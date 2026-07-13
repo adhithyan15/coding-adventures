@@ -1,16 +1,15 @@
 ---
-id: ES-C03-L08
+id: ES-C03-mucho
 chapter: 3
-lesson: 8
 type: word
 headword: mucho
 gloss: much / a lot
 concept_tag: MUCHO
-prerequisites: [ES-C02-L03]
+prerequisites: [ES-C02-noche]
 sounds: [soft-c, vowel-o]
 roots: [multus]
 est_minutes: 3
-reviews_of: [ES-C03-L06]
+reviews_of: [ES-C03-se-llama]
 ---
 
 # mucho — "much," and a sound-change you've already seen
@@ -34,7 +33,7 @@ cousins keep the original *-lt-*:
 
 **The sound-change, again:** Latin *multum* → Spanish *mucho*. The Latin
 **-lt-** softened into Spanish **-ch-** — the very same move as *noctem →
-noche* (*-ct- → -ch-*, Chapter 2). Spanish has a habit of melting these
+noche* (*-ct- → -ch-*, as in the *noche* lesson). Spanish has a habit of melting these
 consonant clusters into *ch*. So a Spanish *-ch-* word very often points back
 to a Latin *-ct-* or *-lt-* root — and the English cousin usually preserves
 it (*noct*urnal, *mult*iple).

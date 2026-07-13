@@ -1,16 +1,15 @@
 ---
-id: ES-C02-L05
+id: ES-C02-practice
 chapter: 2
-lesson: 5
 type: practice-mix
 headword: (practice)
 gloss: all four greetings together
 concept_tag: CH2-PRACTICE
-prerequisites: [ES-C01-L01, ES-C01-L04, ES-C02-L02, ES-C02-L04]
+prerequisites: [ES-C01-hola, ES-C01-buenos-dias, ES-C02-buenas-tardes, ES-C02-buenas-noches]
 sounds: []
 roots: []
 est_minutes: 4
-reviews_of: [ES-C01-L01, ES-C01-L04, ES-C02-L02, ES-C02-L04]
+reviews_of: [ES-C01-hola, ES-C01-buenos-dias, ES-C02-buenas-tardes, ES-C02-buenas-noches]
 ---
 
 # Practice — the four greetings

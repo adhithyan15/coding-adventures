@@ -14,16 +14,18 @@ Chapters 1-3 are authored **atom-first** — teach the pieces, then assemble,
 with grammar introduced exactly where a word needs it
 ([`lessons/`](./lessons/)):
 
-- **Ch. 1 — Hola and Buenos Días** (`C01-L01`–`L05`): hola → **bien**
-  (+ bueno/buena) → **día** (first noun: introduces grammatical **gender**,
-  traced to Latin, + the plural rule) → **buenos días** (assembled;
-  introduces **agreement**) → practice.
-- **Ch. 2 — The Rest of the Greetings** (`C02-L01`–`L05`): tarde → buenas
-  tardes (**feminine** agreement) → noche → buenas noches → practice.
-- **Ch. 3 — Introducing Yourself** (`C03-L01`–`L10`): me → llamo → me llamo
-  (**reflexive verbs**) → **tú / usted** (informal vs formal "you," roots
-  traced) → cómo → se llama → ¿cómo se llama usted? → mucho → mucho gusto →
-  practice.
+- **Ch. 1 — Hola and Buenos Días**: hola → **bien** (+ bueno/buena) →
+  **el / la** (grammatical **gender**, traced to Latin *ille/illa*) → **día**
+  (first noun — applies gender; + the plural rule) → **buenos días**
+  (assembled; introduces **agreement**) → practice.
+- **Ch. 2 — The Rest of the Greetings**: tarde → buenas tardes (**feminine**
+  agreement) → noche → buenas noches → practice.
+- **Ch. 3 — Introducing Yourself**: me → llamar → me llamo (**reflexive
+  verbs**) → **tú / usted** (informal vs formal "you," roots traced) → cómo →
+  se llama → ¿cómo se llama usted? → mucho → mucho gusto → practice.
+
+(Lessons are identified by stable **slug** ids, not numbers — see `HL00`;
+order lives in the book, which LaTeX auto-numbers, and in `session-map.md`.)
 
 Next: **Ch. 4** — responding to *¿cómo está usted?* (bien, gracias, regular,
 más o menos); then **farewells** (hasta luego/mañana/pronto, adiós). Sentences

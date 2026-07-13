@@ -1,16 +1,15 @@
 ---
-id: ES-C03-L06
+id: ES-C03-se-llama
 chapter: 3
-lesson: 6
 type: word
 headword: se llama
 gloss: he/she calls himself; you (formal) call yourself
 concept_tag: SE-LLAMA
-prerequisites: [ES-C03-L03, ES-C03-L04]
+prerequisites: [ES-C03-me-llamo, ES-C03-tu-usted]
 sounds: [vowel-e, ll-y]
 roots: [se-latin, clamare]
 est_minutes: 4
-reviews_of: [ES-C03-L03, ES-C03-L04]
+reviews_of: [ES-C03-me-llamo, ES-C03-tu-usted]
 ---
 
 # se llama — the reflexive that fits *usted*
@@ -23,9 +22,9 @@ loops back on *them*: *se llama*.
 
 ## You'll want to know first
 
-- [ES-C03-L03 (me llamo)](./ES-C03-L03-me-llamo.md) — the reflexive "I call
+- [me llamo](./ES-C03-me-llamo.md) — the reflexive "I call
   myself."
-- [ES-C03-L04 (tú / usted)](./ES-C03-L04-tu-usted.md) — and the key fact that
+- [tú / usted](./ES-C03-tu-usted.md) — and the key fact that
   *usted* takes *he/she* verb forms.
 
 ## The word, taken apart

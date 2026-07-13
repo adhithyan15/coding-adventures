@@ -1,16 +1,15 @@
 ---
-id: ES-C02-L02
+id: ES-C02-buenas-tardes
 chapter: 2
-lesson: 2
 type: word
 headword: buenas tardes
 gloss: good afternoon
 concept_tag: GREETING-AFTERNOON
-prerequisites: [ES-C01-L02, ES-C02-L01]
+prerequisites: [ES-C01-bien, ES-C02-tarde]
 sounds: [diphthong-ue, stress-default-vowel-ns]
 roots: [bonus, tardus]
 est_minutes: 3
-reviews_of: [ES-C01-L02, ES-C01-L04, ES-C02-L01]
+reviews_of: [ES-C01-bien, ES-C01-buenos-dias, ES-C02-tarde]
 ---
 
 # buenas tardes — assembled, and now the *feminine* side of agreement
@@ -23,9 +22,9 @@ and that difference teaches you the other half of the agreement rule.
 
 ## You'll want to know first
 
-- [ES-C01-L02 (bien / bueno)](./ES-C01-L02-bien.md) — the adjective *bueno*
+- [bien / bueno](./ES-C01-bien.md) — the adjective *bueno*
   and its four shapes.
-- [ES-C02-L01 (tarde)](./ES-C02-L01-tarde.md) — the noun *tardes*.
+- [tarde](./ES-C02-tarde.md) — the noun *tardes*.
 
 ## The word, taken apart — by assembling it
 

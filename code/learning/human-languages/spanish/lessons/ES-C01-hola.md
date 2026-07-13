@@ -1,7 +1,6 @@
 ---
-id: ES-C01-L01
+id: ES-C01-hola
 chapter: 1
-lesson: 1
 type: word
 headword: hola
 gloss: hello / hi

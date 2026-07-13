@@ -1,16 +1,15 @@
 ---
-id: ES-C03-L04
+id: ES-C03-tu-usted
 chapter: 3
-lesson: 4
 type: word
 headword: tú / usted
 gloss: you (informal / formal)
 concept_tag: PRONOUN-YOU
-prerequisites: [ES-C03-L01]
+prerequisites: [ES-C03-me]
 sounds: [vowel-u, accent-mark, d-soft]
 roots: [tu-latin, vestra, merces]
 est_minutes: 5
-reviews_of: [ES-C03-L03]
+reviews_of: [ES-C03-me-llamo]
 ---
 
 # tú and usted — two words for "you," and why you must choose

@@ -148,21 +148,37 @@ you're learning*, not as an abstract table.
 
 ## Lesson File Schema
 
-One file per lesson, YAML frontmatter + Markdown body. IDs are
-`<lang>-C<chapter>-L<lesson>` (chapter/lesson, both zero-padded):
+One file per lesson, YAML frontmatter + Markdown body. **IDs are stable
+*slugs*, never ordinal numbers** — `<lang>-C<chapter>-<slug>` (e.g.
+`ES-C01-dia`), matching the filename. This is deliberate: an earlier draft
+numbered lessons (`ES-C01-L03`), and every insertion forced a painful
+renumber cascade across filenames, ids, prerequisites, and cross-links.
+Slugs are insert-proof — adding a lesson is just a new file plus one line in
+the book and the session map; nothing renumbers.
+
+**Order is not stored in the lesson files.** It lives where a tool already
+counts it for us:
+
+- the **book** `\input`s its chapter `.tex` files in order and each chapter's
+  `\section`s run in order, so **LaTeX auto-numbers** every chapter and
+  section (and `\ref`/`\S\ref` cross-references stay correct when a lesson is
+  inserted — never hand-number in the book);
+- `session-map.md` lists the pedagogical sequence by name.
+
+Prose (in lessons and the book) refers to other lessons **by word/name**
+(“the *bien* lesson”), never “Lesson 2”, so nothing goes stale on reorder.
 
 ```yaml
 ---
-id: ES-C01-L02               # <lang-code>-C<chapter>-L<lesson>
-chapter: 1
-lesson: 2
+id: ES-C01-dia               # <lang-code>-C<chapter>-<slug> — a stable slug
+chapter: 1                   # coarse grouping only (chapters rarely reorder)
 type: word                   # word | review | practice-mix
-headword: buenos días        # the one word/phrase this lesson excavates
-gloss: good morning          # plain English gloss
-concept_tag: GREETING-MORNING
-prerequisites: [ES-C01-L01]  # lessons this leans on (become cross-links)
-sounds: [silent-h, diphthong-ue, accent-i]   # ids into pronunciation-reference.md
-roots: [bonus, dies]         # Latin/other roots excavated, for indexing
+headword: día                # the one word/phrase this lesson excavates
+gloss: day (el día — masculine)
+concept_tag: DIA
+prerequisites: [ES-C01-el-la]  # slug ids this leans on (become cross-links)
+sounds: [accent-i, d-soft]   # ids into pronunciation-reference.md
+roots: [dies]                # Latin/other roots excavated, for indexing
 est_minutes: 4
 reviews_of: []               # lesson ids resurfaced (review/practice-mix only)
 ---

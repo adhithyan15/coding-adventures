@@ -80,19 +80,21 @@ one-word lessons with inline sounds and a full cousin web. Current state:
 All built **atom-first** (word first, then assembled) with grammar introduced
 exactly where a word needs it:
 
-- **Chapter 1 — Hola and Buenos Días** (`ES-C01-L01`–`L05`): hola → bien
-  (+ bueno/buena) → día (first noun: introduces **grammatical gender**, traced
-  to Latin's 3-gender system, + the plural rule) → buenos días (assembled,
-  introduces **agreement**) → practice.
-- **Chapter 2 — The Rest of the Greetings** (`ES-C02-L01`–`L05`): tarde →
-  buenas tardes (**feminine** agreement) → noche → buenas noches → practice.
-- **Chapter 3 — Introducing Yourself** (`ES-C03-L01`–`L10`): me → llamo →
-  me llamo (**reflexive verbs**) → **tú / usted** (informal vs formal "you,"
-  both roots traced) → cómo → se llama → ¿cómo se llama usted? → mucho →
-  mucho gusto → practice.
+- **Chapter 1 — Hola and Buenos Días**: hola → bien (+ bueno/buena) → el / la
+  (**grammatical gender**, traced to Latin *ille/illa*) → día (first noun,
+  applies gender; + the plural rule) → buenos días (assembled, introduces
+  **agreement**) → practice.
+- **Chapter 2 — The Rest of the Greetings**: tarde → buenas tardes
+  (**feminine** agreement) → noche → buenas noches → practice.
+- **Chapter 3 — Introducing Yourself**: me → llamar → me llamo (**reflexive
+  verbs**) → **tú / usted** (informal vs formal "you," both roots traced) →
+  cómo → se llama → ¿cómo se llama usted? → mucho → mucho gusto → practice.
 
 Every noun carries its gender (*el*/*la*) and plural; every pronoun is traced
-to its root. Fully authored and in the book (20 pages).
+to its root. Fully authored and in the book (20 pages). Lessons are named by
+**slug** (e.g. `ES-C01-dia`), not numbered — order lives in the book (which
+LaTeX auto-numbers) and in `session-map.md`, so inserting a lesson never
+renumbers anything.
 - **Pronunciation**: [`pronunciation-reference.md`](./pronunciation-reference.md)
   (look-up reference, not a chapter).
 - **Later chapters**: skeleton in [`roadmap.md`](./roadmap.md).

@@ -1,16 +1,15 @@
 ---
-id: ES-C03-L10
+id: ES-C03-practice
 chapter: 3
-lesson: 10
 type: practice-mix
 headword: (practice)
 gloss: a full introduction, formal and informal
 concept_tag: CH3-PRACTICE
-prerequisites: [ES-C03-L03, ES-C03-L04, ES-C03-L07, ES-C03-L09]
+prerequisites: [ES-C03-me-llamo, ES-C03-tu-usted, ES-C03-como-se-llama, ES-C03-gusto]
 sounds: []
 roots: []
 est_minutes: 5
-reviews_of: [ES-C03-L03, ES-C03-L04, ES-C03-L07, ES-C03-L09]
+reviews_of: [ES-C03-me-llamo, ES-C03-tu-usted, ES-C03-como-se-llama, ES-C03-gusto]
 ---
 
 # Practice — introducing yourself

@@ -1,16 +1,15 @@
 ---
-id: ES-C02-L03
+id: ES-C02-noche
 chapter: 2
-lesson: 3
 type: word
 headword: la noche
 gloss: night / evening (la noche — feminine)
 concept_tag: NOCHE
-prerequisites: [ES-C02-L01]
+prerequisites: [ES-C02-tarde]
 sounds: [soft-c, stress-default-vowel-ns]
 roots: [nox]
 est_minutes: 3
-reviews_of: [ES-C02-L01, ES-C02-L02]
+reviews_of: [ES-C02-tarde, ES-C02-buenas-tardes]
 ---
 
 # noche — "night," and a Latin sound-change you can now spot
@@ -23,7 +22,7 @@ dozens of Spanish words later.
 
 ## You'll want to know first
 
-- [ES-C02-L01 (tarde)](./ES-C02-L01-tarde.md) — same build ahead: word first,
+- [tarde](./ES-C02-tarde.md) — same build ahead: word first,
   then *buenas* + it.
 
 ## Sounds you'll need

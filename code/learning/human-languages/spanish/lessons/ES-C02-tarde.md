@@ -1,16 +1,15 @@
 ---
-id: ES-C02-L01
+id: ES-C02-tarde
 chapter: 2
-lesson: 1
 type: word
 headword: la tarde
 gloss: afternoon (la tarde — feminine; also: late)
 concept_tag: TARDE
-prerequisites: [ES-C01-L03, ES-C01-L04]
+prerequisites: [ES-C01-dia, ES-C01-buenos-dias]
 sounds: [vowel-a, stress-default-vowel-ns]
 roots: [tardus]
 est_minutes: 3
-reviews_of: [ES-C01-L04]
+reviews_of: [ES-C01-buenos-dias]
 ---
 
 # tarde — "afternoon," and the "late" hiding inside it
@@ -23,7 +22,7 @@ already know from English.
 
 ## You'll want to know first
 
-- [ES-C01-L04 (buenos días)](./ES-C01-L04-buenos-dias.md) — you'll pair
+- [buenos días](./ES-C01-buenos-dias.md) — you'll pair
   *tarde* with *buena* the same way you paired *días* with *bueno*.
 
 ## Sounds you'll need

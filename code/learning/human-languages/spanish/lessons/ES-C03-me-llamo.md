@@ -1,16 +1,15 @@
 ---
-id: ES-C03-L03
+id: ES-C03-me-llamo
 chapter: 3
-lesson: 3
 type: word
 headword: me llamo
 gloss: my name is (literally "I call myself")
 concept_tag: MY-NAME-IS
-prerequisites: [ES-C03-L01, ES-C03-L02]
+prerequisites: [ES-C03-me, ES-C03-llamar]
 sounds: [ll-y]
 roots: [clamare]
 est_minutes: 3
-reviews_of: [ES-C03-L01, ES-C03-L02]
+reviews_of: [ES-C03-me, ES-C03-llamar]
 ---
 
 # me llamo — "I call myself"
@@ -22,7 +21,7 @@ introduce yourself. But notice Spanish doesn't say "my name is" at all.
 
 ## You'll want to know first
 
-- [ES-C03-L01 (me)](./ES-C03-L01-me.md) · [ES-C03-L02 (llamo)](./ES-C03-L02-llamar.md)
+- [me](./ES-C03-me.md) · [llamo](./ES-C03-llamar.md)
 
 ## The word, taken apart — by assembling it
 

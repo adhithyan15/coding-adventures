@@ -1,16 +1,15 @@
 ---
-id: ES-C03-L09
+id: ES-C03-gusto
 chapter: 3
-lesson: 9
 type: word
 headword: mucho gusto
 gloss: pleased to meet you (literally "much pleasure")
 concept_tag: PLEASED-TO-MEET
-prerequisites: [ES-C03-L08]
+prerequisites: [ES-C03-mucho]
 sounds: [vowel-o, stress-default-vowel-ns]
 roots: [gustus, multus]
 est_minutes: 3
-reviews_of: [ES-C03-L07, ES-C03-L08]
+reviews_of: [ES-C03-como-se-llama, ES-C03-mucho]
 ---
 
 # gusto → mucho gusto — "much pleasure"
@@ -22,7 +21,7 @@ reviews_of: [ES-C03-L07, ES-C03-L08]
 
 ## You'll want to know first
 
-- [ES-C03-L08 (mucho)](./ES-C03-L08-mucho.md) — "much," about to modify
+- [mucho](./ES-C03-mucho.md) — "much," about to modify
   *gusto*.
 
 ## The word, taken apart

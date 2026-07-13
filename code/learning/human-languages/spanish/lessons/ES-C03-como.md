@@ -1,7 +1,6 @@
 ---
-id: ES-C03-L05
+id: ES-C03-como
 chapter: 3
-lesson: 5
 type: word
 headword: cómo
 gloss: how
@@ -10,7 +9,7 @@ prerequisites: []
 sounds: [accent-mark, soft-c, inverted-marks]
 roots: [quomodo]
 est_minutes: 3
-reviews_of: [ES-C03-L04]
+reviews_of: [ES-C03-tu-usted]
 ---
 
 # cómo — "how," your first question word

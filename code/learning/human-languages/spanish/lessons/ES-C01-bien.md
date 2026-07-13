@@ -1,16 +1,15 @@
 ---
-id: ES-C01-L02
+id: ES-C01-bien
 chapter: 1
-lesson: 2
 type: word
 headword: bien
 gloss: well / good / fine
 concept_tag: BIEN
-prerequisites: [ES-C01-L01]
+prerequisites: [ES-C01-hola]
 sounds: [diphthong-ie, v-b]
 roots: [bene, bonus]
 est_minutes: 4
-reviews_of: [ES-C01-L01]
+reviews_of: [ES-C01-hola]
 ---
 
 # bien — "well," a whole answer in one word
@@ -24,7 +23,7 @@ use.
 
 ## You'll want to know first
 
-- [ES-C01-L01 (hola)](./ES-C01-L01-hola.md) — your first word; *bien* is
+- [hola](./ES-C01-hola.md) — your first word; *bien* is
   what you say back when someone asks how you are.
 
 ## Sounds you'll need

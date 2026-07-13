@@ -1,16 +1,15 @@
 ---
-id: ES-C03-L07
+id: ES-C03-como-se-llama
 chapter: 3
-lesson: 7
 type: word
 headword: ¿cómo se llama usted?
 gloss: what's your name? (formal)
 concept_tag: WHATS-YOUR-NAME
-prerequisites: [ES-C03-L05, ES-C03-L06, ES-C03-L04]
+prerequisites: [ES-C03-como, ES-C03-se-llama, ES-C03-tu-usted]
 sounds: [inverted-marks, accent-mark]
 roots: []
 est_minutes: 4
-reviews_of: [ES-C03-L03, ES-C03-L05, ES-C03-L06]
+reviews_of: [ES-C03-me-llamo, ES-C03-como, ES-C03-se-llama]
 ---
 
 # ¿cómo se llama usted? — assembling the question, and answering it
@@ -23,8 +22,8 @@ two-way exchange.
 
 ## You'll want to know first
 
-- [ES-C03-L05 (cómo)](./ES-C03-L05-como.md) · [ES-C03-L06 (se llama)](./ES-C03-L06-se-llama.md)
-  · [ES-C03-L04 (usted)](./ES-C03-L04-tu-usted.md)
+- [cómo](./ES-C03-como.md) · [se llama](./ES-C03-se-llama.md)
+  · [usted](./ES-C03-tu-usted.md)
 
 ## The word, taken apart — by assembling it
 
@@ -44,7 +43,7 @@ real sentence:
 
 ## How to answer
 
-You already have the answer from Lesson 3: **Me llamo ___.**
+You already have the answer from the *me llamo* lesson: **Me llamo ___.**
 
 > — ¿Cómo se llama usted?
 > — **Me llamo David.** ¿Y usted?

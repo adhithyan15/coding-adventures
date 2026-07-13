@@ -1,16 +1,15 @@
 ---
-id: ES-C02-L04
+id: ES-C02-buenas-noches
 chapter: 2
-lesson: 4
 type: word
 headword: buenas noches
 gloss: good evening / good night
 concept_tag: GREETING-NIGHT
-prerequisites: [ES-C02-L02, ES-C02-L03]
+prerequisites: [ES-C02-buenas-tardes, ES-C02-noche]
 sounds: [diphthong-ue, soft-c]
 roots: [bonus, nox]
 est_minutes: 3
-reviews_of: [ES-C01-L02, ES-C02-L03]
+reviews_of: [ES-C01-bien, ES-C02-noche]
 ---
 
 # buenas noches — good evening *and* good night
@@ -22,9 +21,9 @@ one quirk the others don't: it works both coming and going.
 
 ## You'll want to know first
 
-- [ES-C02-L02 (buenas tardes)](./ES-C02-L02-buenas-tardes.md) — feminine
+- [buenas tardes](./ES-C02-buenas-tardes.md) — feminine
   agreement (*buenas*); *noche* is feminine too, so the same shape applies.
-- [ES-C02-L03 (noche)](./ES-C02-L03-noche.md) — the noun *noches*.
+- [noche](./ES-C02-noche.md) — the noun *noches*.
 
 ## The word, taken apart — by assembling it
 

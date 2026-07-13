@@ -1,16 +1,15 @@
 ---
-id: ES-C03-L02
+id: ES-C03-llamar
 chapter: 3
-lesson: 2
 type: word
 headword: llamo
 gloss: I call (from llamar, to call)
 concept_tag: LLAMAR
-prerequisites: [ES-C03-L01]
+prerequisites: [ES-C03-me]
 sounds: [ll-y, vowel-o]
 roots: [clamare]
 est_minutes: 4
-reviews_of: [ES-C03-L01]
+reviews_of: [ES-C03-me]
 ---
 
 # llamo — "I call," from a root that shouts
@@ -23,7 +22,7 @@ whole family of English words.
 
 ## You'll want to know first
 
-- [ES-C03-L01 (me)](./ES-C03-L01-me.md) — you'll bolt *me* onto *llamo* next
+- [me](./ES-C03-me.md) — you'll bolt *me* onto *llamo* next
   lesson.
 
 ## Sounds you'll need

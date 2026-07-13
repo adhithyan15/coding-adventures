@@ -1,16 +1,15 @@
 ---
-id: ES-C01-L05
+id: ES-C01-practice
 chapter: 1
-lesson: 5
 type: practice-mix
 headword: (practice)
 gloss: Hola & Buenos días — putting the chapter together
 concept_tag: CH1-PRACTICE
-prerequisites: [ES-C01-L01, ES-C01-L02, ES-C01-L03, ES-C01-L04]
+prerequisites: [ES-C01-hola, ES-C01-bien, ES-C01-dia, ES-C01-buenos-dias]
 sounds: []
 roots: []
 est_minutes: 4
-reviews_of: [ES-C01-L01, ES-C01-L02, ES-C01-L03, ES-C01-L04]
+reviews_of: [ES-C01-hola, ES-C01-bien, ES-C01-dia, ES-C01-buenos-dias]
 ---
 
 # Practice — hola and buenos días

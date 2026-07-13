@@ -1,7 +1,6 @@
 ---
-id: ES-C03-L01
+id: ES-C03-me
 chapter: 3
-lesson: 1
 type: word
 headword: me
 gloss: me / myself
@@ -33,7 +32,7 @@ Here's the satisfying part: English **me** is a **genuine cousin**, not a
 false friend. Spanish *me* comes from Latin *me*; English *me* comes from
 Proto-Germanic — but both trace back to the *same* ancient ancestor (the
 Proto-Indo-European root *me-*, "me"). So do English **my** and **mine**.
-This is the opposite of the *hola*/*hello* trap from Chapter 1: here the
+This is the opposite of the *hola*/*hello* trap you saw earlier: here the
 resemblance is real, and you can lean on it hard. Spanish *me* = English
 *me*, all the way down.
 
