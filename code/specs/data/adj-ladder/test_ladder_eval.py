@@ -182,6 +182,7 @@ SELF_CONTAINED_RUNGS = (
     "rung142_packing_ratio",
     "rung143_shelf_density",
     "rung144_dose_density",
+    "rung145_pooled_rate",
 )
 
 
