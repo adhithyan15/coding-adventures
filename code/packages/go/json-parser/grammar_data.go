@@ -13,42 +13,42 @@ import gt "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-too
 // ParserGrammarData is the embedded parser grammar.
 var ParserGrammarData = &gt.ParserGrammar{
 	Version: 1,
-	Rules:   []gt.GrammarRule{
+	Rules: []gt.GrammarRule{
 		{Name: `value`, Body: gt.Alternation{Choices: []gt.GrammarElement{
-					gt.RuleReference{Name: `object`, IsToken: false},
-					gt.RuleReference{Name: `array`, IsToken: false},
-					gt.RuleReference{Name: `STRING`, IsToken: true},
-					gt.RuleReference{Name: `NUMBER`, IsToken: true},
-					gt.RuleReference{Name: `TRUE`, IsToken: true},
-					gt.RuleReference{Name: `FALSE`, IsToken: true},
-					gt.RuleReference{Name: `NULL`, IsToken: true},
-				}}, LineNumber: 28},
+			gt.RuleReference{Name: `object`, IsToken: false},
+			gt.RuleReference{Name: `array`, IsToken: false},
+			gt.RuleReference{Name: `STRING`, IsToken: true},
+			gt.RuleReference{Name: `NUMBER`, IsToken: true},
+			gt.RuleReference{Name: `TRUE`, IsToken: true},
+			gt.RuleReference{Name: `FALSE`, IsToken: true},
+			gt.RuleReference{Name: `NULL`, IsToken: true},
+		}}, LineNumber: 28},
 		{Name: `object`, Body: gt.Sequence{Elements: []gt.GrammarElement{
-					gt.RuleReference{Name: `LBRACE`, IsToken: true},
-					gt.Optional{Element: gt.Sequence{Elements: []gt.GrammarElement{
-							gt.RuleReference{Name: `pair`, IsToken: false},
-							gt.Repetition{Element: gt.Sequence{Elements: []gt.GrammarElement{
-									gt.RuleReference{Name: `COMMA`, IsToken: true},
-									gt.RuleReference{Name: `pair`, IsToken: false},
-								}}},
-						}}},
-					gt.RuleReference{Name: `RBRACE`, IsToken: true},
-				}}, LineNumber: 34},
+			gt.RuleReference{Name: `LBRACE`, IsToken: true},
+			gt.Optional{Element: gt.Sequence{Elements: []gt.GrammarElement{
+				gt.RuleReference{Name: `pair`, IsToken: false},
+				gt.Repetition{Element: gt.Sequence{Elements: []gt.GrammarElement{
+					gt.RuleReference{Name: `COMMA`, IsToken: true},
+					gt.RuleReference{Name: `pair`, IsToken: false},
+				}}},
+			}}},
+			gt.RuleReference{Name: `RBRACE`, IsToken: true},
+		}}, LineNumber: 34},
 		{Name: `pair`, Body: gt.Sequence{Elements: []gt.GrammarElement{
-					gt.RuleReference{Name: `STRING`, IsToken: true},
-					gt.RuleReference{Name: `COLON`, IsToken: true},
-					gt.RuleReference{Name: `value`, IsToken: false},
-				}}, LineNumber: 38},
+			gt.RuleReference{Name: `STRING`, IsToken: true},
+			gt.RuleReference{Name: `COLON`, IsToken: true},
+			gt.RuleReference{Name: `value`, IsToken: false},
+		}}, LineNumber: 38},
 		{Name: `array`, Body: gt.Sequence{Elements: []gt.GrammarElement{
-					gt.RuleReference{Name: `LBRACKET`, IsToken: true},
-					gt.Optional{Element: gt.Sequence{Elements: []gt.GrammarElement{
-							gt.RuleReference{Name: `value`, IsToken: false},
-							gt.Repetition{Element: gt.Sequence{Elements: []gt.GrammarElement{
-									gt.RuleReference{Name: `COMMA`, IsToken: true},
-									gt.RuleReference{Name: `value`, IsToken: false},
-								}}},
-						}}},
-					gt.RuleReference{Name: `RBRACKET`, IsToken: true},
-				}}, LineNumber: 42},
+			gt.RuleReference{Name: `LBRACKET`, IsToken: true},
+			gt.Optional{Element: gt.Sequence{Elements: []gt.GrammarElement{
+				gt.RuleReference{Name: `value`, IsToken: false},
+				gt.Repetition{Element: gt.Sequence{Elements: []gt.GrammarElement{
+					gt.RuleReference{Name: `COMMA`, IsToken: true},
+					gt.RuleReference{Name: `value`, IsToken: false},
+				}}},
+			}}},
+			gt.RuleReference{Name: `RBRACKET`, IsToken: true},
+		}}, LineNumber: 42},
 	},
 }
