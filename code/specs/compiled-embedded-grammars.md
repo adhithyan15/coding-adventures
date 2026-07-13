@@ -45,17 +45,21 @@ embedded copy can never disagree.
 
 ### 2.1 Accepted embedding mechanisms
 
-The repo already uses two families of embedding, both acceptable. A package
-picks whichever is idiomatic for its language:
+**Native-struct is the standard.** The grammar is parsed at build time by the
+generator and emitted as source that constructs the language's `TokenGrammar` /
+`ParserGrammar` value directly — a generated `_grammar.*` /
+`Generated/TokenGrammar.*` module. Nothing is parsed at run time; the compiled
+artifact contains the grammar as native data. This is what Rust, Python,
+TypeScript, and Haskell already do, and it is the target for every remaining
+language (Swift, Go, Elixir, Ruby).
 
-| Mechanism | What is embedded | Parse cost | Languages using it today |
-|---|---|---|---|
-| **Native-struct** | The fully-parsed grammar, emitted as source that constructs the language's `TokenGrammar` / `ParserGrammar` value (a generated `_grammar.*` / `Generated/TokenGrammar.*`). | None at run time. | Rust, Python, TypeScript, Haskell |
-| **Embedded-text** | The raw grammar text, embedded as a string/byte constant or a build-system resource, then parsed at run time by the shared `grammar-tools` parser. | One parse at load. | C#（`EmbeddedResource`), Java (jar resource), Rust `include_str!` stragglers |
-
-Both satisfy the standard: neither reads the monorepo tree at run time. The
-distinction is only whether parsing happens at build time (native-struct) or at
-first load (embedded-text).
+The repo also contains a weaker **embedded-text** variant (C# `EmbeddedResource`,
+Java jar resource, a few Rust `include_str!` stragglers) that embeds the raw
+grammar text and parses it at first load. It satisfies the *"no runtime tree
+read"* bar but is **not** the target style: new migrations use native-struct so
+the grammar is truly compiled, not merely bundled. Existing embedded-text
+packages (C#, Java) are already off the fragile path and are left as-is; only
+their CI guard is enabled.
 
 ### 2.2 Per-language status
 
@@ -68,9 +72,9 @@ first load (embedded-text).
 | TypeScript | ~33 | native-struct (`_grammar.ts`) | 27 done |
 | Python | ~51 | native-struct (`_grammar.py`) | 33 done |
 | Ruby | ~44 | native-struct (`_grammar.rb`) | generator runs but output not wired up |
-| **Swift** | **9** | **embedded-text (`_grammar.swift`)** | **this spec's first slice** |
-| Go | ~40 | `//go:embed` (embedded-text) | not started |
-| Elixir | ~33 | embedded-text module | not started |
+| **Swift** | **9** | **native-struct (`_Grammar.swift`)** | **this spec's first slice** |
+| Go | ~40 | native-struct (generated `_grammar.go`) | not started |
+| Elixir | ~33 | native-struct (generated module) | not started |
 
 ## 3. Swift mechanism (first slice)
 
