@@ -47,6 +47,28 @@ STRING = /"([^"\\\\]|\\\\.)*"/
       expect(tokens.first.value, r'line1\nline2');
     });
 
+    test('strips single-quoted and named string delimiters', () {
+      final grammar = parseTokenGrammar('''
+escapes: none
+LITERAL_STRING = /'[^']*'/
+''');
+
+      final token = grammarTokenize("'hello'", grammar).first;
+      expect(token.type, 'LITERAL_STRING');
+      expect(token.value, 'hello');
+    });
+
+    test('strips triple delimiters from multiline string types', () {
+      final grammar = parseTokenGrammar(r'''
+escapes: none
+ML_BASIC_STRING = /"""[\s\S]*?"""/
+''');
+
+      final token = grammarTokenize('"""hello\nworld"""', grammar).first;
+      expect(token.type, 'ML_BASIC_STRING');
+      expect(token.value, 'hello\nworld');
+    });
+
     test('emits NEWLINE when newline is not skipped', () {
       final grammar = parseTokenGrammar('NUMBER = /[0-9]+/');
 

@@ -108,7 +108,7 @@ The missing matrix is heavily concentrated in singleton packages:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 171 | 384 |
+| Present in 10-15 languages | 171 | 383 |
 | Present in 5-9 languages | 122 | 917 |
 | Present in 2-4 languages | 157 | 1,972 |
 | Present in one language | 687 | 9,618 |
@@ -127,10 +127,10 @@ new canonical identity collisions with `--fail-on-collisions`.
 
 ## Priority 1: Complete The 14-Of-15 Set
 
-Ten package/language slots remain to turn 10 nearly complete packages into
+Nine package/language slots remain to turn 9 nearly complete packages into
 fully covered packages.
 
-### Dart: 7 remaining ports
+### Dart: 6 remaining ports
 
 - `algol-lexer`
 - `algol-parser`
@@ -138,10 +138,9 @@ fully covered packages.
 - `b-tree`
 - `mosaic-lexer`
 - `mosaic-parser`
-- `toml-lexer`
 
 Completed in the Dart lane: `heap`, `bitset`, `pixel-container`,
-`image-point-ops`, `logic-gates`, `image-geometric-transforms`.
+`image-point-ops`, `logic-gates`, `image-geometric-transforms`, `toml-lexer`.
 
 ### Haskell: complete
 
@@ -160,7 +159,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 171 packages present in at least ten implementation languages need 384
+The 171 packages present in at least ten implementation languages need 383
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -175,7 +174,7 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Swift | 53 | Data structures and generated frontends before native app surfaces |
 | Java | 57 | Move with Kotlin |
 | Kotlin | 57 | Move with Java |
-| Dart | 113 | Algorithms, data structures, codecs, grammar frontends, documents, and paint transforms first |
+| Dart | 112 | Algorithms, data structures, codecs, grammar frontends, documents, and paint transforms first |
 
 Go, Ruby, Rust, and TypeScript currently have no gaps within the 10-language
 consensus set. They remain reference/template lanes for these waves.
