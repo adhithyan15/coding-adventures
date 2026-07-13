@@ -108,12 +108,12 @@ The missing matrix is heavily concentrated in singleton packages:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 171 | 386 |
+| Present in 10-15 languages | 171 | 385 |
 | Present in 5-9 languages | 122 | 917 |
 | Present in 2-4 languages | 157 | 1,972 |
-| Present in one language | 685 | 9,590 |
+| Present in one language | 686 | 9,604 |
 
-The loop must not start by attempting 9,590 singleton ports. It should finish
+The loop must not start by attempting 9,604 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 ## Priority 0: Inventory And Identity Integrity
@@ -127,23 +127,22 @@ new canonical identity collisions with `--fail-on-collisions`.
 
 ## Priority 1: Complete The 14-Of-15 Set
 
-Twelve package/language slots remain to turn 12 nearly complete packages into
+Eleven package/language slots remain to turn 11 nearly complete packages into
 fully covered packages.
 
-### Dart: 9 remaining ports
+### Dart: 8 remaining ports
 
 - `algol-lexer`
 - `algol-parser`
 - `b-plus-tree`
 - `b-tree`
 - `image-geometric-transforms`
-- `logic-gates`
 - `mosaic-lexer`
 - `mosaic-parser`
 - `toml-lexer`
 
 Completed in the Dart lane: `heap`, `bitset`, `pixel-container`,
-`image-point-ops`.
+`image-point-ops`, `logic-gates`.
 
 ### Haskell: complete
 
@@ -162,7 +161,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 171 packages present in at least ten implementation languages need 386
+The 171 packages present in at least ten implementation languages need 385
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -177,7 +176,7 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Swift | 53 | Data structures and generated frontends before native app surfaces |
 | Java | 57 | Move with Kotlin |
 | Kotlin | 57 | Move with Java |
-| Dart | 115 | Algorithms, data structures, codecs, grammar frontends, documents, and paint transforms first |
+| Dart | 114 | Algorithms, data structures, codecs, grammar frontends, documents, and paint transforms first |
 
 Go, Ruby, Rust, and TypeScript currently have no gaps within the 10-language
 consensus set. They remain reference/template lanes for these waves.
