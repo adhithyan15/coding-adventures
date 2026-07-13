@@ -615,6 +615,7 @@ _ARRAY_BLOCK_METHODS = frozenset(
         "each_with_object",
         "chunk_while",
         "slice_when",
+        "cycle",
     }
 )
 
@@ -1225,6 +1226,27 @@ def _array_block_method(recv: list[Val], name: str, args: list[Val], block: Clos
             else:
                 slices[-1].append(cur)
         return slices
+    if name == "cycle":
+        # ``cycle(n) { |x| … }`` — iterate the array ``n`` full passes in order,
+        # yielding each element on every pass.  ``n <= 0`` (or a nil / non-integer
+        # count) yields nothing.  Always returns nil.
+        #
+        #   ``[1, 2, 3].cycle(2) { |x| out << x }``  →  out == [1, 2, 3, 1, 2, 3]
+        #   ``[1, 2, 3].cycle(0) { … }``             →  no yields, returns nil
+        #   ``[].cycle(5) { … }``                    →  no yields (empty run body)
+        #
+        # Ruby's block-less ``cycle`` (an Enumerator) and its infinite no-``n``
+        # form (which never returns) are documented v0 boundaries: we require a
+        # block and a finite non-negative count, so emitted programs can never
+        # hang.  A truthy/``bool`` count is rejected too — ``True`` is an ``int``
+        # in Python, and a boolean cycle count is a type error in Ruby.
+        n = args[0] if args else None
+        if isinstance(n, bool) or not isinstance(n, int) or n <= 0:
+            return None
+        for _ in range(n):
+            for item in recv:
+                apply(block, [item])
+        return None
     return _MISS
 
 
