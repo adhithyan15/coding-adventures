@@ -1,1 +1,2 @@
 where swift >/dev/null 2>/dev/null && swift test || echo Swift not available on this runner — skipping
+where swift >/dev/null 2>/dev/null && bash ./regen-embedded-grammars.sh --check || echo Swift not available — skipping embedded-grammar drift check

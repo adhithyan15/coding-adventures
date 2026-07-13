@@ -164,7 +164,7 @@ Same changes as Prereq 1, with `fixture_contract_rulebook()`.
 
 ### Prerequisite 3: Generalize the bench harness
 
-`scripts/adj18_bench.py` is currently TSA-specific (hardcoded
+`code/scripts/adj18_bench.py` is currently TSA-specific (hardcoded
 declarations). Generalise to:
 
 - Domain-keyed declaration sets loaded from a config file.

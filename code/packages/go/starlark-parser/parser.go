@@ -38,55 +38,27 @@
 package starlarkparser
 
 import (
-	"path/filepath"
-	"runtime"
-
-	grammartools "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/parser"
 	starlarklexer "github.com/adhithyan15/coding-adventures/code/packages/go/starlark-lexer"
 )
 
-// getGrammarPath computes the absolute path to the starlark.grammar file.
-//
-// This uses the same runtime.Caller(0) technique as the starlark-lexer package.
-// We navigate up 3 levels from this source file to reach the code/ directory,
-// then down into grammars/.
-//
-// Directory structure:
-//   code/
-//     grammars/
-//       starlark.grammar   <-- this is what we want
-//     packages/
-//       go/
-//         starlark-parser/
-//           parser.go      <-- we are here (3 levels below code/)
-func getGrammarPath() string {
-	// runtime.Caller(0) returns the file path of this source file at runtime.
-	_, filename, _, _ := runtime.Caller(0)
-
-	// Get the directory containing this file
-	parent := filepath.Dir(filename)
-
-	// Navigate up 3 levels to code/, then down to grammars/
-	root := filepath.Join(parent, "..", "..", "..", "grammars")
-
-	return filepath.Join(root, "starlark", "starlark.grammar")
-}
-
 // CreateStarlarkParser tokenizes the source code using the Starlark lexer,
-// then loads the Starlark parser grammar and returns a configured GrammarParser
+// then returns a GrammarParser configured with the Starlark parser grammar,
 // ready to produce an AST.
 //
 // The two-step process:
 //   1. TokenizeStarlark(source) -- produces a token stream with INDENT/DEDENT
-//   2. Load starlark.grammar and create a GrammarParser from the tokens
+//   2. Create a GrammarParser from the tokens and the embedded grammar
+//
+// The parser grammar is embedded at compile time as native Go in grammar_data.go
+// (ParserGrammarData); nothing is read from disk at run time, so the parser
+// needs no filesystem capability and works when built standalone. The error
+// result is retained for API compatibility; it is non-nil only when lexing fails.
 //
 // The GrammarParser uses recursive descent with packrat memoization. Each
 // grammar rule becomes a parsing function. The memoization cache ensures that
 // no (rule, position) pair is computed more than once, giving O(n) parsing
 // for most practical grammars.
-//
-// Returns an error if lexing fails or the grammar file cannot be read/parsed.
 func CreateStarlarkParser(source string) (*parser.GrammarParser, error) {
 	// Step 1: Tokenize the source using the Starlark lexer.
 	// This produces tokens with INDENT/DEDENT for indentation,
@@ -96,28 +68,7 @@ func CreateStarlarkParser(source string) (*parser.GrammarParser, error) {
 		return nil, err
 	}
 
-	return StartNew[*parser.GrammarParser]("starlarkparser.CreateStarlarkParser", nil,
-		func(op *Operation[*parser.GrammarParser], rf *ResultFactory[*parser.GrammarParser]) *OperationResult[*parser.GrammarParser] {
-			// Step 2: Read the parser grammar file.
-			// This file defines the syntax rules in EBNF notation.
-			bytes, err := op.File.ReadFile(getGrammarPath())
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-
-			// Step 3: Parse the grammar file into a structured ParserGrammar object.
-			// This extracts all rules, each with a name and a body (a tree of
-			// grammar elements: sequences, alternations, repetitions, etc.).
-			grammar, err := grammartools.ParseParserGrammar(string(bytes))
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-
-			// Step 4: Create the grammar-driven parser.
-			// This builds a rule lookup table and initializes the memoization cache.
-			// The first rule in the grammar (typically "file") becomes the entry point.
-			return rf.Generate(true, false, parser.NewGrammarParser(tokens, grammar))
-		}).GetResult()
+	return parser.NewGrammarParser(tokens, ParserGrammarData), nil
 }
 
 // ParseStarlark is a convenience function that parses Starlark source code

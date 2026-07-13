@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.34.0 — Array `cycle(n)`
+
+Mirrors the Python reference (PR #8117), Go (PR #8123), and Rust (PR #8131) into
+the JS backend's inline `arrayMethod` (beside the existing `chunk_while`/
+`slice_when` arms + the `ARRAY_METHODS` `respond_to?` set), continuing the
+`cycle` cross-backend cascade.
+
+- `cycle(n) { |x| … }` (block) → iterate the array `n` full passes in order,
+  yielding each element on every pass; always returns `null` (Ruby nil).
+  `[1,2,3].cycle(2)` yields `1,2,3,1,2,3`. `n <= 0`, a negative count, an empty
+  receiver, or a nil / non-integer count (Ruby's block-less Enumerator and
+  infinite no-`n` forms) yields nothing rather than hanging — the count is taken
+  only when `Number.isInteger(args[0])`, so a `null` / non-number falls through
+  to the no-yield path. `respond_to?("cycle")` reports `true`.
+- The `run_with_node` suite gains `array_cycle`: the block `print`s each yielded
+  element, proving the two passes (`1,2,3,1,2,3`) and the `nil` returns for
+  `cycle(2)`, `cycle(0)`, and `[].cycle(5)` under a real `node` run.
+
+## 0.33.0 — Array `minmax`
+
+Mirrors the Python reference (PR #8092), Go (PR #8098), and Rust (PR #8103) into
+the JS backend's inline `arrayMethod` (beside the existing `min`/`max` arms + the
+`ARRAY_METHODS` `respond_to?` set), continuing the `minmax` cross-backend
+cascade.
+
+- `minmax` (non-block) → the two-element array `[min, max]` in one pass, via
+  `<`/`>` (the same comparison the `min`/`max` arms use). `[3,1,2].minmax` →
+  `[1, 3]`. An empty array yields `[null, null]` (Ruby `[nil, nil]` — no
+  smallest/largest element), matching the Go/Rust/Python references' 2-element
+  nil array.
+- The `array_catalog_methods` exec-proof test gains `minmax` (non-empty and
+  empty), run through `node`, asserting `[1, 3]` / `[nil, nil]`.
+
 ## 0.32.0 — Array `slice_when`
 
 Mirrors the Python reference (PR #8070), Go (PR #8073), and Rust (PR #8077) into

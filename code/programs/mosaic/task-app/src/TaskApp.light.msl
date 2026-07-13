@@ -1,0 +1,60 @@
+// TaskApp — styling (mosstyle), light theme. Parts match the [ part-name ] labels
+// in TaskApp.mll.
+
+style TaskApp {
+  part app-shell {
+    background : "#f8fafc" ;
+    color : "#0f172a" ;
+    font-family : "system-ui, sans-serif" ;
+    padding : 24 ;
+    gap : 14 ;
+  }
+  part title {
+    font-weight : bold ;
+  }
+  part add-row {
+    gap : 8 ;
+    align : center-vertical ;
+  }
+  part name-input {
+    padding : 8 ;
+    border-width : 1 ;
+    border-color : "#cbd5e1" ;
+    border-radius : 6 ;
+  }
+  part due-input {
+    padding : 8 ;
+    border-width : 1 ;
+    border-color : "#cbd5e1" ;
+    border-radius : 6 ;
+  }
+  part add-btn {
+    background : "#2563eb" ;
+    color : "#ffffff" ;
+    padding : 8 ;
+    border-radius : 6 ;
+  }
+  part summary {
+    color : "#64748b" ;
+  }
+  part task-list {
+    gap : 6 ;
+  }
+  part task-row {
+    gap : 8 ;
+    align : center-vertical ;
+  }
+  part row-btn {
+    padding : 8 ;
+    border-width : 1 ;
+    border-color : "#e2e8f0" ;
+    border-radius : 6 ;
+    background : "#ffffff" ;
+  }
+  part del-btn {
+    padding : 8 ;
+    border-radius : 6 ;
+    background : "#fee2e2" ;
+    color : "#991b1b" ;
+  }
+}

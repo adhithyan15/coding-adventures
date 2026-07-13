@@ -1,7 +1,6 @@
 package lispparser
 
 import (
-	"path/filepath"
 	"testing"
 )
 
@@ -43,12 +42,5 @@ func TestParseLispMalformedList(t *testing.T) {
 	_, err := ParseLisp("(a b")
 	if err == nil {
 		t.Fatal("expected parse error")
-	}
-}
-
-func TestGrammarPath(t *testing.T) {
-	path := getGrammarPath()
-	if filepath.Base(path) != "lisp.grammar" {
-		t.Fatalf("expected lisp.grammar path, got %s", path)
 	}
 }

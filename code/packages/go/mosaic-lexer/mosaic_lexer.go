@@ -5,7 +5,7 @@
 // with its data API (slots) and its visual tree (nodes with properties).
 //
 // This package is a thin wrapper around the generic grammar-driven lexer. It:
-//  1. Uses the embedded mosaic.tokens grammar (TokenGrammarData in _grammar.go)
+//  1. Uses the embedded mosaic.tokens grammar (TokenGrammarData in grammar_data.go)
 //  2. Passes it to the GrammarLexer, which compiles the regex patterns
 //  3. The GrammarLexer handles skip patterns (whitespace, comments) automatically
 //
@@ -31,53 +31,20 @@
 package mosaiclexer
 
 import (
-	"os"
-	"path/filepath"
-	"runtime"
-
-	grammartools "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
 )
 
-// getGrammarPath computes the absolute path to the mosaic.tokens grammar file.
+// CreateLexer returns a GrammarLexer configured with the Mosaic token grammar,
+// ready to tokenize the given Mosaic source text.
 //
-// We use runtime.Caller(0) to find the directory of this Go source file at
-// runtime, then navigate up three levels (mosaic-lexer -> go -> packages ->
-// code) to reach the grammars directory.
+// The grammar is embedded at compile time as native Go in grammar_data.go
+// (TokenGrammarData); nothing is read from disk at run time. The returned lexer
+// skips line comments (// ...), block comments (/* ... */), and all whitespace
+// (spaces, tabs, newlines) between tokens.
 //
-// Directory structure:
-//
-//	code/
-//	  grammars/
-//	    mosaic.tokens       <-- this is what we want
-//	  packages/
-//	    go/
-//	      mosaic-lexer/
-//	        mosaic_lexer.go <-- we are here (3 levels below code/)
-func getGrammarPath() string {
-	_, filename, _, _ := runtime.Caller(0)
-	parent := filepath.Dir(filename)
-	root := filepath.Join(parent, "..", "..", "..", "grammars")
-	return filepath.Join(root, "mosaic", "mosaic.tokens")
-}
-
-// CreateLexer loads the Mosaic token grammar and returns a configured
-// GrammarLexer ready to tokenize the given Mosaic source text.
-//
-// The returned lexer skips line comments (// ...), block comments (/* ... */),
-// and all whitespace (spaces, tabs, newlines) between tokens.
-//
-// Returns an error if the grammar file cannot be read or parsed.
+// The error result is retained for API compatibility and is always nil.
 func CreateLexer(source string) (*lexer.GrammarLexer, error) {
-	data, err := os.ReadFile(getGrammarPath())
-	if err != nil {
-		return nil, err
-	}
-	grammar, err := grammartools.ParseTokenGrammar(string(data))
-	if err != nil {
-		return nil, err
-	}
-	return lexer.NewGrammarLexer(source, grammar), nil
+	return lexer.NewGrammarLexer(source, TokenGrammarData), nil
 }
 
 // Tokenize is a convenience function that tokenizes Mosaic source text in a

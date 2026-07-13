@@ -21,7 +21,6 @@
 //
 // ============================================================================
 
-import Foundation
 import GrammarTools
 import Lexer
 
@@ -45,7 +44,7 @@ public struct EcmascriptES1Lexer: Sendable {
     /// - Returns: An array of `Token` values, ending with an EOF token.
     /// - Throws: `LexerError` on unexpected characters.
     public static func tokenize(_ source: String) throws -> [Token] {
-        let grammar = try loadGrammar()
+        let grammar = loadGrammar()
         let lexer = GrammarLexer(source: source, grammar: grammar)
         let raw = try lexer.tokenize()
 
@@ -78,19 +77,9 @@ public struct EcmascriptES1Lexer: Sendable {
     ///
     /// - Returns: A `TokenGrammar` parsed from `es1.tokens`.
     /// - Throws: If the file cannot be read or parsed.
-    public static func loadGrammar() throws -> TokenGrammar {
-        let thisFile = #filePath
-        var url = URL(fileURLWithPath: thisFile)
-        // Walk up: EcmascriptES1Lexer.swift -> Sources/EcmascriptES1Lexer -> Sources -> ecmascript-es1-lexer -> swift -> packages -> code
-        for _ in 0..<6 {
-            url = url.deletingLastPathComponent()
-        }
-        let tokensURL = url
-            .appendingPathComponent("grammars")
-            .appendingPathComponent("ecmascript")
-            .appendingPathComponent("es1.tokens")
-
-        let content = try String(contentsOf: tokensURL, encoding: .utf8)
-        return try parseTokenGrammar(source: content)
+    public static func loadGrammar() -> TokenGrammar {
+        // Embedded at compile time in the generated `_Grammar.swift`
+        // (from code/grammars/es1/...); no run-time file read.
+        EmbeddedGrammar.es1
     }
 }

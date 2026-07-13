@@ -309,6 +309,35 @@ def test_array_slice_when() -> None:
     assert oop.call_method([1], "respond_to?", "slice_when") is True
 
 
+def test_array_cycle() -> None:
+    # `cycle(n) { |x| … }` iterates the array n full passes in order, yielding
+    # each element on every pass; it always returns nil.
+    seen: list[int] = []
+    assert (
+        oop.call_method([1, 2, 3], "cycle", 2, Closure(lambda x: seen.append(x)))
+        is None
+    )
+    assert seen == [1, 2, 3, 1, 2, 3]
+    # A single pass is just the array in order.
+    once: list[int] = []
+    oop.call_method([7, 8], "cycle", 1, Closure(lambda x: once.append(x)))
+    assert once == [7, 8]
+    # n <= 0 yields nothing (and still returns nil).
+    zero: list[int] = []
+    assert oop.call_method([1, 2], "cycle", 0, Closure(lambda x: zero.append(x))) is None
+    assert zero == []
+    neg: list[int] = []
+    oop.call_method([1, 2], "cycle", -3, Closure(lambda x: neg.append(x)))
+    assert neg == []
+    # An empty receiver yields nothing no matter how many passes are requested.
+    empty: list[int] = []
+    oop.call_method([], "cycle", 5, Closure(lambda x: empty.append(x)))
+    assert empty == []
+    # respond_to? advertises it; a still-uncatalogued method reports False.
+    assert oop.call_method([1], "respond_to?", "cycle") is True
+    assert oop.call_method([1], "respond_to?", "combination") is False
+
+
 def test_array_mutating_push_pop_shift_unshift() -> None:
     a = [1, 2]
     assert oop.call_method(a, "push", 3) == [1, 2, 3]

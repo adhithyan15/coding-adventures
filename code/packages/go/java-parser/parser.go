@@ -1,70 +1,24 @@
+// Package javaparser parses Java source code using versioned grammars.
+// It supports Java 1.0, 1.1, 1.4, 5, 7, 8, 10, 14, 17, and 21, each with its
+// own parser grammar. See the java-lexer package for a description of each
+// release.
+//
+// The grammars are embedded at compile time as native Go data structures in
+// grammar_data.go (VersionedParserGrammars, keyed by version string). Nothing
+// is read from disk at run time, so the parser needs no filesystem capability
+// and works unchanged when the package is built standalone.
 package javaparser
 
 import (
 	"fmt"
-	"os"
-	"path/filepath"
-	"runtime"
 
-	"github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	javalexer "github.com/adhithyan15/coding-adventures/code/packages/go/java-lexer"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/parser"
 )
 
-// validVersions is the set of Java version strings the parser recognises.
-// These must stay in sync with the same map in the java-lexer package so
-// that the lexer and parser always agree on which grammars are available.
-//
-// See the java-lexer package for a detailed description of each release.
-var validVersions = map[string]bool{
-	"1.0": true,
-	"1.1": true,
-	"1.4": true,
-	"5":   true,
-	"7":   true,
-	"8":   true,
-	"10":  true,
-	"14":  true,
-	"17":  true,
-	"21":  true,
-}
-
 // DefaultVersion is the Java version used when no version is specified.
 // Kept in sync with the java-lexer package.
 const DefaultVersion = "21"
-
-// getGrammarPath resolves the absolute path to the .grammar file for the given
-// Java version string.
-//
-// When version is "" (empty string), the DefaultVersion ("21") is used.
-// This provides a sensible default for callers that do not care about a
-// specific version.
-//
-// Any other non-empty string must appear in validVersions; an unknown version
-// returns a descriptive error so that typos produce actionable messages.
-func getGrammarPath(version string) (string, error) {
-	// runtime.Caller(0) returns the path to *this* source file at compile
-	// time. We navigate up three directories to reach code/grammars/.
-	_, filename, _, _ := runtime.Caller(0)
-	parent := filepath.Dir(filename)
-	root := filepath.Join(parent, "..", "..", "..", "grammars")
-
-	// Default to the latest LTS version when no version is specified.
-	if version == "" {
-		version = DefaultVersion
-	}
-
-	if !validVersions[version] {
-		return "", fmt.Errorf(
-			"unknown Java version %q: valid versions are 1.0, 1.1, 1.4, 5, 7, 8, 10, 14, 17, 21",
-			version,
-		)
-	}
-
-	// Grammar files follow the pattern: java/java{version}.grammar
-	// For example: java/java21.grammar, java/java1.0.grammar
-	return filepath.Join(root, "java", "java"+version+".grammar"), nil
-}
 
 // CreateJavaParser constructs a GrammarParser ready to parse the given
 // Java source string.
@@ -75,29 +29,28 @@ func getGrammarPath(version string) (string, error) {
 //   - "5", "7", "8" — pre-modular Java releases
 //   - "10", "14", "17", "21" — modern Java releases
 //
-// Both the lexer and parser grammar files are selected by the same version
-// string, guaranteeing that the token set and parse rules stay consistent.
+// Both the lexer and parser grammars are selected by the same version string,
+// guaranteeing that the token set and parse rules stay consistent. Both are
+// read from the compiled-in grammar maps; no grammar file is read at run time.
 //
-// An error is returned if the version string is unrecognised, or if any
-// grammar file cannot be read.
+// An error is returned only when the version string is unrecognised.
 func CreateJavaParser(source string, version string) (*parser.GrammarParser, error) {
-	// Tokenise first; any version-error is surfaced here before we attempt
-	// to open the parser grammar file.
+	// Tokenise first; any version-error is surfaced here before we look up
+	// the parser grammar.
 	tokens, err := javalexer.TokenizeJava(source, version)
 	if err != nil {
 		return nil, err
 	}
-	grammarPath, err := getGrammarPath(version)
-	if err != nil {
-		return nil, err
+	// Default to the latest LTS version when no version is specified.
+	if version == "" {
+		version = DefaultVersion
 	}
-	bytes, err := os.ReadFile(grammarPath)
-	if err != nil {
-		return nil, err
-	}
-	grammar, err := grammartools.ParseParserGrammar(string(bytes))
-	if err != nil {
-		return nil, err
+	grammar, ok := VersionedParserGrammars[version]
+	if !ok {
+		return nil, fmt.Errorf(
+			"unknown Java version %q: valid versions are 1.0, 1.1, 1.4, 5, 7, 8, 10, 14, 17, 21",
+			version,
+		)
 	}
 	return parser.NewGrammarParser(tokens, grammar), nil
 }

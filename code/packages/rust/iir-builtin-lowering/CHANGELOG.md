@@ -1,5 +1,149 @@
 # Changelog — iir-builtin-lowering
 
+## 0.29.0 - 2026-07-13 (E6d-6: boxed-bool `jmp_if_false` branches on the raw bool)
+
+Both dynamic-representation passes now recognise a `jmp_if_false` whose guard is a
+**boxed machine bool** — a boxed comparison result (`= tag …` in a Twig `match`,
+or any `(if (= a b) …)` forced onto the dynamic path) — and branch on its RAW
+pre-box `bool`, instead of applying McCarthy nil-truthiness.
+
+Why: `lower_dynamic_arith` boxes every comparison result (`cmp_eq → bool` then
+`box → ref<any>`). Both passes then saw a `ref<any>`/tagged condition and wrapped
+it — the structural pass (WASM/JVM/CLR/BEAM) as `not(is_null(cond))`, the native
+pass (NativeAot/LLVM) as `dyn_truthy(cond)`. But a boxed `#f` is a **non-nil**
+value (`ref.i31(0)` on the structural side; `dyn_box_int(0)` = tagged integer 0 on
+the native side), and nil-truthiness / McCarthy-truthiness both read it as **true**
+— so every `match` arm's tag test passed and dispatch was wrong (E6d-6).
+
+Fix: in `lower_dyn_repr_structural` (new `boxed_bool_source`/`boxed_bool_conditions`
+helpers) and in `lower_dyn_repr`'s `wrap_tagged_conditions`, a guard that is a
+`box` of a `"bool"`-typed value is repointed to the raw source and the jump is
+emitted unwrapped. General fix — helps any comparison-as-branch-condition on the
+dynamic path, not only `match`. One new unit test; 149 lib tests pass.
+
+## 0.28.0 - 2026-07-13 (E6d-3b COMPLETE: `assoc` via a synthesized alist-search helper)
+
+`lower_list_ops` gains its fifth and final list operation, `assoc` — completing
+the E6d-3b list-operation set (`length`, `list-ref`, `append`, `reverse`,
+`assoc`). It rewrites `call_builtin "assoc" key alist` to a call to a synthesized
+recursive helper `__dyn_list_assoc` (injected once) that searches an association
+list (a list of `(k . v)` cons pairs):
+
+```
+__dyn_list_assoc(key, alist) = if null?(alist) then nil
+    else if key == car(car(alist)) then car(alist)
+    else __dyn_list_assoc(key, cdr(alist))
+```
+
+The key comparison must yield a raw machine bool for `jmp_if_false`. Since the
+`equal?` builtin lowers unevenly across the managed (`equal?`) and native
+(`dyn_equal`) paths and its result is not a plain branch bool, V1 `assoc`
+**unboxes both keys to `i64` and compares with a typed `cmp_eq`** — the exact
+technique `list-ref` uses for its index. That scopes V1 `assoc` to **integer
+keys** (every E6d-3b proof uses integer atoms); symbol keys arrive with E6d-4
+(interned symbols → `eq?` bit-equality). The alist cells, the returned pair, and
+`nil` are all references, so no boxing on the value path. Five new unit tests
+(rewrite, single injection, pair-search shape with 2 unboxes / 2 branches / 2
+cars / 3 rets, all-five-ops coexistence).
+
+## 0.27.0 - 2026-07-13 (E6d-3b: `reverse` via a tail-recursive accumulator helper)
+
+`lower_list_ops` gains a fourth list operation, `reverse`. It rewrites
+`call_builtin "reverse" a` to a **nil-seeded** call to a synthesized
+tail-recursive accumulator helper `__dyn_list_reverse` (injected once):
+
+```
+reverse(a)          = __dyn_list_reverse(a, nil)      # nil seed at the call site
+__dyn_list_reverse(a, acc) = if null?(a) then acc
+                             else __dyn_list_reverse(cdr(a), cons(car(a), acc))
+```
+
+Consing each element of `a` onto the *front* of the accumulator reverses the
+order; the base case returns the accumulator. The call-site rewrite emits the
+empty accumulator as a `const 0 : ref<LispyPair>` (the exact nil sentinel the
+`list` desugar / `make_nil` emit), named `{dest}.rev_nil` (unique per SSA dest so
+two `reverse` sites never collide). Like `append` there is no index → no
+unbox/box; the recursion reuses `null?`/`car`/`cdr`/`cons` (E6d-1). Recursion is
+in tail position but the backends do not yet TCO, so depth is bounded by the list
+length. Five new unit tests (nil-seed + acc-call rewrite, single injection,
+tail-recursive-accumulator shape, all-four-ops coexistence). `assoc` follows.
+
+## 0.26.0 - 2026-07-12 (E6d-3b: `append` via a synthesized list-rebuild helper)
+
+`lower_list_ops` gains a third list operation, `append`. It rewrites
+`call_builtin "append" a b` to a call to a synthesized recursive helper
+`__dyn_list_append` (injected once, idempotently) that *rebuilds* the first list
+in front of the second:
+
+```
+__dyn_list_append(a: ref<any>, b: ref<any>) -> ref<any>:
+    if !null?(a)  goto recurse       # → is_null (E6d-1)
+    ret b                            # append(nil, b) = b
+  recurse:
+    ret cons(car(a), __dyn_list_append(cdr(a), b))
+```
+
+Unlike `list-ref` there is **no index**, so no unbox/box: `a`/`b`, `car(a)`, and
+the recursive result are all lisp `ref<any>` references. Its only new op versus
+`length`/`list-ref` is the `cons` in the recursive arm — the same E6d-1 heap
+builtin, rewritten to `alloc`/`field_store` for the injected helper by the same
+head-of-heap-lowering pass. Both arms return `ref<any>` (the second list, or a
+fresh cons). Five new unit tests (rewrite, single injection, cons-rebuild shape,
+all-three-ops coexistence). `reverse`/`assoc` follow the same pattern.
+
+## 0.25.0 - 2026-07-12 (E6d-3b: `list-ref` via a synthesized index-walk helper)
+
+`lower_list_ops` gains a second list operation, `list-ref`. Like `length` it
+rewrites `call_builtin "list-ref" lst n` to a call to a synthesized recursive
+helper `__dyn_list_ref` (injected once, idempotently) and reuses `car`/`cdr`
+(E6d-1):
+
+```
+__dyn_list_ref(lst: ref<any>, n: ref<any>) -> ref<any>:
+    ni = unbox n                       # boxed index → machine i64
+    if !(ni == 0) goto recurse         # typed cmp_eq → raw bool
+    ret car(lst)                       # base: the n-th element
+  recurse:
+    ret __dyn_list_ref(cdr(lst), box(ni - 1))   # typed sub, re-boxed
+```
+
+Design note — **the index is a boxed lisp value, not a raw `i64` param.** The
+lisp boundary is uniform-anyref: `dyn_repr_structural` (managed) / `lower_dyn_repr`
+(native) box *every* argument to a lisp function, so a raw-`i64` index param
+faults at the call (`expected i64, got I32(2)`). The helper therefore takes
+`n : ref<any>` and unboxes it once; the index test/decrement are then plain typed
+`cmp_eq`/`sub` (the raw bool feeds `jmp_if_false` directly — hint `"bool"`, so it
+is not treated as a lisp-truthiness condition), and the decremented index is
+re-boxed before the recursive call (the same explicit-`box` shape the `length`
+helper's base case uses). `length` and `list-ref` share the module entry and
+each inject their helper independently. Five new unit tests (rewrite, single
+injection, index-walk shape, coexistence with `length`). `append`/`reverse`/
+`assoc` follow the same pattern.
+
+## 0.24.0 - 2026-07-12 (E6d-3b: `length` via a synthesized cons-walk helper)
+
+New `list_ops` module (`lower_list_ops`): a list *operation* like `length` walks
+the cons chain, so it can't be a straight-line desugar (unlike E6d-3a's `list`
+constructor). `lower_list_ops` rewrites `call_builtin "length" lst -> dest` into a
+`call __dyn_list_length, lst -> dest : ref<any>` and injects (once per module) the
+recursive helper
+
+    __dyn_list_length(lst : ref<any>) -> ref<any>:
+        if null?(lst) then (box 0) else (+ 1 (__dyn_list_length (cdr lst)))
+
+The helper is a **proper lisp function** — both branches return a boxed
+`ref<any>`, and the `+ 1 …` is the E6d-2 **dynamic** add (raw `i64` `1` + boxed
+recursive result). This matters: a mixed i64/ref helper confused `dyn_repr`'s
+lisp/machine partition (it classifies a function calling lisp builtins as lisp and
+coerced the i64 return, giving `type mismatch: expected i64, got I32(0)`). As a
+proper lisp function it rides `null?`/`cdr` (E6d-1) + dynamic arithmetic (E6d-2) —
+nothing new lowers, so it reaches all five code-gen backends. Runs at the head of
+both `lower_heap_builtins` and `lower_heap_builtins_runtime` (like the E6d-3a
+desugar), so the helper's `null?`/`cdr` lower on both the managed and native
+paths with no lang-aot pipeline change. 4 unit tests. (Depends on the WASM nil
+`ref.null` fix, iir-to-wasm 0.38.0.) `list-ref`/`append`/`reverse` follow the same
+helper pattern.
+
 ## 0.23.0 - 2026-07-12 (E6d-3a: `list` constructor desugars to a cons chain)
 
 `list` is pure sugar over `cons` — `(list a b c)` = `(cons a (cons b (cons c

@@ -249,7 +249,7 @@ A condensed quick-reference of mistakes made during development, grouped by cate
 - **CI detect outputs must use `steps.toolchains` (not `steps.detect`).** Adding a new language to CI requires THREE places: `allLanguages` in `main.go`, the detect job `outputs:`, AND `steps.toolchains` normalization (BOTH the `is_main=true` and `else` branches).
 - **CodeQL flags `int64 → int` downcasts of CLI input** as `go/incorrect-integer-conversion`. Add explicit platform-sized bounds checks first; for `float64`, reject NaN/Inf/non-integral before the cast.
 - **Miri timeout grows with code, not with test count.** `lang-runtime-safety.yml` had `timeout-minutes: 30`; PR 5 (closures) tripled `twig-vm` Miri wallclock and one of two parallel runs failed at 30:15 from runner variance, not a real bug. Bump generously (90 min) and shard by crate when wallclock crosses 60 min. Locally, `MIRIFLAGS="-Zmiri-ignore-leaks" cargo +nightly miri test -p twig-vm` is the canonical pre-push smoke check; don't trust the timeout to catch slowdown.
-- **Miri belongs on unsafe code, not the integration seam — and not on every PR.** PR 7 moved `twig-vm` Miri off the per-PR critical path entirely.  PRs only run Miri on `lang-runtime-core` + `dynval-runtime` (where the unsafe is); both run in ~5 min total, blocking.  `twig-vm` Miri runs only on **post-merge to main** + a nightly cron, both via `lang-runtime-safety-deep.yml`, and **never gates anything** (`continue-on-error: true`) because twig-vm has zero unsafe — a Miri failure there is an integration-seam regression worth investigating, not a "main is broken" signal.  Engineers run `scripts/miri-twig-vm.sh` locally before pushing twig-vm changes — that's the canonical verification.  Lessons: (a) when Miri wallclock exceeds the per-PR budget, split by **where the unsafe lives**, not by tightening the cap further; (b) intensive checks belong on **main, not PRs** — fast PR iteration matters more than 100% per-PR coverage; (c) for crates without unsafe, even main-side Miri stays non-blocking — the workflow run history is the regression marker, not a status-badge red X.
+- **Miri belongs on unsafe code, not the integration seam — and not on every PR.** PR 7 moved `twig-vm` Miri off the per-PR critical path entirely.  PRs only run Miri on `lang-runtime-core` + `dynval-runtime` (where the unsafe is); both run in ~5 min total, blocking.  `twig-vm` Miri runs only on **post-merge to main** + a nightly cron, both via `lang-runtime-safety-deep.yml`, and **never gates anything** (`continue-on-error: true`) because twig-vm has zero unsafe — a Miri failure there is an integration-seam regression worth investigating, not a "main is broken" signal.  Engineers run `code/scripts/miri-twig-vm.sh` locally before pushing twig-vm changes — that's the canonical verification.  Lessons: (a) when Miri wallclock exceeds the per-PR budget, split by **where the unsafe lives**, not by tightening the cap further; (b) intensive checks belong on **main, not PRs** — fast PR iteration matters more than 100% per-PR coverage; (c) for crates without unsafe, even main-side Miri stays non-blocking — the workflow run history is the regression marker, not a status-badge red X.
 - **Clippy is a blocking CI gate via the build tool's `-clippy` flag, not a `cargo clippy --workspace` job.** `cargo clippy --workspace` CANNOT run in this repo: platform-gated crates (`paint-metal`/`metal-compute`/`objc-bridge` need macOS, `paint-vm-direct2d`/`paint-vm-gdi` need Windows) `compile_error!` off their platform, so a whole-workspace clippy always fails somewhere. Instead, `build-tool -clippy` runs `cargo clippy --all-targets -- -D warnings` PER affected Rust package, from the crate dir, before its BUILD commands. `clippyStepFor` mirrors each BUILD's own platform guard: unconditional `cargo …` → lint unconditionally; `if [ "$(uname)" = "Darwin" ]; then cargo …` → reuse the condition; pure `echo SKIP` (no cargo) → no clippy. Diff-based on PRs, full on main. Setup gotchas, all learned the hard way wiring this gate:
   (1) `dtolnay/rust-toolchain` installs the **minimal** profile (no clippy) — add `with: components: clippy`.
   (2) **Match the clippy version you verify against to CI's `@stable`.** A stale local toolchain (mise's cached "stable" was 1.94 while CI stable was 1.97) hid ~65 lints that only failed in CI (`manual_checked_ops`, stricter `collapsible_match`/`while_let_loop`/`question_mark`/`unnecessary_sort_by`). Before pushing: `rustup update stable` then `cargo +stable clippy`.
@@ -1535,3 +1535,56 @@ ask two *separate* questions — (1) is nesting depth bounded? (parser cap) and
 (2) is repetition *width* bounded? (needs its own budget). They are different
 axes; the depth cap only answers the first. Cross-refs the depth-cap lesson above
 and [[project_closurec_deep_recursion_dos]].
+
+## ISO C (pre-C23) forbids implicit `T[N][M]` → `const T[N][M]`; clang allows it, gcc `-pedantic-errors` rejects it
+
+**Symptom:** A pure-ISO C package built clean on macOS (Apple clang) but failed
+on ubuntu CI (real gcc) with `-pedantic-errors`:
+`invalid use of pointers to arrays with different qualifiers in ISO C before C2X
+[-Wpedantic]` at every call site passing a **non-const** 2-D array to a function
+whose parameter is `const double m[3][3]`.
+
+**Cause:** For a plain pointer, `T*` → `const T*` is a permitted implicit
+conversion. For a pointer to an *array*, `T(*)[N]` → `const T(*)[N]` is **not**
+permitted in ISO C before C23 (C11/C17 6.3.2.3 only qualifies the immediately
+pointed-to type, and a 2-D array parameter decays to `double(*)[3]`, so the const
+lands one level too deep). C23/C2X finally allows it. **Clang does not diagnose
+this even under `-pedantic-errors`; real gcc does.** So a Mac-only local build
+(where `gcc` is an Apple-clang shim) cannot catch it — only ubuntu CI will.
+
+**Fix (caller side, minimal):** make every *input-only* array `const` at its
+definition so the call passes `const → const` (identical qualifiers, always
+clean); for a genuinely non-const array that is also read as input (e.g. an
+out-param from an earlier call reused as input), add an explicit
+`(const double (*)[3])` cast at the call. Do **not** drop the `const` from the
+library parameter — that just flips the error onto the const fixtures (`ID`,
+`SWAP`) instead.
+
+**Blind spot / how to catch it:** any C API that takes a multi-dimensional array
+by `const` parameter is a portability trap you cannot verify on a clang-only
+machine. When writing such tests, declare read-only matrix fixtures `const` from
+the start. Treat ubuntu-gcc CI as the source of truth for pure-ISO C conformance,
+not the local build. Cross-ref [[feedback_no_third_party_ffi]] and the C/C++
+lane's strict-ISO intent.
+
+## gcc `-Werror=format-truncation`: `snprintf("...%s", buf)` where `buf` is a known-size array can overflow the destination
+
+**Symptom:** A pure-ISO C package built clean on macOS (Apple clang) but failed
+on ubuntu CI (real gcc) with:
+`error: '%s' directive output may be truncated writing up to 127 bytes into a
+region of size 101 [-Werror=format-truncation=]`
+for `snprintf(err->message, sizeof err->message, "CompileError: Parse error: %s", perr.message);`
+where both `err->message` and `perr.message` are `char[128]`.
+
+**Why:** When the `%s` argument is a *fixed-size array* (e.g. `char[128]`), gcc
+knows its maximum length (127) and can prove that `prefix + 127` may exceed the
+destination buffer, so `-Werror=format-truncation` fires. It does NOT fire when
+the argument is a bare `const char *` of unknown length (gcc can't bound it) —
+which is why sibling `snprintf(... "%s", value)` calls with `char *` args were
+not flagged. Apple clang doesn't implement this warning, so it only surfaces on
+ubuntu CI.
+
+**Fix:** Bound the embedded string with a precision so the total provably fits:
+`"CompileError: Parse error: %.100s"` (128 − 27-char prefix − NUL = 100 usable).
+Truncating an over-long nested message inside a fixed error buffer is correct
+behaviour anyway. Do NOT silence the warning; cap the field.

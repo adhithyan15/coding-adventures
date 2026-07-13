@@ -27,7 +27,7 @@
 #      failure here is an integration-seam regression to
 #      investigate, not a "main is broken" signal.
 #
-# Local pre-push: `scripts/miri-twig-vm.sh` is the canonical
+# Local pre-push: `code/scripts/miri-twig-vm.sh` is the canonical
 # verification engineers run before pushing changes that touch
 # twig-vm.  The post-merge run here is the safety net.
 

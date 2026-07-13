@@ -224,27 +224,111 @@ E6d-7.
      `list` builtin is gone before the backend sees it). Matrix:
      `(car (list 42 1 2))` → 42 and `(car (cdr (list 1 42 3)))` → 42; WASM + real
      dotnet CLR verified, native/LLVM/JVM via CI. `(list)` → nil.
-   - **E6d-3b — list *operations* (☐).** `length`, `list-ref`, `append`,
-     `reverse`, `assoc` — these walk/rebuild the cons chain, so they need a
-     synthesized cons-walk helper (managed) / runtime call (native/LLVM), not a
-     pure desugar. `null?`/`pair?` already lower. Proof: `(length (list 1 2 3))` → 3,
-     `(list-ref (list 10 20 42) 2)` → 42.
-4. **E6d-4 — symbols / quote.** `make_symbol`, `symbol->string`, `string->symbol`,
-   `eq?` on symbols (bit-equality). Interned-immediate model (§2.1); reuse
-   `intern_symbols_structural`. Proof: `(eq? 'a 'a)` vs `(eq? 'a 'b)`.
-5. **E6d-5 — records (TW6, part 1).** Type-parameterized `alloc` + a struct-type
-   registry (§3.3); Twig record constructor/accessor lowering. Proof: a Twig
-   record round-trip returning a field → 42.
-6. **E6d-6 — unions / match (TW6, part 2).** Integer-tagged constructors +
-   discriminant test + `match` arm dispatch, over the E6d-5 structs. Proof: a
-   `match` over a 2-variant union → 42.
+   - **E6d-3b — list *operations* (✅ COMPLETE: `length` ✅, `list-ref` ✅,
+     `append` ✅, `reverse` ✅, `assoc` ✅).** These walk/rebuild the cons chain,
+     so they need a synthesized cons-walk helper, not a pure desugar. `null?`/
+     `pair?` already lower. `length` (shipped): `iir-builtin-lowering`'s `lower_list_ops` rewrites
+     `call_builtin "length" lst` → `call __dyn_list_length, lst` and injects (once)
+     a recursive helper that is itself a **proper lisp function** returning a boxed
+     `ref<any>` — base case `null? lst` → `box 0`, recurse `+ 1 (length (cdr lst))`
+     via the dynamic `+` (E6d-2). Because it returns a genuine boxed value it
+     composes: `(+ (length (list 1 2 3)) 39)` → 42. Shipping `length` also forced
+     the **WASM nil-const fix** (iir-to-wasm 0.38.0): a `ref<…>` `const 0` now emits
+     `ref.null`, so `null?`/`is_null` detects the terminator — previously the walk
+     overran nil into `struct.get` on an i32; this also fixes `(null? (list))` → 1
+     (CLR already lowered nil to `ldnull`). `list-ref` (shipped): same
+     `lower_list_ops` rewrites `call_builtin "list-ref" lst n` → `call
+     __dyn_list_ref, lst, n`, whose helper is `if ni==0 then car(lst) else
+     list-ref(cdr(lst), ni-1)`. **The index is a boxed lisp value** — the
+     uniform-anyref boundary (`dyn_repr_structural`/`lower_dyn_repr`) boxes every
+     lisp-call arg, so a raw-`i64` index param faults (`expected i64, got I32(2)`);
+     the helper takes `n : ref<any>`, unboxes it once, and the index test/decrement
+     are typed `cmp_eq`/`sub` (raw bool feeds `jmp_if_false` directly). `append`
+     (shipped): same `lower_list_ops` rewrites `call_builtin "append" a b` → `call
+     __dyn_list_append, a, b`, whose helper *rebuilds* the first list —
+     `if null?(a) then b else cons(car(a), append(cdr(a), b))`. No index, so no
+     unbox/box (every value it touches is a reference); its one new op is the
+     `cons` in the recursive arm (the E6d-1 heap builtin, lowered for the injected
+     helper too). `reverse` (shipped): same `lower_list_ops` rewrites
+     `call_builtin "reverse" a` → a **nil-seeded** call to a tail-recursive
+     accumulator helper — `reverse_acc(a, acc) = if null?(a) then acc else
+     reverse_acc(cdr(a), cons(car(a), acc))` — consing each element onto the
+     accumulator's front; the call site seeds `acc` with a `const 0 :
+     ref<LispyPair>` nil (the `list`-desugar sentinel). `assoc` (shipped): same
+     `lower_list_ops` rewrites `call_builtin "assoc" key alist` → `call
+     __dyn_list_assoc, key, alist`, whose helper searches an association list —
+     `if null?(alist) then nil else if key==car(car(alist)) then car(alist) else
+     assoc(key, cdr(alist))`. The key equality must be a raw bool for
+     `jmp_if_false`, and `equal?` lowers unevenly across the managed/runtime paths,
+     so V1 `assoc` **unboxes both keys to `i64` + typed `cmp_eq`** (the `list-ref`
+     technique) — V1 keys are integers; symbol keys come with E6d-4. Proof
+     (shipped): `(+ (length (list 1 2 3)) 39)` → 42, `(null? (list))` → 1,
+     `(list-ref (list 10 20 42) 2)` → 42,
+     `(car (cdr (append (list 1 42) (list 3))))` → 42,
+     `(car (reverse (list 1 2 42)))` → 42,
+     `(cdr (assoc 2 (list (cons 1 10) (cons 2 42) (cons 3 30))))` → 42,
+     `(null? (assoc 9 …))` → 1; WASM + real dotnet CLR verified, native/LLVM/JVM
+     via CI.
+4. **E6d-4 — symbols / quote (✅ quote-literal identity; runtime create/name-recovery
+   deferred).** A Twig quote literal (`'a` / `(quote a)`) now lowers to `const
+   Var(name) : symbol` — the interned-const form McCarthy emits (twig-ir-compiler
+   0.43.0) — rather than the runtime `make_symbol` string path (which needs
+   data-section string emission the code-gen backends lack). This rides the
+   already-wired `intern_symbols` (native) / `intern_symbols_structural` (managed)
+   passes (§2.1): each distinct name → one module-wide id in a reserved high range,
+   so a symbol never collides with an integer atom and `equal?` on symbols is
+   bit-equality — no new value type. Twig has `equal?` (not `eq?`); `equal?` on
+   two symbols is identity. Proof (shipped): `(equal? 'a 'a)` → #t (exit 1),
+   `(equal? 'a 'b)` → #f (exit 0) on [NativeAot, Llvm, Wasm, Jvm, Clr]; WASM + real
+   dotnet CLR verified, native/LLVM/JVM via CI. **Deferred:** runtime symbol
+   *creation* (`string->symbol` over a runtime string) and `symbol->string` name
+   recovery on the code-gen backends still need the `make_symbol` data-section path.
+5. **E6d-5 — records (TW6, part 1) (✅ shipped).** A Twig `(record Name (f : T) …)`
+   already erases (in the frontend) to a constructor that builds a cons chain via
+   typed `alloc [ref<LispyPair>]` + `field_store`, and accessors `name-f(r)` =
+   `car(cdr^i(r))` via `field_load` — so records reuse the E6d-1 heap substrate
+   with **no new value type, no struct-type registry, and no frontend change**;
+   they are a catalog-extension over cons. Shipping the proof fixed a latent
+   **wasm-runtime** bug (0.4.0): struct field counts were indexed by per-function
+   count, over-counting when functions share a signature (a record's constructor +
+   N same-shape accessors + predicate), so every record `struct.set` trapped
+   `field 0 out of range` on WASM; now indexed by the deduplicated function-type
+   count. Proof (shipped): `(record Point (x : int) (y : int)) (point-x (Point 42
+   7))` → 42 and `(point-y (Point 7 42))` → 42 on [NativeAot, Llvm, Wasm, Jvm,
+   Clr]; WASM + real dotnet CLR verified, native/LLVM/JVM via CI.
+6. **E6d-6 — unions / match (TW6, part 2) (✅ shipped).** A Twig `(union Name
+   (Variant …) …)` erases (frontend, unchanged) to integer-tagged constructors —
+   a cons `(tag . fields…)` — and `match` compares the scrutinee's tag (`car`) to
+   each variant's integer tag, binding fields via `car(cdr^i)`, over the E6d-1
+   heap substrate. Two fixes made it run on the code-gen backends: (1) the variant
+   tag const is typed `i64` not `"any"` (twig-ir-compiler 0.44.0 — an `"any"`
+   const was wrongly `unbox`ed → WASM `expected i32, got I64` trap); (2) a
+   boxed-bool `jmp_if_false` (the boxed `=` tag-compare result) now branches on its
+   RAW bool in **both** dyn_repr passes (iir-builtin-lowering 0.29.0 — structural
+   for WASM/JVM/CLR/BEAM and the native `dyn_truthy` path for NativeAot/LLVM),
+   because a boxed `#f` is a non-nil i31 / tagged-0 that the nil-/McCarthy-
+   truthiness wrap mis-read as true, mis-dispatching every arm. This is a general
+   fix (any `(if (= a b) …)` on the dynamic path). Proof (shipped):
+   `(union Opt (Some (v : int)) (None)) (match (Some 42) ((Some v) v) ((None) 0))`
+   → 42 and matching the 2nd variant → 42 on [NativeAot, Llvm, Wasm, Jvm, Clr];
+   WASM + real dotnet CLR verified (full matrix re-run confirms no regression),
+   native/LLVM/JVM via CI.
 7. **E6d-7 — closures on WASM (TW5).** ⚠ design note first (§3.4). Wire Phase-4
    downgrade (or native `$Closure`); JVM/CLR/LLVM already run closures. Proof:
    `((lambda (x) (+ x 1)) 41)` → 42 on all code-gen backends.
-8. **E6d-8 — dynamic globals.** `call_builtin "global_get"/"global_set"` over
-   `any` (a closure-captured or forward-referenced Twig `define`). Reuses the
-   E6-layer-1 typed-global slots, widened to `any`. Proof: a captured mutable
-   Twig global → 42.
+8. **E6d-8 — dynamic globals (✅ read/write roundtrip shipped; arith follow-up).**
+   A forward-referenced Twig value global (read before its `define`) is emitted as
+   `call_builtin "global_get"/"global_set"` over `any`. The shared `lower_global_io`
+   pass rewrites those to typed `global_load`/`global_store` (which every backend
+   already supports) — but **only the native `twig-aot` pipeline ran it**; the
+   managed `lang-aot` pipelines (WASM/JVM/CLR/BEAM) + LLVM never did, so a dynamic
+   global hit an unsupported `call_builtin`. Fix: add `lower_global_io` (step 0) to
+   all those pipelines. Proof (shipped): `(define (f) g) (define g 42) (f)` → 42 on
+   [NativeAot, Llvm, Wasm, Jvm, Clr] (`main` `global_store`s g=42, `f` `global_load`s
+   it); WASM + real dotnet CLR verified, native/LLVM/JVM via CI. **Follow-up:** a
+   dynamic global feeding dynamic *arithmetic* (`(+ g 2)`) traps — the slot stores a
+   raw `i64` but `lower_dynamic_arith` treats the `any`-typed `global_load` result as
+   boxed and inserts an `unbox`. Needs the slot widened to a boxed `any`.
 
 Ordering rationale: E6d-2 (arithmetic) is the widest single unlock and blocks any
 "compute a number dynamically" proof; lists/records/unions all reduce to cons

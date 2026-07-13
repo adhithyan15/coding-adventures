@@ -22,12 +22,13 @@
 // generate statements, and configurations — all part of the language itself.
 // This makes the lexer simpler: there is no preprocessing step.
 //
-// Locating the Grammar File
-// -------------------------
+// Embedded Grammars
+// -----------------
 //
-// The vhdl.tokens file lives in code/grammars/, which is located relative
-// to this source file at ../../../grammars/vhdl.tokens. The path is
-// resolved at runtime using runtime.Caller.
+// Each supported VHDL edition has its token grammar embedded at compile time
+// as native Go data structures in internal/grammars/v{1987,1993,2002,2008,2019}.
+// Nothing is read from disk at run time, so the lexer needs no filesystem
+// capability and works unchanged when the package is built standalone.
 package vhdllexer
 
 import (
@@ -44,14 +45,13 @@ import (
 )
 
 // ============================================================================
-// Grammar Path Resolution
+// Version Selection
 // ============================================================================
 //
-// The grammar file (vhdl.tokens) defines all token patterns: keywords,
-// operators, literals, identifiers, etc. We locate it relative to this
-// source file using runtime.Caller(0), which gives us the absolute path
-// to lexer.go at compile time. From there, we navigate three levels up
-// (vhdl-lexer → go → packages → code) and into grammars/.
+// The grammar for each VHDL edition (keywords, operators, literals,
+// identifiers, etc.) is embedded at compile time in the internal/grammars
+// subpackages. tokenGrammarForVersion selects the right one; no grammar file
+// is read at run time.
 
 const DefaultVersion = "2008"
 
@@ -149,12 +149,12 @@ func normalizeCaseInsensitiveTokens(tokens []lexer.Token, keywordSet map[string]
 // Lexer Creation
 // ============================================================================
 
-// createLexerFromSource loads the VHDL grammar and creates a GrammarLexer.
+// createLexerFromSource selects the VHDL grammar and creates a GrammarLexer.
 //
-// This is the internal workhorse: it reads the vhdl.tokens grammar file via
-// op.File.ReadFile (enforcing the fs:read capability in required_capabilities.json),
-// parses it into token patterns, and creates a GrammarLexer configured for
-// VHDL source code.
+// This is the internal workhorse: it selects the compiled-in grammar for the
+// requested edition (embedded in the internal/grammars subpackages) and
+// creates a GrammarLexer configured for VHDL source code. No grammar file is
+// read at run time.
 func createLexerFromSource(source string) (*lexer.GrammarLexer, error) {
 	return createLexerFromSourceVersion(source, DefaultVersion)
 }
@@ -165,10 +165,7 @@ func createLexerFromSourceVersion(source string, version string) (*lexer.Grammar
 		return nil, err
 	}
 
-	return StartNew[*lexer.GrammarLexer]("vhdllexer.createLexerFromSource", nil,
-		func(_ *Operation[*lexer.GrammarLexer], rf *ResultFactory[*lexer.GrammarLexer]) *OperationResult[*lexer.GrammarLexer] {
-			return rf.Generate(true, false, lexer.NewGrammarLexer(source, grammar))
-		}).GetResult()
+	return lexer.NewGrammarLexer(source, grammar), nil
 }
 
 // CreateVhdlLexer creates a GrammarLexer configured for VHDL source code.
@@ -228,21 +225,18 @@ func TokenizeVhdlVersion(source string, version string) ([]lexer.Token, error) {
 		return nil, err
 	}
 
-	return StartNew[[]lexer.Token]("vhdllexer.TokenizeVhdl", nil,
-		func(_ *Operation[[]lexer.Token], rf *ResultFactory[[]lexer.Token]) *OperationResult[[]lexer.Token] {
-			// Build the keyword set for post-tokenization reclassification.
-			// The grammar lexer only matches keywords by exact string equality,
-			// so "ENTITY" won't match "entity" in the keyword list. Our
-			// normalization step lowercases NAME tokens and checks this set
-			// to promote them to KEYWORD when they match.
-			keywordSet := make(map[string]struct{})
-			for _, kw := range grammar.Keywords {
-				keywordSet[kw] = struct{}{}
-			}
+	// Build the keyword set for post-tokenization reclassification.
+	// The grammar lexer only matches keywords by exact string equality,
+	// so "ENTITY" won't match "entity" in the keyword list. Our
+	// normalization step lowercases NAME tokens and checks this set
+	// to promote them to KEYWORD when they match.
+	keywordSet := make(map[string]struct{})
+	for _, kw := range grammar.Keywords {
+		keywordSet[kw] = struct{}{}
+	}
 
-			vhdlLexer := lexer.NewGrammarLexer(source, grammar)
-			tokens := vhdlLexer.Tokenize()
-			tokens = normalizeCaseInsensitiveTokens(tokens, keywordSet)
-			return rf.Generate(true, false, tokens)
-		}).GetResult()
+	vhdlLexer := lexer.NewGrammarLexer(source, grammar)
+	tokens := vhdlLexer.Tokenize()
+	tokens = normalizeCaseInsensitiveTokens(tokens, keywordSet)
+	return tokens, nil
 }

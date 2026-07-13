@@ -2,13 +2,6 @@
   "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
   "version": 1,
   "package": "go/toml-parser",
-  "capabilities": [
-    {
-      "category": "fs",
-      "action": "read",
-      "target": "../../../grammars/toml/toml.grammar",
-      "justification": "Reads parser grammar definition file to build parse tables at initialization time."
-    }
-  ],
-  "justification": "Reads grammar definition files. No write, network, or process access needed."
+  "capabilities": [],
+  "justification": "Uses a compiled-in parser grammar. No runtime filesystem, network, process, or environment access needed."
 }

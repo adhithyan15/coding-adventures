@@ -7,6 +7,7 @@ The first goal here is not to create an encyclopedia of algorithms. It is to exp
 ## Topics
 
 - [Kahn's algorithm](./kahns-algorithm.md)
+- [Trees, indexes, and probabilistic structures](./trees-indexes-and-probabilistic-structures.md)
 
 ## Why This Track Exists
 
@@ -28,5 +29,8 @@ Without an algorithms track, those pieces are easy to use but harder to truly un
 | Dependency levels / parallel groups | `directed-graph`, build tools |
 | Affected-node propagation | `directed-graph`, incremental build planning |
 | Cycle detection | `directed-graph`, dependency validation |
+| Ordered and storage indexes | binary search trees, AVL trees, red-black trees, B-trees, B+ trees |
+| Prefix and range structures | tries, radix trees, Fenwick trees, segment trees |
+| Compact and approximate sets | bitsets, Bloom filters, HyperLogLog |
 
 The Kahn's algorithm deep dive is the starting point because it explains the most important graph operation used by the build system: computing an order where every dependency comes before the thing that depends on it.

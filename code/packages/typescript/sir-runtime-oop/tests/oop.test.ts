@@ -211,6 +211,11 @@ describe("built-in method catalog: non-block Array (M1a)", () => {
     expect(callMethod([10, 2, 30], "sort")).toEqual([2, 10, 30]);
     expect(callMethod([3, 1, 2], "min")).toBe(1);
     expect(callMethod([3, 1, 2], "max")).toBe(3);
+    // `minmax` → [min, max] in one call; empty → [null, null] (Ruby [nil, nil]).
+    expect(callMethod([3, 1, 2], "minmax")).toEqual([1, 3]);
+    expect(callMethod(["b", "a", "c"], "minmax")).toEqual(["a", "c"]);
+    expect(callMethod([], "minmax")).toEqual([null, null]);
+    expect(callMethod([1], "respond_to?", "minmax")).toBe(true);
     expect(callMethod([1, 2, 3], "sum")).toBe(6);
     expect(callMethod([1, 2, 3], "sum", 10)).toBe(16);
     expect(callMethod([], "min")).toBeNull();

@@ -75,65 +75,58 @@ package algolparser
 
 import (
 	"fmt"
-	"path/filepath"
-	"runtime"
 
-	grammartools "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	algollexer "github.com/adhithyan15/coding-adventures/code/packages/go/algol-lexer"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/parser"
 )
 
+// validAlgolVersions is the set of ALGOL versions with an embedded grammar.
+// ALGOL 60 is the only version we support; the version parameter is retained
+// on the public API so callers can pass a version explicitly and receive a
+// clear error for anything unrecognized.
 var validAlgolVersions = map[string]bool{
 	"algol60": true,
 }
 
-// getGrammarPath computes the absolute path to the algol.grammar file.
-//
-// We use runtime.Caller(0) to find the directory of this Go source file at
-// runtime, then navigate up three levels (algol-parser -> go -> packages ->
-// code) to reach the grammars directory.
-//
-// Directory structure:
-//
-//	code/
-//	  grammars/
-//	    algol.grammar       <-- this is what we want
-//	  packages/
-//	    go/
-//	      algol-parser/
-//	        parser.go       <-- we are here (3 levels below code/)
-func getGrammarPath(version string) (string, error) {
-	_, filename, _, _ := runtime.Caller(0)
-	parent := filepath.Dir(filename)
-	root := filepath.Join(parent, "..", "..", "..", "grammars")
+// resolveVersion normalizes the optional version argument. An empty string
+// defaults to "algol60". It returns an error for any unrecognized version,
+// preserving the historical unknown-version behavior even though the grammar
+// is now compiled in rather than read from disk.
+func resolveVersion(version string) (string, error) {
 	if version == "" {
 		version = "algol60"
 	}
 	if !validAlgolVersions[version] {
 		return "", fmt.Errorf("unknown ALGOL version %q: valid versions are algol60", version)
 	}
-	return filepath.Join(root, "algol", version+".grammar"), nil
+	return version, nil
 }
 
 // CreateAlgolParser tokenizes the ALGOL 60 source using the ALGOL lexer, then
-// loads the ALGOL parser grammar and returns a configured GrammarParser ready
+// returns a GrammarParser configured with the ALGOL 60 parser grammar, ready
 // to produce an AST.
 //
 // The two-step process:
 //  1. TokenizeAlgol(source) — produces a token stream with comments and
 //     whitespace already stripped
-//  2. Load algol.grammar and create a GrammarParser from the tokens
+//  2. Create a GrammarParser from the tokens and the embedded parser grammar
 //
-// The GrammarParser uses recursive descent with packrat memoization. Each
-// grammar rule (program, block, declaration, statement, expression, ...) becomes
-// a parsing function. The memoization cache prevents exponential blowup when
+// The parser grammar is embedded at compile time as native Go in grammar_data.go
+// (ParserGrammarData); nothing is read from disk at run time, so the parser
+// needs no filesystem capability and works when built standalone. The
+// GrammarParser uses recursive descent with packrat memoization. Each grammar
+// rule (program, block, declaration, statement, expression, ...) becomes a
+// parsing function. The memoization cache prevents exponential blowup when
 // backtracking across ALGOL's many ambiguous rules.
 //
-// Returns an error if lexing fails or the grammar file cannot be read/parsed.
+// Returns an error if lexing fails or an unrecognized version is requested.
 func CreateAlgolParser(source string, version ...string) (*parser.GrammarParser, error) {
 	effectiveVersion := ""
 	if len(version) > 0 {
 		effectiveVersion = version[0]
+	}
+	if _, err := resolveVersion(effectiveVersion); err != nil {
+		return nil, err
 	}
 	// Step 1: Tokenize the ALGOL source.
 	// The lexer strips whitespace and comments (comment...;), reclassifies
@@ -142,35 +135,11 @@ func CreateAlgolParser(source string, version ...string) (*parser.GrammarParser,
 	if err != nil {
 		return nil, err
 	}
-	grammarPath, err := getGrammarPath(effectiveVersion)
-	if err != nil {
-		return nil, err
-	}
 
-	// Steps 2–4 run inside a capability-scoped Operation so that all file I/O
-	// is audited against the declared allowlist in required_capabilities.json.
-	return StartNew[*parser.GrammarParser]("algolparser.CreateAlgolParser", nil,
-		func(op *Operation[*parser.GrammarParser], rf *ResultFactory[*parser.GrammarParser]) *OperationResult[*parser.GrammarParser] {
-			// Step 2: Read the parser grammar file.
-			// algol.grammar defines the complete ALGOL 60 syntax in EBNF.
-			bytes, err := op.File.ReadFile(grammarPath)
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-
-			// Step 3: Parse the grammar file into a structured ParserGrammar.
-			// This extracts all 30+ rules with their EBNF bodies (sequences,
-			// alternations, repetitions, optional elements).
-			grammar, err := grammartools.ParseParserGrammar(string(bytes))
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-
-			// Step 4: Create the grammar-driven parser.
-			// The first rule in the grammar ("program") becomes the entry point.
-			// The memoization cache is initialized empty and populated on demand.
-			return rf.Generate(true, false, parser.NewGrammarParser(tokens, grammar))
-		}).GetResult()
+	// Step 2: Create the grammar-driven parser from the embedded grammar.
+	// The first rule in the grammar ("program") becomes the entry point.
+	// The memoization cache is initialized empty and populated on demand.
+	return parser.NewGrammarParser(tokens, ParserGrammarData), nil
 }
 
 // ParseAlgol is a convenience function that parses ALGOL 60 source text into

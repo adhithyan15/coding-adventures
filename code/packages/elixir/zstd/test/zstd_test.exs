@@ -112,6 +112,12 @@ defmodule CodingAdventures.ZstdTest do
   # Repetitive text > 2× MAX_BLOCK_SIZE. Tests multi-block handling with
   # compressed blocks. Expect at least 50% compression.
 
+  # The pure-Elixir compressor walks 300 KB through match-finding and block
+  # encoding; on a heavily loaded CI runner this can exceed ExUnit's 60 s
+  # default. The work is bounded (single pass over a fixed 300 KB buffer), so a
+  # generous cap keeps the test meaningful without turning transient runner load
+  # into a red build.
+  @tag timeout: 300_000
   test "TC-8: 300 KB repetitive text round-trip with compression" do
     input = String.duplicate("the quick brown fox jumps over the lazy dog\n", 7000)
       |> binary_part(0, 300 * 1024)

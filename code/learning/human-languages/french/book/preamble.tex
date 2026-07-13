@@ -1,0 +1,58 @@
+% Preamble for "French, Step by Step, Root by Root" (HL00 book format).
+% XeLaTeX only. Mirrors the Spanish track's preamble.
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{english}
+\setotherlanguage{french}
+
+\setmainfont{Latin Modern Roman}
+\setsansfont{Latin Modern Sans}
+\setmonofont{Latin Modern Mono}
+
+\usepackage[table]{xcolor}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage[hidelinks]{hyperref}
+\usepackage{titlesec}
+
+\hypersetup{
+  pdftitle={French, Step by Step, Root by Root},
+  pdfauthor={Adhithya Rajasekaran},
+  pdfsubject={Etymology-driven French curriculum},
+  pdfkeywords={French, etymology, Latin, language learning}
+}
+
+% Cousin Web callout: the root + the family of English cousins it lights up.
+\newtcolorbox{cousinweb}{
+  breakable, skin=enhanced, colback=yellow!8, colframe=yellow!45!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={The word, taken apart --- and its English cousins}
+}
+
+% Culture callout: why a phrase is said this way (idiomatic / cultural).
+\newtcolorbox{culture}{
+  breakable, skin=enhanced, colback=red!5, colframe=red!40!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={Why it's said this way}
+}
+
+% Grammar Lens callout: plain-language grammar concept + English contrast.
+\newtcolorbox{grammarlens}{
+  breakable, skin=enhanced, colback=blue!5, colframe=blue!35!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={Grammar Lens}
+}
+
+% Sounds callout: the pronunciation facts a single word needs.
+\newtcolorbox{sounds}{
+  breakable, skin=enhanced, colback=green!6, colframe=green!30!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={Sounds you'll need}
+}
+
+\titleformat{\chapter}[display]
+  {\normalfont\Large\bfseries}{Chapter \thechapter}{10pt}{\huge}

@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 140 \u2014 yield ratio from four stated quantities (CLOSING the OVER-A-DIFFERENCE column and completing the numerator-op x denominator-shape matrix). rung-137 put a product over a difference (a*b)/(c-d); rung-138 a sum (a+b)/(c-d); rung-139 a difference (a-b)/(c-d); rung-140 puts a QUOTIENT over a difference (a/b)/(c-d) \u2014 across rungs 130-140 the numerator op walks quotient/sum/difference/product over each two-part denominator (rate c/d, sum c+d, difference c-d). From a unit yield (harvest / dose_split) divided by a window gap (close_mark - open_mark), compute the yield ratio ((harvest/dose_split)/(close_mark-open_mark)), the unit yield (harvest/dose_split), or the window gap (close_mark-open_mark). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a QUOTIENT NUMERATOR OVER A DIFFERENCE (a/b)/(c-d) (form the unit yield, gap the marks, then divide the yield by the gap, so (a/b)/(c-d) = a/(b*(c-d)) \u2014 the two-part denominator is ONE gap, not two divisors). As on rungs 137-139, the divide-across and lost-grouping errors go negative when c>d, so the two in-range canonical slips are used as distractors. The harness matches the scalar to the printed options. The yield ratio is a ratio (how much unit yield rides on each unit of the window gap), framed as a RATIO so the dimensionless value stays honest. Contamination-safe: every figure is built only from the four observed quantities via /, -, and + \u2014 no constant leaks, and neither the unit yield, the window gap, nor the yield ratio ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make with a gap denominator: dividing by the SUM of the marks instead of their gap ((a/b)/(c+d), a total where a gap belongs, a wrong operation) and INVERTING the ratio ((c-d)/(a/b), the gap over the yield, the reciprocal, a wrong operation). The core confusion tested is that (a/b)/(c-d) is one rate over one gap, not (a/b)/(c+d) and not (c-d)/(a/b). This rung has a subtraction in the denominator, so the window gap is guarded (close_mark - open_mark >= 2) to keep the denominator positive, and dose_split divides harvest evenly so the unit yield is a clean integer; the five family values are kept pairwise distinct with all three queried readouts varying across the panel, all asserted strictly positive at build time.",
+  "items": [
+    {
+      "id": "r140yra-01",
+      "qtype": "yield_ratio",
+      "stem": "A yield study records a harvest of 12 split over a dose split of 2, read against a close mark of 7 and an open mark of 2. What is the yield ratio (the unit yield divided by the window gap)?",
+      "program": "observe harvest(12)\nobserve dose_split(2)\nobserve close_mark(7)\nobserve open_mark(2)\nlet answer = (harvest / dose_split) / (close_mark - open_mark)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.8333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r140yra-02",
+      "qtype": "yield_ratio",
+      "stem": "A yield study records a harvest of 12 split over a dose split of 2, read against a close mark of 7 and an open mark of 2. What is the the unit yield (the harvest split over the dose split, the numerator that is divided by the window gap)?",
+      "program": "observe harvest(12)\nobserve dose_split(2)\nobserve close_mark(7)\nobserve open_mark(2)\nlet answer = harvest / dose_split\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.8333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r140yra-03",
+      "qtype": "yield_ratio",
+      "stem": "A yield study records a harvest of 12 split over a dose split of 2, read against a close mark of 7 and an open mark of 2. What is the the window gap (the close mark minus the open mark, the difference the unit yield is divided by)?",
+      "program": "observe harvest(12)\nobserve dose_split(2)\nobserve close_mark(7)\nobserve open_mark(2)\nlet answer = close_mark - open_mark\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.8333333333333334,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r140yra-04",
+      "qtype": "yield_ratio",
+      "stem": "A yield study records a harvest of 24 split over a dose split of 3, read against a close mark of 6 and an open mark of 3. What is the yield ratio (the unit yield divided by the window gap)?",
+      "program": "observe harvest(24)\nobserve dose_split(3)\nobserve close_mark(6)\nobserve open_mark(3)\nlet answer = (harvest / dose_split) / (close_mark - open_mark)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.8888888888888888,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.375,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r140yra-05",
+      "qtype": "yield_ratio",
+      "stem": "A yield study records a harvest of 24 split over a dose split of 3, read against a close mark of 6 and an open mark of 3. What is the the unit yield (the harvest split over the dose split, the numerator that is divided by the window gap)?",
+      "program": "observe harvest(24)\nobserve dose_split(3)\nobserve close_mark(6)\nobserve open_mark(3)\nlet answer = harvest / dose_split\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.8888888888888888,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.375,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r140yra-06",
+      "qtype": "yield_ratio",
+      "stem": "A yield study records a harvest of 24 split over a dose split of 3, read against a close mark of 6 and an open mark of 3. What is the the window gap (the close mark minus the open mark, the difference the unit yield is divided by)?",
+      "program": "observe harvest(24)\nobserve dose_split(3)\nobserve close_mark(6)\nobserve open_mark(3)\nlet answer = close_mark - open_mark\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8888888888888888,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.375,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r140yra-07",
+      "qtype": "yield_ratio",
+      "stem": "A yield study records a harvest of 20 split over a dose split of 2, read against a close mark of 8 and an open mark of 4. What is the yield ratio (the unit yield divided by the window gap)?",
+      "program": "observe harvest(20)\nobserve dose_split(2)\nobserve close_mark(8)\nobserve open_mark(4)\nlet answer = (harvest / dose_split) / (close_mark - open_mark)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8333333333333334,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r140yra-08",
+      "qtype": "yield_ratio",
+      "stem": "A yield study records a harvest of 20 split over a dose split of 2, read against a close mark of 8 and an open mark of 4. What is the the unit yield (the harvest split over the dose split, the numerator that is divided by the window gap)?",
+      "program": "observe harvest(20)\nobserve dose_split(2)\nobserve close_mark(8)\nobserve open_mark(4)\nlet answer = harvest / dose_split\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8333333333333334,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r140yra-09",
+      "qtype": "yield_ratio",
+      "stem": "A yield study records a harvest of 20 split over a dose split of 2, read against a close mark of 8 and an open mark of 4. What is the the window gap (the close mark minus the open mark, the difference the unit yield is divided by)?",
+      "program": "observe harvest(20)\nobserve dose_split(2)\nobserve close_mark(8)\nobserve open_mark(4)\nlet answer = close_mark - open_mark\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.8333333333333334,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r140yra-10",
+      "qtype": "yield_ratio",
+      "stem": "A yield study records a harvest of 36 split over a dose split of 3, read against a close mark of 10 and an open mark of 4. What is the yield ratio (the unit yield divided by the window gap)?",
+      "program": "observe harvest(36)\nobserve dose_split(3)\nobserve close_mark(10)\nobserve open_mark(4)\nlet answer = (harvest / dose_split) / (close_mark - open_mark)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.8571428571428571,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r140yra-11",
+      "qtype": "yield_ratio",
+      "stem": "A yield study records a harvest of 36 split over a dose split of 3, read against a close mark of 10 and an open mark of 4. What is the the unit yield (the harvest split over the dose split, the numerator that is divided by the window gap)?",
+      "program": "observe harvest(36)\nobserve dose_split(3)\nobserve close_mark(10)\nobserve open_mark(4)\nlet answer = harvest / dose_split\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8571428571428571,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r140yra-12",
+      "qtype": "yield_ratio",
+      "stem": "A yield study records a harvest of 36 split over a dose split of 3, read against a close mark of 10 and an open mark of 4. What is the the window gap (the close mark minus the open mark, the difference the unit yield is divided by)?",
+      "program": "observe harvest(36)\nobserve dose_split(3)\nobserve close_mark(10)\nobserve open_mark(4)\nlet answer = close_mark - open_mark\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8571428571428571,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r140yra-13",
+      "qtype": "yield_ratio",
+      "stem": "A yield study records a harvest of 28 split over a dose split of 2, read against a close mark of 11 and an open mark of 2. What is the yield ratio (the unit yield divided by the window gap)?",
+      "program": "observe harvest(28)\nobserve dose_split(2)\nobserve close_mark(11)\nobserve open_mark(2)\nlet answer = (harvest / dose_split) / (close_mark - open_mark)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.5555555555555556,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.0769230769230769,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.6428571428571429,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r140yra-14",
+      "qtype": "yield_ratio",
+      "stem": "A yield study records a harvest of 28 split over a dose split of 2, read against a close mark of 11 and an open mark of 2. What is the the unit yield (the harvest split over the dose split, the numerator that is divided by the window gap)?",
+      "program": "observe harvest(28)\nobserve dose_split(2)\nobserve close_mark(11)\nobserve open_mark(2)\nlet answer = harvest / dose_split\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.5555555555555556,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.0769230769230769,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.6428571428571429,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r140yra-15",
+      "qtype": "yield_ratio",
+      "stem": "A yield study records a harvest of 28 split over a dose split of 2, read against a close mark of 11 and an open mark of 2. What is the the window gap (the close mark minus the open mark, the difference the unit yield is divided by)?",
+      "program": "observe harvest(28)\nobserve dose_split(2)\nobserve close_mark(11)\nobserve open_mark(2)\nlet answer = close_mark - open_mark\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.5555555555555556,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.0769230769230769,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.6428571428571429,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r140yra-16",
+      "qtype": "yield_ratio",
+      "stem": "A yield study records a harvest of 27 split over a dose split of 3, read against a close mark of 9 and an open mark of 2. What is the yield ratio (the unit yield divided by the window gap)?",
+      "program": "observe harvest(27)\nobserve dose_split(3)\nobserve close_mark(9)\nobserve open_mark(2)\nlet answer = (harvest / dose_split) / (close_mark - open_mark)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.2857142857142858,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8181818181818182,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.7777777777777778,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r140yra-17",
+      "qtype": "yield_ratio",
+      "stem": "A yield study records a harvest of 27 split over a dose split of 3, read against a close mark of 9 and an open mark of 2. What is the the unit yield (the harvest split over the dose split, the numerator that is divided by the window gap)?",
+      "program": "observe harvest(27)\nobserve dose_split(3)\nobserve close_mark(9)\nobserve open_mark(2)\nlet answer = harvest / dose_split\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.2857142857142858,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8181818181818182,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.7777777777777778,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r140yra-18",
+      "qtype": "yield_ratio",
+      "stem": "A yield study records a harvest of 27 split over a dose split of 3, read against a close mark of 9 and an open mark of 2. What is the the window gap (the close mark minus the open mark, the difference the unit yield is divided by)?",
+      "program": "observe harvest(27)\nobserve dose_split(3)\nobserve close_mark(9)\nobserve open_mark(2)\nlet answer = close_mark - open_mark\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.2857142857142858,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8181818181818182,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.7777777777777778,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r140yra-19",
+      "qtype": "yield_ratio",
+      "stem": "A yield study records a harvest of 32 split over a dose split of 2, read against a close mark of 13 and an open mark of 3. What is the yield ratio (the unit yield divided by the window gap)?",
+      "program": "observe harvest(32)\nobserve dose_split(2)\nobserve close_mark(13)\nobserve open_mark(3)\nlet answer = (harvest / dose_split) / (close_mark - open_mark)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.6,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.625,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r140yra-20",
+      "qtype": "yield_ratio",
+      "stem": "A yield study records a harvest of 32 split over a dose split of 2, read against a close mark of 13 and an open mark of 3. What is the the unit yield (the harvest split over the dose split, the numerator that is divided by the window gap)?",
+      "program": "observe harvest(32)\nobserve dose_split(2)\nobserve close_mark(13)\nobserve open_mark(3)\nlet answer = harvest / dose_split\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.625,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 16.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r140yra-21",
+      "qtype": "yield_ratio",
+      "stem": "A yield study records a harvest of 32 split over a dose split of 2, read against a close mark of 13 and an open mark of 3. What is the the window gap (the close mark minus the open mark, the difference the unit yield is divided by)?",
+      "program": "observe harvest(32)\nobserve dose_split(2)\nobserve close_mark(13)\nobserve open_mark(3)\nlet answer = close_mark - open_mark\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.625,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

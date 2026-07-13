@@ -541,6 +541,16 @@ mod tests {
         assert!(find_rule(&ast, "comparison"), "Expected comparison");
     }
 
+    /// The `GLOB` and `NOT GLOB` infix operators parse as comparison forms
+    /// (the planner lowers them onto the `glob` builtin).
+    #[test]
+    fn test_parse_glob_operator() {
+        let ast = assert_program_root("SELECT x FROM t WHERE name GLOB 'A*'");
+        assert!(find_rule(&ast, "comparison"), "Expected comparison");
+        let ast2 = assert_program_root("SELECT x FROM t WHERE name NOT GLOB 'A*'");
+        assert!(find_rule(&ast2, "comparison"), "Expected comparison for NOT GLOB");
+    }
+
     // -----------------------------------------------------------------------
     // Test 20: BETWEEN expression
     // -----------------------------------------------------------------------

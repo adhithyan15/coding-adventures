@@ -231,6 +231,210 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
     },
+    // Twig — **E6d-3b: the `length` list operation on the code-gen backends.**
+    // Unlike the `list` *constructor* (E6d-3a, a straight-line cons desugar),
+    // `length` *walks* the cons chain, so `iir-builtin-lowering::lower_list_ops`
+    // rewrites `call_builtin "length" lst` to a call to a synthesized recursive
+    // helper `__dyn_list_length(lst) = if null?(lst) then 0 else 1 + length(cdr(lst))`
+    // injected into the module. The helper is a *proper lisp function* (returns a
+    // boxed `ref<any>`; its `+` is the E6d-2 dynamic add), so it rides `null?`/`cdr`
+    // (E6d-1) + dynamic arithmetic (E6d-2) — nothing new lowers. This also required
+    // fixing the WASM nil const: `const 0 : ref<LispyPair>` now emits `ref.null`
+    // (it was `i32.const 0`, so `is_null` never detected the list terminator and the
+    // walk overran) — aligning WASM with CLR's existing `ldnull` for nil.
+    // `(+ (length (list 1 2 3)) 39)` = 3 + 39 = 42, proving `length` composes with
+    // dynamic arithmetic and returns a genuine lisp value.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(+ (length (list 1 2 3)) 39)",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
+    // Twig — E6d-3b: `null?` on the empty list `(list)` (a bare nil) is #t → exit 1,
+    // the direct regression guard for the WASM nil-const `ref.null` fix.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(null? (list))",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
+    // Twig — **E6d-3b: the `list-ref` list operation on the code-gen backends.**
+    // Like `length`, `list-ref` *walks* the cons chain, so `lower_list_ops`
+    // rewrites `call_builtin "list-ref" lst n` to a call to a synthesized
+    // recursive helper `__dyn_list_ref(lst, n) = if n==0 then car(lst) else
+    // list-ref(cdr(lst), n-1)` injected into the module. The index is a boxed
+    // lisp value at the call boundary (the uniform-anyref convention boxes every
+    // lisp-call argument), so the helper unboxes it once; the index test/decrement
+    // are then typed `cmp_eq : bool` (feeding `jmp_if_false`) and `sub : i64`,
+    // re-boxed for the recursive call — nothing new lowers. The *return* is a
+    // `car` result (a lisp value). `(list-ref (list 10 20 42) 2)` = 42.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(list-ref (list 10 20 42) 2)",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
+    // Twig — **E6d-3b: the `append` list operation on the code-gen backends.**
+    // `append` *rebuilds* the first list in front of the second, so `lower_list_ops`
+    // rewrites `call_builtin "append" a b` to a synthesized recursive helper
+    // `__dyn_list_append(a, b) = if null?(a) then b else cons(car(a), append(cdr(a), b))`.
+    // Unlike `list-ref` there is no index — both args are lisp lists and every value
+    // it touches is already a reference, so no unbox/box; its one new op vs
+    // length/list-ref is the `cons` in the recursive arm (the E6d-1 heap builtin,
+    // lowered for the injected helper too). `(append (list 1 42) (list 3))` builds
+    // `(1 42 3)`; `(car (cdr …))` = 42, proving the rebuilt spine is a real cons chain.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(car (cdr (append (list 1 42) (list 3))))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
+    // Twig — **E6d-3b: the `reverse` list operation on the code-gen backends.**
+    // `reverse` is lowered by `lower_list_ops` to a nil-seeded call to a synthesized
+    // *tail-recursive accumulator* helper:
+    //   reverse(a) = __dyn_list_reverse(a, nil)
+    //   __dyn_list_reverse(a, acc) = if null?(a) then acc
+    //                                else __dyn_list_reverse(cdr(a), cons(car(a), acc))
+    // Consing each element onto the accumulator's front reverses the order. The
+    // call site seeds `acc` with a `const 0 : ref<LispyPair>` nil (the `list`-desugar
+    // sentinel); the recursion reuses null?/car/cdr/cons — nothing new lowers.
+    // `(reverse (list 1 2 42))` = `(42 2 1)`; `car` = 42.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(car (reverse (list 1 2 42)))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
+    // Twig — **E6d-3b: the `assoc` list operation on the code-gen backends** (the
+    // last E6d-3b op). `assoc` searches an association list (a list of `(k . v)`
+    // cons pairs) for a key: `lower_list_ops` rewrites `call_builtin "assoc" key
+    // alist` to a synthesized recursive helper
+    //   __dyn_list_assoc(key, alist) = if null?(alist) then nil
+    //     else if key == car(car(alist)) then car(alist) else assoc(key, cdr(alist))
+    // V1 keys are integers: the key test unboxes both keys to i64 and compares with
+    // a typed `cmp_eq` (feeding jmp_if_false), since `equal?` lowers unevenly across
+    // the managed/runtime paths (symbol keys arrive with E6d-4). `(assoc 2 alist)`
+    // over `((1 . 10) (2 . 42) (3 . 30))` finds `(2 . 42)`; `cdr` = 42.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(cdr (assoc 2 (list (cons 1 10) (cons 2 42) (cons 3 30))))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
+    // Twig — E6d-3b: `assoc` of an ABSENT key returns nil, so `null?` of the result
+    // is #t → exit 1 — the direct guard for the not-found (nil base-case) branch.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(null? (assoc 9 (list (cons 1 10) (cons 2 20))))",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
+    // Twig — **E6d-4: symbols / quote on the code-gen backends.** A quote literal
+    // `'a` (or `(quote a)`) now lowers to `const Var("a") : symbol` — the same
+    // interned-const form McCarthy Lisp emits — instead of the runtime `make_symbol`
+    // string path. The shared `intern_symbols` (native) / `intern_symbols_structural`
+    // (managed) passes assign each distinct name one module-wide id in a reserved
+    // high range, so `equal?` on symbols is bit-equality with no new value type.
+    // `(equal? 'a 'a)` = #t → exit 1.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(equal? 'a 'a)",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
+    // Twig — E6d-4: two DISTINCT symbols are not `equal?` (different interned ids),
+    // so `(equal? 'a 'b)` = #f → exit 0 — the discriminating half of the proof.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(equal? 'a 'b)",
+        expect: Expect::Exit(0),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
+    // Twig — **E6d-5: records (TW6 part 1) on the code-gen backends.** A `(record
+    // Name (f : T) …)` erases to a constructor `Name(…)` that builds a cons chain
+    // (typed `alloc [ref<LispyPair>]` + `field_store`) and accessors `name-f(r)` =
+    // `car(cdr^i(r))` (typed `field_load`) — the E6d-1 heap substrate, so records
+    // ride the same proven cons/car/cdr path with no new value type. `(Point 42 7)`
+    // builds `(42 . (7 . nil))`; `(point-x …)` = `car` = 42, proving construction
+    // + field access round-trip end-to-end.
+    //
+    // Shipping this also fixed a latent WASM-runtime bug: struct field counts were
+    // registered by per-function count, over-counting when functions share a
+    // signature (a record emits a constructor + N same-shape accessors + a
+    // predicate), so the `$LispyPair` field-count landed at the wrong type index
+    // and every `struct.set` trapped "field 0 out of range" (wasm-runtime 0.4.0).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(record Point (x : int) (y : int)) (point-x (Point 42 7))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
+    // Twig — E6d-5: the SECOND field of a record (accessor walks one `cdr` then
+    // `car`), proving the cons-chain offset is right. `(point-y (Point 7 42))` = 42.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(record Point (x : int) (y : int)) (point-y (Point 7 42))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
+    // Twig — **E6d-6: unions / `match` (TW6 part 2) on the code-gen backends.** A
+    // `(union Name (Variant …) …)` erases to integer-tagged constructors (a cons
+    // `(tag . fields…)`) and `match` dispatches by comparing the scrutinee's tag
+    // (`car`) to each variant's integer tag, binding fields via `car(cdr^i)`. The
+    // tag compare uses the E6d-1 heap substrate + dynamic `=`; two fixes made it
+    // run on the managed backends: the variant tag const is typed `i64` (not
+    // `any`, which caused a bogus `unbox`), and `dyn_repr_structural` now branches
+    // a boxed-bool `jmp_if_false` on its raw truth value (a boxed `#f` is a non-nil
+    // i31, which the nil-truthiness wrap mis-read as true → every arm matched).
+    // `(match (Some 42) …)` binds `v = 42`.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(union Opt (Some (v : int)) (None)) (match (Some 42) ((Some v) v) ((None) 0))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
+    // Twig — E6d-6: matching the SECOND variant (`None`) proves the tag dispatch
+    // actually discriminates — the fixed boxed-bool branch takes the right arm,
+    // not always the first. `(match (None) ((Some v) v) ((None) 42))` = 42.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(union Opt (Some (v : int)) (None)) (match (None) ((Some v) v) ((None) 42))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
+    // Twig — **E6d-8: dynamic globals on the code-gen backends.** A value global
+    // `g` that is *forward-referenced* (read inside `f` before its `define`) is
+    // emitted as `call_builtin "global_get"/"global_set"` (the dynamic `any`-typed
+    // global path, vs the typed-local-slot form a non-forward define gets). The
+    // shared `lower_global_io` pass rewrites those to `global_load`/`global_store`
+    // — the typed-global ops every backend accepts — but the managed pipelines
+    // (WASM/JVM/CLR/BEAM) + the LLVM pipeline never ran it (only native `twig-aot`
+    // did), so a dynamic global reached the backend as an unsupported `call_builtin`.
+    // Adding `lower_global_io` to those pipelines makes the set+get roundtrip work:
+    // `main` sets `g = 42` (`global_store`), `f` reads it (`global_load`), `(f)` = 42.
+    // (A dynamic global flowing into *dynamic arithmetic* still needs the global slot
+    // widened to a boxed `any` — a follow-up; here the roundtrip value is returned
+    // directly.)
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f) g) (define g 42) (f)",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
     // Twig — E4 literal `string-length`. The compiler lowers
     // `(string-length "HELLO")` to shared `str_const` + `str_len`, avoiding the
     // dynamic `call_builtin "string-length"` path that codegen validators reject.

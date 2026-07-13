@@ -1,5 +1,22 @@
 # Changelog -- DartmouthBasicParser (Swift)
 
+## [0.2.0] -- 2026-07-13
+
+### Changed
+- `loadGrammar()` now returns the grammar embedded at compile time in the
+  generated `_Grammar.swift` instead of reading `code/grammars/**` via
+  `#filePath` at run time. The lexer/parser no longer depends on the
+  monorepo layout and works when published standalone. Grammar source of
+  truth is unchanged; regenerate via `swift/grammar-tools`' `grammar-tools-embed`.
+
+## [0.1.2] -- 2026-07-12
+
+### Fixed
+- `loadGrammar()` now reads the grammar from
+  `grammars/dartmouth_basic/dartmouth_basic.grammar` after the per-grammar
+  subdirectory move in PR #7475. The old flat path would have failed once the
+  companion lexer's own grammar-path fix let this package build again.
+
 ## [0.1.1] -- 2026-04-10
 
 ### Fixed

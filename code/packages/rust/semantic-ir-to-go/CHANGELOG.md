@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.33.0 — Array `cycle(n)`
+
+Mirrors the Python reference (PR #8117) into the Go backend's inline `__sir`
+runtime (`_sir_array_block_method` beside the existing `chunk_while`/`slice_when`
+arms + the `_sir_array_responds` `respond_to?` arm), continuing the `cycle`
+cross-backend cascade.
+
+- `cycle(n) { |x| … }` (block) → iterate the array `n` full passes in order,
+  yielding each element on every pass; always returns nil. `[1,2,3].cycle(2)`
+  yields `1,2,3,1,2,3`. `n <= 0`, a negative count, an empty receiver, or a nil
+  / non-integer count (Ruby's block-less Enumerator and infinite no-`n` forms)
+  yields nothing rather than hanging — a boolean count is not an `int64`/`int`
+  in Go, so it falls through to the no-yield path.
+- The `array_methods_compile_and_run` suite gains `array_cycle_compile_and_run`:
+  the block `puts`es each yielded element, so the two passes (`1,2,3,1,2,3`) and
+  the `nil` returns for `cycle(2)`, `cycle(0)`, and `[].cycle(5)` are proven
+  under a real `go run`.
+
 ## 0.32.0 — Array `minmax`
 
 Mirrors the Python reference (PR #8092) into the Go backend's inline `__sir`

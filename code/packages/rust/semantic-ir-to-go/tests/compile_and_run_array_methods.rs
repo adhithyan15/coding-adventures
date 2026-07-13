@@ -87,6 +87,26 @@ fn puts_stmt(expr: Expr) -> Stmt {
     }
 }
 
+/// One-parameter lambda (for `cycle`'s block), registered top-level.
+fn lambda_fn1(fn_name: &str, p0: &str, body: Block) -> Function {
+    Function {
+        name: fn_name.into(),
+        params: vec![semantic_ir::Param {
+            name: p0.into(),
+            kind: semantic_ir::ParamKind::Required,
+            sir_type: None,
+            default: None,
+            span: s(),
+        }],
+        return_type: None,
+        captures: vec![],
+        body,
+        effects: EffectSet::PURE.with(Effect::MayPrint),
+        metadata: Metadata::new(),
+        span: s(),
+    }
+}
+
 /// Two-parameter lambda (for `each_with_index`), registered top-level.
 fn lambda_fn2(fn_name: &str, p0: &str, p1: &str, body: Block) -> Function {
     Function {
@@ -439,6 +459,85 @@ fn array_slice_when_compile_and_run() {
             "[[1, 2], [4], [9, 10, 11, 12]]", // slice_when { b-a>1 }
             "[[9]]",                          // single element
             "[]",                             // [].slice_when → []
+        ],
+        "unexpected stdout:\n{stdout}"
+    );
+}
+
+// ── Array cycle(n) ─────────────────────────────────────────────────────────
+//
+// `cycle(n) { |x| ... }` iterates the array n full passes in order, yielding
+// each element on every pass, and always returns nil.  n <= 0, a negative
+// count, or an empty receiver yields nothing.  Mirrors the Python reference
+// (#8117): the block `puts`es each element so the passes are observable, and
+// the method's nil return is printed after each call.
+fn cycle_module() -> Function {
+    Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block {
+            stmts: vec![
+                // [1,2,3].cycle(2) { |x| puts x.to_s }  → 1 2 3 1 2 3, then nil
+                print_stmt(method(
+                    seq(vec![ilit(1), ilit(2), ilit(3)]),
+                    "cycle",
+                    vec![ilit(2), closure("__lam_puts")],
+                )),
+                // [1,2,3].cycle(0) { … }  → no yields, nil
+                print_stmt(method(
+                    seq(vec![ilit(1), ilit(2), ilit(3)]),
+                    "cycle",
+                    vec![ilit(0), closure("__lam_puts")],
+                )),
+                // [].cycle(5) { … }  → no yields, nil
+                print_stmt(method(seq(vec![]), "cycle", vec![ilit(5), closure("__lam_puts")])),
+            ],
+            value: nil(),
+            span: s(),
+        },
+        effects: EffectSet::PURE.with(Effect::MayPrint),
+        metadata: Metadata::new(),
+        span: s(),
+    }
+}
+
+#[test]
+fn array_cycle_compile_and_run() {
+    if !go_available() {
+        eprintln!("skipping: go not on PATH");
+        return;
+    }
+    // { |x| puts x.to_s } — emit one line per yielded element.
+    let puts_lam = lambda_fn1(
+        "__lam_puts",
+        "x",
+        Block {
+            stmts: vec![puts_stmt(method(var_p("x"), "to_s", vec![]))],
+            value: nil(),
+            span: s(),
+        },
+    );
+    let module = program(vec![cycle_module(), puts_lam]);
+    let artifact = compile(&module).expect("module should compile to Go source");
+    let run_out = run_go(&artifact.source, "cycle");
+    if !run_out.status.success() {
+        panic!(
+            "emitted Go failed:\n--- stderr ---\n{}\n--- source ---\n{}",
+            String::from_utf8_lossy(&run_out.stderr),
+            artifact.source,
+        );
+    }
+    let stdout = String::from_utf8_lossy(&run_out.stdout);
+    let lines: Vec<&str> = stdout.lines().collect();
+    assert_eq!(
+        lines,
+        vec![
+            "1", "2", "3", "1", "2", "3", // cycle(2) yields two full passes
+            "nil", // cycle(2) returns nil
+            "nil", // cycle(0) — no yields, nil
+            "nil", // [].cycle(5) — no yields, nil
         ],
         "unexpected stdout:\n{stdout}"
     );

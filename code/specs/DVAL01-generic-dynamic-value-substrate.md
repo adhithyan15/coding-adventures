@@ -146,7 +146,7 @@ calls* (native/LLVM) for box/unbox is a per-backend representation choice
   (`twig_gc.c` / `twig_runtime.c` stay — GC and I/O are already neutral.)
 - Rust golden crate `lispy-runtime` → `dynval-runtime` (same tag mirror + Miri
   golden tests). **`twig-vm` depends on the unsafe here** — per project policy the
-  local `scripts/miri-twig-vm.sh` runs before pushing any PR that touches it.
+  local `code/scripts/miri-twig-vm.sh` runs before pushing any PR that touches it.
 - Passes `lisp_repr*` → `dyn_repr*`, `symbol_intern` stays (already neutral).
 
 Per "break compat freely, clean restructures over shims" — a straight rename, no
@@ -202,7 +202,7 @@ that a future Python/Ruby/JS frontend can target unchanged.
 Every rename PR is proven by the existing `lang-aot` matrix staying green on all
 five code-gen backends (the tag ABI is unchanged, so a correct rename is a no-op
 in behaviour) plus the `dynval-runtime` Miri golden tests and, for any twig-vm
--touching change, `scripts/miri-twig-vm.sh`. The §3.3 generalisation adds a unit
+-touching change, `code/scripts/miri-twig-vm.sh`. The §3.3 generalisation adds a unit
 test (a boxed non-cons `DynValue` is exit-unboxed) and is proven end-to-end by the
 resumed dynamic-arithmetic cell reaching NativeAot + LLVM.
 

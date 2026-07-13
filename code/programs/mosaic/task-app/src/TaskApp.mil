@@ -1,0 +1,30 @@
+// TaskApp — interface (mosmodel).
+//
+// A to-do app that *auto-schedules*. The host fills these slots from the pure
+// task-core engine (via task-wasm) and turns the emitted events back into engine
+// operations. Rows are pre-formatted strings (name · due · computed schedule) because
+// moslayout iterates a single `list<text>` and cannot bind parallel per-row arrays —
+// so the host bakes each row's display into one string.
+
+component TaskApp {
+  // Header + add-row inputs.
+  slot app-title     : text ;
+  slot new-task-name : text ;
+  slot new-task-due  : text ;
+
+  // A one-line summary (counts, project finish).
+  slot summary : text ;
+
+  // One pre-formatted line per task, in schedule order.
+  slot task-rows : list<text> ;
+
+  // Typing in the two inputs.
+  emit onNewTaskNameChange ( value : text ) ;
+  emit onNewTaskDueChange ( value : text ) ;
+
+  // Add the typed task; toggle/delete a row (the row index is delivered as the number
+  // payload of a single-number-param event).
+  emit onAddTask ;
+  emit onToggleTask ( index : number ) ;
+  emit onDeleteTask ( index : number ) ;
+}

@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.6] - Unreleased
+
+### Added
+
+- **`GLOB` and `NOT GLOB` infix operators.** `WHERE s GLOB 'x*'` now parses —
+  case-sensitive Unix-glob matching (`*` any run, `?` one char, `[…]` classes).
+  Added as `comparison` alternatives mirroring `LIKE`/`NOT LIKE`. The planner
+  (0.2.5) lowers `X GLOB Y` onto the existing `glob(Y, X)` builtin, so no new
+  codegen/VM opcode was needed.
+
 ## [0.1.5] - Unreleased
 
 ### Added

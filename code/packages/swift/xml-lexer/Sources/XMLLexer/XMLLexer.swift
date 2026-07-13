@@ -1,4 +1,3 @@
-import Foundation
 import GrammarTools
 import Lexer
 
@@ -51,24 +50,15 @@ public struct XMLLexer: Sendable {
     }
 
     /// Load and parse the XML token grammar.
-    public static func loadGrammar() throws -> TokenGrammar {
-        let thisFile = #filePath
-        var url = URL(fileURLWithPath: thisFile)
-        // Walk up: XMLLexer.swift -> Sources/XMLLexer -> Sources -> xml-lexer -> swift -> packages -> code
-        for _ in 0..<6 {
-            url = url.deletingLastPathComponent()
-        }
-        let tokensURL = url
-            .appendingPathComponent("grammars")
-            .appendingPathComponent("xml.tokens")
-
-        let content = try String(contentsOf: tokensURL, encoding: .utf8)
-        return try parseTokenGrammar(source: content)
+    public static func loadGrammar() -> TokenGrammar {
+        // Embedded at compile time in the generated `_Grammar.swift`
+        // (from code/grammars/xml/...); no run-time file read.
+        EmbeddedGrammar.xml
     }
 
     /// Create a `GrammarLexer` configured for XML text.
     public static func createXMLLexer(_ source: String) throws -> GrammarLexer {
-        let grammar = try loadGrammar()
+        let grammar = loadGrammar()
         let lexer = GrammarLexer(source: source, grammar: grammar)
         lexer.setOnToken(xmlOnToken)
         return lexer

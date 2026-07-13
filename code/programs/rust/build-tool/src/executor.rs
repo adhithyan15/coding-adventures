@@ -49,8 +49,6 @@ use crate::hasher::collect_transitive_predecessors;
 /// Holds the outcome of building a single package.
 #[derive(Debug, Clone)]
 pub struct BuildResult {
-    /// Qualified name, e.g. "python/logic-gates".
-    pub package_name: String,
     /// "built", "failed", "skipped", "dep-skipped", "would-build".
     pub status: String,
     /// Wall-clock seconds spent building.
@@ -59,8 +57,6 @@ pub struct BuildResult {
     pub stdout: String,
     /// Combined stderr from all BUILD commands.
     pub stderr: String,
-    /// Exit code of the last failing command, or 0.
-    pub return_code: i32,
 }
 
 // ---------------------------------------------------------------------------
@@ -101,38 +97,31 @@ fn run_package_build(pkg: &Package) -> BuildResult {
                 all_stderr.push(String::from_utf8_lossy(&out.stderr).to_string());
 
                 if !out.status.success() {
-                    let exit_code = out.status.code().unwrap_or(1);
                     return BuildResult {
-                        package_name: pkg.name.clone(),
                         status: "failed".to_string(),
                         duration: start.elapsed().as_secs_f64(),
                         stdout: all_stdout.join(""),
                         stderr: all_stderr.join(""),
-                        return_code: exit_code,
                     };
                 }
             }
             Err(e) => {
                 all_stderr.push(format!("Failed to execute command: {}", e));
                 return BuildResult {
-                    package_name: pkg.name.clone(),
                     status: "failed".to_string(),
                     duration: start.elapsed().as_secs_f64(),
                     stdout: all_stdout.join(""),
                     stderr: all_stderr.join(""),
-                    return_code: 1,
                 };
             }
         }
     }
 
     BuildResult {
-        package_name: pkg.name.clone(),
         status: "built".to_string(),
         duration: start.elapsed().as_secs_f64(),
         stdout: all_stdout.join(""),
         stderr: all_stderr.join(""),
-        return_code: 0,
     }
 }
 
@@ -148,6 +137,11 @@ fn run_package_build(pkg: &Package) -> BuildResult {
 ///  7. Updates the cache after each build
 ///
 /// The function returns a map from package name to BuildResult.
+// This orchestrator threads together several independent inputs (the package
+// set, dependency graph, cache, two hash maps) and run-mode knobs (force,
+// dry-run, jobs, affected-set). They are genuinely distinct concerns rather
+// than a bundle that wants a struct, so we opt out of the argument-count lint.
+#[allow(clippy::too_many_arguments)]
 pub fn execute_builds(
     packages: &[Package],
     graph: &Graph,
@@ -175,12 +169,10 @@ pub fn execute_builds(
                 results.insert(
                     pkg.name.clone(),
                     BuildResult {
-                        package_name: pkg.name.clone(),
                         status: "failed".to_string(),
                         duration: 0.0,
                         stdout: String::new(),
                         stderr: format!("cycle detected in dependency graph: {}", e),
-                        return_code: 1,
                     },
                 );
             }
@@ -222,12 +214,10 @@ pub fn execute_builds(
                 results.lock().unwrap().insert(
                     name.clone(),
                     BuildResult {
-                        package_name: name.clone(),
                         status: "dep-skipped".to_string(),
                         duration: 0.0,
                         stdout: String::new(),
                         stderr: String::new(),
-                        return_code: 0,
                     },
                 );
                 continue;
@@ -240,12 +230,10 @@ pub fn execute_builds(
                     results.lock().unwrap().insert(
                         name.clone(),
                         BuildResult {
-                            package_name: name.clone(),
                             status: "skipped".to_string(),
                             duration: 0.0,
                             stdout: String::new(),
                             stderr: String::new(),
-                            return_code: 0,
                         },
                     );
                     continue;
@@ -260,12 +248,10 @@ pub fn execute_builds(
                 results.lock().unwrap().insert(
                     name.clone(),
                     BuildResult {
-                        package_name: name.clone(),
                         status: "skipped".to_string(),
                         duration: 0.0,
                         stdout: String::new(),
                         stderr: String::new(),
-                        return_code: 0,
                     },
                 );
                 continue;
@@ -275,12 +261,10 @@ pub fn execute_builds(
                 results.lock().unwrap().insert(
                     name.clone(),
                     BuildResult {
-                        package_name: name.clone(),
                         status: "would-build".to_string(),
                         duration: 0.0,
                         stdout: String::new(),
                         stderr: String::new(),
-                        return_code: 0,
                     },
                 );
                 continue;
@@ -337,15 +321,13 @@ mod tests {
     #[test]
     fn test_build_result_defaults() {
         let result = BuildResult {
-            package_name: "test/pkg".to_string(),
             status: "built".to_string(),
             duration: 1.5,
             stdout: "ok".to_string(),
             stderr: String::new(),
-            return_code: 0,
         };
         assert_eq!(result.status, "built");
-        assert_eq!(result.return_code, 0);
+        assert_eq!(result.duration, 1.5);
     }
 
     #[test]

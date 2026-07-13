@@ -23,13 +23,12 @@
 // This package glues them together: tokenize with verilog-lexer, load
 // verilog.grammar, hand both to GrammarParser, and return the result.
 //
-// Locating the Grammar File
-// -------------------------
+// Grammar Embedding
+// -----------------
 //
-// The verilog.grammar file lives in code/grammars/, which is three directory
-// levels above this source file (packages/go/verilog-parser/ -> code/).
-// The path is resolved at runtime using runtime.Caller(0) so it works
-// regardless of the current working directory.
+// The Verilog parser grammars are embedded at compile time as native Go data
+// in the internal/grammars/v* subpackages (ParserGrammarData). Nothing is read
+// from code/grammars/ at run time.
 //
 // Usage
 // -----
@@ -114,13 +113,10 @@ func CreateVerilogParserVersion(source string, version string) (*parser.GrammarP
 		return nil, err
 	}
 
-	return StartNew[*parser.GrammarParser]("verilogparser.CreateVerilogParser", nil,
-		func(_ *Operation[*parser.GrammarParser], rf *ResultFactory[*parser.GrammarParser]) *OperationResult[*parser.GrammarParser] {
-			// Step 2: Create the parser from the compiled grammar.
-			// NewGrammarParser builds a packrat parser with memoization that
-			// will interpret the grammar rules against the token stream.
-			return rf.Generate(true, false, parser.NewGrammarParser(tokens, grammar))
-		}).GetResult()
+	// Step 2: Create the parser from the compiled grammar.
+	// NewGrammarParser builds a packrat parser with memoization that
+	// will interpret the grammar rules against the token stream.
+	return parser.NewGrammarParser(tokens, grammar), nil
 }
 
 // ParseVerilog tokenizes and parses Verilog source code in one step.

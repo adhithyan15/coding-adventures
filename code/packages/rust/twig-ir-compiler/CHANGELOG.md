@@ -1,5 +1,37 @@
 # Changelog — twig-ir-compiler
 
+## [0.44.0] — 2026-07-13 (LANG-FULL E6d-6 — `match` variant tag is a typed i64 const)
+
+`compile_match` now emits each variant's discriminant tag constant with type_hint
+`i64` instead of `"any"`. It is a raw compile-time integer, not a boxed lisp
+value; typed `"any"`, the shared `lower_dynamic_arith` pass treated it as boxed
+(`is_boxed("any")`) and emitted a bogus `unbox` on it, so the tag comparison in a
+`(match …)` trapped on WASM (`i31.get_s` of a raw i64 → `expected i32, got I64`).
+As `i64` it flows straight into the typed comparison; only the genuinely-boxed
+`tag_reg` (a `field_load` of the scrutinee's car) is unboxed. This is one half of
+the E6d-6 union/match fix (the other is in iir-builtin-lowering 0.29.0's
+boxed-bool `jmp_if_false` handling). 103 lib tests still pass.
+
+## [0.43.0] — 2026-07-13 (LANG-FULL E6d-4 — quote literals as interned symbol consts)
+
+A Twig quote literal (`'a` / `(quote a)`, an `Expr::SymLit`) now lowers to
+`const Var(name) : symbol` — the **same interned-const form McCarthy Lisp's
+`emit_symbol` emits** — instead of the runtime `make_symbol` string path (`const
+Var(name) : any` + `call_builtin "make_symbol"`).
+
+Why: `make_symbol` needs data-section string-literal emission that the code-gen
+backends (native/LLVM/WASM/JVM/CLR) don't have, so quoted symbols never ran there.
+The interned-const form rides the already-wired `intern_symbols` (native) /
+`intern_symbols_structural` (managed) passes, which assign each distinct name one
+module-wide id in a reserved high range — so `equal?` on symbols is bit-equality
+(`(equal? 'a 'a)` #t, `(equal? 'a 'b)` #f) on **all five code-gen backends**, with
+no new value type. On twig-vm the `const Var(name)` dispatch already interns the
+text to a symbol, so the VM is unaffected (176 twig-vm tests pass). Runtime symbol
+*creation* (`string->symbol` over a runtime string) keeps `make_symbol`.
+
+The `quoted_symbol_emits_make_symbol` unit test is updated to
+`quoted_symbol_emits_interned_const`.
+
 ## [0.37.0] — 2026-06-28 (LANG-FULL E4 — direct-call string parameter inference)
 
 Top-level Twig functions can now infer `str` for otherwise-unannotated

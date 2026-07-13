@@ -1346,14 +1346,26 @@ impl Compiler {
             }
 
             Expr::SymLit(SymLit { name, .. }) => {
-                let name_reg = self.string_arg(ctx, name, loc);
+                // E6d-4 (symbols): a quote literal (`'a` / `(quote a)`) whose name
+                // is known at compile time lowers to `const Var(name) : symbol` —
+                // the SAME interned-const form McCarthy Lisp's `emit_symbol` emits,
+                // rather than the runtime `make_symbol` string path (which needs
+                // data-section string emission the code-gen backends lack). This
+                // rides the existing `intern_symbols` / `intern_symbols_structural`
+                // passes: each distinct name gets one module-wide id, so `equal?`
+                // on symbols is bit-equality (`(equal? 'a 'a)` #t, `(equal? 'a 'b)`
+                // #f) on all five code-gen backends — with no new value type. On
+                // twig-vm the `const Var(name)` dispatch already interns the text to
+                // a symbol, so the VM is unaffected. (Runtime symbol *creation* —
+                // `string->symbol` over a runtime string — keeps `make_symbol`.)
                 let v = ctx.fresh_var("sym");
                 ctx.emit(IIRInstr::new(
-                    "call_builtin",
+                    "const",
                     Some(v.clone()),
-                    vec![Operand::Var("make_symbol".into()), Operand::Var(name_reg)],
-                    "any",
+                    vec![Operand::Var(name.clone())],
+                    "symbol",
                 ), loc);
+                ctx.record_type(&v, "symbol");
                 Ok(v)
             }
 
@@ -2507,14 +2519,25 @@ impl Compiler {
                     ), arm_loc);
                     ctx.record_type(&tag_reg, "ref<any>");
 
-                    // Emit: tag_int = integer constant for this variant
+                    // Emit: tag_int = integer constant for this variant.
+                    //
+                    // E6d-6: type this `i64`, NOT `"any"`. It is a raw
+                    // compile-time integer, not a boxed lisp value. If it were
+                    // `"any"`, `lower_dynamic_arith` would treat it as boxed
+                    // (`is_boxed("any")`) and emit a bogus `unbox` on it — on WASM
+                    // the `i31.get_s` of a raw `i64` traps `expected i32, got I64`.
+                    // As `i64` it flows straight into the typed comparison; only
+                    // the genuinely-boxed `tag_reg` (a `field_load` result) is
+                    // unboxed. (This mirrors how a `list-ref` index literal is a
+                    // raw `i64` const.)
                     let tag_int_reg = ctx.fresh_var("tag_val");
                     ctx.emit(IIRInstr::new(
                         "const",
                         Some(tag_int_reg.clone()),
                         vec![Operand::Int(tag as i64)],
-                        "any",
+                        "i64",
                     ), arm_loc);
+                    ctx.record_type(&tag_int_reg, "i64");
 
                     // Emit: cond = (= tag_reg tag_int)
                     let cond_reg = ctx.fresh_var("tag_eq");

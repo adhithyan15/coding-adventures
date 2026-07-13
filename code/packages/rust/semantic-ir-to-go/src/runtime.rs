@@ -1704,7 +1704,7 @@ func _sir_array_responds(name string) bool {
 		"reject", "reduce", "inject", "find", "detect", "any?", "all?", "none?",
 		"sort_by", "min_by", "max_by", "group_by", "partition", "flat_map",
 		"collect_concat", "take_while", "drop_while", "each_with_object",
-		"chunk_while", "slice_when":
+		"chunk_while", "slice_when", "cycle":
 		return true
 	}
 	return false
@@ -2381,6 +2381,39 @@ func _sir_array_block_method(recv *Seq, name string, args []Value, block *Closur
 			}
 		}
 		return &Seq{Items: slices}, true
+	case "cycle":
+		// `cycle(n) { |x| ... }` -> iterate the array n full passes in order,
+		// yielding each element on every pass; always returns nil.
+		//
+		//   [1,2,3].cycle(2) { |x| out << x }  ->  out == [1,2,3,1,2,3]
+		//   [1,2,3].cycle(0) { ... }           ->  no yields, returns nil
+		//   [].cycle(5) { ... }                ->  no yields (empty run body)
+		//
+		// n <= 0, a negative count, an empty receiver, or a nil / non-integer
+		// count (Ruby's block-less Enumerator and infinite no-`n` forms) yields
+		// nothing rather than hanging, so emitted programs can never spin forever.
+		// A boolean count is not an int64/int in Go, so it falls through to nil.
+		var n int64
+		if len(args) > 0 {
+			if iv, ok := args[0].(int64); ok {
+				n = iv
+			} else if iv, ok := args[0].(int); ok {
+				n = int64(iv)
+			} else {
+				return nil, true
+			}
+		} else {
+			return nil, true
+		}
+		if n <= 0 {
+			return nil, true
+		}
+		for p := int64(0); p < n; p++ {
+			for _, item := range recv.Items {
+				_sir_apply(block, []Value{item})
+			}
+		}
+		return nil, true
 	}
 	return nil, false
 }

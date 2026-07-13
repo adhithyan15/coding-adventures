@@ -17,7 +17,7 @@
 Between merging ADJ29 and producing this bench, a gemma-only retry run
 ([`data/adj29-gemma-retry-2026-05-14.json`](data/adj29-gemma-retry-2026-05-14.json))
 showed zero gap-count change vs ADJ28. That finding was wrong. The
-bench harness (`scripts/adj_pr6_foundation_bench.py`) unconditionally
+bench harness (`code/scripts/adj_pr6_foundation_bench.py`) unconditionally
 set `ADJ_PR6_MAX_RETRIES=3`, which forces `PerLevelRetryBudget::uniform(3)`
 in the bench binary and bypasses the per-level defaults entirely. The
 gemma-only run was therefore executing the ADJ28 uniform-3 budget under

@@ -4,6 +4,21 @@ All notable changes to the Rust build tool will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.1] - 2026-07-12
+
+### Fixed
+
+- **Clippy/dead-code cleanup for Rust 1.97**: the `-clippy` pass runs
+  `cargo clippy -- -D warnings` under the CI `stable` toolchain (now 1.97),
+  which surfaced new lints. Addressed `needless_late_init` (`cache.rs`),
+  `manual_is_multiple_of` and `question_mark` (`main.rs`), `collapsible_if`
+  (`glob_match.rs`), `unwrap_or_default` (`graph.rs`), and `manual_split_once`
+  (`resolver.rs`). Removed the never-read `BuildResult` fields `package_name`
+  (the results map is already keyed by name) and `return_code`, gated the
+  test-only `build_known_names` helper behind `#[cfg(test)]`, dropped an unused
+  test import, and annotated the intentionally many-argument `execute_builds`
+  orchestrator with `#[allow(clippy::too_many_arguments)]`.
+
 ## [0.2.0] - 2026-03-22
 
 ### Added

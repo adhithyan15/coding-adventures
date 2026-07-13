@@ -386,7 +386,7 @@ impl Lowerer {
     fn lower_token(&mut self, token: &Token) -> Result<Expr, WolframLowerError> {
         let span = self.token_span(token);
         match token_type(token) {
-            "NUMBER" => Ok(number_literal_expr(&token.value, span)),
+            "NUMBER" => Ok(self.number_literal_expr(&token.value, span)),
             "NAME" => Ok(self.sym_symbol(token.value.clone(), span)),
             "STRING" => Ok(Expr::StrLit {
                 value: strip_quotes(&token.value).to_string(),
@@ -1284,6 +1284,41 @@ impl Lowerer {
             column: node.start_column.unwrap_or(1),
         }
     }
+
+    /// Parse a `NUMBER` lexeme into an `IntLit` or `FloatLit`, matching the
+    /// native `wolfram-runtime::lower::lower_number`'s identical rule (a `.`,
+    /// `e`, or `E` means a real; otherwise an integer). An integer lexeme too
+    /// large for `i64` falls back to a float rather than silently truncating.
+    ///
+    /// **Must** be an instance method, not a free function: every branch
+    /// that constructs a `FloatLit` calls `self.observed.add(Feature::
+    /// Floats)` immediately. Previously this was a free function with no
+    /// access to `observed`, so a float-literal-only module never declared
+    /// the feature even though `semantic-ir/src/validator.rs`'s `check_expr`
+    /// requires it for every `Expr::FloatLit` node — a confirmed, live bug
+    /// (any Wolfram program with a float literal failed `semantic_ir::
+    /// validate()`), found while implementing `macsyma-to-semantic-ir` and
+    /// fixed here.
+    fn number_literal_expr(&mut self, text: &str, span: Span) -> Expr {
+        if text.contains('.') || text.contains('e') || text.contains('E') {
+            self.observed.add(Feature::Floats);
+            Expr::FloatLit {
+                value: text.parse::<f64>().unwrap_or(0.0),
+                span,
+            }
+        } else {
+            match text.parse::<i64>() {
+                Ok(v) => Expr::IntLit { value: v, span },
+                Err(_) => {
+                    self.observed.add(Feature::Floats);
+                    Expr::FloatLit {
+                        value: text.parse::<f64>().unwrap_or(0.0),
+                        span,
+                    }
+                }
+            }
+        }
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -1322,27 +1357,6 @@ fn as_token(child: &ASTNodeOrToken) -> Option<&Token> {
 
 fn token_type(token: &Token) -> &str {
     token.effective_type_name()
-}
-
-/// Parse a `NUMBER` lexeme into an `IntLit` or `FloatLit`, matching the
-/// native `wolfram-runtime::lower::lower_number`'s identical rule (a `.`,
-/// `e`, or `E` means a real; otherwise an integer). An integer lexeme too
-/// large for `i64` falls back to a float rather than silently truncating.
-fn number_literal_expr(text: &str, span: Span) -> Expr {
-    if text.contains('.') || text.contains('e') || text.contains('E') {
-        Expr::FloatLit {
-            value: text.parse::<f64>().unwrap_or(0.0),
-            span,
-        }
-    } else {
-        match text.parse::<i64>() {
-            Ok(v) => Expr::IntLit { value: v, span },
-            Err(_) => Expr::FloatLit {
-                value: text.parse::<f64>().unwrap_or(0.0),
-                span,
-            },
-        }
-    }
 }
 
 /// Strip the surrounding double-quotes from a `STRING` lexeme (mirrors the

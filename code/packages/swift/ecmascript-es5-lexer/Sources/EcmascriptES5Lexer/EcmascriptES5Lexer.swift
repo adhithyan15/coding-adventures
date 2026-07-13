@@ -7,7 +7,6 @@
 // strict mode semantics, native JSON support, and property descriptors.
 // ============================================================================
 
-import Foundation
 import GrammarTools
 import Lexer
 
@@ -18,7 +17,7 @@ public struct EcmascriptES5Lexer: Sendable {
 
     /// Tokenize an ECMAScript 5 source string.
     public static func tokenize(_ source: String) throws -> [Token] {
-        let grammar = try loadGrammar()
+        let grammar = loadGrammar()
         let lexer = GrammarLexer(source: source, grammar: grammar)
         let raw = try lexer.tokenize()
 
@@ -39,18 +38,9 @@ public struct EcmascriptES5Lexer: Sendable {
     }
 
     /// Load and parse the ES5 token grammar.
-    public static func loadGrammar() throws -> TokenGrammar {
-        let thisFile = #filePath
-        var url = URL(fileURLWithPath: thisFile)
-        for _ in 0..<6 {
-            url = url.deletingLastPathComponent()
-        }
-        let tokensURL = url
-            .appendingPathComponent("grammars")
-            .appendingPathComponent("ecmascript")
-            .appendingPathComponent("es5.tokens")
-
-        let content = try String(contentsOf: tokensURL, encoding: .utf8)
-        return try parseTokenGrammar(source: content)
+    public static func loadGrammar() -> TokenGrammar {
+        // Embedded at compile time in the generated `_Grammar.swift`
+        // (from code/grammars/es5/...); no run-time file read.
+        EmbeddedGrammar.es5
     }
 }

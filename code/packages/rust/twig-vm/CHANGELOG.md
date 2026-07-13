@@ -14,7 +14,7 @@ The shared tagged-value crate `lispy-runtime` is renamed to `dynval-runtime`
 `Cargo.toml` dependency and the `use dynval_runtime::{…}` imports in
 `src/{lib,operand,dispatch}.rs` move to the new name. Pure rename — no ABI,
 tag-layout, or dispatch behaviour change. twig-vm depends on the unsafe in
-this crate, so `scripts/miri-twig-vm.sh` was run locally before pushing (the
+this crate, so `code/scripts/miri-twig-vm.sh` was run locally before pushing (the
 canonical gate); CI's blocking Miri check now targets `-p dynval-runtime`.
 
 ## [0.24.0] — 2026-06-27 (LANG-FULL E4 — shared `str_const` compatibility)
@@ -918,7 +918,7 @@ Final structure:
   "main is broken" signal.  The workflow run record IS the
   regression marker.
 
-- **Local pre-push (`scripts/miri-twig-vm.sh`)**: canonical
+- **Local pre-push (`code/scripts/miri-twig-vm.sh`)**: canonical
   verification.  Runs the full Miri suite (lang-runtime-core +
   lispy-runtime + twig-vm) with the same flags as CI.
   Documented in `CLAUDE.md` and `lessons.md` as the

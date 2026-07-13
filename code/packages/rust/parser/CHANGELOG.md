@@ -2,6 +2,38 @@
 
 All notable changes to the `parser` crate will be documented in this file.
 
+## [0.4.2] - 2026-07-13
+
+### Fixed — packrat memo / left-recursion-guard hot path no longer allocates a `String` per lookup
+
+`GrammarParser::parse_rule_inner` looked up and inserted into its packrat
+`memo` cache and its `in_progress` left-recursion guard via a
+`format!("{},{}", rule_idx, pos)`-allocated `String` key — on *every* rule
+attempted at *every* token position, for every grammar built on this crate
+(flagged as follow-up work in `wolfram-parser`'s own `MAX_RULE_DEPTH` doc
+comment, since Wolfram's dense rule-chain grammar makes the hot-path cost
+most visible there, but the cost applied to all ~130 downstream consumers
+equally). Changed both `memo: HashMap<String, MemoEntry>` and
+`in_progress: HashSet<String>` to key on a plain `(usize, usize)` tuple
+instead — no allocation, and hashing/equality on two `usize`s rather than a
+formatted string.
+
+Also fixed `record_failure`'s furthest-expected-position tracking, which
+allocated `expected.to_string()` on *every* call just to check
+`!v.contains(&expected.to_string())` — including the overwhelmingly common
+case where the expectation was already recorded and nothing new needed to
+be pushed. Changed to `!v.iter().any(|s| s.as_str() == expected)`, which
+compares against the existing `&str`s directly and only allocates once a
+push is actually needed. Added `test_furthest_failure_expectations_are_deduplicated`
+to lock in that the dedup behavior itself (not just its allocation cost)
+stayed exactly the same.
+
+Purely an internal-state change — `memo`, `in_progress`, and
+`record_failure` are all private; no public API changed, and every
+existing test (this crate's own 41, plus a downstream sample across
+`wolfram-parser`/`macsyma-parser`/`apl-parser`/`j-parser`/`matlab-parser`/
+`ruby-parser`/`python-parser`, ~400 tests total) passes unchanged.
+
 ## [0.4.1] - 2026-06-30
 
 ### Fixed — recursion-depth guard is now OPT-IN (default is unlimited)

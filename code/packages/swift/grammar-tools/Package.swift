@@ -35,6 +35,9 @@ let package = Package(
     ],
     targets: [
         .target(name: "GrammarTools"),
+        // Dev-time code generator: emits a package's `_Grammar.swift` embedding
+        // its grammar as native Swift. Not part of the shipped library.
+        .executableTarget(name: "grammar-tools-embed", dependencies: ["GrammarTools"]),
         .testTarget(name: "GrammarToolsTests", dependencies: ["GrammarTools"]),
     ]
 )

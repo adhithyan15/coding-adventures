@@ -1,7 +1,7 @@
 //! adj_pr6_bench — single-cell driver for the ADJ25 / ADJ26 foundation
 //! bench.
 //!
-//! The Python harness `scripts/adj_pr6_foundation_bench.py` iterates
+//! The Python harness `code/scripts/adj_pr6_foundation_bench.py` iterates
 //! the 8-declaration × 5-model matrix and shells out to this binary
 //! per cell. Each cell receives source text + a model name + an
 //! endpoint via env vars, runs `decompose_hierarchical` against a

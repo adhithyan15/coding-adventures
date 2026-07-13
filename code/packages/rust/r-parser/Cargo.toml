@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-r-parser"
-version = "0.1.0"
+version = "0.4.0"
 edition = "2021"
 description = "Parser for the R language (an implementation of the S language)"
 

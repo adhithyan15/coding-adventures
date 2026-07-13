@@ -2694,6 +2694,8 @@ fn array_catalog_module() -> Module {
         print(method(a1234(), "count", vec![method_closure("__ba_even")])),      // 2
         print(method(a312(), "min", vec![])),                                    // 1
         print(method(a312(), "max", vec![])),                                    // 3
+        print(method(a312(), "minmax", vec![])),                                 // [1, 3]
+        print(method(arr(vec![]), "minmax", vec![])),                            // [nil, nil]
         print(method(arr(vec![int(1), int(2), int(3)]), "sum", vec![])),         // 6
         print(method(arr(vec![int(1), int(1), int(2), int(3)]), "uniq", vec![])), // [1, 2, 3]
     ];
@@ -2735,7 +2737,7 @@ fn array_catalog_methods() {
         assert_eq!(
             stdout,
             "[1, 2, 3]\n[2, 4]\n[1, 3]\n10\n[1, 2, 3]\n[[2, 4], [1, 3]]\n\
-             [1, 1, 2, 2, 3, 3]\n[1, 2]\n2\n1\n3\n6\n[1, 2, 3]"
+             [1, 1, 2, 2, 3, 3]\n[1, 2]\n2\n1\n3\n[1, 3]\n[nil, nil]\n6\n[1, 2, 3]"
         );
     }
 }
@@ -3141,6 +3143,70 @@ fn array_slice_when() {
             "[[1, 2], [4], [9, 10, 11, 12]]\n\
              [[9]]\n\
              []"
+        );
+    }
+}
+
+// ── Ruby Array#cycle(n) ────────────────────────────────────────────────────
+// `cycle(n) { |x| … }` iterates the array n full passes in order, yielding each
+// element on every pass, and always returns nil.  n <= 0, a negative count, or
+// an empty receiver yields nothing.  Mirrors the Python reference (#8117), Go
+// (#8123), Rust (#8131): the block `print`s each yielded element, so the two
+// passes are observable, and the nil return is printed after each call.
+#[test]
+fn array_cycle() {
+    // `{ |x| print x }` — emit one line per yielded element.
+    let puts = func("__t_puts", vec![param("x")], vec![print(param_ref("x"))], Expr::NilLit { span: sp() });
+    let stmts = vec![
+        // [1,2,3].cycle(2) { |x| print x }  → 1 2 3 1 2 3, then nil
+        print(method(
+            seq(vec![int(1), int(2), int(3)]),
+            "cycle",
+            vec![int(2), method_closure("__t_puts")],
+        )),
+        // [1,2,3].cycle(0) { … }  → no yields, nil
+        print(method(
+            seq(vec![int(1), int(2), int(3)]),
+            "cycle",
+            vec![int(0), method_closure("__t_puts")],
+        )),
+        // [].cycle(5) { … }  → no yields, nil
+        print(method(seq(vec![]), "cycle", vec![int(5), method_closure("__t_puts")])),
+    ];
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts, value: Expr::NilLit { span: sp() }, span: sp() },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sp(),
+    };
+    let module = Module {
+        name: "arrcycle".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::Sequences,
+            Feature::Strings,
+            Feature::Closures,
+            Feature::DynamicTyping,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![main, puts],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("handbuilt")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sp(),
+    };
+    if let Some(stdout) = run_module(&module, "arrcycle") {
+        assert_eq!(
+            stdout,
+            "1\n2\n3\n1\n2\n3\n\
+             nil\n\
+             nil\n\
+             nil"
         );
     }
 }

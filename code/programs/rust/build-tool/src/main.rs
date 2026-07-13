@@ -130,16 +130,12 @@ fn find_repo_root(start: Option<&str>) -> Option<PathBuf> {
             return Some(current);
         }
 
-        match current.parent() {
-            Some(parent) => {
-                if parent == current {
-                    // Reached filesystem root without finding .git.
-                    return None;
-                }
-                current = parent.to_path_buf();
-            }
-            None => return None,
+        let parent = current.parent()?;
+        if parent == current {
+            // Reached filesystem root without finding .git.
+            return None;
         }
+        current = parent.to_path_buf();
     }
 }
 
@@ -210,7 +206,7 @@ fn chrono_now_iso8601() -> String {
 
 /// Helper for leap year calculation.
 fn is_leap_year(y: u64) -> bool {
-    (y % 4 == 0 && y % 100 != 0) || (y % 400 == 0)
+    (y.is_multiple_of(4) && !y.is_multiple_of(100)) || y.is_multiple_of(400)
 }
 
 // ---------------------------------------------------------------------------

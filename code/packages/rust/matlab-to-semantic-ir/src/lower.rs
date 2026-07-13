@@ -1642,7 +1642,7 @@ impl Lowerer {
         if let Some(tok) = node.token() {
             let span = self.span_of(node);
             return match tok.type_ {
-                TokenType::Number => Ok(number_literal_expr(tok, &span)),
+                TokenType::Number => Ok(self.number_literal_expr(tok, &span)),
                 TokenType::String => Ok(Expr::StrLit {
                     value: tok.value.clone(),
                     span,
@@ -1932,6 +1932,44 @@ impl Lowerer {
         }
     }
 
+    /// A `NUMBER` lexeme is a float if it has a decimal point or exponent,
+    /// otherwise an int; an integer lexeme too large for `i64` falls back to
+    /// a float rather than silently truncating or erroring.
+    ///
+    /// **Must** be an instance method, not a free function: every branch
+    /// that constructs a `FloatLit` calls `self.observed.add(Feature::
+    /// Floats)` immediately. Previously this was a free function with no
+    /// access to `observed`, so a float-literal-only module never declared
+    /// the feature even though `semantic-ir/src/validator.rs`'s `check_expr`
+    /// requires it for every `Expr::FloatLit` node — a confirmed, live bug
+    /// (any MATLAB program with a float literal failed `semantic_ir::
+    /// validate()`), found while implementing `macsyma-to-semantic-ir` and
+    /// fixed here.
+    fn number_literal_expr(&mut self, tok: &Token, span: &Span) -> Expr {
+        let text = &tok.value;
+        if text.contains('.') || text.contains('e') || text.contains('E') {
+            self.observed.add(Feature::Floats);
+            Expr::FloatLit {
+                value: text.parse::<f64>().unwrap_or(0.0),
+                span: span.clone(),
+            }
+        } else {
+            match text.parse::<i64>() {
+                Ok(v) => Expr::IntLit {
+                    value: v,
+                    span: span.clone(),
+                },
+                Err(_) => {
+                    self.observed.add(Feature::Floats);
+                    Expr::FloatLit {
+                        value: text.parse::<f64>().unwrap_or(0.0),
+                        span: span.clone(),
+                    }
+                }
+            }
+        }
+    }
+
     /// Reject a same-precedence operator chain (`additive`/`multiplicative`/
     /// `comparison`/`logical_or`/`logical_and`) with more than
     /// `MAX_EXPR_DEPTH` operands.
@@ -1985,30 +2023,6 @@ fn child_nodes(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {
             ASTNodeOrToken::Token(_) => None,
         })
         .collect()
-}
-
-/// A `NUMBER` lexeme is a float if it has a decimal point or exponent,
-/// otherwise an int; an integer lexeme too large for `i64` falls back to a
-/// float rather than silently truncating or erroring.
-fn number_literal_expr(tok: &Token, span: &Span) -> Expr {
-    let text = &tok.value;
-    if text.contains('.') || text.contains('e') || text.contains('E') {
-        Expr::FloatLit {
-            value: text.parse::<f64>().unwrap_or(0.0),
-            span: span.clone(),
-        }
-    } else {
-        match text.parse::<i64>() {
-            Ok(v) => Expr::IntLit {
-                value: v,
-                span: span.clone(),
-            },
-            Err(_) => Expr::FloatLit {
-                value: text.parse::<f64>().unwrap_or(0.0),
-                span: span.clone(),
-            },
-        }
-    }
 }
 
 /// Is `e` provably a scalar? See the module doc comment's "Scalar/array

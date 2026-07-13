@@ -142,7 +142,7 @@ rather than panicking:
   - **Array** (`Seq`): `length`/`size`, `first`, `last`, `push`/`append`,
     `pop`, `include?`, `reverse`, `sort`, `min`/`max`/`minmax`/`sum`, `join`, `map`, `select`/`filter`,
     `reject`, `find`, `reduce`/`inject`, `each`, `any?`/`all?`/`none?`,
-    `each_slice`/`each_cons`, `chunk_while`/`slice_when`.
+    `each_slice`/`each_cons`, `chunk_while`/`slice_when`, `cycle`.
   - **Hash** (`Map`): `keys`, `values`, `size`/`length`, `empty?`, `has_key?`,
     `fetch`, `to_a`, `merge`, `dig` (nested), `invert`, `store`/`[]=`, `delete`,
     `clear`, `each`/`each_pair`, `each_key`, `each_value`, `map`, `select`,

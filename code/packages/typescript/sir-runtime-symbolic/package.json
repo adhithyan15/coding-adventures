@@ -1,0 +1,32 @@
+{
+  "name": "@coding-adventures/sir-runtime-symbolic",
+  "version": "0.2.0",
+  "description": "Symbolic-expression + pattern/rewrite runtime for Semantic-IR-emitted TypeScript/JavaScript (SIR23)",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "sir",
+    "semantic-ir",
+    "runtime",
+    "cas",
+    "pattern-matching",
+    "rewrite",
+    "compiler"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/symbolic-ir": "file:../symbolic-ir",
+    "@coding-adventures/cas-pattern-matching": "file:../cas-pattern-matching"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}

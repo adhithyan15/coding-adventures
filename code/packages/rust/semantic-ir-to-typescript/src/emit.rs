@@ -257,6 +257,17 @@ fn uses_range(m: &Module) -> bool {
     module_uses_builtin(m, "range")
 }
 
+/// True if the module uses the SIR23 symbolic/pattern domain, in which case
+/// the emitted artifact imports `@coding-adventures/sir-runtime-symbolic`.
+/// Both `Feature::SymbolicExpr` (`SymSymbol`/`SymApply`) and
+/// `Feature::PatternMatching` (`SymPatternBlank`/`SymPatternNamed`/
+/// `SymRule`/`SymReplaceAll`) gate the same single import — a module using
+/// only bare symbolic values with no pattern/rule ever still needs `sym`/
+/// `apply` from this package.
+fn uses_symbolic(m: &Module) -> bool {
+    m.manifest.contains(Feature::SymbolicExpr) || m.manifest.contains(Feature::PatternMatching)
+}
+
 /// Walk every function body for a `BuiltinCall` named `name` — gates
 /// per-concern imports for builtins that carry no `Feature` flag.  Exhaustive
 /// over `Stmt`/`Expr` so a new node can't silently hide a use.
@@ -537,6 +548,10 @@ pub fn emit_module(m: &Module) -> String {
     // Only range-using modules import the range runtime.
     if uses_range(m) {
         out.push_str(crate::runtime::RUNTIME_RANGE);
+    }
+    // Only symbolic/pattern-using modules import the SIR23 runtime.
+    if uses_symbolic(m) {
+        out.push_str(crate::runtime::RUNTIME_SYM);
     }
     // E2: thread user `class Child < Parent` ancestry into the exception
     // matcher at program init, *before* any function or main body runs, so a
@@ -1573,25 +1588,127 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
                 e.span()
             );
         }
-        // SIR23 symbolic-expression/pattern nodes.  This backend does not
-        // declare `Feature::SymbolicExpr`/`Feature::PatternMatching` in
-        // `accepts_features` (see lib.rs), so `Backend::check_module` rejects
-        // any module using these nodes before it ever reaches emission.
-        // Panic here to catch a backend/validator drift (mirrors the
-        // SIR22/SIR26 guard above).
-        Expr::SymSymbol { .. }
-        | Expr::SymRational { .. }
-        | Expr::SymApply { .. }
-        | Expr::SymPatternBlank { .. }
-        | Expr::SymPatternNamed { .. }
-        | Expr::SymRule { .. }
-        | Expr::SymReplaceAll { .. } => {
-            panic!(
-                "typescript backend reached a deferred SIR23 expression ({}) at {} — not accepted yet",
-                e.kind_name(),
-                e.span()
-            );
+        // SIR23 symbolic-expression/pattern nodes — construct/consume a
+        // tagged term-tree value at runtime via `sir-runtime-symbolic`,
+        // imported as `__SirSym` (gated by `uses_symbolic`, see
+        // `emit_module`).  See the SIR23 spec's "Backend impact" and
+        // `emit_sym_operand`'s doc comment for why a plain `IntLit`/
+        // `FloatLit`/`StrLit` child needs wrapping but every other child
+        // expression does not.
+        Expr::SymSymbol { name, .. } => {
+            out.push_str("__SirSym.sym(");
+            out.push_str(&quote_ts_string(name));
+            out.push(')');
         }
+        Expr::SymRational { numer, denom, .. } => {
+            let _ = write!(out, "__SirSym.rational({}, {})", numer, denom);
+        }
+        Expr::SymApply { head, args, .. } => {
+            out.push_str("__SirSym.apply(");
+            emit_sym_operand(out, head, indent);
+            out.push_str(", [");
+            for (i, a) in args.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(", ");
+                }
+                emit_sym_operand(out, a, indent);
+            }
+            out.push_str("])");
+        }
+        Expr::SymPatternBlank { head: None, .. } => {
+            out.push_str("__SirSym.blank()");
+        }
+        Expr::SymPatternBlank {
+            head: Some(head), ..
+        } => match head.as_ref() {
+            Expr::SymSymbol { name, .. } => {
+                out.push_str("__SirSym.blankTyped(");
+                out.push_str(&quote_ts_string(name));
+                out.push(')');
+            }
+            _ => panic!(
+                "typescript backend: SymPatternBlank's head-constraint must be a SymSymbol, got {} at {}",
+                head.kind_name(),
+                head.span()
+            ),
+        },
+        Expr::SymPatternNamed { name, pattern, .. } => {
+            out.push_str("__SirSym.named(");
+            out.push_str(&quote_ts_string(name));
+            out.push_str(", ");
+            emit_sym_operand(out, pattern, indent);
+            out.push(')');
+        }
+        Expr::SymRule {
+            lhs, rhs, delayed, ..
+        } => {
+            out.push_str(if *delayed {
+                "__SirSym.ruleDelayed("
+            } else {
+                "__SirSym.rule("
+            });
+            emit_sym_operand(out, lhs, indent);
+            out.push_str(", ");
+            emit_sym_operand(out, rhs, indent);
+            out.push(')');
+        }
+        Expr::SymReplaceAll {
+            expr,
+            rules,
+            repeated,
+            ..
+        } => {
+            out.push_str("__SirSym.unwrap(");
+            out.push_str(if *repeated {
+                "__SirSym.replaceRepeated("
+            } else {
+                "__SirSym.replaceAll("
+            });
+            emit_sym_operand(out, expr, indent);
+            out.push_str(", [");
+            for (i, r) in rules.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(", ");
+                }
+                emit_sym_operand(out, r, indent);
+            }
+            out.push_str("]))");
+        }
+    }
+}
+
+/// Emit `e` as a value usable as a `symbolic-ir` `IRNode` term — used for
+/// the `head`/`args`/`lhs`/`rhs`/`pattern`/`expr`/rule-list children of
+/// `SymApply`/`SymPatternBlank`/`SymPatternNamed`/`SymRule`/
+/// `SymReplaceAll`, where the SIR23 spec requires a real term-tree node,
+/// not a bare host value.
+///
+/// The three literal kinds SIR23 "reuses directly" instead of defining new
+/// leaf nodes for (`IntLit`/`FloatLit`/`StrLit`, per the spec's "New Expr
+/// variants" section) need wrapping into the matching `__SirSym`
+/// constructor here — a bare JS number or string is never a valid
+/// `IRNode`. Every other expression (a `SymSymbol`/`SymRational`/
+/// `SymApply`/pattern/rule node, which already constructs a term via the
+/// ordinary `emit_expr` arms above, or a `VarRef`/call whose runtime value
+/// is already a term by the frontend's own convention) emits unchanged.
+fn emit_sym_operand(out: &mut String, e: &Expr, indent: usize) {
+    match e {
+        Expr::IntLit { .. } => {
+            out.push_str("__SirSym.int(");
+            emit_expr(out, e, indent);
+            out.push(')');
+        }
+        Expr::FloatLit { .. } => {
+            out.push_str("__SirSym.numberNode(");
+            emit_expr(out, e, indent);
+            out.push(')');
+        }
+        Expr::StrLit { .. } => {
+            out.push_str("__SirSym.stringNode(");
+            emit_expr(out, e, indent);
+            out.push(')');
+        }
+        _ => emit_expr(out, e, indent),
     }
 }
 

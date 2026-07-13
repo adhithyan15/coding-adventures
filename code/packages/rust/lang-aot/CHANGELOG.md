@@ -1,5 +1,224 @@
 # Changelog — `lang-aot`
 
+## 0.212.0 - 2026-07-13 — E6d-8: Twig dynamic globals on the code-gen backends
+
+A matrix cell proves a Twig **dynamic global** set+get roundtrip:
+
+- `(define (f) g) (define g 42) (f)` → 42
+
+on `[NativeAot, Llvm, Wasm, Jvm, Clr]`. A value global that is *forward-referenced*
+(read inside `f` before its `define`) is emitted by the frontend as
+`call_builtin "global_get"/"global_set"` — the dynamic `any`-typed global path
+(a non-forward `define` gets a typed-local slot instead). The shared
+`iir_builtin_lowering::lower_global_io` pass rewrites those to `global_load`/
+`global_store` — the typed-global ops every backend accepts — **but only the native
+`twig-aot` pipeline ran it**. The managed `lang-aot` pipelines (WASM/JVM/CLR/BEAM)
+and the LLVM pipeline never called it, so a dynamic global reached the backend as
+an unsupported `call_builtin` and failed to compile.
+
+Fix: add `lower_global_io` (as pipeline step 0, before the value-model passes,
+matching twig-aot) to `compile_source_to_wasm`, `compile_source_to_llvm_with_target`,
+`compile_source_to_jvm_class`, `compile_source_to_cil_artifact`,
+`compile_source_to_cil_text`, and `compile_source_to_beam`. No new backend code —
+`global_load`/`global_store` were already supported. Run-verified locally on WASM
+(in-process) + real dotnet CLR; native/LLVM/JVM via CI.
+
+Follow-up (not in this change): a dynamic global whose value flows into *dynamic
+arithmetic* (`(+ g 2)`) still traps, because the global slot stores a raw `i64`
+while `lower_dynamic_arith` treats the `any`-typed `global_load` result as boxed and
+inserts an `unbox`. Making that work needs the global slot widened to a boxed `any`
+(the spec's "typed-global slots widened to any").
+
+## 0.211.0 - 2026-07-13 — E6d-6: Twig unions / match on the code-gen backends
+
+Two matrix cells prove Twig **unions + `match`** dispatch on all five code-gen
+backends:
+
+- `(union Opt (Some (v : int)) (None)) (match (Some 42) ((Some v) v) ((None) 0))` → 42
+- `(union Opt (Some (v : int)) (None)) (match (None) ((Some v) v) ((None) 42))` → 42
+
+on `[NativeAot, Llvm, Wasm, Jvm, Clr]`. A union erases (frontend, unchanged) to
+integer-tagged constructors — a cons `(tag . fields…)` — and `match` compares the
+scrutinee's tag (`car`) to each variant's integer tag, binding fields via
+`car(cdr^i)`, over the E6d-1 heap substrate. The second cell (matching the *second*
+variant) proves the tag test actually discriminates rather than always taking the
+first arm.
+
+Two fixes made it run on the managed + native backends:
+
+1. **twig-ir-compiler 0.44.0** — the variant tag constant is typed `i64`, not
+   `"any"` (an `"any"` const was wrongly `unbox`ed by `lower_dynamic_arith` → WASM
+   `expected i32, got I64` trap).
+2. **iir-builtin-lowering 0.29.0** — a boxed-bool `jmp_if_false` (the boxed `=`
+   tag-compare result) now branches on its RAW bool. Both dyn_repr passes
+   previously wrapped it with nil-/McCarthy-truthiness, but a boxed `#f` is a
+   non-nil i31 / tagged-0, read as true → every arm mis-matched. Fixed in both the
+   structural pass (WASM/JVM/CLR/BEAM) and the native `dyn_truthy` path
+   (NativeAot/LLVM).
+
+Run-verified locally on WASM (in-process) + real dotnet CLR — including that the
+full matrix (every prior merged cell) still agrees, since fix #2 touches every
+managed conditional; native/LLVM/JVM via CI.
+
+## 0.210.0 - 2026-07-13 — E6d-5: Twig records on the code-gen backends
+
+Two matrix cells prove Twig **records** (construct + field access) round-trip:
+
+- `(record Point (x : int) (y : int)) (point-x (Point 42 7))` → 42 (first field)
+- `(record Point (x : int) (y : int)) (point-y (Point 7 42))` → 42 (second field)
+
+on `[NativeAot, Llvm, Wasm, Jvm, Clr]`. A `(record Name (f : T) …)` erases (in the
+Twig frontend, unchanged) to a constructor `Name(…)` that builds a cons chain via
+typed `alloc [ref<LispyPair>]` + `field_store`, and accessors `name-f(r)` =
+`car(cdr^i(r))` via typed `field_load` — the **E6d-1 heap substrate**, so records
+ride the same proven cons/car/cdr path with no new value type and no frontend
+change.
+
+Shipping this surfaced and fixed a **latent wasm-runtime bug** (bumped to 0.4.0):
+struct field counts were registered by per-function count, which over-counts when
+functions share a signature — precisely what a record emits (constructor + N
+same-shape accessors + predicate collapse to a few distinct function types). The
+`$LispyPair` field count then landed at the wrong (too-high) type index, so the
+real `struct.set` type index was a zero-field filler and every record construction
+trapped `struct.set: field 0 out of range`. Single-function cons programs and the
+list-op helpers were unaffected (their function types were all distinct). Fixed by
+indexing on the deduplicated function-type count (`module.types.len()`).
+Run-verified locally on WASM (in-process) + real dotnet CLR; native/LLVM/JVM via CI.
+
+## 0.209.0 - 2026-07-13 — E6d-4: Twig symbols / quote on the code-gen backends
+
+Two matrix cells prove Twig **symbols** (quote literals + `equal?` identity):
+
+- `(equal? 'a 'a)` → #t → exit 1  (same symbol)
+- `(equal? 'a 'b)` → #f → exit 0  (distinct symbols)
+
+on `[NativeAot, Llvm, Wasm, Jvm, Clr]`. A Twig quote literal (`'a` / `(quote a)`)
+now lowers to `const Var(name) : symbol` — the interned-const form McCarthy Lisp
+emits (twig-ir-compiler 0.43.0) — instead of the runtime `make_symbol` string path
+(which needs data-section string emission the code-gen backends lack). This rides
+the already-wired `intern_symbols` (native) / `intern_symbols_structural` (managed)
+passes: each distinct name gets one module-wide id in a reserved high range, so a
+symbol never collides with an integer atom and `equal?` on symbols is bit-equality
+— no new value type, no backend change. twig-vm is unaffected (its `const Var(name)`
+dispatch already interns text to a symbol). Run-verified locally on WASM
+(in-process) + real dotnet CLR; native/LLVM/JVM via CI. (Runtime symbol *creation*
+and `symbol->string` name recovery on the code-gen backends remain deferred — they
+need the `make_symbol` data-section path.)
+
+## 0.208.0 - 2026-07-13 — E6d-3b COMPLETE: Twig `assoc` list operation on the code-gen backends
+
+Two matrix cells prove the fifth and final E6d-3b list operation, `assoc`:
+
+- `(cdr (assoc 2 (list (cons 1 10) (cons 2 42) (cons 3 30))))` → 42 (found)
+- `(null? (assoc 9 (list (cons 1 10) (cons 2 20))))` → 1 (absent key → nil)
+
+on `[NativeAot, Llvm, Wasm, Jvm, Clr]`. This **completes the E6d-3b list-operation
+set** — `length`, `list-ref`, `append`, `reverse`, `assoc` all run on the five
+code-gen backends. `assoc` searches an association list (a list of `(k . v)` cons
+pairs) via a synthesized recursive helper (`iir-builtin-lowering` 0.28.0):
+
+```
+__dyn_list_assoc(key, alist) = if null?(alist) then nil
+    else if key == car(car(alist)) then car(alist) else assoc(key, cdr(alist))
+```
+
+V1 keys are integers: the key test unboxes both keys to `i64` and compares with a
+typed `cmp_eq` (feeding `jmp_if_false`), because `equal?` lowers unevenly across
+the managed/runtime paths — symbol keys arrive with E6d-4. Run-verified locally on
+WASM (in-process) + real dotnet CLR; native/LLVM/JVM via CI.
+
+## 0.207.0 - 2026-07-13 — E6d-3b: Twig `reverse` list operation on the code-gen backends
+
+One matrix cell proves the fourth list operation, `reverse`:
+
+- `(car (reverse (list 1 2 42)))` → 42
+
+on `[NativeAot, Llvm, Wasm, Jvm, Clr]`. `reverse (list 1 2 42)` builds `(42 2 1)`;
+`car` = 42. `reverse` is lowered by `iir-builtin-lowering` 0.27.0's `lower_list_ops`
+to a **nil-seeded** call to a synthesized *tail-recursive accumulator* helper
+`__dyn_list_reverse`:
+
+```
+reverse(a)          = __dyn_list_reverse(a, nil)      # nil seed at the call site
+__dyn_list_reverse(a, acc) = if null?(a) then acc
+                             else __dyn_list_reverse(cdr(a), cons(car(a), acc))
+```
+
+Consing each element onto the accumulator's front reverses the order. The call
+site seeds the empty accumulator as `const 0 : ref<LispyPair>` (the exact nil
+sentinel the `list` desugar / `make_nil` emit). Like `append` there is no index,
+so no unbox/box — the recursion reuses `null?`/`car`/`cdr`/`cons` (E6d-1).
+Run-verified locally on WASM (in-process) + real dotnet CLR; native/LLVM/JVM via
+CI. `assoc` follows the same pattern.
+
+## 0.206.0 - 2026-07-12 — E6d-3b: Twig `append` list operation on the code-gen backends
+
+One matrix cell proves the third list operation, `append` (a list *rebuild*):
+
+- `(car (cdr (append (list 1 42) (list 3))))` → 42
+
+on `[NativeAot, Llvm, Wasm, Jvm, Clr]`. `append (list 1 42) (list 3)` builds
+`(1 42 3)`; `car (cdr …)` = 42, proving the rebuilt spine is a genuine cons chain.
+`append` is lowered by `iir-builtin-lowering` 0.26.0's `lower_list_ops`, which
+rewrites `call_builtin "append" a b` to a synthesized recursive helper
+`__dyn_list_append` and injects it once:
+
+```
+__dyn_list_append(a, b) = if null?(a) then b else cons(car(a), append(cdr(a), b))
+```
+
+Unlike `list-ref` there is no index, so no unbox/box — `a`/`b`, `car(a)`, and the
+recursive result are all lisp references. Its one new op versus `length`/`list-ref`
+is the `cons` in the recursive arm (the E6d-1 heap builtin, rewritten to
+`alloc`/`field_store` for the injected helper by the same head-of-heap-lowering
+pass). Run-verified locally on WASM (in-process) + real dotnet CLR; native/LLVM/JVM
+via CI. `reverse`/`assoc` follow the same pattern.
+
+## 0.205.0 - 2026-07-12 — E6d-3b: Twig `list-ref` list operation on the code-gen backends
+
+One matrix cell proves the second list operation, `list-ref` (an index walk):
+
+- `(list-ref (list 10 20 42) 2)` → 42
+
+on `[NativeAot, Llvm, Wasm, Jvm, Clr]`. Like `length`, `list-ref` is lowered by
+`iir-builtin-lowering` 0.25.0's `lower_list_ops`, which rewrites
+`call_builtin "list-ref" lst n` to a call to a synthesized recursive helper
+`__dyn_list_ref` and injects it once. The helper reuses `car`/`cdr` (E6d-1):
+`if ni == 0 then car(lst) else list-ref(cdr(lst), ni - 1)`.
+
+Design note — **the index is a boxed lisp value.** The lisp calling convention
+is uniform-anyref (`dyn_repr_structural` on the managed backends / `lower_dyn_repr`
+on native box *every* argument to a lisp function), so a raw-`i64` index param
+faults at the call boundary (`expected i64, got I32(2)`). The helper takes
+`n : ref<any>` and unboxes it once; the index test (`ni == 0` → raw `cmp_eq :
+bool` feeding `jmp_if_false`) and decrement (`ni - 1` → raw `sub : i64`,
+re-boxed for the recursive call) are then plain typed machine ops. Its return is
+always a `car` result / the recursive call — cleanly `ref<any>`. This mirrors the
+explicit-`box`/`unbox` shape the `length` helper already uses, proven-portable on
+all five columns. Run-verified locally on WASM (in-process) + real dotnet CLR;
+native/LLVM/JVM via CI. `append`/`reverse`/`assoc` follow the same pattern.
+
+## 0.204.0 - 2026-07-12 — E6d-3b: Twig `length` list operation on the code-gen backends
+
+Two matrix cells prove the first list *operation* (a cons-chain walk, unlike the
+E6d-3a `list` constructor):
+
+- `(+ (length (list 1 2 3)) 39)` → 42 — `length` = 3, composed with dynamic `+`,
+  proving it returns a genuine boxed lisp value.
+- `(null? (list))` → 1 — the empty list is nil; the direct regression guard for
+  the WASM nil-const fix.
+
+on `[NativeAot, Llvm, Wasm, Jvm, Clr]`. `length` is lowered by `iir-builtin-lowering`
+0.24.0's new `lower_list_ops`, which rewrites `call_builtin "length"` to a call to a
+synthesized recursive `__dyn_list_length` helper (a proper lisp function: `null?`/
+`cdr` + dynamic `+`, all already lowered by E6d-1/E6d-2). This also required fixing
+the **WASM nil const**: `const 0 : ref<LispyPair>` now emits `ref.null`
+(iir-to-wasm 0.38.0) so `is_null`/`null?` detects the terminator — it was
+`i32.const 0`, so a walk overran the list end into `struct.get` on an i32. (CLR
+already lowered nil to `ldnull`; car/cdr never touch the nil tail, so E6d-1/E6d-3a
+were unaffected.) Run-verified locally on WASM + real dotnet CLR; native/LLVM/JVM
+via CI. `list-ref`/`append`/`reverse` follow the same helper pattern.
+
 ## 0.203.0 - 2026-07-12 — E6d-3a: Twig `list` constructor on the code-gen backends
 
 Two matrix cells prove the `list` constructor as Twig's next dynamic capability:
