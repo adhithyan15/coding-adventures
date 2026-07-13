@@ -3,17 +3,15 @@
 % loaded by relative path so local and CI builds are identical.
 
 \usepackage{fontspec}
-\usepackage{polyglossia}
-\setmainlanguage{english}
-\setotherlanguage{arabic}
-
 \setmainfont{Latin Modern Roman}
 \setsansfont{Latin Modern Sans}
 \setmonofont{Latin Modern Mono}
 
-% Vendored Arabic font (static instance; ../../_fonts/ from <lang>/book/).
-\newfontfamily\arabicfont[Path=../../_fonts/, Script=Arabic]{NotoNaskhArabic-Static.ttf}
-
+% IMPORTANT: xcolor, hyperref, tcolorbox, etc. must be loaded BEFORE
+% polyglossia, because polyglossia loads `bidi` for the Arabic (RTL) language,
+% and bidi errors out ("you have loaded package xcolor after bidi package") if
+% these are loaded after it. (MiKTeX is lenient about this; TeX Live/CI is
+% strict.) So all non-polyglossia packages come first, then polyglossia.
 \usepackage[table]{xcolor}
 \usepackage{tcolorbox}
 \tcbuselibrary{skins,breakable}
@@ -22,6 +20,13 @@
 \usepackage{array}
 \usepackage[hidelinks]{hyperref}
 \usepackage{titlesec}
+
+\usepackage{polyglossia}
+\setmainlanguage{english}
+\setotherlanguage{arabic}
+
+% Vendored Arabic font (static instance; ../../_fonts/ from <lang>/book/).
+\newfontfamily\arabicfont[Path=../../_fonts/, Script=Arabic]{NotoNaskhArabic-Static.ttf}
 
 \hypersetup{
   pdftitle={Arabic, Step by Step, Root by Root},
