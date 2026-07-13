@@ -269,9 +269,20 @@ E6d-7.
      `(cdr (assoc 2 (list (cons 1 10) (cons 2 42) (cons 3 30))))` → 42,
      `(null? (assoc 9 …))` → 1; WASM + real dotnet CLR verified, native/LLVM/JVM
      via CI.
-4. **E6d-4 — symbols / quote.** `make_symbol`, `symbol->string`, `string->symbol`,
-   `eq?` on symbols (bit-equality). Interned-immediate model (§2.1); reuse
-   `intern_symbols_structural`. Proof: `(eq? 'a 'a)` vs `(eq? 'a 'b)`.
+4. **E6d-4 — symbols / quote (✅ quote-literal identity; runtime create/name-recovery
+   deferred).** A Twig quote literal (`'a` / `(quote a)`) now lowers to `const
+   Var(name) : symbol` — the interned-const form McCarthy emits (twig-ir-compiler
+   0.43.0) — rather than the runtime `make_symbol` string path (which needs
+   data-section string emission the code-gen backends lack). This rides the
+   already-wired `intern_symbols` (native) / `intern_symbols_structural` (managed)
+   passes (§2.1): each distinct name → one module-wide id in a reserved high range,
+   so a symbol never collides with an integer atom and `equal?` on symbols is
+   bit-equality — no new value type. Twig has `equal?` (not `eq?`); `equal?` on
+   two symbols is identity. Proof (shipped): `(equal? 'a 'a)` → #t (exit 1),
+   `(equal? 'a 'b)` → #f (exit 0) on [NativeAot, Llvm, Wasm, Jvm, Clr]; WASM + real
+   dotnet CLR verified, native/LLVM/JVM via CI. **Deferred:** runtime symbol
+   *creation* (`string->symbol` over a runtime string) and `symbol->string` name
+   recovery on the code-gen backends still need the `make_symbol` data-section path.
 5. **E6d-5 — records (TW6, part 1).** Type-parameterized `alloc` + a struct-type
    registry (§3.3); Twig record constructor/accessor lowering. Proof: a Twig
    record round-trip returning a field → 42.

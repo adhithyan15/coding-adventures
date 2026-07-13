@@ -1,5 +1,25 @@
 # Changelog — twig-ir-compiler
 
+## [0.43.0] — 2026-07-13 (LANG-FULL E6d-4 — quote literals as interned symbol consts)
+
+A Twig quote literal (`'a` / `(quote a)`, an `Expr::SymLit`) now lowers to
+`const Var(name) : symbol` — the **same interned-const form McCarthy Lisp's
+`emit_symbol` emits** — instead of the runtime `make_symbol` string path (`const
+Var(name) : any` + `call_builtin "make_symbol"`).
+
+Why: `make_symbol` needs data-section string-literal emission that the code-gen
+backends (native/LLVM/WASM/JVM/CLR) don't have, so quoted symbols never ran there.
+The interned-const form rides the already-wired `intern_symbols` (native) /
+`intern_symbols_structural` (managed) passes, which assign each distinct name one
+module-wide id in a reserved high range — so `equal?` on symbols is bit-equality
+(`(equal? 'a 'a)` #t, `(equal? 'a 'b)` #f) on **all five code-gen backends**, with
+no new value type. On twig-vm the `const Var(name)` dispatch already interns the
+text to a symbol, so the VM is unaffected (176 twig-vm tests pass). Runtime symbol
+*creation* (`string->symbol` over a runtime string) keeps `make_symbol`.
+
+The `quoted_symbol_emits_make_symbol` unit test is updated to
+`quoted_symbol_emits_interned_const`.
+
 ## [0.37.0] — 2026-06-28 (LANG-FULL E4 — direct-call string parameter inference)
 
 Top-level Twig functions can now infer `str` for otherwise-unannotated
