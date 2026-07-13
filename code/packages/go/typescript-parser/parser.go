@@ -24,6 +24,8 @@
 package typescriptparser
 
 import (
+	"fmt"
+
 	"github.com/adhithyan15/coding-adventures/code/packages/go/parser"
 	typescriptlexer "github.com/adhithyan15/coding-adventures/code/packages/go/typescript-lexer"
 )
@@ -51,9 +53,14 @@ func CreateTypescriptParser(source string, version string) (*parser.GrammarParse
 	}
 	grammar := ParserGrammarData
 	if version != "" {
-		// Unknown versions were already rejected by TokenizeTypescript above,
-		// so a present version is guaranteed to be in the map.
-		grammar = VersionedParserGrammars[version]
+		// Unknown versions were already rejected by TokenizeTypescript above.
+		// The `ok` check is defense-in-depth: it guarantees a non-nil grammar
+		// even if the lexer's and parser's generated version maps ever diverge.
+		versioned, ok := VersionedParserGrammars[version]
+		if !ok {
+			return nil, fmt.Errorf("unknown TypeScript version %q", version)
+		}
+		grammar = versioned
 	}
 	return parser.NewGrammarParser(tokens, grammar), nil
 }
