@@ -173,6 +173,7 @@ SELF_CONTAINED_RUNGS = (
     "rung133_elimination_span",
     "rung134_cumulative_load_span",
     "rung135_admixture_concentration",
+    "rung136_recovery_density",
 )
 
 
