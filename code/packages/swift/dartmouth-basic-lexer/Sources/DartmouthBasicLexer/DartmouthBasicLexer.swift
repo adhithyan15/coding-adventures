@@ -105,7 +105,6 @@
 //
 // ============================================================================
 
-import Foundation
 import GrammarTools
 import Lexer
 
@@ -146,7 +145,7 @@ public struct DartmouthBasicLexer: Sendable {
     /// - Throws: `LexerError` on unexpected characters.
     ///
     public static func tokenize(_ source: String) throws -> [Token] {
-        let grammar = try loadGrammar()
+        let grammar = loadGrammar()
         let lexer = GrammarLexer(source: source, grammar: grammar)
         var tokens = try lexer.tokenize()
 
@@ -184,44 +183,19 @@ public struct DartmouthBasicLexer: Sendable {
         return tokens
     }
 
-    /// Load and parse the Dartmouth BASIC token grammar.
+    /// Return the Dartmouth BASIC token grammar.
     ///
-    /// The grammar file path is computed relative to this source file:
+    /// The grammar is embedded at compile time as native Swift in the generated
+    /// `_Grammar.swift` (`EmbeddedGrammar.dartmouthBasic`), produced from
+    /// `code/grammars/dartmouth_basic/dartmouth_basic.tokens` by
+    /// `swift/grammar-tools`' `grammar-tools-embed`. Nothing is read from disk
+    /// at run time, so the lexer works unchanged when published standalone and
+    /// does not depend on the monorepo's `code/grammars/` layout.
     ///
-    ///   DartmouthBasicLexer.swift          ← this file
-    ///     Sources/DartmouthBasicLexer/     (1) strip filename
-    ///     dartmouth-basic-lexer/           (2)
-    ///     swift/                           (3)
-    ///     packages/                        (4)
-    ///     code/                            (5)  → grammars/dartmouth_basic/dartmouth_basic.tokens
+    /// - Returns: The embedded `TokenGrammar`.
     ///
-    /// The `#filePath` directive resolves to the compile-time path of this
-    /// source file inside the monorepo. Walking up 5 levels plus the filename
-    /// level reaches the `code/` directory, then we descend into `grammars/`.
-    ///
-    /// - Returns: A `TokenGrammar` parsed from `dartmouth_basic.tokens`.
-    /// - Throws: If the file cannot be read or the grammar cannot be parsed.
-    ///
-    public static func loadGrammar() throws -> TokenGrammar {
-        let thisFile = #filePath
-        var url = URL(fileURLWithPath: thisFile)
-        // Walk up 6 path components:
-        //   DartmouthBasicLexer.swift  → Sources/DartmouthBasicLexer
-        //   Sources/DartmouthBasicLexer → Sources
-        //   Sources → dartmouth-basic-lexer
-        //   dartmouth-basic-lexer → swift
-        //   swift → packages
-        //   packages → code
-        for _ in 0..<6 {
-            url = url.deletingLastPathComponent()
-        }
-        let tokensURL = url
-            .appendingPathComponent("grammars")
-            .appendingPathComponent("dartmouth_basic")
-            .appendingPathComponent("dartmouth_basic.tokens")
-
-        let content = try String(contentsOf: tokensURL, encoding: .utf8)
-        return try parseTokenGrammar(source: content)
+    public static func loadGrammar() -> TokenGrammar {
+        EmbeddedGrammar.dartmouthBasic
     }
 
     // =========================================================================

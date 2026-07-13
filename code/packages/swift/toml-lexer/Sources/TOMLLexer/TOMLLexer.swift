@@ -1,4 +1,3 @@
-import Foundation
 import GrammarTools
 import Lexer
 
@@ -11,20 +10,10 @@ public struct TOMLLexer: Sendable {
     public static let version = "0.1.0"
 
     /// Load and parse the TOML token grammar.
-    public static func loadGrammar() throws -> TokenGrammar {
-        let thisFile = #filePath
-        var url = URL(fileURLWithPath: thisFile)
-        // Walk up: TOMLLexer.swift -> Sources/TOMLLexer -> Sources -> toml-lexer -> swift -> packages -> code
-        for _ in 0..<6 {
-            url = url.deletingLastPathComponent()
-        }
-        let tokensURL = url
-            .appendingPathComponent("grammars")
-            .appendingPathComponent("toml")
-            .appendingPathComponent("toml.tokens")
-
-        let content = try String(contentsOf: tokensURL, encoding: .utf8)
-        return try parseTokenGrammar(source: content)
+    public static func loadGrammar() -> TokenGrammar {
+        // Embedded at compile time in the generated `_Grammar.swift`
+        // (from code/grammars/toml/...); no run-time file read.
+        EmbeddedGrammar.toml
     }
 
     /// Tokenize TOML text and return an array of tokens.
@@ -36,7 +25,7 @@ public struct TOMLLexer: Sendable {
     /// @param source - The TOML text to tokenize.
     /// @returns An array of Token objects. The last token is always EOF.
     public static func tokenize(_ source: String) throws -> [Token] {
-        let grammar = try loadGrammar()
+        let grammar = loadGrammar()
         let lexer = GrammarLexer(source: source, grammar: grammar)
         return try lexer.tokenize()
     }
