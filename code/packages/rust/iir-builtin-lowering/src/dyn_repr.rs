@@ -63,7 +63,7 @@
 use interpreter_ir::function::IIRFunction;
 use interpreter_ir::instr::{IIRInstr, Operand};
 use interpreter_ir::IIRModule;
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 /// The frontend type hint for a reference to a lisp pair (and the nil
 /// sentinel). Mirrors `mccarthy-lisp-iir-compiler`'s `REF_PAIR`.
@@ -405,11 +405,58 @@ fn wrap_tagged_conditions(func: &mut IIRFunction, boxed_regs: &HashSet<String>) 
         return;
     }
 
+    // E6d-6: a `jmp_if_false` guard that is a *boxed machine bool* (a boxed
+    // comparison result — `= tag …` in a `match`) must branch on its raw truth
+    // value, NOT go through `dyn_truthy`. A boxed `#f` is `dyn_box_int(0)` = a
+    // tagged integer 0, and `dyn_truthy` reads an integer atom as truthy (only
+    // `#f`/nil are false in McCarthy), so it would wrongly take the arm — the
+    // native twin of the managed `dyn_repr_structural` bug. We map each such guard
+    // to its raw pre-box `bool` register and repoint the jump to it. (`box` is
+    // still `box` here — the `dyn_box_int` rename runs after this pass.)
+    let boxed_bool: HashMap<String, String> = func
+        .instructions
+        .iter()
+        .filter(|i| i.op == "jmp_if_false")
+        .filter_map(|i| match i.srcs.first() {
+            Some(Operand::Var(c)) => Some(c.clone()),
+            _ => None,
+        })
+        .filter_map(|c| {
+            let boxed = func.instructions.iter().find(|i| i.dest.as_deref() == Some(&c))?;
+            if boxed.op != "box" {
+                return None;
+            }
+            match boxed.srcs.first() {
+                Some(Operand::Var(src))
+                    if func
+                        .instructions
+                        .iter()
+                        .find(|i| i.dest.as_deref() == Some(src))
+                        .map(|i| i.type_hint == "bool")
+                        .unwrap_or(false) =>
+                {
+                    Some((c, src.clone()))
+                }
+                _ => None,
+            }
+        })
+        .collect();
+
     let old = std::mem::take(&mut func.instructions);
     let mut new_instrs: Vec<IIRInstr> = Vec::with_capacity(old.len() + 2);
     let mut truthy_counter = 0usize;
 
-    for instr in old {
+    for mut instr in old {
+        // A boxed-bool guard: repoint to the raw `bool`, emit the jump unwrapped.
+        if instr.op == "jmp_if_false" {
+            if let Some(Operand::Var(c)) = instr.srcs.first().cloned() {
+                if let Some(raw) = boxed_bool.get(&c) {
+                    instr.srcs[0] = Operand::Var(raw.clone());
+                    new_instrs.push(instr);
+                    continue;
+                }
+            }
+        }
         // A `jmp_if_false` whose condition (srcs[0]) is a tagged LispyValue.
         let tagged_cond = if instr.op == "jmp_if_false" {
             match instr.srcs.first() {

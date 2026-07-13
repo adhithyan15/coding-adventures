@@ -1,5 +1,26 @@
 # Changelog — iir-builtin-lowering
 
+## 0.29.0 - 2026-07-13 (E6d-6: boxed-bool `jmp_if_false` branches on the raw bool)
+
+Both dynamic-representation passes now recognise a `jmp_if_false` whose guard is a
+**boxed machine bool** — a boxed comparison result (`= tag …` in a Twig `match`,
+or any `(if (= a b) …)` forced onto the dynamic path) — and branch on its RAW
+pre-box `bool`, instead of applying McCarthy nil-truthiness.
+
+Why: `lower_dynamic_arith` boxes every comparison result (`cmp_eq → bool` then
+`box → ref<any>`). Both passes then saw a `ref<any>`/tagged condition and wrapped
+it — the structural pass (WASM/JVM/CLR/BEAM) as `not(is_null(cond))`, the native
+pass (NativeAot/LLVM) as `dyn_truthy(cond)`. But a boxed `#f` is a **non-nil**
+value (`ref.i31(0)` on the structural side; `dyn_box_int(0)` = tagged integer 0 on
+the native side), and nil-truthiness / McCarthy-truthiness both read it as **true**
+— so every `match` arm's tag test passed and dispatch was wrong (E6d-6).
+
+Fix: in `lower_dyn_repr_structural` (new `boxed_bool_source`/`boxed_bool_conditions`
+helpers) and in `lower_dyn_repr`'s `wrap_tagged_conditions`, a guard that is a
+`box` of a `"bool"`-typed value is repointed to the raw source and the jump is
+emitted unwrapped. General fix — helps any comparison-as-branch-condition on the
+dynamic path, not only `match`. One new unit test; 149 lib tests pass.
+
 ## 0.28.0 - 2026-07-13 (E6d-3b COMPLETE: `assoc` via a synthesized alist-search helper)
 
 `lower_list_ops` gains its fifth and final list operation, `assoc` — completing

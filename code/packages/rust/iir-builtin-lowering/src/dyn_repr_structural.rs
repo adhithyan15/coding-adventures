@@ -125,6 +125,45 @@ fn lisp_conditions(func: &IIRFunction) -> HashSet<String> {
     set
 }
 
+/// If `reg` is produced by `box %reg = %src` where `%src`'s producer hint is
+/// `"bool"`, return `%src` — the raw machine bool behind a boxed comparison /
+/// predicate result.
+///
+/// Such a condition must branch on its **truth value**, not on nil-ness. The
+/// dynamic-arithmetic pass boxes every comparison result (`=`/`<`/… → a boxed
+/// `bool`), so a `jmp_if_false` on it sees a `ref<any>` and would be treated as a
+/// lisp value by [`lisp_conditions`]. But a boxed `#f` is `ref.i31(0)` — a
+/// **non-null** reference — so the McCarthy nil-truthiness wrap
+/// (`not(is_null(..))`) would wrongly read it as true, mis-dispatching e.g. every
+/// `match` arm (E6d-6). Testing the raw pre-box `bool` directly is correct.
+fn boxed_bool_source(func: &IIRFunction, reg: &str) -> Option<String> {
+    let boxed = func.instructions.iter().find(|i| i.dest.as_deref() == Some(reg))?;
+    if boxed.op != "box" {
+        return None;
+    }
+    match boxed.srcs.first() {
+        Some(Operand::Var(src)) if producer_hint(func, src) == Some("bool") => Some(src.clone()),
+        _ => None,
+    }
+}
+
+/// The `jmp_if_false` conditions that are a **boxed machine bool** (a boxed
+/// comparison result), mapped to the raw pre-box `bool` register to test instead.
+/// See [`boxed_bool_source`].
+fn boxed_bool_conditions(func: &IIRFunction) -> HashMap<String, String> {
+    let mut map = HashMap::new();
+    for instr in &func.instructions {
+        if instr.op == "jmp_if_false" {
+            if let Some(Operand::Var(c)) = instr.srcs.first() {
+                if let Some(src) = boxed_bool_source(func, c) {
+                    map.insert(c.clone(), src);
+                }
+            }
+        }
+    }
+    map
+}
+
 /// The `srcs` indices of `instr` that hold a **lisp value** (and so whose
 /// integer atoms must be boxed): `field_store`'s value operand, and the value
 /// arguments of a `pair?`/`equal?` call. Other positions (the builtin name, a
@@ -312,6 +351,10 @@ fn lower_structural_function(
         }
     }
     let lisp_conds = lisp_conditions(func);
+    // A `jmp_if_false` whose guard is a *boxed machine bool* (a boxed comparison
+    // result) must branch on the raw bool, not on nil-ness (E6d-6). Precomputed
+    // here because the rebuild below drains `func.instructions`.
+    let boxed_bool_conds = boxed_bool_conditions(func);
 
     // The lisp-value source indices of an instruction: the structural positions
     // (`field_store` value, `pair?`/`equal?` args) plus the arguments of a `call`
@@ -387,6 +430,17 @@ fn lower_structural_function(
         // so a lisp integer atom (even `0`) is true and only `nil` is false.
         if instr.op == "jmp_if_false" {
             if let Some(Operand::Var(cond)) = instr.srcs.first().cloned() {
+                // E6d-6: a boxed machine bool (a boxed `=`/`<`/… result) branches
+                // on its raw truth value, NOT nil-ness — repoint the guard to the
+                // pre-box `bool` and emit the jump unwrapped. (A boxed `#f` is a
+                // non-null `i31ref`, so the nil-truthiness wrap below would read it
+                // as true and mis-dispatch, e.g. every `match` arm.)
+                if let Some(raw) = boxed_bool_conds.get(&cond) {
+                    let mut j = instr.clone();
+                    j.srcs[0] = Operand::Var(raw.clone());
+                    new_instrs.push(j);
+                    continue;
+                }
                 // Only wrap a guard we can prove is a reference (so `is_null` is
                 // well-typed) or a boxable integer atom (which we box first). A
                 // lisp-value guard that is neither — e.g. a function parameter,
@@ -941,5 +995,47 @@ mod tests {
         // backend can detect the unboxable atom rather than silently lose bits.
         let c = f.instructions.iter().find(|i| i.op == "const").unwrap();
         assert_eq!(c.type_hint, "i64", "out-of-range atom keeps its width");
+    }
+
+    #[test]
+    fn boxed_bool_condition_branches_on_raw_bool_not_nil_truthiness() {
+        // E6d-6: a `jmp_if_false` on a BOXED comparison result (the shape a Twig
+        // `match` tag test produces after dynamic_arith: `cmp_eq → bool`, `box →
+        // ref<any>`) must test the raw bool directly — NOT be wrapped with
+        // `not(is_null(..))`. A boxed `#f` is a non-nil `i31ref`, so the
+        // nil-truthiness wrap would read it as true and mis-dispatch every arm.
+        let instrs = vec![
+            // A heap op marks this a lisp function (owned by this pass).
+            IIRInstr::new("field_load", Some("h".into()),
+                vec![Operand::Var("x".into()), Operand::Int(0)], REF_ANY),
+            IIRInstr::new("unbox", Some("xu".into()), vec![Operand::Var("x".into())], "i64"),
+            IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("cmp_eq", Some("raw".into()),
+                vec![Operand::Var("xu".into()), Operand::Var("z".into())], "bool"),
+            IIRInstr::new("box", Some("cond".into()), vec![Operand::Var("raw".into())], REF_ANY),
+            IIRInstr::new("jmp_if_false", None,
+                vec![Operand::Var("cond".into()), Operand::Var("L".into())], "void"),
+            IIRInstr::new("ret", None, vec![Operand::Var("h".into())], REF_ANY),
+            IIRInstr::new("label", None, vec![Operand::Var("L".into())], "void"),
+            IIRInstr::new("ret", None, vec![Operand::Var("h".into())], REF_ANY),
+        ];
+        let f = IIRFunction::new(
+            "main",
+            vec![("x".to_string(), REF_ANY.to_string())],
+            REF_ANY,
+            instrs,
+        );
+        let mut m = IIRModule::new("m", "twig");
+        m.entry_point = Some("main".into());
+        m.functions = vec![f];
+        lower_dyn_repr_structural(&mut m);
+        let f = &m.functions[0];
+        // The jmp_if_false now tests the RAW bool `raw`, not a wrapped truthy reg.
+        let jif = f.instructions.iter().find(|i| i.op == "jmp_if_false").unwrap();
+        assert_eq!(jif.srcs.first(), Some(&Operand::Var("raw".into())),
+            "boxed-bool guard must branch on the raw pre-box bool");
+        // No nil-truthiness wrapping was inserted for this condition.
+        assert!(!f.instructions.iter().any(|i| i.op == "is_null"),
+            "no is_null truthiness wrap for a boxed-bool condition");
     }
 }

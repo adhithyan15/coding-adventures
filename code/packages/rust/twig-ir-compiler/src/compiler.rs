@@ -2519,14 +2519,25 @@ impl Compiler {
                     ), arm_loc);
                     ctx.record_type(&tag_reg, "ref<any>");
 
-                    // Emit: tag_int = integer constant for this variant
+                    // Emit: tag_int = integer constant for this variant.
+                    //
+                    // E6d-6: type this `i64`, NOT `"any"`. It is a raw
+                    // compile-time integer, not a boxed lisp value. If it were
+                    // `"any"`, `lower_dynamic_arith` would treat it as boxed
+                    // (`is_boxed("any")`) and emit a bogus `unbox` on it — on WASM
+                    // the `i31.get_s` of a raw `i64` traps `expected i32, got I64`.
+                    // As `i64` it flows straight into the typed comparison; only
+                    // the genuinely-boxed `tag_reg` (a `field_load` result) is
+                    // unboxed. (This mirrors how a `list-ref` index literal is a
+                    // raw `i64` const.)
                     let tag_int_reg = ctx.fresh_var("tag_val");
                     ctx.emit(IIRInstr::new(
                         "const",
                         Some(tag_int_reg.clone()),
                         vec![Operand::Int(tag as i64)],
-                        "any",
+                        "i64",
                     ), arm_loc);
+                    ctx.record_type(&tag_int_reg, "i64");
 
                     // Emit: cond = (= tag_reg tag_int)
                     let cond_reg = ctx.fresh_var("tag_eq");

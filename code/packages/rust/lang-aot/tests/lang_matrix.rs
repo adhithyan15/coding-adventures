@@ -388,6 +388,33 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
     },
+    // Twig — **E6d-6: unions / `match` (TW6 part 2) on the code-gen backends.** A
+    // `(union Name (Variant …) …)` erases to integer-tagged constructors (a cons
+    // `(tag . fields…)`) and `match` dispatches by comparing the scrutinee's tag
+    // (`car`) to each variant's integer tag, binding fields via `car(cdr^i)`. The
+    // tag compare uses the E6d-1 heap substrate + dynamic `=`; two fixes made it
+    // run on the managed backends: the variant tag const is typed `i64` (not
+    // `any`, which caused a bogus `unbox`), and `dyn_repr_structural` now branches
+    // a boxed-bool `jmp_if_false` on its raw truth value (a boxed `#f` is a non-nil
+    // i31, which the nil-truthiness wrap mis-read as true → every arm matched).
+    // `(match (Some 42) …)` binds `v = 42`.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(union Opt (Some (v : int)) (None)) (match (Some 42) ((Some v) v) ((None) 0))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
+    // Twig — E6d-6: matching the SECOND variant (`None`) proves the tag dispatch
+    // actually discriminates — the fixed boxed-bool branch takes the right arm,
+    // not always the first. `(match (None) ((Some v) v) ((None) 42))` = 42.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(union Opt (Some (v : int)) (None)) (match (None) ((Some v) v) ((None) 42))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
     // Twig — E4 literal `string-length`. The compiler lowers
     // `(string-length "HELLO")` to shared `str_const` + `str_len`, avoiding the
     // dynamic `call_builtin "string-length"` path that codegen validators reject.

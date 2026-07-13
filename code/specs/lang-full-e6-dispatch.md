@@ -296,9 +296,23 @@ E6d-7.
    count. Proof (shipped): `(record Point (x : int) (y : int)) (point-x (Point 42
    7))` → 42 and `(point-y (Point 7 42))` → 42 on [NativeAot, Llvm, Wasm, Jvm,
    Clr]; WASM + real dotnet CLR verified, native/LLVM/JVM via CI.
-6. **E6d-6 — unions / match (TW6, part 2).** Integer-tagged constructors +
-   discriminant test + `match` arm dispatch, over the E6d-5 structs. Proof: a
-   `match` over a 2-variant union → 42.
+6. **E6d-6 — unions / match (TW6, part 2) (✅ shipped).** A Twig `(union Name
+   (Variant …) …)` erases (frontend, unchanged) to integer-tagged constructors —
+   a cons `(tag . fields…)` — and `match` compares the scrutinee's tag (`car`) to
+   each variant's integer tag, binding fields via `car(cdr^i)`, over the E6d-1
+   heap substrate. Two fixes made it run on the code-gen backends: (1) the variant
+   tag const is typed `i64` not `"any"` (twig-ir-compiler 0.44.0 — an `"any"`
+   const was wrongly `unbox`ed → WASM `expected i32, got I64` trap); (2) a
+   boxed-bool `jmp_if_false` (the boxed `=` tag-compare result) now branches on its
+   RAW bool in **both** dyn_repr passes (iir-builtin-lowering 0.29.0 — structural
+   for WASM/JVM/CLR/BEAM and the native `dyn_truthy` path for NativeAot/LLVM),
+   because a boxed `#f` is a non-nil i31 / tagged-0 that the nil-/McCarthy-
+   truthiness wrap mis-read as true, mis-dispatching every arm. This is a general
+   fix (any `(if (= a b) …)` on the dynamic path). Proof (shipped):
+   `(union Opt (Some (v : int)) (None)) (match (Some 42) ((Some v) v) ((None) 0))`
+   → 42 and matching the 2nd variant → 42 on [NativeAot, Llvm, Wasm, Jvm, Clr];
+   WASM + real dotnet CLR verified (full matrix re-run confirms no regression),
+   native/LLVM/JVM via CI.
 7. **E6d-7 — closures on WASM (TW5).** ⚠ design note first (§3.4). Wire Phase-4
    downgrade (or native `$Closure`); JVM/CLR/LLVM already run closures. Proof:
    `((lambda (x) (+ x 1)) 41)` → 42 on all code-gen backends.
