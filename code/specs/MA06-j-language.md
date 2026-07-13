@@ -124,10 +124,19 @@ so for J's:
     `(x f y) g (x h y)`; a leading noun `n` in `f`'s position is used as
     a literal constant instead of being applied — `(n g h) y` =
     `n g (h y)`.
-  - **4 or more verbs** recursively reduce as a fork whose left tooth is
-    itself the fork/hook of everything before the last two elements —
-    i.e. `(a b c d)` parses as the fork `(a (b c d))`, recursing until a
-    2- or 3-element base case remains. This right-to-left recursive
+  - **4 or more verbs** recursively reduce as a **hook** whose right
+    tooth is itself the fork/hook of every remaining tooth after the
+    first — i.e. `(a b c d)` parses as the hook `(a (b c d))`, peeling
+    one tooth off the left at each step and recursing until a 2- or
+    3-element base case remains (`(b c d)` here is already a 3-element
+    fork base case, so the recursion stops after one peel). Implemented
+    at MA-6d: an earlier draft of this bullet described the recursion
+    the other way around ("left tooth is the fork/hook of everything
+    before the last two elements"), which does not match this bullet's
+    own worked example (that phrasing would parse `(a b c d)` as
+    `((a b) c d)`, grouping `a`/`b` together, not `a`/`(b c d)`) —
+    corrected here to match the example, which is unambiguous and is
+    what `j-runtime` actually implements. This right-to-left recursive
     reduction is the *same* shape as APL's own right-recursive
     `value_expr` (MA05 §3 bullet 2) — trains are not a fundamentally
     different recursion, just one more production folding the same way.

@@ -1,0 +1,10 @@
+[package]
+name = "coding-adventures-j-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "Tree-walking evaluator for the J language over array-runtime"
+
+[dependencies]
+coding-adventures-j-parser = { path = "../j-parser" }
+array-runtime = { package = "coding-adventures-array-runtime", path = "../array-runtime" }
+parser = { path = "../parser" }
