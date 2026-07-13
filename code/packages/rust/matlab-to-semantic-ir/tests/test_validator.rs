@@ -58,6 +58,27 @@ fn a_purely_literal_program_validates_and_the_js_backend_accepts_it() {
 }
 
 #[test]
+fn a_float_literal_program_validates_and_declares_floats() {
+    // Regression test for a confirmed, previously-shipped bug:
+    // `number_literal_expr` never called `self.observed.add(Feature::
+    // Floats)` (it was a free function with no access to `observed`), so a
+    // float-literal-only module failed `semantic_ir::validate()` even
+    // though `check_expr` requires the feature for every `Expr::FloatLit`
+    // node. Found while implementing `macsyma-to-semantic-ir`, fixed here.
+    let module = assert_valid("function r = half()\n  r = 1.5;\nend\ndisp(half());\n");
+    assert!(module
+        .manifest
+        .iter()
+        .any(|f| f == semantic_ir::Feature::Floats));
+    let backend = JavaScriptBackend;
+    let errors = backend.check_module(&module);
+    assert!(
+        errors.is_empty(),
+        "expected the JS backend to accept a purely-literal float module, got: {errors:?}"
+    );
+}
+
+#[test]
 fn control_flow_with_a_variable_accumulator_validates_but_needs_array_features() {
     let module = assert_valid(
         "total = 0;\nfor i = 1:10\n  if i > 5\n    total = total + i;\n  end\nend\ndisp(total);\n",

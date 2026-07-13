@@ -52,6 +52,25 @@ fn bare_arithmetic_validates_and_declares_symbolic_expr() {
 }
 
 #[test]
+fn a_float_literal_module_validates_and_declares_floats() {
+    // Regression test for a confirmed, previously-shipped bug: `lower_token`'s
+    // number-literal handling never called `self.observed.add(Feature::
+    // Floats)` (it delegated to a free function with no access to
+    // `observed`), so a float-literal-only module failed
+    // `semantic_ir::validate()` even though `check_expr` requires the
+    // feature for every `Expr::FloatLit` node. Found while implementing
+    // `macsyma-to-semantic-ir`, fixed here.
+    //
+    // Paired with `x +` (a genuine `SymApply`) rather than a bare `1.5`
+    // alone: a bare float literal is a plain SIR16 node the JS backend
+    // already accepts, so it wouldn't exercise this file's own "every
+    // module is rejected" capability-gate assertion below.
+    let module = assert_valid("x + 1.5\n");
+    assert!(module.manifest.iter().any(|f| f == Feature::Floats));
+    assert_js_backend_rejects(&module);
+}
+
+#[test]
 fn a_bare_symbol_alone_validates_and_declares_symbolic_expr() {
     let module = assert_valid("x\n");
     assert!(module.manifest.iter().any(|f| f == Feature::SymbolicExpr));
