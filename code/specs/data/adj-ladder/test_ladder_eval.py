@@ -179,6 +179,7 @@ SELF_CONTAINED_RUNGS = (
     "rung139_slope_ratio",
     "rung140_yield_ratio",
     "rung141_grid_density",
+    "rung142_packing_ratio",
 )
 
 
