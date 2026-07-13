@@ -4,6 +4,14 @@ All notable changes to the C++ `lisp-parser` package are documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+
+### Added
+
+- `SExpr` child accessors `child_count` / `child` / `dotted_last` /
+  `quoted_inner`, so tree walkers (e.g. the `lisp-compiler`) can traverse the
+  AST without reaching into the `detail` namespace.
+
 ## [0.1.0] - 2026-07-13
 
 ### Added

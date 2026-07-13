@@ -4,6 +4,14 @@ All notable changes to the C `lisp-parser` package are documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+
+### Added
+
+- AST child accessors `lp_sexpr_child_count` / `lp_sexpr_child` /
+  `lp_sexpr_dotted_last` / `lp_sexpr_quoted_inner`, so tree walkers (e.g. the
+  `lisp-compiler`) can traverse an opaque `LpSExpr`.
+
 ## [0.1.0] - 2026-07-13
 
 ### Added

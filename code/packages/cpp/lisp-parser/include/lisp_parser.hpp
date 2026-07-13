@@ -77,6 +77,28 @@ class SExpr {
         return std::get<detail::Atom>(node).value;
     }
 
+    // Child access (for tree walkers such as a compiler). For a List or
+    // DottedPair, `child_count`/`child` cover the leading elements; for a
+    // DottedPair, `dotted_last` is the final cdr; for a Quoted, `quoted_inner`
+    // is the quoted form.
+    std::size_t child_count() const {
+        if (const auto* l = std::get_if<detail::List>(&node))
+            return l->items.size();
+        if (const auto* d = std::get_if<detail::DottedPair>(&node))
+            return d->elements.size();
+        return 0;
+    }
+    const SExpr& child(std::size_t i) const {
+        if (const auto* l = std::get_if<detail::List>(&node)) return l->items[i];
+        return std::get<detail::DottedPair>(node).elements[i];
+    }
+    const SExpr& dotted_last() const {
+        return *std::get<detail::DottedPair>(node).last;
+    }
+    const SExpr& quoted_inner() const {
+        return *std::get<detail::Quoted>(node).inner;
+    }
+
     // Recursively collect every atom value in this tree.
     std::vector<std::string> find_atoms() const {
         std::vector<std::string> out;

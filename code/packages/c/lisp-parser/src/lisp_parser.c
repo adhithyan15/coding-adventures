@@ -329,6 +329,25 @@ LpSExprKind lp_sexpr_kind(const LpSExpr *e) { return e->kind; }
 LpAtomKind lp_sexpr_atom_kind(const LpSExpr *e) { return e->as.atom.kind; }
 const char *lp_sexpr_atom_value(const LpSExpr *e) { return e->as.atom.value; }
 
+size_t lp_sexpr_child_count(const LpSExpr *e) {
+    if (e->kind == LP_LIST) return e->as.list.n;
+    if (e->kind == LP_DOTTED_PAIR) return e->as.dotted.n;
+    return 0;
+}
+const LpSExpr *lp_sexpr_child(const LpSExpr *e, size_t i) {
+    if (e->kind == LP_LIST)
+        return i < e->as.list.n ? e->as.list.items[i] : NULL;
+    if (e->kind == LP_DOTTED_PAIR)
+        return i < e->as.dotted.n ? e->as.dotted.items[i] : NULL;
+    return NULL;
+}
+const LpSExpr *lp_sexpr_dotted_last(const LpSExpr *e) {
+    return e->kind == LP_DOTTED_PAIR ? e->as.dotted.last : NULL;
+}
+const LpSExpr *lp_sexpr_quoted_inner(const LpSExpr *e) {
+    return e->kind == LP_QUOTED ? e->as.quoted : NULL;
+}
+
 static int collect_atoms(const LpSExpr *e, LpStrList *out, size_t *cap) {
     switch (e->kind) {
         case LP_ATOM:

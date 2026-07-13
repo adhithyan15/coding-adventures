@@ -81,6 +81,17 @@ LpSExprKind lp_sexpr_kind(const LpSExpr *e);
 LpAtomKind lp_sexpr_atom_kind(const LpSExpr *e);
 const char *lp_sexpr_atom_value(const LpSExpr *e);
 
+/* Child access (for tree walkers such as a compiler). For an LP_LIST or
+ * LP_DOTTED_PAIR node, `lp_sexpr_child_count` is the number of leading elements
+ * and `lp_sexpr_child` returns element `i` (borrowed). For an LP_DOTTED_PAIR,
+ * `lp_sexpr_dotted_last` is the final cdr; for an LP_QUOTED node,
+ * `lp_sexpr_quoted_inner` is the quoted form. Out-of-range / wrong-kind access
+ * returns 0 / NULL. */
+size_t lp_sexpr_child_count(const LpSExpr *e);
+const LpSExpr *lp_sexpr_child(const LpSExpr *e, size_t i);
+const LpSExpr *lp_sexpr_dotted_last(const LpSExpr *e);
+const LpSExpr *lp_sexpr_quoted_inner(const LpSExpr *e);
+
 /* Recursively collect every atom value in `e` (owned; free with
  * lp_strlist_free). */
 LpStrList lp_sexpr_find_atoms(const LpSExpr *e);
