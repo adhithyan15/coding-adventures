@@ -277,6 +277,22 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
     },
+    // Twig — **E6d-3b: the `append` list operation on the code-gen backends.**
+    // `append` *rebuilds* the first list in front of the second, so `lower_list_ops`
+    // rewrites `call_builtin "append" a b` to a synthesized recursive helper
+    // `__dyn_list_append(a, b) = if null?(a) then b else cons(car(a), append(cdr(a), b))`.
+    // Unlike `list-ref` there is no index — both args are lisp lists and every value
+    // it touches is already a reference, so no unbox/box; its one new op vs
+    // length/list-ref is the `cons` in the recursive arm (the E6d-1 heap builtin,
+    // lowered for the injected helper too). `(append (list 1 42) (list 3))` builds
+    // `(1 42 3)`; `(car (cdr …))` = 42, proving the rebuilt spine is a real cons chain.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(car (cdr (append (list 1 42) (list 3))))",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
     // Twig — E4 literal `string-length`. The compiler lowers
     // `(string-length "HELLO")` to shared `str_const` + `str_len`, avoiding the
     // dynamic `call_builtin "string-length"` path that codegen validators reject.
