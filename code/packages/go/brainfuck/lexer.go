@@ -25,7 +25,8 @@
 //	Source text  →  Lexer  →  []Token
 //	"++[>+<-]"      rules     [INC INC LOOP_START RIGHT INC LEFT DEC LOOP_END EOF]
 //
-// The lexer uses a grammar-driven engine loaded from brainfuck.tokens. The
+// The lexer uses a grammar-driven engine whose token grammar is embedded at
+// compile time as native Go data (TokenGrammarData in grammar_data.go). The
 // grammar specifies:
 //   - 8 literal token types (one per command character)
 //   - 2 skip patterns: whitespace and comments (non-command characters)
@@ -53,76 +54,26 @@
 package brainfuck
 
 import (
-	"path/filepath"
-	"runtime"
-
-	grammartools "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
 )
 
-// getTokensGrammarPath computes the absolute path to the brainfuck.tokens
-// grammar file.
+// CreateBrainfuckLexer returns a GrammarLexer configured with the Brainfuck
+// token grammar, ready to tokenize the given Brainfuck source text.
 //
-// We use runtime.Caller(0) to find the directory of this Go source file at
-// runtime, then navigate up three levels (brainfuck -> go -> packages ->
-// code) to reach the grammars directory. This approach works regardless of
-// the working directory, which matters because tests and the build tool may
-// run from different locations.
-//
-// Directory structure:
-//
-//	code/
-//	  grammars/
-//	    brainfuck.tokens    <-- this is what we want
-//	  packages/
-//	    go/
-//	      brainfuck/
-//	        lexer.go        <-- we are here (3 levels below code/)
-func getTokensGrammarPath() string {
-	_, filename, _, _ := runtime.Caller(0)
-	parent := filepath.Dir(filename)
-	root := filepath.Join(parent, "..", "..", "..", "grammars")
-	return filepath.Join(root, "brainfuck", "brainfuck.tokens")
-}
-
-// CreateBrainfuckLexer loads the Brainfuck token grammar and returns a
-// configured GrammarLexer ready to tokenize the given Brainfuck source text.
-//
-// The pipeline:
-//  1. Open brainfuck.tokens via the capability-scoped file system
-//  2. Parse the grammar file into a TokenGrammar structure
-//  3. Construct a GrammarLexer configured with that grammar
+// The grammar is embedded at compile time as native Go in grammar_data.go
+// (TokenGrammarData); nothing is read from disk at run time. The lexer
+// compiles the grammar's regex patterns once here, then reuses them during
+// Tokenize(). Line and column tracking start at (1, 1).
 //
 // The returned lexer operates in default scanning mode. Whitespace and
 // non-command characters (comments) are discarded automatically by the
 // skip: patterns in the grammar — they are consumed but never emitted.
 //
-// Returns an error if the grammar file cannot be read or parsed.
+// The error result is retained for API compatibility and is always nil: with
+// the grammar compiled in, there is no file to read and nothing to parse at
+// run time, so the capability-scoped file system is no longer needed.
 func CreateBrainfuckLexer(source string) (*lexer.GrammarLexer, error) {
-	return StartNew[*lexer.GrammarLexer]("brainfuck.CreateBrainfuckLexer", nil,
-		func(op *Operation[*lexer.GrammarLexer], rf *ResultFactory[*lexer.GrammarLexer]) *OperationResult[*lexer.GrammarLexer] {
-			// Read the grammar file through the capability-enforced file accessor.
-			// This ensures only the declared paths (brainfuck.tokens and
-			// brainfuck.grammar) can be opened — any other path causes a
-			// capability violation error rather than a silent success.
-			bytes, err := op.File.ReadFile(getTokensGrammarPath())
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-
-			// Parse the raw grammar text into structured token definitions.
-			// ParseTokenGrammar extracts the token names, patterns (literal or
-			// regex), and skip definitions into a TokenGrammar value.
-			grammar, err := grammartools.ParseTokenGrammar(string(bytes))
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-
-			// Construct the generic grammar-driven lexer with the Brainfuck
-			// grammar. The lexer compiles regex patterns once here, then reuses
-			// them during Tokenize(). Line and column tracking start at (1, 1).
-			return rf.Generate(true, false, lexer.NewGrammarLexer(source, grammar))
-		}).GetResult()
+	return lexer.NewGrammarLexer(source, TokenGrammarData), nil
 }
 
 // TokenizeBrainfuck is a convenience function that tokenizes Brainfuck source

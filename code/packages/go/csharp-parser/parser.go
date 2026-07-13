@@ -1,88 +1,31 @@
+// Package csharpparser parses C# source code into an Abstract Syntax Tree (AST)
+// using versioned grammars.
+//
+// The parser supports every released C# version (1.0 through 12.0). Each version
+// has its own parser grammar that describes the syntactic structure of that
+// release. See the csharp-lexer package for a description of each version.
+//
+// The grammars are embedded at compile time as native Go data structures in
+// grammar_data.go (VersionedParserGrammars, keyed by version string). Nothing is
+// read from disk at run time, so the parser needs no filesystem capability and
+// works unchanged when the package is built standalone.
+//
+// Usage:
+//
+//	ast, err := csharpparser.ParseCSharp(source, "9.0")
+//	ast, err := csharpparser.ParseCSharp(source, "")  // defaults to 12.0
 package csharpparser
 
 import (
 	"fmt"
-	"os"
-	"path/filepath"
-	"runtime"
 
-	"github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
-	"github.com/adhithyan15/coding-adventures/code/packages/go/parser"
 	csharplexer "github.com/adhithyan15/coding-adventures/code/packages/go/csharp-lexer"
+	"github.com/adhithyan15/coding-adventures/code/packages/go/parser"
 )
-
-// validVersions is the set of C# version strings the parser recognises.
-// These must stay in sync with the same map in the csharp-lexer package so
-// that the lexer and parser always agree on which grammars are available.
-//
-// See the csharp-lexer package for a detailed description of each release.
-var validVersions = map[string]bool{
-	"1.0":  true,
-	"2.0":  true,
-	"3.0":  true,
-	"4.0":  true,
-	"5.0":  true,
-	"6.0":  true,
-	"7.0":  true,
-	"8.0":  true,
-	"9.0":  true,
-	"10.0": true,
-	"11.0": true,
-	"12.0": true,
-}
 
 // DefaultVersion is the C# version used when no version is specified.
 // Kept in sync with the csharp-lexer package.
 const DefaultVersion = "12.0"
-
-// getGrammarPath resolves the absolute path to the .grammar file for the given
-// C# version string.
-//
-// When version is "" (empty string), the DefaultVersion ("12.0") is used.
-// This provides a sensible default for callers that do not care about a
-// specific version.
-//
-// Any other non-empty string must appear in validVersions; an unknown version
-// returns a descriptive error so that typos produce actionable messages.
-//
-// # How grammar files are found
-//
-// The .grammar file describes the *syntactic structure* of the language —
-// production rules like "a class declaration consists of access modifiers,
-// the keyword 'class', a name, an optional base list, and a body". These rules
-// are separate from the .tokens file (which the lexer uses), because the two
-// tools need different representations:
-//
-//   - The lexer uses a flat list of regex-like patterns to classify individual
-//     characters into tokens.
-//   - The parser uses a context-free grammar (CFG) to describe how tokens
-//     combine into larger structures (expressions, statements, declarations).
-//
-// Both files live under code/grammars/csharp/ and share the same version
-// naming convention (csharp{version}.tokens / csharp{version}.grammar).
-func getGrammarPath(version string) (string, error) {
-	// runtime.Caller(0) returns the path to *this* source file at compile
-	// time. We navigate up three directories to reach code/grammars/.
-	_, filename, _, _ := runtime.Caller(0)
-	parent := filepath.Dir(filename)
-	root := filepath.Join(parent, "..", "..", "..", "grammars")
-
-	// Default to the latest version when no version is specified.
-	if version == "" {
-		version = DefaultVersion
-	}
-
-	if !validVersions[version] {
-		return "", fmt.Errorf(
-			"unknown C# version %q: valid versions are 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0",
-			version,
-		)
-	}
-
-	// Grammar files follow the pattern: csharp/csharp{version}.grammar
-	// For example: csharp/csharp12.0.grammar, csharp/csharp1.0.grammar
-	return filepath.Join(root, "csharp", "csharp"+version+".grammar"), nil
-}
 
 // NewCSharpParser constructs a GrammarParser ready to parse the given
 // C# source string.
@@ -102,11 +45,12 @@ func getGrammarPath(version string) (string, error) {
 //   - "11.0" — required members and raw string literals
 //   - "12.0" — primary constructors and collection expressions
 //
-// Both the lexer and parser grammar files are selected by the same version
-// string, guaranteeing that the token set and parse rules stay consistent.
-//
-// An error is returned if the version string is unrecognised, or if any
-// grammar file cannot be read.
+// Both the lexer and parser grammars are selected by the same version string,
+// guaranteeing that the token set and parse rules stay consistent. The parser
+// grammar is selected from the compiled-in VersionedParserGrammars map; no
+// grammar file is read at run time. When version is "" the default grammar
+// (C# 12.0) is used directly. An error is returned if the version string is
+// unrecognised, or if lexing fails.
 //
 // # Two-phase compilation: lexing then parsing
 //
@@ -127,23 +71,21 @@ func getGrammarPath(version string) (string, error) {
 // The AST is the input to subsequent phases: semantic analysis, type checking,
 // optimisation, and code generation.
 func NewCSharpParser(source string, version string) (*parser.GrammarParser, error) {
-	// Tokenise first; any version-error is surfaced here before we attempt
-	// to open the parser grammar file.
+	// Tokenise first; any version-error is surfaced here before we select
+	// the parser grammar.
 	tokens, err := csharplexer.TokenizeCSharp(source, version)
 	if err != nil {
 		return nil, err
 	}
-	grammarPath, err := getGrammarPath(version)
-	if err != nil {
-		return nil, err
+	if version == "" {
+		return parser.NewGrammarParser(tokens, ParserGrammarData), nil
 	}
-	bytes, err := os.ReadFile(grammarPath)
-	if err != nil {
-		return nil, err
-	}
-	grammar, err := grammartools.ParseParserGrammar(string(bytes))
-	if err != nil {
-		return nil, err
+	grammar, ok := VersionedParserGrammars[version]
+	if !ok {
+		return nil, fmt.Errorf(
+			"unknown C# version %q: valid versions are 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0",
+			version,
+		)
 	}
 	return parser.NewGrammarParser(tokens, grammar), nil
 }

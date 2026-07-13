@@ -2,49 +2,6 @@
   "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
   "version": 1,
   "package": "go/python-lexer",
-  "capabilities": [
-    {
-      "category": "fs",
-      "action": "read",
-      "target": "../../../grammars/python/python.tokens",
-      "justification": "Reads the legacy minimal Python token grammar (backward compatibility)."
-    },
-    {
-      "category": "fs",
-      "action": "read",
-      "target": "../../../grammars/python/python2.7.tokens",
-      "justification": "Reads Python 2.7 token grammar for version-aware tokenization."
-    },
-    {
-      "category": "fs",
-      "action": "read",
-      "target": "../../../grammars/python/python3.0.tokens",
-      "justification": "Reads Python 3.0 token grammar for version-aware tokenization."
-    },
-    {
-      "category": "fs",
-      "action": "read",
-      "target": "../../../grammars/python/python3.6.tokens",
-      "justification": "Reads Python 3.6 token grammar for version-aware tokenization."
-    },
-    {
-      "category": "fs",
-      "action": "read",
-      "target": "../../../grammars/python/python3.8.tokens",
-      "justification": "Reads Python 3.8 token grammar for version-aware tokenization."
-    },
-    {
-      "category": "fs",
-      "action": "read",
-      "target": "../../../grammars/python/python3.10.tokens",
-      "justification": "Reads Python 3.10 token grammar for version-aware tokenization."
-    },
-    {
-      "category": "fs",
-      "action": "read",
-      "target": "../../../grammars/python/python3.12.tokens",
-      "justification": "Reads Python 3.12 token grammar for version-aware tokenization."
-    }
-  ],
-  "justification": "Reads versioned Python grammar definition files. No write, network, or process access needed."
+  "capabilities": [],
+  "justification": "Uses a compiled-in token grammar. No runtime filesystem, network, process, or environment access needed."
 }

@@ -2,13 +2,6 @@
   "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
   "version": 1,
   "package": "go/verilog-lexer",
-  "capabilities": [
-    {
-      "category": "fs",
-      "action": "read",
-      "target": "../../../grammars/verilog/verilog.tokens",
-      "justification": "Reads the Verilog token grammar file from the filesystem to configure the lexer at initialization time."
-    }
-  ],
-  "justification": "Reads token pattern definitions from code/grammars/*.tokens at runtime to configure the tokenizer. The grammar file is loaded once at initialization via the filesystem."
+  "capabilities": [],
+  "justification": "Uses a compiled-in token grammar. No runtime filesystem, network, process, or environment access needed."
 }

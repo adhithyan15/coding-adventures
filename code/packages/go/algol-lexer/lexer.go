@@ -62,79 +62,55 @@ package algollexer
 
 import (
 	"fmt"
-	"path/filepath"
-	"runtime"
 	"strings"
 
-	grammartools "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
 )
 
+// validAlgolVersions is the set of ALGOL versions with an embedded grammar.
+// ALGOL 60 is the only version we support; the version parameter is retained
+// on the public API so callers can pass a version explicitly and receive a
+// clear error for anything unrecognized.
 var validAlgolVersions = map[string]bool{
 	"algol60": true,
 }
 
-// getGrammarPath computes the absolute path to the algol.tokens grammar file.
-//
-// We use runtime.Caller(0) to find the directory of this Go source file at
-// runtime, then navigate up three levels (algol-lexer -> go -> packages ->
-// code) to reach the grammars directory. This approach works regardless of the
-// working directory, which is important because tests and the build tool may
-// run from different locations.
-//
-// Directory structure:
-//
-//	code/
-//	  grammars/
-//	    algol.tokens        <-- this is what we want
-//	  packages/
-//	    go/
-//	      algol-lexer/
-//	        lexer.go        <-- we are here (3 levels below code/)
-func getGrammarPath(version string) (string, error) {
-	_, filename, _, _ := runtime.Caller(0)
-	parent := filepath.Dir(filename)
-	root := filepath.Join(parent, "..", "..", "..", "grammars")
+// resolveVersion normalizes the optional version argument. An empty string
+// defaults to "algol60". It returns an error for any unrecognized version,
+// preserving the historical unknown-version behavior even though the grammar
+// is now compiled in rather than read from disk.
+func resolveVersion(version string) (string, error) {
 	if version == "" {
 		version = "algol60"
 	}
 	if !validAlgolVersions[version] {
 		return "", fmt.Errorf("unknown ALGOL version %q: valid versions are algol60", version)
 	}
-	return filepath.Join(root, "algol", version+".tokens"), nil
+	return version, nil
 }
 
-// CreateAlgolLexer loads the ALGOL 60 token grammar and returns a configured
-// GrammarLexer ready to tokenize the given ALGOL 60 source text.
+// CreateAlgolLexer returns a GrammarLexer configured with the ALGOL 60 token
+// grammar, ready to tokenize the given ALGOL 60 source text.
 //
-// The returned lexer operates in default mode (no indentation tracking).
-// ALGOL 60's whitespace is handled by skip patterns: spaces, tabs, carriage
-// returns, and newlines are all consumed silently between tokens. Comments
-// (the keyword "comment" through the next ";") are also consumed silently.
+// The grammar is embedded at compile time as native Go in grammar_data.go
+// (TokenGrammarData); nothing is read from disk at run time, so the lexer needs
+// no filesystem capability and works unchanged when the package is built
+// standalone. The returned lexer operates in default mode (no indentation
+// tracking). ALGOL 60's whitespace is handled by skip patterns: spaces, tabs,
+// carriage returns, and newlines are all consumed silently between tokens.
+// Comments (the keyword "comment" through the next ";") are also consumed
+// silently.
 //
-// Returns an error if the grammar file cannot be read or parsed.
+// An error is returned only when an unrecognized version is requested.
 func CreateAlgolLexer(source string, version ...string) (*lexer.GrammarLexer, error) {
 	effectiveVersion := ""
 	if len(version) > 0 {
 		effectiveVersion = version[0]
 	}
-	grammarPath, err := getGrammarPath(effectiveVersion)
-	if err != nil {
+	if _, err := resolveVersion(effectiveVersion); err != nil {
 		return nil, err
 	}
-
-	return StartNew[*lexer.GrammarLexer]("algollexer.CreateAlgolLexer", nil,
-		func(op *Operation[*lexer.GrammarLexer], rf *ResultFactory[*lexer.GrammarLexer]) *OperationResult[*lexer.GrammarLexer] {
-			bytes, err := op.File.ReadFile(grammarPath)
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-			grammar, err := grammartools.ParseTokenGrammar(string(bytes))
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-			return rf.Generate(true, false, lexer.NewGrammarLexer(source, grammar))
-		}).GetResult()
+	return lexer.NewGrammarLexer(source, TokenGrammarData), nil
 }
 
 // TokenizeAlgol is a convenience function that tokenizes ALGOL 60 source text

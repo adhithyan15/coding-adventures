@@ -1,38 +1,24 @@
 package rubyparser
 
 import (
-	"path/filepath"
-	"runtime"
-
-	"github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/parser"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/ruby-lexer"
 )
 
-func getGrammarPath() string {
-	_, filename, _, _ := runtime.Caller(0)
-	parent := filepath.Dir(filename)
-	root := filepath.Join(parent, "..", "..", "..", "grammars")
-	return filepath.Join(root, "ruby", "ruby.grammar")
-}
-
+// CreateRubyParser tokenizes the Ruby source using the Ruby lexer, then returns
+// a GrammarParser configured with the Ruby parser grammar, ready to produce an
+// AST.
+//
+// The parser grammar is embedded at compile time as native Go in grammar_data.go
+// (ParserGrammarData); nothing is read from disk at run time, so the parser
+// needs no filesystem capability and works when built standalone. The error
+// result is retained for API compatibility; it is non-nil only when lexing fails.
 func CreateRubyParser(source string) (*parser.GrammarParser, error) {
 	tokens, err := rubylexer.TokenizeRuby(source)
 	if err != nil {
 		return nil, err
 	}
-	return StartNew[*parser.GrammarParser]("rubyparser.CreateRubyParser", nil,
-		func(op *Operation[*parser.GrammarParser], rf *ResultFactory[*parser.GrammarParser]) *OperationResult[*parser.GrammarParser] {
-			bytes, err := op.File.ReadFile(getGrammarPath())
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-			grammar, err := grammartools.ParseParserGrammar(string(bytes))
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-			return rf.Generate(true, false, parser.NewGrammarParser(tokens, grammar))
-		}).GetResult()
+	return parser.NewGrammarParser(tokens, ParserGrammarData), nil
 }
 
 func ParseRuby(source string) (*parser.ASTNode, error) {

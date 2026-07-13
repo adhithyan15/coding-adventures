@@ -19,8 +19,9 @@
 //  1. The Dartmouth BASIC lexer (dartmouth-basic-lexer): turns raw BASIC text
 //     into a typed token stream (LINE_NUM, KEYWORD, NAME, NUMBER, etc.).
 //
-//  2. The grammar-driven parser engine (parser package): reads
-//     dartmouth_basic.grammar and applies it to the token stream using
+//  2. The grammar-driven parser engine (parser package): applies the
+//     dartmouth_basic grammar — embedded at compile time as native Go in
+//     grammar_data.go (ParserGrammarData) — to the token stream using
 //     recursive descent with packrat memoization.
 //
 // The result is an AST rooted at the "program" rule.
@@ -87,42 +88,9 @@
 package dartmouthbasicparser
 
 import (
-	"path/filepath"
-	"runtime"
-
-	grammartools "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	dartmouthlexer "github.com/adhithyan15/coding-adventures/code/packages/go/dartmouth-basic-lexer"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/parser"
 )
-
-// getGrammarPath computes the absolute path to the dartmouth_basic.grammar file.
-//
-// This function uses runtime.Caller(0) to locate this source file at runtime,
-// then navigates up the directory tree to find the shared grammars directory.
-//
-// Directory layout:
-//
-//	code/
-//	  grammars/
-//	    dartmouth_basic.grammar   <-- what we want
-//	  packages/
-//	    go/
-//	      dartmouth-basic-parser/
-//	        parser.go             <-- we are here (3 levels below code/)
-//
-// Three "../" steps from the package directory reach code/; then we descend
-// into grammars/.
-func getGrammarPath() string {
-	// runtime.Caller(0) returns the source path of THIS file, even at runtime.
-	// This is Go's way of embedding a file-relative path — no os.Getwd() needed.
-	_, filename, _, _ := runtime.Caller(0)
-
-	// Navigate from the file's directory up 3 levels to code/
-	parent := filepath.Dir(filename)
-	root := filepath.Join(parent, "..", "..", "..", "grammars")
-
-	return filepath.Join(root, "dartmouth_basic", "dartmouth_basic.grammar")
-}
 
 // CreateDartmouthBasicParser tokenizes the BASIC source text using the Dartmouth
 // BASIC lexer, then loads the parser grammar and returns a configured
@@ -136,14 +104,17 @@ func getGrammarPath() string {
 //     (b) suppressRemContent — drops all tokens between REM and NEWLINE
 //     (c) upcaseIdentifiers  — upcases NAME, BUILTIN_FN, USER_FN values
 //
-//  2. Load dartmouth_basic.grammar, create a GrammarParser from the tokens.
+//  2. Create a GrammarParser from the tokens and the parser grammar embedded at
+//     compile time as native Go in grammar_data.go (ParserGrammarData).
 //     The GrammarParser uses recursive descent with packrat memoization.
 //     Packrat memoization ensures no (rule, position) pair is computed more
 //     than once, giving O(n × rules) time for most practical inputs.
 //
 // The grammar's "program" rule is the entry point (first rule in the file).
 //
-// Returns an error if lexing fails or the grammar file cannot be read/parsed.
+// The parser grammar is embedded at compile time; nothing is read from disk at
+// run time, so the parser needs no filesystem capability and works when built
+// standalone. Returns an error only when lexing fails.
 func CreateDartmouthBasicParser(source string) (*parser.GrammarParser, error) {
 	// Step 1: Tokenize the BASIC source.
 	// The lexer normalises the token stream: line-number labels become LINE_NUM,
@@ -154,38 +125,14 @@ func CreateDartmouthBasicParser(source string) (*parser.GrammarParser, error) {
 		return nil, err
 	}
 
-	// Steps 2–4 run inside a capability-scoped Operation so that all file I/O
-	// is audited against the declared allowlist in required_capabilities.json.
-	// Only the exact path ../../../grammars/dartmouth_basic.grammar is permitted.
-	return StartNew[*parser.GrammarParser]("dartmouthbasicparser.CreateDartmouthBasicParser", nil,
-		func(op *Operation[*parser.GrammarParser], rf *ResultFactory[*parser.GrammarParser]) *OperationResult[*parser.GrammarParser] {
-			// Step 2: Read the grammar file.
-			// This EBNF grammar defines the full syntax of Dartmouth BASIC 1964:
-			// all 17 statement types, the expression precedence cascade, the
-			// variable rule (scalar and array forms), and helper rules like relop,
-			// print_list, dim_decl, etc.
-			bytes, err := op.File.ReadFile(getGrammarPath())
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-
-			// Step 3: Parse the grammar file into a structured ParserGrammar.
-			// ParseParserGrammar extracts each rule (name + body), where the body
-			// is a tree of grammar elements: sequences, alternations (|), repetitions
-			// ({ }), options ([ ]), token references (UPPERCASE), and rule references
-			// (lowercase). Literal strings like "LET" match keyword tokens by value.
-			grammar, err := grammartools.ParseParserGrammar(string(bytes))
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-
-			// Step 4: Create the GrammarParser.
-			// NewGrammarParser builds a rule-name → rule lookup table and
-			// initialises the packrat memoization cache. The first rule in the
-			// grammar file ("program") becomes the implicit entry point, called
-			// by GrammarParser.Parse().
-			return rf.Generate(true, false, parser.NewGrammarParser(tokens, grammar))
-		}).GetResult()
+	// Step 2: Create the GrammarParser.
+	// NewGrammarParser builds a rule-name → rule lookup table and initialises
+	// the packrat memoization cache. ParserGrammarData is the embedded EBNF
+	// grammar for Dartmouth BASIC 1964: all 17 statement types, the expression
+	// precedence cascade, the variable rule (scalar and array forms), and helper
+	// rules like relop, print_list, dim_decl, etc. The first rule ("program")
+	// becomes the implicit entry point, called by GrammarParser.Parse().
+	return parser.NewGrammarParser(tokens, ParserGrammarData), nil
 }
 
 // ParseDartmouthBasic is a convenience function that parses Dartmouth BASIC
