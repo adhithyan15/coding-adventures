@@ -1,5 +1,27 @@
 # Changelog — iir-builtin-lowering
 
+## 0.27.0 - 2026-07-13 (E6d-3b: `reverse` via a tail-recursive accumulator helper)
+
+`lower_list_ops` gains a fourth list operation, `reverse`. It rewrites
+`call_builtin "reverse" a` to a **nil-seeded** call to a synthesized
+tail-recursive accumulator helper `__dyn_list_reverse` (injected once):
+
+```
+reverse(a)          = __dyn_list_reverse(a, nil)      # nil seed at the call site
+__dyn_list_reverse(a, acc) = if null?(a) then acc
+                             else __dyn_list_reverse(cdr(a), cons(car(a), acc))
+```
+
+Consing each element of `a` onto the *front* of the accumulator reverses the
+order; the base case returns the accumulator. The call-site rewrite emits the
+empty accumulator as a `const 0 : ref<LispyPair>` (the exact nil sentinel the
+`list` desugar / `make_nil` emit), named `{dest}.rev_nil` (unique per SSA dest so
+two `reverse` sites never collide). Like `append` there is no index → no
+unbox/box; the recursion reuses `null?`/`car`/`cdr`/`cons` (E6d-1). Recursion is
+in tail position but the backends do not yet TCO, so depth is bounded by the list
+length. Five new unit tests (nil-seed + acc-call rewrite, single injection,
+tail-recursive-accumulator shape, all-four-ops coexistence). `assoc` follows.
+
 ## 0.26.0 - 2026-07-12 (E6d-3b: `append` via a synthesized list-rebuild helper)
 
 `lower_list_ops` gains a third list operation, `append`. It rewrites
