@@ -462,5 +462,5 @@ int main(void) {
     test_split_and_slice();
     test_filter_invariants();
     test_2d();
-    ISO_TEST_RESULT();
+    return ISO_TEST_RESULT();
 }
