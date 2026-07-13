@@ -181,6 +181,7 @@ SELF_CONTAINED_RUNGS = (
     "rung141_grid_density",
     "rung142_packing_ratio",
     "rung143_shelf_density",
+    "rung144_dose_density",
 )
 
 
