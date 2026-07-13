@@ -351,8 +351,11 @@ FdDoc *fd_annotate(FdAnnotation annotation, FdDoc *content) {
     return d;
 }
 
-/* Deep-copy a doc tree (for fd_join's separator). Returns NULL on OOM. */
-static FdDoc *fd_clone(const FdDoc *s) {
+int fd_is_nil(const FdDoc *d) { return d != NULL && d->kind == FD_NIL; }
+
+/* Deep-copy a doc tree (also used internally for fd_join's separator). Returns
+ * NULL on OOM. */
+FdDoc *fd_clone(const FdDoc *s) {
     if (s == NULL) return NULL;
     switch (s->kind) {
         case FD_NIL:
