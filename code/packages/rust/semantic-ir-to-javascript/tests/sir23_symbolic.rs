@@ -15,7 +15,7 @@ use std::path::PathBuf;
 use std::process::Command;
 
 use semantic_ir::{
-    Block, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Module, Span, Stmt,
+    Block, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Module, Scope, Span, Stmt,
 };
 use semantic_ir_to_javascript::compile;
 
@@ -34,6 +34,14 @@ fn sp() -> Span {
 fn sym(name: &str) -> Expr {
     Expr::SymSymbol {
         name: name.into(),
+        span: sp(),
+    }
+}
+
+fn local(name: &str) -> Expr {
+    Expr::VarRef {
+        name: name.into(),
+        scope: Scope::Local,
         span: sp(),
     }
 }
@@ -247,5 +255,73 @@ fn typed_blank_matches_only_constrained_head() {
     );
     if let Some(stdout) = run_module(&module, "sym_typed_blank") {
         assert_eq!(stdout, "Pair(5, f(z))");
+    }
+}
+
+#[test]
+fn print_on_deeply_nested_term_truncates_instead_of_crashing_node() {
+    // Regression test (/security-review finding): `Symbolic.toDisplayString`
+    // — reached from `print`/`puts` via `formatSeen` — recursed over the
+    // FULL term tree with no depth cap of its own (only `replaceAll`/
+    // `replaceRepeated`'s walk enforced `MAX_TERM_DEPTH`). A term built via
+    // 2000 real *runtime* firings of `Symbolic.apply` (an ordinary
+    // compiled `for`-loop, NOT a hand-built 2000-node static AST — the
+    // whole point being that a tiny, shallow compiled program can build an
+    // arbitrarily deep runtime VALUE) bypassed that cap entirely, so
+    // `toDisplayString` needed its own guard. `node` must exit cleanly
+    // with a truncated `...` rather than crashing with "Maximum call
+    // stack size exceeded".
+    //
+    // for i in range(0, 2000, 1) { acc = Symbolic-apply(f, [acc]) }
+    // print(acc)
+    let stmts = vec![
+        Stmt::LetBinding {
+            name: "acc".into(),
+            sir_type: None,
+            value: sym("leaf"),
+            span: sp(),
+        },
+        Stmt::ForRange {
+            var: "i".into(),
+            start: Expr::IntLit {
+                value: 0,
+                span: sp(),
+            },
+            stop: Expr::IntLit {
+                value: 2000,
+                span: sp(),
+            },
+            step: Expr::IntLit {
+                value: 1,
+                span: sp(),
+            },
+            body: Block {
+                stmts: vec![Stmt::Assign {
+                    name: "acc".into(),
+                    scope: Scope::Local,
+                    value: sym_apply(sym("f"), vec![local("acc")]),
+                    span: sp(),
+                }],
+                value: Expr::NilLit { span: sp() },
+                span: sp(),
+            },
+            span: sp(),
+        },
+        print(local("acc")),
+    ];
+    let module = module_with_main(
+        stmts,
+        Expr::IntLit {
+            value: 0,
+            span: sp(),
+        },
+        &[
+            Feature::SymbolicExpr,
+            Feature::Loops,
+            Feature::MutableBindings,
+        ],
+    );
+    if let Some(stdout) = run_module(&module, "sym_deep_display") {
+        assert!(stdout.contains("..."), "got: {stdout}");
     }
 }

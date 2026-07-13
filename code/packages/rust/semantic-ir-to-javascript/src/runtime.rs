@@ -2383,12 +2383,25 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
 
     function headName(node) { return node.kind === "symbol" ? node.name : ""; }
 
-    // A minimal, non-recursive-through-the-whole-tree display: enough
-    // to make `print`/`puts` on a Symbolic term readable in tests and
-    // REPL output (`f(x, 1/3)`), mirroring `symbolic-ir`'s own
-    // `toDisplayString`. Not part of the SIR23 spec's own contract —
-    // an internal convenience `formatSeen` (above) reaches for.
-    function toDisplayString(node) {
+    // A display helper `print`/`puts`/`formatSeen` (above) reach for,
+    // mirroring `symbolic-ir`'s own `toDisplayString`. Not part of the
+    // SIR23 spec's own contract.
+    //
+    // SECURITY (CWE-674): a term built via `Symbolic.apply`/`applyTerm`
+    // is NOT depth-capped at construction time (only `replaceAll`/
+    // `replaceRepeated`'s tree WALK enforces `MAX_TERM_DEPTH` above) — a
+    // compiled program can build one arbitrarily deep directly, e.g. a
+    // loop lowered to repeated `SymApply` nesting with an
+    // attacker-influenced iteration count. Without its own cap, this
+    // recursive walk would `RangeError: Maximum call stack size
+    // exceeded` well before 512 levels (this walk's per-frame cost is
+    // heavier than `walkOnce`'s). `depth` mirrors the SAME
+    // `MAX_TERM_DEPTH` cap and truncates rather than crashing, matching
+    // how `formatSeen` already renders `"[...]"`/`"{...}"` for an
+    // Array/Map cycle instead of recursing forever.
+    function toDisplayString(node, depth) {
+      if (depth === undefined) { depth = 0; }
+      if (depth > MAX_TERM_DEPTH) { return "..."; }
       switch (node.kind) {
         case "symbol": return node.name;
         case "integer": return String(node.value);
@@ -2396,8 +2409,8 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         case "float": return String(node.value);
         case "string": return JSON.stringify(node.value);
         case "apply":
-          return toDisplayString(node.head) + "("
-            + node.args.map(toDisplayString).join(", ") + ")";
+          return toDisplayString(node.head, depth + 1) + "("
+            + node.args.map((a) => toDisplayString(a, depth + 1)).join(", ") + ")";
         default: return undefined;
       }
     }

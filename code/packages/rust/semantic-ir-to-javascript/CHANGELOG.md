@@ -36,16 +36,30 @@ JavaScript artifact stays self-contained" treatment the exception runtime
   term (a plain object carrying a `.kind` tag) and renders it via a new
   `Symbolic.toDisplayString` — so `print`ing a `SymReplaceAll` result reads as
   `f(x, 1/3)` rather than `[object Object]`.
-- New `tests/sir23_symbolic.rs`: three real `node`-execution tests (not just
+- New `tests/sir23_symbolic.rs`: four real `node`-execution tests (not just
   string-shape assertions) proving the ported algorithm is actually correct —
   `replaceRepeated` reduces `Add(Add(z, 0), 0)` to the bare symbol `z` via
-  `x_ + 0 -> x_`, `replaceAll`'s single-pass contract, and a head-typed blank
-  (`x_Integer`) matching selectively. `lib.rs` gains the TypeScript backend's
-  own shape-assertion test suite (leaf constructors, literal wrapping,
-  blank/blankTyped, the non-`SymSymbol`-head panic guard, `rule` vs.
-  `ruleDelayed`, and `replaceAll`/`replaceRepeated` both routing through
-  `unwrap`), plus an end-to-end `wolfram-to-semantic-ir` compile test (new dev
-  dependency).
+  `x_ + 0 -> x_`, `replaceAll`'s single-pass contract, a head-typed blank
+  (`x_Integer`) matching selectively, and a DoS regression test (below).
+  `lib.rs` gains the TypeScript backend's own shape-assertion test suite
+  (leaf constructors, literal wrapping, blank/blankTyped, the
+  non-`SymSymbol`-head panic guard, `rule` vs. `ruleDelayed`, and
+  `replaceAll`/`replaceRepeated` both routing through `unwrap`), plus an
+  end-to-end `wolfram-to-semantic-ir` compile test (new dev dependency).
+- **Security fix (found by this PR's own `/security-review`, CWE-674):**
+  `Symbolic.toDisplayString` — reached from `print`/`puts` via the
+  `formatSeen` branch above — recursed over a term's *entire* tree with no
+  depth cap of its own; only `replaceAll`/`replaceRepeated`'s walk enforced
+  `MAX_TERM_DEPTH`. A term built via a small, ordinary compiled `for`-loop
+  (not a huge static AST — a handful of source-level nodes executed many
+  times at runtime) can grow arbitrarily deep, so `print`ing one could crash
+  the process with a raw `RangeError: Maximum call stack size exceeded`.
+  `toDisplayString` now threads a `depth` parameter and truncates to `"..."`
+  past `MAX_TERM_DEPTH`, matching how `formatSeen` already renders
+  `"[...]"`/`"{...}"` for an Array/Map cycle instead of crashing. New
+  regression test in `tests/sir23_symbolic.rs` builds depth via a real
+  `Stmt::ForRange` loop (2000 runtime firings of `Symbolic.apply`), proving
+  `node` now exits cleanly with a truncated result.
 
 ## 0.34.0 — Array `cycle(n)`
 
