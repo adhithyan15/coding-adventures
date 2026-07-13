@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 149 \u2014 combined density from FIVE stated quantities (the FIRST five-quantity rung). Rungs 145-148 kept a three-term numerator over a LONE denominator (four quantities). rung-149 gives the denominator a second term too \u2014 a three-term sum over a two-term sum (a+b+c)/(d+e) \u2014 so the panel now observes FIVE quantities. From a part total (part_one + part_two + part_three) divided by a span total (span_one + span_two), compute the combined density ((part_one+part_two+part_three)/(span_one+span_two)), the part total (part_one+part_two+part_three), or the span total (span_one+span_two). Each item is a compute_dimensioned program (observe the five quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a THREE-TERM SUM OVER A TWO-TERM SUM (a+b+c)/(d+e) (pool all three parts and both spans FIRST, then divide the part total by the span total). With terms on both sides, the new slip is dropping a term on EITHER side \u2014 dropping a part from the top ((a+b)/(d+e)) or dropping a span from the bottom ((a+b+c)/d) \u2014 the mistakes the four-quantity rungs (one denominator term) could not test. The harness matches the scalar to the printed options. Contamination-safe: every figure is built only from the five observed quantities via + and / \u2014 no constant leaks, and neither the part total, the span total, nor the combined density ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. This rung uses only + and / over positive quantities, so every figure is automatically positive \u2014 no positivity guards are needed \u2014 and the five family values are kept pairwise distinct with all three queried readouts varying across the panel, all asserted strictly positive at build time.",
+  "items": [
+    {
+      "id": "r149cda-01",
+      "qtype": "combined_density",
+      "stem": "A coverage study records three parts of 2, 4, and 6 pooled across two spans of 2 and 3. What is the combined density (the part total divided by the span total)?",
+      "program": "observe part_one(2)\nobserve part_two(4)\nobserve part_three(6)\nobserve span_one(2)\nobserve span_two(3)\nlet answer = (part_one + part_two + part_three) / (span_one + span_two)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r149cda-02",
+      "qtype": "combined_density",
+      "stem": "A coverage study records three parts of 2, 4, and 6 pooled across two spans of 2 and 3. What is the the part total (all three parts added, the numerator that is divided by the span total)?",
+      "program": "observe part_one(2)\nobserve part_two(4)\nobserve part_three(6)\nobserve span_one(2)\nobserve span_two(3)\nlet answer = part_one + part_two + part_three\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r149cda-03",
+      "qtype": "combined_density",
+      "stem": "A coverage study records three parts of 2, 4, and 6 pooled across two spans of 2 and 3. What is the the span total (the two spans added, the denominator the part total is divided by)?",
+      "program": "observe part_one(2)\nobserve part_two(4)\nobserve part_three(6)\nobserve span_one(2)\nobserve span_two(3)\nlet answer = span_one + span_two\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r149cda-04",
+      "qtype": "combined_density",
+      "stem": "A coverage study records three parts of 3, 5, and 12 pooled across two spans of 4 and 4. What is the combined density (the part total divided by the span total)?",
+      "program": "observe part_one(3)\nobserve part_two(5)\nobserve part_three(12)\nobserve span_one(4)\nobserve span_two(4)\nlet answer = (part_one + part_two + part_three) / (span_one + span_two)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r149cda-05",
+      "qtype": "combined_density",
+      "stem": "A coverage study records three parts of 3, 5, and 12 pooled across two spans of 4 and 4. What is the the part total (all three parts added, the numerator that is divided by the span total)?",
+      "program": "observe part_one(3)\nobserve part_two(5)\nobserve part_three(12)\nobserve span_one(4)\nobserve span_two(4)\nlet answer = part_one + part_two + part_three\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 20,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r149cda-06",
+      "qtype": "combined_density",
+      "stem": "A coverage study records three parts of 3, 5, and 12 pooled across two spans of 4 and 4. What is the the span total (the two spans added, the denominator the part total is divided by)?",
+      "program": "observe part_one(3)\nobserve part_two(5)\nobserve part_three(12)\nobserve span_one(4)\nobserve span_two(4)\nlet answer = span_one + span_two\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r149cda-07",
+      "qtype": "combined_density",
+      "stem": "A coverage study records three parts of 4, 6, and 20 pooled across two spans of 5 and 5. What is the combined density (the part total divided by the span total)?",
+      "program": "observe part_one(4)\nobserve part_two(6)\nobserve part_three(20)\nobserve span_one(5)\nobserve span_two(5)\nlet answer = (part_one + part_two + part_three) / (span_one + span_two)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r149cda-08",
+      "qtype": "combined_density",
+      "stem": "A coverage study records three parts of 4, 6, and 20 pooled across two spans of 5 and 5. What is the the part total (all three parts added, the numerator that is divided by the span total)?",
+      "program": "observe part_one(4)\nobserve part_two(6)\nobserve part_three(20)\nobserve span_one(5)\nobserve span_two(5)\nlet answer = part_one + part_two + part_three\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r149cda-09",
+      "qtype": "combined_density",
+      "stem": "A coverage study records three parts of 4, 6, and 20 pooled across two spans of 5 and 5. What is the the span total (the two spans added, the denominator the part total is divided by)?",
+      "program": "observe part_one(4)\nobserve part_two(6)\nobserve part_three(20)\nobserve span_one(5)\nobserve span_two(5)\nlet answer = span_one + span_two\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r149cda-10",
+      "qtype": "combined_density",
+      "stem": "A coverage study records three parts of 3, 9, and 12 pooled across two spans of 5 and 2. What is the combined density (the part total divided by the span total)?",
+      "program": "observe part_one(3)\nobserve part_two(9)\nobserve part_three(12)\nobserve span_one(5)\nobserve span_two(2)\nlet answer = (part_one + part_two + part_three) / (span_one + span_two)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.7142857142857142,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.4285714285714284,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r149cda-11",
+      "qtype": "combined_density",
+      "stem": "A coverage study records three parts of 3, 9, and 12 pooled across two spans of 5 and 2. What is the the part total (all three parts added, the numerator that is divided by the span total)?",
+      "program": "observe part_one(3)\nobserve part_two(9)\nobserve part_three(12)\nobserve span_one(5)\nobserve span_two(2)\nlet answer = part_one + part_two + part_three\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.4285714285714284,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.7142857142857142,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r149cda-12",
+      "qtype": "combined_density",
+      "stem": "A coverage study records three parts of 3, 9, and 12 pooled across two spans of 5 and 2. What is the the span total (the two spans added, the denominator the part total is divided by)?",
+      "program": "observe part_one(3)\nobserve part_two(9)\nobserve part_three(12)\nobserve span_one(5)\nobserve span_two(2)\nlet answer = span_one + span_two\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.4285714285714284,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.7142857142857142,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r149cda-13",
+      "qtype": "combined_density",
+      "stem": "A coverage study records three parts of 5, 9, and 21 pooled across two spans of 5 and 4. What is the combined density (the part total divided by the span total)?",
+      "program": "observe part_one(5)\nobserve part_two(9)\nobserve part_three(21)\nobserve span_one(5)\nobserve span_two(4)\nlet answer = (part_one + part_two + part_three) / (span_one + span_two)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.888888888888889,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.5555555555555556,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r149cda-14",
+      "qtype": "combined_density",
+      "stem": "A coverage study records three parts of 5, 9, and 21 pooled across two spans of 5 and 4. What is the the part total (all three parts added, the numerator that is divided by the span total)?",
+      "program": "observe part_one(5)\nobserve part_two(9)\nobserve part_three(21)\nobserve span_one(5)\nobserve span_two(4)\nlet answer = part_one + part_two + part_three\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.888888888888889,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.5555555555555556,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r149cda-15",
+      "qtype": "combined_density",
+      "stem": "A coverage study records three parts of 5, 9, and 21 pooled across two spans of 5 and 4. What is the the span total (the two spans added, the denominator the part total is divided by)?",
+      "program": "observe part_one(5)\nobserve part_two(9)\nobserve part_three(21)\nobserve span_one(5)\nobserve span_two(4)\nlet answer = span_one + span_two\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.888888888888889,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.5555555555555556,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r149cda-16",
+      "qtype": "combined_density",
+      "stem": "A coverage study records three parts of 6, 10, and 32 pooled across two spans of 4 and 2. What is the combined density (the part total divided by the span total)?",
+      "program": "observe part_one(6)\nobserve part_two(10)\nobserve part_three(32)\nobserve span_one(4)\nobserve span_two(2)\nlet answer = (part_one + part_two + part_three) / (span_one + span_two)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r149cda-17",
+      "qtype": "combined_density",
+      "stem": "A coverage study records three parts of 6, 10, and 32 pooled across two spans of 4 and 2. What is the the part total (all three parts added, the numerator that is divided by the span total)?",
+      "program": "observe part_one(6)\nobserve part_two(10)\nobserve part_three(32)\nobserve span_one(4)\nobserve span_two(2)\nlet answer = part_one + part_two + part_three\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r149cda-18",
+      "qtype": "combined_density",
+      "stem": "A coverage study records three parts of 6, 10, and 32 pooled across two spans of 4 and 2. What is the the span total (the two spans added, the denominator the part total is divided by)?",
+      "program": "observe part_one(6)\nobserve part_two(10)\nobserve part_three(32)\nobserve span_one(4)\nobserve span_two(2)\nlet answer = span_one + span_two\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 48,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.6666666666666665,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 12.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r149cda-19",
+      "qtype": "combined_density",
+      "stem": "A coverage study records three parts of 7, 11, and 18 pooled across two spans of 5 and 6. What is the combined density (the part total divided by the span total)?",
+      "program": "observe part_one(7)\nobserve part_two(11)\nobserve part_three(18)\nobserve span_one(5)\nobserve span_two(6)\nlet answer = (part_one + part_two + part_three) / (span_one + span_two)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.6363636363636365,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.272727272727273,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7.2,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r149cda-20",
+      "qtype": "combined_density",
+      "stem": "A coverage study records three parts of 7, 11, and 18 pooled across two spans of 5 and 6. What is the the part total (all three parts added, the numerator that is divided by the span total)?",
+      "program": "observe part_one(7)\nobserve part_two(11)\nobserve part_three(18)\nobserve span_one(5)\nobserve span_two(6)\nlet answer = part_one + part_two + part_three\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.272727272727273,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.6363636363636365,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 36,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r149cda-21",
+      "qtype": "combined_density",
+      "stem": "A coverage study records three parts of 7, 11, and 18 pooled across two spans of 5 and 6. What is the the span total (the two spans added, the denominator the part total is divided by)?",
+      "program": "observe part_one(7)\nobserve part_two(11)\nobserve part_three(18)\nobserve span_one(5)\nobserve span_two(6)\nlet answer = span_one + span_two\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.272727272727273,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.6363636363636365,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7.2,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
