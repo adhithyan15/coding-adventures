@@ -2,6 +2,15 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename` crate will be documented in this file.
 
+## [0.20.0] - 2026-07-12
+
+### Changed — CLOC12.189 PR2: bail on module `export`
+
+The local-renaming soundness gate now also declines when
+`program_contains_export_declaration` is true, mirroring the existing `import`
+and `with` gates — an exported binding is this module's public surface and must
+not be renamed.
+
 ## [0.19.0] - 2026-07-12
 
 ### Added — CLOC12.189 PR1: export declaration the predicates report no function payload and the local-name walks skip exports

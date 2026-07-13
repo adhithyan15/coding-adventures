@@ -2,6 +2,21 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.53.0] - 2026-07-12
+
+### Added — CLOC12.189 PR2: bridge `export` declarations
+
+`convert_export_declaration` bridges the grammar's `export_declaration` into the
+three `Declaration::Export*` variants (added by PR1), so ES-module `export` files
+now optimize instead of degrading to WHITESPACE_ONLY. Recognised shapes
+(parse-tree-probe-verified): named `export {a, b as c}`, re-export
+`export {a} from "y"`, export-all `export * from "y"`, default
+`export default <expr | function | class>`, and inline declaration exports
+`export const/let/var …` / `export function …` / `export class …`. The inner
+declaration/expression is bridged by reusing the existing `convert_*` helpers.
+`export * as ns from "y"` is a grammar gap (rejected at parse) and any
+unrecognised shape DECLINES via `unsupported`. Seven bridge tests.
+
 ## [0.52.0] - 2026-07-12
 
 ### Added — CLOC12.188 PR2: bridge `import` declarations

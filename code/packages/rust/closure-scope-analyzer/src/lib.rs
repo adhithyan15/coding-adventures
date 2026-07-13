@@ -267,6 +267,19 @@ pub struct ScopeAnalysis {
     /// rename the whole program when it is set. See
     /// [`program_contains_import_declaration`].
     pub has_import: bool,
+    /// `true` if the program contains at least one ES-module `export`
+    /// declaration anywhere.
+    ///
+    /// An `export` publishes names to *other modules* — a named export
+    /// (`export { foo }`), a re-export (`export { a } from "y"`), or an inline
+    /// declaration export (`export const x = …`) all make a binding part of this
+    /// module's public surface. Renaming an exported binding (or the exported
+    /// name of a specifier) would break importers that reference it by that
+    /// exact name — the analyzer cannot see the other side of that contract.
+    /// Mirroring [`has_import`], the rename passes read this flag and decline to
+    /// rename the whole program when it is set. See
+    /// [`program_contains_export_declaration`].
+    pub has_export: bool,
 }
 
 impl ScopeAnalysis {
@@ -447,6 +460,7 @@ pub fn analyze(program: &Program) -> ScopeAnalysis {
         references: Vec::new(),
         has_with: false,
         has_import: false,
+        has_export: false,
     };
 
     let mut pending: Vec<PendingReference> = Vec::new();
@@ -515,6 +529,23 @@ pub fn program_contains_import_declaration(program: &Program) -> bool {
     analyze(program).has_import
 }
 
+/// Does `program` contain an ES-module `export` declaration anywhere?
+///
+/// A soundness gate for the renaming passes, a sibling of
+/// [`program_contains_import_declaration`]. An `export` publishes a binding to
+/// other modules by an exact name (`export { foo }`, `export const x = …`,
+/// `export { a } from "y"`); renaming that binding — or the exported name of a
+/// specifier — would break importers the analyzer cannot see. The only sound
+/// response with the current module-unaware analysis is to disable renaming for
+/// the whole program. The rename / rename-globals / rename-properties passes
+/// call this and return their input unchanged when it is `true`.
+///
+/// Like the sibling flags it rides the full [`analyze`] walk, so it sees an
+/// `export` however it is nested.
+pub fn program_contains_export_declaration(program: &Program) -> bool {
+    analyze(program).has_export
+}
+
 /// Emit a binding into the given scope and update both the
 /// flat `analysis.bindings` table and the per-scope binding list.
 fn emit_binding(
@@ -578,13 +609,21 @@ fn walk_declaration(
         Declaration::ImportDeclaration(_) => {
             analysis.has_import = true;
         }
-        // Export declarations (CLOC12.189). PR1 keeps the node unreachable (no
-        // bridge yet), so we register nothing and set no flag. The export
-        // soundness gate (exports are the module's public surface — their names
-        // must not be renamed) lands with the bridge PR, mirroring `has_import`.
+        // Export declarations (CLOC12.189 PR2). An `export` publishes names to
+        // other modules — its bindings are this module's public surface and must
+        // not be renamed. We record that on the analysis (`has_export`) so the
+        // rename passes bail for the whole program, mirroring the `import` gate.
+        // We do not descend into an inline declaration export's inner
+        // declaration to register bindings: the whole-program bail makes any such
+        // bindings moot (nothing will be renamed), and not registering them keeps
+        // the conservative "leave exports alone" contract simple. (A future,
+        // finer gate could rename non-exported locals while reserving the
+        // exported names.)
         Declaration::ExportNamedDeclaration(_)
         | Declaration::ExportDefaultDeclaration(_)
-        | Declaration::ExportAllDeclaration(_) => {}
+        | Declaration::ExportAllDeclaration(_) => {
+            analysis.has_export = true;
+        }
     }
 }
 
@@ -1268,6 +1307,7 @@ mod tests {
             references: Vec::new(),
             has_with: false,
             has_import: false,
+            has_export: false,
         };
         let inner = ScopeId(1);
         let resolved = analysis.resolve("x", inner);
@@ -1308,6 +1348,7 @@ mod tests {
             references: Vec::new(),
             has_with: false,
             has_import: false,
+            has_export: false,
         };
         let inner = ScopeId(1);
         assert_eq!(analysis.resolve("x", inner), Some(BindingId(1)));
@@ -1739,6 +1780,7 @@ mod tests {
             }],
             has_with: false,
             has_import: false,
+            has_export: false,
         };
         let json = serde_json::to_string(&analysis).expect("serialize");
         let back: ScopeAnalysis = serde_json::from_str(&json).expect("deserialize");
@@ -2068,5 +2110,57 @@ mod tests {
         let prog = program_with(vec![import_item()]);
         assert!(program_contains_import_declaration(&prog));
         assert!(analyze(&prog).has_import);
+    }
+
+    // ---------------------------------------------------------------
+    // CLOC12.189 PR2 — `export` soundness gate (sibling of the import
+    // gate). `program_contains_export_declaration` is the flag the
+    // rename passes read to disable renaming when an `export` is present.
+    // ---------------------------------------------------------------
+
+    /// `export const x = 1;` as a top-level declaration export item.
+    fn export_item() -> ProgramItem {
+        use coding_adventures_javascript_ast::{
+            ExportNamedDeclaration, NumericLiteral, VarKind, VariableDeclaration,
+            VariableDeclarator,
+        };
+        let inner = Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind: VarKind::Const,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: coding_adventures_javascript_ast::BindingTarget::Identifier(Identifier {
+                    cv: None,
+                    name: "x".into(),
+                }),
+                init: Some(Expression::NumericLiteral(NumericLiteral {
+                    cv: None,
+                    value: 1.0,
+                    raw: "1".into(),
+                })),
+            }],
+        });
+        ProgramItem::Declaration(Declaration::export_named_declaration(ExportNamedDeclaration {
+            cv: None,
+            declaration: Some(Box::new(inner)),
+            specifiers: vec![],
+            source: None,
+        }))
+    }
+
+    #[test]
+    fn program_contains_export_is_false_for_export_free_program() {
+        // `function f(a) {}` — no export, so the gate stays open.
+        let prog = program_with(vec![fn_decl_with_body("f", &["a"], vec![])]);
+        assert!(!program_contains_export_declaration(&prog));
+        assert!(!analyze(&prog).has_export);
+    }
+
+    #[test]
+    fn program_contains_export_detects_top_level_export() {
+        // `export const x = 1;` — the gate must fire, disabling renaming.
+        let prog = program_with(vec![export_item()]);
+        assert!(program_contains_export_declaration(&prog));
+        assert!(analyze(&prog).has_export);
     }
 }

@@ -49,8 +49,10 @@ use lexer::token::{Token, TokenType};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use coding_adventures_javascript_ast::{
     declaration::{
-        BindingTarget, ClassDeclaration, Declaration, FunctionDeclaration, FunctionParam,
-        ImportDeclaration, ImportSpecifier, VarKind, VariableDeclaration, VariableDeclarator,
+        BindingTarget, ClassDeclaration, Declaration, ExportAllDeclaration,
+        ExportDefaultDeclaration, ExportDefaultKind, ExportNamedDeclaration, ExportSpecifier,
+        FunctionDeclaration, FunctionParam, ImportDeclaration, ImportSpecifier, VarKind,
+        VariableDeclaration, VariableDeclarator,
     },
     expression::{
         ArrayExpression, ArrowBody, ArrowFunctionExpression, AssignmentExpression,
@@ -287,6 +289,12 @@ fn convert_source_element(node: &GrammarASTNode) -> Result<ProgramItem, BridgeEr
             let decl = convert_import_declaration(child)?;
             Ok(ProgramItem::Declaration(Declaration::ImportDeclaration(decl)))
         }
+        // An ES-module `export` declaration (CLOC12.189 PR2). Recognised shapes:
+        // named (`export {a, b as c}`), re-export (`export {a} from "y"`),
+        // export-all (`export * from "y"`), default (`export default …`), and
+        // declaration exports (`export const/var/function/class …`). Anything
+        // unrecognised — e.g. `export * as ns from "y"` (grammar gap) — DECLINES.
+        "export_declaration" => Ok(ProgramItem::Declaration(convert_export_declaration(child)?)),
         "statement" => {
             let stmt = convert_statement(child)?;
             Ok(ProgramItem::Statement(stmt))
@@ -398,6 +406,143 @@ fn import_source(node: &GrammarASTNode) -> Option<StringLiteral> {
         }),
         _ => None,
     })
+}
+
+/// Convert an `export_declaration` grammar node into a `Declaration` (one of the
+/// three `Export*` variants) — CLOC12.189 PR2. Grammar shape (verified by a
+/// parse-tree probe):
+///
+/// ```text
+///   export_declaration =
+///       Token("export"),
+///       ( named_exports [ , from_clause ]                    // export {a}[from"y"]
+///       | Token("*"), from_clause                            // export * from "y"
+///       | Token("default"), ( assignment_expression          // export default 1
+///                           | function_declaration            // export default fn
+///                           | decorated_class_declaration )   // export default class
+///       | lexical_declaration | variable_statement            // export const/var …
+///       | function_declaration                                // export function …
+///       | decorated_class_declaration ),                      // export class …
+///       Token(";") ? ;
+///   named_exports    = Token("{"), { export_specifier, [Token(",")] }, Token("}");
+///   export_specifier = Token(name) , [ Token("as"), Token(name) ]; // `a`/`a as c`
+/// ```
+///
+/// The inner declaration/expression is bridged by reusing the existing
+/// `convert_*` helpers, so every construct those already model works inside an
+/// `export`. `export * as ns from "y"` is a grammar gap (rejected at parse) and
+/// any unrecognised shape DECLINES via `unsupported` (safe WHITESPACE_ONLY
+/// fallback), never a mis-bridge.
+fn convert_export_declaration(node: &GrammarASTNode) -> Result<Declaration, BridgeError> {
+    let kids = node_children(node);
+
+    // `export default <expr | function | class>`.
+    if has_token(node, "default") {
+        let child = kids
+            .first()
+            .ok_or_else(|| internal(node, "export default: missing operand"))?;
+        let kind = match child.rule_name.as_str() {
+            "function_declaration" | "generator_declaration" => {
+                ExportDefaultKind::FunctionDeclaration(convert_function_declaration(child)?)
+            }
+            "decorated_class_declaration" => match node_children(child).as_slice() {
+                [cd] if cd.rule_name == "class_declaration" => {
+                    ExportDefaultKind::ClassDeclaration(convert_class_declaration(cd)?)
+                }
+                _ => return Err(unsupported(child)),
+            },
+            "class_declaration" => {
+                ExportDefaultKind::ClassDeclaration(convert_class_declaration(child)?)
+            }
+            // Anything else is an expression operand (`export default 1`,
+            // `export default foo()`); `convert_expression` dispatches on the
+            // expression rule (`assignment_expression`, …).
+            _ => ExportDefaultKind::Expression(Box::new(convert_expression(child)?)),
+        };
+        return Ok(Declaration::ExportDefaultDeclaration(ExportDefaultDeclaration {
+            cv: None,
+            declaration: kind,
+        }));
+    }
+
+    // `export * from "y"` — the `*` is a token; the sole node child is the
+    // `from_clause`. (`export * as ns from "y"` fails at parse, so a namespace
+    // binding never reaches here → `exported` is always None.)
+    if has_token(node, "*") {
+        let from = kids
+            .iter()
+            .find(|n| n.rule_name == "from_clause")
+            .ok_or_else(|| unsupported(node))?;
+        let source = import_source(from).ok_or_else(|| unsupported(from))?;
+        return Ok(Declaration::ExportAllDeclaration(ExportAllDeclaration {
+            cv: None,
+            exported: None,
+            source,
+        }));
+    }
+
+    // `export { a, b as c }` / `export { a } from "y"` — a named-specifier
+    // export, optionally re-exporting from another module.
+    if let Some(named) = kids.iter().find(|n| n.rule_name == "named_exports") {
+        let mut specifiers: Vec<ExportSpecifier> = Vec::new();
+        for spec in node_children(named) {
+            if spec.rule_name != "export_specifier" {
+                return Err(unsupported(spec));
+            }
+            // `a` → local == exported == a ; `a as c` → local = a, exported = c.
+            let (local, exported) = match token_vals(spec).as_slice() {
+                [a] => ((*a).to_string(), (*a).to_string()),
+                [a, as_kw, c] if *as_kw == "as" => ((*a).to_string(), (*c).to_string()),
+                _ => return Err(unsupported(spec)),
+            };
+            specifiers.push(ExportSpecifier {
+                local: Identifier { cv: None, name: local },
+                exported: Identifier { cv: None, name: exported },
+            });
+        }
+        let source = kids
+            .iter()
+            .find(|n| n.rule_name == "from_clause")
+            .and_then(|f| import_source(f));
+        return Ok(Declaration::ExportNamedDeclaration(ExportNamedDeclaration {
+            cv: None,
+            declaration: None,
+            specifiers,
+            source,
+        }));
+    }
+
+    // `export const/let/var …` / `export function …` / `export class …` — a
+    // declaration export: the sole node child is the inner declaration, bridged
+    // by the existing converter for its kind.
+    let inner = kids
+        .first()
+        .ok_or_else(|| internal(node, "export declaration: missing inner declaration"))?;
+    let decl = match inner.rule_name.as_str() {
+        "lexical_declaration" => {
+            Declaration::VariableDeclaration(convert_lexical_declaration(inner)?)
+        }
+        "variable_statement" => {
+            Declaration::VariableDeclaration(convert_variable_statement(inner)?)
+        }
+        "function_declaration" | "generator_declaration" => {
+            Declaration::FunctionDeclaration(convert_function_declaration(inner)?)
+        }
+        "decorated_class_declaration" => match node_children(inner).as_slice() {
+            [cd] if cd.rule_name == "class_declaration" => {
+                Declaration::ClassDeclaration(convert_class_declaration(cd)?)
+            }
+            _ => return Err(unsupported(inner)),
+        },
+        "class_declaration" => Declaration::ClassDeclaration(convert_class_declaration(inner)?),
+        _ => return Err(unsupported(inner)),
+    };
+    Ok(Declaration::ExportNamedDeclaration(ExportNamedDeclaration {
+        cv: None,
+        declaration: Some(Box::new(decl)),
+        specifiers: Vec::new(),
+        source: None,
+    }))
 }
 
 // =========================================================================
@@ -4074,6 +4219,127 @@ mod tests {
         // bridge ever runs), so the whole file declines rather than
         // mis-bridging.
         assert!(parse_javascript_typed("import x, * as ns from \"y\";", DEFAULT_ES_VERSION).is_err());
+    }
+
+    /// Pull the sole `Declaration::Export*` out of a single-item program.
+    fn export_of(src: &str) -> Declaration {
+        let p = bridge_ok(src);
+        match p.body.first() {
+            Some(ProgramItem::Declaration(
+                d @ (Declaration::ExportNamedDeclaration(_)
+                | Declaration::ExportDefaultDeclaration(_)
+                | Declaration::ExportAllDeclaration(_)),
+            )) => d.clone(),
+            other => panic!("expected an Export* declaration for {src}, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn bridge_export_named_plain_and_aliased() {
+        // `export {a, b as c};` — `a` → local=exported=a, `b as c` → local=b,
+        // exported=c; no inner declaration, no source.
+        match export_of("export {a, b as c};") {
+            Declaration::ExportNamedDeclaration(e) => {
+                assert!(e.declaration.is_none());
+                assert!(e.source.is_none());
+                match &e.specifiers[..] {
+                    [s0, s1] => {
+                        assert_eq!((s0.local.name.as_str(), s0.exported.name.as_str()), ("a", "a"));
+                        assert_eq!((s1.local.name.as_str(), s1.exported.name.as_str()), ("b", "c"));
+                    }
+                    other => panic!("expected two specifiers, got {other:?}"),
+                }
+            }
+            other => panic!("expected ExportNamedDeclaration, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn bridge_export_named_reexport() {
+        // `export {a} from "y";` — carries a re-export source.
+        match export_of("export {a} from \"y\";") {
+            Declaration::ExportNamedDeclaration(e) => {
+                assert_eq!(e.specifiers.len(), 1);
+                assert_eq!(e.source.as_ref().map(|s| s.value.as_str()), Some("y"));
+            }
+            other => panic!("expected ExportNamedDeclaration, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn bridge_export_all() {
+        // `export * from "y";` — bare re-export-all, no namespace binding.
+        match export_of("export * from \"y\";") {
+            Declaration::ExportAllDeclaration(e) => {
+                assert!(e.exported.is_none());
+                assert_eq!(e.source.value, "y");
+            }
+            other => panic!("expected ExportAllDeclaration, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn bridge_export_default_expression() {
+        // `export default 1;` — an expression operand.
+        match export_of("export default 1;") {
+            Declaration::ExportDefaultDeclaration(e) => assert!(matches!(
+                e.declaration,
+                ExportDefaultKind::Expression(_)
+            )),
+            other => panic!("expected ExportDefaultDeclaration, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn bridge_export_default_function_and_class() {
+        match export_of("export default function f(){}") {
+            Declaration::ExportDefaultDeclaration(e) => assert!(matches!(
+                e.declaration,
+                ExportDefaultKind::FunctionDeclaration(_)
+            )),
+            other => panic!("expected ExportDefaultDeclaration(fn), got {other:?}"),
+        }
+        match export_of("export default class C{}") {
+            Declaration::ExportDefaultDeclaration(e) => assert!(matches!(
+                e.declaration,
+                ExportDefaultKind::ClassDeclaration(_)
+            )),
+            other => panic!("expected ExportDefaultDeclaration(class), got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn bridge_export_declaration_const_var_function_class() {
+        // `export const x = 1;` / `export var v = 1;` / `export function f(){}` /
+        // `export class C {}` — each wraps its inner declaration.
+        for (src, want) in [
+            ("export const x = 1;", "var"),
+            ("export var v = 1;", "var"),
+            ("export function f(){}", "fn"),
+            ("export class C {}", "class"),
+        ] {
+            match export_of(src) {
+                Declaration::ExportNamedDeclaration(e) => {
+                    assert!(e.specifiers.is_empty());
+                    assert!(e.source.is_none());
+                    let got = match e.declaration.as_deref() {
+                        Some(Declaration::VariableDeclaration(_)) => "var",
+                        Some(Declaration::FunctionDeclaration(_)) => "fn",
+                        Some(Declaration::ClassDeclaration(_)) => "class",
+                        other => panic!("unexpected inner decl for {src}: {other:?}"),
+                    };
+                    assert_eq!(got, want, "for {src}");
+                }
+                other => panic!("expected ExportNamedDeclaration for {src}, got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn bridge_export_star_as_namespace_declines() {
+        // `export * as ns from "y";` is a grammar gap — rejected at the parse
+        // layer, so the file declines rather than mis-bridging.
+        assert!(parse_javascript_typed("export * as ns from \"y\";", DEFAULT_ES_VERSION).is_err());
     }
 
     /// Pull the `AssignmentExpression` operator out of `<lhs> <op> <rhs>;`.

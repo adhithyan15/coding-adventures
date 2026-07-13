@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-properties` crate will be documented in this file.
 
+## [0.18.0] - 2026-07-12
+
+### Changed — CLOC12.189 PR2: bail on module `export`
+
+The property-renaming soundness gate now also declines when
+`program_contains_export_declaration` is true — an exported name is public
+surface other modules reference.
+
 ## [0.17.0] - 2026-07-12
 
 ### Added — CLOC12.189 PR1: export declaration the classify and rewrite walks skip exports (no properties to rename)
