@@ -843,6 +843,36 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT CAST(n AS VARCHAR) AS tv, CAST('9x' AS INT) AS iv FROM t ORDER BY id",
     },
+    // `NULLS LAST` on an ASC sort OVERRIDES SQLite's default (which puts NULLs
+    // first for ASC), so the NULLs move to the end. This case is order-sensitive
+    // (the query has ORDER BY), so the oracle compares row order exactly.
+    Case {
+        id: "order_by_nulls_last",
+        setup: &[
+            "CREATE TABLE t (a INTEGER)",
+            "INSERT INTO t VALUES (2), (NULL), (1), (NULL), (3)",
+        ],
+        query: "SELECT a FROM t ORDER BY a ASC NULLS LAST",
+    },
+    // `NULLS FIRST` on a DESC sort OVERRIDES the default (NULLs last for DESC).
+    Case {
+        id: "order_by_desc_nulls_first",
+        setup: &[
+            "CREATE TABLE t (a INTEGER)",
+            "INSERT INTO t VALUES (2), (NULL), (1), (NULL), (3)",
+        ],
+        query: "SELECT a FROM t ORDER BY a DESC NULLS FIRST",
+    },
+    // The explicit clause matching the default (`ASC NULLS FIRST`) must be a
+    // no-op — same result as a bare `ORDER BY a`.
+    Case {
+        id: "order_by_nulls_first_default",
+        setup: &[
+            "CREATE TABLE t (a INTEGER)",
+            "INSERT INTO t VALUES (2), (NULL), (1), (3)",
+        ],
+        query: "SELECT a FROM t ORDER BY a NULLS FIRST",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but

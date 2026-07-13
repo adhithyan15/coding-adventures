@@ -194,6 +194,9 @@ pub struct CompiledSortKey {
     pub column: String,
     /// `true` = ascending (ASC), `false` = descending (DESC).
     pub ascending: bool,
+    /// Explicit NULL placement from `NULLS FIRST` / `NULLS LAST`. `None` = the
+    /// SQLite default (NULLs first for ASC, last for DESC).
+    pub nulls_first: Option<bool>,
 }
 
 /// The complete bytecode instruction set for the Mini-SQLite VM.
@@ -2129,6 +2132,7 @@ fn peel_post_ops(plan: &OptimizedPlan) -> (&OptimizedPlan, Vec<Instruction>) {
                             _ => "?".to_string(),
                         },
                         ascending: k.ascending,
+                        nulls_first: k.nulls_first,
                     })
                     .collect();
                 post_ops.push(Instruction::SortResult(compiled_keys));
@@ -2700,6 +2704,7 @@ mod tests {
             keys: vec![SortKey {
                 expr: col("name"),
                 ascending: true,
+                nulls_first: None,
             }],
         });
         let v = instrs(&plan);
@@ -2718,6 +2723,7 @@ mod tests {
             keys: vec![SortKey {
                 expr: col("score"),
                 ascending: true,
+                nulls_first: None,
             }],
         });
         let v = instrs(&plan);
@@ -2737,6 +2743,7 @@ mod tests {
             keys: vec![SortKey {
                 expr: col("score"),
                 ascending: false,
+                nulls_first: None,
             }],
         });
         let v = instrs(&plan);
@@ -2757,10 +2764,12 @@ mod tests {
                 SortKey {
                     expr: col("a"),
                     ascending: true,
+                    nulls_first: None,
                 },
                 SortKey {
                     expr: col("b"),
                     ascending: false,
+                    nulls_first: None,
                 },
             ],
         });
@@ -3535,6 +3544,7 @@ mod tests {
             keys: vec![SortKey {
                 expr: col("x"),
                 ascending: true,
+                nulls_first: None,
             }],
         });
         let v = instrs(&plan);

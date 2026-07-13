@@ -534,6 +534,7 @@ fn fold_plan(plan: OptimizedPlan) -> OptimizedPlan {
                 .map(|k| SortKey {
                     expr: fold_expr(k.expr),
                     ascending: k.ascending,
+                    nulls_first: k.nulls_first,
                 })
                 .collect(),
         },
@@ -1787,6 +1788,7 @@ mod tests {
             keys: vec![SortKey {
                 expr: col(col_name),
                 ascending: true,
+                nulls_first: None,
             }],
         }
     }
@@ -2422,6 +2424,7 @@ mod tests {
             keys: vec![SortKey {
                 expr: col("id"),
                 ascending: true,
+                nulls_first: None,
             }],
         };
         let opt = optimize_with_passes(plan, &[&DeadCodeEliminationPass]);
@@ -2599,6 +2602,7 @@ mod tests {
                 keys: vec![SortKey {
                     expr: col("name"),
                     ascending: true,
+                    nulls_first: None,
                 }],
             }),
             count: Some(10),

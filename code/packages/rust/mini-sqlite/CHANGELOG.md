@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.5.24 — `NULLS FIRST` / `NULLS LAST` in `ORDER BY`
+
+`SELECT … ORDER BY a NULLS FIRST` / `NULLS LAST` now parse and run. mini-sqlite
+already reproduced SQLite's *default* null ordering (NULLs first for ASC, last
+for DESC) for free — this adds the explicit clause, whose value matters most for
+the OVERRIDE cases (`ASC NULLS LAST`, `DESC NULLS FIRST`). Spans grammar
+(sql-parser 0.1.8) → `SortKey.nulls_first` (sql-planner 0.2.7) →
+`CompiledSortKey` (sql-codegen 0.6.2) → the VM sort comparator (sql-vm 0.4.13),
+with the optimizer (0.1.2) carrying the field. FIRST/LAST stay non-reserved
+(validated in the planner). Three differential-oracle cases
+(`order_by_nulls_last`, `order_by_desc_nulls_first`,
+`order_by_nulls_first_default`) diff row order against real bundled SQLite.
+COLLATE in ORDER BY (a comparator transform) remains a separate follow-up.
+
 ## 0.5.23 — `CAST(expr AS type)` — INTEGER / REAL / TEXT
 
 `SELECT CAST(x AS INTEGER)` and friends now parse and run, following SQLite's

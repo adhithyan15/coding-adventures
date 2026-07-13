@@ -266,6 +266,21 @@ mod tests {
         assert!(find_rule(&ast, "order_clause"), "Expected order_clause");
     }
 
+    /// `NULLS FIRST` / `NULLS LAST` parse in ORDER BY, alone and combined with
+    /// ASC/DESC. FIRST/LAST are ordinary NAMEs (the planner validates them).
+    #[test]
+    fn test_parse_order_by_nulls() {
+        for q in [
+            "SELECT id FROM t ORDER BY a NULLS FIRST",
+            "SELECT id FROM t ORDER BY a NULLS LAST",
+            "SELECT id FROM t ORDER BY a ASC NULLS LAST",
+            "SELECT id FROM t ORDER BY a DESC NULLS FIRST",
+        ] {
+            let ast = assert_program_root(q);
+            assert!(find_rule(&ast, "order_item"), "Expected order_item for {q:?}");
+        }
+    }
+
     // -----------------------------------------------------------------------
     // Test 5: SELECT with LIMIT and OFFSET
     // -----------------------------------------------------------------------
