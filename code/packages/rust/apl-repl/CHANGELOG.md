@@ -38,6 +38,19 @@ All notable changes to this project will be documented in this file.
   line's remainder is now propagated rather than swallowed, for the same
   reason (a broken pipe there isn't the same thing as "no more bytes to
   discard").
+- The discard step now **loops** over as many further capped chunks as it
+  takes to reach the oversized line's real end (a real `\n`) or true EOF,
+  instead of draining exactly one extra chunk and stopping — found by a
+  third `/security-review` round: a line whose true length spanned more
+  than two cap-widths left its remaining tail (ending in a real `\n`)
+  sitting in the reader, so the *next* read picked that fragment up and
+  misinterpreted it as a fresh, independently-typed statement, defeating
+  the "the whole oversized line is discarded" guarantee. The same round
+  also confirmed a related boundary case is handled correctly: a final
+  line whose length lands *exactly* on the cap, immediately followed by
+  genuine EOF, is a maximal ordinary line, not an oversized one — resolved
+  by checking for at least one more byte beyond the cap before reporting
+  "oversized".
 
 ## [0.1.0] - 2026-07-11
 
