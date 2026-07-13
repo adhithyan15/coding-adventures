@@ -180,6 +180,7 @@ SELF_CONTAINED_RUNGS = (
     "rung140_yield_ratio",
     "rung141_grid_density",
     "rung142_packing_ratio",
+    "rung143_shelf_density",
 )
 
 
