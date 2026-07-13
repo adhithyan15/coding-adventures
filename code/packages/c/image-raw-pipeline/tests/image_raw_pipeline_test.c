@@ -60,7 +60,7 @@ int main(void) {
         irp_mat3x3_mul(ID, v, out);
         ISO_CHECK(out[0] == 3.0 && out[1] == 5.0 && out[2] == 7.0);
 
-        double z[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
+        const double z[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
         double v2[3] = {1, 2, 3};
         irp_mat3x3_mul(z, v2, out);
         ISO_CHECK(out[0] == 0 && out[1] == 0 && out[2] == 0);
@@ -69,13 +69,13 @@ int main(void) {
         irp_mat3x3_mul(SWAP, vs, out); /* R<->B swap */
         ISO_CHECK(out[0] == 3.0 && out[1] == 2.0 && out[2] == 1.0);
 
-        double known[3][3] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+        const double known[3][3] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
         double e0[3] = {1, 0, 0};
         irp_mat3x3_mul(known, e0, out); /* first column */
         ISO_CHECK(dabs(out[0] - 1) < 1e-12 && dabs(out[1] - 4) < 1e-12 &&
                   dabs(out[2] - 7) < 1e-12);
 
-        double scale[3][3] = {{2, 0, 0}, {0, 3, 0}, {0, 0, 4}};
+        const double scale[3][3] = {{2, 0, 0}, {0, 3, 0}, {0, 0, 4}};
         double ones[3] = {1, 1, 1};
         irp_mat3x3_mul(scale, ones, out);
         ISO_CHECK(dabs(out[0] - 2) < 1e-12 && dabs(out[1] - 3) < 1e-12 &&
@@ -90,7 +90,7 @@ int main(void) {
             for (int c = 0; c < 3; c++)
                 ISO_CHECK(dabs(inv[r][c] - (r == c ? 1.0 : 0.0)) < 1e-12);
 
-        double diag[3][3] = {{2, 0, 0}, {0, 3, 0}, {0, 0, 4}};
+        const double diag[3][3] = {{2, 0, 0}, {0, 3, 0}, {0, 0, 4}};
         ISO_CHECK(irp_invert_3x3(diag, inv) == 1);
         ISO_CHECK(dabs(inv[0][0] - 0.5) < 1e-12);
         ISO_CHECK(dabs(inv[1][1] - 1.0 / 3.0) < 1e-12);
@@ -103,21 +103,23 @@ int main(void) {
                 ISO_CHECK(dabs(inv[r][c] - SWAP[r][c]) < 1e-12);
 
         /* singular matrices return 0 */
-        double zero[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
+        const double zero[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
         ISO_CHECK(irp_invert_3x3(zero, inv) == 0);
-        double rankdef[3][3] = {{1, 2, 3}, {1, 2, 3}, {1, 2, 3}};
+        const double rankdef[3][3] = {{1, 2, 3}, {1, 2, 3}, {1, 2, 3}};
         ISO_CHECK(irp_invert_3x3(rankdef, inv) == 0);
 
         /* M * inv(M) == I for a typical camera colour matrix */
-        double cam[3][3] = {{1.392, -0.418, 0.026},
-                            {-0.254, 1.614, -0.360},
-                            {0.068, -0.584, 1.516}};
+        const double cam[3][3] = {{1.392, -0.418, 0.026},
+                                  {-0.254, 1.614, -0.360},
+                                  {0.068, -0.584, 1.516}};
         ISO_CHECK(irp_invert_3x3(cam, inv) == 1);
         for (int i = 0; i < 3; i++) {
             double e[3] = {0, 0, 0};
             e[i] = 1.0;
             double t1[3], t2[3];
-            irp_mat3x3_mul(inv, e, t1);
+            /* `inv` is a non-const out-param above; ISO C (pre-C23) will not
+             * implicitly convert double[3][3] -> const double[3][3], so cast. */
+            irp_mat3x3_mul((const double(*)[3])inv, e, t1);
             irp_mat3x3_mul(cam, t1, t2);
             for (int j = 0; j < 3; j++)
                 ISO_CHECK(dabs(t2[j] - (i == j ? 1.0 : 0.0)) < 1e-8);
