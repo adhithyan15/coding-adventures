@@ -900,4 +900,5 @@ members = [
   "document-ast-to-docx",
   "markdown-docx",
   "task-core",
+  "task-wasm",
 ]
