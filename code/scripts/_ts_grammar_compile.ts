@@ -7,7 +7,7 @@
 //
 // This bypasses the main-module guard in index.ts that is incompatible with
 // vite-node's argv handling.
-import { compileTokensCommand, compileGrammarCommand } from "../code/programs/typescript/grammar-tools/index.ts";
+import { compileTokensCommand, compileGrammarCommand } from "../programs/typescript/grammar-tools/index.ts";
 
 const [,, mode, input, output] = process.argv;
 if (mode === "tokens") {

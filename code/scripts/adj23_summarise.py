@@ -11,7 +11,7 @@ Reads the JSON produced by `adj23_decomposition_bench.py` and prints:
 
 Usage:
 
-    python3 scripts/adj23_summarise.py <results.json>
+    python3 code/scripts/adj23_summarise.py <results.json>
 """
 
 import json

@@ -26,7 +26,7 @@ package-to-learning backlog. Regenerate it after adding or renaming packages or
 learning material:
 
 ```powershell
-python scripts/learning_coverage_report.py --output code/learning/COVERAGE.md
+python code/scripts/learning_coverage_report.py --output code/learning/COVERAGE.md
 ```
 
 ## Coverage Map

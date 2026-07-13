@@ -80,8 +80,8 @@ jobs:
 
       - name: Test package parity reporter
         run: |
-          python3 -m unittest discover -s scripts/tests -p 'test_package_parity_report.py'
-          python3 scripts/package_parity_report.py --format json --fail-on-collisions > /tmp/package-parity-report.json
+          python3 -m unittest discover -s code/scripts/tests -p 'test_package_parity_report.py'
+          python3 code/scripts/package_parity_report.py --format json --fail-on-collisions > /tmp/package-parity-report.json
 
       - name: Determine diff base
         id: diff-base

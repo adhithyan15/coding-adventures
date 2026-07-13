@@ -27,7 +27,7 @@ the downstream packages affected by it.
 
 The repository changes quickly. This README describes the durable architecture
 and current direction; it deliberately avoids a hand-maintained package
-inventory. Run the [package parity report](./scripts/package_parity_report.py)
+inventory. Run the [package parity report](./code/scripts/package_parity_report.py)
 for a live cross-language view.
 
 ## What Makes This Repo Different
@@ -219,9 +219,9 @@ See [Engram](./code/specs/engram-app.md) and the
 |   |-- learning/     plain-language teaching material
 |   |-- packages/     reusable libraries grouped by ecosystem
 |   |-- programs/     executables, demos, apps, and visualizers
+|   |-- scripts/      repository-wide generation, reporting, and safety tools
 |   |-- sites/        website source/content
 |   \-- specs/        architecture, package, and roadmap specifications
-|-- scripts/          repository-wide generation, reporting, and safety tools
 |-- .github/workflows CI, CodeQL, safety, publishing, releases, and deployment
 |-- CHANGELOG.md      monorepo-level notable changes
 |-- CLAUDE.md         repository policy and working conventions
@@ -303,10 +303,10 @@ Useful repository checks:
 ./build-tool -root . -diff-base origin/main -detect-languages
 
 # Inspect cross-language coverage and reject naming collisions.
-python scripts/package_parity_report.py --fail-on-collisions
+python code/scripts/package_parity_report.py --fail-on-collisions
 
 # Regenerate the package-to-learning coverage backlog.
-python scripts/learning_coverage_report.py --output code/learning/COVERAGE.md
+python code/scripts/learning_coverage_report.py --output code/learning/COVERAGE.md
 
 # Test the build tool itself.
 cd code/programs/go/build-tool && go test ./...

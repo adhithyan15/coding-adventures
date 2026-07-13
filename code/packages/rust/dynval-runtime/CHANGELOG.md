@@ -31,11 +31,11 @@ names are renamed by later DVAL01 PRs (-2), not here.
 
 Consumers updated: `mccarthy-lisp-iir-compiler`, `mccarthy-lisp-vm`,
 `twig-vm`, `lang-aot`, `twig-aot`. CI (`lang-runtime-safety*.yml`) and
-`scripts/miri-twig-vm.sh` now run Miri on `-p dynval-runtime`.
+`code/scripts/miri-twig-vm.sh` now run Miri on `-p dynval-runtime`.
 
 Verified by the `lang-aot` cross-backend matrix staying green on all five
 code-gen backends (a correct rename is a behavioural no-op) plus the
-`dynval-runtime` Miri golden tests and `scripts/miri-twig-vm.sh`.
+`dynval-runtime` Miri golden tests and `code/scripts/miri-twig-vm.sh`.
 
 ## [0.5.0] — 2026-05-24 (Path A increment 6b — typed cons-cell mutator)
 

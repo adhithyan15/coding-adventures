@@ -66,7 +66,7 @@ Use `try_tokenize_s` to get a `Result` instead of panicking on a lexical error.
 ## Regenerating the embedded grammar
 
 `src/_grammar.rs` is generated from `code/grammars/s.tokens`. Regenerate it with
-`scripts/generate-compiled-grammars.sh` (or the Rust grammar-tools CLI
+`code/scripts/generate-compiled-grammars.sh` (or the Rust grammar-tools CLI
 `grammar-tools compile-tokens code/grammars/s.tokens -o src/_grammar.rs`).
 
 ## Testing
