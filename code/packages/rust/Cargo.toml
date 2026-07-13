@@ -248,6 +248,7 @@ members = [
     "apl-repl",
     "apl-to-semantic-ir",
     "j-lexer",
+    "j-parser",
     "logic-gates",
     "logic-core",
     "lookup-core",
