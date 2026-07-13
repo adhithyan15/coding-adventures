@@ -220,6 +220,7 @@ members = [
     "macsyma-compiler",
     "macsyma-runtime",
     "macsyma-wasm",
+    "macsyma-to-semantic-ir",
     "matlab-lexer",
     "matlab-parser",
     "c-lexer",
