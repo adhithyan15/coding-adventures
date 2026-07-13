@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 136 \u2014 recovery density from four stated quantities (a NEW panel: recovery, COMPLETING the over-a-sum trio). rung-132 put a quotient over a sum (a/b)/(c+d); rung-135 put a product over a sum (a*b)/(c+d); rung-136 puts a DIFFERENCE over a sum (a-b)/(c+d) \u2014 the combining op walks quotient, product, difference over the same divide-by-a-sum skeleton, the sum-denominator mirror of the over-a-rate family (131 sum, 133 difference, 134 product over (c/d)). From a net recovery (intake_total - spillage) divided by a pooled capacity (holding_span + surge_span), compute the recovery density ((intake_total-spillage)/(holding_span+surge_span)), the net recovery (intake_total-spillage), or the pooled capacity (holding_span+surge_span). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW family, a DIFFERENCE NUMERATOR OVER A SUM (a-b)/(c+d) (subtract the loss, pool the capacity, then divide the net by the pooled capacity \u2014 the two-part denominator is ONE total, not two divisors). The divide-by-a-sum slips ride alongside as distractors. The harness matches the scalar to the printed options. The recovery density is a density (how much net recovery sits in each unit of pooled capacity), framed as a DENSITY so the dimensionless value stays honest. Contamination-safe: every figure is built only from the four observed quantities via -, /, and + \u2014 no constant leaks, and neither the net recovery, the pooled capacity, nor the recovery density ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: distributing the division across the sum ((a-b)/c + (a-b)/d, FALSE because x/(c+d) != x/c + x/d, a wrong operation) and dropping the grouping so the second span is added on instead of pooled ((a-b)/c + d, a wrong operation). The core confusion tested is that (a-b)/(c+d) is one difference over one pooled total, not (a-b)/c + (a-b)/d and not (a-b)/c + d. This rung has a subtraction in the numerator, so the binding difference is guarded (intake_total - spillage >= 2) to keep the net recovery positive; the five family values are kept pairwise distinct with all three queried readouts varying across the panel, all asserted strictly positive at build time.",
+  "items": [
+    {
+      "id": "r136rda-01",
+      "qtype": "recovery_density",
+      "stem": "A recovery study records an intake total of 8 with a spillage of 2, spread across a holding span of 4 plus a surge span of 5. What is the recovery density (the net recovery divided by the pooled capacity)?",
+      "program": "observe intake_total(8)\nobserve spillage(2)\nobserve holding_span(4)\nobserve surge_span(5)\nlet answer = (intake_total - spillage) / (holding_span + surge_span)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.7,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r136rda-02",
+      "qtype": "recovery_density",
+      "stem": "A recovery study records an intake total of 8 with a spillage of 2, spread across a holding span of 4 plus a surge span of 5. What is the the net recovery (the intake total minus the spillage, the numerator that is divided by the pooled capacity)?",
+      "program": "observe intake_total(8)\nobserve spillage(2)\nobserve holding_span(4)\nobserve surge_span(5)\nlet answer = intake_total - spillage\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.7,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r136rda-03",
+      "qtype": "recovery_density",
+      "stem": "A recovery study records an intake total of 8 with a spillage of 2, spread across a holding span of 4 plus a surge span of 5. What is the the pooled capacity (the holding span plus the surge span, the pooled total the net recovery is divided by)?",
+      "program": "observe intake_total(8)\nobserve spillage(2)\nobserve holding_span(4)\nobserve surge_span(5)\nlet answer = holding_span + surge_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.7,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r136rda-04",
+      "qtype": "recovery_density",
+      "stem": "A recovery study records an intake total of 11 with a spillage of 3, spread across a holding span of 3 plus a surge span of 7. What is the recovery density (the net recovery divided by the pooled capacity)?",
+      "program": "observe intake_total(11)\nobserve spillage(3)\nobserve holding_span(3)\nobserve surge_span(7)\nlet answer = (intake_total - spillage) / (holding_span + surge_span)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.8095238095238093,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9.666666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r136rda-05",
+      "qtype": "recovery_density",
+      "stem": "A recovery study records an intake total of 11 with a spillage of 3, spread across a holding span of 3 plus a surge span of 7. What is the the net recovery (the intake total minus the spillage, the numerator that is divided by the pooled capacity)?",
+      "program": "observe intake_total(11)\nobserve spillage(3)\nobserve holding_span(3)\nobserve surge_span(7)\nlet answer = intake_total - spillage\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.8095238095238093,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 9.666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r136rda-06",
+      "qtype": "recovery_density",
+      "stem": "A recovery study records an intake total of 11 with a spillage of 3, spread across a holding span of 3 plus a surge span of 7. What is the the pooled capacity (the holding span plus the surge span, the pooled total the net recovery is divided by)?",
+      "program": "observe intake_total(11)\nobserve spillage(3)\nobserve holding_span(3)\nobserve surge_span(7)\nlet answer = holding_span + surge_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.8095238095238093,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9.666666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r136rda-07",
+      "qtype": "recovery_density",
+      "stem": "A recovery study records an intake total of 14 with a spillage of 4, spread across a holding span of 4 plus a surge span of 7. What is the recovery density (the net recovery divided by the pooled capacity)?",
+      "program": "observe intake_total(14)\nobserve spillage(4)\nobserve holding_span(4)\nobserve surge_span(7)\nlet answer = (intake_total - spillage) / (holding_span + surge_span)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.9090909090909091,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.928571428571429,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r136rda-08",
+      "qtype": "recovery_density",
+      "stem": "A recovery study records an intake total of 14 with a spillage of 4, spread across a holding span of 4 plus a surge span of 7. What is the the net recovery (the intake total minus the spillage, the numerator that is divided by the pooled capacity)?",
+      "program": "observe intake_total(14)\nobserve spillage(4)\nobserve holding_span(4)\nobserve surge_span(7)\nlet answer = intake_total - spillage\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.9090909090909091,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.928571428571429,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r136rda-09",
+      "qtype": "recovery_density",
+      "stem": "A recovery study records an intake total of 14 with a spillage of 4, spread across a holding span of 4 plus a surge span of 7. What is the the pooled capacity (the holding span plus the surge span, the pooled total the net recovery is divided by)?",
+      "program": "observe intake_total(14)\nobserve spillage(4)\nobserve holding_span(4)\nobserve surge_span(7)\nlet answer = holding_span + surge_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.9090909090909091,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 10,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.928571428571429,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 11,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r136rda-10",
+      "qtype": "recovery_density",
+      "stem": "A recovery study records an intake total of 16 with a spillage of 4, spread across a holding span of 5 plus a surge span of 3. What is the recovery density (the net recovery divided by the pooled capacity)?",
+      "program": "observe intake_total(16)\nobserve spillage(4)\nobserve holding_span(5)\nobserve surge_span(3)\nlet answer = (intake_total - spillage) / (holding_span + surge_span)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r136rda-11",
+      "qtype": "recovery_density",
+      "stem": "A recovery study records an intake total of 16 with a spillage of 4, spread across a holding span of 5 plus a surge span of 3. What is the the net recovery (the intake total minus the spillage, the numerator that is divided by the pooled capacity)?",
+      "program": "observe intake_total(16)\nobserve spillage(4)\nobserve holding_span(5)\nobserve surge_span(3)\nlet answer = intake_total - spillage\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r136rda-12",
+      "qtype": "recovery_density",
+      "stem": "A recovery study records an intake total of 16 with a spillage of 4, spread across a holding span of 5 plus a surge span of 3. What is the the pooled capacity (the holding span plus the surge span, the pooled total the net recovery is divided by)?",
+      "program": "observe intake_total(16)\nobserve spillage(4)\nobserve holding_span(5)\nobserve surge_span(3)\nlet answer = holding_span + surge_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 6.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r136rda-13",
+      "qtype": "recovery_density",
+      "stem": "A recovery study records an intake total of 19 with a spillage of 5, spread across a holding span of 3 plus a surge span of 4. What is the recovery density (the net recovery divided by the pooled capacity)?",
+      "program": "observe intake_total(19)\nobserve spillage(5)\nobserve holding_span(3)\nobserve surge_span(4)\nlet answer = (intake_total - spillage) / (holding_span + surge_span)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.166666666666668,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.666666666666668,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r136rda-14",
+      "qtype": "recovery_density",
+      "stem": "A recovery study records an intake total of 19 with a spillage of 5, spread across a holding span of 3 plus a surge span of 4. What is the the net recovery (the intake total minus the spillage, the numerator that is divided by the pooled capacity)?",
+      "program": "observe intake_total(19)\nobserve spillage(5)\nobserve holding_span(3)\nobserve surge_span(4)\nlet answer = intake_total - spillage\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 7,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8.166666666666668,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.666666666666668,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r136rda-15",
+      "qtype": "recovery_density",
+      "stem": "A recovery study records an intake total of 19 with a spillage of 5, spread across a holding span of 3 plus a surge span of 4. What is the the pooled capacity (the holding span plus the surge span, the pooled total the net recovery is divided by)?",
+      "program": "observe intake_total(19)\nobserve spillage(5)\nobserve holding_span(3)\nobserve surge_span(4)\nlet answer = holding_span + surge_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 8.166666666666668,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.666666666666668,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r136rda-16",
+      "qtype": "recovery_density",
+      "stem": "A recovery study records an intake total of 12 with a spillage of 3, spread across a holding span of 4 plus a surge span of 9. What is the recovery density (the net recovery divided by the pooled capacity)?",
+      "program": "observe intake_total(12)\nobserve spillage(3)\nobserve holding_span(4)\nobserve surge_span(9)\nlet answer = (intake_total - spillage) / (holding_span + surge_span)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.6923076923076923,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r136rda-17",
+      "qtype": "recovery_density",
+      "stem": "A recovery study records an intake total of 12 with a spillage of 3, spread across a holding span of 4 plus a surge span of 9. What is the the net recovery (the intake total minus the spillage, the numerator that is divided by the pooled capacity)?",
+      "program": "observe intake_total(12)\nobserve spillage(3)\nobserve holding_span(4)\nobserve surge_span(9)\nlet answer = intake_total - spillage\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.6923076923076923,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r136rda-18",
+      "qtype": "recovery_density",
+      "stem": "A recovery study records an intake total of 12 with a spillage of 3, spread across a holding span of 4 plus a surge span of 9. What is the the pooled capacity (the holding span plus the surge span, the pooled total the net recovery is divided by)?",
+      "program": "observe intake_total(12)\nobserve spillage(3)\nobserve holding_span(4)\nobserve surge_span(9)\nlet answer = holding_span + surge_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.6923076923076923,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.25,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 11.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r136rda-19",
+      "qtype": "recovery_density",
+      "stem": "A recovery study records an intake total of 22 with a spillage of 6, spread across a holding span of 3 plus a surge span of 2. What is the recovery density (the net recovery divided by the pooled capacity)?",
+      "program": "observe intake_total(22)\nobserve spillage(6)\nobserve holding_span(3)\nobserve surge_span(2)\nlet answer = (intake_total - spillage) / (holding_span + surge_span)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13.333333333333332,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7.333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r136rda-20",
+      "qtype": "recovery_density",
+      "stem": "A recovery study records an intake total of 22 with a spillage of 6, spread across a holding span of 3 plus a surge span of 2. What is the the net recovery (the intake total minus the spillage, the numerator that is divided by the pooled capacity)?",
+      "program": "observe intake_total(22)\nobserve spillage(6)\nobserve holding_span(3)\nobserve surge_span(2)\nlet answer = intake_total - spillage\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 13.333333333333332,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 7.333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 16,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r136rda-21",
+      "qtype": "recovery_density",
+      "stem": "A recovery study records an intake total of 22 with a spillage of 6, spread across a holding span of 3 plus a surge span of 2. What is the the pooled capacity (the holding span plus the surge span, the pooled total the net recovery is divided by)?",
+      "program": "observe intake_total(22)\nobserve spillage(6)\nobserve holding_span(3)\nobserve surge_span(2)\nlet answer = holding_span + surge_span\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.2,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 16,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13.333333333333332,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7.333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
