@@ -177,6 +177,7 @@ SELF_CONTAINED_RUNGS = (
     "rung137_gradient_index",
     "rung138_pressure_ratio",
     "rung139_slope_ratio",
+    "rung140_yield_ratio",
 )
 
 
