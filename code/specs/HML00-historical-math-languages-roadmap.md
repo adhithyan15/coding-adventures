@@ -173,7 +173,12 @@ sequence of one-PR items run through the autonomous loop (§8).
   (`array-runtime` needs generalized reduce/scan/outer-product kernels
   first, tracked as item AR-2) before the lexer/parser/runtime land.)*
 - **Wave 5 — Reduce, Derive, Maple (subset).** More symbolic CAS on the shared
-  engine (Derive is small and historically charming).
+  engine (Derive is small and historically charming). *(Kickoff: see
+  [`MA07`](MA07-derive-language.md) for Derive — the design item fixing
+  language scope and the `:=`-assignment expression grammar, verified
+  against the Derive 6.1 online help rather than assumed from the family
+  resemblance to Macsyma/Wolfram, before the lexer/parser/runtime land.
+  Reduce and Maple remain unstarted.)*
 - **Wave 6 — J, K/Q, Scilab, IDL.** More array languages, each a frontend on
   `array-runtime`. *(Kickoff: see [`MA06`](MA06-j-language.md) for J — the
   design item fixing language scope, the verb/adverb/conjunction grammar
