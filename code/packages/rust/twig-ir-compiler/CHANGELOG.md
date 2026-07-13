@@ -1,5 +1,17 @@
 # Changelog — twig-ir-compiler
 
+## [0.44.0] — 2026-07-13 (LANG-FULL E6d-6 — `match` variant tag is a typed i64 const)
+
+`compile_match` now emits each variant's discriminant tag constant with type_hint
+`i64` instead of `"any"`. It is a raw compile-time integer, not a boxed lisp
+value; typed `"any"`, the shared `lower_dynamic_arith` pass treated it as boxed
+(`is_boxed("any")`) and emitted a bogus `unbox` on it, so the tag comparison in a
+`(match …)` trapped on WASM (`i31.get_s` of a raw i64 → `expected i32, got I64`).
+As `i64` it flows straight into the typed comparison; only the genuinely-boxed
+`tag_reg` (a `field_load` of the scrutinee's car) is unboxed. This is one half of
+the E6d-6 union/match fix (the other is in iir-builtin-lowering 0.29.0's
+boxed-bool `jmp_if_false` handling). 103 lib tests still pass.
+
 ## [0.43.0] — 2026-07-13 (LANG-FULL E6d-4 — quote literals as interned symbol consts)
 
 A Twig quote literal (`'a` / `(quote a)`, an `Expr::SymLit`) now lowers to
