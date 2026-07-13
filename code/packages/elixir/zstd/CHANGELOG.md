@@ -5,6 +5,18 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.1.2] — 2026-07-12
+
+### Fixed
+
+- `TC-8: 300 KB repetitive text round-trip with compression` now carries
+  `@tag timeout: 300_000`. The pure-Elixir compressor makes a single bounded
+  pass over the 300 KB buffer, but on a saturated CI runner that could exceed
+  ExUnit's 60 s default and turn transient load into a red build.
+- Grouped the two `encode_blocks/3` clauses together (the `is_all_same/2`
+  helper had been defined between them), clearing the compiler's
+  "clauses with the same name and arity should be grouped together" warning.
+
 ## [0.1.1] — 2026-04-26
 
 ### Tests

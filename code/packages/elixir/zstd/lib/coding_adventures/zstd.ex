@@ -1147,13 +1147,6 @@ defmodule CodingAdventures.Zstd do
     Enum.reverse(acc) |> List.flatten()
   end
 
-  # O(n) time, O(1) heap scan: returns true iff every byte in `bin` equals `b`.
-  # Replaces the prior `:binary.bin_to_list/1 |> Enum.all?` pattern, which
-  # allocated ~2 MB of cons cells per 128 KB block.
-  defp is_all_same(<<>>, _b), do: true
-  defp is_all_same(<<b, rest::binary>>, b), do: is_all_same(rest, b)
-  defp is_all_same(_bin, _b), do: false
-
   defp encode_blocks(data, offset, acc) do
     blk_end = min(offset + @max_block_size, byte_size(data))
     blk_size = blk_end - offset
@@ -1164,6 +1157,13 @@ defmodule CodingAdventures.Zstd do
     block_bytes = encode_one_block(block_bin, blk_size, last_bit)
     encode_blocks(data, blk_end, [block_bytes | acc])
   end
+
+  # O(n) time, O(1) heap scan: returns true iff every byte in `bin` equals `b`.
+  # Replaces the prior `:binary.bin_to_list/1 |> Enum.all?` pattern, which
+  # allocated ~2 MB of cons cells per 128 KB block.
+  defp is_all_same(<<>>, _b), do: true
+  defp is_all_same(<<b, rest::binary>>, b), do: is_all_same(rest, b)
+  defp is_all_same(_bin, _b), do: false
 
   defp encode_one_block(block_bin, blk_size, last_bit) do
     # Try RLE first: if all bytes are identical, use a 4-byte RLE block.
