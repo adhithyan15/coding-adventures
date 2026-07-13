@@ -224,10 +224,10 @@ E6d-7.
      `list` builtin is gone before the backend sees it). Matrix:
      `(car (list 42 1 2))` → 42 and `(car (cdr (list 1 42 3)))` → 42; WASM + real
      dotnet CLR verified, native/LLVM/JVM via CI. `(list)` → nil.
-   - **E6d-3b — list *operations* (◐ `length` ✅, `list-ref` ✅, `append` ✅,
-     `reverse` ✅; `assoc` ☐).** These walk/rebuild the cons chain, so they need a
-     synthesized cons-walk helper, not a pure desugar. `null?`/`pair?` already
-     lower. `length` (shipped): `iir-builtin-lowering`'s `lower_list_ops` rewrites
+   - **E6d-3b — list *operations* (✅ COMPLETE: `length` ✅, `list-ref` ✅,
+     `append` ✅, `reverse` ✅, `assoc` ✅).** These walk/rebuild the cons chain,
+     so they need a synthesized cons-walk helper, not a pure desugar. `null?`/
+     `pair?` already lower. `length` (shipped): `iir-builtin-lowering`'s `lower_list_ops` rewrites
      `call_builtin "length" lst` → `call __dyn_list_length, lst` and injects (once)
      a recursive helper that is itself a **proper lisp function** returning a boxed
      `ref<any>` — base case `null? lst` → `box 0`, recurse `+ 1 (length (cdr lst))`
@@ -254,13 +254,21 @@ E6d-7.
      accumulator helper — `reverse_acc(a, acc) = if null?(a) then acc else
      reverse_acc(cdr(a), cons(car(a), acc))` — consing each element onto the
      accumulator's front; the call site seeds `acc` with a `const 0 :
-     ref<LispyPair>` nil (the `list`-desugar sentinel). The remaining op (`assoc`)
-     follows the same helper pattern. Proof (shipped):
-     `(+ (length (list 1 2 3)) 39)` → 42, `(null? (list))` → 1,
+     ref<LispyPair>` nil (the `list`-desugar sentinel). `assoc` (shipped): same
+     `lower_list_ops` rewrites `call_builtin "assoc" key alist` → `call
+     __dyn_list_assoc, key, alist`, whose helper searches an association list —
+     `if null?(alist) then nil else if key==car(car(alist)) then car(alist) else
+     assoc(key, cdr(alist))`. The key equality must be a raw bool for
+     `jmp_if_false`, and `equal?` lowers unevenly across the managed/runtime paths,
+     so V1 `assoc` **unboxes both keys to `i64` + typed `cmp_eq`** (the `list-ref`
+     technique) — V1 keys are integers; symbol keys come with E6d-4. Proof
+     (shipped): `(+ (length (list 1 2 3)) 39)` → 42, `(null? (list))` → 1,
      `(list-ref (list 10 20 42) 2)` → 42,
      `(car (cdr (append (list 1 42) (list 3))))` → 42,
-     `(car (reverse (list 1 2 42)))` → 42; WASM + real dotnet CLR verified,
-     native/LLVM/JVM via CI.
+     `(car (reverse (list 1 2 42)))` → 42,
+     `(cdr (assoc 2 (list (cons 1 10) (cons 2 42) (cons 3 30))))` → 42,
+     `(null? (assoc 9 …))` → 1; WASM + real dotnet CLR verified, native/LLVM/JVM
+     via CI.
 4. **E6d-4 — symbols / quote.** `make_symbol`, `symbol->string`, `string->symbol`,
    `eq?` on symbols (bit-equality). Interned-immediate model (§2.1); reuse
    `intern_symbols_structural`. Proof: `(eq? 'a 'a)` vs `(eq? 'a 'b)`.
