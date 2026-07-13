@@ -250,6 +250,8 @@ members = [
     "apl-to-semantic-ir",
     "j-lexer",
     "j-parser",
+    "j-runtime",
+    "j-repl",
     "logic-gates",
     "logic-core",
     "lookup-core",
