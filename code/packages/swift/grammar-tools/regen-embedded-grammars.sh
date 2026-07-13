@@ -41,7 +41,8 @@ for entry in "${manifest[@]}"; do
   if [ "$check" -eq 1 ]; then
     tmp="$(mktemp)"
     swift run --package-path "$gt" grammar-tools-embed "$kind" "$tmp" EmbeddedGrammar "$label=$grammar" >/dev/null
-    if ! diff -q "$out" "$tmp" >/dev/null 2>&1; then
+    # Compare CR-insensitively so a CRLF checkout does not read as drift.
+    if ! diff -q <(tr -d '\r' <"$out") <(tr -d '\r' <"$tmp") >/dev/null 2>&1; then
       echo "STALE: $out (regenerate with regen-embedded-grammars.sh)"
       status=1
     fi
