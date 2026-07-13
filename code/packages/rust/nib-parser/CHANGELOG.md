@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.4.0 — 2026-07-13
+
+### Fixed — recursion-depth guard against native stack overflow (DoS)
+
+`create_nib_parser` built its `GrammarParser` with no recursion-depth cap,
+even though `nib-dap` compiles whatever file is open in the editor being
+debugged — a real, not theoretical, attack surface. Deeply-nested input
+(`((((...))))`) would recurse until it overflowed the native thread stack —
+an uncatchable process abort — before this crate's own `Result`-returning
+entry points ever got a chance to report anything.
+
+The shared crate's generic `DEFAULT_MAX_RULE_DEPTH` (128) was measured
+unsafe *by rejection* for this grammar: it already trips at just 15 real
+nesting levels. Added a bespoke `MAX_RULE_DEPTH = 200`, empirically measured
+the same way `r-parser`/`s-parser`/`macsyma-parser` measured their own
+bespoke values: binary-searching an *uncapped* parser against increasing
+real nesting depth on a default-stack worker thread (crashes at 28 levels,
+safe at 27; in rule-frame terms, safe through 285, crashes at 290 on the
+same 5000-level adversarial input). 200 sits about 31% below that measured
+floor and still supports 18 real nesting levels before tripping.
+
+- Added `MAX_RULE_DEPTH: usize = 200` and wired it into `create_nib_parser`
+  via `.with_max_depth(...)`.
+- 3 new regression tests: deep adversarial input on an enlarged-stack
+  thread returns a clean `Err`, input at the measured real-nesting boundary
+  still parses one level past it doesn't, and the cap trips before the
+  native stack would overflow even on a default-stack thread.
+
+No change to behaviour for any input that nests below the cap.
+
 ## 0.3.0 — 2026-06-13 (LANG-FULL N1)
 
 - Grammar gains the multiplicative level `mul_expr = bitwise_expr

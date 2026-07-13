@@ -2,6 +2,39 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.54.0] - 2026-07-13
+
+### Fixed — recursion-depth guard on the three parser entry points `asi.rs` doesn't sit in front of
+
+`create_javascript_parser`, `create_javascript_parser_typed`, and
+`parse_javascript_with_cv` all built their `GrammarParser` with no
+recursion-depth cap. `javascript-to-semantic-ir::compile_source` calls the
+untyped `parse_javascript` (→ `create_javascript_parser`) path directly, so
+this was a real, not theoretical, attack surface on untrusted JS: deeply-
+nested input (`((((...))))`) would recurse until it overflowed the native
+thread stack — an uncatchable process abort.
+
+`asi.rs`'s own `parse_with_asi` (used by `parse_javascript_typed` and
+`parse_javascript_typed_with_cv`) already opts into `DEFAULT_MAX_RULE_DEPTH`
+(128) and documents it measured safe for this exact grammar ("trips a
+clean, recoverable parse error well below the ~200-frame overflow point...
+real JS never nests grouping this deep") — the three entry points fixed
+here just hadn't been brought into that same discipline. Independently
+re-confirmed here (binary search against `create_javascript_parser`, safe
+to 17 real nesting levels, trips at 18; 5000-level adversarial input on a
+default-stack thread returns cleanly, no crash) before reusing the value.
+
+- Wired `.with_max_depth(DEFAULT_MAX_RULE_DEPTH)` into all three remaining
+  unguarded `GrammarParser::new` call sites.
+- 5 new regression tests: deep adversarial input on an enlarged-stack
+  thread returns a clean `Err`, input at the measured real-nesting boundary
+  still parses one level past it doesn't, the cap trips before the native
+  stack would overflow even on a default-stack thread, and the typed/
+  CV-carrying entry points share the same protection.
+
+No change to behaviour for any input that nests below the cap — every real
+JavaScript program and every existing test (238 total) pass unchanged.
+
 ## [0.53.0] - 2026-07-12
 
 ### Added — CLOC12.189 PR2: bridge `export` declarations

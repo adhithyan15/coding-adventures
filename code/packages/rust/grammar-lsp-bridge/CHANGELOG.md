@@ -1,5 +1,46 @@
 # Changelog — `grammar-lsp-bridge`
 
+## 0.3.0 — 2026-07-13
+
+### Fixed — recursion-depth guard against native stack overflow (DoS)
+
+`GrammarLanguageBridge::parse` built its `GrammarParser` with no
+recursion-depth cap, even though `basic-lsp-bridge`/`nib-lsp-bridge`/
+`oct-lsp-bridge`/`twig-lsp-bridge` all compile whatever file is open in the
+editor being debugged/edited through this one shared code path — a real,
+not theoretical, attack surface for all four. Deeply-nested input
+(`((((...))))`) would recurse until it overflowed the native thread stack —
+an uncatchable process abort — before `parse` ever got a chance to turn a
+parse failure into a `Diagnostic`.
+
+Unlike a dedicated parser crate, this bridge builds a `GrammarParser` from
+*whichever* `LanguageSpec` its caller supplies, so a single cap here must be
+safe for every grammar any current consumer's spec carries. Measured
+directly (binary search, uncapped parser, default-stack worker thread,
+debug build) against all four grammars this bridge currently serves:
+`nib`/`oct` (via their own dedicated parser crates, which lower through the
+same compiled grammar this bridge parses at runtime) bind the constraint at
+27/30 real nesting levels (285/290 in rule-frame terms); `twig` and `basic`
+(Dartmouth BASIC) both tolerate far deeper nesting before crashing.
+
+- Added `MAX_RULE_DEPTH: usize = 200` (about 30% below the binding
+  285-rule-frame floor, matching `nib-parser`/`oct-parser`'s own
+  independently-measured value) and wired it into `parse` via
+  `.with_max_depth(...)`.
+- 3 new regression tests against this crate's own `toy` test grammar: deep
+  adversarial input on an enlarged-stack thread produces a clean
+  `Diagnostic` (never a crash), input at the measured real-nesting boundary
+  (98 levels for `toy`'s simpler `form -> list -> {form}` shape) still
+  parses one level past it doesn't, and the cap trips before the native
+  stack would overflow even on a default-stack thread.
+- Verified no regression across all four real consumers
+  (`basic-lsp-bridge`/`nib-lsp-bridge`/`oct-lsp-bridge`/`twig-lsp-bridge`'s
+  own test suites, 61 tests total, all pass unchanged).
+
+A future `LanguageSpec` with an even lower native-stack floor than
+`nib`/`oct`'s would need this constant re-measured — see the `MAX_RULE_DEPTH`
+doc comment in `bridge.rs`.
+
 ## 0.2.0 — 2026-05-04
 
 **LS02 PR A — Full `GrammarLanguageBridge` implementation.**
