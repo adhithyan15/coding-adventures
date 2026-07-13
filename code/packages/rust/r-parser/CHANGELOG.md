@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2026-07-13
+
+### Fixed — recursion-depth guard against native stack overflow (DoS)
+
+`create_r_parser`/`try_parse_r` built their `GrammarParser` with no
+recursion-depth cap (the shared `parser` crate's default is unbounded), even
+though `r-repl` feeds this parser arbitrary, untrusted source at an
+interactive prompt. Deeply-nested input (`((((...))))`) would recurse until
+it overflowed the native thread stack — an uncatchable process abort — before
+this crate's own `Result`-returning entry points ever got a chance to report
+anything.
+
+The shared crate's generic `DEFAULT_MAX_RULE_DEPTH` (128) turned out unsafe
+*by rejection* for this grammar: measured directly, 128 rule-frames only
+covers 8 real parenthesised-nesting levels, well within plausible real R
+code. Added a bespoke `MAX_RULE_DEPTH = 200`, empirically measured the same
+way `apl-parser`/`j-parser`/`macsyma-parser` measured their own bespoke
+values: binary-searching an *uncapped* parser against increasing real nesting
+depth on a default-stack worker thread (crashes at 22 levels, safe at 21;
+in rule-frame terms, safe through 297, crashes at 298 on the same 5000-level
+adversarial input). 200 sits about 33% below that measured floor and still
+supports 14 real nesting levels before tripping.
+
+- Added `MAX_RULE_DEPTH: usize = 200` and wired it into both
+  `create_r_parser` and `try_parse_r` via `.with_max_depth(...)`.
+- 3 new regression tests: `test_deeply_nested_input_returns_error_not_overflow`
+  (5000 levels on a 32 MiB worker thread returns a clean `Err`, never
+  crashes), `test_nesting_up_to_cap_still_parses` (14 levels parse, 15
+  trips), `test_opt_in_cap_trips_before_overflow_on_default_stack` (5000
+  levels on a **default**-stack thread still returns `Err` cleanly, proving
+  the cap trips before the native stack would).
+
+No change to behaviour for any input that nests below the cap — every real
+R program and every existing test.
+
 ## [0.3.0] - 2026-06-19
 
 ### Changed
