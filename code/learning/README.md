@@ -6,11 +6,12 @@ The basic rule for this folder is simple: if a concept is important enough to ha
 
 ## How To Read This Folder
 
-There are three kinds of material in this directory:
+There are four kinds of material in this directory:
 
 1. **Track overviews**: explain a whole area, like computer architecture or language tooling.
 2. **Deep dives**: explain one important concept in detail, like Kahn's algorithm.
 3. **Ecosystem notes**: explain tooling and language-specific conventions.
+4. **Personal curricula**: self-contained, standalone skill-building tracks that aren't tied to any package in this repo — e.g. the human-language curriculum. These follow their own spec lineage (see each track's README) rather than the package-companion coverage map below.
 
 ## Current Tracks
 
@@ -20,6 +21,7 @@ There are three kinds of material in this directory:
 - [Cryptography](./cryptography/README.md)
 - [Language Tooling](./language-tooling/README.md)
 - [Python Ecosystem](./programming-languages/python-ecosystem.md)
+- [Human Languages](./human-languages/README.md) — personal curriculum, not a package companion
 
 The generated [Learning Coverage Inventory](./COVERAGE.md) is the complete
 package-to-learning backlog. Regenerate it after adding or renaming packages or
