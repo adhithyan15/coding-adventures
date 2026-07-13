@@ -127,7 +127,7 @@ new canonical identity collisions with `--fail-on-collisions`.
 
 ## Priority 1: Complete The 14-Of-15 Set
 
-Fifteen package/language slots remain to turn 15 nearly complete packages into
+Fourteen package/language slots remain to turn 15 nearly complete packages into
 fully covered packages.
 
 ### Dart: 9 remaining ports
@@ -145,14 +145,13 @@ fully covered packages.
 Completed in the Dart lane: `heap`, `bitset`, `pixel-container`,
 `image-point-ops`.
 
-### Haskell: 3 remaining ports
+### Haskell: 2 remaining ports
 
-- `lz77`
 - `lzss`
 - `lzw`
 
 Completed in the Haskell lane: `activation-functions`, `caesar-cipher`,
-`huffman-tree`, `huffman-compression`.
+`huffman-tree`, `huffman-compression`, `lz77`.
 
 ### Swift: 3 ports
 
