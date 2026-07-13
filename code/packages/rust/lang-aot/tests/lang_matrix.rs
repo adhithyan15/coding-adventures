@@ -336,6 +336,29 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(1),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
     },
+    // Twig — **E6d-4: symbols / quote on the code-gen backends.** A quote literal
+    // `'a` (or `(quote a)`) now lowers to `const Var("a") : symbol` — the same
+    // interned-const form McCarthy Lisp emits — instead of the runtime `make_symbol`
+    // string path. The shared `intern_symbols` (native) / `intern_symbols_structural`
+    // (managed) passes assign each distinct name one module-wide id in a reserved
+    // high range, so `equal?` on symbols is bit-equality with no new value type.
+    // `(equal? 'a 'a)` = #t → exit 1.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(equal? 'a 'a)",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
+    // Twig — E6d-4: two DISTINCT symbols are not `equal?` (different interned ids),
+    // so `(equal? 'a 'b)` = #f → exit 0 — the discriminating half of the proof.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(equal? 'a 'b)",
+        expect: Expect::Exit(0),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
     // Twig — E4 literal `string-length`. The compiler lowers
     // `(string-length "HELLO")` to shared `str_const` + `str_len`, avoiding the
     // dynamic `call_builtin "string-length"` path that codegen validators reject.

@@ -1346,14 +1346,26 @@ impl Compiler {
             }
 
             Expr::SymLit(SymLit { name, .. }) => {
-                let name_reg = self.string_arg(ctx, name, loc);
+                // E6d-4 (symbols): a quote literal (`'a` / `(quote a)`) whose name
+                // is known at compile time lowers to `const Var(name) : symbol` —
+                // the SAME interned-const form McCarthy Lisp's `emit_symbol` emits,
+                // rather than the runtime `make_symbol` string path (which needs
+                // data-section string emission the code-gen backends lack). This
+                // rides the existing `intern_symbols` / `intern_symbols_structural`
+                // passes: each distinct name gets one module-wide id, so `equal?`
+                // on symbols is bit-equality (`(equal? 'a 'a)` #t, `(equal? 'a 'b)`
+                // #f) on all five code-gen backends — with no new value type. On
+                // twig-vm the `const Var(name)` dispatch already interns the text to
+                // a symbol, so the VM is unaffected. (Runtime symbol *creation* —
+                // `string->symbol` over a runtime string — keeps `make_symbol`.)
                 let v = ctx.fresh_var("sym");
                 ctx.emit(IIRInstr::new(
-                    "call_builtin",
+                    "const",
                     Some(v.clone()),
-                    vec![Operand::Var("make_symbol".into()), Operand::Var(name_reg)],
-                    "any",
+                    vec![Operand::Var(name.clone())],
+                    "symbol",
                 ), loc);
+                ctx.record_type(&v, "symbol");
                 Ok(v)
             }
 
