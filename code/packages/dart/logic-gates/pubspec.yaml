@@ -1,0 +1,11 @@
+name: coding_adventures_logic_gates
+version: 0.1.0
+description: Pure-Dart logic gates, combinational circuits, and sequential state elements.
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dev_dependencies:
+  test: ^1.25.0
