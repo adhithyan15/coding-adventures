@@ -250,6 +250,27 @@ worse than none, so disputed or folk etymologies are flagged as such
 aren't (e.g. *querer*'s *quaerere* vs. *quarrel*'s *queri*) are kept
 separate.
 
+### Show the derivation, not just the root
+
+Naming the root is not enough. Where it's interesting — and it usually is —
+a lesson shows **how the target word was actually formed from that root**:
+the erosion, compression, or fusion that produced it. This is often the most
+memorable part of a lesson, and the learner asked for it explicitly. Examples
+the Spanish track already carries:
+
+- **Erosion**: *quomodo → quomo → como* ("how"); the final *-do* drops, the
+  middle collapses, *qu-* flattens to *k*. Show the intermediate steps.
+- **Compression of a phrase**: *usted ← vuestra merced* ("your grace");
+  *adiós ← a + Dios* ("to God"); *buenos días* as the fossil of *"buenos días
+  os dé Dios."*
+- **Regular sound-changes**, taught once and then reused as decoding tools:
+  Latin *-ct- → -ch-* (*noctem → noche*), *-lt- → -ch-* (*multum → mucho*),
+  *cl-/fl-/pl- → ll-* (*clamare → llamar*).
+
+When a word belongs to a systematic family (e.g. the Latin *qu-*
+interrogatives → Spanish *qué/quién/cuál/cuándo/cuánto/cómo*), the lesson
+surfaces the whole pattern, so one derivation unlocks a set.
+
 Spanish's second root stream, alongside Latin, is **Arabic** — roughly
 4,000 words from ~800 years of Al-Andalus (*azul, ojalá, azúcar, aceite,
 almohada*), often sharing an English cousin borrowed from the same Arabic

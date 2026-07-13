@@ -30,12 +30,44 @@ English.
 
 ## The word, taken apart
 
-**cómo** — "how." Root: Latin **quomodo** — literally *quo modo*, "in what
-**manner**." That *modo* ("manner, measure") is English:
+**cómo** — "how." Root: Latin **quomodo** — a fused little phrase, *quo modo*,
+"in what **manner**."
 
-- **mode**, **mod**al, **model**, **mod**erate, **mod**ify, com**mod**ity.
+**The two halves, and their English cousins:**
 
-So *cómo* is asking "in what mode / manner?" — "how?"
+- *modo* ("manner, measure") → English **mode**, **mod**al, **model**,
+  **mod**erate, **mod**ify, com**mod**ity.
+- *quo* ("in what") is the Latin question-stem **qu-** — the seed of almost
+  every Spanish question word (see the family below).
+
+**How *quomodo* became *cómo* — the wearing-down.** Spanish didn't borrow
+*cómo* ready-made; it *eroded* out of *quomodo* over centuries of everyday
+speech. The final *-do* fell off and the middle collapsed:
+
+> *quomodo* → *quomo* → **como**
+
+The *qu-* (a *kw* sound) flattened to a plain *k* (written *c* before *o*).
+What's left is *quomodo* worn smooth — the way a pebble loses its edges in a
+river. The same erosion gave Italian *come*, Portuguese *como*, French
+*comme*. The accent in *cómo* is the one late addition: Spanish stamps it on
+to mark the question (vs. accent-less *como*, "like / as").
+
+**The whole question family is worn-down Latin *qu-*.** Once you see *cómo ←
+quomodo*, the rest fall into place — nearly every Spanish question word is an
+eroded Latin *qu-* interrogative:
+
+| Spanish | ← Latin | meaning |
+|---|---|---|
+| qué | *quid* | what |
+| quién | *quem* | who |
+| cuál | *qualis* | which |
+| cuándo | *quando* | when |
+| cuánto | *quantus* | how much |
+| **cómo** | *quomodo* | how |
+
+Learn one derivation and you've cracked the pattern behind all of them.
+(*dónde*, "where," is the odd one out — from *de unde*, "from where," not the
+*qu-* stem.)
 
 ## Grammar Lens: the accent that marks a question
 
@@ -58,6 +90,6 @@ puts a visible flag on the question word. Every question word you'll learn
 
 ## Wrap-up Recall
 
-[PAUSE 3s] What does the accent on *cómo* signal, beyond stress? (That it's a
-question word — vs. accent-less *como*, "like/as".) What Latin phrase is it
-from? (*Quo modo*, "in what manner.")
+[PAUSE 3s] Walk the erosion: *quomodo* → ? → *cómo* (*quomo* → *como*, then
+the question-accent). And what single Latin stem gives *qué, quién, cuándo,
+cómo*? (The question-stem *qu-*.)
