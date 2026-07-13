@@ -1,92 +1,61 @@
+// Package typescriptparser parses TypeScript source code into an Abstract
+// Syntax Tree using versioned grammars. It supports TypeScript 1.0, 2.0, 3.0,
+// 4.0, 5.0, and 5.8, each with its own parser grammar, plus a generic superset
+// grammar for callers that do not care about a specific version.
+//
+// The parsing pipeline has two stages:
+//
+//  1. Lexing (typescript-lexer): source is tokenised with the token grammar for
+//     the requested version. The version string is validated there; an unknown
+//     version surfaces as an error before any parser grammar is selected.
+//  2. Parsing (this package): the token stream is parsed with the parser grammar
+//     for the same version.
+//
+// Both grammars are embedded at compile time as native Go data structures in
+// grammar_data.go (VersionedParserGrammars, keyed by version string, plus
+// ParserGrammarData for the generic path). Nothing is read from disk at run
+// time, so the parser needs no filesystem capability and works unchanged when
+// the package is built standalone.
+//
+// Usage:
+//
+//	ast, err := typescriptparser.ParseTypescript(source, "ts5.8")
+//	ast, err := typescriptparser.ParseTypescript(source, "")  // generic grammar
 package typescriptparser
 
 import (
-	"fmt"
-	"path/filepath"
-	"runtime"
-
-	"github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/parser"
 	typescriptlexer "github.com/adhithyan15/coding-adventures/code/packages/go/typescript-lexer"
 )
-
-// validVersions is the set of TypeScript version strings the parser recognises.
-// These must stay in sync with the same map in the typescript-lexer package so
-// that the lexer and parser always agree on which grammars are available.
-//
-//   ts1.0  — TypeScript 1.0  (April 2014)    first public release
-//   ts2.0  — TypeScript 2.0  (September 2016) strict null checks era
-//   ts3.0  — TypeScript 3.0  (July 2018)      project references era
-//   ts4.0  — TypeScript 4.0  (August 2020)    variadic tuple types era
-//   ts5.0  — TypeScript 5.0  (March 2023)     decorators era
-//   ts5.8  — TypeScript 5.8  (February 2025)  latest stable
-var validVersions = map[string]bool{
-	"ts1.0": true,
-	"ts2.0": true,
-	"ts3.0": true,
-	"ts4.0": true,
-	"ts5.0": true,
-	"ts5.8": true,
-}
-
-// getGrammarPath resolves the absolute path to the .grammar file for the given
-// TypeScript version string.
-//
-// When version is "" (empty string) the generic grammar at
-// code/grammars/typescript.grammar is used — preserving backward-compatible
-// behaviour for callers that do not care about a specific version.
-//
-// Any other non-empty string must appear in validVersions; an unknown version
-// returns a descriptive error so that typos produce actionable messages.
-func getGrammarPath(version string) (string, error) {
-	_, filename, _, _ := runtime.Caller(0)
-	parent := filepath.Dir(filename)
-	root := filepath.Join(parent, "..", "..", "..", "grammars")
-	if version == "" {
-		return filepath.Join(root, "typescript", "typescript.grammar"), nil
-	}
-	if !validVersions[version] {
-		return "", fmt.Errorf("unknown TypeScript version %q: valid versions are ts1.0, ts2.0, ts3.0, ts4.0, ts5.0, ts5.8", version)
-	}
-	return filepath.Join(root, "typescript", version+".grammar"), nil
-}
 
 // CreateTypescriptParser constructs a GrammarParser ready to parse the given
 // TypeScript source string.
 //
 // version selects the TypeScript grammar pair:
 //   - ""      — generic grammar (typescript.grammar / typescript.tokens);
-//               same as pre-0.2.0 behaviour
+//     same as pre-0.2.0 behaviour
 //   - "ts1.0" through "ts5.8" — versioned grammar pair
 //
-// Both the lexer and parser grammar files are selected by the same version
-// string, guaranteeing that the token set and parse rules stay consistent.
+// Both the lexer and parser grammars are selected by the same version string,
+// guaranteeing that the token set and parse rules stay consistent. Grammars are
+// read from the compiled-in grammar data; no grammar file is read at run time.
 //
-// An error is returned if the version string is unrecognised, or if any
-// grammar file cannot be read.
+// An error is returned if the version string is unrecognised — that error comes
+// from the lexer's tokenisation step, which validates the version first.
 func CreateTypescriptParser(source string, version string) (*parser.GrammarParser, error) {
-	// Tokenise first; any version-error is surfaced here before we attempt
-	// to open the parser grammar file.
+	// Tokenise first; a version error is surfaced here (the lexer owns version
+	// validation) before we select the parser grammar.
 	tokens, err := typescriptlexer.TokenizeTypescript(source, version)
 	if err != nil {
 		return nil, err
 	}
-	grammarPath, err := getGrammarPath(version)
-	if err != nil {
-		return nil, err
+	grammar := ParserGrammarData
+	if version != "" {
+		// Unknown versions were already rejected by TokenizeTypescript above,
+		// so a present version is guaranteed to be in the map.
+		grammar = VersionedParserGrammars[version]
 	}
-	return StartNew[*parser.GrammarParser]("typescriptparser.CreateTypescriptParser", nil,
-		func(op *Operation[*parser.GrammarParser], rf *ResultFactory[*parser.GrammarParser]) *OperationResult[*parser.GrammarParser] {
-			bytes, err := op.File.ReadFile(grammarPath)
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-			grammar, err := grammartools.ParseParserGrammar(string(bytes))
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-			return rf.Generate(true, false, parser.NewGrammarParser(tokens, grammar))
-		}).GetResult()
+	return parser.NewGrammarParser(tokens, grammar), nil
 }
 
 // ParseTypescript is the main entry point for parsing TypeScript source code.

@@ -7,7 +7,7 @@
 // expressions.
 //
 // This package is a thin wrapper around the generic grammar-driven lexer. It:
-//   1. Loads the TOML token grammar from the toml.tokens file
+//   1. Uses the TOML token grammar embedded at compile time (TokenGrammarData)
 //   2. Passes it to the GrammarLexer, which compiles the regex patterns
 //   3. The GrammarLexer handles skip patterns (comments and whitespace)
 //      automatically based on the grammar file
@@ -47,47 +47,11 @@
 package tomllexer
 
 import (
-	"path/filepath"
-	"runtime"
-
-	grammartools "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
 )
 
-// getGrammarPath computes the absolute path to the toml.tokens grammar file.
-//
-// We use runtime.Caller(0) to find the directory of this Go source file at
-// runtime, then navigate up three levels (toml-lexer -> go -> packages ->
-// code) to reach the grammars directory. This approach works regardless of the
-// working directory, which is important because tests and the build tool may
-// run from different locations.
-//
-// Directory structure:
-//
-//	code/
-//	  grammars/
-//	    toml.tokens        <-- this is what we want
-//	  packages/
-//	    go/
-//	      toml-lexer/
-//	        lexer.go        <-- we are here (3 levels below code/)
-func getGrammarPath() string {
-	// runtime.Caller(0) returns the file path of the current source file.
-	// The underscore variables are: program counter, line number, and ok bool.
-	_, filename, _, _ := runtime.Caller(0)
-
-	// filepath.Dir gives us the directory containing lexer.go
-	parent := filepath.Dir(filename)
-
-	// Navigate up 3 levels: toml-lexer -> go -> packages -> code,
-	// then down into grammars/
-	root := filepath.Join(parent, "..", "..", "..", "grammars")
-
-	return filepath.Join(root, "toml", "toml.tokens")
-}
-
-// CreateTOMLLexer loads the TOML token grammar and returns a configured
-// GrammarLexer ready to tokenize the given TOML text.
+// CreateTOMLLexer returns a GrammarLexer configured with the TOML token
+// grammar, ready to tokenize the given TOML text.
 //
 // The returned lexer operates in standard mode (not indentation mode). TOML
 // is newline-sensitive — newlines delimit key-value pairs — so the standard
@@ -117,32 +81,13 @@ func getGrammarPath() string {
 //   - NEWLINE: line breaks (significant in TOML)
 //   - EOF: end of input
 //
-// Returns an error if the grammar file cannot be read or parsed.
+// The grammar is embedded at compile time as native Go in grammar_data.go
+// (TokenGrammarData); nothing is read from disk at run time. The lexer works
+// unchanged when the package is built standalone and needs no filesystem
+// capability. The error result is retained for API compatibility and is
+// always nil.
 func CreateTOMLLexer(source string) (*lexer.GrammarLexer, error) {
-	return StartNew[*lexer.GrammarLexer]("tomllexer.CreateTOMLLexer", nil,
-		func(op *Operation[*lexer.GrammarLexer], rf *ResultFactory[*lexer.GrammarLexer]) *OperationResult[*lexer.GrammarLexer] {
-			// Read the grammar file from disk. This file defines all token patterns,
-			// skip patterns, and literal tokens for TOML.
-			bytes, err := op.File.ReadFile(getGrammarPath())
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-
-			// Parse the grammar file into a structured TokenGrammar object.
-			// This extracts token definitions (with regex patterns), skip
-			// definitions, the escape mode ("none" for TOML), and the mode
-			// (which will be empty for TOML, meaning no indentation tracking).
-			grammar, err := grammartools.ParseTokenGrammar(string(bytes))
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-
-			// Create the grammar-driven lexer. The GrammarLexer constructor compiles
-			// all regex patterns and initializes skip pattern matching. Since TOML
-			// has escapes: none, STRING tokens will have their quotes stripped but
-			// escape sequences will be left as raw text for the parser to handle.
-			return rf.Generate(true, false, lexer.NewGrammarLexer(source, grammar))
-		}).GetResult()
+	return lexer.NewGrammarLexer(source, TokenGrammarData), nil
 }
 
 // TokenizeTOML is a convenience function that tokenizes TOML text in a single

@@ -423,26 +423,6 @@ func TestCreateSQLLexer(t *testing.T) {
 }
 
 // =============================================================================
-// TestCapabilityEnforcement_RejectsUnauthorizedPath
-// =============================================================================
-//
-// Verifies that the generated ReadFile enforcement returns a capability
-// violation error when a caller passes a path that does not match the
-// canonical resolved grammar path (_allowedPath_0).
-//
-// This test directly exercises _FileCapabilities.ReadFile from gen_capabilities.go,
-// which is accessible from this in-package test. The enforcement uses exact
-// canonical path comparison (sync.OnceValue + runtime.Caller), so any path
-// other than the real grammar file is rejected before os.ReadFile is called.
-func TestCapabilityEnforcement_RejectsUnauthorizedPath(t *testing.T) {
-	fc := &_FileCapabilities{}
-	_, err := fc.ReadFile("/not/the/grammar/path.tokens")
-	if err == nil {
-		t.Error("expected capability violation error for unauthorized path, got nil")
-	}
-}
-
-// =============================================================================
 // Helpers
 // =============================================================================
 

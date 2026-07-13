@@ -56,56 +56,26 @@
 package tomlparser
 
 import (
-	"path/filepath"
-	"runtime"
-
-	grammartools "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	tomllexer "github.com/adhithyan15/coding-adventures/code/packages/go/toml-lexer"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/parser"
 )
 
-// getGrammarPath computes the absolute path to the toml.grammar file.
-//
-// This uses the same runtime.Caller(0) technique as the toml-lexer package.
-// We navigate up 3 levels from this source file to reach the code/ directory,
-// then down into grammars/.
-//
-// Directory structure:
-//
-//	code/
-//	  grammars/
-//	    toml.grammar       <-- this is what we want
-//	  packages/
-//	    go/
-//	      toml-parser/
-//	        parser.go      <-- we are here (3 levels below code/)
-func getGrammarPath() string {
-	// runtime.Caller(0) returns the file path of this source file at runtime.
-	_, filename, _, _ := runtime.Caller(0)
-
-	// Get the directory containing this file
-	parent := filepath.Dir(filename)
-
-	// Navigate up 3 levels to code/, then down to grammars/
-	root := filepath.Join(parent, "..", "..", "..", "grammars")
-
-	return filepath.Join(root, "toml", "toml.grammar")
-}
-
-// CreateTOMLParser tokenizes the TOML text using the TOML lexer, then loads
-// the TOML parser grammar and returns a configured GrammarParser ready to
-// produce an AST.
+// CreateTOMLParser tokenizes the TOML text using the TOML lexer, then returns a
+// GrammarParser configured with the TOML parser grammar, ready to produce an AST.
 //
 // The two-step process:
 //   1. TokenizeTOML(source) -- produces a token stream with NEWLINE tokens
-//   2. Load toml.grammar and create a GrammarParser from the tokens
+//   2. Create a GrammarParser from the tokens and the embedded grammar
 //
 // The GrammarParser uses recursive descent with packrat memoization. Each
 // grammar rule becomes a parsing function. The memoization cache ensures that
 // no (rule, position) pair is computed more than once, giving O(n) parsing
 // for most practical grammars.
 //
-// Returns an error if lexing fails or the grammar file cannot be read/parsed.
+// The parser grammar is embedded at compile time as native Go in grammar_data.go
+// (ParserGrammarData); nothing is read from disk at run time, so the parser
+// needs no filesystem capability and works when built standalone. The error
+// result is retained for API compatibility; it is non-nil only when lexing fails.
 func CreateTOMLParser(source string) (*parser.GrammarParser, error) {
 	// Step 1: Tokenize the source using the TOML lexer.
 	// This produces tokens with string quotes stripped (escape sequences left
@@ -115,28 +85,7 @@ func CreateTOMLParser(source string) (*parser.GrammarParser, error) {
 		return nil, err
 	}
 
-	return StartNew[*parser.GrammarParser]("tomlparser.CreateTOMLParser", nil,
-		func(op *Operation[*parser.GrammarParser], rf *ResultFactory[*parser.GrammarParser]) *OperationResult[*parser.GrammarParser] {
-			// Step 2: Read the parser grammar file.
-			// This file defines the syntax rules in EBNF notation.
-			bytes, err := op.File.ReadFile(getGrammarPath())
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-
-			// Step 3: Parse the grammar file into a structured ParserGrammar object.
-			// This extracts all rules, each with a name and a body (a tree of
-			// grammar elements: sequences, alternations, repetitions, etc.).
-			grammar, err := grammartools.ParseParserGrammar(string(bytes))
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-
-			// Step 4: Create the grammar-driven parser.
-			// This builds a rule lookup table and initializes the memoization cache.
-			// The first rule in the grammar ("document") becomes the entry point.
-			return rf.Generate(true, false, parser.NewGrammarParser(tokens, grammar))
-		}).GetResult()
+	return parser.NewGrammarParser(tokens, ParserGrammarData), nil
 }
 
 // ParseTOML is a convenience function that parses TOML text into an AST in a

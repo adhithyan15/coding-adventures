@@ -105,10 +105,7 @@ func createLexerFromSource(source string, version string) (*lexer.GrammarLexer, 
 		return nil, err
 	}
 
-	return StartNew[*lexer.GrammarLexer]("veriloglexer.createLexerFromSource", nil,
-		func(_ *Operation[*lexer.GrammarLexer], rf *ResultFactory[*lexer.GrammarLexer]) *OperationResult[*lexer.GrammarLexer] {
-			return rf.Generate(true, false, lexer.NewGrammarLexer(source, grammar))
-		}).GetResult()
+	return lexer.NewGrammarLexer(source, grammar), nil
 }
 
 // TokenizeVerilog tokenizes Verilog source code with preprocessing enabled.
