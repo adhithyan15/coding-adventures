@@ -224,7 +224,7 @@ E6d-7.
      `list` builtin is gone before the backend sees it). Matrix:
      `(car (list 42 1 2))` → 42 and `(car (cdr (list 1 42 3)))` → 42; WASM + real
      dotnet CLR verified, native/LLVM/JVM via CI. `(list)` → nil.
-   - **E6d-3b — list *operations* (◐ `length` ✅, `list-ref` ✅; `append`/
+   - **E6d-3b — list *operations* (◐ `length` ✅, `list-ref` ✅, `append` ✅;
      `reverse`/`assoc` ☐).** These walk/rebuild the cons chain, so they need a
      synthesized cons-walk helper, not a pure desugar. `null?`/`pair?` already
      lower. `length` (shipped): `iir-builtin-lowering`'s `lower_list_ops` rewrites
@@ -243,11 +243,17 @@ E6d-7.
      uniform-anyref boundary (`dyn_repr_structural`/`lower_dyn_repr`) boxes every
      lisp-call arg, so a raw-`i64` index param faults (`expected i64, got I32(2)`);
      the helper takes `n : ref<any>`, unboxes it once, and the index test/decrement
-     are typed `cmp_eq`/`sub` (raw bool feeds `jmp_if_false` directly). The
-     remaining ops (`append`, `reverse`, `assoc`) follow the same helper pattern.
-     Proof (shipped): `(+ (length (list 1 2 3)) 39)` → 42, `(null? (list))` → 1,
-     `(list-ref (list 10 20 42) 2)` → 42; WASM + real dotnet CLR verified,
-     native/LLVM/JVM via CI.
+     are typed `cmp_eq`/`sub` (raw bool feeds `jmp_if_false` directly). `append`
+     (shipped): same `lower_list_ops` rewrites `call_builtin "append" a b` → `call
+     __dyn_list_append, a, b`, whose helper *rebuilds* the first list —
+     `if null?(a) then b else cons(car(a), append(cdr(a), b))`. No index, so no
+     unbox/box (every value it touches is a reference); its one new op is the
+     `cons` in the recursive arm (the E6d-1 heap builtin, lowered for the injected
+     helper too). The remaining ops (`reverse`, `assoc`) follow the same helper
+     pattern. Proof (shipped): `(+ (length (list 1 2 3)) 39)` → 42,
+     `(null? (list))` → 1, `(list-ref (list 10 20 42) 2)` → 42,
+     `(car (cdr (append (list 1 42) (list 3))))` → 42; WASM + real dotnet CLR
+     verified, native/LLVM/JVM via CI.
 4. **E6d-4 — symbols / quote.** `make_symbol`, `symbol->string`, `string->symbol`,
    `eq?` on symbols (bit-equality). Interned-immediate model (§2.1); reuse
    `intern_symbols_structural`. Proof: `(eq? 'a 'a)` vs `(eq? 'a 'b)`.

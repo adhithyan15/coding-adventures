@@ -1,5 +1,28 @@
 # Changelog — iir-builtin-lowering
 
+## 0.26.0 - 2026-07-12 (E6d-3b: `append` via a synthesized list-rebuild helper)
+
+`lower_list_ops` gains a third list operation, `append`. It rewrites
+`call_builtin "append" a b` to a call to a synthesized recursive helper
+`__dyn_list_append` (injected once, idempotently) that *rebuilds* the first list
+in front of the second:
+
+```
+__dyn_list_append(a: ref<any>, b: ref<any>) -> ref<any>:
+    if !null?(a)  goto recurse       # → is_null (E6d-1)
+    ret b                            # append(nil, b) = b
+  recurse:
+    ret cons(car(a), __dyn_list_append(cdr(a), b))
+```
+
+Unlike `list-ref` there is **no index**, so no unbox/box: `a`/`b`, `car(a)`, and
+the recursive result are all lisp `ref<any>` references. Its only new op versus
+`length`/`list-ref` is the `cons` in the recursive arm — the same E6d-1 heap
+builtin, rewritten to `alloc`/`field_store` for the injected helper by the same
+head-of-heap-lowering pass. Both arms return `ref<any>` (the second list, or a
+fresh cons). Five new unit tests (rewrite, single injection, cons-rebuild shape,
+all-three-ops coexistence). `reverse`/`assoc` follow the same pattern.
+
 ## 0.25.0 - 2026-07-12 (E6d-3b: `list-ref` via a synthesized index-walk helper)
 
 `lower_list_ops` gains a second list operation, `list-ref`. Like `length` it

@@ -35,6 +35,22 @@
 //!   }
 //! ```
 //!
+//! `append` → a recursive `__dyn_list_append` that *rebuilds* the first list:
+//!
+//! ```text
+//!   fn __dyn_list_append(a : ref<any>, b : ref<any>) -> ref<any> {
+//!       if !null?(a) goto recurse           ;; → is_null (heap.rs, E6d-1)
+//!       ret b                               ;; append(nil, b) = b
+//!     recurse:
+//!       ret cons(car(a), __dyn_list_append(cdr(a), b))   ;; cons a new cell
+//!   }
+//! ```
+//!
+//! `append` needs no index, so no unbox/box: `a`/`b` and every value it touches
+//! (`car(a)`, the recursive result) are already references. Its one new op is the
+//! `cons` in the recursive arm — the same heap builtin (E6d-1) the head-of-heap
+//! pass lowers for the injected helper too.
+//!
 //! ### The lisp boundary is uniform-anyref — the index is boxed too
 //!
 //! `length` *returns* a number, so both arms return a boxed `ref<any>` — a
@@ -72,6 +88,8 @@ use interpreter_ir::IIRModule;
 const LENGTH_HELPER: &str = "__dyn_list_length";
 /// The synthesized recursive list-ref helper's function name.
 const LISTREF_HELPER: &str = "__dyn_list_ref";
+/// The synthesized recursive append helper's function name.
+const APPEND_HELPER: &str = "__dyn_list_append";
 
 /// Module-level entry: rewrite every list-*operation* `call_builtin` to a call to
 /// its synthesized recursive helper, and inject each helper once if any call to
@@ -80,6 +98,7 @@ const LISTREF_HELPER: &str = "__dyn_list_ref";
 pub fn lower_list_ops(module: &mut IIRModule) {
     lower_length(module);
     lower_list_ref(module);
+    lower_append(module);
 }
 
 /// Rewrite `length` calls + inject `__dyn_list_length` once.
@@ -113,6 +132,22 @@ fn lower_list_ref(module: &mut IIRModule) {
     }
     if !module.functions.iter().any(|f| f.name == LISTREF_HELPER) {
         module.functions.push(build_listref_helper());
+    }
+}
+
+/// Rewrite `append` calls + inject `__dyn_list_append` once.
+fn lower_append(module: &mut IIRModule) {
+    let uses_append = module.functions.iter().any(|f| {
+        f.instructions.iter().any(is_append_call)
+    });
+    if !uses_append {
+        return;
+    }
+    for f in &mut module.functions {
+        rewrite_append_calls(f);
+    }
+    if !module.functions.iter().any(|f| f.name == APPEND_HELPER) {
+        module.functions.push(build_append_helper());
     }
 }
 
@@ -340,6 +375,125 @@ fn build_listref_helper() -> IIRFunction {
     )
 }
 
+// ---------------------------------------------------------------------------
+// append
+// ---------------------------------------------------------------------------
+
+/// Is `instr` a `call_builtin "append" …`?
+fn is_append_call(instr: &IIRInstr) -> bool {
+    instr.op == "call_builtin"
+        && matches!(instr.srcs.first(), Some(Operand::Var(n)) if n == "append")
+}
+
+/// Replace each `call_builtin "append" a b -> dest` with
+/// `call __dyn_list_append, a, b -> dest : ref<any>`.
+///
+/// `a` (srcs[1]) and `b` (srcs[2]) are both cons chains (lisp `ref<any>`), passed
+/// straight to the helper's two `ref<any>` params. The helper returns the rebuilt
+/// list (a fresh `cons` chain), so its `ref<any>` return flows into `dest`.
+fn rewrite_append_calls(f: &mut IIRFunction) {
+    let old = std::mem::take(&mut f.instructions);
+    let mut out: Vec<IIRInstr> = Vec::with_capacity(old.len() + 2);
+    for instr in old {
+        if !is_append_call(&instr) {
+            out.push(instr);
+            continue;
+        }
+        // No dest ⇒ result unused; drop the (pure) call.
+        let dest = match &instr.dest {
+            Some(d) => d.clone(),
+            None => continue,
+        };
+        // srcs = [Var("append"), a, b]; a malformed arity is left for the
+        // validator to reject with full context.
+        let (a, b) = match (instr.srcs.get(1), instr.srcs.get(2)) {
+            (Some(a), Some(b)) => (a.clone(), b.clone()),
+            _ => { out.push(instr); continue; }
+        };
+        out.push(IIRInstr::new(
+            "call",
+            Some(dest),
+            vec![Operand::Var(APPEND_HELPER.to_string()), a, b],
+            "ref<any>",
+        ));
+    }
+    f.instructions = out;
+}
+
+/// Build the recursive `__dyn_list_append(a: ref<any>, b: ref<any>) -> ref<any>`
+/// helper.
+///
+/// `append` *rebuilds* the first list in front of the second:
+///
+/// ```text
+///   append(a, b) = if null?(a) then b
+///                  else cons(car(a), append(cdr(a), b))
+/// ```
+///
+/// Unlike `list-ref` there is **no index** — both arguments are lisp `ref<any>`
+/// lists, and every value the helper touches (`car(a)`, the recursive result, the
+/// second list `b`) is already a reference, so no unbox/box is needed. The only
+/// new op versus `length`/`list-ref` is a `cons` in the recursive arm — the same
+/// heap builtin (E6d-1) that the head-of-heap-lowering pass rewrites to
+/// `alloc`/`field_store` for the injected helper too, so nothing new must lower.
+/// Both arms return `ref<any>` (the second list, or a fresh cons), so the return
+/// is cleanly a lisp value.
+fn build_append_helper() -> IIRFunction {
+    let recurse = "__dla_recurse".to_string();
+    let instrs = vec![
+        // is_nil = null?(a)
+        IIRInstr::new(
+            "call_builtin", Some("__dla_is_nil".into()),
+            vec![Operand::Var("null?".into()), Operand::Var("a".into())], "bool",
+        ),
+        // if a is NON-nil → recurse; else fall through: a empty ⇒ result is b.
+        IIRInstr::new(
+            "jmp_if_false", None,
+            vec![Operand::Var("__dla_is_nil".into()), Operand::Var(recurse.clone())], "void",
+        ),
+        // base: null?(a) ⇒ append(nil, b) = b.
+        IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "ref<any>"),
+        // recurse: cons(car(a), append(cdr(a), b))
+        IIRInstr::new("label", None, vec![Operand::Var(recurse)], "void"),
+        IIRInstr::new(
+            "call_builtin", Some("__dla_head".into()),
+            vec![Operand::Var("car".into()), Operand::Var("a".into())], "ref<any>",
+        ),
+        IIRInstr::new(
+            "call_builtin", Some("__dla_rest".into()),
+            vec![Operand::Var("cdr".into()), Operand::Var("a".into())], "ref<any>",
+        ),
+        IIRInstr::new(
+            "call", Some("__dla_tail".into()),
+            vec![
+                Operand::Var(APPEND_HELPER.into()),
+                Operand::Var("__dla_rest".into()),
+                Operand::Var("b".into()),
+            ],
+            "ref<any>",
+        ),
+        IIRInstr::new(
+            "call_builtin", Some("__dla_res".into()),
+            vec![
+                Operand::Var("cons".into()),
+                Operand::Var("__dla_head".into()),
+                Operand::Var("__dla_tail".into()),
+            ],
+            "ref<any>",
+        ),
+        IIRInstr::new("ret", None, vec![Operand::Var("__dla_res".into())], "ref<any>"),
+    ];
+    IIRFunction::new(
+        APPEND_HELPER,
+        vec![
+            ("a".to_string(), "ref<any>".to_string()),
+            ("b".to_string(), "ref<any>".to_string()),
+        ],
+        "ref<any>",
+        instrs,
+    )
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -527,5 +681,108 @@ mod tests {
         lower_list_ops(&mut m);
         assert_eq!(m.functions.iter().filter(|f| f.name == LENGTH_HELPER).count(), 1);
         assert_eq!(m.functions.iter().filter(|f| f.name == LISTREF_HELPER).count(), 1);
+    }
+
+    // ── append ──────────────────────────────────────────────────────────────
+
+    fn append_call(dest: &str, a: &str, b: &str) -> IIRInstr {
+        IIRInstr::new(
+            "call_builtin", Some(dest.into()),
+            vec![
+                Operand::Var("append".into()),
+                Operand::Var(a.into()),
+                Operand::Var(b.into()),
+            ],
+            "any",
+        )
+    }
+
+    #[test]
+    fn no_append_is_noop() {
+        let mut m = module_with(vec![
+            IIRInstr::new("const", Some("x".into()), vec![Operand::Int(1)], "i64"),
+        ]);
+        lower_list_ops(&mut m);
+        assert_eq!(m.functions.len(), 1, "no helper injected when append is unused");
+    }
+
+    #[test]
+    fn append_call_becomes_helper_call() {
+        let mut m = module_with(vec![append_call("r", "xs", "ys")]);
+        lower_list_ops(&mut m);
+        let body = &m.functions[0].instructions;
+        // call __dyn_list_append, xs, ys -> r : ref<any>
+        let call = &body[0];
+        assert_eq!(call.op, "call");
+        assert_eq!(call.srcs[0], Operand::Var(APPEND_HELPER.into()));
+        assert_eq!(call.srcs[1], Operand::Var("xs".into()));
+        assert_eq!(call.srcs[2], Operand::Var("ys".into()));
+        assert_eq!(call.dest.as_deref(), Some("r"));
+        assert_eq!(call.type_hint, "ref<any>");
+        assert!(body.iter().all(|i| !is_append_call(i)), "no append call_builtin survives");
+    }
+
+    #[test]
+    fn append_helper_is_injected_once() {
+        let mut m = module_with(vec![
+            append_call("a", "l1", "r1"),
+            append_call("b", "l2", "r2"),
+        ]);
+        lower_list_ops(&mut m);
+        assert_eq!(
+            m.functions.iter().filter(|f| f.name == APPEND_HELPER).count(), 1,
+            "exactly one append helper",
+        );
+        lower_list_ops(&mut m);
+        assert_eq!(m.functions.iter().filter(|f| f.name == APPEND_HELPER).count(), 1);
+    }
+
+    #[test]
+    fn append_helper_shape_rebuilds_via_cons() {
+        let mut m = module_with(vec![append_call("r", "xs", "ys")]);
+        lower_list_ops(&mut m);
+        let helper = m.functions.iter().find(|f| f.name == APPEND_HELPER).unwrap();
+        assert_eq!(helper.return_type, "ref<any>", "helper returns a lisp value");
+        assert_eq!(
+            helper.params,
+            vec![
+                ("a".to_string(), "ref<any>".to_string()),
+                ("b".to_string(), "ref<any>".to_string()),
+            ],
+            "both params are lisp lists",
+        );
+        let ops: Vec<&str> = helper.instructions.iter().map(|i| i.op.as_str()).collect();
+        // Terminates on null?(a); rebuilds with cons(car(a), recurse(cdr(a), b)).
+        assert!(helper.instructions.iter().any(|i|
+            i.op == "call_builtin" && i.srcs.first() == Some(&Operand::Var("null?".into()))));
+        assert!(ops.contains(&"jmp_if_false"));
+        assert!(helper.instructions.iter().any(|i|
+            i.op == "call_builtin" && i.srcs.first() == Some(&Operand::Var("car".into()))));
+        assert!(helper.instructions.iter().any(|i|
+            i.op == "call_builtin" && i.srcs.first() == Some(&Operand::Var("cdr".into()))));
+        assert!(helper.instructions.iter().any(|i|
+            i.op == "call_builtin" && i.srcs.first() == Some(&Operand::Var("cons".into()))),
+            "recursive arm rebuilds via cons");
+        // No index arithmetic — append has no index.
+        assert!(!ops.contains(&"unbox") && !ops.contains(&"cmp_eq") && !ops.contains(&"sub"),
+            "append does no index arithmetic");
+        assert_eq!(ops.iter().filter(|o| **o == "ret").count(), 2, "base + recursive ret");
+        // The recursive call targets the helper itself.
+        assert!(helper.instructions.iter().any(|i|
+            i.op == "call" && i.srcs.first() == Some(&Operand::Var(APPEND_HELPER.into()))));
+    }
+
+    #[test]
+    fn all_three_ops_coexist() {
+        // A module using length + list-ref + append injects all three helpers.
+        let mut m = module_with(vec![
+            length_call("a", "l1"),
+            listref_call("b", "l2", "i2"),
+            append_call("c", "l3", "l4"),
+        ]);
+        lower_list_ops(&mut m);
+        assert_eq!(m.functions.iter().filter(|f| f.name == LENGTH_HELPER).count(), 1);
+        assert_eq!(m.functions.iter().filter(|f| f.name == LISTREF_HELPER).count(), 1);
+        assert_eq!(m.functions.iter().filter(|f| f.name == APPEND_HELPER).count(), 1);
     }
 }
