@@ -200,13 +200,16 @@ session and verifies the interval schedule is actually satisfied.
 ## Interleaving Across Languages (Framework, Not Yet Populated)
 
 Every unit's `concept_tag` (e.g. `GREETINGS-01`, `NUMBERS-01`) is a shared key
-across future language tracks. Once a second language track exists, a session
-can walk the *same* concept in two languages back-to-back — contrastive
-reinforcement, and a natural place to surface cross-language etymology (e.g.
-Spanish *gracias* vs. French *merci* diverge in root, while Spanish/French/
-Italian generally converge on Latin *gratia* for the "grace" family). Only
-the Spanish track is populated in this pass; the schema is designed for this
-now so later tracks slot in without a rewrite.
+across language tracks — Spanish, French, German, Arabic, Hindi, Tamil,
+Kannada, Malayalam, and Telugu all tag their Chapter 1 greetings/pronoun/
+numbers units the same way. A session can walk the *same* concept in two
+languages back-to-back — contrastive reinforcement, and a natural place to
+surface cross-language etymology (e.g. Spanish *gracias* vs. French *merci*
+diverge in root, while Spanish/French/Italian generally converge on Latin
+*gratia* for the "grace" family). The actual session-by-session
+interleaving schedule across tracks is not yet built — each track's
+`session-map.md` is still per-language — but the shared tags mean it can be
+added without a schema rewrite.
 
 ## Etymology Methodology (Spanish Track)
 
@@ -252,24 +255,92 @@ for. This gets treated as a **standing methodology**, not a single chapter:
   early, formalize later, contrast explicitly with what English does (which
   is usually "nothing").
 
-## Part 0 — Sounds & Letters
+## Part 0 — Sounds & Letters (familiar scripts only)
 
-Every language track opens with a **Part 0**, before any vocabulary content,
-covering the script and sound system. For a Latin-alphabet language like
-Spanish this is short — a handful of units covering vowel purity, consonants
-that differ from English, and stress/accent rules. It gets **no dedicated
-spaced-repetition cycle** of its own: pronunciation and orthography are
-reinforced implicitly by every single subsequent unit's target-language text,
-so a separate review schedule would be redundant.
+A language track gets a standalone **Part 0** only when the learner already
+*reads* its alphabet and just needs its **pronunciation** conventions —
+Spanish, French, German (Latin alphabet). This is short — a handful of
+units covering vowel purity, consonants that differ from English, and
+stress/accent rules. It gets **no dedicated spaced-repetition cycle** of
+its own: pronunciation and orthography are reinforced implicitly by every
+single subsequent unit's target-language text, so a separate review
+schedule would be redundant.
 
-This phase is deliberately sized to the script, not fixed at three units.
-For Arabic (a new alphabet, right-to-left, letters that change shape by
-position), Devanagari (Hindi — a new alphabet, conjunct consonants), and the
-Dravidian scripts (Tamil, Kannada, Telugu, Malayalam — each its own distinct
-alphabet), Part 0 is expected to run to dozens of units, teaching the script
-letter by letter or letter-cluster by letter-cluster, before Part I's
-vocabulary content can even begin. Spanish's three-unit Part 0 is the floor,
-not the template size.
+For any track where the *script itself* needs teaching or refreshing — a
+genuinely new alphabet, or one the learner can read but is rusty on — there
+is **no separate Part 0 at all**. See "Just-In-Time Script & Grammar
+Introduction" below: letters are taught inline, inside real vocabulary
+units, the same session structure as everything else, starting straight at
+Chapter 1.
+
+## Just-In-Time Script & Grammar Introduction
+
+Per direct learner feedback, the "exactly one new concept per unit" rule
+(Unit Types, above) generalizes to two more things beyond vocabulary/grammar
+points, and both replace what would otherwise be a front-loaded review
+phase:
+
+- **Scripts.** No dedicated "learn/review the alphabet" chapter for any
+  track that needs one. A brand-new script (Kannada, Malayalam, Telugu) or
+  a rusty-but-known one (Arabic, Hindi) gets its letters introduced *inside*
+  Chapter 1's vocabulary units, right where a word first uses them — each
+  unit's New Material gets a short "new letters in this word" note
+  alongside the vocabulary itself. This is a deliberate pedagogical choice,
+  not just economy: learning a glyph attached to a real, meaningful word
+  sticks better than memorizing an abstract alphabet chart before ever
+  using it. A track's early chapters are chosen specifically to introduce a
+  manageable, high-frequency set of letters this way (see Frequency-Driven
+  Content Selection below) — by the time a script's first several chapters
+  are done, a meaningful share of its alphabet has been covered through
+  actual words, not a standalone drill.
+- **Grammar.** Same principle, made explicit for tracks where the learner
+  speaks the language but doesn't know its grammar formally (Tamil is the
+  motivating case): grammar constructs are introduced one at a time, inline
+  within vocabulary units, starting from the simplest construct that
+  unlocks real sentences and building complexity from there — not a
+  front-loaded grammar-reference dump. This was already true of every other
+  track (Unit Anatomy's Grammar Lens section, "exactly one new concept");
+  this note exists mainly to confirm it applies to a fluency-first,
+  literacy-first track like Tamil just as much as to a from-scratch one.
+
+## Frequency-Driven Content Selection
+
+Chapter-by-chapter content — which words, which grammar construct, which
+letters — is chosen by asking **"what does a basic real conversation
+actually need first?"**, not arbitrary topic order. This isn't corpus-counted
+frequency analysis, but reasoned judgment applied explicitly per chapter:
+greetings, subject pronouns, a "to be" verb, and numbers 0-10 lead every
+track's Chapter 1 because they're genuinely load-bearing — you can't
+assemble almost any basic exchange without them. The same reasoning governs
+which letters a new-script track's early chapters introduce (pick words
+that are both common *and* efficiently cover new glyphs) and which single
+grammar construct a track like Tamil starts with (whichever one unlocks the
+most new sentence patterns for the least overhead).
+
+## Cross-Language Comparison Web
+
+Etymology Methodology (below) was written Spanish-specific — English
+grounding, Latin root chain, Arabic loanword thread. As more tracks come
+online, comparisons generalize into an **accumulating hierarchy**: each new
+language, in the order it's added to the curriculum, compares its
+vocabulary against *every language already established before it*
+(English is the permanent base across all tracks), and contributes its own
+"deep root" system, which becomes available to whatever comes after it too.
+
+| Order | Track | Compares against | Contributes |
+|---|---|---|---|
+| 1 | Spanish | English | Latin |
+| 2 | French | English, Spanish | Latin (via Old French — occasionally contrasted with Spanish's own routing of the same root, e.g. *gratia*→*gracias* vs. *merci*, which is actually a different root, *merces*) |
+| 3 | German | English, Spanish, French | Latin (German's own loanword layer, e.g. *Fenster*←*fenestra*) — Germanic-**inherited** words are already covered by the English comparison, since English is itself Germanic |
+| 4 | Arabic | English, Spanish, French, German | Arabic itself, from here on — Al-Andalus loans into Spanish traced *outward* this time, complementing Spanish's own backward trace |
+| 5 | Hindi | English, Spanish, French, German, Arabic | Sanskrit + Persian/Arabic loanwords (using the Arabic thread just established) |
+| 6 | Tamil | English, Spanish, French, German, Arabic, Hindi, Sanskrit | Tamil/native-Dravidian, from here on |
+| 7 | Kannada, Malayalam, Telugu | all of the above | — |
+
+A given word only shows the comparisons that are **genuinely real** for
+it — not every accumulated language forced into every entry. By the time a
+track has 7-8 possible comparison languages available, most words connect
+meaningfully to 2-3 of them, and that's what gets shown.
 
 ## Book Format
 
@@ -311,7 +382,8 @@ fully authored.
   morphology thread is lexical only (roots/prefixes/suffixes and how words
   are built). If real Latin grammar instruction is ever wanted, that's a
   candidate to become its own track, not a widening of this one.
-- **Non-Spanish tracks** — French, German, Arabic, Hindi, Tamil, Kannada,
-  Telugu, Malayalam all reuse this framework once the Spanish pilot proves
-  it out. In particular, Part 0 (script/sound system) and the book are only
-  built for Spanish so far.
+- **Depth beyond Chapter 1** for French, German, Arabic, Hindi, Tamil,
+  Kannada, Malayalam, Telugu — all eight now have a real Chapter 1 (or, for
+  Tamil, an equivalent first grammar+vocabulary chapter), but only Spanish
+  has been carried further (through Part I). Each track deepens the same
+  way Spanish does, chapter by chapter.
