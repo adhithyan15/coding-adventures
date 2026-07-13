@@ -184,6 +184,7 @@ SELF_CONTAINED_RUNGS = (
     "rung144_dose_density",
     "rung145_pooled_rate",
     "rung146_net_rate",
+    "rung147_loaded_rate",
 )
 
 
