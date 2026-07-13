@@ -25,3 +25,10 @@ All notable changes to this package will be documented in this file.
   `cond`, `define`, `lambda`, higher-order functions, `quote`, cons/car/cdr,
   symbols, `factorial`, `fib`, tail-recursive `countdown 10000`, and the
   non-tail recursion depth guard).
+
+### Fixed
+
+- Bound the embedded compile-error message in `lv_run` / `lv_run_with_output`'s
+  `snprintf` with a `%.118s` precision so the total fits the 128-byte buffer;
+  the unbounded `%s` tripped gcc's `-Werror=format-truncation` on ubuntu CI
+  (both messages are `char[128]`).

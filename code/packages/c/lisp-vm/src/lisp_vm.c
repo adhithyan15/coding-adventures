@@ -1033,7 +1033,10 @@ int lv_run(const char *source, LcValue *out, LvError *err) {
     LcCompileError cerr;
     if (!lc_compile(source, &code, &cerr)) {
         if (err != NULL)
-            snprintf(err->message, sizeof err->message, "VmError: %s",
+            /* Cap the embedded compile message with a precision so the total
+             * fits the 128-byte buffer — gcc's -Werror=format-truncation flags
+             * the unbounded %s (both messages are char[128]). */
+            snprintf(err->message, sizeof err->message, "VmError: %.118s",
                      cerr.message);
         return 0;
     }
@@ -1058,7 +1061,10 @@ int lv_run_with_output(const char *source, LcValue *out, char ***out_lines,
     LcCompileError cerr;
     if (!lc_compile(source, &code, &cerr)) {
         if (err != NULL)
-            snprintf(err->message, sizeof err->message, "VmError: %s",
+            /* Cap the embedded compile message with a precision so the total
+             * fits the 128-byte buffer — gcc's -Werror=format-truncation flags
+             * the unbounded %s (both messages are char[128]). */
+            snprintf(err->message, sizeof err->message, "VmError: %.118s",
                      cerr.message);
         return 0;
     }
