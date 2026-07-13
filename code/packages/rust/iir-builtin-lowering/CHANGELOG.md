@@ -1,5 +1,34 @@
 # Changelog — iir-builtin-lowering
 
+## 0.25.0 - 2026-07-12 (E6d-3b: `list-ref` via a synthesized index-walk helper)
+
+`lower_list_ops` gains a second list operation, `list-ref`. Like `length` it
+rewrites `call_builtin "list-ref" lst n` to a call to a synthesized recursive
+helper `__dyn_list_ref` (injected once, idempotently) and reuses `car`/`cdr`
+(E6d-1):
+
+```
+__dyn_list_ref(lst: ref<any>, n: ref<any>) -> ref<any>:
+    ni = unbox n                       # boxed index → machine i64
+    if !(ni == 0) goto recurse         # typed cmp_eq → raw bool
+    ret car(lst)                       # base: the n-th element
+  recurse:
+    ret __dyn_list_ref(cdr(lst), box(ni - 1))   # typed sub, re-boxed
+```
+
+Design note — **the index is a boxed lisp value, not a raw `i64` param.** The
+lisp boundary is uniform-anyref: `dyn_repr_structural` (managed) / `lower_dyn_repr`
+(native) box *every* argument to a lisp function, so a raw-`i64` index param
+faults at the call (`expected i64, got I32(2)`). The helper therefore takes
+`n : ref<any>` and unboxes it once; the index test/decrement are then plain typed
+`cmp_eq`/`sub` (the raw bool feeds `jmp_if_false` directly — hint `"bool"`, so it
+is not treated as a lisp-truthiness condition), and the decremented index is
+re-boxed before the recursive call (the same explicit-`box` shape the `length`
+helper's base case uses). `length` and `list-ref` share the module entry and
+each inject their helper independently. Five new unit tests (rewrite, single
+injection, index-walk shape, coexistence with `length`). `append`/`reverse`/
+`assoc` follow the same pattern.
+
 ## 0.24.0 - 2026-07-12 (E6d-3b: `length` via a synthesized cons-walk helper)
 
 New `list_ops` module (`lower_list_ops`): a list *operation* like `length` walks
