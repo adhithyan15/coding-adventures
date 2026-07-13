@@ -170,7 +170,6 @@
 //
 // ============================================================================
 
-import Foundation
 import GrammarTools
 import Lexer
 import Parser
@@ -228,49 +227,24 @@ public struct DartmouthBasicParser: Sendable {
     /// - Throws: `GrammarParseError` if the tokens do not form a valid program.
     ///
     public static func parseTokens(_ tokens: [Token]) throws -> ASTNode {
-        let grammar = try loadGrammar()
+        let grammar = loadGrammar()
         let parser = GrammarParser(tokens: tokens, grammar: grammar)
         return try parser.parse()
     }
 
-    /// Load and parse the Dartmouth BASIC parser grammar.
+    /// Return the Dartmouth BASIC parser grammar.
     ///
-    /// The grammar file path is computed relative to this source file:
+    /// The grammar is embedded at compile time as native Swift in the generated
+    /// `_Grammar.swift` (`EmbeddedGrammar.dartmouthBasic`), produced from
+    /// `code/grammars/dartmouth_basic/dartmouth_basic.grammar` by
+    /// `swift/grammar-tools`' `grammar-tools-embed`. Nothing is read from disk
+    /// at run time, so the parser works unchanged when published standalone and
+    /// does not depend on the monorepo's `code/grammars/` layout.
     ///
-    ///   DartmouthBasicParser.swift         ← this file
-    ///     Sources/DartmouthBasicParser/    (1) strip filename
-    ///     dartmouth-basic-parser/          (2)
-    ///     swift/                           (3)
-    ///     packages/                        (4)
-    ///     code/                            (5)  → grammars/dartmouth_basic/dartmouth_basic.grammar
+    /// - Returns: The embedded `ParserGrammar`.
     ///
-    /// The `#filePath` directive resolves to the compile-time path of this
-    /// source file inside the monorepo. Walking up 6 levels reaches `code/`,
-    /// then we descend into `grammars/`.
-    ///
-    /// - Returns: A `ParserGrammar` parsed from `dartmouth_basic.grammar`.
-    /// - Throws: If the file cannot be read or the grammar cannot be parsed.
-    ///
-    public static func loadGrammar() throws -> ParserGrammar {
-        let thisFile = #filePath
-        var url = URL(fileURLWithPath: thisFile)
-        // Walk up 6 path components:
-        //   DartmouthBasicParser.swift  → Sources/DartmouthBasicParser
-        //   Sources/DartmouthBasicParser → Sources
-        //   Sources → dartmouth-basic-parser
-        //   dartmouth-basic-parser → swift
-        //   swift → packages
-        //   packages → code
-        for _ in 0..<6 {
-            url = url.deletingLastPathComponent()
-        }
-        let grammarURL = url
-            .appendingPathComponent("grammars")
-            .appendingPathComponent("dartmouth_basic")
-            .appendingPathComponent("dartmouth_basic.grammar")
-
-        let content = try String(contentsOf: grammarURL, encoding: .utf8)
-        return try parseParserGrammar(source: content)
+    public static func loadGrammar() -> ParserGrammar {
+        EmbeddedGrammar.dartmouthBasic
     }
 
 }
