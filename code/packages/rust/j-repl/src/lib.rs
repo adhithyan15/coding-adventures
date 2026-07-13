@@ -65,6 +65,135 @@ pub enum ReplResponse {
 /// "generous but bounded" convention.
 const MAX_CONTINUATION_BUFFER: usize = 64 * 1024;
 
+/// Upper bound on a single *physical* line read from the input stream,
+/// applied in [`read_bounded_line`] before [`MAX_CONTINUATION_BUFFER`]'s own
+/// check ever runs. `BufRead::read_line` has no length bound of its own — it
+/// grows its buffer until it sees a `\n` or EOF — so without this, a single,
+/// arbitrarily long physical line (no embedded newline at all) is fully
+/// buffered in memory before `JRepl::feed` ever gets a chance to reject
+/// anything, regardless of `MAX_CONTINUATION_BUFFER`. Same bound, same
+/// rationale, as that constant (mirroring `apl-repl::MAX_LINE_LEN` exactly)
+/// — the two together mean neither one physical line nor an accumulated
+/// multi-line continuation can grow unbounded.
+const MAX_LINE_LEN: u64 = 64 * 1024;
+
+/// Read one physical line, bounded to [`MAX_LINE_LEN`] bytes.
+///
+/// - `Ok(None)` — genuine end of input.
+/// - `Ok(Some(Ok(line)))` — an ordinary line. Includes a final,
+///   newline-less line at genuine EOF (same as [`BufRead::read_line`]'s own
+///   contract — an unterminated last line is not "oversized", it's just
+///   short of a full cap's worth of bytes).
+/// - `Ok(Some(Err(())))` — a single physical line's true length exceeds the
+///   cap. The entire oversized remainder of that same line is fully drained
+///   and discarded, however many more [`MAX_LINE_LEN`]-byte chunks that
+///   takes, so a well-behaved caller's next read always starts at a genuine
+///   line boundary — never mid-line. A line whose length is *exactly* the
+///   cap with nothing at all following it (genuine EOF right at the
+///   boundary) is **not** oversized; see below.
+///
+/// Reads raw **bytes** (`read_until(b'\n', ..)`), not [`BufRead::read_line`]
+/// directly, and only attempts UTF-8 decoding *after* confirming whether the
+/// byte run stopped because of a real `\n` or because it genuinely
+/// exhausted the cap. `read_line` validates UTF-8 over whatever byte run it
+/// stops at — and `Take` stops at an arbitrary **byte** offset with no
+/// notion of a character boundary, so an ordinary, fully valid UTF-8 line
+/// whose true length only slightly exceeds [`MAX_LINE_LEN`] can have a
+/// multi-byte character straddle that exact offset, making `read_line` alone
+/// report a spurious `InvalidData` I/O error (fatal — it aborts the whole
+/// session, see `main.rs`) for input that isn't actually malformed, just
+/// long. Deciding "oversized?" on bytes first means a cap that happens to
+/// split a character is correctly treated as just another oversized line,
+/// not a decoding failure (mirrors `apl-repl::read_bounded_line`'s identical
+/// fix exactly).
+///
+/// Oversized is judged by **all three** of: no trailing `\n` in the initial
+/// capped read, the byte count actually hitting the cap, *and* there being
+/// at least one more byte beyond it — not `\n`-absence alone. Two false
+/// positives that `\n`-absence alone would produce, both fixed here:
+/// - `read_until` also stops with no trailing `\n` at genuine EOF, e.g. a
+///   final line with no closing newline at all (length < the cap) — length
+///   too short to even reach the cap, so never mistaken for oversized.
+/// - A final line whose length lands *exactly* on the cap, immediately
+///   followed by genuine EOF, looks identical to "cap hit, more data still
+///   coming" from the initial read alone — resolved by attempting one more
+///   read past the cap: if that confirms EOF with zero further bytes, the
+///   original capped bytes *are* the whole (maximal, but not over-long)
+///   line, not a truncated one.
+///
+/// When a line genuinely does exceed the cap, the discard step **loops**
+/// over as many further capped chunks as it takes to reach either a real
+/// `\n` or true EOF — draining exactly one extra chunk and stopping there
+/// (an earlier version of this function) left any additional overflow
+/// sitting in the reader, so the *next* call could pick up a short tail
+/// fragment of the same rejected line — ending in its real `\n` — and
+/// misinterpret that fragment as a fresh, legitimate, independently-typed
+/// line. Looping until the true end of the oversized line is found closes
+/// that gap: nothing from a rejected line can ever reach [`JRepl::feed`].
+fn read_bounded_line<R: BufRead>(reader: &mut R) -> std::io::Result<Option<Result<String, ()>>> {
+    let mut buf: Vec<u8> = Vec::new();
+    // Explicit UFCS + an explicit reborrow (`&mut *reader`), not plain
+    // `reader.take(...)` method-call syntax: `Read`/`BufRead` are
+    // implemented both for `R` itself and for `&mut R`, and ordinary
+    // autoref method resolution prefers the *by-value* `R` candidate over
+    // the reference one even when the receiver expression is already a
+    // reference -- silently trying to MOVE `*reader` (illegal, since we
+    // only borrow it) instead of taking a bounded view of it. Naming the
+    // trait and the exact `&mut R` receiver explicitly removes that
+    // ambiguity.
+    let mut limited: std::io::Take<&mut R> = std::io::Read::take(&mut *reader, MAX_LINE_LEN);
+    let read = limited.read_until(b'\n', &mut buf)?;
+    if read == 0 {
+        return Ok(None);
+    }
+    let hit_cap = buf.len() as u64 == MAX_LINE_LEN && buf.last() != Some(&b'\n');
+    if hit_cap {
+        // The initial capped read filled up with no newline in sight -- but
+        // that alone doesn't yet prove the line is actually longer than the
+        // cap (see doc comment: it could be a maximal line at genuine EOF).
+        // Keep reading further capped chunks -- accumulating none of them,
+        // since all of this is being discarded regardless -- until either a
+        // real `\n` is found (line was genuinely longer than the cap) or a
+        // chunk comes back empty (true EOF).
+        let mut saw_more_data = false;
+        loop {
+            let mut chunk: Vec<u8> = Vec::new();
+            let mut limited: std::io::Take<&mut R> = std::io::Read::take(&mut *reader, MAX_LINE_LEN);
+            // Propagated with `?`, not swallowed: a genuine I/O error while
+            // draining the remainder (e.g. a broken pipe) is a real failure,
+            // not just "no more oversized bytes to discard" -- it shouldn't
+            // be misreported as an ordinary oversized-line event.
+            let n = limited.read_until(b'\n', &mut chunk)?;
+            if n == 0 {
+                if !saw_more_data {
+                    // Nothing at all followed the cap-sized initial read: it
+                    // was an ordinary, maximal-length line at genuine EOF,
+                    // not an oversized one. Decode and return it normally.
+                    return match String::from_utf8(buf) {
+                        Ok(line) => Ok(Some(Ok(line))),
+                        Err(e) => Err(std::io::Error::new(std::io::ErrorKind::InvalidData, e)),
+                    };
+                }
+                break; // true EOF reached while draining real overflow
+            }
+            saw_more_data = true;
+            if chunk.last() == Some(&b'\n') {
+                break; // found the oversized line's real end
+            }
+            // else: the line continues past this chunk too -- keep draining.
+        }
+        return Ok(Some(Err(())));
+    }
+    // The byte run genuinely ended at a real `\n` within the cap, so any
+    // UTF-8 error here is real malformed input, not a truncation artifact --
+    // propagated as an I/O error, same as `BufRead::read_line` would have
+    // done for this same (uncapped) byte run.
+    match String::from_utf8(buf) {
+        Ok(line) => Ok(Some(Ok(line))),
+        Err(e) => Err(std::io::Error::new(std::io::ErrorKind::InvalidData, e)),
+    }
+}
+
 /// A persistent interactive J session.
 pub struct JRepl {
     interp: Interpreter,
@@ -164,11 +293,21 @@ pub fn run<R: BufRead, W: Write>(mut reader: R, mut writer: W) -> std::io::Resul
         write!(writer, "{}", repl.prompt())?;
         writer.flush()?;
 
-        let mut line = String::new();
-        if reader.read_line(&mut line)? == 0 {
-            writeln!(writer)?;
-            break;
-        }
+        let line = match read_bounded_line(&mut reader)? {
+            None => {
+                writeln!(writer)?;
+                break;
+            }
+            Some(Err(())) => {
+                writeln!(
+                    writer,
+                    "Error: line exceeds the {MAX_LINE_LEN}-byte limit; discarded"
+                )?;
+                writer.flush()?;
+                continue;
+            }
+            Some(Ok(line)) => line,
+        };
         let line = line.strip_suffix('\n').unwrap_or(&line);
         let line = line.strip_suffix('\r').unwrap_or(line);
 
@@ -253,5 +392,168 @@ mod tests {
         run(input, &mut output).unwrap();
         let text = String::from_utf8(output).unwrap();
         assert!(text.contains('6'));
+    }
+
+    #[test]
+    fn read_bounded_line_returns_a_final_line_without_a_trailing_newline() {
+        // A genuine EOF before the cap with no trailing '\n' at all (e.g.
+        // `printf '%s' quit` piped in, or a file with no final newline) is
+        // an ordinary short line, not an oversized one -- the byte run
+        // stopped at EOF, not because the cap was exhausted. Mirrors
+        // `apl-repl`'s identical regression test.
+        let mut input = "quit".as_bytes();
+        assert_eq!(
+            read_bounded_line(&mut input).unwrap(),
+            Some(Ok("quit".to_string()))
+        );
+        assert_eq!(read_bounded_line(&mut input).unwrap(), None);
+    }
+
+    #[test]
+    fn run_quits_cleanly_on_a_final_line_without_a_trailing_newline() {
+        let input = "quit".as_bytes(); // no trailing '\n' anywhere in the input
+        let mut output = Vec::new();
+        run(input, &mut output).unwrap();
+        let text = String::from_utf8(output).unwrap();
+        assert!(
+            !text.contains("exceeds"),
+            "a short, unterminated final line must not be treated as oversized, got: {text}"
+        );
+    }
+
+    #[test]
+    fn read_bounded_line_returns_an_ordinary_line_unchanged() {
+        let mut input = "A=.5\nA*2\n".as_bytes();
+        assert_eq!(
+            read_bounded_line(&mut input).unwrap(),
+            Some(Ok("A=.5\n".to_string()))
+        );
+        assert_eq!(
+            read_bounded_line(&mut input).unwrap(),
+            Some(Ok("A*2\n".to_string()))
+        );
+        assert_eq!(read_bounded_line(&mut input).unwrap(), None);
+    }
+
+    #[test]
+    fn read_bounded_line_rejects_a_line_exceeding_the_cap_without_buffering_it_whole() {
+        // A single physical line with no embedded newline at all, well past
+        // MAX_LINE_LEN -- exactly the shape `BufRead::read_line` alone would
+        // buffer in full before anything else got a chance to reject it.
+        let oversized = "+".repeat(MAX_LINE_LEN as usize * 3);
+        let mut input = oversized.as_bytes();
+        assert_eq!(read_bounded_line(&mut input).unwrap(), Some(Err(())));
+        // Whatever remains (this input is 3x the cap, so a second oversized
+        // chunk may still be pending) doesn't matter for this test -- what
+        // matters is the first call didn't attempt to allocate the whole
+        // 3x-cap string at once, which the cap itself already proves.
+        let _ = read_bounded_line(&mut input);
+    }
+
+    #[test]
+    fn read_bounded_line_at_exactly_the_cap_with_a_trailing_newline_is_not_oversized() {
+        let mut line = "+".repeat(MAX_LINE_LEN as usize - 1);
+        line.push('\n');
+        assert_eq!(line.len() as u64, MAX_LINE_LEN);
+        let mut input = line.as_bytes();
+        assert_eq!(read_bounded_line(&mut input).unwrap(), Some(Ok(line)));
+    }
+
+    #[test]
+    fn run_reports_an_oversized_line_cleanly_and_keeps_the_session_alive() {
+        let oversized = "+".repeat(MAX_LINE_LEN as usize * 2);
+        let input = format!("{oversized}\n1+1\nquit\n");
+        let mut output = Vec::new();
+        run(input.as_bytes(), &mut output).unwrap();
+        let text = String::from_utf8(output).unwrap();
+        assert!(text.contains("exceeds"), "expected an oversized-line error, got: {text}");
+        assert!(
+            text.contains('2'),
+            "session must keep working after an oversized line, got: {text}"
+        );
+    }
+
+    #[test]
+    fn read_bounded_line_handles_a_multibyte_char_straddling_the_cap_boundary() {
+        // A line whose true length only slightly exceeds MAX_LINE_LEN, with
+        // a 2-byte UTF-8 character ('é') positioned so the cap lands right
+        // in the middle of it. Before the byte-oriented rewrite, this made
+        // `read_line` (validating whatever partial byte run `Take` handed
+        // it) return a spurious `InvalidData` I/O error -- fatal, per
+        // `run`'s `?` propagation -- for a line that is not malformed, just
+        // long. It must now be treated exactly like any other oversized
+        // line: `Some(Err(()))`, not a hard I/O error. Mirrors
+        // `apl-repl`'s identical regression test.
+        let mut oversized: Vec<u8> = vec![b'a'; MAX_LINE_LEN as usize - 1];
+        oversized.extend_from_slice("é".as_bytes()); // 2-byte char, straddles the cap
+        oversized.push(b'\n');
+        let mut input = oversized.as_slice();
+        assert_eq!(read_bounded_line(&mut input).unwrap(), Some(Err(())));
+    }
+
+    #[test]
+    fn run_survives_a_multibyte_char_straddling_the_cap_boundary() {
+        let mut oversized: Vec<u8> = vec![b'a'; MAX_LINE_LEN as usize - 1];
+        oversized.extend_from_slice("é".as_bytes());
+        let mut input = oversized;
+        input.extend_from_slice(b"\n1+1\nquit\n");
+        let mut output = Vec::new();
+        run(input.as_slice(), &mut output).unwrap();
+        let text = String::from_utf8(output).unwrap();
+        assert!(text.contains("exceeds"), "expected an oversized-line error, got: {text}");
+        assert!(
+            text.contains('2'),
+            "session must keep working after a boundary-splitting oversized line, got: {text}"
+        );
+    }
+
+    #[test]
+    fn read_bounded_line_treats_an_exactly_cap_sized_final_line_as_ordinary_not_oversized() {
+        // No trailing '\n' at all, and genuinely nothing follows -- EOF lands
+        // right at the cap. This is a maximal ordinary line (indistinguishable
+        // in length from an oversized one until a further read confirms EOF),
+        // not an oversized one, so it must decode normally rather than being
+        // reported and discarded as "exceeds the limit". Mirrors `apl-repl`'s
+        // identical regression test.
+        let line = "+".repeat(MAX_LINE_LEN as usize);
+        let mut input = line.as_bytes();
+        assert_eq!(read_bounded_line(&mut input).unwrap(), Some(Ok(line.clone())));
+        assert_eq!(read_bounded_line(&mut input).unwrap(), None);
+    }
+
+    #[test]
+    fn read_bounded_line_fully_drains_a_line_spanning_multiple_cap_chunks() {
+        // True length 2.5x the cap -- past the initial capped read AND a
+        // second full capped chunk -- with a real newline only after that.
+        // An earlier version of this function discarded only one extra
+        // chunk and stopped, leaving the remaining 0.5x-cap tail (ending in
+        // the real '\n') to be picked up by the *next* call and misread as
+        // a fresh, legitimate line. The discard must now loop until the
+        // oversized line's true end is found, so the next call sees only
+        // the genuinely separate line that follows. Mirrors `apl-repl`'s
+        // identical regression test.
+        let oversized = "+".repeat(MAX_LINE_LEN as usize * 5 / 2);
+        let input = format!("{oversized}\n1+1\n");
+        let mut input = input.as_bytes();
+        assert_eq!(read_bounded_line(&mut input).unwrap(), Some(Err(())));
+        assert_eq!(
+            read_bounded_line(&mut input).unwrap(),
+            Some(Ok("1+1\n".to_string()))
+        );
+    }
+
+    #[test]
+    fn run_executes_the_correct_follow_up_statement_after_a_multi_chunk_oversized_line() {
+        let oversized = "+".repeat(MAX_LINE_LEN as usize * 5 / 2);
+        let input = format!("{oversized}\n1+1\nquit\n");
+        let mut output = Vec::new();
+        run(input.as_bytes(), &mut output).unwrap();
+        let text = String::from_utf8(output).unwrap();
+        assert!(text.contains("exceeds"), "expected an oversized-line error, got: {text}");
+        assert!(
+            text.contains('2'),
+            "the real follow-up statement (1+1), not a fragment of the \
+             discarded line, must be what gets evaluated, got: {text}"
+        );
     }
 }
