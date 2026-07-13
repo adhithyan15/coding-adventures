@@ -237,6 +237,7 @@ members = [
     "octave-to-semantic-ir",
     "maxima-runtime",
     "maxima-repl",
+    "maxima-to-semantic-ir",
     "wolfram-lexer",
     "wolfram-parser",
     "wolfram-runtime",
