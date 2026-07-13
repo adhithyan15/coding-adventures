@@ -2,6 +2,19 @@
 
 All notable changes to `coding-adventures-sir-runtime-oop` are documented here.
 
+## [0.1.26] - 2026-07-12
+
+### Added
+
+- **`Array#cycle(n)`** — the block-taking Array method that iterates the array
+  `n` full passes in order, yielding each element on every pass, and always
+  returns nil (`[1,2,3].cycle(2) { |x| … }` yields `1,2,3,1,2,3`). A count of
+  `0`, a negative count, or an empty receiver yields nothing; a non-integer /
+  nil count (including the block-less and infinite no-`n` Enumerator forms) is a
+  documented v0 boundary that yields nothing rather than hanging. This is the
+  Python **reference** for the new cross-backend cascade (Go/Rust/JS/TS mirrors
+  to follow). `respond_to?("cycle")` reports `true`.
+
 ## [0.1.25] - 2026-07-11
 
 ### Added
