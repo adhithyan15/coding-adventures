@@ -149,6 +149,67 @@ enum ForkLeft {
     Noun(Array),
 }
 
+/// Tear down a `JFn` tree **iteratively**, so dropping one can never itself
+/// overflow the native stack no matter how deep the tree is.
+///
+/// `Compose`/`Hook`/`Fork` box their operands, so `JFn` gets an ordinary
+/// *recursive* compiler-derived `Drop` for free — fine for the shallow
+/// trees any real, parser-bounded train produces (`j-parser`'s own
+/// `MAX_RULE_DEPTH` caps a genuine `verb_train` to roughly 61 teeth), but a
+/// `JFn` built another way (as `fold_train`'s own test for its *construction*-
+/// time stack safety does, deliberately, to exercise a shape no real parse
+/// can produce) can be arbitrarily deep, and tearing THAT down via ordinary
+/// recursive `Drop` overflows the stack exactly the same way `fold_train`'s
+/// own construction once could (found by that very test, which crashed here
+/// instead of in `fold_train`, once the construction side was already fixed
+/// — the same "fixed the forward walk, the backward one still crashes"
+/// lesson this repo's `wolfram-to-semantic-ir`/`macsyma-to-semantic-ir`
+/// crates already ran into for their own `Expr` trees).
+///
+/// The technique mirrors those crates' own `drop_iterative`: swap each
+/// boxed child out for a cheap non-recursive sentinel (`JFn::Atom` has no
+/// boxed fields of its own), push the *real* child onto an explicit
+/// heap-allocated work stack, and let the now-shallow original node's
+/// `Drop` run harmlessly on the sentinel it's left holding. Each loop
+/// iteration therefore drops only one node's own non-recursive fields.
+impl Drop for JFn {
+    fn drop(&mut self) {
+        // `Vec<JFn>`, not `Vec<Box<JFn>>` -- the `Vec` itself already puts
+        // its elements on the heap, so re-boxing each one would just be an
+        // extra unnecessary allocation on top (clippy's `vec_box` lint).
+        let mut stack: Vec<JFn> = Vec::new();
+        take_boxed_children(self, &mut stack);
+        while let Some(mut child) = stack.pop() {
+            take_boxed_children(&mut child, &mut stack);
+            // `child` drops here -- shallowly, since any boxed fields it
+            // had were already swapped out onto `stack` above.
+        }
+    }
+}
+
+/// Swap every `Box<JFn>` field `node` owns for a cheap `JFn::Atom`
+/// sentinel, pushing the real (possibly deep) subtree onto `out` (moved out
+/// of its box) instead of leaving it in place to be dropped recursively as
+/// part of `node`'s own teardown. `ForkLeft::Noun` and every other
+/// non-recursive variant have no boxed children and are left untouched.
+fn take_boxed_children(node: &mut JFn, out: &mut Vec<JFn>) {
+    let leaf = || Box::new(JFn::Atom(BinOp::Add));
+    match node {
+        JFn::Compose(f, g) | JFn::Hook(f, g) => {
+            out.push(*std::mem::replace(f, leaf()));
+            out.push(*std::mem::replace(g, leaf()));
+        }
+        JFn::Fork(left, g, h) => {
+            if let ForkLeft::Verb(f) = left {
+                out.push(*std::mem::replace(f, leaf()));
+            }
+            out.push(*std::mem::replace(g, leaf()));
+            out.push(*std::mem::replace(h, leaf()));
+        }
+        JFn::Atom(_) | JFn::NonScalar(_) | JFn::Reduce(_) | JFn::Scan(_) => {}
+    }
+}
+
 /// What one `train_tooth` evaluates to, before it's known whether the
 /// overall train needs it to be a verb or (in a fork's leading position
 /// only) accepts it as a literal noun — see [`Interpreter::eval_train_tooth`].
@@ -350,7 +411,24 @@ impl Interpreter {
     /// [`ToothValue`] first, then [`fold_train`] applies MA06 §3's
     /// corrected right-to-left, peel-from-the-left folding rule.
     fn parse_verb_train(&self, node: &GrammarASTNode) -> Result<JFn, String> {
-        let teeth = node_children(node)
+        // `verb_train`'s `{ train_tooth }` repetition is flat, not
+        // recursive -- exactly like `eval_term`'s stranded-number case
+        // above -- so it is capped here directly, before doing any of the
+        // O(tooth count) work of evaluating each one. `fold_train` below
+        // is already iterative (a security review caught and fixed a
+        // stack-overflow risk in an earlier, recursive version of it — see
+        // its own doc comment), so this cap is defense in depth against
+        // sheer resource exhaustion from an implausibly wide train, not a
+        // stack-safety requirement on its own.
+        let tooth_nodes = node_children(node);
+        if tooth_nodes.len() > builtins::MAX_ARRAY_LENGTH {
+            return Err(format!(
+                "j-runtime: a train of {} teeth exceeds the cap of {} elements",
+                tooth_nodes.len(),
+                builtins::MAX_ARRAY_LENGTH
+            ));
+        }
+        let teeth = tooth_nodes
             .into_iter()
             .map(|tooth| self.eval_train_tooth(tooth))
             .collect::<Result<Vec<_>, _>>()?;
@@ -603,7 +681,7 @@ fn require_scalar_binop(f: &JFn, context: &str) -> Result<BinOp, String> {
 }
 
 /// Fold a flat list of `verb_train` teeth into a `JFn`, following MA06 §3's
-/// corrected right-to-left, peel-from-the-left recursive rule:
+/// corrected right-to-left, peel-from-the-left rule:
 ///
 /// - **2 teeth** `[f, g]`: `Hook(f, g)` — both teeth must be verbs; a noun
 ///   in either position of a 2-tooth train is a clean error (a leading noun
@@ -613,43 +691,64 @@ fn require_scalar_binop(f: &JFn, context: &str) -> Result<BinOp, String> {
 ///   `ForkLeft::Verb`.
 /// - **4+ teeth** `[t0, t1, …, tN-1]`: peel the FIRST tooth off (it must be
 ///   a verb — a noun here has no defined meaning, since it would need to
-///   become a `Hook`'s left tooth) and recurse on the rest:
-///   `Hook(t0, fold_train([t1, …, tN-1]))`. Repeatedly peeling by exactly
-///   one tooth at a time means the recursion always bottoms out at the
-///   3-tooth fork base case (never the 2-tooth case, since `N - (N - 3) ==
-///   3` for every `N ≥ 4`) — so the *only* tooth that may ever be a noun in
-///   an N-tooth train is the one at index `N - 3` (the position that lands
-///   in the terminal fork's own leading slot), falling out naturally from
-///   this recursive structure with no extra position-tracking needed.
+///   become a `Hook`'s left tooth) and repeat on the rest, conceptually
+///   `Hook(t0, fold(t1, …, tN-1))`. Repeatedly peeling by exactly one tooth
+///   at a time means this always bottoms out at the 3-tooth fork base case
+///   (never the 2-tooth case, since `N - (N - 3) == 3` for every `N ≥ 4`) —
+///   so the *only* tooth that may ever be a noun in an N-tooth train is the
+///   one at index `N - 3` (the position that lands in the terminal fork's
+///   own leading slot).
+///
+/// **Implemented iteratively, not via self-recursion** — a security review
+/// of the original (recursive) version caught that `verb_train`'s
+/// `{ train_tooth }` repetition is a single *flat* CST node, exactly like
+/// the stranded-`NUMBER`-literal repetition `eval_term` already guards
+/// against (see that function's own `MAX_ARRAY_LENGTH` check): a
+/// parenthesized train with a very large number of teeth needs no *nested*
+/// parentheses at all to produce it, so `j-parser`'s own `MAX_RULE_DEPTH`
+/// (which bounds nesting, not repetition width) never engages, and this
+/// evaluator's own `MAX_DEPTH`/`DepthGuard` mechanism only guards recursive
+/// *evaluation*, not this construction-time helper. A wide-enough flat
+/// train could therefore overflow the native stack via plain recursion
+/// here, before any depth check ever ran. Building the result iteratively
+/// (start from the last three teeth's `Fork`, then walk the remaining
+/// teeth right-to-left wrapping each into a new `Hook`) keeps this
+/// function's own native stack usage `O(1)` regardless of tooth count, so
+/// there is nothing here left for a cap to guard — the checked `Vec`
+/// operations below (`split_off`, `pop`) are the only allocation-adjacent
+/// work, and none of them can panic given the length checks that gate them.
 fn fold_train(mut teeth: Vec<ToothValue>) -> Result<JFn, String> {
-    match teeth.len() {
-        n if n < 2 => Err(format!(
-            "j-runtime: a train needs at least 2 teeth, got {n}"
-        )),
-        2 => {
-            let g = tooth_to_verb(teeth.pop().expect("len == 2"), "a 2-tooth hook")?;
-            let f = tooth_to_verb(teeth.pop().expect("len == 2"), "a 2-tooth hook")?;
-            Ok(JFn::Hook(Box::new(f), Box::new(g)))
-        }
-        3 => {
-            let h = tooth_to_verb(teeth.pop().expect("len == 3"), "a fork's middle/right tooth")?;
-            let g = tooth_to_verb(teeth.pop().expect("len == 3"), "a fork's middle/right tooth")?;
-            let left = match teeth.pop().expect("len == 3") {
-                ToothValue::Noun(n) => ForkLeft::Noun(n),
-                ToothValue::Verb(f) => ForkLeft::Verb(Box::new(f)),
-            };
-            Ok(JFn::Fork(left, Box::new(g), Box::new(h)))
-        }
-        _ => {
-            let rest = teeth.split_off(1);
-            let first = tooth_to_verb(
-                teeth.pop().expect("split_off(1) leaves exactly one element"),
-                "a 4+-tooth train's peeled-off leading tooth",
-            )?;
-            let g = fold_train(rest)?;
-            Ok(JFn::Hook(Box::new(first), Box::new(g)))
-        }
+    let n = teeth.len();
+    if n < 2 {
+        return Err(format!("j-runtime: a train needs at least 2 teeth, got {n}"));
     }
+    if n == 2 {
+        let g = tooth_to_verb(teeth.pop().expect("len == 2"), "a 2-tooth hook")?;
+        let f = tooth_to_verb(teeth.pop().expect("len == 2"), "a 2-tooth hook")?;
+        return Ok(JFn::Hook(Box::new(f), Box::new(g)));
+    }
+
+    // n >= 3: `split_off(n - 3)` returns the LAST 3 teeth as a new `Vec`
+    // and leaves `teeth` holding the leading run [0 .. n-3) in original
+    // (left-to-right) order. The last 3 form the base-case `Fork`.
+    let mut last3 = teeth.split_off(n - 3);
+    let h = tooth_to_verb(last3.pop().expect("len == 3"), "a fork's middle/right tooth")?;
+    let g = tooth_to_verb(last3.pop().expect("len == 3"), "a fork's middle/right tooth")?;
+    let left = match last3.pop().expect("len == 3") {
+        ToothValue::Noun(noun) => ForkLeft::Noun(noun),
+        ToothValue::Verb(f) => ForkLeft::Verb(Box::new(f)),
+    };
+    let mut acc = JFn::Fork(left, Box::new(g), Box::new(h));
+
+    // Walk the leading run right-to-left, wrapping the accumulator in one
+    // more `Hook` per tooth -- iterative equivalent of peeling one tooth
+    // off the front and recursing, but bounded to O(1) native stack frames
+    // regardless of how many teeth this train has.
+    while let Some(tooth) = teeth.pop() {
+        let f = tooth_to_verb(tooth, "a 4+-tooth train's peeled-off leading tooth")?;
+        acc = JFn::Hook(Box::new(f), Box::new(acc));
+    }
+    Ok(acc)
 }
 
 /// Require a [`ToothValue`] to be a verb, with a clean error naming the
@@ -726,5 +825,36 @@ mod tests {
             interp.enter().is_ok(),
             "dropping every guard must let a fresh enter() succeed again"
         );
+    }
+
+    /// A direct, white-box test of `fold_train`'s own stack-safety, for the
+    /// identical reason the depth-guard test above needs one: a security
+    /// review caught that the original (recursive) `fold_train` had no
+    /// depth bound of its own, and — like `MAX_DEPTH` above — this can
+    /// never actually be exercised through genuine J source, because
+    /// `j-parser`'s own `MAX_RULE_DEPTH` (70) already bounds a real
+    /// `verb_train` CST node to roughly 61 teeth before its own guard
+    /// fires (its own measured "long train" recursion shape, per that
+    /// crate's changelog) — nowhere near enough to stack-overflow even
+    /// the *old* recursive `fold_train`. The fix (and this test) is
+    /// defense in depth for any caller that builds a `Vec<ToothValue>`
+    /// another way (directly, as this test does, or via some future
+    /// frontend that doesn't route through `try_parse_j`), not a
+    /// currently-reachable bug in the shipped `j`/`j-repl` binary — stated
+    /// plainly here rather than overstated, mirroring this crate's own
+    /// standing preference for accurate severity over alarmism.
+    #[test]
+    fn fold_train_handles_many_teeth_without_recursing_natively() {
+        let teeth: Vec<ToothValue> = (0..50_000)
+            .map(|_| ToothValue::Verb(JFn::Atom(BinOp::Add)))
+            .collect();
+        let folded = fold_train(teeth).expect("50,000 teeth must fold without overflowing");
+        // Sanity-check the shape is a `Hook` at the top (every peel wraps
+        // one more `Hook` around the accumulator) rather than asserting
+        // anything about evaluating it end-to-end (this many nested `+`
+        // hooks would itself trip `MAX_DEPTH` on evaluation, which is a
+        // separate, already-tested guard -- this test is only about
+        // `fold_train`'s own construction-time stack safety).
+        assert!(matches!(folded, JFn::Hook(_, _)));
     }
 }
