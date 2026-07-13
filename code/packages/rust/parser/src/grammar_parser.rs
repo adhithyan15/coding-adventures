@@ -168,19 +168,29 @@ pub struct GrammarParser {
     /// Whether newlines are significant in this grammar.
     newlines_significant: bool,
 
-    /// Packrat memoization cache: "rule_idx,pos" -> MemoEntry.
-    memo: HashMap<String, MemoEntry>,
+    /// Packrat memoization cache: `(rule_idx, pos)` -> `MemoEntry`.
+    ///
+    /// Keyed by a plain `(usize, usize)` tuple, not a `format!`-allocated
+    /// string — every memo lookup happens on the hot path (once per rule
+    /// attempted at every token position, for every grammar in this repo
+    /// built on `GrammarParser`), so allocating and hashing a fresh string
+    /// just to look up an already-cached `(rule, pos)` pair was pure
+    /// overhead a tuple key avoids entirely (`usize` hashes and compares in
+    /// O(1) with no allocation).
+    memo: HashMap<(usize, usize), MemoEntry>,
 
     /// Furthest position reached during parsing.
     furthest_pos: usize,
 
     /// What was expected at the furthest position.
     furthest_expected: Vec<String>,
-    /// Set of (rule_index, pos) pairs currently being parsed.
+    /// Set of `(rule_index, pos)` pairs currently being parsed.
     /// Used to detect and break left recursion: if we try to parse a rule
     /// at a position where we're already inside that same rule (but haven't
     /// cached the result yet), we know it's left recursion and should fail.
-    in_progress: std::collections::HashSet<String>,
+    /// Same tuple-key rationale as [`Self::memo`] — no `format!` allocation
+    /// needed to test/insert/remove a `(usize, usize)` pair.
+    in_progress: std::collections::HashSet<(usize, usize)>,
 
     /// Pre-parse hooks: transform token list before parsing.
     /// Each hook is a function `Vec<Token> -> Vec<Token>`. Multiple hooks compose left-to-right.
@@ -410,12 +420,21 @@ impl GrammarParser {
     }
 
     /// Record a failed expectation at the current position for error reporting.
+    ///
+    /// The membership check below compares `expected` against the existing
+    /// `&str`s directly (`s.as_str() == expected`) rather than allocating an
+    /// `expected.to_string()` up front just to ask "is this already here?" —
+    /// this function runs on every failed rule/token attempt across the
+    /// whole parse, so the previous `!v.contains(&expected.to_string())`
+    /// paid a `String` allocation on every single call, including the
+    /// overwhelmingly common case where the expectation was already recorded
+    /// and nothing new needs to be pushed at all.
     fn record_failure(&mut self, expected: &str) {
         if self.pos > self.furthest_pos {
             self.furthest_pos = self.pos;
             self.furthest_expected = vec![expected.to_string()];
         } else if self.pos == self.furthest_pos
-            && !self.furthest_expected.contains(&expected.to_string()) {
+            && !self.furthest_expected.iter().any(|s| s.as_str() == expected) {
                 self.furthest_expected.push(expected.to_string());
             }
     }
@@ -575,7 +594,7 @@ impl GrammarParser {
 
         // Check memo cache.
         if let Some(&idx) = self.rule_index.get(rule_name) {
-            let key = format!("{},{}", idx, self.pos);
+            let key = (idx, self.pos);
             if let Some(entry) = self.memo.get(&key) {
                 let end_pos = entry.end_pos;
                 let ok = entry.ok;
@@ -602,7 +621,7 @@ impl GrammarParser {
             // break the cycle. This handles grammars with rules like:
             //   primary = ... | primary LBRACKET expression RBRACKET
             // where `primary` appears as the first element of an alternative.
-            if !self.in_progress.insert(key.clone()) {
+            if !self.in_progress.insert(key) {
                 // key was already present — left recursion detected
                 return None;
             }
@@ -645,7 +664,7 @@ impl GrammarParser {
 
         // Cache result and remove from in_progress set.
         if let Some(&idx) = self.rule_index.get(rule_name) {
-            let key = format!("{},{}", idx, start_pos);
+            let key = (idx, start_pos);
             self.in_progress.remove(&key);
             if let Some(ref result) = children {
                 self.memo.insert(key, MemoEntry {
@@ -1570,6 +1589,42 @@ mod tests {
         let err = parser.parse().unwrap_err();
         // The error should mention what was expected.
         assert!(err.message.contains("Expected") || err.message.contains("Unexpected"));
+    }
+
+    #[test]
+    fn test_furthest_failure_expectations_are_deduplicated() {
+        // Two alternatives that expect the exact same token type at the same
+        // furthest position (a contrived but valid grammar: NUMBER | NUMBER)
+        // both call `record_failure("NUMBER")` when a NAME token shows up
+        // instead. `record_failure`'s dedup check (`!v.iter().any(|s| s ==
+        // expected)`, changed from an allocate-then-`Vec::contains` check
+        // during a performance pass) must still record "NUMBER" only once,
+        // not once per failing alternative.
+        let grammar = ParserGrammar {
+            rules: vec![GrammarRule {
+                name: "value".to_string(),
+                body: GrammarElement::Alternation {
+                    choices: vec![
+                        GrammarElement::TokenReference { name: "NUMBER".to_string() },
+                        GrammarElement::TokenReference { name: "NUMBER".to_string() },
+                    ],
+                },
+                line_number: 1,
+            }],
+            version: 0,
+        };
+
+        let tokens = vec![tok(TokenType::Name, "x"), tok(TokenType::Eof, "")];
+        let mut parser = GrammarParser::new(tokens, grammar);
+        let err = parser.parse().unwrap_err();
+        // "NUMBER" must appear exactly once in the message, not duplicated
+        // ("NUMBER or NUMBER") the way an un-deduplicated list would render.
+        assert_eq!(
+            err.message.matches("NUMBER").count(),
+            1,
+            "expected \"NUMBER\" to appear exactly once (deduplicated), got: {}",
+            err.message
+        );
     }
 
     // -----------------------------------------------------------------------
