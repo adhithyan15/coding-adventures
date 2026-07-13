@@ -172,6 +172,7 @@ SELF_CONTAINED_RUNGS = (
     "rung132_occupancy_share",
     "rung133_elimination_span",
     "rung134_cumulative_load_span",
+    "rung135_admixture_concentration",
 )
 
 
