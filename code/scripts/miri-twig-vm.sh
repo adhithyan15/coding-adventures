@@ -20,7 +20,7 @@
 #
 # Usage:
 #
-#   $ scripts/miri-twig-vm.sh
+#   $ code/scripts/miri-twig-vm.sh
 #
 # Exit code 0 = all twig-vm Miri tests pass.
 # Exit non-zero = UB detected; do not push without fixing.
@@ -38,7 +38,7 @@
 
 set -euo pipefail
 
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 PACKAGES_RUST="${REPO_ROOT}/code/packages/rust"
 
 # ── Pre-flight: nightly + miri component ─────────────────────────────

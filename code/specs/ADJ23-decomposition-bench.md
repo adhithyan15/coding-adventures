@@ -63,7 +63,7 @@ LLM calls per cell — meaningfully longer than ADJ18's Arm A only).
 
 ## Harness
 
-`scripts/adj23_decomposition_bench.py`. Same structural idea as
+`code/scripts/adj23_decomposition_bench.py`. Same structural idea as
 `scripts/adj18_tsa_arm_a_bench.py` but Arm B + audit trail:
 
 - Sets `ADJ_DEMO_IR_MODE=llm` + `ADJ_DEMO_AUDIT=1`.

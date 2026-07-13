@@ -13,7 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Added the first backfill lessons for tree and probabilistic data structures,
   dictionary and entropy compression, cryptographic composition, and
   intermediate representations.
-- Added a tested `scripts/learning_coverage_report.py` command so the inventory
+- Added a tested `code/scripts/learning_coverage_report.py` command so the inventory
   can be regenerated as packages and learning material evolve.
 
 ### Added — SPICE Berkeley Mosaic App Startup Summary

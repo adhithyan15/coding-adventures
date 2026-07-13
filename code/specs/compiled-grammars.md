@@ -65,7 +65,7 @@ The Rust command iterates over `code/packages/rust`, finds `*-lexer` and `*-pars
 matching files under `code/grammars`, and calls the appropriate compile step for each. Its mapping
 logic now lives in `code/programs/rust/grammar-tools/src/lib.rs`.
 
-The older `scripts/generate-compiled-grammars.sh` script remains as legacy orchestration for the
+The older `code/scripts/generate-compiled-grammars.sh` script remains as legacy orchestration for the
 non-Rust language outputs until those generators are also moved into native programs.
 
 ## Grammar coverage

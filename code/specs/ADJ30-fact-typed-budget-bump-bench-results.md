@@ -24,7 +24,7 @@
 
 ## Method
 
-- Same harness as ADJ29 (`scripts/adj_pr6_foundation_bench.py
+- Same harness as ADJ29 (`code/scripts/adj_pr6_foundation_bench.py
   --per-level-defaults`) with the additional env override
   `ADJ_PR6_MAX_RETRIES_FACT_TYPED=16`.
 - Per-level budgets: `3 / 4 / 5 / 16` across

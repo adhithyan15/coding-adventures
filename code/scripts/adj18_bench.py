@@ -23,13 +23,13 @@ that crashes can be resumed without losing progress.
 
 Usage:
     # Bench against a local Ollama on the default port:
-    python3 scripts/adj18_bench.py \
+    python3 code/scripts/adj18_bench.py \
         --endpoint http://127.0.0.1:11434 \
         --cache-dir /tmp/adj18_cache \
         --out code/specs/data/adj18-tsa-bench-$(date +%F).json
 
     # Resume an interrupted run:
-    python3 scripts/adj18_bench.py --resume --out code/specs/data/adj18-tsa-bench-2026-05-13.json
+    python3 code/scripts/adj18_bench.py --resume --out code/specs/data/adj18-tsa-bench-2026-05-13.json
 
 Each cell is a subprocess call into the built adjudication-tsa-demo
 binary; the harness sets env vars per cell and parses the binary's

@@ -80,7 +80,7 @@ jobs:
   #     branch we deep-check) and we get coverage without
   #     gating PRs.
   #
-  #   - **Local pre-push**: `scripts/miri-twig-vm.sh` is the
+  #   - **Local pre-push**: `code/scripts/miri-twig-vm.sh` is the
   #     canonical local check before pushing changes that
   #     touch twig-vm.  Documented in CLAUDE.md.
   #

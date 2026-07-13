@@ -35,7 +35,7 @@ the headline metrics are:
 Usage:
 
     cargo build -p adjudication-tsa-demo --release
-    python3 scripts/adj23_decomposition_bench.py \\
+    python3 code/scripts/adj23_decomposition_bench.py \\
         --endpoint http://127.0.0.1:11434 \\
         --cache-dir /tmp/adj23_cache \\
         --out code/specs/data/adj23-decomposition-bench-$(date +%F).json

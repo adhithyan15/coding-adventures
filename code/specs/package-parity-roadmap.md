@@ -17,9 +17,9 @@ families, then classify and port sparse families in dependency-shaped waves.
 Run:
 
 ```sh
-python scripts/package_parity_report.py --format markdown
-python scripts/package_parity_report.py --format json
-python scripts/package_parity_report.py --format csv
+python code/scripts/package_parity_report.py --format markdown
+python code/scripts/package_parity_report.py --format json
+python code/scripts/package_parity_report.py --format csv
 ```
 
 The reporter reads Git-visible files: tracked files plus untracked files that
