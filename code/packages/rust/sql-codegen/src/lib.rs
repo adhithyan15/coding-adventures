@@ -76,6 +76,11 @@ use coding_adventures_sql_planner::{
     OutputColumn, SqlExpr, UnaryOp as PlanUnaryOp,
 };
 
+/// The CAST target type, re-exported from the planner so `Instruction::Cast`
+/// and the VM can name it without a parallel enum (it is a plain data enum
+/// with identical meaning across all three layers).
+pub use coding_adventures_sql_planner::CastType;
+
 // ---------------------------------------------------------------------------
 // Maximum recursion depth for compile_expr.
 //
@@ -277,6 +282,11 @@ pub enum Instruction {
     ///
     /// ## Stack effect: `[..., value, pattern] → [..., Bool]`
     Like,
+
+    /// SQL `CAST(value AS type)` — pop one value, push its conversion.
+    ///
+    /// ## Stack effect: `[..., value] → [..., converted]`
+    Cast(CastType),
 
     /// SQL `IN (v1, v2, ...)` list membership test.
     ///
@@ -2003,6 +2013,14 @@ impl Compiler {
                 self.compile_expr(value);
                 self.compile_expr(pattern);
                 self.emit(Instruction::Like);
+            }
+
+            // ── CAST ─────────────────────────────────────────────────────────
+
+            SqlExpr::Cast { expr, ty } => {
+                // Evaluate the operand, then convert it in place.
+                self.compile_expr(expr);
+                self.emit(Instruction::Cast(ty.clone()));
             }
 
             // ── IN list ──────────────────────────────────────────────────────

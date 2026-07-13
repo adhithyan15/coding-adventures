@@ -143,6 +143,14 @@ pub enum SqlExpr {
         star: bool,
     },
 
+    /// `CAST(expr AS type)` — an explicit type conversion.
+    ///
+    /// Example: `CAST('12' AS INTEGER)` → the integer `12`.
+    Cast {
+        expr: Box<SqlExpr>,
+        ty: CastType,
+    },
+
     /// An aggregate function applied within GROUP BY context.
     ///
     /// Aggregates are separated from regular function calls because they
@@ -190,6 +198,23 @@ pub enum UnaryOp {
     Neg,
     /// Logical negation: `NOT x`
     Not,
+}
+
+/// The target type of a `CAST(expr AS type)` conversion.
+///
+/// SQLite resolves any declared type name to one of five "affinities"; this
+/// enum covers the three whose CAST results compare exactly or within the
+/// oracle's numeric epsilon (INTEGER, REAL, TEXT). BLOB and NUMERIC are not
+/// yet supported (a later increment) — see the planner's cast parser.
+#[derive(Debug, Clone, PartialEq)]
+pub enum CastType {
+    /// `CAST(x AS INTEGER)` — truncate reals toward zero; parse a leading
+    /// numeric prefix of text (`'12abc'` → 12, `'abc'` → 0).
+    Integer,
+    /// `CAST(x AS REAL)` — parse a leading numeric prefix of text as f64.
+    Real,
+    /// `CAST(x AS TEXT)` — render the value as its text representation.
+    Text,
 }
 
 /// An aggregate function name.
@@ -2054,6 +2079,15 @@ fn plan_unary(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
 /// | `TRUE`               | KEYWORD      | `Bool(true)`          |
 /// | `FALSE`              | KEYWORD      | `Bool(false)`         |
 fn plan_primary(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
+    // `CAST(expr AS type)` — recognised by a leading `CAST` keyword token.
+    // Handled before the generic loop so the `CAST` token isn't mistaken for a
+    // bare column name.
+    if let Some(ASTNodeOrToken::Token(t)) = node.children.first() {
+        if t.value.eq_ignore_ascii_case("CAST") {
+            return plan_cast(node);
+        }
+    }
+
     // Check child nodes first (column_ref, function_call, or parenthesized expr).
     for child in &node.children {
         match child {
@@ -2086,6 +2120,62 @@ fn plan_primary(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
     Err(PlanError::UnsupportedStatement(
         "empty primary node".to_string(),
     ))
+}
+
+/// Plan a `CAST(expr AS type)` primary node into [`SqlExpr::Cast`].
+///
+/// Grammar: `primary = "CAST" "(" expr "AS" NAME ")"` (among other choices).
+/// The node's children are the `CAST` / `(` / `AS` / `)` tokens, the inner
+/// expression node, and the type-name token.
+///
+/// The declared type name is mapped to a [`CastType`] using SQLite's
+/// substring affinity rule (so synonyms like `INT`, `VARCHAR`, `FLOAT` resolve
+/// correctly): a name containing `INT` → INTEGER; `CHAR`/`CLOB`/`TEXT` → TEXT;
+/// `REAL`/`FLOA`/`DOUB` → REAL. `BLOB` and `NUMERIC`/other names are not yet
+/// supported and yield an `UnsupportedStatement` error (a later increment).
+fn plan_cast(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
+    // The inner expression is the sole nested Node child.
+    let expr_node = node
+        .children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Node(n) => Some(n),
+            _ => None,
+        })
+        .ok_or_else(|| PlanError::UnsupportedStatement("CAST missing expression".to_string()))?;
+    let inner = plan_expression(expr_node)?;
+
+    // The type name is the token following `AS`.
+    let type_name = {
+        let children = &node.children;
+        let mut found = None;
+        for (i, c) in children.iter().enumerate() {
+            if is_keyword_token(c, "AS") {
+                if let Some(ASTNodeOrToken::Token(t)) = children.get(i + 1) {
+                    found = Some(t.value.to_uppercase());
+                }
+            }
+        }
+        found.ok_or_else(|| PlanError::UnsupportedStatement("CAST missing type name".to_string()))?
+    };
+
+    // SQLite's type-affinity substring rule, restricted to the supported types.
+    let ty = if type_name.contains("INT") {
+        CastType::Integer
+    } else if type_name.contains("CHAR") || type_name.contains("CLOB") || type_name.contains("TEXT") {
+        CastType::Text
+    } else if type_name.contains("REAL") || type_name.contains("FLOA") || type_name.contains("DOUB") {
+        CastType::Real
+    } else {
+        return Err(PlanError::UnsupportedStatement(format!(
+            "CAST to unsupported type: {type_name}"
+        )));
+    };
+
+    Ok(SqlExpr::Cast {
+        expr: Box::new(inner),
+        ty,
+    })
 }
 
 /// Plan a single token from a primary node into a literal or column reference.

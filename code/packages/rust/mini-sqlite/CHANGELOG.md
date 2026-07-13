@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.5.23 — `CAST(expr AS type)` — INTEGER / REAL / TEXT
+
+`SELECT CAST(x AS INTEGER)` and friends now parse and run, following SQLite's
+documented cast rules: text yields its leading integer prefix (`'12abc'`→12,
+`'3.9'`→3), reals truncate toward zero (`-4.9`→-4), text→REAL reads the leading
+real prefix incl. exponent (`'1e3'`→1000.0), and integers render to their
+decimal string for TEXT. The declared type name resolves through SQLite's
+substring **affinity** rule, so synonyms like `INT`, `VARCHAR`, and `FLOAT`
+work. This spans all layers: grammar (sql-parser 0.1.7) → `SqlExpr::Cast`
+(sql-planner 0.2.6) → `Instruction::Cast` (sql-codegen 0.6.1) → `apply_cast`
+(sql-vm 0.4.12), with the optimizer (0.1.1) recursing through the new node.
+Three differential-oracle cases (`cast_to_integer`, `cast_to_real`,
+`cast_to_text_and_synonyms`) diff against real bundled SQLite. `BLOB` and
+`NUMERIC` target types, and `real→TEXT` formatting (the approximate-`dtoa`
+rabbit hole), remain follow-ups.
+
 ## 0.5.22 — `GLOB` / `NOT GLOB` infix operators
 
 `SELECT … WHERE s GLOB 'x*'` now parses and runs — case-sensitive Unix-glob

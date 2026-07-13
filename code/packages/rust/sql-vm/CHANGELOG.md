@@ -3,6 +3,17 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.12] - Unreleased
+
+### Added
+
+- **`Instruction::Cast` execution** (`apply_cast`) with SQLite's documented
+  rules for the three supported target types: INTEGER (reals truncate toward
+  zero; text yields its leading integer prefix), REAL (text yields its leading
+  real prefix, exponent-aware), and TEXT (decimal string; a boolean renders as
+  `1`/`0`). NULL always casts to NULL. Helpers `parse_int_prefix` /
+  `parse_real_prefix` do the byte-scan prefix parsing.
+
 ## [0.4.11] - Unreleased
 
 ### Added

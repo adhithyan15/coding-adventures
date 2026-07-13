@@ -539,6 +539,18 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::Literal { value: r#"NULL"#.to_string() },
                 GrammarElement::Literal { value: r#"TRUE"#.to_string() },
                 GrammarElement::Literal { value: r#"FALSE"#.to_string() },
+                // `CAST(expr AS type)` — placed before `function_call` so the
+                // ordered-choice parser matches the AS-typed form first (a bare
+                // `foo(...)` fails the leading `CAST` literal and falls through
+                // to function_call). The type is a NAME token (INTEGER/REAL/…).
+                GrammarElement::Sequence { elements: vec![
+                    GrammarElement::Literal { value: r#"CAST"#.to_string() },
+                    GrammarElement::Literal { value: r#"("#.to_string() },
+                    GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                    GrammarElement::Literal { value: r#"AS"#.to_string() },
+                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                    GrammarElement::Literal { value: r#")"#.to_string() },
+                ] },
                 GrammarElement::RuleReference { name: r#"function_call"#.to_string() },
                 GrammarElement::RuleReference { name: r#"column_ref"#.to_string() },
                 GrammarElement::Sequence { elements: vec![

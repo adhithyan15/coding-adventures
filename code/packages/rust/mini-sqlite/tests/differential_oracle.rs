@@ -810,6 +810,39 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT id FROM t WHERE s NOT GLOB 'c?t' ORDER BY id",
     },
+    // `CAST(x AS INTEGER)` — text yields its leading integer prefix (`'12abc'`
+    // → 12, `'3.9'` → 3 since it stops at the `.`), and a real truncates toward
+    // zero (`4.9` → 4, `-4.9` → -4). Aliased so the check is on values, not the
+    // (engine-specific) auto-generated CAST column name.
+    Case {
+        id: "cast_to_integer",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT, r REAL)",
+            "INSERT INTO t VALUES (1,'12abc',4.9),(2,'3.9',-4.9),(3,'abc',7.2)",
+        ],
+        query: "SELECT CAST(s AS INTEGER) AS si, CAST(r AS INTEGER) AS ri FROM t ORDER BY id",
+    },
+    // `CAST(x AS REAL)` — text yields its leading real prefix (`'1e3'` → 1000.0,
+    // `'12.5abc'` → 12.5), and an integer widens (`42` → 42.0). REAL cells are
+    // compared within the oracle's numeric epsilon.
+    Case {
+        id: "cast_to_real",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT, n INTEGER)",
+            "INSERT INTO t VALUES (1,'1e3',42),(2,'12.5abc',7)",
+        ],
+        query: "SELECT CAST(s AS REAL) AS sr, CAST(n AS REAL) AS nr FROM t ORDER BY id",
+    },
+    // `CAST(int AS TEXT)` renders the decimal string; the affinity substring
+    // rule resolves the synonym `VARCHAR` to TEXT and `INT` to INTEGER.
+    Case {
+        id: "cast_to_text_and_synonyms",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, n INTEGER)",
+            "INSERT INTO t VALUES (1,65),(2,-7)",
+        ],
+        query: "SELECT CAST(n AS VARCHAR) AS tv, CAST('9x' AS INT) AS iv FROM t ORDER BY id",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but

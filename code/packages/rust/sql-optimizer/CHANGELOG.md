@@ -2,6 +2,14 @@
 
 All notable changes to this crate will be documented here.
 
+## [0.1.1] - Unreleased
+
+### Added
+
+- Handle the new `SqlExpr::Cast` variant: `fold_expr` folds the cast's operand
+  but keeps the conversion (a cast of a constant is still evaluated by the VM),
+  and `collect_columns_in_expr` recurses into the operand.
+
 ## [0.1.0] — 2026-06-30
 
 ### Added

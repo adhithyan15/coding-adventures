@@ -33,7 +33,9 @@
 use std::collections::HashMap;
 
 use coding_adventures_sql_backend::{Backend, Cursor, Row, RowIterator, SqlValue};
-use coding_adventures_sql_codegen::{AggFn, BinaryOp, CompiledSortKey, Instruction, Program, UnaryOp};
+use coding_adventures_sql_codegen::{
+    AggFn, BinaryOp, CastType, CompiledSortKey, Instruction, Program, UnaryOp,
+};
 
 // ===========================================================================
 // Public API types
@@ -364,6 +366,11 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
                     _ => SqlValue::Bool(like_match(&sql_to_str(&val), &sql_to_str(&pat))),
                 };
                 stack.push(result);
+            }
+
+            Instruction::Cast(ty) => {
+                let val = pop(&mut stack)?;
+                stack.push(apply_cast(&val, &ty));
             }
 
             // ─────────────── BETWEEN ───────────────────────────────────────
@@ -2432,6 +2439,137 @@ fn sql_to_str(v: &SqlValue) -> String {
         }
         SqlValue::Null => String::new(),
     }
+}
+
+/// Apply a `CAST(value AS type)` conversion, following SQLite's documented
+/// rules for the three supported target types. NULL always casts to NULL.
+///
+/// - **INTEGER**: reals truncate toward zero; text yields the longest leading
+///   *integer* prefix (`'3.9'` → 3 because it stops at the `.`, `'12abc'` → 12,
+///   `'abc'` → 0), leading whitespace ignored.
+/// - **REAL**: text yields the longest leading *real* prefix (`'1e3'` → 1000.0,
+///   `'12.5abc'` → 12.5, `'abc'` → 0.0).
+/// - **TEXT**: the value's text representation (integers become their decimal
+///   string; a boolean — which SQLite has no type for — renders as `1`/`0`).
+fn apply_cast(val: &SqlValue, ty: &CastType) -> SqlValue {
+    if matches!(val, SqlValue::Null) {
+        return SqlValue::Null;
+    }
+    match ty {
+        CastType::Integer => SqlValue::Int(cast_to_i64(val)),
+        CastType::Real => SqlValue::Float(cast_to_f64(val)),
+        CastType::Text => SqlValue::Text(match val {
+            // SQLite has no boolean type; a stored bool casts like the integer
+            // 1/0 it stands in for, not the words "true"/"false".
+            SqlValue::Bool(b) => (*b as i64).to_string(),
+            _ => sql_to_str(val),
+        }),
+    }
+}
+
+/// Value → i64 for `CAST(… AS INTEGER)`. Float truncates toward zero (and
+/// saturates on overflow, matching Rust's `as i64`); text parses a leading
+/// integer prefix.
+fn cast_to_i64(val: &SqlValue) -> i64 {
+    match val {
+        SqlValue::Int(i) => *i,
+        SqlValue::Bool(b) => *b as i64,
+        SqlValue::Float(f) => *f as i64,
+        SqlValue::Text(s) => parse_int_prefix(s),
+        SqlValue::Blob(b) => parse_int_prefix(&String::from_utf8_lossy(b)),
+        SqlValue::Null => 0,
+    }
+}
+
+/// Value → f64 for `CAST(… AS REAL)`. Text parses a leading real prefix.
+fn cast_to_f64(val: &SqlValue) -> f64 {
+    match val {
+        SqlValue::Int(i) => *i as f64,
+        SqlValue::Bool(b) => *b as i64 as f64,
+        SqlValue::Float(f) => *f,
+        SqlValue::Text(s) => parse_real_prefix(s),
+        SqlValue::Blob(b) => parse_real_prefix(&String::from_utf8_lossy(b)),
+        SqlValue::Null => 0.0,
+    }
+}
+
+/// The longest leading substring of `s` that is a well-formed integer
+/// (optional sign + digits, after skipping leading whitespace), parsed to
+/// i64. No such prefix → 0; digit overflow saturates to i64::MIN/MAX.
+fn parse_int_prefix(s: &str) -> i64 {
+    let t = s.trim_start();
+    let bytes = t.as_bytes();
+    let mut i = 0;
+    let mut neg = false;
+    if i < bytes.len() && (bytes[i] == b'+' || bytes[i] == b'-') {
+        neg = bytes[i] == b'-';
+        i += 1;
+    }
+    let start = i;
+    while i < bytes.len() && bytes[i].is_ascii_digit() {
+        i += 1;
+    }
+    if i == start {
+        return 0;
+    }
+    match t[start..i].parse::<i64>() {
+        Ok(n) => {
+            if neg {
+                -n
+            } else {
+                n
+            }
+        }
+        Err(_) => {
+            if neg {
+                i64::MIN
+            } else {
+                i64::MAX
+            }
+        }
+    }
+}
+
+/// The longest leading substring of `s` that is a well-formed real number
+/// (optional sign, digits, fractional part, and exponent — after skipping
+/// leading whitespace), parsed to f64. No such prefix → 0.0.
+fn parse_real_prefix(s: &str) -> f64 {
+    let t = s.trim_start();
+    let bytes = t.as_bytes();
+    let mut i = 0;
+    if i < bytes.len() && (bytes[i] == b'+' || bytes[i] == b'-') {
+        i += 1;
+    }
+    let mut saw_digit = false;
+    while i < bytes.len() && bytes[i].is_ascii_digit() {
+        i += 1;
+        saw_digit = true;
+    }
+    if i < bytes.len() && bytes[i] == b'.' {
+        i += 1;
+        while i < bytes.len() && bytes[i].is_ascii_digit() {
+            i += 1;
+            saw_digit = true;
+        }
+    }
+    if !saw_digit {
+        return 0.0;
+    }
+    // Optional exponent — only consumed if it actually has digits.
+    if i < bytes.len() && (bytes[i] == b'e' || bytes[i] == b'E') {
+        let mut j = i + 1;
+        if j < bytes.len() && (bytes[j] == b'+' || bytes[j] == b'-') {
+            j += 1;
+        }
+        let exp_start = j;
+        while j < bytes.len() && bytes[j].is_ascii_digit() {
+            j += 1;
+        }
+        if j > exp_start {
+            i = j;
+        }
+    }
+    t[..i].parse::<f64>().unwrap_or(0.0)
 }
 
 // ===========================================================================
