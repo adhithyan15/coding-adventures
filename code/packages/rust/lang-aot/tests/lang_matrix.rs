@@ -260,6 +260,23 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(1),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
     },
+    // Twig — **E6d-3b: the `list-ref` list operation on the code-gen backends.**
+    // Like `length`, `list-ref` *walks* the cons chain, so `lower_list_ops`
+    // rewrites `call_builtin "list-ref" lst n` to a call to a synthesized
+    // recursive helper `__dyn_list_ref(lst, n) = if n==0 then car(lst) else
+    // list-ref(cdr(lst), n-1)` injected into the module. The index is a boxed
+    // lisp value at the call boundary (the uniform-anyref convention boxes every
+    // lisp-call argument), so the helper unboxes it once; the index test/decrement
+    // are then typed `cmp_eq : bool` (feeding `jmp_if_false`) and `sub : i64`,
+    // re-boxed for the recursive call — nothing new lowers. The *return* is a
+    // `car` result (a lisp value). `(list-ref (list 10 20 42) 2)` = 42.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(list-ref (list 10 20 42) 2)",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
     // Twig — E4 literal `string-length`. The compiler lowers
     // `(string-length "HELLO")` to shared `str_const` + `str_len`, avoiding the
     // dynamic `call_builtin "string-length"` path that codegen validators reject.

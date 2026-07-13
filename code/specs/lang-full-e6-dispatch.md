@@ -224,10 +224,10 @@ E6d-7.
      `list` builtin is gone before the backend sees it). Matrix:
      `(car (list 42 1 2))` → 42 and `(car (cdr (list 1 42 3)))` → 42; WASM + real
      dotnet CLR verified, native/LLVM/JVM via CI. `(list)` → nil.
-   - **E6d-3b — list *operations* (◐ `length` ✅; `list-ref`/`append`/`reverse`/
-     `assoc` ☐).** These walk/rebuild the cons chain, so they need a synthesized
-     cons-walk helper, not a pure desugar. `null?`/`pair?` already lower.
-     `length` (shipped): `iir-builtin-lowering`'s `lower_list_ops` rewrites
+   - **E6d-3b — list *operations* (◐ `length` ✅, `list-ref` ✅; `append`/
+     `reverse`/`assoc` ☐).** These walk/rebuild the cons chain, so they need a
+     synthesized cons-walk helper, not a pure desugar. `null?`/`pair?` already
+     lower. `length` (shipped): `iir-builtin-lowering`'s `lower_list_ops` rewrites
      `call_builtin "length" lst` → `call __dyn_list_length, lst` and injects (once)
      a recursive helper that is itself a **proper lisp function** returning a boxed
      `ref<any>` — base case `null? lst` → `box 0`, recurse `+ 1 (length (cdr lst))`
@@ -236,10 +236,18 @@ E6d-7.
      the **WASM nil-const fix** (iir-to-wasm 0.38.0): a `ref<…>` `const 0` now emits
      `ref.null`, so `null?`/`is_null` detects the terminator — previously the walk
      overran nil into `struct.get` on an i32; this also fixes `(null? (list))` → 1
-     (CLR already lowered nil to `ldnull`). The remaining ops (`list-ref`, `append`,
-     `reverse`, `assoc`) follow the same helper pattern. Proof (shipped):
-     `(+ (length (list 1 2 3)) 39)` → 42, `(null? (list))` → 1; WASM + real dotnet
-     CLR verified, native/LLVM/JVM via CI.
+     (CLR already lowered nil to `ldnull`). `list-ref` (shipped): same
+     `lower_list_ops` rewrites `call_builtin "list-ref" lst n` → `call
+     __dyn_list_ref, lst, n`, whose helper is `if ni==0 then car(lst) else
+     list-ref(cdr(lst), ni-1)`. **The index is a boxed lisp value** — the
+     uniform-anyref boundary (`dyn_repr_structural`/`lower_dyn_repr`) boxes every
+     lisp-call arg, so a raw-`i64` index param faults (`expected i64, got I32(2)`);
+     the helper takes `n : ref<any>`, unboxes it once, and the index test/decrement
+     are typed `cmp_eq`/`sub` (raw bool feeds `jmp_if_false` directly). The
+     remaining ops (`append`, `reverse`, `assoc`) follow the same helper pattern.
+     Proof (shipped): `(+ (length (list 1 2 3)) 39)` → 42, `(null? (list))` → 1,
+     `(list-ref (list 10 20 42) 2)` → 42; WASM + real dotnet CLR verified,
+     native/LLVM/JVM via CI.
 4. **E6d-4 — symbols / quote.** `make_symbol`, `symbol->string`, `string->symbol`,
    `eq?` on symbols (bit-equality). Interned-immediate model (§2.1); reuse
    `intern_symbols_structural`. Proof: `(eq? 'a 'a)` vs `(eq? 'a 'b)`.
