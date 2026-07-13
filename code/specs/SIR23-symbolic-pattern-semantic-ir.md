@@ -133,7 +133,13 @@ SymReplaceAll {
 A backend implementing `SymReplaceAll` must:
 
 1. Walk `expr`'s tree in the same traversal order `cas-pattern-matching`
-   uses today (top-down, left-to-right over `args`).
+   uses today — **bottom-up (post-order)**: a node's `head` and every
+   `args` element are visited (and possibly replaced) before the node
+   itself is tried against any rule. (An earlier draft of this bullet said
+   "top-down, left-to-right over `args`" — that never matched what
+   `cas-pattern-matching`'s `rewrite()` actually does; corrected here to
+   match the real, tested algorithm this spec's own "port, not a
+   reimplementation" framing below commits to.)
 2. At each subtree, try each `rules[i].lhs` in order; the first structural
    match wins (no backtracking across rules — matches the reference CAS
    behavior).
