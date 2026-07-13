@@ -1,5 +1,13 @@
 # Changelog -- DartmouthBasicParser (Swift)
 
+## [0.1.2] -- 2026-07-12
+
+### Fixed
+- `loadGrammar()` now reads the grammar from
+  `grammars/dartmouth_basic/dartmouth_basic.grammar` after the per-grammar
+  subdirectory move in PR #7475. The old flat path would have failed once the
+  companion lexer's own grammar-path fix let this package build again.
+
 ## [0.1.1] -- 2026-04-10
 
 ### Fixed

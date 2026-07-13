@@ -54,6 +54,10 @@ use crate::graph::Graph;
 ///
 /// By building this mapping upfront, we can resolve dependencies across
 /// languages without hard-coding specific package names.
+///
+/// Only the tests build the unscoped map directly; production code always
+/// resolves within a language scope via [`build_known_names_for_scope`].
+#[cfg(test)]
 pub fn build_known_names(packages: &[Package]) -> HashMap<String, String> {
     build_known_names_for_scope(packages, "")
 }
@@ -203,7 +207,7 @@ fn parse_python_deps(pkg: &Package, known_names: &HashMap<String, String>) -> Ve
         if !in_deps {
             // Look for the start of the dependencies array.
             if trimmed.starts_with("dependencies") && trimmed.contains('=') {
-                let after_eq = trimmed.splitn(2, '=').nth(1).unwrap_or("").trim();
+                let after_eq = trimmed.split_once('=').map_or("", |(_, v)| v).trim();
 
                 if after_eq.starts_with('[') {
                     if after_eq.contains(']') {

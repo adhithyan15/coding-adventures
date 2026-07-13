@@ -84,12 +84,8 @@ impl Graph {
 
     /// Adds a node to the graph. No-op if the node already exists.
     pub fn add_node(&mut self, node: &str) {
-        self.forward
-            .entry(node.to_string())
-            .or_insert_with(HashSet::new);
-        self.reverse
-            .entry(node.to_string())
-            .or_insert_with(HashSet::new);
+        self.forward.entry(node.to_string()).or_default();
+        self.reverse.entry(node.to_string()).or_default();
     }
 
     /// Adds a directed edge from `from` to `to`.

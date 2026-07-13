@@ -1,5 +1,12 @@
 # Shared Source + Shell Packages
 
+> **⚠️ Superseded / historical.** This packaging model was retired when the
+> legacy `code/src/` shared-source tree was removed (PR #7341). TypeScript
+> packages are now self-contained under `code/packages/typescript/<pkg>/`, and
+> the publish tool that implemented this model
+> (`code/programs/typescript/package-materializer`) has been removed. This spec
+> is kept as a design record only; it does not describe the current layout.
+
 ## 1. Overview
 
 This spec defines a monorepo packaging model for languages whose packages are

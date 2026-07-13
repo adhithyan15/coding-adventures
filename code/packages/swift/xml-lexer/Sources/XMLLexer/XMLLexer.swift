@@ -60,6 +60,7 @@ public struct XMLLexer: Sendable {
         }
         let tokensURL = url
             .appendingPathComponent("grammars")
+            .appendingPathComponent("xml")
             .appendingPathComponent("xml.tokens")
 
         let content = try String(contentsOf: tokensURL, encoding: .utf8)

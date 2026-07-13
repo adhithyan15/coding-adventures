@@ -1,5 +1,14 @@
 # Changelog -- DartmouthBasicLexer (Swift)
 
+## [0.1.2] -- 2026-07-12
+
+### Fixed
+- `loadGrammar()` now reads the grammar from
+  `grammars/dartmouth_basic/dartmouth_basic.tokens`. PR #7475 moved every
+  grammar into a per-grammar `code/grammars/<name>/` subdirectory, but this
+  lexer still resolved the old flat `grammars/dartmouth_basic.tokens` path,
+  so every test failed with "The file doesn't exist."
+
 ## [0.1.1] -- 2026-04-10
 
 ### Added

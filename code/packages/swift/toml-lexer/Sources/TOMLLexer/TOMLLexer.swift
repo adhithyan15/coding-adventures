@@ -20,6 +20,7 @@ public struct TOMLLexer: Sendable {
         }
         let tokensURL = url
             .appendingPathComponent("grammars")
+            .appendingPathComponent("toml")
             .appendingPathComponent("toml.tokens")
 
         let content = try String(contentsOf: tokensURL, encoding: .utf8)
