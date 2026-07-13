@@ -10,22 +10,25 @@
 > [`lessons/`](./lessons/), not one dense unit. See
 > [`HL00`](../../../specs/HL00-human-language-curriculum-framework.md).
 
-Chapter 1 (Hola and Buenos Días) is authored **atom-first**: teach the
-pieces, then assemble them — [`lessons/ES-C01-L01`–`L05`](./lessons/):
+Chapters 1-3 are authored **atom-first** — teach the pieces, then assemble,
+with grammar introduced exactly where a word needs it
+([`lessons/`](./lessons/)):
 
-1. `L01` **hola** — the casual greeting.
-2. `L02` **bien** — "well," a one-word answer; plus its adjective sibling
-   *bueno/buena*.
-3. `L03` **día** — "day," and the plural rule (vowel + *-s* → *días*).
-4. `L04` **buenos días** — *assembled* from *bueno* + *días*, introducing
-   adjective **agreement** (*bueno* → *buenos*).
-5. `L05` **practice** — hola & buenos días together.
+- **Ch. 1 — Hola and Buenos Días** (`C01-L01`–`L05`): hola → **bien**
+  (+ bueno/buena) → **día** (first noun: introduces grammatical **gender**,
+  traced to Latin, + the plural rule) → **buenos días** (assembled;
+  introduces **agreement**) → practice.
+- **Ch. 2 — The Rest of the Greetings** (`C02-L01`–`L05`): tarde → buenas
+  tardes (**feminine** agreement) → noche → buenas noches → practice.
+- **Ch. 3 — Introducing Yourself** (`C03-L01`–`L10`): me → llamo → me llamo
+  (**reflexive verbs**) → **tú / usted** (informal vs formal "you," roots
+  traced) → cómo → se llama → ¿cómo se llama usted? → mucho → mucho gusto →
+  practice.
 
-Chapter 2 then asks **"how do you respond to *buenos días*?"** and starts a
-recursive responding cycle; afterward the same atom-first pattern repeats for
-*tarde* → *buenas tardes* and *noche* → *buenas noches*. Sentences grow as
-grammar accumulates piece by piece. The theme skeleton below plans the wider
-road ahead.
+Next: **Ch. 4** — responding to *¿cómo está usted?* (bien, gracias, regular,
+más o menos); then **farewells** (hasta luego/mañana/pronto, adiós). Sentences
+grow as grammar accumulates piece by piece. The theme skeleton below plans the
+wider road ahead.
 
 ## Theme Skeleton (planning only)
 

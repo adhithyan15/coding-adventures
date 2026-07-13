@@ -77,12 +77,22 @@ The track was **redesigned** after early feedback: from coarse units (ten
 greetings crammed together, a front-loaded pronunciation chapter) to deep
 one-word lessons with inline sounds and a full cousin web. Current state:
 
-- **Chapter 1 — Hola and Buenos Días**: 5 lessons in [`lessons/`](./lessons/)
-  (`ES-C01-L01`–`L05`), built **atom-first**: hola → bien (+ bueno/buena) →
-  día (+ plurals) → buenos días (assembled, + agreement) → practice. Grammar
-  arrives exactly where a word needs it. Fully authored and in the book.
-  (Earlier drafts of tardes/noches/gracias/etc. are in git history; they'll
-  be rebuilt atom-first in their own later chapters.)
+All built **atom-first** (word first, then assembled) with grammar introduced
+exactly where a word needs it:
+
+- **Chapter 1 — Hola and Buenos Días** (`ES-C01-L01`–`L05`): hola → bien
+  (+ bueno/buena) → día (first noun: introduces **grammatical gender**, traced
+  to Latin's 3-gender system, + the plural rule) → buenos días (assembled,
+  introduces **agreement**) → practice.
+- **Chapter 2 — The Rest of the Greetings** (`ES-C02-L01`–`L05`): tarde →
+  buenas tardes (**feminine** agreement) → noche → buenas noches → practice.
+- **Chapter 3 — Introducing Yourself** (`ES-C03-L01`–`L10`): me → llamo →
+  me llamo (**reflexive verbs**) → **tú / usted** (informal vs formal "you,"
+  both roots traced) → cómo → se llama → ¿cómo se llama usted? → mucho →
+  mucho gusto → practice.
+
+Every noun carries its gender (*el*/*la*) and plural; every pronoun is traced
+to its root. Fully authored and in the book (20 pages).
 - **Pronunciation**: [`pronunciation-reference.md`](./pronunciation-reference.md)
   (look-up reference, not a chapter).
 - **Later chapters**: skeleton in [`roadmap.md`](./roadmap.md).

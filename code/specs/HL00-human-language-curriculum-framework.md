@@ -286,15 +286,26 @@ gender on *every* noun, and that gender forces agreement across articles and
 adjectives — a structural feature English speakers have no built-in instinct
 for. This gets treated as a **standing methodology**, not a single chapter:
 
-- Every noun introduced from the very first one onward carries an inline
-  gender tag (see the `la casa` example above) — building intuition through
-  repeated exposure well before any formal rules unit explains the pattern.
-- The formal gender chapter (Part I, per the roadmap) is where the pattern
-  becomes explicit: the *-o*/*-a* default, common exceptions (*el día, la
-  mano, el problema* — Greek-origin *-ma* nouns are masculine despite ending
-  in *-a*), and why *el agua* takes the masculine article despite being a
-  feminine noun (stressed initial *a* clashing with *la*). That chapter
-  builds on tags the learner has already been seeing for weeks, rather than
+- **Gender is introduced on the very first noun taught, not in a later
+  "gender chapter."** For Spanish that first noun is *día* (Chapter 1): the
+  lesson introduces the concept of grammatical gender itself, traces it to
+  Latin (see below), tags *día* as masculine (*el día*), and establishes the
+  rule that *every* noun from then on arrives with its *el*/*la* — because
+  gender can't be reliably guessed, it must be learned *with* the word,
+  alongside its plural. Number (plural) and gender are taught together, as
+  the two tags every Spanish noun carries.
+- **Trace the gender system to Latin.** Grammatical gender isn't a Spanish
+  invention: Latin sorted every noun into *three* genders (masculine,
+  feminine, neuter); Spanish simplified to *two* (masculine, feminine),
+  folding most old neuter nouns into the masculine. A given noun's gender is
+  usually inherited straight from its Latin gender — which is exactly why
+  *el día* is masculine despite its *-a* ending (Latin *dies* was masculine)
+  and *la noche* is feminine (Latin *nox* was feminine). The Latin origin is
+  presented as the *explanation* for the gender, not a footnote.
+- Later, a consolidation lesson can make the surface pattern explicit — the
+  *-o*/*-a* default and its real exceptions (*el día, la mano, el problema*,
+  *el agua*) — but the learner has been tagging gender per-noun since the
+  first noun, so that lesson formalizes an already-lived pattern rather than
   introducing gender cold.
 - This generalizes: French and German have their own gender systems (German
   adds a third, neuter, and ties gender to case); Hindi marks gender on verbs

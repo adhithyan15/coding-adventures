@@ -30,11 +30,36 @@ By session 5 the chapter's four words are all in the review rotation, and
 verbatim repeats) are generated from the due column as each session is
 reached.
 
+## Chapter 2 — the rest of the greetings (sessions 6-9)
+
+Atom-first again: *tarde* → *buenas tardes* (introduces **feminine**
+agreement), *noche* → *buenas noches*, practice. Reviews of Chapter 1 words
+fold in per the N+1/N+3/N+7 schedule.
+
+| Session | New lesson(s) | Introduces |
+|---|---|---|
+| 6 | `C02-L01` tarde · `C02-L02` buenas tardes | feminine noun (*la tarde*); feminine agreement (*buenas*) |
+| 7 | `C02-L03` noche · `C02-L04` buenas noches | -ct-→-ch- sound pattern; greeting-and-farewell |
+| 8 | `C02-L05` practice — four greetings | — |
+
+## Chapter 3 — introducing yourself (sessions 9-14)
+
+The introduction exchange, atom by atom, including the *tú*/*usted* pronoun
+pair.
+
+| Session | New lesson(s) | Introduces |
+|---|---|---|
+| 9 | `C03-L01` me · `C03-L02` llamo | first pronoun; cl-→ll- pattern |
+| 10 | `C03-L03` me llamo | reflexive verbs |
+| 11 | `C03-L04` tú / usted | informal vs formal "you"; roots (thou; *vuestra merced*) |
+| 12 | `C03-L05` cómo · `C03-L06` se llama | question words + accent; reflexive *se* |
+| 13 | `C03-L07` ¿cómo se llama usted? | assembling the question + answering |
+| 14 | `C03-L08` mucho · `C03-L09` gusto/mucho gusto · `C03-L10` practice | -lt-→-ch-; the full exchange |
+
 ## What comes next (recursive)
 
-Chapter 2 answers the question `L05` ends on: **"when someone says *buenos
-días* to you, what do you say back?"** Responding opens its own small cycle
-of atoms (how-are-you, likewise, and the answer *bien* you already have).
-After that, the same atom-first pattern repeats for the other times of day:
-*tarde* → *buenas tardes*, then *noche* → *buenas noches* — each time word,
-then assembly. Sentences grow as the grammar accumulates piece by piece.
+Chapter 4 answers what Chapter 3 ends on: their reply to **"¿cómo está
+usted?"** — how are you? — opening the responses cycle (*bien*, *gracias*,
+*regular*, *más o menos*). Then farewells (*hasta luego / mañana / pronto*,
+*adiós*). Each new noun keeps carrying its gender + plural, each new pronoun
+its root, per the pattern *día* and *tú/usted* established.
