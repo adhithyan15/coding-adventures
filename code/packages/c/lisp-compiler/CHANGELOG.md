@@ -24,3 +24,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - 96 checks mirroring the Rust crate's own unit tests, run under every available
   C compiler via the shared `iso-harness`; the suite also passes clean under
   AddressSanitizer + UndefinedBehaviorSanitizer.
+- Public value/code helpers used by the sibling `c/lisp-vm`: `lc_value_clone`,
+  `lc_value_free`, `lc_value_equal`, and `lc_code_object_clone` (deep copy of an
+  `LcCodeObject`).
+
+### Fixed
+
+- Bound the embedded parser message in the `lc_compile` error `snprintf` with a
+  `%.100s` precision so the total provably fits the 128-byte buffer; the
+  unbounded `%s` tripped gcc's `-Werror=format-truncation` on ubuntu CI.

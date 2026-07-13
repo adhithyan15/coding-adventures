@@ -125,6 +125,17 @@ void lc_code_object_free(LcCodeObject *code);
 /* Is `v` falsy in Lisp (Nil, Bool(false), or Integer(0))? */
 int lc_value_is_falsy(const LcValue *v);
 
+/* Deep-copy a value (dups its string and, for LC_VAL_CODE, its whole nested
+ * code object). Useful to a VM that moves values around. */
+LcValue lc_value_clone(const LcValue *v);
+/* Free the heap a value owns (its string and/or nested code object). Leaves the
+ * struct itself (which lives in an array or on the stack) untouched. */
+void lc_value_free(LcValue *v);
+/* Structural equality of two values (deep for LC_VAL_CODE). */
+int lc_value_equal(const LcValue *a, const LcValue *b);
+/* Deep-copy a code object (returns a fresh heap object; NULL on OOM). */
+LcCodeObject *lc_code_object_clone(const LcCodeObject *code);
+
 #ifdef __cplusplus
 }
 #endif

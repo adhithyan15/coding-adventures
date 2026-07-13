@@ -106,6 +106,75 @@ static int code_equal(const LcCodeObject *a, const LcCodeObject *b) {
     return 1;
 }
 
+/* ── Public value helpers (for a downstream VM) ────────────────────────────*/
+
+int lc_value_equal(const LcValue *a, const LcValue *b) {
+    return value_equal(a, b);
+}
+void lc_value_free(LcValue *v) { value_free_contents(v); }
+
+LcCodeObject *lc_code_object_clone(const LcCodeObject *code) {
+    if (code == NULL) return NULL;
+    LcCodeObject *c = (LcCodeObject *)calloc(1, sizeof(LcCodeObject));
+    if (c == NULL) return NULL;
+    if (code->n_instructions > 0) {
+        c->instructions = (LcInstruction *)malloc(code->n_instructions *
+                                                  sizeof(LcInstruction));
+        if (c->instructions == NULL) {
+            free(c);
+            return NULL;
+        }
+        memcpy(c->instructions, code->instructions,
+               code->n_instructions * sizeof(LcInstruction));
+        c->n_instructions = code->n_instructions;
+    }
+    if (code->n_constants > 0) {
+        c->constants = (LcValue *)calloc(code->n_constants, sizeof(LcValue));
+        if (c->constants == NULL) {
+            lc_code_object_free(c);
+            free(c);
+            return NULL;
+        }
+        for (size_t i = 0; i < code->n_constants; i++) {
+            c->constants[i] = lc_value_clone(&code->constants[i]);
+            c->n_constants = i + 1;
+            /* Detect a failed nested clone (string/code dropped to NULL). */
+            if ((code->constants[i].str != NULL && c->constants[i].str == NULL) ||
+                (code->constants[i].code != NULL &&
+                 c->constants[i].code == NULL)) {
+                lc_code_object_free(c);
+                free(c);
+                return NULL;
+            }
+        }
+    }
+    if (code->n_names > 0) {
+        c->names = (char **)calloc(code->n_names, sizeof(char *));
+        if (c->names == NULL) {
+            lc_code_object_free(c);
+            free(c);
+            return NULL;
+        }
+        for (size_t i = 0; i < code->n_names; i++) {
+            c->names[i] = str_dup(code->names[i]);
+            c->n_names = i + 1;
+            if (c->names[i] == NULL) {
+                lc_code_object_free(c);
+                free(c);
+                return NULL;
+            }
+        }
+    }
+    return c;
+}
+
+LcValue lc_value_clone(const LcValue *v) {
+    LcValue c = *v; /* copies kind/integer/boolean/addr; str/code duped below */
+    if (v->str != NULL) c.str = str_dup(v->str);
+    if (v->code != NULL) c.code = lc_code_object_clone(v->code);
+    return c;
+}
+
 /* ── Operator tables ───────────────────────────────────────────────────────*/
 
 /* Returns the opcode for an arithmetic symbol, or -1. */
@@ -875,8 +944,11 @@ int lc_compile(const char *source, LcCodeObject *out, LcCompileError *err) {
     LpProgram program;
     LpError perr;
     if (!lp_parse(source, &program, &perr)) {
+        /* Cap the embedded parser message with a precision so the total can't
+         * exceed the 128-byte buffer — gcc's -Werror=format-truncation flags
+         * the unbounded `%s` (both messages are `char[128]`). */
         snprintf(err->message, sizeof err->message,
-                 "CompileError: Parse error: %s", perr.message);
+                 "CompileError: Parse error: %.100s", perr.message);
         return 0;
     }
     int ok = lc_compile_ast(&program, out, err);
