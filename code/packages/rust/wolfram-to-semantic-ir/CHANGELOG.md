@@ -1,5 +1,22 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- **Correctness: `Feature::Floats` was never observed for a `FloatLit`.**
+  `number_literal_expr` was a free function with no access to the
+  lowerer's feature-tracking state, so a module containing a float
+  literal never declared `Feature::Floats` in its manifest even though
+  `semantic-ir/src/validator.rs`'s `check_expr` requires it for every
+  `Expr::FloatLit` node — any Wolfram program with a float literal failed
+  `semantic_ir::validate()`. Found while implementing
+  `macsyma-to-semantic-ir` (which cross-checked its own `Feature::Floats`
+  handling against every sibling frontend). Fixed by converting
+  `number_literal_expr` into an instance method that calls
+  `self.observed.add(Feature::Floats)` on every `FloatLit`-constructing
+  branch; added a regression test.
+
 ## [0.1.0] - 2026-07-11
 
 ### Added
