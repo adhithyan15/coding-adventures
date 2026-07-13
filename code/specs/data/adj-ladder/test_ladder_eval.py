@@ -189,6 +189,7 @@ SELF_CONTAINED_RUNGS = (
     "rung149_combined_density",
     "rung150_net_density",
     "rung151_adjusted_density",
+    "rung152_net_over_net_density",
 )
 
 
