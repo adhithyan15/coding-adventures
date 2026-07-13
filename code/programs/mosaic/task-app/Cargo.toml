@@ -1,0 +1,24 @@
+# Cargo.toml — compile-check harness for the task-app Mosaic package.
+#
+# The Mosaic sources here describe the TaskApp web/todo surface. This Cargo project
+# exists only to test that the package compiles (mirrors engram-app's harness).
+
+[workspace]
+# Intentionally empty: opt out of the parent Rust workspace.
+
+[package]
+name = "task-app-mosaic-smoke"
+version = "0.1.0"
+edition = "2021"
+description = "Compile-check harness for the task-app Mosaic package"
+publish = false
+
+[dev-dependencies]
+mosmodel-compiler = { path = "../../../packages/rust/mosmodel-compiler" }
+moslayout-compiler = { path = "../../../packages/rust/moslayout-compiler" }
+mosstyle-compiler = { path = "../../../packages/rust/mosstyle-compiler" }
+mosaic-package-manifest = { path = "../../../packages/rust/mosaic-package-manifest" }
+
+[[test]]
+name = "package_compiles"
+path = "tests/package_compiles.rs"

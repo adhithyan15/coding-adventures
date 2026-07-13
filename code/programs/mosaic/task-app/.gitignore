@@ -1,0 +1,3 @@
+# Generated, runnable React project (emit + npm) — reproduce with scripts/build-web.sh.
+build/
+target/
