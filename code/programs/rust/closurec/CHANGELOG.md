@@ -2,6 +2,29 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.28] - 2026-07-13
+
+### Added — CLOC12.189 PR3: ES-module `export` end-to-end
+
+Picks up javascript-parser 0.54.0 (the `export_declaration` bridge flip,
+`convert_export_declaration`) and its renaming-soundness gate. A file with a
+top-level `export` no longer declines to WHITESPACE_ONLY — it flows through the
+full optimization pipeline. New `tests/diff/simple-export/` fixture +
+`diff_simple_export.rs` with two facts:
+  - **SIMPLE**: `export { a, b as c } from "y"; d(4 + 5);` →
+    `export{a,b as c}from"y";d(9);` — the re-`export` round-trips (bridge
+    modelled it, `b as c` alias space preserved) and the trailing argument folds
+    `4+5`→`9` (the pipeline optimized the rest of the module, not a
+    WHITESPACE_ONLY fallback).
+  - **ADVANCED**: `export { a } from "y"; function longFn(longParam){…}
+    longFn(1);longFn(2);longFn(3);` keeps `longFn`/`longParam` verbatim — the
+    CLOC12.189 PR2 renaming-soundness gate fires end-to-end. (The identical
+    program without the `export` renames down to `function b(a){…}`, so the
+    surviving long names are a direct observation of the gate: an `export`ed
+    name is part of the module's public interface and must not be renamed.)
+
+Version-synced cli.spec.json + tests/diff/help-markdown/expected.stdout. PATCH.
+
 ## [0.234.27] - 2026-07-12
 
 ### Added — CLOC12.188 PR3: ES-module `import` end-to-end
