@@ -1,5 +1,14 @@
 # Changelog -- XMLLexer (Swift)
 
+## [0.2.0] -- 2026-07-13
+
+### Changed
+- `loadGrammar()` now returns the grammar embedded at compile time in the
+  generated `_Grammar.swift` instead of reading `code/grammars/**` via
+  `#filePath` at run time. The lexer/parser no longer depends on the
+  monorepo layout and works when published standalone. Grammar source of
+  truth is unchanged; regenerate via `swift/grammar-tools`' `grammar-tools-embed`.
+
 ## [0.1.1] -- 2026-07-12
 
 ### Fixed

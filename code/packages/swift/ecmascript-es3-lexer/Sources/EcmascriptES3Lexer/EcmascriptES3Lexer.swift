@@ -11,7 +11,6 @@
 //   - 28 keywords total
 // ============================================================================
 
-import Foundation
 import GrammarTools
 import Lexer
 
@@ -22,7 +21,7 @@ public struct EcmascriptES3Lexer: Sendable {
 
     /// Tokenize an ECMAScript 3 source string.
     public static func tokenize(_ source: String) throws -> [Token] {
-        let grammar = try loadGrammar()
+        let grammar = loadGrammar()
         let lexer = GrammarLexer(source: source, grammar: grammar)
         let raw = try lexer.tokenize()
 
@@ -43,18 +42,9 @@ public struct EcmascriptES3Lexer: Sendable {
     }
 
     /// Load and parse the ES3 token grammar.
-    public static func loadGrammar() throws -> TokenGrammar {
-        let thisFile = #filePath
-        var url = URL(fileURLWithPath: thisFile)
-        for _ in 0..<6 {
-            url = url.deletingLastPathComponent()
-        }
-        let tokensURL = url
-            .appendingPathComponent("grammars")
-            .appendingPathComponent("ecmascript")
-            .appendingPathComponent("es3.tokens")
-
-        let content = try String(contentsOf: tokensURL, encoding: .utf8)
-        return try parseTokenGrammar(source: content)
+    public static func loadGrammar() -> TokenGrammar {
+        // Embedded at compile time in the generated `_Grammar.swift`
+        // (from code/grammars/es3/...); no run-time file read.
+        EmbeddedGrammar.es3
     }
 }
