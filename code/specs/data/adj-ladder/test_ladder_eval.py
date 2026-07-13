@@ -185,6 +185,7 @@ SELF_CONTAINED_RUNGS = (
     "rung145_pooled_rate",
     "rung146_net_rate",
     "rung147_loaded_rate",
+    "rung148_net_yield_rate",
 )
 
 
