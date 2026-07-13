@@ -2,6 +2,17 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.5] - Unreleased
+
+### Added
+
+- **`GLOB` / `NOT GLOB` operator lowering.** `plan_comparison` now recognises
+  the `GLOB` token (sql-parser 0.1.6) and lowers `X GLOB Y` onto the existing
+  `glob` builtin as `FunctionCall { name: "glob", args: [Y, X] }` — SQLite
+  defines the operator exactly as `glob(Y, X)` (pattern first). `NOT GLOB`
+  wraps the call in `UnaryOp::Not`. No dedicated `Glob` expr node, codegen, or
+  VM opcode was added — it reuses the function-call path end to end.
+
 ## [0.2.4] - Unreleased
 
 ### Added

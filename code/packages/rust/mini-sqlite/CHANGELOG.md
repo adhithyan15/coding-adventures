@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.5.22 — `GLOB` / `NOT GLOB` infix operators
+
+`SELECT … WHERE s GLOB 'x*'` now parses and runs — case-sensitive Unix-glob
+matching (`*` any run, `?` one char, `[…]` classes). SQLite defines the
+operator `X GLOB Y` as the function `glob(Y, X)`, and mini-sqlite lowers it
+exactly that way: the grammar accepts `GLOB`/`NOT GLOB` as comparison forms
+(sql-parser 0.1.6) and the planner rewrites them onto the existing `glob`
+builtin (sql-planner 0.2.5, args swapped; `NOT GLOB` = `NOT glob(...)`). No new
+codegen or VM opcode was needed — it reuses the scalar-function path. Two new
+differential-oracle cases (`glob_operator`, `not_glob_and_question`) diff
+against real bundled SQLite, including case-sensitivity and the `?`
+single-char wildcard. (The `glob()` function form has been available since
+0.4.x; this adds the infix operator spelling.)
+
 ## 0.5.21 — `LIMIT off, count` MySQL shorthand
 
 `SELECT … LIMIT 1, 2` now parses and runs, returning the same rows as
