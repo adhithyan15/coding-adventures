@@ -445,6 +445,9 @@ pub fn compile_source_to_llvm_with_target(
     target_triple: &str,
 ) -> Result<String, LangAotError> {
     let mut module = compile_source_to_iir(language, source, module_name)?;
+    // E6d-8: lower dynamic `global_get`/`global_set` → `global_load`/`global_store`
+    // before the value-model passes (as the native twig-aot path does).
+    iir_builtin_lowering::lower_global_io(&mut module);
     // The TAGGED-WORD lisp pipeline (McCarthy W12b) — the SAME passes the native
     // AOT path runs, NOT the managed structural pass. `lower_heap_builtins_runtime`
     // turns cons/car/cdr/pair?/equal?/not into `call_builtin "dyn_*"`;
@@ -543,6 +546,14 @@ pub fn compile_source_to_wasm(
     module_name: &str,
 ) -> Result<Vec<u8>, LangAotError> {
     let mut module = compile_source_to_iir(language, source, module_name)?;
+    // E6d-8: lower `call_builtin "global_get"/"global_set"` (a forward-referenced
+    // or closure-captured Twig `define`) to `global_load`/`global_store` — the
+    // typed-global ops the code-gen backends accept. The native `twig-aot`
+    // pipeline already runs this as step 0; the managed pipelines were missing it,
+    // so a dynamic global reached the backend as an unsupported `call_builtin`.
+    // A no-op for a module with no global builtins. Runs first (before the repr
+    // passes), matching twig-aot's ordering.
+    iir_builtin_lowering::lower_global_io(&mut module);
     // Managed backends consume the structural cons form (not the native
     // runtime-call form). A no-op for a module without cons builtins.
     iir_builtin_lowering::lower_heap_builtins(&mut module);
@@ -727,6 +738,8 @@ pub fn compile_source_to_jvm_class(
     class_name: &str,
 ) -> Result<iir_to_jvm_class_file::JvmClassFile, LangAotError> {
     let mut module = compile_source_to_iir(language, source, class_name)?;
+    // E6d-8: dynamic global builtins → typed global_load/global_store.
+    iir_builtin_lowering::lower_global_io(&mut module);
     iir_builtin_lowering::lower_heap_builtins(&mut module);
     iir_builtin_lowering::lower_dynamic_arith(&mut module);
     iir_builtin_lowering::intern_symbols_structural(&mut module);
@@ -808,6 +821,8 @@ pub fn compile_source_to_cil_artifact(
     name: &str,
 ) -> Result<iir_to_cil_bytecode::CILProgramArtifact, LangAotError> {
     let mut module = compile_source_to_iir(language, source, name)?;
+    // E6d-8: dynamic global builtins → typed global_load/global_store.
+    iir_builtin_lowering::lower_global_io(&mut module);
     // The managed value-model pipeline — the same backend-agnostic structural
     // passes the wasm/JVM paths use. The CLR backend lowers `box`/`unbox`/
     // `alloc`/`field_*` to `box [int32]`/`unbox.any` + `object[]` cons cells
@@ -838,6 +853,8 @@ pub fn compile_source_to_cil_text(
     name: &str,
 ) -> Result<String, LangAotError> {
     let mut module = compile_source_to_iir(language, source, name)?;
+    // E6d-8: dynamic global builtins → typed global_load/global_store.
+    iir_builtin_lowering::lower_global_io(&mut module);
     // The same managed value-model pipeline the binary CIL path uses, so the
     // textual and binary emitters lower an identical program.
     iir_builtin_lowering::lower_heap_builtins(&mut module);
@@ -904,6 +921,8 @@ pub fn compile_source_to_beam(
     module_name: &str,
 ) -> Result<Vec<u8>, LangAotError> {
     let mut module = compile_source_to_iir(language, source, module_name)?;
+    // E6d-8: dynamic global builtins → typed global_load/global_store.
+    iir_builtin_lowering::lower_global_io(&mut module);
     // BEAM uses the NATIVE Erlang-terms value model, not the managed structural
     // pass: `lower_heap_builtins` turns McCarthy `cons`/`car`/`cdr` into
     // `alloc ref<LispyPair>` + `field_store`/`field_load`, which `iir-to-beam`

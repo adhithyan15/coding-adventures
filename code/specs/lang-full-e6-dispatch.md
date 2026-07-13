@@ -316,10 +316,19 @@ E6d-7.
 7. **E6d-7 — closures on WASM (TW5).** ⚠ design note first (§3.4). Wire Phase-4
    downgrade (or native `$Closure`); JVM/CLR/LLVM already run closures. Proof:
    `((lambda (x) (+ x 1)) 41)` → 42 on all code-gen backends.
-8. **E6d-8 — dynamic globals.** `call_builtin "global_get"/"global_set"` over
-   `any` (a closure-captured or forward-referenced Twig `define`). Reuses the
-   E6-layer-1 typed-global slots, widened to `any`. Proof: a captured mutable
-   Twig global → 42.
+8. **E6d-8 — dynamic globals (✅ read/write roundtrip shipped; arith follow-up).**
+   A forward-referenced Twig value global (read before its `define`) is emitted as
+   `call_builtin "global_get"/"global_set"` over `any`. The shared `lower_global_io`
+   pass rewrites those to typed `global_load`/`global_store` (which every backend
+   already supports) — but **only the native `twig-aot` pipeline ran it**; the
+   managed `lang-aot` pipelines (WASM/JVM/CLR/BEAM) + LLVM never did, so a dynamic
+   global hit an unsupported `call_builtin`. Fix: add `lower_global_io` (step 0) to
+   all those pipelines. Proof (shipped): `(define (f) g) (define g 42) (f)` → 42 on
+   [NativeAot, Llvm, Wasm, Jvm, Clr] (`main` `global_store`s g=42, `f` `global_load`s
+   it); WASM + real dotnet CLR verified, native/LLVM/JVM via CI. **Follow-up:** a
+   dynamic global feeding dynamic *arithmetic* (`(+ g 2)`) traps — the slot stores a
+   raw `i64` but `lower_dynamic_arith` treats the `any`-typed `global_load` result as
+   boxed and inserts an `unbox`. Needs the slot widened to a boxed `any`.
 
 Ordering rationale: E6d-2 (arithmetic) is the widest single unlock and blocks any
 "compute a number dynamically" proof; lists/records/unions all reduce to cons

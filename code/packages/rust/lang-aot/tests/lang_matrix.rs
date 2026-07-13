@@ -415,6 +415,26 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
     },
+    // Twig — **E6d-8: dynamic globals on the code-gen backends.** A value global
+    // `g` that is *forward-referenced* (read inside `f` before its `define`) is
+    // emitted as `call_builtin "global_get"/"global_set"` (the dynamic `any`-typed
+    // global path, vs the typed-local-slot form a non-forward define gets). The
+    // shared `lower_global_io` pass rewrites those to `global_load`/`global_store`
+    // — the typed-global ops every backend accepts — but the managed pipelines
+    // (WASM/JVM/CLR/BEAM) + the LLVM pipeline never ran it (only native `twig-aot`
+    // did), so a dynamic global reached the backend as an unsupported `call_builtin`.
+    // Adding `lower_global_io` to those pipelines makes the set+get roundtrip work:
+    // `main` sets `g = 42` (`global_store`), `f` reads it (`global_load`), `(f)` = 42.
+    // (A dynamic global flowing into *dynamic arithmetic* still needs the global slot
+    // widened to a boxed `any` — a follow-up; here the roundtrip value is returned
+    // directly.)
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f) g) (define g 42) (f)",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+    },
     // Twig — E4 literal `string-length`. The compiler lowers
     // `(string-length "HELLO")` to shared `str_const` + `str_len`, avoiding the
     // dynamic `call_builtin "string-length"` path that codegen validators reject.
