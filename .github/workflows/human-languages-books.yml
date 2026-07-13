@@ -60,14 +60,23 @@ jobs:
           name=$(basename "$(dirname "${{ matrix.book_dir }}")")
           echo "name=$name" >> "$GITHUB_OUTPUT"
 
-      - name: Install LaTeX toolchain
+      # Install the COMPLETE TeX Live distribution rather than a hand-picked
+      # list of texlive-* sub-packages. The earlier granular approach broke
+      # CI (`Unable to locate package texlive-lang-indic`) and risked silently
+      # missing font/language packages a book needs. `texlive-full` is a single
+      # guaranteed-to-exist meta-package that bundles every engine (XeLaTeX),
+      # every language collection (Arabic, Indic, etc.), and every font that
+      # ships with TeX Live — including Latin Modern and the Noto families.
+      # This is the "machine that has all the fonts": ubuntu-latest already has
+      # git/node for checkout, and texlive-full supplies the full typesetting
+      # stack, so no Windows/macOS runner is needed for font coverage.
+      # fonts-noto-* additionally register the Noto families with fontconfig
+      # by family name, which the non-Latin-script tracks will want later.
+      - name: Install TeX Live (full)
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
-            texlive-xetex texlive-latex-extra texlive-fonts-extra \
-            texlive-lang-arabic texlive-lang-indic \
-            fonts-noto fonts-noto-core fonts-noto-extra \
-            latexmk
+            texlive-full latexmk fonts-noto-core fonts-noto-extra
 
       - name: Build ${{ steps.lang.outputs.name }} book
         working-directory: ${{ matrix.book_dir }}
