@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- **`MAX_LINE_LEN` (64 KiB) caps a single physical line read from the input
+  stream**, applied via the new `read_bounded_line` helper *before*
+  `MAX_CONTINUATION_BUFFER`'s own check ever runs. `BufRead::read_line` has
+  no length bound of its own — it grows until it sees `\n` or EOF — so a
+  single, arbitrarily long physical line (no embedded newline at all) was
+  previously fully buffered in memory regardless of the continuation-buffer
+  cap. Found (LOW severity, given this crate's stdio-only threat model) by
+  the security review of the `j-runtime`/`j-repl` PR, which mirrors this
+  crate closely enough that the same gap applied here too. An oversized
+  line is now rejected cleanly (`Error: line exceeds the 65536-byte limit;
+  discarded`) with its remainder drained (one more bounded chunk) rather
+  than left to be picked up mid-line by the next read.
+
 ## [0.1.0] - 2026-07-11
 
 ### Added

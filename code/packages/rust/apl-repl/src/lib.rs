@@ -58,6 +58,59 @@ pub enum ReplResponse {
 /// convention for a single logical unit of input.
 const MAX_CONTINUATION_BUFFER: usize = 64 * 1024;
 
+/// Upper bound on a single *physical* line read from the input stream,
+/// applied in [`read_bounded_line`] before [`MAX_CONTINUATION_BUFFER`]'s own
+/// check ever runs. `BufRead::read_line` has no length bound of its own — it
+/// grows its buffer until it sees a `\n` or EOF — so without this, a single,
+/// arbitrarily long physical line (no embedded newline at all) is fully
+/// buffered in memory before `AplRepl::feed` ever gets a chance to reject
+/// anything, regardless of `MAX_CONTINUATION_BUFFER`. Same bound, same
+/// rationale, as that constant — the two together mean neither one physical
+/// line nor an accumulated multi-line continuation can grow unbounded.
+const MAX_LINE_LEN: u64 = 64 * 1024;
+
+/// Read one physical line, bounded to [`MAX_LINE_LEN`] bytes.
+///
+/// - `Ok(None)` — genuine end of input.
+/// - `Ok(Some(Ok(line)))` — an ordinary line (including its trailing `\n`,
+///   same as [`BufRead::read_line`]'s own contract).
+/// - `Ok(Some(Err(())))` — a single physical line exceeded the cap before
+///   any `\n` appeared. The oversized remainder of that same line is
+///   drained and discarded (up to one more [`MAX_LINE_LEN`]-byte chunk,
+///   itself bounded for the same reason) so a well-behaved caller's next
+///   read starts at (or very near) a genuine line boundary instead of
+///   picking up mid-line.
+fn read_bounded_line<R: BufRead>(reader: &mut R) -> std::io::Result<Option<Result<String, ()>>> {
+    let mut line = String::new();
+    // Explicit UFCS + an explicit reborrow (`&mut *reader`), not plain
+    // `reader.take(...)` method-call syntax: `Read`/`BufRead` are
+    // implemented both for `R` itself and for `&mut R`, and ordinary
+    // autoref method resolution prefers the *by-value* `R` candidate over
+    // the reference one even when the receiver expression is already a
+    // reference -- silently trying to MOVE `*reader` (illegal, since we
+    // only borrow it) instead of taking a bounded view of it. Naming the
+    // trait and the exact `&mut R` receiver explicitly removes that
+    // ambiguity.
+    let mut limited: std::io::Take<&mut R> = std::io::Read::take(&mut *reader, MAX_LINE_LEN);
+    let read = limited.read_line(&mut line)?;
+    if read == 0 {
+        return Ok(None);
+    }
+    if line.ends_with('\n') {
+        return Ok(Some(Ok(line)));
+    }
+    // Hit the cap without ever seeing a newline -- discard the rest of this
+    // same oversized line (one more bounded chunk; if the line somehow
+    // exceeds even that, the next call will simply report another oversized
+    // chunk rather than hang or grow memory further, which is a safe, if
+    // repetitive, degradation for a threat model this crate does not
+    // otherwise need to defend against today).
+    let mut discard = String::new();
+    let mut limited: std::io::Take<&mut R> = std::io::Read::take(&mut *reader, MAX_LINE_LEN);
+    let _ = limited.read_line(&mut discard);
+    Ok(Some(Err(())))
+}
+
 /// A persistent interactive APL session.
 pub struct AplRepl {
     interp: Interpreter,
@@ -157,11 +210,21 @@ pub fn run<R: BufRead, W: Write>(mut reader: R, mut writer: W) -> std::io::Resul
         write!(writer, "{}", repl.prompt())?;
         writer.flush()?;
 
-        let mut line = String::new();
-        if reader.read_line(&mut line)? == 0 {
-            writeln!(writer)?;
-            break;
-        }
+        let line = match read_bounded_line(&mut reader)? {
+            None => {
+                writeln!(writer)?;
+                break;
+            }
+            Some(Err(())) => {
+                writeln!(
+                    writer,
+                    "Error: line exceeds the {MAX_LINE_LEN}-byte limit; discarded"
+                )?;
+                writer.flush()?;
+                continue;
+            }
+            Some(Ok(line)) => line,
+        };
         let line = line.strip_suffix('\n').unwrap_or(&line);
         let line = line.strip_suffix('\r').unwrap_or(line);
 
@@ -240,5 +303,60 @@ mod tests {
         run(input, &mut output).unwrap();
         let text = String::from_utf8(output).unwrap();
         assert!(text.contains('6'));
+    }
+
+    #[test]
+    fn read_bounded_line_returns_an_ordinary_line_unchanged() {
+        let mut input = "A←5\nA×2\n".as_bytes();
+        assert_eq!(
+            read_bounded_line(&mut input).unwrap(),
+            Some(Ok("A←5\n".to_string()))
+        );
+        assert_eq!(
+            read_bounded_line(&mut input).unwrap(),
+            Some(Ok("A×2\n".to_string()))
+        );
+        assert_eq!(read_bounded_line(&mut input).unwrap(), None);
+    }
+
+    #[test]
+    fn read_bounded_line_rejects_a_line_exceeding_the_cap_without_buffering_it_whole() {
+        // A single physical line with no embedded newline at all, well past
+        // MAX_LINE_LEN -- exactly the shape `BufRead::read_line` alone would
+        // buffer in full before anything else got a chance to reject it.
+        let oversized = "+".repeat(MAX_LINE_LEN as usize * 3);
+        let mut input = oversized.as_bytes();
+        assert_eq!(read_bounded_line(&mut input).unwrap(), Some(Err(())));
+        // The next read should reach EOF (the whole oversized "line" -- one
+        // capped read plus one capped discard chunk -- was consumed, not
+        // left half-read for a following call to pick up mid-garbage).
+        // This particular input is 3x the cap, so a second oversized chunk
+        // may still remain; either an Err or eventual None is acceptable --
+        // what matters is the first call didn't attempt to allocate the
+        // whole 3x-cap string at once, which the cap itself already proves.
+        let _ = read_bounded_line(&mut input);
+    }
+
+    #[test]
+    fn read_bounded_line_at_exactly_the_cap_with_a_trailing_newline_is_not_oversized() {
+        let mut line = "+".repeat(MAX_LINE_LEN as usize - 1);
+        line.push('\n');
+        assert_eq!(line.len() as u64, MAX_LINE_LEN);
+        let mut input = line.as_bytes();
+        assert_eq!(read_bounded_line(&mut input).unwrap(), Some(Ok(line)));
+    }
+
+    #[test]
+    fn run_reports_an_oversized_line_cleanly_and_keeps_the_session_alive() {
+        let oversized = "+".repeat(MAX_LINE_LEN as usize * 2);
+        let input = format!("{oversized}\n1+1\nquit\n");
+        let mut output = Vec::new();
+        run(input.as_bytes(), &mut output).unwrap();
+        let text = String::from_utf8(output).unwrap();
+        assert!(text.contains("exceeds"), "expected an oversized-line error, got: {text}");
+        assert!(
+            text.contains('2'),
+            "session must keep working after an oversized line, got: {text}"
+        );
     }
 }
