@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-globals` crate will be documented in this file.
 
+## [0.16.0] - 2026-07-12
+
+### Changed — CLOC12.189 PR2: bail on module `export`
+
+The global-renaming soundness gate now also declines when
+`program_contains_export_declaration` is true — an exported global is public
+surface other modules reference by name.
+
 ## [0.15.0] - 2026-07-12
 
 ### Added — CLOC12.189 PR1: export declaration the global-renaming walk does not descend into exports

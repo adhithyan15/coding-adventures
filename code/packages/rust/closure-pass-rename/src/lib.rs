@@ -88,7 +88,8 @@ use coding_adventures_closure_pass_pipeline::{
     IterationPolicy, Pass, PassContext, PassError, PassOutput, PassStats,
 };
 use coding_adventures_closure_scope_analyzer::{
-    program_contains_import_declaration, program_contains_with_statement,
+    program_contains_export_declaration, program_contains_import_declaration,
+    program_contains_with_statement,
 };
 use coding_adventures_correlation_vector::Contribution;
 use serde_json::json;
@@ -173,8 +174,15 @@ impl Pass for RenamePass {
         // scope analyzer registers no binding for an import — the fresh-name
         // allocator could also collide an unrelated local with an import name.
         // See [`program_contains_import_declaration`].
+        //
+        // It likewise covers ES-module `export` declarations (CLOC12.189 PR2):
+        // an export publishes a binding to other modules by an exact name, so
+        // renaming an exported binding (or a specifier's exported name) would
+        // break importers the analyzer cannot see. See
+        // [`program_contains_export_declaration`].
         if program_contains_with_statement(ctx.program)
             || program_contains_import_declaration(ctx.program)
+            || program_contains_export_declaration(ctx.program)
         {
             return Ok(PassOutput {
                 program: ctx.program.clone(),

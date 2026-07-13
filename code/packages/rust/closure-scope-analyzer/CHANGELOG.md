@@ -2,6 +2,18 @@
 
 All notable changes to the `coding-adventures-closure-scope-analyzer` crate will be documented in this file.
 
+## [0.18.0] - 2026-07-12
+
+### Added — CLOC12.189 PR2: `export` soundness gate
+
+New `has_export` field on `ScopeAnalysis` (set when the `analyze` walk reaches an
+`Export*` declaration) and a public `program_contains_export_declaration` helper
+— a sibling of `program_contains_import_declaration`. It is the flag the renaming
+passes read to disable renaming whole-program when an `export` is present: an
+export publishes a binding to other modules by an exact name, so renaming an
+exported binding (or a specifier's exported name) would break importers the
+analyzer cannot see. Two tests.
+
 ## [0.17.0] - 2026-07-12
 
 ### Added — CLOC12.189 PR1: export declaration no scope binding is registered and no flag is set (the export soundness gate lands with the bridge PR)

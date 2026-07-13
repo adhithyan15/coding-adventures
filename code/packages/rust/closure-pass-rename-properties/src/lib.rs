@@ -80,7 +80,8 @@ use coding_adventures_closure_pass_pipeline::{
     IterationPolicy, Pass, PassContext, PassError, PassOutput, PassStats,
 };
 use coding_adventures_closure_scope_analyzer::{
-    program_contains_import_declaration, program_contains_with_statement,
+    program_contains_export_declaration, program_contains_import_declaration,
+    program_contains_with_statement,
 };
 use coding_adventures_correlation_vector::Contribution;
 use coding_adventures_javascript_ast::statement::TaggedStatement;
@@ -791,9 +792,13 @@ impl Pass for RenamePropertiesPass {
         // an imported name aliases a foreign module's export, and property
         // renaming cannot know whether a bare name is really such an alias, so
         // renaming would risk desynchronizing from the cross-module contract.
-        // See [`program_contains_import_declaration`].
+        // See [`program_contains_import_declaration`]. It likewise covers
+        // `export` declarations (CLOC12.189 PR2) — an exported name is public
+        // surface other modules reference. See
+        // [`program_contains_export_declaration`].
         if program_contains_with_statement(ctx.program)
             || program_contains_import_declaration(ctx.program)
+            || program_contains_export_declaration(ctx.program)
         {
             return Ok(PassOutput {
                 program: ctx.program.clone(),

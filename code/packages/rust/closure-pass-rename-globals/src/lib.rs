@@ -69,7 +69,8 @@ use coding_adventures_closure_pass_pipeline::{
     IterationPolicy, Pass, PassContext, PassError, PassOutput, PassStats,
 };
 use coding_adventures_closure_scope_analyzer::{
-    program_contains_import_declaration, program_contains_with_statement,
+    program_contains_export_declaration, program_contains_import_declaration,
+    program_contains_with_statement,
 };
 use coding_adventures_correlation_vector::Contribution;
 use coding_adventures_javascript_ast::statement::TaggedStatement;
@@ -152,9 +153,13 @@ impl Pass for RenameGlobalsPass {
         // an import binds names that alias a foreign module's exports, so
         // renaming a global into (or an import binding out of) those names would
         // break the cross-module contract. See
-        // [`program_contains_import_declaration`].
+        // [`program_contains_import_declaration`]. It likewise covers `export`
+        // declarations (CLOC12.189 PR2) — an exported global is public surface
+        // other modules reference by name. See
+        // [`program_contains_export_declaration`].
         if program_contains_with_statement(ctx.program)
             || program_contains_import_declaration(ctx.program)
+            || program_contains_export_declaration(ctx.program)
         {
             return Ok(PassOutput {
                 program: ctx.program.clone(),
