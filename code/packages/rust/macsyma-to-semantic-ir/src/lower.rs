@@ -535,25 +535,32 @@ impl Lowerer {
     }
 
     /// `unary = ( MINUS | PLUS ) unary | power ;`
+    ///
+    /// An exhaustive match on `children.len()` (mirroring `lower_power`'s
+    /// own shape) rather than an early-return-then-index — a security
+    /// review caught the prior version indexing `node.children[0]`
+    /// unconditionally in the 2-child path with no defense against a
+    /// hypothetical 0-child node (impossible under the current grammar, but
+    /// every structurally analogous function in this file defends against
+    /// that "shouldn't happen" shape explicitly rather than assuming it
+    /// away, so this one now does too).
     fn lower_unary(&mut self, node: &GrammarASTNode, depth: usize) -> Result<Expr, MacsymaLowerError> {
-        if node.children.len() == 1 {
-            return self.lower_child(&node.children[0], depth + 1);
-        }
-        let op = token_type(
-            as_token(&node.children[0])
-                .ok_or_else(|| self.err_at(node, "unary op must be a token".to_string()))?,
-        );
-        let operand = self.lower_child(
-            node.children
-                .get(1)
-                .ok_or_else(|| self.err_at(node, "unary op with no operand".to_string()))?,
-            depth + 1,
-        )?;
-        if op == "MINUS" {
-            let span = self.span_of(node);
-            Ok(self.sym_apply(self.sym_symbol_bare(NEG, span.clone()), vec![operand], span))
-        } else {
-            Ok(operand) // unary plus is a no-op
+        match node.children.len() {
+            1 => self.lower_child(&node.children[0], depth + 1),
+            2 => {
+                let op = token_type(
+                    as_token(&node.children[0])
+                        .ok_or_else(|| self.err_at(node, "unary op must be a token".to_string()))?,
+                );
+                let operand = self.lower_child(&node.children[1], depth + 1)?;
+                if op == "MINUS" {
+                    let span = self.span_of(node);
+                    Ok(self.sym_apply(self.sym_symbol_bare(NEG, span.clone()), vec![operand], span))
+                } else {
+                    Ok(operand) // unary plus is a no-op
+                }
+            }
+            _ => Err(self.err_at(node, "malformed unary node".to_string())),
         }
     }
 
