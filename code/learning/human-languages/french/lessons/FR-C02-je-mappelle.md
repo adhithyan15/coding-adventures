@@ -30,8 +30,8 @@ Three atoms, each already taken apart on its own — [je](FR-C02-je.md) (I, ←
 
 > **je m'appelle…** = word for word "I call myself…" = **"my name is…"**
 
-*Je m'appelle David.* → "My name is David." *Je m'appelle Susanne.* → "My name
-is Susanne."
+*Je m'appelle Arun.* → "My name is Arun." *Je m'appelle Mira.* → "My name
+is Mira."
 
 ## Why it's said this way
 

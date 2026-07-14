@@ -22,9 +22,9 @@ reviews_of: [FR-C02-je, FR-C02-me, FR-C02-appeler, FR-C02-je-mappelle, FR-C02-tu
 
 | French | English |
 |---|---|
-| *Je m'appelle Susanne.* | My name is Susanne. |
+| *Je m'appelle Mira.* | My name is Mira. |
 | *Comment vous appelez-vous?* | What's your name? |
-| *Je m'appelle David.* | My name is David. |
+| *Je m'appelle Arun.* | My name is Arun. |
 | *Enchanté.* | Pleased to meet you. |
 
 Every piece traced to a root:
