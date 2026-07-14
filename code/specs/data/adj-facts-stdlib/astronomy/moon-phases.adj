@@ -1,0 +1,46 @@
+% ============================================================================
+% moon-phases — each Moon phase's position in the lunar cycle
+% (adj-facts-stdlib, ASTRONOMY).
+% ============================================================================
+% An astronomy facts library — a child's first sky fact: the Moon does not
+% change shape, but the sunlit part we SEE changes night by night, and those
+% shapes come around in a fixed order that repeats about once a month. Recall
+% is a binding query:
+%
+%     ? moon_phase_order(full_moon, $N)     % 5  (full Moon is the 5th phase)
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `moon_phase_order(phase, order)` carrying the NASA citation, so the lookup
+% above is the ordinary SLD binding query — the engine returns the position
+% WITH its source, on the CPU, with zero model calls, and abstains on a
+% non-phase (e.g. `eclipse` is a different event, deliberately NOT a row here).
+% The `order` value is a NUMBER, so a recalled position composes into arithmetic
+% (how many phases separate new Moon and full Moon? 5 − 1 = 4 steps apart).
+%
+% Provenance: NASA lists the eight lunar phases in cycle order in one sentence;
+% the citable artifact is NASA's Moon Phases page at the `locator`, and the row
+% order below is exactly the order that sentence states — starting at new Moon
+% and running to waning crescent, after which the cycle repeats. `trust
+% authoritative` — the space agency's primary reference. Nothing here is
+% asserted from memory. The atoms use NASA's names (lowercased, spaces → `_`),
+% and `third_quarter` is NASA's name for the phase also called the last quarter.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table moon_phase_order {
+    columns phase, order
+
+    row (new_moon, 1)
+    row (waxing_crescent, 2)
+    row (first_quarter, 3)
+    row (waxing_gibbous, 4)
+    row (full_moon, 5)
+    row (waning_gibbous, 6)
+    row (third_quarter, 7)
+    row (waning_crescent, 8)
+
+    source "The eight lunar phases are, in order: new Moon, waxing crescent, first quarter, waxing gibbous, full Moon, waning gibbous, third quarter, and waning crescent."
+    locator "https://science.nasa.gov/moon/moon-phases/"
+    trust authoritative
+}
