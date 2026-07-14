@@ -36,6 +36,7 @@ fn run(program: &Path) -> (bool, String) {
 /// Run one law: copy the shipped library next to a consumer that binds the two
 /// quantities and applies `call`, then assert the derived value AND that the
 /// applied formula carries its cited provenance (trust tier + locator host).
+#[allow(clippy::too_many_arguments)]
 fn check_law(
     tag: &str,
     obs_one: &str,
