@@ -10,7 +10,9 @@ Picks up javascript-ast 0.42.0. The apply step now rewrites global references in
 `FunctionParam::AssignmentPattern` default `right` (using the same shadow-stripped map as the function body,
 so a global read is renamed while a reference to an earlier param is left alone), and the new
 `collect_param_idents` helper adds a default’s identifiers to the avoid set so a freshly-minted global name
-never collides with one.
+never collides with one. Covers both the nested-value apply path (`rename_apply_expr`) and the top-level
+declaration apply path (`rename_apply_decl`, for a global read in a top-level function/method default —
+added after security review).
 
 ## [0.17.0] - 2026-07-14
 

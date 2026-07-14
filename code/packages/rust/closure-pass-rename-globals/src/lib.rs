@@ -1021,6 +1021,16 @@ fn rename_apply_decl(decl: &mut Declaration, map: &HashMap<String, String>) {
             if let Some(new) = map.get(&fd.id.name) {
                 fd.id.name = new.clone();
             }
+            // A default parameter's `right` runs in the function scope and can
+            // read a renamed global (`function f(x = SOME_GLOBAL){}`); rewrite it
+            // with the full `map`, exactly like the body. A param that shadowed a
+            // global would push that name's count past 1 (excluded from `map`), so
+            // a shadowed reference is never rewritten.
+            for p in &mut fd.params {
+                if let Some(def) = p.default_value_mut() {
+                    rename_apply_expr(def, map);
+                }
+            }
             // … and recurse into the body for uses of any renamed global.
             // Parameters are NOT renamed here — a parameter that shared a
             // top-level name would make that name declared-more-than-once,
@@ -1052,6 +1062,13 @@ fn rename_apply_decl(decl: &mut Declaration, map: &HashMap<String, String>) {
             for member in &mut cd.body {
                 match member {
                     ClassMember::Method(m) => {
+                        // Default-param `right` expressions — see the function
+                        // declaration arm above.
+                        for p in &mut m.value.params {
+                            if let Some(def) = p.default_value_mut() {
+                                rename_apply_expr(def, map);
+                            }
+                        }
                         for s in &mut m.value.body.body {
                             rename_apply_stmt(s, map);
                         }
@@ -1822,5 +1839,100 @@ mod tests {
         assert!(!out.changed, "must not rename globals when a `with` is present");
         assert_eq!(out.program, prog, "program must be returned unchanged");
         assert!(out.contributions.is_empty());
+    }
+
+    // -------------------------------------------------------------------
+    // CLOC12.191 PR1 (security-review regression) — a global referenced only
+    // inside a TOP-LEVEL function's default parameter must be renamed there
+    // too. The apply path for top-level declarations (`rename_apply_decl`)
+    // recurses into the body but originally skipped parameter defaults, so a
+    // renamed global left a dangling reference in the default. The bridge does
+    // not yet produce defaults (PR2), so the AST is hand-built.
+    // -------------------------------------------------------------------
+    #[test]
+    fn renames_global_referenced_in_top_level_default_parameter() {
+        use coding_adventures_javascript_ast::statement::ReturnStatement;
+        use coding_adventures_javascript_ast::{
+            AssignmentPattern, BindingTarget, BlockStatement, Declaration, Expression,
+            FunctionDeclaration, FunctionParam, Identifier, NumericLiteral, ProgramItem, Statement,
+            VarKind, VariableDeclaration, VariableDeclarator,
+        };
+
+        let id = |n: &str| Identifier {
+            cv: None,
+            name: n.to_string(),
+        };
+
+        // `var SOME_GLOBAL = 1;`
+        let var = Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind: VarKind::Var,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: BindingTarget::Identifier(id("SOME_GLOBAL")),
+                init: Some(Expression::NumericLiteral(NumericLiteral {
+                    cv: None,
+                    value: 1.0,
+                    raw: "1".to_string(),
+                })),
+            }],
+        });
+        // `function longFn(x = SOME_GLOBAL) { return x; }`
+        let f = Declaration::FunctionDeclaration(FunctionDeclaration {
+            cv: None,
+            id: id("longFn"),
+            params: vec![FunctionParam::AssignmentPattern(AssignmentPattern {
+                cv: None,
+                left: id("x"),
+                right: Expression::Identifier(id("SOME_GLOBAL")),
+            })],
+            body: BlockStatement {
+                cv: None,
+                body: vec![Statement::return_statement(ReturnStatement {
+                    cv: None,
+                    argument: Some(Expression::Identifier(id("x"))),
+                })],
+            },
+            generator: false,
+            is_async: false,
+        });
+
+        let mut prog = program();
+        prog.body = vec![
+            ProgramItem::Declaration(var),
+            ProgramItem::Declaration(f),
+        ];
+
+        let pass = RenameGlobalsPass::with_no_externs();
+        let sidecar = Sidecar::new();
+        let mut cv = CVLog::new(false);
+        let out = pass
+            .run(PassContext {
+                program: &prog,
+                sidecar: &sidecar,
+                cv: &mut cv,
+            })
+            .expect("rename-globals");
+
+        assert!(out.changed, "the two long globals should have been renamed");
+        // The new name chosen for `SOME_GLOBAL` on its declaration …
+        let ProgramItem::Declaration(Declaration::VariableDeclaration(vd)) = &out.program.body[0]
+        else {
+            panic!("expected the var declaration back");
+        };
+        let BindingTarget::Identifier(decl_id) = &vd.declarations[0].id;
+        assert_ne!(decl_id.name, "SOME_GLOBAL", "the global should have been renamed");
+        // … must be the name the default reads, not the stale `SOME_GLOBAL`.
+        let ProgramItem::Declaration(Declaration::FunctionDeclaration(f)) = &out.program.body[1]
+        else {
+            panic!("expected the function declaration back");
+        };
+        match f.params[0].default_value() {
+            Some(Expression::Identifier(idref)) => assert_eq!(
+                idref.name, decl_id.name,
+                "top-level default `= SOME_GLOBAL` must track the renamed global"
+            ),
+            other => panic!("expected an identifier default, got {other:?}"),
+        }
     }
 }

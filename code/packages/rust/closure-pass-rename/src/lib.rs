@@ -1344,6 +1344,13 @@ fn rewrite_uses_stmt(stmt: &mut Statement, map: &HashMap<String, String>) {
                             let id = p.binding_identifier();
                             inner.remove(&id.name);
                         }
+                        // Default-param `right` expressions — see the
+                        // `FunctionExpression` arm.
+                        for p in &mut m.value.params {
+                            if let Some(def) = p.default_value_mut() {
+                                rewrite_uses_expr(def, &inner);
+                            }
+                        }
                         for s in &mut m.value.body.body {
                             rewrite_uses_stmt(s, &inner);
                         }
@@ -1630,6 +1637,14 @@ fn rewrite_uses_expr(expr: &mut Expression, map: &HashMap<String, String>) {
                 let id = p.binding_identifier();
                 inner.remove(&id.name);
             }
+            // A default parameter's `right` closes over the enclosing locals
+            // (`function(a = outerLocal){}`); rewrite its uses with the same
+            // shadow-stripped `inner` as the body.
+            for p in &mut fe.params {
+                if let Some(def) = p.default_value_mut() {
+                    rewrite_uses_expr(def, &inner);
+                }
+            }
             for s in &mut fe.body.body {
                 rewrite_uses_stmt(s, &inner);
             }
@@ -1661,6 +1676,13 @@ fn rewrite_uses_expr(expr: &mut Expression, map: &HashMap<String, String>) {
                         for p in &m.value.params {
                             let id = p.binding_identifier();
                             inner.remove(&id.name);
+                        }
+                        // Default-param `right` expressions — see the
+                        // `FunctionExpression` arm.
+                        for p in &mut m.value.params {
+                            if let Some(def) = p.default_value_mut() {
+                                rewrite_uses_expr(def, &inner);
+                            }
                         }
                         for s in &mut m.value.body.body {
                             rewrite_uses_stmt(s, &inner);
@@ -1699,6 +1721,14 @@ fn rewrite_uses_expr(expr: &mut Expression, map: &HashMap<String, String>) {
             for p in &ae.params {
                 let id = p.binding_identifier();
                 inner.remove(&id.name);
+            }
+            // Default-param `right` expressions — see the `FunctionExpression`
+            // arm. An arrow default (`(a = outerLocal) => …`) closes over the
+            // enclosing locals just as the body does.
+            for p in &mut ae.params {
+                if let Some(def) = p.default_value_mut() {
+                    rewrite_uses_expr(def, &inner);
+                }
             }
             match &mut ae.body {
                 ArrowBody::Block(b) => {
@@ -2398,6 +2428,110 @@ mod tests {
             Some(Expression::Identifier(idref)) => assert_eq!(
                 idref.name, x_new,
                 "default `= longX` must be rewritten to the renamed `{x_new}`"
+            ),
+            other => panic!("expected an identifier default, got {other:?}"),
+        }
+    }
+
+    // -------------------------------------------------------------------
+    // CLOC12.191 PR1 (security-review regression) — a NESTED arrow's default
+    // that closes over a renamed outer local must be rewritten too. The leaf
+    // function's own defaults were handled, but `rewrite_uses_expr` (the walk
+    // that descends into nested function/arrow values to fix closure-over uses)
+    // originally skipped their param defaults, leaving a stale reference.
+    // -------------------------------------------------------------------
+    #[test]
+    fn rewrites_outer_local_referenced_in_nested_arrow_default() {
+        use coding_adventures_javascript_ast::statement::ReturnStatement;
+        use coding_adventures_javascript_ast::{
+            ArrowBody, ArrowFunctionExpression, AssignmentPattern, BindingTarget, BlockStatement,
+            Declaration, Expression, FunctionDeclaration, FunctionParam, Identifier, ProgramItem,
+            Statement, VarKind, VariableDeclaration, VariableDeclarator,
+        };
+
+        let id = |n: &str| Identifier {
+            cv: None,
+            name: n.to_string(),
+        };
+
+        // `var g = (a = longName) => a;` — the arrow default closes over the
+        // outer param `longName`.
+        let arrow = Expression::ArrowFunctionExpression(ArrowFunctionExpression {
+            cv: None,
+            params: vec![FunctionParam::AssignmentPattern(AssignmentPattern {
+                cv: None,
+                left: id("a"),
+                right: Expression::Identifier(id("longName")),
+            })],
+            body: ArrowBody::Expression(Box::new(Expression::Identifier(id("a")))),
+            is_async: false,
+        });
+        let var_g = Statement::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind: VarKind::Var,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: BindingTarget::Identifier(id("g")),
+                init: Some(arrow),
+            }],
+        }));
+
+        // `function outer(longName) { var g = (a = longName) => a; return g; }`
+        // — a leaf (an arrow in a var initializer does NOT disqualify leaf
+        // status), so its param `longName` is renamed everywhere it is read.
+        let outer = FunctionDeclaration {
+            cv: None,
+            id: id("outer"),
+            params: vec![FunctionParam::Identifier(id("longName"))],
+            body: BlockStatement {
+                cv: None,
+                body: vec![
+                    var_g,
+                    Statement::return_statement(ReturnStatement {
+                        cv: None,
+                        argument: Some(Expression::Identifier(id("g"))),
+                    }),
+                ],
+            },
+            generator: false,
+            is_async: false,
+        };
+
+        let mut prog = program();
+        prog.body = vec![ProgramItem::Statement(Statement::Declaration(
+            Declaration::FunctionDeclaration(outer),
+        ))];
+
+        let pass = RenamePass::new();
+        let sidecar = Sidecar::new();
+        let mut cv = CVLog::new(false);
+        let out = pass
+            .run(PassContext {
+                program: &prog,
+                sidecar: &sidecar,
+                cv: &mut cv,
+            })
+            .expect("rename");
+
+        assert!(out.changed, "`longName` should have been shortened");
+        let ProgramItem::Statement(Statement::Declaration(Declaration::FunctionDeclaration(f))) =
+            &out.program.body[0]
+        else {
+            panic!("expected the outer function back");
+        };
+        let new_name = f.params[0].binding_identifier().name.clone();
+        assert_ne!(new_name, "longName", "outer param should have been shortened");
+        // Dig out the nested arrow's default and confirm it tracks the new name.
+        let Statement::Declaration(Declaration::VariableDeclaration(vd)) = &f.body.body[0] else {
+            panic!("expected the `var g` declaration");
+        };
+        let Some(Expression::ArrowFunctionExpression(ae)) = &vd.declarations[0].init else {
+            panic!("expected the arrow initializer");
+        };
+        match ae.params[0].default_value() {
+            Some(Expression::Identifier(idref)) => assert_eq!(
+                idref.name, new_name,
+                "nested arrow default `= longName` must track the renamed outer local"
             ),
             other => panic!("expected an identifier default, got {other:?}"),
         }

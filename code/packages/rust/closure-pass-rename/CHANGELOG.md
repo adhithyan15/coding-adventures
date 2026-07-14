@@ -10,7 +10,9 @@ Picks up javascript-ast 0.42.0. A default parameter’s `right` (`function f(x, 
 apply step now rewrites its uses through the rename map so a reference tracks its renamed binding, and the
 new `collect_param_idents` helper adds a default’s identifiers to the collision-avoidance set so a fresh
 short name never shadows a name a default reads. Routed through every param-collection site (leaf function,
-nested function/arrow, class method).
+nested function/arrow, class method). The apply-side rewrite covers both the leaf function's own defaults
+and — via `rewrite_uses_expr` — a default in a nested function/arrow/method value that closes over a
+renamed outer local (the closure-descent path, added after security review).
 
 ## [0.21.0] - 2026-07-14
 
