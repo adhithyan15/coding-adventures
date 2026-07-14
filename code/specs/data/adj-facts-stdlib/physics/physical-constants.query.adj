@@ -1,0 +1,26 @@
+% ============================================================================
+% physical-constants.query.adj — a worked recall over the physics constants
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is the speed of
+% light?" or "which constant equals 299792458?": it states no physics fact — it
+% only `import`s the grounded table and asks binding queries. The engine resolves
+% each `?` against the `physical_constant` rows and returns the value + the
+% table's source/locator/trust. A constant not in the table abstains honestly —
+% the engine never invents a value.
+%
+% Note the two directions of recall a `table` gives for free:
+%   - forward  `? physical_constant(planck_constant, $V)`   name  → value
+%   - reverse  `? physical_constant($C, 299792458)`         value → name
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli physical-constants.query.adj
+% ============================================================================
+
+import "physical-constants.adj"
+
+? physical_constant(speed_of_light, $V)     % expect 299792458
+? physical_constant(planck_constant, $V)    % expect exact expansion of 6.62607015e-34
+? physical_constant(elementary_charge, $V)  % expect exact expansion of 1.602176634e-19
+? physical_constant($C, 299792458)          % reverse recall — expect C = speed_of_light
+? physical_constant(gravitational_constant, $V) % expect abstain — not a DEFINING SI constant
