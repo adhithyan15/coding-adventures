@@ -1,0 +1,64 @@
+% ============================================================================
+% basic-tastes — the five basic tastes your tongue can sense
+% (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% A very early fact about your own body: your tongue does not sense infinitely
+% many flavors — it senses a small, fixed set of BASIC tastes. There are FIVE of
+% them: sweet, sour, salty, bitter, and umami (a savory taste, said "oo-MOM-ee").
+% Recall is a binding query that asks "is this one of the five basic tastes?":
+%
+%     ? basic_taste(sweet, $Is)          % yes
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `basic_taste(taste, is_basic_taste)` carrying the table's citation,
+% so the lookup above is the ordinary SLD binding query — the engine returns the
+% membership answer WITH its source, on the CPU, with zero model calls, and
+% abstains on anything that is not one of the five basic tastes.
+%
+% The five basic tastes, as a membership truth table (every listed taste IS a
+% basic taste, so the answer column is `yes` for all five):
+%
+%     taste    is_basic_taste
+%     -------  --------------
+%     sweet    yes
+%     sour     yes
+%     salty    yes
+%     bitter   yes
+%     umami    yes
+%
+% Why a MEMBERSHIP table (taste -> yes) and not a taste -> example-food table?
+% Because we ship ONLY what the source states verbatim. The cited NIDCD page
+% names the five basic tastes but does NOT give a canonical example food for
+% each of the five, so grounding a `taste -> example` pairing would be inventing
+% facts the source does not contain. Membership is exactly what the sentence
+% supports, so membership is what we encode. (See feedback_nothing_human_authored.)
+%
+% Note that a NON-taste — say `spicy` (spiciness is a heat/pain sensation, not
+% one of the five basic tastes) — is deliberately NOT a row, so a basic-tastes
+% recall ABSTAINS on it rather than inventing a `yes`. That honest-abstention
+% property is what makes the table safe to trust: it answers exactly the five it
+% can ground, and only those.
+%
+% Provenance: the five tastes are copied VERBATIM from the U.S. National
+% Institute on Deafness and Other Communication Disorders (NIDCD, part of the
+% NIH), "Taste Disorders" health page, which states (see `source`): "Taste cells
+% have receptors that respond to one of at least five basic taste qualities:
+% sweet, sour, bitter, salty, and umami." The citable artifact is that page at
+% the `locator`. `trust authoritative` — NIDCD is a primary/official U.S.
+% government (.gov) health authority. Nothing here is asserted from memory.
+% (See ../README.md; feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table basic_taste {
+    columns taste, is_basic_taste
+
+    row (sweet, yes)
+    row (sour, yes)
+    row (salty, yes)
+    row (bitter, yes)
+    row (umami, yes)
+
+    source "Taste cells have receptors that respond to one of at least five basic taste qualities: sweet, sour, bitter, salty, and umami [oo-MOM-ee]."
+    locator "https://www.nidcd.nih.gov/health/taste-disorders"
+    trust authoritative
+}

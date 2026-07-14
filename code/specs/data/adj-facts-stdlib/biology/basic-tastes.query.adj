@@ -1,0 +1,19 @@
+% ============================================================================
+% basic-tastes.query.adj — a worked recall over the basic-tastes library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "is sweet a basic taste?":
+% it states no biology fact — it only `import`s the grounded table and asks
+% binding queries. The engine resolves each `?` against the `basic_taste` rows
+% and returns the membership answer + the table's source/locator/trust. A key
+% that is not one of the five basic tastes abstains honestly — the engine never
+% invents a `yes`.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli basic-tastes.query.adj
+% ============================================================================
+
+import "basic-tastes.adj"
+
+? basic_taste(sweet, $Is)      % expect yes
+? basic_taste(umami, $Is)      % expect yes
+? basic_taste(spicy, $Is)      % expect abstain — spicy is a heat/pain sensation, not one of the five basic tastes
