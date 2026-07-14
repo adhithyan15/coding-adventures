@@ -105,11 +105,11 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. Regenerated
-on July 14, 2026 after the Dart DT11 B-tree and DT12 B+ tree ports:
+on July 14, 2026 after the Swift CLI-builder port:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 171 | 376 |
+| Present in 10-15 languages | 171 | 375 |
 | Present in 5-9 languages | 122 | 917 |
 | Present in 2-4 languages | 157 | 1,972 |
 | Present in one language | 694 | 9,716 |
@@ -128,8 +128,8 @@ new canonical identity collisions with `--fail-on-collisions`.
 
 ## Priority 1: Complete The 14-Of-15 Set
 
-Two package/language slots remain to turn 2 nearly complete packages into
-fully covered packages.
+One package/language slot remains to turn the final nearly complete package
+into a fully covered package.
 
 ### Dart: complete
 
@@ -144,12 +144,11 @@ The dependency-shaped DT11/DT12 `b-tree`/`b-plus-tree` pair is complete.
 Completed in the Haskell lane: `activation-functions`, `caesar-cipher`,
 `huffman-tree`, `huffman-compression`, `lz77`, `lzss`, `lzw`.
 
-### Swift: 2 remaining ports
+### Swift: 1 remaining port
 
-- `cli-builder`
 - `sql-execution-engine`
 
-Completed in the Swift lane: `wasm-simulator`.
+Completed in the Swift lane: `wasm-simulator`, `cli-builder`.
 
 Port dependency families together when doing so avoids temporary broken package
 graphs. Grammar-generated lexer/parser pairs should be generated from the shared
@@ -157,7 +156,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 171 packages present in at least ten implementation languages need 378
+The 171 packages present in at least ten implementation languages need 375
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -169,7 +168,7 @@ ports to reach all 15. After Priority 1, select work in this order:
 | C# | 17 | Move with F# |
 | F# | 17 | Move with C# |
 | Haskell | 34 | Dependency-shaped compression, graphics, ML, and protocol waves |
-| Swift | 52 | Data structures and generated frontends before native app surfaces |
+| Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 57 | Move with Kotlin |
 | Kotlin | 57 | Move with Java |
 | Dart | 106 | Algorithms, data structures, codecs, grammar frontends, documents, and paint transforms first |
