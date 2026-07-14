@@ -2,6 +2,18 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.56.0] - 2026-07-14
+
+### Added — bridge default parameters (`function f(a = expr){}`) — CLOC12.191 PR2
+
+Picks up javascript-ast 0.42.0. `convert_formal_parameter` now maps a `NAME = assignment_expression`
+formal parameter to a `FunctionParam::AssignmentPattern`: the left is the simple NAME, the right is the
+default `assignment_expression` converted through the ordinary expression path (so the optimizer folds /
+renames / inlines it as live code — `function f(a = 1 + 2)` bridges to an *unfolded* `BinaryExpression`
+that constant-fold later shrinks to `3`). A destructuring target with a default (`{x} = {}`) still declines
+via the existing `binding_pattern` guard. Before this, any default parameter declined to WHITESPACE_ONLY.
+Additive; MINOR.
+
 ## [0.55.0] - 2026-07-14
 
 ### Added — bridge rest parameters (`function f(...args){}`) — CLOC12.190 PR2
