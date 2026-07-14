@@ -9,6 +9,27 @@ and this project adheres to semantic versioning.
 
 ### Added
 
+- **`thread` primitive** (CCPP02 Phase 2, PR 2): threads, mutexes, and condition
+  variables — concurrency is bucket B (C11 `<threads.h>` is optional and
+  MSVC-absent). Opaque heap handles keep OS types out of the shared header; each
+  `_init`/`_spawn` allocates and each `_destroy`/`_join` frees, so nothing leaks.
+  - `osp_thread_spawn` / `osp_thread_join` (worker is `void *(*)(void *)`; join
+    delivers the worker's result and frees the handle).
+  - `osp_mutex_init` / `_lock` / `_unlock` / `_destroy` (non-recursive).
+  - `osp_cond_init` / `_wait` / `_signal` / `_broadcast` / `_destroy`.
+  - Backends: `thread_posix.c` (pthreads; links `-pthread` via PLATFORM_LIBS) and
+    `thread_windows.c` (`_beginthreadex` + `CRITICAL_SECTION` +
+    `CONDITION_VARIABLE`; CRT + kernel32, no extra lib).
+  - Integration tests (`tests/thread_test.c`): four-thread locked-counter mutual
+    exclusion (deterministic, not flaky), condition-variable handoff + return
+    value, and NULL-argument rejection. Verified under ASan+UBSan **and
+    ThreadSanitizer** (no data races) with 0 leaks.
+- **`os_platform/status.h`**: the shared `osp_status` enum, extracted so multiple
+  primitive headers can be included together without a duplicate `enum`
+  definition; adds `OSP_ERR_NOMEM`. `clock.h` now includes it (no API change).
+
+### Added — PR 1
+
 - **Initial package + `clock` primitive** (CCPP02 Phase 2, PR 1). The first
   bucket-B library: OS-provided capabilities that pure-ISO C cannot compute.
   Built by `platform-harness` (warnings-as-errors, but not `-pedantic-errors`).
