@@ -105,11 +105,11 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. Regenerated
-on July 14, 2026 after the Dart ALGOL 60 frontend port:
+on July 14, 2026 after the Dart DT11 B-tree and DT12 B+ tree ports:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 171 | 378 |
+| Present in 10-15 languages | 171 | 376 |
 | Present in 5-9 languages | 122 | 917 |
 | Present in 2-4 languages | 157 | 1,972 |
 | Present in one language | 694 | 9,716 |
@@ -128,25 +128,23 @@ new canonical identity collisions with `--fail-on-collisions`.
 
 ## Priority 1: Complete The 14-Of-15 Set
 
-Four package/language slots remain to turn 4 nearly complete packages into
+Two package/language slots remain to turn 2 nearly complete packages into
 fully covered packages.
 
-### Dart: 2 remaining ports
-
-- `b-plus-tree`
-- `b-tree`
+### Dart: complete
 
 Completed in the Dart lane: `heap`, `bitset`, `pixel-container`,
 `image-point-ops`, `logic-gates`, `image-geometric-transforms`, `toml-lexer`.
 The grammar-driven `mosaic-lexer`/`mosaic-parser` and
 `algol-lexer`/`algol-parser` pairs are also complete.
+The dependency-shaped DT11/DT12 `b-tree`/`b-plus-tree` pair is complete.
 
 ### Haskell: complete
 
 Completed in the Haskell lane: `activation-functions`, `caesar-cipher`,
 `huffman-tree`, `huffman-compression`, `lz77`, `lzss`, `lzw`.
 
-### Swift: 2 ports
+### Swift: 2 remaining ports
 
 - `cli-builder`
 - `sql-execution-engine`
@@ -174,7 +172,7 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Swift | 52 | Data structures and generated frontends before native app surfaces |
 | Java | 57 | Move with Kotlin |
 | Kotlin | 57 | Move with Java |
-| Dart | 108 | Algorithms, data structures, codecs, grammar frontends, documents, and paint transforms first |
+| Dart | 106 | Algorithms, data structures, codecs, grammar frontends, documents, and paint transforms first |
 
 Go, Ruby, Rust, and TypeScript currently have no gaps within the 10-language
 consensus set. They remain reference/template lanes for these waves.
