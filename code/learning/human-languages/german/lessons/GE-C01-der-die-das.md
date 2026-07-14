@@ -16,9 +16,9 @@ reviews_of: [GE-C01-gut]
 
 ## Warm-up
 
-[PAUSE 2s] Before your first noun: German's words for "the." You've met gender
-in Spanish and French — German has it too, but with a twist neither of them
-kept.
+[PAUSE 2s] Before your first noun: German's words for "the." Many European
+languages tag every noun with a grammatical *gender* — Spanish and French each
+run two — and German has it too, but with a twist neither of them kept.
 
 ## Sounds you'll need
 
