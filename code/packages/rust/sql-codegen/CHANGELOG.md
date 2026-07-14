@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.5] - Unreleased
+
+### Added
+
+- **Emit bitwise ops.** `BinaryOp`/`UnaryOp` gain the bitwise variants and
+  `map_binary_op`/`map_unary_op` forward them to the VM instruction stream.
+
 ## [0.6.4] - Unreleased
 
 ### Added

@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.12] - Unreleased
+
+### Added
+
+- **Bitwise `BinaryOp`/`UnaryOp` variants.** `BitAnd`/`BitOr`/`ShiftLeft`/
+  `ShiftRight` and `BitNot`; `plan_bitwise` maps the `bitwise` rule's operators
+  and `plan_unary` maps `~`. Operands are coerced to integer in the VM.
+
 ## [0.2.11] - Unreleased
 
 ### Added

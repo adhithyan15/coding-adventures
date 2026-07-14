@@ -639,6 +639,26 @@ mod tests {
         }
     }
 
+    /// Bitwise operators parse through the new `bitwise` precedence level and
+    /// the `~` prefix in `unary`: each operator alone, mixed precedence with
+    /// additive, and the unary complement.
+    #[test]
+    fn test_parse_bitwise() {
+        for q in [
+            "SELECT a & b FROM t",
+            "SELECT a | b FROM t",
+            "SELECT a << 2 FROM t",
+            "SELECT a >> 2 FROM t",
+            "SELECT ~a FROM t",
+            "SELECT 5 | 3 & 2 FROM t",
+            "SELECT 3 + 1 << 2 FROM t",
+            "SELECT x FROM t WHERE (a & 1) = 0",
+        ] {
+            let ast = assert_program_root(q);
+            assert!(find_rule(&ast, "bitwise"), "Expected bitwise for {q:?}");
+        }
+    }
+
     // -----------------------------------------------------------------------
     // Test 20: BETWEEN expression
     // -----------------------------------------------------------------------

@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.13] - Unreleased
+
+### Added
+
+- **Bitwise operators in the expression grammar.** Wired the generated grammar's
+  `bitwise` precedence level (`bitwise = additive {{ ("&"|"|"|"<<"|">>") additive }}`)
+  between `additive` and `comparison` — all four are one left-associative level,
+  so `5 | 3 & 2` = `(5|3)&2`. Added the `~` (and `+`) prefix to `unary`. Both were
+  present in the grammar source but stale in the generated parser.
+
 ## [0.1.12] - Unreleased
 
 ### Added
