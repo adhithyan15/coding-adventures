@@ -49,10 +49,12 @@ fn kindergarten_days_recall_binds_iso_weekday_number_with_citation() {
     // Monday is ISO weekday 1; Sunday is 7 — the recalled numbers.
     assert!(out.contains("\"N\":\"1\""), "monday → 1: {out}");
     assert!(out.contains("\"N\":\"7\""), "sunday → 7: {out}");
-    // The answer carries the ISO week-date citation as its proof.
+    // The answer carries the ISO week-date citation as its proof. Wikipedia is a
+    // secondary consensus summary of the (paywalled) ISO standard, so the tier is
+    // `consensus`, not `authoritative`.
     assert!(
         out.contains("en.wikipedia.org/wiki/ISO_week_date")
-            && out.contains("\"trust\":\"authoritative\""),
+            && out.contains("\"trust\":\"consensus\""),
         "carries the source citation: {out}"
     );
     // "funday" is not a day of the week — honest abstention, never a fabricated number.
