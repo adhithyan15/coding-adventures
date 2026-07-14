@@ -1,8 +1,8 @@
 % ============================================================================
-% us-coins — what each US coin is worth, in CENTS (adj-facts-stdlib, KINDERGARTEN).
+% us-coins — what each US coin is worth, in CENTS (adj-facts-stdlib, MONEY).
 % ============================================================================
-% A money fact every kindergartener learns at the register: "a nickel is five
-% cents, a quarter is twenty-five." Recall is a binding query:
+% A money fact everyone learns at the register: "a nickel is five cents, a
+% quarter is twenty-five." Recall is a binding query:
 %
 %     ? coin_cents(quarter, $Cents)      % 25
 %     ? coin_cents(nickel,  $Cents)      % 5
@@ -15,7 +15,7 @@
 % coin_cents($Coin, 5)` recalls the coin WORTH five cents — the nickel.
 %
 % Because the `cents` value is a NUMBER, a recalled value composes straight into
-% arithmetic — the concrete kindergarten bridge from RECALL to COMPUTE:
+% arithmetic — the concrete bridge from RECALL to COMPUTE:
 %
 %     how many cents in three quarters?  3 × coin_cents(quarter) = 3 × 25 = 75
 %

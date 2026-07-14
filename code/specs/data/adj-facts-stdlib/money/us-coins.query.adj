@@ -1,5 +1,5 @@
 % ============================================================================
-% us-coins.query.adj — a worked recall over the kindergarten US-coins library.
+% us-coins.query.adj — a worked recall over the US-coins money library.
 % ============================================================================
 % The shape a learner (or an LLM) produces to ANSWER "how much is a quarter
 % worth?": it states no money fact — it only `import`s the grounded table and

@@ -1,5 +1,5 @@
-//! End-to-end test for the kindergarten US-coins FACTS library
-//! (`adj-facts-stdlib/kindergarten/us-coins.adj`) driven through the built CLI:
+//! End-to-end test for the US-coins FACTS library
+//! (`adj-facts-stdlib/money/us-coins.adj`) driven through the built CLI:
 //! a native `table` of coin → value-in-cents resolves a binding-query recall
 //! with the U.S. Mint's citation, runs the relation backwards (value → coin),
 //! and abstains on a non-coin — 0 model calls.
@@ -15,7 +15,7 @@ fn facts_stdlib() -> PathBuf {
 }
 
 fn scratch(tag: &str) -> PathBuf {
-    let dir = std::env::temp_dir().join(format!("adjcli_factsk_{tag}_{}", std::process::id()));
+    let dir = std::env::temp_dir().join(format!("adjcli_facts_{tag}_{}", std::process::id()));
     let _ = std::fs::remove_dir_all(&dir);
     std::fs::create_dir_all(&dir).unwrap();
     dir
@@ -30,10 +30,10 @@ fn run(program: &Path) -> (bool, String) {
 }
 
 #[test]
-fn kindergarten_coins_recall_binds_cent_value_with_citation() {
+fn coins_recall_binds_cent_value_with_citation() {
     let dir = scratch("coins");
-    // Copy the shipped kindergarten table beside the entry program and import it.
-    let src = facts_stdlib().join("kindergarten/us-coins.adj");
+    // Copy the shipped money table beside the entry program and import it.
+    let src = facts_stdlib().join("money/us-coins.adj");
     std::fs::copy(&src, dir.join("us-coins.adj")).expect("copy shipped us-coins.adj");
     std::fs::write(
         dir.join("case.adj"),
