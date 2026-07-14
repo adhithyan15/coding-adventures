@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.5.33 — Scalar subquery `( SELECT … )` parses (evaluation is a follow-up)
+
+`SELECT (SELECT count(*) FROM t2)` and `WHERE x > (SELECT max(y) FROM t2)` now
+PARSE — the grammar's `primary` accepts a parenthesised `SELECT` (sql-parser
+0.1.17), tried before the plain `( expr )` form. Evaluation is not yet wired: the
+planner rejects a scalar subquery with a clear
+`scalar subqueries are not yet supported` error (sql-planner 0.2.15) rather than
+panicking or mis-planning — an integration test confirms the parse→plan→clean-error
+path end to end. This is the first, parse-only slice of scalar-subquery support;
+a follow-up adds `SqlExpr::ScalarSubquery` + the VM sub-plan evaluation (run the
+inner SELECT once, take row 0 / column 0, NULL if empty). The plain
+`( 1 + 2 )` parenthesised-expression form is unaffected (regression-tested).
+
 ## 0.5.32 — `COLLATE` on the left comparison operand
 
 `x COLLATE NOCASE = y` now folds the comparison just like `x = y COLLATE C`

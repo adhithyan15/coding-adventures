@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.17] - Unreleased
+
+### Added
+
+- **Scalar subquery `( SELECT … )` parses as a `primary`.** The generated
+  `primary` rule gains `"(" select_stmt ")"` before the plain `"(" expr ")"` form
+  (matching the grammar source), so a subquery is matched when the token after `(`
+  is `SELECT` and a non-SELECT `(` backtracks to the expression form. Parsing is
+  wired; evaluation is a follow-up (the planner errors NYI).
+
 ## [0.1.16] - Unreleased
 
 ### Added
