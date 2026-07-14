@@ -50,6 +50,9 @@ members = [
     "hash-functions",
     "hash-map",
     "resp-protocol",
+    "in-memory-data-store-protocol",
+    "in-memory-data-store-engine",
+    "in-memory-data-store",
     "skip-list",
     "hyperloglog",
     "bloom-filter",
@@ -106,6 +109,9 @@ coding-adventures-trie = { workspace = true }
 coding-adventures-hash-functions = { workspace = true }
 coding-adventures-hash-map = { workspace = true }
 coding-adventures-resp-protocol = { workspace = true }
+coding-adventures-in-memory-data-store-protocol = { workspace = true }
+coding-adventures-in-memory-data-store-engine = { workspace = true }
+coding-adventures-in-memory-data-store = { workspace = true }
 coding-adventures-skip-list = { workspace = true }
 coding-adventures-hyperloglog = { workspace = true }
 coding-adventures-bloom-filter = { workspace = true }
