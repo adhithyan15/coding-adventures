@@ -1,0 +1,24 @@
+% ============================================================================
+% rock-types.query.adj — a worked recall over the earth-science rock-types
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how does an igneous rock
+% form?" — it states no earth-science fact, only `import`s the grounded table
+% and asks binding queries. The engine resolves each `?` against the
+% `rock_formation` rows and returns how the rock forms (or the rock type, on a
+% reverse query) + the NPS source/locator/trust. Something the page does not
+% name as one of the three rock types abstains honestly — the engine never
+% invents a formation.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli rock-types.query.adj
+% ============================================================================
+
+import "rock-types.adj"
+
+? rock_formation(igneous, $How)          % expect cooled_magma (once-molten, cooled)
+? rock_formation(metamorphic, $How)      % expect heat_and_pressure (changed rock)
+? rock_formation($Type, compacted_sediment)
+                                         % expect sedimentary (reverse: pressed bits?)
+? rock_formation(magma, $How)            % expect abstain — magma is the molten
+                                         %   material rock forms FROM, not a rock type
