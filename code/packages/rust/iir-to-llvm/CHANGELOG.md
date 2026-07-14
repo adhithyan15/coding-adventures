@@ -1,5 +1,41 @@
 # Changelog — iir-to-llvm
 
+## 0.42.0 - 2026-07-14 (E6d-6-LLVM: structural heap ops + special-char name quoting → records run on LLVM)
+
+Two additions give the LLVM column the word-granular heap model the native
+backend already has, so a Twig **record** (its constructor + field accessors)
+runs on LLVM — the last language feature that built for native but not LLVM.
+
+1. **Structural heap ops.** `SUPPORTED_OPS` + `lower_instr` gain `alloc`,
+   `field_store`, `field_load`, and `is_null`, mirroring the aarch64/x86_64
+   memory model exactly:
+   - `alloc [<size>]` → `call i64 @__twig_gc_alloc(i64 <size>)` (default 16, a
+     2-word `LispyPair`); the extern is declared once per module that allocates.
+   - `field_store ptr, idx, val` → `inttoptr`; `getelementptr i64, ptr, i64 <idx>`
+     (the i64 element type scales the raw field index by 8); `store i64`.
+   - `field_load ptr, idx -> dest` → same GEP + `load i64`.
+   - `is_null x -> dest` → `icmp eq i64 x, 0` + `zext`, with the i1 kept in
+     `env_i1` so a downstream `jmp_if_*` uses it directly.
+   The object handle and every field are raw 64-bit words (tagged `DynValue`s),
+   identical to the native backend, so the two columns agree byte-for-byte.
+
+2. **Special-char function-name quoting.** `llvm_fn_ident` quotes any function
+   name outside LLVM's unquoted set (`[-a-zA-Z$._][-a-zA-Z$._0-9]*`) — the Twig
+   record accessor `point-x` and the union predicate `Some?` need `@"point-x"` /
+   `@"Some?"`, which an unquoted `@Some?` mis-parses as a hard error. Applied at
+   the `define` site and every `call` site so the reference always resolves; a
+   plain identifier is emitted unquoted (no output churn).
+
+Run-verified: `(record Point (x : int) (y : int)) (point-x (Point 42 7))` and the
+`point-y` sibling exit 42 on native, LLVM, and WASM (new `e6d6_llvm_records`
+integration test + the existing matrix record cells).
+
+Not covered — a documented follow-up (E6d-6b): union `match` on the tagged
+backends (native/LLVM). The union constructor stores raw words while `match`
+reads them boxed; that only round-trips on the structural backends
+(Wasm/Jvm/Clr), where the call boundary boxes `int → any`. The two union matrix
+cells are scoped to `[Wasm, Jvm, Clr]` accordingly.
+
 ## 0.41.0 - 2026-07-14 (fix: dynamic comparison width — a `bool`-typed cmp compares i64s)
 
 `lower_cmp` typed the `icmp`/`fcmp` operand width from the comparison's
