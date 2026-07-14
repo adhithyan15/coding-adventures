@@ -434,6 +434,20 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                 GrammarElement::Optional { element: Box::new(GrammarElement::Alternation { choices: vec![
                         GrammarElement::Sequence { elements: vec![
+                            // Optional `COLLATE name` on the LEFT operand
+                            // (`col COLLATE NOCASE = 'x'`). It lives at the START
+                            // of THIS cmp_op alternative — not before the whole
+                            // alternation — so that a trailing `COLLATE` with no
+                            // following `cmp_op` (e.g. `ORDER BY name COLLATE
+                            // NOCASE`, where the order_item owns the COLLATE)
+                            // fails this alternative and backtracks, leaving the
+                            // COLLATE for the caller. The planner takes the FIRST
+                            // COLLATE token, so a left collation wins over a right
+                            // one — matching SQLite — and applies it to both sides.
+                            GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                    GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                                ] }) },
                             GrammarElement::RuleReference { name: r#"cmp_op"#.to_string() },
                             GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                             // Optional `COLLATE name` on the right operand of a

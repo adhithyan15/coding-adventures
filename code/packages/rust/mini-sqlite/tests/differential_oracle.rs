@@ -1112,6 +1112,22 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT id FROM t WHERE a IS NOT DISTINCT FROM b ORDER BY id",
     },
+    // ---- Lane 3: COLLATE on the LEFT comparison operand ------------------
+    // `x COLLATE C = y` folds the comparison just like `x = y COLLATE C`.
+    Case {
+        id: "collate_left_operand_nocase",
+        setup: &["CREATE TABLE t (id INTEGER)", "INSERT INTO t VALUES (1)"],
+        query: "SELECT ('A' COLLATE NOCASE = 'a') AS a, ('a ' COLLATE RTRIM = 'a') AS b FROM t",
+    },
+    // COLLATE on the LEFT operand of a WHERE predicate matches per row.
+    Case {
+        id: "collate_left_operand_where",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT)",
+            "INSERT INTO t VALUES (1,'Apple'),(2,'apple'),(3,'BANANA')",
+        ],
+        query: "SELECT id FROM t WHERE name COLLATE NOCASE = 'apple' ORDER BY id",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but

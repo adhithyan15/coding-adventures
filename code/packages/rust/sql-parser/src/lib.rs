@@ -688,6 +688,23 @@ mod tests {
         }
     }
 
+    /// `COLLATE name` on the LEFT operand of a comparison parses — and crucially
+    /// does NOT steal an `ORDER BY … COLLATE …` clause's collation (the left-side
+    /// COLLATE only binds when a comparison operator follows, else it backtracks).
+    #[test]
+    fn test_parse_left_operand_collate() {
+        for q in [
+            "SELECT 'A' COLLATE NOCASE = 'a' FROM t",
+            "SELECT x FROM t WHERE name COLLATE NOCASE = 'foo'",
+        ] {
+            let ast = assert_program_root(q);
+            assert!(find_rule(&ast, "comparison"), "Expected comparison for {q:?}");
+        }
+        // Regression: ORDER BY COLLATE still routes the collation to order_item.
+        let ast = assert_program_root("SELECT name FROM t ORDER BY name COLLATE NOCASE");
+        assert!(find_rule(&ast, "order_item"), "Expected order_item to keep COLLATE");
+    }
+
     // -----------------------------------------------------------------------
     // Test 20: BETWEEN expression
     // -----------------------------------------------------------------------
