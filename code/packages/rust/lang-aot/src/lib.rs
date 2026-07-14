@@ -455,6 +455,12 @@ pub fn compile_source_to_llvm_with_target(
     // boxes integer literals to tagged words and inserts the final `dyn_unbox_int`
     // so the result is a plain `i64`. `iir-to-llvm` then lowers each `dyn_*` to a
     // `call @__dyn_*` into `dynval_runtime.c`. A no-op for a scalar program.
+    // NOTE: closures (`lower_closures_to_heap`) are deliberately NOT wired on the
+    // LLVM path yet — the dispatcher's dynamic `=` index test hits a pre-existing
+    // `lower_dynamic_arith` comparison-width bug on LLVM (`cmp_eq` typed `bool` →
+    // `icmp i1` on an i64), which also affects E6d-6 match/union on LLVM (latent —
+    // the LLVM column was never run locally). Filed as an E6d-7a-LLVM follow-up;
+    // NativeAot + WASM ship now.
     iir_builtin_lowering::lower_heap_builtins_runtime(&mut module);
     iir_builtin_lowering::lower_dynamic_arith(&mut module);
     iir_builtin_lowering::intern_symbols(&mut module);
@@ -554,6 +560,11 @@ pub fn compile_source_to_wasm(
     // A no-op for a module with no global builtins. Runs first (before the repr
     // passes), matching twig-aot's ordering.
     iir_builtin_lowering::lower_global_io(&mut module);
+    // E6d-7a: lower closures to the cons-heap form + a synthesized dispatcher
+    // BEFORE `lower_heap_builtins`, so the `cons`/`car`/`cdr` this pass emits are
+    // then lowered by it. WASM has no native closure model (JVM/CLR/native/LLVM
+    // do), so this is the WASM-only path; a no-op for a closure-free module.
+    iir_builtin_lowering::lower_closures_to_heap(&mut module);
     // Managed backends consume the structural cons form (not the native
     // runtime-call form). A no-op for a module without cons builtins.
     iir_builtin_lowering::lower_heap_builtins(&mut module);

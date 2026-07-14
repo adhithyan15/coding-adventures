@@ -1,5 +1,9 @@
 # Changelog — `lang-aot`
 
+## 0.213.0 - 2026-07-14 (E6d-7a: closures on NativeAot + WASM)
+
+Wires `iir_builtin_lowering::lower_closures_to_heap` into the WASM pipeline (`compile_source_to_wasm`, before `lower_heap_builtins`); NativeAot gets it via twig-aot. Two matrix cells prove Twig `((lambda (x) (+ x 1)) 41)` -> 42 and a capturing `(((lambda (x) (lambda (y) (+ x y))) 40) 2)` -> 42 on [NativeAot, Wasm, Jvm, Clr] (JVM/CLR run closures via their native long[]/object[] dispatch). New run-verified integration test `e6d7a_wasm_closures` (WASM + native). **LLVM is a follow-up**: the dispatcher's dynamic `=` index test hits a pre-existing `lower_dynamic_arith` comparison-width bug on the LLVM column (`cmp_eq` typed `bool` -> `icmp i1` on an i64; also affects E6d-6 match on LLVM, latent since the LLVM column was never run locally).
+
 ## 0.212.0 - 2026-07-13 — E6d-8: Twig dynamic globals on the code-gen backends
 
 A matrix cell proves a Twig **dynamic global** set+get roundtrip:
