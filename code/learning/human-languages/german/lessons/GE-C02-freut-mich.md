@@ -7,7 +7,7 @@ gloss: pleased to meet you (literally "it gladdens me")
 concept_tag: PLEASED-TO-MEET
 prerequisites: [GE-C02-ich-heisse]
 sounds: [eu-vowel, ich-laut]
-roots: [froh]
+roots: [froh, mek]
 est_minutes: 3
 reviews_of: [GE-C02-ich-heisse, GE-C02-wie-heissen-sie]
 ---
@@ -35,12 +35,20 @@ on **froh** ("glad, joyful"):
 
 So *freut mich* says, warmly, "this makes me glad."
 
+## The other word: mich — "me"
+
+**mich** ("me," the object form) ← Proto-Germanic **\*mek**, from PIE **\*me-** —
+the *same* first-person root as English **me**, **my**, **mine** (and the French
+*me* in *je m'appelle*). So German *mich*, English *me*, and French *me* are
+three cousins of one ancient word for "me." And just as English shifts **I**
+(subject) → **me** (object), German shifts **ich** → **mich**.
+
 ## Grammar Lens: "it gladdens *me*"
 
-**mich** is "me" (the object). German literally says "[it] gladdens **me**" —
-the *meeting* is what does the gladdening, and you are on the receiving end. Two
-common variants: **sehr erfreut** ("much pleased") and the plain **angenehm**
-("pleasant / agreeable"), both usable as "pleased to meet you."
+German literally says "[it] gladdens **me**" — the *meeting* is what does the
+gladdening, and you (**mich**) are on the receiving end. Two common variants:
+**sehr erfreut** ("much pleased") and the plain **angenehm** ("pleasant /
+agreeable"), both usable as "pleased to meet you."
 
 ## Guided Practice
 

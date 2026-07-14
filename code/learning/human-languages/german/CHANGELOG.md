@@ -17,6 +17,9 @@
   - **wie heißen Sie?** — **"what's your name?"** ("how are you called?");
     verb-second word order; informal *wie heißt du?*.
   - **freut mich** ("pleased to meet you" = "it gladdens me"; ← *froh*, "glad").
+    Its object pronoun **mich** ("me") is traced too — ← *\*mek* / PIE *\*me-*,
+    cousin of English *me/my/mine* and French *me* (every atom rooted, not
+    glossed).
   - **practice** — the whole dialogue.
 - Book compiles clean with XeLaTeX.
 

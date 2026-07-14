@@ -30,6 +30,7 @@ reviews_of: [GE-C02-ich, GE-C02-heissen, GE-C02-ich-heisse, GE-C02-du-sie, GE-C0
 Every piece a Germanic cousin of English:
 
 - **ich** ← *\*ik* (English *I*, Latin *ego*)
+- **mich** ← *\*mek* (English *me*, *my*, *mine*)
 - **heißen** ← *\*haitaną* (English *hight*, *behest*)
 - **wie** ← *\*hwī* (English *how*, *what*, *who*)
 - **freuen** ← *froh* (glad; English *frolic*)
