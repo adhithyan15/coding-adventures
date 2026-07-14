@@ -315,6 +315,24 @@ describe("indexGet / indexSet", () => {
     expect(Array.from((sub as arr.NDArray).data)).toEqual([2, 5, 3, 6]);
   });
 
+  it("a 2-index sub-array selection whose row x col product would exceed MAX_ELEMENTS is a clean error, not an OOM", () => {
+    // Each of `rows`/`cols` is individually a perfectly legitimate
+    // range-selection size (100,000 positions) — only their PRODUCT is
+    // absurd, exactly the outer-product-shaped gap `matmul` guards
+    // against, one level up in `indexGet`/`indexSet`.
+    const a = arr.zeros(1, 1);
+    const bigSelection: arr.NDArray = {
+      shape: [1, 100000],
+      data: Float64Array.from({ length: 100000 }, (_, i) => i),
+    };
+    const twoBigRanges = [
+      { kind: "range" as const, indices: bigSelection },
+      { kind: "range" as const, indices: bigSelection },
+    ];
+    expect(() => arr.indexGet(a, twoBigRanges)).toThrow(/exceeds/);
+    expect(() => arr.indexSet(a, twoBigRanges, 0)).toThrow(/exceeds/);
+  });
+
   it("single-argument linear indexing", () => {
     const a = arr.fromRows([
       [1, 2],

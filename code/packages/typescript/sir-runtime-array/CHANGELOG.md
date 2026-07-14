@@ -56,7 +56,7 @@ All notable changes to this project will be documented in this file.
   `array_runtime::ops`'s existing `reduce`/`scan`/`outer` Rust
   implementations now would be speculative. A natural follow-up once
   `apl-to-semantic-ir`'s own JS-backend consumption needs them.
-- 53 tests, 100% line/branch/function coverage, including an adversarial
+- 54 tests, 100% line/branch/function coverage, including an adversarial
   regression test confirming `range`'s `MAX_ELEMENTS` cap actually trips
   (not just trusting the code that it would) on a runtime-computed bound
   that would otherwise materialize an unbounded array.
@@ -91,3 +91,17 @@ All notable changes to this project will be documented in this file.
   can't police at runtime) fell through to `undefined` and surfaced as a
   confusing `TypeError` several calls downstream instead of a clean
   `Error` at the point of the actual mistake.
+- **The same allocate-before-validate gap in `indexGet`/`indexSet`'s
+  2-index sub-array path** — found on the *second* `/security-review`
+  round, after the first three fixes above. `rows.length`/`cols.length`
+  (from `resolvePositions` on each index argument) are each individually
+  bounded — by `a`'s own dimensions for a `whole` selection, or by a
+  `range` NDArray's own `MAX_ELEMENTS` cap for a `range` selection — but
+  nothing bounded their *product*, so a `range`-selected row list and a
+  `range`-selected column list, each independently legitimate (up to
+  `MAX_ELEMENTS` positions), could still multiply to an absurd output size
+  before `indexGet`'s `new Float64Array(rows.length * cols.length)` or
+  `indexSet`'s `broadcastValues(value, rows.length * cols.length)` ever
+  allocated it — the exact outer-product-shaped gap the `matmul` fix
+  above closed, reopened one function over. Fixed the same way:
+  `checkedShapeSize([rows.length, cols.length])` before either allocation.

@@ -1,4 +1,4 @@
-import { get, set, ndarray, nrows, ncols, type NDArray } from "./ndarray.js";
+import { get, set, ndarray, checkedShapeSize, nrows, ncols, type NDArray } from "./ndarray.js";
 
 /**
  * One MATLAB-style index-position argument — mirrors the SIR22 spec's
@@ -74,7 +74,15 @@ export function indexGet(a: NDArray, indices: readonly IndexArg[]): NDArray | nu
     if (rowArg.kind === "scalar" && colArg.kind === "scalar") {
       return read(rows[0], cols[0]);
     }
-    const data = new Float64Array(rows.length * cols.length);
+    // `rows.length`/`cols.length` are each individually bounded by
+    // `a`'s own dimensions (`whole`) or by a `range` NDArray's own
+    // `MAX_ELEMENTS` cap — but nothing bounds their *product* on its own
+    // (a `range`-selected row list and a `range`-selected column list can
+    // each independently approach `MAX_ELEMENTS`), so this is the exact
+    // outer-product-shaped allocation `matmul` guards against, one level
+    // up. Validate before allocating, not after.
+    const outLen = checkedShapeSize([rows.length, cols.length]);
+    const data = new Float64Array(outLen);
     for (let c = 0; c < cols.length; c++) {
       for (let r = 0; r < rows.length; r++) {
         data[c * rows.length + r] = read(rows[r], cols[c]);
@@ -124,7 +132,10 @@ export function indexSet(a: NDArray, indices: readonly IndexArg[], value: number
     const [rowArg, colArg] = indices;
     const rows = resolvePositions(rowArg, nrows(a));
     const cols = resolvePositions(colArg, ncols(a));
-    const values = broadcastValues(value, rows.length * cols.length);
+    // Same product-of-two-independent-selections gap `indexGet` closes
+    // above — validate before `broadcastValues` allocates.
+    const count = checkedShapeSize([rows.length, cols.length]);
+    const values = broadcastValues(value, count);
     let k = 0;
     for (let c = 0; c < cols.length; c++) {
       for (let r = 0; r < rows.length; r++) {
