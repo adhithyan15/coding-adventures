@@ -15,12 +15,13 @@ Spanish and French where a contrast helps. The recurring decoder is the
 - **Ch. 1 — Greetings**: hallo → gut → **der/die/das** (three genders) → Tag →
   **Guten Tag** → Morgen → Guten Morgen → Abend → Guten Abend → Nacht →
   **Gute Nacht** → practice.
+- **Ch. 2 — Introducing Yourself**: ich → heißen → **ich heiße** ("my name
+  is") → **du / Sie** → wie → **wie heißen Sie?** → freut mich → practice.
 
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 2 | Introducing yourself: ich heiße, **du / Sie** (informal vs formal "you"), wie, freut mich |
 | 3 | Responding: wie geht's, gut danke, und dir/Ihnen |
 | 4 | Farewells: tschüss, auf Wiedersehen, bis morgen |
 | 5+ | Numbers, cases (der→den→dem), family, food — following the shared theme order |
