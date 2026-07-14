@@ -1,0 +1,7 @@
+{
+  "$schema": "../../../../schemas/required-capabilities.schema.json",
+  "version": 1,
+  "package": "swift/sql-execution-engine",
+  "capabilities": [],
+  "justification": "Pure Swift in-memory SQL evaluation; callers provide data through the SqlDataSource protocol."
+}

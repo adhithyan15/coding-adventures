@@ -128,8 +128,8 @@ new canonical identity collisions with `--fail-on-collisions`.
 
 ## Priority 1: Complete The 14-Of-15 Set
 
-One package/language slot remains to turn the final nearly complete package
-into a fully covered package.
+Priority 1 is complete. Every package that entered this wave at 14-of-15 now
+has an implementation in all 15 language lanes.
 
 ### Dart: complete
 
@@ -144,11 +144,10 @@ The dependency-shaped DT11/DT12 `b-tree`/`b-plus-tree` pair is complete.
 Completed in the Haskell lane: `activation-functions`, `caesar-cipher`,
 `huffman-tree`, `huffman-compression`, `lz77`, `lzss`, `lzw`.
 
-### Swift: 1 remaining port
+### Swift: complete
 
-- `sql-execution-engine`
-
-Completed in the Swift lane: `wasm-simulator`, `cli-builder`.
+Completed in the Swift lane: `wasm-simulator`, `cli-builder`,
+`sql-execution-engine`.
 
 Port dependency families together when doing so avoids temporary broken package
 graphs. Grammar-generated lexer/parser pairs should be generated from the shared
@@ -156,7 +155,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 171 packages present in at least ten implementation languages need 375
+The 171 packages present in at least ten implementation languages need 374
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -168,7 +167,7 @@ ports to reach all 15. After Priority 1, select work in this order:
 | C# | 17 | Move with F# |
 | F# | 17 | Move with C# |
 | Haskell | 34 | Dependency-shaped compression, graphics, ML, and protocol waves |
-| Swift | 51 | Data structures and generated frontends before native app surfaces |
+| Swift | 50 | Data structures and generated frontends before native app surfaces |
 | Java | 57 | Move with Kotlin |
 | Kotlin | 57 | Move with Java |
 | Dart | 106 | Algorithms, data structures, codecs, grammar frontends, documents, and paint transforms first |
