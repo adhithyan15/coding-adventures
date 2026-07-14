@@ -56,6 +56,13 @@ function applyOp(op: ElementwiseOpKind, a: number, b: number): number {
       return b2f(a >= b);
     case "Gt":
       return b2f(a > b);
+    default:
+      // Same "crosses a JS runtime boundary TypeScript can't enforce"
+      // reasoning as `resolvePositions` in `indexing.ts`: an unrecognised
+      // `op` must fail loudly here, not fall through to `undefined` —
+      // which `Float64Array.from`/direct assignment would otherwise
+      // silently coerce to `NaN`, corrupting data instead of erroring.
+      throw new Error(`applyOp: unrecognised ElementwiseOpKind ${JSON.stringify(op)}`);
   }
 }
 

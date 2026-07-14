@@ -78,8 +78,18 @@ export function scalar(value: number): NDArray {
   return ndarray([], Float64Array.of(value));
 }
 
-/** A 1-D array (a column vector's worth of values, shape `[n]`). */
+/**
+ * A 1-D array (a column vector's worth of values, shape `[n]`). Validates
+ * `values.length` with `checkedShapeSize` *before* `Float64Array.from`
+ * allocates — a genuine TypeScript-typed `number[]` costs its caller
+ * memory proportional to its own length already, but `values` crosses the
+ * same unenforced JS-runtime boundary every other factory in this module
+ * does, and `Float64Array.from` also accepts a bare `{ length: N }`
+ * array-like with no real backing elements, which would otherwise drive an
+ * `N`-sized allocation from a caller who paid for none of it.
+ */
 export function fromVec(values: readonly number[]): NDArray {
+  checkedShapeSize([values.length]);
   return ndarray([values.length], Float64Array.from(values));
 }
 

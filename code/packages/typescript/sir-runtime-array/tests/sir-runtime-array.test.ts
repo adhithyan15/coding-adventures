@@ -23,6 +23,14 @@ describe("ndarray construction and accessors", () => {
     expect(arr.isScalar(v)).toBe(false);
   });
 
+  it("fromVec validates length before allocating, even for a bare array-like with no real elements", () => {
+    // `Float64Array.from` accepts any `{ length: N }` array-like, not just a
+    // real `number[]` — a caller could pass one with no backing elements at
+    // all, costing them nothing while requesting an N-sized allocation.
+    const arrayLike = { length: 1e10 } as unknown as readonly number[];
+    expect(() => arr.fromVec(arrayLike)).toThrow(/exceeds/);
+  });
+
   it("fromRows stores column-major", () => {
     // Row-major input [[1,2,3],[4,5,6]] becomes column-major [1,4,2,5,3,6].
     const a = arr.fromRows([
@@ -108,6 +116,13 @@ describe("elementwise", () => {
     const a = arr.fromVec([2, 3, 4]);
     const b = arr.fromVec([3, 2, 1]);
     expect(Array.from(arr.elementwise("Pow", a, b).data)).toEqual([8, 9, 4]);
+  });
+
+  it("a malformed op (only reachable from untyped emitted JS) is a clean error, not silent NaN corruption", () => {
+    const a = arr.fromVec([1, 2]);
+    const b = arr.fromVec([3, 4]);
+    const bogus = "Bogus" as unknown as arr.ElementwiseOpKind;
+    expect(() => arr.elementwise(bogus, a, b)).toThrow(/unrecognised ElementwiseOpKind/);
   });
 
   it("scalar broadcasts on either side, result keeps the array operand's shape", () => {

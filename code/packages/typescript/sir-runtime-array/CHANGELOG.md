@@ -56,7 +56,7 @@ All notable changes to this project will be documented in this file.
   `array_runtime::ops`'s existing `reduce`/`scan`/`outer` Rust
   implementations now would be speculative. A natural follow-up once
   `apl-to-semantic-ir`'s own JS-backend consumption needs them.
-- 54 tests, 100% line/branch/function coverage, including an adversarial
+- 56 tests, 100% line/branch/function coverage, including an adversarial
   regression test confirming `range`'s `MAX_ELEMENTS` cap actually trips
   (not just trusting the code that it would) on a runtime-computed bound
   that would otherwise materialize an unbounded array.
@@ -105,3 +105,21 @@ All notable changes to this project will be documented in this file.
   allocated it — the exact outer-product-shaped gap the `matmul` fix
   above closed, reopened one function over. Fixed the same way:
   `checkedShapeSize([rows.length, cols.length])` before either allocation.
+- **`fromVec` and `applyOp` were missing the same two guard classes,
+  found by a third, systematic sweep of every `Float64Array` call site
+  in the package** (checking each one's size argument back to its
+  source, not just spot-checking what earlier rounds had already
+  touched):
+  - `fromVec(values)` called `Float64Array.from(values)` before
+    validating `values.length` — `Float64Array.from` accepts any bare
+    `{ length: N }` array-like, not just a real `number[]`, so a caller
+    could request an `N`-sized allocation while paying for none of the
+    `N` elements themselves (the same allocate-before-validate class
+    fixed three times above, one level lower). Now calls
+    `checkedShapeSize([values.length])` first.
+  - `applyOp` (in `elementwise.ts`) had no `default` case in its
+    `ElementwiseOpKind` switch — an unrecognised `op` fell through to an
+    implicit `undefined`, which array assignment silently coerces to
+    `NaN`, corrupting data instead of failing loudly (the same missing-
+    `default` class `resolvePositions` was fixed for above). Now throws
+    a clean `Error` for an unrecognised `op`.
