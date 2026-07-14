@@ -55,7 +55,7 @@ fn kindergarten_months_recall_binds_month_number_with_citation() {
     assert!(out.contains("\"Month\":\"january\""), "1 → january: {out}");
     // The answer carries the ISO 8601 citation as its proof.
     assert!(
-        out.contains("cl.cam.ac.uk") && out.contains("\"trust\":\"authoritative\""),
+        out.contains("cl.cam.ac.uk") && out.contains("\"trust\":\"consensus\""),
         "carries the source citation: {out}"
     );
     // `smarch` is not a month — honest abstention, never a fabricated index.

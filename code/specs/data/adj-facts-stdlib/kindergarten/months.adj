@@ -23,7 +23,9 @@
 % international standard). The span at the `locator` states the endpoints of the
 % numbering — "the month of the year between 01 (January) and 12 (December)" — and
 % the twelve months run consecutively in the universal Gregorian order between
-% those two anchors. `trust authoritative` — a primary reference for ISO 8601.
+% those two anchors. `trust consensus` — Kuhn's page is a widely-cited SECONDARY
+% expert summary of ISO 8601, not the primary standard itself (the official ISO
+% 8601 text is paywalled), so it earns the consensus tier, not authoritative.
 % Nothing here is asserted from memory. (See ../README.md;
 % feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
 % ============================================================================
@@ -46,5 +48,5 @@ table month_number {
 
     source "MM is the month of the year between 01 (January) and 12 (December)"
     locator "https://www.cl.cam.ac.uk/~mgk25/iso-time.html"
-    trust authoritative
+    trust consensus
 }
