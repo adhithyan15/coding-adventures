@@ -1,0 +1,20 @@
+% ============================================================================
+% moon-phases.query.adj — a worked recall over the astronomy moon-phases library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "which phase is fifth in
+% the cycle?" — it states no astronomy fact, only `import`s the grounded table
+% and asks binding queries. The engine resolves each `?` against the
+% `moon_phase_order` rows and returns the position (or the phase, on a reverse
+% query) + the NASA source/locator/trust. A body/event that is not one of the
+% eight named phases abstains honestly — the engine never invents an order.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli moon-phases.query.adj
+% ============================================================================
+
+import "moon-phases.adj"
+
+? moon_phase_order(new_moon, $N)       % expect 1  (the cycle starts here)
+? moon_phase_order(full_moon, $N)      % expect 5  (the fully lit phase)
+? moon_phase_order($Phase, 3)          % expect first_quarter (reverse: 3rd phase?)
+? moon_phase_order(eclipse, $N)        % expect abstain — an eclipse is not a phase
