@@ -231,8 +231,19 @@ pub fn create_twig_parser(source: &str) -> Result<GrammarParser, TwigParseError>
 /// (capped parser, so no crash risk): paren-application nesting parses
 /// cleanly up to 38 levels (39 trips the cap), type-annotation nesting up
 /// to 117 levels (118 trips the cap) — comfortably past any hand-written
-/// Twig program's real nesting, and well below `MAX_PAREN_DEPTH` (64) so
-/// this cap never fires before the existing pre-scan would.
+/// Twig program's real nesting.
+///
+/// Note this cap is *more* restrictive than `MAX_PAREN_DEPTH` (64) for the
+/// paren-application shape specifically: `MAX_PAREN_DEPTH`'s own pre-scan
+/// still admits up to 64 levels of `(((…)))`-style application nesting
+/// through `parse`/`parse_to_ast`, but at 3 rule-frames/level that would
+/// need `MAX_RULE_DEPTH` ≥ 192 to avoid re-rejecting anything
+/// `MAX_PAREN_DEPTH` already allows — which would exceed the
+/// type-annotation shape's own 170-rule-frame safety floor. Real Twig
+/// programs are single-digit-deep (per `MAX_PAREN_DEPTH`'s own doc
+/// comment), so this narrower envelope (39 vs. 64 levels) has no practical
+/// effect; it's flagged here so a future re-tuning of either constant
+/// doesn't assume the two guards agree.
 const MAX_RULE_DEPTH: usize = 120;
 
 /// Build a [`GrammarParser`] from a pre-tokenised stream.

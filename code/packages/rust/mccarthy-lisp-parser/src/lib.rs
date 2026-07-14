@@ -396,8 +396,23 @@ pub fn mccarthy_grammar() -> &'static ParserGrammar {
 /// (capped parser, so no crash risk): list nesting parses cleanly up to
 /// 59 levels (60 trips the cap), quote-chain up to 88 levels (89 trips
 /// the cap) — comfortably past any hand-written Lisp program's real
-/// nesting, and below `MAX_PAREN_DEPTH` (64) for the list shape so this
-/// cap never fires before the existing pre-scan would for that shape.
+/// nesting.
+///
+/// Note this cap is *more* restrictive than `MAX_PAREN_DEPTH` (64) for the
+/// list-nesting shape specifically: `MAX_PAREN_DEPTH`'s own pre-scan still
+/// admits up to 64 levels of list nesting through `parse`/`parse_to_cst`,
+/// but at 3 rule-frames/level that would need `MAX_RULE_DEPTH` ≥ 192 to
+/// avoid re-rejecting anything `MAX_PAREN_DEPTH` already allows. Unlike
+/// twig-parser's analogous note, 192 is *not* blocked by the other shape's
+/// safety floor here — quote-chain's 280-rule-frame floor has headroom to
+/// spare either way, and list-nesting is itself the binding (lower) floor
+/// at 260, so 192 would still sit safely below it. The reason `180` was
+/// chosen over a value nearer `192` is simply the same 25-45% margin
+/// convention used across sibling crates, not a hard ceiling imposed by a
+/// second shape. Real Lisp programs are single-digit-deep (per
+/// `MAX_PAREN_DEPTH`'s own doc comment), so the narrower envelope (59 vs.
+/// 64 levels) has no practical effect; it's flagged here so a future
+/// re-tuning of either constant doesn't assume the two guards agree.
 const MAX_RULE_DEPTH: usize = 180;
 
 /// Build a [`GrammarParser`] from a pre-tokenized stream.
