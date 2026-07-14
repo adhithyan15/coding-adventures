@@ -2,6 +2,31 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.24.0] - 2026-07-14
+
+### Added — CLOC12.194: flatten redundant `BlockStatement`s (oracle divergence #4)
+
+A bare `{ … }` block at statement-list position creates a lexical scope, but if
+nothing inside is block-scoped that scope is unobservable — the braces can be
+removed and the inner statements run directly in the enclosing list with
+identical semantics. `fold_program` and `fold_block_statement` now splice such a
+block's body in place; the empty block `{}` flattens to nothing (removed). This
+mirrors Closure's `PeepholeRemoveDeadCode` block normalization and closes
+**oracle divergence #3-adjacent #4**: it fires both on a hand-written `{ … }`
+and — importantly — on the block left behind when `if (true) { … }` collapses to
+its consequent, so `if (true) { a(); } else { b(); }` at SIMPLE now emits `a();`
+instead of `{ a(); }`.
+
+The soundness gate is the existing `block_is_scope_safe_to_hoist` predicate that
+already backs the CLOC25 `else`-hoist: a block declaring `let`/`const`/`class`/a
+`function` is **kept** (flattening would leak or collide its binding), while a
+plain `var` is function-scoped and hoists harmlessly. A spliced block that ends
+in a terminator re-arms the dead-code-after-terminator drop, exactly as the
+`else`-hoist does. Verified byte-identical to the reference Closure Compiler
+across the case set (`{a}`→`a;`, `{a;b}`→`a;b;`, `{var x=1;a}`→`var x=1;a;`,
+`{}`→removed, `if(true){…}`/`if(false){…}` unwrap; `let`/`const`/`class`/
+`function` blocks unchanged). Additive; MINOR bump 0.23.0 → 0.24.0.
+
 ## [0.23.0] - 2026-07-12
 
 ### Added — CLOC12.189 PR1: export declaration the control-flow predicate reports no foldable flow; the rebuild clones each export

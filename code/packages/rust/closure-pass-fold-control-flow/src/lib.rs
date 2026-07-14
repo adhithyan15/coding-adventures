@@ -306,11 +306,27 @@ fn expression_cv(expr: &Expression) -> Option<String> {
 
 fn fold_program(prog: &Program, st: &mut FoldState) -> Program {
     st.visit();
-    let new_body = prog
-        .body
-        .iter()
-        .map(|item| fold_program_item(item, st))
-        .collect();
+    // Fold each top-level item, then flatten any redundant block it produced
+    // (CLOC12.194). We build the list imperatively rather than `map`ping because
+    // flattening turns one block item into *many* items (its body spliced in) —
+    // or zero, for an empty block.
+    let mut new_body: Vec<ProgramItem> = Vec::with_capacity(prog.body.len());
+    for item in &prog.body {
+        let folded = fold_program_item(item, st);
+        if let ProgramItem::Statement(s) = &folded {
+            if let Some((block_cv, body)) = redundant_block(s) {
+                st.record_fold(
+                    block_cv,
+                    "flatten-redundant-block",
+                    "{ <stmts> }",
+                    "<stmts>",
+                );
+                new_body.extend(body.iter().cloned().map(ProgramItem::Statement));
+                continue;
+            }
+        }
+        new_body.push(folded);
+    }
     Program {
         cv: prog.cv.clone(),
         version: prog.version,
@@ -571,6 +587,29 @@ fn fold_block_statement(b: &BlockStatement, st: &mut FoldState) -> BlockStatemen
             }
         }
 
+        // CLOC12.194 — flatten a redundant nested block into this block's
+        // statement list. A bare `{ … }` with nothing block-scoped inside is
+        // identical to its body run in place (e.g. the block left behind when
+        // `if (true) { … }` folds to its consequent). Splicing may expose a
+        // terminator as the new last statement, so re-check `hit_terminator`
+        // for the dead-code-after-terminator drop, exactly as the `else`-hoist
+        // above does.
+        if let Some((block_cv, body)) = redundant_block(&folded) {
+            st.record_fold(
+                block_cv,
+                "flatten-redundant-block",
+                "{ <stmts> }",
+                "<stmts>",
+            );
+            for inner in body {
+                new_body.push(inner.clone());
+            }
+            if new_body.last().map(is_terminator).unwrap_or(false) {
+                hit_terminator = true;
+            }
+            continue;
+        }
+
         let terminates = is_terminator(&folded);
         new_body.push(folded);
         if terminates {
@@ -664,6 +703,34 @@ fn block_is_scope_safe_to_hoist(b: &BlockStatement) -> bool {
         // Tagged statements introduce no lexical binding of their own.
         Statement::Tagged(_) => true,
     })
+}
+
+/// CLOC12.194 — is `folded`, sitting at statement-list position, a **redundant
+/// block** that should be replaced by its own statements spliced in place?
+///
+/// A bare `{ … }` block introduces a fresh lexical scope, but if nothing inside
+/// is block-scoped (`let`/`const`/`class`/`function`) that scope is
+/// unobservable: the braces can be removed and the inner statements run
+/// directly in the enclosing list with identical semantics. `var` is
+/// function-scoped, so it hoists out harmlessly; the empty block `{}` flattens
+/// to *nothing* (removed). This mirrors Closure's `PeepholeRemoveDeadCode`
+/// block normalization and fires on a hand-written `{ … }` as well as on the
+/// block left behind when `if (true) { … }` collapses to its consequent.
+///
+/// Returns `Some((block_cv, body))` when safe to flatten — the caller splices
+/// `body` into the statement list and records a fold against `block_cv` — or
+/// `None` to keep the statement as-is (any non-block, or a block that declares
+/// a block-scoped binding: reuses the [`block_is_scope_safe_to_hoist`] gate that
+/// backs the CLOC25 `else`-hoist, so the soundness boundary is shared).
+fn redundant_block(folded: &Statement) -> Option<(&Option<String>, &[Statement])> {
+    match folded {
+        Statement::Tagged(TaggedStatement::BlockStatement(b))
+            if block_is_scope_safe_to_hoist(b) =>
+        {
+            Some((&b.cv, &b.body))
+        }
+        _ => None,
+    }
 }
 
 /// Is this `else` branch safe to hoist into the enclosing block (CLOC25)?
@@ -2953,5 +3020,208 @@ mod tests {
                 ));
             }
         }
+    }
+
+    // =====================================================================
+    // CLOC12.194 — redundant BlockStatement flattening (oracle divergence #4)
+    //
+    // A bare `{ … }` at statement-list position is a lexical scope with no
+    // observable effect UNLESS it declares a block-scoped binding. Closure
+    // removes such braces (`PeepholeRemoveDeadCode`); these tests pin the fold
+    // and its soundness boundary — verified byte-identical to the real Closure
+    // jar (`{a}`→`a;`, `{a;b}`→`a;b;`, `{var x=1;a}`→`var x=1;a;`, `{}`→removed;
+    // `{let…}`/`{const…}`/`{function…}` kept).
+    // =====================================================================
+
+    /// Wrap statements in a `{ … }` block statement (test helper).
+    fn block(cv: Option<&str>, body: Vec<Statement>) -> Statement {
+        Statement::block_statement(BlockStatement {
+            cv: cv.map(|s| s.to_string()),
+            body,
+        })
+    }
+
+    #[test]
+    fn flatten_bare_block_at_program_level() {
+        // `{ a; }` → `a;`
+        let prog = program().with_body(vec![ProgramItem::Statement(block(
+            Some("blk.1"),
+            vec![expr_stmt(ident("a"), None)],
+        ))]);
+        let (out, _c, changed, _n) = run_pass(prog);
+        assert!(changed, "bare block should flatten");
+        assert_eq!(out.body.len(), 1, "block braces gone, one statement left");
+        match first_stmt(&out) {
+            Statement::Tagged(TaggedStatement::ExpressionStatement(es)) => assert!(
+                matches!(&es.expression, Expression::Identifier(i) if i.name == "a")
+            ),
+            other => panic!("expected `a;`, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn flatten_multi_statement_block() {
+        // `{ a; b; }` → `a; b;`
+        let prog = program().with_body(vec![ProgramItem::Statement(block(
+            None,
+            vec![expr_stmt(ident("a"), None), expr_stmt(ident("b"), None)],
+        ))]);
+        let (out, _c, changed, _n) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 2, "both inner statements spliced in");
+    }
+
+    #[test]
+    fn flatten_empty_block_removes_it() {
+        // `a; {}` → `a;` — the empty block flattens to nothing.
+        let prog = program().with_body(vec![
+            ProgramItem::Statement(expr_stmt(ident("a"), None)),
+            ProgramItem::Statement(block(None, vec![])),
+        ]);
+        let (out, _c, changed, _n) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 1, "empty block removed entirely");
+    }
+
+    #[test]
+    fn flatten_block_with_only_var_is_safe() {
+        // `{ var x = 1; a; }` → `var x = 1; a;` — `var` is function-scoped and
+        // hoists, so the block boundary is unobservable.
+        let prog = program().with_body(vec![ProgramItem::Statement(block(
+            None,
+            vec![
+                make_var_decl("x", Some(num(1.0, None))),
+                expr_stmt(ident("a"), None),
+            ],
+        ))]);
+        let (out, _c, changed, _n) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 2);
+        assert!(
+            matches!(
+                &out.body[0],
+                ProgramItem::Statement(Statement::Declaration(
+                    Declaration::VariableDeclaration(_)
+                ))
+            ),
+            "the `var` declaration hoisted out of the block"
+        );
+    }
+
+    #[test]
+    fn block_with_let_is_not_flattened() {
+        // `{ let x = 1; a; }` — `let` is block-scoped; flattening would leak the
+        // binding into the enclosing scope. Must be kept.
+        let prog = program().with_body(vec![ProgramItem::Statement(block(
+            None,
+            vec![
+                make_let_decl("x", Some(num(1.0, None))),
+                expr_stmt(ident("a"), None),
+            ],
+        ))]);
+        let (out, _c, _changed, _n) = run_pass(prog);
+        assert_eq!(out.body.len(), 1);
+        assert!(
+            matches!(
+                first_stmt(&out),
+                Statement::Tagged(TaggedStatement::BlockStatement(_))
+            ),
+            "a `let` block must NOT be flattened"
+        );
+    }
+
+    #[test]
+    fn block_with_const_is_not_flattened() {
+        // `{ const x = 1; }` — `const` is block-scoped: keep the block.
+        let const_decl =
+            Statement::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+                cv: None,
+                kind: VarKind::Const,
+                declarations: vec![VariableDeclarator {
+                    cv: None,
+                    id: BindingTarget::Identifier(Identifier {
+                        cv: None,
+                        name: "x".to_string(),
+                    }),
+                    init: Some(num(1.0, None)),
+                }],
+            }));
+        let prog = program().with_body(vec![ProgramItem::Statement(block(None, vec![const_decl]))]);
+        let (out, _c, _changed, _n) = run_pass(prog);
+        assert_eq!(out.body.len(), 1);
+        assert!(matches!(
+            first_stmt(&out),
+            Statement::Tagged(TaggedStatement::BlockStatement(_))
+        ));
+    }
+
+    #[test]
+    fn block_with_function_declaration_is_not_flattened() {
+        // `{ function f(){} }` — a nested function declaration is block-scoped
+        // (strict mode) / Annex-B special; hoisting it out could change scope or
+        // collide. Keep the block.
+        let fdecl = Statement::Declaration(Declaration::FunctionDeclaration(FunctionDeclaration {
+            cv: None,
+            id: Identifier {
+                cv: None,
+                name: "f".to_string(),
+            },
+            params: vec![],
+            body: BlockStatement {
+                cv: None,
+                body: vec![],
+            },
+            generator: false,
+            is_async: false,
+        }));
+        let prog = program().with_body(vec![ProgramItem::Statement(block(None, vec![fdecl]))]);
+        let (out, _c, _changed, _n) = run_pass(prog);
+        assert_eq!(out.body.len(), 1);
+        assert!(matches!(
+            first_stmt(&out),
+            Statement::Tagged(TaggedStatement::BlockStatement(_))
+        ));
+    }
+
+    #[test]
+    fn if_true_block_consequent_flattens_to_statements() {
+        // `if (true) { a; } else { b; }` → `a;` — the branch folds to its
+        // consequent block, then that redundant block flattens. This is the
+        // exact divergence #4 case (closurec previously emitted `{a}`).
+        let if_stmt = Statement::if_statement(IfStatement {
+            cv: Some("if.1".to_string()),
+            test: boolean(true, None),
+            consequent: Box::new(block(None, vec![expr_stmt(ident("a"), None)])),
+            alternate: Some(Box::new(block(None, vec![expr_stmt(ident("b"), None)]))),
+        });
+        let prog = program().with_body(vec![ProgramItem::Statement(if_stmt)]);
+        let (out, _c, changed, _n) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 1);
+        match first_stmt(&out) {
+            Statement::Tagged(TaggedStatement::ExpressionStatement(es)) => assert!(
+                matches!(&es.expression, Expression::Identifier(i) if i.name == "a"),
+                "expected the consequent `a;` un-blocked"
+            ),
+            other => panic!("expected `a;` after if-fold + flatten, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn flatten_block_inside_function_body() {
+        // `function f(){ { a; } }` → `function f(){ a; }` — exercises the
+        // nested (`fold_block_statement`) flatten path, not just program level.
+        let prog = fdecl_with_body(vec![block(None, vec![expr_stmt(ident("a"), None)])]);
+        let (out, _c, changed, _n) = run_pass(prog);
+        assert!(changed);
+        let body = extract_fn_body(&out);
+        assert_eq!(body.body.len(), 1);
+        assert!(
+            matches!(
+                &body.body[0],
+                Statement::Tagged(TaggedStatement::ExpressionStatement(_))
+            ),
+            "the inner block should flatten inside the function body"
+        );
     }
 }
