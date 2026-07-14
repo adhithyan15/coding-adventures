@@ -2,6 +2,21 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.90.0] - 2026-07-14
+
+### Added — fold array-literal `.length` → element count — CLOC12.193
+
+`fold_member` now folds `[e0, e1, …].length` to the element count, mirroring the existing string-literal
+`.length` fold. Two guards keep it byte-identical to the reference Closure Compiler (verified against the
+real jar): a spread element (`[...x]`) makes the length statically unknown, so it declines; and an element
+with a side effect must not be dropped (evaluating the array literal runs it), so it declines unless every
+present element is side-effect-free. Holes (`[,,]`) evaluate nothing but still count toward the length
+(`[,,].length === 2`). Adds a conservative `is_side_effect_free` predicate (literals, identifier, property
+read, and pure operators over pure operands are free; call/new/assignment/`++`/`--`/await/yield/tagged-
+template/dynamic-import/spread/object-literal/class-expression are not). Truth table matched byte-for-byte:
+`[1,2,3]`→3, `[]`→0, `[,,]`→2, `[a,b]`→2, `[a+b,c]`→2, `[x.y]`→1 FOLD; `[a=1]`, `[g()]`, `[1,2,...x]` DON’T.
+Additive; MINOR.
+
 ## [0.89.0] - 2026-07-14
 
 ### Added — fold default-parameter expressions — CLOC12.191 PR1

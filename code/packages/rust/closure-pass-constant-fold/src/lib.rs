@@ -3799,6 +3799,79 @@ fn fold_chain(c: &ChainExpression, st: &mut FoldState) -> Expression {
     })
 }
 
+/// Is evaluating `e` guaranteed to produce no observable side effect?
+///
+/// Used by the array-literal `.length` fold: dropping `[a, b, c]` (replacing it
+/// with `3`) is only legal when evaluating its elements runs nothing observable.
+/// This is deliberately **conservative** — it only ever answers `true` for
+/// expressions that are *definitely* pure. Under-answering (saying `false` for a
+/// pure expression) merely misses an optimization; over-answering would drop a
+/// real side effect, so the fall-through is `false`.
+///
+/// The classification mirrors what Closure folds for array `.length` (verified
+/// against the reference compiler): literals, a plain variable read, a property
+/// read (`x.y`), and pure operators over pure operands are free; a call, `new`,
+/// assignment, `++`/`--`, `await`/`yield`, a tagged template, a dynamic
+/// `import()`, a spread, an object literal (getters/spread), or a class
+/// expression (its `static{}` block runs at definition time) are not.
+fn is_side_effect_free(e: &Expression) -> bool {
+    match e {
+        // Inert leaves — no sub-expression, nothing to run.
+        Expression::NumericLiteral(_)
+        | Expression::StringLiteral(_)
+        | Expression::BooleanLiteral(_)
+        | Expression::NullLiteral(_)
+        | Expression::UndefinedLiteral(_)
+        | Expression::BigIntLiteral(_)
+        | Expression::RegExpLiteral(_)
+        | Expression::Identifier(_)
+        | Expression::ThisExpression(_)
+        | Expression::Super(_)
+        | Expression::NewTarget(_)
+        | Expression::ImportMeta(_)
+        // Building a function / arrow *value* runs no code (the body is not
+        // executed). A CLASS expression is deliberately excluded — a `static {}`
+        // initializer runs at definition time.
+        | Expression::FunctionExpression(_)
+        | Expression::ArrowFunctionExpression(_)
+        // A property read is treated as free, matching Closure (which folds
+        // `[x.y].length`); a getter could in principle run, but Closure does not
+        // model that in this fold.
+        | Expression::MemberExpression(_)
+        | Expression::OptionalMemberExpression(_) => true,
+
+        // `delete x.y` mutates its target; every other unary operator (`-`, `+`,
+        // `!`, `~`, `typeof`, `void`) is pure over a pure operand.
+        Expression::UnaryExpression(u) => {
+            u.operator != UnaryOperator::Delete && is_side_effect_free(&u.argument)
+        }
+        Expression::BinaryExpression(b) => {
+            is_side_effect_free(&b.left) && is_side_effect_free(&b.right)
+        }
+        Expression::LogicalExpression(l) => {
+            is_side_effect_free(&l.left) && is_side_effect_free(&l.right)
+        }
+        Expression::ConditionalExpression(c) => {
+            is_side_effect_free(&c.test)
+                && is_side_effect_free(&c.consequent)
+                && is_side_effect_free(&c.alternate)
+        }
+        Expression::SequenceExpression(s) => s.expressions.iter().all(is_side_effect_free),
+        Expression::ChainExpression(c) => is_side_effect_free(&c.expression),
+        Expression::TemplateLiteral(t) => t.expressions.iter().all(is_side_effect_free),
+        // A hole (`None`) evaluates nothing; a present element must be free.
+        Expression::ArrayExpression(a) => a
+            .elements
+            .iter()
+            .all(|el| el.as_ref().is_none_or(is_side_effect_free)),
+
+        // Conservatively unsafe: Call / New / OptionalCall / Assignment / Update
+        // (++/--) / Await / Yield / TaggedTemplate / ImportExpression / Spread /
+        // ObjectExpression / ClassExpression. Never mark these free.
+        _ => false,
+    }
+}
+
 fn fold_member(m: &MemberExpression, st: &mut FoldState) -> Expression {
     // Recurse first, so e.g. `("a" + "b").length` sees the folded `"ab"`.
     let object = fold_expression(&m.object, st);
@@ -3813,6 +3886,36 @@ fn fold_member(m: &MemberExpression, st: &mut FoldState) -> Expression {
                 let after = format_js_number(len);
                 let new_cv = st.fork_cv(&parent, &before, &after);
                 return stamp_literal_cv(FoldedLiteral::Number(len), new_cv);
+            }
+        }
+        // `[e0, e1, …].length` → the element count (CLOC12.193). Two guards keep
+        // this byte-identical to Closure:
+        //   1. a spread element (`[...x]`) contributes an unknown number of
+        //      elements at runtime, so the length is not statically known —
+        //      decline;
+        //   2. an element with a side effect must not be dropped, since
+        //      evaluating the array literal runs it — decline unless every
+        //      present element is side-effect-free.
+        // Holes (`[,,]`) evaluate nothing yet still count toward the length
+        // (`[,,].length === 2`), so `elements.len()` is the right count.
+        if let (Expression::ArrayExpression(a), Expression::Identifier(id)) = (&object, &property) {
+            if id.name == "length" {
+                let has_spread = a
+                    .elements
+                    .iter()
+                    .any(|el| matches!(el, Some(Expression::SpreadElement(_))));
+                let all_free = a
+                    .elements
+                    .iter()
+                    .all(|el| el.as_ref().is_none_or(is_side_effect_free));
+                if !has_spread && all_free {
+                    let len = a.elements.len() as f64;
+                    let parent = m.cv.clone();
+                    let before = format!("array-literal[{}].length", a.elements.len());
+                    let after = format_js_number(len);
+                    let new_cv = st.fork_cv(&parent, &before, &after);
+                    return stamp_literal_cv(FoldedLiteral::Number(len), new_cv);
+                }
             }
         }
     }
@@ -6510,6 +6613,107 @@ mod tests {
             Expression::NumericLiteral(n) => assert_eq!(n.value, 0.0),
             other => panic!("expected 0; got {:?}", other),
         }
+    }
+
+    /// Build an array literal from a slice of optional elements (`None` = hole).
+    fn array_opt(elements: Vec<Option<Expression>>) -> Expression {
+        Expression::ArrayExpression(ArrayExpression {
+            cv: Some("arr.cv".to_string()),
+            elements,
+        })
+    }
+
+    /// CLOC12.193: `[e0, e1, …].length` folds to the element count when every
+    /// present element is side-effect-free and there is no spread. Truth table
+    /// verified against the reference Closure Compiler.
+    #[test]
+    fn fold_array_literal_length_when_pure() {
+        // `[1, 2, 3].length` → 3.
+        let m = member(
+            array_opt(vec![
+                Some(num(1.0, None)),
+                Some(num(2.0, None)),
+                Some(num(3.0, None)),
+            ]),
+            "length",
+        );
+        let (out, _, changed, _) = run_pass(program_with_expr(m, true));
+        assert!(changed, "[1,2,3].length should fold");
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 3.0),
+            other => panic!("expected 3; got {other:?}"),
+        }
+
+        // `[].length` → 0.
+        let m0 = member(array_opt(vec![]), "length");
+        let (out, _, _, _) = run_pass(program_with_expr(m0, true));
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 0.0),
+            other => panic!("expected 0; got {other:?}"),
+        }
+
+        // `[,,].length` → 2 — holes evaluate nothing but DO count toward length.
+        let mh = member(array_opt(vec![None, None]), "length");
+        let (out, _, _, _) = run_pass(program_with_expr(mh, true));
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 2.0),
+            other => panic!("expected 2 (holes count); got {other:?}"),
+        }
+
+        // `[a, b].length` → 2 — identifier elements are side-effect-free.
+        let mid = member(
+            array_opt(vec![Some(ident("a")), Some(ident("b"))]),
+            "length",
+        );
+        let (out, _, _, _) = run_pass(program_with_expr(mid, true));
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 2.0),
+            other => panic!("expected 2 (identifiers are pure); got {other:?}"),
+        }
+    }
+
+    /// The array-`.length` fold must DECLINE when dropping the array would drop a
+    /// side effect (a call / an assignment) or when a spread makes the length
+    /// statically unknown — matching Closure, which keeps all three intact.
+    #[test]
+    fn array_literal_length_declines_on_side_effect_or_spread() {
+        use coding_adventures_javascript_ast::{AssignmentOperator, AssignmentTarget};
+        // `[g()].length` — the call must not be dropped.
+        let call = Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(ident("g")),
+            arguments: vec![],
+        });
+        let m_call = member(array_opt(vec![Some(call)]), "length");
+        let (out, _, changed, _) = run_pass(program_with_expr(m_call, true));
+        assert!(!changed, "[g()].length must not fold — the call has a side effect");
+        assert!(
+            matches!(extract_expr(&out), Expression::MemberExpression(_)),
+            "expected the member expression to survive"
+        );
+
+        // `[a = 1].length` — the assignment mutates `a`, so it must not be dropped.
+        let assign = Expression::AssignmentExpression(AssignmentExpression {
+            cv: None,
+            operator: AssignmentOperator::Eq,
+            left: AssignmentTarget::Identifier(Identifier { cv: None, name: "a".to_string() }),
+            right: Box::new(num(1.0, None)),
+        });
+        let m_assign = member(array_opt(vec![Some(assign)]), "length");
+        let (_out, _, changed, _) = run_pass(program_with_expr(m_assign, true));
+        assert!(!changed, "[a=1].length must not fold — the assignment has a side effect");
+
+        // `[1, 2, ...x].length` — a spread makes the length statically unknown.
+        let spread = Expression::SpreadElement(SpreadElement {
+            cv: None,
+            argument: Box::new(ident("x")),
+        });
+        let m_spread = member(
+            array_opt(vec![Some(num(1.0, None)), Some(num(2.0, None)), Some(spread)]),
+            "length",
+        );
+        let (_out, _, changed, _) = run_pass(program_with_expr(m_spread, true));
+        assert!(!changed, "[1,2,...x].length must not fold — spread length is unknown");
     }
 
     #[test]
