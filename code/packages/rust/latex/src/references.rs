@@ -3298,6 +3298,53 @@ impl Document {
         // twin of S33, the numeric summary of S20's per-source duplicate list.
         self.resolve_references().duplicates.len().to_string()
     }
+
+    /// The **single-integer total of the numbered labels** (LTXDOC03 S35) — the decimal `.len()` of the
+    /// S4 numbering table [`number_labels`](Document::number_labels), rendered as one line with **no**
+    /// trailing newline.
+    ///
+    /// Where S29's [`label_definition_count`](Document::label_definition_count) counts *every* winning
+    /// `\label` definition, S35 counts only the subset S4 assigns a **printed number** to: the labels on
+    /// a numbered section, a figure, a table, or (since S8) a labelled non-starred display equation. An
+    /// **inline** `\label` (in running text, a [`LabelKind::Inline`]) and a `\label` on a starred
+    /// `\section*` receive no counter and are omitted from the numbering table, so they are excluded
+    /// here — though they are still counted by S29. This is the **numbering-side companion** of S29's
+    /// definition total.
+    ///
+    /// ```text
+    /// 1
+    /// ```
+    ///
+    /// (a body with `\section{Intro}\label{sec:i}` plus an inline `\label{note}` → the section is
+    /// numbered `1`, the inline `note` carries no counter; S29 reports `2`, and the gap `2 − 1 = 1` is
+    /// exactly the inline label.) A document with **no** numberable labels — only inline labels, or no
+    /// `\label`s at all — returns `"0"`.
+    ///
+    /// **Ordering note.** `numbered_label_count ≤ label_definition_count` by construction: every numbered
+    /// label is a winning definition (the numbering pass records only first-wins keys, exactly as S1
+    /// does), but not every winning definition is numbered. The difference is precisely the count of
+    /// defined-but-unnumbered (inline / starred-section) labels. A key defined more than once contributes
+    /// a single numbered row — first-definition-wins, matching S29 — so S35 never double-counts.
+    ///
+    /// ## Additive by construction
+    ///
+    /// S35 is a brand-new, read-only method that reuses [`number_labels`](Document::number_labels) and
+    /// mutates nothing; it changes no S1–S34 output (they are byte-for-byte unchanged) and leaves the
+    /// `to_latex` round-trip fixed point intact. It is a *second view* of the same numbering table S4
+    /// builds — counting never adds, drops, or reorders the numbered labels relative to what
+    /// `number_labels` produced.
+    ///
+    /// **Total & panic-free.** No `unwrap`/`expect`, no unchecked indexing (no source slicing at all —
+    /// only `.len()` is read); a single read of the already-bounded numbering table's length. Borrows
+    /// `self` immutably and returns owned `String` data, so the result outlives any borrow of the source.
+    pub fn numbered_label_count(&self) -> String {
+        // S4's numbering pass already recorded one row per distinct *numberable* label key (numbered
+        // sections + figures + tables + labelled non-starred equations; inline and starred-section
+        // labels carry no counter and are omitted). We only read that table's length — no
+        // `key`/`kind`/`number` is read. The numbering-side companion of S29's definition total:
+        // `numbered_label_count ≤ label_definition_count`, the gap being the un-numbered inline labels.
+        self.number_labels().labels.len().to_string()
+    }
 }
 
 /// The plain-text rendering of a float's optional `\caption{…}` (LTXDOC03 S12).
@@ -8285,5 +8332,138 @@ See Section~\ref{sec:intro}, \eqref{eq:e}, \eqref{eq:ghost}, \nameref{sec:intro}
         let winners: usize = doc.label_definition_count().parse().unwrap();
         let losers: usize = doc.duplicate_label_count().parse().unwrap();
         assert_eq!(winners + losers, 5);
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // LTXDOC03 S35 — single-integer TOTAL of the numbered labels (`numbered_label_count`).
+    // The numbering-side companion of S29's `label_definition_count`: one decimal line = `.len()` of
+    // S4's `number_labels().labels` table. S4 numbers only sections (numbered) / figures / tables /
+    // labelled non-starred equations; inline (and starred-section) labels carry no counter and are
+    // omitted. So `numbered_label_count ≤ label_definition_count`, the gap being the un-numbered inline
+    // labels. Being a COUNT renderer its empty value is the honest "0", NOT a `(no …)` marker. A key
+    // defined twice yields ONE numbered row (first-definition-wins, matching S29) — never double-counted.
+    // ---------------------------------------------------------------------------------------------
+
+    #[test]
+    fn s35_mixed_numbered_and_inline_counts_only_the_numbered() {
+        // A numbered section + a figure + a table (all numbered) plus one inline `\label` in running
+        // text (unnumbered). Numbered subset = 3; S29 definitions = 4; the gap of 1 is the inline label.
+        let src = r"\begin{document}\section{Intro}\label{sec:i}
+
+\begin{figure}\includegraphics{p.png}\caption{P}\label{fig:p}\end{figure}
+
+\begin{table}\caption{T}\label{tab:t}\end{table}
+
+Some text \label{note} here.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.numbered_label_count(), "3");
+        // S29 counts the inline `note` too, so it is strictly larger; the difference is the inline count.
+        assert_eq!(doc.label_definition_count(), "4");
+        let numbered: usize = doc.numbered_label_count().parse().unwrap();
+        let defined: usize = doc.label_definition_count().parse().unwrap();
+        assert!(numbered <= defined, "numbered ≤ defined by construction");
+        assert_eq!(defined - numbered, 1, "the gap is exactly the one inline label");
+        // Two views of the SAME S4 table.
+        assert_eq!(
+            doc.numbered_label_count(),
+            doc.number_labels().labels.len().to_string()
+        );
+    }
+
+    #[test]
+    fn s35_all_numbered_equals_definition_count() {
+        // Every `\label` is on a numbered node (section + figure) — no inline labels — so the numbered
+        // total equals S29's definition total exactly.
+        let src = r"\begin{document}\section{A}\label{s:a}
+
+\begin{figure}\includegraphics{p.png}\caption{P}\label{fig:p}\end{figure}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.numbered_label_count(), "2");
+        assert_eq!(doc.numbered_label_count(), doc.label_definition_count());
+    }
+
+    #[test]
+    fn s35_inline_only_counts_zero_with_nonzero_definitions() {
+        // Only inline `\label`s (in running text) — none is numbered, so S35 is "0", while S29 counts
+        // them, proving the ≤ gap is real (the whole definition total is the un-numbered inline labels).
+        let src = r"\begin{document}Text \label{a} and \label{b} more.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.numbered_label_count(), "0");
+        assert_eq!(doc.label_definition_count(), "2");
+    }
+
+    #[test]
+    fn s35_no_labels_at_all_counts_zero() {
+        // A document with NO `\label` at all → "0", the honest count of an empty numbering table.
+        let src = r"\begin{document}Just text, no labels.\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.numbered_label_count(), "0");
+    }
+
+    #[test]
+    fn s35_duplicated_key_numbers_once_first_wins() {
+        // The same key `\label{dup}` on two numbered sections → the numbering pass records the FIRST
+        // only (first-definition-wins), so S35 = "1" (one numbered row), matching S29's "1" winner and
+        // S34's "1" loser — S35 never double-counts a duplicated key.
+        let src = r"\begin{document}\section{A}\label{dup}
+
+\section{B}\label{dup}\end{document}";
+        let doc = parse_document(src).expect("parse");
+        assert_eq!(doc.numbered_label_count(), "1");
+        assert_eq!(doc.label_definition_count(), "1");
+        assert_eq!(doc.duplicate_label_count(), "1");
+    }
+
+    #[test]
+    fn s35_is_additive_leaves_s1_s34_outputs_unchanged() {
+        // Same representative doc as the S34 additive test. S35 changes NONE of the S1–S34 outputs — it
+        // only reads S4's `number_labels`. Numbered subset = the section, figure, and (S8) equation
+        // labels (3); the inline `dup` is a winning definition (in S29's "4") but carries no counter, so
+        // it is absent from the numbering table. Pinned here alongside S22 and the totals-family S27–S34
+        // to show S35 neither adds, drops, nor reorders.
+        let src = r"\begin{document}\section{Introduction}\label{sec:intro}
+\begin{figure}\includegraphics{p.png}\caption{A plot}\label{fig:p}\end{figure}
+
+\begin{equation}\label{eq:e}E=mc^2\end{equation}
+
+First \label{dup} here.
+
+Second \label{dup} there.
+
+See Section~\ref{sec:intro}, \eqref{eq:e}, \eqref{eq:ghost}, \nameref{sec:intro}, \nameref{fig:p}, and \cite{a,b} plus \cite{c,ghost}.
+\begin{thebibliography}{9}
+\bibitem{a} Author A.
+\bibitem{b} Author B.
+\bibitem{c} Author C.
+\bibitem{a} Author A again.
+\end{thebibliography}
+\end{document}";
+        let doc = parse_document(src).expect("parse");
+
+        // S22 flat winning label definitions — byte-for-byte unchanged.
+        assert_eq!(
+            doc.label_definitions(),
+            "\\label{sec:intro}\n\\label{fig:p}\n\\label{eq:e}\n\\label{dup}"
+        );
+        // Prior totals-family renderers — byte-for-byte unchanged.
+        assert_eq!(doc.unresolved_reference_count(), "1");
+        assert_eq!(doc.resolved_reference_count(), "2");
+        assert_eq!(doc.label_definition_count(), "4");
+        assert_eq!(doc.bibliography_entry_count(), "3");
+        assert_eq!(doc.citation_count(), "3");
+        assert_eq!(doc.unresolved_citation_count(), "1");
+        assert_eq!(doc.duplicate_bibliography_count(), "1");
+        assert_eq!(doc.duplicate_label_count(), "1");
+
+        // And S35 itself: the numbered subset is the section, figure, and equation (3); the inline `dup`
+        // is defined (part of S29's "4") but unnumbered, so the gap S29 − S35 = 1 is exactly that inline.
+        assert_eq!(doc.numbered_label_count(), "3");
+        assert_eq!(
+            doc.numbered_label_count(),
+            doc.number_labels().labels.len().to_string()
+        );
+        let numbered: usize = doc.numbered_label_count().parse().unwrap();
+        let defined: usize = doc.label_definition_count().parse().unwrap();
+        assert_eq!(defined - numbered, 1);
     }
 }
