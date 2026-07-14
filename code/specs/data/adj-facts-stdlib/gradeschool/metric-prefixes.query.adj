@@ -1,0 +1,21 @@
+% ============================================================================
+% metric-prefixes.query.adj — a worked recall over the gradeschool SI-prefix library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what power of ten is 'kilo'?":
+% it states no fact of its own — it only `import`s the grounded table and asks
+% binding queries. The engine resolves each `?` against the `si_prefix_power` rows
+% and returns the exponent + the table's source/locator/trust. Note the reverse
+% query below: because `power_of_ten` is an ordinary column, you can bind the
+% PREFIX from a known power (which prefix is 10^6? → mega). A word that is not an
+% SI prefix abstains honestly — the engine never invents an exponent.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli metric-prefixes.query.adj
+% ============================================================================
+
+import "metric-prefixes.adj"
+
+? si_prefix_power(kilo, $P)        % expect 3   (kilo = 10^3)
+? si_prefix_power(milli, $P)       % expect -3  (milli = 10^-3)
+? si_prefix_power($Prefix, 6)      % expect mega (reverse: which prefix is 10^6?)
+? si_prefix_power(dozen, $P)       % expect abstain — "dozen" is not an SI prefix
