@@ -38,6 +38,8 @@ Every track shares the same shape:
 | [Kannada](./kannada/README.md) | Dravidian / Kannada (vendored font) | Chapters 1-2 authored (lessons + book) |
 | [Telugu](./telugu/README.md) | Dravidian / Telugu (vendored font) | Chapters 1-2 authored (lessons + book) |
 | [Malayalam](./malayalam/README.md) | Dravidian / Malayalam (vendored font) | Chapters 1-2 authored (lessons + book) |
+| [Latin](./latin/README.md) | Italic / Latin (**taproot**) | Chapter 1 (Greetings) authored (lessons + book) |
+| [Sanskrit](./sanskrit/README.md) | Indo-Aryan / Devanagari (**taproot**) | Chapter 1 (Greetings) authored (lessons + book) |
 
 Spanish is the pilot that proved the format; every other track replicates it,
 grounding each word against English plus whatever languages the learner already
@@ -45,3 +47,11 @@ knows (see `HL00`). Non-Latin scripts are taught **inline** — letters introduc
 inside the word that first needs them, never as a gated reading course — using
 vendored static Noto fonts (see [`_fonts/`](./_fonts/)) so local and CI builds
 render identically.
+
+**Latin and Sanskrit are taproot tracks.** Rather than being learned for
+conversation, they are the classical sources the other tracks keep pointing back
+to: Latin is the parent of the Spanish/French/Italian/Portuguese greetings (and
+half of English's vocabulary), and Sanskrit is the parent of the
+Hindi/Marathi/Punjabi/Bengali greetings — while both, as Indo-European sisters,
+also reach into English (*na* ↔ *no* ↔ *nōn*, *su-* ↔ Greek *eu-*, √gam ↔ *come*).
+They tie the two halves of the curriculum together.
