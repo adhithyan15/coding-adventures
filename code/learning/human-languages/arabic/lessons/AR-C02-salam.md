@@ -1,15 +1,15 @@
 ---
-id: AR-C01-salam
-chapter: 1
+id: AR-C02-salam
+chapter: 2
 type: word
 headword: سلام
 gloss: peace (salām)
 concept_tag: SALAM
-prerequisites: [AR-C01-root-system]
+prerequisites: [AR-C02-root-system]
 sounds: [rtl, emphatic-none]
 roots: [s-l-m]
 est_minutes: 5
-reviews_of: [AR-C01-marhaba]
+reviews_of: [AR-C02-marhaba]
 ---
 
 # سلام (salām) — "peace," and the most famous root in the language
@@ -22,7 +22,7 @@ Hebrew *shalom*. It is the root under the whole culture's word for hello.
 
 ## You'll want to know first
 
-- [the root system](./AR-C01-root-system.md)
+- [the root system](./AR-C02-root-system.md)
 
 ## Sounds you'll need
 

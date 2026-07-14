@@ -1,15 +1,15 @@
 ---
-id: AR-C01-khayr
-chapter: 1
+id: AR-C02-khayr
+chapter: 2
 type: word
 headword: خير
 gloss: good, goodness (khayr)
 concept_tag: KHAYR
-prerequisites: [AR-C01-root-system]
+prerequisites: [AR-C02-root-system]
 sounds: [rtl, kha]
 roots: [kh-y-r]
 est_minutes: 3
-reviews_of: [AR-C01-sabah]
+reviews_of: [AR-C02-sabah]
 ---
 
 # خير (khayr) — "good, goodness"

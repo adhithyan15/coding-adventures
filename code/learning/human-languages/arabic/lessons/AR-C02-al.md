@@ -1,15 +1,15 @@
 ---
-id: AR-C01-al
-chapter: 1
+id: AR-C02-al
+chapter: 2
 type: word
 headword: ال
 gloss: "the" (al-)
 concept_tag: ARTICLE-AL
-prerequisites: [AR-C01-salam]
+prerequisites: [AR-C02-salam]
 sounds: [rtl, sun-moon]
 roots: []
 est_minutes: 5
-reviews_of: [AR-C01-salam]
+reviews_of: [AR-C02-salam]
 ---
 
 # ال (al-) — "the," the one Arabic word hiding in English *algebra*
@@ -22,7 +22,7 @@ smuggled piece of Arabic.
 
 ## You'll want to know first
 
-- [سلام (salām)](./AR-C01-salam.md) — you'll attach *al-* to it next lesson.
+- [سلام (salām)](./AR-C02-salam.md) — you'll attach *al-* to it next lesson.
 
 ## Sounds you'll need
 

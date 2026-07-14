@@ -1,15 +1,15 @@
 ---
-id: AR-C01-practice
-chapter: 1
+id: AR-C02-practice
+chapter: 2
 type: practice-mix
 headword: (practice)
 gloss: the Arabic greetings, all together
 concept_tag: CH1-PRACTICE
-prerequisites: [AR-C01-marhaba, AR-C01-as-salamu-alaykum, AR-C01-sabah-al-khayr, AR-C01-masa-al-khayr, AR-C01-shukran]
+prerequisites: [AR-C02-marhaba, AR-C02-as-salamu-alaykum, AR-C02-sabah-al-khayr, AR-C02-masa-al-khayr, AR-C02-shukran]
 sounds: [rtl]
 roots: []
 est_minutes: 4
-reviews_of: [AR-C01-marhaba, AR-C01-as-salamu-alaykum, AR-C01-sabah-al-khayr, AR-C01-masa-al-khayr, AR-C01-shukran]
+reviews_of: [AR-C02-marhaba, AR-C02-as-salamu-alaykum, AR-C02-sabah-al-khayr, AR-C02-masa-al-khayr, AR-C02-shukran]
 ---
 
 # Practice — the Arabic greetings

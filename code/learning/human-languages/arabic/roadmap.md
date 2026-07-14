@@ -11,9 +11,12 @@ organizing engine. Script is reintroduced inline, RTL.
 
 ## Authored
 
-- **Ch. 1 — Greetings**: the root system → marḥaban → salām → **al-** → as-salāmu
-  ʿalaykum → ṣabāḥ → khayr → ṣabāḥ al-khayr → masāʾ → masāʾ al-khayr → shukran
-  → practice.
+- **Ch. 1 — Learning to Read** (reading course): la → salam → marhaba →
+  sabah/khayr → shukran → alaykum → practice. A few letters per lesson, each
+  cashing out in a real word, reaching the full greeting set (~15 letters).
+- **Ch. 2 — Greetings** (what they mean): the root system → marḥaban → salām →
+  **al-** → as-salāmu ʿalaykum → ṣabāḥ → khayr → ṣabāḥ al-khayr → masāʾ → masāʾ
+  al-khayr → shukran → practice.
 
 ## Planned
 

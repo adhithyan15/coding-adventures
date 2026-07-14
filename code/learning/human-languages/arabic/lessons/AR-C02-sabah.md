@@ -1,15 +1,15 @@
 ---
-id: AR-C01-sabah
-chapter: 1
+id: AR-C02-sabah
+chapter: 2
 type: word
 headword: صباح
 gloss: morning (ṣabāḥ)
 concept_tag: SABAH
-prerequisites: [AR-C01-root-system]
+prerequisites: [AR-C02-root-system]
 sounds: [rtl, emphatic-sad, ha-heavy]
 roots: [s-b-h]
 est_minutes: 3
-reviews_of: [AR-C01-as-salamu-alaykum]
+reviews_of: [AR-C02-as-salamu-alaykum]
 ---
 
 # صباح (ṣabāḥ) — "morning"

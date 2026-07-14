@@ -1,15 +1,15 @@
 ---
-id: AR-C01-as-salamu-alaykum
-chapter: 1
+id: AR-C02-as-salamu-alaykum
+chapter: 2
 type: word
 headword: السلام عليكم
 gloss: peace be upon you (as-salāmu ʿalaykum)
 concept_tag: GREETING-PEACE
-prerequisites: [AR-C01-salam, AR-C01-al]
+prerequisites: [AR-C02-salam, AR-C02-al]
 sounds: [rtl, ayn]
 roots: [s-l-m]
 est_minutes: 4
-reviews_of: [AR-C01-salam, AR-C01-al]
+reviews_of: [AR-C02-salam, AR-C02-al]
 ---
 
 # السلام عليكم (as-salāmu ʿalaykum) — "peace be upon you"
@@ -21,7 +21,7 @@ the most-spoken sentences on Earth.
 
 ## You'll want to know first
 
-- [سلام (salām)](./AR-C01-salam.md) · [ال (al-)](./AR-C01-al.md)
+- [سلام (salām)](./AR-C02-salam.md) · [ال (al-)](./AR-C02-al.md)
 
 ## Sounds you'll need
 

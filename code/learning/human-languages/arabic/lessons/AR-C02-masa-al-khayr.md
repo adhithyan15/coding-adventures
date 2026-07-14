@@ -1,15 +1,15 @@
 ---
-id: AR-C01-masa-al-khayr
-chapter: 1
+id: AR-C02-masa-al-khayr
+chapter: 2
 type: word
 headword: مساء الخير
 gloss: good evening (masāʾ al-khayr)
 concept_tag: GREETING-EVENING
-prerequisites: [AR-C01-masa, AR-C01-khayr]
+prerequisites: [AR-C02-masa, AR-C02-khayr]
 sounds: [rtl]
 roots: [m-s-w, kh-y-r]
 est_minutes: 2
-reviews_of: [AR-C01-masa, AR-C01-sabah-al-khayr]
+reviews_of: [AR-C02-masa, AR-C02-sabah-al-khayr]
 ---
 
 # مساء الخير (masāʾ al-khayr) — "evening of goodness"
@@ -21,7 +21,7 @@ evening.
 
 ## You'll want to know first
 
-- [مساء (masāʾ)](./AR-C01-masa.md) · [خير (khayr)](./AR-C01-khayr.md)
+- [مساء (masāʾ)](./AR-C02-masa.md) · [خير (khayr)](./AR-C02-khayr.md)
 
 ## The word, taken apart — by assembling it
 

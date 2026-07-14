@@ -1,15 +1,15 @@
 ---
-id: AR-C01-marhaba
-chapter: 1
+id: AR-C02-marhaba
+chapter: 2
 type: word
 headword: مرحبا
 gloss: hello / welcome (marḥaban)
 concept_tag: GREETING-HELLO
-prerequisites: [AR-C01-root-system]
+prerequisites: [AR-C02-root-system]
 sounds: [rtl, ha-heavy]
 roots: [r-h-b]
 est_minutes: 4
-reviews_of: [AR-C01-root-system]
+reviews_of: [AR-C02-root-system]
 ---
 
 # مرحبا (marḥaban) — "hello," literally "welcome, there's room for you"
@@ -21,7 +21,7 @@ do its work. This one is built on the idea of *spaciousness*.
 
 ## You'll want to know first
 
-- [the root system](./AR-C01-root-system.md) — three consonants, one meaning.
+- [the root system](./AR-C02-root-system.md) — three consonants, one meaning.
 
 ## Sounds you'll need
 
