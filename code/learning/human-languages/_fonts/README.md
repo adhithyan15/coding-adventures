@@ -1,16 +1,23 @@
 # Vendored fonts (non-Latin scripts)
 
-These are **static Regular instances** of Google's [Noto](https://fonts.google.com/noto)
-fonts, vendored so the non-Latin-script books (Arabic, Hindi, Tamil, Kannada,
-Telugu, Malayalam) compile **identically** on any machine and in CI — with no
-dependency on whatever font packages happen to be installed.
+These are **static Regular** files of Google's [Noto](https://fonts.google.com/noto)
+fonts, vendored so the non-Latin-script books (Arabic, Hindi, Marathi, Tamil,
+Kannada, Telugu, Malayalam, Punjabi, Bengali) compile **identically** on any
+machine and in CI — with no dependency on whatever font packages happen to be
+installed.
 
 - `NotoNaskhArabic-Static.ttf` — Arabic
-- `NotoSansDevanagari-Static.ttf` — Hindi (Devanagari)
+- `NotoSansDevanagari-Static.ttf` — Hindi **and Marathi** (both Devanagari)
 - `NotoSansTamil-Static.ttf` — Tamil
 - `NotoSansKannada-Static.ttf` — Kannada
 - `NotoSansTelugu-Static.ttf` — Telugu
 - `NotoSansMalayalam-Static.ttf` — Malayalam
+- `NotoSansGurmukhi-Static.ttf` — Punjabi (Gurmukhi)
+- `NotoSansBengali-Static.ttf` — Bengali
+
+(The Gurmukhi and Bengali files are the upstream static `-Regular.ttf` from the
+`notofonts.github.io` repo — already single-weight, so no instancing needed.
+The others were flattened from variable fonts; see below.)
 
 ## Why static instances?
 
