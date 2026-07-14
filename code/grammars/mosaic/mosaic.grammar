@@ -109,13 +109,15 @@ property_assignment = ( NAME | KEYWORD ) COLON property_value SEMICOLON ;
 # (e.g., "color", "text", "node") can also appear as layout/style property names.
 
 property_value = slot_ref
+              | enum_value
               | STRING
               | NUMBER
               | DIMENSION
               | COLOR_HEX
               | KEYWORD
-              | NAME
-              | enum_value ;
+              | NAME ;
+# Keep enum_value before NAME: both begin with NAME, and ordered-choice
+# parsers must try the longer NAME DOT NAME form first.
 
 slot_ref = AT NAME ;
 
