@@ -1,0 +1,47 @@
+% ============================================================================
+% water-cycle — each water-cycle stage's step number (adj-facts-stdlib,
+% EARTH-SCIENCE).
+% ============================================================================
+% An early earth-science fact every young student meets: water is always on the
+% move, and the trip repeats in the same order. The Sun warms water so it rises
+% as invisible vapor, the vapor cools into clouds, the clouds rain or snow it
+% back down, that water runs downhill, and some soaks underground — then the Sun
+% lifts it up again. Recall is a binding query:
+%
+%     ? water_cycle_stage(precipitation, $N)   % 3  (rain/snow is the 3rd step)
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `water_cycle_stage(stage, step_number)` carrying the USGS citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the step
+% WITH its source, on the CPU, with zero model calls. It abstains on anything the
+% page does not name as a moving-water stage: the Sun is deliberately NOT a row
+% (USGS calls it "the real boss of the water cycle" — the ENERGY that drives the
+% cycle, not a stage the water passes through), just as a driver is not a step.
+% The `step_number` value is a NUMBER, so a recalled step composes into arithmetic
+% (how many steps from evaporation to precipitation? 3 − 1 = 2).
+%
+% Provenance: the USGS Water Science School beginner diagram for kids names these
+% stages and describes them in this process order — each stage's text hands off to
+% the next (evaporation lifts vapor; "This is condensation, the opposite of
+% evaporation"; the cloud droplets "fall to Earth as precipitation"; when rain/snow
+% melts "it flows downhill ... This is called runoff"; "Some precipitation and
+% runoff soaks into the ground to become groundwater"). The citable artifact is that
+% USGS page at the `locator`, and every stage below is confirmed by its own section
+% there. `trust authoritative` — a U.S. Geological Survey (.gov) primary reference.
+% Nothing here is asserted from memory. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table water_cycle_stage {
+    columns stage, step_number
+
+    row (evaporation, 1)
+    row (condensation, 2)
+    row (precipitation, 3)
+    row (runoff, 4)
+    row (groundwater, 5)
+
+    source "The sun causes liquid water to evaporate, or turn from a liquid to a gas (water vapor)."
+    locator "https://water.usgs.gov/edu/watercycle-kids-beg.html"
+    trust authoritative
+}

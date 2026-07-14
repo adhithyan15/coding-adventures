@@ -32,6 +32,7 @@ per rotation, in parallel):
 | `mathematics/` | Roman numeral → value | (consensus) |
 | `calendar/` | day / month → number | ISO 8601 |
 | `money/` | US coin → cents | US Mint |
+| `earth-science/` | water-cycle stage → step number | USGS Water Science School |
 | … | *physics, biology, geography, anatomy, physical constants, …* | *(expanding)* |
 
 Formulas and laws (Newton's `F = ma`, the ideal gas law `PV = nRT`, area/volume, …) are grown

@@ -1,0 +1,22 @@
+% ============================================================================
+% water-cycle.query.adj — a worked recall over the earth-science water-cycle
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "which step of the water
+% cycle is precipitation?" — it states no earth-science fact, only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?` against
+% the `water_cycle_stage` rows and returns the step number (or the stage, on a
+% reverse query) + the USGS source/locator/trust. Something the page does not name
+% as a moving-water stage abstains honestly — the engine never invents a step.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli water-cycle.query.adj
+% ============================================================================
+
+import "water-cycle.adj"
+
+? water_cycle_stage(evaporation, $N)      % expect 1  (the cycle starts here)
+? water_cycle_stage(precipitation, $N)    % expect 3  (rain / snow falls to Earth)
+? water_cycle_stage($Stage, 2)            % expect condensation (reverse: 2nd step?)
+? water_cycle_stage(sun, $N)              % expect abstain — the Sun DRIVES the
+                                          %   cycle; it is not a stage, not a row
