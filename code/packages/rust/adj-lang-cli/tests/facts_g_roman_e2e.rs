@@ -1,5 +1,5 @@
-//! End-to-end test for the first grade-school FACTS library
-//! (`adj-facts-stdlib/gradeschool/roman-numerals.adj`) driven through the built
+//! End-to-end test for the mathematics (numeral systems) FACTS library
+//! (`adj-facts-stdlib/mathematics/roman-numerals.adj`) driven through the built
 //! CLI: a native `table` of Roman symbol → numeric value resolves a binding-query
 //! recall with the source's citation, and abstains on a letter that is not a
 //! Roman numeral — 0 model calls.
@@ -30,10 +30,10 @@ fn run(program: &Path) -> (bool, String) {
 }
 
 #[test]
-fn gradeschool_roman_recall_binds_symbol_value_with_citation() {
+fn mathematics_roman_recall_binds_symbol_value_with_citation() {
     let dir = scratch("roman");
-    // Copy the shipped grade-school table beside the entry program and import it.
-    let src = facts_stdlib().join("gradeschool/roman-numerals.adj");
+    // Copy the shipped mathematics table beside the entry program and import it.
+    let src = facts_stdlib().join("mathematics/roman-numerals.adj");
     std::fs::copy(&src, dir.join("roman-numerals.adj")).expect("copy shipped roman-numerals.adj");
     std::fs::write(
         dir.join("case.adj"),

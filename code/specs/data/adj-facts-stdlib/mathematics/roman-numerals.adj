@@ -1,9 +1,11 @@
 % ============================================================================
-% roman-numerals — each Roman symbol's value (adj-facts-stdlib, GRADE-SCHOOL).
+% roman-numerals — each Roman symbol's value (adj-facts-stdlib, MATHEMATICS).
 % ============================================================================
-% A grade-school arithmetic fact: the seven letters of the Roman system and the
-% number each one stands for — I is one, V is five, X is ten, and so on up to M
-% for a thousand. Recall is a binding query:
+% A numeral-systems fact: the seven letters of the Roman system and the number
+% each one stands for — I is one, V is five, X is ten, and so on up to M for a
+% thousand. This library lives under the MATHEMATICS subject (numeral systems);
+% the facts stdlib is organized by SUBJECT, not by grade level. Recall is a
+% binding query:
 %
 %     ? roman_numeral_value(x, $V)        % 10
 %
@@ -16,8 +18,8 @@
 % Because the `value` column is a NUMBER, a recalled symbol-value composes
 % straight into arithmetic: to read a whole numeral like XVI you add the recalled
 % values 10 + 5 + 1 = 16 (with a subtractive step for forms like IX). That is the
-% concrete bridge from grade-school RECALL of the seven symbols to grade-school
-% COMPUTE of a numeral's total.
+% concrete bridge from RECALL of the seven symbols to COMPUTE of a numeral's
+% total.
 %
 % A NOTE ON CASE: ADJ atoms are lowercase, so the `symbol` key is written with
 % the lowercase letters `i, v, x, l, c, d, m`. The source (below) writes the
