@@ -101,6 +101,7 @@ you actually intend to run `llc` for a non-default architecture.
 | v0.18.0 | **Literal string metadata** (LANG-FULL E4). `str_len`/`str_eq`/`str_concat` over direct `str_const` literals lower to compile-time results, proving `(string-length "HELLO")`, `(string=? "HELLO" "HELLO")`, and `(string-length (string-append "AB" "CDE"))` on LLVM while dynamic string algebra stays rejected. |
 | v0.22.0 | **Computed string indexes** (LANG-FULL E4). Literal-only `str_len` constants can flow through typed `i64` arithmetic and feed `str_index`. |
 | v0.24.0 | **Literal string comparison** (LANG-FULL E4). Literal-only `str_cmp` lowers to the shared `-1`/`0`/`1` ordering result. |
+| v0.42.0 | **Structural heap ops + name quoting** (LANG-FULL E6d-6). `alloc`→`call i64 @__twig_gc_alloc`, `field_store`/`field_load`→`inttoptr`+`getelementptr i64`+`store`/`load` (a field is at `idx*8`), `is_null`→`icmp eq …, 0`+`zext` — the native backend's word-granular model. `llvm_fn_ident` quotes special-char names (`@"point-x"`, `@"Some?"`). **Twig records run on LLVM** (exit 42). Union `match` on native/LLVM is a documented follow-up (E6d-6b). |
 | (later) | GC, debug info via `!dbg`. |
 
 ### Bounds-checked arrays (v0.14.0)

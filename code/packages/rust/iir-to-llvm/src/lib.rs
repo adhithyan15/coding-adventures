@@ -268,6 +268,13 @@ const SUPPORTED_OPS: &[&str] = &[
     // x86_64 / native AOT backend already supports (LANG76); we add the LLVM
     // lowering so Brainfuck — which builds an implicit byte tape — compiles.
     "alloc_bytes", "load_byte", "store_byte",
+    // E6d-6-LLVM — word-granular heap objects: the structural `alloc` /
+    // `field_store` / `field_load` / `is_null` ops a Twig record/union
+    // constructor + accessors emit (a `ref<LispyPair>` cons chain), matching the
+    // native backend (LANG77). `alloc [size]` calls `__twig_gc_alloc`; a field is
+    // a raw 64-bit word at index*8. Lets records/unions/`match` run on LLVM (they
+    // already run on native/WASM/JVM/CLR).
+    "alloc", "field_store", "field_load", "is_null",
     // LANG-FULL E5 — bounds-checked arrays (the *static* representation:
     // length-prefixed flat `calloc` block + an explicit compare/trap, vs the
     // JVM/CLR managed-array native check). `alloc_array` allocates `[i64 len]
@@ -729,6 +736,7 @@ pub fn lower_iir_to_llvm(
     // line, returns an i64 handle to a `[i64 len][bytes]` heap block).
     let mut used_input_str = false;
     let mut used_alloc_bytes = false;
+    let mut used_gc_alloc = false;
     // LANG-FULL E5: any array op needs `@calloc` (the allocation) and `@llvm.trap`
     // (the out-of-bounds trap). `is_array_op` covers alloc_array/array_*.
     let mut used_arrays = false;
@@ -768,6 +776,9 @@ pub fn lower_iir_to_llvm(
         for i in &f.instructions {
             if i.op == "alloc_bytes" {
                 used_alloc_bytes = true;
+            }
+            if i.op == "alloc" {
+                used_gc_alloc = true;
             }
             if i.op == "print_str" {
                 used_print_str = true;
@@ -853,10 +864,15 @@ pub fn lower_iir_to_llvm(
         out.push_str("declare double @pow(double, double)\n");
     }
     if used_alloc_bytes || used_arrays || used_conversions || used_str_index || used_putchar || used_getchar
-        || used_input_i64 || used_input_str || used_str_concat || used_str_eq {
+        || used_input_i64 || used_input_str || used_str_concat || used_str_eq || used_gc_alloc {
         out.push('\n');
         if used_alloc_bytes || used_arrays {
             out.push_str("declare ptr @calloc(i64, i64)\n");
+        }
+        if used_gc_alloc {
+            // E6d-6-LLVM: the GC allocator (twig_gc.c), shared with the native
+            // backend. `i64 __twig_gc_alloc(i64 n_bytes)` returns a heap pointer.
+            out.push_str("declare i64 @__twig_gc_alloc(i64)\n");
         }
         if used_arrays || used_conversions || used_str_index {
             // The trap target — out-of-bounds for arrays (LANG-FULL E5) and
@@ -1239,7 +1255,7 @@ fn lower_function(
 ) -> Result<(), IIRLlvmError> {
     // ── Header line: `define <ret> @<name>(<params>) {`
     let ret_ty = llvm_type_for(&func.return_type, &func.name)?;
-    out.push_str(&format!("define {ret_ty} @{}(", func.name));
+    out.push_str(&format!("define {ret_ty} @{}(", llvm_fn_ident(&func.name)));
     for (i, (pname, pty)) in func.params.iter().enumerate() {
         if i > 0 {
             out.push_str(", ");
@@ -1703,6 +1719,10 @@ fn lower_instr(
 
         // ── byte-tape memory (LLVM05 — LANG-MATRIX LM-L Brainfuck) ───────
         "alloc_bytes" => lower_alloc_bytes(instr, state, out),
+        "alloc" => lower_alloc(instr, state, out),
+        "field_store" => lower_field_store(instr, state, out),
+        "field_load" => lower_field_load(instr, state, out),
+        "is_null" => lower_is_null(instr, state, out),
         "load_byte" => lower_load_byte(instr, state, out),
         "store_byte" => lower_store_byte(instr, state, out),
         "alloc_array" => lower_alloc_array(instr, state, out),
@@ -2355,6 +2375,119 @@ fn lower_alloc_bytes(
     out.push_str(&format!("  %{dest} = call ptr @calloc(i64 {size}, i64 1)\n"));
     state.env.insert(dest.clone(), format!("%{dest}"));
     Ok(())
+}
+
+// ── E6d-6-LLVM: word-granular heap objects (records / unions / closures) ──────
+//
+// A Twig record/union constructor erases (frontend) to a `ref<LispyPair>` cons
+// chain built with the structural `alloc` / `field_store` ops, and its
+// accessors read fields with `field_load`; `match` on a union tests the tag with
+// `is_null`/`=`. The native backend (LANG77) already runs these directly; these
+// four arms give LLVM the same word-granular heap model so records/unions/`match`
+// run on the LLVM column too. A heap object is a `__twig_gc_alloc`'d block; the
+// object handle and every field are raw 64-bit words (tagged `DynValue`s), so a
+// field is at byte offset `idx*8` — one `getelementptr i64, ptr, i64 <idx>`.
+
+/// `alloc [<size>] -> dest` — GC-allocate a heap object; dest is the i64 handle.
+/// `srcs[0]`, when present, is the compile-time payload size in bytes; default 16
+/// (a 2-word `LispyPair`), matching the native backend.
+fn lower_alloc(instr: &IIRInstr, state: &mut FnState, out: &mut String) -> Result<(), IIRLlvmError> {
+    let dest = require_dest(instr, "alloc", state.fn_name)?.to_string();
+    let size: i64 = match instr.srcs.first() {
+        Some(Operand::Int(n)) if *n > 0 => *n,
+        _ => 16,
+    };
+    out.push_str(&format!("  %{dest} = call i64 @__twig_gc_alloc(i64 {size})\n"));
+    state.env.insert(dest.clone(), format!("%{dest}"));
+    Ok(())
+}
+
+/// `field_store ptr, idx, value` (no dest) — `[ptr + idx*8] = value`. `idx` is a
+/// compile-time field index; values are raw 64-bit words.
+fn lower_field_store(instr: &IIRInstr, state: &mut FnState, out: &mut String) -> Result<(), IIRLlvmError> {
+    if instr.dest.is_some() {
+        return Err(IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: "field_store must not have a dest".into(),
+        });
+    }
+    let ptr = resolve_operand(instr.srcs.first(), &state.env, "i64", state.fn_name)?;
+    let idx = field_index(instr, 1, state.fn_name)?;
+    let val = resolve_operand(instr.srcs.get(2), &state.env, "i64", state.fn_name)?;
+    let p = state.fresh("fsp");
+    out.push_str(&format!("  {p} = inttoptr i64 {ptr} to ptr\n"));
+    let ep = state.fresh("fsep");
+    out.push_str(&format!("  {ep} = getelementptr i64, ptr {p}, i64 {idx}\n"));
+    out.push_str(&format!("  store i64 {val}, ptr {ep}\n"));
+    Ok(())
+}
+
+/// `field_load ptr, idx -> dest` — `dest = [ptr + idx*8]` (a raw 64-bit word).
+fn lower_field_load(instr: &IIRInstr, state: &mut FnState, out: &mut String) -> Result<(), IIRLlvmError> {
+    let dest = require_dest(instr, "field_load", state.fn_name)?.to_string();
+    let ptr = resolve_operand(instr.srcs.first(), &state.env, "i64", state.fn_name)?;
+    let idx = field_index(instr, 1, state.fn_name)?;
+    let p = state.fresh("flp");
+    out.push_str(&format!("  {p} = inttoptr i64 {ptr} to ptr\n"));
+    let ep = state.fresh("flep");
+    out.push_str(&format!("  {ep} = getelementptr i64, ptr {p}, i64 {idx}\n"));
+    out.push_str(&format!("  %{dest} = load i64, ptr {ep}\n"));
+    state.env.insert(dest.clone(), format!("%{dest}"));
+    Ok(())
+}
+
+/// `is_null x -> dest` — `dest = (x == 0)` (the nil sentinel is the 0 word). The
+/// i1 form is kept in `env_i1` so a downstream `jmp_if_*` uses it directly.
+fn lower_is_null(instr: &IIRInstr, state: &mut FnState, out: &mut String) -> Result<(), IIRLlvmError> {
+    let dest = require_dest(instr, "is_null", state.fn_name)?.to_string();
+    let x = resolve_operand(instr.srcs.first(), &state.env, "i64", state.fn_name)?;
+    let i1 = format!("%{dest}.i1");
+    out.push_str(&format!("  {i1} = icmp eq i64 {x}, 0\n"));
+    state.env_i1.insert(dest.clone(), i1.clone());
+    out.push_str(&format!("  %{dest} = zext i1 {i1} to i64\n"));
+    state.env.insert(dest.clone(), format!("%{dest}"));
+    Ok(())
+}
+
+/// The LLVM global-identifier token for a function name, ready to follow `@`.
+///
+/// LLVM unquoted named values match `[-a-zA-Z$._][-a-zA-Z$._0-9]*`; a name with
+/// any other character (e.g. the Twig record accessor `point-x`'s `?`-suffixed
+/// union predicate `Some?`, or `list->vector`'s `>`) must be **quoted** —
+/// `@"Some?"`. A quoted identifier denotes the *same* symbol as the unquoted
+/// spelling when the characters are identical, so quoting conservatively (any
+/// name outside the safe set) is always sound; `"` and `\` inside the name are
+/// hex-escaped as LLVM requires. Emitted identically at the `define` site and at
+/// every `call` site so the reference always resolves.
+fn llvm_fn_ident(name: &str) -> String {
+    let safe = |c: char| c.is_ascii_alphanumeric() || matches!(c, '$' | '.' | '_' | '-');
+    let first_ok = name.chars().next().is_some_and(|c| !c.is_ascii_digit());
+    if first_ok && name.chars().all(safe) {
+        name.to_string()
+    } else {
+        let mut q = String::with_capacity(name.len() + 2);
+        q.push('"');
+        for c in name.chars() {
+            match c {
+                '"' => q.push_str("\\22"),
+                '\\' => q.push_str("\\5C"),
+                _ => q.push(c),
+            }
+        }
+        q.push('"');
+        q
+    }
+}
+
+/// A compile-time field index operand (`srcs[at]` = `Int(n)`, `n >= 0`).
+fn field_index(instr: &IIRInstr, at: usize, fn_name: &str) -> Result<i64, IIRLlvmError> {
+    match instr.srcs.get(at) {
+        Some(Operand::Int(n)) if *n >= 0 => Ok(*n),
+        _ => Err(IIRLlvmError::InvalidOperand {
+            function: fn_name.into(),
+            detail: format!("{}: srcs[{at}] must be a non-negative Int field index", instr.op),
+        }),
+    }
 }
 
 /// Lower `load_byte dest <- base, idx` — read one tape cell, zero-extended.
@@ -3249,15 +3382,16 @@ fn lower_call(
     let args_joined = arg_parts.join(", ");
 
     let ret_ty = sig.return_type;
+    let callee_ref = llvm_fn_ident(&callee);
     if let Some(dest) = &instr.dest {
         out.push_str(&format!(
-            "  %{dest} = call {ret_ty} @{callee}({args_joined})\n"
+            "  %{dest} = call {ret_ty} @{callee_ref}({args_joined})\n"
         ));
         state.env.insert(dest.clone(), format!("%{dest}"));
     } else {
         // Void return — no dest binding.  Per LLVM IR, a void `call` must
         // not be on the LHS of an assignment.
-        out.push_str(&format!("  call {ret_ty} @{callee}({args_joined})\n"));
+        out.push_str(&format!("  call {ret_ty} @{callee_ref}({args_joined})\n"));
     }
     Ok(())
 }

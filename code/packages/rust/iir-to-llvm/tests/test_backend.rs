@@ -2424,3 +2424,176 @@ fn str_eq_over_params_calls_twig_str_eq() {
     assert!(ll.contains("declare i64 @__twig_str_eq(i64, i64)"),
         "the @__twig_str_eq extern must be declared; got:\n{ll}");
 }
+
+// ===========================================================================
+// 8. E6d-6-LLVM — structural heap ops (alloc / field_store / field_load /
+//    is_null) + special-char function-name quoting.
+//
+//    These give the LLVM column the same word-granular heap model the native
+//    backend uses, so Twig records (and, once the tagged-world int→any
+//    coercion lands, unions) run on LLVM. A heap object is a `__twig_gc_alloc`'d
+//    block; the handle + every field are raw 64-bit words, so a field lives at
+//    byte offset `idx*8` — one `getelementptr i64, ptr, i64 <idx>`.
+// ===========================================================================
+
+/// A one-function module that exercises all four heap ops, threading a param
+/// `v` into a freshly-allocated object and reading it back.
+fn heap_ops_module() -> IIRModule {
+    let f = IIRFunction::new(
+        "main",
+        vec![("v".into(), "i64".into())],
+        "i64",
+        vec![
+            IIRInstr::new("alloc", Some("c".into()), vec![], "ref<LispyPair>"),
+            IIRInstr::new(
+                "field_store",
+                None,
+                vec![Operand::Var("c".into()), Operand::Int(0), Operand::Var("v".into())],
+                "void",
+            ),
+            IIRInstr::new(
+                "field_load",
+                Some("r".into()),
+                vec![Operand::Var("c".into()), Operand::Int(1)],
+                "ref<any>",
+            ),
+            IIRInstr::new("is_null", Some("n".into()), vec![Operand::Var("c".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ],
+    );
+    module_with(f)
+}
+
+#[test]
+fn alloc_calls_gc_alloc_with_default_size_and_declares_extern() {
+    let ll = lower(&heap_ops_module());
+    // Default payload is a 2-word LispyPair (16 bytes), matching the native backend.
+    assert!(ll.contains("call i64 @__twig_gc_alloc(i64 16)"), "{ll}");
+    // The extern must be declared exactly once when `alloc` is used.
+    assert_eq!(ll.matches("declare i64 @__twig_gc_alloc(i64)").count(), 1, "{ll}");
+}
+
+#[test]
+fn alloc_honours_explicit_payload_size() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("alloc", Some("c".into()), vec![Operand::Int(24)], "ref<LispyPair>"),
+            IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("call i64 @__twig_gc_alloc(i64 24)"), "{ll}");
+}
+
+#[test]
+fn field_store_writes_word_at_scaled_offset() {
+    let ll = lower(&heap_ops_module());
+    // inttoptr the i64 handle, GEP by the field index (i64-scaled → *8), store the word.
+    assert!(ll.contains("inttoptr i64 %c to ptr"), "{ll}");
+    assert!(ll.contains("getelementptr i64, ptr"), "{ll}");
+    assert!(ll.contains("store i64 %v, ptr"), "{ll}");
+}
+
+#[test]
+fn field_load_reads_word_at_scaled_offset() {
+    let ll = lower(&heap_ops_module());
+    // field_load[1] → GEP index 1 then load an i64 into the dest.
+    assert!(ll.contains("getelementptr i64, ptr %flp") || ll.contains("getelementptr i64, ptr"), "{ll}");
+    assert!(ll.contains("%r = load i64, ptr"), "{ll}");
+}
+
+#[test]
+fn is_null_compares_handle_to_zero_and_zexts() {
+    let ll = lower(&heap_ops_module());
+    assert!(ll.contains("icmp eq i64 %c, 0"), "{ll}");
+    assert!(ll.contains("zext i1 %n.i1 to i64"), "{ll}");
+}
+
+#[test]
+fn field_store_must_not_have_dest() {
+    let f = IIRFunction::new(
+        "main",
+        vec![("v".into(), "i64".into())],
+        "void",
+        vec![
+            IIRInstr::new("alloc", Some("c".into()), vec![], "ref<LispyPair>"),
+            IIRInstr::new(
+                "field_store",
+                Some("bad".into()),
+                vec![Operand::Var("c".into()), Operand::Int(0), Operand::Var("v".into())],
+                "void",
+            ),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    let err = lower_iir_to_llvm(&module_with(f), &IIRLlvmConfig::default()).unwrap_err();
+    assert!(matches!(err, IIRLlvmError::InvalidOperand { .. }), "{err:?}");
+}
+
+#[test]
+fn field_index_must_be_non_negative_int() {
+    let f = IIRFunction::new(
+        "main",
+        vec![("v".into(), "i64".into())],
+        "void",
+        vec![
+            IIRInstr::new("alloc", Some("c".into()), vec![], "ref<LispyPair>"),
+            IIRInstr::new(
+                "field_store",
+                None,
+                // srcs[1] is a Var, not an Int field index → rejected.
+                vec![Operand::Var("c".into()), Operand::Var("v".into()), Operand::Var("v".into())],
+                "void",
+            ),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    let err = lower_iir_to_llvm(&module_with(f), &IIRLlvmConfig::default()).unwrap_err();
+    assert!(matches!(err, IIRLlvmError::InvalidOperand { .. }), "{err:?}");
+}
+
+/// A function whose name needs LLVM quoting (`?`), called from `main`. Both the
+/// `define` and the `call` must use the SAME quoted spelling so the reference
+/// resolves — an unquoted `@Some?` is a hard LLVM parse error.
+#[test]
+fn special_char_function_names_are_quoted_at_define_and_call() {
+    let predicate = IIRFunction::new(
+        "Some?",
+        vec![("v".into(), "i64".into())],
+        "i64",
+        vec![IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i64")],
+    );
+    let main = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("k".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new(
+                "call",
+                Some("r".into()),
+                vec![Operand::Var("Some?".into()), Operand::Var("k".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ],
+    );
+    let module = IIRModule {
+        name: "t".into(),
+        functions: vec![predicate, main],
+        entry_point: Some("main".into()),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+    };
+    let ll = lower(&module);
+    assert!(ll.contains(r#"define i64 @"Some?"("#), "define not quoted:\n{ll}");
+    assert!(ll.contains(r#"call i64 @"Some?"("#), "call not quoted:\n{ll}");
+    // A hyphenated name (Twig record accessor `point-x`) also needs quoting; a
+    // plain identifier must stay UNQUOTED (quoting is conservative but the common
+    // case must not regress to noisy output).
+    assert!(!ll.contains(r#"@"main""#), "plain name should stay unquoted:\n{ll}");
+}
