@@ -1,0 +1,77 @@
+% ============================================================================
+% amino-acids — each standard amino acid and its one-letter code
+% (adj-facts-stdlib, BIOLOGY). A biochemistry fact a medicine or molecular-
+% biology agent reasons from, foundational to reading protein sequences.
+% ============================================================================
+% Proteins are chains of amino acids, and every sequence database, alignment,
+% and clinical variant report writes those chains in the standard ONE-LETTER
+% code: the haemoglobin beta chain begins "MVHLTPEEK…", the sickle-cell variant
+% swaps a single letter (E6V). Knowing that "glycine is G, serine is S" is the
+% alphabet an agent needs before it can read any protein. Recall is a binding
+% query in either direction:
+%
+%     ? amino_acid_code(glycine, $C)      % g   (name -> code)
+%     ? amino_acid_code($A, a)            % alanine  (code -> name)
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `amino_acid_code(amino_acid, code)` carrying the table's citation, so
+% both lookups above are ordinary SLD binding queries — the engine returns the
+% answer WITH its source, on the CPU, with zero model calls, and abstains on
+% anything not in the table (never inventing a code). Keys AND code values are
+% lowercase ADJ atoms (glycine -> g, serine -> s, …); the human-facing capital
+% form (G, S, …) is the same one-letter string upper-cased for display. The two
+% acidic residues keep the source's own names, `aspartic_acid` (D) and
+% `glutamic_acid` (E), spelled as single atoms.
+%
+% Only the 20 STANDARD (proteinogenic, genetically encoded via the universal
+% codon table) amino acids are shipped. The DDBJ page also lists Sec/U
+% (selenocysteine) and Pyl/O (pyrrolysine) — the 21st and 22nd amino acids,
+% incorporated by special recoding — and these are deliberately OMITTED so that
+% a recall over "the standard twenty" abstains on them rather than conflating
+% the canonical alphabet with its rare extensions.
+%
+% Provenance: every amino-acid name and its one-letter code below is copied from
+% the DNA Data Bank of Japan (DDBJ) "Codes" reference page — DDBJ is a primary
+% national sequence database and a member of the International Nucleotide
+% Sequence Database Collaboration (INSDC, with NCBI/GenBank and EMBL-EBI/ENA),
+% so its amino-acid code table is an official standard. On that page the three
+% columns are, in order, `Abbreviation` (3-letter), `1 letter abbreviation`, and
+% `Amino acid name`; the `source` span below is the VERBATIM cell triple for
+% glycine — the 3-letter code "Gly", the one-letter code "G", and the name
+% "Glycine", each its own table cell — pairing the name with its one-letter
+% code. The full 20-row table this covers is served at the `locator` URL, and
+% every name->code pair below was confirmed against it. `trust authoritative`.
+% Nothing here is asserted from memory; any pair that could not be verified on
+% the fetched page would have been dropped. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts,
+% feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table amino_acid_code {
+    columns amino_acid, code
+
+    row (alanine, a)
+    row (arginine, r)
+    row (asparagine, n)
+    row (aspartic_acid, d)
+    row (cysteine, c)
+    row (glutamine, q)
+    row (glutamic_acid, e)
+    row (glycine, g)
+    row (histidine, h)
+    row (isoleucine, i)
+    row (leucine, l)
+    row (lysine, k)
+    row (methionine, m)
+    row (phenylalanine, f)
+    row (proline, p)
+    row (serine, s)
+    row (threonine, t)
+    row (tryptophan, w)
+    row (tyrosine, y)
+    row (valine, v)
+
+    source "Gly\nG\nGlycine"
+    locator "https://www.ddbj.nig.ac.jp/ddbj/code-e.html"
+    trust authoritative
+}
