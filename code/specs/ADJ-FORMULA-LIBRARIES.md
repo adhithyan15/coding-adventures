@@ -117,6 +117,9 @@ symbolic → numeric once variables bind). Same provenance discipline: a symboli
 ## 3. Rung-0 — the substrate: `formulabook` + `formula name(params) = expr`
 
 A new top-level construct, a sibling of `dictionary` and `rulebook`, importable via `use`/`import`.
+(A third sibling, the `table` construct for native tabular reference data — unit conversions,
+reference ranges, dose charts — is specified in [`ADJ-TABLES`](ADJ-TABLES.md) (RS-5); a looked-up
+table value composes into a `formula` exactly as an observed slot does.)
 
 ```adj
 % code/…/stdlib/clinical/bmi.adj — the body-mass-index formula library.

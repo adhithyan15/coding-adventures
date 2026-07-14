@@ -335,8 +335,10 @@ weights" thesis becomes verifiable: every step has a record.
 4. **Tabular and chart rules.** Some domains (drug dosing,
    tax brackets) are inherently tabular. Stage 0 currently elicits
    natural-language rules and depends on `decompose_text` to handle
-   tabular structures; explicit table support remains ADJ09's open
-   question #3.
+   tabular structures. Native tabular data is now a first-class
+   construct — see [`ADJ-TABLES`](ADJ-TABLES.md) (RS-5): a provenanced
+   `table` whose rows lower to relations, with exact lookup shipped and
+   range/interpolated lookup staged.
 
 ## Limitations
 

@@ -225,6 +225,32 @@ pub enum LowerError {
     FormulaNestingTooDeep {
         limit: usize,
     },
+    /// A `table` row's cell count did not match the table's declared `columns`
+    /// (ADJ-TABLES RS-5). A table's arity is fixed by its `columns` clause; a row
+    /// of a different length would lower to a relation of the wrong arity (and so
+    /// never match a lookup, or silently shadow a real one), so it is a clean
+    /// compile error instead. Carries the table name, the declared column count,
+    /// the offending row's index (0-based), and its actual cell count.
+    TableArity {
+        table: String,
+        expected: usize,
+        row: usize,
+        got: usize,
+    },
+    /// A shipped `table` carried no `source` (the provenance-required lint, shared
+    /// with `formula`/`relate`). A table asserts facts about the world — the very
+    /// reason it is a first-class construct is to be the auditable home for a
+    /// *cited* published table — so it may not enter a library unsourced. Carries
+    /// the table name.
+    TableMissingProvenance {
+        table: String,
+    },
+    /// A `table` declared zero `columns` (ADJ-TABLES RS-5). A table with no columns
+    /// has no arity and no lookup key; it is almost certainly a mistake, so it is
+    /// rejected rather than lowered to a stream of nullary facts. Carries the name.
+    TableNoColumns {
+        table: String,
+    },
     /// An `import "<path>"` survived to lowering (MYCIN-2026 M3). Imports must be
     /// resolved by [`crate::resolve`] *before* `lower` runs — reaching here means
     /// the caller used `compile` directly on a program that still has imports,
@@ -579,6 +605,44 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
             // bindings are documentation of the vocabulary the formulas are typed
             // against (rung-0 does not enforce dictionary typing of parameters).
             Statement::Formulabook { .. } => {}
+            // ---- table (ADJ-TABLES RS-5) ----
+            // Each row lowers to a ground relation `name(cell1, …, celln)`
+            // carrying the table's provenance — byte-identical to how a `relate`
+            // edge lowers (above) — so EXACT lookup is just the existing SLD
+            // binding query, and a looked-up NUMBER feeds a `let`/`formula` via
+            // the existing arity-1 slot/`Ref` path. Two guards keep a table honest:
+            // (1) the arity of every row must match the declared `columns` (a wrong
+            // arity would silently never match, or shadow, a real lookup); and
+            // (2) the provenance-required lint — a shipped table must be sourced,
+            // exactly like `formula`/`relate` (the whole reason a table is
+            // first-class is to be the auditable home for a *cited* published table).
+            Statement::Table {
+                name,
+                uses: _,
+                columns,
+                rows,
+                annotations,
+            } => {
+                if columns.is_empty() {
+                    return Err(LowerError::TableNoColumns { table: name.clone() });
+                }
+                let prov = annotations_to_provenance(annotations)?;
+                if prov.source.trim().is_empty() {
+                    return Err(LowerError::TableMissingProvenance { table: name.clone() });
+                }
+                for (i, row) in rows.iter().enumerate() {
+                    if row.cells.len() != columns.len() {
+                        return Err(LowerError::TableArity {
+                            table: name.clone(),
+                            expected: columns.len(),
+                            row: i,
+                            got: row.cells.len(),
+                        });
+                    }
+                    let args: Vec<CoreTerm> = row.cells.iter().map(lower_cell).collect();
+                    kb.add_fact(Fact::certain(compound(name, args)).with_provenance(prov.clone()));
+                }
+            }
             // ---- import (MYCIN-2026 M3) ----
             // Imports are resolved away by `crate::resolve` before lowering; one
             // reaching here means `compile` was called on an unresolved program.
@@ -895,6 +959,17 @@ fn check_lr(lr: f64) -> Result<(), LowerError> {
         Ok(())
     } else {
         Err(LowerError::InvalidLikelihoodRatio { value: lr })
+    }
+}
+
+/// Lower one [`crate::ast::TableCell`] (ADJ-TABLES RS-5) to a ground engine term.
+/// The three cell kinds map 1:1 onto the engine's three ground term kinds; a cell
+/// is never a variable or compound, so this is total and never fails.
+fn lower_cell(cell: &crate::ast::TableCell) -> CoreTerm {
+    match cell {
+        crate::ast::TableCell::Number(x) => core_float(*x),
+        crate::ast::TableCell::Atom(name) => core_atom(name),
+        crate::ast::TableCell::Text(s) => CoreTerm::Str(s.clone()),
     }
 }
 
@@ -1986,6 +2061,118 @@ mod tests {
         assert!(
             dag.proofs.is_empty(),
             "must abstain, not fabricate an enzyme"
+        );
+    }
+
+    // ---- ADJ-TABLES RS-5: the `table` construct ----
+
+    #[test]
+    fn table_rows_lower_to_provenanced_relations() {
+        // Each `row` becomes a ground relation `length_to_metres(unit, metres)`
+        // carrying the table's provenance — so an exact lookup is the ordinary
+        // binding query, and the answer names the table's citation as its proof.
+        let src = r#"
+            table length_to_metres {
+                columns unit, metres
+                row (foot, 0.3048)
+                row (mile, 1609.344)
+                source "Defined with respect to meter"
+                locator "https://example.test/nist"
+                trust authoritative
+            }
+            ? length_to_metres(foot, $Metres)
+        "#;
+        let lowered = compile(src).unwrap();
+        // A table is data, not a hypothesis differential.
+        let query = &lowered.queries[0];
+        let v = query_var(query);
+        let dag = enumerate_all(query, &lowered.kb);
+        assert_eq!(dag.proofs.len(), 1, "exactly one row matches the key `foot`");
+        assert_eq!(dag.proofs[0].bindings.walk_var(&v), core_float(0.3048));
+        // The answer's proof is a table row whose Fact carries the citation.
+        let fid = dag.proofs[0].via_facts[0];
+        let prov = &lowered.kb.fact(fid).expect("row fact exists").provenance;
+        assert_eq!(prov.source, "Defined with respect to meter");
+        assert_eq!(prov.trust_tier, TrustTier::Authoritative);
+    }
+
+    #[test]
+    fn table_absent_key_has_no_proof() {
+        let src = r#"
+            table length_to_metres {
+                columns unit, metres
+                row (foot, 0.3048)
+                source "Defined with respect to meter"
+                trust authoritative
+            }
+            ? length_to_metres(furlong, $Metres)
+        "#;
+        let lowered = compile(src).unwrap();
+        let dag = enumerate_all(&lowered.queries[0], &lowered.kb);
+        assert!(dag.proofs.is_empty(), "a key not in the table abstains");
+    }
+
+    #[test]
+    fn table_string_cell_lowers_to_a_string_term() {
+        // A quoted cell lowers to a Str term (not an atom), so a label column is
+        // representable alongside numeric factors.
+        let src = r#"
+            table unit_symbol {
+                columns unit, symbol
+                row (metre, "m")
+                source "SI base unit of length"
+                trust authoritative
+            }
+            ? unit_symbol(metre, $Symbol)
+        "#;
+        let lowered = compile(src).unwrap();
+        let query = &lowered.queries[0];
+        let v = query_var(query);
+        let dag = enumerate_all(query, &lowered.kb);
+        assert_eq!(dag.proofs.len(), 1);
+        assert_eq!(dag.proofs[0].bindings.walk_var(&v), CoreTerm::Str("m".into()));
+    }
+
+    #[test]
+    fn table_row_arity_mismatch_is_a_clean_error() {
+        let src = r#"
+            table length_to_metres {
+                columns unit, metres
+                row (foot, 0.3048, extra)
+                source "Defined with respect to meter"
+                trust authoritative
+            }
+        "#;
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::CompileError::Lower(LowerError::TableArity {
+                    expected: 2,
+                    row: 0,
+                    got: 3,
+                    ..
+                })
+            ),
+            "a wrong-length row is a clean TableArity error, got {err:?}"
+        );
+    }
+
+    #[test]
+    fn table_without_source_is_rejected() {
+        let src = r#"
+            table length_to_metres {
+                columns unit, metres
+                row (foot, 0.3048)
+            }
+        "#;
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::CompileError::Lower(LowerError::TableMissingProvenance { .. })
+            ),
+            "an unsourced table is rejected (the write gate), got {err:?}"
         );
     }
 
