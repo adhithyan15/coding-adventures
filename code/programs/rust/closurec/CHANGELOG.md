@@ -2,6 +2,19 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.30] - 2026-07-14
+
+### Added — CLOC12.191 PR3: ES default parameters end-to-end
+
+Picks up javascript-parser 0.56.0 (the `convert_formal_parameter` EQUALS-branch bridge flip, PR2) on top
+of the PR1 `FunctionParam::AssignmentPattern` node + emitter + pass threading. A file with a default
+parameter no longer declines to WHITESPACE_ONLY — it flows through the full optimization pipeline, and the
+default expression itself folds as live code. New `tests/diff/default-params/` fixture +
+`diff_default_params.rs`: `function f(a=1+2){return a} g(f());` at SIMPLE emits
+`function f(a=3){return a};g(f());` — the default `a = 1 + 2` folds to `a = 3`, proving the pipeline ran
+(a WHITESPACE_ONLY fallback would leave `a=1+2` intact). PATCH bump; regen `--help_markdown` fixture +
+`cli.spec.json` version sync.
+
 ## [0.234.29] - 2026-07-14
 
 ### Added — CLOC12.190 PR3: ES rest parameters end-to-end

@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-07-14
+
+### Added
+
+- `Number::Exact(BigDecimal)` — a third numeric variant holding an unbounded exact
+  decimal, so a written decimal literal (`3.14159…`, `6.022e23`) keeps every digit
+  instead of being truncated to `f64` at parse time (see
+  `code/specs/ADJ-EXACT-NUMBERS.md`). This is NX-1 of the exact-numbers arc; nothing
+  *produces* `Exact` yet (literals still lower via `f64` until NX-2), so this release
+  is a pure, behavior-preserving type widening.
+- `Number::to_f64_lossy()` — the single, greppable, sanctioned way to drop a `Number`
+  to `f64` (the "labeled lossy export" boundary). `Exact` rounds via `BigDecimal::to_f64`.
+- New dependency on `bignum-core` (for `BigDecimal`).
+
+### Changed
+
+- **Breaking:** `Number` no longer derives `Copy` — `Exact` wraps a heap-backed
+  `BigDecimal`, so `Number` now moves/clones like `Term`. Callers that copied a
+  `Number` by value must move or `.clone()`.
+- `Number`'s `Display` prints an `Exact` value with all of its digits (no truncation).
+- Equality stays **variant-distinct** (Prolog tradition): `Int(1)`, `Float(1.0)`, and
+  `Exact(1.0)` are three different ground terms; numeric reconciliation remains a
+  compute-layer concern.
+
 ## [0.1.0] - 2026-05-10
 
 ### Added
