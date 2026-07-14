@@ -1,6 +1,6 @@
 [package]
 name = "mccarthy-lisp-parser"
-version = "0.2.1"
+version = "0.3.0"
 edition = "2021"
 description = "Parser for McCarthy's 1960 Lisp (Lisp 1.0) — a thin wrapper over the shared grammar-driven GrammarParser plus a typed-AST extractor.  The S-expression grammar lives in `code/grammars/mccarthy_lisp.grammar` (compiled to Rust at build time); the extractor lowers the generic CST to a `LispExpr` AST (Nil / Symbol / Int / Cons), expanding `'X` to `(QUOTE X)` and desugaring lists to cons cells.  L1 of the McCarthy Lisp implementation."
 build = "build.rs"

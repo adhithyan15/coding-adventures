@@ -362,12 +362,52 @@ pub fn mccarthy_grammar() -> &'static ParserGrammar {
 // Public API
 // ===========================================================================
 
+/// Recursion-depth cap for the [`GrammarParser`] itself — a *second*,
+/// independent layer of defense alongside this crate's existing pre-scan
+/// (`check_nesting_depth`/[`MAX_PAREN_DEPTH`]). That pre-scan already
+/// rejects excessive combined paren+quote nesting before the parser ever
+/// runs, but `create_mccarthy_parser_from_tokens` is a public entry point
+/// (documented for editor/LSP integrations that already hold a token
+/// stream) that bypasses it entirely, so a caller invoking it directly
+/// with adversarial tokens could still hit the same
+/// native-stack-overflow DoS the pre-scan was meant to close.
+///
+/// # Two independent recursive shapes
+///
+/// - **List nesting** — `sexpr -> list -> list_body -> sexpr` (3
+///   rule-frames per real nesting level).
+/// - **Quote-chain** — `sexpr -> quoted -> sexpr` (2 rule-frames per real
+///   nesting level).
+///
+/// Measured (binary search, uncapped parser, on the true default-stack
+/// per-test worker thread — no `RUST_MIN_STACK` override and no explicit
+/// `Builder::stack_size`, matching what `cargo test` and a production
+/// caller both actually get — debug build, adversarial 5000-level input,
+/// bypassing `check_nesting_depth` entirely to measure the parser's own
+/// floor): list nesting (the *binding*, lower floor) safe through 260
+/// rule-frames, crashes at 262; quote-chain safe through 280, crashes at
+/// 290.
+///
+/// `MAX_RULE_DEPTH` is set to **180** — about 31% below the binding
+/// 260-rule-frame floor (comparable margin to sibling crates' 25-45%
+/// convention), independently confirmed not to crash a default-stack
+/// thread even thousands of rule-frames past the cap for either shape
+/// (see this crate's tests). Measured real-nesting headroom at 180
+/// (capped parser, so no crash risk): list nesting parses cleanly up to
+/// 59 levels (60 trips the cap), quote-chain up to 88 levels (89 trips
+/// the cap) — comfortably past any hand-written Lisp program's real
+/// nesting, and below `MAX_PAREN_DEPTH` (64) for the list shape so this
+/// cap never fires before the existing pre-scan would for that shape.
+const MAX_RULE_DEPTH: usize = 180;
+
 /// Build a [`GrammarParser`] from a pre-tokenized stream.
 ///
 /// Useful for editor / LSP integrations that already hold a
 /// `Vec<Token>` (e.g. from `mccarthy_lisp_lexer::create_mccarthy_lexer`).
+/// The recursion-depth guard ([`MAX_RULE_DEPTH`]) is enabled as a second,
+/// independent layer of defense alongside [`check_nesting_depth`].
 pub fn create_mccarthy_parser_from_tokens(tokens: Vec<Token>) -> GrammarParser {
-    GrammarParser::new(tokens, mccarthy_parser_grammar().clone())
+    GrammarParser::new(tokens, mccarthy_parser_grammar().clone()).with_max_depth(MAX_RULE_DEPTH)
 }
 
 /// Parse McCarthy Lisp source into the generic [`GrammarASTNode`] CST.
@@ -745,4 +785,112 @@ mod tests {
         let forms = parse(&src).expect("should parse");
         assert_eq!(forms.len(), 1);
     }
+}
+
+/// Regression tests for [`MAX_RULE_DEPTH`], one triple per independent
+/// recursive shape (see that constant's doc comment). These call
+/// [`create_mccarthy_parser_from_tokens`] directly (bypassing
+/// `check_nesting_depth`) so they exercise the new guard specifically,
+/// not the crate's existing pre-scan.
+#[cfg(test)]
+mod depth_guard_tests {
+    fn nested_list_source(n: usize) -> String {
+        format!("{}A{}", "(".repeat(n), ")".repeat(n))
+    }
+
+    fn nested_quote_source(n: usize) -> String {
+        format!("{}A", "'".repeat(n))
+    }
+
+    macro_rules! depth_guard_triple {
+        ($mod_name:ident, $source_fn:ident, $up_to_cap:expr, $one_past_cap:expr) => {
+            mod $mod_name {
+                use super::$source_fn as nested_source;
+
+                fn parse_bypassing_prescan(src: &str) -> Result<(), String> {
+                    let tokens = super::super::tokenize_mccarthy(src).map_err(|e| format!("{e}"))?;
+                    super::super::create_mccarthy_parser_from_tokens(tokens)
+                        .parse()
+                        .map(|_| ())
+                        .map_err(|e| format!("{e}"))
+                }
+
+                /// Deeply-nested input must produce a recoverable error, not
+                /// overflow the native stack. Parses 5000 levels — far past
+                /// `MAX_RULE_DEPTH` — on a worker thread with a generous
+                /// 32 MiB stack, so the *guard* is what stops the
+                /// recursion, not the stack running out.
+                #[test]
+                fn test_deeply_nested_input_returns_error_not_overflow() {
+                    let handle = std::thread::Builder::new()
+                        .name(
+                            concat!(
+                                "mccarthy-lisp-depth-guard-",
+                                stringify!($mod_name),
+                                "-regression"
+                            )
+                            .to_string(),
+                        )
+                        .stack_size(32 * 1024 * 1024)
+                        .spawn(|| {
+                            let result = parse_bypassing_prescan(&nested_source(5000));
+                            assert!(
+                                result.is_err(),
+                                "deeply-nested input must fail with an error, not parse or crash"
+                            );
+                        })
+                        .expect("failed to spawn worker thread");
+                    handle
+                        .join()
+                        .expect("depth guard must keep the worker thread from crashing");
+                }
+
+                /// Input that nests *exactly up to* `MAX_RULE_DEPTH` still
+                /// parses cleanly, and one layer deeper cleanly trips the
+                /// guard. These exact boundary counts were found
+                /// empirically by binary-searching against increasing
+                /// nesting counts at the production cap — see
+                /// `MAX_RULE_DEPTH`'s doc comment.
+                #[test]
+                fn test_nesting_up_to_cap_still_parses() {
+                    assert!(
+                        parse_bypassing_prescan(&nested_source($up_to_cap)).is_ok(),
+                        "{} levels must stay under the cap",
+                        $up_to_cap
+                    );
+                    assert!(
+                        parse_bypassing_prescan(&nested_source($one_past_cap)).is_err(),
+                        "one nesting level past the cap's measured limit must fail"
+                    );
+                }
+
+                /// A caller relying on `MAX_RULE_DEPTH` must have the guard
+                /// trip *before* the native stack overflows on a
+                /// default-stack thread — otherwise a production caller
+                /// (e.g. an LSP integration calling
+                /// `create_mccarthy_parser_from_tokens` directly, or
+                /// `cargo test`'s own per-test thread) would still crash.
+                /// Parses far-too-deep input on a worker thread with
+                /// **no** `stack_size` override (the same default a
+                /// thread gets in this environment, unmodified by any
+                /// `RUST_MIN_STACK` override). A clean `Err` (not a
+                /// `join()` failure from a crashed thread) proves
+                /// `MAX_RULE_DEPTH` sits safely below the native overflow
+                /// point on the default stack.
+                #[test]
+                fn test_opt_in_cap_trips_before_overflow_on_default_stack() {
+                    let handle = std::thread::spawn(|| {
+                        let result = parse_bypassing_prescan(&nested_source(5000));
+                        assert!(result.is_err(), "deeply-nested input must error, not crash");
+                    });
+                    handle.join().expect(
+                        "MAX_RULE_DEPTH must trip BEFORE native overflow on the default stack",
+                    );
+                }
+            }
+        };
+    }
+
+    depth_guard_triple!(list_shape, nested_list_source, 59, 60);
+    depth_guard_triple!(quote_shape, nested_quote_source, 88, 89);
 }

@@ -2,6 +2,41 @@
 
 All notable changes to this crate will be documented in this file.
 
+## [0.4.0] — 2026-07-14
+
+### Fixed — recursion-depth guard against native stack overflow (DoS)
+
+`create_dartmouth_basic_parser` built its `GrammarParser` with no
+recursion-depth cap, even though this crate is reachable via the
+`lang-aot` multi-language driver on arbitrary source files — a real, not
+theoretical, attack surface. Deeply-nested input, in any of this
+grammar's three *independent* recursive shapes (paren/function-call
+nesting, direct `power` (`^`) self-recursion, array-index nesting), would
+recurse until it overflowed the native thread stack — an uncatchable
+process abort — before this crate's own `Result`-returning entry points
+ever got a chance to report anything.
+
+All three shapes were independently measured (binary search, uncapped
+parser, the true default per-test-thread stack — no `RUST_MIN_STACK`
+override, no explicit `Builder::stack_size`, matching what `cargo test`
+and a production caller both actually get — debug build, adversarial
+5000-level input): paren/function-call and array-index nesting safe
+through 270 rule-frames, crashes at 280; `power` self-recursion (the
+*binding*, lower floor) safe through 175, crashes at 176. Added a bespoke
+`MAX_RULE_DEPTH = 120` — about 31% below the binding floor — and wired it
+into `create_dartmouth_basic_parser` via `.with_max_depth(...)`.
+
+- Added `MAX_RULE_DEPTH: usize = 120` and wired it into
+  `create_dartmouth_basic_parser`.
+- 9 new regression tests (3 per independent recursive shape): deep
+  adversarial input on an enlarged-stack thread returns a clean `Err`,
+  input at the measured real-nesting boundary (22 levels for
+  paren/function-call, 111 for `power`-chain, 18 for array-index) still
+  parses while one level past it doesn't, and the cap trips before the
+  native stack would overflow even on a default-stack thread.
+
+No change to behaviour for any input that nests below the cap.
+
 ## [0.3.0] — 2026-07-02 — BA-DIM-2D: multi-dimensional array subscripts
 
 ### Changed

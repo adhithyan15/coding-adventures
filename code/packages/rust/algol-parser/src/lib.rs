@@ -104,6 +104,60 @@ mod _grammar;
 /// let ast = parser.parse().expect("parse failed");
 /// println!("{:?}", ast.rule_name);
 /// ```
+/// Recursion-depth cap for the ALGOL 60 [`GrammarParser`] — see
+/// [`GrammarParser::with_max_depth`] and
+/// [`parser::grammar_parser::DEFAULT_MAX_RULE_DEPTH`] for why the underlying
+/// guard exists at all (deep recursion through `parse_rule` can overflow the
+/// *native* thread stack — an uncatchable process abort — before this
+/// crate's own `Result`-returning entry points ever get a chance to report
+/// anything). Reachable via the `lang-aot` multi-language driver on
+/// arbitrary source files, a real attack surface.
+///
+/// # Eleven independent recursive shapes
+///
+/// ALGOL 60's grammar is richer than any other crate in this depth-cap
+/// sweep — eleven independent recursion paths were measured (binary
+/// search, uncapped parser, the true default per-test-thread stack — no
+/// `RUST_MIN_STACK` override, no explicit `Builder::stack_size`, matching
+/// what `cargo test` and a production caller both actually get — debug
+/// build, adversarial 5000-level input):
+///
+/// | Shape | Cycle | Frames/level | Floor (safe/crash) |
+/// |---|---|---|---|
+/// | `if`/`then`/`else` (arith) | `arith_expr -> arith_expr` (else branch) | 1 | 218/219 |
+/// | NOT-chain | `expr_not -> expr_not` | 1 | 218/219 |
+/// | if/else statement | `statement -> cond_stmt -> statement` | 2 | 197/198 (**binding**) |
+/// | designational paren | `desig_expr -> simple_desig -> desig_expr` | 2 | 247/248 |
+/// | begin/end block | `statement -> unlabeled_stmt -> block -> statement` | 3 | 259/260 |
+/// | for-loop body | `statement -> unlabeled_stmt -> for_stmt -> statement` | 3 | 260/261 |
+/// | nested procedures | `declaration -> procedure_decl -> proc_body -> block -> declaration` | 4 | 247/248 |
+/// | arithmetic paren | `arith_expr -> ... -> primary -> arith_expr` | 5 | 289/290 |
+/// | array subscript | `variable -> subscripts -> arith_expr -> ... -> variable` | 7 | 260/270 |
+/// | boolean paren | `bool_expr -> ... -> bool_primary -> bool_expr` | 7 | 270/272 |
+/// | expression paren | `expr_atom -> expression -> ... -> expr_atom` (unified cascade) | 11 | 289/290 |
+///
+/// (The `.grammar` *source* file also documents an if/then/else form on
+/// the unified `expression` rule itself, and broader — both-branches —
+/// recursion on `arith_expr`/`bool_expr`/`desig_expr`'s conditional forms,
+/// but none of that is present in the currently-*compiled* `_grammar.rs`
+/// — a pre-existing, unrelated grammar/codegen-sync bug, not something
+/// this depth-cap fix touches or depends on. The shapes above reflect
+/// what the parser actually runs today.)
+///
+/// If/else statement nesting is the *binding* (lowest) floor at 197
+/// rule-frames. `MAX_RULE_DEPTH` is set to **135** — about 31% below that
+/// floor (comparable margin to sibling crates' 25-45% convention),
+/// independently confirmed not to crash a default-stack thread even
+/// thousands of rule-frames past the cap for any of the eleven shapes
+/// (see this crate's tests). Measured real-nesting headroom at 135
+/// (capped parser, so no crash risk): if/then/else (arith) up to 120
+/// levels, NOT-chain up to 119, if/else statement up to 59, designational
+/// paren up to 63, begin/end up to 45, for-loop up to 39, nested
+/// procedures up to 29, arithmetic paren up to 10, array subscript up to
+/// 18, boolean paren up to 17, expression paren up to 10 — comfortably
+/// past any hand-written ALGOL 60 program's real nesting.
+const MAX_RULE_DEPTH: usize = 135;
+
 pub fn create_algol_parser(source: &str) -> GrammarParser {
     // Step 1: Tokenize the source using the algol-lexer.
     //
@@ -112,7 +166,7 @@ pub fn create_algol_parser(source: &str) -> GrammarParser {
     let tokens = tokenize_algol(source);
 
     let grammar = _grammar::parser_grammar();
-    GrammarParser::new(tokens, grammar)
+    GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH)
 }
 
 /// Parse ALGOL 60 source text into an AST.
@@ -470,4 +524,180 @@ mod tests {
             "Expected 'for_stmt' rule in AST"
         );
     }
+}
+
+/// Regression tests for [`MAX_RULE_DEPTH`], one triple per independent
+/// recursive shape (see that constant's doc comment). Uses
+/// `create_algol_parser(..).parse()` directly (not the panicking
+/// [`parse_algol`] wrapper) since these tests need to observe the
+/// `Result` rather than unwind through a panic.
+#[cfg(test)]
+mod depth_guard_tests {
+    fn nested_if_then_else_source(n: usize) -> String {
+        // Targets `arith_expr`'s conditional form specifically — `x :=
+        // <expr>` always parses via the unified `expression` rule, which
+        // has no if/then/else alternative in the *compiled* grammar (see
+        // `MAX_RULE_DEPTH`'s doc comment), so this uses an array-subscript
+        // context (`subscripts = arith_expr {...}`) where `arith_expr` is
+        // directly required. `arith_expr`'s compiled grammar recurses on
+        // the ELSE branch only (`"if" bool_expr "then" simple_arith
+        // "else" arith_expr | simple_arith`).
+        format!("begin x := A[{}1] end", "if true then 1 else ".repeat(n))
+    }
+
+    fn nested_not_source(n: usize) -> String {
+        format!("begin x := {}1 end", "not ".repeat(n))
+    }
+
+    fn nested_begin_end_source(n: usize) -> String {
+        // "end".repeat(n) with no separator would concatenate into one
+        // bad token ("endend"); each `end` needs its own word boundary.
+        format!("{}{}", "begin ".repeat(n), "end ".repeat(n))
+    }
+
+    fn nested_cond_stmt_source(n: usize) -> String {
+        format!("begin {}x:=1 end", "if true then x:=1 else ".repeat(n))
+    }
+
+    fn nested_desig_paren_source(n: usize) -> String {
+        format!("begin goto {}1{} end", "(".repeat(n), ")".repeat(n))
+    }
+
+    fn nested_subscript_source(n: usize) -> String {
+        // `variable = NAME [LBRACKET subscripts RBRACKET]`, and
+        // `subscripts` cascades back down to `variable` via
+        // `arith_expr -> ... -> primary -> variable`. Nesting requires
+        // repeating `A[` (a fresh NAME before each bracket), not just `[`.
+        format!("begin x := {}1{} end", "A[".repeat(n), "]".repeat(n))
+    }
+
+    fn nested_arith_paren_source(n: usize) -> String {
+        format!("begin x := {}1{} end", "(".repeat(n), ")".repeat(n))
+    }
+
+    fn nested_bool_paren_source(n: usize) -> String {
+        format!(
+            "begin if {}true{} then x:=1 end",
+            "(".repeat(n),
+            ")".repeat(n)
+        )
+    }
+
+    fn nested_expression_paren_source(n: usize) -> String {
+        format!("begin x := {}1{} end", "(".repeat(n), ")".repeat(n))
+    }
+
+    fn nested_proc_decl_source(n: usize) -> String {
+        format!(
+            "begin {}x:=1 {}end",
+            "procedure P; begin ".repeat(n),
+            "end; ".repeat(n)
+        )
+    }
+
+    fn nested_for_loop_source(n: usize) -> String {
+        format!("begin {}x:=1 end", "for i:=1 do ".repeat(n))
+    }
+
+    macro_rules! depth_guard_triple {
+        ($mod_name:ident, $source_fn:ident, $up_to_cap:expr, $one_past_cap:expr) => {
+            mod $mod_name {
+                use super::$source_fn as nested_source;
+
+                /// Deeply-nested input must produce a recoverable error, not
+                /// overflow the native stack. Parses 5000 levels — far past
+                /// `MAX_RULE_DEPTH` — on a worker thread with a generous
+                /// 32 MiB stack, so the *guard* is what stops the
+                /// recursion, not the stack running out.
+                #[test]
+                fn test_deeply_nested_input_returns_error_not_overflow() {
+                    let handle = std::thread::Builder::new()
+                        .name(
+                            concat!(
+                                "algol-parser-depth-guard-",
+                                stringify!($mod_name),
+                                "-regression"
+                            )
+                            .to_string(),
+                        )
+                        .stack_size(32 * 1024 * 1024)
+                        .spawn(|| {
+                            let result =
+                                super::super::create_algol_parser(&nested_source(5000)).parse();
+                            assert!(
+                                result.is_err(),
+                                "deeply-nested input must fail with an error, not parse or crash"
+                            );
+                        })
+                        .expect("failed to spawn worker thread");
+                    handle
+                        .join()
+                        .expect("depth guard must keep the worker thread from crashing");
+                }
+
+                /// Input that nests *exactly up to* `MAX_RULE_DEPTH` still
+                /// parses cleanly, and one layer deeper cleanly trips the
+                /// guard. These exact boundary counts were found
+                /// empirically by binary-searching against increasing
+                /// nesting counts at the production cap — see
+                /// `MAX_RULE_DEPTH`'s doc comment.
+                #[test]
+                fn test_nesting_up_to_cap_still_parses() {
+                    assert!(
+                        super::super::create_algol_parser(&nested_source($up_to_cap))
+                            .parse()
+                            .is_ok(),
+                        "{} levels must stay under the cap",
+                        $up_to_cap
+                    );
+                    assert!(
+                        super::super::create_algol_parser(&nested_source($one_past_cap))
+                            .parse()
+                            .is_err(),
+                        "one nesting level past the cap's measured limit must fail"
+                    );
+                }
+
+                /// A caller relying on `MAX_RULE_DEPTH` must have the guard
+                /// trip *before* the native stack overflows on a
+                /// default-stack thread — otherwise a production caller
+                /// (e.g. the `lang-aot` driver, or `cargo test`'s own
+                /// per-test thread) would still crash. Parses far-too-deep
+                /// input on a worker thread with **no** `stack_size`
+                /// override (the same default a thread gets in this
+                /// environment, unmodified by any `RUST_MIN_STACK`
+                /// override). A clean `Err` (not a `join()` failure from a
+                /// crashed thread) proves `MAX_RULE_DEPTH` sits safely below
+                /// the native overflow point on the default stack.
+                #[test]
+                fn test_opt_in_cap_trips_before_overflow_on_default_stack() {
+                    let handle = std::thread::spawn(|| {
+                        let result =
+                            super::super::create_algol_parser(&nested_source(5000)).parse();
+                        assert!(result.is_err(), "deeply-nested input must error, not crash");
+                    });
+                    handle.join().expect(
+                        "MAX_RULE_DEPTH must trip BEFORE native overflow on the default stack",
+                    );
+                }
+            }
+        };
+    }
+
+    depth_guard_triple!(if_then_else_shape, nested_if_then_else_source, 120, 121);
+    depth_guard_triple!(not_shape, nested_not_source, 119, 120);
+    depth_guard_triple!(begin_end_shape, nested_begin_end_source, 45, 46);
+    depth_guard_triple!(cond_stmt_shape, nested_cond_stmt_source, 59, 60);
+    depth_guard_triple!(desig_paren_shape, nested_desig_paren_source, 63, 64);
+    depth_guard_triple!(subscript_shape, nested_subscript_source, 18, 19);
+    depth_guard_triple!(arith_paren_shape, nested_arith_paren_source, 10, 11);
+    depth_guard_triple!(bool_paren_shape, nested_bool_paren_source, 17, 18);
+    depth_guard_triple!(
+        expression_paren_shape,
+        nested_expression_paren_source,
+        10,
+        11
+    );
+    depth_guard_triple!(proc_decl_shape, nested_proc_decl_source, 29, 30);
+    depth_guard_triple!(for_loop_shape, nested_for_loop_source, 39, 40);
 }
