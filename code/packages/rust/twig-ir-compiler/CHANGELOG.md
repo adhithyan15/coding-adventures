@@ -1,5 +1,30 @@
 # Changelog — twig-ir-compiler
 
+## [0.45.0] — 2026-07-14 (LANG-FULL E6d-6b — union `match` runs on the tagged backends)
+
+`emit_union_def` now stores a variant's **tag and each field boxed** — a `box`
+op on the tag const and on each field value before the `field_store` that writes
+it into the variant's cons chain.
+
+Why: `match` reads a variant's tag + fields back as **boxed** `DynValue`s (the
+tag via the dynamic `=`, which unboxes; the bound field flows into an `any`
+context that `unbox`es). The constructor previously stored them as **raw** words.
+On the structural backends (Wasm/Jvm/Clr) the `int → any` call boundary boxes, so
+the raw store still round-tripped; on the **tagged** backends (native/LLVM,
+`any` = raw i64) nothing boxed, so `match (Some 42)` gave `unbox(42) = 5` and
+`match (None)` gave `unbox(raw tag 1) = 0` — the second variant never matched
+(segfault). Boxing in the constructor makes the stored word a proper `DynValue`
+on the tagged backends (`n << 3`); on the structural backends `box` of an
+already-boxed value is the identity, so their round-trip is unchanged.
+
+Run-verified exit 42 on **NativeAot + Llvm + Wasm** (new `lang-aot`
+`e6d6b_union_match_tagged` integration test); the two union matrix cells regain
+`[NativeAot, Llvm, Wasm, Jvm]`. Records are untouched (their accessor returns the
+field with the same rawness it was stored — no box/unbox mismatch). Clr is still
+omitted from the union cells: the CIL backend rejects the predicate name `Some?`
+as an illegal identifier — a separate name-quoting gap (E6d-6c, the CIL twin of
+`iir-to-llvm`'s `llvm_fn_ident`).
+
 ## [0.44.0] — 2026-07-13 (LANG-FULL E6d-6 — `match` variant tag is a typed i64 const)
 
 `compile_match` now emits each variant's discriminant tag constant with type_hint

@@ -2935,13 +2935,28 @@ impl Compiler {
                     alloc.may_alloc = true;
                     ctx.emit(alloc, loc);
                     ctx.record_type(&cell, "ref<LispyPair>");
+                    // E6d-6b: the field must be stored as a *boxed* `DynValue`, not
+                    // a raw word. `match`/accessors read the field back as `any`
+                    // (the loaded value flows through `unbox`/dynamic ops), so the
+                    // constructor boxes here. On the tagged backends (`any` = raw
+                    // i64) this is the `n<<3` that makes `unbox` recover the value;
+                    // on the structural backends `box` of an already-`anyref` field
+                    // is the identity, so the round-trip is unchanged.
+                    let field_boxed = ctx.fresh_var("fbox");
+                    ctx.emit(IIRInstr::new(
+                        "box",
+                        Some(field_boxed.clone()),
+                        vec![Operand::Var(field_name.clone())],
+                        "ref<any>",
+                    ), loc);
+                    ctx.record_type(&field_boxed, "ref<any>");
                     ctx.emit(IIRInstr::new(
                         "field_store",
                         None,
                         vec![
                             Operand::Var(cell.clone()),
                             Operand::Int(0),
-                            Operand::Var(field_name.clone()),
+                            Operand::Var(field_boxed),
                         ],
                         "void",
                     ), loc);
@@ -2968,6 +2983,19 @@ impl Compiler {
                     "i64",
                 ), loc);
                 ctx.record_type(&tag_reg, "i64");
+                // E6d-6b: box the tag for the same reason as the fields — `match`
+                // reads the tag (`car`) back as a boxed `DynValue` and compares it
+                // with the dynamic `=` (which unboxes). A raw tag word makes
+                // `unbox(raw tag)` wrong on the tagged backends (`unbox(1)=0`, so
+                // the second variant never matches).
+                let tag_boxed = ctx.fresh_var("tbox");
+                ctx.emit(IIRInstr::new(
+                    "box",
+                    Some(tag_boxed.clone()),
+                    vec![Operand::Var(tag_reg)],
+                    "ref<any>",
+                ), loc);
+                ctx.record_type(&tag_boxed, "ref<any>");
                 let head = ctx.fresh_var("head");
                 let mut alloc_head = IIRInstr::new(
                     "alloc",
@@ -2984,7 +3012,7 @@ impl Compiler {
                     vec![
                         Operand::Var(head.clone()),
                         Operand::Int(0),
-                        Operand::Var(tag_reg),
+                        Operand::Var(tag_boxed),
                     ],
                     "void",
                 ), loc);
