@@ -1,0 +1,72 @@
+% Preamble for "Sanskrit, Step by Step, Root by Root" (HL00 book format).
+% XeLaTeX only. Reuses the vendored static Noto Sans Devanagari (see _fonts/) —
+% Sanskrit is classically written in Devanagari, the same script as Hindi/Marathi.
+% Rendered font-only via Script=Devanagari (no polyglossia Sanskrit module needed).
+
+\usepackage{fontspec}
+\setmainfont{Latin Modern Roman}
+\setsansfont{Latin Modern Sans}
+\setmonofont{Latin Modern Mono}
+
+% IAST transliteration letters absent from Latin Modern, mapped to accents.
+\usepackage{newunicodechar}
+\newunicodechar{ṁ}{\.{m}}
+\newunicodechar{ṃ}{\d{m}}
+\newunicodechar{ṛ}{\d{r}}
+\newunicodechar{ṝ}{\={\d{r}}}
+\newunicodechar{ḥ}{\d{h}}
+\newunicodechar{ṇ}{\d{n}}
+\newunicodechar{ṭ}{\d{t}}
+\newunicodechar{ḍ}{\d{d}}
+\newunicodechar{ś}{\'{s}}
+\newunicodechar{ṣ}{\d{s}}
+\newunicodechar{ṉ}{\b{n}}
+\newunicodechar{ḷ}{\d{l}}
+
+\usepackage[table]{xcolor}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage[hidelinks]{hyperref}
+\usepackage{titlesec}
+
+\usepackage{polyglossia}
+\setmainlanguage{english}
+
+% Vendored Devanagari font (../../_fonts/ from <lang>/book/); \sk{...} = inline
+% Sanskrit snippet.
+\newfontfamily\sanskritfont[Path=../../_fonts/, Script=Devanagari]{NotoSansDevanagari-Static.ttf}
+\newcommand{\sk}[1]{{\sanskritfont #1}}
+
+\hypersetup{
+  pdftitle={Sanskrit, Step by Step, Root by Root},
+  pdfauthor={Adhithya Rajasekaran},
+  pdfsubject={Etymology-driven Sanskrit curriculum},
+  pdfkeywords={Sanskrit, Devanagari, Indo-European, language learning}
+}
+
+\newtcolorbox{cousinweb}{
+  breakable, skin=enhanced, colback=yellow!8, colframe=yellow!45!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={The word, taken apart --- its roots and family}
+}
+\newtcolorbox{culture}{
+  breakable, skin=enhanced, colback=red!5, colframe=red!40!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={Why it's said this way}
+}
+\newtcolorbox{grammarlens}{
+  breakable, skin=enhanced, colback=blue!5, colframe=blue!35!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={Grammar Lens}
+}
+\newtcolorbox{sounds}{
+  breakable, skin=enhanced, colback=green!6, colframe=green!30!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={The letters in this word}
+}
+
+\titleformat{\chapter}[display]
+  {\normalfont\Large\bfseries}{Chapter \thechapter}{10pt}{\huge}
