@@ -22,20 +22,26 @@ Every track shares the same shape:
 
 ## Tracks
 
-| Language | Status |
-|---|---|
-| [Spanish](./spanish/README.md) | Pilot — Chapters 1-3 authored (lessons + book); ~30 lessons |
-| [French](./french/README.md) | **Chapter 1 (Greetings) authored** (lessons + book) |
-| German | Planned (next — Germanic roots + shared-with-English cognates) |
-| Arabic | Planned (learner reads it, rusty; script inline) |
-| Hindi | Planned (learner reads Devanagari; Sanskrit + Persian/Arabic roots) |
-| Tamil | Planned (native speaker; formal grammar + native/Sanskrit doublets) |
-| Kannada | Planned (new script) |
-| Telugu | Planned (new script) |
-| Malayalam | Planned (new script) |
+| Language | Family / script | Status |
+|---|---|---|
+| [Spanish](./spanish/README.md) | Romance / Latin | Pilot — Chapters 1-3 authored (lessons + book); ~30 lessons |
+| [French](./french/README.md) | Romance / Latin | Chapters 1-2 authored (lessons + book) |
+| [German](./german/README.md) | Germanic / Latin | Chapters 1-2 authored (lessons + book) |
+| [Italian](./italian/README.md) | Romance / Latin | Chapter 1 (Greetings) authored (lessons + book) |
+| [Portuguese](./portuguese/README.md) | Romance / Latin | Chapter 1 (Greetings) authored (lessons + book) |
+| [Arabic](./arabic/README.md) | Semitic / Arabic (vendored font) | Chapters 1-2 authored (script inline) |
+| [Hindi](./hindi/README.md) | Indo-Aryan / Devanagari | Chapters 1-2 authored (lessons + book) |
+| [Marathi](./marathi/README.md) | Indo-Aryan / Devanagari | Chapter 1 (Greetings) authored (lessons + book) |
+| [Punjabi](./punjabi/README.md) | Indo-Aryan / Gurmukhi (vendored font) | Chapter 1 (Greetings) authored (lessons + book) |
+| [Bengali](./bengali/README.md) | Indo-Aryan / Bengali (vendored font) | Chapter 1 (Greetings) authored (lessons + book) |
+| [Tamil](./tamil/README.md) | Dravidian / Tamil (vendored font) | Chapters 1-2 authored (lessons + book) |
+| [Kannada](./kannada/README.md) | Dravidian / Kannada (vendored font) | Chapters 1-2 authored (lessons + book) |
+| [Telugu](./telugu/README.md) | Dravidian / Telugu (vendored font) | Chapters 1-2 authored (lessons + book) |
+| [Malayalam](./malayalam/README.md) | Dravidian / Malayalam (vendored font) | Chapters 1-2 authored (lessons + book) |
 
-Spanish is the pilot that proved the format; French is the first replication,
-and it grounds each word against English **and Spanish** (the learner's
-in-progress language), foregrounding the Romance twins' differences. The other
-tracks follow in the order above, each grounded on English plus whatever
-languages the learner already knows by then (see `HL00`).
+Spanish is the pilot that proved the format; every other track replicates it,
+grounding each word against English plus whatever languages the learner already
+knows (see `HL00`). Non-Latin scripts are taught **inline** — letters introduced
+inside the word that first needs them, never as a gated reading course — using
+vendored static Noto fonts (see [`_fonts/`](./_fonts/)) so local and CI builds
+render identically.
