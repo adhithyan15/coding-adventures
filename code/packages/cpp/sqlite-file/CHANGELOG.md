@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- `record::encode`, a byte-compatible record writer with SQLite's minimal
+  signed integer widths and self-referential header-length varints.
+
 ## [0.1.0] - 2026-07-13
 
 ### Added

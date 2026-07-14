@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- `sf_record_encode` and `sf_record_free`, a pure C record writer that mirrors
+  Rust's byte-compatible encoder, including minimal signed integer widths and
+  self-referential header-length varints.
+
 ## [0.1.0] - 2026-07-13
 
 ### Added

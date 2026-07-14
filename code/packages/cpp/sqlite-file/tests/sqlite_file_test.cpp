@@ -133,6 +133,48 @@ void test_record_decode() {
     ISO_CHECK(!sf::record::decode(std::vector<std::uint8_t>{0x02, 0x0a}).has_value());
 }
 
+void test_record_encode() {
+    const std::vector<sf::Value> golden_values = {
+        sf::Value{std::monostate{}}, sf::Value{static_cast<std::int64_t>(42)},
+        sf::Value{std::string("hi")}
+    };
+    const std::vector<std::uint8_t> golden = {0x04, 0x00, 0x01, 0x11, 0x2a, 0x68, 0x69};
+    ISO_CHECK(sf::record::encode(golden_values) == golden);
+
+    struct IntegerCase { std::int64_t value; std::uint8_t serial; };
+    const IntegerCase cases[] = {
+        {-129, 2}, {-128, 1}, {127, 1}, {128, 2},
+        {32767, 2}, {32768, 3}, {8388607, 3}, {8388608, 4},
+        {2147483647LL, 4}, {2147483648LL, 5},
+        {(1LL << 47) - 1, 5}, {1LL << 47, 6}
+    };
+    for (const IntegerCase& c : cases) {
+        auto encoded = sf::record::encode({sf::Value{c.value}});
+        ISO_CHECK(encoded.size() >= 2 && encoded[1] == c.serial);
+    }
+
+    std::uint64_t state = 0x8f23a1d94c67b025ULL;
+    for (int i = 0; i < 20000; ++i) {
+        state = state * 6364136223846793005ULL + 1442695040888963407ULL;
+        std::vector<sf::Value> values = {
+            sf::Value{std::monostate{}},
+            sf::Value{static_cast<std::int64_t>(state)},
+            sf::Value{static_cast<double>(i) / 10.0},
+            sf::Value{std::string("row")},
+            sf::Value{std::vector<std::uint8_t>{0xde, 0xad, 0xbe, 0xef}}
+        };
+        auto encoded = sf::record::encode(values);
+        auto decoded = sf::record::decode(encoded);
+        ISO_CHECK(decoded.has_value() && *decoded == values);
+    }
+
+    std::vector<sf::Value> large_header(130, sf::Value{std::monostate{}});
+    auto encoded = sf::record::encode(large_header);
+    ISO_CHECK(encoded.size() >= 2 && encoded[0] == 0x81 && encoded[1] == 0x04);
+    auto decoded = sf::record::decode(encoded);
+    ISO_CHECK(decoded.has_value() && *decoded == large_header);
+}
+
 // ── header ────────────────────────────────────────────────────────
 
 std::vector<std::uint8_t> make_header(std::uint16_t page_size_field, std::uint32_t encoding) {
@@ -504,6 +546,7 @@ int main() {
     test_varint_max_u64();
     test_varint_sweep_and_truncation();
     test_record_decode();
+    test_record_encode();
     test_header();
     test_pager();
     test_btree_leaf();

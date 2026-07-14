@@ -157,6 +157,133 @@ static void test_record(void) {
     }
 }
 
+static int encoded_row_equals(const sf_value_t *values, size_t count, const sf_row_t *decoded) {
+    size_t i;
+    if (decoded->len != count) {
+        return 0;
+    }
+    for (i = 0; i < count; ++i) {
+        if (values[i].type != decoded->items[i].type) {
+            return 0;
+        }
+        switch (values[i].type) {
+        case SF_VAL_INT:
+            if (values[i].int_val != decoded->items[i].int_val) return 0;
+            break;
+        case SF_VAL_REAL:
+            if (values[i].real_val != decoded->items[i].real_val) return 0;
+            break;
+        case SF_VAL_TEXT:
+        case SF_VAL_BLOB:
+            if (values[i].bytes_len != decoded->items[i].bytes_len ||
+                (values[i].bytes_len != 0 &&
+                 memcmp(values[i].bytes, decoded->items[i].bytes, values[i].bytes_len) != 0)) {
+                return 0;
+            }
+            break;
+        default:
+            break;
+        }
+    }
+    return 1;
+}
+
+static void test_record_encode(void) {
+    {
+        sf_value_t values[3];
+        uint8_t text[] = {'h', 'i'};
+        uint8_t expected[] = {0x04, 0x00, 0x01, 0x11, 0x2a, 0x68, 0x69};
+        uint8_t *encoded = NULL;
+        size_t encoded_len = 0;
+        memset(values, 0, sizeof values);
+        values[0].type = SF_VAL_NULL;
+        values[1].type = SF_VAL_INT;
+        values[1].int_val = 42;
+        values[2].type = SF_VAL_TEXT;
+        values[2].bytes = text;
+        values[2].bytes_len = sizeof text;
+        ISO_CHECK(sf_record_encode(values, 3, &encoded, &encoded_len) == SF_OK);
+        ISO_CHECK_EQ_UINT(encoded_len, sizeof expected);
+        if (encoded != NULL && encoded_len == sizeof expected) {
+            ISO_CHECK_MEM_EQ(encoded, expected, sizeof expected);
+        }
+        sf_record_free(encoded);
+    }
+    {
+        struct { int64_t value; uint8_t serial; } cases[] = {
+            {-129, 2}, {-128, 1}, {127, 1}, {128, 2},
+            {32767, 2}, {32768, 3}, {8388607, 3}, {8388608, 4},
+            {2147483647LL, 4}, {2147483648LL, 5},
+            {((int64_t)1 << 47) - 1, 5}, {(int64_t)1 << 47, 6}
+        };
+        size_t i;
+        for (i = 0; i < sizeof cases / sizeof cases[0]; ++i) {
+            sf_value_t value;
+            uint8_t *encoded = NULL;
+            size_t encoded_len = 0;
+            memset(&value, 0, sizeof value);
+            value.type = SF_VAL_INT;
+            value.int_val = cases[i].value;
+            ISO_CHECK(sf_record_encode(&value, 1, &encoded, &encoded_len) == SF_OK);
+            ISO_CHECK(encoded != NULL && encoded_len >= 2 && encoded[1] == cases[i].serial);
+            sf_record_free(encoded);
+        }
+    }
+    {
+        uint8_t text[] = {'r', 'o', 'w'};
+        uint8_t blob[] = {0xde, 0xad, 0xbe, 0xef};
+        int iter;
+        for (iter = 0; iter < 20000; ++iter) {
+            sf_value_t values[5];
+            uint8_t *encoded = NULL;
+            size_t encoded_len = 0;
+            sf_row_t decoded;
+            memset(values, 0, sizeof values);
+            values[0].type = SF_VAL_NULL;
+            values[1].type = SF_VAL_INT;
+            values[1].int_val = (int64_t)lcg_next();
+            values[2].type = SF_VAL_REAL;
+            values[2].real_val = (double)iter / 10.0;
+            values[3].type = SF_VAL_TEXT;
+            values[3].bytes = text;
+            values[3].bytes_len = sizeof text;
+            values[4].type = SF_VAL_BLOB;
+            values[4].bytes = blob;
+            values[4].bytes_len = sizeof blob;
+            if (sf_record_encode(values, 5, &encoded, &encoded_len) != SF_OK) {
+                ISO_CHECK(0);
+                continue;
+            }
+            if (sf_record_decode(encoded, encoded_len, &decoded) != SF_OK) {
+                ISO_CHECK(0);
+                sf_record_free(encoded);
+                continue;
+            }
+            ISO_CHECK(encoded_row_equals(values, 5, &decoded));
+            sf_row_free(&decoded);
+            sf_record_free(encoded);
+        }
+    }
+    {
+        sf_value_t values[130];
+        uint8_t *encoded = NULL;
+        size_t encoded_len = 0;
+        sf_row_t decoded;
+        size_t i;
+        memset(values, 0, sizeof values);
+        for (i = 0; i < 130; ++i) values[i].type = SF_VAL_NULL;
+        ISO_CHECK(sf_record_encode(values, 130, &encoded, &encoded_len) == SF_OK);
+        ISO_CHECK(encoded != NULL && encoded_len >= 2 && encoded[0] == 0x81 && encoded[1] == 0x04);
+        if (encoded != NULL && sf_record_decode(encoded, encoded_len, &decoded) == SF_OK) {
+            ISO_CHECK(encoded_row_equals(values, 130, &decoded));
+            sf_row_free(&decoded);
+        } else {
+            ISO_CHECK(0);
+        }
+        sf_record_free(encoded);
+    }
+}
+
 /* ── header ──────────────────────────────────────────────────────── */
 
 static void make_header(uint8_t *buf /* 100 bytes */, uint16_t page_size_field, uint32_t enc) {
@@ -654,6 +781,7 @@ static void test_btree_index(void) {
 int main(void) {
     test_varint();
     test_record();
+    test_record_encode();
     test_header();
     test_pager();
     test_btree_leaf_and_interior();

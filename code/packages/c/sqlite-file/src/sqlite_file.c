@@ -187,6 +187,188 @@ static int64_t read_int_be(const uint8_t *bytes, size_t len) {
     return (int64_t)v;
 }
 
+static sf_error_t encode_value_layout(const sf_value_t *value, uint64_t *serial,
+                                      size_t *width) {
+    switch (value->type) {
+    case SF_VAL_NULL:
+        *serial = 0;
+        *width = 0;
+        return SF_OK;
+    case SF_VAL_INT: {
+        int64_t v = value->int_val;
+        if (v == 0) {
+            *serial = 8;
+            *width = 0;
+        } else if (v == 1) {
+            *serial = 9;
+            *width = 0;
+        } else if (v >= -((int64_t)1 << 7) && v < ((int64_t)1 << 7)) {
+            *serial = 1;
+            *width = 1;
+        } else if (v >= -((int64_t)1 << 15) && v < ((int64_t)1 << 15)) {
+            *serial = 2;
+            *width = 2;
+        } else if (v >= -((int64_t)1 << 23) && v < ((int64_t)1 << 23)) {
+            *serial = 3;
+            *width = 3;
+        } else if (v >= -((int64_t)1 << 31) && v < ((int64_t)1 << 31)) {
+            *serial = 4;
+            *width = 4;
+        } else if (v >= -((int64_t)1 << 47) && v < ((int64_t)1 << 47)) {
+            *serial = 5;
+            *width = 6;
+        } else {
+            *serial = 6;
+            *width = 8;
+        }
+        return SF_OK;
+    }
+    case SF_VAL_REAL:
+        *serial = 7;
+        *width = 8;
+        return SF_OK;
+    case SF_VAL_TEXT:
+        if ((value->bytes == NULL && value->bytes_len != 0) ||
+            value->bytes_len > (size_t)(INT64_MAX - 13) / 2) {
+            return SF_ERR_CORRUPT;
+        }
+        *serial = 13 + 2 * (uint64_t)value->bytes_len;
+        *width = value->bytes_len;
+        return SF_OK;
+    case SF_VAL_BLOB:
+        if ((value->bytes == NULL && value->bytes_len != 0) ||
+            value->bytes_len > (size_t)(INT64_MAX - 12) / 2) {
+            return SF_ERR_CORRUPT;
+        }
+        *serial = 12 + 2 * (uint64_t)value->bytes_len;
+        *width = value->bytes_len;
+        return SF_OK;
+    default:
+        return SF_ERR_CORRUPT;
+    }
+}
+
+static void write_low_bytes_be(uint64_t value, size_t width, uint8_t *out) {
+    size_t i;
+    for (i = 0; i < width; ++i) {
+        out[i] = (uint8_t)(value >> ((width - 1 - i) * 8));
+    }
+}
+
+sf_error_t sf_record_encode(const sf_value_t *values, size_t count,
+                            uint8_t **out_record, size_t *out_len) {
+    uint8_t *serials = NULL;
+    uint8_t *payload = NULL;
+    uint8_t *record = NULL;
+    size_t serial_len = 0;
+    size_t payload_len = 0;
+    size_t payload_off = 0;
+    size_t i;
+    size_t assumed_header_width = 1;
+    uint8_t header_varint[9];
+    size_t header_width;
+    size_t header_len;
+    size_t total_len;
+
+    if (out_record == NULL || out_len == NULL || (values == NULL && count != 0)) {
+        return SF_ERR_CORRUPT;
+    }
+    *out_record = NULL;
+    *out_len = 0;
+    if (count > (size_t)-1 / 9) {
+        return SF_ERR_ALLOC;
+    }
+    serials = (uint8_t *)malloc(count == 0 ? 1 : count * 9);
+    if (serials == NULL) {
+        return SF_ERR_ALLOC;
+    }
+
+    for (i = 0; i < count; ++i) {
+        uint64_t serial;
+        size_t width;
+        sf_error_t err = encode_value_layout(&values[i], &serial, &width);
+        if (err != SF_OK) {
+            free(serials);
+            return err;
+        }
+        if (width > (size_t)-1 - payload_len) {
+            free(serials);
+            return SF_ERR_ALLOC;
+        }
+        payload_len += width;
+        serial_len += sf_varint_write((int64_t)serial, serials + serial_len);
+    }
+
+    payload = (uint8_t *)malloc(payload_len == 0 ? 1 : payload_len);
+    if (payload == NULL) {
+        free(serials);
+        return SF_ERR_ALLOC;
+    }
+    for (i = 0; i < count; ++i) {
+        uint64_t serial;
+        size_t width;
+        (void)encode_value_layout(&values[i], &serial, &width);
+        switch (values[i].type) {
+        case SF_VAL_INT:
+            if (width != 0) {
+                write_low_bytes_be((uint64_t)values[i].int_val, width, payload + payload_off);
+            }
+            break;
+        case SF_VAL_REAL: {
+            uint64_t bits;
+            memcpy(&bits, &values[i].real_val, sizeof bits);
+            write_low_bytes_be(bits, 8, payload + payload_off);
+            break;
+        }
+        case SF_VAL_TEXT:
+        case SF_VAL_BLOB:
+            if (width != 0) {
+                memcpy(payload + payload_off, values[i].bytes, width);
+            }
+            break;
+        default:
+            break;
+        }
+        payload_off += width;
+    }
+
+    for (;;) {
+        if (serial_len > (size_t)INT64_MAX - assumed_header_width) {
+            free(serials);
+            free(payload);
+            return SF_ERR_ALLOC;
+        }
+        header_len = assumed_header_width + serial_len;
+        header_width = sf_varint_write((int64_t)header_len, header_varint);
+        if (header_width == assumed_header_width) {
+            break;
+        }
+        assumed_header_width = header_width;
+    }
+    if (header_len > (size_t)-1 - payload_len) {
+        free(serials);
+        free(payload);
+        return SF_ERR_ALLOC;
+    }
+    total_len = header_len + payload_len;
+    record = (uint8_t *)malloc(total_len == 0 ? 1 : total_len);
+    if (record == NULL) {
+        free(serials);
+        free(payload);
+        return SF_ERR_ALLOC;
+    }
+    memcpy(record, header_varint, header_width);
+    memcpy(record + header_width, serials, serial_len);
+    memcpy(record + header_len, payload, payload_len);
+    free(serials);
+    free(payload);
+    *out_record = record;
+    *out_len = total_len;
+    return SF_OK;
+}
+
+void sf_record_free(uint8_t *record) { free(record); }
+
 /* Fill *out with the decoded value; returns SF_OK, SF_ERR_CORRUPT, or
  * SF_ERR_ALLOC.  Allocates out->bytes for TEXT/BLOB. */
 static sf_error_t decode_value(uint64_t serial, const uint8_t *content, size_t content_len,

@@ -6,6 +6,9 @@ crate, in namespace `ca::sqlite_file`.
 
 ## What it does
 
+The record layer also encodes typed values into byte-compatible SQLite records,
+providing the Phase F writer groundwork exposed by the Rust source package.
+
 Decodes the subset of the [SQLite file format](https://www.sqlite.org/fileformat2.html)
 needed to read table rows straight out of a database's bytes — no external
 SQLite library, no FFI, no I/O. You hand it a `std::vector<std::uint8_t>` (e.g.
@@ -32,7 +35,7 @@ for (auto& [rowid, columns] : sf::read_table(db_bytes, "notes")) {
 }
 ```
 
-Also exposed: `varint::read`/`write`, `record::decode` (returns
+Also exposed: `varint::read`/`write`, `record::encode`, `record::decode` (returns
 `std::optional`), `parse_header`, `Pager`, `walk_table`/`walk_index`,
 `read_schema`, `table_root_page`, `read_without_rowid_table`. Where the Rust
 crate returns `Result`, this port throws a `SqliteError` carrying an `Error`

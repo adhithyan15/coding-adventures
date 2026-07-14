@@ -5,6 +5,9 @@ faithful port of the Rust [`sqlite-file`](../../rust/sqlite-file) crate.
 
 ## What it does
 
+The record layer also encodes typed values into byte-compatible SQLite records,
+providing the Phase F writer groundwork exposed by the Rust source package.
+
 Decodes the subset of the [SQLite file format](https://www.sqlite.org/fileformat2.html)
 needed to read table rows straight out of a database's bytes — no external
 SQLite library, no FFI, no I/O. You hand it a byte buffer (e.g. the
@@ -40,7 +43,7 @@ if (sf_read_table(db_bytes, db_len, "notes", &rows) == SF_OK) {
 }
 ```
 
-Also exposed: `sf_varint_read`/`write`, `sf_record_decode`, `sf_header_parse`,
+Also exposed: `sf_varint_read`/`write`, `sf_record_encode`/`decode`, `sf_header_parse`,
 `sf_pager_open`/`sf_pager_page`, `sf_walk_table`/`sf_walk_index`,
 `sf_read_schema`, `sf_table_root_page`, `sf_read_without_rowid_table`. Decoded
 results are malloc-owned and freed with the matching `sf_*_free` routine.

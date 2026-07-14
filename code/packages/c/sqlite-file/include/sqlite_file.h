@@ -96,6 +96,13 @@ void sf_row_free(sf_row_t *row);
  * SF_ERR_CORRUPT on any inconsistency. */
 sf_error_t sf_record_decode(const uint8_t *record, size_t len, sf_row_t *out);
 
+/* Encode `count` values into a complete SQLite record.  On success,
+ * *out_record is malloc-owned and must be released with sf_record_free(). */
+sf_error_t sf_record_encode(const sf_value_t *values, size_t count,
+                            uint8_t **out_record, size_t *out_len);
+
+void sf_record_free(uint8_t *record);
+
 /* ------------------------------------------------------------------ */
 /* header                                                             */
 /* ------------------------------------------------------------------ */

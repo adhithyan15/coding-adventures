@@ -273,7 +273,89 @@ inline std::optional<Value> decode_value(std::uint64_t serial, const std::uint8_
     }
 }
 
+inline std::pair<std::uint64_t, std::size_t> int_serial(std::int64_t value) {
+    if (value >= -(1LL << 7) && value < (1LL << 7)) return {1, 1};
+    if (value >= -(1LL << 15) && value < (1LL << 15)) return {2, 2};
+    if (value >= -(1LL << 23) && value < (1LL << 23)) return {3, 3};
+    if (value >= -(1LL << 31) && value < (1LL << 31)) return {4, 4};
+    if (value >= -(1LL << 47) && value < (1LL << 47)) return {5, 6};
+    return {6, 8};
+}
+
+inline void append_low_bytes_be(std::uint64_t value, std::size_t width,
+                                std::vector<std::uint8_t>& out) {
+    for (std::size_t i = width; i-- > 0;) {
+        out.push_back(static_cast<std::uint8_t>(value >> (i * 8)));
+    }
+}
+
 } // namespace detail
+
+// Encode column values into a complete SQLite record. Integer payloads use
+// SQLite's shortest signed width, including the payload-free 0/1 serial types.
+inline std::vector<std::uint8_t> encode(const std::vector<Value>& values) {
+    std::vector<std::uint8_t> serial_varints;
+    std::vector<std::uint8_t> payload;
+    for (const Value& value : values) {
+        std::uint64_t serial = 0;
+        switch (value.index()) {
+        case VNull:
+            break;
+        case VInt: {
+            std::int64_t integer = std::get<std::int64_t>(value);
+            if (integer == 0) {
+                serial = 8;
+            } else if (integer == 1) {
+                serial = 9;
+            } else {
+                auto layout = detail::int_serial(integer);
+                serial = layout.first;
+                detail::append_low_bytes_be(static_cast<std::uint64_t>(integer), layout.second,
+                                            payload);
+            }
+            break;
+        }
+        case VReal: {
+            serial = 7;
+            std::uint64_t bits;
+            double real = std::get<double>(value);
+            std::memcpy(&bits, &real, sizeof bits);
+            detail::append_low_bytes_be(bits, 8, payload);
+            break;
+        }
+        case VText: {
+            const std::string& text = std::get<std::string>(value);
+            serial = 13 + 2 * static_cast<std::uint64_t>(text.size());
+            payload.insert(payload.end(), text.begin(), text.end());
+            break;
+        }
+        case VBlob: {
+            const auto& blob = std::get<std::vector<std::uint8_t>>(value);
+            serial = 12 + 2 * static_cast<std::uint64_t>(blob.size());
+            payload.insert(payload.end(), blob.begin(), blob.end());
+            break;
+        }
+        default:
+            throw SqliteError(Error::Corrupt);
+        }
+        varint::write(static_cast<std::int64_t>(serial), serial_varints);
+    }
+
+    std::size_t assumed_header_width = 1;
+    for (;;) {
+        std::size_t header_len = assumed_header_width + serial_varints.size();
+        std::vector<std::uint8_t> record;
+        std::size_t actual_header_width =
+            varint::write(static_cast<std::int64_t>(header_len), record);
+        if (actual_header_width == assumed_header_width) {
+            record.reserve(header_len + payload.size());
+            record.insert(record.end(), serial_varints.begin(), serial_varints.end());
+            record.insert(record.end(), payload.begin(), payload.end());
+            return record;
+        }
+        assumed_header_width = actual_header_width;
+    }
+}
 
 // Decode a complete record (header + payload) into its column values.  Empty on
 // any inconsistency (header overrun, truncated payload, reserved serial type).
