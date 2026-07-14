@@ -1,0 +1,84 @@
+% ============================================================================
+% farm-animals — a familiar farm animal and the PRODUCT it gives us
+% (adj-facts-stdlib, AGRICULTURE).
+% ============================================================================
+% One of the very first "where does it come from?" facts a child learns: the
+% animals on a farm each give us something useful. A hen gives us EGGS, a sheep
+% gives us WOOL, a goat gives us MILK. This tiny library records, for a handful
+% of familiar farm animals, the product each one is raised to give. Recall is a
+% binding query:
+%
+%     ? farm_animal_product(chicken, $Product)     % eggs
+%     ? farm_animal_product(sheep, $Product)        % wool
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `farm_animal_product(animal, product)` carrying the table's citation,
+% so the lookup above is the ordinary SLD binding query — the engine returns the
+% product WITH its source, on the CPU, with zero model calls, and abstains on any
+% animal that is not one of the recorded ones (ask it about a `tiger` and it stays
+% honestly silent rather than inventing a product).
+%
+% The farm-animal → product pairs shipped here, as a truth table:
+%
+%     animal     product   a beginner's cue
+%     ---------  --------   ------------------------------------------------
+%     chicken    eggs       a flock of hens lays eggs for the family
+%     duck       eggs       ducks lay eggs too, a little bigger than a hen's
+%     sheep      wool       a sheep's fleece is sheared and spun into wool
+%     rabbit     wool       some rabbit breeds grow a very soft wool (fibre)
+%     goat       milk       a goat is milked, like a cow
+%
+% Three distinct products appear — eggs, wool and milk — so a learner sees that
+% different animals give different things, and that TWO animals can give the SAME
+% product (a chicken and a duck both give eggs; a sheep and a rabbit both give
+% wool). Each animal here was chosen to have ONE clear, source-stated product.
+%
+% Honest abstention is the safety property. A word that is not one of these
+% animals — `tiger`, `rock`, `oak` — is deliberately NOT a row, so a product
+% recall ABSTAINS on it rather than fabricating an answer.
+%
+% Note which pairs are deliberately ABSENT. The everyday "cow → milk" and
+% "bee → honey" facts are NOT rows here, even though a child would expect them:
+% the single source this library is grounded on (below) does not state either one
+% verbatim — its honeybee entry says only that bees "provide versatile products,"
+% without naming honey, and it has no cattle entry at all. Rather than assert a
+% product from memory, the library omits those animals. That is the same
+% honest-sourcing discipline as leaving `uracil` out of the DNA base-pair table:
+% a fact enters ONLY when a citable source states it (feedback_nothing_human_authored).
+%
+% ----------------------------------------------------------------------------
+% Provenance (byte-quotable, per the ADJ-facts standard).
+% ----------------------------------------------------------------------------
+% Every row is copied from IOWA STATE UNIVERSITY's Center for Food Security and
+% Public Health (CFSPH), "The Livestock Project — Animals for Beginning Small
+% Farmers." CFSPH is a center of Iowa State University's College of Veterinary
+% Medicine, a primary university educational source — hence `trust authoritative`.
+% Nothing here is asserted from memory. Because ADJ tables carry ONE shared
+% provenance envelope (per-row provenance is a documented future extension — see
+% ADJ-TABLES §6), the envelope below cites that page at its `locator`, and the
+% `source` quotes the SHEEP entry verbatim. For full auditability, here is the
+% exact CFSPH span (all on the one page at the `locator`) that grounds EACH row:
+%
+%   chicken → eggs — "A small flock can keep a family in eggs or meat."
+%   duck    → eggs — "Like chickens, Ducks produce meat and eggs."
+%   sheep   → wool — "depending on the breed, they can produce wool, meat, and milk."
+%   rabbit  → wool — "Some rabbit breeds produce a very soft wool that can be
+%                     harvested regularly and used for fiber arts."
+%   goat    → milk — "Goat milk may be pasteurized for human consumption."
+%
+% (See ../README.md; feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table farm_animal_product {
+    columns animal, product
+
+    row (chicken, eggs)
+    row (duck, eggs)
+    row (sheep, wool)
+    row (rabbit, wool)
+    row (goat, milk)
+
+    source "Sheep are low maintenance and versatile – depending on the breed, they can produce wool, meat, and milk"
+    locator "https://www.cfsph.iastate.edu/thelivestockproject/animals-for-beginning-small-farmers/"
+    trust authoritative
+}
