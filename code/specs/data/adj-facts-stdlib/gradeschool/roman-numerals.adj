@@ -1,0 +1,49 @@
+% ============================================================================
+% roman-numerals — each Roman symbol's value (adj-facts-stdlib, GRADE-SCHOOL).
+% ============================================================================
+% A grade-school arithmetic fact: the seven letters of the Roman system and the
+% number each one stands for — I is one, V is five, X is ten, and so on up to M
+% for a thousand. Recall is a binding query:
+%
+%     ? roman_numeral_value(x, $V)        % 10
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `roman_numeral_value(symbol, value)` carrying the table's citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns the
+% value WITH its source, on the CPU, with zero model calls, and abstains on any
+% letter not in the table (e.g. `q`, which is not a Roman numeral).
+%
+% Because the `value` column is a NUMBER, a recalled symbol-value composes
+% straight into arithmetic: to read a whole numeral like XVI you add the recalled
+% values 10 + 5 + 1 = 16 (with a subtractive step for forms like IX). That is the
+% concrete bridge from grade-school RECALL of the seven symbols to grade-school
+% COMPUTE of a numeral's total.
+%
+% A NOTE ON CASE: ADJ atoms are lowercase, so the `symbol` key is written with
+% the lowercase letters `i, v, x, l, c, d, m`. The source (below) writes the
+% symbols as the uppercase Latin letters `I, V, X, L, C, D, M`; the value each
+% denotes is identical — only the atom spelling is lowercased so it parses as a
+% bare identifier.
+%
+% Provenance: the seven symbol→value pairs are copied from the sentence quoted in
+% `source`, taken verbatim from the Wikipedia "Roman numerals" article's lead at
+% the `locator`. `trust authoritative` — a citable encyclopedia reference.
+% Nothing here is asserted from memory; every value traces to that sentence.
+% (See ../README.md; feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table roman_numeral_value {
+    columns symbol, value
+
+    row (i, 1)
+    row (v, 5)
+    row (x, 10)
+    row (l, 50)
+    row (c, 100)
+    row (d, 500)
+    row (m, 1000)
+
+    source "The modern style of Roman numerals uses only seven letters from the Latin alphabet as symbols: I meaning 1, V meaning 5, X meaning 10, L meaning 50, C meaning 100, D meaning 500, and M meaning 1000."
+    locator "https://en.wikipedia.org/wiki/Roman_numerals"
+    trust authoritative
+}

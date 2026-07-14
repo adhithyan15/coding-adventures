@@ -1,0 +1,20 @@
+% ============================================================================
+% roman-numerals.query.adj — a worked recall over the grade-school Roman library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is the value of X?":
+% it states no arithmetic fact of its own — it only `import`s the grounded table
+% and asks binding queries. The engine resolves each `?` against the
+% `roman_numeral_value` rows and returns the value + the table's source/locator/
+% trust. A letter that is not a Roman symbol abstains honestly — the engine never
+% invents a value.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli roman-numerals.query.adj
+% ============================================================================
+
+import "roman-numerals.adj"
+
+? roman_numeral_value(x, $V)           % expect 10
+? roman_numeral_value(m, $V)           % expect 1000
+? roman_numeral_value($S, 50)          % reverse recall — expect $S = l
+? roman_numeral_value(q, $V)           % expect abstain — q is not a Roman numeral
