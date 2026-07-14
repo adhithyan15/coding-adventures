@@ -1,5 +1,5 @@
-//! End-to-end test for the kindergarten months FACTS library
-//! (`adj-facts-stdlib/kindergarten/months.adj`) driven through the built CLI:
+//! End-to-end test for the calendar months FACTS library
+//! (`adj-facts-stdlib/calendar/months.adj`) driven through the built CLI:
 //! a native `table` of month → month-number resolves a binding-query recall with
 //! the source's citation, binds both directions, and abstains on a non-month —
 //! 0 model calls.
@@ -30,10 +30,10 @@ fn run(program: &Path) -> (bool, String) {
 }
 
 #[test]
-fn kindergarten_months_recall_binds_month_number_with_citation() {
+fn calendar_months_recall_binds_month_number_with_citation() {
     let dir = scratch("months");
-    // Copy the shipped kindergarten table beside the entry program and import it.
-    let src = facts_stdlib().join("kindergarten/months.adj");
+    // Copy the shipped calendar table beside the entry program and import it.
+    let src = facts_stdlib().join("calendar/months.adj");
     std::fs::copy(&src, dir.join("months.adj")).expect("copy shipped months.adj");
     std::fs::write(
         dir.join("case.adj"),

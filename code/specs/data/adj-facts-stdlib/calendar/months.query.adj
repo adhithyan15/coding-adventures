@@ -1,5 +1,5 @@
 % ============================================================================
-% months.query.adj — a worked recall over the kindergarten months library.
+% months.query.adj — a worked recall over the calendar months library.
 % ============================================================================
 % The shape a learner (or an LLM) produces to ANSWER "what number is January?":
 % it states no calendar fact — it only `import`s the grounded table and asks

@@ -1,9 +1,9 @@
 % ============================================================================
-% months — which number names each month of the year (adj-facts-stdlib, KINDERGARTEN).
+% months — which number names each month of the year (adj-facts-stdlib, CALENDAR).
 % ============================================================================
-% A second rung of the facts ladder, beside `shapes.adj`: the calendar fact a
-% kindergartener chants — "January is the first month, December is the twelfth."
-% Recall is a binding query:
+% The calendar-facts library of the ADJ standard library: the plain fact that
+% "January is the first month, December is the twelfth." Recall is a binding
+% query:
 %
 %     ? month_number(march, $Number)        % 3
 %
@@ -15,7 +15,7 @@
 % `? month_number(may, $N)` gives 5, and reverse `? month_number($M, 5)` gives
 % may. Because the `number` value is a NUMBER, a recalled month index composes
 % straight into a formula (days-elapsed, quarter = ceil(number / 3)): the concrete
-% bridge from kindergarten RECALL to kindergarten COMPUTE.
+% bridge from RECALL to COMPUTE.
 %
 % Provenance: the month → number mapping is the ISO 8601 numbering, copied
 % verbatim from Markus Kuhn's canonical ISO 8601 summary hosted by the University
