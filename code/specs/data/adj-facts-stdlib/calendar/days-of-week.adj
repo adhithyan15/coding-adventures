@@ -1,9 +1,9 @@
 % ============================================================================
-% days-of-week — the ISO weekday number for each day (adj-facts-stdlib, KINDERGARTEN).
+% days-of-week — the ISO weekday number for each day (adj-facts-stdlib, CALENDAR).
 % ============================================================================
-% Another first-rung calendar fact: a child learns the days of the week in order,
-% and the ISO 8601 standard pins that order to NUMBERS — Monday is day 1, Sunday
-% is day 7. Recall is a binding query:
+% A calendar facts library in the ADJ standard library, importable by any
+% program: the days of the week in order, with the ISO 8601 standard pinning that
+% order to NUMBERS — Monday is day 1, Sunday is day 7. Recall is a binding query:
 %
 %     ? iso_weekday(monday, $N)      % 1
 %     ? iso_weekday(sunday, $N)      % 7
@@ -18,8 +18,7 @@
 %
 % Because the `iso_number` value is a NUMBER, a recalled weekday composes straight
 % into arithmetic (day-of-week offsets, "how many days until Friday", modular
-% week math): the concrete bridge from kindergarten RECALL to kindergarten
-% COMPUTE.
+% week math): the concrete bridge from RECALL to COMPUTE.
 %
 % Provenance: the day→number pairs are the ISO 8601 week-date numbering, copied
 % from the citable description at the `locator`, which states verbatim that the

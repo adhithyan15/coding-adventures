@@ -1,5 +1,5 @@
-//! End-to-end test for the kindergarten calendar FACTS library
-//! (`adj-facts-stdlib/kindergarten/days-of-week.adj`) driven through the built CLI:
+//! End-to-end test for the calendar FACTS library
+//! (`adj-facts-stdlib/calendar/days-of-week.adj`) driven through the built CLI:
 //! a native `table` of day → ISO weekday number resolves a binding-query recall
 //! with the source's citation, and abstains on a non-day — 0 model calls.
 
@@ -14,7 +14,7 @@ fn facts_stdlib() -> PathBuf {
 }
 
 fn scratch(tag: &str) -> PathBuf {
-    let dir = std::env::temp_dir().join(format!("adjcli_factsk_{tag}_{}", std::process::id()));
+    let dir = std::env::temp_dir().join(format!("adjcli_facts_{tag}_{}", std::process::id()));
     let _ = std::fs::remove_dir_all(&dir);
     std::fs::create_dir_all(&dir).unwrap();
     dir
@@ -29,10 +29,10 @@ fn run(program: &Path) -> (bool, String) {
 }
 
 #[test]
-fn kindergarten_days_recall_binds_iso_weekday_number_with_citation() {
+fn calendar_days_recall_binds_iso_weekday_number_with_citation() {
     let dir = scratch("days");
-    // Copy the shipped kindergarten table beside the entry program and import it.
-    let src = facts_stdlib().join("kindergarten/days-of-week.adj");
+    // Copy the shipped calendar table beside the entry program and import it.
+    let src = facts_stdlib().join("calendar/days-of-week.adj");
     std::fs::copy(&src, dir.join("days-of-week.adj")).expect("copy shipped days-of-week.adj");
     std::fs::write(
         dir.join("case.adj"),

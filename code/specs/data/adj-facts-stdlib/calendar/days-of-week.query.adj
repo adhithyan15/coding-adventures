@@ -1,5 +1,5 @@
 % ============================================================================
-% days-of-week.query.adj — a worked recall over the kindergarten calendar library.
+% days-of-week.query.adj — a worked recall over the calendar facts library.
 % ============================================================================
 % The shape a learner (or an LLM) produces to ANSWER "what number is Monday?": it
 % states no calendar fact — it only `import`s the grounded table and asks binding
