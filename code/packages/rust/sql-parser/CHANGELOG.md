@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.16] - Unreleased
+
+### Added
+
+- **`COLLATE name` on the LEFT comparison operand** (`col COLLATE NOCASE = 'x'`),
+  mirroring the right-operand COLLATE. Placed at the START of the `cmp_op`
+  alternative so a trailing `COLLATE` with no following operator (an
+  `ORDER BY … COLLATE …` clause, whose `order_item` owns the collation)
+  backtracks and is left for that caller — no regression to sort collation. The
+  planner already takes the first COLLATE token, so a left collation wins over a
+  right one, matching SQLite.
 ## [0.1.15] - Unreleased
 
 ### Added
