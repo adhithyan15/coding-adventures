@@ -33,8 +33,10 @@ use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 
 use crate::ast::{
     AggOp, Annotation, ArithOp, BinFn, CmpOp, Define, DefineKind, Evidence, ExprAst, FormulaDef,
-    NamedFn, OptDir, Program, RelOp, RuleLiteral, Statement, Term, TrustTierName,
+    NamedFn, NumLit, OptDir, Program, RelOp, RuleLiteral, Statement, Term, TrustTierName,
 };
+use bignum_core::BigDecimal;
+use std::str::FromStr;
 
 /// Errors raised while adapting a generic AST to the typed AST.
 ///
@@ -999,7 +1001,7 @@ fn adapt_row_item(node: &GrammarASTNode) -> Result<crate::ast::TableCell, Adapte
         if let ASTNodeOrToken::Token(t) = c {
             match t.type_ {
                 TokenType::Number => {
-                    return Ok(crate::ast::TableCell::Number(parse_finite(
+                    return Ok(crate::ast::TableCell::Number(parse_numlit(
                         &t.value, t.type_, "row_item",
                     )?));
                 }
@@ -2472,7 +2474,7 @@ fn adapt_term(node: &GrammarASTNode) -> Result<Term, AdapterError> {
         match c {
             ASTNodeOrToken::Node(n) if n.rule_name == "term" => args.push(adapt_term(n)?),
             ASTNodeOrToken::Token(t) if t.type_ == TokenType::Number => {
-                args.push(Term::Num(parse_finite(&t.value, t.type_, "term")?));
+                args.push(Term::Num(parse_numlit(&t.value, t.type_, "term")?));
             }
             // A `$Enzyme` VAR surfaces as a Name token whose value begins with
             // `$` (unknown token names fall back to TokenType::Name). The functor
@@ -2600,6 +2602,36 @@ fn parse_finite(raw: &str, kind: TokenType, rule: &str) -> Result<f64, AdapterEr
             kind,
             value: raw.to_string(),
             reason: "not a finite f64",
+        }),
+    }
+}
+
+/// Parse a NUMBER token into a [`NumLit`] that loses no digit (ADJ-EXACT-NUMBERS NX-2).
+///
+/// The precedence is chosen so small whole numbers keep the engine's `Int` fast paths while
+/// everything else is preserved exactly:
+///
+/// 1. If the literal is a whole number that fits `i64` (`18000`), it becomes [`NumLit::Int`].
+/// 2. Otherwise — a fractional or out-of-`i64` decimal, scientific or not (`2.54`, `6.022e23`,
+///    π to 39 places) — it is parsed with [`BigDecimal::from_str`] into [`NumLit::Exact`], keeping
+///    every written digit. `BigDecimal`'s own `MAX_SCALE` budget rejects scale-amplification
+///    payloads (`1e-2000000000`), so this is also the safe boundary for untrusted input.
+/// 3. If neither parse succeeds, it is a malformed token — an [`AdapterError::BadToken`].
+///
+/// This replaces the old `f64` parse at the two **ground-term** sites (a table cell and a
+/// valued-fact argument). Compute leaves (`ExprAst::Lit`) still take an `f64` via `parse_finite`,
+/// because the compute layer is inherently `f64`.
+fn parse_numlit(raw: &str, kind: TokenType, rule: &str) -> Result<NumLit, AdapterError> {
+    if let Ok(i) = raw.parse::<i64>() {
+        return Ok(NumLit::Int(i));
+    }
+    match BigDecimal::from_str(raw) {
+        Ok(d) => Ok(NumLit::Exact(d)),
+        Err(_) => Err(AdapterError::BadToken {
+            rule: rule.to_string(),
+            kind,
+            value: raw.to_string(),
+            reason: "not an integer or exact decimal literal",
         }),
     }
 }
@@ -2923,7 +2955,9 @@ mod tests {
                 Term::Compound { functor, args } => {
                     assert_eq!(functor, "gross_income");
                     assert_eq!(args.len(), 1);
-                    assert!(matches!(args[0], Term::Num(x) if x == 18000.0));
+                    // A whole number that fits `i64` parses to `NumLit::Int` (NX-2), keeping the
+                    // engine's small-integer fast path — not a lossy `f64`.
+                    assert!(matches!(args[0], Term::Num(NumLit::Int(18000))));
                 }
                 other => panic!("expected compound, got {other:?}"),
             },

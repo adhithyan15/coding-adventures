@@ -1090,10 +1090,16 @@ pub fn numeric_magnitude(value: &Term) -> Option<f64> {
     match value {
         Term::Num(Number::Int(i)) => Some(*i as f64),
         Term::Num(Number::Float(x)) => Some(*x),
+        // An exactly-stored decimal (ADJ-EXACT-NUMBERS NX-2) reads out as its labeled-lossy `f64`
+        // magnitude here — the same value the old `Float(f64)` path yielded, since a valued fact's
+        // magnitude flows into the inherently-`f64` compute layer. (Exact-rational ingestion of the
+        // decimal, with no `f64` hop, is NX-3.)
+        Term::Num(Number::Exact(d)) => Some(d.to_f64()),
         // Typed wrapper: the magnitude is the leading numeric argument.
         Term::Compound { args, .. } => match args.first() {
             Some(Term::Num(Number::Int(i))) => Some(*i as f64),
             Some(Term::Num(Number::Float(x))) => Some(*x),
+            Some(Term::Num(Number::Exact(d))) => Some(d.to_f64()),
             _ => None,
         },
         _ => None,
@@ -1108,12 +1114,21 @@ pub fn numeric_exact_magnitude(value: &Term) -> Option<crate::compute::ExactRati
     match value {
         Term::Num(Number::Int(i)) => Some(crate::compute::ExactRational::from_i128(*i as i128)),
         Term::Num(Number::Float(x)) => crate::compute::ExactRational::from_integer_f64(*x),
+        // NX-2 reads an exactly-stored decimal through the *same* integer-valued gate the `Float`
+        // path uses (`to_f64` then `from_integer_f64`), so the exact-rational sidecar is populated
+        // for integer-valued facts and `None` for fractional ones — byte-for-byte the old
+        // behavior. Ingesting the decimal's full precision into `ExactRational` without an `f64`
+        // hop is deliberately deferred to NX-3, so no compute result changes in this PR.
+        Term::Num(Number::Exact(d)) => crate::compute::ExactRational::from_integer_f64(d.to_f64()),
         Term::Compound { args, .. } => match args.first() {
             Some(Term::Num(Number::Int(i))) => {
                 Some(crate::compute::ExactRational::from_i128(*i as i128))
             }
             Some(Term::Num(Number::Float(x))) => {
                 crate::compute::ExactRational::from_integer_f64(*x)
+            }
+            Some(Term::Num(Number::Exact(d))) => {
+                crate::compute::ExactRational::from_integer_f64(d.to_f64())
             }
             _ => None,
         },

@@ -295,6 +295,34 @@ impl BigDecimal {
         self.mant.signum()
     }
 
+    /// How many **significant digits** the value carries — the count of digits in the mantissa
+    /// once trailing zeros are removed. Because a `BigDecimal` is always kept in canonical form
+    /// (the [module documentation](crate::decimal) explains: the mantissa never ends in a `0`
+    /// unless the value *is* zero), this is simply the number of base-10 digits in the mantissa,
+    /// and `0` for the value zero. The scale (where the decimal point sits) is irrelevant — only
+    /// the run of meaningful digits counts.
+    ///
+    /// | value    | canonical `(mant, scale)` | significant digits |
+    /// |----------|---------------------------|--------------------|
+    /// | `0`      | `(0, 0)`                  | `0`                |
+    /// | `100`    | `(1, -2)`                 | `1`                |
+    /// | `20.180` | `(2018, 2)`               | `4`                |
+    /// | `-3.14`  | `(-314, 2)`               | `3`                |
+    /// | π (39dp) | `(3141…197, 39)`          | `40`               |
+    ///
+    /// This is the measure the exact-numbers renderer (ADJ NX-2) uses to decide whether a value
+    /// still fits an `f64`'s ~17-digit budget (render the `f64` canonical form, preserving
+    /// existing output byte-for-byte) or exceeds it (render every exact digit instead).
+    pub fn significant_digits(&self) -> usize {
+        if self.mant.is_zero() {
+            return 0;
+        }
+        // The mantissa carries no trailing zero in canonical form, so its digit count *is* the
+        // significant-digit count. `abs()` drops a leading `-` so the sign never inflates the
+        // length.
+        self.mant.abs().to_string().len()
+    }
+
     /// The absolute value `|self|`.
     pub fn abs(&self) -> BigDecimal {
         BigDecimal {
@@ -747,6 +775,35 @@ mod tests {
         assert_eq!(hundred.scale(), -2);
         assert_eq!(hundred.to_string(), "100");
         assert_eq!(d("12300").to_string(), "12300");
+    }
+
+    #[test]
+    fn significant_digits_counts_meaningful_mantissa_digits() {
+        // Zero has no significant digits.
+        assert_eq!(d("0").significant_digits(), 0);
+        assert_eq!(d("0.000").significant_digits(), 0);
+        // Trailing zeros are not significant (canonical form already strips them).
+        assert_eq!(d("20.180").significant_digits(), 4); // 2018
+        assert_eq!(d("100").significant_digits(), 1); // mantissa 1
+        assert_eq!(d("1000").significant_digits(), 1);
+        assert_eq!(d("12300").significant_digits(), 3); // 123
+        // Leading zeros before the first non-zero digit are not significant either.
+        assert_eq!(d("0.001").significant_digits(), 1);
+        assert_eq!(d("0.0123").significant_digits(), 3);
+        // Ordinary values.
+        assert_eq!(d("1.23").significant_digits(), 3);
+        assert_eq!(d("-3.14").significant_digits(), 3); // sign does not count
+        assert_eq!(d("42").significant_digits(), 2);
+        // The f64 fit/overflow boundary the renderer keys on: 17 digits vs 18.
+        assert_eq!(d("1.2345678901234567").significant_digits(), 17);
+        assert_eq!(d("1.23456789012345678").significant_digits(), 18);
+        // π to 39 decimal places — the motivating case (every digit counts). The literal has one
+        // integer digit plus 39 fractional digits, so 40 significant digits in all.
+        let pi = "3.141592653589793238462643383279502884197";
+        assert_eq!(d(pi).significant_digits(), 40);
+        // Scientific notation is normalized first, so only real digits count.
+        assert_eq!(d("6.02214076e23").significant_digits(), 9);
+        assert_eq!(d("1e3").significant_digits(), 1); // 1000 -> mantissa 1
     }
 
     #[test]

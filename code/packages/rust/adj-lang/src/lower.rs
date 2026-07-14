@@ -20,7 +20,8 @@
 //!   `source` annotations are a [`LowerError::DuplicateAnnotation`].
 
 use logic_core::{
-    atom as core_atom, compound, float as core_float, var as core_var, LogicVar, Term as CoreTerm,
+    atom as core_atom, compound, int as core_int, var as core_var, LogicVar, Number as CoreNumber,
+    Term as CoreTerm,
 };
 use logic_engine::{
     compute, BodyLiteral, Citation, CmpOp as EngineCmpOp, ComputeExpr, ComputeOp,
@@ -33,7 +34,7 @@ use std::collections::HashMap;
 
 use crate::ast::{
     AggOp, Annotation, ArithOp, BinFn, CmpOp, Define, DefineKind, Evidence, ExprAst, FormulaDef,
-    NamedFn, OptDir, Program, RelOp, Statement, Term as AstTerm, TrustTierName,
+    NamedFn, NumLit, OptDir, Program, RelOp, Statement, Term as AstTerm, TrustTierName,
 };
 
 /// One lowered constraint: `lhs <op> rhs`, with both sides kept as
@@ -962,12 +963,22 @@ fn check_lr(lr: f64) -> Result<(), LowerError> {
     }
 }
 
+/// Lower a surface [`NumLit`] to the engine's ground [`CoreNumber`] **without an `f64` hop**
+/// (ADJ-EXACT-NUMBERS NX-2): `Int` becomes `Number::Int` (keeping the small-integer fast path),
+/// and `Exact` becomes `Number::Exact`, carrying every written digit into the stored value.
+fn lower_numlit(n: &NumLit) -> CoreTerm {
+    match n {
+        NumLit::Int(i) => core_int(*i),
+        NumLit::Exact(d) => CoreTerm::Num(CoreNumber::Exact(d.clone())),
+    }
+}
+
 /// Lower one [`crate::ast::TableCell`] (ADJ-TABLES RS-5) to a ground engine term.
 /// The three cell kinds map 1:1 onto the engine's three ground term kinds; a cell
 /// is never a variable or compound, so this is total and never fails.
 fn lower_cell(cell: &crate::ast::TableCell) -> CoreTerm {
     match cell {
-        crate::ast::TableCell::Number(x) => core_float(*x),
+        crate::ast::TableCell::Number(x) => lower_numlit(x),
         crate::ast::TableCell::Atom(name) => core_atom(name),
         crate::ast::TableCell::Text(s) => CoreTerm::Str(s.clone()),
     }
@@ -976,7 +987,7 @@ fn lower_cell(cell: &crate::ast::TableCell) -> CoreTerm {
 fn lower_term(t: &AstTerm) -> CoreTerm {
     match t {
         AstTerm::Atom(name) => core_atom(name),
-        AstTerm::Num(x) => core_float(*x),
+        AstTerm::Num(x) => lower_numlit(x),
         // A bare `Var` outside a query goal (e.g. inside a `relate` ground edge)
         // is unusual — ground edges have no variables — but lower it to a fresh
         // logic variable rather than panicking, so the engine treats it as an
@@ -996,7 +1007,7 @@ fn lower_term(t: &AstTerm) -> CoreTerm {
 fn lower_term_scoped(t: &AstTerm, vars: &mut HashMap<String, LogicVar>) -> CoreTerm {
     match t {
         AstTerm::Atom(name) => core_atom(name),
-        AstTerm::Num(x) => core_float(*x),
+        AstTerm::Num(x) => lower_numlit(x),
         AstTerm::Var(name) => {
             let lv = vars
                 .entry(name.clone())
@@ -1611,7 +1622,10 @@ fn apply_formula(fd: &FormulaDef, goal: &AstTerm) -> Result<ExprAst, LowerError>
     for (param, arg) in fd.params.iter().zip(args.iter()) {
         let bound = match arg {
             AstTerm::Atom(name) => ExprAst::Ref(name.clone()),
-            AstTerm::Num(x) => ExprAst::Lit(*x),
+            // A numeric formula argument feeds the (inherently `f64`) compute layer, so it
+            // takes the labeled-lossy export here — the exact literal is preserved on the
+            // ground-term paths (`lower_numlit`), not on this compute leaf.
+            AstTerm::Num(x) => ExprAst::Lit(x.to_f64_lossy()),
             _ => {
                 return Err(LowerError::FormulaBadArgument {
                     formula: fd.name.clone(),
@@ -1737,6 +1751,7 @@ mod tests {
     use super::*;
     use crate::compile;
     use logic_engine::{enumerate_all, search, SearchMode, SearchResult};
+    use std::str::FromStr;
 
     // ---- ADJ-FORMULA-LIBRARIES rung-0: formulabook / formula ----
 
@@ -2088,7 +2103,15 @@ mod tests {
         let v = query_var(query);
         let dag = enumerate_all(query, &lowered.kb);
         assert_eq!(dag.proofs.len(), 1, "exactly one row matches the key `foot`");
-        assert_eq!(dag.proofs[0].bindings.walk_var(&v), core_float(0.3048));
+        // NX-2: a fractional cell binds as an EXACT decimal, not a lossy `f64` (a distinct
+        // `Number` variant). Preserving the exact value is the whole intent — `0.3048` is stored
+        // with every digit, and only the *rendering* falls back to the f64 form when it fits.
+        assert_eq!(
+            dag.proofs[0].bindings.walk_var(&v),
+            CoreTerm::Num(CoreNumber::Exact(
+                bignum_core::BigDecimal::from_str("0.3048").unwrap()
+            ))
+        );
         // The answer's proof is a table row whose Fact carries the citation.
         let fid = dag.proofs[0].via_facts[0];
         let prov = &lowered.kb.fact(fid).expect("row fact exists").provenance;
@@ -2524,12 +2547,26 @@ mod tests {
     }
 
     #[test]
-    fn non_finite_number_literal_is_rejected_at_parse() {
-        // 1e400 overflows f64 to +inf; reject it rather than flow inf on.
-        let err = compile("observe gross_income(1e400)").unwrap_err();
-        assert!(
-            matches!(err, crate::CompileError::Adapt(_)),
-            "expected an adapter BadToken error, got {err:?}"
+    fn large_magnitude_literal_is_stored_exactly_not_rejected() {
+        // Before NX-2, `1e400` overflowed `f64` to +inf and was rejected at parse. Now it is a
+        // perfectly good exact decimal (`10^400`) preserved with every digit — the whole point of
+        // the exact-numbers arc is that a written magnitude is stored as written, not truncated
+        // (or, here, saturated to inf) the instant it is parsed. The lossy `f64` view appears only
+        // if something later asks for one.
+        let src = r#"
+            observe gross_income(1e400)
+            ? gross_income($V)
+        "#;
+        let lowered = compile(src).unwrap();
+        let query = &lowered.queries[0];
+        let v = query_var(query);
+        let dag = enumerate_all(query, &lowered.kb);
+        assert_eq!(dag.proofs.len(), 1);
+        assert_eq!(
+            dag.proofs[0].bindings.walk_var(&v),
+            CoreTerm::Num(CoreNumber::Exact(
+                bignum_core::BigDecimal::from_str("1e400").unwrap()
+            ))
         );
     }
 

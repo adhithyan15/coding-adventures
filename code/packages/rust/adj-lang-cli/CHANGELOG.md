@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.11.1] — 2026-07-14 — exact-number bindings render every digit (ADJ-EXACT-NUMBERS NX-2)
+
+### Added
+
+- E2E test: a native `table` whose cell is π to 39 decimal places binds through `? t(key, $V)`
+  and renders **all 39 digits**, proving the exact-numbers path survives parse → store → query →
+  render end-to-end (previously it came back as the f64-truncated `3.141592653589793`).
+
+### Changed
+
+- Behavior: a numeric literal whose magnitude overflows `f64` (`1e400`) now compiles and is stored
+  exactly, instead of being reported as a malformed-literal error. The `malformed_numeric_clauses`
+  golden was updated to probe a scale-amplification payload (`1e-2000000000`), which `BigDecimal`'s
+  `MAX_SCALE` budget still rejects cleanly — so the "un-representable literal → `{"error":…}`, never
+  a panic" invariant is unchanged.
+
 ## [Unreleased] — render applied-formula provenance in the `derived` section
 
 ### Added
