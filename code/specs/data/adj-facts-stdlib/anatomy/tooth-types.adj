@@ -1,0 +1,87 @@
+% ============================================================================
+% tooth-types — each kind of human tooth and the job it does when we eat
+% (adj-facts-stdlib, ANATOMY).
+% ============================================================================
+% A first anatomy fact on the way to the mouth: an adult has four SHAPES of
+% tooth, and each shape does a different job while we chew. The sharp front
+% teeth CUT, the pointed corner teeth TEAR, and the wide back teeth GRIND —
+% shape follows job. Recall is a binding query:
+%
+%     ? tooth_function(incisors, $Job)      % cutting
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `tooth_function(tooth, function)` carrying the table's citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns the
+% job WITH its source, on the CPU, with zero model calls, and abstains on
+% anything that is not one of the four tooth types.
+%
+% The four tooth types, as a little truth table:
+%
+%     tooth       job         where it sits           what it does to food
+%     ---------   --------    --------------------    --------------------
+%     incisors    cutting     front and center        cuts / bites off pieces
+%     canines     tearing     the sharp corners       tears and punctures
+%     premolars   grinding    behind the canines      crushes / grinds
+%     molars      grinding    the wide back teeth      grinds when we chew
+%
+% The query also runs BACKWARD — bind a job and recall the tooth type(s) that
+% do it (both `premolars` and `molars` do the grinding, so both are recalled):
+%
+%     ? tooth_function($T, grinding)        % premolars ; molars
+%
+% Something that is not one of the four tooth types — the tongue, the gums —
+% has no row, so a recall on it ABSTAINS rather than inventing a job. That
+% honest-abstention property is what makes the table safe to reason from.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every tooth→job pair was
+% read out of a fetched NIH/NLM page, and any tooth that could not be grounded
+% there would have been dropped). Each row, with the NIH source it was copied
+% from and the verbatim span that states its job:
+%
+%   incisors → cutting
+%     https://www.ncbi.nlm.nih.gov/books/NBK538475/  (NIH / NLM, StatPearls:
+%     "Physiology, Tooth")
+%     "The anterior teeth are called incisors, directly reflecting their role
+%      in cutting food into smaller pieces without performing any grinding
+%      function."
+%
+%   canines → tearing
+%     https://www.ncbi.nlm.nih.gov/books/NBK538475/  (NIH / NLM, StatPearls:
+%     "Physiology, Tooth")
+%     "Canine teeth function to tear and puncture holes."
+%
+%   premolars → grinding
+%     https://www.ncbi.nlm.nih.gov/books/NBK538475/  (NIH / NLM, StatPearls:
+%     "Physiology, Tooth")
+%     "The 8 premolars (bicuspids), 4 in each arch, which assist in crushing,
+%      grinding, and mixing food."
+%
+%   molars → grinding
+%     https://www.ncbi.nlm.nih.gov/books/NBK553376/  (NIH / NLM,
+%     InformedHealth.org: "In brief: How our teeth and jaws work together")
+%     "When we bite down, the cusps of the upper molars fit into the grooves of
+%      the lower teeth. That way, they can grind food when we chew."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single strongest span: the StatPearls sentence that
+% fixes the first row (incisors → cutting). Every OTHER row's per-fact source
+% and verbatim span is listed above, so each job remains independently
+% checkable. All sources are primary U.S. government NIH / National Library of
+% Medicine references (ncbi.nlm.nih.gov), so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table tooth_function {
+    columns tooth, function
+
+    row (incisors, cutting)
+    row (canines, tearing)
+    row (premolars, grinding)
+    row (molars, grinding)
+
+    source "The anterior teeth are called incisors, directly reflecting their role in cutting food into smaller pieces without performing any grinding function."
+    locator "https://www.ncbi.nlm.nih.gov/books/NBK538475/"
+    trust authoritative
+}
