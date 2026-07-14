@@ -1,0 +1,20 @@
+% ============================================================================
+% ordinal-numbers.query.adj — a worked recall over the ordinal-numbers library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is the ordinal word
+% for 4?" — it states no fact itself, only `import`s the grounded table and asks
+% binding queries. The engine resolves each `?` against the `ordinal_number`
+% rows and returns the ordinal word (or the number, on a reverse query) + the
+% EF source/locator/trust. A number the table does not list abstains honestly —
+% the engine never invents an ordinal.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli ordinal-numbers.query.adj
+% ============================================================================
+
+import "ordinal-numbers.adj"
+
+? ordinal_number(1, $Word)         % expect first   (who is at the front of the line?)
+? ordinal_number(4, $Word)         % expect fourth
+? ordinal_number($N, third)        % expect 3       (reverse: which number is "third"?)
+? ordinal_number(11, $Word)        % expect abstain — the table lists only 1..10
