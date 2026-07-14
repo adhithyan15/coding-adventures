@@ -961,8 +961,13 @@ fn collect_binding_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                 out.insert(id.name.clone());
             }
             for p in &fe.params {
-                let id = p.binding_identifier();
-                out.insert(id.name.clone());
+                out.insert(p.binding_identifier().name.clone());
+                // A default's `right` reads names too (`a = SOME_NAME`); over-
+                // collect them so a fresh name the void splice mints can never
+                // collide with a name a nested default reads.
+                if let Some(def) = p.default_value() {
+                    collect_binding_idents_expr(def, out);
+                }
             }
         }
         // A class *value* binds its own name (if named) and each method
@@ -988,8 +993,10 @@ fn collect_binding_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                             out.insert(id.name.clone());
                         }
                         for p in &m.value.params {
-                            let id = p.binding_identifier();
-                            out.insert(id.name.clone());
+                            out.insert(p.binding_identifier().name.clone());
+                            if let Some(def) = p.default_value() {
+                                collect_binding_idents_expr(def, out);
+                            }
                         }
                     }
                     // A field's initializer is evaluated at construction; the
@@ -1022,8 +1029,10 @@ fn collect_binding_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
         // record them so an inline never captures or collides with them.
         Expression::ArrowFunctionExpression(ae) => {
             for p in &ae.params {
-                let id = p.binding_identifier();
-                out.insert(id.name.clone());
+                out.insert(p.binding_identifier().name.clone());
+                if let Some(def) = p.default_value() {
+                    collect_binding_idents_expr(def, out);
+                }
             }
         }
         // A template literal introduces NO boundary bindings; its quasis are
@@ -2053,6 +2062,15 @@ fn substitute(expr: &mut Expression, map: &HashMap<String, Expression>) {
                 let id = p.binding_identifier();
                 inner.remove(&id.name);
             }
+            // A default parameter's `right` runs in the nested scope and can
+            // reference a substituted outer parameter (`return function(a = b){}`
+            // inside `f(a, b)`); substitute through it with the shadow-stripped
+            // `inner`, exactly like the body.
+            for p in &mut fe.params {
+                if let Some(def) = p.default_value_mut() {
+                    substitute(def, &inner);
+                }
+            }
             for s in &mut fe.body.body {
                 substitute_in_stmt(s, &inner);
             }
@@ -2083,6 +2101,13 @@ fn substitute(expr: &mut Expression, map: &HashMap<String, Expression>) {
                         for p in &m.value.params {
                             let id = p.binding_identifier();
                             inner.remove(&id.name);
+                        }
+                        // Default-param `right` expressions — see the
+                        // `FunctionExpression` arm.
+                        for p in &mut m.value.params {
+                            if let Some(def) = p.default_value_mut() {
+                                substitute(def, &inner);
+                            }
                         }
                         for s in &mut m.value.body.body {
                             substitute_in_stmt(s, &inner);
@@ -2119,6 +2144,12 @@ fn substitute(expr: &mut Expression, map: &HashMap<String, Expression>) {
             for p in &ae.params {
                 let id = p.binding_identifier();
                 inner.remove(&id.name);
+            }
+            // Default-param `right` expressions — see the `FunctionExpression` arm.
+            for p in &mut ae.params {
+                if let Some(def) = p.default_value_mut() {
+                    substitute(def, &inner);
+                }
             }
             match &mut ae.body {
                 ArrowBody::Block(b) => {
@@ -4177,6 +4208,14 @@ fn rename_in_expr(expr: &mut Expression, map: &HashMap<String, String>) {
                 let id = p.binding_identifier();
                 inner.remove(&id.name);
             }
+            // A default's `right` can reference an outer name being alpha-renamed
+            // (`(x = loc) => …` spliced where `loc` is renamed); rename it with
+            // the shadow-stripped `inner`, exactly like the body.
+            for p in &mut fe.params {
+                if let Some(def) = p.default_value_mut() {
+                    rename_in_expr(def, &inner);
+                }
+            }
             for s in &mut fe.body.body {
                 rename_in_stmt(s, &inner);
             }
@@ -4206,6 +4245,13 @@ fn rename_in_expr(expr: &mut Expression, map: &HashMap<String, String>) {
                         for p in &m.value.params {
                             let id = p.binding_identifier();
                             inner.remove(&id.name);
+                        }
+                        // Default-param `right` expressions — see the
+                        // `FunctionExpression` arm.
+                        for p in &mut m.value.params {
+                            if let Some(def) = p.default_value_mut() {
+                                rename_in_expr(def, &inner);
+                            }
                         }
                         for s in &mut m.value.body.body {
                             rename_in_stmt(s, &inner);
@@ -4242,6 +4288,12 @@ fn rename_in_expr(expr: &mut Expression, map: &HashMap<String, String>) {
             for p in &ae.params {
                 let id = p.binding_identifier();
                 inner.remove(&id.name);
+            }
+            // Default-param `right` expressions — see the `FunctionExpression` arm.
+            for p in &mut ae.params {
+                if let Some(def) = p.default_value_mut() {
+                    rename_in_expr(def, &inner);
+                }
             }
             match &mut ae.body {
                 ArrowBody::Block(b) => {
@@ -5834,5 +5886,107 @@ mod tests {
             inline_source("var t = 9; function f(x) { var t = x; return t; } var g = f(5);"),
             "var t=9;function f(x){var t=x;return t};var b=5;const a=b;var g=a;"
         );
+    }
+
+    // -------------------------------------------------------------------
+    // CLOC12.191 PR1 (security-review regression) — when the inliner splices a
+    // function body that contains a NESTED function/arrow value with a default
+    // parameter, the body-rewriters (`substitute` param→arg, `rename_in_expr`
+    // alpha-rename) must rewrite that nested default too — else a name it reads
+    // (an outer param being substituted, or an outer local being renamed) is
+    // left dangling. The bridge does not yet produce defaults (PR2), so these
+    // call the rewriters directly on hand-built AST.
+    // -------------------------------------------------------------------
+    #[test]
+    fn substitute_reaches_nested_default_parameter() {
+        use coding_adventures_javascript_ast::statement::ReturnStatement;
+        use coding_adventures_javascript_ast::{
+            AssignmentPattern, BlockStatement, Expression, FunctionExpression, FunctionParam,
+            Identifier, NumericLiteral, Statement,
+        };
+
+        let id = |n: &str| Identifier {
+            cv: None,
+            name: n.to_string(),
+        };
+        // `function(a = b){ return a; }` — the default reads `b`.
+        let mut expr = Expression::FunctionExpression(FunctionExpression {
+            cv: None,
+            id: None,
+            params: vec![FunctionParam::AssignmentPattern(AssignmentPattern {
+                cv: None,
+                left: id("a"),
+                right: Expression::Identifier(id("b")),
+            })],
+            body: BlockStatement {
+                cv: None,
+                body: vec![Statement::return_statement(ReturnStatement {
+                    cv: None,
+                    argument: Some(Expression::Identifier(id("a"))),
+                })],
+            },
+            generator: false,
+            is_async: false,
+        });
+
+        // Substituting `b -> 2` must reach the default `= b`.
+        let mut map = HashMap::new();
+        map.insert(
+            "b".to_string(),
+            Expression::NumericLiteral(NumericLiteral {
+                cv: None,
+                value: 2.0,
+                raw: "2".to_string(),
+            }),
+        );
+        substitute(&mut expr, &map);
+
+        let Expression::FunctionExpression(fe) = &expr else {
+            panic!("expected a function expression");
+        };
+        match fe.params[0].default_value() {
+            Some(Expression::NumericLiteral(n)) => assert_eq!(n.value, 2.0),
+            other => panic!("nested default `= b` was not substituted: {other:?}"),
+        }
+    }
+
+    #[test]
+    fn rename_in_expr_reaches_nested_arrow_default() {
+        use coding_adventures_javascript_ast::{
+            ArrowBody, ArrowFunctionExpression, AssignmentPattern, Expression, FunctionParam,
+            Identifier,
+        };
+
+        let id = |n: &str| Identifier {
+            cv: None,
+            name: n.to_string(),
+        };
+        // `(x = loc) => x` — the default reads the outer local `loc`.
+        let mut expr = Expression::ArrowFunctionExpression(ArrowFunctionExpression {
+            cv: None,
+            params: vec![FunctionParam::AssignmentPattern(AssignmentPattern {
+                cv: None,
+                left: id("x"),
+                right: Expression::Identifier(id("loc")),
+            })],
+            body: ArrowBody::Expression(Box::new(Expression::Identifier(id("x")))),
+            is_async: false,
+        });
+
+        // Alpha-renaming `loc -> _a` must reach the default `= loc`.
+        let mut map = HashMap::new();
+        map.insert("loc".to_string(), "_a".to_string());
+        rename_in_expr(&mut expr, &map);
+
+        let Expression::ArrowFunctionExpression(ae) = &expr else {
+            panic!("expected an arrow expression");
+        };
+        match ae.params[0].default_value() {
+            Some(Expression::Identifier(idref)) => assert_eq!(
+                idref.name, "_a",
+                "nested arrow default `= loc` was not alpha-renamed"
+            ),
+            other => panic!("expected an identifier default, got {other:?}"),
+        }
     }
 }
