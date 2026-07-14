@@ -96,7 +96,7 @@ use serde_json::json;
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use coding_adventures_javascript_ast::{
     ArrowBody, AssignmentTarget, BindingTarget, BlockStatement, ClassMember, Declaration,
-    Expression, ForInit, FunctionDeclaration, ObjectMember, Program, ProgramItem,
+    Expression, ForInit, FunctionDeclaration, FunctionParam, ObjectMember, Program, ProgramItem,
     PropertyKey, Statement, VarKind, VariableDeclaration,
 };
 
@@ -589,10 +589,7 @@ fn rename_leaf_bindings(fd: &mut FunctionDeclaration, renames: &mut Vec<LocalRen
     // uses, and property names), so a rename can neither collide with a
     // local nor capture a free global.
     let mut avoid: HashSet<String> = HashSet::new();
-    for p in &fd.params {
-        let id = p.binding_identifier();
-        avoid.insert(id.name.clone());
-    }
+    collect_param_idents(&fd.params, &mut avoid);
     collect_all_idents_block(&fd.body, &mut avoid);
 
     // Decide the renames, in declaration order for deterministic output.
@@ -638,9 +635,18 @@ fn rename_leaf_bindings(fd: &mut FunctionDeclaration, renames: &mut Vec<LocalRen
 
     // Apply: rewrite the parameter declarations …
     for p in &mut fd.params {
-        let id = p.binding_identifier_mut();
-        if let Some(new) = map.get(&id.name) {
-            id.name = new.clone();
+        {
+            let id = p.binding_identifier_mut();
+            if let Some(new) = map.get(&id.name) {
+                id.name = new.clone();
+            }
+        }
+        // … including a default parameter's `right` expression: a reference in
+        // `function f(a, b = a)` must track `a`'s new name, so rewrite the
+        // default's uses through the same map. (Defaults are evaluated in the
+        // function scope, so the same renames apply.)
+        if let Some(def) = p.default_value_mut() {
+            rewrite_uses_expr(def, &map);
         }
     }
     // … and every declaration + use inside the body.
@@ -828,6 +834,23 @@ fn push_var_occurrences(vd: &VariableDeclaration, out: &mut Vec<(String, bool)>,
     }
 }
 
+/// Collect every identifier a parameter list introduces or references into
+/// `out`: each parameter's bound name plus — for a default parameter
+/// (`a = expr`) — every identifier in its `right` default expression. A
+/// default's `right` is live code that can read a free name (`function f(a =
+/// GLOBAL) {}`), so its identifiers must join the collision-avoidance set or a
+/// freshly-minted short name could shadow the very name the default reads. A
+/// plain or rest parameter has no such expression and contributes only its
+/// bound name.
+fn collect_param_idents(params: &[FunctionParam], out: &mut HashSet<String>) {
+    for p in params {
+        out.insert(p.binding_identifier().name.clone());
+        if let Some(def) = p.default_value() {
+            collect_all_idents_expr(def, out);
+        }
+    }
+}
+
 /// Collect EVERY identifier name appearing anywhere in `block`
 /// (declarations, uses, and property names) — used to pick collision-free
 /// fresh names. Over-inclusive on purpose: avoiding a name that only
@@ -852,10 +875,7 @@ fn collect_all_idents_stmt(stmt: &Statement, out: &mut HashSet<String>) {
         }
         Statement::Declaration(Declaration::FunctionDeclaration(fd)) => {
             out.insert(fd.id.name.clone());
-            for p in &fd.params {
-                let id = p.binding_identifier();
-                out.insert(id.name.clone());
-            }
+            collect_param_idents(&fd.params, out);
             collect_all_idents_block(&fd.body, out);
         }
         // An import declaration's bound names link to a foreign module's
@@ -884,10 +904,7 @@ fn collect_all_idents_stmt(stmt: &Statement, out: &mut HashSet<String>) {
                         if let Some(id) = &m.value.id {
                             out.insert(id.name.clone());
                         }
-                        for p in &m.value.params {
-                            let id = p.binding_identifier();
-                            out.insert(id.name.clone());
-                        }
+                        collect_param_idents(&m.value.params, out);
                         for s in &m.value.body.body {
                             collect_all_idents_stmt(s, out);
                         }
@@ -1157,10 +1174,7 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
             if let Some(id) = &fe.id {
                 out.insert(id.name.clone());
             }
-            for p in &fe.params {
-                let id = p.binding_identifier();
-                out.insert(id.name.clone());
-            }
+            collect_param_idents(&fe.params, out);
             for s in &fe.body.body {
                 collect_all_idents_stmt(s, out);
             }
@@ -1189,10 +1203,7 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                         if let Some(id) = &m.value.id {
                             out.insert(id.name.clone());
                         }
-                        for p in &m.value.params {
-                            let id = p.binding_identifier();
-                            out.insert(id.name.clone());
-                        }
+                        collect_param_idents(&m.value.params, out);
                         for s in &m.value.body.body {
                             collect_all_idents_stmt(s, out);
                         }
@@ -1225,10 +1236,7 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
         // fresh short name for an OUTER local can never collide with a
         // name used inside the arrow.
         Expression::ArrowFunctionExpression(ae) => {
-            for p in &ae.params {
-                let id = p.binding_identifier();
-                out.insert(id.name.clone());
-            }
+            collect_param_idents(&ae.params, out);
             match &ae.body {
                 ArrowBody::Block(b) => {
                     for s in &b.body {
@@ -2312,5 +2320,86 @@ mod tests {
             out.contributions.is_empty(),
             "no rename contributions when bailing on `with`"
         );
+    }
+
+    // -------------------------------------------------------------------
+    // CLOC12.191 PR1 — default-parameter reference rewriting.
+    //
+    // A default parameter's `right` expression can REFERENCE another param
+    // (`function f(x, y = x){…}`). When rename shortens `x`, the reference in
+    // the default must move with it, or the emitted code reads a name that no
+    // longer exists. The bridge does not yet produce defaults (that is PR2), so
+    // this hand-builds the AST to exercise the rewrite directly.
+    // -------------------------------------------------------------------
+    #[test]
+    fn rewrites_reference_inside_default_parameter() {
+        use coding_adventures_javascript_ast::statement::ReturnStatement;
+        use coding_adventures_javascript_ast::{
+            AssignmentPattern, BlockStatement, Declaration, Expression, FunctionDeclaration,
+            FunctionParam, Identifier, ProgramItem, Statement,
+        };
+
+        let id = |n: &str| Identifier {
+            cv: None,
+            name: n.to_string(),
+        };
+
+        // `function f(longX, longY = longX) { return longX; }` — two leaf params
+        // (both long enough to shorten); the second's default reads the first.
+        let f = FunctionDeclaration {
+            cv: None,
+            id: id("f"),
+            params: vec![
+                FunctionParam::Identifier(id("longX")),
+                FunctionParam::AssignmentPattern(AssignmentPattern {
+                    cv: None,
+                    left: id("longY"),
+                    right: Expression::Identifier(id("longX")),
+                }),
+            ],
+            body: BlockStatement {
+                cv: None,
+                body: vec![Statement::return_statement(ReturnStatement {
+                    cv: None,
+                    argument: Some(Expression::Identifier(id("longX"))),
+                })],
+            },
+            generator: false,
+            is_async: false,
+        };
+
+        let mut prog = program();
+        prog.body = vec![ProgramItem::Statement(Statement::Declaration(
+            Declaration::FunctionDeclaration(f),
+        ))];
+
+        let pass = RenamePass::new();
+        let sidecar = Sidecar::new();
+        let mut cv = CVLog::new(false);
+        let out = pass
+            .run(PassContext {
+                program: &prog,
+                sidecar: &sidecar,
+                cv: &mut cv,
+            })
+            .expect("rename");
+
+        assert!(out.changed, "the two long params should have been renamed");
+        let ProgramItem::Statement(Statement::Declaration(Declaration::FunctionDeclaration(f))) =
+            &out.program.body[0]
+        else {
+            panic!("expected the function declaration back");
+        };
+        // `longX` shortened on the binding …
+        let x_new = f.params[0].binding_identifier().name.clone();
+        assert_ne!(x_new, "longX", "first param should have been shortened");
+        // … and the default's reference to it must track the same new name.
+        match f.params[1].default_value() {
+            Some(Expression::Identifier(idref)) => assert_eq!(
+                idref.name, x_new,
+                "default `= longX` must be rewritten to the renamed `{x_new}`"
+            ),
+            other => panic!("expected an identifier default, got {other:?}"),
+        }
     }
 }

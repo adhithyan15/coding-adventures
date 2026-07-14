@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename` crate will be documented in this file.
 
+## [0.22.0] - 2026-07-14
+
+### Changed — rename references inside default-parameter expressions — CLOC12.191 PR1
+
+Picks up javascript-ast 0.42.0. A default parameter’s `right` (`function f(x, y = x){}`) is live code: the
+apply step now rewrites its uses through the rename map so a reference tracks its renamed binding, and the
+new `collect_param_idents` helper adds a default’s identifiers to the collision-avoidance set so a fresh
+short name never shadows a name a default reads. Routed through every param-collection site (leaf function,
+nested function/arrow, class method).
+
 ## [0.21.0] - 2026-07-14
 
 ### Changed — handle `FunctionParam::RestElement` — CLOC12.190 PR1

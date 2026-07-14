@@ -584,6 +584,16 @@ fn candidate_from_function(
         return None;
     }
 
+    // A default parameter (`function f(a = expr)`) can't be inlined by simple
+    // positional argument binding: when a call omits the argument or passes
+    // `undefined`, the default value applies — semantics a plain `const a = arg`
+    // substitution does not reproduce. Decline the whole candidate; the function
+    // is left intact for the other passes. (A rest param is fine — it binds a
+    // name with no default expression.)
+    if fd.params.iter().any(|p| p.default_value().is_some()) {
+        return None;
+    }
+
     // Parameter names must be distinct, or the substitution map would
     // be ambiguous. (`function f(a, a)` is a syntax error in strict
     // mode anyway, but we never assume the parser rejected it.)
@@ -2645,6 +2655,13 @@ fn void_candidate_from_function(
     // (1) The name must be declared exactly once in the whole program, so
     // every use of the identifier resolves to this function.
     if decl_counts.get(&fd.id.name).copied().unwrap_or(0) != 1 {
+        return None;
+    }
+
+    // A default parameter can't be inlined by positional argument binding (an
+    // omitted/`undefined` argument triggers the default) — decline, exactly as
+    // the return-expression candidate builder does.
+    if fd.params.iter().any(|p| p.default_value().is_some()) {
         return None;
     }
 

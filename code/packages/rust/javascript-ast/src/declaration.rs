@@ -139,14 +139,55 @@ pub struct RestElement {
     pub argument: Identifier,
 }
 
-/// One parameter of a [`FunctionDeclaration`]. A plain [`Identifier`] or a
-/// trailing [`RestElement`] (`...name`) in this slice; `AssignmentPattern`
-/// (default value) and destructuring patterns are Phase 3.
+/// A **default parameter** — `name = expr` in a parameter list. When the
+/// caller omits the argument (or passes `undefined`), the binding takes the
+/// value of the default expression instead:
+///
+/// ```text
+///   function f(a = 1) {}        // f()    → a=1 ;  f(5) → a=5
+///   function g(a, b = a + 1) {} // g(2)   → a=2, b=3
+/// ```
+///
+/// ESTree `AssignmentPattern`: `{ left, right }`. `left` is the bound name and
+/// `right` is the default-value [`Expression`]. Only a **simple identifier**
+/// target is modelled here — a destructuring target with a default
+/// (`{x} = {}`, `[a] = []`) reuses the Phase-3 pattern machinery and is
+/// declined by the bridge for now.
+///
+/// The distinctive `left` + `right` field shape is what lets the
+/// `#[serde(untagged)]` [`FunctionParam`] tell a default parameter apart from a
+/// plain [`Identifier`] (`name`) or a [`RestElement`] (`argument`) — no `type`
+/// tag needed.
+///
+/// **Why `right` must be a full [`Expression`], not just a literal:** the
+/// default is live code that the optimizer walks. `function f(a = 1 + 2)` folds
+/// to `function f(a = 3)`; a name referenced in the default (`b = SOME_GLOBAL`)
+/// participates in renaming and inlining exactly as any other expression does.
+/// Every pass that visits a parameter list therefore recurses into `right`
+/// through the same expression-visit path it uses for a function body — unlike
+/// [`RestElement`], whose only payload is a bound name.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct AssignmentPattern {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    /// The bound name (`a` in `a = 1`). A simple identifier in this slice.
+    pub left: Identifier,
+    /// The default-value expression (`1` in `a = 1`). Full live code: folded,
+    /// renamed, and inlined by the passes like any other expression.
+    pub right: Expression,
+}
+
+/// One parameter of a [`FunctionDeclaration`]. A plain [`Identifier`], a
+/// trailing [`RestElement`] (`...name`), or a default-valued
+/// [`AssignmentPattern`] (`name = expr`) in this slice; destructuring patterns
+/// are Phase 3.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum FunctionParam {
     Identifier(Identifier),
     RestElement(RestElement),
+    AssignmentPattern(AssignmentPattern),
 }
 
 impl FunctionParam {
@@ -159,6 +200,7 @@ impl FunctionParam {
         match self {
             FunctionParam::Identifier(id) => id,
             FunctionParam::RestElement(re) => &re.argument,
+            FunctionParam::AssignmentPattern(ap) => &ap.left,
         }
     }
 
@@ -170,6 +212,29 @@ impl FunctionParam {
         match self {
             FunctionParam::Identifier(id) => id,
             FunctionParam::RestElement(re) => &mut re.argument,
+            FunctionParam::AssignmentPattern(ap) => &mut ap.left,
+        }
+    }
+
+    /// The default-value expression when this parameter is an
+    /// [`AssignmentPattern`] (`name = expr`), else `None`. Passes that walk
+    /// parameter defaults — constant-fold, the renamers, the inliners — reach
+    /// the live `right` expression through this accessor, then visit it with the
+    /// same machinery they use for a function body.
+    pub fn default_value(&self) -> Option<&Expression> {
+        match self {
+            FunctionParam::AssignmentPattern(ap) => Some(&ap.right),
+            _ => None,
+        }
+    }
+
+    /// Mutable twin of [`default_value`](Self::default_value) — the folding and
+    /// renaming passes rewrite the default expression in place (`a = 1 + 2` →
+    /// `a = 3`), so they need `&mut` access to `right`.
+    pub fn default_value_mut(&mut self) -> Option<&mut Expression> {
+        match self {
+            FunctionParam::AssignmentPattern(ap) => Some(&mut ap.right),
+            _ => None,
         }
     }
 }
@@ -822,6 +887,110 @@ mod tests {
                 assert_eq!(e.source.value, "y");
             }
             other => panic!("expected ExportAllDeclaration, got {other:?}"),
+        }
+    }
+
+    // ---- CLOC12.191: default parameters (AssignmentPattern) ----
+
+    /// Build the numeric-literal default `= n` used by the default-param tests.
+    fn num_default(value: f64, raw: &str) -> Expression {
+        Expression::NumericLiteral(NumericLiteral {
+            cv: None,
+            value,
+            raw: raw.to_string(),
+        })
+    }
+
+    #[test]
+    fn default_param_roundtrips_and_untagged_discriminates() {
+        // `function f(a, b = 1) {}` — a fixed parameter followed by a default.
+        // The untagged `FunctionParam` must tell the three shapes apart:
+        // Identifier (`name`), RestElement (`argument`), AssignmentPattern
+        // (`left`+`right`). Serialize then deserialize and confirm each param
+        // deserializes back to the *same* variant — the whole point of the
+        // shape-based discrimination.
+        let d = FunctionDeclaration {
+            cv: None,
+            id: Identifier {
+                cv: None,
+                name: "f".to_string(),
+            },
+            params: vec![
+                FunctionParam::Identifier(Identifier {
+                    cv: None,
+                    name: "a".to_string(),
+                }),
+                FunctionParam::AssignmentPattern(AssignmentPattern {
+                    cv: None,
+                    left: Identifier {
+                        cv: None,
+                        name: "b".to_string(),
+                    },
+                    right: num_default(1.0, "1"),
+                }),
+            ],
+            body: BlockStatement {
+                cv: None,
+                body: vec![],
+            },
+            generator: false,
+            is_async: false,
+        };
+
+        let json = serde_json::to_string(&d).expect("serialize");
+        // The default carries ESTree's `left`/`right`, not a `type` tag.
+        assert!(json.contains("\"left\""), "expected `left` field; got {json}");
+        assert!(
+            json.contains("\"right\""),
+            "expected `right` field; got {json}"
+        );
+
+        let back: FunctionDeclaration = serde_json::from_str(&json).expect("deserialize");
+        assert_eq!(back, d, "default param did not round-trip");
+        assert!(
+            matches!(back.params[0], FunctionParam::Identifier(_)),
+            "first param should stay a plain Identifier"
+        );
+        assert!(
+            matches!(back.params[1], FunctionParam::AssignmentPattern(_)),
+            "second param should stay an AssignmentPattern (not mis-read as Identifier)"
+        );
+    }
+
+    #[test]
+    fn default_param_accessors_reach_name_and_expr() {
+        // The `binding_identifier*` accessors return the LEFT name; the
+        // `default_value*` accessors expose the RIGHT expression that the
+        // folding/renaming passes rewrite in place.
+        let mut p = FunctionParam::AssignmentPattern(AssignmentPattern {
+            cv: None,
+            left: Identifier {
+                cv: None,
+                name: "a".to_string(),
+            },
+            right: num_default(2.0, "2"),
+        });
+
+        assert_eq!(p.binding_identifier().name, "a");
+        assert!(
+            p.default_value().is_some(),
+            "a default param must expose its default expression"
+        );
+
+        // A plain identifier has no default.
+        let plain = FunctionParam::Identifier(Identifier {
+            cv: None,
+            name: "x".to_string(),
+        });
+        assert!(plain.default_value().is_none());
+
+        // Mutating through the accessors reaches both sides.
+        p.binding_identifier_mut().name = "renamed".to_string();
+        *p.default_value_mut().expect("default expr") = num_default(3.0, "3");
+        assert_eq!(p.binding_identifier().name, "renamed");
+        match p.default_value().expect("default expr") {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 3.0),
+            other => panic!("expected numeric default, got {other:?}"),
         }
     }
 }

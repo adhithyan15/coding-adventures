@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-closure-pass-constant-fold"
-version = "0.88.0"
+version = "0.89.0"
 edition = "2021"
 description = "Constant-folding optimization pass for the Closure Compiler clone. Per CLOC06's canonical pass set. Folds compile-time-evaluable expressions like `2 + 3 → 5`."
 

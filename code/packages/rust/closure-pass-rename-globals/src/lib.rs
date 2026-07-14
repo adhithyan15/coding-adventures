@@ -77,7 +77,7 @@ use coding_adventures_javascript_ast::statement::TaggedStatement;
 use serde_json::json;
 use coding_adventures_javascript_ast::{
     ArrowBody, AssignmentTarget, BindingTarget, ClassMember, Declaration, Expression, ForInit,
-    ObjectMember, Program, ProgramItem, PropertyKey, Statement, VariableDeclaration,
+    FunctionParam, ObjectMember, Program, ProgramItem, PropertyKey, Statement, VariableDeclaration,
 };
 
 /// `Pass::depends_on` value — empty. Global renaming is correct on its
@@ -529,6 +529,21 @@ fn count_decl_names_stmt(
 
 // ---- avoid-set collection (every identifier, anywhere) -------------------
 
+/// Collect every identifier a parameter list introduces or references into
+/// `out`: each param's bound name, plus — for a default parameter (`a = expr`)
+/// — every identifier in its `right` default expression. The default is live
+/// code that can read a global (`function f(a = GLOBAL) {}`); over-collecting
+/// its idents keeps a freshly-minted short GLOBAL name from colliding with a
+/// name the default reads. Plain and rest params contribute only their name.
+fn collect_param_idents(params: &[FunctionParam], out: &mut HashSet<String>) {
+    for p in params {
+        out.insert(p.binding_identifier().name.clone());
+        if let Some(def) = p.default_value() {
+            collect_all_idents_expr(def, out);
+        }
+    }
+}
+
 fn collect_all_idents_program(program: &Program, out: &mut HashSet<String>) {
     for item in &program.body {
         match item {
@@ -572,10 +587,7 @@ fn collect_all_idents_decl(decl: &Declaration, out: &mut HashSet<String>) {
                         if let Some(id) = &m.value.id {
                             out.insert(id.name.clone());
                         }
-                        for p in &m.value.params {
-                            let id = p.binding_identifier();
-                            out.insert(id.name.clone());
-                        }
+                        collect_param_idents(&m.value.params, out);
                         for s in &m.value.body.body {
                             collect_all_idents_stmt(s, out);
                         }
@@ -607,10 +619,7 @@ fn collect_all_idents_decl(decl: &Declaration, out: &mut HashSet<String>) {
         }
         Declaration::FunctionDeclaration(fd) => {
             out.insert(fd.id.name.clone());
-            for p in &fd.params {
-                let id = p.binding_identifier();
-                out.insert(id.name.clone());
-            }
+            collect_param_idents(&fd.params, out);
             for s in &fd.body.body {
                 collect_all_idents_stmt(s, out);
             }
@@ -873,10 +882,7 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
             if let Some(id) = &fe.id {
                 out.insert(id.name.clone());
             }
-            for p in &fe.params {
-                let id = p.binding_identifier();
-                out.insert(id.name.clone());
-            }
+            collect_param_idents(&fe.params, out);
             for s in &fe.body.body {
                 collect_all_idents_stmt(s, out);
             }
@@ -905,10 +911,7 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                         if let Some(id) = &m.value.id {
                             out.insert(id.name.clone());
                         }
-                        for p in &m.value.params {
-                            let id = p.binding_identifier();
-                            out.insert(id.name.clone());
-                        }
+                        collect_param_idents(&m.value.params, out);
                         for s in &m.value.body.body {
                             collect_all_idents_stmt(s, out);
                         }
@@ -939,10 +942,7 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
         // An arrow value contributes its params and body identifiers (it
         // has no name), so a renamed global never collides with them.
         Expression::ArrowFunctionExpression(ae) => {
-            for p in &ae.params {
-                let id = p.binding_identifier();
-                out.insert(id.name.clone());
-            }
+            collect_param_idents(&ae.params, out);
             match &ae.body {
                 ArrowBody::Block(b) => {
                     for s in &b.body {
@@ -1347,6 +1347,14 @@ fn rename_apply_expr(expr: &mut Expression, map: &HashMap<String, String>) {
                 let id = p.binding_identifier();
                 inner.remove(&id.name);
             }
+            // A default parameter's `right` runs in the function scope: a global
+            // it reads is renamed, a reference to an earlier param is left alone
+            // (that name was just removed from `inner`). Same `inner` as the body.
+            for p in &mut fe.params {
+                if let Some(def) = p.default_value_mut() {
+                    rename_apply_expr(def, &inner);
+                }
+            }
             for s in &mut fe.body.body {
                 rename_apply_stmt(s, &inner);
             }
@@ -1380,6 +1388,13 @@ fn rename_apply_expr(expr: &mut Expression, map: &HashMap<String, String>) {
                         for p in &m.value.params {
                             let id = p.binding_identifier();
                             inner.remove(&id.name);
+                        }
+                        // Default-param `right` expressions — see the
+                        // `FunctionExpression` arm.
+                        for p in &mut m.value.params {
+                            if let Some(def) = p.default_value_mut() {
+                                rename_apply_expr(def, &inner);
+                            }
                         }
                         for s in &mut m.value.body.body {
                             rename_apply_stmt(s, &inner);
@@ -1419,6 +1434,12 @@ fn rename_apply_expr(expr: &mut Expression, map: &HashMap<String, String>) {
             for p in &ae.params {
                 let id = p.binding_identifier();
                 inner.remove(&id.name);
+            }
+            // Default-param `right` expressions — see the `FunctionExpression` arm.
+            for p in &mut ae.params {
+                if let Some(def) = p.default_value_mut() {
+                    rename_apply_expr(def, &inner);
+                }
             }
             match &mut ae.body {
                 ArrowBody::Block(b) => {

@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-closure-pass-inline"
-version = "0.29.0"
+version = "0.30.0"
 edition = "2021"
 description = "Function-inlining pass for the Closure Compiler clone. Per CLOC06's canonical pass set. Substitutes small or single-use function bodies at their call sites to enable downstream folding and shrink call overhead."
 
