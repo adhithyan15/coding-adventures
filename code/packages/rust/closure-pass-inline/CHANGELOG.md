@@ -2,6 +2,22 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.30.0] - 2026-07-14
+
+### Changed — decline to inline functions with a default parameter — CLOC12.191 PR1
+
+Picks up javascript-ast 0.42.0. Both inline-candidate builders (return-expression and void-statement) now
+reject a function whose parameter list contains a `FunctionParam::AssignmentPattern`: positional argument
+binding can’t reproduce a default’s undefined-triggered semantics (`function f(a = 5); f(undefined)` must
+yield `a = 5`, not `a = undefined`). The function is left intact for the other passes. A rest parameter
+remains inlinable — it binds a name with no default expression.
+
+Additionally, the two body-rewriters that descend into *nested* function/arrow/method values inside an
+inlined body — `substitute` (param→arg) and `rename_in_expr` (void-splice alpha-rename) — now rewrite those
+nested values' parameter defaults with the same shadow-stripped map as the body, and `collect_binding_idents_expr`
+collects a nested default's identifiers into the avoid-set. Without this a nested default that reads a
+substituted outer parameter or a renamed outer local was left dangling (a miscompile; found in security review).
+
 ## [0.29.0] - 2026-07-14
 
 ### Changed — handle `FunctionParam::RestElement` — CLOC12.190 PR1

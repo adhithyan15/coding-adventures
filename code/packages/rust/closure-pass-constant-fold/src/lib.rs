@@ -96,7 +96,7 @@ use coding_adventures_javascript_ast::{
     ForStatement,
     ArrowBody, ArrowFunctionExpression, TaggedTemplateExpression, TemplateLiteral,
     ClassDeclaration, ClassExpression, ClassMember, MethodDefinition, PropertyDefinition,
-    FunctionDeclaration, FunctionExpression, Identifier,
+    AssignmentPattern, FunctionDeclaration, FunctionExpression, FunctionParam, Identifier,
     ChainExpression, IfStatement, LogicalExpression, LogicalOperator, MemberExpression, NullLiteral, NumericLiteral, OptionalCallExpression, OptionalMemberExpression,
     ObjectExpression, ObjectMember, Program, ProgramItem, Property, PropertyKey, PropertyKind, ReturnStatement, Statement,
     StringLiteral, UnaryExpression, UnaryOperator, UndefinedLiteral, UpdateExpression, VariableDeclaration,
@@ -454,6 +454,29 @@ fn fold_tagged_statement(stmt: &TaggedStatement, st: &mut FoldState) -> TaggedSt
 // Declarations
 // =====================================================================
 
+/// Fold each parameter's default-value expression. A plain identifier and a
+/// rest element carry no sub-expression, so they clone verbatim; a default
+/// parameter (`a = 1 + 2`) holds live code — its `right` is folded (→ `a = 3`)
+/// through the same [`fold_expression`] path a function body uses. This is what
+/// makes `function f(a = 1 + 2){}` shrink to `function f(a = 3){}` instead of
+/// carrying the arithmetic to the output.
+fn fold_params(params: &[FunctionParam], st: &mut FoldState) -> Vec<FunctionParam> {
+    params
+        .iter()
+        .map(|p| match p {
+            FunctionParam::AssignmentPattern(ap) => {
+                FunctionParam::AssignmentPattern(AssignmentPattern {
+                    cv: ap.cv.clone(),
+                    left: ap.left.clone(),
+                    right: fold_expression(&ap.right, st),
+                })
+            }
+            // Plain identifier / rest element: no default expression to fold.
+            other => other.clone(),
+        })
+        .collect()
+}
+
 fn fold_declaration(decl: &Declaration, st: &mut FoldState) -> Declaration {
     st.visit();
     match decl {
@@ -464,7 +487,7 @@ fn fold_declaration(decl: &Declaration, st: &mut FoldState) -> Declaration {
             Declaration::FunctionDeclaration(FunctionDeclaration {
                 cv: f.cv.clone(),
                 id: f.id.clone(),
-                params: f.params.clone(),
+                params: fold_params(&f.params, st),
                 body: BlockStatement {
                     cv: f.body.cv.clone(),
                     body: f.body.body.iter().map(|s| fold_statement(s, st)).collect(),
@@ -554,7 +577,7 @@ fn fold_class_body(
                 value: FunctionExpression {
                     cv: md.value.cv.clone(),
                     id: md.value.id.clone(),
-                    params: md.value.params.clone(),
+                    params: fold_params(&md.value.params, st),
                     body: BlockStatement {
                         cv: md.value.body.cv.clone(),
                         body: md
@@ -778,7 +801,7 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
             Expression::FunctionExpression(FunctionExpression {
                 cv: f.cv.clone(),
                 id: f.id.clone(),
-                params: f.params.clone(),
+                params: fold_params(&f.params, st),
                 body: BlockStatement {
                     cv: f.body.cv.clone(),
                     body: f.body.body.iter().map(|s| fold_statement(s, st)).collect(),
@@ -802,7 +825,7 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
         Expression::ArrowFunctionExpression(a) => {
             Expression::ArrowFunctionExpression(ArrowFunctionExpression {
                 cv: a.cv.clone(),
-                params: a.params.clone(),
+                params: fold_params(&a.params, st),
                 body: match &a.body {
                     ArrowBody::Block(b) => ArrowBody::Block(BlockStatement {
                         cv: b.cv.clone(),
@@ -5599,6 +5622,44 @@ mod tests {
                 expression: expr,
             }),
         )])
+    }
+
+    /// CLOC12.191 PR1: a default-parameter's `right` expression must fold. The
+    /// pass previously cloned parameter lists verbatim (rest-params carry only a
+    /// name); a default carries *live code*, so `function f(a = 2 + 3){}` has to
+    /// shrink to `function f(a = 5){}` — the same fold a function body gets.
+    #[test]
+    fn folds_default_parameter_expression() {
+        let default_expr = Expression::BinaryExpression(BinaryExpression {
+            cv: None,
+            operator: BinaryOperator::Add,
+            left: Box::new(num(2.0, None)),
+            right: Box::new(num(3.0, None)),
+        });
+        let fd = FunctionDeclaration {
+            cv: None,
+            id: Identifier { cv: None, name: "f".to_string() },
+            params: vec![FunctionParam::AssignmentPattern(AssignmentPattern {
+                cv: None,
+                left: Identifier { cv: None, name: "a".to_string() },
+                right: default_expr,
+            })],
+            body: BlockStatement { cv: None, body: vec![] },
+            generator: false,
+            is_async: false,
+        };
+        let prog = untraced_program().with_body(vec![ProgramItem::Declaration(
+            Declaration::FunctionDeclaration(fd),
+        )]);
+        let (out, _contribs, changed, _) = run_pass(prog);
+        assert!(changed, "folding a default expression should mark the program changed");
+        let ProgramItem::Declaration(Declaration::FunctionDeclaration(f)) = &out.body[0] else {
+            panic!("expected a function declaration back");
+        };
+        match f.params[0].default_value() {
+            Some(Expression::NumericLiteral(n)) => assert_eq!(n.value, 5.0),
+            other => panic!("expected the default to fold to 5; got {other:?}"),
+        }
     }
 
     /// Extract the (folded) expression from a Program whose body is a

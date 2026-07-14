@@ -77,7 +77,7 @@ use coding_adventures_javascript_ast::statement::TaggedStatement;
 use serde_json::json;
 use coding_adventures_javascript_ast::{
     ArrowBody, AssignmentTarget, BindingTarget, ClassMember, Declaration, Expression, ForInit,
-    ObjectMember, Program, ProgramItem, PropertyKey, Statement, VariableDeclaration,
+    FunctionParam, ObjectMember, Program, ProgramItem, PropertyKey, Statement, VariableDeclaration,
 };
 
 /// `Pass::depends_on` value — empty. Global renaming is correct on its
@@ -529,6 +529,21 @@ fn count_decl_names_stmt(
 
 // ---- avoid-set collection (every identifier, anywhere) -------------------
 
+/// Collect every identifier a parameter list introduces or references into
+/// `out`: each param's bound name, plus — for a default parameter (`a = expr`)
+/// — every identifier in its `right` default expression. The default is live
+/// code that can read a global (`function f(a = GLOBAL) {}`); over-collecting
+/// its idents keeps a freshly-minted short GLOBAL name from colliding with a
+/// name the default reads. Plain and rest params contribute only their name.
+fn collect_param_idents(params: &[FunctionParam], out: &mut HashSet<String>) {
+    for p in params {
+        out.insert(p.binding_identifier().name.clone());
+        if let Some(def) = p.default_value() {
+            collect_all_idents_expr(def, out);
+        }
+    }
+}
+
 fn collect_all_idents_program(program: &Program, out: &mut HashSet<String>) {
     for item in &program.body {
         match item {
@@ -572,10 +587,7 @@ fn collect_all_idents_decl(decl: &Declaration, out: &mut HashSet<String>) {
                         if let Some(id) = &m.value.id {
                             out.insert(id.name.clone());
                         }
-                        for p in &m.value.params {
-                            let id = p.binding_identifier();
-                            out.insert(id.name.clone());
-                        }
+                        collect_param_idents(&m.value.params, out);
                         for s in &m.value.body.body {
                             collect_all_idents_stmt(s, out);
                         }
@@ -607,10 +619,7 @@ fn collect_all_idents_decl(decl: &Declaration, out: &mut HashSet<String>) {
         }
         Declaration::FunctionDeclaration(fd) => {
             out.insert(fd.id.name.clone());
-            for p in &fd.params {
-                let id = p.binding_identifier();
-                out.insert(id.name.clone());
-            }
+            collect_param_idents(&fd.params, out);
             for s in &fd.body.body {
                 collect_all_idents_stmt(s, out);
             }
@@ -873,10 +882,7 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
             if let Some(id) = &fe.id {
                 out.insert(id.name.clone());
             }
-            for p in &fe.params {
-                let id = p.binding_identifier();
-                out.insert(id.name.clone());
-            }
+            collect_param_idents(&fe.params, out);
             for s in &fe.body.body {
                 collect_all_idents_stmt(s, out);
             }
@@ -905,10 +911,7 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                         if let Some(id) = &m.value.id {
                             out.insert(id.name.clone());
                         }
-                        for p in &m.value.params {
-                            let id = p.binding_identifier();
-                            out.insert(id.name.clone());
-                        }
+                        collect_param_idents(&m.value.params, out);
                         for s in &m.value.body.body {
                             collect_all_idents_stmt(s, out);
                         }
@@ -939,10 +942,7 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
         // An arrow value contributes its params and body identifiers (it
         // has no name), so a renamed global never collides with them.
         Expression::ArrowFunctionExpression(ae) => {
-            for p in &ae.params {
-                let id = p.binding_identifier();
-                out.insert(id.name.clone());
-            }
+            collect_param_idents(&ae.params, out);
             match &ae.body {
                 ArrowBody::Block(b) => {
                     for s in &b.body {
@@ -1021,6 +1021,16 @@ fn rename_apply_decl(decl: &mut Declaration, map: &HashMap<String, String>) {
             if let Some(new) = map.get(&fd.id.name) {
                 fd.id.name = new.clone();
             }
+            // A default parameter's `right` runs in the function scope and can
+            // read a renamed global (`function f(x = SOME_GLOBAL){}`); rewrite it
+            // with the full `map`, exactly like the body. A param that shadowed a
+            // global would push that name's count past 1 (excluded from `map`), so
+            // a shadowed reference is never rewritten.
+            for p in &mut fd.params {
+                if let Some(def) = p.default_value_mut() {
+                    rename_apply_expr(def, map);
+                }
+            }
             // … and recurse into the body for uses of any renamed global.
             // Parameters are NOT renamed here — a parameter that shared a
             // top-level name would make that name declared-more-than-once,
@@ -1052,6 +1062,13 @@ fn rename_apply_decl(decl: &mut Declaration, map: &HashMap<String, String>) {
             for member in &mut cd.body {
                 match member {
                     ClassMember::Method(m) => {
+                        // Default-param `right` expressions — see the function
+                        // declaration arm above.
+                        for p in &mut m.value.params {
+                            if let Some(def) = p.default_value_mut() {
+                                rename_apply_expr(def, map);
+                            }
+                        }
                         for s in &mut m.value.body.body {
                             rename_apply_stmt(s, map);
                         }
@@ -1347,6 +1364,14 @@ fn rename_apply_expr(expr: &mut Expression, map: &HashMap<String, String>) {
                 let id = p.binding_identifier();
                 inner.remove(&id.name);
             }
+            // A default parameter's `right` runs in the function scope: a global
+            // it reads is renamed, a reference to an earlier param is left alone
+            // (that name was just removed from `inner`). Same `inner` as the body.
+            for p in &mut fe.params {
+                if let Some(def) = p.default_value_mut() {
+                    rename_apply_expr(def, &inner);
+                }
+            }
             for s in &mut fe.body.body {
                 rename_apply_stmt(s, &inner);
             }
@@ -1380,6 +1405,13 @@ fn rename_apply_expr(expr: &mut Expression, map: &HashMap<String, String>) {
                         for p in &m.value.params {
                             let id = p.binding_identifier();
                             inner.remove(&id.name);
+                        }
+                        // Default-param `right` expressions — see the
+                        // `FunctionExpression` arm.
+                        for p in &mut m.value.params {
+                            if let Some(def) = p.default_value_mut() {
+                                rename_apply_expr(def, &inner);
+                            }
                         }
                         for s in &mut m.value.body.body {
                             rename_apply_stmt(s, &inner);
@@ -1419,6 +1451,12 @@ fn rename_apply_expr(expr: &mut Expression, map: &HashMap<String, String>) {
             for p in &ae.params {
                 let id = p.binding_identifier();
                 inner.remove(&id.name);
+            }
+            // Default-param `right` expressions — see the `FunctionExpression` arm.
+            for p in &mut ae.params {
+                if let Some(def) = p.default_value_mut() {
+                    rename_apply_expr(def, &inner);
+                }
             }
             match &mut ae.body {
                 ArrowBody::Block(b) => {
@@ -1801,5 +1839,100 @@ mod tests {
         assert!(!out.changed, "must not rename globals when a `with` is present");
         assert_eq!(out.program, prog, "program must be returned unchanged");
         assert!(out.contributions.is_empty());
+    }
+
+    // -------------------------------------------------------------------
+    // CLOC12.191 PR1 (security-review regression) — a global referenced only
+    // inside a TOP-LEVEL function's default parameter must be renamed there
+    // too. The apply path for top-level declarations (`rename_apply_decl`)
+    // recurses into the body but originally skipped parameter defaults, so a
+    // renamed global left a dangling reference in the default. The bridge does
+    // not yet produce defaults (PR2), so the AST is hand-built.
+    // -------------------------------------------------------------------
+    #[test]
+    fn renames_global_referenced_in_top_level_default_parameter() {
+        use coding_adventures_javascript_ast::statement::ReturnStatement;
+        use coding_adventures_javascript_ast::{
+            AssignmentPattern, BindingTarget, BlockStatement, Declaration, Expression,
+            FunctionDeclaration, FunctionParam, Identifier, NumericLiteral, ProgramItem, Statement,
+            VarKind, VariableDeclaration, VariableDeclarator,
+        };
+
+        let id = |n: &str| Identifier {
+            cv: None,
+            name: n.to_string(),
+        };
+
+        // `var SOME_GLOBAL = 1;`
+        let var = Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind: VarKind::Var,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: BindingTarget::Identifier(id("SOME_GLOBAL")),
+                init: Some(Expression::NumericLiteral(NumericLiteral {
+                    cv: None,
+                    value: 1.0,
+                    raw: "1".to_string(),
+                })),
+            }],
+        });
+        // `function longFn(x = SOME_GLOBAL) { return x; }`
+        let f = Declaration::FunctionDeclaration(FunctionDeclaration {
+            cv: None,
+            id: id("longFn"),
+            params: vec![FunctionParam::AssignmentPattern(AssignmentPattern {
+                cv: None,
+                left: id("x"),
+                right: Expression::Identifier(id("SOME_GLOBAL")),
+            })],
+            body: BlockStatement {
+                cv: None,
+                body: vec![Statement::return_statement(ReturnStatement {
+                    cv: None,
+                    argument: Some(Expression::Identifier(id("x"))),
+                })],
+            },
+            generator: false,
+            is_async: false,
+        });
+
+        let mut prog = program();
+        prog.body = vec![
+            ProgramItem::Declaration(var),
+            ProgramItem::Declaration(f),
+        ];
+
+        let pass = RenameGlobalsPass::with_no_externs();
+        let sidecar = Sidecar::new();
+        let mut cv = CVLog::new(false);
+        let out = pass
+            .run(PassContext {
+                program: &prog,
+                sidecar: &sidecar,
+                cv: &mut cv,
+            })
+            .expect("rename-globals");
+
+        assert!(out.changed, "the two long globals should have been renamed");
+        // The new name chosen for `SOME_GLOBAL` on its declaration …
+        let ProgramItem::Declaration(Declaration::VariableDeclaration(vd)) = &out.program.body[0]
+        else {
+            panic!("expected the var declaration back");
+        };
+        let BindingTarget::Identifier(decl_id) = &vd.declarations[0].id;
+        assert_ne!(decl_id.name, "SOME_GLOBAL", "the global should have been renamed");
+        // … must be the name the default reads, not the stale `SOME_GLOBAL`.
+        let ProgramItem::Declaration(Declaration::FunctionDeclaration(f)) = &out.program.body[1]
+        else {
+            panic!("expected the function declaration back");
+        };
+        match f.params[0].default_value() {
+            Some(Expression::Identifier(idref)) => assert_eq!(
+                idref.name, decl_id.name,
+                "top-level default `= SOME_GLOBAL` must track the renamed global"
+            ),
+            other => panic!("expected an identifier default, got {other:?}"),
+        }
     }
 }

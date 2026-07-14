@@ -69,7 +69,7 @@ use coding_adventures_javascript_ast::statement::TaggedStatement;
 use coding_adventures_javascript_ast::{
     ArrowBody, ArrowFunctionExpression,
     AssignmentTarget, BindingTarget, BlockStatement, ClassDeclaration, ClassMember, CvId, Declaration, Expression, ForInit,
-    FunctionDeclaration, FunctionExpression, FunctionParam, ObjectMember, Program, ProgramItem, Property, PropertyKey, Statement,
+    FunctionDeclaration, FunctionExpression, ObjectMember, Program, ProgramItem, Property, PropertyKey, Statement,
     VarKind, VariableDeclaration,
 };
 use serde::{Deserialize, Serialize};
@@ -718,12 +718,12 @@ fn walk_function_declaration(
 
     // Params become Param-kind bindings in the function scope.
     for param in &fd.params {
-        // Both a plain identifier param and a rest param (`...name`) bind a
-        // single name in the function scope — extract it from either variant.
-        let id = match param {
-            FunctionParam::Identifier(id) => id,
-            FunctionParam::RestElement(re) => &re.argument,
-        };
+        // Every parameter shape binds a single name in the function scope —
+        // a plain identifier's name, a rest param's gathered-array name, or a
+        // default param's LEFT name. The AST accessor yields it uniformly. A
+        // default param's RIGHT expression is walked separately below for its
+        // references.
+        let id = param.binding_identifier();
         emit_binding(
             id.name.clone(),
             BindingKind::Param,
@@ -742,6 +742,15 @@ fn walk_function_declaration(
         current: function_scope,
         enclosing_function: function_scope,
     };
+    // A default parameter's `right` (`function f(a, b = a + 1) {}`) is live code
+    // evaluated in the function scope — its references resolve against the
+    // params and enclosing scopes, so collect them under `inner_ctx` for rename
+    // soundness. Plain and rest params carry no such expression.
+    for param in &fd.params {
+        if let Some(def) = param.default_value() {
+            walk_expression(def, inner_ctx, analysis, pending);
+        }
+    }
     for stmt in &fd.body.body {
         walk_statement(stmt, inner_ctx, analysis, pending);
     }
@@ -782,12 +791,12 @@ fn walk_function_expression(
     }
 
     for param in &fe.params {
-        // Both a plain identifier param and a rest param (`...name`) bind a
-        // single name in the function scope — extract it from either variant.
-        let id = match param {
-            FunctionParam::Identifier(id) => id,
-            FunctionParam::RestElement(re) => &re.argument,
-        };
+        // Every parameter shape binds a single name in the function scope —
+        // a plain identifier's name, a rest param's gathered-array name, or a
+        // default param's LEFT name. The AST accessor yields it uniformly. A
+        // default param's RIGHT expression is walked separately below for its
+        // references.
+        let id = param.binding_identifier();
         emit_binding(
             id.name.clone(),
             BindingKind::Param,
@@ -801,6 +810,12 @@ fn walk_function_expression(
         current: function_scope,
         enclosing_function: function_scope,
     };
+    // Default-param `right` expressions — see `walk_function_declaration`.
+    for param in &fe.params {
+        if let Some(def) = param.default_value() {
+            walk_expression(def, inner_ctx, analysis, pending);
+        }
+    }
     for stmt in &fe.body.body {
         walk_statement(stmt, inner_ctx, analysis, pending);
     }
@@ -828,12 +843,12 @@ fn walk_arrow_function_expression(
     let function_scope = emit_scope(ScopeKind::Function, ctx.current, analysis);
 
     for param in &ae.params {
-        // Both a plain identifier param and a rest param (`...name`) bind a
-        // single name in the function scope — extract it from either variant.
-        let id = match param {
-            FunctionParam::Identifier(id) => id,
-            FunctionParam::RestElement(re) => &re.argument,
-        };
+        // Every parameter shape binds a single name in the function scope —
+        // a plain identifier's name, a rest param's gathered-array name, or a
+        // default param's LEFT name. The AST accessor yields it uniformly. A
+        // default param's RIGHT expression is walked separately below for its
+        // references.
+        let id = param.binding_identifier();
         emit_binding(
             id.name.clone(),
             BindingKind::Param,
@@ -847,6 +862,12 @@ fn walk_arrow_function_expression(
         current: function_scope,
         enclosing_function: function_scope,
     };
+    // Default-param `right` expressions — see `walk_function_declaration`.
+    for param in &ae.params {
+        if let Some(def) = param.default_value() {
+            walk_expression(def, inner_ctx, analysis, pending);
+        }
+    }
     match &ae.body {
         ArrowBody::Block(b) => {
             for stmt in &b.body {
@@ -1261,7 +1282,7 @@ fn walk_property(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use coding_adventures_javascript_ast::SourceType;
+    use coding_adventures_javascript_ast::{FunctionParam, SourceType};
     use coding_adventures_javascript_tokens::EsVersion;
 
     fn empty_program() -> Program {
