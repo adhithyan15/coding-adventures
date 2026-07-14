@@ -1907,10 +1907,16 @@ fn plan_comparison(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
         return Ok(left);
     }
 
-    // IS NULL / IS NOT NULL
-    // Grammar: `IS NULL` or `IS NOT NULL` — these arrive as direct keyword tokens.
+    // IS [NOT] NULL   and   IS [NOT] <expr>  (null-safe (in)equality)
+    // Grammar: `IS NULL` / `IS NOT NULL` produce only keyword tokens (no right
+    // operand node), whereas `IS <expr>` / `IS NOT <expr>` produce a second
+    // expression node — that is how we tell the two apart.
     if direct_tok_uppers.contains(&"IS".to_string()) {
         let negated = direct_tok_uppers.contains(&"NOT".to_string());
+        if let Some(right_node) = child_nodes_ordered.get(1) {
+            let right = plan_expression(right_node)?;
+            return Ok(plan_is_distinct(left, right, negated));
+        }
         return Ok(if negated {
             SqlExpr::IsNotNull(Box::new(left))
         } else {
@@ -2229,6 +2235,57 @@ fn plan_cast(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
         expr: Box::new(inner),
         ty,
     })
+}
+
+/// Lower `a IS b` (and `a IS NOT b`) — SQLite's **null-safe** (in)equality —
+/// onto a `CASE`, reusing existing nodes so no new codegen or VM opcode is
+/// needed.
+///
+/// Semantics: `a IS b` is 1 when both operands are NULL, 0 when exactly one is
+/// NULL, and `a = b` otherwise (in that last case neither is NULL, so `a = b` is
+/// a clean boolean, never NULL). This differs from `a = b`, which yields NULL
+/// whenever either side is NULL. `a IS NOT b` is the logical negation.
+///
+/// Expressed as:
+/// ```text
+/// CASE WHEN a IS NULL AND b IS NULL THEN 1
+///      WHEN a IS NULL OR  b IS NULL THEN 0
+///      ELSE a = b END
+/// ```
+/// Both operands are pure, so re-evaluating them across the CASE branches is
+/// sound. (The tempting `(a = b) OR (a IS NULL AND b IS NULL)` is WRONG — it
+/// yields NULL, not 0, for `1 IS NULL`.)
+fn plan_is_distinct(left: SqlExpr, right: SqlExpr, negated: bool) -> SqlExpr {
+    let both_null = SqlExpr::BinaryOp {
+        op: BinaryOp::And,
+        left: Box::new(SqlExpr::IsNull(Box::new(left.clone()))),
+        right: Box::new(SqlExpr::IsNull(Box::new(right.clone()))),
+    };
+    let either_null = SqlExpr::BinaryOp {
+        op: BinaryOp::Or,
+        left: Box::new(SqlExpr::IsNull(Box::new(left.clone()))),
+        right: Box::new(SqlExpr::IsNull(Box::new(right.clone()))),
+    };
+    let eq = SqlExpr::BinaryOp {
+        op: BinaryOp::Eq,
+        left: Box::new(left),
+        right: Box::new(right),
+    };
+    let case = SqlExpr::Case {
+        branches: vec![
+            (both_null, SqlExpr::Literal(SqlValue::Int(1))),
+            (either_null, SqlExpr::Literal(SqlValue::Int(0))),
+        ],
+        else_val: Some(Box::new(eq)),
+    };
+    if negated {
+        SqlExpr::UnaryOp {
+            op: UnaryOp::Not,
+            expr: Box::new(case),
+        }
+    } else {
+        case
+    }
 }
 
 /// Plan a searched `CASE WHEN … THEN … [ELSE …] END` primary node into

@@ -2,6 +2,19 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.9] - Unreleased
+
+### Added
+
+- **`a IS b` / `a IS NOT b` null-safe (in)equality.** The IS handler now
+  distinguishes `IS [NOT] NULL` (no right operand) from `IS [NOT] <expr>` (a
+  right operand node) and lowers the latter via new `plan_is_distinct` onto
+  `CASE WHEN a IS NULL AND b IS NULL THEN 1 WHEN a IS NULL OR b IS NULL THEN 0
+  ELSE a = b END` (negated → wrapped in `NOT`). Reuses the CASE node added in
+  0.2.8 plus existing `IsNull`/`BinaryOp`/`UnaryOp` — **no codegen or VM opcode
+  needed**. (The naive `(a=b) OR (a IS NULL AND b IS NULL)` is wrong — it yields
+  NULL, not 0, for `1 IS NULL`.)
+
 ## [0.2.8] - Unreleased
 
 ### Added

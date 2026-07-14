@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-sql-parser"
-version = "0.1.9"
+version = "0.1.10"
 edition = "2021"
 description = "SQL parser — parses SQL source text into an AST using the grammar-driven parser and the sql.grammar file"
 

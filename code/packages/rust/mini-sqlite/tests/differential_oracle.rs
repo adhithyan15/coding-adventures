@@ -903,6 +903,27 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT id, CASE WHEN a=2 THEN 10 ELSE 20 END + 5 AS v FROM t WHERE CASE WHEN a IS NULL THEN 0 ELSE 1 END ORDER BY id",
     },
+    // `a IS b` is null-SAFE equality: 1 when both equal OR both NULL, 0 when
+    // exactly one is NULL — unlike `=`, which yields NULL if either side is NULL.
+    // Aliased so the check is on the 1/0 result value per row.
+    Case {
+        id: "is_null_safe_equality",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, a INTEGER, b INTEGER)",
+            "INSERT INTO t VALUES (1,1,1),(2,1,2),(3,NULL,NULL),(4,1,NULL),(5,NULL,1)",
+        ],
+        query: "SELECT id, (a IS b) AS e, (a IS NOT b) AS ne FROM t ORDER BY id",
+    },
+    // `IS`/`IS NOT` used as a WHERE predicate — the null-safe match includes the
+    // both-NULL row, which a plain `a = b` would exclude (NULL is not true).
+    Case {
+        id: "is_operator_in_where",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, a INTEGER, b INTEGER)",
+            "INSERT INTO t VALUES (1,1,1),(2,1,2),(3,NULL,NULL),(4,2,NULL)",
+        ],
+        query: "SELECT id FROM t WHERE a IS b ORDER BY id",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but

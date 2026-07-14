@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.5.26 — `IS` / `IS NOT` null-safe (in)equality
+
+`SELECT a IS b` / `a IS NOT b` now parse and run as SQLite's null-safe
+comparison: `a IS b` is 1 when both operands are equal OR both NULL, 0 when
+exactly one is NULL (unlike `=`, which yields NULL if either side is NULL);
+`a IS NOT b` is the negation. It is lowered entirely in the planner onto the
+CASE node (added in 0.5.25) — `CASE WHEN a IS NULL AND b IS NULL THEN 1 WHEN a
+IS NULL OR b IS NULL THEN 0 ELSE a=b END` — so grammar (sql-parser 0.1.10) +
+planner (sql-planner 0.2.9) are the only changes; **no codegen or VM opcode**.
+`IS NULL` / `IS NOT NULL` still work (matched first). Two differential-oracle
+cases (`is_null_safe_equality`, `is_operator_in_where`) diff against real
+bundled SQLite, including `IS` as a WHERE predicate. (`IS [NOT] DISTINCT FROM`
+— the standard-SQL spelling — is a separate follow-up.)
+
 ## 0.5.25 — Searched `CASE WHEN … THEN … [ELSE …] END`
 
 `SELECT CASE WHEN cond THEN val … [ELSE val] END` now parses and runs with
