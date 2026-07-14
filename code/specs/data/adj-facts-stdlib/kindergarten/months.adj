@@ -1,0 +1,50 @@
+% ============================================================================
+% months — which number names each month of the year (adj-facts-stdlib, KINDERGARTEN).
+% ============================================================================
+% A second rung of the facts ladder, beside `shapes.adj`: the calendar fact a
+% kindergartener chants — "January is the first month, December is the twelfth."
+% Recall is a binding query:
+%
+%     ? month_number(march, $Number)        % 3
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `month_number(month, number)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the month
+% number WITH its source, on the CPU, with zero model calls, and abstains on a
+% word that is not a month. The relation binds BOTH ways: forward
+% `? month_number(may, $N)` gives 5, and reverse `? month_number($M, 5)` gives
+% may. Because the `number` value is a NUMBER, a recalled month index composes
+% straight into a formula (days-elapsed, quarter = ceil(number / 3)): the concrete
+% bridge from kindergarten RECALL to kindergarten COMPUTE.
+%
+% Provenance: the month → number mapping is the ISO 8601 numbering, copied
+% verbatim from Markus Kuhn's canonical ISO 8601 summary hosted by the University
+% of Cambridge Computer Laboratory (an educational, .ac.uk reference for the
+% international standard). The span at the `locator` states the endpoints of the
+% numbering — "the month of the year between 01 (January) and 12 (December)" — and
+% the twelve months run consecutively in the universal Gregorian order between
+% those two anchors. `trust authoritative` — a primary reference for ISO 8601.
+% Nothing here is asserted from memory. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table month_number {
+    columns month, number
+
+    row (january, 1)
+    row (february, 2)
+    row (march, 3)
+    row (april, 4)
+    row (may, 5)
+    row (june, 6)
+    row (july, 7)
+    row (august, 8)
+    row (september, 9)
+    row (october, 10)
+    row (november, 11)
+    row (december, 12)
+
+    source "MM is the month of the year between 01 (January) and 12 (December)"
+    locator "https://www.cl.cam.ac.uk/~mgk25/iso-time.html"
+    trust authoritative
+}
