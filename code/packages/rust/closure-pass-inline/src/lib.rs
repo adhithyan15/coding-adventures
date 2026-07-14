@@ -131,7 +131,7 @@ use coding_adventures_javascript_ast::{
     BlockStatement,
     CallExpression, ClassMember, Declaration, Expression, ExpressionStatement, ForInit,
     FunctionDeclaration,
-    FunctionParam, Identifier, IfStatement, NullLiteral, Program, ProgramItem, ObjectMember, PropertyKey,
+    Identifier, IfStatement, NullLiteral, Program, ProgramItem, ObjectMember, PropertyKey,
     Statement, VarKind, VariableDeclaration, VariableDeclarator,
 };
 

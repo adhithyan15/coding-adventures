@@ -108,7 +108,7 @@ use serde_json::json;
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use coding_adventures_javascript_ast::{
     ArrowBody, AssignmentTarget, BindingTarget, ClassMember, Declaration, Expression, ForInit,
-    FunctionParam, Program, ProgramItem, ObjectMember, PropertyKey, Statement, VarKind,
+    Program, ProgramItem, ObjectMember, PropertyKey, Statement, VarKind,
     VariableDeclaration,
 };
 

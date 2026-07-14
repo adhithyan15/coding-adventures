@@ -77,7 +77,7 @@ use coding_adventures_javascript_ast::statement::TaggedStatement;
 use serde_json::json;
 use coding_adventures_javascript_ast::{
     ArrowBody, AssignmentTarget, BindingTarget, ClassMember, Declaration, Expression, ForInit,
-    FunctionParam, ObjectMember, Program, ProgramItem, PropertyKey, Statement, VariableDeclaration,
+    ObjectMember, Program, ProgramItem, PropertyKey, Statement, VariableDeclaration,
 };
 
 /// `Pass::depends_on` value — empty. Global renaming is correct on its
