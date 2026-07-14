@@ -34,10 +34,10 @@ so this is half-learned already.
 - **le** ← *ille*, **la** ← *illa*, **les** ← *illos* — the pointing force
   ("that") faded into a plain "the," and the initial *il-* wore off.
 
-> Spanish twin, exactly: Spanish *el / la / los* come from the *same ille /
-> illa / illos*. French kept *le* where Spanish kept *el* — same parent, and
-> the same twin trick: these articles gave French **il** ("he") and **elle**
-> ("she") too (Spanish: *él / ella*). Article and pronoun, one Latin root.
+> Spanish cousin, exactly: from the *same ille / illa / illos*, Spanish made
+> *el / la / los*. French kept *le* where Spanish kept *el* — same parent. And
+> those same Latin demonstratives also gave French **il** ("he") and **elle**
+> ("she") (Spanish *él / ella*): article and pronoun, one Latin root.
 > (English "the" is Germanic — unrelated.)
 
 ## Grammar Lens: French gender, also from Latin
