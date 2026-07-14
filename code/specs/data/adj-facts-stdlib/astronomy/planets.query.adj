@@ -1,5 +1,5 @@
 % ============================================================================
-% planets.query.adj — a worked recall over the kindergarten planets library.
+% planets.query.adj — a worked recall over the astronomy planets library.
 % ============================================================================
 % The shape a learner (or an LLM) produces to ANSWER "which planet is third from
 % the Sun?" — it states no astronomy fact, only `import`s the grounded table and

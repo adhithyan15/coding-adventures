@@ -1,7 +1,7 @@
 % ============================================================================
-% planets — each planet's order from the Sun (adj-facts-stdlib, KINDERGARTEN).
+% planets — each planet's order from the Sun (adj-facts-stdlib, ASTRONOMY).
 % ============================================================================
-% The second kindergarten rung, and the first SCIENCE fact: the order of the
+% An astronomy facts library — an early science fact: the order of the
 % planets, counting out from the Sun — the thing a child chants ("My Very Easy
 % Method Just Speeds Up Naming Planets"). Recall is a binding query:
 %

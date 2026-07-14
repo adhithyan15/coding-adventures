@@ -1,5 +1,5 @@
-//! End-to-end test for the kindergarten planets FACTS library
-//! (`adj-facts-stdlib/kindergarten/planets.adj`): a native `table` of
+//! End-to-end test for the astronomy planets FACTS library
+//! (`adj-facts-stdlib/astronomy/planets.adj`): a native `table` of
 //! planet → order-from-the-Sun resolves forward AND reverse binding queries with
 //! the NASA citation, and abstains on a non-planet — 0 answer-time model calls.
 
@@ -29,9 +29,9 @@ fn run(program: &Path) -> (bool, String) {
 }
 
 #[test]
-fn kindergarten_planets_recall_binds_order_forward_and_reverse() {
+fn astronomy_planets_recall_binds_order_forward_and_reverse() {
     let dir = scratch("planets");
-    let src = facts_stdlib().join("kindergarten/planets.adj");
+    let src = facts_stdlib().join("astronomy/planets.adj");
     std::fs::copy(&src, dir.join("planets.adj")).expect("copy shipped planets.adj");
     std::fs::write(
         dir.join("case.adj"),
