@@ -1,0 +1,58 @@
+% ============================================================================
+% element-symbols — each chemical element's one/two-letter SYMBOL
+% (adj-facts-stdlib, CHEMISTRY). Complements chemistry/elements.adj (atomic
+% numbers) with the OTHER half of what a chemistry student memorizes first.
+% ============================================================================
+% A subject-organized (no grade level) facts library: the chemical symbol every
+% chemistry learner recalls — "hydrogen is H, sodium is Na." Recall is a binding
+% query in either direction:
+%
+%     ? element_symbol(oxygen, $S)      % o   (name  -> symbol)
+%     ? element_symbol($E, na)          % sodium  (symbol -> name)
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `element_symbol(element, symbol)` carrying the table's citation, so
+% both lookups above are ordinary SLD binding queries — the engine returns the
+% answer WITH its source, on the CPU, with zero model calls, and abstains on an
+% element not in the table (never inventing a symbol). Keys AND symbol values are
+% lowercase ADJ atoms (hydrogen -> h, helium -> he, …); the human-facing capital
+% form (H, He, Na, …) is the same string title-cased for display.
+%
+% Provenance: every element name and its symbol below is copied from PubChem's
+% (NIH/NLM) periodic-table REST resource — a primary chemistry authority. The
+% `source` span is the VERBATIM JSON `Cell` triple for atomic number 8
+% (AtomicNumber "8", Symbol "O", Name "Oxygen") as it appears in that response;
+% the full 20-row table this covers is served at the `locator` URL, and each
+% name->symbol pair below was confirmed against it. `trust authoritative`.
+% Nothing here is asserted from memory. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table element_symbol {
+    columns element, symbol
+
+    row (hydrogen, h)
+    row (helium, he)
+    row (lithium, li)
+    row (beryllium, be)
+    row (boron, b)
+    row (carbon, c)
+    row (nitrogen, n)
+    row (oxygen, o)
+    row (fluorine, f)
+    row (neon, ne)
+    row (sodium, na)
+    row (magnesium, mg)
+    row (aluminum, al)
+    row (silicon, si)
+    row (phosphorus, p)
+    row (sulfur, s)
+    row (chlorine, cl)
+    row (argon, ar)
+    row (potassium, k)
+    row (calcium, ca)
+
+    source "\"8\",\n          \"O\",\n          \"Oxygen\""
+    locator "https://pubchem.ncbi.nlm.nih.gov/rest/pug/periodictable/JSON"
+    trust authoritative
+}
