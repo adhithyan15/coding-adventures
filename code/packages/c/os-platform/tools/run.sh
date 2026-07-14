@@ -56,4 +56,9 @@ PLATFORM_LIBS="-pthread"
 export PLATFORM_LIBS
 platform_build_and_run c thread-tests tests/thread_test.c src/thread_posix.c || rc=1
 
+# fs — POSIX backend (stat/open/read/write/opendir). No extra OS library.
+PLATFORM_LIBS=""
+export PLATFORM_LIBS
+platform_build_and_run c fs-tests tests/fs_test.c src/fs_posix.c || rc=1
+
 exit "$rc"

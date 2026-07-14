@@ -42,3 +42,6 @@ Platform-BuildAndRun -Lang c -Name 'clock-tests' -Sources @('tests\clock_test.c'
 
 # thread — Win32 backend (_beginthreadex + CRITICAL_SECTION + CONDITION_VARIABLE).
 Platform-BuildAndRun -Lang c -Name 'thread-tests' -Sources @('tests\thread_test.c', 'src\thread_windows.c')
+
+# fs — Win32 backend (CreateFile/ReadFile/WriteFile + GetFileAttributesEx + FindFirstFile).
+Platform-BuildAndRun -Lang c -Name 'fs-tests' -Sources @('tests\fs_test.c', 'src\fs_windows.c')

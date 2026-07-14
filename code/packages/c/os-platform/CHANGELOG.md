@@ -9,6 +9,22 @@ and this project adheres to semantic versioning.
 
 ### Added
 
+- **`fs` primitive** (CCPP02 Phase 2, PR 3): filesystem metadata, whole-file
+  read/write, and directory listing — bucket B (ISO `<stdio.h>` opens files by
+  name but cannot list a directory or report type/size/mtime).
+  - `osp_fs_stat` → `osp_file_info` (is_dir / is_regular / size / mtime_unix_ns)
+    and `osp_fs_exists`.
+  - `osp_fs_read_file` (whole file into a malloc'd, NUL-terminated, binary-safe
+    buffer; caller frees) and `osp_fs_write_file` (create/truncate).
+  - `osp_fs_list_dir` (callback per entry, skipping "." / "..").
+  - Backends: `fs_posix.c` (`stat`/`open`/`fstat`/`read`/`write`/`opendir`; libc
+    only, EINTR-safe and partial-read/write loops; fstat on the open fd to avoid
+    a TOCTOU size gap) and `fs_windows.c` (`GetFileAttributesEx` /
+    `CreateFile`+`ReadFile`/`WriteFile` chunked to DWORD / `FindFirstFile`;
+    FILETIME→UNIX-ns like the clock backend; kernel32 only).
+  - Size→allocation guarded against 32-bit `size_t` truncation and `len+1`
+    wraparound. Round-trip test (binary payload with an embedded NUL) verified
+    under ASan+UBSan with 0 leaks; files created under gitignored `_build/`.
 - **`thread` primitive** (CCPP02 Phase 2, PR 2): threads, mutexes, and condition
   variables — concurrency is bucket B (C11 `<threads.h>` is optional and
   MSVC-absent). Opaque heap handles keep OS types out of the shared header; each
