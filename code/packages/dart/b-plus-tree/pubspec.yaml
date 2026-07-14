@@ -1,0 +1,13 @@
+name: coding_adventures_b_plus_tree
+description: >
+  Pure Dart DT12 B+ tree with linked leaves, lookup, mutation, range scans,
+  balanced levels, and invariant validation.
+version: 0.1.0
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dev_dependencies:
+  test: ^1.25.0
