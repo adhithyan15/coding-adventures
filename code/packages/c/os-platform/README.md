@@ -17,14 +17,17 @@ exactly one backend and the code contains no `#if defined(__linux__)` mazes.
 
 ## Primitives
 
-| Module  | Header                     | Status        |
-|---------|----------------------------|---------------|
-| `clock` | `os_platform/clock.h`      | ✅ implemented |
-| thread  | —                          | planned       |
-| fs      | —                          | planned       |
-| process | —                          | planned       |
-| dynlib  | —                          | planned       |
-| mmap    | —                          | planned       |
+| Module   | Header                  | Status        |
+|----------|-------------------------|---------------|
+| `clock`  | `os_platform/clock.h`   | ✅ implemented |
+| `thread` | `os_platform/thread.h`  | ✅ implemented |
+| fs       | —                       | planned       |
+| process  | —                       | planned       |
+| dynlib   | —                       | planned       |
+| mmap     | —                       | planned       |
+
+All primitives share the `osp_status` return convention from
+`os_platform/status.h` (`OSP_OK == 0`; negative on error).
 
 See [`CCPP02-os-platform-lane.md`](../../../specs/CCPP02-os-platform-lane.md) for
 the full plan.
@@ -67,6 +70,42 @@ links no extra library (both calls live in libc on modern glibc/macOS). The
 Windows backend uses only kernel32, linked by MSVC by default. On Windows,
 `osp_sleep_ns` has millisecond granularity (`Sleep` rounds up to whole ms).
 
+### `thread` — threads, mutexes, condition variables
+
+Concurrency is bucket B (C11 `<threads.h>` is optional and MSVC-absent). Opaque
+handles hide the OS types; create with `_init`/`_spawn`, release with
+`_destroy`/`_join`:
+
+```c
+#include "os_platform/thread.h"
+
+static void *worker(void *arg) { /* … */ return arg; }
+
+osp_thread *t;
+osp_thread_spawn(&t, worker, ctx);
+void *result;
+osp_thread_join(t, &result);        /* waits, delivers worker's return, frees t */
+
+osp_mutex *m; osp_mutex_init(&m);
+osp_mutex_lock(m); /* … */ osp_mutex_unlock(m);
+
+osp_cond *c; osp_cond_init(&c);
+osp_mutex_lock(m);
+while (!ready) osp_cond_wait(c, m); /* loop guards spurious wake-ups */
+osp_mutex_unlock(m);
+```
+
+Backends:
+
+| OS          | thread                             | mutex              | cond                 |
+|-------------|------------------------------------|--------------------|----------------------|
+| macOS/Linux | `pthread_create` / `_join`         | `pthread_mutex_t`  | `pthread_cond_t`     |
+| Windows     | `_beginthreadex` / `WaitForSingleObject` | `CRITICAL_SECTION` | `CONDITION_VARIABLE` |
+
+The POSIX backend links the OS thread library (`-pthread`); the Windows backend
+uses only the CRT + kernel32. Mutexes are non-recursive; a condition variable is
+always waited on while holding its paired mutex.
+
 ## Build & test
 
 ```sh
@@ -74,19 +113,23 @@ cd code/packages/c/os-platform
 sh tools/run.sh        # macOS / Linux (Windows: tools\run.ps1 via BUILD_windows)
 ```
 
-This compiles `tests/clock_test.c` with the OS's clock backend under every
-present compiler and runs it, printing `N checks, 0 failed`. Output goes to
-`_build/` (never `build/`, which collides with the `BUILD` file on
-case-insensitive filesystems). Remove it with `rm -rf _build`.
+This compiles each primitive's test with the OS's backend under every present
+compiler and runs it, printing `N checks, 0 failed`. Output goes to `_build/`
+(never `build/`, which collides with the `BUILD` file on case-insensitive
+filesystems). Remove it with `rm -rf _build`.
 
 ## Layout
 
 ```
 os-platform/
-├── include/os_platform/clock.h   # shared public API (one header per primitive)
-├── src/clock_posix.c             # macOS + Linux backend
-├── src/clock_windows.c           # Windows backend
-├── tests/clock_test.c            # property tests, run on each OS
+├── include/os_platform/
+│   ├── status.h                  # shared osp_status enum (all primitives)
+│   ├── clock.h                   # clock API
+│   └── thread.h                  # thread API
+├── src/
+│   ├── clock_posix.c   · clock_windows.c    # per-OS clock backends
+│   └── thread_posix.c  · thread_windows.c   # per-OS thread backends
+├── tests/clock_test.c  · thread_test.c      # per-primitive tests, run on each OS
 ├── tools/run.sh  · run.ps1       # per-OS build drivers
 ├── BUILD  · BUILD_windows        # per-OS source selection
 └── required_capabilities.json    # CI needs gcc, clang, cl

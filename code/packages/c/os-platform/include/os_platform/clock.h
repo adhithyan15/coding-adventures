@@ -64,18 +64,11 @@
 
 #include <stdint.h>
 
+#include "os_platform/status.h" /* osp_status: OSP_OK / OSP_ERR_* */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/* Status codes. 0 is success (so `if (osp_...())` reads as "if it failed"); all
- * errors are negative, leaving room to grow the vocabulary without colliding
- * with OSP_OK. */
-typedef enum {
-    OSP_OK = 0,          /* the call succeeded; the out-parameter is valid    */
-    OSP_ERR_OS = -1,     /* the underlying OS call reported a failure          */
-    OSP_ERR_INVAL = -2   /* a caller argument was invalid (e.g. NULL out-ptr) */
-} osp_status;
 
 /*
  * osp_monotonic_ns — elapsed-time clock, in nanoseconds.

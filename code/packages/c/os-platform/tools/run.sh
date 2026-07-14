@@ -46,7 +46,14 @@ echo "os-platform ($(platform_os)): C compilers: $(platform_compilers c)"
 
 rc=0
 
-# clock — POSIX backend (clock_gettime + nanosleep).
+# clock — POSIX backend (clock_gettime + nanosleep). No extra OS library.
+PLATFORM_LIBS=""
+export PLATFORM_LIBS
 platform_build_and_run c clock-tests tests/clock_test.c src/clock_posix.c || rc=1
+
+# thread — POSIX backend (pthreads). Links the OS thread library.
+PLATFORM_LIBS="-pthread"
+export PLATFORM_LIBS
+platform_build_and_run c thread-tests tests/thread_test.c src/thread_posix.c || rc=1
 
 exit "$rc"

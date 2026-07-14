@@ -39,3 +39,6 @@ Write-Host "os-platform (windows): C compilers: $((Platform-Compilers -Lang c) -
 
 # clock — Win32 backend (QueryPerformanceCounter + FILETIME + Sleep).
 Platform-BuildAndRun -Lang c -Name 'clock-tests' -Sources @('tests\clock_test.c', 'src\clock_windows.c')
+
+# thread — Win32 backend (_beginthreadex + CRITICAL_SECTION + CONDITION_VARIABLE).
+Platform-BuildAndRun -Lang c -Name 'thread-tests' -Sources @('tests\thread_test.c', 'src\thread_windows.c')
