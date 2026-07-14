@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-flow-matic-parser"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Parser for FLOW-MATIC (B-0, 1955–1959) — parses FLOW-MATIC source into a generic parse tree using the grammar-driven parser and the flow_matic.grammar file."
 

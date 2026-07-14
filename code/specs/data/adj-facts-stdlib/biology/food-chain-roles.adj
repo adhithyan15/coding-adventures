@@ -1,0 +1,67 @@
+% ============================================================================
+% food-chain-roles — each food-chain role and the one-word job it does
+% (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% A beginner biology facts library in the ADJ standard library — the kind an
+% ecology or science agent `import`s when it needs the grounded, child-level
+% answer to "what does a producer do?": a plant MAKES its own food, an animal
+% EATS other organisms, a mushroom BREAKS DOWN what has died. Every food chain
+% is built from three roles, and each role has one job. Recall is a binding
+% query:
+%
+%     ? food_chain_role(producer, $D)    % makes_food
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `food_chain_role(role, description)` carrying the table's citation,
+% so the lookup above is the ordinary SLD binding query — the engine returns the
+% description atom WITH its source, on the CPU, with zero model calls, and
+% abstains on a word that is not one of the three roles. The query also runs
+% BACKWARD — bind the job and recall the role:
+%
+%     ? food_chain_role($R, makes_food)  % producer
+%
+% The `description` value of every row is a SINGLE lowercase atom, chosen to be a
+% faithful one-word paraphrase of the role's definition the source states — never
+% an interpretation the source does not support. A recalled description atom
+% therefore composes straight into downstream reasoning (an ecology agent asking
+% "which role makes_food?" gets the grounded answer, not a guess) — the concrete
+% bridge from biology RECALL to reasoning.
+%
+% Provenance: every role and its `description` atom is grounded in the NOAA
+% (National Oceanic and Atmospheric Administration) "Aquatic food webs" education
+% resource — a primary U.S. government science-education page (the citable
+% artifact at the `locator`). The `source` span is the VERBATIM glossary
+% definition of the first data row (producer), copied character-for-character
+% from that page. The remaining rows' atoms are each a faithful one-word
+% paraphrase of that same page's definition for their role:
+%
+%     producer    → "An organism that makes its own food through photosynthesis
+%                     or chemosynthesis."                                → makes_food
+%     consumer    → "An organism that gains energy by feeding on other
+%                     organisms." (and: "Consumers are animals that cannot make
+%                     their own food and need to eat other organisms for
+%                     energy.")                                          → eats_others
+%     decomposer  → "Organic matter is broken down to carbon dioxide and mineral
+%                     forms of nutrients by organisms such as bacteria and
+%                     fungi."                                            → breaks_down
+%
+% `trust authoritative` — NOAA is a primary U.S. government scientific agency
+% (noaa.gov), the honest tier for an official source (contrast `consensus`,
+% reserved for a secondary reference such as an encyclopedia). Nothing here is
+% asserted from memory; each pair was read out of the fetched page and any role
+% whose job the page did not state would have been dropped.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_adjudication_no_interpretive_gating.)
+% ============================================================================
+
+table food_chain_role {
+    columns role, description
+
+    row (producer, makes_food)
+    row (consumer, eats_others)
+    row (decomposer, breaks_down)
+
+    source "An organism that makes its own food through photosynthesis or chemosynthesis."
+    locator "https://www.noaa.gov/education/resource-collections/marine-life/aquatic-food-webs"
+    trust authoritative
+}

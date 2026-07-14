@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.5.32 — `COLLATE` on the left comparison operand
+
+`x COLLATE NOCASE = y` now folds the comparison just like `x = y COLLATE C`
+(and `WHERE name COLLATE NOCASE = 'foo'` matches per row). Grammar-only
+(sql-parser 0.1.16): the left-side COLLATE binds inside the `cmp_op` alternative,
+so it never steals an `ORDER BY … COLLATE …` clause's collation (that regression
+was caught by the differential oracle and fixed via ordered-choice backtracking).
+The planner reuses the merged `collate_name_after`/`wrap_collate` unchanged — the
+first COLLATE token wins, so a left collation takes precedence over a right one,
+matching SQLite. Two differential-oracle cases (`=` and a WHERE predicate) plus a
+parser regression test for ORDER BY COLLATE.
+
 ## 0.5.31 — `IS [NOT] DISTINCT FROM` (standard-SQL null-safe compare)
 
 `SELECT a IS DISTINCT FROM b`, `a IS NOT DISTINCT FROM b`, and the WHERE-predicate

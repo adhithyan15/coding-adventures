@@ -34,6 +34,7 @@ per rotation, in parallel):
 | `money/` | US coin → cents | US Mint |
 | `earth-science/` | water-cycle stage → step number | USGS Water Science School |
 | `nutrition/` | common food → MyPlate food group | USDA MyPlate |
+| `agriculture/` | farm animal → product it gives | Iowa State University (CFSPH) |
 | … | *physics, biology, geography, anatomy, physical constants, …* | *(expanding)* |
 
 Formulas and laws (Newton's `F = ma`, the ideal gas law `PV = nRT`, area/volume, …) are grown

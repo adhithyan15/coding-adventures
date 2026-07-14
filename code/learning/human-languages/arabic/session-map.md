@@ -1,37 +1,29 @@
-# Session Map — Arabic Chapters 1-2
+# Session Map — Arabic Chapter 1
 
 Same spaced-repetition schedule as the other tracks (a word from session *N*
 resurfaces at *N+1, N+3, N+7, N+15*). Lessons named by slug; this map is the
 authoritative order.
 
-**Chapter 1 is a reading course** — you learn to *decode* Arabic from zero, a
-few letters per lesson, each cashing out in a real word — before Chapter 2
-opens what the words mean.
+**There is no reading course.** The Arabic script is learned *through* the
+words: each lesson's *"The letters in this word"* section introduces exactly the
+letters that word needs, right to left. By the end of Chapter 1 you have met
+about a dozen letters — half the alphabet — all in the service of real
+greetings, plus the root engine and the attached *al-*.
 
-## Chapter 1 — Learning to read
+## Chapter 1 — Greetings
 
-| Session | Lesson | New letters → word you can now read |
-|---|---|---|
-| 1 | read-la | ا ل → **لا** (*lā*, "no") |
-| 2 | read-salam | م س → **سلام** (*salām*, "peace") |
-| 3 | read-marhaba | ب ر ح → **مرحبا** (*marḥaban*, "welcome/hi") |
-| 4 | read-sabah-khayr | ص خ ي → **صباح الخير** (good morning) |
-| 5 | read-shukran | ش ك → **شكرا** (*shukran*, "thanks") |
-| 6 | read-alaykum | ع ء → **السلام عليكم**, **مساء الخير** |
-| 7 | read-practice | (decode the whole greeting set) |
-
-## Chapter 2 — Greetings (what they mean)
-
-| Session | Lesson | Introduces |
-|---|---|---|
-| 8 | root-system | the three-consonant root engine (k-t-b → kitāb/kātib/maktab) |
-| 9 | marhaba · salam | roots r-ḥ-b and s-l-m (the big family; Hebrew *shalom*) |
-| 10 | al- · as-salamu-alaykum | "the"; sun/moon letters; Al-Andalus loanwords (algebra, azúcar) |
-| 11 | sabah · khayr · sabah-al-khayr | morning + goodness; reply ṣabāḥ an-nūr |
-| 12 | masa · masa-al-khayr | evening; "good evening" |
-| 13 | shukran · practice | thanks (sh-k-r); recap |
+| Session | Lesson | Word | New letters / reading idea | Root / thread |
+|---|---|---|---|---|
+| 1 | salam | سلام | RTL; ا ل م س (+ لا warm-up); long-ā | root *s-l-m* (islām/muslim; Hebrew *shalom*) |
+| 2 | marhaba | مرحبا | ب ر ح; dots-on-skeleton (ب ت ث) | root *r-ḥ-b* ("there's room for you") |
+| 3 | al | ال | (no new letters) | "the"; **sun/moon letters**; al-jabr, azúcar |
+| 4 | as-salamu-alaykum | السلام عليكم | ع ي ك | *al-*+*salām* assembled; "no word for is" |
+| 5 | sabah-al-khayr | صباح الخير | ص (emphatic s), خ (= Spanish j) | roots *ṣ-b-ḥ*, *kh-y-r*; reply *ṣabāḥ an-nūr* |
+| 6 | masa-al-khayr | مساء الخير | ء (hamza) | root *m-s-w*; the morning/evening mirror |
+| 7 | shukran | شكرا | ش (= س + 3 dots), ك | root *sh-k-r*; the *kātib/maktūb* patterns |
+| 8 | practice | (recap) | read all six, RTL | the day of greetings + replies |
 
 ## Next
 
-Chapter 3 — introducing yourself (*ismī…*) and Arabic's **gendered** "you"
-(*anta* / *anti*).
+Chapter 2 — introducing yourself (*ismī…*) and Arabic's **gendered** "you"
+(*anta* to a man / *anti* to a woman).
