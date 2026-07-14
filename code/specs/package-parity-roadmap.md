@@ -105,11 +105,12 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. Regenerated
-on July 14, 2026 after the paired Lua/Perl `fenwick-tree` ports:
+on July 14, 2026 after the paired Lua/Perl `fenwick-tree` and `binary-tree`
+ports:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 171 | 369 |
+| Present in 10-15 languages | 171 | 367 |
 | Present in 5-9 languages | 122 | 917 |
 | Present in 2-4 languages | 157 | 1,972 |
 | Present in one language | 695 | 9,730 |
@@ -155,15 +156,15 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 171 packages present in at least ten implementation languages need 369
+The 171 packages present in at least ten implementation languages need 367
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
 |---|---:|---|
 | Python | 1 | Classify the remaining self-hosted `python-parser` carefully |
 | Elixir | 0 | Complete; `python-parser` uses the shared grammar-driven frontend |
-| Lua | 15 | Pair with Perl data-structure/storage wave |
-| Perl | 15 | Pair with Lua data-structure/storage wave |
+| Lua | 14 | Pair with Perl data-structure/storage wave |
+| Perl | 14 | Pair with Lua data-structure/storage wave |
 | C# | 17 | Move with F# |
 | F# | 17 | Move with C# |
 | Haskell | 34 | Dependency-shaped compression, graphics, ML, and protocol waves |
@@ -175,9 +176,9 @@ ports to reach all 15. After Priority 1, select work in this order:
 Go, Ruby, Rust, and TypeScript currently have no gaps within the 10-language
 consensus set. They remain reference/template lanes for these waves.
 
-The first paired Lua/Perl data-structure slice is complete: `fenwick-tree` now
-has pure implementations, package-native tests, metadata, and capability
-declarations in both lanes.
+The first two paired Lua/Perl data-structure slices are complete: `fenwick-tree`
+and `binary-tree` now have pure implementations, package-native tests, metadata,
+and capability declarations in both lanes.
 
 Recommended family order:
 
