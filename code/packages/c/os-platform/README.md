@@ -21,7 +21,7 @@ exactly one backend and the code contains no `#if defined(__linux__)` mazes.
 |----------|-------------------------|---------------|
 | `clock`  | `os_platform/clock.h`   | ✅ implemented |
 | `thread` | `os_platform/thread.h`  | ✅ implemented |
-| fs       | —                       | planned       |
+| `fs`     | `os_platform/fs.h`      | ✅ implemented |
 | process  | —                       | planned       |
 | dynlib   | —                       | planned       |
 | mmap     | —                       | planned       |
@@ -106,6 +106,39 @@ The POSIX backend links the OS thread library (`-pthread`); the Windows backend
 uses only the CRT + kernel32. Mutexes are non-recursive; a condition variable is
 always waited on while holding its paired mutex.
 
+### `fs` — metadata, whole-file I/O, directory listing
+
+ISO `<stdio.h>` opens a file by name but cannot list a directory or report a
+file's type, size, or modification time — that needs the OS.
+
+```c
+#include "os_platform/fs.h"
+
+osp_fs_write_file("out.bin", bytes, n);   /* create/truncate, binary-safe */
+
+unsigned char *data; size_t len;
+osp_fs_read_file("out.bin", &data, &len); /* malloc'd, NUL-terminated; you free */
+free(data);
+
+osp_file_info info;
+osp_fs_stat("out.bin", &info);            /* is_dir / is_regular / size / mtime */
+if (osp_fs_exists("out.bin")) { /* … */ }
+
+static void on_entry(const char *name, void *user) { /* … */ }
+osp_fs_list_dir(".", on_entry, NULL);     /* callback per entry, skips . and .. */
+```
+
+Backends:
+
+| OS          | metadata              | read / write               | list                        |
+|-------------|-----------------------|----------------------------|-----------------------------|
+| macOS/Linux | `stat`                | `open`/`read` · `write`    | `opendir`/`readdir`         |
+| Windows     | `GetFileAttributesEx` | `CreateFile`+`ReadFile`/`WriteFile` | `FindFirstFile`/`FindNextFile` |
+
+`osp_fs_read_file` is binary-safe (length-based; embedded NULs preserved) and the
+allocation is guarded against `size_t` overflow. `mtime_unix_ns` is
+second-resolution on POSIX (portable `st_mtime`).
+
 ## Build & test
 
 ```sh
@@ -125,11 +158,13 @@ os-platform/
 ├── include/os_platform/
 │   ├── status.h                  # shared osp_status enum (all primitives)
 │   ├── clock.h                   # clock API
-│   └── thread.h                  # thread API
+│   ├── thread.h                  # thread API
+│   └── fs.h                      # fs API
 ├── src/
 │   ├── clock_posix.c   · clock_windows.c    # per-OS clock backends
-│   └── thread_posix.c  · thread_windows.c   # per-OS thread backends
-├── tests/clock_test.c  · thread_test.c      # per-primitive tests, run on each OS
+│   ├── thread_posix.c  · thread_windows.c   # per-OS thread backends
+│   └── fs_posix.c      · fs_windows.c       # per-OS fs backends
+├── tests/clock_test.c · thread_test.c · fs_test.c   # per-primitive tests
 ├── tools/run.sh  · run.ps1       # per-OS build drivers
 ├── BUILD  · BUILD_windows        # per-OS source selection
 └── required_capabilities.json    # CI needs gcc, clang, cl
