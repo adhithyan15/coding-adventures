@@ -40,12 +40,33 @@ use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 
 mod _grammar;
 
+/// Recursion-depth cap for the FLOW-MATIC [`GrammarParser`] — see
+/// [`GrammarParser::with_max_depth`] and
+/// [`parser::grammar_parser::DEFAULT_MAX_RULE_DEPTH`] for why the underlying
+/// guard exists at all.
+///
+/// Unlike its sibling crates in this same depth-cap hardening sweep, the
+/// FLOW-MATIC grammar has **no recursive shape at all**: `program =
+/// {statement} [program_end]`, and every `statement` clause (`input_clause`,
+/// `compare_clause`, `if_clause`, …) is flat — none reference `statement`,
+/// `clause`, or `program` back, directly or through any repetition/optional.
+/// There is no rule-reference cycle anywhere in the grammar, so depth cannot
+/// grow past a small constant per statement regardless of input size — no
+/// adversarial deep-nesting DoS vector exists to calibrate against.
+///
+/// `MAX_RULE_DEPTH` is still set to the shared crate's generic
+/// [`parser::grammar_parser::DEFAULT_MAX_RULE_DEPTH`] (128) for
+/// defense-in-depth and consistency with the rest of this sweep — comfortably
+/// above the grammar's real maximum call depth, so it can never reject a
+/// legitimate FLOW-MATIC program.
+const MAX_RULE_DEPTH: usize = parser::grammar_parser::DEFAULT_MAX_RULE_DEPTH;
+
 /// Create a [`GrammarParser`] wired to the FLOW-MATIC grammar and tokens, ready
 /// to call `.parse()`. Uses the panicking tokenizer; for the fully fallible
 /// path use [`try_parse_flow_matic`].
 pub fn create_flow_matic_parser(source: &str) -> GrammarParser {
     let tokens = tokenize_flow_matic(source);
-    GrammarParser::new(tokens, _grammar::parser_grammar())
+    GrammarParser::new(tokens, _grammar::parser_grammar()).with_max_depth(MAX_RULE_DEPTH)
 }
 
 /// Parse FLOW-MATIC `source` into a [`GrammarASTNode`] CST rooted at
@@ -62,6 +83,7 @@ pub fn parse_flow_matic(source: &str) -> GrammarASTNode {
 pub fn try_parse_flow_matic(source: &str) -> Result<GrammarASTNode, String> {
     let tokens = try_tokenize_flow_matic(source)?;
     GrammarParser::new(tokens, _grammar::parser_grammar())
+        .with_max_depth(MAX_RULE_DEPTH)
         .parse()
         .map_err(|e| format!("{e}"))
 }
@@ -265,5 +287,22 @@ mod tests {
     #[test]
     fn lexical_error_is_reported() {
         assert!(try_parse_flow_matic("(0) @ .").is_err());
+    }
+
+    /// `MAX_RULE_DEPTH` (set to the generic `DEFAULT_MAX_RULE_DEPTH` for
+    /// defense-in-depth — see that constant's doc comment for why this
+    /// grammar has no real recursive shape to calibrate against) must not
+    /// reject a legitimate program with many flat, non-nested numbered
+    /// statements. `{statement}` in `program = {statement} [program_end]`
+    /// loops rather than recurses, so breadth here costs no extra
+    /// rule-frame depth regardless of count.
+    #[test]
+    fn many_flat_statements_still_parse_under_the_default_cap() {
+        let mut src = String::new();
+        for i in 0..200 {
+            src.push_str(&format!("({i}) STOP .\n"));
+        }
+        let ast = root(&src);
+        assert!(has_rule(&ast, "stop_clause"));
     }
 }

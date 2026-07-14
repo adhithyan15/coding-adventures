@@ -195,6 +195,57 @@ pub fn create_twig_parser(source: &str) -> Result<GrammarParser, TwigParseError>
     Ok(create_twig_parser_from_tokens(tokens))
 }
 
+/// Recursion-depth cap for the [`GrammarParser`] itself — a *second*,
+/// independent layer of defense alongside this crate's existing
+/// [`check_paren_depth`]/[`MAX_PAREN_DEPTH`] pre-scan. That pre-scan
+/// already rejects pathological paren-nesting before the parser ever
+/// runs, but it only inspects LPAREN/RPAREN tokens; this cap protects the
+/// `GrammarParser`'s own `parse_rule` recursion directly; so a future
+/// grammar change that adds a recursive shape *not* delimited by literal
+/// parens (see [`parser::grammar_parser::DEFAULT_MAX_RULE_DEPTH`] for why
+/// the underlying guard exists at all) doesn't silently reopen the same
+/// class of native-stack-overflow DoS.
+///
+/// # Two independent recursive shapes
+///
+/// - **Paren application nesting** — `expr -> compound -> apply -> expr`
+///   (3 rule-frames per real nesting level).
+/// - **Type-annotation nesting** — `type_annotation -> type_annotation`,
+///   direct self-recursion via `LPAREN { type_annotation } RPAREN` (1
+///   rule-frame per real nesting level).
+///
+/// Measured (binary search, uncapped parser, on the true default-stack
+/// per-test worker thread — no `RUST_MIN_STACK` override and no explicit
+/// `Builder::stack_size`, matching what `cargo test` and a production
+/// caller both actually get — debug build, adversarial 5000-level input,
+/// bypassing `check_paren_depth` entirely to measure the parser's own
+/// floor): paren-application nesting safe through 280 rule-frames,
+/// crashes at 290; type-annotation nesting (the *binding*, lower floor)
+/// safe through 170, crashes at 180.
+///
+/// `MAX_RULE_DEPTH` is set to **120** — about 29% below the binding
+/// 170-rule-frame floor (comparable margin to sibling crates' 25-45%
+/// convention), independently confirmed not to crash a default-stack
+/// thread even thousands of rule-frames past the cap for either shape
+/// (see this crate's tests). Measured real-nesting headroom at 120
+/// (capped parser, so no crash risk): paren-application nesting parses
+/// cleanly up to 38 levels (39 trips the cap), type-annotation nesting up
+/// to 117 levels (118 trips the cap) — comfortably past any hand-written
+/// Twig program's real nesting.
+///
+/// Note this cap is *more* restrictive than `MAX_PAREN_DEPTH` (64) for the
+/// paren-application shape specifically: `MAX_PAREN_DEPTH`'s own pre-scan
+/// still admits up to 64 levels of `(((…)))`-style application nesting
+/// through `parse`/`parse_to_ast`, but at 3 rule-frames/level that would
+/// need `MAX_RULE_DEPTH` ≥ 192 to avoid re-rejecting anything
+/// `MAX_PAREN_DEPTH` already allows — which would exceed the
+/// type-annotation shape's own 170-rule-frame safety floor. Real Twig
+/// programs are single-digit-deep (per `MAX_PAREN_DEPTH`'s own doc
+/// comment), so this narrower envelope (39 vs. 64 levels) has no practical
+/// effect; it's flagged here so a future re-tuning of either constant
+/// doesn't assume the two guards agree.
+const MAX_RULE_DEPTH: usize = 120;
+
 /// Build a [`GrammarParser`] from a pre-tokenised stream.
 ///
 /// Useful for incremental editors / LSP-style integrations that already
@@ -203,9 +254,11 @@ pub fn create_twig_parser(source: &str) -> Result<GrammarParser, TwigParseError>
 /// Uses the build-time-compiled grammar — no runtime file I/O, no
 /// re-parsing per parser construction.  `GrammarParser::new` takes
 /// ownership of the grammar, so we clone the static reference; the
-/// shared underlying parsed grammar is also reused across calls.
+/// shared underlying parsed grammar is also reused across calls. The
+/// recursion-depth guard ([`MAX_RULE_DEPTH`]) is enabled as a second,
+/// independent layer of defense alongside [`check_paren_depth`].
 pub fn create_twig_parser_from_tokens(tokens: Vec<Token>) -> GrammarParser {
-    GrammarParser::new(tokens, twig_parser_grammar().clone())
+    GrammarParser::new(tokens, twig_parser_grammar().clone()).with_max_depth(MAX_RULE_DEPTH)
 }
 
 /// Borrow the build-time-compiled Twig parser grammar.
@@ -980,4 +1033,114 @@ mod tests {
         let p = parse(&src).expect("20-deep nest should parse");
         assert_eq!(p.forms.len(), 1);
     }
+}
+
+/// Regression tests for [`MAX_RULE_DEPTH`], one triple per independent
+/// recursive shape (see that constant's doc comment). These call
+/// [`create_twig_parser_from_tokens`] directly (NOT [`parse`]/
+/// [`parse_to_ast`]) since those higher-level entry points run
+/// [`check_paren_depth`] first, which would reject the same deep input for
+/// an unrelated reason before `MAX_RULE_DEPTH` ever got a chance to fire —
+/// these tests exist specifically to prove the *parser's own* guard works,
+/// independent of the pre-scan.
+#[cfg(test)]
+mod depth_guard_tests {
+    fn nested_apply_source(n: usize) -> String {
+        format!("{}1{}", "(".repeat(n), ")".repeat(n))
+    }
+
+    fn nested_type_annotation_source(n: usize) -> String {
+        format!("(type T {}{})", "(".repeat(n), ")".repeat(n))
+    }
+
+    macro_rules! depth_guard_triple {
+        ($mod_name:ident, $source_fn:ident, $up_to_cap:expr, $one_past_cap:expr) => {
+            mod $mod_name {
+                use super::$source_fn as nested_source;
+
+                fn parse_bypassing_prescan(src: &str) -> Result<(), String> {
+                    let tokens = super::super::tokenize_twig(src).map_err(|e| format!("{e}"))?;
+                    super::super::create_twig_parser_from_tokens(tokens)
+                        .parse()
+                        .map(|_| ())
+                        .map_err(|e| format!("{e}"))
+                }
+
+                /// Deeply-nested input must produce a recoverable error, not
+                /// overflow the native stack. Parses 5000 levels — far past
+                /// `MAX_RULE_DEPTH` — on a worker thread with a generous
+                /// 32 MiB stack, so the *guard* is what stops the
+                /// recursion, not the stack running out.
+                #[test]
+                fn test_deeply_nested_input_returns_error_not_overflow() {
+                    let handle = std::thread::Builder::new()
+                        .name(
+                            concat!(
+                                "twig-parser-depth-guard-",
+                                stringify!($mod_name),
+                                "-regression"
+                            )
+                            .to_string(),
+                        )
+                        .stack_size(32 * 1024 * 1024)
+                        .spawn(|| {
+                            let result = parse_bypassing_prescan(&nested_source(5000));
+                            assert!(
+                                result.is_err(),
+                                "deeply-nested input must fail with an error, not parse or crash"
+                            );
+                        })
+                        .expect("failed to spawn worker thread");
+                    handle
+                        .join()
+                        .expect("depth guard must keep the worker thread from crashing");
+                }
+
+                /// Input that nests *exactly up to* `MAX_RULE_DEPTH` still
+                /// parses cleanly, and one layer deeper cleanly trips the
+                /// guard. These exact boundary counts were found
+                /// empirically by binary-searching against increasing
+                /// nesting counts at the production cap — see
+                /// `MAX_RULE_DEPTH`'s doc comment.
+                #[test]
+                fn test_nesting_up_to_cap_still_parses() {
+                    assert!(
+                        parse_bypassing_prescan(&nested_source($up_to_cap)).is_ok(),
+                        "{} levels must stay under the cap",
+                        $up_to_cap
+                    );
+                    assert!(
+                        parse_bypassing_prescan(&nested_source($one_past_cap)).is_err(),
+                        "one nesting level past the cap's measured limit must fail"
+                    );
+                }
+
+                /// A caller relying on `MAX_RULE_DEPTH` must have the guard
+                /// trip *before* the native stack overflows on a
+                /// default-stack thread — otherwise a production caller
+                /// (e.g. an LSP integration calling
+                /// `create_twig_parser_from_tokens` directly, or `cargo
+                /// test`'s own per-test thread) would still crash. Parses
+                /// far-too-deep input on a worker thread with **no**
+                /// `stack_size` override (the same default a thread gets in
+                /// this environment, unmodified by any `RUST_MIN_STACK`
+                /// override). A clean `Err` (not a `join()` failure from a
+                /// crashed thread) proves `MAX_RULE_DEPTH` sits safely below
+                /// the native overflow point on the default stack.
+                #[test]
+                fn test_opt_in_cap_trips_before_overflow_on_default_stack() {
+                    let handle = std::thread::spawn(|| {
+                        let result = parse_bypassing_prescan(&nested_source(5000));
+                        assert!(result.is_err(), "deeply-nested input must error, not crash");
+                    });
+                    handle.join().expect(
+                        "MAX_RULE_DEPTH must trip BEFORE native overflow on the default stack",
+                    );
+                }
+            }
+        };
+    }
+
+    depth_guard_triple!(apply_shape, nested_apply_source, 38, 39);
+    depth_guard_triple!(type_annotation_shape, nested_type_annotation_source, 117, 118);
 }

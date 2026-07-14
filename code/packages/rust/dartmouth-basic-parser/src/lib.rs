@@ -113,6 +113,49 @@ mod _grammar;
 /// let ast = parser.parse().expect("parse failed");
 /// println!("{:?}", ast.rule_name);
 /// ```
+/// Recursion-depth cap for the Dartmouth BASIC [`GrammarParser`] — see
+/// [`GrammarParser::with_max_depth`] and
+/// [`parser::grammar_parser::DEFAULT_MAX_RULE_DEPTH`] for why the underlying
+/// guard exists at all (deep recursion through `parse_rule` can overflow the
+/// *native* thread stack — an uncatchable process abort — before this
+/// crate's own `Result`-returning entry points ever get a chance to report
+/// anything). Reachable via the `lang-aot` multi-language driver on
+/// arbitrary source files, a real attack surface.
+///
+/// # Three independent recursive shapes
+///
+/// This grammar has three *independent* recursion paths that must all be
+/// measured, since a single `MAX_RULE_DEPTH` bounds the parser's internal
+/// rule-invocation counter for any of them:
+///
+/// - **Paren/function-call nesting** — `expr -> term -> power -> unary ->
+///   primary -> expr` (5 rule-frames per real nesting level).
+/// - **Direct `power` self-recursion** — right-associative `^` via
+///   `power = unary [CARET power]` (1 rule-frame per real nesting level).
+/// - **Array-index nesting** — `variable -> expr -> term -> power ->
+///   unary -> primary -> variable` (6 rule-frames per real nesting
+///   level).
+///
+/// Measured (binary search, uncapped parser, on the true default-stack
+/// per-test worker thread — no `RUST_MIN_STACK` override and no explicit
+/// `Builder::stack_size`, matching what `cargo test` and a production
+/// caller both actually get — debug build, adversarial 5000-level input):
+/// paren/function-call and array-index nesting safe through 270
+/// rule-frames, crashes at 280; `power` self-recursion (the *binding*,
+/// lower floor) safe through 175, crashes at 176.
+///
+/// `MAX_RULE_DEPTH` is set to **120** — about 31% below the binding
+/// 175-rule-frame floor (comparable margin to sibling crates' 25-45%
+/// convention), independently confirmed not to crash a default-stack
+/// thread even thousands of rule-frames past the cap for any of the three
+/// shapes (see this crate's tests). Measured real-nesting headroom at 120
+/// (capped parser, so no crash risk): paren/function-call nesting parses
+/// cleanly up to 22 levels (23 trips the cap), `power`-chain up to 111
+/// levels (112 trips the cap), array-index nesting up to 18 levels (19
+/// trips the cap) — comfortably past any hand-written BASIC program's
+/// real nesting.
+const MAX_RULE_DEPTH: usize = 120;
+
 pub fn create_dartmouth_basic_parser(source: &str) -> GrammarParser {
     // Step 1: Tokenize the source using the dartmouth-basic-lexer.
     //
@@ -132,7 +175,7 @@ pub fn create_dartmouth_basic_parser(source: &str) -> GrammarParser {
     let tokens = tokenize_dartmouth_basic(source);
 
     let grammar = _grammar::parser_grammar();
-    GrammarParser::new(tokens, grammar)
+    GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH)
 }
 
 /// Parse Dartmouth BASIC source text into an AST.
@@ -941,4 +984,120 @@ mod tests {
         assert!(find_rule(&ast, "term"), "Expected term");
         assert!(find_rule(&ast, "power"), "Expected power");
     }
+}
+
+#[cfg(test)]
+fn nested_paren_source(n: usize) -> String {
+    format!("10 LET X = {}1{}\n", "(".repeat(n), ")".repeat(n))
+}
+
+#[cfg(test)]
+fn nested_power_source(n: usize) -> String {
+    format!("10 LET X = {}2\n", "2^".repeat(n))
+}
+
+#[cfg(test)]
+fn nested_index_source(n: usize) -> String {
+    format!("10 LET X = {}1{}\n", "A(".repeat(n), ")".repeat(n))
+}
+
+/// Regression tests for [`MAX_RULE_DEPTH`], one triple per independent
+/// recursive shape (see that constant's doc comment). Uses
+/// `create_dartmouth_basic_parser(..).parse()` directly (not the
+/// panicking [`parse_dartmouth_basic`] wrapper) since these tests need to
+/// observe the `Result` rather than unwind through a panic.
+#[cfg(test)]
+mod depth_guard_tests {
+    macro_rules! depth_guard_triple {
+        ($mod_name:ident, $source_fn:ident, $up_to_cap:expr, $one_past_cap:expr) => {
+            mod $mod_name {
+                use super::super::$source_fn as nested_source;
+
+                /// Deeply-nested input must produce a recoverable error, not
+                /// overflow the native stack. Parses 5000 levels — far past
+                /// `MAX_RULE_DEPTH` — on a worker thread with a generous
+                /// 32 MiB stack, so the *guard* is what stops the
+                /// recursion, not the stack running out.
+                #[test]
+                fn test_deeply_nested_input_returns_error_not_overflow() {
+                    let handle = std::thread::Builder::new()
+                        .name(
+                            concat!(
+                                "dartmouth-basic-depth-guard-",
+                                stringify!($mod_name),
+                                "-regression"
+                            )
+                            .to_string(),
+                        )
+                        .stack_size(32 * 1024 * 1024)
+                        .spawn(|| {
+                            let result =
+                                super::super::create_dartmouth_basic_parser(&nested_source(5000))
+                                    .parse();
+                            assert!(
+                                result.is_err(),
+                                "deeply-nested input must fail with an error, not parse or crash"
+                            );
+                        })
+                        .expect("failed to spawn worker thread");
+                    handle
+                        .join()
+                        .expect("depth guard must keep the worker thread from crashing");
+                }
+
+                /// Input that nests *exactly up to* `MAX_RULE_DEPTH` still
+                /// parses cleanly, and one layer deeper cleanly trips the
+                /// guard. These exact boundary counts were found
+                /// empirically by binary-searching against increasing
+                /// nesting counts at the production cap — see
+                /// `MAX_RULE_DEPTH`'s doc comment.
+                #[test]
+                fn test_nesting_up_to_cap_still_parses() {
+                    assert!(
+                        super::super::create_dartmouth_basic_parser(&nested_source($up_to_cap))
+                            .parse()
+                            .is_ok(),
+                        "{} levels must stay under the cap",
+                        $up_to_cap
+                    );
+                    assert!(
+                        super::super::create_dartmouth_basic_parser(&nested_source(
+                            $one_past_cap
+                        ))
+                        .parse()
+                        .is_err(),
+                        "one nesting level past the cap's measured limit must fail"
+                    );
+                }
+
+                /// A caller relying on `MAX_RULE_DEPTH` must have the guard
+                /// trip *before* the native stack overflows on a
+                /// default-stack thread — otherwise a production caller
+                /// (e.g. the `lang-aot` driver, or `cargo test`'s own
+                /// per-test thread) would still crash. Parses far-too-deep
+                /// input on a worker thread with **no** `stack_size`
+                /// override (the same default a thread gets in this
+                /// environment, unmodified by any `RUST_MIN_STACK`
+                /// override). A clean `Err` (not a `join()` failure from a
+                /// crashed thread) proves `MAX_RULE_DEPTH` sits safely below
+                /// the native overflow point on the default stack.
+                #[test]
+                fn test_opt_in_cap_trips_before_overflow_on_default_stack() {
+                    let handle = std::thread::spawn(|| {
+                        let result =
+                            super::super::create_dartmouth_basic_parser(&nested_source(5000))
+                                .parse();
+                        assert!(result.is_err(), "deeply-nested input must error, not crash");
+                    });
+                    handle.join().expect(
+                        "MAX_RULE_DEPTH must trip BEFORE native overflow on the default stack",
+                    );
+                }
+            }
+        };
+    }
+
+    depth_guard_triple!(paren_shape, nested_paren_source, 22, 23);
+    depth_guard_triple!(power_shape, nested_power_source, 111, 112);
+    depth_guard_triple!(index_shape, nested_index_source, 18, 19);
 }

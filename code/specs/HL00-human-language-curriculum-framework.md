@@ -450,10 +450,6 @@ may assume nothing and let a fluent reader move fast — it is optional
 scaffolding, not gated content). Sequence early words so their letters
 accumulate sensibly (Frequency-Driven Content Selection, below).
 
-(The Arabic track's current standalone Chapter-1 reading course predates this
-rule and is to be reworked into inline letter-introduction within the greeting
-lessons.)
-
 Grammar follows the identical principle — introduced in context, on the
 first word that needs it (the Grammar Lens section), never front-loaded.
 This matters most for a track like Tamil, where the learner is fluent and
