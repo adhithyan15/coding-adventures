@@ -1,0 +1,21 @@
+% ============================================================================
+% elements.query.adj — a worked recall over the grade-school elements library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is oxygen's atomic
+% number?": it states no chemistry fact — it only `import`s the grounded table
+% and asks binding queries. The engine resolves each `?` against the
+% `atomic_number` rows and returns the number + the table's source/locator/trust.
+% The third query runs the relation BACKWARD (bind the number, recall the
+% element). An element not in the table abstains honestly — the engine never
+% invents an atomic number.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli elements.query.adj
+% ============================================================================
+
+import "elements.adj"
+
+? atomic_number(hydrogen, $Z)          % expect 1
+? atomic_number(oxygen, $Z)            % expect 8
+? atomic_number($E, 6)                 % expect carbon — the reverse recall
+? atomic_number(kryptonite, $Z)        % expect abstain — not a chemical element
