@@ -1,0 +1,28 @@
+% ============================================================================
+% ideal-gas-law.query.adj — a worked application of the ideal gas law.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a gas-law word
+% problem: it states NO arithmetic. It `import`s the grounded law library, binds
+% each state variable it decomposed from the input (each `observe` is a
+% byte-provenance span the model cited), and asks the engine to APPLY the recalled
+% law. The native adj-lang engine substitutes the law's body, computes exactly on
+% the CPU, and returns the value carrying the law's NIST source/locator/trust —
+% the auditable chain.
+%
+% "One mole of an ideal gas at 273.15 K occupies 0.022414 m³. What is its
+%  pressure?"  → recall P = nRT/V, bind n = 1, T = 273.15, V = 0.022414,
+%  apply → ~101325 Pa (one standard atmosphere — this is exactly STP: 1 mol of
+%  ideal gas at the ice point occupies the molar volume 22.414 L, so the pressure
+%  comes back to 1 atm, the internal consistency check on R and the molar volume).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli ideal-gas-law.query.adj
+% ============================================================================
+
+import "ideal-gas-law.adj"
+
+% --- Ideal gas law at STP: 1 mol at 273.15 K in the molar volume 0.022414 m³. ---
+observe moles(1)                              % "…one mole of gas…"        (span cited by the model)
+observe temperature(273.15)                   % "…at 273.15 K…"            (span cited by the model)
+observe volume(0.022414)                      % "…occupying 0.022414 m³…"  (span cited by the model)
+? pressure(moles, temperature, volume)        % engine → ~101325 Pa (P = nRT/V, NIST CODATA R, authoritative)
