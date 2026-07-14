@@ -2,6 +2,20 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.32] - 2026-07-14
+
+### Added — CLOC12.193 PR2: array-literal `.length` fold end-to-end
+
+Picks up `closure-pass-constant-fold` 0.90.0 (the array-literal `.length` fold, PR1 #8336). Before it,
+closurec folded string-literal `.length` (`"abc".length` → `3`) but left `[1, 2, 3].length` intact; the
+reference Closure Compiler folds it to the element count. Now `g([1,2,3].length);` at SIMPLE emits
+`g(3);` — verified byte-identical to the real Closure jar across the full truth table (holes count,
+side-effecting elements and spreads decline). New `tests/diff/array-length/` fixture +
+`diff_array_length.rs` integration test assert the fold fires end-to-end (output contains `g(3)`, no
+residual `].length`), proving the optimization pipeline ran rather than falling back to WHITESPACE_ONLY.
+No CLI-surface change; PATCH bump `0.234.31` → `0.234.32` (help-markdown golden regenerated for the
+version line).
+
 ## [0.234.31] - 2026-07-14
 
 ### Added — CLOC12.192 PR2: ES async arrow functions end-to-end

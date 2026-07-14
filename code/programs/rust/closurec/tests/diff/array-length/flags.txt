@@ -1,0 +1,4 @@
+--js
+tests/diff/array-length/input/a.js
+--compilation_level
+SIMPLE
