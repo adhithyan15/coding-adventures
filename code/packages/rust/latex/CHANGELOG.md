@@ -2,6 +2,33 @@
 
 All notable changes to the full-fidelity LaTeX parser crate.
 
+## [0.71.0] — 2026-07-14
+
+### Added — single-integer TOTAL of the numbered labels (LTXDOC03 S35)
+
+A **new** public method `Document::numbered_label_count(&self) -> String` that renders the decimal
+**COUNT** of the labels S4 assigns a printed cross-reference number to — the `.len()` of the
+`number_labels().labels` numbering table — as one integer line. It is the **numbering-side companion**
+of S29's `label_definition_count`: where S29 counts *every* winning `\label` definition, S35 counts only
+the subset the numbering pass numbers — the labels on a **numbered section**, a **figure**, a **table**,
+or (since S8) a **labelled non-starred display equation**. An **inline** `\label` (in running text, a
+`LabelKind::Inline`) and a `\label` on a starred `\section*` receive no counter and are omitted from the
+numbering table, so they are excluded here — though S29 still counts them. The two totals are ordered by
+construction: **`numbered_label_count ≤ label_definition_count`**, because every numbered label is a
+winning definition (the numbering pass records only first-wins keys, exactly as S1 does) but not every
+winning definition is numbered; the difference `label_definition_count − numbered_label_count` is
+precisely the count of defined-but-unnumbered (inline / starred-section) labels. A key defined more than
+once contributes a **single** numbered row (first-definition-wins, matching S29) — S35 never
+double-counts. It reads only `number_labels().labels.len()` — never a `key`/`kind`/`number`, no source
+slicing at all — so every numbered label folds into one total. Being a COUNT renderer, its empty case
+(only inline labels, or no `\label`s at all) is the honest number `"0"` — **not** a `(no numbered
+labels)` marker (that discipline belongs to *list* renderers; this mirrors S27/S28/S29/S30/S31/S32/S33/S34).
+One line, no trailing newline. E.g. `\section{Intro}\label{sec:i}` plus an inline `\label{note}` → `1`
+(the section is numbered; the inline `note` is not — S29 reports `2`, and the gap `2 − 1 = 1` is the
+inline label). It is a read-only view over `number_labels()`; every S1–S34 output is left
+**byte-for-byte unchanged**; S35 is purely additive and leaves the `to_latex()` round-trip fixed point
+intact. Total & panic-free.
+
 ## [0.70.0] — 2026-07-11
 
 ### Added — single-integer TOTAL of the duplicate ("multiply defined") `\label`s (LTXDOC03 S34)

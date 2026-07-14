@@ -2784,3 +2784,86 @@ additivity check that S20's `duplicate_label_definitions`, S22's `label_definiti
 `citation_count`, S32's `unresolved_citation_count`, and S33's `duplicate_bibliography_count` all still
 produce their exact prior strings, with S34 returning `"1"` for a body defining `dup` twice). All prior
 S1–S33 tests pass unchanged. No `cargo fmt`, no grammar regen, no new dependencies.
+
+## 41. S35 — single-integer total of the numbered labels (`numbered_label_count`)
+
+### 41.1 Motivation
+
+S29 (`label_definition_count`) counts every **winning** label definition — the `.len()` of
+`resolve_references().definitions`, one per distinct `\label` key. But not every defined label receives a
+**printed cross-reference number**. S4 (`number_labels`) walks the document assigning counters, and it numbers
+only the labels attached to a **numbered section**, a **figure**, a **table**, or (since S8) a **labelled
+non-starred display equation**. A `\label` sitting in running text — a `LabelKind::Inline` label — and a
+`\label` on a starred `\section*` receive **no** counter and are **omitted** from the numbering table
+entirely. So a reader often wants the *other* total: not "how many labels are defined?" (S29) but "how many
+labels actually get a number a `\ref` can print?" — the size of the S4 numbering table, answered at a glance.
+
+S35 is the **numbering-side companion** of S29's definition total. Where S29 counts the winning `definitions`,
+S35 counts the subset of those that S4 numbers — collapsing the whole `number_labels().labels` table to its
+decimal `.len()`. The two totals are ordered by construction: **`numbered_label_count` ≤ `label_definition_count`**,
+because every numbered label is a winning definition (the numbering pass records only first-wins keys, exactly
+as S1 does) but not every winning definition is numbered (the inline / starred-section labels are the gap). The
+difference `label_definition_count − numbered_label_count` is precisely the count of defined-but-unnumbered
+labels — the inline labels S4 leaves out.
+
+### 41.2 Why a new method — additive by construction
+
+S35 adds a **new public method** `Document::numbered_label_count(&self) -> String`. It is a pure, read-only
+render of `number_labels().labels.len()` — a *second view* of the exact table S4's `number_labels` builds. It
+reuses that table verbatim (never re-walking the body itself — it calls `number_labels`, which does the one
+walk), so the report can never drift from the S4 numbering it summarises, and counting never adds, drops, or
+reorders rows relative to what `number_labels` produced. It mutates nothing and changes no S1–S34 output —
+including `to_latex()`'s round-trip fixed point — byte-for-byte. Like S11–S34 it is a method the caller invokes
+directly.
+
+### 41.3 The rendering rule
+
+The output is the decimal `.len()` of the `number_labels().labels` table, rendered as its `String`, **always**
+on a single line with **no** trailing newline. There is no ordering question (a single integer has no order) —
+only `.len()` is read, with **no** source slicing at all, and never a `key`/`kind`/`number`. Because the
+numbering pass already records each key at most once (first-definition-wins), a key defined *twice* contributes
+**one** numbered row, not two — S35 counts distinct numbered keys, exactly as S29 counts distinct defined keys.
+Being a **count** renderer, its empty case (no numberable labels — e.g. a document whose only `\label`s are
+inline, or no `\label`s at all) is the honest number `"0"` — **not** a `(no numbered labels)` marker, mirroring
+S27/S28/S29/S30/S31/S32/S33/S34 exactly.
+
+### 41.4 The exact rendering contract — `Document::numbered_label_count(&self) -> String`
+
+- Read `number_labels().labels.len()` and render it with `.to_string()` → the decimal count, one line, no
+  trailing newline. There is **no** source slicing at all, so the render needs no source borrow and can never
+  index out of bounds.
+- Only the **numbered** labels are counted — sections (numbered, non-starred), figures, tables, and labelled
+  non-starred display equations. An **inline** `\label` (in running text) and a `\label` on a starred
+  `\section*` receive no counter and are absent from `number_labels().labels`, so they are excluded by
+  construction; their keys are still counted by S29 (they are winning definitions), which is exactly why
+  `numbered_label_count ≤ label_definition_count`.
+- A key defined more than once contributes a single numbered row (first-definition-wins, matching S1/S29), so
+  S35 never double-counts a duplicated key. The `key`/`kind`/`number` are never read.
+- The empty case (no numberable labels) returns the honest number `"0"` — **not** a `(no numbered labels)`
+  marker, because S35 is a count renderer (mirroring S27–S34).
+
+Example (a body with `\section{Intro}\label{sec:i}` and an inline `\label{note}` in a paragraph):
+
+```text
+1
+```
+
+Only `sec:i` is numbered (`1`); the inline `note` is a winning definition (part of the `2` S29 reports) but
+carries no counter, so it is absent from the numbering table. The gap `2 − 1 = 1` is exactly the inline label.
+
+### 41.5 Public API (added in S35)
+
+One new method: `Document::numbered_label_count(&self) -> String`. No existing type, field, counter, or
+signature changes; `number_labels` and every S1–S34 method are unchanged; no AST or grammar change; no new
+dependency, no `unsafe`, no I/O.
+
+### 41.6 Verification (S35)
+
+`cargo test -p latex` green (6 new S35 tests: a mixed document (numbered section + figure + table + inline
+label) returning the count of the numbered subset and cross-checked to be strictly below S29's definition
+total by the inline count; an all-numbered document where `numbered_label_count == label_definition_count`; an
+inline-only document returning `"0"` (with S29 non-zero, proving the ≤ gap); a no-`\label` document returning
+`"0"`; a duplicated-key document proving first-wins gives one numbered row (not two); and an additivity check
+that S4's numbering table, S22's `label_definitions`, and the totals-family renderers S27–S34 all still produce
+their exact prior strings, with S35 reporting the numbered subset). All prior S1–S34 tests pass unchanged. No
+`cargo fmt`, no grammar regen, no new dependencies.
