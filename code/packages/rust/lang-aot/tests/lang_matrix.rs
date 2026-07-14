@@ -448,7 +448,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "((lambda (x) (+ x 1)) 41)",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Wasm, Jvm, Clr],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
     },
     // Twig — E6d-7: a **capturing** closure. The outer lambda returns an inner
     // one that captures `x`; applying it threads the captured 40 + the arg 2.
@@ -459,7 +459,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(((lambda (x) (lambda (y) (+ x y))) 40) 2)",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Wasm, Jvm, Clr],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
     },
     // Twig — E4 literal `string-length`. The compiler lowers
     // `(string-length "HELLO")` to shared `str_const` + `str_len`, avoiding the
