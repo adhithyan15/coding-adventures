@@ -483,6 +483,20 @@ pub fn parser_grammar() -> ParserGrammar {
                             GrammarElement::Literal { value: r#"NOT"#.to_string() },
                             GrammarElement::Literal { value: r#"NULL"#.to_string() },
                         ] },
+                        // `x IS NOT <expr>` / `x IS <expr>` — null-safe (in)equality.
+                        // These come AFTER the IS NULL / IS NOT NULL sequences so
+                        // ordered-choice matches the NULL forms first (NULL is
+                        // itself a valid `additive`); and `IS NOT <expr>` before
+                        // `IS <expr>` so the NOT form is tried first.
+                        GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Literal { value: r#"IS"#.to_string() },
+                            GrammarElement::Literal { value: r#"NOT"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"additive"#.to_string() },
+                        ] },
+                        GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Literal { value: r#"IS"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"additive"#.to_string() },
+                        ] },
                     ] }) },
             ] },
             line_number: 68,

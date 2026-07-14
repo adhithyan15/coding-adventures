@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.10] - Unreleased
+
+### Added
+
+- **`IS <expr>` / `IS NOT <expr>` (null-safe (in)equality).** Two `comparison`
+  alternatives added AFTER the `IS NULL` / `IS NOT NULL` sequences (so those
+  still match first) and with `IS NOT <expr>` before `IS <expr>`. The planner
+  (sql-planner 0.2.9) lowers them onto a CASE, so no codegen/VM change.
+
 ## [0.1.9] - Unreleased
 
 ### Added

@@ -556,6 +556,22 @@ mod tests {
         assert!(find_rule(&ast, "comparison"), "Expected comparison");
     }
 
+    /// `IS <expr>` / `IS NOT <expr>` (null-safe (in)equality) parse as comparison
+    /// forms, without disturbing `IS NULL` / `IS NOT NULL` (which must still
+    /// match their dedicated sequences first).
+    #[test]
+    fn test_parse_is_operator() {
+        for q in [
+            "SELECT x FROM t WHERE a IS b",
+            "SELECT x FROM t WHERE a IS NOT b",
+            "SELECT x FROM t WHERE a IS NULL",
+            "SELECT x FROM t WHERE a IS NOT NULL",
+        ] {
+            let ast = assert_program_root(q);
+            assert!(find_rule(&ast, "comparison"), "Expected comparison for {q:?}");
+        }
+    }
+
     /// The `GLOB` and `NOT GLOB` infix operators parse as comparison forms
     /// (the planner lowers them onto the `glob` builtin).
     #[test]
