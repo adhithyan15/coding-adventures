@@ -588,6 +588,21 @@ mod tests {
         }
     }
 
+    /// `IS [NOT] DISTINCT FROM` (the standard-SQL null-safe compare) parses as a
+    /// comparison — its DISTINCT sequences are matched ahead of the plain
+    /// `IS [NOT] <expr>` forms, and `IS NULL` still works unchanged.
+    #[test]
+    fn test_parse_is_distinct_from() {
+        for q in [
+            "SELECT x FROM t WHERE a IS DISTINCT FROM b",
+            "SELECT x FROM t WHERE a IS NOT DISTINCT FROM b",
+            "SELECT x FROM t WHERE a IS NULL",
+        ] {
+            let ast = assert_program_root(q);
+            assert!(find_rule(&ast, "comparison"), "Expected comparison for {q:?}");
+        }
+    }
+
     /// The `GLOB` and `NOT GLOB` infix operators parse as comparison forms
     /// (the planner lowers them onto the `glob` builtin).
     #[test]

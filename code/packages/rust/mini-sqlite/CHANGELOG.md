@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.5.31 — `IS [NOT] DISTINCT FROM` (standard-SQL null-safe compare)
+
+`SELECT a IS DISTINCT FROM b`, `a IS NOT DISTINCT FROM b`, and the WHERE-predicate
+form now parse and run: `IS NOT DISTINCT FROM` is the null-safe equality (both-NULL
+is "not distinct" = equal, one-NULL distinct, values compared otherwise) and `IS
+DISTINCT FROM` is its negation — the SQL-standard spelling of the `IS`/`IS NOT`
+operator merged earlier. It is lowered entirely in the planner (sql-parser 0.1.15
+grammar; sql-planner 0.2.14 inverts the sense on DISTINCT) onto the existing
+`plan_is_distinct` null-safe-CASE machinery — no new codegen or VM. Two
+differential-oracle cases (the four-combination table + a WHERE predicate) diff
+against real bundled SQLite.
+
 ## 0.5.30 — Expr-level `COLLATE` in comparisons
 
 `x = y COLLATE NOCASE`, `a < b COLLATE RTRIM`, `WHERE name = 'foo' COLLATE NOCASE`

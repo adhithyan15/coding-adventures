@@ -2,6 +2,16 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.14] - Unreleased
+
+### Added
+
+- **`IS [NOT] DISTINCT FROM` lowered onto `plan_is_distinct`.** The IS handler now
+  inverts the sense when `DISTINCT` is present: `IS NOT DISTINCT FROM` is the
+  null-safe *equality* (`x IS y`) and `IS DISTINCT FROM` its negation (`x IS NOT
+  y`). No new codegen/VM — reuses the null-safe CASE machinery from the IS
+  slice.
+
 ## [0.2.13] - Unreleased
 
 ### Added
