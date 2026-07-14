@@ -45,6 +45,24 @@ scope") defers them to their own follow-on items, since the shared VM has
 no existing handler for any of them (unlike `D`/`Integrate`, which are
 already fully implemented and used unchanged).
 
+## Vectors/matrices (D-5)
+
+`[a, b, c]` and `[a, b, c; d, e, f]` lower to structural `List` data —
+`List[a, b, c]` and `List[List[a, b, c], List[d, e, f]]` respectively,
+mirroring Wolfram's `{a, b}` → `List[a, b]`. The grammar has one `vector`
+rule for both shapes; `lower_vector` tells them apart by *counting* how
+many `row`s were parsed (one row → flat vector, more than one → matrix).
+This is **structural only** — no linear-algebra evaluation (matrix
+multiply, determinant, …) is wired here (MA07 §2/§4); elements still
+evaluate individually through the existing arithmetic handlers:
+
+```rust
+use coding_adventures_derive_runtime::eval;
+
+assert_eq!(eval("[1 + 1, 2*3, 2^3]\n").unwrap(), "#1: [2, 6, 8]\n");
+assert_eq!(eval("[1, 2; 3, 4]\n").unwrap(), "#1: [1, 2; 3, 4]\n");
+```
+
 ## Usage
 
 ```rust

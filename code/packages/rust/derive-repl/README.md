@@ -31,8 +31,8 @@ Derive (on the shared symbolic stack) — one statement per line, type QUIT to e
   returns to zero; unlike `wolfram-repl` there is no string/comment state to
   track (this subset has neither — MA07 §4).
 - **`QUIT`/`EXIT`** (case-insensitive) or Ctrl-D ends the session.
-- **Non-fatal errors** — a surface error (parse failure, a deferred D-5
-  vector literal, …) prints and the session keeps working.
+- **Non-fatal errors** — a surface error (parse failure, a malformed
+  `Assign` LHS, …) prints and the session keeps working.
 
 ## Security: bounded line reads
 

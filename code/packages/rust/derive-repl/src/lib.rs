@@ -269,12 +269,14 @@ mod tests {
 
     #[test]
     fn continues_while_a_bracket_is_open() {
-        // A matrix/vector literal spanning lines — this crate doesn't
-        // evaluate it (D-5), but the REPL still buffers correctly and the
-        // session surfaces the deferral as a clean error.
+        // A vector literal spanning lines — buffers until the closing `]`,
+        // then evaluates to a List (D-5).
         let mut r = DeriveRepl::new();
         assert_eq!(r.feed("[1,"), ReplResponse::NeedMore);
-        assert!(matches!(r.feed("2, 3]"), ReplResponse::Output(_)));
+        assert!(matches!(
+            r.feed("2, 3]"),
+            ReplResponse::Output(t) if t.contains("[1, 2, 3]")
+        ));
     }
 
     #[test]

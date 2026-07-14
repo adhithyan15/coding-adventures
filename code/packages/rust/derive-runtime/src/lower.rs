@@ -47,13 +47,18 @@
 //! bare `NAME` in `F(x, y) := …`'s argument position already lowers straight
 //! to a plain `Symbol`, the exact shape `define_handler` binds against.
 //!
-//! ## Vectors/matrices are deferred to D-5
+//! ## Vectors/matrices as structural `List` data (D-5)
 //!
-//! `derive-parser` already parses `[a, b, c]` / `[a, b; c, d]` (D-3 syntax
-//! scope), but MA07 §2 scopes their `List`-lowering to a separate D-5 item.
-//! `vector`/`row` nodes therefore return a [`LowerError`] here rather than
-//! silently mis-lowering — the same "reject, don't guess" discipline
-//! `lower_node`'s catch-all arm already applies to any other unhandled rule.
+//! `derive-parser` parses `[a, b, c]` / `[a, b; c, d]` as a single `vector`
+//! rule — `vector = LBRACKET row { SEMI row } RBRACKET`, `row = expr { COMMA
+//! expr }` — with no separate grammar rule distinguishing "vector" from
+//! "matrix" shape. [`lower_vector`] draws that distinction purely by
+//! *counting* how many `row` children were parsed (per the grammar file's
+//! own comment on `vector`): exactly one `row` lowers to a flat
+//! `List(elems…)` (a vector); more than one lowers to a `List` of per-row
+//! `List`s (a matrix), mirroring Wolfram's `{a, b}` → `List[a, b]`. Per MA07
+//! §2/§4, this is *structural* only — no linear-algebra evaluation (matrix
+//! multiply, determinant, …) is wired here; that is separate, later work.
 
 use lexer::token::Token;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
@@ -141,11 +146,11 @@ fn lower_node(node: &GrammarASTNode) -> Result<IRNode, LowerError> {
             "power" => lower_power(node),
             "postfix" => lower_postfix(node),
             "atom" => lower_atom(node),
-            "vector" | "row" => Err(LowerError::new(format!(
-                "`{}` literals are not lowered until D-5 (MA07 §2) — vectors/matrices \
-                 parse (D-3) but do not yet evaluate",
-                node.rule_name
-            ))),
+            "vector" => lower_vector(node),
+            "row" => Err(LowerError::new(
+                "a `row` node must be lowered via `lower_vector`'s row-counting logic, \
+                 not `lower_node` directly",
+            )),
             "group" => lower_group(node),
             "arglist" => Err(LowerError::new(
                 "an arglist cannot be lowered as a scalar expression",
@@ -379,6 +384,34 @@ fn lower_postfix(node: &GrammarASTNode) -> Result<IRNode, LowerError> {
 
 /// `arglist = expr { COMMA expr }` — lower each comma-separated argument.
 fn lower_arglist(node: &GrammarASTNode) -> Result<Vec<IRNode>, LowerError> {
+    child_nodes(node).map(lower_node).collect()
+}
+
+/// `vector = LBRACKET row { SEMI row } RBRACKET` (D-5, MA07 §2/§3).
+///
+/// A vector `[a, b, c]` parses as exactly one `row`; a matrix `[a, b, c; d,
+/// e, f]` parses as more than one — the grammar has no separate rule for the
+/// two shapes (see `derive.grammar`'s own comment on `vector`), so this is
+/// where they're told apart, purely by counting `row` children: one row
+/// lowers to a flat `List(elems…)`, more than one lowers to a `List` of
+/// per-row `List`s — `[a,b,c]` → `List[a,b,c]`, `[a,b,c;d,e,f]` →
+/// `List[List[a,b,c], List[d,e,f]]`, matching MA07 §3's table exactly.
+fn lower_vector(node: &GrammarASTNode) -> Result<IRNode, LowerError> {
+    let rows: Vec<&GrammarASTNode> = child_nodes(node).filter(|n| n.rule_name == "row").collect();
+    if rows.len() == 1 {
+        Ok(apply(sym(LIST), lower_row(rows[0])?))
+    } else {
+        let row_lists = rows
+            .into_iter()
+            .map(|row| Ok(apply(sym(LIST), lower_row(row)?)))
+            .collect::<Result<Vec<IRNode>, LowerError>>()?;
+        Ok(apply(sym(LIST), row_lists))
+    }
+}
+
+/// `row = expr { COMMA expr }` — lower each comma-separated element (mirrors
+/// [`lower_arglist`]'s identical shape).
+fn lower_row(node: &GrammarASTNode) -> Result<Vec<IRNode>, LowerError> {
     child_nodes(node).map(lower_node).collect()
 }
 
@@ -795,10 +828,75 @@ mod tests {
     }
 
     #[test]
-    fn vector_and_matrix_literals_are_deferred_to_d5() {
-        let ast = parse_derive("[a, b, c]\n");
-        let err = lower_program(&ast).expect_err("vector lowering must be deferred");
-        assert!(err.message().contains("D-5"), "got {err:?}");
+    fn vector_literal_lowers_to_flat_list() {
+        // [a, b, c] -> List(a, b, c) — one row.
+        assert_eq!(
+            lower_one("[a, b, c]\n"),
+            apply(sym(LIST), vec![sym("a"), sym("b"), sym("c")])
+        );
+    }
+
+    #[test]
+    fn matrix_literal_lowers_to_list_of_row_lists() {
+        // [a, b; c, d] -> List(List(a, b), List(c, d)) — two rows.
+        assert_eq!(
+            lower_one("[a, b; c, d]\n"),
+            apply(
+                sym(LIST),
+                vec![
+                    apply(sym(LIST), vec![sym("a"), sym("b")]),
+                    apply(sym(LIST), vec![sym("c"), sym("d")]),
+                ]
+            )
+        );
+    }
+
+    #[test]
+    fn single_element_vector_lowers_to_singleton_list() {
+        assert_eq!(lower_one("[5]\n"), apply(sym(LIST), vec![int(5)]));
+    }
+
+    #[test]
+    fn three_row_matrix_lowers_to_three_row_lists() {
+        // [1; 2; 3] -> List(List(1), List(2), List(3)) — three one-element rows.
+        assert_eq!(
+            lower_one("[1; 2; 3]\n"),
+            apply(
+                sym(LIST),
+                vec![
+                    apply(sym(LIST), vec![int(1)]),
+                    apply(sym(LIST), vec![int(2)]),
+                    apply(sym(LIST), vec![int(3)]),
+                ]
+            )
+        );
+    }
+
+    #[test]
+    fn vector_of_expressions_lowers_each_element() {
+        // [x + 1, x * 2] -> List(Add(x, 1), Times(x, 2))
+        assert_eq!(
+            lower_one("[x + 1, x * 2]\n"),
+            apply(
+                sym(LIST),
+                vec![
+                    apply(sym(ADD), vec![sym("x"), int(1)]),
+                    apply(sym(MUL), vec![sym("x"), int(2)]),
+                ]
+            )
+        );
+    }
+
+    #[test]
+    fn vector_assigned_to_a_variable() {
+        // v := [1, 2, 3]  ->  Assign(v, List(1, 2, 3))
+        assert_eq!(
+            lower_one("v := [1, 2, 3]\n"),
+            apply(
+                sym(symbolic_ir::ASSIGN),
+                vec![sym("v"), apply(sym(LIST), vec![int(1), int(2), int(3)])]
+            )
+        );
     }
 
     #[test]

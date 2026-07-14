@@ -448,9 +448,22 @@ mod tests {
     }
 
     #[test]
-    fn vector_literal_is_a_clean_error_not_a_panic() {
-        // Deferred to D-5 (see crate::lower) — must surface as Err, not crash.
-        assert!(eval("[1, 2, 3]\n").is_err());
+    fn vector_literal_evaluates_elementwise() {
+        // [1+1, 2*3, 2^3] -> [2, 6, 8] — a List's own head is data (held), but
+        // each element still evaluates through the shared arithmetic handlers.
+        assert_eq!(eval("[1 + 1, 2*3, 2^3]\n").unwrap(), "#1: [2, 6, 8]\n");
+    }
+
+    #[test]
+    fn matrix_literal_evaluates_end_to_end() {
+        assert_eq!(eval("[1 + 1, 2; 3, 4 * 2]\n").unwrap(), "#1: [2, 2; 3, 8]\n");
+    }
+
+    #[test]
+    fn vector_assignment_persists_across_calls() {
+        let mut s = DeriveSession::new();
+        assert_eq!(s.feed("v := [1, 2, 3]\n").unwrap(), "#1: [1, 2, 3]\n");
+        assert_eq!(s.feed("v\n").unwrap(), "#2: [1, 2, 3]\n");
     }
 
     #[test]
