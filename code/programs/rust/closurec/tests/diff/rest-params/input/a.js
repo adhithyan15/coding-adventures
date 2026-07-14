@@ -1,0 +1,1 @@
+function f(...a){return a.length} g(f(1 + 2, 3));
