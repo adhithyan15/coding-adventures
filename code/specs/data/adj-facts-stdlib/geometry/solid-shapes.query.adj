@@ -1,0 +1,19 @@
+% ============================================================================
+% solid-shapes.query.adj — a worked recall over the geometry solid-shapes library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how many faces does a
+% cube have?": it states no geometry fact — it only `import`s the grounded
+% table and asks binding queries. The engine resolves each `?` against the
+% `solid_faces` rows and returns the count + the table's source/locator/trust.
+% A solid (or non-solid) not in the table abstains honestly — the engine never
+% invents a count.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli solid-shapes.query.adj
+% ============================================================================
+
+import "solid-shapes.adj"
+
+? solid_faces(cube, $Faces)            % expect 6
+? solid_faces(icosahedron, $Faces)     % expect 20
+? solid_faces(sphere, $Faces)          % expect abstain — a sphere has no flat faces

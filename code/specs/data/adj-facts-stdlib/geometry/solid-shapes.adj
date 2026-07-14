@@ -1,0 +1,40 @@
+% ============================================================================
+% solid-shapes — how many faces each common solid has (adj-facts-stdlib, GEOMETRY).
+% ============================================================================
+% A geometry facts library, the 3-D sibling of shapes.adj (polygon -> sides):
+% how many flat faces each Platonic solid has — "a cube has six faces, a
+% tetrahedron (a triangular pyramid) has four." Recall is a binding query:
+%
+%     ? solid_faces(cube, $Faces)      % 6
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `solid_faces(solid, faces)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the count
+% WITH its source, on the CPU, with zero model calls, and abstains on a solid not
+% in the table. Because the `faces` value is a NUMBER, a recalled count composes
+% straight into a formula (Euler's V - E + F = 2 for convex polyhedra): the same
+% concrete bridge from RECALL to COMPUTE as its 2-D sibling.
+%
+% Provenance: the five solid names and their face counts are copied from the one
+% Wolfram MathWorld "Platonic Solid" sentence that lists them together —
+% "The ordered number of faces for the Platonic solids are 4, 6, 8, 12, 20 ... in
+% the order tetrahedron, cube, octahedron, dodecahedron, icosahedron" — so each
+% name->count pair below is read straight off that ordered list (tetrahedron=4,
+% cube=6, octahedron=8, dodecahedron=12, icosahedron=20). `trust authoritative`
+% — a primary mathematics reference. Nothing here is asserted from memory. (See
+% ../README.md; feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table solid_faces {
+    columns solid, faces
+
+    row (tetrahedron, 4)
+    row (cube, 6)
+    row (octahedron, 8)
+    row (dodecahedron, 12)
+    row (icosahedron, 20)
+
+    source "The ordered number of faces for the Platonic solids are 4, 6, 8, 12, 20 (OEIS A053016; in the order tetrahedron, cube, octahedron, dodecahedron, icosahedron)"
+    locator "https://mathworld.wolfram.com/PlatonicSolid.html"
+    trust authoritative
+}
