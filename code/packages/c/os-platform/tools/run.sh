@@ -61,4 +61,9 @@ PLATFORM_LIBS=""
 export PLATFORM_LIBS
 platform_build_and_run c fs-tests tests/fs_test.c src/fs_posix.c || rc=1
 
+# process — POSIX backend (fork/execv/waitpid). No extra OS library.
+PLATFORM_LIBS=""
+export PLATFORM_LIBS
+platform_build_and_run c process-tests tests/process_test.c src/process_posix.c || rc=1
+
 exit "$rc"

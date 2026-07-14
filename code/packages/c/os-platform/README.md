@@ -21,9 +21,9 @@ exactly one backend and the code contains no `#if defined(__linux__)` mazes.
 |----------|-------------------------|---------------|
 | `clock`  | `os_platform/clock.h`   | ✅ implemented |
 | `thread` | `os_platform/thread.h`  | ✅ implemented |
-| `fs`     | `os_platform/fs.h`      | ✅ implemented |
-| process  | —                       | planned       |
-| dynlib   | —                       | planned       |
+| `fs`      | `os_platform/fs.h`      | ✅ implemented |
+| `process` | `os_platform/process.h` | ✅ implemented |
+| dynlib    | —                       | planned       |
 | mmap     | —                       | planned       |
 
 All primitives share the `osp_status` return convention from
@@ -139,6 +139,33 @@ Backends:
 allocation is guarded against `size_t` overflow. `mtime_unix_ns` is
 second-resolution on POSIX (portable `st_mtime`).
 
+### `process` — spawn a child, wait, read its exit code
+
+ISO `system()` blocks, needs a shell, and can't reliably report the exit code —
+process control is bucket B.
+
+```c
+#include "os_platform/process.h"
+
+const char *argv[] = { "cat", "notes.txt", NULL };
+osp_process *p;
+osp_process_spawn(&p, "/bin/cat", argv);   /* explicit path — no shell, no PATH */
+int code;
+osp_process_wait(p, &code);                /* blocks, reports exit code, frees p */
+```
+
+Backends:
+
+| OS          | spawn              | wait                   | exit code            |
+|-------------|--------------------|------------------------|----------------------|
+| macOS/Linux | `fork` + `execv`   | `waitpid`              | `WIFEXITED`/`WEXITSTATUS` (128+signo if signalled) |
+| Windows     | `CreateProcess`    | `WaitForSingleObject`  | `GetExitCodeProcess` |
+
+**No shell, no PATH search:** `path` is handed to `execv`/`CreateProcess`
+directly, so there is no shell word-splitting, globbing, or injection surface.
+On Windows the backend re-quotes `argv` into a command line using the exact
+`CommandLineToArgvW` rules, so the child reconstructs the caller's `argv` intact.
+
 ## Build & test
 
 ```sh
@@ -159,12 +186,14 @@ os-platform/
 │   ├── status.h                  # shared osp_status enum (all primitives)
 │   ├── clock.h                   # clock API
 │   ├── thread.h                  # thread API
-│   └── fs.h                      # fs API
+│   ├── fs.h                      # fs API
+│   └── process.h                 # process API
 ├── src/
-│   ├── clock_posix.c   · clock_windows.c    # per-OS clock backends
-│   ├── thread_posix.c  · thread_windows.c   # per-OS thread backends
-│   └── fs_posix.c      · fs_windows.c       # per-OS fs backends
-├── tests/clock_test.c · thread_test.c · fs_test.c   # per-primitive tests
+│   ├── clock_posix.c   · clock_windows.c     # per-OS clock backends
+│   ├── thread_posix.c  · thread_windows.c    # per-OS thread backends
+│   ├── fs_posix.c      · fs_windows.c        # per-OS fs backends
+│   └── process_posix.c · process_windows.c   # per-OS process backends
+├── tests/clock_test.c · thread_test.c · fs_test.c · process_test.c
 ├── tools/run.sh  · run.ps1       # per-OS build drivers
 ├── BUILD  · BUILD_windows        # per-OS source selection
 └── required_capabilities.json    # CI needs gcc, clang, cl
