@@ -55,8 +55,9 @@ functions).
 `[a, b, c]` is a one-row vector; `[a, b, c; d, e, f]` is a matrix, rows
 separated by `;` (the *only* use of `;` in this subset — Derive has no
 general statement terminator). Both parse through the same `vector` rule;
-the row count (one vs. more than one) is what a future D-4/D-5 lowering
-uses to decide between a flat `List[...]` and a `List` of row-`List`s.
+the row count (one vs. more than one) is what `derive-runtime`'s D-5
+lowering uses to decide between a flat `List[...]` and a `List` of
+row-`List`s.
 
 ## Usage
 

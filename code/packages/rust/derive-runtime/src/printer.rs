@@ -29,8 +29,8 @@
 
 use symbolic_ir::{
     IRApply, IRNode, ACOS, ACOSH, ADD, AND, ASIN, ASINH, ATAN, ATANH, COS, COSH, COTH, CSCH, D,
-    DIV, EQUAL, EXP, GREATER, GREATER_EQUAL, IF, INTEGRATE, LESS, LESS_EQUAL, LOG, MUL, NEG, NOT,
-    OR, POW, SECH, SIN, SINH, SQRT, SUB, TAN, TANH,
+    DIV, EQUAL, EXP, GREATER, GREATER_EQUAL, IF, INTEGRATE, LESS, LESS_EQUAL, LIST, LOG, MUL, NEG,
+    NOT, OR, POW, SECH, SIN, SINH, SQRT, SUB, TAN, TANH,
 };
 
 const PREC_LOWEST: u8 = 0;
@@ -114,6 +114,7 @@ fn render_apply(app: &IRApply) -> (String, u8) {
                 let inner = print_at(&args[0], PREC_NOT_CMP);
                 return (format!("NOT {inner}"), PREC_NOT_CMP);
             }
+            LIST => return (render_list(args), PREC_ATOM),
             _ => {}
         }
 
@@ -155,6 +156,39 @@ fn nary_logic(name: &str) -> Option<(&'static str, u8)> {
         OR => (" OR ", PREC_OR),
         _ => return None,
     })
+}
+
+/// Render a `List(...)` node back to Derive's bracket syntax (D-5) — the
+/// exact reverse of [`crate::lower::lower_vector`]. A matrix
+/// (`List(List(row1…), List(row2…), …)`, every element itself a `List`)
+/// prints with `;`-separated rows; a flat vector (`List(elem…)`) prints
+/// with `,`. `lower_vector` never produces a *mixed* shape (some elements
+/// `List`, some not), so this "all-or-nothing" check is unambiguous for
+/// anything this crate's own lowering can produce.
+fn render_list(args: &[IRNode]) -> String {
+    if !args.is_empty() && args.iter().all(is_list_node) {
+        let rows: Vec<String> = args
+            .iter()
+            .map(|row| match row {
+                IRNode::Apply(row_app) => row_app
+                    .args
+                    .iter()
+                    .map(print_derive)
+                    .collect::<Vec<_>>()
+                    .join(", "),
+                _ => unreachable!("is_list_node guarantees an Apply"),
+            })
+            .collect();
+        format!("[{}]", rows.join("; "))
+    } else {
+        let parts: Vec<String> = args.iter().map(print_derive).collect();
+        format!("[{}]", parts.join(", "))
+    }
+}
+
+/// True if `node` is itself a `List(...)` apply.
+fn is_list_node(node: &IRNode) -> bool {
+    matches!(node, IRNode::Apply(app) if matches!(&app.head, IRNode::Symbol(s) if s == LIST))
 }
 
 /// The IR→surface head dictionary — the exact reverse of
@@ -271,5 +305,39 @@ mod tests {
             print_derive(&apply(sym("F"), vec![sym("x"), sym("y")])),
             "F(x, y)"
         );
+    }
+
+    #[test]
+    fn flat_list_prints_as_a_vector() {
+        assert_eq!(
+            print_derive(&apply(sym(LIST), vec![int(1), int(2), int(3)])),
+            "[1, 2, 3]"
+        );
+    }
+
+    #[test]
+    fn list_of_lists_prints_as_a_matrix() {
+        let e = apply(
+            sym(LIST),
+            vec![
+                apply(sym(LIST), vec![int(1), int(2)]),
+                apply(sym(LIST), vec![int(3), int(4)]),
+            ],
+        );
+        assert_eq!(print_derive(&e), "[1, 2; 3, 4]");
+    }
+
+    #[test]
+    fn empty_list_prints_as_empty_brackets() {
+        assert_eq!(print_derive(&apply(sym(LIST), vec![])), "[]");
+    }
+
+    #[test]
+    fn list_of_expressions_prints_each_element() {
+        let e = apply(
+            sym(LIST),
+            vec![apply(sym(ADD), vec![sym("x"), int(1)]), sym("y")],
+        );
+        assert_eq!(print_derive(&e), "[x + 1, y]");
     }
 }
