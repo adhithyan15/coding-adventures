@@ -1,0 +1,87 @@
+% ============================================================================
+% body-counts — how many of each major structure the human body has
+% (adj-facts-stdlib, ANATOMY).
+% ============================================================================
+% An anatomy facts library in the ADJ standard library — the kind a MEDICINE
+% agent `import`s when it needs a grounded, citable structural fact about the
+% human body: "an adult skeleton has 206 bones," "the heart has 4 chambers," "a
+% human cell carries 46 chromosomes." These are the counts a clinician reasons
+% FROM — a rib-fracture note that reads "fracture of the 13th rib" is suspect
+% because there are only twelve pairs; a karyotype with 47 chromosomes is a
+% trisomy precisely because the normal count is 46. Recall is a binding query:
+%
+%     ? body_count(heart_chambers, $N)      % 4
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `body_count(structure, count)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the number
+% WITH its source, on the CPU, with zero model calls, and abstains on a
+% structure not in the table (it never invents a count). The query also runs
+% BACKWARD — bind a count and recall the structure(s) that have it:
+%
+%     ? body_count($S, 206)                 % bones_in_adult_body
+%
+% Because each `count` value is a NUMBER (not a label), a recalled count
+% composes straight into arithmetic and constraint checks: `pairs_of_ribs` (12)
+% doubles to 24 individual ribs; an observed chromosome count can be compared to
+% 46 to flag aneuploidy — the concrete bridge from anatomy RECALL to COMPUTE.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every count below was read
+% out of a fetched authoritative page, and any count that could not be verified
+% there would have been dropped). Each structure→count pair, with the primary
+% U.S. government / NIH source it was copied from and the verbatim span that
+% states it:
+%
+%   chromosomes → 46
+%     https://www.genome.gov/genetics-glossary/Chromosome  (NIH / NHGRI)
+%     "Humans have 22 pairs of numbered chromosomes (autosomes) and one pair
+%      of sex chromosomes (XX or XY), for a total of 46."
+%
+%   bones_in_adult_body → 206
+%     https://www.ncbi.nlm.nih.gov/books/NBK537199/  (NIH / NLM, StatPearls)
+%     "Human infants typically have 270 bones, fusing into around 206 in the
+%      human adult."
+%
+%   heart_chambers → 4
+%     https://www.nhlbi.nih.gov/health/heart/anatomy  (NIH / NHLBI)
+%     "It has four hollow chambers surrounded by muscle and other heart tissue."
+%
+%   lungs → 2
+%     https://www.nhlbi.nih.gov/health/lungs  (NIH / NHLBI)
+%     "the pair of spongy, pinkish-gray organs in your chest"
+%
+%   pairs_of_ribs → 12
+%     https://www.ncbi.nlm.nih.gov/books/NBK538328/  (NIH / NLM, StatPearls)
+%     "Generally, there are twelve pairs of ribs."
+%
+%   kidneys → 2
+%     https://training.seer.cancer.gov/anatomy/urinary/components/kidney.html
+%     (NIH / NCI SEER Training)
+%     "The paired kidneys are located between the twelfth thoracic and third
+%      lumbar vertebrae, one on each side of the vertebral column."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single strongest span: the explicitly numeric NHGRI
+% statement that fixes the first row (chromosomes → 46). Every OTHER row's
+% per-fact source and verbatim span is listed above, so each count remains
+% independently checkable. All six sources are primary U.S. government / NIH
+% references, so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table body_count {
+    columns structure, count
+
+    row (chromosomes, 46)
+    row (bones_in_adult_body, 206)
+    row (heart_chambers, 4)
+    row (lungs, 2)
+    row (pairs_of_ribs, 12)
+    row (kidneys, 2)
+
+    source "Humans have 22 pairs of numbered chromosomes (autosomes) and one pair of sex chromosomes (XX or XY), for a total of 46."
+    locator "https://www.genome.gov/genetics-glossary/Chromosome"
+    trust authoritative
+}

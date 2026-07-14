@@ -108,7 +108,7 @@ use serde_json::json;
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use coding_adventures_javascript_ast::{
     ArrowBody, AssignmentTarget, BindingTarget, ClassMember, Declaration, Expression, ForInit,
-    FunctionParam, Program, ProgramItem, ObjectMember, PropertyKey, Statement, VarKind,
+    Program, ProgramItem, ObjectMember, PropertyKey, Statement, VarKind,
     VariableDeclaration,
 };
 
@@ -463,7 +463,7 @@ fn count_decl_names_decl(
         Declaration::FunctionDeclaration(fd) => {
             *out.entry(fd.id.name.clone()).or_insert(0) += 1;
             for p in &fd.params {
-                let FunctionParam::Identifier(id) = p;
+                let id = p.binding_identifier();
                 *out.entry(id.name.clone()).or_insert(0) += 1;
             }
             for s in &fd.body.body {

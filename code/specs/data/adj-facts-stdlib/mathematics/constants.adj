@@ -1,0 +1,64 @@
+% ============================================================================
+% constants — named mathematical constants and their decimal values
+% (adj-facts-stdlib, SUBJECT: mathematics). Subject-organized, NOT graded.
+% ============================================================================
+% A mathematics fact library for the ADJ standard library: each row maps a named
+% mathematical constant to its decimal-digit value. Recall is a binding query —
+% the model asserts no digits from memory; the engine resolves the `?` against the
+% grounded rows and returns the value WITH its citation, on the CPU, with zero
+% answer-time model calls, and abstains on a name that is not in the table:
+%
+%     ? math_constant(pi, $V)      % 3.14159... , cited to Wolfram MathWorld
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `math_constant(name, value)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query.
+%
+% WHY A CONSTANT LIBRARY, AND HOW IT COMPOSES. Because the `value` column is a
+% NUMBER, a recalled constant flows straight into a formula from
+% `adj-formula-stdlib`: a looked-up pi feeds the circle-area formula A = pi*r^2,
+% so a geometry program never re-states pi's digits — it recalls them once, cited,
+% and computes with them. That is the concrete bridge from mathematics RECALL to
+% mathematics COMPUTE, the same bridge the physics `physical_constant` table gives
+% for c and h.
+%
+% ON DIGITS AND PRECISION. ADJ number literals accept many decimal digits, so each
+% `value` below is written to EXACTLY the digits the source span prints — 39
+% fractional digits, ending where MathWorld's "..." begins; no digit is appended
+% from memory. The full-precision digits therefore live in the LITERAL and in the
+% quoted `source` span, which is where the provenance lives. Note, however, that
+% the runtime binds the value as a double-precision float: `? math_constant(pi,
+% $V)` returns pi rounded to ~15-16 significant digits (3.141592653589793), not
+% all 39. That is a property of the numeric runtime, not of the stored fact — the
+% grounded, full-precision value is the literal, and a consumer needing every digit
+% reads it from there. Keys are lowercase atoms.
+%
+% PROVENANCE. Every value is copied verbatim from Wolfram MathWorld — the
+% authoritative online mathematics reference (Weisstein, Eric W.). The `source`
+% span quotes the exact text carrying the digits from the constant's MathWorld
+% page; the `locator` is that page's URL. MathWorld is a PRIMARY mathematics
+% reference, so `trust authoritative`. Nothing here is asserted from memory; every
+% digit traces to the quoted span.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table math_constant {
+    columns constant, value
+
+    % pi — ratio of a circle's circumference to its diameter.
+    % MathWorld "Pi": "pi has decimal expansion given by pi=3.141592653589793238462643383279502884197..."
+    row (pi, 3.141592653589793238462643383279502884197)
+
+    % e — base of the natural logarithm.
+    % MathWorld "e": "e=2.718281828459045235360287471352662497757..."
+    row (e, 2.718281828459045235360287471352662497757)
+
+    % golden_ratio — phi = (1 + sqrt 5) / 2.
+    % MathWorld "Golden Ratio": "1.618033988749894848204586834365638117720..."
+    row (golden_ratio, 1.618033988749894848204586834365638117720)
+
+    source "pi has decimal expansion given by pi=3.141592653589793238462643383279502884197... (3)"
+    locator "https://mathworld.wolfram.com/Pi.html"
+    trust authoritative
+}

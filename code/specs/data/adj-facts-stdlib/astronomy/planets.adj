@@ -1,0 +1,42 @@
+% ============================================================================
+% planets — each planet's order from the Sun (adj-facts-stdlib, ASTRONOMY).
+% ============================================================================
+% An astronomy facts library — an early science fact: the order of the
+% planets, counting out from the Sun — the thing a child chants ("My Very Easy
+% Method Just Speeds Up Naming Planets"). Recall is a binding query:
+%
+%     ? planet_order(earth, $N)      % 3  (Earth is the third planet from the Sun)
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `planet_order(planet, order)` carrying the NASA citation, so the lookup above
+% is the ordinary SLD binding query — the engine returns the position WITH its
+% source, on the CPU, with zero model calls, and abstains on a non-planet (e.g.
+% pluto, reclassified a dwarf planet in 2006, is deliberately NOT a row here).
+% The `order` value is a NUMBER, so a recalled position composes into arithmetic
+% (how many planets lie between Mars and Saturn? 6 − 4 − 1 = 1).
+%
+% Provenance: NASA states each planet's ordinal position in prose (e.g. "Venus is
+% the second planet from the Sun"); the citable artifact is NASA's Solar System
+% Planets hub at the `locator`, and every planet's order below is confirmed by its
+% own NASA page. `trust authoritative` — the space agency's primary reference.
+% Nothing here is asserted from memory. Order is the canonical eight major planets
+% only, Mercury (nearest) → Neptune (farthest). (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table planet_order {
+    columns planet, order_from_sun
+
+    row (mercury, 1)
+    row (venus, 2)
+    row (earth, 3)
+    row (mars, 4)
+    row (jupiter, 5)
+    row (saturn, 6)
+    row (uranus, 7)
+    row (neptune, 8)
+
+    source "Venus is the second planet from the Sun"
+    locator "https://science.nasa.gov/solar-system/planets/"
+    trust authoritative
+}

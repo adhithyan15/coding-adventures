@@ -56,6 +56,7 @@
 pub mod btree;
 pub mod error;
 pub mod header;
+pub mod page_writer;
 pub mod pager;
 pub mod record;
 pub mod schema;

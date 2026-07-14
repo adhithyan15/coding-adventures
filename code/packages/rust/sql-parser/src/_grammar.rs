@@ -431,24 +431,24 @@ pub fn parser_grammar() -> ParserGrammar {
         GrammarRule {
             name: r#"comparison"#.to_string(),
             body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::RuleReference { name: r#"additive"#.to_string() },
+                GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                 GrammarElement::Optional { element: Box::new(GrammarElement::Alternation { choices: vec![
                         GrammarElement::Sequence { elements: vec![
                             GrammarElement::RuleReference { name: r#"cmp_op"#.to_string() },
-                            GrammarElement::RuleReference { name: r#"additive"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                         ] },
                         GrammarElement::Sequence { elements: vec![
                             GrammarElement::Literal { value: r#"BETWEEN"#.to_string() },
-                            GrammarElement::RuleReference { name: r#"additive"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                             GrammarElement::Literal { value: r#"AND"#.to_string() },
-                            GrammarElement::RuleReference { name: r#"additive"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                         ] },
                         GrammarElement::Sequence { elements: vec![
                             GrammarElement::Literal { value: r#"NOT"#.to_string() },
                             GrammarElement::Literal { value: r#"BETWEEN"#.to_string() },
-                            GrammarElement::RuleReference { name: r#"additive"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                             GrammarElement::Literal { value: r#"AND"#.to_string() },
-                            GrammarElement::RuleReference { name: r#"additive"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                         ] },
                         GrammarElement::Sequence { elements: vec![
                             GrammarElement::Literal { value: r#"IN"#.to_string() },
@@ -465,12 +465,12 @@ pub fn parser_grammar() -> ParserGrammar {
                         ] },
                         GrammarElement::Sequence { elements: vec![
                             GrammarElement::Literal { value: r#"LIKE"#.to_string() },
-                            GrammarElement::RuleReference { name: r#"additive"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                         ] },
                         GrammarElement::Sequence { elements: vec![
                             GrammarElement::Literal { value: r#"NOT"#.to_string() },
                             GrammarElement::Literal { value: r#"LIKE"#.to_string() },
-                            GrammarElement::RuleReference { name: r#"additive"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                         ] },
                         // `x GLOB pattern` — case-sensitive Unix-glob matching.
                         // SQLite defines `X GLOB Y` as `glob(Y, X)`, so the
@@ -478,12 +478,12 @@ pub fn parser_grammar() -> ParserGrammar {
                         // (args swapped); `NOT GLOB` wraps it in a logical NOT.
                         GrammarElement::Sequence { elements: vec![
                             GrammarElement::Literal { value: r#"GLOB"#.to_string() },
-                            GrammarElement::RuleReference { name: r#"additive"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                         ] },
                         GrammarElement::Sequence { elements: vec![
                             GrammarElement::Literal { value: r#"NOT"#.to_string() },
                             GrammarElement::Literal { value: r#"GLOB"#.to_string() },
-                            GrammarElement::RuleReference { name: r#"additive"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                         ] },
                         GrammarElement::Sequence { elements: vec![
                             GrammarElement::Literal { value: r#"IS"#.to_string() },
@@ -502,11 +502,11 @@ pub fn parser_grammar() -> ParserGrammar {
                         GrammarElement::Sequence { elements: vec![
                             GrammarElement::Literal { value: r#"IS"#.to_string() },
                             GrammarElement::Literal { value: r#"NOT"#.to_string() },
-                            GrammarElement::RuleReference { name: r#"additive"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                         ] },
                         GrammarElement::Sequence { elements: vec![
                             GrammarElement::Literal { value: r#"IS"#.to_string() },
-                            GrammarElement::RuleReference { name: r#"additive"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                         ] },
                     ] }) },
             ] },
@@ -523,6 +523,27 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::Literal { value: r#">="#.to_string() },
             ] },
             line_number: 78,
+        },
+        GrammarRule {
+            // Bitwise operators `& | << >>` — one precedence level, left-
+            // associative, sitting BETWEEN additive and comparison (SQLite
+            // groups all four here). `5 | 3 & 2` = `(5|3)&2` = 2; `3+1<<2` =
+            // `(3+1)<<2` = 16. The generated rule mirrors the grammar source
+            // `bitwise = additive { ("&"|"|"|"<<"|">>") additive }`.
+            name: r#"bitwise"#.to_string(),
+            body: GrammarElement::Sequence { elements: vec![
+                GrammarElement::RuleReference { name: r#"additive"#.to_string() },
+                GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
+                        GrammarElement::Group { element: Box::new(GrammarElement::Alternation { choices: vec![
+                                GrammarElement::Literal { value: r#"&"#.to_string() },
+                                GrammarElement::Literal { value: r#"|"#.to_string() },
+                                GrammarElement::Literal { value: r#"<<"#.to_string() },
+                                GrammarElement::Literal { value: r#">>"#.to_string() },
+                            ] }) },
+                        GrammarElement::RuleReference { name: r#"additive"#.to_string() },
+                    ] }) },
+            ] },
+            line_number: 79,
         },
         GrammarRule {
             name: r#"additive"#.to_string(),
@@ -556,9 +577,17 @@ pub fn parser_grammar() -> ParserGrammar {
         },
         GrammarRule {
             name: r#"unary"#.to_string(),
+            // Prefix operators, per the grammar source `( "-" | "~" | "+" ) unary`:
+            // arithmetic negation `-`, bitwise complement `~`, and the no-op
+            // unary plus `+`. The planner maps `-`→Neg, `~`→BitNot, and treats
+            // `+x` as `x`.
             body: GrammarElement::Alternation { choices: vec![
                 GrammarElement::Sequence { elements: vec![
-                    GrammarElement::Literal { value: r#"-"#.to_string() },
+                    GrammarElement::Group { element: Box::new(GrammarElement::Alternation { choices: vec![
+                            GrammarElement::Literal { value: r#"-"#.to_string() },
+                            GrammarElement::Literal { value: r#"~"#.to_string() },
+                            GrammarElement::Literal { value: r#"+"#.to_string() },
+                        ] }) },
                     GrammarElement::RuleReference { name: r#"unary"#.to_string() },
                 ] },
                 GrammarElement::RuleReference { name: r#"primary"#.to_string() },
@@ -585,12 +614,19 @@ pub fn parser_grammar() -> ParserGrammar {
                     GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
                     GrammarElement::Literal { value: r#")"#.to_string() },
                 ] },
-                // Searched `CASE WHEN cond THEN val … [ELSE val] END`. One
-                // WHEN/THEN is mandatory; further ones repeat; ELSE is optional.
-                // The condition/value slots are full `expr`s. Placed before
-                // function_call so the leading `CASE` literal is matched here.
+                // `CASE [operand] WHEN cond THEN val … [ELSE val] END`. Two
+                // forms share one rule: the *searched* form (`CASE WHEN cond …`)
+                // and the *simple* form (`CASE operand WHEN value …`), told apart
+                // by the optional `operand` expr between `CASE` and the first
+                // `WHEN`. Because `WHEN` is a keyword and cannot start an `expr`,
+                // the optional operand never swallows the searched form's `WHEN`.
+                // One WHEN/THEN is mandatory; further ones repeat; ELSE is
+                // optional. All slots are full `expr`s. The planner desugars the
+                // simple form to the searched form (`operand = value`). Placed
+                // before function_call so the leading `CASE` literal matches here.
                 GrammarElement::Sequence { elements: vec![
                     GrammarElement::Literal { value: r#"CASE"#.to_string() },
+                    GrammarElement::Optional { element: Box::new(GrammarElement::RuleReference { name: r#"expr"#.to_string() }) },
                     GrammarElement::Literal { value: r#"WHEN"#.to_string() },
                     GrammarElement::RuleReference { name: r#"expr"#.to_string() },
                     GrammarElement::Literal { value: r#"THEN"#.to_string() },

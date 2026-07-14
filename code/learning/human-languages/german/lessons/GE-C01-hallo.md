@@ -16,9 +16,9 @@ reviews_of: []
 
 ## Warm-up
 
-[PAUSE 2s] Your first German word — and a reassuring one. German is the
-learner's home turf in a way Spanish and French aren't: German and English
-are *both Germanic languages*, close siblings. *hallo* is the first proof.
+[PAUSE 2s] Your first German word — and a reassuring one, because German and
+English are close cousins: *both are Germanic languages*. That kinship will
+help you all through this book, and *hallo* is the first proof.
 
 ## Sounds you'll need
 
@@ -36,8 +36,8 @@ even shaped partly by German *hallo*.
 
 > The pattern to carry through this whole book: because English is a Germanic
 > language, German words are often **direct cousins** of English words — same
-> family, no Latin middleman. Where Spanish sent you through Rome, German
-> sends you straight home.
+> family, no Latin middleman. (The Romance languages like Spanish and French
+> reach English mostly *through* Latin; German reaches it directly.)
 
 ## Why it's said this way
 

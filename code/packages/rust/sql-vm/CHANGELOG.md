@@ -3,6 +3,17 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.15] - Unreleased
+
+### Added
+
+- **Execute bitwise ops.** `&`/`|`/`~` coerce operands to integer (reusing the
+  CAST slice's integer affinity), propagate NULL, and complement/AND/OR as i64.
+  Shifts go through new `sql_shift`, which implements SQLite's exact rules —
+  negative count flips direction, count ≥ 64 saturates (left → 0; right → 0/−1
+  by sign), right shift is arithmetic — avoiding Rust's shift-overflow UB via
+  `wrapping_shl` and width-checked branches.
+
 ## [0.4.14] - Unreleased
 
 ### Added

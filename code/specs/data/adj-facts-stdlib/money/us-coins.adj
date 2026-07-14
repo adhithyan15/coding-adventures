@@ -1,0 +1,68 @@
+% ============================================================================
+% us-coins — what each US coin is worth, in CENTS (adj-facts-stdlib, MONEY).
+% ============================================================================
+% A money fact everyone learns at the register: "a nickel is five cents, a
+% quarter is twenty-five." Recall is a binding query:
+%
+%     ? coin_cents(quarter, $Cents)      % 25
+%     ? coin_cents(nickel,  $Cents)      % 5
+%
+% This is a native `table` (ADJ-TABLES): each `row` lowers to a ground relation
+% `coin_cents(coin, cents)` carrying the table's citation, so the lookup above is
+% the ordinary SLD binding query — the engine returns the value WITH its source,
+% on the CPU, with zero model calls, and abstains honestly on a token that is not
+% a US coin (it never invents a value). The relation runs both ways: `?
+% coin_cents($Coin, 5)` recalls the coin WORTH five cents — the nickel.
+%
+% Because the `cents` value is a NUMBER, a recalled value composes straight into
+% arithmetic — the concrete bridge from RECALL to COMPUTE:
+%
+%     how many cents in three quarters?  3 × coin_cents(quarter) = 3 × 25 = 75
+%
+% (the U.S. Mint's own "Money Patterns" activity works exactly this sum: "If you
+% have 3 quarters, you have seventy-five cents ($0.75).")
+%
+% ----------------------------------------------------------------------------
+% PROVENANCE — every value is byte-quoted from the U.S. Mint (nothing from memory)
+% ----------------------------------------------------------------------------
+% Each coin's cent value is copied VERBATIM from that coin's page in the U.S.
+% Mint's Coin Classroom (kids.usmint.gov, "© 2025 United States Mint, U.S.
+% Department of Treasury"). `trust authoritative` — the Mint is the agency that
+% mints US circulating coins. The per-row quote and its exact URL:
+%
+%   penny   → 1    "The one-cent coin ceased circulating in 2025 after 232 years
+%                    of production."          https://kids.usmint.gov/about-the-mint/penny
+%   nickel  → 5    "The nickel is the United States' five-cent coin."
+%                                             https://kids.usmint.gov/about-the-mint/nickel
+%   dime    → 10   "The dime is the United States' 10-cent coin."
+%                                             https://kids.usmint.gov/about-the-mint/dime
+%   quarter → 25   "In 1804, the Mint marked the quarter with "25c," meaning 25
+%                    cents."                  https://kids.usmint.gov/about-the-mint/quarter
+%   half_dollar → 50  "The half dollar is the United States' 50-cent coin."
+%                                             https://kids.usmint.gov/about-the-mint/half-dollar
+%   dollar  → 100  "The dollar is the United States' 100-cent coin. It takes 100
+%                    pennies to equal a dollar!"
+%                                             https://kids.usmint.gov/about-the-mint/dollar
+%
+% ADJ `table` carries ONE provenance envelope per table (per-row provenance is a
+% documented future extension — ADJ-TABLES §6), so the `source`/`locator` below
+% cite the Mint's Coin Classroom hub, whose "Circulating Coins" section
+% enumerates exactly these six denominations; the per-row byte-quotes above pin
+% each individual value to its own U.S. Mint page. (See ../README.md; ADJ-TABLES.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table coin_cents {
+    columns coin, cents
+
+    row (penny, 1)
+    row (nickel, 5)
+    row (dime, 10)
+    row (quarter, 25)
+    row (half_dollar, 50)
+    row (dollar, 100)
+
+    source "The denominations you'll see the most are the penny, nickel, dime, and quarter. The Mint makes half dollars and dollars for collecting, but you can still spend them."
+    locator "https://kids.usmint.gov/about-the-mint"
+    trust authoritative
+}

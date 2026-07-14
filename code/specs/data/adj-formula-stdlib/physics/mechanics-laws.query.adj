@@ -1,0 +1,28 @@
+% ============================================================================
+% mechanics-laws.query.adj — worked applications of the foundational physics laws.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a physics-word
+% problem: it states NO arithmetic. It `import`s the grounded law library, binds
+% each quantity it decomposed from the input (each `observe` is a byte-provenance
+% span the model cited), and asks the engine to APPLY the recalled law. The native
+% adj-lang engine substitutes the law's body, computes exactly on the CPU, and
+% returns the value carrying the law's source/locator/trust — the auditable chain.
+%
+% "A 2 kg block accelerates at 3 m/s². What net force acts on it?"
+%   → recall F = ma, bind mass = 2, acceleration = 3, apply → 6 N (Newton, NASA).
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli mechanics-laws.query.adj
+% ============================================================================
+
+import "mechanics-laws.adj"
+
+% --- Newton's second law: a 2 kg mass accelerating at 3 m/s² feels 6 N. ---
+observe mass(2)                        % "…a 2 kg block…"          (span cited by the model)
+observe acceleration(3)                % "…accelerates at 3 m/s²…" (span cited by the model)
+? force(mass, acceleration)            % engine → 6  (F = m·a, NASA Glenn, authoritative)
+
+% --- Ohm's law: 4 A through a 5 Ω resistor drops 20 V. ---
+observe current(4)                     % "…a current of 4 amperes…"   (span cited)
+observe resistance(5)                  % "…a 5 ohm resistor…"         (span cited)
+? voltage(current, resistance)         % engine → 20 (V = I·R, Wikipedia, consensus)

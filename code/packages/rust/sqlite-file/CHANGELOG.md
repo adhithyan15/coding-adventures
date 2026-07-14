@@ -1,5 +1,38 @@
 # Changelog — sqlite-file
 
+## 0.10.0 - Unreleased
+
+**Phase F (writer), rung 3: the 100-byte DB-header encoder.** New
+`Header::encode(&self) -> Vec<u8>` is the exact inverse of `Header::parse` —
+`parse(encode(h)) == h`. It writes the magic string, page size (65536 stored as
+the special value 1), reserved-space byte, the fixed 64/32/32 payload-fraction
+constants SQLite requires, and every reader-surfaced field (change counter, page
+count, freelist trunk/count, schema cookie/format, text encoding) at their exact
+offsets; everything else is zero. Paired with `page_writer::encode_table_leaf_page`
+(0.9.0) and `record::encode` (0.8.0), a caller can now lay down page 1's header +
+a leaf page to build a file our own `Pager::open`/`Header::parse` reader accepts —
+the write path is now three rungs deep toward emitting a re-readable single-table
+`.sqlite` database (the milestone for eventually dropping the rusqlite dev-dep).
+Round-trip tests cover a typical header, the 65536/reserved/UTF-16 edge cases, and
+opening an encoded header through the pager.
+
+## 0.9.0 - Unreleased
+
+**Phase F (writer), rung 2: the table-leaf PAGE writer.** New
+`page_writer::encode_table_leaf_page(page_size, reserved_space, cells)` packs a
+set of `(rowid, record-bytes)` cells into one table b-tree leaf page (type
+`0x0D`) — the byte-level inverse of the leaf reader in `btree`. It writes the
+8-byte page header, the cell-pointer array (rowid order), and the cells packed
+from the end of the page downward (`[payload-len varint][rowid varint][record
+bytes]`), sorting cells by rowid and setting the cell-content-area start. One
+capability only: a single leaf page, no overflow, no interior pages, no
+freeblock coalescing. Records too large to store inline (would need an overflow
+chain), duplicate rowids, more than 65535 cells, a page that cannot hold the
+cells, and bad page sizes are all rejected with typed errors rather than
+producing corrupt bytes. Round-trip gate: encoded pages (both raw cells and
+`record::encode`-produced records, end-to-end) are read back through the real
+`Pager::open` + `btree::walk_table` reader and asserted equal, in rowid order.
+
 ## 0.8.0 - Unreleased
 
 **Phase F (writer) begins: the record ENCODER.** `record::encode(&[SqlValue])

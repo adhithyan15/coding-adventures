@@ -1925,8 +1925,69 @@ fn eval_binary(op: &BinaryOp, l: SqlValue, r: SqlValue) -> Result<SqlValue, VmEr
             Ok(SqlValue::Text(ls + &rs))
         }
 
+        // ── Bitwise ───────────────────────────────────────────────────────────
+        //
+        // Both operands are coerced to integer (SQLite integer affinity: reals
+        // truncate toward zero, text prefix-parses). NULL was already handled
+        // above, so these never see NULL. `&`/`|` are plain i64 bit ops; shifts
+        // follow SQLite's saturate-and-negate rules in `sql_shift`.
+        BinaryOp::BitAnd => Ok(SqlValue::Int(cast_to_i64(&l) & cast_to_i64(&r))),
+        BinaryOp::BitOr => Ok(SqlValue::Int(cast_to_i64(&l) | cast_to_i64(&r))),
+        BinaryOp::ShiftLeft => {
+            Ok(SqlValue::Int(sql_shift(cast_to_i64(&l), cast_to_i64(&r), true)))
+        }
+        BinaryOp::ShiftRight => {
+            Ok(SqlValue::Int(sql_shift(cast_to_i64(&l), cast_to_i64(&r), false)))
+        }
+
         // AND/OR already handled above.
         BinaryOp::And | BinaryOp::Or => unreachable!(),
+    }
+}
+
+/// SQLite's bit-shift semantics for `value << count` / `value >> count`.
+///
+/// Rust's own `<<`/`>>` are Undefined Behaviour (they panic in debug) once the
+/// shift amount reaches the type width, so we cannot use them directly on
+/// attacker-controlled counts. SQLite instead defines every count precisely
+/// (verified against the C library):
+///
+/// | input        | result | why                                        |
+/// |--------------|--------|--------------------------------------------|
+/// | `1 << 64`    | 0      | count ≥ 64 on a left shift → 0             |
+/// | `8 >> 100`   | 0      | count ≥ 64, value ≥ 0 → 0                  |
+/// | `-1 >> 1`    | -1     | right shift is arithmetic (sign-extending) |
+/// | `-4 >> 100`  | -1     | count ≥ 64, value < 0 → -1                 |
+/// | `1 << -1`    | 0      | negative count flips direction: `1 >> 1`   |
+///
+/// The rules: a negative count shifts the *other* direction by its magnitude; a
+/// count ≥ 64 saturates (left → 0; right → 0 for a non-negative value, −1 for a
+/// negative one because the sign bit fills); otherwise a normal shift, using an
+/// unsigned left shift so it can never overflow and an `i64` (arithmetic) right
+/// shift so negatives sign-extend — exactly matching SQLite's implementation.
+fn sql_shift(value: i64, count: i64, left: bool) -> i64 {
+    let mut do_left = left;
+    // Magnitude of the shift; a negative count means shift the other way.
+    // `i64::MIN.unsigned_abs()` is 2^63, well past 64, so it saturates below.
+    let amount: u64 = if count < 0 {
+        do_left = !do_left;
+        count.unsigned_abs()
+    } else {
+        count as u64
+    };
+
+    if amount >= 64 {
+        // Saturated: a left shift (or any shift of a non-negative value) yields
+        // 0; a right shift of a negative value fills with sign bits → -1.
+        return if value >= 0 || do_left { 0 } else { -1 };
+    }
+    let amount = amount as u32;
+    if do_left {
+        // Unsigned shift cannot be UB and matches SQLite's `(i64)((u64)iA<<iB)`.
+        (value as u64).wrapping_shl(amount) as i64
+    } else {
+        // i64 `>>` is arithmetic in Rust, sign-extending like SQLite.
+        value >> amount
     }
 }
 
@@ -2012,6 +2073,9 @@ fn eval_unary(op: &UnaryOp, v: SqlValue) -> Result<SqlValue, VmError> {
                 other => Ok(other), // non-numeric: leave unchanged
             },
             UnaryOp::Not => Ok(SqlValue::Bool(!is_truthy(&v))),
+            // `~x` — coerce to integer (SQLite integer affinity) then complement.
+            // `~0` = -1, `~-1` = 0. NULL was handled above.
+            UnaryOp::BitNot => Ok(SqlValue::Int(!cast_to_i64(&v))),
         },
     }
 }

@@ -1,5 +1,17 @@
 # Changelog — iir-to-llvm
 
+## 0.41.0 - 2026-07-14 (fix: dynamic comparison width — a `bool`-typed cmp compares i64s)
+
+`lower_cmp` typed the `icmp`/`fcmp` operand width from the comparison's
+`type_hint`. `lower_dynamic_arith` tags a dynamic `DynValue` comparison result
+`"bool"` though its operands are the unboxed i64s, so LLVM emitted `icmp i1 %x`
+on a 64-bit `%x` (`'%x' defined with type 'i64' but expected 'i1'`) — blocking
+every dynamic `=`/`<` on the LLVM column (E6d-7 closure dispatch, E6d-6 match tag
+tests). Fix: map a `"bool"` cmp hint to `i64` for the operand width, resolution,
+and predicate; the i1 RESULT is unchanged (still threaded to `jmp_if_*` and
+zext'd). The distinct legitimate `"i1"` hint (produce-i1, skip-zext) is left
+untouched. Latent — the dynamic comparison path was never run on the LLVM column.
+
 ## 0.40.0 - 2026-07-11 (E6d-2b: ref<any> is a tagged i64)
 
 E6d-2b: `llvm_type_for` now maps `ref<any>` -> `i64` (a tagged word, exactly like `ref<LispyPair>`), so a `dyn_box_int` result (a re-boxed dynamic-arithmetic value) validates and lowers on the LLVM backend. The `DYN_BUILTINS` table already routes `dyn_box_int`/`dyn_unbox_int` to `@__dyn_box_int`/`@__dyn_unbox_int`.

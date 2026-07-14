@@ -77,3 +77,38 @@ fn closures_run_on_native() {
     assert_eq!(run_native("(((lambda (x) (lambda (y) (+ x y))) 40) 2)", "e6d7a_n2"), Some(42));
 }
 
+
+// --- LLVM (unblocked by the iir-to-llvm comparison-width fix: the dispatcher's
+//     dynamic `=` index test no longer emits `icmp i1` on an i64) --------------
+
+fn runtime_c(name: &str) -> std::path::PathBuf {
+    std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../twig-aot/runtime").join(name)
+}
+
+/// LLVM: emit host IR, link the tagged-value C runtime, run.
+fn run_llvm(src: &str, module: &str) -> i32 {
+    let triple = String::from_utf8(
+        Command::new("clang").arg("-dumpmachine").output().expect("clang").stdout,
+    ).unwrap().trim().to_string();
+    let ll = lang_aot::compile_source_to_llvm_with_target(Language::Twig, src, module, &triple)
+        .unwrap_or_else(|e| panic!("compile {src:?} to LLVM: {e}"));
+    let tmp = std::env::temp_dir().join(format!("e6d7a_llvm_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).unwrap();
+    let ll_path = tmp.join(format!("{module}.ll"));
+    std::fs::write(&ll_path, &ll).unwrap();
+    let exe = tmp.join(module);
+    let build = Command::new("clang")
+        .arg("-x").arg("ir").arg(&ll_path)
+        .arg("-x").arg("none")
+        .arg(runtime_c("dynval_runtime.c")).arg(runtime_c("twig_gc.c")).arg(runtime_c("twig_runtime.c"))
+        .arg("-o").arg(&exe).output().expect("clang");
+    assert!(build.status.success(), "clang link: {}", String::from_utf8_lossy(&build.stderr));
+    Command::new(&exe).output().unwrap().status.code().unwrap()
+}
+
+#[test]
+fn closures_run_on_llvm() {
+    if !clang_available() { eprintln!("clang absent — skipping"); return; }
+    assert_eq!(run_llvm("((lambda (x) (+ x 1)) 41)", "e6d7a_l1"), 42, "capture-free closure on LLVM");
+    assert_eq!(run_llvm("(((lambda (x) (lambda (y) (+ x y))) 40) 2)", "e6d7a_l2"), 42, "capturing closure on LLVM (dynamic `=` dispatch)");
+}

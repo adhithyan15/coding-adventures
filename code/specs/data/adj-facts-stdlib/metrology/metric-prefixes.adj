@@ -1,0 +1,68 @@
+% ============================================================================
+% metric-prefixes — each SI prefix → its power of ten (adj-facts-stdlib, METROLOGY).
+% ============================================================================
+% The metrology (units-of-measure) fact that unlocks the metric system: a prefix
+% names a power of ten. "kilo" means 10^3 (a kilometre is 1000 metres); "milli"
+% means 10^-3 (a millimetre is a thousandth of a metre). Recall is a binding
+% query — you ask for a prefix and get back its exponent, WITH its citation:
+%
+%     ? si_prefix_power(kilo, $P)       % 3
+%     ? si_prefix_power(milli, $P)      % -3
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `si_prefix_power(prefix, power_of_ten)` carrying the table's citation,
+% so the lookup is the ordinary SLD binding query — the engine returns the
+% exponent WITH its source, on the CPU, with zero model calls, and abstains on a
+% word that is not an SI prefix (it never invents an exponent).
+%
+% Why the `power` value is a NUMBER (and can be NEGATIVE): because it is a plain
+% integer exponent, a recalled prefix COMPOSES straight into arithmetic — to scale
+% a base quantity you multiply by 10^power. `milli` recalls as -3, so a millimetre
+% is metres × 10^-3; `kilo` recalls as 3, so a kilometre is metres × 10^3. That is
+% the concrete metrology bridge from RECALL (name the prefix) to COMPUTE (apply
+% its power). Negative literals like `-3` are valid ADJ numbers, so the sub-unit
+% prefixes are first-class rows, not a special case.
+%
+% Why a `table` and NOT twelve prose sentences: this is exactly the shape reference
+% data ships in — a published prefix table, one prefix per row with its 10^n
+% factor. A table cell like `kilo | k | 10^3` was NEVER a prose sentence, so there
+% is no sentence to cite; the citable artifact IS the NIST prefixes table at the
+% `locator` below, and each prefix→power pair here is read straight off it. The
+% whole table is defended by one provenance envelope rather than repeating
+% source/locator/trust on every row.
+%
+% Provenance: the prefixes and their powers of ten are taken VERBATIM from the NIST
+% Office of Weights and Measures "Metric (SI) Prefixes" table. The `source` span
+% below is the sentence on that page that states, in prose, that deka, hecto, and
+% kilo mean 10, 100, and 1000 (i.e. 10^1, 10^2, 10^3); the remaining powers are the
+% 10^n factors in the same page's prefix table. The prefix names use the NIST
+% spelling (`deka`, symbol `da`). `trust authoritative` — a primary standards
+% reference, re-fetchable at the `locator`. Nothing here is asserted from memory:
+% every prefix→power pair is a cell of the cited table. Only prefixes whose power
+% is confirmable on that page are included. (See ../README.md; ADJ-TABLES.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table si_prefix_power {
+    columns prefix, power_of_ten
+
+    % larger quantities or whole units (positive powers of ten)
+    row (tera, 12)
+    row (giga, 9)
+    row (mega, 6)
+    row (kilo, 3)
+    row (hecto, 2)
+    row (deka, 1)
+
+    % smaller quantities or sub units (negative powers of ten)
+    row (deci, -1)
+    row (centi, -2)
+    row (milli, -3)
+    row (micro, -6)
+    row (nano, -9)
+    row (pico, -12)
+
+    source "combining with the name of the unit the prefixes deka, hecto, and kilo meaning, respectively, 10, 100, and 1000"
+    locator "https://www.nist.gov/pml/owm/metric-si-prefixes"
+    trust authoritative
+}

@@ -148,6 +148,88 @@ impl Header {
     pub fn usable_size(&self) -> u32 {
         self.page_size - u32::from(self.reserved_space)
     }
+
+    /// Serialise this header into the 100 bytes that begin a SQLite database
+    /// file — the exact inverse of [`Header::parse`], so `parse(encode(h)) == h`.
+    ///
+    /// This is a *write*-path rung: paired with [`crate::page_writer`], a caller
+    /// can emit `encode()` as the first 100 bytes of page 1 and a leaf page as
+    /// page 2 to produce a file our own reader (and SQLite) accepts.
+    ///
+    /// ## The bytes we write
+    ///
+    /// ```text
+    ///  offset  bytes  field                      value
+    ///    0      16    magic string               "SQLite format 3\0"
+    ///   16       2    page size (u16-be)          page_size, or 1 for 65536
+    ///   18       1    file format write version   1 (legacy/rollback journal)
+    ///   19       1    file format read version    1
+    ///   20       1    reserved space per page     reserved_space
+    ///   21       1    max embedded payload frac.  64  (SQLite requires this)
+    ///   22       1    min embedded payload frac.  32  (ditto)
+    ///   23       1    leaf payload fraction       32  (ditto)
+    ///   24       4    file change counter         change_counter
+    ///   28       4    database size in pages      page_count
+    ///   32       4    first freelist trunk page   freelist_trunk
+    ///   36       4    total freelist pages        freelist_count
+    ///   40       4    schema cookie               schema_cookie
+    ///   44       4    schema format number        schema_format
+    ///   56       4    text encoding               1/2/3 for UTF-8/16le/16be
+    ///   …             everything else             0
+    /// ```
+    ///
+    /// The three payload-fraction bytes (64/32/32) are constants SQLite fixes;
+    /// writing anything else makes the file unreadable by the C library. Fields
+    /// our reader does not surface (default page-cache size, largest-root-page,
+    /// user/application version, the version-valid-for and library-version
+    /// numbers) are left zero — valid, since a zeroed field simply reads back as
+    /// zero. Page size 65536 is stored as the special value 1.
+    pub fn encode(&self) -> Vec<u8> {
+        let mut buf = vec![0u8; 100];
+        buf[0..16].copy_from_slice(MAGIC);
+
+        // Page size: 65536 does not fit in the u16 field, so SQLite stores it as
+        // the reserved value 1. Every other (power-of-two) size fits directly.
+        // A page size outside 512..=65536 is a caller bug — flag it in debug
+        // builds; the `as u16` below would otherwise silently truncate.
+        debug_assert!(
+            self.page_size == 65536 || (512..=0xFFFF).contains(&self.page_size),
+            "page_size {} out of the encodable 512..=65536 range",
+            self.page_size
+        );
+        let raw_page_size: u16 = if self.page_size == 65536 {
+            1
+        } else {
+            self.page_size as u16
+        };
+        buf[16..18].copy_from_slice(&raw_page_size.to_be_bytes());
+
+        // File format read/write versions: 1 = the legacy rollback-journal mode
+        // our reader assumes (WAL would be 2).
+        buf[18] = 1;
+        buf[19] = 1;
+        buf[20] = self.reserved_space;
+        // Payload fractions — fixed constants required by the format.
+        buf[21] = 64;
+        buf[22] = 32;
+        buf[23] = 32;
+
+        buf[24..28].copy_from_slice(&self.change_counter.to_be_bytes());
+        buf[28..32].copy_from_slice(&self.page_count.to_be_bytes());
+        buf[32..36].copy_from_slice(&self.freelist_trunk.to_be_bytes());
+        buf[36..40].copy_from_slice(&self.freelist_count.to_be_bytes());
+        buf[40..44].copy_from_slice(&self.schema_cookie.to_be_bytes());
+        buf[44..48].copy_from_slice(&self.schema_format.to_be_bytes());
+
+        let encoding: u32 = match self.text_encoding {
+            TextEncoding::Utf8 => 1,
+            TextEncoding::Utf16Le => 2,
+            TextEncoding::Utf16Be => 3,
+        };
+        buf[56..60].copy_from_slice(&encoding.to_be_bytes());
+
+        buf
+    }
 }
 
 #[cfg(test)]
@@ -162,6 +244,71 @@ mod tests {
         buf[16..18].copy_from_slice(&page_size_field.to_be_bytes());
         buf[56..60].copy_from_slice(&encoding.to_be_bytes());
         buf
+    }
+
+    /// `encode` is the exact inverse of `parse`: a header with every
+    /// reader-surfaced field set round-trips byte-for-byte back to itself.
+    #[test]
+    fn encode_round_trips_through_parse() {
+        let h = Header {
+            page_size: 4096,
+            reserved_space: 0,
+            page_count: 7,
+            change_counter: 42,
+            freelist_trunk: 3,
+            freelist_count: 2,
+            schema_cookie: 9,
+            schema_format: 4,
+            text_encoding: TextEncoding::Utf8,
+        };
+        let bytes = h.encode();
+        assert_eq!(bytes.len(), 100, "header must be exactly 100 bytes");
+        assert_eq!(&bytes[0..16], MAGIC);
+        // Payload-fraction constants SQLite requires.
+        assert_eq!((bytes[21], bytes[22], bytes[23]), (64, 32, 32));
+        assert_eq!(Header::parse(&bytes).unwrap(), h);
+    }
+
+    /// Page size 65536 is stored as the special value 1 and decodes back to
+    /// 65536; reserved space and UTF-16 encodings also survive the round-trip.
+    #[test]
+    fn encode_handles_65536_and_reserved_and_utf16() {
+        let h = Header {
+            page_size: 65536,
+            reserved_space: 32,
+            page_count: 1,
+            change_counter: 0,
+            freelist_trunk: 0,
+            freelist_count: 0,
+            schema_cookie: 0,
+            schema_format: 1,
+            text_encoding: TextEncoding::Utf16Le,
+        };
+        let bytes = h.encode();
+        // 65536 is written as the u16 value 1.
+        assert_eq!(u16::from_be_bytes([bytes[16], bytes[17]]), 1);
+        assert_eq!(Header::parse(&bytes).unwrap(), h);
+    }
+
+    /// The bytes `encode` produces are accepted by the pager: opening a two-page
+    /// buffer whose first 100 bytes are `encode()` yields the same header.
+    #[test]
+    fn encoded_header_opens_via_pager() {
+        let h = Header {
+            page_size: 512,
+            reserved_space: 0,
+            page_count: 2,
+            change_counter: 1,
+            freelist_trunk: 0,
+            freelist_count: 0,
+            schema_cookie: 0,
+            schema_format: 1,
+            text_encoding: TextEncoding::Utf8,
+        };
+        let mut file = vec![0u8; 512 * 2];
+        file[0..100].copy_from_slice(&h.encode());
+        let (parsed, _pager) = crate::pager::Pager::open(&file).unwrap();
+        assert_eq!(parsed, h);
     }
 
     #[test]

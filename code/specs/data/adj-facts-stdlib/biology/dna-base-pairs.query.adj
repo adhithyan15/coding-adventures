@@ -1,0 +1,19 @@
+% ============================================================================
+% dna-base-pairs.query.adj — a worked recall over the DNA base-pairing library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what base pairs with
+% adenine in DNA?": it states no biology fact — it only `import`s the grounded
+% table and asks binding queries. The engine resolves each `?` against the
+% `dna_complement` rows and returns the complement + the table's source/locator/
+% trust. A molecule not in the table abstains honestly — the engine never
+% invents a partner.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli dna-base-pairs.query.adj
+% ============================================================================
+
+import "dna-base-pairs.adj"
+
+? dna_complement(adenine, $Base)       % expect thymine
+? dna_complement(guanine, $Base)       % expect cytosine
+? dna_complement(uracil, $Base)        % expect abstain — uracil is RNA, not DNA

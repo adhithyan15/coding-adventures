@@ -1,0 +1,24 @@
+% ============================================================================
+% amino-acids.query.adj — a worked recall over the amino-acid one-letter codes.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is glycine's
+% one-letter code?": it states no biochemistry fact — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?` against
+% the `amino_acid_code` rows and returns the code (or the name) plus the table's
+% source/locator/trust. An amino acid not among the standard twenty abstains
+% honestly — the engine never invents a code.
+%
+% The query runs in BOTH directions: bind the name to recall the code (forward),
+% or bind the code to recall the name (reverse) — the same ground relation
+% resolves either way.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli amino-acids.query.adj
+% ============================================================================
+
+import "amino-acids.adj"
+
+? amino_acid_code(glycine, $C)         % forward — expect g
+? amino_acid_code($A, g)               % reverse — expect glycine (code g -> name)
+? amino_acid_code(alanine, $C)         % forward — expect a
+? amino_acid_code(selenocysteine, $C)  % expect abstain — not one of the standard 20
