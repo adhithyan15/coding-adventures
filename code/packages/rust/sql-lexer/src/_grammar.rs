@@ -75,11 +75,53 @@ pub fn token_grammar() -> TokenGrammar {
                 alias: Some(r#"NOT_EQUALS"#.to_string()),
             },
             TokenDefinition {
+                // Bitwise left shift.  Must precede the single-character `<`
+                // (LESS_THAN) below so the lexer prefers the two-character match
+                // (first-match-in-order scanning, like `<=`/`<>`).
+                name: r#"SHIFT_LEFT"#.to_string(),
+                pattern: r#"<<"#.to_string(),
+                is_regex: false,
+                line_number: 25,
+                alias: None,
+            },
+            TokenDefinition {
+                // Bitwise right shift.  Must precede the single-character `>`
+                // (GREATER_THAN) below for the same maximal-munch reason.
+                name: r#"SHIFT_RIGHT"#.to_string(),
+                pattern: r#">>"#.to_string(),
+                is_regex: false,
+                line_number: 25,
+                alias: None,
+            },
+            TokenDefinition {
                 // SQL string concatenation operator.  Must be declared BEFORE
                 // any single-pipe (|) token so the lexer always prefers the
                 // longer two-character match.
                 name: r#"CONCAT_OP"#.to_string(),
                 pattern: r#"||"#.to_string(),
+                is_regex: false,
+                line_number: 26,
+                alias: None,
+            },
+            TokenDefinition {
+                // Bitwise OR.  Declared AFTER CONCAT_OP (`||`) so the
+                // two-character concat always wins over the single pipe.
+                name: r#"BIT_OR"#.to_string(),
+                pattern: r#"|"#.to_string(),
+                is_regex: false,
+                line_number: 26,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"BIT_AND"#.to_string(),
+                pattern: r#"&"#.to_string(),
+                is_regex: false,
+                line_number: 26,
+                alias: None,
+            },
+            TokenDefinition {
+                name: r#"BIT_NOT"#.to_string(),
+                pattern: r#"~"#.to_string(),
                 is_regex: false,
                 line_number: 26,
                 alias: None,

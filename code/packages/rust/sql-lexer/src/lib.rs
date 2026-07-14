@@ -753,4 +753,23 @@ mod tests {
         assert_eq!(pairs.len(), 1);
         assert_eq!(pairs[0].0, TokenType::Star);
     }
+
+    /// The bitwise operators `& | ~ << >>` each lex to a single token with the
+    /// expected value, and — crucially — maximal munch holds: `<<`/`>>` win over
+    /// `<`/`>`, and `||` (concat) still wins over a single `|`.
+    #[test]
+    fn test_bitwise_operator_tokens() {
+        for op in ["&", "|", "~", "<<", ">>"] {
+            let pairs = lex(op);
+            assert_eq!(pairs.len(), 1, "expected one token for {op:?}");
+            assert_eq!(pairs[0].1, op, "token value mismatch for {op:?}");
+        }
+        // Maximal munch: `<<`/`>>` are one token each, not two `<`/`>`.
+        assert_eq!(lex("<<").len(), 1);
+        assert_eq!(lex(">>").len(), 1);
+        // `||` still lexes as a single concat token, not two `|` bit-ors.
+        let concat = lex("||");
+        assert_eq!(concat.len(), 1, "|| must remain one token");
+        assert_eq!(concat[0].1, "||");
+    }
 }

@@ -96,7 +96,7 @@ use serde_json::json;
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use coding_adventures_javascript_ast::{
     ArrowBody, AssignmentTarget, BindingTarget, BlockStatement, ClassMember, Declaration,
-    Expression, ForInit, FunctionDeclaration, FunctionParam, ObjectMember, Program, ProgramItem,
+    Expression, ForInit, FunctionDeclaration, ObjectMember, Program, ProgramItem,
     PropertyKey, Statement, VarKind, VariableDeclaration,
 };
 
@@ -574,7 +574,7 @@ fn rename_leaf_bindings(fd: &mut FunctionDeclaration, renames: &mut Vec<LocalRen
     // kind) is detected and skipped.
     let mut decl_order: Vec<(String, bool)> = Vec::new();
     for p in &fd.params {
-        let FunctionParam::Identifier(id) = p;
+        let id = p.binding_identifier();
         decl_order.push((id.name.clone(), true)); // params: function-scoped
     }
     collect_decl_occurrences(&fd.body, &mut decl_order, false);
@@ -590,7 +590,7 @@ fn rename_leaf_bindings(fd: &mut FunctionDeclaration, renames: &mut Vec<LocalRen
     // local nor capture a free global.
     let mut avoid: HashSet<String> = HashSet::new();
     for p in &fd.params {
-        let FunctionParam::Identifier(id) = p;
+        let id = p.binding_identifier();
         avoid.insert(id.name.clone());
     }
     collect_all_idents_block(&fd.body, &mut avoid);
@@ -638,7 +638,7 @@ fn rename_leaf_bindings(fd: &mut FunctionDeclaration, renames: &mut Vec<LocalRen
 
     // Apply: rewrite the parameter declarations …
     for p in &mut fd.params {
-        let FunctionParam::Identifier(id) = p;
+        let id = p.binding_identifier_mut();
         if let Some(new) = map.get(&id.name) {
             id.name = new.clone();
         }
@@ -853,7 +853,7 @@ fn collect_all_idents_stmt(stmt: &Statement, out: &mut HashSet<String>) {
         Statement::Declaration(Declaration::FunctionDeclaration(fd)) => {
             out.insert(fd.id.name.clone());
             for p in &fd.params {
-                let FunctionParam::Identifier(id) = p;
+                let id = p.binding_identifier();
                 out.insert(id.name.clone());
             }
             collect_all_idents_block(&fd.body, out);
@@ -885,7 +885,7 @@ fn collect_all_idents_stmt(stmt: &Statement, out: &mut HashSet<String>) {
                             out.insert(id.name.clone());
                         }
                         for p in &m.value.params {
-                            let FunctionParam::Identifier(id) = p;
+                            let id = p.binding_identifier();
                             out.insert(id.name.clone());
                         }
                         for s in &m.value.body.body {
@@ -1158,7 +1158,7 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                 out.insert(id.name.clone());
             }
             for p in &fe.params {
-                let FunctionParam::Identifier(id) = p;
+                let id = p.binding_identifier();
                 out.insert(id.name.clone());
             }
             for s in &fe.body.body {
@@ -1190,7 +1190,7 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                             out.insert(id.name.clone());
                         }
                         for p in &m.value.params {
-                            let FunctionParam::Identifier(id) = p;
+                            let id = p.binding_identifier();
                             out.insert(id.name.clone());
                         }
                         for s in &m.value.body.body {
@@ -1226,7 +1226,7 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
         // name used inside the arrow.
         Expression::ArrowFunctionExpression(ae) => {
             for p in &ae.params {
-                let FunctionParam::Identifier(id) = p;
+                let id = p.binding_identifier();
                 out.insert(id.name.clone());
             }
             match &ae.body {
@@ -1333,7 +1333,7 @@ fn rewrite_uses_stmt(stmt: &mut Statement, map: &HashMap<String, String>) {
                             inner.remove(&id.name);
                         }
                         for p in &m.value.params {
-                            let FunctionParam::Identifier(id) = p;
+                            let id = p.binding_identifier();
                             inner.remove(&id.name);
                         }
                         for s in &mut m.value.body.body {
@@ -1619,7 +1619,7 @@ fn rewrite_uses_expr(expr: &mut Expression, map: &HashMap<String, String>) {
                 inner.remove(&id.name);
             }
             for p in &fe.params {
-                let FunctionParam::Identifier(id) = p;
+                let id = p.binding_identifier();
                 inner.remove(&id.name);
             }
             for s in &mut fe.body.body {
@@ -1651,7 +1651,7 @@ fn rewrite_uses_expr(expr: &mut Expression, map: &HashMap<String, String>) {
                             inner.remove(&id.name);
                         }
                         for p in &m.value.params {
-                            let FunctionParam::Identifier(id) = p;
+                            let id = p.binding_identifier();
                             inner.remove(&id.name);
                         }
                         for s in &mut m.value.body.body {
@@ -1689,7 +1689,7 @@ fn rewrite_uses_expr(expr: &mut Expression, map: &HashMap<String, String>) {
         Expression::ArrowFunctionExpression(ae) => {
             let mut inner = map.clone();
             for p in &ae.params {
-                let FunctionParam::Identifier(id) = p;
+                let id = p.binding_identifier();
                 inner.remove(&id.name);
             }
             match &mut ae.body {

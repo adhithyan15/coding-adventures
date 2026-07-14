@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.13] - Unreleased
+
+### Added
+
+- **Bitwise operators in the expression grammar.** Wired the generated grammar's
+  `bitwise` precedence level (`bitwise = additive {{ ("&"|"|"|"<<"|">>") additive }}`)
+  between `additive` and `comparison` — all four are one left-associative level,
+  so `5 | 3 & 2` = `(5|3)&2`. Added the `~` (and `+`) prefix to `unary`. Both were
+  present in the grammar source but stale in the generated parser.
+
+## [0.1.12] - Unreleased
+
+### Added
+
+- **Simple (operand) `CASE` form.** The `case_expr` grammar gains an optional
+  operand expression between `CASE` and the first `WHEN`, so
+  `CASE x WHEN v THEN r … END` parses alongside the searched
+  `CASE WHEN cond THEN r … END`. `WHEN` is a keyword (not a NAME), so the
+  optional operand never swallows the searched form's `WHEN`. The planner tells
+  the two forms apart and desugars the simple form.
+
 ## [0.1.11] - Unreleased
 
 ### Added

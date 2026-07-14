@@ -130,7 +130,8 @@ mod es_version_serde {
 pub use declaration::{
     BindingTarget, ClassDeclaration, Declaration, ExportAllDeclaration, ExportDefaultDeclaration,
     ExportDefaultKind, ExportNamedDeclaration, ExportSpecifier, FunctionDeclaration, FunctionParam,
-    ImportDeclaration, ImportSpecifier, VarKind, VariableDeclaration, VariableDeclarator,
+    ImportDeclaration, ImportSpecifier, RestElement, VarKind, VariableDeclaration,
+    VariableDeclarator,
 };
 pub use expression::{
     ArrayExpression, ArrowBody, ArrowFunctionExpression, AssignmentExpression,

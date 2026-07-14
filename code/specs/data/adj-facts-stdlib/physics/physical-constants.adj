@@ -1,0 +1,53 @@
+% ============================================================================
+% physical-constants — the exact defining constants of the SI (adj-facts-stdlib,
+% SUBJECT: physics). Subject-organized, NOT graded by school level.
+% ============================================================================
+% A physics fact library for the ADJ standard library: each row maps a physical
+% constant to its EXACT value. Recall is a binding query — the model asserts no
+% number from memory; the engine resolves the `?` against the grounded rows and
+% returns the value WITH its citation, on the CPU, with zero answer-time model
+% calls, and abstains on a constant that is not in the table:
+%
+%     ? physical_constant(speed_of_light, $V)    % 299792458 (m/s), cited to NIST
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `physical_constant(name, value)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query. A science- or medicine-facing
+% agent `import`s this library to recall a constant and get its source in one hop,
+% and — because each `value` is a NUMBER — feeds the recalled constant straight
+% into a formula from `adj-formula-stdlib` (e.g. E = h·ν uses the recalled Planck
+% constant): the concrete bridge from physics RECALL to physics COMPUTE.
+%
+% WHY THESE FIVE, AND WHY THEY ARE EXACT. Since the 2019 revision of the SI, seven
+% "defining constants" are fixed by DEFINITION — they have exact numerical values
+% with zero uncertainty, and the base units are derived FROM them (the metre, for
+% instance, is now defined by fixing c). Five of those defining constants are the
+% ones a physics or chemistry learner recalls most: the speed of light c, the
+% Planck constant h, the elementary charge e, the Boltzmann constant k, and the
+% Avogadro constant N_A. Each value below is exact.
+%
+% PROVENANCE. Every value is copied verbatim from NIST's "Definitions of the SI
+% base units" page (the `source` span and `locator` below). NIST — the U.S.
+% National Institute of Standards and Technology, which with CODATA is a PRIMARY
+% metrology authority — is the citable artifact; hence `trust authoritative`.
+% Nothing here is asserted from memory. Note how ADJ stores each value: a literal
+% written in scientific notation (`6.62607015e-34`) is kept as its EXACT decimal
+% expansion, so no precision is lost — `? physical_constant(planck_constant, $V)`
+% binds the full exact decimal, not a rounded float. Keys are lowercase atoms.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table physical_constant {
+    columns constant, value
+
+    row (speed_of_light, 299792458)          % c   — metres per second (m s^-1)
+    row (planck_constant, 6.62607015e-34)    % h   — joule seconds     (J s)
+    row (elementary_charge, 1.602176634e-19) % e   — coulombs          (C)
+    row (boltzmann_constant, 1.380649e-23)   % k   — joules per kelvin (J K^-1)
+    row (avogadro_constant, 6.02214076e23)   % N_A — per mole          (mol^-1)
+
+    source "The meter is defined by taking the fixed numerical value of the speed of light in vacuum c to be 299,792,458 when expressed in the unit m s−1, where the second is defined in terms of ∆νCs."
+    locator "https://www.nist.gov/si-redefinition/definitions-si-base-units"
+    trust authoritative
+}

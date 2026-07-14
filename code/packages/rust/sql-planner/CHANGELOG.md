@@ -2,6 +2,26 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.12] - Unreleased
+
+### Added
+
+- **Bitwise `BinaryOp`/`UnaryOp` variants.** `BitAnd`/`BitOr`/`ShiftLeft`/
+  `ShiftRight` and `BitNot`; `plan_bitwise` maps the `bitwise` rule's operators
+  and `plan_unary` maps `~`. Operands are coerced to integer in the VM.
+
+## [0.2.11] - Unreleased
+
+### Added
+
+- **Simple `CASE` desugars to searched `CASE`.** `plan_case` now captures the
+  optional operand (the expression node before the first `WHEN`) and lowers each
+  `WHEN value THEN result` into a `(operand = value, result)` branch of the
+  existing `SqlExpr::Case` — **no new codegen or VM opcode**. A NULL operand
+  makes every `operand = value` NULL (never true), so it falls through to ELSE,
+  matching SQLite. Exact because mini-sqlite expressions are pure (SQLite
+  evaluates the operand once; a pure operand is unchanged by re-evaluation).
+
 ## [0.2.10] - Unreleased
 
 ### Added

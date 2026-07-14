@@ -22,7 +22,7 @@ agreement are automatic.
 ## What you've built
 
 - **salut** — casual "hi/bye" (← *salus*, "health").
-- **bien** — "well," a one-word answer (← *bene*; the Spanish twin).
+- **bien** — "well," a one-word answer (← *bene*; Spanish kept the same word).
 - **bon / bonne** — "good," the adjective (← *bonus*), and its agreement.
 - **le / la / les** — "the," carrying gender (← *ille/illa/illos*).
 - **bonjour** = bon + jour (masc.) — polite daytime "hello," *singular*

@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.46.0] - 2026-07-14
+
+### Added — emit `...name` rest parameters — CLOC12.190 PR1
+
+Picks up javascript-ast 0.41.0. New `FunctionParam::RestElement` emit arm writes `...` + the gathered
+identifier (`function f(a,...rest){}`). A lone rest param keeps its parens — the arrow concise-param form
+now only elides parens for a plain identifier, since `...a=>` is invalid JS. Additive; MINOR.
+
 ## [0.45.0] - 2026-07-12
 
 ### Added — CLOC12.189 PR1: emit export declarations

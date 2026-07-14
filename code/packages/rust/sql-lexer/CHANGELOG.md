@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.2] - Unreleased
+
+### Added
+
+- **Bitwise operator tokens `& | ~ << >>`.** New literal tokens for bitwise AND,
+  OR, NOT, and the two shifts. `<<`/`>>` are declared before the single `<`/`>`
+  and `|` after `||`, so first-match-in-order scanning preserves maximal munch
+  (`<<` is one token, `||` still beats a single `|`).
+
 ## [0.1.1] - Unreleased
 
 ### Fixed

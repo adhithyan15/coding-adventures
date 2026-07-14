@@ -1,39 +1,51 @@
-# adj-facts-stdlib — the graded, byte-provenanced *facts* standard library (K → med)
+# adj-facts-stdlib — the ADJ standard library of grounded facts (organized by subject)
 
-A curriculum of **recallable facts**, climbing from **what every kindergartener
-learns → medical school**, as importable, grounded ADJ libraries. The sibling of
-[`adj-formula-stdlib`](../adj-formula-stdlib/) (graded *formulas*) and the
-[medical recall domains](../mycin-2026/recall/) (single-hop clinical recall): where
-those hold computation and clinical edges, this holds the **elementary facts a
-learner memorizes first** — shapes, colors, counting, the calendar, the planets —
-and grows upward toward the science facts a clinician recalls.
+A growing **standard library of recallable facts** that any ADJ program can `import` and
+query. Together with [`adj-formula-stdlib`](../adj-formula-stdlib/) (grounded **formulas and
+laws**) and the [medical recall domains](../mycin-2026/recall/), it forms the **ADJ standard
+library**: the facts, formulas, and laws of the sciences — chemistry, physics, biology,
+mathematics, and beyond — encoded once, provenanced, and reusable.
 
-## Why facts are first-class
+## Why a standard library of facts (and formulas, and laws)
 
-The ADJ language natively supports facts (`relate`, `dictionary`) and now native
-tabular data ([`table`](../../ADJ-TABLES.md)). A fact library is *imported* and
-*recalled* — the model performs no lookup from memory; the engine resolves a
-binding query against the grounded rows and returns the answer **with its
-citation**, on the CPU, with zero answer-time model calls. Every shipped fact is
-byte-provenanced from a citable source (see
-[feedback: nothing human-authored]) — nothing is asserted "from memory."
+The goal is that an AI agent working in a domain can **reason through this library** the way a
+student reasons up from foundations — e.g. a medicine agent draws on chemistry, physics,
+biology, and math the way a medical student builds on them from the start. Recall costs
+**zero answer-time model calls**: the engine resolves a binding query against the grounded
+rows and returns the answer **with its citation**, on the CPU. Every value is byte-provenanced
+from a citable source (see [feedback: nothing human-authored]); nothing is asserted "from
+memory," and the trust tier honestly reflects the source (`authoritative` for a primary/official
+source — NIST, NASA, IUPAC, PubChem, a standards body; `consensus` for a secondary reference).
 
-## Layout (by grade level)
+## Organized by subject, not by level
 
-| level | what | examples |
-|-------|------|----------|
-| `kindergarten/` | the first facts a child learns | shapes → sides (this PR) |
-| … | grade-school, middle, high-school, undergrad … | *(grown one small library per rotation)* |
-| → medical school | the science facts a clinician recalls | (already: `mycin-2026/recall/`, 63 domains) |
+Files live under `code/specs/data/adj-facts-stdlib/<subject>/<name>.adj`. There is **no
+grade/age categorization** — just subjects. Current subjects (grown one small, grounded library
+per rotation, in parallel):
 
-## Consuming a fact library
+| subject | example library | source |
+|---|---|---|
+| `geometry/` | polygon → number of sides | Wolfram MathWorld |
+| `astronomy/` | planet → order from the Sun | NASA |
+| `chemistry/` | element → atomic number | PubChem / NIH |
+| `metrology/` | SI prefix → power of ten | NIST |
+| `mathematics/` | Roman numeral → value | (consensus) |
+| `calendar/` | day / month → number | ISO 8601 |
+| `money/` | US coin → cents | US Mint |
+| … | *physics, biology, geography, anatomy, physical constants, …* | *(expanding)* |
+
+Formulas and laws (Newton's `F = ma`, the ideal gas law `PV = nRT`, area/volume, …) are grown
+in `adj-formula-stdlib/<subject>/` using the `formula` construct — simple ones first, growing
+more complex — and are consumed the same way.
+
+## Consuming a library
 
 ```adj
-import "kindergarten/shapes.adj"
-? polygon_sides(hexagon, $Sides)     % 6, cited to the source
+import "chemistry/elements.adj"
+? atomic_number(oxygen, $Z)          % 8, cited to its source
 ```
 
-Because a `table` row lowers to a relation whose value is a number, a recalled
-fact **composes into a formula**: e.g. a looked-up side count feeds a
-perimeter/area formula from `adj-formula-stdlib` — the concrete K-math bridge from
-*recall* to *compute*.
+Because a `table` row lowers to a relation whose value is a number ([`ADJ-TABLES`](../../ADJ-TABLES.md)),
+a recalled fact **composes into a formula** — a looked-up atomic number, side count, or
+conversion factor flows straight into arithmetic. That is the bridge from **recall** to
+**compute**, and the reason facts and formulas belong in one standard library.

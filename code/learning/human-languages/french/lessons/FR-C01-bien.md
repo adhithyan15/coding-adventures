@@ -16,9 +16,8 @@ reviews_of: [FR-C01-salut]
 
 ## Warm-up
 
-[PAUSE 2s] If you're learning Spanish too, this word will feel like déjà vu —
-it's *spelled the same and means the same*: **bien**, "well." That's not a
-coincidence, and this lesson shows why.
+[PAUSE 2s] A tiny, essential word: **bien**, "well." It carries a good chunk
+of everyday conversation, and its root reaches straight into English.
 
 ## Sounds you'll need
 
@@ -33,12 +32,13 @@ is yours already:
 - **bene**fit ("do well"), **bene**volent ("wish well"), **bene**diction
   ("speak well"), be**nign**.
 
-> Spanish twin: Spanish also has **bien**, also from *bene*, also meaning
-> "well." French and Spanish inherited the *same* Latin adverb independently
-> and it barely changed in either. When two Romance languages agree this
-> exactly, you're looking straight at the shared Latin parent.
+> A cross-language aside: Spanish, another daughter of Latin, has the very
+> same word — *bien*, also from *bene*, also "well." French and Spanish each
+> inherited the Latin adverb independently and it barely changed in either;
+> when two Romance languages agree this exactly, you're looking straight at
+> the shared Latin parent.
 
-**Using it alone**, just like Spanish: "*Comment ça va?*" → "**Bien.**"
+**Using it alone**: "*Comment ça va?*" (how's it going?) → "**Bien.**"
 ("Well / good.") Intensified: "**très bien**" ("very well").
 
 ## Grammar Lens: the "good" it pairs with
