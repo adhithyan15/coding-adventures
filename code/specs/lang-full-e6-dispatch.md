@@ -313,9 +313,14 @@ E6d-7.
    → 42 and matching the 2nd variant → 42 on [NativeAot, Llvm, Wasm, Jvm, Clr];
    WASM + real dotnet CLR verified (full matrix re-run confirms no regression),
    native/LLVM/JVM via CI.
-7. **E6d-7 — closures on WASM (TW5).** ⚠ design note first (§3.4). Wire Phase-4
-   downgrade (or native `$Closure`); JVM/CLR/LLVM already run closures. Proof:
-   `((lambda (x) (+ x 1)) 41)` → 42 on all code-gen backends.
+7. **E6d-7 — closures on WASM (TW5).** ✅ **design note written** —
+   [`E6D7-wasm-closures.md`](E6D7-wasm-closures.md) commits to **option (a)**:
+   heap-form closure (`[dispatch_index, captures…]`, reusing the `alloc`/`field_*`
+   substrate) + a synthesized `$__dyn_call_closure` dispatcher (the WASM twin of
+   JVM/CLR `__callClosure` — a `br_table` over statically-known bodies, **no
+   `call_indirect`/`funcref`**). JVM/CLR/LLVM/native already run closures.
+   Impl PRs: E6d-7a (iir-to-wasm lowering) → E6d-7b (matrix cell). Proof:
+   `((lambda (x) (+ x 1)) 41)` → 42 on all 5 code-gen backends.
 8. **E6d-8 — dynamic globals (✅ read/write roundtrip shipped; arith follow-up).**
    A forward-referenced Twig value global (read before its `define`) is emitted as
    `call_builtin "global_get"/"global_set"` over `any`. The shared `lower_global_io`
