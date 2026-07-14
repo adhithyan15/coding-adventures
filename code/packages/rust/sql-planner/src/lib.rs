@@ -2281,6 +2281,16 @@ fn plan_primary(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
                 "column_ref" => return plan_column_ref(n),
                 "function_call" => return plan_function_call(n),
                 "expr" => return plan_expression(n),
+                // A `( SELECT … )` scalar subquery parses to a nested `select_stmt`
+                // node in a primary. Parsing is wired but evaluation is not yet:
+                // reject it with a clear error rather than mis-planning it as an
+                // expression. Wiring `SqlExpr::ScalarSubquery` + the VM sub-plan
+                // eval is the follow-up.
+                "select_stmt" => {
+                    return Err(PlanError::UnsupportedStatement(
+                        "scalar subqueries are not yet supported".to_string(),
+                    ))
+                }
                 "or_expr" | "and_expr" | "not_expr" | "comparison" | "bitwise"
                 | "additive" | "multiplicative" | "unary" | "primary" => return plan_expression(n),
                 _ => return plan_expression(n),

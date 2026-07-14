@@ -192,3 +192,19 @@ fn opening_a_missing_file_is_an_operational_error() {
     let err = connect("this/file/does/not/exist.sqlite").unwrap_err();
     assert!(matches!(err, MiniSqliteError::OperationalError(_)));
 }
+
+#[test]
+fn scalar_subquery_parses_but_errors_not_yet_supported() {
+    // A `( SELECT … )` scalar subquery now PARSES (grammar wired), but the
+    // evaluation path is not implemented — it must fail with a clear error
+    // rather than panicking or mis-planning.
+    let conn = must_connect();
+    must_execute(&conn, "CREATE TABLE t (x INTEGER)", &[]);
+    let err = conn
+        .execute("SELECT (SELECT 1) FROM t", &[])
+        .expect_err("scalar subquery should be rejected as not-yet-supported");
+    assert!(
+        format!("{err}").to_lowercase().contains("subquer"),
+        "expected a subquery-not-supported error, got: {err}"
+    );
+}

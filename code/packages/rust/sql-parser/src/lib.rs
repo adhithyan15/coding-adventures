@@ -705,6 +705,24 @@ mod tests {
         assert!(find_rule(&ast, "order_item"), "Expected order_item to keep COLLATE");
     }
 
+    /// A scalar subquery `( SELECT … )` parses as a `primary` containing a
+    /// nested `select_stmt` — in the SELECT list and in a WHERE comparison — and
+    /// does NOT disturb the plain parenthesised-expression form `( 1 + 2 )`.
+    #[test]
+    fn test_parse_scalar_subquery() {
+        for q in [
+            "SELECT (SELECT count(*) FROM t2) FROM t",
+            "SELECT x FROM t WHERE x > (SELECT max(y) FROM t2)",
+        ] {
+            let ast = assert_program_root(q);
+            // Two select_stmt nodes: the outer query and the nested subquery.
+            assert!(find_rule(&ast, "select_stmt"), "Expected select_stmt for {q:?}");
+        }
+        // Regression: a plain parenthesised expression still parses.
+        let ast = assert_program_root("SELECT (1 + 2) FROM t");
+        assert!(find_rule(&ast, "primary"), "Expected primary for parenthesised expr");
+    }
+
     // -----------------------------------------------------------------------
     // Test 20: BETWEEN expression
     // -----------------------------------------------------------------------
