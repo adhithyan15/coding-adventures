@@ -1,0 +1,62 @@
+% ============================================================================
+% states-of-matter — each everyday state of matter and its defining property
+% (adj-facts-stdlib, CHEMISTRY).
+% ============================================================================
+% An early-elementary science fact: matter around us comes in three everyday
+% STATES, and each one behaves differently when you put it in a container. A
+% solid keeps its own shape; a liquid flows to take the shape of whatever holds
+% it (but keeps the same amount); a gas spreads out to fill the whole container.
+% Recall is a binding query:
+%
+%     ? matter_state(solid, $Property)      % fixed_shape
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `matter_state(state, property)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the
+% property WITH its source, on the CPU, with zero model calls, and abstains on a
+% state not in the table.
+%
+% The three everyday states, as a truth table:
+%
+%     state    property                    what it means
+%     ------   -------------------------   ---------------------------------
+%     solid    fixed_shape                 keeps its own shape and volume
+%     liquid   takes_shape_of_container    flows to fit its container,
+%                                          but has a FIXED volume
+%     gas      fills_container             spreads to fill the whole container
+%
+% The property atoms are chosen to match the source's own wording: a solid
+% "holds its shape" (fixed_shape); a liquid "will take the shape of its
+% container" (takes_shape_of_container); a gas "fills its container"
+% (fills_container).
+%
+% Note that `plasma` — the "fourth state of matter" — is deliberately NOT a row:
+% this beginner library covers only the three everyday states a young learner
+% sees (ice, water, steam), so a recall must ABSTAIN on plasma rather than
+% invent a property for it. That honest-abstention property is what makes the
+% table safe to trust.
+%
+% Provenance: the properties are copied from NASA's Glenn Research Center K-12
+% "State of Matter" educational page. The `source` span below is the VERBATIM
+% solid-phase sentence from that page; the liquid and gas properties are the
+% page's own words too — it states verbatim that "A liquid will take the shape
+% of its container ... a liquid has a fixed volume" and that "A gas fills its
+% container, taking both the shape and the volume of the container." The citable
+% artifact is that page at the `locator`, and each state->property row was
+% confirmed against it. `trust authoritative` — grc.nasa.gov is a primary U.S.
+% government (.gov) science-education source. Nothing here is asserted from
+% memory. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table matter_state {
+    columns state, property
+
+    row (solid, fixed_shape)
+    row (liquid, takes_shape_of_container)
+    row (gas, fills_container)
+
+    source "A solid holds its shape and the volume of a solid is fixed by the shape of the solid."
+    locator "https://www.grc.nasa.gov/www/k-12/airplane/state.html"
+    trust authoritative
+}

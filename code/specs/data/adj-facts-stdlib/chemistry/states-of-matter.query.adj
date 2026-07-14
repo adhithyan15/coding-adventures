@@ -1,0 +1,19 @@
+% ============================================================================
+% states-of-matter.query.adj — a worked recall over the states-of-matter library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does a solid do in a
+% container?": it states no science fact — it only `import`s the grounded table
+% and asks binding queries. The engine resolves each `?` against the
+% `matter_state` rows and returns the property + the table's source/locator/
+% trust. A state not in the table abstains honestly — the engine never invents a
+% property.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli states-of-matter.query.adj
+% ============================================================================
+
+import "states-of-matter.adj"
+
+? matter_state(solid, $Property)       % expect fixed_shape
+? matter_state(gas, $Property)         % expect fills_container
+? matter_state(plasma, $Property)      % expect abstain — plasma is the 4th state, not shipped here
