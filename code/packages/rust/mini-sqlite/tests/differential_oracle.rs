@@ -1090,6 +1090,28 @@ const CASES: &[Case] = &[
         setup: &["CREATE TABLE t (id INTEGER)", "INSERT INTO t VALUES (1)"],
         query: "SELECT (5 = '5' COLLATE NOCASE) AS a, (5 = 5 COLLATE NOCASE) AS b FROM t",
     },
+    // ---- Lane 2: IS [NOT] DISTINCT FROM (standard-SQL null-safe compare) --
+    // `IS NOT DISTINCT FROM` = null-safe equality (like `IS`); `IS DISTINCT
+    // FROM` = its negation. Both-NULL is "not distinct" (equal). Aliased so
+    // the diff is on the value, not the column name.
+    Case {
+        id: "is_distinct_from",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, a INTEGER, b INTEGER)",
+            "INSERT INTO t VALUES (1,1,1),(2,1,2),(3,NULL,NULL),(4,1,NULL)",
+        ],
+        query: "SELECT id, (a IS DISTINCT FROM b) AS d, (a IS NOT DISTINCT FROM b) AS nd FROM t ORDER BY id",
+    },
+    // `IS NOT DISTINCT FROM` used as a WHERE predicate — the null-safe match
+    // includes the both-NULL row, which a plain `a = b` would exclude.
+    Case {
+        id: "is_not_distinct_from_where",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, a INTEGER, b INTEGER)",
+            "INSERT INTO t VALUES (1,1,1),(2,1,2),(3,NULL,NULL),(4,2,NULL)",
+        ],
+        query: "SELECT id FROM t WHERE a IS NOT DISTINCT FROM b ORDER BY id",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but

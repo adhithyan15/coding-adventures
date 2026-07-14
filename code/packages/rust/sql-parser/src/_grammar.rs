@@ -501,6 +501,25 @@ pub fn parser_grammar() -> ParserGrammar {
                             GrammarElement::Literal { value: r#"NOT"#.to_string() },
                             GrammarElement::Literal { value: r#"NULL"#.to_string() },
                         ] },
+                        // `x IS [NOT] DISTINCT FROM <expr>` — the standard-SQL
+                        // spelling of the null-safe compare. `IS NOT DISTINCT
+                        // FROM` is the null-safe *equality* (`x IS y`) and `IS
+                        // DISTINCT FROM` is its negation. Placed BEFORE the plain
+                        // `IS [NOT] <expr>` forms so ordered choice matches the
+                        // DISTINCT keyword first (the planner inverts the sense).
+                        GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Literal { value: r#"IS"#.to_string() },
+                            GrammarElement::Literal { value: r#"NOT"#.to_string() },
+                            GrammarElement::Literal { value: r#"DISTINCT"#.to_string() },
+                            GrammarElement::Literal { value: r#"FROM"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
+                        ] },
+                        GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Literal { value: r#"IS"#.to_string() },
+                            GrammarElement::Literal { value: r#"DISTINCT"#.to_string() },
+                            GrammarElement::Literal { value: r#"FROM"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
+                        ] },
                         // `x IS NOT <expr>` / `x IS <expr>` — null-safe (in)equality.
                         // These come AFTER the IS NULL / IS NOT NULL sequences so
                         // ordered-choice matches the NULL forms first (NULL is

@@ -1957,12 +1957,20 @@ fn plan_comparison(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
     // operand node), whereas `IS <expr>` / `IS NOT <expr>` produce a second
     // expression node — that is how we tell the two apart.
     if direct_tok_uppers.contains(&"IS".to_string()) {
-        let negated = direct_tok_uppers.contains(&"NOT".to_string());
+        let has_not = direct_tok_uppers.contains(&"NOT".to_string());
         if let Some(right_node) = child_nodes_ordered.get(1) {
             let right = plan_expression(right_node)?;
+            // Two spellings share the null-safe compare `plan_is_distinct`:
+            //   `x IS [NOT] y`                 → negated = has_not
+            //   `x IS [NOT] DISTINCT FROM y`   → negated = !has_not
+            // because DISTINCT *inverts* the sense: `IS NOT DISTINCT FROM` is the
+            // null-safe equality (like `IS`), and `IS DISTINCT FROM` its negation
+            // (like `IS NOT`).
+            let has_distinct = direct_tok_uppers.contains(&"DISTINCT".to_string());
+            let negated = if has_distinct { !has_not } else { has_not };
             return Ok(plan_is_distinct(left, right, negated));
         }
-        return Ok(if negated {
+        return Ok(if has_not {
             SqlExpr::IsNotNull(Box::new(left))
         } else {
             SqlExpr::IsNull(Box::new(left))
