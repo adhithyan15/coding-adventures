@@ -1,0 +1,19 @@
+% ============================================================================
+% major-organs.query.adj — a worked recall over the major-organs library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does the heart do?":
+% it states no fact of its own — it only `import`s the grounded table and asks
+% binding queries. The engine resolves each `?` against the `organ_function`
+% rows and returns the job + the table's source/locator/trust. A word that is
+% not one of these organs abstains honestly — the engine never invents a job.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli major-organs.query.adj
+% ============================================================================
+
+import "major-organs.adj"
+
+? organ_function(heart, $Job)         % expect pumps_blood
+? organ_function(kidneys, $Job)       % expect filter_blood
+? organ_function($Organ, gas_exchange) % reverse bind — expect lungs
+? organ_function(bone, $Job)          % expect abstain — a bone is not one of these organs
