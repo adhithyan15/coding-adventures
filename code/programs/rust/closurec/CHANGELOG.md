@@ -2,6 +2,19 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.31] - 2026-07-14
+
+### Added — CLOC12.192 PR2: ES async arrow functions end-to-end
+
+Picks up javascript-parser 0.57.0 (the `async_arrow_function` bridge enable, PR1) — a bridge-only arc,
+since the AST (`ArrowFunctionExpression.is_async`) and emitter (prints `async`) already modelled async
+arrows. A file with an async arrow no longer declines to WHITESPACE_ONLY; it flows through the full
+optimization pipeline and the arrow body folds. New `tests/diff/async-arrow/` fixture +
+`diff_async_arrow.rs`: `var f=async()=>1+2; g(f);` at SIMPLE emits `var f=async()=>3;g(f);` — the concise
+body `1 + 2` folds to `3` and the `async` keyword round-trips, proving the pipeline ran (a WHITESPACE_ONLY
+fallback would leave `async()=>1+2` intact). PATCH bump; regen `--help_markdown` fixture + `cli.spec.json`
+version sync.
+
 ## [0.234.30] - 2026-07-14
 
 ### Added — CLOC12.191 PR3: ES default parameters end-to-end
