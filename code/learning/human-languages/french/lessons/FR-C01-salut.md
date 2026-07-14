@@ -37,9 +37,9 @@ you already own in English:
 - **salut**ary, **salu**brious — health-giving.
 - and, from the close cousin *salvus* ("safe"), *save*, *salvation*, *safe*.
 
-> Spanish note: you met *hola* — an uncertain, rootless interjection. French
-> *salut* is the opposite: a transparent Latin word meaning "health." Two
-> Romance languages, two totally different casual "hi"s.
+> Spanish note: its casual "hi" is *hola* — an uncertain, rootless
+> interjection. French *salut* is the opposite: a transparent Latin word
+> meaning "health." Two Romance languages, two totally different casual "hi"s.
 
 ## Why it's said this way
 

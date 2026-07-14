@@ -16,9 +16,9 @@ reviews_of: [FR-C01-bon]
 
 ## Warm-up
 
-[PAUSE 2s] Before your first noun: the words for "the." Like Spanish, French
-splits "the" by gender — and it's the *same* Latin source you met in Spanish,
-so this is half-learned already.
+[PAUSE 2s] Before your first noun: the words for "the." French splits "the" by
+gender — masculine *le*, feminine *la* — a habit it inherited from Latin (its
+sibling Spanish did the same, from the same source).
 
 ## Sounds you'll need
 
@@ -42,12 +42,12 @@ so this is half-learned already.
 
 ## Grammar Lens: French gender, also from Latin
 
-Every French noun is **masculine or feminine** — the same grammatical-gender
-system you met in Spanish, and from the same source: Latin's three genders
-(masculine, feminine, neuter) collapsed to two, the neuters folding into the
-masculine. You learn each noun **with its article** (*le* or *la*), because
-gender can't be guessed. French offers *one* small mercy Spanish doesn't:
-plurals share a single article, *les*, for both genders.
+Every French noun is **masculine or feminine** — a grammatical gender baked
+into the noun, inherited from Latin: its three genders (masculine, feminine,
+neuter) collapsed to two, the neuters folding into the masculine. (Spanish, the
+other Latin daughter, did the very same.) You learn each noun **with its
+article** (*le* or *la*), because the gender can't be guessed. French has one
+convenience here: in the plural, both genders share a single article, *les*.
 
 ## Guided Practice
 
