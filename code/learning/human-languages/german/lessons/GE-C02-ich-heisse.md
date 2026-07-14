@@ -25,8 +25,8 @@ need for meeting anyone.
 
 > **ich heiße…** = word for word "I am called…" = **"my name is…"**
 
-*Ich heiße David.* → "My name is David." *Ich heiße Susanne.* → "My name is
-Susanne."
+*Ich heiße Arun.* → "My name is Arun." *Ich heiße Mira.* → "My name is
+Mira."
 
 ## Why it's said this way
 

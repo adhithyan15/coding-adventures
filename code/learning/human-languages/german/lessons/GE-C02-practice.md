@@ -22,9 +22,9 @@ reviews_of: [GE-C02-ich, GE-C02-heissen, GE-C02-ich-heisse, GE-C02-du-sie, GE-C0
 
 | German | English |
 |---|---|
-| *Ich heiße Susanne.* | My name is Susanne. |
+| *Ich heiße Mira.* | My name is Mira. |
 | *Wie heißen Sie?* | What's your name? |
-| *Ich heiße David.* | My name is David. |
+| *Ich heiße Arun.* | My name is Arun. |
 | *Freut mich.* | Pleased to meet you. |
 
 Every piece a Germanic cousin of English:
