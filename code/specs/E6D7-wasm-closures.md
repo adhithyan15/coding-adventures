@@ -161,3 +161,34 @@ layer-2 dispatch on the code-gen backends.
   optimization.
 - **Escape analysis / stack-allocated closures** — an AOT00 T5 optimization, out
   of scope here.
+
+## 8. Implementation status & divergence from the plan (E6d-7a)
+
+**Approach — IIR pass, not in-backend lowering.** E6d-7a implements the closure
+lowering as a shared IIR pass (`iir-builtin-lowering::lower_closures_to_heap`),
+not as new `iir-to-wasm` codegen (§4's plan). It rewrites `alloc_closure`/
+`call_closure` to the cons-heap form + a synthesized `__dyn_call_closure`
+dispatcher using only ops every heap backend already lowers (`cons`/`car`/`cdr`,
+a dynamic `=`, `call`, `jmp_if_false`). This is strictly better: **zero** new
+backend codegen, and it works for *any* backend lacking a native closure model.
+`iir-to-wasm`'s `alloc_closure`/`call_closure` rejection stays as a defensive
+guard (the pass eliminates the ops upstream).
+
+**The design note was wrong about native/LLVM.** §0/§1 assumed "NativeAot and
+LLVM run [closures] through the C runtime". They do **not** — both `BackendRefused`
+`alloc_closure`/`call_closure` (only JVM/CLR run closures natively, via their
+`long[]`/`object[]` dispatch). So the same pass lights up **NativeAot + WASM**
+together (run-verified, exit 42), a bigger win than WASM-alone.
+
+**The index test is a dynamic `=`, not `unbox`+`cmp_eq`.** The unboxed integer
+width differs by backend (WASM i31/i32 vs native i64), so a hand-rolled
+`unbox`+`cmp_eq` cannot be typed uniformly. Using the dynamic `=` (the proven
+E6d-6 match/union tag test) delegates the width + boxed-bool `jmp_if_false` to
+already-uniform machinery.
+
+**LLVM is a follow-up.** The dynamic `=` on the LLVM column hits a *pre-existing*
+`lower_dynamic_arith` comparison-width bug (`cmp_eq` typed `bool` → `icmp i1` on
+an i64), which also affects E6d-6 match/union on LLVM (latent — the LLVM column
+was never run locally). Filed separately; once fixed, wire the pass into the LLVM
+pipeline and add `Llvm` to the two closure matrix cells. **E6d-7a ships on
+[NativeAot, Wasm, Jvm, Clr].**

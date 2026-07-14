@@ -245,6 +245,8 @@ members = [
     "wolfram-to-semantic-ir",
     "derive-lexer",
     "derive-parser",
+    "derive-runtime",
+    "derive-repl",
     "apl-lexer",
     "apl-parser",
     "apl-runtime",

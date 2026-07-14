@@ -104,8 +104,8 @@ use interpreter_ir::function::IIRFunction;
 use interpreter_ir::instr::{IIRInstr, Operand};
 use interpreter_ir::module::IIRModule;
 use iir_builtin_lowering::{
-    intern_symbols, lower_box_unbox_to_runtime_calls, lower_dyn_repr, lower_dynamic_arith,
-    lower_global_io, lower_heap_builtins_runtime,
+    intern_symbols, lower_box_unbox_to_runtime_calls, lower_closures_to_heap, lower_dyn_repr,
+    lower_dynamic_arith, lower_global_io, lower_heap_builtins_runtime,
 };
 use iir_refinement_pass::{check_module as check_refinements, RefinementMode};
 use jit_core::backend::FunctionContext;
@@ -2227,6 +2227,14 @@ fn prepare_module_for_aot(module: &mut IIRModule) {
     // what later enables `pair?`/`ATOM`/`EQ`/symbols (L3b-2c).  It only
     // touches those exact builtin names, so a module without them — every
     // Twig/Nib/Brainfuck program today — is left unchanged.
+    // Phase 0-clo: closures (E6d-7a). NativeAot has no native closure model, so
+    // lower `alloc_closure`/`call_closure` to the cons-heap form + a synthesized
+    // `__dyn_call_closure` dispatcher — all `cons`/`car`/`cdr`/`call` the runtime
+    // heap path below already lowers. Must run BEFORE `lower_heap_builtins_runtime`
+    // so the `cons`/`car`/`cdr` it emits become `dyn_*` runtime calls. A no-op for
+    // a closure-free module.
+    lower_closures_to_heap(module);
+
     lower_heap_builtins_runtime(module);
 
     // Phase 0a‴: dynamic integer arithmetic over `any` (LANG-FULL E6d-2).

@@ -2797,13 +2797,53 @@ fn apply_sort(
                 };
             }
 
-            let cmp = sql_cmp(va, vb);
+            let cmp = sql_cmp_collated(va, vb, key.collation.as_deref());
             if cmp != std::cmp::Ordering::Equal {
                 return if key.ascending { cmp } else { cmp.reverse() };
             }
         }
         std::cmp::Ordering::Equal
     });
+}
+
+/// Compare two values honouring an optional `COLLATE` sequence.
+///
+/// Collation only affects **text-vs-text** comparisons; for every other type
+/// pairing SQLite's normal type-ordering (`sql_cmp`) applies unchanged. The two
+/// built-in text collations we transform:
+///
+/// | Collation | Transform before byte comparison        | Example equal pair |
+/// |-----------|------------------------------------------|--------------------|
+/// | `NOCASE`  | ASCII-lowercase both operands            | `'Apple'` = `'apple'` |
+/// | `RTRIM`   | strip trailing spaces from both operands | `'a  '` = `'a'`       |
+///
+/// `None` or `BINARY` (folded to `None` in the planner) keeps raw byte order.
+/// The transform is applied to *copies*; the underlying values are untouched, so
+/// the sort is a pure reordering. NOCASE is ASCII-only, matching SQLite's
+/// built-in NOCASE (it lowercases A–Z exclusively, leaving non-ASCII bytes as
+/// is) — we mirror that with `to_ascii_lowercase` rather than Unicode folding.
+fn sql_cmp_collated(
+    a: &SqlValue,
+    b: &SqlValue,
+    collation: Option<&str>,
+) -> std::cmp::Ordering {
+    if let (Some(coll), SqlValue::Text(sa), SqlValue::Text(sb)) = (collation, a, b) {
+        let ta = collate_text(sa, coll);
+        let tb = collate_text(sb, coll);
+        return ta.cmp(&tb);
+    }
+    sql_cmp(a, b)
+}
+
+/// Produce the collation-normalised form of a text value for comparison.
+/// Unknown collation names fall through to the raw string (defensive — the
+/// planner already rejects anything other than NOCASE/RTRIM/BINARY).
+fn collate_text(s: &str, collation: &str) -> String {
+    match collation {
+        "NOCASE" => s.to_ascii_lowercase(),
+        "RTRIM" => s.trim_end_matches(' ').to_string(),
+        _ => s.to_string(),
+    }
 }
 
 /// Remove duplicate rows from `rows` (preserving first occurrence).
@@ -3744,7 +3784,7 @@ mod tests {
             Instruction::Label("end".to_string()),
             Instruction::CloseScan(None),
             Instruction::Halt,
-            Instruction::SortResult(vec![CompiledSortKey { column: "x".to_string(), ascending: true, nulls_first: None }]),
+            Instruction::SortResult(vec![CompiledSortKey { column: "x".to_string(), ascending: true, nulls_first: None, collation: None }]),
         ]), &mut b).unwrap();
         assert_eq!(r.rows, vec![vec![int(1)], vec![int(2)], vec![int(3)]]);
     }
@@ -3767,7 +3807,7 @@ mod tests {
             Instruction::Label("end".to_string()),
             Instruction::CloseScan(None),
             Instruction::Halt,
-            Instruction::SortResult(vec![CompiledSortKey { column: "x".to_string(), ascending: false, nulls_first: None }]),
+            Instruction::SortResult(vec![CompiledSortKey { column: "x".to_string(), ascending: false, nulls_first: None, collation: None }]),
         ]), &mut b).unwrap();
         assert_eq!(r.rows, vec![vec![int(3)], vec![int(2)], vec![int(1)]]);
     }
@@ -3798,8 +3838,8 @@ mod tests {
             Instruction::CloseScan(None),
             Instruction::Halt,
             Instruction::SortResult(vec![
-                CompiledSortKey { column: "a".to_string(), ascending: true, nulls_first: None },
-                CompiledSortKey { column: "b".to_string(), ascending: true, nulls_first: None },
+                CompiledSortKey { column: "a".to_string(), ascending: true, nulls_first: None, collation: None },
+                CompiledSortKey { column: "b".to_string(), ascending: true, nulls_first: None, collation: None },
             ]),
         ]), &mut b).unwrap();
         assert_eq!(r.rows[0], vec![int(1), int(1)]);
@@ -4304,7 +4344,7 @@ mod tests {
             Instruction::Label("end".to_string()),
             Instruction::CloseScan(None),
             Instruction::Halt,
-            Instruction::SortResult(vec![CompiledSortKey { column: "x".to_string(), ascending: true, nulls_first: None }]),
+            Instruction::SortResult(vec![CompiledSortKey { column: "x".to_string(), ascending: true, nulls_first: None, collation: None }]),
             Instruction::LimitResult(Some(3), None),
         ]), &mut b).unwrap();
         assert_eq!(r.rows, vec![vec![int(1)], vec![int(2)], vec![int(3)]]);
@@ -4331,7 +4371,7 @@ mod tests {
             Instruction::Label("end".to_string()),
             Instruction::CloseScan(None),
             Instruction::Halt,
-            Instruction::SortResult(vec![CompiledSortKey { column: "x".to_string(), ascending: true, nulls_first: None }]),
+            Instruction::SortResult(vec![CompiledSortKey { column: "x".to_string(), ascending: true, nulls_first: None, collation: None }]),
             Instruction::DistinctResult,
         ]), &mut b).unwrap();
         assert_eq!(r.rows, vec![vec![int(1)], vec![int(2)], vec![int(3)]]);

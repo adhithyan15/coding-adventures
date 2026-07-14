@@ -873,6 +873,99 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT a FROM t ORDER BY a NULLS FIRST",
     },
+    // Searched CASE: the value of the first branch whose WHEN is truthy wins;
+    // no match with an ELSE yields the ELSE. Aliased so the check is on values.
+    Case {
+        id: "case_first_match_and_else",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, a INTEGER)",
+            "INSERT INTO t VALUES (1,1),(2,2),(3,3)",
+        ],
+        query: "SELECT CASE WHEN a=1 THEN 'one' WHEN a=2 THEN 'two' ELSE 'other' END AS c FROM t ORDER BY id",
+    },
+    // No matching WHEN and NO ELSE → NULL; and a NULL condition is not truthy so
+    // its branch is skipped (the `WHEN NULL THEN 'x'` never fires).
+    Case {
+        id: "case_no_else_is_null_and_null_cond_skipped",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, a INTEGER)",
+            "INSERT INTO t VALUES (1,1),(2,5)",
+        ],
+        query: "SELECT CASE WHEN NULL THEN 'x' WHEN a=1 THEN 'one' END AS c FROM t ORDER BY id",
+    },
+    // CASE nests as an ordinary expression — usable in a WHERE predicate and in
+    // arithmetic — proving it composes through the whole expression grammar.
+    Case {
+        id: "case_in_where_and_arithmetic",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, a INTEGER)",
+            "INSERT INTO t VALUES (1,1),(2,2),(3,NULL),(4,4)",
+        ],
+        query: "SELECT id, CASE WHEN a=2 THEN 10 ELSE 20 END + 5 AS v FROM t WHERE CASE WHEN a IS NULL THEN 0 ELSE 1 END ORDER BY id",
+    },
+    // `a IS b` is null-SAFE equality: 1 when both equal OR both NULL, 0 when
+    // exactly one is NULL — unlike `=`, which yields NULL if either side is NULL.
+    // Aliased so the check is on the 1/0 result value per row.
+    Case {
+        id: "is_null_safe_equality",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, a INTEGER, b INTEGER)",
+            "INSERT INTO t VALUES (1,1,1),(2,1,2),(3,NULL,NULL),(4,1,NULL),(5,NULL,1)",
+        ],
+        query: "SELECT id, (a IS b) AS e, (a IS NOT b) AS ne FROM t ORDER BY id",
+    },
+    // `IS`/`IS NOT` used as a WHERE predicate — the null-safe match includes the
+    // both-NULL row, which a plain `a = b` would exclude (NULL is not true).
+    Case {
+        id: "is_operator_in_where",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, a INTEGER, b INTEGER)",
+            "INSERT INTO t VALUES (1,1,1),(2,1,2),(3,NULL,NULL),(4,2,NULL)",
+        ],
+        query: "SELECT id FROM t WHERE a IS b ORDER BY id",
+    },
+    // ---- Lane 3: COLLATE in ORDER BY -------------------------------------
+    // NOCASE folds case, so mixed-case names sort case-insensitively. Equal
+    // keys ('Apple'/'apple', 'banana'/'BANANA') keep insertion order — a
+    // secondary `id` key pins that so the oracle diff is deterministic.
+    Case {
+        id: "order_by_collate_nocase",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT)",
+            "INSERT INTO t VALUES (1,'banana'),(2,'Apple'),(3,'cherry'),(4,'BANANA'),(5,'apple')",
+        ],
+        query: "SELECT name FROM t ORDER BY name COLLATE NOCASE, id",
+    },
+    // NOCASE with DESC — the key comparison flips but the collation still folds
+    // case, and equal-key ties are unaffected by direction.
+    Case {
+        id: "order_by_collate_nocase_desc",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT)",
+            "INSERT INTO t VALUES (1,'banana'),(2,'Apple'),(3,'cherry'),(4,'BANANA'),(5,'apple')",
+        ],
+        query: "SELECT name FROM t ORDER BY name COLLATE NOCASE DESC, id",
+    },
+    // RTRIM ignores trailing spaces, so 'a  ' and 'a' compare equal (broken by
+    // the id tiebreak). Contrast with default BINARY, where 'a' < 'a  '.
+    Case {
+        id: "order_by_collate_rtrim",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT)",
+            "INSERT INTO t VALUES (1,'b'),(2,'a  '),(3,'a'),(4,'b '),(5,'c')",
+        ],
+        query: "SELECT name FROM t ORDER BY name COLLATE RTRIM, id",
+    },
+    // Explicit COLLATE BINARY is the default byte order — uppercase sorts
+    // before lowercase (ASCII 'A'=65 < 'a'=97).
+    Case {
+        id: "order_by_collate_binary",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT)",
+            "INSERT INTO t VALUES (1,'banana'),(2,'Apple'),(3,'apple')",
+        ],
+        query: "SELECT name FROM t ORDER BY name COLLATE BINARY",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but

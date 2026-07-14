@@ -156,6 +156,7 @@ fn adapt_statement(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
         "define_decl" => adapt_define(child).map(Statement::Define),
         "rulebook_decl" => adapt_rulebook(child),
         "formulabook_decl" => adapt_formulabook(child),
+        "table_decl" => adapt_table(child),
         "use_decl" => adapt_use(child),
         "import_decl" => adapt_import(child),
         other => Err(AdapterError::UnexpectedRule {
@@ -913,6 +914,108 @@ fn adapt_formula(node: &GrammarASTNode) -> Result<FormulaDef, AdapterError> {
         steps,
         body,
         annotations,
+    })
+}
+
+fn adapt_table(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // table_decl = "table" IDENT LBRACE { use_decl } columns_decl { table_row } { annotation } RBRACE
+    //
+    // The name is the first Name token that isn't the `table` keyword (the
+    // `columns`/`row` structural literals and every column/cell identifier live
+    // INSIDE nested nodes, so they cannot be mistaken for the table name).
+    let name = first_name_not(node, "table")
+        .ok_or(AdapterError::MissingChild {
+            rule: "table_decl".into(),
+            position: "table name",
+        })?
+        .to_string();
+    // `{ use_decl }` — the vocabulary bindings appear as direct `use_decl`
+    // children (not wrapped, unlike a formulabook's `formulabook_item`).
+    let mut uses = Vec::new();
+    for c in &node.children {
+        if let ASTNodeOrToken::Node(item) = c {
+            if item.rule_name == "use_decl" {
+                if let Statement::Use(u) = adapt_use(item)? {
+                    uses.push(u);
+                }
+            }
+        }
+    }
+    // columns_decl = "columns" IDENT { COMMA IDENT } — the column names are the
+    // Name tokens of the `columns_decl` child other than the `columns` literal
+    // itself (which is an IDENT-matched keyword, so it surfaces as a Name token
+    // with value "columns"). COMMA is punctuation and is skipped.
+    let columns_node =
+        first_named_child(node, "columns_decl").ok_or(AdapterError::MissingChild {
+            rule: "table_decl".into(),
+            position: "columns_decl",
+        })?;
+    let columns: Vec<String> = columns_node
+        .children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name && t.value != "columns" => {
+                Some(t.value.clone())
+            }
+            _ => None,
+        })
+        .collect();
+    // { table_row } — each `table_row` node holds the `row` literal plus one
+    // `row_item` node per cell (in source order). A row's arity is NOT checked
+    // here (that is the lowerer's job, against `columns`); the adapter only
+    // faithfully carries the cells.
+    let mut rows = Vec::new();
+    for c in &node.children {
+        if let ASTNodeOrToken::Node(row_node) = c {
+            if row_node.rule_name == "table_row" {
+                let mut cells = Vec::new();
+                for rc in &row_node.children {
+                    if let ASTNodeOrToken::Node(item) = rc {
+                        if item.rule_name == "row_item" {
+                            cells.push(adapt_row_item(item)?);
+                        }
+                    }
+                }
+                rows.push(crate::ast::TableRow { cells });
+            }
+        }
+    }
+    // Same provenance envelope as every grounded clause (`{ annotation }`).
+    let annotations = collect_annotations(node)?;
+    Ok(Statement::Table {
+        name,
+        uses,
+        columns,
+        rows,
+        annotations,
+    })
+}
+
+fn adapt_row_item(node: &GrammarASTNode) -> Result<crate::ast::TableCell, AdapterError> {
+    // row_item = NUMBER | IDENT | STRING — a single-token alternation that
+    // surfaces as a `row_item` node wrapping exactly one token. Map that token
+    // to the matching ground cell kind.
+    for c in &node.children {
+        if let ASTNodeOrToken::Token(t) = c {
+            match t.type_ {
+                TokenType::Number => {
+                    return Ok(crate::ast::TableCell::Number(parse_finite(
+                        &t.value, t.type_, "row_item",
+                    )?));
+                }
+                TokenType::String => {
+                    return Ok(crate::ast::TableCell::Text(unquote_string(&t.value)));
+                }
+                TokenType::Name => {
+                    return Ok(crate::ast::TableCell::Atom(t.value.clone()));
+                }
+                _ => {}
+            }
+        }
+    }
+    Err(AdapterError::MissingChild {
+        rule: "row_item".into(),
+        position: "cell token (NUMBER | IDENT | STRING)",
     })
 }
 

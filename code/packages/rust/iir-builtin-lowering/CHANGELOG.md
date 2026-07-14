@@ -1,5 +1,9 @@
 # Changelog — iir-builtin-lowering
 
+## 0.30.0 - 2026-07-14 (E6d-7a: closures -> cons-heap + synthesized dispatcher)
+
+New pass `lower_closures_to_heap` (closure_heap.rs): lowers `alloc_closure`/`call_closure` entirely at the IIR level for the backends that lack a native closure model (WASM + NativeAot; LLVM is a follow-up). A closure becomes a cons-chain `(box(dispatch_index) . (caps...))`; `call_closure` boxes its args into a second chain and calls a synthesized `__dyn_call_closure` dispatcher — a chain of dynamic `=` index tests (the proven E6d-6 match/union tag pattern) over statically-known lambda bodies, each a direct `call` threading captures ++ args. Reuses only `cons`/`car`/`cdr`/`=`/`call`/`jmp_if_false` (no new backend codegen; no `call_indirect`/funcref). Dispatch indices are assigned alphabetically (deterministic). Unit-tested; run-verified on WASM + native (exit 42).
+
 ## 0.29.0 - 2026-07-13 (E6d-6: boxed-bool `jmp_if_false` branches on the raw bool)
 
 Both dynamic-representation passes now recognise a `jmp_if_false` whose guard is a

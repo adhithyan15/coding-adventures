@@ -535,6 +535,7 @@ fn fold_plan(plan: OptimizedPlan) -> OptimizedPlan {
                     expr: fold_expr(k.expr),
                     ascending: k.ascending,
                     nulls_first: k.nulls_first,
+                    collation: k.collation,
                 })
                 .collect(),
         },
@@ -610,6 +611,16 @@ fn fold_expr(expr: SqlExpr) -> SqlExpr {
         Cast { expr: inner, ty } => Cast {
             expr: Box::new(fold_expr(*inner)),
             ty,
+        },
+
+        // CASE: fold each condition/value and the ELSE, but keep the branch
+        // structure (short-circuit semantics are the VM's job, not the folder's).
+        Case { branches, else_val } => Case {
+            branches: branches
+                .into_iter()
+                .map(|(cond, val)| (fold_expr(cond), fold_expr(val)))
+                .collect(),
+            else_val: else_val.map(|e| Box::new(fold_expr(*e))),
         },
 
         IsNull(inner) => {
@@ -1289,6 +1300,15 @@ fn collect_columns_in_expr(expr: &SqlExpr, out: &mut HashSet<String>) {
         }
         SqlExpr::UnaryOp { expr, .. } => collect_columns_in_expr(expr, out),
         SqlExpr::Cast { expr, .. } => collect_columns_in_expr(expr, out),
+        SqlExpr::Case { branches, else_val } => {
+            for (cond, val) in branches {
+                collect_columns_in_expr(cond, out);
+                collect_columns_in_expr(val, out);
+            }
+            if let Some(e) = else_val {
+                collect_columns_in_expr(e, out);
+            }
+        }
         SqlExpr::IsNull(inner) | SqlExpr::IsNotNull(inner) => {
             collect_columns_in_expr(inner, out)
         }
@@ -1789,6 +1809,7 @@ mod tests {
                 expr: col(col_name),
                 ascending: true,
                 nulls_first: None,
+                collation: None,
             }],
         }
     }
@@ -2425,6 +2446,7 @@ mod tests {
                 expr: col("id"),
                 ascending: true,
                 nulls_first: None,
+                collation: None,
             }],
         };
         let opt = optimize_with_passes(plan, &[&DeadCodeEliminationPass]);
@@ -2603,6 +2625,7 @@ mod tests {
                     expr: col("name"),
                     ascending: true,
                     nulls_first: None,
+                    collation: None,
                 }],
             }),
             count: Some(10),

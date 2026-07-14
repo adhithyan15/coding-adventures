@@ -2,6 +2,39 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.10] - Unreleased
+
+### Added
+
+- **`COLLATE name` read into `SortKey.collation`.** `plan_order_item` now scans
+  for a `COLLATE` token and validates the following name against the three
+  built-in sequences: `BINARY` (folded to `None`, the default byte order),
+  `NOCASE`, and `RTRIM`. An unknown collation is a planning error
+  (`no such collating sequence: X`), matching SQLite. New `collation:
+  Option<String>` field on `SortKey` (stored uppercased).
+
+## [0.2.9] - Unreleased
+
+### Added
+
+- **`a IS b` / `a IS NOT b` null-safe (in)equality.** The IS handler now
+  distinguishes `IS [NOT] NULL` (no right operand) from `IS [NOT] <expr>` (a
+  right operand node) and lowers the latter via new `plan_is_distinct` onto
+  `CASE WHEN a IS NULL AND b IS NULL THEN 1 WHEN a IS NULL OR b IS NULL THEN 0
+  ELSE a = b END` (negated → wrapped in `NOT`). Reuses the CASE node added in
+  0.2.8 plus existing `IsNull`/`BinaryOp`/`UnaryOp` — **no codegen or VM opcode
+  needed**. (The naive `(a=b) OR (a IS NULL AND b IS NULL)` is wrong — it yields
+  NULL, not 0, for `1 IS NULL`.)
+
+## [0.2.8] - Unreleased
+
+### Added
+
+- **`SqlExpr::Case { branches, else_val }`** for searched CASE, plus `plan_case`
+  which walks the `CASE`/`WHEN`/`THEN`/`ELSE`/`END` keyword tokens and their
+  interleaved expression nodes into `(cond, value)` branch pairs and an optional
+  ELSE. Rejects a CASE with no `WHEN` branch.
+
 ## [0.2.7] - Unreleased
 
 ### Added

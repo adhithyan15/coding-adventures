@@ -1,0 +1,42 @@
+% ============================================================================
+% length-conversions — exact length-unit → metre factors (ADJ-TABLES RS-5).
+% ============================================================================
+% The first shipped `table`: a native tabular relation ingested VERBATIM from a
+% published NIST conversion table. Each row states an EXACT factor converting one
+% customary length unit to metres:
+%
+%     ? length_to_metres(foot, $Metres)      % 0.3048
+%     ? length_to_metres(mile, $Metres)      % 1609.344
+%
+% Why a `table` and not seven hand-written `relate` clauses: this is exactly the
+% shape reference data comes in — a published table, not prose. The citable
+% artifact IS the NIST conversion-factors table at the `locator` below; every
+% factor here (0.3048, 1.8288, 1609.344) appears CHARACTER-FOR-CHARACTER in that
+% table, and the whole table is defended by one provenance envelope rather than
+% repeating `source`/`locator`/`trust` on every row. Each `row` lowers to a
+% ground relation `length_to_metres(unit, metres)`, so the exact lookup above is
+% the ordinary SLD binding query — the engine returns the factor WITH this
+% table's citation as its proof, on the CPU, with zero model calls. A looked-up
+% factor is a number, so it can feed a `let`/`formula` downstream (e.g. multiply
+% a measurement by it) through the existing slot path.
+%
+% All factors are the internationally-agreed EXACT equivalents (the 1959
+% international yard-and-pound agreement, as published by NIST): the international
+% foot is exactly 0.3048 m, a fathom is exactly 1.8288 m (6 ft), and the
+% international mile is exactly 1609.344 m. `trust authoritative` — a primary,
+% re-fetchable standards reference. (See ADJ-TABLES.md; and
+% feedback_nothing_human_authored — nothing here is asserted "from memory": every
+% factor is a verbatim cell of the cited table.)
+% ============================================================================
+
+table length_to_metres {
+    columns unit, metres
+
+    row (foot, 0.3048)
+    row (fathom, 1.8288)
+    row (mile, 1609.344)
+
+    source "Defined with respect to meter"
+    locator "https://www.nist.gov/pml/us-surveyfoot/revised-unit-conversion-factors"
+    trust authoritative
+}

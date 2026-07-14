@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.11] - Unreleased
+
+### Added
+
+- **`COLLATE name` clause in `ORDER BY`.** The `order_item` grammar rule gains
+  an optional `[ "COLLATE" NAME ]` between the sort expression and the `ASC` /
+  `DESC` direction (`expr COLLATE name [ASC|DESC] [NULLS ...]`), matching
+  SQLite's grammar. `COLLATE` is matched by literal text and the collation name
+  is an ordinary NAME token (validated in the planner), so no lexer keyword was
+  added. Existing `ASC`/`DESC`/`NULLS` ordering is unaffected.
+
+## [0.1.10] - Unreleased
+
+### Added
+
+- **`IS <expr>` / `IS NOT <expr>` (null-safe (in)equality).** Two `comparison`
+  alternatives added AFTER the `IS NULL` / `IS NOT NULL` sequences (so those
+  still match first) and with `IS NOT <expr>` before `IS <expr>`. The planner
+  (sql-planner 0.2.9) lowers them onto a CASE, so no codegen/VM change.
+
+## [0.1.9] - Unreleased
+
+### Added
+
+- **Searched `CASE WHEN … THEN … [ELSE …] END`.** Added to the `primary` rule
+  (before `function_call`): one `WHEN/THEN` is mandatory, further ones repeat,
+  and `ELSE` is optional. Conditions and values are full `expr`s. The planner
+  (sql-planner 0.2.8) turns it into `SqlExpr::Case`.
+
 ## [0.1.8] - Unreleased
 
 ### Added

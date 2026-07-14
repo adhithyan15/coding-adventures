@@ -1,5 +1,49 @@
 # Changelog
 
+## 0.5.27 — `COLLATE` in `ORDER BY` (NOCASE / RTRIM / BINARY)
+
+`ORDER BY col COLLATE name` now sorts through a collating sequence, matching
+SQLite: `NOCASE` compares ASCII case-insensitively (`'Apple'` = `'apple'`),
+`RTRIM` ignores trailing spaces (`'a  '` = `'a'`), and `BINARY` (the default)
+keeps raw byte order (uppercase before lowercase). The `COLLATE` name parses
+between the sort expression and `ASC`/`DESC` (sql-parser 0.1.11), is validated
+in the planner into a new `SortKey.collation` field (sql-planner 0.2.10),
+threaded through `CompiledSortKey` (sql-codegen 0.6.4) and constant folding
+(sql-optimizer 0.1.4), and applied by the VM sort comparator to text values
+only (sql-vm 0.4.14). Equal keys keep insertion order (the sort is stable),
+matching SQLite. Four differential-oracle cases diff NOCASE (asc + desc), RTRIM,
+and BINARY against real bundled SQLite. Unknown collations are a planning error.
+
+## 0.5.26 — `IS` / `IS NOT` null-safe (in)equality
+
+`SELECT a IS b` / `a IS NOT b` now parse and run as SQLite's null-safe
+comparison: `a IS b` is 1 when both operands are equal OR both NULL, 0 when
+exactly one is NULL (unlike `=`, which yields NULL if either side is NULL);
+`a IS NOT b` is the negation. It is lowered entirely in the planner onto the
+CASE node (added in 0.5.25) — `CASE WHEN a IS NULL AND b IS NULL THEN 1 WHEN a
+IS NULL OR b IS NULL THEN 0 ELSE a=b END` — so grammar (sql-parser 0.1.10) +
+planner (sql-planner 0.2.9) are the only changes; **no codegen or VM opcode**.
+`IS NULL` / `IS NOT NULL` still work (matched first). Two differential-oracle
+cases (`is_null_safe_equality`, `is_operator_in_where`) diff against real
+bundled SQLite, including `IS` as a WHERE predicate. (`IS [NOT] DISTINCT FROM`
+— the standard-SQL spelling — is a separate follow-up.)
+
+## 0.5.25 — Searched `CASE WHEN … THEN … [ELSE …] END`
+
+`SELECT CASE WHEN cond THEN val … [ELSE val] END` now parses and runs with
+SQLite's exact semantics: branches are evaluated top-to-bottom, the first
+truthy `WHEN` yields its `THEN`; no match with an `ELSE` yields the `ELSE`,
+otherwise `NULL`; a `NULL` condition is not truthy (its branch is skipped); and
+evaluation short-circuits (later branches' values are not computed once one
+matches). Spans grammar (sql-parser 0.1.9) → `SqlExpr::Case` (sql-planner
+0.2.8) → a jump-chain in codegen (sql-codegen 0.6.3, reusing the existing
+`JumpIfTrue`/`Jump`/`Label` opcodes — no VM change), with the optimizer (0.1.3)
+folding through the node. Three differential-oracle cases (`case_first_match_and_else`,
+`case_no_else_is_null_and_null_cond_skipped`, `case_in_where_and_arithmetic`)
+diff against real bundled SQLite, including CASE nested in a WHERE predicate and
+in arithmetic. (The *simple* form `CASE x WHEN v THEN …` — equality against a
+base expression — is a separate follow-up slice.)
+
 ## 0.5.24 — `NULLS FIRST` / `NULLS LAST` in `ORDER BY`
 
 `SELECT … ORDER BY a NULLS FIRST` / `NULLS LAST` now parse and run. mini-sqlite

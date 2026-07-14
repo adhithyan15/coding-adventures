@@ -199,6 +199,17 @@ pub fn parser_grammar() -> ParserGrammar {
             name: r#"order_item"#.to_string(),
             body: GrammarElement::Sequence { elements: vec![
                 GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                // Optional `COLLATE name` clause, BEFORE the ASC/DESC direction
+                // (per SQLite grammar: `expr COLLATE name ASC`). `COLLATE` is
+                // matched by literal text (it is not in the lexer keyword list,
+                // so it arrives as a NAME token that the literal matcher accepts
+                // case-insensitively); the name that follows (BINARY / NOCASE /
+                // RTRIM, or a user collation) is accepted as a generic NAME and
+                // validated in the planner. Absent → BINARY (byte order).
+                GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                        GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                        GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                    ] }) },
                 GrammarElement::Optional { element: Box::new(GrammarElement::Alternation { choices: vec![
                         GrammarElement::Literal { value: r#"ASC"#.to_string() },
                         GrammarElement::Literal { value: r#"DESC"#.to_string() },
@@ -483,6 +494,20 @@ pub fn parser_grammar() -> ParserGrammar {
                             GrammarElement::Literal { value: r#"NOT"#.to_string() },
                             GrammarElement::Literal { value: r#"NULL"#.to_string() },
                         ] },
+                        // `x IS NOT <expr>` / `x IS <expr>` — null-safe (in)equality.
+                        // These come AFTER the IS NULL / IS NOT NULL sequences so
+                        // ordered-choice matches the NULL forms first (NULL is
+                        // itself a valid `additive`); and `IS NOT <expr>` before
+                        // `IS <expr>` so the NOT form is tried first.
+                        GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Literal { value: r#"IS"#.to_string() },
+                            GrammarElement::Literal { value: r#"NOT"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"additive"#.to_string() },
+                        ] },
+                        GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Literal { value: r#"IS"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"additive"#.to_string() },
+                        ] },
                     ] }) },
             ] },
             line_number: 68,
@@ -559,6 +584,28 @@ pub fn parser_grammar() -> ParserGrammar {
                     GrammarElement::Literal { value: r#"AS"#.to_string() },
                     GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
                     GrammarElement::Literal { value: r#")"#.to_string() },
+                ] },
+                // Searched `CASE WHEN cond THEN val … [ELSE val] END`. One
+                // WHEN/THEN is mandatory; further ones repeat; ELSE is optional.
+                // The condition/value slots are full `expr`s. Placed before
+                // function_call so the leading `CASE` literal is matched here.
+                GrammarElement::Sequence { elements: vec![
+                    GrammarElement::Literal { value: r#"CASE"#.to_string() },
+                    GrammarElement::Literal { value: r#"WHEN"#.to_string() },
+                    GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                    GrammarElement::Literal { value: r#"THEN"#.to_string() },
+                    GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                    GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Literal { value: r#"WHEN"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                            GrammarElement::Literal { value: r#"THEN"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                        ] }) },
+                    GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Literal { value: r#"ELSE"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                        ] }) },
+                    GrammarElement::Literal { value: r#"END"#.to_string() },
                 ] },
                 GrammarElement::RuleReference { name: r#"function_call"#.to_string() },
                 GrammarElement::RuleReference { name: r#"column_ref"#.to_string() },

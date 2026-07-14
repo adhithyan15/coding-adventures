@@ -281,6 +281,22 @@ mod tests {
         }
     }
 
+    /// `COLLATE name` parses in ORDER BY — standalone, and composed with the
+    /// ASC/DESC direction and a NULLS clause (COLLATE comes first, per SQLite).
+    /// The collation name is an ordinary NAME; the planner validates it.
+    #[test]
+    fn test_parse_order_by_collate() {
+        for q in [
+            "SELECT id FROM t ORDER BY name COLLATE NOCASE",
+            "SELECT id FROM t ORDER BY name COLLATE BINARY",
+            "SELECT id FROM t ORDER BY name COLLATE RTRIM DESC",
+            "SELECT id FROM t ORDER BY name COLLATE NOCASE ASC NULLS LAST",
+        ] {
+            let ast = assert_program_root(q);
+            assert!(find_rule(&ast, "order_item"), "Expected order_item for {q:?}");
+        }
+    }
+
     // -----------------------------------------------------------------------
     // Test 5: SELECT with LIMIT and OFFSET
     // -----------------------------------------------------------------------
@@ -556,6 +572,22 @@ mod tests {
         assert!(find_rule(&ast, "comparison"), "Expected comparison");
     }
 
+    /// `IS <expr>` / `IS NOT <expr>` (null-safe (in)equality) parse as comparison
+    /// forms, without disturbing `IS NULL` / `IS NOT NULL` (which must still
+    /// match their dedicated sequences first).
+    #[test]
+    fn test_parse_is_operator() {
+        for q in [
+            "SELECT x FROM t WHERE a IS b",
+            "SELECT x FROM t WHERE a IS NOT b",
+            "SELECT x FROM t WHERE a IS NULL",
+            "SELECT x FROM t WHERE a IS NOT NULL",
+        ] {
+            let ast = assert_program_root(q);
+            assert!(find_rule(&ast, "comparison"), "Expected comparison for {q:?}");
+        }
+    }
+
     /// The `GLOB` and `NOT GLOB` infix operators parse as comparison forms
     /// (the planner lowers them onto the `glob` builtin).
     #[test]
@@ -576,6 +608,20 @@ mod tests {
         // A CAST expression can also appear in a WHERE predicate.
         let ast2 = assert_program_root("SELECT x FROM t WHERE CAST(s AS REAL) > 1.5");
         assert!(find_rule(&ast2, "comparison"), "Expected comparison");
+    }
+
+    /// Searched `CASE WHEN … THEN … [ELSE …] END` parses as a primary: a single
+    /// WHEN, multiple WHENs, with and without ELSE, and nested in a WHERE.
+    #[test]
+    fn test_parse_case() {
+        for q in [
+            "SELECT CASE WHEN a=1 THEN 'x' END FROM t",
+            "SELECT CASE WHEN a=1 THEN 'x' WHEN a=2 THEN 'y' ELSE 'z' END FROM t",
+            "SELECT x FROM t WHERE CASE WHEN a IS NULL THEN 0 ELSE 1 END",
+        ] {
+            let ast = assert_program_root(q);
+            assert!(find_rule(&ast, "primary"), "Expected primary for {q:?}");
+        }
     }
 
     // -----------------------------------------------------------------------

@@ -393,6 +393,24 @@ pub enum Statement {
         uses: Vec<String>,
         formulas: Vec<FormulaDef>,
     },
+    /// `table <name> { columns … row(…)… }` — a first-class, importable,
+    /// provenanced tabular relation (ADJ-TABLES RS-5). A sibling of
+    /// [`Statement::Rulebook`]/[`Statement::Formulabook`]: real reference
+    /// knowledge (unit conversions, reference ranges, dose charts, tax brackets)
+    /// is tabular, and each `row (v1, …, vn)` lowers to a ground relation
+    /// `name(v1, …, vn)` carrying the table's provenance — byte-identical to how
+    /// a `relate` edge lowers — so EXACT lookup is the existing SLD binding query
+    /// with no new engine machinery. `uses` records `use <dict>` for vocabulary
+    /// checking; `columns` fixes the row arity (a row of a different length is a
+    /// [`crate::LowerError::TableArity`]); `annotations` is the shared provenance
+    /// envelope (a shipped table must be sourced).
+    Table {
+        name: String,
+        uses: Vec<String>,
+        columns: Vec<String>,
+        rows: Vec<TableRow>,
+        annotations: Vec<Annotation>,
+    },
     /// `use <dictionary>` — bind a `dictionary` (by name) as the controlled
     /// vocabulary the enclosing scope's clauses are checked against (MYCIN-2026
     /// M2). Legal at top level or inside a `rulebook`.
@@ -470,6 +488,32 @@ pub struct FormulaStep {
     pub name: String,
     /// The step's defining expression (over params + earlier step names).
     pub expr: ExprAst,
+}
+
+/// One `row (v1, …, vn)` of a [`Statement::Table`] (ADJ-TABLES RS-5). The cells
+/// are positionally bound to the table's declared `columns`, and the row lowers
+/// to a ground relation `<table>(v1, …, vn)` carrying the table's provenance.
+#[derive(Debug, Clone, PartialEq)]
+pub struct TableRow {
+    /// The row's cells, in column order.
+    pub cells: Vec<TableCell>,
+}
+
+/// A single table cell (ADJ-TABLES RS-5). One of the three GROUND term kinds the
+/// engine stores — a number, an atom, or a string — mapped 1:1 onto
+/// `logic_core::Term::{Num, Atom, Str}` by the lowerer. (A cell is never a
+/// variable or a compound: a table holds ground data, not open goals.)
+#[derive(Debug, Clone, PartialEq)]
+pub enum TableCell {
+    /// A numeric literal (`2.54`) — lowers to `logic_core::Term::Num`. This is
+    /// the cell kind a looked-up value flows from into a `let`/`formula`.
+    Number(f64),
+    /// A bare identifier (`inch`) — lowers to `logic_core::Term::Atom`. Typically
+    /// the key column of a key→value table.
+    Atom(String),
+    /// A quoted string (`"mg/dL"`) — lowers to `logic_core::Term::Str`. For label
+    /// cells that are not identifiers.
+    Text(String),
 }
 
 /// A single dictionary entry (MYCIN-2026).

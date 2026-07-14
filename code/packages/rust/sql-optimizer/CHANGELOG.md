@@ -2,6 +2,22 @@
 
 All notable changes to this crate will be documented here.
 
+## [0.1.4] - Unreleased
+
+### Changed
+
+- **Preserve `SortKey.collation` through constant folding.** `fold_plan` now
+  carries the new `collation` field on `Sort` keys so a `COLLATE` clause
+  survives optimization.
+
+## [0.1.3] - Unreleased
+
+### Added
+
+- Handle `SqlExpr::Case`: `fold_expr` folds each condition/value and the ELSE
+  while keeping the branch structure (short-circuiting stays the VM's job), and
+  `collect_columns_in_expr` recurses into every branch and the ELSE.
+
 ## [0.1.2] - Unreleased
 
 ### Changed

@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-sql-optimizer"
-version = "0.1.2"
+version = "0.1.4"
 edition = "2021"
 description = "Logical query plan optimizer for the Mini-SQLite SQL pipeline (Level 1)"
 authors = ["Adhithya Rajasekaran <adhithyan15@gmail.com>"]

@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.6.4] - Unreleased
+
+### Added
+
+- **Thread `collation` through `CompiledSortKey`.** The compiled sort key gains
+  a `collation: Option<String>` field, copied from the planner's `SortKey`, so
+  the VM can apply the collating sequence when comparing text values.
+
+## [0.6.3] - Unreleased
+
+### Added
+
+- **`SqlExpr::Case` codegen** as a short-circuiting jump chain: each condition
+  is compiled followed by `JumpIfTrue(body_i)`; if none match, the ELSE (or a
+  `LoadConst(Null)`) is compiled; each body pushes its THEN value and jumps to a
+  shared end label. No new VM opcode — reuses `JumpIfTrue`/`Jump`/`Label`. Later
+  branches' THENs are never evaluated once one matches.
+
 ## [0.6.2] - Unreleased
 
 ### Added
