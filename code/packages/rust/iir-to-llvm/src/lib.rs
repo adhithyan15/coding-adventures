@@ -2838,11 +2838,25 @@ fn lower_cmp(
     out: &mut String,
 ) -> Result<(), IIRLlvmError> {
     let dest = require_dest(instr, bare_op, state.fn_name)?.to_string();
-    let operand_ty = llvm_type_for(&instr.type_hint, state.fn_name)?;
-    let a = resolve_operand(instr.srcs.first(), &state.env, &instr.type_hint, state.fn_name)?;
-    let b = resolve_operand(instr.srcs.get(1), &state.env, &instr.type_hint, state.fn_name)?;
-    let pred = llvm_cmp_predicate(bare_op, &instr.type_hint)?;
-    let icmp_or_fcmp = if is_float_type(&instr.type_hint) { "fcmp" } else { "icmp" };
+    // A comparison's type_hint is normally its **operand** type (`i64`/`f64`/…),
+    // and LLVM types the `icmp`/`fcmp` by it. But `lower_dynamic_arith` tags a
+    // dynamic `DynValue` comparison result `"bool"` even though its operands are
+    // the unboxed `i64`s — so a `"bool"` hint here means "compare two `i64`s,
+    // yielding an i1", not "compare two i1s". Without this, LLVM emitted
+    // `icmp i1 %x` on a 64-bit `%x` (`'%x' defined with type 'i64' but expected
+    // 'i1'`), blocking dynamic comparisons — E6d-6 match/union tag tests and the
+    // E6d-7 closure dispatcher — on the LLVM column. (Numeric/E3 comparisons
+    // carry the real operand type; the `"i1"` hint is a distinct, legitimate
+    // "produce an i1, skip the zext" request — both are left untouched.)
+    let cmp_hint: &str = match instr.type_hint.as_str() {
+        "bool" => "i64",
+        other => other,
+    };
+    let operand_ty = llvm_type_for(cmp_hint, state.fn_name)?;
+    let a = resolve_operand(instr.srcs.first(), &state.env, cmp_hint, state.fn_name)?;
+    let b = resolve_operand(instr.srcs.get(1), &state.env, cmp_hint, state.fn_name)?;
+    let pred = llvm_cmp_predicate(bare_op, cmp_hint)?;
+    let icmp_or_fcmp = if is_float_type(cmp_hint) { "fcmp" } else { "icmp" };
 
     // i1 form: always synthesized.  Lives in env_i1 for downstream jmp_if_*.
     let i1_name = format!("%{dest}.i1");
