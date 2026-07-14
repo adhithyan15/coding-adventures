@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.15] - Unreleased
+
+### Added
+
+- **`IS [NOT] DISTINCT FROM`** in comparisons — the standard-SQL spelling of the
+  null-safe compare. The grammar adds `IS DISTINCT FROM <expr>` and `IS NOT
+  DISTINCT FROM <expr>` sequences ahead of the plain `IS [NOT] <expr>` forms so
+  ordered choice matches the DISTINCT keyword first.
+
 ## [0.1.14] - Unreleased
 
 ### Added

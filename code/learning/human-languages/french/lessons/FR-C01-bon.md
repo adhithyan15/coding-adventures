@@ -36,16 +36,17 @@ Latin **bonus / bona** ("good"). Your English cousins:
 - **bon**us (borrowed straight from Latin *bonus*), **bon**anza, and — via
   Old French *bonté* — **boun**ty. Even *bonbon* ("good-good," a candy).
 
-> Spanish twin: Spanish *bueno / buena*, also from *bonus / bona*. Notice
-> French kept it shorter (*bon*) while Spanish broke the *o* into a diphthong
-> (*bue-*). Same Latin word, two accents of wear.
+> Spanish cousin: from the same *bonus / bona*, Spanish made *bueno / buena*.
+> Notice French kept it shorter (*bon*) while Spanish broke the *o* into a
+> diphthong (*bue-*). Same Latin word, two accents of wear.
 
-## Grammar Lens: agreement (you know this from Spanish)
+## Grammar Lens: adjectives agree with their noun
 
 Like every Romance adjective, *bon* **agrees** with its noun's gender and
 number — *bon* (masc.), *bonne* (fem.), *bons* (masc. pl.), *bonnes* (fem.
-pl.). Exactly the *bueno/buena* machine from Spanish, and you'll watch it run
-in the next few lessons: *bon jour* (masc.) but *bonne nuit* (fem.).
+pl.). This is Latin's legacy: adjectives change their ending to match the noun
+(Spanish runs the same machine on *bueno / buena*). You'll watch it in the next
+few lessons: *bon jour* (masc.) but *bonne nuit* (fem.).
 
 ## Guided Practice
 
@@ -56,5 +57,5 @@ in the next few lessons: *bon jour* (masc.) but *bonne nuit* (fem.).
 ## Wrap-up Recall
 
 [PAUSE 3s] Why do *bon* and *bonne* sound different? (The double *nn* in
-*bonne* cancels the nasal — *bõ* vs *bun*.) What Spanish adjective is *bon*'s
-twin? (*bueno*, same root *bonus*.)
+*bonne* cancels the nasal — *bõ* vs *bun*.) Which Spanish adjective shares
+*bon*'s Latin root? (*bueno*, from the same *bonus*.)

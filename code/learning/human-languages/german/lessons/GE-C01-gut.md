@@ -43,9 +43,10 @@ So why *gut* and not *good*? One sound-law:
 > | be**d** | Be**tt** |
 > | **d**o | **t**un |
 >
-> This is German's version of the *-ct-→-ch-* rules you met in Spanish: learn
-> the shift once, and you can guess the English cousin behind a German word
-> (and vice-versa) on sight. More rules of the shift as we go.
+> It's a single regular sound-law — the same kind of trick that reshaped the
+> Romance languages (Latin *-ct-* became Spanish *-ch-*, *noche*). Learn the
+> shift once, and you can guess the English cousin behind a German word (and
+> vice-versa) on sight. More rules of the shift as we go.
 
 ## Grammar Lens: German merges "good" and "well"
 

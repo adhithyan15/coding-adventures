@@ -1,0 +1,64 @@
+% ============================================================================
+% plant-parts — each main plant part and its primary function
+% (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% One of the first biology facts a child learns, and a foundation a science or
+% medicine agent reasons up from: a plant is built from a few main PARTS, and
+% each part does one main JOB. The roots drink up water, the stem holds the
+% plant up, the leaves make food from sunlight, and the flower makes new plants.
+% Recall is a binding query:
+%
+%     ? plant_part_function(roots, $Function)   % absorb_water
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `plant_part_function(part, function)` carrying the table's citation,
+% so the lookup above is the ordinary SLD binding query — the engine returns the
+% function atom WITH its source, on the CPU, with zero model calls, and abstains
+% on anything that is not one of these parts. The query also runs BACKWARD —
+% bind the function and recall the part:
+%
+%     ? plant_part_function($Part, photosynthesis)  % leaves
+%
+% Each row's `function` value is a SINGLE lowercase atom, chosen as a faithful
+% one-word paraphrase of the function the source states for that part — never an
+% interpretation the source does not support. A recalled function atom therefore
+% composes straight into downstream reasoning (an agent asking "which part does
+% photosynthesis?" gets the grounded answer, not a guess) — the concrete bridge
+% from biology RECALL to reasoning.
+%
+% Each plant part and its `function` atom, as a truth table, with the VERBATIM
+% sentence from the source that grounds it:
+%
+%     part     function        grounding sentence (copied character-for-character)
+%     ------   -------------   ------------------------------------------------------------
+%     roots    absorb_water    "Roots anchor a plant in the soil and absorb air, water, and nutrients."
+%     stem     support         "Stems provide structural support and transport water and nutrients between roots, leaves, and flowers."
+%     leaves   photosynthesis  "Leaves capture sunlight for photosynthesis."
+%     flower   reproduction    "Flowers are the reproductive structures of plants, classified as perfect (having both male and female parts) or imperfect (male or female)."
+%
+% Provenance: every part name and its `function` atom is grounded in the plant
+% "Organs" article on UF/IFAS Extension (University of Florida Institute of Food
+% and Agricultural Sciences) Pasco County — the citable artifact at the
+% `locator`. The `source` span below is the VERBATIM sentence for the FIRST data
+% row (roots), copied character-for-character from that page; the other three
+% rows' atoms are each grounded in the same page's verbatim sentence shown in the
+% table above. `trust authoritative` — a university-extension publication is a
+% primary educational reference (contrast the `consensus` tier reserved for a
+% collaboratively edited encyclopedia). Nothing here is asserted from memory;
+% any part whose function the article did not state would have been dropped.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_adjudication_no_interpretive_gating.)
+% ============================================================================
+
+table plant_part_function {
+    columns part, function
+
+    row (roots, absorb_water)
+    row (stem, support)
+    row (leaves, photosynthesis)
+    row (flower, reproduction)
+
+    source "Roots anchor a plant in the soil and absorb air, water, and nutrients."
+    locator "https://blogs.ifas.ufl.edu/pascoco/2025/01/23/plant-biology-organs/"
+    trust authoritative
+}
