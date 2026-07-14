@@ -1,6 +1,6 @@
 [package]
 name = "mosmodel-compiler"
-version = "0.1.0"
+version = "0.1.2"
 edition = "2021"
 description = "Compiles .mosmodel component interface files to interface descriptor JSON and target-language bindings"
 

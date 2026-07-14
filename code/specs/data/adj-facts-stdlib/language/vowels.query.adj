@@ -1,0 +1,18 @@
+% ============================================================================
+% vowels.query.adj — a worked recall over the English-vowels library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "is this letter a vowel?":
+% it states no fact of its own — it only `import`s the grounded table and asks
+% binding queries. The engine resolves each `?` against the `vowel_letter` rows
+% and returns `yes` + the table's source/locator/trust. A consonant that has no
+% row abstains honestly — the engine never guesses a membership it cannot cite.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli vowels.query.adj
+% ============================================================================
+
+import "vowels.adj"
+
+? vowel_letter(a, $V)       % expect yes
+? vowel_letter(u, $V)       % expect yes
+? vowel_letter(b, $V)       % expect abstain — b is a consonant, not in the table

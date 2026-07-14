@@ -2,6 +2,15 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.89.0] - 2026-07-14
+
+### Added — fold default-parameter expressions — CLOC12.191 PR1
+
+Picks up javascript-ast 0.42.0. New `fold_params` helper folds each `FunctionParam::AssignmentPattern`
+default `right` through the same `fold_expression` path a function body uses, so `function f(a = 1 + 2){}`
+shrinks to `function f(a = 3){}`. Applied at all four param-list sites (function declaration/expression,
+class method, arrow). Plain and rest params clone verbatim (no default expression).
+
 ## [0.88.0] - 2026-07-12
 
 ### Added — CLOC12.189 PR1: export declaration rebuild arms clone each export verbatim

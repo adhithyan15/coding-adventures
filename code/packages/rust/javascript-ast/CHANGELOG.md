@@ -2,6 +2,19 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.42.0] - 2026-07-14
+
+### Added — `FunctionParam::AssignmentPattern` (`name = expr` default parameter) — CLOC12.191 PR1
+
+New `AssignmentPattern` struct (`left: Identifier`, `right: Expression`) + a `FunctionParam::AssignmentPattern`
+variant so a default-valued parameter (`function f(a = 1){}`) is representable. The `#[serde(untagged)]`
+`FunctionParam` tells it apart from a plain identifier (`name`) and a rest element (`argument`) by its
+`left`/`right` shape — no `type` tag. `binding_identifier()`/`binding_identifier_mut()` return the `left`
+name for this variant; two new accessors — `default_value()`/`default_value_mut()` — expose the `right`
+expression so the folding, renaming, and inlining passes can walk and rewrite the default as live code
+(`function f(a = 1 + 2)` → `function f(a = 3)`), unlike a rest element whose only payload is a bound name.
+Additive; MINOR.
+
 ## [0.41.0] - 2026-07-14
 
 ### Added — `FunctionParam::RestElement` (`...name` rest parameter) — CLOC12.190 PR1

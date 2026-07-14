@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-closure-emitter"
-version = "0.46.0"
+version = "0.47.0"
 edition = "2021"
 description = "JavaScript code emitter for the Closure Compiler clone. Per CLOC07's emit contract. Takes a finalized Program + sidecar and produces output JavaScript text + companion source map. Runs after every pass in the pipeline."
 

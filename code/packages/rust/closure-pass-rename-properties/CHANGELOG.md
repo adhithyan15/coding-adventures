@@ -2,6 +2,15 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename-properties` crate will be documented in this file.
 
+## [0.19.0] - 2026-07-14
+
+### Changed — classify and rewrite property accesses inside default-parameter expressions — CLOC12.191 PR1
+
+Picks up javascript-ast 0.42.0. New `classify_param_defaults` / `rewrite_param_defaults` helpers walk each
+`FunctionParam::AssignmentPattern` default `right` in both phases, kept in lockstep across the function
+declaration/expression, class-method, and arrow arms — so a quoted access in a default still disables
+renaming of that property, and a renamed property is rewritten where a default reads it.
+
 ## [0.18.0] - 2026-07-12
 
 ### Changed — CLOC12.189 PR2: bail on module `export`

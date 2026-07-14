@@ -87,8 +87,8 @@ use coding_adventures_correlation_vector::Contribution;
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use serde_json::json;
 use coding_adventures_javascript_ast::{
-    ArrowBody, AssignmentTarget, ClassMember, Declaration, Expression, ForInit, ObjectMember,
-    Program, ProgramItem, PropertyKey, Statement,
+    ArrowBody, AssignmentTarget, ClassMember, Declaration, Expression, ForInit, FunctionParam,
+    ObjectMember, Program, ProgramItem, PropertyKey, Statement,
 };
 
 /// `Pass::depends_on` value — empty. Property renaming is correct
@@ -1046,6 +1046,7 @@ fn classify_decl(decl: &Declaration, cls: &mut Classify, nodes_touched: &mut u32
             }
         }
         Declaration::FunctionDeclaration(fd) => {
+            classify_param_defaults(&fd.params, cls);
             for s in &fd.body.body {
                 classify_stmt(s, cls, nodes_touched);
             }
@@ -1102,6 +1103,7 @@ fn classify_class_members(
                     // inside the key expression.
                     classify_expr(e, cls);
                 }
+                classify_param_defaults(&m.value.params, cls);
                 let mut nested = 0u32;
                 for s in &m.value.body.body {
                     classify_stmt(s, cls, &mut nested);
@@ -1262,6 +1264,20 @@ fn classify_stmt(stmt: &Statement, cls: &mut Classify, nodes_touched: &mut u32) 
     }
 }
 
+/// Classify property accesses inside each parameter's default-value expression
+/// (`function f(a = o["x"]) {}`). A default is live code: a quoted access there
+/// must still DISABLE renaming of that property, exactly as one in a function
+/// body would — miss it and a later `rewrite` could rename `o.x` while the
+/// quoted default access keeps the old name (a miscompile). Plain and rest
+/// params have no default expression.
+fn classify_param_defaults(params: &[FunctionParam], cls: &mut Classify) {
+    for p in params {
+        if let Some(def) = p.default_value() {
+            classify_expr(def, cls);
+        }
+    }
+}
+
 fn classify_expr(expr: &Expression, cls: &mut Classify) {
     match expr {
         Expression::Identifier(_)
@@ -1380,6 +1396,7 @@ fn classify_expr(expr: &Expression, cls: &mut Classify) {
         // `classify_expr` isn't threaded it, so a throwaway counter is
         // used for the nested walk.
         Expression::FunctionExpression(fe) => {
+            classify_param_defaults(&fe.params, cls);
             let mut nested = 0u32;
             for s in &fe.body.body {
                 classify_stmt(s, cls, &mut nested);
@@ -1405,15 +1422,18 @@ fn classify_expr(expr: &Expression, cls: &mut Classify) {
         // a quoted `o["foo"]` written there must still disable renaming
         // of `foo`. Params are variable names, never property names, so
         // they don't touch the property namespace.
-        Expression::ArrowFunctionExpression(ae) => match &ae.body {
-            ArrowBody::Block(b) => {
-                let mut nested = 0u32;
-                for s in &b.body {
-                    classify_stmt(s, cls, &mut nested);
+        Expression::ArrowFunctionExpression(ae) => {
+            classify_param_defaults(&ae.params, cls);
+            match &ae.body {
+                ArrowBody::Block(b) => {
+                    let mut nested = 0u32;
+                    for s in &b.body {
+                        classify_stmt(s, cls, &mut nested);
+                    }
                 }
+                ArrowBody::Expression(e) => classify_expr(e, cls),
             }
-            ArrowBody::Expression(e) => classify_expr(e, cls),
-        },
+        }
         // Classify property accesses inside each `${…}` insert too. Quasis
         // are leaf strings — only the insert expressions can hold a member
         // access that touches the property namespace.
@@ -1474,6 +1494,7 @@ fn rewrite_decl(decl: &mut Declaration, map: &HashMap<String, String>) {
             }
         }
         Declaration::FunctionDeclaration(fd) => {
+            rewrite_param_defaults(&mut fd.params, map);
             for s in &mut fd.body.body {
                 rewrite_stmt(s, map);
             }
@@ -1525,6 +1546,7 @@ fn rewrite_class_members(
                         }
                     }
                 }
+                rewrite_param_defaults(&mut m.value.params, map);
                 for s in &mut m.value.body.body {
                     rewrite_stmt(s, map);
                 }
@@ -1679,6 +1701,18 @@ fn rewrite_stmt(stmt: &mut Statement, map: &HashMap<String, String>) {
     }
 }
 
+/// Rewrite renamed property accesses inside each parameter's default-value
+/// expression — the mirror of [`classify_param_defaults`], keeping the classify
+/// and rewrite walks over the same positions so a property renamed elsewhere is
+/// also renamed where a default reads it (`function f(a = o.x)` → `a = o.<new>`).
+fn rewrite_param_defaults(params: &mut [FunctionParam], map: &HashMap<String, String>) {
+    for p in params {
+        if let Some(def) = p.default_value_mut() {
+            rewrite_expr(def, map);
+        }
+    }
+}
+
 fn rewrite_expr(expr: &mut Expression, map: &HashMap<String, String>) {
     match expr {
         Expression::Identifier(_)
@@ -1785,6 +1819,7 @@ fn rewrite_expr(expr: &mut Expression, map: &HashMap<String, String>) {
         // Rewrite property accesses inside a function *value*'s body, the
         // mirror of classifying them above.
         Expression::FunctionExpression(fe) => {
+            rewrite_param_defaults(&mut fe.params, map);
             for s in &mut fe.body.body {
                 rewrite_stmt(s, map);
             }
@@ -1798,14 +1833,17 @@ fn rewrite_expr(expr: &mut Expression, map: &HashMap<String, String>) {
         Expression::ClassExpression(ce) => rewrite_class_members(&mut ce.super_class, &mut ce.body, map),
         // Rewrite property accesses inside an arrow-value's body, the
         // mirror of classifying them above.
-        Expression::ArrowFunctionExpression(ae) => match &mut ae.body {
-            ArrowBody::Block(b) => {
-                for s in &mut b.body {
-                    rewrite_stmt(s, map);
+        Expression::ArrowFunctionExpression(ae) => {
+            rewrite_param_defaults(&mut ae.params, map);
+            match &mut ae.body {
+                ArrowBody::Block(b) => {
+                    for s in &mut b.body {
+                        rewrite_stmt(s, map);
+                    }
                 }
+                ArrowBody::Expression(e) => rewrite_expr(e, map),
             }
-            ArrowBody::Expression(e) => rewrite_expr(e, map),
-        },
+        }
         // Rewrite property accesses inside each `${…}` insert, the mirror of
         // classifying them above. Quasis are leaf strings — nothing to walk.
         Expression::TemplateLiteral(t) => {
