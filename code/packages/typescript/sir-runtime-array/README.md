@@ -100,11 +100,19 @@ out of scope for the same reason.
 
 ## Security: bounded allocation
 
-`ndarray`/`range` both enforce `MAX_ELEMENTS` (2²⁶, matching
+`checkedShapeSize` enforces `MAX_ELEMENTS` (2²⁶, matching
 `matlab-runtime`'s own `MAX_RANGE`) — a compiled program's array shapes and
 range bounds are runtime values, potentially attacker-influenced, not fixed
 at compile time, so an absurd shape or range fails with a clean `Error`
-rather than exhausting memory.
+rather than exhausting memory. Every function that allocates a buffer sized
+from caller-supplied numbers (`zeros`, `fromRows`, `matmul`'s `m * n`,
+`range`'s incremental loop) validates *before* calling `new Float64Array`,
+not after — validating only inside `ndarray`'s constructor would be too
+late, since the allocation attempt itself can throw an uncaught
+`RangeError` or stall on a huge request before a cap ever gets a chance to
+reject anything cleanly. `checkedShapeSize` also rejects negative and
+non-integer dimensions, closing a variant where two negative dimensions
+multiply to a small, cap-passing positive product.
 
 ## Where it fits
 

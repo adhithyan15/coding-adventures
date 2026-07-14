@@ -56,7 +56,38 @@ All notable changes to this project will be documented in this file.
   `array_runtime::ops`'s existing `reduce`/`scan`/`outer` Rust
   implementations now would be speculative. A natural follow-up once
   `apl-to-semantic-ir`'s own JS-backend consumption needs them.
-- 49 tests, 100% line/branch/function coverage, including an adversarial
+- 53 tests, 100% line/branch/function coverage, including an adversarial
   regression test confirming `range`'s `MAX_ELEMENTS` cap actually trips
   (not just trusting the code that it would) on a runtime-computed bound
   that would otherwise materialize an unbounded array.
+
+### Fixed
+
+- **Allocate-before-validate ordering in `zeros`/`fromRows`/`matmul`** —
+  found by this package's own `/security-review` before its first push.
+  `zeros(rows, cols)` and `fromRows` computed `new Float64Array(rows *
+  cols)` (or `nrows * ncols`) *before* the shared `ndarray()` constructor
+  ever checked `MAX_ELEMENTS` — so an absurd `rows`/`cols` attempted the
+  allocation first, either stalling on a huge request or throwing an
+  uncaught `RangeError` instead of this package's own clean `Error`.
+  `matmul` had the same gap one level up: `m`/`n` come from two
+  *independent* operands, each individually under `MAX_ELEMENTS`, but nothing
+  bounded their *product* — an outer-product-shaped call (e.g. `[2²⁶, 1] ·
+  [1, 2²⁶]`) could still request a `2⁵²`-element output before any check
+  ran. Fixed by extracting `checkedShapeSize(shape)` — validates
+  negative/non-integer dimensions and the `MAX_ELEMENTS` cap *before*
+  returning a safe element count — and calling it in all three places
+  before the corresponding `new Float64Array(...)`, not after.
+- **Negative/non-integer shape dimensions were not rejected** — `ndarray`
+  only checked `n === data.length` and `n <= MAX_ELEMENTS`; a shape like
+  `[-2, -50]` against a 100-element buffer computes `n = 100` (two
+  negatives multiply positive), passing both checks and producing an
+  `NDArray` with negative dimensions that `matmul`/`transpose` would later
+  compute a negative allocation size from. `checkedShapeSize` (see above)
+  closes this the same way it closes the allocation-ordering gap.
+- **`resolvePositions`'s `IndexArg` dispatch had no `default` case** — a
+  malformed `kind` (only reachable from a compiled-JS call site that
+  crosses the TypeScript/JavaScript boundary this package's exported types
+  can't police at runtime) fell through to `undefined` and surfaced as a
+  confusing `TypeError` several calls downstream instead of a clean
+  `Error` at the point of the actual mistake.

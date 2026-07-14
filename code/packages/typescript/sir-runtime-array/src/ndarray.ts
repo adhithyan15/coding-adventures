@@ -34,8 +34,27 @@ export interface NDArray {
  */
 export const MAX_ELEMENTS = 1 << 26; // 67,108,864
 
-function shapeSize(shape: readonly number[]): number {
-  return shape.reduce((acc, d) => acc * d, 1);
+/**
+ * Validate a shape *before* any caller allocates a buffer sized from it —
+ * every function that computes an output size from caller-supplied numbers
+ * (`zeros`, `fromRows`, `matmul`'s `m * n`, …) must call this first, not
+ * after, so a negative, non-integer, or absurdly large shape is rejected
+ * with a clean `Error` before `new Float64Array(...)` ever runs. Calling
+ * the cap check *after* allocating (as `ndarray`'s own validation alone
+ * would, if factories didn't also call this) is too late: the allocation
+ * attempt itself can throw an uncaught `RangeError` or stall on a huge
+ * request before the cap gets a chance to reject anything cleanly.
+ * Returns the validated element count.
+ */
+export function checkedShapeSize(shape: readonly number[]): number {
+  if (!shape.every((d) => Number.isInteger(d) && d >= 0)) {
+    throw new Error(`checkedShapeSize: shape ${JSON.stringify(shape)} has a negative or non-integer dimension`);
+  }
+  const n = shape.reduce((acc, d) => acc * d, 1);
+  if (!Number.isFinite(n) || n > MAX_ELEMENTS) {
+    throw new Error(`checkedShapeSize: shape ${JSON.stringify(shape)} (${n} elements) exceeds the ${MAX_ELEMENTS}-element cap`);
+  }
+  return n;
 }
 
 /**
@@ -45,14 +64,11 @@ function shapeSize(shape: readonly number[]): number {
  * mismatch and a shape whose element count exceeds `MAX_ELEMENTS`.
  */
 export function ndarray(shape: readonly number[], data: Float64Array): NDArray {
-  const n = shapeSize(shape);
-  if (!Number.isFinite(n) || n !== data.length) {
+  const n = checkedShapeSize(shape);
+  if (n !== data.length) {
     throw new Error(
       `ndarray: shape ${JSON.stringify(shape)} implies ${n} elements, got ${data.length}`,
     );
-  }
-  if (n > MAX_ELEMENTS) {
-    throw new Error(`ndarray: ${n} elements exceeds the ${MAX_ELEMENTS}-element cap`);
   }
   return { shape, data };
 }
@@ -81,7 +97,8 @@ export function fromRows(rows: readonly (readonly number[])[]): NDArray {
   if (rows.some((r) => r.length !== ncols)) {
     throw new Error("fromRows: ragged rows");
   }
-  const data = new Float64Array(nrows * ncols);
+  const n = checkedShapeSize([nrows, ncols]);
+  const data = new Float64Array(n);
   for (let r = 0; r < nrows; r++) {
     for (let c = 0; c < ncols; c++) {
       data[c * nrows + r] = rows[r][c]; // column-major store
@@ -92,7 +109,8 @@ export function fromRows(rows: readonly (readonly number[])[]): NDArray {
 
 /** An `[rows, cols]` array of zeros. */
 export function zeros(rows: number, cols: number): NDArray {
-  return ndarray([rows, cols], new Float64Array(rows * cols));
+  const n = checkedShapeSize([rows, cols]);
+  return ndarray([rows, cols], new Float64Array(n));
 }
 
 export function ndims(a: NDArray): number {

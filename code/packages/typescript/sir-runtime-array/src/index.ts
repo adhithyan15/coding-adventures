@@ -56,7 +56,7 @@
  * real-only scope.
  */
 
-export { ndarray, scalar, fromVec, fromRows, zeros, ndims, isScalar, nrows, ncols, get, set, MAX_ELEMENTS, type NDArray } from "./ndarray.js";
+export { ndarray, checkedShapeSize, scalar, fromVec, fromRows, zeros, ndims, isScalar, nrows, ncols, get, set, MAX_ELEMENTS, type NDArray } from "./ndarray.js";
 export { elementwise, type ElementwiseOpKind } from "./elementwise.js";
 export { matmul } from "./matmul.js";
 export { transpose } from "./transpose.js";

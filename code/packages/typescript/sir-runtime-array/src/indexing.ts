@@ -27,6 +27,12 @@ function resolvePositions(arg: IndexArg, dimSize: number): number[] {
       return Array.from({ length: dimSize }, (_, i) => i);
     case "range":
       return Array.from(arg.indices.data, (x) => Math.trunc(x));
+    default:
+      // Emitted code crosses a JS runtime boundary that TypeScript can't
+      // enforce at the actual call site — a malformed `kind` must fail
+      // cleanly here, not fall through to `undefined` and surface as a
+      // confusing `TypeError` several calls further down.
+      throw new Error(`resolvePositions: unrecognised IndexArg ${JSON.stringify(arg)}`);
   }
 }
 

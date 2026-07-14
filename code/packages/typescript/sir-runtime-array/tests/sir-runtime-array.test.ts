@@ -80,6 +80,18 @@ describe("ndarray construction and accessors", () => {
       /exceeds/,
     );
   });
+
+  it("checkedShapeSize rejects negative and non-integer dimensions before any allocation", () => {
+    expect(() => arr.checkedShapeSize([-2, 5])).toThrow(/negative or non-integer/);
+    expect(() => arr.checkedShapeSize([2.5, 5])).toThrow(/negative or non-integer/);
+  });
+
+  it("zeros/fromRows validate the shape before allocating, not after", () => {
+    // Two negative dims multiply to a small positive product — a naive
+    // `rows * cols` check alone would miss this; `checkedShapeSize`
+    // rejects the negative dimension directly instead.
+    expect(() => arr.zeros(-100, -100)).toThrow(/negative or non-integer/);
+  });
 });
 
 describe("elementwise", () => {
@@ -191,6 +203,16 @@ describe("matmul", () => {
     const a = arr.fromRows([[1, 2]]); // 1x2
     const b = arr.fromRows([[1, 2]]); // 1x2
     expect(() => arr.matmul(a, b)).toThrow(/inner dimensions disagree/);
+  });
+
+  it("an outer-product-shaped call whose output would exceed MAX_ELEMENTS is a clean error, not an OOM", () => {
+    // Each operand is individually tiny; only their PRODUCT (m * n) is
+    // absurd. This proves the output shape is validated before `matmul`
+    // ever allocates `out`, not after — an allocate-then-validate ordering
+    // would attempt the huge allocation first.
+    const col: arr.NDArray = { shape: [100000, 1], data: new Float64Array(1) };
+    const row: arr.NDArray = { shape: [1, 100000], data: new Float64Array(1) };
+    expect(() => arr.matmul(col, row)).toThrow(/exceeds/);
   });
 });
 
@@ -383,5 +405,13 @@ describe("indexGet / indexSet", () => {
     ];
     expect(() => arr.indexGet(a, tooMany)).toThrow(/rank ≤ 2/);
     expect(() => arr.indexSet(a, tooMany, 1)).toThrow(/rank ≤ 2/);
+  });
+
+  it("a malformed IndexArg (only reachable from untyped emitted JS, not real TypeScript callers) is a clean error", () => {
+    const a = arr.zeros(1, 1);
+    // `as unknown as arr.IndexArg` simulates a compiled-JS call site that
+    // TypeScript's own type-checking can't police at runtime.
+    const malformed = { kind: "bogus" } as unknown as arr.IndexArg;
+    expect(() => arr.indexGet(a, [malformed])).toThrow(/unrecognised IndexArg/);
   });
 });
