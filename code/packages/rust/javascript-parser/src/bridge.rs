@@ -51,8 +51,8 @@ use coding_adventures_javascript_ast::{
     declaration::{
         BindingTarget, ClassDeclaration, Declaration, ExportAllDeclaration,
         ExportDefaultDeclaration, ExportDefaultKind, ExportNamedDeclaration, ExportSpecifier,
-        FunctionDeclaration, FunctionParam, ImportDeclaration, ImportSpecifier, VarKind,
-        VariableDeclaration, VariableDeclarator,
+        FunctionDeclaration, FunctionParam, ImportDeclaration, ImportSpecifier, RestElement,
+        VarKind, VariableDeclaration, VariableDeclarator,
     },
     expression::{
         ArrayExpression, ArrowBody, ArrowFunctionExpression, AssignmentExpression,
@@ -2206,9 +2206,32 @@ fn convert_formal_parameters(node: &GrammarASTNode) -> Result<Vec<FunctionParam>
 fn convert_formal_parameter(node: &GrammarASTNode) -> Result<FunctionParam, BridgeError> {
     // formal_parameter = ( NAME | binding_pattern ) [ EQUALS assignment_expression ]
     //                  | ELLIPSIS ( NAME | binding_pattern )
-    // In Phase 1: only simple NAME identifiers.
+    // Simple NAME identifiers and (CLOC12.190) trailing rest parameters
+    // (`...name`) are modelled; a destructuring target is declined.
     if has_token(node, "...") {
-        return Err(unsupported(node)); // rest params are Phase 3
+        // Rest parameter `...target`. A destructuring rest (`...[a,b]`, `...{x}`)
+        // reuses the Phase-3 binding-pattern machinery — decline it rather than
+        // mis-model. A simple `...name` bridges to a `FunctionParam::RestElement`.
+        for c in &node.children {
+            if let ASTNodeOrToken::Node(n) = c {
+                if n.rule_name == "binding_pattern" {
+                    return Err(unsupported(n));
+                }
+            }
+        }
+        // The gathered name is the sole non-`...` token in the node.
+        let name = node
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Token(t) if t.value != "..." => Some(t.value.clone()),
+                _ => None,
+            })
+            .ok_or_else(|| internal(node, "rest parameter: missing name"))?;
+        return Ok(FunctionParam::RestElement(RestElement {
+            cv: None,
+            argument: Identifier { cv: None, name },
+        }));
     }
     for c in &node.children {
         if let ASTNodeOrToken::Node(n) = c {
@@ -4148,6 +4171,55 @@ mod tests {
             Some(ProgramItem::Declaration(Declaration::ImportDeclaration(i))) => i.clone(),
             other => panic!("expected an ImportDeclaration for {src}, got {other:?}"),
         }
+    }
+
+    /// Pull the sole `FunctionDeclaration` out of a single-item program.
+    fn fn_of(src: &str) -> FunctionDeclaration {
+        let p = bridge_ok(src);
+        match p.body.first() {
+            Some(ProgramItem::Declaration(Declaration::FunctionDeclaration(f))) => f.clone(),
+            other => panic!("expected a FunctionDeclaration for {src}, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn rest_parameter_bridges() {
+        // `function f(...args){}` — CLOC12.190 PR2. The lone `...args` bridges to
+        // a `FunctionParam::RestElement` binding the name `args`, instead of the
+        // whole file declining to WHITESPACE_ONLY.
+        let f = fn_of("function f(...args){}");
+        assert_eq!(f.params.len(), 1);
+        match &f.params[0] {
+            FunctionParam::RestElement(re) => assert_eq!(re.argument.name, "args"),
+            other => panic!("expected a RestElement param, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn fixed_then_rest_parameter_bridges() {
+        // `function f(a, ...rest){}` — the fixed `a` stays an Identifier param and
+        // the trailing `...rest` bridges to a RestElement, in order.
+        let f = fn_of("function f(a, ...rest){}");
+        assert_eq!(f.params.len(), 2);
+        match &f.params[0] {
+            FunctionParam::Identifier(id) => assert_eq!(id.name, "a"),
+            other => panic!("expected Identifier for param 0, got {other:?}"),
+        }
+        match &f.params[1] {
+            FunctionParam::RestElement(re) => assert_eq!(re.argument.name, "rest"),
+            other => panic!("expected RestElement for param 1, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn rest_destructuring_param_declines_gracefully() {
+        // `function f(...[a, b]){}` — a destructuring rest target is Phase 3, so
+        // the bridge declines (the whole program falls back to WHITESPACE_ONLY)
+        // rather than mis-modelling it. A decline is an Err, never a panic.
+        assert!(
+            bridge("function f(...[a, b]){}").is_err(),
+            "destructuring rest param should decline, not bridge"
+        );
     }
 
     #[test]
