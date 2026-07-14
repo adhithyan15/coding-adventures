@@ -1,0 +1,20 @@
+% ============================================================================
+% oceans.query.adj — a worked recall over the geography oceans library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "which is the biggest
+% ocean?" — it states no geography fact, only `import`s the grounded table and
+% asks binding queries. The engine resolves each `?` against the ocean_size_rank
+% rows and returns the rank (or the ocean, on a reverse query) + the NOAA
+% source/locator/trust. A body of water that is not one of the five named oceans
+% abstains honestly — the engine never invents a rank.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli oceans.query.adj
+% ============================================================================
+
+import "oceans.adj"
+
+? ocean_size_rank(pacific, $R)         % expect 1  (the largest ocean basin)
+? ocean_size_rank(arctic, $R)          % expect 5  (the smallest of the five)
+? ocean_size_rank($Ocean, 2)           % expect atlantic (reverse: who is #2?)
+? ocean_size_rank(mediterranean, $R)   % expect abstain — a sea, not an ocean
