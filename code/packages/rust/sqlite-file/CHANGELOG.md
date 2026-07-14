@@ -1,5 +1,22 @@
 # Changelog — sqlite-file
 
+## 0.12.0 - Unreleased
+
+**Phase F (writer): one-call whole-file assembler.** New
+`page_writer::write_single_table_db(page_size, table_name, create_sql, rows)`
+emits a complete, re-readable single-table SQLite database in one call — wiring
+together `Header::encode`, `schema::table_schema_row`, `record::encode`, and the
+leaf-page writer. Page 1 is the 100-byte DB header followed (at offset 100) by the
+`sqlite_schema` leaf describing the table at root page 2; page 2 is the data leaf
+holding the rows. The result reads straight back through `schema::read_table(&db,
+name)`. Internally the leaf-page writer was refactored into a shared
+`fill_table_leaf_page(page, header_offset, …)` so page 1 (b-tree header at offset
+100) and ordinary pages (offset 0) share one code path; `encode_table_leaf_page`
+is unchanged behaviourally. This turns the writer milestone's hand-assembly recipe
+into a real API — the ergonomic capstone toward dropping the `rusqlite` dev-dep.
+Round-trip tests: assemble a table, read it back by name; empty-table and
+bad-page-size cases.
+
 ## 0.11.0 - Unreleased
 
 **Phase F (writer), rung 4 — the `sqlite_schema` row + a full single-table file.**
