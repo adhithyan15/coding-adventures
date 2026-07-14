@@ -30,8 +30,11 @@ shown, LaTeX book.
 - **Chapter 1 — Greetings** ([`lessons/TA-C01-*`](./lessons/)): vaṇakkam →
   naṉṟi → ām → illai → sari → practice (with the *pōy varugiṟēṉ* farewell).
   Tamil script taught inline; Dravidian cognates traced. In the book.
-- **Chapter 2 — Introducing Yourself** (planned): *eṉ peyar…* ("my name"), and
-  *nī* / *nīṅgaḷ* (familiar / respectful "you").
+- **Chapter 2 — Introducing Yourself** ([`lessons/TA-C02-*`](./lessons/)):
+  peyar, eṉ, **eṉ peyar** ("my name is," zero copula), nī/nīṅgaḷ, eṉṉa,
+  **uṅgaḷ peyar eṉṉa?** ("what's your name?"), magiḻcci, practice. Every atom
+  native Dravidian and traced (*peyar* ≠ Indo-European *name*); the **zero
+  copula** (no word for "is"). In the book.
 
 ## Book / fonts
 

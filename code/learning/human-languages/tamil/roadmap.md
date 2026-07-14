@@ -17,12 +17,15 @@ that needs it.
   Tamil script introduced through the words (inherent *a*, puḷḷi, vowel signs,
   independent vowels, the three-way *n*/*l*/*r* distinction), and the native
   vs. Sanskrit split shown through the greetings themselves.
+- **Ch. 2 — Introducing Yourself**: peyar → eṉ → **eṉ peyar** ("my name is,"
+  zero copula) → nī/nīṅgaḷ → eṉṉa → **uṅgaḷ peyar eṉṉa?** → magiḻcci → practice.
+  Every atom native Dravidian and traced (*peyar* ≠ *name*); the **zero copula**
+  (no word for "is"); respect-by-plural like French *vous*.
 
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 2 | Introducing yourself: *eṉ peyar…* ("my name"), *nī* / *nīṅgaḷ* (familiar / respectful "you"), the native/Sanskrit doublets (*arasaṉ* / *rāja*, "king") |
 | 3 | Responding: *eppaḍi irukkīṅgaḷ?* ("how are you"), *nallā irukkēṉ* ("I'm well"), the verb *iru* ("to be") |
 | 4 | The case-endings (Tamil's agglutinative suffixes), numbers 1–10 |
 | 5+ | Postpositions, tense on the verb, family, food — always with the Dravidian-cognate thread |
