@@ -1,0 +1,96 @@
+% ============================================================================
+% heart-chambers — each of the four heart chambers and the job it does
+% (adj-facts-stdlib, ANATOMY).
+% ============================================================================
+% A cardiac-anatomy fact on the way to medicine: the human heart has FOUR
+% chambers, and each one has one job in the loop that moves blood around the
+% body. Blood comes back from the body, gets sent to the lungs to pick up
+% oxygen, comes back from the lungs, and is pumped back out to the body — and
+% each step is one chamber's job. Recall is a binding query:
+%
+%     ? heart_chamber_function(right_atrium, $Job)   % receives_blood_from_body
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `heart_chamber_function(chamber, function)` carrying the table's
+% citation, so the lookup above is the ordinary SLD binding query — the engine
+% returns the job WITH its source, on the CPU, with zero model calls, and
+% abstains on anything that is not one of the four chambers.
+%
+% The four chambers, as a little truth table (follow the blood around the loop):
+%
+%     chamber          job                        where the blood comes/goes
+%     --------------   ------------------------   ----------------------------
+%     right_atrium     receives_blood_from_body   deoxygenated, from the body
+%     right_ventricle  pumps_blood_to_lungs       out to the lungs for oxygen
+%     left_atrium      receives_blood_from_lungs  oxygenated, back from lungs
+%     left_ventricle   pumps_blood_to_body        out to the whole body
+%
+% The RIGHT side of the heart handles used (deoxygenated) blood on its way to
+% the lungs; the LEFT side handles fresh (oxygenated) blood on its way to the
+% body. This is the concrete cardiac rung a medicine agent reasons UP from:
+% before it can reason about a murmur, a failing valve, or a shunt, it must
+% first know which chamber receives from where and pumps to where, the way a
+% first-year student does. The query also runs BACKWARD — bind the job and
+% recall the chamber that does it:
+%
+%     ? heart_chamber_function($C, pumps_blood_to_body)   % left_ventricle
+%
+% Something that is not one of the four chambers — the aorta, a valve, the
+% septum — has no row, so a recall on it ABSTAINS rather than inventing a job.
+% That honest-abstention property is what makes the table safe to reason from.
+%
+% The `function` value of every row is a SINGLE lowercase atom, chosen to be a
+% faithful short snake_case paraphrase of what the source states that chamber
+% does — never an interpretation the source does not support.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every chamber→job pair was
+% read out of a fetched NIH / National Library of Medicine page, and any
+% chamber that could not be grounded there would have been dropped). All four
+% spans come from the SAME primary U.S. government reference, NIH / NLM
+% StatPearls "Anatomy, Thorax, Heart" (ncbi.nlm.nih.gov/books/NBK470256/), each
+% quoted here character-for-character so any reader can re-check it:
+%
+%   right_atrium → receives_blood_from_body
+%     "The right atrium receives deoxygenated blood from the entire body except
+%      for the lungs (the systemic circulation) via the superior and inferior
+%      vena cavae."
+%
+%   right_ventricle → pumps_blood_to_lungs
+%     "The right ventricle pumps blood through the right ventricular outflow
+%      tract, across the pulmonic valve, and into the pulmonary artery that
+%      distributes it to the lungs for oxygenation."
+%
+%   left_atrium → receives_blood_from_lungs
+%     "This oxygenated blood is collected by the four pulmonary veins, two from
+%      each lung. All four of these veins open into the left atrium that acts as
+%      a collection chamber for oxygenated blood."
+%
+%   left_ventricle → pumps_blood_to_body
+%     "The left ventricle is the main pumping chamber of the left heart, then
+%      pumps, sending freshly oxygenated blood to the systemic circulation
+%      through the aortic valve."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single strongest span: the StatPearls sentence that
+% fixes the first row (right_atrium → receives_blood_from_body). Every OTHER
+% row's per-fact source and verbatim span is listed above, so each job remains
+% independently checkable. The source is a primary U.S. government NIH /
+% National Library of Medicine reference (ncbi.nlm.nih.gov), so
+% `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table heart_chamber_function {
+    columns chamber, function
+
+    row (right_atrium, receives_blood_from_body)
+    row (right_ventricle, pumps_blood_to_lungs)
+    row (left_atrium, receives_blood_from_lungs)
+    row (left_ventricle, pumps_blood_to_body)
+
+    source "The right atrium receives deoxygenated blood from the entire body except for the lungs (the systemic circulation) via the superior and inferior vena cavae."
+    locator "https://www.ncbi.nlm.nih.gov/books/NBK470256/"
+    trust authoritative
+}
