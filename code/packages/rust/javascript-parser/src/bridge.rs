@@ -49,7 +49,7 @@ use lexer::token::{Token, TokenType};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use coding_adventures_javascript_ast::{
     declaration::{
-        BindingTarget, ClassDeclaration, Declaration, ExportAllDeclaration,
+        AssignmentPattern, BindingTarget, ClassDeclaration, Declaration, ExportAllDeclaration,
         ExportDefaultDeclaration, ExportDefaultKind, ExportNamedDeclaration, ExportSpecifier,
         FunctionDeclaration, FunctionParam, ImportDeclaration, ImportSpecifier, RestElement,
         VarKind, VariableDeclaration, VariableDeclarator,
@@ -2240,12 +2240,36 @@ fn convert_formal_parameter(node: &GrammarASTNode) -> Result<FunctionParam, Brid
             }
         }
     }
-    // Has default? Not Phase 1.
+    // Default parameter `name = expr` (CLOC12.191). A destructuring target with
+    // a default (`{x} = {}`, `[a] = []`) was already declined by the
+    // `binding_pattern` guard above, so here the left is always a simple NAME.
+    // The right is the sole child *node* — the `assignment_expression` the
+    // grammar attaches after `=` — converted through the ordinary expression
+    // path so the optimizer folds / renames / inlines it as the live code it is
+    // (`function f(a = 1 + 2)` → `function f(a = 3)`).
     if has_token(node, "=") {
-        return Err(BridgeError::UnsupportedSyntax {
-            rule: "formal_parameter_default".to_string(),
-            location: loc(node),
-        });
+        let name = node
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Token(t) if t.value != "=" => Some(t.value.clone()),
+                _ => None,
+            })
+            .ok_or_else(|| internal(node, "default parameter: missing name"))?;
+        let right_node = node
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Node(n) => Some(n),
+                _ => None,
+            })
+            .ok_or_else(|| internal(node, "default parameter: missing default expression"))?;
+        let right = convert_expression(right_node)?;
+        return Ok(FunctionParam::AssignmentPattern(AssignmentPattern {
+            cv: None,
+            left: Identifier { cv: None, name },
+            right,
+        }));
     }
     let name = node.children.iter().find_map(|c| match c {
         ASTNodeOrToken::Token(t) => Some(t.value.clone()),
@@ -4219,6 +4243,73 @@ mod tests {
         assert!(
             bridge("function f(...[a, b]){}").is_err(),
             "destructuring rest param should decline, not bridge"
+        );
+    }
+
+    #[test]
+    fn default_parameter_bridges() {
+        // `function f(a = 1){}` — CLOC12.191 PR2. The `a = 1` bridges to a
+        // `FunctionParam::AssignmentPattern` binding `a` with a numeric-literal
+        // default, instead of the whole file declining to WHITESPACE_ONLY.
+        let f = fn_of("function f(a = 1){}");
+        assert_eq!(f.params.len(), 1);
+        match &f.params[0] {
+            FunctionParam::AssignmentPattern(ap) => {
+                assert_eq!(ap.left.name, "a");
+                match &ap.right {
+                    Expression::NumericLiteral(n) => assert_eq!(n.value, 1.0),
+                    other => panic!("expected a numeric-literal default, got {other:?}"),
+                }
+            }
+            other => panic!("expected an AssignmentPattern param, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn fixed_then_default_parameter_bridges() {
+        // `function f(a, b = 2){}` — the fixed `a` stays an Identifier param and
+        // `b = 2` bridges to an AssignmentPattern, in order.
+        let f = fn_of("function f(a, b = 2){}");
+        assert_eq!(f.params.len(), 2);
+        match &f.params[0] {
+            FunctionParam::Identifier(id) => assert_eq!(id.name, "a"),
+            other => panic!("expected Identifier for param 0, got {other:?}"),
+        }
+        match &f.params[1] {
+            FunctionParam::AssignmentPattern(ap) => assert_eq!(ap.left.name, "b"),
+            other => panic!("expected AssignmentPattern for param 1, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn default_parameter_expression_bridges_unfolded() {
+        // `function f(a = 1 + 2){}` — the default's `right` is a full expression
+        // (a `BinaryExpression`), NOT pre-folded: the bridge only models the
+        // shape; constant-fold does the folding downstream. This is the whole
+        // point of `right` being an Expression rather than a literal.
+        let f = fn_of("function f(a = 1 + 2){}");
+        match &f.params[0] {
+            FunctionParam::AssignmentPattern(ap) => {
+                assert_eq!(ap.left.name, "a");
+                assert!(
+                    matches!(ap.right, Expression::BinaryExpression(_)),
+                    "default `1 + 2` must bridge as an (unfolded) BinaryExpression, got {:?}",
+                    ap.right
+                );
+            }
+            other => panic!("expected an AssignmentPattern param, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn destructuring_default_param_declines_gracefully() {
+        // `function f({x} = {}){}` — a destructuring target WITH a default reuses
+        // the Phase-3 binding-pattern machinery, so the bridge declines (falls
+        // back to WHITESPACE_ONLY) via the `binding_pattern` guard rather than
+        // mis-modelling it. A decline is an Err, never a panic.
+        assert!(
+            bridge("function f({x} = {}){}").is_err(),
+            "destructuring default param should decline, not bridge"
         );
     }
 
