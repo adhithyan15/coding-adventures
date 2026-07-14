@@ -1,6 +1,6 @@
 [package]
 name = "sqlite-file"
-version = "0.10.0"
+version = "0.11.0"
 edition = "2021"
 description = "A small, zero-dependency reader for the SQLite on-disk file format — the read subset the Engram Anki-package importer needs — reimplemented from scratch to keep the Engram stack free of the bundled-C `rusqlite` crate."
 license = "MIT"
