@@ -1,0 +1,19 @@
+% ============================================================================
+% animal-babies.query.adj — a worked recall over the animal-baby library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is a baby dog
+% called?": it states no fact — it only `import`s the grounded table and asks
+% binding queries. The engine resolves each `?` against the `animal_baby` rows
+% and returns the baby's name + the table's source/locator/trust. A word that is
+% not a recorded animal abstains honestly — the engine never invents a name.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli animal-babies.query.adj
+% ============================================================================
+
+import "animal-babies.adj"
+
+? animal_baby(dog, $Baby)          % expect puppy
+? animal_baby(kangaroo, $Baby)     % expect joey
+? animal_baby(horse, $Baby)        % expect foal
+? animal_baby(rock, $Baby)         % expect abstain — a rock is not an animal
