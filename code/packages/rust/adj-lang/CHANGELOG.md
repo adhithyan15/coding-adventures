@@ -20,6 +20,13 @@ store → query.
 - Behavior note: a magnitude that overflows `f64` (`1e400`) is no longer rejected at parse — it is
   a valid exact decimal now stored with full precision. A scale-amplification payload
   (`1e-2000000000`) is still rejected by `BigDecimal`'s `MAX_SCALE` budget.
+- **DoS guard.** Because `.adj` source is untrusted and `BigDecimal` base-10 conversion is
+  `O(digits²)`, `parse_numlit` caps an exact literal's **byte length** (`MAX_NUMBER_TOKEN_LEN =
+  4096`, checked before the quadratic parse) and its **scale magnitude** (`MAX_NUMBER_TOKEN_SCALE =
+  4096`, so a tiny token like `1e-1000000` cannot force a ~1 MB render/`to_f64` string). Both sit
+  ~100× above any legitimate constant (π to 39 places is 41 bytes), so only hostile payloads are
+  rejected — restoring the implicit bound the old `f64` parse provided. Adversarial tests cover
+  both shapes.
 - Depends on `bignum-core` ≥ 0.5.0 and `logic-core` ≥ 0.2.1.
 
 ## [0.52.0] — 2026-07-13
