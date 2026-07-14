@@ -1,0 +1,19 @@
+% ============================================================================
+% temperature.query.adj — worked applications of the temperature library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a "what is 37 °C
+% in Fahrenheit?" question: it states no arithmetic — it only `import`s the
+% grounded library, binds the reading with `observe`, and applies the cited
+% formula. The native adj-lang engine computes each value on the CPU and returns
+% it WITH NIST's source/locator/trust as the answer's proof.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli temperature.query.adj
+% ============================================================================
+
+import "temperature.adj"
+
+observe celsius(100)   ? fahrenheit(celsius)    % expect 212    (boiling point of water)
+observe celsius(37)    ? fahrenheit(celsius)    % expect 98.6   (normal body temperature)
+observe fahrenheit(32) ? celsius(fahrenheit)    % expect 0      (freezing point of water)
+observe celsius(0)     ? kelvin(celsius)        % expect 273.15 (ice point on the Kelvin scale)

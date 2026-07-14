@@ -1,0 +1,78 @@
+% ============================================================================
+% temperature.adj — the temperature-scale conversion formula library.
+% ============================================================================
+% A METROLOGY entry of the *compute* standard library: the unit-conversion
+% formulas that turn a temperature stated on one scale into another. Like
+% `clinical/bmi.adj` and `mathematics/geometry-formulas.adj`, each is an
+% importable, byte-provenanced, PARAMETERIZED `formula`. A consumer states NO
+% arithmetic — it `import`s this file, binds the reading from its own
+% byte-provenance decomposition, and asks the engine to apply the cited formula
+% on the CPU. Zero math is performed by the model; the engine computes each
+% value EXACTLY, carrying NIST's definition as the answer's citation.
+%
+%     import "temperature.adj"
+%     observe celsius(37)              % "…a temperature of 37 °C…"  (span cited)
+%     ? fahrenheit(celsius)            % engine → 98.6, carrying NIST's (°C * 1.8) + 32
+%
+% Medically relevant: normal human body temperature is ~37 °C / 98.6 °F, and a
+% chart that records one scale must often be read on the other — a conversion a
+% clinician performs constantly. The formula (and its source) live HERE; the
+% reading (and its span) comes from the input.
+%
+% Grounding note — these are the exact NIST relations, expressed with exact
+% integer ratios rather than the decimal 1.8. NIST's "Temperature Conversion
+% (Exact)" table gives Celsius→Fahrenheit as `(°C * 1.8) + 32` and
+% Fahrenheit→Celsius as `(°F - 32) / 1.8`; since 1.8 = 9/5 (and dividing by 1.8
+% is multiplying by 5/9), `celsius * 9 / 5 + 32` and `(fahrenheit - 32) * 5 / 9`
+% are the SAME relations written with the schoolbook fraction, so the engine's
+% exact CPU arithmetic matches the cited definition character-for-value.
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vocabulary. Each term is a temperature reading on a named scale — both an
+% input a formula ranges over and a result another formula produces. Rung-0's
+% grammar types an observable slot as `finding` (dimensional typing of formula
+% parameters is a later rung; the engine already infers + checks quantities when
+% a formula is APPLIED). The `surface` lists are the everyday names a decomposer
+% maps onto the canonical term.
+% ----------------------------------------------------------------------------
+dictionary temperature_vocab {
+    define celsius    : finding  surface "celsius", "degrees celsius", "°C", "centigrade"
+    define fahrenheit : finding  surface "fahrenheit", "degrees fahrenheit", "°F"
+    define kelvin     : finding  surface "kelvin", "kelvins", "K"
+}
+
+% ----------------------------------------------------------------------------
+% The formulas. Each is a named, importable, reusable `let` over its formal
+% parameter, bound at apply time, and each carries a VERBATIM cell of NIST's
+% "Temperature Conversion (Exact)" table (required on a shipped formula; the
+% linter rejects an unsourced one). NIST is a primary standards body (a .gov
+% metrology authority) — trust `authoritative`.
+%
+%   fahrenheit(celsius)    = celsius * 9 / 5 + 32      %  NIST: (°C * 1.8) + 32
+%   celsius(fahrenheit)    = (fahrenheit - 32) * 5 / 9 %  NIST: (°F - 32) / 1.8
+%   kelvin(celsius)        = celsius + 273.15          %  NIST: °C + 273.15
+% ----------------------------------------------------------------------------
+formulabook temperature_conversions {
+    use temperature_vocab
+
+    % Celsius → Fahrenheit. NIST states it as (°C * 1.8) + 32; 1.8 = 9/5.
+    formula fahrenheit(celsius) = celsius * 9 / 5 + 32
+        source "(°C * 1.8) + 32"
+        locator "https://www.nist.gov/pml/owm/si-units-temperature"
+        trust authoritative
+
+    % Fahrenheit → Celsius. NIST states it as (°F - 32) / 1.8; dividing by 1.8
+    % is multiplying by 5/9.
+    formula celsius(fahrenheit) = (fahrenheit - 32) * 5 / 9
+        source "(°F - 32) / 1.8"
+        locator "https://www.nist.gov/pml/owm/si-units-temperature"
+        trust authoritative
+
+    % Celsius → Kelvin. NIST states it exactly as °C + 273.15 (the ice point of
+    % water offset that fixes the two scales' shared degree size).
+    formula kelvin(celsius) = celsius + 273.15
+        source "°C + 273.15"
+        locator "https://www.nist.gov/pml/owm/si-units-temperature"
+        trust authoritative
+}
