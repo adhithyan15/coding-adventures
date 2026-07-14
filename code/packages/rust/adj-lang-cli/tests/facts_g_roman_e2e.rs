@@ -50,10 +50,11 @@ fn gradeschool_roman_recall_binds_symbol_value_with_citation() {
     // X is ten; M is a thousand — the recalled values.
     assert!(out.contains("\"V\":\"10\""), "x → 10: {out}");
     assert!(out.contains("\"V\":\"1000\""), "m → 1000: {out}");
-    // The answer carries the Wikipedia citation as its proof.
+    // The answer carries the Wikipedia citation as its proof. Wikipedia is a
+    // consensus encyclopedia, so the trust tier is `consensus`, not `authoritative`.
     assert!(
         out.contains("en.wikipedia.org/wiki/Roman_numerals")
-            && out.contains("\"trust\":\"authoritative\""),
+            && out.contains("\"trust\":\"consensus\""),
         "carries the source citation: {out}"
     );
     // `q` is not a Roman numeral — honest abstention, never a fabricated value.

@@ -27,8 +27,12 @@
 %
 % Provenance: the seven symbol→value pairs are copied from the sentence quoted in
 % `source`, taken verbatim from the Wikipedia "Roman numerals" article's lead at
-% the `locator`. `trust authoritative` — a citable encyclopedia reference.
-% Nothing here is asserted from memory; every value traces to that sentence.
+% the `locator`. `trust consensus` — Wikipedia is a CONSENSUS encyclopedia, not a
+% primary authority: the `authoritative` tier is reserved for primary/official
+% sources (a standards body, a .gov/NIST publication). Roman numerals are a
+% historical writing convention with no single governing standards body, so a
+% consensus encyclopedia is the honest tier for this fact. Nothing here is
+% asserted from memory; every value traces to that sentence.
 % (See ../README.md; feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
 % ============================================================================
 
@@ -45,5 +49,5 @@ table roman_numeral_value {
 
     source "The modern style of Roman numerals uses only seven letters from the Latin alphabet as symbols: I meaning 1, V meaning 5, X meaning 10, L meaning 50, C meaning 100, D meaning 500, and M meaning 1000."
     locator "https://en.wikipedia.org/wiki/Roman_numerals"
-    trust authoritative
+    trust consensus
 }
