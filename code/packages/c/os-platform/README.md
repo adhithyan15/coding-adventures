@@ -23,7 +23,7 @@ exactly one backend and the code contains no `#if defined(__linux__)` mazes.
 | `thread` | `os_platform/thread.h`  | ✅ implemented |
 | `fs`      | `os_platform/fs.h`      | ✅ implemented |
 | `process` | `os_platform/process.h` | ✅ implemented |
-| dynlib    | —                       | planned       |
+| `dynlib`  | `os_platform/dynlib.h`  | ✅ implemented |
 | mmap     | —                       | planned       |
 
 All primitives share the `osp_status` return convention from
@@ -166,6 +166,39 @@ directly, so there is no shell word-splitting, globbing, or injection surface.
 On Windows the backend re-quotes `argv` into a command line using the exact
 `CommandLineToArgvW` rules, so the child reconstructs the caller's `argv` intact.
 
+### `dynlib` — load a shared library, resolve a symbol, close
+
+Loading code at run time (plugins, FFI) is bucket B — ISO C has no notion of it.
+
+```c
+#include "os_platform/dynlib.h"
+#include <string.h>
+
+osp_dynlib *lib;
+osp_dynlib_open(&lib, "libm.so.6");     /* dlopen / LoadLibrary */
+
+void *addr;
+osp_dynlib_symbol(lib, "cos", &addr);   /* dlsym / GetProcAddress */
+
+double (*cosfn)(double);
+memcpy(&cosfn, &addr, sizeof cosfn);    /* void* -> fn ptr, warning-free */
+double c = cosfn(0.0);                   /* == 1.0 */
+
+osp_dynlib_close(lib);                   /* dlclose / FreeLibrary */
+```
+
+Backends:
+
+| OS          | load          | resolve          | unload        |
+|-------------|---------------|------------------|---------------|
+| macOS/Linux | `dlopen`      | `dlsym`          | `dlclose`     |
+| Windows     | `LoadLibrary` | `GetProcAddress` | `FreeLibrary` |
+
+The POSIX BUILD links `-ldl` on **Linux only** (macOS has `dlopen` in libc). A
+resolved symbol is a `void *`; convert it to a function pointer with `memcpy`
+(the direct object↔function cast is non-ISO — which is exactly why `dynlib` lives
+on `platform-harness`, not `iso-harness`).
+
 ## Build & test
 
 ```sh
@@ -187,13 +220,15 @@ os-platform/
 │   ├── clock.h                   # clock API
 │   ├── thread.h                  # thread API
 │   ├── fs.h                      # fs API
-│   └── process.h                 # process API
+│   ├── process.h                 # process API
+│   └── dynlib.h                  # dynlib API
 ├── src/
 │   ├── clock_posix.c   · clock_windows.c     # per-OS clock backends
 │   ├── thread_posix.c  · thread_windows.c    # per-OS thread backends
 │   ├── fs_posix.c      · fs_windows.c        # per-OS fs backends
-│   └── process_posix.c · process_windows.c   # per-OS process backends
-├── tests/clock_test.c · thread_test.c · fs_test.c · process_test.c
+│   ├── process_posix.c · process_windows.c   # per-OS process backends
+│   └── dynlib_posix.c  · dynlib_windows.c    # per-OS dynlib backends
+├── tests/clock_test.c · thread_test.c · fs_test.c · process_test.c · dynlib_test.c
 ├── tools/run.sh  · run.ps1       # per-OS build drivers
 ├── BUILD  · BUILD_windows        # per-OS source selection
 └── required_capabilities.json    # CI needs gcc, clang, cl

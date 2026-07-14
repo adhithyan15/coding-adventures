@@ -9,6 +9,23 @@ and this project adheres to semantic versioning.
 
 ### Added
 
+- **`dynlib` primitive** (CCPP02 Phase 2, PR 5): load a shared library, resolve a
+  symbol, unload — the foundation for plugins/FFI, and pure bucket B (ISO C
+  cannot load code at run time).
+  - `osp_dynlib_open` / `osp_dynlib_symbol` (address into a `void *`) /
+    `osp_dynlib_close`.
+  - Backends: `dynlib_posix.c` (`dlopen(RTLD_NOW|RTLD_LOCAL)` / `dlsym` /
+    `dlclose`; the `dlerror()`-clear dance distinguishes a missing symbol from a
+    legitimately NULL-valued one) and `dynlib_windows.c` (`LoadLibraryA` /
+    `GetProcAddress` / `FreeLibrary`; FARPROC→`void*` via memcpy to avoid the
+    MSVC C4054 function/data-pointer cast).
+  - The POSIX BUILD links `-ldl` on **Linux only** (macOS has dlopen in libc and
+    ships no libdl). This is why dynlib lives on platform-harness: converting the
+    resolved address to a function pointer is not strict-ISO.
+  - Test (`tests/dynlib_test.c`): loads a per-OS system library (libc.so.6 /
+    libSystem.dylib / kernel32.dll), resolves and *calls* a known symbol
+    (getpid / GetCurrentProcessId) via a memcpy'd function pointer, and checks
+    missing-symbol + NULL-arg errors. Clean under ASan+UBSan, 0 leaks.
 - **`process` primitive** (CCPP02 Phase 2, PR 4): spawn a child program, wait,
   read its exit code — bucket B (ISO `system()` blocks, needs a shell, and can't
   reliably report the exit code).
