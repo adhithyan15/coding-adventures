@@ -2339,6 +2339,10 @@ fn plan_case(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
     let mut pending_cond: Option<SqlExpr> = None;
     // What the next expression node is filling (set by the preceding keyword).
     let mut slot: Option<&'static str> = None;
+    // The *simple* form carries an operand expr between `CASE` and the first
+    // `WHEN` — the one expression node that appears while no WHEN/THEN/ELSE
+    // keyword is active. `None` = the searched form (`CASE WHEN cond …`).
+    let mut operand: Option<SqlExpr> = None;
 
     for child in &node.children {
         match child {
@@ -2355,13 +2359,32 @@ fn plan_case(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
                 match slot {
                     Some("when") => pending_cond = Some(expr),
                     Some("then") => {
-                        let cond = pending_cond.take().ok_or_else(|| {
+                        let value = pending_cond.take().ok_or_else(|| {
                             PlanError::UnsupportedStatement("CASE THEN without WHEN".to_string())
                         })?;
+                        // Simple form: the WHEN expression is a *value* compared
+                        // to the operand for equality (`operand = value`); the
+                        // searched form uses the WHEN expression as the condition
+                        // verbatim. Cloning the operand per branch is exact
+                        // because mini-sqlite expressions are pure (SQLite
+                        // evaluates the operand once, but a pure operand yields
+                        // the same result each time). A NULL operand makes every
+                        // `operand = value` NULL — never true — so a NULL operand
+                        // falls through to ELSE, matching SQLite.
+                        let cond = match &operand {
+                            Some(op) => SqlExpr::BinaryOp {
+                                op: BinaryOp::Eq,
+                                left: Box::new(op.clone()),
+                                right: Box::new(value),
+                            },
+                            None => value,
+                        };
                         branches.push((cond, expr));
                     }
                     Some("else") => else_val = Some(Box::new(expr)),
-                    _ => {}
+                    // A node with no active slot, before any WHEN, is the simple
+                    // form's operand.
+                    _ => operand = Some(expr),
                 }
                 slot = None;
             }

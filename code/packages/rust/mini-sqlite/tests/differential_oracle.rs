@@ -966,6 +966,44 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT name FROM t ORDER BY name COLLATE BINARY",
     },
+    // ---- Lane 1: simple (operand) CASE ----------------------------------
+    // `CASE x WHEN v THEN r … ELSE d END` compares the operand to each value
+    // for equality; a NULL operand matches nothing (x = NULL is never true)
+    // and falls through to ELSE, exactly as the searched form would.
+    Case {
+        id: "simple_case_with_else",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, x INTEGER)",
+            "INSERT INTO t VALUES (1,1),(2,2),(3,3),(4,NULL)",
+        ],
+        query: "SELECT id, CASE x WHEN 1 THEN 'a' WHEN 2 THEN 'b' ELSE 'c' END AS r FROM t ORDER BY id",
+    },
+    // No ELSE: an unmatched operand (including NULL) yields NULL.
+    Case {
+        id: "simple_case_no_else_yields_null",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, x INTEGER)",
+            "INSERT INTO t VALUES (1,1),(2,9),(3,NULL)",
+        ],
+        query: "SELECT id, CASE x WHEN 1 THEN 'one' END AS r FROM t ORDER BY id",
+    },
+    // Text operand, and the first matching branch wins.
+    Case {
+        id: "simple_case_text_first_match",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT)",
+            "INSERT INTO t VALUES (1,'x'),(2,'y'),(3,'z')",
+        ],
+        query: "SELECT id, CASE s WHEN 'x' THEN 10 WHEN 'y' THEN 20 ELSE 30 END AS r FROM t ORDER BY id",
+    },
+    // Constant simple CASE with a NULL operand hits ELSE (x = NULL is not true).
+    // Aliased so the diff is on the value, not the column name (unaliased
+    // expression column naming is a separate, orthogonal gap).
+    Case {
+        id: "simple_case_null_operand_hits_else",
+        setup: &["CREATE TABLE t (id INTEGER)", "INSERT INTO t VALUES (1)"],
+        query: "SELECT CASE NULL WHEN 1 THEN 'a' ELSE 'z' END AS r FROM t",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but
