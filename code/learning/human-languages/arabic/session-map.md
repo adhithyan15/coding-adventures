@@ -1,4 +1,4 @@
-# Session Map — Arabic Chapter 1
+# Session Map — Arabic Chapters 1–2
 
 Same spaced-repetition schedule as the other tracks (a word from session *N*
 resurfaces at *N+1, N+3, N+7, N+15*). Lessons named by slug; this map is the
@@ -23,7 +23,20 @@ greetings, plus the root engine and the attached *al-*.
 | 7 | shukran | شكرا | ش (= س + 3 dots), ك | root *sh-k-r*; the *kātib/maktūb* patterns |
 | 8 | practice | (recap) | read all six, RTL | the day of greetings + replies |
 
+## Chapter 2 — Introducing Yourself
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 9 | ism | اسم | "name" ← Semitic s-m-w (Hebrew *shem*, not *name*) |
+| 10 | ii-my | ي | "my" — a glued suffix *-ī* (like *al-*) |
+| 11 | ismii | اسمي … | **"my name is…"** — the **zero copula** (shared with Dravidian) |
+| 12 | anta-anti | أنت | **"you"**, split by **gender** (*anta* m. / *anti* f.), not register |
+| 13 | maa | ما | "what" |
+| 14 | maa-ismuka | ما اسمك؟ | **"what's your name?"**; the *-ka/-ki* "your" suffix, gendered |
+| 15 | tasharrafna | تشرفنا | "pleased to meet you" ("we are honoured"; root sh-r-f → *sharīf/sheriff*) |
+| 16 | practice | (dialogue) | the whole exchange |
+
 ## Next
 
-Chapter 2 — introducing yourself (*ismī…*) and Arabic's **gendered** "you"
-(*anta* to a man / *anti* to a woman).
+Chapter 3 — *kayfa ḥāluka?* ("how are you?") and *al-ḥamdu lillāh* — the
+responding cycle.

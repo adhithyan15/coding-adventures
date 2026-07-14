@@ -31,8 +31,11 @@ book.
 - **Chapter 1 — Greetings** ([`lessons/ML-C01-*`](./lessons/)): namaskāram →
   nandi → athe → illa → śari → practice (with the *pōyi varām* farewell).
   Malayalam script taught inline; Dravidian cognates traced. In the book.
-- **Chapter 2 — Introducing Yourself** (planned): *enṟe pēru…* ("my name"), and
-  *nī* / *niṅṅaḷ* (familiar / respectful "you").
+- **Chapter 2 — Introducing Yourself** ([`lessons/ML-C02-*`](./lessons/)):
+  peru, enṟe, **āṇŭ** ("is" — the copula), **enṟe pēru … āṇŭ** ("my name is"),
+  nī/niṅṅaḷ, entŭ, **ninṟe pēru entāṇŭ?** ("what's your name?"), santōṣam,
+  practice. The Malayalam standout: it *has* a copula *āṇŭ*, unlike its
+  zero-copula Dravidian sisters. In the book.
 
 ## Book / fonts
 

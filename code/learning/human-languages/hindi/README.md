@@ -31,8 +31,11 @@ Two things shape this track.
   inline (inherent *a*, mātrā vowel signs, halant + conjuncts, independent
   vowels) and the Sanskrit vs. Perso-Arabic heritage introduced through the
   words themselves. In the book.
-- **Chapter 2 — Introducing Yourself** (planned): *āp* vs. *tum* (formal /
-  informal "you"), *merā nām*, gender in Hindi nouns.
+- **Chapter 2 — Introducing Yourself** ([`lessons/HI-C02-*`](./lessons/)): nām,
+  merā, hai, **merā nām … hai** ("my name is"), āp/tum, kyā, **āpkā nām kyā
+  hai?** ("what's your name?"), khushī, practice. Every atom traced (nām ←
+  *nāman* → *name*; hai ← *asti* → *is*); SOV order; the three-level "you". In
+  the book.
 
 ## Book / fonts
 

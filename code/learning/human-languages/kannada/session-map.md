@@ -1,4 +1,4 @@
-# Session Map — Kannada Chapter 1
+# Session Map — Kannada Chapters 1–2
 
 Same spaced-repetition schedule as the other tracks (a word from session *N*
 resurfaces at *N+1, N+3, N+7, N+15*). Lessons named by slug; this map is the
@@ -21,7 +21,20 @@ independent vowels — all in the service of real greetings.
 | 5 | sari | ಸರಿ | ಸ, ರಿ (i-sign) | native; the *same word* as Tamil *sari* |
 | 6 | practice | (recap) | read all five | the *hōgi baruttēne* farewell (= Tamil *pōy varugiṟēṉ*) |
 
+## Chapter 2 — Introducing Yourself
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 7 | hesaru | ಹೆಸರು | "name" ← Dravidian *\*pesar* (p→h; cousin of Tamil *peyar*, not *name*) |
+| 8 | nanna | ನನ್ನ | "my" ← *nānu* ("I") |
+| 9 | nanna-hesaru | ನನ್ನ ಹೆಸರು … | **"my name is…"** — the **zero copula** (no "is") |
+| 10 | niinu-niivu | ನೀನು / ನೀವು | **"you"** familiar/respectful; respect by plural |
+| 11 | enu | ಏನು | "what" ← Dravidian question-stem *\*yā-/\*e-* |
+| 12 | nimma-hesaru-enu | ನಿಮ್ಮ ಹೆಸರು ಏನು? | **"what's your name?"** (still no "is") |
+| 13 | santosha | ಸಂತೋಷ | "pleased to meet you" — **Sanskrit** (vs. Tamil's native *magiḻcci*) |
+| 14 | practice | (dialogue) | the whole exchange |
+
 ## Next
 
-Chapter 2 — introducing yourself: *nanna hesaru…* ("my name"), *nīnu* / *nīvu*
-(familiar / respectful "you"), and the first native/Sanskrit doublets.
+Chapter 3 — *hēgiddīra?* ("how are you?") and answering with *chennāgiddēne* —
+the responding cycle.
