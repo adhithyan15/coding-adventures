@@ -53,9 +53,22 @@ follow-up (**T7-find-1**): narrow a `uN` return to its width before `ret` (CLR
 `.method`, and ideally a shared frontend narrowing so the value model is uniform),
 then the harness can compare full values, not just the low byte.
 
+## 3b. Second slice (shipped) — full-value differential via BASIC `PRINT`
+
+The u8 exit-code observable (§2) is only 8 bits, so it cannot see a disagreement
+in the upper bits (a `u8 200+100` reads 44 on every engine merely because the OS
+truncates the exit code). Dartmouth BASIC's `PRINT` reports the **full** integer
+on stdout, so `t7_differential_random_basic_print_agree` generates
+`10 PRINT <expr>` programs over `+ - *` (literals `0..=16`, depth ≤ 3 → an all-`*`
+tree is ≤ `16^8 ≈ 4.3e9`, inside `i64`, never overflowing; no division, so total)
+and compares whole `i64` values — negatives and large products included — across
+every engine. **Strictly stronger** than the exit-code slice: a full-value
+disagreement, not just a low-byte one, fails loudly. 368 full-value agreements
+over 160 programs locally.
+
 ## 4. Growth path (future slices)
 
-- Wider expression grammar: `- *` (guarded), comparisons, `let`/`for`, calls —
+- Wider expression grammar: comparisons, `let`/`for`, calls, division (guarded) —
   each is a language the matrix already runs on all engines.
 - Multiple frontends (ALGOL/BASIC/Oct/Twig) as generators.
 - **Shrinking**: on a disagreement, minimise the program before reporting.
