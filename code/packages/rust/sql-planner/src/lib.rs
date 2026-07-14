@@ -200,6 +200,11 @@ pub enum BinaryOp {
     Or,
     // String concatenation
     Concat,
+    // Bitwise — operands coerced to integer, NULL-propagating
+    BitAnd,
+    BitOr,
+    ShiftLeft,
+    ShiftRight,
 }
 
 /// A unary operator.
@@ -209,6 +214,8 @@ pub enum UnaryOp {
     Neg,
     /// Logical negation: `NOT x`
     Not,
+    /// Bitwise complement: `~x` (operand coerced to integer, NULL-propagating).
+    BitNot,
 }
 
 /// The target type of a `CAST(expr AS type)` conversion.
@@ -1777,6 +1784,7 @@ fn plan_expression(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
         "and_expr" => plan_and_expr(node),
         "not_expr" => plan_not_expr(node),
         "comparison" => plan_comparison(node),
+        "bitwise" => plan_bitwise(node),
         "additive" => plan_additive(node),
         "multiplicative" => plan_multiplicative(node),
         "unary" => plan_unary(node),
@@ -2109,6 +2117,23 @@ fn plan_additive(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
     })
 }
 
+/// Plan a `bitwise` node.
+///
+/// Grammar: `bitwise = additive { ("&" | "|" | "<<" | ">>") additive }`
+///
+/// All four operators share one precedence level and are left-associative, so
+/// `5 | 3 & 2` parses as `(5 | 3) & 2`. The VM coerces both operands to integer
+/// and propagates NULL; see `apply_binary`/`apply_shift` in sql-vm.
+fn plan_bitwise(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
+    plan_left_assoc_binary(node, |tok| match tok {
+        "&" => Some(BinaryOp::BitAnd),
+        "|" => Some(BinaryOp::BitOr),
+        "<<" => Some(BinaryOp::ShiftLeft),
+        ">>" => Some(BinaryOp::ShiftRight),
+        _ => None,
+    })
+}
+
 /// Plan a `multiplicative` node.
 ///
 /// Grammar: `multiplicative = unary { (* | / | %) unary }`
@@ -2125,7 +2150,17 @@ fn plan_multiplicative(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
 ///
 /// Grammar: `unary = "-" unary | "+" unary | primary`
 fn plan_unary(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
-    if has_token(node, "-") {
+    // `-x` (arithmetic negation) and `~x` (bitwise complement) both wrap the
+    // inner operand; `+x` is a no-op handled by the fall-through below. `~`
+    // coerces its operand to integer and propagates NULL (see the VM).
+    let unary_op = if has_token(node, "-") {
+        Some(UnaryOp::Neg)
+    } else if has_token(node, "~") {
+        Some(UnaryOp::BitNot)
+    } else {
+        None
+    };
+    if let Some(op) = unary_op {
         let inner = node
             .children
             .iter()
@@ -2136,9 +2171,9 @@ fn plan_unary(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
                     None
                 }
             })
-            .ok_or_else(|| PlanError::UnsupportedStatement("unary minus without operand".to_string()))?;
+            .ok_or_else(|| PlanError::UnsupportedStatement("unary operator without operand".to_string()))?;
         return Ok(SqlExpr::UnaryOp {
-            op: UnaryOp::Neg,
+            op,
             expr: Box::new(plan_expression(inner)?),
         });
     }
@@ -2191,8 +2226,8 @@ fn plan_primary(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
                 "column_ref" => return plan_column_ref(n),
                 "function_call" => return plan_function_call(n),
                 "expr" => return plan_expression(n),
-                "or_expr" | "and_expr" | "not_expr" | "comparison" | "additive"
-                | "multiplicative" | "unary" | "primary" => return plan_expression(n),
+                "or_expr" | "and_expr" | "not_expr" | "comparison" | "bitwise"
+                | "additive" | "multiplicative" | "unary" | "primary" => return plan_expression(n),
                 _ => return plan_expression(n),
             },
             ASTNodeOrToken::Token(tok) => {

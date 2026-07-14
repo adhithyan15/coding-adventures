@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.5.29 — Bitwise operators `& | ~ << >>`
+
+`SELECT 5 & 3`, `5 | 2`, `~0`, `1 << 4`, `256 >> 2` now parse and run with
+SQLite's exact semantics: operands are coerced to integer (integer affinity —
+reals truncate toward zero, `2.9 & 1` → 0; text prefix-parses), NULL propagates,
+and the four binary operators share one left-associative precedence level between
+additive and comparison (`5 | 3 & 2` = `(5|3)&2` = 2; `3 + 1 << 2` = 16). Shifts
+follow SQLite's rules precisely — a negative count flips direction (`1 << -1` =
+`1 >> 1` = 0), a count ≥ 64 saturates (left → 0; right → 0 for non-negative, −1
+for negative), and right shift is arithmetic (`-1 >> 1` = -1) — implemented
+without Rust's shift-overflow UB. Full pipeline: lexer tokens (sql-lexer 0.1.2),
+grammar `bitwise` level + `~` prefix (sql-parser 0.1.13), `BitAnd`/`BitOr`/
+`ShiftLeft`/`ShiftRight`/`BitNot` (sql-planner 0.2.12, sql-codegen 0.6.5), and VM
+execution with `sql_shift` (sql-vm 0.4.15). Seven differential-oracle cases diff
+each operator, precedence, real truncation, NULL, shift edges, and a table column
+against real bundled SQLite.
+
 ## 0.5.28 — Simple (operand) `CASE x WHEN v THEN …`
 
 `SELECT CASE x WHEN 1 THEN 'a' WHEN 2 THEN 'b' ELSE 'c' END` now parses and runs

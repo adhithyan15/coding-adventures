@@ -135,6 +135,14 @@ pub enum BinaryOp {
     Or,
     /// `left || right` (string concatenation)
     Concat,
+    /// `left & right` (bitwise AND; operands coerced to integer)
+    BitAnd,
+    /// `left | right` (bitwise OR; operands coerced to integer)
+    BitOr,
+    /// `left << right` (bitwise left shift; SQLite saturation/negation rules)
+    ShiftLeft,
+    /// `left >> right` (bitwise arithmetic right shift; SQLite rules)
+    ShiftRight,
 }
 
 /// A unary operator for the VM's evaluation stack.
@@ -148,6 +156,8 @@ pub enum UnaryOp {
     Neg,
     /// Logical negation: `NOT x`
     Not,
+    /// Bitwise complement: `~x` (operand coerced to integer)
+    BitNot,
 }
 
 /// An aggregate function tag.
@@ -2378,6 +2388,10 @@ fn map_binary_op(op: &PlanBinaryOp) -> BinaryOp {
         PlanBinaryOp::And => BinaryOp::And,
         PlanBinaryOp::Or => BinaryOp::Or,
         PlanBinaryOp::Concat => BinaryOp::Concat,
+        PlanBinaryOp::BitAnd => BinaryOp::BitAnd,
+        PlanBinaryOp::BitOr => BinaryOp::BitOr,
+        PlanBinaryOp::ShiftLeft => BinaryOp::ShiftLeft,
+        PlanBinaryOp::ShiftRight => BinaryOp::ShiftRight,
     }
 }
 
@@ -2386,6 +2400,7 @@ fn map_unary_op(op: &PlanUnaryOp) -> UnaryOp {
     match op {
         PlanUnaryOp::Neg => UnaryOp::Neg,
         PlanUnaryOp::Not => UnaryOp::Not,
+        PlanUnaryOp::BitNot => UnaryOp::BitNot,
     }
 }
 
