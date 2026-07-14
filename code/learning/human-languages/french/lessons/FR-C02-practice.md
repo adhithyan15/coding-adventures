@@ -9,7 +9,7 @@ prerequisites: [FR-C02-je-mappelle, FR-C02-comment-vous-appelez-vous, FR-C02-enc
 sounds: []
 roots: []
 est_minutes: 5
-reviews_of: [FR-C02-je, FR-C02-appeler, FR-C02-je-mappelle, FR-C02-tu-vous, FR-C02-comment, FR-C02-comment-vous-appelez-vous, FR-C02-enchante]
+reviews_of: [FR-C02-je, FR-C02-me, FR-C02-appeler, FR-C02-je-mappelle, FR-C02-tu-vous, FR-C02-comment, FR-C02-comment-vous-appelez-vous, FR-C02-enchante]
 ---
 
 # Chapter 2 — the introduction, whole
@@ -30,6 +30,7 @@ reviews_of: [FR-C02-je, FR-C02-appeler, FR-C02-je-mappelle, FR-C02-tu-vous, FR-C
 Every piece traced to a root:
 
 - **je** ← *ego* (English *ego*)
+- **me** ← *mē* (English *me*, *my*, *mine*)
 - **(s')appeler** ← *appellāre* (English *appeal*, *appellation*)
 - **comment** ← *quo modo* (Spanish *cómo*, English *mode*)
 - **enchanté** ← *in-cantāre* (English *enchant*, *incantation*, *chant*)

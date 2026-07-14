@@ -14,9 +14,10 @@ compared, every Spanish form supplied in full (no prior Spanish assumed).
 
 - **Ch. 1 — Greetings**: salut → bien → bon/bonne → **le/la/les** (gender) →
   jour → **bonjour** → soir → bonsoir → nuit → **bonne nuit** → practice.
-- **Ch. 2 — Introducing Yourself**: je → (s')appeler → **je m'appelle** ("my
-  name is") → **tu / vous** → comment → **comment vous appelez-vous?** →
-  enchanté(e) → practice.
+- **Ch. 2 — Introducing Yourself**: je → **me** → (s')appeler → **je
+  m'appelle** ("my name is") → **tu / vous** → comment → **comment vous
+  appelez-vous?** → enchanté(e) → practice. (Every atom traced, *me* ← *mē*
+  included.)
 
 ## Planned (mirrors the Spanish theme sequence)
 

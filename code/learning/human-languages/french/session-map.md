@@ -25,13 +25,14 @@ authoritative order.
 | Session | New lesson(s) | Introduces |
 |---|---|---|
 | 10 | je | "I" (← *ego*; English *ego*) |
-| 11 | (s')appeler | "to call [oneself]" (← *appellāre*); **reflexive verbs** |
-| 12 | je m'appelle… | **"my name is…"** assembled (+ literal *mon nom est*) |
-| 13 | tu / vous | familiar / formal **"you"** (← *tū / vōs*); politeness by plural |
-| 14 | comment | "how" (← *quo modo*; Spanish *cómo*) |
-| 15 | comment vous appelez-vous? | **"what's your name?"** by inversion |
-| 16 | enchanté(e) | "pleased to meet you" (← *in-cantāre*); gender agreement |
-| 17 | practice | the whole introduction dialogue |
+| 11 | me | "myself" (← *mē*; English *me/my/mine*); the reflexive set me/te/se |
+| 12 | (s')appeler | "to call [oneself]" (← *appellāre*); **reflexive verbs** |
+| 13 | je m'appelle… | **"my name is…"** assembled from je + me + appelle |
+| 14 | tu / vous | familiar / formal **"you"** (← *tū / vōs*); politeness by plural |
+| 15 | comment | "how" (← *quo modo*; Spanish *cómo*) |
+| 16 | comment vous appelez-vous? | **"what's your name?"** by inversion |
+| 17 | enchanté(e) | "pleased to meet you" (← *in-cantāre*); gender agreement |
+| 18 | practice | the whole introduction dialogue |
 
 Reviews of earlier words fold into each session per the interval schedule.
 

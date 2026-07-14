@@ -6,6 +6,9 @@
   Comment vous appelez-vous? / Je m'appelle David. / Enchanté.*), atom-first,
   one word per lesson (`lessons/FR-C02-*`, `book/chapters/ch02-introductions.tex`):
   - **je** ("I" ← *ego*; English *ego*)
+  - **me** ("myself" ← Latin *mē*; English *me*, *my*, *mine*) — its own lesson,
+    with the reflexive set *me / te / se* traced. (Every atom of *je m'appelle*
+    is taught and rooted, not just glossed.)
   - **(s')appeler** ("to call [oneself]" ← *appellāre*; *appeal*, *appellation*)
     — introduces **reflexive verbs**.
   - **je m'appelle…** — assembled: **"my name is…"** ("I call myself"), with the

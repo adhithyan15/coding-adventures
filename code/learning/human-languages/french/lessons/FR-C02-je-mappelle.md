@@ -5,11 +5,11 @@ type: phrase
 headword: je m'appelle…
 gloss: my name is… (literally "I call myself…")
 concept_tag: MY-NAME-IS
-prerequisites: [FR-C02-je, FR-C02-appeler]
+prerequisites: [FR-C02-je, FR-C02-me, FR-C02-appeler]
 sounds: [elision]
-roots: [ego, appellare, nomen]
+roots: [ego, me-latin, appellare, nomen]
 est_minutes: 4
-reviews_of: [FR-C02-je, FR-C02-appeler]
+reviews_of: [FR-C02-je, FR-C02-me, FR-C02-appeler]
 ---
 
 # je m'appelle… — "my name is…," literally "I call myself"
@@ -20,6 +20,10 @@ reviews_of: [FR-C02-je, FR-C02-appeler]
 the single most useful sentence for meeting anyone.
 
 ## The phrase, assembled
+
+Three atoms, each already taken apart on its own — [je](FR-C02-je.md) (I, ←
+*ego*), [me](FR-C02-me.md) (myself, ← *mē*), [appelle](FR-C02-appeler.md)
+(call, ← *appellāre*):
 
 - **je** (I) + **me** (myself) + **appelle** (call).
 - *me* elides before the vowel of *appelle* → **m'**.
