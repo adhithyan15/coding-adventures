@@ -1,5 +1,23 @@
 # Changelog — sqlite-file
 
+## 0.11.0 - Unreleased
+
+**Phase F (writer), rung 4 — the `sqlite_schema` row + a full single-table file.**
+`SchemaEntry::to_record_columns()` is the inverse of the reader's schema-row
+decode: it serialises an entry into the five `sqlite_schema` columns
+(`type`, `name`, `tbl_name`, `rootpage`, `sql`), and the convenience
+`table_schema_row(name, root_page, sql)` builds the row for an ordinary rowid
+table. Combined with the earlier rungs — `record::encode` (row payload, 0.8.0),
+`page_writer::encode_table_leaf_page` (leaf page, 0.9.0), and `Header::encode`
+(100-byte DB header, 0.10.0) — the writer can now emit a **complete, re-readable
+single-table database**: a test assembles a two-page file by hand (page 1 = DB
+header + a `sqlite_schema` leaf at offset 100 describing table `t` at root page 2;
+page 2 = the data leaf) and reads the rows back through the real reader
+(`schema::read_table` by table name) plus confirms the schema round-trips. This
+completes the byte-level toolkit that makes dropping the `rusqlite` dev-dependency
+viable. (A one-call whole-file assembler that handles page 1's 100-byte b-tree
+offset is a natural follow-up.)
+
 ## 0.10.0 - Unreleased
 
 **Phase F (writer), rung 3: the 100-byte DB-header encoder.** New
