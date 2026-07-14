@@ -1,0 +1,20 @@
+% ============================================================================
+% days-of-week.query.adj — a worked recall over the calendar facts library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what number is Monday?": it
+% states no calendar fact — it only `import`s the grounded table and asks binding
+% queries. The engine resolves each `?` against the `iso_weekday` rows and returns
+% the number + the table's source/locator/trust. The query runs in reverse too
+% (number → day). Anything that is not a day of the week abstains honestly — the
+% engine never invents a weekday number.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli days-of-week.query.adj
+% ============================================================================
+
+import "days-of-week.adj"
+
+? iso_weekday(monday, $N)        % expect 1
+? iso_weekday(sunday, $N)        % expect 7
+? iso_weekday($Day, 1)           % expect monday — reverse lookup, "which day is 1?"
+? iso_weekday(funday, $N)        % expect abstain — funday is not a day of the week
