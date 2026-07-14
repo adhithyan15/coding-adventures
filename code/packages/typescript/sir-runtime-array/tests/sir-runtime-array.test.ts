@@ -83,6 +83,14 @@ describe("ndarray construction and accessors", () => {
     expect(() => arr.ndarray([2, 2], Float64Array.of(1, 2, 3))).toThrow(/implies/);
   });
 
+  it("ndarray rejects a data buffer that isn't really a Float64Array", () => {
+    // NDArray is a plain structural interface, not a class — a compiled-JS
+    // caller could hand back an object shaped like one whose `data` is a
+    // plain array or array-like instead of a real Float64Array.
+    const notReallyFloat64 = [1, 2, 3, 4] as unknown as Float64Array;
+    expect(() => arr.ndarray([2, 2], notReallyFloat64)).toThrow(/must be a Float64Array/);
+  });
+
   it("ndarray rejects a shape exceeding MAX_ELEMENTS", () => {
     expect(() => arr.ndarray([arr.MAX_ELEMENTS + 1], new Float64Array(arr.MAX_ELEMENTS + 1))).toThrow(
       /exceeds/,

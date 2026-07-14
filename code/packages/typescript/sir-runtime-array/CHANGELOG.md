@@ -56,7 +56,7 @@ All notable changes to this project will be documented in this file.
   `array_runtime::ops`'s existing `reduce`/`scan`/`outer` Rust
   implementations now would be speculative. A natural follow-up once
   `apl-to-semantic-ir`'s own JS-backend consumption needs them.
-- 56 tests, 100% line/branch/function coverage, including an adversarial
+- 57 tests, 100% line/branch/function coverage, including an adversarial
   regression test confirming `range`'s `MAX_ELEMENTS` cap actually trips
   (not just trusting the code that it would) on a runtime-computed bound
   that would otherwise materialize an unbounded array.
@@ -123,3 +123,15 @@ All notable changes to this project will be documented in this file.
     `NaN`, corrupting data instead of failing loudly (the same missing-
     `default` class `resolvePositions` was fixed for above). Now throws
     a clean `Error` for an unrecognised `op`.
+- **`ndarray()` never checked that `data` was really a `Float64Array`** —
+  found by a fourth, final confirmation sweep. `NDArray` is a plain
+  structural interface, not a class, and every other function in this
+  package sizes its own allocations from an existing `NDArray`'s
+  `data.length`, trusting it was already validated by `ndarray()` — an
+  unenforced invariant a compiled-JS caller could violate by handing back
+  an `NDArray`-shaped object whose `data` is a plain array or other
+  array-like instead of a real `Float64Array`. `ndarray()` now asserts
+  `data instanceof Float64Array` before anything else. 57 tests (up from
+  56), 100% coverage maintained — this closed the review; four rounds of
+  `/security-review`, converging from 5 findings down to 1 defense-in-depth
+  item with no demonstrated live exploit path.

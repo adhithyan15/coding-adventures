@@ -62,8 +62,18 @@ export function checkedShapeSize(shape: readonly number[]): number {
  * `shape` — the shared validating constructor every factory below funnels
  * through (mirrors `Array::from_shape`). Rejects a shape/data-length
  * mismatch and a shape whose element count exceeds `MAX_ELEMENTS`.
+ *
+ * `NDArray` is a plain structural interface, not a class, so nothing stops
+ * a compiled-JS caller from handing back an object shaped like one whose
+ * `data` isn't really a `Float64Array` — every other function in this
+ * package sizes its own allocations from an existing `NDArray`'s
+ * `data.length`, trusting it was already validated here, so this check is
+ * where that trust actually has to be earned.
  */
 export function ndarray(shape: readonly number[], data: Float64Array): NDArray {
+  if (!(data instanceof Float64Array)) {
+    throw new Error("ndarray: data must be a Float64Array");
+  }
   const n = checkedShapeSize(shape);
   if (n !== data.length) {
     throw new Error(
