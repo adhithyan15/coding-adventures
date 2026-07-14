@@ -36,7 +36,7 @@ word, stretched across a continent.
 
 ## Grammar Lens: the verb comes last
 
-Hindi is **subject–object–verb**: "my name David **is**." *hai* sits at the
+Hindi is **subject–object–verb**: "my name Arun **is**." *hai* sits at the
 *end* of the sentence, where English puts "is" in the middle. Bank the shape —
 in Hindi the verb waits until the end.
 
@@ -45,7 +45,7 @@ in Hindi the verb waits until the end.
 [PAUSE 1s]
 - [YOU SAY: "hai"]
 - [YOU SAY: the family — *hai* / *is* / *ist* / *est* / *es*]
-- [YOU SAY: "merā nām David hai" — note *hai* at the end]
+- [YOU SAY: "merā nām Arun hai" — note *hai* at the end]
 
 ## Wrap-up Recall
 

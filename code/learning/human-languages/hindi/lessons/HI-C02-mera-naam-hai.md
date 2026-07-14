@@ -26,13 +26,13 @@ Three atoms, each already rooted — [merā](HI-C02-meraa.md) (my, ← *ma-*),
 
 > **मेरा नाम … है** = "my name … is" = **"my name is…"**
 
-*Merā nām David hai.* → "My name is David." Slot your name into the gap; *hai*
+*Merā nām Arun hai.* → "My name is Arun." Slot your name into the gap; *hai*
 stays at the end.
 
 ## Grammar Lens: subject–object–verb
 
-Literally the Hindi is "my name David **is**" — the verb last. English puts "is"
-in the middle ("my name **is** David"); Hindi holds it to the end. Every Hindi
+Literally the Hindi is "my name Arun **is**" — the verb last. English puts "is"
+in the middle ("my name **is** Arun"); Hindi holds it to the end. Every Hindi
 sentence you build will end on its verb.
 
 ## Guided Practice

@@ -31,7 +31,7 @@ into the object slot — no reordering, no inversion.
 
 ## Grammar Lens: answer, and the informal version
 
-Answer with the sentence you built: **Merā nām David hai.** The informal "your"
+Answer with the sentence you built: **Merā nām Arun hai.** The informal "your"
 swaps *āpkā* for **tumhārā**: *tumhārā nām kyā hai?*
 
 ## Guided Practice

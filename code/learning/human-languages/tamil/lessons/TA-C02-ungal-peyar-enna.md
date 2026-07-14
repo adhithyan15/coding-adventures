@@ -30,7 +30,7 @@ adds an "is."
 
 ## Grammar Lens: answer, and the familiar version
 
-Answer with the sentence you built: **Eṉ peyar David.** The familiar "your"
+Answer with the sentence you built: **Eṉ peyar Arun.** The familiar "your"
 swaps *uṅgaḷ* for **uṉ** (from *nī*): *uṉ peyar eṉṉa?*
 
 ## Guided Practice

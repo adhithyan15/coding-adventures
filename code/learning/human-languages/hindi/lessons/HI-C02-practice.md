@@ -22,9 +22,9 @@ reviews_of: [HI-C02-naam, HI-C02-meraa, HI-C02-hai, HI-C02-mera-naam-hai, HI-C02
 
 | Hindi | English |
 |---|---|
-| मेरा नाम सुज़ाना है। (*merā nām Suzānā hai*) | My name is Susana. |
+| मेरा नाम मीरा है। (*merā nām Mira hai*) | My name is Mira. |
 | आपका नाम क्या है? (*āpkā nām kyā hai*) | What's your name? |
-| मेरा नाम डेविड है। (*merā nām David hai*) | My name is David. |
+| मेरा नाम अरुण है। (*merā nām Arun hai*) | My name is Arun. |
 | आपसे मिलकर ख़ुशी हुई। (*āpse milkar khushī huī*) | Pleased to meet you. |
 
 Every atom traced:

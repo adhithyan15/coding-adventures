@@ -22,9 +22,9 @@ reviews_of: [TA-C02-peyar, TA-C02-en, TA-C02-en-peyar, TA-C02-nii-niingal, TA-C0
 
 | Tamil | English |
 |---|---|
-| என் பெயர் சுசன். (*eṉ peyar Susan*) | My name is Susan. |
+| என் பெயர் மீரா. (*eṉ peyar Mira*) | My name is Mira. |
 | உங்கள் பெயர் என்ன? (*uṅgaḷ peyar eṉṉa*) | What's your name? |
-| என் பெயர் டேவிட். (*eṉ peyar David*) | My name is David. |
+| என் பெயர் அருண். (*eṉ peyar Arun*) | My name is Arun. |
 | மகிழ்ச்சி. (*magiḻcci*) | Pleased to meet you. |
 
 Every atom native and traced:
@@ -36,7 +36,7 @@ Every atom native and traced:
 
 And the Tamil habit to keep: the **zero copula** — an equational sentence ("X is
 Y") needs *no* word for "is" at all. Where Hindi added *hai* and English needs
-*is*, Tamil says only "my name David."
+*is*, Tamil says only "my name Arun."
 
 ## Guided Practice
 

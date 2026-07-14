@@ -25,15 +25,15 @@ English needs that Tamil doesn't.
 
 > **என் பெயர் …** = "my name …" → **"my name is…"**
 
-*Eṉ peyar David.* → "My name is David."
+*Eṉ peyar Arun.* → "My name is Arun."
 
 ## Grammar Lens: Tamil has no word for "is" here
 
 Look at what's missing: there is **no verb**. Tamil sets "my name" beside
-"David" — *eṉ peyar David* — and the "is" is simply understood. This is the
+"Arun" — *eṉ peyar Arun* — and the "is" is simply understood. This is the
 **zero copula**: for equational sentences (X is Y), Dravidian needs no "to be"
 at all — where English needs *is*, Hindi needs *hai*, Arabic (you'll see) also
-drops it. Tamil says only "my name David."
+drops it. Tamil says only "my name Arun."
 
 ## Guided Practice
 
