@@ -1,5 +1,5 @@
 % ============================================================================
-% shapes.query.adj — a worked recall over the kindergarten shapes library.
+% shapes.query.adj — a worked recall over the geometry shapes library.
 % ============================================================================
 % The shape a learner (or an LLM) produces to ANSWER "how many sides does a
 % hexagon have?": it states no geometry fact — it only `import`s the grounded

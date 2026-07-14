@@ -1,7 +1,7 @@
 % ============================================================================
-% shapes — how many sides each polygon has (adj-facts-stdlib, KINDERGARTEN).
+% shapes — how many sides each polygon has (adj-facts-stdlib, GEOMETRY).
 % ============================================================================
-% The very first rung of the facts ladder: a fact every kindergartener learns —
+% A geometry facts library: how many sides each polygon has —
 % "a triangle has three sides, a square has four." Recall is a binding query:
 %
 %     ? polygon_sides(hexagon, $Sides)      % 6
@@ -12,7 +12,7 @@
 % WITH its source, on the CPU, with zero model calls, and abstains on a shape not
 % in the table. Because the `sides` value is a NUMBER, a recalled count composes
 % straight into a formula (a regular polygon's perimeter is sides × side-length):
-% the concrete bridge from kindergarten RECALL to kindergarten COMPUTE.
+% the concrete bridge from RECALL to COMPUTE.
 %
 % Provenance: the polygon names and their side counts are copied verbatim from
 % the Wolfram MathWorld "Polygon" names table (the citable artifact is that table

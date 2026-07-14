@@ -1,5 +1,5 @@
-//! End-to-end test for the first kindergarten FACTS library
-//! (`adj-facts-stdlib/kindergarten/shapes.adj`) driven through the built CLI:
+//! End-to-end test for the geometry FACTS library
+//! (`adj-facts-stdlib/geometry/shapes.adj`) driven through the built CLI:
 //! a native `table` of polygon → number-of-sides resolves a binding-query recall
 //! with the source's citation, and abstains on a non-polygon — 0 model calls.
 
@@ -29,10 +29,10 @@ fn run(program: &Path) -> (bool, String) {
 }
 
 #[test]
-fn kindergarten_shapes_recall_binds_side_count_with_citation() {
+fn geometry_shapes_recall_binds_side_count_with_citation() {
     let dir = scratch("shapes");
-    // Copy the shipped kindergarten table beside the entry program and import it.
-    let src = facts_stdlib().join("kindergarten/shapes.adj");
+    // Copy the shipped geometry table beside the entry program and import it.
+    let src = facts_stdlib().join("geometry/shapes.adj");
     std::fs::copy(&src, dir.join("shapes.adj")).expect("copy shipped shapes.adj");
     std::fs::write(
         dir.join("case.adj"),
