@@ -151,6 +151,17 @@ pub enum SqlExpr {
         ty: CastType,
     },
 
+    /// A searched `CASE WHEN cond THEN val … [ELSE val] END` expression.
+    ///
+    /// The `branches` are evaluated top-to-bottom; the value of the first branch
+    /// whose condition is truthy (non-zero, non-NULL) is the result. If none
+    /// match, the result is `else_val` if present, otherwise `NULL`. Later
+    /// branches are NOT evaluated once one matches (short-circuit).
+    Case {
+        branches: Vec<(SqlExpr, SqlExpr)>,
+        else_val: Option<Box<SqlExpr>>,
+    },
+
     /// An aggregate function applied within GROUP BY context.
     ///
     /// Aggregates are separated from regular function calls because they
@@ -2125,6 +2136,9 @@ fn plan_primary(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
         if t.value.eq_ignore_ascii_case("CAST") {
             return plan_cast(node);
         }
+        if t.value.eq_ignore_ascii_case("CASE") {
+            return plan_case(node);
+        }
     }
 
     // Check child nodes first (column_ref, function_call, or parenthesized expr).
@@ -2215,6 +2229,57 @@ fn plan_cast(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
         expr: Box::new(inner),
         ty,
     })
+}
+
+/// Plan a searched `CASE WHEN … THEN … [ELSE …] END` primary node into
+/// [`SqlExpr::Case`].
+///
+/// Grammar: `CASE ("WHEN" expr "THEN" expr)+ ["ELSE" expr] "END"`. The node's
+/// children are the `CASE`/`WHEN`/`THEN`/`ELSE`/`END` keyword tokens interleaved
+/// with the condition and value expression nodes. We walk them in order: each
+/// keyword tags the expression node that follows it, so `WHEN`→condition,
+/// `THEN`→pairs with the last condition into a branch, `ELSE`→the fallback.
+fn plan_case(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
+    let mut branches: Vec<(SqlExpr, SqlExpr)> = Vec::new();
+    let mut else_val: Option<Box<SqlExpr>> = None;
+    let mut pending_cond: Option<SqlExpr> = None;
+    // What the next expression node is filling (set by the preceding keyword).
+    let mut slot: Option<&'static str> = None;
+
+    for child in &node.children {
+        match child {
+            ASTNodeOrToken::Token(t) => {
+                slot = match t.value.to_uppercase().as_str() {
+                    "WHEN" => Some("when"),
+                    "THEN" => Some("then"),
+                    "ELSE" => Some("else"),
+                    _ => None, // CASE / END and any punctuation
+                };
+            }
+            ASTNodeOrToken::Node(n) => {
+                let expr = plan_expression(n)?;
+                match slot {
+                    Some("when") => pending_cond = Some(expr),
+                    Some("then") => {
+                        let cond = pending_cond.take().ok_or_else(|| {
+                            PlanError::UnsupportedStatement("CASE THEN without WHEN".to_string())
+                        })?;
+                        branches.push((cond, expr));
+                    }
+                    Some("else") => else_val = Some(Box::new(expr)),
+                    _ => {}
+                }
+                slot = None;
+            }
+        }
+    }
+
+    if branches.is_empty() {
+        return Err(PlanError::UnsupportedStatement(
+            "CASE requires at least one WHEN … THEN … branch".to_string(),
+        ));
+    }
+    Ok(SqlExpr::Case { branches, else_val })
 }
 
 /// Plan a single token from a primary node into a literal or column reference.

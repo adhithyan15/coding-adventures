@@ -2026,6 +2026,40 @@ impl Compiler {
                 self.emit(Instruction::Cast(ty.clone()));
             }
 
+            // ── CASE ─────────────────────────────────────────────────────────
+
+            SqlExpr::Case { branches, else_val } => {
+                // Short-circuit via a jump chain (no branch's THEN is evaluated
+                // unless its WHEN matched, and no later WHEN is evaluated once
+                // one matches). Exactly one value is left on the stack.
+                //
+                //     for each branch:  <compile cond>; JumpIfTrue(body_i)
+                //     <compile ELSE or LoadConst Null>; Jump(end)
+                //     body_i: <compile then_i>; Jump(end)
+                //     end:
+                let end = self.fresh_label("case_end");
+                let body_labels: Vec<String> =
+                    branches.iter().map(|_| self.fresh_label("case_body")).collect();
+
+                for ((cond, _), body) in branches.iter().zip(body_labels.iter()) {
+                    self.compile_expr(cond);
+                    self.emit(Instruction::JumpIfTrue(body.clone()));
+                }
+                // Fell through every WHEN → the ELSE value, or NULL.
+                match else_val {
+                    Some(e) => self.compile_expr(e),
+                    None => self.emit(Instruction::LoadConst(SqlValue::Null)),
+                }
+                self.emit(Instruction::Jump(end.clone()));
+
+                for ((_, then_val), body) in branches.iter().zip(body_labels.iter()) {
+                    self.emit(Instruction::Label(body.clone()));
+                    self.compile_expr(then_val);
+                    self.emit(Instruction::Jump(end.clone()));
+                }
+                self.emit(Instruction::Label(end));
+            }
+
             // ── IN list ──────────────────────────────────────────────────────
 
             SqlExpr::InList {

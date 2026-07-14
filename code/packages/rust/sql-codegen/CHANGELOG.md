@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.6.3] - Unreleased
+
+### Added
+
+- **`SqlExpr::Case` codegen** as a short-circuiting jump chain: each condition
+  is compiled followed by `JumpIfTrue(body_i)`; if none match, the ELSE (or a
+  `LoadConst(Null)`) is compiled; each body pushes its THEN value and jumps to a
+  shared end label. No new VM opcode — reuses `JumpIfTrue`/`Jump`/`Label`. Later
+  branches' THENs are never evaluated once one matches.
+
 ## [0.6.2] - Unreleased
 
 ### Added

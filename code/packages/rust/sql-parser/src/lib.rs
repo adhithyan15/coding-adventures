@@ -578,6 +578,20 @@ mod tests {
         assert!(find_rule(&ast2, "comparison"), "Expected comparison");
     }
 
+    /// Searched `CASE WHEN … THEN … [ELSE …] END` parses as a primary: a single
+    /// WHEN, multiple WHENs, with and without ELSE, and nested in a WHERE.
+    #[test]
+    fn test_parse_case() {
+        for q in [
+            "SELECT CASE WHEN a=1 THEN 'x' END FROM t",
+            "SELECT CASE WHEN a=1 THEN 'x' WHEN a=2 THEN 'y' ELSE 'z' END FROM t",
+            "SELECT x FROM t WHERE CASE WHEN a IS NULL THEN 0 ELSE 1 END",
+        ] {
+            let ast = assert_program_root(q);
+            assert!(find_rule(&ast, "primary"), "Expected primary for {q:?}");
+        }
+    }
+
     // -----------------------------------------------------------------------
     // Test 20: BETWEEN expression
     // -----------------------------------------------------------------------

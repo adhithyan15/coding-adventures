@@ -560,6 +560,28 @@ pub fn parser_grammar() -> ParserGrammar {
                     GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
                     GrammarElement::Literal { value: r#")"#.to_string() },
                 ] },
+                // Searched `CASE WHEN cond THEN val … [ELSE val] END`. One
+                // WHEN/THEN is mandatory; further ones repeat; ELSE is optional.
+                // The condition/value slots are full `expr`s. Placed before
+                // function_call so the leading `CASE` literal is matched here.
+                GrammarElement::Sequence { elements: vec![
+                    GrammarElement::Literal { value: r#"CASE"#.to_string() },
+                    GrammarElement::Literal { value: r#"WHEN"#.to_string() },
+                    GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                    GrammarElement::Literal { value: r#"THEN"#.to_string() },
+                    GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                    GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Literal { value: r#"WHEN"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                            GrammarElement::Literal { value: r#"THEN"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                        ] }) },
+                    GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Literal { value: r#"ELSE"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                        ] }) },
+                    GrammarElement::Literal { value: r#"END"#.to_string() },
+                ] },
                 GrammarElement::RuleReference { name: r#"function_call"#.to_string() },
                 GrammarElement::RuleReference { name: r#"column_ref"#.to_string() },
                 GrammarElement::Sequence { elements: vec![

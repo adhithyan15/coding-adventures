@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.5.25 — Searched `CASE WHEN … THEN … [ELSE …] END`
+
+`SELECT CASE WHEN cond THEN val … [ELSE val] END` now parses and runs with
+SQLite's exact semantics: branches are evaluated top-to-bottom, the first
+truthy `WHEN` yields its `THEN`; no match with an `ELSE` yields the `ELSE`,
+otherwise `NULL`; a `NULL` condition is not truthy (its branch is skipped); and
+evaluation short-circuits (later branches' values are not computed once one
+matches). Spans grammar (sql-parser 0.1.9) → `SqlExpr::Case` (sql-planner
+0.2.8) → a jump-chain in codegen (sql-codegen 0.6.3, reusing the existing
+`JumpIfTrue`/`Jump`/`Label` opcodes — no VM change), with the optimizer (0.1.3)
+folding through the node. Three differential-oracle cases (`case_first_match_and_else`,
+`case_no_else_is_null_and_null_cond_skipped`, `case_in_where_and_arithmetic`)
+diff against real bundled SQLite, including CASE nested in a WHERE predicate and
+in arithmetic. (The *simple* form `CASE x WHEN v THEN …` — equality against a
+base expression — is a separate follow-up slice.)
+
 ## 0.5.24 — `NULLS FIRST` / `NULLS LAST` in `ORDER BY`
 
 `SELECT … ORDER BY a NULLS FIRST` / `NULLS LAST` now parse and run. mini-sqlite
