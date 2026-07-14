@@ -1,0 +1,85 @@
+% ============================================================================
+% body-systems — each major human body system and its main job
+% (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% An early-elementary biology facts library in the ADJ standard library — the
+% kind a science or medicine agent `import`s when it needs the most basic
+% grounded physiology fact: "the digestive system breaks down food; the
+% respiratory system does breathing; the circulatory system moves blood." The
+% human body is organized into systems, and each system carries out one main
+% job. This is a small but real STEP toward how a medicine agent reasons about
+% physiology: before diagnosing anything it must first know which system does
+% what, the way a first-year student does. Recall is a binding query:
+%
+%     ? body_system_function(digestive, $F)   % breaks_down_food
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `body_system_function(system, function)` carrying the table's
+% citation, so the lookup above is the ordinary SLD binding query — the engine
+% returns the function atom WITH its source, on the CPU, with zero model calls,
+% and abstains on a body part (or non-system) not in the table. The query also
+% runs BACKWARD — bind the job and recall the system:
+%
+%     ? body_system_function($S, moves_blood)  % circulatory
+%
+% The `function` value of every row is a SINGLE lowercase atom, chosen to be a
+% faithful one-word (or short snake_case) paraphrase of the primary-function
+% text MedlinePlus states — never an interpretation the source does not support.
+% A recalled function atom therefore composes straight into downstream reasoning
+% (a medicine agent asking "which system moves_blood?" gets the grounded answer,
+% not a guess) — the concrete bridge from biology RECALL to reasoning.
+%
+% Provenance: every system name and its `function` atom is grounded in a
+% VERBATIM span from MedlinePlus (the U.S. National Library of Medicine / NIH,
+% a `.gov` primary reference). The `source` span below is the VERBATIM overview
+% text for the first data row (digestive), copied character-for-character from
+% its MedlinePlus page (the `locator`). Each remaining row's atom is a faithful
+% short paraphrase of that system's own MedlinePlus span, quoted here with its
+% own page so any reader can re-check it byte-for-byte:
+%
+%   digestive    → breaks_down_food  https://medlineplus.gov/ency/imagepages/1090.htm
+%     "The esophagus, stomach, large and small intestine, aided by the liver,
+%      gallbladder and pancreas convert the nutritive components of food into
+%      energy and break down the non-nutritive components into waste to be
+%      excreted through the large intestine."
+%   respiratory  → breathing         https://medlineplus.gov/ency/imagepages/9828.htm
+%     "Air is breathed in through the nasal passageways, travels through the
+%      trachea and bronchi to the lungs."
+%   circulatory  → moves_blood       https://medlineplus.gov/ency/imagepages/8747.htm
+%     "Blood used by the body is brought back to the heart and lungs by the
+%      veins of the body. Once the blood has gathered more oxygen from the lungs,
+%      it is pumped back out to the body through the arteries."
+%   nervous      → controls_body     https://medlineplus.gov/ency/article/007456.htm
+%     "Together, your brain and spinal cord serve as the main \"processing
+%      center\" for the entire nervous system, and control all the functions of
+%      your body."
+%   skeletal     → supports_body     https://medlineplus.gov/ency/imagepages/9065.htm
+%     "The bones of the skeleton provide support for the soft tissues."
+%   muscular     → movement          https://medlineplus.gov/ency/imagepages/9676.htm
+%     "Muscle tissue is composed primarily of contractile cells. Contractile
+%      cells have the ability to produce movement."
+%
+% `trust authoritative` — MedlinePlus is a `.gov` service of the U.S. National
+% Library of Medicine (NIH), a primary/official reference (contrast the
+% `consensus` tier reserved for a secondary source such as an encyclopedia or
+% KidsHealth). Nothing here is asserted from memory; each pair was read out of
+% the fetched MedlinePlus page and any system whose function the pages did not
+% state would have been dropped.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_adjudication_no_interpretive_gating.)
+% ============================================================================
+
+table body_system_function {
+    columns system, function
+
+    row (digestive, breaks_down_food)
+    row (respiratory, breathing)
+    row (circulatory, moves_blood)
+    row (nervous, controls_body)
+    row (skeletal, supports_body)
+    row (muscular, movement)
+
+    source "The esophagus, stomach, large and small intestine, aided by the liver, gallbladder and pancreas convert the nutritive components of food into energy and break down the non-nutritive components into waste to be excreted through the large intestine."
+    locator "https://medlineplus.gov/ency/imagepages/1090.htm"
+    trust authoritative
+}
