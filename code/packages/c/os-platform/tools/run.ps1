@@ -45,3 +45,6 @@ Platform-BuildAndRun -Lang c -Name 'thread-tests' -Sources @('tests\thread_test.
 
 # fs — Win32 backend (CreateFile/ReadFile/WriteFile + GetFileAttributesEx + FindFirstFile).
 Platform-BuildAndRun -Lang c -Name 'fs-tests' -Sources @('tests\fs_test.c', 'src\fs_windows.c')
+
+# process — Win32 backend (CreateProcess + WaitForSingleObject + GetExitCodeProcess).
+Platform-BuildAndRun -Lang c -Name 'process-tests' -Sources @('tests\process_test.c', 'src\process_windows.c')

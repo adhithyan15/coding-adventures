@@ -9,6 +9,23 @@ and this project adheres to semantic versioning.
 
 ### Added
 
+- **`process` primitive** (CCPP02 Phase 2, PR 4): spawn a child program, wait,
+  read its exit code — bucket B (ISO `system()` blocks, needs a shell, and can't
+  reliably report the exit code).
+  - `osp_process_spawn(out, path, argv)` (explicit executable path, **no shell,
+    no PATH search** — nothing to inject into) and `osp_process_wait(p, &code)`
+    (blocks, reports the exit code, frees the handle).
+  - Backends: `process_posix.c` (`fork` + `execv` + `waitpid`, EINTR-safe; child
+    `_exit(127)` on exec failure; signal death reported as 128+signo) and
+    `process_windows.c` (`CreateProcess` + `WaitForSingleObject` +
+    `GetExitCodeProcess`). Both link no extra library beyond libc / kernel32.
+  - The Windows backend re-quotes argv into a command line using the exact
+    `CommandLineToArgvW` rules (backslash/quote doubling), so a child sees the
+    same argv the caller passed — implemented once and guarded against
+    argument-injection.
+  - Test (`tests/process_test.c`): spawns the system shell to exit with 42/0/7
+    and asserts the code round-trips (which also proves the args arrived intact),
+    plus NULL-arg rejection. Clean under ASan+UBSan, 0 leaks.
 - **`fs` primitive** (CCPP02 Phase 2, PR 3): filesystem metadata, whole-file
   read/write, and directory listing — bucket B (ISO `<stdio.h>` opens files by
   name but cannot list a directory or report type/size/mtime).
