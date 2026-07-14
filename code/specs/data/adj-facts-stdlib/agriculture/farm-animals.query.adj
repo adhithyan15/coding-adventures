@@ -1,0 +1,18 @@
+% ============================================================================
+% farm-animals.query.adj — a worked recall over the farm-animals FACTS library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does a chicken give
+% us?": it states no farm fact — it only `import`s the grounded table and asks
+% binding queries. The engine resolves each `?` against the `farm_animal_product`
+% rows and returns the product + the table's source/locator/trust. An animal not
+% in the table abstains honestly — the engine never invents a product.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli farm-animals.query.adj
+% ============================================================================
+
+import "farm-animals.adj"
+
+? farm_animal_product(chicken, $Product)     % expect eggs
+? farm_animal_product(sheep, $Product)        % expect wool
+? farm_animal_product(tiger, $Product)        % expect abstain — a tiger is not a farm animal
