@@ -81,12 +81,12 @@ pub enum CompileError {
 /// anything). `adj-lang` is reachable via `adj-lang-cli` on arbitrary
 /// `.adj` files, a real attack surface.
 ///
-/// # Two independent recursive shapes
+/// # Three independent recursive shapes
 ///
-/// Unlike most sibling grammars, adj-lang's expression grammar has two
-/// *independent* recursion paths that must both be measured, since a single
+/// Unlike most sibling grammars, adj-lang's grammar has three *independent*
+/// recursion paths that must all be measured, since a single
 /// `MAX_RULE_DEPTH` bounds the parser's internal rule-invocation counter for
-/// either shape:
+/// any of them:
 ///
 /// - **Paren nesting** — `factor = … | LPAREN expr RPAREN`, cascading
 ///   through `expr → term_expr → factor` (~3 rule-frames per real nesting
@@ -96,23 +96,30 @@ pub enum CompileError {
 ///   level, but each frame is heavier — more local state per call — so it
 ///   overflows the native stack at a *lower* rule-frame count than the
 ///   paren shape despite the lighter per-level rule-frame cost).
+/// - **Rulebook nesting** — `rulebook_decl = "rulebook" IDENT LBRACE
+///   {statement} RBRACE`, and `statement`'s own alternation includes
+///   `rulebook_decl`, so `rulebook a { rulebook b { … } }` recurses
+///   `statement → rulebook_decl → statement → …` once per nested block
+///   (flagged by security review as a shape the first pass of this fix
+///   missed).
 ///
 /// Measured (binary search, uncapped parser, on the true default-stack
 /// per-test worker thread — no `RUST_MIN_STACK` override and no explicit
 /// `Builder::stack_size`, matching what `cargo test` and a production
 /// caller both actually get — debug build, adversarial 5000-level input):
-/// paren shape safe through 260 rule-frames, crashes at 262; call shape
-/// safe through 124, crashes at 126 — call nesting is the *binding* (lower)
-/// floor.
+/// paren shape safe through 260 rule-frames, crashes at 262; rulebook shape
+/// safe through 245, crashes at 250; call shape safe through 124, crashes
+/// at 126 — call nesting is the *binding* (lower) floor of the three.
 ///
 /// `MAX_RULE_DEPTH` is set to **90** — about 27% below the binding
 /// 124-rule-frame floor (comparable margin to sibling crates' 25-45%
 /// convention), independently confirmed not to crash a default-stack
-/// thread even thousands of rule-frames past the cap for either shape (see
-/// this crate's tests). Measured real-nesting headroom at 90 (capped
-/// parser, so no crash risk): paren nesting parses cleanly up to 28 levels
-/// (29 trips the cap), call nesting up to 86 levels (87 trips the cap) —
-/// comfortably past any hand-written adj-lang program's real nesting.
+/// thread even thousands of rule-frames past the cap for any of the three
+/// shapes (see this crate's tests). Measured real-nesting headroom at 90
+/// (capped parser, so no crash risk): paren nesting parses cleanly up to 28
+/// levels (29 trips the cap), rulebook nesting up to 44 levels (45 trips
+/// the cap), call nesting up to 86 levels (87 trips the cap) — comfortably
+/// past any hand-written adj-lang program's real nesting.
 const MAX_RULE_DEPTH: usize = 90;
 
 /// Tokenize + parse + adapt: produce a typed [`Program`] from
@@ -189,6 +196,17 @@ fn nested_paren_source(n: usize) -> String {
 #[cfg(test)]
 fn nested_term_source(n: usize) -> String {
     format!("observe {}x{}\n", "f(".repeat(n), ")".repeat(n))
+}
+
+#[cfg(test)]
+fn nested_rulebook_source(n: usize) -> String {
+    let mut src = String::new();
+    for i in 0..n {
+        src.push_str(&format!("rulebook r{i} {{ "));
+    }
+    src.push_str(&"}".repeat(n));
+    src.push('\n');
+    src
 }
 
 /// Deeply-nested paren input must produce a recoverable error, not overflow
@@ -291,7 +309,7 @@ fn test_opt_in_cap_trips_before_paren_overflow_on_default_stack() {
 
 /// Same as [`test_opt_in_cap_trips_before_paren_overflow_on_default_stack`]
 /// but for the call-nesting shape — the *binding* (lower) native-stack
-/// floor of the two, per `MAX_RULE_DEPTH`'s doc comment.
+/// floor of the three, per `MAX_RULE_DEPTH`'s doc comment.
 #[test]
 fn test_opt_in_cap_trips_before_term_overflow_on_default_stack() {
     let handle = std::thread::spawn(|| {
@@ -299,6 +317,60 @@ fn test_opt_in_cap_trips_before_term_overflow_on_default_stack() {
         assert!(
             result.is_err(),
             "deeply-nested call input must error, not crash"
+        );
+    });
+    handle
+        .join()
+        .expect("MAX_RULE_DEPTH must trip BEFORE native overflow on the default stack");
+}
+
+/// Deeply-nested `rulebook { rulebook { … } }` input (adj-lang's third,
+/// independent recursive shape — `statement → rulebook_decl → statement`,
+/// flagged by security review) must also produce a recoverable error, not
+/// overflow the native stack.
+#[test]
+fn test_deeply_nested_rulebook_input_returns_error_not_overflow() {
+    let handle = std::thread::Builder::new()
+        .name("adj-lang-depth-guard-rulebook-regression".to_string())
+        .stack_size(32 * 1024 * 1024)
+        .spawn(|| {
+            let result = parse(&nested_rulebook_source(5000));
+            assert!(
+                result.is_err(),
+                "deeply-nested rulebook input must fail with an error, not parse or crash"
+            );
+        })
+        .expect("failed to spawn worker thread");
+    handle
+        .join()
+        .expect("depth guard must keep the worker thread from crashing");
+}
+
+/// Rulebook-nesting input that nests *exactly up to* `MAX_RULE_DEPTH` still
+/// parses cleanly, and one layer deeper cleanly trips the guard (44
+/// legitimate levels, empirically measured — see `MAX_RULE_DEPTH`'s doc
+/// comment).
+#[test]
+fn test_rulebook_nesting_up_to_cap_still_parses() {
+    assert!(
+        parse(&nested_rulebook_source(44)).is_ok(),
+        "44 levels must stay under the cap"
+    );
+    assert!(
+        parse(&nested_rulebook_source(45)).is_err(),
+        "one nesting level past the cap's measured limit must fail"
+    );
+}
+
+/// Same as [`test_opt_in_cap_trips_before_paren_overflow_on_default_stack`]
+/// but for the rulebook-nesting shape.
+#[test]
+fn test_opt_in_cap_trips_before_rulebook_overflow_on_default_stack() {
+    let handle = std::thread::spawn(|| {
+        let result = parse(&nested_rulebook_source(5000));
+        assert!(
+            result.is_err(),
+            "deeply-nested rulebook input must error, not crash"
         );
     });
     handle

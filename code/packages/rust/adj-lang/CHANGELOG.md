@@ -6,29 +6,33 @@
 
 `parse` built its `GrammarParser` with no recursion-depth cap, even though
 `adj-lang` is reachable via `adj-lang-cli` on arbitrary `.adj` files — a
-real, not theoretical, attack surface. Deeply-nested input, in either of
-this grammar's two *independent* recursive shapes (parenthesised arithmetic
-nesting via `factor → expr → term_expr → factor`, or direct call nesting
-via `term`'s own self-recursion), would recurse until it overflowed the
-native thread stack — an uncatchable process abort — before this crate's
-own `Result`-returning entry points ever got a chance to report anything.
+real, not theoretical, attack surface. Deeply-nested input, in any of this
+grammar's three *independent* recursive shapes (parenthesised arithmetic
+nesting via `factor → expr → term_expr → factor`, direct call nesting via
+`term`'s own self-recursion, or `rulebook { rulebook { … } }` nesting via
+`statement`'s own alternation including `rulebook_decl`), would recurse
+until it overflowed the native thread stack — an uncatchable process abort
+— before this crate's own `Result`-returning entry points ever got a
+chance to report anything. (The rulebook shape was missed in the first
+pass of this fix and caught by `/security-review` before merge.)
 
-Both shapes were independently measured (binary search, uncapped parser,
-the true default per-test-thread stack — no `RUST_MIN_STACK` override, no
-explicit `Builder::stack_size`, matching what `cargo test` and a
-production caller both actually get — debug build, adversarial 5000-level
-input): paren nesting safe through 260 rule-frames, crashes at 262; call
-nesting (the *binding*, lower floor) safe through 124, crashes at 126.
-Added a bespoke `MAX_RULE_DEPTH = 90` — about 27% below the binding
-124-rule-frame floor — and wired it into `parse` via `.with_max_depth(...)`.
+All three shapes were independently measured (binary search, uncapped
+parser, the true default per-test-thread stack — no `RUST_MIN_STACK`
+override, no explicit `Builder::stack_size`, matching what `cargo test`
+and a production caller both actually get — debug build, adversarial
+5000-level input): paren nesting safe through 260 rule-frames, crashes at
+262; rulebook nesting safe through 245, crashes at 250; call nesting (the
+*binding*, lower floor) safe through 124, crashes at 126. Added a bespoke
+`MAX_RULE_DEPTH = 90` — about 27% below the binding 124-rule-frame floor —
+and wired it into `parse` via `.with_max_depth(...)`.
 
 - Added `MAX_RULE_DEPTH: usize = 90` and wired it into `parse`.
-- 6 new regression tests (3 per independent recursive shape): deep
+- 9 new regression tests (3 per independent recursive shape): deep
   adversarial input on an enlarged-stack thread returns a clean `Err`,
   input at the measured real-nesting boundary (28 levels for paren
-  nesting, 86 for call nesting) still parses while one level past it
-  doesn't, and the cap trips before the native stack would overflow even
-  on a default-stack thread.
+  nesting, 44 for rulebook nesting, 86 for call nesting) still parses
+  while one level past it doesn't, and the cap trips before the native
+  stack would overflow even on a default-stack thread.
 
 No change to behaviour for any input that nests below the cap.
 
