@@ -48,3 +48,6 @@ Platform-BuildAndRun -Lang c -Name 'fs-tests' -Sources @('tests\fs_test.c', 'src
 
 # process — Win32 backend (CreateProcess + WaitForSingleObject + GetExitCodeProcess).
 Platform-BuildAndRun -Lang c -Name 'process-tests' -Sources @('tests\process_test.c', 'src\process_windows.c')
+
+# dynlib — Win32 backend (LoadLibrary + GetProcAddress + FreeLibrary).
+Platform-BuildAndRun -Lang c -Name 'dynlib-tests' -Sources @('tests\dynlib_test.c', 'src\dynlib_windows.c')

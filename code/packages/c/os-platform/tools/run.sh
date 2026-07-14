@@ -66,4 +66,14 @@ PLATFORM_LIBS=""
 export PLATFORM_LIBS
 platform_build_and_run c process-tests tests/process_test.c src/process_posix.c || rc=1
 
+# dynlib — POSIX backend (dlopen/dlsym/dlclose). Links -ldl on Linux only
+# (macOS has dlopen in libc and ships no libdl, so -ldl would fail to link).
+if [ "$(platform_os)" = "linux" ]; then
+    PLATFORM_LIBS="-ldl"
+else
+    PLATFORM_LIBS=""
+fi
+export PLATFORM_LIBS
+platform_build_and_run c dynlib-tests tests/dynlib_test.c src/dynlib_posix.c || rc=1
+
 exit "$rc"
