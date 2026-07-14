@@ -1,0 +1,1 @@
+function f(a=1+2){return a} g(f());
