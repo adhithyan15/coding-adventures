@@ -119,6 +119,106 @@ fn decode_value(serial: u64, content: &[u8]) -> Option<SqlValue> {
     Some(value)
 }
 
+/// The minimal big-endian signed-integer width (in bytes) that can hold `v`,
+/// mapped to the serial type and byte count SQLite would choose. Returns
+/// `(serial_type, width_bytes)`. Callers handle 0 and 1 separately (serial 8/9,
+/// zero payload) *before* calling this.
+///
+/// SQLite always picks the SHORTEST width — a byte-compatible writer must too,
+/// or the record won't match what `sqlite3` produced for the same row.
+fn int_serial(v: i64) -> (u64, usize) {
+    // The signed ranges for each on-disk width. `1i64 << (bits-1)` is the
+    // magnitude of the most-negative value of a `bits`-wide two's-complement int.
+    const I8: i64 = 1 << 7;
+    const I16: i64 = 1 << 15;
+    const I24: i64 = 1 << 23;
+    const I32: i64 = 1 << 31;
+    const I48: i64 = 1 << 47;
+    if (-I8..I8).contains(&v) {
+        (1, 1)
+    } else if (-I16..I16).contains(&v) {
+        (2, 2)
+    } else if (-I24..I24).contains(&v) {
+        (3, 3)
+    } else if (-I32..I32).contains(&v) {
+        (4, 4)
+    } else if (-I48..I48).contains(&v) {
+        (5, 6)
+    } else {
+        (6, 8)
+    }
+}
+
+/// Append the low `width` bytes of `v` in big-endian order (two's complement).
+/// `width` is one of 1/2/3/4/6/8 as chosen by [`int_serial`], so the discarded
+/// high bytes are pure sign extension and the value round-trips through
+/// [`read_int_be`].
+fn write_int_be(v: i64, width: usize, out: &mut Vec<u8>) {
+    let bytes = (v as u64).to_be_bytes(); // 8 bytes, most-significant first
+    out.extend_from_slice(&bytes[8 - width..]);
+}
+
+/// The serial type and payload bytes for one column value — the inverse of
+/// [`decode_value`].
+fn value_serial_and_payload(value: &SqlValue) -> (u64, Vec<u8>) {
+    match value {
+        SqlValue::Null => (0, Vec::new()),
+        SqlValue::Int(0) => (8, Vec::new()), // value carried inline by the type
+        SqlValue::Int(1) => (9, Vec::new()),
+        SqlValue::Int(i) => {
+            let (serial, width) = int_serial(*i);
+            let mut payload = Vec::with_capacity(width);
+            write_int_be(*i, width, &mut payload);
+            (serial, payload)
+        }
+        SqlValue::Real(f) => (7, f.to_be_bytes().to_vec()),
+        // Text: odd serial ≥ 13, length = (N-13)/2, so N = 13 + 2·len.
+        SqlValue::Text(s) => (13 + 2 * s.len() as u64, s.as_bytes().to_vec()),
+        // Blob: even serial ≥ 12, length = (N-12)/2, so N = 12 + 2·len.
+        SqlValue::Blob(b) => (12 + 2 * b.len() as u64, b.clone()),
+    }
+}
+
+/// Encode a row of column values into one SQLite record (header + payload) —
+/// the inverse of [`decode`]. The bytes are byte-for-byte what SQLite writes for
+/// the same row, so `decode(encode(row)) == row` and a produced record slots
+/// straight into a table b-tree leaf cell.
+///
+/// The header-length varint counts itself plus every serial-type varint. Its own
+/// byte-length depends on the total, which depends on its byte-length — a small
+/// self-reference resolved by trying header-varint widths 1, 2, … until the
+/// declared length is consistent with the width needed to encode it.
+pub fn encode(values: &[SqlValue]) -> Vec<u8> {
+    // Serial-type varints and the payload are independent of the header length.
+    let mut serial_varints = Vec::new();
+    let mut payload = Vec::new();
+    for value in values {
+        let (serial, bytes) = value_serial_and_payload(value);
+        varint::write(serial as i64, &mut serial_varints);
+        payload.extend_from_slice(&bytes);
+    }
+
+    // Resolve the self-referential header length. `body` is everything in the
+    // header after the length varint; the length counts the length varint too.
+    let body = serial_varints.len();
+    let mut header_varint_len = 1;
+    loop {
+        let header_len = header_varint_len + body;
+        // How many bytes does it take to actually encode this header_len?
+        let mut probe = Vec::new();
+        let actual = varint::write(header_len as i64, &mut probe);
+        if actual == header_varint_len {
+            let mut record = probe; // the header-length varint
+            record.extend_from_slice(&serial_varints);
+            record.extend_from_slice(&payload);
+            return record;
+        }
+        // The length didn't fit in the assumed width — grow and retry. This
+        // terminates in at most a couple of iterations (varints are ≤ 9 bytes).
+        header_varint_len = actual;
+    }
+}
+
 /// Decode a complete record (header + payload) into its column values.
 ///
 /// Returns `None` on any inconsistency — a header that overruns the record, a
@@ -225,5 +325,113 @@ mod tests {
         assert_eq!(decode(&[0x02, 0x06, 0x00]), None);
         // Reserved serial type 10.
         assert_eq!(decode(&[0x02, 0x0a]), None);
+    }
+
+    // ── Encoder (Phase F writer groundwork) ──────────────────────────────────
+
+    #[test]
+    fn encode_matches_the_golden_decode_vectors_byte_for_byte() {
+        // The exact bytes the decode tests above assert on — the encoder must
+        // reproduce them (this is what "byte-compatible with SQLite" means).
+        assert_eq!(
+            encode(&[
+                SqlValue::Null,
+                SqlValue::Int(42),
+                SqlValue::Text("hi".to_string())
+            ]),
+            vec![0x04, 0x00, 0x01, 0x11, 0x2a, 0x68, 0x69]
+        );
+        // [0, 1, 1.5] → serial types 8, 9, 7.
+        assert_eq!(
+            encode(&[SqlValue::Int(0), SqlValue::Int(1), SqlValue::Real(1.5)]),
+            vec![0x04, 0x08, 0x09, 0x07, 0x3f, 0xf8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
+        );
+        // Small negatives use the MINIMAL 8-bit width (serial 1) — SQLite's
+        // decoder accepts a wider encoding (the decode test uses 16-bit `-2` to
+        // exercise sign-extension), but the writer always picks the shortest.
+        assert_eq!(encode(&[SqlValue::Int(-2)]), vec![0x02, 0x01, 0xfe]);
+        assert_eq!(encode(&[SqlValue::Int(-1)]), vec![0x02, 0x01, 0xff]);
+        // [x'DEAD'] → serial 16.
+        assert_eq!(
+            encode(&[SqlValue::Blob(vec![0xde, 0xad])]),
+            vec![0x02, 0x10, 0xde, 0xad]
+        );
+    }
+
+    #[test]
+    fn encoder_picks_the_minimal_integer_width() {
+        // 127 fits in 8 bits (serial 1); 128 needs 16 (serial 2). The header is
+        // 2 bytes in both (length varint + one serial-type varint).
+        assert_eq!(encode(&[SqlValue::Int(127)]), vec![0x02, 0x01, 0x7f]);
+        assert_eq!(encode(&[SqlValue::Int(128)]), vec![0x02, 0x02, 0x00, 0x80]);
+        // 65536 needs 24 bits (serial 3); 2^32 fits in 48 bits (serial 5, six
+        // payload bytes) — SQLite reserves the 64-bit serial 6 for values that
+        // actually need it (|v| ≥ 2^47).
+        assert_eq!(
+            encode(&[SqlValue::Int(65536)]),
+            vec![0x02, 0x03, 0x01, 0x00, 0x00]
+        );
+        assert_eq!(
+            encode(&[SqlValue::Int(1 << 32)]),
+            vec![0x02, 0x05, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00]
+        );
+        // A value that truly needs 64 bits (2^47) uses serial 6.
+        assert_eq!(
+            encode(&[SqlValue::Int(1 << 47)]),
+            vec![0x02, 0x06, 0x00, 0x00, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00]
+        );
+    }
+
+    #[test]
+    fn decode_of_encode_is_identity_over_a_wide_sweep() {
+        // Deterministic LCG — no rng dependency (zero-dep crate). Build assorted
+        // rows mixing every storage class and integer width, and assert the
+        // record round-trips through the encoder and decoder unchanged.
+        let mut state: u64 = 0x0f0e_0d0c_0b0a_0908;
+        let mut next = || {
+            state = state
+                .wrapping_mul(6364136223846793005)
+                .wrapping_add(1442695040888963407);
+            state
+        };
+        for _ in 0..20_000 {
+            let row = vec![
+                SqlValue::Null,
+                SqlValue::Int(next() as i64),
+                SqlValue::Int((next() % 4) as i64), // hits 0/1 inline-value types
+                SqlValue::Real(f64::from_bits(next())),
+                {
+                    let len = (next() % 6) as usize;
+                    SqlValue::Text((0..len).map(|_| (b'a' + (next() % 26) as u8) as char).collect())
+                },
+                {
+                    let len = (next() % 6) as usize;
+                    SqlValue::Blob((0..len).map(|_| next() as u8).collect())
+                },
+            ];
+            let encoded = encode(&row);
+            let decoded = decode(&encoded).expect("round-trip decodes");
+            // NaN != NaN, so compare the float column by bit pattern.
+            for (a, b) in row.iter().zip(decoded.iter()) {
+                match (a, b) {
+                    (SqlValue::Real(x), SqlValue::Real(y)) => {
+                        assert_eq!(x.to_bits(), y.to_bits(), "real round-trip")
+                    }
+                    _ => assert_eq!(a, b, "column round-trip"),
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn encodes_a_large_header_that_needs_a_two_byte_length_varint() {
+        // A row with enough columns that the header length itself exceeds 127,
+        // forcing the self-referential header-length varint to widen to 2 bytes.
+        // 130 single-byte NULL serial types → body = 130, header_len = 132.
+        let row = vec![SqlValue::Null; 130];
+        let encoded = encode(&row);
+        // Header length 132 encodes as the 2-byte varint 0x81 0x04.
+        assert_eq!(&encoded[..2], &[0x81, 0x04]);
+        assert_eq!(decode(&encoded).unwrap(), row);
     }
 }

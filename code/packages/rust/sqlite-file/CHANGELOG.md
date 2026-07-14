@@ -1,5 +1,20 @@
 # Changelog — sqlite-file
 
+## 0.8.0 - Unreleased
+
+**Phase F (writer) begins: the record ENCODER.** `record::encode(&[SqlValue])
+-> Vec<u8>` is the exact inverse of `record::decode` — it serialises a row into
+one byte-compatible SQLite record (header + payload), so `decode(encode(row))
+== row` and a produced record drops straight into a table b-tree leaf cell. It
+reuses the existing minimal `varint::write`, chooses the **shortest** integer
+serial type SQLite would (0/1 inline for the values 0/1; 8/16/24/32/48/64-bit
+by magnitude), and resolves the self-referential header-length varint by
+widening until consistent. Verified with byte-for-byte golden vectors (the same
+bytes the decoder tests assert on), a 20k-row `decode(encode(row)) == row`
+sweep across every storage class, and a large-header case that forces a 2-byte
+length varint. Next Phase-F slices: page/file-header writing, then emitting a
+minimal single-page table-leaf `.sqlite` file real `sqlite3`/`rusqlite` can open.
+
 ## 0.7.0 - Unreleased
 
 Phase E5 (cont.): the **name-based convenience reader** for `WITHOUT ROWID`
