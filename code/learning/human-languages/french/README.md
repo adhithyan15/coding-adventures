@@ -9,10 +9,10 @@ never front-loaded.
 
 ## What's different about the French track
 
-Because the learner is **already learning Spanish**, French grounds each word
-against **both English and Spanish** (per `HL00`'s "English First, Then the
-Deep Root" — Spanish is now a known language, fair to compare). The
-*differences* between the Romance twins are often the lesson:
+French grounds each word against **English and its closest Romance sibling,
+Spanish** — both worn-down Latin. Per `HL00`'s Audience rule, no prior Spanish
+is assumed: the text supplies every Spanish form in full, as enrichment, so the
+*differences* between the two Latin daughters can become the lesson:
 
 - *día* (Spanish) vs. *jour* (French) — same Latin *dies*, but French detoured
   through *diurnum* (→ English *journal*, *journey*).

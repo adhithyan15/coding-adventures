@@ -38,8 +38,7 @@ the rare *serotine* (a bat that flies in the *late* evening).
 > Spanish parallel — this is the good part. Spanish *tarde* ("afternoon")
 > comes from Latin *tardus*, "**late**." French *soir* ("evening") comes from
 > *sērus*, "**late**." Two different Latin "late" words, two languages, the
-> same idea: name the later part of the day after its *lateness*. You saw the
-> move once in Spanish; here it is again in French.
+> same idea: name the later part of the day after its *lateness*.
 
 ## Grammar Lens
 

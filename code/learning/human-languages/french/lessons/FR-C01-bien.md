@@ -12,7 +12,7 @@ est_minutes: 3
 reviews_of: [FR-C01-salut]
 ---
 
-# bien — "well," a whole answer (and a Spanish twin)
+# bien — "well," a whole answer
 
 ## Warm-up
 

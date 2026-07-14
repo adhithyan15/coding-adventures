@@ -1,5 +1,26 @@
 # Changelog
 
+## Beginner-audience pass — Spanish no longer assumed as prior knowledge
+
+Corrected a systemic violation of HL00's Audience rule: the book and practice
+lessons addressed a reader who was "also learning Spanish" and leaned on
+Spanish as knowledge already owned. The books are for a true beginner whose
+only shared language is English; Spanish comparisons are enrichment the text
+must supply in full, not a baseline it may assume.
+
+- Preface rewritten: drops "Because the reader is also learning Spanish…" and
+  "exactly as in the Spanish book"; states the true-beginner framing and that
+  every Spanish comparison is supplied by the text (a reader who knows Spanish
+  "simply nods along").
+- Chapter 1 (`book/chapters/ch01-greetings.tex`) and the matching practice
+  lessons: recast every "Spanish twin," "the *bueno/buena* machine from
+  Spanish," "One mercy over Spanish," and "you know this from Spanish" into
+  self-contained "Spanish, another daughter of Latin, does X" enrichment.
+  Section title "*bien* — and a Spanish twin" → "*bien* — 'well'."
+- Filled the two missing noun plurals the standard wants: *les soirs*,
+  *les nuits* (a new Grammar Lens on *soir*, extended on *nuit*).
+- Book still compiles clean with XeLaTeX (13 pages).
+
 ## Chapter 1 — Greetings (track bootstrapped)
 
 - New French track, built on the same HL00 framework as Spanish: one word per
