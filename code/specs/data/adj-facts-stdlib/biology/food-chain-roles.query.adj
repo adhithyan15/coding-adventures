@@ -1,0 +1,22 @@
+% ============================================================================
+% food-chain-roles.query.adj — a worked recall over the biology food-chain library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does a producer do?":
+% it states no biology fact — it only `import`s the grounded table and asks
+% binding queries. The engine resolves each `?` against the `food_chain_role`
+% rows and returns the description atom + the table's source/locator/trust. The
+% fourth query runs the relation BACKWARD (bind the job, recall the role). A word
+% that is not one of the three roles abstains honestly — the engine never invents
+% a job.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli food-chain-roles.query.adj
+% ============================================================================
+
+import "food-chain-roles.adj"
+
+? food_chain_role(producer, $D)     % expect makes_food
+? food_chain_role(consumer, $D)     % expect eats_others
+? food_chain_role(decomposer, $D)   % expect breaks_down
+? food_chain_role($R, makes_food)   % expect producer — the reverse recall
+? food_chain_role(volcano, $D)      % expect abstain — not a food-chain role
