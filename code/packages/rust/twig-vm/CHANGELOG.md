@@ -1,5 +1,20 @@
 # Changelog — twig-vm
 
+## [0.25.0] — 2026-07-14 (E6d-6b — `box` opcode: identity on the VM)
+
+The dispatcher now handles the `box` opcode. E6d-6b made the Twig union
+constructor (`emit_union_def`) emit a `box` on each variant tag + field so
+`match`'s later `unbox` round-trips on the tagged code-gen backends. That op is
+in the **frontend** IIR, so it now reaches the VM too — which previously raised
+`UnsupportedOpcode("box")`, breaking every `(union …)`/`match` program (the five
+`tw05d_smoke` union tests).
+
+On the VM `box` is the **identity** (a register copy): every `LispyValue` is
+already the boxed dynamic-value representation — an integer literal `3` is held as
+the tagged `LispyValue(24)` — so there is no unboxed register form to wrap. (On
+the tagged/structural code-gen backends the same op is a real `n<<3` / `ref.i31`
+wrap.) Records were unaffected (their constructor emits no `box`).
+
 ## [0.24.2] — 2026-07-11 (DVAL01-2 — dyn_* builtin dispatch names)
 
 DVAL01-2: the dispatcher's references to the tagged-value builtin names move

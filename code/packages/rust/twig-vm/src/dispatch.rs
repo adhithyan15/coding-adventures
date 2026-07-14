@@ -1245,6 +1245,20 @@ fn dispatch(
                 pc += 1;
             }
 
+            // E6d-6b: `box` — produce a boxed `DynValue` from its operand. The VM's
+            // `LispyValue` *is* the boxed dynamic-value representation (every value in
+            // a register is already tagged — an integer literal `3` is held as the
+            // boxed `LispyValue(24)`), so `box` is the **identity** here: it copies
+            // the operand to the dest. On the tagged/structural code-gen backends the
+            // same op is a real `n<<3` / `ref.i31` wrap, but the VM has no unboxed
+            // register form to wrap. (The union constructor `emit_union_def` emits a
+            // `box` on each variant tag + field so `match`'s later unbox round-trips
+            // on the tagged backends; that op now reaches the VM too — see E6d-6b.)
+            "box" => {
+                exec_box(instr, &mut frame)?;
+                pc += 1;
+            }
+
             "add" | "sub" | "mul" | "div"
             | "cmp_eq" | "cmp_lt" | "cmp_gt" | "cmp_le" | "cmp_ge"
             | "mov" => {
@@ -1684,6 +1698,27 @@ fn exec_field_load(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> 
             "field_load srcs[1] must be Int(0|1); got {other:?}"
         ))),
     };
+    frame.set(dest.clone(), value)?;
+    Ok(())
+}
+
+/// E6d-6b: `box d <- s` — copy `s` to `d`. See the dispatch arm for why this is the
+/// identity on the VM (every `LispyValue` is already a boxed `DynValue`).
+fn exec_box(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+    let dest = instr.dest.as_ref().ok_or_else(|| {
+        RunError::MalformedInstruction("box requires dest".into())
+    })?;
+    let src = match instr.srcs.first() {
+        Some(Operand::Var(name)) => name,
+        other => {
+            return Err(RunError::MalformedInstruction(format!(
+                "box srcs[0] must be Var(register); got {other:?}"
+            )))
+        }
+    };
+    let value = frame.get(src).ok_or_else(|| {
+        RunError::Runtime(RuntimeError::Custom(format!("box: undefined register {src:?}")))
+    })?;
     frame.set(dest.clone(), value)?;
     Ok(())
 }
