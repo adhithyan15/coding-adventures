@@ -1052,6 +1052,44 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT id, (x & 6) AS m, (x | 1) AS o FROM t ORDER BY id",
     },
+    // ---- Lane 3: expr-level COLLATE in comparisons -----------------------
+    // `= … COLLATE NOCASE` folds case in the equality; aliased to isolate the
+    // value from the (orthogonal) unaliased-expression column name.
+    Case {
+        id: "collate_nocase_equality",
+        setup: &["CREATE TABLE t (id INTEGER)", "INSERT INTO t VALUES (1)"],
+        query: "SELECT ('A' = 'a' COLLATE NOCASE) AS a, ('A' = 'a') AS b FROM t",
+    },
+    // `= … COLLATE RTRIM` ignores trailing spaces in the equality.
+    Case {
+        id: "collate_rtrim_equality",
+        setup: &["CREATE TABLE t (id INTEGER)", "INSERT INTO t VALUES (1)"],
+        query: "SELECT ('a ' = 'a' COLLATE RTRIM) AS a FROM t",
+    },
+    // Ordering comparison honours the collation: `'B' < 'a' COLLATE NOCASE` is
+    // 0 (b > a case-folded) vs 1 under default binary ('B'=66 < 'a'=97).
+    Case {
+        id: "collate_nocase_ordering",
+        setup: &["CREATE TABLE t (id INTEGER)", "INSERT INTO t VALUES (1)"],
+        query: "SELECT ('B' < 'a' COLLATE NOCASE) AS c, ('B' < 'a') AS d FROM t",
+    },
+    // COLLATE on a WHERE predicate matches case-insensitively across rows.
+    Case {
+        id: "collate_nocase_where",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT)",
+            "INSERT INTO t VALUES (1,'Apple'),(2,'apple'),(3,'BANANA')",
+        ],
+        query: "SELECT id FROM t WHERE name = 'apple' COLLATE NOCASE ORDER BY id",
+    },
+    // Collation is ignored for a numeric operand: `5 = '5' COLLATE NOCASE` is 0
+    // (5 stays integer, '5' stays text) — the canonicaliser passes non-text
+    // through unchanged, matching SQLite.
+    Case {
+        id: "collate_numeric_operand_unaffected",
+        setup: &["CREATE TABLE t (id INTEGER)", "INSERT INTO t VALUES (1)"],
+        query: "SELECT (5 = '5' COLLATE NOCASE) AS a, (5 = 5 COLLATE NOCASE) AS b FROM t",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but

@@ -659,6 +659,20 @@ mod tests {
         }
     }
 
+    /// `COLLATE name` parses on the right operand of a comparison — with `=` and
+    /// the ordering operators, in a bare expression and in a WHERE clause.
+    #[test]
+    fn test_parse_expr_collate() {
+        for q in [
+            "SELECT 'A' = 'a' COLLATE NOCASE FROM t",
+            "SELECT a < b COLLATE RTRIM FROM t",
+            "SELECT x FROM t WHERE name = 'foo' COLLATE NOCASE",
+        ] {
+            let ast = assert_program_root(q);
+            assert!(find_rule(&ast, "comparison"), "Expected comparison for {q:?}");
+        }
+    }
+
     // -----------------------------------------------------------------------
     // Test 20: BETWEEN expression
     // -----------------------------------------------------------------------

@@ -3,6 +3,17 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.16] - Unreleased
+
+### Added
+
+- **Internal `__collate(value, name)` builtin.** Canonicalises a text value for
+  the given collation (NOCASE → ASCII-lowercase, RTRIM → strip trailing spaces),
+  passing NULL and every non-text value through unchanged, so a following byte
+  comparison honours the collation without changing numeric semantics. Reuses the
+  existing `collate_text` helper (from the ORDER BY COLLATE slice). Emitted by the
+  planner for expr-level COLLATE; not user-facing SQL.
+
 ## [0.4.15] - Unreleased
 
 ### Added

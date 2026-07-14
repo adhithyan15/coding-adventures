@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.14] - Unreleased
+
+### Added
+
+- **`COLLATE name` on a comparison's right operand.** The `comparison` grammar
+  accepts an optional `[COLLATE NAME]` after the right-hand `bitwise` operand
+  (`col = 'x' COLLATE NOCASE`, `a < b COLLATE RTRIM`). The planner applies the
+  collation to both sides.
+
 ## [0.1.13] - Unreleased
 
 ### Added
