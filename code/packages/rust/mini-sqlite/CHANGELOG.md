@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.5.30 — Expr-level `COLLATE` in comparisons
+
+`x = y COLLATE NOCASE`, `a < b COLLATE RTRIM`, `WHERE name = 'foo' COLLATE NOCASE`
+now parse and run with SQLite's semantics: the collation applies to the whole
+comparison (equality and ordering), NOCASE folds ASCII case, RTRIM ignores
+trailing spaces, and a numeric operand is unaffected (`5 = '5' COLLATE NOCASE` is
+0). It is lowered entirely in the planner (sql-parser 0.1.14 grammar; sql-planner
+0.2.13) onto a new internal `__collate` builtin (sql-vm 0.4.16) that canonicalises
+each operand — no new comparison opcode, mirroring `GLOB → glob()`. The trick:
+NOCASE/RTRIM are canonicalising transforms, so `x <op> y COLLATE C` equals
+`canon_C(x) <op> canon_C(y)` under byte comparison, exactly. Five differential-
+oracle cases (=, <, WHERE, RTRIM, numeric-operand) diff against real bundled
+SQLite. (COLLATE on the LEFT operand — `col COLLATE NOCASE = 'x'` — is a follow-up.)
+
 ## 0.5.29 — Bitwise operators `& | ~ << >>`
 
 `SELECT 5 & 3`, `5 | 2`, `~0`, `1 << 4`, `256 >> 2` now parse and run with

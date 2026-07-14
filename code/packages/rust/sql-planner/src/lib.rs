@@ -2093,16 +2093,63 @@ fn plan_comparison(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
         let right_node = child_nodes_ordered
             .get(2)
             .ok_or_else(|| PlanError::UnsupportedStatement("comparison missing right operand".to_string()))?;
+        let right = plan_expression(right_node)?;
+
+        // Optional `COLLATE name` on the comparison (grammar allows it after the
+        // right operand). NOCASE (ASCII case-fold) and RTRIM (trim trailing
+        // spaces) are *canonicalising* transforms, so `x <op> y COLLATE C` is
+        // exactly `canon_C(x) <op> canon_C(y)` under the default byte comparison
+        // — including the non-text and NULL cases (`5 = '5' COLLATE NOCASE` is 0
+        // because 5 stays 5 while '5' stays '5'; a NULL operand stays NULL). We
+        // therefore lower the collation onto the internal `__collate` builtin
+        // wrapping BOTH operands, reusing the VM's existing collation helper —
+        // no new comparison opcode, mirroring the `GLOB → glob()` lowering.
+        // `COLLATE BINARY` is the default, so it is a no-op.
+        let (left, right) = match collate_name_after(&direct_tok_uppers)? {
+            Some(name) => (wrap_collate(left, &name), wrap_collate(right, &name)),
+            None => (left, right),
+        };
 
         return Ok(SqlExpr::BinaryOp {
             op,
             left: Box::new(left),
-            right: Box::new(plan_expression(right_node)?),
+            right: Box::new(right),
         });
     }
 
     // Passthrough — single operand, no recognised operator.
     Ok(left)
+}
+
+/// Find the collation name in a comparison's direct tokens, if it carries a
+/// `COLLATE name` clause. Returns `None` when absent or `COLLATE BINARY` (the
+/// default, a no-op); `Some(NAME)` for `NOCASE`/`RTRIM`; and an error for an
+/// unknown collation, matching SQLite's "no such collating sequence".
+fn collate_name_after(direct_tok_uppers: &[String]) -> Result<Option<String>, PlanError> {
+    let Some(pos) = direct_tok_uppers.iter().position(|t| t == "COLLATE") else {
+        return Ok(None);
+    };
+    let name = direct_tok_uppers.get(pos + 1).ok_or_else(|| {
+        PlanError::UnsupportedStatement("COLLATE clause missing collation name".to_string())
+    })?;
+    match name.as_str() {
+        "BINARY" => Ok(None),
+        "NOCASE" | "RTRIM" => Ok(Some(name.clone())),
+        other => Err(PlanError::UnsupportedStatement(format!(
+            "no such collating sequence: {other}"
+        ))),
+    }
+}
+
+/// Wrap an expression in the internal `__collate(value, 'NAME')` builtin, which
+/// canonicalises a text value for the given collation (and passes non-text and
+/// NULL through unchanged) so a following byte comparison honours the collation.
+fn wrap_collate(expr: SqlExpr, name: &str) -> SqlExpr {
+    SqlExpr::FunctionCall {
+        name: "__collate".to_string(),
+        args: vec![expr, SqlExpr::Literal(SqlValue::Text(name.to_string()))],
+        star: false,
+    }
 }
 
 /// Plan an `additive` node.

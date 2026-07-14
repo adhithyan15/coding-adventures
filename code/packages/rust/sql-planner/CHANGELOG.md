@@ -2,6 +2,18 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.13] - Unreleased
+
+### Added
+
+- **Expr-level COLLATE lowered onto the `__collate` builtin.** A comparison with
+  `COLLATE NOCASE`/`RTRIM` wraps BOTH operands in `__collate(operand, 'NAME')`,
+  because those collations are *canonicalising* — `x <op> y COLLATE C` equals
+  `canon_C(x) <op> canon_C(y)` under byte comparison, including non-text and NULL
+  operands (`5 = '5' COLLATE NOCASE` stays 0). No new comparison opcode — mirrors
+  the `GLOB → glob()` lowering. `COLLATE BINARY` is a no-op; unknown names error
+  (`no such collating sequence`). New helpers `collate_name_after`/`wrap_collate`.
+
 ## [0.2.12] - Unreleased
 
 ### Added

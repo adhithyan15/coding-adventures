@@ -1283,6 +1283,33 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
             }
         }
 
+        // Internal collation canonicaliser (not user-facing SQL — the planner
+        // emits it to lower `x <op> y COLLATE C` onto `canon_C(x) <op> canon_C(y)`).
+        // A text value is transformed by the collation (NOCASE → ASCII-lowercase,
+        // RTRIM → strip trailing spaces); NULL and every non-text value pass
+        // through UNCHANGED, so a numeric comparison keeps its own semantics
+        // (`5 = '5' COLLATE NOCASE` stays 0). Reuses `collate_text`.
+        "__COLLATE" => {
+            if args.len() != 2 {
+                return Err(VmError::TypeMismatch(format!(
+                    "__collate expects 2 args, got {}",
+                    args.len()
+                )));
+            }
+            let collation = match &args[1] {
+                SqlValue::Text(s) => s.clone(),
+                other => {
+                    return Err(VmError::TypeMismatch(format!(
+                        "__collate expects a text collation name, got {other:?}"
+                    )))
+                }
+            };
+            match &args[0] {
+                SqlValue::Text(s) => Ok(SqlValue::Text(collate_text(s, &collation))),
+                other => Ok(other.clone()),
+            }
+        }
+
         "TRIM" => trim_builtin("TRIM", &args, true, true),
 
         "LTRIM" => trim_builtin("LTRIM", &args, true, false),

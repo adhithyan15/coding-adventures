@@ -436,6 +436,13 @@ pub fn parser_grammar() -> ParserGrammar {
                         GrammarElement::Sequence { elements: vec![
                             GrammarElement::RuleReference { name: r#"cmp_op"#.to_string() },
                             GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
+                            // Optional `COLLATE name` on the right operand of a
+                            // comparison (`col = 'x' COLLATE NOCASE`). The planner
+                            // applies the collation to BOTH sides of the compare.
+                            GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                    GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                                ] }) },
                         ] },
                         GrammarElement::Sequence { elements: vec![
                             GrammarElement::Literal { value: r#"BETWEEN"#.to_string() },
