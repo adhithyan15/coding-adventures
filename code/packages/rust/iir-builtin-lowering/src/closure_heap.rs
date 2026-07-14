@@ -119,9 +119,9 @@ fn collect_dispatch(module: &IIRModule) -> Vec<Dispatch> {
         .collect()
 }
 
-/// Module-level entry: lower `alloc_closure`/`call_closure` to the cons-heap form
-/// + a synthesized dispatcher, for the WASM backend. A no-op if the module has no
-/// closures.
+/// Module-level entry: lower `alloc_closure`/`call_closure` to the cons-heap
+/// form plus a synthesized dispatcher (native + WASM). A no-op if the module has
+/// no closures.
 pub fn lower_closures_to_heap(module: &mut IIRModule) {
     let dispatch = collect_dispatch(module);
     if dispatch.is_empty() {
