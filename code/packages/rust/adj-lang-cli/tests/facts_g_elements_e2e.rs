@@ -1,5 +1,5 @@
-//! End-to-end test for the grade-school FACTS library
-//! (`adj-facts-stdlib/gradeschool/elements.adj`) driven through the built CLI:
+//! End-to-end test for the chemistry FACTS library
+//! (`adj-facts-stdlib/chemistry/elements.adj`) driven through the built CLI:
 //! a native `table` of element → atomic-number resolves a binding-query recall
 //! with the source's citation, runs the relation backward (number → element),
 //! and abstains on a non-element — 0 model calls.
@@ -30,10 +30,10 @@ fn run(program: &Path) -> (bool, String) {
 }
 
 #[test]
-fn gradeschool_elements_recall_binds_atomic_number_with_citation() {
+fn chemistry_elements_recall_binds_atomic_number_with_citation() {
     let dir = scratch("elements");
-    // Copy the shipped grade-school table beside the entry program and import it.
-    let src = facts_stdlib().join("gradeschool/elements.adj");
+    // Copy the shipped chemistry table beside the entry program and import it.
+    let src = facts_stdlib().join("chemistry/elements.adj");
     std::fs::copy(&src, dir.join("elements.adj")).expect("copy shipped elements.adj");
     std::fs::write(
         dir.join("case.adj"),

@@ -1,11 +1,12 @@
 % ============================================================================
 % elements — the atomic number of the first twenty chemical elements
-% (adj-facts-stdlib, GRADESCHOOL science).
+% (adj-facts-stdlib, CHEMISTRY).
 % ============================================================================
-% One rung up from the kindergarten `shapes` table: a fact from grade-school
-% science — "hydrogen is element number 1, oxygen is number 8." The atomic
-% number is the count of protons in an atom's nucleus, and it is what ORDERS
-% the periodic table. Recall is a binding query:
+% A chemistry facts library in the ADJ standard library — the kind a medicine
+% or science agent `import`s when it needs a grounded periodic-table fact:
+% "hydrogen is element number 1, oxygen is number 8." The atomic number is the
+% count of protons in an atom's nucleus, and it is what ORDERS the periodic
+% table. Recall is a binding query:
 %
 %     ? atomic_number(oxygen, $Z)          % 8
 %
@@ -21,8 +22,7 @@
 % Because the `number` value is a NUMBER (not a label), a recalled atomic number
 % composes straight into arithmetic: it IS the proton count, so `number` protons
 % is that value, and (for a neutral atom) the electron count too — the concrete
-% bridge from grade-school science RECALL to COMPUTE, mirroring how the
-% kindergarten side count feeds a perimeter formula.
+% bridge from chemistry RECALL to COMPUTE.
 %
 % Provenance: every element name and its atomic number is copied verbatim from
 % the PubChem Periodic Table REST data endpoint (U.S. National Institutes of
