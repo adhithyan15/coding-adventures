@@ -1,0 +1,19 @@
+% ============================================================================
+% traffic-lights.query.adj — a worked recall over the traffic-light library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does a red light
+% mean to a driver?": it states no rule of the road — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?`
+% against the `traffic_light_meaning` rows and returns the meaning + the
+% table's source/locator/trust. A color that is not a steady signal color
+% abstains honestly — the engine never invents a meaning.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli traffic-lights.query.adj
+% ============================================================================
+
+import "traffic-lights.adj"
+
+? traffic_light_meaning(red, $Meaning)      % expect stop
+? traffic_light_meaning(green, $Meaning)    % expect proceed
+? traffic_light_meaning(blue, $Meaning)     % expect abstain — not a signal color
