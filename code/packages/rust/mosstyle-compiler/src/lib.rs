@@ -261,11 +261,35 @@ pub fn tokenize(source: &str) -> Result<Vec<Token>, CompileError> {
 // Parser
 // ===========================================================================
 
+/// Recursion-depth cap for the mosstyle [`GrammarParser`] — see
+/// [`GrammarParser::with_max_depth`] and
+/// [`parser::grammar_parser::DEFAULT_MAX_RULE_DEPTH`] for why the underlying
+/// guard exists at all.
+///
+/// Unlike its sibling crates in the mosaic family (`mosaic-parser`,
+/// `mosmodel-compiler`, `moslayout-compiler`, each of which has at least
+/// one grammar rule that can nest arbitrarily deep given adversarial
+/// input), the mosstyle grammar has **no recursive shape at all**: tracing
+/// every rule (`style_def -> part_def -> part_item -> {state_block |
+/// property_decl} -> style_value`) shows `state_block` only reaches
+/// `property_decl` (a terminal), never back to `part_def`/`state_block`/
+/// `style_def`, and `part_path`'s `{SLASH NAME}` repeats a *token*, not a
+/// rule. The maximum static call depth is fixed (~5 rule-frames)
+/// regardless of input size, so there is no adversarial deep-nesting DoS
+/// vector to calibrate against.
+///
+/// `MAX_RULE_DEPTH` is still set to the shared crate's generic
+/// [`parser::grammar_parser::DEFAULT_MAX_RULE_DEPTH`] (128) for
+/// defense-in-depth and consistency with the rest of the mosaic family —
+/// at 25x the grammar's real maximum call depth, it can never reject a
+/// legitimate mosstyle file.
+const MAX_RULE_DEPTH: usize = parser::grammar_parser::DEFAULT_MAX_RULE_DEPTH;
+
 /// Parse mosstyle source text into a grammar AST.
 pub fn parse_style(source: &str) -> Result<GrammarASTNode, String> {
     let tokens = tokenize(source).map_err(|e| e.message)?;
     let grammar = _grammar::parser_grammar();
-    let mut parser = GrammarParser::new(tokens, grammar);
+    let mut parser = GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH);
     parser.parse().map_err(|e| format!("parse error: {e}"))
 }
 
@@ -1300,5 +1324,24 @@ mod tests {
         assert!(result.style_map_json.contains("\"component\": \"Grid\""));
         assert!(result.style_map_json.contains("\"root\""));
         assert!(result.style_map_json.contains("\"background\""));
+    }
+
+    /// `MAX_RULE_DEPTH` (the shared [`super::MAX_RULE_DEPTH`], set to the
+    /// generic [`parser::grammar_parser::DEFAULT_MAX_RULE_DEPTH`] for
+    /// defense-in-depth — see that constant's doc comment for why this
+    /// grammar has no real recursive shape to calibrate against) must not
+    /// reject a legitimate style file with many flat, non-nested parts and
+    /// properties. Repetition (`{part_def}`, `{property_decl}`) loops
+    /// rather than recurses, so breadth here costs no extra rule-frame
+    /// depth regardless of count.
+    #[test]
+    fn many_flat_parts_and_properties_still_parse_under_the_default_cap() {
+        let mut src = String::from("style Wide {\n");
+        for i in 0..200 {
+            src.push_str(&format!("  part p{i} {{ background: #ffffff; }}\n"));
+        }
+        src.push_str("}\n");
+        let def = parse_and_analyze(&src);
+        assert_eq!(def.parts.len(), 200);
     }
 }

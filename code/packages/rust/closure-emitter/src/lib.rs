@@ -1079,6 +1079,19 @@ impl<'a> Emitter<'a> {
                     self.write_str("...");
                     self.emit_identifier(&re.argument);
                 }
+                FunctionParam::AssignmentPattern(ap) => {
+                    // `name=expr` — a default parameter. The default is emitted
+                    // at `PREC_ASSIGNMENT` (the RHS of `=`), so a looser bare
+                    // sequence default wraps (`a=(1,2)`) while everything tighter
+                    // prints bare — exactly as an assignment RHS or class-field
+                    // value does. `pretty_ws()` gives `a = 1` in pretty mode and
+                    // `a=1` minified.
+                    self.emit_identifier(&ap.left);
+                    self.pretty_ws();
+                    self.write_str("=");
+                    self.pretty_ws();
+                    self.emit_expression_inner(&ap.right, PREC_ASSIGNMENT);
+                }
             }
         }
         self.write_str(")");
@@ -1157,6 +1170,19 @@ impl<'a> Emitter<'a> {
                     // `...name` — the rest parameter, always last in the list.
                     self.write_str("...");
                     self.emit_identifier(&re.argument);
+                }
+                FunctionParam::AssignmentPattern(ap) => {
+                    // `name=expr` — a default parameter. The default is emitted
+                    // at `PREC_ASSIGNMENT` (the RHS of `=`), so a looser bare
+                    // sequence default wraps (`a=(1,2)`) while everything tighter
+                    // prints bare — exactly as an assignment RHS or class-field
+                    // value does. `pretty_ws()` gives `a = 1` in pretty mode and
+                    // `a=1` minified.
+                    self.emit_identifier(&ap.left);
+                    self.pretty_ws();
+                    self.write_str("=");
+                    self.pretty_ws();
+                    self.emit_expression_inner(&ap.right, PREC_ASSIGNMENT);
                 }
             }
         }
@@ -1421,6 +1447,15 @@ impl<'a> Emitter<'a> {
                     FunctionParam::RestElement(re) => {
                         self.write_str("...");
                         self.emit_identifier(&re.argument);
+                    }
+                    FunctionParam::AssignmentPattern(ap) => {
+                        // `name=expr` default param — same shape as a function's,
+                        // emitted at `PREC_ASSIGNMENT` so a sequence default wraps.
+                        self.emit_identifier(&ap.left);
+                        self.pretty_ws();
+                        self.write_str("=");
+                        self.pretty_ws();
+                        self.emit_expression_inner(&ap.right, PREC_ASSIGNMENT);
                     }
                 }
             }
@@ -3061,7 +3096,7 @@ mod tests {
     #![allow(clippy::neg_multiply)]
     use super::*;
     use coding_adventures_javascript_ast::{
-        CatchClause, PrivateName, Program, RestElement, SourceType,
+        AssignmentPattern, CatchClause, PrivateName, Program, RestElement, SourceType,
     };
     use coding_adventures_javascript_tokens::EsVersion;
 
@@ -4052,6 +4087,101 @@ mod tests {
         )]);
         let out = emit_default(prog);
         assert_eq!(out.code, "function g(...args){};");
+    }
+
+    // ---- default parameters (CLOC12.191 PR1) ----------------
+    //
+    // A default parameter prints `name=expr` (minified) — the `=` has no
+    // surrounding whitespace in compact mode. The default is a *live*
+    // expression, emitted at `PREC_ASSIGNMENT`: an ordinary literal prints
+    // bare, but a looser bare sequence default must parenthesise (`a=(1,2)`),
+    // and a plain identifier param mixed alongside a default still prints
+    // uniformly.
+
+    /// `function f(a,b=1){}` → `function f(a,b=1){}` — a fixed param followed
+    /// by a numeric-literal default. The `=` is tight in minified mode.
+    #[test]
+    fn default_parameter_minified() {
+        let f = FunctionDeclaration {
+            cv: None,
+            id: Identifier { cv: None, name: "f".to_string() },
+            params: vec![
+                FunctionParam::Identifier(Identifier { cv: None, name: "a".to_string() }),
+                FunctionParam::AssignmentPattern(AssignmentPattern {
+                    cv: None,
+                    left: Identifier { cv: None, name: "b".to_string() },
+                    right: num(1.0),
+                }),
+            ],
+            body: BlockStatement { cv: None, body: vec![] },
+            generator: false,
+            is_async: false,
+        };
+        let prog = program().with_body(vec![ProgramItem::Declaration(
+            Declaration::FunctionDeclaration(f),
+        )]);
+        assert_eq!(emit_default(prog).code, "function f(a,b=1){};");
+    }
+
+    /// A **sequence** default must parenthesise: `function f(a=(1,2)){}`. The
+    /// default is emitted at `PREC_ASSIGNMENT`, so a bare comma sequence — which
+    /// binds looser than `=` — is wrapped; without the parens `a=1,2` would parse
+    /// as two parameters `a=1` and `2` (the latter invalid).
+    #[test]
+    fn default_parameter_sequence_wraps() {
+        let seq = Expression::SequenceExpression(SequenceExpression {
+            cv: None,
+            expressions: vec![num(1.0), num(2.0)],
+        });
+        let f = FunctionDeclaration {
+            cv: None,
+            id: Identifier { cv: None, name: "f".to_string() },
+            params: vec![FunctionParam::AssignmentPattern(AssignmentPattern {
+                cv: None,
+                left: Identifier { cv: None, name: "a".to_string() },
+                right: seq,
+            })],
+            body: BlockStatement { cv: None, body: vec![] },
+            generator: false,
+            is_async: false,
+        };
+        let prog = program().with_body(vec![ProgramItem::Declaration(
+            Declaration::FunctionDeclaration(f),
+        )]);
+        assert_eq!(emit_default(prog).code, "function f(a=(1,2)){};");
+    }
+
+    /// Pretty mode spaces the `=`: `function f(a = 1){ }`-style. Confirms the
+    /// `pretty_ws()` bracketing around `=` mirrors a class-field initializer.
+    #[test]
+    fn default_parameter_pretty_spaces_equals() {
+        let f = FunctionDeclaration {
+            cv: None,
+            id: Identifier { cv: None, name: "f".to_string() },
+            params: vec![FunctionParam::AssignmentPattern(AssignmentPattern {
+                cv: None,
+                left: Identifier { cv: None, name: "a".to_string() },
+                right: num(1.0),
+            })],
+            body: BlockStatement { cv: None, body: vec![] },
+            generator: false,
+            is_async: false,
+        };
+        let prog = program().with_body(vec![ProgramItem::Declaration(
+            Declaration::FunctionDeclaration(f),
+        )]);
+        let out = emit_with(
+            prog,
+            EmitOptions {
+                pretty: true,
+                ..EmitOptions::default()
+            },
+        );
+        assert!(
+            out.code.contains("a = 1"),
+            "pretty mode should space the default `=`; got {}",
+            out.code
+        );
     }
 
     // ---- class declarations (CLOC12.174 PR1) ----------------
