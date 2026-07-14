@@ -49,15 +49,50 @@ use std::sync::atomic::{AtomicU64, Ordering};
 
 /// A numeric logic term.
 ///
-/// Integers and floats are kept as separate variants so that equality on
-/// integers is exact and so that downstream arithmetic can dispatch on
-/// type without re-parsing. Mixing across variants in unification follows
-/// Prolog tradition: `1 = 1.0` does **not** unify, because they are
-/// distinct ground terms.
-#[derive(Debug, Clone, Copy, PartialEq)]
+/// Three variants, kept **distinct** so that a value keeps exactly the shape it
+/// was written or computed in:
+///
+/// | variant        | holds                        | when it appears                                   |
+/// |----------------|------------------------------|---------------------------------------------------|
+/// | `Int(i64)`     | a small machine integer      | integer literals that fit `i64`; integer results  |
+/// | `Exact(..)`    | an unbounded exact decimal   | any decimal literal — `3.14159…`, `6.022e23` — so no digit is lost at parse time |
+/// | `Float(f64)`   | a labeled **lossy** `f64`    | the inherently-approximate / explicitly-exported value (a float backend, an approximate mode) |
+///
+/// Why three and not two: before `Exact`, a decimal literal was parsed straight
+/// to `f64`, so `pi` written to 39 digits came back at ~16 — truncated at parse
+/// time, upstream of every big number (see `code/specs/ADJ-EXACT-NUMBERS.md`).
+/// `Exact` gives a written decimal somewhere lossless to live; `f64` is now only
+/// the *labeled lossy export*, never the silent default.
+///
+/// **Equality / unification stays variant-distinct**, following Prolog tradition:
+/// `1 = 1.0` does **not** unify because they are distinct ground terms, and
+/// `Exact` joins as a third distinct term (`Int(1)`, `Float(1.0)`, `Exact(1.0)`
+/// are three different terms). *Numeric* reconciliation (`2.50` == `2.5`) is a
+/// compute-layer concern (`ExactRational`), not ground-term unification.
+///
+/// Note `Number` is **no longer `Copy`**: `Exact` wraps a heap-backed
+/// [`BigDecimal`], so the enum moves or clones like `Term` itself.
+#[derive(Debug, Clone, PartialEq)]
 pub enum Number {
     Int(i64),
     Float(f64),
+    Exact(bignum_core::BigDecimal),
+}
+
+impl Number {
+    /// The **labeled lossy** `f64` export — the *only* sanctioned way to obtain
+    /// an `f64` from a `Number`. `Int` widens exactly (all `i64` in range are
+    /// representable up to 2^53 without loss and saturate predictably beyond),
+    /// `Float` is already an `f64`, and `Exact` rounds to the nearest `f64` via
+    /// [`BigDecimal::to_f64`]. The name is deliberately greppable so every place
+    /// that drops to `f64` is auditable.
+    pub fn to_f64_lossy(&self) -> f64 {
+        match self {
+            Number::Int(i) => *i as f64,
+            Number::Float(x) => *x,
+            Number::Exact(d) => d.to_f64(),
+        }
+    }
 }
 
 impl fmt::Display for Number {
@@ -65,6 +100,8 @@ impl fmt::Display for Number {
         match self {
             Number::Int(i) => write!(f, "{}", i),
             Number::Float(x) => write!(f, "{}", x),
+            // Prints every digit the exact decimal carries — no truncation.
+            Number::Exact(d) => write!(f, "{}", d),
         }
     }
 }
