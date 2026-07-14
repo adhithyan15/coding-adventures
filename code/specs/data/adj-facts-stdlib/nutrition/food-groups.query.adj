@@ -1,0 +1,18 @@
+% ============================================================================
+% food-groups.query.adj — a worked recall over the food-groups library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what food group is an
+% apple in?": it states no nutrition fact — it only `import`s the grounded table
+% and asks binding queries. The engine resolves each `?` against the `food_group`
+% rows and returns the group + the table's source/locator/trust. A thing that is
+% not a MyPlate food abstains honestly — the engine never invents a group.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli food-groups.query.adj
+% ============================================================================
+
+import "food-groups.adj"
+
+? food_group(apple, $Group)        % expect fruits
+? food_group(chicken, $Group)      % expect protein
+? food_group(rock, $Group)         % expect abstain — a rock is not a food
