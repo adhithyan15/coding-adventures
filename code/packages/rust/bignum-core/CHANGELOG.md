@@ -5,6 +5,19 @@ All notable changes to the `bignum-core` package will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2026-07-14
+
+### Added
+
+- **`BigDecimal::significant_digits(&self) -> usize`** — counts the meaningful digits a value
+  carries (the mantissa's digit count once trailing zeros are removed; `0` for zero). Because a
+  `BigDecimal` is always canonical (no trailing-zero mantissa), this is simply the digit length of
+  the mantissa's magnitude — `20.180 → 4`, `100 → 1`, `0 → 0`, π-to-39 → `39`. Introduced for the
+  ADJ exact-numbers renderer (NX-2): it decides whether an exact value still fits an `f64`'s
+  ~17-digit budget (render the `f64` canonical form, preserving existing output byte-for-byte) or
+  exceeds it (render every exact digit). Tested across zero, trailing/leading zeros, the 17-vs-18
+  digit f64 boundary, negatives, and scientific-notation inputs.
+
 ## [0.4.1] - 2026-07-11
 
 ### Added

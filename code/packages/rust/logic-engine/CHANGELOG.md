@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.38.1] — 2026-07-14 — read `Number::Exact` valued facts (ADJ-EXACT-NUMBERS NX-2)
+
+### Changed
+
+- The compute-layer valued-fact readers now recognize the `Number::Exact` variant that `adj-lang`
+  begins producing in NX-2. `numeric_magnitude`, `numeric_exact_magnitude`, `dimensioned_value`,
+  and the `datetime` integral reader each gained an `Exact` arm that **folds into the existing
+  `Float` handling via the labeled-lossy `to_f64` boundary** — so a valued fact stored exactly is
+  visible to a formula/predicate exactly as it was when it stored an `f64`, and no compute result
+  changes. (Before this, an `Exact`-valued slot was invisible and surfaced as `UnknownSlot`.)
+  Ingesting an exact decimal's full precision into `ExactRational` **without** an `f64` hop is
+  deliberately deferred to NX-3; this release only restores parity.
+
 ## [0.38.0] — exact arithmetic by default: `ExactRational` is now a `BigRational` (NUM-5)
 
 ### Changed

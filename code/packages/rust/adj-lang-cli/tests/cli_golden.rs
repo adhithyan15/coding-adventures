@@ -276,12 +276,18 @@ fn compile_error_is_reported_as_json() {
 
 #[test]
 fn malformed_numeric_clauses_do_not_panic_the_cli() {
-    // Regression: a non-positive LR / out-of-range prior / overflowing
+    // Regression: a non-positive LR / out-of-range prior / un-representable
     // literal must be a clean `{"error":...}` (exit 1), never a panic.
+    //
+    // Note the numeric-literal case changed with ADJ-EXACT-NUMBERS NX-2: `1e400` is no longer
+    // malformed — it is a perfectly good exact decimal (`10^400`) now stored with full precision
+    // instead of saturating to `f64` infinity. The remaining un-representable literal is a
+    // scale-amplification payload (`1e-2000000000`), which `BigDecimal`'s `MAX_SCALE` budget
+    // rejects at parse — a few bytes that would otherwise force a multi-gigabyte materialization.
     for src in [
         "contributes -5 from x to y\n? y\n",
         "prior 2 for x\n? x\n",
-        "observe gross_income(1e400)\n? required_to_file\n",
+        "observe gross_income(1e-2000000000)\n? required_to_file\n",
     ] {
         let (ok, s) = run("adjcli_malformed.adj", src);
         assert!(!ok, "expected non-zero exit for {src:?}: {s}");

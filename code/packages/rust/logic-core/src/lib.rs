@@ -64,6 +64,14 @@ use std::sync::atomic::{AtomicU64, Ordering};
 /// `Exact` gives a written decimal somewhere lossless to live; `f64` is now only
 /// the *labeled lossy export*, never the silent default.
 ///
+/// **Display of `Exact` is a superset of the old `f64` output.** An `Exact` with
+/// ≤ 17 significant digits (everything an `f64` can represent) renders through its
+/// `f64` canonical form, so its printed string is byte-for-byte what the value
+/// showed before literals were stored exactly (scientific notation for extreme
+/// magnitudes, trailing-zero normalization, and so on). Only a value that exceeds
+/// the `f64` budget — π to 39 places — prints its full exact digit string. Nothing
+/// that already fit an `f64` changes how it looks.
+///
 /// **Equality / unification stays variant-distinct**, following Prolog tradition:
 /// `1 = 1.0` does **not** unify because they are distinct ground terms, and
 /// `Exact` joins as a third distinct term (`Int(1)`, `Float(1.0)`, `Exact(1.0)`
@@ -100,8 +108,26 @@ impl fmt::Display for Number {
         match self {
             Number::Int(i) => write!(f, "{}", i),
             Number::Float(x) => write!(f, "{}", x),
-            // Prints every digit the exact decimal carries — no truncation.
-            Number::Exact(d) => write!(f, "{}", d),
+            // The rendering policy that keeps exactness a *superset* of the old f64 behavior
+            // (ADJ-EXACT-NUMBERS NX-2). An `f64` carries ~15–17 significant decimal digits, so:
+            //
+            //   * If the exact value has **≤ 17 significant digits**, it still round-trips
+            //     through `f64` losslessly, and we render its `f64` canonical form. This is
+            //     byte-for-byte what the value displayed *before* NX-2 lowered literals to
+            //     `Exact` — including scientific notation for tiny/huge magnitudes
+            //     (`6.62607015e-34`) and trailing-zero normalization (`20.180` → `20.18`) —
+            //     so none of the existing rendered-string tests regress.
+            //   * Otherwise (e.g. π to 39 places), the value cannot fit an `f64`, so we print
+            //     every exact digit the `BigDecimal` carries. This is the whole point of the
+            //     exact-numbers arc: the extra precision becomes visible in the binding, not
+            //     silently truncated at 17 digits.
+            Number::Exact(d) => {
+                if d.significant_digits() <= 17 {
+                    write!(f, "{}", d.to_f64())
+                } else {
+                    write!(f, "{}", d)
+                }
+            }
         }
     }
 }
@@ -419,6 +445,27 @@ mod tests {
     #[test]
     fn strings_display_with_quotes() {
         assert_eq!(string("hello world").to_string(), "\"hello world\"");
+    }
+
+    #[test]
+    fn exact_display_is_a_superset_of_f64_output() {
+        use bignum_core::BigDecimal;
+        use std::str::FromStr;
+        let exact = |s: &str| Number::Exact(BigDecimal::from_str(s).unwrap());
+        // ≤ 17 significant digits: render the f64 canonical form, byte-for-byte what the value
+        // showed before literals were stored exactly — trailing zeros normalize away, extreme
+        // magnitudes use scientific notation.
+        assert_eq!(exact("20.180").to_string(), "20.18");
+        assert_eq!(exact("2.54").to_string(), "2.54");
+        assert_eq!(exact("0.3048").to_string(), "0.3048");
+        assert_eq!(exact("100").to_string(), "100");
+        // Extreme magnitudes render exactly as the corresponding `f64` would (the whole point of
+        // the ≤17-digit branch: `Exact` and `Float` print the same string for any f64-sized value).
+        assert_eq!(exact("6.62607015e-34").to_string(), format!("{}", 6.62607015e-34_f64));
+        assert_eq!(exact("6.02214076e23").to_string(), format!("{}", 6.02214076e23_f64));
+        // > 17 significant digits: every exact digit prints (this is the NX-2 win).
+        let pi = "3.141592653589793238462643383279502884197";
+        assert_eq!(exact(pi).to_string(), pi);
     }
 
     #[test]

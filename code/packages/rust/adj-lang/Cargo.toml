@@ -1,11 +1,12 @@
 [package]
 name = "adj-lang"
-version = "0.52.0"
+version = "0.53.0"
 edition = "2021"
 description = "Surface-syntax frontend for the adjudication framework's probabilistic-logic rulebooks. Lexes, parses, and lowers a domain-expert-readable DSL into a `logic-engine` KnowledgeBase. Dissolves ADJ46 awkwardness items A10 (rulebook syntax) and A4 (joint contributions syntactically distinct)."
 
 [dependencies]
 asciimath = { path = "../asciimath" }
+bignum-core = { path = "../bignum-core" }
 grammar-tools = { path = "../grammar-tools" }
 latex = { path = "../latex" }
 lexer = { path = "../lexer" }

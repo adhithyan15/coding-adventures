@@ -33,8 +33,10 @@ use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 
 use crate::ast::{
     AggOp, Annotation, ArithOp, BinFn, CmpOp, Define, DefineKind, Evidence, ExprAst, FormulaDef,
-    NamedFn, OptDir, Program, RelOp, RuleLiteral, Statement, Term, TrustTierName,
+    NamedFn, NumLit, OptDir, Program, RelOp, RuleLiteral, Statement, Term, TrustTierName,
 };
+use bignum_core::BigDecimal;
+use std::str::FromStr;
 
 /// Errors raised while adapting a generic AST to the typed AST.
 ///
@@ -999,7 +1001,7 @@ fn adapt_row_item(node: &GrammarASTNode) -> Result<crate::ast::TableCell, Adapte
         if let ASTNodeOrToken::Token(t) = c {
             match t.type_ {
                 TokenType::Number => {
-                    return Ok(crate::ast::TableCell::Number(parse_finite(
+                    return Ok(crate::ast::TableCell::Number(parse_numlit(
                         &t.value, t.type_, "row_item",
                     )?));
                 }
@@ -2472,7 +2474,7 @@ fn adapt_term(node: &GrammarASTNode) -> Result<Term, AdapterError> {
         match c {
             ASTNodeOrToken::Node(n) if n.rule_name == "term" => args.push(adapt_term(n)?),
             ASTNodeOrToken::Token(t) if t.type_ == TokenType::Number => {
-                args.push(Term::Num(parse_finite(&t.value, t.type_, "term")?));
+                args.push(Term::Num(parse_numlit(&t.value, t.type_, "term")?));
             }
             // A `$Enzyme` VAR surfaces as a Name token whose value begins with
             // `$` (unknown token names fall back to TokenType::Name). The functor
@@ -2600,6 +2602,87 @@ fn parse_finite(raw: &str, kind: TokenType, rule: &str) -> Result<f64, AdapterEr
             kind,
             value: raw.to_string(),
             reason: "not a finite f64",
+        }),
+    }
+}
+
+/// The maximum **length in bytes** of an exact decimal NUMBER token accepted from `.adj` source.
+///
+/// This is a **DoS budget** at the untrusted-input boundary, not a precision limit. Base-10
+/// `BigDecimal` conversion is schoolbook-quadratic in the mantissa's digit count — `from_str`
+/// (parse), [`BigDecimal::significant_digits`], `Display`, and `to_f64` are each `O(L²)` for an
+/// `L`-digit literal. The old `parse_finite` path scanned a token in `O(L)` and saturated an
+/// out-of-range magnitude to `±∞`; routing tokens through `BigDecimal` instead removes that
+/// implicit bound, so a hostile `.adj` file could pack multi-megabyte number literals to force
+/// quadratic work. Capping the token length bounds every such materialization to a few million
+/// ops — trivial and one-time. `4096` bytes is ~100× the longest literal any real rulebook needs
+/// (π to 39 places is 41 bytes; Planck's constant is 15), so no legitimate high-precision constant
+/// is rejected.
+const MAX_NUMBER_TOKEN_LEN: usize = 4096;
+
+/// The maximum **scale magnitude** (`|scale|`, i.e. decimal places on either side of the point) of
+/// an accepted exact literal. `BigDecimal`'s own `MAX_SCALE` budget already caps this at
+/// `1_000_000`, but that still permits a *tiny* token — `1e-1000000` is 11 bytes — to force a
+/// ~1 MB decimal string every time the value is rendered or narrowed to `f64` (which happens
+/// several times per term during lowering/evaluation, uncached). A `.adj` literal never needs a
+/// scale past a few thousand, so this tighter cap keeps every render/`to_f64` string small while
+/// still accepting every real scientific-notation constant (Avogadro's scale is 15, Planck's 42).
+const MAX_NUMBER_TOKEN_SCALE: i64 = 4096;
+
+/// Parse a NUMBER token into a [`NumLit`] that loses no digit (ADJ-EXACT-NUMBERS NX-2).
+///
+/// The precedence is chosen so small whole numbers keep the engine's `Int` fast paths while
+/// everything else is preserved exactly:
+///
+/// 1. If the literal is a whole number that fits `i64` (`18000`), it becomes [`NumLit::Int`].
+/// 2. Otherwise — a fractional or out-of-`i64` decimal, scientific or not (`2.54`, `6.022e23`,
+///    π to 39 places) — it is parsed with [`BigDecimal::from_str`] into [`NumLit::Exact`], keeping
+///    every written digit.
+/// 3. If neither parse succeeds, it is a malformed token — an [`AdapterError::BadToken`].
+///
+/// **DoS boundary.** Because `.adj` source is untrusted and `BigDecimal` base-10 conversion is
+/// `O(digits²)`, this is where the exact-number path is throttled: a token longer than
+/// [`MAX_NUMBER_TOKEN_LEN`] is rejected *before* the quadratic parse runs, and a parsed value whose
+/// scale magnitude exceeds [`MAX_NUMBER_TOKEN_SCALE`] is rejected *after* (bounding the
+/// render/`to_f64` string). Both budgets sit ~100× above any legitimate literal, so they only ever
+/// reject a hostile payload, never a real constant. (`BigDecimal::from_str` also enforces its own
+/// `MAX_SCALE`; these caps are the tighter, adj-lang-specific layer.)
+///
+/// This replaces the old `f64` parse at the two **ground-term** sites (a table cell and a
+/// valued-fact argument). Compute leaves (`ExprAst::Lit`) still take an `f64` via `parse_finite`,
+/// because the compute layer is inherently `f64`.
+fn parse_numlit(raw: &str, kind: TokenType, rule: &str) -> Result<NumLit, AdapterError> {
+    // Reject an over-long token FIRST — before either the `i64` scan or the O(digits²) BigDecimal
+    // parse — so no oversized mantissa can force superlinear work on any path. (A legitimate small
+    // integer is far under the cap, so its `Int` fast path below is unaffected.)
+    if raw.len() > MAX_NUMBER_TOKEN_LEN {
+        return Err(AdapterError::BadToken {
+            rule: rule.to_string(),
+            kind,
+            value: format!("<{}-byte numeric literal>", raw.len()),
+            reason: "numeric literal exceeds the exact-decimal length budget",
+        });
+    }
+    if let Ok(i) = raw.parse::<i64>() {
+        return Ok(NumLit::Int(i));
+    }
+    match BigDecimal::from_str(raw) {
+        // A tiny token can still name a huge scale (`1e-1000000`); reject it so a later render /
+        // `to_f64` cannot be forced to materialize a megabyte-long decimal string.
+        Ok(d) if d.scale().unsigned_abs() > MAX_NUMBER_TOKEN_SCALE as u64 => {
+            Err(AdapterError::BadToken {
+                rule: rule.to_string(),
+                kind,
+                value: raw.to_string(),
+                reason: "numeric literal exceeds the exact-decimal scale budget",
+            })
+        }
+        Ok(d) => Ok(NumLit::Exact(d)),
+        Err(_) => Err(AdapterError::BadToken {
+            rule: rule.to_string(),
+            kind,
+            value: raw.to_string(),
+            reason: "not an integer or exact decimal literal",
         }),
     }
 }
@@ -2804,6 +2887,14 @@ mod tests {
             .expect("at least one statement")
     }
 
+    /// Parse `src` expecting it to fail in the ADAPTER stage, returning that [`AdapterError`].
+    fn adapt_one(src: &str) -> AdapterError {
+        match parse(src) {
+            Err(crate::CompileError::Adapt(e)) => e,
+            other => panic!("expected an adapter error, got {other:?}"),
+        }
+    }
+
     #[test]
     fn round_trips_prior() {
         match parse_one("prior 0.10 for acs") {
@@ -2923,12 +3014,57 @@ mod tests {
                 Term::Compound { functor, args } => {
                     assert_eq!(functor, "gross_income");
                     assert_eq!(args.len(), 1);
-                    assert!(matches!(args[0], Term::Num(x) if x == 18000.0));
+                    // A whole number that fits `i64` parses to `NumLit::Int` (NX-2), keeping the
+                    // engine's small-integer fast path — not a lossy `f64`.
+                    assert!(matches!(args[0], Term::Num(NumLit::Int(18000))));
                 }
                 other => panic!("expected compound, got {other:?}"),
             },
             other => panic!("expected Observe, got {other:?}"),
         }
+    }
+
+    #[test]
+    fn exact_high_precision_literal_parses_to_numlit_exact() {
+        // A >17-digit fractional literal (π to 39 places) is preserved exactly as a NumLit::Exact
+        // — the NX-2 win — while staying comfortably within the size budgets.
+        let pi = "3.141592653589793238462643383279502884197";
+        match parse_one(&format!("observe c({pi})")) {
+            Statement::Observe { term } => match term {
+                Term::Compound { args, .. } => match &args[0] {
+                    Term::Num(NumLit::Exact(d)) => assert_eq!(d.to_string(), pi),
+                    other => panic!("expected NumLit::Exact, got {other:?}"),
+                },
+                other => panic!("expected compound, got {other:?}"),
+            },
+            other => panic!("expected Observe, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn oversized_numeric_literal_is_rejected_before_quadratic_parse() {
+        // DoS guard (security review, NX-2): a multi-kilobyte number literal — which would force
+        // O(digits²) BigDecimal work — is rejected at the untrusted `.adj` boundary, cleanly, not
+        // parsed. This is the length budget the old f64 parse gave implicitly (it saturated).
+        let giant = "9".repeat(super::MAX_NUMBER_TOKEN_LEN + 1);
+        let err = adapt_one(&format!("observe c({giant})"));
+        assert!(
+            matches!(err, AdapterError::BadToken { reason, .. } if reason.contains("length budget")),
+            "an over-long literal is a clean BadToken, got {err:?}"
+        );
+    }
+
+    #[test]
+    fn huge_scale_literal_is_rejected_to_bound_render_materialization() {
+        // DoS guard (security review, NX-2): a *tiny* token can still name an enormous scale
+        // (`1e-1000000`, 11 bytes) that a later render / `to_f64` would blow up into a ~1 MB decimal
+        // string. It is rejected by the scale budget even though it is short and within
+        // BigDecimal's own MAX_SCALE.
+        let err = adapt_one("observe c(1e-1000000)");
+        assert!(
+            matches!(err, AdapterError::BadToken { reason, .. } if reason.contains("scale budget")),
+            "a huge-scale literal is a clean BadToken, got {err:?}"
+        );
     }
 
     #[test]

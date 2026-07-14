@@ -8,6 +8,43 @@
 //! (one annotation = one rule) while still letting the lowerer
 //! enforce ordering / multiplicity invariants.
 
+/// A **numeric literal** as written in the source, kept in the shape that loses no digit
+/// (ADJ-EXACT-NUMBERS NX-2). Before NX-2 every number went straight to `f64` at parse time, so a
+/// 39-digit π literal came back at ~16 digits. `NumLit` fixes that at the AST level:
+///
+/// - **`Int(i64)`** — a whole number that fits `i64` (`18000`). It lowers to
+///   `logic_core::Number::Int`, keeping the engine's small-integer fast paths and exact-integer
+///   ergonomics.
+/// - **`Exact(BigDecimal)`** — anything else: a fractional or out-of-`i64` decimal, in scientific
+///   notation or not (`2.54`, `6.022e23`, π to 39 places). It lowers to
+///   `logic_core::Number::Exact`, so every written digit survives to the stored ground value.
+///
+/// The lossy `f64` still exists, but only where a value is *asked for* as an `f64` — a compute
+/// leaf (`ExprAst::Lit`) or an inherently-approximate backend — via [`NumLit::to_f64_lossy`],
+/// never as the silent default at parse time.
+#[derive(Debug, Clone, PartialEq)]
+pub enum NumLit {
+    /// A whole number that fits `i64` — lowers to `logic_core::Number::Int`.
+    Int(i64),
+    /// An exactly-written decimal (fractional, scientific, or beyond `i64`) — lowers to
+    /// `logic_core::Number::Exact`, preserving every digit.
+    Exact(bignum_core::BigDecimal),
+}
+
+impl NumLit {
+    /// The **labeled lossy** `f64` view of this literal — the single sanctioned way to obtain an
+    /// `f64` from a `NumLit`. `Int` widens with `as f64`; `Exact` narrows to the nearest `f64` via
+    /// [`bignum_core::BigDecimal::to_f64`]. Used only where an `f64` is genuinely required (a
+    /// compute leaf or an approximate backend), never at parse time. The name is deliberately
+    /// greppable so every lossy boundary is auditable, mirroring `logic_core::Number::to_f64_lossy`.
+    pub fn to_f64_lossy(&self) -> f64 {
+        match self {
+            NumLit::Int(i) => *i as f64,
+            NumLit::Exact(d) => d.to_f64(),
+        }
+    }
+}
+
 /// A Term in the surface language: either an atom or a compound
 /// term. The lowerer converts these to `logic_core::Term`s.
 ///
@@ -19,10 +56,11 @@
 pub enum Term {
     Atom(String),
     /// A numeric literal — appears as a compound argument in a *valued*
-    /// fact, e.g. `gross_income(18000)`. Carried as `f64`; the lowerer
-    /// converts it to `logic_core::Term::Num`. Valued facts are what
+    /// fact, e.g. `gross_income(18000)`. Carried as a [`NumLit`] so no digit is
+    /// lost at parse time; the lowerer converts it to `logic_core::Term::Num`
+    /// (`Int` → `Number::Int`, `Exact` → `Number::Exact`). Valued facts are what
     /// predicate-gated contributions read on the CPU.
-    Num(f64),
+    Num(NumLit),
     /// A logic VARIABLE — the `$Enzyme` surface form (MYCIN-2026 REL-2). Appears
     /// only as a *compound argument* in a binding query goal
     /// (`? deficient_in(tay_sachs, $Enzyme)`); the lowerer maps it to a
@@ -505,9 +543,12 @@ pub struct TableRow {
 /// variable or a compound: a table holds ground data, not open goals.)
 #[derive(Debug, Clone, PartialEq)]
 pub enum TableCell {
-    /// A numeric literal (`2.54`) — lowers to `logic_core::Term::Num`. This is
-    /// the cell kind a looked-up value flows from into a `let`/`formula`.
-    Number(f64),
+    /// A numeric literal (`2.54`) — lowers to `logic_core::Term::Num`. Carried as a
+    /// [`NumLit`] so a high-precision table cell (π to 39 places) keeps every digit
+    /// through parse → store → query; the lowerer maps `Int` → `Number::Int` and
+    /// `Exact` → `Number::Exact`. This is the cell kind a looked-up value flows from
+    /// into a `let`/`formula`.
+    Number(NumLit),
     /// A bare identifier (`inch`) — lowers to `logic_core::Term::Atom`. Typically
     /// the key column of a key→value table.
     Atom(String),

@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.1] - 2026-07-14
+
+### Changed
+
+- **`Number::Exact` `Display` now follows the NX-2 rendering policy.** An exact value with
+  **≤ 17 significant digits** (everything an `f64` can represent) renders through its `f64`
+  canonical form, so its printed string is byte-for-byte identical to the value's old `Float`
+  rendering — trailing-zero normalization (`20.180` → `20.18`), extreme-magnitude formatting, and
+  so on all match. A value with **more than 17 significant digits** (π to 39 places) prints every
+  exact digit it carries. This makes exactness a strict *superset* of the old output: nothing that
+  already fit an `f64` changes how it looks, and only genuinely higher-precision values gain digits.
+  Depends on `bignum-core` ≥ 0.5.0 for `BigDecimal::significant_digits`. (Nothing produced `Exact`
+  before NX-2, so this only affects values created by the exact-literal lowering that lands with it.)
+
 ## [0.2.0] - 2026-07-14
 
 ### Added
