@@ -65,35 +65,57 @@ fn var_src<'a>(
     }
 }
 
-/// Validate that `name` is a safe CIL identifier before it is written **verbatim**
-/// into the `.il` text (a `label`/branch target, or a `.method`/`call` name).
+/// The CIL identifier token for `name`, ready to be written **verbatim** into the
+/// `.il` text (a `label`/branch target, or a `.method`/`call` name) — either the
+/// bare name or an ILAsm single-quoted identifier.
 ///
 /// These names — unlike register operands, which are resolved to numeric
 /// `V_<slot>`/`ldarg <n>` and never reach the text — come from `Operand::Var`
 /// strings, i.e. arbitrary unbounded input. If one carried whitespace, newlines,
 /// `}`, or CIL directives (`.entrypoint`, `.method`, `//` comments…), a hostile IIR
-/// could inject arbitrary CIL into the assembled program. We fail **closed**: only
-/// a non-empty run of `[A-Za-z0-9_$]` (a safe subset of legal CIL identifier
-/// characters) is accepted. The binary emitter is immune by construction (numeric
-/// offsets / tokens); this gives the textual emitter the same guarantee. Synthetic
-/// names (`L_cond_next_<n>`, `lambda_<n>`, `label_<n>`, `main`) always pass.
-fn checked_cil_ident<'a>(ctx: &str, name: &'a str) -> Result<&'a str, IIRClrError> {
-    let valid = !name.is_empty()
-        && name
-            .chars()
-            .all(|c| c.is_ascii_alphanumeric() || c == '_' || c == '$');
-    if valid {
-        Ok(name)
-    } else {
-        Err(IIRClrError::InvalidOperand {
+/// could inject arbitrary CIL into the assembled program. We stay fail-**closed**:
+///
+/// - A non-empty run of `[A-Za-z0-9_$]` (a safe subset of legal CIL identifier
+///   characters) is emitted **bare** — synthetic names (`L_cond_next_<n>`,
+///   `lambda_<n>`, `label_<n>`, `main`) always take this path unchanged.
+/// - A name with other **graphic ASCII** characters — a Twig union predicate
+///   `Some?` or a record accessor `point-x`, whose `?`/`-` are legal in an ILAsm
+///   *quoted* identifier but not a bare one — is emitted single-quoted
+///   (`'Some?'`), with `'` and `\` backslash-escaped so it cannot break out of the
+///   quotes. ILAsm resolves `'Some?'` and any bare spelling of the same characters
+///   to the same member, and the quoted form is emitted identically at the
+///   `.method` definition and every `call` site.
+/// - Anything else (control chars, whitespace, non-ASCII) is rejected — a
+///   legitimate lisp identifier is printable ASCII with no spaces, so this can only
+///   be hostile input. This preserves the original injection guarantee; the binary
+///   emitter is immune by construction (numeric offsets / tokens).
+fn checked_cil_ident(ctx: &str, name: &str) -> Result<String, IIRClrError> {
+    if !name.is_empty()
+        && name.chars().all(|c| c.is_ascii_alphanumeric() || c == '_' || c == '$')
+    {
+        return Ok(name.to_string());
+    }
+    if name.is_empty() || !name.chars().all(|c| c.is_ascii_graphic()) {
+        return Err(IIRClrError::InvalidOperand {
             function: ctx.to_string(),
             detail: format!("CIL identifier {name:?} contains an illegal character"),
-        })
+        });
     }
+    let mut quoted = String::with_capacity(name.len() + 2);
+    quoted.push('\'');
+    for c in name.chars() {
+        match c {
+            '\'' => quoted.push_str("\\'"),
+            '\\' => quoted.push_str("\\\\"),
+            _ => quoted.push(c),
+        }
+    }
+    quoted.push('\'');
+    Ok(quoted)
 }
 
 /// A `label`/branch target name, validated for the current function's context.
-fn checked_label<'a>(f: &IIRFunction, name: &'a str) -> Result<&'a str, IIRClrError> {
+fn checked_label(f: &IIRFunction, name: &str) -> Result<String, IIRClrError> {
     checked_cil_ident(&f.name, name)
 }
 
@@ -529,7 +551,7 @@ fn emit_method(
     let method_name = if is_entry {
         "MccarthyEntry".to_string()
     } else {
-        checked_cil_ident(&f.name, &f.name)?.to_string()
+        checked_cil_ident(&f.name, &f.name)?
     };
     let ret_ty = cil_ret_type(module, f);
     let regs = FnRegs::build(f);
@@ -1105,7 +1127,18 @@ fn emit_method(
                 let _ = writeln!(il, "    conv.i4");
                 store_var(il, &regs, dest)?;
             }
-            // box <dest> = <src>  →  ld<src>; box [System.Runtime]System.Int32; st<dest>
+            // box <dest> = <src>  →  ld<src>; [box [System.Runtime]System.Int32]; st<dest>
+            //
+            // `box` produces a boxed `DynValue`. In the CLR value model a `ref<any>`
+            // / `ref<LispyPair>` local is ALREADY a reference (`object` / `object[]`
+            // — an `any` param arrives boxed at the call boundary, a `field_load`
+            // result is `object`, a cons cell is `object[]`). For those, `box` is the
+            // **identity** — a plain copy — exactly as on the WASM/JVM structural
+            // backends. Emitting `box System.Int32` on a reference would box the
+            // *pointer* as an int (E6d-6b union field: `box(object 42)` → a truncated
+            // handle, not 42). Only a raw value-type source (`int32`/`int64`, e.g. an
+            // E6d-2 dynamic-arithmetic result or the union tag const) is really boxed;
+            // an `int64` is narrowed with `conv.i4` first.
             "box" => {
                 let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
                     function: f.name.clone(),
@@ -1113,13 +1146,31 @@ fn emit_method(
                 })?;
                 let src = var_src(f, instr, 0, "box")?;
                 load_var(il, &regs, src)?;
-                // `box System.Int32` boxes a 32-bit value. When the source rides
-                // an `int64` local (E6d-2 dynamic arithmetic works in i64),
-                // narrow with `conv.i4` first.
-                if regs.home(src)?.ty == "int64" {
-                    let _ = writeln!(il, "    conv.i4");
+                match regs.home(src)?.ty {
+                    "int64" => {
+                        let _ = writeln!(il, "    conv.i4");
+                        let _ = writeln!(il, "    box [System.Runtime]System.Int32");
+                    }
+                    "int32" => {
+                        let _ = writeln!(il, "    box [System.Runtime]System.Int32");
+                    }
+                    // A `float64`/`float32` source is a value type that is NOT an
+                    // `Int32`: boxing it as one, or passing it through into an
+                    // `object` slot a later `unbox.any System.Int32` trusts, is type
+                    // confusion. The dynamic value model is integer-based, so `box`
+                    // of a float is never emitted today — fail **closed** rather than
+                    // silently mis-type it (a `box System.Double` path can be added
+                    // when a float dynamic value actually exists).
+                    ty @ ("float64" | "float32") => {
+                        return Err(IIRClrError::InvalidOperand {
+                            function: f.name.clone(),
+                            detail: format!("box of a floating-point source ({ty}) is unsupported"),
+                        });
+                    }
+                    // Already a reference (`object` / `object[]` / `string` / an
+                    // array handle) — box is the identity, a plain copy.
+                    _ => {}
                 }
-                let _ = writeln!(il, "    box [System.Runtime]System.Int32");
                 store_var(il, &regs, dest)?;
             }
             // unbox <dest> = <src>  →  ld<src>; unbox.any [System.Runtime]System.Int32; st<dest>
@@ -1268,7 +1319,7 @@ fn emit_method(
                 let callee_method = if callee == entry_name(module) {
                     "MccarthyEntry".to_string()
                 } else {
-                    checked_cil_ident(&f.name, callee)?.to_string()
+                    checked_cil_ident(&f.name, callee)?
                 };
                 let _ = writeln!(
                     il,
@@ -1560,6 +1611,80 @@ fn emit_method(
 mod tests {
     use super::*;
     use interpreter_ir::{IIRFunction, IIRInstr, IIRModule};
+
+    // ── E6d-6c — CIL name quoting + box-of-reference passthrough ─────────────
+
+    #[test]
+    fn checked_cil_ident_bares_the_safe_subset() {
+        assert_eq!(checked_cil_ident("ctx", "main").unwrap(), "main");
+        assert_eq!(checked_cil_ident("ctx", "L_cond_next_3").unwrap(), "L_cond_next_3");
+        assert_eq!(checked_cil_ident("ctx", "lambda_0$x").unwrap(), "lambda_0$x");
+    }
+
+    #[test]
+    fn checked_cil_ident_single_quotes_special_chars() {
+        // Twig union predicate `Some?` and record accessor `point-x` need an ILAsm
+        // single-quoted identifier (`?`/`-` are illegal bare).
+        assert_eq!(checked_cil_ident("ctx", "Some?").unwrap(), "'Some?'");
+        assert_eq!(checked_cil_ident("ctx", "point-x").unwrap(), "'point-x'");
+    }
+
+    #[test]
+    fn checked_cil_ident_escapes_quote_and_backslash() {
+        // A `'` or `\` inside the name is escaped so it cannot break out of the quotes.
+        assert_eq!(checked_cil_ident("ctx", "a'b").unwrap(), r"'a\'b'");
+        assert_eq!(checked_cil_ident("ctx", r"a\b").unwrap(), r"'a\\b'");
+    }
+
+    #[test]
+    fn checked_cil_ident_fails_closed_on_hostile_chars() {
+        // Whitespace / control / non-ASCII stays rejected (injection guard).
+        for hostile in ["a b", "x\n.entrypoint", "", "caf\u{00e9}"] {
+            assert!(
+                checked_cil_ident("ctx", hostile).is_err(),
+                "must reject {hostile:?}"
+            );
+        }
+    }
+
+    /// A `box` whose source is already a reference (`ref<any>` = `object`) must NOT
+    /// emit `box System.Int32` — that would box the pointer. A `box` of a raw int
+    /// value type still boxes. (E6d-6c: a union field, read back via `field_load` as
+    /// `ref<any>`, is already boxed; re-boxing it gave the 63576 truncated handle.)
+    #[test]
+    fn box_of_reference_is_passthrough_but_int_is_boxed() {
+        // f(p: ref<any>) { r = field_load p[0] : ref<any>; box b <- r; ret b }
+        // `r` is `object`, so `box b <- r` must be a plain copy (no `box Int32`),
+        // while the `int32` const in a separate box IS boxed.
+        let boxref = IIRFunction::new(
+            "boxref",
+            vec![("p".into(), "ref<LispyPair>".into())],
+            "any",
+            vec![
+                IIRInstr::new("field_load", Some("r".into()),
+                    vec![Operand::Var("p".into()), Operand::Int(0)], "ref<any>"),
+                IIRInstr::new("box", Some("b".into()), vec![Operand::Var("r".into())], "ref<any>"),
+                IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "any"),
+                // A raw int box in the SAME function proves the value-type arm still fires.
+                IIRInstr::new("const", Some("n".into()), vec![Operand::Int(7)], "i32"),
+                IIRInstr::new("box", Some("nb".into()), vec![Operand::Var("n".into())], "ref<any>"),
+            ],
+        );
+        let mut m = IIRModule::new("Main", "mccarthy-lisp");
+        m.functions.push(IIRFunction::new("main", vec![], "any",
+            vec![IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
+                 IIRInstr::new("ret", None, vec![Operand::Var("z".into())], "any")]));
+        m.functions.push(boxref);
+        m.entry_point = Some("main".into());
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        let body: String = il.lines().skip_while(|l| !l.contains("boxref")).collect::<Vec<_>>().join("\n");
+        // Exactly one `box System.Int32` — the raw `n`, not the object `r`.
+        assert_eq!(
+            body.matches("box [System.Runtime]System.Int32").count(),
+            1,
+            "only the value-type box should fire (object source is passthrough); got:\n{body}"
+        );
+    }
 
     fn scalar_module(n: i64) -> IIRModule {
         let instrs = vec![
