@@ -1,0 +1,73 @@
+% Preamble for "Kannada, Step by Step, Root by Root" (HL00 book format).
+% XeLaTeX only. Uses the vendored static Noto Sans Kannada (see _fonts/),
+% loaded by relative path so local and CI builds are identical.
+%
+% Note: the Kannada script is rendered via a \newfontfamily with Script=Kannada
+% (XeTeX does the complex-script shaping from the font's OpenType tables). We do
+% NOT load a polyglossia Kannada language module — only english as the main
+% language — so the build never depends on a gloss-kannada.ldf being present.
+
+\usepackage{fontspec}
+\setmainfont{Latin Modern Roman}
+\setsansfont{Latin Modern Sans}
+\setmonofont{Latin Modern Mono}
+
+% A few transliteration letters used in the cognate boxes (Tamil alveolar ṉ, ṟ)
+% are absent from Latin Modern; render them with the bar-under accent.
+\usepackage{newunicodechar}
+\newunicodechar{ṉ}{\b{n}}
+\newunicodechar{ṟ}{\b{r}}
+\newunicodechar{ṁ}{\.{m}}
+
+\usepackage[table]{xcolor}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage[hidelinks]{hyperref}
+\usepackage{titlesec}
+
+\usepackage{polyglossia}
+\setmainlanguage{english}
+
+% Vendored Kannada font (../../_fonts/ from <lang>/book/); Script=Kannada drives
+% the shaping. \kn{...} = an inline Kannada snippet within English text.
+\newfontfamily\kannadafont[Path=../../_fonts/, Script=Kannada]{NotoSansKannada-Static.ttf}
+\newcommand{\kn}[1]{{\kannadafont #1}}
+
+\hypersetup{
+  pdftitle={Kannada, Step by Step, Root by Root},
+  pdfauthor={Adhithya Rajasekaran},
+  pdfsubject={Etymology-driven Kannada curriculum},
+  pdfkeywords={Kannada, Dravidian, language learning, etymology}
+}
+
+\newtcolorbox{cousinweb}{
+  breakable, skin=enhanced, colback=yellow!8, colframe=yellow!45!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={The word, taken apart --- its roots and family}
+}
+\newtcolorbox{culture}{
+  breakable, skin=enhanced, colback=red!5, colframe=red!40!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={Why it's said this way}
+}
+\newtcolorbox{grammarlens}{
+  breakable, skin=enhanced, colback=blue!5, colframe=blue!35!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={Grammar Lens}
+}
+\newtcolorbox{sounds}{
+  breakable, skin=enhanced, colback=green!6, colframe=green!30!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={The letters in this word}
+}
+\newtcolorbox{cognates}{
+  breakable, skin=enhanced, colback=violet!6, colframe=violet!45!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={Across the family --- the same idea, five ways}
+}
+
+\titleformat{\chapter}[display]
+  {\normalfont\Large\bfseries}{Chapter \thechapter}{10pt}{\huge}
