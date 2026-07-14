@@ -111,13 +111,67 @@ pub struct FunctionDeclaration {
     pub is_async: bool,
 }
 
-/// One parameter of a [`FunctionDeclaration`]. Identifier in Phase 1;
-/// `AssignmentPattern` (default value), `RestElement`, and
-/// destructuring patterns are Phase 3.
+/// A **rest parameter** — the trailing `...name` in a parameter list that
+/// gathers every remaining call argument into a fresh array bound to `name`:
+///
+/// ```text
+///   function f(a, ...rest) {}   // f(1,2,3) → a=1, rest=[2,3]
+///   function g(...all) {}       // g(1,2)   → all=[1,2]
+/// ```
+///
+/// ESTree `RestElement`. A rest parameter is always **last** in the list and
+/// never carries a default (`...x = []` is a syntax error), so there is no
+/// `AssignmentPattern` wrapping here. Only a **simple identifier** target is
+/// modelled: a destructuring rest target (`...[a, b]`, `...{x}`) reuses the
+/// Phase-3 [`BindingTarget`] machinery and is declined by the bridge for now.
+///
+/// The `argument` field name (vs [`Identifier`]'s `name`) is what lets the
+/// `#[serde(untagged)]` [`FunctionParam`] tell a rest element apart from a
+/// plain identifier parameter by shape alone — no `type` tag needed.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RestElement {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    /// The identifier the gathered arguments are bound to (the `rest` in
+    /// `...rest`). A simple name in this slice; destructuring targets are
+    /// Phase 3.
+    pub argument: Identifier,
+}
+
+/// One parameter of a [`FunctionDeclaration`]. A plain [`Identifier`] or a
+/// trailing [`RestElement`] (`...name`) in this slice; `AssignmentPattern`
+/// (default value) and destructuring patterns are Phase 3.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum FunctionParam {
     Identifier(Identifier),
+    RestElement(RestElement),
+}
+
+impl FunctionParam {
+    /// The single [`Identifier`] this parameter binds — the name itself for a
+    /// plain identifier param, or the gathered-array name for a `...rest`
+    /// param. Both bind exactly one simple name in this slice, so passes that
+    /// count, look up, or reason about parameter bindings can treat the two
+    /// uniformly through this accessor instead of matching every call site.
+    pub fn binding_identifier(&self) -> &Identifier {
+        match self {
+            FunctionParam::Identifier(id) => id,
+            FunctionParam::RestElement(re) => &re.argument,
+        }
+    }
+
+    /// Mutable twin of [`binding_identifier`](Self::binding_identifier) — used
+    /// by the renaming passes, which rewrite `id.name` in place. A `...rest`
+    /// param's gathered name is an ordinary renameable local, so it is renamed
+    /// through the same path as a plain parameter.
+    pub fn binding_identifier_mut(&mut self) -> &mut Identifier {
+        match self {
+            FunctionParam::Identifier(id) => id,
+            FunctionParam::RestElement(re) => &mut re.argument,
+        }
+    }
 }
 
 /// `class C { … }`, `class C extends B { … }` — a class written in

@@ -79,7 +79,7 @@ use coding_adventures_javascript_ast::{
     FunctionParam, Identifier, IfStatement, ImportDeclaration, ImportSpecifier, LabeledStatement,
     LogicalExpression, LogicalOperator,
     MemberExpression, NewExpression, NullLiteral, NumericLiteral, ObjectExpression, Program, ProgramItem, SequenceExpression,
-    ObjectMember, Property, PropertyKey, PropertyKind, ReturnStatement, Statement, StringLiteral,
+    ObjectMember, Property, PropertyKey, PropertyKind, RestElement, ReturnStatement, Statement, StringLiteral,
     SwitchCase, SwitchStatement, ThrowStatement, TryStatement, UnaryExpression, UnaryOperator, UpdateExpression, UpdateOperator,
     RegExpLiteral,
     UndefinedLiteral, VarKind, VariableDeclaration, VariableDeclarator, WhileStatement, WithStatement,
@@ -1074,6 +1074,11 @@ impl<'a> Emitter<'a> {
             }
             match p {
                 FunctionParam::Identifier(id) => self.emit_identifier(id),
+                FunctionParam::RestElement(re) => {
+                    // `...name` — the rest parameter, always last in the list.
+                    self.write_str("...");
+                    self.emit_identifier(&re.argument);
+                }
             }
         }
         self.write_str(")");
@@ -1148,6 +1153,11 @@ impl<'a> Emitter<'a> {
             }
             match p {
                 FunctionParam::Identifier(id) => self.emit_identifier(id),
+                FunctionParam::RestElement(re) => {
+                    // `...name` — the rest parameter, always last in the list.
+                    self.write_str("...");
+                    self.emit_identifier(&re.argument);
+                }
             }
         }
         self.write_str(")");
@@ -1385,8 +1395,10 @@ impl<'a> Emitter<'a> {
         if a.is_async {
             self.write_str("async");
         }
-        // Param list — single plain identifier drops the parens.
-        if a.params.len() == 1 {
+        // Param list — a single plain identifier drops the parens. A single
+        // *rest* param (`(...a)=>`) must keep its parens — `...a=>` is invalid
+        // JS — so it falls through to the parenthesised branch below.
+        if a.params.len() == 1 && matches!(a.params[0], FunctionParam::Identifier(_)) {
             // `async x=>` needs a separating space so `async` and the
             // param identifier don't merge into `asyncx`. The
             // parenthesised forms below begin with `(`, which
@@ -1394,8 +1406,8 @@ impl<'a> Emitter<'a> {
             if a.is_async {
                 self.required_ws();
             }
-            match &a.params[0] {
-                FunctionParam::Identifier(id) => self.emit_identifier(id),
+            if let FunctionParam::Identifier(id) = &a.params[0] {
+                self.emit_identifier(id);
             }
         } else {
             self.write_str("(");
@@ -1406,6 +1418,10 @@ impl<'a> Emitter<'a> {
                 }
                 match p {
                     FunctionParam::Identifier(id) => self.emit_identifier(id),
+                    FunctionParam::RestElement(re) => {
+                        self.write_str("...");
+                        self.emit_identifier(&re.argument);
+                    }
                 }
             }
             self.write_str(")");
@@ -3985,6 +4001,55 @@ mod tests {
         // after the function-declaration's closing `}` to
         // match upstream Closure v20240317.
         assert_eq!(out.code, "function f(x){return x};");
+    }
+
+    /// A **rest parameter** emits `...name`, and keeps its place after the
+    /// leading fixed params: `function f(a, ...rest) {}` → `function f(a,...rest){}`
+    /// (CLOC12.190 PR1). Proves the emitter's new `FunctionParam::RestElement`
+    /// arm writes the `...` prefix and the gathered-name identifier.
+    #[test]
+    fn rest_parameter_minified() {
+        let f = FunctionDeclaration {
+            cv: None,
+            id: Identifier { cv: None, name: "f".to_string() },
+            params: vec![
+                FunctionParam::Identifier(Identifier { cv: None, name: "a".to_string() }),
+                FunctionParam::RestElement(RestElement {
+                    cv: None,
+                    argument: Identifier { cv: None, name: "rest".to_string() },
+                }),
+            ],
+            body: BlockStatement { cv: None, body: vec![] },
+            generator: false,
+            is_async: false,
+        };
+        let prog = program().with_body(vec![ProgramItem::Declaration(
+            Declaration::FunctionDeclaration(f),
+        )]);
+        let out = emit_default(prog);
+        assert_eq!(out.code, "function f(a,...rest){};");
+    }
+
+    /// A lone rest parameter is still comma-free and parenthesised:
+    /// `function g(...args) {}` → `function g(...args){}`.
+    #[test]
+    fn rest_parameter_sole_minified() {
+        let f = FunctionDeclaration {
+            cv: None,
+            id: Identifier { cv: None, name: "g".to_string() },
+            params: vec![FunctionParam::RestElement(RestElement {
+                cv: None,
+                argument: Identifier { cv: None, name: "args".to_string() },
+            })],
+            body: BlockStatement { cv: None, body: vec![] },
+            generator: false,
+            is_async: false,
+        };
+        let prog = program().with_body(vec![ProgramItem::Declaration(
+            Declaration::FunctionDeclaration(f),
+        )]);
+        let out = emit_default(prog);
+        assert_eq!(out.code, "function g(...args){};");
     }
 
     // ---- class declarations (CLOC12.174 PR1) ----------------
