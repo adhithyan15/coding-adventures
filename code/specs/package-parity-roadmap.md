@@ -105,16 +105,16 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. Regenerated
-on July 14, 2026 after the Swift CLI-builder port:
+on July 14, 2026 after the Elixir `python-parser` port:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 171 | 375 |
+| Present in 10-15 languages | 171 | 373 |
 | Present in 5-9 languages | 122 | 917 |
 | Present in 2-4 languages | 157 | 1,972 |
-| Present in one language | 694 | 9,716 |
+| Present in one language | 695 | 9,730 |
 
-The loop must not start by attempting 9,716 singleton ports. It should finish
+The loop must not start by attempting 9,730 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 ## Priority 0: Inventory And Identity Integrity
@@ -155,13 +155,13 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 171 packages present in at least ten implementation languages need 374
+The 171 packages present in at least ten implementation languages need 373
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
 |---|---:|---|
 | Python | 3 | Pair `in-memory-data-store` packages; classify self-hosted `python-parser` carefully |
-| Elixir | 1 | Complete alongside the Python parser/frontend decision |
+| Elixir | 0 | Complete; `python-parser` uses the shared grammar-driven frontend |
 | Lua | 16 | Pair with Perl data-structure/storage wave |
 | Perl | 16 | Pair with Lua data-structure/storage wave |
 | C# | 17 | Move with F# |
