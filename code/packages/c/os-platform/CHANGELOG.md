@@ -9,6 +9,24 @@ and this project adheres to semantic versioning.
 
 ### Added
 
+- **`mmap` primitive** (CCPP02 Phase 2, PR 6 — completes the six-primitive core):
+  anonymous virtual memory with protection control — `malloc` gives bytes,
+  but only the OS gives a page range with a chosen protection (read-only data,
+  guard pages, or executable JIT memory).
+  - `osp_map_anon(out, len, prot)` (zero-filled anonymous pages),
+    `osp_map_protect`, `osp_map_base` / `osp_map_size`, `osp_map_unmap`. `prot`
+    is an OSP_PROT_* bitmask (NONE/READ/WRITE/EXEC).
+  - Backends: `mmap_posix.c` (`mmap(MAP_PRIVATE|MAP_ANONYMOUS)` / `mprotect` /
+    `munmap`; the BUILD adds `_DEFAULT_SOURCE` + `_DARWIN_C_SOURCE` so
+    MAP_ANONYMOUS is visible on both glibc and Darwin) and `mmap_windows.c`
+    (`VirtualAlloc(MEM_RESERVE|MEM_COMMIT)` / `VirtualProtect` /
+    `VirtualFree(MEM_RELEASE)`; OSP_PROT_* mapped onto the PAGE_* matrix).
+  - Test (`tests/mmap_test.c`): anonymous RW map, zero-fill check, page-sized
+    write/read checksum, protection change to READ-only, accessors, unmap, and
+    NULL/zero-length validation. Clean under ASan+UBSan, 0 leaks.
+  - The EXEC bit is plumbed to PROT_EXEC / PAGE_EXECUTE_* for JIT consumers; a
+    dedicated JIT executor (per-arch machine code + the Apple-Silicon MAP_JIT
+    write-protect protocol + an execute-and-call test) is a planned follow-up.
 - **`dynlib` primitive** (CCPP02 Phase 2, PR 5): load a shared library, resolve a
   symbol, unload — the foundation for plugins/FFI, and pure bucket B (ISO C
   cannot load code at run time).
