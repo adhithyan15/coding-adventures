@@ -1,0 +1,28 @@
+{
+  "name": "@coding-adventures/sir-runtime-array",
+  "version": "0.1.0",
+  "description": "N-D array/matrix runtime for Semantic-IR-emitted TypeScript/JavaScript (SIR22)",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "sir",
+    "semantic-ir",
+    "runtime",
+    "matrix",
+    "ndarray",
+    "matlab",
+    "compiler"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}

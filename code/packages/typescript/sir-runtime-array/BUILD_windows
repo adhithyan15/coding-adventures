@@ -1,0 +1,3 @@
+npm ci --quiet
+npx tsc --noEmit
+npx vitest run --coverage
