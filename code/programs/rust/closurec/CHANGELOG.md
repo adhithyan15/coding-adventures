@@ -2,6 +2,22 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.29] - 2026-07-14
+
+### Added — CLOC12.190 PR3: ES rest parameters end-to-end
+
+Picks up javascript-parser 0.55.0 (the `convert_formal_parameter` bridge flip, PR2) on top of the PR1
+`FunctionParam::RestElement` node + emitter + pass arms. A file with a rest parameter no longer declines
+to WHITESPACE_ONLY — it flows through the full optimization pipeline. New `tests/diff/rest-params/`
+fixture + `diff_rest_params.rs`:
+  - **SIMPLE**: `function f(...a){return a.length} g(f(1 + 2, 3));` →
+    `function f(...a){return a.length};g(f(3,3));` — the rest parameter round-trips (`...a` survives,
+    proving the bridge modelled it) AND the call argument folds `1+2`→`3` (the pipeline optimized the
+    rest of the module, not a WHITESPACE_ONLY fallback which would leave `1+2` intact). The `g(...)`
+    wrapper retains the single-use `f` so its `...a` parameter stays visible.
+
+Version-synced cli.spec.json + tests/diff/help-markdown/expected.stdout. PATCH.
+
 ## [0.234.28] - 2026-07-13
 
 ### Added — CLOC12.189 PR3: ES-module `export` end-to-end
