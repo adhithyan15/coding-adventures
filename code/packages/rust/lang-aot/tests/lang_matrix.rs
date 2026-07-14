@@ -4489,3 +4489,80 @@ fn t7_differential_random_u8_expressions_agree() {
     assert!(cross_checks >= 2 * N, "expected >= {} cross-checks, got {cross_checks}", 2 * N);
 }
 
+
+
+// ── AOT00 T7 — full-value differential over BASIC `PRINT` (stdout channel) ────
+//
+// The u8 differential above compares an 8-bit exit code — enough to catch a
+// low-byte disagreement, but blind to the upper bits (a u8 `200+100` reads 44 on
+// every engine only because the OS truncates the exit code; the full value 300 is
+// unobservable there). Dartmouth BASIC's `PRINT` reports the **full** integer on
+// stdout, so this differential compares whole `i64` values — negatives and large
+// products included — across every engine. Strictly stronger coverage: a
+// full-value disagreement (not just a low-byte one) fails loudly.
+
+/// A random total `i64` `PRINT` expression over `+ - *`. Literals are `0..=16`
+/// and depth is capped at 3 (≤ 8 leaves), so an all-`*` tree is at most
+/// `16^8 ≈ 4.3e9` — comfortably inside `i64`, never overflowing. No division, so
+/// it is total.
+fn gen_basic_expr(state: &mut u64, depth: usize) -> String {
+    if depth >= 3 || (depth > 0 && xorshift(state).is_multiple_of(3)) {
+        return (xorshift(state) % 17).to_string();
+    }
+    let op = ["+", "-", "*"][(xorshift(state) % 3) as usize];
+    let a = gen_basic_expr(state, depth + 1);
+    let b = gen_basic_expr(state, depth + 1);
+    format!("({a} {op} {b})")
+}
+
+/// The trimmed stdout of an engine's result (None if absent/trapped).
+fn stdout_of(r: Option<RunResult>) -> Option<String> {
+    match r {
+        Some(RunResult::Completed { stdout, .. }) => Some(stdout.trim().to_string()),
+        _ => None,
+    }
+}
+
+#[test]
+fn t7_differential_random_basic_print_agree() {
+    const SEED: u64 = 0x2545_F491_4F6C_DD1D;
+    const N: usize = 160;
+    const TOOLCHAIN_EVERY: usize = 10;
+    let mut state = SEED;
+    let mut cross_checks = 0usize;
+    for i in 0..N {
+        let expr = gen_basic_expr(&mut state, 0);
+        let src: &'static str =
+            Box::leak(format!("10 PRINT {expr}\n20 END\n").into_boxed_str());
+        let p = Prog {
+            lang: Language::DartmouthBasic,
+            ext: "bas",
+            src,
+            expect: Expect::Stdout(""),
+            backends: &[],
+        };
+
+        let Some(want) = stdout_of(run_vm(&p)) else {
+            panic!("VM (reference oracle) failed to run generated program: {src:?}");
+        };
+
+        let mut engines: Vec<(&str, Option<String>)> =
+            vec![("wasm", stdout_of(run_wasm(&p))), ("jit", stdout_of(run_jit(&p)))];
+        if i.is_multiple_of(TOOLCHAIN_EVERY) {
+            engines.push(("native", stdout_of(run_native(&p))));
+            engines.push(("llvm", stdout_of(run_llvm(&p))));
+            engines.push(("clr", stdout_of(run_clr(&p))));
+        }
+        for (engine, got) in engines {
+            if let Some(got) = got {
+                assert_eq!(
+                    got, want,
+                    "T7 full-value differential disagreement [{engine}] on {src:?}: vm={want:?}, {engine}={got:?}"
+                );
+                cross_checks += 1;
+            }
+        }
+    }
+    eprintln!("T7 BASIC-print differential: {cross_checks} full-value cross-engine agreements over {N} programs");
+    assert!(cross_checks >= 2 * N, "expected >= {} cross-checks, got {cross_checks}", 2 * N);
+}
