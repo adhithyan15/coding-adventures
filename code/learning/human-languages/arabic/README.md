@@ -15,27 +15,28 @@ the **root system** itself as the organizing engine.
 
 Two more things:
 
-- **Chapter 1 is a reading course**, written for someone who cannot read a
-  single letter. It teaches *reading* incrementally — a few letters per
-  lesson, each cashing out in a real, decodable word (ل + ا → **لا**, "no"),
-  building up until the greeting set is readable. Vocabulary depth begins in
-  Chapter 2. (Per `HL00`'s reading-course rule for non-Latin scripts.)
+- **The script is taught inside the word lessons — no reading course.** Written
+  for someone who may not read a single Arabic letter, each word lesson has a
+  *"The letters in this word"* section introducing exactly the letters that word
+  needs, right to left (سلام brings ا ل م س and the long-ā; مرحبا adds ب ر ح). A
+  reader who already reads Arabic skims those notes. (Per `HL00`'s inline-letters
+  rule for non-Latin scripts.)
 - **Grounded against English + Spanish.** Arabic's long shadow over Spanish is
   a recurring thread: the article **al-** smuggled into English *algebra*/
   *alcohol*, and the sun-letter assimilation you can still hear in Spanish
-  *azúcar* (← *as-sukkar*). The Al-Andalus loanwords the Spanish track traces
-  *backward* are met here from the source.
+  *azúcar* (← *as-sukkar*) — every form supplied so no prior Spanish is assumed.
+  The Al-Andalus loanwords the Spanish track traces *backward* are met here from
+  the source.
 
 ## Progress
 
-- **Chapter 1 — Learning to Read** ([`lessons/AR-C01-read-*`](./lessons/)):
-  la → salam → marhaba → sabah/khayr → shukran → alaykum → practice; ~15
-  letters, each learned by reading a real word, reaching the full greeting set.
-- **Chapter 2 — Greetings** ([`lessons/AR-C02-*`](./lessons/)): the root
-  system, marḥaban, salām, al-, as-salāmu ʿalaykum, ṣabāḥ, khayr, ṣabāḥ
-  al-khayr, masāʾ, masāʾ al-khayr, shukran, practice — now that you can read
-  them. In the book.
-- **Chapter 3 — Introducing Yourself** (planned): ismī, the gendered "you".
+- **Chapter 1 — Greetings** ([`lessons/AR-C01-*`](./lessons/)): salām →
+  marḥaban → al- → as-salāmu ʿalaykum → ṣabāḥ al-khayr → masāʾ al-khayr →
+  shukran → practice. The Arabic script is taught inline (RTL, connecting
+  letters, dots-on-a-skeleton, the emphatic consonants, ʿayn/hamza), and the
+  root engine + attached *al-* are shown as the words are built. In the book.
+- **Chapter 2 — Introducing Yourself** (planned): ismī, the gendered "you"
+  (*anta* / *anti*).
 
 ## Book / fonts
 
