@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.9] - Unreleased
+
+### Added
+
+- **Searched `CASE WHEN … THEN … [ELSE …] END`.** Added to the `primary` rule
+  (before `function_call`): one `WHEN/THEN` is mandatory, further ones repeat,
+  and `ELSE` is optional. Conditions and values are full `expr`s. The planner
+  (sql-planner 0.2.8) turns it into `SqlExpr::Case`.
+
 ## [0.1.8] - Unreleased
 
 ### Added

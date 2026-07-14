@@ -2,6 +2,15 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.8] - Unreleased
+
+### Added
+
+- **`SqlExpr::Case { branches, else_val }`** for searched CASE, plus `plan_case`
+  which walks the `CASE`/`WHEN`/`THEN`/`ELSE`/`END` keyword tokens and their
+  interleaved expression nodes into `(cond, value)` branch pairs and an optional
+  ELSE. Rejects a CASE with no `WHEN` branch.
+
 ## [0.2.7] - Unreleased
 
 ### Added

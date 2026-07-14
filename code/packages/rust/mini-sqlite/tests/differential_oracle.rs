@@ -873,6 +873,36 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT a FROM t ORDER BY a NULLS FIRST",
     },
+    // Searched CASE: the value of the first branch whose WHEN is truthy wins;
+    // no match with an ELSE yields the ELSE. Aliased so the check is on values.
+    Case {
+        id: "case_first_match_and_else",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, a INTEGER)",
+            "INSERT INTO t VALUES (1,1),(2,2),(3,3)",
+        ],
+        query: "SELECT CASE WHEN a=1 THEN 'one' WHEN a=2 THEN 'two' ELSE 'other' END AS c FROM t ORDER BY id",
+    },
+    // No matching WHEN and NO ELSE → NULL; and a NULL condition is not truthy so
+    // its branch is skipped (the `WHEN NULL THEN 'x'` never fires).
+    Case {
+        id: "case_no_else_is_null_and_null_cond_skipped",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, a INTEGER)",
+            "INSERT INTO t VALUES (1,1),(2,5)",
+        ],
+        query: "SELECT CASE WHEN NULL THEN 'x' WHEN a=1 THEN 'one' END AS c FROM t ORDER BY id",
+    },
+    // CASE nests as an ordinary expression — usable in a WHERE predicate and in
+    // arithmetic — proving it composes through the whole expression grammar.
+    Case {
+        id: "case_in_where_and_arithmetic",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, a INTEGER)",
+            "INSERT INTO t VALUES (1,1),(2,2),(3,NULL),(4,4)",
+        ],
+        query: "SELECT id, CASE WHEN a=2 THEN 10 ELSE 20 END + 5 AS v FROM t WHERE CASE WHEN a IS NULL THEN 0 ELSE 1 END ORDER BY id",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but
