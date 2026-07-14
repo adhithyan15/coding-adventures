@@ -2,6 +2,17 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.47.0] - 2026-07-14
+
+### Added — emit `name=expr` default parameters — CLOC12.191 PR1
+
+Picks up javascript-ast 0.42.0. New `FunctionParam::AssignmentPattern` emit arm writes the `left`
+identifier, `=` (tight in minified mode, spaced `a = 1` in pretty mode via `pretty_ws()`), then the
+`right` default expression at `PREC_ASSIGNMENT` — so a looser bare-sequence default parenthesises
+(`function f(a=(1,2)){}`) while an ordinary literal prints bare. The arrow single-param paren-elision
+guard already restricts to a plain identifier, so a lone default param `(a=1)=>` keeps its parens
+(`a=1=>` is invalid JS). Additive; MINOR.
+
 ## [0.46.0] - 2026-07-14
 
 ### Added — emit `...name` rest parameters — CLOC12.190 PR1

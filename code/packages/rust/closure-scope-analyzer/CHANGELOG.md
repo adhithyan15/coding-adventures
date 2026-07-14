@@ -2,6 +2,17 @@
 
 All notable changes to the `coding-adventures-closure-scope-analyzer` crate will be documented in this file.
 
+## [0.20.0] - 2026-07-14
+
+### Changed — collect references inside default-parameter expressions — CLOC12.191 PR1
+
+Picks up javascript-ast 0.42.0. `walk_function_declaration` / `walk_function_expression` /
+`walk_arrow_function_expression` now walk each `FunctionParam::AssignmentPattern` default (`a = expr`) in
+the function scope, recording the identifiers it references. Every downstream pass that consumes
+`ScopeAnalysis` — `remove-unused-vars`, `treeshake` — therefore counts a variable read in a default,
+so it is never wrongly deleted. The param-binding loops now use the AST `binding_identifier()` accessor
+(handling all three variants uniformly).
+
 ## [0.19.0] - 2026-07-14
 
 ### Changed — handle `FunctionParam::RestElement` — CLOC12.190 PR1
