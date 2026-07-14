@@ -924,6 +924,48 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT id FROM t WHERE a IS b ORDER BY id",
     },
+    // ---- Lane 3: COLLATE in ORDER BY -------------------------------------
+    // NOCASE folds case, so mixed-case names sort case-insensitively. Equal
+    // keys ('Apple'/'apple', 'banana'/'BANANA') keep insertion order — a
+    // secondary `id` key pins that so the oracle diff is deterministic.
+    Case {
+        id: "order_by_collate_nocase",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT)",
+            "INSERT INTO t VALUES (1,'banana'),(2,'Apple'),(3,'cherry'),(4,'BANANA'),(5,'apple')",
+        ],
+        query: "SELECT name FROM t ORDER BY name COLLATE NOCASE, id",
+    },
+    // NOCASE with DESC — the key comparison flips but the collation still folds
+    // case, and equal-key ties are unaffected by direction.
+    Case {
+        id: "order_by_collate_nocase_desc",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT)",
+            "INSERT INTO t VALUES (1,'banana'),(2,'Apple'),(3,'cherry'),(4,'BANANA'),(5,'apple')",
+        ],
+        query: "SELECT name FROM t ORDER BY name COLLATE NOCASE DESC, id",
+    },
+    // RTRIM ignores trailing spaces, so 'a  ' and 'a' compare equal (broken by
+    // the id tiebreak). Contrast with default BINARY, where 'a' < 'a  '.
+    Case {
+        id: "order_by_collate_rtrim",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT)",
+            "INSERT INTO t VALUES (1,'b'),(2,'a  '),(3,'a'),(4,'b '),(5,'c')",
+        ],
+        query: "SELECT name FROM t ORDER BY name COLLATE RTRIM, id",
+    },
+    // Explicit COLLATE BINARY is the default byte order — uppercase sorts
+    // before lowercase (ASCII 'A'=65 < 'a'=97).
+    Case {
+        id: "order_by_collate_binary",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT)",
+            "INSERT INTO t VALUES (1,'banana'),(2,'Apple'),(3,'apple')",
+        ],
+        query: "SELECT name FROM t ORDER BY name COLLATE BINARY",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but

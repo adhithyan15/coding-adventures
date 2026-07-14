@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.11] - Unreleased
+
+### Added
+
+- **`COLLATE name` clause in `ORDER BY`.** The `order_item` grammar rule gains
+  an optional `[ "COLLATE" NAME ]` between the sort expression and the `ASC` /
+  `DESC` direction (`expr COLLATE name [ASC|DESC] [NULLS ...]`), matching
+  SQLite's grammar. `COLLATE` is matched by literal text and the collation name
+  is an ordinary NAME token (validated in the planner), so no lexer keyword was
+  added. Existing `ASC`/`DESC`/`NULLS` ordering is unaffected.
+
 ## [0.1.10] - Unreleased
 
 ### Added

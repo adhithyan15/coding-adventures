@@ -2,6 +2,14 @@
 
 All notable changes to this crate will be documented here.
 
+## [0.1.4] - Unreleased
+
+### Changed
+
+- **Preserve `SortKey.collation` through constant folding.** `fold_plan` now
+  carries the new `collation` field on `Sort` keys so a `COLLATE` clause
+  survives optimization.
+
 ## [0.1.3] - Unreleased
 
 ### Added

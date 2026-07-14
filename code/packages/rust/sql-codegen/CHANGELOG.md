@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.6.4] - Unreleased
+
+### Added
+
+- **Thread `collation` through `CompiledSortKey`.** The compiled sort key gains
+  a `collation: Option<String>` field, copied from the planner's `SortKey`, so
+  the VM can apply the collating sequence when comparing text values.
+
 ## [0.6.3] - Unreleased
 
 ### Added

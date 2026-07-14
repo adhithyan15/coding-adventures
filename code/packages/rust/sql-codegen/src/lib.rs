@@ -197,6 +197,10 @@ pub struct CompiledSortKey {
     /// Explicit NULL placement from `NULLS FIRST` / `NULLS LAST`. `None` = the
     /// SQLite default (NULLs first for ASC, last for DESC).
     pub nulls_first: Option<bool>,
+    /// Collating sequence from `COLLATE name`, applied to text values before
+    /// comparison. `None` = default byte order (BINARY). `Some("NOCASE")` =
+    /// ASCII case-insensitive; `Some("RTRIM")` = ignore trailing spaces.
+    pub collation: Option<String>,
 }
 
 /// The complete bytecode instruction set for the Mini-SQLite VM.
@@ -2167,6 +2171,7 @@ fn peel_post_ops(plan: &OptimizedPlan) -> (&OptimizedPlan, Vec<Instruction>) {
                         },
                         ascending: k.ascending,
                         nulls_first: k.nulls_first,
+                        collation: k.collation.clone(),
                     })
                     .collect();
                 post_ops.push(Instruction::SortResult(compiled_keys));
@@ -2739,6 +2744,7 @@ mod tests {
                 expr: col("name"),
                 ascending: true,
                 nulls_first: None,
+                collation: None,
             }],
         });
         let v = instrs(&plan);
@@ -2758,6 +2764,7 @@ mod tests {
                 expr: col("score"),
                 ascending: true,
                 nulls_first: None,
+                collation: None,
             }],
         });
         let v = instrs(&plan);
@@ -2778,6 +2785,7 @@ mod tests {
                 expr: col("score"),
                 ascending: false,
                 nulls_first: None,
+                collation: None,
             }],
         });
         let v = instrs(&plan);
@@ -2799,11 +2807,13 @@ mod tests {
                     expr: col("a"),
                     ascending: true,
                     nulls_first: None,
+                    collation: None,
                 },
                 SortKey {
                     expr: col("b"),
                     ascending: false,
                     nulls_first: None,
+                    collation: None,
                 },
             ],
         });
@@ -3579,6 +3589,7 @@ mod tests {
                 expr: col("x"),
                 ascending: true,
                 nulls_first: None,
+                collation: None,
             }],
         });
         let v = instrs(&plan);
