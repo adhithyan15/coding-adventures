@@ -1,0 +1,30 @@
+% ============================================================================
+% geometry-formulas.query.adj — worked examples over the geometry formula library.
+% ============================================================================
+% The shape a consumer (an LLM, or a person) produces to ANSWER a mensuration
+% question: it states NO arithmetic and NO formula — it only `import`s the
+% grounded library, `observe`s the side lengths it decomposed from the prompt
+% (each a byte-provenanced span, elided here), and asks the engine to APPLY the
+% cited formula. The native adj-lang engine binds the parameters, computes each
+% value EXACTLY on the CPU, and returns it with the formula's source/locator/trust.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli geometry-formulas.query.adj
+% ============================================================================
+
+import "geometry-formulas.adj"
+
+% A 4 by 3 rectangle: area = 4 * 3, perimeter = 2 * (4 + 3).
+observe length(4)
+observe width(3)
+? rectangle_area(length, width)        % expect 12  (MathWorld: A = ab)
+? rectangle_perimeter(length, width)   % expect 14  (MathWorld: P = 2(a+b))
+
+% A triangle with base 10 and height 3: area = 10 * 3 / 2.
+observe base(10)
+observe height(3)
+? triangle_area(base, height)          % expect 15  (MathWorld: Δ = ½ a h)
+
+% A square with side 5: area = 5 * 5.
+observe side(5)
+? square_area(side)                    % expect 25  (MathWorld: A = a²)
