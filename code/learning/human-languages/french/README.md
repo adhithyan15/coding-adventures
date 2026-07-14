@@ -26,8 +26,11 @@ is assumed: the text supplies every Spanish form in full, as enrichment, so the
 - **Chapter 1 — Greetings**: authored ([`lessons/FR-C01-*`](./lessons/)) —
   salut, bien, bon/bonne, le/la/les (gender), jour, bonjour, soir, bonsoir,
   nuit, bonne nuit, practice. In the book.
-- **Chapter 2 — Introducing Yourself** (planned): je m'appelle, **tu / vous**
-  (informal vs formal "you"), comment, enchanté.
+- **Chapter 2 — Introducing Yourself**: authored ([`lessons/FR-C02-*`](./lessons/))
+  — je, me, (s')appeler, **je m'appelle** ("my name is"), **tu / vous**,
+  comment, **comment vous appelez-vous?** ("what's your name?"), enchanté(e),
+  practice. In the book. (Every atom — *je*, *me*, *appelle* — traced to its
+  root.)
 - Later chapters mirror the Spanish roadmap's themes.
 
 ## Files
