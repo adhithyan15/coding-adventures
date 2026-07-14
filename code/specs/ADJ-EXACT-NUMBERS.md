@@ -45,16 +45,23 @@ pub enum Number {
 ```
 
 `BigDecimal` already derives `Clone/PartialEq/Eq/Hash` and implements `Ord`/`PartialOrd` and
-`Display` (`bignum-core/src/decimal.rs`), so `Number` keeps its derived comparisons and gets a
+`Display` (`bignum-core/src/decimal.rs`), so `Number` keeps a derivable `PartialEq` and gets a
 faithful `Display` arm (`Number::Exact(d) => write!(f, "{d}")`) that prints all the digits.
 
-- **Equality / unification.** `Number::Exact(a) == Number::Exact(b)` iff the decimals are
-  numerically equal (BigDecimal equality is value-correct: `2.50 == 2.5`). Cross-variant
-  equality is defined by exact promotion, not `f64` round-off: an `Int(n)` equals
-  `Exact(d)` iff `d` is the integer `n`; an `Exact`/`Int` compares to a `Float` only via the
-  **labeled-lossy** path (documented as approximate — a `Float` is already inexact, so any
-  comparison to it is inexact by construction). Unification of two ground numbers uses exact
-  equality when neither side is `Float`.
+- **`Copy` is dropped — the load-bearing ripple.** `Number` today derives `Copy` (`logic-core/src/lib.rs:57`);
+  `BigDecimal` is heap-backed, so `Number` can no longer be `Copy` (no boxing escapes this — `Box`
+  isn't `Copy` either). NX-1's real work is therefore **move-semantics fallout**: every site that
+  relied on copying a `Number`/`Term::Num` by value (e.g. `matches!(t, Term::Num(x) if x == …)`,
+  by-value returns, `Copy`-deriving structs that embed a `Number`) needs a `.clone()` or a move.
+  This is compiler-guided but wider than the `match`-arm additions, and is the bulk of NX-1.
+- **Equality / unification = variant-distinct (unchanged tradition).** The engine already holds
+  `1 ≠ 1.0` as *distinct ground terms* (`logic-core` §"Numbers do not cross variants"). `Exact`
+  joins as a **third distinct variant**: `Int(1)`, `Float(1.0)`, and `Exact(1.0)` are three
+  different ground terms, so a **derived** (variant-distinct) `PartialEq` is exactly right — no
+  bespoke cross-variant equality. *Numeric* reconciliation (`2.50` == `2.5`, `1` == `1.0`) is a
+  **compute-layer** concern (`ExactRational`), where it already lives; ground-term unification
+  stays syntactic. (This deliberately simplifies the first draft, which over-proposed
+  cross-variant equality — rejected as inconsistent with the existing `1 ≠ 1.0` rule.)
 - **Lossy export.** A single accessor `Number::to_f64_lossy(&self) -> f64` (Int→as, Float→copy,
   Exact→`BigDecimal::to_f64`) is the *only* sanctioned way to obtain an `f64` from a `Number`.
   Grep-able name so audits can find every lossy boundary.
@@ -95,11 +102,13 @@ semantically-load-bearing updates are in `logic-engine`, `math-core`, `adj-lang`
 ## PR staging (each: spec/tests → impl → CHANGELOG → README/spec-sync → /security-review → babysit)
 
 - **NX-0 (this doc).** Spec, committed first.
-- **NX-1 — core variant.** Add `Number::Exact(BigDecimal)` + `Display` + `to_f64_lossy` +
-  exact equality/ordering in `logic-core`; update **all** workspace match sites to compile
-  (peripheral crates delegate to `to_f64_lossy`). `cargo build --workspace` green. No behavior
-  change yet (nothing *produces* `Exact` — literals still lower as before), so this PR is a pure,
-  reviewable type widening.
+- **NX-1 — core variant + `Copy` removal.** Add `Number::Exact(BigDecimal)` + `Display` +
+  `to_f64_lossy` to `logic-core`, add the `bignum-core` dep, and **drop `Copy` from `Number`**.
+  Then fix the compiler-guided fallout across the workspace: new `match` arms (peripheral crates
+  delegate to `to_f64_lossy`) **and** the move/`.clone()` sites that assumed `Number: Copy`.
+  `cargo build --workspace` + `cargo test --workspace` green. No behavior change yet (nothing
+  *produces* `Exact` — literals still lower via `f64` until NX-2), so it stays reviewable, but it
+  is a genuine ownership migration, not a one-line widening.
 - **NX-2 — parse & lower.** `adj-lang` parses NUMBER via `BigDecimal::from_str`; AST carries the
   exact literal; `lower_*` emit `Number::Exact`/`Int`. Adds the e2e: `? math_constant(pi,$V)`
   binds the **full** digit string; small ints still bind as `Int`.
