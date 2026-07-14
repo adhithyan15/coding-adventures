@@ -65,7 +65,7 @@ fn rest_params_round_trip_and_fold() {
         "mismatch.\nactual:\n{actual}\nexpected:\n{expected}",
     );
 
-    let flat = actual.replace(' ', "").replace('\n', "");
+    let flat = actual.replace([' ', '\n'], "");
     // (1) the rest parameter round-tripped — the bridge modelled it (not
     // WHITESPACE_ONLY). The `...a` prefix must survive on the emitted function.
     // (Checked on space-stripped output, so no space between `function` and `f`.)
