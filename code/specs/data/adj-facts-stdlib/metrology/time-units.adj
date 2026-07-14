@@ -1,0 +1,58 @@
+% ============================================================================
+% time-units — each time unit → its length in SECONDS (adj-facts-stdlib, METROLOGY).
+% ============================================================================
+% The everyday metrology fact that turns a clock into arithmetic: a named time
+% unit stands for a fixed number of seconds. A minute is 60 seconds; an hour is
+% 3600 seconds; a day is 86400 seconds. Recall is a binding query — you name a
+% unit and get back its length in seconds, WITH its citation:
+%
+%     ? time_unit_seconds(minute, $S)     % 60
+%     ? time_unit_seconds(hour, $S)       % 3600
+%     ? time_unit_seconds(day, $S)        % 86400
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `time_unit_seconds(unit, seconds)` carrying the table's citation, so
+% the lookup is the ordinary SLD binding query — the engine returns the length in
+% seconds WITH its source, on the CPU, with zero model calls, and abstains on a
+% word that is not one of these time units (it never invents a length).
+%
+% Why the `seconds` value is a NUMBER (and why the unit is SECONDS): because the
+% length is a plain integer count of seconds, a looked-up unit length flows
+% straight into DURATION ARITHMETIC. To turn "how many seconds in 3 hours?" into a
+% number you recall hour → 3600 and multiply: 3 × 3600 = 10800 s. To convert a
+% span of seconds back into hours you divide by the same recalled 3600. Seconds is
+% the SI base unit of time, so every unit here reduces to the SAME base and the
+% factors compose cleanly (a day is 24 hours because 86400 = 24 × 3600). That is
+% the concrete metrology bridge from RECALL (name the unit) to COMPUTE (scale by
+% its seconds).
+%
+% Why a `table` and NOT three prose sentences: this is exactly the shape reference
+% data ships in — a published units table, one unit per row with its conversion to
+% the base unit. The citable artifact IS the NIST table at the `locator` below, and
+% each unit→seconds pair here is read straight off it. The whole table is defended
+% by one provenance envelope rather than repeating source/locator/trust per row.
+%
+% Provenance: the units and their lengths are taken VERBATIM from NIST Special
+% Publication 811, "Units outside the SI" (Table 6, units accepted for use with the
+% SI). The `source` span below reproduces the three conversion cells of that table
+% that state 1 min = 60 s, 1 h = 3600 s, and 1 d = 86400 s. `trust authoritative`
+% — a primary U.S. standards reference (NIST, a .gov), re-fetchable at the
+% `locator`. Nothing here is asserted from memory: every unit→seconds pair is a
+% cell of the cited table. WEEK is deliberately OMITTED — NIST Table 6 does not
+% state a "7 days per week" relation, so 604800 s cannot be grounded on this page
+% and is not shipped (only units whose length is confirmable on the cited page are
+% included). (See ../README.md; ADJ-TABLES.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table time_unit_seconds {
+    columns unit, seconds
+
+    row (minute, 60)      % 1 min = 60 s
+    row (hour, 3600)      % 1 h = 60 min = 3600 s
+    row (day, 86400)      % 1 d = 24 h = 86400 s
+
+    source "1 min = 60 s | 1 h = 60 min = 3600 s | 1 d = 24 h = 86 400 s"
+    locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-chapter-5-units-outside-si"
+    trust authoritative
+}
