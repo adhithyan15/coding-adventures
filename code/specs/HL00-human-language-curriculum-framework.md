@@ -412,40 +412,47 @@ lessons, they've absorbed the sounds they've actually needed, each one welded
 to a real word, rather than having memorized an abstract chart they can't yet
 attach to anything.
 
-### Non-Latin scripts: Chapter 1 IS a reading course
+### Non-Latin scripts: letters taught *inside* the word lessons — no reading course
 
-The rules above assume the learner can already *read* the script (true for
-the Latin-alphabet tracks — Spanish, French, German). For any track whose
-script the learner does **not** fluently read — **Arabic, Hindi, Tamil,
-Kannada, Telugu, Malayalam** (i.e. everything not written in the Latin
-alphabet) — **Chapter 1 is an incremental reading course**, and vocabulary
-(greetings, etc.) begins in Chapter 2, once the letters exist to decode it.
+The Latin-alphabet tracks (Spanish, French, German) can go straight to words;
+the reader already reads the letters. For a non-Latin script — **Arabic,
+Hindi, Tamil, Kannada, Telugu, Malayalam** — the reader may not, so the letters
+have to be taught. But there is **no separate "reading course" chapter to sit
+through before the real words begin.** Instead, **each word lesson introduces
+the letters that word needs, inline**, and teaches reading *and* meaning
+*and* etymology together, in one lesson. The word is the vehicle for its own
+letters.
 
-This was a correction after the first Arabic draft dropped whole words
-(*مرحبا*, *صباح الخير*) with only a gloss of the hard sounds — which teaches
-a vocabulary list, not *reading*. The fix is the atom-first playbook applied
-to the **script**: the atoms are **letters**, and words are built from letters
-the learner has just learned, exactly as Spanish built *buenos días* from
-*bueno* + *días*.
+Concretely, a `word` lesson in a non-Latin track adds one section:
 
-The reading course is **not** the "gated alphabet chart" this section warns
-against. The difference:
+- **"The letters in this word"** — the *new* letters this headword uses (their
+  shapes, sounds, and how they join/conjunct), enough to actually **decode**
+  this word. Cumulative: letters seen in earlier lessons are used, not
+  re-taught. Then the lesson proceeds normally — meaning, roots, cultural
+  note — so the reader learns to *read* नमस्ते **and** learns it means "I bow
+  to you," in the same few minutes.
 
-- A gated chart teaches all ~28-50 letters in the abstract before any word.
-- A reading course introduces **a few letters per lesson** and **immediately
-  cashes them out in a real, decodable word** — so the learner *reads
-  something true* in lesson 1 (e.g. Arabic ل + ا → **لا**, "no"), and every
-  lesson after adds letters that unlock the next word. Letters change shape
-  by position (Arabic) or combine into conjuncts (Indic scripts); those facts
-  are taught as the words that use them arrive, cumulatively.
+This corrects two earlier mistakes in one rule:
 
-Sequence the letters so real words — and soon the greeting set — become
-readable as fast as possible (Frequency-Driven Content Selection, below,
-applied to letters). The reading course is authored for someone who cannot
-read a single letter of the script (per Audience, above) — it never tells the
-reader to skim. Once Chapter 1's reading course is done, later chapters
-proceed word-first like the Latin tracks, with new letters still introduced
-inline as rarer ones appear.
+1. The first Arabic draft dropped whole words with only a gloss of the hard
+   sounds — teaching a vocabulary list, not reading. (Letters must actually be
+   taught.)
+2. The over-correction built a standalone decode-only "reading course" chapter
+   (لا, ما, ماما…) that the reader sits through *before* any real vocabulary.
+   That is **not** wanted either — it front-loads reading as its own gate.
+
+The synthesis is the just-in-time principle done properly: **"If a word needs
+four letters, introduce those four letters in that word's lesson."** No gated
+alphabet chart, and no gated reading course — letters arrive with the words
+that use them, cumulatively, and a reader who already knows the script simply
+**skims** the "letters in this word" section (this is the one place the text
+may assume nothing and let a fluent reader move fast — it is optional
+scaffolding, not gated content). Sequence early words so their letters
+accumulate sensibly (Frequency-Driven Content Selection, below).
+
+(The Arabic track's current standalone Chapter-1 reading course predates this
+rule and is to be reworked into inline letter-introduction within the greeting
+lessons.)
 
 Grammar follows the identical principle — introduced in context, on the
 first word that needs it (the Grammar Lens section), never front-loaded.
