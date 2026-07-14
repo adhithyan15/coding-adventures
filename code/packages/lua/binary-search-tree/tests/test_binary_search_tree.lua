@@ -1,0 +1,112 @@
+package.path = "../src/?.lua;../src/?/init.lua;" .. package.path
+
+local module = require("coding_adventures.binary_search_tree")
+local BSTNode = module.BSTNode
+local BinarySearchTree = module.BinarySearchTree
+
+local function populated()
+    local tree = BinarySearchTree.empty()
+    for _, value in ipairs({5, 1, 8, 3, 7}) do
+        tree = tree:insert(value)
+    end
+    return tree
+end
+
+describe("BinarySearchTree persistence", function()
+    it("inserts, searches, ranks, and deletes", function()
+        local tree = populated()
+        assert.are.same({1, 3, 5, 7, 8}, tree:to_sorted_array())
+        assert.equals(5, tree:size())
+        assert.is_true(tree:contains(7))
+        assert.equals(7, tree:search(7).value)
+        assert.equals(1, tree:min_value())
+        assert.equals(8, tree:max_value())
+        assert.equals(3, tree:predecessor(5))
+        assert.equals(7, tree:successor(5))
+        assert.equals(2, tree:rank(4))
+        assert.equals(7, tree:kth_smallest(4))
+
+        local deleted = tree:delete(5)
+        assert.is_false(deleted:contains(5))
+        assert.is_true(deleted:is_valid())
+        assert.is_true(tree:contains(5))
+    end)
+
+    it("ignores duplicate comparator keys", function()
+        local tree = populated()
+        local duplicate = tree:insert(3)
+        assert.are.same(tree:to_sorted_array(), duplicate:to_sorted_array())
+        assert.equals(tree:search(3), duplicate:search(3))
+    end)
+end)
+
+describe("BinarySearchTree construction", function()
+    it("builds a balanced tree from a sorted array", function()
+        local values = {1, 2, 3, 4, 5, 6, 7}
+        local tree = BinarySearchTree.from_sorted_array(values)
+        assert.are.same(values, tree:to_sorted_array())
+        assert.equals(4, tree.root.value)
+        assert.equals(2, tree:height())
+        assert.equals(7, tree:size())
+        assert.is_true(tree:is_valid())
+    end)
+
+    it("handles empty trees and edge queries", function()
+        local tree = BinarySearchTree.empty()
+        assert.is_nil(tree:search(1))
+        assert.is_nil(tree:min_value())
+        assert.is_nil(tree:max_value())
+        assert.is_nil(tree:predecessor(1))
+        assert.is_nil(tree:successor(1))
+        assert.is_nil(tree:kth_smallest(0))
+        assert.is_nil(tree:kth_smallest(1))
+        assert.equals(0, tree:rank(1))
+        assert.equals(-1, tree:height())
+        assert.equals(0, tree:size())
+        assert.is_true(tree:is_valid())
+        assert.equals("BinarySearchTree(root=nil, size=0)", tostring(tree))
+    end)
+
+    it("validates constructor inputs", function()
+        assert.has_error(function() BSTNode.new(nil) end, "node value must not be nil")
+        assert.has_error(function() BSTNode.new(1, "left") end, "left must be a BSTNode or nil")
+        assert.has_error(function() BSTNode.new(1, nil, nil, -1) end, "size must be a non-negative integer")
+        assert.has_error(function() BinarySearchTree.new("root") end, "root must be a BSTNode or nil")
+        assert.has_error(function() BinarySearchTree.new(nil, "compare") end, "compare must be a function")
+        assert.has_error(function() BinarySearchTree.from_sorted_array("values") end, "values must be a table")
+        assert.has_error(function()
+            local tree = BinarySearchTree.empty()
+            tree:insert(nil)
+        end, "value must not be nil")
+    end)
+end)
+
+describe("BinarySearchTree deletion", function()
+    it("deletes leaves, one-child nodes, and absent values", function()
+        local tree = BinarySearchTree.from_sorted_array({2, 4, 6, 8})
+        assert.equals(6, tree.root.value)
+        assert.are.same({4, 6, 8}, tree:delete(2):to_sorted_array())
+        assert.are.same({2, 4, 6}, tree:delete(8):to_sorted_array())
+        assert.are.same({2, 4, 6, 8}, tree:delete(99):to_sorted_array())
+    end)
+end)
+
+describe("BinarySearchTree validation and comparison", function()
+    it("catches ordering and size corruption", function()
+        local bad_order = BinarySearchTree.new(BSTNode.new(5, BSTNode.new(6)))
+        local bad_size = BinarySearchTree.new(BSTNode.new(5, BSTNode.new(3), nil, 99))
+        assert.is_false(bad_order:is_valid())
+        assert.is_false(bad_size:is_valid())
+    end)
+
+    it("supports custom comparators", function()
+        local function by_length(left, right)
+            return #left - #right
+        end
+        local tree = BinarySearchTree.empty(by_length):insert("bbb"):insert("a"):insert("cc")
+        assert.are.same({"a", "cc", "bbb"}, tree:to_sorted_array())
+        assert.is_true(tree:contains("zz"))
+        assert.equals("a", tree:predecessor("zz"))
+        assert.equals("bbb", tree:successor("zz"))
+    end)
+end)
