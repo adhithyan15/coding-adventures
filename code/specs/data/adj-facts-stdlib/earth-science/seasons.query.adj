@@ -1,0 +1,21 @@
+% ============================================================================
+% seasons.query.adj — a worked recall over the earth-science seasons library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "which month does spring
+% start in?" — it states no earth-science fact, only `import`s the grounded table
+% and asks binding queries. The engine resolves each `?` against the
+% `season_start_month` rows and returns the start month (or the season, on a
+% reverse query) + the NOAA source/locator/trust. A word the page does not name as
+% a meteorological season abstains honestly — the engine never invents a month.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli seasons.query.adj
+% ============================================================================
+
+import "seasons.adj"
+
+? season_start_month(spring, $Month)      % expect march   (spring begins in March)
+? season_start_month(summer, $Month)      % expect june    (summer begins in June)
+? season_start_month($Season, december)   % expect winter  (reverse: starts in Dec?)
+? season_start_month(equinox, $Month)     % expect abstain — an equinox is an
+                                          %   astronomical instant, not a season
