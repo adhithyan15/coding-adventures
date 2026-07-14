@@ -24,7 +24,7 @@ exactly one backend and the code contains no `#if defined(__linux__)` mazes.
 | `fs`      | `os_platform/fs.h`      | ✅ implemented |
 | `process` | `os_platform/process.h` | ✅ implemented |
 | `dynlib`  | `os_platform/dynlib.h`  | ✅ implemented |
-| mmap     | —                       | planned       |
+| `mmap`    | `os_platform/mmap.h`    | ✅ implemented |
 
 All primitives share the `osp_status` return convention from
 `os_platform/status.h` (`OSP_OK == 0`; negative on error).
@@ -199,6 +199,34 @@ resolved symbol is a `void *`; convert it to a function pointer with `memcpy`
 (the direct object↔function cast is non-ISO — which is exactly why `dynlib` lives
 on `platform-harness`, not `iso-harness`).
 
+### `mmap` — anonymous memory with protection control
+
+`malloc` gives bytes; only the OS gives a page range with a chosen protection
+(read-only data, guard pages, or executable JIT memory).
+
+```c
+#include "os_platform/mmap.h"
+
+osp_mapping *m;
+osp_map_anon(&m, 4096, OSP_PROT_READ | OSP_PROT_WRITE);  /* zero-filled pages */
+unsigned char *p = osp_map_base(m);
+p[0] = 0x42;                                             /* real, committed memory */
+osp_map_protect(m, OSP_PROT_READ);                      /* now read-only */
+osp_map_unmap(m);
+```
+
+Backends:
+
+| OS          | reserve+commit | protect         | release      |
+|-------------|----------------|-----------------|--------------|
+| macOS/Linux | `mmap`         | `mprotect`      | `munmap`     |
+| Windows     | `VirtualAlloc` | `VirtualProtect`| `VirtualFree`|
+
+`prot` is a bitmask of `OSP_PROT_NONE/READ/WRITE/EXEC`. The `EXEC` bit is plumbed
+through (for JIT) and works directly on Linux/Windows; a JIT executor that also
+handles Apple Silicon's `MAP_JIT` write-protect protocol, with a cross-arch
+execute-and-call test, is a planned follow-up.
+
 ## Build & test
 
 ```sh
@@ -221,14 +249,16 @@ os-platform/
 │   ├── thread.h                  # thread API
 │   ├── fs.h                      # fs API
 │   ├── process.h                 # process API
-│   └── dynlib.h                  # dynlib API
+│   ├── dynlib.h                  # dynlib API
+│   └── mmap.h                    # mmap API
 ├── src/
 │   ├── clock_posix.c   · clock_windows.c     # per-OS clock backends
 │   ├── thread_posix.c  · thread_windows.c    # per-OS thread backends
 │   ├── fs_posix.c      · fs_windows.c        # per-OS fs backends
 │   ├── process_posix.c · process_windows.c   # per-OS process backends
-│   └── dynlib_posix.c  · dynlib_windows.c    # per-OS dynlib backends
-├── tests/clock_test.c · thread_test.c · fs_test.c · process_test.c · dynlib_test.c
+│   ├── dynlib_posix.c  · dynlib_windows.c    # per-OS dynlib backends
+│   └── mmap_posix.c    · mmap_windows.c      # per-OS mmap backends
+├── tests/  clock · thread · fs · process · dynlib · mmap  (one _test.c each)
 ├── tools/run.sh  · run.ps1       # per-OS build drivers
 ├── BUILD  · BUILD_windows        # per-OS source selection
 └── required_capabilities.json    # CI needs gcc, clang, cl

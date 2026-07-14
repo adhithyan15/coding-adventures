@@ -51,3 +51,6 @@ Platform-BuildAndRun -Lang c -Name 'process-tests' -Sources @('tests\process_tes
 
 # dynlib — Win32 backend (LoadLibrary + GetProcAddress + FreeLibrary).
 Platform-BuildAndRun -Lang c -Name 'dynlib-tests' -Sources @('tests\dynlib_test.c', 'src\dynlib_windows.c')
+
+# mmap — Win32 backend (VirtualAlloc + VirtualProtect + VirtualFree).
+Platform-BuildAndRun -Lang c -Name 'mmap-tests' -Sources @('tests\mmap_test.c', 'src\mmap_windows.c')

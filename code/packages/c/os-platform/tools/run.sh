@@ -76,4 +76,14 @@ fi
 export PLATFORM_LIBS
 platform_build_and_run c dynlib-tests tests/dynlib_test.c src/dynlib_posix.c || rc=1
 
+# mmap — POSIX backend (mmap/mprotect/munmap). No extra OS library. MAP_ANONYMOUS
+# is a non-POSIX extension gated differently per OS: glibc needs _DEFAULT_SOURCE,
+# Darwin needs _DARWIN_C_SOURCE (each harmless on the other). These expose the
+# mmap/mprotect declarations too, so _POSIX_C_SOURCE is not needed here.
+PLATFORM_LIBS=""
+export PLATFORM_LIBS
+PLATFORM_DEFINES="_DEFAULT_SOURCE _DARWIN_C_SOURCE"
+export PLATFORM_DEFINES
+platform_build_and_run c mmap-tests tests/mmap_test.c src/mmap_posix.c || rc=1
+
 exit "$rc"
