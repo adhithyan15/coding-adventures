@@ -121,6 +121,7 @@ pub mod global_io;
 pub mod closure;
 pub mod dynamic_arith;
 pub mod list_ops;
+pub mod closure_heap;
 
 // We keep the `lower` module for backward compatibility with any code that
 // already imports from it, but the canonical implementation is now in
@@ -166,6 +167,7 @@ pub use closure::lower_closure_builtins;
 pub use dynamic_arith::lower_dynamic_arith;
 pub use dynamic_arith::lower_box_unbox_to_runtime_calls;
 pub use list_ops::lower_list_ops;
+pub use closure_heap::lower_closures_to_heap;
 
 use interpreter_ir::IIRModule;
 

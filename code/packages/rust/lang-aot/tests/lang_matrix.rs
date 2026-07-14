@@ -435,6 +435,32 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
     },
+    // Twig — **E6d-7: closures (TW5) on all 5 code-gen backends** (the last E6
+    // backend gap). `((lambda (x) (+ x 1)) 41)` allocates a closure and applies
+    // it → 42. JVM/CLR run it via `long[]`/`object[]` dispatch arrays; NativeAot/
+    // LLVM via the C runtime; **WASM** — which had no closure model — via
+    // `iir-builtin-lowering::lower_closures_to_heap` (E6d-7a): the closure lowers
+    // to a cons-chain `(box(idx) . (caps…))` and a synthesized `__dyn_call_closure`
+    // dispatcher (a `cmp_eq` chain over statically-known bodies → direct `call`),
+    // reusing the E6d-1 heap substrate — no new WasmGC `funcref`/`call_indirect`.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "((lambda (x) (+ x 1)) 41)",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Wasm, Jvm, Clr],
+    },
+    // Twig — E6d-7: a **capturing** closure. The outer lambda returns an inner
+    // one that captures `x`; applying it threads the captured 40 + the arg 2.
+    // `(((lambda (x) (lambda (y) (+ x y))) 40) 2)` → 42. Two lambda bodies get
+    // distinct dispatch indices in the synthesized WASM dispatcher.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(((lambda (x) (lambda (y) (+ x y))) 40) 2)",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Wasm, Jvm, Clr],
+    },
     // Twig — E4 literal `string-length`. The compiler lowers
     // `(string-length "HELLO")` to shared `str_const` + `str_len`, avoiding the
     // dynamic `call_builtin "string-length"` path that codegen validators reject.

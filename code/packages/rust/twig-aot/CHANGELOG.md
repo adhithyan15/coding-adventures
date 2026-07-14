@@ -1,5 +1,9 @@
 # Changelog — `twig-aot`
 
+## 0.36.0 - 2026-07-14 (E6d-7a: closures on NativeAot)
+
+`prepare_module_for_aot` now runs `lower_closures_to_heap` before `lower_heap_builtins_runtime` — NativeAot had no closure model (it `BackendRefused` `alloc_closure`/`call_closure`). A Twig `((lambda (x) (+ x 1)) 41)` now compiles + runs to exit 42 natively. A no-op for a closure-free module.
+
 ## 0.35.0 - 2026-07-11 (E6d-2b: native dynamic arithmetic)
 
 E6d-2b: `prepare_module_for_aot` now runs `lower_dynamic_arith` (it did not before — native AOT had no dynamic-arithmetic lowering at all) followed, after `lower_dyn_repr`, by `lower_box_unbox_to_runtime_calls`. A native McCarthy/Twig program can now do `(+ (car …) 1)`: the boxed operand is unboxed, added, re-boxed via `__dyn_box_int`, and exit-unboxed. Verified: exit 42.
