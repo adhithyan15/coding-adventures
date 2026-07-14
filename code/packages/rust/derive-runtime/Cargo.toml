@@ -1,0 +1,25 @@
+[package]
+name = "coding-adventures-derive-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "Derive runtime — lowers Derive syntax to symbolic-ir and evaluates via symbolic-vm"
+license = "MIT"
+
+[dependencies]
+# The D-3 frontend: parses Derive source into a generic GrammarASTNode that
+# this crate lowers to symbolic-ir.
+coding-adventures-derive-parser = { path = "../derive-parser" }
+# The D-2 lexer. Tokenized once up front (the lexer is iterative, so unlike
+# the parser it cannot stack-overflow) to measure per-statement token counts
+# from the *real* token stream, mirroring wolfram-runtime/maxima-runtime's
+# identical guard against a long flat operator chain folding into a deeply
+# nested lowered tree (see MAX_STATEMENT_TOKENS's doc comment).
+coding-adventures-derive-lexer = { path = "../derive-lexer" }
+# The shared symbolic substrate: the term IR everything lowers to and the VM
+# that rewrites it.
+symbolic-ir = { path = "../symbolic-ir" }
+symbolic-vm = { path = "../symbolic-vm" }
+# The generic parser AST types (GrammarASTNode / ASTNodeOrToken) and the lexer
+# Token type the lowering walks.
+parser = { path = "../parser" }
+lexer = { path = "../lexer" }

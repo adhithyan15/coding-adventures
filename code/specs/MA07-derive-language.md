@@ -65,16 +65,19 @@ no grammar files yet:
   precedent) rather than assumed.
 - **D-4 — `derive-runtime` + `derive-repl`.** Lowers the parsed
   `GrammarASTNode` into `symbolic-ir`, evaluates with `symbolic-vm`'s shared
-  `SymbolicBackend`, and wires the §3-specified named built-ins (`DIF`, `INT`, `LIM`,
-  `SUM`, `SOLVE`, `IF`, …) as thin calls into the same handler-table pattern
-  Wolfram's W-4/W-5/W-22 already use — each one, where the semantics match,
-  calling the *exact same* `cas-*` function its Macsyma/Wolfram counterpart
-  calls (`DIF` → the same differentiation `cas-*` already implements for
-  `D`/`DIF`-under-Macsyma-names, `INT` → the same integration engine, `SOLVE`
-  → the same solver), so all three languages agree on every result these
-  crates can produce. Plus the interactive `derive-repl` (`#n: ` numbered
-  input, mirroring Derive's own numbered expression history, and the
-  `derive` binary).
+  `SymbolicBackend` — reused *unchanged*, with no custom `Backend` at all,
+  since D-4's scope needs nothing the shared handler table doesn't already
+  provide (arithmetic, comparison, logic, the held `Assign`/`Define`/`If`
+  forms, and the base `DIF`→`D`/`INT`→`Integrate` calculus handlers, both
+  already implemented — the *exact same* functions Macsyma/Wolfram call
+  under their own names, so all three languages agree on every result these
+  handlers can produce). Per §4, `LIM`/`SUM`/`PRODUCT`/`TAYLOR`/`SOLVE` are
+  **not** in D-4's scope — the shared VM has no existing handler for any of
+  them, so wiring them would be new engine code, not reuse; they land in
+  their own follow-on item(s), matching how Wolfram's W-6 through W-22 items
+  landed incrementally rather than all at once. Plus the interactive
+  `derive-repl` (`#n: ` numbered input, mirroring Derive's own numbered
+  expression history, and the `derive` binary).
 - **D-5 — vectors/matrices as structural `List` data.** `[a, b, c]` and
   `[a, b, c; d, e, f]` lower to nested `List` heads (mirroring Wolfram's
   `{a, b}` → `List[a, b]`), giving programs a way to *hold* vector/matrix
