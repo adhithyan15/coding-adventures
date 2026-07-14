@@ -2,6 +2,18 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.55.0] - 2026-07-14
+
+### Added — bridge rest parameters (`function f(...args){}`) — CLOC12.190 PR2
+
+`convert_formal_parameter` now bridges a trailing rest parameter to the (PR1) `FunctionParam::RestElement`
+instead of declining: on an `ELLIPSIS` it takes the sole non-`...` NAME token as the gathered
+identifier. A destructuring rest target (`...[a,b]`, `...{x}`) still declines (Phase 3), and a rest
+`binding_pattern` is guarded. A file whose only unmodelled construct was a rest parameter now flows
+through the typed pipeline rather than falling back to WHITESPACE_ONLY. 3 new bridge tests
+(`rest_parameter_bridges`, `fixed_then_rest_parameter_bridges`, `rest_destructuring_param_declines_gracefully`).
+Picks up javascript-ast 0.41.0. MINOR.
+
 ## [0.54.1] - 2026-07-14
 
 ### Fixed — test compiles against `FunctionParam::RestElement` — CLOC12.190 PR1
