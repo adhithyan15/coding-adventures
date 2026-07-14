@@ -104,16 +104,17 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 
 ## Work Inventory
 
-The missing matrix is heavily concentrated in singleton packages:
+The missing matrix is heavily concentrated in singleton packages. Regenerated
+on July 14, 2026 after the Dart Mosaic frontend port:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 171 | 383 |
+| Present in 10-15 languages | 171 | 380 |
 | Present in 5-9 languages | 122 | 917 |
 | Present in 2-4 languages | 157 | 1,972 |
-| Present in one language | 687 | 9,618 |
+| Present in one language | 694 | 9,716 |
 
-The loop must not start by attempting 9,618 singleton ports. It should finish
+The loop must not start by attempting 9,716 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 ## Priority 0: Inventory And Identity Integrity
@@ -127,20 +128,19 @@ new canonical identity collisions with `--fail-on-collisions`.
 
 ## Priority 1: Complete The 14-Of-15 Set
 
-Eight package/language slots remain to turn 8 nearly complete packages into
+Six package/language slots remain to turn 6 nearly complete packages into
 fully covered packages.
 
-### Dart: 6 remaining ports
+### Dart: 4 remaining ports
 
 - `algol-lexer`
 - `algol-parser`
 - `b-plus-tree`
 - `b-tree`
-- `mosaic-lexer`
-- `mosaic-parser`
 
 Completed in the Dart lane: `heap`, `bitset`, `pixel-container`,
 `image-point-ops`, `logic-gates`, `image-geometric-transforms`, `toml-lexer`.
+The grammar-driven `mosaic-lexer` and `mosaic-parser` pair is also complete.
 
 ### Haskell: complete
 
@@ -160,7 +160,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 171 packages present in at least ten implementation languages need 382
+The 171 packages present in at least ten implementation languages need 380
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -175,7 +175,7 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Swift | 52 | Data structures and generated frontends before native app surfaces |
 | Java | 57 | Move with Kotlin |
 | Kotlin | 57 | Move with Java |
-| Dart | 112 | Algorithms, data structures, codecs, grammar frontends, documents, and paint transforms first |
+| Dart | 110 | Algorithms, data structures, codecs, grammar frontends, documents, and paint transforms first |
 
 Go, Ruby, Rust, and TypeScript currently have no gaps within the 10-language
 consensus set. They remain reference/template lanes for these waves.
@@ -206,7 +206,7 @@ This phase covers 122 package identities and 917 current missing slots.
 
 ## Priority 4: Classify Sparse And Singleton Families
 
-The singleton inventory is led by 465 Rust, 88 Python, and 81 TypeScript
+The singleton inventory is led by 501 Rust, 86 Python, and 82 TypeScript
 packages. Classify families before opening implementation PRs.
 
 ### Likely portable Rust-led families
