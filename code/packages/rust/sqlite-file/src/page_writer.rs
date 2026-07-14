@@ -41,6 +41,7 @@
 //! spilling into overflow chains and growing the tree are later rungs.
 
 use crate::error::SqliteError;
+use crate::header::{Header, TextEncoding};
 use crate::varint;
 
 /// The table-leaf page type byte (matches `btree::LEAF_TABLE`).
@@ -88,34 +89,37 @@ pub fn encode_table_leaf_page(
     // the whole usable area.
     let max_local = usable.saturating_sub(LEAF_PAYLOAD_OVERHEAD);
 
-    // The cell count is a u16 field, so at most 65535 cells fit by definition.
-    if cells.len() > u16::MAX as usize {
-        return Err(SqliteError::Unsupported(
-            "more than 65535 cells on one leaf page",
-        ));
-    }
+    // Order cells by rowid and reject duplicates (see `order_cells`).
+    let ordered = order_cells(cells)?;
 
-    // --- Order cells by rowid (a table b-tree is keyed on rowid) and reject
-    //     duplicates, which would make an ambiguous, un-representable tree. -----
-    let mut ordered: Vec<&(i64, Vec<u8>)> = cells.iter().collect();
-    ordered.sort_by_key(|(rowid, _)| *rowid);
-    for pair in ordered.windows(2) {
-        if pair[0].0 == pair[1].0 {
-            return Err(SqliteError::Unsupported("duplicate rowid in leaf page"));
-        }
-    }
-
-    let n = ordered.len();
     let mut page = vec![0u8; page_size];
+    fill_table_leaf_page(&mut page, 0, page_size, max_local, &ordered)?;
+    Ok(page)
+}
+
+/// Write a table-leaf b-tree into `page` with its 8-byte b-tree header at
+/// `header_offset` — 0 for an ordinary page, or 100 on page 1 (whose b-tree
+/// header follows the 100-byte database header). Cells are packed from the end
+/// of the page downward with absolute offsets, and the cell-pointer array grows
+/// from `header_offset + 8`. `ordered` must already be rowid-sorted and
+/// duplicate-free; `max_local` is the inline-payload limit.
+fn fill_table_leaf_page(
+    page: &mut [u8],
+    header_offset: usize,
+    page_size: usize,
+    max_local: usize,
+    ordered: &[&(i64, Vec<u8>)],
+) -> Result<(), SqliteError> {
+    let n = ordered.len();
 
     // --- 8-byte page header. Freeblock (1..3) and fragmented-free (7) stay 0. --
-    page[0] = LEAF_TABLE;
-    page[3..5].copy_from_slice(&(n as u16).to_be_bytes());
+    page[header_offset] = LEAF_TABLE;
+    page[header_offset + 3..header_offset + 5].copy_from_slice(&(n as u16).to_be_bytes());
 
-    // The cell-pointer array occupies bytes [8, 8 + 2·N); cell content must not
-    // grow down into it. `content_floor` is the first byte the content area may
-    // not cross.
-    let ptr_array = 8usize;
+    // The cell-pointer array occupies [header+8, header+8+2·N); cell content must
+    // not grow down into it. `content_floor` is the first byte content may not
+    // cross.
+    let ptr_array = header_offset + 8;
     let content_floor = ptr_array + n * 2;
 
     // --- Pack cells from the end of the page downward. ------------------------
@@ -149,12 +153,98 @@ pub fn encode_table_leaf_page(
         page[entry..entry + 2].copy_from_slice(&(content_top as u16).to_be_bytes());
     }
 
-    // --- Cell-content-area start (offset 5..7). The format stores 65536 as 0,
-    //     which only arises for an empty 64 KiB page; `as u16` wraps 65536 → 0
-    //     exactly, so the cast already yields the right bytes. -----------------
-    page[5..7].copy_from_slice(&(content_top as u16).to_be_bytes());
+    // --- Cell-content-area start (b-tree header offset 5..7). The format stores
+    //     65536 as 0 (only an empty 64 KiB page); `as u16` wraps 65536 → 0. -----
+    page[header_offset + 5..header_offset + 7].copy_from_slice(&(content_top as u16).to_be_bytes());
+    Ok(())
+}
 
-    Ok(page)
+/// Sort `(rowid, record)` cells by rowid and reject duplicate rowids — the
+/// shared preamble for any table-leaf page. Returns borrowed refs in key order.
+fn order_cells(cells: &[(i64, Vec<u8>)]) -> Result<Vec<&(i64, Vec<u8>)>, SqliteError> {
+    if cells.len() > u16::MAX as usize {
+        return Err(SqliteError::Unsupported(
+            "more than 65535 cells on one leaf page",
+        ));
+    }
+    let mut ordered: Vec<&(i64, Vec<u8>)> = cells.iter().collect();
+    ordered.sort_by_key(|(rowid, _)| *rowid);
+    for pair in ordered.windows(2) {
+        if pair[0].0 == pair[1].0 {
+            return Err(SqliteError::Unsupported("duplicate rowid in leaf page"));
+        }
+    }
+    Ok(ordered)
+}
+
+/// Emit a complete, re-readable single-table SQLite database file in one call.
+///
+/// This is the ergonomic capstone of the write path: it wires together
+/// [`crate::header::Header::encode`], [`crate::schema::table_schema_row`],
+/// [`crate::record::encode`], and the leaf-page writer to produce a two-page
+/// file our own reader — and SQLite — accept:
+///
+/// - **Page 1** holds the 100-byte database header followed (at offset 100) by
+///   the `sqlite_schema` b-tree: a single row describing table `table_name`,
+///   rooted on page 2, with `create_sql` as its DDL.
+/// - **Page 2** is the table's data leaf, holding `rows` (each `(rowid, columns)`
+///   encoded with [`crate::record::encode`]).
+///
+/// `rows` is `(rowid, column values)` per row. The result is exactly
+/// `2 * page_size` bytes and reads back through
+/// [`crate::schema::read_table`]`(&db, table_name)`.
+///
+/// # Errors
+/// [`SqliteError::BadPageSize`] for a `page_size` that is not a power of two in
+/// `512..=65536`; [`SqliteError::Unsupported`] if the schema row or any data row
+/// is too large to fit inline on its single page (overflow is not yet emitted),
+/// or if there are duplicate rowids.
+pub fn write_single_table_db(
+    page_size: usize,
+    table_name: &str,
+    create_sql: &str,
+    rows: &[(i64, Vec<crate::record::SqlValue>)],
+) -> Result<Vec<u8>, SqliteError> {
+    if !(512..=65536).contains(&page_size) || !page_size.is_power_of_two() {
+        return Err(SqliteError::BadPageSize(page_size as u32));
+    }
+
+    // --- Page 2: the user table's data leaf. ---------------------------------
+    let data_cells: Vec<(i64, Vec<u8>)> = rows
+        .iter()
+        .map(|(rowid, cols)| (*rowid, crate::record::encode(cols)))
+        .collect();
+    let data_leaf = encode_table_leaf_page(page_size, 0, &data_cells)?;
+
+    // --- Page 1: DB header (offset 0..100) + sqlite_schema leaf (offset 100). -
+    let header = Header {
+        page_size: page_size as u32,
+        reserved_space: 0,
+        page_count: 2,
+        change_counter: 1,
+        freelist_trunk: 0,
+        freelist_count: 0,
+        schema_cookie: 1,
+        schema_format: 1,
+        text_encoding: TextEncoding::Utf8,
+    };
+    let mut page1 = vec![0u8; page_size];
+    page1[0..100].copy_from_slice(&header.encode());
+
+    // The schema b-tree carries one cell (rowid 1): the record for the table,
+    // rooted on page 2. Its leaf header sits at offset 100 (after the DB header).
+    let schema_record =
+        crate::record::encode(&crate::schema::table_schema_row(table_name, 2, create_sql));
+    let schema_cells = vec![(1i64, schema_record)];
+    let ordered = order_cells(&schema_cells)?;
+    // Inline limit for page 1's leaf: usable area minus the 100-byte header and
+    // the 35-byte cell overhead the reader assumes.
+    let max_local = (page_size - 100).saturating_sub(LEAF_PAYLOAD_OVERHEAD);
+    fill_table_leaf_page(&mut page1, 100, page_size, max_local, &ordered)?;
+
+    let mut file = page1;
+    file.extend_from_slice(&data_leaf);
+    Ok(file)
 }
 
 #[cfg(test)]
@@ -164,6 +254,46 @@ mod tests {
     use crate::header::MAGIC;
     use crate::pager::Pager;
     use crate::record::{self, SqlValue};
+
+    /// The one-call assembler produces a database that the real reader resolves
+    /// by table name: `write_single_table_db` → `schema::read_table`.
+    #[test]
+    fn write_single_table_db_round_trips_by_name() {
+        let rows = vec![
+            (1i64, vec![SqlValue::Int(10), SqlValue::Text("a".into())]),
+            (2, vec![SqlValue::Int(20), SqlValue::Text("b".into())]),
+            (3, vec![SqlValue::Null, SqlValue::Text("c".into())]),
+        ];
+        let db = write_single_table_db(512, "widgets", "CREATE TABLE widgets(n, label)", &rows)
+            .unwrap();
+        assert_eq!(db.len(), 512 * 2);
+        assert_eq!(&db[0..16], MAGIC);
+
+        // Reads back by name through the real schema/b-tree reader.
+        let read = crate::schema::read_table(&db, "widgets").unwrap();
+        assert_eq!(read, rows);
+
+        // The schema resolves the table's root page and DDL.
+        let schema = crate::schema::read_schema(&db).unwrap();
+        assert_eq!(schema.len(), 1);
+        assert_eq!(schema[0].name, "widgets");
+        assert_eq!(schema[0].root_page, Some(2));
+        assert_eq!(schema[0].sql.as_deref(), Some("CREATE TABLE widgets(n, label)"));
+    }
+
+    /// An empty table still yields a valid, readable database (no rows).
+    #[test]
+    fn write_single_table_db_handles_empty_table() {
+        let db = write_single_table_db(512, "t", "CREATE TABLE t(x)", &[]).unwrap();
+        assert_eq!(crate::schema::read_table(&db, "t").unwrap(), vec![]);
+    }
+
+    /// A bad page size is rejected up front.
+    #[test]
+    fn write_single_table_db_rejects_bad_page_size() {
+        let err = write_single_table_db(1000, "t", "CREATE TABLE t(x)", &[]).unwrap_err();
+        assert!(matches!(err, SqliteError::BadPageSize(_)));
+    }
 
     /// Wrap an encoded leaf page as **page 2** of a minimal two-page database, so
     /// the real reader ([`Pager::open`] + [`walk_table`]) can parse it. Page 1
