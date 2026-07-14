@@ -32,7 +32,7 @@ fn run(src: &str, module: &str) -> i32 {
     let exe = tmp.join(module);
     let build = std::process::Command::new("clang")
         .arg("-x").arg("ir").arg(&ll_path)
-        .arg("-x").arg("none").arg(dynval_runtime_c())
+        .arg("-x").arg("none").arg(dynval_runtime_c()).arg(dynval_runtime_c().with_file_name("twig_gc.c")).arg(dynval_runtime_c().with_file_name("twig_runtime.c"))
         .arg("-o").arg(&exe).output().expect("spawn clang");
     assert!(build.status.success(), "clang failed: {}", String::from_utf8_lossy(&build.stderr));
     std::process::Command::new(&exe).output().expect("run").status.code().expect("exit code")
