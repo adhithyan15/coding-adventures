@@ -5,6 +5,21 @@ All notable changes to the `bignum-core` package will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.0] - 2026-07-14
+
+### Added
+
+- **`BigDecimal::to_rational(&self) -> BigRational`** — the **exact** counterpart of the lossy
+  `to_f64()`. A `BigDecimal` is `mantissa × 10^(-scale)`, always a ratio of two integers, so this
+  converts with **zero loss and no `f64` hop**: `scale > 0` yields `mantissa / 10^scale`
+  (`2.54 → 127/50`, `0.3048 → 381/1250`), and `scale ≤ 0` yields the whole number
+  `mantissa × 10^|scale|` (`100 → 100/1`). The result is reduced to lowest terms by
+  `BigRational::new`, and a 39-digit π converts to `3141592653589793238462643383279502884197 / 10^39`
+  exactly. Introduced for ADJ exact-numbers NX-3 (exact compute ingestion): the logic engine now
+  ingests a stored `Number::Exact` decimal into its `ExactRational` sidecar through this method, so
+  arithmetic on a high-precision constant stays exact. Unit-tested across fractional, integer,
+  zero, negative, and 39-digit-π inputs.
+
 ## [0.5.0] - 2026-07-14
 
 ### Added

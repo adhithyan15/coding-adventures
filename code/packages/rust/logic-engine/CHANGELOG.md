@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.39.0] — 2026-07-14 — exact compute ingestion of `Number::Exact` (ADJ-EXACT-NUMBERS NX-3)
+
+### Changed
+
+- **`numeric_exact_magnitude` now ingests a `Number::Exact(BigDecimal)` leaf at full precision**,
+  replacing the NX-2 stopgap that folded the decimal through `to_f64()` (losing everything past the
+  ~16th significant digit). A `BigDecimal` is `mantissa × 10^(-scale)`, an exact ratio, so the
+  exact-rational sidecar is now populated via the new `BigDecimal::to_rational()` →
+  `ExactRational::from_ratio(...)` — **no `f64` hop**. `Int` was already exact; `Float` remains the
+  single documented inexact ingress. Net effect: `pi + pi` on the stdlib's stored 39-digit π stays
+  exact to all digits (`6.283185307179586476925286766559005768394`) instead of collapsing to the
+  f64-rounded `6.283185307179586`, and further arithmetic stays exact (NUM-5). Both the bare and
+  typed-wrapper (`Compound`) arms were migrated. No result changes for `Int`/`Float` inputs.
+- Added a compute-layer regression test proving the doubled-π sidecar equals the exact 40-digit
+  value and reduces to `3141592653589793238462643383279502884197 / (5 × 10^38)` in lowest terms.
+
 ## [0.38.1] — 2026-07-14 — read `Number::Exact` valued facts (ADJ-EXACT-NUMBERS NX-2)
 
 ### Changed

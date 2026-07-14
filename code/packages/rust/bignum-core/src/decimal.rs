@@ -46,7 +46,7 @@
 //! assert_eq!(third.to_string(), "3.3333");
 //! ```
 
-use crate::BigInteger;
+use crate::{BigInteger, BigRational};
 use std::cmp::Ordering;
 use std::fmt;
 use std::str::FromStr;
@@ -365,6 +365,45 @@ impl BigDecimal {
     /// and out-of-range magnitudes saturate to `±∞` / `0` exactly as the parser does.
     pub fn to_f64(&self) -> f64 {
         self.to_string().parse::<f64>().unwrap_or(f64::NAN)
+    }
+}
+
+// ===========================================================================
+//  Exact export to BigRational
+// ===========================================================================
+
+impl BigDecimal {
+    /// The **exact** value as a [`BigRational`] — no rounding, no `f64` hop.
+    ///
+    /// A [`BigDecimal`] is `mantissa × 10^(-scale)`, so it is *always* a ratio of two integers
+    /// and converts to a fraction with **zero loss**. This is the exact counterpart of the
+    /// lossy [`to_f64`](Self::to_f64): where `to_f64` narrows to the nearest binary float,
+    /// `to_rational` hands back the true value that a rational engine can keep computing on
+    /// exactly (see ADJ-EXACT-NUMBERS NX-3 — exact compute ingestion).
+    ///
+    /// The scale sign picks the shape of the fraction:
+    ///
+    /// | value | mantissa | scale | `to_rational()` |
+    /// |---|---|---|---|
+    /// | `2.54`   | `254`  | `2`  | `254 / 100` → `127/50`  (scale > 0 ⇒ denominator `10^scale`) |
+    /// | `0.3048` | `3048` | `4`  | `3048 / 10000` → `381/1250` |
+    /// | `100`    | `1`    | `-2` | `1 × 10^2` → `100/1`  (scale ≤ 0 ⇒ whole number `mant · 10^|scale|`) |
+    /// | `0`      | `0`    | `0`  | `0/1` |
+    ///
+    /// [`BigRational::new`] reduces to lowest terms and moves the sign onto the numerator, so the
+    /// result is canonical. The mantissa already carries the sign, so no separate sign handling
+    /// is needed here.
+    pub fn to_rational(&self) -> BigRational {
+        if self.scale > 0 {
+            // Fractional digits: the value is `mantissa / 10^scale`.
+            let denom = ten_pow(scale_diff_to_u32(self.scale as i128));
+            BigRational::new(self.mant.clone(), denom)
+        } else {
+            // scale <= 0: the value is a whole number `mantissa × 10^(-scale)`.
+            // (`scale == 0` folds in here too, since `10^0 == 1`.)
+            let factor = ten_pow(scale_diff_to_u32(-(self.scale as i128)));
+            BigRational::from_integer(&self.mant * &factor)
+        }
     }
 }
 
@@ -761,6 +800,56 @@ mod tests {
         // Out-of-range magnitudes saturate exactly as the parser does.
         let huge = "1".to_string() + &"0".repeat(400); // 10^400
         assert_eq!(d(&huge).to_f64(), f64::INFINITY);
+    }
+
+    // ---- exact BigRational export --------------------------------------
+
+    #[test]
+    fn to_rational_is_exact_for_fractional_decimals() {
+        // 2.54 = 254/100 = 127/50 in lowest terms.
+        let r = d("2.54").to_rational();
+        assert_eq!(r.numerator().to_string(), "127");
+        assert_eq!(r.denominator().to_string(), "50");
+        // 0.3048 = 3048/10000 = 381/1250.
+        let r = d("0.3048").to_rational();
+        assert_eq!(r.numerator().to_string(), "381");
+        assert_eq!(r.denominator().to_string(), "1250");
+    }
+
+    #[test]
+    fn to_rational_handles_integers_and_zero_and_signs() {
+        // Whole numbers land on denominator 1 (scale <= 0 branch).
+        assert_eq!(d("100").to_rational(), BigRational::from_ints(100, 1));
+        assert_eq!(d("7").to_rational(), BigRational::from_ints(7, 1));
+        // 12300 canonicalizes to mantissa 123, scale -2, then rehydrates exactly.
+        assert_eq!(d("12300").to_rational(), BigRational::from_ints(12300, 1));
+        // Zero is the canonical 0/1.
+        assert_eq!(d("0").to_rational(), BigRational::zero());
+        // Sign rides on the mantissa; new() keeps the denominator positive.
+        let r = d("-2.5").to_rational();
+        assert_eq!(r.numerator().to_string(), "-5");
+        assert_eq!(r.denominator().to_string(), "2");
+        assert!(r.is_negative());
+    }
+
+    #[test]
+    fn to_rational_is_exact_for_39_digit_pi() {
+        // The stdlib ships pi to 39 digits. Its exact rational value is
+        // 3141592653589793238462643383279502884197 / 10^39 (already coprime, so it
+        // does not reduce). No f64 hop, so all 39 digits survive.
+        let pi = d("3.141592653589793238462643383279502884197");
+        let r = pi.to_rational();
+        assert_eq!(
+            r.numerator().to_string(),
+            "3141592653589793238462643383279502884197"
+        );
+        assert_eq!(
+            r.denominator().to_string(),
+            "1000000000000000000000000000000000000000" // 10^39
+        );
+        // Round-trip sanity: numerator has 40 digits, denominator has 40 (1 + 39 zeros).
+        assert_eq!(r.numerator().to_string().len(), 40);
+        assert_eq!(r.denominator().to_string().len(), 40);
     }
 
     // ---- canonical form & display --------------------------------------
