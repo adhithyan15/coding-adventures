@@ -1,5 +1,5 @@
 % ============================================================================
-% metric-prefixes.query.adj — a worked recall over the gradeschool SI-prefix library.
+% metric-prefixes.query.adj — a worked recall over the metrology SI-prefix library.
 % ============================================================================
 % The shape a learner (or an LLM) produces to ANSWER "what power of ten is 'kilo'?":
 % it states no fact of its own — it only `import`s the grounded table and asks

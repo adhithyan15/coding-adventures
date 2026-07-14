@@ -1,5 +1,5 @@
-//! End-to-end test for the gradeschool FACTS library
-//! (`adj-facts-stdlib/gradeschool/metric-prefixes.adj`) driven through the built
+//! End-to-end test for the metrology FACTS library
+//! (`adj-facts-stdlib/metrology/metric-prefixes.adj`) driven through the built
 //! CLI: a native `table` of SI-prefix → power-of-ten resolves a binding-query
 //! recall with the source's citation, binds a NEGATIVE exponent for a sub-unit
 //! prefix (milli → -3), and abstains on a word that is not an SI prefix — with 0
@@ -31,10 +31,10 @@ fn run(program: &Path) -> (bool, String) {
 }
 
 #[test]
-fn gradeschool_metric_prefix_recall_binds_power_of_ten_with_citation() {
+fn metrology_metric_prefix_recall_binds_power_of_ten_with_citation() {
     let dir = scratch("siprefix");
-    // Copy the shipped gradeschool table beside the entry program and import it.
-    let src = facts_stdlib().join("gradeschool/metric-prefixes.adj");
+    // Copy the shipped metrology table beside the entry program and import it.
+    let src = facts_stdlib().join("metrology/metric-prefixes.adj");
     std::fs::copy(&src, dir.join("metric-prefixes.adj")).expect("copy shipped metric-prefixes.adj");
     std::fs::write(
         dir.join("case.adj"),

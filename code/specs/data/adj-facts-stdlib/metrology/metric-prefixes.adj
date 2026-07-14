@@ -1,7 +1,7 @@
 % ============================================================================
-% metric-prefixes — each SI prefix → its power of ten (adj-facts-stdlib, GRADESCHOOL).
+% metric-prefixes — each SI prefix → its power of ten (adj-facts-stdlib, METROLOGY).
 % ============================================================================
-% The grade-school science/math fact that unlocks the metric system: a prefix
+% The metrology (units-of-measure) fact that unlocks the metric system: a prefix
 % names a power of ten. "kilo" means 10^3 (a kilometre is 1000 metres); "milli"
 % means 10^-3 (a millimetre is a thousandth of a metre). Recall is a binding
 % query — you ask for a prefix and get back its exponent, WITH its citation:
@@ -19,7 +19,7 @@
 % integer exponent, a recalled prefix COMPOSES straight into arithmetic — to scale
 % a base quantity you multiply by 10^power. `milli` recalls as -3, so a millimetre
 % is metres × 10^-3; `kilo` recalls as 3, so a kilometre is metres × 10^3. That is
-% the concrete grade-school bridge from RECALL (name the prefix) to COMPUTE (apply
+% the concrete metrology bridge from RECALL (name the prefix) to COMPUTE (apply
 % its power). Negative literals like `-3` are valid ADJ numbers, so the sub-unit
 % prefixes are first-class rows, not a special case.
 %
