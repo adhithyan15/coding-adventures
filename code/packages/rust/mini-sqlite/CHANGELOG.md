@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.5.27 — `COLLATE` in `ORDER BY` (NOCASE / RTRIM / BINARY)
+
+`ORDER BY col COLLATE name` now sorts through a collating sequence, matching
+SQLite: `NOCASE` compares ASCII case-insensitively (`'Apple'` = `'apple'`),
+`RTRIM` ignores trailing spaces (`'a  '` = `'a'`), and `BINARY` (the default)
+keeps raw byte order (uppercase before lowercase). The `COLLATE` name parses
+between the sort expression and `ASC`/`DESC` (sql-parser 0.1.11), is validated
+in the planner into a new `SortKey.collation` field (sql-planner 0.2.10),
+threaded through `CompiledSortKey` (sql-codegen 0.6.4) and constant folding
+(sql-optimizer 0.1.4), and applied by the VM sort comparator to text values
+only (sql-vm 0.4.14). Equal keys keep insertion order (the sort is stable),
+matching SQLite. Four differential-oracle cases diff NOCASE (asc + desc), RTRIM,
+and BINARY against real bundled SQLite. Unknown collations are a planning error.
+
 ## 0.5.26 — `IS` / `IS NOT` null-safe (in)equality
 
 `SELECT a IS b` / `a IS NOT b` now parse and run as SQLite's null-safe

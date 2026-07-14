@@ -3,6 +3,18 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.14] - Unreleased
+
+### Added
+
+- **Collation-aware `ORDER BY` comparator.** `apply_sort` now compares text
+  values through the sort key's collating sequence: `NOCASE` folds ASCII case
+  on both operands, `RTRIM` strips trailing spaces, and `BINARY`/absent keeps
+  raw byte order. Collation applies only to text-vs-text comparisons; every
+  other type pairing uses the existing `sql_cmp` type ordering. The stable sort
+  already preserves insertion order for equal keys, matching SQLite. New helpers
+  `sql_cmp_collated` and `collate_text`.
+
 ## [0.4.13] - Unreleased
 
 ### Added

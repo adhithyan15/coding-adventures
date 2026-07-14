@@ -199,6 +199,17 @@ pub fn parser_grammar() -> ParserGrammar {
             name: r#"order_item"#.to_string(),
             body: GrammarElement::Sequence { elements: vec![
                 GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                // Optional `COLLATE name` clause, BEFORE the ASC/DESC direction
+                // (per SQLite grammar: `expr COLLATE name ASC`). `COLLATE` is
+                // matched by literal text (it is not in the lexer keyword list,
+                // so it arrives as a NAME token that the literal matcher accepts
+                // case-insensitively); the name that follows (BINARY / NOCASE /
+                // RTRIM, or a user collation) is accepted as a generic NAME and
+                // validated in the planner. Absent → BINARY (byte order).
+                GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                        GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                        GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                    ] }) },
                 GrammarElement::Optional { element: Box::new(GrammarElement::Alternation { choices: vec![
                         GrammarElement::Literal { value: r#"ASC"#.to_string() },
                         GrammarElement::Literal { value: r#"DESC"#.to_string() },

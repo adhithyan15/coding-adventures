@@ -413,6 +413,12 @@ pub struct SortKey {
     /// `None` = SQLite's default (NULLs sort first for ASC, last for DESC);
     /// `Some(true)` = NULLs first; `Some(false)` = NULLs last.
     pub nulls_first: Option<bool>,
+    /// Collating sequence from a `COLLATE name` clause, applied to **text**
+    /// values before comparison. `None` (or an explicit `COLLATE BINARY`) means
+    /// the default byte-order comparison. `Some("NOCASE")` compares ASCII
+    /// case-insensitively; `Some("RTRIM")` ignores trailing spaces. Non-text
+    /// values are unaffected by collation. Stored uppercased.
+    pub collation: Option<String>,
 }
 
 /// An aggregate item inside an `Aggregate` plan node.
@@ -1000,10 +1006,41 @@ fn plan_order_item(item: &GrammarASTNode) -> Result<SortKey, PlanError> {
         placement.transpose()?
     };
 
+    // Optional `COLLATE name` clause. `COLLATE` is followed by the collation
+    // name (BINARY / NOCASE / RTRIM). We validate against the three built-in
+    // sequences and store the name uppercased; `BINARY` (the default) collapses
+    // to `None` so the VM takes the plain byte-order path. An unknown collation
+    // is a planning error, matching SQLite's "no such collating sequence".
+    let collation = {
+        let children = &item.children;
+        let mut coll: Option<Result<Option<String>, PlanError>> = None;
+        for (i, c) in children.iter().enumerate() {
+            if is_keyword_token(c, "COLLATE") {
+                coll = Some(match children.get(i + 1) {
+                    Some(tok) => {
+                        let name = token_text_of(tok).to_uppercase();
+                        match name.as_str() {
+                            "BINARY" => Ok(None),
+                            "NOCASE" | "RTRIM" => Ok(Some(name)),
+                            other => Err(PlanError::UnsupportedStatement(format!(
+                                "no such collating sequence: {other}"
+                            ))),
+                        }
+                    }
+                    None => Err(PlanError::UnsupportedStatement(
+                        "COLLATE clause missing collation name".to_string(),
+                    )),
+                });
+            }
+        }
+        coll.transpose()?.flatten()
+    };
+
     Ok(SortKey {
         expr,
         ascending,
         nulls_first,
+        collation,
     })
 }
 

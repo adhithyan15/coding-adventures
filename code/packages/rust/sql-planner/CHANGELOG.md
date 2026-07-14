@@ -2,6 +2,17 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.10] - Unreleased
+
+### Added
+
+- **`COLLATE name` read into `SortKey.collation`.** `plan_order_item` now scans
+  for a `COLLATE` token and validates the following name against the three
+  built-in sequences: `BINARY` (folded to `None`, the default byte order),
+  `NOCASE`, and `RTRIM`. An unknown collation is a planning error
+  (`no such collating sequence: X`), matching SQLite. New `collation:
+  Option<String>` field on `SortKey` (stored uppercased).
+
 ## [0.2.9] - Unreleased
 
 ### Added

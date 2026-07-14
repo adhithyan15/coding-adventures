@@ -281,6 +281,22 @@ mod tests {
         }
     }
 
+    /// `COLLATE name` parses in ORDER BY — standalone, and composed with the
+    /// ASC/DESC direction and a NULLS clause (COLLATE comes first, per SQLite).
+    /// The collation name is an ordinary NAME; the planner validates it.
+    #[test]
+    fn test_parse_order_by_collate() {
+        for q in [
+            "SELECT id FROM t ORDER BY name COLLATE NOCASE",
+            "SELECT id FROM t ORDER BY name COLLATE BINARY",
+            "SELECT id FROM t ORDER BY name COLLATE RTRIM DESC",
+            "SELECT id FROM t ORDER BY name COLLATE NOCASE ASC NULLS LAST",
+        ] {
+            let ast = assert_program_root(q);
+            assert!(find_rule(&ast, "order_item"), "Expected order_item for {q:?}");
+        }
+    }
+
     // -----------------------------------------------------------------------
     // Test 5: SELECT with LIMIT and OFFSET
     // -----------------------------------------------------------------------

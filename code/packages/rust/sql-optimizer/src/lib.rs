@@ -535,6 +535,7 @@ fn fold_plan(plan: OptimizedPlan) -> OptimizedPlan {
                     expr: fold_expr(k.expr),
                     ascending: k.ascending,
                     nulls_first: k.nulls_first,
+                    collation: k.collation,
                 })
                 .collect(),
         },
@@ -1808,6 +1809,7 @@ mod tests {
                 expr: col(col_name),
                 ascending: true,
                 nulls_first: None,
+                collation: None,
             }],
         }
     }
@@ -2444,6 +2446,7 @@ mod tests {
                 expr: col("id"),
                 ascending: true,
                 nulls_first: None,
+                collation: None,
             }],
         };
         let opt = optimize_with_passes(plan, &[&DeadCodeEliminationPass]);
@@ -2622,6 +2625,7 @@ mod tests {
                     expr: col("name"),
                     ascending: true,
                     nulls_first: None,
+                    collation: None,
                 }],
             }),
             count: Some(10),
