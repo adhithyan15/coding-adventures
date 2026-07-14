@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.41.0] - 2026-07-14
+
+### Added — `FunctionParam::RestElement` (`...name` rest parameter) — CLOC12.190 PR1
+
+New `RestElement` struct (`argument: Identifier`) + a `FunctionParam::RestElement` variant so a trailing
+rest parameter (`function f(a, ...rest){}`) is representable. The `#[serde(untagged)]` `FunctionParam`
+tells it apart from a plain identifier by shape (`argument` vs `name`). Adds
+`FunctionParam::binding_identifier()`/`binding_identifier_mut()` accessors yielding the single bound name
+for either variant so passes treat params uniformly. Additive; MINOR.
+
 ## [0.40.0] - 2026-07-12
 
 ### Added — CLOC12.189 PR1: ES-module export declarations

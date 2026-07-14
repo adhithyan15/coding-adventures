@@ -6075,7 +6075,9 @@ mod tests {
         let a = bridge_var_init_arrow("var f=x=>x+1;");
         assert!(!a.is_async);
         assert_eq!(a.params.len(), 1);
-        let FunctionParam::Identifier(p) = &a.params[0];
+        let FunctionParam::Identifier(p) = &a.params[0] else {
+            panic!("expected a plain Identifier param, got {:?}", a.params[0]);
+        };
         assert_eq!(p.name, "x");
         assert!(
             matches!(a.body, ArrowBody::Expression(_)),

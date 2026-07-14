@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename` crate will be documented in this file.
 
+## [0.21.0] - 2026-07-14
+
+### Changed — handle `FunctionParam::RestElement` — CLOC12.190 PR1
+
+Picks up javascript-ast 0.41.0. Handles the new `FunctionParam::RestElement` variant via
+`binding_identifier()`, so a rest parameter (`...name`) is walked as an ordinary single-name binding
+(counted / looked up / renamed) rather than being unrepresentable. Additive; MINOR.
+
 ## [0.20.0] - 2026-07-12
 
 ### Changed — CLOC12.189 PR2: bail on module `export`

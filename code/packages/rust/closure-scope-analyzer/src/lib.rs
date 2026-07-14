@@ -718,7 +718,12 @@ fn walk_function_declaration(
 
     // Params become Param-kind bindings in the function scope.
     for param in &fd.params {
-        let FunctionParam::Identifier(id) = param;
+        // Both a plain identifier param and a rest param (`...name`) bind a
+        // single name in the function scope — extract it from either variant.
+        let id = match param {
+            FunctionParam::Identifier(id) => id,
+            FunctionParam::RestElement(re) => &re.argument,
+        };
         emit_binding(
             id.name.clone(),
             BindingKind::Param,
@@ -777,7 +782,12 @@ fn walk_function_expression(
     }
 
     for param in &fe.params {
-        let FunctionParam::Identifier(id) = param;
+        // Both a plain identifier param and a rest param (`...name`) bind a
+        // single name in the function scope — extract it from either variant.
+        let id = match param {
+            FunctionParam::Identifier(id) => id,
+            FunctionParam::RestElement(re) => &re.argument,
+        };
         emit_binding(
             id.name.clone(),
             BindingKind::Param,
@@ -818,7 +828,12 @@ fn walk_arrow_function_expression(
     let function_scope = emit_scope(ScopeKind::Function, ctx.current, analysis);
 
     for param in &ae.params {
-        let FunctionParam::Identifier(id) = param;
+        // Both a plain identifier param and a rest param (`...name`) bind a
+        // single name in the function scope — extract it from either variant.
+        let id = match param {
+            FunctionParam::Identifier(id) => id,
+            FunctionParam::RestElement(re) => &re.argument,
+        };
         emit_binding(
             id.name.clone(),
             BindingKind::Param,
