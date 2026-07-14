@@ -1,5 +1,37 @@
 # Changelog — iir-to-cil-bytecode
 
+## 0.41.0 - 2026-07-14 (E6d-6c — union `match` runs on CLR: name quoting + box-of-reference passthrough)
+
+Two CLR-only fixes complete the CLR column for Twig union `match` — so union
+`match` now runs on **all five** code-gen backends (NativeAot / Llvm / Wasm / Jvm /
+Clr).
+
+1. **Special-char method names → ILAsm single-quoted identifiers.**
+   `checked_cil_ident` now emits a name outside the bare-safe set `[A-Za-z0-9_$]`
+   as a quoted identifier `'…'` (the CIL twin of `iir-to-llvm`'s `llvm_fn_ident`):
+   the union predicate `Some?` and the record accessor `point-x` carry `?`/`-`,
+   which the ILAsm grammar rejects bare, so those methods previously would not even
+   assemble. `'` and `\` inside the name are backslash-escaped, and the guard stays
+   **fail-closed** — whitespace / control / non-ASCII (which a legitimate lisp
+   identifier never contains) is still rejected, preserving the anti-injection
+   property. Bare names (`main`, `L_cond_next_<n>`, `lambda_<n>`) are unchanged.
+
+2. **`box` of an already-boxed reference is the identity.** The `box` op emitted
+   `box [System.Runtime]System.Int32` unconditionally. In the CLR value model a
+   `ref<any>` / `ref<LispyPair>` local is already a reference (`object` /
+   `object[]`), so boxing it as an `Int32` boxes the *pointer* — E6d-6b's union
+   field, read back via `field_load` as `ref<any>`, then re-boxed, produced a
+   truncated handle (`63576` instead of `42`). `box` now only boxes a value-type
+   source (`int32`/`int64`, e.g. an E6d-2 dynamic-arithmetic result or the union
+   tag const, narrowing `int64` with `conv.i4` first); a reference source is copied
+   through. This matches the WASM/JVM structural backends, where `box`-of-boxed is
+   already the identity.
+
+Run-verified exit 42 on the real CoreCLR (ilasm + the runtime) for
+`(match (Some 42) …)`, `(match (None) …)`, and `(match (Some 20) ((Some v) (+ v v)))`
+(= 40, dynamic arithmetic over the extracted field); records + E6d-2/E6d-3 CLR
+cells unchanged. The two union matrix cells regain `Clr`.
+
 ## 0.40.1 - 2026-07-11 (DVAL01-2: rename IIR builtin names lispy_* -> dyn_*)
 
 DVAL01-2: the CIL structural lowering's references to the `lispy_cons` IIR name are renamed to `dyn_cons` (heap builtins are handled structurally; the name only appears in a comment + a lowering test). Pure rename.
