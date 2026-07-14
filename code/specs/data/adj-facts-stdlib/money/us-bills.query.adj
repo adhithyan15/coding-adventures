@@ -1,0 +1,20 @@
+% ============================================================================
+% us-bills.query.adj — a worked recall over the US-bills money library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "whose face is on the twenty?":
+% it states no money fact — it only `import`s the grounded table and asks binding
+% queries. The engine resolves each `?` against the `bill_portrait` rows and returns
+% the surname + the table's source/locator/trust. An amount that is NOT a printed
+% US denomination abstains honestly — the engine never invents a name. The third
+% query runs the relation BACKWARDS: given the surname, recall the denomination.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli us-bills.query.adj
+% ============================================================================
+
+import "us-bills.adj"
+
+? bill_portrait(1, $Who)          % expect washington
+? bill_portrait(100, $Who)        % expect franklin
+? bill_portrait($Dollars, lincoln) % expect 5 — reverse lookup by portrait
+? bill_portrait(3, $Who)          % expect abstain — there is no $3 bill
