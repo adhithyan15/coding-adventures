@@ -1,0 +1,55 @@
+% ============================================================================
+% dna-base-pairs — each DNA base and its Watson–Crick complement
+% (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% A molecular-biology fact a medicine agent reasons from: in double-stranded
+% DNA the two strands are complementary, and each base pairs with exactly one
+% partner across the helix. Recall is a binding query:
+%
+%     ? dna_complement(adenine, $Base)      % thymine
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `dna_complement(base, complement)` carrying the table's citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns the
+% complementary base WITH its source, on the CPU, with zero model calls, and
+% abstains on anything not in the table.
+%
+% Watson–Crick base pairing, as a truth table:
+%
+%     base       complement    bond
+%     ---------  ----------    ------------------
+%     adenine    thymine       2 hydrogen bonds (A–T)
+%     thymine    adenine       2 hydrogen bonds (T–A)
+%     guanine    cytosine      3 hydrogen bonds (G–C)
+%     cytosine   guanine       3 hydrogen bonds (C–G)
+%
+% All FOUR directed rows are shipped so that BOTH forward directions resolve:
+% asking for adenine's partner and asking for thymine's partner each bind
+% directly, without the query needing to know the pairing is symmetric.
+%
+% Note that `uracil` is deliberately NOT a row: uracil replaces thymine in RNA,
+% not DNA, so a DNA-complement recall must ABSTAIN on it rather than invent a
+% partner — the honest-abstention property is what makes the table safe for a
+% clinical reasoner to trust.
+%
+% Provenance: the pairing is copied from the NHGRI (National Human Genome
+% Research Institute) Genetics Glossary "Base Pair" entry, whose definition
+% states verbatim (see `source`) that "adenine pairs with thymine, and cytosine
+% pairs with guanine." The citable artifact is that glossary page at the
+% `locator`. `trust authoritative` — NHGRI/genome.gov is a primary genetics
+% reference. Nothing here is asserted from memory. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table dna_complement {
+    columns base, complement
+
+    row (adenine, thymine)
+    row (thymine, adenine)
+    row (guanine, cytosine)
+    row (cytosine, guanine)
+
+    source "adenine pairs with thymine, and cytosine pairs with guanine"
+    locator "https://www.genome.gov/genetics-glossary/Base-Pair"
+    trust authoritative
+}
