@@ -2023,7 +2023,10 @@ fn convert_yield_expression(node: &GrammarASTNode) -> Result<Expression, BridgeE
 /// Async arrows (`async x => x`) parse under the separate
 /// `async_arrow_function` rule and remain declined for now — a follow-up
 /// once the async evaluation model lands.
-fn convert_arrow_function(node: &GrammarASTNode) -> Result<ArrowFunctionExpression, BridgeError> {
+fn convert_arrow_function(
+    node: &GrammarASTNode,
+    is_async: bool,
+) -> Result<ArrowFunctionExpression, BridgeError> {
     let children = node_children(node);
 
     let mut params = Vec::new();
@@ -2077,7 +2080,7 @@ fn convert_arrow_function(node: &GrammarASTNode) -> Result<ArrowFunctionExpressi
         cv: None,
         params,
         body,
-        is_async: false,
+        is_async,
     })
 }
 
@@ -2401,7 +2404,18 @@ fn convert_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> 
         // itself declines the ambiguous `() => {}` / object-body case and
         // (until the grammar parses them) never sees a block body.
         "arrow_function" => {
-            convert_arrow_function(node).map(Expression::ArrowFunctionExpression)
+            convert_arrow_function(node, false).map(Expression::ArrowFunctionExpression)
+        }
+
+        // Async arrow function (CLOC12.192). The grammar rule
+        // `async_arrow_function = "async" arrow_parameters ARROW concise_body`
+        // is the plain `arrow_function` shape plus a leading `async` literal, so
+        // `convert_arrow_function` handles its children unchanged (the `async`
+        // token is not a node) — we just set `is_async`. The AST and emitter
+        // already model async arrows; a body that requires `await` still
+        // declines separately (that grammar is not parseable yet).
+        "async_arrow_function" => {
+            convert_arrow_function(node, true).map(Expression::ArrowFunctionExpression)
         }
 
         // No-substitution template literal (CLOC12.155). `convert_template_literal`
@@ -2431,8 +2445,7 @@ fn convert_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> 
             convert_class_expression(node).map(Expression::ClassExpression)
         }
 
-        "async_arrow_function"
-        | "await_expression"
+        "await_expression"
         | "async_function_expression"
         | "async_generator_expression"
         | "tagged_template_expression"
@@ -6294,17 +6307,30 @@ mod tests {
     }
 
     #[test]
-    fn async_arrow_is_still_declined() {
-        // Async arrows parse under `async_arrow_function` and remain declined
-        // (safe whitespace-only passthrough) until the async model lands.
-        assert!(
-            grammar_to_program(
-                &crate::parse_javascript("var f=async x=>x;", "es2025").expect("parse"),
-                DEFAULT_ES_VERSION,
-            )
-            .is_err(),
-            "async arrow should still decline"
-        );
+    fn async_arrow_single_param_bridges() {
+        // `async x => x` — CLOC12.192. Async arrows parse under
+        // `async_arrow_function` (the plain arrow shape plus a leading `async`
+        // literal) and now bridge to an `ArrowFunctionExpression` with `is_async`
+        // set, instead of declining to WHITESPACE_ONLY.
+        let f = arrow_of("x = async x => x;");
+        assert!(f.is_async, "async arrow must set is_async");
+        assert_eq!(f.params.len(), 1);
+    }
+
+    #[test]
+    fn async_arrow_paren_params_bridges() {
+        // `async (a, b) => a` — parenthesised params carry the same async flag.
+        let f = arrow_of("x = async (a, b) => a;");
+        assert!(f.is_async);
+        assert_eq!(f.params.len(), 2);
+    }
+
+    #[test]
+    fn plain_arrow_is_not_async() {
+        // Regression: the plain-arrow dispatch still bridges with is_async=false
+        // after the shared converter gained the `is_async` parameter.
+        let f = arrow_of("x = y => y;");
+        assert!(!f.is_async, "plain arrow must not be async");
     }
 
     /// Pull the single `ForOfStatement` out of a one-statement program.
