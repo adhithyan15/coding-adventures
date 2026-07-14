@@ -2,6 +2,12 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.54.1] - 2026-07-14
+
+### Fixed — test compiles against `FunctionParam::RestElement` — CLOC12.190 PR1
+
+Picks up javascript-ast 0.41.0's new `FunctionParam::RestElement` variant. One bridge unit test used a\nnow-refutable `let FunctionParam::Identifier(p) = ...` binding; guarded it with a `let ... else { panic! }`\nso the (single-variant) arrow-param assertion still holds. Test-only; no runtime behavior change. PATCH.
+
 ## [0.54.0] - 2026-07-13
 
 ### Fixed — recursion-depth guard on the three parser entry points `asi.rs` doesn't sit in front of
