@@ -585,12 +585,19 @@ pub fn parser_grammar() -> ParserGrammar {
                     GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
                     GrammarElement::Literal { value: r#")"#.to_string() },
                 ] },
-                // Searched `CASE WHEN cond THEN val … [ELSE val] END`. One
-                // WHEN/THEN is mandatory; further ones repeat; ELSE is optional.
-                // The condition/value slots are full `expr`s. Placed before
-                // function_call so the leading `CASE` literal is matched here.
+                // `CASE [operand] WHEN cond THEN val … [ELSE val] END`. Two
+                // forms share one rule: the *searched* form (`CASE WHEN cond …`)
+                // and the *simple* form (`CASE operand WHEN value …`), told apart
+                // by the optional `operand` expr between `CASE` and the first
+                // `WHEN`. Because `WHEN` is a keyword and cannot start an `expr`,
+                // the optional operand never swallows the searched form's `WHEN`.
+                // One WHEN/THEN is mandatory; further ones repeat; ELSE is
+                // optional. All slots are full `expr`s. The planner desugars the
+                // simple form to the searched form (`operand = value`). Placed
+                // before function_call so the leading `CASE` literal matches here.
                 GrammarElement::Sequence { elements: vec![
                     GrammarElement::Literal { value: r#"CASE"#.to_string() },
+                    GrammarElement::Optional { element: Box::new(GrammarElement::RuleReference { name: r#"expr"#.to_string() }) },
                     GrammarElement::Literal { value: r#"WHEN"#.to_string() },
                     GrammarElement::RuleReference { name: r#"expr"#.to_string() },
                     GrammarElement::Literal { value: r#"THEN"#.to_string() },

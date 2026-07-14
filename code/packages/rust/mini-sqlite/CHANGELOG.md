@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.5.28 — Simple (operand) `CASE x WHEN v THEN …`
+
+`SELECT CASE x WHEN 1 THEN 'a' WHEN 2 THEN 'b' ELSE 'c' END` now parses and runs
+with SQLite's semantics: the operand is compared to each `WHEN` value for
+equality, the first match's result is returned (ELSE, or NULL if no ELSE and no
+match). A NULL operand matches nothing (`x = NULL` is never true) and falls
+through to ELSE. It is lowered entirely in the planner (sql-parser 0.1.12 adds
+the optional operand to the CASE grammar; sql-planner 0.2.11 desugars each
+`WHEN v THEN r` into a `(x = v, r)` branch of the searched-CASE node added in
+0.5.25) — so **no codegen or VM opcode**; it reuses the searched `CASE`
+machinery. Four differential-oracle cases (with/without ELSE, text operand +
+first-match, NULL-operand → ELSE) diff against real bundled SQLite.
+
 ## 0.5.27 — `COLLATE` in `ORDER BY` (NOCASE / RTRIM / BINARY)
 
 `ORDER BY col COLLATE name` now sorts through a collating sequence, matching
