@@ -31,8 +31,11 @@ book.
   dhanyavādamulu → avunu → lēdu → sarē → practice (with the *veḷḷi vastānu*
   farewell). Telugu script taught inline; Dravidian cognates traced. In the
   book.
-- **Chapter 2 — Introducing Yourself** (planned): *nā pēru…* ("my name"), and
-  *nuvvu* / *mīru* (familiar / respectful "you").
+- **Chapter 2 — Introducing Yourself** ([`lessons/TE-C02-*`](./lessons/)):
+  peru, naa, **nā pēru** ("my name is," zero copula), nuvvu/mīru, ēmiṭi,
+  **mī pēru ēmiṭi?** ("what's your name?"), santōṣam, practice. Every atom
+  traced (*pēru* ← *\*pēr*, twin of Tamil *peyar*; *santōṣam* Sanskrit). In the
+  book.
 
 ## Book / fonts
 

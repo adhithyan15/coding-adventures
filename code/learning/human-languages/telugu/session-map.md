@@ -1,4 +1,4 @@
-# Session Map — Telugu Chapter 1
+# Session Map — Telugu Chapters 1–2
 
 Same spaced-repetition schedule as the other tracks (a word from session *N*
 resurfaces at *N+1, N+3, N+7, N+15*). Lessons named by slug; this map is the
@@ -21,7 +21,19 @@ the independent vowels — all in the service of real greetings.
 | 5 | sare | సరే | స, రే (ē-sign) | native; the family word *sari* in Telugu dress |
 | 6 | practice | (recap) | read all five | the *veḷḷi vastānu* farewell |
 
+## Chapter 2 — Introducing Yourself
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 7 | peru | పేరు | "name" ← Dravidian *\*pēr* (twin of Tamil *peyar*, not *name*) |
+| 8 | naa | నా | "my" ← *nēnu* ("I") |
+| 9 | naa-peru | నా పేరు … | **"my name is…"** — the **zero copula** (no "is") |
+| 10 | nuvvu-miiru | నువ్వు / మీరు | **"you"** familiar/respectful; respect by plural |
+| 11 | emiti | ఏమిటి | "what" ← Dravidian question-stem *\*yā-/\*e-* |
+| 12 | mii-peru-emiti | మీ పేరు ఏమిటి? | **"what's your name?"** (still no "is") |
+| 13 | santosham | సంతోషం | "pleased to meet you" — **Sanskrit** (vs. Tamil's native *magiḻcci*) |
+| 14 | practice | (dialogue) | the whole exchange |
+
 ## Next
 
-Chapter 2 — introducing yourself: *nā pēru…* ("my name"), *nuvvu* / *mīru*
-(familiar / respectful "you"), and the first native/Sanskrit doublets.
+Chapter 3 — *elā unnāru?* ("how are you?") — the responding cycle.
