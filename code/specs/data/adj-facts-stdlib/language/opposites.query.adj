@@ -1,0 +1,18 @@
+% ============================================================================
+% opposites.query.adj — a worked recall over the word-opposites library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is the opposite of
+% hot?": it states no fact of its own — it only `import`s the grounded table and
+% asks binding queries. The engine resolves each `?` against the `opposite` rows
+% and returns the opposite + the table's source/locator/trust. A word the table
+% does not carry abstains honestly — the engine never invents an opposite.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli opposites.query.adj
+% ============================================================================
+
+import "opposites.adj"
+
+? opposite(hot, $Word)         % expect cold
+? opposite(happy, $Word)       % expect sad
+? opposite(purple, $Word)      % expect abstain — no opposite is shipped for purple
