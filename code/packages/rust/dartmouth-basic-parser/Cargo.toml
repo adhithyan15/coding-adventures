@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-dartmouth-basic-parser"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
 description = "Dartmouth BASIC parser — v0.3.0 parses multi-dimensional array subscripts and DIM bounds (`A(i,j)`, `DIM A(m,n)`) for BA-DIM-2D. v0.2.0 parses `$` string variables and STRING primaries for BA4."
 
