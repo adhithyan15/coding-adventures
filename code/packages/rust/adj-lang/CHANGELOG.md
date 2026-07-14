@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.51.0] — native tabular data: the `table` construct (ADJ-TABLES RS-5)
+
+### Added
+
+- **`table` construct** — a first-class, importable, provenanced tabular relation, a sibling of
+  `dictionary`/`rulebook`/`formulabook`. Surface:
+  `table <name> { [use <dict>…] columns c1,… row (v1,…) … source "…" locator "…" trust <tier> }`.
+  `table`/`columns`/`row` are IDENT-matched literals (no new lexer keywords). Grammar: new
+  `table_decl`/`columns_decl`/`table_row`/`row_item` rules; AST: `Statement::Table` +
+  `TableRow`/`TableCell`; adapter: `adapt_table`/`adapt_row_item`.
+- **Rows lower to relations** — each `row (v1,…,vn)` lowers to a ground `logic_engine::Fact`
+  `name(v1,…,vn)` carrying the table's provenance, byte-identical to how a `relate` edge lowers. So
+  **exact lookup is the existing SLD binding query** (`? name(key, $V)`) with zero new engine code,
+  the answer names the table's citation as its proof, a missing key abstains, and a looked-up number
+  feeds a `let`/`formula` through the existing slot/`Ref` path. Cells map 1:1 onto the engine's three
+  ground term kinds (`Num`/`Atom`/`Str`).
+- **Guards** — `LowerError::TableArity` (a row whose cell count ≠ the declared `columns`),
+  `TableMissingProvenance` (a shipped table must be `source`d — the write gate shared with
+  `formula`/`relate`), and `TableNoColumns` (defensive).
+- Motivation and design in `code/specs/ADJ-TABLES.md`; the first shipped table,
+  `reference/length-conversions.adj` (NIST exact length→metre factors), demonstrates ingesting a
+  published table verbatim and citing it once. Range/bracket and interpolated lookup are staged
+  follow-ups (RS-5c/RS-5d).
+
 ## [0.50.0] — multi-step formula bodies (ADJ-RULE-SUBSTRATE RS-2)
 
 ### Added
