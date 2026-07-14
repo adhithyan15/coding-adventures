@@ -1,15 +1,15 @@
 ---
-id: AR-C01-masa
-chapter: 1
+id: AR-C02-masa
+chapter: 2
 type: word
 headword: مساء
 gloss: evening (masāʾ)
 concept_tag: MASA
-prerequisites: [AR-C01-sabah]
+prerequisites: [AR-C02-sabah]
 sounds: [rtl, hamza]
 roots: [m-s-w]
 est_minutes: 3
-reviews_of: [AR-C01-sabah-al-khayr]
+reviews_of: [AR-C02-sabah-al-khayr]
 ---
 
 # مساء (masāʾ) — "evening"
@@ -20,7 +20,7 @@ reviews_of: [AR-C01-sabah-al-khayr]
 
 ## You'll want to know first
 
-- [صباح (ṣabāḥ)](./AR-C01-sabah.md) — its morning counterpart.
+- [صباح (ṣabāḥ)](./AR-C02-sabah.md) — its morning counterpart.
 
 ## Sounds you'll need
 

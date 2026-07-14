@@ -1,6 +1,6 @@
 ---
-id: AR-C01-root-system
-chapter: 1
+id: AR-C02-root-system
+chapter: 2
 type: word
 headword: (the root system)
 gloss: how Arabic builds words from three-consonant roots
@@ -16,19 +16,17 @@ reviews_of: []
 
 ## Warm-up
 
-[PAUSE 2s] Every book in this series is obsessed with *roots*. Arabic is the
-language where roots aren't a historical curiosity — they're the *living
-machine* that builds almost every word. Understand this one idea and Arabic
-stops looking like memorization and starts looking like arithmetic.
+[PAUSE 2s] You can now *read* the greeting words (Chapter 1). This chapter
+opens them up — and it starts with the single idea that runs all of Arabic:
+the root. Every book in this series is obsessed with *roots*; Arabic is the
+language where roots aren't a historical curiosity but the *living machine*
+that builds almost every word. Understand this and Arabic stops looking like
+memorization and starts looking like arithmetic.
 
-## Two things about the script first
+## You'll want to know first
 
-Arabic is written **right to left**. And its letters **connect** into each
-other like cursive, so a letter changes shape depending on whether it's at the
-start, middle, or end of a word. Don't try to master the alphabet up front —
-you already read Arabic (if rusty), and this book reintroduces letters *inside
-real words* as they come. For now, just re-set two habits: eyes move
-right-to-left, and letters join up.
+- The [Chapter 1 reading lessons](./AR-C01-read-practice.md) — you can decode
+  every word below; now you'll learn what it means.
 
 ## The big idea: three consonants = one meaning-family
 

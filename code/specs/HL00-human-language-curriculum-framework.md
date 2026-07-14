@@ -34,6 +34,41 @@ both were removed on learner feedback in favor of this finer, gate-free
 model. Some legacy `ES-P0-U##` files from that scheme may still exist mid-
 migration.)
 
+## Audience — who the books are for
+
+**The books are written for a motivated *true beginner* — someone with no
+prior knowledge of the target language (or of any of the others), who wants
+to learn it in depth.** They are *not* written for the curriculum's
+originator or any particular person. This is a load-bearing rule, because it
+constrains what the text may assume:
+
+- **The only language the reader is assumed to know is English** (the books
+  are written in English). Every explanation grounds in English + the
+  language's own deep roots (Latin, Sanskrit, Semitic roots, etc.), because
+  those are universally available to the reader.
+- **No lesson may assume the reader knows another *target* language.** Phrases
+  like "you already know this from Spanish," "the Spanish twin you know,"
+  "if you're also learning Spanish," or "skim this, it's already yours" are
+  forbidden — they address a specific reader, not the beginner the book is
+  for.
+- **Cross-language comparisons are still welcome — as self-contained
+  enrichment.** Showing that Spanish *día* and French *jour* both descend from
+  Latin *dies* is wonderful depth, and a beginner learns *both* facts fresh
+  from it. State such comparisons as information the text supplies ("Spanish,
+  another daughter of Latin, kept *día*…"), never as knowledge the reader is
+  presumed to arrive with.
+- **For non-Latin scripts, the reading course (below) is written for someone
+  who cannot read a single letter** — not "a refresher you can skim." Someone
+  who happens to read the script will move fast on their own; the text does
+  not tell them to.
+
+The curriculum's *methodology* (etymology-first, atom-first, gender-early,
+grammar-from-zero) was shaped by one person's learning preferences — the
+"Motivation" below records that origin — but the *output* serves the beginner
+defined here. Where this spec below says "the learner" as design rationale,
+read it as "why the method is shaped this way"; the reader of the books is
+always the beginner above.
+
 ## Motivation
 
 Off-the-shelf apps (Duolingo et al.) optimize for screen-tap engagement, not
@@ -372,16 +407,45 @@ Instead:
   not a gate to pass through. Every inline "Sounds you'll need" note links
   into it (via `sounds:` ids in the frontmatter), so the curious learner
   can go deep on demand and everyone else keeps moving.
-- The same applies to **new or rusty scripts** (Arabic, Hindi, and the
-  Dravidian scripts when those tracks are built): letters are introduced
-  inside the lesson whose headword first uses them, and collected in the
-  track's pronunciation/script reference — never as a wall of alphabet
-  before any real words.
-
 The payoff is cumulative: by the time a learner has done the first several
-lessons, they've absorbed the sounds (or letters) they've actually needed,
-each one welded to a real word, rather than having memorized an abstract
-chart they can't yet attach to anything.
+lessons, they've absorbed the sounds they've actually needed, each one welded
+to a real word, rather than having memorized an abstract chart they can't yet
+attach to anything.
+
+### Non-Latin scripts: Chapter 1 IS a reading course
+
+The rules above assume the learner can already *read* the script (true for
+the Latin-alphabet tracks — Spanish, French, German). For any track whose
+script the learner does **not** fluently read — **Arabic, Hindi, Tamil,
+Kannada, Telugu, Malayalam** (i.e. everything not written in the Latin
+alphabet) — **Chapter 1 is an incremental reading course**, and vocabulary
+(greetings, etc.) begins in Chapter 2, once the letters exist to decode it.
+
+This was a correction after the first Arabic draft dropped whole words
+(*مرحبا*, *صباح الخير*) with only a gloss of the hard sounds — which teaches
+a vocabulary list, not *reading*. The fix is the atom-first playbook applied
+to the **script**: the atoms are **letters**, and words are built from letters
+the learner has just learned, exactly as Spanish built *buenos días* from
+*bueno* + *días*.
+
+The reading course is **not** the "gated alphabet chart" this section warns
+against. The difference:
+
+- A gated chart teaches all ~28-50 letters in the abstract before any word.
+- A reading course introduces **a few letters per lesson** and **immediately
+  cashes them out in a real, decodable word** — so the learner *reads
+  something true* in lesson 1 (e.g. Arabic ل + ا → **لا**, "no"), and every
+  lesson after adds letters that unlock the next word. Letters change shape
+  by position (Arabic) or combine into conjuncts (Indic scripts); those facts
+  are taught as the words that use them arrive, cumulatively.
+
+Sequence the letters so real words — and soon the greeting set — become
+readable as fast as possible (Frequency-Driven Content Selection, below,
+applied to letters). The reading course is authored for someone who cannot
+read a single letter of the script (per Audience, above) — it never tells the
+reader to skim. Once Chapter 1's reading course is done, later chapters
+proceed word-first like the Latin tracks, with new letters still introduced
+inline as rarer ones appear.
 
 Grammar follows the identical principle — introduced in context, on the
 first word that needs it (the Grammar Lens section), never front-loaded.

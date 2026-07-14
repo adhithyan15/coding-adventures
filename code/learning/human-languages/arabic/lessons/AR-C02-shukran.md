@@ -1,15 +1,15 @@
 ---
-id: AR-C01-shukran
-chapter: 1
+id: AR-C02-shukran
+chapter: 2
 type: word
 headword: شكرا
 gloss: thank you (shukran)
 concept_tag: THANKS
-prerequisites: [AR-C01-root-system]
+prerequisites: [AR-C02-root-system]
 sounds: [rtl, shin]
 roots: [sh-k-r]
 est_minutes: 3
-reviews_of: [AR-C01-masa-al-khayr]
+reviews_of: [AR-C02-masa-al-khayr]
 ---
 
 # شكرا (shukran) — "thank you"

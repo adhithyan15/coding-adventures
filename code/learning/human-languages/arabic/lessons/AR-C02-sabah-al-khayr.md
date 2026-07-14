@@ -1,15 +1,15 @@
 ---
-id: AR-C01-sabah-al-khayr
-chapter: 1
+id: AR-C02-sabah-al-khayr
+chapter: 2
 type: word
 headword: صباح الخير
 gloss: good morning (ṣabāḥ al-khayr)
 concept_tag: GREETING-MORNING
-prerequisites: [AR-C01-sabah, AR-C01-khayr, AR-C01-al]
+prerequisites: [AR-C02-sabah, AR-C02-khayr, AR-C02-al]
 sounds: [rtl]
 roots: [s-b-h, kh-y-r]
 est_minutes: 3
-reviews_of: [AR-C01-sabah, AR-C01-khayr]
+reviews_of: [AR-C02-sabah, AR-C02-khayr]
 ---
 
 # صباح الخير (ṣabāḥ al-khayr) — "morning of goodness"
@@ -21,8 +21,8 @@ standard "good morning."
 
 ## You'll want to know first
 
-- [صباح (ṣabāḥ)](./AR-C01-sabah.md) · [خير (khayr)](./AR-C01-khayr.md) ·
-  [ال (al-)](./AR-C01-al.md)
+- [صباح (ṣabāḥ)](./AR-C02-sabah.md) · [خير (khayr)](./AR-C02-khayr.md) ·
+  [ال (al-)](./AR-C02-al.md)
 
 ## The word, taken apart — by assembling it
 

@@ -1,8 +1,9 @@
 # Arabic Pronunciation & Script — Reference
 
-A **reference**, not a chapter. You already read Arabic (if rusty), so this is
-a refresher you dip into — never a wall to climb first. Lessons name the
-sounds they need and link here.
+A **reference**, not a chapter — a place to look things up as you go, never a
+wall to climb first. Chapter 1 (the reading course) teaches you to decode the
+script from zero, letter by letter; this page just collects the sound-and-
+script facts in one spot. Lessons name the sounds they need and link here.
 
 Transliteration note: this curriculum writes Arabic in both the **script**
 (مرحبا) and a **Latin transliteration** (*marḥaban*), with a dot under a
