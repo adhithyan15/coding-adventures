@@ -1,5 +1,33 @@
 # Changelog — mosmodel-compiler
 
+## [0.1.2] — 2026-07-14
+
+### Fixed — recursion-depth guard against native stack overflow (DoS)
+
+`compile` built its `GrammarParser` with no recursion-depth cap, even
+though `mosmodel-compiler` is reachable via the `mosaic` CLI on arbitrary
+`.mil` files — a real, not theoretical, attack surface. Deeply-nested
+`list<list<list<...>>>` slot-type input would recurse until it overflowed
+the native thread stack — an uncatchable process abort — before this
+crate's own `Result`-returning entry points ever got a chance to report
+anything.
+
+Measured (binary search, uncapped parser, the true default per-test-thread
+stack — no `RUST_MIN_STACK` override, no explicit `Builder::stack_size`,
+matching what `cargo test` and a production caller both actually get —
+debug build, adversarial 5000-level input): safe through 289 rule-frames,
+crashes at 290. Added a bespoke `MAX_RULE_DEPTH = 200` — about 31% below
+that floor — and wired it into `compile` via `.with_max_depth(...)`.
+
+- Added `MAX_RULE_DEPTH: usize = 200` and wired it into `compile`.
+- 3 new regression tests: deep adversarial input on an enlarged-stack
+  thread returns a clean `Err`, input at the measured real-nesting
+  boundary (97 levels) still parses while one level past it doesn't, and
+  the cap trips before the native stack would overflow even on a
+  default-stack thread.
+
+No change to behaviour for any input that nests below the cap.
+
 ## [0.1.1] — 2026-05-10
 
 ### Changed

@@ -35,6 +35,26 @@ switcher first rendered the light theme.
 - Backwards-compatible: existing `.msl` files don't reference these
   state names; no behaviour change for them.
 
+## [0.1.1] — 2026-07-14
+
+### Fixed — defense-in-depth recursion-depth cap
+
+`parse_style` built its `GrammarParser` with no recursion-depth cap.
+Unlike its sibling crates in the mosaic family, tracing every rule in this
+grammar (`style_def -> part_def -> part_item -> {state_block |
+property_decl} -> style_value`) confirms there is **no recursive shape at
+all** — `state_block` only reaches `property_decl` (a terminal), never
+back to `part_def`/`state_block`/`style_def`, so the maximum static call
+depth is fixed (~5 rule-frames) regardless of input size. There is no
+adversarial deep-nesting DoS vector to calibrate against here.
+
+Added `MAX_RULE_DEPTH` set to the shared crate's generic
+`parser::grammar_parser::DEFAULT_MAX_RULE_DEPTH` (128) anyway, for
+defense-in-depth and consistency with the rest of the mosaic family — at
+25x the grammar's real maximum call depth, it can never reject a
+legitimate mosstyle file. One new regression test confirms a style file
+with 200 flat (non-nested) parts still parses cleanly under the cap.
+
 ## [0.1.0] — 2026-05-11
 
 ### Added

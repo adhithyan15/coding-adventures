@@ -42,12 +42,58 @@ mod _grammar;
 // Public API
 // ===========================================================================
 
+/// Recursion-depth cap for the Mosaic [`GrammarParser`] — see
+/// [`GrammarParser::with_max_depth`] and
+/// [`parser::grammar_parser::DEFAULT_MAX_RULE_DEPTH`] for why the underlying
+/// guard exists at all (deep recursion through `parse_rule` can overflow the
+/// *native* thread stack — an uncatchable process abort — before this
+/// crate's own error-reporting paths ever get a chance to run).
+/// `mosaic-parser` is reachable via the `mosaic` CLI on arbitrary `.mosaic`
+/// files, a real attack surface.
+///
+/// # Four independent recursive shapes
+///
+/// This grammar has four *independent* recursion paths that must all be
+/// measured, since a single `MAX_RULE_DEPTH` bounds the parser's internal
+/// rule-invocation counter for any of them:
+///
+/// - **Element-tree nesting** — `node_element -> node_content -> child_node
+///   -> node_element` (3 rule-frames per real nesting level).
+/// - **`when`-block nesting** — `node_content -> when_block -> node_content`
+///   (2 rule-frames per real nesting level).
+/// - **`each`-block nesting** — `node_content -> each_block -> node_content`
+///   (2 rule-frames per real nesting level).
+/// - **List-type nesting** — `slot_type -> list_type -> slot_type` (2
+///   rule-frames per real nesting level).
+///
+/// Measured (binary search, uncapped parser, on the true default-stack
+/// per-test worker thread — no `RUST_MIN_STACK` override and no explicit
+/// `Builder::stack_size`, matching what `cargo test` and a production
+/// caller both actually get — debug build, adversarial 5000-level input):
+/// element-tree safe through 288 rule-frames, crashes at 290; list-type
+/// safe through 288, crashes at 290; `when`/`each`-block nesting (the
+/// *binding*, lower floor) safe through 248, crashes at 249.
+///
+/// `MAX_RULE_DEPTH` is set to **170** — about 31% below the binding
+/// 248-rule-frame floor (comparable margin to sibling crates' 25-45%
+/// convention), independently confirmed not to crash a default-stack
+/// thread even thousands of rule-frames past the cap for any of the four
+/// shapes (see this crate's tests). Measured real-nesting headroom at 170
+/// (capped parser, so no crash risk): element-tree nesting parses cleanly
+/// up to 56 levels (57 trips the cap), `when`/`each`-block nesting up to 82
+/// levels (83 trips the cap), list-type nesting up to 83 levels (84 trips
+/// the cap) — comfortably past any hand-written Mosaic component's real
+/// nesting.
+const MAX_RULE_DEPTH: usize = 170;
+
 /// Create a `GrammarParser` configured for Mosaic source text.
 ///
 /// This function:
 /// 1. Tokenizes `source` using `mosaic-lexer`.
 /// 2. Reads and parses the `mosaic.grammar` file.
-/// 3. Constructs a `GrammarParser` wired to those tokens and rules.
+/// 3. Constructs a `GrammarParser` wired to those tokens and rules, with the
+///    recursion-depth guard ([`MAX_RULE_DEPTH`]) enabled so pathologically
+///    deep nesting fails cleanly instead of overflowing the native stack.
 ///
 /// The returned parser is ready to call `.parse()` on. Use this for
 /// custom error handling or incremental analysis.
@@ -58,7 +104,7 @@ mod _grammar;
 pub fn create_mosaic_parser(source: &str) -> GrammarParser {
     let tokens = tokenize(source);
     let grammar = _grammar::parser_grammar();
-    GrammarParser::new(tokens, grammar)
+    GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH)
 }
 
 /// Parse Mosaic source text into an AST.
@@ -419,4 +465,124 @@ mod tests {
         assert!(result.is_ok(), "Parser should succeed: {:?}", result.err());
         assert_eq!(result.unwrap().rule_name, "file");
     }
+}
+
+/// Regression tests for [`MAX_RULE_DEPTH`], one triple per independent
+/// recursive shape (see that constant's doc comment). Uses
+/// `create_mosaic_parser(..).parse()` directly (not the panicking [`parse`]
+/// wrapper) since these tests need to observe the `Result` rather than
+/// unwind through a panic.
+#[cfg(test)]
+mod depth_guard_tests {
+    fn nested_element_source(n: usize) -> String {
+        format!("component C {{ {}{} }}", "N{".repeat(n), "}".repeat(n))
+    }
+
+    fn nested_when_source(n: usize) -> String {
+        format!(
+            "component C {{ N {{ {}{} }} }}",
+            "when @s {".repeat(n),
+            "}".repeat(n)
+        )
+    }
+
+    fn nested_each_source(n: usize) -> String {
+        format!(
+            "component C {{ N {{ {}{} }} }}",
+            "each @s as it {".repeat(n),
+            "}".repeat(n)
+        )
+    }
+
+    fn nested_list_source(n: usize) -> String {
+        format!(
+            "component C {{ slot x: {}text{}; N{{}} }}",
+            "list<".repeat(n),
+            ">".repeat(n)
+        )
+    }
+
+    macro_rules! depth_guard_triple {
+        ($mod_name:ident, $source_fn:ident, $up_to_cap:expr, $one_past_cap:expr) => {
+            mod $mod_name {
+                use super::$source_fn as nested_source;
+
+                /// Deeply-nested input must produce a recoverable error, not
+                /// overflow the native stack. Parses 5000 levels — far past
+                /// `MAX_RULE_DEPTH` — on a worker thread with a generous
+                /// 32 MiB stack, so the *guard* is what stops the
+                /// recursion, not the stack running out.
+                #[test]
+                fn test_deeply_nested_input_returns_error_not_overflow() {
+                    let handle = std::thread::Builder::new()
+                        .name(concat!(
+                            "mosaic-parser-depth-guard-",
+                            stringify!($mod_name),
+                            "-regression"
+                        ).to_string())
+                        .stack_size(32 * 1024 * 1024)
+                        .spawn(|| {
+                            let result = super::super::create_mosaic_parser(&nested_source(5000)).parse();
+                            assert!(
+                                result.is_err(),
+                                "deeply-nested input must fail with an error, not parse or crash"
+                            );
+                        })
+                        .expect("failed to spawn worker thread");
+                    handle
+                        .join()
+                        .expect("depth guard must keep the worker thread from crashing");
+                }
+
+                /// Input that nests *exactly up to* `MAX_RULE_DEPTH` still
+                /// parses cleanly, and one layer deeper cleanly trips the
+                /// guard. These exact boundary counts were found empirically
+                /// by binary-searching against increasing nesting counts at
+                /// the production cap — see `MAX_RULE_DEPTH`'s doc comment.
+                #[test]
+                fn test_nesting_up_to_cap_still_parses() {
+                    assert!(
+                        super::super::create_mosaic_parser(&nested_source($up_to_cap))
+                            .parse()
+                            .is_ok(),
+                        "{} levels must stay under the cap",
+                        $up_to_cap
+                    );
+                    assert!(
+                        super::super::create_mosaic_parser(&nested_source($one_past_cap))
+                            .parse()
+                            .is_err(),
+                        "one nesting level past the cap's measured limit must fail"
+                    );
+                }
+
+                /// A caller relying on `MAX_RULE_DEPTH` must have the guard
+                /// trip *before* the native stack overflows on a
+                /// default-stack thread — otherwise a production caller
+                /// (e.g. the `mosaic` CLI, or `cargo test`'s own per-test
+                /// thread) would still crash. Parses far-too-deep input on a
+                /// worker thread with **no** `stack_size` override (the same
+                /// default a thread gets in this environment, unmodified by
+                /// any `RUST_MIN_STACK` override). A clean `Err` (not a
+                /// `join()` failure from a crashed thread) proves
+                /// `MAX_RULE_DEPTH` sits safely below the native overflow
+                /// point on the default stack.
+                #[test]
+                fn test_opt_in_cap_trips_before_overflow_on_default_stack() {
+                    let handle = std::thread::spawn(|| {
+                        let result = super::super::create_mosaic_parser(&nested_source(5000)).parse();
+                        assert!(result.is_err(), "deeply-nested input must error, not crash");
+                    });
+                    handle.join().expect(
+                        "MAX_RULE_DEPTH must trip BEFORE native overflow on the default stack",
+                    );
+                }
+            }
+        };
+    }
+
+    depth_guard_triple!(element_shape, nested_element_source, 56, 57);
+    depth_guard_triple!(when_shape, nested_when_source, 82, 83);
+    depth_guard_triple!(each_shape, nested_each_source, 82, 83);
+    depth_guard_triple!(list_shape, nested_list_source, 83, 84);
 }

@@ -1037,6 +1037,34 @@ fn camel_to_snake(s: &str) -> String {
 // Top-level compile entry point
 // ===========================================================================
 
+/// Recursion-depth cap for the mosmodel [`GrammarParser`] — see
+/// [`GrammarParser::with_max_depth`] and
+/// [`parser::grammar_parser::DEFAULT_MAX_RULE_DEPTH`] for why the underlying
+/// guard exists at all (deep recursion through `parse_rule` can overflow the
+/// *native* thread stack — an uncatchable process abort — before this
+/// crate's own `Result`-returning entry points ever get a chance to report
+/// anything). `mosmodel-compiler` is reachable via the `mosaic` CLI on
+/// arbitrary `.mil` files, a real attack surface.
+///
+/// The grammar has one independent recursive shape: `list_type -> inner_type
+/// -> list_type` (`list<list<list<...text...>>>` slot-type nesting, 2
+/// rule-frames per real nesting level).
+///
+/// Measured (binary search, uncapped parser, on the true default-stack
+/// per-test worker thread — no `RUST_MIN_STACK` override and no explicit
+/// `Builder::stack_size`, matching what `cargo test` and a production
+/// caller both actually get — debug build, adversarial 5000-level input):
+/// safe through 289 rule-frames, crashes at 290.
+///
+/// `MAX_RULE_DEPTH` is set to **200** — about 31% below that measured
+/// floor (comparable margin to sibling crates' 25-45% convention),
+/// independently confirmed not to crash a default-stack thread even
+/// thousands of rule-frames past the cap (see this crate's tests). Measured
+/// real-nesting headroom at 200 (capped parser, so no crash risk): `list<>`
+/// nesting parses cleanly up to 97 levels (98 trips the cap) — comfortably
+/// past any hand-written mosmodel interface's real nesting.
+const MAX_RULE_DEPTH: usize = 200;
+
 /// Compile a `.mil` source string.
 ///
 /// Runs the full pipeline: tokenize → parse → analyze → validate → emit.
@@ -1051,7 +1079,7 @@ pub fn compile(source: &str) -> Result<CompileOutput, Vec<CompileError>> {
 
     // Parse
     let grammar = _grammar::parser_grammar();
-    let mut parser = GrammarParser::new(tokens, grammar);
+    let mut parser = GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH);
     let ast = parser.parse().map_err(|e| {
         vec![CompileError {
             kind: ErrorKind::UnknownConstruct,
@@ -1530,5 +1558,73 @@ component Cube {
             .unwrap();
         assert_eq!(change_emit.params.len(), 1);
     }
+}
+
+#[cfg(test)]
+fn nested_list_source(n: usize) -> String {
+    format!(
+        "component C {{ slot x: {}text{}; }}",
+        "list<".repeat(n),
+        ">".repeat(n)
+    )
+}
+
+/// Deeply-nested `list<list<...>>` input must produce a recoverable error,
+/// not overflow the native stack. We parse 5000 levels — far past
+/// `MAX_RULE_DEPTH` — on a worker thread with a generous 32 MiB stack, so
+/// the *guard* is what stops the recursion, not the stack running out.
+#[test]
+fn test_deeply_nested_input_returns_error_not_overflow() {
+    let handle = std::thread::Builder::new()
+        .name("mosmodel-depth-guard-regression".to_string())
+        .stack_size(32 * 1024 * 1024)
+        .spawn(|| {
+            let result = compile(&nested_list_source(5000));
+            assert!(
+                result.is_err(),
+                "deeply-nested input must fail with an error, not parse or crash"
+            );
+        })
+        .expect("failed to spawn worker thread");
+    handle
+        .join()
+        .expect("depth guard must keep the worker thread from crashing");
+}
+
+/// Input that nests *exactly up to* `MAX_RULE_DEPTH` still compiles
+/// cleanly, and one layer deeper cleanly trips the guard. These exact
+/// boundary counts (97 legitimate levels) were found empirically by
+/// binary-searching against increasing nesting counts at the production
+/// cap — see `MAX_RULE_DEPTH`'s doc comment.
+#[test]
+fn test_nesting_up_to_cap_still_parses() {
+    assert!(
+        compile(&nested_list_source(97)).is_ok(),
+        "97 levels must stay under the cap"
+    );
+    assert!(
+        compile(&nested_list_source(98)).is_err(),
+        "one nesting level past the cap's measured limit must fail"
+    );
+}
+
+/// A caller relying on `MAX_RULE_DEPTH` must have the guard trip *before*
+/// the native stack overflows on a default-stack thread — otherwise a
+/// production caller (e.g. the `mosaic` CLI, or `cargo test`'s own
+/// per-test thread) would still crash. We parse far-too-deep input on a
+/// worker thread with **no** `stack_size` override (the same default a
+/// thread gets in this environment, unmodified by any `RUST_MIN_STACK`
+/// override). A clean `Err` (not a `join()` failure from a crashed
+/// thread) proves `MAX_RULE_DEPTH` sits safely below the native overflow
+/// point on the default stack.
+#[test]
+fn test_opt_in_cap_trips_before_overflow_on_default_stack() {
+    let handle = std::thread::spawn(|| {
+        let result = compile(&nested_list_source(5000));
+        assert!(result.is_err(), "deeply-nested input must error, not crash");
+    });
+    handle
+        .join()
+        .expect("MAX_RULE_DEPTH must trip BEFORE native overflow on the default stack");
 }
 

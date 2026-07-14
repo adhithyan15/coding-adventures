@@ -2,6 +2,40 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-07-14
+
+### Fixed — recursion-depth guard against native stack overflow (DoS)
+
+`create_mosaic_parser` built its `GrammarParser` with no recursion-depth
+cap, even though `mosaic-parser` is reachable via the `mosaic` CLI on
+arbitrary `.mosaic` files — a real, not theoretical, attack surface.
+Deeply-nested input, in any of this grammar's four *independent* recursive
+shapes (element-tree nesting, `when`-block nesting, `each`-block nesting,
+list-type nesting), would recurse until it overflowed the native thread
+stack — an uncatchable process abort — before this crate's own
+error-reporting paths ever got a chance to run.
+
+All four shapes were independently measured (binary search, uncapped
+parser, the true default per-test-thread stack — no `RUST_MIN_STACK`
+override, no explicit `Builder::stack_size`, matching what `cargo test`
+and a production caller both actually get — debug build, adversarial
+5000-level input): element-tree and list-type nesting safe through 288
+rule-frames, crashes at 290; `when`/`each`-block nesting (the *binding*,
+lower floor) safe through 248, crashes at 249. Added a bespoke
+`MAX_RULE_DEPTH = 170` — about 31% below the binding floor — and wired it
+into `create_mosaic_parser` via `.with_max_depth(...)`.
+
+- Added `MAX_RULE_DEPTH: usize = 170` and wired it into
+  `create_mosaic_parser`.
+- 12 new regression tests (3 per independent recursive shape): deep
+  adversarial input on an enlarged-stack thread returns a clean `Err`,
+  input at the measured real-nesting boundary (56 levels for element-tree,
+  82 for `when`/`each`-block, 83 for list-type) still parses while one
+  level past it doesn't, and the cap trips before the native stack would
+  overflow even on a default-stack thread.
+
+No change to behaviour for any input that nests below the cap.
+
 ## [0.1.0] - 2026-04-04
 
 ### Added
