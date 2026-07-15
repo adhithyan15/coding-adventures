@@ -2,6 +2,26 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.48.0] - 2026-07-15
+
+### Added — drop the leading zero of a bare fraction in value position (`0.5` → `.5`)
+
+A numeric literal whose magnitude is in `(0, 1)` now emits without its leading
+zero in **expression/value position**, matching the reference Closure Compiler's
+minification: `0.5` → `.5`, `-0.25` → `-.25`, `0.75` → `.75`. The strip is
+applied to the decimal candidate *before* the decimal-vs-exponential
+shorter-of comparison, so a stripped decimal can win a tie against the
+exponential form (`0.001` → `.001`, not `1E-3`) while a strictly-shorter
+exponential still wins (`0.0001` → `1E-4`). A non-zero integer part is untouched
+(`10.5`, `3.14`).
+
+The strip is **value-position only**. In object-key position the reference
+compiler does not drop the leading zero — it quotes a float key instead
+(`{0.5:1}` → `{"0.5":1}`), a separate transform — so `emit_numeric` (value path)
+uses the new `format_js_number_value`, while the `PropertyKey::NumericLiteral`
+arm keeps the canonical `format_js_number`. Both share `format_js_number_impl`,
+parameterized by whether to strip.
+
 ## [0.47.0] - 2026-07-14
 
 ### Added — emit `name=expr` default parameters — CLOC12.191 PR1
