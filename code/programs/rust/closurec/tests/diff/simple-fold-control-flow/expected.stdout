@@ -1,2 +1,1 @@
-{takeThis()}{alsoKept()};
-
+takeThis();alsoKept();;

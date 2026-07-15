@@ -5915,6 +5915,11 @@ mod tests {
         // the load-bearing case: constant-fold turns `2 > 3` into
         // `false`, and only then can fold-control-flow decide the
         // branch — so this exercises the two passes composing.
+        //
+        // CLOC12.194: the selected `else` branch is a bare `{ b(); }` block
+        // with no block-scoped binding, so fold-control-flow now *flattens*
+        // it — the redundant braces are removed and `b()` runs directly,
+        // matching the reference Closure Compiler (which emits `b();`).
         let cfg = CompilerConfig {
             compilation: crate::config::CompilationConfig {
                 level: crate::config::CompilationLevel::Simple,
@@ -5923,7 +5928,10 @@ mod tests {
             ..Default::default()
         };
         let out = transform_source("if (2 > 3) { a(); } else { b(); }", &cfg).expect("ok");
-        assert_eq!(out, "{b()}", "fold-control-flow must keep only the else branch");
+        assert_eq!(
+            out, "b();",
+            "fold-control-flow keeps the else branch AND flattens its redundant block"
+        );
     }
 
     #[test]
