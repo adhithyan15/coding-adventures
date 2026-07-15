@@ -447,8 +447,7 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
             // remaining effect is evaluating `test`; if `test` is side-effect-
             // free the entire `if` is dead and collapses to `;` (which the
             // block/program sweep then drops). `if(x){}`, `if(x.y){}else{}`, … →
-            // removed; a side-effecting test (`if(f()){}`) is left intact — the
-            // "keep the test as an expression statement" rewrite is a follow-up.
+            // removed.
             let cons_empty = statement_is_empty(&consequent);
             let alt_empty = alternate.as_ref().is_none_or(|a| statement_is_empty(a));
             if cons_empty && alt_empty && is_side_effect_free(&test) {
@@ -459,6 +458,38 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
                     "EmptyStatement",
                 );
                 return TaggedStatement::EmptyStatement(EmptyStatement { cv: s.cv.clone() });
+            }
+
+            // A side-effecting test with both branches empty still has to RUN
+            // the test, so the `if` wrapper is dead but the test survives as an
+            // expression statement: `if(f()){}` → `f();`, `if(a.b()){}` →
+            // `a.b();`, `if(f(1,2)){}else{}` → `f(1,2);`. This is the impure
+            // twin of the `is_side_effect_free` removal above (the two guards
+            // are mutually exclusive — a call is never side-effect-free).
+            //
+            // Scoped to a plain `CallExpression`: as an expression statement a
+            // bare call is already Closure's *final* form, so the rewrite is
+            // byte-identical. Other impure tests get FURTHER simplifications
+            // that are separate transforms, so we decline them here rather than
+            // emit a non-canonical intermediate:
+            //   - `!f()`   → Closure drops the discarded `!`   → `f();`
+            //   - `a = b`  → dead-assignment removal may delete it entirely
+            //   - `a, f()` → the sequence is split into statements `a;f();`
+            //   - `new F()`→ emitted `new F` (no parens) in statement position
+            // Non-empty branches are a different rewrite again (`if(f()){g()}`
+            // → `f()&&g()`, the if→logical arc), so this only fires when BOTH
+            // branches are empty.
+            if cons_empty && alt_empty && matches!(test, Expression::CallExpression(_)) {
+                st.record(
+                    &s.cv,
+                    "if_to_expression_statement",
+                    "IfStatement{ <empty>, test = CallExpression }",
+                    "ExpressionStatement",
+                );
+                return TaggedStatement::ExpressionStatement(ExpressionStatement {
+                    cv: s.cv.clone(),
+                    expression: test,
+                });
             }
 
             TaggedStatement::IfStatement(IfStatement {
@@ -3345,13 +3376,45 @@ mod tests {
     }
 
     #[test]
-    fn empty_if_with_side_effecting_test_is_kept() {
-        // `if(f()){}` — the call may have side effects, so the `if` stays
-        // (converting to `f();` is a deliberate follow-up).
-        let prog = program()
-            .with_body(vec![ProgramItem::Statement(if_full(call0("f"), empty_block_stmt(), None))]);
+    fn empty_if_with_call_test_becomes_expression_statement() {
+        // `if(f()){}` and `if(f()){}else{}` — the call may have side effects, so
+        // the `if` wrapper is dead but the call must still RUN: it survives as
+        // an expression statement `f();`.
+        for alt in [None, Some(empty_block_stmt())] {
+            let prog = program().with_body(vec![ProgramItem::Statement(if_full(
+                call0("f"),
+                empty_block_stmt(),
+                alt,
+            ))]);
+            let (out, _c, changed, _) = run_pass(prog);
+            assert!(changed, "impure-call empty if should mark changed");
+            assert_eq!(out.body.len(), 1, "the call must survive as one statement");
+            let ProgramItem::Statement(Statement::Tagged(TaggedStatement::ExpressionStatement(
+                es,
+            ))) = &out.body[0]
+            else {
+                panic!("expected an ExpressionStatement; got {:?}", out.body[0])
+            };
+            assert!(
+                matches!(&es.expression, Expression::CallExpression(_)),
+                "the expression statement should wrap the call test"
+            );
+        }
+    }
+
+    #[test]
+    fn empty_if_with_non_call_impure_test_is_kept() {
+        // `if(!f()){}` — the test is impure (the inner call runs) but is NOT a
+        // bare `CallExpression`. Closure would drop the discarded `!` (→ `f();`),
+        // a separate transform, so we DECLINE and keep the `if` intact rather
+        // than emit a non-canonical `!f();`.
+        let prog = program().with_body(vec![ProgramItem::Statement(if_full(
+            not(call0("f")),
+            empty_block_stmt(),
+            None,
+        ))]);
         let (out, _c, _changed, _) = run_pass(prog);
-        assert_eq!(out.body.len(), 1, "impure-test empty if must be kept");
+        assert_eq!(out.body.len(), 1, "non-call impure-test empty if must be kept");
         assert!(matches!(
             &out.body[0],
             ProgramItem::Statement(Statement::Tagged(TaggedStatement::IfStatement(_)))
