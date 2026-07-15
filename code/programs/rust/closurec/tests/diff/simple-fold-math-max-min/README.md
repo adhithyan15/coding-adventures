@@ -22,7 +22,7 @@ compile time and the call collapses to that literal.
 Expected SIMPLE stdout:
 
 ```text
-var a=3;var b=1;var c=-1;var d=7;var e=Math.max(1,x);var f=Math.max();var g=m.max(1,2);report(a,b,c,d,e,f,g);
+var a=3,b=1,c=-1,d=7,e=Math.max(1,x),f=Math.max(),g=m.max(1,2);report(a,b,c,d,e,f,g);
 ```
 
 Each result flows into `report(...)` so it stays referenced past

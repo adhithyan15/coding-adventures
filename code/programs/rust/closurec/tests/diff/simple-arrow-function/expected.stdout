@@ -1,1 +1,1 @@
-var factory=n=>3;var scaled=(a,b)=>a+12;arr.map(x=>x+4);
+var factory=n=>3,scaled=(a,b)=>a+12;arr.map(x=>x+4);

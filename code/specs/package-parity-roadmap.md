@@ -106,12 +106,12 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 
 The missing matrix is heavily concentrated in singleton packages. Regenerated
 on July 15, 2026 after the paired Lua/Perl `fenwick-tree`, `binary-tree`,
-`binary-search-tree`, `in-memory-data-store-protocol`, `avl-tree`, and
-`tree-set` ports:
+`binary-search-tree`, `in-memory-data-store-protocol`, `avl-tree`, `tree-set`,
+and `skip-list` ports:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 171 | 359 |
+| Present in 10-15 languages | 171 | 357 |
 | Present in 5-9 languages | 122 | 917 |
 | Present in 2-4 languages | 157 | 1,972 |
 | Present in one language | 695 | 9,730 |
@@ -157,15 +157,15 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 171 packages present in at least ten implementation languages need 359
+The 171 packages present in at least ten implementation languages need 357
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
 |---|---:|---|
 | Python | 1 | Classify the remaining self-hosted `python-parser` carefully |
 | Elixir | 0 | Complete; `python-parser` uses the shared grammar-driven frontend |
-| Lua | 10 | Pair with Perl data-structure/storage wave |
-| Perl | 10 | Pair with Lua data-structure/storage wave |
+| Lua | 9 | Pair with Perl data-structure/storage wave |
+| Perl | 9 | Pair with Lua data-structure/storage wave |
 | C# | 17 | Move with F# |
 | F# | 17 | Move with C# |
 | Haskell | 34 | Dependency-shaped compression, graphics, ML, and protocol waves |
@@ -177,13 +177,14 @@ ports to reach all 15. After Priority 1, select work in this order:
 Go, Ruby, Rust, and TypeScript currently have no gaps within the 10-language
 consensus set. They remain reference/template lanes for these waves.
 
-The first six paired Lua/Perl slices are complete: `fenwick-tree`,
+The first seven paired Lua/Perl slices are complete: `fenwick-tree`,
 `binary-tree`, `binary-search-tree`, `in-memory-data-store-protocol`,
-`avl-tree`, and `tree-set` now have pure implementations, package-native tests,
-metadata, and capability declarations in both lanes. The protocol slice
-establishes the dependency-free IR needed before the higher in-memory data
-store layers move; the AVL slice now supplies the ordered backend for
-`tree-set`.
+`avl-tree`, `tree-set`, and `skip-list` now have pure implementations,
+package-native tests, metadata, and capability declarations in both lanes.
+The protocol slice establishes the dependency-free IR needed before the higher
+in-memory data store layers move; the AVL slice supplies the ordered backend
+for `tree-set`; and the dependency-free skip-list slice adds a span-augmented
+ordered map with logarithmic rank and selection.
 
 Recommended family order:
 

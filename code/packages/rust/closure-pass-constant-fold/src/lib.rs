@@ -90,7 +90,8 @@ use coding_adventures_closure_pass_pipeline::{
 };
 use coding_adventures_correlation_vector::{CVLog, Contribution};
 use coding_adventures_javascript_ast::{
-    statement::TaggedStatement, ArrayExpression, AssignmentExpression, BinaryExpression,
+    statement::TaggedStatement, ArrayExpression, AssignmentExpression, AssignmentOperator,
+    AssignmentTarget, BinaryExpression,
     BinaryOperator, BlockStatement, BooleanLiteral, CallExpression, ConditionalExpression, NewExpression, SequenceExpression, SpreadElement, YieldExpression, AwaitExpression, ImportExpression,
     Declaration, Expression, ExpressionStatement, ForInStatement, ForInit, ForOfStatement,
     ForStatement,
@@ -670,15 +671,12 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
         }),
         Expression::ConditionalExpression(c) => fold_conditional(c, st),
 
-        // Recurse but don't collapse — these have runtime semantics.
-        Expression::AssignmentExpression(a) => {
-            Expression::AssignmentExpression(AssignmentExpression {
-                cv: a.cv.clone(),
-                operator: a.operator,
-                left: a.left.clone(),
-                right: Box::new(fold_expression(&a.right, st)),
-            })
-        }
+        // `x = …` — recurse into the right-hand side, and additionally contract
+        // the compound self-assignment shape `x = x OP E` → `x OP= E`. The body
+        // lives out-of-line (see `fold_assignment`) so its locals do not enlarge
+        // this hot recursion frame — same DoS-guard discipline as the optional
+        // and member arms above.
+        Expression::AssignmentExpression(a) => fold_assignment(a, st),
         Expression::CallExpression(c) => fold_call(c, st),
         // `new X(args)` constructs an object — a side-effecting operation, never
         // a constant. Recurse into the callee and each argument (they may hold
@@ -844,6 +842,155 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
         // parts are constant is a future optimisation; here we only recurse.)
         Expression::TemplateLiteral(t) => fold_template_literal(t, st),
     }
+}
+
+/// Contract a compound *self*-assignment: `x = x OP E` → `x OP= E`.
+///
+/// ## What this fold does
+///
+/// ```text
+///   x = x + 1     ──▶   x += 1
+///   n = n - 2     ──▶   n -= 2
+///   k = k * 2     ──▶   k *= 2
+///   a = a + b     ──▶   a += b
+///   s = s + "b"   ──▶   s += "b"
+/// ```
+///
+/// The reference Closure Compiler performs exactly this contraction at
+/// `SIMPLE`, and it is a pure size win: `x=x+1` (5 chars) becomes `x+=1`
+/// (4 chars) with identical run-time behaviour.
+///
+/// ## The exact rule (and why the shape matters)
+///
+/// We rewrite only when ALL of the following hold:
+///   1. the assignment operator is plain `=` (not already a compound form),
+///   2. the target is a **bare identifier** `x` (`AssignmentTarget::Identifier`),
+///   3. the right-hand side is a `BinaryExpression` whose **LEFT** operand is
+///      that same identifier `x` (compared by *name*), and
+///   4. the binary operator has a compound counterpart — the arithmetic and
+///      bitwise operators do (`+ - * / % ** << >> >>> & | ^`); the relational,
+///      equality, `in`, and `instanceof` operators do **not**.
+///
+/// The match is on the **left** operand only. `x = x + 1` folds, but
+/// `x = 1 + x` does **not**:
+///
+/// ```text
+///   x = x - 1   ≡   x -= 1        (target on the left — contractable)
+///   x = 1 - x   ≡   x -= ??       (NO — `1 - x` ≠ `x - 1` for non-commutative
+///                                  operators; there is no "reverse -=" form)
+/// ```
+///
+/// Even for a commutative operator (`+`, `*`) the reference compiler only
+/// contracts the left-operand shape, so mirroring that keeps us byte-identical.
+///
+/// ## Why identifier targets are always sound (and members are deferred)
+///
+/// For a bare identifier binding, evaluating the *reference* `x` has no
+/// user-observable side effect — so `x = x OP E` reads `x` once, computes, and
+/// writes `x` once, exactly as `x OP= E` does. The two forms are
+/// interchangeable.
+///
+/// This is **not** true for a member target like `o[f()]`: the expanded form
+/// `o[f()] = o[f()] OP E` evaluates the reference sub-expressions (here `f()`)
+/// *twice*, whereas `o[f()] OP= E` evaluates them *once*. Contracting a member
+/// target is therefore only sound once the object/property sub-expressions are
+/// proven side-effect-free — that is a deliberate follow-up (CLOC12.198b), and
+/// PR1 restricts itself to identifier targets.
+///
+/// Kept `#[inline(never)]` and out of the big `fold_expression` match so its
+/// locals do not inflate the shared recursive frame (the same DoS-guard
+/// discipline the member/optional/template arms follow — see lessons.md).
+#[inline(never)]
+fn fold_assignment(a: &AssignmentExpression, st: &mut FoldState) -> Expression {
+    // Fold the right-hand side first, consistent with every other recursive
+    // arm; the contraction test below then runs on the folded RHS.
+    let right = fold_expression(&a.right, st);
+
+    // The contraction only applies to a plain `=` whose target is an identifier
+    // and whose RHS is `<that identifier> OP E` for a compound-capable OP.
+    if a.operator == AssignmentOperator::Eq {
+        if let AssignmentTarget::Identifier(target) = &a.left {
+            if let Expression::BinaryExpression(b) = &right {
+                if let Expression::Identifier(bin_left) = b.left.as_ref() {
+                    if bin_left.name == target.name {
+                        if let Some((compound, op_symbol)) =
+                            compound_assignment_operator(b.operator)
+                        {
+                            let parent = a.cv.clone();
+                            let before =
+                                format!("{0} = {0} {1} E", target.name, op_symbol);
+                            let after = format!("{0} {1}= E", target.name, op_symbol);
+                            let new_cv = st.fork_cv(&parent, &before, &after);
+                            return Expression::AssignmentExpression(AssignmentExpression {
+                                cv: new_cv,
+                                operator: compound,
+                                // Reuse the original target node verbatim.
+                                left: a.left.clone(),
+                                // The compound form keeps only the binary's RIGHT
+                                // operand; the left operand is now implied by the
+                                // target.
+                                right: b.right.clone(),
+                            });
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // No contraction: preserve the assignment, carrying the folded RHS.
+    Expression::AssignmentExpression(AssignmentExpression {
+        cv: a.cv.clone(),
+        operator: a.operator,
+        left: a.left.clone(),
+        right: Box::new(right),
+    })
+}
+
+/// Map a [`BinaryOperator`] to its compound-[`AssignmentOperator`] counterpart
+/// and the operator's source symbol, or `None` when the operator has no
+/// compound assignment form.
+///
+/// | binary | compound | | binary | compound |
+/// |--------|----------|-|--------|----------|
+/// | `+`    | `+=`     | | `<<`   | `<<=`    |
+/// | `-`    | `-=`     | | `>>`   | `>>=`    |
+/// | `*`    | `*=`     | | `>>>`  | `>>>=`   |
+/// | `/`    | `/=`     | | `&`    | `&=`     |
+/// | `%`    | `%=`     | | `|`    | `|=`     |
+/// | `**`   | `**=`    | | `^`    | `^=`     |
+///
+/// The relational (`< <= > >=`), equality (`== != === !==`), `in`, and
+/// `instanceof` operators have no `OP=` form in JavaScript, so they return
+/// `None` and the caller declines the contraction.
+fn compound_assignment_operator(op: BinaryOperator) -> Option<(AssignmentOperator, &'static str)> {
+    use AssignmentOperator as A;
+    use BinaryOperator as B;
+    Some(match op {
+        B::Add => (A::AddEq, "+"),
+        B::Sub => (A::SubEq, "-"),
+        B::Mul => (A::MulEq, "*"),
+        B::Div => (A::DivEq, "/"),
+        B::Mod => (A::ModEq, "%"),
+        B::Exp => (A::ExpEq, "**"),
+        B::LeftShift => (A::LeftShiftEq, "<<"),
+        B::RightShift => (A::RightShiftEq, ">>"),
+        B::UnsignedRightShift => (A::UnsignedRightShiftEq, ">>>"),
+        B::BitAnd => (A::BitAndEq, "&"),
+        B::BitOr => (A::BitOrEq, "|"),
+        B::BitXor => (A::BitXorEq, "^"),
+        // No compound assignment form exists for these.
+        B::Eq
+        | B::NotEq
+        | B::StrictEq
+        | B::StrictNotEq
+        | B::Lt
+        | B::LtEq
+        | B::Gt
+        | B::GtEq
+        | B::In
+        | B::InstanceOf => return None,
+    })
 }
 
 /// Fold a template literal — recurse into its substitutions, then collapse the
@@ -6836,6 +6983,138 @@ mod tests {
         );
         let (_out, _, changed, _) = run_pass(program_with_expr(m_spread, true));
         assert!(!changed, "[1,2,...x].length must not fold — spread length is unknown");
+    }
+
+    // -----------------------------------------------------------------
+    // CLOC12.198: compound self-assignment contraction (`x = x OP E` → `x OP= E`)
+    // -----------------------------------------------------------------
+
+    /// Build `<target> = <right>` — a plain `=` assignment to a bare identifier.
+    fn assign_eq(target: &str, right: Expression) -> Expression {
+        Expression::AssignmentExpression(AssignmentExpression {
+            cv: Some("as.1".to_string()),
+            operator: AssignmentOperator::Eq,
+            left: AssignmentTarget::Identifier(Identifier {
+                cv: None,
+                name: target.to_string(),
+            }),
+            right: Box::new(right),
+        })
+    }
+
+    /// Every arithmetic / bitwise operator contracts: `x = x OP y` → `x OP= y`,
+    /// keeping only the binary's RIGHT operand. Verified byte-identical against
+    /// the reference Closure Compiler (`x=x+1`→`x+=1`, `x=x*2`→`x*=2`, …).
+    #[test]
+    fn contracts_compound_self_assignment_for_each_operator() {
+        use AssignmentOperator as A;
+        use BinaryOperator as B;
+        let cases = [
+            (B::Add, A::AddEq),
+            (B::Sub, A::SubEq),
+            (B::Mul, A::MulEq),
+            (B::Div, A::DivEq),
+            (B::Mod, A::ModEq),
+            (B::Exp, A::ExpEq),
+            (B::LeftShift, A::LeftShiftEq),
+            (B::RightShift, A::RightShiftEq),
+            (B::UnsignedRightShift, A::UnsignedRightShiftEq),
+            (B::BitAnd, A::BitAndEq),
+            (B::BitOr, A::BitOrEq),
+            (B::BitXor, A::BitXorEq),
+        ];
+        for (bin_op, want) in cases {
+            // `x = x <op> y`
+            let rhs = binary_with(bin_op, ident("x"), ident("y"));
+            let (out, _c, changed, _) = run_pass(program_with_expr(assign_eq("x", rhs), true));
+            assert!(changed, "{bin_op:?}: the contraction should mark the program changed");
+            match extract_expr(&out) {
+                Expression::AssignmentExpression(a) => {
+                    assert_eq!(a.operator, want, "{bin_op:?}: wrong compound operator");
+                    match &a.left {
+                        AssignmentTarget::Identifier(id) => {
+                            assert_eq!(id.name, "x", "{bin_op:?}: target must survive")
+                        }
+                        other => panic!("{bin_op:?}: expected identifier target; got {other:?}"),
+                    }
+                    // The compound form keeps only the binary's RIGHT operand.
+                    match a.right.as_ref() {
+                        Expression::Identifier(id) => {
+                            assert_eq!(id.name, "y", "{bin_op:?}: RHS must be the right operand")
+                        }
+                        other => panic!("{bin_op:?}: expected `y` as the RHS; got {other:?}"),
+                    }
+                }
+                other => panic!("{bin_op:?}: expected an assignment back; got {other:?}"),
+            }
+        }
+    }
+
+    /// The contraction DECLINES whenever the shape is not `target = target OP E`:
+    /// a different left identifier, the target on the binary's RIGHT operand
+    /// (`x = 1 + x` — unsound for `-`/`/`/… and never done by Closure), an
+    /// operator with no compound form (`==`), or an already-compound operator.
+    #[test]
+    fn compound_self_assignment_declines_off_pattern() {
+        // `x = y + 1` — a *different* identifier: not a self-assignment.
+        let e1 = assign_eq("x", binary_with(BinaryOperator::Add, ident("y"), num(1.0, None)));
+        let (o1, _, c1, _) = run_pass(program_with_expr(e1, true));
+        assert!(!c1, "x = y + 1 must not contract");
+        assert!(
+            matches!(extract_expr(&o1), Expression::AssignmentExpression(a) if a.operator == AssignmentOperator::Eq),
+            "x = y + 1 must stay a plain `=` assignment"
+        );
+
+        // `x = 1 + x` — the target is the binary's RIGHT operand, not its left.
+        let e2 = assign_eq("x", binary_with(BinaryOperator::Add, num(1.0, None), ident("x")));
+        let (o2, _, c2, _) = run_pass(program_with_expr(e2, true));
+        assert!(!c2, "x = 1 + x must not contract (target on the right)");
+        assert!(
+            matches!(extract_expr(&o2), Expression::AssignmentExpression(a) if a.operator == AssignmentOperator::Eq),
+            "x = 1 + x must stay a plain `=` assignment"
+        );
+
+        // `x = x == 1` — the comparison operator has no `OP=` form.
+        let e3 = assign_eq("x", binary_with(BinaryOperator::Eq, ident("x"), num(1.0, None)));
+        let (_o3, _, c3, _) = run_pass(program_with_expr(e3, true));
+        assert!(!c3, "x = x == 1 must not contract (no `==` compound form)");
+
+        // `x += x + 1` — the operator is already compound (not plain `=`).
+        let e4 = Expression::AssignmentExpression(AssignmentExpression {
+            cv: Some("as.4".to_string()),
+            operator: AssignmentOperator::AddEq,
+            left: AssignmentTarget::Identifier(Identifier { cv: None, name: "x".to_string() }),
+            right: Box::new(binary_with(BinaryOperator::Add, ident("x"), num(1.0, None))),
+        });
+        let (_o4, _, c4, _) = run_pass(program_with_expr(e4, true));
+        assert!(!c4, "x += (x + 1) must not further contract");
+    }
+
+    /// A string self-concat contracts as well: `s = s + "b"` → `s += "b"`, and
+    /// the rewrite is CV-traced — the contracted node carries a forked CV id and
+    /// a `constant-fold` contribution is recorded.
+    #[test]
+    fn contracts_string_self_concat_and_traces_cv() {
+        let expr = assign_eq("s", binary_with(BinaryOperator::Add, ident("s"), string("b", None)));
+        let (out, contribs, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed, "s = s + \"b\" should contract");
+        match extract_expr(&out) {
+            Expression::AssignmentExpression(a) => {
+                assert_eq!(a.operator, AssignmentOperator::AddEq);
+                match a.right.as_ref() {
+                    Expression::StringLiteral(s) => assert_eq!(s.value, "b"),
+                    other => panic!("expected the string \"b\" as RHS; got {other:?}"),
+                }
+                assert!(a.cv.is_some(), "the contracted node should carry a forked CV id");
+            }
+            other => panic!("expected an assignment back; got {other:?}"),
+        }
+        assert!(
+            contribs
+                .iter()
+                .any(|c| c.source == "constant-fold" && c.tag == "folded"),
+            "a constant-fold contribution should be recorded for the contraction"
+        );
     }
 
     /// Build a computed index access `object[k]` (an integer-literal index).
