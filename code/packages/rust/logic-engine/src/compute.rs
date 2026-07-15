@@ -157,6 +157,18 @@ impl ExactRational {
         self.0.to_f64()
     }
 
+    /// The **exact** base-10 expansion as a string, when the value terminates — the rendering
+    /// side of ADJ-EXACT-NUMBERS NX-4. `1/4 → "0.25"`; a stored 39-digit π doubled → all 39
+    /// fractional digits; `1/3 → None` (a repeating expansion no finite decimal can hold).
+    ///
+    /// This is the compute-result analogue of NX-2's `Number::Exact` recall rendering: an exact
+    /// value is shown *exactly* by default, and the `f64` from [`to_f64`](Self::to_f64) is used
+    /// only as the labeled-lossy fallback for the repeating case. See
+    /// [`BigDecimal::from_rational_exact`] for the terminating-vs-repeating test.
+    pub fn to_exact_decimal_string(&self) -> Option<String> {
+        bignum_core::BigDecimal::from_rational_exact(&self.0).map(|d| d.to_string())
+    }
+
     /// Raise to a **non-negative integer** power, exactly (`x^0 = 1`). A rational to a whole
     /// power is itself rational, so `(3/2)^2 = 9/4` stays exact rather than collapsing to the
     /// `f64` `2.25`.
@@ -1982,6 +1994,34 @@ mod tests {
             ExactRational::from_integer_f64((pi_decimal.to_f64() * 2.0).trunc())
                 .unwrap_or_else(|| ExactRational::from_i128(0)),
             "the exact sidecar must not degrade to the truncated f64 value"
+        );
+
+        // NX-4 — the RENDERING half: the exact sidecar prints all 39 fractional digits, where
+        // `to_f64` would collapse to the ~16 a binary float carries. This is the string the CLI
+        // now emits for a computed exact result.
+        assert_eq!(
+            exact.to_exact_decimal_string().as_deref(),
+            Some("6.283185307179586476925286766559005768394"),
+            "a computed exact result renders with every digit, not the f64 export"
+        );
+        assert_ne!(
+            exact.to_exact_decimal_string().as_deref(),
+            Some(format!("{}", exact.to_f64()).as_str()),
+            "the exact rendering is strictly richer than the lossy f64 rendering"
+        );
+    }
+
+    #[test]
+    fn exact_decimal_string_is_none_for_repeating_expansions() {
+        // A quotient like 1/3 has no finite decimal; the render path must fall back to the
+        // labeled-lossy f64 rather than loop forever or fabricate a truncation.
+        let third = ExactRational::new(1, 3).unwrap();
+        assert_eq!(third.to_exact_decimal_string(), None);
+        // But a terminating quotient (3/4) renders exactly.
+        let three_quarters = ExactRational::new(3, 4).unwrap();
+        assert_eq!(
+            three_quarters.to_exact_decimal_string().as_deref(),
+            Some("0.75")
         );
     }
 

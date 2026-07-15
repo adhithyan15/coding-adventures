@@ -78,6 +78,26 @@ fn jnum(x: f64) -> String {
     }
 }
 
+/// Render a derived value's `"value"` field, **exact-first** (ADJ-EXACT-NUMBERS NX-4).
+///
+/// When a computation stayed inside exact rational arithmetic (NX-3) *and* the result has a
+/// finite base-10 expansion, we print ALL of its digits — the same policy NX-2 gave a stored
+/// `Number::Exact` recall binding. So a stored 39-digit π fed through a shipped `formula` renders
+/// its doubled value to all 39 fractional digits here, instead of the ~16 an `f64` carries.
+///
+/// The `f64` (`jnum`) is the labeled-lossy fallback, used only when there is no exact sidecar or
+/// when the value *repeats* (e.g. `1/3`), which no finite decimal can hold. The emitted digits
+/// remain a JSON number literal, so the field's type is unchanged for every existing consumer;
+/// only its precision grows for values that were previously truncated.
+fn value_json(d: &logic_engine::compute::Derived) -> String {
+    if let Some(exact) = &d.exact {
+        if let Some(s) = exact.to_exact_decimal_string() {
+            return s;
+        }
+    }
+    jnum(d.value)
+}
+
 /// Render the `let`-bound derived values as a JSON array, one object per
 /// distinct binding name, each carrying the engine-computed magnitude plus the
 /// [`Dimension`](logic_engine::dimension::Dimension) tag the engine *inferred*
@@ -131,7 +151,7 @@ fn derived_json(kb: &KnowledgeBase) -> String {
             format!(
                 "{{\"name\":\"{}\",\"value\":{},\"dim\":\"{}\"{}{}}}",
                 esc(&d.name),
-                jnum(d.value),
+                value_json(d),
                 esc(&d.dim.tag()),
                 exact,
                 provenance

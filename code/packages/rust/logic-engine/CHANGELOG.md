@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.40.0] — 2026-07-14 — exact rendering of a computed result (ADJ-EXACT-NUMBERS NX-4)
+
+### Added
+
+- **`ExactRational::to_exact_decimal_string(&self) -> Option<String>`** — the rendering side of the
+  exact-numbers arc. When the exact-rational result of a computation has a finite base-10 expansion
+  it returns all its digits (`3/4 → "0.75"`; a stored 39-digit π doubled →
+  `"6.283185307179586476925286766559005768394"`); for a repeating expansion (`1/3`) it returns
+  `None`, leaving the caller to fall back to the labeled-lossy `f64` from `to_f64()`. Delegates to
+  the new `BigDecimal::from_rational_exact`. This is the compute-result analogue of NX-2's
+  `Number::Exact` recall rendering: exact by default, `f64` only as a labeled fallback.
+- Compute-layer tests: the doubled-π sidecar renders every digit and is strictly richer than its
+  `f64` form; a repeating quotient (`1/3`) renders `None` while a terminating one (`3/4`) renders
+  `"0.75"`.
+
 ## [0.39.0] — 2026-07-14 — exact compute ingestion of `Number::Exact` (ADJ-EXACT-NUMBERS NX-3)
 
 ### Changed
