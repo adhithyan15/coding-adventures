@@ -2,6 +2,29 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.25.0] - 2026-07-15
+
+### Added — empty-`if` elimination (test side-effect-free)
+
+`dce_statement` now drops an `if` statement whose consequent is empty AND whose
+alternate is absent-or-empty AND whose test is **side-effect-free**: `if(x){}`,
+`if(x.y){}`, `if(x[k]){}`, `if(a&&b){}`, `if(typeof x){}`, `if(!x){}`,
+`if(x){}else{}` all collapse to `;` (which the block/program empty-statement
+sweep then removes), matching the reference Closure Compiler. When either branch
+does real work, or the test may have side effects (`if(f()){}`, `if(x++){}`), the
+`if` is kept — the "keep the test as an expression statement" rewrite
+(`if(f()){}`→`f();`) is a deliberate follow-up, and switch elimination for a
+side-effect-free-but-non-leaf discriminant is a separate slice.
+
+A new `is_side_effect_free` predicate backs the decision: identifiers, `this`,
+literals, and property reads / unary (non-`delete`) / binary / logical /
+conditional expressions built from side-effect-free parts are pure; calls,
+`new`, assignment, `++`/`--`, `delete`, `yield`, `await`, tagged templates,
+dynamic `import()`, and (conservatively) the comma operator are not. Member
+access is pure only when its object (and computed key) are pure, so `f().y` is
+correctly excluded. Safe-by-construction: anything not positively known pure is
+never removed.
+
 ## [0.24.0] - 2026-07-15
 
 ### Added — CLOC12.195: strip stray top-level `EmptyStatement`s
