@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.12.0] — 2026-07-14 — exact-number arc COMPLETE: computed results render every digit (ADJ-EXACT-NUMBERS NX-4)
+
+### Changed
+
+- **`derived.value` now renders exact-first.** When a `let`/`formula` computation stayed inside
+  exact rational arithmetic (NX-3) and its result has a finite base-10 expansion, the CLI prints
+  **all** of its digits (via the new `ExactRational::to_exact_decimal_string`), mirroring NX-2's
+  exact recall-binding rendering. So a stored 39-digit π fed through the shipped `product` formula
+  and doubled now renders `6.283185307179586476925286766559005768394`, not the f64-truncated
+  `6.283185307179586`. The `f64` (`jnum`) remains the labeled-lossy fallback, used only when there
+  is no exact sidecar or when the value **repeats** (e.g. `1/3`), which no finite decimal can hold.
+  The field stays a JSON number literal — its type is unchanged; only its precision grows for values
+  that were previously truncated. Non-terminating results (e.g. the ideal-gas pressure, a division
+  whose denominator carries a prime other than 2/5) are byte-for-byte unchanged.
+
+### Added
+
+- E2E proofs closing the arc: the shipped `mathematics/constants.adj` binds π, e, and
+  golden_ratio to their **full** published digit strings through the CLI (updated from the previous
+  ~16-digit leading-substring assertion, which hedged that "the runtime binds a double-precision
+  float" — no longer true); and a computed-result test doubles a stored 39-digit π through the
+  shipped `product` formula and asserts the rendered `value` shows all 39 exact digits.
+
 ## [0.11.1] — 2026-07-14 — exact-number bindings render every digit (ADJ-EXACT-NUMBERS NX-2)
 
 ### Added

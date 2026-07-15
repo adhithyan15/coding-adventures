@@ -405,6 +405,91 @@ impl BigDecimal {
             BigRational::from_integer(&self.mant * &factor)
         }
     }
+
+    /// The **exact** base-10 expansion of a rational, when a finite one exists — the inverse
+    /// direction of [`to_rational`](Self::to_rational), and the rendering half of the
+    /// ADJ-EXACT-NUMBERS arc (NX-4).
+    ///
+    /// ## When does a fraction have a *finite* decimal?
+    ///
+    /// Write the rational in lowest terms as `p / q` (a [`BigRational`] is always kept reduced
+    /// with a positive denominator). Its base-10 expansion terminates **iff** `q`'s only prime
+    /// factors are the primes of the base, `2` and `5`:
+    ///
+    /// | fraction | reduced `q` | factors of `q` | expansion |
+    /// |---|---|---|---|
+    /// | `1/4`   | `4`    | `2²`      | `0.25`  — terminates |
+    /// | `3/8`   | `8`    | `2³`      | `0.375` — terminates |
+    /// | `7/20`  | `20`   | `2²·5`    | `0.35`  — terminates |
+    /// | `1/3`   | `3`    | `3`       | `0.333…` — **repeats**, no finite decimal |
+    /// | `2/7`   | `7`    | `7`       | `0.285714…` — **repeats** |
+    ///
+    /// So we strip every factor of `2` and `5` out of `q`, counting how many of each; if anything
+    /// but `1` is left over, the expansion repeats and we return `None` (the caller then falls
+    /// back to a labeled-lossy `f64` — a repeating value simply has no exact `BigDecimal`).
+    ///
+    /// ## Building the mantissa when it *does* terminate
+    ///
+    /// After stripping we know `q = 2^a · 5^b`. We want a scale `s` and mantissa `m` with
+    /// `p / q = m / 10^s`. Choosing `s = max(a, b)` makes `10^s / q = 2^(s−a) · 5^(s−b)` a whole
+    /// number, so `m = p · 2^(s−a) · 5^(s−b)` is exact — we scale numerator and denominator by the
+    /// same factor, which cannot change the value. Handing `(m, s)` to [`from_parts`](Self::from_parts)
+    /// (which strips trailing zeros into canonical form) gives the terminating decimal, sign and all.
+    ///
+    /// ```
+    /// # use bignum_core::{BigDecimal, BigRational, BigInteger};
+    /// let quarter = BigRational::from_ints(1, 4);
+    /// assert_eq!(BigDecimal::from_rational_exact(&quarter).unwrap().to_string(), "0.25");
+    /// let third = BigRational::from_ints(1, 3);
+    /// assert!(BigDecimal::from_rational_exact(&third).is_none()); // repeats — no finite decimal
+    /// ```
+    pub fn from_rational_exact(r: &BigRational) -> Option<BigDecimal> {
+        let two = BigInteger::from_i64(2);
+        let five = BigInteger::from_i64(5);
+
+        // Strip factors of 2, then of 5, from the (positive) denominator, tallying each.
+        let mut den = r.denominator().clone();
+        let mut twos: i64 = 0;
+        let mut fives: i64 = 0;
+        loop {
+            let (q, rem) = den.div_rem(&two);
+            if rem.is_zero() {
+                den = q;
+                twos += 1;
+            } else {
+                break;
+            }
+        }
+        loop {
+            let (q, rem) = den.div_rem(&five);
+            if rem.is_zero() {
+                den = q;
+                fives += 1;
+            } else {
+                break;
+            }
+        }
+        // Any leftover prime factor (3, 7, 11, …) ⇒ the expansion repeats ⇒ no finite decimal.
+        if den != BigInteger::one() {
+            return None;
+        }
+
+        // Rebalance so the denominator is exactly 10^scale, scaling the numerator to match.
+        let scale = twos.max(fives);
+        let mut mant = r.numerator().clone();
+        if scale > twos {
+            mant = &mant * &two.pow((scale - twos) as u32);
+        }
+        if scale > fives {
+            mant = &mant * &five.pow((scale - fives) as u32);
+        }
+        // `checked_from_parts` keeps this a **total** function: a value whose exact scale would
+        // exceed `BigDecimal`'s internal scale budget (an astronomically fine fraction like
+        // `1 / 2^8_000_001`) yields `None` — the same "no representable exact decimal" signal a
+        // repeating expansion gives — rather than panicking. In every real caller the rational is
+        // already size-bounded well under the budget, so this branch is defence-in-depth.
+        BigDecimal::checked_from_parts(mant, scale)
+    }
 }
 
 // ===========================================================================
@@ -1254,6 +1339,70 @@ mod tests {
                 .div_round(&BigDecimal::from_i64(dd as i64), target, mode);
             let want = oracle(expect_r, target);
             assert_eq!(got, want, "{n}/{dd} @s{target} {mode:?}");
+        }
+    }
+
+    // ---- from_rational_exact: terminating vs repeating expansions ---------
+
+    #[test]
+    fn from_rational_exact_renders_terminating_decimals() {
+        // Powers-of-2-and-5 denominators all terminate; the string is fully exact.
+        let cases = [
+            (1i64, 4i64, "0.25"),
+            (3, 8, "0.375"),
+            (7, 20, "0.35"),
+            (1, 2, "0.5"),
+            (1, 1, "1"),      // an integer is the scale-0 case
+            (0, 1, "0"),      // zero
+            (5463, 20, "273.15"), // the temperature-conversion offset
+            (1013248623, 10000, "101324.8623"),
+            (-3, 8, "-0.375"), // sign rides on the mantissa
+        ];
+        for (n, d, want) in cases {
+            let r = BigRational::from_ints(n, d);
+            let got = BigDecimal::from_rational_exact(&r)
+                .unwrap_or_else(|| panic!("{n}/{d} should terminate"));
+            assert_eq!(got.to_string(), want, "{n}/{d}");
+        }
+    }
+
+    #[test]
+    fn from_rational_exact_rejects_repeating_decimals() {
+        // Any leftover prime factor (3, 7, 11, …) means the expansion repeats forever,
+        // so no finite BigDecimal can hold it — the caller must fall back to a lossy f64.
+        for (n, d) in [(1i64, 3i64), (2, 7), (5, 6), (1, 11), (22, 7)] {
+            let r = BigRational::from_ints(n, d);
+            assert!(
+                BigDecimal::from_rational_exact(&r).is_none(),
+                "{n}/{d} repeats and must return None"
+            );
+        }
+    }
+
+    #[test]
+    fn from_rational_exact_round_trips_high_precision_pi_times_two() {
+        // The exact-numbers headline: pi to 39 digits, doubled, stays exact end to end.
+        // pi*2 = 6283185307179586476925286766559005768394 / 10^39 — a terminating decimal.
+        let pi2 = BigRational::new(
+            BigInteger::parse_radix("6283185307179586476925286766559005768394", 10).unwrap(),
+            ten_pow(39),
+        );
+        let got = BigDecimal::from_rational_exact(&pi2).expect("pi*2 terminates");
+        assert_eq!(
+            got.to_string(),
+            "6.283185307179586476925286766559005768394",
+            "all 39 fractional digits survive, not the ~16 an f64 carries"
+        );
+    }
+
+    #[test]
+    fn from_rational_exact_inverts_to_rational() {
+        // Round-trip: a terminating BigDecimal → rational → back is byte-identical.
+        for s in ["0.25", "273.15", "101324.8623", "-0.375", "1000", "0"] {
+            let d = BigDecimal::from_str(s).unwrap();
+            let back = BigDecimal::from_rational_exact(&d.to_rational())
+                .expect("a decimal's rational always terminates");
+            assert_eq!(back, d, "round-trip {s}");
         }
     }
 

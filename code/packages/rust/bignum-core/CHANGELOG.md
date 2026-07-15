@@ -5,6 +5,22 @@ All notable changes to the `bignum-core` package will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.0] - 2026-07-14
+
+### Added
+
+- **`BigDecimal::from_rational_exact(r: &BigRational) -> Option<BigDecimal>`** — the inverse of
+  `to_rational`, and the rendering half of the ADJ exact-numbers arc (NX-4). A reduced fraction
+  `p/q` has a **finite** decimal expansion iff `q`'s only prime factors are `2` and `5` (the primes
+  of base 10); the method strips those factors, and if anything else remains (`3`, `7`, `11`, …) the
+  expansion repeats and it returns `None` (so the caller falls back to a labeled-lossy `f64`). When
+  it terminates, it rebalances to `mantissa / 10^scale` and hands the parts to `from_parts`, so
+  `1/4 → 0.25`, `7/20 → 0.35`, and a doubled 39-digit π
+  (`6283185307179586476925286766559005768394 / 10^39`) renders to all 39 fractional digits, while
+  `1/3` and `2/7` return `None`. Sign rides on the mantissa; zero and integers are the scale-0 case.
+  Round-trips exactly against `to_rational`. Introduced so the logic engine / CLI can print an exact
+  **computed** result with every digit instead of the ~16-significant-digit f64 export.
+
 ## [0.6.0] - 2026-07-14
 
 ### Added
