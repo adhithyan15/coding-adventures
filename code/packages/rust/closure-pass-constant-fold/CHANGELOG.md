@@ -2,6 +2,36 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.93.0] - 2026-07-15
+
+### Added — contract compound self-assignment `x = x OP E` → `x OP= E` — CLOC12.198
+
+`fold_expression` now contracts a plain-`=` assignment whose right-hand side is a
+binary expression on the same target into the compound-assignment form:
+`x = x + 1` → `x += 1`, `n = n - 2` → `n -= 2`, `k = k * 2` → `k *= 2`,
+`a = a + b` → `a += b`, `s = s + "b"` → `s += "b"`. The rewrite fires for every
+arithmetic / bitwise operator that has a compound counterpart
+(`+ - * / % ** << >> >>> & | ^`); the relational, equality, `in`, and
+`instanceof` operators have no `OP=` form and decline. Verified byte-identical to
+the reference Closure Compiler (`SIMPLE`), which performs the same contraction.
+
+The contraction is matched on the binary's **left** operand only, so `x = x + 1`
+folds but `x = 1 + x` does **not** — for non-commutative operators (`-`, `/`,
+`**`, the shifts) `x = x - 1` (→ `x -= 1`) and `x = 1 - x` are different
+computations, and the reference compiler likewise only contracts the
+left-operand shape. A different left identifier (`x = y + 1`) also declines.
+
+**Scope:** identifier targets only. A member target such as `o[f()] = o[f()] + 1`
+is a deliberate follow-up (CLOC12.198b): its expanded form evaluates the
+reference sub-expressions (`f()`) twice while the compound form evaluates them
+once, so contracting it is only sound once the object/property is proven
+side-effect-free. For a bare identifier binding the reference `x` has no
+observable side effect, so `x = x OP E` and `x OP= E` are always interchangeable.
+
+The contraction body lives in an `#[inline(never)]` `fold_assignment` helper so
+its locals don't inflate the shared recursive `fold_expression` frame (the same
+DoS-guard discipline the member / optional / template arms follow).
+
 ## [0.92.0] - 2026-07-15
 
 ### Added — fold template literal → string when every substitution is constant — CLOC12.197
