@@ -2,6 +2,22 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.33] - 2026-07-15
+
+### Added — CLOC12.194 PR2: redundant-block flattening end-to-end
+
+Picks up `closure-pass-fold-control-flow` 0.24.0 (the redundant-`BlockStatement`
+flatten, PR1 #8345). When an `if` with a statically-decidable condition folds to
+its surviving branch, closurec previously left that branch's `{ … }` block intact;
+now the redundant braces are removed and the statement runs directly. New
+`tests/diff/block-flatten/` fixture: `if (2 > 3) { a(); } else { b(); }` at SIMPLE
+emits `b();` (not `{ b(); }`) — verified byte-identical to the reference Closure
+Compiler. `diff_block_flatten.rs` asserts the fold fired end-to-end (output
+contains `b()`, no residual `{b(` block braces, no surviving `if(`), proving the
+optimization pipeline ran rather than falling back to WHITESPACE_ONLY. No
+CLI-surface change; PATCH bump `0.234.32` → `0.234.33` (help-markdown golden
+regenerated for the version line).
+
 ## [0.234.32] - 2026-07-14
 
 ### Added — CLOC12.193 PR2: array-literal `.length` fold end-to-end
