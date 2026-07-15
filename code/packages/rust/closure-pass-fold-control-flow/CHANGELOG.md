@@ -2,6 +2,38 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.25.0] - 2026-07-15
+
+### Added — DIV#2: coalesce adjacent same-kind variable declarations
+
+A new statement-list post-step merges a run of *strictly adjacent*
+`VariableDeclaration` statements of the *same kind* (`var`/`let`/`const`) into a
+single multi-declarator declaration: `var a=1;var b=2;` → `var a=1,b=2;`,
+`let a=1;let b=2;` → `let a=1,b=2;`, `var a;var b;` → `var a,b;`, and 3+-decl
+runs collapse in one pass. Verified byte-identical to the reference Closure
+Compiler at `SIMPLE`. It is a pure size win with identical semantics —
+declarators keep their order (so initializer evaluation order is unchanged:
+`var a=b++;var c=2;` → `var a=b++,c=2;`), and merging same-scope same-kind
+bindings changes nothing about hoisting or the temporal dead zone.
+
+Runs as a post-step after this crate's other statement-list rewrites, so decls a
+block-flatten made adjacent (`{var a=1}var b=2` → `var a=1,b=2`) also merge. It
+is applied at both list-assembly points — the program body (`fold_program`) and
+block bodies (`fold_block_statement`) — via a small `VarDeclCarrier` trait so one
+generic `coalesce_var_decls` serves both `ProgramItem` and `Statement` lists.
+
+Decline conditions (each preserves byte-identity with Closure): different kinds
+don't merge (`var a=1;let b=2;` stays split); a non-declaration statement between
+two decls breaks the run (only strictly-adjacent decls merge); and a run whose
+merged declarator list would **repeat** a binding name is left untouched —
+`var a=1;var a=2;` must NOT become `var a=1,a=2;`, because Closure rewrites the
+redeclaration's second half to a bare assignment (`var a=1;a=2;`), a separate
+transform this pass does not perform, so it declines rather than diverge. (For
+`let`/`const` a repeated name is a syntax error that never reaches the pass.)
+
+Folded-away declaration statements have their CV ids tombstoned via
+`record_fold_deleting`, recording the surviving container declaration's CV.
+
 ## [0.24.0] - 2026-07-14
 
 ### Added — CLOC12.194: flatten redundant `BlockStatement`s (oracle divergence #4)

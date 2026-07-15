@@ -331,7 +331,9 @@ fn fold_program(prog: &Program, st: &mut FoldState) -> Program {
         cv: prog.cv.clone(),
         version: prog.version,
         source_type: prog.source_type,
-        body: new_body,
+        // DIV#2 — as a post-step, merge any runs of adjacent same-kind variable
+        // declarations this list now holds (see `coalesce_var_decls`).
+        body: coalesce_var_decls(new_body, st),
     }
 }
 
@@ -631,8 +633,166 @@ fn fold_block_statement(b: &BlockStatement, st: &mut FoldState) -> BlockStatemen
     }
     BlockStatement {
         cv: b.cv.clone(),
-        body: new_body,
+        // DIV#2 — merge adjacent same-kind variable declarations in the block
+        // body (including any the flatten/hoist above made adjacent).
+        body: coalesce_var_decls(new_body, st),
     }
+}
+
+// =====================================================================
+// DIV#2 — coalesce adjacent same-kind variable declarations
+// =====================================================================
+//
+//   var a=1;var b=2;   ──▶   var a=1,b=2;      (one keyword + one `;` saved)
+//   let a=1;let b=2;    ──▶   let a=1,b=2;
+//   var a;var b;        ──▶   var a,b;
+//
+// The reference Closure Compiler merges a run of *strictly adjacent*
+// `VariableDeclaration` statements of the *same kind* (`var`/`let`/`const`)
+// into a single multi-declarator declaration. It is a pure size win with
+// identical semantics: the declarators keep their original order — and so their
+// initializer evaluation order (`var a=b++;var c=2;` → `var a=b++,c=2;` still
+// runs `b++` first) — and merging same-scope same-kind bindings changes nothing
+// about hoisting or the temporal dead zone.
+//
+// DECLINE conditions (each preserves byte-identity with Closure):
+//   * different kinds don't merge — `var a=1;let b=2;` stays two statements;
+//   * a non-declaration statement (or a different-kind decl) between two decls
+//     breaks the run — only *strictly adjacent* decls merge; an EmptyStatement
+//     (`;`) also breaks it here, but the pipeline's separate empty-statement
+//     removal drops the `;` in an earlier fixed-point iteration so the decls
+//     become adjacent and merge on a later pass;
+//   * a run whose merged declarator list would REPEAT a binding name is left
+//     untouched: `var a=1;var a=2;` must NOT become `var a=1,a=2;` — Closure
+//     rewrites the redeclaration's second half to a bare assignment
+//     (`var a=1;a=2;`), a *different* transform this pass does not perform, so
+//     we decline rather than diverge. (For `let`/`const` a repeated name is a
+//     syntax error that never reaches us.)
+//
+// Runs as a POST-STEP after this crate's other statement-list rewrites
+// (block-flatten, else-hoist, dead-code drop) so decls a block-flatten made
+// adjacent (`{var a=1}var b=2` → `var a=1;var b=2` → `var a=1,b=2`) also merge.
+
+/// A statement-list element that *may* carry a bare variable declaration.
+///
+/// Implemented for both list-element types this pass assembles — [`ProgramItem`]
+/// (top level) and [`Statement`] (block body) — so one generic coalescer serves
+/// both. A top-level `var` is bridged as
+/// `ProgramItem::Statement(Statement::Declaration(…))` (the parser routes
+/// variable statements through `statement`), so the program-item view looks
+/// through that wrapper as well as the bare `ProgramItem::Declaration` form, and
+/// rebuilds into the wrapper form the bridge uses.
+trait VarDeclCarrier: Clone {
+    /// The variable declaration this element carries, if any.
+    fn as_var_decl(&self) -> Option<&VariableDeclaration>;
+    /// Wrap a (merged) variable declaration back into a list element.
+    fn from_var_decl(decl: VariableDeclaration) -> Self;
+}
+
+impl VarDeclCarrier for ProgramItem {
+    fn as_var_decl(&self) -> Option<&VariableDeclaration> {
+        match self {
+            ProgramItem::Statement(Statement::Declaration(Declaration::VariableDeclaration(vd)))
+            | ProgramItem::Declaration(Declaration::VariableDeclaration(vd)) => Some(vd),
+            _ => None,
+        }
+    }
+    fn from_var_decl(decl: VariableDeclaration) -> Self {
+        // Match the bridge's program-level shape (a variable *statement*).
+        ProgramItem::Statement(Statement::Declaration(Declaration::VariableDeclaration(decl)))
+    }
+}
+
+impl VarDeclCarrier for Statement {
+    fn as_var_decl(&self) -> Option<&VariableDeclaration> {
+        match self {
+            Statement::Declaration(Declaration::VariableDeclaration(vd)) => Some(vd),
+            _ => None,
+        }
+    }
+    fn from_var_decl(decl: VariableDeclaration) -> Self {
+        Statement::Declaration(Declaration::VariableDeclaration(decl))
+    }
+}
+
+/// Merge runs of strictly-adjacent same-kind variable declarations in one
+/// statement list into single multi-declarator declarations. See the module
+/// comment above for the exact rule and the decline conditions.
+fn coalesce_var_decls<T: VarDeclCarrier>(items: Vec<T>, st: &mut FoldState) -> Vec<T> {
+    let mut out: Vec<T> = Vec::with_capacity(items.len());
+    let mut i = 0;
+    while i < items.len() {
+        // A run can only start at a variable declaration; anything else passes
+        // through verbatim.
+        let kind = match items[i].as_var_decl() {
+            Some(vd) => vd.kind,
+            None => {
+                out.push(items[i].clone());
+                i += 1;
+                continue;
+            }
+        };
+        // Extend the run over every immediately-following same-kind decl.
+        let mut j = i + 1;
+        while j < items.len() && items[j].as_var_decl().map(|vd| vd.kind) == Some(kind) {
+            j += 1;
+        }
+        if j - i < 2 {
+            // A lone declaration — nothing adjacent to merge into it.
+            out.push(items[i].clone());
+            i += 1;
+            continue;
+        }
+
+        // Gather the run's declarators in order; a repeated binding name across
+        // the run declines the *whole* run (redeclaration → separate transform).
+        let mut declarations: Vec<VariableDeclarator> = Vec::new();
+        let mut names: Vec<String> = Vec::new();
+        let mut duplicate = false;
+        for item in &items[i..j] {
+            let vd = item.as_var_decl().expect("run member is a var declaration");
+            for d in &vd.declarations {
+                let BindingTarget::Identifier(id) = &d.id;
+                if names.iter().any(|n| n == &id.name) {
+                    duplicate = true;
+                } else {
+                    names.push(id.name.clone());
+                }
+                declarations.push(d.clone());
+            }
+        }
+
+        if duplicate {
+            // Leave the run untouched — declining is never wrong.
+            for item in &items[i..j] {
+                out.push(item.clone());
+            }
+            i = j;
+            continue;
+        }
+
+        // Merge: the first decl's CV becomes the container; the folded-away
+        // declarations' CVs are tombstoned (their statement wrappers vanish).
+        let container_cv = items[i].as_var_decl().unwrap().cv.clone();
+        let discarded: Vec<Option<String>> = items[i + 1..j]
+            .iter()
+            .map(|item| item.as_var_decl().unwrap().cv.clone())
+            .collect();
+        st.record_fold_deleting(
+            &container_cv,
+            &discarded,
+            "coalesce-var-declarations",
+            "adjacent same-kind var declarations",
+            "one multi-declarator declaration",
+        );
+        out.push(T::from_var_decl(VariableDeclaration {
+            cv: container_cv,
+            kind,
+            declarations,
+        }));
+        i = j;
+    }
+    out
 }
 
 /// A statement that unconditionally transfers control out of the
@@ -3222,6 +3382,206 @@ mod tests {
                 Statement::Tagged(TaggedStatement::ExpressionStatement(_))
             ),
             "the inner block should flatten inside the function body"
+        );
+    }
+
+    // ---------------- DIV#2: coalesce adjacent same-kind var decls --------
+
+    /// A program-level variable declaration item (a `var`/`let`/`const`
+    /// statement) with one declarator, optionally carrying a CV id.
+    fn prog_var(name: &str, init: Option<Expression>, kind: VarKind, cv: Option<&str>) -> ProgramItem {
+        ProgramItem::Statement(Statement::Declaration(Declaration::VariableDeclaration(
+            VariableDeclaration {
+                cv: cv.map(|s| s.to_string()),
+                kind,
+                declarations: vec![VariableDeclarator {
+                    cv: None,
+                    id: BindingTarget::Identifier(Identifier {
+                        cv: None,
+                        name: name.to_string(),
+                    }),
+                    init,
+                }],
+            },
+        )))
+    }
+
+    /// The variable declaration at program-body index `idx` (panics otherwise).
+    fn prog_decl_at(prog: &Program, idx: usize) -> &VariableDeclaration {
+        match &prog.body[idx] {
+            ProgramItem::Statement(Statement::Declaration(Declaration::VariableDeclaration(vd)))
+            | ProgramItem::Declaration(Declaration::VariableDeclaration(vd)) => vd,
+            other => panic!("expected a variable declaration at {idx}; got {other:?}"),
+        }
+    }
+
+    /// The bound names of a declaration, in order (`var a=1,b=2` → `["a","b"]`).
+    fn declarator_names(vd: &VariableDeclaration) -> Vec<String> {
+        vd.declarations
+            .iter()
+            .map(|d| {
+                let BindingTarget::Identifier(id) = &d.id;
+                id.name.clone()
+            })
+            .collect()
+    }
+
+    #[test]
+    fn two_adjacent_var_decls_coalesce() {
+        // `var a=1;var b=2;` → `var a=1,b=2;`
+        let prog = program().with_body(vec![
+            prog_var("a", Some(num(1.0, None)), VarKind::Var, None),
+            prog_var("b", Some(num(2.0, None)), VarKind::Var, None),
+        ]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(changed, "coalescing should mark the program changed");
+        assert_eq!(out.body.len(), 1, "the two decls should merge into one");
+        let vd = prog_decl_at(&out, 0);
+        assert_eq!(vd.kind, VarKind::Var);
+        assert_eq!(declarator_names(vd), vec!["a", "b"]);
+        // Inits are preserved in order.
+        assert!(matches!(&vd.declarations[0].init, Some(Expression::NumericLiteral(n)) if n.value == 1.0));
+        assert!(matches!(&vd.declarations[1].init, Some(Expression::NumericLiteral(n)) if n.value == 2.0));
+    }
+
+    #[test]
+    fn three_adjacent_var_decls_coalesce_into_one() {
+        // `var a=1;var b=2;var c=3;` → `var a=1,b=2,c=3;`
+        let prog = program().with_body(vec![
+            prog_var("a", Some(num(1.0, None)), VarKind::Var, None),
+            prog_var("b", Some(num(2.0, None)), VarKind::Var, None),
+            prog_var("c", Some(num(3.0, None)), VarKind::Var, None),
+        ]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 1);
+        assert_eq!(declarator_names(prog_decl_at(&out, 0)), vec!["a", "b", "c"]);
+    }
+
+    #[test]
+    fn adjacent_let_decls_coalesce() {
+        // `let a=1;let b=2;` → `let a=1,b=2;` — same rule, `let` kind preserved.
+        let prog = program().with_body(vec![
+            prog_var("a", Some(num(1.0, None)), VarKind::Let, None),
+            prog_var("b", Some(num(2.0, None)), VarKind::Let, None),
+        ]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 1);
+        let vd = prog_decl_at(&out, 0);
+        assert_eq!(vd.kind, VarKind::Let);
+        assert_eq!(declarator_names(vd), vec!["a", "b"]);
+    }
+
+    #[test]
+    fn declarations_without_initializers_coalesce() {
+        // `var a;var b;` → `var a,b;`
+        let prog = program().with_body(vec![
+            prog_var("a", None, VarKind::Var, None),
+            prog_var("b", None, VarKind::Var, None),
+        ]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 1);
+        let vd = prog_decl_at(&out, 0);
+        assert_eq!(declarator_names(vd), vec!["a", "b"]);
+        assert!(vd.declarations.iter().all(|d| d.init.is_none()));
+    }
+
+    #[test]
+    fn different_kind_decls_do_not_coalesce() {
+        // `var a=1;let b=2;` — different kinds stay two separate statements.
+        let prog = program().with_body(vec![
+            prog_var("a", Some(num(1.0, None)), VarKind::Var, None),
+            prog_var("b", Some(num(2.0, None)), VarKind::Let, None),
+        ]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(!changed, "different-kind decls must not merge");
+        assert_eq!(out.body.len(), 2);
+        assert_eq!(prog_decl_at(&out, 0).kind, VarKind::Var);
+        assert_eq!(prog_decl_at(&out, 1).kind, VarKind::Let);
+    }
+
+    #[test]
+    fn non_adjacent_decls_do_not_coalesce() {
+        // `var a=1;f();var b=2;` — the call between them breaks the run.
+        let prog = program().with_body(vec![
+            prog_var("a", Some(num(1.0, None)), VarKind::Var, None),
+            ProgramItem::Statement(expr_stmt(ident("f"), None)),
+            prog_var("b", Some(num(2.0, None)), VarKind::Var, None),
+        ]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(!changed, "a statement between the decls must break the run");
+        assert_eq!(out.body.len(), 3);
+    }
+
+    #[test]
+    fn redeclaration_declines_to_preserve_byte_identity() {
+        // `var a=1;var a=2;` must NOT become `var a=1,a=2;` — the repeated name
+        // is a redeclaration the reference compiler rewrites differently
+        // (`var a=1;a=2;`), so this pass leaves the run untouched.
+        let prog = program().with_body(vec![
+            prog_var("a", Some(num(1.0, None)), VarKind::Var, None),
+            prog_var("a", Some(num(2.0, None)), VarKind::Var, None),
+        ]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(!changed, "a repeated binding name must decline the merge");
+        assert_eq!(out.body.len(), 2, "the two decls stay separate");
+    }
+
+    #[test]
+    fn lone_declaration_is_left_alone() {
+        let prog =
+            program().with_body(vec![prog_var("a", Some(num(1.0, None)), VarKind::Var, None)]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(!changed);
+        assert_eq!(out.body.len(), 1);
+        assert_eq!(declarator_names(prog_decl_at(&out, 0)), vec!["a"]);
+    }
+
+    #[test]
+    fn flattened_block_decls_then_coalesce() {
+        // `{var a=1;var b=2;}` at program level: the scope-safe block flattens
+        // into the program body (CLOC12.194), and the now-adjacent decls then
+        // coalesce — the two rewrites compose to `var a=1,b=2;`.
+        let block = Statement::block_statement(BlockStatement {
+            cv: None,
+            body: vec![
+                make_var_decl("a", Some(num(1.0, None))),
+                make_var_decl("b", Some(num(2.0, None))),
+            ],
+        });
+        let prog = program().with_body(vec![ProgramItem::Statement(block)]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 1, "flatten + coalesce compose to one decl");
+        assert_eq!(declarator_names(prog_decl_at(&out, 0)), vec!["a", "b"]);
+    }
+
+    #[test]
+    fn coalesce_tombstones_the_folded_away_declaration_cv() {
+        // Merging `var a=1;var b=2;` deletes the second decl's statement
+        // wrapper; its CV id must be tombstoned with the container recorded.
+        let mut log = CVLog::new(true);
+        let second_id = log.create(None);
+        let prog = program().with_body(vec![
+            prog_var("a", Some(num(1.0, None)), VarKind::Var, Some("v.first")),
+            prog_var("b", Some(num(2.0, None)), VarKind::Var, Some(second_id.as_str())),
+        ]);
+        let out = run_capturing_cv(&prog, &mut log);
+        assert_eq!(out.body.len(), 1, "the decls should have merged");
+        let del = log
+            .get(&second_id)
+            .unwrap()
+            .deleted
+            .as_ref()
+            .expect("the folded-away declaration must be tombstoned");
+        assert_eq!(del.source, "fold-control-flow");
+        assert_eq!(del.reason, "coalesce-var-declarations");
+        assert_eq!(
+            del.meta.get("container_cv").and_then(|v| v.as_str()),
+            Some("v.first"),
+            "tombstone should record the surviving container decl's cv"
         );
     }
 }
