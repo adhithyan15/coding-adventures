@@ -1,1 +1,1 @@
-var a="42";var b="-7";var c="true";var d="null";var e=JSON.stringify("x");var f=JSON.stringify(3.5);report(a,b,c,d,e,f);
+var a="42",b="-7",c="true",d="null",e=JSON.stringify("x"),f=JSON.stringify(3.5);report(a,b,c,d,e,f);

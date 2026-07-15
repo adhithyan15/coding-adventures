@@ -1,1 +1,1 @@
-var a=first();var b=second();report(a!=b,a!==b,!(a<b));
+var a=first(),b=second();report(a!=b,a!==b,!(a<b));

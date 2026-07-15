@@ -28,7 +28,7 @@ be numeric or the result is `NaN`:
 So the folded `expected.stdout` is:
 
 ```js
-var a=42;var b=0;var c=3.5;var d=31;var e=5;var f=15;var g=Number("abc");report(a,b,c,d,e,f,g);
+var a=42,b=0,c=3.5,d=31,e=5,f=15,g=Number("abc");report(a,b,c,d,e,f,g);
 ```
 
 Only the **bare global identifier** folds — a member access like

@@ -7,7 +7,7 @@ literals at `--compilation_level SIMPLE`.
 |------|------|
 | `flags.txt` | CLI args: `--compilation_level SIMPLE --js input/a.js` |
 | `input/a.js` | `parseInt("12px")`, `parseInt("FF", 16)`, `parseFloat("3.14abc")`, `parseInt("0x1F")` |
-| `expected.stdout` | The folded output: `var a=12;var b=255;var c=3.14;var d=31;report(a,b,c,d);` |
+| `expected.stdout` | The folded output: `var a=12,b=255,c=3.14,d=31;report(a,b,c,d);` |
 
 The SIMPLE level runs the typed-AST optimization pipeline, whose
 `constant-fold` pass folds global `parseInt`/`parseFloat` calls whose first
