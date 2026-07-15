@@ -68,7 +68,7 @@ use coding_adventures_javascript_ast::{
     DoWhileStatement, VariableDeclarator, WhileStatement, WithStatement,
 };
 use serde_json::json;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 /// `Pass::depends_on` value. CLOC06 canonical order pins
 /// constant-fold first so we see folded literals as branch
@@ -746,17 +746,23 @@ fn coalesce_var_decls<T: VarDeclCarrier>(items: Vec<T>, st: &mut FoldState) -> V
 
         // Gather the run's declarators in order; a repeated binding name across
         // the run declines the *whole* run (redeclaration → separate transform).
+        //
+        // The seen-names check uses a `HashSet` (not a linear `Vec` scan): a run
+        // of N strictly-adjacent single-declarator statements is trivially
+        // authorable in the input JS (`var a0=1;var a1=1;…`), and a per-declarator
+        // linear membership test would be Θ(N²) — a linear-input → quadratic-work
+        // DoS on this hot pass path. The `&str` borrows live in `items[i..j]`,
+        // which outlives this per-run gather, so no owned clone is needed.
         let mut declarations: Vec<VariableDeclarator> = Vec::new();
-        let mut names: Vec<String> = Vec::new();
+        let mut names: HashSet<&str> = HashSet::new();
         let mut duplicate = false;
         for item in &items[i..j] {
             let vd = item.as_var_decl().expect("run member is a var declaration");
             for d in &vd.declarations {
                 let BindingTarget::Identifier(id) = &d.id;
-                if names.iter().any(|n| n == &id.name) {
+                // `insert` returns false when the name was already present.
+                if !names.insert(id.name.as_str()) {
                     duplicate = true;
-                } else {
-                    names.push(id.name.clone());
                 }
                 declarations.push(d.clone());
             }

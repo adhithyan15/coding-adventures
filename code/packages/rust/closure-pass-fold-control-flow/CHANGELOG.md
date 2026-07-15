@@ -34,6 +34,11 @@ transform this pass does not perform, so it declines rather than diverge. (For
 Folded-away declaration statements have their CV ids tombstoned via
 `record_fold_deleting`, recording the surviving container declaration's CV.
 
+The repeated-name check uses a `HashSet`, keeping the pass linear in the number
+of declarators: a run of many strictly-adjacent single-declarator statements is
+trivially authorable in the input, so a linear per-declarator membership scan
+would be Θ(N²) — a linear-input → quadratic-work DoS on the hot pass path.
+
 ## [0.24.0] - 2026-07-14
 
 ### Added — CLOC12.194: flatten redundant `BlockStatement`s (oracle divergence #4)
