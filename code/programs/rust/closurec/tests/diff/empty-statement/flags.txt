@@ -1,0 +1,4 @@
+--js
+tests/diff/empty-statement/input/a.js
+--compilation_level
+SIMPLE

@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.34] - 2026-07-15
+
+### Added — CLOC12.195 + CLOC12.196 PR2: empty-statement removal + array-index fold end-to-end
+
+Picks up `closure-pass-dce` 0.24.0 (top-level empty-statement sweep, CLOC12.195)
+and `closure-pass-constant-fold` 0.91.0 (array-literal index-access fold,
+CLOC12.196), landing both closurec end-to-end fixtures in one PATCH bump.
+
+- **`tests/diff/empty-statement/`**: `;g(1);;g(2);` at SIMPLE emits `g(1);g(2);`
+  — the leading `;` and interior `;;` are swept away (`diff_empty_statement.rs`
+  asserts no `;;` run and no leading `;`).
+- **`tests/diff/array-index/`**: `g([1,2,3][1]);` at SIMPLE emits `g(2);` — the
+  constant integer index folds to the element (`diff_array_index.rs` asserts
+  `g(2)` and no residual `][` array-index access).
+
+Both verified byte-identical to the reference Closure Compiler. No CLI-surface
+change; PATCH bump `0.234.33` → `0.234.34` (help-markdown golden regenerated for
+the version line).
+
 ## [0.234.33] - 2026-07-15
 
 ### Added — CLOC12.194 PR2: redundant-block flattening end-to-end
