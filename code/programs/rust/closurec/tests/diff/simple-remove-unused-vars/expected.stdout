@@ -1,2 +1,1 @@
-var live=10;var impure=run();log(live);
-
+var live=10,impure=run();log(live);

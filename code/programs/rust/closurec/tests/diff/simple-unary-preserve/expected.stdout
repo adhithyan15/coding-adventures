@@ -1,1 +1,1 @@
-var a=first();var b=second();var c=third();report(!a,-b,~c,!(a<b));
+var a=first(),b=second(),c=third();report(!a,-b,~c,!(a<b));
