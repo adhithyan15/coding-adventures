@@ -2,6 +2,33 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.92.0] - 2026-07-15
+
+### Added — fold template literal → string when every substitution is constant — CLOC12.197
+
+`fold_expression` now collapses a `TemplateLiteral` to a `StringLiteral` when
+every `${…}` substitution is a stringifiable constant (number / string / boolean
+/ null / undefined) and every quasi carries a cooked value: `` `a${1}b` `` →
+`"a1b"`, `` `${1}-${2}-${3}` `` → `"1-2-3"`, `` `hello` `` → `"hello"`, `` `` `` →
+`""`. Recursion handles nested templates (`` `a${`b${1}c`}d` `` → `"ab1cd"`) and
+constant sub-expressions (`` `a${1+2}b` `` → `"a3b"`, the `1+2` folds first).
+Verified byte-identical to the reference Closure Compiler; no emitter work is
+needed because closurec's string emitter already matches its quote choice
+(single-quote when the value contains a `"`) and escaping (`\n`, `\t`, `\\`). A
+non-constant substitution (`` `a${x}b` ``, `` `a${f()}b` ``) or an illegal-escape
+(tagged-only) quasi declines.
+
+The fold body lives in an `#[inline(never)]` `fold_template_literal` helper so its
+`Vec`/`String` locals don't inflate the shared recursive `fold_expression` frame
+(that frame is walked once per AST depth level; bloating it lowers the nesting
+depth the pass survives — the `deeply_nested_*` stack-safety tests pin this).
+
+Adds a `stringify_const_operand` predicate + four unit tests. NOTE: end-to-end at
+SIMPLE this currently only fires on **no-substitution** templates (`` `hello` `` →
+`"hello"`) — *substituted* templates (`` `a${x}b` ``) do not yet parse in
+closurec's grammar, so the fold, though correct and unit-tested, can't receive one
+until that separate grammar/bridge arc lands. Additive; MINOR 0.91.0 → 0.92.0.
+
 ## [0.91.0] - 2026-07-15
 
 ### Added — fold array-literal index access `[a, b, c][K]` → element — CLOC12.196
