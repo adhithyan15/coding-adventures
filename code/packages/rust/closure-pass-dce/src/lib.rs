@@ -293,6 +293,37 @@ fn dce_program(prog: &Program, st: &mut DceState) -> Program {
         );
     }
 
+    // Strip stray top-level `EmptyStatement`s (`;`) — CLOC12.195.
+    //
+    // Like `debugger`, an empty statement at statement-list position is a pure
+    // no-op, so the program body needs its own sweep separate from
+    // `dce_block_statement`'s (which already does this for block bodies). These
+    // arise from a hand-written `;`, from `constant-fold`/`fold-control-flow`
+    // folding `if (false) …;` / `while (false) …;` to an `EmptyStatement`, and
+    // from the trailing `;` a flattened block leaves behind
+    // (`g(0);{g(1)};g(2)` → `g(0);g(1);;g(2)` → `g(0);g(1);g(2)`). Upstream
+    // Closure removes them all; matching it here removes the last stray `;`.
+    // A `for (…) ;` / `if (c) ;` empty *substatement* is a loop/if body, NOT a
+    // statement-list member, so it never reaches this sweep — it stays intact,
+    // exactly as Closure keeps it.
+    let before_empty_drop = new_body.len();
+    let removed_empty_cvs: Vec<Option<String>> = new_body
+        .iter()
+        .filter(|item| is_empty_program_item(item))
+        .map(program_item_cv)
+        .collect();
+    new_body.retain(|item| !is_empty_program_item(item));
+    let dropped_empties = before_empty_drop - new_body.len();
+    if dropped_empties > 0 {
+        st.record_deletion(
+            &removed_empty_cvs,
+            &prog.cv,
+            "removed-empty-statement",
+            &format!("program with {} top-level items", before_empty_drop),
+            &format!("dropped {} top-level empty statements", dropped_empties),
+        );
+    }
+
     Program {
         cv: prog.cv.clone(),
         version: prog.version,
@@ -1076,6 +1107,15 @@ fn is_debugger_program_item(item: &ProgramItem) -> bool {
     matches!(item, ProgramItem::Statement(s) if is_debugger_statement(s))
 }
 
+/// Is this top-level item a bare `EmptyStatement` (`;`)? Mirrors
+/// [`is_empty_statement`] for the `ProgramItem` list, so [`dce_program`] can
+/// sweep stray semicolons out of the program body the same way
+/// [`dce_block_statement`] sweeps them out of a block body. An `EmptyStatement`
+/// only ever appears as a `ProgramItem::Statement`, never a `Declaration`.
+fn is_empty_program_item(item: &ProgramItem) -> bool {
+    matches!(item, ProgramItem::Statement(s) if is_empty_statement(s))
+}
+
 /// Fetch a statement's own correlation-vector id, if it carries one.
 ///
 /// DCE's deletion sites need the *removed* node's CV id — not just the
@@ -1801,6 +1841,65 @@ mod tests {
             .as_ref()
             .expect("a stripped top-level debugger must be tombstoned");
         assert_eq!(del.reason, "removed-debugger");
+    }
+
+    #[test]
+    fn top_level_empty_statement_is_removed() {
+        // `keep(); ;` at PROGRAM level → `keep();` — CLOC12.195. Before this the
+        // program-body sweep only stripped `debugger`, leaving stray top-level
+        // `;` behind (block bodies were already cleaned by `dce_block_statement`).
+        let prog = program().with_body(vec![
+            ProgramItem::Statement(expr_stmt(ident("keep"))),
+            ProgramItem::Statement(empty_stmt()),
+        ]);
+        let (out, _c, changed, _n) = run_pass(prog);
+        assert!(changed, "a stray top-level `;` should be removed");
+        assert_eq!(out.body.len(), 1, "only the kept statement survives");
+        assert!(matches!(
+            &out.body[0],
+            ProgramItem::Statement(Statement::Tagged(TaggedStatement::ExpressionStatement(_)))
+        ));
+    }
+
+    #[test]
+    fn multiple_top_level_empty_statements_all_removed() {
+        // `; ; keep(); ;` → `keep();` — leading, interior, and trailing empties.
+        let prog = program().with_body(vec![
+            ProgramItem::Statement(empty_stmt()),
+            ProgramItem::Statement(empty_stmt()),
+            ProgramItem::Statement(expr_stmt(ident("keep"))),
+            ProgramItem::Statement(empty_stmt()),
+        ]);
+        let (out, _c, changed, _n) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 1, "all three empties swept, `keep` remains");
+    }
+
+    #[test]
+    fn top_level_empty_statement_removal_tombstones_the_statement() {
+        // The program-body empty sweep is a separate code path from the
+        // block-body sweep, so it gets its own tombstone test (mirrors the
+        // top-level debugger tombstone test).
+        let mut log = CVLog::new(true);
+        let empty_id = log.create(None);
+        let empty = Statement::empty_statement(EmptyStatement {
+            cv: Some(empty_id.clone()),
+        });
+        let prog = program().with_body(vec![
+            ProgramItem::Statement(expr_stmt(ident("keep"))),
+            ProgramItem::Statement(empty),
+        ]);
+
+        let _out = run_pass_capturing_cv(&prog, &mut log);
+
+        let del = log
+            .get(&empty_id)
+            .unwrap()
+            .deleted
+            .as_ref()
+            .expect("a stripped top-level empty statement must be tombstoned");
+        assert_eq!(del.source, "dce");
+        assert_eq!(del.reason, "removed-empty-statement");
     }
 
     #[test]

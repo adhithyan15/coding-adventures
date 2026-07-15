@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.24.0] - 2026-07-15
+
+### Added — CLOC12.195: strip stray top-level `EmptyStatement`s
+
+`dce_program` now sweeps bare `EmptyStatement`s (`;`) out of the **program body**,
+mirroring the sweep `dce_block_statement` already performs on block bodies. An
+empty statement at statement-list position is a pure no-op, so removing it is
+byte-safe. These arise from a hand-written `;`, from `constant-fold` /
+`fold-control-flow` folding `if (false) …` / `while (false) …` to an
+`EmptyStatement`, and — new in this cycle — from the trailing `;` a flattened
+block leaves behind (`g(0);{g(1)};g(2)` → `g(0);g(1);;g(2)` → `g(0);g(1);g(2)`),
+closing the CLOC12.194 residual. Verified byte-identical to the reference Closure
+Compiler: `;`→removed, `;;;`→removed, `g(0);;g(1)`→`g(0);g(1)`, `;g(1)`→`g(1)`,
+`if(false){g(1)}`→removed. A `for (…) ;` / `if (c) ;` empty *substatement* is a
+loop/if body, NOT a statement-list member, so it never reaches this sweep and
+stays intact — exactly as Closure keeps it. Adds an `is_empty_program_item`
+predicate and records a `removed-empty-statement` deletion (tombstoning each
+swept span for `--correlation_vector`). Additive; MINOR bump 0.23.0 → 0.24.0.
+
 ## [0.23.0] - 2026-07-12
 
 ### Added — CLOC12.189 PR1: export declaration rebuild clones the export; the removability predicate treats an export as live
