@@ -214,7 +214,8 @@ Every value is canonical — trailing zeros stripped, zero pinned to `(0, 0)` �
 | Construct | `zero`, `one`, `from_parts`, `from_integer`, `from_i64`, `From<BigInteger/i64/u64/i128/u128>` |
 | Exact arithmetic | `add`/`+`, `sub`/`-`, `mul`/`*`, unary `-`, `abs`, `pow(u32)` |
 | Rounding | `RoundingMode` (`Down`/`Up`/`Floor`/`Ceiling`/`HalfUp`/`HalfDown`/`HalfEven`), `div_round`/`checked_div_round`, `round_to_scale` |
-| Query | `is_zero`, `is_negative`, `is_positive`, `signum`, `mantissa`, `scale`, `Ord`/`Eq`/`Hash` |
+| Query | `is_zero`, `is_negative`, `is_positive`, `signum`, `mantissa`, `scale`, `significant_digits`, `Ord`/`Eq`/`Hash` |
+| Convert | `to_rational` (**exact** `BigRational`, no `f64` hop — `2.54 → 127/50`), `to_f64` (lossy, correctly rounded) |
 | I/O | `FromStr` (plain + scientific) with typed `ParseDecimalError`; plain-decimal `Display`/`Debug` |
 
 ## BigDouble — correctly-rounded binary float, any precision (NUM-4)

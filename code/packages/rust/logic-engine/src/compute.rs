@@ -1917,6 +1917,75 @@ mod tests {
     }
 
     #[test]
+    fn stored_exact_decimal_pi_doubles_exactly_with_no_f64_hop() {
+        // The proof of NX-3: a high-precision constant stored EXACTLY survives arithmetic.
+        // The stdlib ships pi to 39 digits. If the compute engine ingested it through an
+        // `f64` hop, `pi + pi` would collapse to the ~16-digit `6.283185307179586`. NX-3
+        // ingests the `BigDecimal` as its true `mantissa / 10^scale` rational, so all 39
+        // fractional digits survive doubling.
+        use logic_core::{Number, Term};
+        use std::str::FromStr;
+
+        let pi_str = "3.141592653589793238462643383279502884197";
+        let pi_decimal = bignum_core::BigDecimal::from_str(pi_str).unwrap();
+
+        // Store pi as an EXACT valued fact `pi(3.14159…197)` — a `Number::Exact`, not an f64.
+        let kb = kb_with(vec![crate::Fact::certain(compound(
+            "pi",
+            vec![Term::Num(Number::Exact(pi_decimal.clone()))],
+        ))]);
+
+        // Double it through the deterministic compute engine: pi + pi.
+        let d = compute(
+            "two_pi",
+            &bin(ComputeOp::Add, refexpr("pi"), refexpr("pi")),
+            &kb,
+        )
+        .unwrap();
+
+        // The human-readable exact expectation: 2·pi rendered to its full 40-digit decimal
+        // via BigDecimal's own exact addition — no rounding anywhere.
+        let doubled_decimal = &pi_decimal + &pi_decimal;
+        assert_eq!(
+            doubled_decimal.to_string(),
+            "6.283185307179586476925286766559005768394",
+            "BigDecimal exact doubling must keep every digit"
+        );
+
+        // The engine's exact sidecar must equal that exact value — NOT the f64-rounded one.
+        let exact = d
+            .exact
+            .expect("a stored Number::Exact fact must populate the exact sidecar");
+        assert_eq!(
+            exact,
+            ExactRational::from_ratio(doubled_decimal.to_rational()),
+            "compute must ingest the stored decimal exactly (no f64 hop)"
+        );
+
+        // And in lowest terms: 2·(N/10^39) = N / (5·10^38), so the numerator is pi's exact
+        // 40-digit mantissa and the denominator is 5·10^38 (39 digits). This pins the precise
+        // ratio the engine now holds.
+        assert_eq!(
+            exact.numerator().to_string(),
+            "3141592653589793238462643383279502884197"
+        );
+        assert_eq!(
+            exact.denominator().to_string(),
+            "500000000000000000000000000000000000000" // 5 × 10^38 (39 digits)
+        );
+
+        // Guard the regression this PR fixes: the exact value is strictly better than the
+        // f64 hop. The old NX-2 path folded through `to_f64()`, losing everything past the
+        // 16th significant digit; the exact denominator here has 39 digits.
+        assert_ne!(
+            exact,
+            ExactRational::from_integer_f64((pi_decimal.to_f64() * 2.0).trunc())
+                .unwrap_or_else(|| ExactRational::from_i128(0)),
+            "the exact sidecar must not degrade to the truncated f64 value"
+        );
+    }
+
+    #[test]
     fn integer_fraction_arithmetic_carries_exact_rational_sidecar() {
         let kb = KnowledgeBase::new();
         let expr = ComputeExpr::Bin(
