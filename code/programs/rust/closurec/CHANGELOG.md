@@ -2,6 +2,20 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.35] - 2026-07-15
+
+### Added — CLOC12.197 PR2: template-literal → string fold end-to-end
+
+Picks up `closure-pass-constant-fold` 0.92.0 (the template-literal fold). A
+no-substitution template literal is a compile-time-known string, so it now folds
+to a plain string literal at SIMPLE: `g(`hi`);` → `g("hi");`, byte-identical to
+the reference Closure Compiler. New `tests/diff/template-literal-fold/` fixture +
+`diff_template_literal_fold.rs` (asserts `"hi"` present, no backtick left).
+*Substituted* templates (`` `a${x}b` ``) still don't parse in closurec's grammar,
+so the no-substitution form is the only shape the fold receives end-to-end today.
+No CLI-surface change; PATCH bump `0.234.34` → `0.234.35` (help-markdown golden
+regenerated for the version line).
+
 ## [0.234.34] - 2026-07-15
 
 ### Added — CLOC12.195 + CLOC12.196 PR2: empty-statement removal + array-index fold end-to-end
