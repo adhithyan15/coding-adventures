@@ -842,11 +842,82 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
         // `quasis` are fixed string segments with no sub-expressions to
         // fold. (Folding the *whole* template to a string literal when all
         // parts are constant is a future optimisation; here we only recurse.)
-        Expression::TemplateLiteral(t) => Expression::TemplateLiteral(TemplateLiteral {
-            cv: t.cv.clone(),
-            quasis: t.quasis.clone(),
-            expressions: t.expressions.iter().map(|e| fold_expression(e, st)).collect(),
-        }),
+        Expression::TemplateLiteral(t) => fold_template_literal(t, st),
+    }
+}
+
+/// Fold a template literal — recurse into its substitutions, then collapse the
+/// whole node to a string literal when every substitution is a stringifiable
+/// constant (CLOC12.197). Kept `#[inline(never)]` and out of the big
+/// `fold_expression` match so its several `Vec`/`String` locals do NOT inflate
+/// the shared recursive frame — that frame is walked once per AST depth level,
+/// so bloating it lowers the input-nesting depth the pass survives (the
+/// `deeply_nested_*` stack-safety tests pin this). See the DCE crate's identical
+/// `#[inline(never)]` helper convention.
+#[inline(never)]
+fn fold_template_literal(t: &TemplateLiteral, st: &mut FoldState) -> Expression {
+    // Recurse first so a substitution like `${1 + 2}` folds to `${3}`, and a
+    // nested template `${`b${1}c`}` folds to `${"b1c"}` — by the time we test
+    // the substitutions below they are already constants.
+    let expressions: Vec<Expression> =
+        t.expressions.iter().map(|e| fold_expression(e, st)).collect();
+
+    // When EVERY substitution is a stringifiable constant literal AND every
+    // quasi carries a cooked value, the whole template is a compile-time-known
+    // string: interleave the quasis' cooked text with each substitution's
+    // `ToString` form (`cooked₀ str(e₀) cooked₁ … cookedₙ`).
+    //
+    // Emitted as a plain string literal; no emitter work is needed because
+    // closurec's string emitter already matches the reference compiler's quote
+    // choice (single-quote when the value contains a `"`) and escaping (`\n`,
+    // `\t`, `\\`) byte-for-byte.
+    //
+    // A `cooked` of `None` (an escape legal only in a *tagged* template) or a
+    // non-const / BigInt / RegExp substitution makes the string not statically
+    // known, so we decline and keep the template.
+    let sub_strings: Option<Vec<String>> =
+        expressions.iter().map(stringify_const_operand).collect();
+    let cooked: Option<Vec<&str>> = t.quasis.iter().map(|q| q.cooked.as_deref()).collect();
+    if let (Some(subs), Some(cooked)) = (sub_strings, cooked) {
+        let mut result = String::new();
+        for (i, quasi) in cooked.iter().enumerate() {
+            result.push_str(quasi);
+            if let Some(s) = subs.get(i) {
+                result.push_str(s);
+            }
+        }
+        let parent = t.cv.clone();
+        let before = format!("template-literal[{} subs]", subs.len());
+        let after = format!("\"{result}\"");
+        let new_cv = st.fork_cv(&parent, &before, &after);
+        return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
+    }
+
+    Expression::TemplateLiteral(TemplateLiteral {
+        cv: t.cv.clone(),
+        quasis: t.quasis.clone(),
+        expressions,
+    })
+}
+
+/// The `ToString` form of a constant-literal template substitution, or `None`
+/// if the operand is not a constant we can stringify at compile time.
+///
+/// Matches JavaScript `String(x)` for the primitives that appear as folded
+/// constants: a number takes its shortest round-trip form (`3`, not `3.0`), a
+/// string is itself, `true`/`false`/`null`/`undefined` take their keyword text.
+/// A `BigInt` (its text would drop the `n`), a `RegExp`, or any non-literal
+/// (identifier, call, …) returns `None`, so the enclosing template declines to
+/// fold — exactly matching the reference compiler, which leaves
+/// `` `a${x}b` `` / `` `a${f()}b` `` intact.
+fn stringify_const_operand(e: &Expression) -> Option<String> {
+    match e {
+        Expression::NumericLiteral(n) => Some(format_js_number(n.value)),
+        Expression::StringLiteral(s) => Some(s.value.clone()),
+        Expression::BooleanLiteral(b) => Some(if b.value { "true" } else { "false" }.to_string()),
+        Expression::NullLiteral(_) => Some("null".to_string()),
+        Expression::UndefinedLiteral(_) => Some("undefined".to_string()),
+        _ => None,
     }
 }
 
@@ -6888,6 +6959,115 @@ mod tests {
         );
         let (_out, _, changed, _) = run_pass(program_with_expr(e, true));
         assert!(!changed, "[1,2,...x][0] must not fold — spread indices unknown");
+    }
+
+    /// Build a template literal from quasi cooked strings + substitution
+    /// expressions (`quasis.len() == exprs.len() + 1`). CLOC12.197 test helper.
+    fn template(quasis: &[&str], exprs: Vec<Expression>) -> Expression {
+        use coding_adventures_javascript_ast::{TemplateElement, TemplateLiteral};
+        let n = exprs.len();
+        let quasi_elems = quasis
+            .iter()
+            .enumerate()
+            .map(|(i, q)| TemplateElement {
+                cv: None,
+                raw: q.to_string(),
+                cooked: Some(q.to_string()),
+                tail: i == n,
+            })
+            .collect();
+        Expression::TemplateLiteral(TemplateLiteral {
+            cv: Some("tpl.cv".to_string()),
+            quasis: quasi_elems,
+            expressions: exprs,
+        })
+    }
+
+    /// CLOC12.197: `` `a${1}b` `` → `"a1b"` when every substitution is a
+    /// stringifiable constant literal. Truth table verified against the
+    /// reference Closure Compiler.
+    #[test]
+    fn fold_template_all_const_subs() {
+        // `\`a${1}b\`` → "a1b".
+        let t = template(&["a", "b"], vec![num(1.0, None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(t, true));
+        assert!(changed, "template with a const sub should fold");
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "a1b"),
+            other => panic!("expected \"a1b\"; got {other:?}"),
+        }
+
+        // `\`${1}-${2}-${3}\`` → "1-2-3".
+        let t = template(
+            &["", "-", "-", ""],
+            vec![num(1.0, None), num(2.0, None), num(3.0, None)],
+        );
+        let (out, _, _, _) = run_pass(program_with_expr(t, true));
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "1-2-3"),
+            other => panic!("expected \"1-2-3\"; got {other:?}"),
+        }
+
+        // string / bool / null substitutions stringify via `ToString`.
+        let t = template(
+            &["", "-", "-", ""],
+            vec![string("x", None), boolean(true, None), null(None)],
+        );
+        let (out, _, _, _) = run_pass(program_with_expr(t, true));
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "x-true-null"),
+            other => panic!("expected \"x-true-null\"; got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn fold_template_no_substitutions() {
+        // `\`hello\`` → "hello".
+        let t = template(&["hello"], vec![]);
+        let (out, _, changed, _) = run_pass(program_with_expr(t, true));
+        assert!(changed);
+        assert!(matches!(extract_expr(&out), Expression::StringLiteral(s) if s.value == "hello"));
+
+        // `\`\`` → "".
+        let t = template(&[""], vec![]);
+        let (out, _, _, _) = run_pass(program_with_expr(t, true));
+        assert!(matches!(extract_expr(&out), Expression::StringLiteral(s) if s.value.is_empty()));
+    }
+
+    #[test]
+    fn fold_template_const_expr_sub_folds_first() {
+        // `\`a${1+2}b\`` — `1+2` folds to `3` first (recursion), then the
+        // template collapses → "a3b".
+        let sum = Expression::BinaryExpression(BinaryExpression {
+            cv: None,
+            operator: BinaryOperator::Add,
+            left: Box::new(num(1.0, None)),
+            right: Box::new(num(2.0, None)),
+        });
+        let t = template(&["a", "b"], vec![sum]);
+        let (out, _, changed, _) = run_pass(program_with_expr(t, true));
+        assert!(changed);
+        assert!(matches!(extract_expr(&out), Expression::StringLiteral(s) if s.value == "a3b"));
+    }
+
+    #[test]
+    fn template_declines_on_nonconst_substitution() {
+        // `\`a${x}b\`` — an identifier is not a compile-time constant → keep.
+        let t = template(&["a", "b"], vec![ident("x")]);
+        let (out, _, changed, _) = run_pass(program_with_expr(t, true));
+        assert!(!changed, "template with a non-const sub must not fold");
+        assert!(matches!(extract_expr(&out), Expression::TemplateLiteral(_)));
+
+        // `\`a${f()}b\`` — a call is not constant → keep.
+        let call = Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(ident("f")),
+            arguments: vec![],
+        });
+        let t = template(&["a", "b"], vec![call]);
+        let (out, _, changed, _) = run_pass(program_with_expr(t, true));
+        assert!(!changed);
+        assert!(matches!(extract_expr(&out), Expression::TemplateLiteral(_)));
     }
 
     #[test]
