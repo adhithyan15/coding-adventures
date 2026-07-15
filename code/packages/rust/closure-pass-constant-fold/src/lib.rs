@@ -3918,6 +3918,57 @@ fn fold_member(m: &MemberExpression, st: &mut FoldState) -> Expression {
                 }
             }
         }
+    } else {
+        // `[e0, e1, …][K]` → the K-th element (CLOC12.196). Computed index access
+        // with a constant integer index folds to the element at that index,
+        // mirroring the array-`.length` fold. Guards keep it byte-identical to
+        // Closure:
+        //   1. no spread element anywhere — a spread (`[...x]`) makes the runtime
+        //      indices statically unknown, so decline;
+        //   2. K is a non-negative integer literal in range (`0 ≤ K < len`). A
+        //      NumericLiteral is never negative in the AST (`-1` is a unary
+        //      expression), and a fractional or out-of-range index is not a
+        //      canonical array index, so both decline here — matching Closure,
+        //      which leaves `[1,2,3][1.5]` / `[1,2,3][5]` / `[1,2,3][-1]` intact
+        //      (the out-of-bounds / hole `void 0` result is a follow-up);
+        //   3. the element at K is PRESENT (a hole reads as `undefined`, a
+        //      `void 0` result left to the follow-up);
+        //   4. every element EXCEPT the selected one is side-effect-free. The
+        //      SELECTED element is preserved verbatim — its own side effect still
+        //      runs (`[a, b()][1]` → `b()`) — but dropping the *other* elements
+        //      must not drop a side effect, so `[a, b()][0]` declines.
+        if let (Expression::ArrayExpression(a), Expression::NumericLiteral(k)) =
+            (&object, &property)
+        {
+            let has_spread = a
+                .elements
+                .iter()
+                .any(|el| matches!(el, Some(Expression::SpreadElement(_))));
+            let in_range = k.value.is_finite()
+                && k.value >= 0.0
+                && k.value.fract() == 0.0
+                && (k.value as usize) < a.elements.len();
+            if !has_spread && in_range {
+                let idx = k.value as usize;
+                if let Some(selected) = &a.elements[idx] {
+                    let others_free = a
+                        .elements
+                        .iter()
+                        .enumerate()
+                        .filter(|(i, _)| *i != idx)
+                        .all(|(_, el)| el.as_ref().is_none_or(is_side_effect_free));
+                    if others_free {
+                        let parent = m.cv.clone();
+                        let before = format!("array-literal[{}][{}]", a.elements.len(), idx);
+                        let after = format!("element[{idx}]");
+                        // Records the fold (and sets `changed`); the selected
+                        // element keeps its own cv for span provenance.
+                        let _new_cv = st.fork_cv(&parent, &before, &after);
+                        return selected.clone();
+                    }
+                }
+            }
+        }
     }
 
     Expression::MemberExpression(MemberExpression {
@@ -6714,6 +6765,129 @@ mod tests {
         );
         let (_out, _, changed, _) = run_pass(program_with_expr(m_spread, true));
         assert!(!changed, "[1,2,...x].length must not fold — spread length is unknown");
+    }
+
+    /// Build a computed index access `object[k]` (an integer-literal index).
+    fn index(object: Expression, k: f64) -> Expression {
+        Expression::MemberExpression(MemberExpression {
+            cv: Some("m.cv".to_string()),
+            object: Box::new(object),
+            property: Box::new(num(k, None)),
+            computed: true,
+        })
+    }
+
+    /// CLOC12.196: `[e0, e1, …][K]` folds to the element at index `K` when `K` is
+    /// an in-bounds non-negative integer, the element is present, no spread
+    /// exists, and every *other* element is side-effect-free. Verified against
+    /// the reference Closure Compiler.
+    #[test]
+    fn fold_array_index_when_in_bounds_and_pure() {
+        // `[1, 2, 3][0]` → 1, `[1, 2, 3][1]` → 2, `[1, 2, 3][2]` → 3.
+        for (k, want) in [(0.0, 1.0), (1.0, 2.0), (2.0, 3.0)] {
+            let e = index(
+                array_opt(vec![
+                    Some(num(1.0, None)),
+                    Some(num(2.0, None)),
+                    Some(num(3.0, None)),
+                ]),
+                k,
+            );
+            let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+            assert!(changed, "[1,2,3][{k}] should fold");
+            match extract_expr(&out) {
+                Expression::NumericLiteral(n) => assert_eq!(n.value, want, "[1,2,3][{k}]"),
+                other => panic!("expected {want}; got {other:?}"),
+            }
+        }
+
+        // `[a, b, c][1]` → `b` — identifier elements are side-effect-free.
+        let e = index(
+            array_opt(vec![Some(ident("a")), Some(ident("b")), Some(ident("c"))]),
+            1.0,
+        );
+        let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(changed);
+        match extract_expr(&out) {
+            Expression::Identifier(id) => assert_eq!(id.name, "b"),
+            other => panic!("expected ident b; got {other:?}"),
+        }
+
+        // `[1, , 3][0]` → 1 — a hole ELSEWHERE (index 1) doesn't block index 0.
+        let e = index(
+            array_opt(vec![Some(num(1.0, None)), None, Some(num(3.0, None))]),
+            0.0,
+        );
+        let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(changed);
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 1.0),
+            other => panic!("expected 1; got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn fold_array_index_preserves_side_effect_in_selected_element() {
+        // `[a, g()][1]` → `g()` — the SELECTED element is preserved verbatim, so
+        // its call still runs; the other element `a` is pure and safely dropped.
+        let call = Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(ident("g")),
+            arguments: vec![],
+        });
+        let e = index(array_opt(vec![Some(ident("a")), Some(call)]), 1.0);
+        let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(changed, "[a,g()][1] should fold to the (preserved) call");
+        assert!(
+            matches!(extract_expr(&out), Expression::CallExpression(_)),
+            "expected the selected call to survive"
+        );
+    }
+
+    #[test]
+    fn array_index_declines_on_side_effect_hole_oob_or_spread() {
+        // `[a, g()][0]` — selecting `a` would DROP `g()`, a side effect → decline.
+        let call = Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(ident("g")),
+            arguments: vec![],
+        });
+        let e = index(array_opt(vec![Some(ident("a")), Some(call)]), 0.0);
+        let (_out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(!changed, "[a,g()][0] must not fold — would drop the call g()");
+
+        // `[1, , 3][1]` — the SELECTED slot is a hole → `undefined`; left to the
+        // `void 0` follow-up, so decline for now.
+        let e = index(
+            array_opt(vec![Some(num(1.0, None)), None, Some(num(3.0, None))]),
+            1.0,
+        );
+        let (_out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(!changed, "[1,,3][1] selects a hole — must not fold (yet)");
+
+        // `[1, 2, 3][5]` — out of bounds → `undefined`; decline (follow-up).
+        let e = index(
+            array_opt(vec![
+                Some(num(1.0, None)),
+                Some(num(2.0, None)),
+                Some(num(3.0, None)),
+            ]),
+            5.0,
+        );
+        let (_out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(!changed, "[1,2,3][5] is out of bounds — must not fold (yet)");
+
+        // `[1, 2, ...x][0]` — a spread makes runtime indices unknown → decline.
+        let spread = Expression::SpreadElement(SpreadElement {
+            cv: None,
+            argument: Box::new(ident("x")),
+        });
+        let e = index(
+            array_opt(vec![Some(num(1.0, None)), Some(num(2.0, None)), Some(spread)]),
+            0.0,
+        );
+        let (_out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(!changed, "[1,2,...x][0] must not fold — spread indices unknown");
     }
 
     #[test]

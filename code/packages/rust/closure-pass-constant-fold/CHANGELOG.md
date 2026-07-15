@@ -2,6 +2,26 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.91.0] - 2026-07-15
+
+### Added — fold array-literal index access `[a, b, c][K]` → element — CLOC12.196
+
+`fold_member`'s computed-access path (`arr[K]`) now folds a constant integer index
+into the selected element, the companion to the CLOC12.193 array-`.length` fold.
+`[1,2,3][1]` → `2`, `[a,b,c][1]` → `b`, nested `[[1,2],[3,4]][1][0]` → `3`. Guards
+keep it byte-identical to the reference Closure Compiler (verified against the real
+jar): no spread anywhere (`[1,...x][0]` declines — indices are runtime-unknown); the
+index is a non-negative integer literal in range (a NumericLiteral is never negative
+in the AST, and a fractional / out-of-range index is not a canonical array index, so
+`[1,2,3][1.5]` / `[1,2,3][5]` / `[1,2,3][-1]` are left intact); the element at `K` is
+present (a hole is left, pending the `void 0` follow-up); and every element EXCEPT
+the selected one is side-effect-free — the SELECTED element is preserved verbatim, so
+`[a, b()][1]` folds to `b()` (its call still runs) while `[a, b()][0]` declines (it
+would drop `b()`). CV provenance recorded per fold. Three unit tests (fold cases +
+selected-side-effect preservation + each decline). Out of scope for this PR (a tight
+follow-up needing `void 0` construction): out-of-bounds / selected-hole → `void 0`,
+and canonical string-index keys (`[1,2,3]["0"]` → `1`). Additive; MINOR 0.90.0 → 0.91.0.
+
 ## [0.90.0] - 2026-07-14
 
 ### Added — fold array-literal `.length` → element count — CLOC12.193
