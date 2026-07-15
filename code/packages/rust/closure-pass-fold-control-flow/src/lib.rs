@@ -1211,7 +1211,62 @@ fn fold_if_statement(s: &IfStatement, st: &mut FoldState) -> Statement {
                 }
             }
 
-            // Couldn't ternarise or logical-and — keep the IfStatement.
+            // Empty THEN branch + single-expression-statement ELSE →
+            // `<test> || <expr>`. The mirror of the `if-to-logical-and` above:
+            // when the consequent does nothing and the alternate is one
+            // expression statement, `if (x) {} else S;` is `x || S;`.
+            //
+            //   if (x) {} else foo();        → x || foo();
+            //   if (x) ; else foo();         → x || foo();     (empty-stmt then)
+            //   if (x) {} else { foo(); }    → x || foo();     (single-expr
+            //                                                   block unwraps)
+            //   if (x) {} else b = 1;        → x || (b = 1);   (emitter parens
+            //                                                   the lower-
+            //                                                   precedence assign)
+            //   if (a && b) {} else c();     → a && b || c();  (compound test)
+            //   if (x) {} else { a(); b(); } → unchanged (multi-statement else
+            //                                  needs a sequence — separate arc)
+            //   if (x) {} else return E;     → unchanged (return isn't an
+            //                                  expression statement)
+            //
+            // Why this is safe (the dual of the `&&` case):
+            //
+            //   * `x || S` evaluates `x` first — exactly like `if (x) {} else S`.
+            //   * If `x` is truthy: `||` short-circuits and does NOT evaluate
+            //     `S`, matching the empty then-branch running nothing.
+            //   * If `x` is falsy: `||` evaluates `S`, matching the else branch.
+            //   * The wrapper ExpressionStatement discards the result, so the
+            //     value `||` yields is irrelevant — only `S`'s side effects
+            //     matter, and they fire exactly when `x` is falsy in both forms.
+            //
+            // A `!<inner>` test never reaches here with an empty consequent: the
+            // De Morgan swap above already rewrote `if (!x) {} else S;` to
+            // `if (x) S; else {}` (non-empty consequent), so we don't interfere
+            // with that normalisation.
+            if let Some(alt) = &alternate {
+                if statement_is_empty(&consequent) {
+                    if let Some(a_expr) = single_expr_stmt(alt) {
+                        st.record_fold(
+                            &s.cv,
+                            "if-empty-then-to-logical-or",
+                            "if (<test>) {} else <expr>;",
+                            "<test> || <expr>;",
+                        );
+                        let or = Expression::LogicalExpression(LogicalExpression {
+                            cv: None,
+                            operator: LogicalOperator::Or,
+                            left: Box::new(test),
+                            right: Box::new(a_expr),
+                        });
+                        return Statement::expression_statement(ExpressionStatement {
+                            cv: s.cv.clone(),
+                            expression: or,
+                        });
+                    }
+                }
+            }
+
+            // Couldn't ternarise or logical-and/or — keep the IfStatement.
             Statement::if_statement(IfStatement {
                 cv: s.cv.clone(),
                 test,
@@ -1240,6 +1295,24 @@ fn single_expr_stmt(stmt: &Statement) -> Option<Expression> {
             single_expr_stmt(&b.body[0])
         }
         _ => None,
+    }
+}
+
+/// True when `stmt` does nothing observable — an `EmptyStatement` (`;`) or a
+/// `BlockStatement` whose every member is itself empty (`{}`, `{;;}`, `{{}}`).
+///
+/// Used by the `if-empty-then-to-logical-or` fold to recognise a do-nothing
+/// consequent. We recurse through block layers (mirroring `single_expr_stmt`)
+/// so `if (x) {} else …` and `if (x) ; else …` fold the same way; anything that
+/// does real work — a statement that isn't empty — makes the whole block
+/// non-empty and bails the fold.
+fn statement_is_empty(stmt: &Statement) -> bool {
+    match stmt {
+        Statement::Tagged(TaggedStatement::EmptyStatement(_)) => true,
+        Statement::Tagged(TaggedStatement::BlockStatement(b)) => {
+            b.body.iter().all(statement_is_empty)
+        }
+        _ => false,
     }
 }
 
@@ -2471,6 +2544,68 @@ mod tests {
                 }
             }
             other => panic!("expected ExpressionStatement; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn if_empty_then_with_single_expr_else_folds_to_logical_or() {
+        // Empty consequent + single-expression-statement alternate →
+        // `test || expr`, the mirror of the if-to-logical-and fold:
+        // `if (x) {} else y;` and `if (x) ; else y;` → `x || y;`.
+        for consequent in [
+            Statement::block_statement(BlockStatement { cv: None, body: vec![] }),
+            Statement::empty_statement(EmptyStatement { cv: None }),
+        ] {
+            let if_stmt = Statement::if_statement(IfStatement {
+                cv: Some("if.or".to_string()),
+                test: ident("x"),
+                consequent: Box::new(consequent),
+                alternate: Some(Box::new(expr_stmt(ident("y"), None))),
+            });
+            let prog = program().with_body(vec![ProgramItem::Statement(if_stmt)]);
+            let (out, contribs, changed, _) = run_pass(prog);
+            assert!(changed, "empty-then + expr-else should fold to ||");
+            assert!(!contribs.is_empty());
+            match first_stmt(&out) {
+                Statement::Tagged(TaggedStatement::ExpressionStatement(es)) => {
+                    match &es.expression {
+                        Expression::LogicalExpression(l) => {
+                            assert_eq!(l.operator, LogicalOperator::Or, "operator must be ||");
+                        }
+                        other => panic!("expected LogicalExpression(Or); got {:?}", other),
+                    }
+                }
+                other => panic!("expected ExpressionStatement; got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn if_empty_then_with_multi_statement_else_passes_through() {
+        // `if (x) {} else { a; b; }` — a two-statement else would need a
+        // sequence expression, which this fold doesn't build (a
+        // LogicalExpression takes exactly one right operand), so the
+        // IfStatement is kept intact (that's a separate arc).
+        let if_stmt = Statement::if_statement(IfStatement {
+            cv: Some("if.or2".to_string()),
+            test: ident("x"),
+            consequent: Box::new(Statement::block_statement(BlockStatement {
+                cv: None,
+                body: vec![],
+            })),
+            alternate: Some(Box::new(Statement::block_statement(BlockStatement {
+                cv: None,
+                body: vec![expr_stmt(ident("a"), None), expr_stmt(ident("b"), None)],
+            }))),
+        });
+        let prog = program().with_body(vec![ProgramItem::Statement(if_stmt)]);
+        let (out, _contribs, _changed, _) = run_pass(prog);
+        match first_stmt(&out) {
+            Statement::Tagged(TaggedStatement::IfStatement(_)) => {}
+            other => panic!(
+                "expected IfStatement intact (multi-statement else); got {:?}",
+                other
+            ),
         }
     }
 
