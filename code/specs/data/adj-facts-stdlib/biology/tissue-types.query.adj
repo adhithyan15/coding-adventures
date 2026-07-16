@@ -1,0 +1,23 @@
+% ============================================================================
+% tissue-types.query.adj — a worked recall over the biology tissue-types library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is muscle tissue made
+% of?": it states no histology fact of its own — it only `import`s the grounded
+% table and asks binding queries. The engine resolves each `?` against the
+% `tissue_example` rows and returns the example + the table's source/locator/
+% trust. The fourth query runs the relation BACKWARD (bind the example
+% `bone_or_blood`, recall its tissue type — connective). A word that is not one
+% of the four basic tissue types abstains honestly — the engine never invents an
+% example.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli tissue-types.query.adj
+% ============================================================================
+
+import "tissue-types.adj"
+
+? tissue_example(epithelial, $Example)   % expect covering_lining
+? tissue_example(muscle, $Example)       % expect cardiac_or_skeletal
+? tissue_example(nervous, $Example)      % expect brain_and_nerves
+? tissue_example($Tissue, bone_or_blood) % reverse bind — expect connective
+? tissue_example(epidermis, $Example)    % expect abstain — the epidermis is a structure, not one of the four basic tissue types

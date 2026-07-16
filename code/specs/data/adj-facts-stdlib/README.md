@@ -39,6 +39,7 @@ per rotation, in parallel):
 | `agriculture/` | farm animal → product it gives | Iowa State University (CFSPH) |
 | `biology/` | common bone → body region | NIH / MedlinePlus |
 | `biology/` | macronutrient → energy (kcal) per gram | NIH / MedlinePlus |
+| `biology/` | basic tissue type → representative example | NCI SEER Training |
 | `physics/` | simple machine → everyday example | NASA |
 | … | *geography, anatomy, physical constants, …* | *(expanding)* |
 
