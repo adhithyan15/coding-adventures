@@ -82,7 +82,10 @@
 use std::cell::Cell;
 use std::fmt::Write;
 
-use semantic_ir::{Block, Expr, Function, Global, Module, Param, ParamKind, Scope, Stmt};
+use semantic_ir::{
+    Block, ElementwiseOpKind, Expr, Function, Global, IndexArg, Module, Param, ParamKind, Scope,
+    Stmt,
+};
 
 use crate::runtime::RUNTIME;
 
@@ -645,17 +648,83 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             }
             out.push('\n');
         }
-        // ── SIR22: array/matrix indexed assignment (deferred) ───────
-        // `Feature::NDArrays` is not in `ACCEPTED_FEATURES` (see lib.rs),
-        // so `check_module` rejects any module using `IndexSet` before
-        // lowering reaches this emitter. Panic here only guards against
-        // that capability check ever drifting — mirrors the `StrConcat`/
-        // `Intrinsic` deferred-kind panics in `emit_expr` below.  Real
-        // codegen (`__SirArray.indexSet(...)`, per the SIR22 spec's
-        // "Backend impact") lands in a follow-up PR.
-        Stmt::IndexSet { span, .. } => {
-            panic!("javascript backend reached a deferred `IndexSet` at {span} — not accepted yet");
+        // ── SIR22: array/matrix indexed assignment ──────────────────
+        // `target[indices...] = value;` — mutates in place via
+        // `__Sir.Array.indexSet` (see `runtime.rs`'s "array/matrix
+        // domain" section), matching the SIR22 spec's own note that
+        // `IndexSet` is a `Stmt`, not a pure `Expr`, for exactly this
+        // in-place-mutation reason.
+        Stmt::IndexSet {
+            target,
+            indices,
+            value,
+            ..
+        } => {
+            out.push_str(&pad);
+            out.push_str("__Sir.Array.indexSet(");
+            emit_expr(out, target, indent);
+            out.push_str(", [");
+            emit_index_args(out, indices, indent);
+            out.push_str("], ");
+            emit_expr(out, value, indent);
+            out.push_str(");\n");
         }
+    }
+}
+
+/// The JS string `__Sir.Array.elementwise`'s `applyOp` switches on —
+/// exact `ElementwiseOpKind` variant names, not `.name()`'s lowercase
+/// forms (`"add"`, etc., used elsewhere for e.g. debug/display), since
+/// this string is a real runtime dispatch key, not a cosmetic label.
+fn elementwise_op_js_name(op: ElementwiseOpKind) -> &'static str {
+    match op {
+        ElementwiseOpKind::Add => "Add",
+        ElementwiseOpKind::Sub => "Sub",
+        ElementwiseOpKind::Mul => "Mul",
+        ElementwiseOpKind::Div => "Div",
+        ElementwiseOpKind::Pow => "Pow",
+        ElementwiseOpKind::Max => "Max",
+        ElementwiseOpKind::Min => "Min",
+        ElementwiseOpKind::Eq => "Eq",
+        ElementwiseOpKind::Ne => "Ne",
+        ElementwiseOpKind::Lt => "Lt",
+        ElementwiseOpKind::Le => "Le",
+        ElementwiseOpKind::Ge => "Ge",
+        ElementwiseOpKind::Gt => "Gt",
+    }
+}
+
+/// Emit one `IndexArg` as the JS object literal `__Sir.Array.indexGet`/
+/// `indexSet` expect: `{ kind: "scalar", value }` / `{ kind: "whole" }` /
+/// `{ kind: "range", indices: <NDArray> }`. The `Range` case reuses
+/// `emit_expr` on the inner `Expr::Range` node directly — that node's own
+/// `Expr::Range` arm already emits a call into `__Sir.Array.range(...)`,
+/// which returns exactly the `NDArray` shape `indices` needs, so no
+/// separate handling is needed here.
+fn emit_index_arg(out: &mut String, arg: &IndexArg, indent: usize) {
+    match arg {
+        IndexArg::Scalar(e) => {
+            out.push_str("{ kind: \"scalar\", value: ");
+            emit_expr(out, e, indent);
+            out.push_str(" }");
+        }
+        IndexArg::Whole => {
+            out.push_str("{ kind: \"whole\" }");
+        }
+        IndexArg::Range(e) => {
+            out.push_str("{ kind: \"range\", indices: ");
+            emit_expr(out, e, indent);
+            out.push_str(" }");
+        }
+    }
+}
+
+fn emit_index_args(out: &mut String, indices: &[IndexArg], indent: usize) {
+    for (i, arg) in indices.iter().enumerate() {
+        if i > 0 {
+            out.push_str(", ");
+        }
+        emit_index_arg(out, arg, indent);
     }
 }
 
@@ -835,26 +904,101 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         Expr::KeywordArg { span, .. } => {
             panic!("javascript backend reached a `KeywordArg` outside call-argument position at {span} — this is a backend bug (keyword args are collapsed by emit_call_args)");
         }
-        // ── SIR22: array/matrix nodes (deferred) ──────────────────────
-        // Neither `Feature::NDArrays` nor `Feature::MatrixOps` is in
-        // `ACCEPTED_FEATURES` (see lib.rs), so `check_module` rejects any
-        // module using these nodes before lowering reaches this emitter —
-        // per the SIR22 spec's "Backend impact": real codegen (calls into
-        // `sir-runtime-array`'s `__SirArray.matmul`/`elementwise`/`range`/
-        // `indexGet`) is a first-wave-JS follow-up PR, not required for
-        // this spec to land safely.  These panics only guard against the
-        // capability check ever drifting, exactly like `StrConcat` above.
-        Expr::ArrayLit { span, .. }
-        | Expr::Range { span, .. }
-        | Expr::MatMul { span, .. }
-        | Expr::ElementwiseOp { span, .. }
-        | Expr::Transpose { span, .. }
-        | Expr::IndexGet { span, .. }
-        // SIR22 addendum: APL primitive operators — same deferral as the
-        // base SIR22 nodes above; `MatrixOps`/`NDArrays`/`ArrayColumnMajor`
-        // are still the gating features, so none of these nine reach this
-        // emitter in a validated module either.
-        | Expr::Reduce { span, .. }
+        // ── SIR22: array/matrix nodes (base cut) ──────────────────────
+        // Real codegen: calls into the inlined `__Sir.Array.*` sub-runtime
+        // (see `runtime.rs`'s "array/matrix domain" section) — a plain-JS
+        // port of `sir-runtime-array`, mirroring how the SIR23 `Sym*` arms
+        // above call into `__Sir.Symbolic.*`. `rows` is row-major in the
+        // literal syntax (per the SIR22 spec); `__Sir.Array.fromRows`
+        // reconciles that with column-major storage, so the emitter just
+        // nests the row/element expressions unchanged.
+        Expr::ArrayLit { rows, .. } => {
+            out.push_str("__Sir.Array.fromRows([");
+            for (i, row) in rows.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(", ");
+                }
+                out.push('[');
+                emit_args(out, row, indent);
+                out.push(']');
+            }
+            out.push_str("])");
+        }
+        // `__Sir.Array.range(start, stop, step)` — note the argument
+        // ORDER: the SIR node's own field order is `start, step, stop`,
+        // but `sir-runtime-array`'s `range(start, stop, step = 1)`
+        // (and this runtime's port of it) takes `stop` before `step`.
+        Expr::Range {
+            start, step, stop, ..
+        } => {
+            out.push_str("__Sir.Array.range(");
+            emit_expr(out, start, indent);
+            out.push_str(", ");
+            emit_expr(out, stop, indent);
+            out.push_str(", ");
+            match step {
+                Some(step) => emit_expr(out, step, indent),
+                None => out.push('1'),
+            }
+            out.push(')');
+        }
+        Expr::MatMul { lhs, rhs, .. } => {
+            out.push_str("__Sir.Array.matmul(");
+            emit_expr(out, lhs, indent);
+            out.push_str(", ");
+            emit_expr(out, rhs, indent);
+            out.push(')');
+        }
+        // The op name must match `applyOp`'s switch in `runtime.rs`
+        // exactly (`"Add"`, not `.name()`'s lowercase `"add"`).
+        Expr::ElementwiseOp { op, lhs, rhs, .. } => {
+            let _ = write!(
+                out,
+                "__Sir.Array.elementwise({}, ",
+                quote_js_string(elementwise_op_js_name(*op))
+            );
+            emit_expr(out, lhs, indent);
+            out.push_str(", ");
+            emit_expr(out, rhs, indent);
+            out.push(')');
+        }
+        Expr::Transpose {
+            target, conjugate, ..
+        } => {
+            out.push_str("__Sir.Array.transpose(");
+            emit_expr(out, target, indent);
+            let _ = write!(out, ", {conjugate})");
+        }
+        Expr::IndexGet {
+            target, indices, ..
+        } => {
+            out.push_str("__Sir.Array.indexGet(");
+            emit_expr(out, target, indent);
+            out.push_str(", [");
+            emit_index_args(out, indices, indent);
+            out.push_str("])");
+        }
+        // ── SIR22 addendum: APL primitive operators (still deferred) ──
+        // `Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/
+        // `IndexGenerator`/`IndexOf`/`Ravel`/`Catenate` observe the SAME
+        // `NDArrays`/`MatrixOps`/`ArrayColumnMajor` features as the base
+        // cut above (the SIR22 addendum gives them no feature flag of
+        // their own), so accepting those features for the base cut also
+        // lets a module using these nine past the capability check —
+        // unlike every other still-deferred arm in this function, these
+        // nine are NOT purely a "capability check ever drifts" guard.
+        // This is safe today only because no frontend crate emits any of
+        // these nine `Expr` variants yet (`apl-to-semantic-ir` does not
+        // lower APL's reduce/scan/outer-product/shape/reshape/iota/
+        // index-of/ravel/catenate operators to them — see the SIR22 spec's
+        // addendum and `sir-runtime-array`'s own README, which scoped them
+        // out of the runtime package for the identical reason). Wiring
+        // real codegen for these requires porting `array_runtime::ops::
+        // {reduce,scan,outer}` and `apl-runtime::builtins`'s bespoke
+        // shape/reshape/iota/index-of/ravel/catenate logic into this
+        // runtime first — a natural, cleanly-scoped follow-up once a
+        // frontend actually needs them, not part of this PR.
+        Expr::Reduce { span, .. }
         | Expr::Scan { span, .. }
         | Expr::OuterProduct { span, .. }
         | Expr::Shape { span, .. }

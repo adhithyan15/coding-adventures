@@ -1,5 +1,82 @@
 # Changelog
 
+## 0.36.0 — SIR22 array/matrix base-cut codegen (HML01 Stream A)
+
+Real codegen for the SIR22 array/matrix domain's *base cut* — `ArrayLit`,
+`Range`, `MatMul`, `ElementwiseOp`, `Transpose`, `IndexGet` (an `Expr`), and
+`IndexSet` (a `Stmt`) — replacing the deferred `panic!` placeholder these
+seven nodes had. Mirrors the SIR23 codegen's own inlined-runtime treatment:
+targets a new `__Sir.Array` sub-runtime (a plain-JS port of the published
+`sir-runtime-array` npm package) rather than an imported package, so the
+JavaScript artifact stays self-contained.
+
+- `runtime.rs` gains `__Sir.Array`, a plain-JS port of `sir-runtime-array`'s
+  `ndarray`/`elementwise`/`matmul`/`transpose`/`range`/`indexGet`/`indexSet`
+  — dense, column-major `f64` storage (mirroring `array_runtime::value::Array`
+  field-for-field), the same `MAX_ELEMENTS` (2^26) allocation-size guard
+  validated *before* every `new Float64Array(...)` call, and the same
+  APL-style `1`/`0` (never native `boolean`) comparison-result convention.
+- New `toArrayValue` coercion in `elementwise`: `matlab-to-semantic-ir`'s
+  lowerer emits a *bare* (unwrapped) scalar operand for `.* ./ .\` and for
+  `* /` when exactly one side is provably scalar (e.g. `A .* 2` — the `2`
+  arrives as a plain `IntLit`, not an `ArrayLit`), so `elementwise` coerces
+  a raw JS `number` into a scalar `NDArray` itself rather than assuming both
+  operands already carry `.data`/`.shape`. Found and fixed during this PR's
+  own real-MATLAB-source end-to-end testing, not a hand-built edge case —
+  confirmed as a genuine regression by temporarily reverting the coercion
+  and watching `elementwise_mul_with_a_bare_scalar_operand_broadcasts`
+  (this crate) and `elementwise_scale_with_a_bare_scalar_operand_runs_in_node`
+  (`matlab-to-semantic-ir`) both fail with a `node` crash.
+- `emit.rs`: the seven base-cut arms emit real `__Sir.Array.*` calls. Note
+  `Expr::Range`'s field order is `start, step, stop`, but
+  `__Sir.Array.range(start, stop, step)` takes `stop` before `step` —
+  covered by a dedicated argument-order regression test.
+- **Scope boundary, not silently swept away**: the SIR22 "APL addendum"
+  nodes (`Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/
+  `IndexOf`/`Ravel`/`Catenate`) remain deferred — `sir-runtime-array` itself
+  never implemented them (no frontend needed them when that package
+  shipped), and porting `array_runtime::ops::{reduce,scan,outer}` +
+  `apl-runtime::builtins`'s bespoke shape/reshape/iota/index-of/ravel/
+  catenate logic is a properly-scoped follow-up, not part of this PR.
+  **Found while auditing downstream consumers for this PR**: these nine
+  variants share `Feature::NDArrays`/`MatrixOps`/`ArrayColumnMajor` with the
+  now-accepted base cut (the SIR22 addendum spec gives them no flag of
+  their own), and `apl-to-semantic-ir`'s *real* lowering (not just a test
+  fixture) emits `Reduce`/`Scan`/`OuterProduct` for APL's `+/`/`+\`/`∘.×`
+  operators today — contradicting that spec's now-stale "no frontend
+  crate consumes these yet" claim. Without a fix, such a module would pass
+  `accepts_features()` and panic inside `emit`. Fixed with a new
+  `find_unimplemented_sir22_addendum_node` tree walk (using the
+  `semantic_ir::Visitor` trait) wired into `JavaScriptBackend::compile()`
+  as an explicit step, mirroring the existing `TailCalls` belt-and-
+  suspenders check — a module using any of these nine now fails cleanly
+  with `BackendErrorKind::UnsupportedFeature`, never a panic.
+- `lib.rs`: `Feature::NDArrays`, `Feature::MatrixOps`, and
+  `Feature::ArrayColumnMajor` join `ACCEPTED_FEATURES`.
+- New `tests/sir22_array.rs`: seven real `node`-execution tests (matmul,
+  the scalar-broadcast fix above, transpose, MATLAB-colon-semantics range,
+  in-place `indexSet` — including whole-column broadcast — and a
+  non-conformable-matmul clean-error-exit case). `lib.rs`'s own test module
+  gains shape-assertion and regression tests (op-name casing, `Range`
+  argument order, `IndexSet` statement shape, the new addendum-node
+  rejection). `runtime.rs` gains four new tests
+  (`runtime_defines_array_matrix_domain`,
+  `array_runtime_validates_shape_before_allocating`,
+  `array_elementwise_coerces_bare_scalar_operands`,
+  `array_elementwise_comparisons_return_apl_style_numbers_not_booleans`).
+  129 tests now in this crate's `--lib` suite alone (`cargo test -p
+  semantic-ir-to-javascript --lib`), plus the seven in the new
+  `sir22_array.rs` integration test file.
+- Downstream consumers updated in lockstep: `matlab-to-semantic-ir`'s
+  `tests/test_validator.rs` (three tests converted from "the backend
+  rejects this" to "the backend accepts this") and `tests/e2e_node.rs`
+  (four new real-MATLAB-source `node`-execution tests: matrix multiply,
+  elementwise scalar broadcast, indexed assignment, range+transpose) and
+  `apl-to-semantic-ir`'s `tests/test_validator.rs` (the plain-`ElementwiseOp`
+  test converted to acceptance; the `Reduce`/`OuterProduct` test updated to
+  assert on `compile()`'s new tree-walk rejection rather than the now-
+  insufficient-by-itself `check_module()`).
+
 ## 0.35.0 — SIR23 symbolic-expression + pattern/rewrite codegen (HML01 Stream B, item 7 JS half)
 
 Real codegen for the SIR23 symbolic/pattern domain, replacing the deferred
