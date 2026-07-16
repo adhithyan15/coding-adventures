@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.3.0 — READ-ITEM / END OF DATA record loops (PL09 D4)
+
+- `READ-ITEM <handle>` reads the next record from stdin into the file's fields:
+  the `input_more` builtin peeks whether a record remains (the EOF-aware read the
+  plain `input_i64` lacks — PL09 D4), sets the shared `_eof` flag, and reads each
+  field with `input_i64` (skipped at end-of-input, so fields keep their values).
+- `IF END OF DATA GO TO OPERATION n` now compiles — a conditional jump on the
+  `_eof` flag set by the most recent `READ-ITEM` (zero-initialised at entry, so a
+  lone one reads a defined false).
+- Completes the record-processing loop: READ → `IF END OF DATA` → process →
+  `WRITE-ITEM` → `JUMP` back. Run-verified on the VM/JIT with a stdin stream
+  ([5,3] → `5\n3\n`; multi-field; empty input → no output). `input_more` is a
+  VM/JIT builtin for now; AOT-column EOF is a follow-up (D4).
+- `TRANSFER`, `TEST`/`REWIND`/`CLOSE-OUT` remain a clean `Unsupported`.
+
 ## 0.2.0 — WRITE-ITEM → observable stdout (PL09 D4)
 
 - `WRITE-ITEM <handle>` now writes the file's record to stdout: its fields

@@ -22,11 +22,16 @@ let module = compile_source(source, "prog")?; // interpreter_ir::IIRModule
 FLOW-MATIC is a file/record data-flow language, but its **control flow** and
 **scalar-field moves** lower with no file runtime: operations become labels,
 `COMPARE`/`IF`/`OTHERWISE`/`GO TO`/`JUMP` become the IIR's comparison and branch
-ops, `MOVE` a register copy, `WRITE-ITEM` prints the file's record (its fields via a
-synthesized digit-print helper over `putchar`), `STOP` a `ret 0`, and the
-`INPUT`/`OUTPUT`/`HSP` file declarations are no-ops. Each file-qualified field is
-an `i64` register.
+ops, `MOVE` a register copy, `READ-ITEM` reads a record from stdin into the file's
+fields (an `input_more` end-of-data peek + `input_i64` per field), `IF END OF
+DATA` branches on the resulting flag, `WRITE-ITEM` prints the file's record (its
+fields via a synthesized digit-print helper over `putchar`), `STOP` a `ret 0`,
+and the `INPUT`/`OUTPUT`/`HSP` file declarations are no-ops. Each file-qualified
+field is an `i64` register; records stream over stdin/stdout (PL09 D4 — no
+filesystem).
 
-Record input (`READ-ITEM`, which needs the EOF-aware read — PL09 D4), `TRANSFER`, tape control, and the `END OF DATA` loop are a later rung and return a descriptive error until then —
-never wrong output. See PL09 for the roadmap toward the full inventory-pricing
-program and the COBOL frontends.
+`TRANSFER` (whole-record copy) and tape control (`TEST`/`REWIND`/`CLOSE-OUT`) are
+a later rung and return a descriptive error until then — never wrong output.
+`input_more` is a VM/JIT builtin for now; the AOT-column EOF read is a follow-up
+(PL09 D4). See PL09 for the roadmap toward the full inventory-pricing program and
+the COBOL frontends.
