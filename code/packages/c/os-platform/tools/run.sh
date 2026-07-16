@@ -86,4 +86,12 @@ PLATFORM_DEFINES="_DEFAULT_SOURCE _DARWIN_C_SOURCE"
 export PLATFORM_DEFINES
 platform_build_and_run c mmap-tests tests/mmap_test.c src/mmap_posix.c || rc=1
 
+# jit — POSIX backend (mmap MAP_JIT / mprotect + i-cache flush). No extra OS
+# library (Apple's pthread_jit_write_protect_np / sys_icache_invalidate live in
+# libSystem). Same MAP_ANON/MAP_JIT feature-macro needs as mmap above, so the
+# PLATFORM_DEFINES set for mmap carries over.
+PLATFORM_LIBS=""
+export PLATFORM_LIBS
+platform_build_and_run c jit-tests tests/jit_test.c src/jit_posix.c || rc=1
+
 exit "$rc"

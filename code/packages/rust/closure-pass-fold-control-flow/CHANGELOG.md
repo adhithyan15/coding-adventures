@@ -2,6 +2,37 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.27.0] - 2026-07-16
+
+### Added — empty-then `if` with a MULTI-statement else → `x || (seq)`
+
+Generalises the 0.26.0 empty-then→logical-OR fold from a *single* expression
+statement to a **run** of them, sequenced with the comma operator — verified
+byte-identical against the reference Closure Compiler (`SIMPLE`):
+
+- `if (x) {} else { a(); b(); }` → `x || (a(), b());`
+- `if (x) {} else { a(); b(); c(); }` → `x || (a(), b(), c());`
+- `if (x) {} else { a(); b; c(); }` → `x || (a(), b, c());` (a pure member such
+  as the bare `b` is **kept** — dropping it is a separate DCE transform)
+
+**Soundness.** The comma operator evaluates its operands left-to-right and yields
+the last, so `(s1, s2, …)` runs the else block's statements in the original order
+with the same side effects; the wrapping `x || (…)` discards the value, so only
+that ordering matters, and — as in 0.26.0 — the effects fire exactly when `x` is
+falsy.
+
+**Scope.** Every else-block member must be a plain expression statement. A block
+containing a `var`/`let`/`const` declaration, a `return`/`break`, an `if`/loop,
+or a nested block **declines** (the `if` is kept), because those can't join a
+comma-sequence — Closure reaches for a different rewrite there (e.g. the De
+Morgan `if (!x) { … }`). Non-empty then-branches (`if (x) a(); else { b(); c() }`
+→ `x ? a() : (b(), c())`) are the ternary-sequence generalisation, a separate
+follow-up.
+
+A new `stmts_as_sequence_expr` helper backs this: a strict superset of
+`single_expr_stmt` that returns the bare expression for a one-statement block and
+a `SequenceExpression` for a ≥2-statement all-expression block.
+
 ## [0.26.0] - 2026-07-15
 
 ### Added — empty-then `if` → logical-OR (`if (x) {} else S;` → `x || S;`)

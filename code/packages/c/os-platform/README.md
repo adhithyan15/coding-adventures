@@ -25,6 +25,7 @@ exactly one backend and the code contains no `#if defined(__linux__)` mazes.
 | `process` | `os_platform/process.h` | ✅ implemented |
 | `dynlib`  | `os_platform/dynlib.h`  | ✅ implemented |
 | `mmap`    | `os_platform/mmap.h`    | ✅ implemented |
+| `jit`     | `os_platform/jit.h`     | ✅ implemented |
 
 All primitives share the `osp_status` return convention from
 `os_platform/status.h` (`OSP_OK == 0`; negative on error).
@@ -223,9 +224,44 @@ Backends:
 | Windows     | `VirtualAlloc` | `VirtualProtect`| `VirtualFree`|
 
 `prot` is a bitmask of `OSP_PROT_NONE/READ/WRITE/EXEC`. The `EXEC` bit is plumbed
-through (for JIT) and works directly on Linux/Windows; a JIT executor that also
-handles Apple Silicon's `MAP_JIT` write-protect protocol, with a cross-arch
-execute-and-call test, is a planned follow-up.
+through for JIT consumers; the full JIT protocol lives in `jit` below.
+
+### `jit` — emit machine code at run time and call it
+
+`mmap` gives you an executable page, but W^X means you cannot just scribble
+instructions into it and jump — each OS has a protocol for the RW→RX transition.
+`jit` encapsulates it: allocate, write bytes, commit, call.
+
+```c
+#include "os_platform/jit.h"
+
+/* machine code for: int f(void){ return 42; } (x86_64) */
+static const unsigned char code[] = {0xB8, 0x2A, 0x00, 0x00, 0x00, 0xC3};
+
+osp_jit *j;
+osp_jit_alloc(&j, sizeof code);       /* JIT-capable, writable */
+osp_jit_write(j, code, sizeof code);  /* append machine code   */
+osp_jit_commit(j);                    /* flip to R+X, flush i-cache */
+
+void *entry = osp_jit_entry(j);
+int (*fn)(void);
+memcpy(&fn, &entry, sizeof fn);        /* void* -> function pointer */
+int r = fn();                          /* -> 42 */
+osp_jit_free(j);
+```
+
+Backends:
+
+| OS                    | allocate           | write              | commit                                |
+|-----------------------|--------------------|--------------------|---------------------------------------|
+| macOS (Apple Silicon) | `mmap` `MAP_JIT`   | write-protect toggle + `memcpy` | `sys_icache_invalidate`  |
+| Linux                 | `mmap` RW          | `memcpy`           | `mprotect` RX + `__builtin___clear_cache` |
+| Windows               | `VirtualAlloc` RW  | `memcpy`           | `VirtualProtect` RX + `FlushInstructionCache` |
+
+The instruction-cache flush is a no-op on x86 (coherent i-cache) but a real flush
+on arm64 (both Linux and macOS) — omitting it runs stale bytes. The
+`tests/jit_test.c` emit-and-call test carries x86_64 **and** arm64 machine code so
+it proves the whole path on every runner in the 3-OS matrix.
 
 ## Build & test
 
@@ -250,15 +286,17 @@ os-platform/
 │   ├── fs.h                      # fs API
 │   ├── process.h                 # process API
 │   ├── dynlib.h                  # dynlib API
-│   └── mmap.h                    # mmap API
+│   ├── mmap.h                    # mmap API
+│   └── jit.h                     # jit API
 ├── src/
 │   ├── clock_posix.c   · clock_windows.c     # per-OS clock backends
 │   ├── thread_posix.c  · thread_windows.c    # per-OS thread backends
 │   ├── fs_posix.c      · fs_windows.c        # per-OS fs backends
 │   ├── process_posix.c · process_windows.c   # per-OS process backends
 │   ├── dynlib_posix.c  · dynlib_windows.c    # per-OS dynlib backends
-│   └── mmap_posix.c    · mmap_windows.c      # per-OS mmap backends
-├── tests/  clock · thread · fs · process · dynlib · mmap  (one _test.c each)
+│   ├── mmap_posix.c    · mmap_windows.c      # per-OS mmap backends
+│   └── jit_posix.c     · jit_windows.c       # per-OS jit backends
+├── tests/  clock · thread · fs · process · dynlib · mmap · jit  (one _test.c each)
 ├── tools/run.sh  · run.ps1       # per-OS build drivers
 ├── BUILD  · BUILD_windows        # per-OS source selection
 └── required_capabilities.json    # CI needs gcc, clang, cl

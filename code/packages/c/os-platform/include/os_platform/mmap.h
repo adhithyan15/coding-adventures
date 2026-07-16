@@ -26,10 +26,11 @@
  * PROT_EXEC / PAGE_EXECUTE_* so JIT consumers can request it, and it works
  * directly on Linux and Windows (map RW, emit, re-protect to R+X, run). Apple
  * Silicon's hardened runtime additionally requires MAP_JIT plus a per-thread
- * write-protect toggle and an instruction-cache flush; a dedicated JIT executor
- * that encapsulates that protocol (and a cross-architecture execute-and-call
- * test) is a planned follow-up. This header's own tests exercise anonymous
- * read/write memory and protection changes, which are identical on every OS.
+ * write-protect toggle and an instruction-cache flush. That full protocol — and
+ * a cross-architecture emit-and-call test — now lives in the sibling `jit`
+ * primitive (os_platform/jit.h); this header's own tests deliberately stay with
+ * anonymous read/write memory and protection changes, which are identical on
+ * every OS.
  *
  * BUILD. Compiled by platform-harness; the POSIX backend needs _DEFAULT_SOURCE
  * (added by the BUILD) so MAP_ANONYMOUS is visible on glibc, and links no extra
