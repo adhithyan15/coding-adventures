@@ -55,6 +55,20 @@
 //! [`factor_to_base_exp`] uses for anything that isn't a bare `Pow` with
 //! an integer exponent), so this pass cannot re-open growth the term-count
 //! cap already closed off.
+//!
+//! **One thing `EXPAND_MAX_TERMS` does *not* bound**, caught in security
+//! review before merge: a `Mul` with many distinct factors that a caller
+//! writes directly (`x1*x2*...*xk`) rather than reaching via
+//! `expand_mul`'s distribution — there is nothing to distribute in a bare
+//! product of symbols, so `expand_mul` never refuses it and `k` is
+//! unconstrained by that cap. [`monomialize_factors`] merges same-base
+//! factors by *sorting* the whole factor list first and scanning adjacent
+//! runs, not by a linear find-or-insert scan per factor — the latter would
+//! be `O(k²)` in exactly this unbounded `k`, not the `O(n log n)` this
+//! module claims. Exponent sums also use `saturating_add`, not `+=` — a
+//! `Pow`'s integer exponent is copied verbatim from the input with no cap
+//! of its own, so two huge-exponent occurrences of the same base could
+//! otherwise overflow a plain `i64` addition.
 
 use symbolic_ir::{apply, sym, IRNode, ADD, MUL, POW, SUB};
 
@@ -163,6 +177,19 @@ fn monomialize(node: &IRNode) -> (Acc, Vec<BaseTerm>) {
 /// in particular routinely leaves a raw `Mul(Mul(a, a), a)` behind for
 /// `a^3`, not the flat `Mul(a, a, a)` this function would otherwise need
 /// to see to recognise all three factors as the same base.
+///
+/// Merges same-base factors by *sorting then scanning adjacent runs*, not
+/// a linear find-or-insert scan: a `Mul`'s distinct-factor count is bounded
+/// by `EXPAND_MAX_TERMS` only when it went through `expand_mul`'s own
+/// distribution — a bare `x1*x2*...*xk` a caller writes directly (never
+/// distributed, since there is nothing to distribute) is not, so a
+/// find-or-insert scan here would be `O(k²)` in that factor count, not the
+/// `O(k log k)` this module's docs claim. Exponent sums use
+/// `saturating_add`, not `+=` — a `Pow`'s integer exponent is copied
+/// verbatim from the input in `factor_to_base_exp` with no cap of its own
+/// (unlike `EXPAND_MAX_POW`, which only gates *active* distribution), so
+/// two huge-exponent occurrences of the same base could otherwise overflow
+/// a plain `i64` addition.
 fn monomialize_factors(raw_factors: &[IRNode]) -> (Acc, Vec<BaseTerm>) {
     let mut flat: Vec<&IRNode> = Vec::new();
     for factor in raw_factors {
@@ -170,7 +197,7 @@ fn monomialize_factors(raw_factors: &[IRNode]) -> (Acc, Vec<BaseTerm>) {
     }
 
     let mut coef = Acc::identity(true);
-    let mut bases: Vec<BaseTerm> = Vec::new();
+    let mut keyed: Vec<BaseTerm> = Vec::new();
     for factor in flat {
         if let Some(val) = node_to_acc(factor) {
             coef = coef.combine(val, true);
@@ -178,11 +205,19 @@ fn monomialize_factors(raw_factors: &[IRNode]) -> (Acc, Vec<BaseTerm>) {
         }
         let (base, exp) = factor_to_base_exp(factor);
         let key = format!("{base:?}");
-        if let Some(existing) = bases.iter_mut().find(|(k, _, _)| *k == key) {
-            existing.2 += exp;
-        } else {
-            bases.push((key, base, exp));
+        keyed.push((key, base, exp));
+    }
+    keyed.sort_by(|a, b| a.0.cmp(&b.0));
+
+    let mut bases: Vec<BaseTerm> = Vec::new();
+    for (key, base, exp) in keyed {
+        if let Some(last) = bases.last_mut() {
+            if last.0 == key {
+                last.2 = last.2.saturating_add(exp);
+                continue;
+            }
         }
+        bases.push((key, base, exp));
     }
     (coef, bases)
 }
@@ -524,6 +559,43 @@ mod tests {
         // x + (-1)*x -> 0, not a leftover Add or a stray 0 term.
         let result = collect_terms(add(vec![sym("x"), mul(vec![int(-1), sym("x")])]));
         assert_eq!(result, int(0));
+    }
+
+    #[test]
+    fn a_mul_with_many_distinct_factors_stays_fast_not_quadratic() {
+        // x1*x2*...*xk (k=5000 distinct one-off symbols, none repeated) —
+        // a bare Mul like this never goes through expand_mul's own
+        // distribution (nothing to distribute), so EXPAND_MAX_TERMS never
+        // gets a chance to bound k. Found in security review: an earlier
+        // version merged same-base factors via a linear find-or-insert
+        // scan, which is O(k^2) in exactly this unbounded k. This test's
+        // job is to complete promptly (a regression back to O(k^2) would
+        // make 5000 factors noticeably slow, not just eventually correct)
+        // and to confirm the result is still every factor, unmerged (no
+        // base repeats, so nothing should combine).
+        let factors: Vec<IRNode> = (0..5000).map(|i| sym(format!("x{i}"))).collect();
+        let result = collect_terms(mul(factors));
+        // Still a Mul of all 5000 distinct factors (order aside) — no
+        // coefficient, nothing merged.
+        match result {
+            IRNode::Apply(app) if matches!(&app.head, IRNode::Symbol(s) if s == MUL) => {
+                assert_eq!(app.args.len(), 5000);
+            }
+            other => panic!("expected an unmerged 5000-factor Mul, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn exponent_sum_saturates_instead_of_overflowing_on_huge_pows() {
+        // x^i64::MAX * x^i64::MAX -- a Pow's integer exponent is copied
+        // verbatim from the input with no cap of its own (unlike
+        // EXPAND_MAX_POW, which only gates active distribution), so two
+        // occurrences of a huge exponent on the same base must saturate,
+        // not overflow-panic (debug/test builds) or silently wrap
+        // (release builds) when their exponents are summed.
+        let huge = pow(sym("x"), int(i64::MAX));
+        let result = collect_terms(mul(vec![huge.clone(), huge]));
+        assert_eq!(result, pow(sym("x"), int(i64::MAX)));
     }
 }
 

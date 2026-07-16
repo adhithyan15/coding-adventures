@@ -28,19 +28,43 @@
   needs to see all three factors as the same base) — found by this
   package's own test suite (`expand_pow_of_trinomial_multivariate`'s (a+b)³
   case) before ever reaching `/security-review`.
-- `O(n log n)` grouping (sort-then-merge-adjacent), not `O(n²)`
-  (find-or-insert) — matters at `EXPAND_MAX_TERMS` (10,000) scale; see the
-  module's own DoS-safety note for why this pass can't reopen the growth
-  its sibling guard already closed.
+- `rebuild_additive`'s term-grouping is `O(n log n)` (sort-then-merge-
+  adjacent), not `O(n²)` (find-or-insert) — matters at `EXPAND_MAX_TERMS`
+  (10,000) scale; see the module's own DoS-safety note for why this pass
+  can't reopen the growth its sibling guard already closed.
 - Updated the two downstream consumers (`macsyma-runtime`'s `expand`,
   `wolfram-runtime`'s `Expand[...]`) — both delegate to this crate's
   `expand` unchanged, so they inherit collected output automatically; their
   own exact-output tests and doc comments (which pinned/described the old
   uncollected shape) are updated in lockstep.
-- 30 tests total (up from 24), including adversarial cases (opposite-signed
+- 32 tests total (up from 24), including adversarial cases (opposite-signed
   cancellation to exact zero, exact-rational coefficient summation via the
   shared `Acc`, negative-exponent bases, an opaque non-`Pow` repeated
   factor like `Sin(x)*Sin(x)`).
+
+### Fixed
+
+- **`monomialize_factors`'s same-base merge was `O(k²)` in a single term's
+  own distinct-factor count `k`, not bounded by `EXPAND_MAX_TERMS`** —
+  found by `/security-review` before this crate's first push of the
+  feature above. `EXPAND_MAX_TERMS` only bounds term counts that pass
+  through `expand_mul`'s own distribution; a bare `x1*x2*...*xk` a caller
+  writes directly (nothing to distribute in a flat product of symbols) is
+  never refused by that cap, and the original implementation merged
+  same-base factors with a linear `find`-or-insert scan per new factor —
+  genuinely `O(k²)`, not the `O(n log n)` this module's docs claimed.
+  Fixed by sorting the factor list first and merging adjacent runs in one
+  linear pass, the same pattern `rebuild_additive` already used. New
+  regression test with 5,000 distinct one-off factors.
+- **Exponent sums used `+=`, not `saturating_add`** — a `Pow`'s integer
+  exponent is copied verbatim from the input with no cap of its own
+  (unlike `EXPAND_MAX_POW`, which only gates *active* distribution), so
+  two occurrences of a huge exponent (e.g. `i64::MAX`) on the same base
+  could overflow a plain `i64` addition — panicking under overflow-checked
+  debug/test builds, or silently wrapping to an incorrect exponent in
+  release builds. Fixed to `saturating_add`, mirroring `term_count`'s own
+  `saturating_add`/`saturating_mul` convention elsewhere in this crate.
+  New regression test multiplying `x^i64::MAX` by itself.
 
 ## [0.4.1] — 2026-07-12
 
