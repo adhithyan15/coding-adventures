@@ -2,6 +2,62 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.29.0] - 2026-07-16
+
+### Added — `for (init; <falsy literal>; update)` removal (the `for` twin of `while (false)`)
+
+A C-style `for` loop whose test is a known-falsy literal never runs its body or
+update, so the loop is dead. It collapses to just its `init` — which runs once,
+before the first (failing) test — matching the reference Closure Compiler at
+`SIMPLE` byte-for-byte:
+
+- `for (; false; ) body` → `;` (no init)
+- `for (a(); false; ) body` → `a();` (expression init runs once, kept)
+- `for (var i = 0; false; ) body` → `var i = 0;` (a `var` hoists to the enclosing
+  function scope, so the binding survives — kept)
+- `for (let i = 0; false; ) body` → `;` (a literal-init `let`/`const` in the
+  for-header is scoped to the loop, so removing the loop drops the binding
+  unobservably)
+- `for (; false; ) { function g(){} }` → `;` (a block-scoped `function` goes with
+  the dead loop)
+- `for (; 0; )` / `for (; !1; )` → same (any falsy literal)
+
+Mirrors the existing `while (false)` removal (`fold_while_statement`): a new
+`fold_for_statement` reuses the same `literal_truthy(test) == Some(false)` gate
+and tombstones the discarded body span via `record_fold_deleting`. A non-literal
+or truthy test rebuilds the loop unchanged — a `for (;;)` infinite loop stays,
+because its non-termination is observable.
+
+### Soundness guards — the collapse **declines** where dropping the loop would delete an observable effect
+
+Unlike `while (false)` (no init, empty-scoped body), a dead `for` can carry two
+effects that outlive the loop. The collapse now keeps the loop (folding only the
+test) rather than eliding them — matching Closure, which likewise does not drop
+these:
+
+- **Lexical init side effect** — a `let`/`const` header is initialized exactly
+  once at loop entry, *before* the failing test (ECMAScript §14.7.4), and the
+  binding is loop-scoped so it can't be lifted out. `for (let i = f(); false; )`
+  keeps the loop so `f()` still runs; only a purely-literal header
+  (`let i = 0`) collapses. Gated by `lexical_header_is_droppable`.
+- **Hoisted body `var`** — a `var` inside the never-run body hoists to the
+  enclosing function scope and stays observable, so `for (; false; ) { var x = 1; }`
+  keeps the loop rather than dropping `x`. (Closure instead *extracts* the
+  hoisted binding — `var x, i = 0;` — which is a deeper transform tracked as a
+  follow-up; declining is sound and never regresses.) Gated by
+  `body_has_hoistable_var`, a **fail-safe total walker** that descends into every
+  binding-transparent construct a `var` can hide in — blocks, both `if` arms,
+  all loop bodies *and their `var` headers* (`while`/`do`/`for`/`for-in`/
+  `for-of`), labeled bodies, `switch` cases, `try` block/handler/finalizer, and
+  `with` bodies. Its `match` is exhaustive (no wildcard), so a future statement
+  variant is a compile error rather than a silent false-negative that could drop
+  a hidden hoisted `var`.
+
+Both guards — and the completeness of the hoist detector (a `var` hidden in a
+`try`/`finally`, `do…while`, or nested `for` header must not be dropped) — were
+surfaced by the pre-push security review across two rounds. Additive; MINOR bump
+0.28.0 → 0.29.0.
+
 ## [0.28.0] - 2026-07-16
 
 ### Added — `if`→ternary / `if`→`&&` now comma-sequence multi-statement branches

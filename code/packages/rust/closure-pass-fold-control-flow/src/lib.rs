@@ -393,20 +393,7 @@ fn fold_tagged_statement(stmt: &TaggedStatement, st: &mut FoldState) -> Statemen
                 test: fold_expression(&s.test, st),
             }))
         }
-        TaggedStatement::ForStatement(s) => {
-            Statement::Tagged(TaggedStatement::ForStatement(ForStatement {
-                cv: s.cv.clone(),
-                init: s.init.as_ref().map(|i| match i {
-                    ForInit::VariableDeclaration(v) => {
-                        ForInit::VariableDeclaration(fold_variable_declaration(v, st))
-                    }
-                    ForInit::Expression(e) => ForInit::Expression(fold_expression(e, st)),
-                }),
-                test: s.test.as_ref().map(|e| fold_expression(e, st)),
-                update: s.update.as_ref().map(|e| fold_expression(e, st)),
-                body: Box::new(fold_statement(&s.body, st)),
-            }))
-        }
+        TaggedStatement::ForStatement(s) => fold_for_statement(s, st),
         TaggedStatement::ForInStatement(s) => {
             Statement::Tagged(TaggedStatement::ForInStatement(ForInStatement {
                 cv: s.cv.clone(),
@@ -1453,6 +1440,232 @@ fn fold_while_statement(s: &WhileStatement, st: &mut FoldState) -> Statement {
     }
 }
 
+/// Does the never-run body of a dead loop carry a `var` binding that *hoists*
+/// to the enclosing function scope? A `var` (unlike a `let`/`const`) is
+/// function-scoped, so even when the loop that contains it never executes the
+/// binding stays observable — `typeof x === "undefined"` rather than a
+/// `ReferenceError`. If the collapse dropped such a `var`, that would be a
+/// miscompile (`for(;false;){var x=1}` must not lose `x`).
+///
+/// This is a **fail-safe soundness gate**: it must never answer `false` when a
+/// hoistable `var` is actually present. It therefore walks *every*
+/// binding-transparent construct a `var` can hide in — blocks, both `if` arms,
+/// all loop bodies (`while`/`do`/`for`/`for-in`/`for-of`) **and their `var`
+/// headers**, labeled bodies, `switch` cases, `try` block/handler/finalizer,
+/// and `with` bodies — and treats a genuine leaf (expression / `return` /
+/// `break` / …) as var-free. The `TaggedStatement` match is **total** (no
+/// wildcard arm), so a future statement variant is a compile error here rather
+/// than a silent false-negative.
+///
+/// A nested `function` body is its own scope and is deliberately *not*
+/// descended: Closure drops a block-scoped `function` when it removes the dead
+/// loop (`for(;false;){function g(){}}` → nothing), so ignoring it is
+/// byte-identical and not a hoist hazard.
+fn body_has_hoistable_var(stmt: &Statement) -> bool {
+    match stmt {
+        // A `var` declaration is the hazard; `let`/`const`/`class`/`function`/
+        // `import`/`export` are block-scoped (or dropped with the loop).
+        Statement::Declaration(Declaration::VariableDeclaration(v)) => v.kind == VarKind::Var,
+        Statement::Declaration(_) => false,
+        Statement::Tagged(t) => match t {
+            // Binding-transparent compound statements — recurse into every
+            // sub-statement (and any `var` loop header).
+            TaggedStatement::BlockStatement(b) => b.body.iter().any(body_has_hoistable_var),
+            TaggedStatement::IfStatement(i) => {
+                body_has_hoistable_var(&i.consequent)
+                    || i.alternate.as_deref().is_some_and(body_has_hoistable_var)
+            }
+            TaggedStatement::WhileStatement(w) => body_has_hoistable_var(&w.body),
+            TaggedStatement::DoWhileStatement(d) => body_has_hoistable_var(&d.body),
+            TaggedStatement::ForStatement(f) => {
+                for_init_has_hoistable_var(f.init.as_ref()) || body_has_hoistable_var(&f.body)
+            }
+            TaggedStatement::ForInStatement(f) => {
+                for_init_has_hoistable_var(Some(&f.left)) || body_has_hoistable_var(&f.body)
+            }
+            TaggedStatement::ForOfStatement(f) => {
+                for_init_has_hoistable_var(Some(&f.left)) || body_has_hoistable_var(&f.body)
+            }
+            TaggedStatement::LabeledStatement(l) => body_has_hoistable_var(&l.body),
+            TaggedStatement::WithStatement(w) => body_has_hoistable_var(&w.body),
+            TaggedStatement::SwitchStatement(s) => s
+                .cases
+                .iter()
+                .any(|c| c.consequent.iter().any(body_has_hoistable_var)),
+            TaggedStatement::TryStatement(tr) => {
+                tr.block.body.iter().any(body_has_hoistable_var)
+                    || tr
+                        .handler
+                        .as_ref()
+                        .is_some_and(|h| h.body.body.iter().any(body_has_hoistable_var))
+                    || tr
+                        .finalizer
+                        .as_ref()
+                        .is_some_and(|f| f.body.iter().any(body_has_hoistable_var))
+            }
+            // Genuine leaf statements introduce no binding.
+            TaggedStatement::ExpressionStatement(_)
+            | TaggedStatement::ReturnStatement(_)
+            | TaggedStatement::BreakStatement(_)
+            | TaggedStatement::ContinueStatement(_)
+            | TaggedStatement::ThrowStatement(_)
+            | TaggedStatement::EmptyStatement(_)
+            | TaggedStatement::DebuggerStatement(_) => false,
+        },
+    }
+}
+
+/// A `for` / `for-in` / `for-of` header binding hoists to function scope iff it
+/// is a `var` declaration. `let`/`const` headers are loop-scoped and an
+/// expression head introduces no binding, so neither is a hoist hazard.
+fn for_init_has_hoistable_var(init: Option<&ForInit>) -> bool {
+    matches!(init, Some(ForInit::VariableDeclaration(v)) if v.kind == VarKind::Var)
+}
+
+/// Is a `let`/`const` `for`-header safe to *drop* when its loop is dead? Only
+/// when every declarator's initializer is absent or a side-effect-free literal.
+///
+/// A `for` header's lexical bindings are initialized exactly once at loop entry,
+/// **before** the (failing) test, per ECMAScript §14.7.4 (CreateForBindings).
+/// The binding is scoped to the loop and cannot be lifted out, so an initializer
+/// with a side effect (a call, a getter-bearing member access, a
+/// possibly-undeclared identifier read) is observed once and must not be elided.
+/// Closure keeps the whole loop in that case (`for(let i=f();0;)`); we mirror
+/// that by declining the collapse. Literals never throw and have no side effect,
+/// so a purely-literal header (`let i = 0`) is safe to drop with the loop.
+fn lexical_header_is_droppable(v: &VariableDeclaration) -> bool {
+    v.declarations
+        .iter()
+        .all(|d| d.init.as_ref().map(|e| literal_truthy(e).is_some()).unwrap_or(true))
+}
+
+/// Fold a `for (init; test; update) body`. When `test` is a known-falsy literal
+/// the body and update never run, so the loop is dead — it collapses to just
+/// its `init`, which runs once (before the first, failing, test):
+///
+/// ```text
+///   for (; false; ) body           →  ;              (no init)
+///   for (a(); false; ) body        →  a();           (expression init kept)
+///   for (var i = 0; false; ) body  →  var i = 0;     (a `var` hoists — kept)
+///   for (let i = 0; false; ) body  →  ;              (literal-init `let`/`const`
+///                                                      is loop-scoped, so
+///                                                      dropping the loop removes
+///                                                      the binding unobservably)
+/// ```
+///
+/// The collapse is **declined** (loop kept, test folded) in the two cases where
+/// removing more than the loop would delete an observable effect — both flagged
+/// by the security review, and both places Closure keeps the loop or lifts a
+/// binding rather than dropping it:
+///
+/// ```text
+///   for (let i = f(); false; ) body   →  loop kept   (lexical init runs once at
+///                                                      entry; side effect can't
+///                                                      be lifted out — §14.7.4)
+///   for (; false; ) { var y = 1; }     →  loop kept   (a body `var` hoists to the
+///                                                      function scope and stays
+///                                                      observable; Closure
+///                                                      extracts it, which this
+///                                                      pass does not yet do)
+/// ```
+///
+/// A **truthy** literal test is instead redundant — the loop runs forever, and
+/// a `for` header can omit the test — so it is dropped: `for (; true; )` →
+/// `for (;;)` (a `while (true)`, whose test is mandatory, is left alone by
+/// `fold_while_statement`). A non-literal or absent test rebuilds the loop
+/// unchanged. Mirrors [`fold_while_statement`]'s falsy-test removal.
+fn fold_for_statement(s: &ForStatement, st: &mut FoldState) -> Statement {
+    let init = s.init.as_ref().map(|i| match i {
+        ForInit::VariableDeclaration(v) => {
+            ForInit::VariableDeclaration(fold_variable_declaration(v, st))
+        }
+        ForInit::Expression(e) => ForInit::Expression(fold_expression(e, st)),
+    });
+    let test = s.test.as_ref().map(|e| fold_expression(e, st));
+    let update = s.update.as_ref().map(|e| fold_expression(e, st));
+    let body = fold_statement(&s.body, st);
+
+    // Always-FALSE test → dead loop: it collapses to just its `init` (which
+    // runs once, before the first, failing, test) — BUT only when that collapse
+    // is observably equivalent. Two hazards force us to DECLINE and keep the
+    // loop (both surfaced by the security review):
+    //
+    //   * A `let`/`const` header runs its initializer exactly once at loop
+    //     entry, before the failing test. The binding is loop-scoped and can't
+    //     be lifted, so a side-effecting initializer must not be dropped —
+    //     `lexical_header_is_droppable` gates this (literal inits are safe).
+    //   * A `var`/hoisted binding *inside* the never-run body still hoists to
+    //     the function scope and stays observable — `body_has_hoistable_var`
+    //     gates this. (Closure extracts such a `var`; this pass doesn't yet, so
+    //     we keep the loop rather than silently drop the binding.)
+    //
+    // When declined we fall through and rebuild the loop unchanged (with the
+    // folded falsy test) — sound, valid, and a no-op versus the pre-fold shape.
+    if test.as_ref().and_then(literal_truthy) == Some(false) {
+        let lexical_header_unsafe = matches!(
+            &init,
+            Some(ForInit::VariableDeclaration(v))
+                if v.kind != VarKind::Var && !lexical_header_is_droppable(v)
+        );
+        if !lexical_header_unsafe && !body_has_hoistable_var(&body) {
+            let discarded = [statement_cv(&body)];
+            st.record_fold_deleting(
+                &s.cv,
+                &discarded,
+                "folded-branch",
+                "for (…; <falsy literal>; …) { … }",
+                "<init>;",
+            );
+            return match init {
+                None => Statement::empty_statement(EmptyStatement { cv: s.cv.clone() }),
+                Some(ForInit::Expression(e)) => {
+                    Statement::expression_statement(ExpressionStatement {
+                        cv: s.cv.clone(),
+                        expression: e,
+                    })
+                }
+                Some(ForInit::VariableDeclaration(v)) => {
+                    if v.kind == VarKind::Var {
+                        // A `var` hoists to the enclosing function scope, so the
+                        // binding (and its initializer's effect) survives the loop.
+                        Statement::Declaration(Declaration::VariableDeclaration(v))
+                    } else {
+                        // A literal-init `let`/`const` in the for-header is scoped
+                        // to the loop, so dropping the loop removes it with no
+                        // observable effect.
+                        Statement::empty_statement(EmptyStatement { cv: s.cv.clone() })
+                    }
+                }
+            };
+        }
+        // Declined — fall through to rebuild the loop with the folded test.
+    }
+
+    // Always-TRUE test → the loop runs forever; the test is redundant, so drop
+    // it to the canonical infinite `for (;;)` (`for (; true; )` → `for (;;)`).
+    // Unlike `while (true)` — whose test is mandatory — a `for` header can omit
+    // it. Init and update are preserved. A non-literal or absent test is kept.
+    let test = if test.as_ref().and_then(literal_truthy) == Some(true) {
+        st.record_fold(
+            &s.cv,
+            "for-truthy-test-dropped",
+            "for (…; <truthy literal>; …)",
+            "for (…;;…)",
+        );
+        None
+    } else {
+        test
+    };
+
+    Statement::Tagged(TaggedStatement::ForStatement(ForStatement {
+        cv: s.cv.clone(),
+        init,
+        test,
+        update,
+        body: Box::new(body),
+    }))
+}
+
 // =====================================================================
 // Declarations
 // =====================================================================
@@ -2359,6 +2572,289 @@ mod tests {
             .as_ref()
             .expect("the eliminated `while (false)` body must be tombstoned");
         assert_eq!(del.reason, "folded-branch");
+    }
+
+    // ---------------- for(;false;) removal ------------------------------
+
+    fn for_stmt(init: Option<ForInit>, test: Option<Expression>, body: Statement) -> Statement {
+        Statement::for_statement(ForStatement {
+            cv: Some("for.1".to_string()),
+            init,
+            test,
+            update: None,
+            body: Box::new(body),
+        })
+    }
+    fn var_init(kind: VarKind, name: &str) -> ForInit {
+        use coding_adventures_javascript_ast::{BindingTarget, VariableDeclaration, VariableDeclarator};
+        ForInit::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: BindingTarget::Identifier(Identifier { cv: None, name: name.to_string() }),
+                init: Some(num(0.0, None)),
+            }],
+        })
+    }
+    fn call_expr(name: &str) -> Expression {
+        Expression::CallExpression(coding_adventures_javascript_ast::CallExpression {
+            cv: None,
+            callee: Box::new(ident(name)),
+            arguments: vec![],
+        })
+    }
+
+    /// `for (; false; ) body` — no init, dead loop → `;`.
+    #[test]
+    fn for_false_no_init_removed() {
+        let f = for_stmt(None, Some(boolean(false, None)), expr_stmt(ident("body"), None));
+        let (out, _, changed, _) = run_pass(program().with_body(vec![ProgramItem::Statement(f)]));
+        assert!(changed);
+        assert!(
+            matches!(first_stmt(&out), Statement::Tagged(TaggedStatement::EmptyStatement(_))),
+            "for(;false;) must collapse to EmptyStatement; got {:?}",
+            first_stmt(&out)
+        );
+    }
+
+    /// `for (a(); false; ) body` → `a();` — the expression init runs once.
+    #[test]
+    fn for_false_expression_init_kept() {
+        let f = for_stmt(
+            Some(ForInit::Expression(call_expr("a"))),
+            Some(boolean(false, None)),
+            expr_stmt(ident("body"), None),
+        );
+        let (out, _, changed, _) = run_pass(program().with_body(vec![ProgramItem::Statement(f)]));
+        assert!(changed);
+        match first_stmt(&out) {
+            Statement::Tagged(TaggedStatement::ExpressionStatement(es)) => {
+                assert!(matches!(&es.expression, Expression::CallExpression(_)), "init call kept");
+            }
+            other => panic!("expected the init call as an ExpressionStatement; got {:?}", other),
+        }
+    }
+
+    /// `for (var i = 0; false; ) body` → `var i = 0;` — a `var` hoists, so kept.
+    #[test]
+    fn for_false_var_init_kept_as_declaration() {
+        let f = for_stmt(Some(var_init(VarKind::Var, "i")), Some(boolean(false, None)), expr_stmt(ident("body"), None));
+        let (out, _, changed, _) = run_pass(program().with_body(vec![ProgramItem::Statement(f)]));
+        assert!(changed);
+        assert!(
+            matches!(
+                first_stmt(&out),
+                Statement::Declaration(Declaration::VariableDeclaration(_))
+            ),
+            "for(var i=0;false;) must keep the var declaration; got {:?}",
+            first_stmt(&out)
+        );
+    }
+
+    /// `for (let i = 0; false; ) body` → `;` — a `let` is loop-scoped, so dropping
+    /// the whole loop removes the binding with no observable effect.
+    #[test]
+    fn for_false_let_init_removed() {
+        let f = for_stmt(Some(var_init(VarKind::Let, "i")), Some(boolean(false, None)), expr_stmt(ident("body"), None));
+        let (out, _, changed, _) = run_pass(program().with_body(vec![ProgramItem::Statement(f)]));
+        assert!(changed);
+        assert!(
+            matches!(first_stmt(&out), Statement::Tagged(TaggedStatement::EmptyStatement(_))),
+            "for(let i=0;false;) must collapse to EmptyStatement; got {:?}",
+            first_stmt(&out)
+        );
+    }
+
+    /// A non-literal test keeps the loop: `for (; x; ) body` is unchanged.
+    #[test]
+    fn for_non_literal_test_kept() {
+        let f = for_stmt(None, Some(ident("x")), expr_stmt(ident("body"), None));
+        let (out, _, _changed, _) = run_pass(program().with_body(vec![ProgramItem::Statement(f)]));
+        assert!(
+            matches!(first_stmt(&out), Statement::Tagged(TaggedStatement::ForStatement(_))),
+            "for(;x;) must be kept; got {:?}",
+            first_stmt(&out)
+        );
+    }
+
+    /// An always-true test is dropped: `for (; true; ) body` → `for (;;) body`
+    /// (the loop stays live, but the redundant test is removed).
+    #[test]
+    fn for_truthy_test_dropped() {
+        let f = for_stmt(None, Some(boolean(true, None)), expr_stmt(ident("body"), None));
+        let (out, _, changed, _) = run_pass(program().with_body(vec![ProgramItem::Statement(f)]));
+        assert!(changed);
+        match first_stmt(&out) {
+            Statement::Tagged(TaggedStatement::ForStatement(fs)) => {
+                assert!(fs.test.is_none(), "the truthy test must be dropped; got {:?}", fs.test);
+            }
+            other => panic!("for(;true;) must stay a (test-less) for loop; got {:?}", other),
+        }
+    }
+
+    /// `for (let i = f(); false; ) body` — a `let`/`const` header initializes
+    /// its bindings exactly once at loop entry, so a side-effecting initializer
+    /// can't be elided. Closure keeps the whole loop; we DECLINE the collapse
+    /// (security-review Finding 1).
+    #[test]
+    fn for_false_let_init_side_effect_keeps_loop() {
+        use coding_adventures_javascript_ast::{
+            BindingTarget, VariableDeclaration, VariableDeclarator,
+        };
+        let init = ForInit::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind: VarKind::Let,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: BindingTarget::Identifier(Identifier {
+                    cv: None,
+                    name: "i".to_string(),
+                }),
+                init: Some(call_expr("f")),
+            }],
+        });
+        let f = for_stmt(Some(init), Some(boolean(false, None)), expr_stmt(ident("body"), None));
+        let (out, _, _changed, _) = run_pass(program().with_body(vec![ProgramItem::Statement(f)]));
+        assert!(
+            matches!(first_stmt(&out), Statement::Tagged(TaggedStatement::ForStatement(_))),
+            "for(let i=f();false;) must keep the loop (lexical init side effect); got {:?}",
+            first_stmt(&out)
+        );
+    }
+
+    /// `for (; false; ) { var x = 1; }` — a body `var` hoists to the enclosing
+    /// function scope and stays observable. This pass does not yet extract it,
+    /// so it DECLINES the collapse and keeps the loop (security-review Finding 2).
+    #[test]
+    fn for_false_body_hoisted_var_keeps_loop() {
+        use coding_adventures_javascript_ast::{
+            BindingTarget, VariableDeclaration, VariableDeclarator,
+        };
+        let var_x = Statement::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind: VarKind::Var,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: BindingTarget::Identifier(Identifier {
+                    cv: None,
+                    name: "x".to_string(),
+                }),
+                init: Some(num(1.0, None)),
+            }],
+        }));
+        let body = Statement::Tagged(TaggedStatement::BlockStatement(BlockStatement {
+            cv: None,
+            body: vec![var_x],
+        }));
+        let f = for_stmt(None, Some(boolean(false, None)), body);
+        let (out, _, _changed, _) = run_pass(program().with_body(vec![ProgramItem::Statement(f)]));
+        assert!(
+            matches!(first_stmt(&out), Statement::Tagged(TaggedStatement::ForStatement(_))),
+            "for(;false;){{var x=1}} must keep the loop (hoistable body var); got {:?}",
+            first_stmt(&out)
+        );
+    }
+
+    /// `for (; false; ) { function g(){} }` — a block-scoped `function` is *not*
+    /// a hoisting hazard (Closure drops it with the dead loop), so the collapse
+    /// still fires and the loop becomes `;`. Guards against over-declining.
+    #[test]
+    fn for_false_body_function_decl_collapses() {
+        let g = Statement::Declaration(Declaration::FunctionDeclaration(FunctionDeclaration {
+            cv: None,
+            id: Identifier {
+                cv: None,
+                name: "g".to_string(),
+            },
+            params: vec![],
+            body: BlockStatement {
+                cv: None,
+                body: vec![],
+            },
+            generator: false,
+            is_async: false,
+        }));
+        let body = Statement::Tagged(TaggedStatement::BlockStatement(BlockStatement {
+            cv: None,
+            body: vec![g],
+        }));
+        let f = for_stmt(None, Some(boolean(false, None)), body);
+        let (out, _, changed, _) = run_pass(program().with_body(vec![ProgramItem::Statement(f)]));
+        assert!(changed);
+        assert!(
+            matches!(first_stmt(&out), Statement::Tagged(TaggedStatement::EmptyStatement(_))),
+            "for(;false;){{function g(){{}}}} must collapse to EmptyStatement; got {:?}",
+            first_stmt(&out)
+        );
+    }
+
+    /// Build a bare `var <name> = 1;` statement (a hoistable binding).
+    fn var_decl_stmt(name: &str) -> Statement {
+        use coding_adventures_javascript_ast::{
+            BindingTarget, VariableDeclaration, VariableDeclarator,
+        };
+        Statement::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind: VarKind::Var,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: BindingTarget::Identifier(Identifier {
+                    cv: None,
+                    name: name.to_string(),
+                }),
+                init: Some(num(1.0, None)),
+            }],
+        }))
+    }
+    fn blk(stmts: Vec<Statement>) -> BlockStatement {
+        BlockStatement {
+            cv: None,
+            body: stmts,
+        }
+    }
+
+    /// `for (; false; ) { try {} finally { var x = 1; } }` — the hoistable `var`
+    /// hides in a `finally` block. The detector must descend into `try` bodies,
+    /// so the collapse is DECLINED and the loop kept (security-review Finding 3).
+    #[test]
+    fn for_false_var_in_finally_keeps_loop() {
+        use coding_adventures_javascript_ast::TryStatement;
+        let try_stmt = Statement::Tagged(TaggedStatement::TryStatement(TryStatement {
+            cv: None,
+            block: blk(vec![]),
+            handler: None,
+            finalizer: Some(blk(vec![var_decl_stmt("x")])),
+        }));
+        let body = Statement::Tagged(TaggedStatement::BlockStatement(blk(vec![try_stmt])));
+        let f = for_stmt(None, Some(boolean(false, None)), body);
+        let (out, _, _changed, _) = run_pass(program().with_body(vec![ProgramItem::Statement(f)]));
+        assert!(
+            matches!(first_stmt(&out), Statement::Tagged(TaggedStatement::ForStatement(_))),
+            "for(;false;){{try{{}}finally{{var x=1}}}} must keep the loop (var in finally); got {:?}",
+            first_stmt(&out)
+        );
+    }
+
+    /// `for (; false; ) for (var i = 0; c; ) {}` — the hoistable `var i` hides in
+    /// a nested `for`-header. The detector must inspect nested loop headers, so
+    /// the collapse is DECLINED and the loop kept (security-review Finding 3).
+    #[test]
+    fn for_false_var_in_nested_for_header_keeps_loop() {
+        let inner = Statement::for_statement(ForStatement {
+            cv: None,
+            init: Some(var_init(VarKind::Var, "i")),
+            test: Some(ident("c")),
+            update: None,
+            body: Box::new(Statement::empty_statement(EmptyStatement { cv: None })),
+        });
+        let f = for_stmt(None, Some(boolean(false, None)), inner);
+        let (out, _, _changed, _) = run_pass(program().with_body(vec![ProgramItem::Statement(f)]));
+        assert!(
+            matches!(first_stmt(&out), Statement::Tagged(TaggedStatement::ForStatement(_))),
+            "for(;false;)for(var i=0;c;){{}} must keep the loop (var in nested for-header); got {:?}",
+            first_stmt(&out)
+        );
     }
 
     #[test]
