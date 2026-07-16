@@ -28,6 +28,7 @@ per rotation, in parallel):
 | `geometry/` | polygon → number of sides | Wolfram MathWorld |
 | `astronomy/` | planet → order from the Sun | NASA |
 | `chemistry/` | element → atomic number | PubChem / NIH |
+| `chemistry/` | common substance → approximate pH | LibreTexts (consensus) |
 | `metrology/` | SI prefix → power of ten | NIST |
 | `mathematics/` | Roman numeral → value | (consensus) |
 | `calendar/` | day / month → number | ISO 8601 |
