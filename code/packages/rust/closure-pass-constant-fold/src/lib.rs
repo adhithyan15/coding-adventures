@@ -4137,54 +4137,18 @@ fn fold_member(m: &MemberExpression, st: &mut FoldState) -> Expression {
             }
         }
     } else {
-        // `[e0, e1, …][K]` → the K-th element (CLOC12.196). Computed index access
-        // with a constant integer index folds to the element at that index,
-        // mirroring the array-`.length` fold. Guards keep it byte-identical to
-        // Closure:
-        //   1. no spread element anywhere — a spread (`[...x]`) makes the runtime
-        //      indices statically unknown, so decline;
-        //   2. K is a non-negative integer literal in range (`0 ≤ K < len`). A
-        //      NumericLiteral is never negative in the AST (`-1` is a unary
-        //      expression), and a fractional or out-of-range index is not a
-        //      canonical array index, so both decline here — matching Closure,
-        //      which leaves `[1,2,3][1.5]` / `[1,2,3][5]` / `[1,2,3][-1]` intact
-        //      (the out-of-bounds / hole `void 0` result is a follow-up);
-        //   3. the element at K is PRESENT (a hole reads as `undefined`, a
-        //      `void 0` result left to the follow-up);
-        //   4. every element EXCEPT the selected one is side-effect-free. The
-        //      SELECTED element is preserved verbatim — its own side effect still
-        //      runs (`[a, b()][1]` → `b()`) — but dropping the *other* elements
-        //      must not drop a side effect, so `[a, b()][0]` declines.
+        // `[e0, e1, …][K]` → computed integer-index access into an array
+        // literal (CLOC12.196 in-bounds element pick + CLOC12.196b the
+        // out-of-bounds / hole `void 0` result). The whole truth table lives
+        // in `fold_array_index_access`; delegating keeps this hot, recursive
+        // `fold_member` frame small so deeply-nested expressions don't blow
+        // the stack (a fold body inlined here would bloat every frame on the
+        // recursion — see the frame-size lesson).
         if let (Expression::ArrayExpression(a), Expression::NumericLiteral(k)) =
             (&object, &property)
         {
-            let has_spread = a
-                .elements
-                .iter()
-                .any(|el| matches!(el, Some(Expression::SpreadElement(_))));
-            let in_range = k.value.is_finite()
-                && k.value >= 0.0
-                && k.value.fract() == 0.0
-                && (k.value as usize) < a.elements.len();
-            if !has_spread && in_range {
-                let idx = k.value as usize;
-                if let Some(selected) = &a.elements[idx] {
-                    let others_free = a
-                        .elements
-                        .iter()
-                        .enumerate()
-                        .filter(|(i, _)| *i != idx)
-                        .all(|(_, el)| el.as_ref().is_none_or(is_side_effect_free));
-                    if others_free {
-                        let parent = m.cv.clone();
-                        let before = format!("array-literal[{}][{}]", a.elements.len(), idx);
-                        let after = format!("element[{idx}]");
-                        // Records the fold (and sets `changed`); the selected
-                        // element keeps its own cv for span provenance.
-                        let _new_cv = st.fork_cv(&parent, &before, &after);
-                        return selected.clone();
-                    }
-                }
+            if let Some(folded) = fold_array_index_access(a, k, &m.cv, st) {
+                return folded;
             }
         }
     }
@@ -4195,6 +4159,123 @@ fn fold_member(m: &MemberExpression, st: &mut FoldState) -> Expression {
         property: Box::new(property),
         computed: m.computed,
     })
+}
+
+/// Fold a computed integer-index access `[e0, e1, …][K]` into an array
+/// literal. Returns `Some(replacement)` when the access folds, `None` to
+/// decline (leaving the `MemberExpression` intact).
+///
+/// This is the union of two oracle-verified arcs:
+///
+/// * **CLOC12.196** — an *in-bounds* index whose element is **present**
+///   folds to that element (`[a, b, c][1]` → `b`).
+/// * **CLOC12.196b** — an *out-of-bounds* index (`K ≥ len` **or** `K < 0`)
+///   or an in-bounds **hole** reads as `undefined`, which Closure spells
+///   `void 0` (`[1,2,3][5]` / `[1,,3][1]` / `[1,2,3][-1]` → `void 0`).
+///
+/// Truth table (all rows require **no spread** and an **integer** `K`; a
+/// fractional index such as `[1,2,3][1.5]` is an ordinary absent-property
+/// read that Closure leaves intact, so it declines):
+///
+/// | array          | K    | result   | why                                  |
+/// |----------------|------|----------|--------------------------------------|
+/// | `[a,b,c]`      | `1`  | `b`      | in-bounds, element present           |
+/// | `[1,2,3]`      | `5`  | `void 0` | out of bounds (`K ≥ len`)            |
+/// | `[1,2]`        | `2`  | `void 0` | out of bounds (`K == len`)           |
+/// | `[]`           | `0`  | `void 0` | out of bounds (empty)                |
+/// | `[1,2,3]`      | `-1` | `void 0` | negative index (post-fold `-1`)      |
+/// | `[1,,3]`       | `1`  | `void 0` | in-bounds **hole** reads `undefined` |
+/// | `[1,2,3]`      | `1.5`| decline  | fractional index — not an element    |
+///
+/// **Side-effect discipline** differs between the two results, because it
+/// governs which elements may be dropped:
+///
+/// * A **present** in-bounds element is *preserved verbatim* — its own side
+///   effect still runs (`[a, b()][1]` → `b()`). Only the **other** elements
+///   must be side-effect-free, or dropping them would drop a side effect
+///   (`[a, b()][0]` declines).
+/// * A **`void 0`** result drops the *whole* array literal, so **every**
+///   element must be side-effect-free (`[f(),2][5]` declines even though the
+///   index is out of bounds).
+///
+/// Marked `#[inline(never)]`: `fold_member` is on the recursive
+/// `fold_expression` path, so inlining this body would enlarge every stack
+/// frame along a deeply-nested expression and shrink the nesting depth we can
+/// fold before overflowing (see the frame-size lesson).
+#[inline(never)]
+fn fold_array_index_access(
+    a: &ArrayExpression,
+    k: &NumericLiteral,
+    parent_cv: &Option<String>,
+    st: &mut FoldState,
+) -> Option<Expression> {
+    // A spread (`[...x]`) makes the runtime indices statically unknown.
+    let has_spread = a
+        .elements
+        .iter()
+        .any(|el| matches!(el, Some(Expression::SpreadElement(_))));
+    if has_spread {
+        return None;
+    }
+    // Only a finite INTEGER index selects (or misses) an array element. A
+    // fractional index is an ordinary property read Closure leaves intact.
+    // (Post-fold a negative index is a `NumericLiteral` with a negative
+    // `value` — `-1` folds `-1` — so the negative case flows through here.)
+    if !(k.value.is_finite() && k.value.fract() == 0.0) {
+        return None;
+    }
+
+    let len = a.elements.len();
+    // `void 0` drops the whole literal, so every element must be pure.
+    let all_free = || {
+        a.elements
+            .iter()
+            .all(|el| el.as_ref().is_none_or(is_side_effect_free))
+    };
+
+    if k.value >= 0.0 && (k.value as usize) < len {
+        // In bounds: `0 ≤ K < len`.
+        let idx = k.value as usize;
+        match &a.elements[idx] {
+            // Present element (CLOC12.196): fold to it, preserving its own
+            // side effect; only the OTHER elements must be side-effect-free.
+            Some(selected) => {
+                let others_free = a
+                    .elements
+                    .iter()
+                    .enumerate()
+                    .filter(|(i, _)| *i != idx)
+                    .all(|(_, el)| el.as_ref().is_none_or(is_side_effect_free));
+                if !others_free {
+                    return None;
+                }
+                let before = format!("array-literal[{len}][{idx}]");
+                let after = format!("element[{idx}]");
+                // Records the fold (and sets `changed`); the selected element
+                // keeps its own cv for span provenance.
+                let _new_cv = st.fork_cv(parent_cv, &before, &after);
+                Some(selected.clone())
+            }
+            // In-bounds HOLE (CLOC12.196b): reads as `undefined` → `void 0`.
+            None => {
+                if !all_free() {
+                    return None;
+                }
+                let before = format!("array-literal[{len}][{idx}]=hole");
+                let new_cv = st.fork_cv(parent_cv, &before, "void 0");
+                Some(stamp_literal_cv(FoldedLiteral::Undefined, new_cv))
+            }
+        }
+    } else {
+        // Out of bounds (CLOC12.196b): `K ≥ len` or `K < 0`. The absent index
+        // reads as `undefined` → `void 0`.
+        if !all_free() {
+            return None;
+        }
+        let before = format!("array-literal[{len}][{}]", format_js_number(k.value));
+        let new_cv = st.fork_cv(parent_cv, &before, "void 0");
+        Some(stamp_literal_cv(FoldedLiteral::Undefined, new_cv))
+    }
 }
 
 // ---------------------------------------------------------------------
@@ -7206,27 +7287,6 @@ mod tests {
         let (_out, _, changed, _) = run_pass(program_with_expr(e, true));
         assert!(!changed, "[a,g()][0] must not fold — would drop the call g()");
 
-        // `[1, , 3][1]` — the SELECTED slot is a hole → `undefined`; left to the
-        // `void 0` follow-up, so decline for now.
-        let e = index(
-            array_opt(vec![Some(num(1.0, None)), None, Some(num(3.0, None))]),
-            1.0,
-        );
-        let (_out, _, changed, _) = run_pass(program_with_expr(e, true));
-        assert!(!changed, "[1,,3][1] selects a hole — must not fold (yet)");
-
-        // `[1, 2, 3][5]` — out of bounds → `undefined`; decline (follow-up).
-        let e = index(
-            array_opt(vec![
-                Some(num(1.0, None)),
-                Some(num(2.0, None)),
-                Some(num(3.0, None)),
-            ]),
-            5.0,
-        );
-        let (_out, _, changed, _) = run_pass(program_with_expr(e, true));
-        assert!(!changed, "[1,2,3][5] is out of bounds — must not fold (yet)");
-
         // `[1, 2, ...x][0]` — a spread makes runtime indices unknown → decline.
         let spread = Expression::SpreadElement(SpreadElement {
             cv: None,
@@ -7238,6 +7298,89 @@ mod tests {
         );
         let (_out, _, changed, _) = run_pass(program_with_expr(e, true));
         assert!(!changed, "[1,2,...x][0] must not fold — spread indices unknown");
+
+        // `[1, 2, 3][1.5]` — a fractional index is an ordinary absent-property
+        // read, not an element pick. Closure leaves it intact → decline.
+        let e = index(
+            array_opt(vec![
+                Some(num(1.0, None)),
+                Some(num(2.0, None)),
+                Some(num(3.0, None)),
+            ]),
+            1.5,
+        );
+        let (_out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(!changed, "[1,2,3][1.5] fractional index — must not fold");
+
+        // `[f(), 2][5]` — out of bounds, BUT the `void 0` result would drop the
+        // whole literal including the impure `f()` → decline (CLOC12.196b: every
+        // element must be side-effect-free for a `void 0` fold).
+        let call = Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(ident("f")),
+            arguments: vec![],
+        });
+        let e = index(array_opt(vec![Some(call), Some(num(2.0, None))]), 5.0);
+        let (_out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(!changed, "[f(),2][5] must not fold — would drop the call f()");
+    }
+
+    #[test]
+    fn fold_array_index_out_of_bounds_to_void_0() {
+        // CLOC12.196b: an out-of-bounds index reads as `undefined`, which the
+        // emitter spells `void 0`. Verified against the Closure oracle:
+        //   [1,2,3][5]  [1,2][2]  [][0]  → void 0.
+        for (elems, k) in [
+            (vec![Some(num(1.0, None)), Some(num(2.0, None)), Some(num(3.0, None))], 5.0),
+            (vec![Some(num(1.0, None)), Some(num(2.0, None))], 2.0),
+            (vec![], 0.0),
+        ] {
+            let e = index(array_opt(elems), k);
+            let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+            assert!(changed, "out-of-bounds index {k} should fold to void 0");
+            assert!(
+                matches!(extract_expr(&out), Expression::UndefinedLiteral(_)),
+                "expected void 0 (UndefinedLiteral) for out-of-bounds index {k}"
+            );
+        }
+    }
+
+    #[test]
+    fn fold_array_index_negative_to_void_0() {
+        // CLOC12.196b: a negative index is never a valid array slot → `void 0`.
+        // Post-fold, `-1` is a NumericLiteral with value `-1.0`, so the OOB path
+        // handles it. Oracle: `[1,2,3][-1]` → `void 0`.
+        let e = index(
+            array_opt(vec![
+                Some(num(1.0, None)),
+                Some(num(2.0, None)),
+                Some(num(3.0, None)),
+            ]),
+            -1.0,
+        );
+        let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(changed, "[1,2,3][-1] should fold to void 0");
+        assert!(
+            matches!(extract_expr(&out), Expression::UndefinedLiteral(_)),
+            "expected void 0 (UndefinedLiteral) for negative index"
+        );
+    }
+
+    #[test]
+    fn fold_array_index_in_bounds_hole_to_void_0() {
+        // CLOC12.196b: an in-bounds slot that is a HOLE reads as `undefined`.
+        // Oracle: `[1,,3][1]` → `void 0`. The other present elements (1, 3) are
+        // side-effect-free, so dropping the literal is sound.
+        let e = index(
+            array_opt(vec![Some(num(1.0, None)), None, Some(num(3.0, None))]),
+            1.0,
+        );
+        let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(changed, "[1,,3][1] selects a hole — should fold to void 0");
+        assert!(
+            matches!(extract_expr(&out), Expression::UndefinedLiteral(_)),
+            "expected void 0 (UndefinedLiteral) for in-bounds hole"
+        );
     }
 
     /// Build a template literal from quasi cooked strings + substitution

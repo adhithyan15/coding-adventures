@@ -2,6 +2,37 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.94.0] - 2026-07-15
+
+### Added — array-index out-of-bounds / negative / hole → `void 0` — CLOC12.196b
+
+Extends the CLOC12.196 computed array-index fold (`[a, b, c][K]` → the K-th
+element) to cover the cases that read as `undefined`, which the emitter spells
+`void 0`:
+
+- **out of bounds** — `K ≥ len`: `[1,2,3][5]` → `void 0`, `[1,2][2]` → `void 0`,
+  `[][0]` → `void 0`;
+- **negative index** — `[1,2,3][-1]` → `void 0` (post-fold a negative index is a
+  `NumericLiteral` with a negative `value`, so it flows through the same
+  out-of-range path);
+- **in-bounds hole** — `[1,,3][1]` → `void 0` (an elided slot reads as
+  `undefined`).
+
+All rows are verified byte-identical against the reference Closure Compiler
+(`SIMPLE`). Two guards keep the fold sound:
+
+- a **fractional** index (`[1,2,3][1.5]`) is an ordinary absent-property read,
+  not an element pick, so it declines — matching Closure;
+- a `void 0` result drops the *whole* array literal, so **every** element must be
+  side-effect-free: `[f(),2][5]` declines even though the index is out of bounds
+  (this is stricter than the in-bounds present-element fold, which preserves the
+  selected element and so only requires the *other* elements to be pure).
+
+The computed-index logic moved into a dedicated `#[inline(never)]`
+`fold_array_index_access` helper so the recursive `fold_member` stack frame stays
+small (deeply-nested expressions must not overflow the stack — the frame-size
+lesson).
+
 ## [0.93.0] - 2026-07-15
 
 ### Added — contract compound self-assignment `x = x OP E` → `x OP= E` — CLOC12.198
