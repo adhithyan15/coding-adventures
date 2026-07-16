@@ -1899,10 +1899,13 @@ fn eval_binary(op: &BinaryOp, l: SqlValue, r: SqlValue) -> Result<SqlValue, VmEr
         BinaryOp::Sub => checked_int_binop(l, r, i64::checked_sub, |a, b| a - b, "subtraction"),
         BinaryOp::Mul => checked_int_binop(l, r, i64::checked_mul, |a, b| a * b, "multiplication"),
         BinaryOp::Div => {
-            // Division by zero → VmError.
+            // SQLite returns NULL for division by zero (integer OR float) — e.g.
+            // `SELECT 5/0`, `5.0/0`, and `0/0` all yield NULL, never an error.
+            // NULL operands were already short-circuited above, so a zero divisor
+            // here is a genuine value. `*f == 0.0` also matches `-0.0`.
             match (&l, &r) {
-                (_, SqlValue::Int(0)) => Err(VmError::DivisionByZero),
-                (_, SqlValue::Float(f)) if *f == 0.0 => Err(VmError::DivisionByZero),
+                (_, SqlValue::Int(0)) => Ok(SqlValue::Null),
+                (_, SqlValue::Float(f)) if *f == 0.0 => Ok(SqlValue::Null),
                 (SqlValue::Int(a), SqlValue::Int(b)) => {
                     a.checked_div(*b).map(SqlValue::Int).ok_or_else(|| {
                         VmError::TypeMismatch("integer overflow in division".to_string())
@@ -1918,7 +1921,10 @@ fn eval_binary(op: &BinaryOp, l: SqlValue, r: SqlValue) -> Result<SqlValue, VmEr
             }
         }
         BinaryOp::Mod => match (&l, &r) {
-            (_, SqlValue::Int(0)) => Err(VmError::DivisionByZero),
+            // Like division, modulo by zero is NULL in SQLite (`5%0`, `5.5%0`,
+            // `5%0.0` → NULL), including a float-zero divisor — not an error.
+            (_, SqlValue::Int(0)) => Ok(SqlValue::Null),
+            (_, SqlValue::Float(f)) if *f == 0.0 => Ok(SqlValue::Null),
             (SqlValue::Int(a), SqlValue::Int(b)) => {
                 a.checked_rem(*b).map(SqlValue::Int).ok_or_else(|| {
                     VmError::TypeMismatch("integer overflow in modulo".to_string())
@@ -3149,15 +3155,32 @@ mod tests {
     }
 
     #[test]
-    fn test_div_by_zero_returns_error() {
+    fn test_div_and_mod_by_zero_return_null() {
+        // SQLite yields NULL (not an error) for `x / 0` and `x % 0`, for both
+        // integer and float zero divisors.
         let mut b = InMemoryBackend::new();
-        let err = execute(&prog(vec![
-            Instruction::LoadConst(int(1)),
-            Instruction::LoadConst(int(0)),
-            Instruction::BinaryOpInstr(BinaryOp::Div),
-            Instruction::Halt,
-        ]), &mut b);
-        assert!(matches!(err, Err(VmError::DivisionByZero)));
+        for op in [BinaryOp::Div, BinaryOp::Mod] {
+            for divisor in [int(0), SqlValue::Float(0.0)] {
+                let r = execute(
+                    &prog(vec![
+                        Instruction::BeginRow,
+                        Instruction::LoadConst(int(5)),
+                        Instruction::LoadConst(divisor.clone()),
+                        Instruction::BinaryOpInstr(op.clone()),
+                        Instruction::EmitColumn("r".to_string()),
+                        Instruction::EmitRow,
+                        Instruction::Halt,
+                    ]),
+                    &mut b,
+                )
+                .unwrap();
+                assert_eq!(
+                    r.rows,
+                    vec![vec![SqlValue::Null]],
+                    "{op:?} by {divisor:?} should be NULL"
+                );
+            }
+        }
     }
 
     #[test]

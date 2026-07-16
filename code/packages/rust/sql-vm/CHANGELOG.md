@@ -3,6 +3,20 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.17] - Unreleased
+
+### Changed
+
+- **Division and modulo by zero now yield `NULL`, not an error.** `x / 0`,
+  `x % 0`, `x / 0.0`, `x % 0.0`, and `0 / 0` return `SqlValue::Null` — matching
+  SQLite, where a zero divisor is a NULL result rather than a runtime failure.
+  Previously the VM raised `VmError::DivisionByZero`, which aborted the whole
+  query (a statement that runs fine in SQLite would hard-fail in mini-sqlite).
+  Applies to both integer and float zero divisors; the `Mod` arm also gained the
+  missing float-zero check (`5.5 % 0.0` → `NULL` instead of `NaN`). NULL operands
+  are still short-circuited to NULL upstream, and non-zero division/modulo is
+  unchanged. `VmError::DivisionByZero` is retained but no longer constructed.
+
 ## [0.4.16] - Unreleased
 
 ### Added
