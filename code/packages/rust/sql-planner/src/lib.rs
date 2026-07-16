@@ -630,6 +630,12 @@ fn plan_select(
     // single-row, no-column virtual table (the "dual" table).  We model
     // this as a `Scan` of a special `__dual__` table that the backend and
     // codegen handle as yielding one empty row.
+    // Records the single base table (real name + optional alias) so ORDER BY can
+    // resolve a bare column's schema-defined COLLATE. Left `None` for the dual
+    // table and (below) for any query with JOINs, where column→table resolution
+    // is ambiguous and out of scope for this pass.
+    let mut base_table_ref: Option<(String, Option<String>)> = None;
+
     let mut plan: LogicalPlan = if let Some(table_ref) = find_node(stmt, "table_ref") {
         // Extract table name and optional alias from `table_ref = table_name [ "AS" NAME ]`.
         let (table_name, table_alias) = extract_table_ref(table_ref);
@@ -638,6 +644,8 @@ fn plan_select(
         schema
             .column_names(&table_name)
             .map_err(|_| PlanError::UnknownTable(table_name.clone()))?;
+
+        base_table_ref = Some((table_name.clone(), table_alias.clone()));
 
         LogicalPlan::Scan {
             table: table_name,
@@ -752,7 +760,16 @@ fn plan_select(
     // Step 7: ORDER BY.
     // -----------------------------------------------------------------------
     if let Some(order_clause) = find_node(stmt, "order_clause") {
-        let keys = plan_order_by(order_clause)?;
+        // Column-defined COLLATE only propagates into ORDER BY for a single
+        // base table (no JOINs) — see `base_table_ref`. With JOINs present we
+        // pass `None`, so every sort key keeps whatever explicit collation it
+        // carried and otherwise falls back to BINARY.
+        let collate_ctx = if find_nodes(stmt, "join_clause").is_empty() {
+            base_table_ref.as_ref().map(|(t, a)| (t.as_str(), a.as_deref()))
+        } else {
+            None
+        };
+        let keys = plan_order_by(order_clause, schema, collate_ctx)?;
         plan = LogicalPlan::Sort {
             input: Box::new(plan),
             keys,
@@ -955,15 +972,76 @@ fn plan_group_by_exprs(group_clause: &GrammarASTNode) -> Result<Vec<SqlExpr>, Pl
 ///
 /// Grammar: `order_clause = ORDER BY order_item { "," order_item }`
 /// Grammar: `order_item = expr [ ASC | DESC ]`
-fn plan_order_by(order_clause: &GrammarASTNode) -> Result<Vec<SortKey>, PlanError> {
+fn plan_order_by(
+    order_clause: &GrammarASTNode,
+    schema: &dyn SchemaProvider,
+    collate_ctx: Option<(&str, Option<&str>)>,
+) -> Result<Vec<SortKey>, PlanError> {
+    // Fetch the base table's declared collations exactly ONCE (not per sort
+    // key). A bare `ORDER BY c0, c0, …` over a very wide table would otherwise
+    // clone the whole schema for every key — O(keys × columns) deep copies,
+    // both dimensions attacker-controlled. Building a name→collation map up
+    // front keeps planning linear in the number of keys.
+    let order_ctx = collate_ctx.map(|(table, alias)| {
+        let collations = schema
+            .table_collations(table)
+            .unwrap_or_default()
+            .into_iter()
+            .map(|(name, coll)| (name.to_ascii_lowercase(), coll))
+            .collect::<std::collections::HashMap<String, String>>();
+        OrderCollateCtx {
+            table,
+            alias,
+            collations,
+        }
+    });
     find_nodes(order_clause, "order_item")
         .iter()
-        .map(|item| plan_order_item(item))
+        .map(|item| plan_order_item(item, order_ctx.as_ref()))
         .collect()
 }
 
+/// Single base table (name + alias) plus its precomputed `column → COLLATE`
+/// map, used to resolve a bare ORDER BY column's inherited collation without
+/// re-querying the schema per key.
+struct OrderCollateCtx<'a> {
+    table: &'a str,
+    alias: Option<&'a str>,
+    /// Lowercased column name → declared collation, for columns that have one.
+    collations: std::collections::HashMap<String, String>,
+}
+
+/// Resolve the collation a bare-column ORDER BY key inherits from its column
+/// definition. Returns `Some(name)` only when the sort expression is a plain
+/// column reference (optionally qualified by the table's name or alias) whose
+/// column was declared with a non-default `COLLATE`. Anything else — a computed
+/// expression, an alias to an output column, a qualifier that doesn't match the
+/// base table — yields `None`, and the key keeps the default BINARY ordering.
+fn resolve_column_collation(expr: &SqlExpr, ctx: &OrderCollateCtx) -> Option<String> {
+    let SqlExpr::Column { table, name } = expr else {
+        return None;
+    };
+    // A qualifier, if present, must name the base table or its alias; otherwise
+    // it refers to something not in scope for single-table collation resolution.
+    if let Some(qual) = table {
+        let matches_table = qual.eq_ignore_ascii_case(ctx.table);
+        let matches_alias = ctx.alias.is_some_and(|a| qual.eq_ignore_ascii_case(a));
+        if !matches_table && !matches_alias {
+            return None;
+        }
+    }
+    ctx.collations.get(&name.to_ascii_lowercase()).cloned()
+}
+
 /// Plan a single `order_item` node.
-fn plan_order_item(item: &GrammarASTNode) -> Result<SortKey, PlanError> {
+///
+/// `collate_ctx` carries the single base table (name + alias + collation map)
+/// when the query has exactly one table, enabling column-defined COLLATE to
+/// flow into the sort key; it is `None` for multi-table or table-less queries.
+fn plan_order_item(
+    item: &GrammarASTNode,
+    collate_ctx: Option<&OrderCollateCtx>,
+) -> Result<SortKey, PlanError> {
     // The first child Node is the expression; check for ASC/DESC tokens.
     let expr_node = item
         .children
@@ -1041,6 +1119,22 @@ fn plan_order_item(item: &GrammarASTNode) -> Result<SortKey, PlanError> {
             }
         }
         coll.transpose()?.flatten()
+    };
+
+    // An explicit `COLLATE` on the ORDER BY item always wins — including
+    // `COLLATE BINARY`, which forces byte order even when the column is declared
+    // NOCASE/RTRIM. Because BINARY parses to `None` (same as "no collation"), we
+    // must detect the *presence* of the clause separately: only a key with no
+    // explicit COLLATE at all inherits the column's schema-defined sequence
+    // (`CREATE TABLE t(x TEXT COLLATE NOCASE); ... ORDER BY x`).
+    let has_explicit_collate = item
+        .children
+        .iter()
+        .any(|c| is_keyword_token(c, "COLLATE"));
+    let collation = if has_explicit_collate {
+        collation
+    } else {
+        collate_ctx.and_then(|ctx| resolve_column_collation(&expr, ctx))
     };
 
     Ok(SortKey {
@@ -1633,7 +1727,7 @@ fn plan_col_def(col_def: &GrammarASTNode) -> Result<ColumnDef, PlanError> {
     for child in &col_def.children {
         if let ASTNodeOrToken::Node(constraint) = child {
             if constraint.rule_name == "col_constraint" {
-                apply_col_constraint(&mut col, constraint);
+                apply_col_constraint(&mut col, constraint)?;
             }
         }
     }
@@ -1643,8 +1737,19 @@ fn plan_col_def(col_def: &GrammarASTNode) -> Result<ColumnDef, PlanError> {
 
 /// Apply a `col_constraint` to a mutable `ColumnDef`.
 ///
-/// Grammar: `col_constraint = NOT NULL | NULL | PRIMARY KEY | UNIQUE | DEFAULT primary`
-fn apply_col_constraint(col: &mut ColumnDef, constraint: &GrammarASTNode) {
+/// Grammar: `col_constraint = ( "NOT" "NULL" … ) | "NULL" | ( "PRIMARY" "KEY" … )
+///                          | ( "UNIQUE" … ) | ( "DEFAULT" primary )
+///                          | ( "CHECK" "(" expr ")" ) | ( "COLLATE" NAME )
+///                          | ( "REFERENCES" NAME … ) ;`
+///
+/// Returns an error only for an unrecognised `COLLATE` sequence — SQLite
+/// rejects `CREATE TABLE t(x COLLATE BOGUS)` at prepare time with "no such
+/// collating sequence", so we surface that here rather than silently storing a
+/// collation the VM cannot honour.
+fn apply_col_constraint(
+    col: &mut ColumnDef,
+    constraint: &GrammarASTNode,
+) -> Result<(), PlanError> {
     // Check which constraint keyword tokens are present.
     if has_token(constraint, "PRIMARY") {
         col.primary_key = true;
@@ -1665,6 +1770,43 @@ fn apply_col_constraint(col: &mut ColumnDef, constraint: &GrammarASTNode) {
             }
         }
     }
+    // COLLATE handling: the collation name is the token immediately after the
+    // COLLATE keyword. `BINARY` is the default and collapses to `None` (see
+    // `ColumnDef::collation`); `NOCASE`/`RTRIM` are stored uppercased; anything
+    // else is a "no such collating sequence" error, matching SQLite. Only the
+    // three built-in sequences exist in mini-sqlite (no user-registered ones).
+    if has_token(constraint, "COLLATE") {
+        let name = token_after_keyword(constraint, "COLLATE").ok_or_else(|| {
+            PlanError::UnsupportedStatement("COLLATE clause missing collation name".to_string())
+        })?;
+        let upper = name.to_uppercase();
+        match upper.as_str() {
+            "BINARY" => col.collation = None,
+            "NOCASE" | "RTRIM" => col.collation = Some(upper),
+            other => {
+                return Err(PlanError::UnsupportedStatement(format!(
+                    "no such collating sequence: {other}"
+                )))
+            }
+        }
+    }
+    Ok(())
+}
+
+/// Return the text of the token immediately following the first occurrence of
+/// keyword `kw` among a node's direct token children. Used to read the operand
+/// of a single-keyword clause such as `COLLATE NOCASE`.
+fn token_after_keyword(node: &GrammarASTNode, kw: &str) -> Option<String> {
+    let toks: Vec<&str> = node
+        .children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Token(t) => Some(t.value.as_str()),
+            _ => None,
+        })
+        .collect();
+    let pos = toks.iter().position(|t| t.eq_ignore_ascii_case(kw))?;
+    toks.get(pos + 1).map(|s| s.to_string())
 }
 
 /// Plan a `drop_table_stmt` node.
@@ -3278,6 +3420,103 @@ mod tests {
         } else {
             panic!("Expected CreateTable");
         }
+    }
+
+    #[test]
+    fn test_create_table_stores_column_collation() {
+        // NOCASE / RTRIM are stored uppercased; an explicit BINARY collapses to
+        // None (the default), so `has-collation` is unambiguous downstream.
+        let plan = plan_ok(
+            "CREATE TABLE t2 (a TEXT COLLATE NOCASE, b TEXT COLLATE RTRIM, \
+             c TEXT COLLATE BINARY, d TEXT)",
+        );
+        if let LogicalPlan::CreateTable { columns, .. } = &plan {
+            assert_eq!(columns[0].collation.as_deref(), Some("NOCASE"));
+            assert_eq!(columns[1].collation.as_deref(), Some("RTRIM"));
+            assert_eq!(columns[2].collation, None, "explicit BINARY → None");
+            assert_eq!(columns[3].collation, None, "no COLLATE → None");
+        } else {
+            panic!("Expected CreateTable");
+        }
+    }
+
+    #[test]
+    fn test_create_table_unknown_collation_errors() {
+        // Matches SQLite's prepare-time "no such collating sequence" rejection.
+        let err = plan_err("CREATE TABLE t2 (x TEXT COLLATE BOGUS)");
+        let msg = format!("{err:?}");
+        assert!(
+            msg.contains("no such collating sequence"),
+            "unexpected error: {msg}"
+        );
+    }
+
+    /// A schema whose single table `tc` declares `name` with a `NOCASE`
+    /// collation, used to prove a bare ORDER BY key inherits it.
+    struct CollSchema;
+    impl SchemaProvider for CollSchema {
+        fn column_names(&self, table: &str) -> Result<Vec<String>, BackendError> {
+            if table.eq_ignore_ascii_case("tc") {
+                Ok(vec!["id".to_string(), "name".to_string()])
+            } else {
+                Err(BackendError::TableNotFound {
+                    table: table.to_string(),
+                })
+            }
+        }
+        fn table_collations(&self, table: &str) -> Result<Vec<(String, String)>, BackendError> {
+            if table.eq_ignore_ascii_case("tc") {
+                Ok(vec![("name".to_string(), "NOCASE".to_string())])
+            } else {
+                Ok(Vec::new())
+            }
+        }
+    }
+
+    /// Pull the first Sort node's keys out of a planned SELECT (Sort sits below
+    /// the outermost Project).
+    fn sort_keys(plan: &LogicalPlan) -> Vec<SortKey> {
+        fn walk(p: &LogicalPlan) -> Option<Vec<SortKey>> {
+            match p {
+                LogicalPlan::Sort { keys, .. } => Some(keys.clone()),
+                LogicalPlan::Project { input, .. }
+                | LogicalPlan::Filter { input, .. }
+                | LogicalPlan::Distinct(input)
+                | LogicalPlan::Limit { input, .. } => walk(input),
+                _ => None,
+            }
+        }
+        walk(plan).unwrap_or_default()
+    }
+
+    #[test]
+    fn test_order_by_inherits_column_collation() {
+        // Bare `ORDER BY name` inherits the column's declared NOCASE sequence…
+        let plan = plan_sql("SELECT name FROM tc ORDER BY name", &CollSchema).unwrap();
+        assert_eq!(sort_keys(&plan)[0].collation.as_deref(), Some("NOCASE"));
+
+        // …a qualified reference (`tc.name`) resolves the same way…
+        let plan = plan_sql("SELECT name FROM tc ORDER BY tc.name", &CollSchema).unwrap();
+        assert_eq!(sort_keys(&plan)[0].collation.as_deref(), Some("NOCASE"));
+
+        // …and through a table alias (`u.name`).
+        let plan = plan_sql("SELECT u.name FROM tc AS u ORDER BY u.name", &CollSchema).unwrap();
+        assert_eq!(sort_keys(&plan)[0].collation.as_deref(), Some("NOCASE"));
+    }
+
+    #[test]
+    fn test_explicit_collate_overrides_column_collation() {
+        // An explicit COLLATE BINARY on the key wins over the column's NOCASE.
+        let plan =
+            plan_sql("SELECT name FROM tc ORDER BY name COLLATE BINARY", &CollSchema).unwrap();
+        assert_eq!(sort_keys(&plan)[0].collation, None, "BINARY → no collation");
+    }
+
+    #[test]
+    fn test_order_by_column_without_collation_stays_binary() {
+        // `id` has no declared collation, so its sort key stays BINARY (None).
+        let plan = plan_sql("SELECT id FROM tc ORDER BY id", &CollSchema).unwrap();
+        assert_eq!(sort_keys(&plan)[0].collation, None);
     }
 
     // -----------------------------------------------------------------------

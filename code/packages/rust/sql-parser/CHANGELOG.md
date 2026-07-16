@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.18] - Unreleased
+
+### Added
+
+- **Column-level `COLLATE name` in `CREATE TABLE`.** `col_constraint` now accepts
+  a `COLLATE NAME` alternative (`x TEXT COLLATE NOCASE`), mirroring the existing
+  `order_item` COLLATE clause. `COLLATE` arrives as a NAME token matched
+  case-insensitively; the collation name that follows is a generic NAME the
+  planner validates. Enables sql-planner to persist and honour column-defined
+  collations.
+
 ## [0.1.17] - Unreleased
 
 ### Added
