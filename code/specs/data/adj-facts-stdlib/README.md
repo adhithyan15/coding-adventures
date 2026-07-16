@@ -35,7 +35,8 @@ per rotation, in parallel):
 | `earth-science/` | water-cycle stage → step number | USGS Water Science School |
 | `nutrition/` | common food → MyPlate food group | USDA MyPlate |
 | `agriculture/` | farm animal → product it gives | Iowa State University (CFSPH) |
-| … | *physics, biology, geography, anatomy, physical constants, …* | *(expanding)* |
+| `biology/` | common bone → body region | NIH / MedlinePlus |
+| … | *physics, geography, anatomy, physical constants, …* | *(expanding)* |
 
 Formulas and laws (Newton's `F = ma`, the ideal gas law `PV = nRT`, area/volume, …) are grown
 in `adj-formula-stdlib/<subject>/` using the `formula` construct — simple ones first, growing
