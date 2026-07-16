@@ -187,6 +187,14 @@ pub struct ColumnDef {
     pub has_default: bool,
     pub check_expression: Option<String>,
     pub foreign_key: Option<String>,
+    /// Column-level collating sequence from a `COLLATE name` clause in the
+    /// column definition (`CREATE TABLE t(x TEXT COLLATE NOCASE)`). Uppercased.
+    /// `None` means the default `BINARY` (byte-order) collation. When a query
+    /// sorts or compares this column *without* an explicit `COLLATE`, SQLite
+    /// falls back to this column-defined sequence — so it must be persisted in
+    /// the schema, not just parsed and discarded. Recognised names: `NOCASE`
+    /// (ASCII case-fold) and `RTRIM` (ignore trailing spaces).
+    pub collation: Option<String>,
 }
 
 impl ColumnDef {
@@ -202,7 +210,17 @@ impl ColumnDef {
             has_default: false,
             check_expression: None,
             foreign_key: None,
+            collation: None,
         }
+    }
+
+    /// Builder: attach a column-level collating sequence. `BINARY` (the
+    /// default) is normalised to `None` so downstream comparison/sort code can
+    /// treat "no collation" and "explicit BINARY" identically.
+    pub fn collation(mut self, name: impl Into<String>) -> Self {
+        let upper = name.into().to_uppercase();
+        self.collation = if upper == "BINARY" { None } else { Some(upper) };
+        self
     }
 
     pub fn not_null(mut self) -> Self {
@@ -383,6 +401,32 @@ pub trait Backend {
 
 pub trait SchemaProvider {
     fn column_names(&self, table: &str) -> Result<Vec<String>, BackendError>;
+
+    /// The column-level collating sequence declared for `table.column`, if any
+    /// (`CREATE TABLE t(x TEXT COLLATE NOCASE)` → `Some("NOCASE")`). Returns
+    /// `Ok(None)` when the column has no explicit collation (the default
+    /// `BINARY`) *or* when the table/column is unknown — callers treat a
+    /// missing collation and an unknown column identically (both fall back to
+    /// byte-order comparison), so this never surfaces a lookup error. The
+    /// default implementation returns `None`, letting schema providers that do
+    /// not track collation opt out without extra code.
+    fn column_collation(
+        &self,
+        _table: &str,
+        _column: &str,
+    ) -> Result<Option<String>, BackendError> {
+        Ok(None)
+    }
+
+    /// Every column of `table` that carries a non-default collation, as
+    /// `(column_name, COLLATE_NAME)` pairs. Lets a caller resolve many column
+    /// references against one table without re-fetching (and re-cloning) the
+    /// schema per lookup — the planner uses this to avoid O(keys × columns)
+    /// work when an ORDER BY names many columns. Default returns empty (no
+    /// collations); unknown table collapses to empty, never an error.
+    fn table_collations(&self, _table: &str) -> Result<Vec<(String, String)>, BackendError> {
+        Ok(Vec::new())
+    }
 }
 
 pub struct BackendSchemaProvider<'a> {
@@ -400,6 +444,37 @@ impl SchemaProvider for BackendSchemaProvider<'_> {
             .columns(table)?
             .into_iter()
             .map(|c| c.name)
+            .collect())
+    }
+
+    fn column_collation(
+        &self,
+        table: &str,
+        column: &str,
+    ) -> Result<Option<String>, BackendError> {
+        // Unknown table → no collation (see trait doc: lookup failures collapse
+        // to "default collation" rather than propagating as errors). Column
+        // names compare case-insensitively, matching SQLite identifier rules.
+        let cols = match self.backend.columns(table) {
+            Ok(cols) => cols,
+            Err(_) => return Ok(None),
+        };
+        Ok(cols
+            .into_iter()
+            .find(|c| c.name.eq_ignore_ascii_case(column))
+            .and_then(|c| c.collation))
+    }
+
+    fn table_collations(&self, table: &str) -> Result<Vec<(String, String)>, BackendError> {
+        // One `columns()` fetch, then keep only the columns that declare a
+        // collation. Unknown table → empty (see trait doc), never an error.
+        let cols = match self.backend.columns(table) {
+            Ok(cols) => cols,
+            Err(_) => return Ok(Vec::new()),
+        };
+        Ok(cols
+            .into_iter()
+            .filter_map(|c| c.collation.map(|coll| (c.name, coll)))
             .collect())
     }
 }

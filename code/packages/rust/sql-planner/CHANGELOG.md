@@ -2,6 +2,21 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.16] - Unreleased
+
+### Added
+
+- **Column-defined `COLLATE` flows into `ORDER BY`.** `apply_col_constraint`
+  now parses a column's `COLLATE NAME` (validating NOCASE/RTRIM/BINARY; an
+  unknown sequence errors with "no such collating sequence", matching SQLite's
+  prepare-time rejection) and stores it on `ColumnDef`. A bare `ORDER BY col`
+  (single-table query, no JOINs) inherits that sequence — `CREATE TABLE
+  t(x TEXT COLLATE NOCASE); SELECT x FROM t ORDER BY x` now folds case like
+  real SQLite. An explicit `COLLATE` on the key (including `COLLATE BINARY`)
+  still overrides the column default. Qualified (`t.x`) and aliased (`u.x`)
+  references resolve too. Comparison / GROUP BY / DISTINCT collation
+  propagation and multi-table resolution remain follow-ups.
+
 ## [0.2.15] - Unreleased
 
 ### Added
