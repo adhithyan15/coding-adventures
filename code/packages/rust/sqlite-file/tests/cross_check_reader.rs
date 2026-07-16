@@ -473,3 +473,79 @@ fn our_writer_output_reads_in_real_sqlite_with_overflow() {
         "real SQLite must read back every row our writer emitted"
     );
 }
+
+/// Multi-table write-path cross-check: a database our writer assembles with
+/// several tables — one carrying an overflow row — is accepted by real
+/// bundled-C SQLite (`PRAGMA integrity_check` → "ok") and every table reads
+/// back over SQL.
+#[test]
+fn our_multi_table_writer_output_reads_in_real_sqlite() {
+    use sqlite_file::page_writer::{write_multi_table_db, TableSpec};
+    use sqlite_file::SqlValue;
+
+    let big = "multi-overflow ".repeat(600); // ~9000 bytes → overflow chain
+    let notes = vec![
+        (1i64, vec![SqlValue::Int(1), SqlValue::Text("alpha".into())]),
+        (2, vec![SqlValue::Int(2), SqlValue::Text(big.clone())]),
+    ];
+    let cards = vec![
+        (1i64, vec![SqlValue::Int(10)]),
+        (2, vec![SqlValue::Int(20)]),
+        (3, vec![SqlValue::Int(30)]),
+    ];
+    let tables: &[TableSpec] = &[
+        ("notes", "CREATE TABLE notes(nid, body)", &notes),
+        ("cards", "CREATE TABLE cards(cid)", &cards),
+    ];
+    let db = write_multi_table_db(4096, tables).unwrap();
+
+    static COUNTER_M: AtomicU64 = AtomicU64::new(11_000_000);
+    let unique = COUNTER_M.fetch_add(1, Ordering::Relaxed);
+    let mut dir = std::env::temp_dir();
+    dir.push(format!("sqlite_file_multi_{}_{}", std::process::id(), unique));
+    std::fs::create_dir(&dir).expect("create fresh fixture dir");
+    let path = dir.join("ours.db");
+    std::fs::write(&path, &db).unwrap();
+
+    let conn = rusqlite::Connection::open(&path).unwrap();
+    let integrity: String = conn
+        .query_row("PRAGMA integrity_check", [], |r| r.get(0))
+        .unwrap();
+    assert_eq!(integrity, "ok", "real SQLite integrity_check on our multi-table file");
+
+    // sqlite_schema lists both tables.
+    let mut schema_names: Vec<String> = conn
+        .prepare("SELECT name FROM sqlite_schema WHERE type='table' ORDER BY name")
+        .unwrap()
+        .query_map([], |r| r.get::<_, String>(0))
+        .unwrap()
+        .map(|r| r.unwrap())
+        .collect();
+    schema_names.sort();
+    assert_eq!(schema_names, vec!["cards".to_string(), "notes".to_string()]);
+
+    // Each table's rows read back, including the overflow row.
+    let notes_body: Vec<(i64, String)> = conn
+        .prepare("SELECT nid, body FROM notes ORDER BY nid")
+        .unwrap()
+        .query_map([], |r| Ok((r.get(0)?, r.get::<_, String>(1)?)))
+        .unwrap()
+        .map(|r| r.unwrap())
+        .collect();
+    let cids: Vec<i64> = conn
+        .prepare("SELECT cid FROM cards ORDER BY cid")
+        .unwrap()
+        .query_map([], |r| r.get::<_, i64>(0))
+        .unwrap()
+        .map(|r| r.unwrap())
+        .collect();
+    drop(conn);
+    let _ = std::fs::remove_dir_all(&dir);
+
+    assert_eq!(
+        notes_body,
+        vec![(1, "alpha".to_string()), (2, big)],
+        "notes (incl. overflow row) must read back"
+    );
+    assert_eq!(cids, vec![10, 20, 30], "cards must read back");
+}
