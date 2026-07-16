@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.2.0 — WRITE-ITEM → observable stdout (PL09 D4)
+
+- `WRITE-ITEM <handle>` now writes the file's record to stdout: its fields
+  (those qualified by the handle's letter, `FILE-C` → `C`), space-separated,
+  then a newline. Numeric fields render through two synthesized recursive
+  digit-print helpers (`__fm_print_int` → `__fm_print_mag`) over `putchar` — the
+  same portable print substrate Dartmouth BASIC uses (no host print builtin).
+- First observable FLOW-MATIC output. Accepted by the wasm/jvm/clr validators
+  (BEAM excluded for `putchar`, as BASIC's print programs are) and run-verified
+  on the JIT (`WRITE-ITEM` of a zero record prints `0`; multi-digit and negative
+  covered by a direct digit-print unit test).
+- `READ-ITEM` still needs the EOF-aware read (D4) and remains a clean
+  `CompileError::Unsupported`.
+
 ## 0.1.0 — control-flow + scalar-field slice (PL09)
 
 - First FLOW-MATIC → IIR compiler. `compile_source(&str, &str) -> IIRModule`

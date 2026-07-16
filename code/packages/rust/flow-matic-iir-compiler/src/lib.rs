@@ -6,10 +6,11 @@
 //! (NativeAOT / LLVM / WASM / JVM / CLR / VM / JIT). See
 //! [PL09](../../../specs/PL09-codegen.md).
 //!
-//! ## This slice (v0.1)
+//! ## This slice
 //!
-//! FLOW-MATIC is a file/record data-flow language, but its **control flow** and
-//! **scalar-field moves** lower cleanly without a file runtime:
+//! FLOW-MATIC is a file/record data-flow language; its **control flow**,
+//! **scalar-field moves**, and **record output** lower over the existing
+//! backend-portable primitives (no filesystem — see PL09 D4):
 //!
 //! | FLOW-MATIC | IIR |
 //! | --- | --- |
@@ -19,13 +20,14 @@
 //! | `OTHERWISE GO TO OPERATION n` | `jmp op_n` |
 //! | `JUMP TO OPERATION n` | `jmp op_n` |
 //! | `MOVE field TO field` | `mov` between the fields' registers |
+//! | `WRITE-ITEM handle` | print the file's fields via `__fm_print_int`+`putchar` |
 //! | `STOP` | `ret 0` |
 //! | `INPUT`/`OUTPUT`/`HSP` (file declarations) | no-op |
 //!
-//! Each file-qualified field (`PRODUCT-NO (A)`) is modelled as a distinct `i64`
-//! register initialised to 0. Real record I/O — `READ-ITEM`/`WRITE-ITEM`,
+//! Each file-qualified field (`PRODUCT-NO (A)`) is a distinct `i64` register
+//! initialised to 0. `READ-ITEM` (which needs the EOF-aware input capability),
 //! `TRANSFER`, `TEST`/`REWIND`/`CLOSE-OUT`, and the `END OF DATA` loop condition
-//! — is a later rung; a program that reaches one gets a clean
+//! are a later rung; a program that reaches one gets a clean
 //! [`CompileError::Unsupported`], never wrong output.
 
 use coding_adventures_flow_matic_parser::try_parse_flow_matic;
@@ -72,6 +74,14 @@ pub fn compile_source(source: &str, module_name: &str) -> Result<IIRModule, Comp
 
     let mut module = IIRModule::new(module_name, "flow-matic");
     module.functions.push(main);
+    // WRITE-ITEM prints numeric fields through the synthesized recursive
+    // digit-print helpers; append them (before user code is irrelevant — `call`
+    // resolves by name) only when a WRITE-ITEM actually rendered a value.
+    if comp.needs_print {
+        for func in print_helper_functions() {
+            module.functions.push(func);
+        }
+    }
     module.entry_point = Some("main".to_string());
     Ok(module)
 }
@@ -83,6 +93,14 @@ pub fn compile_source(source: &str, module_name: &str) -> Result<IIRModule, Comp
 #[derive(Default)]
 struct Compiler {
     instrs: Vec<IIRInstr>,
+    /// Every file-qualified field register, collected up front (also used by
+    /// `WRITE-ITEM` to find a file's fields).
+    fields: BTreeSet<String>,
+    /// Set when a `WRITE-ITEM` emits a call to the digit-print helpers, so they
+    /// are appended to the module.
+    needs_print: bool,
+    /// Unique-label counter for `WRITE-ITEM` record separators.
+    write_counter: usize,
 }
 
 impl Compiler {
@@ -94,10 +112,9 @@ impl Compiler {
         // Pre-pass: every file-qualified field becomes an i64 register, zeroed
         // at entry (FLOW-MATIC fields start empty; a real value would arrive via
         // READ-ITEM, a later rung).
-        let mut fields = BTreeSet::new();
-        collect_fields(program, &mut fields);
-        for field in &fields {
-            self.emit("const", Some(field), vec![Operand::Int(0)], "i64");
+        collect_fields(program, &mut self.fields);
+        for field in self.fields.clone() {
+            self.emit("const", Some(&field), vec![Operand::Int(0)], "i64");
         }
         // Zero the three shared comparison flags at entry too, so an
         // `IF … GO TO` that is reachable without a dominating `COMPARE` (e.g. a
@@ -195,12 +212,51 @@ impl Compiler {
                 Ok(())
             }
 
-            // Record/file I/O and tape control are a later rung.
+            "write_item_clause" => {
+                // WRITE-ITEM <handle> writes the file's record to stdout: its
+                // fields (those qualified by the handle's letter — `FILE-C` →
+                // `C`), space-separated, then a newline.
+                let handle = first_token(inner, "NAME").ok_or_else(|| {
+                    CompileError::Malformed("WRITE-ITEM without a file handle".into())
+                })?;
+                let qualifier = qualifier_of_handle(&handle);
+                let suffix = format!("__{}", sanitise(&qualifier));
+                let record: Vec<String> =
+                    self.fields.iter().filter(|f| f.ends_with(&suffix)).cloned().collect();
+                self.needs_print = true;
+                for (i, field) in record.iter().enumerate() {
+                    if i > 0 {
+                        self.emit_putchar(b' ' as i64);
+                    }
+                    // call __fm_print_int(field) — the return value is unused.
+                    let ret = format!("_w{}", self.write_counter);
+                    self.write_counter += 1;
+                    self.emit(
+                        "call",
+                        Some(&ret),
+                        vec![Operand::Var("__fm_print_int".into()), Operand::Var(field.clone())],
+                        "i64",
+                    );
+                }
+                self.emit_putchar(b'\n' as i64); // the record terminator
+                Ok(())
+            }
+
+            // Record READ (needs the EOF-aware input capability, D4) and tape
+            // control are a later rung.
             other => Err(CompileError::Unsupported(format!(
-                "the {} (record/file I/O is a later rung)",
+                "the {} (record input / tape control is a later rung)",
                 verb_name(other)
             ))),
         }
+    }
+
+    /// `putchar(byte)` — a `const` then the host `putchar` builtin.
+    fn emit_putchar(&mut self, byte: i64) {
+        let t = format!("_ch{}", self.write_counter);
+        self.write_counter += 1;
+        self.emit("const", Some(&t), vec![Operand::Int(byte)], "i64");
+        self.emit("call_builtin", None, vec![Operand::Var("putchar".into()), Operand::Var(t)], "void");
     }
 
     /// The flag register a given `if_clause`'s condition reads.
@@ -329,6 +385,69 @@ fn verb_name(rule: &str) -> &str {
     }
 }
 
+/// The field qualifier a `WRITE-ITEM`/`READ-ITEM` file handle refers to: `FILE-C`
+/// → `C` (the letter fields are qualified by). A handle without the `FILE-`
+/// prefix is used as-is.
+fn qualifier_of_handle(handle: &str) -> String {
+    let up = handle.to_ascii_uppercase();
+    up.strip_prefix("FILE-").unwrap_or(&up).to_string()
+}
+
+/// The synthesized recursive digit-print helpers a `WRITE-ITEM` calls:
+/// `__fm_print_int(n)` dispatches the sign then calls `__fm_print_mag(m)`, which
+/// prints an `i64` magnitude most-significant-digit first via `putchar`. Both
+/// return `i64` 0 (the convention the print backends expect). Mirrors the
+/// Dartmouth BASIC frontend's `__basic_print_int`/`__basic_print_uint`.
+fn print_helper_functions() -> Vec<IIRFunction> {
+    fn mk(op: &str, dest: Option<&str>, srcs: Vec<Operand>, ty: &str) -> IIRInstr {
+        IIRInstr::new(op, dest.map(str::to_string), srcs, ty)
+    }
+    fn var(name: &str) -> Operand {
+        Operand::Var(name.to_string())
+    }
+
+    // __fm_print_mag(m): print m (>= 0), high digits first, recursively.
+    let mag_body = vec![
+        mk("const", Some("ten"), vec![Operand::Int(10)], "i64"),
+        mk("div", Some("t"), vec![var("m"), var("ten")], "i64"),
+        mk("const", Some("zero"), vec![Operand::Int(0)], "i64"),
+        mk("cmp_ne", Some("more"), vec![var("t"), var("zero")], "i64"),
+        // Single-digit m (t == 0): skip the recursion.
+        mk("jmp_if_false", None, vec![var("more"), var("mag_last")], "void"),
+        mk("call", Some("_r"), vec![var("__fm_print_mag"), var("t")], "i64"),
+        mk("label", None, vec![var("mag_last")], "void"),
+        mk("mod", Some("d"), vec![var("m"), var("ten")], "i64"),
+        mk("const", Some("c0"), vec![Operand::Int(b'0' as i64)], "i64"),
+        mk("add", Some("c"), vec![var("d"), var("c0")], "i64"),
+        mk("call_builtin", None, vec![var("putchar"), var("c")], "void"),
+        mk("const", Some("z"), vec![Operand::Int(0)], "i64"),
+        mk("ret", None, vec![var("z")], "i64"),
+    ];
+
+    // __fm_print_int(n): print the sign, then the magnitude.
+    let int_body = vec![
+        mk("const", Some("zero"), vec![Operand::Int(0)], "i64"),
+        mk("cmp_lt", Some("neg"), vec![var("n"), var("zero")], "i64"),
+        mk("jmp_if_false", None, vec![var("neg"), var("int_pos")], "void"),
+        mk("const", Some("minus"), vec![Operand::Int(b'-' as i64)], "i64"),
+        mk("call_builtin", None, vec![var("putchar"), var("minus")], "void"),
+        mk("sub", Some("mag"), vec![var("zero"), var("n")], "i64"),
+        mk("call", Some("_rn"), vec![var("__fm_print_mag"), var("mag")], "i64"),
+        mk("jmp", None, vec![var("int_done")], "void"),
+        mk("label", None, vec![var("int_pos")], "void"),
+        mk("call", Some("_rp"), vec![var("__fm_print_mag"), var("n")], "i64"),
+        mk("label", None, vec![var("int_done")], "void"),
+        mk("const", Some("z2"), vec![Operand::Int(0)], "i64"),
+        mk("ret", None, vec![var("z2")], "i64"),
+    ];
+
+    let mut mag = IIRFunction::new("__fm_print_mag", vec![("m".into(), "i64".into())], "i64", mag_body);
+    mag.type_status = FunctionTypeStatus::FullyTyped;
+    let mut int = IIRFunction::new("__fm_print_int", vec![("n".into(), "i64".into())], "i64", int_body);
+    int.type_status = FunctionTypeStatus::FullyTyped;
+    vec![int, mag]
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -413,6 +532,66 @@ mod tests {
         let err = compile_source(src, "r").unwrap_err();
         assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
         assert!(err.to_string().contains("READ-ITEM"));
+    }
+
+    #[test]
+    fn digit_print_helper_renders_every_shape() {
+        // Exercise __fm_print_int directly (WRITE-ITEM can't reach non-zero
+        // fields until READ lands): build a `main` that prints one constant, run
+        // it on the JIT, and check the bytes. Covers 0, single/multi-digit, and
+        // the negative sign path — the correctness the WRITE record image needs.
+        use jit_core::core::JITCore;
+        use jit_core::GenericCirJit;
+        use std::sync::{Arc, Mutex};
+        use vm_core::core::VMCore;
+        use vm_core::value::Value;
+
+        fn print(n: i64) -> String {
+            let mut instrs = vec![
+                IIRInstr::new("const", Some("x".into()), vec![Operand::Int(n)], "i64"),
+                IIRInstr::new(
+                    "call",
+                    Some("_r".into()),
+                    vec![Operand::Var("__fm_print_int".into()), Operand::Var("x".into())],
+                    "i64",
+                ),
+                IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("z".into())], "i64"),
+            ];
+            let _ = &mut instrs;
+            let mut main = IIRFunction::new("main", vec![], "i64", instrs);
+            main.type_status = FunctionTypeStatus::FullyTyped;
+            let mut module = IIRModule::new("t", "flow-matic");
+            module.functions.push(main);
+            for f in print_helper_functions() {
+                module.functions.push(f);
+            }
+            module.entry_point = Some("main".into());
+            assert!(module.validate().is_empty(), "{:?}", module.validate());
+
+            let mut vm = VMCore::new();
+            let chars: Arc<Mutex<Vec<u8>>> = Arc::new(Mutex::new(Vec::new()));
+            {
+                let chars = Arc::clone(&chars);
+                vm.builtins_mut().register("putchar", move |args| {
+                    let b = args.first().and_then(|v| v.as_i64()).unwrap_or(0);
+                    chars.lock().unwrap().push(b as u8);
+                    Ok(Value::Null)
+                });
+            }
+            let backend = GenericCirJit::new();
+            let mut jit = JITCore::new(&mut vm, Box::new(backend));
+            jit.execute_with_jit(&mut vm, &mut module, "main", &[]).unwrap();
+            let bytes = chars.lock().unwrap().clone();
+            String::from_utf8(bytes).unwrap()
+        }
+
+        assert_eq!(print(0), "0");
+        assert_eq!(print(7), "7");
+        assert_eq!(print(42), "42");
+        assert_eq!(print(100), "100");
+        assert_eq!(print(-7), "-7");
+        assert_eq!(print(-1234), "-1234");
     }
 
     #[test]
