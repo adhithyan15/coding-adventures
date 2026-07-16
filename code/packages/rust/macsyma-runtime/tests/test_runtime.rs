@@ -1398,7 +1398,9 @@ fn expand_distributes_polynomial_multiplication() {
     // -- symbolic-vm's build_handler_table never registered a handler
     // for "Expand", so the Expand-named head in the shared table was a
     // silent no-op. Fixed by wiring cas_simplify::expand as the
-    // MacsymaBackend's Expand handler.
+    // MacsymaBackend's Expand handler. expand() now also collects like
+    // terms (cas_simplify::collect_terms), so (x+1)^2 comes back as the
+    // fully collected 1 + 2*x + x^2, not the raw 1 + x + x + x*x.
     let mut session = MacsymaSession::new();
     let results = session.eval_source("expand((x+1)^2);").unwrap();
     assert_eq!(results.len(), 1);
@@ -1407,7 +1409,11 @@ fn expand_distributes_polynomial_multiplication() {
         results[0].output,
         apply(
             sym(ADD),
-            vec![int(1), x.clone(), x.clone(), apply(sym(MUL), vec![x.clone(), x])],
+            vec![
+                int(1),
+                apply(sym(MUL), vec![int(2), x.clone()]),
+                apply(sym(POW), vec![x, int(2)]),
+            ],
         )
     );
 }

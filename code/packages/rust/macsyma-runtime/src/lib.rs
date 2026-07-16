@@ -1573,13 +1573,13 @@ fn simplify_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
 }
 
 /// `expand(expr)` — full polynomial expansion: distribute `Mul` over
-/// `Add`/`Sub` and expand bounded non-negative integer `Pow`s. Was
-/// previously wired to the `Expand` head via the `EXPAND` name-table
-/// entry, but no handler was ever registered for that head in
+/// `Add`/`Sub`, expand bounded non-negative integer `Pow`s, and collect
+/// like terms (`expand(x + x)` → `2*x`, repeated factors fold into a
+/// power). Was previously wired to the `Expand` head via the `EXPAND`
+/// name-table entry, but no handler was ever registered for that head in
 /// `symbolic-vm`'s shared table, so `expand((x+1)^2)` silently returned
 /// the unevaluated input. Fixed by delegating to `cas_simplify::expand`
-/// — see that crate for the full algorithm and its documented scope
-/// (distributes correctly; does not collect like terms).
+/// — see that crate for the full algorithm.
 fn expand_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
     if expr.args.len() != 1 {
         return IRNode::Apply(Box::new(expr));
