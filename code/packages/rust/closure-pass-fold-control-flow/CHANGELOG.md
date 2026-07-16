@@ -2,6 +2,36 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.26.0] - 2026-07-15
+
+### Added — empty-then `if` → logical-OR (`if (x) {} else S;` → `x || S;`)
+
+The mirror of the existing `if-to-logical-and` fold (`if (x) S;` → `x && S;`).
+When an `if`'s consequent does nothing and its alternate is a **single
+expression statement**, the whole `if` collapses to `test || expr` — verified
+byte-identical against the reference Closure Compiler (`SIMPLE`):
+
+- `if (x) {} else a();` → `x || a();`
+- `if (x) ; else a();` → `x || a();`
+- `if (x) {} else { a(); }` → `x || a();` (single-expr block unwraps)
+- `if (x) {} else b = 1;` → `x || (b = 1);` (the emitter parenthesises the
+  lower-precedence assignment)
+- `if (a && b) {} else c();` → `a && b || c();`
+
+**Soundness (the dual of the `&&` case):** `x || S` evaluates `x` first; if `x`
+is truthy the `||` short-circuits and does not evaluate `S` (matching the empty
+then-branch), and if `x` is falsy it evaluates `S` (matching the else). The
+wrapper expression statement discards the result, so only `S`'s side effects
+matter, and they fire exactly when `x` is falsy in both forms.
+
+**Scope.** The consequent must be empty (`{}`, `;`, or nested-empty blocks) and
+the alternate a single expression statement. A **multi-statement else** would
+need a sequence expression (`if (x) {} else { a(); b(); }` → `x || (a(), b())`),
+which is a separate arc, so it declines and keeps the `if`. A `!<inner>` test
+never reaches this path: the De Morgan swap already rewrites
+`if (!x) {} else S;` to `if (x) S; else {}` (non-empty consequent) upstream in
+the same fold.
+
 ## [0.25.0] - 2026-07-15
 
 ### Added — DIV#2: coalesce adjacent same-kind variable declarations
