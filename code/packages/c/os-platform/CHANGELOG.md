@@ -9,6 +9,27 @@ and this project adheres to semantic versioning.
 
 ### Added
 
+- **`jit` primitive** (CCPP02 follow-up — completes `mmap`'s deferred EXEC story):
+  emit machine code at run time and call it. Encapsulates each OS's W^X RW→RX
+  protocol so a code generator can `alloc → write → commit → call`.
+  - `osp_jit_alloc(out, capacity)` (JIT-capable writable buffer), `osp_jit_write`
+    (append machine code, capacity-checked), `osp_jit_commit` (flip to R+X + flush
+    the i-cache; no writes after), `osp_jit_entry` (callable address, NULL until
+    committed), `osp_jit_free`.
+  - Backends: `jit_posix.c` — Apple Silicon maps `MAP_JIT` (RWX) and toggles
+    writability per-thread with `pthread_jit_write_protect_np`, flushing with
+    `sys_icache_invalidate`; Linux maps RW, `mprotect`s to RX, and flushes with
+    `__builtin___clear_cache` (a no-op on x86, a real flush on arm64) — the single
+    `#if __APPLE__` split matching `mmap_posix.c`'s convention. `jit_windows.c` —
+    `VirtualAlloc` RW → `VirtualProtect` RX → `FlushInstructionCache`.
+  - Test (`tests/jit_test.c`): emits `int f(void){return N;}` for the current
+    architecture — **x86_64 and arm64** machine code — runs it through the
+    primitive, calls it, and asserts N (42 and 1337, proving the CPU runs the
+    exact bytes written); plus lifecycle (entry NULL until commit, no writes and
+    no double-commit after), capacity enforcement, and NULL validation. Verified
+    on Apple Silicon (executed live) and x86_64 (encoding disassembled); clean
+    under ASan+UBSan, 0 leaks.
+
 - **`mmap` primitive** (CCPP02 Phase 2, PR 6 — completes the six-primitive core):
   anonymous virtual memory with protection control — `malloc` gives bytes,
   but only the OS gives a page range with a chosen protection (read-only data,
@@ -24,9 +45,10 @@ and this project adheres to semantic versioning.
   - Test (`tests/mmap_test.c`): anonymous RW map, zero-fill check, page-sized
     write/read checksum, protection change to READ-only, accessors, unmap, and
     NULL/zero-length validation. Clean under ASan+UBSan, 0 leaks.
-  - The EXEC bit is plumbed to PROT_EXEC / PAGE_EXECUTE_* for JIT consumers; a
+  - The EXEC bit is plumbed to PROT_EXEC / PAGE_EXECUTE_* for JIT consumers; the
     dedicated JIT executor (per-arch machine code + the Apple-Silicon MAP_JIT
-    write-protect protocol + an execute-and-call test) is a planned follow-up.
+    write-protect protocol + an execute-and-call test) now ships as the `jit`
+    primitive above.
 - **`dynlib` primitive** (CCPP02 Phase 2, PR 5): load a shared library, resolve a
   symbol, unload — the foundation for plugins/FFI, and pure bucket B (ISO C
   cannot load code at run time).
