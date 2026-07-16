@@ -2,6 +2,49 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.27.0] - 2026-07-16
+
+### Changed — empty-switch removal: broaden the DISCRIMINANT gate to any side-effect-free expression
+
+The gap-014 step-2 empty-switch elimination previously required the discriminant
+to be a **leaf literal** (`is_pure_leaf`). The reference Closure Compiler removes
+an otherwise-empty switch for *any* side-effect-free discriminant, so this
+release broadens the discriminant gate to `is_side_effect_free` — closing a batch
+of oracle divergences where closurec kept a switch Closure dropped:
+
+- `switch (x) {}` → removed (bare identifier read)
+- `switch (a.b) {}` → removed (pure member read)
+- `switch (a && b) {}` → removed (pure logical)
+- `switch (!x) {}` → removed (pure unary)
+- `switch (typeof x) {}` → removed
+
+The two gates are deliberately **asymmetric**, mirroring Closure byte-for-byte:
+
+- The **discriminant** now only needs to be side-effect-free.
+- Each case **test**, however, still must be a literal (`is_pure_leaf`) or absent
+  (`default:`). Closure *keeps* a switch whose case test is a non-literal even
+  when that test is itself side-effect-free — `switch (x) { case y: }` and
+  `switch (x) { case a.b: case c: }` survive, while `switch (x) { case 1: case 2: }`
+  and `switch (x) { default: }` drop. We match that exactly rather than removing
+  more (which would diverge).
+
+Also generalised the "empty consequent" check: a consequent counts as empty when
+**every statement in it is itself empty** (via `statement_is_empty`), not only
+when the consequent list is literally empty. So `switch (x) { case 1: {} }` — a
+case whose only body is an empty block — now drops too (oracle: `→` removed).
+
+**Soundness.** The switch is removed only when evaluating the discriminant and
+every (literal) case test has no observable side effect *and* no case runs any
+statement — so the whole construct is a verified no-op. A side-EFFECTING
+discriminant such as `switch (f()) {}` is **not** side-effect-free, so this path
+declines and keeps the switch intact (Closure instead extracts the discriminant
+to `f();` via a separate transform we do not perform here — declining avoids
+dropping the call, so there is no unsound removal and no regression). Step-4
+constant-discriminant collapse is untouched: it still requires a literal
+discriminant (`is_pure_leaf`) to compile-time evaluate strict-equality.
+
+Additive behavior-narrowing to match the oracle; MINOR bump 0.26.0 → 0.27.0.
+
 ## [0.26.0] - 2026-07-15
 
 ### Added — empty-`if` with a side-effecting **call** test → expression statement
