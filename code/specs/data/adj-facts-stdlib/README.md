@@ -41,7 +41,8 @@ per rotation, in parallel):
 | `biology/` | macronutrient → energy (kcal) per gram | NIH / MedlinePlus |
 | `biology/` | basic tissue type → representative example | NCI SEER Training |
 | `physics/` | simple machine → everyday example | NASA |
-| … | *geography, anatomy, physical constants, …* | *(expanding)* |
+| `anatomy/` | lung → number of lobes (right 3, left 2) | NIH / NCI SEER Training |
+| … | *geography, physical constants, …* | *(expanding)* |
 
 Formulas and laws (Newton's `F = ma`, the ideal gas law `PV = nRT`, area/volume, …) are grown
 in `adj-formula-stdlib/<subject>/` using the `formula` construct — simple ones first, growing

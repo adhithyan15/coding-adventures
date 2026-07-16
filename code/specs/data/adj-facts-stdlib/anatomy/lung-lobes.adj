@@ -1,0 +1,87 @@
+% ============================================================================
+% lung-lobes — how many lobes each human lung has
+% (adj-facts-stdlib, ANATOMY).
+% ============================================================================
+% A respiratory-anatomy fact on the way to medicine: the two human lungs are
+% NOT mirror images. The RIGHT lung is divided into THREE lobes (superior/upper,
+% middle, inferior/lower); the LEFT lung has only TWO lobes (superior/upper,
+% inferior/lower), because the heart sits slightly left of the midline and its
+% apex presses a notch — the cardiac notch — into the left lung's medial
+% surface, leaving no room for a middle lobe. Recall is a binding query:
+%
+%     ? lung_lobe_count(right_lung, $N)     % 3
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `lung_lobe_count(lung, count)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the number
+% WITH its source, on the CPU, with zero model calls, and abstains on anything
+% that is not one of the two lungs (it never invents a lobe count).
+%
+% The two lungs, as a little truth table:
+%
+%     lung          lobes   which lobes
+%     -----------   -----   ------------------------------------
+%     right_lung      3     superior (upper), middle, inferior (lower)
+%     left_lung       2     superior (upper), inferior (lower)
+%
+% Because each `count` value is a NUMBER (not a label), a recalled count
+% composes straight into arithmetic and constraint checks: the two lungs sum to
+% 3 + 2 = 5 lobes total; a radiology note describing a "middle lobe" collapse on
+% the LEFT is suspect precisely because the left lung has no middle lobe. That
+% is the concrete bridge from anatomy RECALL to COMPUTE, and the rung a medicine
+% agent reasons UP from before it can reason about a lobectomy or a lobar
+% pneumonia. The query also runs BACKWARD — bind a count and recall the lung
+% that has it:
+%
+%     ? lung_lobe_count($L, 3)              % right_lung — reverse recall
+%
+% Something that is not one of the two lungs — the trachea, the heart, a single
+% lobe — has no row, so a recall on it ABSTAINS rather than inventing a count.
+% That honest-abstention property is what makes the table safe to reason from.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every lung→count pair was
+% read out of a fetched U.S. government / NIH page this session, and any count
+% that could not be grounded there would have been dropped). Both counts come
+% from the SAME primary U.S. National Cancer Institute reference, NCI SEER
+% Training "Bronchi, Bronchial Tree, & Lungs"
+% (training.seer.cancer.gov/anatomy/respiratory/passages/bronchi.html), each
+% quoted here character-for-character so any reader can re-check it:
+%
+%   right_lung → 3
+%     "The right lung is shorter, broader, and has a greater volume than the
+%      left lung. It is divided into three lobes and each lobe is supplied by
+%      one of the secondary bronchi."
+%
+%   left_lung → 2
+%     "The left lung has two lobes."
+%
+% The individual lobe NAMES (superior/upper, middle, inferior/lower) are
+% corroborated by a second primary U.S. government NIH / National Library of
+% Medicine reference, StatPearls "Anatomy, Thorax, Lungs"
+% (ncbi.nlm.nih.gov/books/NBK470197/):
+%
+%     "The right lung is comprised of the right upper (RUL), middle (RML), and
+%      lower (RLL) lobes. The left lung consists of the left upper (LUL) and
+%      lower (LLL) lobes."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single strongest span: the NCI SEER Training sentence
+% that fixes the first row (right_lung → 3). The other row's per-fact source and
+% verbatim span is listed above, so each count remains independently checkable.
+% Both sources are primary U.S. government NIH references (NCI SEER Training;
+% NIH / NLM StatPearls), so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table lung_lobe_count {
+    columns lung, count
+
+    row (right_lung, 3)
+    row (left_lung, 2)
+
+    source "The right lung is shorter, broader, and has a greater volume than the left lung. It is divided into three lobes and each lobe is supplied by one of the secondary bronchi."
+    locator "https://training.seer.cancer.gov/anatomy/respiratory/passages/bronchi.html"
+    trust authoritative
+}
