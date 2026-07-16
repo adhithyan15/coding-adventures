@@ -38,6 +38,7 @@
 #define NET_TCP_H
 
 #include <stddef.h> /* size_t */
+#include <stdint.h> /* uintptr_t */
 
 #include "os_platform/status.h" /* osp_status — shared platform error codes */
 
@@ -101,6 +102,17 @@ osp_status osp_socket_recv(osp_socket *s, void *buf, size_t len, size_t *out_n);
  * close failure.
  */
 osp_status osp_socket_close(osp_socket *s);
+
+/*
+ * osp_socket_fd — expose the underlying OS descriptor (an int fd on POSIX, a
+ * SOCKET on Windows), widened to uintptr_t so one signature serves both. This
+ * lets an external event loop — e.g. the `reactor` — watch this socket for
+ * readiness instead of blocking in accept/recv. The descriptor stays owned by
+ * the socket; do not close it directly (use osp_socket_close). A consumer feeds
+ * it to the reactor by casting to the reactor's osp_fd (an int on POSIX, a
+ * uintptr_t on Windows). OSP_ERR_INVAL if s or out is NULL.
+ */
+osp_status osp_socket_fd(const osp_socket *s, uintptr_t *out);
 
 #ifdef __cplusplus
 } /* extern "C" */
