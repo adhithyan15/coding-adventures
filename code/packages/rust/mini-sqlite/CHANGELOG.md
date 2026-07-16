@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.5.34 — Column-defined COLLATE honoured in ORDER BY
+
+A column declared with `COLLATE NOCASE` / `RTRIM` now drives ordering when a
+query sorts by that column without an explicit COLLATE:
+`CREATE TABLE t(id INTEGER, name TEXT COLLATE NOCASE); SELECT name FROM t ORDER
+BY name` folds case exactly like real SQLite (previously the column collation
+was parsed and discarded, so the sort fell back to BINARY). An explicit COLLATE
+on the ORDER BY key still wins, and an unknown collation on the column is
+rejected at CREATE time. Adds seven differential-oracle cases (sql-parser 0.1.18,
+sql-planner 0.2.16, sql-backend 0.1.1). Comparison / GROUP BY / DISTINCT
+collation and multi-table resolution remain follow-ups.
+
 ## 0.5.33 — Scalar subquery `( SELECT … )` parses (evaluation is a follow-up)
 
 `SELECT (SELECT count(*) FROM t2)` and `WHERE x > (SELECT max(y) FROM t2)` now

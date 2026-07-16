@@ -1,6 +1,6 @@
 [package]
 name = "flow-matic-iir-compiler"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "FLOW-MATIC (B-0) frontend for the LANG VM AOT chain — lowers a parsed FLOW-MATIC program into interpreter_ir::IIRModule so it runs on every execution backend. v0.1.0: the control-flow + scalar-field slice (operations→labels, COMPARE/IF/OTHERWISE/GO TO/JUMP/STOP, scalar-field MOVE); file record I/O is a later rung. See PL09-codegen.md."
 

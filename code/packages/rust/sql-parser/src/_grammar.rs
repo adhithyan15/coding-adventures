@@ -374,6 +374,18 @@ pub fn parser_grammar() -> ParserGrammar {
                         GrammarElement::Literal { value: r#"DEFAULT"#.to_string() },
                         GrammarElement::RuleReference { name: r#"primary"#.to_string() },
                     ] }) },
+                // Column-level `COLLATE name` (e.g. `x TEXT COLLATE NOCASE`).
+                // `COLLATE` arrives as a NAME token — it is not a lexer keyword,
+                // so the literal matcher accepts it case-insensitively — and the
+                // following collation name (BINARY / NOCASE / RTRIM) is a generic
+                // NAME the planner validates. This mirrors the `order_item`
+                // COLLATE clause; the sequence is persisted on the column so a
+                // later bare `ORDER BY col` inherits it (see sql-planner
+                // `apply_col_constraint` / `resolve_column_collation`).
+                GrammarElement::Group { element: Box::new(GrammarElement::Sequence { elements: vec![
+                        GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                        GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                    ] }) },
             ] },
             line_number: 57,
         },

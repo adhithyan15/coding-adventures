@@ -559,3 +559,69 @@ fn contains_id(backend: &InMemoryBackend, id: i64) -> bool {
         .into_iter()
         .any(|row| row["id"] == SqlValue::Int(id))
 }
+
+#[test]
+fn column_def_collation_builder_normalises_binary() {
+    // NOCASE/RTRIM are stored uppercased; BINARY (the default) collapses to
+    // None so "no collation" and "explicit BINARY" are indistinguishable.
+    assert_eq!(
+        ColumnDef::new("x", "TEXT").collation("nocase").collation,
+        Some("NOCASE".to_string())
+    );
+    assert_eq!(
+        ColumnDef::new("x", "TEXT").collation("RtRiM").collation,
+        Some("RTRIM".to_string())
+    );
+    assert_eq!(ColumnDef::new("x", "TEXT").collation("binary").collation, None);
+    assert_eq!(ColumnDef::new("x", "TEXT").collation, None, "default is None");
+}
+
+#[test]
+fn schema_provider_reports_column_collation() {
+    // A column declared with COLLATE NOCASE round-trips through create_table and
+    // is surfaced by the BackendSchemaProvider; lookups are case-insensitive on
+    // both the table and column name, and unknown names collapse to Ok(None).
+    let mut backend = InMemoryBackend::new();
+    backend
+        .create_table(
+            "docs",
+            vec![
+                ColumnDef::new("id", "INTEGER"),
+                ColumnDef::new("title", "TEXT").collation("NOCASE"),
+            ],
+            false,
+        )
+        .unwrap();
+
+    let schema = backend_as_schema_provider(&backend);
+    assert_eq!(
+        schema.column_collation("docs", "title").unwrap().as_deref(),
+        Some("NOCASE")
+    );
+    assert_eq!(
+        schema.column_collation("DOCS", "TITLE").unwrap().as_deref(),
+        Some("NOCASE"),
+        "table and column names compare case-insensitively"
+    );
+    assert_eq!(schema.column_collation("docs", "id").unwrap(), None);
+    assert_eq!(
+        schema.column_collation("docs", "missing").unwrap(),
+        None,
+        "unknown column → None, not an error"
+    );
+    assert_eq!(
+        schema.column_collation("nope", "title").unwrap(),
+        None,
+        "unknown table → None, not an error"
+    );
+
+    // The batch form returns only collation-bearing columns, in one fetch.
+    assert_eq!(
+        schema.table_collations("docs").unwrap(),
+        vec![("title".to_string(), "NOCASE".to_string())]
+    );
+    assert!(
+        schema.table_collations("nope").unwrap().is_empty(),
+        "unknown table → empty, not an error"
+    );
+}
