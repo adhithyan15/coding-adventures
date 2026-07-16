@@ -7,7 +7,7 @@ string-literal operands at `--compilation_level SIMPLE`.
 |------|------|
 | `flags.txt` | CLI args: `--compilation_level SIMPLE --js input/a.js` |
 | `input/a.js` | `"abcabc".lastIndexOf("bc")`, `"abcabc".lastIndexOf("z")`, `"abc".lastIndexOf("")`, `"ab".lastIndexOf("b")` |
-| `expected.stdout` | The folded output: `var a=4;var b=-1;var c=3;var d=1;report(a,b,c,d);` |
+| `expected.stdout` | The folded output: `var a=4,b=-1,c=3,d=1;report(a,b,c,d);` |
 
 The SIMPLE level runs the typed-AST optimization pipeline, whose `constant-fold`
 pass folds a `"…".lastIndexOf("…")` call into the UTF-16 code-unit index of the

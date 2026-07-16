@@ -16,12 +16,16 @@ reading course.
   practice. Devanagari introduced through the words (inherent *a*, mātrā vowel
   signs, halant + conjuncts, independent vowels), and the Sanskrit /
   Perso-Arabic split introduced through the greetings themselves.
+- **Ch. 2 — Introducing Yourself**: nām → merā → hai → **merā nām … hai** ("my
+  name is") → āp/tum → kyā → **āpkā nām kyā hai?** → khushī (pleased to meet) →
+  practice. Every atom traced (nām ← *nāman* → *name*; hai ← *asti* → *is*;
+  merā ← *ma-* → *my*; kyā ← *ka-* → *what*); SOV word order; the three-level
+  "you."
 
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 2 | Introducing yourself: *merā nām* ("my name"), the formal/informal "you" (*āp* / *tum*), grammatical gender at the first noun (traced to Sanskrit) |
 | 3 | Responding: *āp kaise haiṅ* ("how are you"), *ṭhīk hūṅ* ("I'm fine"), the verb *honā* ("to be") |
 | 4 | Farewells deepened, *phir milenge* ("we'll meet again"); numbers 1–10 |
 | 5+ | Postpositions (Hindi's "back-placed" prepositions), the ergative *ne*, family, food — always with the two-vocabularies thread |

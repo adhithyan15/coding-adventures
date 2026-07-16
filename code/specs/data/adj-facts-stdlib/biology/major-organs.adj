@@ -1,0 +1,102 @@
+% ============================================================================
+% major-organs — each major human organ and its main job in the body
+% (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% One of the very first facts a child learns about their own body, and the
+% rung a MEDICINE agent reasons UP from: the body is built of organs, and each
+% organ has one main job. "The heart pumps blood; the lungs do gas exchange;
+% the kidneys filter blood." Before you can reason about disease you must know
+% what each organ is FOR — chest pain matters because the heart pumps blood to
+% the whole body; kidney failure matters because the kidneys filter the blood.
+% Recall is a binding query:
+%
+%     ? organ_function(heart, $Job)      % pumps_blood
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `organ_function(organ, function)` carrying the table's citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns the
+% job WITH its source, on the CPU, with zero model calls, and abstains on a
+% word that is not one of these organs (it never invents a job).
+%
+% Each organ and its main job, as a truth table:
+%
+%     organ     function         a beginner's cue
+%     -------   --------------   ---------------------------------------------
+%     heart     pumps_blood      the heart pumps blood all through your body
+%     lungs     gas_exchange     the lungs swap oxygen in for carbon dioxide out
+%     liver     removes_poisons  the liver helps remove poisons from the body
+%     kidneys   filter_blood     the kidneys filter your blood into urine
+%     brain     controls_body    the brain is the control center of the body
+%     stomach   digests_food     the stomach mixes and starts digesting food
+%
+% The query also runs BACKWARD — bind the job and recall which organ does it:
+%
+%     ? organ_function($Organ, pumps_blood)   % heart
+%
+% A word that is NOT one of these organs — `bone`, `skin`, `rock` — is
+% deliberately NOT a row, so an organ-function recall ABSTAINS on it rather
+% than inventing a job. That honest-abstention property is what makes the table
+% safe to build a reasoner on: it answers exactly the organ→job pairs it can
+% ground, and only those.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every organ's job below was
+% read out of a fetched U.S. government / NIH page, and any organ whose job could
+% not be verified there would have been dropped). Each organ→function pair, with
+% the primary source it was copied from and the verbatim span that states it:
+%
+%   heart → pumps_blood
+%     https://www.nhlbi.nih.gov/health/heart  (NIH / NHLBI)
+%     "The heart is an organ about the size of your fist that pumps blood
+%      through your body."
+%
+%   lungs → gas_exchange
+%     https://www.nhlbi.nih.gov/health/lungs  (NIH / NHLBI)
+%     "This process, called gas exchange, is essential to life."
+%     (the process by which oxygen moves into the blood and carbon dioxide
+%      moves out to be exhaled)
+%
+%   liver → removes_poisons
+%     https://medlineplus.gov/liverdiseases.html  (NIH / NLM, MedlinePlus)
+%     "Your liver is the largest organ inside your body. It helps your body
+%      digest food, store energy, and remove poisons."
+%
+%   kidneys → filter_blood
+%     https://medlineplus.gov/kidneydiseases.html  (NIH / NLM, MedlinePlus)
+%     "They filter your blood. They remove wastes and extra water, which
+%      become urine."
+%
+%   brain → controls_body
+%     https://medlineplus.gov/braindiseases.html  (NIH / NLM, MedlinePlus)
+%     "Your brain is the control center of your body."
+%
+%   stomach → digests_food
+%     https://medlineplus.gov/stomachdisorders.html  (NIH / NLM, MedlinePlus)
+%     "It stores swallowed food. It mixes the food with stomach acids. Then it
+%      sends the mixture on to the small intestine." — "It is where digestion
+%      of protein begins."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the NHLBI statement that fixes
+% the first row (heart → pumps_blood). Every OTHER row's per-fact source and
+% verbatim span is listed above, so each job remains independently checkable.
+% All six sources are primary U.S. government / NIH references, so
+% `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table organ_function {
+    columns organ, function
+
+    row (heart, pumps_blood)
+    row (lungs, gas_exchange)
+    row (liver, removes_poisons)
+    row (kidneys, filter_blood)
+    row (brain, controls_body)
+    row (stomach, digests_food)
+
+    source "The heart is an organ about the size of your fist that pumps blood through your body."
+    locator "https://www.nhlbi.nih.gov/health/heart"
+    trust authoritative
+}

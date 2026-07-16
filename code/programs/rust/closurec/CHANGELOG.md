@@ -2,6 +2,95 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.35] - 2026-07-15
+
+### Added — CLOC12.197 PR2: template-literal → string fold end-to-end
+
+Picks up `closure-pass-constant-fold` 0.92.0 (the template-literal fold). A
+no-substitution template literal is a compile-time-known string, so it now folds
+to a plain string literal at SIMPLE: `g(`hi`);` → `g("hi");`, byte-identical to
+the reference Closure Compiler. New `tests/diff/template-literal-fold/` fixture +
+`diff_template_literal_fold.rs` (asserts `"hi"` present, no backtick left).
+*Substituted* templates (`` `a${x}b` ``) still don't parse in closurec's grammar,
+so the no-substitution form is the only shape the fold receives end-to-end today.
+No CLI-surface change; PATCH bump `0.234.34` → `0.234.35` (help-markdown golden
+regenerated for the version line).
+
+## [0.234.34] - 2026-07-15
+
+### Added — CLOC12.195 + CLOC12.196 PR2: empty-statement removal + array-index fold end-to-end
+
+Picks up `closure-pass-dce` 0.24.0 (top-level empty-statement sweep, CLOC12.195)
+and `closure-pass-constant-fold` 0.91.0 (array-literal index-access fold,
+CLOC12.196), landing both closurec end-to-end fixtures in one PATCH bump.
+
+- **`tests/diff/empty-statement/`**: `;g(1);;g(2);` at SIMPLE emits `g(1);g(2);`
+  — the leading `;` and interior `;;` are swept away (`diff_empty_statement.rs`
+  asserts no `;;` run and no leading `;`).
+- **`tests/diff/array-index/`**: `g([1,2,3][1]);` at SIMPLE emits `g(2);` — the
+  constant integer index folds to the element (`diff_array_index.rs` asserts
+  `g(2)` and no residual `][` array-index access).
+
+Both verified byte-identical to the reference Closure Compiler. No CLI-surface
+change; PATCH bump `0.234.33` → `0.234.34` (help-markdown golden regenerated for
+the version line).
+
+## [0.234.33] - 2026-07-15
+
+### Added — CLOC12.194 PR2: redundant-block flattening end-to-end
+
+Picks up `closure-pass-fold-control-flow` 0.24.0 (the redundant-`BlockStatement`
+flatten, PR1 #8345). When an `if` with a statically-decidable condition folds to
+its surviving branch, closurec previously left that branch's `{ … }` block intact;
+now the redundant braces are removed and the statement runs directly. New
+`tests/diff/block-flatten/` fixture: `if (2 > 3) { a(); } else { b(); }` at SIMPLE
+emits `b();` (not `{ b(); }`) — verified byte-identical to the reference Closure
+Compiler. `diff_block_flatten.rs` asserts the fold fired end-to-end (output
+contains `b()`, no residual `{b(` block braces, no surviving `if(`), proving the
+optimization pipeline ran rather than falling back to WHITESPACE_ONLY. No
+CLI-surface change; PATCH bump `0.234.32` → `0.234.33` (help-markdown golden
+regenerated for the version line).
+
+## [0.234.32] - 2026-07-14
+
+### Added — CLOC12.193 PR2: array-literal `.length` fold end-to-end
+
+Picks up `closure-pass-constant-fold` 0.90.0 (the array-literal `.length` fold, PR1 #8336). Before it,
+closurec folded string-literal `.length` (`"abc".length` → `3`) but left `[1, 2, 3].length` intact; the
+reference Closure Compiler folds it to the element count. Now `g([1,2,3].length);` at SIMPLE emits
+`g(3);` — verified byte-identical to the real Closure jar across the full truth table (holes count,
+side-effecting elements and spreads decline). New `tests/diff/array-length/` fixture +
+`diff_array_length.rs` integration test assert the fold fires end-to-end (output contains `g(3)`, no
+residual `].length`), proving the optimization pipeline ran rather than falling back to WHITESPACE_ONLY.
+No CLI-surface change; PATCH bump `0.234.31` → `0.234.32` (help-markdown golden regenerated for the
+version line).
+
+## [0.234.31] - 2026-07-14
+
+### Added — CLOC12.192 PR2: ES async arrow functions end-to-end
+
+Picks up javascript-parser 0.57.0 (the `async_arrow_function` bridge enable, PR1) — a bridge-only arc,
+since the AST (`ArrowFunctionExpression.is_async`) and emitter (prints `async`) already modelled async
+arrows. A file with an async arrow no longer declines to WHITESPACE_ONLY; it flows through the full
+optimization pipeline and the arrow body folds. New `tests/diff/async-arrow/` fixture +
+`diff_async_arrow.rs`: `var f=async()=>1+2; g(f);` at SIMPLE emits `var f=async()=>3;g(f);` — the concise
+body `1 + 2` folds to `3` and the `async` keyword round-trips, proving the pipeline ran (a WHITESPACE_ONLY
+fallback would leave `async()=>1+2` intact). PATCH bump; regen `--help_markdown` fixture + `cli.spec.json`
+version sync.
+
+## [0.234.30] - 2026-07-14
+
+### Added — CLOC12.191 PR3: ES default parameters end-to-end
+
+Picks up javascript-parser 0.56.0 (the `convert_formal_parameter` EQUALS-branch bridge flip, PR2) on top
+of the PR1 `FunctionParam::AssignmentPattern` node + emitter + pass threading. A file with a default
+parameter no longer declines to WHITESPACE_ONLY — it flows through the full optimization pipeline, and the
+default expression itself folds as live code. New `tests/diff/default-params/` fixture +
+`diff_default_params.rs`: `function f(a=1+2){return a} g(f());` at SIMPLE emits
+`function f(a=3){return a};g(f());` — the default `a = 1 + 2` folds to `a = 3`, proving the pipeline ran
+(a WHITESPACE_ONLY fallback would leave `a=1+2` intact). PATCH bump; regen `--help_markdown` fixture +
+`cli.spec.json` version sync.
+
 ## [0.234.29] - 2026-07-14
 
 ### Added — CLOC12.190 PR3: ES rest parameters end-to-end

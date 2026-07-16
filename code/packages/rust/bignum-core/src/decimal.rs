@@ -46,7 +46,7 @@
 //! assert_eq!(third.to_string(), "3.3333");
 //! ```
 
-use crate::BigInteger;
+use crate::{BigInteger, BigRational};
 use std::cmp::Ordering;
 use std::fmt;
 use std::str::FromStr;
@@ -295,6 +295,34 @@ impl BigDecimal {
         self.mant.signum()
     }
 
+    /// How many **significant digits** the value carries — the count of digits in the mantissa
+    /// once trailing zeros are removed. Because a `BigDecimal` is always kept in canonical form
+    /// (the [module documentation](crate::decimal) explains: the mantissa never ends in a `0`
+    /// unless the value *is* zero), this is simply the number of base-10 digits in the mantissa,
+    /// and `0` for the value zero. The scale (where the decimal point sits) is irrelevant — only
+    /// the run of meaningful digits counts.
+    ///
+    /// | value    | canonical `(mant, scale)` | significant digits |
+    /// |----------|---------------------------|--------------------|
+    /// | `0`      | `(0, 0)`                  | `0`                |
+    /// | `100`    | `(1, -2)`                 | `1`                |
+    /// | `20.180` | `(2018, 2)`               | `4`                |
+    /// | `-3.14`  | `(-314, 2)`               | `3`                |
+    /// | π (39dp) | `(3141…197, 39)`          | `40`               |
+    ///
+    /// This is the measure the exact-numbers renderer (ADJ NX-2) uses to decide whether a value
+    /// still fits an `f64`'s ~17-digit budget (render the `f64` canonical form, preserving
+    /// existing output byte-for-byte) or exceeds it (render every exact digit instead).
+    pub fn significant_digits(&self) -> usize {
+        if self.mant.is_zero() {
+            return 0;
+        }
+        // The mantissa carries no trailing zero in canonical form, so its digit count *is* the
+        // significant-digit count. `abs()` drops a leading `-` so the sign never inflates the
+        // length.
+        self.mant.abs().to_string().len()
+    }
+
     /// The absolute value `|self|`.
     pub fn abs(&self) -> BigDecimal {
         BigDecimal {
@@ -337,6 +365,130 @@ impl BigDecimal {
     /// and out-of-range magnitudes saturate to `±∞` / `0` exactly as the parser does.
     pub fn to_f64(&self) -> f64 {
         self.to_string().parse::<f64>().unwrap_or(f64::NAN)
+    }
+}
+
+// ===========================================================================
+//  Exact export to BigRational
+// ===========================================================================
+
+impl BigDecimal {
+    /// The **exact** value as a [`BigRational`] — no rounding, no `f64` hop.
+    ///
+    /// A [`BigDecimal`] is `mantissa × 10^(-scale)`, so it is *always* a ratio of two integers
+    /// and converts to a fraction with **zero loss**. This is the exact counterpart of the
+    /// lossy [`to_f64`](Self::to_f64): where `to_f64` narrows to the nearest binary float,
+    /// `to_rational` hands back the true value that a rational engine can keep computing on
+    /// exactly (see ADJ-EXACT-NUMBERS NX-3 — exact compute ingestion).
+    ///
+    /// The scale sign picks the shape of the fraction:
+    ///
+    /// | value | mantissa | scale | `to_rational()` |
+    /// |---|---|---|---|
+    /// | `2.54`   | `254`  | `2`  | `254 / 100` → `127/50`  (scale > 0 ⇒ denominator `10^scale`) |
+    /// | `0.3048` | `3048` | `4`  | `3048 / 10000` → `381/1250` |
+    /// | `100`    | `1`    | `-2` | `1 × 10^2` → `100/1`  (scale ≤ 0 ⇒ whole number `mant · 10^|scale|`) |
+    /// | `0`      | `0`    | `0`  | `0/1` |
+    ///
+    /// [`BigRational::new`] reduces to lowest terms and moves the sign onto the numerator, so the
+    /// result is canonical. The mantissa already carries the sign, so no separate sign handling
+    /// is needed here.
+    pub fn to_rational(&self) -> BigRational {
+        if self.scale > 0 {
+            // Fractional digits: the value is `mantissa / 10^scale`.
+            let denom = ten_pow(scale_diff_to_u32(self.scale as i128));
+            BigRational::new(self.mant.clone(), denom)
+        } else {
+            // scale <= 0: the value is a whole number `mantissa × 10^(-scale)`.
+            // (`scale == 0` folds in here too, since `10^0 == 1`.)
+            let factor = ten_pow(scale_diff_to_u32(-(self.scale as i128)));
+            BigRational::from_integer(&self.mant * &factor)
+        }
+    }
+
+    /// The **exact** base-10 expansion of a rational, when a finite one exists — the inverse
+    /// direction of [`to_rational`](Self::to_rational), and the rendering half of the
+    /// ADJ-EXACT-NUMBERS arc (NX-4).
+    ///
+    /// ## When does a fraction have a *finite* decimal?
+    ///
+    /// Write the rational in lowest terms as `p / q` (a [`BigRational`] is always kept reduced
+    /// with a positive denominator). Its base-10 expansion terminates **iff** `q`'s only prime
+    /// factors are the primes of the base, `2` and `5`:
+    ///
+    /// | fraction | reduced `q` | factors of `q` | expansion |
+    /// |---|---|---|---|
+    /// | `1/4`   | `4`    | `2²`      | `0.25`  — terminates |
+    /// | `3/8`   | `8`    | `2³`      | `0.375` — terminates |
+    /// | `7/20`  | `20`   | `2²·5`    | `0.35`  — terminates |
+    /// | `1/3`   | `3`    | `3`       | `0.333…` — **repeats**, no finite decimal |
+    /// | `2/7`   | `7`    | `7`       | `0.285714…` — **repeats** |
+    ///
+    /// So we strip every factor of `2` and `5` out of `q`, counting how many of each; if anything
+    /// but `1` is left over, the expansion repeats and we return `None` (the caller then falls
+    /// back to a labeled-lossy `f64` — a repeating value simply has no exact `BigDecimal`).
+    ///
+    /// ## Building the mantissa when it *does* terminate
+    ///
+    /// After stripping we know `q = 2^a · 5^b`. We want a scale `s` and mantissa `m` with
+    /// `p / q = m / 10^s`. Choosing `s = max(a, b)` makes `10^s / q = 2^(s−a) · 5^(s−b)` a whole
+    /// number, so `m = p · 2^(s−a) · 5^(s−b)` is exact — we scale numerator and denominator by the
+    /// same factor, which cannot change the value. Handing `(m, s)` to [`from_parts`](Self::from_parts)
+    /// (which strips trailing zeros into canonical form) gives the terminating decimal, sign and all.
+    ///
+    /// ```
+    /// # use bignum_core::{BigDecimal, BigRational, BigInteger};
+    /// let quarter = BigRational::from_ints(1, 4);
+    /// assert_eq!(BigDecimal::from_rational_exact(&quarter).unwrap().to_string(), "0.25");
+    /// let third = BigRational::from_ints(1, 3);
+    /// assert!(BigDecimal::from_rational_exact(&third).is_none()); // repeats — no finite decimal
+    /// ```
+    pub fn from_rational_exact(r: &BigRational) -> Option<BigDecimal> {
+        let two = BigInteger::from_i64(2);
+        let five = BigInteger::from_i64(5);
+
+        // Strip factors of 2, then of 5, from the (positive) denominator, tallying each.
+        let mut den = r.denominator().clone();
+        let mut twos: i64 = 0;
+        let mut fives: i64 = 0;
+        loop {
+            let (q, rem) = den.div_rem(&two);
+            if rem.is_zero() {
+                den = q;
+                twos += 1;
+            } else {
+                break;
+            }
+        }
+        loop {
+            let (q, rem) = den.div_rem(&five);
+            if rem.is_zero() {
+                den = q;
+                fives += 1;
+            } else {
+                break;
+            }
+        }
+        // Any leftover prime factor (3, 7, 11, …) ⇒ the expansion repeats ⇒ no finite decimal.
+        if den != BigInteger::one() {
+            return None;
+        }
+
+        // Rebalance so the denominator is exactly 10^scale, scaling the numerator to match.
+        let scale = twos.max(fives);
+        let mut mant = r.numerator().clone();
+        if scale > twos {
+            mant = &mant * &two.pow((scale - twos) as u32);
+        }
+        if scale > fives {
+            mant = &mant * &five.pow((scale - fives) as u32);
+        }
+        // `checked_from_parts` keeps this a **total** function: a value whose exact scale would
+        // exceed `BigDecimal`'s internal scale budget (an astronomically fine fraction like
+        // `1 / 2^8_000_001`) yields `None` — the same "no representable exact decimal" signal a
+        // repeating expansion gives — rather than panicking. In every real caller the rational is
+        // already size-bounded well under the budget, so this branch is defence-in-depth.
+        BigDecimal::checked_from_parts(mant, scale)
     }
 }
 
@@ -735,6 +887,56 @@ mod tests {
         assert_eq!(d(&huge).to_f64(), f64::INFINITY);
     }
 
+    // ---- exact BigRational export --------------------------------------
+
+    #[test]
+    fn to_rational_is_exact_for_fractional_decimals() {
+        // 2.54 = 254/100 = 127/50 in lowest terms.
+        let r = d("2.54").to_rational();
+        assert_eq!(r.numerator().to_string(), "127");
+        assert_eq!(r.denominator().to_string(), "50");
+        // 0.3048 = 3048/10000 = 381/1250.
+        let r = d("0.3048").to_rational();
+        assert_eq!(r.numerator().to_string(), "381");
+        assert_eq!(r.denominator().to_string(), "1250");
+    }
+
+    #[test]
+    fn to_rational_handles_integers_and_zero_and_signs() {
+        // Whole numbers land on denominator 1 (scale <= 0 branch).
+        assert_eq!(d("100").to_rational(), BigRational::from_ints(100, 1));
+        assert_eq!(d("7").to_rational(), BigRational::from_ints(7, 1));
+        // 12300 canonicalizes to mantissa 123, scale -2, then rehydrates exactly.
+        assert_eq!(d("12300").to_rational(), BigRational::from_ints(12300, 1));
+        // Zero is the canonical 0/1.
+        assert_eq!(d("0").to_rational(), BigRational::zero());
+        // Sign rides on the mantissa; new() keeps the denominator positive.
+        let r = d("-2.5").to_rational();
+        assert_eq!(r.numerator().to_string(), "-5");
+        assert_eq!(r.denominator().to_string(), "2");
+        assert!(r.is_negative());
+    }
+
+    #[test]
+    fn to_rational_is_exact_for_39_digit_pi() {
+        // The stdlib ships pi to 39 digits. Its exact rational value is
+        // 3141592653589793238462643383279502884197 / 10^39 (already coprime, so it
+        // does not reduce). No f64 hop, so all 39 digits survive.
+        let pi = d("3.141592653589793238462643383279502884197");
+        let r = pi.to_rational();
+        assert_eq!(
+            r.numerator().to_string(),
+            "3141592653589793238462643383279502884197"
+        );
+        assert_eq!(
+            r.denominator().to_string(),
+            "1000000000000000000000000000000000000000" // 10^39
+        );
+        // Round-trip sanity: numerator has 40 digits, denominator has 40 (1 + 39 zeros).
+        assert_eq!(r.numerator().to_string().len(), 40);
+        assert_eq!(r.denominator().to_string().len(), 40);
+    }
+
     // ---- canonical form & display --------------------------------------
 
     #[test]
@@ -747,6 +949,35 @@ mod tests {
         assert_eq!(hundred.scale(), -2);
         assert_eq!(hundred.to_string(), "100");
         assert_eq!(d("12300").to_string(), "12300");
+    }
+
+    #[test]
+    fn significant_digits_counts_meaningful_mantissa_digits() {
+        // Zero has no significant digits.
+        assert_eq!(d("0").significant_digits(), 0);
+        assert_eq!(d("0.000").significant_digits(), 0);
+        // Trailing zeros are not significant (canonical form already strips them).
+        assert_eq!(d("20.180").significant_digits(), 4); // 2018
+        assert_eq!(d("100").significant_digits(), 1); // mantissa 1
+        assert_eq!(d("1000").significant_digits(), 1);
+        assert_eq!(d("12300").significant_digits(), 3); // 123
+        // Leading zeros before the first non-zero digit are not significant either.
+        assert_eq!(d("0.001").significant_digits(), 1);
+        assert_eq!(d("0.0123").significant_digits(), 3);
+        // Ordinary values.
+        assert_eq!(d("1.23").significant_digits(), 3);
+        assert_eq!(d("-3.14").significant_digits(), 3); // sign does not count
+        assert_eq!(d("42").significant_digits(), 2);
+        // The f64 fit/overflow boundary the renderer keys on: 17 digits vs 18.
+        assert_eq!(d("1.2345678901234567").significant_digits(), 17);
+        assert_eq!(d("1.23456789012345678").significant_digits(), 18);
+        // π to 39 decimal places — the motivating case (every digit counts). The literal has one
+        // integer digit plus 39 fractional digits, so 40 significant digits in all.
+        let pi = "3.141592653589793238462643383279502884197";
+        assert_eq!(d(pi).significant_digits(), 40);
+        // Scientific notation is normalized first, so only real digits count.
+        assert_eq!(d("6.02214076e23").significant_digits(), 9);
+        assert_eq!(d("1e3").significant_digits(), 1); // 1000 -> mantissa 1
     }
 
     #[test]
@@ -1108,6 +1339,70 @@ mod tests {
                 .div_round(&BigDecimal::from_i64(dd as i64), target, mode);
             let want = oracle(expect_r, target);
             assert_eq!(got, want, "{n}/{dd} @s{target} {mode:?}");
+        }
+    }
+
+    // ---- from_rational_exact: terminating vs repeating expansions ---------
+
+    #[test]
+    fn from_rational_exact_renders_terminating_decimals() {
+        // Powers-of-2-and-5 denominators all terminate; the string is fully exact.
+        let cases = [
+            (1i64, 4i64, "0.25"),
+            (3, 8, "0.375"),
+            (7, 20, "0.35"),
+            (1, 2, "0.5"),
+            (1, 1, "1"),      // an integer is the scale-0 case
+            (0, 1, "0"),      // zero
+            (5463, 20, "273.15"), // the temperature-conversion offset
+            (1013248623, 10000, "101324.8623"),
+            (-3, 8, "-0.375"), // sign rides on the mantissa
+        ];
+        for (n, d, want) in cases {
+            let r = BigRational::from_ints(n, d);
+            let got = BigDecimal::from_rational_exact(&r)
+                .unwrap_or_else(|| panic!("{n}/{d} should terminate"));
+            assert_eq!(got.to_string(), want, "{n}/{d}");
+        }
+    }
+
+    #[test]
+    fn from_rational_exact_rejects_repeating_decimals() {
+        // Any leftover prime factor (3, 7, 11, …) means the expansion repeats forever,
+        // so no finite BigDecimal can hold it — the caller must fall back to a lossy f64.
+        for (n, d) in [(1i64, 3i64), (2, 7), (5, 6), (1, 11), (22, 7)] {
+            let r = BigRational::from_ints(n, d);
+            assert!(
+                BigDecimal::from_rational_exact(&r).is_none(),
+                "{n}/{d} repeats and must return None"
+            );
+        }
+    }
+
+    #[test]
+    fn from_rational_exact_round_trips_high_precision_pi_times_two() {
+        // The exact-numbers headline: pi to 39 digits, doubled, stays exact end to end.
+        // pi*2 = 6283185307179586476925286766559005768394 / 10^39 — a terminating decimal.
+        let pi2 = BigRational::new(
+            BigInteger::parse_radix("6283185307179586476925286766559005768394", 10).unwrap(),
+            ten_pow(39),
+        );
+        let got = BigDecimal::from_rational_exact(&pi2).expect("pi*2 terminates");
+        assert_eq!(
+            got.to_string(),
+            "6.283185307179586476925286766559005768394",
+            "all 39 fractional digits survive, not the ~16 an f64 carries"
+        );
+    }
+
+    #[test]
+    fn from_rational_exact_inverts_to_rational() {
+        // Round-trip: a terminating BigDecimal → rational → back is byte-identical.
+        for s in ["0.25", "273.15", "101324.8623", "-0.375", "1000", "0"] {
+            let d = BigDecimal::from_str(s).unwrap();
+            let back = BigDecimal::from_rational_exact(&d.to_rational())
+                .expect("a decimal's rational always terminates");
+            assert_eq!(back, d, "round-trip {s}");
         }
     }
 

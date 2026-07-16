@@ -1,0 +1,80 @@
+% ============================================================================
+% neuron-parts — each part of a neuron and the job it does
+% (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% A middle-school neuroscience facts library in the ADJ standard library — the
+% kind a science or medicine agent `import`s when it needs the most basic
+% grounded fact about how a nerve cell is built: "dendrites receive the signal,
+% the axon transmits it, the cell body processes it, and the myelin sheath
+% speeds it up." A neuron (nerve cell) is the fundamental unit of the nervous
+% system, and each of its parts carries out ONE job in passing a signal along.
+% This is the first RUNG a medicine agent reasons up from: long before it can
+% reason about a stroke, a nerve injury, or a demyelinating disease, it has to
+% know which part of the neuron does what — the way a middle-school student
+% first learns the cell, then a first-year student the physiology. Recall is a
+% binding query:
+%
+%     ? neuron_part_function(dendrites, $F)   % receive_signals
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `neuron_part_function(part, function)` carrying the table's citation,
+% so the lookup above is the ordinary SLD binding query — the engine returns the
+% function atom WITH its source, on the CPU, with zero model calls, and abstains
+% on anything that is not one of the parts in the table. The query also runs
+% BACKWARD — bind the job and recall the part:
+%
+%     ? neuron_part_function($P, speeds_signals)  % myelin_sheath
+%
+% The `function` value of every row is a SINGLE lowercase atom, chosen to be a
+% faithful one-word (or short snake_case) paraphrase of what the NIH source says
+% that part does — never an interpretation the source does not support. A
+% recalled function atom therefore composes straight into downstream reasoning
+% (a medicine agent asking "which part speeds_signals?" gets the grounded
+% answer, myelin_sheath, not a guess) — the concrete bridge from neuroscience
+% RECALL up toward clinical reasoning.
+%
+% Provenance: every part name and its `function` atom is grounded in a VERBATIM
+% span from an NIH source — StatPearls and the Neuroscience textbook on the NCBI
+% Bookshelf (National Center for Biotechnology Information, U.S. National
+% Library of Medicine / NIH), plus Physiology, Nerve — all `.gov` primary
+% references. The `source` span below is the VERBATIM sentence for the first
+% data row (dendrites), copied character-for-character from its NCBI Bookshelf
+% page (the `locator`). Each remaining row's atom is a faithful short paraphrase
+% of that part's own NIH span, quoted here with its own page so any reader can
+% re-check it byte-for-byte:
+%
+%   dendrites      → receive_signals   https://www.ncbi.nlm.nih.gov/books/NBK441977/
+%     "Dendrites receive afferent signals."
+%   axon           → transmit_signals  https://www.ncbi.nlm.nih.gov/books/NBK441977/
+%     "Axons carry efferent signals."
+%   cell_body      → process_signals   https://www.ncbi.nlm.nih.gov/books/NBK11103/
+%     "The information from the inputs that impinge on the neuronal dendrites is
+%      integrated and \"read out\" at the origin of the axon, the portion of the
+%      nerve cell specialized for signal conduction to the next site of synaptic
+%      interaction."
+%   myelin_sheath  → speeds_signals    https://www.ncbi.nlm.nih.gov/books/NBK551652/
+%     "The presence of myelin greatly increases conduction velocity."
+%
+% `trust authoritative` — every source is a `.gov` service of the U.S. National
+% Library of Medicine (NIH): StatPearls and the Neuroscience textbook on the
+% NCBI Bookshelf, and the Physiology, Nerve StatPearls chapter, all primary /
+% official references (contrast the `consensus` tier reserved for a secondary
+% source such as an encyclopedia). Nothing here is asserted from memory; each
+% pair was read out of the fetched NIH page and any part whose function the
+% pages did not state would have been dropped.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_adjudication_no_interpretive_gating.)
+% ============================================================================
+
+table neuron_part_function {
+    columns part, function
+
+    row (dendrites, receive_signals)
+    row (axon, transmit_signals)
+    row (cell_body, process_signals)
+    row (myelin_sheath, speeds_signals)
+
+    source "Dendrites receive afferent signals."
+    locator "https://www.ncbi.nlm.nih.gov/books/NBK441977/"
+    trust authoritative
+}

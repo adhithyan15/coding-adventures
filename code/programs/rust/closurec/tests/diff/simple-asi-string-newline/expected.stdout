@@ -1,1 +1,1 @@
-var label="total";var n=3;show(label,n);
+var label="total",n=3;show(label,n);

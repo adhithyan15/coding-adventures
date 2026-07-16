@@ -1,4 +1,4 @@
-# Session Map — Tamil Chapter 1
+# Session Map — Tamil Chapters 1–2
 
 Same spaced-repetition schedule as the other tracks (a word from session *N*
 resurfaces at *N+1, N+3, N+7, N+15*). Lessons named by slug; this map is the
@@ -21,7 +21,20 @@ puḷḷi, the common vowel signs, the independent vowels, and the three-way
 | 5 | sari | சரி | ச (one letter, many sounds) | voicing read from position |
 | 6 | practice | (recap) | read all five | the *pōy varugiṟēṉ* farewell |
 
+## Chapter 2 — Introducing Yourself
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 7 | peyar | பெயர் | "name" ← Dravidian *\*peyar* (**not** *name/nām*) |
+| 8 | en | என் | "my" ← *nāṉ* ("I"); no European cousin |
+| 9 | en-peyar | என் பெயர் … | **"my name is…"** — the **zero copula** (no "is") |
+| 10 | nii-niingal | நீ / நீங்கள் | **"you"** familiar/respectful; respect by plural (like French *vous*) |
+| 11 | enna | என்ன | "what" ← Dravidian question-stem *\*yā-/\*e-* |
+| 12 | ungal-peyar-enna | உங்கள் பெயர் என்ன? | **"what's your name?"** (still no "is") |
+| 13 | magizhcci | மகிழ்ச்சி | "pleased to meet you" ("joy"); the rare ழ (*ḻ*) |
+| 14 | practice | (dialogue) | the whole exchange |
+
 ## Next
 
-Chapter 2 — introducing yourself: *eṉ peyar…* ("my name"), *nī* / *nīṅgaḷ*
-(familiar / respectful "you"), and the first native/Sanskrit doublets.
+Chapter 3 — *eppaḍi irukkīṅgaḷ?* ("how are you?") and answering with *nallā* —
+the responding cycle.

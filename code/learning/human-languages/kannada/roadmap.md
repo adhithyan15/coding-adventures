@@ -18,12 +18,16 @@ needs it.
   practice. Kannada script introduced through the words (inherent *a*, vowel
   signs, virama + *ottakṣara* stacked conjuncts, independent vowels), and the
   Sanskrit-loan vs. native-Dravidian split shown through the words themselves.
+- **Ch. 2 — Introducing Yourself**: hesaru → nanna → **nanna hesaru** ("my name
+  is," zero copula) → nīnu/nīvu → ēnu → **nimma hesaru ēnu?** → santōṣa →
+  practice. Every atom traced (*hesaru* ← *\*pesar*, p→h, cousin of Tamil
+  *peyar*; *santōṣa* a Sanskrit loan for "pleased" vs. Tamil's native
+  *magiḻcci*); the zero copula.
 
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 2 | Introducing yourself: *nanna hesaru…* ("my name"), *nīnu* / *nīvu* (familiar / respectful "you"), native/Sanskrit doublets |
 | 3 | Responding: *hēgiddīra?* ("how are you"), *chennāgiddēne* ("I'm well"), the verb *iru* ("to be") |
 | 4 | The case-endings (Kannada's agglutinative suffixes), numbers 1–10 |
 | 5+ | Postpositions, tense on the verb, family, food — always with the Dravidian-cognate thread |

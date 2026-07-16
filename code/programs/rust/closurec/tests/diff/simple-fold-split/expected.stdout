@@ -1,1 +1,1 @@
-var a=["a","b","c"];var b=["a","b","c"];var c=["a","b"];var d=["abc"];report(a,b,c,d);
+var a=["a","b","c"],b=["a","b","c"],c=["a","b"],d=["abc"];report(a,b,c,d);

@@ -1,4 +1,4 @@
-# Session Map — Malayalam Chapter 1
+# Session Map — Malayalam Chapters 1–2
 
 Same spaced-repetition schedule as the other tracks (a word from session *N*
 resurfaces at *N+1, N+3, N+7, N+15*). Lessons named by slug; this map is the
@@ -21,7 +21,20 @@ independent vowels — all in the service of real greetings.
 | 5 | sari | ശരി | ശ (śa), ri-sign | native; the family word *sari* (Sanskrit ശ) |
 | 6 | practice | (recap) | read all five | the *pōyi varām* farewell (≈ Tamil *pōy varugiṟēṉ*) |
 
+## Chapter 2 — Introducing Yourself
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 7 | peru | പേര് | "name" ← Dravidian *\*pēr* (twin of Tamil *peyar*, not *name*) |
+| 8 | enre | എന്റെ | "my" ← *ñāṉ* ("I") |
+| 9 | aanu | ആണ് | **"is"** — Malayalam's copula (← *āka*); its sisters use **none** |
+| 10 | enre-peru-aanu | എന്റെ പേര് … ആണ് | **"my name is…"**; verb last (unlike Tamil) |
+| 11 | nii-ningal | നീ / നിങ്ങൾ | **"you"** familiar/respectful; respect by plural |
+| 12 | entu | എന്ത് | "what" ← Dravidian question-stem *\*yā-/\*e-* |
+| 13 | ninre-peru-entaanu | നിന്റെ പേര് എന്താണ്? | **"what's your name?"** (*entŭ* + *āṇŭ* fused) |
+| 14 | santosham | സന്തോഷം | "pleased to meet you" — **Sanskrit** (vs. native *nandi* for thanks) |
+| 15 | practice | (dialogue) | the whole exchange |
+
 ## Next
 
-Chapter 2 — introducing yourself: *enṟe pēru…* ("my name"), *nī* / *niṅṅaḷ*
-(familiar / respectful "you"), and the first native/Sanskrit doublets.
+Chapter 3 — *sukhamāṇō?* ("are you well?") — the responding cycle.

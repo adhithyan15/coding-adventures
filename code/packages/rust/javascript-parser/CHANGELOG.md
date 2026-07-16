@@ -2,6 +2,18 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.57.0] - 2026-07-14
+
+### Added — bridge async arrow functions (`async () => expr`) — CLOC12.192
+
+The grammar rule `async_arrow_function = "async" arrow_parameters ARROW concise_body` is the plain
+`arrow_function` shape plus a leading `async` literal, so `convert_arrow_function` (now taking an
+`is_async` flag) handles its children unchanged and just sets the flag. `async_arrow_function` is
+dispatched to it instead of declining. The AST (`ArrowFunctionExpression.is_async`) and emitter (prints
+`async`) already modelled async arrows, so this is a bridge-only enable — an async arrow file no longer
+declines to WHITESPACE_ONLY. A body needing `await` still declines separately (that grammar is not
+parseable yet). Additive; MINOR.
+
 ## [0.56.0] - 2026-07-14
 
 ### Added — bridge default parameters (`function f(a = expr){}`) — CLOC12.191 PR2

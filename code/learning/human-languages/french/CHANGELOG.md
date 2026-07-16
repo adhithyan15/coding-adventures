@@ -1,5 +1,30 @@
 # Changelog
 
+## Chapter 2 — Introducing Yourself
+
+- New chapter built around the introduction dialogue (*Je m'appelle Susanne. /
+  Comment vous appelez-vous? / Je m'appelle David. / Enchanté.*), atom-first,
+  one word per lesson (`lessons/FR-C02-*`, `book/chapters/ch02-introductions.tex`):
+  - **je** ("I" ← *ego*; English *ego*)
+  - **me** ("myself" ← Latin *mē*; English *me*, *my*, *mine*) — its own lesson,
+    with the reflexive set *me / te / se* traced. (Every atom of *je m'appelle*
+    is taught and rooted, not just glossed.)
+  - **(s')appeler** ("to call [oneself]" ← *appellāre*; *appeal*, *appellation*)
+    — introduces **reflexive verbs**.
+  - **je m'appelle…** — assembled: **"my name is…"** ("I call myself"), with the
+    literal *mon nom est* (← *nōmen*, English *noun*) as the stiffer alternative.
+  - **tu / vous** (familiar / formal "you" ← *tū / vōs*) — politeness by using
+    the plural on one person; contrasted with Spanish *usted*.
+  - **comment** ("how" ← *quo modo*; same source as Spanish *cómo*).
+  - **comment vous appelez-vous?** — **"what's your name?"** by inversion; the
+    informal *comment tu t'appelles?*.
+  - **enchanté(e)** ("pleased to meet you" ← *in-cantāre*; *enchant*,
+    *incantation*, *chant*) — gender agreement with the speaker.
+  - **practice** — the whole dialogue.
+- Also fixed two leftover beginner-audience slips the earlier pass missed
+  (`roadmap.md` "the learner's in-progress language"; `session-map.md` "the
+  Spanish twin"). Book compiles clean with XeLaTeX.
+
 ## Beginner-audience pass — Spanish no longer assumed as prior knowledge
 
 Corrected a systemic violation of HL00's Audience rule: the book and practice

@@ -90,7 +90,8 @@ use coding_adventures_closure_pass_pipeline::{
 };
 use coding_adventures_correlation_vector::{CVLog, Contribution};
 use coding_adventures_javascript_ast::{
-    statement::TaggedStatement, ArrayExpression, AssignmentExpression, BinaryExpression,
+    statement::TaggedStatement, ArrayExpression, AssignmentExpression, AssignmentOperator,
+    AssignmentTarget, BinaryExpression,
     BinaryOperator, BlockStatement, BooleanLiteral, CallExpression, ConditionalExpression, NewExpression, SequenceExpression, SpreadElement, YieldExpression, AwaitExpression, ImportExpression,
     Declaration, Expression, ExpressionStatement, ForInStatement, ForInit, ForOfStatement,
     ForStatement,
@@ -670,15 +671,12 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
         }),
         Expression::ConditionalExpression(c) => fold_conditional(c, st),
 
-        // Recurse but don't collapse — these have runtime semantics.
-        Expression::AssignmentExpression(a) => {
-            Expression::AssignmentExpression(AssignmentExpression {
-                cv: a.cv.clone(),
-                operator: a.operator,
-                left: a.left.clone(),
-                right: Box::new(fold_expression(&a.right, st)),
-            })
-        }
+        // `x = …` — recurse into the right-hand side, and additionally contract
+        // the compound self-assignment shape `x = x OP E` → `x OP= E`. The body
+        // lives out-of-line (see `fold_assignment`) so its locals do not enlarge
+        // this hot recursion frame — same DoS-guard discipline as the optional
+        // and member arms above.
+        Expression::AssignmentExpression(a) => fold_assignment(a, st),
         Expression::CallExpression(c) => fold_call(c, st),
         // `new X(args)` constructs an object — a side-effecting operation, never
         // a constant. Recurse into the callee and each argument (they may hold
@@ -842,11 +840,231 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
         // `quasis` are fixed string segments with no sub-expressions to
         // fold. (Folding the *whole* template to a string literal when all
         // parts are constant is a future optimisation; here we only recurse.)
-        Expression::TemplateLiteral(t) => Expression::TemplateLiteral(TemplateLiteral {
-            cv: t.cv.clone(),
-            quasis: t.quasis.clone(),
-            expressions: t.expressions.iter().map(|e| fold_expression(e, st)).collect(),
-        }),
+        Expression::TemplateLiteral(t) => fold_template_literal(t, st),
+    }
+}
+
+/// Contract a compound *self*-assignment: `x = x OP E` → `x OP= E`.
+///
+/// ## What this fold does
+///
+/// ```text
+///   x = x + 1     ──▶   x += 1
+///   n = n - 2     ──▶   n -= 2
+///   k = k * 2     ──▶   k *= 2
+///   a = a + b     ──▶   a += b
+///   s = s + "b"   ──▶   s += "b"
+/// ```
+///
+/// The reference Closure Compiler performs exactly this contraction at
+/// `SIMPLE`, and it is a pure size win: `x=x+1` (5 chars) becomes `x+=1`
+/// (4 chars) with identical run-time behaviour.
+///
+/// ## The exact rule (and why the shape matters)
+///
+/// We rewrite only when ALL of the following hold:
+///   1. the assignment operator is plain `=` (not already a compound form),
+///   2. the target is a **bare identifier** `x` (`AssignmentTarget::Identifier`),
+///   3. the right-hand side is a `BinaryExpression` whose **LEFT** operand is
+///      that same identifier `x` (compared by *name*), and
+///   4. the binary operator has a compound counterpart — the arithmetic and
+///      bitwise operators do (`+ - * / % ** << >> >>> & | ^`); the relational,
+///      equality, `in`, and `instanceof` operators do **not**.
+///
+/// The match is on the **left** operand only. `x = x + 1` folds, but
+/// `x = 1 + x` does **not**:
+///
+/// ```text
+///   x = x - 1   ≡   x -= 1        (target on the left — contractable)
+///   x = 1 - x   ≡   x -= ??       (NO — `1 - x` ≠ `x - 1` for non-commutative
+///                                  operators; there is no "reverse -=" form)
+/// ```
+///
+/// Even for a commutative operator (`+`, `*`) the reference compiler only
+/// contracts the left-operand shape, so mirroring that keeps us byte-identical.
+///
+/// ## Why identifier targets are always sound (and members are deferred)
+///
+/// For a bare identifier binding, evaluating the *reference* `x` has no
+/// user-observable side effect — so `x = x OP E` reads `x` once, computes, and
+/// writes `x` once, exactly as `x OP= E` does. The two forms are
+/// interchangeable.
+///
+/// This is **not** true for a member target like `o[f()]`: the expanded form
+/// `o[f()] = o[f()] OP E` evaluates the reference sub-expressions (here `f()`)
+/// *twice*, whereas `o[f()] OP= E` evaluates them *once*. Contracting a member
+/// target is therefore only sound once the object/property sub-expressions are
+/// proven side-effect-free — that is a deliberate follow-up (CLOC12.198b), and
+/// PR1 restricts itself to identifier targets.
+///
+/// Kept `#[inline(never)]` and out of the big `fold_expression` match so its
+/// locals do not inflate the shared recursive frame (the same DoS-guard
+/// discipline the member/optional/template arms follow — see lessons.md).
+#[inline(never)]
+fn fold_assignment(a: &AssignmentExpression, st: &mut FoldState) -> Expression {
+    // Fold the right-hand side first, consistent with every other recursive
+    // arm; the contraction test below then runs on the folded RHS.
+    let right = fold_expression(&a.right, st);
+
+    // The contraction only applies to a plain `=` whose target is an identifier
+    // and whose RHS is `<that identifier> OP E` for a compound-capable OP.
+    if a.operator == AssignmentOperator::Eq {
+        if let AssignmentTarget::Identifier(target) = &a.left {
+            if let Expression::BinaryExpression(b) = &right {
+                if let Expression::Identifier(bin_left) = b.left.as_ref() {
+                    if bin_left.name == target.name {
+                        if let Some((compound, op_symbol)) =
+                            compound_assignment_operator(b.operator)
+                        {
+                            let parent = a.cv.clone();
+                            let before =
+                                format!("{0} = {0} {1} E", target.name, op_symbol);
+                            let after = format!("{0} {1}= E", target.name, op_symbol);
+                            let new_cv = st.fork_cv(&parent, &before, &after);
+                            return Expression::AssignmentExpression(AssignmentExpression {
+                                cv: new_cv,
+                                operator: compound,
+                                // Reuse the original target node verbatim.
+                                left: a.left.clone(),
+                                // The compound form keeps only the binary's RIGHT
+                                // operand; the left operand is now implied by the
+                                // target.
+                                right: b.right.clone(),
+                            });
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // No contraction: preserve the assignment, carrying the folded RHS.
+    Expression::AssignmentExpression(AssignmentExpression {
+        cv: a.cv.clone(),
+        operator: a.operator,
+        left: a.left.clone(),
+        right: Box::new(right),
+    })
+}
+
+/// Map a [`BinaryOperator`] to its compound-[`AssignmentOperator`] counterpart
+/// and the operator's source symbol, or `None` when the operator has no
+/// compound assignment form.
+///
+/// | binary | compound | | binary | compound |
+/// |--------|----------|-|--------|----------|
+/// | `+`    | `+=`     | | `<<`   | `<<=`    |
+/// | `-`    | `-=`     | | `>>`   | `>>=`    |
+/// | `*`    | `*=`     | | `>>>`  | `>>>=`   |
+/// | `/`    | `/=`     | | `&`    | `&=`     |
+/// | `%`    | `%=`     | | `|`    | `|=`     |
+/// | `**`   | `**=`    | | `^`    | `^=`     |
+///
+/// The relational (`< <= > >=`), equality (`== != === !==`), `in`, and
+/// `instanceof` operators have no `OP=` form in JavaScript, so they return
+/// `None` and the caller declines the contraction.
+fn compound_assignment_operator(op: BinaryOperator) -> Option<(AssignmentOperator, &'static str)> {
+    use AssignmentOperator as A;
+    use BinaryOperator as B;
+    Some(match op {
+        B::Add => (A::AddEq, "+"),
+        B::Sub => (A::SubEq, "-"),
+        B::Mul => (A::MulEq, "*"),
+        B::Div => (A::DivEq, "/"),
+        B::Mod => (A::ModEq, "%"),
+        B::Exp => (A::ExpEq, "**"),
+        B::LeftShift => (A::LeftShiftEq, "<<"),
+        B::RightShift => (A::RightShiftEq, ">>"),
+        B::UnsignedRightShift => (A::UnsignedRightShiftEq, ">>>"),
+        B::BitAnd => (A::BitAndEq, "&"),
+        B::BitOr => (A::BitOrEq, "|"),
+        B::BitXor => (A::BitXorEq, "^"),
+        // No compound assignment form exists for these.
+        B::Eq
+        | B::NotEq
+        | B::StrictEq
+        | B::StrictNotEq
+        | B::Lt
+        | B::LtEq
+        | B::Gt
+        | B::GtEq
+        | B::In
+        | B::InstanceOf => return None,
+    })
+}
+
+/// Fold a template literal — recurse into its substitutions, then collapse the
+/// whole node to a string literal when every substitution is a stringifiable
+/// constant (CLOC12.197). Kept `#[inline(never)]` and out of the big
+/// `fold_expression` match so its several `Vec`/`String` locals do NOT inflate
+/// the shared recursive frame — that frame is walked once per AST depth level,
+/// so bloating it lowers the input-nesting depth the pass survives (the
+/// `deeply_nested_*` stack-safety tests pin this). See the DCE crate's identical
+/// `#[inline(never)]` helper convention.
+#[inline(never)]
+fn fold_template_literal(t: &TemplateLiteral, st: &mut FoldState) -> Expression {
+    // Recurse first so a substitution like `${1 + 2}` folds to `${3}`, and a
+    // nested template `${`b${1}c`}` folds to `${"b1c"}` — by the time we test
+    // the substitutions below they are already constants.
+    let expressions: Vec<Expression> =
+        t.expressions.iter().map(|e| fold_expression(e, st)).collect();
+
+    // When EVERY substitution is a stringifiable constant literal AND every
+    // quasi carries a cooked value, the whole template is a compile-time-known
+    // string: interleave the quasis' cooked text with each substitution's
+    // `ToString` form (`cooked₀ str(e₀) cooked₁ … cookedₙ`).
+    //
+    // Emitted as a plain string literal; no emitter work is needed because
+    // closurec's string emitter already matches the reference compiler's quote
+    // choice (single-quote when the value contains a `"`) and escaping (`\n`,
+    // `\t`, `\\`) byte-for-byte.
+    //
+    // A `cooked` of `None` (an escape legal only in a *tagged* template) or a
+    // non-const / BigInt / RegExp substitution makes the string not statically
+    // known, so we decline and keep the template.
+    let sub_strings: Option<Vec<String>> =
+        expressions.iter().map(stringify_const_operand).collect();
+    let cooked: Option<Vec<&str>> = t.quasis.iter().map(|q| q.cooked.as_deref()).collect();
+    if let (Some(subs), Some(cooked)) = (sub_strings, cooked) {
+        let mut result = String::new();
+        for (i, quasi) in cooked.iter().enumerate() {
+            result.push_str(quasi);
+            if let Some(s) = subs.get(i) {
+                result.push_str(s);
+            }
+        }
+        let parent = t.cv.clone();
+        let before = format!("template-literal[{} subs]", subs.len());
+        let after = format!("\"{result}\"");
+        let new_cv = st.fork_cv(&parent, &before, &after);
+        return stamp_literal_cv(FoldedLiteral::String(result), new_cv);
+    }
+
+    Expression::TemplateLiteral(TemplateLiteral {
+        cv: t.cv.clone(),
+        quasis: t.quasis.clone(),
+        expressions,
+    })
+}
+
+/// The `ToString` form of a constant-literal template substitution, or `None`
+/// if the operand is not a constant we can stringify at compile time.
+///
+/// Matches JavaScript `String(x)` for the primitives that appear as folded
+/// constants: a number takes its shortest round-trip form (`3`, not `3.0`), a
+/// string is itself, `true`/`false`/`null`/`undefined` take their keyword text.
+/// A `BigInt` (its text would drop the `n`), a `RegExp`, or any non-literal
+/// (identifier, call, …) returns `None`, so the enclosing template declines to
+/// fold — exactly matching the reference compiler, which leaves
+/// `` `a${x}b` `` / `` `a${f()}b` `` intact.
+fn stringify_const_operand(e: &Expression) -> Option<String> {
+    match e {
+        Expression::NumericLiteral(n) => Some(format_js_number(n.value)),
+        Expression::StringLiteral(s) => Some(s.value.clone()),
+        Expression::BooleanLiteral(b) => Some(if b.value { "true" } else { "false" }.to_string()),
+        Expression::NullLiteral(_) => Some("null".to_string()),
+        Expression::UndefinedLiteral(_) => Some("undefined".to_string()),
+        _ => None,
     }
 }
 
@@ -3799,6 +4017,79 @@ fn fold_chain(c: &ChainExpression, st: &mut FoldState) -> Expression {
     })
 }
 
+/// Is evaluating `e` guaranteed to produce no observable side effect?
+///
+/// Used by the array-literal `.length` fold: dropping `[a, b, c]` (replacing it
+/// with `3`) is only legal when evaluating its elements runs nothing observable.
+/// This is deliberately **conservative** — it only ever answers `true` for
+/// expressions that are *definitely* pure. Under-answering (saying `false` for a
+/// pure expression) merely misses an optimization; over-answering would drop a
+/// real side effect, so the fall-through is `false`.
+///
+/// The classification mirrors what Closure folds for array `.length` (verified
+/// against the reference compiler): literals, a plain variable read, a property
+/// read (`x.y`), and pure operators over pure operands are free; a call, `new`,
+/// assignment, `++`/`--`, `await`/`yield`, a tagged template, a dynamic
+/// `import()`, a spread, an object literal (getters/spread), or a class
+/// expression (its `static{}` block runs at definition time) are not.
+fn is_side_effect_free(e: &Expression) -> bool {
+    match e {
+        // Inert leaves — no sub-expression, nothing to run.
+        Expression::NumericLiteral(_)
+        | Expression::StringLiteral(_)
+        | Expression::BooleanLiteral(_)
+        | Expression::NullLiteral(_)
+        | Expression::UndefinedLiteral(_)
+        | Expression::BigIntLiteral(_)
+        | Expression::RegExpLiteral(_)
+        | Expression::Identifier(_)
+        | Expression::ThisExpression(_)
+        | Expression::Super(_)
+        | Expression::NewTarget(_)
+        | Expression::ImportMeta(_)
+        // Building a function / arrow *value* runs no code (the body is not
+        // executed). A CLASS expression is deliberately excluded — a `static {}`
+        // initializer runs at definition time.
+        | Expression::FunctionExpression(_)
+        | Expression::ArrowFunctionExpression(_)
+        // A property read is treated as free, matching Closure (which folds
+        // `[x.y].length`); a getter could in principle run, but Closure does not
+        // model that in this fold.
+        | Expression::MemberExpression(_)
+        | Expression::OptionalMemberExpression(_) => true,
+
+        // `delete x.y` mutates its target; every other unary operator (`-`, `+`,
+        // `!`, `~`, `typeof`, `void`) is pure over a pure operand.
+        Expression::UnaryExpression(u) => {
+            u.operator != UnaryOperator::Delete && is_side_effect_free(&u.argument)
+        }
+        Expression::BinaryExpression(b) => {
+            is_side_effect_free(&b.left) && is_side_effect_free(&b.right)
+        }
+        Expression::LogicalExpression(l) => {
+            is_side_effect_free(&l.left) && is_side_effect_free(&l.right)
+        }
+        Expression::ConditionalExpression(c) => {
+            is_side_effect_free(&c.test)
+                && is_side_effect_free(&c.consequent)
+                && is_side_effect_free(&c.alternate)
+        }
+        Expression::SequenceExpression(s) => s.expressions.iter().all(is_side_effect_free),
+        Expression::ChainExpression(c) => is_side_effect_free(&c.expression),
+        Expression::TemplateLiteral(t) => t.expressions.iter().all(is_side_effect_free),
+        // A hole (`None`) evaluates nothing; a present element must be free.
+        Expression::ArrayExpression(a) => a
+            .elements
+            .iter()
+            .all(|el| el.as_ref().is_none_or(is_side_effect_free)),
+
+        // Conservatively unsafe: Call / New / OptionalCall / Assignment / Update
+        // (++/--) / Await / Yield / TaggedTemplate / ImportExpression / Spread /
+        // ObjectExpression / ClassExpression. Never mark these free.
+        _ => false,
+    }
+}
+
 fn fold_member(m: &MemberExpression, st: &mut FoldState) -> Expression {
     // Recurse first, so e.g. `("a" + "b").length` sees the folded `"ab"`.
     let object = fold_expression(&m.object, st);
@@ -3815,6 +4106,51 @@ fn fold_member(m: &MemberExpression, st: &mut FoldState) -> Expression {
                 return stamp_literal_cv(FoldedLiteral::Number(len), new_cv);
             }
         }
+        // `[e0, e1, …].length` → the element count (CLOC12.193). Two guards keep
+        // this byte-identical to Closure:
+        //   1. a spread element (`[...x]`) contributes an unknown number of
+        //      elements at runtime, so the length is not statically known —
+        //      decline;
+        //   2. an element with a side effect must not be dropped, since
+        //      evaluating the array literal runs it — decline unless every
+        //      present element is side-effect-free.
+        // Holes (`[,,]`) evaluate nothing yet still count toward the length
+        // (`[,,].length === 2`), so `elements.len()` is the right count.
+        if let (Expression::ArrayExpression(a), Expression::Identifier(id)) = (&object, &property) {
+            if id.name == "length" {
+                let has_spread = a
+                    .elements
+                    .iter()
+                    .any(|el| matches!(el, Some(Expression::SpreadElement(_))));
+                let all_free = a
+                    .elements
+                    .iter()
+                    .all(|el| el.as_ref().is_none_or(is_side_effect_free));
+                if !has_spread && all_free {
+                    let len = a.elements.len() as f64;
+                    let parent = m.cv.clone();
+                    let before = format!("array-literal[{}].length", a.elements.len());
+                    let after = format_js_number(len);
+                    let new_cv = st.fork_cv(&parent, &before, &after);
+                    return stamp_literal_cv(FoldedLiteral::Number(len), new_cv);
+                }
+            }
+        }
+    } else {
+        // `[e0, e1, …][K]` → computed integer-index access into an array
+        // literal (CLOC12.196 in-bounds element pick + CLOC12.196b the
+        // out-of-bounds / hole `void 0` result). The whole truth table lives
+        // in `fold_array_index_access`; delegating keeps this hot, recursive
+        // `fold_member` frame small so deeply-nested expressions don't blow
+        // the stack (a fold body inlined here would bloat every frame on the
+        // recursion — see the frame-size lesson).
+        if let (Expression::ArrayExpression(a), Expression::NumericLiteral(k)) =
+            (&object, &property)
+        {
+            if let Some(folded) = fold_array_index_access(a, k, &m.cv, st) {
+                return folded;
+            }
+        }
     }
 
     Expression::MemberExpression(MemberExpression {
@@ -3823,6 +4159,123 @@ fn fold_member(m: &MemberExpression, st: &mut FoldState) -> Expression {
         property: Box::new(property),
         computed: m.computed,
     })
+}
+
+/// Fold a computed integer-index access `[e0, e1, …][K]` into an array
+/// literal. Returns `Some(replacement)` when the access folds, `None` to
+/// decline (leaving the `MemberExpression` intact).
+///
+/// This is the union of two oracle-verified arcs:
+///
+/// * **CLOC12.196** — an *in-bounds* index whose element is **present**
+///   folds to that element (`[a, b, c][1]` → `b`).
+/// * **CLOC12.196b** — an *out-of-bounds* index (`K ≥ len` **or** `K < 0`)
+///   or an in-bounds **hole** reads as `undefined`, which Closure spells
+///   `void 0` (`[1,2,3][5]` / `[1,,3][1]` / `[1,2,3][-1]` → `void 0`).
+///
+/// Truth table (all rows require **no spread** and an **integer** `K`; a
+/// fractional index such as `[1,2,3][1.5]` is an ordinary absent-property
+/// read that Closure leaves intact, so it declines):
+///
+/// | array          | K    | result   | why                                  |
+/// |----------------|------|----------|--------------------------------------|
+/// | `[a,b,c]`      | `1`  | `b`      | in-bounds, element present           |
+/// | `[1,2,3]`      | `5`  | `void 0` | out of bounds (`K ≥ len`)            |
+/// | `[1,2]`        | `2`  | `void 0` | out of bounds (`K == len`)           |
+/// | `[]`           | `0`  | `void 0` | out of bounds (empty)                |
+/// | `[1,2,3]`      | `-1` | `void 0` | negative index (post-fold `-1`)      |
+/// | `[1,,3]`       | `1`  | `void 0` | in-bounds **hole** reads `undefined` |
+/// | `[1,2,3]`      | `1.5`| decline  | fractional index — not an element    |
+///
+/// **Side-effect discipline** differs between the two results, because it
+/// governs which elements may be dropped:
+///
+/// * A **present** in-bounds element is *preserved verbatim* — its own side
+///   effect still runs (`[a, b()][1]` → `b()`). Only the **other** elements
+///   must be side-effect-free, or dropping them would drop a side effect
+///   (`[a, b()][0]` declines).
+/// * A **`void 0`** result drops the *whole* array literal, so **every**
+///   element must be side-effect-free (`[f(),2][5]` declines even though the
+///   index is out of bounds).
+///
+/// Marked `#[inline(never)]`: `fold_member` is on the recursive
+/// `fold_expression` path, so inlining this body would enlarge every stack
+/// frame along a deeply-nested expression and shrink the nesting depth we can
+/// fold before overflowing (see the frame-size lesson).
+#[inline(never)]
+fn fold_array_index_access(
+    a: &ArrayExpression,
+    k: &NumericLiteral,
+    parent_cv: &Option<String>,
+    st: &mut FoldState,
+) -> Option<Expression> {
+    // A spread (`[...x]`) makes the runtime indices statically unknown.
+    let has_spread = a
+        .elements
+        .iter()
+        .any(|el| matches!(el, Some(Expression::SpreadElement(_))));
+    if has_spread {
+        return None;
+    }
+    // Only a finite INTEGER index selects (or misses) an array element. A
+    // fractional index is an ordinary property read Closure leaves intact.
+    // (Post-fold a negative index is a `NumericLiteral` with a negative
+    // `value` — `-1` folds `-1` — so the negative case flows through here.)
+    if !(k.value.is_finite() && k.value.fract() == 0.0) {
+        return None;
+    }
+
+    let len = a.elements.len();
+    // `void 0` drops the whole literal, so every element must be pure.
+    let all_free = || {
+        a.elements
+            .iter()
+            .all(|el| el.as_ref().is_none_or(is_side_effect_free))
+    };
+
+    if k.value >= 0.0 && (k.value as usize) < len {
+        // In bounds: `0 ≤ K < len`.
+        let idx = k.value as usize;
+        match &a.elements[idx] {
+            // Present element (CLOC12.196): fold to it, preserving its own
+            // side effect; only the OTHER elements must be side-effect-free.
+            Some(selected) => {
+                let others_free = a
+                    .elements
+                    .iter()
+                    .enumerate()
+                    .filter(|(i, _)| *i != idx)
+                    .all(|(_, el)| el.as_ref().is_none_or(is_side_effect_free));
+                if !others_free {
+                    return None;
+                }
+                let before = format!("array-literal[{len}][{idx}]");
+                let after = format!("element[{idx}]");
+                // Records the fold (and sets `changed`); the selected element
+                // keeps its own cv for span provenance.
+                let _new_cv = st.fork_cv(parent_cv, &before, &after);
+                Some(selected.clone())
+            }
+            // In-bounds HOLE (CLOC12.196b): reads as `undefined` → `void 0`.
+            None => {
+                if !all_free() {
+                    return None;
+                }
+                let before = format!("array-literal[{len}][{idx}]=hole");
+                let new_cv = st.fork_cv(parent_cv, &before, "void 0");
+                Some(stamp_literal_cv(FoldedLiteral::Undefined, new_cv))
+            }
+        }
+    } else {
+        // Out of bounds (CLOC12.196b): `K ≥ len` or `K < 0`. The absent index
+        // reads as `undefined` → `void 0`.
+        if !all_free() {
+            return None;
+        }
+        let before = format!("array-literal[{len}][{}]", format_js_number(k.value));
+        let new_cv = st.fork_cv(parent_cv, &before, "void 0");
+        Some(stamp_literal_cv(FoldedLiteral::Undefined, new_cv))
+    }
 }
 
 // ---------------------------------------------------------------------
@@ -6510,6 +6963,533 @@ mod tests {
             Expression::NumericLiteral(n) => assert_eq!(n.value, 0.0),
             other => panic!("expected 0; got {:?}", other),
         }
+    }
+
+    /// Build an array literal from a slice of optional elements (`None` = hole).
+    fn array_opt(elements: Vec<Option<Expression>>) -> Expression {
+        Expression::ArrayExpression(ArrayExpression {
+            cv: Some("arr.cv".to_string()),
+            elements,
+        })
+    }
+
+    /// CLOC12.193: `[e0, e1, …].length` folds to the element count when every
+    /// present element is side-effect-free and there is no spread. Truth table
+    /// verified against the reference Closure Compiler.
+    #[test]
+    fn fold_array_literal_length_when_pure() {
+        // `[1, 2, 3].length` → 3.
+        let m = member(
+            array_opt(vec![
+                Some(num(1.0, None)),
+                Some(num(2.0, None)),
+                Some(num(3.0, None)),
+            ]),
+            "length",
+        );
+        let (out, _, changed, _) = run_pass(program_with_expr(m, true));
+        assert!(changed, "[1,2,3].length should fold");
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 3.0),
+            other => panic!("expected 3; got {other:?}"),
+        }
+
+        // `[].length` → 0.
+        let m0 = member(array_opt(vec![]), "length");
+        let (out, _, _, _) = run_pass(program_with_expr(m0, true));
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 0.0),
+            other => panic!("expected 0; got {other:?}"),
+        }
+
+        // `[,,].length` → 2 — holes evaluate nothing but DO count toward length.
+        let mh = member(array_opt(vec![None, None]), "length");
+        let (out, _, _, _) = run_pass(program_with_expr(mh, true));
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 2.0),
+            other => panic!("expected 2 (holes count); got {other:?}"),
+        }
+
+        // `[a, b].length` → 2 — identifier elements are side-effect-free.
+        let mid = member(
+            array_opt(vec![Some(ident("a")), Some(ident("b"))]),
+            "length",
+        );
+        let (out, _, _, _) = run_pass(program_with_expr(mid, true));
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 2.0),
+            other => panic!("expected 2 (identifiers are pure); got {other:?}"),
+        }
+    }
+
+    /// The array-`.length` fold must DECLINE when dropping the array would drop a
+    /// side effect (a call / an assignment) or when a spread makes the length
+    /// statically unknown — matching Closure, which keeps all three intact.
+    #[test]
+    fn array_literal_length_declines_on_side_effect_or_spread() {
+        use coding_adventures_javascript_ast::{AssignmentOperator, AssignmentTarget};
+        // `[g()].length` — the call must not be dropped.
+        let call = Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(ident("g")),
+            arguments: vec![],
+        });
+        let m_call = member(array_opt(vec![Some(call)]), "length");
+        let (out, _, changed, _) = run_pass(program_with_expr(m_call, true));
+        assert!(!changed, "[g()].length must not fold — the call has a side effect");
+        assert!(
+            matches!(extract_expr(&out), Expression::MemberExpression(_)),
+            "expected the member expression to survive"
+        );
+
+        // `[a = 1].length` — the assignment mutates `a`, so it must not be dropped.
+        let assign = Expression::AssignmentExpression(AssignmentExpression {
+            cv: None,
+            operator: AssignmentOperator::Eq,
+            left: AssignmentTarget::Identifier(Identifier { cv: None, name: "a".to_string() }),
+            right: Box::new(num(1.0, None)),
+        });
+        let m_assign = member(array_opt(vec![Some(assign)]), "length");
+        let (_out, _, changed, _) = run_pass(program_with_expr(m_assign, true));
+        assert!(!changed, "[a=1].length must not fold — the assignment has a side effect");
+
+        // `[1, 2, ...x].length` — a spread makes the length statically unknown.
+        let spread = Expression::SpreadElement(SpreadElement {
+            cv: None,
+            argument: Box::new(ident("x")),
+        });
+        let m_spread = member(
+            array_opt(vec![Some(num(1.0, None)), Some(num(2.0, None)), Some(spread)]),
+            "length",
+        );
+        let (_out, _, changed, _) = run_pass(program_with_expr(m_spread, true));
+        assert!(!changed, "[1,2,...x].length must not fold — spread length is unknown");
+    }
+
+    // -----------------------------------------------------------------
+    // CLOC12.198: compound self-assignment contraction (`x = x OP E` → `x OP= E`)
+    // -----------------------------------------------------------------
+
+    /// Build `<target> = <right>` — a plain `=` assignment to a bare identifier.
+    fn assign_eq(target: &str, right: Expression) -> Expression {
+        Expression::AssignmentExpression(AssignmentExpression {
+            cv: Some("as.1".to_string()),
+            operator: AssignmentOperator::Eq,
+            left: AssignmentTarget::Identifier(Identifier {
+                cv: None,
+                name: target.to_string(),
+            }),
+            right: Box::new(right),
+        })
+    }
+
+    /// Every arithmetic / bitwise operator contracts: `x = x OP y` → `x OP= y`,
+    /// keeping only the binary's RIGHT operand. Verified byte-identical against
+    /// the reference Closure Compiler (`x=x+1`→`x+=1`, `x=x*2`→`x*=2`, …).
+    #[test]
+    fn contracts_compound_self_assignment_for_each_operator() {
+        use AssignmentOperator as A;
+        use BinaryOperator as B;
+        let cases = [
+            (B::Add, A::AddEq),
+            (B::Sub, A::SubEq),
+            (B::Mul, A::MulEq),
+            (B::Div, A::DivEq),
+            (B::Mod, A::ModEq),
+            (B::Exp, A::ExpEq),
+            (B::LeftShift, A::LeftShiftEq),
+            (B::RightShift, A::RightShiftEq),
+            (B::UnsignedRightShift, A::UnsignedRightShiftEq),
+            (B::BitAnd, A::BitAndEq),
+            (B::BitOr, A::BitOrEq),
+            (B::BitXor, A::BitXorEq),
+        ];
+        for (bin_op, want) in cases {
+            // `x = x <op> y`
+            let rhs = binary_with(bin_op, ident("x"), ident("y"));
+            let (out, _c, changed, _) = run_pass(program_with_expr(assign_eq("x", rhs), true));
+            assert!(changed, "{bin_op:?}: the contraction should mark the program changed");
+            match extract_expr(&out) {
+                Expression::AssignmentExpression(a) => {
+                    assert_eq!(a.operator, want, "{bin_op:?}: wrong compound operator");
+                    match &a.left {
+                        AssignmentTarget::Identifier(id) => {
+                            assert_eq!(id.name, "x", "{bin_op:?}: target must survive")
+                        }
+                        other => panic!("{bin_op:?}: expected identifier target; got {other:?}"),
+                    }
+                    // The compound form keeps only the binary's RIGHT operand.
+                    match a.right.as_ref() {
+                        Expression::Identifier(id) => {
+                            assert_eq!(id.name, "y", "{bin_op:?}: RHS must be the right operand")
+                        }
+                        other => panic!("{bin_op:?}: expected `y` as the RHS; got {other:?}"),
+                    }
+                }
+                other => panic!("{bin_op:?}: expected an assignment back; got {other:?}"),
+            }
+        }
+    }
+
+    /// The contraction DECLINES whenever the shape is not `target = target OP E`:
+    /// a different left identifier, the target on the binary's RIGHT operand
+    /// (`x = 1 + x` — unsound for `-`/`/`/… and never done by Closure), an
+    /// operator with no compound form (`==`), or an already-compound operator.
+    #[test]
+    fn compound_self_assignment_declines_off_pattern() {
+        // `x = y + 1` — a *different* identifier: not a self-assignment.
+        let e1 = assign_eq("x", binary_with(BinaryOperator::Add, ident("y"), num(1.0, None)));
+        let (o1, _, c1, _) = run_pass(program_with_expr(e1, true));
+        assert!(!c1, "x = y + 1 must not contract");
+        assert!(
+            matches!(extract_expr(&o1), Expression::AssignmentExpression(a) if a.operator == AssignmentOperator::Eq),
+            "x = y + 1 must stay a plain `=` assignment"
+        );
+
+        // `x = 1 + x` — the target is the binary's RIGHT operand, not its left.
+        let e2 = assign_eq("x", binary_with(BinaryOperator::Add, num(1.0, None), ident("x")));
+        let (o2, _, c2, _) = run_pass(program_with_expr(e2, true));
+        assert!(!c2, "x = 1 + x must not contract (target on the right)");
+        assert!(
+            matches!(extract_expr(&o2), Expression::AssignmentExpression(a) if a.operator == AssignmentOperator::Eq),
+            "x = 1 + x must stay a plain `=` assignment"
+        );
+
+        // `x = x == 1` — the comparison operator has no `OP=` form.
+        let e3 = assign_eq("x", binary_with(BinaryOperator::Eq, ident("x"), num(1.0, None)));
+        let (_o3, _, c3, _) = run_pass(program_with_expr(e3, true));
+        assert!(!c3, "x = x == 1 must not contract (no `==` compound form)");
+
+        // `x += x + 1` — the operator is already compound (not plain `=`).
+        let e4 = Expression::AssignmentExpression(AssignmentExpression {
+            cv: Some("as.4".to_string()),
+            operator: AssignmentOperator::AddEq,
+            left: AssignmentTarget::Identifier(Identifier { cv: None, name: "x".to_string() }),
+            right: Box::new(binary_with(BinaryOperator::Add, ident("x"), num(1.0, None))),
+        });
+        let (_o4, _, c4, _) = run_pass(program_with_expr(e4, true));
+        assert!(!c4, "x += (x + 1) must not further contract");
+    }
+
+    /// A string self-concat contracts as well: `s = s + "b"` → `s += "b"`, and
+    /// the rewrite is CV-traced — the contracted node carries a forked CV id and
+    /// a `constant-fold` contribution is recorded.
+    #[test]
+    fn contracts_string_self_concat_and_traces_cv() {
+        let expr = assign_eq("s", binary_with(BinaryOperator::Add, ident("s"), string("b", None)));
+        let (out, contribs, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed, "s = s + \"b\" should contract");
+        match extract_expr(&out) {
+            Expression::AssignmentExpression(a) => {
+                assert_eq!(a.operator, AssignmentOperator::AddEq);
+                match a.right.as_ref() {
+                    Expression::StringLiteral(s) => assert_eq!(s.value, "b"),
+                    other => panic!("expected the string \"b\" as RHS; got {other:?}"),
+                }
+                assert!(a.cv.is_some(), "the contracted node should carry a forked CV id");
+            }
+            other => panic!("expected an assignment back; got {other:?}"),
+        }
+        assert!(
+            contribs
+                .iter()
+                .any(|c| c.source == "constant-fold" && c.tag == "folded"),
+            "a constant-fold contribution should be recorded for the contraction"
+        );
+    }
+
+    /// Build a computed index access `object[k]` (an integer-literal index).
+    fn index(object: Expression, k: f64) -> Expression {
+        Expression::MemberExpression(MemberExpression {
+            cv: Some("m.cv".to_string()),
+            object: Box::new(object),
+            property: Box::new(num(k, None)),
+            computed: true,
+        })
+    }
+
+    /// CLOC12.196: `[e0, e1, …][K]` folds to the element at index `K` when `K` is
+    /// an in-bounds non-negative integer, the element is present, no spread
+    /// exists, and every *other* element is side-effect-free. Verified against
+    /// the reference Closure Compiler.
+    #[test]
+    fn fold_array_index_when_in_bounds_and_pure() {
+        // `[1, 2, 3][0]` → 1, `[1, 2, 3][1]` → 2, `[1, 2, 3][2]` → 3.
+        for (k, want) in [(0.0, 1.0), (1.0, 2.0), (2.0, 3.0)] {
+            let e = index(
+                array_opt(vec![
+                    Some(num(1.0, None)),
+                    Some(num(2.0, None)),
+                    Some(num(3.0, None)),
+                ]),
+                k,
+            );
+            let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+            assert!(changed, "[1,2,3][{k}] should fold");
+            match extract_expr(&out) {
+                Expression::NumericLiteral(n) => assert_eq!(n.value, want, "[1,2,3][{k}]"),
+                other => panic!("expected {want}; got {other:?}"),
+            }
+        }
+
+        // `[a, b, c][1]` → `b` — identifier elements are side-effect-free.
+        let e = index(
+            array_opt(vec![Some(ident("a")), Some(ident("b")), Some(ident("c"))]),
+            1.0,
+        );
+        let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(changed);
+        match extract_expr(&out) {
+            Expression::Identifier(id) => assert_eq!(id.name, "b"),
+            other => panic!("expected ident b; got {other:?}"),
+        }
+
+        // `[1, , 3][0]` → 1 — a hole ELSEWHERE (index 1) doesn't block index 0.
+        let e = index(
+            array_opt(vec![Some(num(1.0, None)), None, Some(num(3.0, None))]),
+            0.0,
+        );
+        let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(changed);
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 1.0),
+            other => panic!("expected 1; got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn fold_array_index_preserves_side_effect_in_selected_element() {
+        // `[a, g()][1]` → `g()` — the SELECTED element is preserved verbatim, so
+        // its call still runs; the other element `a` is pure and safely dropped.
+        let call = Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(ident("g")),
+            arguments: vec![],
+        });
+        let e = index(array_opt(vec![Some(ident("a")), Some(call)]), 1.0);
+        let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(changed, "[a,g()][1] should fold to the (preserved) call");
+        assert!(
+            matches!(extract_expr(&out), Expression::CallExpression(_)),
+            "expected the selected call to survive"
+        );
+    }
+
+    #[test]
+    fn array_index_declines_on_side_effect_hole_oob_or_spread() {
+        // `[a, g()][0]` — selecting `a` would DROP `g()`, a side effect → decline.
+        let call = Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(ident("g")),
+            arguments: vec![],
+        });
+        let e = index(array_opt(vec![Some(ident("a")), Some(call)]), 0.0);
+        let (_out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(!changed, "[a,g()][0] must not fold — would drop the call g()");
+
+        // `[1, 2, ...x][0]` — a spread makes runtime indices unknown → decline.
+        let spread = Expression::SpreadElement(SpreadElement {
+            cv: None,
+            argument: Box::new(ident("x")),
+        });
+        let e = index(
+            array_opt(vec![Some(num(1.0, None)), Some(num(2.0, None)), Some(spread)]),
+            0.0,
+        );
+        let (_out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(!changed, "[1,2,...x][0] must not fold — spread indices unknown");
+
+        // `[1, 2, 3][1.5]` — a fractional index is an ordinary absent-property
+        // read, not an element pick. Closure leaves it intact → decline.
+        let e = index(
+            array_opt(vec![
+                Some(num(1.0, None)),
+                Some(num(2.0, None)),
+                Some(num(3.0, None)),
+            ]),
+            1.5,
+        );
+        let (_out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(!changed, "[1,2,3][1.5] fractional index — must not fold");
+
+        // `[f(), 2][5]` — out of bounds, BUT the `void 0` result would drop the
+        // whole literal including the impure `f()` → decline (CLOC12.196b: every
+        // element must be side-effect-free for a `void 0` fold).
+        let call = Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(ident("f")),
+            arguments: vec![],
+        });
+        let e = index(array_opt(vec![Some(call), Some(num(2.0, None))]), 5.0);
+        let (_out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(!changed, "[f(),2][5] must not fold — would drop the call f()");
+    }
+
+    #[test]
+    fn fold_array_index_out_of_bounds_to_void_0() {
+        // CLOC12.196b: an out-of-bounds index reads as `undefined`, which the
+        // emitter spells `void 0`. Verified against the Closure oracle:
+        //   [1,2,3][5]  [1,2][2]  [][0]  → void 0.
+        for (elems, k) in [
+            (vec![Some(num(1.0, None)), Some(num(2.0, None)), Some(num(3.0, None))], 5.0),
+            (vec![Some(num(1.0, None)), Some(num(2.0, None))], 2.0),
+            (vec![], 0.0),
+        ] {
+            let e = index(array_opt(elems), k);
+            let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+            assert!(changed, "out-of-bounds index {k} should fold to void 0");
+            assert!(
+                matches!(extract_expr(&out), Expression::UndefinedLiteral(_)),
+                "expected void 0 (UndefinedLiteral) for out-of-bounds index {k}"
+            );
+        }
+    }
+
+    #[test]
+    fn fold_array_index_negative_to_void_0() {
+        // CLOC12.196b: a negative index is never a valid array slot → `void 0`.
+        // Post-fold, `-1` is a NumericLiteral with value `-1.0`, so the OOB path
+        // handles it. Oracle: `[1,2,3][-1]` → `void 0`.
+        let e = index(
+            array_opt(vec![
+                Some(num(1.0, None)),
+                Some(num(2.0, None)),
+                Some(num(3.0, None)),
+            ]),
+            -1.0,
+        );
+        let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(changed, "[1,2,3][-1] should fold to void 0");
+        assert!(
+            matches!(extract_expr(&out), Expression::UndefinedLiteral(_)),
+            "expected void 0 (UndefinedLiteral) for negative index"
+        );
+    }
+
+    #[test]
+    fn fold_array_index_in_bounds_hole_to_void_0() {
+        // CLOC12.196b: an in-bounds slot that is a HOLE reads as `undefined`.
+        // Oracle: `[1,,3][1]` → `void 0`. The other present elements (1, 3) are
+        // side-effect-free, so dropping the literal is sound.
+        let e = index(
+            array_opt(vec![Some(num(1.0, None)), None, Some(num(3.0, None))]),
+            1.0,
+        );
+        let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(changed, "[1,,3][1] selects a hole — should fold to void 0");
+        assert!(
+            matches!(extract_expr(&out), Expression::UndefinedLiteral(_)),
+            "expected void 0 (UndefinedLiteral) for in-bounds hole"
+        );
+    }
+
+    /// Build a template literal from quasi cooked strings + substitution
+    /// expressions (`quasis.len() == exprs.len() + 1`). CLOC12.197 test helper.
+    fn template(quasis: &[&str], exprs: Vec<Expression>) -> Expression {
+        use coding_adventures_javascript_ast::{TemplateElement, TemplateLiteral};
+        let n = exprs.len();
+        let quasi_elems = quasis
+            .iter()
+            .enumerate()
+            .map(|(i, q)| TemplateElement {
+                cv: None,
+                raw: q.to_string(),
+                cooked: Some(q.to_string()),
+                tail: i == n,
+            })
+            .collect();
+        Expression::TemplateLiteral(TemplateLiteral {
+            cv: Some("tpl.cv".to_string()),
+            quasis: quasi_elems,
+            expressions: exprs,
+        })
+    }
+
+    /// CLOC12.197: `` `a${1}b` `` → `"a1b"` when every substitution is a
+    /// stringifiable constant literal. Truth table verified against the
+    /// reference Closure Compiler.
+    #[test]
+    fn fold_template_all_const_subs() {
+        // `\`a${1}b\`` → "a1b".
+        let t = template(&["a", "b"], vec![num(1.0, None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(t, true));
+        assert!(changed, "template with a const sub should fold");
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "a1b"),
+            other => panic!("expected \"a1b\"; got {other:?}"),
+        }
+
+        // `\`${1}-${2}-${3}\`` → "1-2-3".
+        let t = template(
+            &["", "-", "-", ""],
+            vec![num(1.0, None), num(2.0, None), num(3.0, None)],
+        );
+        let (out, _, _, _) = run_pass(program_with_expr(t, true));
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "1-2-3"),
+            other => panic!("expected \"1-2-3\"; got {other:?}"),
+        }
+
+        // string / bool / null substitutions stringify via `ToString`.
+        let t = template(
+            &["", "-", "-", ""],
+            vec![string("x", None), boolean(true, None), null(None)],
+        );
+        let (out, _, _, _) = run_pass(program_with_expr(t, true));
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "x-true-null"),
+            other => panic!("expected \"x-true-null\"; got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn fold_template_no_substitutions() {
+        // `\`hello\`` → "hello".
+        let t = template(&["hello"], vec![]);
+        let (out, _, changed, _) = run_pass(program_with_expr(t, true));
+        assert!(changed);
+        assert!(matches!(extract_expr(&out), Expression::StringLiteral(s) if s.value == "hello"));
+
+        // `\`\`` → "".
+        let t = template(&[""], vec![]);
+        let (out, _, _, _) = run_pass(program_with_expr(t, true));
+        assert!(matches!(extract_expr(&out), Expression::StringLiteral(s) if s.value.is_empty()));
+    }
+
+    #[test]
+    fn fold_template_const_expr_sub_folds_first() {
+        // `\`a${1+2}b\`` — `1+2` folds to `3` first (recursion), then the
+        // template collapses → "a3b".
+        let sum = Expression::BinaryExpression(BinaryExpression {
+            cv: None,
+            operator: BinaryOperator::Add,
+            left: Box::new(num(1.0, None)),
+            right: Box::new(num(2.0, None)),
+        });
+        let t = template(&["a", "b"], vec![sum]);
+        let (out, _, changed, _) = run_pass(program_with_expr(t, true));
+        assert!(changed);
+        assert!(matches!(extract_expr(&out), Expression::StringLiteral(s) if s.value == "a3b"));
+    }
+
+    #[test]
+    fn template_declines_on_nonconst_substitution() {
+        // `\`a${x}b\`` — an identifier is not a compile-time constant → keep.
+        let t = template(&["a", "b"], vec![ident("x")]);
+        let (out, _, changed, _) = run_pass(program_with_expr(t, true));
+        assert!(!changed, "template with a non-const sub must not fold");
+        assert!(matches!(extract_expr(&out), Expression::TemplateLiteral(_)));
+
+        // `\`a${f()}b\`` — a call is not constant → keep.
+        let call = Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(ident("f")),
+            arguments: vec![],
+        });
+        let t = template(&["a", "b"], vec![call]);
+        let (out, _, changed, _) = run_pass(program_with_expr(t, true));
+        assert!(!changed);
+        assert!(matches!(extract_expr(&out), Expression::TemplateLiteral(_)));
     }
 
     #[test]

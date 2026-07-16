@@ -2,6 +2,78 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.26.0] - 2026-07-15
+
+### Added — empty-`if` with a side-effecting **call** test → expression statement
+
+The impure twin of the 0.25.0 empty-`if` removal. When both branches of an `if`
+are empty but the test **has** a side effect, the `if` wrapper is dead yet the
+test must still run, so it survives as an expression statement:
+
+- `if(f()){}` → `f();`
+- `if(f()){}else{}` → `f();`
+- `if(a.b()){}` → `a.b();`
+- `if(f(1,2)){}` → `f(1,2);`
+
+Verified byte-identical against the reference Closure Compiler (`SIMPLE`). The
+two empty-`if` guards are mutually exclusive: a side-effect-free test is *removed*
+(0.25.0), a side-effecting one is *kept as its test* (this release).
+
+**Scope: the test must be a plain `CallExpression`.** As an expression statement
+a bare call is already Closure's final form, so the rewrite is exact. Other
+impure tests receive *further* simplifications that are separate transforms, so
+they deliberately decline here rather than emit a non-canonical intermediate:
+
+- `!f()` — Closure drops the discarded `!` (→ `f();`);
+- `a = b` — dead-assignment removal may delete it entirely;
+- `a, f()` — the sequence is split into statements (`a;f();`);
+- `new F()` — emitted `new F` (no parens) in statement position.
+
+A non-empty branch is also out of scope: `if(f()){g()}` → `f()&&g()` is the
+`if`→logical rewrite, a different arc.
+
+## [0.25.0] - 2026-07-15
+
+### Added — empty-`if` elimination (test side-effect-free)
+
+`dce_statement` now drops an `if` statement whose consequent is empty AND whose
+alternate is absent-or-empty AND whose test is **side-effect-free**: `if(x){}`,
+`if(x.y){}`, `if(x[k]){}`, `if(a&&b){}`, `if(typeof x){}`, `if(!x){}`,
+`if(x){}else{}` all collapse to `;` (which the block/program empty-statement
+sweep then removes), matching the reference Closure Compiler. When either branch
+does real work, or the test may have side effects (`if(f()){}`, `if(x++){}`), the
+`if` is kept — the "keep the test as an expression statement" rewrite
+(`if(f()){}`→`f();`) is a deliberate follow-up, and switch elimination for a
+side-effect-free-but-non-leaf discriminant is a separate slice.
+
+A new `is_side_effect_free` predicate backs the decision: identifiers, `this`,
+literals, and property reads / unary (non-`delete`) / binary / logical /
+conditional expressions built from side-effect-free parts are pure; calls,
+`new`, assignment, `++`/`--`, `delete`, `yield`, `await`, tagged templates,
+dynamic `import()`, and (conservatively) the comma operator are not. Member
+access is pure only when its object (and computed key) are pure, so `f().y` is
+correctly excluded. Safe-by-construction: anything not positively known pure is
+never removed.
+
+## [0.24.0] - 2026-07-15
+
+### Added — CLOC12.195: strip stray top-level `EmptyStatement`s
+
+`dce_program` now sweeps bare `EmptyStatement`s (`;`) out of the **program body**,
+mirroring the sweep `dce_block_statement` already performs on block bodies. An
+empty statement at statement-list position is a pure no-op, so removing it is
+byte-safe. These arise from a hand-written `;`, from `constant-fold` /
+`fold-control-flow` folding `if (false) …` / `while (false) …` to an
+`EmptyStatement`, and — new in this cycle — from the trailing `;` a flattened
+block leaves behind (`g(0);{g(1)};g(2)` → `g(0);g(1);;g(2)` → `g(0);g(1);g(2)`),
+closing the CLOC12.194 residual. Verified byte-identical to the reference Closure
+Compiler: `;`→removed, `;;;`→removed, `g(0);;g(1)`→`g(0);g(1)`, `;g(1)`→`g(1)`,
+`if(false){g(1)}`→removed. A `for (…) ;` / `if (c) ;` empty *substatement* is a
+loop/if body, NOT a statement-list member, so it never reaches this sweep and
+stays intact — exactly as Closure keeps it. Adds an `is_empty_program_item`
+predicate and records a `removed-empty-statement` deletion (tombstoning each
+swept span for `--correlation_vector`). Additive; MINOR bump 0.23.0 → 0.24.0.
+
 ## [0.23.0] - 2026-07-12
 
 ### Added — CLOC12.189 PR1: export declaration rebuild clones the export; the removability predicate treats an export as live

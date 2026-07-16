@@ -79,7 +79,7 @@ use coding_adventures_javascript_ast::{
     ClassDeclaration, ClassExpression, ClassMember, MethodDefinition, PropertyDefinition,
     ChainExpression, FunctionDeclaration, FunctionExpression, IfStatement, LogicalExpression, MemberExpression, NullLiteral, OptionalCallExpression, OptionalMemberExpression,
     NumericLiteral, ObjectExpression, ObjectMember, Program, ProgramItem, Property, PropertyKey,
-    ReturnStatement, Statement, StringLiteral, UnaryExpression, UndefinedLiteral, UpdateExpression, VarKind,
+    ReturnStatement, Statement, StringLiteral, UnaryExpression, UnaryOperator, UndefinedLiteral, UpdateExpression, VarKind,
     DoWhileStatement, VariableDeclaration, VariableDeclarator, WhileStatement, WithStatement,
 };
 use serde_json::json;
@@ -253,6 +253,81 @@ fn is_pure_leaf(expr: &Expression) -> bool {
     )
 }
 
+/// Is evaluating `expr` free of observable side effects? Used to decide whether
+/// a statement whose only job is to evaluate `expr` (e.g. the test of an
+/// otherwise-empty `if`) can be dropped entirely.
+///
+/// This is broader than [`is_pure_leaf`] (which is literals only): it mirrors
+/// the reference Closure Compiler's notion, under which reading a binding or a
+/// property, and combining pure sub-expressions with the pure operators, has no
+/// side effect. So `if (x) {}`, `if (x.y) {}`, `if (x[k]) {}`, `if (a && b) {}`,
+/// `if (typeof x) {}`, `if (!x) {}` all drop.
+///
+/// SAFE-BY-CONSTRUCTION: anything not positively known pure returns `false`
+/// (never removed). The impure set — calls, `new`, assignment, `++`/`--`,
+/// `delete`, `yield`, `await`, tagged templates, dynamic `import()`, and
+/// (conservatively) the comma operator — is therefore handled by the catch-all.
+///
+/// - **Member access** is pure only when its object *and* (for a computed key)
+///   its property are pure — `f().y` is NOT pure (the call runs).
+/// - **`delete`** is excluded from the pure unary operators: it mutates.
+/// - The comma operator (`SequenceExpression`) returns `false` even when both
+///   operands are pure, because the reference compiler rewrites
+///   `if (a, b) {}` to `a;` (a different transform), so declining here keeps us
+///   byte-identical rather than removing it outright.
+fn is_side_effect_free(expr: &Expression) -> bool {
+    match expr {
+        // Leaf values and bindings: no side effect to read.
+        Expression::NumericLiteral(_)
+        | Expression::StringLiteral(_)
+        | Expression::BooleanLiteral(_)
+        | Expression::NullLiteral(_)
+        | Expression::UndefinedLiteral(_)
+        | Expression::BigIntLiteral(_)
+        | Expression::RegExpLiteral(_)
+        | Expression::Identifier(_)
+        | Expression::ThisExpression(_) => true,
+        // Property read: pure iff the object (and computed key) are pure.
+        Expression::MemberExpression(m) => {
+            is_side_effect_free(&m.object)
+                && (!m.computed || is_side_effect_free(&m.property))
+        }
+        // Pure prefix operators over a pure operand. `delete` is NOT here — it
+        // removes a property (a side effect).
+        Expression::UnaryExpression(u) => {
+            u.operator != UnaryOperator::Delete && is_side_effect_free(&u.argument)
+        }
+        Expression::BinaryExpression(b) => {
+            is_side_effect_free(&b.left) && is_side_effect_free(&b.right)
+        }
+        Expression::LogicalExpression(l) => {
+            is_side_effect_free(&l.left) && is_side_effect_free(&l.right)
+        }
+        Expression::ConditionalExpression(c) => {
+            is_side_effect_free(&c.test)
+                && is_side_effect_free(&c.consequent)
+                && is_side_effect_free(&c.alternate)
+        }
+        // Anything else (Call / New / Assignment / Update / Sequence / Yield /
+        // Await / TaggedTemplate / ImportExpression / …) is treated as possibly
+        // side-effecting and is NOT removed.
+        _ => false,
+    }
+}
+
+/// Does this statement do nothing when executed — an `EmptyStatement` (`;`) or
+/// an empty `BlockStatement` (`{}`)? Used to test whether an `if`'s branch is
+/// empty. (An empty block IS observably a no-op: it declares no bindings.)
+fn statement_is_empty(stmt: &Statement) -> bool {
+    matches!(
+        stmt,
+        Statement::Tagged(TaggedStatement::EmptyStatement(_))
+    ) || matches!(
+        stmt,
+        Statement::Tagged(TaggedStatement::BlockStatement(b)) if b.body.is_empty()
+    )
+}
+
 // =====================================================================
 // Program / top-level
 // =====================================================================
@@ -290,6 +365,37 @@ fn dce_program(prog: &Program, st: &mut DceState) -> Program {
             "removed-debugger",
             &format!("program with {} top-level items", before_debugger_drop),
             &format!("dropped {} top-level debugger statements", dropped_debuggers),
+        );
+    }
+
+    // Strip stray top-level `EmptyStatement`s (`;`) — CLOC12.195.
+    //
+    // Like `debugger`, an empty statement at statement-list position is a pure
+    // no-op, so the program body needs its own sweep separate from
+    // `dce_block_statement`'s (which already does this for block bodies). These
+    // arise from a hand-written `;`, from `constant-fold`/`fold-control-flow`
+    // folding `if (false) …;` / `while (false) …;` to an `EmptyStatement`, and
+    // from the trailing `;` a flattened block leaves behind
+    // (`g(0);{g(1)};g(2)` → `g(0);g(1);;g(2)` → `g(0);g(1);g(2)`). Upstream
+    // Closure removes them all; matching it here removes the last stray `;`.
+    // A `for (…) ;` / `if (c) ;` empty *substatement* is a loop/if body, NOT a
+    // statement-list member, so it never reaches this sweep — it stays intact,
+    // exactly as Closure keeps it.
+    let before_empty_drop = new_body.len();
+    let removed_empty_cvs: Vec<Option<String>> = new_body
+        .iter()
+        .filter(|item| is_empty_program_item(item))
+        .map(program_item_cv)
+        .collect();
+    new_body.retain(|item| !is_empty_program_item(item));
+    let dropped_empties = before_empty_drop - new_body.len();
+    if dropped_empties > 0 {
+        st.record_deletion(
+            &removed_empty_cvs,
+            &prog.cv,
+            "removed-empty-statement",
+            &format!("program with {} top-level items", before_empty_drop),
+            &format!("dropped {} top-level empty statements", dropped_empties),
         );
     }
 
@@ -331,12 +437,68 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
         TaggedStatement::BlockStatement(s) => {
             TaggedStatement::BlockStatement(dce_block_statement(s, st))
         }
-        TaggedStatement::IfStatement(s) => TaggedStatement::IfStatement(IfStatement {
-            cv: s.cv.clone(),
-            test: dce_expression(&s.test, st),
-            consequent: Box::new(dce_statement(&s.consequent, st)),
-            alternate: s.alternate.as_ref().map(|a| Box::new(dce_statement(a, st))),
-        }),
+        TaggedStatement::IfStatement(s) => {
+            let test = dce_expression(&s.test, st);
+            let consequent = Box::new(dce_statement(&s.consequent, st));
+            let alternate = s.alternate.as_ref().map(|a| Box::new(dce_statement(a, st)));
+
+            // Empty-`if` elimination. When both branches do nothing (consequent
+            // empty AND alternate absent-or-empty) the whole statement's only
+            // remaining effect is evaluating `test`; if `test` is side-effect-
+            // free the entire `if` is dead and collapses to `;` (which the
+            // block/program sweep then drops). `if(x){}`, `if(x.y){}else{}`, … →
+            // removed.
+            let cons_empty = statement_is_empty(&consequent);
+            let alt_empty = alternate.as_ref().is_none_or(|a| statement_is_empty(a));
+            if cons_empty && alt_empty && is_side_effect_free(&test) {
+                st.record(
+                    &s.cv,
+                    "if_eliminated",
+                    "IfStatement{ <empty>, test side-effect-free }",
+                    "EmptyStatement",
+                );
+                return TaggedStatement::EmptyStatement(EmptyStatement { cv: s.cv.clone() });
+            }
+
+            // A side-effecting test with both branches empty still has to RUN
+            // the test, so the `if` wrapper is dead but the test survives as an
+            // expression statement: `if(f()){}` → `f();`, `if(a.b()){}` →
+            // `a.b();`, `if(f(1,2)){}else{}` → `f(1,2);`. This is the impure
+            // twin of the `is_side_effect_free` removal above (the two guards
+            // are mutually exclusive — a call is never side-effect-free).
+            //
+            // Scoped to a plain `CallExpression`: as an expression statement a
+            // bare call is already Closure's *final* form, so the rewrite is
+            // byte-identical. Other impure tests get FURTHER simplifications
+            // that are separate transforms, so we decline them here rather than
+            // emit a non-canonical intermediate:
+            //   - `!f()`   → Closure drops the discarded `!`   → `f();`
+            //   - `a = b`  → dead-assignment removal may delete it entirely
+            //   - `a, f()` → the sequence is split into statements `a;f();`
+            //   - `new F()`→ emitted `new F` (no parens) in statement position
+            // Non-empty branches are a different rewrite again (`if(f()){g()}`
+            // → `f()&&g()`, the if→logical arc), so this only fires when BOTH
+            // branches are empty.
+            if cons_empty && alt_empty && matches!(test, Expression::CallExpression(_)) {
+                st.record(
+                    &s.cv,
+                    "if_to_expression_statement",
+                    "IfStatement{ <empty>, test = CallExpression }",
+                    "ExpressionStatement",
+                );
+                return TaggedStatement::ExpressionStatement(ExpressionStatement {
+                    cv: s.cv.clone(),
+                    expression: test,
+                });
+            }
+
+            TaggedStatement::IfStatement(IfStatement {
+                cv: s.cv.clone(),
+                test,
+                consequent,
+                alternate,
+            })
+        }
         TaggedStatement::WhileStatement(s) => TaggedStatement::WhileStatement(WhileStatement {
             cv: s.cv.clone(),
             test: dce_expression(&s.test, st),
@@ -1076,6 +1238,15 @@ fn is_debugger_program_item(item: &ProgramItem) -> bool {
     matches!(item, ProgramItem::Statement(s) if is_debugger_statement(s))
 }
 
+/// Is this top-level item a bare `EmptyStatement` (`;`)? Mirrors
+/// [`is_empty_statement`] for the `ProgramItem` list, so [`dce_program`] can
+/// sweep stray semicolons out of the program body the same way
+/// [`dce_block_statement`] sweeps them out of a block body. An `EmptyStatement`
+/// only ever appears as a `ProgramItem::Statement`, never a `Declaration`.
+fn is_empty_program_item(item: &ProgramItem) -> bool {
+    matches!(item, ProgramItem::Statement(s) if is_empty_statement(s))
+}
+
 /// Fetch a statement's own correlation-vector id, if it carries one.
 ///
 /// DCE's deletion sites need the *removed* node's CV id — not just the
@@ -1801,6 +1972,65 @@ mod tests {
             .as_ref()
             .expect("a stripped top-level debugger must be tombstoned");
         assert_eq!(del.reason, "removed-debugger");
+    }
+
+    #[test]
+    fn top_level_empty_statement_is_removed() {
+        // `keep(); ;` at PROGRAM level → `keep();` — CLOC12.195. Before this the
+        // program-body sweep only stripped `debugger`, leaving stray top-level
+        // `;` behind (block bodies were already cleaned by `dce_block_statement`).
+        let prog = program().with_body(vec![
+            ProgramItem::Statement(expr_stmt(ident("keep"))),
+            ProgramItem::Statement(empty_stmt()),
+        ]);
+        let (out, _c, changed, _n) = run_pass(prog);
+        assert!(changed, "a stray top-level `;` should be removed");
+        assert_eq!(out.body.len(), 1, "only the kept statement survives");
+        assert!(matches!(
+            &out.body[0],
+            ProgramItem::Statement(Statement::Tagged(TaggedStatement::ExpressionStatement(_)))
+        ));
+    }
+
+    #[test]
+    fn multiple_top_level_empty_statements_all_removed() {
+        // `; ; keep(); ;` → `keep();` — leading, interior, and trailing empties.
+        let prog = program().with_body(vec![
+            ProgramItem::Statement(empty_stmt()),
+            ProgramItem::Statement(empty_stmt()),
+            ProgramItem::Statement(expr_stmt(ident("keep"))),
+            ProgramItem::Statement(empty_stmt()),
+        ]);
+        let (out, _c, changed, _n) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 1, "all three empties swept, `keep` remains");
+    }
+
+    #[test]
+    fn top_level_empty_statement_removal_tombstones_the_statement() {
+        // The program-body empty sweep is a separate code path from the
+        // block-body sweep, so it gets its own tombstone test (mirrors the
+        // top-level debugger tombstone test).
+        let mut log = CVLog::new(true);
+        let empty_id = log.create(None);
+        let empty = Statement::empty_statement(EmptyStatement {
+            cv: Some(empty_id.clone()),
+        });
+        let prog = program().with_body(vec![
+            ProgramItem::Statement(expr_stmt(ident("keep"))),
+            ProgramItem::Statement(empty),
+        ]);
+
+        let _out = run_pass_capturing_cv(&prog, &mut log);
+
+        let del = log
+            .get(&empty_id)
+            .unwrap()
+            .deleted
+            .as_ref()
+            .expect("a stripped top-level empty statement must be tombstoned");
+        assert_eq!(del.source, "dce");
+        assert_eq!(del.reason, "removed-empty-statement");
     }
 
     #[test]
@@ -3066,5 +3296,137 @@ mod tests {
             "the statement after a try/finally must remain reachable; got {:?}",
             block.body,
         );
+    }
+
+    // ---------------- empty-`if` elimination ------------------------------
+
+    fn empty_block_stmt() -> Statement {
+        Statement::block_statement(BlockStatement { cv: None, body: vec![] })
+    }
+    fn if_full(test: Expression, consequent: Statement, alternate: Option<Statement>) -> Statement {
+        Statement::if_statement(IfStatement {
+            cv: None,
+            test,
+            consequent: Box::new(consequent),
+            alternate: alternate.map(Box::new),
+        })
+    }
+    fn member(obj: Expression, prop: &str) -> Expression {
+        Expression::MemberExpression(MemberExpression {
+            cv: None,
+            object: Box::new(obj),
+            property: Box::new(ident(prop)),
+            computed: false,
+        })
+    }
+    fn call0(name: &str) -> Expression {
+        Expression::CallExpression(coding_adventures_javascript_ast::CallExpression {
+            cv: None,
+            callee: Box::new(ident(name)),
+            arguments: vec![],
+        })
+    }
+    fn not(arg: Expression) -> Expression {
+        Expression::UnaryExpression(UnaryExpression {
+            cv: None,
+            operator: UnaryOperator::Not,
+            prefix: true,
+            argument: Box::new(arg),
+        })
+    }
+
+    #[test]
+    fn empty_if_with_side_effect_free_test_is_removed() {
+        // `if(x){}`, `if(x.y){}`, `if(true){}`, `if(!x){}` — the test is
+        // side-effect-free and both branches empty, so the whole `if` is dead
+        // and drops (collapses to `;`, then the program sweep removes it).
+        for test in [ident("x"), member(ident("x"), "y"), boolean(true), not(ident("x"))] {
+            let prog = program()
+                .with_body(vec![ProgramItem::Statement(if_full(test.clone(), empty_block_stmt(), None))]);
+            let (out, _c, changed, _) = run_pass(prog);
+            assert!(changed, "empty if with pure test should mark changed: {test:?}");
+            assert!(out.body.is_empty(), "the empty if should be removed; got {:?}", out.body);
+        }
+    }
+
+    #[test]
+    fn empty_if_else_both_empty_is_removed() {
+        // `if(x){}else{}` — both branches empty, pure test → removed.
+        let prog = program().with_body(vec![ProgramItem::Statement(if_full(
+            ident("x"),
+            empty_block_stmt(),
+            Some(empty_block_stmt()),
+        ))]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert!(out.body.is_empty(), "if/else with both branches empty should drop");
+    }
+
+    #[test]
+    fn empty_if_removed_but_neighbours_kept() {
+        // The removal must not disturb sibling statements.
+        let prog = program().with_body(vec![
+            ProgramItem::Statement(expr_stmt(call0("before"))),
+            ProgramItem::Statement(if_full(ident("x"), empty_block_stmt(), None)),
+            ProgramItem::Statement(expr_stmt(call0("after"))),
+        ]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 2, "only the empty if should be removed; got {:?}", out.body);
+    }
+
+    #[test]
+    fn empty_if_with_call_test_becomes_expression_statement() {
+        // `if(f()){}` and `if(f()){}else{}` — the call may have side effects, so
+        // the `if` wrapper is dead but the call must still RUN: it survives as
+        // an expression statement `f();`.
+        for alt in [None, Some(empty_block_stmt())] {
+            let prog = program().with_body(vec![ProgramItem::Statement(if_full(
+                call0("f"),
+                empty_block_stmt(),
+                alt,
+            ))]);
+            let (out, _c, changed, _) = run_pass(prog);
+            assert!(changed, "impure-call empty if should mark changed");
+            assert_eq!(out.body.len(), 1, "the call must survive as one statement");
+            let ProgramItem::Statement(Statement::Tagged(TaggedStatement::ExpressionStatement(
+                es,
+            ))) = &out.body[0]
+            else {
+                panic!("expected an ExpressionStatement; got {:?}", out.body[0])
+            };
+            assert!(
+                matches!(&es.expression, Expression::CallExpression(_)),
+                "the expression statement should wrap the call test"
+            );
+        }
+    }
+
+    #[test]
+    fn empty_if_with_non_call_impure_test_is_kept() {
+        // `if(!f()){}` — the test is impure (the inner call runs) but is NOT a
+        // bare `CallExpression`. Closure would drop the discarded `!` (→ `f();`),
+        // a separate transform, so we DECLINE and keep the `if` intact rather
+        // than emit a non-canonical `!f();`.
+        let prog = program().with_body(vec![ProgramItem::Statement(if_full(
+            not(call0("f")),
+            empty_block_stmt(),
+            None,
+        ))]);
+        let (out, _c, _changed, _) = run_pass(prog);
+        assert_eq!(out.body.len(), 1, "non-call impure-test empty if must be kept");
+        assert!(matches!(
+            &out.body[0],
+            ProgramItem::Statement(Statement::Tagged(TaggedStatement::IfStatement(_)))
+        ));
+    }
+
+    #[test]
+    fn if_with_non_empty_consequent_is_kept() {
+        // `if(x)g();` — the consequent does work, so nothing is removed.
+        let prog = program()
+            .with_body(vec![ProgramItem::Statement(if_full(ident("x"), expr_stmt(call0("g")), None))]);
+        let (out, _c, _changed, _) = run_pass(prog);
+        assert_eq!(out.body.len(), 1, "non-empty-consequent if must be kept");
     }
 }

@@ -1,0 +1,83 @@
+% ============================================================================
+% animal-babies — a familiar animal and the NAME OF ITS BABY (its young)
+% (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% One of the very first vocabulary lessons a small child learns: baby animals
+% have SPECIAL NAMES. A baby dog is not a "baby dog" — it is a PUPPY. A baby cat
+% is a KITTEN, a baby cow (cattle) is a CALF, a baby horse is a FOAL, a baby
+% sheep is a LAMB, a baby kangaroo is a JOEY, and a baby goat is a KID. This tiny
+% library records, for a handful of familiar animals, what its young is called.
+% Recall is a binding query:
+%
+%     ? animal_baby(dog, $Baby)            % puppy
+%     ? animal_baby(kangaroo, $Baby)       % joey
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `animal_baby(animal, baby)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the baby's
+% name WITH its source, on the CPU, with zero model calls, and abstains on
+% anything that is not one of the recorded animals (ask it about a `rock` and it
+% stays honestly silent rather than inventing a name).
+%
+% The baby names, as a truth table over the animals shipped here:
+%
+%     animal    baby      a beginner's cue
+%     --------  --------  -------------------------------------------------
+%     dog       puppy     a young dog; "pup" is the short form
+%     cat       kitten    a young cat
+%     cattle    calf      a young cow or bull (cattle) — also called a calf
+%     horse     foal      a young horse (a colt if male, a filly if female)
+%     sheep     lamb      a young sheep
+%     kangaroo  joey      a young kangaroo, carried in its mother's pouch
+%     goat      kid       a young goat — yes, the word "kid" comes from this!
+%
+% The animals were chosen to be FAMILIAR and to have ONE clear, well-known baby
+% name each. Note "cattle": the general word for cows and bulls is *cattle*, and
+% that is the exact word the source uses, so we keep it as the animal here (a
+% baby cow is still a calf). A word that is NOT one of these animals — `rock`,
+% `banana`, `oak` — is deliberately NOT a row, so a baby-name recall ABSTAINS on
+% it rather than fabricating a name. That honest-abstention property is what
+% makes a recall table safe to build a reasoner on.
+%
+% ----------------------------------------------------------------------------
+% Provenance (byte-quotable, per the ADJ-facts standard).
+% ----------------------------------------------------------------------------
+% Every row is copied from Wikipedia's "List of animal names" — the big table of
+% animals with their male, female, YOUNG, and collective terms. Wikipedia is a
+% general ENCYCLOPEDIA (a secondary reference), so the honest trust tier is
+% `trust consensus` (not `authoritative`, which we reserve for a primary source
+% like a museum, .gov or .edu). Nothing here is asserted from memory. Because ADJ
+% tables carry ONE shared provenance envelope (per-row provenance is a documented
+% future extension — see ADJ-TABLES §6), the envelope below cites the article at
+% its `locator`, and the `source` quotes the HORSE row's "Young" cell verbatim
+% (it contains "foal"). For full auditability, here is the exact "Young"-cell
+% span that grounds EACH row, copied from that table:
+%
+%   dog       — "pup, puppy, whelp"                                  → puppy
+%   cat       — "kit, kitten"                                        → kitten
+%   cattle    — "calf"                                               → calf
+%   horse     — "colt (male), filly (female), foal, weanling, ..."   → foal
+%   sheep     — "cosset, lamb, lambkin"                              → lamb
+%   kangaroo  — "joey"                                               → joey
+%   goat      — "kid"                                                → kid
+%
+%   https://en.wikipedia.org/wiki/List_of_animal_names
+%
+% (See ../README.md; feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table animal_baby {
+    columns animal, baby
+
+    row (dog, puppy)
+    row (cat, kitten)
+    row (cattle, calf)
+    row (horse, foal)
+    row (sheep, lamb)
+    row (kangaroo, joey)
+    row (goat, kid)
+
+    source "colt (male), filly (female), foal, weanling, yearling"
+    locator "https://en.wikipedia.org/wiki/List_of_animal_names"
+    trust consensus
+}

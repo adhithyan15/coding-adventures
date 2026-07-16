@@ -1,6 +1,6 @@
 [package]
 name = "bignum-core"
-version = "0.4.1"
+version = "0.7.0"
 edition = "2021"
 description = "A zero-dependency arbitrary-precision numeric core: a signed integer (BigInteger), an exact rational (BigRational), an exact base-10 decimal (BigDecimal), and a correctly-rounded binary float of arbitrary precision (BigDouble) — all built from scratch with no third-party deps and no unsafe."
 license = "MIT"

@@ -17,12 +17,15 @@ piece by piece, on the first word that needs it.
   practice. Telugu script introduced through the words (inherent *a*, vowel
   signs, virama + below-stacking conjuncts, anusvāra, independent vowels), the
   Sanskrit-loan vs. native split, and the first taste of agglutination.
+- **Ch. 2 — Introducing Yourself**: pēru → nā → **nā pēru** ("my name is," zero
+  copula) → nuvvu/mīru → ēmiṭi → **mī pēru ēmiṭi?** → santōṣam → practice.
+  Every atom traced (*pēru* ← *\*pēr*, twin of Tamil *peyar*; *santōṣam* a
+  Sanskrit loan for "pleased"); the zero copula; respect-by-plural.
 
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 2 | Introducing yourself: *nā pēru…* ("my name"), *nuvvu* / *mīru* (familiar / respectful "you"), native/Sanskrit doublets |
 | 3 | Responding: *elā unnāru?* ("how are you"), *bāgunnānu* ("I'm well"), the verb *uṇḍu* ("to be") |
 | 4 | The case-endings (Telugu's agglutinative suffixes), numbers 1–10 |
 | 5+ | Postpositions, tense on the verb, family, food — always with the Dravidian-cognate thread |

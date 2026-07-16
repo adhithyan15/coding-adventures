@@ -49,15 +49,58 @@ use std::sync::atomic::{AtomicU64, Ordering};
 
 /// A numeric logic term.
 ///
-/// Integers and floats are kept as separate variants so that equality on
-/// integers is exact and so that downstream arithmetic can dispatch on
-/// type without re-parsing. Mixing across variants in unification follows
-/// Prolog tradition: `1 = 1.0` does **not** unify, because they are
-/// distinct ground terms.
-#[derive(Debug, Clone, Copy, PartialEq)]
+/// Three variants, kept **distinct** so that a value keeps exactly the shape it
+/// was written or computed in:
+///
+/// | variant        | holds                        | when it appears                                   |
+/// |----------------|------------------------------|---------------------------------------------------|
+/// | `Int(i64)`     | a small machine integer      | integer literals that fit `i64`; integer results  |
+/// | `Exact(..)`    | an unbounded exact decimal   | any decimal literal — `3.14159…`, `6.022e23` — so no digit is lost at parse time |
+/// | `Float(f64)`   | a labeled **lossy** `f64`    | the inherently-approximate / explicitly-exported value (a float backend, an approximate mode) |
+///
+/// Why three and not two: before `Exact`, a decimal literal was parsed straight
+/// to `f64`, so `pi` written to 39 digits came back at ~16 — truncated at parse
+/// time, upstream of every big number (see `code/specs/ADJ-EXACT-NUMBERS.md`).
+/// `Exact` gives a written decimal somewhere lossless to live; `f64` is now only
+/// the *labeled lossy export*, never the silent default.
+///
+/// **Display of `Exact` is a superset of the old `f64` output.** An `Exact` with
+/// ≤ 17 significant digits (everything an `f64` can represent) renders through its
+/// `f64` canonical form, so its printed string is byte-for-byte what the value
+/// showed before literals were stored exactly (scientific notation for extreme
+/// magnitudes, trailing-zero normalization, and so on). Only a value that exceeds
+/// the `f64` budget — π to 39 places — prints its full exact digit string. Nothing
+/// that already fit an `f64` changes how it looks.
+///
+/// **Equality / unification stays variant-distinct**, following Prolog tradition:
+/// `1 = 1.0` does **not** unify because they are distinct ground terms, and
+/// `Exact` joins as a third distinct term (`Int(1)`, `Float(1.0)`, `Exact(1.0)`
+/// are three different terms). *Numeric* reconciliation (`2.50` == `2.5`) is a
+/// compute-layer concern (`ExactRational`), not ground-term unification.
+///
+/// Note `Number` is **no longer `Copy`**: `Exact` wraps a heap-backed
+/// [`BigDecimal`], so the enum moves or clones like `Term` itself.
+#[derive(Debug, Clone, PartialEq)]
 pub enum Number {
     Int(i64),
     Float(f64),
+    Exact(bignum_core::BigDecimal),
+}
+
+impl Number {
+    /// The **labeled lossy** `f64` export — the *only* sanctioned way to obtain
+    /// an `f64` from a `Number`. `Int` widens exactly (all `i64` in range are
+    /// representable up to 2^53 without loss and saturate predictably beyond),
+    /// `Float` is already an `f64`, and `Exact` rounds to the nearest `f64` via
+    /// [`BigDecimal::to_f64`]. The name is deliberately greppable so every place
+    /// that drops to `f64` is auditable.
+    pub fn to_f64_lossy(&self) -> f64 {
+        match self {
+            Number::Int(i) => *i as f64,
+            Number::Float(x) => *x,
+            Number::Exact(d) => d.to_f64(),
+        }
+    }
 }
 
 impl fmt::Display for Number {
@@ -65,6 +108,26 @@ impl fmt::Display for Number {
         match self {
             Number::Int(i) => write!(f, "{}", i),
             Number::Float(x) => write!(f, "{}", x),
+            // The rendering policy that keeps exactness a *superset* of the old f64 behavior
+            // (ADJ-EXACT-NUMBERS NX-2). An `f64` carries ~15–17 significant decimal digits, so:
+            //
+            //   * If the exact value has **≤ 17 significant digits**, it still round-trips
+            //     through `f64` losslessly, and we render its `f64` canonical form. This is
+            //     byte-for-byte what the value displayed *before* NX-2 lowered literals to
+            //     `Exact` — including scientific notation for tiny/huge magnitudes
+            //     (`6.62607015e-34`) and trailing-zero normalization (`20.180` → `20.18`) —
+            //     so none of the existing rendered-string tests regress.
+            //   * Otherwise (e.g. π to 39 places), the value cannot fit an `f64`, so we print
+            //     every exact digit the `BigDecimal` carries. This is the whole point of the
+            //     exact-numbers arc: the extra precision becomes visible in the binding, not
+            //     silently truncated at 17 digits.
+            Number::Exact(d) => {
+                if d.significant_digits() <= 17 {
+                    write!(f, "{}", d.to_f64())
+                } else {
+                    write!(f, "{}", d)
+                }
+            }
         }
     }
 }
@@ -382,6 +445,27 @@ mod tests {
     #[test]
     fn strings_display_with_quotes() {
         assert_eq!(string("hello world").to_string(), "\"hello world\"");
+    }
+
+    #[test]
+    fn exact_display_is_a_superset_of_f64_output() {
+        use bignum_core::BigDecimal;
+        use std::str::FromStr;
+        let exact = |s: &str| Number::Exact(BigDecimal::from_str(s).unwrap());
+        // ≤ 17 significant digits: render the f64 canonical form, byte-for-byte what the value
+        // showed before literals were stored exactly — trailing zeros normalize away, extreme
+        // magnitudes use scientific notation.
+        assert_eq!(exact("20.180").to_string(), "20.18");
+        assert_eq!(exact("2.54").to_string(), "2.54");
+        assert_eq!(exact("0.3048").to_string(), "0.3048");
+        assert_eq!(exact("100").to_string(), "100");
+        // Extreme magnitudes render exactly as the corresponding `f64` would (the whole point of
+        // the ≤17-digit branch: `Exact` and `Float` print the same string for any f64-sized value).
+        assert_eq!(exact("6.62607015e-34").to_string(), format!("{}", 6.62607015e-34_f64));
+        assert_eq!(exact("6.02214076e23").to_string(), format!("{}", 6.02214076e23_f64));
+        // > 17 significant digits: every exact digit prints (this is the NX-2 win).
+        let pi = "3.141592653589793238462643383279502884197";
+        assert_eq!(exact(pi).to_string(), pi);
     }
 
     #[test]

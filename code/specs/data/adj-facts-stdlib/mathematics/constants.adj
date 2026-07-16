@@ -25,13 +25,16 @@
 % ON DIGITS AND PRECISION. ADJ number literals accept many decimal digits, so each
 % `value` below is written to EXACTLY the digits the source span prints — 39
 % fractional digits, ending where MathWorld's "..." begins; no digit is appended
-% from memory. The full-precision digits therefore live in the LITERAL and in the
-% quoted `source` span, which is where the provenance lives. Note, however, that
-% the runtime binds the value as a double-precision float: `? math_constant(pi,
-% $V)` returns pi rounded to ~15-16 significant digits (3.141592653589793), not
-% all 39. That is a property of the numeric runtime, not of the stored fact — the
-% grounded, full-precision value is the literal, and a consumer needing every digit
-% reads it from there. Keys are lowercase atoms.
+% from memory. The full-precision digits live in the LITERAL and in the quoted
+% `source` span, which is where the provenance lives. Since the exact-numbers arc
+% (ADJ-EXACT-NUMBERS NX-1..4) the value now BINDS and RENDERS exactly to all its
+% digits: `? math_constant(pi, $V)` returns the whole
+% `3.141592653589793238462643383279502884197`, not the ~16 an f64 once carried, and
+% a computed result that consumes it (e.g. `2*pi` through a shipped formula) prints
+% every exact digit too. The literal is stored as a `Number::Exact` big-decimal, the
+% compute engine ingests it as an exact rational with no f64 hop, and the CLI renders
+% the exact value — so the grounded fact and the queryable value are now the SAME
+% full-precision number. Keys are lowercase atoms.
 %
 % PROVENANCE. Every value is copied verbatim from Wolfram MathWorld — the
 % authoritative online mathematics reference (Weisstein, Eric W.). The `source`

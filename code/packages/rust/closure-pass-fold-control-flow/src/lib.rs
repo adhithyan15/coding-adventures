@@ -68,7 +68,7 @@ use coding_adventures_javascript_ast::{
     DoWhileStatement, VariableDeclarator, WhileStatement, WithStatement,
 };
 use serde_json::json;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 /// `Pass::depends_on` value. CLOC06 canonical order pins
 /// constant-fold first so we see folded literals as branch
@@ -306,16 +306,34 @@ fn expression_cv(expr: &Expression) -> Option<String> {
 
 fn fold_program(prog: &Program, st: &mut FoldState) -> Program {
     st.visit();
-    let new_body = prog
-        .body
-        .iter()
-        .map(|item| fold_program_item(item, st))
-        .collect();
+    // Fold each top-level item, then flatten any redundant block it produced
+    // (CLOC12.194). We build the list imperatively rather than `map`ping because
+    // flattening turns one block item into *many* items (its body spliced in) —
+    // or zero, for an empty block.
+    let mut new_body: Vec<ProgramItem> = Vec::with_capacity(prog.body.len());
+    for item in &prog.body {
+        let folded = fold_program_item(item, st);
+        if let ProgramItem::Statement(s) = &folded {
+            if let Some((block_cv, body)) = redundant_block(s) {
+                st.record_fold(
+                    block_cv,
+                    "flatten-redundant-block",
+                    "{ <stmts> }",
+                    "<stmts>",
+                );
+                new_body.extend(body.iter().cloned().map(ProgramItem::Statement));
+                continue;
+            }
+        }
+        new_body.push(folded);
+    }
     Program {
         cv: prog.cv.clone(),
         version: prog.version,
         source_type: prog.source_type,
-        body: new_body,
+        // DIV#2 — as a post-step, merge any runs of adjacent same-kind variable
+        // declarations this list now holds (see `coalesce_var_decls`).
+        body: coalesce_var_decls(new_body, st),
     }
 }
 
@@ -571,6 +589,29 @@ fn fold_block_statement(b: &BlockStatement, st: &mut FoldState) -> BlockStatemen
             }
         }
 
+        // CLOC12.194 — flatten a redundant nested block into this block's
+        // statement list. A bare `{ … }` with nothing block-scoped inside is
+        // identical to its body run in place (e.g. the block left behind when
+        // `if (true) { … }` folds to its consequent). Splicing may expose a
+        // terminator as the new last statement, so re-check `hit_terminator`
+        // for the dead-code-after-terminator drop, exactly as the `else`-hoist
+        // above does.
+        if let Some((block_cv, body)) = redundant_block(&folded) {
+            st.record_fold(
+                block_cv,
+                "flatten-redundant-block",
+                "{ <stmts> }",
+                "<stmts>",
+            );
+            for inner in body {
+                new_body.push(inner.clone());
+            }
+            if new_body.last().map(is_terminator).unwrap_or(false) {
+                hit_terminator = true;
+            }
+            continue;
+        }
+
         let terminates = is_terminator(&folded);
         new_body.push(folded);
         if terminates {
@@ -592,8 +633,172 @@ fn fold_block_statement(b: &BlockStatement, st: &mut FoldState) -> BlockStatemen
     }
     BlockStatement {
         cv: b.cv.clone(),
-        body: new_body,
+        // DIV#2 — merge adjacent same-kind variable declarations in the block
+        // body (including any the flatten/hoist above made adjacent).
+        body: coalesce_var_decls(new_body, st),
     }
+}
+
+// =====================================================================
+// DIV#2 — coalesce adjacent same-kind variable declarations
+// =====================================================================
+//
+//   var a=1;var b=2;   ──▶   var a=1,b=2;      (one keyword + one `;` saved)
+//   let a=1;let b=2;    ──▶   let a=1,b=2;
+//   var a;var b;        ──▶   var a,b;
+//
+// The reference Closure Compiler merges a run of *strictly adjacent*
+// `VariableDeclaration` statements of the *same kind* (`var`/`let`/`const`)
+// into a single multi-declarator declaration. It is a pure size win with
+// identical semantics: the declarators keep their original order — and so their
+// initializer evaluation order (`var a=b++;var c=2;` → `var a=b++,c=2;` still
+// runs `b++` first) — and merging same-scope same-kind bindings changes nothing
+// about hoisting or the temporal dead zone.
+//
+// DECLINE conditions (each preserves byte-identity with Closure):
+//   * different kinds don't merge — `var a=1;let b=2;` stays two statements;
+//   * a non-declaration statement (or a different-kind decl) between two decls
+//     breaks the run — only *strictly adjacent* decls merge; an EmptyStatement
+//     (`;`) also breaks it here, but the pipeline's separate empty-statement
+//     removal drops the `;` in an earlier fixed-point iteration so the decls
+//     become adjacent and merge on a later pass;
+//   * a run whose merged declarator list would REPEAT a binding name is left
+//     untouched: `var a=1;var a=2;` must NOT become `var a=1,a=2;` — Closure
+//     rewrites the redeclaration's second half to a bare assignment
+//     (`var a=1;a=2;`), a *different* transform this pass does not perform, so
+//     we decline rather than diverge. (For `let`/`const` a repeated name is a
+//     syntax error that never reaches us.)
+//
+// Runs as a POST-STEP after this crate's other statement-list rewrites
+// (block-flatten, else-hoist, dead-code drop) so decls a block-flatten made
+// adjacent (`{var a=1}var b=2` → `var a=1;var b=2` → `var a=1,b=2`) also merge.
+
+/// A statement-list element that *may* carry a bare variable declaration.
+///
+/// Implemented for both list-element types this pass assembles — [`ProgramItem`]
+/// (top level) and [`Statement`] (block body) — so one generic coalescer serves
+/// both. A top-level `var` is bridged as
+/// `ProgramItem::Statement(Statement::Declaration(…))` (the parser routes
+/// variable statements through `statement`), so the program-item view looks
+/// through that wrapper as well as the bare `ProgramItem::Declaration` form, and
+/// rebuilds into the wrapper form the bridge uses.
+trait VarDeclCarrier: Clone {
+    /// The variable declaration this element carries, if any.
+    fn as_var_decl(&self) -> Option<&VariableDeclaration>;
+    /// Wrap a (merged) variable declaration back into a list element.
+    fn from_var_decl(decl: VariableDeclaration) -> Self;
+}
+
+impl VarDeclCarrier for ProgramItem {
+    fn as_var_decl(&self) -> Option<&VariableDeclaration> {
+        match self {
+            ProgramItem::Statement(Statement::Declaration(Declaration::VariableDeclaration(vd)))
+            | ProgramItem::Declaration(Declaration::VariableDeclaration(vd)) => Some(vd),
+            _ => None,
+        }
+    }
+    fn from_var_decl(decl: VariableDeclaration) -> Self {
+        // Match the bridge's program-level shape (a variable *statement*).
+        ProgramItem::Statement(Statement::Declaration(Declaration::VariableDeclaration(decl)))
+    }
+}
+
+impl VarDeclCarrier for Statement {
+    fn as_var_decl(&self) -> Option<&VariableDeclaration> {
+        match self {
+            Statement::Declaration(Declaration::VariableDeclaration(vd)) => Some(vd),
+            _ => None,
+        }
+    }
+    fn from_var_decl(decl: VariableDeclaration) -> Self {
+        Statement::Declaration(Declaration::VariableDeclaration(decl))
+    }
+}
+
+/// Merge runs of strictly-adjacent same-kind variable declarations in one
+/// statement list into single multi-declarator declarations. See the module
+/// comment above for the exact rule and the decline conditions.
+fn coalesce_var_decls<T: VarDeclCarrier>(items: Vec<T>, st: &mut FoldState) -> Vec<T> {
+    let mut out: Vec<T> = Vec::with_capacity(items.len());
+    let mut i = 0;
+    while i < items.len() {
+        // A run can only start at a variable declaration; anything else passes
+        // through verbatim.
+        let kind = match items[i].as_var_decl() {
+            Some(vd) => vd.kind,
+            None => {
+                out.push(items[i].clone());
+                i += 1;
+                continue;
+            }
+        };
+        // Extend the run over every immediately-following same-kind decl.
+        let mut j = i + 1;
+        while j < items.len() && items[j].as_var_decl().map(|vd| vd.kind) == Some(kind) {
+            j += 1;
+        }
+        if j - i < 2 {
+            // A lone declaration — nothing adjacent to merge into it.
+            out.push(items[i].clone());
+            i += 1;
+            continue;
+        }
+
+        // Gather the run's declarators in order; a repeated binding name across
+        // the run declines the *whole* run (redeclaration → separate transform).
+        //
+        // The seen-names check uses a `HashSet` (not a linear `Vec` scan): a run
+        // of N strictly-adjacent single-declarator statements is trivially
+        // authorable in the input JS (`var a0=1;var a1=1;…`), and a per-declarator
+        // linear membership test would be Θ(N²) — a linear-input → quadratic-work
+        // DoS on this hot pass path. The `&str` borrows live in `items[i..j]`,
+        // which outlives this per-run gather, so no owned clone is needed.
+        let mut declarations: Vec<VariableDeclarator> = Vec::new();
+        let mut names: HashSet<&str> = HashSet::new();
+        let mut duplicate = false;
+        for item in &items[i..j] {
+            let vd = item.as_var_decl().expect("run member is a var declaration");
+            for d in &vd.declarations {
+                let BindingTarget::Identifier(id) = &d.id;
+                // `insert` returns false when the name was already present.
+                if !names.insert(id.name.as_str()) {
+                    duplicate = true;
+                }
+                declarations.push(d.clone());
+            }
+        }
+
+        if duplicate {
+            // Leave the run untouched — declining is never wrong.
+            for item in &items[i..j] {
+                out.push(item.clone());
+            }
+            i = j;
+            continue;
+        }
+
+        // Merge: the first decl's CV becomes the container; the folded-away
+        // declarations' CVs are tombstoned (their statement wrappers vanish).
+        let container_cv = items[i].as_var_decl().unwrap().cv.clone();
+        let discarded: Vec<Option<String>> = items[i + 1..j]
+            .iter()
+            .map(|item| item.as_var_decl().unwrap().cv.clone())
+            .collect();
+        st.record_fold_deleting(
+            &container_cv,
+            &discarded,
+            "coalesce-var-declarations",
+            "adjacent same-kind var declarations",
+            "one multi-declarator declaration",
+        );
+        out.push(T::from_var_decl(VariableDeclaration {
+            cv: container_cv,
+            kind,
+            declarations,
+        }));
+        i = j;
+    }
+    out
 }
 
 /// A statement that unconditionally transfers control out of the
@@ -664,6 +869,34 @@ fn block_is_scope_safe_to_hoist(b: &BlockStatement) -> bool {
         // Tagged statements introduce no lexical binding of their own.
         Statement::Tagged(_) => true,
     })
+}
+
+/// CLOC12.194 — is `folded`, sitting at statement-list position, a **redundant
+/// block** that should be replaced by its own statements spliced in place?
+///
+/// A bare `{ … }` block introduces a fresh lexical scope, but if nothing inside
+/// is block-scoped (`let`/`const`/`class`/`function`) that scope is
+/// unobservable: the braces can be removed and the inner statements run
+/// directly in the enclosing list with identical semantics. `var` is
+/// function-scoped, so it hoists out harmlessly; the empty block `{}` flattens
+/// to *nothing* (removed). This mirrors Closure's `PeepholeRemoveDeadCode`
+/// block normalization and fires on a hand-written `{ … }` as well as on the
+/// block left behind when `if (true) { … }` collapses to its consequent.
+///
+/// Returns `Some((block_cv, body))` when safe to flatten — the caller splices
+/// `body` into the statement list and records a fold against `block_cv` — or
+/// `None` to keep the statement as-is (any non-block, or a block that declares
+/// a block-scoped binding: reuses the [`block_is_scope_safe_to_hoist`] gate that
+/// backs the CLOC25 `else`-hoist, so the soundness boundary is shared).
+fn redundant_block(folded: &Statement) -> Option<(&Option<String>, &[Statement])> {
+    match folded {
+        Statement::Tagged(TaggedStatement::BlockStatement(b))
+            if block_is_scope_safe_to_hoist(b) =>
+        {
+            Some((&b.cv, &b.body))
+        }
+        _ => None,
+    }
 }
 
 /// Is this `else` branch safe to hoist into the enclosing block (CLOC25)?
@@ -978,7 +1211,62 @@ fn fold_if_statement(s: &IfStatement, st: &mut FoldState) -> Statement {
                 }
             }
 
-            // Couldn't ternarise or logical-and — keep the IfStatement.
+            // Empty THEN branch + single-expression-statement ELSE →
+            // `<test> || <expr>`. The mirror of the `if-to-logical-and` above:
+            // when the consequent does nothing and the alternate is one
+            // expression statement, `if (x) {} else S;` is `x || S;`.
+            //
+            //   if (x) {} else foo();        → x || foo();
+            //   if (x) ; else foo();         → x || foo();     (empty-stmt then)
+            //   if (x) {} else { foo(); }    → x || foo();     (single-expr
+            //                                                   block unwraps)
+            //   if (x) {} else b = 1;        → x || (b = 1);   (emitter parens
+            //                                                   the lower-
+            //                                                   precedence assign)
+            //   if (a && b) {} else c();     → a && b || c();  (compound test)
+            //   if (x) {} else { a(); b(); } → unchanged (multi-statement else
+            //                                  needs a sequence — separate arc)
+            //   if (x) {} else return E;     → unchanged (return isn't an
+            //                                  expression statement)
+            //
+            // Why this is safe (the dual of the `&&` case):
+            //
+            //   * `x || S` evaluates `x` first — exactly like `if (x) {} else S`.
+            //   * If `x` is truthy: `||` short-circuits and does NOT evaluate
+            //     `S`, matching the empty then-branch running nothing.
+            //   * If `x` is falsy: `||` evaluates `S`, matching the else branch.
+            //   * The wrapper ExpressionStatement discards the result, so the
+            //     value `||` yields is irrelevant — only `S`'s side effects
+            //     matter, and they fire exactly when `x` is falsy in both forms.
+            //
+            // A `!<inner>` test never reaches here with an empty consequent: the
+            // De Morgan swap above already rewrote `if (!x) {} else S;` to
+            // `if (x) S; else {}` (non-empty consequent), so we don't interfere
+            // with that normalisation.
+            if let Some(alt) = &alternate {
+                if statement_is_empty(&consequent) {
+                    if let Some(a_expr) = single_expr_stmt(alt) {
+                        st.record_fold(
+                            &s.cv,
+                            "if-empty-then-to-logical-or",
+                            "if (<test>) {} else <expr>;",
+                            "<test> || <expr>;",
+                        );
+                        let or = Expression::LogicalExpression(LogicalExpression {
+                            cv: None,
+                            operator: LogicalOperator::Or,
+                            left: Box::new(test),
+                            right: Box::new(a_expr),
+                        });
+                        return Statement::expression_statement(ExpressionStatement {
+                            cv: s.cv.clone(),
+                            expression: or,
+                        });
+                    }
+                }
+            }
+
+            // Couldn't ternarise or logical-and/or — keep the IfStatement.
             Statement::if_statement(IfStatement {
                 cv: s.cv.clone(),
                 test,
@@ -1007,6 +1295,24 @@ fn single_expr_stmt(stmt: &Statement) -> Option<Expression> {
             single_expr_stmt(&b.body[0])
         }
         _ => None,
+    }
+}
+
+/// True when `stmt` does nothing observable — an `EmptyStatement` (`;`) or a
+/// `BlockStatement` whose every member is itself empty (`{}`, `{;;}`, `{{}}`).
+///
+/// Used by the `if-empty-then-to-logical-or` fold to recognise a do-nothing
+/// consequent. We recurse through block layers (mirroring `single_expr_stmt`)
+/// so `if (x) {} else …` and `if (x) ; else …` fold the same way; anything that
+/// does real work — a statement that isn't empty — makes the whole block
+/// non-empty and bails the fold.
+fn statement_is_empty(stmt: &Statement) -> bool {
+    match stmt {
+        Statement::Tagged(TaggedStatement::EmptyStatement(_)) => true,
+        Statement::Tagged(TaggedStatement::BlockStatement(b)) => {
+            b.body.iter().all(statement_is_empty)
+        }
+        _ => false,
     }
 }
 
@@ -2242,6 +2548,68 @@ mod tests {
     }
 
     #[test]
+    fn if_empty_then_with_single_expr_else_folds_to_logical_or() {
+        // Empty consequent + single-expression-statement alternate →
+        // `test || expr`, the mirror of the if-to-logical-and fold:
+        // `if (x) {} else y;` and `if (x) ; else y;` → `x || y;`.
+        for consequent in [
+            Statement::block_statement(BlockStatement { cv: None, body: vec![] }),
+            Statement::empty_statement(EmptyStatement { cv: None }),
+        ] {
+            let if_stmt = Statement::if_statement(IfStatement {
+                cv: Some("if.or".to_string()),
+                test: ident("x"),
+                consequent: Box::new(consequent),
+                alternate: Some(Box::new(expr_stmt(ident("y"), None))),
+            });
+            let prog = program().with_body(vec![ProgramItem::Statement(if_stmt)]);
+            let (out, contribs, changed, _) = run_pass(prog);
+            assert!(changed, "empty-then + expr-else should fold to ||");
+            assert!(!contribs.is_empty());
+            match first_stmt(&out) {
+                Statement::Tagged(TaggedStatement::ExpressionStatement(es)) => {
+                    match &es.expression {
+                        Expression::LogicalExpression(l) => {
+                            assert_eq!(l.operator, LogicalOperator::Or, "operator must be ||");
+                        }
+                        other => panic!("expected LogicalExpression(Or); got {:?}", other),
+                    }
+                }
+                other => panic!("expected ExpressionStatement; got {:?}", other),
+            }
+        }
+    }
+
+    #[test]
+    fn if_empty_then_with_multi_statement_else_passes_through() {
+        // `if (x) {} else { a; b; }` — a two-statement else would need a
+        // sequence expression, which this fold doesn't build (a
+        // LogicalExpression takes exactly one right operand), so the
+        // IfStatement is kept intact (that's a separate arc).
+        let if_stmt = Statement::if_statement(IfStatement {
+            cv: Some("if.or2".to_string()),
+            test: ident("x"),
+            consequent: Box::new(Statement::block_statement(BlockStatement {
+                cv: None,
+                body: vec![],
+            })),
+            alternate: Some(Box::new(Statement::block_statement(BlockStatement {
+                cv: None,
+                body: vec![expr_stmt(ident("a"), None), expr_stmt(ident("b"), None)],
+            }))),
+        });
+        let prog = program().with_body(vec![ProgramItem::Statement(if_stmt)]);
+        let (out, _contribs, _changed, _) = run_pass(prog);
+        match first_stmt(&out) {
+            Statement::Tagged(TaggedStatement::IfStatement(_)) => {}
+            other => panic!(
+                "expected IfStatement intact (multi-statement else); got {:?}",
+                other
+            ),
+        }
+    }
+
+    #[test]
     fn if_non_literal_test_with_multi_statement_consequent_passes_through() {
         // **Pre-gap-016**: this test asserted `if (flag) x;` stayed
         // unchanged. **Post-gap-016** (CLOC12.24), that single-expr
@@ -2953,5 +3321,408 @@ mod tests {
                 ));
             }
         }
+    }
+
+    // =====================================================================
+    // CLOC12.194 — redundant BlockStatement flattening (oracle divergence #4)
+    //
+    // A bare `{ … }` at statement-list position is a lexical scope with no
+    // observable effect UNLESS it declares a block-scoped binding. Closure
+    // removes such braces (`PeepholeRemoveDeadCode`); these tests pin the fold
+    // and its soundness boundary — verified byte-identical to the real Closure
+    // jar (`{a}`→`a;`, `{a;b}`→`a;b;`, `{var x=1;a}`→`var x=1;a;`, `{}`→removed;
+    // `{let…}`/`{const…}`/`{function…}` kept).
+    // =====================================================================
+
+    /// Wrap statements in a `{ … }` block statement (test helper).
+    fn block(cv: Option<&str>, body: Vec<Statement>) -> Statement {
+        Statement::block_statement(BlockStatement {
+            cv: cv.map(|s| s.to_string()),
+            body,
+        })
+    }
+
+    #[test]
+    fn flatten_bare_block_at_program_level() {
+        // `{ a; }` → `a;`
+        let prog = program().with_body(vec![ProgramItem::Statement(block(
+            Some("blk.1"),
+            vec![expr_stmt(ident("a"), None)],
+        ))]);
+        let (out, _c, changed, _n) = run_pass(prog);
+        assert!(changed, "bare block should flatten");
+        assert_eq!(out.body.len(), 1, "block braces gone, one statement left");
+        match first_stmt(&out) {
+            Statement::Tagged(TaggedStatement::ExpressionStatement(es)) => assert!(
+                matches!(&es.expression, Expression::Identifier(i) if i.name == "a")
+            ),
+            other => panic!("expected `a;`, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn flatten_multi_statement_block() {
+        // `{ a; b; }` → `a; b;`
+        let prog = program().with_body(vec![ProgramItem::Statement(block(
+            None,
+            vec![expr_stmt(ident("a"), None), expr_stmt(ident("b"), None)],
+        ))]);
+        let (out, _c, changed, _n) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 2, "both inner statements spliced in");
+    }
+
+    #[test]
+    fn flatten_empty_block_removes_it() {
+        // `a; {}` → `a;` — the empty block flattens to nothing.
+        let prog = program().with_body(vec![
+            ProgramItem::Statement(expr_stmt(ident("a"), None)),
+            ProgramItem::Statement(block(None, vec![])),
+        ]);
+        let (out, _c, changed, _n) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 1, "empty block removed entirely");
+    }
+
+    #[test]
+    fn flatten_block_with_only_var_is_safe() {
+        // `{ var x = 1; a; }` → `var x = 1; a;` — `var` is function-scoped and
+        // hoists, so the block boundary is unobservable.
+        let prog = program().with_body(vec![ProgramItem::Statement(block(
+            None,
+            vec![
+                make_var_decl("x", Some(num(1.0, None))),
+                expr_stmt(ident("a"), None),
+            ],
+        ))]);
+        let (out, _c, changed, _n) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 2);
+        assert!(
+            matches!(
+                &out.body[0],
+                ProgramItem::Statement(Statement::Declaration(
+                    Declaration::VariableDeclaration(_)
+                ))
+            ),
+            "the `var` declaration hoisted out of the block"
+        );
+    }
+
+    #[test]
+    fn block_with_let_is_not_flattened() {
+        // `{ let x = 1; a; }` — `let` is block-scoped; flattening would leak the
+        // binding into the enclosing scope. Must be kept.
+        let prog = program().with_body(vec![ProgramItem::Statement(block(
+            None,
+            vec![
+                make_let_decl("x", Some(num(1.0, None))),
+                expr_stmt(ident("a"), None),
+            ],
+        ))]);
+        let (out, _c, _changed, _n) = run_pass(prog);
+        assert_eq!(out.body.len(), 1);
+        assert!(
+            matches!(
+                first_stmt(&out),
+                Statement::Tagged(TaggedStatement::BlockStatement(_))
+            ),
+            "a `let` block must NOT be flattened"
+        );
+    }
+
+    #[test]
+    fn block_with_const_is_not_flattened() {
+        // `{ const x = 1; }` — `const` is block-scoped: keep the block.
+        let const_decl =
+            Statement::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+                cv: None,
+                kind: VarKind::Const,
+                declarations: vec![VariableDeclarator {
+                    cv: None,
+                    id: BindingTarget::Identifier(Identifier {
+                        cv: None,
+                        name: "x".to_string(),
+                    }),
+                    init: Some(num(1.0, None)),
+                }],
+            }));
+        let prog = program().with_body(vec![ProgramItem::Statement(block(None, vec![const_decl]))]);
+        let (out, _c, _changed, _n) = run_pass(prog);
+        assert_eq!(out.body.len(), 1);
+        assert!(matches!(
+            first_stmt(&out),
+            Statement::Tagged(TaggedStatement::BlockStatement(_))
+        ));
+    }
+
+    #[test]
+    fn block_with_function_declaration_is_not_flattened() {
+        // `{ function f(){} }` — a nested function declaration is block-scoped
+        // (strict mode) / Annex-B special; hoisting it out could change scope or
+        // collide. Keep the block.
+        let fdecl = Statement::Declaration(Declaration::FunctionDeclaration(FunctionDeclaration {
+            cv: None,
+            id: Identifier {
+                cv: None,
+                name: "f".to_string(),
+            },
+            params: vec![],
+            body: BlockStatement {
+                cv: None,
+                body: vec![],
+            },
+            generator: false,
+            is_async: false,
+        }));
+        let prog = program().with_body(vec![ProgramItem::Statement(block(None, vec![fdecl]))]);
+        let (out, _c, _changed, _n) = run_pass(prog);
+        assert_eq!(out.body.len(), 1);
+        assert!(matches!(
+            first_stmt(&out),
+            Statement::Tagged(TaggedStatement::BlockStatement(_))
+        ));
+    }
+
+    #[test]
+    fn if_true_block_consequent_flattens_to_statements() {
+        // `if (true) { a; } else { b; }` → `a;` — the branch folds to its
+        // consequent block, then that redundant block flattens. This is the
+        // exact divergence #4 case (closurec previously emitted `{a}`).
+        let if_stmt = Statement::if_statement(IfStatement {
+            cv: Some("if.1".to_string()),
+            test: boolean(true, None),
+            consequent: Box::new(block(None, vec![expr_stmt(ident("a"), None)])),
+            alternate: Some(Box::new(block(None, vec![expr_stmt(ident("b"), None)]))),
+        });
+        let prog = program().with_body(vec![ProgramItem::Statement(if_stmt)]);
+        let (out, _c, changed, _n) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 1);
+        match first_stmt(&out) {
+            Statement::Tagged(TaggedStatement::ExpressionStatement(es)) => assert!(
+                matches!(&es.expression, Expression::Identifier(i) if i.name == "a"),
+                "expected the consequent `a;` un-blocked"
+            ),
+            other => panic!("expected `a;` after if-fold + flatten, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn flatten_block_inside_function_body() {
+        // `function f(){ { a; } }` → `function f(){ a; }` — exercises the
+        // nested (`fold_block_statement`) flatten path, not just program level.
+        let prog = fdecl_with_body(vec![block(None, vec![expr_stmt(ident("a"), None)])]);
+        let (out, _c, changed, _n) = run_pass(prog);
+        assert!(changed);
+        let body = extract_fn_body(&out);
+        assert_eq!(body.body.len(), 1);
+        assert!(
+            matches!(
+                &body.body[0],
+                Statement::Tagged(TaggedStatement::ExpressionStatement(_))
+            ),
+            "the inner block should flatten inside the function body"
+        );
+    }
+
+    // ---------------- DIV#2: coalesce adjacent same-kind var decls --------
+
+    /// A program-level variable declaration item (a `var`/`let`/`const`
+    /// statement) with one declarator, optionally carrying a CV id.
+    fn prog_var(name: &str, init: Option<Expression>, kind: VarKind, cv: Option<&str>) -> ProgramItem {
+        ProgramItem::Statement(Statement::Declaration(Declaration::VariableDeclaration(
+            VariableDeclaration {
+                cv: cv.map(|s| s.to_string()),
+                kind,
+                declarations: vec![VariableDeclarator {
+                    cv: None,
+                    id: BindingTarget::Identifier(Identifier {
+                        cv: None,
+                        name: name.to_string(),
+                    }),
+                    init,
+                }],
+            },
+        )))
+    }
+
+    /// The variable declaration at program-body index `idx` (panics otherwise).
+    fn prog_decl_at(prog: &Program, idx: usize) -> &VariableDeclaration {
+        match &prog.body[idx] {
+            ProgramItem::Statement(Statement::Declaration(Declaration::VariableDeclaration(vd)))
+            | ProgramItem::Declaration(Declaration::VariableDeclaration(vd)) => vd,
+            other => panic!("expected a variable declaration at {idx}; got {other:?}"),
+        }
+    }
+
+    /// The bound names of a declaration, in order (`var a=1,b=2` → `["a","b"]`).
+    fn declarator_names(vd: &VariableDeclaration) -> Vec<String> {
+        vd.declarations
+            .iter()
+            .map(|d| {
+                let BindingTarget::Identifier(id) = &d.id;
+                id.name.clone()
+            })
+            .collect()
+    }
+
+    #[test]
+    fn two_adjacent_var_decls_coalesce() {
+        // `var a=1;var b=2;` → `var a=1,b=2;`
+        let prog = program().with_body(vec![
+            prog_var("a", Some(num(1.0, None)), VarKind::Var, None),
+            prog_var("b", Some(num(2.0, None)), VarKind::Var, None),
+        ]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(changed, "coalescing should mark the program changed");
+        assert_eq!(out.body.len(), 1, "the two decls should merge into one");
+        let vd = prog_decl_at(&out, 0);
+        assert_eq!(vd.kind, VarKind::Var);
+        assert_eq!(declarator_names(vd), vec!["a", "b"]);
+        // Inits are preserved in order.
+        assert!(matches!(&vd.declarations[0].init, Some(Expression::NumericLiteral(n)) if n.value == 1.0));
+        assert!(matches!(&vd.declarations[1].init, Some(Expression::NumericLiteral(n)) if n.value == 2.0));
+    }
+
+    #[test]
+    fn three_adjacent_var_decls_coalesce_into_one() {
+        // `var a=1;var b=2;var c=3;` → `var a=1,b=2,c=3;`
+        let prog = program().with_body(vec![
+            prog_var("a", Some(num(1.0, None)), VarKind::Var, None),
+            prog_var("b", Some(num(2.0, None)), VarKind::Var, None),
+            prog_var("c", Some(num(3.0, None)), VarKind::Var, None),
+        ]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 1);
+        assert_eq!(declarator_names(prog_decl_at(&out, 0)), vec!["a", "b", "c"]);
+    }
+
+    #[test]
+    fn adjacent_let_decls_coalesce() {
+        // `let a=1;let b=2;` → `let a=1,b=2;` — same rule, `let` kind preserved.
+        let prog = program().with_body(vec![
+            prog_var("a", Some(num(1.0, None)), VarKind::Let, None),
+            prog_var("b", Some(num(2.0, None)), VarKind::Let, None),
+        ]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 1);
+        let vd = prog_decl_at(&out, 0);
+        assert_eq!(vd.kind, VarKind::Let);
+        assert_eq!(declarator_names(vd), vec!["a", "b"]);
+    }
+
+    #[test]
+    fn declarations_without_initializers_coalesce() {
+        // `var a;var b;` → `var a,b;`
+        let prog = program().with_body(vec![
+            prog_var("a", None, VarKind::Var, None),
+            prog_var("b", None, VarKind::Var, None),
+        ]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 1);
+        let vd = prog_decl_at(&out, 0);
+        assert_eq!(declarator_names(vd), vec!["a", "b"]);
+        assert!(vd.declarations.iter().all(|d| d.init.is_none()));
+    }
+
+    #[test]
+    fn different_kind_decls_do_not_coalesce() {
+        // `var a=1;let b=2;` — different kinds stay two separate statements.
+        let prog = program().with_body(vec![
+            prog_var("a", Some(num(1.0, None)), VarKind::Var, None),
+            prog_var("b", Some(num(2.0, None)), VarKind::Let, None),
+        ]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(!changed, "different-kind decls must not merge");
+        assert_eq!(out.body.len(), 2);
+        assert_eq!(prog_decl_at(&out, 0).kind, VarKind::Var);
+        assert_eq!(prog_decl_at(&out, 1).kind, VarKind::Let);
+    }
+
+    #[test]
+    fn non_adjacent_decls_do_not_coalesce() {
+        // `var a=1;f();var b=2;` — the call between them breaks the run.
+        let prog = program().with_body(vec![
+            prog_var("a", Some(num(1.0, None)), VarKind::Var, None),
+            ProgramItem::Statement(expr_stmt(ident("f"), None)),
+            prog_var("b", Some(num(2.0, None)), VarKind::Var, None),
+        ]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(!changed, "a statement between the decls must break the run");
+        assert_eq!(out.body.len(), 3);
+    }
+
+    #[test]
+    fn redeclaration_declines_to_preserve_byte_identity() {
+        // `var a=1;var a=2;` must NOT become `var a=1,a=2;` — the repeated name
+        // is a redeclaration the reference compiler rewrites differently
+        // (`var a=1;a=2;`), so this pass leaves the run untouched.
+        let prog = program().with_body(vec![
+            prog_var("a", Some(num(1.0, None)), VarKind::Var, None),
+            prog_var("a", Some(num(2.0, None)), VarKind::Var, None),
+        ]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(!changed, "a repeated binding name must decline the merge");
+        assert_eq!(out.body.len(), 2, "the two decls stay separate");
+    }
+
+    #[test]
+    fn lone_declaration_is_left_alone() {
+        let prog =
+            program().with_body(vec![prog_var("a", Some(num(1.0, None)), VarKind::Var, None)]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(!changed);
+        assert_eq!(out.body.len(), 1);
+        assert_eq!(declarator_names(prog_decl_at(&out, 0)), vec!["a"]);
+    }
+
+    #[test]
+    fn flattened_block_decls_then_coalesce() {
+        // `{var a=1;var b=2;}` at program level: the scope-safe block flattens
+        // into the program body (CLOC12.194), and the now-adjacent decls then
+        // coalesce — the two rewrites compose to `var a=1,b=2;`.
+        let block = Statement::block_statement(BlockStatement {
+            cv: None,
+            body: vec![
+                make_var_decl("a", Some(num(1.0, None))),
+                make_var_decl("b", Some(num(2.0, None))),
+            ],
+        });
+        let prog = program().with_body(vec![ProgramItem::Statement(block)]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 1, "flatten + coalesce compose to one decl");
+        assert_eq!(declarator_names(prog_decl_at(&out, 0)), vec!["a", "b"]);
+    }
+
+    #[test]
+    fn coalesce_tombstones_the_folded_away_declaration_cv() {
+        // Merging `var a=1;var b=2;` deletes the second decl's statement
+        // wrapper; its CV id must be tombstoned with the container recorded.
+        let mut log = CVLog::new(true);
+        let second_id = log.create(None);
+        let prog = program().with_body(vec![
+            prog_var("a", Some(num(1.0, None)), VarKind::Var, Some("v.first")),
+            prog_var("b", Some(num(2.0, None)), VarKind::Var, Some(second_id.as_str())),
+        ]);
+        let out = run_capturing_cv(&prog, &mut log);
+        assert_eq!(out.body.len(), 1, "the decls should have merged");
+        let del = log
+            .get(&second_id)
+            .unwrap()
+            .deleted
+            .as_ref()
+            .expect("the folded-away declaration must be tombstoned");
+        assert_eq!(del.source, "fold-control-flow");
+        assert_eq!(del.reason, "coalesce-var-declarations");
+        assert_eq!(
+            del.meta.get("container_cv").and_then(|v| v.as_str()),
+            Some("v.first"),
+            "tombstone should record the surviving container decl's cv"
+        );
     }
 }

@@ -11,7 +11,7 @@ End-to-end oracle for **CLOC26 Phase 2** — Automatic Semicolon Insertion at a
 | `expected.stdout` | The optimized output (see below) |
 
 ```text
-var w=4;var s=3;report(w * s);
+var w=4,s=3;report(w * s);
 ```
 
 What this proves:

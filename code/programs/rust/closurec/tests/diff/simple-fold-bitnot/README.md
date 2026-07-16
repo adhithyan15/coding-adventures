@@ -7,7 +7,7 @@ End-to-end oracle for unary bitwise-NOT folding at
 |------|------|
 | `flags.txt` | CLI args: `--compilation_level SIMPLE --js input/a.js` |
 | `input/a.js` | Four `var` declarations whose initializers are `~<numeric literal>` expressions |
-| `expected.stdout` | The folded output: `var a=-6;var b=0;var c=-6;var d=9;report(a,b,c,d);` |
+| `expected.stdout` | The folded output: `var a=-6,b=0,c=-6,d=9;report(a,b,c,d);` |
 
 The SIMPLE level runs the typed-AST optimization pipeline, whose
 `constant-fold` pass now folds the unary `~` operator on a numeric

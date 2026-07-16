@@ -1,5 +1,34 @@
 # Changelog
 
+## [0.53.0] — 2026-07-14
+
+### Added — NX-2: parse numeric literals to exact values (no silent f64 truncation)
+
+A written decimal literal is now stored **exactly as written** instead of being narrowed to `f64`
+at parse time (spec: `code/specs/ADJ-EXACT-NUMBERS.md`). Before this change a table cell or valued
+fact like π to 39 places bound at only ~16 significant digits; now every digit survives parse →
+store → query.
+
+- New AST node **`NumLit { Int(i64), Exact(BigDecimal) }`** with `to_f64_lossy()`. `Term::Num` and
+  `TableCell::Number` now carry a `NumLit` instead of an `f64`.
+- The adapter's two **ground-term** sites (a table cell and a valued-fact argument) parse the
+  NUMBER token via new `parse_numlit`: a whole number that fits `i64` becomes `Int` (keeping the
+  engine's small-integer fast paths), everything else is parsed with `BigDecimal::from_str` into
+  `Exact`. The two **compute-leaf** sites (`ExprAst::Lit`, inherently `f64`) keep their
+  `parse_finite` → `f64` path — the labeled-lossy boundary.
+- `lower_*` emit `Number::Int` / `Number::Exact` directly, never through `f64`.
+- Behavior note: a magnitude that overflows `f64` (`1e400`) is no longer rejected at parse — it is
+  a valid exact decimal now stored with full precision. A scale-amplification payload
+  (`1e-2000000000`) is still rejected by `BigDecimal`'s `MAX_SCALE` budget.
+- **DoS guard.** Because `.adj` source is untrusted and `BigDecimal` base-10 conversion is
+  `O(digits²)`, `parse_numlit` caps an exact literal's **byte length** (`MAX_NUMBER_TOKEN_LEN =
+  4096`, checked before the quadratic parse) and its **scale magnitude** (`MAX_NUMBER_TOKEN_SCALE =
+  4096`, so a tiny token like `1e-1000000` cannot force a ~1 MB render/`to_f64` string). Both sit
+  ~100× above any legitimate constant (π to 39 places is 41 bytes), so only hostile payloads are
+  rejected — restoring the implicit bound the old `f64` parse provided. Adversarial tests cover
+  both shapes.
+- Depends on `bignum-core` ≥ 0.5.0 and `logic-core` ≥ 0.2.1.
+
 ## [0.52.0] — 2026-07-13
 
 ### Fixed — recursion-depth guard against native stack overflow (DoS)

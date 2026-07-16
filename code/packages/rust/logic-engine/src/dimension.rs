@@ -278,6 +278,9 @@ pub fn dimensioned_value(value: &Term) -> Option<Dimensioned> {
     match value {
         Term::Num(Number::Int(i)) => Some(Dimensioned::scalar(*i as f64)),
         Term::Num(Number::Float(x)) => Some(Dimensioned::scalar(*x)),
+        // An exactly-stored decimal (NX-2) is a scalar magnitude read as its labeled-lossy `f64`,
+        // matching the old `Float` path (the dimension layer is inherently `f64`).
+        Term::Num(Number::Exact(d)) => Some(Dimensioned::scalar(d.to_f64())),
         Term::Compound { functor, args } => {
             // Dates/times are multi-field points in time, not scalar-magnitude
             // wrappers — `date(2025, 1, 15)`'s leading `2025` is a year, not a
@@ -288,6 +291,7 @@ pub fn dimensioned_value(value: &Term) -> Option<Dimensioned> {
             let magnitude = match args.first()? {
                 Term::Num(Number::Int(i)) => *i as f64,
                 Term::Num(Number::Float(x)) => *x,
+                Term::Num(Number::Exact(d)) => d.to_f64(),
                 _ => return None,
             };
             let unit_tag = || match args.get(1) {

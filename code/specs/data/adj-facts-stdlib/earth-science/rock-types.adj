@@ -1,0 +1,57 @@
+% ============================================================================
+% rock-types — each of the three main rock types and how it forms
+% (adj-facts-stdlib, EARTH-SCIENCE).
+% ============================================================================
+% One of the first earth-science facts a young student meets: every rock on
+% Earth belongs to one of THREE families, and the family is decided by HOW the
+% rock was made. Igneous rock is once-molten rock that cooled and hardened;
+% sedimentary rock is loose bits of older rock that got pressed together;
+% metamorphic rock is older rock that heat and pressure changed into something
+% new. Recall is a binding query:
+%
+%     ? rock_formation(igneous, $How)   % cooled_magma (igneous = cooled magma)
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `rock_formation(rock_type, forms_from)` carrying the NPS citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns HOW the
+% rock forms WITH its source, on the CPU, with zero model calls. It abstains on
+% anything the page does not name as one of the three rock types: `magma` is the
+% molten material rock forms FROM, not a rock type, so a query for `magma`
+% honestly binds nothing rather than inventing a formation.
+%
+% The three rock families, as a truth table:
+%
+%     rock_type     forms_from            how it is made (NPS)
+%     -----------   -------------------   ----------------------------------
+%     igneous       cooled_magma          molten magma cools and hardens
+%     sedimentary   compacted_sediment    sediment is pressed / compacted
+%     metamorphic   heat_and_pressure     older rock changed by heat+pressure
+%
+% Provenance: copied from the U.S. National Park Service (NPS) geology teacher
+% page "Olympic Geology pt 2: Rock Sorting", which names the three groups and
+% describes each one's formation verbatim on a single page (the `locator`).
+% Each row's `forms_from` atom is confirmed by its own sentence there:
+%   - igneous → cooled_magma:
+%       "Igneous Rocks: form when hot, liquid rock, or magma, cools."   (see `source`)
+%   - sedimentary → compacted_sediment:
+%       "With the help of time and external pressures, these sediments get
+%        compacted into sedimentary rock."
+%   - metamorphic → heat_and_pressure:
+%       "This normally happens deep underground where heat, pressure, and
+%        chemical activity can actually alter the minerals inside rocks."
+% `trust authoritative` — NPS/nps.gov is a U.S. government (.gov) primary
+% reference. Nothing here is asserted from memory. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table rock_formation {
+    columns rock_type, forms_from
+
+    row (igneous, cooled_magma)
+    row (sedimentary, compacted_sediment)
+    row (metamorphic, heat_and_pressure)
+
+    source "Igneous Rocks: form when hot, liquid rock, or magma, cools."
+    locator "https://www.nps.gov/teachers/classrooms/olympic-geology-pt-2-rock-sorting.htm"
+    trust authoritative
+}

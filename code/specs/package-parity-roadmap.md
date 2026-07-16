@@ -105,16 +105,18 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. Regenerated
-on July 14, 2026 after the Swift CLI-builder port:
+on July 15, 2026 after the paired Lua/Perl `fenwick-tree`, `binary-tree`,
+`binary-search-tree`, `in-memory-data-store-protocol`, `avl-tree`, `tree-set`,
+`skip-list`, and `hyperloglog` ports:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 171 | 375 |
+| Present in 10-15 languages | 171 | 355 |
 | Present in 5-9 languages | 122 | 917 |
 | Present in 2-4 languages | 157 | 1,972 |
-| Present in one language | 694 | 9,716 |
+| Present in one language | 695 | 9,730 |
 
-The loop must not start by attempting 9,716 singleton ports. It should finish
+The loop must not start by attempting 9,730 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 ## Priority 0: Inventory And Identity Integrity
@@ -128,8 +130,8 @@ new canonical identity collisions with `--fail-on-collisions`.
 
 ## Priority 1: Complete The 14-Of-15 Set
 
-One package/language slot remains to turn the final nearly complete package
-into a fully covered package.
+Priority 1 is complete. Every package that entered this wave at 14-of-15 now
+has an implementation in all 15 language lanes.
 
 ### Dart: complete
 
@@ -144,11 +146,10 @@ The dependency-shaped DT11/DT12 `b-tree`/`b-plus-tree` pair is complete.
 Completed in the Haskell lane: `activation-functions`, `caesar-cipher`,
 `huffman-tree`, `huffman-compression`, `lz77`, `lzss`, `lzw`.
 
-### Swift: 1 remaining port
+### Swift: complete
 
-- `sql-execution-engine`
-
-Completed in the Swift lane: `wasm-simulator`, `cli-builder`.
+Completed in the Swift lane: `wasm-simulator`, `cli-builder`,
+`sql-execution-engine`.
 
 Port dependency families together when doing so avoids temporary broken package
 graphs. Grammar-generated lexer/parser pairs should be generated from the shared
@@ -156,25 +157,36 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 171 packages present in at least ten implementation languages need 375
+The 171 packages present in at least ten implementation languages need 355
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
 |---|---:|---|
-| Python | 3 | Pair `in-memory-data-store` packages; classify self-hosted `python-parser` carefully |
-| Elixir | 1 | Complete alongside the Python parser/frontend decision |
-| Lua | 16 | Pair with Perl data-structure/storage wave |
-| Perl | 16 | Pair with Lua data-structure/storage wave |
+| Python | 1 | Classify the remaining self-hosted `python-parser` carefully |
+| Elixir | 0 | Complete; `python-parser` uses the shared grammar-driven frontend |
+| Lua | 8 | Pair with Perl data-structure/storage wave |
+| Perl | 8 | Pair with Lua data-structure/storage wave |
 | C# | 17 | Move with F# |
 | F# | 17 | Move with C# |
 | Haskell | 34 | Dependency-shaped compression, graphics, ML, and protocol waves |
-| Swift | 51 | Data structures and generated frontends before native app surfaces |
+| Swift | 50 | Data structures and generated frontends before native app surfaces |
 | Java | 57 | Move with Kotlin |
 | Kotlin | 57 | Move with Java |
 | Dart | 106 | Algorithms, data structures, codecs, grammar frontends, documents, and paint transforms first |
 
 Go, Ruby, Rust, and TypeScript currently have no gaps within the 10-language
 consensus set. They remain reference/template lanes for these waves.
+
+The first eight paired Lua/Perl slices are complete: `fenwick-tree`,
+`binary-tree`, `binary-search-tree`, `in-memory-data-store-protocol`,
+`avl-tree`, `tree-set`, `skip-list`, and `hyperloglog` now have pure
+implementations, package-native tests, metadata, and capability declarations in
+both lanes.
+The protocol slice establishes the dependency-free IR needed before the higher
+in-memory data store layers move; the AVL slice supplies the ordered backend
+for `tree-set`; and the dependency-free skip-list slice adds a span-augmented
+ordered map with logarithmic rank and selection. The HyperLogLog slice adds a
+fixed-memory approximate distinct counter with deterministic internal hashing.
 
 Recommended family order:
 
@@ -202,7 +214,7 @@ This phase covers 122 package identities and 917 current missing slots.
 
 ## Priority 4: Classify Sparse And Singleton Families
 
-The singleton inventory is led by 501 Rust, 86 Python, and 82 TypeScript
+The singleton inventory is led by 501 Rust, 86 Python, and 83 TypeScript
 packages. Classify families before opening implementation PRs.
 
 ### Likely portable Rust-led families

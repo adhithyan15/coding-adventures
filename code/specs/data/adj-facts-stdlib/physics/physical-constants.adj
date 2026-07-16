@@ -32,8 +32,11 @@
 % metrology authority — is the citable artifact; hence `trust authoritative`.
 % Nothing here is asserted from memory. Note how ADJ stores each value: a literal
 % written in scientific notation (`6.62607015e-34`) is kept as its EXACT decimal
-% expansion, so no precision is lost — `? physical_constant(planck_constant, $V)`
-% binds the full exact decimal, not a rounded float. Keys are lowercase atoms.
+% expansion, so no precision is lost. Since the exact-numbers arc (ADJ-EXACT-NUMBERS
+% NX-1..4) this exactness is end-to-end: `? physical_constant(planck_constant, $V)`
+% BINDS and RENDERS the full exact decimal (a `Number::Exact` big-decimal, never a
+% rounded f64), and a formula that consumes the constant computes and prints its
+% result exactly too. Keys are lowercase atoms.
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
 % ============================================================================

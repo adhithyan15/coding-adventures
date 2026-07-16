@@ -18,11 +18,15 @@ word lessons — never as a gated reading course.
   the emphatic consonants, ʿayn/hamza), and the root engine + attached *al-*
   (with sun/moon assimilation) are shown as the words are built.
 
+- **Ch. 2 — Introducing Yourself**: ism → -ī ("my" suffix) → **ismī** ("my name
+  is," zero copula) → anta/anti (gendered "you") → mā → **mā ismuka/ismuki?** →
+  tasharrafnā → practice. Root-and-suffix engine; the **zero copula** (shared
+  with the Dravidian tracks); "you" split by **gender**, not register.
+
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 2 | Introducing yourself: *ismī…* ("my name is"), the **gendered "you"** (*anta* m. / *anti* f.), the root system deepened |
 | 3 | Responding: *kayfa ḥāluk* ("how are you"), *bi-khayr* ("well"), *al-ḥamdu lillāh* |
 | 4 | Farewells: *maʿa s-salāma* ("with safety"), *ilā l-liqāʾ* |
 | 5+ | Numbers, the pattern system (verb forms I–X), family, food — always with the root engine and the Spanish-loanword thread |

@@ -2,6 +2,129 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.94.0] - 2026-07-15
+
+### Added — array-index out-of-bounds / negative / hole → `void 0` — CLOC12.196b
+
+Extends the CLOC12.196 computed array-index fold (`[a, b, c][K]` → the K-th
+element) to cover the cases that read as `undefined`, which the emitter spells
+`void 0`:
+
+- **out of bounds** — `K ≥ len`: `[1,2,3][5]` → `void 0`, `[1,2][2]` → `void 0`,
+  `[][0]` → `void 0`;
+- **negative index** — `[1,2,3][-1]` → `void 0` (post-fold a negative index is a
+  `NumericLiteral` with a negative `value`, so it flows through the same
+  out-of-range path);
+- **in-bounds hole** — `[1,,3][1]` → `void 0` (an elided slot reads as
+  `undefined`).
+
+All rows are verified byte-identical against the reference Closure Compiler
+(`SIMPLE`). Two guards keep the fold sound:
+
+- a **fractional** index (`[1,2,3][1.5]`) is an ordinary absent-property read,
+  not an element pick, so it declines — matching Closure;
+- a `void 0` result drops the *whole* array literal, so **every** element must be
+  side-effect-free: `[f(),2][5]` declines even though the index is out of bounds
+  (this is stricter than the in-bounds present-element fold, which preserves the
+  selected element and so only requires the *other* elements to be pure).
+
+The computed-index logic moved into a dedicated `#[inline(never)]`
+`fold_array_index_access` helper so the recursive `fold_member` stack frame stays
+small (deeply-nested expressions must not overflow the stack — the frame-size
+lesson).
+
+## [0.93.0] - 2026-07-15
+
+### Added — contract compound self-assignment `x = x OP E` → `x OP= E` — CLOC12.198
+
+`fold_expression` now contracts a plain-`=` assignment whose right-hand side is a
+binary expression on the same target into the compound-assignment form:
+`x = x + 1` → `x += 1`, `n = n - 2` → `n -= 2`, `k = k * 2` → `k *= 2`,
+`a = a + b` → `a += b`, `s = s + "b"` → `s += "b"`. The rewrite fires for every
+arithmetic / bitwise operator that has a compound counterpart
+(`+ - * / % ** << >> >>> & | ^`); the relational, equality, `in`, and
+`instanceof` operators have no `OP=` form and decline. Verified byte-identical to
+the reference Closure Compiler (`SIMPLE`), which performs the same contraction.
+
+The contraction is matched on the binary's **left** operand only, so `x = x + 1`
+folds but `x = 1 + x` does **not** — for non-commutative operators (`-`, `/`,
+`**`, the shifts) `x = x - 1` (→ `x -= 1`) and `x = 1 - x` are different
+computations, and the reference compiler likewise only contracts the
+left-operand shape. A different left identifier (`x = y + 1`) also declines.
+
+**Scope:** identifier targets only. A member target such as `o[f()] = o[f()] + 1`
+is a deliberate follow-up (CLOC12.198b): its expanded form evaluates the
+reference sub-expressions (`f()`) twice while the compound form evaluates them
+once, so contracting it is only sound once the object/property is proven
+side-effect-free. For a bare identifier binding the reference `x` has no
+observable side effect, so `x = x OP E` and `x OP= E` are always interchangeable.
+
+The contraction body lives in an `#[inline(never)]` `fold_assignment` helper so
+its locals don't inflate the shared recursive `fold_expression` frame (the same
+DoS-guard discipline the member / optional / template arms follow).
+
+## [0.92.0] - 2026-07-15
+
+### Added — fold template literal → string when every substitution is constant — CLOC12.197
+
+`fold_expression` now collapses a `TemplateLiteral` to a `StringLiteral` when
+every `${…}` substitution is a stringifiable constant (number / string / boolean
+/ null / undefined) and every quasi carries a cooked value: `` `a${1}b` `` →
+`"a1b"`, `` `${1}-${2}-${3}` `` → `"1-2-3"`, `` `hello` `` → `"hello"`, `` `` `` →
+`""`. Recursion handles nested templates (`` `a${`b${1}c`}d` `` → `"ab1cd"`) and
+constant sub-expressions (`` `a${1+2}b` `` → `"a3b"`, the `1+2` folds first).
+Verified byte-identical to the reference Closure Compiler; no emitter work is
+needed because closurec's string emitter already matches its quote choice
+(single-quote when the value contains a `"`) and escaping (`\n`, `\t`, `\\`). A
+non-constant substitution (`` `a${x}b` ``, `` `a${f()}b` ``) or an illegal-escape
+(tagged-only) quasi declines.
+
+The fold body lives in an `#[inline(never)]` `fold_template_literal` helper so its
+`Vec`/`String` locals don't inflate the shared recursive `fold_expression` frame
+(that frame is walked once per AST depth level; bloating it lowers the nesting
+depth the pass survives — the `deeply_nested_*` stack-safety tests pin this).
+
+Adds a `stringify_const_operand` predicate + four unit tests. NOTE: end-to-end at
+SIMPLE this currently only fires on **no-substitution** templates (`` `hello` `` →
+`"hello"`) — *substituted* templates (`` `a${x}b` ``) do not yet parse in
+closurec's grammar, so the fold, though correct and unit-tested, can't receive one
+until that separate grammar/bridge arc lands. Additive; MINOR 0.91.0 → 0.92.0.
+
+## [0.91.0] - 2026-07-15
+
+### Added — fold array-literal index access `[a, b, c][K]` → element — CLOC12.196
+
+`fold_member`'s computed-access path (`arr[K]`) now folds a constant integer index
+into the selected element, the companion to the CLOC12.193 array-`.length` fold.
+`[1,2,3][1]` → `2`, `[a,b,c][1]` → `b`, nested `[[1,2],[3,4]][1][0]` → `3`. Guards
+keep it byte-identical to the reference Closure Compiler (verified against the real
+jar): no spread anywhere (`[1,...x][0]` declines — indices are runtime-unknown); the
+index is a non-negative integer literal in range (a NumericLiteral is never negative
+in the AST, and a fractional / out-of-range index is not a canonical array index, so
+`[1,2,3][1.5]` / `[1,2,3][5]` / `[1,2,3][-1]` are left intact); the element at `K` is
+present (a hole is left, pending the `void 0` follow-up); and every element EXCEPT
+the selected one is side-effect-free — the SELECTED element is preserved verbatim, so
+`[a, b()][1]` folds to `b()` (its call still runs) while `[a, b()][0]` declines (it
+would drop `b()`). CV provenance recorded per fold. Three unit tests (fold cases +
+selected-side-effect preservation + each decline). Out of scope for this PR (a tight
+follow-up needing `void 0` construction): out-of-bounds / selected-hole → `void 0`,
+and canonical string-index keys (`[1,2,3]["0"]` → `1`). Additive; MINOR 0.90.0 → 0.91.0.
+
+## [0.90.0] - 2026-07-14
+
+### Added — fold array-literal `.length` → element count — CLOC12.193
+
+`fold_member` now folds `[e0, e1, …].length` to the element count, mirroring the existing string-literal
+`.length` fold. Two guards keep it byte-identical to the reference Closure Compiler (verified against the
+real jar): a spread element (`[...x]`) makes the length statically unknown, so it declines; and an element
+with a side effect must not be dropped (evaluating the array literal runs it), so it declines unless every
+present element is side-effect-free. Holes (`[,,]`) evaluate nothing but still count toward the length
+(`[,,].length === 2`). Adds a conservative `is_side_effect_free` predicate (literals, identifier, property
+read, and pure operators over pure operands are free; call/new/assignment/`++`/`--`/await/yield/tagged-
+template/dynamic-import/spread/object-literal/class-expression are not). Truth table matched byte-for-byte:
+`[1,2,3]`→3, `[]`→0, `[,,]`→2, `[a,b]`→2, `[a+b,c]`→2, `[x.y]`→1 FOLD; `[a=1]`, `[g()]`, `[1,2,...x]` DON’T.
+Additive; MINOR.
+
 ## [0.89.0] - 2026-07-14
 
 ### Added — fold default-parameter expressions — CLOC12.191 PR1

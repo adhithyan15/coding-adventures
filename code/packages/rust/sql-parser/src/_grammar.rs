@@ -685,6 +685,17 @@ pub fn parser_grammar() -> ParserGrammar {
                 ] },
                 GrammarElement::RuleReference { name: r#"function_call"#.to_string() },
                 GrammarElement::RuleReference { name: r#"column_ref"#.to_string() },
+                // Scalar subquery `( SELECT … )`. Placed BEFORE the plain
+                // `( expr )` form so ordered choice matches the subquery when the
+                // token after `(` is the `SELECT` keyword (which cannot start an
+                // `expr`); a non-SELECT `(` backtracks to `( expr )`. Parsing is
+                // wired here; the planner rejects it with a clear "not yet
+                // supported" error until the evaluation path lands.
+                GrammarElement::Sequence { elements: vec![
+                    GrammarElement::Literal { value: r#"("#.to_string() },
+                    GrammarElement::RuleReference { name: r#"select_stmt"#.to_string() },
+                    GrammarElement::Literal { value: r#")"#.to_string() },
+                ] },
                 GrammarElement::Sequence { elements: vec![
                     GrammarElement::Literal { value: r#"("#.to_string() },
                     GrammarElement::RuleReference { name: r#"expr"#.to_string() },

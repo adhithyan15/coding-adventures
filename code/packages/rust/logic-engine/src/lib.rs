@@ -1090,30 +1090,49 @@ pub fn numeric_magnitude(value: &Term) -> Option<f64> {
     match value {
         Term::Num(Number::Int(i)) => Some(*i as f64),
         Term::Num(Number::Float(x)) => Some(*x),
+        // An exactly-stored decimal (ADJ-EXACT-NUMBERS NX-2) reads out as its labeled-lossy `f64`
+        // magnitude here — the same value the old `Float(f64)` path yielded, since a valued fact's
+        // magnitude flows into the inherently-`f64` compute layer. (Exact-rational ingestion of the
+        // decimal, with no `f64` hop, is NX-3.)
+        Term::Num(Number::Exact(d)) => Some(d.to_f64()),
         // Typed wrapper: the magnitude is the leading numeric argument.
         Term::Compound { args, .. } => match args.first() {
             Some(Term::Num(Number::Int(i))) => Some(*i as f64),
             Some(Term::Num(Number::Float(x))) => Some(*x),
+            Some(Term::Num(Number::Exact(d))) => Some(d.to_f64()),
             _ => None,
         },
         _ => None,
     }
 }
 
-/// Exact counterpart to [`numeric_magnitude`]. It intentionally returns `None`
-/// for non-integral floats; exact decimal parsing belongs at the language
-/// adapter layer, while this engine helper only trusts values that arrived as
-/// integer terms or integer-valued floats.
+/// Exact counterpart to [`numeric_magnitude`]. `Int` and `Exact(BigDecimal)` values ingest
+/// **exactly** — the decimal is `mantissa × 10^(-scale)`, converted to its true `BigRational`
+/// with no `f64` hop (NX-3). A `Float` term is the one inexact ingress: it captures only
+/// *integer-valued* floats (via [`from_integer_f64`](crate::compute::ExactRational::from_integer_f64))
+/// and returns `None` for a fractional binary float, whose intended exact form belongs to the
+/// base-10 literal string handled by the language adapter, not to the rounded `f64`.
 pub fn numeric_exact_magnitude(value: &Term) -> Option<crate::compute::ExactRational> {
     match value {
         Term::Num(Number::Int(i)) => Some(crate::compute::ExactRational::from_i128(*i as i128)),
         Term::Num(Number::Float(x)) => crate::compute::ExactRational::from_integer_f64(*x),
+        // NX-3 ingests an exactly-stored decimal at *full precision* — `BigDecimal` is
+        // `mantissa × 10^(-scale)`, an exact ratio, so `to_rational()` hands the compute layer the
+        // true value with **no `f64` hop**. A stored 39-digit pi therefore stays exact through
+        // arithmetic (`pi * 2`), instead of collapsing to the ~16-digit nearest float the NX-2
+        // stopgap produced. `Int` above is already exact; `Float` remains the one inexact ingress.
+        Term::Num(Number::Exact(d)) => {
+            Some(crate::compute::ExactRational::from_ratio(d.to_rational()))
+        }
         Term::Compound { args, .. } => match args.first() {
             Some(Term::Num(Number::Int(i))) => {
                 Some(crate::compute::ExactRational::from_i128(*i as i128))
             }
             Some(Term::Num(Number::Float(x))) => {
                 crate::compute::ExactRational::from_integer_f64(*x)
+            }
+            Some(Term::Num(Number::Exact(d))) => {
+                Some(crate::compute::ExactRational::from_ratio(d.to_rational()))
             }
             _ => None,
         },

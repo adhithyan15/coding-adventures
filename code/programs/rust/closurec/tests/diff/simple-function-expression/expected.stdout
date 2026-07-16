@@ -1,1 +1,1 @@
-var factory=function make(n){return 3};var obj={run:function(){return 6}};(function(){var y;y=7})();arr.map(function(x){return x+0});
+var factory=function make(n){return 3},obj={run:function(){return 6}};(function(){var y;y=7})();arr.map(function(x){return x+0});

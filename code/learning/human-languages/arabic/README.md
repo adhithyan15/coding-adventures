@@ -35,8 +35,11 @@ Two more things:
   shukran → practice. The Arabic script is taught inline (RTL, connecting
   letters, dots-on-a-skeleton, the emphatic consonants, ʿayn/hamza), and the
   root engine + attached *al-* are shown as the words are built. In the book.
-- **Chapter 2 — Introducing Yourself** (planned): ismī, the gendered "you"
-  (*anta* / *anti*).
+- **Chapter 2 — Introducing Yourself** ([`lessons/AR-C02-*`](./lessons/)): ism,
+  -ī ("my"), **ismī** ("my name is," zero copula), anta/anti (gendered "you"),
+  mā, **mā ismuka/ismuki?** ("what's your name?"), tasharrafnā, practice. The
+  zero copula (shared with Dravidian) and "you" split by **gender**. In the
+  book.
 
 ## Book / fonts
 

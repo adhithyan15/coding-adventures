@@ -2,6 +2,16 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.15] - Unreleased
+
+### Added
+
+- **Scalar subqueries rejected with a clear error (not yet evaluated).** A
+  `select_stmt` node inside a `primary` (a `( SELECT … )`) returns
+  `PlanError::UnsupportedStatement("scalar subqueries are not yet supported")`
+  rather than mis-planning it. Wiring `SqlExpr::ScalarSubquery` + the VM sub-plan
+  evaluation is the follow-up.
+
 ## [0.2.14] - Unreleased
 
 ### Added

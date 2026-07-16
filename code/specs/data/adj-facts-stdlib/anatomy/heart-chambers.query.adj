@@ -1,0 +1,23 @@
+% ============================================================================
+% heart-chambers.query.adj — a worked recall over the anatomy heart-chambers library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does the right atrium
+% do?": it states no anatomy fact — it only `import`s the grounded table and
+% asks binding queries. The engine resolves each `?` against the
+% `heart_chamber_function` rows and returns the job + the table's
+% source/locator/trust. The fourth query runs the relation BACKWARD (bind the
+% job `pumps_blood_to_body`, recall the chamber that does it — the left
+% ventricle). The aorta is not a chamber, so a recall on it abstains honestly —
+% the engine never invents a job.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli heart-chambers.query.adj
+% ============================================================================
+
+import "heart-chambers.adj"
+
+? heart_chamber_function(right_atrium, $Job)     % expect receives_blood_from_body
+? heart_chamber_function(right_ventricle, $Job)  % expect pumps_blood_to_lungs
+? heart_chamber_function(left_atrium, $Job)      % expect receives_blood_from_lungs
+? heart_chamber_function($C, pumps_blood_to_body) % expect left_ventricle — reverse recall
+? heart_chamber_function(aorta, $Job)            % expect abstain — the aorta is not a chamber

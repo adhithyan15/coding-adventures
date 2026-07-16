@@ -7,7 +7,7 @@ End-to-end oracle for string-indexing folding (`codePointAt`) at
 |------|------|
 | `flags.txt` | CLI args: `--compilation_level SIMPLE --js input/a.js` |
 | `input/a.js` | three `"…".codePointAt(i)` calls into `report(...)` |
-| `expected.stdout` | The folded output: `var a=97;var b=128169;var c=56489;report(a,b,c);` |
+| `expected.stdout` | The folded output: `var a=97,b=128169,c=56489;report(a,b,c);` |
 
 The SIMPLE level runs the typed-AST optimization pipeline, whose
 `constant-fold` pass evaluates `String#codePointAt` on a string-literal

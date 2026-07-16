@@ -9,6 +9,13 @@
 \setsansfont{Latin Modern Sans}
 \setmonofont{Latin Modern Mono}
 
+% Transliteration letters absent from Latin Modern, mapped to accents so the
+% romanizations don't drop characters (ṁ = anusvāra, in haiṁ etc.).
+\usepackage{newunicodechar}
+\newunicodechar{ṁ}{\.{m}}
+\newunicodechar{ṉ}{\b{n}}
+\newunicodechar{ṟ}{\b{r}}
+
 \usepackage[table]{xcolor}
 \usepackage{tcolorbox}
 \tcbuselibrary{skins,breakable}

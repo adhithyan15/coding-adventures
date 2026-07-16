@@ -25,8 +25,9 @@ French *nuit* — one Indo-European word, split four ways.
 - **Chapter 1 — Greetings** ([`lessons/GE-C01-*`](./lessons/)): hallo, gut,
   der/die/das (gender), Tag, Guten Tag, Morgen, Guten Morgen, Abend, Guten
   Abend, Nacht, Gute Nacht, practice. In the book.
-- **Chapter 2 — Introducing Yourself** (planned): ich heiße, **du / Sie**
-  (informal vs formal "you"), wie, name.
+- **Chapter 2 — Introducing Yourself** ([`lessons/GE-C02-*`](./lessons/)): ich,
+  heißen, **ich heiße** ("my name is"), **du / Sie**, wie, **wie heißen Sie?**
+  ("what's your name?"), freut mich, practice. In the book.
 
 ## Files
 

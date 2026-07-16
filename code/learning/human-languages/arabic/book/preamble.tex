@@ -7,6 +7,14 @@
 \setsansfont{Latin Modern Sans}
 \setmonofont{Latin Modern Mono}
 
+% A few transliteration letters (used when citing Tamil etc.) are absent from
+% Latin Modern; map them to accents so romanizations don't drop characters.
+\usepackage{newunicodechar}
+\newunicodechar{ṉ}{\b{n}}
+\newunicodechar{ṟ}{\b{r}}
+\newunicodechar{ṁ}{\.{m}}
+\newunicodechar{ḻ}{\b{l}}
+
 % IMPORTANT: xcolor, hyperref, tcolorbox, etc. must be loaded BEFORE
 % polyglossia, because polyglossia loads `bidi` for the Arabic (RTL) language,
 % and bidi errors out ("you have loaded package xcolor after bidi package") if

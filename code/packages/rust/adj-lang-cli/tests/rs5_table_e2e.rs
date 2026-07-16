@@ -84,6 +84,37 @@ fn table_exact_lookup_binds_value_with_citation() {
 }
 
 #[test]
+fn table_high_precision_pi_binds_all_39_digits() {
+    // The exact-numbers win (ADJ-EXACT-NUMBERS NX-2): a table cell written to 39 decimal places
+    // binds and RENDERS with every digit, instead of being truncated to the ~16 an `f64` carries
+    // the moment it is parsed. This drives the full parse → store → query → render path through
+    // the built CLI, proving the digits survive end-to-end.
+    let dir = scratch("pi39");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "table math_constant {\n\
+         \x20   columns name, value\n\
+         \x20   row (pi, 3.141592653589793238462643383279502884197)\n\
+         \x20   source \"Wolfram MathWorld — Pi\"\n\
+         \x20   locator \"https://mathworld.wolfram.com/Pi.html\"\n\
+         \x20   trust authoritative\n\
+         }\n\
+         ? math_constant(pi, $V)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    assert!(out.contains("\"recall\""), "has a recall section: {out}");
+    // Every one of the 39 fractional digits is present in the binding — not the f64-truncated
+    // prefix. Before NX-2 this came back as `3.141592653589793`.
+    assert!(
+        out.contains("\"V\":\"3.141592653589793238462643383279502884197\""),
+        "pi binds ALL 39 decimal places exactly, not the f64-truncated ~16: {out}"
+    );
+    assert!(out.contains("\"abstained\":false"), "not an abstention: {out}");
+}
+
+#[test]
 fn table_absent_key_abstains() {
     let dir = scratch("absent");
     write(

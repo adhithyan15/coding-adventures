@@ -30,8 +30,11 @@ book.
   dhanyavāda → haudu → illa → sari → practice (with the *hōgi baruttēne*
   farewell). Kannada script taught inline; Dravidian cognates traced. In the
   book.
-- **Chapter 2 — Introducing Yourself** (planned): *nanna hesaru…* ("my name"),
-  and *nīnu* / *nīvu* (familiar / respectful "you").
+- **Chapter 2 — Introducing Yourself** ([`lessons/KA-C02-*`](./lessons/)):
+  hesaru, nanna, **nanna hesaru** ("my name is," zero copula), nīnu/nīvu, ēnu,
+  **nimma hesaru ēnu?** ("what's your name?"), santōṣa, practice. Every atom
+  traced (*hesaru* ← *\*pesar*, p→h; *santōṣa* Sanskrit vs. Tamil *magiḻcci*).
+  In the book.
 
 ## Book / fonts
 

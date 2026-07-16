@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.2.0] - 2026-07-14
+
+### Added
+
+- MA07 D-5: vectors/matrices as structural `List` data. `lower_vector`
+  lowers the D-3 `vector = LBRACKET row { SEMI row } RBRACKET` node by
+  *counting* how many `row` children were parsed — the grammar has no
+  separate rule for the two shapes — one row lowers to a flat
+  `List(elems…)` (a vector), more than one lowers to a `List` of per-row
+  `List`s (a matrix): `[a, b, c]` → `List[a, b, c]`, `[a, b, c; d, e, f]` →
+  `List[List[a, b, c], List[d, e, f]]`, exactly matching MA07 §3's table.
+  Mirrors Wolfram's `{a, b}` → `List[a, b]` lowering.
+- `printer`: the reverse — a `List(...)` node prints back to bracket
+  notation, distinguishing a flat vector (`,`-separated) from a matrix
+  (`;`-separated rows, detected when every element is itself a `List`,
+  the only shape `lower_vector` produces for nested lists).
+- Per MA07 §2/§4, this is *structural* only: no linear-algebra evaluation
+  (matrix multiply, determinant, …) is wired here — elements inside a
+  vector/matrix still evaluate individually through the existing shared
+  arithmetic handlers (e.g. `[1+1, 2*3]` → `[2, 6]`), but the `List` head
+  itself is data, not something the VM tries to further reduce.
+- 6 new `lower` tests, 4 new `printer` tests, 3 new end-to-end session
+  tests (elementwise evaluation, matrix evaluation, persistent vector
+  bindings) — replacing the old D-4-era test that asserted vector literals
+  were a clean deferred error.
+
 ## [0.1.0] - 2026-07-13
 
 ### Added

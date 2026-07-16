@@ -5,6 +5,50 @@ All notable changes to the `bignum-core` package will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.0] - 2026-07-14
+
+### Added
+
+- **`BigDecimal::from_rational_exact(r: &BigRational) -> Option<BigDecimal>`** — the inverse of
+  `to_rational`, and the rendering half of the ADJ exact-numbers arc (NX-4). A reduced fraction
+  `p/q` has a **finite** decimal expansion iff `q`'s only prime factors are `2` and `5` (the primes
+  of base 10); the method strips those factors, and if anything else remains (`3`, `7`, `11`, …) the
+  expansion repeats and it returns `None` (so the caller falls back to a labeled-lossy `f64`). When
+  it terminates, it rebalances to `mantissa / 10^scale` and hands the parts to `from_parts`, so
+  `1/4 → 0.25`, `7/20 → 0.35`, and a doubled 39-digit π
+  (`6283185307179586476925286766559005768394 / 10^39`) renders to all 39 fractional digits, while
+  `1/3` and `2/7` return `None`. Sign rides on the mantissa; zero and integers are the scale-0 case.
+  Round-trips exactly against `to_rational`. Introduced so the logic engine / CLI can print an exact
+  **computed** result with every digit instead of the ~16-significant-digit f64 export.
+
+## [0.6.0] - 2026-07-14
+
+### Added
+
+- **`BigDecimal::to_rational(&self) -> BigRational`** — the **exact** counterpart of the lossy
+  `to_f64()`. A `BigDecimal` is `mantissa × 10^(-scale)`, always a ratio of two integers, so this
+  converts with **zero loss and no `f64` hop**: `scale > 0` yields `mantissa / 10^scale`
+  (`2.54 → 127/50`, `0.3048 → 381/1250`), and `scale ≤ 0` yields the whole number
+  `mantissa × 10^|scale|` (`100 → 100/1`). The result is reduced to lowest terms by
+  `BigRational::new`, and a 39-digit π converts to `3141592653589793238462643383279502884197 / 10^39`
+  exactly. Introduced for ADJ exact-numbers NX-3 (exact compute ingestion): the logic engine now
+  ingests a stored `Number::Exact` decimal into its `ExactRational` sidecar through this method, so
+  arithmetic on a high-precision constant stays exact. Unit-tested across fractional, integer,
+  zero, negative, and 39-digit-π inputs.
+
+## [0.5.0] - 2026-07-14
+
+### Added
+
+- **`BigDecimal::significant_digits(&self) -> usize`** — counts the meaningful digits a value
+  carries (the mantissa's digit count once trailing zeros are removed; `0` for zero). Because a
+  `BigDecimal` is always canonical (no trailing-zero mantissa), this is simply the digit length of
+  the mantissa's magnitude — `20.180 → 4`, `100 → 1`, `0 → 0`, π-to-39 → `39`. Introduced for the
+  ADJ exact-numbers renderer (NX-2): it decides whether an exact value still fits an `f64`'s
+  ~17-digit budget (render the `f64` canonical form, preserving existing output byte-for-byte) or
+  exceeds it (render every exact digit). Tested across zero, trailing/leading zeros, the 17-vs-18
+  digit f64 boundary, negatives, and scientific-notation inputs.
+
 ## [0.4.1] - 2026-07-11
 
 ### Added
