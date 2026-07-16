@@ -87,6 +87,36 @@ here.
   error, not wrong output. A control-flow relooper to structure arbitrary
   `GO TO` is a possible later rung.
 
+### D4. File I/O over stdin/stdout streams; a real named-file primitive is deferred
+
+Both languages' *sequential* record I/O — the classic batch shape — maps onto the
+**existing, backend-portable stdout/stdin builtins**, so **no `file_open`-by-name
+native primitive is added to the 17 backends**, and programs stay deterministic
+and matrix-verifiable (feed stdin, capture stdout — exactly how Dartmouth BASIC's
+`INPUT`/`PRINT` are already verified across all 7 columns):
+
+* `WRITE-ITEM` / COBOL `WRITE` / `DISPLAY` → `print_str` / `print_i64` (the record
+  image is the file's fields). **Free today** — every backend implements these.
+* `READ-ITEM` / COBOL `READ … AT END` → a stdin read; `END OF DATA` / `AT END`
+  is the end-of-input branch.
+* `OPEN`/`CLOSE`, `SELECT`/`FD`, `INPUT`/`OUTPUT` file declarations → no-ops.
+
+**The one gap (found while scoping):** `END OF DATA` needs the read to *signal
+end-of-input*, and the current `input_i64`/`input_str` builtins return a plain
+value with **no portable EOF signal** (the VM registers them as a closure
+returning `Value::Int`; the AOT backends call `BasicRuntime.readLong()`). So the
+end-of-data loop needs a minimal **EOF-aware read capability** — an
+`input_line -> (str, bool_more)` (or a paired `input_eof`) added to the *input*
+path across the run columns. This is far smaller than a file-open-by-name
+primitive (it extends the existing stdin read, not the filesystem) and is the
+prerequisite for `READ-ITEM`/`AT END` loops.
+
+**Multiple simultaneous named files** (the inventory program has four) and COBOL
+**indexed/relative random access** are modelled as **in-memory record
+arrays/keyed maps** (existing `array_*` ops — deterministic, no primitive), or
+eventually as an *optional* real-file capability gated to the filesystem-capable
+columns (native/LLVM/JVM/CLR) only. Both are deferred.
+
 ### D3. The tree-walk runtimes stay as the reference oracle
 
 `cobol-runtime` (87 tests) — and the FLOW-MATIC semantics defined here — are the
