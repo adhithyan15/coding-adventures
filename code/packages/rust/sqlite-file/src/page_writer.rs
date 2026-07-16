@@ -319,51 +319,75 @@ pub fn write_single_table_db(
     create_sql: &str,
     rows: &[(i64, Vec<crate::record::SqlValue>)],
 ) -> Result<Vec<u8>, SqliteError> {
+    // A single-table database is just the one-table case of the general writer.
+    // Delegating keeps the two byte-for-byte identical (the sole table roots on
+    // page 2, exactly as before).
+    write_multi_table_db(page_size, &[(table_name, create_sql, rows)])
+}
+
+/// One table's rows, as `(name, create_sql, rows)` — the unit
+/// [`write_multi_table_db`] writes. `rows` is `(rowid, column values)` per row.
+pub type TableSpec<'a> = (&'a str, &'a str, &'a [(i64, Vec<crate::record::SqlValue>)]);
+
+/// Emit a complete, re-readable SQLite database holding **several** tables in one
+/// call — the multi-table generalisation of [`write_single_table_db`].
+///
+/// ## Page layout
+///
+/// - **Page 1** is the 100-byte DB header followed (at offset 100) by the
+///   `sqlite_schema` leaf: one row per table, in the given order, each naming
+///   the table's root page and DDL.
+/// - **Pages 2…** hold each table's data, table by table in order: a data leaf
+///   followed immediately by that table's overflow pages (for rows too large to
+///   sit inline), then the next table's leaf, and so on. A table's root page is
+///   therefore wherever its leaf lands after the previous tables' pages.
+///
+/// The result reads back through [`crate::schema::read_table`]`(&db, name)` for
+/// each table and is accepted by real SQLite (it passes `PRAGMA
+/// integrity_check`). Reserved space is 0, so usable size equals `page_size`.
+///
+/// # Errors
+/// [`SqliteError::BadPageSize`] for a `page_size` outside the power-of-two
+/// `512..=65536` range; [`SqliteError::Unsupported`] if a duplicate rowid
+/// appears within a table, if the combined `sqlite_schema` rows do not fit on
+/// page 1's single leaf (page-1 schema overflow is a later rung), or if the
+/// database would exceed the 2³²-page limit.
+pub fn write_multi_table_db(page_size: usize, tables: &[TableSpec]) -> Result<Vec<u8>, SqliteError> {
     if !(512..=65536).contains(&page_size) || !page_size.is_power_of_two() {
         return Err(SqliteError::BadPageSize(page_size as u32));
     }
-
-    // --- Page 2: the user table's data leaf (+ any overflow pages). -----------
-    //
-    // Records that exceed the inline limit spill into overflow chains. The data
-    // leaf is page 2, so overflow pages are allocated sequentially from page 3
-    // onward, in rowid order. `reserved_space` is 0, so usable == page_size.
+    // `reserved_space` is 0, so usable == page_size.
     let usable = page_size;
     let data_max_local = usable.saturating_sub(LEAF_PAYLOAD_OVERHEAD);
 
-    let data_records: Vec<(i64, Vec<u8>)> = rows
-        .iter()
-        .map(|(rowid, cols)| (*rowid, crate::record::encode(cols)))
-        .collect();
-    let ordered_data = order_cells(&data_records)?;
-
-    const DATA_LEAF_PAGE: u32 = 2;
-    let mut next_overflow_page: u32 = DATA_LEAF_PAGE + 1;
-    let mut overflow_pages: Vec<Vec<u8>> = Vec::new();
-    let mut leaf_cells: Vec<Vec<u8>> = Vec::with_capacity(ordered_data.len());
-    for (rowid, record) in &ordered_data {
-        let (cell, spilled) = build_leaf_cell(
-            *rowid,
-            record,
-            page_size,
-            usable,
-            data_max_local,
-            next_overflow_page,
-        );
-        next_overflow_page += spilled.len() as u32;
-        overflow_pages.extend(spilled);
-        leaf_cells.push(cell);
+    // --- Encode every table's pages, assigning root pages sequentially from 2.
+    // Each table contributes one data leaf followed by its overflow pages; the
+    // next table roots right after them. `schema_rows` records (name, root, sql)
+    // for the page-1 schema leaf we build once all roots are known.
+    let mut next_page: u32 = 2;
+    let mut table_pages: Vec<Vec<u8>> = Vec::new();
+    let mut schema_rows: Vec<(i64, Vec<u8>)> = Vec::with_capacity(tables.len());
+    for (i, (name, create_sql, rows)) in tables.iter().enumerate() {
+        let root_page = next_page;
+        let (leaf, overflow) =
+            encode_table_pages(page_size, usable, data_max_local, root_page, rows)?;
+        // root leaf (1 page) + its overflow pages.
+        next_page = u32::try_from(root_page as usize + 1 + overflow.len())
+            .map_err(|_| SqliteError::Unsupported("database exceeds the 2^32-page limit"))?;
+        schema_rows.push((
+            (i + 1) as i64,
+            crate::record::encode(&crate::schema::table_schema_row(
+                name,
+                root_page,
+                create_sql,
+            )),
+        ));
+        table_pages.push(leaf);
+        table_pages.extend(overflow);
     }
 
-    let mut data_leaf = vec![0u8; page_size];
-    pack_leaf_cells(&mut data_leaf, 0, page_size, &leaf_cells)?;
-
-    // SQLite page numbers are 32-bit, so a database cannot hold more than
-    // `u32::MAX` pages. Reject past that explicitly rather than letting the
-    // `as u32` header field silently wrap (this is unreachable short of a
-    // multi-terabyte input, but keeps the header count and file length in
-    // lock-step by construction).
-    let total_pages = u32::try_from(2 + overflow_pages.len())
+    // Total pages: page 1 (schema) + every table/overflow page.
+    let total_pages = u32::try_from(1 + table_pages.len())
         .map_err(|_| SqliteError::Unsupported("database exceeds the 2^32-page limit"))?;
 
     // --- Page 1: DB header (offset 0..100) + sqlite_schema leaf (offset 100). -
@@ -381,25 +405,58 @@ pub fn write_single_table_db(
     let mut page1 = vec![0u8; page_size];
     page1[0..100].copy_from_slice(&header.encode());
 
-    // The schema b-tree carries one cell (rowid 1): the record for the table,
-    // rooted on page 2. Its leaf header sits at offset 100 (after the DB header).
-    let schema_record =
-        crate::record::encode(&crate::schema::table_schema_row(table_name, 2, create_sql));
-    let schema_cells = vec![(1i64, schema_record)];
-    let ordered = order_cells(&schema_cells)?;
-    // Inline limit for page 1's leaf: usable area minus the 100-byte header and
-    // the 35-byte cell overhead the reader assumes.
-    let max_local = (page_size - 100).saturating_sub(LEAF_PAYLOAD_OVERHEAD);
-    fill_table_leaf_page(&mut page1, 100, page_size, max_local, &ordered)?;
+    // The schema b-tree leaf sits at offset 100 (after the DB header). Its inline
+    // limit is the usable area minus that 100-byte prefix and the 35-byte cell
+    // overhead; schema rows that would overflow it are rejected (a later rung).
+    let ordered_schema = order_cells(&schema_rows)?;
+    let schema_max_local = (page_size - 100).saturating_sub(LEAF_PAYLOAD_OVERHEAD);
+    fill_table_leaf_page(&mut page1, 100, page_size, schema_max_local, &ordered_schema)?;
 
-    // Page 1, then the data leaf (page 2), then the overflow pages (page 3…) in
-    // the order their page numbers were allocated.
+    // --- Assemble: page 1, then every table's pages in allocation order. ------
     let mut file = page1;
-    file.extend_from_slice(&data_leaf);
-    for page in &overflow_pages {
+    for page in &table_pages {
         file.extend_from_slice(page);
     }
     Ok(file)
+}
+
+/// Encode one table's data leaf (rooted at `root_page`) plus its overflow pages,
+/// which are numbered from `root_page + 1`. Returns `(leaf_bytes,
+/// overflow_pages)` — the leaf is exactly `page_size` bytes and each overflow
+/// page likewise. Shared by every table in [`write_multi_table_db`].
+fn encode_table_pages(
+    page_size: usize,
+    usable: usize,
+    data_max_local: usize,
+    root_page: u32,
+    rows: &[(i64, Vec<crate::record::SqlValue>)],
+) -> Result<(Vec<u8>, Vec<Vec<u8>>), SqliteError> {
+    let records: Vec<(i64, Vec<u8>)> = rows
+        .iter()
+        .map(|(rowid, cols)| (*rowid, crate::record::encode(cols)))
+        .collect();
+    let ordered = order_cells(&records)?;
+
+    let mut next_overflow_page = root_page + 1;
+    let mut overflow_pages: Vec<Vec<u8>> = Vec::new();
+    let mut leaf_cells: Vec<Vec<u8>> = Vec::with_capacity(ordered.len());
+    for (rowid, record) in &ordered {
+        let (cell, spilled) = build_leaf_cell(
+            *rowid,
+            record,
+            page_size,
+            usable,
+            data_max_local,
+            next_overflow_page,
+        );
+        next_overflow_page += spilled.len() as u32;
+        overflow_pages.extend(spilled);
+        leaf_cells.push(cell);
+    }
+
+    let mut leaf = vec![0u8; page_size];
+    pack_leaf_cells(&mut leaf, 0, page_size, &leaf_cells)?;
+    Ok((leaf, overflow_pages))
 }
 
 #[cfg(test)]
@@ -464,6 +521,50 @@ mod tests {
         // rows, byte-for-byte.
         let read = crate::schema::read_table(&db, "docs").unwrap();
         assert_eq!(read, rows);
+    }
+
+    /// Several tables in one database: each roots on its own leaf, and the
+    /// reader resolves every table by name. One table carries an overflow row to
+    /// prove root-page allocation stays correct across a table that consumes
+    /// extra (overflow) pages before the next table's leaf.
+    #[test]
+    fn write_multi_table_db_round_trips_each_table() {
+        let big = "y".repeat(3000); // forces table `docs` past one leaf via overflow
+        let widgets = vec![
+            (1i64, vec![SqlValue::Int(10), SqlValue::Text("a".into())]),
+            (2, vec![SqlValue::Int(20), SqlValue::Text("b".into())]),
+        ];
+        let docs = vec![
+            (1i64, vec![SqlValue::Text("small".into())]),
+            (2, vec![SqlValue::Text(big.clone())]),
+        ];
+        let gadgets = vec![(1i64, vec![SqlValue::Int(99)])];
+        let tables: &[TableSpec] = &[
+            ("widgets", "CREATE TABLE widgets(n, label)", &widgets),
+            ("docs", "CREATE TABLE docs(body)", &docs),
+            ("gadgets", "CREATE TABLE gadgets(k)", &gadgets),
+        ];
+        let db = write_multi_table_db(512, tables).unwrap();
+
+        // Header page count agrees with the file length.
+        let pages = db.len() / 512;
+        let header = crate::header::Header::parse(&db).unwrap();
+        assert_eq!(header.page_count as usize, pages);
+
+        // Every table reads back by name, overflow row reassembled.
+        assert_eq!(crate::schema::read_table(&db, "widgets").unwrap(), widgets);
+        assert_eq!(crate::schema::read_table(&db, "docs").unwrap(), docs);
+        assert_eq!(crate::schema::read_table(&db, "gadgets").unwrap(), gadgets);
+
+        // The schema lists all three, with distinct ascending-ish root pages.
+        let schema = crate::schema::read_schema(&db).unwrap();
+        let names: Vec<&str> = schema.iter().map(|e| e.name.as_str()).collect();
+        assert_eq!(names, vec!["widgets", "docs", "gadgets"]);
+        assert_eq!(schema[0].root_page, Some(2));
+        // `docs` roots after widgets' single leaf (page 3); `gadgets` after
+        // docs' leaf + its overflow pages.
+        assert_eq!(schema[1].root_page, Some(3));
+        assert!(schema[2].root_page.unwrap() > 3);
     }
 
     /// An empty table still yields a valid, readable database (no rows).

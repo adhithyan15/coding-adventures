@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.1.1] - 2026-07-16
+
+### Changed
+
+- **`semantic-ir-to-javascript` now accepts and correctly compiles the SIR22
+  base-cut modules this frontend produces** (a bare `ElementwiseOp`, e.g.
+  `3+4`) — no code change in this crate; that backend gained real codegen
+  for `NDArrays`/`MatrixOps`/`ArrayColumnMajor`. `Reduce`/`Scan`/
+  `OuterProduct` (this crate's own SIR22-addendum output, e.g. `+/1 2 3`,
+  `1∘.×2`) remain unimplemented there and are now rejected via that
+  backend's own dedicated tree-walk check rather than the plain
+  feature-flag capability check (which can no longer distinguish the two,
+  since they share features) — updated `tests/test_validator.rs`
+  accordingly: the plain-`ElementwiseOp` test now asserts acceptance, and
+  the `Reduce`/`OuterProduct` test now asserts on `compile()`'s rejection
+  rather than `check_module()`'s (which no longer catches it alone).
+
 ## [0.1.0] - 2026-07-12
 
 ### Added

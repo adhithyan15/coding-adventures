@@ -1,0 +1,37 @@
+# Changelog
+
+All notable changes to the `tcp-runtime` (C) package are documented here.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to semantic versioning.
+
+## [Unreleased]
+
+### Added
+
+- **Initial package — reactor-driven TCP server** (CCPP02 port campaign, PR 2;
+  the first consumer that drives `net` + `reactor` together end-to-end). The C
+  port of the Rust `tcp-runtime` crate's phase-one core: one thread on a reactor
+  serves many connections instead of one blocking thread per connection.
+  - `tcp_runtime_bind` (listen on host:port + register the reactor),
+    `tcp_runtime_local_port`, `tcp_runtime_poll` (one reactor step: accept new
+    connections and service ready ones — read → handler → write → optional
+    close), `tcp_runtime_serve` (loop poll until stopped), `tcp_runtime_stop`,
+    `tcp_runtime_destroy`. Reuses `osp_status`.
+  - The handler mirrors the Rust `TcpHandlerResult`: `tcp_action { size_t
+    write_len; int close; }` — fill a reply buffer, return how many bytes to send
+    and whether to close afterwards.
+  - OS-agnostic: one source file with no `#ifdef`; all per-OS code stays in `net`
+    and `reactor`. Each accepted connection is a heap node used verbatim as its
+    reactor token (a stable allocation, since the connection-pointer array
+    reallocs), so a wait result maps to its connection in O(1); the listener uses
+    the runtime pointer as a distinct sentinel token.
+  - Test (`tests/tcp_runtime_test.c`): stands up a real server and drives it with
+    real loopback clients in one thread (stepping via `tcp_runtime_poll`),
+    proving multiplexing (two independent connections accepted + echoed on one
+    reactor) and echo-and-close. Verified under ASan+UBSan with 0 leaks.
+  - Scope: phase-one core. Deferred (mirroring the Rust crate's phased plan):
+    per-connection state, an outbound mailbox for worker threads, read
+    pause/resume backpressure (`defer_read`), socket-option policy, connection
+    caps, and multi-core reactor sharding; replies over the 8 KiB per-read buffer
+    are truncated.

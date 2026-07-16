@@ -1038,31 +1038,46 @@ fn fold_if_statement(s: &IfStatement, st: &mut FoldState) -> Statement {
             //                                  → x ? foo() : bar();
             //                                    (single-statement
             //                                     blocks unwrap)
+            //   if (x) a(); else { b(); c(); } → x ? a() : (b(), c());
+            //   if (x) { m(); n(); } else a(); → x ? (m(), n()) : a();
+            //   if (x) { a(); b(); } else { c(); d(); }
+            //                                  → x ? (a(), b()) : (c(), d());
             //   if (x) foo();                  → unchanged (no
             //                                    alternate to fold)
-            //   if (x) { a; b; } else { c; }   → unchanged (multi-
-            //                                    statement consequent)
             //   if (x) return 1; else return 2;
             //                                  → unchanged (return is
             //                                    not an expression
             //                                    statement; tracked
             //                                    as gap-019)
             //
+            // A branch that is a **run of expression statements** is
+            // reduced to a single comma-sequence expression by
+            // `stmts_as_sequence_expr` (a single expression statement
+            // stays as-is; two-or-more become `(s1, s2, …)`). The comma
+            // operator evaluates its operands left-to-right and yields
+            // the last, so a block's statement order and side effects
+            // are preserved exactly. A branch that contains anything
+            // other than expression statements (a `return`, a
+            // declaration, a nested `if`, …) makes `stmts_as_sequence_expr`
+            // return `None`, so this fold declines and the `if` is kept.
+            //
             // Why this is safe: a ConditionalExpression has the same
             // evaluation order as the if-else — `test` is evaluated
             // first, then exactly one of the two branches. Side
             // effects in `test`, in `consequent`, in `alternate`
             // observed in the original program are all preserved in
-            // the rewritten form.
+            // the rewritten form; the wrapper ExpressionStatement
+            // discards the ternary's value, so only the branches' side
+            // effects matter and they fire under the same condition.
             if let Some(alt) = &alternate {
                 if let (Some(c_expr), Some(a_expr)) =
-                    (single_expr_stmt(&consequent), single_expr_stmt(alt))
+                    (stmts_as_sequence_expr(&consequent), stmts_as_sequence_expr(alt))
                 {
                     st.record_fold(
                         &s.cv,
                         "if-else-to-ternary",
-                        "if (<test>) <expr1>; else <expr2>;",
-                        "<test> ? <expr1> : <expr2>;",
+                        "if (<test>) <then>; else <else>;",
+                        "<test> ? <then> : <else>;",
                     );
                     let cond = Expression::ConditionalExpression(ConditionalExpression {
                         cv: None,
@@ -1153,6 +1168,10 @@ fn fold_if_statement(s: &IfStatement, st: &mut FoldState) -> Statement {
             //   if (x) { foo(); }          → x && foo();   (single-expr
             //                                               block unwraps
             //                                               via single_expr_stmt)
+            //   if (x) foo(); else {}      → x && foo();   (empty else is a
+            //                                               no-op — same as no
+            //                                               alternate at all)
+            //   if (x) { foo(); } else ;   → x && foo();   (empty-stmt else)
             //   if (x) foo(); else bar();  → handled above (ternary)
             //   if (x) return 1;           → unchanged (return is not an
             //                                expression statement; this
@@ -1184,19 +1203,31 @@ fn fold_if_statement(s: &IfStatement, st: &mut FoldState) -> Statement {
             //     evaluation; `consequent`'s side effects fire when
             //     and only when `x` is truthy.
             //
-            // Why we don't fold when alternate exists: the previous
-            // ternary branch already handled that. We only reach
-            // here if alternate is `None` (or if alternate exists
-            // but the ternary fold bailed — in which case we don't
-            // discard the alternate by folding to `x && S` because
-            // that would silently drop the else branch).
-            if alternate.is_none() {
-                if let Some(c_expr) = single_expr_stmt(&consequent) {
+            // An **empty** alternate (`else {}` / `else ;`) is a no-op,
+            // so `if (x) S; else {}` is behaviourally identical to
+            // `if (x) S;` — we accept it here and fold to `x && S` too.
+            // (The ternary fold above already declined it: an empty
+            // alternate has no expression to place in the ternary's
+            // else arm, so `stmts_as_sequence_expr(alt)` returned
+            // `None`.) A **non-empty** alternate that merely failed to
+            // ternarise is NOT folded here — that would silently drop
+            // the else branch — so the gate is "no alternate, or an
+            // empty one".
+            // A multi-statement consequent is comma-sequenced, mirroring
+            // the ternary fold: `if (x) { a(); b(); }` → `x && (a(), b())`,
+            // `if (x) { a(); b(); } else {}` → `x && (a(), b())`. Only a
+            // run of expression statements qualifies (`stmts_as_sequence_expr`
+            // returns `None` otherwise, e.g. a `return` or declaration
+            // member), so the fold declines rather than misconvert.
+            let alternate_is_absent_or_empty =
+                alternate.as_ref().is_none_or(statement_is_empty);
+            if alternate_is_absent_or_empty {
+                if let Some(c_expr) = stmts_as_sequence_expr(&consequent) {
                     st.record_fold(
                         &s.cv,
                         "if-to-logical-and",
-                        "if (<test>) <expr>;",
-                        "<test> && <expr>;",
+                        "if (<test>) <then>;",
+                        "<test> && <then>;",
                     );
                     let and = Expression::LogicalExpression(LogicalExpression {
                         cv: None,
@@ -2604,6 +2635,163 @@ mod tests {
     }
 
     #[test]
+    fn if_single_then_multi_else_folds_to_ternary_of_sequence() {
+        // `if (x) a(); else { b(); c(); }` → `x ? a() : (b(), c());`
+        // The single-expression consequent stays a bare expression; the
+        // multi-statement else collapses to a comma-sequence in the
+        // ternary's else arm.
+        let if_stmt = Statement::if_statement(IfStatement {
+            cv: Some("if.t1".to_string()),
+            test: ident("x"),
+            consequent: Box::new(expr_stmt(ident("a"), None)),
+            alternate: Some(Box::new(Statement::block_statement(BlockStatement {
+                cv: None,
+                body: vec![expr_stmt(ident("b"), None), expr_stmt(ident("c"), None)],
+            }))),
+        });
+        let prog = program().with_body(vec![ProgramItem::Statement(if_stmt)]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(changed);
+        let Statement::Tagged(TaggedStatement::ExpressionStatement(es)) = first_stmt(&out) else {
+            panic!("expected ExpressionStatement; got {:?}", first_stmt(&out))
+        };
+        let Expression::ConditionalExpression(cond) = &es.expression else {
+            panic!("expected ConditionalExpression; got {:?}", es.expression)
+        };
+        assert!(
+            matches!(&*cond.consequent, Expression::Identifier(_)),
+            "then arm stays a bare expression; got {:?}",
+            cond.consequent
+        );
+        let Expression::SequenceExpression(seq) = &*cond.alternate else {
+            panic!("else arm must be a SequenceExpression; got {:?}", cond.alternate)
+        };
+        assert_eq!(seq.expressions.len(), 2, "the two else statements sequence");
+    }
+
+    #[test]
+    fn if_multi_then_and_multi_else_folds_to_ternary_of_two_sequences() {
+        // `if (x) { m(); n(); } else { a(); b(); }`
+        //                        → `x ? (m(), n()) : (a(), b());`
+        let if_stmt = Statement::if_statement(IfStatement {
+            cv: Some("if.t2".to_string()),
+            test: ident("x"),
+            consequent: Box::new(Statement::block_statement(BlockStatement {
+                cv: None,
+                body: vec![expr_stmt(ident("m"), None), expr_stmt(ident("n"), None)],
+            })),
+            alternate: Some(Box::new(Statement::block_statement(BlockStatement {
+                cv: None,
+                body: vec![expr_stmt(ident("a"), None), expr_stmt(ident("b"), None)],
+            }))),
+        });
+        let prog = program().with_body(vec![ProgramItem::Statement(if_stmt)]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(changed);
+        let Statement::Tagged(TaggedStatement::ExpressionStatement(es)) = first_stmt(&out) else {
+            panic!("expected ExpressionStatement; got {:?}", first_stmt(&out))
+        };
+        let Expression::ConditionalExpression(cond) = &es.expression else {
+            panic!("expected ConditionalExpression; got {:?}", es.expression)
+        };
+        let (Expression::SequenceExpression(t), Expression::SequenceExpression(e)) =
+            (&*cond.consequent, &*cond.alternate)
+        else {
+            panic!("both arms must be SequenceExpressions; got {:?} / {:?}", cond.consequent, cond.alternate)
+        };
+        assert_eq!(t.expressions.len(), 2);
+        assert_eq!(e.expressions.len(), 2);
+    }
+
+    #[test]
+    fn if_ternary_declines_when_a_branch_is_not_all_expressions() {
+        // `if (x) a(); else { b(); return; }` — the else contains a `return`,
+        // which cannot join a comma-sequence, so `stmts_as_sequence_expr`
+        // returns None and the ternary fold declines. The `if` is kept
+        // (and, since the alternate is non-empty, the && fold also declines).
+        let if_stmt = Statement::if_statement(IfStatement {
+            cv: Some("if.keep".to_string()),
+            test: ident("x"),
+            consequent: Box::new(expr_stmt(ident("a"), None)),
+            alternate: Some(Box::new(Statement::block_statement(BlockStatement {
+                cv: None,
+                body: vec![
+                    expr_stmt(ident("b"), None),
+                    Statement::return_statement(ReturnStatement { cv: None, argument: None }),
+                ],
+            }))),
+        });
+        let prog = program().with_body(vec![ProgramItem::Statement(if_stmt)]);
+        let (out, _c, _changed, _) = run_pass(prog);
+        assert!(
+            matches!(first_stmt(&out), Statement::Tagged(TaggedStatement::IfStatement(_))),
+            "if with a return-containing branch must be kept; got {:?}",
+            first_stmt(&out)
+        );
+    }
+
+    #[test]
+    fn if_multi_then_no_else_folds_to_logical_and_of_sequence() {
+        // `if (x) { a(); b(); }` → `x && (a(), b());` — the multi-statement
+        // consequent is comma-sequenced under the `&&` right operand.
+        let if_stmt = Statement::if_statement(IfStatement {
+            cv: Some("if.and1".to_string()),
+            test: ident("x"),
+            consequent: Box::new(Statement::block_statement(BlockStatement {
+                cv: None,
+                body: vec![expr_stmt(ident("a"), None), expr_stmt(ident("b"), None)],
+            })),
+            alternate: None,
+        });
+        let prog = program().with_body(vec![ProgramItem::Statement(if_stmt)]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(changed);
+        let Statement::Tagged(TaggedStatement::ExpressionStatement(es)) = first_stmt(&out) else {
+            panic!("expected ExpressionStatement; got {:?}", first_stmt(&out))
+        };
+        let Expression::LogicalExpression(l) = &es.expression else {
+            panic!("expected LogicalExpression(And); got {:?}", es.expression)
+        };
+        assert_eq!(l.operator, LogicalOperator::And, "operator must be &&");
+        let Expression::SequenceExpression(seq) = &*l.right else {
+            panic!("&& right operand must be a SequenceExpression; got {:?}", l.right)
+        };
+        assert_eq!(seq.expressions.len(), 2);
+    }
+
+    #[test]
+    fn if_single_then_empty_else_folds_to_logical_and() {
+        // `if (x) S; else {}` and `if (x) S; else ;` — an empty alternate is a
+        // no-op, so both fold to `x && S`, exactly like the no-alternate form.
+        for alt in [
+            Statement::block_statement(BlockStatement { cv: None, body: vec![] }),
+            Statement::empty_statement(EmptyStatement { cv: None }),
+        ] {
+            let if_stmt = Statement::if_statement(IfStatement {
+                cv: Some("if.and2".to_string()),
+                test: ident("x"),
+                consequent: Box::new(expr_stmt(ident("s"), None)),
+                alternate: Some(Box::new(alt)),
+            });
+            let prog = program().with_body(vec![ProgramItem::Statement(if_stmt)]);
+            let (out, _c, changed, _) = run_pass(prog);
+            assert!(changed, "empty else should not block the && fold");
+            let Statement::Tagged(TaggedStatement::ExpressionStatement(es)) = first_stmt(&out) else {
+                panic!("expected ExpressionStatement; got {:?}", first_stmt(&out))
+            };
+            let Expression::LogicalExpression(l) = &es.expression else {
+                panic!("expected LogicalExpression(And); got {:?}", es.expression)
+            };
+            assert_eq!(l.operator, LogicalOperator::And, "operator must be &&");
+            assert!(
+                matches!(&*l.right, Expression::Identifier(_)),
+                "&& right operand is the single consequent expr; got {:?}",
+                l.right
+            );
+        }
+    }
+
+    #[test]
     fn if_empty_then_with_single_expr_else_folds_to_logical_or() {
         // Empty consequent + single-expression-statement alternate →
         // `test || expr`, the mirror of the if-to-logical-and fold:
@@ -2712,22 +2900,38 @@ mod tests {
     }
 
     #[test]
-    fn if_non_literal_test_with_multi_statement_consequent_passes_through() {
-        // **Pre-gap-016**: this test asserted `if (flag) x;` stayed
-        // unchanged. **Post-gap-016** (CLOC12.24), that single-expr
-        // case now folds to `flag && x;`. We update the test to use
-        // a *multi-statement* consequent block, which still can't
-        // collapse to a LogicalExpression (LogicalExpression takes
-        // exactly one right-hand expression).
+    fn if_declaration_in_consequent_passes_through() {
+        // The if→logical/ternary folds only fire when a branch is a run of
+        // **expression** statements. A `var` declaration in the consequent
+        // makes `stmts_as_sequence_expr` return `None` (a declaration can't
+        // join a comma-sequence), so `if (flag) { var x; y(); }` is kept
+        // intact — the fold does not over-fire on non-collapsible shapes.
         //
-        // This preserves the original intent — "the fold doesn't
-        // over-fire on non-collapsible shapes".
+        // (History: this test used to assert that a plain multi-statement
+        // consequent `{ x; y; }` passed through. That case now legitimately
+        // folds to `flag && (x, y)` — see
+        // `if_multi_then_no_else_folds_to_logical_and_of_sequence` — so the
+        // decline is re-anchored on a declaration member instead.)
         let if_stmt = Statement::if_statement(IfStatement {
             cv: Some("if.2".to_string()),
             test: ident("flag"),
             consequent: Box::new(Statement::block_statement(BlockStatement {
                 cv: None,
-                body: vec![expr_stmt(ident("x"), None), expr_stmt(ident("y"), None)],
+                body: vec![
+                    Statement::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+                        cv: None,
+                        kind: VarKind::Var,
+                        declarations: vec![VariableDeclarator {
+                            cv: None,
+                            id: BindingTarget::Identifier(Identifier {
+                                cv: None,
+                                name: "x".to_string(),
+                            }),
+                            init: None,
+                        }],
+                    })),
+                    expr_stmt(ident("y"), None),
+                ],
             })),
             alternate: None,
         });
@@ -2736,7 +2940,7 @@ mod tests {
         match first_stmt(&out) {
             Statement::Tagged(TaggedStatement::IfStatement(_)) => {}
             other => panic!(
-                "expected IfStatement intact (multi-statement consequent); got {:?}",
+                "expected IfStatement intact (declaration in consequent); got {:?}",
                 other
             ),
         }
@@ -3187,14 +3391,20 @@ mod tests {
     }
 
     /// When the consequent does NOT unconditionally terminate, the `else`
-    /// stays: `if(x){g; m} else {h}` is unchanged. (The consequent has two
-    /// statements so the if-else→ternary fold also does not apply — isolating
-    /// the else-hoist's terminator gate as the reason it stays.)
+    /// stays: `if(x){debugger} else {h}` is unchanged. (The consequent is a
+    /// `debugger` statement — not an expression statement — so the
+    /// if-else→ternary fold does not apply either, isolating the else-hoist's
+    /// terminator gate as the reason it stays. A plain expression consequent
+    /// like `{g()}` would now ternarise to `x ? g() : h`, so it can no longer
+    /// serve to isolate the gate. `debugger` also does not var-hoist or
+    /// terminate, so nothing else perturbs the statement.)
     #[test]
     fn else_not_hoisted_when_consequent_falls_through() {
         let consequent = Statement::block_statement(BlockStatement {
             cv: None,
-            body: vec![expr_stmt(ident("g"), None), expr_stmt(ident("m"), None)],
+            body: vec![Statement::debugger_statement(
+                coding_adventures_javascript_ast::DebuggerStatement { cv: None },
+            )],
         });
         let alternate = Statement::block_statement(BlockStatement {
             cv: None,

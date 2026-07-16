@@ -4151,6 +4151,20 @@ fn fold_member(m: &MemberExpression, st: &mut FoldState) -> Expression {
                 return folded;
             }
         }
+        // `[e0, e1, …]["K"]` — a computed STRING key. Closure coerces the key
+        // with JS `ToNumber` and applies the same index fold, so non-canonical
+        // spellings (`["01"]`, `["1.0"]`, `[" 1"]`, `["0x1"]`, `[""]`, …) all
+        // select their integer value's element; `["length"]` folds to the
+        // element count. The full truth table lives in
+        // `fold_array_string_key_access` (also `#[inline(never)]` to keep this
+        // recursive frame small).
+        if let (Expression::ArrayExpression(a), Expression::StringLiteral(s)) =
+            (&object, &property)
+        {
+            if let Some(folded) = fold_array_string_key_access(a, s, &m.cv, st) {
+                return folded;
+            }
+        }
     }
 
     Expression::MemberExpression(MemberExpression {
@@ -4276,6 +4290,85 @@ fn fold_array_index_access(
         let new_cv = st.fork_cv(parent_cv, &before, "void 0");
         Some(stamp_literal_cv(FoldedLiteral::Undefined, new_cv))
     }
+}
+
+/// Fold a computed **string-key** access into an array literal:
+/// `[e0, e1, …]["K"]`. Returns `Some(replacement)` when it folds, `None` to
+/// decline (leaving the `MemberExpression` intact).
+///
+/// The reference Closure Compiler coerces the string key with the SAME full
+/// JS `ToNumber` used by `Number("…")` (`fold_number`), then applies the
+/// integer-index fold — so every spelling that `ToNumber` maps to an integer
+/// selects (or misses) the corresponding element, including the non-canonical
+/// ones. Verified byte-identical at `SIMPLE`:
+///
+/// | access                | ToNumber(key) | result   | why                     |
+/// |-----------------------|---------------|----------|-------------------------|
+/// | `[a,b,c]["0"]`        | `0`           | `a`      | in-bounds               |
+/// | `[a,b,c]["01"]`       | `1`           | `b`      | leading zero → `1`      |
+/// | `[a,b,c]["1.0"]`      | `1`           | `b`      | trailing `.0` → `1`     |
+/// | `[a,b,c][" 1"]`/`["1 "]`| `1`         | `b`      | whitespace trimmed      |
+/// | `[a,b,c]["0x1"]`      | `1`           | `b`      | hex literal → `1`       |
+/// | `[a,b,c]["1e0"]`      | `1`           | `b`      | exponent → `1`          |
+/// | `[a,b,c][""]`         | `0`           | `a`      | `ToNumber("")` is `+0`  |
+/// | `[a,b,c]["3"]`        | `3`           | `void 0` | out of bounds           |
+/// | `[a,b,c]["-1"]`       | `-1`          | `void 0` | negative                |
+/// | `[a,b,c]["1.5"]`      | `1.5`         | decline  | fractional — not index  |
+/// | `[a,b,c]["foo"]`      | `NaN`         | decline  | not numeric (see below) |
+/// | `[a,b,c]["length"]`   | —             | `3`      | the length property     |
+///
+/// Two keys need special handling because `fold_number` can't express them:
+///
+/// * `"length"` isn't an index — it's the length property — so it routes to the
+///   same element-count fold as `.length` (subject to the same no-spread /
+///   all-elements-pure guard).
+/// * A key whose `ToNumber` is `NaN` (`"foo"`) makes `fold_number` return
+///   `None`, so this declines. Closure instead rewrites `["foo"]` to `.foo`
+///   (a member-access *normalisation*, not an index fold); that transform is a
+///   separate slice, so declining here leaves the `["foo"]` access intact.
+///
+/// Marked `#[inline(never)]` for the same frame-size reason as
+/// [`fold_array_index_access`]: `fold_member` is on the recursive
+/// `fold_expression` path.
+#[inline(never)]
+fn fold_array_string_key_access(
+    a: &ArrayExpression,
+    s: &StringLiteral,
+    parent_cv: &Option<String>,
+    st: &mut FoldState,
+) -> Option<Expression> {
+    // `["length"]` — the length property, identical to `.length`. Same guards:
+    // a spread makes the count unknown, and every present element must be
+    // side-effect-free because folding drops the whole array literal.
+    if s.value == "length" {
+        let has_spread = a
+            .elements
+            .iter()
+            .any(|el| matches!(el, Some(Expression::SpreadElement(_))));
+        let all_free = a
+            .elements
+            .iter()
+            .all(|el| el.as_ref().is_none_or(is_side_effect_free));
+        if has_spread || !all_free {
+            return None;
+        }
+        let len = a.elements.len() as f64;
+        let before = format!("array-literal[{}][\"length\"]", a.elements.len());
+        let after = format_js_number(len);
+        let new_cv = st.fork_cv(parent_cv, &before, &after);
+        return Some(stamp_literal_cv(FoldedLiteral::Number(len), new_cv));
+    }
+
+    // Otherwise coerce the key with JS `ToNumber` (declines on `NaN`/`Infinity`/
+    // >2^53) and reuse the integer-index fold, which itself declines on a
+    // fractional index such as `ToNumber("1.5") == 1.5`.
+    let n = fold_number(&s.value)?;
+    let k = NumericLiteral {
+        cv: None,
+        value: n,
+        raw: format_js_number(n),
+    };
+    fold_array_index_access(a, &k, parent_cv, st)
 }
 
 // ---------------------------------------------------------------------
@@ -7381,6 +7474,94 @@ mod tests {
             matches!(extract_expr(&out), Expression::UndefinedLiteral(_)),
             "expected void 0 (UndefinedLiteral) for in-bounds hole"
         );
+    }
+
+    /// Build a computed STRING-key access `object["key"]`.
+    fn index_str(object: Expression, key: &str) -> Expression {
+        Expression::MemberExpression(MemberExpression {
+            cv: Some("m.cv".to_string()),
+            object: Box::new(object),
+            property: Box::new(string(key, None)),
+            computed: true,
+        })
+    }
+
+    /// String-index fold: Closure coerces the string key with JS `ToNumber` and
+    /// applies the same index fold, so canonical AND non-canonical spellings
+    /// select their integer value's element. Verified against the reference
+    /// Closure Compiler at SIMPLE.
+    #[test]
+    fn fold_array_string_index_canonical_and_non_canonical() {
+        let arr = || array_opt(vec![Some(num(10.0, None)), Some(num(20.0, None)), Some(num(30.0, None))]);
+        // key → selected element value.
+        for (key, want) in [
+            ("0", 10.0),
+            ("1", 20.0),
+            ("2", 30.0),
+            ("01", 20.0),   // leading zero → 1
+            ("1.0", 20.0),  // trailing .0 → 1
+            (" 1", 20.0),   // leading whitespace trimmed
+            ("1 ", 20.0),   // trailing whitespace trimmed
+            ("0x1", 20.0),  // hex → 1
+            ("1e0", 20.0),  // exponent → 1
+            ("", 10.0),     // ToNumber("") === +0
+        ] {
+            let e = index_str(arr(), key);
+            let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+            assert!(changed, "[10,20,30][{key:?}] should fold");
+            match extract_expr(&out) {
+                Expression::NumericLiteral(n) => {
+                    assert_eq!(n.value, want, "[10,20,30][{key:?}] selected wrong element")
+                }
+                other => panic!("[10,20,30][{key:?}]: expected {want}; got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn fold_array_string_index_oob_and_negative_to_void_0() {
+        let arr = || array_opt(vec![Some(num(10.0, None)), Some(num(20.0, None)), Some(num(30.0, None))]);
+        for key in ["3", "-1"] {
+            let e = index_str(arr(), key);
+            let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+            assert!(changed, "[10,20,30][{key:?}] should fold to void 0");
+            assert!(
+                matches!(extract_expr(&out), Expression::UndefinedLiteral(_)),
+                "[10,20,30][{key:?}]: expected void 0"
+            );
+        }
+    }
+
+    #[test]
+    fn fold_array_string_index_declines_on_fractional_and_non_numeric() {
+        let arr = || array_opt(vec![Some(num(10.0, None)), Some(num(20.0, None)), Some(num(30.0, None))]);
+        // "1.5" coerces to 1.5 — a fractional index is an ordinary absent-property
+        // read Closure leaves intact. "foo" is NaN; Closure rewrites it to `.foo`
+        // (a separate normalisation), so we decline and keep the bracket access.
+        for key in ["1.5", "foo"] {
+            let e = index_str(arr(), key);
+            let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+            assert!(!changed, "[10,20,30][{key:?}] must NOT fold");
+            assert!(
+                matches!(extract_expr(&out), Expression::MemberExpression(_)),
+                "[10,20,30][{key:?}]: the member access must be kept"
+            );
+        }
+    }
+
+    #[test]
+    fn fold_array_string_key_length_to_element_count() {
+        // `[10,20,30]["length"]` → 3, the computed twin of the `.length` fold.
+        let e = index_str(
+            array_opt(vec![Some(num(10.0, None)), Some(num(20.0, None)), Some(num(30.0, None))]),
+            "length",
+        );
+        let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(changed, "[10,20,30][\"length\"] should fold to 3");
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 3.0),
+            other => panic!("expected 3; got {other:?}"),
+        }
     }
 
     /// Build a template literal from quasi cooked strings + substitution

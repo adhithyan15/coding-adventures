@@ -9,10 +9,14 @@
 //! As `test_validator.rs`'s module doc comment explains, this crate's
 //! "scalar fast path" only recognises *purely literal* arithmetic as
 //! provably scalar — any variable-involving arithmetic takes the
-//! `ElementwiseOp`/`MatMul` path, which the JS backend does not implement
-//! codegen for yet. So, for now, only a purely-literal MATLAB program can
-//! make it all the way through this pipeline; that is exactly what this
-//! test proves, gated on `node` availability like its JS counterpart.
+//! `ElementwiseOp`/`MatMul` path. The JS backend now implements real codegen
+//! for that path (the SIR22 base cut), so a real array/matrix MATLAB
+//! program round-trips through this pipeline too — the tests below prove
+//! that with actual `A = [1 2; 3 4]; B = A * A;`-style source, not hand-built
+//! SIR. `disp` on a computed matrix has no display-formatting story yet
+//! (out of scope for the codegen PR that unblocked this file), so each test
+//! reads back a single element via MATLAB indexing (`disp(B(1, 1))`) rather
+//! than `disp`-ing the whole matrix.
 
 use std::fs::OpenOptions;
 use std::io::Write as _;
@@ -118,4 +122,69 @@ fn a_call_before_its_textual_definition_runs_in_node() {
         "disp(double_seven());\nfunction r = double_seven()\n  r = 3 + 4 + 3 + 4;\nend\n",
     );
     assert_eq!(out, "14");
+}
+
+#[test]
+fn matrix_multiplication_runs_in_node() {
+    if !node_available() {
+        eprintln!("skipping matrix_multiplication_runs_in_node: `node` not available");
+        return;
+    }
+    // A * A where A = [1 2; 3 4] -> [7 10; 15 22] (standard matrix
+    // product, not elementwise). A(1, 1) (1-based MATLAB indexing) is
+    // the top-left element, 7.
+    let out = run_via_node(
+        "matmul",
+        "A = [1 2; 3 4];\nB = A * A;\ndisp(B(1, 1));\n",
+    );
+    assert_eq!(out, "7");
+}
+
+#[test]
+fn elementwise_scale_with_a_bare_scalar_operand_runs_in_node() {
+    if !node_available() {
+        eprintln!(
+            "skipping elementwise_scale_with_a_bare_scalar_operand_runs_in_node: `node` not available"
+        );
+        return;
+    }
+    // A .* 2 -- the frontend emits `2` as a bare (unwrapped) scalar
+    // ElementwiseOp operand, exactly the shape
+    // `semantic-ir-to-javascript`'s runtime coercion exists for. A(2, 2)
+    // is 4 before scaling, 8 after.
+    let out = run_via_node(
+        "elementwise_scalar",
+        "A = [1 2; 3 4];\nB = A .* 2;\ndisp(B(2, 2));\n",
+    );
+    assert_eq!(out, "8");
+}
+
+#[test]
+fn indexed_assignment_mutates_in_place_and_reads_back_in_node() {
+    if !node_available() {
+        eprintln!(
+            "skipping indexed_assignment_mutates_in_place_and_reads_back_in_node: `node` not available"
+        );
+        return;
+    }
+    let out = run_via_node("index_set", "A = [1 2 3];\nA(2) = 9;\ndisp(A(2));\n");
+    assert_eq!(out, "9");
+}
+
+#[test]
+fn range_and_transpose_run_in_node() {
+    if !node_available() {
+        eprintln!("skipping range_and_transpose_run_in_node: `node` not available");
+        return;
+    }
+    // transpose([1 2; 3 4]) = [1 2; 3 4] with rows/cols swapped, i.e.
+    // [1 3; 2 4]; B(2, 1) (1-based) is the original A(1, 2) = 2. The
+    // range `v = 1:5` is exercised for its manifest/codegen path
+    // (compiles and runs without error) even though this particular
+    // program never reads `v` back.
+    let out = run_via_node(
+        "range_and_transpose",
+        "A = [1 2; 3 4];\nv = 1:5;\nB = A';\ndisp(B(2, 1));\n",
+    );
+    assert_eq!(out, "2");
 }

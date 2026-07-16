@@ -2,6 +2,19 @@
 
 ## [Unreleased]
 
+### Changed
+
+- **`semantic-ir-to-javascript` now accepts and correctly compiles the
+  SIR22 array/matrix modules this frontend produces** — no code change in
+  this crate; that backend gained real codegen for `NDArrays`/`MatrixOps`/
+  `ArrayColumnMajor` (previously deferred/rejected). Updated
+  `tests/test_validator.rs`'s three tests from "the backend rejects this"
+  to "the backend accepts this," and added four real `node`-execution
+  tests to `tests/e2e_node.rs` proving actual MATLAB source using matrix
+  multiplication, elementwise scalar broadcast (`A .* 2`), indexed
+  assignment, and range+transpose all compile and run correctly — not
+  just that the module passes validation.
+
 ### Fixed
 
 - **Correctness: `Feature::Floats` was never observed for a `FloatLit`.**

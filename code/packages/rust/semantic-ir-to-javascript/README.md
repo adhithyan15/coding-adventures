@@ -89,16 +89,32 @@ lowering is direct.
 | `ClassVars` (O3)                |                                          |
 | `Modules` (MX4 mixins)          |                                          |
 | `Constants`                     |                                          |
-| `SymbolicExpr` (SIR23)          | `NDArrays` / `MatrixOps` (SIR22)         |
+| `SymbolicExpr` (SIR23)          |                                          |
 | `PatternMatching` (SIR23)       |                                          |
 | `Rationals` (shared w/ SIR22)   |                                          |
+| `NDArrays` (SIR22 base cut)     |                                          |
+| `MatrixOps` (SIR22 base cut)    |                                          |
+| `ArrayColumnMajor` (SIR22)      |                                          |
 
 `accepts_intrinsics()` is empty. The accept-set is deliberately matched
 to what `emit` handles, so a module using a deferred node is turned away
 *before* lowering rather than mis-compiled — and every accepted feature
 has a real emit arm (the residual `panic!` guards cover only the
 still-deferred SIR18 nodes — `SingletonClassDef` OOP dispatch and string
-interpolation).
+interpolation — plus the still-unimplemented SIR22 "APL addendum" nodes,
+one caveat below).
+
+**One caveat on `NDArrays`/`MatrixOps`/`ArrayColumnMajor`**: the SIR22
+*base cut* (`ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/`Transpose`/
+`IndexGet`/`IndexSet`) has real codegen against an inlined `__Sir.Array`
+runtime (a plain-JS port of the published `sir-runtime-array` package —
+see `runtime.rs`). The SIR22 *addendum* nodes (`Reduce`/`Scan`/
+`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/
+`Catenate`) share these same three features and remain deferred, so this
+backend adds a dedicated tree-walk check inside `compile()` (beyond the
+ordinary feature-flag capability check) that cleanly rejects a module
+using any of the nine rather than let it slip through and panic in
+`emit` — see `find_unimplemented_sir22_addendum_node` in `lib.rs`.
 
 `Classes` now covers **full user-defined-class OOP (O3)**: a `ClassDef`
 supplies its `superclass` *ancestry edge* (so `raise MyErr; rescue
@@ -389,6 +405,45 @@ found.
 (`f(x, 1/3)`-style), reached from `formatSeen` by checking for a plain
 object carrying a `.kind` tag.
 
+### Array/matrix domain (SIR22 base cut)
+
+The inlined `__Sir` also carries `Array` — a plain-JS port of the
+published `@coding-adventures/sir-runtime-array` TypeScript package, so
+the artifact stays self-contained:
+
+| SIR                                    | JavaScript emitted                                                       |
+|------------------------------------------|---------------------------------------------------------------------------|
+| `ArrayLit([[1, 2], [3, 4]])`             | `__Sir.Array.fromRows([[1, 2], [3, 4]])`                                 |
+| `Range(1, Some(2), 10)`                  | `__Sir.Array.range(1, 10, 2)` — note the argument ORDER: `stop` before `step` |
+| `MatMul(a, b)`                           | `__Sir.Array.matmul(a, b)`                                               |
+| `ElementwiseOp(Mul, a, b)`               | `__Sir.Array.elementwise("Mul", a, b)`                                   |
+| `Transpose(a, conjugate: true)`         | `__Sir.Array.transpose(a, true)`                                         |
+| `IndexGet(a, [Scalar(0), Whole])`        | `__Sir.Array.indexGet(a, [{ kind: "scalar", value: 0 }, { kind: "whole" }])` |
+| `IndexSet(a, [Scalar(0)], v)` (a `Stmt`) | `__Sir.Array.indexSet(a, [{ kind: "scalar", value: 0 }], v);`            |
+
+`NDArray` is `{ shape: number[], data: Float64Array }` — dense,
+COLUMN-MAJOR storage (Fortran/MATLAB order), mirroring
+`array_runtime::value::Array` field-for-field. `elementwise` coerces a
+bare JS `number` operand into a scalar `NDArray` (`toArrayValue`) because
+`matlab-to-semantic-ir`'s lowerer emits a mixed number/`NDArray` operand
+pair whenever exactly one side of `.* ./ .\`/`* /` is provably scalar
+(`A .* 2` passes `2` through unwrapped, not as an `ArrayLit`).
+
+**Not implemented**: the SIR22 "APL addendum" nodes (`Reduce`/`Scan`/
+`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/
+`Catenate`) — see the capability table's caveat above for why a module
+using one of these fails cleanly rather than through the ordinary
+feature-flag check.
+
+**Security.** Every factory that computes an output size from
+caller-supplied numbers (`matmul`'s `[m, n]`, `indexGet`'s two
+independently-bounded row/column selections, `range`'s element count, ...)
+validates via `checkedShapeSize`/an explicit `MAX_ELEMENTS` (2^26) check
+*before* allocating a `Float64Array`, matching `matlab-runtime`'s own
+`MAX_RANGE` bound — an unbounded or malformed shape fails with a
+catchable `Error`, not an uncaught `RangeError` or a stalled huge
+allocation.
+
 ## Output format
 
 - 2-space indentation, semicolons always (no ASI reliance).
@@ -442,3 +497,8 @@ cargo test -p semantic-ir-to-javascript
   symbolic domain — `replaceRepeated` reduces `Add(Add(z, 0), 0)` to the bare
   symbol `z` via `x_ + 0 -> x_`, `replaceAll`'s single-pass (no-retry)
   contract, and a head-typed blank (`x_Integer`) matching selectively.
+- `tests/sir22_array.rs`: real `node`-execution tests for the SIR22
+  array/matrix base cut — matrix multiplication, the bare-scalar-operand
+  `elementwise` coercion fix, transpose, MATLAB-colon range semantics,
+  in-place `indexSet` (including whole-column broadcast), and a
+  non-conformable-matmul clean-error-exit case.
