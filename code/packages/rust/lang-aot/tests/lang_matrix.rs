@@ -426,24 +426,30 @@ const PROGRAMS: &[Prog] = &[
     // a reference (`object`/`object[]`) — an E6d-6b union field arrives boxed at the
     // call boundary, so `box System.Int32` on it boxed the *pointer* (`box(object
     // 42)` → a truncated handle, not 42). Run-verified exit 42 on all five columns.
+    //
+    // **`Vm` + `Jit` too** (vm-core 0.18.0): the generic VM runs union `match` via
+    // the E6d heap ops (records PR) plus `box` (the identity there) and the dynamic
+    // `=`/`+`/`-`/`*` builtins the tag-test and arms use — so union `match` runs on
+    // **all seven engines**. (`match` here needs no `is_null`, so no nil-handle
+    // disambiguation is required; that is only for list `null?`.)
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(union Opt (Some (v : int)) (None)) (match (Some 42) ((Some v) v) ((None) 0))",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Twig — E6d-6: matching the SECOND variant (`None`) proves the tag dispatch
     // actually discriminates — the boxed-bool branch takes the right arm, not
     // always the first. `(match (None) ((Some v) v) ((None) 42))` = 42. This is the
     // cell the raw-tag bug broke on the tagged backends (`unbox(raw 1)=0`); E6d-6b's
-    // boxed tag fixes it. Runs on all five code-gen backends (Clr via E6d-6c).
+    // boxed tag fixes it. Runs on all seven engines (Clr via E6d-6c, Vm/Jit above).
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(union Opt (Some (v : int)) (None)) (match (None) ((Some v) v) ((None) 42))",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Twig — **E6d-8: dynamic globals on the code-gen backends.** A value global
     // `g` that is *forward-referenced* (read inside `f` before its `define`) is
@@ -4639,5 +4645,7 @@ fn t7_differential_random_basic_conditionals_agree() {
     eprintln!("T7 conditional differential: {cross_checks} cross-engine agreements over {N} branch programs");
     assert!(cross_checks >= 2 * N, "expected >= {} cross-checks, got {cross_checks}", 2 * N);
 }
+
+
 
 

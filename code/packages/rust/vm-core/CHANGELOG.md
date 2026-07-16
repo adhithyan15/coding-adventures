@@ -1,5 +1,28 @@
 # Changelog — vm-core
 
+## [0.18.0] — 2026-07-14 (E6d union `match` on the generic VM — `box` + dynamic builtins)
+
+Builds on 0.17.0 (heap objects): union `match` now runs on the generic VM (and
+the JIT via its VM fallback), so E6d union `match` runs on **all seven engines**.
+
+- **`box` / `unbox` opcodes** — the **identity** on the VM: its `Value` is already
+  the dynamic value (no separate boxed form), so both are a register copy. The
+  union constructor `emit_union_def` emits `box` on the variant tag + fields; that
+  op reaches the generic VM, where it is a no-op copy.
+- **Dynamic-dispatch builtins `=` / `+` / `-` / `*`** (registered by default) —
+  the `any`-typed primitives the frontend emits as `call_builtin` when an
+  operand's static type is `any` (a `match`-bound field, a value read from a cons
+  cell). `=` is a direct `Value` compare → boolean (the tag test); the arithmetic
+  ops compute on same-kind operands (integers wrap on overflow — the i64 tagged
+  model; floats in `f64`), with a clean type error otherwise. This also unblocks
+  E6d-2 dynamic integer arithmetic on the VM.
+
+Verified: both union `match` cells run on the `Vm` + `Jit` matrix columns (Some →
+42, None → 42), plus new `builtins` unit tests (`=`, `+`/`-`/`*` incl. overflow
+wrap + arity/type errors). `match` needs no `is_null`, so no nil-handle
+disambiguation is required here. Closures (`alloc_closure`/`call_closure`) and list
+builtins (`cons`/`car`/…) on the generic VM remain follow-ups.
+
 ## [0.17.0] — 2026-07-14 (E6d heap objects — `alloc`/`field_store`/`field_load` on the generic VM)
 
 The dispatcher now executes the word-granular heap ops that Twig
