@@ -1,0 +1,23 @@
+% ============================================================================
+% hormone-glands.query.adj — a worked recall over the biology hormone-glands
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "which gland makes insulin?":
+% it states no endocrinology fact of its own — it only `import`s the grounded
+% table and asks binding queries. The engine resolves each `?` against the
+% `hormone_gland` rows and returns the gland + the table's source/locator/trust.
+% The fourth query runs the relation BACKWARD (bind the gland `pituitary`, recall
+% a hormone it makes — growth_hormone). A word that is not one of the grounded
+% hormones abstains honestly — the engine never invents a gland.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli hormone-glands.query.adj
+% ============================================================================
+
+import "hormone-glands.adj"
+
+? hormone_gland(insulin, $Gland)     % expect pancreas
+? hormone_gland(cortisol, $Gland)    % expect adrenal_gland
+? hormone_gland(melatonin, $Gland)   % expect pineal_gland
+? hormone_gland($Hormone, pituitary) % reverse bind — expect growth_hormone
+? hormone_gland(aldosterone, $Gland) % expect abstain — a real adrenal hormone, but not grounded here (its span didn't name the gland), so recall abstains rather than guessing
