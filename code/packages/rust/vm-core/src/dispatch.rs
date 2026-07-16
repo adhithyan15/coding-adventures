@@ -1008,6 +1008,27 @@ fn handle_alloc_array(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<
     Ok(Some(value))
 }
 
+/// `box d <- s` / `unbox d <- s` — the **identity** on the generic VM.
+///
+/// The tagged (native/LLVM: `n<<3`) and structural (WASM/JVM/CLR: `ref.i31` /
+/// `Integer`) backends carry a boxed and an unboxed representation of a dynamic
+/// value and convert between them; vm-core's `Value` is *already* the dynamic
+/// value (an `Int` is the integer, no separate boxed form), so both ops are a
+/// register copy — exactly as on the Twig interpreter. E6d union constructors
+/// (`emit_union_def`) emit `box` on the tag + fields so `match`'s later read
+/// round-trips on the tagged backends; that op reaches the generic VM too, where
+/// it is a no-op copy.
+fn handle_box(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let v = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        resolve_src(frame, &instr.srcs, 0)?
+    };
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, v.clone());
+    }
+    Ok(Some(v))
+}
+
 /// `alloc [<size_bytes>] -> dest` — allocate a fixed-size heap object (a cons
 /// cell / record node) on the shared `ctx.arrays` heap, returning its integer
 /// handle.
@@ -1533,6 +1554,10 @@ pub(crate) fn lookup_standard(op: &str) -> Option<StdHandlerFn> {
         "alloc"        => Some(handle_alloc),
         "field_store"  => Some(handle_array_set),
         "field_load"   => Some(handle_array_get),
+        // Dynamic-value box/unbox are the identity on the VM (a `Value` is already
+        // the dynamic value); union `match` emits `box` on tags/fields.
+        "box"          => Some(handle_box),
+        "unbox"        => Some(handle_box),
         "call_builtin" => Some(handle_call_builtin),
         "io_in"        => Some(handle_io_in),
         "io_out"       => Some(handle_io_out),

@@ -42,6 +42,39 @@ pub struct BuiltinRegistry {
     handlers: HashMap<String, BuiltinFn>,
 }
 
+/// The dynamic arithmetic primitive shared by the `+`/`-`/`*` builtins (E6d-2) —
+/// see their registration in [`BuiltinRegistry::new`]. Two same-kind numeric
+/// operands compute a result of that kind: integers wrap on overflow (the i64
+/// tagged-value model the code-gen backends use), floats compute in `f64`. Any
+/// other operand pair is a clean type error, never a panic.
+fn dyn_arith(sym: &str, args: &[Value]) -> Result<Value, VMError> {
+    if args.len() != 2 {
+        return Err(VMError::Custom(format!(
+            "`{sym}` requires exactly 2 arguments, got {}",
+            args.len()
+        )));
+    }
+    match (&args[0], &args[1]) {
+        (Value::Int(a), Value::Int(b)) => Ok(Value::Int(match sym {
+            "+" => a.wrapping_add(*b),
+            "-" => a.wrapping_sub(*b),
+            "*" => a.wrapping_mul(*b),
+            _ => unreachable!("dyn_arith is only registered for + - *"),
+        })),
+        (Value::Float(a), Value::Float(b)) => Ok(Value::Float(match sym {
+            "+" => a + b,
+            "-" => a - b,
+            "*" => a * b,
+            _ => unreachable!("dyn_arith is only registered for + - *"),
+        })),
+        (a, b) => Err(VMError::TypeError {
+            expected: "two numbers of the same kind".into(),
+            actual: format!("{} and {}", a.iir_type_name(), b.iir_type_name()),
+            context: format!("dynamic `{sym}`"),
+        }),
+    }
+}
+
 impl BuiltinRegistry {
     /// Create a new registry pre-loaded with `noop`, `assert_eq`, and `print`.
     pub fn new() -> Self {
@@ -91,6 +124,35 @@ impl BuiltinRegistry {
                 .map_err(|e| VMError::Custom(format!("print_str flush failed: {e}")))?;
             Ok(Value::Null)
         });
+
+        // `=` — the dynamic-equality primitive (E6d). The tagged/structural
+        // code-gen backends lower it to `__dyn_eq` / a typed compare that unboxes
+        // its operands first; on the generic VM a `Value` is already the dynamic
+        // value, so equality is a direct `Value` compare (`Int == Int`,
+        // `Str == Str`, …), returning a boolean. Twig union `match` uses it to test
+        // a variant's integer tag against each arm's tag; the boolean result feeds
+        // a `jmp_if_false`. (Distinct from the `cmp_eq` *opcode*, which the typed
+        // frontends emit for statically-typed comparisons.)
+        reg.register("=", |args| {
+            if args.len() != 2 {
+                return Err(VMError::Custom(format!(
+                    "`=` requires exactly 2 arguments, got {}",
+                    args.len()
+                )));
+            }
+            Ok(Value::Bool(args[0] == args[1]))
+        });
+
+        // Dynamic arithmetic primitives (E6d-2) — the same `any`-typed `+`/`-`/`*`
+        // the frontend emits as a `call_builtin` when an operand's static type is
+        // `any` (e.g. a value read from a cons cell or a bound `match` field). The
+        // tagged/structural backends route these to `__dyn_add`/… (unbox, compute,
+        // rebox); on the generic VM a `Value` is already the value, so it is a
+        // direct compute. Integer operands wrap on overflow (the i64 tagged model);
+        // floats compute in `f64`. A non-numeric operand is a clean type error.
+        for sym in ["+", "-", "*"] {
+            reg.register(sym, move |args| dyn_arith(sym, args));
+        }
 
         reg
     }
@@ -159,6 +221,40 @@ mod tests {
     fn assert_eq_fails() {
         let reg = BuiltinRegistry::new();
         assert!(reg.call("assert_eq", &[Value::Int(1), Value::Int(2)]).is_err());
+    }
+
+    // ── E6d dynamic-dispatch builtins ───────────────────────────────────────
+
+    #[test]
+    fn dyn_eq_returns_boolean() {
+        let reg = BuiltinRegistry::new();
+        assert_eq!(reg.call("=", &[Value::Int(1), Value::Int(1)]).unwrap(), Value::Bool(true));
+        assert_eq!(reg.call("=", &[Value::Int(1), Value::Int(2)]).unwrap(), Value::Bool(false));
+        // Cross-kind values are simply unequal, never an error (dynamic equality).
+        assert_eq!(reg.call("=", &[Value::Int(0), Value::Null]).unwrap(), Value::Bool(false));
+    }
+
+    #[test]
+    fn dyn_arith_computes_and_wraps() {
+        let reg = BuiltinRegistry::new();
+        assert_eq!(reg.call("+", &[Value::Int(20), Value::Int(22)]).unwrap(), Value::Int(42));
+        assert_eq!(reg.call("-", &[Value::Int(50), Value::Int(8)]).unwrap(), Value::Int(42));
+        assert_eq!(reg.call("*", &[Value::Int(6), Value::Int(7)]).unwrap(), Value::Int(42));
+        // Integer overflow wraps (the i64 tagged-value model), never panics.
+        assert_eq!(reg.call("+", &[Value::Int(i64::MAX), Value::Int(1)]).unwrap(), Value::Int(i64::MIN));
+        // Floats compute in f64.
+        assert_eq!(reg.call("+", &[Value::Float(1.5), Value::Float(2.0)]).unwrap(), Value::Float(3.5));
+    }
+
+    #[test]
+    fn dyn_arith_rejects_bad_arity_and_types() {
+        let reg = BuiltinRegistry::new();
+        assert!(reg.call("+", &[Value::Int(1)]).is_err(), "wrong arity");
+        assert!(reg.call("=", &[Value::Int(1)]).is_err(), "wrong arity");
+        assert!(
+            matches!(reg.call("*", &[Value::Int(1), Value::Null]), Err(VMError::TypeError { .. })),
+            "non-numeric operand is a clean type error"
+        );
     }
 
     #[test]
