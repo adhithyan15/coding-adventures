@@ -54,3 +54,6 @@ Platform-BuildAndRun -Lang c -Name 'dynlib-tests' -Sources @('tests\dynlib_test.
 
 # mmap — Win32 backend (VirtualAlloc + VirtualProtect + VirtualFree).
 Platform-BuildAndRun -Lang c -Name 'mmap-tests' -Sources @('tests\mmap_test.c', 'src\mmap_windows.c')
+
+# jit — Win32 backend (VirtualAlloc RW -> VirtualProtect RX -> FlushInstructionCache).
+Platform-BuildAndRun -Lang c -Name 'jit-tests' -Sources @('tests\jit_test.c', 'src\jit_windows.c')

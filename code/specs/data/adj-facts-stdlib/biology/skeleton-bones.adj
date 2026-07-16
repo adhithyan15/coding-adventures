@@ -1,0 +1,136 @@
+% ============================================================================
+% skeleton-bones — common human bones and the body region each one is in
+% (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% One of the very first maps a child draws of their own skeleton, and a rung a
+% MEDICINE agent reasons UP from: the body's bony framework is a set of named
+% bones, and each bone lives in one region of the body. "The femur is in the
+% leg; the humerus is in the arm; the sternum is in the chest." Before you can
+% reason about a fracture, a joint, or an X-ray you must first know WHERE each
+% bone is — a broken femur is a leg injury, a cracked sternum is a chest injury.
+% Recall is a binding query:
+%
+%     ? bone_region(femur, $Region)      % leg
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `bone_region(bone, region)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the region
+% WITH its source, on the CPU, with zero model calls, and abstains on a word
+% that is not one of these bones (it never invents a region).
+%
+% Each bone and the region it is in, as a little truth table:
+%
+%     bone (common name)     region    a beginner's cue
+%     --------------------   -------   --------------------------------------
+%     femur (thigh bone)     leg       the femur is the big upper-leg bone
+%     tibia (shin bone)      leg       the tibia is a lower-leg bone
+%     fibula                 leg       the fibula is the smaller lower-leg bone
+%     patella (kneecap)      knee      the patella is the kneecap, at the knee
+%     humerus (upper arm)    arm       the humerus is the upper-arm bone
+%     radius                 arm       the radius is a forearm bone
+%     ulna                   arm       the ulna is the other forearm bone
+%     clavicle (collarbone)  shoulder  the clavicle is a shoulder-joint bone
+%     scapula (shoulder blade) shoulder the scapula is the shoulder blade
+%     sternum (breast bone)  chest     the sternum is the flat bone of the chest
+%     ribs                   chest     the ribs make the cage of the chest
+%     frontal                skull     the frontal bone is a bone of the skull
+%     parietal               skull     the parietal bones are bones of the skull
+%     temporal               skull     the temporal bones are bones of the skull
+%     occipital              skull     the occipital bone is a bone of the skull
+%
+% The query also runs BACKWARD — bind a region and recall the bones in it:
+%
+%     ? bone_region($Bone, arm)   % humerus ; radius ; ulna
+%
+% A word that is NOT one of these bones — `spleen`, `muscle`, `rock` — is
+% deliberately NOT a row, so a bone-region recall ABSTAINS on it rather than
+% inventing a region. That honest-abstention property is what makes the table
+% safe to build a reasoner on: it answers exactly the bone→region pairs it can
+% ground, and only those.
+%
+% The `region` value of every row is a SINGLE lowercase atom (leg, knee, arm,
+% shoulder, chest, skull), chosen to be the everyday body region the source
+% states that bone belongs to — never a region the source does not support.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every bone→region pair
+% below was read out of a fetched U.S. government / NIH page, and any bone whose
+% region could not be verified there would have been dropped). Each pair, with
+% the primary source it was copied from and the verbatim span that states it:
+%
+%   femur → leg
+%     https://medlineplus.gov/ency/imagepages/8844.htm  (NIH / NLM, MedlinePlus)
+%     "The thigh bone, or femur, is the large upper leg bone that connects the
+%      lower leg bones (knee joint) to the pelvic bone (hip joint)."
+%
+%   tibia → leg, fibula → leg
+%     https://medlineplus.gov/ency/imagepages/8844.htm  (NIH / NLM, MedlinePlus)
+%     "The lower leg is comprised of two bones, the tibia and the smaller
+%      fibula."
+%
+%   patella → knee
+%     https://medlineplus.gov/ency/article/002974.htm  (NIH / NLM, MedlinePlus)
+%     "Your kneecap is called the patella."  (the kneecap, at the front of the
+%      knee joint)
+%
+%   humerus → arm, radius → arm, ulna → arm
+%     https://medlineplus.gov/arminjuriesanddisorders.html  (NIH / NLM, MedlinePlus)
+%     "Of the 206 bones in your body, three of them are in your arm: the
+%      humerus, radius, and ulna."
+%
+%   clavicle → shoulder, scapula → shoulder
+%     https://medlineplus.gov/shoulderinjuriesanddisorders.html  (NIH / NLM, MedlinePlus)
+%     "Your shoulder joint is composed of three bones: the clavicle
+%      (collarbone), the scapula (shoulder blade), and the humerus (upper arm
+%      bone)."
+%
+%   sternum → chest, ribs → chest
+%     https://medlineplus.gov/ency/imagepages/8787.htm  (NIH / NLM, MedlinePlus)
+%     "The ribs connect on the front of the chest with the long flat sternum, or
+%      breast bone, and on the back with the vertebral column, creating a cage
+%      of protection for the lungs and heart."
+%
+%   frontal → skull, parietal → skull, temporal → skull, occipital → skull
+%     https://medlineplus.gov/ency/article/002320.htm  (NIH / NLM, MedlinePlus)
+%     "An infant's skull is made up of 6 separate cranial (skull) bones:
+%      Frontal bone, Occipital bone, Two parietal bones, Two temporal bones."
+%
+% (The same regional grouping is corroborated by the NCI SEER Training Modules
+% Skeletal System pages — the axial skeleton's Skull and Thoracic Cage and the
+% appendicular skeleton's Upper Extremity, Lower Extremity, and Pectoral Girdle,
+% https://training.seer.cancer.gov/anatomy/skeletal/divisions/ — another primary
+% U.S. government teaching resource.)
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the MedlinePlus statement that
+% fixes the first row (femur → leg). Every OTHER row's per-fact source and
+% verbatim span is listed above, so each region remains independently checkable.
+% All sources are primary U.S. government / NIH (NLM MedlinePlus) references, so
+% `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table bone_region {
+    columns bone, region
+
+    row (femur, leg)
+    row (tibia, leg)
+    row (fibula, leg)
+    row (patella, knee)
+    row (humerus, arm)
+    row (radius, arm)
+    row (ulna, arm)
+    row (clavicle, shoulder)
+    row (scapula, shoulder)
+    row (sternum, chest)
+    row (ribs, chest)
+    row (frontal, skull)
+    row (parietal, skull)
+    row (temporal, skull)
+    row (occipital, skull)
+
+    source "The thigh bone, or femur, is the large upper leg bone that connects the lower leg bones (knee joint) to the pelvic bone (hip joint)."
+    locator "https://medlineplus.gov/ency/imagepages/8844.htm"
+    trust authoritative
+}
