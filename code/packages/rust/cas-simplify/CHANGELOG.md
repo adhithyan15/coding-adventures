@@ -37,7 +37,8 @@
   `expand` unchanged, so they inherit collected output automatically; their
   own exact-output tests and doc comments (which pinned/described the old
   uncollected shape) are updated in lockstep.
-- 32 tests total (up from 24), including adversarial cases (opposite-signed
+- 34 tests total (up from 24 — see the `### Fixed` entries below for two of
+  the additions), including adversarial cases (opposite-signed
   cancellation to exact zero, exact-rational coefficient summation via the
   shared `Acc`, negative-exponent bases, an opaque non-`Pow` repeated
   factor like `Sin(x)*Sin(x)`).
@@ -65,6 +66,44 @@
   release builds. Fixed to `saturating_add`, mirroring `term_count`'s own
   `saturating_add`/`saturating_mul` convention elsewhere in this crate.
   New regression test multiplying `x^i64::MAX` by itself.
+- **`collect_terms`'s dispatch order made the same-base-merge fix above
+  `O(k² log k)` overall, not the `O(k log k)` it claimed** — found by a
+  second round of `/security-review`, still before this feature's first
+  push. `expand_apply`'s `.fold()` over `expand_mul` left-nests *any*
+  `n`-ary `Mul`/`Add` with nothing to distribute into a chain of depth
+  `k` (`Mul(Mul(Mul(x1,x2),x3),...)`) — the same "many distinct terms,
+  `EXPAND_MAX_TERMS` never fires" shape the fix above already targeted,
+  just nested instead of flat. `collect_terms`'s dispatch recursed into
+  every child *before* checking whether the current node was itself
+  `Add`/`Sub`/`Mul`, so each of the `k` nesting levels re-flattened and
+  re-sorted everything the level below it had already flattened and
+  sorted — `O(k)` extra work at each of `k` levels, `O(k² log k)` total.
+  Confirmed empirically before the fix (a throwaway release-mode
+  benchmark, deleted after use — the same 10,000-deep chain this
+  section's new regression test uses took multiple seconds; a
+  32,000-deep chain was projected well into the tens of seconds from the
+  observed ~4x-per-doubling growth) and after (the 10,000-deep chain now
+  completes in well under a millisecond; 32,000-deep in ~4.5ms —
+  confirmed near-linear across k=1,000/2,000/4,000/8,000/16,000/32,000).
+  Fixed by flattening the *raw*, pre-collection `Add`/`Sub`/`Mul`
+  structure in one pass (new `flatten_additive_raw`/`flatten_mul_raw`)
+  *before* recursing `collect_terms` into each resulting leaf, instead of
+  collecting every child first and re-flattening the already-rebuilt
+  result afterward — a chain of depth `k` is now flattened once, in
+  `O(k)`, rather than once per level. Both new functions use an explicit
+  `Vec`-backed work-stack rather than native recursion, so flattening a
+  long chain no longer costs one Rust stack frame per level either —
+  partially closing a related stack-overflow risk the same review round
+  flagged (full closure would mean removing recursion-depth risk from
+  arbitrary, non-chain nesting shapes across the whole `simplify`/
+  `canonical` pipeline this module's output always feeds into — a larger,
+  crate-wide undertaking, documented as a known limitation in the module
+  docs rather than silently assumed away, not fixed here). Two new
+  regression tests: a 10,000-deep left-nested `Mul` chain of distinct
+  factors (confirms speed and that nothing wrongly merges) and a
+  10,000-deep left-nested `Add` chain of one repeated symbol (confirms
+  speed and that everything correctly collects into one term). 18 tests
+  in this module now (34 total in the crate, up from 32).
 
 ## [0.4.1] — 2026-07-12
 

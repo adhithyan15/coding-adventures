@@ -69,6 +69,44 @@
 //! `Pow`'s integer exponent is copied verbatim from the input with no cap
 //! of its own, so two huge-exponent occurrences of the same base could
 //! otherwise overflow a plain `i64` addition.
+//!
+//! **A second, deeper instance of the same class, caught in a follow-up
+//! round of security review before this module's first merge**: the fix
+//! above made a *single* grouping call `O(k log k)`, but
+//! [`collect_terms`]'s original dispatch called it once *per nesting
+//! level* of a deep chain, not once for the whole chain. `expand_apply`'s
+//! `.fold()` over [`expand_mul`](crate::expand) left-nests *any* n-ary
+//! `Mul`/`Add` with nothing to distribute into a `Mul(Mul(Mul(x1,x2),x3),
+//! ...)`/`Add(Add(Add(x1,x2),x3), ...)` chain of depth `k` — the exact
+//! same "many distinct terms/factors, `EXPAND_MAX_TERMS` never fires"
+//! shape the first finding already identified, just nested instead of
+//! flat. The original dispatch recursed into every child with
+//! `collect_terms` *before* checking whether the current node was itself
+//! `Add`/`Sub`/`Mul` — so each of the `k` levels flattened and re-sorted
+//! everything the level below it had *already* flattened and sorted,
+//! for a total cost of `O(k^2 log k)`, not `O(k log k)`. Fixed by
+//! flattening the *raw* (pre-collection) same-head structure in one pass
+//! — [`flatten_additive_raw`]/[`flatten_mul_raw`] — before recursing
+//! `collect_terms` into each resulting leaf, so a chain of depth `k` is
+//! flattened once, in `O(k)`, rather than once per level. Those two
+//! functions also use an explicit work-stack rather than native
+//! recursion, so flattening a long chain no longer uses one Rust stack
+//! frame per level either — a `k`-deep homogeneous chain (the shape both
+//! the complexity finding and a plausible stack-exhaustion input share)
+//! no longer risks an uncatchable stack overflow to flatten.
+//!
+//! This is a partial, not complete, mitigation for recursion depth in
+//! general: `collect_terms`'s own recursion into ordinary (non-chain)
+//! tree structure — an arbitrarily deep mix of alternating `Add`-of-
+//! `Mul`-of-`Add`-of-..., or any other head `expand_apply` leaves in
+//! place (`Div`, `Sin`, ...) wrapping another such chain — still uses
+//! native Rust recursion, and the same shape already recurses just as
+//! deeply in the pre-existing, unmodified `simplify`/`canonical` pass
+//! this module's output is always fed into. Removing recursion-depth
+//! risk for *arbitrary* nesting shapes across the whole simplifier
+//! pipeline is a larger, crate-wide undertaking, not specific to this
+//! module — out of scope here, and tracked as a known limitation rather
+//! than silently assumed away.
 
 use symbolic_ir::{apply, sym, IRNode, ADD, MUL, POW, SUB};
 
@@ -87,66 +125,142 @@ type BaseTerm = (String, IRNode, i64);
 /// `Mul`-headed subtree is monomialized on its own so repeated factors
 /// fold into a power even outside of a sum; everything else is left with
 /// its head unchanged, children recursively collected.
+///
+/// **Flattens the raw (pre-collection) `Add`/`Sub`/`Mul` structure first**
+/// — via [`flatten_additive_raw`]/[`flatten_mul_raw`] — and only then
+/// recurses `collect_terms` into each resulting leaf, rather than
+/// recursing into every child first and flattening the *already-rebuilt*
+/// result afterward. See those functions' doc comments for why the
+/// order matters: doing it the other way around reprocesses every
+/// nesting level of a deep chain, which is quadratic, not the linear
+/// (in tree size) cost this ordering achieves.
 pub fn collect_terms(node: IRNode) -> IRNode {
+    if is_additive_head(&node) {
+        let mut signed_raw: Vec<(i64, IRNode)> = Vec::new();
+        flatten_additive_raw(node, &mut signed_raw);
+        let signed: Vec<(Acc, Vec<BaseTerm>)> = signed_raw
+            .into_iter()
+            .map(|(sign, term)| {
+                let (coef, monomial) = monomialize(&collect_terms(term));
+                let signed_coef = if sign < 0 {
+                    coef.combine(Acc::Rat(-1, 1), true)
+                } else {
+                    coef
+                };
+                (signed_coef, monomial)
+            })
+            .collect();
+        return rebuild_additive(signed);
+    }
+    if is_mul_head(&node) {
+        let mut flat_raw: Vec<IRNode> = Vec::new();
+        flatten_mul_raw(node, &mut flat_raw);
+        let collected: Vec<IRNode> = flat_raw.into_iter().map(collect_terms).collect();
+        let (coef, monomial) = monomialize_factors(&collected);
+        return rebuild_term(coef, monomial);
+    }
     match node {
         IRNode::Apply(app) => {
             let head = collect_terms(app.head);
             let args: Vec<IRNode> = app.args.into_iter().map(collect_terms).collect();
-
-            if let IRNode::Symbol(name) = &head {
-                if name == ADD || name == SUB {
-                    return collect_additive(name, &args);
-                }
-                if name == MUL {
-                    let (coef, monomial) = monomialize_factors(&args);
-                    return rebuild_term(coef, monomial);
-                }
-            }
             apply(head, args)
         }
         other => other,
     }
 }
 
-/// Flatten an `Add`/`Sub` node's immediate args into signed terms, group by
-/// monomial, and rebuild.
-fn collect_additive(head_name: &str, args: &[IRNode]) -> IRNode {
-    let mut signed: Vec<(Acc, Vec<BaseTerm>)> = Vec::new();
-    for (i, a) in args.iter().enumerate() {
-        // Add: every arg contributes positively. Sub(a, b) is exactly
-        // `a - b` — the second (and only the second) of its two args is
-        // negated.
-        let sign: i64 = if head_name == SUB && i == 1 { -1 } else { 1 };
-        collect_signed_terms(a, sign, &mut signed);
-    }
-    rebuild_additive(signed)
+/// Whether `node` is an `Add`- or `Sub`-headed `Apply` node.
+fn is_additive_head(node: &IRNode) -> bool {
+    matches!(node, IRNode::Apply(app) if is_head(&app.head, ADD) || is_head(&app.head, SUB))
 }
 
-/// Recursively flatten `node` (scaled by `sign`) into `(coefficient,
-/// monomial)` pairs, descending through nested `Add`/`Sub` so an
-/// intermediate square-and-multiply tree (`Add(Add(..), Add(..))`) is
-/// treated as one flat sum, not two separate ones.
-fn collect_signed_terms(node: &IRNode, sign: i64, out: &mut Vec<(Acc, Vec<BaseTerm>)>) {
-    if let IRNode::Apply(app) = node {
-        if is_head(&app.head, ADD) {
-            for a in &app.args {
-                collect_signed_terms(a, sign, out);
+/// Whether `node` is a `Mul`-headed `Apply` node.
+fn is_mul_head(node: &IRNode) -> bool {
+    matches!(node, IRNode::Apply(app) if is_head(&app.head, MUL))
+}
+
+/// Flatten a (possibly deeply nested) `Add`/`Sub` tree into signed leaf
+/// terms — `[(sign, term)]` where no `term` is itself `Add`/`Sub`-headed —
+/// using an explicit work-stack rather than native recursion.
+///
+/// Two things make this walk over the *raw*, not yet `collect_terms`-ed,
+/// structure important:
+///
+/// - [`expand_mul`](crate::expand) does not flatten between successive
+///   square-and-multiply steps, so an intermediate result is typically a
+///   *nested* `Add(Add(..), Add(..))` tree, not one flat `Add`. Walking
+///   the raw tree in one pass collects every leaf exactly once,
+///   regardless of nesting shape.
+/// - **Critically, this must run *before* any child is individually
+///   `collect_terms`-ed.** An earlier version recursed into every child
+///   first (bottom-up) and only then flattened/grouped the
+///   already-rebuilt result at each level — for a left-nested chain of
+///   depth `k` (exactly what `expand_apply`'s `.fold()` over
+///   `expand_mul` produces for an `n`-ary `Add`/`Mul` with no shared
+///   structure to distribute, e.g. `x1+x2+...+xk`), that meant every one
+///   of the `k` levels re-flattened and re-sorted everything accumulated
+///   *below* it — `O(k^2 log k)` total, not the `O(k log k)` a single
+///   sort-then-merge costs. Flattening the raw structure first (this
+///   function) visits each of the tree's nodes exactly once — `O(k)` —
+///   before the single grouping pass in [`rebuild_additive`] does its one
+///   `O(k log k)` sort. Found and fixed in the same round of security
+///   review that closed the `monomialize_factors` finding this module's
+///   docs already describe — the original fix for that finding narrowed
+///   the complexity bug without eliminating it, since the quadratic
+///   driver was this dispatch order, not the single-call algorithm.
+///
+/// An explicit `Vec`-backed stack (rather than a recursive helper) also
+/// means the walk's memory usage is heap-allocated, not Rust-call-stack
+/// depth proportional to chain length — a long chain no longer risks an
+/// (uncatchable, process-aborting) stack overflow just to be flattened,
+/// though see the module docs' note on why this is a partial, not
+/// complete, mitigation for arbitrarily deep/mixed nesting.
+fn flatten_additive_raw(node: IRNode, out: &mut Vec<(i64, IRNode)>) {
+    let mut stack: Vec<(i64, IRNode)> = vec![(1, node)];
+    while let Some((sign, current)) = stack.pop() {
+        if let IRNode::Apply(app) = current {
+            if is_head(&app.head, ADD) {
+                for a in app.args {
+                    stack.push((sign, a));
+                }
+                continue;
             }
-            return;
+            if is_head(&app.head, SUB) && app.args.len() == 2 {
+                let mut args = app.args.into_iter();
+                let a = args.next().expect("len checked above");
+                let b = args.next().expect("len checked above");
+                stack.push((sign, a));
+                stack.push((-sign, b));
+                continue;
+            }
+            out.push((sign, IRNode::Apply(app)));
+            continue;
         }
-        if is_head(&app.head, SUB) && app.args.len() == 2 {
-            collect_signed_terms(&app.args[0], sign, out);
-            collect_signed_terms(&app.args[1], -sign, out);
-            return;
-        }
+        out.push((sign, current));
     }
-    let (coef, monomial) = monomialize(node);
-    let signed_coef = if sign < 0 {
-        coef.combine(Acc::Rat(-1, 1), true)
-    } else {
-        coef
-    };
-    out.push((signed_coef, monomial));
+}
+
+/// Flatten a (possibly deeply nested) `Mul` tree into leaf factors — no
+/// factor itself `Mul`-headed — using an explicit work-stack. The
+/// `Mul` counterpart to [`flatten_additive_raw`]; see that function's
+/// doc comment for why this must run on the raw structure, before any
+/// child is individually `collect_terms`-ed, and why an explicit stack
+/// (not recursion) is used.
+fn flatten_mul_raw(node: IRNode, out: &mut Vec<IRNode>) {
+    let mut stack: Vec<IRNode> = vec![node];
+    while let Some(current) = stack.pop() {
+        if let IRNode::Apply(app) = current {
+            if is_head(&app.head, MUL) {
+                for a in app.args {
+                    stack.push(a);
+                }
+                continue;
+            }
+            out.push(IRNode::Apply(app));
+            continue;
+        }
+        out.push(current);
+    }
 }
 
 /// Decompose an arbitrary single term into `(coefficient, monomial)` —
@@ -596,6 +710,62 @@ mod tests {
         let huge = pow(sym("x"), int(i64::MAX));
         let result = collect_terms(mul(vec![huge.clone(), huge]));
         assert_eq!(result, pow(sym("x"), int(i64::MAX)));
+    }
+
+    /// Left-nest `k` distinct one-off symbols the same way
+    /// `expand_apply`'s `.fold()` over `expand_mul` does: `Mul(Mul(Mul(x0,
+    /// x1), x2), x3)`, ..., never a single flat `k`-arg `Mul`. This is
+    /// the shape a real `expand()` call on an ordinary `n`-ary product
+    /// actually produces internally — not a contrived worst case.
+    fn left_nested_mul(k: usize) -> IRNode {
+        let mut factors = (0..k).map(|i| sym(format!("x{i}")));
+        let first = factors.next().expect("k > 0");
+        factors.fold(first, |acc, next| mul(vec![acc, next]))
+    }
+
+    /// Same shape, but for `Add` (mirrors a raw, un-flattened
+    /// `Add(Add(Add(x0, x1), x2), x3)` intermediate square-and-multiply
+    /// tree), built from an arbitrary term iterator rather than always
+    /// generating distinct one-off symbols.
+    fn left_nested_add_of(terms: impl Iterator<Item = IRNode>) -> IRNode {
+        let mut terms = terms;
+        let first = terms.next().expect("at least one term");
+        terms.fold(first, |acc, next| add(vec![acc, next]))
+    }
+
+    #[test]
+    fn a_left_nested_mul_chain_stays_fast_not_quadratic() {
+        // Mul(Mul(Mul(x0, x1), x2), ..., x_{k-1}) with k=10,000 distinct
+        // one-off symbols. Found in a follow-up round of security review:
+        // an earlier version's collect_terms recursed into every child
+        // with collect_terms *before* flattening/grouping at the current
+        // level, so a chain like this re-flattened and re-sorted every
+        // level's already-processed result on the level above it --
+        // O(k^2 log k), not the O(k log k) a single sort-then-merge
+        // costs. This test's job is to complete promptly (the old
+        // dispatch order made even k=8,000 take several seconds; k=10,000
+        // would be dramatically worse) and to confirm every factor
+        // still ends up correctly merged (all distinct, so unmerged).
+        let result = collect_terms(left_nested_mul(10_000));
+        match result {
+            IRNode::Apply(app) if matches!(&app.head, IRNode::Symbol(s) if s == MUL) => {
+                assert_eq!(app.args.len(), 10_000);
+            }
+            other => panic!("expected an unmerged 10,000-factor Mul, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn a_left_nested_add_chain_stays_fast_and_collects_correctly() {
+        // Add(Add(Add(x0, x1), x2), ..., x_{k-1}) with k=10,000 terms, all
+        // the *same* symbol this time (unlike the Mul test, which uses
+        // distinct factors) -- exercises both the performance fix and
+        // correctness: every term must still collapse into one
+        // coefficient*symbol term, not k separate (or partially grouped)
+        // terms.
+        let chain = left_nested_add_of(std::iter::repeat_with(|| sym("x")).take(10_000));
+        let result = collect_terms(chain);
+        assert_eq!(result, mul(vec![int(10_000), sym("x")]));
     }
 }
 
