@@ -2,6 +2,35 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.96.0] - 2026-07-16
+
+### Added — computed string-key member → dot member: `o["foo"]` → `o.foo`
+
+A computed member access whose key is a string literal that is a valid,
+**non-reserved ASCII identifier name** now folds to a dot member, matching the
+reference Closure Compiler at `SIMPLE` byte-for-byte:
+
+- `o["foo"]` → `o.foo`, `o["$x"]` → `o.$x`, `o["_y"]` → `o._y`, `o["a1"]` → `o.a1`
+- `o["let"]` / `o["yield"]` / `o["await"]` / `o["of"]` / `o["undefined"]` → dot
+  (none is an ES3 keyword)
+- `o.foo["bar"]` → `o.foo.bar` (chains), `o["foo"]=1` → `o.foo=1` (assignment target)
+
+A key that is an **ES3 reserved word** stays bracketed — `o["class"]`,
+`o["static"]`, `o["delete"]`, `o["int"]`, `o["boolean"]`, `o["enum"]`,
+`o["super"]`, `o["true"]`, `o["null"]`, … — because Closure keeps ES3-unsafe keys
+quoted so the output parses under an ES3 target. The reserved set is the classic
+Rhino `TokenStream.isKeyword` list (ES3 keywords + the Java-flavoured
+future-reserved words + `null`/`true`/`false`), captured in the new
+`is_es3_reserved_word` helper. A non-identifier key also stays bracketed:
+`o["1a"]` (leading digit), `o[""]`, `o["a b"]`, `o["a-b"]`, `o["é"]` (non-ASCII).
+
+The rewrite composes with the existing string-method / `.length` folds through
+the pipeline fixed point: `"abc"["toUpperCase"]()` → `"abc".toUpperCase()` →
+`"ABC"`, and `"abc"["length"]` → `"abc".length` → `3`. It also generalises the
+string-index fold's `["foo"]` case — an array-literal member with a
+non-numeric identifier key (`[a,b,c]["foo"]`) now dots to `[a,b,c].foo` instead
+of declining. Additive; MINOR bump 0.95.0 → 0.96.0.
+
 ## [0.95.0] - 2026-07-16
 
 ### Added — computed **string-key** access into an array literal: `[…]["K"]`
