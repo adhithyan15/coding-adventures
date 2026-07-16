@@ -406,37 +406,48 @@ fn print_helper_functions() -> Vec<IIRFunction> {
         Operand::Var(name.to_string())
     }
 
-    // __fm_print_mag(m): print m (>= 0), high digits first, recursively.
+    // __fm_print_mag(m): print m's decimal digits high-to-low, recursively.
+    // `m` may be **negative** (the sign is handled by the caller) — we take the
+    // absolute value of each digit rather than negating `m`, so `i64::MIN` (whose
+    // negation overflows) is printed correctly. `div`/`mod` truncate toward zero
+    // on every backend, so `m/10` shrinks the magnitude toward 0 and `m%10` is
+    // the signed last digit.
     let mag_body = vec![
         mk("const", Some("ten"), vec![Operand::Int(10)], "i64"),
         mk("div", Some("t"), vec![var("m"), var("ten")], "i64"),
         mk("const", Some("zero"), vec![Operand::Int(0)], "i64"),
         mk("cmp_ne", Some("more"), vec![var("t"), var("zero")], "i64"),
-        // Single-digit m (t == 0): skip the recursion.
+        // Single-digit magnitude (t == 0): skip the recursion.
         mk("jmp_if_false", None, vec![var("more"), var("mag_last")], "void"),
         mk("call", Some("_r"), vec![var("__fm_print_mag"), var("t")], "i64"),
         mk("label", None, vec![var("mag_last")], "void"),
         mk("mod", Some("d"), vec![var("m"), var("ten")], "i64"),
+        // |d|: d is in [-9, 0] when m < 0, so `0 - d` never overflows.
+        mk("cmp_lt", Some("dneg"), vec![var("d"), var("zero")], "i64"),
+        mk("jmp_if_false", None, vec![var("dneg"), var("d_pos")], "void"),
+        mk("sub", Some("dabs"), vec![var("zero"), var("d")], "i64"),
+        mk("jmp", None, vec![var("d_done")], "void"),
+        mk("label", None, vec![var("d_pos")], "void"),
+        mk("mov", Some("dabs"), vec![var("d")], "i64"),
+        mk("label", None, vec![var("d_done")], "void"),
         mk("const", Some("c0"), vec![Operand::Int(b'0' as i64)], "i64"),
-        mk("add", Some("c"), vec![var("d"), var("c0")], "i64"),
+        mk("add", Some("c"), vec![var("dabs"), var("c0")], "i64"),
         mk("call_builtin", None, vec![var("putchar"), var("c")], "void"),
         mk("const", Some("z"), vec![Operand::Int(0)], "i64"),
         mk("ret", None, vec![var("z")], "i64"),
     ];
 
-    // __fm_print_int(n): print the sign, then the magnitude.
+    // __fm_print_int(n): emit a leading '-' for negatives, then the magnitude.
+    // We pass `n` (possibly negative) straight to __fm_print_mag — no negation,
+    // so `i64::MIN` is safe.
     let int_body = vec![
         mk("const", Some("zero"), vec![Operand::Int(0)], "i64"),
         mk("cmp_lt", Some("neg"), vec![var("n"), var("zero")], "i64"),
-        mk("jmp_if_false", None, vec![var("neg"), var("int_pos")], "void"),
+        mk("jmp_if_false", None, vec![var("neg"), var("skip_minus")], "void"),
         mk("const", Some("minus"), vec![Operand::Int(b'-' as i64)], "i64"),
         mk("call_builtin", None, vec![var("putchar"), var("minus")], "void"),
-        mk("sub", Some("mag"), vec![var("zero"), var("n")], "i64"),
-        mk("call", Some("_rn"), vec![var("__fm_print_mag"), var("mag")], "i64"),
-        mk("jmp", None, vec![var("int_done")], "void"),
-        mk("label", None, vec![var("int_pos")], "void"),
-        mk("call", Some("_rp"), vec![var("__fm_print_mag"), var("n")], "i64"),
-        mk("label", None, vec![var("int_done")], "void"),
+        mk("label", None, vec![var("skip_minus")], "void"),
+        mk("call", Some("_r"), vec![var("__fm_print_mag"), var("n")], "i64"),
         mk("const", Some("z2"), vec![Operand::Int(0)], "i64"),
         mk("ret", None, vec![var("z2")], "i64"),
     ];
@@ -592,6 +603,10 @@ mod tests {
         assert_eq!(print(100), "100");
         assert_eq!(print(-7), "-7");
         assert_eq!(print(-1234), "-1234");
+        // i64::MIN — its negation overflows, so the helper must render it
+        // without negating (absolute value per digit).
+        assert_eq!(print(i64::MAX), "9223372036854775807");
+        assert_eq!(print(i64::MIN), "-9223372036854775808");
     }
 
     #[test]
