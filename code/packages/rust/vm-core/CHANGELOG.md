@@ -1,5 +1,30 @@
 # Changelog — vm-core
 
+## [0.17.0] — 2026-07-14 (E6d heap objects — `alloc`/`field_store`/`field_load` on the generic VM)
+
+The dispatcher now executes the word-granular heap ops that Twig
+records/unions/closures build their `(car . cdr)` cons cells from — so the E6d
+dynamic features, previously runnable only on the five code-gen backends and the
+Twig-specific interpreter, now also run on the **generic `vm-core`** engine (and
+the JIT via its VM fallback).
+
+- `alloc [<size_bytes>] -> dest` allocates a fixed-size object on the existing
+  bounds-checked array heap (`ctx.arrays`), returning its integer handle; a field
+  is one 8-byte word, so the element count is `size_bytes / 8` (default 16 bytes =
+  a 2-word `LispyPair`, matching the native `__twig_gc_alloc` default). It shares
+  the array heap's `max_memory_entries` aggregate cap, so no crafted `alloc` can
+  OOM the process.
+- `field_store` / `field_load` reuse the `array_set` / `array_get` handlers
+  verbatim — identical handle+index model — so they inherit the same bounds
+  checking.
+
+First slice: **records** (verified on the `Vm` + `Jit` matrix columns — `point-x`/
+`point-y` = 42, and three `vm-core` unit tests). Purely additive: these three
+opcodes were previously unsupported (`_ => None`). Unions/`match` (which test the
+nil sentinel via `is_null`, and a nil `Int(0)` is presently indistinguishable from
+the first-allocated object handle `0`) are a follow-up needing nil-handle
+disambiguation; records never dereference nil, so they are sound today.
+
 ## [0.16.0] — 2026-06-29 (LANG-FULL BA-pow — `f64_pow` VM dispatch handler)
 
 Added `handle_f64_pow` to the dispatch table.  The handler extracts two source
