@@ -2,6 +2,45 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.28.0] - 2026-07-16
+
+### Added — `if`→ternary / `if`→`&&` now comma-sequence multi-statement branches
+
+Generalises the two existing non-empty-`if` folds so a branch that is a **run
+of expression statements** collapses to a comma-sequence, matching the
+reference Closure Compiler at `SIMPLE` byte-for-byte:
+
+- `if (x) a(); else { b(); c(); }` → `x ? a() : (b(), c());`
+- `if (x) { m(); n(); } else a();` → `x ? (m(), n()) : a();`
+- `if (x) { m(); n(); } else { a(); b(); }` → `x ? (m(), n()) : (a(), b());`
+- `if (x) { a(); b(); }` → `x && (a(), b());`
+
+The if-else→ternary fold and the if→`&&` fold now reduce each branch with
+`stmts_as_sequence_expr` (the helper introduced for the empty-then→`||`
+sequence fold) instead of `single_expr_stmt`. A single expression statement
+stays a bare expression; two-or-more expression statements become
+`(s1, s2, …)`. The comma operator evaluates left-to-right and yields the last,
+so a block's statement order and side effects are preserved exactly, and the
+wrapping expression statement discards the value — only the branches' effects
+matter, and they fire under the same condition as the original `if`.
+
+A branch containing anything other than expression statements (a `return`, a
+declaration, a nested `if`, …) makes `stmts_as_sequence_expr` return `None`, so
+both folds decline and keep the `if` intact — no misconversion.
+
+### Added — `if (x) S; else {}` → `x && S` (empty-else accepted by the `&&` fold)
+
+The if→`&&` fold previously required *no* alternate. An **empty** alternate
+(`else {}` / `else ;`) is a no-op, so `if (x) S; else {}` is behaviourally
+identical to `if (x) S;`; the gate is now "no alternate, or an empty one".
+Combined with the sequence generalisation, `if (x) { a(); b(); } else {}` →
+`x && (a(), b());`. A **non-empty** alternate that merely failed to ternarise
+is still not folded here (that would silently drop the else branch).
+
+All cases verified byte-identical against the reference Closure Compiler
+(`closure-compiler-v20260712.jar`, `SIMPLE`). Additive; MINOR bump
+0.27.0 → 0.28.0.
+
 ## [0.27.0] - 2026-07-16
 
 ### Added — empty-then `if` with a MULTI-statement else → `x || (seq)`

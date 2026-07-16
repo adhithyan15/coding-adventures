@@ -367,23 +367,30 @@ fn test_if_null_folds_to_alternate() {
     assert_fold(inp, expr_stmt(ident("y")));
 }
 
-/// Upstream `testSame("if (x) C else A")` (when C and A are not single
-/// ExpressionStatements) — non-literal test stays as an IfStatement.
+/// Upstream `testSame("if (x) C else A")` — a non-literal test stays as an
+/// IfStatement when its branches cannot collapse to expressions.
 ///
-/// **Updated in CLOC12.18**: the original `if (x) c; else a;` shape
-/// (two single ExpressionStatement branches) is no longer a testSame —
-/// the new gap-017 ternary fold rewrites it. So this test now uses a
-/// multi-statement consequent block to keep the testSame behaviour
-/// at this seam. The original single-expr case is covered by
-/// `test_fold_one_child_blocks_if_else_to_ternary` above.
+/// **Updated in CLOC12.18**: the original `if (x) c; else a;` shape (two
+/// single ExpressionStatement branches) folds to a ternary, so the test moved
+/// to a *multi-statement* consequent block.
+///
+/// **Updated again here**: the if-else→ternary fold now comma-sequences
+/// multi-statement expression branches too (`if (x) { c1; c2 } else a` →
+/// `x ? (c1, c2) : a`, verified byte-identical against the reference Closure
+/// Compiler at SIMPLE). To keep a genuine `testSame` at this seam, the
+/// consequent now holds a `debugger` statement — not an expression, so it
+/// can't join a comma-sequence — which `fold-control-flow` passes through
+/// untouched (it neither var-hoists nor terminates). The collapsible cases
+/// are covered by `test_fold_one_child_blocks_if_else_to_ternary` above and
+/// the sequence-fold lib tests.
 #[test]
 fn test_if_non_literal_test_left_alone() {
-    use coding_adventures_javascript_ast::BlockStatement;
-    let multi_block = Statement::block_statement(BlockStatement {
+    use coding_adventures_javascript_ast::{BlockStatement, DebuggerStatement};
+    let block = Statement::block_statement(BlockStatement {
         cv: None,
-        body: vec![expr_stmt(ident("c1")), expr_stmt(ident("c2"))],
+        body: vec![Statement::debugger_statement(DebuggerStatement { cv: None })],
     });
-    let inp = if_stmt(ident("x"), multi_block, Some(expr_stmt(ident("a"))));
+    let inp = if_stmt(ident("x"), block, Some(expr_stmt(ident("a"))));
     assert_same(inp);
 }
 
