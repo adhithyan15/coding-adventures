@@ -2,6 +2,18 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.17] - Unreleased
+
+### Added
+
+- **`CAST(x AS NUMERIC)` and the NUMERIC default affinity.** The CAST type-name
+  resolver now follows SQLite's full type-name → affinity rules: a name matching
+  none of INTEGER / TEXT / REAL / BLOB resolves to the new `CastType::Numeric`
+  (so `NUMERIC`, `DECIMAL`, `BOOLEAN`, `DATE`, … all take numeric affinity)
+  instead of erroring with "CAST to unsupported type". `BLOB` casts are rejected
+  explicitly (still unimplemented) rather than mis-routed into the NUMERIC
+  fallback. See sql-vm 0.4.18 for the runtime conversion.
+
 ## [0.2.16] - Unreleased
 
 ### Added

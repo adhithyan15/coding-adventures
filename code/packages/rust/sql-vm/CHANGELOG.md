@@ -3,6 +3,19 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.18] - Unreleased
+
+### Added
+
+- **`CAST(… AS NUMERIC)` runtime conversion** (`CastType::Numeric`). Applies
+  SQLite's NUMERIC affinity: a number is unchanged (INTEGER stays INTEGER, REAL
+  stays REAL — `CAST(3.0 AS NUMERIC)` is `3.0`, not `3`); text/blob is parsed and
+  collapsed to INTEGER when the value is integral and fits `i64` (`'3.0'`→`3`,
+  `'1e3'`→`1000`, `'42abc'`→`42`), otherwise REAL (`'3.5'`, an i64-overflowing
+  integer like `'99999999999999999999'`→`1e20`); non-numeric text → `0`. The
+  integer prefix is parsed exactly (not via f64) so `i64::MAX` round-trips as an
+  integer. New helpers `cast_to_numeric` / `text_to_numeric`.
+
 ## [0.4.17] - Unreleased
 
 ### Changed

@@ -233,6 +233,14 @@ pub enum CastType {
     Real,
     /// `CAST(x AS TEXT)` — render the value as its text representation.
     Text,
+    /// `CAST(x AS NUMERIC)` — SQLite's NUMERIC affinity, and the *default*
+    /// affinity for any type name that is not INTEGER/TEXT/REAL/BLOB (e.g.
+    /// `NUMERIC`, `DECIMAL`, `BOOLEAN`, `DATE`). An INTEGER stays INTEGER and a
+    /// REAL stays REAL (the cast is a no-op on numbers — `CAST(3.0 AS NUMERIC)`
+    /// is `3.0`, not `3`). Text/blob is parsed to a number, preferring INTEGER
+    /// when the value is integral and fits i64 (`'3.0'`→`3`, `'1e3'`→`1000`),
+    /// otherwise REAL (`'3.5'`→`3.5`, an i64-overflowing integer→real).
+    Numeric,
 }
 
 /// An aggregate function name.
@@ -2497,17 +2505,24 @@ fn plan_cast(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
         found.ok_or_else(|| PlanError::UnsupportedStatement("CAST missing type name".to_string()))?
     };
 
-    // SQLite's type-affinity substring rule, restricted to the supported types.
+    // SQLite's type-name → affinity rules (https://sqlite.org/datatype3.html
+    // §3.1), applied in order: INT → INTEGER; CHAR/CLOB/TEXT → TEXT; BLOB (or an
+    // empty name) → BLOB; REAL/FLOA/DOUB → REAL; anything else → NUMERIC. NUMERIC
+    // is therefore the default for `NUMERIC`, `DECIMAL`, `BOOLEAN`, `DATE`, … .
+    // BLOB casts are not yet implemented, so we reject them explicitly rather
+    // than silently mis-routing them into the NUMERIC fallback.
     let ty = if type_name.contains("INT") {
         CastType::Integer
     } else if type_name.contains("CHAR") || type_name.contains("CLOB") || type_name.contains("TEXT") {
         CastType::Text
+    } else if type_name.contains("BLOB") {
+        return Err(PlanError::UnsupportedStatement(
+            "CAST to BLOB is not yet supported".to_string(),
+        ));
     } else if type_name.contains("REAL") || type_name.contains("FLOA") || type_name.contains("DOUB") {
         CastType::Real
     } else {
-        return Err(PlanError::UnsupportedStatement(format!(
-            "CAST to unsupported type: {type_name}"
-        )));
+        CastType::Numeric
     };
 
     Ok(SqlExpr::Cast {
