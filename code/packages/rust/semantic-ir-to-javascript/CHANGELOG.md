@@ -108,6 +108,19 @@ JavaScript artifact stays self-contained.
   so `range` returned a valid-looking `[1, 0]`-shaped empty array with no
   error. Fixed with an explicit `Number.isFinite` check on all three
   arguments before the loop runs.
+- **`set(a, r, c, value)`'s bounds check had the same NaN-unsafe OR-form
+  as the pre-fix `indexSet`, found in the follow-up confirmation review
+  of the fix above.** `set` is not reachable with an unvalidated `NaN`
+  through any current codegen path (every caller resolves positions
+  through `assertValidPosition` first), but it is part of this module's
+  exported public surface, so a future direct caller of `Array.set` — or
+  a refactor of `indexSet` that skips `resolvePositions` — would silently
+  reintroduce the same bug with nothing catching it, since `set` looks
+  unchanged and "already fine" next to its now-fixed neighbors. Fixed by
+  writing the check as the negation of `get`'s AND-form
+  (`!(r >= 0 && ...)`) rather than an OR-form, matching how `get` was
+  already written — a true NaN-safe negation, unlike `A || B`, which is
+  not the same thing as `!(A && B)` when either side can be `NaN`.
 
 ## 0.35.0 — SIR23 symbolic-expression + pattern/rewrite codegen (HML01 Stream B, item 7 JS half)
 

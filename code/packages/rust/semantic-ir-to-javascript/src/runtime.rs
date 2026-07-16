@@ -2801,7 +2801,22 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
      * expression, in the SIR22 spec.
      */
     function set(a, r, c, value) {
-      if (r < 0 || c < 0 || r >= nrows(a) || c >= ncols(a)) {
+      // SECURITY: written as the negation of `get`'s AND-form
+      // (`!(r >= 0 && ...)`), not as an OR-form (`r < 0 || ...`) --
+      // under IEEE-754 those are NOT equivalent for NaN: every
+      // relational comparison with NaN is false, so an OR-form check
+      // would have every branch evaluate false for r=NaN, silently
+      // skipping the throw. `a.data[c * nrows(a) + NaN] = value` would
+      // then set a stray, non-index property on the Float64Array rather
+      // than writing the buffer -- the exact same silent-write-drop bug
+      // this file's `resolvePositions`/`assertValidPosition` fix closed
+      // for `indexSet`'s call path into this function. `set` itself is
+      // not reachable with an unvalidated NaN today (every caller
+      // resolves positions through `assertValidPosition` first), but it
+      // is part of this module's exported public surface, so it stays
+      // NaN-safe on its own rather than relying on every future caller
+      // to re-derive that invariant.
+      if (!(r >= 0 && c >= 0 && r < nrows(a) && c < ncols(a))) {
         throw new Error(`set: index (${r}, ${c}) out of bounds for shape ${JSON.stringify(a.shape)}`);
       }
       a.data[c * nrows(a) + r] = value;
@@ -3528,5 +3543,20 @@ mod tests {
         // never a native `boolean` — the result has to stay a plain
         // Float64Array element like every other value here.
         assert!(RUNTIME.contains("const b2f = (cond) => (cond ? 1 : 0);"));
+    }
+
+    #[test]
+    fn array_set_bounds_check_is_a_nan_safe_negated_and_not_an_or() {
+        // Security-review follow-up: `set`'s bounds check must be the
+        // negation of `get`'s AND-form (`!(r >= 0 && ...)`), not an
+        // OR-form (`r < 0 || ...`) -- those are NOT equivalent for NaN
+        // under IEEE-754 (every relational comparison with NaN is
+        // false), so an OR-form would silently skip the throw and let
+        // `a.data[c * nrows(a) + NaN] = value` silently drop the write.
+        // `set` is not reachable with an unvalidated NaN through any
+        // current codegen path (every caller resolves positions through
+        // `assertValidPosition` first), but it is part of this module's
+        // exported public surface, so it must stay NaN-safe on its own.
+        assert!(RUNTIME.contains("if (!(r >= 0 && c >= 0 && r < nrows(a) && c < ncols(a))) {"));
     }
 }
