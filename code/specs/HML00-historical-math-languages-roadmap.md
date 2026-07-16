@@ -178,7 +178,10 @@ sequence of one-PR items run through the autonomous loop (§8).
   language scope and the `:=`-assignment expression grammar, verified
   against the Derive 6.1 online help rather than assumed from the family
   resemblance to Macsyma/Wolfram, before the lexer/parser/runtime land.
-  Reduce and Maple remain unstarted.)*
+  See [`MA08`](MA08-reduce-language.md) for Reduce — one of the two
+  oldest CAS ever built (1968, alongside Macsyma), an Algol-surfaced
+  algebraic-mode language over a Lisp engine, verified against the current
+  REDUCE User's Manual. Maple remains unstarted.)*
 - **Wave 6 — J, K/Q, Scilab, IDL.** More array languages, each a frontend on
   `array-runtime`. *(Kickoff: see [`MA06`](MA06-j-language.md) for J — the
   design item fixing language scope, the verb/adverb/conjunction grammar
