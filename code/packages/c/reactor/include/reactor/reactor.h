@@ -7,15 +7,18 @@
  * wake only for the ones that are ready to read or write. That readiness query
  * is an OS service with no ISO C form:
  *
- *      mechanism   macOS / Linux    Windows
- *      ──────────  ───────────────  ──────────
- *      readiness   poll()           WSAPoll()
+ *      mechanism   macOS    Linux    Windows
+ *      ──────────  ───────  ───────  ─────────
+ *      readiness   kqueue   epoll    WSAPoll
  *
- * SCOPE. This first cut uses poll()/WSAPoll — the portable readiness primitive,
- * with identical semantics on every OS and (unlike epoll/kqueue/IOCP) verifiable
- * on a developer machine. The scalable, edge-triggered backends the plan names —
- * epoll (Linux), kqueue (macOS), IOCP (Windows) — are a drop-in follow-up behind
- * this same interface; poll() is O(n) per wait but correct and universal.
+ * SCOPE. macOS and Linux use their scalable readiness mechanisms — kqueue and
+ * epoll — which register interest once and return only the ready descriptors
+ * (O(ready) per wait, vs poll's O(n) rescan). Windows uses WSAPoll: also
+ * readiness-based, and adequate here. True IOCP is intentionally NOT used — it is
+ * a *completion* API (you post a read and are told when it finished), a different
+ * model that would not fit this readiness interface; a completion-style reactor
+ * would be its own primitive. All three backends present the identical interface
+ * below with the same semantics (one coalesced event per ready descriptor).
  *
  * MODEL. Register descriptors with osp_reactor_add (each carries an interest
  * mask and an opaque token), then call osp_reactor_wait, which blocks up to a
@@ -26,8 +29,9 @@
  * POSIX, a SOCKET (pointer-width) on Windows — captured by the osp_fd typedef
  * below (the single place the two platforms' descriptor types are reconciled).
  *
- * BUILD. Compiled by platform-harness; POSIX links no extra library, Windows
- * links ws2_32 (WSAPoll). Per-OS source selection is done by the BUILD.
+ * BUILD. Compiled by platform-harness; the Unix backends link no extra library,
+ * Windows links ws2_32 (WSAPoll). Per-OS source selection is done by the BUILD /
+ * run.sh (reactor_mac.c · reactor_linux.c · reactor_windows.c).
  */
 #ifndef REACTOR_REACTOR_H
 #define REACTOR_REACTOR_H
