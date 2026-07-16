@@ -901,6 +901,45 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
 /// locals do not inflate the shared recursive frame (the same DoS-guard
 /// discipline the member/optional/template arms follow — see lessons.md).
 #[inline(never)]
+/// Normalise an assignment **target** — the left-hand side of `=`. For a member
+/// target we fold the object (value position) and dot-normalise a computed
+/// string key exactly like [`fold_member`] does for a value-position member, so
+/// `o["foo"] = 1` → `o.foo = 1` and `a["b"]["c"] = 1` → `a.b.c = 1`. We do NOT
+/// route the target through `fold_member` itself: that would run the array-index
+/// / `.length` folds, which must not fire on an lvalue (`[1,2,3]["0"] = x` must
+/// stay an element write, not fold to the literal `1`). A bare-identifier target
+/// is returned unchanged.
+fn fold_assignment_target(t: &AssignmentTarget, st: &mut FoldState) -> AssignmentTarget {
+    let AssignmentTarget::MemberExpression(m) = t else {
+        return t.clone();
+    };
+    let object = fold_expression(&m.object, st);
+    if m.computed {
+        if let Expression::StringLiteral(s) = m.property.as_ref() {
+            if is_identifier_name(&s.value) && !is_es3_reserved_word(&s.value) {
+                let before = format!("member[\"{}\"] (assign target)", s.value);
+                let after = format!("member.{} (assign target)", s.value);
+                let new_cv = st.fork_cv(&m.cv, &before, &after);
+                return AssignmentTarget::MemberExpression(Box::new(MemberExpression {
+                    cv: new_cv,
+                    object: Box::new(object),
+                    property: Box::new(Expression::Identifier(Identifier {
+                        cv: s.cv.clone(),
+                        name: s.value.clone(),
+                    })),
+                    computed: false,
+                }));
+            }
+        }
+    }
+    AssignmentTarget::MemberExpression(Box::new(MemberExpression {
+        cv: m.cv.clone(),
+        object: Box::new(object),
+        property: m.property.clone(),
+        computed: m.computed,
+    }))
+}
+
 fn fold_assignment(a: &AssignmentExpression, st: &mut FoldState) -> Expression {
     // Fold the right-hand side first, consistent with every other recursive
     // arm; the contraction test below then runs on the folded RHS.
@@ -938,11 +977,12 @@ fn fold_assignment(a: &AssignmentExpression, st: &mut FoldState) -> Expression {
         }
     }
 
-    // No contraction: preserve the assignment, carrying the folded RHS.
+    // No contraction: preserve the assignment, carrying the folded RHS and the
+    // (dot-normalised) target.
     Expression::AssignmentExpression(AssignmentExpression {
         cv: a.cv.clone(),
         operator: a.operator,
-        left: a.left.clone(),
+        left: fold_assignment_target(&a.left, st),
         right: Box::new(right),
     })
 }
@@ -4165,6 +4205,31 @@ fn fold_member(m: &MemberExpression, st: &mut FoldState) -> Expression {
                 return folded;
             }
         }
+        // `obj["key"]` → `obj.key` — a computed member whose key is a string
+        // literal that is a valid, non-reserved ASCII identifier name folds to a
+        // dot member (CLOC12.199). The reference Closure Compiler prints
+        // `o["foo"]` as `o.foo`, `o["$x"]` as `o.$x`, `o["let"]` as `o.let`
+        // (`let` is not an ES3 keyword), etc. A key that is an ES3 **reserved
+        // word** (`o["class"]`, `o["static"]`, `o["delete"]`, `o["int"]`, …) or
+        // is not an ASCII identifier (`o["1a"]`, `o[""]`, `o["a b"]`, `o["é"]`)
+        // stays bracketed — matching Closure, which keeps ES3-unsafe keys
+        // quoted so the output parses under an ES3 target.
+        if let Expression::StringLiteral(s) = &property {
+            if is_identifier_name(&s.value) && !is_es3_reserved_word(&s.value) {
+                let before = format!("member[\"{}\"]", s.value);
+                let after = format!("member.{}", s.value);
+                let new_cv = st.fork_cv(&m.cv, &before, &after);
+                return Expression::MemberExpression(MemberExpression {
+                    cv: new_cv,
+                    object: Box::new(object),
+                    property: Box::new(Expression::Identifier(Identifier {
+                        cv: s.cv.clone(),
+                        name: s.value.clone(),
+                    })),
+                    computed: false,
+                });
+            }
+        }
     }
 
     Expression::MemberExpression(MemberExpression {
@@ -4173,6 +4238,36 @@ fn fold_member(m: &MemberExpression, st: &mut FoldState) -> Expression {
         property: Box::new(property),
         computed: m.computed,
     })
+}
+
+/// Is `s` an ECMAScript **ES3 reserved word** — a keyword or future-reserved
+/// word from the ES3 grammar (the set Closure's Rhino `TokenStream.isKeyword`
+/// uses to decide whether a property name must stay quoted / bracketed)?
+///
+/// Closure keeps a member key or object-property key bracketed when it is one of
+/// these, so `o["class"]` / `o["delete"]` / `o["int"]` do NOT become dot access
+/// even though ES5+ would permit it — the quoted form parses under an ES3
+/// target. Words added AFTER ES3 (`let`, `yield`, `await`, `async`, `static` is
+/// ES3-reserved, but `let`/`yield` are not) are deliberately absent, so
+/// `o["let"]` → `o.let` — matching Closure byte-for-byte.
+fn is_es3_reserved_word(s: &str) -> bool {
+    matches!(
+        s,
+        // ES3 keywords
+        "break" | "case" | "catch" | "continue" | "default" | "delete" | "do"
+            | "else" | "finally" | "for" | "function" | "if" | "in" | "instanceof"
+            | "new" | "return" | "switch" | "this" | "throw" | "try" | "typeof"
+            | "var" | "void" | "while" | "with" | "debugger"
+        // ES3 future-reserved words (includes the Java-flavoured set)
+            | "abstract" | "boolean" | "byte" | "char" | "class" | "const"
+            | "double" | "enum" | "export" | "extends" | "final" | "float"
+            | "goto" | "implements" | "import" | "int" | "interface" | "long"
+            | "native" | "package" | "private" | "protected" | "public"
+            | "short" | "static" | "super" | "synchronized" | "throws"
+            | "transient" | "volatile"
+        // ES3 literals
+            | "null" | "true" | "false"
+    )
 }
 
 /// Fold a computed integer-index access `[e0, e1, …][K]` into an array
@@ -7536,17 +7631,26 @@ mod tests {
     fn fold_array_string_index_declines_on_fractional_and_non_numeric() {
         let arr = || array_opt(vec![Some(num(10.0, None)), Some(num(20.0, None)), Some(num(30.0, None))]);
         // "1.5" coerces to 1.5 — a fractional index is an ordinary absent-property
-        // read Closure leaves intact. "foo" is NaN; Closure rewrites it to `.foo`
-        // (a separate normalisation), so we decline and keep the bracket access.
-        for key in ["1.5", "foo"] {
-            let e = index_str(arr(), key);
-            let (out, _, changed, _) = run_pass(program_with_expr(e, true));
-            assert!(!changed, "[10,20,30][{key:?}] must NOT fold");
-            assert!(
-                matches!(extract_expr(&out), Expression::MemberExpression(_)),
-                "[10,20,30][{key:?}]: the member access must be kept"
-            );
-        }
+        // read, and "1.5" is not an identifier name, so it stays a bracketed
+        // computed member (declines both the index fold and the dot fold).
+        // Oracle: `[10,20,30]["1.5"]` → `[10,20,30]["1.5"]`.
+        let e = index_str(arr(), "1.5");
+        let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(!changed, "[10,20,30][\"1.5\"] must NOT fold");
+        assert!(
+            matches!(extract_expr(&out), Expression::MemberExpression(m) if m.computed),
+            "[10,20,30][\"1.5\"]: the computed member access must be kept"
+        );
+
+        // "foo" is NaN as an index, but it IS a valid identifier name, so it now
+        // normalises to a dot member: `[10,20,30]["foo"]` → `[10,20,30].foo`.
+        let e = index_str(arr(), "foo");
+        let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(changed, "[10,20,30][\"foo\"] normalises to a dot member");
+        assert!(
+            matches!(extract_expr(&out), Expression::MemberExpression(m) if !m.computed),
+            "[10,20,30][\"foo\"]: expected a non-computed (dot) member"
+        );
     }
 
     #[test]
@@ -7561,6 +7665,89 @@ mod tests {
         match extract_expr(&out) {
             Expression::NumericLiteral(n) => assert_eq!(n.value, 3.0),
             other => panic!("expected 3; got {other:?}"),
+        }
+    }
+
+    /// A computed member whose key is a non-reserved ASCII identifier name folds
+    /// to a dot member: `o["foo"]` → `o.foo`. `let`/`yield` are NOT ES3 keywords,
+    /// so they dot too. Verified byte-identical against the reference compiler.
+    #[test]
+    fn fold_computed_string_key_to_dot() {
+        for key in ["foo", "$x", "_y", "a1", "let", "yield", "undefined", "NaN"] {
+            let e = index_str(ident("o"), key);
+            let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+            assert!(changed, "o[{key:?}] should fold to a dot member");
+            match extract_expr(&out) {
+                Expression::MemberExpression(m) => {
+                    assert!(!m.computed, "o[{key:?}] must become a non-computed member");
+                    match m.property.as_ref() {
+                        Expression::Identifier(id) => assert_eq!(id.name, key),
+                        other => panic!("o[{key:?}]: property must be an Identifier; got {other:?}"),
+                    }
+                }
+                other => panic!("o[{key:?}]: expected a MemberExpression; got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn computed_key_declines_on_es3_reserved_word() {
+        // ES3 keywords + future-reserved words stay bracketed (Closure keeps them
+        // ES3-safe): class / static / delete / int / boolean / enum / …
+        for key in ["class", "if", "static", "delete", "int", "boolean", "enum", "super", "true", "null"] {
+            let e = index_str(ident("o"), key);
+            let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+            assert!(!changed, "o[{key:?}] (ES3 reserved) must stay bracketed");
+            assert!(
+                matches!(extract_expr(&out), Expression::MemberExpression(m) if m.computed),
+                "o[{key:?}] must remain a computed member"
+            );
+        }
+    }
+
+    #[test]
+    fn computed_key_declines_on_non_identifier() {
+        for key in ["1a", "", "a b", "a-b", "a.b"] {
+            let e = index_str(ident("o"), key);
+            let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+            assert!(!changed, "o[{key:?}] (not an identifier) must stay bracketed");
+            assert!(
+                matches!(extract_expr(&out), Expression::MemberExpression(m) if m.computed),
+                "o[{key:?}] must remain a computed member"
+            );
+        }
+    }
+
+    /// An assignment TARGET dot-normalises too: `o["foo"] = 1` → `o.foo = 1`.
+    #[test]
+    fn computed_key_to_dot_in_assignment_target() {
+        use coding_adventures_javascript_ast::{AssignmentOperator, AssignmentTarget};
+        let target = AssignmentTarget::MemberExpression(Box::new(MemberExpression {
+            cv: None,
+            object: Box::new(ident("o")),
+            property: Box::new(string("foo", None)),
+            computed: true,
+        }));
+        let e = Expression::AssignmentExpression(AssignmentExpression {
+            cv: Some("as.cv".to_string()),
+            operator: AssignmentOperator::Eq,
+            left: target,
+            right: Box::new(num(1.0, None)),
+        });
+        let (out, _, changed, _) = run_pass(program_with_expr(e, true));
+        assert!(changed, "o[\"foo\"]=1 target should dot-normalise");
+        match extract_expr(&out) {
+            Expression::AssignmentExpression(a) => match &a.left {
+                AssignmentTarget::MemberExpression(m) => {
+                    assert!(!m.computed, "target must become a non-computed member");
+                    assert!(
+                        matches!(m.property.as_ref(), Expression::Identifier(id) if id.name == "foo"),
+                        "target property must be Identifier(foo)"
+                    );
+                }
+                other => panic!("expected a member target; got {other:?}"),
+            },
+            other => panic!("expected an assignment; got {other:?}"),
         }
     }
 
@@ -7719,8 +7906,12 @@ mod tests {
     }
 
     #[test]
-    fn computed_string_length_does_not_fold() {
-        // `"abc"["length"]` is the computed form — deliberately left alone.
+    fn computed_string_length_normalizes_to_dot() {
+        // `"abc"["length"]` — the computed `["length"]` normalises to a `.length`
+        // dot member in THIS pass. The `.length` → `3` fold then fires on the
+        // pipeline's next fixpoint iteration (a bare member has no enclosing node
+        // to re-inspect it within a single pass, unlike the casing-in-a-call
+        // case above). End-to-end, closurec emits `3` — see the oracle e2e.
         let m = Expression::MemberExpression(MemberExpression {
             cv: Some("m.cv".to_string()),
             object: Box::new(string("abc", None)),
@@ -7728,11 +7919,17 @@ mod tests {
             computed: true,
         });
         let (out, _, changed, _) = run_pass(program_with_expr(m, true));
-        assert!(!changed, "computed \"abc\"[\"length\"] must not fold");
-        assert!(matches!(
-            extract_expr(&out),
-            Expression::MemberExpression(_)
-        ));
+        assert!(changed, "\"abc\"[\"length\"] normalises to a dot member");
+        match extract_expr(&out) {
+            Expression::MemberExpression(mm) => {
+                assert!(!mm.computed, "must become a non-computed member");
+                match mm.property.as_ref() {
+                    Expression::Identifier(id) => assert_eq!(id.name, "length"),
+                    other => panic!("property must be Identifier(length); got {other:?}"),
+                }
+            }
+            other => panic!("expected a MemberExpression; got {other:?}"),
+        }
     }
 
     // ------------------- string casing methods -----------------------
@@ -7809,8 +8006,11 @@ mod tests {
     }
 
     #[test]
-    fn computed_string_casing_does_not_fold() {
-        // `"abc"["toUpperCase"]()` is the computed form — left alone.
+    fn computed_string_casing_folds_via_dot_normalization() {
+        // `"abc"["toUpperCase"]()` — the computed key `["toUpperCase"]` first
+        // normalises to a dot member (`.toUpperCase`), which then lets the
+        // string-casing fold fire: `"abc".toUpperCase()` → `"ABC"`. Oracle:
+        // `"abc"["toUpperCase"]()` → `"ABC"`.
         let callee = Expression::MemberExpression(MemberExpression {
             cv: Some("m.cv".to_string()),
             object: Box::new(string("abc", None)),
@@ -7823,8 +8023,11 @@ mod tests {
             arguments: vec![],
         });
         let (out, _, changed, _) = run_pass(program_with_expr(up, true));
-        assert!(!changed, "computed casing call must not fold");
-        assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        assert!(changed, "computed casing call now folds via dot normalization");
+        match extract_expr(&out) {
+            Expression::StringLiteral(s) => assert_eq!(s.value, "ABC"),
+            other => panic!("expected \"ABC\"; got {other:?}"),
+        }
     }
 
     #[test]
