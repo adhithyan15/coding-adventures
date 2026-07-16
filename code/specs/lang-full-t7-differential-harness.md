@@ -79,9 +79,21 @@ disagreements are most likely (boolean representation, branch polarity: the clas
 of the E6d-6 boxed-bool `jmp_if_false` bug). 264 full-value agreements over 120
 branch programs locally.
 
+## 3d. Fourth slice (shipped) — loop differential via BASIC `FOR … NEXT`
+
+The three prior slices cover straight-line and single-branch code but never a
+**loop back-edge**. `t7_differential_random_basic_loops_agree` generates
+`S := 0; FOR I = 1 TO n { S := S + <body(I)> }; PRINT S` accumulator programs —
+`<body>` a `+ - *` tree whose leaves are the counter `I` or a small literal, trip
+count `n ∈ 2..=6`, depth-capped so the sum stays inside `i64`. This exercises the
+**loop header/latch, counter increment + bound test, and a mutated accumulator
+across iterations** — a distinct codegen path and a classic divergence source
+(off-by-one bounds, `NEXT` target, STEP). 264 full-value agreements over 120 loop
+programs locally.
+
 ## 4. Growth path (future slices)
 
-- Wider grammar still: `let`/`for` loops, `DEF FN`/`GOSUB` calls, division
+- Wider grammar still: `DEF FN`/`GOSUB` calls, `STEP`, nested loops, division
   (guarded) — each is a language the matrix already runs on all engines.
 - Multiple frontends (ALGOL/BASIC/Oct/Twig) as generators.
 - **Shrinking**: on a disagreement, minimise the program before reporting.
