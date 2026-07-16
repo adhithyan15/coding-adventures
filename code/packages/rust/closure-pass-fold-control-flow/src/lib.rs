@@ -1224,10 +1224,13 @@ fn fold_if_statement(s: &IfStatement, st: &mut FoldState) -> Statement {
             //                                                   the lower-
             //                                                   precedence assign)
             //   if (a && b) {} else c();     → a && b || c();  (compound test)
-            //   if (x) {} else { a(); b(); } → unchanged (multi-statement else
-            //                                  needs a sequence — separate arc)
+            //   if (x) {} else { a(); b(); } → x || (a(), b());  (multi-statement
+            //                                  else — sequenced; the `,` groups
+            //                                  the effects under one `||` right
+            //                                  operand, preserving order)
             //   if (x) {} else return E;     → unchanged (return isn't an
-            //                                  expression statement)
+            //                                  expression statement, so it can't
+            //                                  join a comma-sequence)
             //
             // Why this is safe (the dual of the `&&` case):
             //
@@ -1235,6 +1238,8 @@ fn fold_if_statement(s: &IfStatement, st: &mut FoldState) -> Statement {
             //   * If `x` is truthy: `||` short-circuits and does NOT evaluate
             //     `S`, matching the empty then-branch running nothing.
             //   * If `x` is falsy: `||` evaluates `S`, matching the else branch.
+            //     When the else is several statements, `S` is `(s1, s2, …)` — the
+            //     comma operator runs them left-to-right, same order as the block.
             //   * The wrapper ExpressionStatement discards the result, so the
             //     value `||` yields is irrelevant — only `S`'s side effects
             //     matter, and they fire exactly when `x` is falsy in both forms.
@@ -1245,12 +1250,12 @@ fn fold_if_statement(s: &IfStatement, st: &mut FoldState) -> Statement {
             // with that normalisation.
             if let Some(alt) = &alternate {
                 if statement_is_empty(&consequent) {
-                    if let Some(a_expr) = single_expr_stmt(alt) {
+                    if let Some(a_expr) = stmts_as_sequence_expr(alt) {
                         st.record_fold(
                             &s.cv,
                             "if-empty-then-to-logical-or",
-                            "if (<test>) {} else <expr>;",
-                            "<test> || <expr>;",
+                            "if (<test>) {} else <stmts>;",
+                            "<test> || (<stmts>);",
                         );
                         let or = Expression::LogicalExpression(LogicalExpression {
                             cv: None,
@@ -1296,6 +1301,57 @@ fn single_expr_stmt(stmt: &Statement) -> Option<Expression> {
         }
         _ => None,
     }
+}
+
+/// Collapse a statement into a *single expression* by comma-sequencing, when
+/// possible. Generalises [`single_expr_stmt`] from one expression statement to a
+/// **run** of them:
+///
+///   { a(); }            → a()               (1-element: bare, no `,` wrapper)
+///   { a(); b(); }       → (a(), b())         (2+ → SequenceExpression)
+///   { a(); b; c(); }    → (a(), b, c())      (pure members kept — dropping them
+///                                             is a *separate* DCE transform)
+///
+/// It is a strict superset of `single_expr_stmt`, so callers that used that
+/// helper keep byte-identical output on the single-statement case and now also
+/// fold a multi-statement block. It **declines** (returns `None`) whenever a
+/// member isn't a plain expression statement — a `var`/`let`/`const`
+/// declaration, a `return`/`break`/`if`/loop, or a nested block — because those
+/// can't be expressed as one comma-sequence (Closure reaches for a different
+/// rewrite there, e.g. the De Morgan `if (!x) { … }`).
+///
+/// The comma operator evaluates its operands left-to-right and yields the last,
+/// so `(s1, s2, …)` runs the block's statements in the original order with the
+/// same set of side effects — the wrapping context (`x || (…)`) discards the
+/// value, so only that ordering matters.
+fn stmts_as_sequence_expr(stmt: &Statement) -> Option<Expression> {
+    // The 1-element case (a bare expression statement, or single-statement block
+    // layers) is exactly `single_expr_stmt`; reuse it so behaviour is identical.
+    if let Some(e) = single_expr_stmt(stmt) {
+        return Some(e);
+    }
+    // Otherwise only a block of ≥2 statements can sequence, and only when EVERY
+    // member is a plain expression statement.
+    if let Statement::Tagged(TaggedStatement::BlockStatement(b)) = stmt {
+        if b.body.len() >= 2 {
+            let mut expressions = Vec::with_capacity(b.body.len());
+            for member in &b.body {
+                match member {
+                    Statement::Tagged(TaggedStatement::ExpressionStatement(es)) => {
+                        expressions.push(es.expression.clone());
+                    }
+                    // A declaration / return / nested block / etc. can't join a
+                    // comma-sequence — bail so the `if` is left intact.
+                    _ => return None,
+                }
+            }
+            return Some(Expression::SequenceExpression(SequenceExpression {
+                cv: None,
+                expressions,
+            }));
+        }
+    }
+    None
 }
 
 /// True when `stmt` does nothing observable — an `EmptyStatement` (`;`) or a
@@ -2581,11 +2637,9 @@ mod tests {
     }
 
     #[test]
-    fn if_empty_then_with_multi_statement_else_passes_through() {
-        // `if (x) {} else { a; b; }` — a two-statement else would need a
-        // sequence expression, which this fold doesn't build (a
-        // LogicalExpression takes exactly one right operand), so the
-        // IfStatement is kept intact (that's a separate arc).
+    fn if_empty_then_with_multi_statement_else_folds_to_or_of_sequence() {
+        // `if (x) {} else { a; b; }` — the multi-statement else now collapses to
+        // a comma-sequence under the `||` right operand: `x || (a, b)`.
         let if_stmt = Statement::if_statement(IfStatement {
             cv: Some("if.or2".to_string()),
             test: ident("x"),
@@ -2599,14 +2653,62 @@ mod tests {
             }))),
         });
         let prog = program().with_body(vec![ProgramItem::Statement(if_stmt)]);
-        let (out, _contribs, _changed, _) = run_pass(prog);
-        match first_stmt(&out) {
-            Statement::Tagged(TaggedStatement::IfStatement(_)) => {}
-            other => panic!(
-                "expected IfStatement intact (multi-statement else); got {:?}",
-                other
+        let (out, _contribs, changed, _) = run_pass(prog);
+        assert!(changed, "multi-statement else should fold to || of a sequence");
+        let Statement::Tagged(TaggedStatement::ExpressionStatement(es)) = first_stmt(&out) else {
+            panic!("expected an ExpressionStatement; got {:?}", first_stmt(&out))
+        };
+        let Expression::LogicalExpression(l) = &es.expression else {
+            panic!("expected a LogicalExpression(Or); got {:?}", es.expression)
+        };
+        assert_eq!(l.operator, LogicalOperator::Or, "operator must be ||");
+        let Expression::SequenceExpression(seq) = &*l.right else {
+            panic!("|| right operand must be a SequenceExpression; got {:?}", l.right)
+        };
+        assert_eq!(seq.expressions.len(), 2, "the two else statements sequence");
+    }
+
+    #[test]
+    fn if_empty_then_with_declaration_else_passes_through() {
+        // `if (x) {} else { var y; a(); }` — a `var` declaration can't join a
+        // comma-sequence, so the fold declines and the `if` is kept intact
+        // (Closure reaches for a De Morgan `if (!x) { … }` there — a separate arc).
+        let if_stmt = Statement::if_statement(IfStatement {
+            cv: Some("if.or3".to_string()),
+            test: ident("x"),
+            consequent: Box::new(Statement::block_statement(BlockStatement {
+                cv: None,
+                body: vec![],
+            })),
+            alternate: Some(Box::new(Statement::block_statement(BlockStatement {
+                cv: None,
+                body: vec![
+                    Statement::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+                        cv: None,
+                        kind: VarKind::Var,
+                        declarations: vec![VariableDeclarator {
+                            cv: None,
+                            id: BindingTarget::Identifier(Identifier {
+                                cv: None,
+                                name: "y".to_string(),
+                            }),
+                            init: None,
+                        }],
+                    })),
+                    expr_stmt(ident("a"), None),
+                ],
+            }))),
+        });
+        let prog = program().with_body(vec![ProgramItem::Statement(if_stmt)]);
+        let (out, _c, _changed, _) = run_pass(prog);
+        assert!(
+            matches!(
+                first_stmt(&out),
+                Statement::Tagged(TaggedStatement::IfStatement(_))
             ),
-        }
+            "declaration in the else must keep the if intact; got {:?}",
+            first_stmt(&out)
+        );
     }
 
     #[test]
