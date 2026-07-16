@@ -45,6 +45,23 @@ int main(void) {
     ISO_CHECK(osp_tcp_connect(&client, "127.0.0.1", port) == OSP_OK);
     ISO_CHECK(osp_tcp_accept(listener, &conn) == OSP_OK);
 
+    /* ── the descriptor accessor exposes a distinct OS descriptor per socket,
+     *    so an external event loop (the reactor) can watch each one ───────── */
+    {
+        uintptr_t fd_listen = 0;
+        uintptr_t fd_client = 0;
+        uintptr_t fd_conn = 0;
+        ISO_CHECK(osp_socket_fd(listener, &fd_listen) == OSP_OK);
+        ISO_CHECK(osp_socket_fd(client, &fd_client) == OSP_OK);
+        ISO_CHECK(osp_socket_fd(conn, &fd_conn) == OSP_OK);
+        ISO_CHECK_MSG(fd_listen != fd_client && fd_client != fd_conn &&
+                          fd_listen != fd_conn,
+                      "each socket must expose a distinct OS descriptor");
+        /* NULL-argument validation (done here while a live socket is on hand) */
+        ISO_CHECK(osp_socket_fd(NULL, &fd_listen) == OSP_ERR_INVAL);
+        ISO_CHECK(osp_socket_fd(listener, NULL) == OSP_ERR_INVAL);
+    }
+
     /* ── client → server ────────────────────────────────────────────────── */
     ISO_CHECK(osp_socket_send(client, msg, msglen, &n) == OSP_OK);
     ISO_CHECK_EQ_UINT(n, msglen);
