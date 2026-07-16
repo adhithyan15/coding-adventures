@@ -1008,6 +1008,61 @@ fn handle_alloc_array(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<
     Ok(Some(value))
 }
 
+/// `alloc [<size_bytes>] -> dest` — allocate a fixed-size heap object (a cons
+/// cell / record node) on the shared `ctx.arrays` heap, returning its integer
+/// handle.
+///
+/// E6d records/unions/closures build their `(car . cdr)` cells with this op — the
+/// same word-granular heap the native/LLVM (`__twig_gc_alloc`) and structural
+/// (`object[]`) backends use, so the generic VM now runs those dynamic features
+/// too. A field is one 8-byte word, so the element count is `size_bytes / 8`;
+/// with no operand it defaults to 16 bytes = a 2-word `LispyPair`, matching the
+/// native allocator's default. `field_store` / `field_load` then write/read fields
+/// with the identical handle+index model as `array_set` / `array_get` (they route
+/// to those handlers), and this shares the array heap's `max_memory_entries`
+/// aggregate ceiling, so no crafted `alloc` can OOM the process.
+///
+/// Note: an object handle is a plain `Int`, so the nil sentinel (`const Int(0)`)
+/// and the first-allocated object (handle `0`) are indistinguishable. Records
+/// never dereference nil (accessors only read stored `car` fields), so this is
+/// sound for them; unions/`match` (which test nil via `is_null`) need a nil-handle
+/// disambiguation first — a separate slice.
+fn handle_alloc(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let bytes = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        match instr.srcs.first() {
+            Some(_) => resolve_src(frame, &instr.srcs, 0)?.as_i64().ok_or_else(|| {
+                VMError::Custom("alloc size must be an integer".into())
+            })?,
+            None => 16,
+        }
+    };
+    // A field is one 8-byte word; always at least one word.
+    let count = (bytes / 8).max(1) as usize;
+    // Same aggregate DoS ceiling as `alloc_array`: bound both the number of live
+    // allocations and the running total of elements across them.
+    if ctx.arrays.len() >= ctx.max_memory_entries {
+        return Err(VMError::Custom(format!(
+            "allocation count exceeds the {} allocation cap",
+            ctx.max_memory_entries
+        )));
+    }
+    let live_elems: usize = ctx.arrays.iter().map(|a| a.len()).sum();
+    if live_elems.saturating_add(count) > ctx.max_memory_entries {
+        return Err(VMError::Custom(format!(
+            "alloc of {count} words would exceed the {} total-element cap (live: {live_elems})",
+            ctx.max_memory_entries
+        )));
+    }
+    let handle = ctx.arrays.len() as i64;
+    ctx.arrays.push(vec![Value::Int(0); count]);
+    let value = Value::Int(handle);
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+    }
+    Ok(Some(value))
+}
+
 /// `array_len dest <- arr` — the element count of array `arr`.
 fn handle_array_len(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
     let handle = {
@@ -1473,6 +1528,11 @@ pub(crate) fn lookup_standard(op: &str) -> Option<StdHandlerFn> {
         "array_len"    => Some(handle_array_len),
         "array_get"    => Some(handle_array_get),
         "array_set"    => Some(handle_array_set),
+        // E6d heap objects (records/unions/closures) — a cons cell is a 2-word
+        // object; `field_*` share the `array_*` handle+index model verbatim.
+        "alloc"        => Some(handle_alloc),
+        "field_store"  => Some(handle_array_set),
+        "field_load"   => Some(handle_array_get),
         "call_builtin" => Some(handle_call_builtin),
         "io_in"        => Some(handle_io_in),
         "io_out"       => Some(handle_io_out),
