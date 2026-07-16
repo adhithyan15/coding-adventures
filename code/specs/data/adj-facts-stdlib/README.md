@@ -38,6 +38,7 @@ per rotation, in parallel):
 | `nutrition/` | common food → MyPlate food group | USDA MyPlate |
 | `agriculture/` | farm animal → product it gives | Iowa State University (CFSPH) |
 | `biology/` | common bone → body region | NIH / MedlinePlus |
+| `biology/` | macronutrient → energy (kcal) per gram | NIH / MedlinePlus |
 | `physics/` | simple machine → everyday example | NASA |
 | … | *geography, anatomy, physical constants, …* | *(expanding)* |
 

@@ -1,0 +1,23 @@
+% ============================================================================
+% macronutrients.query.adj — a worked recall over the biology macronutrients library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how many Calories are in a
+% gram of fat?": it states no nutrition fact of its own — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?` against
+% the `kcal_per_gram` rows and returns the number + the table's source/locator/
+% trust. The fourth query runs the relation BACKWARD (bind the value `4`, recall
+% the macronutrients that supply it — carbohydrate, protein). A word that is not
+% one of these macronutrients abstains honestly — the engine never invents an
+% energy value.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli macronutrients.query.adj
+% ============================================================================
+
+import "macronutrients.adj"
+
+? kcal_per_gram(fat, $Kcal)          % expect 9
+? kcal_per_gram(carbohydrate, $Kcal) % expect 4
+? kcal_per_gram(alcohol, $Kcal)      % expect 7
+? kcal_per_gram($Nutrient, 4)        % reverse bind — expect carbohydrate ; protein
+? kcal_per_gram(water, $Kcal)        % expect abstain — water supplies no Calories
