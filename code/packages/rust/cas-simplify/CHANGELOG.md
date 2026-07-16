@@ -1,5 +1,47 @@
 # Changelog — cas-simplify (Rust)
 
+## [0.5.0] — 2026-07-16
+
+### Added
+
+- **`collect_terms` — `expand()` now collects like terms.** Previously an
+  honestly-documented, explicitly-tracked gap (see `expand`'s own module
+  docs prior to this release, and the `spice-macsyma-pending-work.md`
+  `Expand` entry): `expand((x+1)^2)` returned the raw, uncollected
+  `1 + x + x + x*x` rather than `1 + 2*x + x^2`. New `collect_terms` module:
+  flattens an `Add`/`Sub` subtree into signed terms (descending through the
+  nested `Add(Add(..), Add(..))` shape square-and-multiply's intermediate
+  results leave behind), decomposes each term into a `(coefficient,
+  monomial)` pair — reusing `numeric_fold`'s exact-rational `Acc`
+  accumulator so both passes share the same GCD-reduced,
+  float-contamination-aware arithmetic — groups by monomial (summing
+  coefficients, dropping exact-zero groups, so genuine cancellations like
+  the cross terms in `(a+b)*(a-b)` actually disappear), and rebuilds. Also
+  folds repeated multiplication into a power (`x*x` → `x^2`) as a
+  byproduct of the same monomial decomposition — the *other* half of the
+  gap `expand`'s docs called out. `expand()` now runs `collect_terms` on
+  the raw distribution before the final `simplify` pass.
+- Flattens nested `Mul` structure first (`expand_mul` only ever wraps two
+  operands per call and never re-flattens against an already-`Mul`
+  operand — square-and-multiply routinely leaves `Mul(Mul(a, a), a)`
+  behind for `a^3`, not the flat `Mul(a, a, a)` the base decomposition
+  needs to see all three factors as the same base) — found by this
+  package's own test suite (`expand_pow_of_trinomial_multivariate`'s (a+b)³
+  case) before ever reaching `/security-review`.
+- `O(n log n)` grouping (sort-then-merge-adjacent), not `O(n²)`
+  (find-or-insert) — matters at `EXPAND_MAX_TERMS` (10,000) scale; see the
+  module's own DoS-safety note for why this pass can't reopen the growth
+  its sibling guard already closed.
+- Updated the two downstream consumers (`macsyma-runtime`'s `expand`,
+  `wolfram-runtime`'s `Expand[...]`) — both delegate to this crate's
+  `expand` unchanged, so they inherit collected output automatically; their
+  own exact-output tests and doc comments (which pinned/described the old
+  uncollected shape) are updated in lockstep.
+- 30 tests total (up from 24), including adversarial cases (opposite-signed
+  cancellation to exact zero, exact-rational coefficient summation via the
+  shared `Acc`, negative-exponent bases, an opaque non-`Pow` repeated
+  factor like `Sin(x)*Sin(x)`).
+
 ## [0.4.1] — 2026-07-12
 
 ### Fixed

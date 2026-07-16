@@ -4,6 +4,18 @@ All notable changes to `wolfram-runtime` are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/) and this project uses
 [Semantic Versioning](https://semver.org/).
 
+## [0.19.3] — 2026-07-16
+
+### Changed
+
+- `Expand[...]` now collects like terms — `Expand[(x+1)^2]` returns
+  `1 + 2*x + x^2`, not the raw `1 + x + x + x*x` from before. No code
+  change in this crate: `expand_handler` delegates to
+  `cas_simplify::expand` unchanged, which gained a `collect_terms` pass
+  (see that crate's 0.5.0 CHANGELOG entry). Updated this crate's own
+  `expand_distributes_products_over_sums` test and the `expand_handler`
+  doc comment, which had pinned/described the old uncollected shape.
+
 ## [0.19.2] — 2026-07-12
 
 ### Added (W-22 — `Factor`, third `cas-*` head)

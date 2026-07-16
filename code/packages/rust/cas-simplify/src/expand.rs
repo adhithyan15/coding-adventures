@@ -1,32 +1,31 @@
 //! Polynomial expansion: distribute `Mul` over `Add`/`Sub`, and expand
 //! non-negative integer powers of a sum via square-and-multiply.
 //!
-//! ## What this is — and, honestly, what it is not
+//! ## What this is
 //!
 //! `expand(x)` is the operation MACSYMA calls `expand()` and Wolfram
 //! calls `Expand[...]`. It **distributes** — `(x+1)*(x+2)` becomes
-//! `2 + x + 2*x + x*x` — but it does **not collect like terms**: the
-//! two `x` terms above stay separate rather than merging into `3*x`,
-//! and `x*x` is never folded into `x^2`. The result is always
-//! mathematically correct (it evaluates identically to the input for
-//! any assignment) but is not always the compact form a human would
-//! write by hand. Full like-term collection is a separate, more
-//! involved pass — tracked as an explicit follow-up, not silently
-//! dropped (see the crate's `spice-macsyma-pending-work.md` entry).
+//! `2 + 3*x + x^2` — and **does collect like terms**: repeated monomials
+//! are combined and their coefficients summed by [`crate::collect_terms`],
+//! which runs on the raw distributed tree before the final `simplify`
+//! pass (see that module's own docs for the four-step algorithm). This
+//! *was* a known, explicitly-tracked gap (the raw distributor alone
+//! leaves `2 + x + 2*x + x*x` uncollected — see the crate's
+//! `spice-macsyma-pending-work.md` entry for the history) — closed by
+//! `collect_terms`, not silently left in place.
 //!
-//! This is a **faithful recursive-distributor port** of the Python
-//! reference (`symbolic_vm.cas_handlers._sym_expand` /
+//! This distributor is a **faithful recursive-distributor port** of the
+//! Python reference (`symbolic_vm.cas_handlers._sym_expand` /
 //! `_sym_expand_mul` / `_sym_expand_pow`), generalized to the n-ary
 //! `Add`/`Mul` shape this Rust IR actually produces (Python's reference
 //! assumes strictly-binary `Add`/`Sub`/`Mul`, since its frontends never
 //! flatten more than two operands into one node). The Python reference
 //! also has a *second*, faster path for single-variable
 //! rational-coefficient polynomials, built on a `to_rational`/
-//! `from_polynomial` bridge, that *does* collect like terms (that is
-//! what its docstring's "clean" example actually demonstrates — not
-//! the general path this module ports). This port always takes the
-//! general path, so it does not reproduce that fast-path's cleaner
-//! output even for single-variable input.
+//! `from_polynomial` bridge, that reaches the same collected form via
+//! polynomial arithmetic rather than a general monomial-grouping pass —
+//! this port takes the general path (any number of variables, not just
+//! one) and collects afterward, rather than reproducing that fast path.
 //!
 //! ## Truth table (the four expansion rules)
 //!
@@ -189,7 +188,7 @@ fn term_count(node: &IRNode) -> usize {
 
 /// Whether `node` is the symbol `name` (e.g. `is_head(&app.head, ADD)`
 /// checks whether an application's head is literally `Add`).
-fn is_head(node: &IRNode, name: &str) -> bool {
+pub(crate) fn is_head(node: &IRNode, name: &str) -> bool {
     matches!(node, IRNode::Symbol(s) if s == name)
 }
 
@@ -242,14 +241,11 @@ fn expand_pow(base: &IRNode, n: i64) -> IRNode {
 }
 
 /// Recursively distribute `Mul` over `Add`/`Sub` and expand bounded
-/// non-negative integer `Pow`s throughout `node`, then run the result
-/// through [`simplify`] (canonical form, numeric-literal folding, and
-/// identity rules — `x*1 -> x`, `1*1 -> 1`, etc.) to clean up the raw
-/// distribution.
-///
-/// See the module-level docs for what "does not collect like terms"
-/// means in practice — the output below has two separate `x` terms,
-/// not one `2*x` term, and `x*x` rather than `x^2`.
+/// non-negative integer `Pow`s throughout `node`, [`collect_terms`] the
+/// raw distribution (see that module for the four-step grouping
+/// algorithm), then run the result through [`simplify`] (canonical form,
+/// numeric-literal folding, and identity rules — `x*1 -> x`, `1*1 -> 1`,
+/// etc.) to clean up.
 ///
 /// Non-polynomial subexpressions (trig, transcendentals, symbolic
 /// powers, `Div`) are returned with their children recursively expanded
@@ -260,16 +256,18 @@ fn expand_pow(base: &IRNode, n: i64) -> IRNode {
 /// use symbolic_ir::{apply, int, sym, ADD, POW};
 /// use cas_simplify::expand;
 ///
-/// // (x + 1)^2 -> 1 + x + x + x*x  (mathematically x^2 + 2x + 1;
-/// // see the module docs for why the two `x` terms and `x*x` are
-/// // not collected/folded further).
+/// // (x + 1)^2 -> 1 + 2*x + x^2 -- the raw distributor alone would leave
+/// // 1 + x + x + x*x; collect_terms folds it into this clean form.
 /// let x_plus_1 = apply(sym(ADD), vec![sym("x"), int(1)]);
 /// let expr = apply(sym(POW), vec![x_plus_1, int(2)]);
 /// let expanded = expand(expr);
-/// assert_eq!(format!("{expanded}"), "Add(1, x, x, Mul(x, x))");
+/// assert_eq!(format!("{expanded}"), "Add(1, Mul(2, x), Pow(x, 2))");
 /// ```
 pub fn expand(node: IRNode) -> IRNode {
-    simplify(expand_recursive(node), EXPAND_SIMPLIFY_MAX_ITERATIONS)
+    simplify(
+        crate::collect_terms::collect_terms(expand_recursive(node)),
+        EXPAND_SIMPLIFY_MAX_ITERATIONS,
+    )
 }
 
 fn expand_recursive(node: IRNode) -> IRNode {
@@ -323,81 +321,71 @@ mod tests {
 
     #[test]
     fn expand_distributes_mul_over_add() {
-        // (x + 1) * (x + 2) -> 2 + x + 2*x + x*x (see module docs:
-        // the `x` term from 1*x and the `2*x` term from 2*x are not
-        // collected into 3*x; x*x is not folded into x^2).
+        // (x + 1) * (x + 2) -> 2 + 3*x + x^2, fully collected: the `x`
+        // term from 1*x and the `2*x` term from x*2 combine into `3*x`,
+        // and `x*x` folds into `x^2` (see collect_terms's own docs).
         let lhs = add(vec![sym("x"), int(1)]);
         let rhs = add(vec![sym("x"), int(2)]);
         let result = expand(mul(vec![lhs, rhs]));
         assert_eq!(
             result,
-            add(vec![
-                int(2),
-                sym("x"),
-                mul(vec![int(2), sym("x")]),
-                mul(vec![sym("x"), sym("x")]),
-            ])
+            add(vec![int(2), mul(vec![int(3), sym("x")]), pow(sym("x"), int(2))])
         );
     }
 
     #[test]
     fn expand_distributes_mul_over_sub() {
-        // (a + b) * (a - b) -> (a*a - a*b) + (a*b - b*b) — evaluates
-        // to a^2 - b^2 (the two `a*b` terms cancel numerically for any
-        // assignment) but Sub is not flattened into a single Add of
-        // signed terms, so the middle terms are never actually
-        // cancelled structurally. See module docs.
+        // (a + b) * (a - b) -> a^2 - b^2: the two cross `a*b` terms
+        // (+a*b from a*a - ... and -a*b from ... - b*b, see the raw
+        // distribution collect_terms::tests::difference_of_squares_collects_cleanly
+        // spells out) cancel exactly, collect_terms drops the resulting
+        // zero-coefficient group entirely, and the two surviving terms
+        // fold their repeated factors into powers. The final term/arg
+        // order below is `simplify`'s own `canonical` pass's
+        // (type-rank, debug-string) sort, not collect_terms's — see
+        // that module's `rebuild_term` doc comment.
         let lhs = add(vec![sym("a"), sym("b")]);
         let rhs = sub(sym("a"), sym("b"));
         let result = expand(mul(vec![lhs, rhs]));
         assert_eq!(
             result,
             add(vec![
-                sub(mul(vec![sym("a"), sym("a")]), mul(vec![sym("a"), sym("b")]),),
-                sub(mul(vec![sym("a"), sym("b")]), mul(vec![sym("b"), sym("b")]),),
+                mul(vec![int(-1), pow(sym("b"), int(2))]),
+                pow(sym("a"), int(2)),
             ])
         );
     }
 
     #[test]
     fn expand_pow_of_binomial_distributes_correctly() {
-        // (x + 1)^2 -> 1 + x + x + x*x (mathematically x^2 + 2x + 1;
-        // see module docs for why it isn't collected into that form).
+        // (x + 1)^2 -> 1 + 2*x + x^2 -- the classic clean binomial
+        // expansion, not the raw 1 + x + x + x*x collect_terms folds it
+        // from.
         let result = expand(pow(add(vec![sym("x"), int(1)]), int(2)));
         assert_eq!(
             result,
-            add(vec![
-                int(1),
-                sym("x"),
-                sym("x"),
-                mul(vec![sym("x"), sym("x")])
-            ])
+            add(vec![int(1), mul(vec![int(2), sym("x")]), pow(sym("x"), int(2))])
         );
     }
 
     #[test]
     fn expand_pow_of_trinomial_multivariate() {
-        // (a + b)^3 -> 8 raw monomials (a^3 has only one arrangement;
-        // a^2*b and a*b^2 each have 3 arrangements from square-and-
-        // multiply, matching the binomial coefficients C(3,1)=3, but
-        // emitted as repeated separate terms rather than one term with
-        // coefficient 3 — see module docs).
+        // (a + b)^3 -> a^3 + 3*a^2*b + 3*a*b^2 + b^3 -- the textbook
+        // binomial-theorem coefficients. Square-and-multiply's raw
+        // distribution produces 8 monomials (a^2*b and a*b^2 each
+        // appearing 3 times, matching C(3,1)=3), which collect_terms
+        // combines into one term per distinct monomial with the repeated
+        // count folded into a coefficient. The final arg/factor order
+        // below is `simplify`'s own `canonical` pass's sort, not
+        // collect_terms's (see that module's `rebuild_term` doc comment).
         let result = expand(pow(add(vec![sym("a"), sym("b")]), int(3)));
-        let aaa = mul(vec![sym("a"), sym("a"), sym("a")]);
-        let aab = mul(vec![sym("a"), sym("a"), sym("b")]);
-        let abb = mul(vec![sym("a"), sym("b"), sym("b")]);
-        let bbb = mul(vec![sym("b"), sym("b"), sym("b")]);
         assert_eq!(
             result,
             add(vec![
-                aaa,
-                aab.clone(),
-                aab.clone(),
-                aab,
-                abb.clone(),
-                abb.clone(),
-                abb,
-                bbb,
+                mul(vec![int(3), sym("a"), pow(sym("b"), int(2))]),
+                mul(vec![int(3), sym("b"), pow(sym("a"), int(2))]),
+                pow(sym("a"), int(3)),
+                pow(sym("b"), int(3)),
             ])
         );
     }
@@ -437,8 +425,8 @@ mod tests {
 
     #[test]
     fn expand_recurses_into_div_operands() {
-        // (x+1)^2 / y -> (1 + x + x + x*x) / y — Div itself is not
-        // distributed, but its numerator is still expanded.
+        // (x+1)^2 / y -> (1 + 2*x + x^2) / y — Div itself is not
+        // distributed, but its numerator is still expanded and collected.
         let numerator = pow(add(vec![sym("x"), int(1)]), int(2));
         let result = expand(apply(sym(DIV), vec![numerator, sym("y")]));
         assert_eq!(
@@ -446,12 +434,7 @@ mod tests {
             apply(
                 sym(DIV),
                 vec![
-                    add(vec![
-                        int(1),
-                        sym("x"),
-                        sym("x"),
-                        mul(vec![sym("x"), sym("x")])
-                    ]),
+                    add(vec![int(1), mul(vec![int(2), sym("x")]), pow(sym("x"), int(2))]),
                     sym("y"),
                 ]
             )
