@@ -966,6 +966,80 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT name FROM t ORDER BY name COLLATE BINARY",
     },
+    // ---- Lane 3: column-DEFINED COLLATE flows into ORDER BY --------------
+    // A `COLLATE NOCASE` on the column definition itself makes a bare
+    // `ORDER BY name` (no explicit COLLATE in the query) fold case, exactly as
+    // if the query said `ORDER BY name COLLATE NOCASE`. Before this feature the
+    // column collation was parsed and discarded, so the sort fell back to
+    // BINARY and diverged from SQLite.
+    Case {
+        id: "order_by_column_collate_nocase",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT COLLATE NOCASE)",
+            "INSERT INTO t VALUES (1,'banana'),(2,'Apple'),(3,'cherry'),(4,'BANANA'),(5,'apple')",
+        ],
+        query: "SELECT name FROM t ORDER BY name, id",
+    },
+    // Column-defined RTRIM: 'a  ' and 'a' compare equal (id breaks the tie),
+    // where BINARY would order 'a' before 'a  '.
+    Case {
+        id: "order_by_column_collate_rtrim",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT COLLATE RTRIM)",
+            "INSERT INTO t VALUES (1,'b'),(2,'a  '),(3,'a'),(4,'b '),(5,'c')",
+        ],
+        query: "SELECT name FROM t ORDER BY name, id",
+    },
+    // The column collation also flows through a qualified reference (`t.name`)
+    // and through a table alias (`u.name` where `u` aliases `t`).
+    Case {
+        id: "order_by_column_collate_qualified",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT COLLATE NOCASE)",
+            "INSERT INTO t VALUES (1,'banana'),(2,'Apple'),(3,'apple')",
+        ],
+        query: "SELECT name FROM t ORDER BY t.name, t.id",
+    },
+    // The ORDER BY qualifier may be a table alias (`u` aliases `t`). The select
+    // list is qualified too (`u.name`) to sidestep an unrelated pre-existing bug
+    // where an *unqualified* projection under a table alias yields NULL.
+    Case {
+        id: "order_by_column_collate_alias",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT COLLATE NOCASE)",
+            "INSERT INTO t VALUES (1,'banana'),(2,'Apple'),(3,'apple')",
+        ],
+        query: "SELECT u.name FROM t AS u ORDER BY u.name, u.id",
+    },
+    // An explicit `COLLATE` in the query overrides the column's declared
+    // sequence: the column is NOCASE, but `COLLATE BINARY` forces byte order
+    // ('A'=65 sorts before 'a'=97).
+    Case {
+        id: "order_by_column_collate_explicit_override",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT COLLATE NOCASE)",
+            "INSERT INTO t VALUES (1,'banana'),(2,'Apple'),(3,'apple')",
+        ],
+        query: "SELECT name FROM t ORDER BY name COLLATE BINARY, id",
+    },
+    // DESC honours the column collation just like ASC — case still folds, only
+    // the key order reverses.
+    Case {
+        id: "order_by_column_collate_nocase_desc",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT COLLATE NOCASE)",
+            "INSERT INTO t VALUES (1,'banana'),(2,'Apple'),(3,'cherry'),(4,'BANANA'),(5,'apple')",
+        ],
+        query: "SELECT name FROM t ORDER BY name DESC, id",
+    },
+    // An unknown collation on the column definition is rejected at CREATE time
+    // ("no such collating sequence"), matching SQLite's prepare-time error.
+    // The oracle compares error-vs-success, so both engines erroring is a pass.
+    Case {
+        id: "create_table_unknown_column_collation",
+        setup: &[],
+        query: "CREATE TABLE t (x TEXT COLLATE BOGUS)",
+    },
     // ---- Lane 1: simple (operand) CASE ----------------------------------
     // `CASE x WHEN v THEN r … ELSE d END` compares the operand to each value
     // for equality; a NULL operand matches nothing (x = NULL is never true)
