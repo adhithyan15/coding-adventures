@@ -2561,6 +2561,80 @@ fn apply_cast(val: &SqlValue, ty: &CastType) -> SqlValue {
             SqlValue::Bool(b) => (*b as i64).to_string(),
             _ => sql_to_str(val),
         }),
+        CastType::Numeric => cast_to_numeric(val),
+    }
+}
+
+/// Value → INTEGER or REAL for `CAST(… AS NUMERIC)` (SQLite's NUMERIC affinity).
+///
+/// A number is left unchanged — an INTEGER stays INTEGER and a REAL stays REAL,
+/// so `CAST(3.0 AS NUMERIC)` is `3.0`, not `3`. Text and blob are parsed to a
+/// number, preferring INTEGER when the value is integral and fits `i64`,
+/// otherwise REAL (see [`text_to_numeric`]). NULL was already handled by the
+/// caller.
+fn cast_to_numeric(val: &SqlValue) -> SqlValue {
+    match val {
+        SqlValue::Int(i) => SqlValue::Int(*i),
+        // A stored bool stands in for the integer 1/0.
+        SqlValue::Bool(b) => SqlValue::Int(*b as i64),
+        SqlValue::Float(f) => SqlValue::Float(*f),
+        SqlValue::Text(s) => text_to_numeric(s),
+        SqlValue::Blob(b) => text_to_numeric(&String::from_utf8_lossy(b)),
+        SqlValue::Null => SqlValue::Null,
+    }
+}
+
+/// Parse text to a NUMERIC value, matching SQLite's `sqlite3VdbeMemNumerify`:
+/// prefer INTEGER when the leading numeric prefix denotes an integer that fits
+/// `i64`, otherwise REAL. Non-numeric text yields `0` (integer), like the other
+/// numeric casts.
+///
+/// | input        | result      | why                                    |
+/// |--------------|-------------|----------------------------------------|
+/// | `'42'`       | `Int(42)`   | pure integer prefix                    |
+/// | `'42abc'`    | `Int(42)`   | integer prefix, trailing junk ignored  |
+/// | `'3.0'`      | `Int(3)`    | real syntax, but value is integral     |
+/// | `'1e3'`      | `Int(1000)` | exponent, but value is integral        |
+/// | `'3.5'`      | `Float(3.5)`| non-integral                           |
+/// | `'9e99'`     | `Float(..)` | integral but overflows i64 → real      |
+/// | `'abc'`      | `Int(0)`    | no numeric prefix                       |
+fn text_to_numeric(s: &str) -> SqlValue {
+    let t = s.trim_start();
+    let bytes = t.as_bytes();
+    let mut i = 0;
+    if i < bytes.len() && (bytes[i] == b'+' || bytes[i] == b'-') {
+        i += 1;
+    }
+    let digit_start = i;
+    while i < bytes.len() && bytes[i].is_ascii_digit() {
+        i += 1;
+    }
+    let has_int_digits = i > digit_start;
+    // A `.`/`e`/`E` immediately after the integer digits means the prefix is a
+    // real literal, not a plain integer.
+    let real_syntax =
+        i < bytes.len() && matches!(bytes[i], b'.' | b'e' | b'E');
+
+    if has_int_digits && !real_syntax {
+        // Pure integer prefix (e.g. `42`, `-7`, `42abc`). Parse it exactly so an
+        // i64 overflow falls through to the real value rather than saturating.
+        if let Ok(n) = t[..i].parse::<i64>() {
+            return SqlValue::Int(n);
+        }
+        return SqlValue::Float(parse_real_prefix(s));
+    }
+
+    // Real-syntax or digit-less prefix: take the real value, then collapse it to
+    // an integer when it is integral and fits i64 (`3.0`→3, `1e3`→1000), else
+    // keep it real (`3.5`, overflow). `parse_real_prefix` returns 0.0 for
+    // non-numeric text, so `'abc'`→`Int(0)`.
+    let r = parse_real_prefix(s);
+    // 2^63 as f64; the half-open range keeps `r as i64` exact (no saturation).
+    const I64_LIMIT: f64 = 9_223_372_036_854_775_808.0;
+    if r.is_finite() && r.fract() == 0.0 && (-I64_LIMIT..I64_LIMIT).contains(&r) {
+        SqlValue::Int(r as i64)
+    } else {
+        SqlValue::Float(r)
     }
 }
 
@@ -3196,6 +3270,35 @@ mod tests {
             Instruction::Halt,
         ]), &mut b).unwrap();
         assert_eq!(r.rows, vec![vec![int(1)]]);
+    }
+
+    #[test]
+    fn test_cast_numeric_affinity() {
+        let num = |v: SqlValue| apply_cast(&v, &CastType::Numeric);
+
+        // Text → INTEGER when integral & fits i64; else REAL.
+        assert_eq!(num(SqlValue::Text("42".into())), SqlValue::Int(42));
+        assert_eq!(num(SqlValue::Text("3.0".into())), SqlValue::Int(3));
+        assert_eq!(num(SqlValue::Text("1e3".into())), SqlValue::Int(1000));
+        assert_eq!(num(SqlValue::Text("42abc".into())), SqlValue::Int(42));
+        assert_eq!(num(SqlValue::Text("abc".into())), SqlValue::Int(0));
+        assert_eq!(num(SqlValue::Text("3.5".into())), SqlValue::Float(3.5));
+        // i64-overflowing integer text → REAL.
+        match num(SqlValue::Text("99999999999999999999".into())) {
+            SqlValue::Float(f) => assert!((f - 1e20).abs() < 1e6),
+            other => panic!("expected REAL, got {other:?}"),
+        }
+        // i64::MAX parses exactly as INTEGER (no f64-rounding surprise).
+        assert_eq!(
+            num(SqlValue::Text("9223372036854775807".into())),
+            SqlValue::Int(i64::MAX)
+        );
+        // Numbers are a no-op: INTEGER stays INTEGER, REAL stays REAL (even 3.0).
+        assert_eq!(num(SqlValue::Int(42)), SqlValue::Int(42));
+        assert_eq!(num(SqlValue::Float(3.0)), SqlValue::Float(3.0));
+        assert_eq!(num(SqlValue::Float(3.5)), SqlValue::Float(3.5));
+        // NULL stays NULL.
+        assert_eq!(num(SqlValue::Null), SqlValue::Null);
     }
 
     #[test]

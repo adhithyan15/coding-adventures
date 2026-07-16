@@ -40,8 +40,10 @@ per rotation, in parallel):
 | `biology/` | common bone → body region | NIH / MedlinePlus |
 | `biology/` | macronutrient → energy (kcal) per gram | NIH / MedlinePlus |
 | `biology/` | basic tissue type → representative example | NCI SEER Training |
+| `biology/` | hormone → endocrine gland that secretes it | NCI SEER Training / NIH MedlinePlus |
 | `physics/` | simple machine → everyday example | NASA |
 | `anatomy/` | lung → number of lobes (right 3, left 2) | NIH / NCI SEER Training |
+| `anatomy/` | brain part → primary function it controls | NIH / NCI SEER Training + StatPearls |
 | … | *geography, physical constants, …* | *(expanding)* |
 
 Formulas and laws (Newton's `F = ma`, the ideal gas law `PV = nRT`, area/volume, …) are grown

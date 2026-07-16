@@ -999,6 +999,7 @@ fn handle_alloc_array(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<
     } else {
         Value::Int(0)
     };
+    reserve_nil_handle(ctx);
     let handle = ctx.arrays.len() as i64;
     ctx.arrays.push(vec![default; count as usize]);
     let value = Value::Int(handle);
@@ -1006,6 +1007,35 @@ fn handle_alloc_array(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<
         ctx.frames.last_mut().unwrap().assign(dest, value.clone());
     }
     Ok(Some(value))
+}
+
+/// Reserve heap handle `0` as a permanent empty sentinel, so no live object or
+/// array is ever handle `0`. The E6d nil sentinel is `const Int(0) : ref<LispyPair>`
+/// → `Value::Int(0)`; reserving handle `0` makes it distinguishable from every real
+/// cons cell (which now gets a handle ≥ 1), so `is_null` can test `x == Int(0)`
+/// exactly. Idempotent — a no-op once index `0` exists. Called from every
+/// allocation path (`alloc`, `alloc_array`); a program that allocates nothing pays
+/// nothing, and the wasted index-0 `Vec` is empty (no element-cap cost).
+fn reserve_nil_handle(ctx: &mut DispatchCtx) {
+    if ctx.arrays.is_empty() {
+        ctx.arrays.push(Vec::new());
+    }
+}
+
+/// `is_null d <- x` — `d = (x is nil)`. The E6d list terminator (`null?`, empty
+/// list) is the `Int(0)` sentinel; every real cons cell is a heap handle ≥ 1
+/// (handle `0` is reserved — see [`reserve_nil_handle`]), so nil-ness is exactly
+/// `x == Int(0)`. Returns a boolean, which a downstream `jmp_if_false` branches on.
+fn handle_is_null(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let x = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        resolve_src(frame, &instr.srcs, 0)?
+    };
+    let result = Value::Bool(x == Value::Int(0));
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+    }
+    Ok(Some(result))
 }
 
 /// `box d <- s` / `unbox d <- s` — the **identity** on the generic VM.
@@ -1043,11 +1073,9 @@ fn handle_box(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
 /// to those handlers), and this shares the array heap's `max_memory_entries`
 /// aggregate ceiling, so no crafted `alloc` can OOM the process.
 ///
-/// Note: an object handle is a plain `Int`, so the nil sentinel (`const Int(0)`)
-/// and the first-allocated object (handle `0`) are indistinguishable. Records
-/// never dereference nil (accessors only read stored `car` fields), so this is
-/// sound for them; unions/`match` (which test nil via `is_null`) need a nil-handle
-/// disambiguation first — a separate slice.
+/// Handle `0` is reserved (see [`reserve_nil_handle`]) so no live object is ever
+/// handle `0`; that makes the nil sentinel (`const Int(0)`) distinguishable from
+/// every real cons cell, which is what lets `is_null` (list `null?`) be exact.
 fn handle_alloc(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
     let bytes = {
         let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
@@ -1075,6 +1103,7 @@ fn handle_alloc(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>
             ctx.max_memory_entries
         )));
     }
+    reserve_nil_handle(ctx);
     let handle = ctx.arrays.len() as i64;
     ctx.arrays.push(vec![Value::Int(0); count]);
     let value = Value::Int(handle);
@@ -1554,6 +1583,7 @@ pub(crate) fn lookup_standard(op: &str) -> Option<StdHandlerFn> {
         "alloc"        => Some(handle_alloc),
         "field_store"  => Some(handle_array_set),
         "field_load"   => Some(handle_array_get),
+        "is_null"      => Some(handle_is_null),
         // Dynamic-value box/unbox are the identity on the VM (a `Value` is already
         // the dynamic value); union `match` emits `box` on tags/fields.
         "box"          => Some(handle_box),

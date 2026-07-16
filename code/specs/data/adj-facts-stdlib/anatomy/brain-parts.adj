@@ -1,0 +1,113 @@
+% ============================================================================
+% brain-parts — a major brain part → the primary function it controls
+% (adj-facts-stdlib, ANATOMY).
+% ============================================================================
+% A middle/high-school neuroanatomy fact set on the way to medicine: the brain
+% is not one undivided organ — different PARTS do different JOBS. The cerebrum
+% (the big wrinkled top) does conscious thought; the cerebellum (the little
+% "cauliflower" at the back) coordinates movement and balance; the brainstem
+% (the stalk into the spinal cord) runs the automatic life-support functions
+% like breathing; the hypothalamus is a tiny control knob for drives such as
+% hunger; the thalamus is the switchboard that relays sensation up to the
+% cerebrum; and the hippocampus lays down memory. Recall is a binding query:
+%
+%     ? brain_part_function(cerebellum, $Job)   % coordination_of_voluntary_movement
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `brain_part_function(part, function)` carrying the table's citation,
+% so the lookup above is the ordinary SLD binding query — the engine returns the
+% function WITH its source, on the CPU, with zero model calls, and abstains on
+% anything that is not one of these parts (it never invents a job).
+%
+% The parts, as a little truth table:
+%
+%     brain_part      function                            in one phrase
+%     -------------   ---------------------------------   ------------------------
+%     cerebrum        conscious_activity                  conscious thought
+%     cerebellum      coordination_of_voluntary_movement  smooth, balanced movement
+%     brainstem       breathing                           automatic life support
+%     hypothalamus    hunger                              drives (hunger/thirst/sleep)
+%     thalamus        relays                              sensory switchboard
+%     hippocampus     memory                              laying down memory
+%
+% Each `function` value is a single lowercase token/phrase that appears VERBATIM
+% in the cited source sentence (see the provenance block), so the recall is a
+% faithful echo of the source, not a paraphrase. The query also runs BACKWARD —
+% bind a function and recall the part that performs it:
+%
+%     ? brain_part_function($Part, breathing)   % brainstem — reverse recall
+%
+% Something that is not one of these parts — a neuron, the skull, the spinal
+% cord — has no row, so a recall on it ABSTAINS rather than inventing a job.
+% That honest-abstention property is what makes the table safe to reason from:
+% a medicine agent reasons UP from "which part does what" before it can reason
+% about a stroke localized to the cerebellum or a brainstem bleed.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every part→function pair
+% was read out of a fetched U.S. government / NIH page this session, and any
+% pair that could not be grounded there was dropped). Each function token below
+% is quoted inside the verbatim source sentence so any reader can re-check it:
+%
+%   cerebrum → conscious_activity
+%     https://training.seer.cancer.gov/brain/tumors/anatomy/brain.html
+%     (U.S. National Cancer Institute, NCI SEER Training Modules)
+%     "The cerebrum is the part of the brain that receives and processes
+%      conscious sensation, generates thought, and controls conscious activity."
+%
+%   cerebellum → coordination_of_voluntary_movement
+%     https://www.ncbi.nlm.nih.gov/books/NBK551718/
+%     (NIH / U.S. National Library of Medicine, StatPearls "Physiology, Brain")
+%     "The cerebellum controls the coordination of voluntary movement and
+%      receives sensory information from the brain and spinal cord to fine-tune
+%      the precision and accuracy of motor activity."
+%
+%   brainstem → breathing
+%     https://www.ncbi.nlm.nih.gov/books/NBK551718/
+%     (NIH / NLM, StatPearls "Physiology, Brain")
+%     "The brainstem houses the principal centers that perform autonomic
+%      functions such as breathing, temperature regulation, respiration, heart
+%      rate, wake-sleep cycles, coughing, sneezing, digestion, vomiting, and
+%      swallowing."
+%
+%   hypothalamus → hunger
+%     https://www.ncbi.nlm.nih.gov/books/NBK551718/
+%     (NIH / NLM, StatPearls "Physiology, Brain")
+%     "The hypothalamus controls hunger, thirst, and sleep."
+%
+%   thalamus → relays
+%     https://www.ncbi.nlm.nih.gov/books/NBK551718/
+%     (NIH / NLM, StatPearls "Physiology, Brain")
+%     "Sensory neurons bring sensory input from the body to the thalamus, which
+%      relays this information to the cerebrum."
+%
+%   hippocampus → memory
+%     https://www.ncbi.nlm.nih.gov/books/NBK482171/
+%     (NIH / NLM, StatPearls "Neuroanatomy, Hippocampus")
+%     "The hippocampus is the 'flash drive' of the human brain and is often
+%      associated with memory consolidation and decision-making"
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the NCI SEER Training sentence
+% that fixes the first row (cerebrum → conscious_activity). Every OTHER row's
+% per-fact source and verbatim span is listed above, so each pair remains
+% independently checkable. All three sources are primary U.S. government / NIH
+% references (NCI SEER Training; NIH / NLM StatPearls), so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table brain_part_function {
+    columns brain_part, function
+
+    row (cerebrum, conscious_activity)
+    row (cerebellum, coordination_of_voluntary_movement)
+    row (brainstem, breathing)
+    row (hypothalamus, hunger)
+    row (thalamus, relays)
+    row (hippocampus, memory)
+
+    source "The cerebrum is the part of the brain that receives and processes conscious sensation, generates thought, and controls conscious activity."
+    locator "https://training.seer.cancer.gov/brain/tumors/anatomy/brain.html"
+    trust authoritative
+}

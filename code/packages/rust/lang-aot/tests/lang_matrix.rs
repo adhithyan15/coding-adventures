@@ -171,7 +171,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(car (cons 42 0))",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Twig — E6d-1: nested cons proves multi-cell pointer chasing.
     // `(car (cdr (cons 1 (cons 42 0))))` = car(cdr(`(1 . (42 . 0))`)) =
@@ -181,7 +181,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(car (cdr (cons 1 (cons 42 0))))",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Twig — **E6d-2: dynamic integer arithmetic over `any`, all 5 code-gen
     // backends.** `(+ (car (cons 41 0)) 1)` forces `+` over a boxed operand —
@@ -204,7 +204,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(+ (car (cons 41 0)) 1)",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Twig — **E6d-3a: the `list` constructor on the code-gen backends.**
     // `list` is pure sugar over `cons`: `(list a b c)` = `(cons a (cons b
@@ -219,7 +219,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(car (list 42 1 2))",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Twig — E6d-3a: `list` + `cdr` traversal reaches the second element.
     // `(car (cdr (list 1 42 3)))` = car(cdr(`(1 42 3)`)) = car(`(42 3)`) = 42,
@@ -229,7 +229,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(car (cdr (list 1 42 3)))",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Twig — **E6d-3b: the `length` list operation on the code-gen backends.**
     // Unlike the `list` *constructor* (E6d-3a, a straight-line cons desugar),
@@ -249,7 +249,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(+ (length (list 1 2 3)) 39)",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Twig — E6d-3b: `null?` on the empty list `(list)` (a bare nil) is #t → exit 1,
     // the direct regression guard for the WASM nil-const `ref.null` fix.
@@ -258,7 +258,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(null? (list))",
         expect: Expect::Exit(1),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Twig — **E6d-3b: the `list-ref` list operation on the code-gen backends.**
     // Like `length`, `list-ref` *walks* the cons chain, so `lower_list_ops`
@@ -275,7 +275,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(list-ref (list 10 20 42) 2)",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Twig — **E6d-3b: the `append` list operation on the code-gen backends.**
     // `append` *rebuilds* the first list in front of the second, so `lower_list_ops`
@@ -291,7 +291,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(car (cdr (append (list 1 42) (list 3))))",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Twig — **E6d-3b: the `reverse` list operation on the code-gen backends.**
     // `reverse` is lowered by `lower_list_ops` to a nil-seeded call to a synthesized
@@ -308,7 +308,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(car (reverse (list 1 2 42)))",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Twig — **E6d-3b: the `assoc` list operation on the code-gen backends** (the
     // last E6d-3b op). `assoc` searches an association list (a list of `(k . v)`
@@ -325,7 +325,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(cdr (assoc 2 (list (cons 1 10) (cons 2 42) (cons 3 30))))",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Twig — E6d-3b: `assoc` of an ABSENT key returns nil, so `null?` of the result
     // is #t → exit 1 — the direct guard for the not-found (nil base-case) branch.
@@ -334,7 +334,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(null? (assoc 9 (list (cons 1 10) (cons 2 20))))",
         expect: Expect::Exit(1),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Twig — **E6d-4: symbols / quote on the code-gen backends.** A quote literal
     // `'a` (or `(quote a)`) now lowers to `const Var("a") : symbol` — the same
