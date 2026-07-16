@@ -2944,6 +2944,17 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       if (step === 0) {
         throw new Error("range: step cannot be zero");
       }
+      // SECURITY: the loop condition below is false on its very first
+      // check whenever start/stop/step is NaN (every relational
+      // comparison with NaN is false), so an unguarded NaN bound would
+      // silently produce an empty range instead of erroring -- the same
+      // "NaN defeats a comparison-based check" class the linear
+      // indexGet/indexSet fix below closes. Reject non-finite bounds
+      // up front instead of letting them fall through to a
+      // quietly-wrong empty result.
+      if (!Number.isFinite(start) || !Number.isFinite(stop) || !Number.isFinite(step)) {
+        throw new Error(`range: start/stop/step must be finite numbers, got (${start}, ${stop}, ${step})`);
+      }
       const values = [];
       let x = start;
       while ((step > 0 && x <= stop + RANGE_EPSILON) || (step < 0 && x >= stop - RANGE_EPSILON)) {
@@ -2967,12 +2978,40 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     // frontend resolves `end` to a concrete 0-based `scalar` index
     // before emitting `IndexGet`/`IndexSet`.
 
+    /**
+     * Validate one resolved position is a real, finite integer.
+     *
+     * SECURITY: `indexGet`/`indexSet`'s own linear (1-argument) bounds
+     * checks are written as `i < 0 || i >= length` — the negation of
+     * `get`'s `r >= 0 && r < nrows(a)` AND-form. Under IEEE-754, `NaN`
+     * fails *every* relational comparison, so for `i = NaN` **both**
+     * halves of that OR are `false`, and the "out of bounds" check is
+     * silently skipped entirely — `a.data[NaN]` then reads/writes a
+     * stray, non-index `"NaN"` property on the `Float64Array` object
+     * rather than the buffer, so a NaN index makes `indexGet` silently
+     * return `undefined` (not throw) and makes `indexSet` silently drop
+     * the write (not throw, not mutate). This is the exact "malformed
+     * input crosses a JS boundary and must fail loudly, not fall
+     * through to `undefined`/corrupt data" hazard this file's other
+     * `default:` guards (`applyOp`, this function's own `default` arm)
+     * already guard against — validating here, once, at the single
+     * choke point both `indexGet` and `indexSet` resolve every position
+     * through, closes it for both without duplicating a NaN-safe bounds
+     * check at every call site.
+     */
+    function assertValidPosition(i) {
+      if (!Number.isInteger(i)) {
+        throw new Error(`resolvePositions: index ${i} is not a finite integer`);
+      }
+      return i;
+    }
+
     /** Resolve one `IndexArg` against a dimension of size `dimSize` into a flat list of 0-based positions along that dimension. */
     function resolvePositions(arg, dimSize) {
       switch (arg.kind) {
-        case "scalar": return [arg.value];
+        case "scalar": return [assertValidPosition(arg.value)];
         case "whole": return Array.from({ length: dimSize }, (_, i) => i);
-        case "range": return Array.from(arg.indices.data, (x) => Math.trunc(x));
+        case "range": return Array.from(arg.indices.data, (x) => assertValidPosition(Math.trunc(x)));
         default:
           // Emitted code crosses a JS runtime boundary the emitter can't
           // enforce at the actual call site — a malformed `kind` must

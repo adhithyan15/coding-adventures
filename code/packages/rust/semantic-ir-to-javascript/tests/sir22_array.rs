@@ -111,6 +111,16 @@ const ARRAY_FEATURES: &[Feature] = &[
     Feature::ArrayColumnMajor,
 ];
 
+/// `ARRAY_FEATURES` plus `Floats` — for the NaN regression tests below,
+/// which use an `Expr::FloatLit { value: f64::NAN, .. }` to construct a
+/// NaN index/range-bound at compile time.
+const ARRAY_AND_FLOAT_FEATURES: &[Feature] = &[
+    Feature::NDArrays,
+    Feature::MatrixOps,
+    Feature::ArrayColumnMajor,
+    Feature::Floats,
+];
+
 fn run_module(module: &Module, tag: &str) -> Option<String> {
     let artifact = compile(module).expect("compile to javascript");
     if !node_available() {
@@ -347,15 +357,46 @@ fn index_set_with_whole_column_broadcasts_a_scalar() {
     }
 }
 
+/// Compile `module`, run it under `node`, and assert it exits NON-zero
+/// with `expected_stderr_substring` somewhere in stderr -- for tests
+/// proving a malformed input is cleanly REJECTED (a thrown, uncaught JS
+/// `Error` propagating out of `main()`), inverting `run_module`'s usual
+/// "must succeed" assumption. A silent, zero-exit-code "success" here
+/// would mean the malformed input was accepted and silently mishandled
+/// instead of raising -- exactly the failure mode these tests exist to
+/// catch.
+fn run_module_expecting_failure(module: &Module, tag: &str, expected_stderr_substring: &str) {
+    let artifact = compile(module).expect("compile to javascript");
+    if !node_available() {
+        eprintln!("note: `node` unavailable — skipping execution for `{tag}`");
+        return;
+    }
+    let mut path: PathBuf = std::env::temp_dir();
+    path.push(format!("sir_js_{}_{}.js", tag, std::process::id()));
+    std::fs::write(&path, &artifact.source).expect("write temp js");
+    let output = Command::new("node")
+        .arg(&path)
+        .output()
+        .expect("spawn node");
+    let _ = std::fs::remove_file(&path);
+    assert!(
+        !output.status.success(),
+        "expected node to exit non-zero for `{tag}`, but it succeeded:\n{}",
+        artifact.source
+    );
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(
+        stderr.contains(expected_stderr_substring),
+        "got stderr:\n{stderr}"
+    );
+}
+
 #[test]
 fn matmul_with_non_conformable_shapes_throws_a_catchable_error() {
     // [1 2] (1x2) * [1 2] (1x2) -- inner dimensions (2 vs 1) disagree, so
     // `__Sir.Array.matmul` must throw a plain JS `Error` (with a message
     // naming the disagreement) rather than silently produce a
-    // wrong-shaped result. Left uncaught here, so it propagates out of
-    // `main()` and node exits non-zero -- inverts `run_module`'s usual
-    // success assumption for this one case, since a *clean* rejection is
-    // exactly what this test wants to see.
+    // wrong-shaped result.
     let a = array_lit(vec![vec![int(1), int(2)]]);
     let b = array_lit(vec![vec![int(1), int(2)]]);
     let stmts = vec![let_binding(
@@ -367,30 +408,90 @@ fn matmul_with_non_conformable_shapes_throws_a_catchable_error() {
         },
     )];
     let module = module_with_main(stmts, int(0), ARRAY_FEATURES);
-    let artifact = compile(&module).expect("compile to javascript");
-    if !node_available() {
-        eprintln!("note: `node` unavailable — skipping execution for `matmul_non_conformable`");
-        return;
-    }
-    let mut path: PathBuf = std::env::temp_dir();
-    path.push(format!(
-        "sir_js_matmul_non_conformable_{}.js",
-        std::process::id()
-    ));
-    std::fs::write(&path, &artifact.source).expect("write temp js");
-    let output = Command::new("node")
-        .arg(&path)
-        .output()
-        .expect("spawn node");
-    let _ = std::fs::remove_file(&path);
-    assert!(
-        !output.status.success(),
-        "expected node to exit non-zero on a non-conformable matmul, but it succeeded:\n{}",
-        artifact.source
+    run_module_expecting_failure(
+        &module,
+        "matmul_non_conformable",
+        "matmul: inner dimensions disagree",
     );
-    let stderr = String::from_utf8_lossy(&output.stderr);
-    assert!(
-        stderr.contains("matmul: inner dimensions disagree"),
-        "got stderr:\n{stderr}"
+}
+
+fn nan() -> Expr {
+    Expr::FloatLit {
+        value: f64::NAN,
+        span: sp(),
+    }
+}
+
+#[test]
+fn scalar_index_get_with_a_nan_index_throws_instead_of_silently_returning_undefined() {
+    // Security-review finding: `get(a, r, c)`'s 2-arg bounds check is an
+    // AND-form (`r >= 0 && r < nrows(a)`), which correctly falls through
+    // to "out of bounds" for r=NaN (NaN fails every relational
+    // comparison). But the linear (1-arg) `indexGet` path used an OR-form
+    // (`i < 0 || i >= length`) that is NOT the same check's negation for
+    // NaN -- both halves are false, so the "out of bounds" throw was
+    // skipped entirely and `a.data[NaN]` silently read `undefined`
+    // instead of raising. `i` here (a NaN scalar index) is exactly the
+    // kind of value a compiled program's own arithmetic can produce at
+    // its own runtime boundary (e.g. `0/0`), not just a hand-built edge
+    // case. Must now throw a catchable Error, not silently succeed with a
+    // wrong (or missing) value.
+    let a = array_lit(vec![vec![int(1), int(2), int(3)]]);
+    let stmts = vec![let_binding("a", a)];
+    let value = Expr::IndexGet {
+        target: Box::new(local("a")),
+        indices: vec![IndexArg::Scalar(Box::new(nan()))],
+        span: sp(),
+    };
+    let module = module_with_main(stmts, value, ARRAY_AND_FLOAT_FEATURES);
+    run_module_expecting_failure(
+        &module,
+        "index_get_nan",
+        "resolvePositions: index NaN is not a finite integer",
+    );
+}
+
+#[test]
+fn scalar_index_set_with_a_nan_index_throws_instead_of_silently_dropping_the_write() {
+    // Same root cause as the IndexGet test above, but on the write side:
+    // `a.data[NaN] = v` sets a stray, non-index property on the
+    // `Float64Array` object rather than writing into the buffer -- the
+    // pre-fix behavior silently dropped the write with no exception at
+    // all, so a caller had no way to detect the mutation never happened.
+    let a = array_lit(vec![vec![int(1), int(2), int(3)]]);
+    let stmts = vec![
+        let_binding("a", a),
+        Stmt::IndexSet {
+            target: Box::new(local("a")),
+            indices: vec![IndexArg::Scalar(Box::new(nan()))],
+            value: Box::new(int(99)),
+            span: sp(),
+        },
+    ];
+    let module = module_with_main(stmts, int(0), ARRAY_AND_FLOAT_FEATURES);
+    run_module_expecting_failure(
+        &module,
+        "index_set_nan",
+        "resolvePositions: index NaN is not a finite integer",
+    );
+}
+
+#[test]
+fn range_with_a_nan_bound_throws_instead_of_silently_returning_empty() {
+    // Same NaN-defeats-a-comparison-based-check root cause: `range`'s
+    // loop condition is false on the first check whenever start/stop is
+    // NaN, so an unguarded NaN bound silently produced an empty (but
+    // otherwise valid-looking) row vector instead of erroring.
+    let value = Expr::Range {
+        start: Box::new(nan()),
+        step: None,
+        stop: Box::new(int(10)),
+        span: sp(),
+    };
+    let module = module_with_main(vec![], value, ARRAY_AND_FLOAT_FEATURES);
+    run_module_expecting_failure(
+        &module,
+        "range_nan",
+        "range: start/stop/step must be finite numbers",
     );
 }

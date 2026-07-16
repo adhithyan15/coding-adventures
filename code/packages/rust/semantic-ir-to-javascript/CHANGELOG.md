@@ -77,6 +77,38 @@ JavaScript artifact stays self-contained.
   assert on `compile()`'s new tree-walk rejection rather than the now-
   insufficient-by-itself `check_module()`).
 
+### Fixed (found by `/security-review` before this feature's first push)
+
+- **`NaN` silently bypassed the linear (1-argument) `indexGet`/`indexSet`
+  bounds check, causing a silent wrong read and a silently-dropped write.**
+  `get(a, r, c)`'s 2-argument bounds check is an AND-form
+  (`r >= 0 && r < nrows(a)`), which correctly falls through to "out of
+  bounds" for `r = NaN` (every relational comparison with `NaN` is
+  `false`, so the whole AND is `false`). The linear path instead used an
+  OR-form (`i < 0 || i >= length`) that is *not* the same check's negation
+  under IEEE-754: for `i = NaN`, both halves are `false`, so the "out of
+  bounds" throw was skipped entirely. `indexGet` then silently returned
+  `undefined` from `a.data[NaN]` (a stray, non-index property read on the
+  `Float64Array`, not a buffer read); `indexSet` silently no-opped —
+  `a.data[NaN] = v` sets a stray object property rather than writing the
+  buffer, with no exception at all, so a caller had no way to detect the
+  mutation never happened. `NDArray` index values come from the *compiled
+  program's own runtime arithmetic* (e.g. `0/0`), not just a hand-built
+  edge case. Fixed by validating every resolved position is a real
+  integer once, at `resolvePositions` — the single choke point both
+  `indexGet` and `indexSet` route through — rather than re-deriving a
+  NaN-safe bounds check at each call site. Three new `node`-execution
+  regression tests (NaN scalar `IndexGet`, NaN scalar `IndexSet`, and the
+  related `range()` NaN-bound case below), each confirmed to fail without
+  the fix (node exits 0 silently) and pass with it (a clean, catchable
+  `Error`).
+- **`range()` silently returned an empty vector instead of erroring on a
+  `NaN` `start`/`stop`/`step`.** Same root cause as above: the loop
+  condition is `false` on the very first check whenever a bound is `NaN`,
+  so `range` returned a valid-looking `[1, 0]`-shaped empty array with no
+  error. Fixed with an explicit `Number.isFinite` check on all three
+  arguments before the loop runs.
+
 ## 0.35.0 — SIR23 symbolic-expression + pattern/rewrite codegen (HML01 Stream B, item 7 JS half)
 
 Real codegen for the SIR23 symbolic/pattern domain, replacing the deferred
