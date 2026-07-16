@@ -66,10 +66,23 @@ every engine. **Strictly stronger** than the exit-code slice: a full-value
 disagreement, not just a low-byte one, fails loudly. 368 full-value agreements
 over 160 programs locally.
 
+## 3c. Third slice (shipped) — control-flow differential via BASIC `IF … THEN`
+
+The two arithmetic slices exercise only straight-line evaluation.
+`t7_differential_random_basic_conditionals_agree` generates
+`10 IF <a> <relop> <b> THEN 40 / 20 PRINT <c> / 30 GOTO 50 / 40 PRINT <d> / 50 END`
+programs — `<a>`/`<b>`/`<c>`/`<d>` the §3b `+ - *` trees, `<relop>` over all six
+(`= <> < > <= >=`). The printed value witnesses **both** the comparison result and
+that the correct branch was taken, so it exercises the **comparison ops +
+conditional branch + `GOTO`** codegen — the paths where cross-backend
+disagreements are most likely (boolean representation, branch polarity: the class
+of the E6d-6 boxed-bool `jmp_if_false` bug). 264 full-value agreements over 120
+branch programs locally.
+
 ## 4. Growth path (future slices)
 
-- Wider expression grammar: comparisons, `let`/`for`, calls, division (guarded) —
-  each is a language the matrix already runs on all engines.
+- Wider grammar still: `let`/`for` loops, `DEF FN`/`GOSUB` calls, division
+  (guarded) — each is a language the matrix already runs on all engines.
 - Multiple frontends (ALGOL/BASIC/Oct/Twig) as generators.
 - **Shrinking**: on a disagreement, minimise the program before reporting.
 - **IIR-level generation** (the roadmap's end state): generate well-typed IIR

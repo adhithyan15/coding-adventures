@@ -4566,3 +4566,68 @@ fn t7_differential_random_basic_print_agree() {
     eprintln!("T7 BASIC-print differential: {cross_checks} full-value cross-engine agreements over {N} programs");
     assert!(cross_checks >= 2 * N, "expected >= {} cross-checks, got {cross_checks}", 2 * N);
 }
+
+
+// ── AOT00 T7 — control-flow differential: BASIC `IF … THEN`/`GOTO` ───────────
+//
+// The two arithmetic differentials above exercise only straight-line evaluation.
+// This one exercises the **comparison ops + conditional branch + `GOTO`** codegen
+// — the paths where cross-backend disagreements are most likely (boolean
+// representation, branch-condition polarity: exactly the class of the E6d-6
+// boxed-bool `jmp_if_false` bug). A random comparison picks between two `PRINT`
+// arms, so the printed value witnesses *both* the comparison result and that the
+// right branch was taken, compared as a full `i64` across every engine.
+
+/// A random BASIC program: `IF <a> <relop> <b> THEN <print d> ELSE <print c>`,
+/// laid out with a `GOTO` (Dartmouth `IF` only takes a target line). `a`/`b`/`c`/`d`
+/// are the §3b `+ - *` expression trees; `<relop>` ranges over all six.
+fn gen_basic_if_program(state: &mut u64) -> String {
+    let relop = ["=", "<>", "<", ">", "<=", ">="][(xorshift(state) % 6) as usize];
+    let a = gen_basic_expr(state, 0);
+    let b = gen_basic_expr(state, 0);
+    let c = gen_basic_expr(state, 0);
+    let d = gen_basic_expr(state, 0);
+    format!("10 IF {a} {relop} {b} THEN 40\n20 PRINT {c}\n30 GOTO 50\n40 PRINT {d}\n50 END\n")
+}
+
+#[test]
+fn t7_differential_random_basic_conditionals_agree() {
+    const SEED: u64 = 0x1234_5678_9ABC_DEF1;
+    const N: usize = 120;
+    const TOOLCHAIN_EVERY: usize = 15;
+    let mut state = SEED;
+    let mut cross_checks = 0usize;
+    for i in 0..N {
+        let src: &'static str = Box::leak(gen_basic_if_program(&mut state).into_boxed_str());
+        let p = Prog {
+            lang: Language::DartmouthBasic,
+            ext: "bas",
+            src,
+            expect: Expect::Stdout(""),
+            backends: &[],
+        };
+
+        let Some(want) = stdout_of(run_vm(&p)) else {
+            panic!("VM (reference oracle) failed to run generated program: {src:?}");
+        };
+
+        let mut engines: Vec<(&str, Option<String>)> =
+            vec![("wasm", stdout_of(run_wasm(&p))), ("jit", stdout_of(run_jit(&p)))];
+        if i.is_multiple_of(TOOLCHAIN_EVERY) {
+            engines.push(("native", stdout_of(run_native(&p))));
+            engines.push(("llvm", stdout_of(run_llvm(&p))));
+            engines.push(("clr", stdout_of(run_clr(&p))));
+        }
+        for (engine, got) in engines {
+            if let Some(got) = got {
+                assert_eq!(
+                    got, want,
+                    "T7 conditional differential disagreement [{engine}] on {src:?}: vm={want:?}, {engine}={got:?}"
+                );
+                cross_checks += 1;
+            }
+        }
+    }
+    eprintln!("T7 conditional differential: {cross_checks} cross-engine agreements over {N} branch programs");
+    assert!(cross_checks >= 2 * N, "expected >= {} cross-checks, got {cross_checks}", 2 * N);
+}
