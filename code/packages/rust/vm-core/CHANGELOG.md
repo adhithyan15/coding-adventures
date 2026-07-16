@@ -1,5 +1,28 @@
 # Changelog — vm-core
 
+## [0.19.0] — 2026-07-14 (E6d list `null?` on the generic VM — `is_null` + nil-handle reservation)
+
+Completes the E6d dynamic features on the generic VM: Twig **list** builtins
+(`cons`/`car`/`cdr`/`null?`/`list`/`length`/`list-ref`/`append`/`reverse`/`assoc`)
+now run on the VM (and the JIT), so E6d runs on **all seven engines**.
+
+`cons`/`car`/`cdr` already lowered to the `alloc`/`field_load` heap ops the VM
+gained in 0.17.0; the one missing piece was `null?` → the `is_null` opcode:
+
+- **`is_null d <- x`** — `d = (x == Int(0))`. The E6d nil sentinel is
+  `const Int(0) : ref<LispyPair>` → `Value::Int(0)`.
+- **`reserve_nil_handle`** — every allocation path (`alloc`, `alloc_array`) now
+  reserves heap handle `0` as a permanent empty sentinel, so a real cons cell
+  always gets a handle ≥ 1 and can never be mistaken for nil. This is the
+  nil-handle disambiguation the earlier records slice deferred; it costs one empty
+  `Vec` per program that allocates, and leaves array-handle *semantics* unchanged
+  (handles are opaque indices).
+
+Verified: `(null? (list))` → true, `(null? (list 1))` → false, plus
+length/list-ref/append/reverse/assoc → 42, and a `vm-core` unit test that a
+freshly-allocated object is not nil while `Int(0)` is. All 178 `Vm` + 178 `Jit`
+matrix cells pass under the reservation (no array regression from the handle shift).
+
 ## [0.18.0] — 2026-07-14 (E6d union `match` on the generic VM — `box` + dynamic builtins)
 
 Builds on 0.17.0 (heap objects): union `match` now runs on the generic VM (and
