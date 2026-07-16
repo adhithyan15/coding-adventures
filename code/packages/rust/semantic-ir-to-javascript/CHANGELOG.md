@@ -1,5 +1,127 @@
 # Changelog
 
+## 0.36.0 — SIR22 array/matrix base-cut codegen (HML01 Stream A)
+
+Real codegen for the SIR22 array/matrix domain's *base cut* — `ArrayLit`,
+`Range`, `MatMul`, `ElementwiseOp`, `Transpose`, `IndexGet` (an `Expr`), and
+`IndexSet` (a `Stmt`) — replacing the deferred `panic!` placeholder these
+seven nodes had. Mirrors the SIR23 codegen's own inlined-runtime treatment:
+targets a new `__Sir.Array` sub-runtime (a plain-JS port of the published
+`sir-runtime-array` npm package) rather than an imported package, so the
+JavaScript artifact stays self-contained.
+
+- `runtime.rs` gains `__Sir.Array`, a plain-JS port of `sir-runtime-array`'s
+  `ndarray`/`elementwise`/`matmul`/`transpose`/`range`/`indexGet`/`indexSet`
+  — dense, column-major `f64` storage (mirroring `array_runtime::value::Array`
+  field-for-field), the same `MAX_ELEMENTS` (2^26) allocation-size guard
+  validated *before* every `new Float64Array(...)` call, and the same
+  APL-style `1`/`0` (never native `boolean`) comparison-result convention.
+- New `toArrayValue` coercion in `elementwise`: `matlab-to-semantic-ir`'s
+  lowerer emits a *bare* (unwrapped) scalar operand for `.* ./ .\` and for
+  `* /` when exactly one side is provably scalar (e.g. `A .* 2` — the `2`
+  arrives as a plain `IntLit`, not an `ArrayLit`), so `elementwise` coerces
+  a raw JS `number` into a scalar `NDArray` itself rather than assuming both
+  operands already carry `.data`/`.shape`. Found and fixed during this PR's
+  own real-MATLAB-source end-to-end testing, not a hand-built edge case —
+  confirmed as a genuine regression by temporarily reverting the coercion
+  and watching `elementwise_mul_with_a_bare_scalar_operand_broadcasts`
+  (this crate) and `elementwise_scale_with_a_bare_scalar_operand_runs_in_node`
+  (`matlab-to-semantic-ir`) both fail with a `node` crash.
+- `emit.rs`: the seven base-cut arms emit real `__Sir.Array.*` calls. Note
+  `Expr::Range`'s field order is `start, step, stop`, but
+  `__Sir.Array.range(start, stop, step)` takes `stop` before `step` —
+  covered by a dedicated argument-order regression test.
+- **Scope boundary, not silently swept away**: the SIR22 "APL addendum"
+  nodes (`Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/
+  `IndexOf`/`Ravel`/`Catenate`) remain deferred — `sir-runtime-array` itself
+  never implemented them (no frontend needed them when that package
+  shipped), and porting `array_runtime::ops::{reduce,scan,outer}` +
+  `apl-runtime::builtins`'s bespoke shape/reshape/iota/index-of/ravel/
+  catenate logic is a properly-scoped follow-up, not part of this PR.
+  **Found while auditing downstream consumers for this PR**: these nine
+  variants share `Feature::NDArrays`/`MatrixOps`/`ArrayColumnMajor` with the
+  now-accepted base cut (the SIR22 addendum spec gives them no flag of
+  their own), and `apl-to-semantic-ir`'s *real* lowering (not just a test
+  fixture) emits `Reduce`/`Scan`/`OuterProduct` for APL's `+/`/`+\`/`∘.×`
+  operators today — contradicting that spec's now-stale "no frontend
+  crate consumes these yet" claim. Without a fix, such a module would pass
+  `accepts_features()` and panic inside `emit`. Fixed with a new
+  `find_unimplemented_sir22_addendum_node` tree walk (using the
+  `semantic_ir::Visitor` trait) wired into `JavaScriptBackend::compile()`
+  as an explicit step, mirroring the existing `TailCalls` belt-and-
+  suspenders check — a module using any of these nine now fails cleanly
+  with `BackendErrorKind::UnsupportedFeature`, never a panic.
+- `lib.rs`: `Feature::NDArrays`, `Feature::MatrixOps`, and
+  `Feature::ArrayColumnMajor` join `ACCEPTED_FEATURES`.
+- New `tests/sir22_array.rs`: seven real `node`-execution tests (matmul,
+  the scalar-broadcast fix above, transpose, MATLAB-colon-semantics range,
+  in-place `indexSet` — including whole-column broadcast — and a
+  non-conformable-matmul clean-error-exit case). `lib.rs`'s own test module
+  gains shape-assertion and regression tests (op-name casing, `Range`
+  argument order, `IndexSet` statement shape, the new addendum-node
+  rejection). `runtime.rs` gains four new tests
+  (`runtime_defines_array_matrix_domain`,
+  `array_runtime_validates_shape_before_allocating`,
+  `array_elementwise_coerces_bare_scalar_operands`,
+  `array_elementwise_comparisons_return_apl_style_numbers_not_booleans`).
+  129 tests now in this crate's `--lib` suite alone (`cargo test -p
+  semantic-ir-to-javascript --lib`), plus the seven in the new
+  `sir22_array.rs` integration test file.
+- Downstream consumers updated in lockstep: `matlab-to-semantic-ir`'s
+  `tests/test_validator.rs` (three tests converted from "the backend
+  rejects this" to "the backend accepts this") and `tests/e2e_node.rs`
+  (four new real-MATLAB-source `node`-execution tests: matrix multiply,
+  elementwise scalar broadcast, indexed assignment, range+transpose) and
+  `apl-to-semantic-ir`'s `tests/test_validator.rs` (the plain-`ElementwiseOp`
+  test converted to acceptance; the `Reduce`/`OuterProduct` test updated to
+  assert on `compile()`'s new tree-walk rejection rather than the now-
+  insufficient-by-itself `check_module()`).
+
+### Fixed (found by `/security-review` before this feature's first push)
+
+- **`NaN` silently bypassed the linear (1-argument) `indexGet`/`indexSet`
+  bounds check, causing a silent wrong read and a silently-dropped write.**
+  `get(a, r, c)`'s 2-argument bounds check is an AND-form
+  (`r >= 0 && r < nrows(a)`), which correctly falls through to "out of
+  bounds" for `r = NaN` (every relational comparison with `NaN` is
+  `false`, so the whole AND is `false`). The linear path instead used an
+  OR-form (`i < 0 || i >= length`) that is *not* the same check's negation
+  under IEEE-754: for `i = NaN`, both halves are `false`, so the "out of
+  bounds" throw was skipped entirely. `indexGet` then silently returned
+  `undefined` from `a.data[NaN]` (a stray, non-index property read on the
+  `Float64Array`, not a buffer read); `indexSet` silently no-opped —
+  `a.data[NaN] = v` sets a stray object property rather than writing the
+  buffer, with no exception at all, so a caller had no way to detect the
+  mutation never happened. `NDArray` index values come from the *compiled
+  program's own runtime arithmetic* (e.g. `0/0`), not just a hand-built
+  edge case. Fixed by validating every resolved position is a real
+  integer once, at `resolvePositions` — the single choke point both
+  `indexGet` and `indexSet` route through — rather than re-deriving a
+  NaN-safe bounds check at each call site. Three new `node`-execution
+  regression tests (NaN scalar `IndexGet`, NaN scalar `IndexSet`, and the
+  related `range()` NaN-bound case below), each confirmed to fail without
+  the fix (node exits 0 silently) and pass with it (a clean, catchable
+  `Error`).
+- **`range()` silently returned an empty vector instead of erroring on a
+  `NaN` `start`/`stop`/`step`.** Same root cause as above: the loop
+  condition is `false` on the very first check whenever a bound is `NaN`,
+  so `range` returned a valid-looking `[1, 0]`-shaped empty array with no
+  error. Fixed with an explicit `Number.isFinite` check on all three
+  arguments before the loop runs.
+- **`set(a, r, c, value)`'s bounds check had the same NaN-unsafe OR-form
+  as the pre-fix `indexSet`, found in the follow-up confirmation review
+  of the fix above.** `set` is not reachable with an unvalidated `NaN`
+  through any current codegen path (every caller resolves positions
+  through `assertValidPosition` first), but it is part of this module's
+  exported public surface, so a future direct caller of `Array.set` — or
+  a refactor of `indexSet` that skips `resolvePositions` — would silently
+  reintroduce the same bug with nothing catching it, since `set` looks
+  unchanged and "already fine" next to its now-fixed neighbors. Fixed by
+  writing the check as the negation of `get`'s AND-form
+  (`!(r >= 0 && ...)`) rather than an OR-form, matching how `get` was
+  already written — a true NaN-safe negation, unlike `A || B`, which is
+  not the same thing as `!(A && B)` when either side can be `NaN`.
+
 ## 0.35.0 — SIR23 symbolic-expression + pattern/rewrite codegen (HML01 Stream B, item 7 JS half)
 
 Real codegen for the SIR23 symbolic/pattern domain, replacing the deferred

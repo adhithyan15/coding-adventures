@@ -54,11 +54,21 @@
 //! published `sir-runtime-symbolic`/`symbolic-ir`/`cas-pattern-matching`
 //! TypeScript packages, so the artifact stays self-contained.
 //!
+//! It also accepts the SIR22 array/matrix domain's base cut (`NDArrays`,
+//! `MatrixOps`, `ArrayColumnMajor`): an `ArrayLit`/`Range`/`MatMul`/
+//! `ElementwiseOp`/`Transpose`/`IndexGet`/`IndexSet` node lowers to a call
+//! into the inlined `__Sir.Array.*` runtime — a plain-JS port of the
+//! published `sir-runtime-array` TypeScript package, so the artifact stays
+//! self-contained. The SIR22 "APL addendum" nodes (`Reduce`/`Scan`/
+//! `OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/
+//! `Catenate`) remain deferred — no frontend crate emits them yet, and
+//! `sir-runtime-array` itself deliberately does not implement them (see
+//! `emit`'s own doc comment for the resulting capability/emit caveat).
+//!
 //! It **rejects** everything else at the capability check — the
-//! remaining SIR18 features (e.g. string interpolation), the SIR22
-//! array/matrix domain (`NDArrays`, `MatrixOps`), `TailCalls` (V8 does not
-//! reliably tail-call optimise), and `Intrinsics` (empty whitelist).  The
-//! accept-set is deliberately matched to exactly what
+//! remaining SIR18 features (e.g. string interpolation), `TailCalls` (V8
+//! does not reliably tail-call optimise), and `Intrinsics` (empty
+//! whitelist).  The accept-set is deliberately matched to exactly what
 //! [`emit`](crate::emit) lowers, so a module that uses a deferred node is
 //! turned away *before* lowering rather than producing wrong code.
 //!
@@ -69,7 +79,8 @@ mod emit;
 mod runtime;
 
 use semantic_ir::{
-    Artifact, ArtifactMetadata, Backend, BackendError, BackendErrorKind, Feature, Module,
+    walk_expr_default, Artifact, ArtifactMetadata, Backend, BackendError, BackendErrorKind, Expr,
+    Feature, Module, Span, Visitor,
 };
 
 pub use emit::sanitize_ident;
@@ -78,6 +89,59 @@ pub use emit::sanitize_ident;
 /// checks, rejects unsupported features, and lowers to JavaScript.
 pub fn compile(module: &Module) -> Result<Artifact, BackendError> {
     JavaScriptBackend::new().compile(module)
+}
+
+/// Finds the first (if any) SIR22 "APL addendum" node anywhere in a
+/// module — `Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/
+/// `IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`.
+///
+/// These nine variants share `Feature::NDArrays`/`MatrixOps`/
+/// `ArrayColumnMajor` with the SIR22 *base* cut this backend accepts —
+/// the SIR22 addendum spec gives them no feature flag of their own — so
+/// the ordinary `accepts_features()` capability check cannot tell a
+/// module using only the base cut (real codegen, safe) from one that
+/// also uses these nine (still deferred in `emit`, would panic). This
+/// walk is the finer-grained check that closes that gap: found by
+/// auditing `apl-to-semantic-ir`'s downstream tests while wiring this
+/// backend's SIR22 codegen — that crate's *real* lowering logic (not
+/// just a hand-built test fixture) emits `Reduce`/`Scan`/`OuterProduct`
+/// for APL's `+/`/`+\`/`∘.×` operators today, contradicting the SIR22
+/// addendum spec's now-stale "no frontend crate consumes these yet"
+/// claim. Without this check, compiling such a module would sail past
+/// `accepts_features()` (since `NDArrays`/`MatrixOps` are now accepted)
+/// and panic inside `emit` instead of failing cleanly at the capability
+/// boundary — exactly the class of regression the existing `TailCalls`
+/// belt-and-suspenders check in [`JavaScriptBackend::compile`] guards
+/// against for a different feature. See `emit`'s own doc comment on
+/// these nine nodes for why they remain unimplemented.
+fn find_unimplemented_sir22_addendum_node(module: &Module) -> Option<(&'static str, Span)> {
+    struct Finder(Option<(&'static str, Span)>);
+    impl Visitor for Finder {
+        fn visit_expr(&mut self, e: &Expr, depth: usize) {
+            if self.0.is_none() {
+                let hit = match e {
+                    Expr::Reduce { span, .. } => Some(("Reduce", span.clone())),
+                    Expr::Scan { span, .. } => Some(("Scan", span.clone())),
+                    Expr::OuterProduct { span, .. } => Some(("OuterProduct", span.clone())),
+                    Expr::Shape { span, .. } => Some(("Shape", span.clone())),
+                    Expr::Reshape { span, .. } => Some(("Reshape", span.clone())),
+                    Expr::IndexGenerator { span, .. } => Some(("IndexGenerator", span.clone())),
+                    Expr::IndexOf { span, .. } => Some(("IndexOf", span.clone())),
+                    Expr::Ravel { span, .. } => Some(("Ravel", span.clone())),
+                    Expr::Catenate { span, .. } => Some(("Catenate", span.clone())),
+                    _ => None,
+                };
+                if hit.is_some() {
+                    self.0 = hit;
+                    return;
+                }
+            }
+            walk_expr_default(self, e, depth);
+        }
+    }
+    let mut finder = Finder(None);
+    finder.visit_module(module);
+    finder.0
 }
 
 /// The v0 JavaScript backend.
@@ -190,10 +254,25 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // section and `runtime.rs`'s "Symbolic expressions" section.
     Feature::SymbolicExpr,
     Feature::PatternMatching,
-    // A `SymRational` node sets this (shared with the still-deferred SIR22
-    // array/matrix domain rather than a flag of its own — mirroring the
+    // A `SymRational` node sets this (shared with the SIR22 array/matrix
+    // domain below rather than a flag of its own — mirroring the
     // TypeScript backend's identical choice).
     Feature::Rationals,
+    // SIR22: the array/matrix domain's *base cut* — `ArrayLit`, `Range`,
+    // `MatMul`, `ElementwiseOp`, `Transpose`, `IndexGet` (an `Expr`) and
+    // `IndexSet` (a `Stmt`) lower to calls into the inlined
+    // `__Sir.Array.*` runtime (a plain-JS port of the published
+    // `sir-runtime-array` TypeScript package — see `runtime.rs`'s
+    // "array/matrix domain" section and `emit`'s SIR22 arms). The SIR22
+    // "APL addendum" nodes (`Reduce`/`Scan`/`OuterProduct`/`Shape`/
+    // `Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`) share these
+    // SAME three features (the addendum gives them no flag of their own)
+    // but remain deferred in `emit` — see that module's own doc comment
+    // on why accepting these three features doesn't fully close the
+    // capability/emit gap for those nine specifically.
+    Feature::NDArrays,
+    Feature::MatrixOps,
+    Feature::ArrayColumnMajor,
 ];
 
 impl Backend for JavaScriptBackend {
@@ -241,6 +320,27 @@ impl Backend for JavaScriptBackend {
             });
         }
 
+        // 3b. The SIR22 "APL addendum" nodes (`Reduce`/`Scan`/
+        //     `OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/
+        //     `IndexOf`/`Ravel`/`Catenate`) share `NDArrays`/`MatrixOps`/
+        //     `ArrayColumnMajor` with the SIR22 base cut this backend
+        //     accepts (the addendum gives them no flag of their own), so
+        //     step 2's coarse feature check cannot reject a module using
+        //     them — an explicit tree walk is the only way to catch this
+        //     before `emit` panics on one. See
+        //     `find_unimplemented_sir22_addendum_node`'s doc comment for
+        //     why this is a real, not theoretical, gap (`apl-to-semantic-ir`
+        //     emits these from real APL source today).
+        if let Some((kind, span)) = find_unimplemented_sir22_addendum_node(module) {
+            return Err(BackendError {
+                kind: BackendErrorKind::UnsupportedFeature,
+                message: format!(
+                    "javascript backend does not yet implement the SIR22 addendum node `{kind}`"
+                ),
+                span,
+            });
+        }
+
         // 4. Lower.
         let source = emit::emit_module(module);
         let metadata = ArtifactMetadata {
@@ -260,7 +360,7 @@ impl Backend for JavaScriptBackend {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use semantic_ir::{Block, EffectSet, Expr, FeatureManifest, Function, Metadata, Span, Stmt};
+    use semantic_ir::{Block, EffectSet, Expr, FeatureManifest, Function, Metadata, Scope, Span, Stmt};
 
     fn s() -> Span {
         Span::synthetic()
@@ -399,38 +499,64 @@ mod tests {
         );
     }
 
-    // ── SIR22: array/matrix capability-rejection tests ────────────────
+    // ── SIR22: array/matrix codegen ────────────────────────────────────
     //
-    // Per the SIR22 spec's "Backend impact": "Rust/Go/Python backends: not
-    // required to support this in the first wave; they reject modules
-    // declaring NDArrays/MatrixOps per the existing capability-rejection
-    // path."  This JavaScript backend is likewise not updated for real
-    // SIR22 codegen in this PR, so it must reject the same way, via the
-    // same SIR10 capability-check mechanism `rejects_tail_calls_feature`
-    // above already exercises for `Feature::TailCalls`.
+    // The base cut (`ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/
+    // `Transpose`/`IndexGet`/`IndexSet`) is accepted and lowers to calls
+    // into the inlined `__Sir.Array.*` runtime; see `runtime.rs`'s "array/
+    // matrix domain" section and `emit`'s SIR22 arms. Behavioural (actual
+    // `node` execution) coverage lives in `tests/sir22_array.rs`, mirroring
+    // how `tests/sir23_symbolic.rs` complements the shape assertions here.
 
     #[test]
-    fn rejects_nd_arrays_feature() {
+    fn accepts_nd_arrays_feature() {
         let mut m = minimal_module();
         m.manifest = FeatureManifest::from_features(&[Feature::NDArrays]);
-        let err = compile(&m).expect_err("nd-arrays rejected");
-        assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
+        compile(&m).expect("nd-arrays accepted");
     }
 
     #[test]
-    fn rejects_matrix_ops_feature() {
+    fn accepts_matrix_ops_feature() {
         let mut m = minimal_module();
         m.manifest = FeatureManifest::from_features(&[Feature::MatrixOps]);
-        let err = compile(&m).expect_err("matrix-ops rejected");
+        compile(&m).expect("matrix-ops accepted");
+    }
+
+    /// Regression test for the gap `find_unimplemented_sir22_addendum_node`
+    /// closes: `apl-to-semantic-ir`'s real lowering emits `Expr::Reduce`
+    /// (APL `+/A`) with exactly these three features, and — before this
+    /// check existed — that module would sail past `accepts_features()`
+    /// (since `NDArrays`/`MatrixOps` are now accepted for the SIR22 base
+    /// cut) and panic inside `emit`. Must instead fail cleanly with
+    /// `UnsupportedFeature`, the same error kind every other still-
+    /// deferred node produces, not a panic.
+    #[test]
+    fn rejects_reduce_node_cleanly_instead_of_panicking_in_emit() {
+        let mut m = minimal_module();
+        m.manifest = FeatureManifest::from_features(&[
+            Feature::NDArrays,
+            Feature::MatrixOps,
+            Feature::ArrayColumnMajor,
+        ]);
+        let main = m.functions.iter_mut().find(|f| f.name == "main").unwrap();
+        main.body.value = Expr::Reduce {
+            op: semantic_ir::ElementwiseOpKind::Add,
+            target: Box::new(Expr::ArrayLit {
+                rows: vec![vec![Expr::IntLit { value: 1, span: s() }]],
+                span: s(),
+            }),
+            span: s(),
+        };
+        let err = compile(&m).expect_err("Reduce node rejected cleanly, not a panic");
         assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
     }
 
     /// End-to-end version: a real module body using `Expr::ArrayLit` and
     /// `Expr::MatMul` (the concrete SIR22 nodes the spec names), not just a
-    /// hand-set manifest flag — proving the rejection path works from
-    /// actual node usage.
+    /// hand-set manifest flag — proving real codegen runs from actual node
+    /// usage, and asserting the exact generated call shape.
     #[test]
-    fn rejects_module_body_using_array_lit_and_matmul() {
+    fn emits_array_lit_and_matmul_as_sir_array_calls() {
         let mut m = minimal_module();
         m.manifest = FeatureManifest::from_features(&[
             Feature::NDArrays,
@@ -455,8 +581,102 @@ mod tests {
             }),
             span: s(),
         };
-        let err = compile(&m).expect_err("array/matmul body rejected");
-        assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
+        let artifact = compile(&m).expect("array/matmul body compiles");
+        assert!(
+            artifact
+                .source
+                .contains("__Sir.Array.matmul(__Sir.Array.fromRows([[1]]), __Sir.Array.fromRows([[2]]))"),
+            "got:\n{}",
+            artifact.source
+        );
+    }
+
+    #[test]
+    fn emits_elementwise_op_with_pascal_case_op_name() {
+        // The op name must match `runtime.rs`'s `applyOp` switch exactly
+        // (`"Mul"`, not `ElementwiseOpKind::name()`'s lowercase `"mul"`).
+        let mut m = minimal_module();
+        m.manifest = FeatureManifest::from_features(&[
+            Feature::NDArrays,
+            Feature::MatrixOps,
+            Feature::ArrayColumnMajor,
+        ]);
+        let main = m.functions.iter_mut().find(|f| f.name == "main").unwrap();
+        main.body.value = Expr::ElementwiseOp {
+            op: semantic_ir::ElementwiseOpKind::Mul,
+            lhs: Box::new(Expr::IntLit { value: 2, span: s() }),
+            rhs: Box::new(Expr::IntLit { value: 3, span: s() }),
+            span: s(),
+        };
+        let artifact = compile(&m).expect("elementwise body compiles");
+        assert!(
+            artifact.source.contains("__Sir.Array.elementwise(\"Mul\", 2, 3)"),
+            "got:\n{}",
+            artifact.source
+        );
+    }
+
+    #[test]
+    fn emits_range_with_stop_before_step_argument_order() {
+        // `Expr::Range`'s own field order is `start, step, stop`, but
+        // `__Sir.Array.range(start, stop, step)` takes `stop` before
+        // `step` — a real ordering bug here would silently swap the
+        // wrong two arguments rather than fail to compile.
+        let mut m = minimal_module();
+        m.manifest = FeatureManifest::from_features(&[Feature::NDArrays]);
+        let main = m.functions.iter_mut().find(|f| f.name == "main").unwrap();
+        main.body.value = Expr::Range {
+            start: Box::new(Expr::IntLit { value: 1, span: s() }),
+            step: Some(Box::new(Expr::IntLit { value: 2, span: s() })),
+            stop: Box::new(Expr::IntLit { value: 10, span: s() }),
+            span: s(),
+        };
+        let artifact = compile(&m).expect("range body compiles");
+        assert!(
+            artifact.source.contains("__Sir.Array.range(1, 10, 2)"),
+            "got:\n{}",
+            artifact.source
+        );
+    }
+
+    #[test]
+    fn emits_index_set_as_a_statement_not_an_assignment() {
+        let mut m = minimal_module();
+        m.manifest = FeatureManifest::from_features(&[
+            Feature::NDArrays,
+            Feature::ArrayColumnMajor,
+        ]);
+        let main = m.functions.iter_mut().find(|f| f.name == "main").unwrap();
+        main.body.stmts.push(Stmt::LetBinding {
+            name: "a".into(),
+            sir_type: None,
+            value: Expr::ArrayLit {
+                rows: vec![vec![Expr::IntLit { value: 1, span: s() }]],
+                span: s(),
+            },
+            span: s(),
+        });
+        main.body.stmts.push(Stmt::IndexSet {
+            target: Box::new(Expr::VarRef {
+                name: "a".into(),
+                scope: Scope::Local,
+                span: s(),
+            }),
+            indices: vec![
+                semantic_ir::IndexArg::Scalar(Box::new(Expr::IntLit { value: 0, span: s() })),
+                semantic_ir::IndexArg::Whole,
+            ],
+            value: Box::new(Expr::IntLit { value: 9, span: s() }),
+            span: s(),
+        });
+        let artifact = compile(&m).expect("index-set body compiles");
+        assert!(
+            artifact
+                .source
+                .contains("__Sir.Array.indexSet(a, [{ kind: \"scalar\", value: 0 }, { kind: \"whole\" }], 9);"),
+            "got:\n{}",
+            artifact.source
+        );
     }
 
     // ── SIR23: symbolic-expression/pattern codegen ─────────────────────

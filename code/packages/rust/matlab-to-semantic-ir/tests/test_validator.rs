@@ -1,18 +1,18 @@
 //! Structural verification of lowered modules: every module this frontend
 //! produces must pass the shared SIR validator, and any module using the
-//! SIR22 array/matrix domain must be correctly *rejected* by a backend that
-//! does not declare `Feature::NDArrays`/`MatrixOps` — mirroring exactly the
-//! capability-rejection verification pattern used to land SIR22/SIR23
+//! SIR22 array/matrix domain must be correctly *accepted* by the
+//! `semantic-ir-to-javascript` backend — mirroring exactly the
+//! capability-acceptance verification pattern used to land SIR22/SIR23
 //! themselves (a real `Module`, checked through the actual
 //! `Backend::check_module` path, not an isolated unit assertion).
 //!
-//! `semantic-ir-to-javascript` does not yet implement codegen for the
-//! SIR22 nodes (`ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/`Transpose`/
-//! `IndexGet`/`IndexSet` all panic with "not accepted yet" if ever reached
-//! post-check — see that backend's `emit.rs`), so these tests confirm the
-//! *gate* works, not that codegen runs; a genuine array/matrix round-trip
-//! through a real backend is future work tracked separately (see this
-//! crate's README).
+//! `semantic-ir-to-javascript` now implements real codegen for the SIR22
+//! *base cut* (`ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/`Transpose`/
+//! `IndexGet`/`IndexSet` all lower to calls into its inlined
+//! `__Sir.Array.*` runtime — see that backend's `emit.rs`/`runtime.rs`),
+//! so these tests confirm the *gate* now lets these modules through; a
+//! genuine array/matrix round-trip through real execution lives in
+//! `e2e_node.rs`.
 //!
 //! Note on scope: the "scalar fast path" described in `lower.rs`'s module
 //! doc comment only recognises operands built *purely from literals* as
@@ -21,11 +21,10 @@
 //! inference, so ordinary variable arithmetic (`total + i`, `x * x` for a
 //! parameter `x`, ...) always takes the `ElementwiseOp`/`MatMul` path and
 //! therefore always needs `MatrixOps`/`ArrayColumnMajor` declared — even
-//! though, at runtime, such values are almost always genuine scalars. This
-//! is why only a *purely-literal* program can round-trip through the
-//! current JS backend today; seeing `control_flow_and_loops_validate`
-//! below need the array-domain features makes that limitation concrete
-//! rather than a claim in a doc comment.
+//! though, at runtime, such values are almost always genuine scalars.
+//! `control_flow_and_loops_validate` below documents this by asserting the
+//! manifest directly, rather than relying on backend rejection to make it
+//! concrete (the backend now accepts these features too).
 
 use matlab_to_semantic_ir::compile_source;
 use semantic_ir::backend::Backend;
@@ -93,7 +92,7 @@ fn control_flow_with_a_variable_accumulator_validates_but_needs_array_features()
 }
 
 #[test]
-fn a_matrix_program_validates_but_the_js_backend_rejects_it() {
+fn a_matrix_program_validates_and_the_js_backend_accepts_it() {
     let module = assert_valid("A = [1 2; 3 4];\nB = A * A;\ndisp(B);\n");
     assert!(module
         .manifest
@@ -102,30 +101,29 @@ fn a_matrix_program_validates_but_the_js_backend_rejects_it() {
     let backend = JavaScriptBackend;
     let errors = backend.check_module(&module);
     assert!(
-        !errors.is_empty(),
-        "expected the JS backend to reject a module using SIR22 array/matrix features \
-         (codegen for them isn't implemented there yet)"
+        errors.is_empty(),
+        "expected the JS backend to accept a module using SIR22 array/matrix features, got: {errors:?}"
     );
 }
 
 #[test]
-fn an_indexing_program_validates_but_the_js_backend_rejects_it() {
+fn an_indexing_program_validates_and_the_js_backend_accepts_it() {
     let module = assert_valid("A = [1 2 3];\nA(2) = 9;\ndisp(A(2));\n");
     let backend = JavaScriptBackend;
     let errors = backend.check_module(&module);
     assert!(
-        !errors.is_empty(),
-        "expected the JS backend to reject a module using IndexGet/IndexSet"
+        errors.is_empty(),
+        "expected the JS backend to accept a module using IndexGet/IndexSet, got: {errors:?}"
     );
 }
 
 #[test]
-fn a_range_and_transpose_program_validates_but_the_js_backend_rejects_it() {
+fn a_range_and_transpose_program_validates_and_the_js_backend_accepts_it() {
     let module = assert_valid("A = [1 2; 3 4];\nv = 1:5;\nB = A';\ndisp(B);\n");
     let backend = JavaScriptBackend;
     let errors = backend.check_module(&module);
     assert!(
-        !errors.is_empty(),
-        "expected the JS backend to reject a module using Range/Transpose"
+        errors.is_empty(),
+        "expected the JS backend to accept a module using Range/Transpose, got: {errors:?}"
     );
 }

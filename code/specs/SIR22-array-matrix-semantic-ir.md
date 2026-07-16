@@ -211,12 +211,22 @@ operation as `MatMul`/`Transpose` above. `IndexGenerator`/`IndexOf` observe
 only `Feature::NDArrays` — they construct/query arrays without inherently
 being a "matrix op" any more than `Range`/`IndexGet` are.
 
-No frontend crate consumes any of these nine variants yet. This addendum
-is IR-substrate-only, mirroring how `array-runtime`'s AR-2 task preceded
-`apl-runtime` as its own separate step before that runtime crate could be
-built — the actual `apl-to-semantic-ir` frontend that will emit these
-nodes from parsed APL source is a follow-up task, not part of this
-addendum.
+No frontend crate consumed any of these nine variants at the time this
+addendum was written — it was IR-substrate-only, mirroring how
+`array-runtime`'s AR-2 task preceded `apl-runtime` as its own separate
+step before that runtime crate could be built. **This is no longer
+true**: `apl-to-semantic-ir` (a follow-up task after this addendum, as
+anticipated) does emit `Reduce`/`Scan`/`OuterProduct` from APL's
+`+/`/`+\`/`∘.×` operators. No backend implements codegen for any of the
+nine yet, though — `sir-runtime-array` (the JS/TS runtime package)
+deliberately scoped them out (see that package's own `src/index.ts` doc
+comment) since no frontend needed them when it shipped, and
+`semantic-ir-to-javascript`'s later SIR22 base-cut codegen PR found that,
+because these nine share `NDArrays`/`MatrixOps`/`ArrayColumnMajor` with
+the base cut, a plain feature-flag capability check can no longer tell
+"safe" modules from "still unimplemented" ones — see that crate's
+`find_unimplemented_sir22_addendum_node` for the dedicated tree-walk this
+now requires.
 
 ## Storage convention
 
@@ -261,12 +271,24 @@ is lowered as a `Stmt`-position operation (like `Assign`), not a value-producing
 
 ## Backend impact
 
-- **JS/TS** (`semantic-ir-to-javascript`/`-to-typescript`): new `match` arms
-  emit calls into `sir-runtime-array` (`__SirArray.matmul(...)`,
-  `__SirArray.elementwise(...)`, `__SirArray.range(...)`,
-  `__SirArray.indexGet(...)`/`indexSet(...)`), imported only when
-  `Feature::MatrixOps`/`NDArrays` is in the manifest — same gating pattern as
-  the existing OOP/exception runtime imports.
+- **JS** (`semantic-ir-to-javascript`) — **done**: new `match` arms emit calls
+  into an *inlined* `__Sir.Array.*` sub-runtime (a plain-JS port of
+  `sir-runtime-array`, not an `import`/`require` — this backend always
+  inlines its runtime helpers, unlike the TS backend's imported-package
+  model) for the base cut (`ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/
+  `Transpose`/`IndexGet`/`IndexSet`). `NDArrays`/`MatrixOps`/
+  `ArrayColumnMajor` are in `ACCEPTED_FEATURES`. The SIR22 "APL addendum"
+  nodes below share these same three features but remain deferred — this
+  backend adds a dedicated tree-walk check inside `compile()` (beyond the
+  ordinary feature-flag capability check) so a module using one of the
+  nine still fails cleanly rather than reaching an emit-time panic; see
+  that crate's `find_unimplemented_sir22_addendum_node`.
+- **TS** (`semantic-ir-to-typescript`) — not yet done: still rejects
+  `NDArrays`/`MatrixOps`/`ArrayColumnMajor` via the plain capability-
+  rejection path (a real `import { ... } from
+  "@coding-adventures/sir-runtime-array"` codegen PR, mirroring the JS
+  backend's call shapes but against the published npm package instead of
+  an inlined port, is a follow-up).
 - **Rust/Go/Python backends**: not required to support this in the first
   wave; they reject modules declaring `NDArrays`/`MatrixOps` per the existing
   capability-rejection path. No code changes required to these backends for

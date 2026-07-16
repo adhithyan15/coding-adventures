@@ -2665,6 +2665,492 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     };
   })();
 
+  // ── array/matrix domain (SIR22) ────────────────────────────────
+  //
+  // `ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/`Transpose`/`IndexGet`
+  // (and `IndexSet`, a `Stmt`) lower to calls into `Array.*` below — a
+  // plain-JS port of the published `@coding-adventures/sir-runtime-array`
+  // TypeScript package this backend's TypeScript sibling *imports*, so
+  // the JavaScript artifact stays self-contained — the same treatment
+  // `Symbolic` above already got for SIR23.
+  //
+  // ## Value model
+  //
+  // `{ shape: number[], data: Float64Array }` — dense, rectangular,
+  // COLUMN-MAJOR storage (Fortran/MATLAB order), mirroring
+  // `array_runtime::value::Array` (`code/packages/rust/array-runtime/src/value.rs`)
+  // field-for-field. `shape == []` is a scalar, `[n]` a vector (an `n×1`
+  // column for row/column purposes), `[r, c]` a matrix — this port's
+  // whole scope, like the Rust reference and the TypeScript sibling, is
+  // rank ≤ 2.
+  //
+  // ## Scope: the SIR22 "APL addendum" is NOT ported here
+  //
+  // `Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/
+  // `IndexOf`/`Ravel`/`Catenate` remain deferred in `emit.rs` (still a
+  // `panic!`, unchanged by this port) — no frontend crate emits these
+  // nine `Expr` variants yet (`apl-to-semantic-ir` does not lower APL's
+  // reduce/scan/outer-product operators to them), and the TypeScript
+  // sibling package deliberately scoped them out for the same reason
+  // (see `sir-runtime-array`'s own `src/index.ts` doc comment). Porting
+  // them now would be speculative rather than filling a real gap —
+  // exactly the same reasoning that package's own README states.
+  const ArrayRt = (() => {
+    // SECURITY: every factory below validates a shape/output size
+    // *before* allocating a `Float64Array` from it — a compiled
+    // program's array sizes come from potentially attacker-influenced
+    // runtime values (loop counts, parsed input, ...), not fixed
+    // compile-time constants, so an unbounded or malformed shape must
+    // fail cleanly with a catchable `Error` rather than let
+    // `new Float64Array(n)` itself throw an uncaught `RangeError` or
+    // stall attempting a huge allocation. Mirrors `matlab-runtime`'s own
+    // `MAX_RANGE` bound and the TypeScript sibling's `MAX_ELEMENTS`
+    // exactly, so behaviour is identical across both backends.
+    const MAX_ELEMENTS = 1 << 26; // 67,108,864
+
+    function checkedShapeSize(shape) {
+      if (!shape.every((d) => Number.isInteger(d) && d >= 0)) {
+        throw new Error(`checkedShapeSize: shape ${JSON.stringify(shape)} has a negative or non-integer dimension`);
+      }
+      const n = shape.reduce((acc, d) => acc * d, 1);
+      if (!Number.isFinite(n) || n > MAX_ELEMENTS) {
+        throw new Error(`checkedShapeSize: shape ${JSON.stringify(shape)} (${n} elements) exceeds the ${MAX_ELEMENTS}-element cap`);
+      }
+      return n;
+    }
+
+    function ndarray(shape, data) {
+      if (!(data instanceof Float64Array)) {
+        throw new Error("ndarray: data must be a Float64Array");
+      }
+      const n = checkedShapeSize(shape);
+      if (n !== data.length) {
+        throw new Error(`ndarray: shape ${JSON.stringify(shape)} implies ${n} elements, got ${data.length}`);
+      }
+      return { shape, data };
+    }
+
+    function fromRows(rows) {
+      const nrowsIn = rows.length;
+      if (nrowsIn === 0) {
+        return ndarray([0, 0], new Float64Array(0));
+      }
+      const ncolsIn = rows[0].length;
+      if (rows.some((r) => r.length !== ncolsIn)) {
+        throw new Error("fromRows: ragged rows");
+      }
+      const n = checkedShapeSize([nrowsIn, ncolsIn]);
+      const data = new Float64Array(n);
+      for (let r = 0; r < nrowsIn; r++) {
+        for (let c = 0; c < ncolsIn; c++) {
+          data[c * nrowsIn + r] = rows[r][c]; // column-major store
+        }
+      }
+      return ndarray([nrowsIn, ncolsIn], data);
+    }
+
+    /**
+     * Coerce a bare JS `number` into a rank-0 (scalar) `NDArray`; an
+     * already-`NDArray` value passes through unchanged. Needed because
+     * `matlab-to-semantic-ir`'s lowerer emits a mixed operand pair for
+     * `.* ./ .\` and for `* /` when exactly one side is scalar (e.g.
+     * `A .* 2`) — the *bare* scalar sub-expression is passed through
+     * `ElementwiseOp` unwrapped (a plain `IntLit`/`FloatLit`/arithmetic
+     * result, which emits as an ordinary JS `number`), not wrapped in an
+     * `ArrayLit`/scalar-array constructor first. Every function below
+     * that accepts an "array" operand normalizes through this first, so
+     * a raw number never reaches `.data`/`.shape` and throws a
+     * `TypeError` instead of behaving correctly.
+     */
+    function toArrayValue(v) {
+      return typeof v === "number" ? { shape: [], data: Float64Array.of(v) } : v;
+    }
+
+    function isScalar(a) { return a.data.length === 1; }
+
+    /** Rows, treating a scalar as `1×1` and a vector `[n]` as `n×1`. */
+    function nrows(a) {
+      switch (a.shape.length) {
+        case 0: return 1;
+        default: return a.shape[0];
+      }
+    }
+
+    /** Columns, treating a scalar as `1×1` and a vector `[n]` as `n×1`. */
+    function ncols(a) {
+      switch (a.shape.length) {
+        case 0:
+        case 1: return 1;
+        default: return a.shape[1];
+      }
+    }
+
+    /** Element `(r, c)` (column-major), or `undefined` if out of bounds. */
+    function get(a, r, c) {
+      if (r >= 0 && c >= 0 && r < nrows(a) && c < ncols(a)) {
+        return a.data[c * nrows(a) + r];
+      }
+      return undefined;
+    }
+
+    /**
+     * Set element `(r, c)` in place (column-major) — mutates `a.data`
+     * directly, matching MATLAB assignment semantics (`A(i,j) = v`
+     * rebinds one element of the existing array, it does not produce a
+     * new one). This is why `Stmt::IndexSet` is a statement, not a pure
+     * expression, in the SIR22 spec.
+     */
+    function set(a, r, c, value) {
+      // SECURITY: written as the negation of `get`'s AND-form
+      // (`!(r >= 0 && ...)`), not as an OR-form (`r < 0 || ...`) --
+      // under IEEE-754 those are NOT equivalent for NaN: every
+      // relational comparison with NaN is false, so an OR-form check
+      // would have every branch evaluate false for r=NaN, silently
+      // skipping the throw. `a.data[c * nrows(a) + NaN] = value` would
+      // then set a stray, non-index property on the Float64Array rather
+      // than writing the buffer -- the exact same silent-write-drop bug
+      // this file's `resolvePositions`/`assertValidPosition` fix closed
+      // for `indexSet`'s call path into this function. `set` itself is
+      // not reachable with an unvalidated NaN today (every caller
+      // resolves positions through `assertValidPosition` first), but it
+      // is part of this module's exported public surface, so it stays
+      // NaN-safe on its own rather than relying on every future caller
+      // to re-derive that invariant.
+      if (!(r >= 0 && c >= 0 && r < nrows(a) && c < ncols(a))) {
+        throw new Error(`set: index (${r}, ${c}) out of bounds for shape ${JSON.stringify(a.shape)}`);
+      }
+      a.data[c * nrows(a) + r] = value;
+    }
+
+    // ── elementwise binary ops ────────────────────────────────────
+    // Comparisons follow the same APL-style boolean convention
+    // `array_runtime::BinOp` uses: `1` for true, `0` for false (never a
+    // native `boolean`), since the result must stay a plain array
+    // element like every other value here.
+    function applyOp(op, a, b) {
+      const b2f = (cond) => (cond ? 1 : 0);
+      switch (op) {
+        case "Add": return a + b;
+        case "Sub": return a - b;
+        case "Mul": return a * b;
+        case "Div": return a / b;
+        case "Pow": return Math.pow(a, b);
+        case "Max": return Math.max(a, b);
+        case "Min": return Math.min(a, b);
+        case "Eq": return b2f(a === b);
+        case "Ne": return b2f(a !== b);
+        case "Lt": return b2f(a < b);
+        case "Le": return b2f(a <= b);
+        case "Ge": return b2f(a >= b);
+        case "Gt": return b2f(a > b);
+        default:
+          // Same "crosses a JS runtime boundary the emitter can't
+          // enforce" reasoning `resolvePositions` below documents: an
+          // unrecognised `op` must fail loudly here, not fall through
+          // to `undefined`, which would otherwise silently corrupt data
+          // as `NaN` instead of erroring.
+          throw new Error(`applyOp: unrecognised ElementwiseOpKind ${JSON.stringify(op)}`);
+      }
+    }
+
+    function sameShape(a, b) {
+      return a.length === b.length && a.every((d, i) => d === b[i]);
+    }
+
+    /**
+     * Elementwise binary op with scalar broadcasting. Either operand may
+     * be a scalar; otherwise the shapes must match exactly (full
+     * NumPy/MATLAB broadcasting is out of scope, same as the Rust
+     * reference). Result takes the non-scalar operand's shape (or the
+     * scalar's, if both are).
+     */
+    function elementwise(op, a, b) {
+      a = toArrayValue(a);
+      b = toArrayValue(b);
+      const ad = a.data;
+      const bd = b.data;
+      let data;
+      if (isScalar(a)) {
+        data = Float64Array.from(bd, (y) => applyOp(op, ad[0], y));
+      } else if (isScalar(b)) {
+        data = Float64Array.from(ad, (x) => applyOp(op, x, bd[0]));
+      } else {
+        if (!sameShape(a.shape, b.shape)) {
+          throw new Error(`elementwise: non-conformable arrays: ${JSON.stringify(a.shape)} vs ${JSON.stringify(b.shape)}`);
+        }
+        data = new Float64Array(ad.length);
+        for (let i = 0; i < data.length; i++) {
+          data[i] = applyOp(op, ad[i], bd[i]);
+        }
+      }
+      const shape = isScalar(a) ? b.shape : a.shape;
+      return ndarray(shape, data);
+    }
+
+    /**
+     * Matrix product `[m, k] · [k, n] → [m, n]` (column-major
+     * throughout). `m` and `n` come from two *independent* operands
+     * (each individually under `MAX_ELEMENTS`, but their product isn't
+     * bounded by that alone — an outer-product-shaped call could still
+     * ask for a huge output), so `checkedShapeSize` validates `[m, n]`
+     * *before* allocating `out`, not after.
+     */
+    function matmul(a, b) {
+      const m = nrows(a);
+      const ka = ncols(a);
+      const kb = nrows(b);
+      const n = ncols(b);
+      if (ka !== kb) {
+        throw new Error(`matmul: inner dimensions disagree (${m}x${ka} . ${kb}x${n})`);
+      }
+      const outLen = checkedShapeSize([m, n]);
+      const ad = a.data;
+      const bd = b.data;
+      const out = new Float64Array(outLen);
+      for (let j = 0; j < n; j++) {
+        for (let i = 0; i < m; i++) {
+          let acc = 0;
+          for (let p = 0; p < ka; p++) {
+            acc += ad[p * m + i] * bd[j * kb + p]; // column-major indexing
+          }
+          out[j * m + i] = acc;
+        }
+      }
+      return ndarray([m, n], out);
+    }
+
+    /**
+     * Matrix transpose. `conjugate` distinguishes MATLAB `'` (`true`)
+     * from `.'` (`false`) — this runtime has no `Complex` value type yet
+     * (matching `array-runtime`'s own real-only scope today), so a
+     * conjugate transpose of real data is identical to a plain
+     * transpose; `conjugate` is accepted for call-shape parity with the
+     * SIR spec only.
+     */
+    function transpose(a, conjugate) {
+      void conjugate;
+      const m = nrows(a);
+      const n = ncols(a);
+      const ad = a.data;
+      const out = new Float64Array(ad.length);
+      for (let j = 0; j < n; j++) {
+        for (let i = 0; i < m; i++) {
+          out[i * n + j] = ad[j * m + i];
+        }
+      }
+      return ndarray([n, m], out);
+    }
+
+    // ── range ───────────────────────────────────────────────────────
+    // Tolerance for the inclusive-stop boundary check, matching
+    // `matlab-runtime`'s own `eval_colon` exactly — a floating step
+    // (e.g. `1:0.1:2`) can drift a few ULPs short of `stop` by the final
+    // iteration, and MATLAB's `a:step:b` is inclusive of `b`.
+    const RANGE_EPSILON = 1e-9;
+
+    /**
+     * Materialize a MATLAB-style range `start:step:stop` (default
+     * `step = 1`) as a `1×n` row vector — MATLAB's `:` always produces
+     * a row, never a column. Bounded by `MAX_ELEMENTS` so a compiled
+     * program's `1:1e18`-style range can't exhaust memory before this
+     * function ever gets to materialize anything.
+     */
+    function range(start, stop, step = 1) {
+      if (step === 0) {
+        throw new Error("range: step cannot be zero");
+      }
+      // SECURITY: the loop condition below is false on its very first
+      // check whenever start/stop/step is NaN (every relational
+      // comparison with NaN is false), so an unguarded NaN bound would
+      // silently produce an empty range instead of erroring -- the same
+      // "NaN defeats a comparison-based check" class the linear
+      // indexGet/indexSet fix below closes. Reject non-finite bounds
+      // up front instead of letting them fall through to a
+      // quietly-wrong empty result.
+      if (!Number.isFinite(start) || !Number.isFinite(stop) || !Number.isFinite(step)) {
+        throw new Error(`range: start/stop/step must be finite numbers, got (${start}, ${stop}, ${step})`);
+      }
+      const values = [];
+      let x = start;
+      while ((step > 0 && x <= stop + RANGE_EPSILON) || (step < 0 && x >= stop - RANGE_EPSILON)) {
+        if (values.length >= MAX_ELEMENTS) {
+          throw new Error(`range: produces more than ${MAX_ELEMENTS} elements`);
+        }
+        values.push(x);
+        x += step;
+      }
+      return ndarray(
+        values.length === 0 ? [1, 0] : [1, values.length],
+        Float64Array.from(values),
+      );
+    }
+
+    // ── indexing ────────────────────────────────────────────────────
+    // One MATLAB-style index-position argument, mirroring the SIR22
+    // spec's `IndexArg` exactly: `{kind:"scalar",value}` /
+    // `{kind:"whole"}` / `{kind:"range",indices: <NDArray>}`. `end`-
+    // relative indices are never seen here — per SIR10 discipline, the
+    // frontend resolves `end` to a concrete 0-based `scalar` index
+    // before emitting `IndexGet`/`IndexSet`.
+
+    /**
+     * Validate one resolved position is a real, finite integer.
+     *
+     * SECURITY: `indexGet`/`indexSet`'s own linear (1-argument) bounds
+     * checks are written as `i < 0 || i >= length` — the negation of
+     * `get`'s `r >= 0 && r < nrows(a)` AND-form. Under IEEE-754, `NaN`
+     * fails *every* relational comparison, so for `i = NaN` **both**
+     * halves of that OR are `false`, and the "out of bounds" check is
+     * silently skipped entirely — `a.data[NaN]` then reads/writes a
+     * stray, non-index `"NaN"` property on the `Float64Array` object
+     * rather than the buffer, so a NaN index makes `indexGet` silently
+     * return `undefined` (not throw) and makes `indexSet` silently drop
+     * the write (not throw, not mutate). This is the exact "malformed
+     * input crosses a JS boundary and must fail loudly, not fall
+     * through to `undefined`/corrupt data" hazard this file's other
+     * `default:` guards (`applyOp`, this function's own `default` arm)
+     * already guard against — validating here, once, at the single
+     * choke point both `indexGet` and `indexSet` resolve every position
+     * through, closes it for both without duplicating a NaN-safe bounds
+     * check at every call site.
+     */
+    function assertValidPosition(i) {
+      if (!Number.isInteger(i)) {
+        throw new Error(`resolvePositions: index ${i} is not a finite integer`);
+      }
+      return i;
+    }
+
+    /** Resolve one `IndexArg` against a dimension of size `dimSize` into a flat list of 0-based positions along that dimension. */
+    function resolvePositions(arg, dimSize) {
+      switch (arg.kind) {
+        case "scalar": return [assertValidPosition(arg.value)];
+        case "whole": return Array.from({ length: dimSize }, (_, i) => i);
+        case "range": return Array.from(arg.indices.data, (x) => assertValidPosition(Math.trunc(x)));
+        default:
+          // Emitted code crosses a JS runtime boundary the emitter can't
+          // enforce at the actual call site — a malformed `kind` must
+          // fail cleanly here, not fall through to `undefined` and
+          // surface as a confusing `TypeError` several calls further down.
+          throw new Error(`resolvePositions: unrecognised IndexArg ${JSON.stringify(arg)}`);
+      }
+    }
+
+    /**
+     * `A(i)` / `A(i, j)` — read one element or a sub-array. Scoped to 1
+     * or 2 index arguments (rank ≤ 2): a single argument indexes `a`'s
+     * underlying column-major data linearly (MATLAB's own single-
+     * subscript convention, which is column-major too); two arguments
+     * index `(row, col)`. Returns a bare `number` when every argument is
+     * `scalar` (a single element), otherwise an `NDArray`.
+     */
+    function indexGet(a, indices) {
+      if (indices.length === 1) {
+        const [arg] = indices;
+        const positions = resolvePositions(arg, a.data.length);
+        const read = (i) => {
+          if (i < 0 || i >= a.data.length) {
+            throw new Error(`indexGet: linear index ${i} out of bounds`);
+          }
+          return a.data[i];
+        };
+        if (arg.kind === "scalar") {
+          return read(positions[0]);
+        }
+        return ndarray([1, positions.length], Float64Array.from(positions, read));
+      }
+      if (indices.length === 2) {
+        const [rowArg, colArg] = indices;
+        const rows = resolvePositions(rowArg, nrows(a));
+        const cols = resolvePositions(colArg, ncols(a));
+        const read = (r, c) => {
+          const v = get(a, r, c);
+          if (v === undefined) {
+            throw new Error(`indexGet: (${r}, ${c}) out of bounds for shape ${JSON.stringify(a.shape)}`);
+          }
+          return v;
+        };
+        if (rowArg.kind === "scalar" && colArg.kind === "scalar") {
+          return read(rows[0], cols[0]);
+        }
+        // `rows.length`/`cols.length` are each individually bounded by
+        // `a`'s own dimensions (`whole`) or by a `range` NDArray's own
+        // `MAX_ELEMENTS` cap — but nothing bounds their *product* on its
+        // own, so this is the exact outer-product-shaped allocation
+        // `matmul` guards against, one level up. Validate before
+        // allocating, not after.
+        const outLen = checkedShapeSize([rows.length, cols.length]);
+        const data = new Float64Array(outLen);
+        for (let c = 0; c < cols.length; c++) {
+          for (let r = 0; r < rows.length; r++) {
+            data[c * rows.length + r] = read(rows[r], cols[c]);
+          }
+        }
+        return ndarray([rows.length, cols.length], data);
+      }
+      throw new Error(`indexGet: only 1 or 2 index arguments are supported (rank <= 2 scope), got ${indices.length}`);
+    }
+
+    /** Broadcast a scalar-or-`NDArray` right-hand side to exactly `count` values (mirrors `elementwise`'s scalar-broadcast rule). */
+    function broadcastValues(value, count) {
+      if (typeof value === "number") {
+        return new Float64Array(count).fill(value);
+      }
+      if (value.data.length === 1) {
+        return new Float64Array(count).fill(value.data[0]);
+      }
+      if (value.data.length !== count) {
+        throw new Error(`indexSet: value has ${value.data.length} elements, expected ${count}`);
+      }
+      return value.data;
+    }
+
+    /**
+     * `A(i) = v` / `A(i, j) = v` — write one element or a sub-array, IN
+     * PLACE (see `set`'s doc comment above for why this mutates rather
+     * than returns a new array). `value` may be a scalar (broadcast to
+     * every selected position) or an `NDArray` with exactly as many
+     * elements as positions are selected.
+     */
+    function indexSet(a, indices, value) {
+      if (indices.length === 1) {
+        const [arg] = indices;
+        const positions = resolvePositions(arg, a.data.length);
+        const values = broadcastValues(value, positions.length);
+        positions.forEach((i, k) => {
+          if (i < 0 || i >= a.data.length) {
+            throw new Error(`indexSet: linear index ${i} out of bounds`);
+          }
+          a.data[i] = values[k];
+        });
+        return;
+      }
+      if (indices.length === 2) {
+        const [rowArg, colArg] = indices;
+        const rows = resolvePositions(rowArg, nrows(a));
+        const cols = resolvePositions(colArg, ncols(a));
+        // Same product-of-two-independent-selections gap `indexGet`
+        // closes above — validate before `broadcastValues` allocates.
+        const count = checkedShapeSize([rows.length, cols.length]);
+        const values = broadcastValues(value, count);
+        let k = 0;
+        for (let c = 0; c < cols.length; c++) {
+          for (let r = 0; r < rows.length; r++) {
+            set(a, rows[r], cols[c], values[k]);
+            k++;
+          }
+        }
+        return;
+      }
+      throw new Error(`indexSet: only 1 or 2 index arguments are supported (rank <= 2 scope), got ${indices.length}`);
+    }
+
+    return {
+      ndarray, fromRows, isScalar, nrows, ncols, get, set,
+      elementwise, matmul, transpose, range, indexGet, indexSet,
+    };
+  })();
+
   return {
     Sym, Pair, Closure,
     intern, applyClosure, truthy, format, print, puts,
@@ -2682,6 +3168,12 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     // the published sir-runtime-symbolic/symbolic-ir/cas-pattern-matching
     // TypeScript packages so this backend stays self-contained.
     Symbolic,
+    // SIR22: array/matrix domain, ported from the published
+    // sir-runtime-array TypeScript package so this backend stays
+    // self-contained. Exposed as `Array` (a property key, not a `const`
+    // binding — this never shadows the global `Array` constructor
+    // anywhere in this file).
+    Array: ArrayRt,
   };
 })();
 "##;
@@ -2979,5 +3471,92 @@ mod tests {
         // `.kind` tag.
         assert!(RUNTIME.contains("typeof v.kind === \"string\""));
         assert!(RUNTIME.contains("Symbolic.toDisplayString(v)"));
+    }
+
+    #[test]
+    fn runtime_defines_array_matrix_domain() {
+        // SIR22: the emitter's ArrayLit/Range/MatMul/ElementwiseOp/
+        // Transpose/IndexGet/IndexSet arms all call into `Array.*` — this
+        // must stay inlined (no import/require), matching every other
+        // domain in this file.
+        assert!(RUNTIME.contains("const ArrayRt = (() => {"));
+        assert!(RUNTIME.contains("Array: ArrayRt,"), "Array must be exported");
+        for needed in [
+            "function checkedShapeSize(",
+            "function ndarray(",
+            "function fromRows(",
+            "function isScalar(",
+            "function nrows(",
+            "function ncols(",
+            "function get(",
+            "function set(",
+            "function applyOp(",
+            "function elementwise(",
+            "function matmul(",
+            "function transpose(",
+            "function range(",
+            "function resolvePositions(",
+            "function indexGet(",
+            "function indexSet(",
+            "function toArrayValue(",
+        ] {
+            assert!(RUNTIME.contains(needed), "Array runtime missing `{needed}`");
+        }
+        assert!(!RUNTIME.contains("import "));
+        assert!(!RUNTIME.contains("require("));
+    }
+
+    #[test]
+    fn array_runtime_validates_shape_before_allocating() {
+        // SECURITY: every factory that computes an output size from
+        // caller-supplied numbers must validate via `checkedShapeSize`
+        // *before* `new Float64Array(...)` runs, not after — an
+        // unbounded or malformed shape must fail with a catchable
+        // `Error`, not an uncaught `RangeError` or a stalled huge
+        // allocation. Spot-check the two shapes most likely to regress:
+        // an outer-product-shaped `matmul`/`indexGet` (two independently-
+        // bounded dimensions whose product isn't bounded by either
+        // alone) and `range`'s own element cap.
+        assert!(RUNTIME.contains("const MAX_ELEMENTS = 1 << 26;"));
+        assert!(RUNTIME.contains("checkedShapeSize([m, n])"));
+        assert!(RUNTIME.contains("checkedShapeSize([rows.length, cols.length])"));
+        assert!(RUNTIME.contains(
+            "if (values.length >= MAX_ELEMENTS) {\n          throw new Error(`range: produces more than ${MAX_ELEMENTS} elements`);"
+        ));
+    }
+
+    #[test]
+    fn array_elementwise_coerces_bare_scalar_operands() {
+        // `matlab-to-semantic-ir`'s lowerer emits a mixed number/NDArray
+        // operand pair for `.* ./ .\` and for `* /` when exactly one side
+        // is scalar (e.g. `A .* 2`) — the bare scalar sub-expression is
+        // passed through `ElementwiseOp` unwrapped, so `elementwise` must
+        // coerce a plain JS `number` into a scalar NDArray itself rather
+        // than assume both operands already carry `.data`/`.shape`.
+        assert!(RUNTIME.contains("a = toArrayValue(a);"));
+        assert!(RUNTIME.contains("b = toArrayValue(b);"));
+    }
+
+    #[test]
+    fn array_elementwise_comparisons_return_apl_style_numbers_not_booleans() {
+        // Comparisons (`Eq`/`Ne`/`Lt`/`Le`/`Ge`/`Gt`) must return `1`/`0`,
+        // never a native `boolean` — the result has to stay a plain
+        // Float64Array element like every other value here.
+        assert!(RUNTIME.contains("const b2f = (cond) => (cond ? 1 : 0);"));
+    }
+
+    #[test]
+    fn array_set_bounds_check_is_a_nan_safe_negated_and_not_an_or() {
+        // Security-review follow-up: `set`'s bounds check must be the
+        // negation of `get`'s AND-form (`!(r >= 0 && ...)`), not an
+        // OR-form (`r < 0 || ...`) -- those are NOT equivalent for NaN
+        // under IEEE-754 (every relational comparison with NaN is
+        // false), so an OR-form would silently skip the throw and let
+        // `a.data[c * nrows(a) + NaN] = value` silently drop the write.
+        // `set` is not reachable with an unvalidated NaN through any
+        // current codegen path (every caller resolves positions through
+        // `assertValidPosition` first), but it is part of this module's
+        // exported public surface, so it must stay NaN-safe on its own.
+        assert!(RUNTIME.contains("if (!(r >= 0 && c >= 0 && r < nrows(a) && c < ncols(a))) {"));
     }
 }
