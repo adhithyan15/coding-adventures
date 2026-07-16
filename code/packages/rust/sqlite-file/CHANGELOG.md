@@ -1,5 +1,23 @@
 # Changelog — sqlite-file
 
+## 0.14.0 - Unreleased
+
+**Phase F (writer): multi-table databases.** New
+`page_writer::write_multi_table_db(page_size, &[TableSpec])` (where `TableSpec =
+(name, create_sql, rows)`) emits a complete database holding **several** tables
+in one call. Page 1 carries the DB header + a `sqlite_schema` leaf with one row
+per table; pages 2… hold each table's data leaf followed by its overflow pages,
+table by table, so each table roots wherever its leaf lands after the previous
+tables' pages. `write_single_table_db` is now a thin wrapper over the one-table
+case (byte-identical output). New internal helper `encode_table_pages` factors
+out per-table leaf+overflow encoding. Gates: an own-reader round-trip across
+three tables (one with an overflow row, to prove root-page allocation survives a
+table that consumes extra pages), and a **real bundled-C SQLite** cross-check —
+the multi-table file passes `PRAGMA integrity_check` (`"ok"`), `sqlite_schema`
+lists every table, and each table's rows (including the overflow row) read back
+over SQL. Still: one data leaf per table (no interior/tree growth) and the
+combined `sqlite_schema` rows must fit on page 1's single leaf — later rungs.
+
 ## 0.13.0 - Unreleased
 
 **Phase F (writer): overflow chains.** `page_writer::write_single_table_db` now
