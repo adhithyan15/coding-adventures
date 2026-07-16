@@ -1233,6 +1233,50 @@ const CASES: &[Case] = &[
         setup: &["CREATE TABLE t (id INTEGER)", "INSERT INTO t VALUES (1)"],
         query: "SELECT (7 / 2) AS a, (-7 / 2) AS b, (7 % 3) AS c, (7.0 / 2) AS d FROM t",
     },
+    // ---- Lane 1: CAST … AS NUMERIC (affinity) ----------------------------
+    // NUMERIC prefers INTEGER when the value is integral and fits i64, else
+    // REAL. Text `'3.0'` and `'1e3'` are integral → INTEGER; `'3.5'` → REAL;
+    // an i64-overflowing integer → REAL. `typeof` is compared implicitly via
+    // the cell's storage class (Int vs Float sort/compare differently).
+    Case {
+        id: "cast_numeric_text_int_vs_real",
+        setup: &["CREATE TABLE t (id INTEGER)", "INSERT INTO t VALUES (1)"],
+        query: "SELECT CAST('42' AS NUMERIC) AS a, CAST('3.0' AS NUMERIC) AS b, \
+                CAST('3.5' AS NUMERIC) AS c, CAST('1e3' AS NUMERIC) AS d, \
+                CAST('42abc' AS NUMERIC) AS e, CAST('abc' AS NUMERIC) AS f FROM t",
+    },
+    // A REAL value stays REAL (the cast is a no-op on numbers), an INTEGER stays
+    // INTEGER, and NULL stays NULL.
+    Case {
+        id: "cast_numeric_number_is_noop",
+        setup: &["CREATE TABLE t (id INTEGER)", "INSERT INTO t VALUES (1)"],
+        query: "SELECT CAST(3.0 AS NUMERIC) AS a, CAST(3.5 AS NUMERIC) AS b, \
+                CAST(42 AS NUMERIC) AS c, CAST(NULL AS NUMERIC) AS d FROM t",
+    },
+    // An integer that overflows i64 falls through to REAL.
+    Case {
+        id: "cast_numeric_overflow_is_real",
+        setup: &["CREATE TABLE t (id INTEGER)", "INSERT INTO t VALUES (1)"],
+        query: "SELECT CAST('99999999999999999999' AS NUMERIC) AS a, \
+                CAST('9223372036854775807' AS NUMERIC) AS b FROM t",
+    },
+    // NUMERIC is the default affinity for non-INT/TEXT/REAL/BLOB type names, so
+    // DECIMAL and BOOLEAN behave identically to NUMERIC.
+    Case {
+        id: "cast_decimal_boolean_are_numeric",
+        setup: &["CREATE TABLE t (id INTEGER)", "INSERT INTO t VALUES (1)"],
+        query: "SELECT CAST('42.5' AS DECIMAL) AS a, CAST('7' AS BOOLEAN) AS b FROM t",
+    },
+    // Per-row over a real column: NUMERIC keeps reals real but collapses an
+    // integral text column to INTEGER.
+    Case {
+        id: "cast_numeric_per_row",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT)",
+            "INSERT INTO t VALUES (1,'10'),(2,'2.5'),(3,'30.0')",
+        ],
+        query: "SELECT id, CAST(s AS NUMERIC) AS n FROM t ORDER BY id",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but

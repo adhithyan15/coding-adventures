@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.5.36 — CAST … AS NUMERIC
+
+`CAST(x AS NUMERIC)` (and NUMERIC-affinity type names like `DECIMAL`, `BOOLEAN`)
+now work instead of erroring. NUMERIC prefers INTEGER when the value is integral
+and fits i64 — `CAST('3.0' AS NUMERIC)` → `3`, `CAST('1e3' AS NUMERIC)` → `1000`
+— and REAL otherwise (`CAST('3.5' AS NUMERIC)` → `3.5`; an i64-overflowing
+integer → real). A number is left unchanged: `CAST(3.0 AS NUMERIC)` stays `3.0`.
+Six differential-oracle cases; sql-planner 0.2.17, sql-vm 0.4.18. (`CAST … AS
+BLOB` is still rejected — a spun-off follow-up.)
+
 ## 0.5.35 — Division / modulo by zero returns NULL
 
 `SELECT 5/0`, `5.0/0`, `0/0`, `5%0`, `5.5%0`, and `5%0.0` now return **NULL**
