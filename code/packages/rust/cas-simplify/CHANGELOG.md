@@ -102,8 +102,31 @@
   regression tests: a 10,000-deep left-nested `Mul` chain of distinct
   factors (confirms speed and that nothing wrongly merges) and a
   10,000-deep left-nested `Add` chain of one repeated symbol (confirms
-  speed and that everything correctly collects into one term). 18 tests
-  in this module now (34 total in the crate, up from 32).
+  speed and that everything correctly collects into one term).
+- **The fix above introduced its own bug: a malformed (non-binary) `Sub`
+  node infinitely recurses to a stack-overflow abort** — found by the
+  same follow-up review round that confirmed the fix above. The new
+  `is_additive_head` classified *any* `Sub`-headed node as additive,
+  regardless of arity, but `flatten_additive_raw` only knows how to
+  decompose a two-arg `Sub` (`a - b`); for any other arity it falls
+  through to pushing the node back out unchanged. That unchanged node
+  then went straight into a fresh `collect_terms(term)` call, got
+  classified as additive again by the same (too-loose) check, and
+  repeated forever — an unbounded, uncatchable stack-overflow abort
+  (`collect_terms` recurses natively, unlike the iterative flatten
+  helpers), not merely a slow computation. No parser frontend in this
+  repo builds a non-binary `Sub` today, but `collect_terms`/`expand` are
+  both public API with no arity validation on `IRNode` construction, so
+  this wasn't only a theoretical concern. Fixed by requiring the same
+  two-arg check in `is_additive_head` that `flatten_additive_raw` already
+  required, so a malformed `Sub` now correctly falls through to the
+  generic `Apply` arm (recursing into its args and rebuilding — the same
+  safe path already used for `Div`/`Sin`/every other wrapper head). Three
+  new regression tests: 3-arg, 0-arg, and 1-arg `Sub` nodes, all
+  confirmed to terminate (not merely to produce the "right" answer — the
+  bug was non-termination, not a wrong one). 20 tests in this module now
+  (36 total in the crate, up from 32 — the three arity tests plus the two
+  chain tests above account for the difference).
 
 ## [0.4.1] — 2026-07-12
 

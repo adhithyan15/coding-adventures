@@ -169,9 +169,33 @@ pub fn collect_terms(node: IRNode) -> IRNode {
     }
 }
 
-/// Whether `node` is an `Add`- or `Sub`-headed `Apply` node.
+/// Whether `node` is an `Add`-headed `Apply` node, or a *binary*
+/// `Sub`-headed one.
+///
+/// The arity check matters: [`flatten_additive_raw`] only knows how to
+/// decompose a `Sub` with exactly two args (`a - b`) — for any other
+/// arity it falls through to pushing the node back out unchanged, as an
+/// opaque leaf (the same fallback used for any non-`Add`/`Sub` head).
+/// If this function classified *every* `Sub` as additive regardless of
+/// arity, a malformed (non-binary) `Sub` would come back from
+/// `flatten_additive_raw` structurally identical to how it went in, get
+/// handed straight to a fresh `collect_terms(term)` call in this
+/// module's `collect_terms`, get classified as additive again by this
+/// same function, and repeat forever — infinite recursion, and since
+/// `collect_terms` recurses natively (unlike `flatten_additive_raw`'s
+/// own explicit stack), an unbounded, uncatchable stack-overflow abort,
+/// not just a slow loop. Requiring the arity match here means a
+/// malformed `Sub` instead falls through to `collect_terms`'s generic
+/// `Apply` arm, which recurses into its args and rebuilds — the same
+/// safe path already used for `Div`/`Sin`/every other wrapper head.
+/// Found in a follow-up round of security review; no parser frontend in
+/// this repo builds a non-binary `Sub` today, but `collect_terms`/
+/// `expand` are both public API with no arity validation on `IRNode`
+/// construction, so a malformed node reaching here isn't only a
+/// theoretical concern.
 fn is_additive_head(node: &IRNode) -> bool {
-    matches!(node, IRNode::Apply(app) if is_head(&app.head, ADD) || is_head(&app.head, SUB))
+    matches!(node, IRNode::Apply(app) if is_head(&app.head, ADD)
+        || (is_head(&app.head, SUB) && app.args.len() == 2))
 }
 
 /// Whether `node` is a `Mul`-headed `Apply` node.
@@ -766,6 +790,42 @@ mod tests {
         let chain = left_nested_add_of(std::iter::repeat_with(|| sym("x")).take(10_000));
         let result = collect_terms(chain);
         assert_eq!(result, mul(vec![int(10_000), sym("x")]));
+    }
+
+    #[test]
+    fn a_malformed_non_binary_sub_does_not_infinitely_recurse() {
+        // Sub(a, b, c) -- three args, not the two-arg `a - b` shape this
+        // module (and every real parser frontend) always builds. Found in
+        // a follow-up round of security review: an earlier version of
+        // `is_additive_head` classified *any* Sub-headed node as
+        // additive, regardless of arity, but `flatten_additive_raw` only
+        // knows how to decompose a binary Sub -- for any other arity it
+        // pushed the node back out unchanged, which then got handed
+        // straight to a fresh `collect_terms` call, got classified as
+        // additive again, and repeated forever (an unbounded, uncatchable
+        // stack-overflow abort, since collect_terms recurses natively).
+        // No frontend in this repo builds a non-binary Sub today, but
+        // collect_terms/expand are public API with no arity validation on
+        // IRNode construction, so this is a real, not just theoretical,
+        // regression guard. A malformed Sub should fall through to the
+        // generic Apply arm instead -- recursing into its args and
+        // rebuilding, the same safe path Div/Sin already use.
+        let malformed = apply(sym(SUB), vec![sym("a"), sym("b"), sym("c")]);
+        let result = collect_terms(malformed);
+        assert_eq!(result, apply(sym(SUB), vec![sym("a"), sym("b"), sym("c")]));
+    }
+
+    #[test]
+    fn a_malformed_zero_and_one_arg_sub_also_does_not_infinitely_recurse() {
+        // The same arity-mismatch guard, at the other boundary: a Sub
+        // with zero or one args (also never produced by any real
+        // frontend) must likewise fall through to the generic Apply arm
+        // rather than looping forever.
+        let empty_sub = apply(sym(SUB), vec![]);
+        assert_eq!(collect_terms(empty_sub), apply(sym(SUB), vec![]));
+
+        let unary_sub = apply(sym(SUB), vec![sym("a")]);
+        assert_eq!(collect_terms(unary_sub), apply(sym(SUB), vec![sym("a")]));
     }
 }
 
