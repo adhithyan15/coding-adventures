@@ -1,1 +1,1 @@
-var a="42",b="x",c="-3",d="255",e=String(0.5);report(a,b,c,d,e);
+var a="42",b="x",c="-3",d="255",e=String(.5);report(a,b,c,d,e);

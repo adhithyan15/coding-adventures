@@ -1657,8 +1657,11 @@ impl<'a> Emitter<'a> {
     }
 
     fn emit_numeric(&mut self, n: &NumericLiteral) {
+        // Expression/value position: apply the leading-zero fraction
+        // minification (`0.5` → `.5`). Property keys go through the
+        // non-stripping path (see the `PropertyKey::NumericLiteral` arm).
         self.maybe_map(&n.cv);
-        self.write_str(&format_js_number(n.value));
+        self.write_str(&format_js_number_value(n.value));
     }
 
     fn emit_string(&mut self, s: &StringLiteral) {
@@ -2421,7 +2424,14 @@ impl<'a> Emitter<'a> {
                     self.emit_string(s);
                 }
             }
-            PropertyKey::NumericLiteral(n) => self.emit_numeric(n),
+            PropertyKey::NumericLiteral(n) => {
+                // A numeric object key keeps its canonical form — the reference
+                // compiler does NOT drop a leading fractional zero in key
+                // position (it quotes a float key instead, a separate
+                // transform), so use the non-stripping `format_js_number`.
+                self.maybe_map(&n.cv);
+                self.write_str(&format_js_number(n.value));
+            }
             PropertyKey::Expression(e) => {
                 self.write_str("[");
                 self.emit_expression(e);
@@ -2462,7 +2472,7 @@ fn is_identifier_name(s: &str) -> bool {
 
 /// JavaScript-style number rendering — matches `String(x)` so
 /// emitted output round-trips numerically. CLOC12.12 / gap-025:
-/// for finite non-zero numbers we now compute BOTH the decimal and
+/// for finite non-zero numbers we compute BOTH the decimal and
 /// exponential forms and return whichever is shorter. Ties pick
 /// decimal (canonical).
 ///
@@ -2471,11 +2481,34 @@ fn is_identifier_name(s: &str) -> bool {
 ///   1                 →  "1"      (decimal shorter)
 ///   100               →  "100"    (tie → decimal)
 ///   1000000000        →  "1E9"    (decimal 10 chars vs expo 3)
-///   0.5               →  "0.5"    (decimal shorter)
+///   0.5               →  "0.5"    (decimal shorter; see [`format_js_number_value`]
+///                                  for the value-position `.5` minification)
 ///   1.5e-10           →  "1.5E-10" (decimal 13 chars vs expo 7)
 ///   1e21              →  "1E21"   (expo shorter)
 ///   NaN / Infinity    →  unchanged from JS String(x)
+///
+/// This is the *canonical* form used in property-key position, where the
+/// reference compiler does NOT strip a leading fractional zero.
 fn format_js_number(n: f64) -> String {
+    format_js_number_impl(n, false)
+}
+
+/// Value-position number rendering — like [`format_js_number`] but additionally
+/// drops the leading `0` of a bare fraction (`0.5` → `.5`, `-0.25` → `-.25`),
+/// the way the reference compiler minifies numbers in expression position. The
+/// strip is applied to the decimal candidate *before* the shorter-of comparison,
+/// so a stripped decimal can win a tie against the exponential form
+/// (`0.001` → `.001`, not `1E-3`). NOT used for object property keys — there the
+/// reference compiler quotes a float key (`{0.5:1}` → `{"0.5":1}`) instead, a
+/// separate transform.
+fn format_js_number_value(n: f64) -> String {
+    format_js_number_impl(n, true)
+}
+
+/// Shared body for [`format_js_number`] / [`format_js_number_value`]. When
+/// `strip_leading_zero` is set, a `0.`-prefixed decimal fraction has its leading
+/// zero removed before the decimal-vs-exponential length comparison.
+fn format_js_number_impl(n: f64, strip_leading_zero: bool) -> String {
     if n.is_nan() {
         return "NaN".to_string();
     }
@@ -2512,11 +2545,21 @@ fn format_js_number(n: f64) -> String {
     // shortest decimal that round-trips to the same `f64` (and the
     // exponential candidate below still gets a chance to be shorter).
     const I64_RANGE: f64 = 9_223_372_036_854_775_808.0; // 2^63
-    let decimal = if n.fract() == 0.0 && n.abs() < I64_RANGE {
+    let mut decimal = if n.fract() == 0.0 && n.abs() < I64_RANGE {
         format!("{}", n as i64)
     } else {
         n.to_string()
     };
+    // Value-position minification: `0.5` → `.5`, `-0.5` → `-.5`. Only a bare
+    // fraction (magnitude in (0,1)) is `0.`-prefixed here — integers took the
+    // path above and zero returned early — so this never touches `10.5` etc.
+    if strip_leading_zero {
+        if let Some(rest) = decimal.strip_prefix("0.") {
+            decimal = format!(".{rest}");
+        } else if let Some(rest) = decimal.strip_prefix("-0.") {
+            decimal = format!("-.{rest}");
+        }
+    }
     let expo = format_exponential_uppercase(n);
     if expo.len() < decimal.len() {
         expo
@@ -3670,9 +3713,55 @@ mod tests {
     }
 
     #[test]
-    fn number_shortest_form_small_decimals_stay_decimal() {
-        assert_eq!(emit_number_value(0.5), "0.5");
+    fn number_value_position_drops_leading_fraction_zero() {
+        // A bare fraction in value position drops its leading `0` — the
+        // reference compiler's minification (`0.5` → `.5`).
+        assert_eq!(emit_number_value(0.5), ".5");
+        assert_eq!(emit_number_value(0.25), ".25");
+        assert_eq!(emit_number_value(0.75), ".75");
+        assert_eq!(emit_number_value(-0.5), "-.5");
+        assert_eq!(emit_number_value(-0.25), "-.25");
+        // Stripping happens BEFORE the decimal-vs-exponential comparison, so the
+        // stripped decimal can win a tie: `.001` (4) ties `1E-3` (4) → decimal.
+        assert_eq!(emit_number_value(0.001), ".001");
+        // But when the exponential form is strictly shorter it still wins:
+        // `.0001` (5) vs `1E-4` (4) → exponential.
+        assert_eq!(emit_number_value(0.0001), "1E-4");
+        // A non-zero integer part is untouched (no leading `0.`).
         assert_eq!(emit_number_value(3.14), "3.14");
+        assert_eq!(emit_number_value(10.5), "10.5");
+    }
+
+    #[test]
+    fn number_key_position_keeps_leading_fraction_zero() {
+        // In OBJECT-KEY position the leading zero is NOT dropped — the reference
+        // compiler quotes a float key instead, a separate transform, so the
+        // emitter must keep the canonical `0.5` here (not `.5`).
+        let key = Expression::ObjectExpression(ObjectExpression {
+            cv: None,
+            properties: vec![ObjectMember::Property(Property {
+                cv: None,
+                kind: PropertyKind::Init,
+                key: PropertyKey::NumericLiteral(NumericLiteral {
+                    cv: None,
+                    value: 0.5,
+                    raw: String::new(),
+                }),
+                value: Box::new(Expression::NumericLiteral(NumericLiteral {
+                    cv: None,
+                    value: 1.0,
+                    raw: String::new(),
+                })),
+                computed: false,
+                shorthand: false,
+                method: false,
+            })],
+        });
+        let code = emit_default(program().with_body(vec![stmt(key)])).code;
+        assert!(
+            code.contains("0.5:"),
+            "numeric object key must keep its leading zero; got {code}"
+        );
     }
 
     #[test]
