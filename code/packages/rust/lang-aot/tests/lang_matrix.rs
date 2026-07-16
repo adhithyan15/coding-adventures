@@ -479,23 +479,30 @@ const PROGRAMS: &[Prog] = &[
     // to a cons-chain `(box(idx) . (caps…))` and a synthesized `__dyn_call_closure`
     // dispatcher (a `cmp_eq` chain over statically-known bodies → direct `call`),
     // reusing the E6d-1 heap substrate — no new WasmGC `funcref`/`call_indirect`.
+    //
+    // **`Vm` + `Jit` too**: the same `lower_closures_to_heap` + `lower_heap_builtins`
+    // passes the code-gen pipelines run are applied on the VM/JIT compile path
+    // (`lower_dynamic_for_generic_engine`), so a closure lowers to the cons-chain
+    // object + dispatcher over ops the generic VM now runs (`alloc`/`field_load`/
+    // `box`/dynamic `=`/`+`). Closures run on **all seven engines**.
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "((lambda (x) (+ x 1)) 41)",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Twig — E6d-7: a **capturing** closure. The outer lambda returns an inner
     // one that captures `x`; applying it threads the captured 40 + the arg 2.
     // `(((lambda (x) (lambda (y) (+ x y))) 40) 2)` → 42. Two lambda bodies get
-    // distinct dispatch indices in the synthesized WASM dispatcher.
+    // distinct dispatch indices in the synthesized dispatcher. Runs on all seven
+    // engines (Vm/Jit via the closure/heap passes on the generic-engine path).
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(((lambda (x) (lambda (y) (+ x y))) 40) 2)",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Twig — E4 literal `string-length`. The compiler lowers
     // `(string-length "HELLO")` to shared `str_const` + `str_len`, avoiding the
@@ -4015,12 +4022,30 @@ fn run_clr(p: &Prog) -> Option<RunResult> {
 /// other columns' convention); an I/O language's stdout is the captured buffer. `None`
 /// only if the program fails to compile or the VM errors — the VM is in-process, so a
 /// tagged cell always runs (no host gate).
+/// Apply the shared IIR-lowering passes the code-gen backends run, so the generic
+/// register VM / JIT execute the same **dynamic** Twig features they do.
+/// `lower_closures_to_heap` rewrites `alloc_closure`/`call_closure` to a cons-chain
+/// object + a synthesized dispatcher; `lower_heap_builtins` rewrites the
+/// `cons`/`car`/`cdr`/`null?` builtins to the structural `alloc`/`field_load`/
+/// `is_null` ops the VM runs; `lower_global_io` rewrites dynamic
+/// `global_get`/`global_set` to typed `global_load`/`global_store`. Without this the
+/// VM sees the raw frontend `alloc_closure`/`cons`-builtin IIR it cannot dispatch.
+/// The passes are no-ops on programs without those constructs (every non-Twig /
+/// non-dynamic cell), matching how the code-gen pipelines already run them for
+/// every language.
+fn lower_dynamic_for_generic_engine(module: &mut interpreter_ir::IIRModule) {
+    iir_builtin_lowering::lower_global_io(module);
+    iir_builtin_lowering::lower_closures_to_heap(module);
+    iir_builtin_lowering::lower_heap_builtins(module);
+}
+
 fn run_vm(p: &Prog) -> Option<RunResult> {
     use std::sync::{Arc, Mutex};
     use vm_core::core::VMCore;
     use vm_core::value::Value;
 
     let mut module = lang_aot::compile_source_to_iir(p.lang, p.src, "main").ok()?;
+    lower_dynamic_for_generic_engine(&mut module);
     let entry = module.entry_point.clone().unwrap_or_else(|| "main".to_string());
 
     let mut vm = VMCore::new();
@@ -4139,6 +4164,7 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
     use vm_core::value::Value;
 
     let mut module = lang_aot::compile_source_to_iir(p.lang, p.src, "main").ok()?;
+    lower_dynamic_for_generic_engine(&mut module);
     let entry = module.entry_point.clone().unwrap_or_else(|| "main".to_string());
 
     let printed_ints: Arc<Mutex<Vec<i64>>> = Arc::new(Mutex::new(Vec::new()));
@@ -4645,6 +4671,8 @@ fn t7_differential_random_basic_conditionals_agree() {
     eprintln!("T7 conditional differential: {cross_checks} cross-engine agreements over {N} branch programs");
     assert!(cross_checks >= 2 * N, "expected >= {} cross-checks, got {cross_checks}", 2 * N);
 }
+
+
 
 
 
