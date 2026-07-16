@@ -2,6 +2,50 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.95.0] - 2026-07-16
+
+### Added — computed **string-key** access into an array literal: `[…]["K"]`
+
+Extends the CLOC12.196 / .196b integer-index fold to computed **string** keys.
+The reference Closure Compiler coerces the string key with the SAME full JS
+`ToNumber` used by `Number("…")` (this crate's `fold_number`) and then applies
+the integer-index fold, so every spelling `ToNumber` maps to an integer selects
+that element — **including the non-canonical ones**. Verified byte-identical at
+`SIMPLE` against `closure-compiler-v20260712.jar`:
+
+| access                   | ToNumber | result   |
+|--------------------------|----------|----------|
+| `[a,b,c]["0"]`           | `0`      | `a`      |
+| `[a,b,c]["01"]`          | `1`      | `b`      (leading zero) |
+| `[a,b,c]["1.0"]`         | `1`      | `b`      (trailing `.0`) |
+| `[a,b,c][" 1"]` / `["1 "]`| `1`     | `b`      (whitespace trimmed) |
+| `[a,b,c]["0x1"]`         | `1`      | `b`      (hex) |
+| `[a,b,c]["1e0"]`         | `1`      | `b`      (exponent) |
+| `[a,b,c][""]`            | `+0`     | `a`      (`ToNumber("")` is `0`) |
+| `[a,b,c]["3"]`           | `3`      | `void 0` (out of bounds) |
+| `[a,b,c]["-1"]`          | `-1`     | `void 0` (negative) |
+| `[a,b,c]["1.5"]`         | `1.5`    | declines (fractional — an ordinary absent-property read) |
+| `[a,b,c]["foo"]`         | `NaN`    | declines (see below) |
+| `[a,b,c]["length"]`      | —        | `3`      (the length property) |
+
+This is a deliberate match to Closure's behaviour even where it is
+technically unsound — `["01"]`/`["1.0"]` are not canonical array indices in the
+language, yet Closure folds them, so byte-identity requires we do too.
+
+Two keys `fold_number` can't express get special handling: `"length"` is the
+length property (routes to the same element-count fold as `.length`, with the
+same no-spread / all-elements-pure guard); and a key whose `ToNumber` is `NaN`
+(`"foo"`) declines here — Closure rewrites `["foo"]` to `.foo`, a member-access
+*normalisation* that is a separate slice, so the bracket access is left intact.
+
+The logic lives in a new `#[inline(never)]` `fold_array_string_key_access`
+helper (mirroring `fold_array_index_access`) so `fold_member`'s recursive frame
+stays small. Soundness is inherited from the integer-index fold: a present
+element keeps its own side effect while the others must be pure; a `void 0` /
+`length` result drops the whole literal, so every element must be pure.
+
+Additive; MINOR bump 0.94.0 → 0.95.0.
+
 ## [0.94.0] - 2026-07-15
 
 ### Added — array-index out-of-bounds / negative / hole → `void 0` — CLOC12.196b
