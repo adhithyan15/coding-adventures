@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.5.35 — Division / modulo by zero returns NULL
+
+`SELECT 5/0`, `5.0/0`, `0/0`, `5%0`, `5.5%0`, and `5%0.0` now return **NULL**
+like real SQLite, instead of failing the query with a "division by zero" error.
+This makes per-row expressions with an occasional zero divisor
+(`SELECT 100/n FROM t`) behave as SQLite does — the zero-divisor row is NULL and
+the rest compute normally. Four differential-oracle cases added; sql-vm 0.4.17.
+(Follow-ups: `%` integer-remainder semantics and unary `-` numeric coercion on
+text are tracked separately.)
+
 ## 0.5.34 — Column-defined COLLATE honoured in ORDER BY
 
 A column declared with `COLLATE NOCASE` / `RTRIM` now drives ordering when a

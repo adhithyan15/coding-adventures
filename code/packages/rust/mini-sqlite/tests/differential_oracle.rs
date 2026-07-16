@@ -1202,6 +1202,37 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT id FROM t WHERE name COLLATE NOCASE = 'apple' ORDER BY id",
     },
+    // ---- Lane 2: division / modulo by zero → NULL ------------------------
+    // SQLite yields NULL (not an error) for any division or modulo by zero,
+    // integer or float, including 0/0. Aliased so both engines name the columns
+    // identically.
+    Case {
+        id: "div_by_zero_is_null",
+        setup: &["CREATE TABLE t (id INTEGER)", "INSERT INTO t VALUES (1)"],
+        query: "SELECT (5 / 0) AS a, (5.0 / 0) AS b, (0 / 0) AS c, (5 / 0.0) AS d FROM t",
+    },
+    Case {
+        id: "mod_by_zero_is_null",
+        setup: &["CREATE TABLE t (id INTEGER)", "INSERT INTO t VALUES (1)"],
+        query: "SELECT (5 % 0) AS a, (5.5 % 0) AS b, (5 % 0.0) AS c FROM t",
+    },
+    // Per-row: a computed zero divisor (`n - n`) yields NULL for that row
+    // instead of aborting the whole query.
+    Case {
+        id: "div_by_computed_zero_is_null_per_row",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, n INTEGER)",
+            "INSERT INTO t VALUES (1,4),(2,0),(3,10)",
+        ],
+        query: "SELECT id, (100 / n) AS q FROM t ORDER BY id",
+    },
+    // Non-zero division/modulo still compute normally (regression guard: the
+    // NULL path must not swallow ordinary divisors).
+    Case {
+        id: "div_mod_nonzero_unaffected",
+        setup: &["CREATE TABLE t (id INTEGER)", "INSERT INTO t VALUES (1)"],
+        query: "SELECT (7 / 2) AS a, (-7 / 2) AS b, (7 % 3) AS c, (7.0 / 2) AS d FROM t",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but
