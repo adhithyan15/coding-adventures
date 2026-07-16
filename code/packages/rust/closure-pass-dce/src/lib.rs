@@ -663,24 +663,55 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
 
             // gap-014 step 2 / CLOC12.34 — empty-switch elimination.
             //
-            // If every case's consequent is empty (or there are no
-            // cases at all) AND both the discriminant and every
-            // case-test are leaf literals (no side-effect risk),
-            // collapse the whole switch to `;`. The block-walker
-            // (`dce_block_statement`) will drop the EmptyStatement
-            // in its next sweep.
+            // If every case runs nothing (no cases at all, or every
+            // consequent is only empty statements / empty blocks) AND
+            // evaluating the discriminant and every case-test has no
+            // observable side effect, the whole switch is a no-op and
+            // collapses to `;`. The block-walker (`dce_block_statement`)
+            // drops the EmptyStatement in its next sweep.
             //
-            // Conservative bail: anything else (Identifier
-            // discriminant, computed test, non-empty consequent)
-            // keeps the switch intact. The "drop after pure
-            // discriminant with side-effecting tests" rule is a
-            // future slice that needs a proper effect analysis.
-            let all_consequents_empty = new_cases.iter().all(|c| c.consequent.is_empty());
+            // The two gates are deliberately ASYMMETRIC, mirroring the
+            // reference Closure Compiler (`PeepholeRemoveDeadCode`)
+            // byte-for-byte:
+            //
+            //   • The DISCRIMINANT gate is [`is_side_effect_free`] — a
+            //     bare read is enough. So `switch (x) {}`,
+            //     `switch (a.b) {}`, `switch (a && b) {}`,
+            //     `switch (!x) {}`, `switch (typeof x) {}` all drop,
+            //     not just literal discriminants.
+            //
+            //   • Each case TEST, however, must be [`is_pure_leaf`] (a
+            //     literal) or absent (`default:`). Closure KEEPS a
+            //     switch whose case test is a non-literal even when it
+            //     is side-effect-free: `switch (x) { case y: }` and
+            //     `switch (x) { case a.b: case c: }` survive, while
+            //     `switch (x) { case 1: case 2: }` and
+            //     `switch (x) { default: }` drop. We match that exactly
+            //     rather than removing more (which would diverge).
+            //
+            // A consequent counts as empty when every statement in it is
+            // itself empty (via [`statement_is_empty`]), so
+            // `switch (x) { case 1: {} }` — a case whose only body is an
+            // empty block — also drops.
+            //
+            // Still a conservative bail (keeps the switch, a KNOWN
+            // divergence handled by a separate future slice): a
+            // side-EFFECTING discriminant, e.g. `switch (f()) {}`, which
+            // Closure rewrites to `f();` — extracting the discriminant
+            // as an expression statement. That extract-discriminant
+            // transform needs its own effect-preserving lowering and is
+            // out of scope here; `is_side_effect_free(&new_disc)` is
+            // false for `f()`, so this path declines and we leave the
+            // switch untouched (no regression).
+            let all_consequents_empty = new_cases
+                .iter()
+                .all(|c| c.consequent.iter().all(statement_is_empty));
             let discriminant_pure = is_pure_leaf(&new_disc);
             let all_tests_pure_or_none = new_cases
                 .iter()
                 .all(|c| c.test.as_ref().is_none_or(is_pure_leaf));
-            if all_consequents_empty && discriminant_pure && all_tests_pure_or_none {
+            let discriminant_side_effect_free = is_side_effect_free(&new_disc);
+            if all_consequents_empty && discriminant_side_effect_free && all_tests_pure_or_none {
                 st.record(
                     &s.cv,
                     "switch_eliminated",
@@ -2662,20 +2693,82 @@ mod tests {
         assert!(contribs.iter().any(|c| c.tag == "switch_eliminated"));
     }
 
-    /// Conservative bail: Identifier discriminant might TDZ-throw
-    /// for an uninitialised `let` / `const`. Keep the switch.
+    /// A bare Identifier discriminant is side-effect-free, so an
+    /// otherwise-empty `switch (x) {}` DROPS — matching the reference
+    /// Closure Compiler byte-for-byte (verified: `switch(x){}` → ``).
+    /// The read of `x` has no observable effect, and with no cases
+    /// there is nothing to run.
     #[test]
-    fn empty_switch_with_identifier_discriminant_keeps_switch() {
+    fn empty_switch_with_identifier_discriminant_drops() {
         let body = vec![switch_stmt(ident("x"), vec![])];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, contribs, changed, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert!(block.body.is_empty(), "expected empty body; got {:?}", block.body);
+        assert!(changed);
+        assert!(contribs.iter().any(|c| c.tag == "switch_eliminated"));
+    }
+
+    /// A member-read discriminant (`switch (a.b) {}`) is also
+    /// side-effect-free — object and (non-computed) key are pure — so
+    /// the empty switch drops. Oracle: `switch(a.b){}` → ``.
+    #[test]
+    fn empty_switch_with_member_discriminant_drops() {
+        let body = vec![switch_stmt(member(ident("a"), "b"), vec![])];
         let prog = program_with_function(body, Some("fn.1"));
         let (out, contribs, _, _) = run_pass(prog);
         let block = extract_function_body(&out);
-        // SwitchStatement preserved.
+        assert!(block.body.is_empty(), "expected empty body; got {:?}", block.body);
+        assert!(contribs.iter().any(|c| c.tag == "switch_eliminated"));
+    }
+
+    /// A unary `!x` discriminant is side-effect-free (the operand is a
+    /// pure read and `!` has no effect), so `switch (!x) {}` drops.
+    /// Oracle: `switch(!x){}` → ``.
+    #[test]
+    fn empty_switch_with_unary_discriminant_drops() {
+        let body = vec![switch_stmt(not(ident("x")), vec![])];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert!(block.body.is_empty(), "expected empty body; got {:?}", block.body);
+    }
+
+    /// A side-EFFECTING discriminant keeps the switch. `switch (f()) {}`
+    /// is NOT side-effect-free (the call runs), so this path declines.
+    /// (The reference compiler instead extracts the discriminant to
+    /// `f();`, a separate transform we do not perform here — declining
+    /// keeps the switch intact rather than dropping the call, so no
+    /// unsound removal and no regression.)
+    #[test]
+    fn empty_switch_with_call_discriminant_keeps_switch() {
+        let body = vec![switch_stmt(call0("f"), vec![])];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, contribs, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
         assert!(matches!(
             &block.body[0],
             Statement::Tagged(TaggedStatement::SwitchStatement(_))
         ));
         assert!(!contribs.iter().any(|c| c.tag == "switch_eliminated"));
+    }
+
+    /// A case whose only consequent is an empty block (`case 1: {}`)
+    /// counts as empty via `statement_is_empty`, so the whole switch
+    /// drops. Oracle: `switch(x){case 1:{}}` → ``.
+    #[test]
+    fn empty_switch_with_empty_block_consequent_drops() {
+        let cases = vec![SwitchCase {
+            cv: None,
+            test: Some(num(1.0)),
+            consequent: vec![empty_block_stmt()],
+        }];
+        let body = vec![switch_stmt(ident("x"), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, contribs, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert!(block.body.is_empty(), "expected empty body; got {:?}", block.body);
+        assert!(contribs.iter().any(|c| c.tag == "switch_eliminated"));
     }
 
     /// Non-empty consequent keeps the switch even with a pure

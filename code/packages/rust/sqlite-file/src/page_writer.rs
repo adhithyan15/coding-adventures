@@ -110,7 +110,41 @@ fn fill_table_leaf_page(
     max_local: usize,
     ordered: &[&(i64, Vec<u8>)],
 ) -> Result<(), SqliteError> {
-    let n = ordered.len();
+    // Build each cell's bytes: [payload-length varint][rowid varint][record].
+    // This entry point has no overflow support (it cannot allocate overflow
+    // pages), so a record that would not fit inline is rejected — the
+    // whole-database writer handles spilling instead (see `build_leaf_cell`).
+    let mut cells = Vec::with_capacity(ordered.len());
+    for (rowid, record) in ordered {
+        if record.len() > max_local {
+            return Err(SqliteError::Unsupported(
+                "record too large for one leaf page (overflow not yet supported)",
+            ));
+        }
+        let mut cell = Vec::new();
+        varint::write(record.len() as i64, &mut cell);
+        varint::write(*rowid, &mut cell);
+        cell.extend_from_slice(record);
+        cells.push(cell);
+    }
+    pack_leaf_cells(page, header_offset, page_size, &cells)
+}
+
+/// Pack already-built table-leaf **cell bytes** (each a complete
+/// `[payload-len varint][rowid varint][inline payload][…]`) into `page`, with
+/// the 8-byte b-tree header at `header_offset`. Cells are laid out from the end
+/// of the page downward with absolute offsets; the cell-pointer array grows from
+/// `header_offset + 8` in the given order (which the caller must have sorted by
+/// rowid). Shared by the inline-only [`fill_table_leaf_page`] and the
+/// overflow-aware whole-database writer, so both produce byte-identical page
+/// framing.
+fn pack_leaf_cells(
+    page: &mut [u8],
+    header_offset: usize,
+    page_size: usize,
+    cells: &[Vec<u8>],
+) -> Result<(), SqliteError> {
+    let n = cells.len();
 
     // --- 8-byte page header. Freeblock (1..3) and fragmented-free (7) stay 0. --
     page[header_offset] = LEAF_TABLE;
@@ -124,20 +158,7 @@ fn fill_table_leaf_page(
 
     // --- Pack cells from the end of the page downward. ------------------------
     let mut content_top = page_size;
-    for (i, (rowid, record)) in ordered.iter().enumerate() {
-        // No overflow support: the record must fit inline.
-        if record.len() > max_local {
-            return Err(SqliteError::Unsupported(
-                "record too large for one leaf page (overflow not yet supported)",
-            ));
-        }
-
-        // One cell: [payload-length varint][rowid varint][record bytes].
-        let mut cell = Vec::new();
-        varint::write(record.len() as i64, &mut cell);
-        varint::write(*rowid, &mut cell);
-        cell.extend_from_slice(record);
-
+    for (i, cell) in cells.iter().enumerate() {
         // Grow the content area downward; refuse to collide with the pointer
         // array (i.e. the page is full).
         content_top = content_top
@@ -146,7 +167,7 @@ fn fill_table_leaf_page(
             .ok_or(SqliteError::Unsupported(
                 "leaf page overflow: cells do not fit in one page",
             ))?;
-        page[content_top..content_top + cell.len()].copy_from_slice(&cell);
+        page[content_top..content_top + cell.len()].copy_from_slice(cell);
 
         // Record this cell's offset in the pointer array (rowid order).
         let entry = ptr_array + i * 2;
@@ -157,6 +178,99 @@ fn fill_table_leaf_page(
     //     65536 as 0 (only an empty 64 KiB page); `as u16` wraps 65536 → 0. -----
     page[header_offset + 5..header_offset + 7].copy_from_slice(&(content_top as u16).to_be_bytes());
     Ok(())
+}
+
+/// Number of a record's payload bytes that stay **inline** on a table-leaf cell,
+/// the exact inverse of the reader's `split_and_reassemble`. For a payload that
+/// fits (`<= max_local`) that is its whole length; otherwise SQLite's surplus
+/// formula keeps
+///
+/// ```text
+///   M = ((U - 12) * 32 / 255) - 23         (inline floor)
+///   K = M + ((P - M) mod (U - 4))          (candidate inline length)
+///   inline = if K <= X { K } else { M }    (X = max_local)
+/// ```
+///
+/// bytes inline and spills the rest into an overflow chain. `usable` is `U`.
+fn table_leaf_inline_len(payload_len: usize, usable: usize, max_local: usize) -> usize {
+    if payload_len <= max_local {
+        return payload_len;
+    }
+    let min_local = (usable.saturating_sub(12).saturating_mul(32) / 255).saturating_sub(23);
+    // `usable >= 512` (validated by callers), so `span > 0`.
+    let span = usable - 4;
+    let k = min_local + (payload_len - min_local) % span;
+    if k <= max_local {
+        k
+    } else {
+        min_local
+    }
+}
+
+/// Build one table-leaf cell, spilling into an overflow chain when the record is
+/// too large to sit inline. Returns the cell bytes plus any overflow pages the
+/// record produced (empty when it fits inline).
+///
+/// The cell is always `[payload-len varint = full record length P][rowid varint]
+/// [first `inline` payload bytes]`, and when the record overflows a trailing
+/// 4-byte big-endian pointer to `first_overflow_page` follows the inline bytes —
+/// exactly what the reader's `read_leaf_cell` expects. Overflow pages are
+/// numbered `first_overflow_page, +1, …`, each `[u32-be next-page][content]`
+/// with `next = 0` on the last, matching `follow_overflow`.
+fn build_leaf_cell(
+    rowid: i64,
+    record: &[u8],
+    page_size: usize,
+    usable: usize,
+    max_local: usize,
+    first_overflow_page: u32,
+) -> (Vec<u8>, Vec<Vec<u8>>) {
+    let payload_len = record.len();
+    let inline = table_leaf_inline_len(payload_len, usable, max_local);
+
+    let mut cell = Vec::new();
+    varint::write(payload_len as i64, &mut cell);
+    varint::write(rowid, &mut cell);
+    cell.extend_from_slice(&record[..inline]);
+
+    if inline == payload_len {
+        return (cell, Vec::new());
+    }
+
+    // Spill the tail across a chain of overflow pages, then point the cell at
+    // the first page in that chain.
+    cell.extend_from_slice(&first_overflow_page.to_be_bytes());
+    let overflow = encode_overflow_pages(&record[inline..], page_size, usable, first_overflow_page);
+    (cell, overflow)
+}
+
+/// Encode the overflow chain carrying `tail` (the payload bytes that did not fit
+/// inline). Each page is `page_size` bytes: a 4-byte big-endian next-page pointer
+/// (`0` on the last page) followed by up to `usable - 4` content bytes, the rest
+/// zero-padded. Pages are numbered `first_page, first_page + 1, …`.
+fn encode_overflow_pages(
+    tail: &[u8],
+    page_size: usize,
+    usable: usize,
+    first_page: u32,
+) -> Vec<Vec<u8>> {
+    let content_per_page = usable - 4;
+    let mut pages = Vec::new();
+    let mut chunks = tail.chunks(content_per_page).peekable();
+    let mut page_no = first_page;
+    while let Some(chunk) = chunks.next() {
+        let mut page = vec![0u8; page_size];
+        let next = if chunks.peek().is_some() {
+            page_no + 1
+        } else {
+            0
+        };
+        page[0..4].copy_from_slice(&next.to_be_bytes());
+        page[4..4 + chunk.len()].copy_from_slice(chunk);
+        pages.push(page);
+        page_no += 1;
+    }
+    pages
 }
 
 /// Sort `(rowid, record)` cells by rowid and reject duplicate rowids — the
@@ -209,18 +323,54 @@ pub fn write_single_table_db(
         return Err(SqliteError::BadPageSize(page_size as u32));
     }
 
-    // --- Page 2: the user table's data leaf. ---------------------------------
-    let data_cells: Vec<(i64, Vec<u8>)> = rows
+    // --- Page 2: the user table's data leaf (+ any overflow pages). -----------
+    //
+    // Records that exceed the inline limit spill into overflow chains. The data
+    // leaf is page 2, so overflow pages are allocated sequentially from page 3
+    // onward, in rowid order. `reserved_space` is 0, so usable == page_size.
+    let usable = page_size;
+    let data_max_local = usable.saturating_sub(LEAF_PAYLOAD_OVERHEAD);
+
+    let data_records: Vec<(i64, Vec<u8>)> = rows
         .iter()
         .map(|(rowid, cols)| (*rowid, crate::record::encode(cols)))
         .collect();
-    let data_leaf = encode_table_leaf_page(page_size, 0, &data_cells)?;
+    let ordered_data = order_cells(&data_records)?;
+
+    const DATA_LEAF_PAGE: u32 = 2;
+    let mut next_overflow_page: u32 = DATA_LEAF_PAGE + 1;
+    let mut overflow_pages: Vec<Vec<u8>> = Vec::new();
+    let mut leaf_cells: Vec<Vec<u8>> = Vec::with_capacity(ordered_data.len());
+    for (rowid, record) in &ordered_data {
+        let (cell, spilled) = build_leaf_cell(
+            *rowid,
+            record,
+            page_size,
+            usable,
+            data_max_local,
+            next_overflow_page,
+        );
+        next_overflow_page += spilled.len() as u32;
+        overflow_pages.extend(spilled);
+        leaf_cells.push(cell);
+    }
+
+    let mut data_leaf = vec![0u8; page_size];
+    pack_leaf_cells(&mut data_leaf, 0, page_size, &leaf_cells)?;
+
+    // SQLite page numbers are 32-bit, so a database cannot hold more than
+    // `u32::MAX` pages. Reject past that explicitly rather than letting the
+    // `as u32` header field silently wrap (this is unreachable short of a
+    // multi-terabyte input, but keeps the header count and file length in
+    // lock-step by construction).
+    let total_pages = u32::try_from(2 + overflow_pages.len())
+        .map_err(|_| SqliteError::Unsupported("database exceeds the 2^32-page limit"))?;
 
     // --- Page 1: DB header (offset 0..100) + sqlite_schema leaf (offset 100). -
     let header = Header {
         page_size: page_size as u32,
         reserved_space: 0,
-        page_count: 2,
+        page_count: total_pages,
         change_counter: 1,
         freelist_trunk: 0,
         freelist_count: 0,
@@ -242,8 +392,13 @@ pub fn write_single_table_db(
     let max_local = (page_size - 100).saturating_sub(LEAF_PAYLOAD_OVERHEAD);
     fill_table_leaf_page(&mut page1, 100, page_size, max_local, &ordered)?;
 
+    // Page 1, then the data leaf (page 2), then the overflow pages (page 3…) in
+    // the order their page numbers were allocated.
     let mut file = page1;
     file.extend_from_slice(&data_leaf);
+    for page in &overflow_pages {
+        file.extend_from_slice(page);
+    }
     Ok(file)
 }
 
@@ -279,6 +434,36 @@ mod tests {
         assert_eq!(schema[0].name, "widgets");
         assert_eq!(schema[0].root_page, Some(2));
         assert_eq!(schema[0].sql.as_deref(), Some("CREATE TABLE widgets(n, label)"));
+    }
+
+    /// A record larger than the inline limit spills into an overflow chain, and
+    /// the whole database still round-trips through the real reader — including
+    /// the overflow-reassembly path. The big value spans several overflow pages
+    /// (512-byte page → 508 content bytes each), interleaved with inline rows to
+    /// prove page-number allocation stays correct.
+    #[test]
+    fn write_single_table_db_spills_large_record_into_overflow() {
+        let big = "x".repeat(4000); // ≫ max_local (512 − 35 = 477)
+        let rows = vec![
+            (1i64, vec![SqlValue::Int(1), SqlValue::Text("small".into())]),
+            (2, vec![SqlValue::Int(2), SqlValue::Text(big.clone())]),
+            (3, vec![SqlValue::Int(3), SqlValue::Text("also small".into())]),
+        ];
+        let db = write_single_table_db(512, "docs", "CREATE TABLE docs(n, body)", &rows).unwrap();
+
+        // Page 1 + data leaf (page 2) + one or more overflow pages. The file is a
+        // whole number of pages and the header's page count must equal the actual
+        // page count (SQLite validates this).
+        assert_eq!(db.len() % 512, 0);
+        let pages = db.len() / 512;
+        assert!(pages > 2, "overflow pages must have been allocated, got {pages}");
+        let header = crate::header::Header::parse(&db).unwrap();
+        assert_eq!(header.page_count as usize, pages);
+
+        // The reader reassembles the overflow row in full alongside the inline
+        // rows, byte-for-byte.
+        let read = crate::schema::read_table(&db, "docs").unwrap();
+        assert_eq!(read, rows);
     }
 
     /// An empty table still yields a valid, readable database (no rows).

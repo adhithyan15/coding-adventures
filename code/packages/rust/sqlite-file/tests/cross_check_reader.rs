@@ -411,3 +411,65 @@ fn read_table_reports_missing_tables() {
         Err(sqlite_file::SqliteError::NoSuchTable("missing".to_string()))
     );
 }
+
+/// Write-path cross-check: bytes produced by OUR writer — including an overflow
+/// chain for a large row — are accepted and correctly read back by the real
+/// bundled-C SQLite. This is the inverse of the reader gates above:
+/// `write_single_table_db` → open with `rusqlite` → `PRAGMA integrity_check` +
+/// `SELECT`. `integrity_check` returning "ok" means real SQLite validated the
+/// page count, b-tree framing, and overflow chain we emitted.
+#[test]
+fn our_writer_output_reads_in_real_sqlite_with_overflow() {
+    use sqlite_file::page_writer::write_single_table_db;
+    use sqlite_file::SqlValue;
+
+    let big = "overflow-payload ".repeat(500); // ~8500 bytes, ≫ the inline limit
+    let rows = vec![
+        (1i64, vec![SqlValue::Int(10), SqlValue::Text("alpha".into())]),
+        (2, vec![SqlValue::Int(20), SqlValue::Text(big.clone())]),
+        (3, vec![SqlValue::Int(30), SqlValue::Text("gamma".into())]),
+    ];
+    let db = write_single_table_db(4096, "docs", "CREATE TABLE docs(n, body)", &rows).unwrap();
+    assert!(
+        db.len() / 4096 > 2,
+        "the big row must have spilled into overflow pages"
+    );
+
+    static COUNTER_W: AtomicU64 = AtomicU64::new(9_000_000);
+    let unique = COUNTER_W.fetch_add(1, Ordering::Relaxed);
+    let mut dir = std::env::temp_dir();
+    dir.push(format!("sqlite_file_writer_{}_{}", std::process::id(), unique));
+    std::fs::create_dir(&dir).expect("create fresh fixture dir");
+    let path = dir.join("ours.db");
+    std::fs::write(&path, &db).unwrap();
+
+    let conn = rusqlite::Connection::open(&path).unwrap();
+    let integrity: String = conn
+        .query_row("PRAGMA integrity_check", [], |r| r.get(0))
+        .unwrap();
+    assert_eq!(
+        integrity, "ok",
+        "real SQLite's integrity_check must pass on our written file"
+    );
+
+    let mut got: Vec<(i64, i64, String)> = conn
+        .prepare("SELECT rowid, n, body FROM docs")
+        .unwrap()
+        .query_map([], |r| Ok((r.get(0)?, r.get(1)?, r.get::<_, String>(2)?)))
+        .unwrap()
+        .map(|r| r.unwrap())
+        .collect();
+    got.sort();
+    drop(conn);
+    let _ = std::fs::remove_dir_all(&dir);
+
+    assert_eq!(
+        got,
+        vec![
+            (1, 10, "alpha".to_string()),
+            (2, 20, big),
+            (3, 30, "gamma".to_string()),
+        ],
+        "real SQLite must read back every row our writer emitted"
+    );
+}

@@ -11,8 +11,53 @@
 use flow_matic_iir_compiler::compile_source;
 use jit_core::core::JITCore;
 use jit_core::GenericCirJit;
+use std::sync::{Arc, Mutex};
 use vm_core::core::VMCore;
 use vm_core::value::Value;
+
+/// Run a program capturing everything WRITE-ITEM emits through `putchar`.
+fn run_output(source: &str) -> String {
+    let mut module = compile_source(source, "fm_out").expect("FLOW-MATIC should compile");
+    let mut vm = VMCore::new();
+    let chars: Arc<Mutex<Vec<u8>>> = Arc::new(Mutex::new(Vec::new()));
+    {
+        let chars = Arc::clone(&chars);
+        vm.builtins_mut().register("putchar", move |args| {
+            let b = args.first().and_then(|v| v.as_i64()).unwrap_or(0);
+            chars.lock().unwrap().push(b as u8);
+            Ok(Value::Null)
+        });
+    }
+    let backend = GenericCirJit::new();
+    let error_handle = backend.error_handle();
+    let mut jit = JITCore::new(&mut vm, Box::new(backend));
+    jit.execute_with_jit(&mut vm, &mut module, "main", &[])
+        .expect("JIT execution should succeed");
+    if let Some(err) = error_handle.lock().unwrap().clone() {
+        panic!("GenericCirJit reported an error: {err}");
+    }
+    let bytes = chars.lock().unwrap().clone();
+    String::from_utf8(bytes).expect("WRITE-ITEM output must be valid UTF-8")
+}
+
+#[test]
+fn write_item_prints_a_zero_field_record() {
+    // Fields start at 0; WRITE-ITEM FILE-C writes file C's record — here the one
+    // field TOTAL (C) — as its digits then a newline.
+    let src = "\
+(0) OUTPUT REPORT FILE-C .
+(1) MOVE TOTAL (C) TO TOTAL (C) ; WRITE-ITEM FILE-C ; STOP .";
+    assert_eq!(run_output(src), "0\n");
+}
+
+#[test]
+fn write_item_multi_field_record_is_space_separated() {
+    // Two C-qualified fields → one space-separated record line. Both are 0.
+    let src = "\
+(0) OUTPUT REPORT FILE-C .
+(1) MOVE A (C) TO A (C) ; MOVE B (C) TO B (C) ; WRITE-ITEM FILE-C ; STOP .";
+    assert_eq!(run_output(src), "0 0\n");
+}
 
 fn run(source: &str) -> i64 {
     let mut module = compile_source(source, "fm_jit").expect("FLOW-MATIC should compile");

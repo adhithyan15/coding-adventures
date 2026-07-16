@@ -7,6 +7,24 @@ and this project adheres to semantic versioning.
 
 ## [Unreleased]
 
+### Changed
+
+- **Scalable readiness backends: `poll` → `kqueue` (macOS) + `epoll` (Linux).**
+  The Unix backend split from the single `reactor_posix.c` (`poll`, O(n) rescan
+  per wait) into `reactor_mac.c` (`kqueue`) and `reactor_linux.c` (`epoll`), each
+  registering interest once in the kernel and waking only for the ready
+  descriptors (O(ready)). `run.sh` now selects the source + feature macros by OS
+  (`_DARWIN_C_SOURCE` / `_GNU_SOURCE`). The public interface, semantics, and test
+  are unchanged — one coalesced event per ready descriptor, `EOF`/error surfaced
+  as readable. `kqueue`'s per-filter events are de-duplicated by fd to preserve
+  the one-event-per-descriptor contract; `epoll` coalesces natively and carries
+  the token in `epoll_event.data.ptr`. Both keep a small `{fd, interest, token}`
+  record for interest-delta computation and the "nothing registered → return now"
+  short-circuit. Windows stays on `WSAPoll` (readiness-based); **IOCP is
+  deliberately not used** — it is a completion-model API that does not fit this
+  readiness interface. Verified on macOS/arm64 (kqueue: 21 checks / 0 failed,
+  ASan+UBSan, 0 leaks); the epoll path is exercised by the Linux CI matrix.
+
 ### Added
 
 - **Initial package + readiness reactor** (CCPP02 Phase 3, PR 2). Watch many

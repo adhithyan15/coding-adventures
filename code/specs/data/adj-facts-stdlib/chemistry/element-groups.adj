@@ -1,0 +1,121 @@
+% ============================================================================
+% element_group_family — the periodic-table GROUP FAMILY of common elements
+% (adj-facts-stdlib, CHEMISTRY).
+% ============================================================================
+% A middle/high-school chemistry fact set: which FAMILY of the periodic table
+% does a familiar element belong to? The periodic table sorts the elements into
+% vertical columns whose members behave alike; several of those columns have
+% names every chemistry student learns — the ALKALI METALS (soft, very reactive
+% metals like sodium and potassium), the ALKALINE EARTH METALS (magnesium,
+% calcium), the HALOGENS (reactive nonmetals like fluorine and chlorine), the
+% NOBLE GASES (unreactive gases like helium, neon, argon), and the big middle
+% block of TRANSITION METALS (iron, nickel). Recall is a binding query:
+%
+%     ? element_group_family(sodium, $Family)   % alkali_metal
+%
+% Like every FACTS library this is a native `table` (ADJ-TABLES RS-5): each
+% `row` lowers to a ground relation `element_group_family(element, family)`
+% carrying the table's citation, so the lookup above is the ordinary SLD binding
+% query — the engine returns the family WITH its source, on the CPU, with zero
+% model calls, and abstains on an element that is not in the table. It also runs
+% BACKWARD (bind a family, recall an element in it):
+%
+%     ? element_group_family($E, noble_gas)     % helium — first gas in the family
+%
+% The fourteen elements, grouped by family (a little truth table — read down
+% each family to see which elements share a column and therefore behave alike):
+%
+%     element      family                  where it sits on the table
+%     ----------   ---------------------   ------------------------------------
+%     lithium      alkali_metal            Group 1 — soft, very reactive metals
+%     sodium       alkali_metal            Group 1
+%     potassium    alkali_metal            Group 1
+%     beryllium    alkaline_earth_metal    Group 2 — reactive metals, +2 ions
+%     magnesium    alkaline_earth_metal    Group 2
+%     calcium      alkaline_earth_metal    Group 2
+%     fluorine     halogen                 Group 17 — reactive nonmetals
+%     chlorine     halogen                 Group 17
+%     bromine      halogen                 Group 17
+%     helium       noble_gas               Group 18 — unreactive gases
+%     neon         noble_gas               Group 18
+%     argon        noble_gas               Group 18
+%     iron         transition_metal        the d-block, Groups 3–12
+%     nickel       transition_metal        the d-block, Groups 3–12
+%
+% An element that is not one of these fourteen — gold, carbon, uranium — has no
+% row, so a recall on it ABSTAINS rather than inventing a family. That
+% honest-abstention property is what makes the table safe to reason from.
+%
+% The `family` value of every row is a SINGLE lowercase atom, a faithful
+% snake_case name of the family the source assigns the element to — never an
+% interpretation the source does not support.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every element→family pair
+% was read out of a fetched reference page this session, and any element that
+% could not be grounded there was dropped). The fourteen rows are fixed by FIVE
+% Wikipedia family articles, each of which names its member elements in the
+% opening text; each membership span is quoted here character-for-character so
+% any reader can re-check it:
+%
+%   alkali_metal (lithium, sodium, potassium)
+%     "The alkali metals consist of the chemical elements lithium (Li), sodium
+%      (Na), potassium (K), rubidium (Rb), caesium (Cs), and francium (Fr)."
+%     — https://en.wikipedia.org/wiki/Alkali_metal
+%
+%   alkaline_earth_metal (beryllium, magnesium, calcium)
+%     "They are beryllium (Be), magnesium (Mg), calcium (Ca), strontium (Sr),
+%      barium (Ba), and radium (Ra)."
+%     — https://en.wikipedia.org/wiki/Alkaline_earth_metal
+%
+%   halogen (fluorine, chlorine, bromine)
+%     "The halogens are a group in the periodic table consisting of six
+%      chemically related elements: fluorine (F), chlorine (Cl), bromine (Br),
+%      iodine (I), and the radioactive elements astatine (At) and tennessine
+%      (Ts)."
+%     — https://en.wikipedia.org/wiki/Halogen
+%
+%   noble_gas (helium, neon, argon)
+%     "The noble gases ... are the members of group 18 of the periodic table:
+%      helium (He), neon (Ne), argon (Ar), krypton (Kr), xenon (Xe), radon (Rn)
+%      and, in some cases, oganesson (Og)."
+%     — https://en.wikipedia.org/wiki/Noble_gas
+%
+%   transition_metal (iron, nickel)
+%     "All of the elements that are ferromagnetic near room temperature are
+%      transition metals (iron, cobalt and nickel)."
+%     — https://en.wikipedia.org/wiki/Transition_metal
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single strongest span: the alkali-metal sentence that
+% fixes the first rows (lithium/sodium/potassium → alkali_metal). Every OTHER
+% family's membership span and URL is listed above, so each element→family pair
+% remains independently checkable. Wikipedia is a SECONDARY reference (an
+% encyclopedia, not a primary standards body), so `trust consensus` — the honest
+% tier for an encyclopedia, per the standard-library trust convention.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table element_group_family {
+    columns element, family
+
+    row (lithium, alkali_metal)
+    row (sodium, alkali_metal)
+    row (potassium, alkali_metal)
+    row (beryllium, alkaline_earth_metal)
+    row (magnesium, alkaline_earth_metal)
+    row (calcium, alkaline_earth_metal)
+    row (fluorine, halogen)
+    row (chlorine, halogen)
+    row (bromine, halogen)
+    row (helium, noble_gas)
+    row (neon, noble_gas)
+    row (argon, noble_gas)
+    row (iron, transition_metal)
+    row (nickel, transition_metal)
+
+    source "The alkali metals consist of the chemical elements lithium (Li), sodium (Na), potassium (K), rubidium (Rb), caesium (Cs), and francium (Fr)."
+    locator "https://en.wikipedia.org/wiki/Alkali_metal"
+    trust consensus
+}

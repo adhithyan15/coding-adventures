@@ -372,12 +372,20 @@ const PROGRAMS: &[Prog] = &[
     // signature (a record emits a constructor + N same-shape accessors + a
     // predicate), so the `$LispyPair` field-count landed at the wrong type index
     // and every `struct.set` trapped "field 0 out of range" (wasm-runtime 0.4.0).
+    //
+    // **`Vm` + `Jit` too** (vm-core 0.17.0): the generic VM now runs the E6d heap
+    // ops (`alloc`/`field_store`/`field_load`) on its bounds-checked array heap, so
+    // records execute on the interpreter columns as well — all seven engines. (The
+    // union cells stay code-gen-only for now: `match` tests the nil sentinel via
+    // `is_null`, and on the generic VM a nil `Int(0)` is not yet distinguishable
+    // from the first object handle `0`; records never dereference nil, so they are
+    // sound. A nil-handle disambiguation for unions on the VM is a follow-up.)
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(record Point (x : int) (y : int)) (point-x (Point 42 7))",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Twig — E6d-5: the SECOND field of a record (accessor walks one `cdr` then
     // `car`), proving the cons-chain offset is right. `(point-y (Point 7 42))` = 42.
@@ -386,7 +394,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(record Point (x : int) (y : int)) (point-y (Point 7 42))",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // Twig — **E6d-6: unions / `match` (TW6 part 2).** A `(union Name (Variant …) …)`
     // erases to integer-tagged constructors (a cons `(tag . fields…)`) and `match`
@@ -4631,3 +4639,5 @@ fn t7_differential_random_basic_conditionals_agree() {
     eprintln!("T7 conditional differential: {cross_checks} cross-engine agreements over {N} branch programs");
     assert!(cross_checks >= 2 * N, "expected >= {} cross-checks, got {cross_checks}", 2 * N);
 }
+
+
