@@ -2,6 +2,51 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.28.0] - 2026-07-16
+
+### Added — extract a side-effecting discriminant from an empty-body switch
+
+The mirror of the 0.27.0 empty-switch *removal*. Same shape — every consequent
+empty, every case test a literal or absent — but the discriminant **has a side
+effect**, so the switch can't simply vanish: its one observable act is
+evaluating the discriminant once. It collapses to a bare expression statement of
+the discriminant, matching the reference Closure Compiler at `SIMPLE`
+byte-for-byte:
+
+- `switch (f()) {}` → `f();`
+- `switch (a.b()) {}` → `a.b();`
+- `switch (x++) {}` → `x++;`
+- `switch (x = y) {}` → `x = y;`
+- `switch (f()) { case 1: }` → `f();` (empty literal-test case)
+- `switch (f()) { default: }` → `f();`
+
+**Scope — a new `is_terminal_impure_expr` gate.** Only a discriminant Closure
+leaves AS-IS in statement position is extracted: a **call**, an **assignment**,
+or an **update** (`++`/`--`) — each always impure and already in minimal
+statement form. A discriminant Closure *further* simplifies once extracted is
+**declined** (the switch is kept, no regression), because emitting the raw form
+would diverge and reproducing the simplified form needs a separate
+"remove useless code in statement position" pass:
+
+- `switch (f() ? a : b) {}` → Closure `f();` (pure branches dropped) — declined
+- `switch (f().x) {}` → Closure `f();` (pure member read dropped) — declined
+- `switch (-f()) {}` → Closure `f();` (pure unary dropped) — declined
+- `switch (g(), h()) {}` → Closure `g(); h();` (sequence split) — declined
+
+A case test with its own side effect (`switch (f()) { case g(): }`) also
+declines: `all_tests_pure_or_none` is false, so — as with the removal above —
+the switch is kept rather than dropping the test's effect.
+
+**Statement-start safety.** Extraction moves the discriminant to statement-start
+position, so it also declines (via `leftmost_is_object_literal`) when the
+discriminant's leftmost token is an object literal — `switch (({}).f()) {}` is
+kept, because the extracted `{}.f();` would begin with a `{` that opens a block
+and mis-parses. (The underlying emitter gap — no statement-start parens for a
+compound expression whose leftmost token is `{` — is tracked as a separate fix;
+once it lands this guard can be relaxed.)
+
+Additive; MINOR bump 0.27.0 → 0.28.0.
+
 ## [0.27.0] - 2026-07-16
 
 ### Changed — empty-switch removal: broaden the DISCRIMINANT gate to any side-effect-free expression
