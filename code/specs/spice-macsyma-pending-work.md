@@ -605,14 +605,21 @@ already used for `Simplify`/`RatSimplify`/`Radcan`/etc.) — the shared
 Macsyma-specific head is layered on. `expand((x+1)^2)` now correctly returns
 `1 + x + x + x*x`.
 
-**Known remaining gap, honestly scoped out of this fix**: this does **not**
-collect like terms — the two `x` terms above stay separate rather than
-combining into `2*x`, and `x*x` is not folded into `x^2`. Python's reference
-only achieves that clean form via a *second*, single-variable
-rational-polynomial fast path (`to_rational`/`from_polynomial`) that this
-port does not include. A future "collect like terms" pass (grouping
-structurally-repeated monomials and summing their coefficients) is real,
-separate, more involved work — not yet scheduled as its own track/PR.
+**Known remaining gap, honestly scoped out of this fix** — ✅ closed
+(2026-07-16): the fix above deliberately deferred like-term collection (the
+two `x` terms staying separate rather than combining into `2*x`, and `x*x`
+not folding into `x^2`) as a "real, separate, more involved" follow-up. That
+follow-up landed as `cas_simplify::collect_terms` — a bottom-up pass that
+flattens `Add`/`Sub` into signed terms, decomposes each into a
+`(coefficient, monomial)` pair (reusing `numeric_fold`'s exact-rational
+accumulator), groups by monomial (summing coefficients, dropping
+exact-zero groups so real cancellations disappear), and rebuilds. `expand`
+now runs this pass before its final `simplify` call, so `expand((x+1)^2)`
+returns `1 + 2*x + x^2`, not the raw `1 + x + x + x*x`. Python's reference
+only reaches that clean form via a *second*, single-variable
+rational-polynomial fast path (`to_rational`/`from_polynomial`); this port
+takes the general (any-number-of-variables) path and collects afterward,
+rather than reproducing that fast path.
 
 This also unblocks Wolfram's own `Expand[...]` (MA04 §24.2) via the identical
 thin-wiring pattern used for `Simplify[...]`.

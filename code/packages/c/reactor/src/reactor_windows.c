@@ -2,14 +2,15 @@
  * reactor_windows.c — the Winsock (WSAPoll) backend of reactor.
  * ===========================================================================
  *
- * Compiled on Windows (named by `BUILD_windows`; macOS/Linux use reactor_posix.c
- * via the shared `BUILD`). No OS #ifdefs — the build chose this file. Links
- * ws2_32 (WSAPoll).
+ * Compiled on Windows (named by `BUILD_windows`; macOS uses reactor_mac.c /
+ * kqueue and Linux reactor_linux.c / epoll via the shared `BUILD`). No OS
+ * #ifdefs — the build chose this file. Links ws2_32 (WSAPoll).
  *
- * WSAPoll is Winsock's near-exact copy of POSIX poll(), so this mirrors the POSIX
- * backend one-for-one: a growable array of {SOCKET, interest, token}, rebuilt
- * into a WSAPOLLFD array for each wait, with revents mapped back to tokens. The
- * readiness bits are POLLRDNORM / POLLWRNORM.
+ * WSAPoll is Winsock's readiness poll: a growable array of {SOCKET, interest,
+ * token}, rebuilt into a WSAPOLLFD array for each wait, with revents mapped back
+ * to tokens. Like the kqueue/epoll backends it presents the same readiness
+ * interface (one coalesced event per ready descriptor). The readiness bits are
+ * POLLRDNORM / POLLWRNORM.
  */
 #include "reactor/reactor.h"
 

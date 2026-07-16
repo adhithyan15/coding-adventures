@@ -20,15 +20,17 @@
 //! | `OTHERWISE GO TO OPERATION n` | `jmp op_n` |
 //! | `JUMP TO OPERATION n` | `jmp op_n` |
 //! | `MOVE field TO field` | `mov` between the fields' registers |
+//! | `READ-ITEM handle` | `input_more` peek → `_eof` flag, then `input_i64` per field |
+//! | `IF END OF DATA GO TO OPERATION n` | `jmp_if_true _eof, op_n` |
 //! | `WRITE-ITEM handle` | print the file's fields via `__fm_print_int`+`putchar` |
 //! | `STOP` | `ret 0` |
 //! | `INPUT`/`OUTPUT`/`HSP` (file declarations) | no-op |
 //!
 //! Each file-qualified field (`PRODUCT-NO (A)`) is a distinct `i64` register
-//! initialised to 0. `READ-ITEM` (which needs the EOF-aware input capability),
-//! `TRANSFER`, `TEST`/`REWIND`/`CLOSE-OUT`, and the `END OF DATA` loop condition
-//! are a later rung; a program that reaches one gets a clean
-//! [`CompileError::Unsupported`], never wrong output.
+//! initialised to 0; a record is read/written over the stdin/stdout stream
+//! (PL09 D4 — no filesystem). `TRANSFER` (whole-record copy) and
+//! `TEST`/`REWIND`/`CLOSE-OUT` (tape control) are a later rung; a program that
+//! reaches one gets a clean [`CompileError::Unsupported`], never wrong output.
 
 use coding_adventures_flow_matic_parser::try_parse_flow_matic;
 use interpreter_ir::function::FunctionTypeStatus;
@@ -108,6 +110,13 @@ impl Compiler {
         self.instrs.push(IIRInstr::new(op, dest.map(str::to_string), srcs, type_hint));
     }
 
+    /// A fresh unique register/label name with the given prefix.
+    fn fresh(&mut self, prefix: &str) -> String {
+        let n = self.write_counter;
+        self.write_counter += 1;
+        format!("{prefix}{n}")
+    }
+
     fn emit_program(&mut self, program: &GrammarASTNode) -> Result<(), CompileError> {
         // Pre-pass: every file-qualified field becomes an i64 register, zeroed
         // at entry (FLOW-MATIC fields start empty; a real value would arrive via
@@ -122,7 +131,7 @@ impl Compiler {
         // reads a defined `0` (false → no branch) rather than an undefined
         // register — which `module.validate()` and the backend validators do
         // NOT catch, and which would miscompile downstream.
-        for flag in [CMP_GT, CMP_EQ, CMP_LT] {
+        for flag in [CMP_GT, CMP_EQ, CMP_LT, EOF_FLAG] {
             self.emit("const", Some(flag), vec![Operand::Int(0)], "i64");
         }
 
@@ -212,6 +221,43 @@ impl Compiler {
                 Ok(())
             }
 
+            "read_item_clause" => {
+                // READ-ITEM <handle> reads the next record for the file from
+                // stdin into its fields. Per PL09 D4 the input is a stdin stream:
+                // `input_more` peeks whether a record remains (the EOF-aware read
+                // the plain `input_i64` lacks), and each field is read with
+                // `input_i64`. At end-of-input the shared EOF flag is set (read by
+                // a following `IF END OF DATA`) and the field reads are skipped.
+                let handle = first_token(inner, "NAME").ok_or_else(|| {
+                    CompileError::Malformed("READ-ITEM without a file handle".into())
+                })?;
+                let qualifier = qualifier_of_handle(&handle);
+                let suffix = format!("__{}", sanitise(&qualifier));
+                let record: Vec<String> =
+                    self.fields.iter().filter(|f| f.ends_with(&suffix)).cloned().collect();
+
+                // _eof = (input_more == 0)
+                let more = self.fresh("_more");
+                self.emit("call_builtin", Some(&more), vec![Operand::Var("input_more".into())], "i64");
+                let zero = self.fresh("_z");
+                self.emit("const", Some(&zero), vec![Operand::Int(0)], "i64");
+                self.emit("cmp_eq", Some(EOF_FLAG), vec![Operand::Var(more), Operand::Var(zero)], "i64");
+
+                // Skip the field reads at end-of-input (fields keep their values).
+                let skip = self.fresh("_rd_skip");
+                self.emit(
+                    "jmp_if_true",
+                    None,
+                    vec![Operand::Var(EOF_FLAG.into()), Operand::Var(skip.clone())],
+                    "void",
+                );
+                for field in &record {
+                    self.emit("call_builtin", Some(field), vec![Operand::Var("input_i64".into())], "i64");
+                }
+                self.emit("label", None, vec![Operand::Var(skip)], "void");
+                Ok(())
+            }
+
             "write_item_clause" => {
                 // WRITE-ITEM <handle> writes the file's record to stdout: its
                 // fields (those qualified by the handle's letter — `FILE-C` →
@@ -273,9 +319,8 @@ impl Compiler {
             Some("GREATER") => Ok(CMP_GT.to_string()),
             Some("EQUAL") => Ok(CMP_EQ.to_string()),
             Some("LESS") => Ok(CMP_LT.to_string()),
-            Some("END") => Err(CompileError::Unsupported(
-                "IF END OF DATA (the file end-of-data loop is a later rung)".into(),
-            )),
+            // END OF DATA tests the flag set by the most recent READ-ITEM.
+            Some("END") => Ok(EOF_FLAG.to_string()),
             _ => Err(CompileError::Malformed("unrecognised IF condition".into())),
         }
     }
@@ -292,6 +337,9 @@ impl Compiler {
 const CMP_GT: &str = "_cmp_gt";
 const CMP_EQ: &str = "_cmp_eq";
 const CMP_LT: &str = "_cmp_lt";
+/// The end-of-data flag the most recent `READ-ITEM` set (1 = input exhausted),
+/// read by a following `IF END OF DATA`.
+const EOF_FLAG: &str = "_eof";
 const RET_ZERO: &str = "_ret0";
 
 // ---------------------------------------------------------------------------
@@ -536,13 +584,30 @@ mod tests {
     }
 
     #[test]
-    fn record_io_is_unsupported_not_wrong() {
-        // READ-ITEM needs the file runtime — a later rung. Clean error, not a
-        // miscompile.
-        let src = "(0) READ-ITEM FILE-A ; STOP .";
-        let err = compile_source(src, "r").unwrap_err();
+    fn read_item_compiles_to_an_eof_aware_read() {
+        // READ-ITEM emits the `input_more` peek, sets the EOF flag, and reads the
+        // file's fields with `input_i64`.
+        let src = "(0) MOVE N (A) TO N (A) ; READ-ITEM FILE-A ; STOP .";
+        let module = compile_source(src, "r").unwrap();
+        assert!(module.validate().is_empty(), "{:?}", module.validate());
+        let ops: Vec<String> =
+            module.functions[0].instructions.iter().map(|i| i.op.clone()).collect();
+        // A call_builtin (input_more/input_i64) and the EOF cmp_eq are present.
+        assert!(ops.iter().filter(|o| *o == "call_builtin").count() >= 2);
+        assert!(ops.contains(&"cmp_eq".to_string()));
+        // The EOF flag is written by the READ.
+        assert!(module.functions[0]
+            .instructions
+            .iter()
+            .any(|i| i.dest.as_deref() == Some("_eof")));
+    }
+
+    #[test]
+    fn unsupported_verbs_stay_a_clean_error() {
+        // TRANSFER (whole-record copy) still needs a later rung.
+        let err = compile_source("(0) TRANSFER A TO B ; STOP .", "t").unwrap_err();
         assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
-        assert!(err.to_string().contains("READ-ITEM"));
+        assert!(err.to_string().contains("TRANSFER"));
     }
 
     #[test]
@@ -628,9 +693,16 @@ mod tests {
     }
 
     #[test]
-    fn end_of_data_condition_is_unsupported() {
+    fn end_of_data_condition_branches_on_the_eof_flag() {
+        // IF END OF DATA now compiles to a conditional jump on the EOF flag; a
+        // lone one (no preceding READ) reads the zero-initialised flag → false.
         let src = "(0) IF END OF DATA GO TO OPERATION 1 .\n(1) STOP .";
-        let err = compile_source(src, "e").unwrap_err();
-        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+        let module = compile_source(src, "e").unwrap();
+        assert!(module.validate().is_empty(), "{:?}", module.validate());
+        let branches_on_eof = module.functions[0].instructions.iter().any(|i| {
+            i.op == "jmp_if_true"
+                && matches!(i.srcs.first(), Some(Operand::Var(v)) if v == "_eof")
+        });
+        assert!(branches_on_eof, "END OF DATA should jmp_if_true on _eof");
     }
 }

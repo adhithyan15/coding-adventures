@@ -3339,11 +3339,10 @@ fn simplify_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
 
 /// `Expand[expr]` → the fully distributed polynomial form: every
 /// `(a + b) * c`-shaped product is multiplied out into a flat sum of terms,
-/// then the result is fixed-pointed through the same simplifier `Simplify`
-/// uses so constants fold and identities collapse. Does **not** collect like
-/// terms (e.g. `Expand[x + x]` stays `x + x`, it does not become `2 x`) —
-/// that is a separate, not-yet-implemented `cas_simplify::expand` capability
-/// (see MA04 §24.2), not a Wolfram-wiring limitation.
+/// like terms are collected (`Expand[x + x]` → `2 x`, repeated factors fold
+/// into a power — see `cas_simplify::collect_terms`), then the result is
+/// fixed-pointed through the same simplifier `Simplify` uses so constants
+/// fold and identities collapse.
 ///
 /// A thin call into [`cas_simplify::expand`] — the exact function Macsyma's
 /// `expand_handler` calls (`macsyma-runtime/src/lib.rs`), reused verbatim so
@@ -6187,10 +6186,10 @@ mod tests {
 
     #[test]
     fn expand_distributes_products_over_sums() {
-        // Expand[(x+1)^2] -> 1 + x + x + x*x (no like-term collection -- the
-        // same honest, documented scope as Macsyma's `expand()`, see
-        // `expand_distributes_polynomial_multiplication` in
-        // `macsyma-runtime/tests/test_runtime.rs`).
+        // Expand[(x+1)^2] -> 1 + 2*x + x^2, fully collected -- the same
+        // like-term-collecting `cas_simplify::expand` Macsyma's `expand()`
+        // now also uses, see `expand_distributes_polynomial_multiplication`
+        // in `macsyma-runtime/tests/test_runtime.rs`.
         let x = sym("x");
         let squared = apply(
             sym(symbolic_ir::POW),
@@ -6202,9 +6201,8 @@ mod tests {
                 sym(ADD),
                 vec![
                     int(1),
-                    x.clone(),
-                    x.clone(),
-                    apply(sym(MUL), vec![x.clone(), x])
+                    apply(sym(MUL), vec![int(2), x.clone()]),
+                    apply(sym(symbolic_ir::POW), vec![x, int(2)]),
                 ],
             )
         );

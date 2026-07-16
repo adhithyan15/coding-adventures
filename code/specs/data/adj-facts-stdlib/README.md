@@ -29,6 +29,7 @@ per rotation, in parallel):
 | `astronomy/` | planet → order from the Sun | NASA |
 | `chemistry/` | element → atomic number | PubChem / NIH |
 | `chemistry/` | common substance → approximate pH | LibreTexts (consensus) |
+| `chemistry/` | element → periodic-table group family | Wikipedia (consensus) |
 | `metrology/` | SI prefix → power of ten | NIST |
 | `mathematics/` | Roman numeral → value | (consensus) |
 | `calendar/` | day / month → number | ISO 8601 |
@@ -37,7 +38,9 @@ per rotation, in parallel):
 | `nutrition/` | common food → MyPlate food group | USDA MyPlate |
 | `agriculture/` | farm animal → product it gives | Iowa State University (CFSPH) |
 | `biology/` | common bone → body region | NIH / MedlinePlus |
-| … | *physics, geography, anatomy, physical constants, …* | *(expanding)* |
+| `biology/` | macronutrient → energy (kcal) per gram | NIH / MedlinePlus |
+| `physics/` | simple machine → everyday example | NASA |
+| … | *geography, anatomy, physical constants, …* | *(expanding)* |
 
 Formulas and laws (Newton's `F = ma`, the ideal gas law `PV = nRT`, area/volume, …) are grown
 in `adj-formula-stdlib/<subject>/` using the `formula` construct — simple ones first, growing

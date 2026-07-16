@@ -1,5 +1,133 @@
 # Changelog — cas-simplify (Rust)
 
+## [0.5.0] — 2026-07-16
+
+### Added
+
+- **`collect_terms` — `expand()` now collects like terms.** Previously an
+  honestly-documented, explicitly-tracked gap (see `expand`'s own module
+  docs prior to this release, and the `spice-macsyma-pending-work.md`
+  `Expand` entry): `expand((x+1)^2)` returned the raw, uncollected
+  `1 + x + x + x*x` rather than `1 + 2*x + x^2`. New `collect_terms` module:
+  flattens an `Add`/`Sub` subtree into signed terms (descending through the
+  nested `Add(Add(..), Add(..))` shape square-and-multiply's intermediate
+  results leave behind), decomposes each term into a `(coefficient,
+  monomial)` pair — reusing `numeric_fold`'s exact-rational `Acc`
+  accumulator so both passes share the same GCD-reduced,
+  float-contamination-aware arithmetic — groups by monomial (summing
+  coefficients, dropping exact-zero groups, so genuine cancellations like
+  the cross terms in `(a+b)*(a-b)` actually disappear), and rebuilds. Also
+  folds repeated multiplication into a power (`x*x` → `x^2`) as a
+  byproduct of the same monomial decomposition — the *other* half of the
+  gap `expand`'s docs called out. `expand()` now runs `collect_terms` on
+  the raw distribution before the final `simplify` pass.
+- Flattens nested `Mul` structure first (`expand_mul` only ever wraps two
+  operands per call and never re-flattens against an already-`Mul`
+  operand — square-and-multiply routinely leaves `Mul(Mul(a, a), a)`
+  behind for `a^3`, not the flat `Mul(a, a, a)` the base decomposition
+  needs to see all three factors as the same base) — found by this
+  package's own test suite (`expand_pow_of_trinomial_multivariate`'s (a+b)³
+  case) before ever reaching `/security-review`.
+- `rebuild_additive`'s term-grouping is `O(n log n)` (sort-then-merge-
+  adjacent), not `O(n²)` (find-or-insert) — matters at `EXPAND_MAX_TERMS`
+  (10,000) scale; see the module's own DoS-safety note for why this pass
+  can't reopen the growth its sibling guard already closed.
+- Updated the two downstream consumers (`macsyma-runtime`'s `expand`,
+  `wolfram-runtime`'s `Expand[...]`) — both delegate to this crate's
+  `expand` unchanged, so they inherit collected output automatically; their
+  own exact-output tests and doc comments (which pinned/described the old
+  uncollected shape) are updated in lockstep.
+- 34 tests total (up from 24 — see the `### Fixed` entries below for two of
+  the additions), including adversarial cases (opposite-signed
+  cancellation to exact zero, exact-rational coefficient summation via the
+  shared `Acc`, negative-exponent bases, an opaque non-`Pow` repeated
+  factor like `Sin(x)*Sin(x)`).
+
+### Fixed
+
+- **`monomialize_factors`'s same-base merge was `O(k²)` in a single term's
+  own distinct-factor count `k`, not bounded by `EXPAND_MAX_TERMS`** —
+  found by `/security-review` before this crate's first push of the
+  feature above. `EXPAND_MAX_TERMS` only bounds term counts that pass
+  through `expand_mul`'s own distribution; a bare `x1*x2*...*xk` a caller
+  writes directly (nothing to distribute in a flat product of symbols) is
+  never refused by that cap, and the original implementation merged
+  same-base factors with a linear `find`-or-insert scan per new factor —
+  genuinely `O(k²)`, not the `O(n log n)` this module's docs claimed.
+  Fixed by sorting the factor list first and merging adjacent runs in one
+  linear pass, the same pattern `rebuild_additive` already used. New
+  regression test with 5,000 distinct one-off factors.
+- **Exponent sums used `+=`, not `saturating_add`** — a `Pow`'s integer
+  exponent is copied verbatim from the input with no cap of its own
+  (unlike `EXPAND_MAX_POW`, which only gates *active* distribution), so
+  two occurrences of a huge exponent (e.g. `i64::MAX`) on the same base
+  could overflow a plain `i64` addition — panicking under overflow-checked
+  debug/test builds, or silently wrapping to an incorrect exponent in
+  release builds. Fixed to `saturating_add`, mirroring `term_count`'s own
+  `saturating_add`/`saturating_mul` convention elsewhere in this crate.
+  New regression test multiplying `x^i64::MAX` by itself.
+- **`collect_terms`'s dispatch order made the same-base-merge fix above
+  `O(k² log k)` overall, not the `O(k log k)` it claimed** — found by a
+  second round of `/security-review`, still before this feature's first
+  push. `expand_apply`'s `.fold()` over `expand_mul` left-nests *any*
+  `n`-ary `Mul`/`Add` with nothing to distribute into a chain of depth
+  `k` (`Mul(Mul(Mul(x1,x2),x3),...)`) — the same "many distinct terms,
+  `EXPAND_MAX_TERMS` never fires" shape the fix above already targeted,
+  just nested instead of flat. `collect_terms`'s dispatch recursed into
+  every child *before* checking whether the current node was itself
+  `Add`/`Sub`/`Mul`, so each of the `k` nesting levels re-flattened and
+  re-sorted everything the level below it had already flattened and
+  sorted — `O(k)` extra work at each of `k` levels, `O(k² log k)` total.
+  Confirmed empirically before the fix (a throwaway release-mode
+  benchmark, deleted after use — the same 10,000-deep chain this
+  section's new regression test uses took multiple seconds; a
+  32,000-deep chain was projected well into the tens of seconds from the
+  observed ~4x-per-doubling growth) and after (the 10,000-deep chain now
+  completes in well under a millisecond; 32,000-deep in ~4.5ms —
+  confirmed near-linear across k=1,000/2,000/4,000/8,000/16,000/32,000).
+  Fixed by flattening the *raw*, pre-collection `Add`/`Sub`/`Mul`
+  structure in one pass (new `flatten_additive_raw`/`flatten_mul_raw`)
+  *before* recursing `collect_terms` into each resulting leaf, instead of
+  collecting every child first and re-flattening the already-rebuilt
+  result afterward — a chain of depth `k` is now flattened once, in
+  `O(k)`, rather than once per level. Both new functions use an explicit
+  `Vec`-backed work-stack rather than native recursion, so flattening a
+  long chain no longer costs one Rust stack frame per level either —
+  partially closing a related stack-overflow risk the same review round
+  flagged (full closure would mean removing recursion-depth risk from
+  arbitrary, non-chain nesting shapes across the whole `simplify`/
+  `canonical` pipeline this module's output always feeds into — a larger,
+  crate-wide undertaking, documented as a known limitation in the module
+  docs rather than silently assumed away, not fixed here). Two new
+  regression tests: a 10,000-deep left-nested `Mul` chain of distinct
+  factors (confirms speed and that nothing wrongly merges) and a
+  10,000-deep left-nested `Add` chain of one repeated symbol (confirms
+  speed and that everything correctly collects into one term).
+- **The fix above introduced its own bug: a malformed (non-binary) `Sub`
+  node infinitely recurses to a stack-overflow abort** — found by the
+  same follow-up review round that confirmed the fix above. The new
+  `is_additive_head` classified *any* `Sub`-headed node as additive,
+  regardless of arity, but `flatten_additive_raw` only knows how to
+  decompose a two-arg `Sub` (`a - b`); for any other arity it falls
+  through to pushing the node back out unchanged. That unchanged node
+  then went straight into a fresh `collect_terms(term)` call, got
+  classified as additive again by the same (too-loose) check, and
+  repeated forever — an unbounded, uncatchable stack-overflow abort
+  (`collect_terms` recurses natively, unlike the iterative flatten
+  helpers), not merely a slow computation. No parser frontend in this
+  repo builds a non-binary `Sub` today, but `collect_terms`/`expand` are
+  both public API with no arity validation on `IRNode` construction, so
+  this wasn't only a theoretical concern. Fixed by requiring the same
+  two-arg check in `is_additive_head` that `flatten_additive_raw` already
+  required, so a malformed `Sub` now correctly falls through to the
+  generic `Apply` arm (recursing into its args and rebuilding — the same
+  safe path already used for `Div`/`Sin`/every other wrapper head). Three
+  new regression tests: 3-arg, 0-arg, and 1-arg `Sub` nodes, all
+  confirmed to terminate (not merely to produce the "right" answer — the
+  bug was non-termination, not a wrong one). 20 tests in this module now
+  (36 total in the crate, up from 32 — the three arity tests plus the two
+  chain tests above account for the difference).
+
 ## [0.4.1] — 2026-07-12
 
 ### Fixed

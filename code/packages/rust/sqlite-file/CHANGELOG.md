@@ -1,5 +1,26 @@
 # Changelog — sqlite-file
 
+## 0.13.0 - Unreleased
+
+**Phase F (writer): overflow chains.** `page_writer::write_single_table_db` now
+stores rows whose record exceeds the inline limit (`usable − 35`) by spilling the
+tail into an **overflow-page chain**, instead of rejecting them with
+`Unsupported`. The inline/overflow split mirrors the reader's
+`split_and_reassemble` byte-for-byte (`M = ((U−12)·32/255) − 23`,
+`K = M + (P−M) mod (U−4)`, inline `= K if K ≤ X else M`), and each overflow page
+is `[u32-be next-page][content]` with `next = 0` on the last — exactly what
+`btree::follow_overflow` expects. Overflow pages are allocated after the data
+leaf (page 3 onward, in rowid order) and the DB-header page count is updated to
+match. New helpers: `table_leaf_inline_len`, `build_leaf_cell`,
+`encode_overflow_pages`; the leaf packer was split into a reusable
+`pack_leaf_cells` shared by the inline-only `fill_table_leaf_page` and the
+overflow-aware assembler (`encode_table_leaf_page` unchanged behaviourally).
+Gates: an own-reader round-trip for a multi-page overflow row interleaved with
+inline rows, plus a **real bundled-C SQLite** cross-check — our written file
+passes `PRAGMA integrity_check` (`"ok"`) and reads back every row over SQL.
+Still one data leaf only (no interior/tree growth) and the `sqlite_schema` row on
+page 1 must still fit inline — those remain later rungs.
+
 ## 0.12.0 - Unreleased
 
 **Phase F (writer): one-call whole-file assembler.** New

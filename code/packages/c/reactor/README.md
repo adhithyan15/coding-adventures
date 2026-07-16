@@ -5,17 +5,30 @@ and wake only for the ready ones — on top of the `os-platform` core. The
 companion to `net`: blocking one thread per connection does not scale; a reactor
 does. There is no ISO C form for it.
 
-Built by `platform-harness`, per-OS **source selection** via `BUILD`
-(POSIX `poll()`) and `BUILD_windows` (Winsock `WSAPoll()`, linking `ws2_32`).
-Reuses `os-platform`'s `osp_status`.
+Built by `platform-harness`, per-OS **source selection** (`run.sh` picks
+`reactor_mac.c` / `reactor_linux.c`; `BUILD_windows` picks `reactor_windows.c`,
+linking `ws2_32`). Reuses `os-platform`'s `osp_status`.
 
 ## Scope
 
-This first cut uses **`poll()` / `WSAPoll()`** — the portable readiness primitive
-with identical semantics on every OS and (unlike epoll/kqueue/IOCP) verifiable on
-a developer machine. `poll()` is O(n) per wait; the scalable, edge-triggered
-backends the plan names — **epoll** (Linux), **kqueue** (macOS), **IOCP**
-(Windows) — are a drop-in follow-up behind this same interface.
+Each OS uses its scalable readiness mechanism:
+
+| OS      | mechanism | why |
+|---------|-----------|-----|
+| macOS   | `kqueue`  | register once, wake O(ready) |
+| Linux   | `epoll`   | register once, wake O(ready) |
+| Windows | `WSAPoll` | readiness-based; adequate here |
+
+`kqueue`/`epoll` register interest once in the kernel and return only the ready
+descriptors, versus `poll()`'s O(n) rescan every wait — the scalability win for
+many mostly-idle connections. All three present the **identical interface** with
+the same semantics (one coalesced event per ready descriptor, `EOF`/error
+surfaced as readable).
+
+**Not IOCP.** Windows' IOCP is a *completion* API (post a read, get told when it
+finished) — a different model that wouldn't fit this readiness interface; a
+completion-style reactor would be its own primitive. `WSAPoll` keeps Windows on
+the same readiness contract as the Unix backends.
 
 ## API (`reactor/reactor.h`)
 
@@ -71,7 +84,8 @@ Locally (macOS): 21 checks / 0 failed under gcc + clang; clean under ASan+UBSan;
 ```
 reactor/
 ├── include/reactor/reactor.h     # public API (reuses os_platform/status.h)
-├── src/reactor_posix.c           # macOS + Linux (poll) backend
+├── src/reactor_mac.c             # macOS (kqueue) backend
+├── src/reactor_linux.c           # Linux (epoll) backend
 ├── src/reactor_windows.c         # Windows (WSAPoll) backend
 ├── tests/reactor_test.c          # readiness round-trip on a socket pair
 ├── tools/run.sh  · run.ps1       # per-OS build drivers

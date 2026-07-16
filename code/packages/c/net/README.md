@@ -33,6 +33,9 @@ osp_socket_send(cli, "hello", 5, &n);             /* sends ALL bytes */
 char buf[64];
 osp_socket_recv(conn, buf, sizeof buf, &n);       /* n == 0 => peer closed */
 
+uintptr_t fd;
+osp_socket_fd(conn, &fd);      /* raw descriptor → hand to the reactor */
+
 osp_socket_close(cli); osp_socket_close(conn); osp_socket_close(lis);
 osp_net_shutdown();
 ```
@@ -49,8 +52,10 @@ osp_net_shutdown();
 - `osp_socket_send` is send-**all** (loops over partial sends, retries `EINTR`);
   `osp_socket_recv` is a single `recv` reporting the byte count (`0` = orderly
   peer shutdown).
-- Blocking I/O only. Non-blocking readiness (epoll/kqueue/iocp) is the next
-  primitive, `reactor`.
+- Blocking I/O only. To multiplex many sockets on one thread, hand each socket's
+  descriptor — `osp_socket_fd(s, &fd)`, an `int` fd on POSIX / `SOCKET` on Windows
+  widened to `uintptr_t` — to the `reactor` and cast to its `osp_fd`. This is the
+  seam the `tcp-runtime` server builds on.
 - SIGPIPE on a dead peer is suppressed portably (Linux `MSG_NOSIGNAL`, macOS
   `SO_NOSIGPIPE` — selected by feature-macro presence, not by OS name).
 

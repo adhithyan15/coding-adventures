@@ -213,3 +213,11 @@ osp_status osp_socket_close(osp_socket *s) {
     free(s);
     return st;
 }
+
+osp_status osp_socket_fd(const osp_socket *s, uintptr_t *out) {
+    if (s == NULL || out == NULL) {
+        return OSP_ERR_INVAL;
+    }
+    *out = (uintptr_t)s->fd;
+    return OSP_OK;
+}

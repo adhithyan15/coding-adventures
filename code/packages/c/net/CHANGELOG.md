@@ -9,6 +9,13 @@ and this project adheres to semantic versioning.
 
 ### Added
 
+- **`osp_socket_fd` accessor** (CCPP02 port campaign). Exposes a socket's
+  underlying OS descriptor (an `int` fd on POSIX, a `SOCKET` on Windows) widened
+  to `uintptr_t`, so a `net` socket can be watched by an external event loop (the
+  `reactor`) instead of blocking in accept/recv — the seam the `tcp-runtime`
+  server builds on. The descriptor stays owned by the socket. Test extended to
+  assert each of listener/client/connection exposes a distinct descriptor, plus
+  NULL validation; clean under ASan+UBSan, 0 leaks.
 - **Initial package + `tcp` sockets** (CCPP02 Phase 3, PR 1). Real blocking TCP
   over IPv4, on top of the `os-platform` core (reuses `osp_status`). Built by
   `platform-harness`; per-OS source selection via `BUILD` / `BUILD_windows`.
