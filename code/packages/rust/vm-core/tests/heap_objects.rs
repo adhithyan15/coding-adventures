@@ -87,3 +87,29 @@ fn distinct_allocs_do_not_alias() {
         Some(Value::Int(1))
     );
 }
+
+/// `is_null` + reserved handle 0: nil (`Int(0)`) is null; a real cons cell (handle
+/// ≥ 1 after the reservation) is not. `c = alloc; return is_null(c)` ⇒ false, and
+/// `is_null(const 0)` ⇒ true.
+#[test]
+fn is_null_distinguishes_nil_from_first_object() {
+    // A freshly-allocated object is NOT nil (its handle is ≥ 1, not 0).
+    assert_eq!(
+        run(vec![
+            ins("alloc", Some("c"), vec![], "ref<LispyPair>"),
+            ins("is_null", Some("r"), vec![Operand::Var("c".into())], "bool"),
+            ins("ret", None, vec![Operand::Var("r".into())], "bool"),
+        ]),
+        Some(Value::Bool(false)),
+        "the first allocated object must not read as nil"
+    );
+    // The nil sentinel (const Int(0) : ref<LispyPair>) IS nil.
+    assert_eq!(
+        run(vec![
+            ins("const", Some("nil"), vec![Operand::Int(0)], "ref<LispyPair>"),
+            ins("is_null", Some("r"), vec![Operand::Var("nil".into())], "bool"),
+            ins("ret", None, vec![Operand::Var("r".into())], "bool"),
+        ]),
+        Some(Value::Bool(true))
+    );
+}
