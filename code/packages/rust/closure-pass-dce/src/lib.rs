@@ -70,7 +70,7 @@ use coding_adventures_closure_pass_pipeline::{
 };
 use coding_adventures_correlation_vector::{CVLog, Contribution};
 use coding_adventures_javascript_ast::{
-    statement::TaggedStatement, ArrayExpression, AssignmentExpression, BigIntLiteral,
+    statement::TaggedStatement, ArrayExpression, AssignmentExpression, AssignmentTarget, BigIntLiteral,
     BinaryExpression, BlockStatement, BooleanLiteral, CallExpression, ConditionalExpression, NewExpression, SequenceExpression, SpreadElement, YieldExpression, AwaitExpression, ImportExpression,
     Declaration, EmptyStatement, Expression, ExpressionStatement, ForInStatement, ForInit,
     ForOfStatement,
@@ -311,6 +311,68 @@ fn is_side_effect_free(expr: &Expression) -> bool {
         // Anything else (Call / New / Assignment / Update / Sequence / Yield /
         // Await / TaggedTemplate / ImportExpression / …) is treated as possibly
         // side-effecting and is NOT removed.
+        _ => false,
+    }
+}
+
+/// Is `expr` a **side-effecting** expression that the reference Closure Compiler
+/// leaves UNCHANGED once it sits in statement position — so a construct whose
+/// only observable effect is evaluating it (e.g. an empty-body `switch` with a
+/// side-effecting discriminant) can be replaced by `<expr>;` byte-identically?
+///
+/// True for the always-impure, always-minimal forms: a **call** (`f()`,
+/// `a.b()`), an **assignment** (`x = y`, `x += 1`), and an **update**
+/// (`x++` / `--y`). Each of these carries a side effect that cannot be reduced
+/// away, and Closure prints it as-is in statement position.
+///
+/// Deliberately NARROW. Closure *further* simplifies several other impure
+/// forms once they reach statement position, because the discarded value lets
+/// pure wrappers fall away:
+///
+/// - `f() ? a : b` → `f();`   (pure branches dropped)
+/// - `f().x`       → `f();`   (pure member read dropped)
+/// - `-f()`        → `f();`   (pure unary dropped)
+/// - `g(), h()`    → `g(); h();`  (sequence split into statements)
+///
+/// Extracting any of those *raw* would diverge from Closure's simplified output,
+/// so they are excluded here — reproducing them needs the separate
+/// "remove useless code in statement position" transform. Declining leaves the
+/// enclosing construct intact (no regression).
+fn is_terminal_impure_expr(expr: &Expression) -> bool {
+    matches!(
+        expr,
+        Expression::CallExpression(_)
+            | Expression::AssignmentExpression(_)
+            | Expression::UpdateExpression(_)
+    )
+}
+
+/// Would emitting `expr` at the START of a statement begin with a `{` that the
+/// code printer leaves UNPARENTHESISED — so the `{` opens a *block* and the
+/// program mis-parses? True when the leftmost leaf along the
+/// member-object / call-callee / postfix-update / assignment-member-target
+/// spine is an **object literal** (`{…}`). The emitter tags an object literal
+/// at primary precedence and so does not wrap it in those positions
+/// (`({}).f()` prints as `{}.f()`), which is fine mid-expression but a
+/// mis-parse at statement start.
+///
+/// A rewrite that moves an expression to statement-start position — like the
+/// extract-discriminant fold below — must DECLINE when this holds, or a valid
+/// `switch (({}).f()) {}` would become the broken `{}.f();`. (A leftmost
+/// *function*/*class* expression is NOT a hazard: the emitter already wraps
+/// those in member-object / call-callee position. The underlying gap — no
+/// statement-start parens for a compound expression whose leftmost token is
+/// `{` — is a separate emitter fix.)
+fn leftmost_is_object_literal(expr: &Expression) -> bool {
+    match expr {
+        Expression::ObjectExpression(_) => true,
+        Expression::MemberExpression(m) => leftmost_is_object_literal(&m.object),
+        Expression::CallExpression(c) => leftmost_is_object_literal(&c.callee),
+        Expression::UpdateExpression(u) if !u.prefix => leftmost_is_object_literal(&u.argument),
+        Expression::AssignmentExpression(a) => match &a.left {
+            AssignmentTarget::MemberExpression(m) => leftmost_is_object_literal(&m.object),
+            AssignmentTarget::Identifier(_) => false,
+        },
         _ => false,
     }
 }
@@ -719,6 +781,55 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
                     "EmptyStatement",
                 );
                 return TaggedStatement::EmptyStatement(EmptyStatement { cv: s.cv.clone() });
+            }
+
+            // gap-014 step 2b — extract a SIDE-EFFECTING discriminant.
+            //
+            // The mirror of the removal above: SAME shape (every consequent
+            // empty, every case test a literal or absent), but the discriminant
+            // HAS a side effect, so the switch cannot simply vanish — its one
+            // observable act is evaluating the discriminant once (no consequent
+            // runs, and the literal case tests are side-effect-free). So it
+            // collapses to a bare expression statement of the discriminant,
+            // matching the reference Closure Compiler:
+            //
+            //   switch (f())    {}          → f();
+            //   switch (a.b())  {}          → a.b();
+            //   switch (x++)    {}          → x++;
+            //   switch (x = y)  {}          → x = y;
+            //   switch (f()) { case 1: }    → f();      (empty literal-test case)
+            //   switch (f()) { default: }   → f();
+            //
+            // SCOPE — only a discriminant Closure leaves AS-IS in statement
+            // position is extracted (`is_terminal_impure_expr`: call, assignment,
+            // update). A discriminant Closure *further* simplifies once extracted
+            // (`f() ? a : b` → `f();`, `f().x` → `f();`, `-f()` → `f();`,
+            // `g(), h()` → `g(); h();`) is DECLINED — extracting the raw form
+            // would diverge, and reproducing it needs the separate
+            // statement-simplification pass. A case test with its own side effect
+            // (`switch (f()) { case g(): }`) is also declined: `all_tests_pure_or_none`
+            // is false, so both this and the removal above leave the switch intact
+            // (dropping the switch would drop the test's effect).
+            // The extra `!leftmost_is_object_literal` guard prevents a
+            // statement-start mis-parse: extracting `switch (({}).f()) {}` would
+            // otherwise emit `{}.f();`, where the leading `{` opens a block. The
+            // switch is kept instead (it emits correctly — its discriminant is
+            // not at statement start).
+            if all_consequents_empty
+                && all_tests_pure_or_none
+                && is_terminal_impure_expr(&new_disc)
+                && !leftmost_is_object_literal(&new_disc)
+            {
+                st.record(
+                    &s.cv,
+                    "switch_discriminant_extracted",
+                    "SwitchStatement{<empty body>, side-effecting discriminant}",
+                    "ExpressionStatement",
+                );
+                return TaggedStatement::ExpressionStatement(ExpressionStatement {
+                    cv: s.cv.clone(),
+                    expression: new_disc,
+                });
             }
 
             // gap-014 step 4 / CLOC12.36 — constant-discriminant
@@ -2734,15 +2845,54 @@ mod tests {
         assert!(block.body.is_empty(), "expected empty body; got {:?}", block.body);
     }
 
-    /// A side-EFFECTING discriminant keeps the switch. `switch (f()) {}`
-    /// is NOT side-effect-free (the call runs), so this path declines.
-    /// (The reference compiler instead extracts the discriminant to
-    /// `f();`, a separate transform we do not perform here — declining
-    /// keeps the switch intact rather than dropping the call, so no
-    /// unsound removal and no regression.)
+    /// A side-EFFECTING **call** discriminant on an empty-body switch is
+    /// EXTRACTED to a bare expression statement: `switch (f()) {}` → `f();`
+    /// (the switch's only observable act is evaluating `f()`). Matches Closure.
     #[test]
-    fn empty_switch_with_call_discriminant_keeps_switch() {
+    fn empty_switch_with_call_discriminant_extracts() {
         let body = vec![switch_stmt(call0("f"), vec![])];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, contribs, changed, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert!(changed);
+        match &block.body[0] {
+            Statement::Tagged(TaggedStatement::ExpressionStatement(es)) => {
+                assert!(
+                    matches!(&es.expression, Expression::CallExpression(_)),
+                    "expected the discriminant call as the expression; got {:?}",
+                    es.expression
+                );
+            }
+            other => panic!("expected ExpressionStatement (extracted call); got {:?}", other),
+        }
+        assert!(contribs.iter().any(|c| c.tag == "switch_discriminant_extracted"));
+        assert!(!contribs.iter().any(|c| c.tag == "switch_eliminated"));
+    }
+
+    /// Extraction still applies with an empty literal-test case:
+    /// `switch (f()) { case 1: }` → `f();`.
+    #[test]
+    fn empty_switch_with_call_discriminant_and_literal_case_extracts() {
+        let cases = vec![case_empty(Some(num(1.0)))];
+        let body = vec![switch_stmt(call0("f"), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, contribs, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert!(matches!(
+            &block.body[0],
+            Statement::Tagged(TaggedStatement::ExpressionStatement(_))
+        ));
+        assert!(contribs.iter().any(|c| c.tag == "switch_discriminant_extracted"));
+    }
+
+    /// A side-effecting discriminant that is NOT a terminal-impure form is
+    /// DECLINED (kept), because Closure further simplifies it once extracted and
+    /// we don't reproduce that here. `switch (f().x) {}` — a member read on a
+    /// call — is kept (Closure would emit `f();`, dropping the pure `.x`).
+    #[test]
+    fn empty_switch_with_member_discriminant_keeps_switch() {
+        let disc = member(call0("f"), "x"); // f().x — impure but not terminal
+        let body = vec![switch_stmt(disc, vec![])];
         let prog = program_with_function(body, Some("fn.1"));
         let (out, contribs, _, _) = run_pass(prog);
         let block = extract_function_body(&out);
@@ -2750,7 +2900,49 @@ mod tests {
             &block.body[0],
             Statement::Tagged(TaggedStatement::SwitchStatement(_))
         ));
-        assert!(!contribs.iter().any(|c| c.tag == "switch_eliminated"));
+        assert!(!contribs.iter().any(|c| c.tag == "switch_discriminant_extracted"));
+    }
+
+    /// A discriminant whose leftmost token is an object literal is NOT extracted
+    /// — emitting it at statement start would begin with `{` and mis-parse as a
+    /// block. `switch (({}).f()) {}` is kept (it emits correctly as a switch),
+    /// rather than rewritten to the broken `{}.f();`.
+    #[test]
+    fn empty_switch_with_object_literal_leftmost_discriminant_keeps_switch() {
+        let obj = Expression::ObjectExpression(ObjectExpression { cv: None, properties: vec![] });
+        // ({}).f()
+        let disc = Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(member(obj, "f")),
+            arguments: vec![],
+        });
+        let body = vec![switch_stmt(disc, vec![])];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, contribs, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert!(
+            matches!(&block.body[0], Statement::Tagged(TaggedStatement::SwitchStatement(_))),
+            "object-literal-rooted discriminant must keep the switch; got {:?}",
+            block.body[0]
+        );
+        assert!(!contribs.iter().any(|c| c.tag == "switch_discriminant_extracted"));
+    }
+
+    /// A case test with its OWN side effect blocks extraction — dropping the
+    /// switch would drop that effect. `switch (f()) { case g(): }` is kept
+    /// (`all_tests_pure_or_none` is false for the call test).
+    #[test]
+    fn empty_switch_with_impure_case_test_keeps_switch() {
+        let cases = vec![case_empty(Some(call0("g")))];
+        let body = vec![switch_stmt(call0("f"), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, contribs, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert!(matches!(
+            &block.body[0],
+            Statement::Tagged(TaggedStatement::SwitchStatement(_))
+        ));
+        assert!(!contribs.iter().any(|c| c.tag == "switch_discriminant_extracted"));
     }
 
     /// A case whose only consequent is an empty block (`case 1: {}`)
