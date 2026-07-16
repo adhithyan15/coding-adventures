@@ -2,6 +2,36 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.26.0] - 2026-07-15
+
+### Added — empty-`if` with a side-effecting **call** test → expression statement
+
+The impure twin of the 0.25.0 empty-`if` removal. When both branches of an `if`
+are empty but the test **has** a side effect, the `if` wrapper is dead yet the
+test must still run, so it survives as an expression statement:
+
+- `if(f()){}` → `f();`
+- `if(f()){}else{}` → `f();`
+- `if(a.b()){}` → `a.b();`
+- `if(f(1,2)){}` → `f(1,2);`
+
+Verified byte-identical against the reference Closure Compiler (`SIMPLE`). The
+two empty-`if` guards are mutually exclusive: a side-effect-free test is *removed*
+(0.25.0), a side-effecting one is *kept as its test* (this release).
+
+**Scope: the test must be a plain `CallExpression`.** As an expression statement
+a bare call is already Closure's final form, so the rewrite is exact. Other
+impure tests receive *further* simplifications that are separate transforms, so
+they deliberately decline here rather than emit a non-canonical intermediate:
+
+- `!f()` — Closure drops the discarded `!` (→ `f();`);
+- `a = b` — dead-assignment removal may delete it entirely;
+- `a, f()` — the sequence is split into statements (`a;f();`);
+- `new F()` — emitted `new F` (no parens) in statement position.
+
+A non-empty branch is also out of scope: `if(f()){g()}` → `f()&&g()` is the
+`if`→logical rewrite, a different arc.
+
 ## [0.25.0] - 2026-07-15
 
 ### Added — empty-`if` elimination (test side-effect-free)
