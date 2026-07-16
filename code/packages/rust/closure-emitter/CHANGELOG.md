@@ -2,6 +2,43 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.49.0] - 2026-07-16
+
+### Changed — a no-argument `new` drops its empty `()`; `new` always wraps as a member/call spine
+
+The emitter now prints a zero-argument `NewExpression` without the empty
+parentheses — `new C()` → `new C`, `new a.b.C()` → `new a.b.C` — matching the
+reference Closure Compiler at `SIMPLE` byte-for-byte. Previously the argument
+parens were always printed.
+
+Dropping the `()` makes a `new` a bare `NewExpression` in the grammar, which
+binds **looser** than a member access or call: a following `.y` / `[k]` / `(…)`
+would otherwise re-associate onto the callee (`new C.y` parses as `new (C.y)`).
+To preserve meaning, `expr_prec` now tags every `NewExpression` at a new
+`PREC_NEW` (just below `PREC_PRIMARY`), so a member-object or call-callee parent
+wraps it. This matches Closure for **both** the argumented and no-argument
+forms:
+
+- `new C()` → `new C`
+- `new C().foo` → `(new C).foo`
+- `new C()()` → `(new C)()`
+- `new C().m()` → `(new C).m()`
+- `new C(1).foo` → `(new C(1)).foo`
+- `new C(1)()` → `(new C(1))()`
+- `new new C()` → `new (new C)`
+- `new C(1)` (standalone), `typeof new C`, `new C+1` — no wrap (looser parents)
+
+Verified byte-identical against `closure-compiler-v20260712.jar` (`SIMPLE`).
+The upstream `CodePrinterTest` `new`-operator port
+(`tests/upstream/code_printer_new_test.rs`) previously pinned the always-`()`
+spelling; its assertions were corrected to the true jar output (`new X`,
+`(new X).y`, …).
+
+Out of scope (separate divergences, unchanged here): the computed-index → dot
+normalisation (`(new C)["k"]` → `(new C).k`), sequence-at-statement splitting
+(`a,b` → `a;b`), and the space before a parenthesised callee
+(`new(f())` vs `new (f())`). MINOR bump 0.48.0 → 0.49.0.
+
 ## [0.48.0] - 2026-07-15
 
 ### Added — drop the leading zero of a bare fraction in value position (`0.5` → `.5`)
