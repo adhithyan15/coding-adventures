@@ -70,7 +70,7 @@ use coding_adventures_closure_pass_pipeline::{
 };
 use coding_adventures_correlation_vector::{CVLog, Contribution};
 use coding_adventures_javascript_ast::{
-    statement::TaggedStatement, ArrayExpression, AssignmentExpression, AssignmentTarget, BigIntLiteral,
+    statement::TaggedStatement, ArrayExpression, AssignmentExpression, AssignmentOperator, AssignmentTarget, BigIntLiteral,
     BinaryExpression, BlockStatement, BooleanLiteral, CallExpression, ConditionalExpression, NewExpression, SequenceExpression, SpreadElement, YieldExpression, AwaitExpression, ImportExpression,
     Declaration, EmptyStatement, Expression, ExpressionStatement, ForInStatement, ForInit,
     ForOfStatement,
@@ -347,6 +347,33 @@ fn is_terminal_impure_expr(expr: &Expression) -> bool {
     )
 }
 
+/// Is `expr` a bare-identifier self-assignment `x = x` — a plain `=` whose
+/// target and value are the SAME named identifier?
+///
+/// Such an assignment is a no-op on a lexical binding (read the variable, write
+/// the same value straight back), so removing the statement it forms is sound;
+/// Closure does exactly this at SIMPLE. The gate is deliberately narrow:
+///   - the operator must be `=` (`AssignmentOperator::Eq`) — a compound assign
+///     like `x += x` is `x = x + x`, NOT a no-op;
+///   - the target must be an IDENTIFIER, not a member — `o.x = o.x` / `a[i] =
+///     a[i]` can run a getter/setter and is observable, so it is NOT matched
+///     (Closure keeps it too);
+///   - the value must be an identifier with the same `name` as the target.
+fn is_bare_identifier_self_assign(expr: &Expression) -> bool {
+    let Expression::AssignmentExpression(a) = expr else {
+        return false;
+    };
+    if a.operator != AssignmentOperator::Eq {
+        return false;
+    }
+    match (&a.left, &*a.right) {
+        (AssignmentTarget::Identifier(target), Expression::Identifier(value)) => {
+            target.name == value.name
+        }
+        _ => false,
+    }
+}
+
 /// Would emitting `expr` at the START of a statement begin with a `{` that the
 /// code printer leaves UNPARENTHESISED — so the `{` opens a *block* and the
 /// program mis-parses? True when the leftmost leaf along the
@@ -491,9 +518,40 @@ fn dce_statement(stmt: &Statement, st: &mut DceState) -> Statement {
 fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStatement {
     match stmt {
         TaggedStatement::ExpressionStatement(s) => {
+            let expression = dce_expression(&s.expression, st);
+
+            // Bare-identifier self-assignment `x = x;` is a no-op — read the
+            // variable `x`, write the SAME value back to the SAME binding — so
+            // Closure removes it at SIMPLE. Collapse the statement to
+            // `EmptyStatement`, which the block/program sweep then drops
+            // (mirroring the empty-`if` → `;` path above).
+            //
+            // Scoped to a plain `=` between two IDENTICALLY-named identifiers:
+            //   - a MEMBER self-assign (`o.x = o.x`, `a[i] = a[i]`) is KEPT — a
+            //     property read/write can trigger a getter/setter (observable),
+            //     so Closure keeps it and so do we (`is_bare_identifier_self_
+            //     assign` returns false for a member target);
+            //   - a COMPOUND assign (`x += x`, i.e. `x = x + x`) is not a no-op
+            //     and is excluded by the `=`-only (`AssignmentOperator::Eq`)
+            //     gate;
+            //   - a differently-named assign (`x = y`) obviously stays.
+            // Reading a bare identifier is treated as side-effect-free here, the
+            // same crate-wide contract the equal-branch / ternary folds rely on
+            // (a truly-undeclared `x` would throw `ReferenceError`, an edge
+            // Closure also does not model).
+            if is_bare_identifier_self_assign(&expression) {
+                st.record(
+                    &s.cv,
+                    "self_assign_removed",
+                    "ExpressionStatement{ x = x }",
+                    "EmptyStatement",
+                );
+                return TaggedStatement::EmptyStatement(EmptyStatement { cv: s.cv.clone() });
+            }
+
             TaggedStatement::ExpressionStatement(ExpressionStatement {
                 cv: s.cv.clone(),
-                expression: dce_expression(&s.expression, st),
+                expression,
             })
         }
         TaggedStatement::BlockStatement(s) => {
@@ -3658,6 +3716,90 @@ mod tests {
         let (out, _c, changed, _) = run_pass(prog);
         assert!(changed);
         assert_eq!(out.body.len(), 2, "only the empty if should be removed; got {:?}", out.body);
+    }
+
+    // ---------------- bare-identifier self-assignment removal ---------
+
+    /// `target op value` assignment expression.
+    fn assign(op: AssignmentOperator, target: &str, value: Expression) -> Expression {
+        Expression::AssignmentExpression(AssignmentExpression {
+            cv: None,
+            operator: op,
+            left: AssignmentTarget::Identifier(Identifier {
+                cv: None,
+                name: target.to_string(),
+            }),
+            right: Box::new(value),
+        })
+    }
+
+    #[test]
+    fn bare_identifier_self_assign_is_removed() {
+        // `x = x;` is a no-op → removed (collapses to `;`, then swept).
+        let prog = program().with_body(vec![ProgramItem::Statement(expr_stmt(assign(
+            AssignmentOperator::Eq,
+            "x",
+            ident("x"),
+        )))]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(changed, "x=x should be removed");
+        assert!(out.body.is_empty(), "x=x should drop entirely; got {:?}", out.body);
+    }
+
+    #[test]
+    fn self_assign_removed_but_neighbours_kept() {
+        let prog = program().with_body(vec![
+            ProgramItem::Statement(expr_stmt(call0("before"))),
+            ProgramItem::Statement(expr_stmt(assign(AssignmentOperator::Eq, "x", ident("x")))),
+            ProgramItem::Statement(expr_stmt(call0("after"))),
+        ]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 2, "only x=x should be removed; got {:?}", out.body);
+    }
+
+    #[test]
+    fn different_name_assign_is_kept() {
+        // `x = y;` is a real write — never removed.
+        let prog = program().with_body(vec![ProgramItem::Statement(expr_stmt(assign(
+            AssignmentOperator::Eq,
+            "x",
+            ident("y"),
+        )))]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(!changed, "x=y must be kept");
+        assert_eq!(out.body.len(), 1);
+    }
+
+    #[test]
+    fn compound_self_assign_is_kept() {
+        // `x += x;` is `x = x + x`, NOT a no-op — must be kept.
+        let prog = program().with_body(vec![ProgramItem::Statement(expr_stmt(assign(
+            AssignmentOperator::AddEq,
+            "x",
+            ident("x"),
+        )))]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(!changed, "x+=x must be kept (not a no-op)");
+        assert_eq!(out.body.len(), 1);
+    }
+
+    #[test]
+    fn member_self_assign_is_kept() {
+        // `o.x = o.x;` can run a getter/setter — observable, so kept.
+        let target = Expression::AssignmentExpression(AssignmentExpression {
+            cv: None,
+            operator: AssignmentOperator::Eq,
+            left: AssignmentTarget::MemberExpression(Box::new(match member(ident("o"), "x") {
+                Expression::MemberExpression(m) => m,
+                _ => unreachable!(),
+            })),
+            right: Box::new(member(ident("o"), "x")),
+        });
+        let prog = program().with_body(vec![ProgramItem::Statement(expr_stmt(target))]);
+        let (out, _c, changed, _) = run_pass(prog);
+        assert!(!changed, "o.x=o.x must be kept (getter/setter observable)");
+        assert_eq!(out.body.len(), 1);
     }
 
     #[test]
