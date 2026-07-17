@@ -141,6 +141,7 @@ members = [
     "fsharp-parser",
     "garbage-collector",
     "gc-core",
+    "gc-core-capi",
     "ge225-simulator",
     "argon2d",
     "argon2i",
