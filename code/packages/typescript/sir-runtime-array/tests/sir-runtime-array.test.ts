@@ -179,6 +179,22 @@ describe("elementwise", () => {
     expect(q.data[0]).toBe(Infinity);
     expect(Number.isNaN(q.data[1])).toBe(true);
   });
+
+  it("a bare number operand is coerced to a scalar, not read as `.data`/`.shape` directly", () => {
+    // Mirrors matlab-to-semantic-ir's lowering: `A .* 2` emits `2` as a bare
+    // number, not wrapped in an ArrayLit/scalar-array constructor first.
+    const v = arr.fromVec([1, 2, 3]);
+    const r = arr.elementwise("Mul", v, 2);
+    expect(Array.from(r.data)).toEqual([2, 4, 6]);
+    const r2 = arr.elementwise("Add", 10, v);
+    expect(Array.from(r2.data)).toEqual([11, 12, 13]);
+  });
+
+  it("two bare number operands both coerce and stay a scalar", () => {
+    const r = arr.elementwise("Add", 2, 40);
+    expect(arr.isScalar(r)).toBe(true);
+    expect(Array.from(r.data)).toEqual([42]);
+  });
 });
 
 describe("matmul", () => {
@@ -302,6 +318,16 @@ describe("range", () => {
     // values, not fixed at compile time) — this proves the cap actually
     // trips rather than trusting the code that it would.
     expect(() => arr.range(1, Number.MAX_SAFE_INTEGER)).toThrow(/produces more than/);
+  });
+
+  it("a NaN start/stop/step is a clean error, not a silently empty range", () => {
+    // Without the Number.isFinite guard, the while loop's condition is
+    // false on its very first check for a NaN bound (every relational
+    // comparison with NaN is false), so this would silently return a
+    // valid-looking `[1, 0]` empty array instead of erroring.
+    expect(() => arr.range(NaN, 5)).toThrow(/must be finite/);
+    expect(() => arr.range(1, NaN)).toThrow(/must be finite/);
+    expect(() => arr.range(1, 5, NaN)).toThrow(/must be finite/);
   });
 });
 
@@ -454,5 +480,37 @@ describe("indexGet / indexSet", () => {
     // TypeScript's own type-checking can't police at runtime.
     const malformed = { kind: "bogus" } as unknown as arr.IndexArg;
     expect(() => arr.indexGet(a, [malformed])).toThrow(/unrecognised IndexArg/);
+  });
+
+  it("a NaN scalar index is a clean error for indexGet, not a silent wrong read", () => {
+    // `NDArray` index values come from the compiled program's own runtime
+    // arithmetic (e.g. `0/0`), not just a hand-built edge case. Without
+    // `assertValidPosition`, the linear path's bounds check
+    // (`i < 0 || i >= length`) is an OR-form that is NOT the negation of a
+    // comparison under IEEE-754 for i=NaN (every relational comparison with
+    // NaN is false), so the throw would be skipped and `a.data[NaN]` would
+    // silently return `undefined` instead.
+    const a = arr.fromVec([1, 2, 3]);
+    expect(() => arr.indexGet(a, [{ kind: "scalar", value: NaN }])).toThrow(/not a finite integer/);
+  });
+
+  it("a NaN scalar index is a clean error for indexSet, not a silently dropped write", () => {
+    const a = arr.zeros(1, 3);
+    expect(() => arr.indexSet(a, [{ kind: "scalar", value: NaN }], 9)).toThrow(/not a finite integer/);
+  });
+
+  it("a non-integer scalar index is a clean error, not truncated silently", () => {
+    const a = arr.fromVec([1, 2, 3]);
+    expect(() => arr.indexGet(a, [{ kind: "scalar", value: 1.5 }])).toThrow(/not a finite integer/);
+  });
+
+  it("set() itself rejects a NaN row/col even though not reachable via indexGet/indexSet today", () => {
+    // `set` is part of this module's exported public surface; every
+    // current caller resolves positions through `assertValidPosition`
+    // first, but `set` stays NaN-safe on its own rather than relying on
+    // that invariant holding forever.
+    const a = arr.zeros(2, 2);
+    expect(() => arr.set(a, NaN, 0, 9)).toThrow(/out of bounds/);
+    expect(() => arr.set(a, 0, NaN, 9)).toThrow(/out of bounds/);
   });
 });
