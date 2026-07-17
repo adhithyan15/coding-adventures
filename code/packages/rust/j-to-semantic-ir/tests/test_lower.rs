@@ -517,6 +517,33 @@ fn a_train_within_the_combinator_depth_cap_still_succeeds() {
     assert_eq!(main.body.stmts.len(), 1);
 }
 
+#[test]
+fn a_chain_of_separately_parenthesised_hooks_wider_than_the_cap_is_rejected() {
+    // Security-review regression: each `(+*)` on its own is a single hook,
+    // comfortably within MAX_TRAIN_COMBINATOR_DEPTH -- but chaining many of
+    // them (`(+*)(+*)(+*)...base`, right-recursive noun_expr application)
+    // must ALSO be bounded, since apply_monadic's Hook arm clones its
+    // argument regardless of whether that argument came from *within* one
+    // train's own fold or from the *rest of an outer application chain*.
+    // An earlier version of lower_noun_expr reset combinator_depth to 0 on
+    // every link instead of accumulating it, letting this specific shape
+    // bypass the cap entirely (confirmed to blow up to hundreds of
+    // megabytes from an under-100-byte source before the fix).
+    let chain: String = std::iter::repeat_n("(+*)", 20).collect();
+    let src = format!("{chain}3\n");
+    let msg = compile_err(&src);
+    assert!(msg.contains("combinator levels"), "{msg}");
+}
+
+#[test]
+fn a_chain_of_hooks_within_the_combinator_depth_cap_still_succeeds() {
+    // 5 chained hooks stays well within the cap.
+    let chain: String = std::iter::repeat_n("(+*)", 5).collect();
+    let m = compile_ok(&format!("{chain}3\n"));
+    let main = main_fn(&m);
+    assert_eq!(main.body.stmts.len(), 1);
+}
+
 // ── a full multi-line program validates cleanly ──────────────────────────
 
 #[test]

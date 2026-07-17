@@ -305,8 +305,8 @@ j-repl/       src/{lib.rs, main.rs}       ← MA-6d (the `j` binary)
   [`HML01`](HML01-math-to-semantic-ir.md) §2 — built in this same wave
   rather than as a later retrofit, per §5. `compile`/`compile_source` lower
   `j-parser`'s CST into a `semantic_ir::Module`, reusing the exact SIR22
-  base cut and "APL addendum" `apl-to-semantic-ir` already established; 45
-  tests (40 unit + 4 capability-rejection + 1 doctest). Design notes:
+  base cut and "APL addendum" `apl-to-semantic-ir` already established; 47
+  tests (42 unit + 4 capability-rejection + 1 doctest). Design notes:
   - **`#`/`^` have no APL analogue and no SIR22-addendum node.**
     `array_runtime::ops::BinOp` (the 12-variant type both languages' shared
     scalar atoms map onto) has no `Pow` slot, and `#`'s monadic
@@ -327,15 +327,23 @@ j-repl/       src/{lib.rs, main.rs}       ← MA-6d (the `j` binary)
     already-lowered subtree, unlike a real interpreter, which evaluates
     once and cheaply reuses the resulting value. That duplication
     compounds multiplicatively across nested combinator levels (`N`
-    levels bound the worst case at `2^N` copies), reachable either through
-    a wide single train's own fold or through explicitly nested
+    levels bound the worst case at `2^N` copies) through *three*
+    mechanisms: a wide single train's own fold, explicitly nested
     parenthesised sub-trains (`j.grammar`'s own header comment discloses
-    that trains "can nest"). The general `MAX_EXPR_DEPTH` guard every
-    other frontend uses is nowhere near tight enough for this specific
-    risk, so this crate adds a dedicated `MAX_TRAIN_COMBINATOR_DEPTH` (12)
-    checked at every `Hook`/`Fork` construction site — see
-    `j-to-semantic-ir/src/lower.rs`'s own module doc comment for the full
-    reasoning.
+    that trains "can nest"), and — the one a security review caught an
+    earlier draft of this crate missing, after the first two were already
+    correctly guarded — a *chain* of separately-parenthesised hooks joined
+    by ordinary right-recursive application (`(f g)(h i)...base`), where
+    each `(...)` is individually within the cap but the outer
+    application's own `.clone()` still duplicates the already-duplicated
+    result of the rest of the chain (confirmed to blow up to hundreds of
+    megabytes from an under-100-byte source before the fix). The general
+    `MAX_EXPR_DEPTH` guard every other frontend uses is nowhere near tight
+    enough for this specific risk, so this crate adds a dedicated
+    `MAX_TRAIN_COMBINATOR_DEPTH` (12), with one counter threaded through
+    all three mechanisms and checked at every `Hook`/`Fork` construction
+    site — see `j-to-semantic-ir/src/lower.rs`'s own module doc comment
+    for the full reasoning.
   - **`j.grammar`'s own disclosed gap** — a bare noun tooth is
     syntactically well-formed anywhere in a train (`(A B)` parses) even
     though only a fork's leading position is ever semantically valid — is

@@ -79,15 +79,21 @@ duplicates its noun operand(s) in the emitted `Expr` tree (this lowerer
 builds owned expression trees, not values — unlike a real interpreter,
 which evaluates an operand once and cheaply reuses the resulting value,
 this lowerer must `.clone()` an already-lowered subtree to use it twice).
-That duplication compounds: `N` nested combinator levels bound the worst
-case at `2^N` duplicated copies of whatever sits at the bottom, entirely
-independent of (and far tighter than) the general expression-depth guard.
-`MAX_TRAIN_COMBINATOR_DEPTH` (`12`) bounds this specifically, checked at
-every point a `Hook`/`Fork` is constructed — both when folding a wide
-single train and when descending into an explicitly nested parenthesised
-sub-train — since both mechanisms compound the identical risk. See
-`src/lower.rs`'s module doc comment's "Why trains get their own, much
-smaller depth guard" section for the full reasoning.
+That duplication compounds through three distinct mechanisms that all
+share one counter and cap: folding a wide single train, descending into
+an explicitly nested parenthesised sub-train, *and* a chain of separately
+parenthesised hooks joined by ordinary application (`(f g)(h i)...base`)
+— `N` combinator levels, reached through any mixture of the three, bound
+the worst case at `2^N` duplicated copies of whatever sits at the bottom,
+entirely independent of (and far tighter than) the general
+expression-depth guard. `MAX_TRAIN_COMBINATOR_DEPTH` (`12`) bounds this;
+a security review caught an earlier draft accumulating it correctly for
+the first two mechanisms but resetting it to `0` per application link for
+the third, letting a chain of small (individually within-cap) hooks
+bypass the cap entirely — confirmed to blow up to hundreds of megabytes
+from an under-100-byte source before the fix. See `src/lower.rs`'s module
+doc comment's "Why trains get their own, much smaller depth guard"
+section for the full reasoning and all three mechanisms.
 
 ## Well-known `BuiltinCall` names
 
@@ -98,17 +104,19 @@ smaller depth guard" section for the full reasoning.
 
 ### Testing
 
-- `tests/test_lower.rs` — 40 tests covering every dyadic atom, monadic
+- `tests/test_lower.rs` — 42 tests covering every dyadic atom, monadic
   atoms (valid + rejected comparisons), `$`/`i.`/`,`/`#`/`^` (monadic and
   dyadic), reduce/scan (valid + rejected dyadic use + rejected non-scalar
   verbs), compose (monadic + dyadic), hooks (monadic + dyadic + rejected
   bare-noun tooth), forks (verb-left and leading-noun, monadic + dyadic +
   rejected bare-noun in a non-leading position), 4+-tooth train folding,
-  the combinator-depth cap (both a rejected too-deep train and an
-  accepted within-cap one), stranded/underscore-negative literals,
-  parenthesised grouping, chained assignment, first-occurrence-vs-
-  reassignment, undefined-variable rejection, parse-error propagation, and
-  a full multi-line program that validates via `semantic_ir::validate`.
+  the combinator-depth cap (a rejected too-deep single train, a rejected
+  too-deep *chain* of separately-parenthesised hooks — the security-review
+  regression — and two accepted within-cap cases), stranded/underscore-
+  negative literals, parenthesised grouping, chained assignment,
+  first-occurrence-vs-reassignment, undefined-variable rejection,
+  parse-error propagation, and a full multi-line program that validates
+  via `semantic_ir::validate`.
 - `tests/test_validator.rs` — mirrors `apl-to-semantic-ir`'s own
   capability-rejection pattern: `semantic-ir-to-javascript` accepts
   base-cut modules (including hook/fork-using ones, which are ordinary

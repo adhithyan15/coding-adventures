@@ -173,43 +173,74 @@
 //! this lowerer, working over expression trees ahead of any evaluation,
 //! re-embeds a full *copy* of the subtree each time.
 //!
-//! That duplication **compounds**: if `y` itself is (or contains) another
-//! hook/fork — reachable either through a wide (4+-tooth) single train,
-//! whose fold recurses through several nested `Hook`s, *or* through
-//! explicitly parenthesised nested trains (`j.grammar` itself calls out
-//! that trains "can nest, e.g. `((f g) h)`") — each additional combinator
-//! level can again double how many copies of the innermost operand end up
-//! embedded. `N` nested levels therefore bound the worst case at `2^N`
-//! duplicated copies of whatever expression sits at the bottom, entirely
-//! independent of the *general* [`MAX_EXPR_DEPTH`] guard (which bounds
-//! ordinary CST-walk recursion for stack safety, not output-size
-//! explosion, and is far too permissive a bound for this specific risk —
-//! at `MAX_EXPR_DEPTH`'s own 256, `2^256` is obviously intractable). Note
-//! that `@` (compose) never causes this: its formula uses each operand
-//! exactly once, no `.clone()` involved — chaining many composes is
-//! ordinary linear nesting, not multiplicative.
+//! That duplication **compounds**, and — this is the one part of the
+//! design a security review caught an earlier draft getting wrong, so it's
+//! spelled out carefully here — it compounds through **three** distinct
+//! mechanisms, all of which must share a single counter and cap for the
+//! guard to be sound:
 //!
-//! [`MAX_TRAIN_COMBINATOR_DEPTH`] is a dedicated, much smaller cap
-//! (`12`, bounding the worst case to `2^12 = 4096` duplicated copies — cheap
-//! regardless of what the duplicated subtree contains) checked via
-//! [`Lowerer::check_combinator_depth`] at **every** point a `Hook`/`Fork`
-//! gets constructed: once per level when [`Lowerer::fold_train`] peels a
-//! wide train (bounding a single train's own width), and once per
-//! parenthesised sub-train encountered as a [`Lowerer::lower_verb_expr`]
-//! tooth (bounding nesting achieved via explicit parentheses instead of
-//! raw width) — the two mechanisms share one counter and one cap, since
-//! both compound the identical risk. [`MAX_TRAIN_TEETH`] (`64`) is a
-//! separate, purely defensive cap on raw tooth *count* — generous enough
-//! that no realistic J program ever approaches it, existing only so this
-//! lowerer never does O(tooth count) collection work for an implausibly
-//! wide train before the real guard (`MAX_TRAIN_COMBINATOR_DEPTH`, tripped
-//! during the fold a few levels in regardless) gets a chance to reject it.
-//! Deferring true common-subexpression elimination (binding `y`/`x` to a
-//! synthetic temporary once, referencing it thereafter instead of cloning)
-//! to a follow-up is a deliberate scope decision, not an oversight — no
-//! realistic J program in this cut's scope nests trains anywhere near this
-//! cap, so the guard exists purely as a hard backstop against a
-//! pathological input.
+//! 1. A wide (4+-tooth) single train, whose [`Lowerer::fold_train`] fold
+//!    recurses through several nested `Hook`s.
+//! 2. Explicitly parenthesised *nested* trains (`j.grammar` itself calls
+//!    out that trains "can nest, e.g. `((f g) h)`") — a [`ToothValue::Verb`]
+//!    tooth whose own `verb_expr` is itself another `LPAREN verb_train
+//!    RPAREN`.
+//! 3. A **chain** of separately-parenthesised hooks/forks joined by
+//!    ordinary right-recursive `noun_expr` application (`(f g)(h i)(j
+//!    k)...base`) — each `(...)` here is, on its own, a single small train
+//!    comfortably within the cap, but [`Lowerer::apply_monadic`]/
+//!    [`Lowerer::apply_dyadic`]'s `Hook`/verb-left-`Fork` arms still
+//!    `.clone()` their argument regardless of *where* that argument came
+//!    from, and the argument here is the (already-duplicated) result of
+//!    lowering the rest of the chain — so the doubling compounds across
+//!    the chain exactly as it does within one train's fold. An earlier
+//!    version of this lowerer reset the combinator-depth counter to `0` on
+//!    every [`Lowerer::lower_noun_expr`] application instead of
+//!    accumulating it across the chain, which bounded mechanisms 1 and 2
+//!    correctly but left mechanism 3 completely unguarded — confirmed by a
+//!    security review to blow up to hundreds of megabytes of emitted `Expr`
+//!    tree from an under-100-byte source string of chained hooks before
+//!    this was fixed.
+//!
+//! Each of these three can independently double how many copies of the
+//! innermost operand end up embedded, so `N` combinator levels — however
+//! they're reached, in whatever mixture of the three mechanisms above —
+//! bound the worst case at `2^N` duplicated copies of whatever expression
+//! sits at the bottom, entirely independent of the *general*
+//! [`MAX_EXPR_DEPTH`] guard (which bounds ordinary CST-walk recursion for
+//! stack safety, not output-size explosion, and is far too permissive a
+//! bound for this specific risk — at `MAX_EXPR_DEPTH`'s own 256, `2^256` is
+//! obviously intractable). Note that `@` (compose) never causes this: its
+//! formula uses each operand exactly once, no `.clone()` involved —
+//! chaining many composes is ordinary linear nesting, not multiplicative.
+//!
+//! [`MAX_TRAIN_COMBINATOR_DEPTH`] is a dedicated, much smaller cap (`12`,
+//! bounding the worst case to `2^12 = 4096` duplicated copies — cheap
+//! regardless of what the duplicated subtree contains), and ONE counter
+//! (`combinator_depth`) is threaded through every function that can reach
+//! any of the three mechanisms above, checked via
+//! [`Lowerer::check_combinator_depth`] at every point a `Hook`/`Fork` gets
+//! constructed: incremented once per level when [`Lowerer::fold_train`]
+//! peels a wide train (mechanism 1), once per parenthesised sub-train
+//! encountered as a [`Lowerer::lower_verb_expr`] tooth (mechanism 2), and
+//! once per application link in [`Lowerer::lower_noun_expr`]'s own
+//! right-recursive chain (mechanism 3) — [`Lowerer::lower_term`]'s
+//! `LPAREN` branch threads the same counter through unchanged (ordinary
+//! grouping parentheses are not a combinator boundary of their own).
+//! [`MAX_TRAIN_TEETH`] (`64`) is a separate, purely defensive cap on raw
+//! tooth *count* within a single train — generous enough that no realistic
+//! J program ever approaches it, existing only so this lowerer never does
+//! O(tooth count) collection work for an implausibly wide train before the
+//! real guard (`MAX_TRAIN_COMBINATOR_DEPTH`, tripped during the fold a few
+//! levels in regardless) gets a chance to reject it.
+//!
+//! Deferring true common-subexpression elimination (binding the duplicated
+//! operand to a synthetic temporary once, referencing it thereafter
+//! instead of cloning — which would let mechanisms 1/2/3 nest arbitrarily
+//! deep without any duplication at all) to a follow-up is a deliberate
+//! scope decision, not an oversight — no realistic J program in this cut's
+//! scope nests trains or chains hooks anywhere near this cap, so the guard
+//! exists purely as a hard backstop against a pathological input.
 
 use std::collections::HashSet;
 
@@ -468,7 +499,9 @@ impl Lowerer {
             1 => {
                 let noun_expr_node = only_node(node)
                     .ok_or_else(|| self.err_at(node, "malformed noun_expr statement".to_string()))?;
-                let v = self.lower_noun_expr(noun_expr_node, depth + 1)?;
+                // A fresh top-level statement starts a fresh combinator-depth
+                // budget at 0 (see `lower_noun_expr`'s own doc comment).
+                let v = self.lower_noun_expr(noun_expr_node, depth + 1, 0)?;
                 let span = v.span().clone();
                 Ok(vec![Stmt::ExprStmt {
                     expr: Expr::BuiltinCall {
@@ -513,7 +546,9 @@ impl Lowerer {
                 let noun_expr_node = only_node(node).ok_or_else(|| {
                     self.err_at(node, "malformed noun_expr in assignment".to_string())
                 })?;
-                let v = self.lower_noun_expr(noun_expr_node, depth + 1)?;
+                // A fresh assignment RHS starts a fresh combinator-depth
+                // budget at 0 (see `lower_noun_expr`'s own doc comment).
+                let v = self.lower_noun_expr(noun_expr_node, depth + 1, 0)?;
                 Ok((vec![], v))
             }
             3 => {
@@ -567,27 +602,45 @@ impl Lowerer {
     /// mirrors `apl-to-semantic-ir::Lowerer::lower_value_expr`'s own
     /// dispatch-by-child-count exactly (both productions collapse to the
     /// same three shapes once tokens are filtered out).
-    fn lower_noun_expr(&mut self, node: &GrammarASTNode, depth: usize) -> Result<Expr, JLowerError> {
+    ///
+    /// `combinator_depth` is an ACCUMULATING counter across this
+    /// right-recursive chain of applications, not a fresh budget per link
+    /// -- a security review caught an earlier version of this function
+    /// resetting it to `0` on every `[vexpr, sub]`/`[lhs_term, vexpr, sub]`
+    /// application, which bounded nesting *within* a single parenthesised
+    /// train/compose but not across a *chain* of separately-parenthesised
+    /// hooks/forks (`(f g)(h i)(j k)...base`): each such hook still
+    /// `.clone()`s its own argument (see [`Self::apply_monadic`]/
+    /// [`Self::apply_dyadic`]'s `Hook`/`Fork` arms), and since that argument
+    /// is itself the (already-duplicated) result of the rest of the chain,
+    /// the duplication compounds exactly the same way nesting-via-explicit-
+    /// parens does -- confirmed empirically to blow up to hundreds of
+    /// megabytes from a source string under 100 bytes before this fix.
+    /// Incrementing by one per application link (conservatively, whether or
+    /// not that particular link's verb turns out to be a duplicating
+    /// combinator) keeps this in lockstep with the *intra-train* counter
+    /// [`Self::lower_verb_expr`]/[`Self::fold_train`] already maintain, so
+    /// both mechanisms share one effective budget.
+    fn lower_noun_expr(
+        &mut self,
+        node: &GrammarASTNode,
+        depth: usize,
+        combinator_depth: usize,
+    ) -> Result<Expr, JLowerError> {
         self.check_depth(node, depth)?;
         let span = self.span_of(node);
         let kids = child_nodes(node);
         match kids.as_slice() {
-            [term] => self.lower_term(term, depth + 1),
+            [term] => self.lower_term(term, depth + 1, combinator_depth),
             [vexpr, sub] => {
-                // A fresh top-level verb application starts its own
-                // combinator-depth budget at 0 -- nesting only compounds
-                // *within* one train's own construction (see this file's
-                // module doc comment's "Why trains get their own, much
-                // smaller depth guard" section), not across unrelated
-                // applications elsewhere in the program.
-                let f = self.lower_verb_expr(vexpr, depth + 1, 0)?;
-                let arg = self.lower_noun_expr(sub, depth + 1)?;
+                let f = self.lower_verb_expr(vexpr, depth + 1, combinator_depth)?;
+                let arg = self.lower_noun_expr(sub, depth + 1, combinator_depth + 1)?;
                 self.apply_monadic(f, arg, span)
             }
             [lhs_term, vexpr, sub] => {
-                let lhs = self.lower_term(lhs_term, depth + 1)?;
-                let f = self.lower_verb_expr(vexpr, depth + 1, 0)?;
-                let rhs = self.lower_noun_expr(sub, depth + 1)?;
+                let lhs = self.lower_term(lhs_term, depth + 1, combinator_depth)?;
+                let f = self.lower_verb_expr(vexpr, depth + 1, combinator_depth)?;
+                let rhs = self.lower_noun_expr(sub, depth + 1, combinator_depth + 1)?;
                 self.apply_dyadic(f, lhs, rhs, span)
             }
             other => Err(self.err_at(
@@ -598,7 +651,19 @@ impl Lowerer {
     }
 
     /// `term = NUMBER { NUMBER } | NAME | LPAREN noun_expr RPAREN`.
-    fn lower_term(&mut self, node: &GrammarASTNode, depth: usize) -> Result<Expr, JLowerError> {
+    /// `combinator_depth` is threaded through (not reset) into the
+    /// `LPAREN` branch's nested `noun_expr` -- ordinary grouping
+    /// parentheses are not a combinator boundary of their own, so a
+    /// parenthesised sub-expression inherits whatever budget its enclosing
+    /// context already has, exactly like [`Self::lower_noun_expr`]'s own
+    /// accumulation (see that function's doc comment for the full
+    /// rationale, including the bug this threading fixes).
+    fn lower_term(
+        &mut self,
+        node: &GrammarASTNode,
+        depth: usize,
+        combinator_depth: usize,
+    ) -> Result<Expr, JLowerError> {
         self.check_depth(node, depth)?;
         match node.children.first() {
             Some(ASTNodeOrToken::Token(t)) if t.effective_type_name() == "NUMBER" => {
@@ -642,7 +707,7 @@ impl Lowerer {
             Some(ASTNodeOrToken::Token(t)) if t.effective_type_name() == "LPAREN" => {
                 let inner = only_node(node)
                     .ok_or_else(|| self.err_at(node, "malformed parenthesised term".to_string()))?;
-                self.lower_noun_expr(inner, depth + 1)
+                self.lower_noun_expr(inner, depth + 1, combinator_depth)
             }
             _ => Err(self.err_at(node, "malformed term".to_string())),
         }
@@ -834,7 +899,7 @@ impl Lowerer {
                 Ok(ToothValue::Verb(self.lower_verb_expr(n, depth + 1, combinator_depth)?))
             }
             Some(ASTNodeOrToken::Node(n)) if n.rule_name == "term" => {
-                Ok(ToothValue::Noun(self.lower_term(n, depth + 1)?))
+                Ok(ToothValue::Noun(self.lower_term(n, depth + 1, combinator_depth)?))
             }
             _ => Err(self.err_at(node, "malformed train_tooth".to_string())),
         }

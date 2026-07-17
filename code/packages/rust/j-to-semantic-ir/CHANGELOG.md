@@ -43,12 +43,24 @@
   expression trees, so using an operand twice means cloning an
   already-lowered subtree, unlike a real interpreter which evaluates once
   and reuses the resulting value), and this duplication compounds
-  multiplicatively across nested combinator levels — checked at every
-  `Hook`/`Fork` construction site (both wide-single-train folding and
-  explicit nested-sub-train descent), bounding the worst case to `2^12`
-  duplicated copies regardless of which mechanism causes the depth. A
-  separate, purely defensive `MAX_TRAIN_TEETH` (64) cap bounds a single
-  train's raw tooth count before any O(tooth count) collection work.
+  multiplicatively through three mechanisms sharing one counter and cap:
+  folding a wide single train, descending into an explicitly nested
+  parenthesised sub-train, and — caught by a security review during this
+  same PR, after the first two mechanisms were already correctly guarded
+  — a *chain* of separately-parenthesised hooks/forks joined by ordinary
+  right-recursive application (`(f g)(h i)(j k)...base`). Each `(...)` in
+  such a chain is individually within the cap, but the outer application's
+  own `.clone()` still duplicates the (already-duplicated) result of the
+  rest of the chain, so an earlier draft that reset the combinator-depth
+  counter to `0` per application link instead of accumulating it across
+  the chain left this specific shape completely unguarded — confirmed to
+  blow up to hundreds of megabytes of emitted `Expr` tree from an
+  under-100-byte source string before the fix (regression test:
+  `a_chain_of_separately_parenthesised_hooks_wider_than_the_cap_is_rejected`).
+  Bounds the worst case to `2^12` duplicated copies regardless of which
+  mechanism (or mixture) causes the depth. A separate, purely defensive
+  `MAX_TRAIN_TEETH` (64) cap bounds a single train's raw tooth count
+  before any O(tooth count) collection work.
 - Explicit, disclosed rejections (each a clean `JLowerError`): the 6
   comparison atoms used monadically; a reduce/scan-decorated verb used
   dyadically; `$`/`i.`/`,`/`#`/`^` decorated with an adverb (none is a
@@ -57,7 +69,7 @@
   syntactically but is semantically invalid); trains/compose nested
   deeper than the combinator-depth cap, or a single train wider than the
   tooth-count cap.
-- 45 tests: 40 in `tests/test_lower.rs`, 4 in `tests/test_validator.rs`
+- 47 tests: 42 in `tests/test_lower.rs`, 4 in `tests/test_validator.rs`
   (mirroring `apl-to-semantic-ir`'s own capability-rejection pattern,
   extended to confirm hook/fork-using modules — ordinary nested base-cut
   applications with no new SIR node — are accepted by
