@@ -6,6 +6,28 @@ All notable changes to `task-core` are documented here.
 
 ### Added
 
+- **`Workspace` — projects become first-class, plural, and nestable** (Phase 2 PR-1 of
+  `code/specs/task-app-workspace.md`). The model layer only; no behaviour changes yet.
+  - `Workspace { id, name, projects, roots, cross_project_dependencies,
+    shared_resources, settings }` — the container of every project. The `projects` map
+    is **flat**; nesting is expressed by id via the new `ProjectState::parent`, matching
+    how the rest of the model relates entities. That lets the scheduler (PR-2) build one
+    graph over every task without walking an ownership tree, and keeps snapshots simple.
+  - `ProjectState::parent: Option<ProjectId>` — `None` means a top-level project (listed
+    in `Workspace::roots`). Serialized with `skip_serializing_if`, so root projects omit
+    the field entirely and **pre-workspace snapshots still deserialize** (serde default).
+  - `WorkspaceId` id newtype; `WorkspaceSettings { schedule_as_one_network }` — defaults
+    to `false` (schedule each project independently, i.e. today's behaviour). Turning it
+    on is the "incrementally add complexity" step from portfolio-less to portfolio.
+  - Helpers: `Workspace::empty` (new-document state: one un-nested project),
+    `from_project` (the migration path that wraps a pre-workspace `ProjectState`),
+    `children_of`, `ancestors_of` (cycle-guarded so a corrupt snapshot truncates rather
+    than hangs), and `project_of_task` (task ids are **workspace-global**, which is what
+    lets a cross-project dependency be an ordinary `DependencyLink`).
+  - 7 tests: forest construction/traversal, cycle-guard termination, global task
+    ownership, single-project wrap equivalence, JSON round-trip with `parent` omitted on
+    roots, and old-snapshot compatibility.
+
 - **The data model** — the foundational entity set for a Microsoft Project-class,
   "one model, many views" task engine:
   - `Task` — the central entity, with an optional `TaskSchedule` block (task-type

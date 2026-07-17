@@ -1,5 +1,29 @@
 # Changelog — symbolic-vm (Rust)
 
+## [0.20.3] — 2026-07-17
+
+### Changed
+
+- `handlers::integrate_handler`'s indefinite-integral (2-argument) pipeline
+  is now a `pub` free function, `handlers::integrate_expr(vm, f, x)`. No
+  behavior change for `integrate_handler` itself (its 2-argument branch now
+  just calls the extracted function; its 4-argument definite-integral
+  branch and its existing panic-on-bad-arity contract are untouched) — this
+  only widens visibility so other language runtimes sharing this crate's
+  `VM`/`IRNode` types can reuse the exact same integration pipeline
+  Macsyma's own `integrate` already runs, rather than reimplementing or
+  duplicating it. Mirrors `handlers::differentiate`'s identical extraction
+  for `D` (0.20.2) exactly, including the same "still panics internally,
+  caller with a fail-soft contract must validate arity first" shape.
+  `integrate_expr` installs its own `AssumptionGuard` snapshot of
+  `vm.assumptions` so it is correct standalone even if a caller hasn't
+  already installed one — `AssumptionGuard`'s RAII design explicitly
+  supports a redundant nested install (see `handlers.rs`'s own module
+  docs), so this adds no correctness hazard for `integrate_handler`'s
+  existing internal caller, which already installs one ahead of both its
+  2- and 4-argument branches. First consumer: `wolfram-runtime`'s
+  `Integrate[expr, x]` wiring (W-22, see that crate's own changelog).
+
 ## [0.20.2] — 2026-07-16
 
 ### Changed
