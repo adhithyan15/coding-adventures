@@ -24,40 +24,46 @@ interpreter_ir::IIRModule   (one `main`, returns i64 exit code)
 NativeAOT · LLVM · WASM · JVM · CLR · VM · JIT
 ```
 
-## This slice (v0.1 — the `DISPLAY` / `MOVE` / `STOP RUN` core)
+## This slice (v0.2 — the `DISPLAY` / `MOVE` / `STOP RUN` core + integer arithmetic)
 
-COBOL's WORKING-STORAGE is a **PICTURE-typed** data model. The first rung lowers
-the three verbs that need no arithmetic, as **pure string I/O**:
+COBOL's WORKING-STORAGE is a **PICTURE-typed** data model. Each elementary item
+becomes one IIR register: a **numeric** item (`PIC 9…`) is an `i64` holding its
+value *scaled* by its fractional-digit count (`PIC 9(2)V9` holding 12.3 is the
+integer `123`); an **alphanumeric** item (`PIC X`/`A`) is a `str`.
 
 | COBOL | IIR |
 | --- | --- |
-| elementary item `01 N PIC 9(5)` | one `str` register holding its stored PICTURE image |
-| `VALUE <lit>` | the register's initial `str_const` (literal formatted into the picture at compile time) |
-| `MOVE <lit> TO item` | re-`str_const` the receiver, the literal formatted into *its* picture |
-| `DISPLAY op…` | each operand's image `print_str`'d in turn, then `putchar('\n')` |
+| `VALUE <lit>` / `MOVE <lit> TO item` | the register's `const`/`str_const` — the literal formatted into the item's picture at compile time |
+| `ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE … [GIVING r]` | `add`/`sub`/`mul`/`div` on the `i64` slots, the result reduced to the receiver's field |
+| `DISPLAY op…` | each operand's image emitted, then `putchar('\n')` — a literal prints its source text, a numeric item via the fixed-width digit helper, an alphanumeric via `print_str` |
 | `STOP RUN` | `ret 0` |
 
 ### Why it is exact
 
 A numeric item does not display as a plain integer: `PIC 9(5)` holding 42 shows
 `00042`, and `PIC 9(2)V9` holding 123.456 shows `234` (truncated, implied point).
-Because this rung has **no arithmetic**, every value a program stores is known at
-compile time (a `VALUE` clause or a `MOVE` of a *literal*). So the compiler calls
-the very same picture/value functions the oracle uses — `cobol-runtime`'s
-`move_into_numeric` / `move_into_char`, re-exported for exactly this reuse — at
-compile time, and emits the resulting digit string as a `str` constant. The
-DISPLAYed bytes are byte-identical to the interpreter's by construction.
+For a literal stored into a field, the value is known at compile time, so the
+compiler calls the very same picture/value functions the oracle uses —
+`cobol-runtime`'s `move_into_numeric` / `move_into_char`, re-exported for exactly
+this reuse — and stores the resulting scaled value. A numeric *literal* in a
+`DISPLAY`, by contrast, shows its **source text** (`DISPLAY 42` → `42`).
 
-A numeric *literal*, by contrast, displays as its **source text** (`DISPLAY 42`
-prints `42`, not `00042`) — COBOL only reshapes a value when it lands in a field.
-The compiler honours that distinction.
+Runtime arithmetic (unsigned receivers) is native `i64` over the scaled slots.
+**Integer** `ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE` compute directly; **scaled-decimal**
+`ADD`/`SUBTRACT` (`PIC …V…`) align the implied point to a common working scale,
+accumulate, then store into the receiver's scale — rounding **half away from
+zero** with `ROUNDED`, else truncating. Every store takes the magnitude and keeps
+the low-order `int_digits + dec_digits` digits (COBOL's unsigned-magnitude and
+silent-overflow-truncation rules). Numeric **item-to-item `MOVE`** reshapes the
+source value into the receiver's picture the same way.
 
 ### Deliberately a later rung
 
 Each of these is a clean `CompileError::Unsupported` (never wrong output), landing
-on its own PR: item-to-item `MOVE` (runtime picture reshaping), arithmetic
-(`ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE`/`COMPUTE`), `IF`, `PERFORM`, `GO TO`, group
-items, and signed numerics (`PIC S9…`, trailing-overpunch display).
+on its own PR: **scaled** `MULTIPLY`/`DIVIDE` (a `V` operand) and their `ROUNDED`,
+`ON SIZE ERROR` (needs the `IF` rung's branching), alphanumeric item `MOVE`,
+`COMPUTE`, `IF`, `PERFORM`, `GO TO`, group items, and signed numerics (`PIC S9…`,
+trailing-overpunch display).
 
 ## Usage
 

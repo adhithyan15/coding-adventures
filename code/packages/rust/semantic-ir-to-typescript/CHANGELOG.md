@@ -1,5 +1,67 @@
 # Changelog
 
+## 0.10.0 — SIR22 array/matrix codegen (HML01 Stream A, item 7 TS half)
+
+Real codegen for the SIR22 array/matrix domain's *base cut* — `ArrayLit`,
+`Range`, `MatMul`, `ElementwiseOp`, `Transpose`, `IndexGet` (an `Expr`), and
+`IndexSet` (a `Stmt`) — replacing the deferred `panic!` placeholder these
+seven nodes had. Mirrors the SIR23 codegen's own imported-package treatment
+(0.9.0, above): targets the published `@coding-adventures/sir-runtime-array`
+npm package via `import * as __SirArray from "@coding-adventures/sir-runtime-array"`,
+rather than an inlined runtime — the same contrast the JavaScript backend's
+own SIR22 PR (0.36.0) draws with its inlined `__Sir.Array` port.
+
+- `runtime.rs` gains `RUNTIME_ARRAY`, the `__SirArray` import header, emitted
+  only when `emit::uses_array` finds `Feature::NDArrays`/`MatrixOps`/
+  `ArrayColumnMajor` on the module — a pure-numeric or pure-OOP module never
+  gains the dependency.
+- `emit.rs`: the seven base-cut arms emit real `__SirArray.*` calls,
+  matching the JS backend's call shapes exactly (down to `Expr::Range`'s
+  `start, step, stop` field order vs. `__SirArray.range(start, stop, step)`'s
+  `stop`-before-`step` parameter order, and the `elementwise_op_ts_name`/
+  `emit_index_arg`/`emit_index_args` helpers).
+- **Scope boundary, not silently swept away**: the SIR22 "APL addendum"
+  nodes (`Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/
+  `IndexOf`/`Ravel`/`Catenate`) remain deferred — `sir-runtime-array` itself
+  never implemented them, and porting `array_runtime::ops::{reduce,scan,outer}`
+  + `apl-runtime::builtins`'s bespoke shape/reshape/iota/index-of/ravel/
+  catenate logic is a properly-scoped follow-up, not part of this PR. These
+  nine variants share `Feature::NDArrays`/`MatrixOps`/`ArrayColumnMajor`
+  with the now-accepted base cut (the SIR22 addendum spec gives them no
+  flag of their own), and `apl-to-semantic-ir`'s real lowering emits
+  `Reduce`/`Scan`/`OuterProduct` for APL's `+/`/`+\`/`∘.×` operators today —
+  so without a fix, such a module would pass `accepts_features()` and panic
+  inside `emit`. Fixed with a new `find_unimplemented_sir22_addendum_node`
+  tree walk (using the `semantic_ir::Visitor` trait) wired into
+  `TypeScriptBackend::compile()` as an explicit step, mirroring the
+  identical check the JS backend already has and the existing `TailCalls`
+  belt-and-suspenders check just above it in this same `compile()` — a
+  module using any of these nine now fails cleanly with
+  `BackendErrorKind::UnsupportedFeature`, never a panic.
+- `lib.rs`: `Feature::NDArrays`, `Feature::MatrixOps`, and
+  `Feature::ArrayColumnMajor` join `ACCEPTED_FEATURES`.
+- **Consuming this package for the first time surfaced four latent bugs in
+  `sir-runtime-array` itself**, already found and fixed in the JS backend's
+  own inlined port of this same logic (its 0.36.0 CHANGELOG entry) but never
+  triggered in the TypeScript package before now, since nothing called it —
+  see that package's own 0.2.0 CHANGELOG entry for the full writeup (NaN
+  bypassing the linear `indexGet`/`indexSet` bounds check, `range()` silently
+  returning empty on a NaN bound, `set()`'s NaN-unsafe OR-form bounds check,
+  and `elementwise()` assuming both operands were already `NDArray` when
+  `matlab-to-semantic-ir`'s lowering can emit a bare scalar operand).
+- New tests: `accepts_nd_arrays_feature`/`accepts_matrix_ops_feature`
+  (capability acceptance), `non_array_module_omits_sir_runtime_array_import`/
+  `array_module_imports_sir_runtime_array` (import gating),
+  `rejects_reduce_node_cleanly_instead_of_panicking_in_emit` (the addendum
+  guard), `emits_array_lit_and_matmul_as_sir_array_calls`,
+  `emits_elementwise_op_with_pascal_case_op_name` (op-name casing),
+  `emits_range_with_stop_before_step_argument_order`,
+  `emits_index_set_as_a_statement_not_an_assignment`, and
+  `end_to_end_matlab_matmul_compiles_and_emits_expected_calls` (a real
+  MATLAB program through `matlab-to-semantic-ir`, mirroring
+  `end_to_end_wolfram_replace_all_compiles_and_emits_expected_calls`'s
+  precedent for SIR23). New dev-dependency: `matlab-to-semantic-ir`.
+
 ## 0.9.0 — SIR23 symbolic/pattern codegen (HML01 Stream B, item 7)
 
 Real codegen for the SIR23 symbolic-expression + pattern/rewrite domain —

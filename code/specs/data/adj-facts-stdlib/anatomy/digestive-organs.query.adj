@@ -1,0 +1,24 @@
+% ============================================================================
+% digestive-organs.query.adj — a worked recall over the anatomy digestive-organs
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does the stomach do?":
+% it states no anatomy fact of its own — it only `import`s the grounded table and
+% asks binding queries. The engine resolves each `?` against the `organ_function`
+% rows and returns the function + the table's source/locator/trust. The fourth
+% query runs the relation BACKWARD (bind the function `absorbs_water`, recall the
+% organ that owns it — the large intestine). The heart is a circulatory organ,
+% not one of these digestive organs, so a recall on it abstains honestly — the
+% engine never invents a function.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli digestive-organs.query.adj
+% ============================================================================
+
+import "digestive-organs.adj"
+
+? organ_function(stomach, $Job)            % expect break_down_food
+? organ_function(small_intestine, $Job)    % expect absorbs_nutrients
+? organ_function(liver, $Job)              % expect bile
+? organ_function($Organ, absorbs_water)    % reverse bind — expect large_intestine
+? organ_function(heart, $Job)              % expect abstain — the heart is not a digestive organ

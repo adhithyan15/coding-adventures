@@ -2423,21 +2423,42 @@ fn integrate_handler() -> Handler {
             return IRNode::Apply(Box::new(expr));
         }
 
-        let result = integrate(&f, &x);
-        let original = apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.clone())]);
-        if result == original {
-            // Track E2: generic tabular IBP fallback.  Fires after every
-            // shape-specific handler in `integrate` returned the original
-            // unevaluated `Integrate(...)` form.  Mirrors the Python
-            // ``try_ibp_tabular`` hook in ``integrate.py``.
-            if let Some(ibp_result) = try_ibp_tabular(&f, &x, vm) {
-                return vm.eval(ibp_result);
-            }
-            result
-        } else {
-            vm.eval(result)
-        }
+        integrate_expr(vm, f, x)
     })
+}
+
+/// The indefinite-integral pipeline: `∫ f dx`, published as a reusable `pub`
+/// entry point so other languages' surface functions (Wolfram's
+/// `Integrate[expr, x]`) can call the exact same logic
+/// `integrate_handler`'s 2-argument branch runs, rather than duplicating or
+/// reimplementing it — mirrors [`differentiate`]'s identical extraction for
+/// `D`/`DIF`/`df`.
+///
+/// Installs its own [`AssumptionGuard`] snapshot of `vm.assumptions` so this
+/// function is correct standalone, regardless of whether a caller already
+/// installed one of its own (`integrate_handler`'s remaining 4-argument
+/// branch does, ahead of a call here from its own 2-argument branch) — a
+/// nested install is exactly what `AssumptionGuard` is designed to support
+/// safely (its own doc comment: "an RAII guard restores the previous value
+/// on Drop so nested integrals ... cannot strand it"), so this is a cheap
+/// redundant snapshot in the already-installed case, not a correctness
+/// hazard.
+pub fn integrate_expr(vm: &mut VM, f: IRNode, x: String) -> IRNode {
+    let _assumption_guard = AssumptionGuard::install(vm.assumptions.clone());
+    let result = integrate(&f, &x);
+    let original = apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.clone())]);
+    if result == original {
+        // Track E2: generic tabular IBP fallback.  Fires after every
+        // shape-specific handler in `integrate` returned the original
+        // unevaluated `Integrate(...)` form.  Mirrors the Python
+        // ``try_ibp_tabular`` hook in ``integrate.py``.
+        if let Some(ibp_result) = try_ibp_tabular(&f, &x, vm) {
+            return vm.eval(ibp_result);
+        }
+        result
+    } else {
+        vm.eval(result)
+    }
 }
 
 fn integrate(f: &IRNode, x: &str) -> IRNode {

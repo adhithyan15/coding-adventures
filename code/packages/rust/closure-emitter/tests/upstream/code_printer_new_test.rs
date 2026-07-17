@@ -37,9 +37,10 @@
 //! ```text
 //!   new X           the `new` keyword needs a space before an identifier/member
 //!                   callee, or `newX` fuses into one identifier.
-//!   new(f())        the `new` target is a MemberExpression per grammar and
-//!   new(a.b().c)    cannot BE a call — a callee whose member spine bottoms out
-//!                   in a call is wrapped (the parens also separate the tokens).
+//!   new (f())       the `new` target is a MemberExpression per grammar and
+//!   new (a.b().c)   cannot BE a call — a callee whose member spine bottoms out
+//!                   in a call is wrapped (with a space after `new`, matching
+//!                   the reference compiler).
 //! ```
 //!
 //! ## Note on hand-constructed inputs
@@ -162,20 +163,21 @@ fn new_with_member_arg() {
 // Active — callee-with-call wrapping
 // =====================================================================
 
-/// `new (f())()` — a call in the callee spine MUST be parenthesised, or the
+/// `new (f())` — a call in the callee spine MUST be parenthesised, or the
 /// appended `()` would bind to the inner call (`new f()()` = `(new f())()`, a
-/// different program). The wrapping paren also removes the `new`-keyword space.
+/// different program). The reference compiler keeps a space between `new` and
+/// the wrapping paren (`new (f())`), even though `new(f())` tokenises fine.
 #[test]
 fn new_call_callee_is_wrapped() {
-    assert_emits(new_expr(call(ident("f"), vec![]), vec![]), "new(f());");
+    assert_emits(new_expr(call(ident("f"), vec![]), vec![]), "new (f());");
 }
 
-/// `new (a.b().c)()` — the callee's member spine bottoms out in a call
-/// (`a.b()`), so the whole target is wrapped.
+/// `new (a.b().c)` — the callee's member spine bottoms out in a call
+/// (`a.b()`), so the whole target is wrapped, with the `new` space.
 #[test]
 fn new_callee_with_call_in_member_spine_is_wrapped() {
     let callee = member(call(member(ident("a"), "b"), vec![]), "c");
-    assert_emits(new_expr(callee, vec![]), "new(a.b().c);");
+    assert_emits(new_expr(callee, vec![]), "new (a.b().c);");
 }
 
 // =====================================================================
