@@ -2838,6 +2838,53 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // COBOL-60 — literal `DISPLAY` (PL09 step 4, the `cobol-iir-compiler` minimal
+    // slice). A four-division program whose PROCEDURE DIVISION `DISPLAY`s a string
+    // literal lowers to the shared E4 `str_const` + `print_str` op pair (then a
+    // `putchar('\n')` record terminator) — exactly the string-output substrate
+    // Dartmouth BASIC and ALGOL 60 already prove on every backend. So COBOL's
+    // first matrix cell is stdout on all seven columns with no COBOL-specific
+    // backend hooks. The source is carded into the fixed 80-column format
+    // (6 sequence columns + indicator, code from column 8). Stdout is trimmed,
+    // so the trailing newline is immaterial.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. HELLO.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     DISPLAY \"HELLO\".\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("HELLO"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL-60 — `MOVE` a numeric literal into a PICTURE-typed item, then
+    // `DISPLAY` the item (PL09 step 4). This is the cell that proves the
+    // *data model*: `01 N PIC 9(5)` is a fixed-width numeric field, so `MOVE 42`
+    // stores the zero-filled image `00042` (not `42`) and `DISPLAY N` shows those
+    // five digits. Because this rung has no arithmetic, the compiler formats the
+    // literal into its picture image at compile time (reusing cobol-runtime's own
+    // `move_into_numeric`) and emits it as one `str_const` — so, like the literal
+    // cell, it is the shared string-output substrate on all seven backends. The
+    // leading zeros survive stdout trimming (only surrounding whitespace is cut),
+    // so `00042` is positive proof the field reshaped the value.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  N  PIC 9(5).\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     MOVE 42 TO N.\n\
+               000000     DISPLAY N.\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("00042"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses

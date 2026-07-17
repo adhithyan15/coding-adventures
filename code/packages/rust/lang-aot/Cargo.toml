@@ -14,6 +14,7 @@ oct-iir-compiler     = { path = "../oct-iir-compiler" }
 mccarthy-lisp-iir-compiler = { path = "../mccarthy-lisp-iir-compiler" }
 algol-iir-compiler = { path = "../algol-iir-compiler" }
 flow-matic-iir-compiler = { path = "../flow-matic-iir-compiler" }
+cobol-iir-compiler = { path = "../cobol-iir-compiler" }
 interpreter-ir        = { path = "../interpreter-ir" }
 cli-builder           = { path = "../cli-builder" }
 iir-to-llvm           = { path = "../iir-to-llvm" }

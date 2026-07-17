@@ -229,6 +229,7 @@ members = [
     "cobol-lexer",
     "cobol-parser",
     "cobol-runtime",
+    "cobol-iir-compiler",
     "matlab-runtime",
     "matlab-repl",
     "matlab-to-semantic-ir",
