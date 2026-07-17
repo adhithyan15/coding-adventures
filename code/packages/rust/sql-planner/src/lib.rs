@@ -769,6 +769,25 @@ fn plan_select(
     }
 
     // -----------------------------------------------------------------------
+    // Projected output columns — computed HERE (before ORDER BY) so a
+    // positional `ORDER BY <n>` can resolve the integer to the n-th output
+    // expression. The same list is reused for the outermost Project (step 9),
+    // so `plan_select_list` runs exactly once.
+    // -----------------------------------------------------------------------
+    let output_columns: Vec<OutputColumn> = if let Some(sl) = select_list {
+        plan_select_list(sl)?
+    } else {
+        // Fallback: treat as SELECT * (shouldn't happen with a valid grammar).
+        vec![OutputColumn {
+            expr: SqlExpr::Column {
+                table: None,
+                name: "*".to_string(),
+            },
+            alias: None,
+        }]
+    };
+
+    // -----------------------------------------------------------------------
     // Step 7: ORDER BY.
     // -----------------------------------------------------------------------
     if let Some(order_clause) = find_node(stmt, "order_clause") {
@@ -781,7 +800,7 @@ fn plan_select(
         } else {
             None
         };
-        let keys = plan_order_by(order_clause, schema, collate_ctx)?;
+        let keys = plan_order_by(order_clause, schema, collate_ctx, &output_columns)?;
         plan = LogicalPlan::Sort {
             input: Box::new(plan),
             keys,
@@ -807,23 +826,12 @@ fn plan_select(
     //
     // The SELECT list tells us which columns (or expressions) to include in the
     // output.  This wrapping happens AFTER sort/limit so those operations can
-    // still access columns that aren't in the final output.
-    let columns = if let Some(sl) = select_list {
-        plan_select_list(sl)?
-    } else {
-        // Fallback: treat as SELECT * (shouldn't happen with a valid grammar).
-        vec![OutputColumn {
-            expr: SqlExpr::Column {
-                table: None,
-                name: "*".to_string(),
-            },
-            alias: None,
-        }]
-    };
-
+    // still access columns that aren't in the final output.  The list was
+    // already computed above (before ORDER BY) so positional sort keys could
+    // resolve against it; reuse it here rather than re-planning.
     plan = LogicalPlan::Project {
         input: Box::new(plan),
-        columns,
+        columns: output_columns,
     };
 
     Ok(plan)
@@ -988,6 +996,7 @@ fn plan_order_by(
     order_clause: &GrammarASTNode,
     schema: &dyn SchemaProvider,
     collate_ctx: Option<(&str, Option<&str>)>,
+    output_columns: &[OutputColumn],
 ) -> Result<Vec<SortKey>, PlanError> {
     // Fetch the base table's declared collations exactly ONCE (not per sort
     // key). A bare `ORDER BY c0, c0, …` over a very wide table would otherwise
@@ -1009,8 +1018,128 @@ fn plan_order_by(
     });
     find_nodes(order_clause, "order_item")
         .iter()
-        .map(|item| plan_order_item(item, order_ctx.as_ref()))
+        .map(|item| plan_order_item(item, order_ctx.as_ref(), output_columns))
         .collect()
+}
+
+/// Resolve a **positional** `ORDER BY <n>` key: SQLite treats a *bare integer
+/// literal* in ORDER BY as a 1-based reference to the n-th column of the SELECT
+/// output list (`SELECT a, b FROM t ORDER BY 2` sorts by `b`).
+///
+/// The rule is deliberately narrow — only a lone integer literal is positional.
+/// An *expression* that happens to evaluate to an integer is NOT: `ORDER BY 1+0`
+/// sorts by the constant `1`, i.e. does not reorder at all. So we match strictly
+/// on `Literal(Int(_))` and nothing else.
+///
+/// | ORDER BY term | interpreted as              |
+/// |---------------|-----------------------------|
+/// | `1`           | the 1st output column       |
+/// | `2 DESC`      | the 2nd output column, desc |
+/// | `1+0`         | constant `1` (no reorder)   |
+/// | `name`        | column/alias `name`         |
+///
+/// Returns:
+/// - `Ok(Some(expr))` — the key was a positional reference; `expr` is the
+///   substituted n-th output expression.
+/// - `Ok(None)` — the key is not positional (leave it as written). Also the
+///   escape hatch for `SELECT *`, whose column count/identity isn't known at
+///   plan time; we leave such a key unchanged rather than guess.
+/// - `Err(..)` — a positional reference out of range, matching SQLite's
+///   "ORDER BY term out of range" (only diagnosed for a fully-explicit list).
+fn resolve_positional_key(
+    expr: &SqlExpr,
+    outputs: &[OutputColumn],
+) -> Result<Option<SqlExpr>, PlanError> {
+    // Only a bare integer literal is a positional reference.
+    let SqlExpr::Literal(SqlValue::Int(n)) = expr else {
+        return Ok(None);
+    };
+    let n = *n;
+
+    // If the output list contains an unexpanded `*` (or `t.*`), we can't count
+    // or identify columns at plan time. Leave the key unchanged — no regression
+    // versus prior behavior; positional-over-star is a documented follow-up.
+    let has_star = outputs.iter().any(|c| {
+        matches!(&c.expr, SqlExpr::Column { name, .. } if name == "*")
+    });
+    if has_star {
+        return Ok(None);
+    }
+
+    // Fully explicit list: range-check exactly like SQLite (1..=ncols). Compare
+    // in i64 (not `n as usize`) so a huge ordinal like 2^32 can't truncate to an
+    // in-range value on a 32-bit `usize` and then index out of bounds; on any
+    // platform, an out-of-range `n` is rejected here before it becomes an index.
+    if n < 1 || n > outputs.len() as i64 {
+        return Err(PlanError::UnsupportedStatement(format!(
+            "ORDER BY term out of range - should be between 1 and {}",
+            outputs.len()
+        )));
+    }
+
+    // Safe: `1 <= n <= outputs.len()`, so `n - 1` is a valid 0-based index that
+    // fits `usize` on every platform.
+    let target = &outputs[(n - 1) as usize].expr;
+
+    // If the target is (or contains) an aggregate, we cannot substitute its
+    // expression: aggregates are computed once per group, not re-evaluated per
+    // row in the sort path, so routing `SUM(v)` back through the sort would
+    // ignore it. Sorting by a positional aggregate is left unchanged here (a
+    // known-divergence ledger entry) rather than silently mis-sorting. The
+    // non-aggregate case — the overwhelming majority — resolves below.
+    if expr_contains_aggregate(target) {
+        return Ok(None);
+    }
+
+    // Substitute the n-th output expression. Routing the real expression through
+    // the ordinary sort path means positional keys inherit all the existing
+    // machinery (hidden sort-key columns, collation, NULL placement) for free.
+    Ok(Some(target.clone()))
+}
+
+/// Does this expression tree contain an aggregate function anywhere?
+///
+/// Used to keep positional `ORDER BY <n>` from substituting an aggregate output
+/// expression back into the (per-row) sort path, where it can't be recomputed.
+fn expr_contains_aggregate(expr: &SqlExpr) -> bool {
+    match expr {
+        SqlExpr::Aggregate { .. } => true,
+        SqlExpr::Literal(_) | SqlExpr::Column { .. } => false,
+        SqlExpr::BinaryOp { left, right, .. } => {
+            expr_contains_aggregate(left) || expr_contains_aggregate(right)
+        }
+        SqlExpr::UnaryOp { expr, .. }
+        | SqlExpr::IsNull(expr)
+        | SqlExpr::IsNotNull(expr)
+        | SqlExpr::Cast { expr, .. } => expr_contains_aggregate(expr),
+        SqlExpr::Between {
+            value, low, high, ..
+        } => {
+            expr_contains_aggregate(value)
+                || expr_contains_aggregate(low)
+                || expr_contains_aggregate(high)
+        }
+        SqlExpr::Like {
+            value,
+            pattern,
+            escape,
+            ..
+        } => {
+            expr_contains_aggregate(value)
+                || expr_contains_aggregate(pattern)
+                || escape.as_deref().is_some_and(expr_contains_aggregate)
+        }
+        SqlExpr::InList { value, list, .. } => {
+            expr_contains_aggregate(value) || list.iter().any(expr_contains_aggregate)
+        }
+        SqlExpr::FunctionCall { args, .. } => args.iter().any(expr_contains_aggregate),
+        SqlExpr::Case { branches, else_val } => {
+            branches
+                .iter()
+                .any(|(c, v)| expr_contains_aggregate(c) || expr_contains_aggregate(v))
+                || else_val.as_deref().is_some_and(expr_contains_aggregate)
+        }
+    }
 }
 
 /// Single base table (name + alias) plus its precomputed `column → COLLATE`
@@ -1053,6 +1182,7 @@ fn resolve_column_collation(expr: &SqlExpr, ctx: &OrderCollateCtx) -> Option<Str
 fn plan_order_item(
     item: &GrammarASTNode,
     collate_ctx: Option<&OrderCollateCtx>,
+    output_columns: &[OutputColumn],
 ) -> Result<SortKey, PlanError> {
     // The first child Node is the expression; check for ASC/DESC tokens.
     let expr_node = item
@@ -1067,7 +1197,17 @@ fn plan_order_item(
         })
         .ok_or_else(|| PlanError::UnsupportedStatement("empty order_item".to_string()))?;
 
-    let expr = plan_expression(expr_node)?;
+    let raw_expr = plan_expression(expr_node)?;
+
+    // A bare integer literal is a *positional* reference to the n-th output
+    // column (`ORDER BY 2` → sort by the 2nd SELECT column). Resolve it to the
+    // real output expression BEFORE collation inheritance below, so a positional
+    // key over a `COLLATE NOCASE` column still picks up that collation. Non-
+    // positional keys (and `SELECT *`) pass through unchanged.
+    let expr = match resolve_positional_key(&raw_expr, output_columns)? {
+        Some(resolved) => resolved,
+        None => raw_expr,
+    };
 
     // ASC is the default; DESC reverses.
     let ascending = !has_token(item, "DESC");
@@ -4128,5 +4268,94 @@ mod tests {
                 assert!(keys[0].ascending, "Default ORDER BY should be ASC");
             }
         }
+    }
+
+    // -----------------------------------------------------------------------
+    // ORDER BY positional (ordinal) column references
+    // -----------------------------------------------------------------------
+
+    /// Pull the sort keys out of a planned `SELECT … ORDER BY …`.
+    fn sort_keys_of(sql: &str) -> Vec<SortKey> {
+        match plan_ok(sql) {
+            LogicalPlan::Project { input, .. } => match *input {
+                LogicalPlan::Sort { keys, .. } => keys,
+                other => panic!("expected Sort under Project, got {other:?}"),
+            },
+            other => panic!("expected Project at root, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn test_order_by_ordinal_resolves_to_nth_column() {
+        // `ORDER BY 2` sorts by the 2nd output column (`b`), not the constant 2.
+        let keys = sort_keys_of("SELECT a, b, c FROM t ORDER BY 2");
+        assert_eq!(keys.len(), 1);
+        assert_eq!(
+            keys[0].expr,
+            SqlExpr::Column {
+                table: None,
+                name: "b".to_string()
+            }
+        );
+        assert!(keys[0].ascending);
+    }
+
+    #[test]
+    fn test_order_by_ordinal_carries_direction() {
+        // Direction and multi-key tie-breaks apply to the resolved columns.
+        let keys = sort_keys_of("SELECT a, b, c FROM t ORDER BY 3 DESC, 1");
+        assert_eq!(keys.len(), 2);
+        assert_eq!(
+            keys[0].expr,
+            SqlExpr::Column {
+                table: None,
+                name: "c".to_string()
+            }
+        );
+        assert!(!keys[0].ascending);
+        assert_eq!(
+            keys[1].expr,
+            SqlExpr::Column {
+                table: None,
+                name: "a".to_string()
+            }
+        );
+        assert!(keys[1].ascending);
+    }
+
+    #[test]
+    fn test_order_by_integer_expression_is_not_positional() {
+        // Only a BARE integer literal is positional. `1+0` is an expression that
+        // happens to equal 1, so it sorts by the constant — it must stay a
+        // BinaryOp, NOT be rewritten to the first output column.
+        let keys = sort_keys_of("SELECT a, b FROM t ORDER BY 1+0");
+        assert_eq!(keys.len(), 1);
+        assert!(
+            matches!(keys[0].expr, SqlExpr::BinaryOp { op: BinaryOp::Add, .. }),
+            "1+0 must remain an expression, got {:?}",
+            keys[0].expr
+        );
+    }
+
+    #[test]
+    fn test_order_by_ordinal_out_of_range_errors() {
+        // `SELECT a` has one output column; `ORDER BY 2` (and `ORDER BY 0`) are
+        // out of range, matching SQLite's prepare-time error.
+        let err = plan_err("SELECT a FROM t ORDER BY 2");
+        assert!(
+            format!("{err}").contains("out of range"),
+            "expected out-of-range error, got {err}"
+        );
+        let err0 = plan_err("SELECT a FROM t ORDER BY 0");
+        assert!(format!("{err0}").contains("out of range"));
+    }
+
+    #[test]
+    fn test_order_by_ordinal_over_star_is_unchanged() {
+        // With `SELECT *` the output column count/identity isn't known at plan
+        // time, so a positional key is left as the literal (no guess, no error).
+        let keys = sort_keys_of("SELECT * FROM t ORDER BY 1");
+        assert_eq!(keys.len(), 1);
+        assert_eq!(keys[0].expr, SqlExpr::Literal(SqlValue::Int(1)));
     }
 }
