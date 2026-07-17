@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.13.0 — re-export the PICTURE / value building blocks
+
+- **Public re-exports:** `Picture`, `Decimal`, `move_into_char`, and
+  `move_into_numeric` are now part of the crate's public API. This lets a
+  *compiler* — `cobol-iir-compiler` (PL09 step 4) — reuse COBOL's exact
+  picture and fixed-point-value logic to format literals into their stored
+  picture image, so its compiled output is byte-identical to this interpreter's
+  `DISPLAY`. No behavioural change to the interpreter itself.
+
 ## 0.12.0 — ROUNDED / ON SIZE ERROR on the arithmetic verbs
 
 - **`ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE` now take `ROUNDED` and `ON SIZE ERROR`**,

@@ -44,6 +44,14 @@ mod value;
 
 pub use error::RuntimeError;
 
+// The PICTURE-typed data model's building blocks, re-exported so a *compiler*
+// (not just this tree-walk interpreter) can reuse COBOL's exact picture and
+// fixed-point-value logic. `cobol-iir-compiler` lowers COBOL to IIR and depends
+// on these to format literals into their stored picture image at compile time —
+// so its output is byte-identical to this oracle's `DISPLAY` (PL09).
+pub use picture::Picture;
+pub use value::{move_into_char, move_into_numeric, Decimal};
+
 /// Parse and run a COBOL program, returning everything it `DISPLAY`ed (the
 /// captured console, each `DISPLAY` terminated by a newline).
 ///

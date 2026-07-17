@@ -75,6 +75,10 @@ pub enum Language {
     /// FLOW-MATIC (B-0) — the control-flow + scalar-field slice via the
     /// `flow-matic-iir-compiler` frontend; `main` returns an i64 exit code.
     FlowMatic,
+    /// COBOL-60 — the `DISPLAY`/`MOVE`/`STOP RUN` slice over PICTURE-typed
+    /// WORKING-STORAGE via the `cobol-iir-compiler` frontend; `main` returns an
+    /// i64 exit code.
+    Cobol60,
 }
 
 impl fmt::Display for Language {
@@ -88,6 +92,7 @@ impl fmt::Display for Language {
             Language::McCarthyLisp => write!(f, "mccarthy-lisp"),
             Language::Algol60 => write!(f, "algol60"),
             Language::FlowMatic => write!(f, "flow-matic"),
+            Language::Cobol60 => write!(f, "cobol60"),
         }
     }
 }
@@ -104,11 +109,13 @@ impl Language {
             "mccarthy-lisp" | "mccarthy" | "mcl" | "lisp" => Ok(Self::McCarthyLisp),
             "algol" | "algol60" | "algol-60" | "a60" => Ok(Self::Algol60),
             "flow-matic" | "flowmatic" | "flow" | "fm" | "b0" => Ok(Self::FlowMatic),
+            "cobol" | "cobol60" | "cobol-60" | "cob" => Ok(Self::Cobol60),
             other => Err(format!(
                 "unknown language {other:?}; expected one of: twig, nib, \
                  brainfuck (or bf), dartmouth-basic (or basic / bas), oct, \
                  mccarthy-lisp (or mccarthy / mcl / lisp), algol60 \
-                 (or algol / algol-60 / a60), flow-matic (or fm / b0)")),
+                 (or algol / algol-60 / a60), flow-matic (or fm / b0), \
+                 cobol60 (or cobol / cobol-60 / cob)")),
         }
     }
 }
@@ -127,6 +134,7 @@ pub fn detect_language_from_path(path: &Path) -> Option<Language> {
         "mcl" | "lisp" => Some(Language::McCarthyLisp),
         "algol" | "alg" | "a60" => Some(Language::Algol60),
         "flowmatic" | "fm" | "b0" => Some(Language::FlowMatic),
+        "cobol" | "cob" | "cbl" => Some(Language::Cobol60),
         _ => None,
     }
 }
@@ -331,6 +339,13 @@ pub fn compile_source_to_iir(
         }
         Language::FlowMatic => {
             flow_matic_iir_compiler::compile_source(source, module_name)
+                .map_err(|e| LangAotError::FrontendError {
+                    language,
+                    message: format!("{e}"),
+                })
+        }
+        Language::Cobol60 => {
+            cobol_iir_compiler::compile_source(source, module_name)
                 .map_err(|e| LangAotError::FrontendError {
                     language,
                     message: format!("{e}"),
