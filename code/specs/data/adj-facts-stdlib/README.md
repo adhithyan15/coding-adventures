@@ -44,6 +44,7 @@ per rotation, in parallel):
 | `biology/` | hormone → endocrine gland that secretes it | NCI SEER Training / NIH MedlinePlus |
 | `biology/` | vitamin → deficiency disease it prevents | NIH Office of Dietary Supplements |
 | `physics/` | simple machine → everyday example | NASA |
+| `physics/` | phase change → its name (melting, freezing, …) | LibreTexts (consensus) |
 | `anatomy/` | lung → number of lobes (right 3, left 2) | NIH / NCI SEER Training |
 | `anatomy/` | brain part → primary function it controls | NIH / NCI SEER Training + StatPearls |
 | … | *geography, physical constants, …* | *(expanding)* |
