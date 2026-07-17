@@ -1409,8 +1409,31 @@ fn single_return_with_arg(stmt: &Statement) -> Option<Expression> {
     }
 }
 
-/// Fold a `WhileStatement`. If `test` is a known-falsy literal,
-/// the loop never runs — collapse to `EmptyStatement`.
+/// Fold a `WhileStatement`.
+///
+/// Two things happen here:
+///
+/// * A **known-falsy** test (`while (false) …`) never runs, so the loop
+///   collapses to `EmptyStatement`. This arm is unchanged by the while→for
+///   work below and remains the minimal drop; preserving a `var` hoisted out
+///   of the never-run body (which stays observable in the enclosing function
+///   scope) is a separate, companion dead-loop `var`-extraction concern and is
+///   not done here.
+///
+/// * Every **live** `while (cond) body` is canonicalised to
+///   `for (; cond; ) body` — the shape the reference Closure Compiler always
+///   emits. A `while` and a `for` with an empty init *and* empty update are
+///   exactly equivalent: no init runs, and `continue` targets the test in
+///   both forms (there is no update clause to fall through to). So this is a
+///   pure spelling change, never a semantic one. A redundant always-truthy
+///   test is then dropped to the canonical infinite `for (;;)`, mirroring
+///   [`fold_for_statement`]'s truthy-test elision:
+///
+/// ```text
+///   while (x) a();        →  for (; x; ) a();     (test kept)
+///   while (1) a();        →  for (;;) a();        (truthy test dropped)
+///   while (true) a();     →  for (;;) a();
+/// ```
 fn fold_while_statement(s: &WhileStatement, st: &mut FoldState) -> Statement {
     let test = fold_expression(&s.test, st);
     let body = fold_statement(&s.body, st);
@@ -1428,15 +1451,36 @@ fn fold_while_statement(s: &WhileStatement, st: &mut FoldState) -> Statement {
             );
             Statement::empty_statement(EmptyStatement { cv: s.cv.clone() })
         }
-        // `while (true)` could loop forever — don't fold to
-        // EmptyStatement (semantics differ: an infinite loop is
-        // observable). Future Phase 1.x may collapse provably-
-        // pure infinite loops; v1 leaves them alone.
-        _ => Statement::Tagged(TaggedStatement::WhileStatement(WhileStatement {
-            cv: s.cv.clone(),
-            test,
-            body: Box::new(body),
-        })),
+        // Live loop (`while (true)`, `while (<truthy>)`, or an unknown test):
+        // rewrite to the equivalent `for`. A truthy literal test is redundant
+        // in a `for` header (unlike `while`, whose test is mandatory), so it is
+        // elided to `for (;;)`; any other test is carried across verbatim.
+        truthy => {
+            let for_test = if truthy == Some(true) {
+                st.record_fold(
+                    &s.cv,
+                    "while-to-for-truthy",
+                    "while (<truthy literal>) …",
+                    "for (;;) …",
+                );
+                None
+            } else {
+                st.record_fold(
+                    &s.cv,
+                    "while-to-for",
+                    "while (<test>) …",
+                    "for (; <test>; ) …",
+                );
+                Some(test)
+            };
+            Statement::Tagged(TaggedStatement::ForStatement(ForStatement {
+                cv: s.cv.clone(),
+                init: None,
+                test: for_test,
+                update: None,
+                body: Box::new(body),
+            }))
+        }
     }
 }
 
@@ -3512,18 +3556,54 @@ mod tests {
     }
 
     #[test]
-    fn while_true_is_left_alone() {
+    fn while_true_becomes_infinite_for() {
+        // `while (true) body` → `for (;;) body`: the loop is canonicalised to a
+        // `for`, and the redundant truthy test is elided (init/test/update all
+        // absent). Matches Closure's `for (;;)`.
         let w = Statement::while_statement(WhileStatement {
             cv: Some("w.1".to_string()),
             test: boolean(true, None),
             body: Box::new(expr_stmt(ident("body"), None)),
         });
         let prog = program().with_body(vec![ProgramItem::Statement(w)]);
-        let (out, _, changed, _) = run_pass(prog);
-        assert!(!changed);
+        let (out, contribs, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(contribs.len(), 1);
+        assert_eq!(contribs[0].tag, "while-to-for-truthy");
         match first_stmt(&out) {
-            Statement::Tagged(TaggedStatement::WhileStatement(_)) => {}
-            other => panic!("expected WhileStatement intact; got {:?}", other),
+            Statement::Tagged(TaggedStatement::ForStatement(f)) => {
+                assert!(f.init.is_none(), "init should be absent");
+                assert!(f.test.is_none(), "truthy test should be elided");
+                assert!(f.update.is_none(), "update should be absent");
+            }
+            other => panic!("expected ForStatement; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn while_unknown_test_becomes_for_keeping_test() {
+        // `while (x) body` → `for (; x; ) body`: an unknown (non-literal) test
+        // is carried across verbatim; only the loop keyword changes.
+        let w = Statement::while_statement(WhileStatement {
+            cv: Some("w.1".to_string()),
+            test: ident("x"),
+            body: Box::new(expr_stmt(ident("body"), None)),
+        });
+        let prog = program().with_body(vec![ProgramItem::Statement(w)]);
+        let (out, contribs, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(contribs.len(), 1);
+        assert_eq!(contribs[0].tag, "while-to-for");
+        match first_stmt(&out) {
+            Statement::Tagged(TaggedStatement::ForStatement(f)) => {
+                assert!(f.init.is_none(), "init should be absent");
+                assert!(f.update.is_none(), "update should be absent");
+                match f.test.as_ref() {
+                    Some(Expression::Identifier(id)) => assert_eq!(id.name, "x"),
+                    other => panic!("expected test `x`; got {:?}", other),
+                }
+            }
+            other => panic!("expected ForStatement; got {:?}", other),
         }
     }
 
