@@ -1,0 +1,107 @@
+% ============================================================================
+% acid_or_base — is a common chemical an ACID or a BASE?
+% (adj-facts-stdlib, CHEMISTRY).
+% ============================================================================
+% A middle/high-school chemistry fact set: given a familiar compound, is it an
+% ACID or a BASE? Acids (hydrochloric acid in stomach juice, sulfuric acid in a
+% car battery, nitric acid) donate hydrogen ions and turn litmus red; bases /
+% alkalis (sodium hydroxide = lye, potassium hydroxide, the metal hydroxides)
+% accept hydrogen ions, feel slippery, and turn litmus blue. Recall is a binding
+% query:
+%
+%     ? acid_or_base(hydrochloric_acid, $Class)   % acid
+%
+% Like every FACTS library this is a native `table` (ADJ-TABLES RS-5): each
+% `row` lowers to a ground relation `acid_or_base(substance, classification)`
+% carrying the table's citation, so the lookup above is the ordinary SLD binding
+% query — the engine returns the class WITH its source, on the CPU, with zero
+% model calls, and abstains on a substance that is not in the table. It also runs
+% BACKWARD (bind a class, recall a substance of that class):
+%
+%     ? acid_or_base($S, base)     % sodium_hydroxide — first base in the table
+%
+% The classification value of every row is a SINGLE lowercase atom — exactly one
+% of the two tokens `acid` or `base` — never a strength ("strong"/"weak"), a
+% formula, or an interpretation the source does not support.
+%
+% The twelve substances, grouped by class (a little truth table — read down each
+% class to see which familiar compounds share it):
+%
+%     substance             class   everyday identity
+%     -------------------   -----   ------------------------------------------
+%     hydrochloric_acid     acid    HCl — the acid in stomach gastric juice
+%     hydrobromic_acid      acid    HBr
+%     hydroiodic_acid       acid    HI
+%     nitric_acid           acid    HNO3 — used in fertilisers and explosives
+%     sulfuric_acid         acid    H2SO4 — the acid in a car battery
+%     perchloric_acid       acid    HClO4
+%     lithium_hydroxide     base    LiOH
+%     sodium_hydroxide      base    NaOH — lye / caustic soda, in drain cleaner
+%     potassium_hydroxide   base    KOH — caustic potash
+%     calcium_hydroxide     base    Ca(OH)2 — slaked lime, in limewater
+%     barium_hydroxide      base    Ba(OH)2
+%     magnesium_hydroxide   base    Mg(OH)2 — the base in milk of magnesia
+%
+% A substance that is not one of these twelve — vinegar, baking soda, table salt —
+% has no row, so a recall on it ABSTAINS rather than inventing a class. That
+% honest-abstention property is what makes the table safe to reason from. (The
+% source lists these as the STRONG acids and bases; this table keeps only the
+% coarser fact each entry states outright — that the substance IS an acid, or IS
+% a base — dropping the strength, which a two-token acid/base classification does
+% not carry.)
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every substance→class pair
+% was read out of a fetched teaching-reference page this session, and any
+% substance that could not be grounded there was dropped). All twelve rows come
+% from the SAME source: the LibreTexts Chemistry table "Table 14.7.1: Strong
+% Acids and Bases" (chem.libretexts.org, Introductory Chemistry (LibreTexts),
+% §14.7 "Strong and Weak Acids and Bases"), whose two columns list the acids and
+% the bases by name; each name is copied character-for-character from that table:
+%
+%   ACIDS  (left column of Table 14.7.1)
+%     HCl (hydrochloric acid)     HNO3 (nitric acid)
+%     HBr (hydrobromic acid)      H2SO4 (sulfuric acid)
+%     HI  (hydroiodic acid)       HClO4 (perchloric acid)
+%
+%   BASES  (right column of Table 14.7.1 — the page notes "All strong bases are
+%   OH– compounds")
+%     LiOH (lithium hydroxide)    Ca(OH)2 (calcium hydroxide)
+%     NaOH (sodium hydroxide)     Ba(OH)2 (barium hydroxide)
+%     KOH  (potassium hydroxide)  Mg(OH)2 (magnesium hydroxide)
+%
+% (The source's acid column also lists HClO3 (chloric acid) and its base column
+% RbOH, CsOH, and Sr(OH)2; those are omitted only to keep the set balanced at six
+% acids and six bases — nothing about them was uncertain.)
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold that single source's table caption plus two representative
+% verbatim entries (one acid, one base); every other row's verbatim name is
+% listed above, so each substance→class pair remains independently checkable.
+% LibreTexts is a SECONDARY teaching reference (a college/intro course text, not
+% a primary standards body), so `trust consensus` — the honest tier for a
+% teaching summary, per the standard-library trust convention.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table acid_or_base {
+    columns substance, classification
+
+    row (hydrochloric_acid, acid)
+    row (hydrobromic_acid, acid)
+    row (hydroiodic_acid, acid)
+    row (nitric_acid, acid)
+    row (sulfuric_acid, acid)
+    row (perchloric_acid, acid)
+    row (lithium_hydroxide, base)
+    row (sodium_hydroxide, base)
+    row (potassium_hydroxide, base)
+    row (calcium_hydroxide, base)
+    row (barium_hydroxide, base)
+    row (magnesium_hydroxide, base)
+
+    source "Table 14.7.1: Strong Acids and Bases — Acids: HCl (hydrochloric acid) … H2SO4 (sulfuric acid); Bases: NaOH (sodium hydroxide) … Mg(OH)2 (magnesium hydroxide). All strong bases are OH– compounds."
+    locator "https://chem.libretexts.org/Bookshelves/Introductory_Chemistry/Introductory_Chemistry_(LibreTexts)/14:_Acids_and_Bases/14.07:_Strong_and_Weak_Acids_and_Bases"
+    trust consensus
+}
