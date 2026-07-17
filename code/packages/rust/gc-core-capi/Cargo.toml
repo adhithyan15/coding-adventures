@@ -1,0 +1,17 @@
+[package]
+name = "gc-core-capi"
+version = "0.1.0"
+edition = "2021"
+description = "C ABI for gc-core's flat-native heap — the gc_runtime_<target> archive linked into native-AOT output (LANG16 / AOT00 T1)."
+license = "MIT"
+
+# staticlib (.a) — linked into native-AOT executables as gc_runtime_<target>.a
+# cdylib     (.so/.dylib) — dynamic linking if ever needed
+# lib (rlib) — so `cargo test` can build the in-crate host tests that call the
+#              exported functions directly
+[lib]
+name = "gc_core_capi"
+crate-type = ["staticlib", "cdylib", "lib"]
+
+[dependencies]
+gc-core = { path = "../gc-core" }
