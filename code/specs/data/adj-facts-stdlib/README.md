@@ -30,6 +30,7 @@ per rotation, in parallel):
 | `chemistry/` | element → atomic number | PubChem / NIH |
 | `chemistry/` | common substance → approximate pH | LibreTexts (consensus) |
 | `chemistry/` | element → periodic-table group family | Wikipedia (consensus) |
+| `chemistry/` | common chemical → acid or base | LibreTexts (consensus) |
 | `metrology/` | SI prefix → power of ten | NIST |
 | `mathematics/` | Roman numeral → value | (consensus) |
 | `calendar/` | day / month → number | ISO 8601 |
@@ -41,6 +42,7 @@ per rotation, in parallel):
 | `biology/` | macronutrient → energy (kcal) per gram | NIH / MedlinePlus |
 | `biology/` | basic tissue type → representative example | NCI SEER Training |
 | `biology/` | hormone → endocrine gland that secretes it | NCI SEER Training / NIH MedlinePlus |
+| `biology/` | vitamin → deficiency disease it prevents | NIH Office of Dietary Supplements |
 | `physics/` | simple machine → everyday example | NASA |
 | `anatomy/` | lung → number of lobes (right 3, left 2) | NIH / NCI SEER Training |
 | `anatomy/` | brain part → primary function it controls | NIH / NCI SEER Training + StatPearls |

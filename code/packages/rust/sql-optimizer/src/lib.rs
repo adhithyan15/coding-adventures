@@ -657,10 +657,12 @@ fn fold_expr(expr: SqlExpr) -> SqlExpr {
             value,
             pattern,
             negated,
+            escape,
         } => Like {
             value: Box::new(fold_expr(*value)),
             pattern: Box::new(fold_expr(*pattern)),
             negated,
+            escape: escape.map(|e| Box::new(fold_expr(*e))),
         },
 
         InList {
@@ -1319,9 +1321,17 @@ fn collect_columns_in_expr(expr: &SqlExpr, out: &mut HashSet<String>) {
             collect_columns_in_expr(low, out);
             collect_columns_in_expr(high, out);
         }
-        SqlExpr::Like { value, pattern, .. } => {
+        SqlExpr::Like {
+            value,
+            pattern,
+            escape,
+            ..
+        } => {
             collect_columns_in_expr(value, out);
             collect_columns_in_expr(pattern, out);
+            if let Some(escape) = escape {
+                collect_columns_in_expr(escape, out);
+            }
         }
         SqlExpr::InList { value, list, .. } => {
             collect_columns_in_expr(value, out);

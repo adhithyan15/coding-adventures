@@ -1,0 +1,24 @@
+% ============================================================================
+% vitamins.query.adj — a worked recall over the biology vitamins library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "which disease does a lack
+% of vitamin C cause?": it states no medical fact of its own — it only `import`s
+% the grounded table and asks binding queries. The engine resolves each `?`
+% against the `deficiency_disease` rows and returns the disease + the table's
+% source/locator/trust. The fifth query runs the relation BACKWARD (bind the
+% disease `megaloblastic_anemia`, recall the vitamins whose lack causes it —
+% vitamin_b9 AND vitamin_b12, both returned). A word that is not one of these
+% vitamins abstains honestly — the engine never invents a disease.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli vitamins.query.adj
+% ============================================================================
+
+import "vitamins.adj"
+
+? deficiency_disease(vitamin_c, $Disease)   % expect scurvy
+? deficiency_disease(vitamin_d, $Disease)   % expect rickets
+? deficiency_disease(vitamin_b1, $Disease)  % expect beriberi
+? deficiency_disease(vitamin_b3, $Disease)  % expect pellagra
+? deficiency_disease($V, megaloblastic_anemia) % reverse bind — expect vitamin_b9 ; vitamin_b12
+? deficiency_disease(vitamin_e, $Disease)   % expect abstain — not a grounded row

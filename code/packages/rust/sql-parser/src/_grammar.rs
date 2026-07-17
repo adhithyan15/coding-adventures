@@ -496,8 +496,25 @@ pub fn parser_grammar() -> ParserGrammar {
                             GrammarElement::RuleReference { name: r#"value_list"#.to_string() },
                             GrammarElement::Literal { value: r#")"#.to_string() },
                         ] },
+                        // `x LIKE pattern ESCAPE ch` — the ESCAPE variant is
+                        // listed BEFORE the plain `LIKE pattern` so the
+                        // backtracking parser prefers the longer match when an
+                        // `ESCAPE` clause is present, and falls back otherwise.
                         GrammarElement::Sequence { elements: vec![
                             GrammarElement::Literal { value: r#"LIKE"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
+                            GrammarElement::Literal { value: r#"ESCAPE"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
+                        ] },
+                        GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Literal { value: r#"LIKE"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
+                        ] },
+                        GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Literal { value: r#"NOT"#.to_string() },
+                            GrammarElement::Literal { value: r#"LIKE"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
+                            GrammarElement::Literal { value: r#"ESCAPE"#.to_string() },
                             GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                         ] },
                         GrammarElement::Sequence { elements: vec![
