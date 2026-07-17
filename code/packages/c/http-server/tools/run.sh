@@ -36,9 +36,11 @@ fi
 export PLATFORM_DEFINES
 echo "http-server ($(platform_os)): C compilers: $(platform_compilers c)"
 rc=0
-PLATFORM_LIBS=""; export PLATFORM_LIBS
+# tcp-runtime's mailbox uses os-platform's thread mutex, so this consumer links
+# the thread backend and the OS thread library too (-pthread).
+PLATFORM_LIBS="-pthread"; export PLATFORM_LIBS
 platform_build_and_run c http-server-tests \
     tests/http_server_test.c src/http_server.c \
     "$TCPRT/src/tcp_runtime.c" "$NET/src/net_posix.c" "$REACTOR_SRC" \
-    "$HTTP/src/http_core.c" || rc=1
+    "$HTTP/src/http_core.c" "$OSP/src/thread_posix.c" || rc=1
 exit "$rc"

@@ -768,7 +768,39 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
                             // stay exhaustive, so pass it through unchanged.
                             PropertyKey::PrivateName(p) => PropertyKey::PrivateName(p.clone()),
                             PropertyKey::StringLiteral(s) => PropertyKey::StringLiteral(s.clone()),
-                            PropertyKey::NumericLiteral(n) => PropertyKey::NumericLiteral(n.clone()),
+                            PropertyKey::NumericLiteral(n) => {
+                                // A NON-INTEGER numeric object key must be QUOTED:
+                                // its property name is the ECMAScript `ToString` of
+                                // the value, so Closure prints `{0.5:1}` as
+                                // `{"0.5":1}` (a string key), never the bare number.
+                                // (An integer key stays numeric — the emitter prints
+                                // `{1:1}` unquoted.) We convert only finite
+                                // non-integers in JS's plain-decimal `ToString` range
+                                // `[1e-6, 1e21)`, where `format_js_number` (shortest
+                                // round-trip) equals JS `ToString` exactly. Tiny
+                                // (`<1e-6`) or huge non-integers take exponent forms
+                                // (`1e-7` → `"1e-7"`), and large integers (`>2^53`)
+                                // take precision-quoting forms — both a separate
+                                // follow-up, so they stay numeric here (valid output,
+                                // just not yet byte-identical).
+                                let v = n.value;
+                                if v.is_finite()
+                                    && v.fract() != 0.0
+                                    && v.abs() >= 1e-6
+                                    && v.abs() < 1e21
+                                {
+                                    let name = format_js_number(v);
+                                    let new_cv =
+                                        st.fork_cv(&p.cv, &format!("{{{name}:…}}"), &format!("{{\"{name}\":…}}"));
+                                    let mut key = property_key_for(&name);
+                                    if let PropertyKey::StringLiteral(s) = &mut key {
+                                        s.cv = new_cv;
+                                    }
+                                    key
+                                } else {
+                                    PropertyKey::NumericLiteral(n.clone())
+                                }
+                            }
                             PropertyKey::Expression(e) => {
                                 PropertyKey::Expression(Box::new(fold_expression(e, st)))
                             }
@@ -10854,6 +10886,64 @@ mod tests {
                 assert_pair_key(a.elements[1].as_ref().unwrap(), "1.5");
             }
             other => panic!("expected array of pairs; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn noninteger_object_key_folds_to_quoted_string_key() {
+        // `{0.5: 1, 2: 3}` — the non-integer key `0.5` has property name
+        // ToString(0.5) = "0.5", so it becomes a QUOTED string key
+        // (`{"0.5": 1}`); the integer key `2` stays numeric (`{2: 3}`).
+        let o = object_lit(vec![
+            Property {
+                cv: None,
+                kind: PropertyKind::Init,
+                key: PropertyKey::NumericLiteral(NumericLiteral {
+                    cv: None,
+                    value: 0.5,
+                    raw: "0.5".to_string(),
+                }),
+                value: Box::new(num(1.0, None)),
+                shorthand: false,
+                computed: false,
+                method: false,
+            },
+            Property {
+                cv: None,
+                kind: PropertyKind::Init,
+                key: PropertyKey::NumericLiteral(NumericLiteral {
+                    cv: None,
+                    value: 2.0,
+                    raw: "2".to_string(),
+                }),
+                value: Box::new(num(3.0, None)),
+                shorthand: false,
+                computed: false,
+                method: false,
+            },
+        ]);
+        let (out, _, changed, _) = run_pass(program_with_expr(o, true));
+        assert!(changed, "a non-integer numeric key should fold to a string key");
+        match extract_expr(&out) {
+            Expression::ObjectExpression(obj) => {
+                assert_eq!(obj.properties.len(), 2);
+                match &obj.properties[0] {
+                    ObjectMember::Property(p) => match &p.key {
+                        PropertyKey::StringLiteral(s) => assert_eq!(s.value, "0.5"),
+                        other => panic!("expected a StringLiteral key for 0.5, got {:?}", other),
+                    },
+                    other => panic!("expected a Property, got {:?}", other),
+                }
+                match &obj.properties[1] {
+                    ObjectMember::Property(p) => assert!(
+                        matches!(&p.key, PropertyKey::NumericLiteral(n) if n.value == 2.0),
+                        "the integer key 2 must stay numeric; got {:?}",
+                        p.key
+                    ),
+                    other => panic!("expected a Property, got {:?}", other),
+                }
+            }
+            other => panic!("expected an ObjectExpression; got {:?}", other),
         }
     }
 
