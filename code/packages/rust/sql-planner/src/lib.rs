@@ -115,13 +115,17 @@ pub enum SqlExpr {
         negated: bool,
     },
 
-    /// `value LIKE pattern` — SQL pattern matching.
+    /// `value LIKE pattern [ESCAPE ch]` — SQL pattern matching.
     ///
-    /// `negated = true` for `NOT LIKE`.
+    /// `negated = true` for `NOT LIKE`. `escape` carries the optional
+    /// `ESCAPE ch` operand (an expression, usually a one-character string
+    /// literal); when present, that character makes a following `%`, `_`, or
+    /// escape character itself a literal in the pattern.
     Like {
         value: Box<SqlExpr>,
         pattern: Box<SqlExpr>,
         negated: bool,
+        escape: Option<Box<SqlExpr>>,
     },
 
     /// `value IN (v1, v2, ...)` — membership test.
@@ -2147,18 +2151,28 @@ fn plan_comparison(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
         });
     }
 
-    // LIKE / NOT LIKE
-    // Grammar: `[NOT] LIKE additive`
-    // The pattern is the 2nd child node.
+    // LIKE / NOT LIKE  [ESCAPE ch]
+    // Grammar: `[NOT] LIKE additive [ESCAPE additive]`
+    // Child nodes: [left, pattern] or [left, pattern, escape]; the `ESCAPE`
+    // keyword shows up as a direct token.
     if direct_tok_uppers.contains(&"LIKE".to_string()) {
         let negated = direct_tok_uppers.contains(&"NOT".to_string());
         let pattern_node = child_nodes_ordered
             .get(1)
             .ok_or_else(|| PlanError::UnsupportedStatement("LIKE missing pattern".to_string()))?;
+        let escape = if direct_tok_uppers.contains(&"ESCAPE".to_string()) {
+            let escape_node = child_nodes_ordered.get(2).ok_or_else(|| {
+                PlanError::UnsupportedStatement("LIKE ESCAPE missing character".to_string())
+            })?;
+            Some(Box::new(plan_expression(escape_node)?))
+        } else {
+            None
+        };
         return Ok(SqlExpr::Like {
             value: Box::new(left),
             pattern: Box::new(plan_expression(pattern_node)?),
             negated,
+            escape,
         });
     }
 

@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.5.38 — LIKE … ESCAPE, and NOT LIKE inversion fix
+
+`X LIKE Y ESCAPE Z` now parses and evaluates: the escape character makes a
+following `%`, `_`, or itself a literal in the pattern (e.g. `'100%' LIKE '100#%'
+ESCAPE '#'`). While wiring the negation through, this also fixes a pre-existing
+bug where **`NOT LIKE` behaved exactly like `LIKE`** (the `NOT` was dropped);
+`NOT LIKE` now correctly inverts the match, with `NULL` operands staying `NULL`.
+Three differential-oracle cases; touches sql-parser 0.1.19, sql-planner 0.2.18,
+sql-codegen 0.6.6, sql-optimizer 0.1.5, sql-vm 0.4.20. (Note: `ESCAPE '\'` with
+a *string-literal* pattern is still affected by a separate lexer bug that strips
+backslashes in string literals — tracked separately; column-valued patterns and
+non-backslash escape characters work.)
+
 ## 0.5.37 — substr() start-zero and negative-length edge cases
 
 `substr()` now matches SQLite on its two fiddly edges: `substr('hello',0)` is

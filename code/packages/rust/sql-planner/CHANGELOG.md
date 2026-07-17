@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.18] - Unreleased
+
+### Added
+
+- `SqlExpr::Like` gained an `escape: Option<Box<SqlExpr>>` field, and the
+  comparison parser now reads the optional `ESCAPE ch` operand of `LIKE` /
+  `NOT LIKE`.
+
 ## [0.2.17] - Unreleased
 
 ### Added

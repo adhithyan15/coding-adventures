@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.19] - Unreleased
+
+### Added
+
+- Grammar for the `LIKE pattern ESCAPE ch` clause (and `NOT LIKE … ESCAPE`). The
+  ESCAPE variants are ordered before the plain `LIKE pattern` alternatives so the
+  backtracking parser prefers the longer match when an `ESCAPE` clause is present.
+
 ## [0.1.18] - Unreleased
 
 ### Added

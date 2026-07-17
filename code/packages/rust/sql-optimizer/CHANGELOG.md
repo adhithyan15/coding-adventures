@@ -2,6 +2,13 @@
 
 All notable changes to this crate will be documented here.
 
+## [0.1.5] - Unreleased
+
+### Changed
+
+- Constant folding and column collection recurse into the new `SqlExpr::Like`
+  `escape` operand.
+
 ## [0.1.4] - Unreleased
 
 ### Changed
