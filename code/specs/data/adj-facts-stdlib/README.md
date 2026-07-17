@@ -41,6 +41,7 @@ per rotation, in parallel):
 | `biology/` | common bone → body region | NIH / MedlinePlus |
 | `biology/` | macronutrient → energy (kcal) per gram | NIH / MedlinePlus |
 | `biology/` | basic tissue type → representative example | NCI SEER Training |
+| `biology/` | blood-vessel type → defining function (artery → away from heart) | NCI SEER Training |
 | `biology/` | hormone → endocrine gland that secretes it | NCI SEER Training / NIH MedlinePlus |
 | `biology/` | vitamin → deficiency disease it prevents | NIH Office of Dietary Supplements |
 | `physics/` | simple machine → everyday example | NASA |
