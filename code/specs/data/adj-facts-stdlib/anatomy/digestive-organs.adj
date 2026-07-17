@@ -1,0 +1,124 @@
+% ============================================================================
+% digestive-organs — a digestive-system organ → a primary function it performs
+% (adj-facts-stdlib, ANATOMY).
+% ============================================================================
+% A middle-school biology fact set on the way to medicine: food takes a one-way
+% trip down the alimentary canal, and each organ along the way does ONE headline
+% job. The esophagus is the passageway that carries a swallow down to the
+% stomach; the stomach's acid and enzymes break down food; the small intestine
+% absorbs the nutrients into the blood; the large intestine absorbs the leftover
+% water; and three accessory organs feed the tube — the liver makes bile, the
+% gallbladder stores that bile, and the pancreas makes the digestive enzymes.
+% Recall is a binding query:
+%
+%     ? organ_function(stomach, $Job)   % breaks_down_food → break_down_food
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `organ_function(organ, function)` carrying the table's citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns the
+% function WITH its source, on the CPU, with zero model calls, and abstains on
+% anything that is not one of these organs (it never invents a job).
+%
+% The organs, as a little truth table:
+%
+%     organ             function            everyday gloss of the job
+%     ---------------   -----------------   ---------------------------------
+%     esophagus         passageway          the tube food is swallowed down
+%     stomach           break_down_food     acid + enzymes break food apart
+%     small_intestine   absorbs_nutrients   nutrients cross into the blood
+%     large_intestine   absorbs_water       reclaims water, forms the stool
+%     liver             bile                makes bile to help digest fats
+%     gallbladder       stores_bile         holds the liver's bile until a meal
+%     pancreas          digestive_enzymes   secretes the enzymes that digest
+%
+% Each `function` value is a SINGLE lowercase token/phrase that appears VERBATIM
+% inside the cited source sentence (see the provenance block), so the recall is a
+% faithful echo of the source, not a paraphrase. Note the value is one-to-MANY in
+% neither direction here — each organ has its own headline job — but the relation
+% still runs BACKWARD to name the organ that owns a job:
+%
+%     ? organ_function($Organ, absorbs_water)   % large_intestine
+%
+% Something that is not one of these organs — the heart, a tooth, the tongue —
+% has no row, so a recall on it ABSTAINS rather than inventing a function. That
+% honest-abstention property is what makes the table safe to reason from: a
+% medicine agent reasons UP from "which organ does what" before it can reason
+% about heartburn in the esophagus or malabsorption in the small intestine.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every organ→function pair
+% was read out of a U.S. government / NIH page fetched this session, and any pair
+% that could not be cleanly grounded with a single-token function inside one
+% verbatim sentence was DROPPED; the mouth was dropped because no fetched page
+% stated its job with a single clean token in one sentence). Each function token
+% below is quoted inside the verbatim source sentence so any reader can re-check
+% it. Two primary U.S. references are used — NIH NIDDK "Your Digestive System &
+% How It Works" and the NCI SEER Training Modules — so this table is
+% `trust authoritative`:
+%
+%   esophagus → passageway
+%     https://training.seer.cancer.gov/anatomy/digestive/regions/pharynx.html
+%     (U.S. National Cancer Institute, NCI SEER Training Modules)
+%     "The esophagus is a collapsible muscular tube that serves as a passageway
+%      between the pharynx and stomach."
+%
+%   stomach → break_down_food
+%     https://www.niddk.nih.gov/health-information/digestive-diseases/digestive-system-how-it-works
+%     (NIH / National Institute of Diabetes and Digestive and Kidney Diseases)
+%     "Glands in your stomach lining make stomach acid and enzymes that break
+%      down food."
+%
+%   small_intestine → absorbs_nutrients
+%     https://training.seer.cancer.gov/anatomy/digestive/regions/intestine.html
+%     (U.S. National Cancer Institute, NCI SEER Training Modules)
+%     "The small intestine finishes the process of digestion, absorbs the
+%      nutrients, and passes the residue on to the large intestine."
+%
+%   large_intestine → absorbs_water
+%     https://www.niddk.nih.gov/health-information/digestive-diseases/digestive-system-how-it-works
+%     (NIH / NIDDK)
+%     "The large intestine absorbs water and changes the waste from liquid into
+%      stool."
+%
+%   liver → bile
+%     https://www.niddk.nih.gov/health-information/digestive-diseases/digestive-system-how-it-works
+%     (NIH / NIDDK)
+%     "Your liver makes a digestive juice called bile that helps digest fats and
+%      some vitamins."
+%
+%   gallbladder → stores_bile
+%     https://www.niddk.nih.gov/health-information/digestive-diseases/digestive-system-how-it-works
+%     (NIH / NIDDK)
+%     "Your gallbladder stores bile between meals."
+%
+%   pancreas → digestive_enzymes
+%     https://training.seer.cancer.gov/anatomy/digestive/regions/accessory.html
+%     (U.S. National Cancer Institute, NCI SEER Training Modules)
+%     "It consists of pancreatic acinar cells that secrete digestive enzymes into
+%      tiny ducts interwoven between the cells."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the NCI SEER Training sentence
+% that fixes the first row (esophagus → passageway). Every OTHER row's per-fact
+% source and verbatim span is listed above, so each pair remains independently
+% checkable. Both sources are primary U.S. government / NIH references (NIH
+% NIDDK; NCI SEER Training), so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table organ_function {
+    columns organ, function
+
+    row (esophagus, passageway)
+    row (stomach, break_down_food)
+    row (small_intestine, absorbs_nutrients)
+    row (large_intestine, absorbs_water)
+    row (liver, bile)
+    row (gallbladder, stores_bile)
+    row (pancreas, digestive_enzymes)
+
+    source "The esophagus is a collapsible muscular tube that serves as a passageway between the pharynx and stomach."
+    locator "https://training.seer.cancer.gov/anatomy/digestive/regions/pharynx.html"
+    trust authoritative
+}

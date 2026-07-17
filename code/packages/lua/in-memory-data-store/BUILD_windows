@@ -1,0 +1,5 @@
+luarocks show coding-adventures-in-memory-data-store-engine >nul 2>&1 || (cd ..\in-memory-data-store-engine && luarocks make --local --deps-mode=none coding-adventures-in-memory-data-store-engine-0.1.0-1.rockspec)
+luarocks show coding-adventures-in-memory-data-store-protocol >nul 2>&1 || (cd ..\in-memory-data-store-protocol && luarocks make --local --deps-mode=none coding-adventures-in-memory-data-store-protocol-0.1.0-1.rockspec)
+luarocks show coding-adventures-resp-protocol >nul 2>&1 || (cd ..\resp-protocol && luarocks make --local --deps-mode=none coding-adventures-resp-protocol-0.1.0-1.rockspec)
+luarocks make --local --deps-mode=none coding-adventures-in-memory-data-store-0.1.0-1.rockspec
+cd tests && set "LUA_PATH=../src/?.lua;../src/?/init.lua;../../hyperloglog/src/?.lua;../../hyperloglog/src/?/init.lua;../../in-memory-data-store-engine/src/?.lua;../../in-memory-data-store-engine/src/?/init.lua;../../in-memory-data-store-protocol/src/?.lua;../../in-memory-data-store-protocol/src/?/init.lua;../../resp-protocol/src/?.lua;../../resp-protocol/src/?/init.lua;;" && busted . --verbose --pattern=test_

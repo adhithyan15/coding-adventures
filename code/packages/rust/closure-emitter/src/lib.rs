@@ -2068,6 +2068,12 @@ impl<'a> Emitter<'a> {
         self.maybe_map(&n.cv);
         self.write_str("new");
         if new_callee_needs_parens(&n.callee) {
+            // The reference compiler always separates `new` from a
+            // parenthesised callee with a space (`new (f())`, `new (a?.b)`),
+            // even though `new(f())` would tokenise fine. Emitting the same
+            // `required_ws()` the bare-callee branch uses keeps byte-identity
+            // for every wrapped shape (call-in-spine and optional-chain).
+            self.required_ws();
             self.write_str("(");
             self.emit_expression(&n.callee);
             self.write_str(")");
@@ -2808,10 +2814,49 @@ fn keyword_needs_space_before(e: &Expression) -> bool {
     }
 }
 
+/// Does the callee of a `new` expression need to be wrapped in parens?
+///
+/// Two independent reasons force a wrap, both of which would otherwise
+/// mis-parse or be outright invalid:
+///
+/// 1. **A call in the callee's member spine** (`new f()`, `new a.b()`,
+///    `new a().b`). The grammar makes `new X Arguments` greedy, so a bare
+///    call inside the callee (`new f()()`) reparses as `(new f())()`. We
+///    wrap the callee (`new (f())()`) to keep the inner call bound to the
+///    callee. See [`new_callee_has_call_in_spine`], which walks the
+///    left-associative member chain.
+///
+/// 2. **The callee *is* an optional chain** (`new (a?.b)`, `new (a?.[b])`,
+///    `new (a.b?.c)`, `new (a?.b())`). ECMAScript's `MemberExpression`
+///    production for `new` forbids an `OptionalChain` in the callee — a bare
+///    `new a?.b` is a *Syntax Error*, not just a mis-parse. So a
+///    [`ChainExpression`] callee is *mandatorily* parenthesised.
+///
+/// The chain check is deliberately **top-level only**: it is NOT threaded
+/// through the member-spine recursion. A chain nested as a member *object*
+/// (`new (a?.b).c`, where the top-level callee is a plain, non-optional
+/// `MemberExpression`) is already wrapped internally by
+/// [`Self::emit_plain_access_base`], which parenthesises a ChainExpression
+/// base. Recursing the chain check into `m.object` there would double-wrap
+/// it to `new ((a?.b).c)`, diverging from the reference compiler.
 fn new_callee_needs_parens(callee: &Expression) -> bool {
+    // Reason 2: a chain as the *direct* callee (`new (a?.b)`).
+    if matches!(callee, Expression::ChainExpression(_)) {
+        return true;
+    }
+    // Reason 1: a call anywhere in the callee's member spine.
+    new_callee_has_call_in_spine(callee)
+}
+
+/// Walk the left-associative member spine of a `new` callee looking for a
+/// `CallExpression`. A call in the spine forces a paren-wrap (see reason 1
+/// of [`new_callee_needs_parens`]). This intentionally does NOT match
+/// `ChainExpression` — that is handled once, at the top level, so a chain
+/// buried as a member object is left for `emit_plain_access_base` to wrap.
+fn new_callee_has_call_in_spine(callee: &Expression) -> bool {
     match callee {
         Expression::CallExpression(_) => true,
-        Expression::MemberExpression(m) => new_callee_needs_parens(&m.object),
+        Expression::MemberExpression(m) => new_callee_has_call_in_spine(&m.object),
         _ => false,
     }
 }
@@ -6501,22 +6546,24 @@ mod tests {
         assert_eq!(emit_expr(new_expr(callee, vec![])), "new a.b.c;");
     }
 
-    /// `new (f())()` — a call in the callee spine MUST be parenthesised, or the
+    /// `new (f())` — a call in the callee spine MUST be parenthesised, or the
     /// appended `()` would bind to the inner call (`new f()()` = `(new f())()`,
-    /// a different program). The wrapping paren also removes the need for the
-    /// `new`-keyword space.
+    /// a different program). The reference compiler keeps a space between `new`
+    /// and the wrapping paren (`new (f())`), even though `new(f())` tokenises
+    /// fine — we match it byte-for-byte.
     #[test]
     fn new_call_callee_is_wrapped() {
         let callee = call(ident("f"), vec![]);
-        assert_eq!(emit_expr(new_expr(callee, vec![])), "new(f());");
+        assert_eq!(emit_expr(new_expr(callee, vec![])), "new (f());");
     }
 
-    /// `new a.b().c()` — the callee's member spine bottoms out in a call
-    /// (`a.b()`), so the whole target is wrapped: `new (a.b().c)()`.
+    /// `new (a.b().c)` — the callee's member spine bottoms out in a call
+    /// (`a.b()`), so the whole target is wrapped, with the `new` space:
+    /// `new (a.b().c)`.
     #[test]
     fn new_callee_with_call_in_member_spine_is_wrapped() {
         let callee = member(call(member(ident("a"), "b", false), vec![]), "c", false);
-        assert_eq!(emit_expr(new_expr(callee, vec![])), "new(a.b().c);");
+        assert_eq!(emit_expr(new_expr(callee, vec![])), "new (a.b().c);");
     }
 
     /// `(new X(a)).y` — Closure parenthesises a `new` as a member object even
@@ -6544,6 +6591,56 @@ mod tests {
     fn nested_new_inner_wrapped() {
         let inner = new_expr(ident("X"), vec![]);
         assert_eq!(emit_expr(new_expr(inner, vec![])), "new (new X);");
+    }
+
+    /// `new (a?.b)` — an optional chain as the `new` callee is *mandatorily*
+    /// parenthesised: a bare `new a?.b` is a Syntax Error (ECMAScript forbids an
+    /// `OptionalChain` in the `new` callee), not merely a mis-parse. Emitting it
+    /// unwrapped would be an invalid-JS miscompile.
+    #[test]
+    fn new_optional_chain_callee_is_wrapped() {
+        let callee = chain(opt_member(ident("a"), "b", false));
+        assert_eq!(emit_expr(new_expr(callee, vec![])), "new (a?.b);");
+    }
+
+    /// `new (a?.[b])` — the computed-access optional chain is wrapped for the
+    /// same reason as the dot form.
+    #[test]
+    fn new_optional_computed_chain_callee_is_wrapped() {
+        let callee = chain(opt_member(ident("a"), "b", true));
+        assert_eq!(emit_expr(new_expr(callee, vec![])), "new (a?.[b]);");
+    }
+
+    /// `new (a?.b())` — a chain whose tail is a (plain) call over an optional
+    /// member is wrapped too; the whole `?.`-bearing chain must sit inside the
+    /// parens. The call node itself is non-optional — only the `?.` member is —
+    /// which is how `a?.b()` parses.
+    #[test]
+    fn new_optional_call_chain_callee_is_wrapped() {
+        let callee = chain(call(opt_member(ident("a"), "b", false), vec![]));
+        assert_eq!(emit_expr(new_expr(callee, vec![])), "new (a?.b());");
+    }
+
+    /// `new (a?.b)(x)` — argumented form: the chain callee is still wrapped and
+    /// the arguments follow the closing paren.
+    #[test]
+    fn new_optional_chain_callee_with_args_is_wrapped() {
+        let callee = chain(opt_member(ident("a"), "b", false));
+        assert_eq!(
+            emit_expr(new_expr(callee, vec![ident("x")])),
+            "new (a?.b)(x);"
+        );
+    }
+
+    /// `new (a?.b).c` — the chain is *not* the direct callee here; the callee is
+    /// a plain (non-optional) member `(a?.b).c`, whose ChainExpression object is
+    /// wrapped internally by `emit_plain_access_base`. The outer `new` wrap must
+    /// NOT fire (that would double-wrap to `new ((a?.b).c)`), so the chain check
+    /// is top-level-only.
+    #[test]
+    fn new_member_over_chain_object_is_not_double_wrapped() {
+        let callee = member(chain(opt_member(ident("a"), "b", false)), "c", false);
+        assert_eq!(emit_expr(new_expr(callee, vec![])), "new (a?.b).c;");
     }
 
     /// A no-arg `new X` as a call callee is wrapped: `(new X)()` — a bare

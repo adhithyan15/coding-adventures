@@ -28,6 +28,38 @@ This was a `SIMPLE`/`ADVANCED`-only divergence (the whitespace-only path already
 omitted the space); it also completes the byte-identity of the `new Object()` /
 `new Array()` → `{}` / `[]` folds in `throw`/`return` position. Fixes hand-written
 `throw {…}` / `throw "…"` too. Byte-identical to the reference compiler at SIMPLE.
+## [0.52.0] - 2026-07-17
+
+### Fixed — an optional-chain `new` callee is now parenthesized (invalid-JS miscompile)
+
+An optional chain (`a?.b`) used as the **callee of a `new` expression** MUST be
+parenthesized: ECMAScript's `MemberExpression` production for `new` forbids an
+`OptionalChain` in the callee, so a bare `new a?.b` is an outright **Syntax
+Error**, not merely a mis-parse. The emitter previously dropped the parens,
+producing invalid output:
+
+- `new (a?.b)` → `new a?.b`  (invalid)
+- `new (a?.[b])` → `new a?.[b]`, `new (a.b?.c)` → `new a.b?.c`,
+  `new (a?.b())` → `new a?.b()`, `new (a?.b)(x)` → `new a?.b(x)` — all invalid
+
+`new_callee_needs_parens` now returns `true` for a **top-level**
+`ChainExpression` callee. The check is deliberately top-level-only and is NOT
+threaded through the member-spine recursion: a chain nested as a member
+*object* (`new (a?.b).c`, whose top-level callee is a plain non-optional
+member) is already wrapped internally by `emit_plain_access_base`, so recursing
+would double-wrap it to `new ((a?.b).c)`. The call-in-spine walk moved to a
+dedicated `new_callee_has_call_in_spine` helper.
+
+### Fixed — `new ` keeps its space before a parenthesized callee (byte-identity)
+
+The reference compiler always separates `new` from a parenthesized callee with
+a space (`new (f())`, `new (a.b().c)`, `new (a?.b)`), even though `new(f())`
+would tokenise fine. The wrapped-callee branch of `emit_new` previously emitted
+`new(` directly; it now emits the same `required_ws()` the bare-callee branch
+uses, so every wrapped shape (call-in-spine and optional-chain) matches Closure
+byte-for-byte. (Operator/logical/sequence callees already got the space via the
+precedence-wrapped bare branch — `new (a+b)`, `new (a||b)`; only the explicit
+call/member/chain wrap was missing it.)
 
 ## [0.51.0] - 2026-07-17
 
