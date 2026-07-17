@@ -104,7 +104,7 @@ section for the full reasoning and all three mechanisms.
 
 ### Testing
 
-- `tests/test_lower.rs` — 42 tests covering every dyadic atom, monadic
+- `tests/test_lower.rs` — 43 tests covering every dyadic atom, monadic
   atoms (valid + rejected comparisons), `$`/`i.`/`,`/`#`/`^` (monadic and
   dyadic), reduce/scan (valid + rejected dyadic use + rejected non-scalar
   verbs), compose (monadic + dyadic), hooks (monadic + dyadic + rejected
@@ -112,8 +112,10 @@ section for the full reasoning and all three mechanisms.
   rejected bare-noun in a non-leading position), 4+-tooth train folding,
   the combinator-depth cap (a rejected too-deep single train, a rejected
   too-deep *chain* of separately-parenthesised hooks — the security-review
-  regression — and two accepted within-cap cases), stranded/underscore-
-  negative literals, parenthesised grouping, chained assignment,
+  regression — two accepted within-cap cases, and a long chain of
+  non-duplicating verbs confirming the cap tracks actual duplication risk
+  rather than raw chain length), stranded/underscore-negative literals,
+  parenthesised grouping, chained assignment,
   first-occurrence-vs-reassignment, undefined-variable rejection,
   parse-error propagation, and a full multi-line program that validates
   via `semantic_ir::validate`.

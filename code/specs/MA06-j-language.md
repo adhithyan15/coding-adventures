@@ -306,7 +306,7 @@ j-repl/       src/{lib.rs, main.rs}       ← MA-6d (the `j` binary)
   rather than as a later retrofit, per §5. `compile`/`compile_source` lower
   `j-parser`'s CST into a `semantic_ir::Module`, reusing the exact SIR22
   base cut and "APL addendum" `apl-to-semantic-ir` already established; 47
-  tests (42 unit + 4 capability-rejection + 1 doctest). Design notes:
+  tests (43 unit + 4 capability-rejection + 1 doctest). Design notes:
   - **`#`/`^` have no APL analogue and no SIR22-addendum node.**
     `array_runtime::ops::BinOp` (the 12-variant type both languages' shared
     scalar atoms map onto) has no `Pow` slot, and `#`'s monadic

@@ -544,6 +544,25 @@ fn a_chain_of_hooks_within_the_combinator_depth_cap_still_succeeds() {
     assert_eq!(main.body.stmts.len(), 1);
 }
 
+#[test]
+fn a_long_chain_of_non_duplicating_verbs_never_spends_the_combinator_budget() {
+    // Follow-up regression: a security re-review of the fix above caught
+    // the FIRST version of it over-counting -- incrementing
+    // combinator_depth unconditionally on every application link, even a
+    // plain monadic `+` (conjugate, a pass-through no-op that never
+    // reaches Hook/Fork at all). That version rejected this exact
+    // 12-plus-then-one-small-hook program even though its real worst-case
+    // duplication is 2x, nowhere near the cap. duplicates_monadic_operand
+    // now gates the increment on the verb actually being a Hook/verb-left
+    // Fork, so a long run of ordinary verbs ahead of one small hook must
+    // still succeed.
+    let plusses: String = std::iter::repeat_n("+", 12).collect::<Vec<_>>().join(" ");
+    let src = format!("{plusses} (+*)3\n");
+    let m = compile_ok(&src);
+    let main = main_fn(&m);
+    assert_eq!(main.body.stmts.len(), 1);
+}
+
 // ── a full multi-line program validates cleanly ──────────────────────────
 
 #[test]

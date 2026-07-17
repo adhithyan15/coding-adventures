@@ -58,9 +58,16 @@
   under-100-byte source string before the fix (regression test:
   `a_chain_of_separately_parenthesised_hooks_wider_than_the_cap_is_rejected`).
   Bounds the worst case to `2^12` duplicated copies regardless of which
-  mechanism (or mixture) causes the depth. A separate, purely defensive
-  `MAX_TRAIN_TEETH` (64) cap bounds a single train's raw tooth count
-  before any O(tooth count) collection work.
+  mechanism (or mixture) causes the depth. `lower_noun_expr` only spends
+  this budget on a link whose verb is actually a duplicating `Hook`/
+  verb-left `Fork` (`duplicates_monadic_operand`/`duplicates_dyadic_operands`)
+  rather than unconditionally — a follow-up review caught the
+  unconditional version over-counting, rejecting perfectly safe programs
+  (many ordinary, non-duplicating verb applications ahead of one small
+  hook) purely for chain length rather than actual duplication risk
+  (regression test: `a_long_chain_of_non_duplicating_verbs_never_spends_the_combinator_budget`).
+  A separate, purely defensive `MAX_TRAIN_TEETH` (64) cap bounds a single
+  train's raw tooth count before any O(tooth count) collection work.
 - Explicit, disclosed rejections (each a clean `JLowerError`): the 6
   comparison atoms used monadically; a reduce/scan-decorated verb used
   dyadically; `$`/`i.`/`,`/`#`/`^` decorated with an adverb (none is a
@@ -69,7 +76,7 @@
   syntactically but is semantically invalid); trains/compose nested
   deeper than the combinator-depth cap, or a single train wider than the
   tooth-count cap.
-- 47 tests: 42 in `tests/test_lower.rs`, 4 in `tests/test_validator.rs`
+- 48 tests: 43 in `tests/test_lower.rs`, 4 in `tests/test_validator.rs`
   (mirroring `apl-to-semantic-ir`'s own capability-rejection pattern,
   extended to confirm hook/fork-using modules — ordinary nested base-cut
   applications with no new SIR node — are accepted by

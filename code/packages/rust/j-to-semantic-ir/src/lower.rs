@@ -397,6 +397,29 @@ enum ToothValue {
     Noun(Expr),
 }
 
+/// Whether applying `f` **monadically** ([`Lowerer::apply_monadic`])
+/// `.clone()`s its operand — used by [`Lowerer::lower_noun_expr`] to decide
+/// whether an application link actually needs to spend combinator-depth
+/// budget, rather than charging every link unconditionally (see that
+/// function's own doc comment for why the unconditional version
+/// over-rejected some safe programs). Only a `Hook` and a verb-left `Fork`
+/// duplicate monadically — `Compose`, the scalar/non-scalar leaves, and a
+/// leading-noun `Fork` each use their operand exactly once.
+fn duplicates_monadic_operand(f: &FnKind) -> bool {
+    matches!(f, FnKind::Hook(..) | FnKind::Fork(ForkLeft::Verb(_), ..))
+}
+
+/// Whether applying `f` **dyadically** ([`Lowerer::apply_dyadic`])
+/// `.clone()`s either operand. Deliberately **not** the same predicate as
+/// [`duplicates_monadic_operand`]: a `Hook` does *not* duplicate when
+/// applied dyadically (`x (f g) y = x f (g y)` — `g` always applies
+/// monadically to `y` alone, so `x`/`y` each appear exactly once), so only
+/// a verb-left `Fork` (`x (f g h) y = (x f y) g (x h y)`, both operands
+/// used twice) counts here.
+fn duplicates_dyadic_operands(f: &FnKind) -> bool {
+    matches!(f, FnKind::Fork(ForkLeft::Verb(_), ..))
+}
+
 // ---------------------------------------------------------------------------
 // The lowerer
 // ---------------------------------------------------------------------------
@@ -616,11 +639,22 @@ impl Lowerer {
     /// the duplication compounds exactly the same way nesting-via-explicit-
     /// parens does -- confirmed empirically to blow up to hundreds of
     /// megabytes from a source string under 100 bytes before this fix.
-    /// Incrementing by one per application link (conservatively, whether or
-    /// not that particular link's verb turns out to be a duplicating
-    /// combinator) keeps this in lockstep with the *intra-train* counter
-    /// [`Self::lower_verb_expr`]/[`Self::fold_train`] already maintain, so
-    /// both mechanisms share one effective budget.
+    ///
+    /// The counter only increments for a link whose `f` actually
+    /// duplicates its operand(s) -- [`duplicates_monadic_operand`]/
+    /// [`duplicates_dyadic_operands`] -- rather than unconditionally for
+    /// every link, so a long chain of ordinary, non-duplicating verbs
+    /// (`+ + + + ... y`, `@`-composes, `#`, `^`, ...) never "spends" this
+    /// budget at all; only a real `Hook`/verb-left-`Fork` link does. A
+    /// follow-up to the security-review fix above caught the unconditional
+    /// version over-counting: it rejected some perfectly safe programs
+    /// (many plain verb applications ahead of one small, harmless hook)
+    /// purely for chain length, not actual duplication risk. Note the
+    /// monadic and dyadic predicates genuinely differ -- a `Hook` clones
+    /// its operand when applied monadically (`(f g) y = y f (g y)`) but
+    /// *not* when applied dyadically (`x (f g) y = x f (g y)`: `g` always
+    /// applies monadically to `y` alone, so `x`/`y` each appear exactly
+    /// once) -- see each predicate's own doc comment.
     fn lower_noun_expr(
         &mut self,
         node: &GrammarASTNode,
@@ -634,13 +668,23 @@ impl Lowerer {
             [term] => self.lower_term(term, depth + 1, combinator_depth),
             [vexpr, sub] => {
                 let f = self.lower_verb_expr(vexpr, depth + 1, combinator_depth)?;
-                let arg = self.lower_noun_expr(sub, depth + 1, combinator_depth + 1)?;
+                let next_combinator_depth = if duplicates_monadic_operand(&f) {
+                    combinator_depth + 1
+                } else {
+                    combinator_depth
+                };
+                let arg = self.lower_noun_expr(sub, depth + 1, next_combinator_depth)?;
                 self.apply_monadic(f, arg, span)
             }
             [lhs_term, vexpr, sub] => {
                 let lhs = self.lower_term(lhs_term, depth + 1, combinator_depth)?;
                 let f = self.lower_verb_expr(vexpr, depth + 1, combinator_depth)?;
-                let rhs = self.lower_noun_expr(sub, depth + 1, combinator_depth + 1)?;
+                let next_combinator_depth = if duplicates_dyadic_operands(&f) {
+                    combinator_depth + 1
+                } else {
+                    combinator_depth
+                };
+                let rhs = self.lower_noun_expr(sub, depth + 1, next_combinator_depth)?;
                 self.apply_dyadic(f, lhs, rhs, span)
             }
             other => Err(self.err_at(
