@@ -359,14 +359,7 @@ impl Compiler {
     fn emit_move(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
         let src_node = child_node(verb, "operand")
             .ok_or_else(|| CompileError::Malformed("MOVE without a source".into()))?;
-        let src = match read_operand(src_node)? {
-            Operandy::Literal(lit) => lit,
-            Operandy::Name(n) => {
-                return Err(CompileError::Unsupported(format!(
-                    "MOVE from item {n} (item-to-item reshaping is a later rung)"
-                )))
-            }
-        };
+        let src = read_operand(src_node)?;
         let dsts: Vec<String> = child_tokens(verb)
             .into_iter()
             .filter(|(k, _)| k == "NAME")
@@ -376,26 +369,53 @@ impl Compiler {
             return Err(CompileError::Malformed("MOVE without a receiver".into()));
         }
         for dst in dsts {
-            let idx = self.item_index(&dst)?;
-            let reg = self.items[idx].reg.clone();
-            match &self.items[idx].kind {
-                ItemKind::Char { .. } => {
-                    let picture = Picture::Alphanumeric { size: self.items[idx].width() };
-                    let image = format_into_picture(&src, &picture)
-                        .map_err(|m| CompileError::Unsupported(format!("MOVE into {dst}: {m}")))?;
-                    self.emit("str_const", Some(&reg), vec![Operand::Str(image)], "str");
+            match &src {
+                Operandy::Literal(lit) => self.move_literal_into(lit, &dst)?,
+                // Item-to-item MOVE: only numeric→numeric on this rung (the
+                // receiver picture reshapes the source's value). Alphanumerics
+                // (runtime string reshaping) are a later rung.
+                Operandy::Name(name) => {
+                    let src_idx = self.numeric_index(name)?;
+                    let (_, src_scale) = self.numeric_dims(src_idx);
+                    let src_reg = self.items[src_idx].reg.clone();
+                    let didx = self.item_index(&dst)?;
+                    if !matches!(self.items[didx].kind, ItemKind::Numeric { .. }) {
+                        return Err(CompileError::Unsupported(format!(
+                            "MOVE from {name} into non-numeric {dst} is a later rung"
+                        )));
+                    }
+                    // MOVE truncates (never rounds) when the receiver has fewer
+                    // decimals than the source.
+                    let (src_int, _) = self.numeric_dims(src_idx);
+                    self.store_scaled(&dst, &src_reg, src_scale, src_int, false)?;
                 }
-                ItemKind::Numeric { int_digits, dec_digits, .. } => {
-                    let picture = Picture::Numeric {
-                        int_digits: *int_digits,
-                        dec_digits: *dec_digits,
-                        signed: false,
-                    };
-                    let digits = format_into_picture(&src, &picture)
-                        .map_err(|m| CompileError::Unsupported(format!("MOVE into {dst}: {m}")))?;
-                    let value = parse_digits(&digits);
-                    self.emit("const", Some(&reg), vec![Operand::Int(value)], "i64");
-                }
+            }
+        }
+        Ok(())
+    }
+
+    /// `MOVE <literal> TO item` — the literal formatted into the receiver's
+    /// picture at compile time and emitted as the register's constant.
+    fn move_literal_into(&mut self, lit: &Src, dst: &str) -> Result<(), CompileError> {
+        let idx = self.item_index(dst)?;
+        let reg = self.items[idx].reg.clone();
+        match &self.items[idx].kind {
+            ItemKind::Char { .. } => {
+                let picture = Picture::Alphanumeric { size: self.items[idx].width() };
+                let image = format_into_picture(lit, &picture)
+                    .map_err(|m| CompileError::Unsupported(format!("MOVE into {dst}: {m}")))?;
+                self.emit("str_const", Some(&reg), vec![Operand::Str(image)], "str");
+            }
+            ItemKind::Numeric { int_digits, dec_digits, .. } => {
+                let picture = Picture::Numeric {
+                    int_digits: *int_digits,
+                    dec_digits: *dec_digits,
+                    signed: false,
+                };
+                let digits = format_into_picture(lit, &picture)
+                    .map_err(|m| CompileError::Unsupported(format!("MOVE into {dst}: {m}")))?;
+                let value = parse_digits(&digits);
+                self.emit("const", Some(&reg), vec![Operand::Int(value)], "i64");
             }
         }
         Ok(())
@@ -413,36 +433,79 @@ impl Compiler {
     }
 
     // -----------------------------------------------------------------------
-    // Arithmetic (integer, unsigned receivers)
+    // Arithmetic (unsigned receivers; scaled fixed-point for ADD/SUBTRACT)
     // -----------------------------------------------------------------------
 
     /// `ADD op… TO name [GIVING g]` — the accumulator starts at `name`'s value
     /// and each operand is added; the sum is stored into `g` (or `name`).
     fn emit_add(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
-        self.reject_rounded_or_size_error(verb, "ADD")?;
-        let (to, giving) = self.two_targets(verb, "TO")?;
-        let acc = self.fresh("_acc");
-        let start = self.int_operand_from_name(&to)?;
-        self.emit("mov", Some(&acc), vec![start], "i64");
-        for op in child_nodes(verb, "operand") {
-            let v = self.int_operand(op)?;
-            self.emit("add", Some(&acc), vec![Operand::Var(acc.clone()), v], "i64");
-        }
-        self.store_into(giving.as_deref().unwrap_or(&to), &acc)
+        self.emit_additive(verb, "TO", false)
     }
 
     /// `SUBTRACT op… FROM name [GIVING g]` — `name` minus each operand.
     fn emit_subtract(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
-        self.reject_rounded_or_size_error(verb, "SUBTRACT")?;
-        let (from, giving) = self.two_targets(verb, "FROM")?;
-        let acc = self.fresh("_acc");
-        let start = self.int_operand_from_name(&from)?;
-        self.emit("mov", Some(&acc), vec![start], "i64");
+        self.emit_additive(verb, "FROM", true)
+    }
+
+    /// The shared body of `ADD`/`SUBTRACT`, exact over an implied decimal point.
+    ///
+    /// COBOL adds by the *value*, aligning implied points. We compute at a common
+    /// **working scale** `w` (the largest fractional-digit count among the base
+    /// field and the operands — so every term scales *up* to `w` without loss),
+    /// accumulate, then store into the receiver at *its* scale (rounding or
+    /// truncating any excess). `ON SIZE ERROR` still needs the branch machinery
+    /// of a later rung, so it is rejected; `ROUNDED` is honoured here.
+    fn emit_additive(
+        &mut self,
+        verb: &GrammarASTNode,
+        keyword: &str,
+        is_subtract: bool,
+    ) -> Result<(), CompileError> {
+        let name = if is_subtract { "SUBTRACT" } else { "ADD" };
+        self.reject_size_error(verb, name)?;
+        let rounded = has_rounded(verb);
+        let (base, giving) = self.two_targets(verb, keyword)?;
+
+        // Terms summed: the base field first, then every operand.
+        let mut terms = vec![Term::Item(self.numeric_index(&base)?)];
         for op in child_nodes(verb, "operand") {
-            let v = self.int_operand(op)?;
-            self.emit("sub", Some(&acc), vec![Operand::Var(acc.clone()), v], "i64");
+            terms.push(self.read_arith_term(op)?);
         }
-        self.store_into(giving.as_deref().unwrap_or(&from), &acc)
+        let w = terms.iter().map(|t| self.term_scale(t)).max().unwrap_or(0);
+
+        // Guard the intermediate against `i64` overflow. Each term at scale `w`
+        // has magnitude < 10^(max_int_digits + w); the running sum of `k` of them
+        // is < k · 10^(max_int_digits + w) < 10^(max_int_digits + w + digits(k)).
+        // Requiring that exponent ≤ 18 keeps the accumulator below 10^18 <
+        // i64::MAX, so a hostile "many wide operands" ADD can never wrap (which
+        // would silently diverge from the exact oracle). Real programs never
+        // approach this; it lands as a clean error, not wrong output.
+        let max_int = terms.iter().map(|t| self.term_int_digits(t)).max().unwrap_or(0);
+        let count_digits = decimal_len(terms.len());
+        if max_int + w + count_digits > 18 {
+            return Err(CompileError::Unsupported(format!(
+                "{name} of {} terms into a {}-integer-digit field at scale {w} could overflow the \
+                 i64 intermediate — a later rung",
+                terms.len(),
+                max_int
+            )));
+        }
+
+        // acc = base value, scaled to w; then add/subtract each operand at w.
+        let acc = self.fresh("_acc");
+        let base_op = self.emit_term_at_scale(&terms[0], w);
+        self.emit("mov", Some(&acc), vec![base_op], "i64");
+        for term in &terms[1..] {
+            let v = self.emit_term_at_scale(term, w);
+            let op = if is_subtract { "sub" } else { "add" };
+            self.emit(op, Some(&acc), vec![Operand::Var(acc.clone()), v], "i64");
+        }
+
+        // The accumulator's integer part is < 10^(max_int + digits(k)) (a sum of
+        // k terms each with < max_int integer digits); store_scaled uses this to
+        // bound any up-scale into a wider-scale GIVING receiver.
+        let recv = giving.clone().unwrap_or(base);
+        self.store_scaled(&recv, &acc, w, max_int + count_digits, rounded)
     }
 
     /// `MULTIPLY a BY b [GIVING g]` — `a * b` into `g` (or `b`).
@@ -457,7 +520,11 @@ impl Compiler {
         let prod = self.fresh("_prod");
         self.emit("mul", Some(&prod), vec![a, b], "i64");
         let target = self.giving_or_operand_name(verb, ops[1], "MULTIPLY … BY <literal>")?;
-        self.store_into(&target, &prod)
+        // The operands are integer (scale 0), so the product is scale 0; its
+        // integer part is < 10^(a_int + b_int). The receiver may be a `V` field,
+        // into which store_scaled scales up — bounded by that digit count.
+        let prod_int = self.operand_int_digits(ops[0])? + self.operand_int_digits(ops[1])?;
+        self.store_scaled(&target, &prod, 0, prod_int, false)
     }
 
     /// `DIVIDE a INTO b [GIVING g]` — `b / a` (truncating) into `g` (or `b`).
@@ -475,46 +542,58 @@ impl Compiler {
         // oracle's hard DivideByZero for the handler-less case.)
         self.emit("div", Some(&quot), vec![dividend, divisor], "i64");
         let target = self.giving_or_operand_name(verb, ops[1], "DIVIDE … INTO <literal>")?;
-        self.store_into(&target, &quot)
+        // The quotient b/a is ≤ the dividend b, so its integer part is bounded by
+        // the dividend's integer digits.
+        let quot_int = self.operand_int_digits(ops[1])?;
+        self.store_scaled(&target, &quot, 0, quot_int, false)
     }
 
-    /// Reduce `value_reg` to `target`'s field and store it: take the magnitude
-    /// (unsigned receivers keep no sign) and the low-order `int_digits` digits
-    /// (COBOL truncates high-order overflow silently), then move into the slot.
-    fn store_into(&mut self, target: &str, value_reg: &str) -> Result<(), CompileError> {
-        let idx = self.item_index(target)?;
-        let (int_digits, dec_digits, reg) = match &self.items[idx].kind {
-            ItemKind::Numeric { int_digits, dec_digits, .. } => {
-                (*int_digits, *dec_digits, self.items[idx].reg.clone())
-            }
-            ItemKind::Char { .. } => {
-                return Err(CompileError::Unsupported(format!(
-                    "arithmetic into non-numeric field {target}"
-                )))
-            }
-        };
-        if dec_digits != 0 {
+    /// Store a computed `value_reg` (carrying `value_scale` fractional digits)
+    /// into a numeric `target`. Three steps, matching the oracle's `store_result`
+    /// for an unsigned receiver:
+    ///
+    /// 1. **rescale** the value from `value_scale` to the receiver's `dec_digits`
+    ///    — scaling up loses nothing; scaling down rounds (half away from zero)
+    ///    when `rounded`, else truncates toward zero;
+    /// 2. take the **magnitude** (unsigned receivers keep no sign);
+    /// 3. keep the low-order `int_digits + dec_digits` digits (COBOL's silent
+    ///    high-order overflow truncation),
+    ///
+    /// then move it into the slot. The source register is copied first, so a
+    /// data-name source (an item-to-item `MOVE`) is never clobbered.
+    ///
+    /// `value_max_int` is a bound on the value's integer-part digit count (its
+    /// magnitude is `< 10^(value_max_int + value_scale)`). When the receiver has
+    /// *more* fractional digits than `value_scale`, step 1 multiplies the whole
+    /// value up — pushing its magnitude to `< 10^(value_max_int + dec_digits)`.
+    /// That must stay below `10^18 < i64::MAX`, so an up-scale that could exceed
+    /// it is a clean error (a later rung), never a silent wrap. Down-scaling and
+    /// equal scales only shrink the value, so they need no bound here.
+    fn store_scaled(
+        &mut self,
+        target: &str,
+        value_reg: &str,
+        value_scale: usize,
+        value_max_int: usize,
+        rounded: bool,
+    ) -> Result<(), CompileError> {
+        let idx = self.numeric_index(target)?;
+        let (int_digits, dec_digits) = self.numeric_dims(idx);
+        let reg = self.items[idx].reg.clone();
+
+        if dec_digits > value_scale && value_max_int + dec_digits > 18 {
             return Err(CompileError::Unsupported(format!(
-                "arithmetic into scaled-decimal field {target} (PIC …V…) is a later rung"
+                "up-scaling a {value_max_int}-integer-digit value into {target} (scale {dec_digits}) \
+                 could overflow the i64 intermediate — a later rung"
             )));
         }
-        if int_digits > ARITH_MAX_DIGITS {
-            return Err(CompileError::Unsupported(format!(
-                "arithmetic into field {target} wider than {ARITH_MAX_DIGITS} digits is a later rung"
-            )));
-        }
-        // magnitude: if value < 0, negate (fields ≤ 9 digits, so no i64::MIN).
-        let acc = value_reg.to_string();
-        let zero = self.fresh("_z");
-        self.emit("const", Some(&zero), vec![Operand::Int(0)], "i64");
-        let neg = self.fresh("_neg");
-        self.emit("cmp_lt", Some(&neg), vec![Operand::Var(acc.clone()), Operand::Var(zero.clone())], "i64");
-        let skip = self.fresh("_absskip");
-        self.emit("jmp_if_false", None, vec![Operand::Var(neg), Operand::Var(skip.clone())], "void");
-        self.emit("sub", Some(&acc), vec![Operand::Var(zero), Operand::Var(acc.clone())], "i64");
-        self.emit("label", None, vec![Operand::Var(skip)], "void");
-        // truncate high-order: value % 10^int_digits.
-        let modulus = 10i64.pow(int_digits as u32);
+
+        let acc = self.fresh("_acc");
+        self.emit("mov", Some(&acc), vec![Operand::Var(value_reg.to_string())], "i64");
+        self.rescale(&acc, value_scale, dec_digits, rounded);
+        self.emit_abs(&acc);
+        // truncate high-order: value mod 10^(int_digits + dec_digits).
+        let modulus = 10i64.pow((int_digits + dec_digits) as u32);
         let m = self.fresh("_m");
         self.emit("const", Some(&m), vec![Operand::Int(modulus)], "i64");
         self.emit("mod", Some(&acc), vec![Operand::Var(acc.clone()), Operand::Var(m)], "i64");
@@ -522,16 +601,74 @@ impl Compiler {
         Ok(())
     }
 
-    /// Reject `ROUNDED` / `ON SIZE ERROR` on an arithmetic verb (a later rung):
-    /// ignoring them would silently produce wrong output.
+    /// Rescale register `acc` from `from` to `to` fractional digits in place.
+    /// Up-scaling multiplies (exact). Down-scaling divides, truncating toward
+    /// zero — or, when `rounded`, biasing by half a unit first so truncation
+    /// rounds **half away from zero** (the bias's sign follows `acc`'s).
+    fn rescale(&mut self, acc: &str, from: usize, to: usize, rounded: bool) {
+        use std::cmp::Ordering;
+        match from.cmp(&to) {
+            Ordering::Equal => {}
+            Ordering::Less => {
+                let p = 10i64.pow((to - from) as u32);
+                let pr = self.fresh("_up");
+                self.emit("const", Some(&pr), vec![Operand::Int(p)], "i64");
+                self.emit("mul", Some(acc), vec![Operand::Var(acc.into()), Operand::Var(pr)], "i64");
+            }
+            Ordering::Greater => {
+                let p = 10i64.pow((from - to) as u32);
+                if rounded {
+                    // bias = (acc < 0) ? -(p/2) : (p/2); acc = (acc + bias) / p.
+                    let half = self.fresh("_half");
+                    self.emit("const", Some(&half), vec![Operand::Int(p / 2)], "i64");
+                    let bias = self.fresh("_bias");
+                    self.emit("mov", Some(&bias), vec![Operand::Var(half.clone())], "i64");
+                    let zero = self.fresh("_z");
+                    self.emit("const", Some(&zero), vec![Operand::Int(0)], "i64");
+                    let neg = self.fresh("_neg");
+                    self.emit("cmp_lt", Some(&neg), vec![Operand::Var(acc.into()), Operand::Var(zero.clone())], "i64");
+                    let done = self.fresh("_biasdone");
+                    self.emit("jmp_if_false", None, vec![Operand::Var(neg), Operand::Var(done.clone())], "void");
+                    self.emit("sub", Some(&bias), vec![Operand::Var(zero), Operand::Var(half)], "i64");
+                    self.emit("label", None, vec![Operand::Var(done)], "void");
+                    self.emit("add", Some(acc), vec![Operand::Var(acc.into()), Operand::Var(bias)], "i64");
+                }
+                let pr = self.fresh("_dn");
+                self.emit("const", Some(&pr), vec![Operand::Int(p)], "i64");
+                self.emit("div", Some(acc), vec![Operand::Var(acc.into()), Operand::Var(pr)], "i64");
+            }
+        }
+    }
+
+    /// Replace register `acc` with its magnitude (negate when negative). Fields
+    /// are ≤ 9 digits, so the value is never `i64::MIN` and negation is safe.
+    fn emit_abs(&mut self, acc: &str) {
+        let zero = self.fresh("_z");
+        self.emit("const", Some(&zero), vec![Operand::Int(0)], "i64");
+        let neg = self.fresh("_neg");
+        self.emit("cmp_lt", Some(&neg), vec![Operand::Var(acc.into()), Operand::Var(zero.clone())], "i64");
+        let skip = self.fresh("_absskip");
+        self.emit("jmp_if_false", None, vec![Operand::Var(neg), Operand::Var(skip.clone())], "void");
+        self.emit("sub", Some(acc), vec![Operand::Var(zero), Operand::Var(acc.into())], "i64");
+        self.emit("label", None, vec![Operand::Var(skip)], "void");
+    }
+
+    /// Reject `ROUNDED` / `ON SIZE ERROR` on a verb whose scaled path is a later
+    /// rung (MULTIPLY / DIVIDE): ignoring them would silently produce wrong output.
     fn reject_rounded_or_size_error(
         &self,
         verb: &GrammarASTNode,
         name: &str,
     ) -> Result<(), CompileError> {
-        if child_tokens(verb).iter().any(|(k, v)| k == "KEYWORD" && v == "ROUNDED") {
+        if has_rounded(verb) {
             return Err(CompileError::Unsupported(format!("{name} … ROUNDED is a later rung")));
         }
+        self.reject_size_error(verb, name)
+    }
+
+    /// Reject only `ON SIZE ERROR` (it needs the branch machinery of a later
+    /// rung); `ROUNDED` is handled by `store_scaled`.
+    fn reject_size_error(&self, verb: &GrammarASTNode, name: &str) -> Result<(), CompileError> {
         if child_node(verb, "size_error").is_some() {
             return Err(CompileError::Unsupported(format!(
                 "{name} … ON SIZE ERROR is a later rung"
@@ -578,10 +715,101 @@ impl Compiler {
         }
     }
 
+    /// The `(int_digits, dec_digits)` of a numeric item by index.
+    fn numeric_dims(&self, idx: usize) -> (usize, usize) {
+        match &self.items[idx].kind {
+            ItemKind::Numeric { int_digits, dec_digits, .. } => (*int_digits, *dec_digits),
+            ItemKind::Char { .. } => (0, 0),
+        }
+    }
+
+    /// The item index of a numeric data-name usable in arithmetic: it must be a
+    /// declared numeric item no wider than [`ARITH_MAX_DIGITS`] digits (so the
+    /// scaled `i64` arithmetic cannot overflow).
+    fn numeric_index(&self, name: &str) -> Result<usize, CompileError> {
+        let idx = self.item_index(name)?;
+        match &self.items[idx].kind {
+            ItemKind::Numeric { int_digits, dec_digits, .. } => {
+                if int_digits + dec_digits > ARITH_MAX_DIGITS {
+                    return Err(CompileError::Unsupported(format!(
+                        "arithmetic on field {name} wider than {ARITH_MAX_DIGITS} digits is a later rung"
+                    )));
+                }
+                Ok(idx)
+            }
+            ItemKind::Char { .. } => Err(CompileError::Unsupported(format!(
+                "arithmetic on non-numeric field {name}"
+            ))),
+        }
+    }
+
+    /// Read an ADD/SUBTRACT operand into a [`Term`] (a literal value or a numeric
+    /// item). Alphanumeric operands and over-wide literals are a later rung.
+    fn read_arith_term(&self, op: &GrammarASTNode) -> Result<Term, CompileError> {
+        match read_operand(op)? {
+            Operandy::Literal(Src::Num(s)) => {
+                let d = Decimal::parse_literal(&s)
+                    .ok_or_else(|| CompileError::Malformed(format!("numeric literal {s}")))?;
+                if d.int.trim_start_matches('0').len() + d.frac.len() > ARITH_MAX_DIGITS {
+                    return Err(CompileError::Unsupported(format!(
+                        "numeric literal {s} wider than {ARITH_MAX_DIGITS} digits in arithmetic is a later rung"
+                    )));
+                }
+                Ok(Term::Lit(d))
+            }
+            Operandy::Literal(Src::Zero) => Ok(Term::Lit(Decimal::zero())),
+            Operandy::Literal(_) => {
+                Err(CompileError::Unsupported("an alphanumeric operand in arithmetic".into()))
+            }
+            Operandy::Name(n) => Ok(Term::Item(self.numeric_index(&n)?)),
+        }
+    }
+
+    /// A term's fractional-digit count (its scale).
+    fn term_scale(&self, term: &Term) -> usize {
+        match term {
+            Term::Lit(d) => d.frac.len(),
+            Term::Item(idx) => self.numeric_dims(*idx).1,
+        }
+    }
+
+    /// A term's integer-digit count (its magnitude's width before the point) —
+    /// used only to bound the `i64` accumulator against overflow.
+    fn term_int_digits(&self, term: &Term) -> usize {
+        match term {
+            Term::Lit(d) => d.int.trim_start_matches('0').len(),
+            Term::Item(idx) => self.numeric_dims(*idx).0,
+        }
+    }
+
+    /// Emit an `i64` [`Operand`] carrying the term's value at working scale `w`
+    /// (≥ the term's own scale, so scaling up is exact). A literal is folded to a
+    /// `const` immediate; an item is read from its register and scaled up at run
+    /// time when needed.
+    fn emit_term_at_scale(&mut self, term: &Term, w: usize) -> Operand {
+        match term {
+            Term::Lit(d) => Operand::Int(decimal_scaled_to(d, w)),
+            Term::Item(idx) => {
+                let (_, scale) = self.numeric_dims(*idx);
+                let reg = self.items[*idx].reg.clone();
+                if scale == w {
+                    Operand::Var(reg)
+                } else {
+                    let p = 10i64.pow((w - scale) as u32);
+                    let pr = self.fresh("_ts");
+                    self.emit("const", Some(&pr), vec![Operand::Int(p)], "i64");
+                    let out = self.fresh("_tv");
+                    self.emit("mul", Some(&out), vec![Operand::Var(reg), Operand::Var(pr)], "i64");
+                    Operand::Var(out)
+                }
+            }
+        }
+    }
+
     /// An arithmetic operand as an IIR `i64` [`Operand`]: an integer literal
     /// becomes a `const`-free immediate; a data-name becomes its register.
     /// Fractional literals/fields, alphanumerics, and over-wide fields are a
-    /// later rung.
+    /// later rung. Used by MULTIPLY/DIVIDE, whose scaled path is a later rung.
     fn int_operand(&self, op: &GrammarASTNode) -> Result<Operand, CompileError> {
         match read_operand(op)? {
             Operandy::Literal(Src::Num(s)) => {
@@ -594,6 +822,19 @@ impl Compiler {
                 "an alphanumeric operand in arithmetic".into(),
             )),
             Operandy::Name(n) => self.int_operand_from_name(&n),
+        }
+    }
+
+    /// The integer-digit bound of a MULTIPLY/DIVIDE operand (a literal's trimmed
+    /// integer length, or an item's `int_digits`) — used to bound the store's
+    /// up-scale against `i64` overflow.
+    fn operand_int_digits(&self, op: &GrammarASTNode) -> Result<usize, CompileError> {
+        match read_operand(op)? {
+            Operandy::Literal(Src::Num(s)) => Ok(Decimal::parse_literal(&s)
+                .map(|d| d.int.trim_start_matches('0').len())
+                .unwrap_or(0)),
+            Operandy::Literal(_) => Ok(0),
+            Operandy::Name(n) => Ok(self.numeric_dims(self.item_index(&n)?).0),
         }
     }
 
@@ -820,6 +1061,42 @@ fn parse_digits(digits: &str) -> i64 {
     digits.parse::<i64>().unwrap_or(0)
 }
 
+/// A summed term of an `ADD`/`SUBTRACT`: a literal value or a numeric item.
+enum Term {
+    Lit(Decimal),
+    Item(usize),
+}
+
+/// Does an arithmetic verb carry the `ROUNDED` keyword?
+fn has_rounded(verb: &GrammarASTNode) -> bool {
+    child_tokens(verb).iter().any(|(k, v)| k == "KEYWORD" && v == "ROUNDED")
+}
+
+/// The number of decimal digits in `n` (≥ 1). Used to bound how much an operand
+/// count can enlarge the accumulator.
+fn decimal_len(n: usize) -> usize {
+    let mut n = n;
+    let mut d = 1;
+    while n >= 10 {
+        n /= 10;
+        d += 1;
+    }
+    d
+}
+
+/// A [`Decimal`]'s value scaled by `10^w` as an `i64` — the fixed-point integer a
+/// numeric slot at scale `w` would hold. `w` is at least the literal's own scale
+/// (chosen as a working maximum), so no fractional digit is lost. Reuses the
+/// oracle's `move_into_numeric` to format the magnitude, then applies the sign.
+fn decimal_scaled_to(d: &Decimal, w: usize) -> i64 {
+    let mag = parse_digits(&move_into_numeric(d, NUMERIC_MAX_DIGITS, w));
+    if d.neg {
+        -mag
+    } else {
+        mag
+    }
+}
+
 /// An integer-valued [`Decimal`] as `i64`, for an arithmetic operand. A non-zero
 /// fractional part (a scaled-decimal literal) or an over-wide magnitude is a
 /// later rung.
@@ -966,21 +1243,84 @@ mod tests {
     }
 
     #[test]
-    fn scaled_decimal_arithmetic_is_unsupported() {
-        let err = compile_source(
-            &wrap(&["01  R  PIC 9(2)V9 VALUE 0."], &["ADD 1 TO R.", "STOP RUN."]),
+    fn scaled_add_now_compiles() {
+        // ADD into a V field is supported (PR3): the scaled-i64 path validates.
+        let module = compile_source(
+            &wrap(&["01  R  PIC 9(2)V9 VALUE 0."], &["ADD 1.5 TO R.", "DISPLAY R.", "STOP RUN."]),
             "v",
+        )
+        .unwrap();
+        assert!(module.validate().is_empty(), "{:?}", module.validate());
+    }
+
+    #[test]
+    fn add_rounded_now_compiles_but_on_size_error_stays_unsupported() {
+        // ROUNDED on ADD is honoured now; ON SIZE ERROR still needs branching.
+        let ok = compile_source(
+            &wrap(&["01  R  PIC 9(2)V9 VALUE 0."], &["ADD 1 TO R ROUNDED.", "STOP RUN."]),
+            "r",
+        );
+        assert!(ok.is_ok(), "{ok:?}");
+        let err = compile_source(
+            &wrap(&["01  R  PIC 9(3) VALUE 0."], &["ADD 1 TO R ON SIZE ERROR DISPLAY \"OVR\".", "STOP RUN."]),
+            "x",
         )
         .unwrap_err();
         assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
     }
 
     #[test]
-    fn rounded_and_on_size_error_are_unsupported() {
-        for body in ["ADD 1 TO R ROUNDED.", "ADD 1 TO R ON SIZE ERROR DISPLAY \"OVR\"."] {
+    fn wide_operand_at_high_scale_add_is_a_clean_error() {
+        // A 9-fraction-digit receiver forces working scale 9; a 9-integer-digit
+        // operand scaled to that would exceed the i64 intermediate. The guard
+        // rejects cleanly rather than emitting code that wraps (and would diverge
+        // from the exact oracle).
+        let err = compile_source(
+            &wrap(&["01  R  PIC V9(9) VALUE 0."], &["ADD 999999999 TO R.", "STOP RUN."]),
+            "ov",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn add_giving_wider_scale_receiver_overflow_is_a_clean_error() {
+        // ADD of a wide integer field GIVING a high-scale receiver: the store-time
+        // up-scale (×10^9) would overflow the i64 intermediate. Must be rejected,
+        // not silently wrapped. (A is 9(9); GIVING C at scale 9.)
+        let err = compile_source(
+            &wrap(
+                &["01  A  PIC 9(9) VALUE 0.", "01  C  PIC V9(9) VALUE 0."],
+                &["ADD 999999999 TO A GIVING C.", "STOP RUN."],
+            ),
+            "gv",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn multiply_into_wide_v_receiver_overflow_is_a_clean_error() {
+        // 999999999 × 999999999 ≈ 10^18 fits, but up-scaling ×10 into a V9 field
+        // overflows the i64 intermediate — a clean error, not a silent wrap.
+        let err = compile_source(
+            &wrap(
+                &["01  R  PIC 9(8)V9 VALUE 0."],
+                &["MULTIPLY 999999999 BY 999999999 GIVING R.", "STOP RUN."],
+            ),
+            "mv",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn scaled_multiply_divide_still_deferred() {
+        // MULTIPLY/DIVIDE on a V operand, and their ROUNDED, remain a later rung.
+        for body in ["MULTIPLY 2.5 BY R.", "DIVIDE 2 INTO R ROUNDED."] {
             let err = compile_source(
-                &wrap(&["01  R  PIC 9(3) VALUE 0."], &[body, "STOP RUN."]),
-                "x",
+                &wrap(&["01  R  PIC 9(2)V9 VALUE 1."], &[body, "STOP RUN."]),
+                "md",
             )
             .unwrap_err();
             assert!(matches!(err, CompileError::Unsupported(_)), "{body}: got {err:?}");

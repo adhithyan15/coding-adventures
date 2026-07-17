@@ -241,6 +241,83 @@ fn overflow_without_handler_truncates_high_order() {
     assert_eq!(out, "10\n");
 }
 
+// -------------------------------------------------------------------------
+// Scaled-decimal ADD / SUBTRACT + item→item MOVE (PR3) — vs the oracle.
+// -------------------------------------------------------------------------
+
+#[test]
+fn decimal_add_aligns_the_implied_point() {
+    // R PIC 9(2)V99 starts 1.50; ADD 2.25 TO R → 3.75 → "0375".
+    let out = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(2)V99 VALUE 1.5."],
+        &["ADD 2.25 TO R.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "0375\n");
+}
+
+#[test]
+fn add_of_higher_scale_operand_truncates_and_rounds() {
+    // Operand 2.255 has more decimals than the V99 receiver.
+    // Truncated: 2.25 → "0225"; ROUNDED: 2.26 → "0226".
+    let trunc = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(2)V99 VALUE 0."],
+        &["ADD 2.255 TO R.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(trunc, "0225\n");
+    let round = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(2)V99 VALUE 0."],
+        &["ADD 2.255 TO R ROUNDED.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(round, "0226\n");
+}
+
+#[test]
+fn subtract_decimal_and_unsigned_magnitude() {
+    // 1.5 - 2.25 = -0.75 → unsigned V99 stores magnitude 0.75 → "0075".
+    let out = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(2)V99 VALUE 1.5."],
+        &["SUBTRACT 2.25 FROM R.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "0075\n");
+}
+
+#[test]
+fn add_between_fields_of_different_scales() {
+    // A is 9(3)V9 = 12.3; B is 9(2)V99 = 1.25; ADD A TO B → 13.55 → "1355".
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC 9(3)V9 VALUE 12.3.", "01  B  PIC 9(2)V99 VALUE 1.25."],
+        &["ADD A TO B.", "DISPLAY B.", "STOP RUN."],
+    ));
+    assert_eq!(out, "1355\n");
+}
+
+#[test]
+fn item_to_item_move_reshapes_to_receiver_picture() {
+    // SRC 9(3)=42 → DST 9(5) → "00042".
+    let out = assert_matches_oracle(&wrap(
+        &["01  SRC  PIC 9(3) VALUE 42.", "01  DST  PIC 9(5)."],
+        &["MOVE SRC TO DST.", "DISPLAY DST.", "STOP RUN."],
+    ));
+    assert_eq!(out, "00042\n");
+}
+
+#[test]
+fn item_to_item_move_rescales_the_implied_point() {
+    // SRC 9(2)V9 = 12.3 → DST 9(3)V99 → 12.30 → "01230".
+    let up = assert_matches_oracle(&wrap(
+        &["01  SRC  PIC 9(2)V9 VALUE 12.3.", "01  DST  PIC 9(3)V99."],
+        &["MOVE SRC TO DST.", "DISPLAY DST.", "STOP RUN."],
+    ));
+    assert_eq!(up, "01230\n");
+    // Fewer decimals truncates (MOVE never rounds): 12.36 → 12.3, and
+    // 9(2)V9 is three digits → "123".
+    let down = assert_matches_oracle(&wrap(
+        &["01  SRC  PIC 9(2)V99 VALUE 12.36.", "01  DST  PIC 9(2)V9."],
+        &["MOVE SRC TO DST.", "DISPLAY DST.", "STOP RUN."],
+    ));
+    assert_eq!(down, "123\n");
+}
+
 #[test]
 fn arithmetic_chains_through_the_field() {
     // Successive ops read the field back, proving the i64 slot round-trips:
