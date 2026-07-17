@@ -1550,7 +1550,7 @@ impl<'a> Emitter<'a> {
     /// and `${…}` substitutions round-trip exactly as an untagged template).
     fn emit_tagged_template(&mut self, t: &TaggedTemplateExpression) {
         self.maybe_map(&t.cv);
-        self.emit_expression_inner(&t.tag, PREC_PRIMARY);
+        self.emit_plain_access_base(&t.tag);
         self.emit_template_literal(&t.quasi);
     }
 
@@ -2004,7 +2004,7 @@ impl<'a> Emitter<'a> {
         // became `a||b()` (`a||(b())`) and `(a=b)(c)` became `a=b(c)` — both
         // miscompiles. `PREC_PRIMARY` keeps `a.b()` / `f()()` paren-free and
         // wraps any lower-precedence callee.
-        self.emit_expression_inner(&c.callee, PREC_PRIMARY);
+        self.emit_plain_access_base(&c.callee);
         self.write_str("(");
         for (i, a) in c.arguments.iter().enumerate() {
             if i > 0 {
@@ -2253,6 +2253,40 @@ impl<'a> Emitter<'a> {
         self.write_str("import.meta");
     }
 
+    /// Emit `base` where it is the object of a **plain (non-optional)** member
+    /// access, the callee of a plain call, or the tag of a tagged template.
+    ///
+    /// Normally that is a `PREC_PRIMARY` emit — which keeps `a.b.c` / `f().x`
+    /// paren-free while wrapping any looser base (binary, logical, unary,
+    /// conditional, assignment, sequence). But a [`ChainExpression`] base MUST
+    /// be parenthesised, and precedence alone won't do it: a ChainExpression is
+    /// the transparent optional-chain-boundary wrapper, tagged `PREC_PRIMARY`
+    /// (its inner spine is a member/call node), so the `PREC_PRIMARY` emit would
+    /// print it bare.
+    ///
+    /// Those parens are load-bearing — they ARE the chain boundary. Dropping
+    /// them makes a following **non-optional** access join the chain:
+    ///
+    /// ```text
+    ///   (a?.b).c     bare →  a?.b.c     // `.c` now short-circuits with `?.` —
+    ///                                   //   a SEMANTIC change, not cosmetic
+    ///   (a?.b)()     bare →  a?.b()     // likewise the call joins the chain
+    /// ```
+    ///
+    /// An *optional* access base (`(a?.b)?.c`) is the opposite: the chain simply
+    /// continues, so the parens are redundant (`a?.b?.c`) — hence
+    /// `emit_optional_member`/`emit_optional_call` do NOT use this and keep their
+    /// bare `PREC_PRIMARY` emit.
+    fn emit_plain_access_base(&mut self, base: &Expression) {
+        if matches!(base, Expression::ChainExpression(_)) {
+            self.write_str("(");
+            self.emit_expression(base);
+            self.write_str(")");
+        } else {
+            self.emit_expression_inner(base, PREC_PRIMARY);
+        }
+    }
+
     fn emit_member(&mut self, m: &MemberExpression) {
         self.maybe_map(&m.cv);
         // The object must bind at least as tightly as member access, or the
@@ -2263,7 +2297,7 @@ impl<'a> Emitter<'a> {
         // emitting the object at `PREC_PRIMARY` keeps `a.b.c` / `f().x`
         // paren-free while wrapping anything lower (binary, logical, unary,
         // conditional, assignment, sequence).
-        self.emit_expression_inner(&m.object, PREC_PRIMARY);
+        self.emit_plain_access_base(&m.object);
         if m.computed {
             self.write_str("[");
             self.emit_expression(&m.property);
@@ -3558,6 +3592,38 @@ mod tests {
             right: Box::new(ident("b")),
         });
         assert_eq!(emit_expr(chain(opt_member(or, "c", false))), "(a||b)?.c;");
+    }
+
+    #[test]
+    fn chain_as_plain_access_base_is_parenthesized() {
+        // A `ChainExpression` used as the object of a PLAIN (non-optional)
+        // member/call, or the tag of a tagged template, MUST be parenthesized:
+        // the parens are the optional-chain boundary, so without them a
+        // following non-optional access joins the chain — `(a?.b).c` printed
+        // bare as `a?.b.c` extends the `?.` short-circuit to `.c`, a semantic
+        // miscompile.
+        let ax = || chain(opt_member(ident("a"), "x", false));
+        // (a?.x).y — plain member on a chain
+        assert_eq!(emit_expr(member(ax(), "y", false)), "(a?.x).y;");
+        // (a?.x)() — plain call on a chain
+        assert_eq!(emit_expr(call(ax(), vec![])), "(a?.x)();");
+        // (a?.x)[0] — computed member on a chain
+        assert_eq!(emit_expr(member(ax(), "0", true)), "(a?.x)[0];");
+        // ((a?.x).y).z — chain wrapped once, the outer plain members chain bare
+        assert_eq!(
+            emit_expr(member(member(ax(), "y", false), "z", false)),
+            "(a?.x).y.z;"
+        );
+    }
+
+    #[test]
+    fn chain_not_as_plain_base_is_not_parenthesized() {
+        // A bare chain, a chain as a call ARGUMENT, and a chain as an OPTIONAL
+        // access base must all stay unwrapped — the parens are only needed to
+        // bound the chain against a *following* non-optional access.
+        let ab = || chain(opt_member(ident("a"), "b", false));
+        assert_eq!(emit_expr(ab()), "a?.b;"); // bare
+        assert_eq!(emit_expr(call(ident("f"), vec![ab()])), "f(a?.b);"); // argument
     }
 
     #[test]
