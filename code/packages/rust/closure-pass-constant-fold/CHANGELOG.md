@@ -2,6 +2,29 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.102.0] - 2026-07-17
+
+### Added — idempotent double-negation collapse: `!!!x` → `!x`
+
+A logical-NOT whose operand is itself a `!!y` (double negation) drops that
+inner `!!` pair, matching the reference Closure Compiler at `SIMPLE`
+byte-for-byte:
+
+- `!!!x` → `!x`, `!!!!!x` → `!x` (odd count → one `!`)
+- `!!!!x` → `!!x`, `!!!!!!x` → `!!x` (even count → `!!`)
+- works over any operand — `!!!(a+b)` → `!(a+b)`, `!!!f()` → `!f()`,
+  `!!!a.b` → `!a.b`
+- a lone `!!y` is **preserved** — it is the minified spelling of `Boolean(y)`,
+  and dropping it would change the value (`!!5` is `true`, `5` is `5`)
+
+Sound for **any** operand with **no side-effect gate**: `!` never
+re-evaluates its operand, so the operand is evaluated exactly once no matter
+how many `!` wrap it, and `ToBoolean` invokes no user coercion (unlike the
+`ToNumber`/`valueOf` reordering that makes bitwise re-association unsound).
+`!!!x` computes `¬¬¬ToBoolean(x)` = `¬ToBoolean(x)` = `!x`. Folding is
+bottom-up, so the even/odd cascade converges in a single pass (`!!!!x`'s inner
+`!!!x` collapses to `!x` first, then the outer `!` yields `!!x`).
+
 ## [0.96.0] - 2026-07-16
 
 ### Added — computed string-key member → dot member: `o["foo"]` → `o.foo`
