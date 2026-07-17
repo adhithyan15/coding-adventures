@@ -2,6 +2,35 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.58.0] - 2026-07-16
+
+### Fixed — string literal whose content is a keyword no longer mis-bridged to that keyword (miscompile)
+
+`convert_primary_token` matched the token **value** (`this`/`true`/`false`/`null`/`undefined`) to
+produce the keyword-primary node *before* consulting the `TokenType` discriminant. A `String`
+literal token whose text happens to equal one of those words was therefore mis-encoded as the
+keyword literal:
+
+- `f("true")` → `f(true)` (a string argument silently became the **boolean** `true`; at `SIMPLE`,
+  emitted as `f(!0)`)
+- `f("false")` → `f(false)`, `f("null")` → `f(null)`, `f("undefined")` → `f(undefined)` (`void 0`)
+- `f("this")` → `f(this)` (a string became the **`this`** value — a semantics change *and* a
+  potential `ReferenceError`/wrong-receiver bug)
+- `x = "undefined"` → `x = void 0`; `o["true"]` → `o[true]`; etc.
+
+This is a hard miscompile — a string argument/value changing type — and it diverged from the
+reference Closure Compiler, which keeps the string. The value match is now **gated on the token
+type**: only `TokenType::Name | TokenType::Keyword` tokens are eligible to become a keyword
+primary, so `String`/`Number` literal tokens flow to the type-discriminant arms below
+(`TokenType::String` → `StringLiteral`). Genuine keyword primaries (`this`, `true`, `false`,
+`null`, `undefined` as bare words) are unaffected — they are `Name`/`Keyword` tokens and still
+bridge to their literal nodes.
+
+Regression tests `string_literal_with_keyword_content_stays_a_string` (the five keyword-content
+strings stay `StringLiteral`) and `bare_keyword_primaries_still_bridge` (bare keywords still fold)
+guard both directions. Verified byte-identical to the reference Closure Compiler at `SIMPLE`. Bug
+fix; MINOR bump 0.57.0 → 0.58.0.
+
 ## [0.57.0] - 2026-07-14
 
 ### Added — bridge async arrow functions (`async () => expr`) — CLOC12.192

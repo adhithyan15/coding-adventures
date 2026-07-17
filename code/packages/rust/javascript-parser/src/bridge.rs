@@ -3673,13 +3673,39 @@ fn split_regex_literal(raw: &str) -> Option<(String, String)> {
 /// REGEX has `type_ = TokenType::Name` and `type_name = Some("REGEX")`.
 fn convert_primary_token(t: &Token, ctx: &GrammarASTNode) -> Result<Expression, BridgeError> {
     // Value-based checks first (keywords: this, true, false, null, undefined).
-    match t.value.as_str() {
-        "this" => return Ok(Expression::ThisExpression(ThisExpression { cv: t.cv.clone() })),
-        "null" => return Ok(Expression::NullLiteral(NullLiteral { cv: t.cv.clone() })),
-        "undefined" => return Ok(Expression::UndefinedLiteral(UndefinedLiteral { cv: t.cv.clone() })),
-        "true" => return Ok(Expression::BooleanLiteral(BooleanLiteral { cv: t.cv.clone(), value: true })),
-        "false" => return Ok(Expression::BooleanLiteral(BooleanLiteral { cv: t.cv.clone(), value: false })),
-        _ => {}
+    //
+    // These MUST be gated on the token TYPE: only an identifier-like token
+    // (`Name`/`Keyword`) may be reinterpreted as one of these keyword primaries.
+    // A `String`/`Number` *literal* token whose text happens to equal a keyword
+    // — a string whose content is `this`/`true`/`false`/`null`/`undefined`, or
+    // the value `"true"` in source — is NOT that keyword and must flow to the
+    // type-discriminant arms below (`TokenType::String` → `StringLiteral`, etc.).
+    // Without this gate `f("true")` mis-encodes to `f(true)` and `f("this")` to
+    // `f(this)` — a hard miscompile: a string argument silently becomes a
+    // boolean / the `this` value. (The reference Closure Compiler keeps the
+    // string.) Matching the documented design: "NUMBER/STRING/NAME are encoded
+    // in `t.type_`" — the value match is only for the keyword primaries.
+    if matches!(t.type_, TokenType::Name | TokenType::Keyword) {
+        match t.value.as_str() {
+            "this" => return Ok(Expression::ThisExpression(ThisExpression { cv: t.cv.clone() })),
+            "null" => return Ok(Expression::NullLiteral(NullLiteral { cv: t.cv.clone() })),
+            "undefined" => {
+                return Ok(Expression::UndefinedLiteral(UndefinedLiteral { cv: t.cv.clone() }))
+            }
+            "true" => {
+                return Ok(Expression::BooleanLiteral(BooleanLiteral {
+                    cv: t.cv.clone(),
+                    value: true,
+                }))
+            }
+            "false" => {
+                return Ok(Expression::BooleanLiteral(BooleanLiteral {
+                    cv: t.cv.clone(),
+                    value: false,
+                }))
+            }
+            _ => {}
+        }
     }
 
     // BIGINT: type_ == TokenType::Name but type_name == Some("BIGINT").
@@ -5282,6 +5308,56 @@ mod tests {
             }
             _ => panic!("expected ExpressionStatement"),
         }
+    }
+
+    /// A STRING literal whose *content* is a keyword must bridge to a
+    /// `StringLiteral`, never to the keyword primary. `convert_primary_token`
+    /// used to match `t.value` before the type discriminant, so `"true"` became
+    /// `BooleanLiteral(true)` and `"this"` became `ThisExpression` — a hard
+    /// miscompile: `f("true")` would call `f` with the boolean, `f("this")` with
+    /// the `this` value. The value match is now gated on the token *type*.
+    #[test]
+    fn string_literal_with_keyword_content_stays_a_string() {
+        use coding_adventures_javascript_ast::statement::TaggedStatement;
+        for (src, want) in [
+            ("\"true\";", "true"),
+            ("\"false\";", "false"),
+            ("\"null\";", "null"),
+            ("\"undefined\";", "undefined"),
+            ("\"this\";", "this"),
+        ] {
+            let p = bridge_ok(src);
+            match &p.body[0] {
+                ProgramItem::Statement(Statement::Tagged(
+                    TaggedStatement::ExpressionStatement(es),
+                )) => match &es.expression {
+                    Expression::StringLiteral(s) => assert_eq!(s.value, want, "for {src}"),
+                    other => panic!("expected StringLiteral({want:?}) for {src}, got {other:?}"),
+                },
+                other => panic!("expected an ExpressionStatement for {src}, got {other:?}"),
+            }
+        }
+    }
+
+    /// The genuine keyword primaries must still bridge to their literal nodes —
+    /// the type gate keeps `Name`/`Keyword` tokens on the value-match path.
+    #[test]
+    fn bare_keyword_primaries_still_bridge() {
+        use coding_adventures_javascript_ast::statement::TaggedStatement;
+        let expr_of = |src: &str| -> Expression {
+            let p = bridge_ok(src);
+            match &p.body[0] {
+                ProgramItem::Statement(Statement::Tagged(
+                    TaggedStatement::ExpressionStatement(es),
+                )) => es.expression.clone(),
+                other => panic!("expected an ExpressionStatement for {src}, got {other:?}"),
+            }
+        };
+        assert!(matches!(expr_of("this;"), Expression::ThisExpression(_)));
+        assert!(matches!(expr_of("null;"), Expression::NullLiteral(_)));
+        assert!(matches!(expr_of("undefined;"), Expression::UndefinedLiteral(_)));
+        assert!(matches!(expr_of("true;"), Expression::BooleanLiteral(b) if b.value));
+        assert!(matches!(expr_of("false;"), Expression::BooleanLiteral(b) if !b.value));
     }
 
     // -----------------------------------------------------------------------
