@@ -108,11 +108,12 @@ The missing matrix is heavily concentrated in singleton packages. Regenerated
 on July 16, 2026 after the paired Lua/Perl `fenwick-tree`, `binary-tree`,
 `binary-search-tree`, `in-memory-data-store-protocol`, `avl-tree`, `tree-set`,
 `skip-list`, `hyperloglog`, `trie`, `radix-tree`, and `resp-protocol` ports,
-the paired `hash-functions` prerequisite, and the paired `bloom-filter` port:
+the paired `hash-functions` prerequisite, and the paired `bloom-filter` and
+`hash-map` ports:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 351 |
+| Present in 10-15 languages | 172 | 349 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,972 |
 | Present in one language | 695 | 9,730 |
@@ -158,15 +159,15 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 172 packages present in at least ten implementation languages need 351
+The 172 packages present in at least ten implementation languages need 349
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
 |---|---:|---|
 | Python | 1 | Classify the remaining self-hosted `python-parser` carefully |
 | Elixir | 0 | Complete; `python-parser` uses the shared grammar-driven frontend |
-| Lua | 4 | Pair with Perl data-structure/storage wave |
-| Perl | 4 | Pair with Lua data-structure/storage wave |
+| Lua | 3 | Pair with Perl data-structure/storage wave |
+| Perl | 3 | Pair with Lua data-structure/storage wave |
 | C# | 17 | Move with F# |
 | F# | 17 | Move with C# |
 | Haskell | 34 | Dependency-shaped compression, graphics, ML, and protocol waves |
@@ -178,10 +179,10 @@ ports to reach all 15. After Priority 1, select work in this order:
 Go, Ruby, Rust, and TypeScript currently have no gaps within the 10-language
 consensus set. They remain reference/template lanes for these waves.
 
-The first thirteen paired Lua/Perl slices are complete: `fenwick-tree`,
+The first fourteen paired Lua/Perl slices are complete: `fenwick-tree`,
 `binary-tree`, `binary-search-tree`, `in-memory-data-store-protocol`,
 `avl-tree`, `tree-set`, `skip-list`, `hyperloglog`, `trie`, `radix-tree`, and
-`resp-protocol`, `hash-functions`, and `bloom-filter`
+`resp-protocol`, `hash-functions`, `bloom-filter`, and `hash-map`
 now have pure implementations, package-native tests, metadata, and capability
 declarations in both lanes.
 The protocol slice establishes the dependency-free IR needed before the higher
@@ -204,6 +205,12 @@ The Bloom-filter slice uses that prerequisite for correlation-mixed double
 hashing, deterministic composite-value encoding, exact sizing helpers, and live
 fill and false-positive statistics, reducing the paired high-consensus gap to
 four packages per lane.
+The hash-map slice implements both DT18 collision strategies from first
+principles, including chaining, linear probing, tombstone deletion, automatic
+resizing, deterministic DT17 bucket hashes, bulk access, merge, and clone-based
+functional operations. It reduces the paired high-consensus gap to three
+packages per lane and supplies the direct dependency for the next `hash-set`
+slice.
 
 Recommended family order:
 
