@@ -313,12 +313,21 @@ describe("range", () => {
     expect(() => arr.range(1, 5, 0)).toThrow(/step cannot be zero/);
   });
 
-  it("a range that would produce more than MAX_ELEMENTS is a clean error, not an OOM", () => {
-    // A compiled program's range bounds can be attacker-influenced (runtime
-    // values, not fixed at compile time) — this proves the cap actually
-    // trips rather than trusting the code that it would.
-    expect(() => arr.range(1, Number.MAX_SAFE_INTEGER)).toThrow(/produces more than/);
-  });
+  it(
+    "a range that would produce more than MAX_ELEMENTS is a clean error, not an OOM",
+    () => {
+      // A compiled program's range bounds can be attacker-influenced (runtime
+      // values, not fixed at compile time) — this proves the cap actually
+      // trips rather than trusting the code that it would. Pushing ~2^26
+      // elements before the cap trips is inherently CPU-bound work, not a
+      // hang — the default 5000ms timeout is too tight on a loaded CI
+      // runner (observed timing out on macOS), so this test gets a longer
+      // budget rather than a smaller repro that wouldn't actually exercise
+      // the cap.
+      expect(() => arr.range(1, Number.MAX_SAFE_INTEGER)).toThrow(/produces more than/);
+    },
+    20000,
+  );
 
   it("a NaN start/stop/step is a clean error, not a silently empty range", () => {
     // Without the Number.isFinite guard, the while loop's condition is
