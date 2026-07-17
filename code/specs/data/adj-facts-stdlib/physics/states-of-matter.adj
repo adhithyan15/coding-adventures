@@ -1,0 +1,100 @@
+% ============================================================================
+% states-of-matter — each phase change between the everyday states of matter
+% and its NAME (adj-facts-stdlib, PHYSICS).
+% ============================================================================
+% A first physics fact about matter and energy: when a substance moves between
+% the three everyday states (solid, liquid, gas), each direction of change has
+% its OWN name. Melt an ice cube and you have melting; let steam hit a cold
+% window and you have condensation. This library maps the direction of a phase
+% change to the single word that names it. Recall is a binding query:
+%
+%     ? phase_change_name(solid_to_liquid, $Name)   % melting
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `phase_change_name(change, name)` carrying the table's citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns the
+% name WITH its source, on the CPU, with zero model calls, and abstains on a
+% direction that is not one of the six phase changes.
+%
+% The sibling library `chemistry/states-of-matter.adj` maps a STATE to how it
+% behaves in a container (solid → fixed_shape, …). This physics library is the
+% complementary axis: it names the TRANSITIONS between those states, the rung a
+% learner reasons up from before latent heat, phase diagrams, and enthalpy of
+% fusion/vaporization.
+%
+% The six phase changes, as a truth table (direction → the word that names it →
+% a plain gloss):
+%
+%     change            name            plain gloss
+%     ---------------   -------------   ----------------------------------
+%     solid_to_liquid   melting         a solid becomes a liquid (ice → water)
+%     liquid_to_solid   freezing        a liquid becomes a solid (water → ice)
+%     liquid_to_gas     vaporization    a liquid becomes a gas (water → steam)
+%     gas_to_liquid     condensation    a gas becomes a liquid (steam → water)
+%     solid_to_gas      sublimation     a solid becomes a gas directly (dry ice)
+%     gas_to_solid      deposition      a gas becomes a solid directly (frost)
+%
+% Each `name` value is a SINGLE lowercase atom taken verbatim from the source's
+% own defining sentence for that direction — never a synonym the source does not
+% use for that row. (The source notes `fusion` as an older word for melting and
+% `boiling` for vaporization, but the row carries the word the source uses as the
+% primary name.) A direction that is not one of the six — say `solid_to_plasma`,
+% or a nonsense key — has no row, so a recall on it ABSTAINS rather than inventing
+% a name. That honest-abstention property is what makes the table safe to reason
+% from. The query also runs BACKWARD — bind the name and recall its direction:
+%
+%     ? phase_change_name($Change, condensation)    % gas_to_liquid — reverse recall
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every direction→name pair
+% was read out of a fetched LibreTexts page this session, and any row that could
+% not be grounded there would have been dropped). Four rows come from LibreTexts
+% "9.3.1: Melting, Freezing, and Sublimation" and two from LibreTexts
+% "5.4: Phase Changes" (Heartland), each quoted here character-for-character so a
+% reader can re-check it:
+%
+%   solid_to_liquid → melting
+%     "The process of a solid becoming a liquid is called melting (an older term
+%      that you may see sometimes is fusion)."
+%
+%   liquid_to_solid → freezing
+%     "The opposite process, a liquid becoming a solid, is called freezing (some
+%      textbooks also use the word solidification for this process)."
+%
+%   solid_to_gas → sublimation  /  gas_to_solid → deposition
+%     "The solid-to-gas change is called sublimation, while the reverse process
+%      is called deposition."
+%
+%   liquid_to_gas → vaporization
+%     "Vaporization, which is more often referred to as "boiling," is the
+%      complementary process in which a chemical is converted from the liquid
+%      state of matter to a gaseous physical form."
+%
+%   gas_to_liquid → condensation
+%     "During condensation, a substance is changed from the gaseous to the liquid
+%      state of matter."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single strongest span: the LibreTexts sentence that
+% fixes the first row (solid_to_liquid → melting). Every OTHER row's per-fact
+% source and verbatim span is listed above, so each name remains independently
+% checkable. LibreTexts is a secondary teaching reference (not a primary source),
+% so `trust consensus`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table phase_change_name {
+    columns change, name
+
+    row (solid_to_liquid, melting)
+    row (liquid_to_solid, freezing)
+    row (liquid_to_gas, vaporization)
+    row (gas_to_liquid, condensation)
+    row (solid_to_gas, sublimation)
+    row (gas_to_solid, deposition)
+
+    source "The process of a solid becoming a liquid is called melting (an older term that you may see sometimes is fusion)."
+    locator "https://chem.libretexts.org/Courses/Madera_Community_College/MacArthur_Chemistry_3A_v_1.2/09:_Attractive_Forces/9.03:_Phase_Transitions/9.3.01:_Melting_Freezing_and_Sublimation"
+    trust consensus
+}
