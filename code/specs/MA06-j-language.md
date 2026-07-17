@@ -301,8 +301,46 @@ j-repl/       src/{lib.rs, main.rs}       ← MA-6d (the `j` binary)
   right-to-left evaluation, the §4 primitive set, `$`/`i.` array
   construction, reduce/scan lowered onto AR-2, `@` compose, and hook/
   fork train evaluation.
-- **MA-6e — `j-to-semantic-ir`**, per [`HML01`](HML01-math-to-semantic-ir.md)
-  §2 — built in this same wave rather than as a later retrofit, per §5.
+- **MA-6e — `j-to-semantic-ir`** (✅ done), per
+  [`HML01`](HML01-math-to-semantic-ir.md) §2 — built in this same wave
+  rather than as a later retrofit, per §5. `compile`/`compile_source` lower
+  `j-parser`'s CST into a `semantic_ir::Module`, reusing the exact SIR22
+  base cut and "APL addendum" `apl-to-semantic-ir` already established; 45
+  tests (40 unit + 4 capability-rejection + 1 doctest). Design notes:
+  - **`#`/`^` have no APL analogue and no SIR22-addendum node.**
+    `array_runtime::ops::BinOp` (the 12-variant type both languages' shared
+    scalar atoms map onto) has no `Pow` slot, and `#`'s monadic
+    (tally)/dyadic (replicate) meanings are unrelated structural-array
+    operations — mirroring `j-runtime::eval::JFn`'s own categorisation of
+    both as bespoke non-scalar verbs, this lowerer maps them onto new
+    well-known `BuiltinCall`s (`"tally"`, `"replicate"`, `"exp"`) except for
+    `^`'s dyadic form, which *does* reuse the existing
+    `ElementwiseOpKind::Pow` (added for MATLAB's `.^`, unused by APL) —
+    while still classifying `^` as non-scalar for reduce/scan-eligibility
+    purposes, keeping this frontend's accepted surface in lockstep with
+    `j-runtime`'s own real restriction.
+  - **Trains need a dedicated, much smaller depth guard than every other
+    recursive lowering function in this repo.** A hook or verb-left fork
+    (`(f g)`/`(f g h)`) duplicates its noun operand(s) in the emitted
+    `Expr` *tree* — this lowerer builds owned expression trees ahead of
+    any evaluation, so using an operand twice means `.clone()`-ing an
+    already-lowered subtree, unlike a real interpreter, which evaluates
+    once and cheaply reuses the resulting value. That duplication
+    compounds multiplicatively across nested combinator levels (`N`
+    levels bound the worst case at `2^N` copies), reachable either through
+    a wide single train's own fold or through explicitly nested
+    parenthesised sub-trains (`j.grammar`'s own header comment discloses
+    that trains "can nest"). The general `MAX_EXPR_DEPTH` guard every
+    other frontend uses is nowhere near tight enough for this specific
+    risk, so this crate adds a dedicated `MAX_TRAIN_COMBINATOR_DEPTH` (12)
+    checked at every `Hook`/`Fork` construction site — see
+    `j-to-semantic-ir/src/lower.rs`'s own module doc comment for the full
+    reasoning.
+  - **`j.grammar`'s own disclosed gap** — a bare noun tooth is
+    syntactically well-formed anywhere in a train (`(A B)` parses) even
+    though only a fork's leading position is ever semantically valid — is
+    exactly what this lowerer's `require_verb_tooth` rejects, mirroring
+    the grammar file's own worked example.
 - **Next**: K/Q per [`HML00`](HML00-historical-math-languages-roadmap.md)
   Wave 6 (a further ASCII-spelled, terser descendant with its own
   additional novelties — e.g. K's own distinct primitive vocabulary and
