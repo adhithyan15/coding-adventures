@@ -21,7 +21,8 @@ use std::collections::HashSet;
 use std::fmt::Write;
 
 use semantic_ir::{
-    Block, Expr, Feature, Function, Global, IndexArg, Module, ParamKind, Scope, Stmt,
+    Block, ElementwiseOpKind, Expr, Feature, Function, Global, IndexArg, Module, ParamKind, Scope,
+    Stmt,
 };
 
 use crate::runtime::RUNTIME;
@@ -266,6 +267,17 @@ fn uses_range(m: &Module) -> bool {
 /// `apply` from this package.
 fn uses_symbolic(m: &Module) -> bool {
     m.manifest.contains(Feature::SymbolicExpr) || m.manifest.contains(Feature::PatternMatching)
+}
+
+/// True if the module uses the SIR22 array/matrix domain, in which case the
+/// emitted artifact imports `@coding-adventures/sir-runtime-array`. Any of
+/// the three SIR22 features gates the same single import — a module using
+/// only a bare `ArrayLit`/`IndexGet` with no `MatMul`/`ElementwiseOp`/
+/// `Transpose` still needs `fromRows`/`indexGet` from this package.
+fn uses_array(m: &Module) -> bool {
+    m.manifest.contains(Feature::NDArrays)
+        || m.manifest.contains(Feature::MatrixOps)
+        || m.manifest.contains(Feature::ArrayColumnMajor)
 }
 
 /// Walk every function body for a `BuiltinCall` named `name` — gates
@@ -552,6 +564,10 @@ pub fn emit_module(m: &Module) -> String {
     // Only symbolic/pattern-using modules import the SIR23 runtime.
     if uses_symbolic(m) {
         out.push_str(crate::runtime::RUNTIME_SYM);
+    }
+    // Only array/matrix-using modules import the SIR22 runtime.
+    if uses_array(m) {
+        out.push_str(crate::runtime::RUNTIME_ARRAY);
     }
     // E2: thread user `class Child < Parent` ancestry into the exception
     // matcher at program init, *before* any function or main body runs, so a
@@ -1362,18 +1378,83 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             }
             out.push('\n');
         }
-        // SIR22 array/matrix indexed assignment.  This backend does not
-        // declare `Feature::NDArrays`/`Feature::MatrixOps` in
-        // `accepts_features` (see lib.rs), so `Backend::check_module`
-        // rejects any module containing this node before it ever reaches
-        // emission.  Panic here to catch a backend/validator drift, mirroring
-        // the `Expr::Intrinsic` guard below.
-        Stmt::IndexSet { span, .. } => {
-            panic!(
-                "typescript backend reached a deferred SIR22 array/matrix statement (index-set) at {} — not accepted yet",
-                span
-            );
+        // SIR22: array/matrix indexed assignment — `target[indices...] =
+        // value;`, mutating in place via `__SirArray.indexSet` (the
+        // imported `@coding-adventures/sir-runtime-array` package, gated by
+        // `uses_array` — see `emit_module`). Matches the SIR22 spec's own
+        // note that `IndexSet` is a `Stmt`, not a pure `Expr`, for exactly
+        // this in-place-mutation reason.
+        Stmt::IndexSet {
+            target,
+            indices,
+            value,
+            ..
+        } => {
+            out.push_str(&pad);
+            out.push_str("__SirArray.indexSet(");
+            emit_expr(out, target, indent);
+            out.push_str(", [");
+            emit_index_args(out, indices, indent);
+            out.push_str("], ");
+            emit_expr(out, value, indent);
+            out.push_str(");\n");
         }
+    }
+}
+
+/// The `@coding-adventures/sir-runtime-array` string `elementwise`'s
+/// `applyOp` switches on — exact `ElementwiseOpKind` variant names, not
+/// `.name()`'s lowercase forms, since this string is a real runtime
+/// dispatch key, not a cosmetic label.
+fn elementwise_op_ts_name(op: ElementwiseOpKind) -> &'static str {
+    match op {
+        ElementwiseOpKind::Add => "Add",
+        ElementwiseOpKind::Sub => "Sub",
+        ElementwiseOpKind::Mul => "Mul",
+        ElementwiseOpKind::Div => "Div",
+        ElementwiseOpKind::Pow => "Pow",
+        ElementwiseOpKind::Max => "Max",
+        ElementwiseOpKind::Min => "Min",
+        ElementwiseOpKind::Eq => "Eq",
+        ElementwiseOpKind::Ne => "Ne",
+        ElementwiseOpKind::Lt => "Lt",
+        ElementwiseOpKind::Le => "Le",
+        ElementwiseOpKind::Ge => "Ge",
+        ElementwiseOpKind::Gt => "Gt",
+    }
+}
+
+/// Emit one `IndexArg` as the object literal `__SirArray.indexGet`/
+/// `indexSet` expect: `{ kind: "scalar", value }` / `{ kind: "whole" }` /
+/// `{ kind: "range", indices: <NDArray> }`. The `Range` case reuses
+/// `emit_expr` on the inner `Expr::Range` node directly — that node's own
+/// `Expr::Range` arm already emits a call into `__SirArray.range(...)`,
+/// which returns exactly the `NDArray` shape `indices` needs, so no
+/// separate handling is needed here.
+fn emit_index_arg(out: &mut String, arg: &IndexArg, indent: usize) {
+    match arg {
+        IndexArg::Scalar(e) => {
+            out.push_str("{ kind: \"scalar\", value: ");
+            emit_expr(out, e, indent);
+            out.push_str(" }");
+        }
+        IndexArg::Whole => {
+            out.push_str("{ kind: \"whole\" }");
+        }
+        IndexArg::Range(e) => {
+            out.push_str("{ kind: \"range\", indices: ");
+            emit_expr(out, e, indent);
+            out.push_str(" }");
+        }
+    }
+}
+
+fn emit_index_args(out: &mut String, indices: &[IndexArg], indent: usize) {
+    for (i, arg) in indices.iter().enumerate() {
+        if i > 0 {
+            out.push_str(", ");
+        }
+        emit_index_arg(out, arg, indent);
     }
 }
 
@@ -1554,23 +1635,98 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
                 span
             );
         }
-        // SIR22 array/matrix expressions (`ArrayLit`/`Range`/`MatMul`/
-        // `ElementwiseOp`/`Transpose`/`IndexGet`).  This backend does not
-        // declare `Feature::NDArrays`/`Feature::MatrixOps` in
-        // `accepts_features` (see lib.rs), so `Backend::check_module` rejects
-        // any module using these nodes before it ever reaches emission.
-        // Panic here to catch a backend/validator drift (mirrors the
-        // `Intrinsic` guard above).
-        Expr::ArrayLit { .. }
-        | Expr::Range { .. }
-        | Expr::MatMul { .. }
-        | Expr::ElementwiseOp { .. }
-        | Expr::Transpose { .. }
-        | Expr::IndexGet { .. }
-        // SIR22 addendum: APL primitive operators — same deferral rationale
-        // (gated by the same `MatrixOps`/`NDArrays`/`ArrayColumnMajor`
-        // features, which this backend still doesn't declare).
-        | Expr::Reduce { .. }
+        // ── SIR22: array/matrix nodes (base cut) ──────────────────────
+        // Real codegen: calls into the imported `@coding-adventures/sir-runtime-array`
+        // package (bound as `__SirArray`, gated by `uses_array` — see
+        // `emit_module`), mirroring how the SIR23 `Sym*` arms above call
+        // into `__SirSym.*`. `rows` is row-major in the literal syntax (per
+        // the SIR22 spec); `__SirArray.fromRows` reconciles that with
+        // column-major storage, so the emitter just nests the row/element
+        // expressions unchanged.
+        Expr::ArrayLit { rows, .. } => {
+            out.push_str("__SirArray.fromRows([");
+            for (i, row) in rows.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(", ");
+                }
+                out.push('[');
+                emit_args(out, row, indent);
+                out.push(']');
+            }
+            out.push_str("])");
+        }
+        // `__SirArray.range(start, stop, step)` — note the argument ORDER:
+        // the SIR node's own field order is `start, step, stop`, but
+        // `sir-runtime-array`'s `range(start, stop, step = 1)` takes `stop`
+        // before `step`.
+        Expr::Range {
+            start, step, stop, ..
+        } => {
+            out.push_str("__SirArray.range(");
+            emit_expr(out, start, indent);
+            out.push_str(", ");
+            emit_expr(out, stop, indent);
+            out.push_str(", ");
+            match step {
+                Some(step) => emit_expr(out, step, indent),
+                None => out.push('1'),
+            }
+            out.push(')');
+        }
+        Expr::MatMul { lhs, rhs, .. } => {
+            out.push_str("__SirArray.matmul(");
+            emit_expr(out, lhs, indent);
+            out.push_str(", ");
+            emit_expr(out, rhs, indent);
+            out.push(')');
+        }
+        // The op name must match `elementwise`'s `applyOp` switch (in
+        // `sir-runtime-array`) exactly (`"Add"`, not `.name()`'s lowercase
+        // `"add"`).
+        Expr::ElementwiseOp { op, lhs, rhs, .. } => {
+            let _ = write!(
+                out,
+                "__SirArray.elementwise({}, ",
+                quote_ts_string(elementwise_op_ts_name(*op))
+            );
+            emit_expr(out, lhs, indent);
+            out.push_str(", ");
+            emit_expr(out, rhs, indent);
+            out.push(')');
+        }
+        Expr::Transpose {
+            target, conjugate, ..
+        } => {
+            out.push_str("__SirArray.transpose(");
+            emit_expr(out, target, indent);
+            let _ = write!(out, ", {conjugate})");
+        }
+        Expr::IndexGet {
+            target, indices, ..
+        } => {
+            out.push_str("__SirArray.indexGet(");
+            emit_expr(out, target, indent);
+            out.push_str(", [");
+            emit_index_args(out, indices, indent);
+            out.push_str("])");
+        }
+        // ── SIR22 addendum: APL primitive operators (still deferred) ──
+        // `Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/
+        // `IndexGenerator`/`IndexOf`/`Ravel`/`Catenate` observe the SAME
+        // `NDArrays`/`MatrixOps`/`ArrayColumnMajor` features as the base
+        // cut above (the SIR22 addendum spec gives them no feature flag of
+        // their own) — `sir-runtime-array` itself never implemented them
+        // (no frontend needed them when that package shipped), so
+        // real codegen for these nine requires porting
+        // `array_runtime::ops::{reduce,scan,outer}` +
+        // `apl-runtime::builtins`'s bespoke shape/reshape/iota/index-of/
+        // ravel/catenate logic into that package first — a natural,
+        // cleanly-scoped follow-up, not part of this PR. See `lib.rs`'s
+        // `find_unimplemented_sir22_addendum_node` for why accepting
+        // `NDArrays`/`MatrixOps`/`ArrayColumnMajor` for the base cut above
+        // does not, by itself, silently let one of these nine slip past
+        // the capability check and reach this panic.
+        Expr::Reduce { .. }
         | Expr::Scan { .. }
         | Expr::OuterProduct { .. }
         | Expr::Shape { .. }

@@ -1,6 +1,34 @@
 # Changelog — gc-core
 
-## 0.1.0 — initial release
+## 0.3.0 — 2026-07-17
+
+### Added
+
+- **`FlatHeap::collect_region`** — conservative collection rooted at a raw memory
+  region `[base, base+len)` (plus its `mark_region` helper). Where `collect` takes a
+  tidy slice of `usize` roots, `collect_region` scans arbitrary memory the collector
+  must root from itself — a block of spilled callee-saved registers, or the machine
+  call stack between the stack pointer and the thread's stack base. It is the
+  platform-independent, unit-tested core the argument-less native
+  `__twig_gc_collect`/`safepoint` entry points build on (stack-range discovery is
+  layered separately). Same conservative semantics as `collect` (raw + low-3-bit
+  tag-stripped candidates; false positives retain, never free-live). 5 unit tests
+  (region-rooted survives / unrooted freed, tagged refs, empty region, transitive
+  interior tracing).
+
+### Added
+
+- **`flat_heap` module + `FlatHeap`** — a real-memory mark-and-sweep collector
+  (the second heap representation described in `AOT00-T1-precise-gc.md` §3.1).
+  Where `GcCore` models the heap as `HashMap<usize, Box<dyn HeapObject>>` for the
+  interpreters, `FlatHeap` allocates a real machine pointer per object (32-byte
+  header + payload, 16-byte-aligned) so **native-AOT** output can read/write it
+  directly at byte offsets. `alloc`/`collect` (explicit roots, conservative
+  tracing — raw + tag-stripped candidate words), live-byte and collection
+  accounting folded into `GcProfile`. This is the generic home of
+  `twig-aot/runtime/twig_gc.c`'s flat model, shared by every native consumer
+  (native-AOT / LLVM / WASM) via the new `gc-core-capi` C ABI. Re-exported at the
+  crate root as `gc_core::FlatHeap`.
 
 ### Added
 

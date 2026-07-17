@@ -258,13 +258,23 @@ pub fn build_wolfram_builtins() -> HashMap<String, Handler> {
     // reusing `symbolic-vm`'s own `differentiate` (same idea as `Factor`,
     // but this wrapper does its own arity/shape check first, since `D`'s
     // fail-soft "leave it unevaluated" contract differs from
-    // `derivative_handler`'s panic-on-bad-arity one). Further heads
-    // (`Solve`, `Integrate`, ...) are added one at a time, each its own PR,
-    // per HML00's one-item-per-PR discipline.
+    // `derivative_handler`'s panic-on-bad-arity one). `Integrate` is the
+    // fifth, reusing `symbolic-vm`'s own `integrate_expr` (same
+    // extract-then-wrap idea as `D`/`differentiate`) — indefinite
+    // (2-argument) form only; the 4-argument definite-integral shape
+    // `integrate_handler` also supports internally is deliberately not
+    // exposed here yet (real Wolfram spells that `Integrate[f, {x, a, b}]`
+    // with a `List` bound, a different shape from this repo's flat 4-arg
+    // convention, so it needs its own follow-on rather than a same-shape
+    // passthrough). `Solve` remains a separate future item, no grammar
+    // change required (an ordinary `Head[args]` form the existing grammar
+    // already parses) — added one at a time, each its own PR, per HML00's
+    // one-item-per-PR discipline.
     m.insert("Simplify".to_string(), handler_fn(simplify_handler));
     m.insert("Expand".to_string(), handler_fn(expand_handler));
     m.insert("Factor".to_string(), handler_fn(factor_handler));
     m.insert("D".to_string(), handler_fn(d_handler));
+    m.insert("Integrate".to_string(), handler_fn(integrate_handler));
 
     // W-18 pattern-matching predicates (MA04 §19). HELD (see `PATTERN_HEADS`):
     // each handler evaluates ONLY its subject and matches against the *literal*
@@ -3418,6 +3428,53 @@ fn d_handler(vm: &mut VM, expr: IRApply) -> IRNode {
     symbolic_vm::handlers::differentiate(vm, f, &x)
 }
 
+/// `Integrate[expr, x]` → the indefinite integral of `expr` with respect to
+/// the symbol `x`: shape-specific closed forms (polynomial power rule,
+/// elementary transcendentals, the Weierstrass trig-rational substitution,
+/// incomplete-elliptic recognition, …) tried in sequence, falling back to a
+/// generic tabular integration-by-parts sweep, exactly the same pipeline
+/// Macsyma's own `integrate` surface function already runs.
+///
+/// Like `D` (and unlike `Factor`), the actual integration logic lives
+/// directly in `symbolic-vm` itself but cannot be reused via a single
+/// no-arity-check call the way `factor_handler` can: this is a thin call
+/// into `symbolic_vm::handlers::integrate_expr` — the exact indefinite-
+/// integral pipeline `integrate_handler`'s own 2-argument branch runs,
+/// extracted into a `pub` free function specifically so this wiring can
+/// reuse it (see that crate's own changelog). No algorithm is reimplemented
+/// or duplicated. `integrate_handler`'s existing contract *panics* on an
+/// argument count other than 2 or 4 — right for a genuine internal
+/// invariant violation but wrong for Wolfram's fail-soft "leave it
+/// unevaluated" contract every other W-22/W-15 built-in follows — so this
+/// wrapper validates the shape itself before calling through: exactly two
+/// arguments, and the second must be a bare symbol (`Integrate[expr, 2]` or
+/// `Integrate[expr]` stay unevaluated).
+///
+/// The 4-argument definite-integral shape `integrate_handler` also supports
+/// (`Integrate[f, x, a, b]`, this repo's flat convention for the complete-
+/// elliptic-integral recognisers) is deliberately **not** exposed under the
+/// Wolfram name yet — real Wolfram spells a definite integral
+/// `Integrate[f, {x, a, b}]`, bounds wrapped in a `List`, a different shape
+/// from the flat 4-arg convention `integrate_handler` uses internally, so
+/// building that surface needs its own `List`-destructuring wrapper as a
+/// follow-up rather than a same-shape passthrough.
+///
+/// ```text
+/// Integrate[x^2, x]      (* x^3 / 3 *)
+/// Integrate[x^2, 2]      (* x^2 unevaluated — second argument isn't a symbol *)
+/// ```
+fn integrate_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 2 {
+        return unevaluated(expr);
+    }
+    let x = match &expr.args[1] {
+        IRNode::Symbol(s) => s.clone(),
+        _ => return unevaluated(expr),
+    };
+    let f = expr.args[0].clone();
+    symbolic_vm::handlers::integrate_expr(vm, f, x)
+}
+
 // ---------------------------------------------------------------------------
 // W-12 string builtins
 // ---------------------------------------------------------------------------
@@ -6441,6 +6498,82 @@ mod tests {
             apply(
                 sym(MUL),
                 vec![int(3), apply(sym(symbolic_ir::POW), vec![sym("x"), int(2)])],
+            )
+        );
+    }
+
+    #[test]
+    fn integrate_computes_the_indefinite_integral_of_a_power() {
+        // Integrate[x^2, x] -> (1/3) * x^3, the exact same power-rule result
+        // `integrate(x^2)` produces in `symbolic-vm`'s own
+        // `integrate_power_rules` test (`symbolic-vm/tests/test_vm.rs`).
+        let x_squared = apply(sym(symbolic_ir::POW), vec![sym("x"), int(2)]);
+        assert_eq!(
+            run("Integrate", vec![x_squared, sym("x")]),
+            apply(
+                sym(MUL),
+                vec![
+                    IRNode::Rational(1, 3),
+                    apply(sym(symbolic_ir::POW), vec![sym("x"), int(3)]),
+                ],
+            )
+        );
+    }
+
+    #[test]
+    fn integrate_leaves_a_non_symbol_second_argument_unevaluated() {
+        // Integrate[x^2, 2] -- the second argument isn't a symbol, so this
+        // stays unevaluated exactly like `D`'s own non-symbol case above.
+        let x_squared = apply(sym(symbolic_ir::POW), vec![sym("x"), int(2)]);
+        assert_eq!(
+            run("Integrate", vec![x_squared.clone(), int(2)]),
+            apply(sym("Integrate"), vec![x_squared, int(2)])
+        );
+    }
+
+    #[test]
+    fn integrate_agrees_with_macsyma_on_the_same_underlying_call() {
+        // Both Wolfram's Integrate and Macsyma's integrate dispatch to the
+        // exact same symbolic_vm::handlers::integrate_expr -- this pins
+        // that the Wolfram wiring doesn't diverge from the reference call.
+        // Needs a fresh VM on each side since `integrate_expr` takes
+        // `&mut VM` (unlike Simplify/Expand's parity tests, which call a
+        // plain free function).
+        let x_squared = apply(sym(symbolic_ir::POW), vec![sym("x"), int(2)]);
+        let via_wolfram = run("Integrate", vec![x_squared.clone(), sym("x")]);
+        let mut vm = VM::new(Box::new(SymbolicBackend::new()));
+        let via_macsyma_path =
+            symbolic_vm::handlers::integrate_expr(&mut vm, x_squared, "x".to_string());
+        assert_eq!(via_wolfram, via_macsyma_path);
+    }
+
+    #[test]
+    fn integrate_with_wrong_arity_stays_unevaluated() {
+        assert_eq!(run("Integrate", vec![]), apply(sym("Integrate"), vec![]));
+        assert_eq!(
+            run("Integrate", vec![sym("x")]),
+            apply(sym("Integrate"), vec![sym("x")])
+        );
+        assert_eq!(
+            run("Integrate", vec![sym("x"), sym("y"), sym("z")]),
+            apply(sym("Integrate"), vec![sym("x"), sym("y"), sym("z")])
+        );
+    }
+
+    #[test]
+    fn integrate_dispatches_end_to_end_through_the_wolfram_backend() {
+        // x^2 integrates through the full VM eval dispatch on a real
+        // WolframBackend, exactly mirroring
+        // `d_dispatches_end_to_end_through_the_wolfram_backend` above.
+        let x_squared = apply(sym(symbolic_ir::POW), vec![sym("x"), int(2)]);
+        assert_eq!(
+            eval_full(apply(sym("Integrate"), vec![x_squared, sym("x")])),
+            apply(
+                sym(MUL),
+                vec![
+                    IRNode::Rational(1, 3),
+                    apply(sym(symbolic_ir::POW), vec![sym("x"), int(3)]),
+                ],
             )
         );
     }

@@ -58,7 +58,13 @@ macro_rules! id_type {
 }
 
 id_type!(
-    /// Identifies a whole project (one open document).
+    /// Identifies a whole workspace — the container of every project.
+    WorkspaceId
+);
+id_type!(
+    /// Identifies a single project. A project may *nest* inside another (see
+    /// `ProjectState::parent`), so this addresses a node in the project forest,
+    /// not necessarily a top-level document.
     ProjectId
 );
 id_type!(

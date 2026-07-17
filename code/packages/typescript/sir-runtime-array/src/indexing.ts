@@ -18,15 +18,36 @@ export type IndexArg =
   | { kind: "whole" }
   | { kind: "range"; indices: NDArray };
 
+/**
+ * Validate one resolved position is a real, finite integer.
+ *
+ * SECURITY: `indexGet`/`indexSet`'s own bounds checks further down this
+ * file compare a position against `0`/`dimSize` with `<`/`>=`. Under
+ * IEEE-754, every relational comparison with `NaN` is `false` — so a
+ * comparison-based check alone would let `i = NaN` sail through as
+ * neither "too small" nor "too large", silently reading/writing a stray
+ * non-index property instead of throwing. A position reaching this
+ * function comes from the *compiled program's own runtime arithmetic*
+ * (e.g. `0/0`), not just a hand-built edge case, so this validates once,
+ * here — the single choke point every `resolvePositions` caller routes
+ * through — rather than re-deriving a NaN-safe check at each call site.
+ */
+function assertValidPosition(i: number): number {
+  if (!Number.isInteger(i)) {
+    throw new Error(`resolvePositions: index ${i} is not a finite integer`);
+  }
+  return i;
+}
+
 /** Resolve one `IndexArg` against a dimension of size `dimSize` into a flat list of 0-based positions along that dimension. */
 function resolvePositions(arg: IndexArg, dimSize: number): number[] {
   switch (arg.kind) {
     case "scalar":
-      return [arg.value];
+      return [assertValidPosition(arg.value)];
     case "whole":
       return Array.from({ length: dimSize }, (_, i) => i);
     case "range":
-      return Array.from(arg.indices.data, (x) => Math.trunc(x));
+      return Array.from(arg.indices.data, (x) => assertValidPosition(Math.trunc(x)));
     default:
       // Emitted code crosses a JS runtime boundary that TypeScript can't
       // enforce at the actual call site — a malformed `kind` must fail

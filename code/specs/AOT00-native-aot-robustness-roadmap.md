@@ -66,7 +66,9 @@ level is "reached" only when its gate (§4) holds across the whole chain.
   the value model is uniform.)* **Detailed spec:**
   [`AOT00-T1-precise-gc.md`](AOT00-T1-precise-gc.md).
 - **T2 Runtime — exceptions & unwinding.** Structured throw/catch, unwinding
-  tables, stack traces; supersedes traps.
+  tables, stack traces; supersedes traps. **Detailed spec:**
+  [`AOT00-T2-exceptions.md`](AOT00-T2-exceptions.md) — shares T1's frame descriptor
+  + stack-walker (one runtime effort, two tracks).
 - **T3 Runtime — concurrency.** Threads, safepoints, memory model, a concurrent-GC
   handshake.
 - **T4 Compiler — whole-program.** Reachability/points-to → DCE, devirtualization,

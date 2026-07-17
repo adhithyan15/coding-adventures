@@ -1309,7 +1309,10 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
             }
             match &args[0] {
                 SqlValue::Null => Ok(SqlValue::Null),
-                SqlValue::Text(s) => Ok(SqlValue::Text(s.to_uppercase())),
+                // SQLite's built-in UPPER only case-folds ASCII `a`–`z`; every
+                // other byte (accented letters, non-Latin scripts) is left as-is.
+                // Rust's `to_uppercase` is full-Unicode, so use the ASCII variant.
+                SqlValue::Text(s) => Ok(SqlValue::Text(s.to_ascii_uppercase())),
                 other => Err(VmError::TypeMismatch(format!("UPPER expects TEXT, got {:?}", other))),
             }
         }
@@ -1320,7 +1323,8 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
             }
             match &args[0] {
                 SqlValue::Null => Ok(SqlValue::Null),
-                SqlValue::Text(s) => Ok(SqlValue::Text(s.to_lowercase())),
+                // ASCII-only, mirroring SQLite's built-in LOWER (see UPPER above).
+                SqlValue::Text(s) => Ok(SqlValue::Text(s.to_ascii_lowercase())),
                 other => Err(VmError::TypeMismatch(format!("LOWER expects TEXT, got {:?}", other))),
             }
         }
