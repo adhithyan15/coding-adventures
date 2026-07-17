@@ -4678,4 +4678,76 @@ fn t7_differential_random_basic_conditionals_agree() {
 
 
 
+// ── AOT00 T7 — loop differential: BASIC `FOR … NEXT` accumulator ─────────────
+//
+// The arithmetic and `IF` differentials exercise straight-line and single-branch
+// code; neither touches a **loop back-edge** — a distinct codegen path (the loop
+// header/latch, the counter increment + bound test, a mutated accumulator across
+// iterations) and a classic source of cross-backend divergence (off-by-one bounds,
+// STEP handling, `NEXT` target). This generates `FOR I = 1 TO n` accumulator
+// programs and compares the printed sum across every engine.
 
+/// A random total loop-body expression over `+ - *`, whose leaves are the loop
+/// counter `I` or a literal `0..=6`. Depth ≤ 2 (≤ 4 leaves), and the driver caps
+/// the trip count, so the accumulated sum stays far inside `i64` — no overflow.
+fn gen_loop_body_expr(state: &mut u64, depth: usize) -> String {
+    if depth >= 2 || (depth > 0 && xorshift(state).is_multiple_of(3)) {
+        // Leaf: the counter `I` a third of the time, else a small literal.
+        return if xorshift(state).is_multiple_of(3) {
+            "I".to_string()
+        } else {
+            (xorshift(state) % 7).to_string()
+        };
+    }
+    let op = ["+", "-", "*"][(xorshift(state) % 3) as usize];
+    let a = gen_loop_body_expr(state, depth + 1);
+    let b = gen_loop_body_expr(state, depth + 1);
+    format!("({a} {op} {b})")
+}
+
+/// A random accumulator loop: `S := 0; for I in 1..=n { S := S + <body(I)> }; print S`.
+fn gen_basic_for_program(state: &mut u64) -> String {
+    let n = 2 + (xorshift(state) % 5); // trip count 2..=6
+    let body = gen_loop_body_expr(state, 0);
+    format!("10 LET S = 0\n20 FOR I = 1 TO {n}\n30 LET S = S + {body}\n40 NEXT I\n50 PRINT S\n60 END\n")
+}
+
+#[test]
+fn t7_differential_random_basic_loops_agree() {
+    const SEED: u64 = 0x9E37_79B9_1234_5678;
+    const N: usize = 120;
+    const TOOLCHAIN_EVERY: usize = 15;
+    let mut state = SEED;
+    let mut cross_checks = 0usize;
+    for i in 0..N {
+        let src: &'static str = Box::leak(gen_basic_for_program(&mut state).into_boxed_str());
+        let p = Prog {
+            lang: Language::DartmouthBasic,
+            ext: "bas",
+            src,
+            expect: Expect::Stdout(""),
+            backends: &[],
+        };
+        let Some(want) = stdout_of(run_vm(&p)) else {
+            panic!("VM (reference oracle) failed to run generated program: {src:?}");
+        };
+        let mut engines: Vec<(&str, Option<String>)> =
+            vec![("wasm", stdout_of(run_wasm(&p))), ("jit", stdout_of(run_jit(&p)))];
+        if i.is_multiple_of(TOOLCHAIN_EVERY) {
+            engines.push(("native", stdout_of(run_native(&p))));
+            engines.push(("llvm", stdout_of(run_llvm(&p))));
+            engines.push(("clr", stdout_of(run_clr(&p))));
+        }
+        for (engine, got) in engines {
+            if let Some(got) = got {
+                assert_eq!(
+                    got, want,
+                    "T7 loop differential disagreement [{engine}] on {src:?}: vm={want:?}, {engine}={got:?}"
+                );
+                cross_checks += 1;
+            }
+        }
+    }
+    eprintln!("T7 loop differential: {cross_checks} cross-engine agreements over {N} loop programs");
+    assert!(cross_checks >= 2 * N, "expected >= {} cross-checks, got {cross_checks}", 2 * N);
+}
