@@ -26,7 +26,8 @@
 //! - [`primitives`] — `Date`, `Duration`, `Work`, `Money`: the units the model
 //!   measures in, with civil-date arithmetic delegated to `datetime-core`.
 //! - [`model`] — the entities: `Task`, links, resources, calendars, fields,
-//!   workflow, baselines, views, and the root `ProjectState`.
+//!   workflow, baselines, views, the `ProjectState` root, and the `Workspace` that
+//!   holds every project and how they nest.
 //! - [`calendar`] — the working-time engine: resolve calendars, snap into working
 //!   time, add working durations, and count working minutes. The unit the scheduler
 //!   measures in.
@@ -163,6 +164,132 @@ mod tests {
             Constraint::StartNoEarlierThan(_)
         ));
         assert_eq!(project.assignments[0].units, 1.0);
+    }
+
+    // ── Workspace: projects are first-class, plural, and nestable ───────────────
+
+    /// Build the three-level forest used by the nesting tests:
+    ///   apollo ─ lander ─ avionics
+    fn nested_workspace() -> Workspace {
+        let mut ws = Workspace::empty(WorkspaceId::from_raw("w1"), ProjectId::from_raw("apollo"));
+        for (id, parent) in [("lander", "apollo"), ("avionics", "lander")] {
+            let mut p = ProjectState::empty(ProjectId::from_raw(id));
+            p.parent = Some(ProjectId::from_raw(parent));
+            ws.projects.insert(p.id.clone(), p);
+        }
+        ws
+    }
+
+    #[test]
+    fn an_empty_workspace_holds_one_root_project() {
+        // The "new document" state: one project, un-nested — i.e. exactly today's
+        // single-project world, which is what keeps the simple case simple.
+        let ws = Workspace::empty(WorkspaceId::from_raw("w1"), ProjectId::from_raw("p1"));
+        assert_eq!(ws.projects.len(), 1);
+        assert_eq!(ws.roots, vec![ProjectId::from_raw("p1")]);
+        assert!(ws.projects[&ProjectId::from_raw("p1")].parent.is_none());
+        assert!(ws.cross_project_dependencies.is_empty());
+        // Scheduling stays per-project until you opt in.
+        assert!(!ws.settings.schedule_as_one_network);
+    }
+
+    #[test]
+    fn projects_nest_and_expose_their_forest() {
+        let ws = nested_workspace();
+
+        // Direct children only — apollo owns lander, not avionics.
+        let kids: Vec<_> = ws
+            .children_of(&ProjectId::from_raw("apollo"))
+            .iter()
+            .map(|p| p.id.clone())
+            .collect();
+        assert_eq!(kids, vec![ProjectId::from_raw("lander")]);
+        assert!(ws.children_of(&ProjectId::from_raw("avionics")).is_empty());
+
+        // Ancestors walk nearest-parent-first, all the way to the root.
+        assert_eq!(
+            ws.ancestors_of(&ProjectId::from_raw("avionics")),
+            vec![ProjectId::from_raw("lander"), ProjectId::from_raw("apollo")]
+        );
+        assert!(ws.ancestors_of(&ProjectId::from_raw("apollo")).is_empty());
+    }
+
+    #[test]
+    fn ancestors_of_a_corrupt_parent_cycle_terminates() {
+        // Ops reject cycles, but a snapshot arrives from outside the engine — so the
+        // walk must not hang on hostile data. It truncates rather than looping.
+        let mut ws = nested_workspace();
+        ws.projects
+            .get_mut(&ProjectId::from_raw("apollo"))
+            .unwrap()
+            .parent = Some(ProjectId::from_raw("avionics"));
+
+        let chain = ws.ancestors_of(&ProjectId::from_raw("avionics"));
+        assert!(
+            chain.len() <= ws.projects.len(),
+            "cycle guard bounds the walk"
+        );
+    }
+
+    #[test]
+    fn task_ids_are_workspace_global_so_ownership_is_resolvable() {
+        // This index is what lets the scheduler tell an intra-project edge from a
+        // cross-project one without compound (ProjectId, TaskId) keys.
+        let mut ws = nested_workspace();
+        let t = Task::new(TaskId::from_raw("wiring"), "Wiring");
+        ws.projects
+            .get_mut(&ProjectId::from_raw("avionics"))
+            .unwrap()
+            .tasks
+            .insert(t.id.clone(), t);
+
+        assert_eq!(
+            ws.project_of_task(&TaskId::from_raw("wiring")),
+            Some(&ProjectId::from_raw("avionics"))
+        );
+        assert_eq!(ws.project_of_task(&TaskId::from_raw("nope")), None);
+    }
+
+    #[test]
+    fn a_single_project_wraps_into_an_equivalent_workspace() {
+        // The migration path for pre-workspace snapshots: the project must survive
+        // the wrap untouched, and land as the sole root.
+        let mut project = ProjectState::empty(ProjectId::from_raw("p1"));
+        let t = Task::new(TaskId::from_raw("t1"), "Ship it");
+        project.tasks.insert(t.id.clone(), t);
+
+        let ws = Workspace::from_project(WorkspaceId::from_raw("w1"), project.clone());
+        assert_eq!(ws.roots, vec![ProjectId::from_raw("p1")]);
+        assert_eq!(ws.projects[&ProjectId::from_raw("p1")], project);
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn workspace_json_round_trips_and_omits_parent_for_root_projects() {
+        let ws = nested_workspace();
+        let json = serde_json::to_string(&ws).unwrap();
+
+        // Wire contract: camelCase, bare-string ids, nesting by id.
+        assert!(json.contains("\"crossProjectDependencies\":[]"));
+        assert!(json.contains("\"parent\":\"apollo\""));
+        // A root project omits `parent` entirely rather than emitting null — the
+        // JSON stays clean and old single-project snapshots remain valid input.
+        assert!(!json.contains("\"parent\":null"));
+
+        let back: Workspace = serde_json::from_str(&json).unwrap();
+        assert_eq!(back, ws);
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn a_pre_workspace_project_snapshot_still_deserialises() {
+        // Backward compatibility: JSON written before `parent` existed must still
+        // load (serde default), so Phase-1 persisted data keeps working.
+        let json = serde_json::to_string(&ProjectState::empty(ProjectId::from_raw("p1")))
+            .unwrap()
+            .replace(",\"parent\":null", ""); // simulate the older shape
+        let back: ProjectState = serde_json::from_str(&json).unwrap();
+        assert!(back.parent.is_none());
     }
 
     #[cfg(feature = "serde")]
