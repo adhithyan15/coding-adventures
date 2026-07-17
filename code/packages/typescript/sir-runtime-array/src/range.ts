@@ -24,6 +24,16 @@ export function range(start: number, stop: number, step = 1): NDArray {
   if (step === 0) {
     throw new Error("range: step cannot be zero");
   }
+  // SECURITY: the loop condition below is false on its very first check
+  // whenever start/stop/step is NaN (every relational comparison with
+  // NaN is false), so an unguarded NaN bound would silently produce an
+  // empty range instead of erroring — the same "NaN defeats a
+  // comparison-based check" class `indexGet`/`indexSet`'s fix closes.
+  // Reject non-finite bounds up front instead of letting them fall
+  // through to a quietly-wrong empty result.
+  if (!Number.isFinite(start) || !Number.isFinite(stop) || !Number.isFinite(step)) {
+    throw new Error(`range: start/stop/step must be finite numbers, got (${start}, ${stop}, ${step})`);
+  }
   const values: number[] = [];
   let x = start;
   while ((step > 0 && x <= stop + RANGE_EPSILON) || (step < 0 && x >= stop - RANGE_EPSILON)) {

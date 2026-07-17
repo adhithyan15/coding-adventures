@@ -4,6 +4,41 @@ All notable changes to `wolfram-runtime` are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/) and this project uses
 [Semantic Versioning](https://semver.org/).
 
+## [0.19.5] — 2026-07-17
+
+### Added (W-22 — `Integrate`, fifth `cas-*` head)
+
+- `Integrate[expr, x]` — the indefinite integral of `expr` with respect to
+  the symbol `x`: shape-specific closed forms (polynomial power rule,
+  elementary transcendentals, the Weierstrass trig-rational substitution,
+  incomplete-elliptic recognition, …) tried in sequence, falling back to a
+  generic tabular integration-by-parts sweep, exactly the same pipeline
+  Macsyma's own `integrate` already runs. Like `D`, the actual integration
+  logic lives directly in `symbolic-vm` itself: this wiring calls the new
+  `symbolic_vm::handlers::integrate_expr` — the exact indefinite-integral
+  pipeline `integrate_handler`'s own 2-argument branch runs, extracted into
+  a `pub` free function specifically for this reuse (see `symbolic-vm`'s
+  own changelog). No algorithm is reimplemented or duplicated; a parity
+  test pins both languages' call sites to agree on the same input, exactly
+  like `Simplify`/`Expand`/`Factor`/`D`'s own parity tests.
+- Like every W-5+ built-in, `Integrate` is an ordinary eager `Head[args]`
+  form requiring exactly two arguments, the second of which must be a bare
+  symbol; any other shape leaves the form unevaluated. Unlike `Factor`
+  (whose arity check lives inside `factor_handler` itself), this wrapper
+  does its own check — `integrate_handler`'s existing arity contract
+  panics on an argument count other than 2 or 4, which is right for
+  `symbolic-vm`'s own internal dispatch but wrong for Wolfram's fail-soft
+  contract, so `integrate_handler` (this crate's own wrapper) validates the
+  shape before ever calling through.
+- Scope note: only the indefinite (2-argument) form is wired under the
+  Wolfram name. The 4-argument definite-integral shape
+  `integrate_handler` also supports internally (this repo's flat
+  `Integrate[f, x, a, b]` convention for the complete-elliptic-integral
+  recognisers) is deliberately not exposed yet — real Wolfram spells a
+  definite integral `Integrate[f, {x, a, b}]`, bounds wrapped in a `List`,
+  a different shape needing its own `List`-destructuring wrapper as a
+  follow-up rather than a same-shape passthrough.
+
 ## [0.19.4] — 2026-07-16
 
 ### Added (W-22 — `D`, fourth `cas-*` head)
