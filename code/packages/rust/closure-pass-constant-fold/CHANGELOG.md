@@ -2,6 +2,33 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.100.0] - 2026-07-17
+
+### Added — left-associativity normalization for `&&` / `||`
+
+A right-nested same-operator logical is re-associated left:
+`a && (b && c)` → `(a && b) && c`, and likewise for `||`. Both operators are
+**fully associative** — the two groupings yield the same value, short-circuit at
+the same point, and evaluate `a`, `b`, `c` strictly left-to-right in the same
+order — so the rewrite is behaviour-preserving. The payoff is byte-identity with
+the reference compiler: a right-nested same-operator logical must be
+parenthesised on emit (`a&&(b&&c)`), whereas the left-nested form prints bare
+(`a&&b&&c`).
+
+- `a && (b && c)` → `a && b && c`   `a || (b || c)` → `a || b || c`
+- `a && (b && c) && d` → `a && b && c && d`
+- deep nests fully flatten under the pass's fixed-point iteration:
+  `a && (b && (c && d))` → `a && b && c && d` (one step per node, re-run to fixpoint)
+- also normalises the output of the `if (a) if (b) c();` → `a && (b && c())`
+  control-flow fold, giving `a && b && c()`
+
+`??` is intentionally excluded (it cannot legally mix with `&&`/`||` without
+parens, and warrants its own case). A **mixed-operator** right nest
+(`a && (b || c)`) is left alone — the parens carry real grouping there.
+
+Additive; MINOR bump 0.96.0 → 0.100.0 (0.97 = numeric-object-key, 0.98 = `new Error` drop,
+0.99 = `new Object`/`new Array` drop, all in flight).
+
 ## [0.96.0] - 2026-07-16
 
 ### Added — computed string-key member → dot member: `o["foo"]` → `o.foo`

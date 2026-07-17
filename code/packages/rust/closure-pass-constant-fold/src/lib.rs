@@ -5462,6 +5462,37 @@ fn fold_logical(l: &LogicalExpression, st: &mut FoldState) -> Expression {
         return chosen;
     }
 
+    // Left-associativity normalization: `a op (b op c)` → `(a op b) op c` for
+    // `&&` / `||`. Both operators are fully associative — the two groupings
+    // yield the same value, short-circuit at the same point, and evaluate `a`,
+    // `b`, `c` left-to-right in the same order — so the rewrite is behaviour
+    // preserving. The payoff is byte-identity with the reference compiler: a
+    // right-nested same-operator logical must be parenthesised on emit
+    // (`a&&(b&&c)`), whereas the left-nested form prints bare (`a&&b&&c`).
+    // Applied bottom-up under the pass's fixed-point iteration, a single
+    // re-association step per node fully flattens arbitrarily deep right nests
+    // (`a&&(b&&(c&&d))` → `a&&b&&c&&d`). `??` is intentionally excluded here (it
+    // cannot legally mix with `&&`/`||` without parens, and is a separate case).
+    let same_op_right_nest = matches!(l.operator, LogicalOperator::And | LogicalOperator::Or)
+        && matches!(&right, Expression::LogicalExpression(r) if r.operator == l.operator);
+    if same_op_right_nest {
+        let Expression::LogicalExpression(r) = right else { unreachable!() };
+        let new_cv = st.fork_cv(&l.cv, "a op (b op c)", "(a op b) op c");
+        // `(a op b)` — the new left-nested inner node (synthetic, no cv).
+        let inner = Expression::LogicalExpression(LogicalExpression {
+            cv: None,
+            operator: l.operator,
+            left: Box::new(left),
+            right: r.left,
+        });
+        return Expression::LogicalExpression(LogicalExpression {
+            cv: new_cv,
+            operator: l.operator,
+            left: Box::new(inner),
+            right: r.right,
+        });
+    }
+
     Expression::LogicalExpression(LogicalExpression {
         cv: l.cv.clone(),
         operator: l.operator,
@@ -12761,6 +12792,100 @@ mod tests {
     }
 
     // ------------------- logical (short-circuit) ---------------------
+
+    fn logical(op: LogicalOperator, l: Expression, r: Expression) -> Expression {
+        Expression::LogicalExpression(LogicalExpression {
+            cv: Some("l.1".to_string()),
+            operator: op,
+            left: Box::new(l),
+            right: Box::new(r),
+        })
+    }
+
+    /// `a && (b && c)` re-associates left to `(a && b) && c` — the outer node's
+    /// left becomes a `&&` LogicalExpression and its right becomes the bare `c`.
+    #[test]
+    fn logical_and_right_nest_reassociates_left() {
+        let inner = logical(LogicalOperator::And, ident("b"), ident("c"));
+        let expr = logical(LogicalOperator::And, ident("a"), inner);
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed);
+        match extract_expr(&out) {
+            Expression::LogicalExpression(top) => {
+                assert_eq!(top.operator, LogicalOperator::And);
+                assert!(
+                    matches!(top.left.as_ref(), Expression::LogicalExpression(_)),
+                    "left should be the (a && b) node"
+                );
+                assert!(
+                    matches!(top.right.as_ref(), Expression::Identifier(id) if id.name == "c"),
+                    "right should be the bare `c`"
+                );
+            }
+            other => panic!("expected a LogicalExpression; got {other:?}"),
+        }
+    }
+
+    /// `a || (b || c)` re-associates the same way.
+    #[test]
+    fn logical_or_right_nest_reassociates_left() {
+        let inner = logical(LogicalOperator::Or, ident("b"), ident("c"));
+        let expr = logical(LogicalOperator::Or, ident("a"), inner);
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed);
+        match extract_expr(&out) {
+            Expression::LogicalExpression(top) => {
+                assert!(matches!(top.left.as_ref(), Expression::LogicalExpression(_)));
+                assert!(matches!(top.right.as_ref(), Expression::Identifier(id) if id.name == "c"));
+            }
+            other => panic!("expected a LogicalExpression; got {other:?}"),
+        }
+    }
+
+    /// `a && (b || c)` is LEFT ALONE — a mixed-operator right nest cannot
+    /// re-associate (different precedence/grouping), so the parens stay.
+    #[test]
+    fn logical_mixed_operator_right_nest_not_reassociated() {
+        let inner = logical(LogicalOperator::Or, ident("b"), ident("c"));
+        let expr = logical(LogicalOperator::And, ident("a"), inner);
+        let (out, _, _, _) = run_pass(program_with_expr(expr, true));
+        match extract_expr(&out) {
+            Expression::LogicalExpression(top) => {
+                assert_eq!(top.operator, LogicalOperator::And);
+                // Right stays the `||` node (not flattened into the `&&`).
+                match top.right.as_ref() {
+                    Expression::LogicalExpression(r) => {
+                        assert_eq!(r.operator, LogicalOperator::Or)
+                    }
+                    other => panic!("expected the `||` node preserved on the right; got {other:?}"),
+                }
+            }
+            other => panic!("expected a LogicalExpression; got {other:?}"),
+        }
+    }
+
+    /// `a && (b && (c && d))` fully flattens to `((a && b) && c) && d` under the
+    /// pass's fixed-point iteration (one re-association step per node).
+    #[test]
+    fn logical_deep_right_nest_fully_flattens() {
+        let cd = logical(LogicalOperator::And, ident("c"), ident("d"));
+        let bcd = logical(LogicalOperator::And, ident("b"), cd);
+        let expr = logical(LogicalOperator::And, ident("a"), bcd);
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed);
+        // The top node's right must be the bare `d` (fully left-nested).
+        match extract_expr(&out) {
+            Expression::LogicalExpression(top) => {
+                assert!(
+                    matches!(top.right.as_ref(), Expression::Identifier(id) if id.name == "d"),
+                    "fully-flattened top-right should be the bare `d`; got {:?}",
+                    top.right
+                );
+                assert!(matches!(top.left.as_ref(), Expression::LogicalExpression(_)));
+            }
+            other => panic!("expected a LogicalExpression; got {other:?}"),
+        }
+    }
 
     #[test]
     fn fold_logical_and_left_falsy_returns_left() {
