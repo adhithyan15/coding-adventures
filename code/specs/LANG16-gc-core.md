@@ -40,6 +40,16 @@ LANG16 wires the existing GC into the pipeline.  It introduces:
 - A **`gc_runtime_<target>.a`** companion to `vm_runtime_<target>.a` for
   level-3 AOT binaries (LANG15)
 
+> **Active convergence (AOT00 T1).** The native-AOT backend today links a
+> *separate, Twig-specific* conservative collector (`twig-aot/runtime/twig_gc.c`)
+> that duplicates this crate's algorithm because `gc-core` was orphaned. The AOT00
+> **T1 — precise GC** track ([`AOT00-T1-precise-gc.md`](AOT00-T1-precise-gc.md)) is
+> now realizing the `gc_runtime_<target>.a` companion above from `gc-core` (as a
+> Rust `staticlib` exposing the C ABI `twig_gc.c` exports), wiring `twig-aot` to it,
+> and **retiring `twig_gc.c`** — after which the precise/moving/generational rungs
+> are built here as generic algorithms shared by `vm-core`, `jit-core`, and
+> native-AOT alike.
+
 The existing `garbage-collector` package is **not rewritten**.  LANG16 adds
 a thin `gc-core` adapter that exposes `GarbageCollector` instances to
 `vm-core` through the new interface and registers them with `vm-runtime`
