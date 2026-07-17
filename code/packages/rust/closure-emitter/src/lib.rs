@@ -231,6 +231,20 @@ struct Emitter<'a> {
     /// units). Ignored entirely when `opts.pretty == false`.
     indent: u32,
     source_map: SourceMapBuilder,
+    /// While emitting an `ExpressionStatement`, the output length at the
+    /// statement's start — the byte offset the statement's **first token** will
+    /// land at. An object literal emitted at exactly this offset is the leading
+    /// token of the statement, where a bare `{` mis-parses as a *block*, so
+    /// [`emit_object`](Self::emit_object) wraps just that object in parens
+    /// (`({}).f`, not the whole statement `({}.f)`).
+    ///
+    /// Using the *position* rather than a boolean is precedence-correct for
+    /// free: if an intervening spine node is precedence-wrapped, its `(` is
+    /// written before the object, so `out.len()` has already advanced past this
+    /// mark and the object is (correctly) not treated as leading — e.g.
+    /// `({}+1).x` prints `({}+1).x`, the object protected by the binary's own
+    /// paren, with no double wrap. `None` outside an expression statement.
+    expr_stmt_start: Option<usize>,
 }
 
 impl<'a> Emitter<'a> {
@@ -242,6 +256,7 @@ impl<'a> Emitter<'a> {
             col: 0,
             indent: 0,
             source_map: SourceMapBuilder::new(),
+            expr_stmt_start: None,
         }
     }
 
@@ -398,29 +413,39 @@ impl<'a> Emitter<'a> {
         // precedence-aware emit at parent_prec = 0, which means no
         // wrapping unless an inner expression has a lower-precedence
         // child that requires it.
-        // A leading `{` parses as a block and a leading `function`
-        // parses as a function *declaration* — both mis-parse a bare
-        // expression statement, so wrap them. A leading `class` is the
-        // same hazard: it parses as a class *declaration*, so a class
-        // *expression* in statement position must be wrapped too. (The
-        // general "leftmost token" problem — e.g. a call whose callee is a
-        // function expression — is handled by each child's own precedence
-        // wrap; this covers the direct cases.)
+        // A leading `function` parses as a function *declaration* and a leading
+        // `class` as a class *declaration* — both mis-parse a bare expression
+        // statement, so a `function`/`class` *expression* in statement position
+        // must be wrapped. Only the *direct*-expression check is needed: deeper
+        // on the emit spine (a call callee, a member object) the printer already
+        // wraps them via its own precedence rules, so wrapping here too would
+        // double-wrap (`(function(){})()`).
         let needs_paren = matches!(
             es.expression,
-            Expression::ObjectExpression(_)
-                | Expression::FunctionExpression(_)
-                | Expression::ClassExpression(_)
+            Expression::FunctionExpression(_) | Expression::ClassExpression(_)
         );
+        // An object literal is different: a leading `{` mis-parses as a *block*,
+        // but the object is valid mid-expression (`a = {}.f`) so it is NOT
+        // precedence-wrapped, and it may sit deep on the leftmost spine
+        // (`({}).f`, `({}).x++`, `({}).a = 1`, `({}?.x)`). Rather than wrap the
+        // whole statement — which prints `({}.f)`, not the reference `({}).f` —
+        // we record where the statement's first token will land; the FIRST
+        // object emitted at exactly that offset (`emit_object`) wraps just
+        // itself. Anything that shifts `out.len()` first — a precedence `(`, an
+        // assignment target, an operator — moves the object out of leading
+        // position, so it prints bare. (Direct case `({a:1})` flows through the
+        // same path.)
         self.maybe_map(&es.cv);
         if needs_paren {
             self.write_str("(");
         }
+        let prev_start = self.expr_stmt_start.replace(self.out.len());
         // Statement position is the loosest binding context — every
         // expression's own precedence is >= 0, so the precedence
         // wrapper won't insert outer parens here. Inner precedence
         // requirements still propagate through child calls.
         self.emit_expression_inner(&es.expression, 0);
+        self.expr_stmt_start = prev_start;
         if needs_paren {
             self.write_str(")");
         }
@@ -2325,7 +2350,17 @@ impl<'a> Emitter<'a> {
     }
 
     fn emit_object(&mut self, o: &ObjectExpression) {
+        // If this object is the **leading token** of an expression statement, a
+        // bare `{` would open a block — wrap it in parens. It is leading exactly
+        // when nothing has been written since the statement began, i.e. the
+        // recorded start offset still equals the current output length. Objects
+        // anywhere to the right (past any token, including a precedence `(`)
+        // don't match and print bare.
+        let wrap = self.expr_stmt_start == Some(self.out.len());
         self.maybe_map(&o.cv);
+        if wrap {
+            self.write_str("(");
+        }
         self.write_str("{");
         for (i, member) in o.properties.iter().enumerate() {
             if i > 0 {
@@ -2343,6 +2378,9 @@ impl<'a> Emitter<'a> {
             self.pretty_ws();
         }
         self.write_str("}");
+        if wrap {
+            self.write_str(")");
+        }
     }
 
     /// Emit an object-spread member `...expr` inside an object literal.
@@ -4849,6 +4887,62 @@ mod tests {
         assert_eq!(emit_holes("ee"), "[1,1]");
         assert_eq!(emit_holes("e"), "[1]");
         assert_eq!(emit_holes(""), "[]");
+    }
+
+    #[test]
+    fn object_literal_at_statement_start_via_spine_is_parenthesized() {
+        // The leftmost EMITTED token is `{`, which a bare expression statement
+        // mis-parses as a *block* — so the whole statement must be wrapped, even
+        // when the object is reached through a member/call/assignment spine (the
+        // direct-expression check misses these). `({}).f` printed unwrapped as
+        // `{}.f` is a hard miscompile (invalid JS).
+        let obj = || Expression::ObjectExpression(ObjectExpression { cv: None, properties: vec![] });
+        // ({}).f
+        assert_eq!(emit_expr(member(obj(), "f", false)), "({}).f;");
+        // ({}).f()
+        assert_eq!(emit_expr(call(member(obj(), "f", false), vec![])), "({}).f();");
+        // ({}).f().g() — deeper spine
+        assert_eq!(
+            emit_expr(call(
+                member(call(member(obj(), "f", false), vec![]), "g", false),
+                vec![]
+            )),
+            "({}).f().g();"
+        );
+        // ({}).a = 1 — object reached through an assignment's member target
+        let a = Expression::AssignmentExpression(AssignmentExpression {
+            cv: None,
+            operator: AssignmentOperator::Eq,
+            left: AssignmentTarget::MemberExpression(Box::new(MemberExpression {
+                cv: None,
+                object: Box::new(obj()),
+                property: Box::new(ident("a")),
+                computed: false,
+            })),
+            right: Box::new(num(1.0)),
+        });
+        assert_eq!(emit_expr(a), "({}).a=1;");
+    }
+
+    #[test]
+    fn non_object_leftmost_statement_start_is_not_wrapped() {
+        // A member/call whose leftmost token is an identifier does NOT start with
+        // `{`, so it must stay unwrapped — the spine walk must not over-wrap.
+        assert_eq!(emit_expr(member(ident("a"), "f", false)), "a.f;");
+        assert_eq!(emit_expr(call(member(ident("a"), "f", false), vec![])), "a.f();");
+    }
+
+    #[test]
+    fn object_under_precedence_wrapped_spine_is_not_double_wrapped() {
+        // `({}+1).x` — the member's object is a BinaryExpression that the printer
+        // already precedence-wraps as `({}+1)`. That `(` is written before the
+        // object literal, so the object is no longer the statement's leading
+        // token and must NOT wrap again. Regression guard: a naive
+        // "is the leftmost leaf an object?" check produces the double-wrapped
+        // `(({})+1).x`; the reference Closure prints `({}+1).x`.
+        let obj = Expression::ObjectExpression(ObjectExpression { cv: None, properties: vec![] });
+        let e = member(binary(BinaryOperator::Add, obj, num(1.0)), "x", false);
+        assert_eq!(emit_expr(e), "({}+1).x;");
     }
 
     #[test]

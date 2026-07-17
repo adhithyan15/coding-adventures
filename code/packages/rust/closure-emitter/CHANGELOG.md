@@ -2,6 +2,38 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.50.0] - 2026-07-16
+
+### Fixed — object literal at the leftmost spine of a statement is now parenthesized (invalid-JS miscompile)
+
+An `ExpressionStatement` whose first emitted token is `{` mis-parses as a
+**block**. The direct-expression guard already wrapped a bare `{…}`, but it
+missed an object literal reached through the leftmost **emit spine** — a member,
+call, assignment target, update, binary/logical/conditional/sequence — so these
+printed invalid JS:
+
+- `({}).f` → `{}.f`  (parses `{}` as a block, then `.f` is a syntax error)
+- `({}).f()` → `{}.f()`, `({})[0]` → `{}[0]`, `` ({}).f`` `` → `` {}.f`` ``
+- `({}).x++` → `{}.x++`, `({}).a = 1` → `{}.a=1`, `({}+"")` → `{}+""`
+
+The reference Closure Compiler wraps the **object literal itself** (`({}).f`),
+not the whole statement (`({}.f)`), so a whole-statement wrap would not be
+byte-identical. The fix arms a printer flag (`wrap_leftmost_object`) at the start
+of an expression statement whose leftmost spine leaf is an object literal;
+because every spine construct emits its leftmost child before any token of its
+own, the flag lands on exactly that leaf, and `emit_object` consumes it to wrap
+only itself. A new `starts_with_object_literal` walks the same leftmost spine to
+decide when to arm the flag.
+
+`function`/`class` expressions keep the existing direct-expression wrap: deeper
+on the spine they are already parenthesized by the printer's precedence rules
+(`(function(){})()` stays single-wrapped), so they are deliberately excluded from
+the object-spine walk to avoid double-wrapping. Objects **not** at statement
+start are unaffected (`a = {}.f` stays `a={}.f`, `g(({}).f())` stays `g({}.f())`).
+
+Verified byte-identical to the reference Closure Compiler at `SIMPLE`. Bug fix;
+MINOR bump 0.49.0 → 0.50.0.
+
 ## [0.49.0] - 2026-07-16
 
 ### Changed — a no-argument `new` drops its empty `()`; `new` always wraps as a member/call spine
