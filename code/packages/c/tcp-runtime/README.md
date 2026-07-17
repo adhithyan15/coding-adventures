@@ -41,6 +41,8 @@ tcp_runtime_destroy(rt);     /* closes the listener + every live connection */
 |----------|---------|
 | `tcp_runtime_bind(&rt, host, port, handler, user)` | listen + register the reactor |
 | `tcp_runtime_local_port(rt, &port)` | the bound port (for port 0) |
+| `tcp_runtime_set_max_connections(rt, max)` | cap concurrent connections (0 = unlimited); refuse beyond it |
+| `tcp_runtime_connection_count(rt, &n)` | current live connection count |
 | `tcp_runtime_poll(rt, timeout_ms, &n)` | one reactor step: accept + service ready sockets |
 | `tcp_runtime_serve(rt)` | loop `poll` until stopped (blocks) |
 | `tcp_runtime_stop(rt)` | ask `serve` to return |
@@ -66,11 +68,12 @@ allocation, not a slot in the reallocating connection array.)
 ## Scope
 
 Phase-one core: one listener, many concurrent connections, a stateless handler,
-cooperative stop. Deferred to follow-ups (mirroring the Rust crate's own phased
-plan): per-connection state, an outbound **mailbox** for worker threads,
-read-pause/resume **backpressure** (`defer_read`), socket-option policy
-(`TCP_NODELAY`/keepalive), connection caps, and multi-core reactor **sharding**.
-A reply larger than the 8 KiB per-read buffer is currently truncated.
+cooperative stop, and a concurrent-connection **cap**
+(`tcp_runtime_set_max_connections`). Deferred to follow-ups (mirroring the Rust
+crate's own phased plan): per-connection state, an outbound **mailbox** for worker
+threads, read-pause/resume **backpressure** (`defer_read`), socket-option policy
+(`TCP_NODELAY`/keepalive), and multi-core reactor **sharding**. A reply larger
+than the 8 KiB per-read buffer is currently truncated.
 
 ## Build & test
 

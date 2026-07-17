@@ -88,6 +88,52 @@ int main(void) {
     c2 = NULL;
     ISO_CHECK(tcp_runtime_poll(rt, 500, &handled) == OSP_OK);
 
+    /* ── connection cap: max_connections = 1 refuses the 2nd client ─────── */
+    {
+        tcp_runtime *capped = NULL;
+        osp_socket *k1 = NULL;
+        osp_socket *k2 = NULL;
+        unsigned short cport = 0;
+        size_t nconn = 0;
+        size_t cn = 0;
+        int h = 0;
+        char cbuf[8];
+
+        ISO_CHECK(tcp_runtime_bind(&capped, "127.0.0.1", 0, echo_handler, NULL) ==
+                  OSP_OK);
+        ISO_CHECK(tcp_runtime_set_max_connections(capped, 1) == OSP_OK);
+        ISO_CHECK(tcp_runtime_local_port(capped, &cport) == OSP_OK);
+
+        ISO_CHECK(osp_tcp_connect(&k1, "127.0.0.1", cport) == OSP_OK);
+        ISO_CHECK(osp_tcp_connect(&k2, "127.0.0.1", cport) == OSP_OK);
+        ISO_CHECK(tcp_runtime_poll(capped, 500, &h) == OSP_OK); /* accepts k1 */
+        ISO_CHECK(tcp_runtime_poll(capped, 500, &h) == OSP_OK); /* k2 → refused */
+
+        ISO_CHECK(tcp_runtime_connection_count(capped, &nconn) == OSP_OK);
+        ISO_CHECK_EQ_UINT(nconn, 1u); /* only k1 is tracked */
+
+        /* k1 (under the cap) is served normally */
+        ISO_CHECK(osp_socket_send(k1, "hi", 2, &cn) == OSP_OK);
+        ISO_CHECK(tcp_runtime_poll(capped, 500, &h) == OSP_OK);
+        cn = 0;
+        ISO_CHECK(osp_socket_recv(k1, cbuf, sizeof(cbuf), &cn) == OSP_OK);
+        ISO_CHECK_EQ_UINT(cn, 2u);
+
+        /* k2 (over the cap) was accepted then closed → its recv sees EOF */
+        cn = 123;
+        ISO_CHECK(osp_socket_recv(k2, cbuf, sizeof(cbuf), &cn) == OSP_OK);
+        ISO_CHECK_MSG(cn == 0, "a connection beyond the cap must be closed");
+
+        /* NULL validation for the new accessors */
+        ISO_CHECK(tcp_runtime_set_max_connections(NULL, 1) == OSP_ERR_INVAL);
+        ISO_CHECK(tcp_runtime_connection_count(NULL, &nconn) == OSP_ERR_INVAL);
+        ISO_CHECK(tcp_runtime_connection_count(capped, NULL) == OSP_ERR_INVAL);
+
+        ISO_CHECK(osp_socket_close(k1) == OSP_OK);
+        ISO_CHECK(osp_socket_close(k2) == OSP_OK);
+        ISO_CHECK(tcp_runtime_destroy(capped) == OSP_OK);
+    }
+
     /* ── stop before serve → serve returns immediately ──────────────────── */
     tcp_runtime_stop(rt);
     ISO_CHECK(tcp_runtime_serve(rt) == OSP_OK);

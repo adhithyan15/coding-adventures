@@ -9,6 +9,17 @@ and this project adheres to semantic versioning.
 
 ### Added
 
+- **Connection cap** (CCPP02 port campaign follow-up). `tcp_runtime_set_max_connections`
+  bounds concurrent connections (0 = unlimited, the default); at the cap a newly
+  accepted connection is closed immediately (the client is refused) rather than
+  tracked, so `accept` still dequeues it and the listener stops re-reporting
+  readable. `tcp_runtime_connection_count` reports the current live count. Test
+  extended: with a cap of 1, a second client is accepted-then-closed while the
+  first is served, count stays at 1 (57 checks, ASan+UBSan, 0 leaks). Note: the
+  outbound mailbox and read-pause/resume backpressure remain follow-ups (the
+  mailbox needs the os-platform thread backend linked into all consumers;
+  backpressure needs the per-connection-state follow-up).
+
 - **Initial package — reactor-driven TCP server** (CCPP02 port campaign, PR 2;
   the first consumer that drives `net` + `reactor` together end-to-end). The C
   port of the Rust `tcp-runtime` crate's phase-one core: one thread on a reactor
