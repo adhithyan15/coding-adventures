@@ -1376,27 +1376,30 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
                 SqlValue::Int(n) => *n,
                 other => return Err(VmError::TypeMismatch(format!("SUBSTR arg2 expects INTEGER, got {:?}", other))),
             };
-            // SQLite SUBSTR is 1-indexed.  pos=1 means the first character.
-            // Negative pos counts from the end.
+            // SQLite SUBSTR is 1-indexed and counts *characters*. The index
+            // arithmetic below reproduces SQLite's `substrFunc` exactly, so the
+            // fiddly edge cases match: `pos = 0` (a virtual slot before the
+            // first character), a negative `pos` counting from the right, and a
+            // negative length that returns the |Z| characters *preceding* the
+            // start. See the truth table in `sqlite_substr`.
             let chars: Vec<char> = s.chars().collect();
-            let len = chars.len() as i64;
-            let start = if pos >= 1 {
-                (pos - 1).min(len) as usize
+            let len_arg = if args.len() == 3 {
+                if matches!(args[2], SqlValue::Null) {
+                    return Ok(SqlValue::Null);
+                }
+                match &args[2] {
+                    SqlValue::Int(n) => Some(*n),
+                    other => {
+                        return Err(VmError::TypeMismatch(format!(
+                            "SUBSTR arg3 expects INTEGER, got {:?}",
+                            other
+                        )))
+                    }
+                }
             } else {
-                (len + pos).max(0) as usize
+                None
             };
-            let result_chars = if args.len() == 3 {
-                if matches!(args[2], SqlValue::Null) { return Ok(SqlValue::Null); }
-                let take = match &args[2] {
-                    SqlValue::Int(n) => *n,
-                    other => return Err(VmError::TypeMismatch(format!("SUBSTR arg3 expects INTEGER, got {:?}", other))),
-                };
-                let take = take.max(0) as usize;
-                &chars[start..start.saturating_add(take).min(chars.len())]
-            } else {
-                &chars[start..]
-            };
-            Ok(SqlValue::Text(result_chars.iter().collect()))
+            Ok(SqlValue::Text(sqlite_substr(&chars, pos, len_arg)))
         }
 
         "REPLACE" => {
@@ -2664,6 +2667,74 @@ fn cast_to_f64(val: &SqlValue) -> f64 {
     }
 }
 
+/// SQLite's `substr(X, Y, Z)` window over `chars`, returning the selected text.
+/// `pos` is `Y` (1-indexed); `len_arg` is `Some(Z)` for the 3-arg form or `None`
+/// for the 2-arg form (which runs to the end of the string). This mirrors
+/// SQLite's `substrFunc` index arithmetic byte-for-byte, so every edge case
+/// agrees:
+///
+/// | call                    | result   | rule                                    |
+/// |-------------------------|----------|-----------------------------------------|
+/// | `substr('hello',2,3)`   | `'ell'`  | ordinary 1-indexed slice                |
+/// | `substr('hello',-2)`    | `'lo'`   | negative Y counts from the right        |
+/// | `substr('hello',0)`     | `'hello'`| Y=0 is a slot before char 1 (2-arg)     |
+/// | `substr('hello',0,2)`   | `'h'`    | Y=0 with length consumes one from Z     |
+/// | `substr('hello',2,-1)`  | `'h'`    | negative Z: the |Z| chars *before* Y    |
+/// | `substr('hello',5,-2)`  | `'ll'`   | negative Z reads leftward               |
+fn sqlite_substr(chars: &[char], pos: i64, len_arg: Option<i64>) -> String {
+    let len = chars.len() as i64;
+    let mut p1 = pos;
+
+    // All arithmetic is saturating: `pos`/`len_arg` are attacker-controlled i64
+    // values, so `i64::MIN`/`i64::MAX` must never overflow (debug builds panic
+    // on overflow). Saturation only affects out-of-range inputs, which the final
+    // `clamp(0, len)` collapses to an empty or full window anyway.
+    let (start, end) = match len_arg {
+        Some(mut z) => {
+            if p1 < 0 {
+                // Negative start counts from the right; if it lands before the
+                // string, the shortfall eats into the length.
+                p1 = p1.saturating_add(len);
+                if p1 < 0 {
+                    z = z.saturating_add(p1);
+                    if z < 0 {
+                        z = 0;
+                    }
+                    p1 = 0;
+                }
+            } else if p1 > 0 {
+                p1 -= 1; // 1-indexed → 0-indexed
+            } else if z > 0 {
+                // p1 == 0: the virtual slot before char 1 costs one of Z.
+                z -= 1;
+            }
+            if z < 0 {
+                // Negative length: return the |Z| characters preceding `p1`.
+                p1 = p1.saturating_add(z);
+                z = z.saturating_neg(); // `i64::MIN` → `i64::MAX`, no overflow
+                if p1 < 0 {
+                    z = z.saturating_add(p1);
+                    p1 = 0;
+                }
+            }
+            let start = p1.clamp(0, len);
+            let end = p1.saturating_add(z.max(0)).clamp(0, len);
+            (start, end.max(start))
+        }
+        None => {
+            // 2-arg form: from `p1` to the end of the string.
+            if p1 < 0 {
+                p1 = p1.saturating_add(len).max(0);
+            } else if p1 > 0 {
+                p1 -= 1;
+            }
+            (p1.clamp(0, len), len)
+        }
+    };
+
+    chars[start as usize..end as usize].iter().collect()
+}
+
 /// The longest leading substring of `s` that is a well-formed integer
 /// (optional sign + digits, after skipping leading whitespace), parsed to
 /// i64. No such prefix → 0; digit overflow saturates to i64::MIN/MAX.
@@ -3299,6 +3370,51 @@ mod tests {
         assert_eq!(num(SqlValue::Float(3.5)), SqlValue::Float(3.5));
         // NULL stays NULL.
         assert_eq!(num(SqlValue::Null), SqlValue::Null);
+    }
+
+    #[test]
+    fn test_sqlite_substr_edge_cases() {
+        let chars: Vec<char> = "hello".chars().collect();
+        let s = |pos, z| sqlite_substr(&chars, pos, z);
+        // Ordinary and negative start.
+        assert_eq!(s(2, Some(3)), "ell");
+        assert_eq!(s(-2, None), "lo");
+        assert_eq!(s(-3, Some(2)), "ll");
+        // Y = 0 (virtual slot before the first char).
+        assert_eq!(s(0, None), "hello");
+        assert_eq!(s(0, Some(3)), "he");
+        assert_eq!(s(0, Some(1)), "");
+        assert_eq!(s(0, Some(2)), "h");
+        // Negative length reads the |Z| chars preceding Y.
+        assert_eq!(s(2, Some(-1)), "h");
+        assert_eq!(s(3, Some(-2)), "he");
+        assert_eq!(s(1, Some(-1)), "");
+        assert_eq!(s(5, Some(-2)), "ll");
+        assert_eq!(s(-2, Some(-1)), "l");
+        // Out-of-range windows clamp to empty / the string bounds.
+        assert_eq!(s(6, Some(2)), "");
+        assert_eq!(s(3, Some(0)), "");
+        assert_eq!(s(3, Some(10)), "llo");
+        assert_eq!(s(-10, None), "hello");
+        // Character-based for multibyte text.
+        let accented: Vec<char> = "héllo".chars().collect();
+        assert_eq!(sqlite_substr(&accented, 2, Some(2)), "él");
+
+        // Extreme i64 arguments must not overflow-panic (attacker-controlled —
+        // these are the exact breakers the security review found). We only
+        // require a safe, bounded result: saturating arithmetic keeps the window
+        // in range, so the output is always some slice of the input. Bug-for-bug
+        // parity with SQLite's C integer wrapping on these pathological inputs is
+        // out of scope (no real query passes i64::MIN as an offset/length).
+        for &pos in &[i64::MIN, i64::MAX, -6, -1, 0, 1] {
+            for &z in &[Some(i64::MIN), Some(i64::MAX), Some(0), None] {
+                let out = sqlite_substr(&chars, pos, z);
+                assert!(
+                    out.chars().count() <= chars.len(),
+                    "substr({pos},{z:?}) escaped bounds: {out:?}"
+                );
+            }
+        }
     }
 
     #[test]

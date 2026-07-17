@@ -1277,6 +1277,41 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT id, CAST(s AS NUMERIC) AS n FROM t ORDER BY id",
     },
+    // ---- Lane 2: substr() edge cases ------------------------------------
+    // `Y = 0` is a virtual slot before the first character (2-arg → whole
+    // string; with a length it consumes one from Z), and a negative Z returns
+    // the |Z| characters *preceding* the Y-th, reading leftward.
+    Case {
+        id: "substr_start_zero_and_negative_len",
+        setup: &["CREATE TABLE t (id INTEGER)", "INSERT INTO t VALUES (1)"],
+        query: "SELECT substr('hello',0) AS a, substr('hello',0,3) AS b, \
+                substr('hello',0,1) AS c, substr('hello',2,-1) AS d, \
+                substr('hello',3,-2) AS e, substr('hello',5,-2) AS f FROM t",
+    },
+    // Negative start (count from the right) combined with the length rules,
+    // out-of-range windows, and the 2-arg form.
+    Case {
+        id: "substr_negative_start_and_range",
+        setup: &["CREATE TABLE t (id INTEGER)", "INSERT INTO t VALUES (1)"],
+        query: "SELECT substr('hello',-2) AS a, substr('hello',-2,-1) AS b, \
+                substr('hello',-2,3) AS c, substr('hello',-10) AS d, \
+                substr('hello',6,2) AS e, substr('hello',3,10) AS f FROM t",
+    },
+    // Character-based (not byte-based) for multibyte UTF-8.
+    Case {
+        id: "substr_multibyte_is_char_based",
+        setup: &["CREATE TABLE t (id INTEGER)", "INSERT INTO t VALUES (1)"],
+        query: "SELECT substr('héllo',2,2) AS a, substr('héllo',-2) AS b FROM t",
+    },
+    // Per-row over a text column with a computed negative length.
+    Case {
+        id: "substr_per_row",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT)",
+            "INSERT INTO t VALUES (1,'abcdef'),(2,'xy'),(3,'')",
+        ],
+        query: "SELECT id, substr(s,2,-1) AS a, substr(s,0) AS b FROM t ORDER BY id",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but

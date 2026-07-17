@@ -3,6 +3,19 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.19] - Unreleased
+
+### Fixed
+
+- **`substr()` edge cases now match SQLite.** `substr(X, 0)` treats `Y = 0` as a
+  virtual slot before the first character (2-arg → the whole string; with a
+  length it consumes one from `Z`), and a **negative length** returns the `|Z|`
+  characters *preceding* the start, reading leftward — `substr('hello',2,-1)` is
+  `'h'`, not `''`. Previously `Y = 0` returned `''` and a negative length
+  clamped to `''`. Reimplemented as `sqlite_substr`, mirroring SQLite's
+  `substrFunc` index arithmetic exactly (and still character-based, so multibyte
+  UTF-8 counts by code point).
+
 ## [0.4.18] - Unreleased
 
 ### Added

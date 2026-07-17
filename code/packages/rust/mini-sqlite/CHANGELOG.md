@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.37 — substr() start-zero and negative-length edge cases
+
+`substr()` now matches SQLite on its two fiddly edges: `substr('hello',0)` is
+`'hello'` (Y=0 is a virtual slot before the first character) and
+`substr('hello',2,-1)` is `'h'` (a negative length returns the characters
+*preceding* the start, reading leftward) — both previously returned `''`. Still
+character-based for multibyte UTF-8. Four differential-oracle cases; sql-vm
+0.4.19.
+
 ## 0.5.36 — CAST … AS NUMERIC
 
 `CAST(x AS NUMERIC)` (and NUMERIC-affinity type names like `DECIMAL`, `BOOLEAN`)
