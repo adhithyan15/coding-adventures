@@ -29,18 +29,21 @@ on every result.
 | Range | `range(start, stop, step?)` | `matlab-runtime`'s `eval_colon` |
 | Indexing | `indexGet`/`indexSet` | (SIR-level only — no Rust runtime equivalent yet) |
 
-## Why this package exists before any backend consumes it
+## Backend consumers
 
-This mirrors exactly how `sir-runtime-symbolic` (SIR23's runtime) landed
-*before* the Stream-B codegen that calls it. `semantic-ir-to-javascript` and
-`semantic-ir-to-typescript` currently hard-reject `Feature::NDArrays`/
-`Feature::MatrixOps` and hit a deferred `panic!` at every SIR22 `Expr` match
-arm (see those crates' `emit.rs`) — real codegen is a first-wave-JS
-follow-up PR, not part of this package. Building the runtime primitives
-first means that follow-up PR only has to wire up calls, not design an
-array representation from scratch.
+Both `semantic-ir-to-javascript` and `semantic-ir-to-typescript` now accept
+`Feature::NDArrays`/`Feature::MatrixOps`/`Feature::ArrayColumnMajor` and emit
+real codegen for the SIR22 base cut. `semantic-ir-to-typescript` imports this
+package directly (`import * as __SirArray from "@coding-adventures/sir-runtime-array"`);
+`semantic-ir-to-javascript` inlines its own plain-JS port of the same logic
+instead (that backend always inlines runtime helpers rather than importing
+packages) — see each crate's own `emit.rs`/`runtime.rs` and CHANGELOG for
+the wiring. This package landed first (mirroring exactly how
+`sir-runtime-symbolic`, SIR23's runtime, preceded its own Stream-B codegen)
+so those backend PRs only had to wire up calls, not design an array
+representation from scratch.
 
-## How emitted code will use it (once the backend PR lands)
+## How emitted code uses it
 
 ```ts
 import * as __SirArray from "@coding-adventures/sir-runtime-array";
@@ -89,11 +92,15 @@ const row0 = __SirArray.indexGet(A, [{ kind: "scalar", value: 0 }, { kind: "whol
 The SIR22 spec's "APL addendum" `Expr` variants (`Reduce`/`Scan`/
 `OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/
 `Catenate`) are **not** implemented here, even though `array_runtime::ops`
-already has Rust reference implementations for `reduce`/`scan`/`outer` — no
-frontend crate emits these nine `Expr` variants yet, so porting them now
-would be speculative rather than filling a real gap. They are a natural,
-cleanly-scoped follow-up once `apl-to-semantic-ir`'s own JS-backend
-consumption needs them.
+already has Rust reference implementations for `reduce`/`scan`/`outer` and
+`apl-to-semantic-ir`'s real lowering already emits `Reduce`/`Scan`/
+`OuterProduct` for APL's `+/`/`+\`/`∘.×` operators — porting them is a
+natural, cleanly-scoped follow-up once a JS/TS-backend consumer actually
+needs them, not speculative work. Both backend consumers guard against a
+module using one of these nine slipping past their feature-flag check (the
+addendum shares its three features with the base cut above) via an explicit
+tree walk that fails cleanly instead of reaching an emit-time panic — see
+`find_unimplemented_sir22_addendum_node` in each backend crate.
 
 `Complex`/`Rational` scalar support (shared `SirType`s with SIR23) is also
 out of scope for the same reason.

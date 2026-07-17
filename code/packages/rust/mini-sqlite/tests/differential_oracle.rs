@@ -1345,6 +1345,24 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT id FROM t WHERE code LIKE '%#%%' ESCAPE '#' ORDER BY id",
     },
+    // ---- Lane 2: upper()/lower() are ASCII-only ----------------------------
+    // SQLite's built-in UPPER/LOWER case-fold only ASCII a–z/A–Z; accented and
+    // non-Latin characters pass through unchanged (unlike a full-Unicode fold).
+    Case {
+        id: "upper_lower_ascii_only",
+        setup: &["CREATE TABLE t (id INTEGER)", "INSERT INTO t VALUES (1)"],
+        query: "SELECT upper('naïve') AS a, lower('ÀBC') AS b, upper('café') AS c, \
+                lower('CAFÉ') AS d, upper('straße') AS e, upper('abc123!') AS f FROM t",
+    },
+    // Per-row over a text column with mixed scripts.
+    Case {
+        id: "upper_lower_per_row",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT)",
+            "INSERT INTO t VALUES (1,'Hello'),(2,'naïve'),(3,'ПРИВЕТ')",
+        ],
+        query: "SELECT id, upper(s) AS u, lower(s) AS l FROM t ORDER BY id",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but

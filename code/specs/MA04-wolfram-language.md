@@ -95,12 +95,13 @@ Following [HML00 §6](HML00-historical-math-languages-roadmap.md)'s breakdown:
   progress — see §24.)* Wires the existing `cas-*` crates in one head at a
   time: `Simplify` (a thin call into `cas-simplify`'s `simplify()`),
   `Expand` (a thin call into `cas-simplify`'s `expand()`), `Factor` (a
-  direct call into `symbolic-vm`'s own `factor_handler`), and `D` (a direct
-  call into `symbolic-vm`'s own `differentiate`) are all delivered — each
-  the same function its Macsyma counterpart calls, so the two languages
-  agree on every result this crate can produce. Remaining: `Solve`,
-  `Integrate`, each its own item — no grammar change for any of them (all
-  ordinary `Head[args]` forms the existing grammar already parses).
+  direct call into `symbolic-vm`'s own `factor_handler`), `D` (a direct
+  call into `symbolic-vm`'s own `differentiate`), and `Integrate` (a direct
+  call into `symbolic-vm`'s own `integrate_expr`, indefinite form only) are
+  all delivered — each the same function its Macsyma counterpart calls, so
+  the two languages agree on every result this crate can produce.
+  Remaining: `Solve`, each its own item — no grammar change (an ordinary
+  `Head[args]` form the existing grammar already parses).
 
 ## §3 The supported surface (the grammar)
 
@@ -2222,11 +2223,54 @@ D[x^3, x]      (* 3 * x^2 *)
 D[x^2, 2]      (* x^2 unevaluated — second argument isn't a symbol *)
 ```
 
-### §24.5 Remaining (not yet delivered)
+### §24.5 `Integrate` (delivered, indefinite form only)
 
-`Solve`, `Integrate`, and the rest of §2's original list — each is a
-separate future item, no grammar change required for any of them (all are
-ordinary `Head[args]` forms the existing grammar already parses).
+`Integrate[expr, x]` is a thin call into
+`symbolic_vm::handlers::integrate_expr` — **the exact indefinite-integral
+pipeline** `integrate_handler`'s own 2-argument branch runs, which is in
+turn the same pipeline Macsyma's own `integrate` surface function already
+calls. Unlike `Simplify`/`Expand` (thin calls into the standalone
+`cas-simplify` crate), the integration logic lives directly inside
+`symbolic-vm` itself, same as `Factor`/`D`; `integrate_expr` was extracted
+out of `integrate_handler`'s closure body and made `pub` in `symbolic-vm`
+specifically for this cross-language reuse (see that crate's own
+changelog). No algorithm is reimplemented; a test pins both languages'
+call sites to agree on the same input, exactly like
+`Simplify`/`Expand`/`Factor`/`D`'s own parity tests.
+
+`integrate_expr` tries shape-specific closed forms in sequence (polynomial
+power rule, elementary transcendentals, the Weierstrass trig-rational
+substitution, incomplete-elliptic recognition, …), falling back to a
+generic tabular integration-by-parts sweep when none apply — see
+`symbolic-vm`'s own module docs for the full algorithm inventory (shared,
+not reimplemented, with Macsyma).
+
+Like `D`, `Integrate`'s underlying handler (`integrate_handler`) has an
+existing arity contract that *panics* on the wrong argument count (2 or 4
+expected — a genuine internal invariant for `symbolic-vm`'s own dispatch,
+not a fail-soft contract). Since `Integrate` still needs Wolfram's usual
+"leave it unevaluated" behaviour, `Integrate`'s wrapper validates the shape
+itself before calling through: exactly two arguments, and the second must
+be a bare symbol.
+
+Only the indefinite (2-argument) form is wired under the Wolfram name here.
+The 4-argument definite-integral shape `integrate_handler` also supports
+internally (this repo's flat `Integrate[f, x, a, b]` convention for the
+complete-elliptic-integral recognisers) is deliberately not exposed yet —
+real Wolfram spells a definite integral `Integrate[f, {x, a, b}]`, bounds
+wrapped in a `List`, a different shape needing its own `List`-destructuring
+wrapper as a follow-up rather than a same-shape passthrough.
+
+```
+Integrate[x^2, x]      (* x^3 / 3 *)
+Integrate[x^2, 2]      (* x^2 unevaluated — second argument isn't a symbol *)
+```
+
+### §24.6 Remaining (not yet delivered)
+
+`Solve`, and the rest of §2's original list — each is a separate future
+item, no grammar change required (an ordinary `Head[args]` form the
+existing grammar already parses).
 
 ### §6 References
 

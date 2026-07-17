@@ -1,0 +1,1 @@
+PERL5LIB=lib:../hyperloglog/lib:../in-memory-data-store-engine/lib:../in-memory-data-store-protocol/lib:../resp-protocol/lib prove -l -v t/

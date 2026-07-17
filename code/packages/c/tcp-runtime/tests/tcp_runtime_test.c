@@ -88,6 +88,137 @@ int main(void) {
     c2 = NULL;
     ISO_CHECK(tcp_runtime_poll(rt, 500, &handled) == OSP_OK);
 
+    /* ── connection cap: max_connections = 1 refuses the 2nd client ─────── */
+    {
+        tcp_runtime *capped = NULL;
+        osp_socket *k1 = NULL;
+        osp_socket *k2 = NULL;
+        unsigned short cport = 0;
+        size_t nconn = 0;
+        size_t cn = 0;
+        int h = 0;
+        char cbuf[8];
+
+        ISO_CHECK(tcp_runtime_bind(&capped, "127.0.0.1", 0, echo_handler, NULL) ==
+                  OSP_OK);
+        ISO_CHECK(tcp_runtime_set_max_connections(capped, 1) == OSP_OK);
+        ISO_CHECK(tcp_runtime_local_port(capped, &cport) == OSP_OK);
+
+        ISO_CHECK(osp_tcp_connect(&k1, "127.0.0.1", cport) == OSP_OK);
+        ISO_CHECK(osp_tcp_connect(&k2, "127.0.0.1", cport) == OSP_OK);
+        ISO_CHECK(tcp_runtime_poll(capped, 500, &h) == OSP_OK); /* accepts k1 */
+        ISO_CHECK(tcp_runtime_poll(capped, 500, &h) == OSP_OK); /* k2 → refused */
+
+        ISO_CHECK(tcp_runtime_connection_count(capped, &nconn) == OSP_OK);
+        ISO_CHECK_EQ_UINT(nconn, 1u); /* only k1 is tracked */
+
+        /* k1 (under the cap) is served normally */
+        ISO_CHECK(osp_socket_send(k1, "hi", 2, &cn) == OSP_OK);
+        ISO_CHECK(tcp_runtime_poll(capped, 500, &h) == OSP_OK);
+        cn = 0;
+        ISO_CHECK(osp_socket_recv(k1, cbuf, sizeof(cbuf), &cn) == OSP_OK);
+        ISO_CHECK_EQ_UINT(cn, 2u);
+
+        /* k2 (over the cap) was accepted then closed → its recv sees EOF */
+        cn = 123;
+        ISO_CHECK(osp_socket_recv(k2, cbuf, sizeof(cbuf), &cn) == OSP_OK);
+        ISO_CHECK_MSG(cn == 0, "a connection beyond the cap must be closed");
+
+        /* NULL validation for the new accessors */
+        ISO_CHECK(tcp_runtime_set_max_connections(NULL, 1) == OSP_ERR_INVAL);
+        ISO_CHECK(tcp_runtime_connection_count(NULL, &nconn) == OSP_ERR_INVAL);
+        ISO_CHECK(tcp_runtime_connection_count(capped, NULL) == OSP_ERR_INVAL);
+
+        ISO_CHECK(osp_socket_close(k1) == OSP_OK);
+        ISO_CHECK(osp_socket_close(k2) == OSP_OK);
+        ISO_CHECK(tcp_runtime_destroy(capped) == OSP_OK);
+    }
+
+    /* ── mailbox: a "worker" posts outbound bytes by connection id ───────────
+     * The mailbox bypasses the read→handler path entirely: nothing is sent BY the
+     * client; the runtime drains the queued command on its next poll and writes.
+     * We drive that poll directly (single-threaded), which exercises the exact
+     * enqueue/drain/free machinery a real worker thread would hit. The first
+     * accepted connection has id 1 (next_id starts at 1). */
+    {
+        tcp_runtime *mrt = NULL;
+        tcp_mailbox *mb = NULL;
+        osp_socket *m1 = NULL;
+        unsigned short mport = 0;
+        size_t mn = 0;
+        int mh = 0;
+        char mbuf[32];
+
+        ISO_CHECK(tcp_runtime_bind(&mrt, "127.0.0.1", 0, echo_handler, NULL) ==
+                  OSP_OK);
+        ISO_CHECK(tcp_runtime_local_port(mrt, &mport) == OSP_OK);
+        mb = tcp_runtime_mailbox(mrt);
+        ISO_CHECK_MSG(mb != NULL, "a bound runtime must expose a mailbox");
+        ISO_CHECK(tcp_runtime_mailbox(NULL) == NULL);
+
+        ISO_CHECK(osp_tcp_connect(&m1, "127.0.0.1", mport) == OSP_OK);
+        ISO_CHECK(tcp_runtime_poll(mrt, 500, &mh) == OSP_OK); /* accepts m1 (id 1) */
+        ISO_CHECK(tcp_runtime_connection_count(mrt, &mn) == OSP_OK);
+        ISO_CHECK_EQ_UINT(mn, 1u);
+
+        /* post bytes to conn 1; the next poll delivers them (client sent nothing) */
+        ISO_CHECK(tcp_mailbox_send(mb, 1, "ping", 4) == OSP_OK);
+        ISO_CHECK(tcp_runtime_poll(mrt, 200, &mh) == OSP_OK); /* drains the mailbox */
+        mn = 0;
+        ISO_CHECK(osp_socket_recv(m1, mbuf, sizeof(mbuf), &mn) == OSP_OK);
+        ISO_CHECK_EQ_UINT(mn, 4u);
+        ISO_CHECK_MEM_EQ(mbuf, "ping", 4);
+
+        /* send_and_close: bytes delivered, then the connection is closed */
+        ISO_CHECK(tcp_mailbox_send_and_close(mb, 1, "bye!", 4) == OSP_OK);
+        ISO_CHECK(tcp_runtime_poll(mrt, 200, &mh) == OSP_OK);
+        mn = 0;
+        ISO_CHECK(osp_socket_recv(m1, mbuf, sizeof(mbuf), &mn) == OSP_OK);
+        ISO_CHECK_EQ_UINT(mn, 4u);
+        ISO_CHECK_MEM_EQ(mbuf, "bye!", 4);
+        mn = 123;
+        ISO_CHECK(osp_socket_recv(m1, mbuf, sizeof(mbuf), &mn) == OSP_OK);
+        ISO_CHECK_MSG(mn == 0, "send_and_close must close the connection");
+        ISO_CHECK(tcp_runtime_connection_count(mrt, &mn) == OSP_OK);
+        ISO_CHECK_EQ_UINT(mn, 0u); /* the close removed the connection */
+        ISO_CHECK(osp_socket_close(m1) == OSP_OK);
+        m1 = NULL;
+
+        /* a command for an unknown/closed id is silently dropped (no crash) */
+        ISO_CHECK(tcp_mailbox_send(mb, 999, "x", 1) == OSP_OK);
+        ISO_CHECK(tcp_runtime_poll(mrt, 100, &mh) == OSP_OK);
+        ISO_CHECK(tcp_runtime_connection_count(mrt, &mn) == OSP_OK);
+        ISO_CHECK_EQ_UINT(mn, 0u);
+
+        /* tcp_mailbox_close on a fresh connection (id 2) removes it, no bytes sent */
+        {
+            osp_socket *m2 = NULL;
+            ISO_CHECK(osp_tcp_connect(&m2, "127.0.0.1", mport) == OSP_OK);
+            ISO_CHECK(tcp_runtime_poll(mrt, 500, &mh) == OSP_OK); /* accepts m2 (id 2) */
+            ISO_CHECK(tcp_runtime_connection_count(mrt, &mn) == OSP_OK);
+            ISO_CHECK_EQ_UINT(mn, 1u);
+            ISO_CHECK(tcp_mailbox_close(mb, 2) == OSP_OK);
+            ISO_CHECK(tcp_runtime_poll(mrt, 200, &mh) == OSP_OK);
+            ISO_CHECK(tcp_runtime_connection_count(mrt, &mn) == OSP_OK);
+            ISO_CHECK_EQ_UINT(mn, 0u);
+            mn = 123;
+            ISO_CHECK(osp_socket_recv(m2, mbuf, sizeof(mbuf), &mn) == OSP_OK);
+            ISO_CHECK_MSG(mn == 0, "tcp_mailbox_close must close the connection");
+            ISO_CHECK(osp_socket_close(m2) == OSP_OK);
+        }
+
+        /* argument validation */
+        ISO_CHECK(tcp_mailbox_send(NULL, 1, "x", 1) == OSP_ERR_INVAL);
+        ISO_CHECK(tcp_mailbox_send(mb, 1, NULL, 4) == OSP_ERR_INVAL);
+        ISO_CHECK(tcp_mailbox_send_and_close(NULL, 1, "x", 1) == OSP_ERR_INVAL);
+        ISO_CHECK(tcp_mailbox_close(NULL, 1) == OSP_ERR_INVAL);
+
+        /* a command left queued at teardown must be drained+freed by destroy
+         * (checked by ASan/leaks: no leak of the node or its payload) */
+        ISO_CHECK(tcp_mailbox_send(mb, 1, "left-pending", 12) == OSP_OK);
+        ISO_CHECK(tcp_runtime_destroy(mrt) == OSP_OK);
+    }
+
     /* ── stop before serve → serve returns immediately ──────────────────── */
     tcp_runtime_stop(rt);
     ISO_CHECK(tcp_runtime_serve(rt) == OSP_OK);

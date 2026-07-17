@@ -7,6 +7,12 @@
 //! ([`Resource`], [`Calendar`], [`FieldDef`], [`Workflow`], [`Baseline`], [`View`])
 //! surround the task, and [`ProjectState`] is the flat, normalised root that holds
 //! them all.
+//!
+//! Above a single project sits [`Workspace`]: every project, plus how they nest.
+//! Projects are first-class and plural — you can keep many, nest one inside another,
+//! and schedule them as one network with dependencies crossing project boundaries.
+//! A workspace with one un-nested project behaves exactly like a bare
+//! [`ProjectState`], so the simple case pays nothing for the capability.
 
 use crate::ids::*;
 use crate::primitives::*;
@@ -813,6 +819,18 @@ pub struct ProjectState {
     pub id: ProjectId,
     /// Project name.
     pub name: String,
+    /// The parent project, if this project is nested inside another. `None` means
+    /// a top-level project (listed in [`Workspace::roots`]).
+    ///
+    /// Nesting is expressed **by id**, like every other relationship in this model —
+    /// a sub-project is not physically contained in its parent. That keeps the
+    /// projects map flat, snapshots simple, and lets the scheduler treat the whole
+    /// workspace as one graph without walking a tree of owned structs.
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub parent: Option<ProjectId>,
     /// All tasks, by id.
     pub tasks: BTreeMap<TaskId, Task>,
     /// The scheduling network.
@@ -851,6 +869,7 @@ impl ProjectState {
         ProjectState {
             id,
             name: String::new(),
+            parent: None,
             tasks: BTreeMap::new(),
             dependencies: Vec::new(),
             links: Vec::new(),
@@ -865,4 +884,170 @@ impl ProjectState {
             settings: ProjectSettings::default(),
         }
     }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Workspace
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// The root container: **every project**, and how they nest.
+///
+/// Where [`ProjectState`] is one plan, a `Workspace` is the whole desk. It exists so
+/// projects can be *first-class and plural*: you can keep many, nest one inside
+/// another to arbitrary depth, and — the point of the whole design — **schedule them
+/// as a single network**, with dependencies crossing project boundaries and
+/// sub-project dates rolling up into their parent. That unifies what Microsoft
+/// Project calls master/subprojects and what Primavera calls an EPS.
+///
+/// ## Shape
+///
+/// ```text
+///   Workspace
+///     roots: [ apollo ]                  ← display order of top-level projects
+///     projects:                          ← FLAT map; nesting is by id, not containment
+///       apollo    { parent: None }
+///       lander    { parent: Some(apollo) }
+///       avionics  { parent: Some(lander) }
+///     cross_project_dependencies:
+///       [ avionics::wiring ──FS──▶ lander::assembly ]
+/// ```
+///
+/// The projects map is **flat** and nesting is expressed by
+/// [`ProjectState::parent`], matching how the rest of this model relates entities
+/// (by id, never by nesting — see the module header). One consequence matters a lot:
+/// the scheduler can build a single graph over every task in the workspace without
+/// walking an ownership tree, and a snapshot stays a simple, stable map.
+///
+/// ## Task ids are workspace-global
+///
+/// A [`TaskId`] is unique across the *whole* workspace, not per project. That is what
+/// lets a cross-project dependency be an ordinary [`DependencyLink`] whose two
+/// endpoints merely happen to live in different projects — no compound
+/// `(ProjectId, TaskId)` keys, no second link type, and the existing cycle detection
+/// works unchanged across boundaries.
+///
+/// ## Progressive disclosure
+///
+/// A workspace holding one project with no `parent` and no cross-project links
+/// behaves *exactly* like a bare [`ProjectState`] does today. Nesting and
+/// cross-project scheduling cost nothing until you use them — the simple case stays
+/// simple, which is the standing rule for this product.
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub struct Workspace {
+    /// Workspace identity.
+    pub id: WorkspaceId,
+    /// Workspace name.
+    pub name: String,
+    /// Every project, by id — including nested ones. Flat by design (see above).
+    pub projects: BTreeMap<ProjectId, ProjectState>,
+    /// The display order of top-level projects (those with `parent == None`).
+    /// A `BTreeMap` orders by id, which is stable but arbitrary; user-visible
+    /// ordering is a product decision, so it is stored explicitly.
+    pub roots: Vec<ProjectId>,
+    /// Dependencies whose endpoints live in **different** projects. Dependencies
+    /// within one project stay on that project's `dependencies`, untouched; the
+    /// scheduler simply unions the two sets.
+    pub cross_project_dependencies: Vec<DependencyLink>,
+    /// A resource pool shared across projects. Per-project `ProjectState::resources`
+    /// remain valid for project-local resources; this pool is additive, and is what
+    /// cross-project levelling will draw on later.
+    pub shared_resources: BTreeMap<ResourceId, Resource>,
+    /// Workspace-wide settings.
+    pub settings: WorkspaceSettings,
+}
+
+impl Workspace {
+    /// A workspace holding exactly one empty project — the "new document" state, and
+    /// the shape that reproduces today's single-project behaviour.
+    pub fn empty(id: WorkspaceId, project: ProjectId) -> Workspace {
+        let mut projects = BTreeMap::new();
+        projects.insert(project.clone(), ProjectState::empty(project.clone()));
+        Workspace {
+            id,
+            name: String::new(),
+            projects,
+            roots: vec![project],
+            cross_project_dependencies: Vec::new(),
+            shared_resources: BTreeMap::new(),
+            settings: WorkspaceSettings::default(),
+        }
+    }
+
+    /// Wrap a single existing project as a one-project workspace.
+    ///
+    /// This is the migration path for snapshots written before workspaces existed
+    /// (see `code/specs/task-app-workspace.md` §5): an old bare-`ProjectState` JSON
+    /// loads, then becomes a workspace through here.
+    pub fn from_project(id: WorkspaceId, project: ProjectState) -> Workspace {
+        let pid = project.id.clone();
+        let mut projects = BTreeMap::new();
+        projects.insert(pid.clone(), project);
+        Workspace {
+            id,
+            name: String::new(),
+            projects,
+            roots: vec![pid],
+            cross_project_dependencies: Vec::new(),
+            shared_resources: BTreeMap::new(),
+            settings: WorkspaceSettings::default(),
+        }
+    }
+
+    /// The direct sub-projects of `parent`, in `projects` (id) order.
+    pub fn children_of(&self, parent: &ProjectId) -> Vec<&ProjectState> {
+        self.projects
+            .values()
+            .filter(|p| p.parent.as_ref() == Some(parent))
+            .collect()
+    }
+
+    /// The chain of ancestors of `project`, nearest parent first.
+    ///
+    /// Walks defensively: it stops after `projects.len()` hops so a corrupted
+    /// snapshot containing a parent cycle degrades to a truncated chain instead of
+    /// looping forever. Ops reject cycles up front; this is belt-and-braces for data
+    /// that arrives from outside.
+    pub fn ancestors_of(&self, project: &ProjectId) -> Vec<ProjectId> {
+        let mut out = Vec::new();
+        let mut cursor = self.projects.get(project).and_then(|p| p.parent.clone());
+        while let Some(id) = cursor {
+            if out.len() >= self.projects.len() {
+                break; // cycle guard
+            }
+            cursor = self.projects.get(&id).and_then(|p| p.parent.clone());
+            out.push(id);
+        }
+        out
+    }
+
+    /// Which project owns `task`, if any.
+    ///
+    /// Task ids are workspace-global, so this is the index the scheduler uses to
+    /// tell an intra-project edge from a cross-project one. It is *derived*, never
+    /// stored — the projects map is the single source of truth.
+    pub fn project_of_task(&self, task: &TaskId) -> Option<&ProjectId> {
+        self.projects
+            .iter()
+            .find(|(_, p)| p.tasks.contains_key(task))
+            .map(|(id, _)| id)
+    }
+}
+
+/// Workspace-wide settings. Deliberately thin: anything that can sensibly differ
+/// per project (calendars, duration units, currency) stays on [`ProjectSettings`],
+/// so a project remains self-describing and can be moved between workspaces.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub struct WorkspaceSettings {
+    /// Schedule every project as one network: honour cross-project dependencies and
+    /// roll sub-projects up into their parents.
+    ///
+    /// `false` (the default) schedules each project independently — the simple,
+    /// today's-behaviour case. Turning this on is exactly the "incrementally add
+    /// complexity" step for someone who starts with one board and grows into a
+    /// portfolio.
+    pub schedule_as_one_network: bool,
 }
