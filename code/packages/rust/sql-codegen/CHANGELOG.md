@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.6.6] - Unreleased
+
+### Changed
+
+- `Instruction::Like` now carries a `bool` `NOT` flag, and a new
+  `Instruction::LikeEscape(bool)` handles `LIKE … ESCAPE`. `NOT LIKE` is lowered
+  by setting the flag rather than being dropped, so the VM applies a NULL-aware
+  inversion.
+
 ## [0.6.5] - Unreleased
 
 ### Added

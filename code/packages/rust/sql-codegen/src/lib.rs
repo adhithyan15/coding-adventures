@@ -292,13 +292,24 @@ pub enum Instruction {
     /// ## Stack effect: `[..., value, low, high] → [..., Bool]`
     Between(bool), // inclusive
 
-    /// SQL `LIKE` pattern match.
+    /// SQL `LIKE` / `NOT LIKE` pattern match.
     ///
-    /// Expects `[..., value, pattern]` (pattern on top).
-    /// Pops both; pushes a Bool result.
+    /// Expects `[..., value, pattern]` (pattern on top). Pops both; pushes a
+    /// Bool result (or NULL if either operand is NULL). The `bool` payload is the
+    /// `NOT` flag: when `true`, the (non-NULL) match result is inverted.
     ///
     /// ## Stack effect: `[..., value, pattern] → [..., Bool]`
-    Like,
+    Like(bool),
+
+    /// SQL `LIKE` / `NOT LIKE` with an `ESCAPE ch` clause.
+    ///
+    /// Expects `[..., value, pattern, escape]` (escape on top). The escape
+    /// value's first character makes a following `%`, `_`, or the escape
+    /// character itself a literal in the pattern. The `bool` payload is the `NOT`
+    /// flag (see [`Instruction::Like`]).
+    ///
+    /// ## Stack effect: `[..., value, pattern, escape] → [..., Bool]`
+    LikeEscape(bool),
 
     /// SQL `CAST(value AS type)` — pop one value, push its conversion.
     ///
@@ -2022,14 +2033,22 @@ impl Compiler {
             SqlExpr::Like {
                 value,
                 pattern,
-                negated: _,
+                negated,
+                escape,
             } => {
-                // Stack: [value, pattern] (pattern on top).
-                // The VM applies the LIKE match.  For NOT LIKE, the caller
-                // (optimizer or VM) applies NOT to the result.
+                // Stack: [value, pattern] (pattern on top), plus [escape] when an
+                // ESCAPE clause is present. The VM applies the LIKE match and,
+                // for `NOT LIKE`, the NULL-aware inversion carried by the
+                // instruction's `negated` flag.
                 self.compile_expr(value);
                 self.compile_expr(pattern);
-                self.emit(Instruction::Like);
+                match escape {
+                    Some(escape_expr) => {
+                        self.compile_expr(escape_expr);
+                        self.emit(Instruction::LikeEscape(*negated));
+                    }
+                    None => self.emit(Instruction::Like(*negated)),
+                }
             }
 
             // ── CAST ─────────────────────────────────────────────────────────
@@ -3406,10 +3425,11 @@ mod tests {
                 value: Box::new(col("name")),
                 pattern: Box::new(lit_text("A%")),
                 negated: false,
+                escape: None,
             },
         });
         let v = instrs(&plan);
-        assert!(v.iter().any(|i| matches!(i, Instruction::Like)));
+        assert!(v.iter().any(|i| matches!(i, Instruction::Like(_))));
     }
 
     #[test]

@@ -356,14 +356,56 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
                 stack.push(SqlValue::Bool(!matches!(v, SqlValue::Null)));
             }
 
-            // ─────────────── LIKE ──────────────────────────────────────────
-            Instruction::Like => {
+            // ─────────────── LIKE / NOT LIKE ────────────────────────────────
+            Instruction::Like(negated) => {
                 // Stack (top → bottom): pattern, value
                 let pat = pop(&mut stack)?;
                 let val = pop(&mut stack)?;
                 let result = match (&val, &pat) {
+                    // A NULL operand makes the whole predicate NULL, and `NOT`
+                    // leaves NULL unchanged (NULL is neither true nor false).
                     (SqlValue::Null, _) | (_, SqlValue::Null) => SqlValue::Null,
-                    _ => SqlValue::Bool(like_match(&sql_to_str(&val), &sql_to_str(&pat))),
+                    _ => {
+                        let matched = like_match(&sql_to_str(&val), &sql_to_str(&pat));
+                        SqlValue::Bool(matched ^ negated)
+                    }
+                };
+                stack.push(result);
+            }
+
+            // ─────────────── LIKE / NOT LIKE … ESCAPE ───────────────────────
+            Instruction::LikeEscape(negated) => {
+                // Stack (top → bottom): escape, pattern, value
+                let esc = pop(&mut stack)?;
+                let pat = pop(&mut stack)?;
+                let val = pop(&mut stack)?;
+                let result = match (&val, &pat, &esc) {
+                    // Any NULL operand — including a NULL escape — yields NULL,
+                    // which `NOT` leaves unchanged.
+                    (SqlValue::Null, _, _) | (_, SqlValue::Null, _) | (_, _, SqlValue::Null) => {
+                        SqlValue::Null
+                    }
+                    _ => {
+                        // SQLite requires the ESCAPE string to be exactly one
+                        // character; anything else is a runtime error.
+                        let esc_str = sql_to_str(&esc);
+                        let mut chars = esc_str.chars();
+                        match (chars.next(), chars.next()) {
+                            (Some(e), None) => {
+                                let matched = like_match_escape(
+                                    &sql_to_str(&val),
+                                    &sql_to_str(&pat),
+                                    e,
+                                );
+                                SqlValue::Bool(matched ^ negated)
+                            }
+                            _ => {
+                                return Err(VmError::TypeMismatch(
+                                    "ESCAPE expression must be a single character".to_string(),
+                                ))
+                            }
+                        }
+                    }
                 };
                 stack.push(result);
             }
@@ -2209,6 +2251,60 @@ fn like_match(text: &str, pattern: &str) -> bool {
     pi == p.len()
 }
 
+/// `LIKE` matching with an `ESCAPE` character, per SQLite. Identical to
+/// [`like_match`] except that `escape` immediately before a `%`, `_`, or the
+/// escape character itself makes that character a **literal** (matched
+/// case-insensitively) rather than a wildcard — so `'100%' LIKE '100\%'
+/// ESCAPE '\'` is true and matches only a trailing percent sign.
+fn like_match_escape(text: &str, pattern: &str, escape: char) -> bool {
+    let t: Vec<char> = text.chars().collect();
+    let p: Vec<char> = pattern.chars().collect();
+
+    let (mut ti, mut pi) = (0usize, 0usize);
+    let (mut star_pi, mut star_ti) = (usize::MAX, 0usize);
+
+    // `chars_eq` folds ASCII/Unicode case exactly as the wildcard-free path does.
+    let chars_eq = |a: char, b: char| a.to_lowercase().next() == b.to_lowercase().next();
+
+    while ti < t.len() {
+        if pi + 1 < p.len() && p[pi] == escape {
+            // Escaped literal: the character after `escape` must match verbatim.
+            if chars_eq(p[pi + 1], t[ti]) {
+                ti += 1;
+                pi += 2;
+            } else if star_pi != usize::MAX {
+                star_ti += 1;
+                ti = star_ti;
+                pi = star_pi + 1;
+            } else {
+                return false;
+            }
+        } else if pi < p.len() && p[pi] == '%' {
+            // `%` matches zero or more; record the backtrack point.
+            star_pi = pi;
+            pi += 1;
+            star_ti = ti;
+        } else if pi < p.len() && (p[pi] == '_' || chars_eq(p[pi], t[ti])) {
+            ti += 1;
+            pi += 1;
+        } else if star_pi != usize::MAX {
+            star_ti += 1;
+            ti = star_ti;
+            pi = star_pi + 1;
+        } else {
+            return false;
+        }
+    }
+
+    // Only trailing `%` can match the empty suffix; an escaped literal or `_`
+    // still demands a character, so the pattern fails to consume fully.
+    while pi < p.len() && p[pi] == '%' {
+        pi += 1;
+    }
+
+    pi == p.len()
+}
+
 /// Try to match a GLOB character class `[...]` in `p` starting at `p[start]`
 /// (which must be `'['`) against `ch`. Returns `Some((matched, after))` where
 /// `after` is the pattern index just past the closing `']'`; or `None` if there
@@ -3418,6 +3514,23 @@ mod tests {
     }
 
     #[test]
+    fn test_like_match_escape() {
+        // Escaped `%`/`_` become literals; unescaped ones stay wildcards.
+        assert!(like_match_escape("a%b", "a#%b", '#'));
+        assert!(!like_match_escape("100x", "100#%", '#'));
+        assert!(like_match_escape("a_b", "a#_b", '#'));
+        assert!(!like_match_escape("axb", "a#_b", '#'));
+        // Literal escape then a real wildcard.
+        assert!(like_match_escape("50%off", "50#%%", '#'));
+        // The escape character escaping itself.
+        assert!(like_match_escape("a/b", "a//b", '/'));
+        // Plain wildcards still work with an escape char defined.
+        assert!(like_match_escape("anything", "%", '#'));
+        // Case-insensitive literal match, like the wildcard-free path.
+        assert!(like_match_escape("A%C", "a#%c", '#'));
+    }
+
+    #[test]
     fn test_float_arithmetic() {
         let mut b = InMemoryBackend::new();
         let r = execute(&prog(vec![
@@ -3664,7 +3777,7 @@ mod tests {
             Instruction::BeginRow,
             Instruction::LoadConst(null()),
             Instruction::LoadConst(text("%")),
-            Instruction::Like,
+            Instruction::Like(false),
             Instruction::EmitColumn("r".to_string()),
             Instruction::EmitRow,
             Instruction::Halt,

@@ -1312,6 +1312,39 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT id, substr(s,2,-1) AS a, substr(s,0) AS b FROM t ORDER BY id",
     },
+    // ---- Lane 2: LIKE … ESCAPE ------------------------------------------
+    // The escape character makes a following `%`/`_`/itself a literal. We use
+    // `#`/`/` (not backslash) as the escape so the string lexer doesn't touch
+    // the pattern literal.
+    Case {
+        id: "like_escape_literal_wildcards",
+        setup: &["CREATE TABLE t (id INTEGER)", "INSERT INTO t VALUES (1)"],
+        query: "SELECT ('a%b' LIKE 'a#%b' ESCAPE '#') AS a, \
+                ('100x' LIKE '100#%' ESCAPE '#') AS b, \
+                ('a_b' LIKE 'a#_b' ESCAPE '#') AS c, \
+                ('axb' LIKE 'a#_b' ESCAPE '#') AS d, \
+                ('50%off' LIKE '50#%%' ESCAPE '#') AS e, \
+                ('a/b' LIKE 'a//b' ESCAPE '/') AS f FROM t",
+    },
+    // NOT LIKE (with and without ESCAPE) inverts the match; NULL stays NULL.
+    Case {
+        id: "not_like_and_null",
+        setup: &["CREATE TABLE t (id INTEGER)", "INSERT INTO t VALUES (1)"],
+        query: "SELECT ('abc' NOT LIKE 'x%') AS a, ('abc' NOT LIKE 'a%') AS b, \
+                ('a%c' NOT LIKE 'a#%c' ESCAPE '#') AS c, \
+                ('abc' NOT LIKE 'a#%c' ESCAPE '#') AS d, \
+                (NULL LIKE 'x') AS e, (NULL NOT LIKE 'x' ESCAPE '#') AS f FROM t",
+    },
+    // Per-row LIKE ESCAPE over a column: match rows whose code contains a
+    // literal percent sign.
+    Case {
+        id: "like_escape_per_row",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, code TEXT)",
+            "INSERT INTO t VALUES (1,'10%'),(2,'10x'),(3,'a%b')",
+        ],
+        query: "SELECT id FROM t WHERE code LIKE '%#%%' ESCAPE '#' ORDER BY id",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but

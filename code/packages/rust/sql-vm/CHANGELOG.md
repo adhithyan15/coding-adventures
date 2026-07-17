@@ -3,6 +3,21 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.20] - Unreleased
+
+### Added
+
+- `Instruction::LikeEscape(negated)` implements `LIKE … ESCAPE` via
+  `like_match_escape`: the escape character before a `%`, `_`, or itself makes
+  that character a literal.
+
+### Fixed
+
+- **`NOT LIKE` was inverted** — the `negated` flag was dropped, so `NOT LIKE`
+  behaved like `LIKE`. `Instruction::Like` now carries the flag and both LIKE
+  instructions apply a NULL-aware inversion (`NULL` stays `NULL`;
+  `matched ^ negated` otherwise).
+
 ## [0.4.19] - Unreleased
 
 ### Fixed
