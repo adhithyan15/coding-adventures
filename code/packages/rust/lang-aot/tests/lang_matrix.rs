@@ -2885,6 +2885,32 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("00042"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // COBOL-60 — integer arithmetic (PL09 step 4, PR2). Numeric items are now
+    // scaled `i64` slots, so `ADD`/`MULTIPLY`/`SUBTRACT` lower to native `add` /
+    // `mul` / `sub` on the slot, the result reduced to the field (magnitude, low
+    // `int_digits` digits kept), and `DISPLAY` renders the slot through the
+    // fixed-width digit helper. Here R starts 0: `+7 = 7`, `×3 = 21`, `−1 = 20`,
+    // shown as the two-digit field `20`. This proves the value survives the
+    // store→load round-trip through the slot across three verbs, on every backend
+    // that runs the shared integer-arithmetic + digit-print substrate.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  R  PIC 9(2) VALUE 0.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     ADD 7 TO R.\n\
+               000000     MULTIPLY 3 BY R.\n\
+               000000     SUBTRACT 1 FROM R.\n\
+               000000     DISPLAY R.\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("20"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses
