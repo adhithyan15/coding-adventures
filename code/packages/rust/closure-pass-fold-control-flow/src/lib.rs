@@ -1416,17 +1416,22 @@ fn fold_while_statement(s: &WhileStatement, st: &mut FoldState) -> Statement {
     let body = fold_statement(&s.body, st);
     match literal_truthy(&test) {
         Some(false) => {
-            // A `while (false)` loop never runs — its body is discarded.
-            // Tombstone the body so its span stays auditable.
+            // A `while (false)` loop never runs — its body is discarded. But a
+            // hoisted body `var` still hoists to the enclosing function scope,
+            // so it must be EXTRACTED, not dropped: `while(false){var x=1}` →
+            // `var x;` (dropping `x` was a miscompile — `typeof x` would flip
+            // from "undefined" to a ReferenceError). A body with no hoisted
+            // `var` collapses to `;`. Same reversed-order extraction as the dead
+            // `for`-loop; `while` has no header, so no init to append.
             let discarded = [statement_cv(&body)];
             st.record_fold_deleting(
                 &s.cv,
                 &discarded,
                 "folded-branch",
                 "while (<falsy literal>) { … }",
-                ";",
+                "<hoisted var(s)>;",
             );
-            Statement::empty_statement(EmptyStatement { cv: s.cv.clone() })
+            extract_dead_loop_vars(&body, None, &s.cv)
         }
         // `while (true)` could loop forever — don't fold to
         // EmptyStatement (semantics differ: an infinite loop is
@@ -1440,86 +1445,134 @@ fn fold_while_statement(s: &WhileStatement, st: &mut FoldState) -> Statement {
     }
 }
 
-/// Does the never-run body of a dead loop carry a `var` binding that *hoists*
-/// to the enclosing function scope? A `var` (unlike a `let`/`const`) is
-/// function-scoped, so even when the loop that contains it never executes the
-/// binding stays observable — `typeof x === "undefined"` rather than a
-/// `ReferenceError`. If the collapse dropped such a `var`, that would be a
-/// miscompile (`for(;false;){var x=1}` must not lose `x`).
+/// Collect, in source (traversal) order, the names of every `var` binding that
+/// hoists out of `stmt` — the dead body of a removed loop. The coverage mirrors
+/// [`body_has_hoistable_var`] exactly (every binding-transparent construct a
+/// `var` can hide in), but pushes each declarator's name instead of answering a
+/// bool. This is what lets a dead loop with hoisted `var`s collapse to a bare
+/// `var …;` declaration instead of being declined or — worse — dropped.
 ///
-/// This is a **fail-safe soundness gate**: it must never answer `false` when a
-/// hoistable `var` is actually present. It therefore walks *every*
-/// binding-transparent construct a `var` can hide in — blocks, both `if` arms,
-/// all loop bodies (`while`/`do`/`for`/`for-in`/`for-of`) **and their `var`
-/// headers**, labeled bodies, `switch` cases, `try` block/handler/finalizer,
-/// and `with` bodies — and treats a genuine leaf (expression / `return` /
-/// `break` / …) as var-free. The `TaggedStatement` match is **total** (no
-/// wildcard arm), so a future statement variant is a compile error here rather
-/// than a silent false-negative.
-///
-/// A nested `function` body is its own scope and is deliberately *not*
-/// descended: Closure drops a block-scoped `function` when it removes the dead
-/// loop (`for(;false;){function g(){}}` → nothing), so ignoring it is
-/// byte-identical and not a hoist hazard.
-fn body_has_hoistable_var(stmt: &Statement) -> bool {
+/// `BindingTarget` in this AST is only `Identifier` (destructuring patterns are
+/// declined at the bridge and never reach a pass), so every declarator yields
+/// exactly one name and collection never has to bail out.
+fn collect_hoistable_vars(stmt: &Statement, out: &mut Vec<Identifier>) {
     match stmt {
-        // A `var` declaration is the hazard; `let`/`const`/`class`/`function`/
-        // `import`/`export` are block-scoped (or dropped with the loop).
-        Statement::Declaration(Declaration::VariableDeclaration(v)) => v.kind == VarKind::Var,
-        Statement::Declaration(_) => false,
+        Statement::Declaration(Declaration::VariableDeclaration(v)) if v.kind == VarKind::Var => {
+            collect_var_decl_names(v, out);
+        }
+        Statement::Declaration(_) => {}
         Statement::Tagged(t) => match t {
-            // Binding-transparent compound statements — recurse into every
-            // sub-statement (and any `var` loop header).
-            TaggedStatement::BlockStatement(b) => b.body.iter().any(body_has_hoistable_var),
-            TaggedStatement::IfStatement(i) => {
-                body_has_hoistable_var(&i.consequent)
-                    || i.alternate.as_deref().is_some_and(body_has_hoistable_var)
+            TaggedStatement::BlockStatement(b) => {
+                b.body.iter().for_each(|s| collect_hoistable_vars(s, out))
             }
-            TaggedStatement::WhileStatement(w) => body_has_hoistable_var(&w.body),
-            TaggedStatement::DoWhileStatement(d) => body_has_hoistable_var(&d.body),
+            TaggedStatement::IfStatement(i) => {
+                collect_hoistable_vars(&i.consequent, out);
+                if let Some(a) = i.alternate.as_deref() {
+                    collect_hoistable_vars(a, out);
+                }
+            }
+            TaggedStatement::WhileStatement(w) => collect_hoistable_vars(&w.body, out),
+            TaggedStatement::DoWhileStatement(d) => collect_hoistable_vars(&d.body, out),
             TaggedStatement::ForStatement(f) => {
-                for_init_has_hoistable_var(f.init.as_ref()) || body_has_hoistable_var(&f.body)
+                collect_for_init_names(f.init.as_ref(), out);
+                collect_hoistable_vars(&f.body, out);
             }
             TaggedStatement::ForInStatement(f) => {
-                for_init_has_hoistable_var(Some(&f.left)) || body_has_hoistable_var(&f.body)
+                collect_for_init_names(Some(&f.left), out);
+                collect_hoistable_vars(&f.body, out);
             }
             TaggedStatement::ForOfStatement(f) => {
-                for_init_has_hoistable_var(Some(&f.left)) || body_has_hoistable_var(&f.body)
+                collect_for_init_names(Some(&f.left), out);
+                collect_hoistable_vars(&f.body, out);
             }
-            TaggedStatement::LabeledStatement(l) => body_has_hoistable_var(&l.body),
-            TaggedStatement::WithStatement(w) => body_has_hoistable_var(&w.body),
+            TaggedStatement::LabeledStatement(l) => collect_hoistable_vars(&l.body, out),
+            TaggedStatement::WithStatement(w) => collect_hoistable_vars(&w.body, out),
             TaggedStatement::SwitchStatement(s) => s
                 .cases
                 .iter()
-                .any(|c| c.consequent.iter().any(body_has_hoistable_var)),
+                .for_each(|c| c.consequent.iter().for_each(|s| collect_hoistable_vars(s, out))),
             TaggedStatement::TryStatement(tr) => {
-                tr.block.body.iter().any(body_has_hoistable_var)
-                    || tr
-                        .handler
-                        .as_ref()
-                        .is_some_and(|h| h.body.body.iter().any(body_has_hoistable_var))
-                    || tr
-                        .finalizer
-                        .as_ref()
-                        .is_some_and(|f| f.body.iter().any(body_has_hoistable_var))
+                tr.block.body.iter().for_each(|s| collect_hoistable_vars(s, out));
+                if let Some(h) = &tr.handler {
+                    h.body.body.iter().for_each(|s| collect_hoistable_vars(s, out));
+                }
+                if let Some(f) = &tr.finalizer {
+                    f.body.iter().for_each(|s| collect_hoistable_vars(s, out));
+                }
             }
-            // Genuine leaf statements introduce no binding.
             TaggedStatement::ExpressionStatement(_)
             | TaggedStatement::ReturnStatement(_)
             | TaggedStatement::BreakStatement(_)
             | TaggedStatement::ContinueStatement(_)
             | TaggedStatement::ThrowStatement(_)
             | TaggedStatement::EmptyStatement(_)
-            | TaggedStatement::DebuggerStatement(_) => false,
+            | TaggedStatement::DebuggerStatement(_) => {}
         },
     }
 }
 
-/// A `for` / `for-in` / `for-of` header binding hoists to function scope iff it
-/// is a `var` declaration. `let`/`const` headers are loop-scoped and an
-/// expression head introduces no binding, so neither is a hoist hazard.
-fn for_init_has_hoistable_var(init: Option<&ForInit>) -> bool {
-    matches!(init, Some(ForInit::VariableDeclaration(v)) if v.kind == VarKind::Var)
+/// Push each declarator name of a `var` declaration (in order).
+fn collect_var_decl_names(v: &VariableDeclaration, out: &mut Vec<Identifier>) {
+    for d in &v.declarations {
+        let BindingTarget::Identifier(id) = &d.id;
+        out.push(id.clone());
+    }
+}
+
+/// A nested `for`/`for-in`/`for-of` header var (`for(var k in o)`) hoists too;
+/// collect its names. `let`/`const` headers and expression heads bind nothing.
+fn collect_for_init_names(init: Option<&ForInit>, out: &mut Vec<Identifier>) {
+    if let Some(ForInit::VariableDeclaration(v)) = init {
+        if v.kind == VarKind::Var {
+            collect_var_decl_names(v, out);
+        }
+    }
+}
+
+/// Build the declaration that a dead loop leaves behind after its body and
+/// header vars are hoisted out — matching the reference Closure Compiler.
+///
+/// `body` is the never-run loop body; `for_init` is the `for` header (its `var`
+/// declarators run once at entry and are kept **with** their initializers). The
+/// emitted `var` declares, in this exact order:
+///
+///   REVERSE(body-hoisted var names, initializers stripped) ++ (for-init `var`
+///   declarators, original order, initializers kept)
+///
+/// e.g. `for(var i=0;false;){var y=2;var z=3}` → `var z,y,i=0;`. The reversal of
+/// the body names, and the appended-in-order kept init declarators, are both
+/// what Closure emits. Returns an `EmptyStatement` when nothing hoists (the
+/// dead loop had no `var`s and no `var` header).
+fn extract_dead_loop_vars(
+    body: &Statement,
+    for_init: Option<&ForInit>,
+    cv: &Option<String>,
+) -> Statement {
+    let mut body_names: Vec<Identifier> = Vec::new();
+    collect_hoistable_vars(body, &mut body_names);
+    body_names.reverse();
+    let mut declarations: Vec<VariableDeclarator> = body_names
+        .into_iter()
+        .map(|id| VariableDeclarator {
+            cv: None,
+            id: BindingTarget::Identifier(id),
+            init: None,
+        })
+        .collect();
+    if let Some(ForInit::VariableDeclaration(v)) = for_init {
+        if v.kind == VarKind::Var {
+            declarations.extend(v.declarations.iter().cloned());
+        }
+    }
+    if declarations.is_empty() {
+        Statement::empty_statement(EmptyStatement { cv: cv.clone() })
+    } else {
+        Statement::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+            cv: cv.clone(),
+            kind: VarKind::Var,
+            declarations,
+        }))
+    }
 }
 
 /// Is a `let`/`const` `for`-header safe to *drop* when its loop is dead? Only
@@ -1607,36 +1660,49 @@ fn fold_for_statement(s: &ForStatement, st: &mut FoldState) -> Statement {
             Some(ForInit::VariableDeclaration(v))
                 if v.kind != VarKind::Var && !lexical_header_is_droppable(v)
         );
-        if !lexical_header_unsafe && !body_has_hoistable_var(&body) {
-            let discarded = [statement_cv(&body)];
-            st.record_fold_deleting(
-                &s.cv,
-                &discarded,
-                "folded-branch",
-                "for (…; <falsy literal>; …) { … }",
-                "<init>;",
-            );
-            return match init {
-                None => Statement::empty_statement(EmptyStatement { cv: s.cv.clone() }),
-                Some(ForInit::Expression(e)) => {
-                    Statement::expression_statement(ExpressionStatement {
-                        cv: s.cv.clone(),
-                        expression: e,
-                    })
-                }
-                Some(ForInit::VariableDeclaration(v)) => {
-                    if v.kind == VarKind::Var {
-                        // A `var` hoists to the enclosing function scope, so the
-                        // binding (and its initializer's effect) survives the loop.
-                        Statement::Declaration(Declaration::VariableDeclaration(v))
-                    } else {
-                        // A literal-init `let`/`const` in the for-header is scoped
-                        // to the loop, so dropping the loop removes it with no
-                        // observable effect.
-                        Statement::empty_statement(EmptyStatement { cv: s.cv.clone() })
+        if !lexical_header_unsafe {
+            // A hoisted `var` inside the never-run body still hoists to the
+            // enclosing function scope, so it must survive the loop's removal.
+            // We EXTRACT those bindings (Closure does the same) rather than drop
+            // them: `for(;false;){var x=1}` → `var x;`,
+            // `for(var i=0;false;){var y=2}` → `var y,i=0;` (see
+            // `extract_dead_loop_vars` for the exact reversed-body-then-init
+            // order).
+            //
+            // The one shape we still DECLINE: an *expression* init combined with
+            // a hoisted body `var` — that is two statements (`var x; e;`), which
+            // a single fold return can't represent, so we keep the loop (valid,
+            // no binding dropped). An expression init with no body `var`
+            // collapses to the init expression (`for(a();false;) …` → `a();`),
+            // which runs once at entry.
+            let mut body_names = Vec::new();
+            collect_hoistable_vars(&body, &mut body_names);
+            let expr_init_with_body_vars = matches!(&init, Some(ForInit::Expression(_)))
+                && !body_names.is_empty();
+            if !expr_init_with_body_vars {
+                let discarded = [statement_cv(&body)];
+                st.record_fold_deleting(
+                    &s.cv,
+                    &discarded,
+                    "folded-branch",
+                    "for (…; <falsy literal>; …) { … }",
+                    "<hoisted var(s)> / <init>;",
+                );
+                return match &init {
+                    // Expression init (no body vars): the init runs once, kept.
+                    Some(ForInit::Expression(e)) => {
+                        Statement::expression_statement(ExpressionStatement {
+                            cv: s.cv.clone(),
+                            expression: e.clone(),
+                        })
                     }
-                }
-            };
+                    // `None` or `var`/`let`/`const` init: hoist the body `var`s
+                    // out and, for a `var` header, append its declarators (kept
+                    // with initializers). A `let`/`const` header is loop-scoped
+                    // and contributes nothing.
+                    _ => extract_dead_loop_vars(&body, init.as_ref(), &s.cv),
+                };
+            }
         }
         // Declined — fall through to rebuild the loop with the folded test.
     }
@@ -2723,11 +2789,33 @@ mod tests {
         );
     }
 
+    /// Assert the folded statement is a `var` declaration binding exactly
+    /// `names` (in order), each with its initializer STRIPPED (a hoisted body
+    /// var extracted from a dead loop). Panics with the actual shape otherwise.
+    fn assert_hoisted_var_names(stmt: &Statement, names: &[&str]) {
+        match stmt {
+            Statement::Declaration(Declaration::VariableDeclaration(v)) => {
+                assert_eq!(v.kind, VarKind::Var, "expected a `var` declaration; got {:?}", v.kind);
+                let got: Vec<(&str, bool)> = v
+                    .declarations
+                    .iter()
+                    .map(|d| {
+                        let coding_adventures_javascript_ast::BindingTarget::Identifier(id) = &d.id;
+                        (id.name.as_str(), d.init.is_none())
+                    })
+                    .collect();
+                let want: Vec<(&str, bool)> = names.iter().map(|n| (*n, true)).collect();
+                assert_eq!(got, want, "hoisted var names/stripped mismatch");
+            }
+            other => panic!("expected an extracted `var` declaration for {names:?}; got {other:?}"),
+        }
+    }
+
     /// `for (; false; ) { var x = 1; }` — a body `var` hoists to the enclosing
-    /// function scope and stays observable. This pass does not yet extract it,
-    /// so it DECLINES the collapse and keeps the loop (security-review Finding 2).
+    /// function scope, so the dead loop EXTRACTS it (initializer stripped, since
+    /// the body never runs): `var x;`. Dropping it would be a miscompile.
     #[test]
-    fn for_false_body_hoisted_var_keeps_loop() {
+    fn for_false_body_hoisted_var_extracted() {
         use coding_adventures_javascript_ast::{
             BindingTarget, VariableDeclaration, VariableDeclarator,
         };
@@ -2748,12 +2836,9 @@ mod tests {
             body: vec![var_x],
         }));
         let f = for_stmt(None, Some(boolean(false, None)), body);
-        let (out, _, _changed, _) = run_pass(program().with_body(vec![ProgramItem::Statement(f)]));
-        assert!(
-            matches!(first_stmt(&out), Statement::Tagged(TaggedStatement::ForStatement(_))),
-            "for(;false;){{var x=1}} must keep the loop (hoistable body var); got {:?}",
-            first_stmt(&out)
-        );
+        let (out, _, changed, _) = run_pass(program().with_body(vec![ProgramItem::Statement(f)]));
+        assert!(changed);
+        assert_hoisted_var_names(first_stmt(&out), &["x"]);
     }
 
     /// `for (; false; ) { function g(){} }` — a block-scoped `function` is *not*
@@ -2815,10 +2900,10 @@ mod tests {
     }
 
     /// `for (; false; ) { try {} finally { var x = 1; } }` — the hoistable `var`
-    /// hides in a `finally` block. The detector must descend into `try` bodies,
-    /// so the collapse is DECLINED and the loop kept (security-review Finding 3).
+    /// hides in a `finally` block; the exhaustive collector descends into `try`
+    /// bodies, so it is EXTRACTED: `var x;`.
     #[test]
-    fn for_false_var_in_finally_keeps_loop() {
+    fn for_false_var_in_finally_extracted() {
         use coding_adventures_javascript_ast::TryStatement;
         let try_stmt = Statement::Tagged(TaggedStatement::TryStatement(TryStatement {
             cv: None,
@@ -2828,19 +2913,16 @@ mod tests {
         }));
         let body = Statement::Tagged(TaggedStatement::BlockStatement(blk(vec![try_stmt])));
         let f = for_stmt(None, Some(boolean(false, None)), body);
-        let (out, _, _changed, _) = run_pass(program().with_body(vec![ProgramItem::Statement(f)]));
-        assert!(
-            matches!(first_stmt(&out), Statement::Tagged(TaggedStatement::ForStatement(_))),
-            "for(;false;){{try{{}}finally{{var x=1}}}} must keep the loop (var in finally); got {:?}",
-            first_stmt(&out)
-        );
+        let (out, _, changed, _) = run_pass(program().with_body(vec![ProgramItem::Statement(f)]));
+        assert!(changed);
+        assert_hoisted_var_names(first_stmt(&out), &["x"]);
     }
 
     /// `for (; false; ) for (var i = 0; c; ) {}` — the hoistable `var i` hides in
-    /// a nested `for`-header. The detector must inspect nested loop headers, so
-    /// the collapse is DECLINED and the loop kept (security-review Finding 3).
+    /// a nested `for`-header; the collector inspects nested loop headers, so it
+    /// is EXTRACTED (initializer stripped): `var i;`.
     #[test]
-    fn for_false_var_in_nested_for_header_keeps_loop() {
+    fn for_false_var_in_nested_for_header_extracted() {
         let inner = Statement::for_statement(ForStatement {
             cv: None,
             init: Some(var_init(VarKind::Var, "i")),
@@ -2849,10 +2931,87 @@ mod tests {
             body: Box::new(Statement::empty_statement(EmptyStatement { cv: None })),
         });
         let f = for_stmt(None, Some(boolean(false, None)), inner);
-        let (out, _, _changed, _) = run_pass(program().with_body(vec![ProgramItem::Statement(f)]));
+        let (out, _, changed, _) = run_pass(program().with_body(vec![ProgramItem::Statement(f)]));
+        assert!(changed);
+        assert_hoisted_var_names(first_stmt(&out), &["i"]);
+    }
+
+    /// `for (; false; ) { var x = 1; var y = 2; }` — body vars are extracted in
+    /// REVERSED source order (Closure's emission): `var y,x;`.
+    #[test]
+    fn for_false_body_vars_extracted_reversed() {
+        let body = Statement::Tagged(TaggedStatement::BlockStatement(blk(vec![
+            var_decl_stmt("x"),
+            var_decl_stmt("y"),
+        ])));
+        let f = for_stmt(None, Some(boolean(false, None)), body);
+        let (out, _, changed, _) = run_pass(program().with_body(vec![ProgramItem::Statement(f)]));
+        assert!(changed);
+        assert_hoisted_var_names(first_stmt(&out), &["y", "x"]);
+    }
+
+    /// `for (var i = 0; false; ) { var y = 2; }` — reversed body vars first, then
+    /// the for-init `var` declarators appended in order WITH initializers:
+    /// `var y, i = 0;` (only the `i=0` keeps its initializer).
+    #[test]
+    fn for_false_body_var_plus_init_var_extracted() {
+        let body =
+            Statement::Tagged(TaggedStatement::BlockStatement(blk(vec![var_decl_stmt("y")])));
+        let f = for_stmt(Some(var_init(VarKind::Var, "i")), Some(boolean(false, None)), body);
+        let (out, _, changed, _) = run_pass(program().with_body(vec![ProgramItem::Statement(f)]));
+        assert!(changed);
+        match first_stmt(&out) {
+            Statement::Declaration(Declaration::VariableDeclaration(v)) => {
+                assert_eq!(v.declarations.len(), 2);
+                let coding_adventures_javascript_ast::BindingTarget::Identifier(id0) =
+                    &v.declarations[0].id;
+                assert_eq!(id0.name, "y");
+                assert!(v.declarations[0].init.is_none(), "body var y stripped");
+                let coding_adventures_javascript_ast::BindingTarget::Identifier(id1) =
+                    &v.declarations[1].id;
+                assert_eq!(id1.name, "i");
+                assert!(v.declarations[1].init.is_some(), "init var i keeps its initializer");
+            }
+            other => panic!("expected `var y,i=0;`; got {other:?}"),
+        }
+    }
+
+    /// `while (false) { var x = 1; }` — a hoisted body `var` is EXTRACTED, not
+    /// dropped: `var x;`. Dropping it (the prior behavior) was a miscompile.
+    #[test]
+    fn while_false_hoisted_var_extracted() {
+        use coding_adventures_javascript_ast::WhileStatement;
+        let body =
+            Statement::Tagged(TaggedStatement::BlockStatement(blk(vec![var_decl_stmt("x")])));
+        let w = Statement::Tagged(TaggedStatement::WhileStatement(WhileStatement {
+            cv: None,
+            test: boolean(false, None),
+            body: Box::new(body),
+        }));
+        let (out, _, changed, _) = run_pass(program().with_body(vec![ProgramItem::Statement(w)]));
+        assert!(changed);
+        assert_hoisted_var_names(first_stmt(&out), &["x"]);
+    }
+
+    /// `while (false) { f(); }` — no hoisted `var`, so the dead loop collapses to
+    /// `;` (EmptyStatement), as before.
+    #[test]
+    fn while_false_no_var_collapses_to_empty() {
+        use coding_adventures_javascript_ast::WhileStatement;
+        let body = Statement::Tagged(TaggedStatement::BlockStatement(blk(vec![expr_stmt(
+            call_expr("f"),
+            None,
+        )])));
+        let w = Statement::Tagged(TaggedStatement::WhileStatement(WhileStatement {
+            cv: None,
+            test: boolean(false, None),
+            body: Box::new(body),
+        }));
+        let (out, _, changed, _) = run_pass(program().with_body(vec![ProgramItem::Statement(w)]));
+        assert!(changed);
         assert!(
-            matches!(first_stmt(&out), Statement::Tagged(TaggedStatement::ForStatement(_))),
-            "for(;false;)for(var i=0;c;){{}} must keep the loop (var in nested for-header); got {:?}",
+            matches!(first_stmt(&out), Statement::Tagged(TaggedStatement::EmptyStatement(_))),
+            "while(false){{f()}} must collapse to `;`; got {:?}",
             first_stmt(&out)
         );
     }
