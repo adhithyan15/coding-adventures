@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.39 — upper()/lower() are ASCII-only
+
+`upper()` and `lower()` now match SQLite: they case-fold only ASCII letters and
+leave accented / non-Latin characters untouched — `upper('naïve')` is `'NAïVE'`
+and `upper('straße')` is `'STRAßE'`. Two differential-oracle cases; sql-vm 0.4.21.
+
 ## 0.5.38 — LIKE … ESCAPE, and NOT LIKE inversion fix
 
 `X LIKE Y ESCAPE Z` now parses and evaluates: the escape character makes a

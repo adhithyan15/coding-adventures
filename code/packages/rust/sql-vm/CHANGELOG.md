@@ -3,6 +3,15 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.21] - Unreleased
+
+### Fixed
+
+- `UPPER`/`LOWER` are now ASCII-only, matching SQLite's built-ins: only `a`–`z`/
+  `A`–`Z` fold, and accented or non-Latin characters pass through unchanged
+  (`upper('naïve')` → `'NAïVE'`, not `'NAÏVE'`). Previously they used Rust's
+  full-Unicode `to_uppercase`/`to_lowercase`.
+
 ## [0.4.20] - Unreleased
 
 ### Added
