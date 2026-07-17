@@ -1,0 +1,23 @@
+% ============================================================================
+% acids-bases.query.adj — a worked recall over the chemistry acids-bases library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "is sodium hydroxide an acid
+% or a base?": it states no chemistry fact — it only `import`s the grounded table
+% and asks binding queries. The engine resolves each `?` against the
+% `acid_or_base` rows and returns the class + the table's source/locator/trust.
+% The fourth query runs the relation BACKWARD (bind the class `base`, recall a
+% substance in it — lithium_hydroxide sits first among the bases in the table).
+% Vinegar is not in the table, so a recall on it abstains honestly — the engine
+% never invents a class.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli acids-bases.query.adj
+% ============================================================================
+
+import "acids-bases.adj"
+
+? acid_or_base(hydrochloric_acid, $Class)    % expect acid
+? acid_or_base(sodium_hydroxide, $Class)     % expect base
+? acid_or_base(sulfuric_acid, $Class)        % expect acid
+? acid_or_base($S, base)                      % expect lithium_hydroxide — reverse recall into the bases
+? acid_or_base(vinegar, $Class)              % expect abstain — vinegar is not in the table
