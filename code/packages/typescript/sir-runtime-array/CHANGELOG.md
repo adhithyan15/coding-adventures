@@ -2,6 +2,60 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-07-17
+
+This package went from "built but unconsumed" to actually imported —
+`semantic-ir-to-typescript`'s SIR22 codegen (HML01 Stream A, item 7 TS half)
+now wires real call sites into it as `__SirArray`. Auditing this package
+against the equivalent fixes already made in `semantic-ir-to-javascript`'s
+own inlined port of this same logic (that crate's 0.36.0 CHANGELOG entry)
+found the identical latent bugs here, never triggered before because
+nothing called this package yet.
+
+### Fixed
+
+- **`NaN` silently bypassed the linear (1-argument) `indexGet`/`indexSet`
+  bounds check**, causing a silent wrong read and a silently-dropped write.
+  `get(a, r, c)`'s 2-argument bounds check is an AND-form
+  (`r >= 0 && r < nrows(a)`), which correctly falls through to "out of
+  bounds" for `r = NaN` (every relational comparison with `NaN` is `false`,
+  so the whole AND is `false`). `resolvePositions`'s linear path instead had
+  no check at all before this release. `NDArray` index values come from the
+  *compiled program's own runtime arithmetic* (e.g. `0/0`), not just a
+  hand-built edge case. Fixed by validating every resolved position is a
+  real, finite integer once, in a new `assertValidPosition` helper inside
+  `resolvePositions` — the single choke point both `indexGet` and `indexSet`
+  route through — rather than re-deriving a NaN-safe bounds check at each
+  call site.
+- **`range()` silently returned an empty vector instead of erroring on a
+  `NaN` `start`/`stop`/`step`.** Same root cause: the loop condition is
+  `false` on the very first check whenever a bound is `NaN`, so `range`
+  returned a valid-looking `[1, 0]`-shaped empty array with no error. Fixed
+  with an explicit `Number.isFinite` check on all three arguments before the
+  loop runs.
+- **`set(a, r, c, value)`'s bounds check had the same NaN-unsafe OR-form.**
+  Not reachable with an unvalidated `NaN` through any current call path
+  (every caller resolves positions through `assertValidPosition` first), but
+  it is part of this module's exported public surface, so a future direct
+  caller — or a refactor of `indexSet` that skips `resolvePositions` — would
+  silently reintroduce the bug. Fixed by writing the check as the negation
+  of `get`'s AND-form (`!(r >= 0 && ...)`) rather than an OR-form, matching
+  how `get` was already written.
+- **`elementwise(op, a, b)` assumed both operands were already `NDArray`.**
+  `matlab-to-semantic-ir`'s lowering emits a *bare* (unwrapped) scalar
+  operand for `.* ./ .\` and for `* /` when exactly one side is provably
+  scalar (e.g. `A .* 2` — the `2` arrives as a plain number literal, not an
+  `ArrayLit`/scalar-array constructor). Fixed with a new `toArrayValue`
+  coercion, applied to both operands before either is read as `.data`/
+  `.shape`; `elementwise`'s signature widens to `(op, a: number | NDArray, b:
+  number | NDArray)` accordingly.
+
+Ten new regression tests (NaN scalar `indexGet`/`indexSet`, a non-integer
+scalar index, `set`'s direct NaN case, three `range` NaN-bound cases, and
+three bare-number `elementwise` operand cases), each confirmed to fail
+without its fix and pass with it. `npm run build` (`tsc`) and `npm test`
+(`vitest`) both clean.
+
 ## [0.1.0] - 2026-07-14
 
 ### Added

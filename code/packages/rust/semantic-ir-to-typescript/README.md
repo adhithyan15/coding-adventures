@@ -74,6 +74,19 @@ The TypeScript backend accepts these SIR features:
 - `Rationals` (shared with SIR22) — accepted only for `SymRational`
   (`__SirSym.rational(numer, denom)`); no other construct in this backend
   triggers it yet.
+- `NDArrays` / `MatrixOps` / `ArrayColumnMajor` (SIR22) — a compiled
+  MATLAB/Octave program's array/matrix nodes (`ArrayLit`/`Range`/`MatMul`/
+  `ElementwiseOp`/`Transpose`/`IndexGet`/`IndexSet`) construct/consume a
+  real `NDArray` value at runtime via the imported
+  `@coding-adventures/sir-runtime-array` package, bound as `__SirArray`
+  (gated by any of the three features, so a purely-symbolic or purely-OOP
+  module never gains the dependency). `A * A` (matrix product) emits
+  `__SirArray.matmul(A, A)`. The SIR22 "APL addendum" nodes (`Reduce`/
+  `Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/`IndexOf`/
+  `Ravel`/`Catenate`) share these same three features but remain deferred —
+  a dedicated tree walk (`find_unimplemented_sir22_addendum_node`) rejects
+  a module using one of them cleanly rather than reaching an emit-time
+  panic.
 
 It **rejects**:
 

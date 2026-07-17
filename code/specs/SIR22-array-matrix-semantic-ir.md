@@ -283,12 +283,26 @@ is lowered as a `Stmt`-position operation (like `Assign`), not a value-producing
   ordinary feature-flag capability check) so a module using one of the
   nine still fails cleanly rather than reaching an emit-time panic; see
   that crate's `find_unimplemented_sir22_addendum_node`.
-- **TS** (`semantic-ir-to-typescript`) — not yet done: still rejects
-  `NDArrays`/`MatrixOps`/`ArrayColumnMajor` via the plain capability-
-  rejection path (a real `import { ... } from
-  "@coding-adventures/sir-runtime-array"` codegen PR, mirroring the JS
-  backend's call shapes but against the published npm package instead of
-  an inlined port, is a follow-up).
+- **TS** (`semantic-ir-to-typescript`) — **done**: new `match` arms emit
+  calls into the *imported* `@coding-adventures/sir-runtime-array` package
+  (`import * as __SirArray from "@coding-adventures/sir-runtime-array"`,
+  bound as `__SirArray`, gated by `uses_array` — this backend imports
+  published packages rather than inlining runtime helpers, unlike the JS
+  backend's inlined-port model) for the same base cut
+  (`ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/`Transpose`/`IndexGet`/
+  `IndexSet`). `NDArrays`/`MatrixOps`/`ArrayColumnMajor` are in
+  `ACCEPTED_FEATURES`. Wiring this package in surfaced the identical
+  latent NaN-bypass/bare-scalar-operand bugs the JS backend's own inlined
+  port had already found and fixed in its 0.36.0 release — `sir-runtime-array`
+  itself (0.1.0 → 0.2.0) picked up the same four fixes (`resolvePositions`'s
+  `assertValidPosition`, `range`'s `Number.isFinite` guard, `set`'s
+  AND-negation bounds check, `elementwise`'s `toArrayValue` coercion), since
+  this PR is what made the package's dormant code paths reachable for the
+  first time. The SIR22 "APL addendum" nodes below share these same three
+  features but remain deferred — this backend adds the identical dedicated
+  tree-walk check inside `compile()` the JS backend uses, so a module using
+  one of the nine still fails cleanly rather than reaching an emit-time
+  panic; see that crate's own `find_unimplemented_sir22_addendum_node`.
 - **Rust/Go/Python backends**: not required to support this in the first
   wave; they reject modules declaring `NDArrays`/`MatrixOps` per the existing
   capability-rejection path. No code changes required to these backends for

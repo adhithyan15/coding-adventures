@@ -178,7 +178,22 @@ export function get(a: NDArray, r: number, c: number): number | undefined {
  * reason.
  */
 export function set(a: NDArray, r: number, c: number, value: number): void {
-  if (r < 0 || c < 0 || r >= nrows(a) || c >= ncols(a)) {
+  // SECURITY: written as the negation of `get`'s AND-form
+  // (`!(r >= 0 && ...)`), not as an OR-form (`r < 0 || ...`) — under
+  // IEEE-754 those are NOT equivalent for NaN: every relational
+  // comparison with NaN is false, so an OR-form check would have every
+  // branch evaluate false for r=NaN, silently skipping the throw.
+  // `a.data[c * nrows(a) + NaN] = value` would then set a stray,
+  // non-index property on the `Float64Array` rather than writing the
+  // buffer — the exact same silent-write-drop bug `indexSet`'s own fix
+  // (via `resolvePositions`/`assertValidPosition` in `indexing.ts`)
+  // closes for its call path into this function. `set` itself is not
+  // reachable with an unvalidated NaN today (every caller resolves
+  // positions through `assertValidPosition` first), but it is part of
+  // this module's exported public surface, so it stays NaN-safe on its
+  // own rather than relying on every future caller to re-derive that
+  // invariant.
+  if (!(r >= 0 && c >= 0 && r < nrows(a) && c < ncols(a))) {
     throw new Error(`set: index (${r}, ${c}) out of bounds for shape ${JSON.stringify(a.shape)}`);
   }
   a.data[c * nrows(a) + r] = value;
