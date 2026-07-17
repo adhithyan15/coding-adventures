@@ -93,13 +93,14 @@ Following [HML00 §6](HML00-historical-math-languages-roadmap.md)'s breakdown:
   (with `checked_mul`) before allocation (§19.5). No grammar change.
 - **W-22 — the `cas-*` function surface under Wolfram names.** *(in
   progress — see §24.)* Wires the existing `cas-*` crates in one head at a
-  time: `Simplify` (a thin call into `cas-simplify`'s `simplify()`) and
-  `Expand` (a thin call into `cas-simplify`'s `expand()`) are both
-  delivered — each the same function its Macsyma counterpart calls, so the
-  two languages agree on every result this crate can produce. Remaining:
-  `Factor`, `Solve`, `D`, `Integrate`, each its own item — no grammar
-  change for any of them (all ordinary `Head[args]` forms the existing
-  grammar already parses).
+  time: `Simplify` (a thin call into `cas-simplify`'s `simplify()`),
+  `Expand` (a thin call into `cas-simplify`'s `expand()`), `Factor` (a
+  direct call into `symbolic-vm`'s own `factor_handler`), and `D` (a direct
+  call into `symbolic-vm`'s own `differentiate`) are all delivered — each
+  the same function its Macsyma counterpart calls, so the two languages
+  agree on every result this crate can produce. Remaining: `Solve`,
+  `Integrate`, each its own item — no grammar change for any of them (all
+  ordinary `Head[args]` forms the existing grammar already parses).
 
 ## §3 The supported surface (the grammar)
 
@@ -2098,7 +2099,7 @@ it). `ReplaceRepeated` retains its §22.4 hard iteration cap
 (`REPLACE_GROWTH_NODE_CAP`) — the `//.` operator lowers to the very same head, so
 the DoS bounds apply identically whether written as operator or `Head[args]`.
 
-## §24 W-22 the `cas-*` function surface under Wolfram names — `Simplify`, `Expand`, `Factor` (in progress)
+## §24 W-22 the `cas-*` function surface under Wolfram names — `Simplify`, `Expand`, `Factor`, `D` (in progress)
 
 W-22 starts closing §2's previously unnumbered "Future" item: wiring the
 existing `cas-*` algorithm crates under Wolfram's own head names. Unlike
@@ -2187,9 +2188,43 @@ Factor[x^2 - 1]     (* (1 + x) * (-1 + x) *)
 Factor[x + y]       (* x + y — unevaluated, no recognised pattern *)
 ```
 
-### §24.4 Remaining (not yet delivered)
+### §24.4 `D` (delivered)
 
-`Solve`, `D`, `Integrate`, and the rest of §2's original list — each is a
+`D[expr, x]` is a thin call into `symbolic_vm::handlers::differentiate` —
+**the exact pipeline** Macsyma's own `D` already runs via
+`derivative_handler` (`macsyma-runtime`'s own dispatch). Unlike
+`Simplify`/`Expand` (thin calls into the standalone `cas-simplify` crate),
+the differentiation logic lives directly inside `symbolic-vm` itself, same
+as `Factor`; `differentiate` was extracted out of `derivative_handler`'s
+closure body and made `pub` in `symbolic-vm` specifically for this
+cross-language reuse (see that crate's own changelog). No algorithm is
+reimplemented; a test pins both languages' call sites to agree on the same
+input, exactly like `Simplify`/`Expand`/`Factor`'s own parity tests.
+
+`differentiate` applies the standard sum/product/quotient/power/chain
+rules plus the elementary transcendental functions (`Sin`, `Cos`, `Exp`,
+`Log`, `Sqrt`, the inverse and hyperbolic trig functions, …), fully
+recursing `diff` and then running the result back through the VM's `eval`
+so constant folding and any nested rule output collapse into one final
+form — see `symbolic-vm`'s own module docs for the full rule inventory
+(shared, not reimplemented, with Macsyma).
+
+Unlike `Factor` — whose arity check lives inside `factor_handler` itself,
+so the Wolfram wiring needs none of its own — `derivative_handler`'s
+existing arity contract *panics* on the wrong argument count (a genuine
+internal invariant for `symbolic-vm`'s own dispatch table, not a fail-soft
+contract). Since `D` still needs Wolfram's usual "leave it unevaluated"
+behaviour, `D`'s wrapper validates the shape itself before calling through:
+exactly two arguments, and the second must be a bare symbol.
+
+```
+D[x^3, x]      (* 3 * x^2 *)
+D[x^2, 2]      (* x^2 unevaluated — second argument isn't a symbol *)
+```
+
+### §24.5 Remaining (not yet delivered)
+
+`Solve`, `Integrate`, and the rest of §2's original list — each is a
 separate future item, no grammar change required for any of them (all are
 ordinary `Head[args]` forms the existing grammar already parses).
 

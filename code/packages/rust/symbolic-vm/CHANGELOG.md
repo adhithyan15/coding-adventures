@@ -1,5 +1,24 @@
 # Changelog — symbolic-vm (Rust)
 
+## [0.20.2] — 2026-07-16
+
+### Changed
+
+- `handlers::derivative_handler`'s differentiate-then-simplify logic is now
+  a `pub` free function, `handlers::differentiate(vm, f, x)`. No behavior
+  change for `derivative_handler` itself (it now just calls the extracted
+  function) — this only widens visibility so other language runtimes
+  sharing this crate's `VM`/`IRNode` types can reuse the exact same
+  differentiation pipeline Macsyma's own `D` already runs, rather than
+  reimplementing or duplicating it. Unlike `factor_handler` (made `pub`
+  directly, since it already did its own arity check), `derivative_handler`
+  itself still panics on the wrong argument count — a real internal
+  invariant for this crate's own dispatch table — so callers with a
+  fail-soft contract (leave the form unevaluated instead of panicking)
+  validate arity themselves and call `differentiate` with the unpacked
+  `f`/`x` instead of the whole `IRApply`. First consumer: `wolfram-runtime`'s
+  `D[expr, x]` wiring (W-22, see that crate's own changelog).
+
 ## [0.20.1] — 2026-07-12
 
 ### Changed
