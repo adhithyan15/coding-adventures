@@ -160,7 +160,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 172 packages present in at least ten implementation languages need 343
+The 172 packages present in at least ten implementation languages need 341
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -169,8 +169,8 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Elixir | 0 | Complete; `python-parser` uses the shared grammar-driven frontend |
 | Lua | 0 | Complete; paired data-structure/storage wave |
 | Perl | 0 | Complete; paired data-structure/storage wave |
-| C# | 17 | Move with F# |
-| F# | 17 | Move with C# |
+| C# | 16 | Move with F# |
+| F# | 16 | Move with C# |
 | Haskell | 34 | Dependency-shaped compression, graphics, ML, and protocol waves |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
@@ -228,6 +228,13 @@ execution engine into incremental and pipelined byte-stream entry points with
 binary-safe response conversion. It moves the package from 11 to 13
 implementation lanes and closes the remaining high-consensus gaps in both Lua
 and Perl.
+
+The first paired C#/F# slice is complete: `wasm-module-encoder` now has native
+implementations in both lanes, built on their existing `wasm-leb128` and
+`wasm-types` packages. Parser round-trip tests cover all WebAssembly 1.0 module
+sections and import descriptor validation. The package now spans 12 lanes,
+reduces each paired high-consensus gap to 16, and unlocks the later
+`brainfuck-wasm-compiler` and `nib-wasm-compiler` ports.
 
 Recommended family order:
 
