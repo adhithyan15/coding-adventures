@@ -1,5 +1,25 @@
 # Changelog — sqlite-file
 
+## 0.15.0 - Unreleased
+
+**Phase F (writer): tree growth — a table can now exceed one leaf.** When a
+table's rows don't fit on a single leaf page, the writer splits them into
+several data leaves under an **interior table b-tree page** (type `0x05`) that
+becomes the table's root. `encode_table_pages` was generalised to
+`encode_table_btree`, which returns the table's whole page list (root first):
+it partitions the rowid-ordered cells into leaves by cumulative on-page
+footprint, allocates the interior page + leaves (+ each leaf's overflow pages)
+contiguously from the root page, and builds the interior divider cells
+(`[u32-be left-child][varint largest-rowid-key]`) plus the right-most-child
+pointer via the new `pack_interior_page`. A table that still fits on one leaf
+keeps the byte-identical flat layout. Gates: an own-reader round-trip over ~300
+rows (asserting the root is an interior `0x05` page) and a **real bundled-C
+SQLite** cross-check — a 500-row table passes `PRAGMA integrity_check` (`"ok"`)
+and reads back in full and in rowid order. Still **one interior level**: a table
+with more leaves than fit on a single interior page is rejected with
+`Unsupported` (multi-level trees are a later rung), as is page-1 `sqlite_schema`
+overflow.
+
 ## 0.14.0 - Unreleased
 
 **Phase F (writer): multi-table databases.** New
