@@ -63,7 +63,8 @@ level is "reached" only when its gate (§4) holds across the whole chain.
 - **T1 Runtime — GC.** Conservative → **precise** GC: compiler emits stack maps /
   GC-root descriptors at safepoints; the collector uses them; then generational,
   then concurrent. Biggest single robustness lever. *(Depends on L1 substrate so
-  the value model is uniform.)*
+  the value model is uniform.)* **Detailed spec:**
+  [`AOT00-T1-precise-gc.md`](AOT00-T1-precise-gc.md).
 - **T2 Runtime — exceptions & unwinding.** Structured throw/catch, unwinding
   tables, stack traces; supersedes traps.
 - **T3 Runtime — concurrency.** Threads, safepoints, memory model, a concurrent-GC
