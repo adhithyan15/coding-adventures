@@ -93,6 +93,29 @@ pub unsafe extern "C" fn __gc_collect_roots(roots: *const i64, count: i64) -> i6
     with_heap(|h| h.collect(&root_words).freed as i64)
 }
 
+/// Mark from every candidate pointer in the memory region `[base, base + len)`,
+/// then sweep. Returns the number of objects reclaimed.
+///
+/// This is the region-scan primitive a native runtime uses to root from memory the
+/// collector must scan itself — a block of spilled callee-saved registers, or the
+/// machine call stack from the current stack pointer to the thread's stack base.
+/// The argument-less native collect/safepoint entry points (a follow-up) discover
+/// that stack range and hand it here.
+///
+/// # Safety
+///
+/// `base` must point to `len` readable bytes (or be null with `len == 0`). The
+/// generated caller (or a test) upholds this.
+#[no_mangle]
+pub unsafe extern "C" fn __gc_collect_region(base: *const u8, len: i64) -> i64 {
+    if base.is_null() || len <= 0 {
+        // No region → no roots → free everything (matches `collect(&[])`).
+        return with_heap(|h| h.collect(&[]).freed as i64);
+    }
+    // SAFETY: caller guarantees `[base, base+len)` is readable for `len` bytes.
+    with_heap(|h| unsafe { h.collect_region(base, len as usize) }.freed as i64)
+}
+
 /// Current live payload bytes.
 #[no_mangle]
 pub extern "C" fn __gc_live_bytes() -> i64 {
@@ -150,11 +173,30 @@ mod tests {
             assert_eq!(*(a as *mut i64), 0x1122_3344_5566_7788u64 as i64);
         }
 
-        // Collect with no roots frees the rest.
+        // __gc_collect_region: root from a raw memory region (as a native runtime
+        // would scan a register block / stack slice). The region names the two live
+        // objects `a` and `c`; `d` has no candidate word in it, so only `d` is
+        // reclaimed. (The region must name *every* live object — a real stack scan
+        // sees all of them; here we list them explicitly.)
+        let c = __gc_alloc(16);
+        let d = __gc_alloc(16);
+        assert_eq!(__gc_live_bytes(), 48); // a(16) + c(16) + d(16)
+        let region: [i64; 4] = [0x1234, a, c, 99];
+        let freed_r = unsafe {
+            __gc_collect_region(
+                region.as_ptr() as *const u8,
+                std::mem::size_of_val(&region) as i64,
+            )
+        };
+        assert_eq!(freed_r, 1, "d (no candidate in region) is freed");
+        assert_eq!(__gc_live_bytes(), 32); // a + c survive
+        let _ = d;
+
+        // Collect with no roots frees the rest (a and c).
         let freed2 = unsafe { __gc_collect_roots(std::ptr::null(), 0) };
-        assert_eq!(freed2, 1);
+        assert_eq!(freed2, 2);
         assert_eq!(__gc_live_bytes(), 0);
-        assert_eq!(__gc_collection_count(), 2);
+        assert_eq!(__gc_collection_count(), 3);
 
         // Degenerate allocs fail to null.
         assert_eq!(__gc_alloc(0), 0);

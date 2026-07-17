@@ -1,6 +1,20 @@
 # Changelog — gc-core
 
-## 0.2.0 — 2026-07-16
+## 0.3.0 — 2026-07-17
+
+### Added
+
+- **`FlatHeap::collect_region`** — conservative collection rooted at a raw memory
+  region `[base, base+len)` (plus its `mark_region` helper). Where `collect` takes a
+  tidy slice of `usize` roots, `collect_region` scans arbitrary memory the collector
+  must root from itself — a block of spilled callee-saved registers, or the machine
+  call stack between the stack pointer and the thread's stack base. It is the
+  platform-independent, unit-tested core the argument-less native
+  `__twig_gc_collect`/`safepoint` entry points build on (stack-range discovery is
+  layered separately). Same conservative semantics as `collect` (raw + low-3-bit
+  tag-stripped candidates; false positives retain, never free-live). 5 unit tests
+  (region-rooted survives / unrooted freed, tagged refs, empty region, transitive
+  interior tracing).
 
 ### Added
 

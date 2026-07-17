@@ -37,6 +37,7 @@ The interpreters use `gc-core`'s managed-object collector; native output uses
 | `int64_t __gc_alloc(int64_t n)` | allocate `n` zeroed bytes; returns a real pointer (as `int64`), `0` on failure/`n<=0` |
 | `int64_t __gc_alloc_kind(int64_t n, uint16_t kind)` | as above, tagging the object with a `HeapKind` id (for later precise tracing) |
 | `int64_t __gc_collect_roots(const int64_t *roots, int64_t count)` | mark from `count` root words, sweep; returns objects freed |
+| `int64_t __gc_collect_region(const uint8_t *base, int64_t len)` | mark from every candidate pointer in a raw region, sweep; returns objects freed |
 | `int64_t __gc_live_bytes(void)` | live payload bytes |
 | `int64_t __gc_collection_count(void)` | collections run so far |
 | `void __gc_reset(void)` | drop the whole heap; free everything |
@@ -59,13 +60,17 @@ __gc_collect_roots(roots, 1);         /* cell is rooted → survives */
 
 ## Status
 
-This is **T1 rung 0** — the linkable flat collector with explicit-root collection.
-Still to come (own PRs):
+This is **T1 rung 0** — the linkable flat collector with explicit-root and
+region-scan collection. `__gc_collect_region` is the platform-independent core of
+the conservative stack scan: give it any span of raw memory and it roots from every
+candidate pointer inside. Still to come (own PRs):
 
 - Wire `twig-aot`'s `build.rs` to link this archive and retire `twig_gc.c`
   (golden/smoke parity).
-- A conservative **C-stack scan** so `collect` runs with no explicit roots (the
-  drop-in for `twig_gc.c`'s argument-less `__twig_gc_collect`).
+- The argument-less **C-stack scan** so `collect` runs with no explicit roots (the
+  drop-in for `twig_gc.c`'s `__twig_gc_collect`): discover the current stack pointer
+  and the thread's stack base, spill callee-saved registers, and hand that span to
+  `__gc_collect_region`.
 - **Precise** roots (stack maps) and interior tracing (`HeapKind` field maps),
   then moving / generational — all as `gc-core` algorithms.
 

@@ -46,6 +46,14 @@ int64_t __gc_alloc_kind(int64_t n, uint16_t kind);
  * A null `roots` or count <= 0 means "no roots". */
 int64_t __gc_collect_roots(const int64_t *roots, int64_t count);
 
+/* Mark from every candidate pointer in the raw region [base, base+len), then
+ * sweep. Returns objects freed. This is the region-scan primitive for rooting
+ * from memory the collector must scan itself — a spilled-register block, or the
+ * machine call stack between the stack pointer and the thread's stack base. The
+ * argument-less native collect/safepoint drop-ins (a follow-up) discover that
+ * range and call this. A null `base` or len <= 0 means "no region" → free all. */
+int64_t __gc_collect_region(const uint8_t *base, int64_t len);
+
 /* Live payload bytes. */
 int64_t __gc_live_bytes(void);
 
