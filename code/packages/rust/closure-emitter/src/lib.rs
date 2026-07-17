@@ -675,7 +675,12 @@ impl<'a> Emitter<'a> {
         self.maybe_map(&r.cv);
         self.write_str("return");
         if let Some(arg) = &r.argument {
-            self.required_ws();
+            // Separate `return` from its argument only when they would fuse —
+            // `return{a:1}` / `return"x"` / `return[1]` need no space, matching
+            // the reference compiler. See [`keyword_needs_space_before`].
+            if keyword_needs_space_before(arg) {
+                self.required_ws();
+            }
             self.emit_expression(arg);
         }
         self.write_str(";");
@@ -731,15 +736,19 @@ impl<'a> Emitter<'a> {
         self.emit_statement(&l.body);
     }
 
-    /// `throw expr;` — keyword + REQUIRED whitespace + expression +
-    /// `;`. The space is mandatory: without it `throw1` parses as an
-    /// identifier in V8's relaxed mode and is ambiguous in others.
-    /// Per ECMAScript §13.14, `throw` has no no-argument form, so we
-    /// always emit the argument.
+    /// `throw expr;` — keyword + expression + `;`. A separating space is
+    /// emitted only when the argument would otherwise *fuse* with the keyword
+    /// (`throw x`, `throw 5`, `throw new C`). When the argument begins with
+    /// punctuation (`throw{a:1}`, `throw[1]`, `throw"x"`, `throw!0`) no space is
+    /// needed and the reference compiler omits it — see
+    /// [`keyword_needs_space_before`]. Per ECMAScript §13.14 `throw` has no
+    /// no-argument form, so the argument is always emitted.
     fn emit_throw(&mut self, t: &ThrowStatement) {
         self.maybe_map(&t.cv);
         self.write_str("throw");
-        self.required_ws();
+        if keyword_needs_space_before(&t.argument) {
+            self.required_ws();
+        }
         self.emit_expression(&t.argument);
         self.write_str(";");
     }
@@ -2769,6 +2778,36 @@ fn logical_prec(op: LogicalOperator) -> u8 {
 /// nested inside an argument list or a computed-member key (`new a[f()].g()`
 /// where `f()` is a key) are irrelevant — they are already closed off by their
 /// own brackets — so we do not descend into those.
+/// Does a preceding *word* keyword (`throw`, `return`) need a separating space
+/// before this expression? A space is required only when the expression's first
+/// emitted character is itself a word character (identifier/keyword/digit) that
+/// would fuse with the keyword into one token (`throwx`, `return5`,
+/// `throw new C`). An expression that begins with **punctuation** — `{`, `[`,
+/// `"`/`'`, `` ` ``, `/` (regex), or a `!`/`~`/`-`/`+` unary operator — tokenises
+/// cleanly against the keyword and needs no space, matching the reference
+/// compiler (`throw{a:1}`, `throw"x"`, `throw!0`).
+///
+/// This is deliberately **conservative**: it returns `true` (keep the space —
+/// always safe) for every expression whose leading character is not *provably*
+/// punctuation, so it can never drop a required separator and mis-tokenise. The
+/// punctuation-leading set is exact: the four literal forms above plus a unary
+/// with a symbol operator (`void`/`typeof`/`delete` are *word* operators and
+/// still need the space).
+fn keyword_needs_space_before(e: &Expression) -> bool {
+    match e {
+        Expression::ObjectExpression(_)
+        | Expression::ArrayExpression(_)
+        | Expression::StringLiteral(_)
+        | Expression::RegExpLiteral(_)
+        | Expression::TemplateLiteral(_) => false,
+        Expression::UnaryExpression(u) => matches!(
+            u.operator,
+            UnaryOperator::TypeOf | UnaryOperator::Void | UnaryOperator::Delete
+        ),
+        _ => true,
+    }
+}
+
 fn new_callee_needs_parens(callee: &Expression) -> bool {
     match callee {
         Expression::CallExpression(_) => true,
@@ -5390,13 +5429,71 @@ mod tests {
 
     #[test]
     fn throw_string_literal_emits_throw_quoted_semicolon() {
-        // throw "oops";
+        // throw"oops"; — a string literal begins with a quote, which tokenises
+        // cleanly against `throw`, so NO separating space is emitted (matching
+        // the reference compiler). Quote-choice picks double quotes by default.
         let s = Statement::throw_statement(ThrowStatement {
             cv: None,
             argument: string("oops"),
         });
-        // quote-choice picks double quotes by default for plain strings
-        assert_eq!(emit_stmt(s), "throw \"oops\";");
+        assert_eq!(emit_stmt(s), "throw\"oops\";");
+    }
+
+    /// `throw{};` — an object literal begins with `{`, so no `throw`-space.
+    #[test]
+    fn throw_object_literal_no_space() {
+        let s = Statement::throw_statement(ThrowStatement {
+            cv: None,
+            argument: Expression::ObjectExpression(ObjectExpression {
+                cv: None,
+                properties: vec![],
+            }),
+        });
+        assert_eq!(emit_stmt(s), "throw{};");
+    }
+
+    /// `throw x;` — an identifier is a word token that would fuse with `throw`
+    /// (`throwx`), so the separating space is kept.
+    #[test]
+    fn throw_identifier_keeps_space() {
+        let s = Statement::throw_statement(ThrowStatement {
+            cv: None,
+            argument: ident("x"),
+        });
+        assert_eq!(emit_stmt(s), "throw x;");
+    }
+
+    /// `throw!x;` — a `!` unary begins with punctuation, so no `throw`-space.
+    #[test]
+    fn throw_unary_not_no_space() {
+        let s = Statement::throw_statement(ThrowStatement {
+            cv: None,
+            argument: unary(UnaryOperator::Not, ident("x")),
+        });
+        assert_eq!(emit_stmt(s), "throw!x;");
+    }
+
+    /// `throw void x;` — `void` is a *word* operator, so the space is kept.
+    #[test]
+    fn throw_void_keeps_space() {
+        let s = Statement::throw_statement(ThrowStatement {
+            cv: None,
+            argument: unary(UnaryOperator::Void, ident("x")),
+        });
+        assert_eq!(emit_stmt(s), "throw void x;");
+    }
+
+    /// `return{};` — mirrors the `throw` rule for the `return` keyword.
+    #[test]
+    fn return_object_literal_no_space() {
+        let s = Statement::return_statement(ReturnStatement {
+            cv: None,
+            argument: Some(Expression::ObjectExpression(ObjectExpression {
+                cv: None,
+                properties: vec![],
+            })),
+        });
+        assert_eq!(emit_stmt(s), "return{};");
     }
 
     // ---- SwitchStatement (gap-014, CLOC12.33) ----------------

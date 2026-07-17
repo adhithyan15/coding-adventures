@@ -2,6 +2,33 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.53.0] - 2026-07-17
+
+### Fixed — `throw`/`return` drop the space before a punctuation-leading argument
+
+`emit_throw` and `emit_return` emitted an unconditional space between the keyword
+and its argument (`throw {a:1}`, `return "x"`). The reference Closure Compiler
+emits that space only when the argument would otherwise **fuse** with the
+keyword into one token; a punctuation-leading argument needs no separator:
+
+- `throw {a:1}` → `throw{a:1}`   `throw [1,2]` → `throw[1,2]`
+- `throw "x"` → `throw"x"`       `throw /re/` → `throw/re/`   `throw !0` → `throw!0`
+- **kept** where a word token would fuse: `throw x`, `throw 5`,
+  `throw new C`, `throw void x`, `return typeof x`
+
+A new `keyword_needs_space_before` helper decides this. It is **conservative** —
+it returns `true` (keep the space, always safe against mis-tokenisation) for
+every expression whose leading character is not *provably* punctuation, so it
+can never drop a required separator. The punctuation-leading set is exact: object
+/ array / string / regex / template literals, plus a unary with a symbol
+operator (`!`/`~`/`-`/`+`); the *word* unary operators `void`/`typeof`/`delete`
+still take the space.
+
+This was a `SIMPLE`/`ADVANCED`-only divergence (the whitespace-only path already
+omitted the space); it also completes the byte-identity of the `new Object()` /
+`new Array()` → `{}` / `[]` folds in `throw`/`return` position. Fixes hand-written
+`throw {…}` / `throw "…"` too. Byte-identical to the reference compiler at SIMPLE.
+
 ## [0.51.0] - 2026-07-17
 
 ### Fixed — a `ChainExpression` base of a plain member/call/tagged-template is now parenthesized (optional-chain-scope miscompile)

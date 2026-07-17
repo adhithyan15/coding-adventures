@@ -2087,7 +2087,7 @@ mod tests {
         // The param `val` is renamed; the key `keyName` stays.
         assert_eq!(
             rename_source("function f(val) { return { keyName: val }; }"),
-            "function f(a){return {keyName:a}};"
+            "function f(a){return{keyName:a}};"
         );
     }
 
