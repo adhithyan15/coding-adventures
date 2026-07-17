@@ -1,0 +1,1 @@
+set PERL5LIB=..\hash-map\lib;..\hash-functions\lib && perl -Ilib t/00-load.t && perl -Ilib t/01-hash-set.t

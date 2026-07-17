@@ -109,11 +109,11 @@ on July 16, 2026 after the paired Lua/Perl `fenwick-tree`, `binary-tree`,
 `binary-search-tree`, `in-memory-data-store-protocol`, `avl-tree`, `tree-set`,
 `skip-list`, `hyperloglog`, `trie`, `radix-tree`, and `resp-protocol` ports,
 the paired `hash-functions` prerequisite, and the paired `bloom-filter` and
-`hash-map` ports:
+`hash-map` and `hash-set` ports:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 349 |
+| Present in 10-15 languages | 172 | 347 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,972 |
 | Present in one language | 695 | 9,730 |
@@ -166,8 +166,8 @@ ports to reach all 15. After Priority 1, select work in this order:
 |---|---:|---|
 | Python | 1 | Classify the remaining self-hosted `python-parser` carefully |
 | Elixir | 0 | Complete; `python-parser` uses the shared grammar-driven frontend |
-| Lua | 3 | Pair with Perl data-structure/storage wave |
-| Perl | 3 | Pair with Lua data-structure/storage wave |
+| Lua | 2 | Pair with Perl data-structure/storage wave |
+| Perl | 2 | Pair with Lua data-structure/storage wave |
 | C# | 17 | Move with F# |
 | F# | 17 | Move with C# |
 | Haskell | 34 | Dependency-shaped compression, graphics, ML, and protocol waves |
@@ -179,10 +179,10 @@ ports to reach all 15. After Priority 1, select work in this order:
 Go, Ruby, Rust, and TypeScript currently have no gaps within the 10-language
 consensus set. They remain reference/template lanes for these waves.
 
-The first fourteen paired Lua/Perl slices are complete: `fenwick-tree`,
+The first fifteen paired Lua/Perl slices are complete: `fenwick-tree`,
 `binary-tree`, `binary-search-tree`, `in-memory-data-store-protocol`,
-`avl-tree`, `tree-set`, `skip-list`, `hyperloglog`, `trie`, `radix-tree`, and
-`resp-protocol`, `hash-functions`, `bloom-filter`, and `hash-map`
+`avl-tree`, `tree-set`, `skip-list`, `hyperloglog`, `trie`, `radix-tree`,
+`resp-protocol`, `hash-functions`, `bloom-filter`, `hash-map`, and `hash-set`
 now have pure implementations, package-native tests, metadata, and capability
 declarations in both lanes.
 The protocol slice establishes the dependency-free IR needed before the higher
@@ -209,8 +209,13 @@ The hash-map slice implements both DT18 collision strategies from first
 principles, including chaining, linear probing, tombstone deletion, automatic
 resizing, deterministic DT17 bucket hashes, bulk access, merge, and clone-based
 functional operations. It reduces the paired high-consensus gap to three
-packages per lane and supplies the direct dependency for the next `hash-set`
-slice.
+packages per lane and supplies the direct dependency for the `hash-set` slice.
+The hash-set slice composes that map into a persistent DT19 collection with
+copy-on-write add and remove, complete set algebra and relation predicates,
+option preservation, identity-safe reference elements, and resize coverage for
+both collision strategies. It reduces the paired high-consensus gap to two
+packages per lane, leaving the higher in-memory data store layers as the final
+paired wave.
 
 Recommended family order:
 
