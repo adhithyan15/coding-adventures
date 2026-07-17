@@ -33,10 +33,11 @@
  *      }
  *
  * SCOPE (phase-one core). One listener; many concurrent connections; a stateless
- * handler; cooperative stop. Deliberately DEFERRED to follow-ups (as in the Rust
- * crate's own phased plan): per-connection state, an outbound mailbox for worker
- * threads, read-pause/resume backpressure (`defer_read`), socket-option policy
- * (TCP_NODELAY/keepalive), connection caps, and multi-core reactor sharding.
+ * handler; cooperative stop; a concurrent-connection cap
+ * (tcp_runtime_set_max_connections). Deliberately DEFERRED to follow-ups (as in
+ * the Rust crate's own phased plan): per-connection state, an outbound mailbox
+ * for worker threads, read-pause/resume backpressure (`defer_read`),
+ * socket-option policy (TCP_NODELAY/keepalive), and multi-core reactor sharding.
  *
  * BUILD. OS-agnostic — every per-OS detail lives in net and reactor — so this is
  * one source file compiled with the net + reactor backends for the target OS.
@@ -86,6 +87,19 @@ osp_status tcp_runtime_bind(tcp_runtime **out, const char *host,
 
 /* The actual bound port (useful when binding to port 0). OSP_ERR_INVAL / OSP_ERR_OS. */
 osp_status tcp_runtime_local_port(tcp_runtime *rt, unsigned short *out_port);
+
+/*
+ * tcp_runtime_set_max_connections — cap the number of concurrent connections.
+ * 0 means unlimited (the default). While at the cap, a newly accepted connection
+ * is closed immediately (the client is refused) rather than tracked. The limit
+ * applies to future accepts; connections already open are left in place.
+ * OSP_ERR_INVAL if rt is NULL.
+ */
+osp_status tcp_runtime_set_max_connections(tcp_runtime *rt,
+                                           size_t max_connections);
+
+/* The current number of live connections. OSP_ERR_INVAL if rt/out_count NULL. */
+osp_status tcp_runtime_connection_count(tcp_runtime *rt, size_t *out_count);
 
 /*
  * tcp_runtime_poll — run ONE reactor step: wait up to `timeout_ms` (negative =

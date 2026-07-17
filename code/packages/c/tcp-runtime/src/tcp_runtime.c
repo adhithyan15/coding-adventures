@@ -43,6 +43,7 @@ struct tcp_runtime {
     struct tcp_conn **conns; /* array of stable node pointers */
     size_t count;
     size_t cap;
+    size_t max_connections; /* 0 = unlimited (the default) */
     volatile int stopped;
 };
 
@@ -169,6 +170,24 @@ osp_status tcp_runtime_local_port(tcp_runtime *rt, unsigned short *out_port) {
     return osp_tcp_local_port(rt->listener, out_port);
 }
 
+osp_status tcp_runtime_set_max_connections(tcp_runtime *rt,
+                                           size_t max_connections) {
+    if (rt == NULL) {
+        return OSP_ERR_INVAL;
+    }
+    /* Applies to future accepts; existing connections are left in place. */
+    rt->max_connections = max_connections;
+    return OSP_OK;
+}
+
+osp_status tcp_runtime_connection_count(tcp_runtime *rt, size_t *out_count) {
+    if (rt == NULL || out_count == NULL) {
+        return OSP_ERR_INVAL;
+    }
+    *out_count = rt->count;
+    return OSP_OK;
+}
+
 osp_status tcp_runtime_poll(tcp_runtime *rt, int timeout_ms, int *out_handled) {
     osp_event events[TCP_RT_MAX_EVENTS];
     char rbuf[TCP_RT_BUFSZ];
@@ -192,7 +211,13 @@ osp_status tcp_runtime_poll(tcp_runtime *rt, int timeout_ms, int *out_handled) {
              * so any further pending connections re-report next poll). */
             osp_socket *conn = NULL;
             if (osp_tcp_accept(rt->listener, &conn) == OSP_OK) {
-                if (tcp__add_conn(rt, conn) != OSP_OK) {
+                /* Accept dequeues the pending connection (so the listener stops
+                 * reporting readable); if we are at the cap, close it right away
+                 * to refuse the client rather than track it. */
+                if (rt->max_connections != 0 &&
+                    rt->count >= rt->max_connections) {
+                    osp_socket_close(conn); /* at capacity → refuse */
+                } else if (tcp__add_conn(rt, conn) != OSP_OK) {
                     osp_socket_close(conn); /* could not track it */
                 }
             }
