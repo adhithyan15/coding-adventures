@@ -82,3 +82,26 @@ fn display_program_accepted_by_print_backends() {
     let m = compile_source(&src, "display").unwrap();
     assert_accepted_by_print_backends(&m, "display literals and items");
 }
+
+#[test]
+fn arithmetic_program_accepted_by_print_backends() {
+    // ADD/MULTIPLY/SUBTRACT on i64 slots + the numeric-DISPLAY digit helper
+    // (add/sub/mul/mod/cmp_lt/jmp_if_false/call). Every print backend must
+    // accept the emitted IIR (BEAM excluded, as for any printing program).
+    let src = program(&[
+        "IDENTIFICATION DIVISION.",
+        "PROGRAM-ID. P.",
+        "DATA DIVISION.",
+        "WORKING-STORAGE SECTION.",
+        "01  R  PIC 9(3) VALUE 0.",
+        "PROCEDURE DIVISION.",
+        "MAIN.",
+        "    ADD 5 3 TO R.",
+        "    MULTIPLY 2 BY R.",
+        "    SUBTRACT 1 FROM R.",
+        "    DISPLAY R.",
+        "    STOP RUN.",
+    ]);
+    let m = compile_source(&src, "arith").unwrap();
+    assert_accepted_by_print_backends(&m, "integer arithmetic");
+}

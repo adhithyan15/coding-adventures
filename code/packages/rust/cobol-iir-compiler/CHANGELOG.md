@@ -8,6 +8,29 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.2.0: integer arithmetic (PL09 step 4, PR2)
+
+- **Numeric items are now scaled `i64` slots** (PL09 D1): a `PIC 9…` item holds
+  its value scaled by its fractional-digit count. This replaces v0.1's
+  compile-time string image for numeric items (alphanumerics stay `str`), so
+  values can be computed at run time. `MOVE`/`VALUE`/`DISPLAY` behaviour is
+  unchanged and still oracle-exact (the scaled value is formatted through the new
+  fixed-width digit helper `__cob_print_padded`).
+- **`ADD` / `SUBTRACT` / `MULTIPLY` / `DIVIDE` (with `GIVING`)** on integer,
+  unsigned fields → native `add` / `sub` / `mul` / `div` on the slots. The result
+  is reduced to the receiver's field: magnitude (unsigned receivers drop the
+  sign) and the low-order `int_digits` digits (COBOL's silent high-order overflow
+  truncation). `DIVIDE` truncates toward zero.
+- **Honest boundaries** (clean `CompileError::Unsupported`, never wrong output):
+  scaled-decimal arithmetic (`PIC …V…`), `ROUNDED`, `ON SIZE ERROR`, arithmetic
+  operands/receivers wider than 9 digits (`i64` product safety), and numeric
+  fields wider than 18 digits (the `i64` value model).
+- **Tests.** Unit tests for the arithmetic shape and error paths; `jit_e2e.rs`
+  grows seven arithmetic cases (accumulate, GIVING, unsigned magnitude, multiply,
+  truncating divide, silent overflow, a three-verb chain) each asserted
+  byte-identical to the oracle; `backend_compat.rs` gains an arithmetic program;
+  and a third `lang_matrix.rs` COBOL row (`ADD`/`MULTIPLY`/`SUBTRACT` → `20`).
+
 ### Added — v0.1.0: the `DISPLAY` / `MOVE` / `STOP RUN` slice (PL09 step 4)
 
 - **New crate.** Lowers a parsed COBOL-60 program (the `cobol-parser` CST) into
