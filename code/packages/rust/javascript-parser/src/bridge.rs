@@ -4103,7 +4103,37 @@ fn unquote_string(raw: &str) -> String {
             Some('\\') => result.push('\\'),
             Some('\'') => result.push('\''),
             Some('"') => result.push('"'),
-            Some('0') => result.push('\0'),
+            // Legacy octal escape `\NNN` (ECMAScript Annex B.1.2) — one to three
+            // octal digits denoting a code unit in `0..=255`. `\0`→NUL,
+            // `\101`→'A', `\012`→'\n'. A leading digit `0`–`3` admits up to
+            // THREE octal digits; a leading `4`–`7` admits at most TWO, so the
+            // decoded value never exceeds `0o377` (= 255) — matching the grammar
+            // productions (ZeroToThree may take two trailing octal digits,
+            // FourToSeven only one). The reference Closure Compiler decodes these
+            // to the raw character (`"\101"` → `"A"`), and closurec must
+            // round-trip the identical value; previously `\1`–`\7` fell through
+            // to the identity arm and `\NNN` survived undecoded — a miscompile
+            // (the string value was wrong, not just the spelling). Legacy octal
+            // is forbidden in strict-mode source, but sloppy string literals
+            // permit it, so the fold set must handle it.
+            Some(d @ '0'..='7') => {
+                // SAFETY of unwrap: `d` is a validated octal digit `0`–`7`.
+                let mut value = d.to_digit(8).expect("octal digit");
+                let max_more = if d <= '3' { 2 } else { 1 };
+                for _ in 0..max_more {
+                    match chars.peek() {
+                        Some(&next @ '0'..='7') => {
+                            value = value * 8 + next.to_digit(8).expect("octal digit");
+                            chars.next();
+                        }
+                        _ => break,
+                    }
+                }
+                // `value` is at most 255, always a valid Unicode scalar (Latin-1).
+                if let Some(ch) = char::from_u32(value) {
+                    result.push(ch);
+                }
+            }
             Some('b') => result.push('\x08'),
             Some('f') => result.push('\x0C'),
             Some('v') => result.push('\x0B'),
@@ -5333,6 +5363,36 @@ mod tests {
                 )) => match &es.expression {
                     Expression::StringLiteral(s) => assert_eq!(s.value, want, "for {src}"),
                     other => panic!("expected StringLiteral({want:?}) for {src}, got {other:?}"),
+                },
+                other => panic!("expected an ExpressionStatement for {src}, got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn legacy_octal_string_escapes_decode() {
+        use coding_adventures_javascript_ast::statement::TaggedStatement;
+        // `\NNN` (ECMAScript Annex B.1.2) decodes to the code unit `0..=255`.
+        // A leading digit 0-3 admits up to three octal digits; 4-7 admits two.
+        for (src, want) in [
+            (r#""\101";"#, "A"),        // 0o101 = 65 = 'A'
+            (r#""\0";"#, "\u{0}"),      // NUL — the lone-`\0` case still works
+            (r#""\012";"#, "\n"),       // 0o12 = 10 = LF
+            (r#""\7";"#, "\u{7}"),      // single octal digit
+            (r#""\77";"#, "?"),         // 0o77 = 63 = '?'
+            (r#""\377";"#, "\u{ff}"),   // the max, 0o377 = 255
+            (r#""\40";"#, " "),         // 0o40 = 32 = space
+            (r#""a\101b";"#, "aAb"),    // mid-string
+            (r#""\1010";"#, "A0"),      // 0o101='A' then a literal '0' (3-digit cap)
+            (r#""\4012";"#, " 12"),     // leading 4-7 caps at TWO digits: \40=space, then literal '1','2'
+        ] {
+            let p = bridge_ok(src);
+            match &p.body[0] {
+                ProgramItem::Statement(Statement::Tagged(
+                    TaggedStatement::ExpressionStatement(es),
+                )) => match &es.expression {
+                    Expression::StringLiteral(s) => assert_eq!(s.value, want, "for {src}"),
+                    other => panic!("expected StringLiteral for {src}, got {other:?}"),
                 },
                 other => panic!("expected an ExpressionStatement for {src}, got {other:?}"),
             }
