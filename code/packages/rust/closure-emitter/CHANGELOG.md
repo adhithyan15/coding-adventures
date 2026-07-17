@@ -2,6 +2,43 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.51.0] - 2026-07-17
+
+### Fixed — a `ChainExpression` base of a plain member/call/tagged-template is now parenthesized (optional-chain-scope miscompile)
+
+An optional chain (`a?.b`) used as the object of a **non-optional** member
+access, the callee of a plain call, or the tag of a tagged template MUST be
+parenthesized — the parens are the chain boundary. Dropping them lets a
+following non-optional access join the chain, which is a **semantic** change,
+not cosmetic:
+
+- `(a?.b).c` → `a?.b.c`  — `.c` now short-circuits with `?.` (`a?.b.c` returns
+  `undefined` when `a` is nullish; `(a?.b).c` throws — different behavior)
+- `(a?.b)()` → `a?.b()`, `(a?.[0]).x` → `a?.[0].x`, `(a?.()).x` → `a?.().x`
+- `` (a?.b)`x` `` → `` a?.b`x` `` (also outright invalid — a tagged template
+  can't tag an optional chain unparenthesized)
+
+A `ChainExpression` is the transparent chain-boundary wrapper, tagged
+`PREC_PRIMARY` (its inner spine is a member/call node), so the ordinary
+`PREC_PRIMARY` base emit never wrapped it. A new `emit_plain_access_base` helper
+wraps a `ChainExpression` base and otherwise keeps the existing `PREC_PRIMARY`
+emit; it backs `emit_member`, `emit_call`, and `emit_tagged_template`.
+
+An **optional** access base is deliberately excluded — `(a?.b)?.c` needs no
+parens because the chain simply continues (`a?.b?.c`), so
+`emit_optional_member`/`emit_optional_call` keep their bare emit. A chain as a
+call **argument** (`f(a?.b)`) or in statement position is likewise unwrapped.
+
+Verified byte-identical to the reference Closure Compiler at `SIMPLE` across
+member/call/computed/optional-call-result/tagged-template and deep chains
+(`(a?.b).c().d`, `((a?.b).c)?.d`). Bug fix; MINOR bump 0.50.0 → 0.51.0.
+
+Not covered (rarer, separate follow-ups): a `ChainExpression` as a `new` callee
+(`new (a?.b)`, which also has a `new␣(` spacing quirk) and an **object literal**
+at the head of an optional chain that is then member-accessed
+(`({}?.x).y` → the chain is now correctly bounded, but Closure additionally
+wraps the object literal: `(({})?.x).y`).
+
 ## [0.50.0] - 2026-07-16
 
 ### Fixed — object literal at the leftmost spine of a statement is now parenthesized (invalid-JS miscompile)

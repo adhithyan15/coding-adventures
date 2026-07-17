@@ -4,6 +4,32 @@ All notable changes to `wolfram-runtime` are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/) and this project uses
 [Semantic Versioning](https://semver.org/).
 
+## [0.19.4] — 2026-07-16
+
+### Added (W-22 — `D`, fourth `cas-*` head)
+
+- `D[expr, x]` — the symbolic derivative of `expr` with respect to the
+  symbol `x`: sum/product/quotient/power/chain rules plus the elementary
+  transcendental functions (`Sin`, `Cos`, `Exp`, `Log`, `Sqrt`, inverse and
+  hyperbolic trig), fully recursed and re-evaluated so constant folding and
+  nested rule output collapse into one final form (`D[x^3, x]` → `3 * x^2`,
+  not a half-reduced intermediate). Like `Factor`, the actual differentiation
+  logic lives directly in `symbolic-vm` itself: this wiring calls the new
+  `symbolic_vm::handlers::differentiate` — the exact pipeline Macsyma's own
+  `D` already runs, extracted into a `pub` free function specifically for
+  this reuse (see `symbolic-vm`'s own changelog). No algorithm is
+  reimplemented or duplicated; a parity test pins both languages' call sites
+  to agree on the same input, exactly like `Simplify`/`Expand`/`Factor`'s own
+  parity tests.
+- Like every W-5+ built-in, `D` is an ordinary eager `Head[args]` form
+  requiring exactly two arguments, the second of which must be a bare
+  symbol; any other shape leaves the form unevaluated. Unlike `Factor`
+  (whose arity check lives inside `factor_handler` itself), this wrapper
+  does its own check — `derivative_handler`'s existing arity contract
+  panics on the wrong count, which is right for `symbolic-vm`'s own internal
+  dispatch but wrong for Wolfram's fail-soft contract, so `d_handler`
+  validates the shape before ever calling through.
+
 ## [0.19.3] — 2026-07-16
 
 ### Changed
