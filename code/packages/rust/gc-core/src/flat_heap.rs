@@ -258,6 +258,77 @@ impl FlatHeap {
         stats
     }
 
+    /// Collect using a **raw memory region** as the conservative root set.
+    ///
+    /// Every aligned word in `[base, base + len)` is treated as a *candidate* root
+    /// (raw and low-3-bit-tag-stripped, exactly like [`Self::collect`]'s explicit
+    /// roots); every object reachable from one survives, the rest are freed.
+    ///
+    /// This is the primitive a **native runtime** needs. Where [`Self::collect`]
+    /// takes a tidy slice of `usize` roots the caller already gathered, real
+    /// compiled code keeps its live references in *memory the collector must scan
+    /// itself*: a block of spilled callee-saved registers, or the machine call
+    /// stack from the current stack pointer up to the thread's stack base. Point
+    /// this method at that memory and it roots from it. The argument-less
+    /// `__twig_gc_collect` / `__twig_gc_safepoint` the native backend emits are
+    /// built on exactly this — they discover `(base, len)` for the live stack (a
+    /// platform-specific register-spill + stack-base step) and hand it here. This
+    /// method is that platform-independent, unit-testable core; the stack-range
+    /// discovery is layered on top separately.
+    ///
+    /// A false positive (a plain integer in the region whose bit pattern lands in a
+    /// live block) retains a dead object for one cycle — never frees a live one.
+    /// That imprecision is the defining, intended property of a conservative scan.
+    ///
+    /// # Safety
+    ///
+    /// `[base, base + len)` must be readable for the duration of the call (`base`
+    /// may be null iff `len == 0`). No alignment of `base`/`len` is required —
+    /// scanning starts at `base` and a sub-8-byte tail is ignored.
+    pub unsafe fn collect_region(&mut self, base: *const u8, len: usize) -> GcCycleStats {
+        let before = self.object_count();
+
+        let mut work: Vec<*mut FlatHeader> = Vec::new();
+        // SAFETY: caller guarantees `[base, base+len)` is readable.
+        self.mark_region(base, len, &mut work);
+        while let Some(h) = work.pop() {
+            self.scan_payload(h, &mut work);
+        }
+
+        let (freed, survived, live) = self.sweep();
+        self.live_bytes = live;
+
+        let stats = GcCycleStats {
+            freed,
+            survived,
+            pause_ns: 0,
+            heap_size_before: before,
+            heap_size_after: survived,
+        };
+        self.profile.record_cycle(&stats);
+        self.collection_count += 1;
+        stats
+    }
+
+    /// Scan `[base, base + len)` as an array of aligned candidate root words,
+    /// enqueuing every live block a word points into. The region-oriented sibling
+    /// of [`Self::scan_payload`] (which scans one object's payload); both defer to
+    /// [`Self::mark_word`] for the raw-plus-tag-stripped lookup.
+    ///
+    /// # Safety
+    ///
+    /// `[base, base + len)` must be readable.
+    unsafe fn mark_region(&self, base: *const u8, len: usize, work: &mut Vec<*mut FlatHeader>) {
+        let mut off = 0usize;
+        while off + 8 <= len {
+            // SAFETY: `off + 8 <= len`, so the 8-byte read stays inside the region;
+            // `read_unaligned` tolerates any sub-alignment of `base`.
+            let word = ptr::read_unaligned(base.add(off) as *const usize);
+            self.mark_word(word, work);
+            off += 8;
+        }
+    }
+
     /// Mark the block a candidate `word` points into, if any, and enqueue it.
     /// Checks both the raw word and the tag-stripped word (NaN-box compat).
     fn mark_word(&self, word: usize, work: &mut Vec<*mut FlatHeader>) {
@@ -509,5 +580,74 @@ mod tests {
         assert_eq!(heap.collection_count(), 3);
         assert_eq!(heap.object_count(), 1);
         assert_eq!(heap.profile().total_collections, 3);
+    }
+
+    /// `collect_region`: an object whose payload pointer appears anywhere in the
+    /// scanned region survives; an object with no candidate pointer in the region
+    /// is reclaimed. This is the exact behaviour a register-block / stack scan
+    /// relies on.
+    #[test]
+    fn collect_region_roots_from_a_memory_region() {
+        let mut heap = FlatHeap::new();
+        let keep = heap.alloc(16, 0) as usize;
+        let _garbage = heap.alloc(16, 0); // no pointer to it in the region below
+        assert_eq!(heap.object_count(), 2);
+
+        // A synthetic "register block" / stack slice: some plain integers plus the
+        // live pointer, exactly as a real stack region interleaves data and refs.
+        let region: [usize; 4] = [0xdead_beef, keep, 0, 42];
+        let stats = unsafe {
+            heap.collect_region(region.as_ptr() as *const u8, std::mem::size_of_val(&region))
+        };
+
+        assert_eq!(stats.survived, 1, "the region-rooted object must survive");
+        assert_eq!(stats.freed, 1, "the object with no candidate in the region is freed");
+        assert!(!heap.find_header(keep).is_null());
+        assert_eq!(heap.live_bytes(), 16);
+    }
+
+    /// `collect_region` follows a low-3-bit-tagged (NaN-box) reference found in the
+    /// region, not just a raw pointer.
+    #[test]
+    fn collect_region_follows_tagged_reference_in_region() {
+        let mut heap = FlatHeap::new();
+        let obj = heap.alloc(16, 0) as usize;
+        let region: [usize; 2] = [obj | 0x7, 0]; // tagged in the low 3 bits
+        let stats =
+            unsafe { heap.collect_region(region.as_ptr() as *const u8, std::mem::size_of_val(&region)) };
+        assert_eq!(stats.freed, 0);
+        assert_eq!(stats.survived, 1);
+    }
+
+    /// An empty region (null base, zero length) roots nothing → everything is freed,
+    /// matching `collect(&[])`.
+    #[test]
+    fn collect_region_empty_frees_all() {
+        let mut heap = FlatHeap::new();
+        heap.alloc(16, 0);
+        heap.alloc(32, 0);
+        let stats = unsafe { heap.collect_region(std::ptr::null(), 0) };
+        assert_eq!(stats.freed, 2);
+        assert_eq!(heap.object_count(), 0);
+    }
+
+    /// Interior pointers are still followed transitively from a region root: rooting
+    /// the head of an `a → b → c` chain via the region keeps all three.
+    #[test]
+    fn collect_region_traces_interior_transitively() {
+        let mut heap = FlatHeap::new();
+        let c = heap.alloc(16, 0) as usize;
+        let b = heap.alloc(16, 0) as usize;
+        let a = heap.alloc(16, 0) as usize;
+        unsafe {
+            *(a as *mut usize) = b;
+            *(b as *mut usize) = c;
+        }
+        let _garbage = heap.alloc(16, 0);
+        let region: [usize; 1] = [a];
+        let stats =
+            unsafe { heap.collect_region(region.as_ptr() as *const u8, std::mem::size_of_val(&region)) };
+        assert_eq!(stats.survived, 3);
+        assert_eq!(stats.freed, 1);
     }
 }

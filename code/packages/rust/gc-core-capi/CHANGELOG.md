@@ -2,6 +2,17 @@
 
 All notable changes to this crate are documented here.
 
+## [0.2.0] — 2026-07-17
+
+### Added
+
+- **`__gc_collect_region(base, len)`** — C ABI over `FlatHeap::collect_region`: mark
+  from every candidate pointer in a raw memory region, then sweep; returns objects
+  freed. The primitive a native runtime uses to root from memory it must scan itself
+  (a spilled register block, or the call stack between SP and the thread's stack
+  base). The argument-less `__twig_gc_collect`/`safepoint` drop-ins (a follow-up)
+  discover that stack range and hand it here. Host test extended to drive it.
+
 ## [0.1.0] — 2026-07-16
 
 Initial release. C ABI for `gc-core`'s flat-native heap — LANG16's
