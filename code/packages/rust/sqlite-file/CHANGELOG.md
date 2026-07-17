@@ -1,5 +1,27 @@
 # Changelog — sqlite-file
 
+## 0.16.0 - Unreleased
+
+**Phase F (writer): multi-level b-trees.** The tree builder now handles tables
+so large that even the *interior* level overflows one page: `encode_table_btree`
+was generalised from a single interior root to a **bottom-up** construction that
+stacks interior levels until one root remains (root interior → intermediate
+interiors → leaves). After encoding the data leaves, it repeatedly groups the
+current level's nodes into as many interior pages as fit
+(`group_interior_children`, sized conservatively by charging every child a
+divider-cell footprint so a group always fits `pack_interior_page`), allocating
+each intermediate interior page contiguously and carrying each parent's largest
+subtree rowid upward as the next level's divider key; when a level collapses to a
+single node it is written as the root at `root_page`. One interior level (the
+common case) reproduces the previous byte layout exactly. A progress guard
+rejects the pathological case where usable space is too small to shrink a level
+(unreachable at the ≥512-byte minimum page size) instead of looping. Gates: an
+own-reader round-trip over 3000 rows on a 512-byte page (asserting the root's
+child is itself interior, i.e. a genuine ≥3-level tree) and a **real bundled-C
+SQLite** cross-check — the multi-level file passes `PRAGMA integrity_check`
+(`"ok"`) and reads back all 3000 rows in rowid order. Page-1 `sqlite_schema`
+overflow (many tables) remains the next writer rung.
+
 ## 0.15.0 - Unreleased
 
 **Phase F (writer): tree growth — a table can now exceed one leaf.** When a
