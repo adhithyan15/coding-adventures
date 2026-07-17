@@ -2911,6 +2911,28 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("20"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // COBOL-60 — scaled-decimal ADD (PL09 step 4, PR3). `R PIC 9(2)V99` holds a
+    // value scaled by 2, so it starts 1.50 (slot `150`). `ADD 2.25 TO R` aligns
+    // the implied point — the literal folds to `225` at the same scale — sums to
+    // `375`, and the receiver renders those four digits with no point: `0375`
+    // (= 3.75). This proves the implied-point alignment lowers to plain `i64`
+    // `add` on the scaled slots, on every backend running the shared substrate.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  R  PIC 9(2)V99 VALUE 1.5.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     ADD 2.25 TO R.\n\
+               000000     DISPLAY R.\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("0375"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses

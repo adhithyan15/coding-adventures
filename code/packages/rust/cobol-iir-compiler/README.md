@@ -48,17 +48,22 @@ compiler calls the very same picture/value functions the oracle uses —
 this reuse — and stores the resulting scaled value. A numeric *literal* in a
 `DISPLAY`, by contrast, shows its **source text** (`DISPLAY 42` → `42`).
 
-Runtime **integer arithmetic** (unsigned receivers) is native `i64`: values are
-added/subtracted/multiplied/(truncating-)divided, then the result is stored by
-taking its magnitude and keeping the low-order `int_digits` digits — COBOL's
-unsigned-magnitude and silent-overflow-truncation rules.
+Runtime arithmetic (unsigned receivers) is native `i64` over the scaled slots.
+**Integer** `ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE` compute directly; **scaled-decimal**
+`ADD`/`SUBTRACT` (`PIC …V…`) align the implied point to a common working scale,
+accumulate, then store into the receiver's scale — rounding **half away from
+zero** with `ROUNDED`, else truncating. Every store takes the magnitude and keeps
+the low-order `int_digits + dec_digits` digits (COBOL's unsigned-magnitude and
+silent-overflow-truncation rules). Numeric **item-to-item `MOVE`** reshapes the
+source value into the receiver's picture the same way.
 
 ### Deliberately a later rung
 
 Each of these is a clean `CompileError::Unsupported` (never wrong output), landing
-on its own PR: scaled-decimal arithmetic (`PIC …V…`, scale alignment), `ROUNDED`,
-`ON SIZE ERROR`, item-to-item `MOVE` reshaping, `COMPUTE`, `IF`, `PERFORM`,
-`GO TO`, group items, and signed numerics (`PIC S9…`, trailing-overpunch display).
+on its own PR: **scaled** `MULTIPLY`/`DIVIDE` (a `V` operand) and their `ROUNDED`,
+`ON SIZE ERROR` (needs the `IF` rung's branching), alphanumeric item `MOVE`,
+`COMPUTE`, `IF`, `PERFORM`, `GO TO`, group items, and signed numerics (`PIC S9…`,
+trailing-overpunch display).
 
 ## Usage
 

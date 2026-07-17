@@ -8,6 +8,30 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.3.0: scaled-decimal ADD/SUBTRACT + item-to-item MOVE (PL09 step 4, PR3)
+
+- **Scaled-decimal `ADD` / `SUBTRACT`** on `PIC …V…` fields. Terms are aligned to
+  a common working scale (the largest fractional-digit count among the base field
+  and operands, so every term scales up without loss), accumulated, then stored
+  into the receiver at *its* scale.
+- **`ROUNDED`** is now honoured on `ADD`/`SUBTRACT`: storing into a receiver with
+  fewer decimals rounds **half away from zero** (via a sign-aware bias before the
+  truncating divide); without it, the value truncates toward zero.
+- **Numeric item-to-item `MOVE`** (`MOVE A TO B`) reshapes the source value into
+  the receiver's picture — rescaling the implied point (truncating, never
+  rounding). Alphanumeric item moves remain a later rung.
+- **Unified store path.** A single `store_scaled` (rescale → magnitude → keep the
+  low-order `int_digits + dec_digits` digits) backs every arithmetic verb and the
+  item MOVE. `MULTIPLY`/`DIVIDE` now route through it too, so an integer product
+  into a `V` receiver scales up correctly.
+- **Honest boundaries** (clean `Unsupported`): **scaled** `MULTIPLY`/`DIVIDE`
+  (a `V` operand) and their `ROUNDED`, plus `ON SIZE ERROR` (it needs the branch
+  machinery of the `IF` rung), remain deferred.
+- **Tests.** Unit tests for the new capability/error boundaries; six new
+  `jit_e2e.rs` cases (implied-point alignment, higher-scale operand truncate vs
+  round, unsigned decimal magnitude, cross-scale add, item MOVE reshape up/down)
+  each asserted byte-identical to the oracle; a scaled `lang_matrix.rs` COBOL row.
+
 ### Added — v0.2.0: integer arithmetic (PL09 step 4, PR2)
 
 - **Numeric items are now scaled `i64` slots** (PL09 D1): a `PIC 9…` item holds
