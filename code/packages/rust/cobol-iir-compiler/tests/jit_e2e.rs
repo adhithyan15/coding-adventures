@@ -163,3 +163,174 @@ fn program_with_no_data_division() {
     ));
     assert_eq!(out, "A\nB\n");
 }
+
+// -------------------------------------------------------------------------
+// Integer arithmetic (PR2) — each asserted byte-identical to the oracle.
+// -------------------------------------------------------------------------
+
+#[test]
+fn add_to_accumulates_into_the_receiver() {
+    // R starts 10; ADD 5 3 TO R → 18 → "018".
+    let out = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(3) VALUE 10."],
+        &["ADD 5 3 TO R.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "018\n");
+}
+
+#[test]
+fn add_giving_leaves_the_to_field_unchanged() {
+    // ADD 2 3 TO A GIVING R → R = 2+3+A(100) = 105; A untouched.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC 9(3) VALUE 100.", "01  R  PIC 9(3)."],
+        &["ADD 2 3 TO A GIVING R.", "DISPLAY R.", "DISPLAY A.", "STOP RUN."],
+    ));
+    assert_eq!(out, "105\n100\n");
+}
+
+#[test]
+fn subtract_from_and_unsigned_receiver_keeps_magnitude() {
+    // 10 - 3 = 7 → "007".
+    let out = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(3) VALUE 10."],
+        &["SUBTRACT 3 FROM R.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "007\n");
+    // 3 - 5 = -2, but R is unsigned → stores magnitude 2 → "002".
+    let out = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(3) VALUE 3."],
+        &["SUBTRACT 5 FROM R.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "002\n");
+}
+
+#[test]
+fn multiply_by_updates_the_by_field() {
+    // MOVE-free: R=6; MULTIPLY 7 BY R → 42 → "042".
+    let out = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(3) VALUE 6."],
+        &["MULTIPLY 7 BY R.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "042\n");
+}
+
+#[test]
+fn divide_into_truncates_toward_zero() {
+    // 10 / 4 = 2.5 → into integer 9(3) truncates to 2 → "002".
+    let out = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(3)."],
+        &["DIVIDE 4 INTO 10 GIVING R.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "002\n");
+    // 20 / 5 = 4, without GIVING updates the dividend R → "004".
+    let out = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(3) VALUE 20."],
+        &["DIVIDE 5 INTO R.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "004\n");
+}
+
+#[test]
+fn overflow_without_handler_truncates_high_order() {
+    // R is 9(2) (max 99). 50 + 60 = 110 overflows; with no ON SIZE ERROR handler
+    // COBOL keeps the low two digits → "10".
+    let out = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(2) VALUE 50."],
+        &["ADD 60 TO R.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "10\n");
+}
+
+// -------------------------------------------------------------------------
+// Scaled-decimal ADD / SUBTRACT + item→item MOVE (PR3) — vs the oracle.
+// -------------------------------------------------------------------------
+
+#[test]
+fn decimal_add_aligns_the_implied_point() {
+    // R PIC 9(2)V99 starts 1.50; ADD 2.25 TO R → 3.75 → "0375".
+    let out = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(2)V99 VALUE 1.5."],
+        &["ADD 2.25 TO R.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "0375\n");
+}
+
+#[test]
+fn add_of_higher_scale_operand_truncates_and_rounds() {
+    // Operand 2.255 has more decimals than the V99 receiver.
+    // Truncated: 2.25 → "0225"; ROUNDED: 2.26 → "0226".
+    let trunc = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(2)V99 VALUE 0."],
+        &["ADD 2.255 TO R.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(trunc, "0225\n");
+    let round = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(2)V99 VALUE 0."],
+        &["ADD 2.255 TO R ROUNDED.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(round, "0226\n");
+}
+
+#[test]
+fn subtract_decimal_and_unsigned_magnitude() {
+    // 1.5 - 2.25 = -0.75 → unsigned V99 stores magnitude 0.75 → "0075".
+    let out = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(2)V99 VALUE 1.5."],
+        &["SUBTRACT 2.25 FROM R.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "0075\n");
+}
+
+#[test]
+fn add_between_fields_of_different_scales() {
+    // A is 9(3)V9 = 12.3; B is 9(2)V99 = 1.25; ADD A TO B → 13.55 → "1355".
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC 9(3)V9 VALUE 12.3.", "01  B  PIC 9(2)V99 VALUE 1.25."],
+        &["ADD A TO B.", "DISPLAY B.", "STOP RUN."],
+    ));
+    assert_eq!(out, "1355\n");
+}
+
+#[test]
+fn item_to_item_move_reshapes_to_receiver_picture() {
+    // SRC 9(3)=42 → DST 9(5) → "00042".
+    let out = assert_matches_oracle(&wrap(
+        &["01  SRC  PIC 9(3) VALUE 42.", "01  DST  PIC 9(5)."],
+        &["MOVE SRC TO DST.", "DISPLAY DST.", "STOP RUN."],
+    ));
+    assert_eq!(out, "00042\n");
+}
+
+#[test]
+fn item_to_item_move_rescales_the_implied_point() {
+    // SRC 9(2)V9 = 12.3 → DST 9(3)V99 → 12.30 → "01230".
+    let up = assert_matches_oracle(&wrap(
+        &["01  SRC  PIC 9(2)V9 VALUE 12.3.", "01  DST  PIC 9(3)V99."],
+        &["MOVE SRC TO DST.", "DISPLAY DST.", "STOP RUN."],
+    ));
+    assert_eq!(up, "01230\n");
+    // Fewer decimals truncates (MOVE never rounds): 12.36 → 12.3, and
+    // 9(2)V9 is three digits → "123".
+    let down = assert_matches_oracle(&wrap(
+        &["01  SRC  PIC 9(2)V99 VALUE 12.36.", "01  DST  PIC 9(2)V9."],
+        &["MOVE SRC TO DST.", "DISPLAY DST.", "STOP RUN."],
+    ));
+    assert_eq!(down, "123\n");
+}
+
+#[test]
+fn arithmetic_chains_through_the_field() {
+    // Successive ops read the field back, proving the i64 slot round-trips:
+    // 0 +7 =7, *3 =21, -1 =20 → "20".
+    let out = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(2) VALUE 0."],
+        &[
+            "ADD 7 TO R.",
+            "MULTIPLY 3 BY R.",
+            "SUBTRACT 1 FROM R.",
+            "DISPLAY R.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "20\n");
+}

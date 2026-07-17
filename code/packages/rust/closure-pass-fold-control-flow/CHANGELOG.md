@@ -30,6 +30,49 @@ body is carried across as a block (`while (1) { a(); b(); }` →
 `for (;;) { a(); b(); }`, valid); Closure additionally comma-fuses the body to
 `for (;;) a(), b();`, which is a separate loop-body-fusion transform (a
 follow-up) that applies to `for` loops too.
+## [0.30.0] - 2026-07-17
+
+### Changed — a dead loop's hoisted body `var`s are EXTRACTED, not declined or dropped
+
+The `for(;<falsy>;)` collapse no longer DECLINES when the body carries a
+hoistable `var` (0.29.0's conservative gate), and `while(<falsy>)` no longer
+DROPS one. Both now EXTRACT the hoisted bindings to a bare `var …;`, matching
+the reference Closure Compiler at `SIMPLE` byte-for-byte:
+
+- `for(;false;){var x=1}` → `var x;`
+- `for(;false;){var x=1;var y=2}` → `var y,x;`  (reversed source order)
+- `for(var i=0;false;){var y=2}` → `var y,i=0;`  (reversed body vars, then the
+  `for`-init `var` declarators appended in order **with** their initializers)
+- `for(var i=0,j=1;false;){var y=2}` → `var y,i=0,j=1;`
+- `for(;false;){for(var k in o){}}` → `var k;`  (nested `for-in` header var)
+- `for(;false;){try{}finally{var x=1}}` → `var x;`  (exhaustive collection)
+- `while(false){var x=1}` → `var x;`  (**was** `[]` — dropping a used `var x`
+  was a miscompile: `typeof x` flips from `"undefined"` to a `ReferenceError`)
+
+A body `var`'s initializer is STRIPPED (the body never runs, so its effect —
+`var x=g()` → `var x;` — must not fire), while a `for`-init `var` runs once at
+entry and keeps its initializer. The exact emission is
+`REVERSE(body vars, stripped) ++ (for-init var declarators, in order, kept)`.
+
+Two new helpers: `collect_hoistable_vars` (an exhaustive var-**name** collector
+that mirrors the retired `body_has_hoistable_var` walker's coverage — blocks,
+both `if` arms, all loop bodies **and** their `var` headers, `switch` cases,
+`try` block/handler/finalizer, `with`, labeled — never descending into a nested
+function/class scope) and `extract_dead_loop_vars`.
+
+**Declined (kept as a valid, non-dropping loop — a follow-up):** a `for` with an
+**expression** init AND a hoisted body `var` (`for(f();false;){var x=1}` →
+Closure's `var x;f();` is two statements, which a single fold return can't
+represent). `if(false)` extraction is also deferred (its `else` branch makes it
+multi-statement). A `let`/`const` for-header still declines when its initializer
+has a side effect (0.29.0 gate, unchanged).
+
+NOTE (unchanged, separate gap): at script top level an extracted `var x;` whose
+`x` is never used is still removed by closurec's downstream unused-var DCE (`→
+[]`), where Closure keeps it. That is harmless (an unused binding) and is the
+pre-existing unused-decl-at-`SIMPLE` architectural gap; when the `var` is *used*
+the extraction survives and is byte-identical. Bug fix (while-drop) + byte-
+identity; MINOR bump 0.29.0 → 0.30.0.
 
 ## [0.29.0] - 2026-07-16
 
