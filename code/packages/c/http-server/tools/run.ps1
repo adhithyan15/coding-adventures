@@ -27,11 +27,14 @@ $env:PLATFORM_INCLUDE = "$(Join-Path $self 'include') $(Join-Path $tcprt 'includ
 $env:PLATFORM_LIBS = 'ws2_32.lib'
 . (Join-Path $harness 'lib\platform-lib.ps1')
 Write-Host "http-server (windows): C compilers: $((Platform-Compilers -Lang c) -join ' ')"
+# tcp-runtime's mailbox uses os-platform's thread mutex (Win32 backend); its
+# source needs only the CRT + kernel32, linked by default.
 Platform-BuildAndRun -Lang c -Name 'http-server-tests' -Sources @(
     'tests\http_server_test.c',
     'src\http_server.c',
     (Join-Path $tcprt 'src\tcp_runtime.c'),
     (Join-Path $net 'src\net_windows.c'),
     (Join-Path $reactor 'src\reactor_windows.c'),
-    (Join-Path $http 'src\http_core.c')
+    (Join-Path $http 'src\http_core.c'),
+    (Join-Path $osp 'src\thread_windows.c')
 )
