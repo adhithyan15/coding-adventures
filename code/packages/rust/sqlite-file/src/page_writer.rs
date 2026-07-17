@@ -47,6 +47,10 @@ use crate::varint;
 /// The table-leaf page type byte (matches `btree::LEAF_TABLE`).
 const LEAF_TABLE: u8 = 0x0D;
 
+/// The interior table-b-tree page type byte (matches `btree::INTERIOR_TABLE`).
+/// An interior page holds no rows — only child pointers plus divider rowids.
+const INTERIOR_TABLE: u8 = 0x05;
+
 /// SQLite's local-payload limit for a table-leaf cell: a record longer than
 /// `usable_size - 35` spills into an overflow chain. We do not emit overflow
 /// yet, so any record above this limit is rejected. This mirrors the reader's
@@ -369,10 +373,11 @@ pub fn write_multi_table_db(page_size: usize, tables: &[TableSpec]) -> Result<Ve
     let mut schema_rows: Vec<(i64, Vec<u8>)> = Vec::with_capacity(tables.len());
     for (i, (name, create_sql, rows)) in tables.iter().enumerate() {
         let root_page = next_page;
-        let (leaf, overflow) =
-            encode_table_pages(page_size, usable, data_max_local, root_page, rows)?;
-        // root leaf (1 page) + its overflow pages.
-        next_page = u32::try_from(root_page as usize + 1 + overflow.len())
+        // A table is a whole b-tree now: a single leaf when it fits, otherwise an
+        // interior root over several leaves. Every page it produces is allocated
+        // contiguously from `root_page`, so the next table roots right after.
+        let pages = encode_table_btree(page_size, usable, data_max_local, root_page, rows)?;
+        next_page = u32::try_from(root_page as usize + pages.len())
             .map_err(|_| SqliteError::Unsupported("database exceeds the 2^32-page limit"))?;
         schema_rows.push((
             (i + 1) as i64,
@@ -382,8 +387,7 @@ pub fn write_multi_table_db(page_size: usize, tables: &[TableSpec]) -> Result<Ve
                 create_sql,
             )),
         ));
-        table_pages.push(leaf);
-        table_pages.extend(overflow);
+        table_pages.extend(pages);
     }
 
     // Total pages: page 1 (schema) + every table/overflow page.
@@ -424,23 +428,109 @@ pub fn write_multi_table_db(page_size: usize, tables: &[TableSpec]) -> Result<Ve
 /// which are numbered from `root_page + 1`. Returns `(leaf_bytes,
 /// overflow_pages)` — the leaf is exactly `page_size` bytes and each overflow
 /// page likewise. Shared by every table in [`write_multi_table_db`].
-fn encode_table_pages(
+fn encode_table_btree(
     page_size: usize,
     usable: usize,
     data_max_local: usize,
     root_page: u32,
     rows: &[(i64, Vec<crate::record::SqlValue>)],
-) -> Result<(Vec<u8>, Vec<Vec<u8>>), SqliteError> {
+) -> Result<Vec<Vec<u8>>, SqliteError> {
     let records: Vec<(i64, Vec<u8>)> = rows
         .iter()
         .map(|(rowid, cols)| (*rowid, crate::record::encode(cols)))
         .collect();
     let ordered = order_cells(&records)?;
 
-    let mut next_overflow_page = root_page + 1;
+    // Partition the rowid-ordered cells into leaf pages. A cell's footprint is
+    // its bytes plus a 2-byte cell-pointer entry; a leaf's 8-byte header leaves
+    // `usable - 8` for the pointer array and cells. The overflow *page number*
+    // does not affect a cell's length (the inline pointer is always 4 bytes), so
+    // we can size cells with a placeholder before assigning page numbers.
+    let leaf_content = usable - 8;
+    let mut leaves: Vec<Vec<usize>> = Vec::new();
+    let mut current: Vec<usize> = Vec::new();
+    let mut current_size = 0usize;
+    for (idx, (rowid, record)) in ordered.iter().enumerate() {
+        let (cell, _spilled) =
+            build_leaf_cell(*rowid, record, page_size, usable, data_max_local, 0);
+        let footprint = cell.len() + 2;
+        if !current.is_empty() && current_size + footprint > leaf_content {
+            leaves.push(std::mem::take(&mut current));
+            current_size = 0;
+        }
+        current.push(idx);
+        current_size += footprint;
+    }
+    // An empty table still has one (empty) leaf.
+    leaves.push(current);
+
+    // A table that fits on a single leaf keeps the flat root-is-leaf layout, so
+    // its bytes stay identical to the pre-tree-growth writer.
+    if leaves.len() == 1 {
+        let (leaf, overflow) = encode_single_leaf(
+            page_size,
+            usable,
+            data_max_local,
+            root_page,
+            &ordered,
+            &leaves[0],
+        )?;
+        let mut pages = vec![leaf];
+        pages.extend(overflow);
+        return Ok(pages);
+    }
+
+    // Multiple leaves: the root becomes an interior page at `root_page`, and the
+    // leaves (each followed by its own overflow pages) are allocated after it.
+    // `pages[0]` is reserved for the interior page, filled once its children's
+    // page numbers are known.
+    let mut pages: Vec<Vec<u8>> = vec![Vec::new()];
+    let mut next_page = root_page + 1;
+    // `(left-child page, largest rowid in that leaf)` for each leaf, the raw
+    // material for the interior page's divider cells.
+    let mut leaf_refs: Vec<(u32, i64)> = Vec::with_capacity(leaves.len());
+    for leaf_indices in &leaves {
+        let leaf_page = next_page;
+        next_page += 1;
+        let (leaf, overflow) =
+            encode_single_leaf(page_size, usable, data_max_local, leaf_page, &ordered, leaf_indices)?;
+        next_page = u32::try_from(next_page as usize + overflow.len())
+            .map_err(|_| SqliteError::Unsupported("database exceeds the 2^32-page limit"))?;
+        let max_rowid = leaf_indices
+            .iter()
+            .map(|&i| ordered[i].0)
+            .max()
+            .unwrap_or(0);
+        pages.push(leaf);
+        pages.extend(overflow);
+        leaf_refs.push((leaf_page, max_rowid));
+    }
+
+    // The interior page: one divider cell per leaf except the last (whose rows
+    // are reached via the right-most-child pointer). A divider's key is the
+    // largest rowid in its left child, so `rowid <= key` descends left.
+    let (rightmost_page, _) = *leaf_refs.last().expect("at least two leaves here");
+    let dividers = &leaf_refs[..leaf_refs.len() - 1];
+    pages[0] = pack_interior_page(page_size, dividers, rightmost_page)?;
+    Ok(pages)
+}
+
+/// Build one data leaf (rooted at `leaf_page`) from the `ordered` cells selected
+/// by `indices`, spilling oversized records into overflow pages numbered from
+/// `leaf_page + 1`. Returns `(leaf_bytes, overflow_pages)`.
+fn encode_single_leaf(
+    page_size: usize,
+    usable: usize,
+    data_max_local: usize,
+    leaf_page: u32,
+    ordered: &[&(i64, Vec<u8>)],
+    indices: &[usize],
+) -> Result<(Vec<u8>, Vec<Vec<u8>>), SqliteError> {
+    let mut next_overflow_page = leaf_page + 1;
     let mut overflow_pages: Vec<Vec<u8>> = Vec::new();
-    let mut leaf_cells: Vec<Vec<u8>> = Vec::with_capacity(ordered.len());
-    for (rowid, record) in &ordered {
+    let mut leaf_cells: Vec<Vec<u8>> = Vec::with_capacity(indices.len());
+    for &i in indices {
+        let (rowid, record) = ordered[i];
         let (cell, spilled) = build_leaf_cell(
             *rowid,
             record,
@@ -457,6 +547,51 @@ fn encode_table_pages(
     let mut leaf = vec![0u8; page_size];
     pack_leaf_cells(&mut leaf, 0, page_size, &leaf_cells)?;
     Ok((leaf, overflow_pages))
+}
+
+/// Pack an **interior table b-tree page** (type `0x05`) from its divider cells
+/// and right-most child. Each divider is `(left-child page, key)` where `key` is
+/// the largest rowid reachable through that child; the cell bytes are
+/// `[u32-be left-child][varint key]`, mirroring the reader's `INTERIOR_TABLE`
+/// walk. The 12-byte header carries the cell count and the right-most child at
+/// offset 8; the cell-pointer array grows from offset 12 and cells pack upward
+/// from the bottom, exactly like a leaf.
+///
+/// # Errors
+/// [`SqliteError::Unsupported`] if the dividers do not fit on one interior page
+/// (a multi-level tree is a later rung) or exceed 65535 cells.
+fn pack_interior_page(
+    page_size: usize,
+    dividers: &[(u32, i64)],
+    rightmost: u32,
+) -> Result<Vec<u8>, SqliteError> {
+    let n = dividers.len();
+    if n > u16::MAX as usize {
+        return Err(SqliteError::Unsupported("more than 65535 interior cells"));
+    }
+    let mut page = vec![0u8; page_size];
+    page[0] = INTERIOR_TABLE;
+    page[3..5].copy_from_slice(&(n as u16).to_be_bytes());
+    page[8..12].copy_from_slice(&rightmost.to_be_bytes());
+
+    let ptr_array = 12;
+    let content_floor = ptr_array + n * 2;
+    let mut content_top = page_size;
+    for (i, (child, key)) in dividers.iter().enumerate() {
+        let mut cell = Vec::with_capacity(13);
+        cell.extend_from_slice(&child.to_be_bytes());
+        varint::write(*key, &mut cell);
+        content_top = content_top.checked_sub(cell.len()).filter(|top| *top >= content_floor).ok_or(
+            SqliteError::Unsupported(
+                "too many child leaves for one interior page (multi-level tree not yet supported)",
+            ),
+        )?;
+        page[content_top..content_top + cell.len()].copy_from_slice(&cell);
+        let entry = ptr_array + i * 2;
+        page[entry..entry + 2].copy_from_slice(&(content_top as u16).to_be_bytes());
+    }
+    page[5..7].copy_from_slice(&(content_top as u16).to_be_bytes());
+    Ok(page)
 }
 
 #[cfg(test)]
@@ -565,6 +700,34 @@ mod tests {
         // docs' leaf + its overflow pages.
         assert_eq!(schema[1].root_page, Some(3));
         assert!(schema[2].root_page.unwrap() > 3);
+    }
+
+    /// A table with more rows than fit on one leaf grows a b-tree: several data
+    /// leaves under an interior root page. The reader walks the whole tree and
+    /// returns every row in rowid order.
+    #[test]
+    fn write_table_grows_a_btree_across_multiple_leaves() {
+        // ~300 small rows on a 512-byte page force several leaves + an interior
+        // root (a 512-byte leaf holds only a few dozen small cells).
+        let rows: Vec<(i64, Vec<SqlValue>)> = (1..=300)
+            .map(|n| (n, vec![SqlValue::Int(n * 10), SqlValue::Text(format!("r{n}"))]))
+            .collect();
+        let db = write_single_table_db(512, "big", "CREATE TABLE big(n, label)", &rows).unwrap();
+
+        let pages = db.len() / 512;
+        let header = crate::header::Header::parse(&db).unwrap();
+        assert_eq!(header.page_count as usize, pages);
+        assert!(pages > 3, "expected multiple leaves + interior, got {pages} pages");
+
+        // The table's root page is now an *interior* table page (type 0x05).
+        let schema = crate::schema::read_schema(&db).unwrap();
+        let root = schema[0].root_page.unwrap() as usize;
+        let root_off = (root - 1) * 512;
+        assert_eq!(db[root_off], 0x05, "root should be an interior table page");
+
+        // Every row reads back in order, through the interior→leaf descent.
+        let read = crate::schema::read_table(&db, "big").unwrap();
+        assert_eq!(read, rows);
     }
 
     /// An empty table still yields a valid, readable database (no rows).

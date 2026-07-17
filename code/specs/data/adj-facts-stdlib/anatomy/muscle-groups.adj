@@ -1,0 +1,132 @@
+% ============================================================================
+% muscle-groups — a named skeletal muscle → the body region it is located in
+% (adj-facts-stdlib, ANATOMY).
+% ============================================================================
+% A middle/high-school musculoskeletal fact set on the way to medicine: the body
+% has hundreds of skeletal muscles, and the first thing a learner memorizes is
+% simply WHERE each big named muscle sits. The biceps brachii is in the arm; the
+% deltoid caps the shoulder; the pectoralis major fans across the chest; the
+% rectus abdominis (the "six-pack") runs down the abdomen; the gluteus maximus
+% is the great muscle of the hip; the quadriceps and sartorius run down the
+% thigh; the gastrocnemius bulges the back of the leg. Recall is a binding query:
+%
+%     ? muscle_region(biceps_brachii, $Region)   % arm
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `muscle_region(muscle, region)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the region
+% WITH its source, on the CPU, with zero model calls, and abstains on anything
+% that is not one of these muscles (it never invents a location).
+%
+% The muscles, as a little truth table:
+%
+%     muscle              region     everyday name of the spot
+%     -----------------   --------   ---------------------------------
+%     biceps_brachii      arm        front of the upper arm
+%     triceps_brachii     arm        back of the upper arm
+%     deltoid             shoulder   the rounded cap of the shoulder
+%     pectoralis_major    chest      the fan across the chest
+%     rectus_abdominis    abdomen    the "six-pack" of the belly wall
+%     gluteus_maximus     hip        the big muscle of the hip/buttock
+%     quadriceps          thigh      front of the thigh
+%     sartorius           thigh      the long strap down the thigh
+%     gastrocnemius       leg        the calf, back of the lower leg
+%
+% Each `region` value is a SINGLE lowercase token that appears VERBATIM in the
+% cited source sentence (see the provenance block), so the recall is a faithful
+% echo of the source, not a paraphrase. Note that a region is one-to-MANY: `arm`
+% holds both the biceps and the triceps, and `thigh` holds both the quadriceps
+% and the sartorius — so the relation run BACKWARD enumerates every muscle in a
+% region:
+%
+%     ? muscle_region($M, arm)   % biceps_brachii, then triceps_brachii
+%
+% Something that is not one of these muscles — a bone (the femur), a tendon, the
+% heart — has no row, so a recall on it ABSTAINS rather than inventing a place.
+% That honest-abstention property is what makes the table safe to reason from: a
+% medicine agent reasons UP from "which muscle lives where" before it can reason
+% about a torn hamstring in the thigh or a rotator-cuff problem at the shoulder.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every muscle→region pair was
+% read out of a page fetched this session, and any pair that could not be cleanly
+% grounded was DROPPED; the masseter and sternocleidomastoid were dropped because
+% no fetched source stated their location with a single clean region token in one
+% sentence). Each region token below is quoted inside the verbatim source
+% sentence so any reader can re-check it. All nine sources are the corresponding
+% English Wikipedia muscle articles — a widely-reviewed SECONDARY reference, so
+% this table is `trust consensus` (NOT authoritative: no primary U.S. government
+% / NIH page stated these single-token locations in fetchable text this session):
+%
+%   biceps_brachii → arm
+%     https://en.wikipedia.org/wiki/Biceps
+%     "The biceps or biceps brachii is a large muscle that lies on the front of
+%      the upper arm between the shoulder and the elbow."
+%
+%   triceps_brachii → arm
+%     https://en.wikipedia.org/wiki/Triceps
+%     "The triceps, or triceps brachii (Latin for "three-headed muscle of the
+%      arm"), is a large muscle on the back of the upper limb of many
+%      vertebrates."
+%
+%   deltoid → shoulder
+%     https://en.wikipedia.org/wiki/Deltoid_muscle
+%     "The deltoid muscle (or musculus deltoideus) is the muscle forming the
+%      rounded contour of the human shoulder."
+%
+%   pectoralis_major → chest
+%     https://en.wikipedia.org/wiki/Pectoralis_major
+%     "The pectoralis major (from Latin pectus 'breast') is a thick, fan-shaped
+%      or triangular convergent muscle of the human chest."
+%
+%   rectus_abdominis → abdomen
+%     https://en.wikipedia.org/wiki/Rectus_abdominis_muscle
+%     "The rectus abdominis ... is a pair of segmented skeletal muscle on the
+%      ventral aspect of a person's abdomen."
+%
+%   gluteus_maximus → hip
+%     https://en.wikipedia.org/wiki/Gluteus_maximus_muscle
+%     "The gluteus maximus is the main extensor muscle of the hip in humans."
+%
+%   quadriceps → thigh
+%     https://en.wikipedia.org/wiki/Quadriceps
+%     "The quadriceps femoris muscle is a large muscle group that includes the
+%      four prevailing muscles on the front of the thigh."
+%
+%   sartorius → thigh
+%     https://en.wikipedia.org/wiki/Sartorius_muscle
+%     "It is a long, thin, superficial muscle that runs down the length of the
+%      thigh in the anterior compartment."
+%
+%   gastrocnemius → leg
+%     https://en.wikipedia.org/wiki/Gastrocnemius_muscle
+%     "It is located superficial to the soleus in the posterior (back)
+%      compartment of the leg."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the Wikipedia sentence that fixes
+% the first row (biceps_brachii → arm). Every OTHER row's per-fact source and
+% verbatim span is listed above, so each pair remains independently checkable.
+% All nine sources are the same secondary reference (English Wikipedia), so
+% `trust consensus`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table muscle_region {
+    columns muscle, region
+
+    row (biceps_brachii, arm)
+    row (triceps_brachii, arm)
+    row (deltoid, shoulder)
+    row (pectoralis_major, chest)
+    row (rectus_abdominis, abdomen)
+    row (gluteus_maximus, hip)
+    row (quadriceps, thigh)
+    row (sartorius, thigh)
+    row (gastrocnemius, leg)
+
+    source "The biceps or biceps brachii is a large muscle that lies on the front of the upper arm between the shoulder and the elbow."
+    locator "https://en.wikipedia.org/wiki/Biceps"
+    trust consensus
+}
