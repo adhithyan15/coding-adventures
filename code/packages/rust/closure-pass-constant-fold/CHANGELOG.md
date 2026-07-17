@@ -28,6 +28,33 @@ parens, and warrants its own case). A **mixed-operator** right nest
 
 Additive; MINOR bump 0.96.0 → 0.100.0 (0.97 = numeric-object-key, 0.98 = `new Error` drop,
 0.99 = `new Object`/`new Array` drop, all in flight).
+## [0.97.0] - 2026-07-17
+
+### Added — a non-integer numeric object key is quoted (`{0.5:1}` → `{"0.5":1}`)
+
+An object-literal key that is a **non-integer** `NumericLiteral` now folds to a
+quoted `StringLiteral` key, matching the reference Closure Compiler at `SIMPLE`
+byte-for-byte:
+
+- `{0.5:1}` → `{"0.5":1}`, `{.5:1}` → `{"0.5":1}`, `{1.5:2,2:3}` → `{"1.5":2,2:3}`,
+  `{0.1:1}` → `{"0.1":1}`, `{3.14:1}` → `{"3.14":1}`
+
+A numeric key's property name is the ECMAScript `ToString` of its value, so
+`0.5` names the property `"0.5"`; Closure prints it as a string key, never the
+bare number. (An **integer** key stays numeric — the emitter prints `{1:1}` /
+`{1E3:1}` / `{31:1}` unquoted, which is already correct.) The `NumericLiteral`
+key at `fold_expression`'s object-literal arm is converted via `property_key_for`
+using `format_js_number` — whose shortest-round-trip output equals JS `ToString`
+exactly in the plain-decimal range.
+
+**Scope.** Converted only for a finite non-integer whose magnitude is in JS's
+plain-decimal `ToString` range `[1e-6, 1e21)`, where `format_js_number` matches
+`ToString`. Outside that range the string forms diverge — a tiny value takes
+exponent notation (`{1e-7:1}` → Closure `{"1e-7":1}`) and a large integer past
+`2^53` takes a precision-quoted decimal (`{123…680:1}` → `{"123…680":1}`) — so
+those keep their numeric key for now (valid output, byte-identical follow-up).
+This is purely a key-quoting normalization: `{0.5:1}` and `{"0.5":1}` name the
+same own property, so no runtime semantics change.
 
 ## [0.96.0] - 2026-07-16
 

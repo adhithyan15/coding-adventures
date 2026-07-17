@@ -12,6 +12,22 @@
  */
 import { ndarray, isScalar, type NDArray } from "./ndarray.js";
 
+/**
+ * Coerce a bare `number` into a rank-0 (scalar) `NDArray`; an already-`NDArray`
+ * value passes through unchanged. Needed because a compiled frontend's
+ * lowering can emit a *bare* (unwrapped) scalar operand for `.* ./ .\` and for
+ * `* /` when exactly one side is provably scalar (e.g. `A .* 2` — the `2`
+ * arrives as a plain number literal, not an `ArrayLit`/scalar-array
+ * constructor) — mirrors `matlab-to-semantic-ir`'s lowering convention (see
+ * `code/specs/SIR22-array-matrix-semantic-ir.md`). Every function below that
+ * accepts an "array" operand normalizes through this first, so a raw number
+ * never reaches `.data`/`.shape` and throws a confusing `TypeError` instead of
+ * behaving correctly.
+ */
+function toArrayValue(v: number | NDArray): NDArray {
+  return typeof v === "number" ? { shape: [], data: Float64Array.of(v) } : v;
+}
+
 export type ElementwiseOpKind =
   | "Add"
   | "Sub"
@@ -77,7 +93,9 @@ function sameShape(a: readonly number[], b: readonly number[]): boolean {
  * a scalar; otherwise the shapes must match exactly (full NumPy/MATLAB
  * broadcasting is out of scope here, same as the Rust reference).
  */
-export function elementwise(op: ElementwiseOpKind, a: NDArray, b: NDArray): NDArray {
+export function elementwise(op: ElementwiseOpKind, a: number | NDArray, b: number | NDArray): NDArray {
+  a = toArrayValue(a);
+  b = toArrayValue(b);
   const { data: ad } = a;
   const { data: bd } = b;
   let data: Float64Array;
