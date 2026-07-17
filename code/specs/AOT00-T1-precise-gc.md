@@ -173,6 +173,36 @@ The descriptor table is produced from IIR type information already present at
 closures have a known capture layout — see `ClosureTypeHint`). Frontends that do not
 yet carry precise kinds emit `TYPE_CONSERVATIVE` and lose no correctness.
 
+### 3.1 Two heap representations in `gc-core` (managed-object vs. flat-native)
+
+The `garbage-collector` crate's `MarkAndSweepGC` stores the heap as a
+`HashMap<usize, Box<dyn HeapObject>>` with **synthetic addresses** (`allocate(Box<dyn
+HeapObject>) -> usize`, addresses from `0x10000`). That is a **VM-side object model**:
+the interpreter dereferences through the map and each object supplies its own
+`references()`. It is the right model for `vm-core`/`jit-core`, and it **cannot back
+the native C ABI** — where `__…_gc_alloc(n) -> ptr` must return a **real memory
+pointer** to `n` raw bytes that generated machine code reads/writes directly at byte
+offsets (`field_load`/`field_store`), with no map indirection and no `Box<dyn>`.
+
+So `gc-core` hosts **two heap representations behind one set of abstractions**:
+
+| Representation | Backing | Consumer | Reference form |
+|---|---|---|---|
+| **Managed-object** (`garbage-collector`) | `HashMap<usize, Box<dyn HeapObject>>` | `vm-core`, `jit-core` | synthetic `usize` address |
+| **Flat-native** (new; this arc) | one contiguous malloc-backed region; header + payload (§3) | native-AOT / LLVM / WASM linear memory | real machine pointer |
+
+Both implement the **same collection algorithm** (mark-sweep now; precise/moving/
+generational per §6) and share `gc-core`'s generic machinery — `HeapKind`/`KindRegistry`
+(field maps), `RootSet`, `WriteBarrier`, `GcProfile`/`AdaptivePolicy`. The **flat-native**
+representation is essentially `twig_gc.c`'s battle-tested flat model (32-byte header,
+16-byte payload alignment, adaptive threshold, OOM-safe mark stack) **lifted into
+`gc-core` as a first-class generic algorithm** and exposed through the C-ABI
+`staticlib`. That is what retiring `twig_gc.c` means concretely: not deleting its
+design, but promoting it from a Twig-specific C fork to a `gc-core` representation any
+native consumer links. Task #117 (the C-ABI `staticlib`) is therefore "add the
+flat-native heap collector to `gc-core` + expose its C ABI," not a thin wrapper over
+the managed-object collector.
+
 ---
 
 ## 4. Stack maps: format and lookup
@@ -408,11 +438,13 @@ fallback keeps absent-toolchain rows valid).
 Ship this spec revision (spec-first). Then the **convergence** precedes the precise
 rungs, because precision must be built *in* `gc-core`, not `twig_gc.c`:
 
-1. **`gc-core` C-ABI `staticlib`** — a `crate-type = ["staticlib"]` surface (or a
-   sibling `gc-core-capi` crate) exposing the ABI `twig_gc.c` exports today
-   (`__…_gc_alloc/collect/safepoint/live_bytes/collection_count`), backed by
-   `gc-core`'s existing mark-sweep. Unit-tested on the host (extern-`C`, like
-   `dynval_runtime_golden.rs`).
+1. **`gc-core` flat-native heap + C-ABI `staticlib`** — add the flat-native heap
+   collector (§3.1) to `gc-core` (real-pointer allocation, header+payload, mark-sweep)
+   and expose it through a `crate-type = ["staticlib"]` surface (or a sibling
+   `gc-core-capi` crate) with the ABI `twig_gc.c` exports today
+   (`__…_gc_alloc/collect/safepoint/live_bytes/collection_count`). Unit-tested on the
+   host (extern-`C`, like `dynval_runtime_golden.rs`). *(Not a thin wrapper over the
+   managed-object collector — that model can't return real pointers; see §3.1.)*
 2. **Wire `twig-aot` → link `gc_runtime_<target>.a`, retire `twig_gc.c`** — swap the
    `build.rs` `cc` compile of `twig_gc.c` for the Rust `staticlib`; keep
    `twig_runtime.c`/`dynval_runtime.c` for now. The existing golden + `*_smoke.rs`
