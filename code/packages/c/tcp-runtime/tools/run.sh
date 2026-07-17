@@ -36,8 +36,11 @@ fi
 export PLATFORM_DEFINES
 echo "tcp-runtime ($(platform_os)): C compilers: $(platform_compilers c)"
 rc=0
-PLATFORM_LIBS=""; export PLATFORM_LIBS
+# The mailbox mutex comes from os-platform's thread backend (pthreads on POSIX),
+# so link its source and the OS thread library. _GNU_SOURCE / _DARWIN_C_SOURCE
+# (set above for the reactor) already expose the pthreads declarations.
+PLATFORM_LIBS="-pthread"; export PLATFORM_LIBS
 platform_build_and_run c tcp-runtime-tests \
     tests/tcp_runtime_test.c src/tcp_runtime.c \
-    "$NET/src/net_posix.c" "$REACTOR_SRC" || rc=1
+    "$NET/src/net_posix.c" "$REACTOR_SRC" "$OSP/src/thread_posix.c" || rc=1
 exit "$rc"

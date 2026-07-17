@@ -17,12 +17,14 @@
 #include "tcp_runtime/tcp_runtime.h"
 
 #include "net/tcp.h"
+#include "os_platform/thread.h" /* osp_mutex — guards the mailbox queue */
 #include "reactor/reactor.h"
 
 #include <stdlib.h>
+#include <string.h> /* memcpy — mailbox payloads are copied on enqueue */
 
 /* Per-read scratch. A reply larger than this is truncated (a phase-one limit;
- * streaming/mailbox output is a documented follow-up). */
+ * streaming output is a documented follow-up). */
 #define TCP_RT_BUFSZ 8192u
 /* Ready descriptors serviced per poll step before returning to the caller. */
 #define TCP_RT_MAX_EVENTS 64
@@ -31,6 +33,33 @@ struct tcp_conn {
     osp_socket *sock;
     osp_fd fd; /* cached for osp_reactor_del (the socket may be closing) */
     uint64_t id;
+};
+
+/*
+ * A queued outbound command: send `bytes`[0..`len`) to connection `conn_id`, and
+ * (if `close`) close it afterwards. `bytes` is a private copy of the caller's
+ * payload (NULL when len == 0); the reactor thread frees it after delivery. The
+ * commands form a singly-linked FIFO on the mailbox.
+ */
+struct tcp_cmd {
+    uint64_t conn_id;
+    unsigned char *bytes; /* memdup'd copy, or NULL when len == 0 */
+    size_t len;
+    int close;
+    struct tcp_cmd *next;
+};
+
+/*
+ * The outbound mailbox: a mutex-guarded FIFO of commands. Producers (any thread)
+ * append under the lock; the reactor thread detaches the whole queue under the
+ * lock and processes it unlocked. The mailbox is EMBEDDED in the runtime — its
+ * lifetime is exactly the runtime's — so tcp_runtime_mailbox hands back a pointer
+ * into the runtime, never a separate allocation.
+ */
+struct tcp_mailbox {
+    osp_mutex *lock;
+    struct tcp_cmd *head; /* oldest queued command (dequeued first) */
+    struct tcp_cmd *tail; /* newest queued command (appended here) */
 };
 
 struct tcp_runtime {
@@ -44,6 +73,7 @@ struct tcp_runtime {
     size_t count;
     size_t cap;
     size_t max_connections; /* 0 = unlimited (the default) */
+    struct tcp_mailbox mailbox;
     volatile int stopped;
 };
 
@@ -104,6 +134,110 @@ static void tcp__remove_conn(struct tcp_runtime *rt, struct tcp_conn *node) {
     free(node);
 }
 
+/* Free one command node and the payload it owns. */
+static void tcp__cmd_free(struct tcp_cmd *cmd) {
+    free(cmd->bytes);
+    free(cmd);
+}
+
+/*
+ * Enqueue a command on the mailbox. Copies `data` (so the caller need not keep it
+ * alive) and appends under the lock — the ONLY place a producer thread touches
+ * shared state. Called by the public tcp_mailbox_* wrappers, which validate args.
+ */
+static osp_status tcp__mailbox_enqueue(struct tcp_mailbox *mb, uint64_t conn_id,
+                                       const void *data, size_t len, int close) {
+    struct tcp_cmd *cmd = (struct tcp_cmd *)malloc(sizeof(*cmd));
+    if (cmd == NULL) {
+        return OSP_ERR_NOMEM;
+    }
+    cmd->bytes = NULL;
+    if (len > 0) {
+        cmd->bytes = (unsigned char *)malloc(len);
+        if (cmd->bytes == NULL) {
+            free(cmd);
+            return OSP_ERR_NOMEM;
+        }
+        memcpy(cmd->bytes, data, len);
+    }
+    cmd->conn_id = conn_id;
+    cmd->len = len;
+    cmd->close = close;
+    cmd->next = NULL;
+
+    osp_mutex_lock(mb->lock);
+    if (mb->tail == NULL) {
+        mb->head = cmd; /* first command in an empty queue */
+    } else {
+        mb->tail->next = cmd;
+    }
+    mb->tail = cmd;
+    osp_mutex_unlock(mb->lock);
+    return OSP_OK;
+}
+
+/*
+ * Detach the whole queue under the lock in one shot, then process it WITHOUT the
+ * lock held — so no socket write ever runs while the mutex is locked (a producer
+ * thread is never blocked on I/O it did not initiate). Runs on the reactor thread
+ * only, so scanning/mutating rt->conns needs no lock. A command whose connection
+ * id is unknown (never accepted, or already closed) is dropped.
+ */
+static void tcp__mailbox_drain(struct tcp_runtime *rt) {
+    struct tcp_mailbox *mb = &rt->mailbox;
+    struct tcp_cmd *cmd;
+    struct tcp_cmd *next;
+
+    osp_mutex_lock(mb->lock);
+    cmd = mb->head;
+    mb->head = NULL;
+    mb->tail = NULL;
+    osp_mutex_unlock(mb->lock);
+
+    for (; cmd != NULL; cmd = next) {
+        struct tcp_conn *node = NULL;
+        size_t i;
+        next = cmd->next; /* captured before we free cmd */
+        for (i = 0; i < rt->count; i++) {
+            if (rt->conns[i]->id == cmd->conn_id) {
+                node = rt->conns[i];
+                break;
+            }
+        }
+        if (node != NULL) {
+            if (cmd->len > 0) {
+                (void)osp_socket_send(node->sock, cmd->bytes, cmd->len, NULL);
+            }
+            if (cmd->close) {
+                tcp__remove_conn(rt, node);
+            }
+        }
+        tcp__cmd_free(cmd);
+    }
+}
+
+/* Free any commands still queued at teardown, without performing I/O (the sockets
+ * are being closed). Detaches under the lock so the mutex is left unlocked and
+ * unused, ready for osp_mutex_destroy. */
+static void tcp__mailbox_discard(struct tcp_mailbox *mb) {
+    struct tcp_cmd *cmd;
+    struct tcp_cmd *next;
+
+    if (mb->lock != NULL) {
+        osp_mutex_lock(mb->lock);
+    }
+    cmd = mb->head;
+    mb->head = NULL;
+    mb->tail = NULL;
+    if (mb->lock != NULL) {
+        osp_mutex_unlock(mb->lock);
+    }
+    for (; cmd != NULL; cmd = next) {
+        next = cmd->next;
+        tcp__cmd_free(cmd);
+    }
+}
+
 osp_status tcp_runtime_bind(tcp_runtime **out, const char *host,
                             unsigned short port, tcp_handler handler,
                             void *user) {
@@ -152,6 +286,16 @@ osp_status tcp_runtime_bind(tcp_runtime **out, const char *host,
     /* The runtime pointer is the listener's sentinel token — distinct from every
      * connection node pointer. */
     st = osp_reactor_add(rt->reactor, rt->listener_fd, OSP_READABLE, rt);
+    if (st != OSP_OK) {
+        osp_reactor_destroy(rt->reactor);
+        osp_socket_close(rt->listener);
+        free(rt);
+        osp_net_shutdown();
+        return st;
+    }
+    /* The mailbox mutex is the runtime's only concurrency primitive; the queue
+     * is already empty (calloc zeroed head/tail). */
+    st = osp_mutex_init(&rt->mailbox.lock);
     if (st != OSP_OK) {
         osp_reactor_destroy(rt->reactor);
         osp_socket_close(rt->listener);
@@ -242,6 +386,9 @@ osp_status tcp_runtime_poll(tcp_runtime *rt, int timeout_ms, int *out_handled) {
             }
         }
     }
+    /* Deliver anything a worker thread posted since the last poll — even when the
+     * reactor timed out with no events (count == 0). */
+    tcp__mailbox_drain(rt);
     *out_handled = count;
     return OSP_OK;
 }
@@ -266,10 +413,46 @@ void tcp_runtime_stop(tcp_runtime *rt) {
     }
 }
 
+tcp_mailbox *tcp_runtime_mailbox(tcp_runtime *rt) {
+    if (rt == NULL) {
+        return NULL;
+    }
+    return &rt->mailbox;
+}
+
+osp_status tcp_mailbox_send(tcp_mailbox *mb, uint64_t conn_id, const void *data,
+                            size_t len) {
+    if (mb == NULL || (data == NULL && len > 0)) {
+        return OSP_ERR_INVAL;
+    }
+    return tcp__mailbox_enqueue(mb, conn_id, data, len, 0);
+}
+
+osp_status tcp_mailbox_send_and_close(tcp_mailbox *mb, uint64_t conn_id,
+                                      const void *data, size_t len) {
+    if (mb == NULL || (data == NULL && len > 0)) {
+        return OSP_ERR_INVAL;
+    }
+    return tcp__mailbox_enqueue(mb, conn_id, data, len, 1);
+}
+
+osp_status tcp_mailbox_close(tcp_mailbox *mb, uint64_t conn_id) {
+    if (mb == NULL) {
+        return OSP_ERR_INVAL;
+    }
+    return tcp__mailbox_enqueue(mb, conn_id, NULL, 0, 1);
+}
+
 osp_status tcp_runtime_destroy(tcp_runtime *rt) {
     size_t i;
     if (rt == NULL) {
         return OSP_ERR_INVAL;
+    }
+    /* Free any commands still queued (no I/O — the sockets are about to close),
+     * then release the mutex. */
+    tcp__mailbox_discard(&rt->mailbox);
+    if (rt->mailbox.lock != NULL) {
+        osp_mutex_destroy(rt->mailbox.lock);
     }
     for (i = 0; i < rt->count; i++) {
         osp_reactor_del(rt->reactor, rt->conns[i]->fd);

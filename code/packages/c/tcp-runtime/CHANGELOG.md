@@ -9,6 +9,30 @@ and this project adheres to semantic versioning.
 
 ### Added
 
+- **Outbound mailbox** (CCPP02 port campaign follow-up). A thread-safe way for a
+  worker thread to reply to a connection it cannot touch directly. `tcp_runtime_mailbox`
+  returns the runtime's `tcp_mailbox`; `tcp_mailbox_send`, `tcp_mailbox_send_and_close`,
+  and `tcp_mailbox_close` queue commands (send bytes / send-then-close / close) for
+  a connection id, executed on the reactor thread's next `tcp_runtime_poll`.
+  - The mailbox is a mutex-guarded FIFO of commands (the mutex is os-platform's
+    `thread` primitive — the runtime's only concurrency dependency). Enqueue copies
+    the payload; the queue is the sole shared state, so the connection table stays
+    private to the reactor thread. `poll` detaches the whole queue under the lock,
+    then writes each command **without holding the lock** (a producer never blocks
+    on I/O). A command for an unknown/closed connection id is dropped;
+    `tcp_runtime_destroy` drains and frees any still-queued commands.
+  - No cross-thread wakeup yet (a self-pipe/eventfd is a follow-up): delivery is on
+    the next poll — within one poll timeout under `tcp_runtime_serve` (100 ms).
+  - **Cross-package build change.** `tcp_runtime.c` now references `osp_mutex_*`, so
+    every package that compiles it also compiles the os-platform thread backend and
+    links the OS thread library: the `run.sh`/`run.ps1` of `tcp-runtime`,
+    `resp-server`, and `http-server` add `os-platform/src/thread_posix.c` (`-pthread`)
+    on POSIX and `thread_windows.c` (CRT-only) on Windows.
+  - Test extended (101 checks, ASan+UBSan, 0 leaks — up from 57): send delivers
+    bytes with no client write, send-and-close writes then closes, close removes a
+    connection, a command for an unknown id is dropped, and destroy frees a command
+    left queued at teardown.
+
 - **Connection cap** (CCPP02 port campaign follow-up). `tcp_runtime_set_max_connections`
   bounds concurrent connections (0 = unlimited, the default); at the cap a newly
   accepted connection is closed immediately (the client is refused) rather than

@@ -25,9 +25,12 @@ $env:PLATFORM_INCLUDE = "$(Join-Path $self 'include') $(Join-Path $net 'include'
 $env:PLATFORM_LIBS = 'ws2_32.lib'
 . (Join-Path $harness 'lib\platform-lib.ps1')
 Write-Host "tcp-runtime (windows): C compilers: $((Platform-Compilers -Lang c) -join ' ')"
+# The mailbox mutex comes from os-platform's thread backend (Win32); its source
+# needs only the CRT + kernel32, already linked by default.
 Platform-BuildAndRun -Lang c -Name 'tcp-runtime-tests' -Sources @(
     'tests\tcp_runtime_test.c',
     'src\tcp_runtime.c',
     (Join-Path $net 'src\net_windows.c'),
-    (Join-Path $reactor 'src\reactor_windows.c')
+    (Join-Path $reactor 'src\reactor_windows.c'),
+    (Join-Path $osp 'src\thread_windows.c')
 )

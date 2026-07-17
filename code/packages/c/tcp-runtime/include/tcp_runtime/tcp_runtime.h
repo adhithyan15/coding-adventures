@@ -34,13 +34,17 @@
  *
  * SCOPE (phase-one core). One listener; many concurrent connections; a stateless
  * handler; cooperative stop; a concurrent-connection cap
- * (tcp_runtime_set_max_connections). Deliberately DEFERRED to follow-ups (as in
- * the Rust crate's own phased plan): per-connection state, an outbound mailbox
- * for worker threads, read-pause/resume backpressure (`defer_read`),
- * socket-option policy (TCP_NODELAY/keepalive), and multi-core reactor sharding.
+ * (tcp_runtime_set_max_connections); and a thread-safe outbound MAILBOX
+ * (tcp_runtime_mailbox) so a *worker thread* can push bytes to a connection by
+ * id, delivered on the reactor thread's next poll. Deliberately DEFERRED to
+ * follow-ups (as in the Rust crate's own phased plan): per-connection state,
+ * read-pause/resume backpressure (`defer_read`), socket-option policy
+ * (TCP_NODELAY/keepalive), and multi-core reactor sharding.
  *
- * BUILD. OS-agnostic — every per-OS detail lives in net and reactor — so this is
- * one source file compiled with the net + reactor backends for the target OS.
+ * BUILD. Per-OS socket/reactor detail lives in net and reactor, but the mailbox
+ * needs a mutex, which is os-platform's `thread` primitive (bucket B). So this
+ * one source file is compiled with the net + reactor backends AND the os-platform
+ * thread backend for the target OS (`-pthread` on POSIX; the CRT on Windows).
  */
 #ifndef TCP_RUNTIME_TCP_RUNTIME_H
 #define TCP_RUNTIME_TCP_RUNTIME_H
@@ -124,10 +128,68 @@ osp_status tcp_runtime_serve(tcp_runtime *rt);
 void tcp_runtime_stop(tcp_runtime *rt);
 
 /*
- * tcp_runtime_destroy — close the listener and every live connection, then free
- * the server. OSP_ERR_INVAL if rt is NULL.
+ * tcp_runtime_destroy — close the listener and every live connection, drain and
+ * free any commands still queued in the mailbox, then free the server. The caller
+ * must ensure no producer thread is still using the mailbox (see tcp_mailbox
+ * below) when this runs. OSP_ERR_INVAL if rt is NULL.
  */
 osp_status tcp_runtime_destroy(tcp_runtime *rt);
+
+/* ── Outbound mailbox (post bytes to a connection from another thread) ─────── */
+
+/*
+ * The mailbox is the answer to "how does a worker thread reply to a connection?"
+ * A tcp_runtime services sockets on ONE reactor thread, so only that thread may
+ * touch a socket. A worker instead hands the runtime a COMMAND — send these bytes
+ * to connection N, and/or close it — which the reactor thread executes on its
+ * next poll. Mirrors the Rust crate's `TcpMailbox`.
+ *
+ * Each command is enqueued under a mutex (the queue is the only shared state; the
+ * connection table stays private to the reactor thread), the payload is COPIED,
+ * and tcp_runtime_poll drains the whole queue after servicing readiness — never
+ * holding the lock across a socket write. A command for an unknown or
+ * already-closed connection id is silently dropped.
+ *
+ * DELIVERY LATENCY. There is no cross-thread wakeup (a self-pipe/eventfd is a
+ * documented follow-up), so a posted command is delivered on the reactor thread's
+ * NEXT poll — within one poll timeout when driven by tcp_runtime_serve (100 ms),
+ * or immediately if you drive tcp_runtime_poll yourself.
+ *
+ * LIFETIME (caller precondition). The mailbox lives inside its runtime. The send
+ * functions are safe to call CONCURRENTLY with each other and with the reactor
+ * thread's poll — but NOT concurrently with tcp_runtime_destroy, which tears the
+ * mailbox (and its mutex) down. Quiesce every producer thread before destroying
+ * the runtime, exactly as you would before freeing any shared object.
+ */
+typedef struct tcp_mailbox tcp_mailbox;
+
+/*
+ * tcp_runtime_mailbox — the runtime's outbound mailbox. The returned handle is
+ * owned by the runtime (freed by tcp_runtime_destroy); do not free it. Its send
+ * functions are safe to call from any thread. Returns NULL if rt is NULL.
+ */
+tcp_mailbox *tcp_runtime_mailbox(tcp_runtime *rt);
+
+/*
+ * tcp_mailbox_send — queue `len` bytes of `data` to be sent to connection
+ * `conn_id` on the next poll. The bytes are copied, so `data` need not outlive
+ * the call. OSP_ERR_INVAL (mb NULL, or data NULL with len > 0), OSP_ERR_NOMEM.
+ */
+osp_status tcp_mailbox_send(tcp_mailbox *mb, uint64_t conn_id, const void *data,
+                            size_t len);
+
+/*
+ * tcp_mailbox_send_and_close — like tcp_mailbox_send, but the connection is closed
+ * once the bytes are written (on the same poll). OSP_ERR_INVAL / OSP_ERR_NOMEM.
+ */
+osp_status tcp_mailbox_send_and_close(tcp_mailbox *mb, uint64_t conn_id,
+                                      const void *data, size_t len);
+
+/*
+ * tcp_mailbox_close — queue a close of connection `conn_id` (no bytes sent),
+ * executed on the next poll. OSP_ERR_INVAL (mb NULL), OSP_ERR_NOMEM.
+ */
+osp_status tcp_mailbox_close(tcp_mailbox *mb, uint64_t conn_id);
 
 #ifdef __cplusplus
 } /* extern "C" */
