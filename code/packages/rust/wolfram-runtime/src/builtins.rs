@@ -254,12 +254,17 @@ pub fn build_wolfram_builtins() -> HashMap<String, Handler> {
     // `Factor` is the third, reusing `symbolic-vm`'s own `factor_handler`
     // (the exact function Macsyma's `factor` surface function already calls)
     // rather than `cas-simplify`, since factoring lives directly in the
-    // shared VM crate, not a separate `cas-*` crate. Further heads (`Solve`,
-    // `D`, `Integrate`, ...) are added one at a time, each its own PR, per
-    // HML00's one-item-per-PR discipline.
+    // shared VM crate, not a separate `cas-*` crate. `D` is the fourth,
+    // reusing `symbolic-vm`'s own `differentiate` (same idea as `Factor`,
+    // but this wrapper does its own arity/shape check first, since `D`'s
+    // fail-soft "leave it unevaluated" contract differs from
+    // `derivative_handler`'s panic-on-bad-arity one). Further heads
+    // (`Solve`, `Integrate`, ...) are added one at a time, each its own PR,
+    // per HML00's one-item-per-PR discipline.
     m.insert("Simplify".to_string(), handler_fn(simplify_handler));
     m.insert("Expand".to_string(), handler_fn(expand_handler));
     m.insert("Factor".to_string(), handler_fn(factor_handler));
+    m.insert("D".to_string(), handler_fn(d_handler));
 
     // W-18 pattern-matching predicates (MA04 §19). HELD (see `PATTERN_HEADS`):
     // each handler evaluates ONLY its subject and matches against the *literal*
@@ -3378,6 +3383,41 @@ fn factor_handler(vm: &mut VM, expr: IRApply) -> IRNode {
     symbolic_vm::handlers::factor_handler(vm, expr)
 }
 
+/// `D[expr, x]` → the symbolic derivative of `expr` with respect to the
+/// symbol `x`: the standard sum/product/quotient/power/chain rules, plus
+/// the elementary transcendental functions (`Sin`, `Cos`, `Exp`, `Log`,
+/// `Sqrt`, the inverse and hyperbolic trig functions, …), fully recursed
+/// and then run back through the VM's evaluator so constant folding and any
+/// nested rule output collapse into one final form (e.g. `D[x^3, x]` →
+/// `3 * x^2`, not a half-reduced intermediate).
+///
+/// Like `Factor` (and unlike `Simplify`/`Expand`), the actual
+/// differentiation logic lives directly in `symbolic-vm` itself: this is a
+/// thin call into `symbolic_vm::handlers::differentiate` — the exact
+/// pipeline Macsyma's own `derivative_handler` already runs, extracted into
+/// a `pub` free function specifically so this wiring can reuse it (see
+/// that crate's own changelog). No algorithm is reimplemented or
+/// duplicated. Unlike `factor_handler`, `differentiate` cannot do its own
+/// arity check — `derivative_handler`'s existing contract *panics* on the
+/// wrong number of arguments, which is right for a genuine internal
+/// invariant violation but wrong for Wolfram's fail-soft "leave it
+/// unevaluated" contract every other W-22/W-15 built-in follows — so this
+/// wrapper validates the shape itself before calling through: exactly two
+/// arguments, and the second must be a bare symbol (`D[expr, 2]` or
+/// `D[expr]` stay unevaluated, matching `derivative_handler`'s own
+/// non-symbol case).
+fn d_handler(vm: &mut VM, expr: IRApply) -> IRNode {
+    if expr.args.len() != 2 {
+        return unevaluated(expr);
+    }
+    let x = match &expr.args[1] {
+        IRNode::Symbol(s) => s.clone(),
+        _ => return unevaluated(expr),
+    };
+    let f = expr.args[0].clone();
+    symbolic_vm::handlers::differentiate(vm, f, &x)
+}
+
 // ---------------------------------------------------------------------------
 // W-12 string builtins
 // ---------------------------------------------------------------------------
@@ -6334,6 +6374,73 @@ mod tests {
                     apply(sym(ADD), vec![int(1), sym("x")]),
                     apply(sym(ADD), vec![int(-1), sym("x")]),
                 ],
+            )
+        );
+    }
+
+    #[test]
+    fn d_computes_the_symbolic_derivative_of_a_power() {
+        // D[x^3, x] -> 3 * x^2, the exact same power-rule result `d(x^3)`
+        // produces in `symbolic-vm`'s own `derivative_power_rules` test
+        // (`symbolic-vm/tests/test_vm.rs`).
+        let x_cubed = apply(sym(symbolic_ir::POW), vec![sym("x"), int(3)]);
+        assert_eq!(
+            run("D", vec![x_cubed, sym("x")]),
+            apply(
+                sym(MUL),
+                vec![int(3), apply(sym(symbolic_ir::POW), vec![sym("x"), int(2)])],
+            )
+        );
+    }
+
+    #[test]
+    fn d_leaves_a_non_symbol_second_argument_unevaluated() {
+        // D[x^2, 2] -- the second argument isn't a symbol, so this stays
+        // unevaluated exactly like `derivative_handler`'s own non-symbol
+        // case (`symbolic-vm/src/handlers.rs`).
+        let x_squared = apply(sym(symbolic_ir::POW), vec![sym("x"), int(2)]);
+        assert_eq!(
+            run("D", vec![x_squared.clone(), int(2)]),
+            apply(sym("D"), vec![x_squared, int(2)])
+        );
+    }
+
+    #[test]
+    fn d_agrees_with_macsyma_on_the_same_underlying_call() {
+        // Both Wolfram's D and Macsyma's D dispatch to the exact same
+        // symbolic_vm::handlers::differentiate -- this pins that the
+        // Wolfram wiring doesn't diverge from the reference call. Needs a
+        // fresh VM on each side since `differentiate` takes `&mut VM`
+        // (unlike Simplify/Expand's parity tests, which call a plain free
+        // function).
+        let x_cubed = apply(sym(symbolic_ir::POW), vec![sym("x"), int(3)]);
+        let via_wolfram = run("D", vec![x_cubed.clone(), sym("x")]);
+        let mut vm = VM::new(Box::new(SymbolicBackend::new()));
+        let via_macsyma_path = symbolic_vm::handlers::differentiate(&mut vm, x_cubed, "x");
+        assert_eq!(via_wolfram, via_macsyma_path);
+    }
+
+    #[test]
+    fn d_with_wrong_arity_stays_unevaluated() {
+        assert_eq!(run("D", vec![]), apply(sym("D"), vec![]));
+        assert_eq!(run("D", vec![sym("x")]), apply(sym("D"), vec![sym("x")]));
+        assert_eq!(
+            run("D", vec![sym("x"), sym("y"), sym("z")]),
+            apply(sym("D"), vec![sym("x"), sym("y"), sym("z")])
+        );
+    }
+
+    #[test]
+    fn d_dispatches_end_to_end_through_the_wolfram_backend() {
+        // x^3 differentiates through the full VM eval dispatch on a real
+        // WolframBackend, exactly mirroring
+        // `factor_dispatches_end_to_end_through_the_wolfram_backend` above.
+        let x_cubed = apply(sym(symbolic_ir::POW), vec![sym("x"), int(3)]);
+        assert_eq!(
+            eval_full(apply(sym("D"), vec![x_cubed, sym("x")])),
+            apply(
+                sym(MUL),
+                vec![int(3), apply(sym(symbolic_ir::POW), vec![sym("x"), int(2)])],
             )
         );
     }

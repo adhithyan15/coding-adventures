@@ -1489,6 +1489,32 @@ fn list_handler(_simplify: bool) -> Handler {
 // Symbolic differentiation
 // ---------------------------------------------------------------------------
 
+/// Differentiate `f` with respect to `x`, then — unless the result is just
+/// the unevaluated `D(f, x)` form `diff` couldn't reduce further — run it
+/// back through the VM's own `eval` so constant folding and nested `D`
+/// calls the recursive rules produced (e.g. inside a chain rule) resolve
+/// all the way down, not just one layer of differentiation rules.
+///
+/// This is `derivative_handler`'s own logic, pulled out into a `pub` free
+/// function so other language runtimes sharing this crate's `VM`/`IRNode`
+/// types (e.g. `wolfram-runtime`'s `D[expr, x]`) can reuse the exact same
+/// differentiation-plus-simplification pipeline Macsyma's `D` already uses,
+/// rather than reimplementing or duplicating it — mirrors why
+/// `factor_handler` was made `pub` for the same crate's `Factor[...]`
+/// wiring. Unlike `factor_handler`, this takes `f`/`x` already unpacked
+/// rather than a whole `IRApply`, since callers with a different arity
+/// contract (Wolfram's fail-soft "leave it unevaluated" instead of this
+/// crate's panic) need to do their own argument validation first.
+pub fn differentiate(vm: &mut VM, f: IRNode, x: &str) -> IRNode {
+    let result = diff(&f, x);
+    let original = apply_node(D, vec![f, IRNode::Symbol(x.to_string())]);
+    if result == original {
+        result
+    } else {
+        vm.eval(result)
+    }
+}
+
 fn derivative_handler() -> Handler {
     std::sync::Arc::new(move |vm: &mut VM, expr: IRApply| -> IRNode {
         if expr.args.len() != 2 {
@@ -1501,13 +1527,7 @@ fn derivative_handler() -> Handler {
             _ => return IRNode::Apply(Box::new(expr)),
         };
 
-        let result = diff(&f, &x);
-        let original = apply_node(D, vec![f, IRNode::Symbol(x)]);
-        if result == original {
-            result
-        } else {
-            vm.eval(result)
-        }
+        differentiate(vm, f, &x)
     })
 }
 
