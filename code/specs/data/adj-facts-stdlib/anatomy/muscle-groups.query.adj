@@ -1,0 +1,22 @@
+% ============================================================================
+% muscle-groups.query.adj — a worked recall over the anatomy muscle-groups lib.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "where is the biceps?": it
+% states no anatomy fact — it only `import`s the grounded table and asks binding
+% queries. The engine resolves each `?` against the `muscle_region` rows and
+% returns the region + the table's source/locator/trust. The third query runs
+% the relation BACKWARD (bind the region `arm`, recall every muscle in it — the
+% biceps AND the triceps). The femur is a bone, not a muscle, so a recall on it
+% abstains honestly — the engine never invents a location.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli muscle-groups.query.adj
+% ============================================================================
+
+import "muscle-groups.adj"
+
+? muscle_region(biceps_brachii, $R)    % expect arm
+? muscle_region(deltoid, $R)           % expect shoulder
+? muscle_region(quadriceps, $R)        % expect thigh
+? muscle_region($M, arm)               % expect biceps_brachii, triceps_brachii
+? muscle_region(femur, $R)             % expect abstain — the femur is a bone
