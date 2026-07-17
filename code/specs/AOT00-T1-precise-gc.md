@@ -5,18 +5,52 @@
 [`AOT00-native-aot-robustness-roadmap.md`](AOT00-native-aot-robustness-roadmap.md)
 §3 T1, §5 step 3). This is the "detailed spec" the roadmap's §3 promises for each
 track; the roadmap file is the index, this is the T1 chapter.
-**Builds on:** [`native-aot-substrate.md`](native-aot-substrate.md) (TWIG-GC Layer 1,
-the *conservative* collector that ships today) and the IIR heap/GC opcode surface
-in `interpreter-ir` (`alloc`, `field_load`, `field_store`, `is_null`, `safepoint`,
-`alloc_closure`, `call_closure`).
+**Builds on:** [`LANG16-gc-core.md`](LANG16-gc-core.md) (the **generic**,
+language-agnostic GC layer — `gc-core` + `garbage-collector` crates) and the IIR
+heap/GC opcode surface in `interpreter-ir` (`alloc`, `field_load`, `field_store`,
+`is_null`, `safepoint`, `alloc_closure`, `call_closure`).
+
+---
+
+## Correction (this revision) — the collector is generic `gc-core`, not `twig_gc.c`
+
+An earlier revision of this spec described the native-AOT collector as
+`twig-aot/runtime/twig_gc.c` and framed T1 as "extend that C file." **That framing
+was wrong**, and this revision corrects it. The repo already has a **generic,
+language-agnostic GC layer** — the `gc-core` crate (spec: `LANG16-gc-core.md`) over
+the `garbage-collector` crate — designed with exactly the seams T1 needs:
+`HeapKind`/`KindRegistry` (field maps for precise tracing), `RootSet` (roots),
+`WriteBarrier` (`NoOpBarrier` + a `CardTableBarrier` stub for generational),
+`GcProfile`/`AdaptivePolicy` (algorithm selection across mark-sweep / generational /
+compacting / incremental), all separating *algorithm* from *policy*. LANG16 even
+specifies a **`gc_runtime_<target>.a`** companion archive + AOT stack-map sections +
+write-barrier trampolines for exactly this native-AOT use.
+
+`twig_gc.c` is a **Twig-specific hand-written duplicate** of that generic algorithm,
+built because `gc-core` was orphaned (nothing links it yet). The right design — and
+what T1 now does — is:
+
+> **The precise/moving/generational collector is implemented as generic algorithms
+> inside `gc-core`. The native-AOT backend links `gc-core` as LANG16's
+> `gc_runtime_<target>.a` (a Rust `staticlib` exposing the C ABI), and `twig_gc.c`
+> is retired. Every consumer — `vm-core`, `jit-core`, native-AOT — shares one
+> collector.**
+
+Sequencing: (A) give `gc-core` a C-ABI `staticlib` surface matching the ABI
+`twig_gc.c` exports today (`__…_gc_alloc/collect/safepoint/live_bytes`); (B) wire
+`twig-aot`'s `build.rs` to link it and retire `twig_gc.c`, golden/smoke tests
+proving parity; (C) build the precise rungs (§6) as gc-core algorithms. §5 and §11
+below are written in these terms. Where this spec still says "the collector," read
+"`gc-core`'s native collector," not `twig_gc.c`.
 
 ---
 
 ## 0. One-paragraph summary
 
 Today the native AOT backend reclaims heap memory with a **conservative**
-mark-and-sweep collector (`twig_gc.c`): it scans the C stack word-by-word and
-treats anything that *looks* like a managed pointer as a root. That is correct
+mark-and-sweep collector (currently the Twig-specific `twig_gc.c`, being converged
+onto the generic `gc-core` — see the Correction above): it scans the C stack
+word-by-word and treats anything that *looks* like a managed pointer as a root. That is correct
 (it never frees a live object) but it is the floor of the GC maturity ladder — it
 **cannot move objects** (so it cannot compact or go generational), it **retains
 garbage** whenever an integer aliases a heap address, and its root scan is O(stack
@@ -99,13 +133,17 @@ back to conservative treatment (§7) — never to unsoundness.
 
 Precise tracing needs to know, given a heap pointer, **which payload words are
 references**. That requires a per-object type tag and a table from tag → field map.
-This is exactly `native-aot-substrate.md`'s **Layer 2 (TWIG-ROM)**; T1 promotes it
-from "nice to have" to "required", and pins its layout.
+`gc-core` already models this as **`HeapKind`** layout descriptors held in a
+**`KindRegistry`** (LANG16), so the collector traces object graphs "without RTTI".
+T1's native object header carries the `HeapKind` id; the field map lives in the
+registry the compiler populates from IIR `alloc` kinds. (For the native archive this
+`HeapKind` id is what the header's `type_id` field below stores.)
 
-The current `gc_header_t` is 32 bytes: `next(8) | size(8) | marked(1) | _pad(15)`.
-T1 spends part of that padding on a type id and GC bookkeeping — **no size change**,
-so the 16-byte payload alignment (needed by the NaN-box low-3-bits-clear invariant)
-is preserved:
+The native collector's object header stays 32 bytes — matching `twig_gc.c`'s current
+`next(8) | size(8) | marked(1) | _pad(15)` so alignment and NaN-box invariants carry
+over unchanged — but T1 spends part of that padding on the `HeapKind` id and GC
+bookkeeping. **No size change**, so the 16-byte payload alignment (needed by the
+NaN-box low-3-bits-clear invariant) is preserved:
 
 ```
 ┌──────────┬──────────┬────────┬───────────┬───────────┬─────────────┐
@@ -134,6 +172,36 @@ The descriptor table is produced from IIR type information already present at
 `alloc`/`alloc_closure` sites (the `alloc` op carries a "kind K → ref<K>" hint;
 closures have a known capture layout — see `ClosureTypeHint`). Frontends that do not
 yet carry precise kinds emit `TYPE_CONSERVATIVE` and lose no correctness.
+
+### 3.1 Two heap representations in `gc-core` (managed-object vs. flat-native)
+
+The `garbage-collector` crate's `MarkAndSweepGC` stores the heap as a
+`HashMap<usize, Box<dyn HeapObject>>` with **synthetic addresses** (`allocate(Box<dyn
+HeapObject>) -> usize`, addresses from `0x10000`). That is a **VM-side object model**:
+the interpreter dereferences through the map and each object supplies its own
+`references()`. It is the right model for `vm-core`/`jit-core`, and it **cannot back
+the native C ABI** — where `__…_gc_alloc(n) -> ptr` must return a **real memory
+pointer** to `n` raw bytes that generated machine code reads/writes directly at byte
+offsets (`field_load`/`field_store`), with no map indirection and no `Box<dyn>`.
+
+So `gc-core` hosts **two heap representations behind one set of abstractions**:
+
+| Representation | Backing | Consumer | Reference form |
+|---|---|---|---|
+| **Managed-object** (`garbage-collector`) | `HashMap<usize, Box<dyn HeapObject>>` | `vm-core`, `jit-core` | synthetic `usize` address |
+| **Flat-native** (new; this arc) | one contiguous malloc-backed region; header + payload (§3) | native-AOT / LLVM / WASM linear memory | real machine pointer |
+
+Both implement the **same collection algorithm** (mark-sweep now; precise/moving/
+generational per §6) and share `gc-core`'s generic machinery — `HeapKind`/`KindRegistry`
+(field maps), `RootSet`, `WriteBarrier`, `GcProfile`/`AdaptivePolicy`. The **flat-native**
+representation is essentially `twig_gc.c`'s battle-tested flat model (32-byte header,
+16-byte payload alignment, adaptive threshold, OOM-safe mark stack) **lifted into
+`gc-core` as a first-class generic algorithm** and exposed through the C-ABI
+`staticlib`. That is what retiring `twig_gc.c` means concretely: not deleting its
+design, but promoting it from a Twig-specific C fork to a `gc-core` representation any
+native consumer links. Task #117 (the C-ABI `staticlib`) is therefore "add the
+flat-native heap collector to `gc-core` + expose its C ABI," not a thin wrapper over
+the managed-object collector.
 
 ---
 
@@ -204,15 +272,16 @@ natural classes by who owns the collector:
 | **JIT** (`jit-core`) | same as VM (cold interpretation) | Same as VM. |
 | **JVM** (`iir-to-jvm-class-file`) | **host JVM GC** (already precise, moving, generational) | **Delegate.** Lower `alloc`→object/array allocation, `field_*`→`getfield`/`putfield`, refs are real JVM references the host GC already traces precisely. T1 = ensure we emit real reference types (not `long` handles) so the host GC sees them. No stack maps we author. |
 | **CLR** (`iir-to-cil-bytecode`) | **host CLR GC** (precise, moving, generational) | **Delegate**, symmetric to JVM: emit managed object refs, `ldfld`/`stfld`, let CoreCLR's GC trace. |
-| **NativeAot** (aarch64 / x86_64) | **`twig_gc.c`** (ours) | **The real T1 work.** Emit stack maps at call sites + `safepoint`s; emit the type-descriptor table from `alloc` kinds; teach `twig_gc.c` the precise mark path (§4.2) and, later, relocation + barriers. |
-| **LLVM** (`iir-to-llvm`) | **`twig_gc.c`** (ours, linked in) | Use LLVM's **`gc.statepoint`/`gc.relocate`** intrinsics (or the shadow-stack `gc.root` for a first cut) so LLVM spills references at safepoints and lets us walk them; register our `twig` GC strategy name. First rung may use shadow-stack (simpler, non-moving) then graduate to statepoints (moving-capable). |
-| **WASM** (`iir-to-wasm`) | **`twig_gc.c`** (in linear memory) or **Wasm-GC** | Two paths: (a) **shadow stack** in linear memory — the codegen spills live refs to a side stack the collector walks (portable, works on any wasm engine); or (b) target the **Wasm GC proposal** (`ref`/`struct`/`array`, host-collected) where available. Start with shadow stack for portability parity with the other linear-memory columns. |
+| **NativeAot** (aarch64 / x86_64) | **`gc-core`** via `gc_runtime_<target>.a` | **The real T1 work.** Emit stack maps at call sites + `safepoint`s; emit the type-descriptor table from `alloc` kinds; `gc-core`'s native collector runs the precise mark path (§4.2) and, later, relocation + barriers. (Retires `twig_gc.c`, which is a Twig-specific duplicate of this generic algorithm.) |
+| **LLVM** (`iir-to-llvm`) | **`gc-core`** (same archive, linked in) | Use LLVM's **`gc.statepoint`/`gc.relocate`** intrinsics (or the shadow-stack `gc.root` for a first cut) so LLVM spills references at safepoints and lets the `gc-core` collector walk them; register a `gc-core` GC strategy name. First rung may use shadow-stack (simpler, non-moving) then graduate to statepoints (moving-capable). |
+| **WASM** (`iir-to-wasm`) | **`gc-core`** (in linear memory) or **Wasm-GC** | Two paths: (a) **shadow stack** in linear memory — the codegen spills live refs to a side stack the `gc-core` collector walks (portable, works on any wasm engine); or (b) target the **Wasm GC proposal** (`ref`/`struct`/`array`, host-collected) where available. Start with shadow stack for portability parity with the other linear-memory columns. |
 
 **Consequence:** four of seven engines (VM, JIT, JVM, CLR) are *already* precise or
 delegate to a precise host — T1's genuinely new engineering is the **three
-linear-memory / native columns** (NativeAot, LLVM, WASM) that share `twig_gc.c`.
-That is also exactly where the conservative collector lives today, so T1 is scoped
-to one collector and three code emitters, not seven.
+linear-memory / native columns** (NativeAot, LLVM, WASM) that share the **one
+generic `gc-core` collector** (linked natively as LANG16's `gc_runtime_<target>.a`).
+So T1 is scoped to one collector — `gc-core`, which `vm-core`/`jit-core` also use —
+and three code emitters, not seven, and not a Twig-specific C fork.
 
 ---
 
@@ -225,9 +294,11 @@ gated by T7 (§8). Conservative remains the fallback throughout.
 
 - Emit stack maps at call sites + `safepoint`s on **NativeAot** first (smallest,
   we own the whole pipeline).
-- `twig_gc.c` gains `gc_mark_precise()`: walk frames via §4.2, read exact roots,
-  but still **sweep in place** (no relocation). Payloads still scanned
-  conservatively until §6.2.
+- `gc-core`'s native collector gains a `mark_precise()` path: walk frames via §4.2,
+  read exact roots, but still **sweep in place** (no relocation). Payloads still
+  scanned conservatively until §6.2. (Prerequisite: the C-ABI `staticlib` +
+  `twig-aot` link-in from the Correction's step (A)/(B), so the native path is
+  already running `gc-core` rather than `twig_gc.c` before precise marking lands.)
 - Fallback: any unmapped frame → existing conservative scan. So this rung is
   strictly *additive* precision — it can't regress.
 - **Win measured:** floating garbage from stack-integer false roots disappears;
@@ -310,8 +381,9 @@ test layers:
 2. **GC-stress differential (new, T1-specific).** Generate allocation-heavy programs
    (long lists, deep closure chains, churn loops with `safepoint`s) and assert (a)
    output agreement across engines and (b) on the native/LLVM/WASM columns,
-   `__twig_gc_live_bytes()` converges to the **true** live set after a forced
-   collection — the metric that proves precise beats conservative (conservative
+   `gc-core`'s `live_bytes` accessor (the C-ABI `…_gc_live_bytes()`) converges to the
+   **true** live set after a forced collection — the metric that proves precise beats
+   conservative (conservative
    over-retains; precise hits it on the nose). This directly exercises §6.1's win.
 3. **Moving-safety property (rung C+).** After each collection, assert every live
    object's contents are intact and every reference resolves (a checksum walk of the
@@ -345,9 +417,12 @@ fallback keeps absent-toolchain rows valid).
 
 ## 10. Non-goals / honesty
 
-- **Not** a from-scratch collector: T1 reuses `twig_gc.c`'s mark/sweep skeleton,
-  linked list, adaptive threshold, and OOM-safe mark stack. It replaces two
-  conservative approximations with compiler truth.
+- **Not** a from-scratch collector: T1 reuses `gc-core`'s existing mark/sweep
+  algorithm, profiling, adaptive policy, `HeapKind` field maps, and `WriteBarrier`
+  seam (LANG16). It adds the precise root/interior/moving machinery on top and
+  replaces two conservative approximations with compiler truth. `twig_gc.c`'s
+  battle-tested details (adaptive threshold, OOM-safe mark stack, header alignment)
+  inform `gc-core`'s native collector but are not carried as a separate C fork.
 - **Not** delivering concurrent GC in T1 (that's rung E / T3). T1's core deliverable
   is precise + moving + generational on the three linear-memory columns.
 - **Not** changing observable program behavior: precise GC must be output-invisible;
@@ -358,15 +433,26 @@ fallback keeps absent-toolchain rows valid).
 
 ---
 
-## 11. First PR (proposed)
+## 11. First PRs (proposed)
 
-Ship this spec (spec-first). Then rung A, minimally:
+Ship this spec revision (spec-first). Then the **convergence** precedes the precise
+rungs, because precision must be built *in* `gc-core`, not `twig_gc.c`:
 
-1. **NativeAot stack-map emission at call sites** (aarch64 first) → a `.rodata`
-   table + a `__twig_stackmap_lookup` the collector can binary-search.
-2. **`twig_gc.c` `gc_mark_precise()`** consuming that table for mapped frames, with
-   the conservative scan as the per-frame fallback.
-3. **GC-stress differential** (§8.2) proving `live_bytes` tightens on the NativeAot
+1. **`gc-core` flat-native heap + C-ABI `staticlib`** — add the flat-native heap
+   collector (§3.1) to `gc-core` (real-pointer allocation, header+payload, mark-sweep)
+   and expose it through a `crate-type = ["staticlib"]` surface (or a sibling
+   `gc-core-capi` crate) with the ABI `twig_gc.c` exports today
+   (`__…_gc_alloc/collect/safepoint/live_bytes/collection_count`). Unit-tested on the
+   host (extern-`C`, like `dynval_runtime_golden.rs`). *(Not a thin wrapper over the
+   managed-object collector — that model can't return real pointers; see §3.1.)*
+2. **Wire `twig-aot` → link `gc_runtime_<target>.a`, retire `twig_gc.c`** — swap the
+   `build.rs` `cc` compile of `twig_gc.c` for the Rust `staticlib`; keep
+   `twig_runtime.c`/`dynval_runtime.c` for now. The existing golden + `*_smoke.rs`
+   tests prove byte-for-byte behavior parity (GC is output-invisible).
+3. **Rung A in `gc-core`** — NativeAot stack-map emission at call sites (aarch64
+   first) → a `.rodata` table + a `stackmap_lookup`; `gc-core`'s native collector
+   consumes it (`mark_precise`) with the conservative scan as the per-frame fallback.
+4. **GC-stress differential** (§8.2) proving `live_bytes` tightens on the NativeAot
    column while staying output-identical to the other six engines.
 
 Each subsequent rung/back-end is its own PR under this spec, gated by T7, in the
