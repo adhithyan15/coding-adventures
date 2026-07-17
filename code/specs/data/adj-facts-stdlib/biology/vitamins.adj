@@ -1,0 +1,125 @@
+% ============================================================================
+% vitamins — each vitamin and the classic DEFICIENCY DISEASE that appears when
+% the body goes without it (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% One of the founding facts of nutrition and clinical medicine, and a rung a
+% MEDICINE or DIETETICS agent reasons UP from: a vitamin is a substance the body
+% needs in tiny amounts but mostly cannot make for itself, so when the diet lacks
+% one, a specific, named illness follows — and historically each of these
+% "deficiency diseases" was the clue that led to the vitamin's discovery. Sailors
+% without fresh fruit got scurvy; children without sunlight or fortified food got
+% rickets; populations living on polished rice got beriberi; those on a
+% corn-heavy diet got pellagra. Knowing the vitamin -> disease pairing is the
+% bridge from a symptom back to the missing nutrient, so before you can reason
+% about a patient's diet, a supplement, or a public-health program you must first
+% know which lack causes which disease. Recall is a binding query:
+%
+%     ? deficiency_disease(vitamin_c, $Disease)   % scurvy
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `deficiency_disease(vitamin, disease)` carrying the table's citation,
+% so the lookup above is the ordinary SLD binding query — the engine returns the
+% disease WITH its source, on the CPU, with zero model calls, and abstains on a
+% word that is not one of these vitamins (it never invents a disease).
+%
+% Each vitamin and the disease its deficiency causes, as a little truth table:
+%
+%     vitamin        deficiency disease      a beginner's cue
+%     ------------   --------------------    ---------------------------------
+%     vitamin_c      scurvy                  bleeding gums — the sailors' disease
+%     vitamin_d      rickets                 soft, bowed bones in children
+%     vitamin_a      xerophthalmia           dry eyes, can't see in low light
+%     vitamin_b1     beriberi                thiamin — the polished-rice disease
+%     vitamin_b3     pellagra                niacin — the "3 Ds": derm/diarrhea/dementia
+%     vitamin_b9     megaloblastic_anemia    folate — oversized, immature red cells
+%     vitamin_b12    megaloblastic_anemia    B12 — the same anemia folate prevents
+%
+% (Common B-vitamin aliases: vitamin_b1 is thiamin, vitamin_b3 is niacin,
+% vitamin_b9 is folate, vitamin_b12 is cobalamin. Each vitamin is written as a
+% single lowercase token — `vitamin_c`, `vitamin_b12` — and each disease as the
+% word the source uses, so a recalled disease flows straight into further
+% reasoning.)
+%
+% The query also runs BACKWARD — bind a disease and recall the vitamin(s) whose
+% lack causes it. Two vitamins share one answer here, so the reverse recall
+% returns BOTH, honestly:
+%
+%     ? deficiency_disease($V, megaloblastic_anemia)   % vitamin_b9 ; vitamin_b12
+%
+% A word that is NOT one of these vitamins — `water`, `calcium`, `protein`,
+% `vitamin_e` — is deliberately NOT a row, so a disease recall ABSTAINS on it
+% rather than inventing an illness. (`vitamin_e` and `vitamin_k` are real
+% vitamins, but their deficiencies were not grounded to a single clean
+% source-stated disease token in the pages fetched for this table, so they are
+% honestly LEFT OUT rather than guessed — see the provenance notes below.) That
+% honest-abstention property is what makes the table safe to build a reasoner on:
+% it answers exactly the vitamin -> disease pairs it can ground, and only those.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every vitamin -> disease
+% pair below was read out of a fetched NIH page, and any pair whose disease could
+% not be verified there was dropped). Each pair, with the primary source it was
+% copied from and the verbatim span that states it. Every source is an NIH Office
+% of Dietary Supplements (ods.od.nih.gov) consumer fact sheet — a primary U.S.
+% government reference — so `trust authoritative`:
+%
+%   vitamin_c -> scurvy
+%     https://ods.od.nih.gov/factsheets/VitaminC-Consumer/
+%     "People who get little or no vitamin C (below about 10 mg per day) for many
+%      weeks can get scurvy."
+%
+%   vitamin_d -> rickets
+%     https://ods.od.nih.gov/factsheets/VitaminD-Consumer/
+%     "In children, vitamin D deficiency causes rickets, a disease in which the
+%      bones become soft, weak, deformed, and painful."
+%
+%   vitamin_a -> xerophthalmia
+%     https://ods.od.nih.gov/factsheets/VitaminA-Consumer/
+%     "Xerophthalmia is the inability to see in low light, and it can lead to
+%      blindness if it isn't treated."
+%
+%   vitamin_b1 -> beriberi
+%     https://ods.od.nih.gov/factsheets/Thiamin-Consumer/
+%     "Severe thiamin deficiency leads to a disease called beriberi with the added
+%      symptoms of tingling and numbness in the feet and hands, loss of muscle,
+%      and poor reflexes."
+%
+%   vitamin_b3 -> pellagra
+%     https://ods.od.nih.gov/factsheets/Niacin-Consumer/
+%     "Severe niacin deficiency leads to a disease called pellagra."
+%
+%   vitamin_b9 -> megaloblastic_anemia
+%     https://ods.od.nih.gov/factsheets/Folate-Consumer/
+%     "Getting too little folate can result in megaloblastic anemia, a blood
+%      disorder that causes weakness, fatigue, trouble concentrating,
+%      irritability, headache, heart palpitations, and shortness of breath."
+%
+%   vitamin_b12 -> megaloblastic_anemia
+%     https://ods.od.nih.gov/factsheets/VitaminB12-Consumer/
+%     "Vitamin B12 also helps prevent megaloblastic anemia, a blood condition that
+%      makes people tired and weak."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the NIH ODS Vitamin C statement,
+% which fixes the flagship row (vitamin_c -> scurvy) in one sentence. Every other
+% row's per-fact source and verbatim span is listed above, so each value remains
+% independently checkable.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table deficiency_disease {
+    columns vitamin, disease
+
+    row (vitamin_c, scurvy)
+    row (vitamin_d, rickets)
+    row (vitamin_a, xerophthalmia)
+    row (vitamin_b1, beriberi)
+    row (vitamin_b3, pellagra)
+    row (vitamin_b9, megaloblastic_anemia)
+    row (vitamin_b12, megaloblastic_anemia)
+
+    source "People who get little or no vitamin C (below about 10 mg per day) for many weeks can get scurvy."
+    locator "https://ods.od.nih.gov/factsheets/VitaminC-Consumer/"
+    trust authoritative
+}
