@@ -549,3 +549,55 @@ fn our_multi_table_writer_output_reads_in_real_sqlite() {
     );
     assert_eq!(cids, vec![10, 20, 30], "cards must read back");
 }
+
+/// Tree-growth write-path cross-check: a table with more rows than fit on one
+/// leaf produces an interior-rooted b-tree that real bundled-C SQLite accepts
+/// (`PRAGMA integrity_check` → "ok") and reads back in full and in order.
+#[test]
+fn our_multi_leaf_btree_reads_in_real_sqlite() {
+    use sqlite_file::page_writer::write_single_table_db;
+    use sqlite_file::SqlValue;
+
+    // 500 rows on a 512-byte page span many leaves under an interior root.
+    let rows: Vec<(i64, Vec<SqlValue>)> = (1..=500)
+        .map(|n| (n, vec![SqlValue::Int(n * 3), SqlValue::Text(format!("row-{n}"))]))
+        .collect();
+    let db = write_single_table_db(512, "items", "CREATE TABLE items(v, name)", &rows).unwrap();
+    assert!(
+        db.len() / 512 > 5,
+        "500 rows on a 512-byte page must span several leaves"
+    );
+
+    static COUNTER_T: AtomicU64 = AtomicU64::new(13_000_000);
+    let unique = COUNTER_T.fetch_add(1, Ordering::Relaxed);
+    let mut dir = std::env::temp_dir();
+    dir.push(format!("sqlite_file_tree_{}_{}", std::process::id(), unique));
+    std::fs::create_dir(&dir).expect("create fresh fixture dir");
+    let path = dir.join("ours.db");
+    std::fs::write(&path, &db).unwrap();
+
+    let conn = rusqlite::Connection::open(&path).unwrap();
+    let integrity: String = conn
+        .query_row("PRAGMA integrity_check", [], |r| r.get(0))
+        .unwrap();
+    assert_eq!(integrity, "ok", "real SQLite integrity_check on our multi-leaf tree");
+
+    let count: i64 = conn
+        .query_row("SELECT count(*) FROM items", [], |r| r.get(0))
+        .unwrap();
+    assert_eq!(count, 500);
+
+    // Full ordered readback matches what we wrote.
+    let got: Vec<(i64, i64, String)> = conn
+        .prepare("SELECT rowid, v, name FROM items ORDER BY rowid")
+        .unwrap()
+        .query_map([], |r| Ok((r.get(0)?, r.get(1)?, r.get::<_, String>(2)?)))
+        .unwrap()
+        .map(|r| r.unwrap())
+        .collect();
+    drop(conn);
+    let _ = std::fs::remove_dir_all(&dir);
+
+    let want: Vec<(i64, i64, String)> = (1..=500).map(|n| (n, n * 3, format!("row-{n}"))).collect();
+    assert_eq!(got, want, "real SQLite must read every row of the tree in order");
+}
