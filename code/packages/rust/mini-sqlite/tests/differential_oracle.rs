@@ -1266,6 +1266,35 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT id FROM t WHERE s COLLATE NOCASE BETWEEN 'a' AND 'n' ORDER BY id",
     },
+    // `COLLATE` before `LIKE` now parses, but LIKE IGNORES the collation
+    // (matching SQLite): even `COLLATE BINARY` does not make LIKE case-sensitive,
+    // and `COLLATE NOCASE` changes nothing since LIKE is already ASCII
+    // case-insensitive. `NOT LIKE` and the `ESCAPE` clause compose with the
+    // (ignored) collation. The point is parse-surface parity — mini used to
+    // reject `COLLATE` before LIKE.
+    Case {
+        id: "scalar_collate_like_ignored",
+        setup: &[],
+        query: "SELECT 'ABC' COLLATE BINARY LIKE 'abc' AS a, 'ABC' COLLATE NOCASE LIKE 'abc' AS b, 'ABC' COLLATE NOCASE NOT LIKE 'xyz' AS c, 'A%B' COLLATE NOCASE LIKE 'a!%b' ESCAPE '!' AS d",
+    },
+    // `COLLATE` before `GLOB` also parses and is ignored: GLOB stays
+    // case-sensitive regardless of the collation, so `'ABC' COLLATE NOCASE GLOB
+    // 'abc'` is 0 while `'abc' COLLATE NOCASE GLOB 'abc'` is 1. `NOT GLOB` too.
+    Case {
+        id: "scalar_collate_glob_ignored",
+        setup: &[],
+        query: "SELECT 'ABC' COLLATE NOCASE GLOB 'abc' AS a, 'abc' COLLATE NOCASE GLOB 'abc' AS b, 'ABC' COLLATE NOCASE NOT GLOB 'abc' AS c",
+    },
+    // Column form: `COLLATE` before LIKE on a table column parses and matches
+    // exactly as the un-collated LIKE would (LIKE is case-insensitive for ASCII).
+    Case {
+        id: "where_collate_like_ignored",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT)",
+            "INSERT INTO t VALUES (1,'Apple'),(2,'apricot'),(3,'Banana')",
+        ],
+        query: "SELECT id FROM t WHERE s COLLATE NOCASE LIKE 'ap%' ORDER BY id",
+    },
     // IN membership uses the same equality as `=`: numeric across INTEGER/REAL,
     // and it is three-valued for NULL. `1 IN (1.0)` and `1.0 IN (1)` are true
     // (numeric), `'1' IN (1)` is false (text vs int, no affinity), and a list

@@ -16,14 +16,18 @@ All notable changes to this package will be documented in this file.
   IN's three-valued NULL logic and numeric equality for non-text members are
   preserved. This is the *explicit*-COLLATE path; the *column-defined* collation
   (0.2.22) is still pushed in by `collate_comparisons`, which yields to an
-  already-`__collate`-wrapped operand so an explicit clause always wins. (`LIKE`/
-  `GLOB` follows in the same version.)
+  already-`__collate`-wrapped operand so an explicit clause always wins.
 - **Explicit `COLLATE` before `BETWEEN` applies to the range test.** The
   `BETWEEN`/`NOT BETWEEN` branch wraps the value AND both bounds in
   `__collate(_, name)`. Since `x BETWEEN a AND c` is `x >= a AND x <= c`, this
   makes both ordered comparisons canonicalise their text before the byte compare
   — a collated range test. `'B' COLLATE NOCASE BETWEEN 'a' AND 'c'` is now `1`
   (the folded `'b'` falls in `a..c`) where the byte compare is `0`.
+- **`COLLATE` before `LIKE`/`GLOB` is validated and ignored.** The LIKE and GLOB
+  branches call `collate_name_after` so an unknown collation still errors, then
+  discard the name — no `__collate` wrap. Matches SQLite, where LIKE/GLOB carry
+  their own case-folding and the `COLLATE` operator has no effect on them (even
+  `COLLATE BINARY` does not make LIKE case-sensitive).
 
 ## [0.2.22] - Unreleased
 

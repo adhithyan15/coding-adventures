@@ -2479,6 +2479,13 @@ fn plan_comparison(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
     // keyword shows up as a direct token.
     if direct_tok_uppers.contains(&"LIKE".to_string()) {
         let negated = direct_tok_uppers.contains(&"NOT".to_string());
+        // A `COLLATE name` may be written before LIKE, but the LIKE operator
+        // IGNORES the collation (it carries its own case-folding) — matching
+        // SQLite, where even `COLLATE BINARY` does not make LIKE case-sensitive.
+        // We still call `collate_name_after` to VALIDATE the name (an unknown
+        // collation errors like SQLite's "no such collating sequence"), then
+        // discard it — no `__collate` wrap.
+        let _ = collate_name_after(&direct_tok_uppers)?;
         let pattern_node = child_nodes_ordered
             .get(1)
             .ok_or_else(|| PlanError::UnsupportedStatement("LIKE missing pattern".to_string()))?;
@@ -2508,6 +2515,9 @@ fn plan_comparison(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
     // SQLite does. `NOT GLOB` wraps the call in a logical NOT.
     if direct_tok_uppers.contains(&"GLOB".to_string()) {
         let negated = direct_tok_uppers.contains(&"NOT".to_string());
+        // GLOB, like LIKE, ignores an explicit `COLLATE` (it is always
+        // case-sensitive). Validate the name, then discard it.
+        let _ = collate_name_after(&direct_tok_uppers)?;
         let pattern_node = child_nodes_ordered
             .get(1)
             .ok_or_else(|| PlanError::UnsupportedStatement("GLOB missing pattern".to_string()))?;
