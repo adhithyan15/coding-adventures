@@ -2,6 +2,26 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.54.0] - 2026-07-18
+
+### Changed — `in` / `instanceof` drop their space at hard token boundaries
+
+The word-shaped operators `in` / `instanceof` previously always emitted a space
+on both sides. But a space is only needed to prevent the keyword from fusing with
+a neighbour into one identifier, which can only happen when the touching character
+is an identifier-part char (`[A-Za-z0-9_$]`). At a hard boundary the space is
+redundant, and the reference Closure Compiler drops it in compact mode:
+
+- `"k" in obj`  → `"k"in obj`   (the string's closing `"` absorbs the LEFT space)
+- `a in {}`     → `a in{}`      (the `{` absorbs the RIGHT space)
+- `a in [1]`    → `a in[1]`     (the `[` absorbs the RIGHT space)
+
+while `a in b`, `1 in o` keep both spaces (identifier/digit seams). The left seam
+is decided from the already-emitted buffer's last char; the right seam reuses
+`keyword_needs_space_before` (the helper `return`/`throw` use — those keywords also
+end in a letter, so the classification is identical). Pretty mode is unchanged
+(always spaced). Oracle-verified byte-identical.
+
 ## [0.53.0] - 2026-07-17
 
 ### Fixed — `throw`/`return` drop the space before a punctuation-leading argument

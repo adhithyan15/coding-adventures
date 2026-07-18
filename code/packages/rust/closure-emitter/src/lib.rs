@@ -1826,13 +1826,35 @@ impl<'a> Emitter<'a> {
         self.emit_expression_inner(&b.left, left_prec);
         let op = binary_op_str(b.operator);
 
-        // Word-shaped operators MUST keep a space on both sides or they fuse
-        // with their operands into a single identifier (`1 in obj`, not `1inobj`;
-        // `a instanceof b`, not `ainstanceofb`).
+        // Word-shaped operators (`in` / `instanceof`) are all letters, so a
+        // neighbour fuses with the keyword into one identifier ONLY when the
+        // touching character is itself an identifier-part char (`[A-Za-z0-9_$]`).
+        // A hard-boundary neighbour needs NO separating space, and the reference
+        // compiler drops it in compact mode:
+        //   `"k" in obj`  → `"k"in obj`   (the string's closing `"` absorbs the
+        //                                   LEFT space)
+        //   `a in {}`     → `a in{}`      (the `{` absorbs the RIGHT space)
+        //   `a in [1]`    → `a in[1]`     (the `[` absorbs the RIGHT space)
+        // while `a in b`, `1 in o` keep BOTH spaces (identifier / digit seams).
+        // Pretty mode always spaces for readability. The LEFT operand is already
+        // in `self.out`, so its last char is inspected directly; the RIGHT
+        // operand's leading char is classified by `keyword_needs_space_before`
+        // (the same helper `return` / `throw` use — those keywords also end in a
+        // letter, so the question is identical).
         if matches!(b.operator, BinaryOperator::In | BinaryOperator::InstanceOf) {
-            self.required_ws();
+            let left_needs_space = self.opts.pretty
+                || self
+                    .out
+                    .chars()
+                    .last()
+                    .is_some_and(|c| c.is_ascii_alphanumeric() || c == '_' || c == '$');
+            if left_needs_space {
+                self.required_ws();
+            }
             self.write_str(op);
-            self.required_ws();
+            if self.opts.pretty || keyword_needs_space_before(&b.right) {
+                self.required_ws();
+            }
             self.emit_expression_inner(&b.right, right_prec);
             return;
         }
@@ -3752,11 +3774,38 @@ mod tests {
     #[test]
     fn word_operators_keep_their_spaces() {
         use BinaryOperator::*;
-        // `in` / `instanceof` MUST stay spaced or they fuse into one identifier.
+        // `in` / `instanceof` between two identifier-part seams MUST stay spaced
+        // or they fuse into one identifier.
         assert_eq!(emit_expr(binary(In, ident("a"), ident("b"))), "a in b;");
         assert_eq!(
             emit_expr(binary(InstanceOf, ident("a"), ident("b"))),
             "a instanceof b;"
+        );
+    }
+
+    #[test]
+    fn word_operators_drop_space_at_hard_boundaries() {
+        use BinaryOperator::*;
+        // The LEFT space is dropped after a string literal's closing quote:
+        // `"k" in obj` → `"k"in obj`.
+        assert_eq!(
+            emit_expr(binary(In, string("k"), ident("obj"))),
+            r#""k"in obj;"#
+        );
+        // The RIGHT space is dropped before a `{` (object) / `[` (array):
+        // `a in {}` → `a in{}`.
+        let empty_obj = Expression::ObjectExpression(ObjectExpression {
+            cv: None,
+            properties: vec![],
+        });
+        assert_eq!(emit_expr(binary(In, ident("a"), empty_obj)), "a in{};");
+        let empty_arr = Expression::ArrayExpression(ArrayExpression {
+            cv: None,
+            elements: vec![],
+        });
+        assert_eq!(
+            emit_expr(binary(InstanceOf, ident("a"), empty_arr)),
+            "a instanceof[];"
         );
     }
 
