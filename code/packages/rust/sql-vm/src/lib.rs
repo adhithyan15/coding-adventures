@@ -3039,13 +3039,33 @@ fn parse_real_prefix(s: &str) -> f64 {
 // Helper: aggregate accumulator update / finalize
 // ===========================================================================
 
+/// A canonical, type-tagged string key for a value, used to deduplicate in
+/// `COUNT(DISTINCT …)` and `GROUP_CONCAT(DISTINCT …)`. The leading tag keeps
+/// values of different storage classes distinct (`1` the integer vs `'1'` the
+/// text), matching how SQLite treats them as separate distinct values. NULL is
+/// filtered by callers before this is reached; it maps to a stable key anyway so
+/// this helper never panics.
+fn distinct_key(v: &SqlValue) -> String {
+    match v {
+        SqlValue::Int(n) => format!("i:{}", n),
+        SqlValue::Float(f) => format!("f:{}", f),
+        SqlValue::Text(s) => format!("t:{}", s),
+        SqlValue::Bool(b) => format!("b:{}", b),
+        SqlValue::Blob(bytes) => {
+            let hex: String = bytes.iter().map(|b| format!("{:02x}", b)).collect();
+            format!("x:{}", hex)
+        }
+        SqlValue::Null => "n:".to_string(),
+    }
+}
+
 /// Feed one value into an accumulator.
 ///
 /// - CountStar is handled in the main loop (no stack pop, not called here).
 /// - All other functions skip NULLs.
 ///
 /// Returns `Err(VmError::ResourceLimit)` if a hard per-accumulator memory cap
-/// is reached (currently only for `CountDistinct`).
+/// is reached (`CountDistinct` and `GROUP_CONCAT`).
 fn update_accumulator(acc: &mut AggAccumulator, fn_tag: &AggFn, v: SqlValue) -> Result<(), VmError> {
     match fn_tag {
         AggFn::CountStar => {
@@ -3102,6 +3122,65 @@ fn update_accumulator(acc: &mut AggAccumulator, fn_tag: &AggFn, v: SqlValue) -> 
                 });
             }
         }
+        AggFn::GroupConcat { sep, distinct } => {
+            // Skip NULLs; render each non-NULL value to text and append it,
+            // joined by the constant separator. The running string lives in
+            // `acc.acc` as Text. `sql_to_str` gives each value SQLite's text form
+            // (numbers → their decimal string, text unchanged).
+            //
+            // `DISTINCT` deduplicates values before joining: we track a canonical
+            // key per already-emitted value in `acc.distinct_vals` (the same set
+            // COUNT(DISTINCT) uses) and skip a value whose key was already seen.
+            //
+            // DoS guard: an unbounded concat over a huge table could exhaust
+            // memory. Cap the accumulated length at SQLite's default
+            // SQLITE_MAX_LENGTH (1e9); beyond that SQLite itself raises "string
+            // or blob too big", which we mirror as a ResourceLimit error. The
+            // distinct set is separately capped at 1M entries.
+            const MAX_GROUP_CONCAT_LEN: usize = 1_000_000_000;
+            const MAX_DISTINCT_VALS: usize = 1_000_000;
+            if !matches!(v, SqlValue::Null) {
+                if *distinct {
+                    let key = distinct_key(&v);
+                    let set = acc.distinct_vals.get_or_insert_with(std::collections::HashSet::new);
+                    if set.contains(&key) {
+                        return Ok(()); // already concatenated this value
+                    }
+                    if set.len() >= MAX_DISTINCT_VALS {
+                        return Err(VmError::ResourceLimit(format!(
+                            "GROUP_CONCAT(DISTINCT) exceeded maximum distinct values ({})",
+                            MAX_DISTINCT_VALS
+                        )));
+                    }
+                    set.insert(key);
+                }
+                let piece = sql_to_str(&v);
+                match &mut acc.acc {
+                    // Append IN PLACE (amortised O(total length), not the
+                    // O(n²) that rebuilding the whole string with `format!`
+                    // every row would cost) and without a second full copy.
+                    Some(SqlValue::Text(existing)) => {
+                        if existing.len() + sep.len() + piece.len() > MAX_GROUP_CONCAT_LEN {
+                            return Err(VmError::ResourceLimit(
+                                "GROUP_CONCAT result exceeded maximum length (1e9)".to_string(),
+                            ));
+                        }
+                        existing.push_str(sep);
+                        existing.push_str(&piece);
+                    }
+                    // First non-NULL value (or a slot never populated as Text).
+                    // Cap it too so a single oversized value can't skip the guard.
+                    _ => {
+                        if piece.len() > MAX_GROUP_CONCAT_LEN {
+                            return Err(VmError::ResourceLimit(
+                                "GROUP_CONCAT result exceeded maximum length (1e9)".to_string(),
+                            ));
+                        }
+                        acc.acc = Some(SqlValue::Text(piece));
+                    }
+                }
+            }
+        }
         AggFn::CountDistinct => {
             // Skip NULLs; insert a canonical string representation of non-NULL
             // values into the distinct set.  The set is lazily initialised here
@@ -3112,17 +3191,7 @@ fn update_accumulator(acc: &mut AggAccumulator, fn_tag: &AggFn, v: SqlValue) -> 
             // of hex strings per entry; cap at 1 000 000 distinct values.
             const MAX_DISTINCT_VALS: usize = 1_000_000;
             if !matches!(v, SqlValue::Null) {
-                let key = match &v {
-                    SqlValue::Int(n)   => format!("i:{}", n),
-                    SqlValue::Float(f) => format!("f:{}", f),
-                    SqlValue::Text(s)  => format!("t:{}", s),
-                    SqlValue::Bool(b)  => format!("b:{}", b),
-                    SqlValue::Blob(bytes) => {
-                        let hex: String = bytes.iter().map(|b| format!("{:02x}", b)).collect();
-                        format!("x:{}", hex)
-                    }
-                    SqlValue::Null => unreachable!(),
-                };
+                let key = distinct_key(&v);
                 let set = acc.distinct_vals.get_or_insert_with(std::collections::HashSet::new);
                 if set.len() >= MAX_DISTINCT_VALS && !set.contains(&key) {
                     return Err(VmError::ResourceLimit(format!(
@@ -3148,6 +3217,9 @@ fn finalize_accumulator(acc: &AggAccumulator, fn_tag: &AggFn) -> SqlValue {
         AggFn::Sum => acc.acc.clone().unwrap_or(SqlValue::Null),
         AggFn::Min => acc.acc.clone().unwrap_or(SqlValue::Null),
         AggFn::Max => acc.acc.clone().unwrap_or(SqlValue::Null),
+        // The accumulated Text, or NULL when no non-NULL value was seen (an
+        // empty group or an all-NULL column) — matching SQLite.
+        AggFn::GroupConcat { .. } => acc.acc.clone().unwrap_or(SqlValue::Null),
         AggFn::Avg => match &acc.acc {
             None => SqlValue::Null,
             Some(sum) => {

@@ -3,6 +3,22 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.30] - Unreleased
+
+### Added
+
+- **`GROUP_CONCAT` aggregate execution.** `update_accumulator`/
+  `finalize_accumulator` handle `AggFn::GroupConcat { sep, distinct }`: non-NULL
+  values are rendered with `sql_to_str` and appended, joined by `sep`; an empty or
+  all-NULL group finalises to NULL. `DISTINCT` deduplicates using the same
+  type-tagged key as `COUNT(DISTINCT)`, now factored into a shared `distinct_key`
+  helper. Values are appended IN PLACE (`push_str`, amortised O(total length))
+  rather than rebuilt with `format!` each row (which would be O(n²) and double
+  peak memory). Two DoS guards: the result string is capped at SQLite's default
+  `SQLITE_MAX_LENGTH` (1e9, checked on the first value too) and the distinct set
+  at 1M entries, each returning a `ResourceLimit` error rather than growing
+  unbounded.
+
 ## [0.4.29] - Unreleased
 
 ### Fixed

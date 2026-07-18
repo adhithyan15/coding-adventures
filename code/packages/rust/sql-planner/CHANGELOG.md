@@ -2,6 +2,16 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.24] - Unreleased
+
+### Added
+
+- **`GROUP_CONCAT` recognised as an aggregate.** `try_plan_as_aggregate` now maps
+  `GROUP_CONCAT` to `AggFunc::GroupConcat { sep }`, capturing the separator from
+  an optional literal second argument (default `","`) via `group_concat_separator`
+  / `collect_call_arg_exprs`; the value stream stays single-column (`x`). Pairs
+  with sql-codegen 0.6.7 / sql-vm 0.4.30.
+
 ## [0.2.23] - Unreleased
 
 ### Added
