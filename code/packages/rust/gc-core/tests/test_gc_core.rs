@@ -490,8 +490,17 @@ fn gc_algorithm_mark_and_sweep_is_available() {
 }
 
 #[test]
-fn gc_algorithm_generational_not_yet_available() {
-    assert!(!GcAlgorithm::Generational.is_available());
+fn gc_algorithm_generational_is_available() {
+    // Generational became available with FlatHeap::collect_minor + the
+    // remembered-set write barrier (the generational rung of the ladder).
+    assert!(GcAlgorithm::Generational.is_available());
+}
+
+#[test]
+fn gc_algorithm_compacting_and_incremental_not_yet_available() {
+    // Still planned rungs of the precision ladder.
+    assert!(!GcAlgorithm::Compacting.is_available());
+    assert!(!GcAlgorithm::Incremental.is_available());
 }
 
 #[test]

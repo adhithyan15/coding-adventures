@@ -1,5 +1,41 @@
 # Changelog — gc-core
 
+## 0.7.0 — 2026-07-18
+
+### Added
+
+- **`FlatHeap` generational minor GC: remembered-set write barrier +
+  `collect_minor`** — the payoff of the young/old split (0.6.0). A minor cycle
+  reclaims only **young** garbage and never scans or frees the old generation, so
+  GC cost tracks the churny young gen instead of the whole heap (the win for
+  high-allocation-rate languages — Ruby/Python/JS).
+  - `write_barrier(parent, child)` — the generational write barrier, **O(1)**:
+    the header sits exactly `HEADER_SIZE` bytes before the payload, so a store
+    into an **old** parent records it in the remembered set with no heap search.
+    `child` is never dereferenced (it may be null / a tagged immediate);
+    recording an old parent that didn't store a young child is a harmless
+    over-approximation.
+  - `collect_minor(roots)` — marks from the roots **and** the remembered set
+    (old objects holding old→young pointers), following only young objects, then
+    sweeps only the young generation and tenures survivors.
+  - Every **full** `collect` now **clears** the remembered set (it may free old
+    objects, so entries could dangle); the barrier rebuilds it. `remembered_len()`
+    introspection.
+  - Marking is now generation-aware (`mark_word`/`scan_payload` take a
+    `young_only` flag); the full-collect paths are unchanged in behaviour.
+  - 6 unit tests, including the headline proof (a young object reachable *only*
+    via a remembered old parent survives a minor GC) and its load-bearing
+    contrast (the same store *without* the barrier reclaims the child — the
+    barrier does real work). Adversarially security-reviewed (a missed
+    remembered-set entry would be a use-after-free).
+  - `collect_minor_region(base, len)` — the raw-memory-region (stack-scan)
+    analogue of `collect_minor`, mirroring `collect_region`; the seam
+    `gc-core-capi`'s `__gc_collect_minor` roots from the live stack.
+  - **`GcAlgorithm::Generational::is_available()` now returns `true`** — the
+    algorithm (minor GC + write barrier) is implemented. Only `Compacting` /
+    `Incremental` remain planned. The `AdaptivePolicy` recommendation of
+    Generational under low survival is now actionable.
+
 ## 0.6.0 — 2026-07-18
 
 ### Added

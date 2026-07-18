@@ -80,6 +80,20 @@ int64_t __gc_collect(void);
  * __gc_alloc also runs this same paced collect before allocating. */
 int64_t __gc_safepoint(void);
 
+/* Generational write barrier: call whenever the mutator stores a heap reference
+ * `child` into a field of heap object `parent` (both payload addresses). If
+ * `parent` is old, it is recorded so a later __gc_collect_minor scans it for the
+ * young objects it now references. O(1); `child` is never dereferenced. `parent`
+ * must be a live GC-object payload (a `parent < 32` is ignored). */
+void __gc_write_barrier(int64_t parent, int64_t child);
+
+/* Minor (young-generation-only) collection rooted at this thread's live stack +
+ * callee-saved registers — the generational analogue of __gc_collect. Reclaims
+ * only young garbage; old objects are never scanned or freed (old->young pointers
+ * are reached through the remembered set __gc_write_barrier populates). Returns
+ * objects freed. Requires every old->young store to have called the barrier. */
+int64_t __gc_collect_minor(void);
+
 /* Live payload bytes. */
 int64_t __gc_live_bytes(void);
 
