@@ -26,11 +26,15 @@ French.
   (*breve* ← *brevis*) → practice. **Authored** — fifth track to complete the
   greet-to-goodbye arc (Ch. 3 introductions to slot in below it).
 
+- **Ch. 3 — Introducing Yourself**: eu (← *ego*; pro-drop) → me chamo / chamo-me
+  (*chamar-se* ← *clāmāre*; *ch* = *sh*; alt. *o meu nome é* ← *nōmen*) → como se
+  chama → prazer (← *placēre*; twin of *piacere*) → practice. **Authored** —
+  Portuguese now runs greet → introduce → how-are-you → goodbye end to end.
+
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |
 |---|---|
-| 3 | Introducing yourself: *chamo-me / o meu nome é*, como se chama, prazer |
 | 5+ | Numbers, time, days & months, family, food — following the shared theme order |
 
 Note: Portuguese's polite "you" is **você** (← *vossa mercê*, "your mercy") — the
