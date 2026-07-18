@@ -1,0 +1,113 @@
+% ============================================================================
+% quadrilateral-types — five common quadrilaterals and the ONE defining
+% property each one's source states (adj-facts-stdlib, GEOMETRY).
+% ============================================================================
+% A four-sided polygon (a quadrilateral) comes in named families, and each
+% family is pinned down by ONE defining property: a rectangle is the one with
+% four right angles, a rhombus is the one whose sides are all the same length,
+% a parallelogram is the one with opposite sides parallel, a trapezoid is the
+% one with (just) two sides parallel, and a square is the one whose equal-length
+% sides sit at right angles to each other. Before you can reason about a
+% quadrilateral — its area formula, its symmetry, whether it tiles — you must
+% first know WHICH named family it is. Recall is a binding query:
+%
+%     ? quadrilateral_property(rhombus, $Property)   % all_sides_same_length
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `quadrilateral_property(shape, property)` carrying the table's
+% citation, so the lookup above is the ordinary SLD binding query — the engine
+% returns the property WITH its source, on the CPU, with zero model calls, and
+% abstains on a word that is not one of these five quadrilaterals (it never
+% invents a property).
+%
+% Each quadrilateral and the single defining property its source states, as a
+% little truth table:
+%
+%     quadrilateral   defining property (source's word)   a beginner's cue
+%     -------------   ---------------------------------   -----------------------
+%     square          equal_sides_at_right_angles         equal sides, all corners square
+%     rectangle       four_right_angles                   four square corners
+%     rhombus         all_sides_same_length               a "pushed-over" square
+%     parallelogram   opposite_sides_parallel             both pairs of sides parallel
+%     trapezoid       two_sides_parallel                  exactly one pair parallel
+%
+% The query also runs BACKWARD — bind a property and recall its quadrilateral:
+%
+%     ? quadrilateral_property($Shape, four_right_angles)   % rectangle
+%
+% A word that is NOT one of these five quadrilaterals — `triangle`, `pentagon`,
+% `circle` — is deliberately NOT a row, so a recall ABSTAINS on it rather than
+% inventing a property. That honest-abstention property is what makes the table
+% safe to build a reasoner on: it answers exactly the quadrilateral→property
+% pairs it can ground, and only those.
+%
+% The `property` value of every row is a SINGLE lowercase atom, chosen to be the
+% defining property the source EXPLICITLY states for that quadrilateral in its
+% opening definition — never one the source does not support. Each value is
+% distinct, so no two families collapse to the same defining property. Where the
+% source phrases a family two ways (a rhombus is "equilateral" AND has "all
+% sides the same length"), the atom uses the source's own descriptive words, so
+% every value stays literally checkable against the quoted span.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every quadrilateral→
+% property pair below was read out of a fetched Wolfram MathWorld definition
+% page, and any pair whose property could not be verified there would have been
+% dropped). Each pair, with the primary source it was copied from and the
+% verbatim opening-definition span that states it:
+%
+%   square → equal_sides_at_right_angles
+%     https://mathworld.wolfram.com/Square.html
+%     (Wolfram MathWorld — Weisstein, Eric W.)
+%     "The term 'square' can be used to mean either a square number or a
+%      geometric figure consisting of a convex quadrilateral with sides of equal
+%      length that are positioned at right angles to each other as illustrated
+%      above."
+%
+%   rectangle → four_right_angles
+%     https://mathworld.wolfram.com/Rectangle.html
+%     (Wolfram MathWorld — Weisstein, Eric W.)
+%     "A closed planar quadrilateral with opposite sides of equal lengths a and
+%      b, and with four right angles."
+%
+%   rhombus → all_sides_same_length
+%     https://mathworld.wolfram.com/Rhombus.html
+%     (Wolfram MathWorld — Weisstein, Eric W.)
+%     "A rhombus is a quadrilateral with both pairs of opposite sides parallel
+%      and all sides the same length, i.e., an equilateral parallelogram."
+%
+%   parallelogram → opposite_sides_parallel
+%     https://mathworld.wolfram.com/Parallelogram.html
+%     (Wolfram MathWorld — Weisstein, Eric W.)
+%     "A parallelogram is a quadrilateral with opposite sides parallel (and
+%      therefore opposite angles equal)."
+%
+%   trapezoid → two_sides_parallel
+%     https://mathworld.wolfram.com/Trapezoid.html
+%     (Wolfram MathWorld — Weisstein, Eric W.)
+%     "A trapezoid is a quadrilateral with two sides parallel."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the MathWorld statement that
+% fixes the first row (square → equal_sides_at_right_angles). Every OTHER row's
+% per-fact source and verbatim span is listed above, so each property remains
+% independently checkable. All sources are Wolfram MathWorld, a primary
+% mathematics reference (the same source the geometry/shapes and geometry/
+% solid-shapes libraries cite at `authoritative`), so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table quadrilateral_property {
+    columns shape, property
+
+    row (square, equal_sides_at_right_angles)
+    row (rectangle, four_right_angles)
+    row (rhombus, all_sides_same_length)
+    row (parallelogram, opposite_sides_parallel)
+    row (trapezoid, two_sides_parallel)
+
+    source "The term 'square' can be used to mean either a square number or a geometric figure consisting of a convex quadrilateral with sides of equal length that are positioned at right angles to each other as illustrated above."
+    locator "https://mathworld.wolfram.com/Square.html"
+    trust authoritative
+}
