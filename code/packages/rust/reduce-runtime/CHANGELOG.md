@@ -37,14 +37,23 @@
   (grammar repetitions, not recursive rule calls, aren't bounded by that
   cap). Unlike `derive-runtime`'s identical-in-spirit guard (reset on a
   significant `NEWLINE`), this crate resets on Reduce's own real
-  terminators, `SEMI`/`DOLLAR`, including ones lexically inside a
-  `<< ... >>` group statement (safe, since `group_expr` lowers to a *flat*
-  `CompoundExpression`, never nested sub-statements). Two shapes are
+  terminators, `SEMI`/`DOLLAR` — but **only at bracket depth 0** (tracked
+  over `LPAREN`/`RPAREN`, `LBRACE`/`RBRACE`, `GROUP_OPEN`/`GROUP_CLOSE`),
+  a `/security-review` fix over resetting unconditionally: a `;`/`$`
+  lexically inside a *parenthesized* `<< ... >>` group construct that is
+  itself embedded as one operand of a much larger enclosing chain
+  (`1 + 1 + (<<0;0>>) + 1 + 1 + ...`) previously reset the outer chain's
+  own count too, even though the outer chain still folds every operand
+  into one deeply nested tree regardless — empirically, a chain 16× the
+  documented cap sailed through undetected before this fix. Two shapes are
   guarded: the additive/multiplicative left-fold chain (shared with
   Derive's identical vector) and, new here, a chained postfix call
   `f(x)(x)(x)…` (`postfix`'s own call-chaining loop folds the same way).
   Evaluation runs on a 512 MiB-stack worker thread inside `catch_unwind`,
-  rebuilding the session after any caught panic.
+  rebuilding the session after any caught panic; a thread-spawn failure
+  itself (a second `/security-review` fix, over an earlier `.expect()`
+  that panicked on the *calling* thread, outside that boundary) is now
+  folded into the same ordinary `Err` path instead.
 - **Disclosed spec/reality gap** (documented in `crate::lower`'s module
   doc comment, this crate's README, and MA08 itself — see that spec's own
   R-4 status note): grepping `symbolic-vm::handlers::build_handler_table`
@@ -64,9 +73,10 @@
   already-reused heads instead — `Add`/`Sub`/`Mul`/`Div`/`Pow`/`Neg`,
   exactly what `derive-runtime`/`macsyma-compiler` already lower to — so
   Reduce agrees with its CAS-family siblings on every arithmetic result.
-- 84 tests total: `lower`/`printer` unit tests covering every row of MA08
+- 85 tests total: `lower`/`printer` unit tests covering every row of MA08
   §3's surface table, plus end-to-end session tests (arithmetic, persistent
   bindings/procedures, `if` with/without `else`, lists and cons-folding,
-  both robustness guards including the group-statement-nested case, panic
-  recovery, and the disclosed `CompoundExpression`/list-accessor gap), plus
-  a doctest on `ReduceSession::feed`.
+  both robustness guards including the group-statement-nested case and the
+  embedded-group-inside-a-larger-chain regression, panic recovery, and the
+  disclosed `CompoundExpression`/list-accessor gap), plus a doctest on
+  `ReduceSession::feed`.

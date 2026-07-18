@@ -105,18 +105,34 @@
 //!    `derive-runtime`'s identical-in-spirit guard (which resets its
 //!    running count on a `NEWLINE` token, since Derive's statement
 //!    separator IS the newline), this crate resets on Reduce's own real
-//!    separators, `SEMI`/`DOLLAR` (`;`/`$`) — including ones lexically
-//!    inside a `<< ... >>` group statement, which is fine: `group_expr`'s
-//!    own statements lower to a *flat* `CompoundExpression(s1, s2, …)`
-//!    (see [`lower::lower_group_expr`]), never nested onto each other, so
-//!    bounding each `s_i`'s own token run independently is exactly the
-//!    right (and no more permissive) boundary.
+//!    separators, `SEMI`/`DOLLAR` (`;`/`$`) — but **only when they mark a
+//!    genuine top-level statement boundary**, i.e. at bracket depth 0. An
+//!    earlier version reset unconditionally, including on a `;`/`$`
+//!    lexically inside a `<< ... >>` group statement, reasoning that
+//!    `group_expr`'s own statements lower flat ([`lower::lower_group_expr`])
+//!    so bounding each sub-statement's own token run independently was fine
+//!    — but a `/security-review` finding caught the gap that reasoning
+//!    missed: a *parenthesized* group construct can itself be embedded as
+//!    just **one operand** of a much larger enclosing additive/
+//!    multiplicative/postfix chain (`1 + 1 + (<<0;0>>) + 1 + 1 + ...`), and
+//!    the `;` inside it reset the counter for that *outer* chain too, even
+//!    though the outer chain still folds every operand into one deeply
+//!    nested tree regardless. [`check_statement_token_counts`] now tracks
+//!    bracket nesting (`LPAREN`/`RPAREN`, `LBRACE`/`RBRACE`, `GROUP_OPEN`/
+//!    `GROUP_CLOSE`) and only resets at depth 0 — see that function's own
+//!    doc comment for the full accounting, including the deliberate (and
+//!    safe) trade-off of being slightly more conservative than the strict
+//!    minimum in one unusual case.
 //! 3. **Unwinding panics** (a malformed `Assign`/`Define` LHS, or any other
 //!    reused-handler panic on a surprising shape). Evaluation runs inside
 //!    [`catch_unwind`] on a worker thread with a large bounded stack, and any
 //!    panic becomes a clean `Err(String)`; the session is rebuilt afterward
 //!    (trading lost bindings for a guaranteed-usable session next call), so
 //!    one crafted statement can never abort the process or wedge a session.
+//!    (A thread-spawn failure itself — OS thread-count/memory pressure — is
+//!    handled as an ordinary `Err` too, not a caller-thread panic; an
+//!    earlier version `.expect()`-unwrapped that outside this boundary,
+//!    another `/security-review` finding.)
 
 mod lower;
 mod printer;
@@ -238,29 +254,57 @@ impl ReduceSession {
         // Guard 3 + panics: the lowering, the VM evaluation, and the printer
         // all run on a worker thread with a large bounded stack, and any
         // unwinding panic from the reused symbolic stack is caught.
+        //
+        // `spawn_scoped` itself can fail (OS thread-count/memory pressure —
+        // exactly the kind of adversarial-load condition this crate's own
+        // "trust boundary" doc anticipates) — a previous version unwrapped
+        // that with `.expect(...)`, panicking on the *calling* thread,
+        // entirely outside the `catch_unwind` below (a `/security-review`
+        // finding). Resolved to a plain `Result<Vec<Output>, String>`
+        // *inside* the scoped closure instead (a `ScopedJoinHandle` can't
+        // outlive it), with `panicked` — mutated only on this, the calling,
+        // thread, never touched from the spawned one — flagging whether
+        // `self.vm` needs rebuilding after the scope returns.
         let vm = &mut self.vm;
         let src_owned = src.to_string();
-        let outcome = std::thread::scope(|scope| {
-            std::thread::Builder::new()
+        let mut panicked = false;
+        let result: Result<Vec<Output>, String> = std::thread::scope(|scope| {
+            let handle = match std::thread::Builder::new()
                 .stack_size(EVAL_STACK_SIZE)
                 .spawn_scoped(scope, || {
                     catch_unwind(AssertUnwindSafe(|| eval_source(vm, &src_owned)))
-                })
-                .expect("failed to spawn reduce evaluation thread")
-                .join()
+                }) {
+                Ok(handle) => handle,
+                Err(io_err) => {
+                    // Nothing ran on another thread at all, so there is no
+                    // VM state to rebuild.
+                    return Err(format!(
+                        "failed to spawn the Reduce evaluation thread: {io_err}"
+                    ));
+                }
+            };
+            // `handle.join()`'s outer `Result` is join's own (a panic that
+            // somehow escaped the `catch_unwind` below); its `Ok` carries
+            // `catch_unwind`'s own `Result` (a panic it *did* catch); *that*
+            // `Ok` finally carries `eval_source`'s own `Result<Vec<Output>,
+            // String>` (an ordinary surface error, not a panic at all).
+            match handle.join() {
+                Ok(Ok(Ok(outputs))) => Ok(outputs),
+                Ok(Ok(Err(message))) => Err(message),
+                // A panic the worker caught, or one that escaped and unwound
+                // the join. Either way the env may be inconsistent, so flag
+                // it for a rebuild once we're back on this thread.
+                Ok(Err(payload)) | Err(payload) => {
+                    panicked = true;
+                    Err(panic_message(payload))
+                }
+            }
         });
 
-        match outcome {
-            // Normal path: the worker produced the outputs (or a surface error).
-            Ok(Ok(Ok(outputs))) => Ok(outputs),
-            Ok(Ok(Err(message))) => Err(message),
-            // A panic the worker caught, or one that escaped and unwound the
-            // join. Either way the env may be inconsistent, so rebuild.
-            Ok(Err(payload)) | Err(payload) => {
-                self.vm = VM::new(Box::new(SymbolicBackend::new()));
-                Err(panic_message(payload))
-            }
+        if panicked {
+            self.vm = VM::new(Box::new(SymbolicBackend::new()));
         }
+        result
     }
 }
 
@@ -289,9 +333,38 @@ fn eval_source(vm: &mut VM, src: &str) -> Result<Vec<Output>, String> {
 /// diverge from: a `SEMI`/`DOLLAR` token (`;`/`$`, Reduce's own
 /// interchangeable statement terminators — manual §5.1, unlike
 /// `derive-runtime`'s significant-`NEWLINE` reset) marks a statement
-/// boundary and resets the running count, including one lexically inside a
-/// `<< ... >>` group statement — see the module doc comment's "Robustness"
-/// point 2 for why that's the correct, and not overly permissive, boundary.
+/// boundary and resets the running count.
+///
+/// **Only at bracket depth 0**, though — a `/security-review` finding caught
+/// a bypass in an earlier version of this guard that reset unconditionally,
+/// including on a `;`/`$` lexically inside a `<< ... >>` group statement.
+/// `lower_group_expr` does lower a group's *own* statements flat, but a
+/// group construct can itself be parenthesized and embedded as **one
+/// operand inside a much larger enclosing `additive`/`multiplicative`/
+/// `postfix` chain** (`reduce.grammar`'s `atom = ... | group`, `group =
+/// LPAREN expr RPAREN`) — e.g. `1 + 1 + (<<0;0>>) + 1 + 1 + ...`. The `;`
+/// inside `(<<0;0>>)` would reset the counter for the *outer* chain too,
+/// even though [`lower::lower_binary_chain`] still left-folds every operand
+/// of that outer chain — before, at, and after the embedded reset point —
+/// into one single nested `Apply` tree, since it is one contiguous grammar
+/// repetition with no true top-level statement boundary at each reset
+/// point. Empirically, a 32,000-term `+` chain with a trivial `+(<<0;0>>)`
+/// spliced in every 900 terms sailed through with no error at all, while a
+/// plain uninterrupted chain of the same length was correctly rejected —
+/// 16× the documented cap, undetected.
+///
+/// The fix: track nesting depth over `LPAREN`/`RPAREN`, `LBRACE`/`RBRACE`,
+/// and `GROUP_OPEN`/`GROUP_CLOSE` (every bracket-like construct this
+/// grammar has), and only treat a `SEMI`/`DOLLAR` as a genuine reset point
+/// when depth is back to 0. This is slightly more conservative than
+/// strictly necessary — a single *top-level* `<< s1; s2; ...; sN >>` with
+/// many short, independently-flat sub-statements no longer resets between
+/// them either, since depth stays 1 throughout the group — but that only
+/// means such an (unusual) statement hits the cap sooner than the absolute
+/// minimum required, never that a genuinely deep-folding chain slips
+/// through uncounted. A negative depth from malformed/unbalanced brackets
+/// (which the real parser will separately reject) only makes future
+/// `;`/`$` tokens *not* reset, i.e. more conservative still — never less.
 ///
 /// If the lexer itself errors (an untokenizable character), we return
 /// `Ok(())` and let the parser surface the error uniformly — we never
@@ -303,10 +376,16 @@ fn check_statement_token_counts(src: &str) -> Result<(), String> {
     };
 
     let mut count: usize = 0;
+    let mut depth: i32 = 0;
     for token in &tokens {
-        if matches!(token.effective_type_name(), "SEMI" | "DOLLAR") {
-            count = 0;
-            continue;
+        match token.effective_type_name() {
+            "LPAREN" | "LBRACE" | "GROUP_OPEN" => depth += 1,
+            "RPAREN" | "RBRACE" | "GROUP_CLOSE" => depth -= 1,
+            "SEMI" | "DOLLAR" if depth == 0 => {
+                count = 0;
+                continue;
+            }
+            _ => {}
         }
         count += 1;
         if count > MAX_STATEMENT_TOKENS {
@@ -488,6 +567,41 @@ mod tests {
         // sub-statements is still caught.
         let src = format!("<< 1; {}1 >>;\n", "1+".repeat(5_000));
         assert!(eval(&src).unwrap_err().contains("too complex"));
+    }
+
+    #[test]
+    fn a_group_statement_embedded_inside_a_larger_chain_cannot_hide_the_chains_true_length() {
+        // `/security-review` finding: resetting on ANY `;`/`$` regardless of
+        // bracket nesting let a `;` lexically inside a *parenthesized* group
+        // construct — itself just one operand of a much larger enclosing
+        // additive chain — reset the counter for that outer chain too, even
+        // though `lower_binary_chain` still folds every operand (before, at,
+        // and after the embedded reset point) into one single nested `Apply`
+        // tree, since the whole thing is one contiguous grammar repetition
+        // with no true top-level statement boundary at each reset point.
+        // Splicing a trivial `(<<0;0>>)` into an otherwise-uninterrupted
+        // chain every 900 terms previously let a chain 16x the documented
+        // cap sail through with no error at all; the fix tracks bracket
+        // depth and only resets at depth 0, so the true (much longer than
+        // MAX_STATEMENT_TOKENS) chain length must still be rejected.
+        let mut src = String::new();
+        for i in 0..32_000 {
+            if i > 0 && i % 900 == 0 {
+                src.push_str("+(<<0;0>>)");
+            }
+            src.push_str("+1");
+        }
+        src.push_str(";\n");
+        assert!(
+            src.len() <= MAX_INPUT_LEN,
+            "the PoC must fit under the input-size cap on its own, so only \
+             the statement-token-count guard is what's actually being tested"
+        );
+        assert!(
+            eval(&src).unwrap_err().contains("too complex"),
+            "a chain far longer than MAX_STATEMENT_TOKENS must not be hidden \
+             by an embedded group statement's own internal reset"
+        );
     }
 
     #[test]

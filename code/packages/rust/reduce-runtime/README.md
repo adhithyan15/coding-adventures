@@ -119,12 +119,20 @@ comment for the full rationale):
    folds into a deeply *nested* lowered tree — grammar repetitions aren't
    bounded by `MAX_RULE_DEPTH`, so `MAX_STATEMENT_TOKENS` (measured against
    the real lexer token stream, reset on Reduce's own `SEMI`/`DOLLAR`
-   statement separators — including ones lexically inside a `<< ... >>`
-   group statement) closes this separately.
+   statement separators — but only at bracket depth 0, i.e. genuine
+   top-level statement boundaries) closes this separately. A `/security-
+   review` finding caught a bypass in an earlier version that reset
+   unconditionally, including on a `;`/`$` lexically inside a `<< ... >>`
+   group statement embedded as one operand of a much larger enclosing
+   chain (`1 + 1 + (<<0;0>>) + 1 + 1 + ...`) — see `check_statement_token_
+   counts`'s doc comment for the full accounting.
 
 Evaluation itself runs on a worker thread with a large bounded stack inside
 `catch_unwind`, so a reused-handler panic (e.g. a malformed `Assign` LHS)
 becomes a clean `Err` and the session is rebuilt rather than left corrupted.
+A thread-spawn failure itself (OS thread-count/memory pressure) is also
+handled as an ordinary `Err`, not a caller-thread panic — a second
+`/security-review` finding against an earlier `.expect()`-based version.
 
 ## Tests
 
