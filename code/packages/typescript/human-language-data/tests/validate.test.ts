@@ -31,6 +31,18 @@ describe("validate", () => {
     expect(issues.some((i) => i.code === "unresolved-concept" && i.level === "error")).toBe(true);
   });
 
+  it("rejects a concept tag that collides with an Object prototype member", () => {
+    // Without an own-property check, `constructor`/`toString` would resolve via
+    // the prototype chain and spuriously validate as canonical.
+    for (const evil of ["constructor", "toString", "__proto__", "hasOwnProperty"]) {
+      const issues = validate({ taxonomy, lessons: [good("spanish", "ES1", evil)] });
+      expect(
+        issues.some((i) => i.code === "unresolved-concept" && i.level === "error"),
+        `${evil} should not validate`,
+      ).toBe(true);
+    }
+  });
+
   it("accepts a namespaced tag without complaint", () => {
     const issues = validate({ taxonomy, lessons: [good("spanish", "ES1", "ES-WORD-DIA")] });
     expect(issues.some((i) => i.code === "unresolved-concept")).toBe(false);

@@ -37,3 +37,12 @@ export const NAMESPACED_TAG = /^[A-Z]{2}-[A-Z0-9-]+$/;
 
 /** Longest an authored etymology hook may be (HL01). */
 export const MAX_ETYMOLOGY_HOOK = 120;
+
+/**
+ * Own-property check that ignores the prototype chain. Lesson content controls
+ * concept ids, so a tag like `constructor` or `toString` must NOT resolve to an
+ * inherited Object member and sneak past validation as "canonical".
+ */
+export function hasOwn(obj: object, key: string): boolean {
+  return Object.prototype.hasOwnProperty.call(obj, key);
+}

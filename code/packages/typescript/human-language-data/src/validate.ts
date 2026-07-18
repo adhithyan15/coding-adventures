@@ -8,6 +8,7 @@
 import {
   CONTENT_TYPES,
   EXEMPT_TYPES,
+  hasOwn,
   MAX_ETYMOLOGY_HOOK,
   NAMESPACED_TAG,
 } from "./constants.js";
@@ -54,7 +55,7 @@ export function validate(input: ValidateInput): Issue[] {
     // (1) The concept tag must resolve.
     if (r.concept === "") {
       err("missing-concept", `${id}: content lesson has no concept_tag`, id);
-    } else if (!(r.concept in taxonomy.concepts) && !NAMESPACED_TAG.test(r.concept)) {
+    } else if (!hasOwn(taxonomy.concepts, r.concept) && !NAMESPACED_TAG.test(r.concept)) {
       err(
         "unresolved-concept",
         `${id}: concept_tag '${r.concept}' is neither canonical nor namespaced`,

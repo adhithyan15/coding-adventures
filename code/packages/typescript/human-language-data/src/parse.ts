@@ -4,7 +4,7 @@
 // lives in loader.ts.
 
 import { splitFrontmatter, type Frontmatter } from "./frontmatter.js";
-import { LANGUAGE_SCRIPT, CONTENT_TYPES } from "./constants.js";
+import { LANGUAGE_SCRIPT, CONTENT_TYPES, hasOwn } from "./constants.js";
 import type {
   Concept,
   Dataset,
@@ -84,8 +84,10 @@ export function parseLesson(source: string, language: string): ParsedLesson {
 export function buildDataset(taxonomy: Taxonomy, lessons: ParsedLesson[]): Dataset {
   const content = lessons.filter((l) => CONTENT_TYPES.has(l.realization.type));
 
+  // null-prototype maps so a stray `__proto__`/`constructor` key from a
+  // filename-derived language or a concept tag can't collide with inherited members.
   const byConcept = new Map<string, Realization[]>();
-  const byLanguage: Record<string, Realization[]> = {};
+  const byLanguage: Record<string, Realization[]> = Object.create(null);
   for (const { realization } of content) {
     if (realization.concept === "") continue;
     (byConcept.get(realization.concept) ?? setGet(byConcept, realization.concept)).push(
@@ -96,7 +98,7 @@ export function buildDataset(taxonomy: Taxonomy, lessons: ParsedLesson[]): Datas
 
   const concepts: Concept[] = [];
   for (const [id, realizations] of byConcept) {
-    const canon = taxonomy.concepts[id];
+    const canon = hasOwn(taxonomy.concepts, id) ? taxonomy.concepts[id] : undefined;
     concepts.push({
       id,
       family: canon?.family ?? "(namespaced)",
