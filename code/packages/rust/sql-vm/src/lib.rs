@@ -2141,19 +2141,37 @@ fn eval_unary(op: &UnaryOp, v: SqlValue) -> Result<SqlValue, VmError> {
     match v {
         SqlValue::Null => Ok(SqlValue::Null),
         _ => match op {
-            UnaryOp::Neg => match v {
-                SqlValue::Int(n) => {
+            UnaryOp::Neg => {
+                // SQLite applies numeric affinity to the operand *before*
+                // negating, so `-` on text/blob coerces first:
+                //   `-'5'`   = -5      `-'12abc'` = -12    `-'abc'` = 0
+                //   `-'3.5'` = -3.5    `-'  7'`   = -7     `-TRUE`  = -1
+                // A leading numeric prefix is taken (whitespace-trimmed) and the
+                // rest ignored; text with no numeric prefix is 0. `text_to_numeric`
+                // is the shared affinity helper (Int when integral, else Float).
+                // Known edge left for later: a string in *exponent* form such as
+                // `'3e2'` stays REAL in SQLite (`-'3e2'` = -300.0) but collapses to
+                // an integer here — see the float-affinity follow-up.
+                let num = match v {
+                    SqlValue::Int(_) | SqlValue::Float(_) => v,
+                    SqlValue::Bool(b) => SqlValue::Int(b as i64),
+                    SqlValue::Text(s) => text_to_numeric(&s),
+                    SqlValue::Blob(b) => text_to_numeric(&String::from_utf8_lossy(&b)),
+                    SqlValue::Null => unreachable!("NULL handled by the outer match"),
+                };
+                match num {
                     // -i64::MIN overflows; use checked_neg to return an error
                     // instead of panicking (debug) or wrapping (release).
-                    n.checked_neg()
+                    SqlValue::Int(n) => n
+                        .checked_neg()
                         .map(SqlValue::Int)
                         .ok_or_else(|| VmError::TypeMismatch(
-                            "integer overflow in unary negation (value is i64::MIN)".to_string()
-                        ))
+                            "integer overflow in unary negation (value is i64::MIN)".to_string(),
+                        )),
+                    SqlValue::Float(f) => Ok(SqlValue::Float(-f)),
+                    _ => unreachable!("text_to_numeric returns Int or Float"),
                 }
-                SqlValue::Float(f) => Ok(SqlValue::Float(-f)),
-                other => Ok(other), // non-numeric: leave unchanged
-            },
+            }
             UnaryOp::Not => Ok(SqlValue::Bool(!is_truthy(&v))),
             // `~x` — coerce to integer (SQLite integer affinity) then complement.
             // `~0` = -1, `~-1` = 0. NULL was handled above.
@@ -3714,6 +3732,27 @@ mod tests {
             Instruction::Halt,
         ]), &mut b).unwrap();
         assert_eq!(r.rows, vec![vec![int(-5)]]);
+    }
+
+    #[test]
+    fn test_unary_neg_text_numeric_affinity() {
+        // Unary minus coerces a text operand through numeric affinity, then
+        // negates — matching SQLite.
+        let neg = |s: &str| eval_unary(&UnaryOp::Neg, SqlValue::Text(s.to_string())).unwrap();
+        assert_eq!(neg("5"), SqlValue::Int(-5));
+        assert_eq!(neg("12abc"), SqlValue::Int(-12));
+        assert_eq!(neg("abc"), SqlValue::Int(0)); // no numeric prefix → 0
+        assert_eq!(neg("3.5"), SqlValue::Float(-3.5));
+        assert_eq!(neg("  7"), SqlValue::Int(-7)); // leading whitespace tolerated
+        // Blob operand coerces via its UTF-8 bytes; NULL stays NULL.
+        assert_eq!(
+            eval_unary(&UnaryOp::Neg, SqlValue::Blob(b"9".to_vec())).unwrap(),
+            SqlValue::Int(-9)
+        );
+        assert_eq!(
+            eval_unary(&UnaryOp::Neg, SqlValue::Null).unwrap(),
+            SqlValue::Null
+        );
     }
 
     #[test]

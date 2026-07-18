@@ -1356,6 +1356,16 @@ const CASES: &[Case] = &[
         setup: &["CREATE TABLE t (id INTEGER)", "INSERT INTO t VALUES (1)"],
         query: "SELECT (7 / 2) AS a, (-7 / 2) AS b, (7 % 3) AS c, (7.0 / 2) AS d FROM t",
     },
+    // Unary minus applies NUMERIC affinity to a text/blob operand before
+    // negating, matching SQLite: `-'5'` = -5, `-'12abc'` = -12 (leading numeric
+    // prefix), `-'abc'` = 0 (no prefix → 0), `-'3.5'` = -3.5, and leading
+    // whitespace is tolerated (`-'  7'` = -7). Previously the engine left text
+    // unchanged, so `-'5'` wrongly returned the string `'5'`.
+    Case {
+        id: "unary_minus_text_numeric_affinity",
+        setup: &[],
+        query: "SELECT -'5' AS a, -'12abc' AS b, -'abc' AS c, -'3.5' AS d, -'  7' AS e",
+    },
     // ---- Lane 1: CAST … AS NUMERIC (affinity) ----------------------------
     // NUMERIC prefers INTEGER when the value is integral and fits i64, else
     // REAL. Text `'3.0'` and `'1e3'` are integral → INTEGER; `'3.5'` → REAL;
