@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-closure-pass-fold-control-flow"
-version = "0.30.0"
+version = "0.31.0"
 edition = "2021"
 description = "Control-flow folding pass for the Closure Compiler clone. Slots between constant-fold and DCE per CLOC06's canonical pass set. Eliminates dead branches (`if (false) A else B → B`), removes unreachable code after `return`/`throw`, and collapses degenerate switch arms."
 

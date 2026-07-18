@@ -601,3 +601,72 @@ fn our_multi_leaf_btree_reads_in_real_sqlite() {
     let want: Vec<(i64, i64, String)> = (1..=500).map(|n| (n, n * 3, format!("row-{n}"))).collect();
     assert_eq!(got, want, "real SQLite must read every row of the tree in order");
 }
+
+/// Multi-level tree write-path cross-check: enough rows that the *interior*
+/// level itself overflows one page, so the writer stacks a second interior
+/// level under the root. Real bundled-C SQLite must still accept the file
+/// (`PRAGMA integrity_check` → "ok") and read back every row in order — proof
+/// the deeper divider/right-most-child wiring matches the on-disk format.
+#[test]
+fn our_multi_level_btree_reads_in_real_sqlite() {
+    use sqlite_file::page_writer::write_single_table_db;
+    use sqlite_file::SqlValue;
+
+    // 3000 rows on a 512-byte page → ~90 leaves, more than one 512-byte interior
+    // page can index, forcing a root-over-interiors-over-leaves tree.
+    let rows: Vec<(i64, Vec<SqlValue>)> = (1..=3000)
+        .map(|n| (n, vec![SqlValue::Int(n * 3), SqlValue::Text(format!("row-{n}"))]))
+        .collect();
+    let db = write_single_table_db(512, "items", "CREATE TABLE items(v, name)", &rows).unwrap();
+
+    // Confirm the tree is genuinely multi-level (root interior child is interior)
+    // so this test can't silently degrade into the single-interior-level case.
+    let schema = sqlite_file::schema::read_schema(&db).unwrap();
+    let root = schema[0].root_page.unwrap() as usize;
+    let root_off = (root - 1) * 512;
+    assert_eq!(db[root_off], 0x05, "root must be interior");
+    let first_ptr = u16::from_be_bytes([db[root_off + 12], db[root_off + 13]]) as usize;
+    let first_child = u32::from_be_bytes([
+        db[root_off + first_ptr],
+        db[root_off + first_ptr + 1],
+        db[root_off + first_ptr + 2],
+        db[root_off + first_ptr + 3],
+    ]) as usize;
+    assert_eq!(
+        db[(first_child - 1) * 512],
+        0x05,
+        "expected a multi-level tree (root's child is also interior)"
+    );
+
+    static COUNTER_ML: AtomicU64 = AtomicU64::new(14_000_000);
+    let unique = COUNTER_ML.fetch_add(1, Ordering::Relaxed);
+    let mut dir = std::env::temp_dir();
+    dir.push(format!("sqlite_file_mltree_{}_{}", std::process::id(), unique));
+    std::fs::create_dir(&dir).expect("create fresh fixture dir");
+    let path = dir.join("ours.db");
+    std::fs::write(&path, &db).unwrap();
+
+    let conn = rusqlite::Connection::open(&path).unwrap();
+    let integrity: String = conn
+        .query_row("PRAGMA integrity_check", [], |r| r.get(0))
+        .unwrap();
+    assert_eq!(integrity, "ok", "real SQLite integrity_check on our multi-level tree");
+
+    let count: i64 = conn
+        .query_row("SELECT count(*) FROM items", [], |r| r.get(0))
+        .unwrap();
+    assert_eq!(count, 3000);
+
+    let got: Vec<(i64, i64, String)> = conn
+        .prepare("SELECT rowid, v, name FROM items ORDER BY rowid")
+        .unwrap()
+        .query_map([], |r| Ok((r.get(0)?, r.get(1)?, r.get::<_, String>(2)?)))
+        .unwrap()
+        .map(|r| r.unwrap())
+        .collect();
+    drop(conn);
+    let _ = std::fs::remove_dir_all(&dir);
+
+    let want: Vec<(i64, i64, String)> = (1..=3000).map(|n| (n, n * 3, format!("row-{n}"))).collect();
+    assert_eq!(got, want, "real SQLite must read every row of the multi-level tree in order");
+}

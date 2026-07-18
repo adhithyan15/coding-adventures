@@ -4119,8 +4119,11 @@ fn unquote_string(raw: &str) -> String {
             Some(d @ '0'..='7') => {
                 // SAFETY of unwrap: `d` is a validated octal digit `0`–`7`.
                 let mut value = d.to_digit(8).expect("octal digit");
-                let max_more = if d <= '3' { 2 } else { 1 };
-                for _ in 0..max_more {
+                // Closure reads UP TO THREE octal digits regardless of the
+                // leading digit (value 0..=0o777=511), NOT the ECMAScript Annex
+                // B two-digit cap for a leading 4-7. Byte-identity requires we
+                // match Closure: `\401`->U+0101, `\777`->U+01FF (oracle-verified).
+                for _ in 0..2 {
                     match chars.peek() {
                         Some(&next @ '0'..='7') => {
                             value = value * 8 + next.to_digit(8).expect("octal digit");
@@ -4129,7 +4132,7 @@ fn unquote_string(raw: &str) -> String {
                         _ => break,
                     }
                 }
-                // `value` is at most 255, always a valid Unicode scalar (Latin-1).
+                // `value` is at most 0o777 = 511, always a valid Unicode scalar.
                 if let Some(ch) = char::from_u32(value) {
                     result.push(ch);
                 }
@@ -5384,7 +5387,8 @@ mod tests {
             (r#""\40";"#, " "),         // 0o40 = 32 = space
             (r#""a\101b";"#, "aAb"),    // mid-string
             (r#""\1010";"#, "A0"),      // 0o101='A' then a literal '0' (3-digit cap)
-            (r#""\4012";"#, " 12"),     // leading 4-7 caps at TWO digits: \40=space, then literal '1','2'
+            (r#""\401";"#, "\u{101}"),   // three digits even w/ leading 4-7 (Closure rule)
+            (r#""\777";"#, "\u{1ff}"),   // the max: 0o777 = 511
         ] {
             let p = bridge_ok(src);
             match &p.body[0] {
