@@ -37,11 +37,17 @@ order lives in the book, which LaTeX auto-numbers, and in `session-map.md`.)
   word) → hasta luego (*luego* ← *loco* "place" → then) → hasta mañana (*mañana*
   ← *maneana*; the **ñ** returns) → hasta pronto (*pronto* ← *promptus* →
   *prompt*) → practice. **Authored.**
+- **Ch. 6 — Please, and the first verbs**: por favor (← "for a favour";
+  completes gracias/de nada/por favor) → **hablar** (first regular *-ar* verb; the
+  **present tense** -o/-as/-a; ← *fābula* → fable; f→h law) → trabajar (←
+  *tripalium* → travail/travel) → estudiar (← *studēre* → student) → **Hablo
+  español** (first self-assembled sentence; pro-drop; *español* ← *Hispania*) →
+  practice. **Authored** — the pilot's first grammar-engine chapter.
 
-Next: **Ch. 6** — the courtesy pair **por favor** / **de nada** completed, then
-into **everyday verbs** (the present tense of *-ar* verbs: *hablar, trabajar*),
-where sentences start to move. Grammar accumulates piece by piece. The theme
-skeleton below plans the wider road ahead.
+Next: **Ch. 7** — the **-er/-ir** verbs (comer, vivir) to complete the regular
+present tense, and the first real **questions** (*qué*, *dónde*, *cuándo*). From
+here the course hands over rules, not phrases. Grammar accumulates piece by
+piece. The theme skeleton below plans the wider road ahead.
 
 ## Theme Skeleton (planning only)
 
