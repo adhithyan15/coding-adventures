@@ -2,6 +2,77 @@
 
 ## [Unreleased]
 
+### Added
+
+- **`tests/oracle.rs`: the first oracle/golden test in the whole HML01
+  track (spec §7)** — for a small corpus of MATLAB programs, runs the SAME
+  computation through (a) `matlab-runtime` (this frontend's own sibling
+  interpreter, ground truth) and (b) `matlab_to_semantic_ir::compile_source`
+  → `semantic_ir::Module` → `semantic_ir_to_javascript::compile` → a real
+  `node` process, and asserts the two agree. Every prior `e2e_node.rs`-style
+  test anywhere in this track (this crate's own, plus
+  `wolfram-to-semantic-ir`/`macsyma-to-semantic-ir`'s) only proved the
+  compiled JS *runs without crashing* — none diffed it against the
+  language's own native runtime, which is the actual definition of "oracle
+  testing" per HML01 §7. Marks MATLAB's oracle test done in HML01 §5's
+  Stream A rollout summary (Octave/APL/J's remain open follow-ons).
+  - Corpus (7 cases, all passing, `node` genuinely invoked — not skipped):
+    literal arithmetic operator precedence, a bare comparison, `if`/`else`,
+    an `elseif` chain, a `for`-loop accumulator, matrix multiplication, and
+    elementwise scalar broadcast (the last two are real SIR22 array/matrix
+    cases, not just scalars — the actual point of Stream A).
+  - **Two confirmed bugs in `matlab-runtime` itself** (out of scope to fix
+    in this test-only PR), found because building the harness required
+    reading its output byte-for-byte: (1) its `disp` builtin
+    (`src/builtins.rs`) is a no-op that discards its argument and returns an
+    invisible empty array — `eval("disp(7)\n")` returns `"ans =\n\n\n\n"`,
+    never `"7"`; neither that crate's own tests nor `matlab-repl`'s ever
+    exercise `disp`, relying instead on MATLAB's other, working
+    implicit-display echo convention, which is what this oracle harness
+    uses for ground truth instead. (2) `eval.rs`'s statement dispatch has no
+    `func_def` arm at all — a program containing a `function ... end`
+    definition cannot be run by `matlab-runtime` even though this crate's
+    own `e2e_node.rs` already compiles and runs one. (3) indexed assignment
+    (`A(2) = 9;`) is rejected by `eval_expr_or_assign` ("assignment target
+    must be a variable") even though it is ordinary MATLAB and this crate's
+    own `e2e_node.rs` already round-trips it. (2) and (3) mean the
+    corresponding compiled-path constructs simply have no ground truth to
+    diff against yet, not that they are broken.
+  - **Three confirmed bugs/gaps surfaced in this crate and
+    `semantic-ir-to-javascript`** by cross-checking against real MATLAB
+    semantics (also out of scope to fix here — test infrastructure only;
+    see `tests/oracle.rs`'s module doc for full root-cause writeups):
+    (1) integer-literal division floors instead of true-dividing (`7 / 2`
+    compiles to `3`, not MATLAB's `3.5`) — `number_literal_expr` lowers a
+    decimal-point-free literal to `Expr::IntLit`, and the JS backend's
+    shared `divide()` helper (built for Ruby's `Integer#/`, which really
+    does floor) floors whenever both operands are integer-valued, with no
+    per-source-language override, and MATLAB has no integer type at all.
+    (2) unary minus on a power expression gives `NaN` instead of the
+    correct value (`-2 ^ 2` should be `-4`) — `^`/`.^` unconditionally
+    lower to the SIR22 array-domain `ElementwiseOp::Pow` (no literal-only
+    scalar fast path, unlike `+`/`-`/`*`), so even two literal operands
+    produce an NDArray-shaped object, and `neg`'s codegen applies a bare
+    native `-(...)` to it, which coerces to `NaN`. (3) `try_logical`
+    (`src/lower.rs`) never calls `self.observed.add(Feature::ShortCircuit)`
+    for `&&`/`||`/`&`/`|`, so any MATLAB program using them fails
+    `semantic_ir::validate()` outright.
+  - **One severe, previously-unnoticed correctness bug**, given its own
+    dedicated, always-informative test
+    (`known_bug_while_loop_accumulator_terminates_after_one_iteration`): a
+    `while` loop whose condition variable is also updated via non-literal
+    (variable-involving) arithmetic runs its body exactly **once** instead
+    of to convergence — a silent wrong *computation*, not merely a wrong
+    *display* like the bugs above. Root cause: the accumulator becomes an
+    NDArray-shaped object after its first `ElementwiseOp` update (same
+    root cause as the power/`neg` bug), and the loop's own condition then
+    compiles to a native `<`/`>` comparison against that object, which is
+    unconditionally `false` — so the loop silently stops after one
+    iteration with no error, no validator issue, and a plausible-looking
+    wrong answer. `for`-loop accumulators are not immune to the underlying
+    wrapping, they are just structurally shielded from it (their own
+    termination test is index-driven, never accumulator-driven).
+
 ### Changed
 
 - **`semantic-ir-to-javascript` now accepts and correctly compiles the
