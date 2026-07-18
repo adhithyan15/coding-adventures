@@ -1269,6 +1269,37 @@ fn collate_comparisons(expr: SqlExpr, ctx: &OrderCollateCtx) -> SqlExpr {
             op: UnaryOp::Not,
             expr: Box::new(collate_comparisons(*expr, ctx)),
         },
+        // `value IN (list…)` — SQLite takes the operator's collating sequence
+        // from the LEFT operand (`value`), exactly as for a binary comparison.
+        // When `value` is a base-table column with a declared collation and it
+        // is not already `__collate`-wrapped (an explicit COLLATE outranks), we
+        // wrap the value AND every list element in `__collate(_, coll)`. The VM
+        // then canonicalises each side before the membership test, so
+        // `name IN ('APPLE')` on a NOCASE column matches `'Apple'`/`'apple'`.
+        // `__collate` passes NULL/non-text through unchanged, so IN's NULL and
+        // numeric semantics are preserved. `NOT IN` inherits this via `negated`.
+        SqlExpr::InList {
+            value,
+            list,
+            negated,
+        } => {
+            if is_collate_call(&value) {
+                return SqlExpr::InList { value, list, negated };
+            }
+            let determining = if column_in_base_table(&value, ctx) {
+                resolve_column_collation(&value, ctx)
+            } else {
+                None
+            };
+            match determining {
+                Some(name) => SqlExpr::InList {
+                    value: Box::new(wrap_collate(*value, &name)),
+                    list: list.into_iter().map(|e| wrap_collate(e, &name)).collect(),
+                    negated,
+                },
+                None => SqlExpr::InList { value, list, negated },
+            }
+        }
         other => other,
     }
 }
