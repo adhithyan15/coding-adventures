@@ -1,0 +1,91 @@
+% ============================================================================
+% spine-regions — each region of the vertebral column and the NUMBER of
+% vertebrae it contains (adj-facts-stdlib, ANATOMY).
+% ============================================================================
+% A foundational anatomy fact on the way to reasoning about the spine: the
+% vertebral column is not one uniform stack of bones — it is divided, top to
+% bottom, into five named REGIONS, and each region contains a definite number
+% of vertebrae. From the base of the skull down there are seven cervical
+% vertebrae (the neck), then twelve thoracic (each carrying a pair of ribs),
+% then five lumbar (the small of the back), then five sacral and four
+% coccygeal. Recall is a binding query:
+%
+%     ? spine_region_vertebrae(thoracic, $N)      % 12
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `spine_region_vertebrae(region, count)` carrying the table's
+% citation, so the lookup above is the ordinary SLD binding query — the engine
+% returns the number WITH its source, on the CPU, with zero model calls, and
+% abstains on anything that is not one of these five regions (it never invents
+% a count).
+%
+% The five regions, top to bottom, as a little truth table (each `count` is the
+% bare number the source prints for that region):
+%
+%     region      count   what the source states
+%     ---------   -----   ---------------------------------------------------
+%     cervical      7     "7 cervical" vertebrae — the neck
+%     thoracic     12     "12 thoracic" vertebrae — one pair of ribs each
+%     lumbar        5     "5 lumbar" vertebrae — the small of the back
+%     sacral        5     "5 sacral" vertebrae — these fuse into the sacrum
+%     coccygeal     4     "4 coccygeal" vertebrae — these fuse into the coccyx
+%
+% Because each `count` is a NUMBER (not a label), a recalled count composes
+% straight into arithmetic: the five region counts sum to 7 + 12 + 5 + 5 + 4 =
+% 33, which is exactly the total the source states ("composed of 33
+% vertebrae"). That is the concrete bridge from anatomy RECALL to COMPUTE, and
+% the rung a learner reasons UP from before reasoning about a spinal level, a
+% disc, or a fracture. The query also runs BACKWARD — bind a count and recall
+% the region(s) that have it:
+%
+%     ? spine_region_vertebrae($R, 5)   % lumbar AND sacral — reverse recall
+%
+% Note the count 5 is shared by TWO regions (lumbar and sacral), which is
+% exactly right: a reverse recall on 5 honestly returns BOTH.
+%
+% The sacral (5) and coccygeal (4) counts count the vertebrae BEFORE they fuse:
+% in the adult the five sacral vertebrae fuse into a single sacrum bone and the
+% four coccygeal into a single coccyx. This table records the count of
+% vertebrae the source states for each region — 5 and 4 — never the fused-bone
+% count, because that is the number the quoted sentence prints.
+%
+% Something the source does NOT fix — the skull, the ribs, a limb bone — has no
+% row, so a recall on it ABSTAINS rather than inventing a number. That
+% honest-abstention property is what makes the table safe to reason from.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — all five region→count
+% pairs were read out of a single fetched sentence this session, and any count
+% that could not be grounded there would have been dropped). All five numbers
+% come from ONE sentence of the same source, the NCBI Bookshelf / StatPearls
+% teaching article "Anatomy, Back, Vertebral Column" (DeSai, Reddy, Agarwal),
+% quoted here character-for-character so any reader can re-check it:
+%
+%   cervical → 7,  thoracic → 12,  lumbar → 5,  sacral → 5,  coccygeal → 4
+%     https://www.ncbi.nlm.nih.gov/books/NBK525969/
+%     (NCBI Bookshelf — StatPearls, "Anatomy, Back, Vertebral Column")
+%     "In humans, it is composed of 33 vertebrae that include 7 cervical, 12
+%      thoracic, 5 lumbar, 5 sacral, and 4 coccygeal."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold that single sentence — it fixes ALL five rows at once, so
+% every count is independently checkable against the same quoted span. The
+% source is an NCBI Bookshelf / StatPearls teaching summary (peer-reviewed
+% secondary reference, not a primary government dataset), so `trust consensus`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table spine_region_vertebrae {
+    columns region, count
+
+    row (cervical, 7)
+    row (thoracic, 12)
+    row (lumbar, 5)
+    row (sacral, 5)
+    row (coccygeal, 4)
+
+    source "In humans, it is composed of 33 vertebrae that include 7 cervical, 12 thoracic, 5 lumbar, 5 sacral, and 4 coccygeal."
+    locator "https://www.ncbi.nlm.nih.gov/books/NBK525969/"
+    trust consensus
+}
