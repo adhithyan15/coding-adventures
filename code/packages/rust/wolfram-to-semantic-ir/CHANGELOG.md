@@ -4,6 +4,18 @@
 
 ### Fixed
 
+- **`tests/test_validator.rs` asserted the JS backend rejects every module
+  this frontend produces — stale since `semantic-ir-to-javascript` gained
+  real SIR23 codegen.** All 10 tests in that file were failing on
+  `origin/main` with "expected the JS backend to reject a module using
+  SIR23 features" even though the backend now accepts them. Fixed by
+  inverting the assertion (`assert_js_backend_accepts`, checking
+  `check_module` returns no errors) and updating the module doc comment.
+- Added `tests/e2e_node.rs`: actually compiles and runs representative
+  Wolfram programs (arithmetic, a pattern+call, `/.`, `//.`, a multi-statement
+  program) through `node`, proving the SIR23 codegen path is genuinely
+  executable, not just statically accepted.
+
 - **Correctness: `Feature::Floats` was never observed for a `FloatLit`.**
   `number_literal_expr` was a free function with no access to the
   lowerer's feature-tracking state, so a module containing a float

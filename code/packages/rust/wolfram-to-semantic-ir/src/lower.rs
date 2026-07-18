@@ -34,10 +34,14 @@
 //! expression is a pattern-matched template" without special-casing.
 //! Evaluating that data (binding `Set`/`SetDelayed`, running the matcher
 //! for `SymReplaceAll`) is deliberately left to a **backend runtime**
-//! library (`sir-runtime-symbolic`, not yet built — SIR23 spec, "Backend
-//! impact"; Stream B rollout item 6) — mirroring the SIR23 spec's own
-//! explicit "session state isn't SIR" boundary (the same boundary that lets
-//! Macsyma's `assume`/`kill` stay out of the IR entirely).
+//! library (`sir-runtime-symbolic`, published and wired into the JS/TS
+//! backends' codegen — SIR23 spec, "Backend impact"; Stream B rollout
+//! items 6-7) — mirroring the SIR23 spec's own explicit "session state
+//! isn't SIR" boundary (the same boundary that lets Macsyma's
+//! `assume`/`kill` stay out of the IR entirely). See
+//! `tests/e2e_node.rs`'s own module doc comment for exactly what that
+//! evaluation boundary means for what a compiled program actually does
+//! (and doesn't do) at runtime.
 //!
 //! # Scope (v0.1.0)
 //!
