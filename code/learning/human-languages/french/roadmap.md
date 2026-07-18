@@ -23,12 +23,15 @@ compared, every Spanish form supplied in full (no prior Spanish assumed).
   state-verb — vs Spanish *estar* "to stand") → comment ça va / allez-vous /
   vas-tu → comme ci, comme ça → practice. **Authored** — the deliberate mirror of
   Spanish Ch. 4.
+- **Ch. 4 — Farewells**: au revoir (← "à le revoir", *voir* ← *vidēre*; the
+  "see-again" goodbye, twin of German *auf Wiedersehen*) → à plus tard (*tard* ←
+  *tarde*, = Spanish *tarde*) → à bientôt (*bien* + *tôt*) → à demain (*dē māne*,
+  shares *māne* with *mañana*) → practice. **Authored** — mirror of Spanish Ch. 5.
 
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |
 |---|---|
-| 4 | Farewells: au revoir, à bientôt, à demain |
 | 5+ | Numbers, time, days & months, family, food — following the Spanish theme order, with the Spanish cousin supplied for contrast |
 
 The *tu/vous* lesson (Ch. 2) is the French counterpart to Spanish *tú/usted*:
