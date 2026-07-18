@@ -93,9 +93,24 @@ struct FlatHeader {
     /// `HeapKind` id for *precise* interior tracing (a later rung).  `0` means
     /// "opaque / trace conservatively"; unused by this PR beyond being carried.
     kind: u16,
+    /// Which generation the object lives in: [`GEN_YOUNG`] (freshly allocated) or
+    /// [`GEN_OLD`] (survived at least one collection). A generational *minor* GC
+    /// (a later rung) scans only the young generation plus old→young pointers;
+    /// this PR establishes the split and promotes survivors, but every collect is
+    /// still a full one.
+    generation: u8,
     /// Explicit tail padding to reach exactly 32 bytes.
-    _pad: [u8; 12],
+    _pad: [u8; 11],
 }
+
+/// Generation tag for a freshly-allocated object: the **young** generation, where
+/// most objects die (the generational hypothesis). New allocations start here.
+pub const GEN_YOUNG: u8 = 0;
+
+/// Generation tag for an object that has **survived** a collection and been
+/// promoted (tenured) to the **old** generation. A minor GC skips old objects
+/// except where an old→young pointer (recorded by a write barrier) demands it.
+pub const GEN_OLD: u8 = 1;
 
 // Compile-time proof that the header is exactly 32 bytes — if a field ever
 // changes size this fails to build rather than silently misaligning payloads.
@@ -207,6 +222,7 @@ impl FlatHeap {
             (*block).size = n;
             (*block).marked = false;
             (*block).kind = kind;
+            (*block).generation = GEN_YOUNG; // new objects are born young
         }
         self.all = block;
         self.live_bytes += n;
@@ -323,6 +339,27 @@ impl FlatHeap {
             h = unsafe { (*h).next };
         }
         n
+    }
+
+    /// Live object counts split by generation, as `(young, old)`. Walks the
+    /// all-blocks list — O(n), for tests and profiling. A healthy generational
+    /// workload keeps `young` churning while `old` stays comparatively stable.
+    pub fn object_count_by_generation(&self) -> (usize, usize) {
+        let mut young = 0usize;
+        let mut old = 0usize;
+        let mut h = self.all;
+        // SAFETY: list walk over blocks we own / null terminator.
+        while !h.is_null() {
+            unsafe {
+                if (*h).generation == GEN_OLD {
+                    old += 1;
+                } else {
+                    young += 1;
+                }
+                h = (*h).next;
+            }
+        }
+        (young, old)
     }
 
     /// Run one mark-and-sweep cycle rooted at `roots` (payload addresses as
@@ -555,6 +592,11 @@ impl FlatHeap {
                 let h = *cursor;
                 if (*h).marked {
                     (*h).marked = false;
+                    // Tenure the survivor: an object that lives through a
+                    // collection is promoted to the old generation (already-old
+                    // objects simply stay old). This is what lets a future minor
+                    // GC skip it — most objects die young and never reach here.
+                    (*h).generation = GEN_OLD;
                     survived += 1;
                     live += (*h).size;
                     cursor = &mut (*h).next;
@@ -993,5 +1035,52 @@ mod tests {
         // Must not read out of bounds; container is rooted so it survives cleanly.
         let _ = heap.collect(&[container]);
         assert!(!heap.find_header(container).is_null());
+    }
+
+    // ── Generational split: young/old + promotion ─────────────────────────────
+
+    /// Fresh allocations are born into the young generation.
+    #[test]
+    fn fresh_allocations_are_young() {
+        let mut heap = FlatHeap::new();
+        heap.alloc(16, 0);
+        heap.alloc(16, 0);
+        assert_eq!(heap.object_count_by_generation(), (2, 0));
+    }
+
+    /// An object that survives a collection is promoted (tenured) to the old
+    /// generation; garbage is freed; a subsequently-allocated object is young
+    /// again. This is the young → old lifecycle a minor GC will exploit.
+    #[test]
+    fn survivors_are_promoted_to_old() {
+        let mut heap = FlatHeap::new();
+        let keep = heap.alloc(16, 0) as usize;
+        heap.alloc(16, 0); // unrooted garbage
+        assert_eq!(heap.object_count_by_generation(), (2, 0));
+
+        // Collect rooting only `keep`: the garbage is freed, `keep` is promoted.
+        let stats = heap.collect(&[keep]);
+        assert_eq!(stats.freed, 1);
+        assert_eq!(
+            heap.object_count_by_generation(),
+            (0, 1),
+            "the lone survivor is now old"
+        );
+
+        // A new allocation is young; the old survivor stays old.
+        heap.alloc(16, 0);
+        assert_eq!(heap.object_count_by_generation(), (1, 1));
+    }
+
+    /// A promoted object stays old across further collections (it is not demoted).
+    #[test]
+    fn old_objects_stay_old() {
+        let mut heap = FlatHeap::new();
+        let keep = heap.alloc(16, 0) as usize;
+        let _ = heap.collect(&[keep]); // promote → old
+        assert_eq!(heap.object_count_by_generation(), (0, 1));
+        // Second collect, still rooting it: remains a single old object.
+        let _ = heap.collect(&[keep]);
+        assert_eq!(heap.object_count_by_generation(), (0, 1));
     }
 }
