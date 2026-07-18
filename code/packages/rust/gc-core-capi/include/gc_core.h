@@ -103,6 +103,41 @@ int64_t __gc_collection_count(void);
 /* Drop the whole heap (frees everything) and reset counters. */
 void __gc_reset(void);
 
+/* ── Stack-map registry (precise roots) ─────────────────────────────────────
+ * Register one compiled function's stack maps so the precise stack walker can
+ * turn a return address inside it into the live-reference slots at that PC. Call
+ * once per function at image start-up, before any collection.
+ *
+ * The function occupies the code range [func_start, func_start + func_len). Its
+ * num_records safepoint records are passed as PARALLEL FLATTENED arrays, each of
+ * length num_records:
+ *   pc_offsets[i]   — safepoint offset from func_start (the lookup key)
+ *   frame_sizes[i]  — frame size in bytes (walker steps to the caller); may be NULL
+ *   callee_masks[i] — bitmask of callee-saved regs holding refs here; may be NULL
+ *   slot_counts[i]  — number of reference slots for record i (negative => 0)
+ * plus one concatenated slots array read record-by-record through the counts:
+ *   slots_flat      — record i owns the next slot_counts[i] entries (FP-relative
+ *                     byte offsets, may be negative); may be NULL if all counts 0.
+ *
+ * Returns the number of records stored (> 0), or 0 if rejected (func_len == 0,
+ * func_len > UINT32_MAX (pc_offset is a uint32), num_records <= 0, a required
+ * array NULL, the range wraps, or it overlaps an already-registered function).
+ * frame_sizes/callee_masks are carried for the walker; resolution uses only
+ * pc_offsets + slots. */
+int64_t __gc_register_stackmap(uint64_t func_start, uint64_t func_len,
+                               int64_t num_records, const uint32_t *pc_offsets,
+                               const uint32_t *frame_sizes,
+                               const uint16_t *callee_masks,
+                               const int32_t *slot_counts,
+                               const int32_t *slots_flat);
+
+/* Number of functions currently registered via __gc_register_stackmap. */
+int64_t __gc_stackmap_count(void);
+
+/* Drop all registered stack maps. Code maps normally live for the whole process,
+ * so this is NOT run by __gc_reset; it is for test isolation / teardown. */
+void __gc_stackmap_reset(void);
+
 /* ── twig-compat aliases ────────────────────────────────────────────────────
  * The native-AOT code generators and dynval_runtime.c reference the symbol
  * names the retired twig_gc.c exported. These forward to the __gc_* ABI above
