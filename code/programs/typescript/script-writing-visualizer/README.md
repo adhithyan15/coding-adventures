@@ -47,10 +47,19 @@ npm run build      # production build to dist/
 npm run preview    # serve the production build
 ```
 
-## Scope (MVP) and what's next
+## Practice mode (recall drill)
 
-v1 is **read + decompose** only — recognition and hand-writing practice, no
-in-app handwriting capture and no scheduler. The next steps toward the full
-`HL02` spec are the **interleaving scheduler** (spaced, cross-language review)
-and **recall drills** (prompt → pick the glyph). See
+Toggle **Practice** to drill *recall*: the app shows a **sound** and you pick the
+matching **glyph** from four options. Wrong answers are the **confusable** ones
+(same role / same false-friend status), reveal shows the answer's decomposition,
+and a running **score** tracks correct / total / %. The drill logic lives in the
+pure, unit-tested `src/drill.ts` (`buildDrillQuestion`, `confusabilityOrder`,
+`checkAnswer`, scoring); all randomness is injected by the UI so the core stays
+deterministic.
+
+## Scope and what's next
+
+Today the app does **read + decompose** (Browse) and **recall** (Practice). Still
+to come toward the full `HL02` spec: the **interleaving scheduler** (spaced,
+cross-language review, measured in sessions) and a **write/produce** mode. See
 `code/specs/HL02-companion-practice-app.md`.
