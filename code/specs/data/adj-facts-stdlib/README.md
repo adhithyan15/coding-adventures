@@ -72,6 +72,7 @@ per rotation, in parallel):
 | `anatomy/` | skin layer → defining descriptor (epidermis → outermost, subcutaneous → fat) | NIH / NCI SEER Training |
 | `anatomy/` | ear structure → ear region it sits in (cochlea → inner, malleus → middle, ear canal → outer) | NIH NIDCD (authoritative) |
 | `anatomy/` | hand-bone group → part of the hand it occupies (carpals → base_of_hand, metacarpals → middle_of_hand, phalanges → fingers) | InformedHealth.org / NIH NCBI Bookshelf (consensus) |
+| `geology/` | Mohs reference mineral → whole-number hardness (talc → 1, quartz → 7, diamond → 10) | NPS "Mohs Hardness Scale" (authoritative) |
 | … | *geography, physical constants, …* | *(expanding)* |
 
 Formulas and laws (Newton's `F = ma`, the ideal gas law `PV = nRT`, area/volume, …) are grown
