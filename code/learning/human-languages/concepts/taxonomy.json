@@ -117,6 +117,7 @@
 
     "QUESTION-WHAT": { "family": "QUESTION", "gloss": "what", "core": true, "retires": ["WHAT"] },
     "QUESTION-HOW": { "family": "QUESTION", "gloss": "how", "core": false, "retires": ["HOW"] },
+    "QUESTION-WHERE": { "family": "QUESTION", "gloss": "where", "core": false, "retires": ["WHERE"] },
 
     "INTRO-MY-NAME-IS": {
       "family": "INTRO",
@@ -200,6 +201,9 @@
       "ES-VERB-TRABAJAR": "trabajar — 'to work' (← tripaliāre 'to torture' → travail/travel)",
       "ES-VERB-ESTUDIAR": "estudiar — 'to study' (← studēre 'to be eager' → student)",
       "ES-WORD-ESPANOL": "español — 'Spanish' (the language; ← Hispania)",
+      "ES-VERB-COMER": "comer — 'to eat' (first -er verb; ← comedere → edible)",
+      "ES-VERB-VIVIR": "vivir — 'to live' (first -ir verb; ← vīvere → vivid/survive)",
+      "ES-VERB-BEBER": "beber — 'to drink' (-er; ← bibere → beverage/imbibe)",
       "IT-VERB-STARE": "stare — 'to be' (state; ← Latin stare 'to stand', = Spanish estar); drives 'come stai?'",
       "FR-VERB-APPELER": "(s')appeler — 'to call (oneself)'",
       "FR-VERB-ALLER": "aller — 'to go' (suppletive: ambulāre/vādere/īre); drives 'comment ça va?'",
