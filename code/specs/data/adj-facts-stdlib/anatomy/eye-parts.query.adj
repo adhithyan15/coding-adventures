@@ -1,0 +1,23 @@
+% ============================================================================
+% eye-parts.query.adj — a worked recall over the anatomy eye-parts library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does the retina do?":
+% it states no anatomy fact — it only `import`s the grounded table and asks
+% binding queries. The engine resolves each `?` against the `eye_part_function`
+% rows and returns the function + the table's source/locator/trust. The fourth
+% query runs the relation BACKWARD (bind the function focuses_light, recall the
+% part that does it — the lens). The eardrum has no grounded row here (it is an
+% EAR part, not an eye part), so a recall on it abstains honestly — the engine
+% never invents a function.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli eye-parts.query.adj
+% ============================================================================
+
+import "eye-parts.adj"
+
+? eye_part_function(retina, $F)      % expect turns_light_into_signals
+? eye_part_function(cornea, $F)      % expect bends_light
+? eye_part_function(optic_nerve, $F) % expect carries_signals_to_brain
+? eye_part_function($P, focuses_light) % expect lens — reverse recall
+? eye_part_function(eardrum, $F)     % expect abstain — eardrum has no row
