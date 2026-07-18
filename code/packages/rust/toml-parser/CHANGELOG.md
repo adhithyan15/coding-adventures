@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.1] - 2026-07-18
+
+### Fixed
+- **Security hardening**: `create_toml_parser` never called `GrammarParser::with_max_depth`, leaving every caller (including this crate's own `parse_toml`) exposed to a native-stack-overflow DoS from adversarial deeply-nested input. Added a `MAX_RULE_DEPTH = 165` cap, derived from independently measuring `toml.grammar`'s two distinct self-referential recursion shapes (nested arrays, nested inline tables) — binary search over candidate `with_max_depth` values against a 5000-deep adversarial input per shape. Both shapes land on the identical floor (236 safe / 237 crash). Cap sits ~30% below that. 3 new depth-guard regression tests.
+
 ## [0.1.0] - 2026-03-21
 
 ### Added
