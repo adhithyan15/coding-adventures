@@ -1,0 +1,119 @@
+% ============================================================================
+% friction-types — the four everyday types of friction and, for each, what it
+% acts on / when it occurs, as the source states it (adj-facts-stdlib, PHYSICS).
+% ============================================================================
+% One of the first big ideas of mechanics, and a rung a PHYSICS agent reasons UP
+% from: the single force we call "friction" is usefully split into FOUR
+% everyday types — static, sliding (kinetic), rolling, and fluid — and each type
+% is distinguished by WHEN it happens or WHAT it acts on. "Static friction is
+% the friction between two objects kept at rest against each other; sliding
+% friction is the friction while two surfaces slide against each other; rolling
+% friction is the friction on a spherical object like a wheel or a ball; fluid
+% friction is the friction between the layers of a fluid in relative motion."
+% Before you can reason about a block on a ramp, a braking car, a rolling wheel,
+% or a swimmer, you must first know WHICH of these four regimes you are in.
+% Recall is a binding query:
+%
+%     ? friction_context(rolling, $Context)      % spherical_object
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `friction_context(friction, context)` carrying the table's citation,
+% so the lookup above is the ordinary SLD binding query — the engine returns the
+% context WITH its source, on the CPU, with zero model calls, and abstains on a
+% word that is not one of these four friction types (it never invents a
+% context).
+%
+% Each of the four everyday friction types and the context (what it acts on /
+% when it occurs) the source states for it, as a little truth table:
+%
+%     friction type   context (what it acts on / when it occurs)   a beginner's cue
+%     -------------   ------------------------------------------   ---------------------------
+%     static          at_rest                                      two objects kept at rest
+%     sliding         sliding_motion                               two surfaces sliding
+%     rolling         spherical_object                             a wheel or a ball rolling
+%     fluid           fluid_layers                                 layers of a fluid in motion
+%
+% The query also runs BACKWARD — bind a context and recall its friction type:
+%
+%     ? friction_context($Friction, fluid_layers)   % fluid
+%
+% A word that is NOT one of these four everyday friction types — `gravity`,
+% `tension`, `magnetism` — is deliberately NOT a row, so a friction recall
+% ABSTAINS on it rather than inventing a context. That honest-abstention
+% property is what makes the table safe to build a reasoner on: it answers
+% exactly the friction->context pairs it can ground, and only those.
+%
+% The `context` value of every row is a SINGLE lowercase atom, chosen to be the
+% "what it acts on / when it occurs" phrase the source EXPLICITLY states for that
+% friction type — never one the source does not support. (Where the everyday
+% intuition differs from the source's word — the source frames rolling friction
+% by the "spherical object" it acts on, and fluid friction by the "layers of
+% fluid" it acts between, rather than by a "when" — the atom uses the source's
+% own word, so every value stays literally checkable against the quoted span.)
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every friction->context
+% pair below was read out of a fetched Testbook "Types of Friction" page, and
+% any pair whose context could not be verified there would have been dropped).
+% Each pair, with the primary source it was copied from and the verbatim span
+% that states it:
+%
+%   static -> at_rest
+%     https://testbook.com/physics/types-of-friction
+%     (Testbook — "Types of Friction" teaching summary)
+%     "It is the type of frictional force which acts between the surfaces of two
+%      objects when they are kept at rest about each other."
+%
+%   sliding -> sliding_motion
+%     https://testbook.com/physics/types-of-friction
+%     (Testbook — "Types of Friction" teaching summary)
+%     "Sliding friction can be defined as the friction which is generated
+%      between the surfaces of any two objects when they are in a sliding motion
+%      against each other."
+%
+%   rolling -> spherical_object
+%     https://testbook.com/physics/types-of-friction
+%     (Testbook — "Types of Friction" teaching summary)
+%     "It can be determined as the friction force which prevents the motion of
+%      any spherical object like a wheel or a ball, etc."
+%
+%   fluid -> fluid_layers
+%     https://testbook.com/physics/types-of-friction
+%     (Testbook — "Types of Friction" teaching summary)
+%     "Fluid friction is the type of friction that exists between the layers of
+%      fluid when they are in relative motion with each other."
+%
+% (The static and sliding rows are additionally corroborated by a primary U.S.
+% government source — the NASA "Friction" NextGenSTEM educator notes,
+% https://www.nasa.gov/wp-content/uploads/2024/09/friction-cc-final-9-24-24-508.pdf
+% — "Static friction is a force that opposes the motion of two objects in
+% contact with each other while they are motionless" and "Kinetic friction is a
+% force that opposes the motion of objects in contact with each other while one
+% is moving past the other." That NASA note only covers static and kinetic, so
+% it corroborates two rows but cannot ground rolling or fluid; the table's
+% canonical per-row source is therefore the single Testbook page that states all
+% four cleanly, kept uniform so the trust tier is honest across every row.)
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the Testbook statement that fixes
+% the first row (static -> at_rest). Every OTHER row's per-fact source and
+% verbatim span is listed above, so each context remains independently
+% checkable. All four rows come from the same Testbook "Types of Friction"
+% teaching summary — a secondary teaching resource, not a primary government or
+% university source — so `trust consensus`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table friction_context {
+    columns friction, context
+
+    row (static, at_rest)
+    row (sliding, sliding_motion)
+    row (rolling, spherical_object)
+    row (fluid, fluid_layers)
+
+    source "It is the type of frictional force which acts between the surfaces of two objects when they are kept at rest about each other."
+    locator "https://testbook.com/physics/types-of-friction"
+    trust consensus
+}

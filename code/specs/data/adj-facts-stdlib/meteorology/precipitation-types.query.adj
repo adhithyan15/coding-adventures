@@ -1,0 +1,23 @@
+% ============================================================================
+% precipitation-types.query.adj — a worked recall over the meteorology
+% precipitation-types library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is snow made of?": it
+% states no weather fact of its own — it only `import`s the grounded table and
+% asks binding queries. The engine resolves each `?` against the `precip_form`
+% rows and returns the form + the table's source/locator/trust. The fourth query
+% runs the relation BACKWARD (bind the form `balls_of_ice`, recall its
+% precipitation type — hail). A word that is not one of these precipitation types
+% abstains honestly — the engine never invents a form.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli precipitation-types.query.adj
+% ============================================================================
+
+import "precipitation-types.adj"
+
+? precip_form(snow, $Form)            % expect ice_crystals
+? precip_form(sleet, $Form)           % expect frozen_raindrops
+? precip_form(freezing_rain, $Form)   % expect glaze_of_ice
+? precip_form($Precip, balls_of_ice)  % reverse bind — expect hail
+? precip_form(fog, $Form)             % expect abstain — fog is suspended droplets, not one of the falling precipitation types

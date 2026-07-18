@@ -1,0 +1,115 @@
+% ============================================================================
+% seed-parts — the parts of a seed and the defining role / function the source
+% states for each one (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% A seed is not one solid pellet: it is an assembly of named parts, and a seed-
+% biology text names each part by the ONE thing it is or does. "The seedcoat is
+% the seed-covering structure; the endosperm provides nutrition; the cotyledons
+% are the site of food storage; the embryo grows into a miniature plant; and
+% that embryo differentiates into a radicle (rudimentary root), a hypocotyl
+% (stem), and a plumule (bud)." Before you can reason about a seed — identify
+% it, germinate it, or teach it — you must first know WHICH part you are looking
+% at and what that part is FOR. Recall is a binding query:
+%
+%     ? seed_part_role(cotyledon, $Role)      % food_storage
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `seed_part_role(part, role)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the role
+% WITH its source, on the CPU, with zero model calls, and abstains on a word
+% that is not one of these seed parts (it never invents a role).
+%
+% Each seed part and the defining role / function the source states for it, as a
+% little truth table:
+%
+%     seed part    defining role / function   a beginner's cue
+%     ---------    -----------------------    ------------------------------
+%     seed_coat    covering                   the outer jacket that wraps the seed
+%     endosperm    nutrition                  the built-in packed lunch
+%     cotyledon    food_storage               the seed leaf that holds the food
+%     embryo       miniature_plant            the tiny plant-to-be inside
+%     radicle      rudimentary_root           the first root of the embryo
+%     hypocotyl    stem                       the embryonic stem
+%     plumule      bud                         the embryonic shoot / bud
+%
+% The query also runs BACKWARD — bind a role and recall the seed part:
+%
+%     ? seed_part_role($Part, food_storage)   % cotyledon
+%
+% A word that is NOT one of these seed parts — `petal`, `stamen`, `sepal` — is
+% deliberately NOT a row, so a seed-part recall ABSTAINS on it rather than
+% inventing a role. (The petal is a flower part, but not a part of the SEED.)
+% That honest-abstention property is what makes the table safe to build a
+% reasoner on: it answers exactly the part→role pairs it can ground, and only
+% those.
+%
+% The `role` value of every row is a SINGLE lowercase atom, chosen to be a word
+% the source EXPLICITLY uses for that part — never one the source does not
+% support. Where the source's phrase is more than one word (the endosperm is a
+% "source of nutrients"/"provides nutrition"; the cotyledons are the "site of
+% food storage"; the radicle is a "rudimentary root"), the atom joins the
+% source's own words with underscores, so every value stays literally checkable
+% against the quoted span.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every part→role pair below
+% was read out of a single fetched USDA Forest Service page, and any pair whose
+% role could not be verified there was dropped). Each pair, with the verbatim
+% span that states it, from "The Woody Plant Seed Manual," Chapter 1: Seed
+% Biology (Franklin T. Bonner, USDA Forest Service — a primary U.S. government
+% forestry publication):
+%   https://www.fs.usda.gov/nsl/Wpsm/Chapter1.pdf
+%
+%   seed_coat → covering
+%     "As endosperm and embryo grow, the surrounding maternal tissues develop
+%      into the seed-covering structures, collectively called the seedcoat."
+%
+%   endosperm → nutrition
+%     "Endosperm tissue provides nutrition for the developing embryo, and in
+%      some genera ..."
+%
+%   cotyledon → food_storage
+%     "The cotyledons of the embryo become the site of food storage, and these
+%      species are designated as nonendospermic."
+%
+%   embryo → miniature_plant
+%     "The embryo grows and differentiates into a miniature plant with radicle
+%      (rudimentary root), hypocotyl (stem), plumule (bud), and cotyledons."
+%
+%   radicle → rudimentary_root
+%     "The embryo grows and differentiates into a miniature plant with radicle
+%      (rudimentary root), hypocotyl (stem), plumule (bud), and cotyledons."
+%
+%   hypocotyl → stem
+%     "The embryo grows and differentiates into a miniature plant with radicle
+%      (rudimentary root), hypocotyl (stem), plumule (bud), and cotyledons."
+%
+%   plumule → bud
+%     "The embryo grows and differentiates into a miniature plant with radicle
+%      (rudimentary root), hypocotyl (stem), plumule (bud), and cotyledons."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the USDA statement that fixes the
+% first row (seed_coat → covering). Every OTHER row's verbatim span is listed
+% above, so each role remains independently checkable. The source is a primary
+% U.S. government (USDA Forest Service) seed-biology publication, so `trust
+% authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table seed_part_role {
+    columns part, role
+
+    row (seed_coat, covering)
+    row (endosperm, nutrition)
+    row (cotyledon, food_storage)
+    row (embryo, miniature_plant)
+    row (radicle, rudimentary_root)
+    row (hypocotyl, stem)
+    row (plumule, bud)
+
+    source "As endosperm and embryo grow, the surrounding maternal tissues develop into the seed-covering structures, collectively called the seedcoat."
+    locator "https://www.fs.usda.gov/nsl/Wpsm/Chapter1.pdf"
+    trust authoritative
+}

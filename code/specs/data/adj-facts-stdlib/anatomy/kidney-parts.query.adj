@@ -1,0 +1,22 @@
+% ============================================================================
+% kidney-parts.query.adj — a worked recall over the anatomy kidney-parts library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does the nephron do?":
+% it states no anatomy fact of its own — it only `import`s the grounded table and
+% asks binding queries. The engine resolves each `?` against the `kidney_part`
+% rows and returns the role + the table's source/locator/trust. The fourth query
+% runs the relation BACKWARD (bind the role `collects_urine`, recall its part —
+% renal_pelvis). A word that is not one of these urinary-tract parts abstains
+% honestly — the engine never invents a role.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli kidney-parts.query.adj
+% ============================================================================
+
+import "kidney-parts.adj"
+
+? kidney_part(renal_cortex, $Role)      % expect outer_region
+? kidney_part(nephron, $Role)           % expect filtering_unit
+? kidney_part(ureter, $Role)            % expect carries_urine_to_bladder
+? kidney_part($Part, collects_urine)    % reverse bind — expect renal_pelvis
+? kidney_part(alveolus, $Role)          % expect abstain — the alveolus is a lung structure, not a part of the kidney / urinary system

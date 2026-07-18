@@ -1,0 +1,112 @@
+% ============================================================================
+% kidney-parts — the structural parts of the kidney / urinary system and what
+% each one IS or DOES, as the source states it (adj-facts-stdlib, ANATOMY).
+% ============================================================================
+% A first map of the urinary tract, and a rung a MEDICINE agent reasons UP
+% from: before you can reason about a kidney stone, a blockage, or a filtration
+% number you must first know WHICH structure you are looking at and what that
+% structure is for. "The renal cortex is the outer region; the renal medulla is
+% the innermost part; the renal pelvis collects the urine; the nephron is the
+% filtering unit; the ureter carries the urine down to the bladder." Recall is a
+% binding query:
+%
+%     ? kidney_part(nephron, $Role)      % filtering_unit
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `kidney_part(part, role)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the role
+% WITH its source, on the CPU, with zero model calls, and abstains on a word
+% that is not one of these urinary-tract parts (it never invents a role).
+%
+% Each structural part and the role / what-it-is the source states for it, as a
+% little truth table:
+%
+%     part            role (what it is / does)   a beginner's cue
+%     -------------   ------------------------   ------------------------------
+%     renal_cortex    outer_region               the outer shell of the kidney
+%     renal_medulla   innermost_part             the deep, inner region
+%     renal_pelvis    collects_urine             the funnel that gathers urine
+%     nephron         filtering_unit             ~1 million per kidney, does the filtering
+%     ureter          carries_urine_to_bladder   the tube from kidney down to bladder
+%
+% The query also runs BACKWARD — bind a role and recall its part:
+%
+%     ? kidney_part($Part, collects_urine)   % renal_pelvis
+%
+% A word that is NOT one of these urinary-tract parts — `alveolus`, `neuron`,
+% `rock` — is deliberately NOT a row, so a kidney recall ABSTAINS on it rather
+% than inventing a role. That honest-abstention property is what makes the table
+% safe to build a reasoner on: it answers exactly the part→role pairs it can
+% ground, and only those.
+%
+% The `role` value of every row is a SINGLE lowercase atom, chosen to be a role
+% the source EXPLICITLY states for that part — never one the source does not
+% support. (Where the everyday word differs from the source's word — the source
+% says the medulla is the "innermost part", not merely "inner"; the nephron is a
+% "filtering unit", not a "filter" — the atom uses the source's own word, so
+% every value stays literally checkable against the quoted span.)
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every part→role pair below
+% was read out of a fetched primary teaching page THIS session, and any pair
+% whose role could not be verified there would have been dropped). Each pair,
+% with the primary source it was copied from and the verbatim span that states
+% it:
+%
+%   renal_cortex → outer_region
+%     https://training.seer.cancer.gov/anatomy/urinary/components/kidney.html
+%     (NCI SEER Training Modules — U.S. National Cancer Institute) — authoritative
+%     "The outer, reddish region, next to the capsule, is the renal cortex."
+%
+%   renal_medulla → innermost_part
+%     https://en.wikipedia.org/wiki/Renal_medulla
+%     (Wikipedia) — consensus
+%     "The renal medulla (Latin: medulla renis 'marrow of the kidney') is the
+%      innermost part of the kidney."
+%
+%   renal_pelvis → collects_urine
+%     https://training.seer.cancer.gov/anatomy/urinary/components/kidney.html
+%     (NCI SEER Training Modules — U.S. National Cancer Institute) — authoritative
+%     "The renal pelvis is a large cavity that collects the urine as it is
+%      produced."
+%
+%   nephron → filtering_unit
+%     https://www.niddk.nih.gov/health-information/kidney-disease/kidneys-how-they-work
+%     (NIH NIDDK — U.S. National Institute of Diabetes and Digestive and Kidney
+%      Diseases) — authoritative
+%     "Each of your kidneys is made up of about a million filtering units called
+%      nephrons."
+%
+%   ureter → carries_urine_to_bladder
+%     https://www.niddk.nih.gov/health-information/kidney-disease/kidneys-how-they-work
+%     (NIH NIDDK — U.S. National Institute of Diabetes and Digestive and Kidney
+%      Diseases) — authoritative
+%     "The urine flows from the kidneys to the bladder through two thin tubes of
+%      muscle called ureters, one on each side of your bladder."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the SEER statement that fixes the
+% renal_pelvis → collects_urine row. Every OTHER row's per-fact source and
+% verbatim span is listed above, so each role remains independently checkable.
+% Four of the five rows come from primary U.S. government teaching resources
+% (NCI SEER Training Modules, NIH NIDDK) → `authoritative`; the renal_medulla →
+% innermost_part row is grounded on Wikipedia → `consensus`, noted per-fact
+% above. The envelope holds a SEER span, so its `trust` is honestly
+% `authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_provenance_justified_inference.)
+% ============================================================================
+
+table kidney_part {
+    columns part, role
+
+    row (renal_cortex, outer_region)
+    row (renal_medulla, innermost_part)
+    row (renal_pelvis, collects_urine)
+    row (nephron, filtering_unit)
+    row (ureter, carries_urine_to_bladder)
+
+    source "The renal pelvis is a large cavity that collects the urine as it is produced."
+    locator "https://training.seer.cancer.gov/anatomy/urinary/components/kidney.html"
+    trust authoritative
+}

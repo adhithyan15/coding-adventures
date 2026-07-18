@@ -1,0 +1,22 @@
+% ============================================================================
+% insect-parts.query.adj — a worked recall over the biology insect-parts library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does the thorax
+% bear?": it states no entomology fact of its own — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?` against
+% the `insect_region_bears` rows and returns the value + the table's source/
+% locator/trust. The fourth query runs the relation BACKWARD (bind the feature
+% `legs_and_wings`, recall its region — thorax). A word that is not one of the
+% three main body regions abstains honestly — the engine never invents a part.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli insect-parts.query.adj
+% ============================================================================
+
+import "insect-parts.adj"
+
+? insect_region_bears(head, $Bears)              % expect eyes_antennae_and_mouthparts
+? insect_region_bears(thorax, $Bears)            % expect legs_and_wings
+? insect_region_bears(abdomen, $Bears)           % expect digestion_and_reproduction
+? insect_region_bears($Region, legs_and_wings)   % reverse bind — expect thorax
+? insect_region_bears(tail, $Bears)              % expect abstain — an insect has no tail region; it is not one of the three main body regions

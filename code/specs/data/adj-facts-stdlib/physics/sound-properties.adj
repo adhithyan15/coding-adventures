@@ -1,0 +1,94 @@
+% ============================================================================
+% sound-properties — each PERCEIVED property of a sound and the PHYSICAL
+% quantity of the sound wave it corresponds to (adj-facts-stdlib, PHYSICS).
+% ============================================================================
+% One of the first big ideas of acoustics, and a rung a PHYSICS (or a MUSIC,
+% or a HEARING/audiology) agent reasons UP from: what your EAR hears is not the
+% same vocabulary as what a physicist MEASURES, and the two vocabularies line up
+% one-for-one. What you hear as PITCH is the wave's FREQUENCY; what you hear as
+% LOUDNESS is the wave's AMPLITUDE; what you hear as TIMBRE (why a violin and a
+% flute playing the same note still sound different) is the wave's WAVEFORM —
+% the shape of the wave. Before you can reason about a tone, an instrument, or a
+% hearing test you must first know WHICH physical quantity a heard property maps
+% to. Recall is a binding query:
+%
+%     ? sound_property(pitch, $Physical)      % frequency
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `sound_property(perceived, physical)` carrying the table's citation,
+% so the lookup above is the ordinary SLD binding query — the engine returns the
+% physical quantity WITH its source, on the CPU, with zero model calls, and
+% abstains on a word that is not one of these three perceived properties (it
+% never invents a correspondence).
+%
+% Each perceived property and the physical quantity the source states it
+% corresponds to, as a little truth table:
+%
+%     perceived (what you hear)   physical (what is measured)   a beginner's cue
+%     -------------------------   ---------------------------   ----------------
+%     pitch                       frequency                     high note = fast wave
+%     loudness                    amplitude                     loud = tall wave
+%     timbre                      waveform                      violin vs. flute = wave SHAPE
+%
+% The query also runs BACKWARD — bind a physical quantity and recall the
+% perceived property it is heard as:
+%
+%     ? sound_property($Perceived, frequency)   % pitch
+%
+% A word that is NOT one of these three perceived properties — `rhythm`,
+% `duration`, `color` — is deliberately NOT a row, so a sound-property recall
+% ABSTAINS on it rather than inventing a correspondence. That honest-abstention
+% property is what makes the table safe to build a reasoner on: it answers
+% exactly the perceived->physical pairs it can ground, and only those.
+%
+% The `physical` value of every row is a SINGLE lowercase atom, and each one is
+% a word that appears LITERALLY in the quoted source span below — the source
+% says the three heard qualities correspond to the wave's "fundamental
+% frequency, amplitude and waveform, respectively", so the atoms are
+% `frequency`, `amplitude`, and `waveform`, each checkable against that span.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every perceived->physical
+% pair below was read out of a fetched source, and any pair that could not be
+% verified there would have been dropped).
+%
+% The table's single provenance envelope holds one clean span that fixes ALL
+% THREE rows at once — a Physics LibreTexts conceptual-physics course page:
+%
+%   pitch -> frequency, loudness -> amplitude, timbre -> waveform
+%     https://phys.libretexts.org/Courses/Joliet_Junior_College/Physics_110_-_by_Conceptual_Objective/12:_Conceptual_Objective_12/12.06:_Pitch_Loudness_and_Timbre
+%     (Physics LibreTexts — a teaching summary, so `trust consensus`)
+%     "The three subjective quantities of pitch, loudness and timbre are
+%      related to laboratory measurements of a sound wave's fundamental
+%      frequency, amplitude and waveform, respectively."
+%
+% The first two rows (pitch -> frequency, loudness -> amplitude) are ALSO
+% corroborated by a primary U.S. government / academic source — the NIH NCBI
+% Bookshelf edition of Purves et al., *Neuroscience* (chapter "Sound"):
+%
+%     https://www.ncbi.nlm.nih.gov/books/NBK11126/
+%     (NIH NCBI Bookshelf — authoritative)
+%     "For the human listener, the amplitude and frequency of a sound roughly
+%      correspond to loudness and pitch, respectively."
+%
+% That NIH sentence does NOT name timbre, so it grounds only two of the three
+% rows; the timbre -> waveform row rests on the LibreTexts span, which is why the
+% envelope uses the single LibreTexts sentence (it fixes all three rows) and the
+% table's `trust` is honestly `consensus`, not `authoritative`. No row was
+% invented: the timbre -> waveform row is included ONLY because the LibreTexts
+% source explicitly states it.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table sound_property {
+    columns perceived, physical
+
+    row (pitch, frequency)
+    row (loudness, amplitude)
+    row (timbre, waveform)
+
+    source "The three subjective quantities of pitch, loudness and timbre are related to laboratory measurements of a sound wave's fundamental frequency, amplitude and waveform, respectively."
+    locator "https://phys.libretexts.org/Courses/Joliet_Junior_College/Physics_110_-_by_Conceptual_Objective/12:_Conceptual_Objective_12/12.06:_Pitch_Loudness_and_Timbre"
+    trust consensus
+}

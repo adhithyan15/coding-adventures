@@ -1,0 +1,24 @@
+% ============================================================================
+% mineral-hardness.query.adj — a worked recall over the geology
+% mineral-hardness library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how hard is quartz on the
+% Mohs scale?": it states no geology fact — it only `import`s the grounded table
+% and asks binding queries. The engine resolves each `?` against the
+% `mineral_hardness` rows and returns the number + the table's source/locator/
+% trust. The fourth query runs the relation BACKWARD (bind the value 10, recall
+% the mineral that has it — diamond). Graphite is not one of the ten reference
+% minerals of the scale, so a recall on it abstains honestly — the engine never
+% invents a hardness.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli mineral-hardness.query.adj
+% ============================================================================
+
+import "mineral-hardness.adj"
+
+? mineral_hardness(talc, $H)      % expect 1  — softest
+? mineral_hardness(quartz, $H)    % expect 7  — middle of the scale
+? mineral_hardness(corundum, $H)  % expect 9
+? mineral_hardness($M, 10)        % expect diamond — reverse recall
+? mineral_hardness(graphite, $H)  % expect abstain — not a Mohs reference mineral

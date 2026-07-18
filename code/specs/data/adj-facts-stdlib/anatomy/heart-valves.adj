@@ -1,0 +1,105 @@
+% ============================================================================
+% heart-valves — each of the four heart valves and the two chambers/vessels it
+% separates (adj-facts-stdlib, ANATOMY).
+% ============================================================================
+% A cardiac-anatomy fact one rung up from the chambers: blood only moves the
+% RIGHT way around the heart because four one-way valves sit at the doors
+% between the chambers and the great vessels. A pump needs valves so the fluid
+% cannot slosh back; the heart has four, and each one guards the boundary
+% between exactly two places. Recall is a binding query:
+%
+%     ? valve_separates(tricuspid, $B)   % right_atrium_and_right_ventricle
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `valve_separates(valve, boundary)` carrying the table's citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns the
+% boundary WITH its source, on the CPU, with zero model calls, and abstains on
+% anything that is not one of the four valves.
+%
+% The four valves, as a little truth table (walk the blood forward through the
+% heart and every door it passes is one of these):
+%
+%     valve       boundary it guards                    kind
+%     ---------   -----------------------------------   -------------------
+%     tricuspid   right_atrium_and_right_ventricle      atrioventricular
+%     mitral      left_atrium_and_left_ventricle        atrioventricular
+%     pulmonary   right_ventricle_and_pulmonary_trunk   semilunar
+%     aortic      left_ventricle_and_aorta              semilunar
+%
+% The two ATRIOVENTRICULAR (cuspid) valves sit between an atrium and the
+% ventricle below it — tricuspid on the right, mitral (a.k.a. bicuspid) on the
+% left. The two SEMILUNAR valves sit at the base of a great vessel leaving a
+% ventricle — pulmonary at the pulmonary trunk, aortic at the aorta. This is the
+% concrete cardiac rung a medicine agent reasons UP from: before it can reason
+% about a murmur, a regurgitant valve, or a stenosis, it must first know which
+% two places each valve stands between, the way a first-year student does. The
+% query also runs BACKWARD — bind the boundary and recall the valve that guards
+% it:
+%
+%     ? valve_separates($V, left_ventricle_and_aorta)   % aortic
+%
+% Something that is not one of the four valves — the eustachian valve, the
+% coronary sinus, a chamber — has no row, so a recall on it ABSTAINS rather than
+% inventing a boundary. That honest-abstention property is what makes the table
+% safe to reason from.
+%
+% Each `boundary` value is a SINGLE lowercase atom, chosen to be a faithful
+% short snake_case paraphrase of the TWO places the source names for that
+% valve — never a boundary the source does not state. Note the source's own
+% wording is preserved: the pulmonary valve's downstream vessel is the
+% "pulmonary trunk" (not "pulmonary artery"), so the atom reads
+% ...and_pulmonary_trunk.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every valve→boundary pair
+% was read out of a fetched U.S. National Cancer Institute page, and any valve
+% that could not be grounded there would have been dropped). All four spans come
+% from the SAME primary U.S. government reference, the NCI SEER Training Modules
+% "Structure of the Heart" (training.seer.cancer.gov), each quoted here
+% character-for-character so any reader can re-check it. The two
+% atrioventricular boundaries are fixed by chaining the defining sentence with
+% the naming sentence:
+%
+%   (defining) "The valves between the atria and ventricles are called
+%    atrioventricular valves (also called cuspid valves)."
+%
+%   tricuspid → right_atrium_and_right_ventricle
+%     "The right atrioventricular valve is the tricuspid valve."
+%     (the RIGHT atrioventricular valve ⇒ between the right atrium and the
+%      right ventricle, per the defining sentence above)
+%
+%   mitral → left_atrium_and_left_ventricle
+%     "The left atrioventricular valve is the bicuspid, or mitral, valve."
+%     (the LEFT atrioventricular valve ⇒ between the left atrium and the left
+%      ventricle, per the defining sentence above)
+%
+%   pulmonary → right_ventricle_and_pulmonary_trunk
+%     "The valve between the right ventricle and pulmonary trunk is the
+%      pulmonary semilunar valve."
+%
+%   aortic → left_ventricle_and_aorta
+%     "The valve between the left ventricle and the aorta is the aortic
+%      semilunar valve."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single strongest span: the SEER sentence that names the
+% first row's valve (tricuspid → the right atrioventricular valve). Every OTHER
+% row's per-fact source and verbatim span is listed above, so each boundary
+% remains independently checkable. The source is a primary U.S. government NCI
+% reference (training.seer.cancer.gov), so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table valve_separates {
+    columns valve, boundary
+
+    row (tricuspid, right_atrium_and_right_ventricle)   % "The right atrioventricular valve is the tricuspid valve." + AV = between atria and ventricles
+    row (mitral, left_atrium_and_left_ventricle)        % "The left atrioventricular valve is the bicuspid, or mitral, valve." + AV = between atria and ventricles
+    row (pulmonary, right_ventricle_and_pulmonary_trunk) % "The valve between the right ventricle and pulmonary trunk is the pulmonary semilunar valve."
+    row (aortic, left_ventricle_and_aorta)              % "The valve between the left ventricle and the aorta is the aortic semilunar valve."
+
+    source "The right atrioventricular valve is the tricuspid valve."
+    locator "https://training.seer.cancer.gov/anatomy/cardiovascular/heart/structure.html"
+    trust authoritative
+}

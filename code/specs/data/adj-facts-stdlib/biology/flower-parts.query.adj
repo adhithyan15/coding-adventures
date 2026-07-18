@@ -1,0 +1,23 @@
+% ============================================================================
+% flower-parts.query.adj — a worked recall over the biology flower-parts library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does the petal do?":
+% it states no botany fact of its own — it only `import`s the grounded table and
+% asks binding queries. The engine resolves each `?` against the
+% `flower_part_function` rows and returns the function + the table's source/
+% locator/trust. The fifth query runs the relation BACKWARD (bind the function
+% `male`, recall its flower part — stamen). A word that is not one of these
+% flower parts abstains honestly — the engine never invents a function.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli flower-parts.query.adj
+% ============================================================================
+
+import "flower-parts.adj"
+
+? flower_part_function(petal, $Function)    % expect attract_pollinators
+? flower_part_function(anther, $Function)   % expect carry_pollen
+? flower_part_function(ovary, $Function)    % expect contains_ovules
+? flower_part_function(stigma, $Function)   % expect traps_pollen
+? flower_part_function($Part, male)         % reverse bind — expect stamen
+? flower_part_function(leaf, $Function)     % expect abstain — the leaf is a plant part, not one of these flower parts

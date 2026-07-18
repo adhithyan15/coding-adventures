@@ -1,0 +1,24 @@
+% ============================================================================
+% celestial-objects.query.adj — a worked recall over the astronomy
+% celestial-objects library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what tells a star apart
+% from a planet?": it states no astronomy fact of its own — it only `import`s
+% the grounded table and asks binding queries. The engine resolves each `?`
+% against the `celestial_property` rows and returns the property + the table's
+% source/locator/trust. The fourth query runs the relation BACKWARD (bind the
+% property `orbits_planet`, recall which object it defines — moon). A word that
+% is not one of the basic celestial-object types abstains honestly — the engine
+% never invents a property.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli celestial-objects.query.adj
+% ============================================================================
+
+import "celestial-objects.adj"
+
+? celestial_property(star, $Property)      % expect gives_off_light
+? celestial_property(planet, $Property)    % expect revolves_around_star
+? celestial_property(asteroid, $Property)  % expect rocky
+? celestial_property($Object, orbits_planet) % reverse bind — expect moon
+? celestial_property(cloud, $Property)     % expect abstain — a cloud is not one of the basic celestial-object types

@@ -1,0 +1,23 @@
+% ============================================================================
+% respiratory-parts.query.adj — a worked recall over the anatomy respiratory-parts
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does the trachea do?":
+% it states no anatomy fact of its own — it only `import`s the grounded table and
+% asks binding queries. The engine resolves each `?` against the `part_function`
+% rows and returns the function + the table's source/locator/trust. The fourth
+% query runs the relation BACKWARD (bind the function `gas_exchange`, recall the
+% part that does it — alveoli). A word that is not one of these respiratory parts
+% abstains honestly — the engine never invents a function.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli respiratory-parts.query.adj
+% ============================================================================
+
+import "respiratory-parts.adj"
+
+? part_function(trachea, $Function)    % expect main_airway
+? part_function(larynx, $Function)     % expect human_speech
+? part_function(diaphragm, $Function)  % expect contracts_inspiration
+? part_function($Part, gas_exchange)   % reverse bind — expect alveoli
+? part_function(stomach, $Function)    % expect abstain — the stomach is a digestive organ, not a respiratory part

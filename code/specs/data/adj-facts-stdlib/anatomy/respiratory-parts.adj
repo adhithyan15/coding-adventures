@@ -1,0 +1,135 @@
+% ============================================================================
+% respiratory-parts — each part of the respiratory system and the function /
+% role its source explicitly states for it (adj-facts-stdlib, ANATOMY).
+% ============================================================================
+% Air does not just fall into the blood; it is handed down a chain of parts,
+% each with ONE job the anatomy books state out loud. The nose traps the big
+% particles; the pharynx lets the air pass through; the larynx does speech; the
+% trachea is the main airway; the bronchi branch down to the air sacs; the lungs
+% are where gases are exchanged with the blood (external respiration); the
+% alveoli are the actual gas-exchange surface; and the diaphragm contracts to
+% pull the breath in. Before a MEDICINE agent can reason about a cough, a
+% collapsed lung, or a blocked airway it must first know WHICH part does WHICH
+% job. Recall is a binding query:
+%
+%     ? part_function(trachea, $Function)      % main_airway
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `part_function(part, function)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the stated
+% function WITH its source, on the CPU, with zero model calls, and abstains on a
+% word that is not one of these respiratory parts (it never invents a function).
+%
+% Each part of the respiratory system and the function / role its source states
+% for it, as a little truth table (roughly nose-to-alveoli, then the muscle that
+% drives the whole thing):
+%
+%     respiratory part   stated function / role   a beginner's cue
+%     ----------------   ----------------------   ----------------------------
+%     nose               traps_particles          nose hairs trap inhaled dust
+%     pharynx            passes_air               the throat lets air pass through
+%     larynx             human_speech             the voice box; speech
+%     trachea            main_airway              the windpipe to the lungs
+%     bronchi            branch_to_alveoli        branch down to the air sacs
+%     lungs              external_respiration     gases swap with the blood here
+%     alveoli            gas_exchange             the actual air-to-blood surface
+%     diaphragm          contracts_inspiration    contracts to pull the breath in
+%
+% The query also runs BACKWARD — bind a function and recall the part that does
+% it:
+%
+%     ? part_function($Part, gas_exchange)   % alveoli
+%
+% A word that is NOT one of these respiratory parts — `stomach`, `heart`,
+% `femur` — is deliberately NOT a row, so a part recall ABSTAINS on it rather
+% than inventing a function. That honest-abstention property is what makes the
+% table safe to build a reasoner on: it answers exactly the part→function pairs
+% it can ground, and only those.
+%
+% The `function` value of every row is a SINGLE lowercase atom, chosen to be a
+% role the source EXPLICITLY states for that part — never one the source does
+% not support. Where the everyday word differs from the source's word — the
+% source says the trachea is the "main airway", not that it "carries air"; it
+% says the diaphragm "contracts" during "inspiration", not that it "controls
+% breathing" — the atom uses the source's own word, so every value stays
+% literally checkable against the quoted span.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every part→function pair
+% below was read out of a fetched NCI SEER Training Modules page, and any pair
+% whose function could not be verified there would have been dropped). Each
+% pair, with the primary source it was copied from and the verbatim span that
+% states it:
+%
+%   nose → traps_particles
+%     https://training.seer.cancer.gov/anatomy/respiratory/passages/nose.html
+%     (NCI SEER Training Modules — U.S. National Cancer Institute)
+%     "Nose hairs at the entrance to the nose trap large inhaled particles."
+%
+%   pharynx → passes_air
+%     https://training.seer.cancer.gov/anatomy/respiratory/passages/pharynx.html
+%     (NCI SEER Training Modules — U.S. National Cancer Institute)
+%     "The upper part of the pharynx (throat) lets only air pass through."
+%
+%   larynx → human_speech
+%     https://training.seer.cancer.gov/anatomy/respiratory/passages/larynx.html
+%     (NCI SEER Training Modules — U.S. National Cancer Institute)
+%     "The larynx plays an essential role in human speech."
+%
+%   trachea → main_airway
+%     https://training.seer.cancer.gov/anatomy/respiratory/passages/larynx.html
+%     (NCI SEER Training Modules — U.S. National Cancer Institute)
+%     "The trachea, commonly called the windpipe, is the main airway to the
+%      lungs."
+%
+%   bronchi → branch_to_alveoli
+%     https://training.seer.cancer.gov/anatomy/respiratory/passages/bronchi.html
+%     (NCI SEER Training Modules — U.S. National Cancer Institute)
+%     "The bronchi branch into smaller and smaller passageways until they
+%      terminate in tiny air sacs called alveoli."
+%
+%   lungs → external_respiration
+%     https://training.seer.cancer.gov/anatomy/respiratory/
+%     (NCI SEER Training Modules — U.S. National Cancer Institute)
+%     "After this, there is an exchange of gases between the lungs and the
+%      blood. This is called external respiration."
+%
+%   alveoli → gas_exchange
+%     https://training.seer.cancer.gov/anatomy/respiratory/passages/bronchi.html
+%     (NCI SEER Training Modules — U.S. National Cancer Institute)
+%     "Exchange of gases between the air in the lungs and the blood in the
+%      capillaries occurs across the walls of the alveolar ducts and alveoli."
+%
+%   diaphragm → contracts_inspiration
+%     https://training.seer.cancer.gov/anatomy/respiratory/mechanics.html
+%     (NCI SEER Training Modules — U.S. National Cancer Institute)
+%     "During inspiration, the diaphragm contracts and the thoracic cavity
+%      increases in volume."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the SEER statement that fixes the
+% first row (nose → traps_particles). Every OTHER row's per-fact source and
+% verbatim span is listed above, so each function remains independently
+% checkable. All sources are the NCI SEER Training Modules, a primary U.S.
+% government (National Cancer Institute) teaching resource, so `trust
+% authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table part_function {
+    columns part, function
+
+    row (nose, traps_particles)
+    row (pharynx, passes_air)
+    row (larynx, human_speech)
+    row (trachea, main_airway)
+    row (bronchi, branch_to_alveoli)
+    row (lungs, external_respiration)
+    row (alveoli, gas_exchange)
+    row (diaphragm, contracts_inspiration)
+
+    source "Nose hairs at the entrance to the nose trap large inhaled particles."
+    locator "https://training.seer.cancer.gov/anatomy/respiratory/passages/nose.html"
+    trust authoritative
+}

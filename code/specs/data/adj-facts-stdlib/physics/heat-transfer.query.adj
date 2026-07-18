@@ -1,0 +1,22 @@
+% ============================================================================
+% heat-transfer.query.adj — a worked recall over the physics heat-transfer library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how does conduction move
+% heat?": it states no physics fact of its own — it only `import`s the grounded
+% table and asks binding queries. The engine resolves each `?` against the
+% `heat_transfer_mode` rows and returns the mechanism + the table's source/
+% locator/trust. The fourth query runs the relation BACKWARD (bind the mechanism
+% `light_waves`, recall its mode — radiation). A word that is not one of the
+% three modes abstains honestly — the engine never invents a mechanism.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli heat-transfer.query.adj
+% ============================================================================
+
+import "heat-transfer.adj"
+
+? heat_transfer_mode(conduction, $Mechanism)   % expect direct_contact
+? heat_transfer_mode(convection, $Mechanism)   % expect motion_of_gasses_and_liquids
+? heat_transfer_mode(radiation, $Mechanism)    % expect light_waves
+? heat_transfer_mode($Mode, light_waves)       % reverse bind — expect radiation
+? heat_transfer_mode(evaporation, $Mechanism)  % expect abstain — evaporation is a phase change, not one of the three modes of heat transfer
