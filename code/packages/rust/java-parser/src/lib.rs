@@ -21,7 +21,9 @@ mod _grammar;
 /// `with_max_depth` values against a fixed 5000-level adversarial
 /// `(((...1...)))` input — ordinary parenthesised grouping, the shape
 /// universally present in every language — on a default-~2MiB-stack
-/// worker thread in a debug build): safe at **264**, crashes at **265**.
+/// worker thread in a debug build, no `RUST_MIN_STACK` override or
+/// explicit `Builder::stack_size` present): safe at **264**, crashes at
+/// **265**.
 ///
 /// `MAX_RULE_DEPTH` is set to **180** — about 32% below that floor
 /// (comparable margin to `apl-parser`'s own ~26.5%, `j-parser`'s ~30%,

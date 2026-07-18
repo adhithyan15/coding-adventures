@@ -77,8 +77,9 @@ use parser::grammar_parser::{GrammarParser, GrammarASTNode};
 /// loop -> instruction` (via `loop = LOOP_START { instruction } LOOP_END`).
 /// Measured directly (binary search over candidate `with_max_depth`
 /// values against a fixed 5000-level adversarial `[[[...+...]]]` input, on
-/// a default-~2MiB-stack worker thread in a debug build): safe at **248**,
-/// crashes at **249**.
+/// a default-~2MiB-stack worker thread in a debug build, no
+/// `RUST_MIN_STACK` override or explicit `Builder::stack_size` present):
+/// safe at **248**, crashes at **249**.
 ///
 /// `MAX_RULE_DEPTH` is set to **170** — about 31% below that floor
 /// (comparable margin to `apl-parser`'s own ~26.5%, `j-parser`'s ~30%,

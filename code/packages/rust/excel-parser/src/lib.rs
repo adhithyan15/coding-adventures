@@ -23,8 +23,9 @@ mod _grammar;
 /// `with_max_depth` values against a fixed 5000-level adversarial
 /// `=(((...1...)))` input — ordinary parenthesised grouping, via
 /// `primary -> parenthesized_expression -> expression` — on a
-/// default-~2MiB-stack worker thread in a debug build): safe at **299**,
-/// crashes at **300**.
+/// default-~2MiB-stack worker thread in a debug build, no
+/// `RUST_MIN_STACK` override or explicit `Builder::stack_size` present):
+/// safe at **299**, crashes at **300**.
 ///
 /// `MAX_RULE_DEPTH` is set to **200** — about 33% below that floor
 /// (comparable margin to `derive-parser`'s own ~33%, `apl-parser`'s

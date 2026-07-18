@@ -22,8 +22,9 @@ mod _grammar;
 /// `with_max_depth` values against a fixed 5000-level adversarial
 /// `@if (((...$x...))) { }` input — ordinary parenthesised grouping, via
 /// `lattice_primary = ... | LPAREN lattice_expression RPAREN` — on a
-/// default-~2MiB-stack worker thread in a debug build): safe at **289**,
-/// crashes at **290**.
+/// default-~2MiB-stack worker thread in a debug build, no
+/// `RUST_MIN_STACK` override or explicit `Builder::stack_size` present):
+/// safe at **289**, crashes at **290**.
 ///
 /// `MAX_RULE_DEPTH` is set to **200** — about 31% below that floor
 /// (comparable margin to `sql-parser`'s/`verilog-parser`'s/

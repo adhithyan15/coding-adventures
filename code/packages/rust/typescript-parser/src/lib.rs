@@ -22,8 +22,9 @@ mod _grammar;
 /// grammar). Measured directly instead (binary search over candidate
 /// `with_max_depth` values against a fixed 5000-level adversarial
 /// `let x = (((...1...)));` input — ordinary parenthesised grouping — on a
-/// default-~2MiB-stack worker thread in a debug build), against the
-/// **newest** embedded grammar (`"ts5.8"`, the most feature-complete,
+/// default-~2MiB-stack worker thread in a debug build, no
+/// `RUST_MIN_STACK` override or explicit `Builder::stack_size` present),
+/// against the **newest** embedded grammar (`"ts5.8"`, the most feature-complete,
 /// expected to have the tightest floor): safe at **275**, crashes at
 /// **276**. Spot-checked against the **oldest** embedded grammar
 /// (`"ts1.0"`) too, since a single cap must be safe regardless of which

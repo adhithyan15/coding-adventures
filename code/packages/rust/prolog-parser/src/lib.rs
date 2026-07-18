@@ -79,7 +79,9 @@ mod _grammar;
 /// `f(f(f(...1...))).` input — nested compound-term arguments, via
 /// `compound_term = atom_token LPAREN [ term_arguments ] RPAREN` and
 /// `term_arguments = term { COMMA term }` — on a default-~2MiB-stack
-/// worker thread in a debug build): safe at **260**, crashes at **261**.
+/// worker thread in a debug build, no `RUST_MIN_STACK` override or
+/// explicit `Builder::stack_size` present): safe at **260**, crashes at
+/// **261**.
 ///
 /// `MAX_RULE_DEPTH` is set to **180** — about 31% below that floor
 /// (comparable margin to `apl-parser`'s own ~26.5%, `j-parser`'s ~30%,

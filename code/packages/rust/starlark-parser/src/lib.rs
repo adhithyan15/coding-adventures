@@ -22,7 +22,9 @@ mod _grammar;
 /// `with_max_depth` values against a fixed 5000-level adversarial
 /// `x = (((...1...)))` input — ordinary parenthesised grouping, via
 /// `paren_expr = LPAREN [ paren_body ] RPAREN` — on a default-~2MiB-stack
-/// worker thread in a debug build): safe at **272**, crashes at **273**.
+/// worker thread in a debug build, no `RUST_MIN_STACK` override or
+/// explicit `Builder::stack_size` present): safe at **272**, crashes at
+/// **273**.
 ///
 /// `MAX_RULE_DEPTH` is set to **190** — about 30% below that floor
 /// (comparable margin to `python-parser`'s own ~30%, `sql-parser`'s ~30%,

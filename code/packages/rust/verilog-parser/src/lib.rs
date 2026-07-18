@@ -21,8 +21,10 @@ mod _grammar;
 /// grammar). Measured directly instead (binary search over candidate
 /// `with_max_depth` values against a fixed 5000-level adversarial
 /// `assign x = (((...1...)));` input — ordinary parenthesised grouping —
-/// on a default-~2MiB-stack worker thread in a debug build, against the
-/// `"2005"` default version): safe at **289**, crashes at **290**.
+/// on a default-~2MiB-stack worker thread in a debug build (no
+/// `RUST_MIN_STACK` override or explicit `Builder::stack_size` present),
+/// against the `"2005"` default version): safe at **289**, crashes at
+/// **290**.
 ///
 /// `MAX_RULE_DEPTH` is set to **200** — about 31% below that floor
 /// (comparable margin to `apl-parser`'s own ~26.5%, `j-parser`'s ~30%,

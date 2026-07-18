@@ -23,7 +23,8 @@ mod _grammar;
 /// `with_max_depth` values against a fixed 5000-level adversarial
 /// `x = (((...1...)))` input — ordinary parenthesised grouping, the shape
 /// universally present in every language — on a default-~2MiB-stack
-/// worker thread in a debug build), against the **newest** embedded
+/// worker thread in a debug build, no `RUST_MIN_STACK` override or
+/// explicit `Builder::stack_size` present), against the **newest** embedded
 /// grammar (`"3.12"`, the most feature-complete and therefore most likely
 /// to have the tightest floor): safe at **273**, crashes at **274**. Spot-
 /// checked against the **oldest** embedded grammar (`"2.7"`) too, since a

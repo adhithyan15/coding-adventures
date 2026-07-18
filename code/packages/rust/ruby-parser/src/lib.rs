@@ -27,8 +27,9 @@ mod _grammar;
 /// search over candidate `with_max_depth` values against a fixed
 /// 5000-level adversarial `x = (((...1...)))` input — ordinary
 /// parenthesised grouping, one representative expression/factor shape —
-/// on a default-~2MiB-stack worker thread in a debug build): safe at
-/// **263**, crashes at **264**.
+/// on a default-~2MiB-stack worker thread in a debug build, no
+/// `RUST_MIN_STACK` override or explicit `Builder::stack_size` present):
+/// safe at **263**, crashes at **264**.
 ///
 /// `MAX_RULE_DEPTH` is set to **180** — about 32% below that floor
 /// (comparable margin to `apl-parser`'s own ~26.5%, `j-parser`'s ~30%,

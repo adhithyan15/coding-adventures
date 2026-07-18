@@ -34,8 +34,9 @@ mod _grammar;
 /// `(((...1...)))` input — the ordinary parenthesised-grouping shape, the
 /// one universally present in every language and the shape that has bound
 /// for every CAS-family grammar measured in this repo so far — on a
-/// default-~2MiB-stack worker thread in a debug build): safe at **269**,
-/// crashes at **270**.
+/// default-~2MiB-stack worker thread in a debug build, no
+/// `RUST_MIN_STACK` override or explicit `Builder::stack_size` present):
+/// safe at **269**, crashes at **270**.
 ///
 /// `MAX_RULE_DEPTH` is set to **190** — about 29% below that floor
 /// (comparable margin to `apl-parser`'s own ~26.5%, `j-parser`'s ~30%,

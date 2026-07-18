@@ -91,7 +91,8 @@ mod _grammar;
 /// `WHERE id = (((...1...)))` input — ordinary parenthesised grouping,
 /// one of two recursive shapes this crate's own doc comment calls out
 /// (the other being nested subqueries) — on a default-~2MiB-stack worker
-/// thread in a debug build): safe at **288**, crashes at **289**.
+/// thread in a debug build, no `RUST_MIN_STACK` override or explicit
+/// `Builder::stack_size` present): safe at **288**, crashes at **289**.
 ///
 /// `MAX_RULE_DEPTH` is set to **200** — about 30% below that floor
 /// (comparable margin to `apl-parser`'s own ~26.5%, `j-parser`'s ~30%,
