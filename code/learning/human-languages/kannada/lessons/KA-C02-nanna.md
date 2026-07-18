@@ -4,7 +4,7 @@ chapter: 2
 type: word
 headword: ನನ್ನ
 gloss: my
-concept_tag: MY
+concept_tag: PRONOUN-MY
 prerequisites: [KA-C02-hesaru]
 sounds: [nna-conjunct]
 roots: [naanu-dravidian]

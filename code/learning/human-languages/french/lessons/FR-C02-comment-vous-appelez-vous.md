@@ -4,7 +4,7 @@ chapter: 2
 type: phrase
 headword: comment vous appelez-vous?
 gloss: what's your name? (literally "how do you call yourself?")
-concept_tag: WHATS-YOUR-NAME
+concept_tag: INTRO-WHATS-YOUR-NAME
 prerequisites: [FR-C02-comment, FR-C02-tu-vous, FR-C02-appeler]
 sounds: [liaison]
 roots: [quo-modo, appellare, vos]

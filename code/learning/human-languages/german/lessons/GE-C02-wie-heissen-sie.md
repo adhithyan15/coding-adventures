@@ -4,7 +4,7 @@ chapter: 2
 type: phrase
 headword: wie heißen Sie?
 gloss: what's your name? (literally "how are you called?")
-concept_tag: WHATS-YOUR-NAME
+concept_tag: INTRO-WHATS-YOUR-NAME
 prerequisites: [GE-C02-wie, GE-C02-du-sie, GE-C02-heissen]
 sounds: []
 roots: [hwi, haitana]

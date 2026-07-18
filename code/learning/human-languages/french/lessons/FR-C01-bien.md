@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: bien
 gloss: well / good / fine
-concept_tag: BIEN
+concept_tag: WORD-WELL
 prerequisites: [FR-C01-salut]
 sounds: [nasal-in]
 roots: [bene, bonus]

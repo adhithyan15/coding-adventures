@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: Tag
 gloss: day (der Tag — masculine)
-concept_tag: TAG
+concept_tag: TIME-DAY
 prerequisites: [GE-C01-der-die-das]
 sounds: [vowel-a-german]
 roots: [dagaz]

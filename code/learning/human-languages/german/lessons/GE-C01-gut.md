@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: gut
 gloss: good; well
-concept_tag: GUT
+concept_tag: WORD-GOOD
 prerequisites: [GE-C01-hallo]
 sounds: [vowel-u-german]
 roots: [godaz]

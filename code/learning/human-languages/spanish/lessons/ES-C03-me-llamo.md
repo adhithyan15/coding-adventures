@@ -4,7 +4,7 @@ chapter: 3
 type: word
 headword: me llamo
 gloss: my name is (literally "I call myself")
-concept_tag: MY-NAME-IS
+concept_tag: INTRO-MY-NAME-IS
 prerequisites: [ES-C03-me, ES-C03-llamar]
 sounds: [ll-y]
 roots: [clamare]

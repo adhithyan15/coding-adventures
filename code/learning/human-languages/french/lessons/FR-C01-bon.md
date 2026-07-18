@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: bon / bonne
 gloss: good (adjective)
-concept_tag: BON
+concept_tag: WORD-GOOD
 prerequisites: [FR-C01-bien]
 sounds: [nasal-on, silent-final]
 roots: [bonus]

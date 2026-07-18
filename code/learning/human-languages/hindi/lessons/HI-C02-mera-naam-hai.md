@@ -4,7 +4,7 @@ chapter: 2
 type: phrase
 headword: मेरा नाम … है
 gloss: my name is…
-concept_tag: MY-NAME-IS
+concept_tag: INTRO-MY-NAME-IS
 prerequisites: [HI-C02-meraa, HI-C02-naam, HI-C02-hai]
 sounds: []
 roots: [ma, naaman, asti]

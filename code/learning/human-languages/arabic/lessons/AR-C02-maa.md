@@ -4,7 +4,7 @@ chapter: 2
 type: word
 headword: ما
 gloss: what
-concept_tag: WHAT
+concept_tag: QUESTION-WHAT
 prerequisites: [AR-C02-anta-anti]
 sounds: [known-letters]
 roots: []

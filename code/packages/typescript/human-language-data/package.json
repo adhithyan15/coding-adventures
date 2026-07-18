@@ -1,0 +1,21 @@
+{
+  "name": "@coding-adventures/human-language-data",
+  "version": "0.1.0",
+  "description": "Cross-language concept dataset + validator derived from the Human Languages curriculum (spec HL01)",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "validate": "node --experimental-strip-types src/cli.ts validate",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "license": "MIT",
+  "author": "Adhithya Rajasekaran",
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}

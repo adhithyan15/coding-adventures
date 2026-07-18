@@ -4,7 +4,7 @@ chapter: 2
 type: word
 headword: పేరు
 gloss: name
-concept_tag: NAME
+concept_tag: WORD-NAME
 prerequisites: []
 sounds: [ee-sign]
 roots: [peer-dravidian]

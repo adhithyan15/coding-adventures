@@ -131,6 +131,7 @@ use Backend::{Clr, Jit, Jvm, Llvm, NativeAot, Vm, Wasm};
 /// called from here (the module's own runner is McCarthy-specific dead code).
 #[path = "clr_support/mod.rs"]
 mod clr_support;
+mod common;
 
 /// The cross-language battery. Each program is deliberately tiny but exercises real
 /// computation (arithmetic, calls, comparisons, loops, I/O) — not just constants —
@@ -2954,6 +2955,27 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("BIG"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // COBOL-60 — scaled DIVIDE with ROUNDED (PL09 step 4, PR3b). `20 / 3 =
+    // 6.666…`; carried to one guard digit past the `V99` receiver then rounded
+    // half away from zero → `6.67`, rendered as the four-digit field `0667`. This
+    // proves the dividend up-scale, integer division, and sign-aware rounding
+    // bias all lower to plain `i64` ops on every backend.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  R  PIC 9(2)V99 VALUE 0.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     DIVIDE 3 INTO 20 GIVING R ROUNDED.\n\
+               000000     DISPLAY R.\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("0667"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses
@@ -3186,15 +3208,17 @@ fn run_llvm(p: &Prog) -> Option<RunResult> {
     // Link the tagged-value lisp runtime iff the program calls a `__dyn_*`
     // primitive (cons/car/box_int/… — McCarthy Lisp + Twig dynamic values,
     // E6d-2b). `dynval_runtime.c` implements the tagged-word model and calls the
-    // conservative GC in `twig_gc.c`; both — plus `twig_runtime.c` for any I/O
-    // the runtime itself needs — are linked from the crate's runtime dir.
+    // conservative GC, which now lives in the `gc-core-capi` staticlib (twig_gc.c
+    // was retired in #118b-2b); `twig_runtime.c` supplies any I/O the runtime
+    // itself needs. The two C files come from the crate's runtime dir; the GC
+    // archive (+ its system libs) is supplied by `common::gc_link_args`.
     if ll.contains("@__dyn_") {
         let rt = |name: &str| {
             std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../twig-aot/runtime").join(name)
         };
         cmd.arg("-x").arg("none")
             .arg(rt("dynval_runtime.c"))
-            .arg(rt("twig_gc.c"))
+            .args(common::gc_link_args())
             .arg(rt("twig_runtime.c"));
     }
     let built = cmd.arg("-x").arg("none").arg("-o").arg(&exe).output().ok()?;

@@ -443,9 +443,37 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
                     .map(|_| pop(&mut stack))
                     .collect::<Result<_, _>>()?;
                 let val = pop(&mut stack)?;
+                // SQLite IN is three-valued and uses the same equality as `=`:
+                //   • test value NULL            → NULL
+                //   • any element `=` the value  → 1 (true), even if NULLs present
+                //   • else if any element is NULL → NULL (the value *might* equal
+                //     the unknown), matching `1 IN (NULL,2)` → NULL
+                //   • else                        → 0 (false)
+                // `sql_eq` compares by storage class, so `1 IN (1.0)` is true
+                // (Int/Float compare numerically) while `'1' IN (1)` is false
+                // (text vs integer). This supersedes the old derived-`PartialEq`
+                // membership, which missed both numeric equality and NULL logic.
                 let result = match val {
                     SqlValue::Null => SqlValue::Null,
-                    v => SqlValue::Bool(items.contains(&v)),
+                    v => {
+                        let mut saw_null = false;
+                        let mut matched = false;
+                        for item in &items {
+                            if matches!(item, SqlValue::Null) {
+                                saw_null = true;
+                            } else if sql_eq(&v, item) {
+                                matched = true;
+                                break;
+                            }
+                        }
+                        if matched {
+                            SqlValue::Bool(true)
+                        } else if saw_null {
+                            SqlValue::Null
+                        } else {
+                            SqlValue::Bool(false)
+                        }
+                    }
                 };
                 stack.push(result);
             }
@@ -1875,14 +1903,19 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
 /// | Int(n ≠ 0)  | true      |
 /// | Float(0.0)  | false     |
 /// | Float(f≠0)  | true      |
-/// | Text / Blob | true      |
+/// | Text / Blob | numeric affinity ≠ 0 (`'5'`→true, `'abc'`/`'0'`/`''`→false) |
 fn is_truthy(v: &SqlValue) -> bool {
     match v {
         SqlValue::Null => false,
         SqlValue::Bool(b) => *b,
         SqlValue::Int(n) => *n != 0,
         SqlValue::Float(f) => *f != 0.0,
-        SqlValue::Text(_) | SqlValue::Blob(_) => true,
+        // A text/blob in a boolean context takes NUMERIC AFFINITY first, exactly
+        // like SQLite: `WHERE 'abc'` is false (`'abc'`→0), `WHERE '5'` is true,
+        // `NOT 'abc'` = 1, `NOT '5'` = 0. Previously every non-NULL text/blob was
+        // truthy, which wrongly kept `WHERE <text-column>` rows and inverted
+        // `NOT`. `cast_to_f64` takes the leading numeric prefix (0 for non-numeric).
+        SqlValue::Text(_) | SqlValue::Blob(_) => cast_to_f64(v) != 0.0,
     }
 }
 
@@ -1963,6 +1996,9 @@ fn eval_binary(op: &BinaryOp, l: SqlValue, r: SqlValue) -> Result<SqlValue, VmEr
             // `SELECT 5/0`, `5.0/0`, and `0/0` all yield NULL, never an error.
             // NULL operands were already short-circuited above, so a zero divisor
             // here is a genuine value. `*f == 0.0` also matches `-0.0`.
+            // Numeric affinity applies first, so `5 / '0'` is NULL and `5 / '2'`
+            // is 2, matching SQLite.
+            let (l, r) = (coerce_arith(l), coerce_arith(r));
             match (&l, &r) {
                 (_, SqlValue::Int(0)) => Ok(SqlValue::Null),
                 (_, SqlValue::Float(f)) if *f == 0.0 => Ok(SqlValue::Null),
@@ -1980,9 +2016,11 @@ fn eval_binary(op: &BinaryOp, l: SqlValue, r: SqlValue) -> Result<SqlValue, VmEr
                 ))),
             }
         }
-        BinaryOp::Mod => match (&l, &r) {
-            // Like division, modulo by zero is NULL in SQLite (`5%0`, `5.5%0`,
-            // `5%0.0` → NULL), including a float-zero divisor — not an error.
+        BinaryOp::Mod => {
+          // Numeric affinity applies first (`'7' % 3` = 1); then modulo by zero
+          // is NULL in SQLite (`5%0`, `5.5%0`, `5%0.0`), not an error.
+          let (l, r) = (coerce_arith(l), coerce_arith(r));
+          match (&l, &r) {
             (_, SqlValue::Int(0)) => Ok(SqlValue::Null),
             (_, SqlValue::Float(f)) if *f == 0.0 => Ok(SqlValue::Null),
             (SqlValue::Int(a), SqlValue::Int(b)) => {
@@ -1996,7 +2034,8 @@ fn eval_binary(op: &BinaryOp, l: SqlValue, r: SqlValue) -> Result<SqlValue, VmEr
             _ => Err(VmError::TypeMismatch(format!(
                 "cannot mod {:?} by {:?}", l.type_name(), r.type_name()
             ))),
-        },
+          }
+        }
 
         // ── Comparison ────────────────────────────────────────────────────────
         BinaryOp::Eq => Ok(SqlValue::Bool(sql_eq(&l, &r))),
@@ -2013,8 +2052,12 @@ fn eval_binary(op: &BinaryOp, l: SqlValue, r: SqlValue) -> Result<SqlValue, VmEr
             if matches!(l, SqlValue::Null) || matches!(r, SqlValue::Null) {
                 return Ok(SqlValue::Null);
             }
-            let ls = sql_to_str(&l);
-            let rs = sql_to_str(&r);
+            // `||` yields TEXT. A BLOB operand contributes its RAW bytes (as
+            // text), NOT the `x'…'` hex-literal spelling `sql_to_str` uses for
+            // display: SQLite evaluates `X'41' || 'B'` to `'AB'` (0x41 = 'A'),
+            // not `"x'41'B"`. Other types stringify as usual.
+            let ls = concat_operand_to_str(&l);
+            let rs = concat_operand_to_str(&r);
             Ok(SqlValue::Text(ls + &rs))
         }
 
@@ -2088,6 +2131,22 @@ fn sql_shift(value: i64, count: i64, left: bool) -> i64 {
 ///
 /// `int_op` is a checked variant (returns `Option<i64>`); `float_op` is unchecked
 /// (IEEE 754 overflow saturates to ±∞ which is the standard SQL behaviour).
+/// Apply SQLite numeric affinity to an arithmetic operand. Text/blob take their
+/// leading numeric prefix (`'5'`→5, `'5.5'`→5.5, `'12abc'`→12, `'abc'`→0, via
+/// [`text_to_numeric`]); a bool is its integer value; INTEGER/REAL pass through.
+/// NULL never reaches here — `eval_binary` short-circuits NULL operands before
+/// dispatching to arithmetic. Scoped to arithmetic only: comparison and bitwise
+/// operators apply their own (different) coercion rules.
+fn coerce_arith(v: SqlValue) -> SqlValue {
+    match v {
+        SqlValue::Int(_) | SqlValue::Float(_) => v,
+        SqlValue::Bool(b) => SqlValue::Int(b as i64),
+        SqlValue::Text(s) => text_to_numeric(&s),
+        SqlValue::Blob(b) => text_to_numeric(&String::from_utf8_lossy(&b)),
+        SqlValue::Null => SqlValue::Null,
+    }
+}
+
 fn checked_int_binop(
     l: SqlValue,
     r: SqlValue,
@@ -2095,6 +2154,8 @@ fn checked_int_binop(
     float_op: impl Fn(f64, f64) -> f64,
     op_name: &'static str,
 ) -> Result<SqlValue, VmError> {
+    // SQLite applies numeric affinity to arithmetic operands: `'5' + 0` = 5.
+    let (l, r) = (coerce_arith(l), coerce_arith(r));
     match (l, r) {
         (SqlValue::Int(a), SqlValue::Int(b)) => {
             int_op(a, b).map(SqlValue::Int).ok_or_else(|| {
@@ -2667,6 +2728,21 @@ fn sql_to_str(v: &SqlValue) -> String {
             format!("x'{}'", hex)
         }
         SqlValue::Null => String::new(),
+    }
+}
+
+/// Stringify an operand of the `||` (concatenate) operator.
+///
+/// Identical to [`sql_to_str`] EXCEPT for blobs: `||` treats a blob as its raw
+/// byte sequence interpreted as text, so `X'41' || 'B'` is `'AB'` (0x41 = 'A'),
+/// whereas [`sql_to_str`] renders the reversible display form `x'41'`. Invalid
+/// UTF-8 bytes become the replacement character (U+FFFD) — a rare edge for
+/// non-textual blobs; the common ASCII/UTF-8 case round-trips exactly. NULL is
+/// handled by the caller (it propagates through `||`).
+fn concat_operand_to_str(v: &SqlValue) -> String {
+    match v {
+        SqlValue::Blob(b) => String::from_utf8_lossy(b).into_owned(),
+        other => sql_to_str(other),
     }
 }
 
@@ -3384,6 +3460,25 @@ mod tests {
     }
 
     #[test]
+    fn test_arith_text_numeric_affinity() {
+        // Binary arithmetic coerces text/blob operands via numeric affinity,
+        // matching SQLite: `'5' + 0` = 5, `'abc' + 1` = 1, `'10' - '3'` = 7.
+        let bin = |op: BinaryOp, l: SqlValue, r: SqlValue| eval_binary(&op, l, r).unwrap();
+        let t = |s: &str| SqlValue::Text(s.to_string());
+        assert_eq!(bin(BinaryOp::Add, t("5"), int(0)), int(5));
+        assert_eq!(bin(BinaryOp::Add, t("5.5"), int(0)), SqlValue::Float(5.5));
+        assert_eq!(bin(BinaryOp::Add, t("abc"), int(1)), int(1)); // no prefix → 0
+        assert_eq!(bin(BinaryOp::Mul, t("5"), int(2)), int(10));
+        assert_eq!(bin(BinaryOp::Sub, t("10"), t("3")), int(7));
+        // Division/modulo coerce too; `5 / '0'` → NULL (affinity → integer 0).
+        assert_eq!(bin(BinaryOp::Div, int(5), t("2")), int(2));
+        assert_eq!(bin(BinaryOp::Div, int(5), t("0")), null());
+        assert_eq!(bin(BinaryOp::Mod, t("7"), int(3)), int(1));
+        // NULL still short-circuits to NULL (handled before coercion).
+        assert_eq!(bin(BinaryOp::Add, t("5"), null()), null());
+    }
+
+    #[test]
     fn test_sub_ints() {
         let mut b = InMemoryBackend::new();
         let r = execute(&prog(vec![
@@ -3794,6 +3889,23 @@ mod tests {
         assert_eq!(r.rows, vec![vec![null()]]);
     }
 
+    #[test]
+    fn test_is_truthy_text_numeric_affinity() {
+        // Text/blob truthiness takes numeric affinity, matching SQLite.
+        assert!(!is_truthy(&SqlValue::Text("abc".into()))); // → 0 → false
+        assert!(is_truthy(&SqlValue::Text("5".into()))); // → 5 → true
+        assert!(!is_truthy(&SqlValue::Text("0".into())));
+        assert!(!is_truthy(&SqlValue::Text("".into())));
+        assert!(is_truthy(&SqlValue::Text("5.5".into())));
+        assert!(is_truthy(&SqlValue::Text("12abc".into()))); // leading 12 → true
+        assert!(!is_truthy(&SqlValue::Blob(b"abc".to_vec())));
+        assert!(is_truthy(&SqlValue::Blob(b"9".to_vec())));
+        // Numeric/NULL/bool arms unchanged.
+        assert!(!is_truthy(&SqlValue::Int(0)));
+        assert!(is_truthy(&SqlValue::Int(3)));
+        assert!(!is_truthy(&SqlValue::Null));
+    }
+
     // ── 7. LIKE ───────────────────────────────────────────────────────────────
 
     #[test]
@@ -3955,6 +4067,53 @@ mod tests {
             Instruction::Halt,
         ]), &mut b).unwrap();
         assert_eq!(r.rows, vec![vec![null()]]);
+    }
+
+    #[test]
+    fn test_in_list_numeric_equality() {
+        // `1 IN (1.0)` is TRUE — IN uses `=` equality, which compares INTEGER and
+        // REAL numerically (not by same-variant identity).
+        let run = |val: SqlValue, items: Vec<SqlValue>| {
+            let mut b = InMemoryBackend::new();
+            let n = items.len();
+            let mut prog_v = vec![Instruction::BeginRow, Instruction::LoadConst(val)];
+            for it in items {
+                prog_v.push(Instruction::LoadConst(it));
+            }
+            prog_v.push(Instruction::InList(n));
+            prog_v.push(Instruction::EmitColumn("r".to_string()));
+            prog_v.push(Instruction::EmitRow);
+            prog_v.push(Instruction::Halt);
+            execute(&prog(prog_v), &mut b).unwrap().rows[0][0].clone()
+        };
+        assert_eq!(run(int(1), vec![float(1.0)]), bool_val(true));
+        assert_eq!(run(float(1.0), vec![int(1)]), bool_val(true));
+        assert_eq!(run(int(1), vec![int(2), float(1.0), int(3)]), bool_val(true));
+        // Text vs integer do NOT match (no affinity in IN).
+        assert_eq!(run(SqlValue::Text("1".into()), vec![int(1)]), bool_val(false));
+    }
+
+    #[test]
+    fn test_in_list_null_three_valued() {
+        let run = |val: SqlValue, items: Vec<SqlValue>| {
+            let mut b = InMemoryBackend::new();
+            let n = items.len();
+            let mut prog_v = vec![Instruction::BeginRow, Instruction::LoadConst(val)];
+            for it in items {
+                prog_v.push(Instruction::LoadConst(it));
+            }
+            prog_v.push(Instruction::InList(n));
+            prog_v.push(Instruction::EmitColumn("r".to_string()));
+            prog_v.push(Instruction::EmitRow);
+            prog_v.push(Instruction::Halt);
+            execute(&prog(prog_v), &mut b).unwrap().rows[0][0].clone()
+        };
+        // No match but a NULL element present → NULL.
+        assert_eq!(run(int(5), vec![null(), int(2)]), null());
+        // A real match wins even with a NULL element present → true.
+        assert_eq!(run(int(1), vec![null(), int(1)]), bool_val(true));
+        // No match, no NULL element → false.
+        assert_eq!(run(int(5), vec![int(1), int(2)]), bool_val(false));
     }
 
     // ── 10. Scan / LoadColumn ─────────────────────────────────────────────────
@@ -4680,6 +4839,32 @@ mod tests {
             Instruction::Halt,
         ]), &mut b).unwrap();
         assert_eq!(r.rows, vec![vec![text("Hello World")]]);
+    }
+
+    #[test]
+    fn test_concat_blob_uses_raw_bytes() {
+        // `||` concatenates a blob as its RAW bytes (as text), not the `x'…'`
+        // display form: `X'41' || 'B'` = 'AB'. Result is TEXT; NULL propagates.
+        let cat = |l: SqlValue, r: SqlValue| eval_binary(&BinaryOp::Concat, l, r).unwrap();
+        assert_eq!(
+            cat(SqlValue::Blob(vec![0x41]), SqlValue::Text("B".into())),
+            SqlValue::Text("AB".into())
+        );
+        assert_eq!(
+            cat(SqlValue::Text("A".into()), SqlValue::Blob(vec![0x42])),
+            SqlValue::Text("AB".into())
+        );
+        assert_eq!(
+            cat(SqlValue::Blob(vec![0x48]), SqlValue::Blob(vec![0x69])),
+            SqlValue::Text("Hi".into())
+        );
+        // `sql_to_str` (the display form) still renders the hex literal — the
+        // concat path must NOT regress that helper's behavior.
+        assert_eq!(sql_to_str(&SqlValue::Blob(vec![0x41])), "x'41'");
+        assert_eq!(
+            cat(SqlValue::Blob(vec![0x41]), SqlValue::Null),
+            SqlValue::Null
+        );
     }
 
     // ── 20. Label / Jump / JumpIfTrue ─────────────────────────────────────────

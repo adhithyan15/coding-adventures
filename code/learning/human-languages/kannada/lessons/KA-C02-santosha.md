@@ -4,7 +4,7 @@ chapter: 2
 type: phrase
 headword: ಸಂತೋಷ
 gloss: joy / pleased to meet you
-concept_tag: PLEASED-TO-MEET
+concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [KA-C02-nanna-hesaru]
 sounds: [anusvara]
 roots: [santosha-sanskrit]

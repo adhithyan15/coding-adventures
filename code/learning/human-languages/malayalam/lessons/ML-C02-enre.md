@@ -4,7 +4,7 @@ chapter: 2
 type: word
 headword: എന്റെ
 gloss: my
-concept_tag: MY
+concept_tag: PRONOUN-MY
 prerequisites: [ML-C02-peru]
 sounds: [nre-conjunct]
 roots: [njaan-dravidian]

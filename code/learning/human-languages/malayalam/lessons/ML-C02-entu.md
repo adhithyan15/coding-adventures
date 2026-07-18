@@ -4,7 +4,7 @@ chapter: 2
 type: word
 headword: എന്ത്
 gloss: what
-concept_tag: WHAT
+concept_tag: QUESTION-WHAT
 prerequisites: [ML-C02-nii-ningal]
 sounds: [ntu-conjunct]
 roots: [yaa-dravidian]

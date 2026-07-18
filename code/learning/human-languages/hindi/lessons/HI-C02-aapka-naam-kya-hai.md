@@ -4,7 +4,7 @@ chapter: 2
 type: phrase
 headword: आपका नाम क्या है?
 gloss: what's your name?
-concept_tag: WHATS-YOUR-NAME
+concept_tag: INTRO-WHATS-YOUR-NAME
 prerequisites: [HI-C02-kya, HI-C02-aap-tum, HI-C02-hai]
 sounds: []
 roots: [kim, asti]

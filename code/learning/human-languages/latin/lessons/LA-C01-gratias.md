@@ -4,7 +4,7 @@ chapter: 1
 type: phrase
 headword: grātiās (tibi) agō
 gloss: thank you (lit. "I give thanks to you")
-concept_tag: GRATITUDE-THANKS
+concept_tag: COURTESY-THANKS
 prerequisites: [LA-C01-vale]
 sounds: [hard-c-t, macron-long-vowel]
 roots: [gratia, gratus, ago]

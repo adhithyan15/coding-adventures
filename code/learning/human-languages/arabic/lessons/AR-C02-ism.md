@@ -4,7 +4,7 @@ chapter: 2
 type: word
 headword: اسم
 gloss: name
-concept_tag: NAME
+concept_tag: WORD-NAME
 prerequisites: []
 sounds: [rtl-known-letters]
 roots: [s-m-w]

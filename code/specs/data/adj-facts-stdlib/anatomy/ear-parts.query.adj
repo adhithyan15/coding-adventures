@@ -1,0 +1,23 @@
+% ============================================================================
+% ear-parts.query.adj — a worked recall over the anatomy ear-parts library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "which region of the ear is
+% the cochlea in?": it states no anatomy fact — it only `import`s the grounded
+% table and asks binding queries. The engine resolves each `?` against the
+% `ear_structure_region` rows and returns the region + the table's
+% source/locator/trust. The fourth query runs the relation BACKWARD (bind the
+% region middle_ear, recall a structure that lives there — one of the three
+% ossicles). The pinna has no grounded row here, so a recall on it abstains
+% honestly — the engine never invents a region.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli ear-parts.query.adj
+% ============================================================================
+
+import "ear-parts.adj"
+
+? ear_structure_region(cochlea, $R)     % expect inner_ear
+? ear_structure_region(malleus, $R)     % expect middle_ear
+? ear_structure_region(ear_canal, $R)   % expect outer_ear
+? ear_structure_region($S, middle_ear)  % expect malleus/incus/stapes — reverse recall
+? ear_structure_region(pinna, $R)       % expect abstain — pinna has no row

@@ -50,21 +50,22 @@ this reuse — and stores the resulting scaled value. A numeric *literal* in a
 `DISPLAY`, by contrast, shows its **source text** (`DISPLAY 42` → `42`).
 
 Runtime arithmetic (unsigned receivers) is native `i64` over the scaled slots.
-**Integer** `ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE` compute directly; **scaled-decimal**
-`ADD`/`SUBTRACT` (`PIC …V…`) align the implied point to a common working scale,
-accumulate, then store into the receiver's scale — rounding **half away from
-zero** with `ROUNDED`, else truncating. Every store takes the magnitude and keeps
-the low-order `int_digits + dec_digits` digits (COBOL's unsigned-magnitude and
-silent-overflow-truncation rules). Numeric **item-to-item `MOVE`** reshapes the
-source value into the receiver's picture the same way.
+`ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE` all honour the implied point (`PIC …V…`):
+additive verbs align operands to a common working scale then accumulate;
+`MULTIPLY` products carry scale `sa + sb`; `DIVIDE` scales the dividend up before
+the truncating division to land the receiver's decimals (plus a guard digit for
+rounding). Every store rounds **half away from zero** with `ROUNDED` (else
+truncates), takes the magnitude, and keeps the low-order `int_digits + dec_digits`
+digits (COBOL's unsigned-magnitude and silent-overflow-truncation rules). Numeric
+**item-to-item `MOVE`** reshapes the source value into the receiver's picture the
+same way. **`IF`** compares operands at a common scale and branches.
 
 ### Deliberately a later rung
 
 Each of these is a clean `CompileError::Unsupported` (never wrong output), landing
-on its own PR: **scaled** `MULTIPLY`/`DIVIDE` (a `V` operand) and their `ROUNDED`,
-`ON SIZE ERROR`, alphanumeric item `MOVE` and alphanumeric comparison,
-`COMPUTE`, `PERFORM`, `GO TO`, group items, and signed numerics (`PIC S9…`,
-trailing-overpunch display).
+on its own PR: `ON SIZE ERROR`, alphanumeric item `MOVE` and alphanumeric
+comparison, `COMPUTE`, `PERFORM`, `GO TO`, group items, and signed numerics
+(`PIC S9…`, trailing-overpunch display).
 
 ## Usage
 

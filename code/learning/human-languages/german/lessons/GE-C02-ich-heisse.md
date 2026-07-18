@@ -4,7 +4,7 @@ chapter: 2
 type: phrase
 headword: ich heiße…
 gloss: my name is… (literally "I am called…")
-concept_tag: MY-NAME-IS
+concept_tag: INTRO-MY-NAME-IS
 prerequisites: [GE-C02-ich, GE-C02-heissen]
 sounds: []
 roots: [ik, haitana, namo]

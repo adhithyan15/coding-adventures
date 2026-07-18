@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: buono / buon
 gloss: good (adjective)
-concept_tag: GOOD
+concept_tag: WORD-GOOD
 prerequisites: [IT-C01-ciao]
 sounds: [uo-glide]
 roots: [bonus]

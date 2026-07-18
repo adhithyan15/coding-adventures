@@ -81,6 +81,8 @@ fn closures_run_on_native() {
 // --- LLVM (unblocked by the iir-to-llvm comparison-width fix: the dispatcher's
 //     dynamic `=` index test no longer emits `icmp i1` on an i64) --------------
 
+mod common;
+
 fn runtime_c(name: &str) -> std::path::PathBuf {
     std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../twig-aot/runtime").join(name)
 }
@@ -100,7 +102,7 @@ fn run_llvm(src: &str, module: &str) -> i32 {
     let build = Command::new("clang")
         .arg("-x").arg("ir").arg(&ll_path)
         .arg("-x").arg("none")
-        .arg(runtime_c("dynval_runtime.c")).arg(runtime_c("twig_gc.c")).arg(runtime_c("twig_runtime.c"))
+        .arg(runtime_c("dynval_runtime.c")).args(common::gc_link_args()).arg(runtime_c("twig_runtime.c"))
         .arg("-o").arg(&exe).output().expect("clang");
     assert!(build.status.success(), "clang link: {}", String::from_utf8_lossy(&build.stderr));
     Command::new(&exe).output().unwrap().status.code().unwrap()

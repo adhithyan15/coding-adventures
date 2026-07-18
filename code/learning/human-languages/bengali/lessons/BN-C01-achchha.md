@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: আচ্ছা
 gloss: okay / alright / I see (āchchhā)
-concept_tag: FUNCTION-OKAY
+concept_tag: RESPONSE-OKAY
 prerequisites: [BN-C01-hyan-na]
 sounds: [independent-vowel, chchh-conjunct]
 roots: [accha]

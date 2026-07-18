@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: giorno
 gloss: day (masculine)
-concept_tag: DAY
+concept_tag: TIME-DAY
 prerequisites: [IT-C01-il-la-lo]
 sounds: [soft-g]
 roots: [diurnum, dies]

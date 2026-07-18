@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: లేదు
 gloss: no / there isn't (lēdu)
-concept_tag: NO
+concept_tag: RESPONSE-NO
 prerequisites: [TE-C01-avunu]
 sounds: [e-long-vowel-sign, u-vowel-sign]
 roots: [lē]

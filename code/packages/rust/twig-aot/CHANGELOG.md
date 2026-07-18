@@ -1,5 +1,38 @@
 # Changelog — `twig-aot`
 
+## 0.37.0 - 2026-07-17 (#118b-2b: retire twig_gc.c, GC comes from gc-core-capi)
+
+The garbage collector is no longer a hand-written C translation unit in this crate.
+`runtime/twig_gc.c` is **removed**; the collector is now the generic `gc-core-capi`
+crate (`gc-core`'s flat mark-and-sweep behind a C ABI), which exports both the
+`__gc_*` names and the `__twig_gc_*` compat aliases the emitted code and
+`dynval_runtime.c` reference. This deletes a Twig-specific duplicate of the generic
+`gc-core` algorithm (AOT00-T1 / LANG16 convergence).
+
+Wiring, in three parts:
+
+- **`build.rs`** drops `twig_gc.c` from the `cc::Build` (only `twig_runtime.c` +
+  `dynval_runtime.c` remain — the latter's `__twig_gc_alloc` reference is now left
+  undefined and resolved at link time). On a supported host it additionally runs a
+  nested `cargo build --release -p gc-core-capi` (isolated `--target-dir` under
+  `OUT_DIR` to avoid the outer build's target lock) and copies `libgc_core_capi.a`
+  into `OUT_DIR`, exporting `GC_CORE_CAPI_ARCHIVE`. Unsupported hosts get a 1-byte
+  stub, mirroring the runtime-archive pattern.
+- **`src/lib.rs`** — for twig-aot's own binary/test binaries, a `#[used]` reference
+  to `gc_core_capi::__gc_alloc` keeps the gc-core-capi **rlib** on the final link
+  line (rlib, not the staticlib, to avoid a second copy of Rust std), so the C
+  archive's undefined `__twig_gc_alloc` resolves. For AOT-*emitted* executables, the
+  embedded `GC_CORE_ARCHIVE` (`include_bytes!(env!("GC_CORE_CAPI_ARCHIVE"))`) is
+  written to a temp `.a` and passed to the linker after the runtime archive at each
+  of the three per-OS link sites (macOS `ld`, Linux `cc` + `-lpthread -ldl`, Windows
+  linker). Because a static archive contributes only members needed to satisfy an
+  undefined symbol, non-allocating programs pull nothing from it.
+
+Verified by running: the `dynval_runtime_golden` cons tests (which call
+`__dyn_cons` → `__twig_gc_alloc`) and the macOS arm64 smoke tests still pass, and
+lang-aot's native + LLVM GC-allocating executables (e6d2b / e6d6b / e6d7a) build,
+link, and run to the correct exit codes with no duplicate-symbol errors.
+
 ## 0.36.0 - 2026-07-14 (E6d-7a: closures on NativeAot)
 
 `prepare_module_for_aot` now runs `lower_closures_to_heap` before `lower_heap_builtins_runtime` — NativeAot had no closure model (it `BackendRefused` `alloc_closure`/`call_closure`). A Twig `((lambda (x) (+ x 1)) 41)` now compiles + runs to exit 42 natively. A no-op for a closure-free module.

@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: ശരി
 gloss: okay / alright / correct (śari)
-concept_tag: OKAY
+concept_tag: RESPONSE-OKAY
 prerequisites: [ML-C01-athe]
 sounds: [sha-letter, ri-vowel-sign]
 roots: [sari]

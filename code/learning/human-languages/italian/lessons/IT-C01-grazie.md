@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: grazie
 gloss: thank you
-concept_tag: THANKS
+concept_tag: COURTESY-THANKS
 prerequisites: [IT-C01-ciao]
 sounds: [z-is-ts]
 roots: [gratia]

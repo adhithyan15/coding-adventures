@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: ita / nōn
 gloss: yes / no (lit. "thus" / "not")
-concept_tag: FUNCTION-YESNO
+concept_tag: RESPONSE-YESNO
 prerequisites: [LA-C01-gratias]
 sounds: [macron-long-vowel]
 roots: [ita, sic, non, ne-negative]

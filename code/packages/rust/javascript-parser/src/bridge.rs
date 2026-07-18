@@ -4188,10 +4188,19 @@ fn unquote_string(raw: &str) -> String {
             }
             // Line continuation: backslash followed by newline.
             Some('\n') | Some('\r') => {}
-            Some(other) => {
-                result.push('\\');
-                result.push(other);
-            }
+            // Any other escape is a NonEscapeCharacter (ECMAScript IdentityEscape):
+            // the backslash is dropped and the character is kept, so `"\q"` → "q",
+            // `"\/"` → "/", `"\<"` → "<", etc. The reference Closure Compiler drops
+            // the backslash uniformly for every character that reaches this arm
+            // (oracle-verified across letters and punctuation `\/ \< \? \! \@ \: \;
+            // \, \. \| \~ \= \[ \] \(`). All the SPECIAL escapes — `n r t b f v x u`,
+            // the quotes/backslash `' " \`, the octal digits `0`–`7`, the
+            // NonOctalDecimal `8`/`9`, and the line-continuation newline — have their
+            // own arms above and never reach here. Previously this arm KEPT the
+            // backslash (`"\q"` decoded to the two-char `\q`), a value miscompile;
+            // this generalizes the `\8`/`\9` fix (0.61.0) to the full IdentityEscape
+            // set.
+            Some(other) => result.push(other),
             None => result.push('\\'),
         }
     }
@@ -5427,6 +5436,46 @@ mod tests {
             (r#""\8\9";"#, "89"),   // the probe case: g(a,"\8\9") -> "89"
             (r#""z\8z";"#, "z8z"),  // mid-string
             (r#""\98";"#, "98"),    // adjacent, each drops its own backslash
+        ] {
+            let p = bridge_ok(src);
+            match &p.body[0] {
+                ProgramItem::Statement(Statement::Tagged(
+                    TaggedStatement::ExpressionStatement(es),
+                )) => match &es.expression {
+                    Expression::StringLiteral(s) => assert_eq!(s.value, want, "for {src}"),
+                    other => panic!("expected StringLiteral for {src}, got {other:?}"),
+                },
+                other => panic!("expected an ExpressionStatement for {src}, got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn identity_escapes_drop_backslash() {
+        use coding_adventures_javascript_ast::statement::TaggedStatement;
+        // NonEscapeCharacter (ECMAScript IdentityEscape): a backslash before any
+        // character that is not a recognized escape is dropped and the character
+        // kept. Oracle-verified against the reference Closure Compiler.
+        for (src, want) in [
+            (r#""\q";"#, "q"),      // a letter
+            (r#""\z";"#, "z"),
+            (r#""\/";"#, "/"),      // punctuation
+            (r#""\<";"#, "<"),
+            (r#""\?";"#, "?"),
+            (r#""\!";"#, "!"),
+            (r#""\@";"#, "@"),
+            (r#""\~";"#, "~"),
+            (r#""\=";"#, "="),
+            (r#""a\qb";"#, "aqb"),  // mid-string
+            (r#""\q\z";"#, "qz"),   // adjacent
+            // The SPECIAL escapes are handled by their own arms and are NOT
+            // affected by the identity-escape catch-all:
+            (r#""\n";"#, "\n"),
+            (r#""\t";"#, "\t"),
+            (r#""\\";"#, "\\"),
+            (r#""\"";"#, "\""),
+            (r#""\101";"#, "A"),    // octal still decodes
+            (r#""\8";"#, "8"),      // NonOctalDecimal still handled
         ] {
             let p = bridge_ok(src);
             match &p.body[0] {

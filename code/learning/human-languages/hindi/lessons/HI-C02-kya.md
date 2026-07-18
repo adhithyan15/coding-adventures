@@ -4,7 +4,7 @@ chapter: 2
 type: word
 headword: क्या
 gloss: what
-concept_tag: WHAT
+concept_tag: QUESTION-WHAT
 prerequisites: [HI-C02-aap-tum]
 sounds: [conjunct-kya, matra-aa]
 roots: [kim]

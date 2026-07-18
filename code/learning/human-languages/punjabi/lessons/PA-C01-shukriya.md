@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: ਸ਼ੁਕਰੀਆ
 gloss: thank you (Perso-Arabic) (shukrīā)
-concept_tag: GRATITUDE-THANKS
+concept_tag: COURTESY-THANKS-CASUAL
 prerequisites: [PA-C01-dhanvaad]
 sounds: [pair-bindi, vowel-sign]
 roots: [shukr]

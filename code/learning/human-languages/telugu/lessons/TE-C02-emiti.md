@@ -4,7 +4,7 @@ chapter: 2
 type: word
 headword: ఏమిటి
 gloss: what
-concept_tag: WHAT
+concept_tag: QUESTION-WHAT
 prerequisites: [TE-C02-nuvvu-miiru]
 sounds: [independent-ee, retroflex-ti]
 roots: [yaa-dravidian]

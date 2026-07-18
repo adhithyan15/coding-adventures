@@ -56,41 +56,66 @@ use crate::with_heap;
 
 // ── 1 + 2. Register spill + stack-pointer read ─────────────────────────────
 //
-// `spill_and_sp(buf)` stores every callee-saved *integer* register (the only
-// class that can hold a managed pointer) into `buf`, then returns the current
-// stack pointer. `buf` must hold at least [`SPILL_SLOTS`] words. The register
-// list is ABI-specific.
+// `spill_and_sp(buf)` stores every callee-saved register that could hold a
+// managed pointer — **both integer and floating-point/SIMD** — into `buf`, then
+// returns the current stack pointer. `buf` must hold at least [`SPILL_SLOTS`]
+// words. The register list is ABI-specific.
 //
-// **Callee-saved FP/SIMD registers (aarch64 `d8`–`d15`, Win64 `xmm6`–`xmm15`) are
-// NOT spilled.** This relies on a codegen invariant: the native backend's value
-// model is **tagged i64**, so every managed reference — including a NaN-box-tagged
-// one — lives in an integer register or on the stack, never solely in a
-// floating-point register across a safepoint/alloc call. That invariant makes the
-// omission sound today. It is, however, load-bearing (the paced `__gc_alloc` now
-// scans implicitly), and `twig_gc.c`'s `setjmp` *did* save `d8`–`d15` / `xmm6`–15
-// on those ABIs — so a future NaN-boxing-in-FP codegen would silently reintroduce
-// a missed-root use-after-free. Spilling the callee-saved FP registers to close
-// that gap is tracked as a T1 hardening task; until then the invariant above is
-// the contract, not a blanket "FP never holds references" claim.
+// **Why the FP/SIMD registers too.** A managed reference is normally kept in an
+// integer register or on the stack, so the callee-saved *integer* set is the
+// obvious thing to spill. But a runtime that **NaN-boxes** its values keeps them
+// as `f64`s, and a compiler may legitimately hold a boxed reference in a
+// callee-saved FP register (`d8`–`d15` on AArch64; `xmm6`–`xmm15` on Win64) across
+// a call. If such a reference were the *only* live copy at a safepoint/alloc, a
+// scan that spilled only integer registers would miss it and free the object —
+// a use-after-free. `twig_gc.c`'s `setjmp` saved those FP registers on exactly
+// these ABIs; we match that. (System V x86-64 has **no** callee-saved xmm — all
+// are caller-saved, so the mutator has already spilled any live one to the stack
+// before the call, and there is nothing extra to save there.) A false positive
+// from a stale FP register only retains a dead object one cycle — the intended
+// conservative imprecision, never unsound.
 //
 // The buffer pointer and the SP output are pinned to caller-saved scratch
 // registers (`x8`/`x9`, `r10`/`r11`) so the register allocator can never place
 // them on top of a register we are trying to read — those scratch registers are
 // not in any saved-register list below, so overwriting them loses nothing.
 
-/// Size of the spill buffer, in words: the largest callee-saved integer-register
-/// set across supported ABIs. **aarch64 x19–x28 = 10** is the maximum (Win64 = 8,
-/// SysV = 6), so 10 words (80 bytes) is what every `spill_and_sp` below must fit
-/// into. Getting this too small is an out-of-bounds stack write on every collect;
-/// x86_64 simply leaves the extra slots zero (read as null candidates, ignored).
-const SPILL_SLOTS: usize = 10;
+/// Size of the spill buffer, in words: the largest callee-saved register set
+/// (integer **and** FP) across supported ABIs. Counts:
+///
+/// | ABI            | callee-saved integer | callee-saved FP | total words |
+/// |----------------|----------------------|-----------------|-------------|
+/// | AArch64 AAPCS  | x19–x28 = 10         | d8–d15 = 8      | **18**      |
+/// | Win64          | rbx,rbp,rdi,rsi,r12–r15 = 8 | xmm6–xmm15 = 10 | **18** |
+/// | System V x86-64| rbx,rbp,r12–r15 = 6 | none            | 6           |
+///
+/// 18 words (144 bytes) is the max, so that is the buffer size every
+/// `spill_and_sp` below must fit into. Getting this too small is an
+/// out-of-bounds stack write on **every** collect that passes tests by UB luck
+/// (see the git history of this constant); ABIs that spill fewer registers leave
+/// the extra slots zero (read as null candidates, ignored).
+const SPILL_SLOTS: usize = 18;
+
+// The `spill_and_sp` asm blocks write FIXED BYTE offsets (up to byte 143), but the
+// buffer is sized as `SPILL_SLOTS` *words*. Those agree only when a word is 8
+// bytes. On a 32-bit-pointer variant of a supported arch (e.g. aarch64 `arm64_32`,
+// x86-64 `x32`) the buffer would be `18 * 4 = 72` bytes while the asm still writes
+// 144 — a stack overflow. Every native-AOT target is LP64/LLP64, so this holds;
+// the assert turns any future non-LP64 target into a build error, not an OOB.
+const _: () = assert!(
+    core::mem::size_of::<usize>() == 8,
+    "spill buffer offsets assume an 8-byte usize (LP64/LLP64); a 32-bit-pointer \
+     target would write past the SPILL_SLOTS-word buffer",
+);
 
 #[cfg(target_arch = "aarch64")]
 #[inline(never)]
 unsafe fn spill_and_sp(buf: *mut usize) -> usize {
-    // AAPCS64 callee-saved integer registers: x19–x28 (10). x29 = frame pointer,
-    // x30 = link register; neither carries a mutator GC value. These 10 words are
-    // exactly SPILL_SLOTS — the last `stp` writes bytes 64..80, filling the buffer.
+    // AAPCS64 callee-saved registers: integer x19–x28 (10, bytes 0..80) then
+    // floating-point d8–d15 (8, bytes 80..144). x29 = frame pointer, x30 = link
+    // register; neither carries a mutator GC value. 18 words total = SPILL_SLOTS.
+    // `stp d,d` stores a 64-bit FP pair; a NaN-boxed reference is the full 64-bit
+    // value, so the low-64 `d` view captures it.
     let sp: usize;
     core::arch::asm!(
         "stp x19, x20, [x8, #0]",
@@ -98,11 +123,15 @@ unsafe fn spill_and_sp(buf: *mut usize) -> usize {
         "stp x23, x24, [x8, #32]",
         "stp x25, x26, [x8, #48]",
         "stp x27, x28, [x8, #64]",
+        "stp d8,  d9,  [x8, #80]",
+        "stp d10, d11, [x8, #96]",
+        "stp d12, d13, [x8, #112]",
+        "stp d14, d15, [x8, #128]",
         "mov x9, sp",
         in("x8") buf,
         out("x9") sp,
-        // No options(nomem): the store through x8 must be visible as a memory
-        // write so the compiler materialises `buf` and does not reorder past it.
+        // No options(nomem): the stores through x8 must be visible as memory
+        // writes so the compiler materialises `buf` and does not reorder past it.
         options(nostack),
     );
     sp
@@ -131,8 +160,11 @@ unsafe fn spill_and_sp(buf: *mut usize) -> usize {
 #[cfg(all(target_arch = "x86_64", target_os = "windows"))]
 #[inline(never)]
 unsafe fn spill_and_sp(buf: *mut usize) -> usize {
-    // Win64 callee-saved integer registers add rdi & rsi to the SysV set:
-    // rbx, rbp, rdi, rsi, r12–r15 (8).
+    // Win64 callee-saved registers: integer rbx,rbp,rdi,rsi,r12–r15 (8, bytes
+    // 0..64) then FP xmm6–xmm15 (10, bytes 64..144). `movsd` stores the low 64
+    // bits of each xmm — a NaN-boxed reference is a scalar `f64` living there, so
+    // the low-64 view captures it (the high lanes never hold a mutator reference).
+    // 18 words total = SPILL_SLOTS.
     let sp: usize;
     core::arch::asm!(
         "mov [r10 + 0],  rbx",
@@ -143,6 +175,16 @@ unsafe fn spill_and_sp(buf: *mut usize) -> usize {
         "mov [r10 + 40], r13",
         "mov [r10 + 48], r14",
         "mov [r10 + 56], r15",
+        "movsd [r10 + 64],  xmm6",
+        "movsd [r10 + 72],  xmm7",
+        "movsd [r10 + 80],  xmm8",
+        "movsd [r10 + 88],  xmm9",
+        "movsd [r10 + 96],  xmm10",
+        "movsd [r10 + 104], xmm11",
+        "movsd [r10 + 112], xmm12",
+        "movsd [r10 + 120], xmm13",
+        "movsd [r10 + 128], xmm14",
+        "movsd [r10 + 136], xmm15",
         "mov r11, rsp",
         in("r10") buf,
         out("r11") sp,
