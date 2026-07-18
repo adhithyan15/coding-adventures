@@ -135,18 +135,31 @@ pub fn compile_source(source: &str, module_name: &str)
   module doc comment for why this is necessary, not just convenient, to
   compile an *uncomputed* function body like `f[x_] := x + 1`). One
   consequence: because every Wolfram program, even bare literal arithmetic,
-  therefore emits at least one SIR23 node, no lowered module currently
-  executes end-to-end through any backend (`sir-runtime-symbolic` does not
-  exist yet) — unlike `matlab-to-semantic-ir`'s purely-literal subset, which
-  can. Covers the full grammar `wolfram-parser` accepts (the W-6/W-11/W-21
+  therefore emits at least one SIR23 node, no lowered module executed
+  end-to-end through any backend until `sir-runtime-symbolic` and its JS/TS
+  codegen shipped (Stream B rollout items 6-7, below) — unlike
+  `matlab-to-semantic-ir`'s purely-literal subset, which could from the
+  start. Both now round-trip through `node`; see `tests/e2e_node.rs`.
+  Covers the full grammar `wolfram-parser` accepts (the W-6/W-11/W-21
   operator sugar included), since nothing here forces a MATLAB-style
   narrower cut.
-- **`macsyma-to-semantic-ir`** — walks the `macsyma-parser` CST using the
-  same rule-name dispatch already proven in `macsyma-compiler` (`"assign"`,
-  `"additive"`, `"postfix"`, …), emits SIR23 nodes.
-- **`maxima-to-semantic-ir`** — a thin alias reusing
+- **`macsyma-to-semantic-ir`** (✅ v0.1.0 shipped) — walks the
+  `macsyma-parser` CST using the same rule-name dispatch already proven in
+  `macsyma-compiler` (`"assign"`, `"additive"`, `"postfix"`, …), emits SIR23
+  nodes. Same "everything is symbolic data" design as
+  `wolfram-to-semantic-ir` (this grammar has no pattern-matching syntax at
+  all, so only the arithmetic/assignment/control-flow/function-call SIR23
+  shapes are exercised); also round-trips through `node`.
+- **`maxima-to-semantic-ir`** (✅ v0.1.0 shipped) — a thin alias reusing
   `macsyma-to-semantic-ir` wholesale, mirroring Maxima's existing reuse of
   `macsyma-runtime`.
+- **`apl-to-semantic-ir`** (✅ v0.1.0 shipped, MA-4f) — the first Stream A
+  frontend beyond MATLAB/Octave, confirming the array/matrix domain
+  generalizes past the language it was designed against; emits SIR22 nodes
+  plus the APL-primitive `Expr`/`ElementwiseOpKind` additions (SIR22
+  addendum).
+- **`j-to-semantic-ir`** — the second array-family frontend beyond
+  MATLAB/Octave/APL, sharing the same SIR22 vocabulary.
 
 ## §4 Backend recipe: extend the existing JS/TS backends, don't fork
 
@@ -178,15 +191,21 @@ without any change to the IR or the frontends.
 
 ## §5 Rollout — two parallel streams, one shared serialization point
 
-**Stream A (array/matrix, backs MATLAB/Octave and future APL/J/Scilab/IDL):**
+**Stream A (array/matrix, backs MATLAB/Octave/APL and future J/Scilab/IDL):**
 `SIR22` spec → `semantic-ir` core additions → `matlab-to-semantic-ir` →
 `octave-to-semantic-ir` → `sir-runtime-array` → JS/TS backend codegen →
-golden/oracle tests.
+`apl-to-semantic-ir` (SIR22 addendum for APL primitives) →
+`j-to-semantic-ir` → golden/oracle tests (in progress).
+All items through JS/TS backend codegen are shipped.
 
 **Stream B (symbolic/CAS, backs Wolfram/Macsyma/Maxima and future
 Reduce/Derive/Maple):** `SIR23` spec → `semantic-ir` core additions →
 `wolfram-to-semantic-ir` → `macsyma-to-semantic-ir` → `maxima-to-semantic-ir`
-→ `sir-runtime-symbolic` → JS/TS backend codegen → golden/oracle tests.
+→ `sir-runtime-symbolic` → JS/TS backend codegen → golden/oracle tests
+(in progress — real `node`-execution proof shipped for `wolfram-to-semantic-ir`
+and `macsyma-to-semantic-ir` via each crate's `tests/e2e_node.rs`; a true
+oracle diff against each language's native runtime remains open).
+All items through JS/TS backend codegen are shipped.
 
 The streams touch disjoint crates except `semantic-ir` core and the two JS
 backends — a short serialization point, not a merge of the whole effort.

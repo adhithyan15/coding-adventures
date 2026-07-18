@@ -17,9 +17,7 @@ parser = { path = "../parser" }
 lexer = { path = "../lexer" }
 
 [dev-dependencies]
-# Used only by the capability-rejection tests: every module this frontend
-# produces uses SIR23 nodes, and this backend does not implement SIR23
-# codegen yet, so these tests confirm the *gate* rejects every module (see
-# tests/test_validator.rs's module doc comment — there is no e2e
-# `node`-execution test in this crate, unlike `matlab-to-semantic-ir`).
+# Used by tests/test_validator.rs (confirms the JS backend now accepts
+# every module this frontend produces, all of which use SIR23 nodes) and
+# tests/e2e_node.rs (actually runs the compiled JS through `node`).
 semantic-ir-to-javascript = { path = "../semantic-ir-to-javascript" }
