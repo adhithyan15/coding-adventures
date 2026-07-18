@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.5.48 — arithmetic coerces text/blob operands
+
+`'5' + 0` now returns 5 instead of erroring. Binary arithmetic (`+ - * / %`)
+applies SQLite numeric affinity to text/blob operands: `'abc' + 1` = 1, `'10' -
+'3'` = 7, `'5' * 2` = 10, `5 / '2'` = 2, `5 / '0'` = NULL, `'7' % 3` = 1. This is
+the binary analog of the unary-minus coercion (0.5.43). Comparison and bitwise
+operators are unaffected. Two new differential-oracle cases; sql-vm 0.4.26.
+Known edge (shared with unary minus): an integral real-syntax string `'9.0'`
+collapses to an integer, a float-affinity follow-up.
+
 ## 0.5.47 — IN uses numeric equality + three-valued NULL
 
 `1 IN (1.0)` now returns 1 (true) instead of 0: `IN` membership uses the same

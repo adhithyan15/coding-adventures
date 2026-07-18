@@ -3,6 +3,20 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.26] - Unreleased
+
+### Fixed
+
+- **Binary arithmetic now applies numeric affinity to text/blob operands.**
+  `'5' + 0` errored ("cannot perform arithmetic on TEXT"); it now coerces via the
+  shared `coerce_arith`/`text_to_numeric` path and evaluates to 5, matching
+  SQLite. `'abc' + 1` = 1 (no numeric prefix → 0), `'10' - '3'` = 7, `'5' * 2` =
+  10; division and modulo coerce too (`5 / '2'` = 2, `5 / '0'` = NULL, `'7' % 3`
+  = 1). Bool operands use their integer value. Coercion is scoped to arithmetic
+  only — comparison and bitwise operators keep their own rules. Known edge shared
+  with unary minus: an integral real-syntax string (`'9.0'`) collapses to an
+  integer, so `'9.0' / 2` is 4 not SQLite's 4.5 (float-affinity follow-up).
+
 ## [0.4.25] - Unreleased
 
 ### Fixed

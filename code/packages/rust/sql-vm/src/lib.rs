@@ -1991,6 +1991,9 @@ fn eval_binary(op: &BinaryOp, l: SqlValue, r: SqlValue) -> Result<SqlValue, VmEr
             // `SELECT 5/0`, `5.0/0`, and `0/0` all yield NULL, never an error.
             // NULL operands were already short-circuited above, so a zero divisor
             // here is a genuine value. `*f == 0.0` also matches `-0.0`.
+            // Numeric affinity applies first, so `5 / '0'` is NULL and `5 / '2'`
+            // is 2, matching SQLite.
+            let (l, r) = (coerce_arith(l), coerce_arith(r));
             match (&l, &r) {
                 (_, SqlValue::Int(0)) => Ok(SqlValue::Null),
                 (_, SqlValue::Float(f)) if *f == 0.0 => Ok(SqlValue::Null),
@@ -2008,9 +2011,11 @@ fn eval_binary(op: &BinaryOp, l: SqlValue, r: SqlValue) -> Result<SqlValue, VmEr
                 ))),
             }
         }
-        BinaryOp::Mod => match (&l, &r) {
-            // Like division, modulo by zero is NULL in SQLite (`5%0`, `5.5%0`,
-            // `5%0.0` → NULL), including a float-zero divisor — not an error.
+        BinaryOp::Mod => {
+          // Numeric affinity applies first (`'7' % 3` = 1); then modulo by zero
+          // is NULL in SQLite (`5%0`, `5.5%0`, `5%0.0`), not an error.
+          let (l, r) = (coerce_arith(l), coerce_arith(r));
+          match (&l, &r) {
             (_, SqlValue::Int(0)) => Ok(SqlValue::Null),
             (_, SqlValue::Float(f)) if *f == 0.0 => Ok(SqlValue::Null),
             (SqlValue::Int(a), SqlValue::Int(b)) => {
@@ -2024,7 +2029,8 @@ fn eval_binary(op: &BinaryOp, l: SqlValue, r: SqlValue) -> Result<SqlValue, VmEr
             _ => Err(VmError::TypeMismatch(format!(
                 "cannot mod {:?} by {:?}", l.type_name(), r.type_name()
             ))),
-        },
+          }
+        }
 
         // ── Comparison ────────────────────────────────────────────────────────
         BinaryOp::Eq => Ok(SqlValue::Bool(sql_eq(&l, &r))),
@@ -2120,6 +2126,22 @@ fn sql_shift(value: i64, count: i64, left: bool) -> i64 {
 ///
 /// `int_op` is a checked variant (returns `Option<i64>`); `float_op` is unchecked
 /// (IEEE 754 overflow saturates to ±∞ which is the standard SQL behaviour).
+/// Apply SQLite numeric affinity to an arithmetic operand. Text/blob take their
+/// leading numeric prefix (`'5'`→5, `'5.5'`→5.5, `'12abc'`→12, `'abc'`→0, via
+/// [`text_to_numeric`]); a bool is its integer value; INTEGER/REAL pass through.
+/// NULL never reaches here — `eval_binary` short-circuits NULL operands before
+/// dispatching to arithmetic. Scoped to arithmetic only: comparison and bitwise
+/// operators apply their own (different) coercion rules.
+fn coerce_arith(v: SqlValue) -> SqlValue {
+    match v {
+        SqlValue::Int(_) | SqlValue::Float(_) => v,
+        SqlValue::Bool(b) => SqlValue::Int(b as i64),
+        SqlValue::Text(s) => text_to_numeric(&s),
+        SqlValue::Blob(b) => text_to_numeric(&String::from_utf8_lossy(&b)),
+        SqlValue::Null => SqlValue::Null,
+    }
+}
+
 fn checked_int_binop(
     l: SqlValue,
     r: SqlValue,
@@ -2127,6 +2149,8 @@ fn checked_int_binop(
     float_op: impl Fn(f64, f64) -> f64,
     op_name: &'static str,
 ) -> Result<SqlValue, VmError> {
+    // SQLite applies numeric affinity to arithmetic operands: `'5' + 0` = 5.
+    let (l, r) = (coerce_arith(l), coerce_arith(r));
     match (l, r) {
         (SqlValue::Int(a), SqlValue::Int(b)) => {
             int_op(a, b).map(SqlValue::Int).ok_or_else(|| {
@@ -3428,6 +3452,25 @@ mod tests {
             Instruction::Halt,
         ]), &mut b).unwrap();
         assert_eq!(r.rows, vec![vec![int(7)]]);
+    }
+
+    #[test]
+    fn test_arith_text_numeric_affinity() {
+        // Binary arithmetic coerces text/blob operands via numeric affinity,
+        // matching SQLite: `'5' + 0` = 5, `'abc' + 1` = 1, `'10' - '3'` = 7.
+        let bin = |op: BinaryOp, l: SqlValue, r: SqlValue| eval_binary(&op, l, r).unwrap();
+        let t = |s: &str| SqlValue::Text(s.to_string());
+        assert_eq!(bin(BinaryOp::Add, t("5"), int(0)), int(5));
+        assert_eq!(bin(BinaryOp::Add, t("5.5"), int(0)), SqlValue::Float(5.5));
+        assert_eq!(bin(BinaryOp::Add, t("abc"), int(1)), int(1)); // no prefix → 0
+        assert_eq!(bin(BinaryOp::Mul, t("5"), int(2)), int(10));
+        assert_eq!(bin(BinaryOp::Sub, t("10"), t("3")), int(7));
+        // Division/modulo coerce too; `5 / '0'` → NULL (affinity → integer 0).
+        assert_eq!(bin(BinaryOp::Div, int(5), t("2")), int(2));
+        assert_eq!(bin(BinaryOp::Div, int(5), t("0")), null());
+        assert_eq!(bin(BinaryOp::Mod, t("7"), int(3)), int(1));
+        // NULL still short-circuits to NULL (handled before coercion).
+        assert_eq!(bin(BinaryOp::Add, t("5"), null()), null());
     }
 
     #[test]
