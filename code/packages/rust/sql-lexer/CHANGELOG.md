@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.3] - Unreleased
+
+### Added
+
+- **Blob-literal token `BLOB_HEX`.** The token grammar already declared
+  `BLOB_HEX = /[xX]'[0-9A-Fa-f]*'/ -> BLOB` but the generated token table did
+  not carry it, so `x'414243'` mis-lexed as a `NAME` (`x`) followed by a
+  `STRING` (`'414243'`). The rule is now emitted, placed **before** `NAME` so
+  first-match-wins picks the whole `x'…'` blob literal. It aliases to `BLOB`;
+  because `TokenType` has no blob variant the lexer records the name in
+  `type_name` (with `type_` falling back to `Name`), which the planner keys on.
+
 ## [0.1.2] - Unreleased
 
 ### Added

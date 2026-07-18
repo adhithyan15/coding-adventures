@@ -2,6 +2,21 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.21] - Unreleased
+
+### Added
+
+- **Blob literals `x'…'` / `X'…'` plan to `SqlValue::Blob`.** `plan_primary_token`
+  recognises the lexer's `BLOB` token (via `type_name`) and decodes the hex body
+  into raw bytes through the new `decode_blob_literal` helper: `x'414243'` → the
+  three bytes `41 42 43`, `X'FF00'` → `FF 00`, and the empty literal `x''` → the
+  zero-byte blob. An odd number of hex digits is rejected with a plan error,
+  matching SQLite's tokenizer (`x'012'` is a syntax error there); a non-hex digit
+  is guarded defensively even though the lexer regex already excludes it. The VM
+  already handled `Blob` values (HEX/QUOTE/TYPEOF/equality), so this closes the
+  front-end gap that prevented producing them. `LENGTH()` over a blob (byte count)
+  is a separate VM-builtin follow-up.
+
 ## [0.2.20] - Unreleased
 
 ### Added

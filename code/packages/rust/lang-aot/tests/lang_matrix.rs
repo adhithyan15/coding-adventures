@@ -2933,6 +2933,27 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("0375"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // COBOL-60 — IF / ELSE with a relational condition (PL09 step 4, PR4). The
+    // condition lowers to a `cmp_gt` on the aligned values; `jmp_if_false` skips
+    // the then-branch to the else. Here N=5 > 3 → the then-branch runs, printing
+    // `BIG`. This proves the three-way branch (cmp / conditional jump / labels)
+    // lowers correctly on every backend that runs the shared control-flow + print
+    // substrate.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  N  PIC 9(3) VALUE 5.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     IF N GREATER 3 DISPLAY \"BIG\" ELSE DISPLAY \"SMALL\".\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("BIG"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses
