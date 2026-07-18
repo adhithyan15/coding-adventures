@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.5.50 — explicit COLLATE before IN / BETWEEN / LIKE
+
+`x COLLATE NOCASE IN (…)` now parses and applies the collation to the membership
+test, matching SQLite: an explicit collation on the left operand drives every
+equality the `IN` performs, lifting a plain column to case-insensitive membership
+or overriding a column's declared sequence (`COLLATE BINARY` forces byte order).
+It composes with IN's three-valued NULL logic. Previously the grammar accepted
+`COLLATE` only before a comparison operator (`=`, `<`, …), so `COLLATE` before
+`IN` was a parse error. Grammar prefix added in sql-parser 0.1.21; planner lowers
+it to `__collate` wraps in sql-planner 0.2.23. (`BETWEEN` and `LIKE`/`GLOB` land
+in the same version — see below.) New differential-oracle cases.
+
 ## 0.5.49 — text truthiness takes numeric affinity
 
 `NOT 'abc'` now returns 1 (not 0) and `WHERE <text>` keeps only rows whose text

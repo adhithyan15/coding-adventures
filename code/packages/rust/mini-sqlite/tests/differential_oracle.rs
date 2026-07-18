@@ -1184,12 +1184,46 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT id FROM t WHERE name IN ('apple','banana') ORDER BY id",
     },
-    // (An explicit `COLLATE BINARY` on the IN *value* — `name COLLATE BINARY IN
-    // (…)` — would override the column NOCASE, but the grammar does not yet
-    // accept `COLLATE` before `IN`/`LIKE`/`BETWEEN` (only before a comparison
-    // operator), so that override is a separate grammar follow-up, not covered
-    // here. The `is_collate_call` guard in `collate_comparisons` already handles
-    // it once the syntax parses.)
+    // Explicit `COLLATE` may now be written directly before `IN` — `name COLLATE
+    // BINARY IN (…)`. SQLite takes IN's collating sequence from the left operand,
+    // and an explicit clause on that operand OVERRIDES the column's declared
+    // sequence. Here the column is NOCASE but `COLLATE BINARY` forces byte order,
+    // so only the exact-case 'APPLE' qualifies. (The `is_collate_call` guard in
+    // `collate_comparisons` already yields to this explicit wrap.)
+    Case {
+        id: "where_explicit_collate_binary_in_override",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT COLLATE NOCASE)",
+            "INSERT INTO t VALUES (1,'Apple'),(2,'apple'),(3,'APPLE'),(4,'banana')",
+        ],
+        query: "SELECT id FROM t WHERE name COLLATE BINARY IN ('APPLE') ORDER BY id",
+    },
+    // The reverse direction: an explicit `COLLATE NOCASE` LIFTS a plain (BINARY)
+    // column to case-insensitive membership, matching all case variants.
+    Case {
+        id: "where_explicit_collate_nocase_in",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT)",
+            "INSERT INTO t VALUES (1,'Apple'),(2,'apple'),(3,'APPLE'),(4,'banana')",
+        ],
+        query: "SELECT id FROM t WHERE name COLLATE NOCASE IN ('apple') ORDER BY id",
+    },
+    // Scalar (no-FROM) form: the explicit collation drives every equality test
+    // the IN performs, and `NOT IN` inverts it. `'ABC' COLLATE NOCASE IN
+    // ('abc','def')` is 1; `NOT IN ('abc')` is 0; `COLLATE BINARY IN ('abc')` is 0.
+    Case {
+        id: "scalar_explicit_collate_in",
+        setup: &[],
+        query: "SELECT 'ABC' COLLATE NOCASE IN ('abc','def') AS a, 'ABC' COLLATE NOCASE NOT IN ('abc') AS b, 'ABC' COLLATE BINARY IN ('abc') AS c",
+    },
+    // Explicit COLLATE composes with IN's three-valued NULL logic: a non-matching
+    // membership test with a NULL element is NULL, because `__collate` passes the
+    // NULL element through unchanged.
+    Case {
+        id: "scalar_explicit_collate_in_null",
+        setup: &[],
+        query: "SELECT ('ABC' COLLATE NOCASE IN ('xyz', NULL)) IS NULL AS a, 'ABC' COLLATE NOCASE IN ('abc', NULL) AS b",
+    },
     // IN membership uses the same equality as `=`: numeric across INTEGER/REAL,
     // and it is three-valued for NULL. `1 IN (1.0)` and `1.0 IN (1)` are true
     // (numeric), `'1' IN (1)` is false (text vs int, no affinity), and a list

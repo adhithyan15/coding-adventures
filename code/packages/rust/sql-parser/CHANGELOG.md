@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.21] - Unreleased
+
+### Added
+
+- **`COLLATE name` may now precede the `IN` operator** in the `comparison` rule
+  (`x COLLATE NOCASE IN (…)`, and `NOT IN`). An optional `[COLLATE NAME]` prefix
+  was added to the `IN` / `NOT IN` alternatives. As with the existing left
+  `COLLATE` on a `cmp_op` comparison, the clause lives INSIDE each alternative —
+  not hoisted before the whole alternation — so a bare trailing `COLLATE` (e.g.
+  `ORDER BY x COLLATE NOCASE`, where `order_item` owns the clause) still fails the
+  alternative, backtracks, and leaves the token for the caller. (`BETWEEN` and
+  `LIKE`/`GLOB` prefixes follow in the same version.)
+
 ## [0.1.20] - Unreleased
 
 ### Added

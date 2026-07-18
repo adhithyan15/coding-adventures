@@ -2514,7 +2514,7 @@ fn plan_comparison(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
     if direct_tok_uppers.contains(&"IN".to_string()) {
         let negated = direct_tok_uppers.contains(&"NOT".to_string());
         // value_list is a direct child node.
-        let list_items = if let Some(vl) = find_node(node, "value_list") {
+        let list_items: Vec<SqlExpr> = if let Some(vl) = find_node(node, "value_list") {
             vl.children
                 .iter()
                 .filter_map(|c| {
@@ -2528,8 +2528,25 @@ fn plan_comparison(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
         } else {
             Vec::new()
         };
+        // Optional `COLLATE name` on the left operand (`x COLLATE NOCASE IN (...)`).
+        // SQLite applies the explicit collation to every equality test the IN
+        // performs, so we wrap the value AND each list element in the internal
+        // `__collate` builtin — the same canonicalise-then-byte-compare mechanism
+        // the cmp_op branch uses. `__collate` passes NULL and non-text through
+        // unchanged, so IN's three-valued NULL logic (and numeric equality for
+        // non-text members) is preserved. This is the *explicit*-COLLATE path;
+        // the *column-defined* collation is pushed in separately by
+        // `collate_comparisons`, which yields to an already-`__collate`-wrapped
+        // operand so an explicit clause always wins.
+        let (value, list_items) = match collate_name_after(&direct_tok_uppers)? {
+            Some(name) => (
+                wrap_collate(left, &name),
+                list_items.into_iter().map(|e| wrap_collate(e, &name)).collect(),
+            ),
+            None => (left, list_items),
+        };
         return Ok(SqlExpr::InList {
-            value: Box::new(left),
+            value: Box::new(value),
             list: list_items,
             negated,
         });

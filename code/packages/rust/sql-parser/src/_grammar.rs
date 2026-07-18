@@ -484,12 +484,28 @@ pub fn parser_grammar() -> ParserGrammar {
                             GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                         ] },
                         GrammarElement::Sequence { elements: vec![
+                            // Optional `COLLATE name` on the LEFT operand of an IN
+                            // list (`x COLLATE NOCASE IN (...)`). Like the cmp_op
+                            // branch, the COLLATE lives INSIDE this alternative —
+                            // not hoisted before the whole alternation — so a bare
+                            // trailing `COLLATE` (e.g. `ORDER BY x COLLATE NOCASE`)
+                            // fails this alternative, backtracks, and leaves the
+                            // token for the caller. The planner applies the
+                            // collation to the value AND every list element.
+                            GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                    GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                                ] }) },
                             GrammarElement::Literal { value: r#"IN"#.to_string() },
                             GrammarElement::Literal { value: r#"("#.to_string() },
                             GrammarElement::RuleReference { name: r#"value_list"#.to_string() },
                             GrammarElement::Literal { value: r#")"#.to_string() },
                         ] },
                         GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                    GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                                ] }) },
                             GrammarElement::Literal { value: r#"NOT"#.to_string() },
                             GrammarElement::Literal { value: r#"IN"#.to_string() },
                             GrammarElement::Literal { value: r#"("#.to_string() },
