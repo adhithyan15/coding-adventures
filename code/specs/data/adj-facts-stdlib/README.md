@@ -51,6 +51,7 @@ per rotation, in parallel):
 | `anatomy/` | brain part → primary function it controls | NIH / NCI SEER Training + StatPearls |
 | `anatomy/` | skeletal muscle → body region it is located in | Wikipedia (consensus) |
 | `anatomy/` | digestive organ → primary function it performs | NIH NIDDK / NCI SEER Training |
+| `anatomy/` | synovial joint type → representative example (hinge → elbow) | NIH / NLM StatPearls |
 | … | *geography, physical constants, …* | *(expanding)* |
 
 Formulas and laws (Newton's `F = ma`, the ideal gas law `PV = nRT`, area/volume, …) are grown
