@@ -54,6 +54,15 @@ int64_t __gc_collect_roots(const int64_t *roots, int64_t count);
  * range and call this. A null `base` or len <= 0 means "no region" → free all. */
 int64_t __gc_collect_region(const uint8_t *base, int64_t len);
 
+/* Run a full conservative collection rooted at THIS THREAD'S live C stack and
+ * callee-saved registers — no caller-supplied roots. Spills callee-saved
+ * registers to the stack, reads the stack pointer, finds the thread's stack
+ * base (pthread on macOS/Linux, GetCurrentThreadStackLimits on Windows), and
+ * hands [sp, base) to __gc_collect_region. This is the drop-in for the native
+ * backend's argument-less collect/safepoint points, where the only roots are
+ * whatever the machine is holding. Returns objects freed. Single-threaded. */
+int64_t __gc_collect(void);
+
 /* Live payload bytes. */
 int64_t __gc_live_bytes(void);
 
