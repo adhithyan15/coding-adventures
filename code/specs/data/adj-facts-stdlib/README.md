@@ -62,6 +62,7 @@ per rotation, in parallel):
 | `biology/` | fungus part → defining token / role (hypha → thread_like, mycelium → made_of_hyphae, gills → holds_spores) | UNLV "The Kingdom Fungi" biology faculty page (consensus) |
 | `biology/` | vertebrate class → its one distinctive characteristic (bird → feathers, mammal → hair, reptile → dry_scaly_skin, fish → gills) | NPS "Vertebrate Grab Bag" (authoritative) |
 | `biology/` | muscle-tissue type → its one distinctive characteristic (skeletal → voluntary, smooth → involuntary, cardiac → intercalated_disks) | NCI SEER Training Modules (authoritative) |
+| `biology/` | plant tropism → the stimulus it responds to (phototropism → light, gravitropism → gravity, thigmotropism → touch) | Wikipedia "Tropism" (consensus) |
 | `physics/` | simple machine → everyday example | NASA |
 | `physics/` | phase change → its name (melting, freezing, …) | LibreTexts (consensus) |
 | `physics/` | energy form → defining token (chemical → bonds, thermal → heat) | EIA (energy.gov) |
