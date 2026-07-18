@@ -84,7 +84,7 @@ fn inlines_zero_param_constant_return() {
 fn inlines_string_literal_return() {
     assert_eq!(
         inline_source("function s() { return \"hi\"; } g(s());"),
-        "function s(){return \"hi\"};g(\"hi\");"
+        "function s(){return\"hi\"};g(\"hi\");"
     );
 }
 
