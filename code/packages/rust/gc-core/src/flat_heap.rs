@@ -956,6 +956,12 @@ impl StackMapTable {
     /// Build a table from `records`, sorting them by `pc_offset` so [`lookup`] can
     /// binary-search. Any input order is accepted.
     ///
+    /// Each `pc_offset` should be **unique** within a function — a backend emits at
+    /// most one record per safepoint / return address. Duplicate `pc_offset`s are
+    /// not rejected (this is trusted compiler output, like a `kind` field map), but
+    /// [`lookup`] would then return an arbitrary one of the collisions; keep them
+    /// distinct.
+    ///
     /// [`lookup`]: Self::lookup
     pub fn from_records(mut records: Vec<StackMapRecord>) -> Self {
         records.sort_by_key(|r| r.pc_offset);
