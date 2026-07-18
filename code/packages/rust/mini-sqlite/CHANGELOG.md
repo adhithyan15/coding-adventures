@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.5.54 — Hexadecimal integer literals
+
+`SELECT 0x1F` now works (was a parse error). SQLite hex integer literals like
+`0x1F` (= 31), `0X10` (= 16), and `0xff` (= 255) are recognised as INTEGERs
+(`typeof(0x1F)` = `'integer'`). They decode as a 64-bit value that wraps, so
+`0x7FFFFFFFFFFFFFFF` is `i64::MAX` and `0xFFFFFFFFFFFFFFFF` is -1, matching
+SQLite. Hex literals compose in arithmetic and predicates like any integer
+(`v + 0x10`, `WHERE v = 0x1F`). More than 16 hex digits overflows 64 bits and is
+rejected, as SQLite does ("hex literal too big"). Implemented by a new `HEX_INT`
+token in `sql-lexer` (matched before `NUMBER` so the whole `0x…` is one token,
+aliased to `NUMBER` so no parser rule changed) plus `0x`-prefix decoding in the
+`sql-planner` number-literal decoder. Verified against the bundled real SQLite in
+the differential oracle.
+
 ## 0.5.53 — GROUP_CONCAT aggregate
 
 `SELECT group_concat(x) FROM t` now works (was "unknown built-in function"). It

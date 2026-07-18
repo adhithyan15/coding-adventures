@@ -2,6 +2,22 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.25] - Unreleased
+
+### Added
+
+- **Hexadecimal integer literals (`0x1F`).** The number-literal decoder in
+  `plan_primary_token` now recognises a `0x` / `0X` prefix and decodes the hex
+  digits as a 64-bit value that wraps: `0x1F` → 31, `0x7FFFFFFFFFFFFFFF` →
+  `i64::MAX`, and `0xFFFFFFFFFFFFFFFF` → -1 (parsed as `u64` then bit-cast to
+  `i64`, matching SQLite — an `i64` parse would reject values above `i64::MAX`).
+  These are always INTEGERs (`typeof(0x1F)` = `'integer'`). More than 16 hex
+  digits overflows 64 bits; SQLite rejects that at prepare time ("hex literal too
+  big"), so we return a `PlanError::UnsupportedStatement` rather than silently
+  falling through to a (nonsensical) column reference — a hex token always starts
+  with a digit, so it can never legitimately be a column name. Pairs with the new
+  `HEX_INT` token in `sql-lexer` (aliased to `NUMBER`, so no parser rule changed).
+
 ## [0.2.24] - Unreleased
 
 ### Added

@@ -792,6 +792,33 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT id FROM t WHERE v < 2.5e0 OR v = 3e2 ORDER BY id",
     },
+    // Hexadecimal integer literals: `0x1F` (= 31), `0X10` (= 16), `0xff` (= 255).
+    // SQLite reads these as INTEGERs (`typeof(0x1F)` = 'integer'), decoded as a
+    // 64-bit value that wraps, so `0xFFFFFFFFFFFFFFFF` is -1 and
+    // `0x7FFFFFFFFFFFFFFF` is i64::MAX. Previously the lexer had no hex rule, so
+    // `0x1F` tokenised as `0` + `x1F` (a NAME) and failed to parse.
+    Case {
+        id: "hex_integer_literals",
+        setup: &[],
+        query: "SELECT 0x1F AS a, 0X10 AS b, 0xff AS c, 0x0 AS d, typeof(0x1F) AS e, 0xff + 1 AS f",
+    },
+    // 64-bit wrap edge cases: the full 16-digit hex range. `0x7FFF…` is the
+    // largest positive i64; `0xFFFF…FF` wraps to -1; `0x8000…00` is i64::MIN.
+    Case {
+        id: "hex_integer_wrap",
+        setup: &[],
+        query: "SELECT 0x7FFFFFFFFFFFFFFF AS a, 0xFFFFFFFFFFFFFFFF AS b, 0x8000000000000000 AS c",
+    },
+    // Hex literals compose in arithmetic and predicates like any integer. Exercises
+    // a hex literal in a WHERE comparison and in the SELECT list arithmetic.
+    Case {
+        id: "hex_integer_in_query",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, v INTEGER)",
+            "INSERT INTO t VALUES (1, 15), (2, 31), (3, 255)",
+        ],
+        query: "SELECT id, v + 0x10 AS w FROM t WHERE v = 0x1F ORDER BY id",
+    },
     // A doubled single quote (`''`) inside a string literal is SQL's escape for
     // one literal quote — `'it''s'` is the 4-character string `it's`. Exercises
     // string literals in the SELECT list AND in an INSERT'd row value.

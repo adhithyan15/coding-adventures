@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.5] - Unreleased
+
+### Added
+
+- **Hexadecimal integer-literal token `HEX_INT`.** A new token
+  `HEX_INT = /0[xX][0-9A-Fa-f]+/ -> NUMBER` recognises SQLite hex integers like
+  `0x1F`, `0X10`, and `0xff`. It is placed **before** `NUMBER` so first-match-wins
+  takes the whole `0x…` literal — otherwise `NUMBER` would consume the leading `0`
+  and leave `x1F` to mis-lex as a `NAME` (the previous behaviour, which made
+  `SELECT 0x1F` a parse error). It aliases to `NUMBER`, so it flows through the
+  existing grammar with no new parser rule; the planner's number-literal decoder
+  recognises the `0x` prefix and decodes it as a 64-bit value (see `sql-planner`).
+  A bare `0` (no `x`) still lexes as an ordinary `NUMBER` — the `[xX]` is
+  mandatory. The pattern has no nested quantifier over an overlapping class, so
+  there is no catastrophic-backtracking (ReDoS) risk.
+
 ## [0.1.4] - Unreleased
 
 ### Added
