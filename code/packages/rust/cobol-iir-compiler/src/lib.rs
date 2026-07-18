@@ -164,6 +164,14 @@ const MAX_PERFORM_DEPTH: usize = 64;
 /// nowhere near this; exceeding it is a clean error, not an out-of-memory.
 const MAX_EMIT_INSTRS: usize = 300_000;
 
+/// The largest number of primaries a single `COMPUTE` expression may contain
+/// (parity with the oracle's cap). The grammar's `{ … }` repetition is *flat*,
+/// so the parser's depth cap does not bound how *wide* a chain is — `A + A + …`
+/// folds into a same-depth `AExpr` tree whose recursive evaluation and `Drop`
+/// would otherwise overflow the native stack. Real expressions have a handful of
+/// operands; exhausting this budget is a clean error.
+const MAX_EXPR_OPERANDS: usize = 1024;
+
 #[derive(Default)]
 struct Compiler<'a> {
     instrs: Vec<IIRInstr>,
@@ -358,6 +366,7 @@ impl<'a> Compiler<'a> {
             "multiply_stmt" => self.emit_multiply(verb),
             "divide_stmt" => self.emit_divide(verb),
             "if_stmt" => self.emit_if(verb),
+            "compute_stmt" => self.emit_compute(verb),
             "goto_stmt" => self.emit_goto(verb),
             "perform_stmt" => self.emit_perform(verb),
             other => Err(CompileError::Unsupported(format!(
@@ -568,6 +577,322 @@ impl<'a> Compiler<'a> {
         let cond_reg = self.fresh("_cond");
         self.emit(op, Some(&cond_reg), vec![a, b], "i64");
         Ok(cond_reg)
+    }
+
+    // -----------------------------------------------------------------------
+    // COMPUTE — arithmetic expressions with operator precedence
+    // -----------------------------------------------------------------------
+
+    /// `COMPUTE target [ROUNDED] = <expr> [ON SIZE ERROR …]`.
+    ///
+    /// The expression is evaluated in the same scaled-`i64` model as the other
+    /// verbs, bottom-up: every node carries a compile-time `(scale, int_bound)`,
+    /// and each combination is guarded so the `i64` can never silently wrap — an
+    /// expression whose intermediate could exceed 18 digits is a clean
+    /// [`CompileError::Unsupported`], never wrong output. `+ - *` and unary minus
+    /// evaluate **exactly** (matching the oracle's exact `Decimal`); a
+    /// **top-level** division reproduces the DIVIDE verb's one-guard-digit
+    /// rounding (already proven byte-identical to the oracle), including its
+    /// zero-divisor → size-error branch. Division nested inside a larger
+    /// expression, and `**`, are each a later rung.
+    fn emit_compute(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
+        let target = first_token(verb, "NAME")
+            .ok_or_else(|| CompileError::Malformed("COMPUTE without a receiver".into()))?;
+        // The receiver must be a numeric item within the arithmetic width.
+        self.numeric_index(&target)?;
+        let rounded = has_rounded(verb);
+        let handler = size_error_handler(verb);
+        let expr_node = child_node(verb, "arith_expr")
+            .ok_or_else(|| CompileError::Malformed("COMPUTE without an expression".into()))?;
+        let expr = self.parse_compute(expr_node)?;
+
+        // A top-level division is the DIVIDE verb in disguise — route it through
+        // the same scale/rounding/zero-divisor machinery so it matches the oracle.
+        if let AExpr::Div(dividend, divisor) = expr {
+            return self.emit_compute_div(&target, &dividend, &divisor, rounded, &handler);
+        }
+
+        let val = self.eval_aexpr(&expr)?;
+        self.store_scaled_handled(&target, &val.reg, val.scale, val.int_bound, rounded, &handler)
+    }
+
+    /// Lower a (non-top-level-division) `COMPUTE` expression to an [`Eval`]:
+    /// an `i64` register plus its `(scale, int_bound)`. Every combining step is
+    /// overflow-guarded, so a result that could exceed the `i64` model is a clean
+    /// error rather than a silent wrap.
+    fn eval_aexpr(&mut self, e: &AExpr) -> Result<Eval, CompileError> {
+        match e {
+            AExpr::Num(d) => {
+                let scale = d.frac.len();
+                let reg = self.fresh("_cn");
+                self.emit("const", Some(&reg), vec![Operand::Int(decimal_scaled_to(d, scale))], "i64");
+                Ok(Eval { reg, scale, int_bound: d.int.trim_start_matches('0').len() })
+            }
+            AExpr::Var(idx) => {
+                let (int_digits, dec_digits) = self.numeric_dims(*idx);
+                // Copy the slot so the expression never clobbers the live item.
+                let slot = self.items[*idx].reg.clone();
+                let reg = self.fresh("_v");
+                self.emit("mov", Some(&reg), vec![Operand::Var(slot)], "i64");
+                Ok(Eval { reg, scale: dec_digits, int_bound: int_digits })
+            }
+            AExpr::Neg(inner) => {
+                let v = self.eval_aexpr(inner)?;
+                let zero = self.fresh("_z");
+                self.emit("const", Some(&zero), vec![Operand::Int(0)], "i64");
+                let out = self.fresh("_neg");
+                self.emit("sub", Some(&out), vec![Operand::Var(zero), Operand::Var(v.reg)], "i64");
+                Ok(Eval { reg: out, scale: v.scale, int_bound: v.int_bound })
+            }
+            AExpr::Add(l, r) | AExpr::Sub(l, r) => {
+                let is_sub = matches!(e, AExpr::Sub(..));
+                let a = self.eval_aexpr(l)?;
+                let b = self.eval_aexpr(r)?;
+                // Align both to a common scale (up-scaling is exact); the sum's
+                // integer part is at most one digit wider than the wider operand.
+                let w = a.scale.max(b.scale);
+                let int_bound = a.int_bound.max(b.int_bound) + 1;
+                if int_bound + w > NUMERIC_MAX_DIGITS {
+                    return Err(CompileError::Unsupported(
+                        "a COMPUTE add/subtract whose result could exceed 18 digits is a later rung".into(),
+                    ));
+                }
+                let ar = self.scaled_up(&a, w);
+                let br = self.scaled_up(&b, w);
+                let out = self.fresh("_sum");
+                self.emit(if is_sub { "sub" } else { "add" }, Some(&out), vec![Operand::Var(ar), Operand::Var(br)], "i64");
+                Ok(Eval { reg: out, scale: w, int_bound })
+            }
+            AExpr::Mul(l, r) => {
+                let a = self.eval_aexpr(l)?;
+                let b = self.eval_aexpr(r)?;
+                // Scales add; the product's magnitude is `< 10^(int+scale sum)`.
+                let scale = a.scale + b.scale;
+                let int_bound = a.int_bound + b.int_bound;
+                if int_bound + scale > NUMERIC_MAX_DIGITS {
+                    return Err(CompileError::Unsupported(
+                        "a COMPUTE multiply whose product could exceed 18 digits is a later rung".into(),
+                    ));
+                }
+                let out = self.fresh("_prod");
+                self.emit("mul", Some(&out), vec![Operand::Var(a.reg), Operand::Var(b.reg)], "i64");
+                Ok(Eval { reg: out, scale, int_bound })
+            }
+            AExpr::Div(..) => Err(CompileError::Unsupported(
+                "division nested inside a larger COMPUTE expression is a later rung".into(),
+            )),
+            AExpr::Pow => Err(CompileError::Unsupported(
+                "COMPUTE exponentiation (**) is a later rung".into(),
+            )),
+        }
+    }
+
+    /// Return a register holding `v`'s value at working scale `w` (`w ≥ v.scale`,
+    /// so scaling up is exact). Reuses `v`'s own register when already at `w`.
+    fn scaled_up(&mut self, v: &Eval, w: usize) -> String {
+        if v.scale == w {
+            return v.reg.clone();
+        }
+        let p = 10i64.pow((w - v.scale) as u32);
+        let pr = self.fresh("_up");
+        self.emit("const", Some(&pr), vec![Operand::Int(p)], "i64");
+        let out = self.fresh("_us");
+        self.emit("mul", Some(&out), vec![Operand::Var(v.reg.clone()), Operand::Var(pr)], "i64");
+        out
+    }
+
+    /// A top-level `COMPUTE r = <dividend> / <divisor>`: evaluate both operands
+    /// exactly, then divide at the receiver's precision (plus a guard digit when
+    /// `ROUNDED`) — the very computation the DIVIDE verb performs, so the result
+    /// (including its half-away rounding) is byte-identical to the oracle. A zero
+    /// divisor is a size error: a handler catches it before the faulting division;
+    /// without one the emitted `div` faults, matching the oracle's DivideByZero.
+    fn emit_compute_div(
+        &mut self,
+        target: &str,
+        dividend: &AExpr,
+        divisor: &AExpr,
+        rounded: bool,
+        handler: &[&GrammarASTNode],
+    ) -> Result<(), CompileError> {
+        let num = self.eval_aexpr(dividend)?;
+        let den = self.eval_aexpr(divisor)?;
+        let recv_dec = self.numeric_dims(self.numeric_index(target)?).1;
+        let w = recv_dec + usize::from(rounded);
+
+        // quotient at scale w = (num · 10^e) / den, where e = den.scale + w − num.scale.
+        if den.scale + w < num.scale {
+            return Err(CompileError::Unsupported(
+                "a COMPUTE division whose dividend has more fractional digits than the result \
+                 precision is a later rung"
+                    .into(),
+            ));
+        }
+        let e = den.scale + w - num.scale;
+        // numerator < 10^(num.int_bound + num.scale + e) = 10^(num.int_bound + den.scale + w).
+        if num.int_bound + den.scale + w > NUMERIC_MAX_DIGITS {
+            return Err(CompileError::Unsupported(
+                "a COMPUTE division intermediate at the requested precision could overflow i64 — \
+                 a later rung"
+                    .into(),
+            ));
+        }
+
+        let numerator = if e > 0 {
+            let pr = self.fresh("_dp");
+            self.emit("const", Some(&pr), vec![Operand::Int(10i64.pow(e as u32))], "i64");
+            let n = self.fresh("_num");
+            self.emit("mul", Some(&n), vec![Operand::Var(num.reg), Operand::Var(pr)], "i64");
+            n
+        } else {
+            num.reg
+        };
+
+        let end_lbl = if handler.is_empty() {
+            None
+        } else {
+            let zero = self.fresh("_z");
+            self.emit("const", Some(&zero), vec![Operand::Int(0)], "i64");
+            let iszero = self.fresh("_dz");
+            self.emit("cmp_eq", Some(&iszero), vec![Operand::Var(den.reg.clone()), Operand::Var(zero)], "i64");
+            let (cont, end) = (self.fresh("dz_cont"), self.fresh("dz_end"));
+            self.emit("jmp_if_false", None, vec![Operand::Var(iszero), Operand::Var(cont.clone())], "void");
+            for h in handler {
+                self.emit_statement(h)?;
+            }
+            self.emit("jmp", None, vec![Operand::Var(end.clone())], "void");
+            self.emit("label", None, vec![Operand::Var(cont)], "void");
+            Some(end)
+        };
+
+        let quot = self.fresh("_quot");
+        // i64 division truncates toward zero, as COBOL does.
+        self.emit("div", Some(&quot), vec![Operand::Var(numerator), Operand::Var(den.reg)], "i64");
+        self.store_scaled_handled(target, &quot, w, num.int_bound + den.scale, rounded, handler)?;
+        if let Some(end) = end_lbl {
+            self.emit("label", None, vec![Operand::Var(end)], "void");
+        }
+        Ok(())
+    }
+
+    // -- COMPUTE expression parser (mirrors the oracle's precedence cascade) --
+
+    /// Parse a `COMPUTE` expression tree, bounding its operand count against a
+    /// stack-overflow DoS (parity with the oracle's [`MAX_EXPR_OPERANDS`]).
+    fn parse_compute(&self, node: &GrammarASTNode) -> Result<AExpr, CompileError> {
+        let mut budget = MAX_EXPR_OPERANDS;
+        self.read_compute_expr(node, &mut budget)
+    }
+
+    /// `arith_expr = arith_term { ( "+" | "-" ) arith_term }` — additive,
+    /// left-associative.
+    fn read_compute_expr(&self, node: &GrammarASTNode, budget: &mut usize) -> Result<AExpr, CompileError> {
+        let mut expr: Option<AExpr> = None;
+        let mut sub_pending: Option<bool> = None; // Some(true) = subtract
+        for child in &node.children {
+            match child {
+                ASTNodeOrToken::Node(n) => {
+                    let operand = self.read_compute_term(n, budget)?;
+                    expr = Some(match (expr.take(), sub_pending.take()) {
+                        (Some(left), Some(is_sub)) => {
+                            let (l, r) = (Box::new(left), Box::new(operand));
+                            if is_sub { AExpr::Sub(l, r) } else { AExpr::Add(l, r) }
+                        }
+                        _ => operand,
+                    });
+                }
+                ASTNodeOrToken::Token(t) => match t.effective_type_name() {
+                    "PLUS" => sub_pending = Some(false),
+                    "MINUS" => sub_pending = Some(true),
+                    _ => {}
+                },
+            }
+        }
+        expr.ok_or_else(|| CompileError::Malformed("empty COMPUTE expression".into()))
+    }
+
+    /// `arith_term = arith_factor { ( "*" | "/" ) arith_factor }` — multiplicative,
+    /// left-associative.
+    fn read_compute_term(&self, node: &GrammarASTNode, budget: &mut usize) -> Result<AExpr, CompileError> {
+        let mut expr: Option<AExpr> = None;
+        let mut div_pending: Option<bool> = None; // Some(true) = divide
+        for child in &node.children {
+            match child {
+                ASTNodeOrToken::Node(n) => {
+                    let operand = self.read_compute_factor(n, budget)?;
+                    expr = Some(match (expr.take(), div_pending.take()) {
+                        (Some(left), Some(is_div)) => {
+                            let (l, r) = (Box::new(left), Box::new(operand));
+                            if is_div { AExpr::Div(l, r) } else { AExpr::Mul(l, r) }
+                        }
+                        _ => operand,
+                    });
+                }
+                ASTNodeOrToken::Token(t) => match t.effective_type_name() {
+                    "STAR" => div_pending = Some(false),
+                    "SLASH" => div_pending = Some(true),
+                    _ => {}
+                },
+            }
+        }
+        expr.ok_or_else(|| CompileError::Malformed("empty COMPUTE term".into()))
+    }
+
+    /// `arith_factor = arith_unary { "**" arith_unary }` — exponentiation, folded
+    /// right-associatively so `A ** B ** C` = `A ** (B ** C)` (matching the oracle).
+    fn read_compute_factor(&self, node: &GrammarASTNode, budget: &mut usize) -> Result<AExpr, CompileError> {
+        let units = child_nodes(node, "arith_unary");
+        if units.is_empty() {
+            return Err(CompileError::Malformed("empty COMPUTE factor".into()));
+        }
+        // Read every operand so the stack-overflow budget is charged identically
+        // to the oracle, even though `**` itself is a later rung.
+        let mut last = None;
+        for u in &units {
+            last = Some(self.read_compute_unary(u, budget)?);
+        }
+        if units.len() == 1 {
+            Ok(last.unwrap())
+        } else {
+            Ok(AExpr::Pow)
+        }
+    }
+
+    /// `arith_unary = [ "+" | "-" ] arith_primary` — a leading minus negates.
+    fn read_compute_unary(&self, node: &GrammarASTNode, budget: &mut usize) -> Result<AExpr, CompileError> {
+        let neg = child_tokens(node).iter().any(|(k, _)| k == "MINUS");
+        let prim = child_node(node, "arith_primary")
+            .ok_or_else(|| CompileError::Malformed("unary operator without an operand".into()))?;
+        let e = self.read_compute_primary(prim, budget)?;
+        Ok(if neg { AExpr::Neg(Box::new(e)) } else { e })
+    }
+
+    /// `arith_primary = NUMBER | NAME | "(" arith_expr ")"`. Charges one unit of
+    /// the operand budget (the stack-overflow backstop).
+    fn read_compute_primary(&self, node: &GrammarASTNode, budget: &mut usize) -> Result<AExpr, CompileError> {
+        *budget = budget
+            .checked_sub(1)
+            .ok_or_else(|| CompileError::Unsupported("COMPUTE expression too large".into()))?;
+        if let Some(inner) = child_node(node, "arith_expr") {
+            return self.read_compute_expr(inner, budget);
+        }
+        for (k, v) in child_tokens(node) {
+            match k.as_str() {
+                "NUMBER" => {
+                    let d = Decimal::parse_literal(&v)
+                        .ok_or_else(|| CompileError::Malformed(format!("numeric literal {v}")))?;
+                    if d.int.trim_start_matches('0').len() + d.frac.len() > ARITH_MAX_DIGITS {
+                        return Err(CompileError::Unsupported(format!(
+                            "numeric literal {v} wider than {ARITH_MAX_DIGITS} digits in COMPUTE is a later rung"
+                        )));
+                    }
+                    return Ok(AExpr::Num(d));
+                }
+                "NAME" => return Ok(AExpr::Var(self.numeric_index(&v)?)),
+                _ => {}
+            }
+        }
+        Err(CompileError::Malformed("empty COMPUTE primary".into()))
     }
 
     // -----------------------------------------------------------------------
@@ -1449,6 +1774,38 @@ enum Term {
     Item(usize),
 }
 
+/// A parsed `COMPUTE` arithmetic expression — the grammar's precedence cascade
+/// (`arith_expr` → `arith_term` → `arith_factor` → `arith_unary` →
+/// `arith_primary`) folded into a tree, mirroring the oracle's `Expr`. Leaves
+/// are numeric literals and numeric-item indices; `+ - * /` fold
+/// left-associatively and `**` right-associatively (COBOL's rule), so the tree
+/// shape matches the oracle's exactly.
+enum AExpr {
+    /// A numeric literal (its exact decimal value).
+    Num(Decimal),
+    /// A numeric item, by its slot index.
+    Var(usize),
+    /// Unary minus.
+    Neg(Box<AExpr>),
+    Add(Box<AExpr>, Box<AExpr>),
+    Sub(Box<AExpr>, Box<AExpr>),
+    Mul(Box<AExpr>, Box<AExpr>),
+    Div(Box<AExpr>, Box<AExpr>),
+    /// `**` — recognised (so it earns a clear "later rung" error) but not
+    /// evaluated, hence a marker rather than a subtree.
+    Pow,
+}
+
+/// A `COMPUTE` sub-expression lowered to an `i64` register, with the
+/// compile-time bounds needed to keep every downstream operation from silently
+/// wrapping: `scale` is its fractional-digit count and `int_bound` bounds its
+/// integer-part digits (magnitude `< 10^(int_bound + scale)`).
+struct Eval {
+    reg: String,
+    scale: usize,
+    int_bound: usize,
+}
+
 /// Does an arithmetic verb carry the `ROUNDED` keyword?
 fn has_rounded(verb: &GrammarASTNode) -> bool {
     child_tokens(verb).iter().any(|(k, v)| k == "KEYWORD" && v == "ROUNDED")
@@ -1755,6 +2112,55 @@ mod tests {
             )
             .unwrap();
             assert!(m.validate().is_empty(), "{body}: {:?}", m.validate());
+        }
+    }
+
+    #[test]
+    fn compute_expression_compiles_and_validates() {
+        // Precedence, parens, a top-level division, and unary minus all lower to
+        // valid IIR.
+        for body in [
+            "COMPUTE R = A + B * C.",
+            "COMPUTE R = (A + B) * C.",
+            "COMPUTE R ROUNDED = A / B.",
+            "COMPUTE R = -B + A ON SIZE ERROR DISPLAY \"O\".",
+        ] {
+            let m = compile_source(
+                &wrap(
+                    &[
+                        "01  A  PIC 9(3) VALUE 10.",
+                        "01  B  PIC 9(3) VALUE 3.",
+                        "01  C  PIC 9(3) VALUE 2.",
+                        "01  R  PIC 9(4)V99.",
+                    ],
+                    &[body, "STOP RUN."],
+                ),
+                "compute",
+            )
+            .unwrap();
+            assert!(m.validate().is_empty(), "{body}: {:?}", m.validate());
+        }
+    }
+
+    #[test]
+    fn compute_nested_division_and_exponentiation_are_deferred() {
+        // Division inside a larger expression, and **, are each a clean error —
+        // never wrong output.
+        for body in ["COMPUTE R = A / B + C.", "COMPUTE R = A / B * C.", "COMPUTE R = C ** B."] {
+            let err = compile_source(
+                &wrap(
+                    &[
+                        "01  A  PIC 9(3) VALUE 10.",
+                        "01  B  PIC 9(3) VALUE 3.",
+                        "01  C  PIC 9(3) VALUE 2.",
+                        "01  R  PIC 9(4)V99.",
+                    ],
+                    &[body, "STOP RUN."],
+                ),
+                "compute",
+            )
+            .unwrap_err();
+            assert!(matches!(err, CompileError::Unsupported(_)), "{body}: got {err:?}");
         }
     }
 

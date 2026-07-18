@@ -720,3 +720,119 @@ fn arithmetic_chains_through_the_field() {
     ));
     assert_eq!(out, "20\n");
 }
+
+// -------------------------------------------------------------------------
+// COMPUTE — arithmetic expressions with precedence, vs the oracle.
+// -------------------------------------------------------------------------
+
+#[test]
+fn compute_single_operand_moves_the_value() {
+    // COMPUTE R = A with no operator is a rescale-and-store.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC 9(3) VALUE 42.", "01  R  PIC 9(5)."],
+        &["COMPUTE R = A.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "00042\n");
+}
+
+#[test]
+fn compute_respects_operator_precedence() {
+    // A + B * C = 10 + (3 * 2) = 16 → 0016.00.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC 9(3) VALUE 10.",
+            "01  B  PIC 9(3) VALUE 3.",
+            "01  C  PIC 9(3) VALUE 2.",
+            "01  R  PIC 9(4)V99.",
+        ],
+        &["COMPUTE R = A + B * C.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "001600\n");
+}
+
+#[test]
+fn compute_parentheses_override_precedence() {
+    // (A + B) * C = 13 * 2 = 26 → 0026.00.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC 9(3) VALUE 10.",
+            "01  B  PIC 9(3) VALUE 3.",
+            "01  C  PIC 9(3) VALUE 2.",
+            "01  R  PIC 9(4)V99.",
+        ],
+        &["COMPUTE R = (A + B) * C.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "002600\n");
+}
+
+#[test]
+fn compute_aligns_scaled_operands() {
+    // 1.5 + 2.25 = 3.75 → 9V99 → 375.
+    let out = assert_matches_oracle(&wrap(
+        &["01  X  PIC 9V9 VALUE 1.5.", "01  Y  PIC 9V99 VALUE 2.25.", "01  R  PIC 9V99."],
+        &["COMPUTE R = X + Y.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "375\n");
+}
+
+#[test]
+fn compute_division_truncates_and_rounds() {
+    // 10 / 3 = 3.333… → 9V99 truncates to 3.33.
+    let trunc = assert_matches_oracle(&wrap(
+        &["01  A  PIC 9(3) VALUE 10.", "01  B  PIC 9(3) VALUE 3.", "01  R  PIC 9V99."],
+        &["COMPUTE R = A / B.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(trunc, "333\n");
+    // 20 / 3 = 6.666… → ROUNDED to 6.67.
+    let round = assert_matches_oracle(&wrap(
+        &["01  A  PIC 9(3) VALUE 20.", "01  B  PIC 9(3) VALUE 3.", "01  R  PIC 9V99."],
+        &["COMPUTE R ROUNDED = A / B.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(round, "667\n");
+}
+
+#[test]
+fn compute_unary_minus_and_negative_magnitude() {
+    // -B + A = -3 + 10 = 7 → 007.
+    let pos = assert_matches_oracle(&wrap(
+        &["01  A  PIC 9(3) VALUE 10.", "01  B  PIC 9(3) VALUE 3.", "01  R  PIC 9(3)."],
+        &["COMPUTE R = -B + A.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(pos, "007\n");
+    // B - A = -7 → an unsigned receiver keeps the magnitude, 7 → 007.
+    let neg = assert_matches_oracle(&wrap(
+        &["01  A  PIC 9(3) VALUE 10.", "01  B  PIC 9(3) VALUE 3.", "01  R  PIC 9(3)."],
+        &["COMPUTE R = B - A.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(neg, "007\n");
+}
+
+#[test]
+fn compute_on_size_error_fires_on_overflow() {
+    // A*A*A = 1000 overflows PIC 9(2); the handler runs and R is unchanged.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC 9(3) VALUE 10.", "01  R  PIC 9(2) VALUE 42."],
+        &["COMPUTE R = A * A * A ON SIZE ERROR DISPLAY \"OVER\".", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "OVER\n42\n");
+}
+
+#[test]
+fn compute_overflow_without_handler_truncates() {
+    // No handler: 1000 keeps its low two digits → 00 (COBOL's silent truncation).
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC 9(3) VALUE 10.", "01  R  PIC 9(2) VALUE 42."],
+        &["COMPUTE R = A * A * A.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "00\n");
+}
+
+#[test]
+fn compute_on_size_error_catches_divide_by_zero() {
+    // (C - C) = 0 divisor is a size-error condition; the handler catches it.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC 9(3) VALUE 10.", "01  C  PIC 9(3) VALUE 2.", "01  R  PIC 9(3) VALUE 7."],
+        &["COMPUTE R = A / (C - C) ON SIZE ERROR DISPLAY \"DIVZERO\".", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "DIVZERO\n007\n");
+}
