@@ -18,16 +18,17 @@ describe("real curriculum", () => {
     expect(hasErrors(issues)).toBe(false);
   });
 
-  it("loaded all 16 tracks", () => {
-    expect(dataset.languages.length).toBe(16);
-    expect(dataset.languages).toContain("spanish");
-    expect(dataset.languages).toContain("telugu");
-    expect(dataset.languages).toContain("arabic");
+  it("loaded every track (17+ and growing)", () => {
+    expect(dataset.languages.length).toBeGreaterThanOrEqual(17);
+    for (const t of ["spanish", "telugu", "arabic", "russian"]) {
+      expect(dataset.languages).toContain(t);
+    }
   });
 
   it("GREETING-HELLO joins every track (the normalization payoff)", () => {
+    // Every track realizes 'hello', so the join size tracks the track count.
     const langs = languagesForConcept(dataset, "GREETING-HELLO").map((r) => r.language);
-    expect(new Set(langs).size).toBe(16);
+    expect(new Set(langs).size).toBe(dataset.languages.length);
   });
 
   it("the self-introduction concepts join many languages", () => {

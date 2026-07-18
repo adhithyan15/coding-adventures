@@ -112,12 +112,12 @@ the paired `hash-functions` prerequisite, the paired `bloom-filter`, `hash-map`,
 and `hash-set` ports, the paired `in-memory-data-store-engine` and
 `in-memory-data-store` ports, and the paired C#/F# `wasm-module-encoder`,
 `x25519`, `brainfuck-wasm-compiler`, `argon2i`, `argon2d`, and `argon2id`
-ports, and the paired C#/F# `chacha20-poly1305`, `xml-lexer`, and `block-ram`
-ports:
+ports, and the paired C#/F# `chacha20-poly1305`, `xml-lexer`, `block-ram`, and
+`nib-wasm-compiler` ports:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 325 |
+| Present in 10-15 languages | 172 | 323 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,972 |
 | Present in one language | 701 | 9,814 |
@@ -301,6 +301,16 @@ cross-port visibility, edge behavior, reconfiguration clearing, defensive
 copies, and invalid signals and dimensions. The package now spans 12 target
 implementation lanes, reduces the high-consensus backlog to 325 slots, and
 leaves 8 paired gaps in each lane.
+
+The tenth paired C#/F# slice is complete: `nib-wasm-compiler` now compiles the
+portable typed Nib `u4` function subset in both lanes. Native parsers cover
+literals, parameters, nested calls, and wrapping `+%` addition, while the
+existing `wasm-module-encoder`, `wasm-types`, and `wasm-leb128` packages produce
+validated modules that export every declared function. Package-native tests
+cover executable literals and calls, wrapping-opcode validation, malformed
+source, depth and size limits, defensive results, and optional file output. The
+package now spans 13 implementation lanes, reduces the high-consensus backlog
+to 323 slots, and leaves 7 paired gaps in each lane.
 
 Recommended family order:
 

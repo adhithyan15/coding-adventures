@@ -4,9 +4,9 @@
   "font": "_fonts/NotoSansCyrillic-Static.ttf",
   "direction": "ltr",
   "system": "alphabet",
-  "complete": true,
+  "complete": false,
   "combination": "A true alphabet: letters are written left-to-right in a row and each spells a sound. No inherent vowels, no diacritics in normal text (stress is unmarked). Two letters — ъ (hard sign) and ь (soft sign) — spell no sound of their own; they modify the consonant before them.",
-  "notes": "The 33-letter Russian alphabet, complete. Several letters are 'false friends' that look like Latin letters but sound different — those are flagged. Descended from Greek (via Old Church Slavonic), so many letters are Greek cousins: С↔sigma, Р↔rho, П↔pi, Ф↔phi.",
+  "notes": "The 33 lowercase Russian letters. complete:false because the UPPERCASE forms are not yet in the inventory (lessons use the lowercase citation form); the lowercase set itself is whole. Several letters are 'false friends' that look like Latin letters but sound different — those are flagged. Descended from Greek (via Old Church Slavonic), so many letters are Greek cousins: С↔sigma, Р↔rho, П↔pi, Ф↔phi.",
   "letters": [
     { "glyph": "а", "sound": "a (as in 'father')", "role": "vowel", "components": ["a round bowl", "a right stem"], "strokeOrder": ["bowl", "stem"], "strokeOrderNote": "conventional", "notes": "Looks and sounds like Latin a." },
     { "glyph": "б", "sound": "b", "role": "consonant", "components": ["a vertical", "a top flag", "a lower belly"], "strokeOrder": ["vertical", "belly", "top flag"], "strokeOrderNote": "conventional", "notes": "Distinct from в." },
