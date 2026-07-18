@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.54.0] — 2026-07-18
+
+### Added — RS-5c: range / bracket lookup over a `table` read as a step function (ADJ-TABLES)
+
+A `table` can now be queried as a **step function**, not only by exact key. The new surface
+`? lookup <table> <key_col> = <n> mode range give <value_col>` selects the breakpoint row whose
+key column is the greatest key `<= n` and returns its value column — the tactic for tax brackets,
+dose bands, and reference-range classification. This is the follow-up to RS-5b's exact lookup;
+range/interpolated were spec'd there and deferred, and this lands the range half.
+
+- **Grammar**: `query_decl` now folds a `lookup_expr` alternative
+  (`QUESTION ( lookup_expr | term )`), so the range form coexists with the exact binding query.
+  `lookup`/`mode`/`give` are IDENT-matched literals — **no new lexer tokens**. Regenerated
+  `_parser_grammar.rs` / `_lexer_grammar.rs`.
+- **AST**: new `Statement::RangeLookup { table, key_col, key_value, mode, value_col }`.
+- **Adapter**: `adapt_lookup` (positional Name-token binding, robust to a column literally named
+  `mode`/`give`) + `adapt_signed_number` (optional leading `MINUS`, folded exactly into the literal).
+- **Lower**: validates against the table registry and resolves the key/value columns to positional
+  indices — new `LookupUnknownTable` / `LookupUnknownColumn` / `LookupNonNumericKeyColumn`
+  (the key column must be numeric) / `LookupModeUnsupported` (`interpolated` is reserved for RS-5d)
+  / `LookupUnknownMode`. Emits the validated `LoweredRangeLookup` (now on `LoweredProgram`).
+- The `table` declaration is **unchanged** — a range table is an ordinary table read differently.
+
 ## [0.53.0] — 2026-07-14
 
 ### Added — NX-2: parse numeric literals to exact values (no silent f64 truncation)

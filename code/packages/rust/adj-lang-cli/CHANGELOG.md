@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.13.0] — 2026-07-18 — RS-5c: range / bracket lookup answers (ADJ-TABLES)
+
+### Added
+
+- **`"lookups"` output section** for range/bracket lookups. Each `? lookup <table> <key_col> = <n>
+  mode range give <value_col>` resolves the table (its rows are its facts) by enumerating the
+  relation, selects the breakpoint row whose key is the greatest key `<= n`, and emits
+  `{query, mode, answers:[{bindings, citations}], abstained}` — the value column bound, the
+  **matched breakpoint key** named in the audit, and the selected row's citation carried through
+  (the same `via_facts → provenance` flow as exact recall). A query **below the smallest key**
+  honestly `"abstained": true` — "below the table's domain", never a fabricated classification.
+- The comparison rides the exact `BigRational` order (`ExactRational::as_ratio()` — the identical
+  total order the engine's `CmpOp` exact path uses), so there is **no `f64` hop** in the decision.
+  0 answer-time model calls. The section is omitted entirely when the program declares no
+  `? lookup … mode range …`, so existing output is byte-for-byte unchanged.
+
 ## [0.12.0] — 2026-07-14 — exact-number arc COMPLETE: computed results render every digit (ADJ-EXACT-NUMBERS NX-4)
 
 ### Changed

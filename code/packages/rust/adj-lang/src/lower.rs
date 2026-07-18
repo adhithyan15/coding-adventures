@@ -252,6 +252,43 @@ pub enum LowerError {
     TableNoColumns {
         table: String,
     },
+    /// A `? lookup <table> …` named a table that was never declared (ADJ-TABLES
+    /// RS-5c). A range lookup reads a specific `table` as a step function; an
+    /// unknown name would silently abstain forever, so it is a clean compile
+    /// error. Carries the referenced name.
+    LookupUnknownTable {
+        table: String,
+    },
+    /// A `? lookup <table> <col> …` named a `col` that is not one of the table's
+    /// declared `columns` (ADJ-TABLES RS-5c) — either the key column or the
+    /// `give` value column. Carries the table and the offending column name.
+    LookupUnknownColumn {
+        table: String,
+        column: String,
+    },
+    /// A range lookup's key column holds a non-numeric cell (ADJ-TABLES RS-5c). A
+    /// `range` lookup compares the query value against the key column with the
+    /// exact numeric comparators, so every key cell must be a number; an atom or
+    /// string key is meaningless for a step function. Carries the table, the key
+    /// column, and the offending row index (0-based).
+    LookupNonNumericKeyColumn {
+        table: String,
+        column: String,
+        row: usize,
+    },
+    /// A lookup named `mode <name>` for a mode that is spec'd but not yet built
+    /// (ADJ-TABLES RS-5d) — today only `interpolated`. Rejected explicitly (rather
+    /// than silently treated as `range`) so the reserved surface is honest about
+    /// what the engine can do. Carries the requested mode.
+    LookupModeUnsupported {
+        mode: String,
+    },
+    /// A lookup named a `mode` that is not a recognized tactic at all (ADJ-TABLES
+    /// RS-5c). The valid modes are `range` (built) and `interpolated` (reserved,
+    /// RS-5d). Carries the unrecognized mode.
+    LookupUnknownMode {
+        mode: String,
+    },
     /// An `import "<path>"` survived to lowering (MYCIN-2026 M3). Imports must be
     /// resolved by [`crate::resolve`] *before* `lower` runs — reaching here means
     /// the caller used `compile` directly on a program that still has imports,
@@ -262,12 +299,46 @@ pub enum LowerError {
     },
 }
 
+/// One lowered RANGE / BRACKET lookup (ADJ-TABLES RS-5c) — the validated,
+/// index-resolved form of a `? lookup <table> <key_col> = <n> mode range give
+/// <value_col>` recall. The lowerer has already checked the table and columns
+/// exist and that the key column is numeric, so the runtime tactic (in the CLI)
+/// only has to: read the table's ground facts, convert the key cells and the
+/// query value to exact rationals, select the row whose key is the greatest
+/// `<= key_value`, and return its value cell **with that row's citation** (or
+/// abstain when the query is below the table's domain). Nothing here is `f64`;
+/// the comparison rides the engine's exact `CmpOp`/`BigRational` path.
+#[derive(Debug, Clone)]
+pub struct LoweredRangeLookup {
+    /// The table relation's functor (also the fact functor to scan).
+    pub table: String,
+    /// The relation arity (= the table's column count) — the fact arity to match.
+    pub arity: usize,
+    /// The 0-based position of the key column among the table's columns.
+    pub key_index: usize,
+    /// The 0-based position of the `give` value column among the table's columns.
+    pub value_index: usize,
+    /// The key column's declared name (for the answer's audit trail).
+    pub key_col: String,
+    /// The value column's declared name (the binding name in the answer).
+    pub value_col: String,
+    /// The concrete query value to classify, as a ground `Num` term (exact — no
+    /// digit lost) so the comparison is done on the exact numeric path.
+    pub key_value: CoreTerm,
+    /// The tactic named at the call site — `range` (the only mode this lowers).
+    pub mode: String,
+}
+
 /// The result of lowering — a populated KB, any queries to run, and the
 /// (possibly empty) constraint system the program declared.
 #[derive(Debug)]
 pub struct LoweredProgram {
     pub kb: KnowledgeBase,
     pub queries: Vec<CoreTerm>,
+    /// The RANGE / BRACKET lookups the program declared (ADJ-TABLES RS-5c),
+    /// resolved to relation + column indices + exact query value. Empty for a
+    /// program with no `? lookup … mode range …`. Run by the CLI's range tactic.
+    pub range_lookups: Vec<LoweredRangeLookup>,
     pub constraints: ConstraintSystem,
     /// The controlled vocabulary the program declared (MYCIN-2026): the
     /// `define`d findings + hypotheses, with their surface forms. Empty for a
@@ -316,6 +387,24 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
             }
         }
     }
+
+    // ADJ-TABLES RS-5c: register every `table`'s columns + rows into a name→table
+    // map, up front (like the formula map — tables are order-independent, and a
+    // `? lookup` may precede the table it reads, or read an imported one). A range
+    // lookup validates its table/columns against this map and needs the rows to
+    // check the key column is numeric.
+    #[allow(clippy::type_complexity)]
+    let mut tables: HashMap<&str, (&[String], &[crate::ast::TableRow])> = HashMap::new();
+    for stmt in flat.iter().copied() {
+        if let Statement::Table {
+            name, columns, rows, ..
+        } = stmt
+        {
+            tables.insert(name.as_str(), (columns.as_slice(), rows.as_slice()));
+        }
+    }
+    // ADJ-TABLES RS-5c: the validated range/bracket lookups, run by the CLI tactic.
+    let mut range_lookups: Vec<LoweredRangeLookup> = Vec::new();
 
     for stmt in flat.iter().copied() {
         match stmt {
@@ -526,6 +615,67 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                     let mut vars = HashMap::new();
                     queries.push(lower_term_scoped(conclusion, &mut vars));
                 }
+            }
+            Statement::RangeLookup {
+                table,
+                key_col,
+                key_value,
+                mode,
+                value_col,
+            } => {
+                // ADJ-TABLES RS-5c: validate a `? lookup … mode range …` against the
+                // table registry and resolve the key/value columns to positional
+                // indices, so the runtime tactic never has to re-parse column names.
+                let (columns, rows) = tables.get(table.as_str()).ok_or_else(|| {
+                    LowerError::LookupUnknownTable {
+                        table: table.clone(),
+                    }
+                })?;
+                // Mode: `range` is built; `interpolated` is the reserved RS-5d
+                // tactic (rejected honestly, not silently treated as range); any
+                // other word is not a tactic at all.
+                match mode.as_str() {
+                    "range" => {}
+                    "interpolated" => {
+                        return Err(LowerError::LookupModeUnsupported { mode: mode.clone() })
+                    }
+                    _ => return Err(LowerError::LookupUnknownMode { mode: mode.clone() }),
+                }
+                let key_index = columns.iter().position(|c| c == key_col).ok_or_else(|| {
+                    LowerError::LookupUnknownColumn {
+                        table: table.clone(),
+                        column: key_col.clone(),
+                    }
+                })?;
+                let value_index =
+                    columns.iter().position(|c| c == value_col).ok_or_else(|| {
+                        LowerError::LookupUnknownColumn {
+                            table: table.clone(),
+                            column: value_col.clone(),
+                        }
+                    })?;
+                // The key column must be numeric in EVERY row — a `range` lookup
+                // compares the query against it on the exact numeric path, so an
+                // atom/string key cell is a compile error (never a silent skip).
+                for (i, row) in rows.iter().enumerate() {
+                    if !matches!(row.cells.get(key_index), Some(crate::ast::TableCell::Number(_))) {
+                        return Err(LowerError::LookupNonNumericKeyColumn {
+                            table: table.clone(),
+                            column: key_col.clone(),
+                            row: i,
+                        });
+                    }
+                }
+                range_lookups.push(LoweredRangeLookup {
+                    table: table.clone(),
+                    arity: columns.len(),
+                    key_index,
+                    value_index,
+                    key_col: key_col.clone(),
+                    value_col: value_col.clone(),
+                    key_value: lower_numlit(key_value),
+                    mode: mode.clone(),
+                });
             }
             Statement::Let { name, expr } => {
                 // Evaluate the formula against the facts (and any earlier
@@ -756,6 +906,7 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
     Ok(LoweredProgram {
         kb,
         queries,
+        range_lookups,
         constraints,
         dictionary,
     })

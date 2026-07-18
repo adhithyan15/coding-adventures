@@ -33,12 +33,13 @@ use cli_builder::{load_spec_from_str, Parser};
 use adj_constraint_solver::{
     check, optimize, solve, FeasibilityOutcome, OptimizeOutcome, SolveOutcome,
 };
-use adj_lang::{compile_with_imports, decide, ImportLimits, ImportProvider};
-use logic_core::{atom, LogicVar, Term};
+use adj_lang::{compile_with_imports, decide, ImportLimits, ImportProvider, LoweredRangeLookup};
+use logic_core::{atom, compound, var, LogicVar, Term};
 use logic_engine::govern::Standing;
 use logic_engine::{
-    enumerate_all, enumerate_governing, DerivationOrigin, DifferentialDecision, Fact, GovernStatus,
-    KnowledgeBase, LRAggregateResult, Proof, Provenance, TrustTier,
+    enumerate_all, enumerate_governing, numeric_exact_magnitude, DerivationOrigin,
+    DifferentialDecision, Fact, GovernStatus, KnowledgeBase, LRAggregateResult, Proof, Provenance,
+    TrustTier,
 };
 
 const SPEC: &str = r#"{
@@ -635,6 +636,23 @@ fn main() -> ExitCode {
         format!(",\"governing\":[{}]", governing.join(","))
     };
 
+    // ADJ-TABLES RS-5c: range / bracket lookups over `table`s read as step
+    // functions. Each resolves to its bracketed value + the matched breakpoint
+    // row's citation (or abstains below the table's domain). 0 answer-time model
+    // calls — exact comparison over the CAS-grounded rows. Omitted when the
+    // program declares no `? lookup … mode range …`, so existing output is
+    // byte-for-byte unchanged.
+    let lookups: Vec<String> = lowered
+        .range_lookups
+        .iter()
+        .map(|rl| range_lookup_json(rl, &lowered.kb))
+        .collect();
+    let lookup_section = if lookups.is_empty() {
+        String::new()
+    } else {
+        format!(",\"lookups\":[{}]", lookups.join(","))
+    };
+
     // Render the constraint sections from the outcomes computed above (the
     // solvers are not re-run). Absent a constraint system / `check` / objective,
     // the respective key is omitted entirely.
@@ -662,7 +680,7 @@ fn main() -> ExitCode {
     };
 
     println!(
-        "{{\"queries\":[{}],\"ranked\":[{}],\"decision\":{}{}{}{}{}{}{}}}",
+        "{{\"queries\":[{}],\"ranked\":[{}],\"decision\":{}{}{}{}{}{}{}{}}}",
         queries.join(","),
         ranked.join(","),
         decision,
@@ -671,6 +689,7 @@ fn main() -> ExitCode {
         optimize_section,
         recall_section,
         governing_section,
+        lookup_section,
         derived_section
     );
     ExitCode::SUCCESS
@@ -745,6 +764,100 @@ fn recall_json(query: &Term, kb: &KnowledgeBase) -> String {
         answers.join(","),
         dag.proofs.is_empty()
     )
+}
+
+/// Resolve a RANGE / BRACKET lookup (ADJ-TABLES RS-5c) against the grounded
+/// table and render it as JSON. The table's rows are its facts, so enumerating
+/// `<table>($c0, …, $cn)` binds every column of every row **and** yields that
+/// row's citing fact (`via_facts`) — the same machinery exact recall uses. Among
+/// the rows whose key column is `<= key_value`, the tactic selects the one with
+/// the greatest key (the breakpoint the query falls in) and returns its value
+/// column WITH that row's citation. The comparison rides the exact `BigRational`
+/// order (`ExactRational::as_ratio()` — the identical total order the engine's
+/// `CmpOp` exact path uses), so there is no `f64` hop in the decision. A query
+/// below the smallest key has no key `<=` it and honestly **abstains** ("below
+/// the table's domain"), never a fabricated classification. 0 answer-time model
+/// calls — pure comparison over the CAS-grounded rows.
+fn range_lookup_json(rl: &LoweredRangeLookup, kb: &KnowledgeBase) -> String {
+    // Enumerate every row of the table by unifying an all-fresh-vars goal against
+    // the table relation. `cols[i]` is bound, per proof, to row i's cell in
+    // column i; the proof's `via_facts` is that row's citing fact.
+    let cols: Vec<LogicVar> = (0..rl.arity).map(|i| var(&format!("c{i}"))).collect();
+    let goal = compound(
+        rl.table.clone(),
+        cols.iter().map(|v| Term::Var(v.clone())).collect(),
+    );
+    let dag = enumerate_all(&goal, kb);
+
+    let query_str = format!(
+        "lookup {} {} = {} mode {} give {}",
+        rl.table, rl.key_col, rl.key_value, rl.mode, rl.value_col
+    );
+
+    // The query value, as an exact rational — the right-hand side of every
+    // breakpoint comparison.
+    let q = match numeric_exact_magnitude(&rl.key_value) {
+        Some(x) => x,
+        None => {
+            // The lowerer guarantees a numeric literal, so this is unreachable in
+            // practice; abstain rather than panic if a non-numeric ever arrives.
+            return format!(
+                "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[],\"abstained\":true}}",
+                esc(&query_str),
+                esc(&rl.mode)
+            );
+        }
+    };
+
+    // Among all rows, keep those whose key column is `<= q`, then pick the one
+    // with the GREATEST key — the breakpoint the query falls into. Comparison is
+    // exact (`BigRational::cmp`), never `f64`.
+    let mut best: Option<(&Proof, Term, Term, logic_engine::compute::ExactRational)> = None;
+    for proof in &dag.proofs {
+        let key_term = proof.bindings.walk_var(&cols[rl.key_index]);
+        let Some(k) = numeric_exact_magnitude(&key_term) else {
+            continue; // a non-numeric key cell is impossible post-lowering; skip defensively.
+        };
+        if k.as_ratio() > q.as_ratio() {
+            continue; // key is above the query — not a candidate breakpoint.
+        }
+        let value_term = proof.bindings.walk_var(&cols[rl.value_index]);
+        let take = match &best {
+            None => true,
+            Some((_, _, _, best_k)) => k.as_ratio() > best_k.as_ratio(),
+        };
+        if take {
+            best = Some((proof, key_term, value_term, k));
+        }
+    }
+
+    match best {
+        Some((proof, key_term, value_term, _)) => {
+            let cites: Vec<String> = proof
+                .via_facts
+                .iter()
+                .filter_map(|fid| kb.fact(*fid))
+                .map(|f| format!("{{{}}}", prov(&f.provenance)))
+                .collect();
+            // The answer names the value column (the binding) AND the matched
+            // breakpoint key, so the audit shows WHICH bracket the query fell in.
+            format!(
+                "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[{{\"bindings\":{{\"{}\":\"{}\",\"{}\":\"{}\"}},\"citations\":[{}]}}],\"abstained\":false}}",
+                esc(&query_str),
+                esc(&rl.mode),
+                esc(&rl.value_col),
+                esc(&format!("{value_term}")),
+                esc(&rl.key_col),
+                esc(&format!("{key_term}")),
+                cites.join(",")
+            )
+        }
+        None => format!(
+            "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[],\"abstained\":true}}",
+            esc(&query_str),
+            esc(&rl.mode)
+        ),
+    }
 }
 
 /// Render the ADJ73 *governance* of a binding query (defeasible precedence): every distinct

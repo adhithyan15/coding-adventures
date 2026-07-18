@@ -58,7 +58,9 @@ use parser::grammar_parser::{GrammarParseError, GrammarParser};
 
 pub use adapter::{adapt_program, AdapterError};
 pub use ast::{Annotation, Define, DefineKind, OptDir, Program, RelOp, Statement, Term as AstTerm};
-pub use lower::{lower, ConstraintSystem, LowerError, LoweredConstraint, LoweredProgram};
+pub use lower::{
+    lower, ConstraintSystem, LowerError, LoweredConstraint, LoweredProgram, LoweredRangeLookup,
+};
 pub use resolve::{resolve_imports, ImportError, ImportLimits, ImportProvider};
 
 /// Result of compilation. Either the typed program produced by the

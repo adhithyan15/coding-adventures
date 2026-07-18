@@ -1,6 +1,6 @@
 [package]
 name = "adj-lang-cli"
-version = "0.12.0"
+version = "0.13.0"
 edition = "2021"
 description = "Command-line driver for the adj-lang adjudication DSL. Reads a .adj program (rulebook clauses + observe/query), compiles it through the adj-lang frontend, runs the logic-engine differential on the CPU, and emits the decision plus a byte-cited proof DAG as JSON. Argument parsing is declarative via cli-builder. Zero answer-time model calls — this is the CPU-bound reasoner that the MYCIN-2026 prototype shells out to."
 
