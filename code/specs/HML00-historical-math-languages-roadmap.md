@@ -181,7 +181,15 @@ sequence of one-PR items run through the autonomous loop (§8).
   See [`MA08`](MA08-reduce-language.md) for Reduce — one of the two
   oldest CAS ever built (1968, alongside Macsyma), an Algol-surfaced
   algebraic-mode language over a Lisp engine, verified against the current
-  REDUCE User's Manual. Maple remains unstarted.)*
+  REDUCE User's Manual. See [`MA09`](MA09-maple-language.md) for Maple —
+  Wave 5's third and final language: three distinct aggregate types
+  (expression sequences, lists, sets) sharing brackets that mean something
+  different in every sibling CAS already in this repo, and an `f(x) := e`
+  spelling that is *not* the general function definition Reduce's/Derive's
+  own identical-looking idiom is (real Maple's own remember-table
+  mechanism instead — the arrow operator `f := x -> e` is the general
+  form) — verified against the current Maplesoft online Help system
+  rather than assumed from family resemblance.)*
 - **Wave 6 — J, K/Q, Scilab, IDL.** More array languages, each a frontend on
   `array-runtime`. *(Kickoff: see [`MA06`](MA06-j-language.md) for J — the
   design item fixing language scope, the verb/adverb/conjunction grammar
