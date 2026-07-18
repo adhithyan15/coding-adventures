@@ -1,0 +1,4 @@
+--js
+tests/diff/for-body-fuse/input/a.js
+--compilation_level
+SIMPLE
