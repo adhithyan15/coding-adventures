@@ -10,10 +10,11 @@
 //!
 //! It **supersedes `twig-aot/runtime/twig_gc.c`** — the same flat mark-sweep, but
 //! one generic Rust collector shared by every native consumer instead of a
-//! Twig-specific C fork.  (Wiring `twig-aot` to link this archive, and the
-//! conservative C-stack scan that lets `collect` run with no explicit roots, are
-//! the next PR; this crate delivers the linkable collector + its explicit-root
-//! entry points.)
+//! Twig-specific C fork.  It now covers the whole conservative collector: explicit
+//! roots, a raw region ([`__gc_collect_region`]), and the argument-less
+//! conservative C-stack scan ([`__gc_collect`], see [`stack_scan`]) — all pure
+//! Rust.  (Wiring `twig-aot` to link this archive and retiring `twig_gc.c` is the
+//! next PR.)
 //!
 //! ## The exported ABI
 //!
@@ -22,6 +23,8 @@
 //! | `__gc_alloc(n)` | allocate `n` zeroed bytes; returns a real pointer (as `int64`), or `0` on failure/`n<=0` |
 //! | `__gc_alloc_kind(n, kind)` | as above, tagging the object with a `HeapKind` id (for later precise tracing) |
 //! | `__gc_collect_roots(roots, count)` | mark from `count` root words at `roots`, sweep; returns objects freed |
+//! | `__gc_collect_region(base, len)` | mark from every candidate pointer in a raw region, sweep; returns objects freed |
+//! | `__gc_collect()` | conservative collect rooted at this thread's live stack + callee-saved registers; returns objects freed |
 //! | `__gc_live_bytes()` | live payload bytes |
 //! | `__gc_collection_count()` | collections run so far |
 //! | `__gc_reset()` | drop the whole heap (frees everything); mainly for tests / process teardown |
@@ -36,6 +39,11 @@
 
 use gc_core::FlatHeap;
 use std::sync::Mutex;
+
+/// Conservative C-stack scan — the argument-less `__gc_collect` that roots from
+/// this thread's live stack + callee-saved registers (the drop-in for
+/// `twig_gc.c`'s `__twig_gc_collect`). See [`stack_scan`].
+mod stack_scan;
 
 /// The one process-wide heap.  `None` until the first allocation (lazy init);
 /// `__gc_reset` puts it back to `None`, running `FlatHeap`'s `Drop` to free

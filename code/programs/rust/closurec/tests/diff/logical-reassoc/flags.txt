@@ -1,0 +1,4 @@
+--js
+tests/diff/logical-reassoc/input/a.js
+--compilation_level
+SIMPLE

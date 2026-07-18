@@ -38,6 +38,7 @@ The interpreters use `gc-core`'s managed-object collector; native output uses
 | `int64_t __gc_alloc_kind(int64_t n, uint16_t kind)` | as above, tagging the object with a `HeapKind` id (for later precise tracing) |
 | `int64_t __gc_collect_roots(const int64_t *roots, int64_t count)` | mark from `count` root words, sweep; returns objects freed |
 | `int64_t __gc_collect_region(const uint8_t *base, int64_t len)` | mark from every candidate pointer in a raw region, sweep; returns objects freed |
+| `int64_t __gc_collect(void)` | conservative collection rooted at this thread's live stack + callee-saved registers (no caller roots); returns objects freed |
 | `int64_t __gc_live_bytes(void)` | live payload bytes |
 | `int64_t __gc_collection_count(void)` | collections run so far |
 | `void __gc_reset(void)` | drop the whole heap; free everything |
@@ -60,17 +61,26 @@ __gc_collect_roots(roots, 1);         /* cell is rooted → survives */
 
 ## Status
 
-This is **T1 rung 0** — the linkable flat collector with explicit-root and
-region-scan collection. `__gc_collect_region` is the platform-independent core of
-the conservative stack scan: give it any span of raw memory and it roots from every
-candidate pointer inside. Still to come (own PRs):
+This is **T1 rung 0** — the linkable flat collector. It now covers the full
+conservative collector `twig_gc.c` shipped, in three layers: explicit roots
+(`__gc_collect_roots`), a raw memory region (`__gc_collect_region`), and the
+argument-less **conservative C-stack scan** (`__gc_collect`) — all pure Rust, no C.
 
-- Wire `twig-aot`'s `build.rs` to link this archive and retire `twig_gc.c`
-  (golden/smoke parity).
-- The argument-less **C-stack scan** so `collect` runs with no explicit roots (the
-  drop-in for `twig_gc.c`'s `__twig_gc_collect`): discover the current stack pointer
-  and the thread's stack base, spill callee-saved registers, and hand that span to
-  `__gc_collect_region`.
+`__gc_collect` is the drop-in for `twig_gc.c`'s `__twig_gc_collect`: it spills the
+callee-saved registers to the stack (an `asm!` block replacing `setjmp`), reads the
+stack pointer, finds the thread's stack base via the platform thread API (bare
+`extern` bindings — `pthread_get_stackaddr_np` on macOS, `pthread_getattr_np` /
+`pthread_attr_getstack` on Linux, `GetCurrentThreadStackLimits` on Windows), and
+hands `[sp, base)` to `__gc_collect_region`. Supported targets are exactly the
+native-AOT ones: aarch64 (macOS) and x86_64 (Linux, Windows); anything else is a
+hard `compile_error!` rather than a silent unsound fallback.
+
+Still to come (own PRs):
+
+- Wire `twig-aot`'s `build.rs` to link this archive, export the twig-compat
+  aliases (`__twig_gc_alloc` / `collect` / `safepoint` / `live_bytes` /
+  `collection_count`) the emitted code already calls, and retire `twig_gc.c`
+  (golden / `*_smoke.rs` parity).
 - **Precise** roots (stack maps) and interior tracing (`HeapKind` field maps),
   then moving / generational — all as `gc-core` algorithms.
 

@@ -36,6 +36,7 @@ integer `123`); an **alphanumeric** item (`PIC X`/`A`) is a `str`.
 | `VALUE <lit>` / `MOVE <lit> TO item` | the register's `const`/`str_const` — the literal formatted into the item's picture at compile time |
 | `ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE … [GIVING r]` | `add`/`sub`/`mul`/`div` on the `i64` slots, the result reduced to the receiver's field |
 | `DISPLAY op…` | each operand's image emitted, then `putchar('\n')` — a literal prints its source text, a numeric item via the fixed-width digit helper, an alphanumeric via `print_str` |
+| `IF cond then… [ELSE else…]` | `cmp_*` on the aligned operands → `jmp_if_false` over the then-branch; `NOT` inverts the relation |
 | `STOP RUN` | `ret 0` |
 
 ### Why it is exact
@@ -61,8 +62,8 @@ source value into the receiver's picture the same way.
 
 Each of these is a clean `CompileError::Unsupported` (never wrong output), landing
 on its own PR: **scaled** `MULTIPLY`/`DIVIDE` (a `V` operand) and their `ROUNDED`,
-`ON SIZE ERROR` (needs the `IF` rung's branching), alphanumeric item `MOVE`,
-`COMPUTE`, `IF`, `PERFORM`, `GO TO`, group items, and signed numerics (`PIC S9…`,
+`ON SIZE ERROR`, alphanumeric item `MOVE` and alphanumeric comparison,
+`COMPUTE`, `PERFORM`, `GO TO`, group items, and signed numerics (`PIC S9…`,
 trailing-overpunch display).
 
 ## Usage

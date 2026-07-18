@@ -2,6 +2,29 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.37] - 2026-07-17
+
+### Fixed — decode legacy octal string escapes on the WHITESPACE_ONLY path
+
+The WHITESPACE_ONLY minifier's own string unescaper (`decode_js_string`) left
+`\1`–`\7` and multi-digit `\NNN` undecoded — it dropped the backslash, so
+`"\101"` became the wrong three-character value `"101"` instead of `"A"` (octal
+101 = 65 = `A`). That is a miscompile (a changed string value). This mirrors
+the SIMPLE-path fix in `javascript-parser` 0.59.0; the two paths must agree.
+
+closurec now decodes these to their code unit, matching the reference Closure
+Compiler, which reads UP TO THREE octal digits regardless of the leading digit
+(value `0`..=`0o777` = 511):
+
+- `"\101"` → `"A"`, `"\40"` → `" "`, `"\77"` → `"?"`, `"\1010"` → `"A0"`
+- `"\401"` → U+0101 — three digits even with a leading `4`–`7` (Closure ignores
+  the ECMAScript Annex B two-digit cap; byte-identity requires we do too)
+
+Verified byte-identical to the real Closure jar at WHITESPACE_ONLY. (A separate,
+independent divergence — the WHITESPACE re-encoder spells a control char such as
+U+0007 as `\x07` where Closure uses the raw byte — is filed as a follow-up; it is a
+string-*rendering* issue, not a decode one.)
+
 ## [0.234.35] - 2026-07-15
 
 ### Added — CLOC12.197 PR2: template-literal → string fold end-to-end

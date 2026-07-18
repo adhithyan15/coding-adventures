@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.20] - Unreleased
+
+### Added
+
+- **`primary` now accepts a `BLOB` literal token** (`x'…'` / `X'…'`), placed
+  after `STRING` in the alternation. The planner decodes the hex body into raw
+  bytes. Pairs with sql-lexer 0.1.3's `BLOB_HEX` token.
+
 ## [0.1.19] - Unreleased
 
 ### Added

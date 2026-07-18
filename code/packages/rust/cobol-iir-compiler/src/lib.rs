@@ -316,6 +316,7 @@ impl Compiler {
             "subtract_stmt" => self.emit_subtract(verb),
             "multiply_stmt" => self.emit_multiply(verb),
             "divide_stmt" => self.emit_divide(verb),
+            "if_stmt" => self.emit_if(verb),
             other => Err(CompileError::Unsupported(format!(
                 "the {} statement is a later rung",
                 verb_name(other)
@@ -430,6 +431,100 @@ impl Compiler {
         } else {
             Err(CompileError::Unsupported("STOP <literal> (only STOP RUN is modelled)".into()))
         }
+    }
+
+    // -----------------------------------------------------------------------
+    // Conditionals
+    // -----------------------------------------------------------------------
+
+    /// `IF condition then-stmts [ELSE else-stmts]` — a relational test over a
+    /// three-way branch. The condition lowers to a boolean register; then a
+    /// `jmp_if_false` skips the then-branch to the else-branch (a jump past it
+    /// closes the then-branch). Nested `IF`s recurse through `emit_statement`.
+    fn emit_if(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
+        let cond_node = child_node(verb, "condition")
+            .ok_or_else(|| CompileError::Malformed("IF without a condition".into()))?;
+        let cond = self.emit_condition(cond_node)?;
+
+        // Split the statement children at the ELSE keyword (as the oracle does).
+        let mut then_stmts = Vec::new();
+        let mut else_stmts = Vec::new();
+        let mut seen_else = false;
+        for child in &verb.children {
+            match child {
+                ASTNodeOrToken::Token(t) if t.value == "ELSE" && t.effective_type_name() == "KEYWORD" => {
+                    seen_else = true;
+                }
+                ASTNodeOrToken::Node(n) if n.rule_name == "statement" => {
+                    if seen_else {
+                        else_stmts.push(n);
+                    } else {
+                        then_stmts.push(n);
+                    }
+                }
+                _ => {}
+            }
+        }
+
+        let else_lbl = self.fresh("if_else");
+        let end_lbl = self.fresh("if_end");
+        self.emit("jmp_if_false", None, vec![Operand::Var(cond), Operand::Var(else_lbl.clone())], "void");
+        for stmt in then_stmts {
+            self.emit_statement(stmt)?;
+        }
+        self.emit("jmp", None, vec![Operand::Var(end_lbl.clone())], "void");
+        self.emit("label", None, vec![Operand::Var(else_lbl)], "void");
+        for stmt in else_stmts {
+            self.emit_statement(stmt)?;
+        }
+        self.emit("label", None, vec![Operand::Var(end_lbl)], "void");
+        Ok(())
+    }
+
+    /// Evaluate a `condition` (`operand relop operand`) to a boolean `i64`
+    /// register (1 = true). Numeric comparison only: operands align to a common
+    /// scale, then `cmp_gt`/`cmp_lt`/`cmp_eq` per the relation; `NOT` inverts.
+    /// Alphanumeric comparison (space-padded strings) is a later rung.
+    fn emit_condition(&mut self, cond: &GrammarASTNode) -> Result<String, CompileError> {
+        let operands = child_nodes(cond, "operand");
+        if operands.len() != 2 {
+            return Err(CompileError::Malformed("condition must be operand relop operand".into()));
+        }
+        let left = self.read_arith_term(operands[0])?;
+        let right = self.read_arith_term(operands[1])?;
+        let w = self.term_scale(&left).max(self.term_scale(&right));
+        let a = self.emit_term_at_scale(&left, w);
+        let b = self.emit_term_at_scale(&right, w);
+
+        let relop = child_node(cond, "relop")
+            .ok_or_else(|| CompileError::Malformed("condition without a relational operator".into()))?;
+        let toks = child_tokens(relop);
+        let negated = toks.iter().any(|(k, v)| k == "KEYWORD" && v == "NOT");
+        let base = toks
+            .iter()
+            .find_map(|(k, v)| match (k.as_str(), v.as_str()) {
+                ("KEYWORD", "GREATER") => Some("GREATER"),
+                ("KEYWORD", "LESS") => Some("LESS"),
+                ("KEYWORD", "EQUAL") => Some("EQUAL"),
+                _ => None,
+            })
+            .ok_or_else(|| CompileError::Malformed("unrecognised relational operator".into()))?;
+
+        // `NOT` inverts the *relation* directly, so the comparison op still yields
+        // a single boolean (the cmp_* ops return `Value::Bool`, which
+        // `jmp_if_false` consumes — inverting the boolean itself with an integer
+        // `cmp_eq … 0` would be a type mismatch).
+        let op = match (base, negated) {
+            ("GREATER", false) => "cmp_gt",
+            ("GREATER", true) => "cmp_le",
+            ("LESS", false) => "cmp_lt",
+            ("LESS", true) => "cmp_ge",
+            ("EQUAL", false) => "cmp_eq",
+            _ => "cmp_ne", // ("EQUAL", true)
+        };
+        let cond_reg = self.fresh("_cond");
+        self.emit(op, Some(&cond_reg), vec![a, b], "i64");
+        Ok(cond_reg)
     }
 
     // -----------------------------------------------------------------------
@@ -1309,6 +1404,45 @@ mod tests {
                 &["MULTIPLY 999999999 BY 999999999 GIVING R.", "STOP RUN."],
             ),
             "mv",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn if_compiles_with_branches_and_validates() {
+        let module = compile_source(
+            &wrap(
+                &["01  N  PIC 9(3) VALUE 5."],
+                &["IF N GREATER 3 DISPLAY \"BIG\" ELSE DISPLAY \"SMALL\".", "STOP RUN."],
+            ),
+            "if",
+        )
+        .unwrap();
+        assert!(module.validate().is_empty(), "{:?}", module.validate());
+        let os = ops(&module);
+        assert!(os.contains(&"cmp_gt".to_string()));
+        assert!(os.contains(&"jmp_if_false".to_string()));
+        assert!(os.contains(&"label".to_string()));
+    }
+
+    #[test]
+    fn if_negation_inverts_the_relation() {
+        // IS NOT GREATER lowers to cmp_le (not an integer boolean inversion).
+        let module = compile_source(
+            &wrap(&["01  N  PIC 9(3) VALUE 3."], &["IF N IS NOT GREATER THAN 5 DISPLAY \"OK\".", "STOP RUN."]),
+            "n",
+        )
+        .unwrap();
+        assert!(ops(&module).contains(&"cmp_le".to_string()));
+    }
+
+    #[test]
+    fn alphanumeric_comparison_is_deferred() {
+        // Comparing a character field is a later rung (space-padded string compare).
+        let err = compile_source(
+            &wrap(&["01  W  PIC X(4) VALUE \"AB\"."], &["IF W EQUAL \"AB\" DISPLAY \"M\".", "STOP RUN."]),
+            "a",
         )
         .unwrap_err();
         assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
