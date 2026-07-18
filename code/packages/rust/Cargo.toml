@@ -261,6 +261,8 @@ members = [
     "j-to-semantic-ir",
     "reduce-lexer",
     "reduce-parser",
+    "reduce-runtime",
+    "reduce-repl",
     "logic-gates",
     "logic-core",
     "lookup-core",

@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/reduce-runtime",
+  "capabilities": [],
+  "justification": "Pure computation: parses Reduce source, lowers it to symbolic-ir, evaluates with symbolic-vm, and formats the result string. No filesystem, network, or process access. (A bounded worker thread with a large stack is spawned per evaluation to contain deep-recursion stack overflows; this is in-process compute, not OS-level process spawning.)"
+}
