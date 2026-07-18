@@ -114,9 +114,25 @@ pub struct FlatHeap {
     live_bytes: usize,
     /// Total collections run since creation.
     collection_count: u64,
+    /// Soft ceiling on `live_bytes` that triggers a collection. Consulted by
+    /// [`Self::should_collect`]; re-tuned by [`Self::adapt_threshold`] after each
+    /// cycle. See [`INITIAL_THRESHOLD`] / [`MAX_THRESHOLD`].
+    collect_threshold: usize,
     /// Adaptive-policy profile shared with the rest of `gc-core`.
     profile: GcProfile,
 }
+
+/// Initial collection threshold, and the floor `adapt_threshold` never drops
+/// below: **1 MiB**. Small enough that a real workload collects promptly, large
+/// enough that a burst of tiny allocations does not thrash the collector. Matches
+/// `twig_gc.c`'s `GC_INITIAL_THRESHOLD`.
+pub const INITIAL_THRESHOLD: usize = 1024 * 1024;
+
+/// Ceiling `adapt_threshold` never grows past: **256 MiB**. Bounds the worst-case
+/// live-set overshoot between collections and stops a live-heavy program from
+/// doubling the threshold up to `usize::MAX` (which would disable the GC and let
+/// an untrusted program exhaust memory). Matches `twig_gc.c`'s `GC_MAX_THRESHOLD`.
+pub const MAX_THRESHOLD: usize = 256 * 1024 * 1024;
 
 // SAFETY: `FlatHeap` holds raw pointers (`*mut FlatHeader`), which make it
 // `!Send` by default.  The native AOT runtime is single-threaded and the C ABI
@@ -138,6 +154,7 @@ impl FlatHeap {
             all: ptr::null_mut(),
             live_bytes: 0,
             collection_count: 0,
+            collect_threshold: INITIAL_THRESHOLD,
             profile: GcProfile::default(),
         }
     }
@@ -206,6 +223,49 @@ impl FlatHeap {
         &self.profile
     }
 
+    /// The current collection threshold in bytes (see [`INITIAL_THRESHOLD`]).
+    pub fn collect_threshold(&self) -> usize {
+        self.collect_threshold
+    }
+
+    /// Whether the live set has reached the threshold — i.e. a collection is due.
+    ///
+    /// This is the *policy* half of paced collection: it answers "should I collect
+    /// now?" from live-byte accounting alone, with no knowledge of *where* the
+    /// roots are. The *mechanism* half — actually finding the roots and running a
+    /// cycle — lives with the caller (for native AOT, `gc-core-capi`'s stack scan),
+    /// because only the caller knows how to enumerate its roots. A safepoint or an
+    /// allocation consults this and, when true, drives a collect.
+    pub fn should_collect(&self) -> bool {
+        self.live_bytes >= self.collect_threshold
+    }
+
+    /// Re-tune the threshold after a cycle, given the live bytes *before* it.
+    ///
+    /// The heuristic (ported verbatim from `twig_gc.c`): if **more than half** the
+    /// pre-cycle live set survived, the program is holding a large working set —
+    /// **double** the threshold (capped at [`MAX_THRESHOLD`]) so we collect less
+    /// often and waste less time on low-yield sweeps. Otherwise most of the heap
+    /// was garbage — **halve** it (floored at [`INITIAL_THRESHOLD`]) so we collect
+    /// sooner and keep the footprint tight.
+    ///
+    /// ```text
+    ///   survived > prev/2  →  threshold = min(threshold*2, MAX)   (grow: retain-heavy)
+    ///   survived ≤ prev/2  →  threshold = max(threshold/2, INITIAL) (shrink: garbage-heavy)
+    /// ```
+    ///
+    /// The cap is load-bearing for safety, not just tuning: without it a live-heavy
+    /// program could double the threshold toward `usize::MAX`, making
+    /// `should_collect` never fire — the GC effectively off, an unbounded
+    /// memory-exhaustion vector for untrusted input.
+    fn adapt_threshold(&mut self, prev_live: usize) {
+        if self.live_bytes > prev_live / 2 {
+            self.collect_threshold = (self.collect_threshold * 2).min(MAX_THRESHOLD);
+        } else {
+            self.collect_threshold = (self.collect_threshold / 2).max(INITIAL_THRESHOLD);
+        }
+    }
+
     /// Number of live blocks (walks the list — O(n); for tests/introspection).
     pub fn object_count(&self) -> usize {
         let mut n = 0;
@@ -231,6 +291,7 @@ impl FlatHeap {
     /// extra cycle; it never frees a live one.
     pub fn collect(&mut self, roots: &[usize]) -> GcCycleStats {
         let before = self.object_count();
+        let prev_live = self.live_bytes;
 
         // ── Mark ──────────────────────────────────────────────────────────────
         // Iterative worklist (no recursion → no stack blow-up on deep lists).
@@ -245,6 +306,7 @@ impl FlatHeap {
         // ── Sweep ─────────────────────────────────────────────────────────────
         let (freed, survived, live) = self.sweep();
         self.live_bytes = live;
+        self.adapt_threshold(prev_live);
 
         let stats = GcCycleStats {
             freed,
@@ -287,6 +349,7 @@ impl FlatHeap {
     /// scanning starts at `base` and a sub-8-byte tail is ignored.
     pub unsafe fn collect_region(&mut self, base: *const u8, len: usize) -> GcCycleStats {
         let before = self.object_count();
+        let prev_live = self.live_bytes;
 
         let mut work: Vec<*mut FlatHeader> = Vec::new();
         // SAFETY: caller guarantees `[base, base+len)` is readable.
@@ -297,6 +360,7 @@ impl FlatHeap {
 
         let (freed, survived, live) = self.sweep();
         self.live_bytes = live;
+        self.adapt_threshold(prev_live);
 
         let stats = GcCycleStats {
             freed,
@@ -649,5 +713,80 @@ mod tests {
             unsafe { heap.collect_region(region.as_ptr() as *const u8, std::mem::size_of_val(&region)) };
         assert_eq!(stats.survived, 3);
         assert_eq!(stats.freed, 1);
+    }
+
+    // ── Adaptive collection threshold (GC pacing) ──────────────────────────────
+
+    /// A fresh heap starts at the initial threshold and is not yet due to collect.
+    #[test]
+    fn fresh_heap_starts_at_initial_threshold() {
+        let heap = FlatHeap::new();
+        assert_eq!(heap.collect_threshold(), INITIAL_THRESHOLD);
+        assert!(!heap.should_collect());
+    }
+
+    /// `should_collect` flips true exactly when live bytes reach the threshold.
+    #[test]
+    fn should_collect_fires_at_threshold() {
+        let mut heap = FlatHeap::new();
+        heap.collect_threshold = 100;
+        heap.live_bytes = 99;
+        assert!(!heap.should_collect());
+        heap.live_bytes = 100;
+        assert!(heap.should_collect());
+        heap.live_bytes = 101;
+        assert!(heap.should_collect());
+    }
+
+    /// Retention-heavy cycle (> half survived) doubles the threshold.
+    #[test]
+    fn adapt_threshold_doubles_when_retention_high() {
+        let mut heap = FlatHeap::new();
+        heap.collect_threshold = 4 * INITIAL_THRESHOLD;
+        heap.live_bytes = 100; // survived
+        heap.adapt_threshold(150); // prev/2 = 75 < 100 → grow
+        assert_eq!(heap.collect_threshold(), 8 * INITIAL_THRESHOLD);
+    }
+
+    /// Garbage-heavy cycle (≤ half survived) halves the threshold.
+    #[test]
+    fn adapt_threshold_halves_when_retention_low() {
+        let mut heap = FlatHeap::new();
+        heap.collect_threshold = 4 * INITIAL_THRESHOLD;
+        heap.live_bytes = 10; // survived
+        heap.adapt_threshold(100); // prev/2 = 50 ≥ 10 → shrink
+        assert_eq!(heap.collect_threshold(), 2 * INITIAL_THRESHOLD);
+    }
+
+    /// Growth is capped at `MAX_THRESHOLD` — the safety cap that keeps the GC from
+    /// being tuned off entirely.
+    #[test]
+    fn adapt_threshold_caps_at_max() {
+        let mut heap = FlatHeap::new();
+        heap.collect_threshold = MAX_THRESHOLD;
+        heap.live_bytes = MAX_THRESHOLD; // fully retained → wants to grow
+        heap.adapt_threshold(1);
+        assert_eq!(heap.collect_threshold(), MAX_THRESHOLD);
+    }
+
+    /// Shrinking never drops below the initial floor.
+    #[test]
+    fn adapt_threshold_floors_at_initial() {
+        let mut heap = FlatHeap::new();
+        heap.collect_threshold = INITIAL_THRESHOLD;
+        heap.live_bytes = 0; // nothing survived → wants to shrink
+        heap.adapt_threshold(1000);
+        assert_eq!(heap.collect_threshold(), INITIAL_THRESHOLD);
+    }
+
+    /// A real collect that reclaims everything (0 survivors) shrinks the threshold
+    /// — end-to-end proof the cycle re-tunes pacing, not just the direct unit test.
+    #[test]
+    fn collect_retunes_threshold_end_to_end() {
+        let mut heap = FlatHeap::new();
+        heap.collect_threshold = 4 * INITIAL_THRESHOLD;
+        heap.alloc(64, 0); // unrooted → freed by the collect below
+        let _ = heap.collect(&[]); // 0 survive ≤ prev/2 → halve
+        assert_eq!(heap.collect_threshold(), 2 * INITIAL_THRESHOLD);
     }
 }

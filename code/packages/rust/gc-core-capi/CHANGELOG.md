@@ -2,6 +2,29 @@
 
 All notable changes to this crate are documented here.
 
+## [0.4.0] — 2026-07-17
+
+### Added
+
+- **`__gc_safepoint()`** — the throttled, paced collect (drop-in for `twig_gc.c`'s
+  `__twig_gc_safepoint`). Runs `__gc_collect` only when the heap has reached its
+  adaptive threshold (`FlatHeap::should_collect`), else returns `0`. The native
+  backend emits a `safepoint` op at loop back-edges / function entries; collecting
+  at every one would be ruinous, so each merely asks "over threshold yet?" —
+  keeping GC cost proportional to allocation and stopping a tight allocation loop
+  from ever starving the collector.
+
+### Changed
+
+- **`__gc_alloc` / `__gc_alloc_kind` now collect under pressure** — before
+  allocating, if `should_collect()`, they run a conservative stack-scan collect
+  (matching `__twig_gc_alloc`). Collecting *before* the new allocation means the
+  new object does not exist yet and cannot be wrongly reclaimed; every root that
+  must survive is the caller's, already live on the scanned stack. Below the 1 MiB
+  threshold (host tests, light workloads) this path is never taken — allocation
+  stays a plain bump. Host tests serialised via a shared `TEST_LOCK` (the
+  process-wide `HEAP` is now touched by more than one test).
+
 ## [0.3.0] — 2026-07-17
 
 ### Added
