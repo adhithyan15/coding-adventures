@@ -443,9 +443,37 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
                     .map(|_| pop(&mut stack))
                     .collect::<Result<_, _>>()?;
                 let val = pop(&mut stack)?;
+                // SQLite IN is three-valued and uses the same equality as `=`:
+                //   • test value NULL            → NULL
+                //   • any element `=` the value  → 1 (true), even if NULLs present
+                //   • else if any element is NULL → NULL (the value *might* equal
+                //     the unknown), matching `1 IN (NULL,2)` → NULL
+                //   • else                        → 0 (false)
+                // `sql_eq` compares by storage class, so `1 IN (1.0)` is true
+                // (Int/Float compare numerically) while `'1' IN (1)` is false
+                // (text vs integer). This supersedes the old derived-`PartialEq`
+                // membership, which missed both numeric equality and NULL logic.
                 let result = match val {
                     SqlValue::Null => SqlValue::Null,
-                    v => SqlValue::Bool(items.contains(&v)),
+                    v => {
+                        let mut saw_null = false;
+                        let mut matched = false;
+                        for item in &items {
+                            if matches!(item, SqlValue::Null) {
+                                saw_null = true;
+                            } else if sql_eq(&v, item) {
+                                matched = true;
+                                break;
+                            }
+                        }
+                        if matched {
+                            SqlValue::Bool(true)
+                        } else if saw_null {
+                            SqlValue::Null
+                        } else {
+                            SqlValue::Bool(false)
+                        }
+                    }
                 };
                 stack.push(result);
             }
@@ -3974,6 +4002,53 @@ mod tests {
             Instruction::Halt,
         ]), &mut b).unwrap();
         assert_eq!(r.rows, vec![vec![null()]]);
+    }
+
+    #[test]
+    fn test_in_list_numeric_equality() {
+        // `1 IN (1.0)` is TRUE — IN uses `=` equality, which compares INTEGER and
+        // REAL numerically (not by same-variant identity).
+        let run = |val: SqlValue, items: Vec<SqlValue>| {
+            let mut b = InMemoryBackend::new();
+            let n = items.len();
+            let mut prog_v = vec![Instruction::BeginRow, Instruction::LoadConst(val)];
+            for it in items {
+                prog_v.push(Instruction::LoadConst(it));
+            }
+            prog_v.push(Instruction::InList(n));
+            prog_v.push(Instruction::EmitColumn("r".to_string()));
+            prog_v.push(Instruction::EmitRow);
+            prog_v.push(Instruction::Halt);
+            execute(&prog(prog_v), &mut b).unwrap().rows[0][0].clone()
+        };
+        assert_eq!(run(int(1), vec![float(1.0)]), bool_val(true));
+        assert_eq!(run(float(1.0), vec![int(1)]), bool_val(true));
+        assert_eq!(run(int(1), vec![int(2), float(1.0), int(3)]), bool_val(true));
+        // Text vs integer do NOT match (no affinity in IN).
+        assert_eq!(run(SqlValue::Text("1".into()), vec![int(1)]), bool_val(false));
+    }
+
+    #[test]
+    fn test_in_list_null_three_valued() {
+        let run = |val: SqlValue, items: Vec<SqlValue>| {
+            let mut b = InMemoryBackend::new();
+            let n = items.len();
+            let mut prog_v = vec![Instruction::BeginRow, Instruction::LoadConst(val)];
+            for it in items {
+                prog_v.push(Instruction::LoadConst(it));
+            }
+            prog_v.push(Instruction::InList(n));
+            prog_v.push(Instruction::EmitColumn("r".to_string()));
+            prog_v.push(Instruction::EmitRow);
+            prog_v.push(Instruction::Halt);
+            execute(&prog(prog_v), &mut b).unwrap().rows[0][0].clone()
+        };
+        // No match but a NULL element present → NULL.
+        assert_eq!(run(int(5), vec![null(), int(2)]), null());
+        // A real match wins even with a NULL element present → true.
+        assert_eq!(run(int(1), vec![null(), int(1)]), bool_val(true));
+        // No match, no NULL element → false.
+        assert_eq!(run(int(5), vec![int(1), int(2)]), bool_val(false));
     }
 
     // ── 10. Scan / LoadColumn ─────────────────────────────────────────────────

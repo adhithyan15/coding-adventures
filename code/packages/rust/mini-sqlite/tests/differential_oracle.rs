@@ -1190,6 +1190,24 @@ const CASES: &[Case] = &[
     // operator), so that override is a separate grammar follow-up, not covered
     // here. The `is_collate_call` guard in `collate_comparisons` already handles
     // it once the syntax parses.)
+    // IN membership uses the same equality as `=`: numeric across INTEGER/REAL,
+    // and it is three-valued for NULL. `1 IN (1.0)` and `1.0 IN (1)` are true
+    // (numeric), `'1' IN (1)` is false (text vs int, no affinity), and a list
+    // element `1.0` matches `1`. Previously IN used exact same-variant equality,
+    // so `1 IN (1.0)` wrongly returned false.
+    Case {
+        id: "in_numeric_equality",
+        setup: &[],
+        query: "SELECT 1 IN (1.0) AS a, 1.0 IN (1) AS b, '1' IN (1) AS c, 1 IN (2,1.0,3) AS d, 5 IN (1,2) AS e",
+    },
+    // IN is three-valued: a NULL element makes an otherwise-non-matching test
+    // NULL (`1 IN (NULL,2)` → NULL), but a real match wins over a NULL element
+    // (`1 IN (NULL,1)` → 1). `NOT IN` inverts, so `5 NOT IN (NULL,2)` is NULL.
+    Case {
+        id: "in_null_three_valued",
+        setup: &[],
+        query: "SELECT (1 IN (NULL,2)) IS NULL AS a, 1 IN (NULL,1) AS b, (5 IN (NULL,2)) IS NULL AS c, 5 NOT IN (1,2) AS d, (5 NOT IN (NULL,2)) IS NULL AS e",
+    },
     // A column WITHOUT a declared collation keeps BINARY comparison — only the
     // exact-case match qualifies. Guards against over-applying the fold.
     Case {
