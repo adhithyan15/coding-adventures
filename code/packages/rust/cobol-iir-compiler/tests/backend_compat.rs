@@ -147,3 +147,25 @@ fn if_else_program_accepted_by_print_backends() {
     let m = compile_source(&src, "if").unwrap();
     assert_accepted_by_print_backends(&m, "if/else branch");
 }
+
+#[test]
+fn scaled_multiply_divide_program_accepted_by_print_backends() {
+    // Scaled MULTIPLY and DIVIDE (with ROUNDED) exercise the dividend up-scale
+    // (mul by 10^e), the div, and the store rescale/rounding branches. Every
+    // print backend must accept the emitted IIR.
+    let src = program(&[
+        "IDENTIFICATION DIVISION.",
+        "PROGRAM-ID. P.",
+        "DATA DIVISION.",
+        "WORKING-STORAGE SECTION.",
+        "01  R  PIC 9(2)V99 VALUE 0.",
+        "PROCEDURE DIVISION.",
+        "MAIN.",
+        "    MULTIPLY 2.5 BY 2.5 GIVING R.",
+        "    DIVIDE 3 INTO 20 GIVING R ROUNDED.",
+        "    DISPLAY R.",
+        "    STOP RUN.",
+    ]);
+    let m = compile_source(&src, "muldiv").unwrap();
+    assert_accepted_by_print_backends(&m, "scaled multiply/divide");
+}

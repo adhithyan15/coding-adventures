@@ -603,44 +603,90 @@ impl Compiler {
         self.store_scaled(&recv, &acc, w, max_int + count_digits, rounded)
     }
 
-    /// `MULTIPLY a BY b [GIVING g]` — `a * b` into `g` (or `b`).
+    /// `MULTIPLY a BY b [GIVING g]` — `a * b` into `g` (or `b`). The raw product
+    /// of the two scaled `i64` slots carries scale `sa + sb`; store_scaled then
+    /// rounds/truncates it to the receiver's scale. Each operand is ≤ 9 digits, so
+    /// the product is < 10^18 and never overflows `i64`.
     fn emit_multiply(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
-        self.reject_rounded_or_size_error(verb, "MULTIPLY")?;
+        self.reject_size_error(verb, "MULTIPLY")?;
+        let rounded = has_rounded(verb);
         let ops = child_nodes(verb, "operand");
         if ops.len() != 2 {
             return Err(CompileError::Malformed("MULTIPLY needs two operands".into()));
         }
-        let a = self.int_operand(ops[0])?;
-        let b = self.int_operand(ops[1])?;
+        let at = self.read_arith_term(ops[0])?;
+        let bt = self.read_arith_term(ops[1])?;
+        let (sa, sb) = (self.term_scale(&at), self.term_scale(&bt));
+        let a = self.emit_term_at_scale(&at, sa);
+        let b = self.emit_term_at_scale(&bt, sb);
         let prod = self.fresh("_prod");
         self.emit("mul", Some(&prod), vec![a, b], "i64");
         let target = self.giving_or_operand_name(verb, ops[1], "MULTIPLY … BY <literal>")?;
-        // The operands are integer (scale 0), so the product is scale 0; its
-        // integer part is < 10^(a_int + b_int). The receiver may be a `V` field,
-        // into which store_scaled scales up — bounded by that digit count.
-        let prod_int = self.operand_int_digits(ops[0])? + self.operand_int_digits(ops[1])?;
-        self.store_scaled(&target, &prod, 0, prod_int, false)
+        // The product's integer part is < 10^(a_int + b_int); store_scaled bounds
+        // any up-scale into a wider-scale receiver by that count.
+        let prod_int = self.term_int_digits(&at) + self.term_int_digits(&bt);
+        self.store_scaled(&target, &prod, sa + sb, prod_int, rounded)
     }
 
-    /// `DIVIDE a INTO b [GIVING g]` — `b / a` (truncating) into `g` (or `b`).
+    /// `DIVIDE a INTO b [GIVING g]` — `b / a` into `g` (or `b`).
+    ///
+    /// The quotient is computed at working scale `w` = the receiver's `dec_digits`
+    /// (plus one guard digit when `ROUNDED`), by scaling the dividend up so the
+    /// integer division lands `w` fractional digits: with `b = B/10^sb` and
+    /// `a = A/10^sa`, the value scaled by `10^w` is `floor(B·10^(sa+w−sb) / A)`.
+    /// store_scaled then truncates or rounds `w → dec_digits`. A dividend with
+    /// more fractional digits than the result precision, or an intermediate that
+    /// would exceed `i64`, is a clean error.
     fn emit_divide(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
-        self.reject_rounded_or_size_error(verb, "DIVIDE")?;
+        self.reject_size_error(verb, "DIVIDE")?;
+        let rounded = has_rounded(verb);
         let ops = child_nodes(verb, "operand");
         if ops.len() != 2 {
             return Err(CompileError::Malformed("DIVIDE needs two operands".into()));
         }
-        let divisor = self.int_operand(ops[0])?;
-        let dividend = self.int_operand(ops[1])?;
-        let quot = self.fresh("_quot");
-        // Integer division truncates toward zero — COBOL's behaviour into an
-        // integer receiver. (A zero divisor traps at run time, matching the
-        // oracle's hard DivideByZero for the handler-less case.)
-        self.emit("div", Some(&quot), vec![dividend, divisor], "i64");
+        let divisor_t = self.read_arith_term(ops[0])?; // a
+        let dividend_t = self.read_arith_term(ops[1])?; // b
+        let (sa, sb) = (self.term_scale(&divisor_t), self.term_scale(&dividend_t));
         let target = self.giving_or_operand_name(verb, ops[1], "DIVIDE … INTO <literal>")?;
-        // The quotient b/a is ≤ the dividend b, so its integer part is bounded by
-        // the dividend's integer digits.
-        let quot_int = self.operand_int_digits(ops[1])?;
-        self.store_scaled(&target, &quot, 0, quot_int, false)
+        let recv_dec = self.numeric_dims(self.numeric_index(&target)?).1;
+        let w = recv_dec + usize::from(rounded);
+
+        if sa + w < sb {
+            return Err(CompileError::Unsupported(
+                "DIVIDE with a dividend of more fractional digits than the result precision \
+                 is a later rung"
+                    .into(),
+            ));
+        }
+        let e = sa + w - sb;
+        let b_int = self.term_int_digits(&dividend_t);
+        // numerator = b_scaled · 10^e < 10^(b_int + sa + w); keep it in i64.
+        if b_int + sa + w > 18 {
+            return Err(CompileError::Unsupported(
+                "DIVIDE intermediate at the requested precision could overflow i64 — a later rung"
+                    .into(),
+            ));
+        }
+
+        let b_val = self.emit_term_at_scale(&dividend_t, sb);
+        let num = if e > 0 {
+            let pr = self.fresh("_dp");
+            self.emit("const", Some(&pr), vec![Operand::Int(10i64.pow(e as u32))], "i64");
+            let n = self.fresh("_num");
+            self.emit("mul", Some(&n), vec![b_val, Operand::Var(pr)], "i64");
+            Operand::Var(n)
+        } else {
+            b_val
+        };
+        let a_val = self.emit_term_at_scale(&divisor_t, sa);
+        let quot = self.fresh("_quot");
+        // i64 division truncates toward zero, as COBOL does. A zero divisor faults
+        // at run time — matching the oracle's hard DivideByZero without a handler.
+        self.emit("div", Some(&quot), vec![num, a_val], "i64");
+        // The quotient at scale w is < 10^(b_int + sa + w); its integer part is
+        // < 10^(b_int + sa). store_scaled only down-scales here (w ≥ dec_digits),
+        // so this bound is a formality.
+        self.store_scaled(&target, &quot, w, b_int + sa, rounded)
     }
 
     /// Store a computed `value_reg` (carrying `value_scale` fractional digits)
@@ -748,21 +794,8 @@ impl Compiler {
         self.emit("label", None, vec![Operand::Var(skip)], "void");
     }
 
-    /// Reject `ROUNDED` / `ON SIZE ERROR` on a verb whose scaled path is a later
-    /// rung (MULTIPLY / DIVIDE): ignoring them would silently produce wrong output.
-    fn reject_rounded_or_size_error(
-        &self,
-        verb: &GrammarASTNode,
-        name: &str,
-    ) -> Result<(), CompileError> {
-        if has_rounded(verb) {
-            return Err(CompileError::Unsupported(format!("{name} … ROUNDED is a later rung")));
-        }
-        self.reject_size_error(verb, name)
-    }
-
-    /// Reject only `ON SIZE ERROR` (it needs the branch machinery of a later
-    /// rung); `ROUNDED` is handled by `store_scaled`.
+    /// Reject `ON SIZE ERROR` (it needs the branch machinery of a later rung);
+    /// `ROUNDED` is handled by `store_scaled`.
     fn reject_size_error(&self, verb: &GrammarASTNode, name: &str) -> Result<(), CompileError> {
         if child_node(verb, "size_error").is_some() {
             return Err(CompileError::Unsupported(format!(
@@ -898,61 +931,6 @@ impl Compiler {
                     Operand::Var(out)
                 }
             }
-        }
-    }
-
-    /// An arithmetic operand as an IIR `i64` [`Operand`]: an integer literal
-    /// becomes a `const`-free immediate; a data-name becomes its register.
-    /// Fractional literals/fields, alphanumerics, and over-wide fields are a
-    /// later rung. Used by MULTIPLY/DIVIDE, whose scaled path is a later rung.
-    fn int_operand(&self, op: &GrammarASTNode) -> Result<Operand, CompileError> {
-        match read_operand(op)? {
-            Operandy::Literal(Src::Num(s)) => {
-                let d = Decimal::parse_literal(&s)
-                    .ok_or_else(|| CompileError::Malformed(format!("numeric literal {s}")))?;
-                Ok(Operand::Int(integer_decimal(&d).map_err(CompileError::Unsupported)?))
-            }
-            Operandy::Literal(Src::Zero) => Ok(Operand::Int(0)),
-            Operandy::Literal(_) => Err(CompileError::Unsupported(
-                "an alphanumeric operand in arithmetic".into(),
-            )),
-            Operandy::Name(n) => self.int_operand_from_name(&n),
-        }
-    }
-
-    /// The integer-digit bound of a MULTIPLY/DIVIDE operand (a literal's trimmed
-    /// integer length, or an item's `int_digits`) — used to bound the store's
-    /// up-scale against `i64` overflow.
-    fn operand_int_digits(&self, op: &GrammarASTNode) -> Result<usize, CompileError> {
-        match read_operand(op)? {
-            Operandy::Literal(Src::Num(s)) => Ok(Decimal::parse_literal(&s)
-                .map(|d| d.int.trim_start_matches('0').len())
-                .unwrap_or(0)),
-            Operandy::Literal(_) => Ok(0),
-            Operandy::Name(n) => Ok(self.numeric_dims(self.item_index(&n)?).0),
-        }
-    }
-
-    /// An integer numeric item's register as an arithmetic operand.
-    fn int_operand_from_name(&self, name: &str) -> Result<Operand, CompileError> {
-        let idx = self.item_index(name)?;
-        match &self.items[idx].kind {
-            ItemKind::Numeric { int_digits, dec_digits, .. } => {
-                if *dec_digits != 0 {
-                    return Err(CompileError::Unsupported(format!(
-                        "arithmetic on scaled-decimal field {name} (PIC …V…) is a later rung"
-                    )));
-                }
-                if *int_digits > ARITH_MAX_DIGITS {
-                    return Err(CompileError::Unsupported(format!(
-                        "arithmetic on field {name} wider than {ARITH_MAX_DIGITS} digits is a later rung"
-                    )));
-                }
-                Ok(Operand::Var(self.items[idx].reg.clone()))
-            }
-            ItemKind::Char { .. } => Err(CompileError::Unsupported(format!(
-                "arithmetic on non-numeric field {name}"
-            ))),
         }
     }
 
@@ -1192,22 +1170,6 @@ fn decimal_scaled_to(d: &Decimal, w: usize) -> i64 {
     }
 }
 
-/// An integer-valued [`Decimal`] as `i64`, for an arithmetic operand. A non-zero
-/// fractional part (a scaled-decimal literal) or an over-wide magnitude is a
-/// later rung.
-fn integer_decimal(d: &Decimal) -> Result<i64, String> {
-    if d.frac.chars().any(|c| c != '0') {
-        return Err(format!("scaled-decimal literal {}.{} in arithmetic is a later rung", d.int, d.frac));
-    }
-    let int_part = d.int.trim_start_matches('0');
-    if int_part.len() > ARITH_MAX_DIGITS {
-        return Err(format!(
-            "numeric literal wider than {ARITH_MAX_DIGITS} digits in arithmetic is a later rung"
-        ));
-    }
-    let mag: i64 = if int_part.is_empty() { 0 } else { int_part.parse().map_err(|_| "numeric literal".to_string())? };
-    Ok(if d.neg { -mag } else { mag })
-}
 
 // ---------------------------------------------------------------------------
 // CST helpers
@@ -1449,12 +1411,28 @@ mod tests {
     }
 
     #[test]
-    fn scaled_multiply_divide_still_deferred() {
-        // MULTIPLY/DIVIDE on a V operand, and their ROUNDED, remain a later rung.
+    fn scaled_multiply_divide_now_compile() {
+        // MULTIPLY/DIVIDE on a V operand, and their ROUNDED, are supported (PR3b).
         for body in ["MULTIPLY 2.5 BY R.", "DIVIDE 2 INTO R ROUNDED."] {
-            let err = compile_source(
+            let module = compile_source(
                 &wrap(&["01  R  PIC 9(2)V9 VALUE 1."], &[body, "STOP RUN."]),
                 "md",
+            )
+            .unwrap();
+            assert!(module.validate().is_empty(), "{body}: {:?}", module.validate());
+        }
+    }
+
+    #[test]
+    fn multiply_divide_on_size_error_still_deferred() {
+        // ON SIZE ERROR still needs the branch machinery of a later rung.
+        for body in [
+            "MULTIPLY 2 BY R ON SIZE ERROR DISPLAY \"O\".",
+            "DIVIDE 2 INTO R ON SIZE ERROR DISPLAY \"O\".",
+        ] {
+            let err = compile_source(
+                &wrap(&["01  R  PIC 9(3) VALUE 1."], &[body, "STOP RUN."]),
+                "se",
             )
             .unwrap_err();
             assert!(matches!(err, CompileError::Unsupported(_)), "{body}: got {err:?}");
