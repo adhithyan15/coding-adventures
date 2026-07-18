@@ -37,6 +37,7 @@ per rotation, in parallel):
 | `chemistry/` | lab equipment → its use (beaker → hold, bunsen_burner → heat) | LibreTexts (consensus) |
 | `chemistry/` | Types of chemical reaction → the defining token each is described by (combination → two_or_more_combine, decomposition → breaks_down, combustion → reacts_with_oxygen). | Chemistry LibreTexts (consensus) |
 | `chemistry/` | metal → flame-test color it gives (sodium → orange, potassium → violet, lithium → red) | University of Washington Department of Chemistry (authoritative) |
+| `chemistry/` | mixture-separation method → property it separates by (filtration → by_particle_size, distillation → by_volatility, chromatography → by_different_rates) | Chemistry LibreTexts (consensus) |
 | `metrology/` | SI prefix → power of ten | NIST |
 | `mathematics/` | Roman numeral → value | (consensus) |
 | `calendar/` | day / month → number | ISO 8601 |
