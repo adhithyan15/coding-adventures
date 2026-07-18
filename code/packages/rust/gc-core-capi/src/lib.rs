@@ -29,6 +29,7 @@
 //! | `__gc_live_bytes()` | live payload bytes |
 //! | `__gc_collection_count()` | collections run so far |
 //! | `__gc_reset()` | drop the whole heap (frees everything); mainly for tests / process teardown |
+//! | `__gc_collect_precise()` | full collect rooted precisely at this thread's stack — frame-pointer walk (stack-mapped frames precise, rest conservative) |
 //! | `__gc_register_stackmap(...)` | register a function's stack maps (code range + per-safepoint records) for precise-root resolution |
 //! | `__gc_stackmap_count()` | number of functions registered |
 //! | `__gc_stackmap_reset()` | drop all registered stack maps (tests / teardown) |

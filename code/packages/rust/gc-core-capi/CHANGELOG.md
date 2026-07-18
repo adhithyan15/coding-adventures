@@ -2,6 +2,39 @@
 
 All notable changes to this crate are documented here.
 
+## [0.11.0] — 2026-07-18
+
+### Added
+
+- **`__gc_collect_precise()` — the argument-less precise-root collect entry** (the
+  `asm!` half that gives the precise machinery a real machine stack to walk). It is
+  to `collect_mixed` what `__gc_collect` is to `collect_region`:
+  - Spills callee-saved registers (via the same `spill_and_sp` as `__gc_collect`),
+    captures the current **frame pointer** (`x29` / `rbp`, via a new
+    `#[inline(always)]` `current_fp`) and the stack base, then hands `fp`/`sp`/`base`
+    to `precise_walk::build_precise_roots`. The resulting precise **slots**
+    (stack-mapped frames) and conservative **regions** (unmapped frames) go to
+    `gc_core::FlatHeap::collect_mixed` in one cycle. The spilled registers are also
+    handed over as an explicit conservative region — a reference live only in a
+    callee-saved register is named by no stack map yet (that needs a
+    `callee_saved_mask`, a later rung), so it must be scanned, exactly as
+    `__gc_collect` scans it.
+  - **Opportunistic + safe:** with no stack maps registered, every frame resolves
+    conservatively and the regions tile all of `[sp, base)`, so it degrades to
+    exactly `__gc_collect` — safe even if the captured frame pointer is garbage. As
+    backends register maps, matching frames shed floating garbage; at that point a
+    *valid* frame pointer becomes load-bearing (a garbage anchor whose `[fp+8]`
+    aliased a stale return address into a mapped function could exclude a live span),
+    so the map-emitting rung must build this crate with frame pointers (guaranteed by
+    ABI on the aarch64 primary target; tracked as a prerequisite of that rung). If
+    the stack base can't be established it collects **nothing** this cycle
+    (bias-to-leak, matching `__gc_collect`).
+  - Smoke-tested end-to-end (`precise_collect_keeps_live_local_frees_dead`): a live
+    stack local survives, a dead object is reclaimed, and the asm-capture →
+    frame-walk → `collect_mixed` path runs without crashing. (The precise reclaim of
+    a named slot vs. an unnamed neighbour is proven by `precise_walk`'s
+    synthetic-stack tests from 0.10.0.)
+
 ## [0.10.0] — 2026-07-18
 
 ### Added

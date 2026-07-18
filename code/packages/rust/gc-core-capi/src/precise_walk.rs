@@ -106,11 +106,10 @@ const MAX_FRAMES: usize = 1 << 20;
 /// place. The emitted slot addresses and regions are only *recorded* here, not
 /// dereferenced — `collect_mixed` reads them later under its own contract.
 ///
-/// `#[allow(dead_code)]` until the `asm!` entry point (`__gc_collect_precise`, a
-/// follow-up PR) captures the running thread's `fp`/`sp`/`base` and calls this; it
-/// is exhaustively exercised by this module's synthetic-stack unit tests today,
-/// exactly as `gc-core` shipped `collect_mixed` ahead of its consumer.
-#[allow(dead_code)]
+/// Consumed by the `asm!` entry point [`__gc_collect`](crate::stack_scan)'s sibling
+/// `__gc_collect_precise` (in [`crate::stack_scan`]), which captures the running
+/// thread's `fp`/`sp`/`base` and hands them here; also exhaustively exercised by this
+/// module's synthetic-stack unit tests.
 pub(crate) unsafe fn build_precise_roots(
     start_fp: usize,
     sp: usize,
