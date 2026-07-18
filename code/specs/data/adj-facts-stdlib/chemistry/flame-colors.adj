@@ -1,0 +1,112 @@
+% ============================================================================
+% flame-colors — each metal (or metal ion) and the color it gives in a flame
+% test, as the source states it (adj-facts-stdlib, CHEMISTRY).
+% ============================================================================
+% One of the very first "the world is made of elements, and each one has a
+% fingerprint" ideas a chemistry student meets. Heat a salt in a hot flame and
+% the metal in it glows a characteristic color: sodium glows orange, potassium
+% violet, lithium red. The metal ions are lifted to an excited state by the heat
+% of the flame and then fall back, emitting light of colors characteristic of
+% that element — so the color you SEE names the metal that is present. A flame
+% test is a recall: "what color does barium give?" is a binding query.
+%
+%     ? flame_color(sodium, $Color)      % orange
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `flame_color(metal, color)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the color
+% WITH its source, on the CPU, with zero model calls, and abstains on a metal
+% whose flame color this source does not state (it never invents a color).
+%
+% Each metal the source names and the flame color it states for it, as a little
+% truth table:
+%
+%     metal       flame color (source's word)   a beginner's cue
+%     ---------   ---------------------------   ------------------------------
+%     barium      green                         "Barium gives a green flame"
+%     strontium   red                           "Strontium gives a red flame"
+%     lithium     red                           "Lithium gives a red flame"
+%     calcium     red_orange                    "Calcium gives a red orange flame"
+%     sodium      orange                        "Sodium gives an orange flame"
+%     potassium   violet                        "Potassium give a violet flame"
+%
+% Notice two metals — strontium and lithium — both give `red`: a flame color is
+% NOT unique to one element, so the relation is many-to-one. That makes the
+% reverse recall genuinely interesting: binding a color runs the relation
+% BACKWARD and can recall MORE than one metal.
+%
+%     ? flame_color($Metal, red)   % strontium ; lithium — one color, two metals
+%
+% A metal whose flame color is NOT stated on this source page — `copper`,
+% `magnesium`, `iron` — is deliberately NOT a row, so a flame-color recall
+% ABSTAINS on it rather than inventing a color. That honest-abstention property
+% is what makes the table safe to build a reasoner on: it answers exactly the
+% metal→color pairs it can ground, and only those.
+%
+% The `color` value of every row is a SINGLE lowercase atom, and it is the
+% source's OWN color word: where the source says "red orange" (two words), the
+% atom joins them into a single token `red_orange`, so every value stays
+% literally checkable against the quoted span — never a color the source does
+% not support.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every metal→color pair
+% below was read out of a fetched University of Washington Department of
+% Chemistry lecture-demonstrations page, and any pair whose color could not be
+% verified there would have been dropped). Each pair, with the primary source it
+% was copied from and the verbatim span that states it:
+%
+%   barium → green
+%     https://chem.washington.edu/lecture-demos/flame-tests
+%     (University of Washington — Department of Chemistry)
+%     "Barium gives a green flame"
+%
+%   strontium → red
+%     https://chem.washington.edu/lecture-demos/flame-tests
+%     "Strontium gives a red flame"
+%
+%   lithium → red
+%     https://chem.washington.edu/lecture-demos/flame-tests
+%     "Lithium gives a red flame"
+%
+%   calcium → red_orange
+%     https://chem.washington.edu/lecture-demos/flame-tests
+%     "Calcium gives a red orange flame"
+%
+%   sodium → orange
+%     https://chem.washington.edu/lecture-demos/flame-tests
+%     "Sodium gives an orange flame"
+%
+%   potassium → violet
+%     https://chem.washington.edu/lecture-demos/flame-tests
+%     "Potassium give a violet flame"   (source's wording, verbatim)
+%
+% (Copper is a metal a student might expect here — it gives a green/blue-green
+% flame — but THIS source page does not state a copper flame color, so copper is
+% deliberately dropped rather than filled in from memory: a flame-color recall
+% on copper abstains.)
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the statement that fixes the
+% first row (barium → green). Every OTHER row's per-fact source and verbatim span
+% is listed above, so each color remains independently checkable. The source is
+% the University of Washington Department of Chemistry, a university chemistry
+% department teaching resource, so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table flame_color {
+    columns metal, color
+
+    row (barium, green)
+    row (strontium, red)
+    row (lithium, red)
+    row (calcium, red_orange)
+    row (sodium, orange)
+    row (potassium, violet)
+
+    source "Barium gives a green flame"
+    locator "https://chem.washington.edu/lecture-demos/flame-tests"
+    trust authoritative
+}
