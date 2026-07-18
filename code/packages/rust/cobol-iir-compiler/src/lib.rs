@@ -1469,8 +1469,10 @@ impl<'a> Compiler<'a> {
         }
     }
 
-    /// Replace register `acc` with its magnitude (negate when negative). Fields
-    /// are ≤ 9 digits, so the value is never `i64::MIN` and negation is safe.
+    /// Replace register `acc` with its magnitude (negate when negative). Every
+    /// value reaching here is bounded well below `10^18` (arithmetic operands and
+    /// receivers are ≤ 9 digits, and `COMPUTE` intermediates are guarded to
+    /// `< 10^18` at each step), so it is never `i64::MIN` and negation is safe.
     fn emit_abs(&mut self, acc: &str) {
         let zero = self.fresh("_z");
         self.emit("const", Some(&zero), vec![Operand::Int(0)], "i64");
