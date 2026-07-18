@@ -2,6 +2,35 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.32.0] - 2026-07-17
+
+### Added — `for` loop body comma-fusion: `for(…){a();b();}` → `for(…)a(),b();`
+
+A `for` loop whose **block body is entirely plain expression statements**
+collapses to a single (possibly comma-sequenced) expression statement, dropping
+the braces — matching the reference Closure Compiler at `SIMPLE` byte-for-byte:
+
+- `for (;;) { a(); }` → `for (;;) a();` (single-statement block unwrapped)
+- `for (;;) { a(); b(); }` → `for (;;) a(), b();`
+- `for (;;) { a(); b(); c(); }` → `for (;;) a(), b(), c();`
+- `for (i=0;i<9;i++) { a(); b(); }` → `for (i=0;i<9;i++) a(), b();`
+
+The comma operator runs the statements left-to-right with the same side effects,
+and a loop body discards the value, so only that ordering matters — the rewrite
+is behaviour-preserving. It reuses the existing `stmts_as_sequence_expr` helper
+(introduced for the `if`→ternary/`&&` sequence folds), which **declines**
+(leaving the block intact) for any body carrying a declaration
+(`var`/`let`/`const`), a `break`/`continue`/`return`, a nested `if`/loop, or a
+nested block — none of which can join a comma-sequence. Only a `BlockStatement`
+body is a fusion candidate; a bare-statement body is already brace-free.
+
+Because the fusion runs **after** the body's own inner folds, an
+`if (x) a();` that folded to `x && a()` inside the block participates:
+`for (;;) { if (x) a(); b(); }` → `for (;;) x && a(), b();`.
+
+Applies to `while` loops too, transitively, once they are canonicalised to
+`for` (the while→for rewrite). Additive; MINOR bump 0.29.0 → 0.32.0 (0.30.0 =
+dead-loop hoist-var extraction, 0.31.0 = while→for, both in flight).
 ## [0.31.0] - 2026-07-17
 
 ### Added — `while (cond) body` → `for (; cond; ) body` canonicalization
