@@ -1,5 +1,41 @@
 # Changelog — gc-core
 
+## 0.6.0 — 2026-07-18
+
+### Added
+
+- **`FlatHeap` generational split (young/old) + promotion** — the foundation for
+  a generational collector, the biggest throughput win for high-churn object
+  allocation (Ruby/Python/JS). Each object's `FlatHeader` now carries a
+  `generation` byte (`GEN_YOUNG` / `GEN_OLD`), stolen from the header's existing
+  padding so `size_of::<FlatHeader>()` stays exactly 32 (compile-assert
+  unchanged). New allocations are born **young**; any object that survives a
+  collection is **promoted (tenured) to old** during sweep. New
+  `object_count_by_generation() -> (young, old)` introspection + public
+  `GEN_YOUNG` / `GEN_OLD` constants. 3 unit tests (born-young,
+  survivor-promoted-then-new-alloc-young, old-stays-old). Every collect is still
+  a full collect — this PR only establishes the split and tenuring; the
+  remembered-set write barrier and the young-only **minor** GC that exploit it
+  are the next rung. No behavioural change to existing collection semantics.
+
+## 0.5.0 — 2026-07-17
+
+### Added
+
+- **`FlatHeap` precise interior tracing via reference-field maps** — the first
+  rung of the precision ladder (conservative → precise) and the step that lets
+  the collector serve typed-object languages. `register_kind(field_offsets) ->
+  u16` records the ref-field byte offsets for one object layout and returns a
+  1-based `kind` id; `scan_payload` now follows **only** those offsets for objects
+  allocated with that kind (via `alloc(n, kind)`), instead of scanning every
+  payload word conservatively. So a look-alike-pointer integer sitting in a
+  non-reference field no longer pins a phantom child. Kind id `0` stays reserved
+  for "opaque / trace conservatively", so existing `alloc(n, 0)` behaviour is
+  unchanged; an unregistered kind id or an offset that runs past an object's
+  payload safely falls back / is skipped (never an out-of-bounds read, never
+  under-traces). New `registered_kinds()`. 6 unit tests, including the headline
+  precise-reclaims-phantom vs. conservative-retains-phantom contrast.
+
 ## 0.4.0 — 2026-07-17
 
 ### Added

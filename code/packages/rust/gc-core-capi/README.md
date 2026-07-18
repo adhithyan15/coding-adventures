@@ -35,7 +35,8 @@ The interpreters use `gc-core`'s managed-object collector; native output uses
 | Symbol | Meaning |
 |---|---|
 | `int64_t __gc_alloc(int64_t n)` | allocate `n` zeroed bytes; returns a real pointer (as `int64`), `0` on failure/`n<=0` |
-| `int64_t __gc_alloc_kind(int64_t n, uint16_t kind)` | as above, tagging the object with a `HeapKind` id (for later precise tracing) |
+| `int64_t __gc_alloc_kind(int64_t n, uint16_t kind)` | as above, tagging the object with a registered `kind` id → precise interior tracing (`0` = conservative) |
+| `int64_t __gc_register_kind(const int64_t *field_offsets, int64_t count)` | register a ref-field map, returns a 1-based `kind` id for `__gc_alloc_kind` (precise tracing) |
 | `int64_t __gc_collect_roots(const int64_t *roots, int64_t count)` | mark from `count` root words, sweep; returns objects freed |
 | `int64_t __gc_collect_region(const uint8_t *base, int64_t len)` | mark from every candidate pointer in a raw region, sweep; returns objects freed |
 | `int64_t __gc_collect(void)` | conservative collection rooted at this thread's live stack + callee-saved registers (no caller roots); returns objects freed |
@@ -87,12 +88,18 @@ The archive also exports **twig-compat aliases** — `__twig_gc_alloc` /
 `twig_gc.c` exported; these aliases let this archive satisfy them so `twig_gc.c`
 can be retired without changing the emitters.
 
-Still to come (own PRs):
+**Precise interior tracing** is now available: `__gc_register_kind` records an
+object layout's ref-field offsets and returns a `kind` id for `__gc_alloc_kind`,
+so typed objects are traced exactly (only their ref fields) rather than
+conservatively — the first rung of the precision ladder, and what lets the
+collector serve typed-object languages.
 
-- Wire `twig-aot`'s `build.rs` to link this archive instead of compiling
-  `twig_gc.c`, and retire `twig_gc.c` (golden / `*_smoke.rs` parity).
-- **Precise** roots (stack maps) and interior tracing (`HeapKind` field maps),
-  then moving / generational — all as `gc-core` algorithms.
+Still to come (own PRs) — the rest of the ladder, all as `gc-core` algorithms:
+
+- **Precise roots** (stack maps: the backend emits a live-ref-slot map at each
+  safepoint so the *stack* scan is exact, not just interiors).
+- **Generational** (nursery + write barrier — the biggest win for high-churn
+  object allocation), then **moving / compacting**, then **incremental**.
 
 ## Build & test
 

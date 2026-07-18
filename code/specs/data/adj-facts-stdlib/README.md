@@ -34,6 +34,7 @@ per rotation, in parallel):
 | `chemistry/` | subatomic particle → electric charge (proton → positive) | DOE "Explains…Nuclei" (authoritative) |
 | `chemistry/` | chemical bond type → defining token (ionic → transfer) | LibreTexts (consensus) |
 | `chemistry/` | mixture kind → the everyday example the source names (colloid → milk) | LibreTexts (consensus) |
+| `chemistry/` | lab equipment → its use (beaker → hold, bunsen_burner → heat) | LibreTexts (consensus) |
 | `metrology/` | SI prefix → power of ten | NIST |
 | `mathematics/` | Roman numeral → value | (consensus) |
 | `calendar/` | day / month → number | ISO 8601 |
@@ -55,6 +56,7 @@ per rotation, in parallel):
 | `physics/` | common force → everyday example NASA uses (gravity → waterfall, tension → ropes) | NASA GSFC Swift (authoritative) |
 | `physics/` | named wave → its family (sound → mechanical, radio → electromagnetic) | NASA Science (authoritative) |
 | `physics/` | temperature reference point → the value NIST fixes it at (water_boils_celsius → 100, absolute_zero_kelvin → 0) | NIST (authoritative) |
+| `physics/` | magnetic pole pairing → interaction (like_poles → repel, opposite_poles → attract) | NASA Heliophysics Education (authoritative) |
 | `anatomy/` | lung → number of lobes (right 3, left 2) | NIH / NCI SEER Training |
 | `anatomy/` | brain part → primary function it controls | NIH / NCI SEER Training + StatPearls |
 | `anatomy/` | skeletal muscle → body region it is located in | Wikipedia (consensus) |
