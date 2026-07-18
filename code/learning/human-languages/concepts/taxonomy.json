@@ -63,6 +63,12 @@
       "retires": ["THANKS-CASUAL"],
       "notes": "e.g. Hindi shukriyā, Punjabi shukrīā — the everyday, often Perso-Arabic-derived alternative to the Sanskritic COURTESY-THANKS."
     },
+    "COURTESY-PLEASE": {
+      "family": "COURTESY",
+      "gloss": "please (and, in some languages, 'you're welcome')",
+      "core": false,
+      "notes": "Requesting-a-favour formula: Russian пожалуйста, French s'il vous plaît, Spanish por favor, German bitte. Several languages (Russian, German) use the same word to reply to thanks."
+    },
 
     "RESPONSE-YES": {
       "family": "RESPONSE",
