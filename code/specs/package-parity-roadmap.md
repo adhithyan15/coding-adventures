@@ -105,21 +105,22 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. Regenerated
-on July 17, 2026 after the paired Lua/Perl `fenwick-tree`, `binary-tree`,
+on July 18, 2026 after the paired Lua/Perl `fenwick-tree`, `binary-tree`,
 `binary-search-tree`, `in-memory-data-store-protocol`, `avl-tree`, `tree-set`,
 `skip-list`, `hyperloglog`, `trie`, `radix-tree`, and `resp-protocol` ports,
 the paired `hash-functions` prerequisite, the paired `bloom-filter`, `hash-map`,
-and `hash-set` ports, and the paired `in-memory-data-store-engine` and
-`in-memory-data-store` ports:
+and `hash-set` ports, the paired `in-memory-data-store-engine` and
+`in-memory-data-store` ports, and the paired C#/F# `wasm-module-encoder`,
+`x25519`, and `brainfuck-wasm-compiler` ports:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 343 |
+| Present in 10-15 languages | 172 | 337 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,972 |
-| Present in one language | 697 | 9,758 |
+| Present in one language | 699 | 9,786 |
 
-The loop must not start by attempting 9,758 singleton ports. It should finish
+The loop must not start by attempting 9,786 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 ## Priority 0: Inventory And Identity Integrity
@@ -160,7 +161,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 172 packages present in at least ten implementation languages need 339
+The 172 packages present in at least ten implementation languages need 337
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -169,8 +170,8 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Elixir | 0 | Complete; `python-parser` uses the shared grammar-driven frontend |
 | Lua | 0 | Complete; paired data-structure/storage wave |
 | Perl | 0 | Complete; paired data-structure/storage wave |
-| C# | 15 | Move with F# |
-| F# | 15 | Move with C# |
+| C# | 14 | Move with F# |
+| F# | 14 | Move with C# |
 | Haskell | 34 | Dependency-shaped compression, graphics, ML, and protocol waves |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
@@ -242,6 +243,14 @@ ladder over `2^255 - 19`. RFC scalar-multiplication, Diffie-Hellman,
 high-bit-masking, low-order rejection, and 1,000-round iterated vectors provide
 conformance coverage. The package now spans 12 implementation lanes and
 reduces each paired high-consensus gap to 15.
+
+The third paired C#/F# slice is complete: `brainfuck-wasm-compiler` now builds
+typed WebAssembly modules through the new native encoders in both lanes.
+Package-native tests cover source filtering, balanced and depth-limited loops,
+8-bit cell and pointer emission, optional WASI I/O imports, file output,
+parser/validator round trips, and locally supported runtime execution. The
+package now spans 13 implementation lanes and reduces each paired
+high-consensus gap to 14.
 
 Recommended family order:
 
