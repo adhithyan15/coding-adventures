@@ -53,6 +53,7 @@ per rotation, in parallel):
 | `biology/` | leaf part → defining token / function (blade → flattened, stomata → gas_exchange) | Colorado State University Extension (authoritative) |
 | `biology/` | diet category → food it eats (herbivore → plants, carnivore → animals, omnivore → anything) | U.S. National Park Service (authoritative) |
 | `biology/` | flower part → function / role (petal → attract_pollinators, stamen → male, ovary → contains_ovules) | University of Illinois Extension (authoritative) |
+| `biology/` | seed part → the role/function the source states (seed_coat → covering, cotyledon → food_storage, embryo → miniature_plant) | USDA Forest Service, Woody Plant Seed Manual, Ch.1 (authoritative) |
 | `physics/` | simple machine → everyday example | NASA |
 | `physics/` | phase change → its name (melting, freezing, …) | LibreTexts (consensus) |
 | `physics/` | energy form → defining token (chemical → bonds, thermal → heat) | EIA (energy.gov) |
