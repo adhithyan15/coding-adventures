@@ -20,13 +20,17 @@ French.
   stand) → mais ou menos → practice. **Authored** — the verb-free *Tudo bem?* is
   the distinctive Portuguese move; reordered ahead of introductions, register
   você/o senhor inline.
+- **Ch. 4 — Farewells**: adeus (← *a Deus* "to God"; twin of *adiós/adieu/addio*)
+  → até logo (*até* ← **Arabic *ḥattā***, twin of Spanish *hasta*; *logo* ← *locō*
+  = *luego*) → até amanhã (*amanhã* ← *ad māneāna*; *nh* = *ñ*) → até breve
+  (*breve* ← *brevis*) → practice. **Authored** — fifth track to complete the
+  greet-to-goodbye arc (Ch. 3 introductions to slot in below it).
 
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |
 |---|---|
 | 3 | Introducing yourself: *chamo-me / o meu nome é*, como se chama, prazer |
-| 4 | Farewells: adeus, até logo, até amanhã |
 | 5+ | Numbers, time, days & months, family, food — following the shared theme order |
 
 Note: Portuguese's polite "you" is **você** (← *vossa mercê*, "your mercy") — the
