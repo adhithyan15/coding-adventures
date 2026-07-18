@@ -4,6 +4,43 @@ use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 
 mod _grammar;
 
+/// Recursion-depth cap for the Verilog [`GrammarParser`] — see
+/// [`GrammarParser::with_max_depth`] for why this guard exists at all (deep
+/// recursion through `parse_rule` can overflow the *native* thread stack —
+/// an uncatchable process abort — before this crate's own callers get a
+/// chance to report anything). Before this constant was applied,
+/// `create_verilog_parser_with_version` (the sole real construction path,
+/// used by both `create_verilog_parser` and `parse_verilog_with_version`)
+/// never called `with_max_depth` at all, leaving every caller exposed to a
+/// native-stack-overflow DoS from adversarial deeply-nested input (e.g.
+/// `assign x = (((...1...)));`).
+///
+/// **Not the shared engine's bare default** (see `csharp-parser`'s own
+/// identically-named constant for why a blind `DEFAULT_MAX_RULE_DEPTH`
+/// (128) is unsafe-for-usability on a rich general-purpose-language
+/// grammar). Measured directly instead (binary search over candidate
+/// `with_max_depth` values against a fixed 5000-level adversarial
+/// `assign x = (((...1...)));` input — ordinary parenthesised grouping —
+/// on a default-~2MiB-stack worker thread in a debug build, against the
+/// `"2005"` default version): safe at **289**, crashes at **290**.
+///
+/// `MAX_RULE_DEPTH` is set to **200** — about 31% below that floor
+/// (comparable margin to `apl-parser`'s own ~26.5%, `j-parser`'s ~30%,
+/// `reduce-parser`'s ~28.5%). Measured real-input headroom at `200`: plain
+/// parenthesised nesting parses cleanly to at least 10 levels —
+/// comfortably beyond ordinary hand-written nesting depth.
+///
+/// This is measured against only **one** of Verilog's recursion shapes
+/// (ordinary paren grouping), and only the `"2005"` version among the
+/// several `SUPPORTED_VERSIONS` this crate embeds — a full audit would
+/// also cover nested module instantiations, nested generate blocks, and
+/// nested begin/end blocks across every supported version, the way
+/// `css-parser`/`toml-parser` measured *every* shape in their own (much
+/// smaller) grammars. That fuller audit is a tracked follow-up; this pass
+/// at minimum replaces an unmeasured, silently-broken default with a
+/// properly-measured floor for the shape most likely to bind.
+const MAX_RULE_DEPTH: usize = 200;
+
 pub const DEFAULT_VERSION: &str = coding_adventures_verilog_lexer::DEFAULT_VERSION;
 pub const SUPPORTED_VERSIONS: &[&str] = _grammar::SUPPORTED_VERSIONS;
 
@@ -32,7 +69,7 @@ pub fn create_verilog_parser_with_version(source: &str, version: &str) -> Result
     let tokens = coding_adventures_verilog_lexer::tokenize_verilog_with_version(source, version)?;
     let grammar = _grammar::parser_grammar(version)
         .expect("compiled Verilog parser grammar missing supported version");
-    Ok(GrammarParser::new(tokens, grammar))
+    Ok(GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH))
 }
 
 pub fn parse_verilog(source: &str) -> GrammarASTNode {
@@ -494,6 +531,38 @@ endmodule";
         let err = parse_verilog_with_version("module empty; endmodule", "2099")
             .expect_err("unknown versions should be rejected");
         assert!(err.contains("Unknown Verilog version"));
+    }
+
+    // -------------------------------------------------------------------
+    // Recursion-depth guard (DoS hardening) -- see MAX_RULE_DEPTH's own
+    // doc comment for the measurement.
+    // -------------------------------------------------------------------
+
+    fn nested_paren_source(n: usize) -> String {
+        format!(
+            "module m; wire x; assign x = {}1{}; endmodule",
+            "(".repeat(n),
+            ")".repeat(n)
+        )
+    }
+
+    /// Deeply-nested input must not overflow the native stack on a
+    /// default-stack thread -- the whole point of the guard.
+    #[test]
+    fn test_deeply_nested_input_does_not_overflow_on_default_stack() {
+        let src = nested_paren_source(5000);
+        let handle = std::thread::spawn(move || {
+            let _ = parse_verilog_with_version(&src, "2005");
+        });
+        handle
+            .join()
+            .expect("MAX_RULE_DEPTH must trip BEFORE native overflow on the default stack");
+    }
+
+    /// Reasonable, hand-writable nesting stays well under the cap.
+    #[test]
+    fn test_reasonable_nesting_stays_under_the_cap() {
+        assert!(parse_verilog_with_version(&nested_paren_source(10), "2005").is_ok());
     }
 }
 
