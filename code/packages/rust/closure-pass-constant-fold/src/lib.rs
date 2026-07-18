@@ -4710,10 +4710,7 @@ fn fold_binary(b: &BinaryExpression, st: &mut FoldState) -> Expression {
         // `NaN`), and folding to those literals is both LONGER than the source
         // and unsound if `Infinity`/`NaN` is shadowed in scope — so Closure
         // declines, and so do we. A NON-zero divisor still folds normally
-        // (`5/2`→`2.5`, `1/8`→`.125`, `6/3`→`2`). (A separate divergence —
-        // Closure also keeps a NON-terminating quotient like `1/3` rather than
-        // the 16-digit `.3333333333333333`, governed by its numeric byte-cost
-        // heuristic — is filed as a follow-up, not handled here.)
+        // (`5/2`→`2.5`, `1/8`→`.125`, `6/3`→`2`).
         if matches!(b.operator, BinaryOperator::Div | BinaryOperator::Mod)
             && numeric_literal_value(&right) == Some(0.0)
         {
@@ -4723,6 +4720,30 @@ fn fold_binary(b: &BinaryExpression, st: &mut FoldState) -> Expression {
                 left: Box::new(left),
                 right: Box::new(right),
             });
+        }
+
+        // Long-fraction quotient: Closure keeps `a / b` UNFOLDED when the exact
+        // quotient needs more than seven digits after the decimal point — its
+        // numeric byte-cost heuristic (folding a repeating/precise fraction to a
+        // 16-digit literal costs more bytes than the `a/b` it replaces). The cut
+        // is on the FRACTIONAL-digit count of the result's shortest round-trip
+        // decimal, NOT the total length: `811/128`→`6.3359375` (7 frac digits)
+        // still folds even though it is longer than `811/128`, while
+        // `1/256`→`.00390625` (8 frac) and `1/3`→`.3333333333333333` (16) stay
+        // `1/256` / `1/3`. Integers and short fractions fold as before
+        // (`6/3`→`2`, `1/128`→`.0078125`). Oracle-verified against the reference
+        // jar. This applies to `/` only — `%` results are integers or short.
+        if b.operator == BinaryOperator::Div {
+            if let FoldedLiteral::Number(n) = &value {
+                if fractional_digit_count(*n) > 7 {
+                    return Expression::BinaryExpression(BinaryExpression {
+                        cv: b.cv.clone(),
+                        operator: b.operator,
+                        left: Box::new(left),
+                        right: Box::new(right),
+                    });
+                }
+            }
         }
 
         let parent = b.cv.clone();
@@ -5736,6 +5757,40 @@ fn format_js_number(n: f64) -> String {
     } else {
         body
     }
+}
+
+/// Count the digits after the decimal point in `n`'s shortest round-trip
+/// decimal — i.e. how many fractional places the *fixed-notation* form needs.
+/// Used by the division fold to mirror Closure's "keep `a/b` unfolded when the
+/// quotient has more than seven fractional digits" byte-cost heuristic.
+///
+/// The count is taken from [`format_js_number`] (JS-exact `ToString`) but
+/// normalized OUT of exponential notation, because the fold cares about the
+/// fixed decimal shape, not the printed one:
+///
+/// | value              | ToString              | fractional digits |
+/// |--------------------|-----------------------|-------------------|
+/// | `2`                | `"2"`                 | 0                 |
+/// | `6.3359375`        | `"6.3359375"`         | 7                 |
+/// | `0.00390625`       | `"0.00390625"`        | 8                 |
+/// | `9.5367…e-7`       | `"9.5367…e-7"`        | 13 + 7 = 20       |
+/// | `1e30`             | `"1e+30"`             | 0 (a big integer) |
+///
+/// A negative exponent `e-k` shifts the mantissa's own fractional digits `k`
+/// places further right (adding `k`); a non-negative exponent `e+k` moves the
+/// point right, cancelling up to `k` mantissa-fraction digits (never below 0).
+fn fractional_digit_count(n: f64) -> usize {
+    let s = format_js_number(n);
+    let (mantissa, exp) = match s.split_once(['e', 'E']) {
+        Some((m, e)) => (m, e.parse::<i32>().unwrap_or(0)),
+        None => (s.as_str(), 0),
+    };
+    let mantissa_frac = mantissa
+        .split_once('.')
+        .map(|(_, frac)| frac.len() as i32)
+        .unwrap_or(0);
+    // exp >= 0 cancels mantissa-fraction digits; exp < 0 adds |exp| of them.
+    (mantissa_frac - exp).max(0) as usize
 }
 
 // ---------------------------------------------------------------------
@@ -7197,6 +7252,62 @@ mod tests {
                 other => panic!("expected NumericLiteral({expected}); got {other:?}"),
             }
         }
+    }
+
+    #[test]
+    fn division_with_over_seven_fractional_digits_is_kept_unfolded() {
+        // Closure folds `a/b` only when the quotient has <= 7 fractional digits;
+        // otherwise it keeps the source `a/b` (byte-cost heuristic). Each row was
+        // checked against the reference jar. `folds == true` means the quotient
+        // becomes a NumericLiteral; `false` means the BinaryExpression survives.
+        let cases: &[(f64, f64, bool)] = &[
+            // <= 7 fractional digits — fold (even when longer than the source)
+            (6.0, 3.0, true),        // 2            (integer)
+            (1.0, 2.0, true),        // .5           (1)
+            (7.0, 8.0, true),        // .875         (3)
+            (1.0, 64.0, true),       // .015625      (6)
+            (1.0, 128.0, true),      // .0078125     (7)  boundary: still folds
+            (811.0, 128.0, true),    // 6.3359375    (7)  boundary, magnitude > 1
+            // > 7 fractional digits — keep unfolded
+            (1.0, 256.0, false),     // .00390625    (8)  boundary: kept
+            (1.0, 512.0, false),     // .001953125   (9)
+            (1.0, 1024.0, false),    // .0009765625  (10)
+            (1.0, 3.0, false),       // .3333…       (16, non-terminating)
+            (2.0, 3.0, false),       // .6666…       (16)
+            (1.0, 7.0, false),       // .142857…     (17)
+            (1.0, 1048576.0, false), // 9.53…e-7     (exponential, ~20)
+        ];
+        for &(l, r, folds) in cases {
+            let expr = Expression::BinaryExpression(BinaryExpression {
+                cv: Some("bin.1".to_string()),
+                operator: BinaryOperator::Div,
+                left: Box::new(num(l, None)),
+                right: Box::new(num(r, None)),
+            });
+            let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+            match (folds, extract_expr(&out)) {
+                (true, Expression::NumericLiteral(n)) => {
+                    assert_eq!(n.value, l / r, "{l}/{r} folded to the wrong value");
+                    assert!(changed, "{l}/{r} should fold");
+                }
+                (false, Expression::BinaryExpression(be)) => {
+                    assert_eq!(be.operator, BinaryOperator::Div, "{l}/{r} kept as division");
+                }
+                (folds, other) => {
+                    panic!("{l}/{r}: expected folds={folds}; got {other:?}")
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn fractional_digit_count_normalizes_exponential_forms() {
+        assert_eq!(fractional_digit_count(2.0), 0);
+        assert_eq!(fractional_digit_count(6.3359375), 7);
+        assert_eq!(fractional_digit_count(0.00390625), 8);
+        assert_eq!(fractional_digit_count(1.0 / 3.0), 16);
+        assert_eq!(fractional_digit_count(1e30), 0); // "1e+30" → big integer, 0 frac
+        assert_eq!(fractional_digit_count(1.0 / 1048576.0), 20); // 9.53…e-7
     }
 
     #[test]
