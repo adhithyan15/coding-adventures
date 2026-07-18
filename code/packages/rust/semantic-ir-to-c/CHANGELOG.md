@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.3.0 — lower unary minus (`neg` builtin) — negative literals no longer skip
+
+Ruby lowers unary minus (`-x`) to `BuiltinCall("neg", [x])`, but the v0 C
+emitter had no lowering for `neg`, so `first_unsupported_builtin` rejected it and
+the whole program was reported `UnsupportedFeature` (i.e. **skipped**) — meaning
+ANY negative literal, not just division, was unrunnable on the C backend.
+
+Unary minus IS single-argument subtraction, and the runtime's `_sir_minus_v`
+already negates a single argument tag-preservingly (a `SIR_FLOAT` stays float,
+otherwise int). So `neg` now lowers to `_sir_minus(1, x)` via `variadic_helper`
+— no new runtime code — matching the Go/Rust/Python runtimes that gained `neg`
+in SIR21 §E3. New `unary_minus` exec-proof in `tests/compile_and_run.rs`
+(`puts(-7)` → `-7`, `puts(-7 / 2)` → `-4` floored, `puts(-(3 * 2))` → `-6`),
+compiled and run through a real C compiler.
+
+This closes the **C arm** of the division frontier: with the runtime already
+flooring (`_sir_ifloordiv`), C now reproduces Ruby's floor `/` on negative
+dividends too, so `sir-conformance`'s `division_matches_ruby_floor_on_every_backend`
+asserts (rather than skips) C's negative cases.
+
 ## 0.2.0 — render SIR26 integer conversions
 
 Accepts `Feature::Conversions` (plus the SIR21 type-implied `SizedIntegers`,

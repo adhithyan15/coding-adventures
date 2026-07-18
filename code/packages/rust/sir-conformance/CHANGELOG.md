@@ -2,6 +2,16 @@
 
 All notable changes to the `sir-conformance` crate will be documented in this file.
 
+## [0.14.0] - Division frontier: C arm fully closed (SIR21 §E3)
+
+The C backend now lowers the unary-minus `neg` builtin (semantic-ir-to-c 0.3.0),
+so `division_matches_ruby_floor_on_every_backend` now **asserts** C's negative
+cases instead of skipping them — the C emitter previously reported `neg` as an
+unsupported builtin, so `run_c` returned `Skipped` for every negative literal.
+All six backends (Python, JavaScript, Go, Rust, Ruby, C) now floor every sign
+combination end-to-end. Module docs and the test doc-comment updated to record
+the C arm as closed rather than tracked.
+
 ## [0.13.0] - Division frontier CLOSED on every backend (SIR21 §E3)
 
 With Rust, Go and JavaScript now flooring integer division (their runtime
