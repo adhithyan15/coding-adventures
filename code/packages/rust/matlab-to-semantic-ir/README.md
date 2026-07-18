@@ -67,9 +67,30 @@ documented (and demonstrated) in `tests/test_validator.rs`.
   does not implement SIR22 codegen yet), mirroring the same
   capability-rejection verification pattern used to land SIR22/SIR23
   themselves.
-- `tests/e2e_node.rs` — the one class of MATLAB program that currently
-  avoids the array domain entirely (purely literal arithmetic) is lowered,
-  emitted as JavaScript, and **actually executed with `node`**, gated on
-  `node` availability. A genuine array/matrix round-trip through a real
-  backend arrives with `semantic-ir-to-javascript`'s SIR22 codegen (separate,
-  not-yet-shipped follow-on work per HML01 §4).
+- `tests/e2e_node.rs` — lowers MATLAB source (both purely-literal scalar
+  arithmetic and real array/matrix programs — matrix multiplication,
+  elementwise scalar broadcast, indexed assignment, range+transpose),
+  emits JavaScript, and **actually executes it with `node`**, gated on
+  `node` availability. This proves the compiled JS *runs without
+  crashing* and prints the expected value — but does not check that value
+  against an independent implementation of MATLAB itself; that is
+  `tests/oracle.rs`'s job.
+- `tests/oracle.rs` — the first **oracle/golden test** in the HML01 track
+  (spec §7): for a small corpus of MATLAB programs, runs the *same*
+  computation through both `matlab-runtime` (this frontend's own sibling
+  tree-walking interpreter — ground truth) and this crate's
+  `compile_source` → `semantic-ir-to-javascript` → `node`, and asserts the
+  two agree. Gated on `node` availability like `e2e_node.rs`. Its module
+  doc comment is required reading before adding a new corpus entry: it
+  explains why "the same source" is a `setup`/`final_expr` pair rather
+  than one literal string (MATLAB's `disp` is a confirmed no-op in
+  `matlab-runtime`; `semantic_ir` has no representation of MATLAB's
+  *implicit*-display convention at all), documents the normalization rules
+  applied before comparing, and catalogs several confirmed bugs/gaps found
+  while scoping the corpus (an integer-literal-division bug, a
+  unary-minus-on-power bug, a missing `Feature::ShortCircuit` declaration,
+  a severe `while`-loop-accumulator correctness bug with its own dedicated
+  test, and two `matlab-runtime` gaps — no function-definition support,
+  no indexed-assignment support — that make certain constructs impossible
+  to oracle-test until that sibling crate grows the missing support). See
+  `CHANGELOG.md` for the full write-up of each.

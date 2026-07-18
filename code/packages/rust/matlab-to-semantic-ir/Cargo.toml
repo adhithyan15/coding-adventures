@@ -19,3 +19,6 @@ lexer = { path = "../lexer" }
 # implemented by this backend, so those tests instead verify structural
 # validity plus the capability-rejection path (see README "Testing").
 semantic-ir-to-javascript = { path = "../semantic-ir-to-javascript" }
+# `tests/oracle.rs`'s ground truth: the same tree-walking interpreter this
+# frontend's own CST comes from (HML01 §7's oracle/golden testing).
+coding-adventures-matlab-runtime = { path = "../matlab-runtime" }
