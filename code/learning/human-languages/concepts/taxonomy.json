@@ -66,6 +66,12 @@
       "core": false,
       "notes": "hasta pronto / à bientôt / bis bald / a presto / até breve."
     },
+    "FAREWELL-CASUAL": {
+      "family": "GREETING",
+      "gloss": "a casual / colloquial 'bye'",
+      "core": false,
+      "notes": "The informal parting distinct from the neutral FAREWELL: German tschüss, French salut/tchao, Italian ciao, Portuguese tchau."
+    },
 
     "COURTESY-THANKS": {
       "family": "COURTESY",

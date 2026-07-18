@@ -22,12 +22,16 @@ Spanish and French where a contrast helps. The recurring decoder is the
   *go*; the state-verb, w/ a first taste of the **dative** *mir/dir*) → wie geht
   es dir/Ihnen → es geht (so-so) → practice. **Authored** — completes the
   Spanish/French/German how-are-you trilogy.
+- **Ch. 4 — Farewells**: auf Wiedersehen ("on the seeing-again", *sehen* = *see*;
+  twin of *au revoir*) → tschüss (← *adieu* → secretly "to God", cousin of
+  *adiós*) → bis bald (*bald* = English *bold*) → bis morgen (*Morgen* =
+  *morning/morrow*) → practice. **Authored** — completes the ES/FR/DE farewell
+  trilogy; the "bis …" family mirrors Spanish *hasta* / French *à*.
 
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 4 | Farewells: tschüss, auf Wiedersehen, bis morgen |
 | 5+ | Numbers, cases (der→den→dem), family, food — following the shared theme order |
 
 The **du / Sie** lesson (Ch. 2) completes the formal/informal set across the
