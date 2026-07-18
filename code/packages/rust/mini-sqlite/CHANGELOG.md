@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.5.42 — blob literals `x'…'` parse
+
+SQL blob literals `x'48656C6C6F'` / `X'FF00'` now parse end to end. Previously
+the lexer split `x'414243'` into a `NAME` and a `STRING` and the query failed;
+now the whole literal is one token that the planner decodes into raw bytes.
+`HEX(x'414243')` is `'414243'`, `TYPEOF(x'00')` is `'blob'`, `QUOTE(X'DEADBEEF')`
+is `X'DEADBEEF'`, and `WHERE b = x'0102'` filters by byte-exact blob equality.
+The empty literal `x''` is the zero-byte blob; an odd number of hex digits is a
+parse error, as in SQLite. The VM already supported `Blob` values, so this is a
+pure front-end (lexer→parser→planner) fix. Touches sql-lexer 0.1.3, sql-parser
+0.1.20, sql-planner 0.2.21. `LENGTH()` over a blob is a documented follow-up.
+
+## 0.5.41 — column-defined COLLATE in WHERE comparisons
+
+A column declared `COLLATE NOCASE` / `RTRIM` now folds in WHERE comparisons, not
+just ORDER BY: `SELECT id FROM t WHERE name = 'apple'` on a NOCASE `name` matches
+both `'Apple'` and `'apple'`, and RTRIM ignores trailing spaces (`'hi   ' =
+'hi'`). Comparison operators `=`, `<>`, `<`, `<=`, `>`, `>=` all honour the
+column's sequence, and it flows through `AND`/`OR`/`NOT`. An explicit `COLLATE
+BINARY` on the comparison overrides the column's NOCASE (byte-exact match), and a
+column without a declared collation stays BINARY. Seven new differential-oracle
+cases pass against real SQLite. `DISTINCT`, `GROUP BY`, and `IN` collation remain
+follow-ups. Touches sql-planner 0.2.20 (single base table only, matching the
+ORDER BY restriction).
+
 ## 0.5.40 — ORDER BY positional (ordinal) column references
 
 `ORDER BY <n>` now treats a bare integer as a 1-based reference to the n-th

@@ -1,0 +1,4 @@
+--js
+tests/diff/drop-new-obj-arr/input/a.js
+--compilation_level
+SIMPLE

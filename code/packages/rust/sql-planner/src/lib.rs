@@ -690,7 +690,16 @@ fn plan_select(
     if let Some(where_clause) = find_node(stmt, "where_clause") {
         // Grammar: where_clause = WHERE expr
         // The WHERE clause wraps an expr node; we skip the WHERE keyword token.
-        let predicate = extract_clause_expr(where_clause)?;
+        let mut predicate = extract_clause_expr(where_clause)?;
+        // Column-defined COLLATE flows into WHERE comparisons only for a single
+        // base table (no JOINs), matching the ORDER BY restriction — with joins,
+        // column→table resolution is ambiguous and out of scope for this pass.
+        if find_nodes(stmt, "join_clause").is_empty() {
+            if let Some((table, alias)) = base_table_ref.as_ref() {
+                let ctx = build_collate_ctx(schema, table, alias.as_deref());
+                predicate = collate_comparisons(predicate, &ctx);
+            }
+        }
         plan = LogicalPlan::Filter {
             input: Box::new(plan),
             predicate,
@@ -1158,6 +1167,112 @@ struct OrderCollateCtx<'a> {
 /// column was declared with a non-default `COLLATE`. Anything else — a computed
 /// expression, an alias to an output column, a qualifier that doesn't match the
 /// base table — yields `None`, and the key keeps the default BINARY ordering.
+/// Build the single-base-table collation context: the table's name + optional
+/// alias plus its precomputed lowercased `column → COLLATE` map. Shared by the
+/// ORDER BY and WHERE-comparison collation passes so the schema is queried once.
+fn build_collate_ctx<'a>(
+    schema: &dyn SchemaProvider,
+    table: &'a str,
+    alias: Option<&'a str>,
+) -> OrderCollateCtx<'a> {
+    let collations = schema
+        .table_collations(table)
+        .unwrap_or_default()
+        .into_iter()
+        .map(|(name, coll)| (name.to_ascii_lowercase(), coll))
+        .collect();
+    OrderCollateCtx {
+        table,
+        alias,
+        collations,
+    }
+}
+
+/// Is `op` a binary comparison whose result depends on collation? These are the
+/// operators SQLite subjects to collating-sequence resolution; arithmetic /
+/// logical / bitwise operators are not.
+fn is_comparison_op(op: &BinaryOp) -> bool {
+    matches!(
+        op,
+        BinaryOp::Eq | BinaryOp::Neq | BinaryOp::Lt | BinaryOp::Lte | BinaryOp::Gt | BinaryOp::Gte
+    )
+}
+
+/// Does this expression already carry an explicit collation, i.e. is it an
+/// `__collate(_, _)` call produced by `wrap_collate`? Such an operand means a
+/// `COLLATE` clause was written on the comparison, which outranks any
+/// column-defined collation — so the column-collation pass must leave it alone.
+fn is_collate_call(expr: &SqlExpr) -> bool {
+    matches!(expr, SqlExpr::FunctionCall { name, .. } if name == "__collate")
+}
+
+/// Push column-defined `COLLATE` into the comparisons of a WHERE/HAVING
+/// predicate. SQLite resolves a binary comparison's collating sequence as:
+/// explicit `COLLATE` on either operand → the left operand's column collation →
+/// the right operand's → BINARY. The explicit case is already lowered onto
+/// `__collate` in `plan_comparison`; this pass handles the column cases.
+///
+/// It walks the boolean skeleton (`AND` / `OR` / `NOT`) down to each comparison
+/// and, when neither operand is already `__collate`-wrapped and a column operand
+/// declares a collation, wraps BOTH operands in `__collate(_, coll)` — turning
+/// the collated comparison into a plain byte comparison of canonicalised values,
+/// reusing the exact mechanism explicit `COLLATE` already uses. Non-comparison
+/// leaves pass through unchanged. Only invoked for a single base table (no
+/// JOINs), matching the ORDER BY collation restriction.
+fn collate_comparisons(expr: SqlExpr, ctx: &OrderCollateCtx) -> SqlExpr {
+    match expr {
+        SqlExpr::BinaryOp { op, left, right } if is_comparison_op(&op) => {
+            // An explicit COLLATE (already `__collate`-wrapped) outranks the
+            // column's declared collation — leave the comparison untouched.
+            if is_collate_call(&left) || is_collate_call(&right) {
+                return SqlExpr::BinaryOp { op, left, right };
+            }
+            // SQLite picks the comparison's collation from the LEFT operand if it
+            // is a column, otherwise the right operand if IT is a column, else
+            // BINARY. Crucially, a *column* determines the collation even when
+            // that collation is the default BINARY: `bin_col = nocase_col` uses
+            // BINARY (the left column), it does NOT fall through to the right
+            // column's NOCASE. So we resolve on the first operand that is a
+            // base-table column and stop there — never OR-ing past a BINARY
+            // column into the other operand. A resolved BINARY collation
+            // (`None`) means byte order, so we leave the comparison bare rather
+            // than wrapping it (which would also needlessly strip the column
+            // reference that drives type affinity).
+            let determining = if column_in_base_table(&left, ctx) {
+                resolve_column_collation(&left, ctx)
+            } else if column_in_base_table(&right, ctx) {
+                resolve_column_collation(&right, ctx)
+            } else {
+                None
+            };
+            match determining {
+                Some(name) => SqlExpr::BinaryOp {
+                    op,
+                    left: Box::new(wrap_collate(*left, &name)),
+                    right: Box::new(wrap_collate(*right, &name)),
+                },
+                None => SqlExpr::BinaryOp { op, left, right },
+            }
+        }
+        // Recurse through boolean connectives to reach nested comparisons.
+        SqlExpr::BinaryOp { op, left, right } if matches!(op, BinaryOp::And | BinaryOp::Or) => {
+            SqlExpr::BinaryOp {
+                op,
+                left: Box::new(collate_comparisons(*left, ctx)),
+                right: Box::new(collate_comparisons(*right, ctx)),
+            }
+        }
+        SqlExpr::UnaryOp {
+            op: UnaryOp::Not,
+            expr,
+        } => SqlExpr::UnaryOp {
+            op: UnaryOp::Not,
+            expr: Box::new(collate_comparisons(*expr, ctx)),
+        },
+        other => other,
+    }
+}
+
 fn resolve_column_collation(expr: &SqlExpr, ctx: &OrderCollateCtx) -> Option<String> {
     let SqlExpr::Column { table, name } = expr else {
         return None;
@@ -1172,6 +1287,26 @@ fn resolve_column_collation(expr: &SqlExpr, ctx: &OrderCollateCtx) -> Option<Str
         }
     }
     ctx.collations.get(&name.to_ascii_lowercase()).cloned()
+}
+
+/// Is `expr` a reference to a column of the single base table (optionally
+/// qualified by the table's name or alias)? Distinct from
+/// [`resolve_column_collation`], which returns `None` for a column whose
+/// collation is the default BINARY — here even a BINARY column is `true`,
+/// because *being a column* is what makes an operand determine a comparison's
+/// collating sequence (a left BINARY column forces byte order rather than
+/// deferring to the other operand).
+fn column_in_base_table(expr: &SqlExpr, ctx: &OrderCollateCtx) -> bool {
+    let SqlExpr::Column { table, .. } = expr else {
+        return false;
+    };
+    match table {
+        None => true,
+        Some(qual) => {
+            qual.eq_ignore_ascii_case(ctx.table)
+                || ctx.alias.is_some_and(|a| qual.eq_ignore_ascii_case(a))
+        }
+    }
 }
 
 /// Plan a single `order_item` node.
@@ -2416,7 +2551,9 @@ fn plan_comparison(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
         // therefore lower the collation onto the internal `__collate` builtin
         // wrapping BOTH operands, reusing the VM's existing collation helper —
         // no new comparison opcode, mirroring the `GLOB → glob()` lowering.
-        // `COLLATE BINARY` is the default, so it is a no-op.
+        // `COLLATE BINARY` wraps too — an identity transform in the VM, but it
+        // marks the comparison as explicitly collated so a column-defined
+        // collation can't later override it.
         let (left, right) = match collate_name_after(&direct_tok_uppers)? {
             Some(name) => (wrap_collate(left, &name), wrap_collate(right, &name)),
             None => (left, right),
@@ -2434,9 +2571,11 @@ fn plan_comparison(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
 }
 
 /// Find the collation name in a comparison's direct tokens, if it carries a
-/// `COLLATE name` clause. Returns `None` when absent or `COLLATE BINARY` (the
-/// default, a no-op); `Some(NAME)` for `NOCASE`/`RTRIM`; and an error for an
-/// unknown collation, matching SQLite's "no such collating sequence".
+/// `COLLATE name` clause. Returns `None` only when no `COLLATE` clause is
+/// present; `Some(NAME)` for `NOCASE`/`RTRIM`/`BINARY` (BINARY is the identity
+/// transform but is still reported so an explicit clause overrides an operand's
+/// column-defined collation); and an error for an unknown collation, matching
+/// SQLite's "no such collating sequence".
 fn collate_name_after(direct_tok_uppers: &[String]) -> Result<Option<String>, PlanError> {
     let Some(pos) = direct_tok_uppers.iter().position(|t| t == "COLLATE") else {
         return Ok(None);
@@ -2445,7 +2584,15 @@ fn collate_name_after(direct_tok_uppers: &[String]) -> Result<Option<String>, Pl
         PlanError::UnsupportedStatement("COLLATE clause missing collation name".to_string())
     })?;
     match name.as_str() {
-        "BINARY" => Ok(None),
+        // `COLLATE BINARY` is the default byte order, so at first glance it needs
+        // no wrapping. But it must still be *recorded* as an explicit collation:
+        // it forces byte order even when an operand's column is declared NOCASE,
+        // and the column-collation pass below keys off "is either operand already
+        // `__collate`-wrapped?" to decide whether an explicit collation is
+        // present. Wrapping in the identity `__collate(_, 'BINARY')` (the VM
+        // treats an unknown/BINARY collation as a no-op transform) both preserves
+        // byte semantics and marks the comparison as explicitly collated.
+        "BINARY" => Ok(Some(name.clone())),
         "NOCASE" | "RTRIM" => Ok(Some(name.clone())),
         other => Err(PlanError::UnsupportedStatement(format!(
             "no such collating sequence: {other}"
@@ -2834,6 +2981,17 @@ fn plan_primary_token(tok: &Token) -> Result<SqlExpr, PlanError> {
 
     let val = &tok.value;
 
+    // Blob literal `x'48656C6C6F'` / `X'…'`. The lexer's `BLOB_HEX` rule aliases
+    // it to `BLOB`; because `TokenType` has no `Blob` variant, the lexer records
+    // the name in `type_name` and falls `type_` back to `Name`. Decode the hex
+    // body into raw bytes: SQLite reads `x'414243'` as the three bytes
+    // `41 42 43`. An odd number of hex digits is a tokenizer error in SQLite
+    // (`x'012'` → "unrecognized token"); we surface it as a plan error rather
+    // than silently truncating. The empty blob `x''` is the zero-byte blob.
+    if tok.type_name.as_deref() == Some("BLOB") || tok.type_name.as_deref() == Some("BLOB_HEX") {
+        return decode_blob_literal(val).map(|bytes| SqlExpr::Literal(SqlValue::Blob(bytes)));
+    }
+
     // NUMBER literal: try integer first, then float.
     if let Ok(i) = val.parse::<i64>() {
         return Ok(SqlExpr::Literal(SqlValue::Int(i)));
@@ -2847,6 +3005,62 @@ fn plan_primary_token(tok: &Token) -> Result<SqlExpr, PlanError> {
         table: None,
         name: val.clone(),
     })
+}
+
+/// Decode the body of a blob literal `x'…'` / `X'…'` into raw bytes.
+///
+/// The `raw` argument is the token text as the lexer captured it. The
+/// `BLOB_HEX` rule (`[xX]'[0-9A-Fa-f]*'`) keeps the surrounding `x'` / `'`, so
+/// we strip them here; we also tolerate a body that has already been unquoted,
+/// so the function is robust to either shape.
+///
+/// SQLite semantics:
+///
+/// | Literal        | Bytes            | Notes                                  |
+/// |----------------|------------------|----------------------------------------|
+/// | `x'414243'`    | `41 42 43`       | two hex digits per byte, case-insens.  |
+/// | `X'FF00'`      | `FF 00`          | leading `X` is equivalent to `x`       |
+/// | `x''`          | *(empty)*        | the zero-byte blob                     |
+/// | `x'012'`       | *error*          | odd digit count is a tokenizer error   |
+///
+/// The lexer's regex already guarantees the body is all hex digits, so the only
+/// failure this needs to guard is an odd digit count; the non-hex check is kept
+/// as defence in depth.
+fn decode_blob_literal(raw: &str) -> Result<Vec<u8>, PlanError> {
+    // Strip a leading `x'` / `X'` and the trailing `'` when present.
+    let body = raw
+        .strip_prefix("x'")
+        .or_else(|| raw.strip_prefix("X'"))
+        .and_then(|s| s.strip_suffix('\''))
+        .unwrap_or(raw);
+
+    if body.len() % 2 != 0 {
+        return Err(PlanError::UnsupportedStatement(format!(
+            "blob literal has an odd number of hex digits: x'{body}'"
+        )));
+    }
+
+    let hex = body.as_bytes();
+    let mut bytes = Vec::with_capacity(hex.len() / 2);
+    let mut i = 0;
+    while i < hex.len() {
+        // Decode a nibble pair straight from the byte slice. Slicing the *bytes*
+        // (never the `&str`) sidesteps any UTF-8 char-boundary panic if a
+        // non-ASCII body ever reaches here; `from_utf8` then rejects it as a
+        // non-hex digit instead. `i` steps by two and `body.len()` is even, so
+        // `i + 2 <= hex.len()` always holds — the slice cannot go out of bounds.
+        let pair = std::str::from_utf8(&hex[i..i + 2])
+            .ok()
+            .and_then(|s| u8::from_str_radix(s, 16).ok())
+            .ok_or_else(|| {
+                PlanError::UnsupportedStatement(format!(
+                    "blob literal has a non-hex digit: x'{body}'"
+                ))
+            })?;
+        bytes.push(pair);
+        i += 2;
+    }
+    Ok(bytes)
 }
 
 /// Plan a `column_ref` node.
@@ -3688,6 +3902,122 @@ mod tests {
         assert_eq!(sort_keys(&plan)[0].collation, None);
     }
 
+    /// Pull the WHERE `Filter` predicate out of a plan built against a given
+    /// schema (Filter sits under the outermost Project).
+    fn filter_predicate(plan: &LogicalPlan) -> SqlExpr {
+        fn walk(p: &LogicalPlan) -> Option<SqlExpr> {
+            match p {
+                LogicalPlan::Filter { predicate, .. } => Some(predicate.clone()),
+                LogicalPlan::Project { input, .. }
+                | LogicalPlan::Sort { input, .. }
+                | LogicalPlan::Distinct(input)
+                | LogicalPlan::Limit { input, .. } => walk(input),
+                _ => None,
+            }
+        }
+        walk(plan).expect("expected a Filter in the plan")
+    }
+
+    /// If `expr` is a `__collate(inner, 'NAME')` call, return `NAME`.
+    fn collate_wrapper(expr: &SqlExpr) -> Option<String> {
+        if let SqlExpr::FunctionCall { name, args, .. } = expr {
+            if name == "__collate" {
+                if let Some(SqlExpr::Literal(SqlValue::Text(coll))) = args.get(1) {
+                    return Some(coll.clone());
+                }
+            }
+        }
+        None
+    }
+
+    #[test]
+    fn test_where_comparison_inherits_column_collation() {
+        // A bare `WHERE name = 'x'` on a NOCASE column wraps BOTH operands in
+        // `__collate(_, 'NOCASE')`, so the byte comparison folds case.
+        let plan = plan_sql("SELECT id FROM tc WHERE name = 'apple'", &CollSchema).unwrap();
+        let SqlExpr::BinaryOp { op, left, right } = filter_predicate(&plan) else {
+            panic!("expected a comparison predicate");
+        };
+        assert_eq!(op, BinaryOp::Eq);
+        assert_eq!(collate_wrapper(&left).as_deref(), Some("NOCASE"));
+        assert_eq!(collate_wrapper(&right).as_deref(), Some("NOCASE"));
+    }
+
+    #[test]
+    fn test_where_explicit_collate_binary_overrides_column() {
+        // An explicit `COLLATE BINARY` outranks the column's NOCASE: the operands
+        // are wrapped in the identity `__collate(_, 'BINARY')`, NOT NOCASE, so the
+        // comparison is byte-exact.
+        let plan =
+            plan_sql("SELECT id FROM tc WHERE name = 'apple' COLLATE BINARY", &CollSchema).unwrap();
+        let SqlExpr::BinaryOp { left, right, .. } = filter_predicate(&plan) else {
+            panic!("expected a comparison predicate");
+        };
+        assert_eq!(collate_wrapper(&left).as_deref(), Some("BINARY"));
+        assert_eq!(collate_wrapper(&right).as_deref(), Some("BINARY"));
+    }
+
+    #[test]
+    fn test_where_binary_left_column_does_not_inherit_right_collation() {
+        // `id = name`: the LEFT operand `id` is a column with the default BINARY
+        // collation, so it determines the comparison — the pass must NOT fall
+        // through to the right NOCASE column `name`. Result: no `__collate` wrap.
+        let plan = plan_sql("SELECT id FROM tc WHERE id = name", &CollSchema).unwrap();
+        let SqlExpr::BinaryOp { left, right, .. } = filter_predicate(&plan) else {
+            panic!("expected a comparison predicate");
+        };
+        assert_eq!(collate_wrapper(&left), None, "BINARY left column stays bare");
+        assert_eq!(collate_wrapper(&right), None);
+
+        // The mirror `name = id` is driven by the NOCASE left column, so BOTH
+        // operands are wrapped in NOCASE.
+        let plan = plan_sql("SELECT id FROM tc WHERE name = id", &CollSchema).unwrap();
+        let SqlExpr::BinaryOp { left, right, .. } = filter_predicate(&plan) else {
+            panic!("expected a comparison predicate");
+        };
+        assert_eq!(collate_wrapper(&left).as_deref(), Some("NOCASE"));
+        assert_eq!(collate_wrapper(&right).as_deref(), Some("NOCASE"));
+    }
+
+    #[test]
+    fn test_where_plain_column_comparison_stays_binary() {
+        // `id` has no declared collation, so its comparison is left bare — no
+        // `__collate` wrapping, plain byte comparison.
+        let plan = plan_sql("SELECT id FROM tc WHERE id = 5", &CollSchema).unwrap();
+        let SqlExpr::BinaryOp { left, right, .. } = filter_predicate(&plan) else {
+            panic!("expected a comparison predicate");
+        };
+        assert_eq!(collate_wrapper(&left), None);
+        assert_eq!(collate_wrapper(&right), None);
+    }
+
+    #[test]
+    fn test_where_column_collation_flows_through_and_or() {
+        // The pass recurses through boolean connectives: each comparison under an
+        // `OR` independently picks up the column's NOCASE collation.
+        let plan = plan_sql(
+            "SELECT id FROM tc WHERE name = 'a' OR name = 'b'",
+            &CollSchema,
+        )
+        .unwrap();
+        let SqlExpr::BinaryOp { op, left, right } = filter_predicate(&plan) else {
+            panic!("expected a boolean predicate");
+        };
+        assert_eq!(op, BinaryOp::Or);
+        for side in [&left, &right] {
+            let SqlExpr::BinaryOp {
+                left: l,
+                right: r,
+                ..
+            } = side.as_ref()
+            else {
+                panic!("expected a comparison on each side of OR");
+            };
+            assert_eq!(collate_wrapper(l).as_deref(), Some("NOCASE"));
+            assert_eq!(collate_wrapper(r).as_deref(), Some("NOCASE"));
+        }
+    }
+
     // -----------------------------------------------------------------------
     // C12: DROP TABLE
     // -----------------------------------------------------------------------
@@ -3757,6 +4087,35 @@ mod tests {
     fn test_expr_null_literal() {
         let expr = plan_where_expr("SELECT * FROM t WHERE x IS NULL");
         assert!(matches!(expr, SqlExpr::IsNull(_)));
+    }
+
+    #[test]
+    fn test_expr_blob_literal() {
+        // `x'414243'` → the three bytes `A B C`; upper-case `X'…'` is equivalent.
+        let expr = plan_where_expr("SELECT * FROM t WHERE b = x'414243'");
+        if let SqlExpr::BinaryOp { right, .. } = expr {
+            assert_eq!(*right, SqlExpr::Literal(SqlValue::Blob(vec![0x41, 0x42, 0x43])));
+        } else {
+            panic!("Expected blob literal");
+        }
+        let upper = plan_where_expr("SELECT * FROM t WHERE b = X'FF00'");
+        if let SqlExpr::BinaryOp { right, .. } = upper {
+            assert_eq!(*right, SqlExpr::Literal(SqlValue::Blob(vec![0xFF, 0x00])));
+        } else {
+            panic!("Expected upper-case blob literal");
+        }
+    }
+
+    #[test]
+    fn test_decode_blob_literal() {
+        assert_eq!(decode_blob_literal("x'414243'").unwrap(), vec![0x41, 0x42, 0x43]);
+        assert_eq!(decode_blob_literal("X'FF00'").unwrap(), vec![0xFF, 0x00]);
+        // Empty blob.
+        assert_eq!(decode_blob_literal("x''").unwrap(), Vec::<u8>::new());
+        // Already-unquoted body is tolerated.
+        assert_eq!(decode_blob_literal("0a0B").unwrap(), vec![0x0A, 0x0B]);
+        // Odd digit count is rejected (matches SQLite's tokenizer error).
+        assert!(decode_blob_literal("x'012'").is_err());
     }
 
     #[test]

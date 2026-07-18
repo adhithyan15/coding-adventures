@@ -1,0 +1,4 @@
+--js
+tests/diff/throw-punct-space/input/a.js
+--compilation_level
+SIMPLE
