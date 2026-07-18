@@ -14,13 +14,17 @@ and Italian's habit of keeping final vowels Latin's other children dropped.
 
 - **Ch. 1 — Greetings**: ciao → buono → **il/la/lo** (gender) → giorno →
   **buongiorno** → sera/buonasera → notte/buonanotte → grazie → practice.
+- **Ch. 2 — "Come stai?"**: prego (← *pregare* "to pray") → come (← *quōmodo*) →
+  **stare** ("to be" from *stand* = Spanish *estar*; vs *essere*) → come stai /
+  sta / **va** (also *andare* "to go") → così così → practice. **Authored.**
+  *(Reordered ahead of introductions to widen the cross-language how-are-you set;
+  register tu/Lei introduced inline.)*
 
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |
 |---|---|
-| 2 | Introducing yourself: *mi chiamo*, **tu / Lei** (informal vs formal "you"), come, piacere |
-| 3 | Responding: come stai / come sta, bene, e tu / e Lei |
+| 3 | Introducing yourself: *mi chiamo*, come ti chiami, piacere |
 | 4 | Farewells: arrivederci, a presto, a domani |
 | 5+ | Numbers, time, days & months, family, food — following the shared theme order |
 
