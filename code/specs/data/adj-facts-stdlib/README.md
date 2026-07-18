@@ -44,6 +44,7 @@ per rotation, in parallel):
 | `chemistry/` | metal → flame-test color it gives (sodium → orange, potassium → violet, lithium → red) | University of Washington Department of Chemistry (authoritative) |
 | `chemistry/` | mixture-separation method → property it separates by (filtration → by_particle_size, distillation → by_volatility, chromatography → by_different_rates) | Chemistry LibreTexts (consensus) |
 | `chemistry/` | named gas law → the pair of quantities it relates (boyle → pressure_volume, charles → volume_temperature, avogadro → volume_moles) | Chemistry LibreTexts CK-12 (consensus) |
+| `chemistry/` | element category → defining electrical property (metal → good_conductor, nonmetal → poor_conductor, metalloid → semiconductor) | Chemistry LibreTexts (consensus) |
 | `metrology/` | SI prefix → power of ten | NIST |
 | `mathematics/` | Roman numeral → value | (consensus) |
 | `calendar/` | day / month → number | ISO 8601 |
