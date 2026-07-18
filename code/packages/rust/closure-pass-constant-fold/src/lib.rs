@@ -5578,6 +5578,50 @@ fn js_to_number(input: &str) -> f64 {
     normalised.parse::<f64>().unwrap_or(f64::NAN)
 }
 
+/// Render `n` exactly as JavaScript's `Number.prototype.toString()` (base 10)
+/// would — the ECMAScript `Number::toString` algorithm (ECMA-262 §6.1.6.1.20 /
+/// legacy §7.1.12.1). This is the string a number *becomes* when it is coerced:
+/// `String(n)`, a template substitution `` `${n}` ``, and — the reason this must
+/// be JS-exact — an object property key, since `{[n]: v}` stores `v` under the
+/// key `ToString(n)` (so `{1e21: 0}` is `{"1e+21": 0}`, quoted).
+///
+/// ## Why Rust's own formatting is not enough
+///
+/// Rust's `f64::to_string()` prints the shortest decimal that round-trips, but
+/// it chooses *positional vs. exponential* notation by different thresholds than
+/// JS, and the previous implementation here had two concrete bugs:
+///
+///   * `n as i64` **saturates**: an integral `1e20` (which is `< 1e21` but far
+///     above `i64::MAX ≈ 9.2e18`) clamped to `9223372036854775807` — a totally
+///     different number. Only `|n| < 2^63` is a lossless `i64`.
+///   * exponential-range values (`|n| ≥ 1e21`, or `|n| < 1e-6`) fell through to
+///     `n.to_string()`, whose spelling (`"1000000000000000000000"` vs JS
+///     `"1e+21"`) does not match V8.
+///
+/// ## The algorithm
+///
+/// Take the shortest round-tripping significant digits and their base-10
+/// exponent from Rust's `{:e}` (which normalises to `D` or `D.DDD…` × 10^E), so
+/// `digits` are those significant figures, `k = digits.len()`, and `point =
+/// E + 1` is ECMAScript's `n` (the count of digits to the left of the decimal
+/// point). Then the spec's four positional cases decide the spelling:
+///
+/// | condition                | form                                    |
+/// |--------------------------|-----------------------------------------|
+/// | `point > 21` or `≤ −6`   | exponential: `d[.ddd]e±(point−1)`       |
+/// | `point ≤ 0`              | `0.` + `−point` zeros + digits          |
+/// | `point ≥ k`              | digits + `point−k` trailing zeros       |
+/// | `0 < point < k`          | digits split by a point after `point`   |
+///
+/// The exponential sign is always explicit (`e+21`, `e-7`) — unlike the emitter's
+/// *code-literal* number rendering, which prints `1E21` (uppercase, no sign) to
+/// match Closure's `CodePrinter`. Those are deliberately different renderings for
+/// different jobs: a minified numeric literal in code vs. a coerced string value.
+///
+/// Worked examples (all cross-checked against V8's `String(n)`):
+/// `1e20`→`"100000000000000000000"`, `1e21`→`"1e+21"`, `1e-6`→`"0.000001"`,
+/// `1e-7`→`"1e-7"`, `123456789012345680000`→`"123456789012345680000"`,
+/// `5e-324`→`"5e-324"`, `-0`→`"0"` (JS drops the sign of `-0` in `ToString`).
 fn format_js_number(n: f64) -> String {
     if n.is_nan() {
         return "NaN".to_string();
@@ -5590,12 +5634,51 @@ fn format_js_number(n: f64) -> String {
         };
     }
     if n == 0.0 {
+        // Both `+0` and `-0`: `String(-0) === "0"` in JS (the sign is dropped by
+        // `ToString`, unlike a numeric literal in code). `n == 0.0` is `true` for
+        // both zeros, so this single branch covers them.
         return "0".to_string();
     }
-    if n.fract() == 0.0 && n.abs() < 1e21 {
-        return format!("{}", n as i64);
+
+    let negative = n < 0.0;
+    // `{:e}` gives the shortest round-tripping mantissa and a base-10 exponent:
+    // `format!("{:e}", 123456789012345680000f64)` → `"1.2345678901234568e20"`.
+    // The mantissa always has exactly one digit before the point.
+    let sci = format!("{:e}", n.abs());
+    let (mantissa, exp_str) = sci.split_once('e').expect("`{:e}` always yields an 'e'");
+    let exp: i32 = exp_str.parse().expect("`{:e}` exponent is a valid integer");
+    // Drop the point to get the raw significant digits; `point = exp + 1`.
+    let digits: String = mantissa.chars().filter(|c| *c != '.').collect();
+    let k = digits.len() as i32;
+    let point = exp + 1;
+
+    let body = if point > 21 || point <= -6 {
+        // Exponential: first digit, optional `.` + rest, then `e±(point-1)`.
+        let e = point - 1;
+        let sign = if e >= 0 { '+' } else { '-' };
+        let mantissa_out = if digits.len() > 1 {
+            format!("{}.{}", &digits[..1], &digits[1..])
+        } else {
+            digits.clone()
+        };
+        format!("{mantissa_out}e{sign}{}", e.abs())
+    } else if point <= 0 {
+        // Small magnitude in `(−6, 0]`: `0.` then `−point` leading zeros, digits.
+        format!("0.{}{}", "0".repeat((-point) as usize), digits)
+    } else if point >= k {
+        // Integral: all digits, then `point − k` trailing zeros to reach `point`.
+        format!("{}{}", digits, "0".repeat((point - k) as usize))
+    } else {
+        // Fraction with `point` digits before the decimal point.
+        let p = point as usize;
+        format!("{}.{}", &digits[..p], &digits[p..])
+    };
+
+    if negative {
+        format!("-{body}")
+    } else {
+        body
     }
-    n.to_string()
 }
 
 // ---------------------------------------------------------------------
@@ -6676,6 +6759,63 @@ mod tests {
             other => panic!("expected a single folded number, got {other:?}"),
         }
         std::mem::forget(prog);
+    }
+
+    // ------------------- JS-exact Number::toString -------------------
+
+    /// `format_js_number` must reproduce V8's `String(n)` byte-for-byte. Every
+    /// expected value below was generated by running `String(n)` under Node
+    /// (V8), so this table is a direct conformance check against a real JS
+    /// engine — covering the positional/exponential boundaries (`1e20` vs
+    /// `1e21`, `1e-6` vs `1e-7`), the former `i64`-saturation range
+    /// (`[2^63, 1e21)`), sign handling, and the `-0 → "0"` coercion rule.
+    #[test]
+    fn format_js_number_matches_v8_tostring() {
+        let cases: &[(f64, &str)] = &[
+            // small integers and simple decimals — unchanged from before
+            (0.0, "0"),
+            (1.0, "1"),
+            (-1.0, "-1"),
+            (100.0, "100"),
+            (-100.0, "-100"),
+            (0.5, "0.5"),
+            (-0.5, "-0.5"),
+            (0.1, "0.1"),
+            (1.5, "1.5"),
+            (3.14159, "3.14159"),
+            (123000000.0, "123000000"),
+            (0.000123, "0.000123"),
+            // positional/exponential boundary at 10^21
+            (1e20, "100000000000000000000"),
+            (1e21, "1e+21"),
+            (1e22, "1e+22"),
+            (-1e21, "-1e+21"),
+            (1.5e21, "1.5e+21"),
+            (9.999999999999999e20, "999999999999999900000"),
+            // former i64-saturation range [2^63 ~ 9.2e18, 1e21): integral but
+            // far above i64::MAX, so `n as i64` used to clamp to garbage
+            (123456789012345680000.0, "123456789012345680000"),
+            (12345678901234567890.0, "12345678901234567000"),
+            // small-magnitude boundary at 10^-6 / 10^-7
+            (1e-5, "0.00001"),
+            (1e-6, "0.000001"),
+            (1e-7, "1e-7"),
+            (2.5e-10, "2.5e-10"),
+            // extremes of the f64 range
+            (5e-324, "5e-324"),
+            (1.7976931348623157e308, "1.7976931348623157e+308"),
+            (6.022e23, "6.022e+23"),
+            // non-finite
+            (f64::NAN, "NaN"),
+            (f64::INFINITY, "Infinity"),
+            (f64::NEG_INFINITY, "-Infinity"),
+        ];
+        for &(n, expected) in cases {
+            assert_eq!(format_js_number(n), expected, "String({n:?})");
+        }
+        // Negative zero: JS `String(-0)` drops the sign (a numeric *literal* in
+        // code keeps `-0`, but that is the emitter's separate job).
+        assert_eq!(format_js_number(-0.0), "0", "String(-0)");
     }
 
     // ------------------- metadata + identity tests -------------------

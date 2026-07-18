@@ -2,6 +2,36 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.105.0] - 2026-07-18
+
+### Fixed — `format_js_number` now matches V8's `Number.prototype.toString` exactly
+
+The number-to-string helper (used by every fold that materializes a number as a
+string — `String(n)`, template substitutions, `(n).toString()`, and object
+property keys) is now a faithful implementation of the ECMAScript
+`Number::toString` algorithm rather than a thin wrapper over Rust's formatting.
+Two concrete bugs are fixed:
+
+- **`i64` saturation.** The old integral path used `n as i64` guarded only by
+  `|n| < 1e21`. But `i64::MAX ≈ 9.2e18`, so an integral value in
+  `[2^63, 1e21)` — e.g. `1e20` or `123456789012345680000` — saturated to
+  `9223372036854775807`, a completely different number. These now render
+  correctly (`1e20` → `"100000000000000000000"`).
+- **Exponential-notation thresholds.** Values with `|n| ≥ 1e21` or `|n| < 1e-6`
+  fell through to Rust's `to_string()`, whose positional-vs-exponential choice
+  differs from JS (`"1000000000000000000000"` vs V8's `"1e+21"`). The
+  ECMAScript positional rules are now applied directly: `1e21` → `"1e+21"`,
+  `1e-7` → `"1e-7"`, `1e-6` → `"0.000001"`, `5e-324` → `"5e-324"`, and the
+  exponent sign is always explicit (`e+21`, `e-7`).
+
+The algorithm takes the shortest round-tripping digits and base-10 exponent from
+Rust's `{:e}` and reformats per the spec's four positional cases. A new
+`format_js_number_matches_v8_tostring` table cross-checks 30+ values against
+`String(n)` output captured from Node/V8. No behavior change for the small
+integers and simple decimals that dominate real code; the fix only touches the
+large/small/exponential tails that were previously mis-rendered. This unblocks
+correct quoting of out-of-range numeric object keys.
+
 ## [0.104.1] - 2026-07-18
 
 ### Fixed — flaky stack-overflow in the deep-chain regression test (CI reliability)
