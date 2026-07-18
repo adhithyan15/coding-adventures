@@ -104,6 +104,7 @@ per rotation, in parallel):
 | `anatomy/` | tooth part → its role/location (enamel → outer_surface, dentin → beneath_enamel, cementum → covers_roots) | MedlinePlus / NIH NCBI Bookshelf (authoritative) |
 | `anatomy/` | respiratory part → function it performs (trachea → main_airway, alveoli → gas_exchange, diaphragm → contracts_inspiration) | NIH / NCI SEER Training (authoritative) |
 | `anatomy/` | kidney / urinary part → what it is or does (renal_cortex → outer_region, renal_pelvis → collects_urine, ureter → carries_urine_to_bladder) | NIH NIDDK / NCI SEER Training (authoritative; medulla row Wikipedia consensus) |
+| `anatomy/` | heart valve → the two chambers/vessels it separates (tricuspid → right_atrium_and_right_ventricle, aortic → left_ventricle_and_aorta) | NCI SEER Training (authoritative) |
 | `geology/` | Mohs reference mineral → whole-number hardness (talc → 1, quartz → 7, diamond → 10) | NPS "Mohs Hardness Scale" (authoritative) |
 | `geology/` | Earth's internal layer → physical state, in the source's own words (crust → rigid, mantle → semi_solid, outer_core → liquid, inner_core → solid) | USGS "This Dynamic Earth" (authoritative) |
 | `meteorology/` | Beaufort wind force number → the name the source gives it (0 → calm, 6 → strong_breeze, 12 → hurricane) | NWS Beaufort Wind Scale (authoritative) |
