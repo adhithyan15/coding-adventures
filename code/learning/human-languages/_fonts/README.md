@@ -14,6 +14,9 @@ installed.
 - `NotoSansMalayalam-Static.ttf` — Malayalam
 - `NotoSansGurmukhi-Static.ttf` — Punjabi (Gurmukhi)
 - `NotoSansBengali-Static.ttf` — Bengali
+- `NotoSansCyrillic-Static.ttf` — Russian (Cyrillic); a `fontTools.subset` of NotoSans (latin-greek-cyrillic) to Basic Latin + Cyrillic
+- `NotoSansHebrew-Static.ttf` — Hebrew (upstream static Regular)
+- `NotoSansSC-Subset.ttf` — Chinese (Simplified); a **subset** of the ~17 MB NotoSansSC covering exactly the characters in `../data/scripts/chinese.json`. Regenerate with [`subset-cjk.sh`](./subset-cjk.sh) when Mandarin content adds characters.
 
 (The Gurmukhi and Bengali files are the upstream static `-Regular.ttf` from the
 `notofonts.github.io` repo — already single-weight, so no instancing needed.
