@@ -2,6 +2,22 @@
 
 All notable changes to this crate are documented here.
 
+## [0.5.0] — 2026-07-17
+
+### Added
+
+- **`__twig_gc_*` ABI aliases** (new module `twig_compat`) — `__twig_gc_alloc`,
+  `__twig_gc_collect`, `__twig_gc_safepoint`, `__twig_gc_live_bytes`,
+  `__twig_gc_collection_count`, thin `#[no_mangle]` wrappers forwarding to the
+  generic `__gc_*` ABI. The native-AOT code generators (aarch64 + LLVM backends)
+  and `dynval_runtime.c` reference the symbol names `twig_gc.c` exported; these
+  aliases let `libgc_core_capi.a` satisfy those references so `twig_gc.c` can be
+  retired without touching the emitters. Prototypes match `twig_gc.c` exactly,
+  including the `void`-returning `__twig_gc_collect` / `__twig_gc_safepoint` (the
+  generic entry points' freed-count is discarded). Verified exported as text
+  symbols in the built staticlib; host test drives the full flow. Pure Rust, no C
+  shim; deletable once the emitters emit `__gc_*` directly.
+
 ## [0.4.0] — 2026-07-17
 
 ### Added
