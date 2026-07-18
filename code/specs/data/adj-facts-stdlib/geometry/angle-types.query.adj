@@ -1,0 +1,23 @@
+% ============================================================================
+% angle-types.query.adj — a worked recall over the geometry angle-types library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what makes an angle
+% obtuse?": it states no geometry fact of its own — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?` against
+% the `angle_condition` rows and returns the defining condition + the table's
+% source/locator/trust. The fourth query runs the relation BACKWARD (bind the
+% condition `equals_90`, recall its angle type — right). A word that is not one
+% of the five angle types abstains honestly — the engine never invents a
+% condition.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli angle-types.query.adj
+% ============================================================================
+
+import "angle-types.adj"
+
+? angle_condition(acute, $Condition)      % expect between_0_and_90
+? angle_condition(obtuse, $Condition)     % expect between_90_and_180
+? angle_condition(reflex, $Condition)     % expect greater_than_180
+? angle_condition($Type, equals_90)       % reverse bind — expect right
+? angle_condition(circle, $Condition)     % expect abstain — a circle is not one of the five angle types
