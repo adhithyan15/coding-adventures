@@ -31,6 +31,34 @@ Because the fusion runs **after** the body's own inner folds, an
 Applies to `while` loops too, transitively, once they are canonicalised to
 `for` (the while→for rewrite). Additive; MINOR bump 0.29.0 → 0.32.0 (0.30.0 =
 dead-loop hoist-var extraction, 0.31.0 = while→for, both in flight).
+## [0.31.0] - 2026-07-17
+
+### Added — `while (cond) body` → `for (; cond; ) body` canonicalization
+
+Every live `while` loop is now rewritten to the equivalent `for` loop — the
+form the reference Closure Compiler always emits. A `while` and a `for` with an
+empty init *and* empty update are exactly equivalent: no init runs, and
+`continue` targets the test in both (there is no update clause to fall through
+to), so this is a pure spelling change, never a semantic one. A redundant
+always-truthy test is elided to the canonical infinite `for (;;)`, mirroring the
+existing `for`-truthy-test elision:
+
+```text
+  while (x) a();        →  for (; x; ) a();      (test kept)
+  while (1) a();        →  for (;;) a();         (truthy test dropped)
+  while (true) a();     →  for (;;) a();         (also !0, 2, "x", …)
+  while (a && b) c();   →  for (; a && b; ) c();
+```
+
+Oracle byte-identical at SIMPLE for single-statement bodies (including nested
+`while (1) while (1) a();` → `for (;;) for (;;) a();`). Recorded as a `fold` CV
+contribution (`while-to-for` / `while-to-for-truthy`).
+
+The known-falsy arm (`while (false) …`) is unchanged. A multi-statement block
+body is carried across as a block (`while (1) { a(); b(); }` →
+`for (;;) { a(); b(); }`, valid); Closure additionally comma-fuses the body to
+`for (;;) a(), b();`, which is a separate loop-body-fusion transform (a
+follow-up) that applies to `for` loops too.
 ## [0.30.0] - 2026-07-17
 
 ### Changed — a dead loop's hoisted body `var`s are EXTRACTED, not declined or dropped
