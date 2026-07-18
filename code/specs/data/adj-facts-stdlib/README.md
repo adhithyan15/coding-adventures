@@ -27,6 +27,7 @@ per rotation, in parallel):
 |---|---|---|
 | `geometry/` | polygon → number of sides | Wolfram MathWorld |
 | `astronomy/` | planet → order from the Sun | NASA |
+| `astronomy/` | stellar spectral class letter → the color NASA assigns it (o → blue, g → yellow, m → red) | NASA Science (authoritative) |
 | `chemistry/` | element → atomic number | PubChem / NIH |
 | `chemistry/` | common substance → approximate pH | LibreTexts (consensus) |
 | `chemistry/` | element → periodic-table group family | Wikipedia (consensus) |

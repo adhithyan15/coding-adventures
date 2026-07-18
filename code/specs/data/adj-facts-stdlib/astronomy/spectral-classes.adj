@@ -1,0 +1,103 @@
+% ============================================================================
+% spectral-classes — each stellar spectral class letter and the color its
+% source (NASA) assigns to that class (adj-facts-stdlib, ASTRONOMY).
+% ============================================================================
+% The very first rung of stellar astrophysics, and one an ASTRONOMY agent
+% reasons UP from: main-sequence stars are sorted into a handful of spectral
+% classes — O, B, A, F, G, K, M — running from the hottest, most massive, bluest
+% stars (O) down to the coolest, smallest, reddest stars (M). The class letter is
+% a stand-in for surface temperature, and the COLOR you see is the observable
+% face of that temperature: "O stars are blue, our Sun (a G star) is yellow, M
+% dwarfs are red." A generation of students memorizes the order with the mnemonic
+% "Oh, Be A Fine Guy/Girl, Kiss Me." Before you can reason about a star's age,
+% mass, or lifetime you first place it on this sequence, and the color is how you
+% read the class off a picture. Recall is a binding query:
+%
+%     ? spectral_class_color(g, $Color)      % yellow  (our Sun's class)
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `spectral_class_color(spectral_class, color)` carrying the table's
+% citation, so the lookup above is the ordinary SLD binding query — the engine
+% returns the color WITH its source, on the CPU, with zero model calls, and
+% abstains on a letter that is not one of these seven classes (it never invents a
+% color).
+%
+% Each spectral class and the color NASA states for it, hottest→coolest, as a
+% little truth table:
+%
+%     spectral class   color NASA assigns       atom          a beginner's cue
+%     --------------   -------------------       -----------   -------------------
+%     o                blue                      blue          hottest, biggest, bluest
+%     b                blue-white                blue_white    still very hot
+%     a                white                     white         white-hot
+%     f                yellow-white              yellow_white  warmer than the Sun
+%     g                yellow                    yellow        our Sun is a G star
+%     k                orange                    orange        cooling down
+%     m                red                       red           coolest, smallest, reddest
+%
+% The query also runs BACKWARD — bind a color and recall its spectral class:
+%
+%     ? spectral_class_color($Class, red)        % m  (red → the M class)
+%
+% A letter that is NOT one of these seven main-sequence classes — `z`, `x`, a
+% brown-dwarf label — is deliberately NOT a row, so a class recall ABSTAINS on it
+% rather than inventing a color. That honest-abstention property is what makes the
+% table safe to build a reasoner on: it answers exactly the class→color pairs it
+% can ground, and only those.
+%
+% The `color` value of every row is a SINGLE lowercase atom, chosen to be the
+% color word the source EXPLICITLY states for that class — never one the source
+% does not support. Where NASA writes a hyphenated compound ("blue-white",
+% "yellow-white") the atom joins the two words with an underscore (`blue_white`,
+% `yellow_white`), so every value stays literally checkable against the quoted
+% span.
+%
+% Two of the class LETTERS clash with everyday spelling of a color one might
+% expect ("A" is white, not "amber"); the table uses ONLY the color NASA pairs
+% with each letter, so no row can drift from the source's own words.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every class→color pair below
+% was read out of a fetched NASA science page, and any pair whose color could not
+% be verified there would have been dropped). All seven pairs come from ONE
+% continuous sentence on the NASA Science "Stars" page (Exoplanets), which lists
+% each class letter with its color in parentheses:
+%
+%   "Astronomers use these characteristics to classify main sequence stars into
+%    categories by color and temperature: O (blue), B (blue-white), A (white),
+%    F (yellow-white), G (yellow), K (orange), and M (red), from hottest and
+%    biggest to coolest and smallest."
+%     https://science.nasa.gov/exoplanets/stars/
+%     (NASA Science — U.S. National Aeronautics and Space Administration)
+%
+%   o → blue           ... "O (blue)"
+%   b → blue_white     ... "B (blue-white)"
+%   a → white          ... "A (white)"
+%   f → yellow_white   ... "F (yellow-white)"
+%   g → yellow         ... "G (yellow)"
+%   k → orange         ... "K (orange)"
+%   m → red            ... "M (red)"
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold that single sentence, which fixes all seven rows at once.
+% NASA (science.nasa.gov) is a primary U.S. government (National Aeronautics and
+% Space Administration) science resource, so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table spectral_class_color {
+    columns spectral_class, color
+
+    row (o, blue)
+    row (b, blue_white)
+    row (a, white)
+    row (f, yellow_white)
+    row (g, yellow)
+    row (k, orange)
+    row (m, red)
+
+    source "Astronomers use these characteristics to classify main sequence stars into categories by color and temperature: O (blue), B (blue-white), A (white), F (yellow-white), G (yellow), K (orange), and M (red), from hottest and biggest to coolest and smallest."
+    locator "https://science.nasa.gov/exoplanets/stars/"
+    trust authoritative
+}
