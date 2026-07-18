@@ -1435,6 +1435,26 @@ const CASES: &[Case] = &[
         setup: &["CREATE TABLE t (id INTEGER)", "INSERT INTO t VALUES (1)"],
         query: "SELECT (7 / 2) AS a, (-7 / 2) AS b, (7 % 3) AS c, (7.0 / 2) AS d FROM t",
     },
+    // Binary arithmetic applies NUMERIC affinity to text/blob operands, matching
+    // SQLite: `'5'+0` = 5 (integer), `'5.5'+0` = 5.5 (real), `'abc'+1` = 1 (no
+    // numeric prefix → 0), `'12abc'+0` = 12, and `'10'-'3'` = 7 (both coerced).
+    // Previously the engine errored on any text operand.
+    Case {
+        id: "arith_text_numeric_affinity",
+        setup: &[],
+        query: "SELECT '5'+0 AS a, '5.5'+0 AS b, 'abc'+1 AS c, '5'*2 AS d, '10'-'3' AS e, '12abc'+0 AS f",
+    },
+    // Division/modulo also coerce: `5 / '2'` = 2, `5 / '0'` = NULL (affinity makes
+    // '0' the integer zero, so the divide-by-zero → NULL rule fires), `'7' % 3` = 1.
+    // (Known edge left for later, shared with unary minus: an *integral* real-
+    // syntax string like `'9.0'` collapses to an integer here, so `'9.0' / 2` is
+    // 4 not SQLite's 4.5 — the float-affinity follow-up. Non-integral `'5.5'`
+    // is fine.)
+    Case {
+        id: "div_mod_text_affinity",
+        setup: &[],
+        query: "SELECT 5 / '2' AS a, (5 / '0') IS NULL AS b, '7' % 3 AS c, '5.5' * 2 AS d",
+    },
     // Unary minus applies NUMERIC affinity to a text/blob operand before
     // negating, matching SQLite: `-'5'` = -5, `-'12abc'` = -12 (leading numeric
     // prefix), `-'abc'` = 0 (no prefix → 0), `-'3.5'` = -3.5, and leading
