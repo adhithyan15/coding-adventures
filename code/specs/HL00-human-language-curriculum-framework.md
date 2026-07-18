@@ -11,9 +11,13 @@ publication, that grows one chapter at a time.
 
 This is the first spec in the **HL** series. It defines the pedagogical
 framework, the content schema every lesson file follows, and the divergence
-from this repo's standard software-package process. `HL01`+ are reserved for
-per-language notes as new tracks are added (French, German, Arabic, Hindi,
-Tamil, Kannada, Telugu, Malayalam) after the Spanish pilot proves the format.
+from this repo's standard software-package process. Later specs build on it:
+[`HL01`](./HL01-concept-taxonomy-and-data-layer.md) defines the cross-language
+**concept taxonomy** and the machine-readable **data layer** derived from these
+lessons; [`HL02`](./HL02-companion-practice-app.md) defines the **companion
+practice app** and the learning-science method behind it. (An earlier draft
+reserved `HL01`+ for per-language notes; those never materialized and the
+numbers are repurposed here — nothing is released, so this is a free change.)
 
 ```
                     ┌───────────────────────────┐      Markdown lesson files
@@ -216,8 +220,18 @@ sounds: [accent-i, d-soft]   # ids into pronunciation-reference.md
 roots: [dies]                # Latin/other roots excavated, for indexing
 est_minutes: 4
 reviews_of: []               # lesson ids resurfaced (review/practice-mix only)
+# Optional, added by HL01 for the data layer (back-compatible — omit freely):
+romanization: DEE-ah        # required for non-Latin scripts; omit for Latin (defaults to headword)
+etymology_hook: "día ← Latin dies → diary, dial, diurnal"   # ≤120-char memory anchor
 ---
 ```
+
+The `concept_tag` is the cross-language join key: [`HL01`](./HL01-concept-taxonomy-and-data-layer.md)
+canonicalizes it (universal ids like `GREETING-HELLO` live in
+`concepts/taxonomy.json`; language-local lexical tags are namespaced, e.g.
+`ES-WORD-DIA`). `romanization` and `etymology_hook` are the two optional fields
+`HL01` adds so the data layer and companion app can be **derived** from these
+lessons rather than maintained as a separate, drift-prone copy.
 
 Body sections match the Lesson Anatomy above: `## Warm-up`,
 `## You'll want to know first` (optional), `## Sounds you'll need`,
