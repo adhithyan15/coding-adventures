@@ -118,7 +118,7 @@ ports:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 319 |
+| Present in 10-15 languages | 172 | 317 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,972 |
 | Present in one language | 701 | 9,814 |
@@ -164,7 +164,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 172 packages present in at least ten implementation languages need 319
+The 172 packages present in at least ten implementation languages need 317
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -173,8 +173,8 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Elixir | 0 | Complete; `python-parser` uses the shared grammar-driven frontend |
 | Lua | 0 | Complete; paired data-structure/storage wave |
 | Perl | 0 | Complete; paired data-structure/storage wave |
-| C# | 5 | Move with F# |
-| F# | 5 | Move with C# |
+| C# | 4 | Move with F# |
+| F# | 4 | Move with C# |
 | Haskell | 34 | Dependency-shaped compression, graphics, ML, and protocol waves |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
@@ -332,6 +332,16 @@ statement forms, expression precedence, configured and one-shot APIs, empty
 and bare-line programs, and syntax failures. The package now spans 12
 implementation lanes, reduces the high-consensus backlog to 319 slots, and
 leaves 5 paired gaps in each lane.
+
+The thirteenth paired C#/F# slice is complete: `ed25519` now provides native
+RFC 8032 key generation, deterministic signing, and verification in both
+lanes, composing their existing SHA-512 packages with extended Edwards
+coordinates over `2^255 - 19`. Package-native tests cover the first three RFC
+vectors, deterministic key and signature derivation, wrong messages and keys,
+tampered signature halves, non-canonical scalars, malformed point encodings,
+and strict seed and secret-key formats. The package now spans 12 implementation
+lanes, reduces the high-consensus backlog to 317 slots, and leaves 4 paired
+gaps in each lane.
 
 Recommended family order:
 
