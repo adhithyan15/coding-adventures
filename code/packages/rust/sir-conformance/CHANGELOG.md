@@ -2,6 +2,17 @@
 
 All notable changes to the `sir-conformance` crate will be documented in this file.
 
+## [0.15.0] - Float-division frontier: `Float#/` true-divides on every backend
+
+Adds `float_division_true_divides_on_every_backend` — the float half of the
+polymorphic-`/` frontier. `Float#/` TRUE-divides (`7.0 / 2 == 3.5`) and an
+integral float result still prints its `.0` (`6.0 / 2 == 3.0`), and every
+backend must reproduce Ruby's `Float#to_s`. The JS backend gained this via its
+tagged-float substrate (semantic-ir-to-javascript 0.39.0 — its numbers are all
+f64, so integral floats were previously indistinguishable from integers and
+wrongly floored); the tagged-value backends (Rust/Go/C) and Python/Ruby already
+carried the distinction. Complements the existing integer-floor frontier.
+
 ## [0.14.0] - Division frontier: C arm fully closed (SIR21 §E3)
 
 The C backend now lowers the unary-minus `neg` builtin (semantic-ir-to-c 0.3.0),

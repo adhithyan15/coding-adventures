@@ -756,7 +756,12 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
             let _ = write!(out, "{value}");
         }
         Expr::FloatLit { value, .. } => {
-            out.push_str(&format_float(*value));
+            // A Ruby `Float` literal is minted through `mkFloat`, which boxes
+            // an integral value (`7.0` — otherwise indistinguishable from the
+            // Integer `7`) and leaves a non-integral one native (`3.5`).  This
+            // is where the Integer-vs-Float tag is BORN; every downstream
+            // numeric helper unwraps via `numOf` and re-tags via `mkFloat`.
+            let _ = write!(out, "__Sir.mkFloat({})", format_float(*value));
         }
         Expr::BoolLit { value, .. } => {
             out.push_str(if *value { "true" } else { "false" });
@@ -1115,10 +1120,11 @@ fn emit_sym_operand(out: &mut String, e: &Expr, indent: usize) {
             emit_expr(out, e, indent);
             out.push(')');
         }
-        Expr::FloatLit { .. } => {
-            out.push_str("__Sir.Symbolic.numberNode(");
-            emit_expr(out, e, indent);
-            out.push(')');
+        Expr::FloatLit { value, .. } => {
+            // The Symbolic constructors want a RAW number to wrap into a term
+            // (`{kind:"float", value}`), not a tagged-float box — so emit the
+            // bare literal here rather than routing through `mkFloat`.
+            let _ = write!(out, "__Sir.Symbolic.numberNode({})", format_float(*value));
         }
         Expr::StrLit { .. } => {
             out.push_str("__Sir.Symbolic.stringNode(");
@@ -1491,8 +1497,16 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
             "*" => Some("__Sir.times"),
             // `/` routes through the runtime `divide` helper, which ADDS
             // the Ruby zero-divisor check (native JS `/` yields `Infinity`,
-            // not a `ZeroDivisionError`).  See `runtime::divide`.
+            // not a `ZeroDivisionError`) AND picks Integer#/ floor vs Float#/
+            // true-division from the operand tags.  See `runtime::divide`.
             "/" => Some("__Sir.divide"),
+            // `-` and `%` route through runtime helpers (not native infix)
+            // because their result must be RE-TAGGED: a boxed Float operand
+            // yields a boxed Float result (`7.0 - 1 == 6.0`), which native
+            // `-`/`%` on a `SirFloat` object cannot produce.  See
+            // `runtime::minus` / `runtime::mod`.
+            "-" => Some("__Sir.minus"),
+            "%" => Some("__Sir.mod"),
             _ => None,
         };
         if let Some(helper) = poly {
@@ -1504,26 +1518,26 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
             return;
         }
     }
-    // Other 2-argument binary operators → native infix.  `-`/`/`/`%` are
-    // numeric-only in the SIR contract, and the comparisons are pure
-    // value tests, so native JS infix is faithful.
+    // 2-argument comparisons route through thin runtime helpers that unwrap
+    // a tagged Float via `numOf` before comparing.  `numOf` is the IDENTITY
+    // for every non-`SirFloat` value, so `eq`/`lt`/… are byte-identical to
+    // the old native `===`/`<`/… for all existing values, and additionally
+    // correct for a boxed Float (`7.0 == 7` is true; `7.0 < 8` works — a
+    // native `<` on a `SirFloat` object would coerce to `NaN`).
     if args.len() == 2 {
-        let infix = match name {
-            "-" => Some("-"),
-            "/" => Some("/"),
-            "%" => Some("%"),
-            "=" => Some("==="),
-            "!=" => Some("!=="),
-            "<" => Some("<"),
-            ">" => Some(">"),
-            "<=" => Some("<="),
-            ">=" => Some(">="),
+        let cmp = match name {
+            "=" => Some("__Sir.eq"),
+            "!=" => Some("__Sir.ne"),
+            "<" => Some("__Sir.lt"),
+            ">" => Some("__Sir.gt"),
+            "<=" => Some("__Sir.le"),
+            ">=" => Some("__Sir.ge"),
             _ => None,
         };
-        if let Some(op) = infix {
-            out.push('(');
+        if let Some(helper) = cmp {
+            let _ = write!(out, "{helper}(");
             emit_expr(out, &args[0], indent);
-            let _ = write!(out, " {op} ");
+            out.push_str(", ");
             emit_expr(out, &args[1], indent);
             out.push(')');
             return;
@@ -1539,9 +1553,11 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
                 return;
             }
             "neg" => {
-                out.push_str("(-(");
+                // Unary minus re-tags: `-(7.0)` is the boxed Float `-7.0`,
+                // which native `-` on a `SirFloat` object cannot produce.
+                out.push_str("__Sir.neg(");
                 emit_expr(out, &args[0], indent);
-                out.push_str("))");
+                out.push(')');
                 return;
             }
             "len" => {
@@ -1909,7 +1925,7 @@ mod tests {
                 value: 2.5,
                 span: s()
             }),
-            "2.5"
+            "__Sir.mkFloat(2.5)"
         );
         assert_eq!(
             emit_e(&Expr::BoolLit {
@@ -1982,7 +1998,7 @@ mod tests {
     }
 
     #[test]
-    fn emit_builtin_arithmetic_is_native_infix() {
+    fn emit_builtin_arithmetic_routes_through_retagging_helpers() {
         let two = || {
             vec![
                 Expr::IntLit {
@@ -1995,9 +2011,10 @@ mod tests {
                 },
             ]
         };
-        // `-`/`%` stay native infix (numeric-only in the SIR contract).
-        assert_eq!(emit_e(&bc("-", two())), "(1 - 2)");
-        assert_eq!(emit_e(&bc("%", two())), "(1 % 2)");
+        // `-`/`%` route through runtime helpers (not native infix) so a boxed
+        // Float operand yields a boxed Float result (`7.0 - 1 == 6.0`).
+        assert_eq!(emit_e(&bc("-", two())), "__Sir.minus(1, 2)");
+        assert_eq!(emit_e(&bc("%", two())), "__Sir.mod(1, 2)");
     }
 
     #[test]
@@ -2044,7 +2061,7 @@ mod tests {
     }
 
     #[test]
-    fn emit_builtin_comparison_is_native_infix() {
+    fn emit_builtin_comparison_routes_through_numof_helpers() {
         let two = || {
             vec![
                 Expr::IntLit {
@@ -2057,12 +2074,15 @@ mod tests {
                 },
             ]
         };
-        assert_eq!(emit_e(&bc("=", two())), "(1 === 2)");
-        assert_eq!(emit_e(&bc("!=", two())), "(1 !== 2)");
-        assert_eq!(emit_e(&bc("<", two())), "(1 < 2)");
-        assert_eq!(emit_e(&bc(">", two())), "(1 > 2)");
-        assert_eq!(emit_e(&bc("<=", two())), "(1 <= 2)");
-        assert_eq!(emit_e(&bc(">=", two())), "(1 >= 2)");
+        // Comparisons route through thin `numOf`-unwrapping helpers — for
+        // plain numbers these are exactly the old `===`/`<`/…, and additionally
+        // correct for a boxed Float (`7.0 == 7`, `7.0 < 8`).
+        assert_eq!(emit_e(&bc("=", two())), "__Sir.eq(1, 2)");
+        assert_eq!(emit_e(&bc("!=", two())), "__Sir.ne(1, 2)");
+        assert_eq!(emit_e(&bc("<", two())), "__Sir.lt(1, 2)");
+        assert_eq!(emit_e(&bc(">", two())), "__Sir.gt(1, 2)");
+        assert_eq!(emit_e(&bc("<=", two())), "__Sir.le(1, 2)");
+        assert_eq!(emit_e(&bc(">=", two())), "__Sir.ge(1, 2)");
     }
 
     #[test]
@@ -2085,7 +2105,7 @@ mod tests {
                     span: s()
                 }]
             )),
-            "(-(5))"
+            "__Sir.neg(5)"
         );
         assert_eq!(
             emit_e(&bc(
@@ -2552,40 +2572,42 @@ mod tests {
 
     #[test]
     fn emit_float_lit_decimal_and_specials() {
+        // A Float literal is minted through `__Sir.mkFloat`, which boxes an
+        // integral value and leaves a non-integral / non-finite one native.
         assert_eq!(
             emit_e(&Expr::FloatLit {
                 value: 3.0,
                 span: s()
             }),
-            "3.0"
+            "__Sir.mkFloat(3.0)"
         );
         assert_eq!(
             emit_e(&Expr::FloatLit {
                 value: 2.5,
                 span: s()
             }),
-            "2.5"
+            "__Sir.mkFloat(2.5)"
         );
         assert_eq!(
             emit_e(&Expr::FloatLit {
                 value: f64::INFINITY,
                 span: s()
             }),
-            "Infinity"
+            "__Sir.mkFloat(Infinity)"
         );
         assert_eq!(
             emit_e(&Expr::FloatLit {
                 value: f64::NEG_INFINITY,
                 span: s()
             }),
-            "-Infinity"
+            "__Sir.mkFloat(-Infinity)"
         );
         assert_eq!(
             emit_e(&Expr::FloatLit {
                 value: f64::NAN,
                 span: s()
             }),
-            "NaN"
+            "__Sir.mkFloat(NaN)"
         );
     }
 
@@ -2796,7 +2818,7 @@ mod tests {
         };
         let out = emit_s(&st);
         assert!(
-            out.starts_with("while (__Sir.truthy((i < 3))) {\n"),
+            out.starts_with("while (__Sir.truthy(__Sir.lt(i, 3))) {\n"),
             "got {out}"
         );
         assert!(out.contains("i = __Sir.plus(i, 1);"));
