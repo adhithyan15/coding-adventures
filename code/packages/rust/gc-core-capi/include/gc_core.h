@@ -80,6 +80,17 @@ int64_t __gc_collection_count(void);
 /* Drop the whole heap (frees everything) and reset counters. */
 void __gc_reset(void);
 
+/* ── twig-compat aliases ────────────────────────────────────────────────────
+ * The native-AOT code generators and dynval_runtime.c reference the symbol
+ * names the retired twig_gc.c exported. These forward to the __gc_* ABI above
+ * (prototypes match twig_gc.c exactly, including the void-returning collect /
+ * safepoint). Deletable once the emitters emit the __gc_* names directly. */
+int64_t __twig_gc_alloc(int64_t n);
+void    __twig_gc_collect(void);
+void    __twig_gc_safepoint(void);
+int64_t __twig_gc_live_bytes(void);
+int64_t __twig_gc_collection_count(void);
+
 #ifdef __cplusplus
 }
 #endif

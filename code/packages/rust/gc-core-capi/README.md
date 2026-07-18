@@ -78,12 +78,17 @@ hands `[sp, base)` to `__gc_collect_region`. Supported targets are exactly the
 native-AOT ones: aarch64 (macOS) and x86_64 (Linux, Windows); anything else is a
 hard `compile_error!` rather than a silent unsound fallback.
 
+The archive also exports **twig-compat aliases** — `__twig_gc_alloc` /
+`__twig_gc_collect` / `__twig_gc_safepoint` / `__twig_gc_live_bytes` /
+`__twig_gc_collection_count` (module `twig_compat`) — thin wrappers over the
+`__gc_*` ABI. The AOT code generators and `dynval_runtime.c` reference the names
+`twig_gc.c` exported; these aliases let this archive satisfy them so `twig_gc.c`
+can be retired without changing the emitters.
+
 Still to come (own PRs):
 
-- Wire `twig-aot`'s `build.rs` to link this archive, export the twig-compat
-  aliases (`__twig_gc_alloc` / `collect` / `safepoint` / `live_bytes` /
-  `collection_count`) the emitted code already calls, and retire `twig_gc.c`
-  (golden / `*_smoke.rs` parity).
+- Wire `twig-aot`'s `build.rs` to link this archive instead of compiling
+  `twig_gc.c`, and retire `twig_gc.c` (golden / `*_smoke.rs` parity).
 - **Precise** roots (stack maps) and interior tracing (`HeapKind` field maps),
   then moving / generational — all as `gc-core` algorithms.
 

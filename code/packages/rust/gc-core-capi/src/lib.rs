@@ -46,6 +46,11 @@ use std::sync::Mutex;
 /// `twig_gc.c`'s `__twig_gc_collect`). See [`stack_scan`].
 mod stack_scan;
 
+/// `__twig_gc_*` ABI aliases so the AOT-emitted code and `dynval_runtime.c`,
+/// which reference the names `twig_gc.c` used, link against this collector.
+/// See [`twig_compat`].
+mod twig_compat;
+
 /// The one process-wide heap.  `None` until the first allocation (lazy init);
 /// `__gc_reset` puts it back to `None`, running `FlatHeap`'s `Drop` to free
 /// every outstanding block.
