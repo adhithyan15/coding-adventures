@@ -2,6 +2,29 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.20] - Unreleased
+
+### Added
+
+- **Column-defined `COLLATE` now flows into WHERE comparisons.** A column
+  declared `COLLATE NOCASE` / `RTRIM` previously only affected ORDER BY; bare
+  comparisons in a WHERE predicate compared with BINARY, diverging from SQLite.
+  A post-planning pass (`collate_comparisons`) over the WHERE predicate now
+  wraps both operands of a comparison (`=`, `<>`, `<`, `<=`, `>`, `>=`) in the
+  internal `__collate(_, coll)` when a column operand declares a collation —
+  reusing the exact mechanism an explicit `COLLATE` clause already uses — so the
+  byte comparison honours the column's sequence.
+  - SQLite's collation-resolution order is followed: an explicit `COLLATE` on
+    either operand wins; else the left operand's column collation; else the
+    right operand's; else BINARY. The pass recurses through `AND`/`OR`/`NOT`.
+  - An explicit `COLLATE BINARY` now correctly **overrides** a column's NOCASE:
+    `collate_name_after` reports BINARY (instead of collapsing it to "no
+    collation"), so it is lowered to the identity `__collate(_, 'BINARY')`,
+    which both forces byte order and marks the comparison as explicitly
+    collated so the column-collation pass leaves it alone.
+  - Applies to a single base table (no JOINs), matching the ORDER BY
+    restriction. `DISTINCT`, `GROUP BY`, and `IN` collation remain follow-ups.
+
 ## [0.2.19] - Unreleased
 
 ### Added

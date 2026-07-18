@@ -1767,6 +1767,45 @@ fn fold_for_statement(s: &ForStatement, st: &mut FoldState) -> Statement {
         test
     };
 
+    // Loop-body comma-fusion: a BLOCK body whose statements are *all* plain
+    // expression statements collapses to a single (possibly comma-sequenced)
+    // expression statement, dropping the braces — matching Closure at SIMPLE:
+    //
+    //   for (…) { a(); }          →  for (…) a();          (single-stmt block unwrapped)
+    //   for (…) { a(); b(); }     →  for (…) a(), b();      (comma-sequenced)
+    //
+    // The comma operator runs the statements left-to-right with the same side
+    // effects, and a loop body discards the value, so only that left-to-right
+    // ordering matters — the rewrite is behaviour-preserving. `stmts_as_sequence_expr`
+    // returns `None` (leaving the block intact) for any body carrying a
+    // declaration (`var`/`let`/`const`), a `break`/`continue`/`return`, a nested
+    // `if`/loop, or a nested block — none of which can join a comma-sequence.
+    // Only a `BlockStatement` body is a fusion candidate; a bare-statement body
+    // is already brace-free. This runs *after* the body's own inner folds, so an
+    // `if (x) a();` that folded to `x && a()` inside the block participates:
+    // `for (…) { if (x) a(); b(); }` → `for (…) x && a(), b();`.
+    let body = match &body {
+        Statement::Tagged(TaggedStatement::BlockStatement(_)) => {
+            match stmts_as_sequence_expr(&body) {
+                Some(expr) => {
+                    let body_cv = statement_cv(&body);
+                    st.record_fold(
+                        &s.cv,
+                        "loop-body-fuse",
+                        "for (…) { s1; s2; … }",
+                        "for (…) s1, s2, …",
+                    );
+                    Statement::expression_statement(ExpressionStatement {
+                        cv: body_cv,
+                        expression: expr,
+                    })
+                }
+                None => body,
+            }
+        }
+        _ => body,
+    };
+
     Statement::Tagged(TaggedStatement::ForStatement(ForStatement {
         cv: s.cv.clone(),
         init,
@@ -2726,6 +2765,86 @@ mod tests {
             "for(;false;) must collapse to EmptyStatement; got {:?}",
             first_stmt(&out)
         );
+    }
+
+    /// `for (;;) { a(); b(); }` → `for (;;) a(), b();` — a block body of plain
+    /// expression statements fuses to a comma-sequenced single statement.
+    #[test]
+    fn for_body_multi_expr_fuses_to_sequence() {
+        let body = block(
+            Some("blk.1"),
+            vec![
+                expr_stmt(call_expr("a"), None),
+                expr_stmt(call_expr("b"), None),
+            ],
+        );
+        let f = for_stmt(None, None, body);
+        let (out, contribs, changed, _) =
+            run_pass(program().with_body(vec![ProgramItem::Statement(f)]));
+        assert!(changed);
+        assert!(contribs.iter().any(|c| c.tag == "loop-body-fuse"));
+        match first_stmt(&out) {
+            Statement::Tagged(TaggedStatement::ForStatement(f)) => match f.body.as_ref() {
+                Statement::Tagged(TaggedStatement::ExpressionStatement(es)) => {
+                    match &es.expression {
+                        Expression::SequenceExpression(s) => assert_eq!(s.expressions.len(), 2),
+                        other => panic!("expected a 2-element sequence; got {other:?}"),
+                    }
+                }
+                other => panic!("expected a fused expression-statement body; got {other:?}"),
+            },
+            other => panic!("expected ForStatement; got {other:?}"),
+        }
+    }
+
+    /// `for (;;) { a(); }` → `for (;;) a();` — a single-statement block is
+    /// unwrapped to the bare expression statement (no comma wrapper).
+    #[test]
+    fn for_body_single_expr_unwraps_block() {
+        let body = block(Some("blk.1"), vec![expr_stmt(call_expr("a"), None)]);
+        let f = for_stmt(None, None, body);
+        let (out, _, changed, _) = run_pass(program().with_body(vec![ProgramItem::Statement(f)]));
+        assert!(changed);
+        match first_stmt(&out) {
+            Statement::Tagged(TaggedStatement::ForStatement(f)) => match f.body.as_ref() {
+                Statement::Tagged(TaggedStatement::ExpressionStatement(es)) => {
+                    assert!(matches!(&es.expression, Expression::CallExpression(_)));
+                }
+                other => panic!("expected a bare expression-statement body; got {other:?}"),
+            },
+            other => panic!("expected ForStatement; got {other:?}"),
+        }
+    }
+
+    /// `for (;;) { var x = 0; a(); }` — a body carrying a declaration is NOT
+    /// fused (a `var` can't join a comma-sequence): the block is kept intact.
+    #[test]
+    fn for_body_with_var_decl_not_fused() {
+        use coding_adventures_javascript_ast::{
+            BindingTarget, VariableDeclaration, VariableDeclarator,
+        };
+        let var_x = Statement::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind: VarKind::Var,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: BindingTarget::Identifier(Identifier { cv: None, name: "x".to_string() }),
+                init: Some(num(0.0, None)),
+            }],
+        }));
+        let body = block(Some("blk.1"), vec![var_x, expr_stmt(call_expr("a"), None)]);
+        let f = for_stmt(None, None, body);
+        let (out, _, _, _) = run_pass(program().with_body(vec![ProgramItem::Statement(f)]));
+        match first_stmt(&out) {
+            Statement::Tagged(TaggedStatement::ForStatement(f)) => {
+                assert!(
+                    matches!(f.body.as_ref(), Statement::Tagged(TaggedStatement::BlockStatement(_))),
+                    "a var-bearing body must stay a block; got {:?}",
+                    f.body
+                );
+            }
+            other => panic!("expected ForStatement; got {other:?}"),
+        }
     }
 
     /// `for (a(); false; ) body` → `a();` — the expression init runs once.

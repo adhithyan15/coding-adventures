@@ -631,6 +631,113 @@ fn fold_class(c: &ClassExpression, st: &mut FoldState) -> Expression {
     })
 }
 
+/// Fold a `new` on a **standard built-in constructor** to its shorter
+/// equivalent, matching the reference Closure Compiler's
+/// `tryFoldStandardConstructors`. Returns `Ok(replacement)` when the fold fires,
+/// or `Err(arguments)` (handing the already-folded argument list back) so the
+/// caller can rebuild the `new` unchanged.
+///
+/// Gated to a **bare identifier** callee whose name is exactly `Object` or
+/// `Array` (a member callee like `obj.Array`, or any other name, is left alone).
+/// Like Closure at SIMPLE, this assumes those globals are not shadowed. Both are
+/// spec-safe: calling `Object`/`Array` as an ordinary function constructs the
+/// same value as `new` for every argument list.
+///
+/// ```text
+///   new Object(x)        →  Object(x)      (1+ args: drop `new`, keep the call)
+///   new Object()         →  {}             (no args: an empty object literal)
+///   new Array(x)         →  Array(x)       (exactly ONE arg is a *length* or a
+///                                           sole element — ambiguous, so the
+///                                           call form is kept, NOT `[x]`)
+///   new Array()          →  []             (no args: an empty array literal)
+///   new Array(a, b, …)   →  [a, b, …]      (2+ args: an array literal; spread
+///                                           args carry across as elements)
+/// ```
+///
+/// **`Error` and `RegExp` are intentionally NOT handled here.** `Error` is folded
+/// by its own arm (`new Error(…)` → `Error(…)`); `RegExp` is declined because
+/// `RegExp(r)` aliases an existing regex argument instead of copying it, so
+/// `new RegExp(x)` → `RegExp(x)` could be an observable change — a potential
+/// miscompile the reference compiler tolerates but we do not.
+fn fold_standard_constructor(
+    callee: &Expression,
+    arguments: Vec<Expression>,
+    cv: &Option<String>,
+    st: &mut FoldState,
+) -> Result<Expression, Vec<Expression>> {
+    let name = match callee {
+        Expression::Identifier(id) => id.name.as_str(),
+        _ => return Err(arguments),
+    };
+    match name {
+        // `Object` — no args → `{}`; otherwise drop `new` to a plain call.
+        "Object" if arguments.is_empty() => {
+            let new_cv = st.fork_cv(cv, "new Object()", "{}");
+            Ok(Expression::ObjectExpression(ObjectExpression {
+                cv: new_cv,
+                properties: vec![],
+            }))
+        }
+        "Object" => {
+            let new_cv = st.fork_cv(cv, "new Object(…)", "Object(…)");
+            Ok(Expression::CallExpression(CallExpression {
+                cv: new_cv,
+                callee: Box::new(callee.clone()),
+                arguments,
+            }))
+        }
+        // `Array` — 0 args → `[]`; exactly 1 arg keeps the call (a lone argument
+        // is a *length*, so `Array(3)` ≠ `[3]`); 2+ args → an array literal.
+        "Array" if arguments.is_empty() => {
+            let new_cv = st.fork_cv(cv, "new Array()", "[]");
+            Ok(Expression::ArrayExpression(ArrayExpression {
+                cv: new_cv,
+                elements: vec![],
+            }))
+        }
+        "Array" if arguments.len() == 1 => {
+            let new_cv = st.fork_cv(cv, "new Array(x)", "Array(x)");
+            Ok(Expression::CallExpression(CallExpression {
+                cv: new_cv,
+                callee: Box::new(callee.clone()),
+                arguments,
+            }))
+        }
+        // 2+ args WITH a spread: the array-literal form would be a MISCOMPILE.
+        // A spread of unknown runtime length can collapse the construction to a
+        // *single* runtime argument — the length form — so `new Array(5, ...[])`
+        // is `new Array(5)` (a length-5 array), whereas `[5, ...[]]` is `[5]`
+        // (length 1). The reference compiler folds it to `[a, ...xs]` anyway
+        // (unsound); we decline to the always-equivalent call form
+        // `Array(a, ...xs)` (`Array(args)` ≡ `new Array(args)` for every list).
+        // Matching Closure's array-literal spelling here is a byte-identity
+        // follow-up.
+        "Array"
+            if arguments
+                .iter()
+                .any(|a| matches!(a, Expression::SpreadElement(_))) =>
+        {
+            let new_cv = st.fork_cv(cv, "new Array(…, ...spread)", "Array(…, ...spread)");
+            Ok(Expression::CallExpression(CallExpression {
+                cv: new_cv,
+                callee: Box::new(callee.clone()),
+                arguments,
+            }))
+        }
+        // 2+ plain (non-spread) args: the static count IS the element count, so
+        // an array literal is exactly equivalent.
+        "Array" => {
+            let new_cv = st.fork_cv(cv, "new Array(a,b,…)", "[a,b,…]");
+            let elements = arguments.into_iter().map(Some).collect();
+            Ok(Expression::ArrayExpression(ArrayExpression {
+                cv: new_cv,
+                elements,
+            }))
+        }
+        _ => Err(arguments),
+    }
+}
+
 fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
     st.visit();
     match expr {
@@ -680,7 +787,10 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
         Expression::CallExpression(c) => fold_call(c, st),
         // `new X(args)` constructs an object — a side-effecting operation, never
         // a constant. Recurse into the callee and each argument (they may hold
-        // foldable subexpressions).
+        // foldable subexpressions). A `new` on a *standard built-in constructor*
+        // then folds to its shorter equivalent: `Error` below, and
+        // `Object`/`Array` via [`fold_standard_constructor`]. Everything else
+        // preserves the `new`.
         //
         // **Standard-constructor `new`-drop (`new Error(…)` → `Error(…)`).**
         // Closure rewrites `new Error(args)` to a plain call `Error(args)`,
@@ -692,15 +802,15 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
         // semantics-preserving for **every** argument list, including the
         // no-arg form (`new Error` → `Error()`).
         //
-        // Scope — deliberately `Error` only:
+        // Scope:
+        //   * `Object`/`Array` fold via [`fold_standard_constructor`], which
+        //     also collapses their no-arg forms to `{}` / `[]` literals (and
+        //     keeps `new Array(len)`'s single-arg *length* form as a call).
         //   * `RegExp` is NOT folded: `RegExp(r)` returns its argument unchanged
         //     when `r` is already a regex, whereas `new RegExp(r)` always makes
         //     a fresh copy — so `new RegExp(x)` → `RegExp(x)` would be an
         //     observable change (a potential miscompile). Closure does it
         //     anyway; we decline to stay sound. (Follow-up.)
-        //   * `Object`/`Array` are also spec-safe to drop, but Closure folds
-        //     their *no-arg* forms further to `{}` / `[]` literals — a larger
-        //     transform left for a follow-up.
         //   * The `Error` *subtypes* (`TypeError`, `RangeError`, …) are left
         //     alone because the reference compiler does not fold them.
         //
@@ -711,6 +821,7 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
             let callee = fold_expression(&n.callee, st);
             let arguments: Vec<Expression> =
                 n.arguments.iter().map(|a| fold_expression(a, st)).collect();
+            // `new Error(...)` → `Error(...)` (bare-ident gate; see comment above).
             if matches!(&callee, Expression::Identifier(id) if id.name == "Error") {
                 let new_cv = st.fork_cv(&n.cv, "new Error(…)", "Error(…)");
                 Expression::CallExpression(CallExpression {
@@ -719,11 +830,16 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
                     arguments,
                 })
             } else {
-                Expression::NewExpression(NewExpression {
-                    cv: n.cv.clone(),
-                    callee: Box::new(callee),
-                    arguments,
-                })
+                // `new Object(...)` / `new Array(...)` fold via the helper; any
+                // other callee preserves the `new`.
+                match fold_standard_constructor(&callee, arguments, &n.cv, st) {
+                    Ok(folded) => folded,
+                    Err(arguments) => Expression::NewExpression(NewExpression {
+                        cv: n.cv.clone(),
+                        callee: Box::new(callee),
+                        arguments,
+                    }),
+                }
             }
         }
         // `a, b, c` — fold each operand independently. We do NOT drop the
@@ -6486,7 +6602,7 @@ mod tests {
         assert_eq!(ConstantFoldPass::new().cost(), 2);
     }
 
-    // ------------------- standard-constructor `new`-drop -------------------
+    // --------- standard-constructor `new`-drop (Error / Object / Array) ---------
 
     fn new_expr(callee: Expression, args: Vec<Expression>) -> Expression {
         // A traced `cv` so the fold records a provenance contribution (matching
@@ -6554,6 +6670,117 @@ mod tests {
         let expr = new_expr(member_expr(ident("obj"), "Error"), vec![ident("x")]);
         let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
         assert!(!changed, "a member `obj.Error` callee must not fold");
+        assert!(matches!(extract_expr(&out), Expression::NewExpression(_)));
+    }
+
+    /// `new Object(x)` → `Object(x)` — a plain call.
+    #[test]
+    fn new_object_with_arg_drops_to_call() {
+        let expr = new_expr(ident("Object"), vec![ident("x")]);
+        let (out, contribs, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed);
+        assert!(contribs.iter().any(|c| c.tag == "folded"));
+        match extract_expr(&out) {
+            Expression::CallExpression(c) => {
+                assert!(matches!(c.callee.as_ref(), Expression::Identifier(id) if id.name == "Object"));
+                assert_eq!(c.arguments.len(), 1);
+            }
+            other => panic!("expected `Object(x)`; got {other:?}"),
+        }
+    }
+
+    /// `new Object()` → `{}` — an empty object literal.
+    #[test]
+    fn new_object_no_args_to_empty_object_literal() {
+        let expr = new_expr(ident("Object"), vec![]);
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed);
+        match extract_expr(&out) {
+            Expression::ObjectExpression(o) => assert!(o.properties.is_empty()),
+            other => panic!("expected `{{}}`; got {other:?}"),
+        }
+    }
+
+    /// `new Array(x)` → `Array(x)` — a lone argument is a length, so the call
+    /// form is kept (NOT `[x]`).
+    #[test]
+    fn new_array_one_arg_keeps_call() {
+        let expr = new_expr(ident("Array"), vec![ident("x")]);
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed);
+        match extract_expr(&out) {
+            Expression::CallExpression(c) => {
+                assert!(matches!(c.callee.as_ref(), Expression::Identifier(id) if id.name == "Array"));
+                assert_eq!(c.arguments.len(), 1);
+            }
+            other => panic!("expected `Array(x)`; got {other:?}"),
+        }
+    }
+
+    /// `new Array()` → `[]` — an empty array literal.
+    #[test]
+    fn new_array_no_args_to_empty_array_literal() {
+        let expr = new_expr(ident("Array"), vec![]);
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed);
+        match extract_expr(&out) {
+            Expression::ArrayExpression(a) => assert!(a.elements.is_empty()),
+            other => panic!("expected `[]`; got {other:?}"),
+        }
+    }
+
+    /// `new Array(1, 2)` → `[1, 2]` — 2+ args become an array literal.
+    #[test]
+    fn new_array_multi_args_to_array_literal() {
+        let expr = new_expr(ident("Array"), vec![num(1.0, None), num(2.0, None)]);
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed);
+        match extract_expr(&out) {
+            Expression::ArrayExpression(a) => {
+                assert_eq!(a.elements.len(), 2);
+                assert!(a.elements.iter().all(|e| e.is_some()));
+            }
+            other => panic!("expected `[1,2]`; got {other:?}"),
+        }
+    }
+
+    /// `new Array(a, ...xs)` keeps the CALL form `Array(a, ...xs)` — NOT the
+    /// array literal `[a, ...xs]`, which would be a miscompile when the spread
+    /// expands to zero elements (`new Array(5, ...[])` is a length-5 array, but
+    /// `[5, ...[]]` is `[5]`). The call form is always equivalent.
+    #[test]
+    fn new_array_multi_args_with_spread_keeps_call() {
+        let spread = Expression::SpreadElement(SpreadElement {
+            cv: None,
+            argument: Box::new(ident("xs")),
+        });
+        let expr = new_expr(ident("Array"), vec![ident("a"), spread]);
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed);
+        match extract_expr(&out) {
+            Expression::CallExpression(c) => {
+                assert!(matches!(c.callee.as_ref(), Expression::Identifier(id) if id.name == "Array"));
+                assert_eq!(c.arguments.len(), 2);
+            }
+            other => panic!("expected the call form `Array(a,...xs)`; got {other:?}"),
+        }
+    }
+
+    /// `new obj.Array(x)` is LEFT ALONE — a member callee is not the global.
+    #[test]
+    fn new_member_array_callee_not_folded() {
+        let expr = new_expr(member_expr(ident("obj"), "Array"), vec![ident("x")]);
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(!changed, "a member `obj.Array` callee must not fold");
+        assert!(matches!(extract_expr(&out), Expression::NewExpression(_)));
+    }
+
+    /// `new Foo(x)` (a user constructor) is LEFT ALONE.
+    #[test]
+    fn new_user_ctor_not_folded() {
+        let expr = new_expr(ident("Foo"), vec![ident("x")]);
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(!changed, "a user constructor must not fold");
         assert!(matches!(extract_expr(&out), Expression::NewExpression(_)));
     }
 
