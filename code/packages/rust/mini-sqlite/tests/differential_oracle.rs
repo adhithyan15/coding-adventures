@@ -1040,6 +1040,101 @@ const CASES: &[Case] = &[
         setup: &[],
         query: "CREATE TABLE t (x TEXT COLLATE BOGUS)",
     },
+    // ---- Lane 3: column-DEFINED COLLATE flows into WHERE comparisons ------
+    // A `COLLATE NOCASE` column makes a bare `WHERE name = 'apple'` fold case,
+    // matching every row that equals 'apple' case-insensitively. Before this the
+    // column collation was ignored in comparisons and only 'apple' matched.
+    Case {
+        id: "where_column_collate_nocase_eq",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT COLLATE NOCASE)",
+            "INSERT INTO t VALUES (1,'Apple'),(2,'apple'),(3,'BANANA'),(4,'cherry')",
+        ],
+        query: "SELECT id FROM t WHERE name = 'apple' ORDER BY id",
+    },
+    // `<>` (not-equal) honours the column collation too: case-insensitive
+    // inequality excludes both 'Apple' and 'apple'.
+    Case {
+        id: "where_column_collate_nocase_ne",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT COLLATE NOCASE)",
+            "INSERT INTO t VALUES (1,'Apple'),(2,'apple'),(3,'BANANA'),(4,'cherry')",
+        ],
+        query: "SELECT id FROM t WHERE name <> 'apple' ORDER BY id",
+    },
+    // Ordered comparison (`<`) folds case: 'Apple'/'apple' both sort below 'b'.
+    Case {
+        id: "where_column_collate_nocase_lt",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT COLLATE NOCASE)",
+            "INSERT INTO t VALUES (1,'Apple'),(2,'apple'),(3,'ZED'),(4,'cherry')",
+        ],
+        query: "SELECT id FROM t WHERE name < 'b' ORDER BY id",
+    },
+    // Column-defined RTRIM: trailing spaces are ignored in the comparison, so
+    // 'hi   ' = 'hi'.
+    Case {
+        id: "where_column_collate_rtrim_eq",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT COLLATE RTRIM)",
+            "INSERT INTO t VALUES (1,'hi   '),(2,'hi'),(3,'ho')",
+        ],
+        query: "SELECT id FROM t WHERE s = 'hi' ORDER BY id",
+    },
+    // An explicit `COLLATE BINARY` on the comparison OVERRIDES the column's
+    // NOCASE, forcing byte order so only the exact-case 'apple' matches.
+    Case {
+        id: "where_column_collate_explicit_binary_override",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT COLLATE NOCASE)",
+            "INSERT INTO t VALUES (1,'Apple'),(2,'apple'),(3,'cherry')",
+        ],
+        query: "SELECT id FROM t WHERE name = 'apple' COLLATE BINARY ORDER BY id",
+    },
+    // The column collation flows through the boolean structure (AND/OR) to each
+    // comparison: both `name = 'apple'` and `name = 'banana'` fold case.
+    Case {
+        id: "where_column_collate_nocase_or",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT COLLATE NOCASE)",
+            "INSERT INTO t VALUES (1,'Apple'),(2,'apple'),(3,'BANANA'),(4,'cherry')",
+        ],
+        query: "SELECT id FROM t WHERE name = 'apple' OR name = 'banana' ORDER BY id",
+    },
+    // A column WITHOUT a declared collation keeps BINARY comparison — only the
+    // exact-case match qualifies. Guards against over-applying the fold.
+    Case {
+        id: "where_plain_column_stays_binary",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT)",
+            "INSERT INTO t VALUES (1,'Apple'),(2,'apple')",
+        ],
+        query: "SELECT id FROM t WHERE name = 'apple' ORDER BY id",
+    },
+    // Left-operand precedence: when BOTH operands are columns, SQLite uses the
+    // LEFT column's collation. `bin = nocase` compares byte-exact (the left
+    // BINARY column wins — it must NOT defer to the right NOCASE column), while
+    // the mirror `nocase = bin` folds case. The two therefore disagree, exactly
+    // as in SQLite; getting this wrong (OR-ing past a BINARY left column) would
+    // make both fold.
+    Case {
+        id: "where_column_collation_left_precedence",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, cs TEXT, ci TEXT COLLATE NOCASE)",
+            "INSERT INTO t VALUES (1,'foo','FOO'),(2,'bar','bar')",
+        ],
+        query: "SELECT id FROM t WHERE cs = ci ORDER BY id",
+    },
+    // The mirror image folds: a NOCASE left column drives the comparison, so
+    // 'FOO' = 'foo' matches.
+    Case {
+        id: "where_column_collation_left_precedence_mirror",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, cs TEXT, ci TEXT COLLATE NOCASE)",
+            "INSERT INTO t VALUES (1,'foo','FOO'),(2,'bar','bar')",
+        ],
+        query: "SELECT id FROM t WHERE ci = cs ORDER BY id",
+    },
     // ---- Lane 1: simple (operand) CASE ----------------------------------
     // `CASE x WHEN v THEN r … ELSE d END` compares the operand to each value
     // for equality; a NULL operand matches nothing (x = NULL is never true)
