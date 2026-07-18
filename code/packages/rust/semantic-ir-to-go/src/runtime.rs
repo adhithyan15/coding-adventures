@@ -395,6 +395,21 @@ func _sir_times(args []Value) Value {
 	return acc
 }
 
+// _sir_neg implements Ruby unary minus (`-x`), which the frontend lowers to
+// `BuiltinCall("neg", [x])`.  It was UNIMPLEMENTED, so any negative literal
+// panicked with "unknown builtin: neg" (the JS/Python runtimes already had it).
+// Negate tag-preservingly: a float64 stays a float64; anything else negates as
+// an int64 (the coercion the rest of the arithmetic helpers use).
+func _sir_neg(args []Value) Value {
+	if len(args) == 0 {
+		return int64(0)
+	}
+	if f, ok := args[0].(float64); ok {
+		return -f
+	}
+	return -_sir_as_int(args[0])
+}
+
 func _sir_divide(args []Value) Value {
 	if len(args) == 0 {
 		return int64(0)
@@ -424,7 +439,19 @@ func _sir_divide(args []Value) Value {
 		if d == 0 {
 			panic(_sir_new_error("ZeroDivisionError", Value("divided by 0")))
 		}
-		acc /= d
+		// Ruby `Integer#/` FLOORS toward −∞ (`-7 / 2 == -4`), unlike Go's `/`
+		// which truncates toward zero (`-3`). The floored quotient is the
+		// truncated one minus one exactly when the remainder is non-zero and
+		// its sign differs from the divisor's — when a real division would land
+		// between two integers on the negative side. Matches the SIR21 §E3
+		// oracle `DivOp::Floor` on every sign combination. (Float operands take
+		// the `_sir_any_float` branch above, which true-divides — Ruby `Float#/`.)
+		q := acc / d
+		r := acc % d
+		if r != 0 && (r < 0) != (d < 0) {
+			q--
+		}
+		acc = q
 	}
 	return acc
 }
@@ -1126,6 +1153,8 @@ func _sir_call_builtin_by_name(name string, args []Value) Value {
 		return _sir_times(args)
 	case "/":
 		return _sir_divide(args)
+	case "neg":
+		return _sir_neg(args)
 	case "=":
 		return _sir_eq(args)
 	case "case_eq":

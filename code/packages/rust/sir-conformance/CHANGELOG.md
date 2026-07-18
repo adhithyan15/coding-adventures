@@ -2,6 +2,32 @@
 
 All notable changes to the `sir-conformance` crate will be documented in this file.
 
+## [0.13.0] - Division frontier CLOSED on every backend (SIR21 §E3)
+
+With Rust, Go and JavaScript now flooring integer division (their runtime
+`divide` helpers, this release's sibling backend bumps) alongside Python — and
+Ruby flooring natively (it transpiles to Ruby) and C already flooring
+(`_sir_ifloordiv`) — `division_matches_ruby_floor_on_every_backend` is **no
+longer `#[ignore]`d**. It is a live conformance assertion that emits
+`puts(lhs / rhs)`, runs it through every backend's real toolchain, and asserts
+the output equals the oracle's `DivOp::Floor` on all sign combinations. It fails
+(naming the backend) if any backend regresses to truncation or true-division on
+integer operands. `Skipped` outcomes are not asserted: the C *emitter* does not
+yet lower unary `neg`, so its negative cases skip (positive division is
+asserted), and Ruby skips without a `ruby` toolchain. Verified locally: Python,
+JavaScript, Go, Rust and Ruby all floor every sign combination; C floors the
+positive cases.
+`python_division_is_ruby_floor_faithful` remains as a granular per-backend guard;
+module docs updated to record all four arms closed.
+
+Un-ignoring the frontier also surfaced (and this release's Go/Rust bumps fixed)
+a second bug: the negative test cases (`-7 / 2`) crashed Go and Rust with
+`unknown builtin: neg` — unary minus (`-x`) lowers to a `neg` builtin those two
+runtimes never implemented. That is the "Go/Rust crash on negatives" the
+frontier doc long recorded; it was never a division bug at all. The frontier is
+what forced it to the surface, since floor and truncation only *differ* on
+negative operands.
+
 ## [0.11.0] - Division frontier: Python arm closed (SIR21 §E3)
 
 ### Added — `python_division_is_ruby_floor_faithful` (non-ignored)

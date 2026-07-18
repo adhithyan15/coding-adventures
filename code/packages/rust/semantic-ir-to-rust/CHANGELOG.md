@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.36.0 — Ruby `Integer#/` floors toward −∞ (SIR21 §E3)
+
+The inline `__sir` runtime's `divide` truncated integer division toward zero
+(`acc /= d`), so `-7 / 2` gave `-3` instead of Ruby's floored `-4`. The integer
+path now floors toward −∞ — the truncated quotient minus one exactly when the
+remainder is non-zero and its sign differs from the divisor's — matching the
+SIR21 §E3 oracle `DivOp::Floor` on every sign combination. The float path
+(`any_float`) is unchanged and already true-divides (Ruby `Float#/`); typed
+division-by-zero is unchanged.
+
+### Fixed — unary minus (`neg`) was unimplemented (any negative literal crashed)
+
+Closing the division frontier surfaced a second, unrelated gap: the Ruby
+frontend lowers unary minus (`-x`) to `BuiltinCall("neg", [x])`, but
+`call_builtin_by_name` had **no `neg` arm**, so *every* negative literal
+(`-7`, not just division) panicked at runtime with `unknown builtin: neg`. The
+JavaScript and Python runtimes already implemented it; the Rust backend now
+does too — tag-preservingly (a `Float` stays a `Float`, otherwise negate as
+`Int`). This is what lets the division frontier's negative cases run at all.
+
+Together these close the **Rust arm** of the division frontier
+(`sir-conformance/tests/division.rs`), now a live non-ignored assertion.
+
 ## 0.35.0 — Array `cycle(n)`
 
 Mirrors the Python reference (PR #8117) and the Go backend (PR #8123) into the

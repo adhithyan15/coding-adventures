@@ -443,7 +443,17 @@ pub const RUNTIME: &str = r##"mod __sir {
                 // so `rescue ZeroDivisionError` catches it — Ruby parity.
                 raise("ZeroDivisionError", Value::Str(Rc::from("divided by 0")));
             }
-            acc /= d;
+            // Ruby `Integer#/` FLOORS toward −∞ (`-7 / 2 == -4`), unlike Rust's
+            // `/` which truncates toward zero (`-3`). The floored quotient is
+            // the truncated one minus one *exactly* when the remainder is
+            // non-zero and its sign differs from the divisor's — i.e. when a
+            // real division would land between two integers on the negative
+            // side. Matches the SIR21 §E3 oracle `DivOp::Floor` on every sign
+            // combination. (Float operands take the `any_float` branch above,
+            // which correctly true-divides — Ruby `Float#/`.)
+            let q = acc / d;
+            let r = acc % d;
+            acc = if r != 0 && ((r < 0) != (d < 0)) { q - 1 } else { q };
         }
         Value::Int(acc)
     }
@@ -1107,6 +1117,16 @@ pub const RUNTIME: &str = r##"mod __sir {
             "-" => minus(args),
             "*" => times(args),
             "/" => divide(args),
+            // Ruby unary minus (`-x`) lowers to `BuiltinCall("neg", [x])`. It
+            // was UNIMPLEMENTED here, so any negative literal panicked with
+            // "unknown builtin: neg" (the JS/Python runtimes already had it).
+            // Negate tag-preservingly — a `Float` stays a `Float`; anything
+            // else negates as an `Int` (the same coercion `subtract` uses for
+            // its single-argument negation).
+            "neg" => match args.into_iter().next().unwrap_or(Value::Int(0)) {
+                Value::Float(f) => Value::Float(-f),
+                other => Value::Int(-as_i64(&other)),
+            },
             "=" => {
                 let mut it = args.into_iter();
                 eq(it.next().unwrap_or(Value::Nil), it.next().unwrap_or(Value::Nil))
