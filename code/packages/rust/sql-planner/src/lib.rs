@@ -3109,6 +3109,26 @@ fn plan_primary_token(tok: &Token) -> Result<SqlExpr, PlanError> {
         return decode_blob_literal(val).map(|bytes| SqlExpr::Literal(SqlValue::Blob(bytes)));
     }
 
+    // Hexadecimal integer literal `0x1F` / `0X1F` (lexed by `HEX_INT`, aliased to
+    // `NUMBER`). SQLite decodes these as 64-bit INTEGERs that wrap: the hex digits
+    // are read as an unsigned 64-bit value and reinterpreted as `i64`, so `0x1F`
+    // is 31, `0x7FFFFFFFFFFFFFFF` is `i64::MAX`, and `0xFFFFFFFFFFFFFFFF` is -1.
+    // Parsing as `u64` (not `i64`) before the `as i64` bit-cast is what admits the
+    // full unsigned range — `i64::from_str_radix` would reject anything above
+    // `i64::MAX`. A hex literal always starts with a digit, so this branch can
+    // never shadow a column reference. More than 16 hex digits overflows 64 bits;
+    // SQLite rejects that at prepare time ("hex literal too big"), so we surface a
+    // plan error rather than silently falling through to a (nonsensical) column
+    // reference — the leading `0x` guarantees this token is a number, not a name.
+    if let Some(hex) = val.strip_prefix("0x").or_else(|| val.strip_prefix("0X")) {
+        return match u64::from_str_radix(hex, 16) {
+            Ok(u) => Ok(SqlExpr::Literal(SqlValue::Int(u as i64))),
+            Err(_) => Err(PlanError::UnsupportedStatement(format!(
+                "hex literal too big: {val}"
+            ))),
+        };
+    }
+
     // NUMBER literal: try integer first, then float.
     if let Ok(i) = val.parse::<i64>() {
         return Ok(SqlExpr::Literal(SqlValue::Int(i)));
@@ -4233,6 +4253,57 @@ mod tests {
         assert_eq!(decode_blob_literal("0a0B").unwrap(), vec![0x0A, 0x0B]);
         // Odd digit count is rejected (matches SQLite's tokenizer error).
         assert!(decode_blob_literal("x'012'").is_err());
+    }
+
+    #[test]
+    fn test_expr_hex_integer_literal() {
+        // `0x1F` → 31; `0X10` → 16 (upper-case prefix). Decoded as INTEGER.
+        for (sql, want) in &[
+            ("SELECT * FROM t WHERE x = 0x1F", 31_i64),
+            ("SELECT * FROM t WHERE x = 0X10", 16),
+            ("SELECT * FROM t WHERE x = 0xff", 255),
+            ("SELECT * FROM t WHERE x = 0x0", 0),
+        ] {
+            let expr = plan_where_expr(sql);
+            if let SqlExpr::BinaryOp { right, .. } = expr {
+                assert_eq!(*right, SqlExpr::Literal(SqlValue::Int(*want)), "{sql}");
+            } else {
+                panic!("Expected EQ comparison for {sql}");
+            }
+        }
+    }
+
+    #[test]
+    fn test_expr_hex_integer_wraps_64bit() {
+        // SQLite reads hex as a 64-bit value that wraps: all-ones is -1, and the
+        // sign bit set is i64::MIN. Parsing as u64 then bit-casting to i64 is what
+        // reproduces this (an i64 parse would reject values above i64::MAX).
+        for (sql, want) in &[
+            ("SELECT * FROM t WHERE x = 0x7FFFFFFFFFFFFFFF", i64::MAX),
+            ("SELECT * FROM t WHERE x = 0xFFFFFFFFFFFFFFFF", -1),
+            ("SELECT * FROM t WHERE x = 0x8000000000000000", i64::MIN),
+        ] {
+            let expr = plan_where_expr(sql);
+            if let SqlExpr::BinaryOp { right, .. } = expr {
+                assert_eq!(*right, SqlExpr::Literal(SqlValue::Int(*want)), "{sql}");
+            } else {
+                panic!("Expected EQ comparison for {sql}");
+            }
+        }
+    }
+
+    #[test]
+    fn test_expr_hex_integer_too_big_errors() {
+        // More than 16 hex digits overflows 64 bits; SQLite rejects it at prepare
+        // time ("hex literal too big"). We surface a plan error rather than
+        // silently treating the token as a column reference.
+        let err = plan_err("SELECT * FROM t WHERE x = 0x1FFFFFFFFFFFFFFFF");
+        match err {
+            PlanError::UnsupportedStatement(msg) => {
+                assert!(msg.contains("hex literal too big"), "got: {msg}");
+            }
+            other => panic!("Expected UnsupportedStatement, got: {other:?}"),
+        }
     }
 
     #[test]

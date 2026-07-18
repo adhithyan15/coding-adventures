@@ -35,6 +35,24 @@ pub fn token_grammar() -> TokenGrammar {
                 line_number: 17,
                 alias: None,
             },
+            // A hexadecimal integer literal: `0x` / `0X` followed by one or more
+            // hex digits, e.g. `0x1F` (= 31) or `0xff` (= 255). SQLite treats
+            // these as INTEGERs (`typeof(0x1F)` is `'integer'`), decoded as a
+            // 64-bit value that wraps — `0xFFFFFFFFFFFFFFFF` is -1. This MUST come
+            // BEFORE `NUMBER`: the lexer takes the first matching token in order,
+            // and `NUMBER` would otherwise consume just the leading `0`, leaving
+            // `x1F` to tokenise as a separate NAME. Aliased to `NUMBER` so it flows
+            // through the existing grammar with no new parser rule; the planner's
+            // number-literal decoder recognises the `0x` prefix and decodes it as
+            // hex (see `sql-planner`). A bare `0` (no `x`) still falls through to
+            // `NUMBER`, since the `[xX]` here is mandatory.
+            TokenDefinition {
+                name: r#"HEX_INT"#.to_string(),
+                pattern: r#"0[xX][0-9A-Fa-f]+"#.to_string(),
+                is_regex: true,
+                line_number: 18,
+                alias: Some(r#"NUMBER"#.to_string()),
+            },
             TokenDefinition {
                 name: r#"NUMBER"#.to_string(),
                 // A numeric literal: an integer or decimal part, followed by an
