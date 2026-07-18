@@ -398,6 +398,219 @@ fn item_to_item_move_rescales_the_implied_point() {
 }
 
 // -------------------------------------------------------------------------
+// ON SIZE ERROR — vs the oracle.
+// -------------------------------------------------------------------------
+
+#[test]
+fn add_on_size_error_fires_on_overflow() {
+    // R is 9(2) (max 99). 50 + 60 = 110 overflows → handler runs, R unchanged (50).
+    let out = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(2) VALUE 50."],
+        &["ADD 60 TO R ON SIZE ERROR DISPLAY \"OVER\".", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "OVER\n50\n");
+}
+
+#[test]
+fn add_on_size_error_does_not_fire_when_it_fits() {
+    // 50 + 40 = 90 fits 9(2) → no handler, R = 90.
+    let out = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(2) VALUE 50."],
+        &["ADD 40 TO R ON SIZE ERROR DISPLAY \"OVER\".", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "90\n");
+}
+
+#[test]
+fn multiply_on_size_error_fires_on_overflow() {
+    // 10 * 3 * ... a product that overflows the receiver runs the handler.
+    // 40 * 40 = 1600 into 9(2) overflows → handler, R unchanged.
+    let out = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(2) VALUE 7."],
+        &["MULTIPLY 40 BY 40 GIVING R ON SIZE ERROR DISPLAY \"BIG\".", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "BIG\n07\n");
+}
+
+#[test]
+fn divide_by_zero_with_on_size_error_runs_the_handler() {
+    // A zero divisor is a size-error condition; with a handler it is caught.
+    let out = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(3) VALUE 7."],
+        &["DIVIDE 0 INTO 10 GIVING R ON SIZE ERROR DISPLAY \"DIVZERO\".", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "DIVZERO\n007\n");
+}
+
+// -------------------------------------------------------------------------
+// GO TO and PERFORM — vs the oracle.
+// -------------------------------------------------------------------------
+
+/// Build a program from full procedure lines (paragraphs included) with no DATA
+/// division, and assert the compiled output matches the oracle.
+fn run_proc(data: &[&str], proc: &[&str]) -> String {
+    assert_matches_oracle(&wrap(data, proc))
+}
+
+#[test]
+fn go_to_transfers_control_and_skips_fallthrough() {
+    let out = run_proc(
+        &[],
+        &[
+            "DISPLAY \"START\".",
+            "GO TO SKIP.",
+            "MIDDLE.",
+            "DISPLAY \"MIDDLE\".",
+            "SKIP.",
+            "DISPLAY \"END\".",
+            "STOP RUN.",
+        ],
+    );
+    assert_eq!(out, "START\nEND\n");
+}
+
+#[test]
+fn go_to_forms_a_loop_that_terminates() {
+    let out = run_proc(
+        &["01  I  PIC 9 VALUE 0."],
+        &[
+            "MOVE 0 TO I.",
+            "LOOP.",
+            "ADD 1 TO I.",
+            "DISPLAY I.",
+            "IF I LESS 3 GO TO LOOP.",
+            "STOP RUN.",
+        ],
+    );
+    assert_eq!(out, "1\n2\n3\n");
+}
+
+#[test]
+fn perform_runs_a_paragraph_then_returns() {
+    let out = run_proc(
+        &[],
+        &[
+            "PERFORM GREET.",
+            "DISPLAY \"BACK\".",
+            "STOP RUN.",
+            "GREET.",
+            "DISPLAY \"HI\".",
+        ],
+    );
+    assert_eq!(out, "HI\nBACK\n");
+}
+
+#[test]
+fn perform_n_times_and_zero_times() {
+    let out = run_proc(
+        &["01  COUNT  PIC 9 VALUE 0."],
+        &["PERFORM TICK 3 TIMES.", "STOP RUN.", "TICK.", "ADD 1 TO COUNT.", "DISPLAY COUNT."],
+    );
+    assert_eq!(out, "1\n2\n3\n");
+    let z = run_proc(
+        &["01  N  PIC 9 VALUE 0."],
+        &["PERFORM NOISE N TIMES.", "DISPLAY \"DONE\".", "STOP RUN.", "NOISE.", "DISPLAY \"X\"."],
+    );
+    assert_eq!(z, "DONE\n");
+}
+
+#[test]
+fn perform_until_loops_and_tests_before() {
+    let out = run_proc(
+        &["01  I  PIC 9 VALUE 0."],
+        &[
+            "PERFORM STEP UNTIL I GREATER 2.",
+            "DISPLAY \"DONE\".",
+            "STOP RUN.",
+            "STEP.",
+            "ADD 1 TO I.",
+            "DISPLAY I.",
+        ],
+    );
+    assert_eq!(out, "1\n2\n3\nDONE\n");
+    // Condition already true → body never runs.
+    let z = run_proc(
+        &["01  I  PIC 9 VALUE 5."],
+        &["PERFORM NOISE UNTIL I GREATER 2.", "DISPLAY \"DONE\".", "STOP RUN.", "NOISE.", "DISPLAY \"X\"."],
+    );
+    assert_eq!(z, "DONE\n");
+}
+
+#[test]
+fn perform_thru_runs_a_paragraph_range() {
+    let out = run_proc(
+        &[],
+        &[
+            "PERFORM A THRU C.",
+            "DISPLAY \"BACK\".",
+            "STOP RUN.",
+            "A.",
+            "DISPLAY \"A\".",
+            "B.",
+            "DISPLAY \"B\".",
+            "C.",
+            "DISPLAY \"C\".",
+        ],
+    );
+    assert_eq!(out, "A\nB\nC\nBACK\n");
+}
+
+#[test]
+fn perform_varying_counts_with_induction_variable() {
+    let out = run_proc(
+        &["01  I  PIC 9 VALUE 0."],
+        &[
+            "PERFORM SHOW VARYING I FROM 1 BY 1 UNTIL I GREATER 3.",
+            "DISPLAY \"DONE\".",
+            "STOP RUN.",
+            "SHOW.",
+            "DISPLAY I.",
+        ],
+    );
+    assert_eq!(out, "1\n2\n3\nDONE\n");
+    // Step by 2 from 0.
+    let s = run_proc(
+        &["01  I  PIC 9 VALUE 0."],
+        &["PERFORM SHOW VARYING I FROM 0 BY 2 UNTIL I GREATER 6.", "STOP RUN.", "SHOW.", "DISPLAY I."],
+    );
+    assert_eq!(s, "0\n2\n4\n6\n");
+}
+
+#[test]
+fn stop_run_inside_a_performed_paragraph_ends_the_program() {
+    let out = run_proc(
+        &[],
+        &[
+            "PERFORM DONE.",
+            "DISPLAY \"AFTER\".",
+            "STOP RUN.",
+            "DONE.",
+            "DISPLAY \"IN\".",
+            "STOP RUN.",
+        ],
+    );
+    assert_eq!(out, "IN\n");
+}
+
+#[test]
+fn go_to_out_of_a_performed_paragraph_transfers_at_top_level() {
+    let out = run_proc(
+        &[],
+        &[
+            "PERFORM SUB.",
+            "DISPLAY \"AFTER MAIN\".",
+            "STOP RUN.",
+            "SUB.",
+            "GO TO ELSEWHERE.",
+            "ELSEWHERE.",
+            "DISPLAY \"ELSEWHERE\".",
+            "STOP RUN.",
+        ],
+    );
+    assert_eq!(out, "ELSEWHERE\n");
+}
+
+// -------------------------------------------------------------------------
 // Scaled-decimal MULTIPLY / DIVIDE (PR3b) — vs the oracle.
 // -------------------------------------------------------------------------
 
@@ -506,4 +719,197 @@ fn arithmetic_chains_through_the_field() {
         ],
     ));
     assert_eq!(out, "20\n");
+}
+
+// -------------------------------------------------------------------------
+// COMPUTE — arithmetic expressions with precedence, vs the oracle.
+// -------------------------------------------------------------------------
+
+#[test]
+fn compute_single_operand_moves_the_value() {
+    // COMPUTE R = A with no operator is a rescale-and-store.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC 9(3) VALUE 42.", "01  R  PIC 9(5)."],
+        &["COMPUTE R = A.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "00042\n");
+}
+
+#[test]
+fn compute_respects_operator_precedence() {
+    // A + B * C = 10 + (3 * 2) = 16 → 0016.00.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC 9(3) VALUE 10.",
+            "01  B  PIC 9(3) VALUE 3.",
+            "01  C  PIC 9(3) VALUE 2.",
+            "01  R  PIC 9(4)V99.",
+        ],
+        &["COMPUTE R = A + B * C.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "001600\n");
+}
+
+#[test]
+fn compute_parentheses_override_precedence() {
+    // (A + B) * C = 13 * 2 = 26 → 0026.00.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC 9(3) VALUE 10.",
+            "01  B  PIC 9(3) VALUE 3.",
+            "01  C  PIC 9(3) VALUE 2.",
+            "01  R  PIC 9(4)V99.",
+        ],
+        &["COMPUTE R = (A + B) * C.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "002600\n");
+}
+
+#[test]
+fn compute_aligns_scaled_operands() {
+    // 1.5 + 2.25 = 3.75 → 9V99 → 375.
+    let out = assert_matches_oracle(&wrap(
+        &["01  X  PIC 9V9 VALUE 1.5.", "01  Y  PIC 9V99 VALUE 2.25.", "01  R  PIC 9V99."],
+        &["COMPUTE R = X + Y.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "375\n");
+}
+
+#[test]
+fn compute_division_truncates_and_rounds() {
+    // 10 / 3 = 3.333… → 9V99 truncates to 3.33.
+    let trunc = assert_matches_oracle(&wrap(
+        &["01  A  PIC 9(3) VALUE 10.", "01  B  PIC 9(3) VALUE 3.", "01  R  PIC 9V99."],
+        &["COMPUTE R = A / B.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(trunc, "333\n");
+    // 20 / 3 = 6.666… → ROUNDED to 6.67.
+    let round = assert_matches_oracle(&wrap(
+        &["01  A  PIC 9(3) VALUE 20.", "01  B  PIC 9(3) VALUE 3.", "01  R  PIC 9V99."],
+        &["COMPUTE R ROUNDED = A / B.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(round, "667\n");
+}
+
+#[test]
+fn compute_unary_minus_and_negative_magnitude() {
+    // -B + A = -3 + 10 = 7 → 007.
+    let pos = assert_matches_oracle(&wrap(
+        &["01  A  PIC 9(3) VALUE 10.", "01  B  PIC 9(3) VALUE 3.", "01  R  PIC 9(3)."],
+        &["COMPUTE R = -B + A.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(pos, "007\n");
+    // B - A = -7 → an unsigned receiver keeps the magnitude, 7 → 007.
+    let neg = assert_matches_oracle(&wrap(
+        &["01  A  PIC 9(3) VALUE 10.", "01  B  PIC 9(3) VALUE 3.", "01  R  PIC 9(3)."],
+        &["COMPUTE R = B - A.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(neg, "007\n");
+}
+
+#[test]
+fn compute_on_size_error_fires_on_overflow() {
+    // A*A*A = 1000 overflows PIC 9(2); the handler runs and R is unchanged.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC 9(3) VALUE 10.", "01  R  PIC 9(2) VALUE 42."],
+        &["COMPUTE R = A * A * A ON SIZE ERROR DISPLAY \"OVER\".", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "OVER\n42\n");
+}
+
+#[test]
+fn compute_overflow_without_handler_truncates() {
+    // No handler: 1000 keeps its low two digits → 00 (COBOL's silent truncation).
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC 9(3) VALUE 10.", "01  R  PIC 9(2) VALUE 42."],
+        &["COMPUTE R = A * A * A.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "00\n");
+}
+
+#[test]
+fn compute_on_size_error_catches_divide_by_zero() {
+    // (C - C) = 0 divisor is a size-error condition; the handler catches it.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC 9(3) VALUE 10.", "01  C  PIC 9(3) VALUE 2.", "01  R  PIC 9(3) VALUE 7."],
+        &["COMPUTE R = A / (C - C) ON SIZE ERROR DISPLAY \"DIVZERO\".", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "DIVZERO\n007\n");
+}
+
+// -------------------------------------------------------------------------
+// Signed numerics (PIC S9…) — sign kept through arithmetic, overpunch on
+// DISPLAY — vs the oracle.
+// -------------------------------------------------------------------------
+
+#[test]
+fn signed_value_displays_with_trailing_overpunch() {
+    // -123 in S9(3): magnitude "123", units 3 → 'L' (negative) → "12L".
+    let neg = assert_matches_oracle(&wrap(
+        &["01  N  PIC S9(3) VALUE -123."],
+        &["DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(neg, "12L\n");
+    // +123 → units 3 → 'C' (positive) → "12C".
+    let pos = assert_matches_oracle(&wrap(
+        &["01  N  PIC S9(3) VALUE 123."],
+        &["DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(pos, "12C\n");
+    // Zero is unsigned: units 0 → '{' → "00{".
+    let zero = assert_matches_oracle(&wrap(
+        &["01  N  PIC S9(3) VALUE 0."],
+        &["DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(zero, "00{\n");
+}
+
+#[test]
+fn signed_field_keeps_sign_through_arithmetic() {
+    // 3 - 5 = -2 into a signed receiver → magnitude 2, negative → "0K".
+    let out = assert_matches_oracle(&wrap(
+        &["01  N  PIC S9(2) VALUE 3."],
+        &["SUBTRACT 5 FROM N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "0K\n");
+}
+
+#[test]
+fn signed_value_used_in_arithmetic_carries_its_sign() {
+    // N = -10; ADD 4 → -6 → "0O" (units 6 → 'O', negative).
+    let out = assert_matches_oracle(&wrap(
+        &["01  N  PIC S9(2) VALUE -10."],
+        &["ADD 4 TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "0O\n");
+}
+
+#[test]
+fn moving_signed_into_unsigned_drops_the_sign() {
+    // A signed source moved into an unsigned receiver keeps only magnitude.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC S9(3) VALUE -45.", "01  U  PIC 9(3) VALUE 0."],
+        &["MOVE S TO U.", "DISPLAY U.", "STOP RUN."],
+    ));
+    assert_eq!(out, "045\n");
+}
+
+#[test]
+fn compute_into_signed_receiver_shows_negative_overpunch() {
+    // COMPUTE N = 2 - 9 = -7 into S9(2) → "0P" (units 7 → 'P', negative).
+    let out = assert_matches_oracle(&wrap(
+        &["01  N  PIC S9(2) VALUE 0."],
+        &["COMPUTE N = 2 - 9.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "0P\n");
+}
+
+#[test]
+fn signed_scaled_field_overpunches_the_last_fractional_digit() {
+    // -1.5 in S9V9: magnitude "15", units 5 → 'N' (negative) → "1N".
+    let out = assert_matches_oracle(&wrap(
+        &["01  N  PIC S9V9 VALUE -1.5."],
+        &["DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "1N\n");
 }

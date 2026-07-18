@@ -49,9 +49,11 @@
 //!
 //! ### Deliberately a later rung (each a clean error, never wrong output)
 //!
-//! Scaled-decimal arithmetic (`V` fields, scale alignment), `ROUNDED`, `ON SIZE
-//! ERROR`, item-to-item `MOVE` reshaping, `COMPUTE`, `IF`, `PERFORM`, `GO TO`,
-//! group items, and signed numerics (`PIC S9…`) each land on their own PR.
+//! Group items (and the alphanumeric side of item-to-item `MOVE`/comparison)
+//! each remain a later rung — a clean [`CompileError`], never wrong output.
+//! Scaled-decimal arithmetic, `ROUNDED`, `ON SIZE ERROR`, `COMPUTE`, `IF`,
+//! `PERFORM`, `GO TO`, and signed numerics (`PIC S9…`, trailing overpunch) are
+//! all lowered.
 
 use coding_adventures_cobol_parser::try_parse_cobol;
 use coding_adventures_cobol_runtime::{move_into_char, move_into_numeric, Decimal, Picture};
@@ -113,6 +115,10 @@ pub fn compile_source(source: &str, module_name: &str) -> Result<IIRModule, Comp
     if comp.needs_print {
         module.functions.push(print_padded_function());
     }
+    // The signed printer calls the digit-print helper, so that must be present too.
+    if comp.needs_print_signed {
+        module.functions.push(print_signed_function());
+    }
     module.entry_point = Some("main".to_string());
     Ok(module)
 }
@@ -126,7 +132,9 @@ enum ItemKind {
     /// An alphanumeric item: a `str` register holding its stored character image.
     Char { initial: String },
     /// A numeric item: an `i64` register holding its value scaled by `dec_digits`.
-    Numeric { int_digits: usize, dec_digits: usize, initial: i64 },
+    /// A `signed` (`PIC S9…`) item keeps its sign in the `i64` and shows it as a
+    /// trailing overpunch on `DISPLAY`; an unsigned item stores only magnitude.
+    Numeric { int_digits: usize, dec_digits: usize, signed: bool, initial: i64 },
 }
 
 /// A WORKING-STORAGE elementary item and the IIR register backing it.
@@ -145,8 +153,35 @@ impl Item {
     }
 }
 
+/// A PROCEDURE DIVISION paragraph: its name and the statement nodes it holds,
+/// borrowed from the CST so `PERFORM` can re-emit them inline.
+struct Paragraph<'a> {
+    name: String,
+    stmts: Vec<&'a GrammarASTNode>,
+}
+
+/// The deepest `PERFORM` nesting we inline before refusing — a bound on both the
+/// emitted code size and the compiler's own recursion. Real programs nest a
+/// handful deep; a self- or mutually-`PERFORM`ing loop (which the tree-walk
+/// oracle also caps) trips this as a clean error instead of unbounded expansion.
+const MAX_PERFORM_DEPTH: usize = 64;
+
+/// A hard ceiling on emitted instructions — a backstop against `PERFORM`
+/// inlining blowing up the program (e.g. a paragraph that performs itself twice,
+/// which the depth bound alone would let grow exponentially). Real programs are
+/// nowhere near this; exceeding it is a clean error, not an out-of-memory.
+const MAX_EMIT_INSTRS: usize = 300_000;
+
+/// The largest number of primaries a single `COMPUTE` expression may contain
+/// (parity with the oracle's cap). The grammar's `{ … }` repetition is *flat*,
+/// so the parser's depth cap does not bound how *wide* a chain is — `A + A + …`
+/// folds into a same-depth `AExpr` tree whose recursive evaluation and `Drop`
+/// would otherwise overflow the native stack. Real expressions have a handful of
+/// operands; exhausting this budget is a clean error.
+const MAX_EXPR_OPERANDS: usize = 1024;
+
 #[derive(Default)]
-struct Compiler {
+struct Compiler<'a> {
     instrs: Vec<IIRInstr>,
     /// Elementary items by COBOL data-name, in declaration order (for a stable
     /// init prologue) plus a name index for `MOVE` / `DISPLAY` / arithmetic.
@@ -155,11 +190,19 @@ struct Compiler {
     /// Set when a numeric `DISPLAY` emits a call to the digit-print helper, so it
     /// is appended to the module.
     needs_print: bool,
+    /// Set when a signed-numeric `DISPLAY` emits a call to the overpunch printer.
+    needs_print_signed: bool,
     /// Unique-suffix counter for throwaway registers.
     tmp_counter: usize,
+    /// PROCEDURE DIVISION paragraphs in document order, and a name → index map,
+    /// for `GO TO` (jump to a paragraph label) and `PERFORM` (inline a range).
+    paras: Vec<Paragraph<'a>>,
+    para_index: HashMap<String, usize>,
+    /// Current `PERFORM` inline depth (recursion / code-size bound).
+    perform_depth: usize,
 }
 
-impl Compiler {
+impl<'a> Compiler<'a> {
     fn emit(&mut self, op: &str, dest: Option<&str>, srcs: Vec<Operand>, type_hint: &str) {
         self.instrs.push(IIRInstr::new(op, dest.map(str::to_string), srcs, type_hint));
     }
@@ -170,7 +213,7 @@ impl Compiler {
         format!("{prefix}{n}")
     }
 
-    fn emit_program(&mut self, program: &GrammarASTNode) -> Result<(), CompileError> {
+    fn emit_program(&mut self, program: &'a GrammarASTNode) -> Result<(), CompileError> {
         // 1. Build the item table from WORKING-STORAGE (if any).
         self.collect_items(program)?;
 
@@ -190,15 +233,31 @@ impl Compiler {
             }
         }
 
-        // 3. The PROCEDURE DIVISION's statements, in document order. With no
-        //    PERFORM / GO TO on this rung, control simply falls through.
+        // 3. Collect the PROCEDURE DIVISION paragraphs (name + statement nodes),
+        //    so `GO TO`/`PERFORM` can reference them, then emit each in document
+        //    order behind its label. Control falls through paragraph to paragraph
+        //    exactly as COBOL does; a `GO TO`/`PERFORM` redirects it.
         let pd = child_node(program, "procedure_division")
             .ok_or_else(|| CompileError::Malformed("program without a PROCEDURE DIVISION".into()))?;
         for para in child_nodes(pd, "paragraph") {
-            for sentence in child_nodes(para, "sentence") {
-                for stmt in child_nodes(sentence, "statement") {
-                    self.emit_statement(stmt)?;
-                }
+            let name = first_token(para, "NAME").unwrap_or_default();
+            let stmts: Vec<&'a GrammarASTNode> = child_nodes(para, "sentence")
+                .into_iter()
+                .flat_map(|s| child_nodes(s, "statement"))
+                .collect();
+            if !name.is_empty() {
+                self.para_index.insert(name.clone(), self.paras.len());
+            }
+            self.paras.push(Paragraph { name, stmts });
+        }
+        for idx in 0..self.paras.len() {
+            if !self.paras[idx].name.is_empty() {
+                let label = para_label(&self.paras[idx].name);
+                self.emit("label", None, vec![Operand::Var(label)], "void");
+            }
+            let stmts = self.paras[idx].stmts.clone();
+            for stmt in stmts {
+                self.emit_statement(stmt)?;
             }
         }
 
@@ -238,14 +297,6 @@ impl Compiler {
         let picture = Picture::parse(&pic_str)
             .map_err(|e| CompileError::Malformed(format!("PICTURE {pic_str}: {e}")))?;
 
-        // Signed numerics (`PIC S9…`) display via a trailing sign overpunch — a
-        // later rung. Reject at declaration so we never emit a wrong image.
-        if matches!(picture, Picture::Numeric { signed: true, .. }) {
-            return Err(CompileError::Unsupported(format!(
-                "signed numeric (PIC S9…) item {name} — sign overpunch is a later rung"
-            )));
-        }
-
         let value_lit = match find_clause(entry, "value_clause") {
             Some(vc) => Some(read_literal(
                 child_node(vc, "literal")
@@ -255,7 +306,7 @@ impl Compiler {
         };
 
         let kind = match &picture {
-            Picture::Numeric { int_digits, dec_digits, .. } => {
+            Picture::Numeric { int_digits, dec_digits, signed } => {
                 if int_digits + dec_digits > NUMERIC_MAX_DIGITS {
                     return Err(CompileError::Unsupported(format!(
                         "numeric item {name} wider than {NUMERIC_MAX_DIGITS} digits exceeds the \
@@ -264,17 +315,23 @@ impl Compiler {
                 }
                 // Initial scaled value: VALUE applied as an initialising MOVE
                 // (else 0). We reuse the oracle's `move_into_numeric` to produce
-                // the exact zero-filled digit string, then read it as the scaled
-                // integer.
+                // the exact zero-filled magnitude digits, then read it as the
+                // scaled integer — carrying the sign into a signed field.
                 let initial = match &value_lit {
                     Some(src) => {
                         let digits = format_into_picture(src, &picture)
                             .map_err(|m| CompileError::Unsupported(format!("VALUE {name}: {m}")))?;
-                        parse_digits(&digits)
+                        let mag = parse_digits(&digits);
+                        if *signed && literal_is_negative(src) { -mag } else { mag }
                     }
                     None => 0,
                 };
-                ItemKind::Numeric { int_digits: *int_digits, dec_digits: *dec_digits, initial }
+                ItemKind::Numeric {
+                    int_digits: *int_digits,
+                    dec_digits: *dec_digits,
+                    signed: *signed,
+                    initial,
+                }
             }
             Picture::Alphanumeric { .. } | Picture::Alphabetic { .. } => {
                 let initial = match &value_lit {
@@ -317,6 +374,9 @@ impl Compiler {
             "multiply_stmt" => self.emit_multiply(verb),
             "divide_stmt" => self.emit_divide(verb),
             "if_stmt" => self.emit_if(verb),
+            "compute_stmt" => self.emit_compute(verb),
+            "goto_stmt" => self.emit_goto(verb),
+            "perform_stmt" => self.emit_perform(verb),
             other => Err(CompileError::Unsupported(format!(
                 "the {} statement is a later rung",
                 verb_name(other)
@@ -338,7 +398,11 @@ impl Compiler {
                         ItemKind::Numeric { .. } => {
                             let reg = self.items[idx].reg.clone();
                             let width = self.items[idx].width() as i64;
-                            self.emit_print_numeric(&reg, width);
+                            if self.item_signed(idx) {
+                                self.emit_print_signed(&reg, width);
+                            } else {
+                                self.emit_print_numeric(&reg, width);
+                            }
                         }
                     }
                 }
@@ -407,15 +471,18 @@ impl Compiler {
                     .map_err(|m| CompileError::Unsupported(format!("MOVE into {dst}: {m}")))?;
                 self.emit("str_const", Some(&reg), vec![Operand::Str(image)], "str");
             }
-            ItemKind::Numeric { int_digits, dec_digits, .. } => {
+            ItemKind::Numeric { int_digits, dec_digits, signed, .. } => {
+                let signed = *signed;
                 let picture = Picture::Numeric {
                     int_digits: *int_digits,
                     dec_digits: *dec_digits,
-                    signed: false,
+                    signed,
                 };
                 let digits = format_into_picture(lit, &picture)
                     .map_err(|m| CompileError::Unsupported(format!("MOVE into {dst}: {m}")))?;
-                let value = parse_digits(&digits);
+                let mag = parse_digits(&digits);
+                // A signed receiver keeps the sign; an unsigned one drops it.
+                let value = if signed && literal_is_negative(lit) { -mag } else { mag };
                 self.emit("const", Some(&reg), vec![Operand::Int(value)], "i64");
             }
         }
@@ -528,6 +595,539 @@ impl Compiler {
     }
 
     // -----------------------------------------------------------------------
+    // COMPUTE — arithmetic expressions with operator precedence
+    // -----------------------------------------------------------------------
+
+    /// `COMPUTE target [ROUNDED] = <expr> [ON SIZE ERROR …]`.
+    ///
+    /// The expression is evaluated in the same scaled-`i64` model as the other
+    /// verbs, bottom-up: every node carries a compile-time `(scale, int_bound)`,
+    /// and each combination is guarded so the `i64` can never silently wrap — an
+    /// expression whose intermediate could exceed 18 digits is a clean
+    /// [`CompileError::Unsupported`], never wrong output. `+ - *` and unary minus
+    /// evaluate **exactly** (matching the oracle's exact `Decimal`); a
+    /// **top-level** division reproduces the DIVIDE verb's one-guard-digit
+    /// rounding (already proven byte-identical to the oracle), including its
+    /// zero-divisor → size-error branch. Division nested inside a larger
+    /// expression, and `**`, are each a later rung.
+    fn emit_compute(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
+        let target = first_token(verb, "NAME")
+            .ok_or_else(|| CompileError::Malformed("COMPUTE without a receiver".into()))?;
+        // The receiver must be a numeric item within the arithmetic width.
+        self.numeric_index(&target)?;
+        let rounded = has_rounded(verb);
+        let handler = size_error_handler(verb);
+        let expr_node = child_node(verb, "arith_expr")
+            .ok_or_else(|| CompileError::Malformed("COMPUTE without an expression".into()))?;
+        let expr = self.parse_compute(expr_node)?;
+
+        // A top-level division is the DIVIDE verb in disguise — route it through
+        // the same scale/rounding/zero-divisor machinery so it matches the oracle.
+        if let AExpr::Div(dividend, divisor) = expr {
+            return self.emit_compute_div(&target, &dividend, &divisor, rounded, &handler);
+        }
+
+        let val = self.eval_aexpr(&expr)?;
+        self.store_scaled_handled(&target, &val.reg, val.scale, val.int_bound, rounded, &handler)
+    }
+
+    /// Lower a (non-top-level-division) `COMPUTE` expression to an [`Eval`]:
+    /// an `i64` register plus its `(scale, int_bound)`. Every combining step is
+    /// overflow-guarded, so a result that could exceed the `i64` model is a clean
+    /// error rather than a silent wrap.
+    fn eval_aexpr(&mut self, e: &AExpr) -> Result<Eval, CompileError> {
+        match e {
+            AExpr::Num(d) => {
+                let scale = d.frac.len();
+                let reg = self.fresh("_cn");
+                self.emit("const", Some(&reg), vec![Operand::Int(decimal_scaled_to(d, scale))], "i64");
+                Ok(Eval { reg, scale, int_bound: d.int.trim_start_matches('0').len() })
+            }
+            AExpr::Var(idx) => {
+                let (int_digits, dec_digits) = self.numeric_dims(*idx);
+                // Copy the slot so the expression never clobbers the live item.
+                let slot = self.items[*idx].reg.clone();
+                let reg = self.fresh("_v");
+                self.emit("mov", Some(&reg), vec![Operand::Var(slot)], "i64");
+                Ok(Eval { reg, scale: dec_digits, int_bound: int_digits })
+            }
+            AExpr::Neg(inner) => {
+                let v = self.eval_aexpr(inner)?;
+                let zero = self.fresh("_z");
+                self.emit("const", Some(&zero), vec![Operand::Int(0)], "i64");
+                let out = self.fresh("_neg");
+                self.emit("sub", Some(&out), vec![Operand::Var(zero), Operand::Var(v.reg)], "i64");
+                Ok(Eval { reg: out, scale: v.scale, int_bound: v.int_bound })
+            }
+            AExpr::Add(l, r) | AExpr::Sub(l, r) => {
+                let is_sub = matches!(e, AExpr::Sub(..));
+                let a = self.eval_aexpr(l)?;
+                let b = self.eval_aexpr(r)?;
+                // Align both to a common scale (up-scaling is exact); the sum's
+                // integer part is at most one digit wider than the wider operand.
+                let w = a.scale.max(b.scale);
+                let int_bound = a.int_bound.max(b.int_bound) + 1;
+                if int_bound + w > NUMERIC_MAX_DIGITS {
+                    return Err(CompileError::Unsupported(
+                        "a COMPUTE add/subtract whose result could exceed 18 digits is a later rung".into(),
+                    ));
+                }
+                let ar = self.scaled_up(&a, w);
+                let br = self.scaled_up(&b, w);
+                let out = self.fresh("_sum");
+                self.emit(if is_sub { "sub" } else { "add" }, Some(&out), vec![Operand::Var(ar), Operand::Var(br)], "i64");
+                Ok(Eval { reg: out, scale: w, int_bound })
+            }
+            AExpr::Mul(l, r) => {
+                let a = self.eval_aexpr(l)?;
+                let b = self.eval_aexpr(r)?;
+                // Scales add; the product's magnitude is `< 10^(int+scale sum)`.
+                let scale = a.scale + b.scale;
+                let int_bound = a.int_bound + b.int_bound;
+                if int_bound + scale > NUMERIC_MAX_DIGITS {
+                    return Err(CompileError::Unsupported(
+                        "a COMPUTE multiply whose product could exceed 18 digits is a later rung".into(),
+                    ));
+                }
+                let out = self.fresh("_prod");
+                self.emit("mul", Some(&out), vec![Operand::Var(a.reg), Operand::Var(b.reg)], "i64");
+                Ok(Eval { reg: out, scale, int_bound })
+            }
+            AExpr::Div(..) => Err(CompileError::Unsupported(
+                "division nested inside a larger COMPUTE expression is a later rung".into(),
+            )),
+            AExpr::Pow => Err(CompileError::Unsupported(
+                "COMPUTE exponentiation (**) is a later rung".into(),
+            )),
+        }
+    }
+
+    /// Return a register holding `v`'s value at working scale `w` (`w ≥ v.scale`,
+    /// so scaling up is exact). Reuses `v`'s own register when already at `w`.
+    fn scaled_up(&mut self, v: &Eval, w: usize) -> String {
+        if v.scale == w {
+            return v.reg.clone();
+        }
+        let p = 10i64.pow((w - v.scale) as u32);
+        let pr = self.fresh("_up");
+        self.emit("const", Some(&pr), vec![Operand::Int(p)], "i64");
+        let out = self.fresh("_us");
+        self.emit("mul", Some(&out), vec![Operand::Var(v.reg.clone()), Operand::Var(pr)], "i64");
+        out
+    }
+
+    /// A top-level `COMPUTE r = <dividend> / <divisor>`: evaluate both operands
+    /// exactly, then divide at the receiver's precision (plus a guard digit when
+    /// `ROUNDED`) — the very computation the DIVIDE verb performs, so the result
+    /// (including its half-away rounding) is byte-identical to the oracle. A zero
+    /// divisor is a size error: a handler catches it before the faulting division;
+    /// without one the emitted `div` faults, matching the oracle's DivideByZero.
+    fn emit_compute_div(
+        &mut self,
+        target: &str,
+        dividend: &AExpr,
+        divisor: &AExpr,
+        rounded: bool,
+        handler: &[&GrammarASTNode],
+    ) -> Result<(), CompileError> {
+        let num = self.eval_aexpr(dividend)?;
+        let den = self.eval_aexpr(divisor)?;
+        let recv_dec = self.numeric_dims(self.numeric_index(target)?).1;
+        let w = recv_dec + usize::from(rounded);
+
+        // quotient at scale w = (num · 10^e) / den, where e = den.scale + w − num.scale.
+        if den.scale + w < num.scale {
+            return Err(CompileError::Unsupported(
+                "a COMPUTE division whose dividend has more fractional digits than the result \
+                 precision is a later rung"
+                    .into(),
+            ));
+        }
+        let e = den.scale + w - num.scale;
+        // numerator < 10^(num.int_bound + num.scale + e) = 10^(num.int_bound + den.scale + w).
+        if num.int_bound + den.scale + w > NUMERIC_MAX_DIGITS {
+            return Err(CompileError::Unsupported(
+                "a COMPUTE division intermediate at the requested precision could overflow i64 — \
+                 a later rung"
+                    .into(),
+            ));
+        }
+
+        let numerator = if e > 0 {
+            let pr = self.fresh("_dp");
+            self.emit("const", Some(&pr), vec![Operand::Int(10i64.pow(e as u32))], "i64");
+            let n = self.fresh("_num");
+            self.emit("mul", Some(&n), vec![Operand::Var(num.reg), Operand::Var(pr)], "i64");
+            n
+        } else {
+            num.reg
+        };
+
+        let end_lbl = if handler.is_empty() {
+            None
+        } else {
+            let zero = self.fresh("_z");
+            self.emit("const", Some(&zero), vec![Operand::Int(0)], "i64");
+            let iszero = self.fresh("_dz");
+            self.emit("cmp_eq", Some(&iszero), vec![Operand::Var(den.reg.clone()), Operand::Var(zero)], "i64");
+            let (cont, end) = (self.fresh("dz_cont"), self.fresh("dz_end"));
+            self.emit("jmp_if_false", None, vec![Operand::Var(iszero), Operand::Var(cont.clone())], "void");
+            for h in handler {
+                self.emit_statement(h)?;
+            }
+            self.emit("jmp", None, vec![Operand::Var(end.clone())], "void");
+            self.emit("label", None, vec![Operand::Var(cont)], "void");
+            Some(end)
+        };
+
+        let quot = self.fresh("_quot");
+        // i64 division truncates toward zero, as COBOL does.
+        self.emit("div", Some(&quot), vec![Operand::Var(numerator), Operand::Var(den.reg)], "i64");
+        self.store_scaled_handled(target, &quot, w, num.int_bound + den.scale, rounded, handler)?;
+        if let Some(end) = end_lbl {
+            self.emit("label", None, vec![Operand::Var(end)], "void");
+        }
+        Ok(())
+    }
+
+    // -- COMPUTE expression parser (mirrors the oracle's precedence cascade) --
+
+    /// Parse a `COMPUTE` expression tree, bounding its operand count against a
+    /// stack-overflow DoS (parity with the oracle's [`MAX_EXPR_OPERANDS`]).
+    fn parse_compute(&self, node: &GrammarASTNode) -> Result<AExpr, CompileError> {
+        let mut budget = MAX_EXPR_OPERANDS;
+        self.read_compute_expr(node, &mut budget)
+    }
+
+    /// `arith_expr = arith_term { ( "+" | "-" ) arith_term }` — additive,
+    /// left-associative.
+    fn read_compute_expr(&self, node: &GrammarASTNode, budget: &mut usize) -> Result<AExpr, CompileError> {
+        let mut expr: Option<AExpr> = None;
+        let mut sub_pending: Option<bool> = None; // Some(true) = subtract
+        for child in &node.children {
+            match child {
+                ASTNodeOrToken::Node(n) => {
+                    let operand = self.read_compute_term(n, budget)?;
+                    expr = Some(match (expr.take(), sub_pending.take()) {
+                        (Some(left), Some(is_sub)) => {
+                            let (l, r) = (Box::new(left), Box::new(operand));
+                            if is_sub { AExpr::Sub(l, r) } else { AExpr::Add(l, r) }
+                        }
+                        _ => operand,
+                    });
+                }
+                ASTNodeOrToken::Token(t) => match t.effective_type_name() {
+                    "PLUS" => sub_pending = Some(false),
+                    "MINUS" => sub_pending = Some(true),
+                    _ => {}
+                },
+            }
+        }
+        expr.ok_or_else(|| CompileError::Malformed("empty COMPUTE expression".into()))
+    }
+
+    /// `arith_term = arith_factor { ( "*" | "/" ) arith_factor }` — multiplicative,
+    /// left-associative.
+    fn read_compute_term(&self, node: &GrammarASTNode, budget: &mut usize) -> Result<AExpr, CompileError> {
+        let mut expr: Option<AExpr> = None;
+        let mut div_pending: Option<bool> = None; // Some(true) = divide
+        for child in &node.children {
+            match child {
+                ASTNodeOrToken::Node(n) => {
+                    let operand = self.read_compute_factor(n, budget)?;
+                    expr = Some(match (expr.take(), div_pending.take()) {
+                        (Some(left), Some(is_div)) => {
+                            let (l, r) = (Box::new(left), Box::new(operand));
+                            if is_div { AExpr::Div(l, r) } else { AExpr::Mul(l, r) }
+                        }
+                        _ => operand,
+                    });
+                }
+                ASTNodeOrToken::Token(t) => match t.effective_type_name() {
+                    "STAR" => div_pending = Some(false),
+                    "SLASH" => div_pending = Some(true),
+                    _ => {}
+                },
+            }
+        }
+        expr.ok_or_else(|| CompileError::Malformed("empty COMPUTE term".into()))
+    }
+
+    /// `arith_factor = arith_unary { "**" arith_unary }` — exponentiation, folded
+    /// right-associatively so `A ** B ** C` = `A ** (B ** C)` (matching the oracle).
+    fn read_compute_factor(&self, node: &GrammarASTNode, budget: &mut usize) -> Result<AExpr, CompileError> {
+        let units = child_nodes(node, "arith_unary");
+        if units.is_empty() {
+            return Err(CompileError::Malformed("empty COMPUTE factor".into()));
+        }
+        // Read every operand so the stack-overflow budget is charged identically
+        // to the oracle, even though `**` itself is a later rung.
+        let mut last = None;
+        for u in &units {
+            last = Some(self.read_compute_unary(u, budget)?);
+        }
+        if units.len() == 1 {
+            Ok(last.unwrap())
+        } else {
+            Ok(AExpr::Pow)
+        }
+    }
+
+    /// `arith_unary = [ "+" | "-" ] arith_primary` — a leading minus negates.
+    fn read_compute_unary(&self, node: &GrammarASTNode, budget: &mut usize) -> Result<AExpr, CompileError> {
+        let neg = child_tokens(node).iter().any(|(k, _)| k == "MINUS");
+        let prim = child_node(node, "arith_primary")
+            .ok_or_else(|| CompileError::Malformed("unary operator without an operand".into()))?;
+        let e = self.read_compute_primary(prim, budget)?;
+        Ok(if neg { AExpr::Neg(Box::new(e)) } else { e })
+    }
+
+    /// `arith_primary = NUMBER | NAME | "(" arith_expr ")"`. Charges one unit of
+    /// the operand budget (the stack-overflow backstop).
+    fn read_compute_primary(&self, node: &GrammarASTNode, budget: &mut usize) -> Result<AExpr, CompileError> {
+        *budget = budget
+            .checked_sub(1)
+            .ok_or_else(|| CompileError::Unsupported("COMPUTE expression too large".into()))?;
+        if let Some(inner) = child_node(node, "arith_expr") {
+            return self.read_compute_expr(inner, budget);
+        }
+        for (k, v) in child_tokens(node) {
+            match k.as_str() {
+                "NUMBER" => {
+                    let d = Decimal::parse_literal(&v)
+                        .ok_or_else(|| CompileError::Malformed(format!("numeric literal {v}")))?;
+                    if d.int.trim_start_matches('0').len() + d.frac.len() > ARITH_MAX_DIGITS {
+                        return Err(CompileError::Unsupported(format!(
+                            "numeric literal {v} wider than {ARITH_MAX_DIGITS} digits in COMPUTE is a later rung"
+                        )));
+                    }
+                    return Ok(AExpr::Num(d));
+                }
+                "NAME" => return Ok(AExpr::Var(self.numeric_index(&v)?)),
+                _ => {}
+            }
+        }
+        Err(CompileError::Malformed("empty COMPUTE primary".into()))
+    }
+
+    // -----------------------------------------------------------------------
+    // Control flow: GO TO / PERFORM
+    // -----------------------------------------------------------------------
+
+    /// `GO [TO] para` — an unconditional jump to a paragraph's label. Forward and
+    /// back references both resolve (all paragraph labels exist before emission).
+    fn emit_goto(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
+        let name = first_token(verb, "NAME")
+            .ok_or_else(|| CompileError::Malformed("GO TO without a paragraph name".into()))?;
+        if !self.para_index.contains_key(&name) {
+            return Err(CompileError::Malformed(format!("GO TO undefined paragraph {name}")));
+        }
+        self.emit("jmp", None, vec![Operand::Var(para_label(&name))], "void");
+        Ok(())
+    }
+
+    /// `PERFORM para [THRU para2] [n TIMES | UNTIL cond | VARYING …]`.
+    ///
+    /// The performed paragraph range is **inlined** at the call site (COBOL's
+    /// out-of-line-but-returns semantics): the range's statements run, then
+    /// control falls through to just after the PERFORM — exactly what inlining
+    /// gives, since a `STOP RUN` inside returns and a `GO TO` inside jumps away at
+    /// top level (both abandon the fall-through). A recursive/self-`PERFORM` (or a
+    /// code-size blow-up) trips a depth / instruction bound as a clean error.
+    fn emit_perform(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
+        if self.instrs.len() > MAX_EMIT_INSTRS {
+            return Err(CompileError::Unsupported(
+                "program too large to expand (a recursive PERFORM?) — a later rung".into(),
+            ));
+        }
+        self.perform_depth += 1;
+        if self.perform_depth > MAX_PERFORM_DEPTH {
+            self.perform_depth -= 1;
+            return Err(CompileError::Unsupported(
+                "PERFORM nesting too deep (a paragraph performing itself?)".into(),
+            ));
+        }
+        let result = self.emit_perform_inner(verb);
+        self.perform_depth -= 1;
+        result
+    }
+
+    fn emit_perform_inner(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
+        let names: Vec<String> = child_tokens(verb)
+            .into_iter()
+            .filter(|(k, _)| k == "NAME")
+            .map(|(_, v)| v)
+            .collect();
+        if names.is_empty() {
+            return Err(CompileError::Malformed("PERFORM without a paragraph".into()));
+        }
+        let toks = child_tokens(verb);
+        let has_thru = toks.iter().any(|(k, v)| k == "KEYWORD" && (v == "THRU" || v == "THROUGH"));
+        let start = &names[0];
+        let end = if has_thru {
+            names.get(1).ok_or_else(|| CompileError::Malformed("PERFORM THRU without an end paragraph".into()))?
+        } else {
+            start
+        };
+        let si = *self
+            .para_index
+            .get(start)
+            .ok_or_else(|| CompileError::Malformed(format!("PERFORM undefined paragraph {start}")))?;
+        let ei = *self
+            .para_index
+            .get(end)
+            .ok_or_else(|| CompileError::Malformed(format!("PERFORM undefined paragraph {end}")))?;
+        if ei < si {
+            return Err(CompileError::Unsupported(
+                "PERFORM … THRU with a range that runs backwards is a later rung".into(),
+            ));
+        }
+
+        if let Some(v) = child_node(verb, "perform_varying") {
+            self.emit_perform_varying(v, si, ei)
+        } else if toks.iter().any(|(k, x)| k == "KEYWORD" && x == "UNTIL") {
+            let cond = child_node(verb, "condition")
+                .ok_or_else(|| CompileError::Malformed("PERFORM UNTIL without a condition".into()))?;
+            self.emit_perform_until(cond, si, ei)
+        } else if toks.iter().any(|(k, x)| k == "KEYWORD" && x == "TIMES") {
+            let op = child_node(verb, "operand")
+                .ok_or_else(|| CompileError::Malformed("PERFORM … TIMES without a count".into()))?;
+            self.emit_perform_times(op, si, ei)
+        } else {
+            self.inline_range(si, ei)
+        }
+    }
+
+    /// Inline every statement of paragraphs `si..=ei`, in order.
+    fn inline_range(&mut self, si: usize, ei: usize) -> Result<(), CompileError> {
+        for idx in si..=ei {
+            let stmts = self.paras[idx].stmts.clone();
+            for stmt in stmts {
+                self.emit_statement(stmt)?;
+            }
+        }
+        Ok(())
+    }
+
+    /// `PERFORM range n TIMES` — a counted loop (runs zero times for n ≤ 0).
+    fn emit_perform_times(
+        &mut self,
+        count_op: &GrammarASTNode,
+        si: usize,
+        ei: usize,
+    ) -> Result<(), CompileError> {
+        let n = self.integer_operand_value(count_op, "PERFORM … TIMES count")?;
+        let cnt = self.fresh("_cnt");
+        self.emit("mov", Some(&cnt), vec![n], "i64");
+        let (top, done) = (self.fresh("perf_top"), self.fresh("perf_done"));
+        let zero = self.fresh("_z");
+        self.emit("const", Some(&zero), vec![Operand::Int(0)], "i64");
+        self.emit("label", None, vec![Operand::Var(top.clone())], "void");
+        let more = self.fresh("_more");
+        self.emit("cmp_gt", Some(&more), vec![Operand::Var(cnt.clone()), Operand::Var(zero)], "i64");
+        self.emit("jmp_if_false", None, vec![Operand::Var(more), Operand::Var(done.clone())], "void");
+        self.inline_range(si, ei)?;
+        let one = self.fresh("_one");
+        self.emit("const", Some(&one), vec![Operand::Int(1)], "i64");
+        self.emit("sub", Some(&cnt), vec![Operand::Var(cnt.clone()), Operand::Var(one)], "i64");
+        self.emit("jmp", None, vec![Operand::Var(top)], "void");
+        self.emit("label", None, vec![Operand::Var(done)], "void");
+        Ok(())
+    }
+
+    /// `PERFORM range UNTIL cond` — tests **before** the body (may run zero times).
+    fn emit_perform_until(
+        &mut self,
+        cond: &GrammarASTNode,
+        si: usize,
+        ei: usize,
+    ) -> Result<(), CompileError> {
+        let (top, done) = (self.fresh("perf_top"), self.fresh("perf_done"));
+        self.emit("label", None, vec![Operand::Var(top.clone())], "void");
+        let c = self.emit_condition(cond)?;
+        self.emit("jmp_if_true", None, vec![Operand::Var(c), Operand::Var(done.clone())], "void");
+        self.inline_range(si, ei)?;
+        self.emit("jmp", None, vec![Operand::Var(top)], "void");
+        self.emit("label", None, vec![Operand::Var(done)], "void");
+        Ok(())
+    }
+
+    /// `PERFORM range VARYING id FROM x BY y UNTIL cond` — a counted loop over the
+    /// induction variable `id`, tested before the body.
+    fn emit_perform_varying(
+        &mut self,
+        vnode: &GrammarASTNode,
+        si: usize,
+        ei: usize,
+    ) -> Result<(), CompileError> {
+        let id = first_token(vnode, "NAME")
+            .ok_or_else(|| CompileError::Malformed("PERFORM VARYING without an induction variable".into()))?;
+        let ops = child_nodes(vnode, "operand");
+        if ops.len() != 2 {
+            return Err(CompileError::Malformed("PERFORM VARYING needs FROM and BY operands".into()));
+        }
+        let cond = child_node(vnode, "condition")
+            .ok_or_else(|| CompileError::Malformed("PERFORM VARYING without an UNTIL condition".into()))?;
+
+        self.move_operand_into(ops[0], &id)?; // id = x
+        let (top, done) = (self.fresh("perf_top"), self.fresh("perf_done"));
+        self.emit("label", None, vec![Operand::Var(top.clone())], "void");
+        let c = self.emit_condition(cond)?;
+        self.emit("jmp_if_true", None, vec![Operand::Var(c), Operand::Var(done.clone())], "void");
+        self.inline_range(si, ei)?;
+        self.increment_by(&id, ops[1])?; // id = id + y
+        self.emit("jmp", None, vec![Operand::Var(top)], "void");
+        self.emit("label", None, vec![Operand::Var(done)], "void");
+        Ok(())
+    }
+
+    /// The integer value of an operand as an `i64` [`Operand`] — for a `TIMES`
+    /// count. Requires a scale-0 (integer) operand.
+    fn integer_operand_value(
+        &mut self,
+        op: &GrammarASTNode,
+        what: &str,
+    ) -> Result<Operand, CompileError> {
+        let term = self.read_arith_term(op)?;
+        if self.term_scale(&term) != 0 {
+            return Err(CompileError::Unsupported(format!("{what} must be an integer")));
+        }
+        Ok(self.emit_term_at_scale(&term, 0))
+    }
+
+    /// `id = <operand>` — store an operand's value into a numeric item (as `MOVE`).
+    fn move_operand_into(&mut self, op: &GrammarASTNode, dst: &str) -> Result<(), CompileError> {
+        match read_operand(op)? {
+            Operandy::Literal(lit) => self.move_literal_into(&lit, dst),
+            Operandy::Name(name) => {
+                let src_idx = self.numeric_index(&name)?;
+                let (src_int, src_scale) = self.numeric_dims(src_idx);
+                let src_reg = self.items[src_idx].reg.clone();
+                self.store_scaled(dst, &src_reg, src_scale, src_int, false)
+            }
+        }
+    }
+
+    /// `id = id + <operand>` — the VARYING step, over the scaled arithmetic path.
+    fn increment_by(&mut self, id: &str, op: &GrammarASTNode) -> Result<(), CompileError> {
+        let base = Term::Item(self.numeric_index(id)?);
+        let step = self.read_arith_term(op)?;
+        let w = self.term_scale(&base).max(self.term_scale(&step));
+        let max_int = self.term_int_digits(&base).max(self.term_int_digits(&step));
+        if max_int + w + 1 > 18 {
+            return Err(CompileError::Unsupported(
+                "PERFORM VARYING step could overflow the i64 intermediate — a later rung".into(),
+            ));
+        }
+        let acc = self.fresh("_acc");
+        let b = self.emit_term_at_scale(&base, w);
+        self.emit("mov", Some(&acc), vec![b], "i64");
+        let s = self.emit_term_at_scale(&step, w);
+        self.emit("add", Some(&acc), vec![Operand::Var(acc.clone()), s], "i64");
+        self.store_scaled(id, &acc, w, max_int + 1, false)
+    }
+
+    // -----------------------------------------------------------------------
     // Arithmetic (unsigned receivers; scaled fixed-point for ADD/SUBTRACT)
     // -----------------------------------------------------------------------
 
@@ -548,8 +1148,7 @@ impl Compiler {
     /// **working scale** `w` (the largest fractional-digit count among the base
     /// field and the operands — so every term scales *up* to `w` without loss),
     /// accumulate, then store into the receiver at *its* scale (rounding or
-    /// truncating any excess). `ON SIZE ERROR` still needs the branch machinery
-    /// of a later rung, so it is rejected; `ROUNDED` is honoured here.
+    /// truncating any excess). `ROUNDED` and `ON SIZE ERROR` are both honoured.
     fn emit_additive(
         &mut self,
         verb: &GrammarASTNode,
@@ -557,7 +1156,6 @@ impl Compiler {
         is_subtract: bool,
     ) -> Result<(), CompileError> {
         let name = if is_subtract { "SUBTRACT" } else { "ADD" };
-        self.reject_size_error(verb, name)?;
         let rounded = has_rounded(verb);
         let (base, giving) = self.two_targets(verb, keyword)?;
 
@@ -600,7 +1198,8 @@ impl Compiler {
         // k terms each with < max_int integer digits); store_scaled uses this to
         // bound any up-scale into a wider-scale GIVING receiver.
         let recv = giving.clone().unwrap_or(base);
-        self.store_scaled(&recv, &acc, w, max_int + count_digits, rounded)
+        let handler = size_error_handler(verb);
+        self.store_scaled_handled(&recv, &acc, w, max_int + count_digits, rounded, &handler)
     }
 
     /// `MULTIPLY a BY b [GIVING g]` — `a * b` into `g` (or `b`). The raw product
@@ -608,7 +1207,6 @@ impl Compiler {
     /// rounds/truncates it to the receiver's scale. Each operand is ≤ 9 digits, so
     /// the product is < 10^18 and never overflows `i64`.
     fn emit_multiply(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
-        self.reject_size_error(verb, "MULTIPLY")?;
         let rounded = has_rounded(verb);
         let ops = child_nodes(verb, "operand");
         if ops.len() != 2 {
@@ -625,7 +1223,8 @@ impl Compiler {
         // The product's integer part is < 10^(a_int + b_int); store_scaled bounds
         // any up-scale into a wider-scale receiver by that count.
         let prod_int = self.term_int_digits(&at) + self.term_int_digits(&bt);
-        self.store_scaled(&target, &prod, sa + sb, prod_int, rounded)
+        let handler = size_error_handler(verb);
+        self.store_scaled_handled(&target, &prod, sa + sb, prod_int, rounded, &handler)
     }
 
     /// `DIVIDE a INTO b [GIVING g]` — `b / a` into `g` (or `b`).
@@ -638,8 +1237,8 @@ impl Compiler {
     /// more fractional digits than the result precision, or an intermediate that
     /// would exceed `i64`, is a clean error.
     fn emit_divide(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
-        self.reject_size_error(verb, "DIVIDE")?;
         let rounded = has_rounded(verb);
+        let handler = size_error_handler(verb);
         let ops = child_nodes(verb, "operand");
         if ops.len() != 2 {
             return Err(CompileError::Malformed("DIVIDE needs two operands".into()));
@@ -679,14 +1278,39 @@ impl Compiler {
             b_val
         };
         let a_val = self.emit_term_at_scale(&divisor_t, sa);
+
+        // A zero divisor is a size-error condition (as COMPUTE treats it): with an
+        // ON SIZE ERROR handler it is caught before the (faulting) division; without
+        // one the emitted `div` faults at run time, matching the oracle's hard
+        // DivideByZero. When caught, jump past the division and store to a shared end.
+        let end_lbl = if handler.is_empty() {
+            None
+        } else {
+            let zero = self.fresh("_z");
+            self.emit("const", Some(&zero), vec![Operand::Int(0)], "i64");
+            let iszero = self.fresh("_dz");
+            self.emit("cmp_eq", Some(&iszero), vec![a_val.clone(), Operand::Var(zero)], "i64");
+            let (cont, end) = (self.fresh("dz_cont"), self.fresh("dz_end"));
+            self.emit("jmp_if_false", None, vec![Operand::Var(iszero), Operand::Var(cont.clone())], "void");
+            for h in &handler {
+                self.emit_statement(h)?;
+            }
+            self.emit("jmp", None, vec![Operand::Var(end.clone())], "void");
+            self.emit("label", None, vec![Operand::Var(cont)], "void");
+            Some(end)
+        };
+
         let quot = self.fresh("_quot");
-        // i64 division truncates toward zero, as COBOL does. A zero divisor faults
-        // at run time — matching the oracle's hard DivideByZero without a handler.
+        // i64 division truncates toward zero, as COBOL does.
         self.emit("div", Some(&quot), vec![num, a_val], "i64");
         // The quotient at scale w is < 10^(b_int + sa + w); its integer part is
         // < 10^(b_int + sa). store_scaled only down-scales here (w ≥ dec_digits),
-        // so this bound is a formality.
-        self.store_scaled(&target, &quot, w, b_int + sa, rounded)
+        // so the up-scale bound is a formality; the handler catches overflow.
+        self.store_scaled_handled(&target, &quot, w, b_int + sa, rounded, &handler)?;
+        if let Some(end) = end_lbl {
+            self.emit("label", None, vec![Operand::Var(end)], "void");
+        }
+        Ok(())
     }
 
     /// Store a computed `value_reg` (carrying `value_scale` fractional digits)
@@ -718,8 +1342,26 @@ impl Compiler {
         value_max_int: usize,
         rounded: bool,
     ) -> Result<(), CompileError> {
+        self.store_scaled_handled(target, value_reg, value_scale, value_max_int, rounded, &[])
+    }
+
+    /// The general store: like [`Self::store_scaled`], but with an optional
+    /// `ON SIZE ERROR` handler. When the (rounded, magnitude) value's integer part
+    /// overflows the receiver — `acc ≥ 10^(int+dec)` — a non-empty `handler` runs
+    /// its statements and the receiver is left **unchanged**; an empty handler
+    /// truncates the high-order digits silently (COBOL's handler-less rule).
+    fn store_scaled_handled(
+        &mut self,
+        target: &str,
+        value_reg: &str,
+        value_scale: usize,
+        value_max_int: usize,
+        rounded: bool,
+        handler: &[&GrammarASTNode],
+    ) -> Result<(), CompileError> {
         let idx = self.numeric_index(target)?;
         let (int_digits, dec_digits) = self.numeric_dims(idx);
+        let signed = self.item_signed(idx);
         let reg = self.items[idx].reg.clone();
 
         if dec_digits > value_scale && value_max_int + dec_digits > 18 {
@@ -729,17 +1371,63 @@ impl Compiler {
             )));
         }
 
+        // The value at the receiver's scale (keeps its sign), and its magnitude —
+        // the overflow test is on the magnitude, and an *unsigned* receiver stores
+        // the magnitude while a *signed* receiver keeps the sign.
         let acc = self.fresh("_acc");
         self.emit("mov", Some(&acc), vec![Operand::Var(value_reg.to_string())], "i64");
         self.rescale(&acc, value_scale, dec_digits, rounded);
-        self.emit_abs(&acc);
-        // truncate high-order: value mod 10^(int_digits + dec_digits).
+        let mag = self.fresh("_mag");
+        self.emit("mov", Some(&mag), vec![Operand::Var(acc.clone())], "i64");
+        self.emit_abs(&mag);
         let modulus = 10i64.pow((int_digits + dec_digits) as u32);
-        let m = self.fresh("_m");
-        self.emit("const", Some(&m), vec![Operand::Int(modulus)], "i64");
-        self.emit("mod", Some(&acc), vec![Operand::Var(acc.clone()), Operand::Var(m)], "i64");
-        self.emit("mov", Some(&reg), vec![Operand::Var(acc)], "i64");
+
+        if handler.is_empty() {
+            // Silent high-order truncation: keep the low-order magnitude digits
+            // (`mag mod 10^(int+dec)`), re-applying the sign for a signed receiver.
+            let m = self.fresh("_m");
+            self.emit("const", Some(&m), vec![Operand::Int(modulus)], "i64");
+            let kept = self.fresh("_kept");
+            self.emit("mod", Some(&kept), vec![Operand::Var(mag), Operand::Var(m)], "i64");
+            let stored = if signed { self.reapply_sign(&kept, &acc) } else { kept };
+            self.emit("mov", Some(&reg), vec![Operand::Var(stored)], "i64");
+        } else {
+            // ON SIZE ERROR: if the magnitude ≥ 10^(int+dec) the integer part does
+            // not fit — run the handler and leave the receiver unchanged; else the
+            // value fits, so store it (signed keeps the sign, unsigned its magnitude).
+            let m = self.fresh("_m");
+            self.emit("const", Some(&m), vec![Operand::Int(modulus)], "i64");
+            let ovf = self.fresh("_ovf");
+            self.emit("cmp_ge", Some(&ovf), vec![Operand::Var(mag.clone()), Operand::Var(m)], "i64");
+            let (ovf_lbl, end_lbl) = (self.fresh("se_ovf"), self.fresh("se_end"));
+            self.emit("jmp_if_true", None, vec![Operand::Var(ovf), Operand::Var(ovf_lbl.clone())], "void");
+            let fit = if signed { acc } else { mag };
+            self.emit("mov", Some(&reg), vec![Operand::Var(fit)], "i64");
+            self.emit("jmp", None, vec![Operand::Var(end_lbl.clone())], "void");
+            self.emit("label", None, vec![Operand::Var(ovf_lbl)], "void");
+            for h in handler {
+                self.emit_statement(h)?;
+            }
+            self.emit("label", None, vec![Operand::Var(end_lbl)], "void");
+        }
         Ok(())
+    }
+
+    /// Return a register holding `magnitude` with the sign of `signed_ref` applied
+    /// (negated when `signed_ref < 0`). Used to re-sign a truncated magnitude for
+    /// a signed receiver, without relying on any backend's signed-remainder rule.
+    fn reapply_sign(&mut self, magnitude: &str, signed_ref: &str) -> String {
+        let out = self.fresh("_sgn");
+        self.emit("mov", Some(&out), vec![Operand::Var(magnitude.to_string())], "i64");
+        let zero = self.fresh("_z");
+        self.emit("const", Some(&zero), vec![Operand::Int(0)], "i64");
+        let neg = self.fresh("_neg");
+        self.emit("cmp_lt", Some(&neg), vec![Operand::Var(signed_ref.to_string()), Operand::Var(zero.clone())], "i64");
+        let done = self.fresh("_sgndone");
+        self.emit("jmp_if_false", None, vec![Operand::Var(neg), Operand::Var(done.clone())], "void");
+        self.emit("sub", Some(&out), vec![Operand::Var(zero), Operand::Var(out.clone())], "i64");
+        self.emit("label", None, vec![Operand::Var(done)], "void");
+        out
     }
 
     /// Rescale register `acc` from `from` to `to` fractional digits in place.
@@ -781,8 +1469,10 @@ impl Compiler {
         }
     }
 
-    /// Replace register `acc` with its magnitude (negate when negative). Fields
-    /// are ≤ 9 digits, so the value is never `i64::MIN` and negation is safe.
+    /// Replace register `acc` with its magnitude (negate when negative). Every
+    /// value reaching here is bounded well below `10^18` (arithmetic operands and
+    /// receivers are ≤ 9 digits, and `COMPUTE` intermediates are guarded to
+    /// `< 10^18` at each step), so it is never `i64::MIN` and negation is safe.
     fn emit_abs(&mut self, acc: &str) {
         let zero = self.fresh("_z");
         self.emit("const", Some(&zero), vec![Operand::Int(0)], "i64");
@@ -792,17 +1482,6 @@ impl Compiler {
         self.emit("jmp_if_false", None, vec![Operand::Var(neg), Operand::Var(skip.clone())], "void");
         self.emit("sub", Some(acc), vec![Operand::Var(zero), Operand::Var(acc.into())], "i64");
         self.emit("label", None, vec![Operand::Var(skip)], "void");
-    }
-
-    /// Reject `ON SIZE ERROR` (it needs the branch machinery of a later rung);
-    /// `ROUNDED` is handled by `store_scaled`.
-    fn reject_size_error(&self, verb: &GrammarASTNode, name: &str) -> Result<(), CompileError> {
-        if child_node(verb, "size_error").is_some() {
-            return Err(CompileError::Unsupported(format!(
-                "{name} … ON SIZE ERROR is a later rung"
-            )));
-        }
-        Ok(())
     }
 
     /// The `(to/from, giving)` receiver names of an ADD/SUBTRACT: the direct NAME
@@ -849,6 +1528,12 @@ impl Compiler {
             ItemKind::Numeric { int_digits, dec_digits, .. } => (*int_digits, *dec_digits),
             ItemKind::Char { .. } => (0, 0),
         }
+    }
+
+    /// Whether a numeric item is signed (`PIC S9…`) — it keeps its sign in the
+    /// `i64` slot and displays a trailing overpunch.
+    fn item_signed(&self, idx: usize) -> bool {
+        matches!(self.items[idx].kind, ItemKind::Numeric { signed: true, .. })
     }
 
     /// The item index of a numeric data-name usable in arithmetic: it must be a
@@ -949,6 +1634,23 @@ impl Compiler {
         );
     }
 
+    /// Emit the overpunch-printer call for a signed numeric item's `width`-digit
+    /// image (its sign shows as a trailing overpunch on the units digit). The
+    /// helper itself calls the plain digit printer, so both are needed.
+    fn emit_print_signed(&mut self, reg: &str, width: i64) {
+        self.needs_print = true;
+        self.needs_print_signed = true;
+        let w = self.fresh("_w");
+        self.emit("const", Some(&w), vec![Operand::Int(width)], "i64");
+        let ret = self.fresh("_pr");
+        self.emit(
+            "call",
+            Some(&ret),
+            vec![Operand::Var(SIGNED_PRINT_HELPER.into()), Operand::Var(reg.to_string()), Operand::Var(w)],
+            "i64",
+        );
+    }
+
     /// `putchar('\n')` — the record terminator every `DISPLAY` appends.
     fn emit_newline(&mut self) {
         let t = self.fresh("_nl");
@@ -1019,6 +1721,80 @@ fn print_padded_function() -> IIRFunction {
     ];
     let mut f = IIRFunction::new(
         PRINT_HELPER,
+        vec![("v".into(), "i64".into()), ("w".into(), "i64".into())],
+        "i64",
+        body,
+    );
+    f.type_status = FunctionTypeStatus::FullyTyped;
+    f
+}
+
+const SIGNED_PRINT_HELPER: &str = "__cob_print_signed";
+
+/// `__cob_print_signed(v, w)` prints a signed numeric item's `w`-digit image with
+/// its sign folded into a trailing **overpunch** on the units digit — COBOL's
+/// default `DISPLAY` of a `PIC S9…` field. It prints the leading `w−1` magnitude
+/// digits via [`PRINT_HELPER`], then one overpunch character for the units digit:
+///
+/// | units digit | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
+/// |-------------|---|---|---|---|---|---|---|---|---|---|
+/// | positive    | { | A | B | C | D | E | F | G | H | I |
+/// | negative    | } | J | K | L | M | N | O | P | Q | R |
+///
+/// So `+123` → `12C`, `−123` → `12L`, and (unsigned) zero → `00{`. The codes are
+/// arithmetic: a non-zero units digit `d` is `(neg ? 73 : 64) + d` (`'A'..'I'` /
+/// `'J'..'R'`), and a zero units digit is `neg ? 125 : 123` (`'}'` / `'{'`).
+fn print_signed_function() -> IIRFunction {
+    fn mk(op: &str, dest: Option<&str>, srcs: Vec<Operand>, ty: &str) -> IIRInstr {
+        IIRInstr::new(op, dest.map(str::to_string), srcs, ty)
+    }
+    fn var(name: &str) -> Operand {
+        Operand::Var(name.to_string())
+    }
+
+    let body = vec![
+        mk("const", Some("zero"), vec![Operand::Int(0)], "i64"),
+        // neg = v < 0; mag = |v|.
+        mk("cmp_lt", Some("neg"), vec![var("v"), var("zero")], "i64"),
+        mk("mov", Some("mag"), vec![var("v")], "i64"),
+        mk("jmp_if_false", None, vec![var("neg"), var("notneg")], "void"),
+        mk("sub", Some("mag"), vec![var("zero"), var("v")], "i64"),
+        mk("label", None, vec![var("notneg")], "void"),
+        // units = mag % 10; rest = mag / 10.
+        mk("const", Some("ten"), vec![Operand::Int(10)], "i64"),
+        mk("mod", Some("units"), vec![var("mag"), var("ten")], "i64"),
+        mk("div", Some("rest"), vec![var("mag"), var("ten")], "i64"),
+        // print the leading w-1 digits of the magnitude.
+        mk("const", Some("one"), vec![Operand::Int(1)], "i64"),
+        mk("sub", Some("wm1"), vec![var("w"), var("one")], "i64"),
+        mk("call", Some("_r"), vec![var(PRINT_HELPER), var("rest"), var("wm1")], "i64"),
+        // nzcode = (neg ? 73 : 64) + units.
+        mk("const", Some("c64"), vec![Operand::Int(64)], "i64"),
+        mk("const", Some("c73"), vec![Operand::Int(73)], "i64"),
+        mk("mov", Some("nzbase"), vec![var("c64")], "i64"),
+        mk("jmp_if_false", None, vec![var("neg"), var("nzdone")], "void"),
+        mk("mov", Some("nzbase"), vec![var("c73")], "i64"),
+        mk("label", None, vec![var("nzdone")], "void"),
+        mk("add", Some("nzcode"), vec![var("nzbase"), var("units")], "i64"),
+        // zcode = neg ? 125 : 123.
+        mk("const", Some("c123"), vec![Operand::Int(123)], "i64"),
+        mk("const", Some("c125"), vec![Operand::Int(125)], "i64"),
+        mk("mov", Some("zcode"), vec![var("c123")], "i64"),
+        mk("jmp_if_false", None, vec![var("neg"), var("zdone")], "void"),
+        mk("mov", Some("zcode"), vec![var("c125")], "i64"),
+        mk("label", None, vec![var("zdone")], "void"),
+        // code = (units == 0) ? zcode : nzcode.
+        mk("cmp_eq", Some("iszero"), vec![var("units"), var("zero")], "i64"),
+        mk("mov", Some("code"), vec![var("nzcode")], "i64"),
+        mk("jmp_if_false", None, vec![var("iszero"), var("usecode")], "void"),
+        mk("mov", Some("code"), vec![var("zcode")], "i64"),
+        mk("label", None, vec![var("usecode")], "void"),
+        mk("call_builtin", None, vec![var("putchar"), var("code")], "void"),
+        mk("const", Some("z0"), vec![Operand::Int(0)], "i64"),
+        mk("ret", None, vec![var("z0")], "i64"),
+    ];
+    let mut f = IIRFunction::new(
+        SIGNED_PRINT_HELPER,
         vec![("v".into(), "i64".into()), ("w".into(), "i64".into())],
         "i64",
         body,
@@ -1134,10 +1910,52 @@ fn parse_digits(digits: &str) -> i64 {
     digits.parse::<i64>().unwrap_or(0)
 }
 
+/// Whether a literal source denotes a negative value — only a numeric literal
+/// can (`ZERO`/`SPACE`/strings are non-negative). A negative *zero* is treated
+/// as non-negative, matching COBOL's unsigned zero.
+fn literal_is_negative(src: &Src) -> bool {
+    match src {
+        Src::Num(s) => Decimal::parse_literal(s).is_some_and(|d| d.neg && !d.is_zero()),
+        _ => false,
+    }
+}
+
 /// A summed term of an `ADD`/`SUBTRACT`: a literal value or a numeric item.
 enum Term {
     Lit(Decimal),
     Item(usize),
+}
+
+/// A parsed `COMPUTE` arithmetic expression — the grammar's precedence cascade
+/// (`arith_expr` → `arith_term` → `arith_factor` → `arith_unary` →
+/// `arith_primary`) folded into a tree, mirroring the oracle's `Expr`. Leaves
+/// are numeric literals and numeric-item indices; `+ - * /` fold
+/// left-associatively and `**` right-associatively (COBOL's rule), so the tree
+/// shape matches the oracle's exactly.
+enum AExpr {
+    /// A numeric literal (its exact decimal value).
+    Num(Decimal),
+    /// A numeric item, by its slot index.
+    Var(usize),
+    /// Unary minus.
+    Neg(Box<AExpr>),
+    Add(Box<AExpr>, Box<AExpr>),
+    Sub(Box<AExpr>, Box<AExpr>),
+    Mul(Box<AExpr>, Box<AExpr>),
+    Div(Box<AExpr>, Box<AExpr>),
+    /// `**` — recognised (so it earns a clear "later rung" error) but not
+    /// evaluated, hence a marker rather than a subtree.
+    Pow,
+}
+
+/// A `COMPUTE` sub-expression lowered to an `i64` register, with the
+/// compile-time bounds needed to keep every downstream operation from silently
+/// wrapping: `scale` is its fractional-digit count and `int_bound` bounds its
+/// integer-part digits (magnitude `< 10^(int_bound + scale)`).
+struct Eval {
+    reg: String,
+    scale: usize,
+    int_bound: usize,
 }
 
 /// Does an arithmetic verb carry the `ROUNDED` keyword?
@@ -1229,6 +2047,19 @@ fn sanitise(name: &str) -> String {
     name.chars().map(|c| if c.is_ascii_alphanumeric() { c } else { '_' }).collect()
 }
 
+/// The IIR label for a PROCEDURE DIVISION paragraph.
+fn para_label(name: &str) -> String {
+    format!("para_{}", sanitise(name))
+}
+
+/// An arithmetic verb's `ON SIZE ERROR` handler statements (empty if none).
+fn size_error_handler(verb: &GrammarASTNode) -> Vec<&GrammarASTNode> {
+    match child_node(verb, "size_error") {
+        Some(se) => child_nodes(se, "statement"),
+        None => vec![],
+    }
+}
+
 /// A human-readable verb name for the "not yet lowered" error.
 fn verb_name(rule: &str) -> &str {
     match rule {
@@ -1311,19 +2142,16 @@ mod tests {
     }
 
     #[test]
-    fn add_rounded_now_compiles_but_on_size_error_stays_unsupported() {
-        // ROUNDED on ADD is honoured now; ON SIZE ERROR still needs branching.
-        let ok = compile_source(
-            &wrap(&["01  R  PIC 9(2)V9 VALUE 0."], &["ADD 1 TO R ROUNDED.", "STOP RUN."]),
-            "r",
-        );
-        assert!(ok.is_ok(), "{ok:?}");
-        let err = compile_source(
-            &wrap(&["01  R  PIC 9(3) VALUE 0."], &["ADD 1 TO R ON SIZE ERROR DISPLAY \"OVR\".", "STOP RUN."]),
-            "x",
-        )
-        .unwrap_err();
-        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    fn add_rounded_and_on_size_error_both_compile() {
+        // Both ROUNDED and ON SIZE ERROR are honoured on ADD now.
+        for body in ["ADD 1 TO R ROUNDED.", "ADD 1 TO R ON SIZE ERROR DISPLAY \"OVR\"."] {
+            let m = compile_source(
+                &wrap(&["01  R  PIC 9(3) VALUE 0."], &[body, "STOP RUN."]),
+                "r",
+            )
+            .unwrap();
+            assert!(m.validate().is_empty(), "{body}: {:?}", m.validate());
+        }
     }
 
     #[test]
@@ -1424,19 +2252,90 @@ mod tests {
     }
 
     #[test]
-    fn multiply_divide_on_size_error_still_deferred() {
-        // ON SIZE ERROR still needs the branch machinery of a later rung.
+    fn multiply_divide_on_size_error_now_compile() {
+        // ON SIZE ERROR is honoured on MULTIPLY/DIVIDE (incl. the zero-divisor guard).
         for body in [
             "MULTIPLY 2 BY R ON SIZE ERROR DISPLAY \"O\".",
             "DIVIDE 2 INTO R ON SIZE ERROR DISPLAY \"O\".",
         ] {
-            let err = compile_source(
+            let m = compile_source(
                 &wrap(&["01  R  PIC 9(3) VALUE 1."], &[body, "STOP RUN."]),
                 "se",
+            )
+            .unwrap();
+            assert!(m.validate().is_empty(), "{body}: {:?}", m.validate());
+        }
+    }
+
+    #[test]
+    fn compute_expression_compiles_and_validates() {
+        // Precedence, parens, a top-level division, and unary minus all lower to
+        // valid IIR.
+        for body in [
+            "COMPUTE R = A + B * C.",
+            "COMPUTE R = (A + B) * C.",
+            "COMPUTE R ROUNDED = A / B.",
+            "COMPUTE R = -B + A ON SIZE ERROR DISPLAY \"O\".",
+        ] {
+            let m = compile_source(
+                &wrap(
+                    &[
+                        "01  A  PIC 9(3) VALUE 10.",
+                        "01  B  PIC 9(3) VALUE 3.",
+                        "01  C  PIC 9(3) VALUE 2.",
+                        "01  R  PIC 9(4)V99.",
+                    ],
+                    &[body, "STOP RUN."],
+                ),
+                "compute",
+            )
+            .unwrap();
+            assert!(m.validate().is_empty(), "{body}: {:?}", m.validate());
+        }
+    }
+
+    #[test]
+    fn compute_nested_division_and_exponentiation_are_deferred() {
+        // Division inside a larger expression, and **, are each a clean error —
+        // never wrong output.
+        for body in ["COMPUTE R = A / B + C.", "COMPUTE R = A / B * C.", "COMPUTE R = C ** B."] {
+            let err = compile_source(
+                &wrap(
+                    &[
+                        "01  A  PIC 9(3) VALUE 10.",
+                        "01  B  PIC 9(3) VALUE 3.",
+                        "01  C  PIC 9(3) VALUE 2.",
+                        "01  R  PIC 9(4)V99.",
+                    ],
+                    &[body, "STOP RUN."],
+                ),
+                "compute",
             )
             .unwrap_err();
             assert!(matches!(err, CompileError::Unsupported(_)), "{body}: got {err:?}");
         }
+    }
+
+    #[test]
+    fn signed_numeric_compiles_and_appends_the_overpunch_helper() {
+        // A signed field now lowers (was a deferred error): it keeps its sign and
+        // DISPLAY routes through the overpunch printer.
+        let m = compile_source(
+            &wrap(
+                &["01  N  PIC S9(3) VALUE -12."],
+                &["ADD 5 TO N.", "DISPLAY N.", "STOP RUN."],
+            ),
+            "signed",
+        )
+        .unwrap();
+        assert!(m.validate().is_empty(), "{:?}", m.validate());
+        // The signed value initialises negative, and the overpunch helper is present.
+        assert!(m.functions[0]
+            .instructions
+            .iter()
+            .any(|i| i.op == "const" && matches!(i.srcs.first(), Some(Operand::Int(-12)))));
+        assert!(m.functions.iter().any(|f| f.name == SIGNED_PRINT_HELPER));
+        assert!(m.functions.iter().any(|f| f.name == PRINT_HELPER));
     }
 
     #[test]
