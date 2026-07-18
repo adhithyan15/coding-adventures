@@ -1,0 +1,24 @@
+% ============================================================================
+% forces.query.adj — a worked recall over the physics forces library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what everyday example does
+% NASA use to illustrate gravity?": it states no physics fact — it only
+% `import`s the grounded table and asks binding queries. The engine resolves
+% each `?` against the `force_example` rows and returns the example + the
+% table's source/locator/trust. The fifth query runs the relation BACKWARD (bind
+% the example `ropes`, recall the force it illustrates — tension). Magnetism is a
+% real force, but NASA's poster never illustrates it, so a recall on it abstains
+% honestly — the engine never invents an example.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli forces.query.adj
+% ============================================================================
+
+import "forces.adj"
+
+? force_example(gravity, $Ex)    % expect waterfall
+? force_example(applied, $Ex)    % expect ball
+? force_example(friction, $Ex)   % expect wheels
+? force_example(booster, $Ex)    % expect rocket
+? force_example($F, ropes)       % expect tension — reverse recall
+? force_example(magnetism, $Ex)  % expect abstain — the poster never illustrates it
