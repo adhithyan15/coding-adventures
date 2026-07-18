@@ -2013,8 +2013,12 @@ fn eval_binary(op: &BinaryOp, l: SqlValue, r: SqlValue) -> Result<SqlValue, VmEr
             if matches!(l, SqlValue::Null) || matches!(r, SqlValue::Null) {
                 return Ok(SqlValue::Null);
             }
-            let ls = sql_to_str(&l);
-            let rs = sql_to_str(&r);
+            // `||` yields TEXT. A BLOB operand contributes its RAW bytes (as
+            // text), NOT the `x'…'` hex-literal spelling `sql_to_str` uses for
+            // display: SQLite evaluates `X'41' || 'B'` to `'AB'` (0x41 = 'A'),
+            // not `"x'41'B"`. Other types stringify as usual.
+            let ls = concat_operand_to_str(&l);
+            let rs = concat_operand_to_str(&r);
             Ok(SqlValue::Text(ls + &rs))
         }
 
@@ -2667,6 +2671,21 @@ fn sql_to_str(v: &SqlValue) -> String {
             format!("x'{}'", hex)
         }
         SqlValue::Null => String::new(),
+    }
+}
+
+/// Stringify an operand of the `||` (concatenate) operator.
+///
+/// Identical to [`sql_to_str`] EXCEPT for blobs: `||` treats a blob as its raw
+/// byte sequence interpreted as text, so `X'41' || 'B'` is `'AB'` (0x41 = 'A'),
+/// whereas [`sql_to_str`] renders the reversible display form `x'41'`. Invalid
+/// UTF-8 bytes become the replacement character (U+FFFD) — a rare edge for
+/// non-textual blobs; the common ASCII/UTF-8 case round-trips exactly. NULL is
+/// handled by the caller (it propagates through `||`).
+fn concat_operand_to_str(v: &SqlValue) -> String {
+    match v {
+        SqlValue::Blob(b) => String::from_utf8_lossy(b).into_owned(),
+        other => sql_to_str(other),
     }
 }
 
@@ -4680,6 +4699,32 @@ mod tests {
             Instruction::Halt,
         ]), &mut b).unwrap();
         assert_eq!(r.rows, vec![vec![text("Hello World")]]);
+    }
+
+    #[test]
+    fn test_concat_blob_uses_raw_bytes() {
+        // `||` concatenates a blob as its RAW bytes (as text), not the `x'…'`
+        // display form: `X'41' || 'B'` = 'AB'. Result is TEXT; NULL propagates.
+        let cat = |l: SqlValue, r: SqlValue| eval_binary(&BinaryOp::Concat, l, r).unwrap();
+        assert_eq!(
+            cat(SqlValue::Blob(vec![0x41]), SqlValue::Text("B".into())),
+            SqlValue::Text("AB".into())
+        );
+        assert_eq!(
+            cat(SqlValue::Text("A".into()), SqlValue::Blob(vec![0x42])),
+            SqlValue::Text("AB".into())
+        );
+        assert_eq!(
+            cat(SqlValue::Blob(vec![0x48]), SqlValue::Blob(vec![0x69])),
+            SqlValue::Text("Hi".into())
+        );
+        // `sql_to_str` (the display form) still renders the hex literal — the
+        // concat path must NOT regress that helper's behavior.
+        assert_eq!(sql_to_str(&SqlValue::Blob(vec![0x41])), "x'41'");
+        assert_eq!(
+            cat(SqlValue::Blob(vec![0x41]), SqlValue::Null),
+            SqlValue::Null
+        );
     }
 
     // ── 20. Label / Jump / JumpIfTrue ─────────────────────────────────────────
