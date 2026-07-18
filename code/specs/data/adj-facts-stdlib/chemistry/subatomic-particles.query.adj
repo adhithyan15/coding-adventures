@@ -1,0 +1,24 @@
+% ============================================================================
+% subatomic-particles.query.adj — a worked recall over the chemistry
+% subatomic-particles library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what charge does a proton
+% carry?": it states no chemistry fact — it only `import`s the grounded table and
+% asks binding queries. The engine resolves each `?` against the
+% `particle_charge` rows and returns the charge + the table's source/locator/
+% trust. The fourth query runs the relation BACKWARD (bind the charge `negative`,
+% recall the particle that has it — the electron, the only negative one). A
+% positron is not in the table, so a recall on it abstains honestly — the engine
+% never invents a charge.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli subatomic-particles.query.adj
+% ============================================================================
+
+import "subatomic-particles.adj"
+
+? particle_charge(proton, $C)     % expect positive  — the nucleus's positive particle
+? particle_charge(neutron, $C)    % expect neutral   — no charge
+? particle_charge(electron, $C)   % expect negative  — enshrouds the nucleus
+? particle_charge($P, negative)   % expect electron  — reverse recall to the negative particle
+? particle_charge(positron, $C)   % expect abstain   — a positron is not in the table

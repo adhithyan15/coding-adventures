@@ -1,0 +1,82 @@
+% ============================================================================
+% particle_charge — the electric charge of the three subatomic particles
+% (adj-facts-stdlib, CHEMISTRY).
+% ============================================================================
+% The most elementary chemistry fact set of all: an atom is built from three
+% subatomic particles, and each carries a definite electric charge. The PROTON is
+% positive, the NEUTRON is neutral (no charge), and the ELECTRON is negative.
+% Recall is a binding query:
+%
+%     ? particle_charge(proton, $C)        % positive
+%
+% Like every FACTS library this is a native `table` (ADJ-TABLES RS-5): each
+% `row` lowers to a ground relation `particle_charge(particle, charge)` carrying
+% the table's citation, so the lookup above is the ordinary SLD binding query —
+% the engine returns the charge WITH its source, on the CPU, with zero model
+% calls, and abstains on a particle that is not in the table. It also runs
+% BACKWARD (bind a charge, recall the particle that has it):
+%
+%     ? particle_charge($P, negative)      % electron — the only negative one
+%
+% WHY these three, and why the charges balance. An ordinary atom is electrically
+% NEUTRAL because it holds equal numbers of positive protons and negative
+% electrons, whose charges cancel exactly; the neutral neutrons add mass to the
+% nucleus without adding charge. So this tiny three-row table already encodes the
+% reason atoms are neutral — recall the proton's `positive` and the electron's
+% `negative`, see that they are opposite, and the cancellation follows. That is
+% the concrete bridge from particle RECALL to the neutral-atom rule, the reason a
+% grounded facts library sits at the foundation of chemistry.
+%
+% The three particles and their charges (a little truth table — the charge is the
+% one property that distinguishes them electrically):
+%
+%     particle    charge     where it sits
+%     ---------   --------   ------------------------------------
+%     proton      positive   in the nucleus (electrically positive)
+%     neutron     neutral    in the nucleus (electrically neutral — no charge)
+%     electron    negative   enshrouding the nucleus (negatively charged)
+%
+% A particle that is not one of these three — a positron, a photon, a whole
+% helium ion — has no row, so a recall on it ABSTAINS rather than inventing a
+% charge. That honest-abstention property is what makes the table safe to reason
+% from: the table states exactly the three particles its source names, no more.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every particle→charge pair
+% was read out of a fetched primary source this session, and any particle whose
+% charge could not be copied verbatim would have been dropped). All three values
+% come from the SAME source: the U.S. Department of Energy "DOE Explains…Nuclei"
+% education page (energy.gov, Office of Science), each charge word copied
+% character-for-character from that page:
+%
+%   proton   → positive   from "electrically positive protons"
+%   neutron  → neutral    from "electrically neutral neutrons"
+%   electron → negative   from "negatively charged electrons"
+%
+% Two verbatim sentences on that one page fix all three rows in text:
+%
+%   "Atomic nuclei consist of electrically positive protons and electrically
+%    neutral neutrons."
+%   "The chemical properties of a substance are determined by the negatively
+%    charged electrons enshrouding the nucleus."
+%
+% The DOE is a PRIMARY U.S. government science agency, so `trust authoritative` —
+% the honest tier for an official standards/education source, per the standard-
+% library trust convention. An ADJ `table` carries ONE provenance envelope, so
+% the `source`/`locator`/`trust` below hold this single page's two verbatim
+% sentences and its URL; each charge word above remains independently checkable.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table particle_charge {
+    columns particle, charge
+
+    row (proton, positive)
+    row (neutron, neutral)
+    row (electron, negative)
+
+    source "Atomic nuclei consist of electrically positive protons and electrically neutral neutrons. … The chemical properties of a substance are determined by the negatively charged electrons enshrouding the nucleus."
+    locator "https://www.energy.gov/science/doe-explainsnuclei"
+    trust authoritative
+}
