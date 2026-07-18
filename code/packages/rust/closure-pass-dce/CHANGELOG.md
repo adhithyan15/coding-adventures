@@ -2,6 +2,32 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.29.0] - 2026-07-17
+
+### Added — bare-identifier self-assignment removal: `x = x;` → (removed)
+
+A statement whose whole expression is a plain `=` assignment between two
+identically-named identifiers is a no-op — it reads the variable `x` and
+writes the same value straight back to the same binding. The reference
+Closure Compiler removes it at `SIMPLE`; this pass now collapses it to an
+`EmptyStatement`, which the existing block/program sweep then drops
+(mirroring the empty-`if` → `;` path).
+
+- `x = x;` → removed; `a = a;` → removed
+- neighbours are untouched (`f(); x = x; g();` → `f(); g();`)
+
+The gate is deliberately narrow, matching Closure byte-for-byte:
+
+- **member self-assign is KEPT** — `o.x = o.x`, `a[i] = a[i]` can trigger a
+  getter/setter, so the assignment is observable and must run;
+- **compound assign is KEPT** — `x += x` is `x = x + x`, not a no-op;
+- **differently-named assign is KEPT** — `x = y` is a real write.
+
+Reading a bare identifier is treated as side-effect-free here, the same
+crate-wide contract the equal-branch / ternary folds rely on (a truly
+undeclared `x` would throw `ReferenceError`, an edge Closure also does not
+model).
+
 ## [0.28.0] - 2026-07-16
 
 ### Added — extract a side-effecting discriminant from an empty-body switch
