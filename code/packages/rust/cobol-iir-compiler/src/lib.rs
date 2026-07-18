@@ -441,13 +441,13 @@ impl<'a> Compiler<'a> {
                 // character move truncates or space-pads to the receiver's size.
                 // Cross-category (numeric↔alphanumeric) moves are a later rung.
                 Operandy::Name(name) => {
-                    let src_idx = self.item_index(&name)?;
+                    let src_idx = self.item_index(name)?;
                     let didx = self.item_index(&dst)?;
                     match (&self.items[src_idx].kind, &self.items[didx].kind) {
                         (ItemKind::Numeric { .. }, ItemKind::Numeric { .. }) => {
                             // Re-validate widths and rescale (truncating, never
                             // rounding) the source into the receiver's decimals.
-                            self.numeric_index(&name)?;
+                            self.numeric_index(name)?;
                             let (src_int, src_scale) = self.numeric_dims(src_idx);
                             let src_reg = self.items[src_idx].reg.clone();
                             self.store_scaled(&dst, &src_reg, src_scale, src_int, false)?;
