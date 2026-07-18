@@ -143,6 +143,18 @@ const CORPUS: &[Case] = &[
         source: "(define (adder n) (lambda (x) (+ x n))) (define a (adder 5)) (print (a 3))",
         expected: "8",
     },
+    Case {
+        // Unary minus (`-x`) lowers to the `neg` builtin, which the C backend
+        // now lowers (SIR21 §E3). Before, ANY negative literal made the C
+        // backend report an unsupported builtin and skip. `neg` reuses the
+        // single-argument `_sir_minus` path (which negates tag-preservingly),
+        // so this also confirms floored `Integer#/` on a negative dividend
+        // (`-7 / 2 == -4`, not the truncating `-3`).
+        name: "unary_minus",
+        lang: "ruby",
+        source: "puts(-7)\nputs(-7 / 2)\nputs(-(3 * 2))",
+        expected: "-7\n-4\n-6\n",
+    },
 ];
 
 fn lower(case: &Case) -> semantic_ir::Module {

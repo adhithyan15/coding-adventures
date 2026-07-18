@@ -17,7 +17,7 @@
 //! | Go         | `-3` (truncated)   | ✅ `-4` — floored int path in `_sir_divide` |
 //! | JavaScript | `-3.5` (float `/`) | ✅ `-4` — `Math.floor` when both operands integral |
 //! | Ruby       | (native)           | ✅ `-4` — emits Ruby, whose `/` floors natively |
-//! | C          | (crashed)          | ✅ `-4` on positives; **negatives skip** (see below) |
+//! | C          | (crashed)          | ✅ `-4` — runtime already floored; emitter now lowers `neg` |
 //!
 //! The int-path fixes live in each backend's runtime `divide` helper and mirror
 //! the oracle's [`DivOp::Floor`]: the floored quotient is the truncated one
@@ -30,16 +30,15 @@
 //! integral (`7.0`) still needs the typed pipeline to true-divide, tracked
 //! separately. Ruby transpiles to Ruby, so its `/` is already floor.
 //!
-//! **Two gaps this frontier forced to the surface — both fixed here except one
-//! narrow emitter case:** Ruby lowers unary minus (`-x`) to a `neg` builtin, and
-//! the Go and Rust *runtimes* had no `neg` — so every negative literal (not just
-//! division) crashed with `unknown builtin: neg`. That is the "Go/Rust crash on
-//! negatives" this doc long recorded; it was never a division bug. Both now
-//! implement `neg`. The **C backend's emitter** does not yet lower `neg`, so its
-//! negative cases are reported [`RunOutcome::Skipped`] (not `Failed`) and the
-//! frontier does not assert them — C is closed for positive division and tracked
-//! for negative-literal emit. Ruby needs the `ruby` toolchain present to run;
-//! absent it, it skips.
+//! **A gap this frontier forced to the surface — now fixed everywhere:** Ruby
+//! lowers unary minus (`-x`) to a `neg` builtin, and the Go and Rust *runtimes*
+//! had no `neg` — so every negative literal (not just division) crashed with
+//! `unknown builtin: neg`. That is the "Go/Rust crash on negatives" this doc
+//! long recorded; it was never a division bug. Both runtimes now implement it,
+//! and the **C backend's emitter** now lowers `neg` too (to its single-argument
+//! `_sir_minus`, which negates tag-preservingly), so C's negative cases run and
+//! are asserted rather than skipped. Ruby needs the `ruby` toolchain present to
+//! run; absent it, it skips.
 //!
 //! The resolution of the original "deliberate conflict" (flip vs. split) went
 //! the additive way: the oracle already carries *both* honest ops (`div_floor`,
@@ -88,10 +87,10 @@ fn oracle_floor_matches_ruby_integer_division() {
 /// floors integer division (SIR21 §E3), so this is no longer `#[ignore]`d — it
 /// is a first-class conformance assertion. It asserts on `Ran` outcomes and
 /// fails (naming the offending backend) the day one regresses to truncation or
-/// true-division on integer operands; `Skipped` cases are not asserted (the C
-/// emitter does not yet lower unary `neg`, so its negative cases skip, and Ruby
-/// skips without a `ruby` toolchain). Verified locally across Python, JavaScript,
-/// Go, Rust and Ruby (all flooring) with C flooring the positive cases.
+/// true-division on integer operands; `Skipped` cases are not asserted (Ruby
+/// skips without a `ruby` toolchain, and any backend skips without its
+/// compiler). Verified locally across all six backends — Python, JavaScript,
+/// Go, Rust, Ruby and C — flooring every sign combination.
 #[test]
 fn division_matches_ruby_floor_on_every_backend() {
     let mut ran = 0usize;

@@ -712,6 +712,14 @@ fn variadic_helper(name: &str) -> Option<&'static str> {
         "-" => "_sir_minus",
         "*" => "_sir_times",
         "/" => "_sir_divide",
+        // Ruby unary minus (`-x`) lowers to `BuiltinCall("neg", [x])`. It was
+        // UNIMPLEMENTED here, so any negative literal made the C backend report
+        // an unsupported builtin and skip. Unary minus IS single-argument
+        // subtraction, and `_sir_minus_v` already negates its single argument
+        // tag-preservingly (a `SIR_FLOAT` stays float, else int) — so `neg`
+        // lowers to `_sir_minus(1, x)` with no new runtime code, matching the
+        // Go/Rust/Python runtimes that gained `neg` in SIR21 §E3.
+        "neg" => "_sir_minus",
         "print" => "_sir_print",
         "puts" => "_sir_puts",
         _ => return None,

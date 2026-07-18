@@ -1,6 +1,6 @@
 [package]
 name = "sir-conformance"
-version = "0.13.0"
+version = "0.14.0"
 edition = "2021"
 description = "Cross-backend golden conformance harness for the Semantic IR: lowers real Ruby source and runs the emitted program through every backend's real toolchain, asserting identical output."
 
