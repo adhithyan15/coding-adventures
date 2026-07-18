@@ -1,0 +1,22 @@
+% ============================================================================
+% animal-diets.query.adj — a worked recall over the biology animal-diets library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does a herbivore
+% eat?": it states no biology fact of its own — it only `import`s the grounded
+% table and asks binding queries. The engine resolves each `?` against the
+% `diet_food` rows and returns the food + the table's source/locator/trust. The
+% fourth query runs the relation BACKWARD (bind the food `plants`, recall its
+% diet category — herbivore). A word that is not one of the three basic diet
+% categories abstains honestly — the engine never invents a food.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli animal-diets.query.adj
+% ============================================================================
+
+import "animal-diets.adj"
+
+? diet_food(herbivore, $Food)      % expect plants
+? diet_food(carnivore, $Food)      % expect animals
+? diet_food(omnivore, $Food)       % expect anything
+? diet_food($Category, plants)     % reverse bind — expect herbivore
+? diet_food(detritivore, $Food)    % expect abstain — a detritivore (a detritus-eater) is a real diet category, but not one of the three this source defines
