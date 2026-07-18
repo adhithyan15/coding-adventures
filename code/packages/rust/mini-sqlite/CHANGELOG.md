@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.5.44 — column COLLATE honored in the IN operator
+
+A column declared `COLLATE NOCASE` / `RTRIM` now folds case (etc.) in `IN`
+membership, not just `=`/`<`/… comparisons: `SELECT id FROM t WHERE name IN
+('APPLE')` on a NOCASE `name` matches both `'Apple'` and `'apple'`. `NOT IN`
+inverts it, multi-element lists fold every element, and an explicit `COLLATE
+BINARY` on the value overrides the column's NOCASE. NULL semantics are
+unchanged. Four new differential-oracle cases; sql-planner 0.2.22 (single base
+table, matching the existing WHERE-comparison restriction). `DISTINCT` and
+`GROUP BY` collation remain follow-ups.
+
 ## 0.5.43 — unary minus coerces text/blob operands
 
 `-'5'` now returns `-5`, not the string `'5'`. SQLite applies numeric affinity to
