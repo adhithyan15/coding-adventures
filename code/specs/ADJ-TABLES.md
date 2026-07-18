@@ -101,20 +101,30 @@ A binding query over the table relation *is* an exact lookup:
   `formula`** through the existing slot/`Ref` resolution — a table value composes into
   downstream arithmetic with no special case.
 
-### 3.2 Range / bracket lookup (spec'd here, built in a follow-up)
+### 3.2 Range / bracket lookup (RS-5c)
 
 For step functions (tax brackets, dose bands, reference-range classification), rows define
 **breakpoints**: the lookup selects the row whose key is the greatest key `≤` the query
-(or the interval `[key_i, key_{i+1})` the query falls in). This reuses the engine's existing
-exact comparators `CmpOp {Ge,Le,Gt,Lt,Eq}` (both `f64` and exact `BigRational` paths). Call
-site names the mode explicitly, e.g.
+(equivalently, the interval `[key_i, key_{i+1})` the query falls in). This reuses the engine's
+existing exact comparators `CmpOp {Ge,Le,Gt,Lt,Eq}` on the exact `BigRational` path — no new
+number or engine machinery. The final call-site form is a `?`-prefixed recall that names the
+table, the key column bound to a concrete value, the mode, and the value column to return:
 
 ```
-? lookup(tax_brackets, income = 50000, mode range) give marginal_rate
+? lookup bmi_categories min_bmi = 27.3 mode range give category      % overweight
 ```
 
-Final call-site syntax is settled when the tactic is implemented; the table declaration is
-unchanged (a `range` table is an ordinary table read differently).
+- **`lookup`/`mode`/`give`/`range`** are IDENT-matched literals (no new lexer tokens); the form
+  is folded into `query_decl` (`QUESTION ( lookup_expr | term )`) so it coexists with the exact
+  binding query.
+- The table declaration is **unchanged** — a `range` table is an ordinary table read
+  differently. The key column must be numeric (checked at lower time: `LookupNonNumericKeyColumn`);
+  an unknown table or column is `LookupUnknownTable` / `LookupUnknownColumn`; `mode interpolated`
+  is reserved for RS-5d (`LookupModeUnsupported`).
+- A hit returns the value column **with the selected breakpoint row's citation** (the same
+  `via_facts → provenance` flow as exact lookup) and records the matched key in the audit, so the
+  answer names *which* bracket it fell in. A query **below the smallest key** has no key `≤` it
+  and honestly **abstains** — "below the table's domain", not a fabricated classification.
 
 ### 3.3 Interpolated lookup (spec'd here, built in a follow-up)
 
@@ -162,7 +172,7 @@ per conversion, one table cites the NIST page once and every conversion is audit
 |-------|------|--------|
 | RS-5a | this spec | **this PR** |
 | RS-5b | grammar + AST + adapter + lower; rows→relations; **exact lookup** e2e; shipped NIST table | **this PR** |
-| RS-5c | **range/bracket** lookup tactic (reuses `CmpOp`) + e2e (tax brackets) | follow-up |
+| RS-5c | **range/bracket** lookup tactic (reuses the exact `BigRational` order) + e2e (inline BMI bands) | **this PR** |
 | RS-5d | **interpolated** lookup tactic (new, on `BigRational`) + e2e (nomogram) | follow-up |
 
 **Explicitly deferred:** per-row provenance (table-level only for now); multi-key composite

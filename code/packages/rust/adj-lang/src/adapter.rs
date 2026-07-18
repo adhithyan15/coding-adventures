@@ -464,9 +464,88 @@ fn adapt_functional(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
 }
 
 fn adapt_query(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
-    // query_decl = QUESTION term
+    // query_decl = QUESTION ( lookup_expr | term )
+    //
+    // A `lookup_expr` child is the RANGE / BRACKET lookup form (ADJ-TABLES RS-5c);
+    // otherwise the query is the ordinary exact term goal (`? relation(k, $V)`).
+    if let Some(lookup) = first_named_child(node, "lookup_expr") {
+        return adapt_lookup(lookup);
+    }
     let conclusion = expect_term_child(node, "query_decl")?;
     Ok(Statement::Query { conclusion })
+}
+
+fn adapt_lookup(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // lookup_expr   = "lookup" IDENT IDENT EQUALS signed_number "mode" IDENT "give" IDENT
+    // signed_number = [ MINUS ] NUMBER
+    //
+    // The `lookup`/`mode`/`give` literals are IDENT-matched keywords, so they
+    // surface as Name tokens interleaved with the table/column/mode identifiers.
+    // The EQUALS token and the `signed_number` node sit BETWEEN key_col and the
+    // `mode` literal, so the seven direct Name tokens are exactly, in order:
+    //   [ "lookup", <table>, <key_col>, "mode", <mode>, "give", <value_col> ]
+    // We bind by POSITION (not by value) so a column legitimately named "mode" or
+    // "give" is never mistaken for a keyword.
+    let names: Vec<&str> = node
+        .children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => Some(t.value.as_str()),
+            _ => None,
+        })
+        .collect();
+    if names.len() != 7 {
+        return Err(AdapterError::MissingChild {
+            rule: "lookup_expr".into(),
+            position: "lookup <table> <key_col> = <n> mode <mode> give <value_col>",
+        });
+    }
+    let table = names[1].to_string();
+    let key_col = names[2].to_string();
+    let mode = names[4].to_string();
+    let value_col = names[6].to_string();
+    let key_value = adapt_signed_number(
+        first_named_child(node, "signed_number").ok_or(AdapterError::MissingChild {
+            rule: "lookup_expr".into(),
+            position: "signed_number (the query value)",
+        })?,
+    )?;
+    Ok(Statement::RangeLookup {
+        table,
+        key_col,
+        key_value,
+        mode,
+        value_col,
+    })
+}
+
+fn adapt_signed_number(node: &GrammarASTNode) -> Result<NumLit, AdapterError> {
+    // signed_number = [ MINUS ] NUMBER — an optional leading MINUS then a NUMBER.
+    // A leading MINUS folds into the parsed literal by prefixing the raw text, so
+    // the exact value is negated with no digit loss (parse handles "-").
+    let mut negative = false;
+    let mut raw: Option<&str> = None;
+    for c in &node.children {
+        if let ASTNodeOrToken::Token(t) = c {
+            match t.type_ {
+                TokenType::Minus => negative = true,
+                TokenType::Number => raw = Some(t.value.as_str()),
+                _ => {}
+            }
+        }
+    }
+    let raw = raw.ok_or(AdapterError::MissingChild {
+        rule: "signed_number".into(),
+        position: "NUMBER",
+    })?;
+    let owned;
+    let text = if negative {
+        owned = format!("-{raw}");
+        owned.as_str()
+    } else {
+        raw
+    };
+    parse_numlit(text, TokenType::Number, "signed_number")
 }
 
 fn adapt_let(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
