@@ -1,5 +1,36 @@
 # Changelog — gc-core
 
+## 0.9.0 — 2026-07-18
+
+### Added
+
+- **`FlatHeap::collect_mixed(root_slots, regions)` — precise slots and conservative
+  regions in one cycle.** The collection primitive a native **precise stack walk**
+  needs when only some frames carry stack maps. A real walk sees a *mix*: frames a
+  migrated backend stack-mapped contribute exact `root_slots` (via
+  `frame_root_slots`), while frames it could not map — a C-runtime frame, the
+  collector's own frames, a not-yet-migrated backend — must be scanned
+  conservatively, each contributing its whole span as a `(base, len)` region. Both
+  root kinds must be marked in the *same* mark phase and reclaimed by the *same*
+  sweep (the heap has one live set; a precise-collect-then-region-collect would let
+  the first sweep free what the second's roots keep). `collect_mixed` marks every
+  slot word (exactly as `collect_precise`) **and** every candidate word in every
+  region (exactly as `collect_region`), then sweeps once.
+  - Strict generalisation of both siblings: `collect_precise(slots)` ≡
+    `collect_mixed(slots, &[])`, and `collect_region(base, len)` ≡
+    `collect_mixed(&[], &[(base, len)])`.
+  - **Per-frame precision:** a mapped frame pins only its real references; an
+    unmapped frame conservatively pins its span's look-alikes. Adding precise
+    coverage to more backends strictly reduces floating garbage, and an unmapped
+    frame is never *less* safe than today's fully-conservative scan.
+  - Interior tracing, in-place sweep, remembered-set clearing and threshold
+    adaptation are identical to the two siblings. 5 unit tests, including the
+    headline mixed-frame cycle (mapped frame frees its unnamed-slot look-alike while
+    an unmapped frame's span retains its objects) and the two equivalence proofs.
+  - This is the platform-independent core the gc-core-capi `__gc_collect_precise`
+    stack walk (a follow-up) is layered on, exactly as `collect_region` underpins
+    the conservative `__gc_collect` C-stack scan.
+
 ## 0.8.0 — 2026-07-18
 
 ### Added
