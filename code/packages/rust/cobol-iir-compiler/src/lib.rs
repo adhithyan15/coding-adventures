@@ -56,7 +56,7 @@
 //! all lowered.
 
 use coding_adventures_cobol_parser::try_parse_cobol;
-use coding_adventures_cobol_runtime::{move_into_char, move_into_numeric, Decimal, Picture};
+use coding_adventures_cobol_runtime::{move_into_char, move_into_numeric, Decimal, Picture, MAX_POW_EXP};
 use interpreter_ir::function::FunctionTypeStatus;
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
@@ -769,8 +769,10 @@ impl<'a> Compiler<'a> {
     /// evaluate **exactly** (matching the oracle's exact `Decimal`); a
     /// **top-level** division reproduces the DIVIDE verb's one-guard-digit
     /// rounding (already proven byte-identical to the oracle), including its
-    /// zero-divisor → size-error branch. Division nested inside a larger
-    /// expression, and `**`, are each a later rung.
+    /// zero-divisor → size-error branch. `**` with a compile-time non-negative
+    /// integer exponent unrolls to repeated multiplication (see [`Self::eval_pow`]);
+    /// division nested inside a larger expression, and a `**` with a variable,
+    /// negative, fractional, or oversized exponent, are each a later rung.
     fn emit_compute(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
         let target = first_token(verb, "NAME")
             .ok_or_else(|| CompileError::Malformed("COMPUTE without a receiver".into()))?;
@@ -857,10 +859,58 @@ impl<'a> Compiler<'a> {
             AExpr::Div(..) => Err(CompileError::Unsupported(
                 "division nested inside a larger COMPUTE expression is a later rung".into(),
             )),
-            AExpr::Pow => Err(CompileError::Unsupported(
-                "COMPUTE exponentiation (**) is a later rung".into(),
-            )),
+            AExpr::Pow(base, exponent) => self.eval_pow(base, exponent),
         }
+    }
+
+    /// `base ** exponent` where the exponent is a **compile-time non-negative
+    /// integer** `e`. The oracle computes `base**e` by multiplying `1` by `base`
+    /// `e` times, so the result's magnitude is `base_scaled^e` and its scale is
+    /// `e · base.scale` — exactly what unrolling `e−1` register multiplies of the
+    /// base gives. A variable, negative, fractional, or oversized (`> MAX_POW_EXP`)
+    /// exponent is a clean later rung, matching the oracle's `pow` returning
+    /// `None`. `e = 0` yields the constant `1` regardless of the base (never
+    /// evaluated — COBOL's `x ** 0 = 1`, and the oracle never touches `base`).
+    fn eval_pow(&mut self, base: &AExpr, exponent: &AExpr) -> Result<Eval, CompileError> {
+        let e = const_nonneg_int(exponent).ok_or_else(|| {
+            CompileError::Unsupported(
+                "COMPUTE ** with a non-constant, negative, or fractional exponent is a later rung"
+                    .into(),
+            )
+        })?;
+        if e > MAX_POW_EXP {
+            return Err(CompileError::Unsupported(
+                "COMPUTE ** with an exponent past the oracle's limit is a later rung".into(),
+            ));
+        }
+        // `x ** 0 = 1` — an exact integer one at scale 0. The base is not
+        // evaluated, matching the oracle (which returns `1` without reading it).
+        if e == 0 {
+            let reg = self.fresh("_pow0");
+            self.emit("const", Some(&reg), vec![Operand::Int(1)], "i64");
+            return Ok(Eval { reg, scale: 0, int_bound: 1 });
+        }
+        // The result carries `e` copies of the base's scale and integer bound;
+        // guard the widest intermediate (the final product) against the 18-digit
+        // model so the `i64` can never silently wrap.
+        let b = self.eval_aexpr(base)?;
+        let e = e as usize;
+        let scale = b.scale * e;
+        let int_bound = b.int_bound * e;
+        if int_bound + scale > NUMERIC_MAX_DIGITS {
+            return Err(CompileError::Unsupported(
+                "a COMPUTE ** whose result could exceed 18 digits is a later rung".into(),
+            ));
+        }
+        // Unroll: acc = base, then multiply by the base `e − 1` more times. Each
+        // product is `base_scaled^k`, the scaled representation at scale `k·base.scale`.
+        let mut acc = b.reg.clone();
+        for _ in 1..e {
+            let out = self.fresh("_pow");
+            self.emit("mul", Some(&out), vec![Operand::Var(acc), Operand::Var(b.reg.clone())], "i64");
+            acc = out;
+        }
+        Ok(Eval { reg: acc, scale, int_bound })
     }
 
     /// Return a register holding `v`'s value at working scale `w` (`w ≥ v.scale`,
@@ -1021,17 +1071,18 @@ impl<'a> Compiler<'a> {
         if units.is_empty() {
             return Err(CompileError::Malformed("empty COMPUTE factor".into()));
         }
-        // Read every operand so the stack-overflow budget is charged identically
-        // to the oracle, even though `**` itself is a later rung.
-        let mut last = None;
+        // Read every operand (charging the stack-overflow budget identically to
+        // the oracle), then fold **right-associatively**: `A ** B ** C` becomes
+        // `A ** (B ** C)`, matching the oracle's right-to-left `**`.
+        let mut operands = Vec::with_capacity(units.len());
         for u in &units {
-            last = Some(self.read_compute_unary(u, budget)?);
+            operands.push(self.read_compute_unary(u, budget)?);
         }
-        if units.len() == 1 {
-            Ok(last.unwrap())
-        } else {
-            Ok(AExpr::Pow)
+        let mut acc = operands.pop().expect("factor has at least one operand");
+        while let Some(base) = operands.pop() {
+            acc = AExpr::Pow(Box::new(base), Box::new(acc));
         }
+        Ok(acc)
     }
 
     /// `arith_unary = [ "+" | "-" ] arith_primary` — a leading minus negates.
@@ -2112,9 +2163,11 @@ enum AExpr {
     Sub(Box<AExpr>, Box<AExpr>),
     Mul(Box<AExpr>, Box<AExpr>),
     Div(Box<AExpr>, Box<AExpr>),
-    /// `**` — recognised (so it earns a clear "later rung" error) but not
-    /// evaluated, hence a marker rather than a subtree.
-    Pow,
+    /// `base ** exponent`. Evaluated when the exponent is a **compile-time
+    /// non-negative integer** (unrolled into repeated multiplication, exactly as
+    /// the oracle's `pow` multiplies `1` by `base` `exponent` times); a variable,
+    /// negative, fractional, or oversized exponent is a clean later rung.
+    Pow(Box<AExpr>, Box<AExpr>),
 }
 
 /// A `COMPUTE` sub-expression lowered to an `i64` register, with the
@@ -2154,6 +2207,32 @@ fn decimal_scaled_to(d: &Decimal, w: usize) -> i64 {
         -mag
     } else {
         mag
+    }
+}
+
+/// A `**` exponent that is a compile-time **non-negative integer** literal,
+/// returned as its magnitude — otherwise `None`, so a variable, parenthesised
+/// expression, negative, or fractional exponent stays a clean later rung. The
+/// acceptance rule mirrors the oracle's `pow`: a fractional part of anything but
+/// zeros is rejected, and a negative sign is rejected unless the value is zero
+/// (`-0 = 0`). An integer past `u128` fails to parse (caught here) and one past
+/// `MAX_POW_EXP` is rejected by the caller — both matching the oracle's `None`.
+fn const_nonneg_int(e: &AExpr) -> Option<u128> {
+    let AExpr::Num(d) = e else { return None };
+    // A non-zero fractional digit means it is not an integer.
+    if d.frac.chars().any(|c| c != '0') {
+        return None;
+    }
+    let int_is_zero = d.int.chars().all(|c| c == '0');
+    // A negative sign is allowed only on zero.
+    if d.neg && !int_is_zero {
+        return None;
+    }
+    let trimmed = d.int.trim_start_matches('0');
+    if trimmed.is_empty() {
+        Some(0)
+    } else {
+        trimmed.parse().ok()
     }
 }
 
@@ -2486,10 +2565,19 @@ mod tests {
     }
 
     #[test]
-    fn compute_nested_division_and_exponentiation_are_deferred() {
-        // Division inside a larger expression, and **, are each a clean error —
-        // never wrong output.
-        for body in ["COMPUTE R = A / B + C.", "COMPUTE R = A / B * C.", "COMPUTE R = C ** B."] {
+    fn compute_nested_division_and_variable_exponent_are_deferred() {
+        // Division inside a larger expression, and a `**` whose exponent is not a
+        // compile-time non-negative integer, are each a clean error — never wrong
+        // output. `C ** B` (variable exponent), `C ** -2` (negative), `C ** 1.5`
+        // (fractional), and an oversized exponent all stay a later rung.
+        for body in [
+            "COMPUTE R = A / B + C.",
+            "COMPUTE R = A / B * C.",
+            "COMPUTE R = C ** B.",
+            "COMPUTE R = C ** -2.",
+            "COMPUTE R = C ** 1.5.",
+            "COMPUTE R = C ** 99999.",
+        ] {
             let err = compile_source(
                 &wrap(
                     &[
@@ -2505,6 +2593,39 @@ mod tests {
             .unwrap_err();
             assert!(matches!(err, CompileError::Unsupported(_)), "{body}: got {err:?}");
         }
+    }
+
+    #[test]
+    fn compute_exponentiation_with_a_literal_exponent_lowers() {
+        // A `**` with a compile-time non-negative integer exponent lowers to valid
+        // IIR — a square, a cube, the identity `** 1`, and `** 0` (the base is not
+        // even read).
+        for body in [
+            "COMPUTE R = A ** 2.",
+            "COMPUTE R = A ** 3.",
+            "COMPUTE R = A ** 1.",
+            "COMPUTE R = A ** 0.",
+        ] {
+            let m = compile_source(
+                &wrap(&["01  A  PIC 9(2) VALUE 3.", "01  R  PIC 9(6)."], &[body, "STOP RUN."]),
+                "pow",
+            )
+            .unwrap();
+            assert!(m.validate().is_empty(), "{body}: {:?}", m.validate());
+        }
+    }
+
+    #[test]
+    fn compute_exponentiation_overflowing_the_model_is_deferred() {
+        // The compile-time bound is conservative: `int_digits · exponent` for a
+        // 3-digit base raised to the 10th could reach 30 digits, past the 18-digit
+        // i64 model — so it is a clean later rung, never a silent wrap.
+        let err = compile_source(
+            &wrap(&["01  A  PIC 9(3) VALUE 2.", "01  R  PIC 9(9)."], &["COMPUTE R = A ** 10.", "STOP RUN."]),
+            "pow",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
     }
 
     #[test]

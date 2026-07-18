@@ -3063,6 +3063,27 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("AB"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // COBOL-60 — COMPUTE exponentiation with a constant integer exponent (PL09
+    // step 4). `A ** 3 = 4**3 = 64`, stored into `9(6)` → `000064`. A literal
+    // exponent unrolls to a chain of plain `mul` ops (no new opcode, no strings),
+    // so it proves on every backend the other scaled-i64 arithmetic already does.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  A  PIC 9(2) VALUE 4.\n\
+               000000 01  R  PIC 9(6).\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     COMPUTE R = A ** 3.\n\
+               000000     DISPLAY R.\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("000064"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses

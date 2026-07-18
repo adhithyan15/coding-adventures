@@ -766,6 +766,87 @@ fn compute_parentheses_override_precedence() {
 }
 
 #[test]
+fn compute_exponentiation_squares_and_cubes() {
+    // A ** 2 = 25 → 0025.00; A ** 3 = 125 → 0125.00.
+    let sq = assert_matches_oracle(&wrap(
+        &["01  A  PIC 9(3) VALUE 5.", "01  R  PIC 9(4)V99."],
+        &["COMPUTE R = A ** 2.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(sq, "002500\n");
+    let cube = assert_matches_oracle(&wrap(
+        &["01  A  PIC 9(3) VALUE 5.", "01  R  PIC 9(4)V99."],
+        &["COMPUTE R = A ** 3.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(cube, "012500\n");
+}
+
+#[test]
+fn compute_exponent_zero_is_one_and_one_is_identity() {
+    // x ** 0 = 1 regardless of the base (the base is never even read); x ** 1 = x.
+    let zero = assert_matches_oracle(&wrap(
+        &["01  A  PIC 9(3) VALUE 7.", "01  R  PIC 9(4)."],
+        &["COMPUTE R = A ** 0.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(zero, "0001\n");
+    let one = assert_matches_oracle(&wrap(
+        &["01  A  PIC 9(3) VALUE 7.", "01  R  PIC 9(4)."],
+        &["COMPUTE R = A ** 1.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(one, "0007\n");
+}
+
+#[test]
+fn compute_exponentiation_of_a_scaled_base_accumulates_scale() {
+    // 1.5 ** 2 = 2.25. The base scale (1 fractional digit) is doubled by the two
+    // multiplies, so the exact product carries two fractional digits → 9V99 = 225.
+    let out = assert_matches_oracle(&wrap(
+        &["01  X  PIC 9V9 VALUE 1.5.", "01  R  PIC 9V99."],
+        &["COMPUTE R = X ** 2.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "225\n");
+}
+
+#[test]
+fn compute_exponentiation_over_a_sub_expression() {
+    // (A + B) ** 2 = (10 + 2) ** 2 = 144 → 0144.00.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC 9(3) VALUE 10.",
+            "01  B  PIC 9(3) VALUE 2.",
+            "01  R  PIC 9(4)V99.",
+        ],
+        &["COMPUTE R = (A + B) ** 2.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "014400\n");
+}
+
+#[test]
+fn compute_exponentiation_participates_in_precedence() {
+    // ** binds tighter than * : B * A ** 2 = 3 * (4 ** 2) = 3 * 16 = 48 → 0048.00.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC 9(3) VALUE 4.",
+            "01  B  PIC 9(3) VALUE 3.",
+            "01  R  PIC 9(4)V99.",
+        ],
+        &["COMPUTE R = B * A ** 2.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "004800\n");
+}
+
+#[test]
+fn compute_exponentiation_truncates_into_a_narrower_receiver() {
+    // 2 ** 10 = 1024; stored into 9(3) keeps the low-order three digits → 024.
+    // A one-digit base keeps the compile-time bound (`int_digits · exponent`)
+    // inside the 18-digit model while the value still overflows the receiver.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC 9 VALUE 2.", "01  R  PIC 9(3)."],
+        &["COMPUTE R = A ** 10.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "024\n");
+}
+
+#[test]
 fn compute_aligns_scaled_operands() {
     // 1.5 + 2.25 = 3.75 → 9V99 → 375.
     let out = assert_matches_oracle(&wrap(
