@@ -239,6 +239,28 @@ fn compute_program_accepted_by_print_backends() {
 }
 
 #[test]
+fn exponentiation_program_accepted_by_print_backends() {
+    // `A ** 3` unrolls to a chain of plain `mul` ops (no strings, no new opcode),
+    // so it stays inside the same scaled-i64 substrate the other arithmetic uses.
+    // Every print backend must accept the emitted mul-chain IIR.
+    let src = program(&[
+        "IDENTIFICATION DIVISION.",
+        "PROGRAM-ID. P.",
+        "DATA DIVISION.",
+        "WORKING-STORAGE SECTION.",
+        "01  A  PIC 9(2) VALUE 4.",
+        "01  R  PIC 9(6).",
+        "PROCEDURE DIVISION.",
+        "MAIN.",
+        "    COMPUTE R = A ** 3.",
+        "    DISPLAY R.",
+        "    STOP RUN.",
+    ]);
+    let m = compile_source(&src, "pow").unwrap();
+    assert_accepted_by_print_backends(&m, "pow");
+}
+
+#[test]
 fn signed_program_accepted_by_print_backends() {
     // A signed field adds the __cob_print_signed overpunch helper (a second
     // synthesized function that calls the digit printer) and the sign-keeping

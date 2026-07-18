@@ -8,6 +8,39 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.8.0: COMPUTE exponentiation (`**`) with a constant exponent (PL09 step 4)
+
+`COMPUTE`'s last deferred operator now lowers for the case that covers almost all
+real use: a `**` whose **exponent is a compile-time non-negative integer**.
+
+- **Evaluation.** `AExpr::Pow` now carries its `(base, exponent)` subtrees (it was
+  a bare placeholder that only earned a "later rung" error). `read_compute_factor`
+  folds `A ** B ** C` **right-associatively** into `A ** (B ** C)`, matching the
+  oracle's right-to-left `**`. `eval_pow` reads the exponent as a constant
+  non-negative integer `e` (via `const_nonneg_int`, whose acceptance rule mirrors
+  the oracle's `pow`: a non-zero fractional digit is rejected, and a negative sign
+  only on a non-zero value) and **unrolls the power into `e − 1` register
+  multiplies** of the base — because the oracle computes `base**e` by multiplying
+  `1` by `base` `e` times, the result's magnitude is `base_scaled^e` and its scale
+  is `e · base.scale`, exactly what the mul-chain produces. `x ** 0 = 1` is the
+  constant integer one and never even reads the base (matching the oracle). The
+  final product is guarded against the 18-digit i64 model, so an over-wide power is
+  a clean [`CompileError::Unsupported`], never a silent wrap.
+- **Portability.** The power lowers to a chain of plain `mul` ops — no new opcode
+  and no dynamic strings — so it rides the same scaled-i64 substrate every other
+  arithmetic backend already accepts (wasm / jvm / clr / native-AOT / LLVM / VM /
+  JIT). A `**` whose exponent is a variable, a parenthesised expression, negative,
+  fractional, or past the oracle's `MAX_POW_EXP` (1024) stays a later rung, as does
+  a base+exponent whose conservative digit bound could exceed 18 digits.
+- **Tests.** 6 new `jit_e2e.rs` cases (square / cube; `** 0` and `** 1`; a scaled
+  base accumulating scale; a sub-expression base; `**` binding tighter than `*`;
+  truncation of an overflowing power into a narrower receiver) each byte-identical
+  to the oracle; unit tests for the literal-exponent lowering and for the newly
+  pinned deferrals (variable / negative / fractional / oversized exponent, and the
+  18-digit overflow guard); a `backend_compat` `A ** 3` program (wasm/jvm/clr accept
+  the mul-chain); a `lang_matrix` COBOL `**` row across all seven columns. Full
+  suite **112 green** (22 unit + 12 `backend_compat` + 78 `jit_e2e`).
+
 ### Added — v0.7.0: alphanumeric item MOVE and comparison (PL09 step 4)
 
 The two most commonly-hit character-handling "later rung" errors now lower,

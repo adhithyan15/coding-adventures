@@ -24,7 +24,7 @@ interpreter_ir::IIRModule   (one `main`, returns i64 exit code)
 NativeAOT · LLVM · WASM · JVM · CLR · VM · JIT
 ```
 
-## This slice (v0.6 — the core plus control flow, `COMPUTE`, `ON SIZE ERROR`, signed)
+## This slice (v0.8 — the core plus control flow, `COMPUTE` incl. `**`, `ON SIZE ERROR`, signed, alphanumeric)
 
 COBOL's WORKING-STORAGE is a **PICTURE-typed** data model. Each elementary item
 becomes one IIR register: a **numeric** item (`PIC 9…`) is an `i64` holding its
@@ -36,7 +36,7 @@ integer `123`); an **alphanumeric** item (`PIC X`/`A`) is a `str`.
 | `VALUE <lit>` / `MOVE <lit> TO item` | the register's `const`/`str_const` — the literal formatted into the item's picture at compile time |
 | `MOVE item TO item` | numeric→numeric rescales the implied point; character→character reshapes to the receiver's size (`str_slice` to truncate, `str_concat` to space-pad) |
 | `ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE … [GIVING r] [ROUNDED] [ON SIZE ERROR …]` | `add`/`sub`/`mul`/`div` on the `i64` slots, the result reduced to the receiver's field; a size error runs the handler and leaves the receiver unchanged |
-| `COMPUTE r [ROUNDED] = expr [ON SIZE ERROR …]` | the precedence cascade evaluated bottom-up over scaled `i64`, each step overflow-guarded |
+| `COMPUTE r [ROUNDED] = expr [ON SIZE ERROR …]` | the precedence cascade (`+ - * /`, unary minus, `**` with a constant exponent, parentheses) evaluated bottom-up over scaled `i64`, each step overflow-guarded |
 | `DISPLAY op…` | each operand's image emitted, then `putchar('\n')` — a literal prints its source text, a numeric item via the fixed-width digit helper (signed items via a trailing-overpunch helper), an alphanumeric via `print_str` |
 | `IF cond then… [ELSE else…]` | numeric conditions align operands and `cmp_*`; alphanumeric conditions space-pad both sides and `str_cmp`; `jmp_if_false` over the then-branch; `NOT` inverts the relation |
 | `GO TO para` | `jmp para_<name>` |
@@ -69,7 +69,12 @@ parentheses) bottom-up in the same scaled-`i64` model; every node carries a
 compile-time `(scale, integer-digit)` bound and every combining step is
 overflow-guarded, so an intermediate that could exceed 18 digits is a clean error
 rather than a silent wrap. A **top-level** division reuses the `DIVIDE` verb's
-rounding and zero-divisor handling.
+rounding and zero-divisor handling. **Exponentiation** (`**`) with a compile-time
+non-negative integer exponent `e` unrolls into a chain of `e − 1` `mul`s of the
+base — the oracle computes `base**e` by multiplying `1` by `base` `e` times, so
+the mul-chain's magnitude (`base_scaled^e`) and scale (`e · base.scale`) match it
+exactly; `x ** 0` is the constant `1` (the base is never read). `**` folds
+right-associatively (`A ** B ** C = A ** (B ** C)`) and binds tighter than `* /`.
 
 **Signed numerics (`PIC S9…`)** keep their sign in the `i64` slot — so arithmetic
 and `IF` comparisons are signed — and `DISPLAY` shows the sign as a trailing
@@ -93,7 +98,9 @@ figuratives expanded to the partner operand's length.
 Each of these is a clean `CompileError::Unsupported` (never wrong output): group
 items, cross-category item `MOVE` (`numeric↔alphanumeric`, which needs runtime
 int↔string conversion), a numeric-vs-alphanumeric comparison, `COMPUTE` division
-nested inside a larger expression, and `COMPUTE` exponentiation (`**`).
+nested inside a larger expression, and a `COMPUTE` `**` whose exponent is a
+variable, a parenthesised expression, negative, fractional, or past the oracle's
+`MAX_POW_EXP` (or whose conservative digit bound could exceed the 18-digit model).
 
 ## Usage
 
