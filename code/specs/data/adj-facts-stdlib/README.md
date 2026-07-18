@@ -46,6 +46,7 @@ per rotation, in parallel):
 | `money/` | US coin → cents | US Mint |
 | `earth-science/` | water-cycle stage → step number | USGS Water Science School |
 | `earth-science/` | master soil horizon → what it is (o → organic_matter, c → parent_material, r → bedrock) | UNL passel Plant & Soil Sciences eLibrary (authoritative) |
+| `earth-science/` | tectonic plate-boundary type → how plates move (divergent → rip_apart, convergent → subducts, transform → slide_past) | U.S. National Park Service (authoritative) |
 | `nutrition/` | common food → MyPlate food group | USDA MyPlate |
 | `agriculture/` | farm animal → product it gives | Iowa State University (CFSPH) |
 | `biology/` | common bone → body region | NIH / MedlinePlus |
