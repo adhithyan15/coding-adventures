@@ -1,0 +1,99 @@
+% ============================================================================
+% wave-types — each of several named waves and the WAVE FAMILY it belongs to,
+% mechanical or electromagnetic (adj-facts-stdlib, PHYSICS).
+% ============================================================================
+% An elementary/middle-school physics fact on the way to waves and optics:
+% every wave you meet is one of two great families. A MECHANICAL wave carries
+% energy by shaking matter, so it needs a medium (water, air, a rope). An
+% ELECTROMAGNETIC wave carries energy in oscillating electric and magnetic
+% fields, so it needs no medium at all and can cross the vacuum of space. Recall
+% is a binding query:
+%
+%     ? wave_family(sound, $F)   % mechanical
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `wave_family(wave, family)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the family
+% WITH its source, on the CPU, with zero model calls, and abstains on anything
+% the source does not classify.
+%
+% The named waves, as a little truth table (wave → the family NASA places it in):
+%
+%     wave            family            why (which sentence names it)
+%     -------------   ---------------   -----------------------------------------
+%     water           mechanical        "…examples of mechanical waves."
+%     sound           mechanical        "…examples of mechanical waves."
+%     rope            mechanical        "…waves on a rope … mechanical waves."
+%     gamma           electromagnetic   "…all forms of electromagnetic radiation:
+%                                        gamma rays…"
+%     xray            electromagnetic   "…X-rays…"
+%     visible_light   electromagnetic   "…visible light…"
+%     radio           electromagnetic   "…radio waves."
+%
+% This is the concrete rung a physics learner reasons UP from: before reasoning
+% about wavelength, frequency, refraction, or the Doppler effect, a student first
+% learns to SORT a wave into its family. The query also runs BACKWARD — bind the
+% family and recall a wave that belongs to it:
+%
+%     ? wave_family($W, electromagnetic)   % radio (or another EM wave) — reverse
+%
+% Something the source never sorts into a family — a seismic wave, a gravitational
+% wave — has no row, so a recall on it ABSTAINS rather than inventing a family.
+% That honest-abstention property is what makes the table safe to reason from.
+%
+% Each `family` value is one of the two SINGLE lowercase atoms the source itself
+% uses to name the two families — `mechanical` and `electromagnetic` — copied
+% verbatim from the sentence that classifies each wave; never a family the source
+% does not assign. Each `wave` key is a faithful short snake_case paraphrase of a
+% wave the source explicitly names (gamma rays → gamma, X-rays → xray, radio
+% waves → radio, visible light → visible_light).
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every wave→family pair was
+% read out of a fetched NASA education page this session, and any wave that could
+% not be grounded there would have been dropped). All rows come from the SAME
+% primary U.S. government source, NASA Science's James Webb Space Telescope
+% education asset "Electromagnetic Wave (Light Wave) vs. Mechanical Wave"
+% (science.nasa.gov/asset/webb/electromagnetic-wave-light-wave-vs-mechanical-wave/),
+% quoted here character-for-character so any reader can re-check it.
+%
+% The mechanical family (water, sound, rope) is fixed by ONE sentence —
+%
+%   "Water waves, sound waves, and waves on a rope are all examples of
+%    mechanical waves."
+%
+% The electromagnetic family (gamma, xray, visible_light, radio) is fixed by
+% ONE sentence —
+%
+%   "Light waves include all forms of electromagnetic radiation: gamma rays,
+%    X-rays, ultraviolet light, visible light, infrared light, microwaves, and
+%    radio waves."
+%
+% (and the same page names light itself as electromagnetic: "Light waves, also
+% called electromagnetic waves, involve oscillations of electric and magnetic
+% fields rather than oscillations of matter.")
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single strongest span: the NASA sentence that fixes the
+% three mechanical rows. The OTHER (electromagnetic) span is listed above, so
+% each row's family stays independently checkable. The source is a primary U.S.
+% government NASA education page (science.nasa.gov), so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table wave_family {
+    columns wave, family
+
+    row (water, mechanical)
+    row (sound, mechanical)
+    row (rope, mechanical)
+    row (gamma, electromagnetic)
+    row (xray, electromagnetic)
+    row (visible_light, electromagnetic)
+    row (radio, electromagnetic)
+
+    source "Water waves, sound waves, and waves on a rope are all examples of mechanical waves."
+    locator "https://science.nasa.gov/asset/webb/electromagnetic-wave-light-wave-vs-mechanical-wave/"
+    trust authoritative
+}
