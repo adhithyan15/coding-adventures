@@ -6,7 +6,7 @@ import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildDataset, parseLesson, type ParsedLesson } from "./parse.js";
-import type { Dataset, ScriptData, Taxonomy } from "./types.js";
+import type { Dataset, Script, ScriptData, Taxonomy } from "./types.js";
 
 /** Default curriculum root: code/learning/human-languages, relative to this package. */
 export function defaultCurriculumRoot(): string {
@@ -20,6 +20,22 @@ export function loadTaxonomy(root = defaultCurriculumRoot()): Taxonomy {
   return { version: raw.version ?? 1, concepts: raw.concepts ?? {} };
 }
 
+/**
+ * A track may declare its own script in `<track>/track.json` (`{ "script": "hebrew" }`),
+ * so adding a new-script language needs no edit to the built-in map. Returns
+ * `undefined` when there's no declaration, and the parser falls back to the map.
+ */
+export function trackScript(root: string, trackName: string): Script | undefined {
+  const p = join(root, trackName, "track.json");
+  if (!existsSync(p)) return undefined;
+  try {
+    const t = JSON.parse(readFileSync(p, "utf8"));
+    return typeof t?.script === "string" ? t.script : undefined;
+  } catch {
+    return undefined; // a malformed track.json just falls back to the map
+  }
+}
+
 /** Read every track's lessons/*.md into parsed lessons. */
 export function loadLessons(root = defaultCurriculumRoot()): ParsedLesson[] {
   const out: ParsedLesson[] = [];
@@ -27,10 +43,11 @@ export function loadLessons(root = defaultCurriculumRoot()): ParsedLesson[] {
     if (!track.isDirectory()) continue;
     const lessonsDir = join(root, track.name, "lessons");
     if (!existsSync(lessonsDir)) continue;
+    const script = trackScript(root, track.name);
     for (const file of readdirSync(lessonsDir)) {
       if (!file.endsWith(".md")) continue;
       const source = readFileSync(join(lessonsDir, file), "utf8");
-      out.push(parseLesson(source, track.name));
+      out.push(parseLesson(source, track.name, script));
     }
   }
   return out;
@@ -39,7 +56,7 @@ export function loadLessons(root = defaultCurriculumRoot()): ParsedLesson[] {
 /** Read data/scripts/*.json (may be empty while scripts are still being authored). */
 export function loadScripts(root = defaultCurriculumRoot()): Record<string, ScriptData> {
   const dir = join(root, "data", "scripts");
-  const out: Record<string, ScriptData> = {};
+  const out: Record<string, ScriptData> = Object.create(null);
   if (!existsSync(dir)) return out;
   for (const file of readdirSync(dir)) {
     if (!file.endsWith(".json")) continue;

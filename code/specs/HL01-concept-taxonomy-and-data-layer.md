@@ -182,58 +182,76 @@ resolved against the script data below, not stored per lesson.
 ## Script & character-breakdown data — `data/scripts/<script>.json`
 
 This is **new authored data**, separate from concepts, that powers the app's
-"learn to write, piece by piece" study view (`HL02`). One file per non-Latin
-script (`devanagari`, `bengali`, `gurmukhi`, `tamil`, `telugu`, `kannada`,
-`malayalam`, `arabic`; `latin` needs none). Sourced from each track's existing
-`pronunciation-reference.md` plus standard handwriting convention.
+"learn to write, piece by piece" study view (`HL02`). One file per script, sourced
+from each track's `pronunciation-reference.md` plus standard handwriting convention.
 
-```json
+**The goal is to teach *any* writing system, so the schema is general** — one shape
+describes an alphabet, an abugida, or an abjad, and adding a new script (Gujarati,
+Bengali, **Hebrew**, Greek, …) is a **data drop, never a code change**. The three
+families and how the schema handles each:
+
+| Family | Examples | Vowels | Direction | Schema features used |
+|---|---|---|---|---|
+| **alphabet** | Latin, **Cyrillic**, Greek | letters spell them | ltr | `letters` only |
+| **abugida** | Devanagari, Bengali, Gujarati, Telugu, Kannada, Malayalam, Tamil | inherent vowel + `marks` | ltr | `letters` (+`inherentVowel`), `marks`, `combination` (conjuncts) |
+| **abjad** | Arabic, **Hebrew** | optional diacritic `marks` | **rtl** | `letters` (+`forms`), `marks` (harakat/niqqud) |
+| **logographic** | **Chinese** (Hanzi) | none — tone-marked pinyin in `sound` | ltr | `letters` (`role: logograph`/`radical`, `tone`, `components`=radicals/strokes) |
+
+```jsonc
 {
-  "script": "telugu",
-  "font": "_fonts/NotoSansTelugu-Static.ttf",
-  "abugida": true,
-  "glyphs": [
-    {
-      "glyph": "క",
-      "sound": "ka",
-      "type": "consonant",
-      "inherentVowel": "a",
-      "components": [
-        "talakaṭṭu — the small check-mark hat on top",
-        "the main round body",
-        "the short tail curling right"
-      ],
-      "strokeOrder": [
-        "draw the round body clockwise from the top-left",
-        "add the talakaṭṭu hat",
-        "finish the tail"
-      ],
-      "strokeOrderNote": "typical handwriting order — conventional, not canonical",
-      "notes": "Carries an inherent -a; add a vowel sign to change it."
-    }
+  "script": "devanagari",            // id, matches the filename (an OPEN string)
+  "name": "Devanagari",
+  "font": "_fonts/NotoSansDevanagari-Static.ttf",
+  "direction": "ltr",                // "ltr" | "rtl"
+  "system": "abugida",               // "alphabet" | "abugida" | "abjad" | …
+  "complete": false,                 // true → validator ENFORCES glyph coverage
+  "combination": "consonant + inherent 'a'; a mātrā changes it; virama stacks conjuncts",
+  "letters": [
+    { "glyph": "क", "sound": "ka", "role": "consonant", "inherentVowel": "a",
+      "components": ["left loop", "right spine", "top bar (shirorekhā)"],
+      "strokeOrder": ["left loop", "spine", "top bar"],
+      "strokeOrderNote": "conventional" }
   ],
-  "vowelSigns": [
-    { "sign": "ా", "sound": "ā", "attachesAs": "long stroke to the right",
-      "example": { "base": "క", "combined": "కా", "sound": "kā" } }
-  ],
-  "conjunctRule": "A virama stacks the bare consonant below the next (స + క → స్క, ska)."
+  "marks": [
+    { "mark": "ी", "sound": "ī", "role": "vowel-sign", "attachesAs": "vertical to the right",
+      "example": { "base": "न", "combined": "नी", "sound": "nī" } }
+  ]
 }
+```
+
+For a **cursive/abjad** script a `letter` adds contextual `forms`
+(`isolated`/`initial`/`medial`/`final`) and the file sets `"direction": "rtl"`:
+
+```jsonc
+{ "glyph": "ب", "sound": "b", "role": "consonant",
+  "forms": { "isolated": "ب", "initial": "بـ", "medial": "ـبـ", "final": "ـب" },
+  "components": ["the boat bowl", "one dot below"], "strokeOrder": ["bowl", "dot"],
+  "strokeOrderNote": "conventional" }
 ```
 
 Design commitments:
 
-- **Compositional, not rote.** Abugidas build syllables systematically (base
-  consonant + vowel sign + conjunct rule). The data captures the *system* — the
-  vowel-sign table and the conjunct rule — so the app teaches the generative
-  pattern, not a flat list of thousands of syllables. This is the neuroscience
-  point made concrete (see `HL02`).
+- **General, not abugida-specific.** `script` is an open string
+  (`Script = string`), letters carry a `role` and optional `forms`, and vowel
+  signs / harakat / niqqud are all `marks`. So the same code teaches Devanagari,
+  Arabic, or a future Hebrew with no type or logic changes. `data/scripts/README.md`
+  documents the "add a script" checklist.
+- **Compositional, not rote.** The data captures the *system* — the letter
+  inventory, the vowel `marks`, and the `combination` rule (conjuncts, joining) —
+  so the app teaches the generative pattern, not a flat list of thousands of
+  syllables. (The neuroscience point in `HL02`.)
 - **Stroke order is flagged conventional.** Freely-licensed authoritative
-  stroke-order data does not exist for these scripts; the `strokeOrder` we author
-  is standard handwriting practice, and every glyph carries `strokeOrderNote`
-  saying so. The app renders it as "a typical way to write this," never as law.
+  stroke-order data does not exist for these scripts; every letter/mark carries
+  `strokeOrderNote`, and the app renders it as "a typical way to write this."
 - **Components are the "pieces."** The `components` array is the literal answer to
-  the user's request — each glyph broken into named visual parts you can practice
-  one at a time on paper.
+  the request — each glyph broken into named parts to practise one at a time.
+- **Coverage hardens over time.** While a script is being authored it sets
+  `"complete": false` and unknown headword characters are validator *warnings*;
+  once the inventory is whole it flips to `true` and gaps become *errors*.
+
+Tracks associate to a script through the built-in language→script map or a
+per-track `track.json` (`{ "script": "hebrew" }`), so a brand-new-script language
+needs no shared-map edit either.
 
 ## The data-layer package — `human-language-data`
 

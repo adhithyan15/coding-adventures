@@ -2,6 +2,32 @@
 
 All notable changes to `@coding-adventures/human-language-data` are documented here.
 
+## [0.2.0] - 2026-07-18
+
+### Changed — general script model (teach any writing system)
+- **`Script` is now an open string**, not a closed union — a new script needs no
+  type edit.
+- **Generalized the script-data schema** to cover all three families with one
+  shape: `alphabet`, `abugida`, `abjad`. `ScriptData` gains `name`, `direction`
+  (ltr/rtl), `system`, and `complete`; `Glyph`→`Letter` (with `role`, optional
+  contextual `forms` for cursive/abjad scripts, `inherentVowel` for abugidas);
+  `VowelSign`→`Mark` (vowel signs *or* harakat/niqqud). (Breaking, but nothing
+  consumed the old shape yet.)
+- **Tracks may self-declare their script** via `<track>/track.json`
+  (`{ "script": "hebrew" }`); `parseLesson` takes an optional resolved script and
+  the loader passes it in. Adding a new-script language needs no shared-map edit.
+- **Coverage hardens with `complete`**: unknown headword characters are warnings
+  while a script file has `"complete": false`, and become errors once it's `true`.
+
+### Added
+- `data/scripts/devanagari.json` (abugida) and `data/scripts/arabic.json`
+  (abjad, rtl, contextual forms) — the two reference inventories proving the
+  general schema across LTR-abugida and RTL-abjad.
+- `data/scripts/README.md` — the "add any script" checklist (Gujarati, Bengali,
+  Hebrew, …): author `<script>.json`, vendor the font, point a track at it.
+- `trackScript` loader export; tests for open script ids, contextual-form
+  coverage, and complete→error escalation.
+
 ## [0.1.0] - 2026-07-17
 
 ### Added
