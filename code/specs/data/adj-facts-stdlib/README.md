@@ -78,6 +78,7 @@ per rotation, in parallel):
 | `physics/` | optical element → how it acts on parallel light (convex_lens → converges_light, concave_lens → diverges_light, convex_mirror → diverges_light) | OpenStax University Physics / College Physics via Physics LibreTexts (consensus) |
 | `physics/` | heat-transfer mode → how it moves heat (conduction → direct_contact, convection → motion_of_gasses_and_liquids, radiation → light_waves) | NASA Next Gen STEM (authoritative) |
 | `physics/` | EM-spectrum band → everyday use NASA names (radio → radio_stations, infrared → night_vision, x_ray → teeth) | NASA Imagine the Universe! (authoritative) |
+| `physics/` | Newton's law number → short name NASA labels it (1 → inertia, 2 → force, 3 → action_reaction) | NASA Glenn Beginner's Guide (authoritative) |
 | `anatomy/` | lung → number of lobes (right 3, left 2) | NIH / NCI SEER Training |
 | `anatomy/` | brain part → primary function it controls | NIH / NCI SEER Training + StatPearls |
 | `anatomy/` | skeletal muscle → body region it is located in | Wikipedia (consensus) |
