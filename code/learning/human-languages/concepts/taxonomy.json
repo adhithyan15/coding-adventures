@@ -46,7 +46,25 @@
       "gloss": "goodbye / parting word",
       "core": true,
       "retires": ["GREETING-GOODBYE"],
-      "notes": "Unifies the parting word across tracks (valē, āshi, alvidā, येतो/येते)."
+      "notes": "Unifies the parting word across tracks (valē, āshi, alvidā, येतो/येते). The plain goodbye (adiós, au revoir, auf Wiedersehen); the time-specific 'see you …' partings are FAREWELL-LATER/TOMORROW/SOON."
+    },
+    "FAREWELL-LATER": {
+      "family": "GREETING",
+      "gloss": "see you later (a soon-ish parting)",
+      "core": false,
+      "notes": "hasta luego / à bientôt / bis später / a più tardi / até logo. Distinct from the plain FAREWELL."
+    },
+    "FAREWELL-TOMORROW": {
+      "family": "GREETING",
+      "gloss": "see you tomorrow",
+      "core": false,
+      "notes": "hasta mañana / à demain / bis morgen / a domani / até amanhã."
+    },
+    "FAREWELL-SOON": {
+      "family": "GREETING",
+      "gloss": "see you soon",
+      "core": false,
+      "notes": "hasta pronto / à bientôt / bis bald / a presto / até breve."
     },
 
     "COURTESY-THANKS": {
@@ -170,6 +188,7 @@
       "ES-VERB-LLAMAR": "llamar — 'to call' (the Spanish naming verb)",
       "ES-SE-LLAMA": "se llama — 'he/she calls himself' (3rd-person of llamar)",
       "ES-WORD-MUCHO": "mucho — 'much / a lot'",
+      "ES-WORD-HASTA": "hasta — 'until / up to' (← Arabic ḥattā; a rare borrowed function word)",
       "ES-VERB-ESTAR": "estar — 'to be' (temporary state / location; ← Latin stare 'to stand')",
       "IT-VERB-STARE": "stare — 'to be' (state; ← Latin stare 'to stand', = Spanish estar); drives 'come stai?'",
       "FR-VERB-APPELER": "(s')appeler — 'to call (oneself)'",

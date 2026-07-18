@@ -1,0 +1,65 @@
+---
+id: ES-C05-hasta-manana
+chapter: 5
+type: phrase
+headword: hasta mañana
+gloss: see you tomorrow (literally "until tomorrow")
+concept_tag: FAREWELL-TOMORROW
+prerequisites: [ES-C05-hasta-luego, ES-W02-enye]
+sounds: [enye-ny, vowel-a]
+roots: [hatta-arabic, maneana-latin]
+etymology_hook: "mañana ← Latin (hora) maneana 'early hour' → morning → tomorrow; carries the ñ from the ñ-lesson"
+est_minutes: 3
+reviews_of: [ES-C05-hasta-luego, ES-W02-enye]
+---
+
+# hasta mañana — "see you tomorrow" (and the ñ returns)
+
+## Warm-up
+
+[PAUSE 2s] Leaving for the day? **hasta mañana** — "until tomorrow." It brings
+back a letter you studied in the writing lessons: the **ñ**. Here it is, living
+in a word you'll say every evening.
+
+## Sounds you'll need
+
+- `enye-ny` — **mañana** = *mah-NYAH-nah*: the **ñ** is the squished *ny* of
+  "canyon" (your ñ writing lesson — the tilde is a tiny second *n*, remember).
+  Three soft *ah*'s: *ma-**ÑA**-na*.
+
+## The phrase, taken apart
+
+> **hasta mañana** = "until tomorrow" → "see you tomorrow."
+
+- **hasta** = "until" (Arabic *ḥattā*).
+- **mañana** = "tomorrow" — **and** "morning." One word for both, from Latin
+  **(hōra) maneana**, "the **early** hour" (from *māne*, "in the morning"). The
+  logic: the next "early hour" you'll see is *tomorrow morning* → *mañana* came to
+  mean both **morning** and **tomorrow**.
+  - *por la mañana* = "in the morning."
+  - *hasta mañana* = "until tomorrow."
+
+**The ñ, in the wild.** Recall the writing lesson: *ñ* is a frozen *nn* — a
+scribe's shorthand for a doubled *n*. *mañana* comes from Latin *maneana*, whose
+*n*+*ea* palatalized (softened) into that single *ñ* sound. So the tilde is a
+little historical fossil sitting in the middle of "tomorrow."
+
+## Grammar Lens: same word, two meanings — context decides
+
+*mañana* means "morning" **or** "tomorrow"; the sentence tells you which. Paired
+with *hasta*, it's always **tomorrow**: *hasta mañana*, "until tomorrow."
+
+## Guided Practice
+
+[PAUSE 1s]
+- [YOU SAY: "mañana" — *mah-NYAH-nah*, squished *ñ*]
+- [YOU SAY: "hasta mañana" — until tomorrow]
+- [YOU SAY: "por la mañana" (in the morning) vs "hasta mañana" (until tomorrow) —
+  same word, context decides]
+
+## Wrap-up Recall
+
+[PAUSE 3s] What two meanings does *mañana* carry? (Morning; tomorrow.) With
+*hasta*, which one? (Tomorrow.) What sound is the *ñ*, and what is its tilde,
+historically? (The *ny* of "canyon"; a frozen doubled-*n*.) Next: **hasta
+pronto**.
