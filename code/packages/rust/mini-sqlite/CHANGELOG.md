@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.5.47 — IN uses numeric equality + three-valued NULL
+
+`1 IN (1.0)` now returns 1 (true) instead of 0: `IN` membership uses the same
+equality as `=`, so INTEGER and REAL compare numerically (`'1' IN (1)` stays
+false — text vs integer). `IN` is also now correctly three-valued for NULL: a
+NULL list element makes an otherwise-non-matching test NULL (`1 IN (NULL,2)` →
+NULL), while a real match still wins (`1 IN (NULL,1)` → 1); `NOT IN` inverts.
+Two new differential-oracle cases; sql-vm 0.4.25. The IN-collation folding
+(0.5.44) is unaffected.
+
 ## 0.5.46 — `||` concatenates blobs as raw bytes
 
 `X'41' || 'B'` now returns `'AB'` (0x41 = 'A'), not `"x'41'B"`. The `||` operator

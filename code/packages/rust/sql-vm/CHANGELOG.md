@@ -3,6 +3,20 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.25] - Unreleased
+
+### Fixed
+
+- **`IN` now uses `=` equality and three-valued NULL logic.** The `InList`
+  instruction tested membership with same-variant equality, so `1 IN (1.0)`
+  wrongly returned false and a NULL list element was ignored. It now uses
+  `sql_eq` (INTEGER/REAL compare numerically; text vs integer do not match) and
+  follows SQLite's three-valued rule: a match → true (even alongside NULLs); no
+  match with a NULL element present → NULL (`1 IN (NULL,2)`); otherwise false.
+  `NOT IN` inherits this, so `5 NOT IN (NULL,2)` is NULL. Collation-wrapped
+  operands (0.2.21's IN-collation) still fold correctly since both sides are
+  canonicalised before the compare.
+
 ## [0.4.24] - Unreleased
 
 ### Fixed
