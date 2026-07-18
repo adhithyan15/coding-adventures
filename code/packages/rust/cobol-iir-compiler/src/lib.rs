@@ -49,9 +49,11 @@
 //!
 //! ### Deliberately a later rung (each a clean error, never wrong output)
 //!
-//! Scaled-decimal arithmetic (`V` fields, scale alignment), `ROUNDED`, `ON SIZE
-//! ERROR`, item-to-item `MOVE` reshaping, `COMPUTE`, `IF`, `PERFORM`, `GO TO`,
-//! group items, and signed numerics (`PIC S9…`) each land on their own PR.
+//! Group items (and the alphanumeric side of item-to-item `MOVE`/comparison)
+//! each remain a later rung — a clean [`CompileError`], never wrong output.
+//! Scaled-decimal arithmetic, `ROUNDED`, `ON SIZE ERROR`, `COMPUTE`, `IF`,
+//! `PERFORM`, `GO TO`, and signed numerics (`PIC S9…`, trailing overpunch) are
+//! all lowered.
 
 use coding_adventures_cobol_parser::try_parse_cobol;
 use coding_adventures_cobol_runtime::{move_into_char, move_into_numeric, Decimal, Picture};
@@ -113,6 +115,10 @@ pub fn compile_source(source: &str, module_name: &str) -> Result<IIRModule, Comp
     if comp.needs_print {
         module.functions.push(print_padded_function());
     }
+    // The signed printer calls the digit-print helper, so that must be present too.
+    if comp.needs_print_signed {
+        module.functions.push(print_signed_function());
+    }
     module.entry_point = Some("main".to_string());
     Ok(module)
 }
@@ -126,7 +132,9 @@ enum ItemKind {
     /// An alphanumeric item: a `str` register holding its stored character image.
     Char { initial: String },
     /// A numeric item: an `i64` register holding its value scaled by `dec_digits`.
-    Numeric { int_digits: usize, dec_digits: usize, initial: i64 },
+    /// A `signed` (`PIC S9…`) item keeps its sign in the `i64` and shows it as a
+    /// trailing overpunch on `DISPLAY`; an unsigned item stores only magnitude.
+    Numeric { int_digits: usize, dec_digits: usize, signed: bool, initial: i64 },
 }
 
 /// A WORKING-STORAGE elementary item and the IIR register backing it.
@@ -182,6 +190,8 @@ struct Compiler<'a> {
     /// Set when a numeric `DISPLAY` emits a call to the digit-print helper, so it
     /// is appended to the module.
     needs_print: bool,
+    /// Set when a signed-numeric `DISPLAY` emits a call to the overpunch printer.
+    needs_print_signed: bool,
     /// Unique-suffix counter for throwaway registers.
     tmp_counter: usize,
     /// PROCEDURE DIVISION paragraphs in document order, and a name → index map,
@@ -287,14 +297,6 @@ impl<'a> Compiler<'a> {
         let picture = Picture::parse(&pic_str)
             .map_err(|e| CompileError::Malformed(format!("PICTURE {pic_str}: {e}")))?;
 
-        // Signed numerics (`PIC S9…`) display via a trailing sign overpunch — a
-        // later rung. Reject at declaration so we never emit a wrong image.
-        if matches!(picture, Picture::Numeric { signed: true, .. }) {
-            return Err(CompileError::Unsupported(format!(
-                "signed numeric (PIC S9…) item {name} — sign overpunch is a later rung"
-            )));
-        }
-
         let value_lit = match find_clause(entry, "value_clause") {
             Some(vc) => Some(read_literal(
                 child_node(vc, "literal")
@@ -304,7 +306,7 @@ impl<'a> Compiler<'a> {
         };
 
         let kind = match &picture {
-            Picture::Numeric { int_digits, dec_digits, .. } => {
+            Picture::Numeric { int_digits, dec_digits, signed } => {
                 if int_digits + dec_digits > NUMERIC_MAX_DIGITS {
                     return Err(CompileError::Unsupported(format!(
                         "numeric item {name} wider than {NUMERIC_MAX_DIGITS} digits exceeds the \
@@ -313,17 +315,23 @@ impl<'a> Compiler<'a> {
                 }
                 // Initial scaled value: VALUE applied as an initialising MOVE
                 // (else 0). We reuse the oracle's `move_into_numeric` to produce
-                // the exact zero-filled digit string, then read it as the scaled
-                // integer.
+                // the exact zero-filled magnitude digits, then read it as the
+                // scaled integer — carrying the sign into a signed field.
                 let initial = match &value_lit {
                     Some(src) => {
                         let digits = format_into_picture(src, &picture)
                             .map_err(|m| CompileError::Unsupported(format!("VALUE {name}: {m}")))?;
-                        parse_digits(&digits)
+                        let mag = parse_digits(&digits);
+                        if *signed && literal_is_negative(src) { -mag } else { mag }
                     }
                     None => 0,
                 };
-                ItemKind::Numeric { int_digits: *int_digits, dec_digits: *dec_digits, initial }
+                ItemKind::Numeric {
+                    int_digits: *int_digits,
+                    dec_digits: *dec_digits,
+                    signed: *signed,
+                    initial,
+                }
             }
             Picture::Alphanumeric { .. } | Picture::Alphabetic { .. } => {
                 let initial = match &value_lit {
@@ -390,7 +398,11 @@ impl<'a> Compiler<'a> {
                         ItemKind::Numeric { .. } => {
                             let reg = self.items[idx].reg.clone();
                             let width = self.items[idx].width() as i64;
-                            self.emit_print_numeric(&reg, width);
+                            if self.item_signed(idx) {
+                                self.emit_print_signed(&reg, width);
+                            } else {
+                                self.emit_print_numeric(&reg, width);
+                            }
                         }
                     }
                 }
@@ -459,15 +471,18 @@ impl<'a> Compiler<'a> {
                     .map_err(|m| CompileError::Unsupported(format!("MOVE into {dst}: {m}")))?;
                 self.emit("str_const", Some(&reg), vec![Operand::Str(image)], "str");
             }
-            ItemKind::Numeric { int_digits, dec_digits, .. } => {
+            ItemKind::Numeric { int_digits, dec_digits, signed, .. } => {
+                let signed = *signed;
                 let picture = Picture::Numeric {
                     int_digits: *int_digits,
                     dec_digits: *dec_digits,
-                    signed: false,
+                    signed,
                 };
                 let digits = format_into_picture(lit, &picture)
                     .map_err(|m| CompileError::Unsupported(format!("MOVE into {dst}: {m}")))?;
-                let value = parse_digits(&digits);
+                let mag = parse_digits(&digits);
+                // A signed receiver keeps the sign; an unsigned one drops it.
+                let value = if signed && literal_is_negative(lit) { -mag } else { mag };
                 self.emit("const", Some(&reg), vec![Operand::Int(value)], "i64");
             }
         }
@@ -1346,6 +1361,7 @@ impl<'a> Compiler<'a> {
     ) -> Result<(), CompileError> {
         let idx = self.numeric_index(target)?;
         let (int_digits, dec_digits) = self.numeric_dims(idx);
+        let signed = self.item_signed(idx);
         let reg = self.items[idx].reg.clone();
 
         if dec_digits > value_scale && value_max_int + dec_digits > 18 {
@@ -1355,28 +1371,38 @@ impl<'a> Compiler<'a> {
             )));
         }
 
+        // The value at the receiver's scale (keeps its sign), and its magnitude —
+        // the overflow test is on the magnitude, and an *unsigned* receiver stores
+        // the magnitude while a *signed* receiver keeps the sign.
         let acc = self.fresh("_acc");
         self.emit("mov", Some(&acc), vec![Operand::Var(value_reg.to_string())], "i64");
         self.rescale(&acc, value_scale, dec_digits, rounded);
-        self.emit_abs(&acc);
+        let mag = self.fresh("_mag");
+        self.emit("mov", Some(&mag), vec![Operand::Var(acc.clone())], "i64");
+        self.emit_abs(&mag);
         let modulus = 10i64.pow((int_digits + dec_digits) as u32);
 
         if handler.is_empty() {
-            // Silent high-order truncation: value mod 10^(int_digits + dec_digits).
+            // Silent high-order truncation: keep the low-order magnitude digits
+            // (`mag mod 10^(int+dec)`), re-applying the sign for a signed receiver.
             let m = self.fresh("_m");
             self.emit("const", Some(&m), vec![Operand::Int(modulus)], "i64");
-            self.emit("mod", Some(&acc), vec![Operand::Var(acc.clone()), Operand::Var(m)], "i64");
-            self.emit("mov", Some(&reg), vec![Operand::Var(acc)], "i64");
+            let kept = self.fresh("_kept");
+            self.emit("mod", Some(&kept), vec![Operand::Var(mag), Operand::Var(m)], "i64");
+            let stored = if signed { self.reapply_sign(&kept, &acc) } else { kept };
+            self.emit("mov", Some(&reg), vec![Operand::Var(stored)], "i64");
         } else {
-            // ON SIZE ERROR: if acc ≥ 10^(int+dec) the integer part does not fit —
-            // run the handler and leave the receiver unchanged; else store.
+            // ON SIZE ERROR: if the magnitude ≥ 10^(int+dec) the integer part does
+            // not fit — run the handler and leave the receiver unchanged; else the
+            // value fits, so store it (signed keeps the sign, unsigned its magnitude).
             let m = self.fresh("_m");
             self.emit("const", Some(&m), vec![Operand::Int(modulus)], "i64");
             let ovf = self.fresh("_ovf");
-            self.emit("cmp_ge", Some(&ovf), vec![Operand::Var(acc.clone()), Operand::Var(m)], "i64");
+            self.emit("cmp_ge", Some(&ovf), vec![Operand::Var(mag.clone()), Operand::Var(m)], "i64");
             let (ovf_lbl, end_lbl) = (self.fresh("se_ovf"), self.fresh("se_end"));
             self.emit("jmp_if_true", None, vec![Operand::Var(ovf), Operand::Var(ovf_lbl.clone())], "void");
-            self.emit("mov", Some(&reg), vec![Operand::Var(acc)], "i64");
+            let fit = if signed { acc } else { mag };
+            self.emit("mov", Some(&reg), vec![Operand::Var(fit)], "i64");
             self.emit("jmp", None, vec![Operand::Var(end_lbl.clone())], "void");
             self.emit("label", None, vec![Operand::Var(ovf_lbl)], "void");
             for h in handler {
@@ -1385,6 +1411,23 @@ impl<'a> Compiler<'a> {
             self.emit("label", None, vec![Operand::Var(end_lbl)], "void");
         }
         Ok(())
+    }
+
+    /// Return a register holding `magnitude` with the sign of `signed_ref` applied
+    /// (negated when `signed_ref < 0`). Used to re-sign a truncated magnitude for
+    /// a signed receiver, without relying on any backend's signed-remainder rule.
+    fn reapply_sign(&mut self, magnitude: &str, signed_ref: &str) -> String {
+        let out = self.fresh("_sgn");
+        self.emit("mov", Some(&out), vec![Operand::Var(magnitude.to_string())], "i64");
+        let zero = self.fresh("_z");
+        self.emit("const", Some(&zero), vec![Operand::Int(0)], "i64");
+        let neg = self.fresh("_neg");
+        self.emit("cmp_lt", Some(&neg), vec![Operand::Var(signed_ref.to_string()), Operand::Var(zero.clone())], "i64");
+        let done = self.fresh("_sgndone");
+        self.emit("jmp_if_false", None, vec![Operand::Var(neg), Operand::Var(done.clone())], "void");
+        self.emit("sub", Some(&out), vec![Operand::Var(zero), Operand::Var(out.clone())], "i64");
+        self.emit("label", None, vec![Operand::Var(done)], "void");
+        out
     }
 
     /// Rescale register `acc` from `from` to `to` fractional digits in place.
@@ -1485,6 +1528,12 @@ impl<'a> Compiler<'a> {
         }
     }
 
+    /// Whether a numeric item is signed (`PIC S9…`) — it keeps its sign in the
+    /// `i64` slot and displays a trailing overpunch.
+    fn item_signed(&self, idx: usize) -> bool {
+        matches!(self.items[idx].kind, ItemKind::Numeric { signed: true, .. })
+    }
+
     /// The item index of a numeric data-name usable in arithmetic: it must be a
     /// declared numeric item no wider than [`ARITH_MAX_DIGITS`] digits (so the
     /// scaled `i64` arithmetic cannot overflow).
@@ -1583,6 +1632,23 @@ impl<'a> Compiler<'a> {
         );
     }
 
+    /// Emit the overpunch-printer call for a signed numeric item's `width`-digit
+    /// image (its sign shows as a trailing overpunch on the units digit). The
+    /// helper itself calls the plain digit printer, so both are needed.
+    fn emit_print_signed(&mut self, reg: &str, width: i64) {
+        self.needs_print = true;
+        self.needs_print_signed = true;
+        let w = self.fresh("_w");
+        self.emit("const", Some(&w), vec![Operand::Int(width)], "i64");
+        let ret = self.fresh("_pr");
+        self.emit(
+            "call",
+            Some(&ret),
+            vec![Operand::Var(SIGNED_PRINT_HELPER.into()), Operand::Var(reg.to_string()), Operand::Var(w)],
+            "i64",
+        );
+    }
+
     /// `putchar('\n')` — the record terminator every `DISPLAY` appends.
     fn emit_newline(&mut self) {
         let t = self.fresh("_nl");
@@ -1653,6 +1719,80 @@ fn print_padded_function() -> IIRFunction {
     ];
     let mut f = IIRFunction::new(
         PRINT_HELPER,
+        vec![("v".into(), "i64".into()), ("w".into(), "i64".into())],
+        "i64",
+        body,
+    );
+    f.type_status = FunctionTypeStatus::FullyTyped;
+    f
+}
+
+const SIGNED_PRINT_HELPER: &str = "__cob_print_signed";
+
+/// `__cob_print_signed(v, w)` prints a signed numeric item's `w`-digit image with
+/// its sign folded into a trailing **overpunch** on the units digit — COBOL's
+/// default `DISPLAY` of a `PIC S9…` field. It prints the leading `w−1` magnitude
+/// digits via [`PRINT_HELPER`], then one overpunch character for the units digit:
+///
+/// | units digit | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
+/// |-------------|---|---|---|---|---|---|---|---|---|---|
+/// | positive    | { | A | B | C | D | E | F | G | H | I |
+/// | negative    | } | J | K | L | M | N | O | P | Q | R |
+///
+/// So `+123` → `12C`, `−123` → `12L`, and (unsigned) zero → `00{`. The codes are
+/// arithmetic: a non-zero units digit `d` is `(neg ? 73 : 64) + d` (`'A'..'I'` /
+/// `'J'..'R'`), and a zero units digit is `neg ? 125 : 123` (`'}'` / `'{'`).
+fn print_signed_function() -> IIRFunction {
+    fn mk(op: &str, dest: Option<&str>, srcs: Vec<Operand>, ty: &str) -> IIRInstr {
+        IIRInstr::new(op, dest.map(str::to_string), srcs, ty)
+    }
+    fn var(name: &str) -> Operand {
+        Operand::Var(name.to_string())
+    }
+
+    let body = vec![
+        mk("const", Some("zero"), vec![Operand::Int(0)], "i64"),
+        // neg = v < 0; mag = |v|.
+        mk("cmp_lt", Some("neg"), vec![var("v"), var("zero")], "i64"),
+        mk("mov", Some("mag"), vec![var("v")], "i64"),
+        mk("jmp_if_false", None, vec![var("neg"), var("notneg")], "void"),
+        mk("sub", Some("mag"), vec![var("zero"), var("v")], "i64"),
+        mk("label", None, vec![var("notneg")], "void"),
+        // units = mag % 10; rest = mag / 10.
+        mk("const", Some("ten"), vec![Operand::Int(10)], "i64"),
+        mk("mod", Some("units"), vec![var("mag"), var("ten")], "i64"),
+        mk("div", Some("rest"), vec![var("mag"), var("ten")], "i64"),
+        // print the leading w-1 digits of the magnitude.
+        mk("const", Some("one"), vec![Operand::Int(1)], "i64"),
+        mk("sub", Some("wm1"), vec![var("w"), var("one")], "i64"),
+        mk("call", Some("_r"), vec![var(PRINT_HELPER), var("rest"), var("wm1")], "i64"),
+        // nzcode = (neg ? 73 : 64) + units.
+        mk("const", Some("c64"), vec![Operand::Int(64)], "i64"),
+        mk("const", Some("c73"), vec![Operand::Int(73)], "i64"),
+        mk("mov", Some("nzbase"), vec![var("c64")], "i64"),
+        mk("jmp_if_false", None, vec![var("neg"), var("nzdone")], "void"),
+        mk("mov", Some("nzbase"), vec![var("c73")], "i64"),
+        mk("label", None, vec![var("nzdone")], "void"),
+        mk("add", Some("nzcode"), vec![var("nzbase"), var("units")], "i64"),
+        // zcode = neg ? 125 : 123.
+        mk("const", Some("c123"), vec![Operand::Int(123)], "i64"),
+        mk("const", Some("c125"), vec![Operand::Int(125)], "i64"),
+        mk("mov", Some("zcode"), vec![var("c123")], "i64"),
+        mk("jmp_if_false", None, vec![var("neg"), var("zdone")], "void"),
+        mk("mov", Some("zcode"), vec![var("c125")], "i64"),
+        mk("label", None, vec![var("zdone")], "void"),
+        // code = (units == 0) ? zcode : nzcode.
+        mk("cmp_eq", Some("iszero"), vec![var("units"), var("zero")], "i64"),
+        mk("mov", Some("code"), vec![var("nzcode")], "i64"),
+        mk("jmp_if_false", None, vec![var("iszero"), var("usecode")], "void"),
+        mk("mov", Some("code"), vec![var("zcode")], "i64"),
+        mk("label", None, vec![var("usecode")], "void"),
+        mk("call_builtin", None, vec![var("putchar"), var("code")], "void"),
+        mk("const", Some("z0"), vec![Operand::Int(0)], "i64"),
+        mk("ret", None, vec![var("z0")], "i64"),
+    ];
+    let mut f = IIRFunction::new(
+        SIGNED_PRINT_HELPER,
         vec![("v".into(), "i64".into()), ("w".into(), "i64".into())],
         "i64",
         body,
@@ -1766,6 +1906,16 @@ fn format_into_picture(src: &Src, picture: &Picture) -> Result<String, String> {
 /// it always fits; a leading run of zeros parses fine.
 fn parse_digits(digits: &str) -> i64 {
     digits.parse::<i64>().unwrap_or(0)
+}
+
+/// Whether a literal source denotes a negative value — only a numeric literal
+/// can (`ZERO`/`SPACE`/strings are non-negative). A negative *zero* is treated
+/// as non-negative, matching COBOL's unsigned zero.
+fn literal_is_negative(src: &Src) -> bool {
+    match src {
+        Src::Num(s) => Decimal::parse_literal(s).is_some_and(|d| d.neg && !d.is_zero()),
+        _ => false,
+    }
 }
 
 /// A summed term of an `ADD`/`SUBTRACT`: a literal value or a numeric item.
@@ -2162,6 +2312,28 @@ mod tests {
             .unwrap_err();
             assert!(matches!(err, CompileError::Unsupported(_)), "{body}: got {err:?}");
         }
+    }
+
+    #[test]
+    fn signed_numeric_compiles_and_appends_the_overpunch_helper() {
+        // A signed field now lowers (was a deferred error): it keeps its sign and
+        // DISPLAY routes through the overpunch printer.
+        let m = compile_source(
+            &wrap(
+                &["01  N  PIC S9(3) VALUE -12."],
+                &["ADD 5 TO N.", "DISPLAY N.", "STOP RUN."],
+            ),
+            "signed",
+        )
+        .unwrap();
+        assert!(m.validate().is_empty(), "{:?}", m.validate());
+        // The signed value initialises negative, and the overpunch helper is present.
+        assert!(m.functions[0]
+            .instructions
+            .iter()
+            .any(|i| i.op == "const" && matches!(i.srcs.first(), Some(Operand::Int(-12)))));
+        assert!(m.functions.iter().any(|f| f.name == SIGNED_PRINT_HELPER));
+        assert!(m.functions.iter().any(|f| f.name == PRINT_HELPER));
     }
 
     #[test]

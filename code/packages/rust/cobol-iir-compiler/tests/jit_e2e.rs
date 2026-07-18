@@ -836,3 +836,80 @@ fn compute_on_size_error_catches_divide_by_zero() {
     ));
     assert_eq!(out, "DIVZERO\n007\n");
 }
+
+// -------------------------------------------------------------------------
+// Signed numerics (PIC S9…) — sign kept through arithmetic, overpunch on
+// DISPLAY — vs the oracle.
+// -------------------------------------------------------------------------
+
+#[test]
+fn signed_value_displays_with_trailing_overpunch() {
+    // -123 in S9(3): magnitude "123", units 3 → 'L' (negative) → "12L".
+    let neg = assert_matches_oracle(&wrap(
+        &["01  N  PIC S9(3) VALUE -123."],
+        &["DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(neg, "12L\n");
+    // +123 → units 3 → 'C' (positive) → "12C".
+    let pos = assert_matches_oracle(&wrap(
+        &["01  N  PIC S9(3) VALUE 123."],
+        &["DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(pos, "12C\n");
+    // Zero is unsigned: units 0 → '{' → "00{".
+    let zero = assert_matches_oracle(&wrap(
+        &["01  N  PIC S9(3) VALUE 0."],
+        &["DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(zero, "00{\n");
+}
+
+#[test]
+fn signed_field_keeps_sign_through_arithmetic() {
+    // 3 - 5 = -2 into a signed receiver → magnitude 2, negative → "0K".
+    let out = assert_matches_oracle(&wrap(
+        &["01  N  PIC S9(2) VALUE 3."],
+        &["SUBTRACT 5 FROM N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "0K\n");
+}
+
+#[test]
+fn signed_value_used_in_arithmetic_carries_its_sign() {
+    // N = -10; ADD 4 → -6 → "0O" (units 6 → 'O', negative).
+    let out = assert_matches_oracle(&wrap(
+        &["01  N  PIC S9(2) VALUE -10."],
+        &["ADD 4 TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "0O\n");
+}
+
+#[test]
+fn moving_signed_into_unsigned_drops_the_sign() {
+    // A signed source moved into an unsigned receiver keeps only magnitude.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC S9(3) VALUE -45.", "01  U  PIC 9(3) VALUE 0."],
+        &["MOVE S TO U.", "DISPLAY U.", "STOP RUN."],
+    ));
+    assert_eq!(out, "045\n");
+}
+
+#[test]
+fn compute_into_signed_receiver_shows_negative_overpunch() {
+    // COMPUTE N = 2 - 9 = -7 into S9(2) → "0P" (units 7 → 'P', negative).
+    let out = assert_matches_oracle(&wrap(
+        &["01  N  PIC S9(2) VALUE 0."],
+        &["COMPUTE N = 2 - 9.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "0P\n");
+}
+
+#[test]
+fn signed_scaled_field_overpunches_the_last_fractional_digit() {
+    // -1.5 in S9V9: magnitude "15", units 5 → 'N' (negative) → "1N".
+    let out = assert_matches_oracle(&wrap(
+        &["01  N  PIC S9V9 VALUE -1.5."],
+        &["DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "1N\n");
+}
