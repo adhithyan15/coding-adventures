@@ -92,9 +92,12 @@ struct FuncStackMap {
 /// GC data structure must not become unusable because some unrelated code panicked.
 static REGISTRY: Mutex<Vec<FuncStackMap>> = Mutex::new(Vec::new());
 
-/// Serialises the registry tests, which share the one process-wide [`REGISTRY`].
+/// Serialises every test that touches the one process-wide [`REGISTRY`] — the tests
+/// here and the precise-walk tests in [`crate::precise_walk`], which register and
+/// resolve against the same static. `pub(crate)` so both modules take the *same*
+/// lock (two separate locks would not serialise against each other).
 #[cfg(test)]
-static REG_TEST_LOCK: Mutex<()> = Mutex::new(());
+pub(crate) static REG_TEST_LOCK: Mutex<()> = Mutex::new(());
 
 /// Register one compiled function's stack maps. Returns the number of records
 /// stored (`> 0`) on success, or `0` if the registration is rejected.

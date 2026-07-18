@@ -59,6 +59,12 @@ mod twig_compat;
 /// live there. Populated by [`__gc_register_stackmap`]. See [`stackmap_registry`].
 mod stackmap_registry;
 
+/// Precise stack walk — turns a live frame-pointer chain into the precise slots +
+/// conservative regions that `gc_core::FlatHeap::collect_mixed` consumes. The
+/// platform-independent walk logic; the `asm!` entry that captures the running
+/// thread's frame pointer and calls it is a follow-up. See [`precise_walk`].
+mod precise_walk;
+
 /// The one process-wide heap.  `None` until the first allocation (lazy init);
 /// `__gc_reset` puts it back to `None`, running `FlatHeap`'s `Drop` to free
 /// every outstanding block.

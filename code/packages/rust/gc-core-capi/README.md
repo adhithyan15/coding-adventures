@@ -108,14 +108,21 @@ map any unwound return address to the `StackMapRecord` live there in `O(log n)`.
 That is the code-address analogue of `__gc_register_kind` (object-layout map) —
 together, the two maps a precise collector needs.
 
+The **precise stack walk logic** now lands too: `precise_walk::build_precise_roots`
+unwinds the frame-pointer chain, `resolve`s each return address, and builds the two
+inputs to `gc-core`'s `collect_mixed` — precise slots (`frame_root_slots`) for
+mapped frames, conservative `[fp, caller_fp)` regions for unmapped ones — so a real
+stack (which always mixes stack-mapped and un-migrated frames) collects
+precisely-where-it-can and conservatively-everywhere-else in one cycle. It is pure
+walk logic (no `asm!`), exhaustively tested against synthetic stacks.
+
 Still to come (own PRs):
 
-- **The precise stack walk** — an argument-less `__gc_collect_precise` that
-  unwinds the frame-pointer chain, `resolve`s each return address to its record,
-  computes `frame_base + slot_offset` for every named slot (`frame_root_slots`),
-  and hands the flat slot list to `collect_precise`; an unmapped frame falls back
-  to the conservative `__gc_collect_region` scan. Then the backends
-  (aarch64 / x86_64 / LLVM) emit the records at safepoints and call sites.
+- **The `asm!` entry** — an argument-less `__gc_collect_precise` that captures the
+  running thread's frame pointer / stack pointer / base (mirroring `__gc_collect`'s
+  register spill) and calls `build_precise_roots` + `collect_mixed`. Then the
+  backends (aarch64 / x86_64 / LLVM) emit the stack-map records at safepoints and
+  call sites.
 - **Moving / compacting**, then **incremental** — the rest of the ladder, all as
   `gc-core` algorithms.
 
