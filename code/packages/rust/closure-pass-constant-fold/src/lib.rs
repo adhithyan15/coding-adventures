@@ -6617,15 +6617,32 @@ mod tests {
     // ------------------- deep-chain DoS regression -------------------
 
     /// A very deep left-nested operator chain — the shape the bridge builds
-    /// for flat source like `1+1+…+1` (tens of thousands of terms) — must fold
-    /// without overflowing the native stack. The bottom-up `fold_binary` walk
-    /// recurses once per operator; on the caller's ordinary ~2 MiB stack this
-    /// used to overflow (an uncatchable abort). The large-stack worker
-    /// (`FOLD_STACK_SIZE`) absorbs the recursion and still folds the whole
-    /// chain to a single number.
+    /// for flat source like `1+1+…+1` (thousands of terms) — must fold without
+    /// overflowing the native stack. The bottom-up `fold_binary` walk recurses
+    /// once per operator; on the caller's ordinary ~2 MiB stack this used to
+    /// overflow (an uncatchable abort). The large-stack worker
+    /// (`FOLD_STACK_SIZE`, 128 MiB) absorbs the recursion and still folds the
+    /// whole chain to a single number.
+    ///
+    /// ## Why `N = 6_000` and not more
+    ///
+    /// This is a *regression guard* that the worker exists and is used — NOT a
+    /// measurement of the maximum foldable depth. `N` only has to be deep enough
+    /// that folding on the caller's ~2 MiB stack WOULD overflow (each
+    /// `fold_binary` frame is several KiB, so a few thousand levels already blow
+    /// past 2 MiB by an order of magnitude), while sitting comfortably inside
+    /// the 128 MiB worker with room to spare. An earlier `N = 20_000` sat right
+    /// at the worker's edge (~6-7 KiB/frame × 20 000 ≈ the full 128 MiB), so on
+    /// CI runners — fatter debug frames, higher memory pressure under parallel
+    /// tests — it aborted nondeterministically (~2/3 of runs) even though it
+    /// passed locally. `6_000` keeps ~4× headroom under the worker while still
+    /// proving the property. (Truly bounding *production* recursion against a
+    /// hostile deep input is a separate, larger transform — a recursion-depth
+    /// limit that declines to fold rather than a bigger stack — tracked apart
+    /// from this test's reliability fix.)
     #[test]
     fn deeply_nested_binary_chain_folds_without_stack_overflow() {
-        const N: usize = 20_000;
+        const N: usize = 6_000;
         let mut expr = num(1.0, None);
         for _ in 0..N {
             expr = Expression::BinaryExpression(BinaryExpression {
@@ -6636,13 +6653,13 @@ mod tests {
             });
         }
         let prog = program_with_expr(expr, false);
-        // `fold_program` runs its recursion on the 64 MiB `FOLD_STACK_SIZE`
+        // `fold_program` runs its recursion on the 128 MiB `FOLD_STACK_SIZE`
         // worker, so this depth folds fine even though the test runs on cargo's
         // ~2 MiB thread. Without the worker, `fold_binary`'s per-operator
         // recursion overflows here — so a regression re-breaks this test. The
-        // 20 000-deep *input* AST's own recursive `Drop` would ALSO overflow
-        // this small thread (orthogonal), so we run the pass by reference and
-        // `forget` the input; the shallow folded output drops fine.
+        // deep *input* AST's own recursive `Drop` would ALSO overflow this small
+        // thread (orthogonal), so we run the pass by reference and `forget` the
+        // input; the shallow folded output drops fine.
         let pass = ConstantFoldPass::new();
         let sidecar = Sidecar::new();
         let mut cv = CVLog::new(true);

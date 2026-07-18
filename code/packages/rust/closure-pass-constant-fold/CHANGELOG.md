@@ -2,6 +2,27 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.104.1] - 2026-07-18
+
+### Fixed — flaky stack-overflow in the deep-chain regression test (CI reliability)
+
+`deeply_nested_binary_chain_folds_without_stack_overflow` built a 20 000-deep
+left-nested `1+1+…` chain and folded it on the 128 MiB `FOLD_STACK_SIZE` worker.
+At that depth (~6-7 KiB per `fold_binary` frame × 20 000 ≈ the full 128 MiB) the
+recursion sat right at the worker's edge, so on CI runners — fatter debug frames
+and higher memory pressure under parallel tests — it aborted with an uncatchable
+`fatal runtime error: stack overflow` on roughly two-thirds of runs, while
+passing locally.
+
+Lowered the depth to `N = 6_000`. This is a regression *guard* that the
+large-stack worker exists and is used (a few thousand levels already overflow
+the caller's ~2 MiB stack by an order of magnitude), not a measurement of the
+maximum foldable depth, so the smaller `N` keeps ~4× headroom under the worker
+while still proving the property. No library behavior changes — test-only.
+(Truly bounding *production* recursion against a hostile deep input is a
+separate, larger transform — a recursion-depth limit that declines to fold
+rather than a bigger stack — tracked apart from this reliability fix.)
+
 ## [0.104.0] - 2026-07-18
 
 ### Added — impure-test equal-branch ternary collapses to a comma sequence
