@@ -93,6 +93,7 @@ per rotation, in parallel):
 | `anatomy/` | vertebral-column region → vertebra count (cervical → 7, thoracic → 12, lumbar → 5, sacral → 5, coccygeal → 4) | NCBI Bookshelf / StatPearls "Vertebral Column" (consensus) |
 | `anatomy/` | eye part → function the source states (cornea → bends_light, retina → turns_light_into_signals, optic_nerve → carries_signals_to_brain) | NIH National Eye Institute (authoritative) |
 | `anatomy/` | tooth part → its role/location (enamel → outer_surface, dentin → beneath_enamel, cementum → covers_roots) | MedlinePlus / NIH NCBI Bookshelf (authoritative) |
+| `anatomy/` | respiratory part → function it performs (trachea → main_airway, alveoli → gas_exchange, diaphragm → contracts_inspiration) | NIH / NCI SEER Training (authoritative) |
 | `geology/` | Mohs reference mineral → whole-number hardness (talc → 1, quartz → 7, diamond → 10) | NPS "Mohs Hardness Scale" (authoritative) |
 | `meteorology/` | Beaufort wind force number → the name the source gives it (0 → calm, 6 → strong_breeze, 12 → hurricane) | NWS Beaufort Wind Scale (authoritative) |
 | … | *geography, physical constants, …* | *(expanding)* |
