@@ -2,6 +2,35 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.106.0] - 2026-07-18
+
+### Fixed — numeric object-key quoting now matches Closure across the full range
+
+The object-literal transform decides whether a numeric property key is emitted
+bare (`{100:0}`) or quoted with its `ToString` (`{"1.5":0}`). The old predicate
+only quoted **non-integers in `[1e-6, 1e21)`**, leaving several key classes bare
+that Closure quotes. Oracle-probing the reference jar revealed the actual rule:
+a numeric key stays bare in exactly one case — **a non-negative integer strictly
+below `2^53`** (the safe-integer bound) — and is quoted otherwise.
+
+Newly quoted (previously emitted bare, diverging from Closure):
+
+- integers `>= 2^53`: `{1e20:0}` → `{"100000000000000000000":0}`,
+  `{9007199254740992:0}` → `{"9007199254740992":0}`
+- integers rendered exponentially: `{1e21:0}` → `{"1e+21":0}`
+- non-integers outside `[1e-6, 1e21)`: `{1e-7:0}` → `{"1e-7":0}`
+
+Still bare (safe integers): `{0:_}`, `{100:_}`, `{4294967296:_}`,
+`{9007199254740991:_}` (2^53 − 1); the printer independently minifies them
+(`{4e9:_}` → `{4E9:_}`), matching Closure. A `+Infinity` key (overflow literal
+like `1e400`) stays bare as `Infinity`, also matching. The quoted name comes
+from the now-JS-exact `format_js_number` (0.105.0), so exponential and huge-
+integer keys get their precise V8 spelling.
+
+A new `numeric_object_key_quoting_matches_closure_safe_integer_rule` unit test
+and a `numeric-key-quote` closurec e2e fixture verify byte-identity with the
+real jar.
+
 ## [0.105.0] - 2026-07-18
 
 ### Fixed — `format_js_number` now matches V8's `Number.prototype.toString` exactly

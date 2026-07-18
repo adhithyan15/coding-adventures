@@ -925,26 +925,45 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
                             PropertyKey::PrivateName(p) => PropertyKey::PrivateName(p.clone()),
                             PropertyKey::StringLiteral(s) => PropertyKey::StringLiteral(s.clone()),
                             PropertyKey::NumericLiteral(n) => {
-                                // A NON-INTEGER numeric object key must be QUOTED:
-                                // its property name is the ECMAScript `ToString` of
-                                // the value, so Closure prints `{0.5:1}` as
-                                // `{"0.5":1}` (a string key), never the bare number.
-                                // (An integer key stays numeric — the emitter prints
-                                // `{1:1}` unquoted.) We convert only finite
-                                // non-integers in JS's plain-decimal `ToString` range
-                                // `[1e-6, 1e21)`, where `format_js_number` (shortest
-                                // round-trip) equals JS `ToString` exactly. Tiny
-                                // (`<1e-6`) or huge non-integers take exponent forms
-                                // (`1e-7` → `"1e-7"`), and large integers (`>2^53`)
-                                // take precision-quoting forms — both a separate
-                                // follow-up, so they stay numeric here (valid output,
-                                // just not yet byte-identical).
+                                // A numeric object key's property name is the
+                                // ECMAScript `ToString` of the value, so Closure
+                                // prints most numeric keys as a QUOTED string
+                                // (`{0.5:1}` → `{"0.5":1}`, `{1e21:0}` → `{"1e+21":0}`).
+                                // It keeps a key BARE (numeric) in exactly one case:
+                                // a non-negative integer strictly below 2^53
+                                // (`Number.MAX_SAFE_INTEGER + 1`). Oracle-verified
+                                // against the reference jar:
+                                //
+                                //   bare:   {0:_} {100:_} {4294967296:_} {1e15:_}
+                                //           {9007199254740991:_}   (all < 2^53 ints)
+                                //   quoted: {1.5:_}→"1.5"  {0.5:_}→"0.5"
+                                //           {1e-7:_}→"1e-7"  {1e-6:_}→"0.000001"
+                                //           {1e20:_}→"100000000000000000000"
+                                //           {1e21:_}→"1e+21"
+                                //           {9007199254740992:_}→"9007199254740992"
+                                //           (2^53 and up, and every non-integer)
+                                //
+                                // The bare-eligible integers are emitted numerically
+                                // by the printer, which independently minifies them
+                                // (`{4e9:_}` → `{4E9:_}`) — matching Closure, whose
+                                // own number printer does the same. Since 2^53 is the
+                                // safe-integer bound, every bare key round-trips
+                                // losslessly. `format_js_number` (now JS-`ToString`-
+                                // exact across the whole range) supplies the quoted
+                                // name, so a huge integer or an exponential-form value
+                                // gets its precise V8 spelling.
+                                //
+                                // A non-finite key can only be `+Infinity` (an
+                                // overflowing literal like `1e400`; `-Infinity`/`NaN`
+                                // are not valid numeric key literals). Closure leaves
+                                // it BARE as `Infinity`, so the `is_finite()` guard
+                                // routes it to the else arm (the printer emits
+                                // `Infinity`), matching the reference compiler.
+                                const TWO_POW_53: f64 = 9_007_199_254_740_992.0;
                                 let v = n.value;
-                                if v.is_finite()
-                                    && v.fract() != 0.0
-                                    && v.abs() >= 1e-6
-                                    && v.abs() < 1e21
-                                {
+                                let bare_safe_integer =
+                                    v.fract() == 0.0 && (0.0..TWO_POW_53).contains(&v);
+                                if v.is_finite() && !bare_safe_integer {
                                     let name = format_js_number(v);
                                     let new_cv =
                                         st.fork_cv(&p.cv, &format!("{{{name}:…}}"), &format!("{{\"{name}\":…}}"));
@@ -11513,6 +11532,67 @@ mod tests {
                 }
             }
             other => panic!("expected an ObjectExpression; got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn numeric_object_key_quoting_matches_closure_safe_integer_rule() {
+        // Closure keeps a numeric key BARE only when it is a non-negative
+        // integer strictly below 2^53; every other numeric key is QUOTED with
+        // its JS `ToString`. Each expectation here was captured from the
+        // reference jar (`{k:0}` under SIMPLE). `Some(name)` = quoted string key
+        // with that exact name; `None` = key stays a bare `NumericLiteral`.
+        let cases: &[(f64, Option<&str>)] = &[
+            // bare: non-negative integers below 2^53
+            (0.0, None),
+            (100.0, None),
+            (4_294_967_296.0, None),           // 2^32
+            (1e15, None),
+            (9_007_199_254_740_991.0, None),   // 2^53 - 1 (last bare)
+            // quoted: 2^53 and above (no longer a safe integer)
+            (9_007_199_254_740_992.0, Some("9007199254740992")), // 2^53
+            (1e16, Some("10000000000000000")),
+            (1e20, Some("100000000000000000000")),
+            (1e21, Some("1e+21")),
+            (123456789012345680000.0, Some("123456789012345680000")),
+            // quoted: every non-integer, incl. those outside [1e-6, 1e21)
+            (1.5, Some("1.5")),
+            (0.5, Some("0.5")),
+            (1e-6, Some("0.000001")),
+            (1e-7, Some("1e-7")),
+            // bare: +Infinity (overflow literal like 1e400) prints as `Infinity`
+            (f64::INFINITY, None),
+        ];
+        for &(value, expected) in cases {
+            let o = object_lit(vec![Property {
+                cv: None,
+                kind: PropertyKind::Init,
+                key: PropertyKey::NumericLiteral(NumericLiteral {
+                    cv: None,
+                    value,
+                    raw: format!("{value:?}"),
+                }),
+                value: Box::new(num(1.0, None)),
+                shorthand: false,
+                computed: false,
+                method: false,
+            }]);
+            let (out, _, _, _) = run_pass(program_with_expr(o, true));
+            let Expression::ObjectExpression(obj) = extract_expr(&out) else {
+                panic!("expected an ObjectExpression for key {value:?}");
+            };
+            let ObjectMember::Property(p) = &obj.properties[0] else {
+                panic!("expected a Property for key {value:?}");
+            };
+            match (expected, &p.key) {
+                (Some(name), PropertyKey::StringLiteral(s)) => {
+                    assert_eq!(s.value, name, "quoted name for key {value:?}");
+                }
+                (None, PropertyKey::NumericLiteral(n)) => {
+                    assert_eq!(n.value, value, "bare numeric key for {value:?}");
+                }
+                (exp, got) => panic!("key {value:?}: expected {exp:?}, got {got:?}"),
+            }
         }
     }
 
