@@ -664,6 +664,25 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT OCTET_LENGTH(s) AS o, LENGTH(s) AS l FROM t ORDER BY id",
     },
+    // LENGTH counts BYTES for a blob but CHARACTERS for text, and measures a
+    // number by its decimal-text length. `length(x'0102ff')` = 3, `length(x'')`
+    // = 0, `length(12345)` = 5, `length('héllo')` = 5. Previously LENGTH errored
+    // on anything but text/NULL; blob literals (0.5.42) made the blob case
+    // reachable from SQL.
+    Case {
+        id: "length_blob_int_text",
+        setup: &[],
+        query: "SELECT LENGTH(x'0102ff') AS a, LENGTH(x'') AS b, LENGTH(12345) AS c, LENGTH(-7) AS d, LENGTH('héllo') AS e",
+    },
+    // LENGTH over a blob column (byte count), including the empty blob.
+    Case {
+        id: "length_blob_column",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, b BLOB)",
+            "INSERT INTO t VALUES (1, x'DEADBEEF'), (2, x''), (3, NULL)",
+        ],
+        query: "SELECT LENGTH(b) AS l FROM t ORDER BY id",
+    },
     // LIKELY / UNLIKELY / LIKELIHOOD are planner hints — semantically the
     // identity function on their first argument.
     Case {
@@ -1129,6 +1148,40 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT id FROM t WHERE name = 'apple' OR name = 'banana' ORDER BY id",
     },
+    // The column's collation also drives the `IN` operator: SQLite takes IN's
+    // collating sequence from the left operand, so `name IN ('APPLE')` on a
+    // NOCASE column matches both 'Apple' and 'apple'. `NOT IN` inverts it, and
+    // an explicit `COLLATE BINARY` on the value overrides the column's NOCASE.
+    Case {
+        id: "where_column_collate_nocase_in",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT COLLATE NOCASE)",
+            "INSERT INTO t VALUES (1,'Apple'),(2,'apple'),(3,'BANANA'),(4,'banana')",
+        ],
+        query: "SELECT id FROM t WHERE name IN ('APPLE') ORDER BY id",
+    },
+    Case {
+        id: "where_column_collate_nocase_not_in",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT COLLATE NOCASE)",
+            "INSERT INTO t VALUES (1,'Apple'),(2,'apple'),(3,'BANANA'),(4,'banana')",
+        ],
+        query: "SELECT id FROM t WHERE name NOT IN ('APPLE') ORDER BY id",
+    },
+    Case {
+        id: "where_column_collate_nocase_in_multi",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT COLLATE NOCASE)",
+            "INSERT INTO t VALUES (1,'Apple'),(2,'apple'),(3,'BANANA'),(4,'banana')",
+        ],
+        query: "SELECT id FROM t WHERE name IN ('apple','banana') ORDER BY id",
+    },
+    // (An explicit `COLLATE BINARY` on the IN *value* — `name COLLATE BINARY IN
+    // (…)` — would override the column NOCASE, but the grammar does not yet
+    // accept `COLLATE` before `IN`/`LIKE`/`BETWEEN` (only before a comparison
+    // operator), so that override is a separate grammar follow-up, not covered
+    // here. The `is_collate_call` guard in `collate_comparisons` already handles
+    // it once the syntax parses.)
     // A column WITHOUT a declared collation keeps BINARY comparison — only the
     // exact-case match qualifies. Guards against over-applying the fold.
     Case {

@@ -1,0 +1,26 @@
+% ============================================================================
+% joint-types.query.adj — a worked recall over the anatomy joint-types library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what's a good example of a
+% hinge joint?": it states no anatomy fact — it only `import`s the grounded table
+% and asks binding queries. The engine resolves each `?` against the
+% `joint_example` rows and returns the example + the table's source/locator/trust.
+% The fourth query runs the relation BACKWARD from a joint type (bind
+% `ball_and_socket`, recall BOTH examples the source gives — the hip and the
+% shoulder). The fifth runs it backward from an example (bind `elbow`, recall the
+% shape it illustrates — hinge). A skull `suture` is an immovable joint, not one
+% of these synovial shapes, so a recall on it abstains honestly — the engine
+% never invents an example.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli joint-types.query.adj
+% ============================================================================
+
+import "joint-types.adj"
+
+? joint_example(hinge, $Ex)             % expect elbow
+? joint_example(pivot, $Ex)             % expect atlantoaxial
+? joint_example(saddle, $Ex)            % expect thumb
+? joint_example(ball_and_socket, $Ex)   % expect hip ; shoulder — one-to-many
+? joint_example($T, elbow)              % expect hinge — reverse recall
+? joint_example(suture, $Ex)            % expect abstain — a suture is immovable

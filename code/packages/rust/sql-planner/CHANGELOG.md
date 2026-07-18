@@ -2,6 +2,21 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.22] - Unreleased
+
+### Added
+
+- **Column-defined `COLLATE` now flows into the `IN` operator.** The
+  `collate_comparisons` post-pass gained an `SqlExpr::InList` arm: SQLite takes
+  IN's collating sequence from the left operand, so when `value` is a base-table
+  column with a declared collation (and not already `__collate`-wrapped by an
+  explicit `COLLATE`), the value and every list element are wrapped in
+  `__collate(_, coll)`. `name IN ('APPLE')` on a NOCASE column now matches
+  `'Apple'`/`'apple'`; `NOT IN` inverts it; an explicit `COLLATE BINARY` on the
+  value overrides the column's NOCASE. `__collate` passes NULL/non-text through
+  unchanged, so IN's NULL semantics are preserved. Extends the WHERE-comparison
+  collation from 0.2.20. `DISTINCT`/`GROUP BY` collation remain follow-ups.
+
 ## [0.2.21] - Unreleased
 
 ### Added

@@ -1,5 +1,22 @@
 # Changelog — gc-core
 
+## 0.4.0 — 2026-07-17
+
+### Added
+
+- **`FlatHeap` adaptive collection threshold** — the GC-pacing policy ported from
+  `twig_gc.c`. New `collect_threshold` field (starts at `INITIAL_THRESHOLD` = 1
+  MiB), plus `should_collect()` (live bytes ≥ threshold → a cycle is due) and
+  `collect_threshold()`. After every cycle, `collect`/`collect_region` re-tune the
+  threshold (`adapt_threshold`): **double** it (capped at `MAX_THRESHOLD` = 256
+  MiB) when >½ the pre-cycle live set survived, else **halve** it (floored at 1
+  MiB). The 256 MiB cap is a safety bound — without it a live-heavy program could
+  grow the threshold toward `usize::MAX` and effectively disable the GC (a
+  memory-exhaustion vector). `should_collect` is the *policy* half (when to
+  collect); the *mechanism* half (finding roots) stays with the caller —
+  `gc-core-capi`'s `__gc_safepoint` / `__gc_alloc` drive collection off it. New
+  `pub const INITIAL_THRESHOLD` / `MAX_THRESHOLD`. 7 unit tests.
+
 ## 0.3.0 — 2026-07-17
 
 ### Added

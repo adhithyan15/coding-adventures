@@ -1,0 +1,4 @@
+--js
+tests/diff/ternary-equal-branches/input/a.js
+--compilation_level
+SIMPLE
