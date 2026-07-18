@@ -1,0 +1,1 @@
+dotnet test tests/CodingAdventures.ChaCha20Poly1305.Tests/CodingAdventures.ChaCha20Poly1305.Tests.csproj --disable-build-servers /p:CollectCoverage=true /p:Threshold=80 /p:ThresholdType=line "/p:Include=[CodingAdventures.ChaCha20Poly1305]*"
