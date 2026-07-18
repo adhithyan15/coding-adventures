@@ -73,6 +73,42 @@ use coding_adventures_sql_lexer::tokenize_sql;
 use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 mod _grammar;
 
+/// Recursion-depth cap for the SQL [`GrammarParser`] — see
+/// [`GrammarParser::with_max_depth`] for why this guard exists at all (deep
+/// recursion through `parse_rule` can overflow the *native* thread stack —
+/// an uncatchable process abort — before this crate's own callers get a
+/// chance to report anything). Before this constant was applied,
+/// `create_sql_parser` never called `with_max_depth` at all, leaving every
+/// caller exposed to a native-stack-overflow DoS from adversarial
+/// deeply-nested input (e.g. `WHERE id = (((...1...)))`, or, per this
+/// crate's own doc comment above, deeply nested subqueries).
+///
+/// **Not the shared engine's bare default** (see `csharp-parser`'s own
+/// identically-named constant for why a blind `DEFAULT_MAX_RULE_DEPTH`
+/// (128) is unsafe-for-usability on a rich general-purpose grammar).
+/// Measured directly instead (binary search over candidate
+/// `with_max_depth` values against a fixed 5000-level adversarial
+/// `WHERE id = (((...1...)))` input — ordinary parenthesised grouping,
+/// one of two recursive shapes this crate's own doc comment calls out
+/// (the other being nested subqueries) — on a default-~2MiB-stack worker
+/// thread in a debug build, no `RUST_MIN_STACK` override or explicit
+/// `Builder::stack_size` present): safe at **288**, crashes at **289**.
+///
+/// `MAX_RULE_DEPTH` is set to **200** — about 30% below that floor
+/// (comparable margin to `apl-parser`'s own ~26.5%, `j-parser`'s ~30%,
+/// `reduce-parser`'s ~28.5%). Measured real-input headroom at `200`: plain
+/// parenthesised nesting parses cleanly to at least 10 levels —
+/// comfortably beyond ordinary hand-written nesting depth.
+///
+/// This is measured against only **one** of SQL's recursion shapes
+/// (ordinary paren grouping) — a full audit would also cover nested
+/// subqueries (`SELECT * FROM (SELECT * FROM (...))`) explicitly, the way
+/// `css-parser`/`toml-parser` measured *every* shape in their own (much
+/// smaller) grammars. That fuller audit is a tracked follow-up; this pass
+/// at minimum replaces an unmeasured, silently-broken default with a
+/// properly-measured floor for the shape most likely to bind.
+const MAX_RULE_DEPTH: usize = 200;
+
 // ===========================================================================
 // Public API
 // ===========================================================================
@@ -122,7 +158,7 @@ pub fn create_sql_parser(source: &str) -> Result<GrammarParser, String> {
     // It uses packrat memoization to avoid redundant re-parsing of the same
     // position, which is important for SQL's expression grammar which requires
     // backtracking.
-    Ok(GrammarParser::new(tokens, grammar))
+    Ok(GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH))
 }
 
 /// Parse SQL source text into an AST.
@@ -976,5 +1012,37 @@ mod tests {
     fn test_parse_parenthesized_expr() {
         let ast = assert_program_root("SELECT (a + b) * c FROM t");
         assert!(find_rule(&ast, "multiplicative"), "Expected multiplicative");
+    }
+
+    // -------------------------------------------------------------------
+    // Recursion-depth guard (DoS hardening) -- see MAX_RULE_DEPTH's own
+    // doc comment for the measurement.
+    // -------------------------------------------------------------------
+
+    fn nested_paren_source(n: usize) -> String {
+        format!(
+            "SELECT id FROM users WHERE id = {}1{}",
+            "(".repeat(n),
+            ")".repeat(n)
+        )
+    }
+
+    /// Deeply-nested input must not overflow the native stack on a
+    /// default-stack thread -- the whole point of the guard.
+    #[test]
+    fn test_deeply_nested_input_does_not_overflow_on_default_stack() {
+        let src = nested_paren_source(5000);
+        let handle = std::thread::spawn(move || {
+            let _ = parse_sql(&src);
+        });
+        handle
+            .join()
+            .expect("MAX_RULE_DEPTH must trip BEFORE native overflow on the default stack");
+    }
+
+    /// Reasonable, hand-writable nesting stays well under the cap.
+    #[test]
+    fn test_reasonable_nesting_stays_under_the_cap() {
+        assert!(parse_sql(&nested_paren_source(10)).is_ok());
     }
 }

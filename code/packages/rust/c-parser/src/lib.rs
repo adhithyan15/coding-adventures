@@ -21,15 +21,39 @@
 //! The root node's `rule_name` is `"translation_unit"`.
 
 use coding_adventures_c_lexer::{tokenize_c, try_tokenize_c};
-use parser::grammar_parser::{GrammarASTNode, GrammarParser};
+use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
 mod _grammar;
+
+/// Recursion-depth cap for the C [`GrammarParser`] — see
+/// [`GrammarParser::with_max_depth`] and [`DEFAULT_MAX_RULE_DEPTH`] for why
+/// this guard exists at all (deep recursion through `parse_rule` can
+/// overflow the *native* thread stack — an uncatchable process abort —
+/// before this crate's own callers get a chance to report anything).
+/// Before this constant was applied, neither `create_c_parser` nor
+/// `try_parse_c` ever called `with_max_depth`, leaving every caller exposed
+/// to a native-stack-overflow DoS from adversarial deeply-nested input
+/// (e.g. `((((...1...))))`).
+///
+/// This is an interim, broad safety net: the shared engine's own
+/// [`DEFAULT_MAX_RULE_DEPTH`] (128), not yet a bespoke value derived from
+/// measuring `c.grammar`'s own specific recursion shapes the way
+/// `css-parser`/`toml-parser`/`jsdoc-parser`/`reduce-parser` each did
+/// (binary search over `with_max_depth` against a 5000-deep adversarial
+/// input per shape, picking a value ~30% below the lowest floor found).
+/// 128 is used here because every grammar measured that way in this repo
+/// so far (7 crates, 12+ distinct shapes) has its *lowest* floor
+/// comfortably above it — the tightest found being `reduce-parser`'s own
+/// cons-chain shape at 179 (128 is ~28% below that) — so it is a
+/// reasonable, evidence-backed interim value pending the full bespoke
+/// measurement for this crate's own grammar (tracked as a follow-up).
+const MAX_RULE_DEPTH: usize = DEFAULT_MAX_RULE_DEPTH;
 
 /// Create a [`GrammarParser`] wired to the C grammar and tokens.  Ready to
 /// call `.parse()`.
 pub fn create_c_parser(source: &str) -> GrammarParser {
     let tokens = tokenize_c(source);
-    GrammarParser::new(tokens, _grammar::parser_grammar())
+    GrammarParser::new(tokens, _grammar::parser_grammar()).with_max_depth(MAX_RULE_DEPTH)
 }
 
 /// Parse C `source` into a [`GrammarASTNode`] CST rooted at
@@ -46,6 +70,7 @@ pub fn parse_c(source: &str) -> GrammarASTNode {
 pub fn try_parse_c(source: &str) -> Result<GrammarASTNode, String> {
     let tokens = try_tokenize_c(source)?;
     GrammarParser::new(tokens, _grammar::parser_grammar())
+        .with_max_depth(MAX_RULE_DEPTH)
         .parse()
         .map_err(|e| format!("{e}"))
 }
@@ -134,5 +159,33 @@ mod tests {
         let ast = root("unsigned long g(unsigned int a, long long b) { return a; }");
         assert!(has_rule(&ast, "function_def"));
         assert!(has_rule(&ast, "param"));
+    }
+
+    // -------------------------------------------------------------------
+    // Recursion-depth guard (DoS hardening, interim DEFAULT_MAX_RULE_DEPTH
+    // pass -- see MAX_RULE_DEPTH's own doc comment).
+    // -------------------------------------------------------------------
+
+    fn nested_paren_source(n: usize) -> String {
+        format!("int main(void) {{ return {}1{}; }}", "(".repeat(n), ")".repeat(n))
+    }
+
+    /// Deeply-nested input must not overflow the native stack on a
+    /// default-stack thread -- the whole point of the guard.
+    #[test]
+    fn test_deeply_nested_input_does_not_overflow_on_default_stack() {
+        let src = nested_paren_source(5000);
+        let handle = std::thread::spawn(move || {
+            let _ = try_parse_c(&src);
+        });
+        handle
+            .join()
+            .expect("MAX_RULE_DEPTH must trip BEFORE native overflow on the default stack");
+    }
+
+    /// Reasonable, hand-writable nesting stays well under the cap.
+    #[test]
+    fn test_reasonable_nesting_stays_under_the_cap() {
+        assert!(try_parse_c(&nested_paren_source(10)).is_ok());
     }
 }

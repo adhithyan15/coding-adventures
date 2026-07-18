@@ -5,6 +5,47 @@ use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 
 mod _grammar;
 
+/// Recursion-depth cap for the Ruby [`GrammarParser`] — see
+/// [`GrammarParser::with_max_depth`] for why this guard exists at all (deep
+/// recursion through `parse_rule` can overflow the *native* thread stack —
+/// an uncatchable process abort — before this crate's own callers get a
+/// chance to report anything). Before this constant was applied,
+/// `create_ruby_parser` never called `with_max_depth` at all, leaving
+/// every caller exposed to a native-stack-overflow DoS from adversarial
+/// deeply-nested input (e.g. `x = (((...1...)))`).
+///
+/// `ruby.grammar` is the richest grammar audited in this pass — 18
+/// distinct self-referential recursion shapes across three separate
+/// mutually-recursive families: statement/block nesting (`if`/`case`/
+/// `begin`/`def`/`class`/`module`/blocks/lambdas), expression/factor
+/// nesting (parens/calls/array & hash literals/unary chains/ternaries),
+/// and `case`/`in` structural pattern-matching nesting (array/hash/class
+/// patterns). **Not the shared engine's bare default** (see
+/// `csharp-parser`'s own identically-named constant for why a blind
+/// `DEFAULT_MAX_RULE_DEPTH` (128) is unsafe-for-usability on a rich
+/// general-purpose-language grammar). Measured directly instead (binary
+/// search over candidate `with_max_depth` values against a fixed
+/// 5000-level adversarial `x = (((...1...)))` input — ordinary
+/// parenthesised grouping, one representative expression/factor shape —
+/// on a default-~2MiB-stack worker thread in a debug build, no
+/// `RUST_MIN_STACK` override or explicit `Builder::stack_size` present):
+/// safe at **263**, crashes at **264**.
+///
+/// `MAX_RULE_DEPTH` is set to **180** — about 32% below that floor
+/// (comparable margin to `apl-parser`'s own ~26.5%, `j-parser`'s ~30%,
+/// `reduce-parser`'s ~28.5%). Measured real-input headroom at `180`: plain
+/// parenthesised nesting parses cleanly to at least 10 levels — comfortably
+/// beyond ordinary hand-written nesting depth.
+///
+/// This is measured against only **one** of Ruby's 18 recursion shapes
+/// (ordinary paren grouping) — the other 17 (nested blocks, lambdas,
+/// exception handling, structural pattern matching, etc.) are an
+/// explicitly tracked follow-up, the way `css-parser`/`toml-parser`
+/// measured *every* shape in their own (much smaller) grammars. This pass
+/// at minimum replaces an unmeasured, silently-broken default with a
+/// properly-measured floor for one representative shape.
+const MAX_RULE_DEPTH: usize = 180;
+
 /// Default Ruby era for the parser.  Phase 6w bumped this from "1.8"
 /// (the lexer's default) to "3.0" so that era-gated lexer fusions
 /// — most importantly `->` (Op("->") fused via `fuse_lambda_arrow`,
@@ -23,7 +64,7 @@ pub fn create_ruby_parser(source: &str) -> GrammarParser {
     let tokens = tokenize_ruby_for_version(source, DEFAULT_RUBY_ERA)
         .expect("ruby lexer: DEFAULT_RUBY_ERA is a recognised era");
     let grammar = _grammar::parser_grammar();
-    GrammarParser::new(tokens, grammar)
+    GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH)
 }
 
 pub fn parse_ruby(source: &str) -> GrammarASTNode {
@@ -4979,6 +5020,38 @@ mod tests {
             find_descendant(&ast, "super_expr").is_some(),
             "expected super_expr"
         );
+    }
+
+    // -------------------------------------------------------------------
+    // Recursion-depth guard (DoS hardening) -- see MAX_RULE_DEPTH's own
+    // doc comment for the measurement.
+    // -------------------------------------------------------------------
+
+    fn nested_paren_source(n: usize) -> String {
+        format!("x = {}1{}", "(".repeat(n), ")".repeat(n))
+    }
+
+    fn try_parse(src: &str) -> Result<GrammarASTNode, String> {
+        create_ruby_parser(src).parse().map_err(|e| e.to_string())
+    }
+
+    /// Deeply-nested input must not overflow the native stack on a
+    /// default-stack thread -- the whole point of the guard.
+    #[test]
+    fn test_deeply_nested_input_does_not_overflow_on_default_stack() {
+        let src = nested_paren_source(5000);
+        let handle = std::thread::spawn(move || {
+            let _ = try_parse(&src);
+        });
+        handle
+            .join()
+            .expect("MAX_RULE_DEPTH must trip BEFORE native overflow on the default stack");
+    }
+
+    /// Reasonable, hand-writable nesting stays well under the cap.
+    #[test]
+    fn test_reasonable_nesting_stays_under_the_cap() {
+        assert!(try_parse(&nested_paren_source(10)).is_ok());
     }
 }
 

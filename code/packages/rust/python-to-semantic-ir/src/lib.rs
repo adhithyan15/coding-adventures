@@ -1166,14 +1166,42 @@ mod tests {
     // free-variable scan (`collect_free_names`), and the bound-name scan
     // (`walk_for_targets`).  Each is now depth-bounded (block depth →
     // MAX_BLOCK_DEPTH, expression depth → MAX_EXPR_DEPTH) so a
-    // pathologically deep input via the public `compile` yields a clean
-    // positioned `PythonLowerError` ("too deep") instead of overflowing
-    // the native (uncatchable) stack.
+    // pathologically deep `GrammarASTNode` handed to the public `compile`
+    // yields a clean positioned `PythonLowerError` ("too deep") instead of
+    // overflowing the native (uncatchable) stack.
     //
-    // The test runs on an enlarged stack so the *parser's* own
-    // (unguarded) recursive descent survives long enough for the lowerer
-    // to be reached — the guard under test is the lowerer's, not the
-    // parser's.  Depth 400 comfortably exceeds the 256-level caps while
+    // These 5 tests drive that guard through `compile_source` (parse +
+    // lower) rather than `compile` directly, and originally asserted on
+    // the lowerer's own "too deep" message. Since `python-parser` gained
+    // its own `MAX_RULE_DEPTH` cap (170-200 depending on shape, always
+    // measured well below this crate's 256-level lowering guard, so that
+    // *parsing* itself stays crash-safe against adversarial nesting — see
+    // `python-parser`'s own `MAX_RULE_DEPTH` doc comment), every one of
+    // these 400/300-deep source strings is now rejected by the *parser*
+    // before the lowerer's own depth-bounded walks ever run: confirmed
+    // directly, each now fails with a `parse error: ... Expected ...
+    // input within the supported nesting limit ...` message, not "too
+    // deep". The invariant these tests exist to prove — deeply-nested
+    // input errors cleanly through the public API, never a native crash
+    // — still holds; it's just enforced by an earlier, lower guard now.
+    // Assertions below were updated to match (`"nesting limit"`, the
+    // parser's own wording, rather than the lowerer's "too deep").
+    //
+    // One disclosed consequence: this crate's own `MAX_BLOCK_DEPTH`/
+    // `MAX_EXPR_DEPTH` guard is no longer independently exercisable via
+    // `compile_source` text input at all (the parser's lower cap always
+    // wins first) — only a caller that constructs a `GrammarASTNode`
+    // directly and hands it to `compile` could still reach it. Testing
+    // that path would mean hand-building a 256+-deep CST for each of
+    // these 5 shapes without going through the parser, which is out of
+    // scope for this fix; tracked as a follow-up.
+    //
+    // The test runs on an enlarged stack so the *parser's* own recursive
+    // descent survives long enough to hit its own depth cap and return a
+    // clean error, rather than the outer worker thread's default stack
+    // overflowing first while the parser is still unwinding partial
+    // backtracking state.  Depth 400 comfortably exceeds the 256-level
+    // lowering caps (and, now, `python-parser`'s own lower cap) while
     // keeping construction / drop bounded.
 
     /// Run `f` on a 64 MiB stack so the parser survives deep input and the
@@ -1204,8 +1232,8 @@ mod tests {
             let err = compile_source(&src, "t")
                 .expect_err("deep def tower must be rejected, not crash");
             assert!(
-                err.message.contains("too deep"),
-                "expected a positioned 'too deep' error, got: {}",
+                err.message.contains("nesting limit"),
+                "expected the parser's own depth-cap error, got: {}",
                 err.message
             );
         });
@@ -1222,8 +1250,8 @@ mod tests {
             let err = compile_source(&src, "t")
                 .expect_err("deep expression must be rejected, not crash");
             assert!(
-                err.message.contains("too deep"),
-                "expected a positioned 'too deep' error, got: {}",
+                err.message.contains("nesting limit"),
+                "expected the parser's own depth-cap error, got: {}",
                 err.message
             );
         });
@@ -1708,8 +1736,8 @@ mod tests {
             let err = compile_source(&src, "t")
                 .expect_err("deep list tower must be rejected, not crash");
             assert!(
-                err.message.contains("too deep"),
-                "expected a positioned 'too deep' error, got: {}",
+                err.message.contains("nesting limit"),
+                "expected the parser's own depth-cap error, got: {}",
                 err.message
             );
         });
@@ -1731,8 +1759,8 @@ mod tests {
             let err = compile_source(&src, "t")
                 .expect_err("deep subscript tower must be rejected, not crash");
             assert!(
-                err.message.contains("too deep"),
-                "expected a positioned 'too deep' error, got: {}",
+                err.message.contains("nesting limit"),
+                "expected the parser's own depth-cap error, got: {}",
                 err.message
             );
         });
@@ -1753,8 +1781,8 @@ mod tests {
             let err = compile_source(&src, "t")
                 .expect_err("deep dict tower must be rejected, not crash");
             assert!(
-                err.message.contains("too deep"),
-                "expected a positioned 'too deep' error, got: {}",
+                err.message.contains("nesting limit"),
+                "expected the parser's own depth-cap error, got: {}",
                 err.message
             );
         });
