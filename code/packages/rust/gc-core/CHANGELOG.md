@@ -1,5 +1,50 @@
 # Changelog — gc-core
 
+## 0.8.0 — 2026-07-18
+
+### Added
+
+- **`FlatHeap` precise stack-map roots — the format/lookup + precise-mark core.**
+  The next rung of the precision ladder (`AOT00-T1-precise-gc.md` §4, §6.1): the
+  step from *conservative* root scanning (every stack word is a candidate pointer,
+  so a look-alike integer keeps a dead object alive — "floating garbage") to
+  *exact* roots (only the slots a stack map names as references are read).
+  - **`collect_precise(root_slots)`** — collect from an enumerated set of exact
+    root-slot **addresses**. Each is the address of a stack/register-spill slot a
+    stack map named as live; the collector reads that one word and roots from it,
+    looking at nothing else. No false roots: an integer one slot over from a real
+    reference is never read, so the object it look-alikes can be reclaimed, and
+    root-scan cost drops from O(stack depth) to O(live roots). Sweeps in place (no
+    relocation), so it is strictly *additive* precision over `collect` /
+    `collect_region` and cannot regress liveness. Interior tracing is unchanged
+    (registered-`kind` field maps precise, otherwise conservative).
+  - **`StackMapRecord`** — one safepoint's live-reference description (§4.1):
+    `pc_offset`, `frame_size`, `slots` (FP-relative byte offsets, signed), and a
+    `callee_saved_mask`. `StackMapRecord::new(pc_offset, slots)` for the common
+    all-refs-on-stack shape. (`frame_size` / `callee_saved_mask` are consumed by
+    the native stack *walker* in `gc-core-capi`; carried now so the emitted format
+    is fixed once.)
+  - **`StackMapTable`** — a function's records sorted by `pc_offset` with an exact
+    binary-search `lookup(pc_offset)` (§4.2); `from_records` accepts any order.
+    `len` / `is_empty` / `records`.
+  - **`frame_root_slots(frame_base, rec, out)`** — the pure arithmetic bridge from
+    a walked frame + its matched record to the exact slot addresses
+    (`frame_base + signed offset`) `collect_precise` consumes.
+  - 7 unit tests, including the headline precision proof — an object named by a
+    stack-map slot survives while an object whose pointer sits in an *un-named*
+    slot of the **same** frame is reclaimed — paired with its load-bearing
+    contrast: the same frame scanned conservatively (`collect_region`) retains
+    both (the false root precise roots remove). Plus transitive interior tracing
+    from precise roots, precise-interior composition, multi-frame accumulation,
+    empty-roots, and exact/sorted table lookup.
+  - This is the **platform-independent half**. The native stack walk that
+    *produces* `root_slots` — unwinding the frame-pointer chain, matching each
+    return address to its `StackMapTable` record, and calling `frame_root_slots`
+    — is the platform-specific half, layered on in `gc-core-capi` exactly as the
+    conservative C-stack scan layers on `collect_region`. Backends emitting the
+    records are further follow-ups. A frame the walker cannot map falls back to a
+    conservative `collect_region` scan, so precision is additive, never required.
+
 ## 0.7.0 — 2026-07-18
 
 ### Added

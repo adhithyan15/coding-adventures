@@ -554,11 +554,7 @@ impl FlatHeap {
     /// the young worklist, sweep the young generation, and build the stats. Both
     /// [`Self::collect_minor`] and [`Self::collect_minor_region`] call this after
     /// their (slice- vs region-sourced) root mark.
-    fn minor_finish(
-        &mut self,
-        before: usize,
-        mut work: Vec<*mut FlatHeader>,
-    ) -> GcCycleStats {
+    fn minor_finish(&mut self, before: usize, mut work: Vec<*mut FlatHeader>) -> GcCycleStats {
         // Remembered old parents — scan each for the young children it holds.
         // Snapshot the addresses first so the immutable scan can't alias the set.
         // Each entry is a live old object (a full collect clears the set; a minor
@@ -596,6 +592,90 @@ impl FlatHeap {
     /// Number of old objects currently in the remembered set (test/introspection).
     pub fn remembered_len(&self) -> usize {
         self.remembered.len()
+    }
+
+    /// Collect **precisely** from an enumerated set of exact root-slot addresses.
+    ///
+    /// This is the payoff of the stack-map rung (precision ladder rung "roots";
+    /// see `AOT00-T1-precise-gc.md` §4 and §6.1). Where [`Self::collect_region`]
+    /// scans an entire span of stack memory *conservatively* — treating **every**
+    /// aligned word as a candidate pointer, so a plain integer whose bit pattern
+    /// happens to land inside a live block pins that block for a cycle —
+    /// `collect_precise` is told *exactly which slots hold references*. Each
+    /// `usize` in `root_slots` is the **address of a slot** (a stack location or a
+    /// register-spill cell) that a stack map named as live at the current
+    /// safepoint. The collector reads the one word at each address and roots from
+    /// it; nothing else in the frame is looked at.
+    ///
+    /// The result: **no false roots**. An integer sitting one slot over from a
+    /// real reference — the classic source of "floating garbage" in a
+    /// conservative collector — is never even read, so the object it look-alikes
+    /// can be reclaimed. Root-scan cost also drops from O(stack depth) to
+    /// O(live roots).
+    ///
+    /// Interior tracing of the objects thus rooted is unchanged: a registered
+    /// `kind` is followed precisely through its ref-field offsets, an unregistered
+    /// object conservatively (see [`Self::scan_payload`]). Sweep is in place — no
+    /// relocation — so this rung is strictly *additive* precision over
+    /// [`Self::collect`] and cannot regress liveness.
+    ///
+    /// The stack walk that *produces* `root_slots` — unwinding the frame-pointer
+    /// chain, matching each frame's return address to its [`StackMapTable`] record
+    /// (§4.2), and computing `frame_base + slot_offset` for every named slot (see
+    /// [`frame_root_slots`]) — is the platform-specific half, layered on top in
+    /// `gc-core-capi` exactly as the conservative C-stack scan layers on
+    /// [`Self::collect_region`]. This method is the platform-independent,
+    /// unit-testable precise-mark core.
+    ///
+    /// A frame the walker could **not** map (a C runtime frame, or an
+    /// un-migrated backend) is handled by the caller falling back to
+    /// [`Self::collect_region`] over that frame's span — precision is lost only
+    /// there, never correctness.
+    ///
+    /// # Safety
+    ///
+    /// Every address in `root_slots` must be readable for the duration of the
+    /// call (each names a live stack/register-spill slot). The 8-byte read at each
+    /// is `read_unaligned`, so no alignment is required. Passing an address that
+    /// is not a valid, readable slot is undefined behaviour — the same contract
+    /// [`Self::collect_region`] places on its `[base, base + len)` span.
+    pub unsafe fn collect_precise(&mut self, root_slots: &[usize]) -> GcCycleStats {
+        let before = self.object_count();
+        let prev_live = self.live_bytes;
+
+        // ── Mark ──────────────────────────────────────────────────────────────
+        // Read exactly the named slots — no whole-region scan. Each slot's word is
+        // a candidate root, run through the same raw-plus-tag-stripped lookup as
+        // every other root so NaN-boxed references resolve identically.
+        let mut work: Vec<*mut FlatHeader> = Vec::new();
+        for &slot in root_slots {
+            // SAFETY: caller guarantees each `slot` address is readable; the word
+            // there is a candidate root. `read_unaligned` tolerates sub-alignment.
+            let word = unsafe { ptr::read_unaligned(slot as *const usize) };
+            self.mark_word(word, &mut work, false);
+        }
+        while let Some(h) = work.pop() {
+            self.scan_payload(h, &mut work, false);
+        }
+
+        // ── Sweep ─────────────────────────────────────────────────────────────
+        let (freed, survived, live) = self.sweep(false);
+        self.live_bytes = live;
+        self.adapt_threshold(prev_live);
+        // Full collect: drop the (possibly now-dangling) remembered set; the write
+        // barrier rebuilds it. See [`Self::collect`].
+        self.remembered.clear();
+
+        let stats = GcCycleStats {
+            freed,
+            survived,
+            pause_ns: 0,
+            heap_size_before: before,
+            heap_size_after: survived,
+        };
+        self.profile.record_cycle(&stats);
+        self.collection_count += 1;
+        stats
     }
 
     /// Scan `[base, base + len)` as an array of aligned candidate root words,
@@ -694,8 +774,7 @@ impl FlatHeap {
                     if size >= 8 && off <= size - 8 {
                         // SAFETY: `off + 8 <= size` keeps the 8-byte read inside
                         // the payload; `read_unaligned` tolerates sub-alignment.
-                        let word =
-                            unsafe { ptr::read_unaligned(base.add(off) as *const usize) };
+                        let word = unsafe { ptr::read_unaligned(base.add(off) as *const usize) };
                         self.mark_word(word, work, young_only);
                     }
                 }
@@ -777,8 +856,7 @@ impl FlatHeap {
                     cursor = &mut (*h).next;
                 } else {
                     *cursor = (*h).next;
-                    let layout =
-                        Layout::from_size_align_unchecked(HEADER_SIZE + (*h).size, ALIGN);
+                    let layout = Layout::from_size_align_unchecked(HEADER_SIZE + (*h).size, ALIGN);
                     dealloc(h as *mut u8, layout);
                     freed += 1;
                 }
@@ -803,6 +881,145 @@ impl Drop for FlatHeap {
             }
         }
         self.all = ptr::null_mut();
+    }
+}
+
+// ─── Stack maps: the format + lookup half of precise roots ──────────────────────
+//
+// A stack map answers one question (AOT00-T1-precise-gc.md §4): *at this program
+// counter, where are the live references?* The compiler backend emits one
+// [`StackMapRecord`] per safepoint (every `safepoint` op and, crucially, every
+// call site — a callee may allocate and thus collect, so the caller's live refs
+// must be described there). At collection time the native stack walker
+// (`gc-core-capi`) matches the current return address to a record, computes the
+// exact slot addresses with [`frame_root_slots`], and hands them to
+// [`FlatHeap::collect_precise`].
+//
+// This is the platform-independent *data structure + lookup*; the walk that reads
+// a live machine stack is the platform-specific half in `gc-core-capi`, kept out
+// of here for the same reason the C-stack scan is (it needs `asm!` + the frame
+// layout), so this half stays pure and unit-testable.
+
+/// One safepoint's live-reference description (AOT00-T1-precise-gc.md §4.1).
+///
+/// Records are keyed within a function by `pc_offset` (the return-address /
+/// safepoint offset from the function's start) so the walker can binary-search by
+/// return address. The reference locations are `slots` — **byte offsets from the
+/// frame pointer** — plus `callee_saved_mask`, a bitmask of callee-saved registers
+/// that hold references at this PC (spilled and scanned by the walker). `frame_size`
+/// lets the walker step to the caller's frame.
+///
+/// `frame_size` and `callee_saved_mask` are consumed by the stack *walker*
+/// (`gc-core-capi`, a later PR) — the frame-stepping and register-spill halves;
+/// [`frame_root_slots`] and [`FlatHeap::collect_precise`] here use only `slots`.
+/// They are carried now because they are part of the record the backends emit and
+/// the walker reads, so the format is fixed once.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct StackMapRecord {
+    /// Offset of this safepoint / return address from the function's first byte.
+    pub pc_offset: u32,
+    /// Frame size in bytes — how far up to the caller's frame (walker use).
+    pub frame_size: u32,
+    /// Live reference slots at this PC, as **byte offsets from the frame pointer**
+    /// (may be negative for slots below FP).
+    pub slots: Vec<i32>,
+    /// Bitmask of callee-saved registers holding references here (walker use).
+    pub callee_saved_mask: u16,
+}
+
+impl StackMapRecord {
+    /// A record naming `slots` (FP-relative byte offsets) at `pc_offset`, with no
+    /// callee-saved reference registers and an unspecified frame size. The common
+    /// shape a first-cut backend emits (all live refs spilled to the stack frame).
+    pub fn new(pc_offset: u32, slots: Vec<i32>) -> Self {
+        Self {
+            pc_offset,
+            frame_size: 0,
+            slots,
+            callee_saved_mask: 0,
+        }
+    }
+}
+
+/// A function's stack maps: its per-safepoint [`StackMapRecord`]s, sorted by
+/// `pc_offset` so a return address resolves in O(log n) (§4.2).
+///
+/// The backend builds one table per compiled function; the walker looks up the
+/// record for the current PC by binary search. Construction sorts, so records may
+/// be supplied in any order.
+#[derive(Debug, Clone, Default)]
+pub struct StackMapTable {
+    records: Vec<StackMapRecord>,
+}
+
+impl StackMapTable {
+    /// Build a table from `records`, sorting them by `pc_offset` so [`lookup`] can
+    /// binary-search. Any input order is accepted.
+    ///
+    /// Each `pc_offset` should be **unique** within a function — a backend emits at
+    /// most one record per safepoint / return address. Duplicate `pc_offset`s are
+    /// not rejected (this is trusted compiler output, like a `kind` field map), but
+    /// [`lookup`] would then return an arbitrary one of the collisions; keep them
+    /// distinct.
+    ///
+    /// [`lookup`]: Self::lookup
+    pub fn from_records(mut records: Vec<StackMapRecord>) -> Self {
+        records.sort_by_key(|r| r.pc_offset);
+        Self { records }
+    }
+
+    /// The record whose `pc_offset` **exactly** equals `pc_offset`, or `None`.
+    ///
+    /// A backend emits a record at precisely each safepoint / call-return address,
+    /// and the walker looks up the exact return address it unwound, so the match is
+    /// exact — not a range/`<=` search. A PC with no record is an unmapped frame:
+    /// the caller falls back to a conservative scan of that frame (§4.2), so a miss
+    /// is safe, never a crash.
+    pub fn lookup(&self, pc_offset: u32) -> Option<&StackMapRecord> {
+        self.records
+            .binary_search_by_key(&pc_offset, |r| r.pc_offset)
+            .ok()
+            .map(|i| &self.records[i])
+    }
+
+    /// Number of safepoint records in this table.
+    pub fn len(&self) -> usize {
+        self.records.len()
+    }
+
+    /// Whether this table has no records.
+    pub fn is_empty(&self) -> bool {
+        self.records.is_empty()
+    }
+
+    /// The records, in `pc_offset` order (for inspection / re-emission).
+    pub fn records(&self) -> &[StackMapRecord] {
+        &self.records
+    }
+}
+
+/// Turn a walked frame into the exact root-slot addresses its stack map names,
+/// appending them to `out` for [`FlatHeap::collect_precise`].
+///
+/// `frame_base` is the frame pointer of a live frame the walker has unwound to;
+/// `rec` is the [`StackMapRecord`] matched to that frame's return address. Each
+/// named slot's address is `frame_base + slot_offset` (the offset is signed:
+/// negative slots live below FP). This is the pure arithmetic bridge between the
+/// stack-map format and the precise-mark core — the walker calls it per mapped
+/// frame, accumulating one flat list of addresses, then makes a single
+/// `collect_precise` call.
+///
+/// It computes addresses only; it does **not** dereference them. Whether a given
+/// `frame_base + offset` is actually readable is the walker's responsibility (it
+/// derived `frame_base` from a real frame), enforced at the `collect_precise`
+/// safety boundary.
+pub fn frame_root_slots(frame_base: usize, rec: &StackMapRecord, out: &mut Vec<usize>) {
+    out.reserve(rec.slots.len());
+    for &off in &rec.slots {
+        // Signed-offset add via wrapping in the isize domain: a slot below FP has a
+        // negative offset. Matches how a walker computes `[fp + off]`.
+        let addr = (frame_base as isize).wrapping_add(off as isize) as usize;
+        out.push(addr);
     }
 }
 
@@ -958,7 +1175,10 @@ mod tests {
         };
 
         assert_eq!(stats.survived, 1, "the region-rooted object must survive");
-        assert_eq!(stats.freed, 1, "the object with no candidate in the region is freed");
+        assert_eq!(
+            stats.freed, 1,
+            "the object with no candidate in the region is freed"
+        );
         assert!(!heap.find_header(keep).is_null());
         assert_eq!(heap.live_bytes(), 16);
     }
@@ -970,8 +1190,9 @@ mod tests {
         let mut heap = FlatHeap::new();
         let obj = heap.alloc(16, 0) as usize;
         let region: [usize; 2] = [obj | 0x7, 0]; // tagged in the low 3 bits
-        let stats =
-            unsafe { heap.collect_region(region.as_ptr() as *const u8, std::mem::size_of_val(&region)) };
+        let stats = unsafe {
+            heap.collect_region(region.as_ptr() as *const u8, std::mem::size_of_val(&region))
+        };
         assert_eq!(stats.freed, 0);
         assert_eq!(stats.survived, 1);
     }
@@ -1002,8 +1223,9 @@ mod tests {
         }
         let _garbage = heap.alloc(16, 0);
         let region: [usize; 1] = [a];
-        let stats =
-            unsafe { heap.collect_region(region.as_ptr() as *const u8, std::mem::size_of_val(&region)) };
+        let stats = unsafe {
+            heap.collect_region(region.as_ptr() as *const u8, std::mem::size_of_val(&region))
+        };
         assert_eq!(stats.survived, 3);
         assert_eq!(stats.freed, 1);
     }
@@ -1116,7 +1338,10 @@ mod tests {
             heap.find_header(target).is_null(),
             "precise tracing must reclaim a pointee referenced only via a non-ref field"
         );
-        assert!(!heap.find_header(container).is_null(), "container is rooted");
+        assert!(
+            !heap.find_header(container).is_null(),
+            "container is rooted"
+        );
         assert_eq!(stats.freed, 1, "exactly the phantom pointee is freed");
     }
 
@@ -1137,7 +1362,10 @@ mod tests {
             !heap.find_header(target).is_null(),
             "conservative tracing retains the look-alike pointer's pointee"
         );
-        assert_eq!(stats.freed, 0, "nothing freed — both survive conservatively");
+        assert_eq!(
+            stats.freed, 0,
+            "nothing freed — both survive conservatively"
+        );
     }
 
     /// A pointer in a real **ref** field is still followed under precise tracing.
@@ -1270,7 +1498,11 @@ mod tests {
         let stats = heap.collect_minor(&[keep]);
         assert_eq!(stats.freed, 1, "young garbage reclaimed");
         assert!(!heap.find_header(keep).is_null());
-        assert_eq!(heap.object_count_by_generation(), (0, 1), "survivor tenured");
+        assert_eq!(
+            heap.object_count_by_generation(),
+            (0, 1),
+            "survivor tenured"
+        );
     }
 
     /// A minor GC never frees old objects — even unreachable ones. Only a full
@@ -1378,6 +1610,218 @@ mod tests {
         }
         assert_eq!(heap.remembered_len(), 1);
         let _ = heap.collect(&[p, c]); // full collect
-        assert_eq!(heap.remembered_len(), 0, "remembered set cleared by full GC");
+        assert_eq!(
+            heap.remembered_len(),
+            0,
+            "remembered set cleared by full GC"
+        );
+    }
+
+    // ── Precise stack-map roots ─────────────────────────────────────────────
+
+    /// `StackMapTable::from_records` sorts by `pc_offset`; `lookup` is an exact
+    /// binary search (hit at each PC; miss between PCs, before the first, after the
+    /// last); `len`/`is_empty`/`records` report the sorted contents.
+    #[test]
+    fn stack_map_table_lookup_is_exact_and_sorted() {
+        // Supplied out of order on purpose.
+        let table = StackMapTable::from_records(vec![
+            StackMapRecord::new(40, vec![8]),
+            StackMapRecord::new(8, vec![0]),
+            StackMapRecord::new(24, vec![16, 24]),
+        ]);
+        assert_eq!(table.len(), 3);
+        assert!(!table.is_empty());
+        // Sorted by pc_offset.
+        let pcs: Vec<u32> = table.records().iter().map(|r| r.pc_offset).collect();
+        assert_eq!(pcs, vec![8, 24, 40]);
+        // Exact hits return the right record.
+        assert_eq!(table.lookup(8).unwrap().slots, vec![0]);
+        assert_eq!(table.lookup(24).unwrap().slots, vec![16, 24]);
+        assert_eq!(table.lookup(40).unwrap().slots, vec![8]);
+        // Misses: between records, before the first, after the last.
+        assert!(table.lookup(16).is_none());
+        assert!(table.lookup(0).is_none());
+        assert!(table.lookup(1000).is_none());
+        // Empty table looks up to nothing.
+        let empty = StackMapTable::default();
+        assert!(empty.is_empty());
+        assert_eq!(empty.len(), 0);
+        assert!(empty.lookup(0).is_none());
+    }
+
+    /// `frame_root_slots` computes `frame_base + offset` for each named slot,
+    /// honoring negative (below-FP) offsets, and appends to the caller's vec.
+    #[test]
+    fn frame_root_slots_computes_signed_addresses() {
+        let base: usize = 0x1_0000;
+        let rec = StackMapRecord::new(0, vec![0, 8, -16]);
+        let mut out = vec![0xdead_usize]; // pre-existing entry is preserved
+        frame_root_slots(base, &rec, &mut out);
+        assert_eq!(out, vec![0xdead, 0x1_0000, 0x1_0008, 0x1_0000 - 16]);
+    }
+
+    /// The precision win: an object named by a stack-map slot survives; an object
+    /// whose pointer sits in an *un-named* slot of the very same frame is
+    /// reclaimed — the false root a conservative whole-frame scan would have kept
+    /// is gone. This is the whole point of precise roots.
+    #[test]
+    fn collect_precise_keeps_named_frees_unnamed_in_same_frame() {
+        let mut heap = FlatHeap::new();
+        let a = heap.alloc(16, 0) as usize; // referenced by a NAMED slot → live
+        let b = heap.alloc(16, 0) as usize; // referenced only by an UNNAMED slot
+
+        // A simulated stack frame: two adjacent slots, both physically holding heap
+        // pointers. `frame[0]` is a live reference; `frame[1]` is dead (e.g. a
+        // spilled integer that happens to equal b's address, or a stale ref).
+        let frame: [usize; 2] = [a, b];
+        // The stack map names ONLY slot 0 (byte offset 0). Slot 1 (offset 8) is not
+        // a reference at this PC, so it is not listed.
+        let rec = StackMapRecord::new(0, vec![0]);
+        let frame_base = frame.as_ptr() as usize;
+        let mut roots = Vec::new();
+        frame_root_slots(frame_base, &rec, &mut roots);
+        assert_eq!(roots, vec![frame_base]); // just the &frame[0] address
+
+        let stats = unsafe { heap.collect_precise(&roots) };
+        assert_eq!(stats.freed, 1, "the unnamed-slot object is reclaimed");
+        assert_eq!(stats.survived, 1);
+        assert!(!heap.find_header(a).is_null(), "named object survives");
+        assert!(heap.find_header(b).is_null(), "unnamed object is gone");
+
+        // Keep `frame` alive to the end so the addresses stayed valid.
+        assert_eq!(frame[0], a);
+    }
+
+    /// Contrast proving the win is real: the *same* two-slot frame scanned
+    /// **conservatively** (`collect_region`) retains BOTH objects — b is floating
+    /// garbage kept alive by a false root. Precise marking (above) frees it.
+    #[test]
+    fn collect_region_conservatively_retains_what_precise_frees() {
+        let mut heap = FlatHeap::new();
+        let a = heap.alloc(16, 0) as usize;
+        let b = heap.alloc(16, 0) as usize;
+        let frame: [usize; 2] = [a, b];
+
+        let base = frame.as_ptr() as *const u8;
+        let len = std::mem::size_of_val(&frame);
+        let stats = unsafe { heap.collect_region(base, len) };
+        assert_eq!(
+            stats.freed, 0,
+            "conservative scan keeps both (b is a false root)"
+        );
+        assert_eq!(stats.survived, 2);
+        assert!(!heap.find_header(a).is_null());
+        assert!(
+            !heap.find_header(b).is_null(),
+            "b floats — the imprecision precise roots remove"
+        );
+        assert_eq!(frame[1], b);
+    }
+
+    /// Precise roots still trace interiors transitively: a named parent keeps a
+    /// child it points at (raw interior pointer), while an unrelated object dies.
+    #[test]
+    fn collect_precise_traces_interiors_transitively() {
+        let mut heap = FlatHeap::new();
+        let child = heap.alloc(16, 0) as usize;
+        let parent = heap.alloc(16, 0) as usize;
+        unsafe { *(parent as *mut usize) = child }; // parent.field0 -> child
+        let _garbage = heap.alloc(16, 0); // unreachable
+
+        let frame: [usize; 1] = [parent];
+        let rec = StackMapRecord::new(0, vec![0]);
+        let mut roots = Vec::new();
+        frame_root_slots(frame.as_ptr() as usize, &rec, &mut roots);
+
+        let stats = unsafe { heap.collect_precise(&roots) };
+        assert_eq!(stats.freed, 1, "only the unreachable object is freed");
+        assert_eq!(
+            stats.survived, 2,
+            "parent + transitively-reached child survive"
+        );
+        assert!(!heap.find_header(parent).is_null());
+        assert!(!heap.find_header(child).is_null());
+        assert_eq!(frame[0], parent);
+    }
+
+    /// Precise interior tracing composes with precise roots: a registered `kind`
+    /// with one ref field follows only that field, so an integer look-alike in a
+    /// non-ref field of a precisely-rooted object pins nothing.
+    #[test]
+    fn collect_precise_honors_registered_kind_field_map() {
+        let mut heap = FlatHeap::new();
+        // kind 1: a 16-byte object whose only ref field is at offset 0.
+        let kind = heap.register_kind(&[0]);
+        let target = heap.alloc(16, 0) as usize; // reached via the ref field → live
+        let phantom = heap.alloc(16, 0) as usize; // look-alike in a NON-ref field
+        let obj = heap.alloc(16, kind) as usize;
+        unsafe {
+            *(obj as *mut usize) = target; // field0 (ref) -> target
+            *((obj + 8) as *mut usize) = phantom; // field1 (non-ref) -> phantom
+        }
+
+        let frame: [usize; 1] = [obj];
+        let rec = StackMapRecord::new(0, vec![0]);
+        let mut roots = Vec::new();
+        frame_root_slots(frame.as_ptr() as usize, &rec, &mut roots);
+
+        let stats = unsafe { heap.collect_precise(&roots) };
+        assert!(!heap.find_header(obj).is_null(), "rooted object survives");
+        assert!(
+            !heap.find_header(target).is_null(),
+            "ref-field target survives"
+        );
+        assert!(
+            heap.find_header(phantom).is_null(),
+            "non-ref-field look-alike is reclaimed (precise interior tracing)"
+        );
+        assert_eq!(stats.freed, 1);
+        assert_eq!(frame[0], obj);
+    }
+
+    /// An empty root set frees everything (no roots named → nothing live).
+    #[test]
+    fn collect_precise_empty_roots_frees_all() {
+        let mut heap = FlatHeap::new();
+        let _a = heap.alloc(16, 0);
+        let _b = heap.alloc(24, 0);
+        assert_eq!(heap.object_count(), 2);
+        let stats = unsafe { heap.collect_precise(&[]) };
+        assert_eq!(stats.freed, 2);
+        assert_eq!(stats.survived, 0);
+        assert_eq!(heap.live_bytes(), 0);
+    }
+
+    /// Multiple mapped frames accumulate into one flat root list, then one precise
+    /// collect — the shape the native walker produces (one `collect_precise` after
+    /// walking the whole chain).
+    #[test]
+    fn collect_precise_across_multiple_frames() {
+        let mut heap = FlatHeap::new();
+        let x = heap.alloc(16, 0) as usize; // rooted from "frame 0"
+        let y = heap.alloc(16, 0) as usize; // rooted from "frame 1"
+        let _dead = heap.alloc(16, 0);
+
+        let frame0: [usize; 1] = [x];
+        let frame1: [usize; 2] = [0xabc, y]; // slot 0 unnamed, slot 1 (offset 8) named
+        let mut roots = Vec::new();
+        frame_root_slots(
+            frame0.as_ptr() as usize,
+            &StackMapRecord::new(0, vec![0]),
+            &mut roots,
+        );
+        frame_root_slots(
+            frame1.as_ptr() as usize,
+            &StackMapRecord::new(0, vec![8]),
+            &mut roots,
+        );
+
+        let stats = unsafe { heap.collect_precise(&roots) };
+        assert_eq!(stats.survived, 2, "x and y across two frames");
+        assert_eq!(stats.freed, 1);
+        assert!(!heap.find_header(x).is_null());
+        assert!(!heap.find_header(y).is_null());
+        assert_eq!((frame0[0], frame1[1]), (x, y));
     }
 }

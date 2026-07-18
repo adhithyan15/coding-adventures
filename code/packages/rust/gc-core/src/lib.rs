@@ -107,7 +107,7 @@ pub mod write_barrier;
 
 // Top-level re-exports for the most commonly used types.
 pub use adapter::GcAdapter;
-pub use flat_heap::FlatHeap;
+pub use flat_heap::{frame_root_slots, FlatHeap, StackMapRecord, StackMapTable};
 pub use gc_core::{GcCore, PolicyAdvisory};
 pub use heap_ref::HeapRef;
 pub use kind::{HeapKind, KindRegistry};

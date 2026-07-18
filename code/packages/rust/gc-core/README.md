@@ -41,6 +41,32 @@ Today only `MarkAndSweep` is implemented; the policy infrastructure is fully
 in place so that adding `Generational`, `Compacting`, and `Incremental`
 implementations is mechanical work.
 
+## The native heap (`FlatHeap`) and its precision ladder
+
+Alongside the managed `GcCore` (for the interpreters, which model the heap as
+`HashMap<usize, Box<dyn HeapObject>>`), `gc-core` hosts a second heap
+representation, **`FlatHeap`** — a real-memory mark-and-sweep collector where
+`alloc` returns an actual machine pointer, so **native-AOT / LLVM / WASM** output
+(via the `gc-core-capi` C ABI) reads and writes it directly at byte offsets. It
+supersedes the Twig-specific `twig_gc.c`.
+
+`FlatHeap` is climbing a **precision ladder** (`AOT00-T1-precise-gc.md`), each
+rung strictly additive over conservative fallback:
+
+1. **Conservative mark/sweep** — every candidate word (raw + tag-stripped) is a
+   root; a look-alike integer retains a dead object for one cycle. ✓
+2. **Precise interior tracing** — a registered `kind`'s ref-field map is followed
+   exactly (`register_kind`); non-ref fields pin nothing. ✓
+3. **Generational** — young/old split, remembered-set `write_barrier`, young-only
+   `collect_minor`. ✓
+4. **Precise roots (this rung's core)** — `StackMapRecord` / `StackMapTable`
+   describe exactly which slots hold references at each safepoint;
+   `collect_precise(root_slots)` reads only those, so stack-integer false roots
+   disappear and root cost drops to O(live roots). The `gc-core` half (format,
+   lookup, precise mark) is done; the native stack walk that feeds it and the
+   backend record emission are `gc-core-capi` / codegen follow-ups. ✓ (core)
+5. **Moving / compacting**, then **incremental** — planned.
+
 ## Quick start
 
 ```rust
