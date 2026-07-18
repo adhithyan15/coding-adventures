@@ -59,6 +59,7 @@ per rotation, in parallel):
 | `anatomy/` | digestive organ → primary function it performs | NIH NIDDK / NCI SEER Training |
 | `anatomy/` | synovial joint type → representative example (hinge → elbow) | NIH / NLM StatPearls |
 | `anatomy/` | skin layer → defining descriptor (epidermis → outermost, subcutaneous → fat) | NIH / NCI SEER Training |
+| `anatomy/` | ear structure → ear region it sits in (cochlea → inner, malleus → middle, ear canal → outer) | NIH NIDCD (authoritative) |
 | … | *geography, physical constants, …* | *(expanding)* |
 
 Formulas and laws (Newton's `F = ma`, the ideal gas law `PV = nRT`, area/volume, …) are grown
