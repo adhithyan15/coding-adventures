@@ -257,6 +257,11 @@ pub enum AggFunc {
     Avg,
     Min,
     Max,
+    /// `GROUP_CONCAT(x [, sep])` — concatenate the non-NULL values of `x` in row
+    /// order, joined by `sep` (which defaults to a comma). The separator is a
+    /// constant captured at plan time and carried on the aggregate, so the value
+    /// stream fed to the accumulator stays single-column (just `x`).
+    GroupConcat { sep: String },
 }
 
 // ===========================================================================
@@ -1711,6 +1716,10 @@ fn try_plan_as_aggregate(func_call: &GrammarASTNode) -> Option<AggregateItem> {
         "AVG" => AggFunc::Avg,
         "MIN" => AggFunc::Min,
         "MAX" => AggFunc::Max,
+        // `GROUP_CONCAT(x [, sep])` — the optional 2nd argument is the separator
+        // (default ","), captured now as a constant so the value stream stays
+        // single-column. `arg` below still resolves to the first argument (`x`).
+        "GROUP_CONCAT" => AggFunc::GroupConcat { sep: group_concat_separator(func_call) },
         _ => return None,
     };
 
@@ -1757,6 +1766,40 @@ fn try_plan_as_aggregate(func_call: &GrammarASTNode) -> Option<AggregateItem> {
         distinct,
         alias: None,
     })
+}
+
+/// Collect the planned argument expressions of a `function_call` node, in order.
+/// Handles both the `value_list` wrapper (multi-arg calls) and a single direct
+/// argument node.
+fn collect_call_arg_exprs(func_call: &GrammarASTNode) -> Vec<SqlExpr> {
+    let mut out = Vec::new();
+    for child in &func_call.children {
+        if let ASTNodeOrToken::Node(n) = child {
+            if n.rule_name == "value_list" {
+                for c2 in &n.children {
+                    if let ASTNodeOrToken::Node(n2) = c2 {
+                        if let Ok(e) = plan_expression(n2) {
+                            out.push(e);
+                        }
+                    }
+                }
+            } else if let Ok(e) = plan_expression(n) {
+                out.push(e);
+            }
+        }
+    }
+    out
+}
+
+/// The separator constant of a `GROUP_CONCAT(x [, sep])` call. SQLite joins with
+/// a comma when no separator is given; a string-literal second argument overrides
+/// it. Anything else (absent, or a non-constant second argument) falls back to
+/// ",".
+fn group_concat_separator(func_call: &GrammarASTNode) -> String {
+    match collect_call_arg_exprs(func_call).get(1) {
+        Some(SqlExpr::Literal(SqlValue::Text(s))) => s.clone(),
+        _ => ",".to_string(),
+    }
 }
 
 // ===========================================================================

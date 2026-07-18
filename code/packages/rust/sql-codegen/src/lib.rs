@@ -192,6 +192,11 @@ pub enum AggFn {
     Min,
     /// `MAX(col)` — maximum value
     Max,
+    /// `GROUP_CONCAT([DISTINCT] col [, sep])` — concatenate non-NULL values in
+    /// row order, joined by `sep` (the constant separator captured at plan time;
+    /// the value stream is just `col`). `distinct` deduplicates values before
+    /// joining, matching `GROUP_CONCAT(DISTINCT col)`.
+    GroupConcat { sep: String, distinct: bool },
 }
 
 /// A sort key emitted by the code generator, used in `SortResult`.
@@ -2318,6 +2323,7 @@ fn aggregate_column_name(item: &AggregateItem) -> String {
         AggFunc::Avg => "AVG",
         AggFunc::Min => "MIN",
         AggFunc::Max => "MAX",
+        AggFunc::GroupConcat { .. } => "GROUP_CONCAT",
     };
     let inner = match &item.arg {
         None => "*".to_string(),
@@ -2443,6 +2449,7 @@ fn plan_agg_to_agg_fn(func: &AggFunc, is_star: bool) -> AggFn {
         AggFunc::Avg => AggFn::Avg,
         AggFunc::Min => AggFn::Min,
         AggFunc::Max => AggFn::Max,
+        AggFunc::GroupConcat { sep } => AggFn::GroupConcat { sep: sep.clone(), distinct: false },
     }
 }
 
@@ -2452,6 +2459,10 @@ fn plan_agg_to_agg_fn(func: &AggFunc, is_star: bool) -> AggFn {
 fn plan_agg_to_agg_fn_with_distinct(func: &AggFunc, is_star: bool, distinct: bool) -> AggFn {
     if distinct && matches!(func, AggFunc::Count) && !is_star {
         AggFn::CountDistinct
+    } else if let AggFunc::GroupConcat { sep } = func {
+        // GROUP_CONCAT carries its own `distinct` (dedup before joining), rather
+        // than mapping to a separate DISTINCT opcode like COUNT does.
+        AggFn::GroupConcat { sep: sep.clone(), distinct }
     } else {
         plan_agg_to_agg_fn(func, is_star)
     }
