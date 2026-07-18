@@ -15,13 +15,17 @@ French.
 
 - **Ch. 1 — Greetings**: olá → bom/boa → **o/a** (gender) → dia → **bom dia** →
   tarde/boa tarde → noite/boa noite → obrigado/obrigada → practice.
+- **Ch. 2 — "Tudo bem?"**: de nada (← *nāta*) → como (← *quōmodo*) → **tudo**
+  (← *tōtus* "whole") → tudo bem? / como vai? (*ir*, go) / como está? (*estar*,
+  stand) → mais ou menos → practice. **Authored** — the verb-free *Tudo bem?* is
+  the distinctive Portuguese move; reordered ahead of introductions, register
+  você/o senhor inline.
 
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |
 |---|---|
-| 2 | Introducing yourself: *chamo-me / o meu nome é*, **tu / você** (familiar vs polite "you"), como, prazer |
-| 3 | Responding: como está / tudo bem, bem, e você |
+| 3 | Introducing yourself: *chamo-me / o meu nome é*, como se chama, prazer |
 | 4 | Farewells: adeus, até logo, até amanhã |
 | 5+ | Numbers, time, days & months, family, food — following the shared theme order |
 
