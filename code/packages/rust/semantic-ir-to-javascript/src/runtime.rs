@@ -421,6 +421,22 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     if (b === 0) {
       raiseError("ZeroDivisionError", "divided by 0");
     }
+    // Ruby's `/` is polymorphic: `Integer#/` FLOORS toward −∞ (`-7 / 2 == -4`),
+    // while `Float#/` true-divides (`7.0 / 2 == 3.5`). A bare `a / b` gives
+    // JavaScript's float division, so integer division was wrong (`7 / 2` gave
+    // `3.5`, not `3`). We floor via `Math.floor` when BOTH operands are
+    // integer-valued — matching the SIR21 §E3 oracle `DivOp::Floor` on every
+    // sign combination — and otherwise true-divide.
+    //
+    // KNOWN LIMITATION (needs type-flow, not a runtime fix): JavaScript numbers
+    // are all f64, so a Ruby `Float` that happens to be integral (`7.0`) is
+    // indistinguishable from the `Integer` `7`; `divide(7.0, 2)` therefore
+    // floors to `3` rather than Ruby's `3.5`. Faithful float division requires
+    // the SirType to reach the emitter (a `div_true` op), tracked separately.
+    // The common, corpus-exercised case — integer division — is now correct.
+    if (Number.isInteger(a) && Number.isInteger(b)) {
+      return Math.floor(a / b);
+    }
     return a / b;
   }
 

@@ -5,35 +5,49 @@
 //! ([`sir_conformance::oracle::DivOp::Floor`]) prescribes, and what a faithful
 //! transpile of Ruby must reproduce on every backend.
 //!
-//! Probing the pipeline surfaced a real, multi-way divergence — the textbook
-//! "one overloaded `divide` that does the Ruby thing on Tuesdays" bug SIR21 §E3
-//! exists to kill:
+//! Probing the pipeline once surfaced a real, multi-way divergence — the
+//! textbook "one overloaded `divide` that does the Ruby thing on Tuesdays" bug
+//! SIR21 §E3 exists to kill. **It is now closed:** every backend that runs the
+//! negative cases reproduces Ruby's floor.
 //!
-//! | `-7 / 2` (Ruby floor = **−4**) | backend |
-//! |-------------------------------|---------------|
-//! | Python — **now −4** ✅         | `Integer#/` floors, `Float#/` true-divides (SIR21 §E3) |
-//! | JavaScript `-3.5`             | true (float) division, not integer at all |
-//! | Go / Rust — **crash**         | native `/` panics / errors on the path |
+//! | `-7 / 2` (Ruby floor = **−4**) | was | now |
+//! |-------------------------------|-----|-----|
+//! | Python     | `-3` (truncated)   | ✅ `-4` — `//` on two ints; `Float#/` true-divides |
+//! | Rust       | `-3` (truncated)   | ✅ `-4` — floored int path in `__sir::divide` |
+//! | Go         | `-3` (truncated)   | ✅ `-4` — floored int path in `_sir_divide` |
+//! | JavaScript | `-3.5` (float `/`) | ✅ `-4` — `Math.floor` when both operands integral |
+//! | Ruby       | (native)           | ✅ `-4` — emits Ruby, whose `/` floors natively |
+//! | C          | (crashed)          | ✅ `-4` on positives; **negatives skip** (see below) |
 //!
-//! Even *positive* division diverges elsewhere: `7 / 2` prints `3.5` on
-//! JavaScript.
+//! The int-path fixes live in each backend's runtime `divide` helper and mirror
+//! the oracle's [`DivOp::Floor`]: the floored quotient is the truncated one
+//! minus one exactly when the remainder is non-zero and its sign differs from
+//! the divisor's. Python, Rust, Go and C carry tagged values, so they dispatch
+//! `Integer#/` (floor) vs `Float#/` (true-divide) faithfully; the C runtime
+//! already floored (`_sir_ifloordiv`). JavaScript numbers are all `f64`, so it
+//! floors when both operands are integer-valued (`Number.isInteger`) — correct
+//! for every integer-division case the frontier asserts; a Ruby `Float` that is
+//! integral (`7.0`) still needs the typed pipeline to true-divide, tracked
+//! separately. Ruby transpiles to Ruby, so its `/` is already floor.
 //!
-//! **The Python arm is closed.** The runtime `div` (in
-//! `coding-adventures-sir-runtime-core`) used to be `int(a / b)` — truncating
-//! toward zero, and (a latent bug) flooring float division to an `int`. It now
-//! dispatches on operand type: two ints floor via `//` (matching the oracle's
-//! [`DivOp::Floor`]); anything with a float true-divides — exactly Ruby's
-//! polymorphic `/`. [`python_division_is_ruby_floor_faithful`] is the
-//! non-ignored regression guard that proves it end-to-end. The resolution of the
-//! "deliberate conflict" (flip vs. split) went the additive way: the oracle
-//! already carries *both* honest ops (`div_floor`, `div_trunc`), and the Python
-//! backend maps `Integer#/` onto floor — no overloaded runtime `divide`.
+//! **Two gaps this frontier forced to the surface — both fixed here except one
+//! narrow emitter case:** Ruby lowers unary minus (`-x`) to a `neg` builtin, and
+//! the Go and Rust *runtimes* had no `neg` — so every negative literal (not just
+//! division) crashed with `unknown builtin: neg`. That is the "Go/Rust crash on
+//! negatives" this doc long recorded; it was never a division bug. Both now
+//! implement `neg`. The **C backend's emitter** does not yet lower `neg`, so its
+//! negative cases are reported [`RunOutcome::Skipped`] (not `Failed`) and the
+//! frontier does not assert them — C is closed for positive division and tracked
+//! for negative-literal emit. Ruby needs the `ruby` toolchain present to run;
+//! absent it, it skips.
 //!
-//! JavaScript, Go and Rust still diverge, so the *all-backend* frontier below
-//! stays `#[ignore]`d (it flips green the day those three are floor-faithful
-//! too). This file **captures** the frontier so it is tracked and oracle-judged,
-//! the way the `10²⁴` bignum frontier is captured in `arithmetic.rs`. The
-//! toolchain-free control below always runs.
+//! The resolution of the original "deliberate conflict" (flip vs. split) went
+//! the additive way: the oracle already carries *both* honest ops (`div_floor`,
+//! `div_trunc`), and each backend maps `Integer#/` onto floor — no overloaded
+//! runtime `divide`. [`division_matches_ruby_floor_on_every_backend`] is now a
+//! live (non-ignored) assertion; [`python_division_is_ruby_floor_faithful`]
+//! remains as a granular per-backend guard. The toolchain-free control below
+//! always runs.
 
 use sir_conformance::oracle::{DivOp, Outcome};
 use sir_conformance::{run_source, RunOutcome, Target};
@@ -69,14 +83,16 @@ fn oracle_floor_matches_ruby_integer_division() {
     assert_eq!(floor_expected(-6, 2), "-3");
 }
 
-/// The frontier itself: *every* backend must reproduce Ruby's floor `/`. Still
-/// ignored — Python is now floor-faithful (see
-/// [`python_division_is_ruby_floor_faithful`]), but JS true-divides and Go/Rust
-/// crash on the negative path. Run with `cargo test -- --ignored` to watch it;
-/// it becomes a passing assertion once those three are closed too.
+/// The frontier itself, now **closed and live**: every backend that *runs* a
+/// case must reproduce Ruby's floor `/` for it. Each backend's runtime `divide`
+/// floors integer division (SIR21 §E3), so this is no longer `#[ignore]`d — it
+/// is a first-class conformance assertion. It asserts on `Ran` outcomes and
+/// fails (naming the offending backend) the day one regresses to truncation or
+/// true-division on integer operands; `Skipped` cases are not asserted (the C
+/// emitter does not yet lower unary `neg`, so its negative cases skip, and Ruby
+/// skips without a `ruby` toolchain). Verified locally across Python, JavaScript,
+/// Go, Rust and Ruby (all flooring) with C flooring the positive cases.
 #[test]
-#[ignore = "division frontier (SIR21 §E3): Python now floors ✅, but JS true-divides and \
-            Go/Rust crash on negatives. Flips green when all four are floor-faithful."]
 fn division_matches_ruby_floor_on_every_backend() {
     let mut ran = 0usize;
     for &(lhs, rhs) in CASES {

@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.37.0 — Ruby `Integer#/` floors toward −∞ (SIR21 §E3)
+
+The runtime `divide` returned a bare `a / b` — JavaScript float division — so
+integer division was wrong: `7 / 2` gave `3.5`, `-7 / 2` gave `-3.5`, never
+Ruby's floored integer result. `divide` now floors via `Math.floor(a / b)` when
+**both** operands are integer-valued (`Number.isInteger`), matching the SIR21 §E3
+oracle `DivOp::Floor` on every sign combination, and true-divides otherwise.
+Typed division-by-zero is unchanged. Closes the **JavaScript arm** of the
+division frontier.
+
+**Known limitation (needs type-flow, not a runtime fix):** JavaScript numbers are
+all `f64`, so a Ruby `Float` that is integral (`7.0`) is indistinguishable from
+the `Integer` `7`; `divide(7.0, 2)` therefore floors to `3` rather than Ruby's
+`3.5`. Faithful float division requires the `SirType` to reach the emitter (a
+`div_true` op), tracked separately. The common, corpus-exercised case — integer
+division — is now correct.
+
 ## 0.36.0 — SIR22 array/matrix base-cut codegen (HML01 Stream A)
 
 Real codegen for the SIR22 array/matrix domain's *base cut* — `ArrayLit`,
