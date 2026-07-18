@@ -73,6 +73,7 @@ per rotation, in parallel):
 | `biology/` | muscle-tissue type → its one distinctive characteristic (skeletal → voluntary, smooth → involuntary, cardiac → intercalated_disks) | NCI SEER Training Modules (authoritative) |
 | `biology/` | plant tropism → the stimulus it responds to (phototropism → light, gravitropism → gravity, thigmotropism → touch) | Wikipedia "Tropism" (consensus) |
 | `biology/` | insect body region → what it bears / its function (head → eyes_antennae_and_mouthparts, thorax → legs_and_wings, abdomen → digestion_and_reproduction) | UF/IFAS EDIS Entomology (authoritative) |
+| `biology/` | mitosis phase → its defining event (prophase → chromatin_forms_chromosomes, metaphase → chromosomes_line_up, anaphase → chromatids_separate, telophase → nuclear_membrane_forms) | NCI SEER Training (authoritative) |
 | `physics/` | simple machine → everyday example | NASA |
 | `physics/` | phase change → its name (melting, freezing, …) | LibreTexts (consensus) |
 | `physics/` | energy form → defining token (chemical → bonds, thermal → heat) | EIA (energy.gov) |
