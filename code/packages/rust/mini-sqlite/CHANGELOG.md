@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.5.41 — column-defined COLLATE in WHERE comparisons
+
+A column declared `COLLATE NOCASE` / `RTRIM` now folds in WHERE comparisons, not
+just ORDER BY: `SELECT id FROM t WHERE name = 'apple'` on a NOCASE `name` matches
+both `'Apple'` and `'apple'`, and RTRIM ignores trailing spaces (`'hi   ' =
+'hi'`). Comparison operators `=`, `<>`, `<`, `<=`, `>`, `>=` all honour the
+column's sequence, and it flows through `AND`/`OR`/`NOT`. An explicit `COLLATE
+BINARY` on the comparison overrides the column's NOCASE (byte-exact match), and a
+column without a declared collation stays BINARY. Seven new differential-oracle
+cases pass against real SQLite. `DISTINCT`, `GROUP BY`, and `IN` collation remain
+follow-ups. Touches sql-planner 0.2.20 (single base table only, matching the
+ORDER BY restriction).
+
 ## 0.5.40 — ORDER BY positional (ordinal) column references
 
 `ORDER BY <n>` now treats a bare integer as a 1-based reference to the n-th

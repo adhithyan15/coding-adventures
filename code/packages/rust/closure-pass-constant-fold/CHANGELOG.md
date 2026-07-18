@@ -24,6 +24,49 @@ how many `!` wrap it, and `ToBoolean` invokes no user coercion (unlike the
 `!!!x` computes `¬¬¬ToBoolean(x)` = `¬ToBoolean(x)` = `!x`. Folding is
 bottom-up, so the even/odd cascade converges in a single pass (`!!!!x`'s inner
 `!!!x` collapses to `!x` first, then the outer `!` yields `!!x`).
+## [0.99.0] - 2026-07-17
+
+### Added — standard-constructor `new`-drop extended to `Object` / `Array`
+
+Extends the `new Error(…)` → `Error(…)` fold to the other two standard
+constructors the reference Closure Compiler rewrites. Calling `Object`/`Array`
+as an ordinary function constructs the same value as `new` for every argument
+list, so these are spec-safe:
+
+- `new Object(x)` → `Object(x)`   `new Object()` → `{}`
+- `new Array(x)` → `Array(x)` — a lone argument is a *length* (`Array(3)` builds
+  a length-3 array), so the call form is kept, **not** `[x]`
+- `new Array()` → `[]`
+- `new Array(a, b, …)` → `[a, b, …]` — 2+ **non-spread** arguments become an
+  array literal (the static count is the element count)
+
+A 2+-argument `new Array(…)` that contains a **spread** keeps the call form
+(`new Array(a, ...xs)` → `Array(a, ...xs)`) rather than an array literal: a
+spread of unknown runtime length can collapse the construction to a single
+argument — the *length* form — so `new Array(5, ...[])` is a length-5 array
+whereas `[5, ...[]]` is `[5]`. The reference compiler folds to `[a, ...xs]`
+anyway (unsound); we decline to the always-equivalent call form to avoid the
+miscompile (matching Closure's literal spelling there is a byte-identity
+follow-up). This soundness gate was surfaced by the pre-push security review.
+
+A new `fold_standard_constructor` helper backs the `NewExpression` arm, gated to
+a **bare** `Object`/`Array` identifier callee (a member callee `obj.Array`, a
+user constructor, or any other name is untouched); like Closure at SIMPLE it
+assumes the globals are not shadowed.
+
+`RegExp` is still declined (`RegExp(r)` aliases a regex argument instead of
+copying — a potential miscompile).
+
+Byte-identical to the reference compiler at `SIMPLE` in every context **except**
+where a folded `{}`/`[]` literal lands immediately after `throw`/`return`: the
+emitter emits a redundant space there (`throw {}` vs Closure's `throw{}`), a
+**separate, pre-existing** keyword-before-punctuation emitter gap that also
+affects hand-written `throw {…}` / `throw "…"` and is filed as a follow-up. The
+fold itself is correct and valid everywhere; this is a net improvement over the
+prior un-folded `throw new Object()`.
+
+Additive; MINOR bump 0.96.0 → 0.99.0 (0.97.0 = numeric-object-key, 0.98.0 =
+`new Error` drop, both in flight).
 ## [0.98.0] - 2026-07-17
 
 ### Added — standard-constructor `new`-drop: `new Error(…)` → `Error(…)`
