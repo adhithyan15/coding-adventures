@@ -200,6 +200,66 @@ fn floats_arithmetic_promotion_prints_3_5() {
     }
 }
 
+/// Run a raw-JS `snippet` against the embedded `__Sir` runtime.  A compiled
+/// module ends with the top-level `const __Sir = (…)();` followed by
+/// `main();`, so appending JS after it can call the runtime helpers directly
+/// — the way to exercise runtime-level behaviour (here: the dormant
+/// tagged-float helpers) without a program that reaches them yet.  Returns
+/// `None` when Node is unavailable.
+fn run_runtime_snippet(snippet: &str, tag: &str) -> Option<String> {
+    let module = module_with_main(vec![], Expr::NilLit { span: sp() }, &[]);
+    let artifact = compile(&module).expect("compile to javascript");
+    if !node_available() {
+        eprintln!("note: `node` unavailable — skipping runtime snippet `{tag}`");
+        return None;
+    }
+    let program = format!("{}\n{}\n", artifact.source, snippet);
+    let mut path: PathBuf = std::env::temp_dir();
+    path.push(format!("sir_js_rt_{}_{}.js", tag, std::process::id()));
+    std::fs::write(&path, &program).expect("write temp js");
+    let output = Command::new("node").arg(&path).output().expect("spawn node");
+    let _ = std::fs::remove_file(&path);
+    assert!(
+        output.status.success(),
+        "node exited non-zero for `{tag}`:\nstderr: {}\nprogram:\n{}",
+        String::from_utf8_lossy(&output.stderr),
+        program,
+    );
+    let stdout = String::from_utf8(output.stdout).expect("utf8 stdout");
+    Some(stdout.trim_end_matches(['\n', '\r']).to_string())
+}
+
+#[test]
+fn tagged_float_helpers_behave() {
+    // Exercises the dormant tagged-float substrate directly (nothing emits
+    // boxed floats yet).  Confirms the invariant before the atomic flip:
+    //   - `floatToRubyString` restores the trailing `.0` (incl. `-0.0` and
+    //     exponent form), matching Ruby / the Rust/Go backends;
+    //   - only INTEGRAL floats box (`mkFloat(3.5) === 3.5` stays native);
+    //   - equal integral floats INTERN to one identity (Map/Set dedup);
+    //   - `isFloat`/`isNum`/`numOf` classify and unwrap correctly.
+    let snippet = r#"
+const F = __Sir; const o = [];
+o.push(F.floatToRubyString(7));                 // 7.0
+o.push(F.floatToRubyString(-0));                // -0.0
+o.push(F.floatToRubyString(1e21));              // 1.0e+21
+o.push(String(F.isFloat(F.mkFloat(7))));        // true  (boxed integral float)
+o.push(String(F.isFloat(3.5)));                 // true  (non-integral native float)
+o.push(String(F.isFloat(7)));                   // false (integer)
+o.push(String(F.mkFloat(3.5) === 3.5));         // true  (non-integral stays native)
+o.push(String(F.mkFloat(7) === F.mkFloat(7)));  // true  (interned singleton)
+o.push(String(F.numOf(F.mkFloat(7))));          // 7
+o.push(String(F.isNum(F.mkFloat(7))));          // true
+console.log(o.join("|"));
+"#;
+    if let Some(stdout) = run_runtime_snippet(snippet, "tagfloat") {
+        assert_eq!(
+            stdout,
+            "7.0|-0.0|1.0e+21|true|true|false|true|true|7|true",
+        );
+    }
+}
+
 #[test]
 fn short_circuit_does_not_evaluate_rhs() {
     // (false && <print "boom">) must NOT print "boom"; the whole
