@@ -140,7 +140,37 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // `numOf` unwraps to the raw f64 for arithmetic/comparison; `isNum`
   // recognises "a number" at type gates; `isFloat` recognises "a Ruby
   // Float" (boxed integral OR non-integral native).
-  function numOf(x) { return x instanceof SirFloat ? x.f : x; }
+  //
+  // SECOND unwrap case, added alongside the `SirFloat` one above: a
+  // rank-0 (scalar) SIR22 `NDArray` — `{ shape: [], data: <1 element> }`
+  // (see the "SIR22: array/matrix domain" section far below, `ndarray`/
+  // `toArrayValue`). A scalar-only MATLAB accumulator (`n = n + 1` inside
+  // a `while` loop, where `n` was never provably scalar to the *frontend*
+  // because it is a variable, not a literal — see `matlab-to-semantic-ir`'s
+  // `expr_is_known_scalar`) takes the array-domain `ElementwiseOp` codegen
+  // path even though every value it ever holds is a plain number, so `n`
+  // becomes this NDArray shape after its first update. Every OTHER
+  // consumer of `numOf` (arithmetic re-tagging, comparisons) then sees an
+  // object where it expects a number; a bare JS `<`/`>`/native `-` on that
+  // object coerces through `ToPrimitive` to `NaN`, which is silently
+  // wrong (`NaN < 10` is `false`, not an error) rather than a crash. Since
+  // `numOf` is the identity on any value it doesn't recognise, and only
+  // MATLAB/APL-style SIR22 frontends ever construct an NDArray in the
+  // first place, this second branch is a no-op for every other language
+  // this backend serves (Ruby, JS, …) and a real fix for this one: it
+  // makes "a comparison/negation/subtraction/mod against a 0-D NDArray"
+  // behave exactly like "against the plain number it degenerately holds"
+  // — fixing not just the while-loop non-termination bug this was written
+  // for, but also (for free, same mechanism) unary minus on a scalar power
+  // expression (`-2 ^ 2`, which lowers to `ElementwiseOp::Pow` even for two
+  // literals and previously gave `NaN` via `neg`'s own `numOf` call).
+  function numOf(x) {
+    if (x instanceof SirFloat) { return x.f; }
+    if (x !== null && typeof x === "object" && Array.isArray(x.shape) && x.shape.length === 0) {
+      return x.data[0];
+    }
+    return x;
+  }
   function isNum(x) { return typeof x === "number" || x instanceof SirFloat; }
   function isFloat(x) {
     return x instanceof SirFloat || (typeof x === "number" && !Number.isInteger(x));

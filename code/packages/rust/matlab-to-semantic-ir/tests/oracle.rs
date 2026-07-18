@@ -82,48 +82,63 @@
 //!
 //! The corpus below is restricted to programs this frontend/backend pair
 //! can *actually* execute correctly today. Getting there surfaced four
-//! confirmed, previously-unknown bugs/gaps — each is a **discovery of this
-//! oracle harness doing its job**, not a defect in the harness:
+//! confirmed, previously-unknown bugs/gaps — each was a **discovery of
+//! this oracle harness doing its job**, not a defect in the harness. Three
+//! of the four have since been FIXED (a follow-up PR to the one that added
+//! this file); one remains open:
 //!
-//! - **Integer-literal division floors instead of true-dividing.** MATLAB
-//!   has no integer type — every number is a double, so `7 / 2` is always
-//!   `3.5`. But `number_literal_expr` (`src/lower.rs`) lowers a
-//!   decimal-point-free literal to `Expr::IntLit`, and the JS backend's
-//!   shared `divide()` runtime helper (built for *Ruby's* `Integer#/`,
-//!   which really does floor) floors whenever both operands are
-//!   integer-valued — so the compiled path prints `3`. Excluded from
+//! - **Integer-literal division floors instead of true-dividing** (still
+//!   OPEN). MATLAB has no integer type — every number is a double, so
+//!   `7 / 2` is always `3.5`. But `number_literal_expr` (`src/lower.rs`)
+//!   lowers a decimal-point-free literal to `Expr::IntLit`, and the JS
+//!   backend's shared `divide()` runtime helper (built for *Ruby's*
+//!   `Integer#/`, which really does floor) floors whenever both operands
+//!   are integer-valued — so the compiled path prints `3`. Excluded from
 //!   `CORPUS`; not independently re-demonstrated as its own test here
 //!   since it needs no `node` process to see (`grep -n "Math.floor" src/
 //!   runtime.rs` in `semantic-ir-to-javascript` plus this file's own
 //!   probe history is confirmation enough), but recorded in the CHANGELOG.
-//! - **Unary minus on a power expression gives `NaN`, not the correct
-//!   value.** `^`/`.^` *unconditionally* lower to the SIR22
+//!   Left open because a real fix needs a source-language-aware division
+//!   convention (MATLAB has no integer type at all, unlike Ruby, whose
+//!   `Integer#/`-flooring convention `divide()` was actually built for) —
+//!   a bigger design decision than the fixes below, not a one-line change.
+//! - **FIXED: unary minus on a power expression gave `NaN`, not the
+//!   correct value.** `^`/`.^` *unconditionally* lower to the SIR22
 //!   `ElementwiseOp::Pow` node (`try_power`, `src/lower.rs`) — unlike
 //!   `+`/`-`/`*`, there is no literal-only scalar fast path for power at
 //!   all. So even `2 ^ 2` (both literals) evaluates to an NDArray-shaped
-//!   `{shape, data}` object, not a plain JS number. Unary minus's `neg`
-//!   builtin then compiles to a bare native `-(...)` (`emit.rs`), and
-//!   negating that object coerces it to `NaN` via `ToPrimitive`. Real
-//!   MATLAB: `-2 ^ 2 == -4` (unary binds looser than `^`, confirmed by
-//!   `matlab-runtime`'s own `scalar_arithmetic_echoes_ans` test). Excluded
-//!   from `CORPUS` for the same reason as the division bug above.
-//! - **A `while` loop whose condition variable is also a non-literal
-//!   arithmetic accumulator runs its body exactly once, not to
-//!   convergence.** This is the most severe finding — a silent wrong
-//!   *computation*, not just a wrong *display* — and gets its own
-//!   dedicated, always-informative test:
-//!   [`known_bug_while_loop_accumulator_terminates_after_one_iteration`]
-//!   below, with the full root-cause writeup in its doc comment.
-//! - **`matlab-to-semantic-ir` never declares `Feature::ShortCircuit`**
-//!   for `&&`/`||`/`&`/`|` (`try_logical`, `src/lower.rs` has no
-//!   `self.observed.add(Feature::ShortCircuit)` anywhere), so any MATLAB
-//!   program using them fails `semantic_ir::validate()` outright with
-//!   `"manifest does not declare feature short-circuit but module uses
-//!   it"`. Confirmed via probe (`x > 3 && y > 5`); excluded from `CORPUS`.
-//!   This one is squarely inside this crate's own `src/`, unlike the
-//!   others above, but fixing frontend source is out of scope for this PR
-//!   (test infrastructure only) — flagged here and in the CHANGELOG for a
-//!   follow-up.
+//!   `{shape, data}` object, not a plain JS number, and unary minus's
+//!   `neg` builtin (`emit.rs`) calls the runtime's `numOf` to unwrap its
+//!   operand before negating — the exact same `numOf` gap the while-loop
+//!   bug below turned out to hinge on. Fixing `numOf` (see that bug's
+//!   entry) fixed this one too, for free, in the same commit: real MATLAB
+//!   `-2 ^ 2 == -4` (unary binds looser than `^`, confirmed by
+//!   `matlab-runtime`'s own `scalar_arithmetic_echoes_ans` test) now holds
+//!   through the compiled path too.
+//! - **FIXED: a `while` loop whose condition variable is also a
+//!   non-literal arithmetic accumulator ran its body exactly once, not to
+//!   convergence.** This was the most severe finding — a silent wrong
+//!   *computation*, not just a wrong *display* — and still gets its own
+//!   dedicated, always-informative regression test:
+//!   [`while_loop_accumulator_converges_correctly`] below (renamed from
+//!   `known_bug_while_loop_accumulator_terminates_after_one_iteration`),
+//!   with the full root-cause writeup and the fix in its doc comment.
+//!   Root cause, in one sentence: `semantic-ir-to-javascript`'s shared
+//!   `numOf` helper (`runtime.rs`) unwrapped a tagged `SirFloat` box but
+//!   not a rank-0 (scalar) NDArray, so a comparison against an
+//!   NDArray-wrapped accumulator silently evaluated to `NaN < 10 ==
+//!   false`; `numOf` now unwraps both.
+//! - **FIXED: `matlab-to-semantic-ir` never declared `Feature::
+//!   ShortCircuit`** for `&&`/`||`/`&`/`|` (`try_logical`, `src/lower.rs`
+//!   had no `self.observed.add(Feature::ShortCircuit)` anywhere), so any
+//!   MATLAB program using them failed `semantic_ir::validate()` outright
+//!   with `"manifest does not declare feature short-circuit but module
+//!   uses it"`. Confirmed via probe (`x > 3 && y > 5`); a one-line fix
+//!   (`tests/test_validator.rs`'s
+//!   `a_logical_and_program_validates_and_declares_short_circuit` is the
+//!   regression test) — but such programs are still not in `CORPUS`
+//!   below, since none of this crate's `&&`/`||` support has an oracle
+//!   case here yet, just validator coverage.
 //!
 //! Two more constructs turned out to be impossible to oracle-test at all,
 //! not just currently-buggy, because `matlab-runtime` itself cannot run
@@ -193,6 +208,19 @@ const CORPUS: &[Case] = &[
         setup: "x = 3 + 4 * 2 - 5;\n",
         final_expr: "x",
         expected: "6",
+    },
+    // Regression case for the (now-fixed) unary-minus-on-power bug
+    // documented in this file's module doc: `^` always lowers to the
+    // SIR22 `ElementwiseOp::Pow` node, even for two literals, so `2 ^ 2`
+    // evaluated to an NDArray-shaped scalar and `neg` on it used to give
+    // `NaN` instead of `-4` (unary minus binds looser than `^`, so this is
+    // `-(2 ^ 2)`, not `(-2) ^ 2`). Fixed by the same `semantic-ir-to-
+    // javascript` `numOf` change that fixed the while-loop bug below.
+    Case {
+        name: "unary_minus_on_power",
+        setup: "",
+        final_expr: "-2 ^ 2",
+        expected: "-4",
     },
     // A bare comparison. See the module doc's "Normalization" section for
     // why `expected` is written in MATLAB's own 0/1 numeric-logical
@@ -355,18 +383,18 @@ fn oracle_corpus_matches_native_matlab_runtime() {
     }
 }
 
-/// KNOWN BUG, found while building this harness (not fixed here -- test
-/// infrastructure only; see the CHANGELOG this PR adds): a MATLAB `while`
-/// loop whose condition variable is *also* the target of a non-literal
-/// (variable-involving) arithmetic update runs its body exactly **once**
-/// through the compiled JS path, instead of iterating to convergence.
+/// FIXED (previously `known_bug_while_loop_accumulator_terminates_after_
+/// one_iteration`): a MATLAB `while` loop whose condition variable is
+/// *also* the target of a non-literal (variable-involving) arithmetic
+/// update used to run its body exactly **once** through the compiled JS
+/// path, instead of iterating to convergence.
 ///
 /// Root cause, traced via the actual generated JavaScript
 /// (`semantic_ir_to_javascript::compile` on `"n = 0;\nwhile n < 10\n  n =
 /// n + 1;\nend\n"` emits, in `function main()`:
 /// ```js
 /// let n = 0;
-/// while (__Sir.truthy((n < 10))) {
+/// while (__Sir.truthy(__Sir.lt(n, 10))) {
 ///   n = __Sir.Array.elementwise("Add", n, 1);
 /// }
 /// ```
@@ -377,47 +405,62 @@ fn oracle_corpus_matches_native_matlab_runtime() {
 ///    crate's own README) only ever treats a *literal*-derived expression
 ///    as provably scalar. `n + 1`, where `n` is a variable, is therefore
 ///    always lowered as an SIR22 `Expr::ElementwiseOp`, regardless of what
-///    `n` actually holds at runtime.
+///    `n` actually holds at runtime. This part of the diagnosis was
+///    correct and remains true after the fix below -- it is exactly what
+///    still makes this a genuinely useful regression test, not merely a
+///    coincidentally-passing one.
 /// 2. `semantic-ir-to-javascript`'s `ElementwiseOp` codegen always returns
 ///    an NDArray-shaped `{ shape: number[], data: Float64Array }` object
 ///    (`runtime.rs`'s `ArrayRt.elementwise`), even for a logically-scalar
 ///    result. So after one iteration, `n` holds an *object*, not a JS
-///    number.
-/// 3. Comparison builtins compile to bare native infix operators
-///    (`emit.rs`: `"<" => Some("<")`) shared by every language this
-///    backend serves — there is no array-aware comparison helper. `n < 10`
-///    with `n` now an object triggers `ToPrimitive` coercion (no custom
-///    `valueOf`/`Symbol.toPrimitive` on a plain `{shape, data}` object), so
-///    the comparison is unconditionally `false`.
+///    number. Also still true after the fix -- and fine, because...
+/// 3. ...comparison builtins compile to thin runtime helpers that already
+///    existed for a *different* reason (unwrapping a tagged `SirFloat` box
+///    so `7.0 < 8` doesn't hit `NaN` via `ToPrimitive` on the box --
+///    `emit.rs`: `"<" => Some("__Sir.lt")`), which in turn unwrap through
+///    `runtime.rs`'s shared `numOf`. The ORIGINAL diagnosis (recorded in
+///    this crate's CHANGELOG for the PR that found this bug) described
+///    comparisons as bare native infix operators with "no array-aware
+///    comparison helper" -- that was already stale by the time this bug
+///    was investigated for a fix: the helper existed, it just didn't know
+///    about NDArrays yet. `numOf` unwrapped a `SirFloat` box but returned
+///    every other value (including a scalar NDArray) unchanged, so `n <
+///    10` still coerced the NDArray object through `ToPrimitive` to `NaN`,
+///    and `NaN < 10` is silently `false`.
 ///
-/// The loop body therefore runs exactly once and then silently stops --
-/// no error, no validator issue, no crash, and the resulting `n = 1` looks
-/// like a plausible (if wrong) answer in isolation. This is the most
-/// severe finding of this whole exercise: a silent wrong *computation*,
-/// not merely a wrong *display* (contrast the division/power-operator bugs
-/// documented in this file's module doc, which only corrupt what gets
-/// printed). `for`-loop accumulators (see `for_loop_accumulator` in
-/// `CORPUS` above) are not immune to the underlying NDArray-wrapping --
-/// they simply never hit it, because a `for` loop's OWN termination test
-/// is driven by the loop index (always a plain number, incremented via
-/// native `+`, never `ElementwiseOp`), not by the accumulator variable.
-/// Any future construct whose OWN loop/branch condition reads a
-/// variable that has previously been updated via non-literal arithmetic
-/// would hit this same failure mode.
+/// **The fix** (`semantic-ir-to-javascript/src/runtime.rs`): `numOf` now
+/// also unwraps a rank-0 (scalar) NDArray -- `x.shape.length === 0` --
+/// to its sole `data[0]` element, alongside its existing `SirFloat` case.
+/// `numOf` is the identity on anything it doesn't recognise and only
+/// MATLAB/APL-style SIR22 frontends ever construct an NDArray, so this is
+/// a no-op for every other language this backend serves and a real fix
+/// for comparisons, negation, subtraction, and modulo against a
+/// scalar-shaped array result -- see
+/// `semantic-ir-to-javascript/tests/run_with_node.rs`'s
+/// `numof_unwraps_scalar_ndarray_for_comparison_and_negation` for the
+/// runtime-level regression test, which also confirms this incidentally
+/// fixes the unary-minus-on-power bug documented in this file's module
+/// doc (same root cause: `neg` calls `numOf` too).
 ///
-/// This test intentionally asserts **today's (wrong) behavior**, not the
-/// correct one, precisely so that it fails loudly -- as a prompt to
-/// promote it into a real `CORPUS` entry (with `expected: "10"`) -- the
-/// moment someone fixes the underlying gap (either give `ElementwiseOp` a
-/// scalar-returning fast path mirroring the literal one, or make
-/// comparison codegen array-aware).
+/// Previously the loop body ran exactly once and then silently stopped --
+/// no error, no validator issue, no crash, and the resulting `n = 1`
+/// looked like a plausible (if wrong) answer in isolation: a silent wrong
+/// *computation*, not merely a wrong *display* (contrast the
+/// division/power-operator bugs documented in this file's module doc,
+/// which only corrupt what gets printed). `for`-loop accumulators (see
+/// `for_loop_accumulator` in `CORPUS` above) were never affected by the
+/// underlying NDArray-wrapping in the first place -- a `for` loop's OWN
+/// termination test is driven by the loop index (always a plain number,
+/// incremented via native `+`, never `ElementwiseOp`), not by the
+/// accumulator variable -- but any construct whose OWN loop/branch
+/// condition reads a variable previously updated via non-literal
+/// arithmetic would have hit this same failure mode; the fix is general
+/// (in `numOf`, not in the while-loop's own codegen), so all such
+/// constructs are covered, not just this one shape.
 #[test]
-fn known_bug_while_loop_accumulator_terminates_after_one_iteration() {
+fn while_loop_accumulator_converges_correctly() {
     if !node_available() {
-        eprintln!(
-            "skipping known_bug_while_loop_accumulator_terminates_after_one_iteration: \
-             `node` not available"
-        );
+        eprintln!("skipping while_loop_accumulator_converges_correctly: `node` not available");
         return;
     }
     let setup = "n = 0;\nwhile n < 10\n  n = n + 1;\nend\n";
@@ -428,10 +471,11 @@ fn known_bug_while_loop_accumulator_terminates_after_one_iteration() {
         "matlab-runtime ground truth for this loop changed -- update this test's premise"
     );
 
-    let got = compiled("while_loop_accumulator_bug", setup, "n(1)");
+    let got = compiled("while_loop_accumulator_converges", setup, "n(1)");
     assert_eq!(
-        got, "1",
-        "the while-loop/NDArray-accumulator bug documented above appears to be fixed -- \
-         promote this into a real `CORPUS` entry (expected \"10\") instead of leaving it here"
+        got, "10",
+        "the while-loop/NDArray-accumulator bug appears to have regressed -- \
+         see this test's doc comment (and semantic-ir-to-javascript's `numOf`, \
+         `runtime.rs`) for the fix this used to be a `known_bug_*` guard against"
     );
 }

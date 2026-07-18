@@ -102,6 +102,44 @@
   branch; added a regression test asserting a float-literal program both
   validates and is accepted by the JS backend.
 
+- **Correctness: a `while` loop whose condition variable was also a
+  non-literal arithmetic accumulator ran its body exactly once, not to
+  convergence.** Found and diagnosed by `tests/oracle.rs`'s
+  `known_bug_while_loop_accumulator_terminates_after_one_iteration` (the
+  oracle test added just above, same PR). This was a silent wrong
+  *computation* — no error, no validator issue, no crash — and the most
+  severe finding of that oracle-harness effort. Root cause traced end to
+  end: `expr_is_known_scalar` (this crate's own scalar/array
+  disambiguation heuristic) only treats a *literal*-derived expression as
+  provably scalar, so `n = n + 1` (where `n` is a variable) always lowers
+  to the SIR22 `Expr::ElementwiseOp` path regardless of what `n` actually
+  holds; `semantic-ir-to-javascript`'s `ElementwiseOp` codegen always
+  returns an NDArray-shaped `{ shape, data }` object even for a
+  logically-scalar result; and that backend's shared `numOf` helper (used
+  by every comparison and by `neg`/`minus`/`mod`) only unwrapped a tagged
+  `SirFloat` box, not a scalar (`shape.length === 0`) NDArray — so `n < 10`
+  compiled to `__Sir.lt(n, 10)`, which coerced the wrapped `n` through
+  `ToPrimitive` to `NaN`, and `NaN < 10` is silently `false`. **Fixed in
+  `semantic-ir-to-javascript` (this crate's own `src/` needed no change):
+  `numOf` now also unwraps a scalar NDArray** — see that crate's own
+  0.40.0 CHANGELOG entry for the full write-up, including the
+  `numof_unwraps_scalar_ndarray_for_comparison_and_negation` regression
+  test and confirmation that the same fix also resolves the
+  unary-minus-on-power bug (`-2 ^ 2` giving `NaN`) documented below, for
+  free. `tests/oracle.rs`'s `known_bug_while_loop_accumulator_
+  terminates_after_one_iteration` is renamed to
+  `while_loop_accumulator_converges_correctly` and now asserts the correct
+  converged value (`10`), with its doc comment rewritten to describe the
+  fix instead of the bug; the corresponding bullet in that file's module
+  doc comment is updated to say FIXED.
+
+- **Correctness: unary minus on a power expression gave `NaN`, not the
+  correct value** (`-2 ^ 2` should be `-4`; documented alongside the
+  while-loop bug above, same root cause, same fix — see that entry and
+  `semantic-ir-to-javascript`'s 0.40.0 CHANGELOG entry). Confirmed fixed
+  end to end by re-running `compile_source("disp(-2 ^ 2)\n")` →
+  `semantic_ir_to_javascript::compile` → `node`: prints `-4`.
+
 ## [0.1.0] - 2026-07-11
 
 ### Added
