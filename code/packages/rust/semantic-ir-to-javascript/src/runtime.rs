@@ -98,10 +98,86 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     return c.fn(...args);
   }
 
+  // ── tagged floats (Ruby Integer vs Float) ──────────────────────
+  //
+  // JavaScript has ONE number type (`f64`), so Ruby's `Integer` `7` and
+  // `Float` `7.0` are the same JS value — and Ruby distinguishes them
+  // everywhere: `7 / 2 == 3` (Integer#/ floors) but `7.0 / 2 == 3.5`
+  // (Float#/ true-divides); `puts 7.0` prints `7.0`, not `7`.  The
+  // Rust/Go/C backends carry a tagged `Int`/`Float` runtime value; we do
+  // the same, but only where JS can't already tell the two apart.
+  //
+  //   INVARIANT.  A Ruby Integer is an INTEGRAL native `number`.  A Ruby
+  //   Float is EITHER a non-integral native `number` (`3.5` — already
+  //   distinguishable, so left native) OR a `SirFloat` box wrapping an
+  //   integral value (`7.0` — otherwise indistinguishable from `7`).
+  //
+  // Only integral-valued floats are boxed, so the whole non-integral
+  // corpus stays native and untouched.  `mkFloat` is the SOLE factory;
+  // everything numeric unwraps through `numOf` and re-tags through
+  // `mkFloat`, so the box never escapes to native arithmetic by accident.
+  class SirFloat {
+    constructor(f) { this.f = f; Object.freeze(this); }
+  }
+  // Interning gives equal integral floats a single identity, so a boxed
+  // `7.0` used as a `Map` key or `Set` member (`tally`, `group_by`,
+  // `uniq`, a Hash literal) dedups by identity exactly like Ruby's `eql?`
+  // — while native Integer `7` stays a DISTINCT key (`7.eql?(7.0)` is
+  // false).  The cache is hard-capped: past the cap `mkFloat` returns
+  // fresh un-interned boxes, so memory is bounded (no unbounded-growth
+  // DoS) at the cost of losing dedup for programs with more than
+  // `FLOAT_INTERN_CAP` distinct integral-float keys — bounded and rare.
+  const FLOAT_INTERN_CAP = 4096;
+  const floatIntern = new Map();
+  function mkFloat(v) {
+    if (!Number.isInteger(v)) { return v; } // non-integral float: stays native
+    const hit = floatIntern.get(v);
+    if (hit !== undefined) { return hit; }
+    const box = new SirFloat(v);
+    if (floatIntern.size < FLOAT_INTERN_CAP) { floatIntern.set(v, box); }
+    return box;
+  }
+  // `numOf` unwraps to the raw f64 for arithmetic/comparison; `isNum`
+  // recognises "a number" at type gates; `isFloat` recognises "a Ruby
+  // Float" (boxed integral OR non-integral native).
+  function numOf(x) { return x instanceof SirFloat ? x.f : x; }
+  function isNum(x) { return typeof x === "number" || x instanceof SirFloat; }
+  function isFloat(x) {
+    return x instanceof SirFloat || (typeof x === "number" && !Number.isInteger(x));
+  }
+  // Arithmetic re-tags: the result is a Float iff an operand is a Float
+  // (or the op forces float, e.g. Float#/).  `mkFloat` then leaves a
+  // non-integral result native and boxes an integral one (`3.5 + 3.5`
+  // → boxed `7.0`; `7.0 - 0.5` → native `6.5`).
+  function neg(x) { return isFloat(x) ? mkFloat(-numOf(x)) : -numOf(x); }
+  function minus(a, b) {
+    const r = numOf(a) - numOf(b);
+    return (isFloat(a) || isFloat(b)) ? mkFloat(r) : r;
+  }
+  function mod(a, b) {
+    const r = numOf(a) % numOf(b);
+    return (isFloat(a) || isFloat(b)) ? mkFloat(r) : r;
+  }
+  // Render a boxed float the way Ruby's `to_s` does.  A box only ever
+  // holds a FINITE INTEGRAL value (non-finite/non-integral never box), so
+  // the job is to restore the trailing `.0` that `String(7)` drops:
+  //   7.0        → "7.0"          (append ".0")
+  //   -0.0       → "-0.0"         (String(-0) loses the sign — special-case)
+  //   1e21       → "1.0e+21"      (insert ".0" BEFORE the exponent)
+  // matching the Rust/Go backends ("shortest decimal, `.0` when integral").
+  function floatToRubyString(f) {
+    if (Object.is(f, -0)) { return "-0.0"; }
+    const s = f.toString();
+    const e = s.search(/[eE]/);
+    if (e >= 0) { return s.slice(0, e) + ".0" + s.slice(e); }
+    return s + ".0";
+  }
+
   // ── truthiness ─────────────────────────────────────────────────
   // SIR truthiness, NOT JavaScript's: only `false` and `nil` (null)
   // are falsy.  `0`, `""`, and `NaN` are all truthy — matching Lisp /
-  // Ruby semantics rather than JS's surprising coercions.
+  // Ruby semantics rather than JS's surprising coercions.  A `SirFloat`
+  // box is an object, so it is truthy — matching Ruby (all numbers are).
   function truthy(v) {
     return v !== false && v !== null && v !== undefined;
   }
@@ -1355,6 +1431,13 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // the display path (`formatSeen`) carries for the same cyclic values.
   function valEq(a, b, seen) {
     if (a === b) { return true; }
+    // Ruby `==` on numbers is by VALUE across Integer/Float: `7.0 == 7` is
+    // true, so `[7.0].include?(7)`. Compare unwrapped payloads (a boxed
+    // `7.0` and native `7` are `===`-distinct objects/values but `==`
+    // equal). NaN stays `== NaN` false, matching Ruby. Hash keys use `eql?`
+    // (identity here), NOT this, so Integer `7` and Float `7.0` remain
+    // distinct KEYS while being `==` equal — exactly Ruby's split.
+    if (isNum(a) && isNum(b)) { return numOf(a) === numOf(b); }
     if (a instanceof Sym && b instanceof Sym) { return a.name === b.name; }
     if (Array.isArray(a) && Array.isArray(b)) {
       if (a.length !== b.length) { return false; }
@@ -3171,6 +3254,10 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     Sym, Pair, Closure,
     intern, applyClosure, truthy, format, print, puts,
     plus, times, divide,
+    // Tagged floats (Ruby Integer vs Float). Exported so the emitter can
+    // mint a boxed float at a `FloatLit` and route `-`/`%`/`neg` through
+    // the re-tagging helpers. `mkFloat` is the sole factory.
+    SirFloat, mkFloat, numOf, isNum, isFloat, neg, minus, mod, floatToRubyString,
     builtins, builtinClosure, callBuiltin, callMethod,
     SirError, raiseError, rescueMatches, registerAncestry,
     // OOP (O3): instantiation, method definition + dispatch, super,
@@ -3249,6 +3336,14 @@ mod tests {
             "includeModule",
             "extendModule",
             "callClassMethod",
+            // Tagged floats (Ruby Integer vs Float): the boxed-float
+            // factory + tag helpers the emitter mints/routes through.
+            "class SirFloat",
+            "mkFloat",
+            "numOf",
+            "isNum",
+            "isFloat",
+            "floatToRubyString",
         ] {
             assert!(RUNTIME.contains(needed), "runtime missing `{needed}`");
         }

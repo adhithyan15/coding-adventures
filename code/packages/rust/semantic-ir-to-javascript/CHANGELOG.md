@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.38.0 — tagged-float substrate (dormant): Ruby `Integer` vs `Float`
+
+Groundwork for faithful `Float` semantics on the JS backend. JavaScript has one
+number type (`f64`), so Ruby `Integer` `7` and `Float` `7.0` are the same value
+— which is why `7.0 / 2` still floors to `3` (should be `3.5`) and `puts 7.0`
+prints `7`. The Rust/Go/C backends carry a tagged `Int`/`Float` runtime value;
+this release adds the JS analogue, **dormant** (nothing emits it yet — no
+behavior change; the atomic flip that wires it lands next).
+
+Added to the runtime (all exported on `__Sir`):
+- `SirFloat` — a frozen box wrapping an integral float value.
+- `mkFloat(v)` — the SOLE float factory. Non-integral floats stay native
+  `number` (already distinguishable); integral floats box, **interned** so
+  equal values share one identity (a boxed `7.0` dedups in `Map`/`Set` by
+  Ruby `eql?`, while Integer `7` stays a distinct key). The intern cache is
+  hard-capped (`FLOAT_INTERN_CAP = 4096`) — past the cap `mkFloat` returns
+  fresh un-interned boxes, so memory is bounded (no unbounded-growth DoS).
+- `numOf` (unwrap to raw f64), `isNum`, `isFloat`, `neg`/`minus`/`mod`
+  (re-tagging arithmetic), and `floatToRubyString` (restores the trailing
+  `.0`, incl. `-0.0` and exponent form `1e21` → `1.0e+21`, matching Rust/Go).
+
+Also: `valEq` gains a numeric arm so Ruby `==` is by value across the
+Integer/Float split (`[7.0].include?(7)` is `true`) while hash keys keep
+`eql?` identity semantics.
+
+Invariant established: Ruby Integer ⟺ integral native `number`; Ruby Float ⟺
+non-integral native `number` OR an interned `SirFloat` holding an integral
+value. Non-integral floats stay native, so the entire existing corpus is
+byte-unchanged. Guarded by a dormant-helper node exec-proof
+(`tests/run_with_node.rs::tagged_float_helpers_behave`) and runtime export
+assertions.
+
+
 ## 0.37.0 — Ruby `Integer#/` floors toward −∞ (SIR21 §E3)
 
 The runtime `divide` returned a bare `a / b` — JavaScript float division — so
