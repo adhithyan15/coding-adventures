@@ -30,6 +30,32 @@ with a literal-zero right operand (`±0`); all other arithmetic is untouched.
 NON-terminating quotient — `1/3` stays `1/3` rather than the 16-digit
 `.3333333333333333` — governed by its numeric byte-cost heuristic. That is a
 separate, subtler transform and is not addressed here.
+## [0.101.0] - 2026-07-17
+
+### Added — ternary equal-branch collapse: `t ? X : X` → `X`
+
+A conditional expression whose two arms are the **same** expression now
+collapses to that expression, when the test is side-effect-free:
+
+- `a ? b : b` → `b`
+- `a ? 1 : 1` → `1`, `a ? "s" : "s"` → `"s"`
+- `a ? b.c : b.c` → `b.c`, `a ? b() : b()` → `b()`
+- `a.p ? b : b` → `b` (a member READ is free under the crate contract)
+
+Because both arms are identical, the selected value is `X` regardless of how
+the test decides — the branch is dead. The only thing the rewrite must not
+drop is the **test's own evaluation**, so it fires only when the test is
+`is_side_effect_free` (identifier / literal / member read; a call, assignment,
+or `++`/`--` is not). This matches the reference Closure Compiler at `SIMPLE`
+byte-for-byte. Branch equality is structural (derived `==`); under
+`--correlation_vector` the two arms may carry distinct minted CVs, in which
+case the collapse conservatively declines (a sound miss, never a miscompile).
+
+**Declined (filed as follow-up):** when the test is *impure* Closure rewrites
+to the comma sequence `f() ? b : b` → `(f(), b)` to preserve the effect. That
+is a larger transform (build a `SequenceExpression`, reason about result
+position); this pass leaves the impure-test ternary intact — sound — rather
+than ship a partial version.
 ## [0.100.0] - 2026-07-17
 
 ### Added — left-associativity normalization for `&&` / `||`

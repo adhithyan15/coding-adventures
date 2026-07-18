@@ -1196,13 +1196,24 @@ fn trim_builtin(name: &str, args: &[SqlValue], left: bool, right: bool) -> Resul
 fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
     match name {
         "LENGTH" => {
+            // LENGTH(X) counts *characters* for text and *bytes* for a blob,
+            // matching SQLite: `length('héllo')` = 5 (5 chars, though 6 bytes)
+            // but `length(x'0102ff')` = 3 (raw bytes, NOT text-converted). A
+            // number is measured as the character count of its decimal-text form
+            // (`length(12345)` = 5, `length(-7)` = 2). NULL → NULL. Floats are
+            // declined — their SQLite text form (`3.0` vs Rust's `3`, exponent
+            // notation, …) is subtle enough that we don't guess here (same stance
+            // as OCTET_LENGTH / HEX / QUOTE).
             if args.len() != 1 {
                 return Err(VmError::TypeMismatch(format!("LENGTH expects 1 arg, got {}", args.len())));
             }
             match &args[0] {
                 SqlValue::Null => Ok(SqlValue::Null),
                 SqlValue::Text(s) => Ok(SqlValue::Int(s.chars().count() as i64)),
-                other => Err(VmError::TypeMismatch(format!("LENGTH expects TEXT, got {:?}", other))),
+                SqlValue::Blob(b) => Ok(SqlValue::Int(b.len() as i64)),
+                SqlValue::Int(i) => Ok(SqlValue::Int(i.to_string().chars().count() as i64)),
+                SqlValue::Bool(b) => Ok(SqlValue::Int((*b as i64).to_string().chars().count() as i64)),
+                other => Err(VmError::TypeMismatch(format!("LENGTH expects TEXT/BLOB/INTEGER, got {:?}", other))),
             }
         }
 
@@ -5258,6 +5269,23 @@ mod tests {
         assert!(call_builtin("LIKELIHOOD", vec![SqlValue::Int(1), SqlValue::Float(1.5)]).is_err());
         assert!(call_builtin("LIKELIHOOD", vec![SqlValue::Int(1), SqlValue::Text("x".into())]).is_err());
         assert!(call_builtin("LIKELIHOOD", vec![SqlValue::Int(1)]).is_err());
+    }
+
+    #[test]
+    fn builtin_length_blob_and_number() {
+        let len = |v: SqlValue| call_builtin("LENGTH", vec![v]).unwrap();
+        // Text → character count; a blob → raw byte count (contrast the text
+        // char count); a number → its decimal-text length. NULL propagates.
+        assert_eq!(len(SqlValue::Text("héllo".into())), SqlValue::Int(5)); // 5 chars
+        assert_eq!(len(SqlValue::Blob(vec![0x01, 0x02, 0xff])), SqlValue::Int(3));
+        assert_eq!(len(SqlValue::Blob(vec![])), SqlValue::Int(0));
+        assert_eq!(len(SqlValue::Int(12345)), SqlValue::Int(5));
+        assert_eq!(len(SqlValue::Int(-7)), SqlValue::Int(2));
+        assert_eq!(len(SqlValue::Bool(true)), SqlValue::Int(1));
+        assert_eq!(len(SqlValue::Null), SqlValue::Null);
+        // Floats are declined (text-form length is subtle); wrong arity errors.
+        assert!(call_builtin("LENGTH", vec![SqlValue::Float(3.14)]).is_err());
+        assert!(call_builtin("LENGTH", vec![]).is_err());
     }
 
     #[test]

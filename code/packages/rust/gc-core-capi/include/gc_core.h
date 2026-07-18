@@ -63,6 +63,14 @@ int64_t __gc_collect_region(const uint8_t *base, int64_t len);
  * whatever the machine is holding. Returns objects freed. Single-threaded. */
 int64_t __gc_collect(void);
 
+/* Paced collect: run __gc_collect ONLY if the live set has reached the heap's
+ * adaptive threshold; otherwise do nothing. Returns objects freed (0 if no
+ * collection ran). Drop-in for twig_gc.c's __twig_gc_safepoint — the native
+ * backend calls it at loop back-edges and function entries, and it collects
+ * only under memory pressure so a tight allocation loop can't starve the GC.
+ * __gc_alloc also runs this same paced collect before allocating. */
+int64_t __gc_safepoint(void);
+
 /* Live payload bytes. */
 int64_t __gc_live_bytes(void);
 
@@ -71,6 +79,17 @@ int64_t __gc_collection_count(void);
 
 /* Drop the whole heap (frees everything) and reset counters. */
 void __gc_reset(void);
+
+/* ── twig-compat aliases ────────────────────────────────────────────────────
+ * The native-AOT code generators and dynval_runtime.c reference the symbol
+ * names the retired twig_gc.c exported. These forward to the __gc_* ABI above
+ * (prototypes match twig_gc.c exactly, including the void-returning collect /
+ * safepoint). Deletable once the emitters emit the __gc_* names directly. */
+int64_t __twig_gc_alloc(int64_t n);
+void    __twig_gc_collect(void);
+void    __twig_gc_safepoint(void);
+int64_t __twig_gc_live_bytes(void);
+int64_t __twig_gc_collection_count(void);
 
 #ifdef __cplusplus
 }

@@ -1,0 +1,24 @@
+% ============================================================================
+% energy-forms.query.adj — a worked recall over the physics energy-forms library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what word defines chemical
+% energy?": it states no physics fact — it only `import`s the grounded table and
+% asks binding queries. The engine resolves each `?` against the
+% `energy_form_token` rows and returns the token + the table's source/locator/
+% trust. The fifth query runs the relation BACKWARD (bind the token `heat`,
+% recall the form it defines — thermal). Magnetic energy is not one of the forms
+% this EIA page enumerates, so a recall on it abstains honestly — the engine
+% never invents a token.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli energy-forms.query.adj
+% ============================================================================
+
+import "energy-forms.adj"
+
+? energy_form_token(chemical, $T)      % expect bonds
+? energy_form_token(nuclear, $T)       % expect nucleus
+? energy_form_token(thermal, $T)       % expect heat
+? energy_form_token(electrical, $T)    % expect electrons
+? energy_form_token($F, heat)          % expect thermal — reverse recall
+? energy_form_token(magnetic, $T)      % expect abstain — not one of the enumerated forms

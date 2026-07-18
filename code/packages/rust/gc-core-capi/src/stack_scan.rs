@@ -59,8 +59,19 @@ use crate::with_heap;
 // `spill_and_sp(buf)` stores every callee-saved *integer* register (the only
 // class that can hold a managed pointer) into `buf`, then returns the current
 // stack pointer. `buf` must hold at least [`SPILL_SLOTS`] words. The register
-// list is ABI-specific; floating-point callee-saved registers are omitted (they
-// never hold GC references).
+// list is ABI-specific.
+//
+// **Callee-saved FP/SIMD registers (aarch64 `d8`–`d15`, Win64 `xmm6`–`xmm15`) are
+// NOT spilled.** This relies on a codegen invariant: the native backend's value
+// model is **tagged i64**, so every managed reference — including a NaN-box-tagged
+// one — lives in an integer register or on the stack, never solely in a
+// floating-point register across a safepoint/alloc call. That invariant makes the
+// omission sound today. It is, however, load-bearing (the paced `__gc_alloc` now
+// scans implicitly), and `twig_gc.c`'s `setjmp` *did* save `d8`–`d15` / `xmm6`–15
+// on those ABIs — so a future NaN-boxing-in-FP codegen would silently reintroduce
+// a missed-root use-after-free. Spilling the callee-saved FP registers to close
+// that gap is tracked as a T1 hardening task; until then the invariant above is
+// the contract, not a blanket "FP never holds references" claim.
 //
 // The buffer pointer and the SP output are pinned to caller-saved scratch
 // registers (`x8`/`x9`, `r10`/`r11`) so the register allocator can never place
@@ -256,6 +267,30 @@ pub unsafe extern "C" fn __gc_collect() -> i64 {
     freed
 }
 
+/// A **paced** collect: run [`__gc_collect`] only if the heap has reached its
+/// adaptive threshold ([`gc_core::FlatHeap::should_collect`]); otherwise do
+/// nothing. Returns objects freed (`0` if no collection ran).
+///
+/// This is the drop-in for `twig_gc.c`'s `__twig_gc_safepoint`. The native
+/// backend emits a `safepoint` op at loop back-edges and function entries — cheap,
+/// frequent checkpoints. Collecting at *every* one would be ruinous; instead each
+/// safepoint asks "are we over the threshold yet?" and collects only then, so GC
+/// cost stays proportional to allocation, and a tight allocation loop can never
+/// starve the collector (the twig_gc.c comment's original motivation).
+///
+/// # Safety
+///
+/// Same contract as [`__gc_collect`]: the calling thread must own its stack.
+#[no_mangle]
+#[inline(never)]
+pub unsafe extern "C" fn __gc_safepoint() -> i64 {
+    if with_heap(|h| h.should_collect()) {
+        __gc_collect()
+    } else {
+        0
+    }
+}
+
 /// Upper bound on how many bytes of stack a single conservative scan will walk
 /// (256 MiB). A corrupt or absurd `base` (far above `sp`) would otherwise make
 /// `collect_region` read hundreds of GB and appear to hang — an
@@ -278,12 +313,48 @@ mod tests {
     /// folded away.
     #[test]
     fn stack_scan_keeps_live_local_frees_dead() {
-        // Shares the process-wide heap with the lib.rs ABI test; both are in one
-        // test each and cargo isolates integration vs. unit — but reset first to
-        // be order-independent within this binary.
+        // Serialise against every other HEAP-touching test (see crate::TEST_LOCK),
+        // then reset so this case is order-independent within the binary.
+        let _guard = crate::TEST_LOCK.lock().unwrap_or_else(|e| e.into_inner());
         __gc_reset();
         run_stack_scan_case();
         __gc_reset();
+    }
+
+    /// `__gc_safepoint` is **throttled**: below the collection threshold it does
+    /// nothing; at/over the threshold it runs a stack-scan collect and re-tunes.
+    /// Also exercises `__gc_alloc`'s auto-collect under the same threshold.
+    #[test]
+    fn safepoint_throttles_then_collects_at_threshold() {
+        let _guard = crate::TEST_LOCK.lock().unwrap_or_else(|e| e.into_inner());
+        __gc_reset();
+        run_safepoint_case();
+        __gc_reset();
+    }
+
+    #[inline(never)]
+    fn run_safepoint_case() {
+        use gc_core::flat_heap::INITIAL_THRESHOLD;
+
+        // Under the threshold (a single tiny object): the safepoint is a no-op.
+        let small = __gc_alloc(16);
+        assert!(small != 0);
+        assert_eq!(unsafe { __gc_safepoint() }, 0, "no collect below threshold");
+        assert_eq!(__gc_collection_count(), 0, "throttled: no cycle ran");
+        core::hint::black_box(small);
+
+        // Push the live set to the 1 MiB threshold with one big block, held live on
+        // the stack. Now the safepoint is due and must collect.
+        let big = __gc_alloc(INITIAL_THRESHOLD as i64);
+        assert!(big != 0);
+        assert!(__gc_live_bytes() as usize >= INITIAL_THRESHOLD);
+        unsafe { *(big as *mut i64) = 0xB16 };
+
+        let _ = unsafe { __gc_safepoint() }; // over threshold → collects
+        assert_eq!(__gc_collection_count(), 1, "safepoint collected at threshold");
+        // `big` is stack-rooted, so it survives the conservative scan.
+        assert_eq!(unsafe { *(big as *const i64) }, 0xB16, "live big block survives");
+        core::hint::black_box(big);
     }
 
     #[inline(never)]

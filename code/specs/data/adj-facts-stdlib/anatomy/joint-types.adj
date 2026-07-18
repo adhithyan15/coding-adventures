@@ -1,0 +1,117 @@
+% ============================================================================
+% joint-types — a type of synovial joint → a representative example the source
+% names for it (adj-facts-stdlib, ANATOMY).
+% ============================================================================
+% A musculoskeletal fact set on the way to medicine: a SYNOVIAL (freely movable)
+% joint is where two bones meet across a fluid-filled cavity, and anatomists sort
+% these joints into a handful of shapes by the motion each shape allows. The
+% first thing a learner memorizes is a canonical EXAMPLE for each shape — the one
+% joint a textbook points to so the name sticks. The elbow is the stock HINGE
+% (it swings on one axis like a door); the atlantoaxial joint at the top of the
+% neck is the stock PIVOT (it lets the head turn side to side); the knuckles are
+% CONDYLOID; the base of the thumb is the SADDLE joint; the intercarpal joints of
+% the wrist are PLANAR (gliding); and the hip and shoulder are the body's only
+% BALL-AND-SOCKET joints. Recall is a binding query:
+%
+%     ? joint_example(hinge, $Ex)          % elbow
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `joint_example(joint_type, example)` carrying the table's citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns the
+% example WITH its source, on the CPU, with zero model calls, and abstains on
+% anything that is not one of these synovial-joint types (it never invents an
+% example).
+%
+% The synovial-joint shapes, as a little truth table:
+%
+%     joint_type        example        the joint the source points to
+%     ---------------   ------------   ----------------------------------------
+%     hinge             elbow          the elbow (swings on one axis)
+%     pivot             atlantoaxial   the atlantoaxial joint (turns the head)
+%     condyloid         knuckles       the knuckles of the hand
+%     saddle            thumb          the joint at the base of the thumb
+%     planar            intercarpal    the intercarpal joints of the wrist
+%     ball_and_socket   hip            the hip …
+%     ball_and_socket   shoulder       … and the shoulder
+%
+% Each `example` value is a SINGLE lowercase token that appears VERBATIM in the
+% cited source sentence for that joint type (see the provenance block), so the
+% recall is a faithful echo of the source, not a paraphrase. `ball_and_socket`
+% is one-to-MANY: the source names BOTH the hip and the shoulder as the body's
+% only ball-and-socket joints, so the relation run BACKWARD from a joint type
+% enumerates every example the source gives it:
+%
+%     ? joint_example(ball_and_socket, $Ex)   % hip, then shoulder
+%
+% and run backward from an example recalls the shape that example illustrates:
+%
+%     ? joint_example($T, elbow)              % hinge — reverse recall
+%
+% Something that is not one of these synovial-joint shapes — a skull `suture`
+% (an immovable joint), a bone, a muscle — has no row, so a recall on it ABSTAINS
+% rather than inventing an example. That honest-abstention property is what makes
+% the table safe to reason from: a medicine agent reasons UP from "which joint
+% shape looks like what" before it can reason about a dislocated shoulder (a
+% ball-and-socket) or a jammed finger (an interphalangeal hinge).
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every joint_type→example
+% pair was read out of a page fetched this session, and any pair whose example
+% token did not appear VERBATIM in a fetched sentence was DROPPED). All seven
+% rows come from the SAME single source: the U.S. National Library of Medicine
+% (NIH) NCBI Bookshelf reference StatPearls "Anatomy, Joints"
+% (ncbi.nlm.nih.gov/books/NBK507893/). Each example token below is quoted inside
+% its verbatim source sentence so any reader can re-check it:
+%
+%   hinge → elbow
+%     "Examples include the elbow, knee, ankle, and interphalangeal joints."
+%
+%   pivot → atlantoaxial
+%     "The atlantoaxial joint, formed by the 1st (atlas) and 2nd (axis) cervical
+%      vertebrae, is a pivot joint."
+%
+%   condyloid → knuckles
+%     "Examples of condyloid joints are the knuckles, formed by the distal
+%      metacarpals and proximal phalanges of the medial 4 fingers."
+%
+%   saddle → thumb
+%     "This joint allows the thumb to flex and extend parallel to the palm and
+%      abduct and adduct perpendicular to the palm, making the digit opposable."
+%     (The saddle joint of the preceding sentence is "the joint formed by the
+%      trapezium and 1st metacarpal bone" — the base of the thumb.)
+%
+%   planar → intercarpal
+%     "Examples include the acromioclavicular, intercarpal, and intertarsal
+%      joints."
+%
+%   ball_and_socket → hip, shoulder
+%     "The body's only ball-and-socket joints are the hip and shoulder
+%      (glenohumeral) joints."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the StatPearls sentence that fixes
+% the first row (hinge → elbow). Every OTHER row's per-fact source and verbatim
+% span is listed above, so each pair remains independently checkable. All seven
+% rows share the ONE source — StatPearls, hosted and peer-reviewed on the NIH
+% National Library of Medicine's NCBI Bookshelf — so, following the same
+% NIH/NLM-primary judgement used by the sibling lung-lobes table (which cites the
+% same StatPearls corpus), `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table joint_example {
+    columns joint_type, example
+
+    row (hinge, elbow)
+    row (pivot, atlantoaxial)
+    row (condyloid, knuckles)
+    row (saddle, thumb)
+    row (planar, intercarpal)
+    row (ball_and_socket, hip)
+    row (ball_and_socket, shoulder)
+
+    source "Examples include the elbow, knee, ankle, and interphalangeal joints."
+    locator "https://www.ncbi.nlm.nih.gov/books/NBK507893/"
+    trust authoritative
+}
