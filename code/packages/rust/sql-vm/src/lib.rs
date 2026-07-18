@@ -1987,12 +1987,15 @@ fn eval_binary(op: &BinaryOp, l: SqlValue, r: SqlValue) -> Result<SqlValue, VmEr
     match op {
         // ── Arithmetic ────────────────────────────────────────────────────────
         //
-        // Integer arithmetic uses checked variants so that overflow produces a
-        // VmError rather than panicking in debug builds or silently wrapping in
-        // release builds.  Float arithmetic wraps naturally (IEEE 754 semantics).
-        BinaryOp::Add => checked_int_binop(l, r, i64::checked_add, |a, b| a + b, "addition"),
-        BinaryOp::Sub => checked_int_binop(l, r, i64::checked_sub, |a, b| a - b, "subtraction"),
-        BinaryOp::Mul => checked_int_binop(l, r, i64::checked_mul, |a, b| a * b, "multiplication"),
+        // Integer arithmetic uses checked variants so overflow is detected rather
+        // than panicking (debug) or silently wrapping (release). For `+`/`-`/`*`
+        // an overflow PROMOTES the operation to REAL (see `checked_int_binop`),
+        // matching SQLite; only `/` and `%` still surface the rare `i64::MIN`
+        // overflow as a VmError (a follow-up). Float arithmetic wraps naturally
+        // (IEEE 754 semantics).
+        BinaryOp::Add => checked_int_binop(l, r, i64::checked_add, |a, b| a + b),
+        BinaryOp::Sub => checked_int_binop(l, r, i64::checked_sub, |a, b| a - b),
+        BinaryOp::Mul => checked_int_binop(l, r, i64::checked_mul, |a, b| a * b),
         BinaryOp::Div => {
             // SQLite returns NULL for division by zero (integer OR float) — e.g.
             // `SELECT 5/0`, `5.0/0`, and `0/0` all yield NULL, never an error.
@@ -2154,16 +2157,20 @@ fn checked_int_binop(
     r: SqlValue,
     int_op: impl Fn(i64, i64) -> Option<i64>,
     float_op: impl Fn(f64, f64) -> f64,
-    op_name: &'static str,
 ) -> Result<SqlValue, VmError> {
     // SQLite applies numeric affinity to arithmetic operands: `'5' + 0` = 5.
     let (l, r) = (coerce_arith(l), coerce_arith(r));
     match (l, r) {
-        (SqlValue::Int(a), SqlValue::Int(b)) => {
-            int_op(a, b).map(SqlValue::Int).ok_or_else(|| {
-                VmError::TypeMismatch(format!("integer overflow in {op_name}"))
-            })
-        }
+        // Two integers: return the exact i64 result when it fits. On overflow
+        // SQLite does NOT error or wrap — it PROMOTES the operation to floating
+        // point and yields a REAL. `9223372036854775807 + 1` = 9.2233720369e18
+        // (real), `min_i64 - 1` and `max_i64 * 2` likewise. We recompute with
+        // `float_op` on the f64-widened operands (the same float path the
+        // mixed-operand arms use), so the result carries REAL affinity.
+        (SqlValue::Int(a), SqlValue::Int(b)) => Ok(match int_op(a, b) {
+            Some(v) => SqlValue::Int(v),
+            None => SqlValue::Float(float_op(a as f64, b as f64)),
+        }),
         (SqlValue::Float(a), SqlValue::Float(b)) => Ok(SqlValue::Float(float_op(a, b))),
         (SqlValue::Int(a), SqlValue::Float(b)) => Ok(SqlValue::Float(float_op(a as f64, b))),
         (SqlValue::Float(a), SqlValue::Int(b)) => Ok(SqlValue::Float(float_op(a, b as f64))),
@@ -2234,14 +2241,16 @@ fn eval_unary(op: &UnaryOp, v: SqlValue) -> Result<SqlValue, VmError> {
                     SqlValue::Null => unreachable!("NULL handled by the outer match"),
                 };
                 match num {
-                    // -i64::MIN overflows; use checked_neg to return an error
-                    // instead of panicking (debug) or wrapping (release).
-                    SqlValue::Int(n) => n
-                        .checked_neg()
-                        .map(SqlValue::Int)
-                        .ok_or_else(|| VmError::TypeMismatch(
-                            "integer overflow in unary negation (value is i64::MIN)".to_string(),
-                        )),
+                    // `-n` fits in i64 for every value except i64::MIN, whose
+                    // negation overflows. SQLite PROMOTES that one case to REAL
+                    // (`-(-9223372036854775808)` = 9.2233720369e18) rather than
+                    // erroring/wrapping — mirroring the binary-overflow promotion
+                    // in `checked_int_binop`. `checked_neg` isolates the overflow
+                    // without ever panicking (debug) or wrapping (release).
+                    SqlValue::Int(n) => Ok(match n.checked_neg() {
+                        Some(v) => SqlValue::Int(v),
+                        None => SqlValue::Float(-(n as f64)),
+                    }),
                     SqlValue::Float(f) => Ok(SqlValue::Float(-f)),
                     _ => unreachable!("text_to_numeric returns Int or Float"),
                 }
