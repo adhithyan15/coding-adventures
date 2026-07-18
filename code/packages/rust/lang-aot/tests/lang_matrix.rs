@@ -2954,6 +2954,27 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("BIG"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // COBOL-60 — scaled DIVIDE with ROUNDED (PL09 step 4, PR3b). `20 / 3 =
+    // 6.666…`; carried to one guard digit past the `V99` receiver then rounded
+    // half away from zero → `6.67`, rendered as the four-digit field `0667`. This
+    // proves the dividend up-scale, integer division, and sign-aware rounding
+    // bias all lower to plain `i64` ops on every backend.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  R  PIC 9(2)V99 VALUE 0.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     DIVIDE 3 INTO 20 GIVING R ROUNDED.\n\
+               000000     DISPLAY R.\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("0667"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses
