@@ -1,0 +1,1 @@
+dotnet test tests/CodingAdventures.Argon2id.Tests/CodingAdventures.Argon2id.Tests.fsproj --disable-build-servers /p:CollectCoverage=true /p:Threshold=80 /p:ThresholdType=line "/p:Include=[CodingAdventures.Argon2id.FSharp]*"
