@@ -2,6 +2,26 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.19] - Unreleased
+
+### Added
+
+- **Positional `ORDER BY <n>` (ordinal column references).** A *bare integer
+  literal* in an ORDER BY term is now resolved to the n-th (1-based) column of
+  the SELECT output list, matching SQLite: `SELECT a, b FROM t ORDER BY 2` sorts
+  by `b`. Direction, `NULLS FIRST/LAST`, `COLLATE`, and multi-key tie-breaks all
+  carry through, because the ordinal is rewritten to the real output expression
+  and then flows through the ordinary sort machinery.
+  - The rule is deliberately narrow — only a lone integer literal is positional.
+    An *expression* that evaluates to an integer is **not**: `ORDER BY 1+0` sorts
+    by the constant `1` (no reordering), exactly as in SQLite.
+  - An out-of-range ordinal (`< 1` or `> column count`) is a planning error,
+    matching SQLite's prepare-time "ORDER BY term out of range" — diagnosed only
+    when the select list is fully explicit.
+  - `SELECT *` positional keys are left unchanged (the column count/identity is
+    not known at plan time); positional-over-star and positional-over-aggregate
+    remain follow-ups.
+
 ## [0.2.18] - Unreleased
 
 ### Added

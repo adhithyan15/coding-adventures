@@ -1363,6 +1363,57 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT id, upper(s) AS u, lower(s) AS l FROM t ORDER BY id",
     },
+    // ----- ORDER BY positional (ordinal) column references -----
+    // A bare integer in ORDER BY is a 1-based reference to the n-th output
+    // column: `ORDER BY 2` sorts by the second SELECT column (`b`).
+    Case {
+        id: "order_by_ordinal_single",
+        setup: &[
+            "CREATE TABLE u (a INTEGER, b TEXT)",
+            "INSERT INTO u VALUES (3,'x'),(1,'z'),(2,'y')",
+        ],
+        query: "SELECT a, b FROM u ORDER BY 2",
+    },
+    // Multiple positional keys, mixed direction: primary `2 DESC`, tie-break `1`.
+    Case {
+        id: "order_by_ordinal_multi",
+        setup: &[
+            "CREATE TABLE u (a INTEGER, b TEXT)",
+            "INSERT INTO u VALUES (3,'x'),(1,'x'),(2,'y')",
+        ],
+        query: "SELECT a, b FROM u ORDER BY 2 DESC, 1",
+    },
+    // A positional key referencing an aliased output column sorts by that column.
+    Case {
+        id: "order_by_ordinal_alias",
+        setup: &[
+            "CREATE TABLE u (a INTEGER, b TEXT)",
+            "INSERT INTO u VALUES (3,'x'),(1,'z'),(2,'y')",
+        ],
+        query: "SELECT a AS k, b FROM u ORDER BY 1 DESC",
+    },
+    // Out-of-range ordinal: SQLite errors at prepare time ("ORDER BY term out of
+    // range"); mini-sqlite errors too, so the case agrees by both-fail.
+    Case {
+        id: "order_by_ordinal_out_of_range",
+        setup: &[
+            "CREATE TABLE u (a INTEGER)",
+            "INSERT INTO u VALUES (1),(2)",
+        ],
+        query: "SELECT a FROM u ORDER BY 5",
+    },
+    // Positional reference to an AGGREGATE output column. SQLite sorts by the
+    // computed aggregate (`SUM(v)`); mini-sqlite cannot re-evaluate an aggregate
+    // in the per-row sort path, so it leaves the rows in group order. Documented
+    // in LEDGER until the sort can bind to an already-materialized output column.
+    Case {
+        id: "order_by_ordinal_over_aggregate",
+        setup: &[
+            "CREATE TABLE g (k TEXT, v INTEGER)",
+            "INSERT INTO g VALUES ('a',1),('b',2),('a',3)",
+        ],
+        query: "SELECT k, sum(v) FROM g GROUP BY k ORDER BY 2",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but
@@ -1389,12 +1440,17 @@ const CASES: &[Case] = &[
 /// A newly discovered divergence is added back here with a reason rather than
 /// silently skipped, so the list stays an honest measure.
 const LEDGER: &[(&str, &str)] = &[
-    // Empty — every seed case now matches real SQLite. The ledger opened at ten
-    // reproduced gaps and has been driven to zero, one oracle-gated increment at
-    // a time: INNER/LEFT/RIGHT/FULL JOIN semantics, scalar-function results and
-    // names, and finally aggregate computed-column names (`agg_N` → `COUNT(*)`/
-    // `SUM(n)`). New divergences, when found, are added back here with a reason
-    // rather than silently skipped — shrinking this list remains the metric.
+    // Positional `ORDER BY <n>` that points at an AGGREGATE output column.
+    // Non-aggregate positional keys are fully supported (see the
+    // `order_by_ordinal_*` gated cases); the aggregate case remains open because
+    // the sort path re-evaluates its key per row, and an aggregate has no per-row
+    // value. Closing it means teaching the sort to bind a positional key to an
+    // already-materialized output column by index instead of substituting its
+    // expression. Until then this is a documented divergence, not a silent skip.
+    (
+        "order_by_ordinal_over_aggregate",
+        "positional ORDER BY over an aggregate output column not yet re-bound to the materialized column",
+    ),
 ];
 
 #[test]
