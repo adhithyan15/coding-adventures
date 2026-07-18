@@ -1,0 +1,24 @@
+% ============================================================================
+% triangle-types.query.adj — a worked recall over the geometry triangle-types
+% library (triangles classified BY THEIR SIDES).
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what makes a triangle
+% isosceles?": it states no geometry fact of its own — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?` against
+% the `triangle_sides` rows and returns the side-condition + the table's source/
+% locator/trust. The fourth query runs the relation BACKWARD (bind the condition
+% `three_equal_sides`, recall its type — equilateral). A word that is not one of
+% the three side-classes abstains honestly — the engine never invents a
+% condition.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli triangle-types.query.adj
+% ============================================================================
+
+import "triangle-types.adj"
+
+? triangle_sides(equilateral, $Condition)   % expect three_equal_sides
+? triangle_sides(isosceles, $Condition)     % expect two_equal_sides
+? triangle_sides(scalene, $Condition)       % expect three_unequal_sides
+? triangle_sides($Type, three_equal_sides)  % reverse bind — expect equilateral
+? triangle_sides(square, $Condition)        % expect abstain — a square is not a triangle

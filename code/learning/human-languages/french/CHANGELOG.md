@@ -1,5 +1,25 @@
 # Changelog
 
+## Chapter 3 — "Comment ça va ?" (the parallel of Spanish Ch. 4)
+
+- **Chapter 3 authored** (`FR-C03-merci`, `-de-rien`, `-aller`,
+  `-comment-ca-va`, `-comme-ci-comme-ca`, `-practice`): the "how are you?"
+  exchange, atom-first, reviewing Chapter 2 throughout. Built deliberately as the
+  cross-language mirror of the Spanish Chapter 4 shipped in the same PR — same
+  canonical concepts (`STATE-HOW-ARE-YOU`, `COURTESY-YOUREWELCOME`, `WORD-SOSO`),
+  so the interleaving method has real parallel material.
+- **Etymology contrasts made explicit** (the point of the curriculum):
+  - *merci* ← *mercēs* "reward / wages" (→ mercy/merchant/commerce) — set against
+    Spanish *gracias* ← *grātia* "grace" and Portuguese *obrigado* ← "obliged".
+  - *de rien* ← *rem* "a thing" → "nothing" — the exact twin of Spanish *de nada*
+    ← *nāta* "a born thing" (a callback the Spanish lesson already forward-references).
+  - *aller* "to go" as the state-verb ("how does it *go*?") — contrasted with
+    Spanish *estar* "to stand"; its suppletive paradigm traced to *ambulāre*
+    (amble/ambulance), *vādere* (invade/evade), *īre* (exit/transit).
+  - *comme ci, comme ça* — *comme* shares *quōmodo* with *comment*; the shrug set
+    against Spanish *más o menos* and Italian *così così*.
+- Taxonomy: namespaced `FR-VERB-ALLER` documented in the examples list.
+
 ## Chapter 2 — Introducing Yourself
 
 - New chapter built around the introduction dialogue (*Je m'appelle Susanne. /

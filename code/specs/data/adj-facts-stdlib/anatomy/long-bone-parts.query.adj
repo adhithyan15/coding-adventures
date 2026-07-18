@@ -1,0 +1,26 @@
+% ============================================================================
+% long-bone-parts.query.adj — a worked recall over the anatomy long-bone-parts
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is the diaphysis of a
+% long bone?": it states no anatomy fact — it only `import`s the grounded table
+% and asks binding queries. The engine resolves each `?` against the
+% `long_bone_part` rows and returns the descriptor + the table's
+% source/locator/trust. The sixth query runs the relation BACKWARD (bind the
+% descriptor `shaft`, recall the region that has it — the diaphysis). A tendon is
+% not a region of a long bone, so a recall on it abstains honestly — the engine
+% never invents a descriptor.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli long-bone-parts.query.adj
+% ============================================================================
+
+import "long-bone-parts.adj"
+
+? long_bone_part(diaphysis, $D)         % expect shaft
+? long_bone_part(epiphysis, $D)         % expect tip_of_bone
+? long_bone_part(metaphysis, $D)        % expect between_diaphysis_and_epiphysis
+? long_bone_part(periosteum, $D)        % expect surrounds_bone_surface
+? long_bone_part(epiphyseal_plate, $D)  % expect linear_bone_growth
+? long_bone_part($P, shaft)             % expect diaphysis — reverse recall
+? long_bone_part(tendon, $D)            % expect abstain — a tendon is not a bone region

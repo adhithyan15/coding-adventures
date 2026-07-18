@@ -1,0 +1,109 @@
+% ============================================================================
+% galaxy-types — the main types of galaxy and the defining shape / description
+% each one is known by (adj-facts-stdlib, ASTRONOMY).
+% ============================================================================
+% One of the first big ideas of extragalactic astronomy, and a rung an ASTRO
+% agent reasons UP from: the galaxies we see are not a formless zoo — nearly all
+% of them sort into a handful of MAIN types by their SHAPE, and each type has a
+% characteristic shape it is defined by. "A spiral galaxy is the one with spiral
+% arms; an elliptical galaxy is a smooth ball that ranges from round to oval; an
+% irregular galaxy is the one with no tidy shape at all." Before you can reason
+% about a galaxy's age, its star formation, or its history you must first know
+% WHICH main type you are looking at. Recall is a binding query:
+%
+%     ? galaxy_shape(spiral, $Shape)      % spiral_arms
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `galaxy_shape(type, shape)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the shape
+% WITH its source, on the CPU, with zero model calls, and abstains on a word that
+% is not one of these main galaxy types (it never invents a shape).
+%
+% Each main galaxy type and the defining shape / description NASA states for it,
+% as a little truth table:
+%
+%     galaxy type      defining shape / description   a beginner's cue
+%     -------------    ----------------------------   -------------------------
+%     spiral           spiral_arms                    the pinwheel with arms
+%     barred_spiral    bar_across_center              a spiral with a central bar
+%     elliptical       round_to_oval                  a smooth ball, round to oval
+%     lenticular       disk_no_arms                    a disk like a spiral, no arms
+%     irregular        unusual_shapes                 no tidy shape at all
+%
+% The query also runs BACKWARD — bind a shape and recall its galaxy type:
+%
+%     ? galaxy_shape($Type, round_to_oval)   % elliptical
+%
+% A word that is NOT one of these main galaxy types — `planet`, `star`,
+% `nebula` — is deliberately NOT a row, so a galaxy recall ABSTAINS on it rather
+% than inventing a shape. That honest-abstention property is what makes the
+% table safe to build a reasoner on: it answers exactly the type→shape pairs it
+% can ground, and only those.
+%
+% The `shape` value of every row is a SINGLE lowercase atom, chosen to be the
+% defining shape / description NASA EXPLICITLY states for that type — never one
+% the source does not support. (Each atom uses the source's own words — NASA
+% says spiral arms, says "round to oval", says a bar that cuts "across their
+% centers", says lenticulars have "disk ... but no arms", says irregulars have
+% "unusual shapes" — so every value stays literally checkable against the quoted
+% span.)
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every type→shape pair below
+% was read out of a fetched NASA Science page, and any pair whose shape could not
+% be verified there would have been dropped). Each pair, with the primary source
+% it was copied from and the verbatim span that states it:
+%
+%   spiral → spiral_arms
+%     https://science.nasa.gov/universe/galaxies/types/
+%     (NASA Science — U.S. National Aeronautics and Space Administration)
+%     "Our Milky Way is one example of a broad class of galaxies defined by the
+%      presence of spiral arms."
+%
+%   barred_spiral → bar_across_center
+%     https://science.nasa.gov/universe/galaxies/types/
+%     (NASA Science — U.S. National Aeronautics and Space Administration)
+%     "Barred spirals sport ribbons of stars, gas, and dust that cut across
+%      their centers."
+%
+%   elliptical → round_to_oval
+%     https://science.nasa.gov/universe/galaxies/types/
+%     (NASA Science — U.S. National Aeronautics and Space Administration)
+%     "Elliptical galaxies have shapes that range from completely round to
+%      oval."
+%
+%   lenticular → disk_no_arms
+%     https://science.nasa.gov/universe/galaxies/types/
+%     (NASA Science — U.S. National Aeronautics and Space Administration)
+%     "They have the central bulge and disk common to spiral galaxies but no
+%      arms."
+%
+%   irregular → unusual_shapes
+%     https://science.nasa.gov/universe/galaxies/types/
+%     (NASA Science — U.S. National Aeronautics and Space Administration)
+%     "Irregular galaxies have unusual shapes, like toothpicks, rings, or even
+%      little groupings of stars."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the NASA statement that fixes the
+% first row (spiral → spiral_arms). Every OTHER row's per-fact source and
+% verbatim span is listed above, so each shape remains independently checkable.
+% All sources are NASA Science, a primary U.S. government (NASA) resource, so
+% `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table galaxy_shape {
+    columns type, shape
+
+    row (spiral, spiral_arms)
+    row (barred_spiral, bar_across_center)
+    row (elliptical, round_to_oval)
+    row (lenticular, disk_no_arms)
+    row (irregular, unusual_shapes)
+
+    source "Our Milky Way is one example of a broad class of galaxies defined by the presence of spiral arms."
+    locator "https://science.nasa.gov/universe/galaxies/types/"
+    trust authoritative
+}

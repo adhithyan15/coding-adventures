@@ -1,0 +1,115 @@
+% ============================================================================
+% vertebrate-groups — the five vertebrate CLASSES and the ONE distinctive
+% body-covering / characteristic each source assigns to it
+% (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% The backboned animals — the vertebrates — fall into five big groups, called
+% CLASSES: fish, amphibians, reptiles, birds and mammals. The simplest way a
+% child (or a biology student) tells them apart is by looking at what covers or
+% distinguishes the animal's body: birds have FEATHERS, mammals have HAIR,
+% reptiles have DRY SCALY SKIN, amphibians have MOIST THIN SKIN, and fish breathe
+% through GILLS. This tiny library records, for each of the five classes, the ONE
+% distinctive feature its source states for it. Recall is a binding query:
+%
+%     ? vertebrate_trait(bird, $Trait)       % feathers
+%     ? vertebrate_trait(reptile, $Trait)    % dry_scaly_skin
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `vertebrate_trait(class, trait)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the trait
+% WITH its source, on the CPU, with zero model calls, and abstains on a word that
+% is not one of these five vertebrate classes (ask it about an `insect` — an
+% INVERTEBRATE, not a vertebrate class — and it stays honestly silent rather than
+% inventing a trait).
+%
+% The five vertebrate classes and the distinctive feature the NPS source names
+% for each, as a truth table:
+%
+%     class       distinctive feature   a beginner's cue
+%     ---------   -------------------   -----------------------------------------
+%     fish        gills                 breathes through gills (not lungs)
+%     amphibian   moist_thin_skin       soft, damp skin — part water, part land
+%     reptile     dry_scaly_skin        dry, scaly skin and clawed toes
+%     bird        feathers              the only animals with feathers
+%     mammal      hair                  has hair / fur and feeds its young milk
+%
+% All five classes appear, so a learner sees the whole vertebrate family. Notice
+% the deliberate choice of feature per class: the NPS source lists SEVERAL traits
+% for each class (fish are "ectothermic, scales, gills, fins…"), and both fish
+% and reptiles are described with scales. If we recalled "scales" for fish it
+% would COLLIDE with the reptile row — the same word for two classes — so it
+% would no longer distinguish them. Instead each row uses the ONE feature that is
+% CLEANLY DISTINCT for its class in this source: fish get GILLS (the respiratory
+% feature no other class here has — reptiles, birds and mammals all use lungs),
+% amphibians get their MOIST THIN SKIN, reptiles their DRY SCALY SKIN, birds their
+% FEATHERS and mammals their HAIR. Five classes, five different values — a shared
+% trait is never forced onto a class.
+%
+% A word that is NOT one of these five vertebrate classes — `insect`, `rock`,
+% `bacteria` — is deliberately NOT a row, so a trait recall ABSTAINS on it rather
+% than fabricating an answer. (An insect is an INVERTEBRATE — it has no backbone —
+% so it is not a class of vertebrate at all.) That honest-abstention property is
+% what makes a recall table safe to build a reasoner on: it answers exactly the
+% class→trait pairs it can ground, and only those.
+%
+% The `trait` value of every row is a SINGLE lowercase snake_case atom, chosen to
+% be the source's OWN word(s) for that class's distinctive feature — never one the
+% source does not support. (Where the source uses several words — "moist thin
+% skin", "dry scaly skin" — the atom keeps the source's own words joined with
+% underscores, so every value stays literally checkable against the quoted span.)
+%
+% ----------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every class→trait pair below
+% was read out of a fetched U.S. NATIONAL PARK SERVICE teaching page, and any pair
+% whose feature could not be verified there would have been dropped). The page is
+% the NPS "Vertebrate Grab Bag" lesson plan (nps.gov), a primary U.S. government
+% teaching resource — hence `trust authoritative`. Each pair, with the verbatim
+% span of that page's Background section that states it:
+%
+%   fish → gills
+%     "Fish: backbone, ectothermic, scales, gills, fins, jelly-like eggs"
+%     (gills is the distinctive respiratory feature — no other class here has it)
+%
+%   amphibian → moist_thin_skin
+%     "Amphibians: backbone, ectothermic, moist thin skin, lungs, no claws,
+%      jelly-like eggs"
+%
+%   reptile → dry_scaly_skin
+%     "Reptiles: backbone, ectothermic, dry scaly skin, clawed toes, leathery
+%      eggs, lungs"
+%
+%   bird → feathers
+%     "Birds: backbone, endothermic, feathers, hollow bones, hard-shelled eggs,
+%      lungs"
+%
+%   mammal → hair
+%     "Mammals: backbone, endothermic, hair / fur, diaphragm, lungs, produces
+%      milk"
+%
+% (The five-class framing itself is stated on the same page:
+% "This activity centers on the five major vertebrate classes: fish, amphibian,
+% reptile, bird, and mammal.")
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the NPS statement that fixes the
+% first row (fish → gills). Every OTHER row's verbatim span is listed above, so
+% each trait remains independently checkable. The source is the NPS "Vertebrate
+% Grab Bag" lesson plan, a primary U.S. government (National Park Service)
+% teaching resource, so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table vertebrate_trait {
+    columns class, trait
+
+    row (fish, gills)
+    row (amphibian, moist_thin_skin)
+    row (reptile, dry_scaly_skin)
+    row (bird, feathers)
+    row (mammal, hair)
+
+    source "Fish: backbone, ectothermic, scales, gills, fins, jelly-like eggs"
+    locator "https://www.nps.gov/teachers/classrooms/vertebrate-grab-bag.htm"
+    trust authoritative
+}

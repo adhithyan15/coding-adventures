@@ -1,0 +1,21 @@
+% ============================================================================
+% reference-lines.query.adj — a worked recall over the geography reference-lines
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does the equator
+% mark?" — it states no geography fact, only `import`s the grounded table and
+% asks binding queries. The engine resolves each `?` against the reference_line
+% rows and returns the marked property (or the line, on a reverse query) + the
+% NOAA source/locator/trust. A line the table does not ground abstains honestly —
+% the engine never invents a `marks` atom.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli reference-lines.query.adj
+% ============================================================================
+
+import "reference-lines.adj"
+
+? reference_line(equator, $Marks)               % expect zero_degrees_latitude
+? reference_line(tropic_of_cancer, $Marks)      % expect northernmost_sun_overhead
+? reference_line($Line, zero_degrees_longitude) % expect prime_meridian (reverse: who marks 0° lon?)
+? reference_line(international_date_line, $Marks) % expect abstain — a real line, not grounded here

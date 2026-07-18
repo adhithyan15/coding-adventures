@@ -1,0 +1,112 @@
+% ============================================================================
+% plant-tropisms — the classic plant tropisms and the environmental stimulus
+% each one grows toward (or away from), as the source names it
+% (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% A tropism is a directional growth movement of a plant in response to an
+% environmental stimulus, and — as the source puts it — "Tropisms are usually
+% named for the stimulus involved". So the name IS the answer key: a
+% phototropism is a growth response to light, a gravitropism to gravity, a
+% thigmotropism to touch, a hydrotropism to water, a chemotropism to chemicals.
+% This is one of the first big ideas of plant biology, and a rung a BOTANY or
+% ECOLOGY agent reasons UP from: before you can explain WHY a shoot bends to a
+% window or a root dives downward, you must first know WHICH stimulus that
+% tropism tracks. Recall is a binding query:
+%
+%     ? tropism_stimulus(phototropism, $Stimulus)      % light
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `tropism_stimulus(tropism, stimulus)` carrying the table's citation,
+% so the lookup above is the ordinary SLD binding query — the engine returns the
+% stimulus WITH its source, on the CPU, with zero model calls, and abstains on a
+% word that is not one of these tropisms (it never invents a stimulus).
+%
+% Each classic plant tropism and the stimulus the source states it responds to,
+% as a little truth table:
+%
+%     tropism          stimulus     a beginner's cue
+%     --------------   ----------   -------------------------------------
+%     phototropism     light        shoots bend toward light
+%     gravitropism     gravity      roots grow down, shoots grow up
+%     thigmotropism    touch        tendrils coil around what they touch
+%     hydrotropism     water        roots curve toward moisture
+%     chemotropism     chemicals    pollen tubes grow toward a chemical cue
+%
+% The query also runs BACKWARD — bind a stimulus and recall its tropism:
+%
+%     ? tropism_stimulus($Tropism, gravity)   % gravitropism
+%
+% A word that is NOT one of these tropisms — `sound`, `heat`, `wind` — is
+% deliberately NOT a row, so a tropism recall ABSTAINS on it rather than
+% inventing a stimulus. (There are named tropisms for some of those — an
+% anemotropism is a response to wind — but they are not rows here, so the table
+% answers exactly the tropism→stimulus pairs it can ground, and only those.)
+% That honest-abstention property is what makes the table safe to build a
+% reasoner on.
+%
+% The `stimulus` value of every row is a SINGLE lowercase atom, chosen to be the
+% stimulus word the source EXPLICITLY names for that tropism — never one the
+% source does not support. (Where the source's phrasing carries an "s" or a
+% plural — "lights or colors of light", "chemicals" — the atom uses the source's
+% own stimulus noun in its singular head form: `light`, `chemicals`, `touch`,
+% `water`, `gravity` — so every value stays literally checkable against the
+% quoted span.)
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every tropism→stimulus pair
+% below was read out of a fetched Wikipedia "Tropism" article, and any pair
+% whose stimulus could not be verified there would have been dropped). Each pair,
+% with the source it was copied from and the verbatim span that states it:
+%
+%   phototropism → light
+%     https://en.wikipedia.org/wiki/Tropism
+%     "Phototropism: movement or growth in response to lights or colors of light"
+%
+%   gravitropism → gravity
+%     https://en.wikipedia.org/wiki/Tropism
+%     "Gravitropism (sometimes referred to as geotropism): is movement or growth
+%      in response to gravity"
+%
+%   thigmotropism → touch
+%     https://en.wikipedia.org/wiki/Tropism
+%     "Thigmotropism: movement or growth in response to touch or contact"
+%
+%   hydrotropism → water
+%     https://en.wikipedia.org/wiki/Tropism
+%     "Hydrotropism: movement or growth in response to water; in plants, the root
+%      cap senses differences in water moisture in the soil, and signals cellular
+%      changes that cause the root to curve towards the area of higher moisture"
+%
+%   chemotropism → chemicals
+%     https://en.wikipedia.org/wiki/Tropism
+%     "Chemotropism: the movement or growth in response to chemicals"
+%
+% (The naming principle itself is stated in the article's lead — "Tropisms are
+% usually named for the stimulus involved; for example, a phototropism is a
+% movement to the light source" — which is why the tropism name and its stimulus
+% travel together.)
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the Wikipedia statement that fixes
+% the first row (phototropism → light). Every OTHER row's per-fact source and
+% verbatim span is listed above, so each stimulus remains independently
+% checkable. The source is the Wikipedia "Tropism" article — a teaching-quality
+% consensus encyclopedia summary, not a primary government/university source — so
+% `trust consensus`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table tropism_stimulus {
+    columns tropism, stimulus
+
+    row (phototropism, light)
+    row (gravitropism, gravity)
+    row (thigmotropism, touch)
+    row (hydrotropism, water)
+    row (chemotropism, chemicals)
+
+    source "Phototropism: movement or growth in response to lights or colors of light"
+    locator "https://en.wikipedia.org/wiki/Tropism"
+    trust consensus
+}

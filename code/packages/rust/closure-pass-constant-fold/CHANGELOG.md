@@ -102,6 +102,34 @@ The emitter parenthesises a sequence in argument / sub-expression position, so
 `w(f()?x:x)` prints `w((f(),x))`. Oracle-verified byte-identical. The pure-test
 case continues to collapse straight to `X`.
 
+## [0.103.0] - 2026-07-17
+
+### Fixed — do not fold division / modulo BY ZERO
+
+`x / 0` and `x % 0` were being folded to the numeric literal of their result —
+`1/0` → `Infinity`, `-1/0` → `-Infinity`, `0/0` → `NaN`, `1%0` → `NaN`. The
+reference Closure Compiler does **not** fold these; it keeps the source
+operation. This release matches that:
+
+- `1/0` stays `1/0` (not `Infinity`)
+- `-1/0` stays `-1/0` (not `-Infinity`)
+- `0/0` stays `0/0` (not `NaN`)
+- `1%0` stays `1%0` (not `NaN`)
+
+Two reasons, both of which Closure honours: the folded literal is **longer**
+than the source, and `Infinity` / `NaN` are ordinary **global identifiers that
+can be shadowed** in scope, so emitting them where the source computed the value
+arithmetically is not even sound. Declining keeps closurec byte-identical *and*
+avoids a latent miscompile.
+
+A **non-zero** divisor still folds exactly as before — `6/3` → `2`, `5/2` →
+`2.5`, `1/8` → `.125`. The guard is scoped to the `Div` and `Mod` operators
+with a literal-zero right operand (`±0`); all other arithmetic is untouched.
+
+**Known remaining divergence (filed as a follow-up):** Closure also keeps a
+NON-terminating quotient — `1/3` stays `1/3` rather than the 16-digit
+`.3333333333333333` — governed by its numeric byte-cost heuristic. That is a
+separate, subtler transform and is not addressed here.
 ## [0.102.0] - 2026-07-17
 
 ### Added — idempotent double-negation collapse: `!!!x` → `!x`

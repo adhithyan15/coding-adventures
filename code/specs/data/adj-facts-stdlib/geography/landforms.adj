@@ -1,0 +1,110 @@
+% ============================================================================
+% landforms — the common landforms and the short defining descriptor its
+% source states for each (adj-facts-stdlib, GEOGRAPHY).
+% ============================================================================
+% One of the first big ideas of physical geography, and a rung a GEOGRAPHY or
+% EARTH-SCIENCE agent reasons UP from: the solid surface of the Earth is not
+% uniform — it is built out of a small set of recurring shapes, and each shape
+% has a characteristic defining feature. "A mountain projects conspicuously
+% above its surroundings; a valley is low land bordered by higher ground; a
+% plateau is a flat area of great elevation; a plain is comparatively level;
+% a canyon is narrow and deep." Before you can reason about where a river runs,
+% where rain falls, or where a road can climb, you must first know WHICH
+% landform you are standing on. Recall is a binding query:
+%
+%     ? landform_description(canyon, $Desc)      % deep_narrow
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `landform_description(landform, description)` carrying the table's
+% citation, so the lookup above is the ordinary SLD binding query — the engine
+% returns the descriptor WITH its source, on the CPU, with zero model calls, and
+% abstains on a word that is not one of these landforms (it never invents a
+% descriptor).
+%
+% Each common landform and the short defining descriptor the source states for
+% it, as a little truth table:
+%
+%     landform    defining descriptor          a beginner's cue
+%     --------    -------------------------     --------------------------------
+%     mountain    projects_above_surroundings   stands conspicuously above the land
+%     valley      low_between_mountains          low land, often between two mountains
+%     plateau     flat_elevated                  a flat area, but held up high
+%     plain       comparatively_level            broad, comparatively level ground
+%     canyon      deep_narrow                    a narrow, deep, steep-sided cut
+%
+% The query also runs BACKWARD — bind a descriptor and recall its landform:
+%
+%     ? landform_description($Landform, deep_narrow)   % canyon
+%
+% A word that is NOT one of these landforms — `ocean`, `island`, `river` — is
+% deliberately NOT a row, so a landform recall ABSTAINS on it rather than
+% inventing a descriptor. That honest-abstention property is what makes the
+% table safe to build a reasoner on: it answers exactly the landform→descriptor
+% pairs it can ground, and only those.
+%
+% The `description` value of every row is a SINGLE lowercase atom, chosen to be
+% a defining descriptor the source EXPLICITLY states for that landform — never
+% one the source does not support. Each atom uses the source's own words (the
+% USGS thesaurus says "narrow, deep", not "gorge"; it says "project ... above
+% their surroundings", not "tall"), so every value stays literally checkable
+% against the quoted span.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every landform→descriptor
+% pair below was read out of ONE fetched USGS-hosted source, the Alexandria
+% Digital Library Feature Type Thesaurus served at apps.usgs.gov, and any pair
+% whose descriptor could not be verified there would have been dropped). Each
+% pair, with the verbatim span that states it (all on the one thesaurus page):
+%
+%   mountain → projects_above_surroundings
+%     "Landmasses that project conspicuously above their surroundings."
+%
+%   valley → low_between_mountains
+%     "Low-lying land bordered by higher ground; especially elongate,
+%      relatively large gently sloping depressions of the Earth's surface,
+%      commonly situated between two mountains or between ranges of hills or
+%      mountains, and often containing a stream with an outlet."
+%
+%   plateau → flat_elevated
+%     "Comparatively flat areas of great extent and elevation; specif.
+%      extensive land regions considerably above the adjacent country or above
+%      sea level; commonly limited on at least one side by an abrupt descent ..."
+%
+%   plain → comparatively_level
+%     "Regions of general uniform slope, comparatively level and of
+%      considerable extent."
+%
+%   canyon → deep_narrow
+%     "Relatively narrow, deep depressions with steep sides, the bottom of
+%      which generally has a continuous slope."
+%
+% DROPPED — `hill`: this authoritative source does not carry a standalone
+% `hills` definition (the word appears only as a synonym folded under the
+% `mountains` entry). Rather than borrow a descriptor from a weaker source and
+% drag the whole table down to a lower trust tier, the hill row is dropped, per
+% the honest-drop discipline.
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the thesaurus statement that
+% fixes the first row (mountain → projects_above_surroundings). Every OTHER
+% row's verbatim span is listed above, and all of them live on the SAME
+% USGS-hosted thesaurus page named in `locator`, so each descriptor remains
+% independently checkable. The source is served by the U.S. Geological Survey
+% (a primary U.S. government resource), so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table landform_description {
+    columns landform, description
+
+    row (mountain, projects_above_surroundings)
+    row (valley, low_between_mountains)
+    row (plateau, flat_elevated)
+    row (plain, comparatively_level)
+    row (canyon, deep_narrow)
+
+    source "Landmasses that project conspicuously above their surroundings."
+    locator "https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=3"
+    trust authoritative
+}

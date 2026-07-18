@@ -1,0 +1,101 @@
+% ============================================================================
+% angle-types — the five types of angle and the measure-condition that defines
+% each one (adj-facts-stdlib, GEOMETRY).
+% ============================================================================
+% One of the first classifications a geometry student learns: you name an angle
+% by HOW BIG it is. "An acute angle is less than a right angle; a right angle is
+% exactly 90°; an obtuse angle is bigger than a right angle but less than a
+% straight one; a straight angle is 180°; and a reflex angle is bigger still."
+% Before you can reason about a triangle, a turn, or a bearing you must first be
+% able to say WHICH kind of angle a measure falls into. Recall is a binding
+% query:
+%
+%     ? angle_condition(obtuse, $Condition)      % between_90_and_180
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `angle_condition(angle_type, condition)` carrying the table's
+% citation, so the lookup above is the ordinary SLD binding query — the engine
+% returns the defining condition WITH its source, on the CPU, with zero model
+% calls, and abstains on a word that is not one of these five angle types (it
+% never invents a condition).
+%
+% Each of the five angle types and the measure-condition the source states for
+% it, as a little truth table:
+%
+%     angle type   defining measure-condition   a beginner's cue
+%     ----------   --------------------------   ---------------------------------
+%     acute        between_0_and_90             smaller than a right angle
+%     right        equals_90                    a perfect square corner, 90°
+%     obtuse       between_90_and_180           bigger than a right angle
+%     straight     equals_180                   a straight line, half a turn
+%     reflex       greater_than_180             bigger than a straight angle
+%
+% The query also runs BACKWARD — bind a condition and recall its angle type:
+%
+%     ? angle_condition($Type, equals_90)        % right
+%
+% A word that is NOT one of these five angle types — `circle`, `perpendicular`,
+% `full` — is deliberately NOT a row, so an angle-type recall ABSTAINS on it
+% rather than inventing a condition. That honest-abstention property is what
+% makes the table safe to build a reasoner on: it answers exactly the
+% type→condition pairs it can ground, and only those.
+%
+% The `condition` value of every row is a SINGLE snake_case atom, normalized
+% from the exact measure-condition the source states for that type — never one
+% the source does not support. The source phrases each definition as a range or
+% an exact degree ("between 0° and 90°", "90°", "between 90° and 180°", "180°",
+% "greater than 180°"); each atom is that phrasing collapsed to one token, so
+% every value stays literally checkable against the quoted span. (Note the
+% source defines a reflex angle as "greater than 180°" — an open condition with
+% no explicit upper bound — so the atom is `greater_than_180`, the source's own
+% phrasing, not an invented "between 180 and 360".)
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every type→condition pair
+% below was read out of a fetched Mathematics LibreTexts "Angle Classifications"
+% page, and any pair whose condition could not be verified there would have been
+% dropped). Each pair, with the source it was copied from and the verbatim span
+% that states it:
+%
+%   acute → between_0_and_90
+%     "An acute angle is an angle whose measure is between 0° and 90°."
+%
+%   right → equals_90
+%     "A right angle is an angle whose measure is 90°."
+%
+%   obtuse → between_90_and_180
+%     "An obtuse angle is an angle whose measure is between 90° and 180°."
+%
+%   straight → equals_180
+%     "A straight angle is an angle whose measure is 180°."
+%
+%   reflex → greater_than_180
+%     "A reflex angle is an angle whose measure is greater than 180°."
+%
+% All five spans are from the same page:
+%   https://math.libretexts.org/Bookshelves/Geometry/Elementary_College_Geometry_(Africk)/01:_Lines_Angles_and_Triangles/1.03:_Angle_Classifications
+%   (Mathematics LibreTexts — Elementary College Geometry, Africk)
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the LibreTexts statement that
+% fixes the first row (acute → between_0_and_90). Every OTHER row's verbatim
+% span is listed above, so each condition remains independently checkable. The
+% source is a Mathematics LibreTexts teaching text (an open educational
+% resource, not a primary standards body), so `trust consensus`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table angle_condition {
+    columns angle_type, condition
+
+    row (acute, between_0_and_90)
+    row (right, equals_90)
+    row (obtuse, between_90_and_180)
+    row (straight, equals_180)
+    row (reflex, greater_than_180)
+
+    source "An acute angle is an angle whose measure is between 0° and 90°."
+    locator "https://math.libretexts.org/Bookshelves/Geometry/Elementary_College_Geometry_(Africk)/01:_Lines_Angles_and_Triangles/1.03:_Angle_Classifications"
+    trust consensus
+}

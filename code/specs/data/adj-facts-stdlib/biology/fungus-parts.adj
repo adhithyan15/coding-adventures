@@ -1,0 +1,110 @@
+% ============================================================================
+% fungus-parts — the structural parts of a fungus and the defining token /
+% role the source states for each one (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% A mushroom is the part of a fungus we see, but the FUNGUS is an assembly of
+% named parts, and a mycology key names each part by the ONE thing it is or
+% does. "A hypha is a thread; the mycelium is the body made of hyphae; the
+% fruiting body carries the spores; the cap is the apical surface; a spore
+% disperses the fungus; the gills hold the spores; the stalk lifts the cap."
+% Before you can reason about a fungus — identify it, key it out, or teach it —
+% you must first know WHICH part you are looking at and what that part is FOR.
+% Recall is a binding query:
+%
+%     ? fungus_part_role(mycelium, $Role)      % made_of_hyphae
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `fungus_part_role(part, role)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the role
+% WITH its source, on the CPU, with zero model calls, and abstains on a word
+% that is not one of these fungus parts (it never invents a role).
+%
+% Each fungus part and the defining token / role the source states for it, as
+% a little truth table:
+%
+%     fungus part    defining token / role      a beginner's cue
+%     -----------    ---------------------      -----------------------------
+%     hypha          thread_like                one fine thread of the fungus
+%     mycelium       made_of_hyphae             the body, a tangle of hyphae
+%     fruiting_body  contains_spores            the mushroom that bears spores
+%     cap            apical_surface             the top, the umbrella
+%     spore          disperses                  the seed-like dispersal cell
+%     gills          holds_spores               blades under the cap
+%     stalk          lifts_cap                  the stem that raises the cap
+%
+% The query also runs BACKWARD — bind a role and recall the fungus part:
+%
+%     ? fungus_part_role($Part, made_of_hyphae)   % mycelium
+%
+% A word that is NOT one of these fungus parts — `root`, `leaf`, `chloroplast`
+% — is deliberately NOT a row, so a fungus-part recall ABSTAINS on it rather
+% than inventing a role. (A fungus has no roots: the mycelium is root-LIKE, but
+% it is not a root.) That honest-abstention property is what makes the table
+% safe to build a reasoner on: it answers exactly the part→role pairs it can
+% ground, and only those.
+%
+% The `role` value of every row is a SINGLE lowercase atom, chosen to be a word
+% the source EXPLICITLY uses for that part — never one the source does not
+% support. Where the source's phrase is more than one word (the mycelium is
+% "made up of many hyphae"; the stalk "lifts the cap"), the atom joins the
+% source's own words with underscores, so every value stays literally checkable
+% against the quoted span.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every part→role pair below
+% was read out of a single fetched UNLV School of Life Sciences teaching page,
+% and any pair whose role could not be verified there was dropped). Each pair,
+% with the verbatim span that states it, from "The Kingdom Fungi" (Matthew
+% Landau, University of Nevada Las Vegas biology faculty teaching page):
+%   https://landau.faculty.unlv.edu/fungi.htm
+%
+%   hypha → thread_like
+%     "thread-like structure of very fine, colorless threads, that makes up the
+%      body of a fungus"
+%
+%   mycelium → made_of_hyphae
+%     "The body of a fungus, made up of many hyphae, is called a mycelium."
+%
+%   fruiting_body → contains_spores
+%     "it develops one or more fruiting bodies containing reproductive spores."
+%
+%   cap → apical_surface
+%     "cap - apical surface; on edible fungi usu. rounded and smooth."
+%
+%   spore → disperses
+%     "A spore is a tiny, usually haploid, cell that disperses the fungus to new
+%      habitats, usually by floating thru the air."
+%
+%   gills → holds_spores
+%     "gills - flat-sided, blade-like radial structures on the underside of the
+%      cap, covered with microscopic basidia, which holds the mushroom's spores."
+%
+%   stalk → lifts_cap
+%     "stalk - typically a cylindrical structure that lifts the cap above the
+%      soil surface, like a stem or shoot in seed-bearing plant."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the UNLV statement that fixes the
+% first row (hypha → thread_like). Every OTHER row's verbatim span is listed
+% above, so each role remains independently checkable. The source is a
+% university biology faculty teaching page (a .edu teaching summary, not a
+% primary reference), so `trust consensus`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table fungus_part_role {
+    columns part, role
+
+    row (hypha, thread_like)
+    row (mycelium, made_of_hyphae)
+    row (fruiting_body, contains_spores)
+    row (cap, apical_surface)
+    row (spore, disperses)
+    row (gills, holds_spores)
+    row (stalk, lifts_cap)
+
+    source "thread-like structure of very fine, colorless threads, that makes up the body of a fungus"
+    locator "https://landau.faculty.unlv.edu/fungi.htm"
+    trust consensus
+}

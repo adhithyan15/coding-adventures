@@ -1,0 +1,91 @@
+% ============================================================================
+% newton-laws — Newton's THREE laws of motion, keyed by law NUMBER (1, 2, 3),
+% to the short name NASA gives each law (adj-facts-stdlib, PHYSICS).
+% ============================================================================
+% One of the first big ideas of mechanics, and a rung a physics agent reasons
+% UP from: classical motion rests on exactly THREE laws, and each one has a
+% number and a short name. "The first law is the law of inertia; the second law
+% is the law of force (F = m·a); the third law is the law of action and
+% reaction." Before you can reason about a rocket, a collision, or a free-body
+% diagram you must first know WHICH of the three numbered laws you are invoking.
+% Recall is a binding query keyed by the law's NUMBER:
+%
+%     ? newton_law(2, $Name)      % force
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `newton_law(number, name)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the short
+% name WITH its source, on the CPU, with zero model calls, and abstains on any
+% law number NASA does not fix (there is no fourth law of motion).
+%
+% Each of the three laws and the short name NASA prints for it, as a little
+% truth table (the KEY is the bare law NUMBER, exactly like temperature-scales
+% keys on a bare number):
+%
+%     law number   short name         what NASA labels it
+%     ----------   ----------------   -------------------------------------
+%     1            inertia            "Newton's First Law of Motion (Inertia)"
+%     2            force              "Newton's Second Law of Motion (Force)"
+%     3            action_reaction    "Newton's Third Law of Motion (Action & Reaction)"
+%
+% The query also runs BACKWARD — bind a name and recall its law number:
+%
+%     ? newton_law($N, action_reaction)   % 3 — reverse recall
+%
+% A number that is NOT one of these three — `4`, `0` — is deliberately NOT a
+% row, so a law recall ABSTAINS on it rather than inventing a fourth law. That
+% honest-abstention property is what makes the table safe to build a reasoner
+% on: it answers exactly the number→name pairs it can ground, and only those.
+%
+% The `name` value of every row is a SINGLE lowercase snake_case atom, copied
+% from the parenthetical short label NASA prints beside each numbered law —
+% never a name the source does not support. (NASA writes the third law's label
+% "Action & Reaction"; the atom normalizes the ampersand to `action_reaction`,
+% so every value stays literally checkable against the quoted span.)
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every number→name pair
+% below was read out of a fetched NASA Glenn Research Center page this session,
+% and any pair whose name could not be verified there would have been dropped).
+% All three names come from the SAME primary U.S. government source, NASA's
+% Beginner's Guide to Aeronautics "Newton's Laws of Motion"
+% (www1.grc.nasa.gov/beginners-guide-to-aeronautics/newtons-laws-of-motion/),
+% whose numbered review list labels each law, quoted here character-for-
+% character so any reader can re-check it:
+%
+%   1 → inertia
+%     "Newton's First Law of Motion (Inertia)"
+%
+%   2 → force
+%     "Newton's Second Law of Motion (Force)"
+%     (the same page states the second law as "The acceleration of an object
+%      depends on the mass of the object and the amount of force applied." and
+%      gives the formula "F = m · a")
+%
+%   3 → action_reaction
+%     "Newton's Third Law of Motion (Action & Reaction)"
+%     (the same page states the third law as "Whenever one object exerts a force
+%      on another object, the second object exerts an equal and opposite force
+%      on the first.")
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the NASA label that fixes the
+% first row (1 → inertia). Every OTHER row's per-fact source and verbatim span
+% is listed above, so each name remains independently checkable. The source is a
+% primary U.S. government NASA (Glenn Research Center) page, so `trust
+% authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table newton_law {
+    columns number, name
+
+    row (1, inertia)
+    row (2, force)
+    row (3, action_reaction)
+
+    source "Newton's First Law of Motion (Inertia)"
+    locator "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/newtons-laws-of-motion/"
+    trust authoritative
+}

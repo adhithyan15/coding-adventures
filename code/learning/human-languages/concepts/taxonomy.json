@@ -140,6 +140,28 @@
       "core": false,
       "retires": ["ARTICLES-EL-LA", "ARTICLES-LE-LA", "ARTICLES-DER-DIE-DAS", "ARTICLE-GENDER", "ARTICLE"],
       "notes": "One join key for 'the'; the realization holds each language's specific forms (el/la, der/die/das, il/la/lo, o/a, al-)."
+    },
+
+    "COURTESY-YOUREWELCOME": {
+      "family": "COURTESY",
+      "gloss": "you're welcome (the standard reply to thanks)",
+      "core": false,
+      "retires": ["YOURE-WELCOME", "WELCOME-REPLY"],
+      "notes": "The reply that closes a thanks exchange (de nada, prego, bitte, не за что). Distinct from GREETING-WELCOME (svāgatam), which welcomes an arrival."
+    },
+    "STATE-HOW-ARE-YOU": {
+      "family": "STATE",
+      "gloss": "how are you? (asking after someone's state)",
+      "core": false,
+      "retires": ["HOW-ARE-YOU", "HOWAREYOU"],
+      "notes": "The realization holds each language's phrasing and register split (¿cómo está usted? / ¿cómo estás?). Builds on QUESTION-HOW plus the state verb."
+    },
+    "WORD-SOSO": {
+      "family": "WORD",
+      "gloss": "so-so / not bad (a middling answer to 'how are you?')",
+      "core": false,
+      "retires": ["SO-SO", "SOSO"],
+      "notes": "The neither-good-nor-bad reply (regular / más o menos, così così, comme ci comme ça)."
     }
   },
   "namespaced": {
@@ -148,11 +170,14 @@
       "ES-VERB-LLAMAR": "llamar — 'to call' (the Spanish naming verb)",
       "ES-SE-LLAMA": "se llama — 'he/she calls himself' (3rd-person of llamar)",
       "ES-WORD-MUCHO": "mucho — 'much / a lot'",
+      "ES-VERB-ESTAR": "estar — 'to be' (temporary state / location; ← Latin stare 'to stand')",
       "FR-VERB-APPELER": "(s')appeler — 'to call (oneself)'",
-      "DE-VERB-HEISSEN": "heißen — 'to be called'"
+      "FR-VERB-ALLER": "aller — 'to go' (suppletive: ambulāre/vādere/īre); drives 'comment ça va?'",
+      "DE-VERB-HEISSEN": "heißen — 'to be called'",
+      "DE-VERB-GEHEN": "gehen — 'to go' (= English go); drives 'wie geht es dir?'"
     }
   },
   "practiceTags": {
-    "note": "Non-word lessons (type: review | practice-mix) carry a session label, not a concept, and are exempt from the cross-language join. Existing labels: CH1-PRACTICE, CH2-PRACTICE, CH3-PRACTICE, REVIEW."
+    "note": "Non-word lessons (type: review | practice-mix | writing) carry a session/orthography label, not a concept, and are exempt from the cross-language join. Existing labels: CH1-PRACTICE, CH2-PRACTICE, CH3-PRACTICE, CH4-PRACTICE, REVIEW."
   }
 }

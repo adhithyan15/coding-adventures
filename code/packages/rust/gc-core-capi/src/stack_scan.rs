@@ -309,6 +309,33 @@ pub unsafe extern "C" fn __gc_collect() -> i64 {
     freed
 }
 
+/// A **minor** (young-generation-only) collection rooted at this thread's live
+/// stack + callee-saved registers — the generational analogue of [`__gc_collect`].
+/// Reclaims only young garbage and never scans or frees the old generation
+/// (old→young pointers are reached through the remembered set the
+/// [`__gc_write_barrier`](crate::__gc_write_barrier) populates). Returns objects
+/// freed. Identical stack-discovery to [`__gc_collect`]; only the underlying cycle
+/// differs ([`gc_core::FlatHeap::collect_minor_region`]).
+///
+/// # Safety
+///
+/// Same contract as [`__gc_collect`]: the calling thread must own its stack, and
+/// every old→young store must have gone through the write barrier.
+#[no_mangle]
+#[inline(never)]
+pub unsafe extern "C" fn __gc_collect_minor() -> i64 {
+    let mut regs = [0usize; SPILL_SLOTS];
+    let sp = spill_and_sp(regs.as_mut_ptr());
+    let base = stack_base();
+    let freed = if base != 0 && sp < base && base - sp <= MAX_STACK_SCAN {
+        with_heap(|h| h.collect_minor_region(sp as *const u8, base - sp).freed as i64)
+    } else {
+        0
+    };
+    core::hint::black_box(&regs);
+    freed
+}
+
 /// A **paced** collect: run [`__gc_collect`] only if the heap has reached its
 /// adaptive threshold ([`gc_core::FlatHeap::should_collect`]); otherwise do
 /// nothing. Returns objects freed (`0` if no collection ran).

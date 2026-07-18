@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/human-language-data",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Cross-language concept dataset + validator derived from the Human Languages curriculum (spec HL01)",
   "type": "module",
   "main": "src/index.ts",

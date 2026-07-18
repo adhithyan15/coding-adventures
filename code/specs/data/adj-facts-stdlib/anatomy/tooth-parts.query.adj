@@ -1,0 +1,22 @@
+% ============================================================================
+% tooth-parts.query.adj — a worked recall over the anatomy tooth-parts library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is the enamel?": it
+% states no anatomy fact of its own — it only `import`s the grounded table and
+% asks binding queries. The engine resolves each `?` against the
+% `tooth_part_role` rows and returns the role + the table's source/locator/
+% trust. The fourth query runs the relation BACKWARD (bind the role
+% `covers_roots`, recall which part it is — cementum). A word that is not one of
+% these tooth parts abstains honestly — the engine never invents a role.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli tooth-parts.query.adj
+% ============================================================================
+
+import "tooth-parts.adj"
+
+? tooth_part_role(enamel, $Role)      % expect outer_surface
+? tooth_part_role(dentin, $Role)      % expect beneath_enamel
+? tooth_part_role(pulp, $Role)        % expect blood_vessels_and_nerves
+? tooth_part_role($Part, covers_roots) % reverse bind — expect cementum
+? tooth_part_role(femur, $Role)       % expect abstain — the femur is a leg bone, not a tooth part

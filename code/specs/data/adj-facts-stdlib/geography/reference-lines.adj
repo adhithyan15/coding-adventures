@@ -1,0 +1,110 @@
+% ============================================================================
+% reference-lines — the great imaginary lines on the globe, and what each marks
+% (adj-facts-stdlib, GEOGRAPHY).
+% ============================================================================
+% A geography facts library — the named lines a child first traces on a globe or
+% a classroom map. They are not painted on the Earth; they are IMAGINARY lines of
+% reference that geographers agreed on, and each one MARKS something definite:
+% the equator marks the middle (0° latitude), the prime meridian marks the
+% starting line for longitude (0°), the two tropics mark how far north and south
+% the noon Sun can climb straight overhead, and the two polar circles ring the
+% far north and far south. Recall is a binding query — you name a line and ask
+% what it marks:
+%
+%     ? reference_line(equator, $Marks)     % zero_degrees_latitude
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `reference_line(line, marks)` carrying the table's provenance, so the lookup
+% above is the ordinary SLD binding query — the engine returns the marked
+% property WITH its source, on the CPU, with zero model calls, and abstains on
+% anything that is not one of the six named lines (e.g. `international_date_line`
+% is a real line but is NOT grounded in a row here, so it is deliberately left
+% out and the engine abstains rather than inventing an answer).
+%
+% ----------------------------------------------------------------------------
+% Truth table (the six rows, each an atom → atom fact):
+%
+%     line                  marks
+%     --------------------  ---------------------------
+%     equator               zero_degrees_latitude       % 0° lat; N/S hemispheres
+%     prime_meridian        zero_degrees_longitude      % 0° lon; E/W hemispheres
+%     tropic_of_cancer      northernmost_sun_overhead   % +23.5°; Sun overhead limit N
+%     tropic_of_capricorn   southernmost_sun_overhead   % −23.5°; Sun overhead limit S
+%     arctic_circle         around_north_pole           % ring near the North Pole
+%     antarctic_circle      around_south_pole           % ring near the South Pole
+%
+% Backward query — bind the LINE from the property (the `marks` column is the
+% key you know, the `line` is the unknown):
+%
+%     ? reference_line($Line, zero_degrees_longitude)   % prime_meridian
+%
+% Abstention property — a line the library does not ground returns no row, so
+% the engine reports `"abstained":true`. The equator/prime-meridian and the two
+% tropics are grounded; a line like `international_date_line` (a genuine line,
+% but one this table does not carry) abstains honestly. The engine NEVER
+% fabricates a `marks` atom for an ungrounded line.
+%
+% ----------------------------------------------------------------------------
+% Provenance — every row is grounded to a NOAA (U.S. federal, .gov) page fetched
+% for this library; nothing is asserted from memory (feedback_nothing_human_-
+% authored, feedback_adj_only_shipped_artifacts). Three NOAA pages are involved,
+% all the SAME trust tier, so the envelope is `trust authoritative` honestly. The
+% machine envelope carries the equator citation as its primary `source`/`locator`
+% (the equator is the canonical zeroth reference line), and records the other two
+% NOAA pages as `cites` corroborations. For full auditability, here is the EXACT
+% verbatim span that grounds EACH row, with the page it came from:
+%
+%   equator → zero_degrees_latitude
+%     NOAA National Ocean Service, "What is latitude?":
+%     "The equator is the most well known parallel. At 0 degrees latitude, it
+%      equally divides the Earth into the Northern and Southern hemispheres."
+%     https://oceanservice.noaa.gov/facts/latitude.html
+%
+%   prime_meridian → zero_degrees_longitude
+%     NOAA National Ocean Service, "What is longitude?":
+%     "The prime meridian, which runs through Greenwich, England, has a longitude
+%      of 0 degrees. It divides the Earth into the eastern and western
+%      hemispheres."
+%     https://oceanservice.noaa.gov/facts/longitude.html
+%
+%   tropic_of_cancer → northernmost_sun_overhead
+%   tropic_of_capricorn → southernmost_sun_overhead
+%     NOAA NESDIS, "What Is a Solstice?":
+%     "One in the Northern Hemisphere called the Tropic of Cancer at +23.5°
+%      latitude and one in the Southern Hemisphere called the Tropic of Capricorn
+%      at − 23.5° latitude. At these latitudes, the sun is directly overhead
+%      around noon on the solstices." — and — "Between the two tropics zones,
+%      which includes the equator, the sun is directly overhead twice per year.
+%      Outside the tropic zones, whether to the south or north, the sun is never
+%      directly overhead." So the Tropic of Cancer is the NORTHERNMOST and the
+%      Tropic of Capricorn the SOUTHERNMOST latitude at which the noon Sun can
+%      stand directly overhead.
+%     https://www.nesdis.noaa.gov/about/k-12-education/optical-phenomena/what-solstice
+%
+%   arctic_circle → around_north_pole
+%   antarctic_circle → around_south_pole
+%     NOAA NESDIS, "What Is a Solstice?":
+%     "Two other significant lines of latitude are the Arctic Circle (around the
+%      North Pole) and the Antarctic Circle (around the South Pole)."
+%     https://www.nesdis.noaa.gov/about/k-12-education/optical-phenomena/what-solstice
+%
+% (See ../README.md.)
+% ============================================================================
+
+table reference_line {
+    columns line, marks
+
+    row (equator, zero_degrees_latitude)              % NOAA "What is latitude?" (latitude.html)
+    row (prime_meridian, zero_degrees_longitude)      % NOAA "What is longitude?" (longitude.html)
+    row (tropic_of_cancer, northernmost_sun_overhead)     % NOAA NESDIS "What Is a Solstice?"
+    row (tropic_of_capricorn, southernmost_sun_overhead)  % NOAA NESDIS "What Is a Solstice?"
+    row (arctic_circle, around_north_pole)            % NOAA NESDIS "What Is a Solstice?"
+    row (antarctic_circle, around_south_pole)         % NOAA NESDIS "What Is a Solstice?"
+
+    source "The equator is the most well known parallel. At 0 degrees latitude, it equally divides the Earth into the Northern and Southern hemispheres."
+    locator "https://oceanservice.noaa.gov/facts/latitude.html"
+    trust authoritative
+
+    cites "The prime meridian, which runs through Greenwich, England, has a longitude of 0 degrees. It divides the Earth into the eastern and western hemispheres." locator "https://oceanservice.noaa.gov/facts/longitude.html"
+    cites "In the Northern Hemisphere, the Summer Solstice occurs when the sun is directly above the Tropic of Cancer, usually June 21. In the Southern Hemisphere, the Summer Solstice occurs when the sun is directly above the Tropic of Capricorn, usually December 21. Two other significant lines of latitude are the Arctic Circle (around the North Pole) and the Antarctic Circle (around the South Pole)." locator "https://www.nesdis.noaa.gov/about/k-12-education/optical-phenomena/what-solstice"
+}

@@ -1,0 +1,24 @@
+% ============================================================================
+% mitosis-phases.query.adj — a worked recall over the biology mitosis library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what happens in
+% metaphase?": it states no biology fact — it only `import`s the grounded table
+% and asks binding queries. The engine resolves each `?` against the
+% `mitosis_phase` rows and returns the event atom + the table's
+% source/locator/trust. The fifth query runs the relation BACKWARD (bind the
+% event, recall the phase). A word that is not one of the four mitotic phases —
+% `interphase`, the resting stage BETWEEN divisions — abstains honestly: the
+% engine never invents an event.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli mitosis-phases.query.adj
+% ============================================================================
+
+import "mitosis-phases.adj"
+
+? mitosis_phase(prophase, $E)    % expect chromatin_forms_chromosomes
+? mitosis_phase(metaphase, $E)   % expect chromosomes_line_up
+? mitosis_phase(anaphase, $E)    % expect chromatids_separate
+? mitosis_phase(telophase, $E)   % expect nuclear_membrane_forms
+? mitosis_phase($P, chromosomes_line_up)  % expect metaphase — the reverse recall
+? mitosis_phase(interphase, $E)  % expect abstain — not a phase OF mitosis

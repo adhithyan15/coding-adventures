@@ -44,7 +44,7 @@ export interface Realization {
   language: string; // track slug: "spanish", "telugu", …
   lessonId: string; // e.g. ES-C01-dia
   chapter: number;
-  type: string; // word | phrase | practice | practice-mix | review
+  type: string; // word | phrase | practice | practice-mix | review | writing
   headword: string; // "día" / "నమస్కారం"
   gloss: string; // "day (el día — masculine)"
   romanization: string; // "DEE-ah"; = headword for Latin script; "" if unknown

@@ -1,0 +1,98 @@
+% ============================================================================
+% triangle-types — the three types of triangle CLASSIFIED BY THEIR SIDES and
+% the defining side-condition each one is built on (adj-facts-stdlib, GEOMETRY).
+% ============================================================================
+% One of the first classifications a geometry student learns, and a rung a
+% GEOMETRY agent reasons UP from: classify a triangle by counting how many of
+% its three sides are equal. "An equilateral triangle has all three sides
+% equal; an isosceles triangle has two equal sides; a scalene triangle has three
+% unequal sides." Before you can reason about a triangle's angles, symmetry, or
+% congruence you must first know WHICH of these three side-classes it belongs to.
+% Recall is a binding query:
+%
+%     ? triangle_sides(isosceles, $Condition)      % two_equal_sides
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `triangle_sides(triangle, condition)` carrying the table's citation,
+% so the lookup above is the ordinary SLD binding query — the engine returns the
+% side-condition WITH its source, on the CPU, with zero model calls, and abstains
+% on a word that is not one of these three side-classes (it never invents a
+% condition).
+%
+% This table classifies triangles BY THEIR SIDES. It is DISTINCT from a
+% classification by ANGLES (acute / right / obtuse), which lives in a separate
+% library — a scalene triangle can be acute, right, or obtuse, so the two
+% classifications are independent axes.
+%
+% Each of the three side-classes and the defining side-condition the source
+% states for it, as a little truth table:
+%
+%     triangle type   defining side-condition   a beginner's cue
+%     -------------   -----------------------   --------------------------------
+%     equilateral     three_equal_sides         all three sides the same length
+%     isosceles       two_equal_sides           exactly two sides the same length
+%     scalene         three_unequal_sides       all three sides different lengths
+%
+% The query also runs BACKWARD — bind a side-condition and recall its type:
+%
+%     ? triangle_sides($Type, three_equal_sides)   % equilateral
+%
+% A word that is NOT one of these three side-classes — `right`, `acute`,
+% `square` — is deliberately NOT a row, so a side-classification recall ABSTAINS
+% on it rather than inventing a condition. That honest-abstention property is
+% what makes the table safe to build a reasoner on: it answers exactly the
+% type→condition pairs it can ground, and only those. (`right` and `acute` are
+% ANGLE classes, not side classes; `square` is not a triangle at all.)
+%
+% The `condition` value of every row is a SINGLE lowercase atom, chosen to be
+% the defining side-condition the source EXPLICITLY states for that type — never
+% one the source does not support. (Where the everyday word differs from the
+% source's word — the source says "three unequal sides" for scalene, not "no
+% equal sides" — the atom uses the source's own word, so every value stays
+% literally checkable against the quoted span.)
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every type→condition pair
+% below was read out of a fetched Wolfram MathWorld page, and any pair whose
+% condition could not be verified there would have been dropped). Each pair,
+% with the primary source it was copied from and the verbatim span that states
+% it:
+%
+%   equilateral → three_equal_sides
+%     https://mathworld.wolfram.com/EquilateralTriangle.html
+%     (Wolfram MathWorld — equilateral triangle)
+%     "An equilateral triangle is a triangle with all three sides of equal
+%      length a, corresponding to what could also be known as a 'regular'
+%      triangle."
+%
+%   isosceles → two_equal_sides
+%     https://mathworld.wolfram.com/IsoscelesTriangle.html
+%     (Wolfram MathWorld — isosceles triangle)
+%     "An isosceles triangle is a triangle with (at least) two equal sides."
+%
+%   scalene → three_unequal_sides
+%     https://mathworld.wolfram.com/ScaleneTriangle.html
+%     (Wolfram MathWorld — scalene triangle)
+%     "A scalene triangle is a triangle that has three unequal sides."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the MathWorld statement that
+% fixes the first row (equilateral → three_equal_sides). Every OTHER row's
+% per-fact source and verbatim span is listed above, so each condition remains
+% independently checkable. All sources are Wolfram MathWorld, a widely-cited
+% mathematics reference, so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table triangle_sides {
+    columns triangle, condition
+
+    row (equilateral, three_equal_sides)
+    row (isosceles, two_equal_sides)
+    row (scalene, three_unequal_sides)
+
+    source "An equilateral triangle is a triangle with all three sides of equal length a, corresponding to what could also be known as a 'regular' triangle."
+    locator "https://mathworld.wolfram.com/EquilateralTriangle.html"
+    trust authoritative
+}

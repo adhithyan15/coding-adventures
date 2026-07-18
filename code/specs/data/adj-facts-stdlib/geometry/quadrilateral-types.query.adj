@@ -1,0 +1,24 @@
+% ============================================================================
+% quadrilateral-types.query.adj — a worked recall over the geometry
+% quadrilateral-types library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what makes a rhombus a
+% rhombus?": it states no geometry fact of its own — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?` against
+% the `quadrilateral_property` rows and returns the property + the table's
+% source/locator/trust. The fourth query runs the relation BACKWARD (bind the
+% property `four_right_angles`, recall its quadrilateral — rectangle). A word
+% that is not one of the five named quadrilaterals abstains honestly — the
+% engine never invents a property.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli quadrilateral-types.query.adj
+% ============================================================================
+
+import "quadrilateral-types.adj"
+
+? quadrilateral_property(rhombus, $Property)         % expect all_sides_same_length
+? quadrilateral_property(parallelogram, $Property)   % expect opposite_sides_parallel
+? quadrilateral_property(trapezoid, $Property)       % expect two_sides_parallel
+? quadrilateral_property($Shape, four_right_angles)  % reverse bind — expect rectangle
+? quadrilateral_property(triangle, $Property)        % expect abstain — a triangle has three sides, not a quadrilateral

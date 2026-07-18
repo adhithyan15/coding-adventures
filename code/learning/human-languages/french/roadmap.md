@@ -18,12 +18,16 @@ compared, every Spanish form supplied in full (no prior Spanish assumed).
   m'appelle** ("my name is") → **tu / vous** → comment → **comment vous
   appelez-vous?** → enchanté(e) → practice. (Every atom traced, *me* ← *mē*
   included.)
+- **Ch. 3 — "Comment ça va ?"**: merci (← *mercēs* "reward") → de rien (← *rem*
+  "thing" → "nothing"; twin of Spanish *de nada*) → **aller** ("to go," the
+  state-verb — vs Spanish *estar* "to stand") → comment ça va / allez-vous /
+  vas-tu → comme ci, comme ça → practice. **Authored** — the deliberate mirror of
+  Spanish Ch. 4.
 
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |
 |---|---|
-| 3 | Responding: ça va, très bien, merci, et vous/et toi |
 | 4 | Farewells: au revoir, à bientôt, à demain |
 | 5+ | Numbers, time, days & months, family, food — following the Spanish theme order, with the Spanish cousin supplied for contrast |
 

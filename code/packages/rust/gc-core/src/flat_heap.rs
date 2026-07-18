@@ -64,6 +64,7 @@
 
 use crate::profile::{GcCycleStats, GcProfile};
 use std::alloc::{alloc_zeroed, dealloc, Layout};
+use std::collections::HashSet;
 use std::ptr;
 
 /// Bytes of header prepended to every payload.  Chosen as 32 (not the natural
@@ -135,6 +136,14 @@ pub struct FlatHeap {
     collect_threshold: usize,
     /// Adaptive-policy profile shared with the rest of `gc-core`.
     profile: GcProfile,
+    /// **Remembered set** for generational collection: payload addresses of
+    /// **old** objects that may hold a pointer into the **young** generation.
+    /// Populated by [`Self::write_barrier`] on every old-object store; a
+    /// [`Self::collect_minor`] scans exactly these old parents (plus the roots)
+    /// so it can reclaim young garbage without scanning the whole old generation.
+    /// Cleared by every **full** [`Self::collect`] (which may free old objects,
+    /// invalidating entries) and rebuilt lazily by the barrier afterwards.
+    remembered: HashSet<usize>,
     /// Per-kind **reference-field maps** for *precise* interior tracing, indexed
     /// by `kind_id - 1` (see [`Self::register_kind`]). Entry *k* is the byte
     /// offsets of the `ref`-typed fields in an object of kind `k + 1`. When an
@@ -180,6 +189,7 @@ impl FlatHeap {
             collection_count: 0,
             collect_threshold: INITIAL_THRESHOLD,
             profile: GcProfile::default(),
+            remembered: HashSet::new(),
             field_maps: Vec::new(),
         }
     }
@@ -380,16 +390,20 @@ impl FlatHeap {
         // Iterative worklist (no recursion → no stack blow-up on deep lists).
         let mut work: Vec<*mut FlatHeader> = Vec::new();
         for &r in roots {
-            self.mark_word(r, &mut work);
+            self.mark_word(r, &mut work, false);
         }
         while let Some(h) = work.pop() {
-            self.scan_payload(h, &mut work);
+            self.scan_payload(h, &mut work, false);
         }
 
         // ── Sweep ─────────────────────────────────────────────────────────────
-        let (freed, survived, live) = self.sweep();
+        let (freed, survived, live) = self.sweep(false);
         self.live_bytes = live;
         self.adapt_threshold(prev_live);
+        // A full collect may have freed old objects, so any remembered-set entry
+        // could now dangle. Clear it; the write barrier rebuilds it as new
+        // old→young stores happen. (Cheap: the set is small and short-lived.)
+        self.remembered.clear();
 
         let stats = GcCycleStats {
             freed,
@@ -436,14 +450,17 @@ impl FlatHeap {
 
         let mut work: Vec<*mut FlatHeader> = Vec::new();
         // SAFETY: caller guarantees `[base, base+len)` is readable.
-        self.mark_region(base, len, &mut work);
+        self.mark_region(base, len, &mut work, false);
         while let Some(h) = work.pop() {
-            self.scan_payload(h, &mut work);
+            self.scan_payload(h, &mut work, false);
         }
 
-        let (freed, survived, live) = self.sweep();
+        let (freed, survived, live) = self.sweep(false);
         self.live_bytes = live;
         self.adapt_threshold(prev_live);
+        // Full collect: drop the (possibly now-dangling) remembered set; the
+        // write barrier rebuilds it. See `collect`.
+        self.remembered.clear();
 
         let stats = GcCycleStats {
             freed,
@@ -457,6 +474,130 @@ impl FlatHeap {
         stats
     }
 
+    /// **Generational write barrier.** Call this whenever the mutator stores a
+    /// heap reference `child` into a field of heap object `parent` (both given as
+    /// payload addresses). If `parent` is **old**, it is recorded in the
+    /// remembered set so a later [`Self::collect_minor`] scans it for the young
+    /// objects it may now reference — the pointers a young-only cycle would
+    /// otherwise never see.
+    ///
+    /// It is **O(1)**: the object's header is always exactly [`HEADER_SIZE`] bytes
+    /// before its payload, so the generation is read directly at
+    /// `parent - HEADER_SIZE` with no heap search. Only `parent`'s generation is
+    /// inspected — `child` is never dereferenced (it may legitimately be null or a
+    /// tagged non-pointer immediate). Recording an old parent that did not
+    /// actually store a young child is a harmless over-approximation: the minor
+    /// scan simply finds no young child there.
+    ///
+    /// # Safety
+    ///
+    /// `parent` must be the payload address of a **live GC object** on this heap
+    /// (the store target always is). The barrier reads one byte at
+    /// `parent - HEADER_SIZE`; a non-heap `parent` would read foreign memory. A
+    /// `parent < HEADER_SIZE` (null / tiny) is ignored.
+    pub unsafe fn write_barrier(&mut self, parent: usize, child: usize) {
+        let _ = child; // reserved for a future precise (child-young) filter
+        if parent < HEADER_SIZE {
+            return;
+        }
+        // SAFETY: caller guarantees `parent` is a live GC payload, so its header
+        // is the 32 bytes immediately before it (the flat-heap layout invariant).
+        let parent_gen = unsafe { (*((parent - HEADER_SIZE) as *const FlatHeader)).generation };
+        if parent_gen == GEN_OLD {
+            self.remembered.insert(parent);
+        }
+    }
+
+    /// Run a **minor** (young-generation-only) collection rooted at `roots`.
+    ///
+    /// The payoff of the generational split: instead of scanning the whole heap,
+    /// a minor cycle traces only (a) the roots and (b) the **remembered set** —
+    /// the old objects a [`Self::write_barrier`] flagged as holding old→young
+    /// pointers — and reclaims only **young** garbage. Old objects are never
+    /// scanned or freed. Young survivors are tenured to old. This is what makes
+    /// GC cost track the churny young generation, not the whole live set — the
+    /// win for high-allocation-rate languages.
+    ///
+    /// Correctness rests on the barrier contract: *every* old→young store must
+    /// have called [`Self::write_barrier`]. A missed old→young pointer whose only
+    /// path to a young object is through that old parent would let the young
+    /// object be wrongly freed. The GC upholds its half; the mutator/codegen must
+    /// uphold the barrier.
+    pub fn collect_minor(&mut self, roots: &[usize]) -> GcCycleStats {
+        let before = self.object_count();
+        let mut work: Vec<*mut FlatHeader> = Vec::new();
+        // Roots — mark only the young objects they reach (old are live).
+        for &r in roots {
+            self.mark_word(r, &mut work, true);
+        }
+        self.minor_finish(before, work)
+    }
+
+    /// A **minor** collection rooted at a **raw memory region** — the stack-scan
+    /// analogue of [`Self::collect_minor`], mirroring [`Self::collect_region`].
+    /// `gc-core-capi`'s argument-less `__gc_collect_minor` discovers the live
+    /// stack `(base, len)` and hands it here.
+    ///
+    /// # Safety
+    ///
+    /// `[base, base + len)` must be readable (or `base` null with `len == 0`),
+    /// exactly as for [`Self::collect_region`].
+    pub unsafe fn collect_minor_region(&mut self, base: *const u8, len: usize) -> GcCycleStats {
+        let before = self.object_count();
+        let mut work: Vec<*mut FlatHeader> = Vec::new();
+        // SAFETY: caller guarantees `[base, base+len)` is readable.
+        self.mark_region(base, len, &mut work, true);
+        self.minor_finish(before, work)
+    }
+
+    /// Shared tail of a minor cycle: scan the remembered old→young parents, drain
+    /// the young worklist, sweep the young generation, and build the stats. Both
+    /// [`Self::collect_minor`] and [`Self::collect_minor_region`] call this after
+    /// their (slice- vs region-sourced) root mark.
+    fn minor_finish(
+        &mut self,
+        before: usize,
+        mut work: Vec<*mut FlatHeader>,
+    ) -> GcCycleStats {
+        // Remembered old parents — scan each for the young children it holds.
+        // Snapshot the addresses first so the immutable scan can't alias the set.
+        // Each entry is a live old object (a full collect clears the set; a minor
+        // never frees old), so its header is at `addr - HEADER_SIZE`.
+        let remembered: Vec<usize> = self.remembered.iter().copied().collect();
+        for parent in remembered {
+            let h = (parent - HEADER_SIZE) as *mut FlatHeader;
+            self.scan_payload(h, &mut work, true);
+        }
+        // Drain: `work` holds only young objects; scan them for more young refs.
+        while let Some(h) = work.pop() {
+            self.scan_payload(h, &mut work, true);
+        }
+
+        // Sweep the young generation only; promote survivors.
+        let (freed, survived, live) = self.sweep(true);
+        self.live_bytes = live;
+        // The remembered set is intentionally *kept*: a minor cycle frees no old
+        // object, so no entry dangles. Entries whose young child was promoted are
+        // now old→old — stale but harmless (the next minor scan finds no young
+        // child) and cleared by the next full collect.
+
+        let stats = GcCycleStats {
+            freed,
+            survived,
+            pause_ns: 0,
+            heap_size_before: before,
+            heap_size_after: survived,
+        };
+        self.profile.record_cycle(&stats);
+        self.collection_count += 1;
+        stats
+    }
+
+    /// Number of old objects currently in the remembered set (test/introspection).
+    pub fn remembered_len(&self) -> usize {
+        self.remembered.len()
+    }
+
     /// Scan `[base, base + len)` as an array of aligned candidate root words,
     /// enqueuing every live block a word points into. The region-oriented sibling
     /// of [`Self::scan_payload`] (which scans one object's payload); both defer to
@@ -465,43 +606,59 @@ impl FlatHeap {
     /// # Safety
     ///
     /// `[base, base + len)` must be readable.
-    unsafe fn mark_region(&self, base: *const u8, len: usize, work: &mut Vec<*mut FlatHeader>) {
+    unsafe fn mark_region(
+        &self,
+        base: *const u8,
+        len: usize,
+        work: &mut Vec<*mut FlatHeader>,
+        young_only: bool,
+    ) {
         let mut off = 0usize;
         while off + 8 <= len {
             // SAFETY: `off + 8 <= len`, so the 8-byte read stays inside the region;
             // `read_unaligned` tolerates any sub-alignment of `base`.
             let word = ptr::read_unaligned(base.add(off) as *const usize);
-            self.mark_word(word, work);
+            self.mark_word(word, work, young_only);
             off += 8;
         }
     }
 
     /// Mark the block a candidate `word` points into, if any, and enqueue it.
     /// Checks both the raw word and the tag-stripped word (NaN-box compat).
-    fn mark_word(&self, word: usize, work: &mut Vec<*mut FlatHeader>) {
+    fn mark_word(&self, word: usize, work: &mut Vec<*mut FlatHeader>, young_only: bool) {
         // Raw candidate.
-        let h = self.find_header(word);
-        if !h.is_null() {
-            // SAFETY: `find_header` only returns headers of live blocks we own.
-            unsafe {
-                if !(*h).marked {
-                    (*h).marked = true;
-                    work.push(h);
-                }
-            }
-        }
+        self.mark_candidate(self.find_header(word), work, young_only);
         // Tag-stripped candidate (low 3 bits are a NaN-box tag on dyn values).
         let stripped = word & !0x7usize;
         if stripped != word && stripped != 0 {
-            let h2 = self.find_header(stripped);
-            if !h2.is_null() {
-                // SAFETY: as above.
-                unsafe {
-                    if !(*h2).marked {
-                        (*h2).marked = true;
-                        work.push(h2);
-                    }
-                }
+            self.mark_candidate(self.find_header(stripped), work, young_only);
+        }
+    }
+
+    /// Mark the candidate block `h` (if non-null) and enqueue it for scanning.
+    ///
+    /// In a **minor** cycle (`young_only`), old objects are never marked or
+    /// traversed: they are assumed live (a minor GC does not sweep them) and any
+    /// old→young pointers they hold are reached instead through the remembered
+    /// set. Skipping them here also avoids leaving a stale mark bit on an old
+    /// object that a later full collect would misread as reachable.
+    fn mark_candidate(
+        &self,
+        h: *mut FlatHeader,
+        work: &mut Vec<*mut FlatHeader>,
+        young_only: bool,
+    ) {
+        if h.is_null() {
+            return;
+        }
+        // SAFETY: `find_header` only returns headers of live blocks we own.
+        unsafe {
+            if young_only && (*h).generation != GEN_YOUNG {
+                return;
+            }
+            if !(*h).marked {
+                (*h).marked = true;
+                work.push(h);
             }
         }
     }
@@ -514,7 +671,11 @@ impl FlatHeap {
     /// a non-reference field pins nothing. Otherwise the whole payload is scanned
     /// **conservatively** (kind `0`, or a kind id with no map — a safe fallback
     /// that never under-traces).
-    fn scan_payload(&self, h: *mut FlatHeader, work: &mut Vec<*mut FlatHeader>) {
+    ///
+    /// `young_only` is threaded to [`Self::mark_candidate`]: in a minor cycle,
+    /// children that resolve to old objects are ignored (they are live and not
+    /// swept), so only young children are followed.
+    fn scan_payload(&self, h: *mut FlatHeader, work: &mut Vec<*mut FlatHeader>, young_only: bool) {
         // SAFETY: `h` is a live block; its payload is `size` bytes at `h + 32`.
         let (base, size, kind) = unsafe {
             let payload = (h.add(1)) as *const u8;
@@ -535,7 +696,7 @@ impl FlatHeap {
                         // the payload; `read_unaligned` tolerates sub-alignment.
                         let word =
                             unsafe { ptr::read_unaligned(base.add(off) as *const usize) };
-                        self.mark_word(word, work);
+                        self.mark_word(word, work, young_only);
                     }
                 }
                 return;
@@ -548,7 +709,7 @@ impl FlatHeap {
             // SAFETY: `off + 8 <= size`, so the 8-byte read stays inside the
             // payload.  `read_unaligned` tolerates any payload sub-alignment.
             let word = unsafe { ptr::read_unaligned(base.add(off) as *const usize) };
-            self.mark_word(word, work);
+            self.mark_word(word, work, young_only);
             off += 8;
         }
     }
@@ -575,9 +736,15 @@ impl FlatHeap {
         ptr::null_mut()
     }
 
-    /// Free every unmarked block; clear marks on survivors.  Returns
+    /// Free unmarked blocks and tenure survivors; returns
     /// `(freed, survived, live_bytes)`.
-    fn sweep(&mut self) -> (usize, usize, usize) {
+    ///
+    /// When `young_only` (a **minor** cycle), **old** objects are left entirely
+    /// alone — never freed, mark bit untouched — because a minor GC does not scan
+    /// or reclaim the old generation; only **young** blocks are freed (if
+    /// unmarked) or promoted (if marked). A full cycle (`!young_only`) considers
+    /// every block. Either way a survivor is tenured to [`GEN_OLD`].
+    fn sweep(&mut self, young_only: bool) -> (usize, usize, usize) {
         let mut freed = 0usize;
         let mut survived = 0usize;
         let mut live = 0usize;
@@ -590,6 +757,14 @@ impl FlatHeap {
         unsafe {
             while !(*cursor).is_null() {
                 let h = *cursor;
+                // Minor cycle: an old object is untouched — still live, mark bit
+                // (which a minor cycle never sets) left as-is. Advance past it.
+                if young_only && (*h).generation == GEN_OLD {
+                    survived += 1;
+                    live += (*h).size;
+                    cursor = &mut (*h).next;
+                    continue;
+                }
                 if (*h).marked {
                     (*h).marked = false;
                     // Tenure the survivor: an object that lives through a
@@ -1082,5 +1257,127 @@ mod tests {
         // Second collect, still rooting it: remains a single old object.
         let _ = heap.collect(&[keep]);
         assert_eq!(heap.object_count_by_generation(), (0, 1));
+    }
+
+    // ── Generational minor GC: remembered set + write barrier ──────────────────
+
+    /// A minor GC reclaims young garbage and promotes the young survivor.
+    #[test]
+    fn minor_gc_reclaims_young_garbage_and_promotes_survivor() {
+        let mut heap = FlatHeap::new();
+        let keep = heap.alloc(16, 0) as usize;
+        heap.alloc(16, 0); // young garbage
+        let stats = heap.collect_minor(&[keep]);
+        assert_eq!(stats.freed, 1, "young garbage reclaimed");
+        assert!(!heap.find_header(keep).is_null());
+        assert_eq!(heap.object_count_by_generation(), (0, 1), "survivor tenured");
+    }
+
+    /// A minor GC never frees old objects — even unreachable ones. Only a full
+    /// collect reclaims the old generation.
+    #[test]
+    fn minor_gc_never_frees_old_objects() {
+        let mut heap = FlatHeap::new();
+        let obj = heap.alloc(16, 0) as usize;
+        let _ = heap.collect(&[obj]); // tenure to old
+        assert_eq!(heap.object_count_by_generation(), (0, 1));
+
+        // `obj` is now unreachable, but a MINOR GC must not touch the old gen.
+        let minor = heap.collect_minor(&[]);
+        assert_eq!(minor.freed, 0, "minor GC leaves old garbage alone");
+        assert!(!heap.find_header(obj).is_null());
+
+        // A full collect reclaims it.
+        let full = heap.collect(&[]);
+        assert_eq!(full.freed, 1);
+        assert!(heap.find_header(obj).is_null());
+    }
+
+    /// **The headline barrier proof.** A young object reachable *only* through an
+    /// old object survives a minor GC — because the write barrier recorded the
+    /// old parent in the remembered set, so the minor scan visits it.
+    #[test]
+    fn minor_gc_retains_young_reachable_only_via_remembered_old_parent() {
+        let mut heap = FlatHeap::new();
+        // Make `parent` old.
+        let parent = heap.alloc(16, 0) as usize;
+        let _ = heap.collect(&[parent]);
+        assert_eq!(heap.object_count_by_generation(), (0, 1));
+
+        // Store a fresh young child into parent's field 0, WITH the barrier.
+        let child = heap.alloc(16, 0) as usize;
+        unsafe {
+            *(parent as *mut usize) = child; // old → young store
+            heap.write_barrier(parent, child);
+        }
+        assert_eq!(heap.remembered_len(), 1, "old parent remembered");
+
+        // Minor GC with no external roots: child is reachable only via old parent.
+        let stats = heap.collect_minor(&[]);
+        assert!(
+            !heap.find_header(child).is_null(),
+            "the remembered set keeps the old→young pointee alive"
+        );
+        assert_eq!(stats.freed, 0);
+        assert_eq!(heap.object_count_by_generation(), (0, 2), "child tenured");
+    }
+
+    /// The remembered set is **load-bearing**: the identical old→young store
+    /// *without* the barrier leaves the young child unreachable to the minor scan,
+    /// so it is (correctly, given the missed barrier) reclaimed. This proves the
+    /// barrier does real work — omitting it would be a use-after-free in a real
+    /// program, which is exactly why the barrier contract is mandatory.
+    #[test]
+    fn minor_gc_without_barrier_frees_young_only_reachable_from_old() {
+        let mut heap = FlatHeap::new();
+        let parent = heap.alloc(16, 0) as usize;
+        let _ = heap.collect(&[parent]); // parent → old
+        let child = heap.alloc(16, 0) as usize;
+        unsafe {
+            *(parent as *mut usize) = child; // store WITHOUT calling write_barrier
+        }
+        assert_eq!(heap.remembered_len(), 0);
+
+        let stats = heap.collect_minor(&[]);
+        assert!(
+            heap.find_header(child).is_null(),
+            "no remembered entry → the minor scan never visits parent → child freed"
+        );
+        assert_eq!(stats.freed, 1);
+    }
+
+    /// The write barrier records a store only when the *parent* is old (an
+    /// old→young pointer is the only kind a minor GC must chase).
+    #[test]
+    fn write_barrier_records_only_old_parents() {
+        let mut heap = FlatHeap::new();
+        // Young parent: not remembered.
+        let yp = heap.alloc(16, 0) as usize;
+        let c = heap.alloc(16, 0) as usize;
+        unsafe { heap.write_barrier(yp, c) };
+        assert_eq!(heap.remembered_len(), 0, "young parent isn't remembered");
+
+        // Promote a parent to old, then a store records it.
+        let op = heap.alloc(16, 0) as usize;
+        let _ = heap.collect(&[op, yp, c]); // promote all; clears remembered
+        unsafe { heap.write_barrier(op, c) };
+        assert_eq!(heap.remembered_len(), 1, "old parent is remembered");
+    }
+
+    /// A full collect clears the remembered set (its entries could otherwise
+    /// dangle if an old parent were freed).
+    #[test]
+    fn full_collect_clears_remembered_set() {
+        let mut heap = FlatHeap::new();
+        let p = heap.alloc(16, 0) as usize;
+        let _ = heap.collect(&[p]); // p → old
+        let c = heap.alloc(16, 0) as usize;
+        unsafe {
+            *(p as *mut usize) = c;
+            heap.write_barrier(p, c);
+        }
+        assert_eq!(heap.remembered_len(), 1);
+        let _ = heap.collect(&[p, c]); // full collect
+        assert_eq!(heap.remembered_len(), 0, "remembered set cleared by full GC");
     }
 }

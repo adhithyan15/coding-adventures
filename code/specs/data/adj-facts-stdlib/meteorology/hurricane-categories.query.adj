@@ -1,0 +1,30 @@
+% ============================================================================
+% hurricane-categories.query.adj — a worked recall over the meteorology
+% hurricane-categories library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how much damage does a
+% category 4 hurricane do?": it states no meteorology fact of its own — it only
+% `import`s the grounded table and asks binding queries. The engine resolves
+% each `?` against the `damage_level` rows and returns the descriptor + the
+% table's source/locator/trust.
+%
+% The fifth query runs the relation BACKWARD (bind the descriptor
+% `catastrophic_damage`, recall which categories carry it — HONESTLY category_4
+% AND category_5, because the NHC source opens both paragraphs with the same
+% "Catastrophic damage will occur" sentence). A key that is not one of the five
+% Saffir-Simpson categories abstains honestly — the engine never invents a
+% damage word.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli hurricane-categories.query.adj
+% ============================================================================
+
+import "hurricane-categories.adj"
+
+? damage_level(category_1, $Descriptor)          % expect some_damage
+? damage_level(category_2, $Descriptor)          % expect extensive_damage
+? damage_level(category_3, $Descriptor)          % expect devastating_damage
+? damage_level(category_4, $Descriptor)          % expect catastrophic_damage
+? damage_level(category_5, $Descriptor)          % expect catastrophic_damage
+? damage_level($Category, catastrophic_damage)   % reverse bind — expect category_4 AND category_5
+? damage_level(category_6, $Descriptor)          % expect abstain — there is no category 6 on the scale

@@ -1,0 +1,23 @@
+% ============================================================================
+% gas-laws.query.adj — a worked recall over the chemistry gas-laws library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "which two quantities does
+% Gay-Lussac's law relate?": it states no gas-law fact of its own — it only
+% `import`s the grounded table and asks binding queries. The engine resolves
+% each `?` against the `gas_law_relates` rows and returns the pair + the table's
+% source/locator/trust. The fourth query runs the relation BACKWARD (bind the
+% pair `pressure_temperature`, recall which law names it — gay_lussac). A name
+% that is not one of the four simple gas laws abstains honestly — the engine
+% never invents a relation.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli gas-laws.query.adj
+% ============================================================================
+
+import "gas-laws.adj"
+
+? gas_law_relates(boyle, $Pair)                  % expect pressure_volume
+? gas_law_relates(charles, $Pair)                % expect volume_temperature
+? gas_law_relates(avogadro, $Pair)               % expect volume_moles
+? gas_law_relates($Law, pressure_temperature)    % reverse bind — expect gay_lussac
+? gas_law_relates(newton, $Pair)                 % expect abstain — Newton's laws are mechanics, not a gas law

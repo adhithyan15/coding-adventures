@@ -4677,6 +4677,16 @@ fn fold_array_string_key_access(
 // Binary
 // ---------------------------------------------------------------------
 
+/// The `f64` value of an expression that is a numeric literal, else `None`.
+/// (Unary-minus on a literal has already been folded to a `NumericLiteral` by
+/// the bottom-up walk, so `-1` arrives here as `NumericLiteral(-1.0)`.)
+fn numeric_literal_value(expr: &Expression) -> Option<f64> {
+    match expr {
+        Expression::NumericLiteral(n) => Some(n.value),
+        _ => None,
+    }
+}
+
 fn fold_binary(b: &BinaryExpression, st: &mut FoldState) -> Expression {
     // First recurse into children. By the time we look at left/right
     // they're already folded — that's what gives us `1 + (2 * 3) → 7`
@@ -4687,6 +4697,34 @@ fn fold_binary(b: &BinaryExpression, st: &mut FoldState) -> Expression {
     // Try to fold. If we can't, return a new BinaryExpression with the
     // (possibly folded) children.
     if let Some(value) = try_fold_binary_op(b.operator, &left, &right) {
+        // Division / modulo BY ZERO is never folded — matching the reference
+        // Closure Compiler, which keeps the source operation rather than emit
+        // the shadowable `Infinity`/`NaN` globals:
+        //
+        //   1/0  → Infinity   kept as `1/0`
+        //   -1/0 → -Infinity  kept as `-1/0`   (`-1` is a folded literal operand)
+        //   0/0  → NaN        kept as `0/0`
+        //   1%0  → NaN        kept as `1%0`
+        //
+        // The result of `x / 0` or `x % 0` is always non-finite (`±Infinity` or
+        // `NaN`), and folding to those literals is both LONGER than the source
+        // and unsound if `Infinity`/`NaN` is shadowed in scope — so Closure
+        // declines, and so do we. A NON-zero divisor still folds normally
+        // (`5/2`→`2.5`, `1/8`→`.125`, `6/3`→`2`). (A separate divergence —
+        // Closure also keeps a NON-terminating quotient like `1/3` rather than
+        // the 16-digit `.3333333333333333`, governed by its numeric byte-cost
+        // heuristic — is filed as a follow-up, not handled here.)
+        if matches!(b.operator, BinaryOperator::Div | BinaryOperator::Mod)
+            && numeric_literal_value(&right) == Some(0.0)
+        {
+            return Expression::BinaryExpression(BinaryExpression {
+                cv: b.cv.clone(),
+                operator: b.operator,
+                left: Box::new(left),
+                right: Box::new(right),
+            });
+        }
+
         let parent = b.cv.clone();
         let before = format!(
             "({}) {} ({})",
@@ -7108,6 +7146,55 @@ mod tests {
             match extract_expr(&out) {
                 Expression::NumericLiteral(n) => assert_eq!(n.value, expected, "op {:?}", op),
                 other => panic!("expected NumericLiteral; got {:?} for op {:?}", other, op),
+            }
+        }
+    }
+
+    #[test]
+    fn division_and_modulo_by_zero_are_not_folded() {
+        // `x / 0` and `x % 0` produce ±Infinity / NaN — Closure keeps the source
+        // op rather than emit the shadowable global, and so do we. The binary
+        // node must SURVIVE unfolded.
+        for (op, l, r) in [
+            (BinaryOperator::Div, 1.0, 0.0),   // 1/0  → Infinity  (kept)
+            (BinaryOperator::Div, -1.0, 0.0),  // -1/0 → -Infinity (kept)
+            (BinaryOperator::Div, 0.0, 0.0),   // 0/0  → NaN       (kept)
+            (BinaryOperator::Mod, 1.0, 0.0),   // 1%0  → NaN       (kept)
+        ] {
+            let expr = Expression::BinaryExpression(BinaryExpression {
+                cv: Some("bin.1".to_string()),
+                operator: op,
+                left: Box::new(num(l, None)),
+                right: Box::new(num(0.0, None)),
+            });
+            let _ = r;
+            let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+            assert!(!changed, "{l} {op:?} 0 must NOT fold");
+            match extract_expr(&out) {
+                Expression::BinaryExpression(b) => {
+                    assert_eq!(b.operator, op);
+                    assert!(matches!(&*b.right, Expression::NumericLiteral(n) if n.value == 0.0));
+                }
+                other => panic!("expected the binary op to survive; got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn division_by_nonzero_still_folds() {
+        // The guard is scoped to a ZERO divisor: `6/3`→2 and `5/2`→2.5 still fold.
+        for (l, r, expected) in [(6.0, 3.0, 2.0), (5.0, 2.0, 2.5), (1.0, 8.0, 0.125)] {
+            let expr = Expression::BinaryExpression(BinaryExpression {
+                cv: Some("bin.1".to_string()),
+                operator: BinaryOperator::Div,
+                left: Box::new(num(l, None)),
+                right: Box::new(num(r, None)),
+            });
+            let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+            assert!(changed, "{l}/{r} should fold");
+            match extract_expr(&out) {
+                Expression::NumericLiteral(n) => assert_eq!(n.value, expected, "{l}/{r}"),
+                other => panic!("expected NumericLiteral({expected}); got {other:?}"),
             }
         }
     }

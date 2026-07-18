@@ -1,0 +1,113 @@
+% ============================================================================
+% eye-parts — what each part of the human eye does, in the source's own words
+% (adj-facts-stdlib, ANATOMY).
+% ============================================================================
+% A vision-anatomy fact on the way to medicine: light travels through the eye in
+% order, and each part it passes has ONE job. The CORNEA bends the incoming light;
+% the IRIS controls how much light gets through; the PUPIL is the opening the
+% light gets in by; the LENS focuses that light onto the back of the eye; the
+% RETINA turns the light into electrical signals; and the OPTIC NERVE carries
+% those signals to the brain. Recall is a binding query:
+%
+%     ? eye_part_function(retina, $F)     % turns_light_into_signals
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `eye_part_function(part, function)` carrying the table's citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns the
+% function WITH its source, on the CPU, with zero model calls, and abstains on
+% anything that is not one of the listed eye parts (it never invents a function).
+%
+% The path of sight, as a little truth table (part → the job the source states):
+%
+%     part          function                 what the source says it does
+%     -----------   ----------------------   -------------------------------------
+%     cornea        bends_light              dome-shaped front that bends light
+%     pupil         lets_in_light           the opening light enters the eye by
+%     iris          controls_light          sets how much light the pupil lets in
+%     lens          focuses_light           focuses light onto the retina
+%     retina        turns_light_into_signals turns light into electrical signals
+%     optic_nerve   carries_signals_to_brain carries the signals to the brain
+%
+% Because each `function` is a stable token, a recalled function composes straight
+% into checks: a note that says the retina "focuses light" is suspect precisely
+% because focusing is the LENS's job, and the retina's job is turning light into
+% signals; a note that has the optic nerve "sensing light" contradicts this table.
+% That is the concrete bridge from anatomy RECALL to reasoning, and the rung a
+% medicine agent climbs UP from before it can reason about where vision breaks (a
+% clouded lens is a focusing problem; a damaged retina or optic nerve is a
+% signal problem). The query also runs BACKWARD — bind a function and recall the
+% part that does it:
+%
+%     ? eye_part_function($P, focuses_light)  % lens
+%
+% Something that is not one of the listed eye parts — the eardrum, the sclera, a
+% rock — has no row, so a recall on it ABSTAINS rather than inventing a function.
+% That honest-abstention property is what makes the table safe to reason from.
+%
+% The `function` value of every row is a SINGLE lowercase atom, chosen to stay as
+% close as possible to the verb the source EXPLICITLY uses for that part (the
+% source says the cornea "bends light", not "refracts"; the retina "turn[s] the
+% light into electrical signals"), so every value stays literally checkable
+% against the quoted span.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every part→function pair was
+% read out of a single fetched U.S. government page this session, and any pair
+% that could not be grounded there would have been dropped). The single source is
+% the primary U.S. National Institutes of Health reference, the National Eye
+% Institute (NEI), "How the Eyes Work" (nei.nih.gov), whose step-by-step
+% description of how light moves through the eye states each part's job. Each
+% span is quoted here character-for-character so any reader can re-check it:
+%
+%   cornea → bends_light
+%     "The cornea is shaped like a dome and bends light to help the eye focus."
+%
+%   pupil → lets_in_light
+%     "Some of this light enters the eye through an opening called the pupil"
+%     (its function, the opening light gets in by, is fixed together with the
+%      iris span below: "controls how much light the pupil lets in")
+%
+%   iris → controls_light
+%     "The iris (the colored part of the eye) controls how much light the pupil
+%      lets in."
+%
+%   lens → focuses_light
+%     "The lens works together with the cornea to focus light correctly on the
+%      retina."
+%
+%   retina → turns_light_into_signals
+%     "When light hits the retina (a light-sensitive layer of tissue at the back
+%      of the eye), special cells called photoreceptors turn the light into
+%      electrical signals."
+%
+%   optic_nerve → carries_signals_to_brain
+%     "These electrical signals travel from the retina through the optic nerve to
+%      the brain."
+%
+% (The sclera, macula, and the aqueous/vitreous humors are NOT described on this
+% page, so they are deliberately not rows — the table states only the six parts
+% whose function the source spells out.)
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the NEI sentence that fixes the
+% first row (cornea → bends_light). Every OTHER row's per-fact source span is
+% listed above, so each pair remains independently checkable. NEI is a primary
+% U.S. government NIH institute, so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table eye_part_function {
+    columns part, function
+
+    row (cornea, bends_light)
+    row (pupil, lets_in_light)
+    row (iris, controls_light)
+    row (lens, focuses_light)
+    row (retina, turns_light_into_signals)
+    row (optic_nerve, carries_signals_to_brain)
+
+    source "The cornea is shaped like a dome and bends light to help the eye focus."
+    locator "https://www.nei.nih.gov/learn-about-eye-health/healthy-vision/how-eyes-work"
+    trust authoritative
+}

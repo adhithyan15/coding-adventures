@@ -1,0 +1,120 @@
+% ============================================================================
+% soil-horizons — the master soil horizons (O, A, E, B, C, R) and what its
+% source says each one IS or is made of (adj-facts-stdlib, EARTH-SCIENCE).
+% ============================================================================
+% Dig a pit straight down through a soil and the wall shows horizontal layers,
+% like the layers of a cake. Each layer is a "horizon", and soil scientists give
+% the master horizons single capital letters, from the surface down: O, A, E, B,
+% C, and then R. A soil-science (or agriculture) agent reasons UP from this rung:
+% before you can name a soil, judge its drainage, or plan land use, you must
+% first know WHICH horizon you are looking at and what it is made of. Recall is a
+% binding query:
+%
+%     ? horizon_material(c, $Material)      % parent_material
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `horizon_material(horizon, material)` carrying the table's citation,
+% so the lookup above is the ordinary SLD binding query — the engine returns the
+% material WITH its source, on the CPU, with zero model calls, and abstains on a
+% word that is not one of these master horizons (it never invents a material).
+%
+% Each master horizon and the material / thing the source states it is, top to
+% bottom of the soil profile, as a little truth table:
+%
+%     horizon   what the source says it is    a beginner's cue
+%     -------   ---------------------------   ----------------------------------
+%     o         organic_matter                the leaf-litter layer on top
+%     a         topsoil                        the dark, life-rich surface layer
+%     e         losses                         the leached, washed-out pale layer
+%     b         illuviation                    the subsoil where stuff accumulates
+%     c         parent_material                the little-altered material below
+%     r         bedrock                        the hard rock at the bottom
+%
+% The query also runs BACKWARD — bind a material and recall its horizon:
+%
+%     ? horizon_material($Horizon, bedrock)   % r
+%
+% A word that is NOT one of these master horizons — `humus`, `loam`, `regolith`
+% — is deliberately NOT a row, so a horizon recall ABSTAINS on it rather than
+% inventing a material. (Humus, for instance, is a component of soil organic
+% matter, not itself a master horizon.) That honest-abstention property is what
+% makes the table safe to build a reasoner on: it answers exactly the
+% horizon→material pairs it can ground, and only those.
+%
+% The `material` value of every row is a SINGLE lowercase atom, chosen to be a
+% word the source EXPLICITLY uses for that horizon — never one the source does
+% not support. (Where the everyday word differs from the source's word — the
+% source says the E horizon's dominant processes are "losses", not "leaching";
+% it says the B horizon is a zone of "illuviation" — the atom uses the source's
+% own word, so every value stays literally checkable against the quoted span.)
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every horizon→material pair
+% below was read out of a fetched University of Nebraska–Lincoln passel Plant &
+% Soil Sciences eLibrary lesson, and any pair whose material could not be
+% verified there would have been dropped). Each pair, with the primary source it
+% was copied from and the verbatim span that states it:
+%
+%   o → organic_matter
+%     https://passel2.unl.edu/view/lesson/293965be23a0/3
+%     (UNL passel — Plant & Soil Sciences eLibrary, Soil Genesis and Development)
+%     "An O horizon has at least 20% organic matter by mass."
+%
+%   a → topsoil
+%     https://passel2.unl.edu/view/lesson/293965be23a0/3
+%     (UNL passel — Plant & Soil Sciences eLibrary, Soil Genesis and Development)
+%     "An A horizon is a mineral horizon. This horizon always forms at the
+%      surface and is what many people refer to as topsoil."
+%
+%   e → losses
+%     https://passel2.unl.edu/view/lesson/293965be23a0/3
+%     (UNL passel — Plant & Soil Sciences eLibrary, Soil Genesis and Development)
+%     "The dominant processes of an E horizon are losses."
+%
+%   b → illuviation
+%     https://passel2.unl.edu/view/lesson/293965be23a0/3
+%     (UNL passel — Plant & Soil Sciences eLibrary, Soil Genesis and Development)
+%     "A B horizon is typically a mineral subsurface horizon and is a zone of
+%      accumulation, called illuviation."
+%
+%   c → parent_material
+%     https://passel2.unl.edu/view/lesson/293965be23a0/3
+%     (UNL passel — Plant & Soil Sciences eLibrary, Soil Genesis and Development)
+%     "A C horizon consists of parent material, such as glacial till or lake
+%      sediments that have little to no alteration due to the soil forming
+%      processes."
+%
+%   r → bedrock
+%     https://passel2.unl.edu/view/lesson/293965be23a0/3
+%     (UNL passel — Plant & Soil Sciences eLibrary, Soil Genesis and Development)
+%     "An R layer is bedrock."
+%
+% (The master-horizon framing itself is stated on the same lesson —
+% "There are five soil horizons: O, A, E, B, and C." — with the R layer named
+% separately as bedrock, another span of the same primary university teaching
+% resource.)
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the passel statement that fixes
+% the first row (o → organic_matter). Every OTHER row's per-fact source and
+% verbatim span is listed above, so each material remains independently
+% checkable. All sources are the UNL passel Plant & Soil Sciences eLibrary, a
+% university soil-science teaching resource, so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table horizon_material {
+    columns horizon, material
+
+    row (o, organic_matter)
+    row (a, topsoil)
+    row (e, losses)
+    row (b, illuviation)
+    row (c, parent_material)
+    row (r, bedrock)
+
+    source "An O horizon has at least 20% organic matter by mass."
+    locator "https://passel2.unl.edu/view/lesson/293965be23a0/3"
+    trust authoritative
+}

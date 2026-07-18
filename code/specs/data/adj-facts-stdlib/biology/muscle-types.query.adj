@@ -1,0 +1,23 @@
+% ============================================================================
+% muscle-types.query.adj — a worked recall over the biology muscle-types library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what kind of muscle has
+% intercalated disks?": it states no histology fact of its own — it only
+% `import`s the grounded table and asks binding queries. The engine resolves
+% each `?` against the `muscle_trait` rows and returns the trait + the table's
+% source/locator/trust. The fourth query runs the relation BACKWARD (bind the
+% trait `involuntary`, recall its muscle type — smooth). A word that is not one
+% of the three muscle-tissue types abstains honestly — the engine never invents
+% a trait.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli muscle-types.query.adj
+% ============================================================================
+
+import "muscle-types.adj"
+
+? muscle_trait(skeletal, $Trait)      % expect voluntary
+? muscle_trait(smooth, $Trait)        % expect involuntary
+? muscle_trait(cardiac, $Trait)       % expect intercalated_disks
+? muscle_trait($Muscle, involuntary)  % reverse bind — expect smooth
+? muscle_trait(bone, $Trait)          % expect abstain — bone is not a muscle-tissue type

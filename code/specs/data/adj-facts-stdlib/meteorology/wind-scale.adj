@@ -1,0 +1,110 @@
+% ============================================================================
+% wind-scale — the Beaufort wind FORCE number (0..12) and the descriptive name
+% the source gives each force (adj-facts-stdlib, METEOROLOGY).
+% ============================================================================
+% One of the oldest and simplest ideas in weather: instead of a raw wind SPEED,
+% describe the wind by what it DOES — smoke that rises straight up, leaves that
+% rustle, whole trees in motion, a hurricane that fills the air with foam. The
+% Beaufort scale numbers that continuum 0..12, and each number has a fixed
+% descriptive NAME: 0 is "Calm", 1 is "Light Air", 6 is "Strong Breeze", 12 is
+% "Hurricane". Before you can reason about a marine forecast or a storm warning
+% you must first know WHICH force a name is, and WHICH name a force gets. Recall
+% is a binding query:
+%
+%     ? beaufort_force_name(6, $Name)     % strong_breeze
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `beaufort_force_name(force, name)` carrying the table's citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns the
+% name WITH its source, on the CPU, with zero model calls, and abstains on any
+% force number this scale does not define (it never invents a name).
+%
+% The `force` key is a bare NUMBER (numeric cell, like physics/temperature-
+% scales.adj), so a recalled force composes straight into arithmetic and range
+% checks. The full scale, as a little truth table:
+%
+%     force   name              a beginner's cue (what the wind does)
+%     -----   ---------------   --------------------------------------------
+%       0     calm              smoke rises vertically; sea like a mirror
+%       1     light_air         smoke drifts; ripples like scales on the sea
+%       2     light_breeze      wind felt on face; leaves rustle
+%       3     gentle_breeze     leaves and small twigs in constant motion
+%       4     moderate_breeze   raises dust and loose paper; small branches move
+%       5     fresh_breeze      small leafy trees begin to sway
+%       6     strong_breeze     large branches in motion; whistling heard
+%       7     near_gale         whole trees in motion; walking is inconvenient
+%       8     gale              breaks twigs off trees; impedes progress
+%       9     severe_gale       slight structural damage occurs
+%      10     storm             trees uprooted; considerable structural damage
+%      11     violent_storm     very rarely experienced; widespread damage
+%      12     hurricane         air filled with foam and spray; sea white
+%
+% The query also runs BACKWARD — bind a name and recall its force number:
+%
+%     ? beaufort_force_name($F, hurricane)   % 12 — reverse recall
+%
+% A force number this scale does NOT define — 13, -1 — is deliberately NOT a
+% row, so a recall on it ABSTAINS rather than inventing a name. That honest-
+% abstention property is what makes the table safe to build a reasoner on: it
+% answers exactly the force→name pairs it can ground, and only those.
+%
+% Each `name` value is a SINGLE lowercase atom, the source's own descriptive
+% term normalized to one snake_case token ("Light Air" → light_air, "Strong
+% Breeze" → strong_breeze) — never a term the source does not print for that
+% force, so every value stays literally checkable against the quoted span.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every force→name pair below
+% was read out of a fetched U.S. National Weather Service page this session, and
+% any pair whose name could not be verified there would have been dropped). All
+% thirteen names come from the SAME primary U.S. government source, the National
+% Weather Service (NWS Miami) "Beaufort Wind Scale" table
+% (weather.gov/mfl/beaufort), whose "Description" column prints one descriptive
+% term per force. The table row for each force states its number and name
+% together; the verbatim terms, force by force:
+%
+%    0 → calm             "Calm"
+%    1 → light_air        "Light Air"
+%    2 → light_breeze     "Light Breeze"
+%    3 → gentle_breeze    "Gentle Breeze"
+%    4 → moderate_breeze  "Moderate Breeze"
+%    5 → fresh_breeze     "Fresh Breeze"
+%    6 → strong_breeze    "Strong Breeze"
+%    7 → near_gale        "Near Gale"
+%    8 → gale             "Gale"
+%    9 → severe_gale      "Severe Gale"
+%   10 → storm            "Storm"
+%   11 → violent_storm    "Violent Storm"
+%   12 → hurricane        "Hurricane"
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single anchoring span: the NWS term that fixes the
+% first row (force 0 → calm). Every OTHER row's name is listed above and comes
+% from the same NWS "Description" column, so each remains independently
+% checkable. The source is a primary U.S. government National Weather Service
+% page (weather.gov), so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table beaufort_force_name {
+    columns force, name
+
+    row (0, calm)
+    row (1, light_air)
+    row (2, light_breeze)
+    row (3, gentle_breeze)
+    row (4, moderate_breeze)
+    row (5, fresh_breeze)
+    row (6, strong_breeze)
+    row (7, near_gale)
+    row (8, gale)
+    row (9, severe_gale)
+    row (10, storm)
+    row (11, violent_storm)
+    row (12, hurricane)
+
+    source "Force 0 ... Calm"
+    locator "https://www.weather.gov/mfl/beaufort"
+    trust authoritative
+}

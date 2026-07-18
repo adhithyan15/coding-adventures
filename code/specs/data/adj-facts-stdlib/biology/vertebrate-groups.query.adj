@@ -1,0 +1,23 @@
+% ============================================================================
+% vertebrate-groups.query.adj — a worked recall over the biology
+% vertebrate-groups library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what covers a bird?": it
+% states no biology fact of its own — it only `import`s the grounded table and
+% asks binding queries. The engine resolves each `?` against the
+% `vertebrate_trait` rows and returns the trait + the table's source/locator/
+% trust. The fourth query runs the relation BACKWARD (bind the trait `feathers`,
+% recall its class — bird). A word that is not one of the five vertebrate classes
+% abstains honestly — the engine never invents a trait.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli vertebrate-groups.query.adj
+% ============================================================================
+
+import "vertebrate-groups.adj"
+
+? vertebrate_trait(bird, $Trait)        % expect feathers
+? vertebrate_trait(mammal, $Trait)      % expect hair
+? vertebrate_trait(reptile, $Trait)     % expect dry_scaly_skin
+? vertebrate_trait($Class, feathers)    % reverse bind — expect bird
+? vertebrate_trait(insect, $Trait)      % expect abstain — an insect is an invertebrate, not one of the five vertebrate classes

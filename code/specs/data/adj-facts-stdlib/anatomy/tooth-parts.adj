@@ -1,0 +1,117 @@
+% ============================================================================
+% tooth-parts — each STRUCTURAL PART of a tooth and what it is / its role,
+% as the source states it (adj-facts-stdlib, ANATOMY).
+% ============================================================================
+% A tooth is not one solid lump — it is built out of named LAYERS and regions,
+% and each part sits in a characteristic place and does a characteristic job.
+% The crown is the part you can see; enamel is its outer surface; just beneath
+% the enamel is dentin; cementum covers the root; the pulp in the middle holds
+% the blood vessels and nerves; and the root anchors the tooth in the jawbone.
+% Recall is a binding query:
+%
+%     ? tooth_part_role(enamel, $Role)      % outer_surface
+%
+% This library is DISTINCT from anatomy/tooth-types, which maps a tooth TYPE
+% (incisors, canines, molars) to the job it does. HERE the key is a tooth PART
+% — a piece of ONE tooth's structure — and the value is what that part IS or
+% where it sits, in the source's own words.
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `tooth_part_role(part, role)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the role
+% WITH its source, on the CPU, with zero model calls, and abstains on anything
+% that is not one of these tooth parts (it never invents a role).
+%
+% The six structural parts and the role / description the source states for
+% each, as a little truth table:
+%
+%     tooth part   role / what it is (source's word)   a beginner's cue
+%     ----------   ---------------------------------   ------------------------
+%     crown        visible_part                        the part of the tooth you can see
+%     enamel       outer_surface                       the outer surface of the crown
+%     dentin       beneath_enamel                      the layer just beneath the enamel
+%     pulp         blood_vessels_and_nerves            the soft core with blood and nerves
+%     cementum     covers_roots                        the calcified material over the root
+%     root         extends_into_jawbone                the part anchored down in the jaw
+%
+% The query also runs BACKWARD — bind a role and recall which part it is:
+%
+%     ? tooth_part_role($Part, covers_roots)   % cementum
+%
+% A word that is NOT one of these tooth parts — `femur`, `gum`, `rock` — is
+% deliberately NOT a row, so a tooth-part recall ABSTAINS on it rather than
+% inventing a role. That honest-abstention property is what makes the table
+% safe to build a reasoner on: it answers exactly the part→role pairs it can
+% ground, and only those.
+%
+% The `role` value of every row is a SINGLE lowercase atom, chosen to echo a
+% phrase the source EXPLICITLY states for that part — never one the source does
+% not support (the atom uses the source's own words, so every value stays
+% literally checkable against the quoted span below).
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every part→role pair below
+% was read out of a fetched NIH source this session, and any part whose role was
+% not cleanly stated would have been dropped). Each pair, with the primary
+% source it was copied from and the verbatim span that states it:
+%
+%   crown → visible_part
+%     https://medlineplus.gov/ency/article/002214.htm
+%     (MedlinePlus Medical Encyclopedia — U.S. National Library of Medicine, NIH)
+%     "The part of the tooth you can see is called the crown."
+%
+%   enamel → outer_surface
+%     https://medlineplus.gov/ency/article/002214.htm
+%     (MedlinePlus Medical Encyclopedia — U.S. National Library of Medicine, NIH)
+%     "The outer surface of the crown is made of enamel."
+%
+%   dentin → beneath_enamel
+%     https://medlineplus.gov/ency/article/002214.htm
+%     (MedlinePlus Medical Encyclopedia — U.S. National Library of Medicine, NIH)
+%     "Just beneath the enamel is dentin, a substance harder than bone."
+%
+%   pulp → blood_vessels_and_nerves
+%     https://medlineplus.gov/ency/article/002214.htm
+%     (MedlinePlus Medical Encyclopedia — U.S. National Library of Medicine, NIH)
+%     "The root contains blood vessels and nerves, which supply blood and
+%      feeling to the whole tooth." ... "This area is known as the 'pulp' of the
+%      tooth." (the pulp is the interior region holding the blood vessels and
+%      nerves)
+%
+%   cementum → covers_roots
+%     https://www.ncbi.nlm.nih.gov/books/NBK538475/
+%     (StatPearls, NCBI Bookshelf — U.S. National Library of Medicine, NIH)
+%     "Cementoblasts form the cementum (calcified material covering the roots
+%      of teeth)"
+%
+%   root → extends_into_jawbone
+%     https://medlineplus.gov/ency/article/002214.htm
+%     (MedlinePlus Medical Encyclopedia — U.S. National Library of Medicine, NIH)
+%     "The root of the tooth extends down into the jawbone."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the MedlinePlus statement that
+% fixes the enamel row (enamel → outer_surface). Every OTHER row's per-fact
+% source and verbatim span is listed above, so each role remains independently
+% checkable. Five of the six rows are MedlinePlus (a U.S. NLM/NIH consumer-
+% health encyclopedia) and the sixth is StatPearls on the NCBI Bookshelf (also
+% U.S. NLM/NIH-hosted, the same primary source anatomy/tooth-types cites) — both
+% primary U.S. government (NIH) health resources, so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table tooth_part_role {
+    columns part, role
+
+    row (crown, visible_part)
+    row (enamel, outer_surface)
+    row (dentin, beneath_enamel)
+    row (pulp, blood_vessels_and_nerves)
+    row (cementum, covers_roots)
+    row (root, extends_into_jawbone)
+
+    source "The outer surface of the crown is made of enamel."
+    locator "https://medlineplus.gov/ency/article/002214.htm"
+    trust authoritative
+}

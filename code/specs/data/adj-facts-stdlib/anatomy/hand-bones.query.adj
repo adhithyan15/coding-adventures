@@ -1,0 +1,23 @@
+% ============================================================================
+% hand-bones.query.adj — a worked recall over the anatomy hand-bones library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "which part of the hand
+% are the carpals in?": it states no anatomy fact of its own — it only `import`s
+% the grounded table and asks binding queries. The engine resolves each `?`
+% against the `hand_bone_region` rows and returns the region + the table's
+% source/locator/trust. The fourth query runs the relation BACKWARD (bind the
+% region `fingers`, recall the group in it — phalanges). A word that is not one
+% of these three hand-bone groups abstains honestly — the engine never invents
+% a region.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli hand-bones.query.adj
+% ============================================================================
+
+import "hand-bones.adj"
+
+? hand_bone_region(carpals, $Region)       % expect base_of_hand
+? hand_bone_region(metacarpals, $Region)   % expect middle_of_hand
+? hand_bone_region(phalanges, $Region)     % expect fingers
+? hand_bone_region($Group, fingers)        % reverse bind — expect phalanges
+? hand_bone_region(femur, $Region)         % expect abstain — the femur is a leg bone, not a hand bone

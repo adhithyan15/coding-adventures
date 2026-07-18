@@ -1,0 +1,101 @@
+% ============================================================================
+% mineral-hardness — the ten REFERENCE MINERALS of the Mohs hardness scale and
+% the whole-number hardness each one is assigned (adj-facts-stdlib, GEOLOGY).
+% ============================================================================
+% One of the first quantitative facts of mineralogy, and a rung a GEOLOGY /
+% EARTH-SCIENCE agent reasons UP from: how hard a mineral is — whether it can be
+% scratched by your fingernail, a copper coin, a steel knife, or nothing short of
+% a diamond — is pinned to a ladder of ten well-known reference minerals, each
+% given a definite number from 1 (softest) to 10 (hardest). "Talc is 1, the
+% softest; diamond is 10, the hardest; quartz sits at 7, right in the middle."
+% Before you can reason about whether one mineral scratches another (a higher
+% Mohs number always scratches a lower one) you must first know each reference
+% mineral's number. Recall is a binding query:
+%
+%     ? mineral_hardness(quartz, $H)      % 7
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `mineral_hardness(mineral, hardness)` carrying the table's citation,
+% so the lookup above is the ordinary SLD binding query — the engine returns the
+% number WITH its source, on the CPU, with zero model calls, and abstains on any
+% mineral the scale does not fix (it never invents a hardness).
+%
+% The ten reference minerals, as a little truth table (softest at the top,
+% hardest at the bottom — the classic Mohs ladder):
+%
+%     mineral       hardness   a beginner's cue
+%     -----------   --------   ------------------------------------------------
+%     talc            1        softest of all — a fingernail crushes it
+%     gypsum          2        still scratched by a fingernail
+%     calcite         3        scratched by a copper coin
+%     fluorite        4        scratched by a steel knife
+%     apatite         5        just barely scratched by a knife
+%     orthoclase      6        scratches window glass
+%     quartz          7        the middle of the scale; scratches glass easily
+%     topaz           8        harder than most common minerals
+%     corundum        9        second only to diamond (ruby and sapphire)
+%     diamond        10        hardest natural material — scratches everything
+%
+% Because each `hardness` is a NUMBER (not a label), a recalled value composes
+% straight into a comparison: mineral A scratches mineral B exactly when
+% hardness(A) > hardness(B), so the recalled numbers ARE the ordering that drives
+% a scratch-test reasoner. That is the concrete bridge from RECALL to COMPUTE.
+% The query also runs BACKWARD — bind a number and recall the mineral that has it:
+%
+%     ? mineral_hardness($M, 10)   % diamond — reverse recall
+%
+% A mineral that is NOT one of these ten reference minerals — `gold`, `graphite`,
+% `mica` — is deliberately NOT a row, so a hardness recall ABSTAINS on it rather
+% than inventing a number. (Those minerals have real Mohs hardnesses, but this
+% table fixes ONLY the ten defining reference minerals of the scale itself, so it
+% answers exactly those and abstains on everything else.) That honest-abstention
+% property is what makes the table safe to build a reasoner on.
+%
+% Each `hardness` is copied character-for-character from the NPS sentence that
+% states it — never a number the source does not print for that mineral.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every mineral→hardness pair
+% below was read out of a fetched U.S. National Park Service page this session,
+% and any pair that could not be grounded there would have been dropped). All ten
+% numbers come from the SAME primary U.S. government source, the National Park
+% Service article "Mohs Hardness Scale" (nps.gov), which lists every reference
+% mineral with its number in a single sentence, quoted here character-for-
+% character so any reader can re-check it:
+%
+%   "Diamond, 10; Corundum, 9; Topaz, 8; Quartz, 7; Orthoclase, 6; Apatite, 5;
+%    Flourite, 4; Calcite, 3; Gypsum, 2; and Talc, 1."
+%
+% That one span fixes all ten rows at once. (Two spelling notes, so the atoms
+% stay checkable against the quote: the NPS page prints "Flourite", a typo for
+% the standard "Fluorite" — the row key uses the standard spelling `fluorite`
+% while the number 4 it is bound to comes verbatim from the source; and the
+% source names the hardness-6 mineral "Orthoclase", the specific feldspar Mohs
+% used, so the key is `orthoclase`.)
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold that single sentence — the one NPS span that fixes every
+% row. The source is a primary U.S. government NPS page (nps.gov), so `trust
+% authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table mineral_hardness {
+    columns mineral, hardness
+
+    row (talc, 1)
+    row (gypsum, 2)
+    row (calcite, 3)
+    row (fluorite, 4)
+    row (apatite, 5)
+    row (orthoclase, 6)
+    row (quartz, 7)
+    row (topaz, 8)
+    row (corundum, 9)
+    row (diamond, 10)
+
+    source "Diamond, 10; Corundum, 9; Topaz, 8; Quartz, 7; Orthoclase, 6; Apatite, 5; Flourite, 4; Calcite, 3; Gypsum, 2; and Talc, 1."
+    locator "https://www.nps.gov/articles/mohs-hardness-scale.htm"
+    trust authoritative
+}

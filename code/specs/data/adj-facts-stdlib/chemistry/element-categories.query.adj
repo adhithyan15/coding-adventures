@@ -1,0 +1,24 @@
+% ============================================================================
+% element-categories.query.adj — a worked recall over the chemistry
+% element-categories library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "does a metal conduct
+% electricity?": it states no chemistry fact of its own — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?` against
+% the `element_category_property` rows and returns the property + the table's
+% source/locator/trust. The fourth query runs the relation BACKWARD (bind the
+% property `poor_conductor`, recall its category — nonmetal). A word that is not
+% one of the three broad categories abstains honestly — the engine never invents
+% a property.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli element-categories.query.adj
+% ============================================================================
+
+import "element-categories.adj"
+
+? element_category_property(metal, $Property)      % expect good_conductor
+? element_category_property(nonmetal, $Property)   % expect poor_conductor
+? element_category_property(metalloid, $Property)  % expect semiconductor
+? element_category_property($Category, poor_conductor) % reverse bind — expect nonmetal
+? element_category_property(compound, $Property)   % expect abstain — a compound is not one of the three broad element categories

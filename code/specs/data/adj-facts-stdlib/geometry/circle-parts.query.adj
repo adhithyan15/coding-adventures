@@ -1,0 +1,24 @@
+% ============================================================================
+% circle-parts.query.adj — a worked recall over the geometry circle-parts library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is the radius?" or
+% "what does 'chord' mean?": it states no geometry fact of its own — it only
+% `import`s the grounded table and asks binding queries. The engine resolves
+% each `?` against the `circle_part` rows and returns the defining phrase + the
+% table's source/locator/trust. The fifth query runs the relation BACKWARD (bind
+% the description `perimeter`, recall its part — circumference). A word that is
+% not one of these circle parts abstains honestly — the engine never invents a
+% description.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli circle-parts.query.adj
+% ============================================================================
+
+import "circle-parts.adj"
+
+? circle_part(radius, $D)             % expect center_to_perimeter
+? circle_part(diameter, $D)           % expect maximum_distance_across
+? circle_part(circumference, $D)      % expect perimeter
+? circle_part(chord, $D)              % expect ends_on_circle
+? circle_part($Part, perimeter)       % reverse bind — expect circumference
+? circle_part(vertex, $D)             % expect abstain — a vertex is a polygon corner, not a circle part

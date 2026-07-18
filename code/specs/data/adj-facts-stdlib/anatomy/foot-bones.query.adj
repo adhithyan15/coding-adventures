@@ -1,0 +1,23 @@
+% ============================================================================
+% foot-bones.query.adj — a worked recall over the anatomy foot-bones library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "where in the foot are the
+% metatarsals?": it states no anatomy fact of its own — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?` against
+% the `foot_region` rows and returns the region + the table's source/locator/
+% trust. The fourth query runs the relation BACKWARD (bind the region `toes`,
+% recall the bone group that makes them up — phalanges). The carpals are the
+% WRIST bones, not one of the three foot-bone groups, so a recall on them
+% abstains honestly — the engine never invents a region.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli foot-bones.query.adj
+% ============================================================================
+
+import "foot-bones.adj"
+
+? foot_region(tarsals, $Region)       % expect heel_and_ankle
+? foot_region(metatarsals, $Region)   % expect midfoot
+? foot_region(phalanges, $Region)     % expect toes
+? foot_region($Group, toes)           % reverse bind — expect phalanges
+? foot_region(carpals, $Region)       % expect abstain — carpals are wrist bones, not a foot-bone group

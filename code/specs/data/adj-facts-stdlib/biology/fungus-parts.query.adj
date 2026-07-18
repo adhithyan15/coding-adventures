@@ -1,0 +1,24 @@
+% ============================================================================
+% fungus-parts.query.adj — a worked recall over the biology fungus-parts library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is the mycelium?" or
+% "what do the gills do?": it states no mycology fact of its own — it only
+% `import`s the grounded table and asks binding queries. The engine resolves
+% each `?` against the `fungus_part_role` rows and returns the role + the
+% table's source/locator/trust. The fifth query runs the relation BACKWARD (bind
+% the role `made_of_hyphae`, recall its fungus part — mycelium). A word that is
+% not one of these fungus parts abstains honestly — the engine never invents a
+% role.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli fungus-parts.query.adj
+% ============================================================================
+
+import "fungus-parts.adj"
+
+? fungus_part_role(hypha, $Role)          % expect thread_like
+? fungus_part_role(mycelium, $Role)       % expect made_of_hyphae
+? fungus_part_role(gills, $Role)          % expect holds_spores
+? fungus_part_role(stalk, $Role)          % expect lifts_cap
+? fungus_part_role($Part, made_of_hyphae) % reverse bind — expect mycelium
+? fungus_part_role(root, $Role)           % expect abstain — a fungus has no roots; the mycelium is root-LIKE, not a root

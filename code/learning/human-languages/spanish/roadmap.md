@@ -27,10 +27,15 @@ with grammar introduced exactly where a word needs it
 (Lessons are identified by stable **slug** ids, not numbers — see `HL00`;
 order lives in the book, which LaTeX auto-numbers, and in `session-map.md`.)
 
-Next: **Ch. 4** — responding to *¿cómo está usted?* (bien, gracias, regular,
-más o menos); then **farewells** (hasta luego/mañana/pronto, adiós). Sentences
-grow as grammar accumulates piece by piece. The theme skeleton below plans the
-wider road ahead.
+- **Ch. 4 — Responding to *¿cómo está usted?***: gracias (← *grātia*) → de nada
+  (← *nāta*, "born thing" → "nothing") → **estar** (the *temporary* to-be, ←
+  *stāre* "to stand"; vs *ser*) → ¿cómo está usted? / ¿cómo estás? (assembled;
+  formal vs informal) → regular / más o menos ("so-so") → practice. **Authored.**
+
+Next: **Ch. 5** — **farewells** (hasta luego / hasta mañana / hasta pronto,
+adiós — and *hasta* ← Arabic *ḥattā*, the first of the Arabic-loanword deep
+dives). Sentences grow as grammar accumulates piece by piece. The theme skeleton
+below plans the wider road ahead.
 
 ## Theme Skeleton (planning only)
 
