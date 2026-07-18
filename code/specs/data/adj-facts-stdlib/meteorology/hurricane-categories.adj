@@ -1,0 +1,115 @@
+% ============================================================================
+% hurricane-categories — the Saffir-Simpson Hurricane Wind Scale: each category
+% (1..5) → the DAMAGE descriptor the source uses for it (adj-facts-stdlib,
+% METEOROLOGY).
+% ============================================================================
+% When a hurricane is coming, the single number everyone hears first is its
+% CATEGORY. The Saffir-Simpson Hurricane Wind Scale sorts a storm into one of
+% five categories by its sustained wind speed, and — the part this table
+% captures — the National Hurricane Center pairs each category with a short
+% DAMAGE descriptor: a category 1 will produce "some damage", a category 3
+% brings "devastating damage", a category 4 or 5 brings "catastrophic damage".
+% Before you can reason about evacuation, storm surge, or how a "major
+% hurricane" (category 3 and up) differs from a lesser one, you must first know
+% WHICH damage descriptor the source attaches to a given category. Recall is a
+% binding query:
+%
+%     ? damage_level(category_3, $Descriptor)     % devastating_damage
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `damage_level(category, descriptor)` carrying the table's citation,
+% so the lookup above is the ordinary SLD binding query — the engine returns the
+% descriptor WITH its source, on the CPU, with zero model calls, and abstains on
+% anything that is not one of the five Saffir-Simpson categories (it never
+% invents a descriptor).
+%
+% Each of the five categories and the descriptor word the source states for it,
+% as a little truth table:
+%
+%     category      descriptor (source's own word)   the NHC summary phrase
+%     -----------   ------------------------------   ---------------------------
+%     category_1    some_damage                      "will produce some damage"
+%     category_2    extensive_damage                 "will cause extensive damage"
+%     category_3    devastating_damage               "Devastating damage will occur"
+%     category_4    catastrophic_damage              "Catastrophic damage will occur"
+%     category_5    catastrophic_damage              "Catastrophic damage will occur"
+%
+% The relation also runs BACKWARD — bind a descriptor and recall which
+% category (or categories) the source gives it:
+%
+%     ? damage_level($Category, catastrophic_damage)   % category_4 AND category_5
+%
+% Note the honest DUPLICATE: category 4 and category 5 BOTH carry
+% `catastrophic_damage`, because the NHC source opens the category-4 AND the
+% category-5 paragraph with the identical sentence "Catastrophic damage will
+% occur." We keep both rows exactly as the source states them — we do NOT invent
+% a stronger word for category 5 that the source does not use. So the backward
+% query above honestly returns TWO categories, which is the truth of the scale.
+%
+% A key that is NOT one of the five Saffir-Simpson categories — `category_6`
+% (there is no category 6), a `tropical_storm`, or a `tropical_depression`
+% (weaker systems the Saffir-Simpson scale does not rank) — is deliberately NOT
+% a row, so a category recall ABSTAINS on it rather than inventing a damage
+% word. That honest-abstention property is what makes the table safe to build a
+% reasoner on: it answers exactly the category→descriptor pairs it can ground,
+% and only those.
+%
+% The `descriptor` value of every row is a SINGLE lowercase atom, chosen to be
+% the damage word the source EXPLICITLY uses for that category — never one the
+% source does not support. The atom is the source's summary damage phrase
+% collapsed to snake_case: "some damage" → `some_damage`, "extensive damage" →
+% `extensive_damage`, "Devastating damage" → `devastating_damage`,
+% "Catastrophic damage" → `catastrophic_damage`. That literal fidelity is why
+% category 5's cell is `catastrophic_damage` and not some invented superlative.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every category→descriptor
+% pair below was read out of the fetched NOAA / National Hurricane Center
+% "Saffir-Simpson Hurricane Wind Scale" page, and any pair whose descriptor word
+% could not be verified there would have been dropped). All five spans come from
+% the SAME primary source, https://www.nhc.noaa.gov/aboutsshws.php :
+%
+%   category_1 → some_damage
+%     "Very dangerous winds will produce some damage: Well-constructed frame
+%      homes could have damage to roof, shingles, vinyl siding and gutters."
+%
+%   category_2 → extensive_damage
+%     "Extremely dangerous winds will cause extensive damage: Well-constructed
+%      frame homes could sustain major roof and siding damage."
+%
+%   category_3 → devastating_damage
+%     "Devastating damage will occur: Well-built framed homes may incur major
+%      damage or removal of roof decking and gable ends."
+%
+%   category_4 → catastrophic_damage
+%     "Catastrophic damage will occur: Well-built framed homes can sustain
+%      severe damage with loss of most of the roof structure and/or some
+%      exterior walls."
+%
+%   category_5 → catastrophic_damage
+%     "Catastrophic damage will occur: A high percentage of framed homes will be
+%      destroyed, with total roof failure and wall collapse."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the NHC statement that fixes the
+% category-1 row (category_1 → some_damage). Every OTHER row's per-fact source
+% and verbatim span is listed above, so each descriptor remains independently
+% checkable. All spans are from the same NOAA / National Hurricane Center page,
+% a primary U.S. government source, so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table damage_level {
+    columns category, descriptor
+
+    row (category_1, some_damage)          % "Very dangerous winds will produce some damage"
+    row (category_2, extensive_damage)     % "Extremely dangerous winds will cause extensive damage"
+    row (category_3, devastating_damage)   % "Devastating damage will occur"
+    row (category_4, catastrophic_damage)  % "Catastrophic damage will occur" (category 4 paragraph)
+    row (category_5, catastrophic_damage)  % "Catastrophic damage will occur" (category 5 paragraph)
+
+    source "Very dangerous winds will produce some damage: Well-constructed frame homes could have damage to roof, shingles, vinyl siding and gutters."
+    locator "https://www.nhc.noaa.gov/aboutsshws.php"
+    trust authoritative
+}

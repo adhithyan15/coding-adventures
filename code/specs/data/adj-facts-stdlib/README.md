@@ -108,6 +108,7 @@ per rotation, in parallel):
 | `geology/` | Earth's internal layer → physical state, in the source's own words (crust → rigid, mantle → semi_solid, outer_core → liquid, inner_core → solid) | USGS "This Dynamic Earth" (authoritative) |
 | `meteorology/` | Beaufort wind force number → the name the source gives it (0 → calm, 6 → strong_breeze, 12 → hurricane) | NWS Beaufort Wind Scale (authoritative) |
 | `meteorology/` | precipitation type → defining physical form (snow → ice_crystals, sleet → frozen_raindrops, hail → balls_of_ice) | NOAA National Weather Service (authoritative) |
+| `meteorology/` | Saffir-Simpson hurricane category → the damage descriptor NHC uses (1 → some_damage, 3 → devastating_damage, 5 → catastrophic_damage) | NOAA/NHC Saffir-Simpson Hurricane Wind Scale (authoritative) |
 | `geography/` | common landform → defining descriptor (mountain → projects_above_surroundings, plateau → flat_elevated, canyon → deep_narrow) | USGS Feature Type Thesaurus (authoritative) |
 | … | *geography, physical constants, …* | *(expanding)* |
 
