@@ -1,0 +1,25 @@
+[package]
+name = "coding-adventures-reduce-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "Reduce runtime — lowers Reduce syntax to symbolic-ir and evaluates via symbolic-vm (R-4)"
+license = "MIT"
+
+[dependencies]
+# The R-3 frontend: parses Reduce source into a generic GrammarASTNode that
+# this crate lowers to symbolic-ir.
+coding-adventures-reduce-parser = { path = "../reduce-parser" }
+# The R-2 lexer. Tokenized once up front (the lexer is iterative, so unlike
+# the parser it cannot stack-overflow) to measure per-statement token counts
+# from the *real* token stream, mirroring derive-runtime/wolfram-runtime's
+# identical guard against a long flat operator chain folding into a deeply
+# nested lowered tree (see MAX_STATEMENT_TOKENS's doc comment).
+coding-adventures-reduce-lexer = { path = "../reduce-lexer" }
+# The shared symbolic substrate: the term IR everything lowers to and the VM
+# that rewrites it.
+symbolic-ir = { path = "../symbolic-ir" }
+symbolic-vm = { path = "../symbolic-vm" }
+# The generic parser AST types (GrammarASTNode / ASTNodeOrToken) and the lexer
+# Token type the lowering walks.
+parser = { path = "../parser" }
+lexer = { path = "../lexer" }

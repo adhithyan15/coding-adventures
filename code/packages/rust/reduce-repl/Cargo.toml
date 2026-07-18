@@ -1,0 +1,13 @@
+[package]
+name = "coding-adventures-reduce-repl"
+version = "0.1.0"
+edition = "2021"
+description = "Interactive REPL and `reduce` binary for Reduce (a subset)"
+license = "MIT"
+
+[dependencies]
+coding-adventures-reduce-runtime = { path = "../reduce-runtime" }
+
+[[bin]]
+name = "reduce"
+path = "src/main.rs"
