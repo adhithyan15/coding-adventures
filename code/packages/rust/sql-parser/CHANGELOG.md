@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.21] - Unreleased
+
+### Added
+
+- **`COLLATE name` may now precede the `IN` operator** in the `comparison` rule
+  (`x COLLATE NOCASE IN (…)`, and `NOT IN`). An optional `[COLLATE NAME]` prefix
+  was added to the `IN` / `NOT IN` alternatives. As with the existing left
+  `COLLATE` on a `cmp_op` comparison, the clause lives INSIDE each alternative —
+  not hoisted before the whole alternation — so a bare trailing `COLLATE` (e.g.
+  `ORDER BY x COLLATE NOCASE`, where `order_item` owns the clause) still fails the
+  alternative, backtracks, and leaves the token for the caller.
+- **`COLLATE name` may now precede `BETWEEN`** (`x COLLATE NOCASE BETWEEN a AND
+  c`, and `NOT BETWEEN`). Same optional `[COLLATE NAME]` prefix on the `BETWEEN`
+  / `NOT BETWEEN` alternatives, with the same inside-the-alternative placement
+  for correct backtracking.
+- **`COLLATE name` may now precede `LIKE`/`GLOB`** (all four LIKE variants
+  incl. `ESCAPE`, and `GLOB`/`NOT GLOB`). SQLite parses this but LIKE/GLOB ignore
+  the collation, so the planner validates the name and discards it. Added for
+  parse-surface parity — mini previously rejected `COLLATE` before these.
+
 ## [0.1.20] - Unreleased
 
 ### Added

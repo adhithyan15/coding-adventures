@@ -2,6 +2,33 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.23] - Unreleased
+
+### Added
+
+- **Explicit `COLLATE` written before `IN` now applies to the membership test.**
+  `plan_comparison`'s `IN`/`NOT IN` branch reads the collation via the existing
+  `collate_name_after` and, when present, wraps the value AND every list element
+  in `__collate(_, name)` — the same canonicalise-then-byte-compare mechanism the
+  `cmp_op` branch uses. So `name COLLATE NOCASE IN ('apple')` lifts a plain column
+  to case-insensitive membership, and `name COLLATE BINARY IN (…)` overrides a
+  column's declared NOCASE. `__collate` passes NULL/non-text through unchanged, so
+  IN's three-valued NULL logic and numeric equality for non-text members are
+  preserved. This is the *explicit*-COLLATE path; the *column-defined* collation
+  (0.2.22) is still pushed in by `collate_comparisons`, which yields to an
+  already-`__collate`-wrapped operand so an explicit clause always wins.
+- **Explicit `COLLATE` before `BETWEEN` applies to the range test.** The
+  `BETWEEN`/`NOT BETWEEN` branch wraps the value AND both bounds in
+  `__collate(_, name)`. Since `x BETWEEN a AND c` is `x >= a AND x <= c`, this
+  makes both ordered comparisons canonicalise their text before the byte compare
+  — a collated range test. `'B' COLLATE NOCASE BETWEEN 'a' AND 'c'` is now `1`
+  (the folded `'b'` falls in `a..c`) where the byte compare is `0`.
+- **`COLLATE` before `LIKE`/`GLOB` is validated and ignored.** The LIKE and GLOB
+  branches call `collate_name_after` so an unknown collation still errors, then
+  discard the name — no `__collate` wrap. Matches SQLite, where LIKE/GLOB carry
+  their own case-folding and the `COLLATE` operator has no effect on them (even
+  `COLLATE BINARY` does not make LIKE case-sensitive).
+
 ## [0.2.22] - Unreleased
 
 ### Added

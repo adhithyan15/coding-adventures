@@ -2449,10 +2449,26 @@ fn plan_comparison(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
         let high_node = child_nodes_ordered
             .get(2)
             .ok_or_else(|| PlanError::UnsupportedStatement("BETWEEN missing high".to_string()))?;
+        let low = plan_expression(low_node)?;
+        let high = plan_expression(high_node)?;
+        // Optional `COLLATE name` on the left operand (`x COLLATE NOCASE BETWEEN a
+        // AND c`). `x BETWEEN a AND c` is `x >= a AND x <= c`, so wrapping the
+        // value AND both bounds in `__collate` makes each ordered comparison
+        // canonicalise its text before the byte compare — exactly a collated
+        // range test. `__collate` passes NULL/non-text through unchanged, so the
+        // range's NULL propagation and numeric ordering are preserved.
+        let (value, low, high) = match collate_name_after(&direct_tok_uppers)? {
+            Some(name) => (
+                wrap_collate(left, &name),
+                wrap_collate(low, &name),
+                wrap_collate(high, &name),
+            ),
+            None => (left, low, high),
+        };
         return Ok(SqlExpr::Between {
-            value: Box::new(left),
-            low: Box::new(plan_expression(low_node)?),
-            high: Box::new(plan_expression(high_node)?),
+            value: Box::new(value),
+            low: Box::new(low),
+            high: Box::new(high),
             negated,
         });
     }
@@ -2463,6 +2479,13 @@ fn plan_comparison(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
     // keyword shows up as a direct token.
     if direct_tok_uppers.contains(&"LIKE".to_string()) {
         let negated = direct_tok_uppers.contains(&"NOT".to_string());
+        // A `COLLATE name` may be written before LIKE, but the LIKE operator
+        // IGNORES the collation (it carries its own case-folding) — matching
+        // SQLite, where even `COLLATE BINARY` does not make LIKE case-sensitive.
+        // We still call `collate_name_after` to VALIDATE the name (an unknown
+        // collation errors like SQLite's "no such collating sequence"), then
+        // discard it — no `__collate` wrap.
+        let _ = collate_name_after(&direct_tok_uppers)?;
         let pattern_node = child_nodes_ordered
             .get(1)
             .ok_or_else(|| PlanError::UnsupportedStatement("LIKE missing pattern".to_string()))?;
@@ -2492,6 +2515,9 @@ fn plan_comparison(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
     // SQLite does. `NOT GLOB` wraps the call in a logical NOT.
     if direct_tok_uppers.contains(&"GLOB".to_string()) {
         let negated = direct_tok_uppers.contains(&"NOT".to_string());
+        // GLOB, like LIKE, ignores an explicit `COLLATE` (it is always
+        // case-sensitive). Validate the name, then discard it.
+        let _ = collate_name_after(&direct_tok_uppers)?;
         let pattern_node = child_nodes_ordered
             .get(1)
             .ok_or_else(|| PlanError::UnsupportedStatement("GLOB missing pattern".to_string()))?;
@@ -2514,7 +2540,7 @@ fn plan_comparison(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
     if direct_tok_uppers.contains(&"IN".to_string()) {
         let negated = direct_tok_uppers.contains(&"NOT".to_string());
         // value_list is a direct child node.
-        let list_items = if let Some(vl) = find_node(node, "value_list") {
+        let list_items: Vec<SqlExpr> = if let Some(vl) = find_node(node, "value_list") {
             vl.children
                 .iter()
                 .filter_map(|c| {
@@ -2528,8 +2554,25 @@ fn plan_comparison(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
         } else {
             Vec::new()
         };
+        // Optional `COLLATE name` on the left operand (`x COLLATE NOCASE IN (...)`).
+        // SQLite applies the explicit collation to every equality test the IN
+        // performs, so we wrap the value AND each list element in the internal
+        // `__collate` builtin — the same canonicalise-then-byte-compare mechanism
+        // the cmp_op branch uses. `__collate` passes NULL and non-text through
+        // unchanged, so IN's three-valued NULL logic (and numeric equality for
+        // non-text members) is preserved. This is the *explicit*-COLLATE path;
+        // the *column-defined* collation is pushed in separately by
+        // `collate_comparisons`, which yields to an already-`__collate`-wrapped
+        // operand so an explicit clause always wins.
+        let (value, list_items) = match collate_name_after(&direct_tok_uppers)? {
+            Some(name) => (
+                wrap_collate(left, &name),
+                list_items.into_iter().map(|e| wrap_collate(e, &name)).collect(),
+            ),
+            None => (left, list_items),
+        };
         return Ok(SqlExpr::InList {
-            value: Box::new(left),
+            value: Box::new(value),
             list: list_items,
             negated,
         });

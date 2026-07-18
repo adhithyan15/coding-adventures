@@ -471,12 +471,26 @@ pub fn parser_grammar() -> ParserGrammar {
                                 ] }) },
                         ] },
                         GrammarElement::Sequence { elements: vec![
+                            // Optional `COLLATE name` on the LEFT operand of a
+                            // BETWEEN range (`x COLLATE NOCASE BETWEEN a AND c`).
+                            // Kept inside the alternative (not hoisted) for the
+                            // same backtracking reason as the IN/cmp_op branches.
+                            // The planner wraps the value AND both bounds so the
+                            // `>= low AND <= high` range test honours the collation.
+                            GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                    GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                                ] }) },
                             GrammarElement::Literal { value: r#"BETWEEN"#.to_string() },
                             GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                             GrammarElement::Literal { value: r#"AND"#.to_string() },
                             GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                         ] },
                         GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                    GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                                ] }) },
                             GrammarElement::Literal { value: r#"NOT"#.to_string() },
                             GrammarElement::Literal { value: r#"BETWEEN"#.to_string() },
                             GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
@@ -484,12 +498,28 @@ pub fn parser_grammar() -> ParserGrammar {
                             GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                         ] },
                         GrammarElement::Sequence { elements: vec![
+                            // Optional `COLLATE name` on the LEFT operand of an IN
+                            // list (`x COLLATE NOCASE IN (...)`). Like the cmp_op
+                            // branch, the COLLATE lives INSIDE this alternative —
+                            // not hoisted before the whole alternation — so a bare
+                            // trailing `COLLATE` (e.g. `ORDER BY x COLLATE NOCASE`)
+                            // fails this alternative, backtracks, and leaves the
+                            // token for the caller. The planner applies the
+                            // collation to the value AND every list element.
+                            GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                    GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                                ] }) },
                             GrammarElement::Literal { value: r#"IN"#.to_string() },
                             GrammarElement::Literal { value: r#"("#.to_string() },
                             GrammarElement::RuleReference { name: r#"value_list"#.to_string() },
                             GrammarElement::Literal { value: r#")"#.to_string() },
                         ] },
                         GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                    GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                                ] }) },
                             GrammarElement::Literal { value: r#"NOT"#.to_string() },
                             GrammarElement::Literal { value: r#"IN"#.to_string() },
                             GrammarElement::Literal { value: r#"("#.to_string() },
@@ -500,17 +530,37 @@ pub fn parser_grammar() -> ParserGrammar {
                         // listed BEFORE the plain `LIKE pattern` so the
                         // backtracking parser prefers the longer match when an
                         // `ESCAPE` clause is present, and falls back otherwise.
+                        //
+                        // Each LIKE/GLOB tail also accepts an optional leading
+                        // `[COLLATE NAME]` (`x COLLATE NOCASE LIKE 'a%'`). SQLite
+                        // PARSES this but the LIKE/GLOB operators IGNORE the
+                        // collation (they carry their own case-folding), so the
+                        // planner validates the name and discards it. The prefix
+                        // stays inside each alternative for the same backtracking
+                        // reason as the cmp_op/IN/BETWEEN branches.
                         GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                    GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                                ] }) },
                             GrammarElement::Literal { value: r#"LIKE"#.to_string() },
                             GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                             GrammarElement::Literal { value: r#"ESCAPE"#.to_string() },
                             GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                         ] },
                         GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                    GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                                ] }) },
                             GrammarElement::Literal { value: r#"LIKE"#.to_string() },
                             GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                         ] },
                         GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                    GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                                ] }) },
                             GrammarElement::Literal { value: r#"NOT"#.to_string() },
                             GrammarElement::Literal { value: r#"LIKE"#.to_string() },
                             GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
@@ -518,6 +568,10 @@ pub fn parser_grammar() -> ParserGrammar {
                             GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                         ] },
                         GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                    GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                                ] }) },
                             GrammarElement::Literal { value: r#"NOT"#.to_string() },
                             GrammarElement::Literal { value: r#"LIKE"#.to_string() },
                             GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
@@ -526,11 +580,20 @@ pub fn parser_grammar() -> ParserGrammar {
                         // SQLite defines `X GLOB Y` as `glob(Y, X)`, so the
                         // planner lowers this to the existing `glob` builtin
                         // (args swapped); `NOT GLOB` wraps it in a logical NOT.
+                        // `[COLLATE NAME]` is accepted and ignored (see above).
                         GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                    GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                                ] }) },
                             GrammarElement::Literal { value: r#"GLOB"#.to_string() },
                             GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                         ] },
                         GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                    GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                                ] }) },
                             GrammarElement::Literal { value: r#"NOT"#.to_string() },
                             GrammarElement::Literal { value: r#"GLOB"#.to_string() },
                             GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },

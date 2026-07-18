@@ -416,12 +416,14 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
             }
 
             // ─────────────── BETWEEN ───────────────────────────────────────
-            Instruction::Between(inclusive) => {
-                // Stack (top → bottom): high, low, value
+            Instruction::Between(plain) => {
+                // Stack (top → bottom): high, low, value.
+                // `plain` is codegen's `!negated`: true for `BETWEEN`, false for
+                // `NOT BETWEEN` (see eval_between).
                 let hi = pop(&mut stack)?;
                 let lo = pop(&mut stack)?;
                 let val = pop(&mut stack)?;
-                stack.push(eval_between(&val, &lo, &hi, inclusive)?);
+                stack.push(eval_between(&val, &lo, &hi, plain)?);
             }
 
             // ─────────────── IN list ───────────────────────────────────────
@@ -2262,23 +2264,28 @@ fn eval_between(
     val: &SqlValue,
     lo: &SqlValue,
     hi: &SqlValue,
-    inclusive: bool,
+    plain: bool,
 ) -> Result<SqlValue, VmError> {
-    // NULL propagation: any NULL → NULL.
+    // NULL propagation: any NULL → NULL (three-valued logic).
     if matches!(val, SqlValue::Null) || matches!(lo, SqlValue::Null) || matches!(hi, SqlValue::Null) {
         return Ok(SqlValue::Null);
     }
-    let ge = if inclusive {
-        matches!(sql_cmp(val, lo), std::cmp::Ordering::Greater | std::cmp::Ordering::Equal)
-    } else {
-        sql_cmp(val, lo) == std::cmp::Ordering::Greater
-    };
-    let le = if inclusive {
-        matches!(sql_cmp(val, hi), std::cmp::Ordering::Less | std::cmp::Ordering::Equal)
-    } else {
-        sql_cmp(val, hi) == std::cmp::Ordering::Less
-    };
-    Ok(SqlValue::Bool(ge && le))
+    // The BETWEEN range test is *inclusive*: `val >= lo AND val <= hi`.
+    //
+    //   x   BETWEEN a AND c  ≡  a <= x <= c
+    //   x NOT BETWEEN a AND c ≡  NOT(a <= x <= c)  ≡  x < a OR x > c
+    //
+    // `plain` is codegen's `!negated` (the ONLY producer of `Between(false)` is
+    // `NOT BETWEEN`). `NOT BETWEEN` is the LOGICAL NEGATION of the inclusive
+    // range — it must NOT be computed as a strict/exclusive-bounds range
+    // (`val > lo AND val < hi`). The earlier code did exactly that, which
+    // inverted the answer for interior values: `5 NOT BETWEEN 1 AND 10` wrongly
+    // returned true (5 is *in* [1,10], so `NOT BETWEEN` is false), and
+    // `15 NOT BETWEEN 1 AND 10` wrongly returned false. NULL already returned
+    // above, so the negation is a plain boolean flip.
+    let in_range = matches!(sql_cmp(val, lo), std::cmp::Ordering::Greater | std::cmp::Ordering::Equal)
+        && matches!(sql_cmp(val, hi), std::cmp::Ordering::Less | std::cmp::Ordering::Equal);
+    Ok(SqlValue::Bool(if plain { in_range } else { !in_range }))
 }
 
 // ===========================================================================

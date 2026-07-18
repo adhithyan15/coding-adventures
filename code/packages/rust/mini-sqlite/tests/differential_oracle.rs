@@ -1184,12 +1184,117 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT id FROM t WHERE name IN ('apple','banana') ORDER BY id",
     },
-    // (An explicit `COLLATE BINARY` on the IN *value* — `name COLLATE BINARY IN
-    // (…)` — would override the column NOCASE, but the grammar does not yet
-    // accept `COLLATE` before `IN`/`LIKE`/`BETWEEN` (only before a comparison
-    // operator), so that override is a separate grammar follow-up, not covered
-    // here. The `is_collate_call` guard in `collate_comparisons` already handles
-    // it once the syntax parses.)
+    // Explicit `COLLATE` may now be written directly before `IN` — `name COLLATE
+    // BINARY IN (…)`. SQLite takes IN's collating sequence from the left operand,
+    // and an explicit clause on that operand OVERRIDES the column's declared
+    // sequence. Here the column is NOCASE but `COLLATE BINARY` forces byte order,
+    // so only the exact-case 'APPLE' qualifies. (The `is_collate_call` guard in
+    // `collate_comparisons` already yields to this explicit wrap.)
+    Case {
+        id: "where_explicit_collate_binary_in_override",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT COLLATE NOCASE)",
+            "INSERT INTO t VALUES (1,'Apple'),(2,'apple'),(3,'APPLE'),(4,'banana')",
+        ],
+        query: "SELECT id FROM t WHERE name COLLATE BINARY IN ('APPLE') ORDER BY id",
+    },
+    // The reverse direction: an explicit `COLLATE NOCASE` LIFTS a plain (BINARY)
+    // column to case-insensitive membership, matching all case variants.
+    Case {
+        id: "where_explicit_collate_nocase_in",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, name TEXT)",
+            "INSERT INTO t VALUES (1,'Apple'),(2,'apple'),(3,'APPLE'),(4,'banana')",
+        ],
+        query: "SELECT id FROM t WHERE name COLLATE NOCASE IN ('apple') ORDER BY id",
+    },
+    // Scalar (no-FROM) form: the explicit collation drives every equality test
+    // the IN performs, and `NOT IN` inverts it. `'ABC' COLLATE NOCASE IN
+    // ('abc','def')` is 1; `NOT IN ('abc')` is 0; `COLLATE BINARY IN ('abc')` is 0.
+    Case {
+        id: "scalar_explicit_collate_in",
+        setup: &[],
+        query: "SELECT 'ABC' COLLATE NOCASE IN ('abc','def') AS a, 'ABC' COLLATE NOCASE NOT IN ('abc') AS b, 'ABC' COLLATE BINARY IN ('abc') AS c",
+    },
+    // Explicit COLLATE composes with IN's three-valued NULL logic: a non-matching
+    // membership test with a NULL element is NULL, because `__collate` passes the
+    // NULL element through unchanged.
+    Case {
+        id: "scalar_explicit_collate_in_null",
+        setup: &[],
+        query: "SELECT ('ABC' COLLATE NOCASE IN ('xyz', NULL)) IS NULL AS a, 'ABC' COLLATE NOCASE IN ('abc', NULL) AS b",
+    },
+    // Plain `NOT BETWEEN` is the LOGICAL NEGATION of the inclusive range, not a
+    // strict/exclusive-bounds range. `5 NOT BETWEEN 1 AND 10` is 0 (5 IS in
+    // [1,10]); `15 NOT BETWEEN 1 AND 10` is 1; the boundaries 1 and 10 are IN the
+    // range so their NOT BETWEEN is 0; a NULL operand yields NULL. (Regression
+    // guard: eval_between previously computed `val > lo AND val < hi` for the
+    // negated case, inverting interior values.)
+    Case {
+        id: "not_between_logical_negation",
+        setup: &[],
+        query: "SELECT 5 NOT BETWEEN 1 AND 10 AS a, 15 NOT BETWEEN 1 AND 10 AS b, 1 NOT BETWEEN 1 AND 10 AS c, 10 NOT BETWEEN 1 AND 10 AS d, (NULL NOT BETWEEN 1 AND 10) IS NULL AS e",
+    },
+    // Column form of NOT BETWEEN over a range of integer ids, to exercise the
+    // per-row path (not just constant folding).
+    Case {
+        id: "not_between_column",
+        setup: &[
+            "CREATE TABLE t (id INTEGER)",
+            "INSERT INTO t VALUES (1),(5),(10),(11),(0)",
+        ],
+        query: "SELECT id FROM t WHERE id NOT BETWEEN 1 AND 10 ORDER BY id",
+    },
+    // Explicit `COLLATE` before `BETWEEN`: `x BETWEEN a AND c` is `x >= a AND
+    // x <= c`, and the collation drives both ordered comparisons. `'B' COLLATE
+    // NOCASE BETWEEN 'a' AND 'c'` is 1 (folded 'b' falls in a..c) where the plain
+    // byte compare is 0 (uppercase 'B' sorts below lowercase 'a'). `NOT BETWEEN`
+    // inverts, and a NULL bound propagates NULL through the collation wrap.
+    Case {
+        id: "scalar_explicit_collate_between",
+        setup: &[],
+        query: "SELECT 'B' COLLATE NOCASE BETWEEN 'a' AND 'c' AS a, 'B' BETWEEN 'a' AND 'c' AS b, 'B' COLLATE NOCASE NOT BETWEEN 'a' AND 'c' AS c, 'hi   ' COLLATE RTRIM BETWEEN 'hi' AND 'hi' AS d, ('B' COLLATE NOCASE BETWEEN NULL AND 'c') IS NULL AS e",
+    },
+    // Column form: an explicit `COLLATE NOCASE` on a plain (BINARY) column folds
+    // case for the whole range, so mixed-case names in `a`..`n` all qualify while
+    // an out-of-range uppercase name does not.
+    Case {
+        id: "where_explicit_collate_between",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT)",
+            "INSERT INTO t VALUES (1,'Apple'),(2,'apple'),(3,'ZEBRA'),(4,'mango')",
+        ],
+        query: "SELECT id FROM t WHERE s COLLATE NOCASE BETWEEN 'a' AND 'n' ORDER BY id",
+    },
+    // `COLLATE` before `LIKE` now parses, but LIKE IGNORES the collation
+    // (matching SQLite): even `COLLATE BINARY` does not make LIKE case-sensitive,
+    // and `COLLATE NOCASE` changes nothing since LIKE is already ASCII
+    // case-insensitive. `NOT LIKE` and the `ESCAPE` clause compose with the
+    // (ignored) collation. The point is parse-surface parity — mini used to
+    // reject `COLLATE` before LIKE.
+    Case {
+        id: "scalar_collate_like_ignored",
+        setup: &[],
+        query: "SELECT 'ABC' COLLATE BINARY LIKE 'abc' AS a, 'ABC' COLLATE NOCASE LIKE 'abc' AS b, 'ABC' COLLATE NOCASE NOT LIKE 'xyz' AS c, 'A%B' COLLATE NOCASE LIKE 'a!%b' ESCAPE '!' AS d",
+    },
+    // `COLLATE` before `GLOB` also parses and is ignored: GLOB stays
+    // case-sensitive regardless of the collation, so `'ABC' COLLATE NOCASE GLOB
+    // 'abc'` is 0 while `'abc' COLLATE NOCASE GLOB 'abc'` is 1. `NOT GLOB` too.
+    Case {
+        id: "scalar_collate_glob_ignored",
+        setup: &[],
+        query: "SELECT 'ABC' COLLATE NOCASE GLOB 'abc' AS a, 'abc' COLLATE NOCASE GLOB 'abc' AS b, 'ABC' COLLATE NOCASE NOT GLOB 'abc' AS c",
+    },
+    // Column form: `COLLATE` before LIKE on a table column parses and matches
+    // exactly as the un-collated LIKE would (LIKE is case-insensitive for ASCII).
+    Case {
+        id: "where_collate_like_ignored",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT)",
+            "INSERT INTO t VALUES (1,'Apple'),(2,'apricot'),(3,'Banana')",
+        ],
+        query: "SELECT id FROM t WHERE s COLLATE NOCASE LIKE 'ap%' ORDER BY id",
+    },
     // IN membership uses the same equality as `=`: numeric across INTEGER/REAL,
     // and it is three-valued for NULL. `1 IN (1.0)` and `1.0 IN (1)` are true
     // (numeric), `'1' IN (1)` is false (text vs int, no affinity), and a list
