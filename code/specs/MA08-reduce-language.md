@@ -138,6 +138,18 @@ real Reduce's exact grammar) → additive (`+`/`-`) → multiplicative
 `a:=(b:=c)`"); this subset's `if`/`else` is likewise right-associative
 per §5.3.
 
+Note this table (and the manual's own `⟨infix operator⟩` production it
+transcribes) never places the cons operator `.` (§3, `a . {b, c}`)
+anywhere in this chain — a genuine gap, not an omission of this spec's own
+making. R-3's `reduce.grammar` resolves it by binding `cons` looser than
+`additive` but tighter than the comparison tier: an already-fully-reduced
+arithmetic expression on each side (`1+2 . {3,4}` means `(1+2) . {3,4}`,
+never `1 + (2 . {3,4})`), while still nesting inside an equation (`a . {b}
+= c . {d}`). This is a first-cut, disclosed simplification in the same
+spirit as this section's own comparison-tier note above, not a verified
+claim about real Reduce's exact grammar; see `reduce.grammar`'s own header
+comment for the full reasoning.
+
 Comments, Reduce's mode-switch mechanism (`on rounded;`, `on complex;`,
 …), and its symbolic (raw-Lisp) mode are not part of this grammar; see §4.
 

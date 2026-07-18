@@ -25,6 +25,7 @@
 //! | `__gc_collect_roots(roots, count)` | mark from `count` root words at `roots`, sweep; returns objects freed |
 //! | `__gc_collect_region(base, len)` | mark from every candidate pointer in a raw region, sweep; returns objects freed |
 //! | `__gc_collect()` | conservative collect rooted at this thread's live stack + callee-saved registers; returns objects freed |
+//! | `__gc_safepoint()` | paced collect — runs `__gc_collect` only when live bytes reach the adaptive threshold; returns objects freed |
 //! | `__gc_live_bytes()` | live payload bytes |
 //! | `__gc_collection_count()` | collections run so far |
 //! | `__gc_reset()` | drop the whole heap (frees everything); mainly for tests / process teardown |
@@ -45,10 +46,25 @@ use std::sync::Mutex;
 /// `twig_gc.c`'s `__twig_gc_collect`). See [`stack_scan`].
 mod stack_scan;
 
+/// `__twig_gc_*` ABI aliases so the AOT-emitted code and `dynval_runtime.c`,
+/// which reference the names `twig_gc.c` used, link against this collector.
+/// See [`twig_compat`].
+mod twig_compat;
+
 /// The one process-wide heap.  `None` until the first allocation (lazy init);
 /// `__gc_reset` puts it back to `None`, running `FlatHeap`'s `Drop` to free
 /// every outstanding block.
 static HEAP: Mutex<Option<FlatHeap>> = Mutex::new(None);
+
+/// Serialises tests that touch the single process-wide `HEAP`.
+///
+/// `cargo test` runs unit tests on parallel threads; two tests that each
+/// `__gc_reset` and mutate `HEAP` would otherwise interleave nondeterministically.
+/// Every `HEAP`-touching test — here and in [`stack_scan`] — takes this lock first,
+/// making them mutually exclusive regardless of the runner's thread count. A
+/// poisoned lock is recovered (a panicking test must not wedge the rest).
+#[cfg(test)]
+pub(crate) static TEST_LOCK: Mutex<()> = Mutex::new(());
 
 /// Run `f` against the (lazily created) global heap.
 ///
@@ -75,6 +91,18 @@ pub extern "C" fn __gc_alloc(n: i64) -> i64 {
 pub extern "C" fn __gc_alloc_kind(n: i64, kind: u16) -> i64 {
     if n <= 0 {
         return 0;
+    }
+    // Paced collection: if the live set has reached the adaptive threshold, run a
+    // conservative stack-scan collect BEFORE allocating — exactly where
+    // `twig_gc.c`'s `__twig_gc_alloc` collects. Doing it *before* the allocation
+    // means the new object does not exist yet, so it cannot be wrongly reclaimed;
+    // every root that must survive is the caller's, already live on the stack this
+    // scan walks. Below the 1 MiB threshold (host tests, light workloads) this is
+    // never taken, so allocation stays a plain bump with no surprise scan.
+    if with_heap(|h| h.should_collect()) {
+        // SAFETY: `__gc_alloc*` is only ever called by the single-threaded native
+        // runtime on a thread that owns its stack — `__gc_collect`'s contract.
+        unsafe { stack_scan::__gc_collect() };
     }
     with_heap(|h| h.alloc(n as usize, kind) as i64)
 }
@@ -153,6 +181,7 @@ mod tests {
     // interleaving two tests over the shared heap would be nondeterministic.
     #[test]
     fn c_abi_alloc_collect_flow() {
+        let _guard = TEST_LOCK.lock().unwrap_or_else(|e| e.into_inner());
         __gc_reset();
         assert_eq!(__gc_live_bytes(), 0);
         assert_eq!(__gc_collection_count(), 0);

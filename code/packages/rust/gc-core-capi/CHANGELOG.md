@@ -2,6 +2,45 @@
 
 All notable changes to this crate are documented here.
 
+## [0.5.0] — 2026-07-17
+
+### Added
+
+- **`__twig_gc_*` ABI aliases** (new module `twig_compat`) — `__twig_gc_alloc`,
+  `__twig_gc_collect`, `__twig_gc_safepoint`, `__twig_gc_live_bytes`,
+  `__twig_gc_collection_count`, thin `#[no_mangle]` wrappers forwarding to the
+  generic `__gc_*` ABI. The native-AOT code generators (aarch64 + LLVM backends)
+  and `dynval_runtime.c` reference the symbol names `twig_gc.c` exported; these
+  aliases let `libgc_core_capi.a` satisfy those references so `twig_gc.c` can be
+  retired without touching the emitters. Prototypes match `twig_gc.c` exactly,
+  including the `void`-returning `__twig_gc_collect` / `__twig_gc_safepoint` (the
+  generic entry points' freed-count is discarded). Verified exported as text
+  symbols in the built staticlib; host test drives the full flow. Pure Rust, no C
+  shim; deletable once the emitters emit `__gc_*` directly.
+
+## [0.4.0] — 2026-07-17
+
+### Added
+
+- **`__gc_safepoint()`** — the throttled, paced collect (drop-in for `twig_gc.c`'s
+  `__twig_gc_safepoint`). Runs `__gc_collect` only when the heap has reached its
+  adaptive threshold (`FlatHeap::should_collect`), else returns `0`. The native
+  backend emits a `safepoint` op at loop back-edges / function entries; collecting
+  at every one would be ruinous, so each merely asks "over threshold yet?" —
+  keeping GC cost proportional to allocation and stopping a tight allocation loop
+  from ever starving the collector.
+
+### Changed
+
+- **`__gc_alloc` / `__gc_alloc_kind` now collect under pressure** — before
+  allocating, if `should_collect()`, they run a conservative stack-scan collect
+  (matching `__twig_gc_alloc`). Collecting *before* the new allocation means the
+  new object does not exist yet and cannot be wrongly reclaimed; every root that
+  must survive is the caller's, already live on the scanned stack. Below the 1 MiB
+  threshold (host tests, light workloads) this path is never taken — allocation
+  stays a plain bump. Host tests serialised via a shared `TEST_LOCK` (the
+  process-wide `HEAP` is now touched by more than one test).
+
 ## [0.3.0] — 2026-07-17
 
 ### Added

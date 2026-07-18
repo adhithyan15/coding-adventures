@@ -260,6 +260,7 @@ members = [
     "j-repl",
     "j-to-semantic-ir",
     "reduce-lexer",
+    "reduce-parser",
     "logic-gates",
     "logic-core",
     "lookup-core",
