@@ -8,6 +8,33 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.5.0: scaled-decimal MULTIPLY / DIVIDE (PL09 step 4, PR3b)
+
+- **Scaled `MULTIPLY`** on `PIC …V…` operands: the raw product of the two scaled
+  `i64` slots carries scale `sa + sb`; `store_scaled` then rounds/truncates it to
+  the receiver's scale. Each operand is ≤ 9 digits, so the product is `< 10^18`
+  and never overflows `i64`.
+- **Scaled `DIVIDE`**: the quotient is computed at working scale `w` = the
+  receiver's `dec_digits` (plus one guard digit when `ROUNDED`) by scaling the
+  dividend up before the truncating integer division —
+  `floor(B·10^(sa+w−sb) / A)` — then `store_scaled` truncates or rounds `w →
+  dec_digits`. One guard digit matches the oracle's `round()`, which inspects
+  only the first dropped digit (half away from zero).
+- **`ROUNDED`** is honoured on both, via the shared `store_scaled` bias-rounding.
+- **Overflow-safe** (security-reviewed style): `DIVIDE` rejects a dividend with
+  more fractional digits than the result precision, and any intermediate whose
+  digit width would exceed 18 (`b_int + sa + w > 18`) — a clean `Unsupported`.
+- **Still deferred**: `ON SIZE ERROR` on the arithmetic verbs (needs the `IF`
+  rung's branch machinery).
+- The now-redundant integer-only operand path (`int_operand` etc.) is removed —
+  every arithmetic verb shares the scaled `Term` machinery and `store_scaled`.
+- **Tests.** Unit tests for the new capability and the retained `ON SIZE ERROR`
+  boundary; seven new `jit_e2e.rs` cases (fixed-point multiply truncate/round,
+  BY-field update, divide truncate to receiver decimals, divide rounded, dividend
+  update, decimal-field multiply) each byte-identical to the oracle; a scaled
+  multiply/divide `backend_compat` program; and a `lang_matrix.rs` COBOL row
+  (`20 / 3` rounded in `V99` → `0667`).
+
 ### Added — v0.4.0: IF / ELSE with relational conditions (PL09 step 4, PR4)
 
 - **`IF condition then-stmts [ELSE else-stmts]`** → a three-way branch: the

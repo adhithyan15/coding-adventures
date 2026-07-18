@@ -4,7 +4,7 @@ chapter: 2
 type: word
 headword: comment
 gloss: how
-concept_tag: HOW
+concept_tag: QUESTION-HOW
 prerequisites: [FR-C02-tu-vous]
 sounds: [nasal-on]
 roots: [quo-modo]

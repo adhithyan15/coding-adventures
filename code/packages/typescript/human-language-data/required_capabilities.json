@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "typescript/human-language-data",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../learning/human-languages/**",
+      "justification": "The loader/CLI read the curriculum's lesson Markdown, concept taxonomy, and script JSON from the repo working tree to build and validate the cross-language dataset."
+    },
+    {
+      "category": "fs",
+      "action": "list",
+      "target": "../../learning/human-languages/**",
+      "justification": "The loader enumerates each track's lessons/ directory and data/scripts/ to discover files to parse."
+    }
+  ],
+  "justification": "Read-only filesystem access to the Human Languages curriculum directory. The parse/build/validate/query core is pure; only loader.ts and cli.ts touch the filesystem. No write, network, or process access needed."
+}

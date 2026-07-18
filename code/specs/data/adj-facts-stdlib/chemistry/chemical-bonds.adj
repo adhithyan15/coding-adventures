@@ -1,0 +1,100 @@
+% ============================================================================
+% chemical-bonds — each named TYPE of chemical bond and the single defining
+% token the source uses to characterize it (adj-facts-stdlib, CHEMISTRY).
+% ============================================================================
+% One of the first organizing facts in chemistry: atoms hold together in a few
+% NAMED kinds of bond, and each kind is pinned by one characteristic word — an
+% ionic bond is about TRANSFER of electrons, a covalent bond is about SHARING
+% electrons, a metallic bond pictures a GAS of free electrons, and the van der
+% Waals (secondary) bond is WEAK. Before a learner reasons about why table salt
+% is brittle or why metals conduct, they first learn to NAME the bond types and
+% attach each to the word that defines it. Recall is a binding query:
+%
+%     ? chemical_bond_token(ionic, $T)      % transfer
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `chemical_bond_token(bond, token)` carrying the table's citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns the
+% defining token WITH its source, on the CPU, with zero model calls, and
+% abstains on a bond type this source does not name.
+%
+% The bond types, as a little truth table (bond → what the LibreTexts sentence
+% says → the single defining token we carry):
+%
+%     bond            what the source sentence says                    token
+%     -------------   ----------------------------------------------   --------
+%     ionic           "...arises from complete transfer of ...         transfer
+%                      one or more electrons from one atom to another"
+%     covalent        "...arises from the sharing of two or more        sharing
+%                      electrons between atoms."
+%     metallic        "...a lattice of ion cores being held             gas
+%                      together by a gas of free electrons."
+%     van_der_waals   "...secondary bonding is weak, involving          weak
+%                      energies ranging from about 0.1 to 10 kJ/mole."
+%
+% The source groups these into two families — PRIMARY bonding (ionic, covalent,
+% metallic — "strong", 100 to 1000 kJ/mole) and SECONDARY / van der Waals
+% bonding ("weak", 0.1 to 10 kJ/mole) — but the family split is not part of this
+% table; the table is the single clean axis bond → defining token. The query
+% also runs BACKWARD — bind the token and recall the bond it defines:
+%
+%     ? chemical_bond_token($B, weak)       % van_der_waals — reverse recall
+%
+% Every `token` is a SINGLE lowercase atom that appears VERBATIM inside that
+% bond's own defining sentence (quoted per-row in the provenance block below),
+% never a synonym or a word the source does not use. A bond type this source
+% does NOT pin to a defining token — HYDROGEN bonding, for instance, which the
+% page mentions but only as an interaction it says "can as yet not be
+% formulated" — has no row, so a recall on it ABSTAINS rather than inventing a
+% token. That honest-abstention property is what makes the table safe to reason
+% from.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every bond→token pair was
+% read out of a fetched LibreTexts page this session, and any bond whose token
+% could not be found verbatim in its own characterizing sentence was dropped —
+% hydrogen bonding was dropped for exactly that reason). All four tokens come
+% from the SAME source, the LibreTexts "Introduction to Solid State Chemistry"
+% §1.2 "Chemical Bonding" (chem.libretexts.org), each sentence quoted here
+% character-for-character so any reader can re-check it:
+%
+%   ionic → transfer
+%     "Electrovalent bonding arises from complete transfer of one or more
+%      electrons from one atom to another"
+%
+%   covalent → sharing
+%     "covalent bonding arises from the sharing of two or more electrons
+%      between atoms."
+%
+%   metallic → gas
+%     "We may therefore visualize metals as a lattice of ion cores being held
+%      together by a gas of free electrons."
+%
+%   van_der_waals → weak
+%     "In contrast, secondary bonding is weak, involving energies ranging from
+%      about 0.1 to 10 kJ/mole." (the page labels this "Secondary (van der
+%      WAALS) bonding".)
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single strongest span: the sentence that fixes the
+% first row (ionic → transfer). Every OTHER row's per-fact source and verbatim
+% span is listed above, so each token remains independently checkable.
+% LibreTexts is a SECONDARY teaching reference (a college course text, not a
+% primary standards body), so `trust consensus` — the honest tier for a
+% teaching summary, per the standard-library trust convention.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table chemical_bond_token {
+    columns bond, token
+
+    row (ionic, transfer)
+    row (covalent, sharing)
+    row (metallic, gas)
+    row (van_der_waals, weak)
+
+    source "Electrovalent bonding arises from complete transfer of one or more electrons from one atom to another"
+    locator "https://chem.libretexts.org/Bookshelves/Inorganic_Chemistry/Introduction_to_Solid_State_Chemistry/01:_Lectures/1.02:_Chemical_Bonding"
+    trust consensus
+}

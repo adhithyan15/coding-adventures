@@ -3,6 +3,57 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.27] - Unreleased
+
+### Fixed
+
+- **Text/blob truthiness now takes numeric affinity.** `is_truthy` treated every
+  non-NULL text/blob as true, so `WHERE <text-column>` kept all rows and `NOT
+  'abc'` returned false. It now coerces via `cast_to_f64` and tests `!= 0`,
+  matching SQLite: `NOT 'abc'` = 1, `NOT '5'` = 0, `'5' AND 1` = 1, `'abc' AND 1`
+  = 0, and `WHERE s` / `CASE WHEN s` keep only numerically-non-zero text. This
+  affects every boolean context uniformly (WHERE, HAVING, AND/OR, NOT, IIF,
+  CASE WHEN) since they all route through `is_truthy`.
+
+## [0.4.26] - Unreleased
+
+### Fixed
+
+- **Binary arithmetic now applies numeric affinity to text/blob operands.**
+  `'5' + 0` errored ("cannot perform arithmetic on TEXT"); it now coerces via the
+  shared `coerce_arith`/`text_to_numeric` path and evaluates to 5, matching
+  SQLite. `'abc' + 1` = 1 (no numeric prefix → 0), `'10' - '3'` = 7, `'5' * 2` =
+  10; division and modulo coerce too (`5 / '2'` = 2, `5 / '0'` = NULL, `'7' % 3`
+  = 1). Bool operands use their integer value. Coercion is scoped to arithmetic
+  only — comparison and bitwise operators keep their own rules. Known edge shared
+  with unary minus: an integral real-syntax string (`'9.0'`) collapses to an
+  integer, so `'9.0' / 2` is 4 not SQLite's 4.5 (float-affinity follow-up).
+
+## [0.4.25] - Unreleased
+
+### Fixed
+
+- **`IN` now uses `=` equality and three-valued NULL logic.** The `InList`
+  instruction tested membership with same-variant equality, so `1 IN (1.0)`
+  wrongly returned false and a NULL list element was ignored. It now uses
+  `sql_eq` (INTEGER/REAL compare numerically; text vs integer do not match) and
+  follows SQLite's three-valued rule: a match → true (even alongside NULLs); no
+  match with a NULL element present → NULL (`1 IN (NULL,2)`); otherwise false.
+  `NOT IN` inherits this, so `5 NOT IN (NULL,2)` is NULL. Collation-wrapped
+  operands (0.2.21's IN-collation) still fold correctly since both sides are
+  canonicalised before the compare.
+
+## [0.4.24] - Unreleased
+
+### Fixed
+
+- **`||` (concatenate) now treats a blob operand as its raw bytes.** `X'41' ||
+  'B'` was producing `"x'41'B"` (the hex *display* form of the blob) instead of
+  SQLite's `'AB'` (0x41 = 'A'). The `Concat` arm now stringifies a blob via its
+  raw bytes (`concat_operand_to_str`, lossy-UTF-8) while `sql_to_str` keeps its
+  reversible `x'…'` form for display everywhere else. Result is TEXT; NULL still
+  propagates. blob||text, text||blob, and blob||blob all fold to the byte string.
+
 ## [0.4.23] - Unreleased
 
 ### Fixed

@@ -4,7 +4,7 @@ chapter: 3
 type: word
 headword: llamo
 gloss: I call (from llamar, to call)
-concept_tag: LLAMAR
+concept_tag: ES-VERB-LLAMAR
 prerequisites: [ES-C03-me]
 sounds: [ll-y, vowel-o]
 roots: [clamare]

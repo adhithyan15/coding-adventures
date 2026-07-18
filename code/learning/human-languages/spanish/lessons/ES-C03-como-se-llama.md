@@ -4,7 +4,7 @@ chapter: 3
 type: word
 headword: ¿cómo se llama usted?
 gloss: what's your name? (formal)
-concept_tag: WHATS-YOUR-NAME
+concept_tag: INTRO-WHATS-YOUR-NAME
 prerequisites: [ES-C03-como, ES-C03-se-llama, ES-C03-tu-usted]
 sounds: [inverted-marks, accent-mark]
 roots: []

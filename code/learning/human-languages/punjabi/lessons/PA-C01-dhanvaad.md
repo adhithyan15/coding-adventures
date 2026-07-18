@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: ਧੰਨਵਾਦ
 gloss: thank you (Sanskritic) (dhannavād)
-concept_tag: GRATITUDE-THANKS
+concept_tag: COURTESY-THANKS
 prerequisites: [PA-C01-namaste]
 sounds: [inherent-a, tippi-nasal, vowel-sign]
 roots: [dhanya, vada]

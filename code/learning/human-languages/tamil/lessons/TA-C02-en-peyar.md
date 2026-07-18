@@ -4,7 +4,7 @@ chapter: 2
 type: phrase
 headword: என் பெயர் …
 gloss: my name is… (with no "is")
-concept_tag: MY-NAME-IS
+concept_tag: INTRO-MY-NAME-IS
 prerequisites: [TA-C02-en, TA-C02-peyar]
 sounds: []
 roots: []

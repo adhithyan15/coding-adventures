@@ -1,5 +1,44 @@
 # Changelog
 
+## 0.5.49 — text truthiness takes numeric affinity
+
+`NOT 'abc'` now returns 1 (not 0) and `WHERE <text>` keeps only rows whose text
+is numerically non-zero, matching SQLite. A text/blob in a boolean context takes
+numeric affinity: `'abc'`/`'0'`/`''` are false, `'5'`/`'5.5'` are true. This
+completes the type-affinity work — the boolean-context analog of the arithmetic
+(0.5.48) and unary-minus (0.5.43) coercion — and applies uniformly to WHERE,
+HAVING, AND/OR, NOT, IIF, and CASE WHEN. Two new differential-oracle cases;
+sql-vm 0.4.27.
+
+## 0.5.48 — arithmetic coerces text/blob operands
+
+`'5' + 0` now returns 5 instead of erroring. Binary arithmetic (`+ - * / %`)
+applies SQLite numeric affinity to text/blob operands: `'abc' + 1` = 1, `'10' -
+'3'` = 7, `'5' * 2` = 10, `5 / '2'` = 2, `5 / '0'` = NULL, `'7' % 3` = 1. This is
+the binary analog of the unary-minus coercion (0.5.43). Comparison and bitwise
+operators are unaffected. Two new differential-oracle cases; sql-vm 0.4.26.
+Known edge (shared with unary minus): an integral real-syntax string `'9.0'`
+collapses to an integer, a float-affinity follow-up.
+
+## 0.5.47 — IN uses numeric equality + three-valued NULL
+
+`1 IN (1.0)` now returns 1 (true) instead of 0: `IN` membership uses the same
+equality as `=`, so INTEGER and REAL compare numerically (`'1' IN (1)` stays
+false — text vs integer). `IN` is also now correctly three-valued for NULL: a
+NULL list element makes an otherwise-non-matching test NULL (`1 IN (NULL,2)` →
+NULL), while a real match still wins (`1 IN (NULL,1)` → 1); `NOT IN` inverts.
+Two new differential-oracle cases; sql-vm 0.4.25. The IN-collation folding
+(0.5.44) is unaffected.
+
+## 0.5.46 — `||` concatenates blobs as raw bytes
+
+`X'41' || 'B'` now returns `'AB'` (0x41 = 'A'), not `"x'41'B"`. The `||` operator
+was rendering a blob operand in its `x'…'` hex *display* form; it now uses the
+blob's raw bytes as text, matching SQLite (the result is TEXT). blob||text,
+text||blob, and blob||blob all fold to the byte string. One new
+differential-oracle case; sql-vm 0.4.24. (The `1 IN (1.0)` numeric-equality gap
+noted alongside this remains a separate follow-up.)
+
 ## 0.5.45 — LENGTH() over blobs and numbers
 
 `LENGTH(x'0102ff')` now returns 3 (the byte count) instead of erroring, and

@@ -32,6 +32,8 @@ per rotation, in parallel):
 | `chemistry/` | element → periodic-table group family | Wikipedia (consensus) |
 | `chemistry/` | common chemical → acid or base | LibreTexts (consensus) |
 | `chemistry/` | subatomic particle → electric charge (proton → positive) | DOE "Explains…Nuclei" (authoritative) |
+| `chemistry/` | chemical bond type → defining token (ionic → transfer) | LibreTexts (consensus) |
+| `chemistry/` | mixture kind → the everyday example the source names (colloid → milk) | LibreTexts (consensus) |
 | `metrology/` | SI prefix → power of ten | NIST |
 | `mathematics/` | Roman numeral → value | (consensus) |
 | `calendar/` | day / month → number | ISO 8601 |
@@ -42,17 +44,24 @@ per rotation, in parallel):
 | `biology/` | common bone → body region | NIH / MedlinePlus |
 | `biology/` | macronutrient → energy (kcal) per gram | NIH / MedlinePlus |
 | `biology/` | basic tissue type → representative example | NCI SEER Training |
+| `biology/` | kingdom of life → representative example organism (fungi → mushrooms) | Science Notes (consensus) |
 | `biology/` | blood-vessel type → defining function (artery → away from heart) | NCI SEER Training |
 | `biology/` | hormone → endocrine gland that secretes it | NCI SEER Training / NIH MedlinePlus |
 | `biology/` | vitamin → deficiency disease it prevents | NIH Office of Dietary Supplements |
+| `biology/` | leaf part → defining token / function (blade → flattened, stomata → gas_exchange) | Colorado State University Extension (authoritative) |
 | `physics/` | simple machine → everyday example | NASA |
 | `physics/` | phase change → its name (melting, freezing, …) | LibreTexts (consensus) |
 | `physics/` | energy form → defining token (chemical → bonds, thermal → heat) | EIA (energy.gov) |
+| `physics/` | common force → everyday example NASA uses (gravity → waterfall, tension → ropes) | NASA GSFC Swift (authoritative) |
+| `physics/` | named wave → its family (sound → mechanical, radio → electromagnetic) | NASA Science (authoritative) |
+| `physics/` | temperature reference point → the value NIST fixes it at (water_boils_celsius → 100, absolute_zero_kelvin → 0) | NIST (authoritative) |
 | `anatomy/` | lung → number of lobes (right 3, left 2) | NIH / NCI SEER Training |
 | `anatomy/` | brain part → primary function it controls | NIH / NCI SEER Training + StatPearls |
 | `anatomy/` | skeletal muscle → body region it is located in | Wikipedia (consensus) |
 | `anatomy/` | digestive organ → primary function it performs | NIH NIDDK / NCI SEER Training |
 | `anatomy/` | synovial joint type → representative example (hinge → elbow) | NIH / NLM StatPearls |
+| `anatomy/` | skin layer → defining descriptor (epidermis → outermost, subcutaneous → fat) | NIH / NCI SEER Training |
+| `anatomy/` | ear structure → ear region it sits in (cochlea → inner, malleus → middle, ear canal → outer) | NIH NIDCD (authoritative) |
 | … | *geography, physical constants, …* | *(expanding)* |
 
 Formulas and laws (Newton's `F = ma`, the ideal gas law `PV = nRT`, area/volume, …) are grown

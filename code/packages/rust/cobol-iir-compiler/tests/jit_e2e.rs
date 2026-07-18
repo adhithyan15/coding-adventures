@@ -397,6 +397,100 @@ fn item_to_item_move_rescales_the_implied_point() {
     assert_eq!(down, "123\n");
 }
 
+// -------------------------------------------------------------------------
+// Scaled-decimal MULTIPLY / DIVIDE (PR3b) — vs the oracle.
+// -------------------------------------------------------------------------
+
+#[test]
+fn multiply_fixed_point_truncates_into_receiver() {
+    // 2.5 * 2.5 = 6.25 → into 9(3)V9 truncates to "0062".
+    let out = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(3)V9."],
+        &["MULTIPLY 2.5 BY 2.5 GIVING R.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "0062\n");
+}
+
+#[test]
+fn multiply_giving_rounded() {
+    // 6.25 into 9(2)V9: truncated 6.2, ROUNDED 6.3 (second place is 5).
+    let trunc = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(2)V9 VALUE 0."],
+        &["MULTIPLY 2.5 BY 2.5 GIVING R.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(trunc, "062\n");
+    let round = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(2)V9 VALUE 0."],
+        &["MULTIPLY 2.5 BY 2.5 GIVING R ROUNDED.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(round, "063\n");
+}
+
+#[test]
+fn multiply_by_field_updates_the_by_field() {
+    // MOVE 6 TO R; MULTIPLY 7 BY R → 42.
+    let out = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(3) VALUE 6."],
+        &["MULTIPLY 7 BY R.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "042\n");
+}
+
+#[test]
+fn divide_into_giving_truncates_to_receiver_decimals() {
+    // 10 / 3 = 3.333… → into 9(3)V99 truncates to 3.33 → "00333".
+    let a = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(3)V99."],
+        &["DIVIDE 3 INTO 10 GIVING R.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(a, "00333\n");
+    // 10 / 4 = 2.5 → into 9(3) (no decimals) truncates to 2 → "002".
+    let b = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(3)."],
+        &["DIVIDE 4 INTO 10 GIVING R.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(b, "002\n");
+}
+
+#[test]
+fn divide_giving_rounded() {
+    // 20 / 3 = 6.666… → into V99: truncated 6.66, ROUNDED 6.67.
+    let trunc = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(2)V99 VALUE 0."],
+        &["DIVIDE 3 INTO 20 GIVING R.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(trunc, "0666\n");
+    let round = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(2)V99 VALUE 0."],
+        &["DIVIDE 3 INTO 20 GIVING R ROUNDED.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(round, "0667\n");
+}
+
+#[test]
+fn divide_into_without_giving_updates_the_dividend() {
+    // MOVE 20 TO R; DIVIDE 5 INTO R → 4.
+    let out = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(3) VALUE 20."],
+        &["DIVIDE 5 INTO R.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "004\n");
+}
+
+#[test]
+fn multiply_decimal_field_operands() {
+    // A=1.5 (9(2)V9), B=2.0 (9(2)V9); MULTIPLY A BY B GIVING R(9(3)V99) = 3.00.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC 9(2)V9 VALUE 1.5.",
+            "01  B  PIC 9(2)V9 VALUE 2.",
+            "01  R  PIC 9(3)V99.",
+        ],
+        &["MULTIPLY A BY B GIVING R.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "00300\n");
+}
+
 #[test]
 fn arithmetic_chains_through_the_field() {
     // Successive ops read the field back, proving the i64 slot round-trips:

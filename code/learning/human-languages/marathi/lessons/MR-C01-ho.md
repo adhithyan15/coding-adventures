@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: हो
 gloss: yes (ho)
-concept_tag: YES
+concept_tag: RESPONSE-YES
 prerequisites: [MR-C01-namaskar]
 sounds: [o-matra]
 roots: []

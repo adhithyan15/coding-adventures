@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: bom / boa
 gloss: good (adjective)
-concept_tag: GOOD
+concept_tag: WORD-GOOD
 prerequisites: [PT-C01-ola]
 sounds: [nasal-om]
 roots: [bonus]

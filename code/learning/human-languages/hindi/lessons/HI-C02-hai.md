@@ -4,7 +4,7 @@ chapter: 2
 type: word
 headword: है
 gloss: is
-concept_tag: IS
+concept_tag: WORD-IS
 prerequisites: [HI-C02-naam]
 sounds: [matra-ai]
 roots: [asti]

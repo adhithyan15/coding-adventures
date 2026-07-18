@@ -4,7 +4,7 @@ chapter: 2
 type: word
 headword: la noche
 gloss: night / evening (la noche — feminine)
-concept_tag: NOCHE
+concept_tag: TIME-NIGHT
 prerequisites: [ES-C02-tarde]
 sounds: [soft-c, stress-default-vowel-ns]
 roots: [nox]

@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: dia
 gloss: day (masculine)
-concept_tag: DAY
+concept_tag: TIME-DAY
 prerequisites: [PT-C01-o-a]
 sounds: []
 roots: [dies]

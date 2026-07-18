@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: der / die / das
 gloss: the (masculine / feminine / neuter)
-concept_tag: ARTICLES-DER-DIE-DAS
+concept_tag: GRAMMAR-THE
 prerequisites: [GE-C01-gut]
 sounds: [vowel-a-german, z-ts]
 roots: [sa-thorder]

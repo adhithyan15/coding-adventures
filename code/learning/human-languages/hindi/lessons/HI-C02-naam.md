@@ -4,7 +4,7 @@ chapter: 2
 type: word
 headword: नाम
 gloss: name
-concept_tag: NAME
+concept_tag: WORD-NAME
 prerequisites: []
 sounds: [matra-aa]
 roots: [naaman]

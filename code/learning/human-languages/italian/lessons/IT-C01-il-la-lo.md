@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: il / la / lo
 gloss: the (masculine / feminine)
-concept_tag: ARTICLE-GENDER
+concept_tag: GRAMMAR-THE
 prerequisites: [IT-C01-buono]
 sounds: []
 roots: [ille, illa]

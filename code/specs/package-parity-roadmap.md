@@ -112,16 +112,17 @@ the paired `hash-functions` prerequisite, the paired `bloom-filter`, `hash-map`,
 and `hash-set` ports, the paired `in-memory-data-store-engine` and
 `in-memory-data-store` ports, and the paired C#/F# `wasm-module-encoder`,
 `x25519`, `brainfuck-wasm-compiler`, `argon2i`, `argon2d`, and `argon2id`
-ports, and the paired C#/F# `chacha20-poly1305` ports:
+ports, and the paired C#/F# `chacha20-poly1305`, `xml-lexer`, and `block-ram`
+ports:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 329 |
+| Present in 10-15 languages | 172 | 325 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,972 |
-| Present in one language | 699 | 9,786 |
+| Present in one language | 701 | 9,814 |
 
-The loop must not start by attempting 9,786 singleton ports. It should finish
+The loop must not start by attempting 9,814 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 ## Priority 0: Inventory And Identity Integrity
@@ -162,7 +163,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 172 packages present in at least ten implementation languages need 331
+The 172 packages present in at least ten implementation languages need 327
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -171,8 +172,8 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Elixir | 0 | Complete; `python-parser` uses the shared grammar-driven frontend |
 | Lua | 0 | Complete; paired data-structure/storage wave |
 | Perl | 0 | Complete; paired data-structure/storage wave |
-| C# | 10 | Move with F# |
-| F# | 10 | Move with C# |
+| C# | 8 | Move with F# |
+| F# | 8 | Move with C# |
 | Haskell | 34 | Dependency-shaped compression, graphics, ML, and protocol waves |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
@@ -282,6 +283,24 @@ AEAD vectors cover the full construction, while multiblock round trips and
 tamper tests verify counter progression and authenticate-before-decrypt
 behavior. The package now spans 12 implementation lanes and reduces each
 paired high-consensus gap to 10.
+
+The eighth paired C#/F# slice is complete: `xml-lexer` now provides native,
+context-sensitive scanners in both lanes while reusing their existing lexer
+token models. Package-local state transitions match the shared XML grammar's
+content, tag, comment, CDATA, and processing-instruction groups; tests cover
+namespaces, quoted attributes, entity and character references, significant
+whitespace, token positions, malformed input, and EOF behavior. The package
+now spans 12 implementation lanes, reduces the high-consensus backlog to 327
+slots, and leaves 9 paired gaps in each lane.
+
+The ninth paired C#/F# slice is complete: `block-ram` now models SRAM cells,
+row-addressed arrays, rising-edge single-port and true dual-port RAM, all three
+read-during-write modes, same-address collision detection, and configurable
+FPGA-style width/depth aspect ratios in both lanes. Package-native tests cover
+cross-port visibility, edge behavior, reconfiguration clearing, defensive
+copies, and invalid signals and dimensions. The package now spans 12 target
+implementation lanes, reduces the high-consensus backlog to 325 slots, and
+leaves 8 paired gaps in each lane.
 
 Recommended family order:
 

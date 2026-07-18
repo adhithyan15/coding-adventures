@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: le / la / les
 gloss: the (masculine / feminine / plural)
-concept_tag: ARTICLES-LE-LA
+concept_tag: GRAMMAR-THE
 prerequisites: [FR-C01-bon]
 sounds: [vowel-e-grave, silent-final]
 roots: [ille, illa]

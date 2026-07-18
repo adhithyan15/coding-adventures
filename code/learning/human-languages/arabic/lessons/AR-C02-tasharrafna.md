@@ -4,7 +4,7 @@ chapter: 2
 type: phrase
 headword: تشرفنا
 gloss: pleased to meet you (literally "we have been honoured")
-concept_tag: PLEASED-TO-MEET
+concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [AR-C02-ismii]
 sounds: [taa, faa]
 roots: [sh-r-f]

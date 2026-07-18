@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: ಇಲ್ಲ
 gloss: no / there isn't (illa — the negative)
-concept_tag: NO
+concept_tag: RESPONSE-NO
 prerequisites: [KA-C01-haudu]
 sounds: [independent-vowel-i, lla-conjunct]
 roots: [il]

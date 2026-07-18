@@ -654,6 +654,14 @@ const CASES: &[Case] = &[
         setup: &[],
         query: "SELECT QUOTE(X'DEADBEEF') AS q, HEX(X'ab') AS h",
     },
+    // The `||` operator concatenates a blob as its RAW bytes (as text), not the
+    // `x'…'` display form: `X'41' || 'B'` = 'AB' (0x41 = 'A'), and the result is
+    // TEXT. Blob||text, text||blob, and blob||blob all fold to the byte string.
+    Case {
+        id: "concat_blob_raw_bytes",
+        setup: &[],
+        query: "SELECT X'41' || 'B' AS a, 'A' || X'42' AS b, X'48' || X'69' AS c, TYPEOF(X'41' || 'B') AS t",
+    },
     // OCTET_LENGTH counts BYTES (UTF-8), where LENGTH counts characters:
     // 'héllo' is 5 characters but 6 bytes.
     Case {
@@ -1182,6 +1190,24 @@ const CASES: &[Case] = &[
     // operator), so that override is a separate grammar follow-up, not covered
     // here. The `is_collate_call` guard in `collate_comparisons` already handles
     // it once the syntax parses.)
+    // IN membership uses the same equality as `=`: numeric across INTEGER/REAL,
+    // and it is three-valued for NULL. `1 IN (1.0)` and `1.0 IN (1)` are true
+    // (numeric), `'1' IN (1)` is false (text vs int, no affinity), and a list
+    // element `1.0` matches `1`. Previously IN used exact same-variant equality,
+    // so `1 IN (1.0)` wrongly returned false.
+    Case {
+        id: "in_numeric_equality",
+        setup: &[],
+        query: "SELECT 1 IN (1.0) AS a, 1.0 IN (1) AS b, '1' IN (1) AS c, 1 IN (2,1.0,3) AS d, 5 IN (1,2) AS e",
+    },
+    // IN is three-valued: a NULL element makes an otherwise-non-matching test
+    // NULL (`1 IN (NULL,2)` → NULL), but a real match wins over a NULL element
+    // (`1 IN (NULL,1)` → 1). `NOT IN` inverts, so `5 NOT IN (NULL,2)` is NULL.
+    Case {
+        id: "in_null_three_valued",
+        setup: &[],
+        query: "SELECT (1 IN (NULL,2)) IS NULL AS a, 1 IN (NULL,1) AS b, (5 IN (NULL,2)) IS NULL AS c, 5 NOT IN (1,2) AS d, (5 NOT IN (NULL,2)) IS NULL AS e",
+    },
     // A column WITHOUT a declared collation keeps BINARY comparison — only the
     // exact-case match qualifies. Guards against over-applying the fold.
     Case {
@@ -1408,6 +1434,44 @@ const CASES: &[Case] = &[
         id: "div_mod_nonzero_unaffected",
         setup: &["CREATE TABLE t (id INTEGER)", "INSERT INTO t VALUES (1)"],
         query: "SELECT (7 / 2) AS a, (-7 / 2) AS b, (7 % 3) AS c, (7.0 / 2) AS d FROM t",
+    },
+    // Binary arithmetic applies NUMERIC affinity to text/blob operands, matching
+    // SQLite: `'5'+0` = 5 (integer), `'5.5'+0` = 5.5 (real), `'abc'+1` = 1 (no
+    // numeric prefix → 0), `'12abc'+0` = 12, and `'10'-'3'` = 7 (both coerced).
+    // Previously the engine errored on any text operand.
+    Case {
+        id: "arith_text_numeric_affinity",
+        setup: &[],
+        query: "SELECT '5'+0 AS a, '5.5'+0 AS b, 'abc'+1 AS c, '5'*2 AS d, '10'-'3' AS e, '12abc'+0 AS f",
+    },
+    // Division/modulo also coerce: `5 / '2'` = 2, `5 / '0'` = NULL (affinity makes
+    // '0' the integer zero, so the divide-by-zero → NULL rule fires), `'7' % 3` = 1.
+    // (Known edge left for later, shared with unary minus: an *integral* real-
+    // syntax string like `'9.0'` collapses to an integer here, so `'9.0' / 2` is
+    // 4 not SQLite's 4.5 — the float-affinity follow-up. Non-integral `'5.5'`
+    // is fine.)
+    Case {
+        id: "div_mod_text_affinity",
+        setup: &[],
+        query: "SELECT 5 / '2' AS a, (5 / '0') IS NULL AS b, '7' % 3 AS c, '5.5' * 2 AS d",
+    },
+    // A text/blob in a BOOLEAN context takes numeric affinity, matching SQLite:
+    // `NOT 'abc'` = 1 ('abc'→0), `NOT '5'` = 0, `NOT '0'` = `NOT ''` = 1, and
+    // `'5' AND 1` = 1 while `'abc' AND 1` = 0. Previously all text was truthy.
+    Case {
+        id: "text_boolean_affinity",
+        setup: &[],
+        query: "SELECT NOT 'abc' AS a, NOT '5' AS b, NOT '0' AS c, 'abc' AND 1 AS d, '5' AND 1 AS e",
+    },
+    // The same rule drives WHERE and CASE: `WHERE <text>` keeps only rows whose
+    // text is numerically non-zero, and `CASE WHEN <text>` picks THEN only then.
+    Case {
+        id: "where_case_text_truthiness",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT)",
+            "INSERT INTO t VALUES (1,'abc'), (2,'5'), (3,'0'), (4,'')",
+        ],
+        query: "SELECT id, CASE WHEN s THEN 'y' ELSE 'n' END AS c FROM t WHERE s ORDER BY id",
     },
     // Unary minus applies NUMERIC affinity to a text/blob operand before
     // negating, matching SQLite: `-'5'` = -5, `-'12abc'` = -12 (leading numeric

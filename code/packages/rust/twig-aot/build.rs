@@ -57,7 +57,10 @@ fn main() {
     // Re-run this build script if any C runtime source changes.
     println!("cargo:rerun-if-changed=runtime/twig_runtime.c");
     println!("cargo:rerun-if-changed=runtime/dynval_runtime.c");
-    println!("cargo:rerun-if-changed=runtime/twig_gc.c");
+    // twig_gc.c has been retired (#118b-2b): the GC now comes from the
+    // gc-core-capi crate. Re-run if its C-ABI source changes so the embedded
+    // gc archive stays fresh.
+    println!("cargo:rerun-if-changed=../gc-core-capi/src");
 
     let out_dir: PathBuf = std::env::var("OUT_DIR")
         .expect("OUT_DIR not set by cargo")
@@ -92,14 +95,16 @@ fn main() {
     // archive is also linked into `twig-aot`'s own test binary, so the
     // golden test in `src/dynval_runtime_golden.rs` can call the
     // `__dyn_*` functions directly on the host.
+    // The garbage collector is no longer a C translation unit here. twig_gc.c
+    // has been retired (#118b-2b); the collector now lives in the `gc-core-capi`
+    // crate, whose staticlib we build and embed below. dynval_runtime.c's
+    // `__twig_gc_alloc` reference is left undefined in this archive and resolved
+    // at link time against gc-core-capi (see Part C in src/lib.rs, and the
+    // `extern crate gc_core_capi` for twig-aot's own binary/tests).
     if host_key.is_some() {
         cc::Build::new()
             .file("runtime/twig_runtime.c")
             .file("runtime/dynval_runtime.c")
-            // TWIG-GC (native-aot-substrate PR-1): conservative mark-and-sweep
-            // collector that manages cons cells, alloc objects, and any other
-            // heap value emitted by IIR `alloc` ops.
-            .file("runtime/twig_gc.c")
             .compile("twig_aot_runtime");
     }
 
@@ -135,6 +140,56 @@ fn main() {
             println!("cargo:rustc-env={env_var}={}", stub_path.display());
         }
     }
+
+    // ── Embed the gc-core-capi staticlib (the native GC) ───────────────────
+    //
+    // #118b-2b: the collector is now `gc-core-capi`'s `libgc_core_capi.a`.
+    // At AOT link time, `src/lib.rs` writes this archive to a temp file and
+    // hands it to the linker alongside the runtime archive so the emitted
+    // executable's `__twig_gc_alloc` / `__twig_gc_safepoint` references (and
+    // dynval_runtime.c's `__twig_gc_alloc`, pulled from the runtime archive)
+    // resolve. We build the staticlib here with a nested `cargo build` and
+    // copy it into OUT_DIR, then export its path so `include_bytes!` can bake
+    // the bytes into the twig-aot binary.
+    //
+    // Nested-cargo hygiene: use an isolated `--target-dir` under OUT_DIR so we
+    // never contend for the outer build's target lock (which would deadlock).
+    // `--release` matches the archive we want embedded (small, optimized).
+    let gc_archive_dst = out_dir.join("libgc_core_capi.a");
+    if host_key.is_some() {
+        let cargo = std::env::var("CARGO").unwrap_or_else(|_| "cargo".into());
+        let gc_target = out_dir.join("gc-core-capi-build");
+        let status = std::process::Command::new(&cargo)
+            .args(["build", "--release", "-p", "gc-core-capi", "--target-dir"])
+            .arg(&gc_target)
+            // Do not inherit the outer build's CARGO_TARGET_DIR — that would
+            // point the nested build back at the locked outer target dir.
+            .env_remove("CARGO_TARGET_DIR")
+            .status()
+            .expect("spawn nested cargo build for gc-core-capi staticlib");
+        assert!(status.success(), "gc-core-capi staticlib build failed");
+
+        // Staticlib artifact naming follows the same convention as the runtime
+        // archive above: MSVC emits `<name>.lib`, every other toolchain emits
+        // `lib<name>.a`. Copy whichever the nested build produced.
+        let gc_staticlib_basename = if target_os == "windows"
+            && std::env::var("CARGO_CFG_TARGET_ENV").as_deref() == Ok("msvc")
+        {
+            "gc_core_capi.lib"
+        } else {
+            "libgc_core_capi.a"
+        };
+        let gc_archive_src = gc_target.join("release").join(gc_staticlib_basename);
+        fs::copy(&gc_archive_src, &gc_archive_dst)
+            .unwrap_or_else(|e| panic!("copy {} -> {}: {e}",
+                                       gc_archive_src.display(),
+                                       gc_archive_dst.display()));
+    } else {
+        // Unsupported host: mirror the runtime-stub pattern. AOT is refused on
+        // this host anyway, so a 1-byte stub keeps `include_bytes!` happy.
+        fs::write(&gc_archive_dst, [0u8]).expect("write gc-core-capi stub");
+    }
+    println!("cargo:rustc-env=GC_CORE_CAPI_ARCHIVE={}", gc_archive_dst.display());
 
     // Backwards-compatible alias for the host's archive.  The existing
     // macOS ARM64 path uses `TWIG_RUNTIME_ARCHIVE`; keep that name
