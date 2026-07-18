@@ -27,6 +27,10 @@ compared, every Spanish form supplied in full (no prior Spanish assumed).
   "see-again" goodbye, twin of German *auf Wiedersehen*) → à plus tard (*tard* ←
   *tarde*, = Spanish *tarde*) → à bientôt (*bien* + *tôt*) → à demain (*dē māne*,
   shares *māne* with *mañana*) → practice. **Authored** — mirror of Spanish Ch. 5.
+- **Writing nuances** (`FR-W01`–`W03`, type: writing): the three accents on *e*
+  (é aigu / è grave / **ê circonflexe = a lost *s***: forêt→forest); the cédille
+  ç (soft *c* before a/o/u; ← "little z"); the tréma ï/ë (split the vowels).
+  **Authored.**
 
 ## Planned (mirrors the Spanish theme sequence)
 

@@ -292,6 +292,46 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT dept, SUM(amt) FROM sales GROUP BY dept ORDER BY dept",
     },
+    // GROUP_CONCAT: concatenate non-NULL values in row order, joined by the
+    // separator (default ","; a literal 2nd arg overrides it, including empty).
+    // NULLs are skipped, an empty/all-NULL group is NULL, and DISTINCT dedups.
+    // Was "unknown built-in function" before this aggregate existed.
+    Case {
+        id: "group_concat_basic",
+        setup: &[
+            "CREATE TABLE t (x)",
+            "INSERT INTO t VALUES ('a'),('a'),('b'),(NULL)",
+        ],
+        query: "SELECT group_concat(x) AS a, group_concat(DISTINCT x) AS b, group_concat(x,'') AS c FROM t",
+    },
+    // GROUP_CONCAT per group, with a custom separator and a NULL skipped inside a
+    // group. Integers render to their text form.
+    Case {
+        id: "group_concat_grouped",
+        setup: &[
+            "CREATE TABLE t (g TEXT, x)",
+            "INSERT INTO t VALUES ('a','p'),('a','q'),('b','r'),('b',NULL)",
+        ],
+        query: "SELECT g, group_concat(x) AS c, group_concat(x,'/') AS c2 FROM t GROUP BY g ORDER BY g",
+    },
+    // Numbers stringify to their decimal form.
+    Case {
+        id: "group_concat_numeric",
+        setup: &[
+            "CREATE TABLE t (x INTEGER)",
+            "INSERT INTO t VALUES (1),(2),(10)",
+        ],
+        query: "SELECT group_concat(x,'+') AS a FROM t",
+    },
+    // An aggregate over zero rows is NULL, not an empty string.
+    Case {
+        id: "group_concat_empty",
+        setup: &[
+            "CREATE TABLE t (x INTEGER)",
+            "INSERT INTO t VALUES (1),(2),(10)",
+        ],
+        query: "SELECT group_concat(x) AS a FROM t WHERE x > 99",
+    },
     Case {
         id: "having",
         setup: &[

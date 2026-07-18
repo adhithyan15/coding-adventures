@@ -1,5 +1,22 @@
 # Changelog
 
+## Writing nuances — the accents, the cédille, the tréma
+
+- **First French `writing`-type lessons** (`FR-W01-accents`, `FR-W02-cedille`,
+  `FR-W03-trema`): orthography taught etymology-first, the same way as the
+  Spanish writing lessons, once enough accented words have accumulated.
+- **The three accents on *e*** (`é è ê`): *é* aigu = "ay", *è* grave = open "eh"
+  (and the grave that only separates look-alikes, *a/à*, *ou/où*), and the star —
+  the **circonflexe ê as a tombstone for a lost *s***, with the English cousin
+  usually keeping it (*forêt*→forest, *hôpital*→hospital, *île*→isle,
+  *bête*→beast, *être*→*stāre*). The single most useful French reading trick.
+- **The cédille ç**: keeps *c* soft (*s*) before *a/o/u* (*français*, *garçon*),
+  and the hook's origin as a shrunken subscript *z* (Spanish *zedilla*, "little z").
+- **The tréma ï/ë**: "pronounce these vowels **separately**" (*naïve*, *Noël*,
+  *maïs* vs *mais*) — explicitly contrasted with the German umlaut (which *changes*
+  a vowel rather than *splitting* two).
+- Uses the `writing` lesson type (no `concept_tag`) — no taxonomy change.
+
 ## Chapter 4 — Farewells (parallel of Spanish Ch. 5)
 
 - **Chapter 4 authored** (`FR-C04-au-revoir`, `-a-plus-tard`, `-a-bientot`,

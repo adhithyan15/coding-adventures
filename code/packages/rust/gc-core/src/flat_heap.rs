@@ -678,6 +678,86 @@ impl FlatHeap {
         stats
     }
 
+    /// Collect from **both** exact root slots *and* raw conservative regions in a
+    /// single cycle — the primitive a precise **stack walk** needs when only some
+    /// frames are stack-mapped.
+    ///
+    /// [`Self::collect_precise`] roots from named slots only; [`Self::collect_region`]
+    /// roots from one raw span only. But a real native stack walk sees a *mix*: the
+    /// frames a migrated backend emitted stack maps for contribute exact
+    /// `root_slots` (via [`frame_root_slots`]), while the frames it could **not**
+    /// map — a C-runtime frame, the collector's own frames, a not-yet-migrated
+    /// backend — must be scanned **conservatively**, each contributing its whole
+    /// span as one `(base, len)` region. Those two roots must be marked in the *same*
+    /// mark phase and reclaimed by the *same* sweep, because the heap has one live
+    /// set; you cannot precise-collect then region-collect (the first sweep would
+    /// free everything the second's roots keep). This method is that single cycle:
+    /// mark every `root_slots` word (exactly as `collect_precise`) **and** every
+    /// candidate word in every region (exactly as `collect_region`), then sweep once.
+    ///
+    /// It is the strict generalisation of both siblings — `collect_precise(slots)`
+    /// is `collect_mixed(slots, &[])`, and `collect_region(base, len)` is
+    /// `collect_mixed(&[], &[(base, len)])`. Precision is per-frame: a mapped frame
+    /// pins only its real references, an unmapped frame conservatively pins whatever
+    /// its span look-alikes — so adding precise coverage to more backends strictly
+    /// reduces floating garbage, and a frame with no map is never *less* safe than
+    /// today's fully-conservative scan. Interior tracing, in-place sweep, remembered-
+    /// set clearing and threshold adaptation are all identical to the two siblings.
+    ///
+    /// # Safety
+    ///
+    /// Every address in `root_slots` must be readable for the call (each names a
+    /// live stack / register-spill slot; the word is read `unaligned`). Every
+    /// `(base, len)` region must be readable for the call (`base` may be null iff
+    /// `len == 0`; no alignment required). This is exactly the union of the
+    /// [`Self::collect_precise`] and [`Self::collect_region`] contracts — the walker
+    /// derived both from real frames it unwound.
+    pub unsafe fn collect_mixed(
+        &mut self,
+        root_slots: &[usize],
+        regions: &[(*const u8, usize)],
+    ) -> GcCycleStats {
+        let before = self.object_count();
+        let prev_live = self.live_bytes;
+
+        // ── Mark ──────────────────────────────────────────────────────────────
+        let mut work: Vec<*mut FlatHeader> = Vec::new();
+        // Exact slots first (precise frames): read the one word at each address.
+        for &slot in root_slots {
+            // SAFETY: caller guarantees each `slot` address is readable; the word
+            // there is a candidate root. `read_unaligned` tolerates sub-alignment.
+            let word = unsafe { ptr::read_unaligned(slot as *const usize) };
+            self.mark_word(word, &mut work, false);
+        }
+        // Then whole regions (unmapped frames): every aligned word is a candidate.
+        for &(base, len) in regions {
+            // SAFETY: caller guarantees `[base, base+len)` is readable.
+            self.mark_region(base, len, &mut work, false);
+        }
+        while let Some(h) = work.pop() {
+            self.scan_payload(h, &mut work, false);
+        }
+
+        // ── Sweep ─────────────────────────────────────────────────────────────
+        let (freed, survived, live) = self.sweep(false);
+        self.live_bytes = live;
+        self.adapt_threshold(prev_live);
+        // Full collect: drop the (possibly now-dangling) remembered set; the write
+        // barrier rebuilds it. See [`Self::collect`].
+        self.remembered.clear();
+
+        let stats = GcCycleStats {
+            freed,
+            survived,
+            pause_ns: 0,
+            heap_size_before: before,
+            heap_size_after: survived,
+        };
+        self.profile.record_cycle(&stats);
+        self.collection_count += 1;
+        stats
+    }
+
     /// Scan `[base, base + len)` as an array of aligned candidate root words,
     /// enqueuing every live block a word points into. The region-oriented sibling
     /// of [`Self::scan_payload`] (which scans one object's payload); both defer to
@@ -1743,6 +1823,155 @@ mod tests {
         assert!(!heap.find_header(parent).is_null());
         assert!(!heap.find_header(child).is_null());
         assert_eq!(frame[0], parent);
+    }
+
+    /// The headline for `collect_mixed`: one cycle over a **mapped** frame (exact
+    /// slots) and an **unmapped** frame (conservative span). The mapped frame frees
+    /// its unnamed-slot look-alike, while the unmapped frame conservatively retains
+    /// everything its span names — exactly the per-frame precision a real stack walk
+    /// gets when only some frames carry stack maps.
+    #[test]
+    fn collect_mixed_precise_frame_and_conservative_frame_in_one_cycle() {
+        let mut heap = FlatHeap::new();
+        let a = heap.alloc(16, 0) as usize; // named by the mapped frame → live
+        let b = heap.alloc(16, 0) as usize; // only in an UNNAMED slot → must die
+        let c = heap.alloc(16, 0) as usize; // in the unmapped frame's span → live
+        let d = heap.alloc(16, 0) as usize; // referenced nowhere → must die
+
+        // Mapped frame: two slots [a, b], stack map names only slot 0.
+        let mapped: [usize; 2] = [a, b];
+        let rec = StackMapRecord::new(0, vec![0]);
+        let mut slots = Vec::new();
+        frame_root_slots(mapped.as_ptr() as usize, &rec, &mut slots);
+
+        // Unmapped frame: a raw span holding c (and a non-pointer word). No stack
+        // map, so it is scanned conservatively as one region.
+        let unmapped: [usize; 2] = [c, 0xdead_beef];
+        let region = (
+            unmapped.as_ptr() as *const u8,
+            std::mem::size_of_val(&unmapped),
+        );
+
+        let stats = unsafe { heap.collect_mixed(&slots, &[region]) };
+        assert_eq!(stats.freed, 2, "b (unnamed) and d (unreferenced) are reclaimed");
+        assert_eq!(stats.survived, 2, "a (named) and c (span) survive");
+        assert!(!heap.find_header(a).is_null(), "a survives (precise root)");
+        assert!(heap.find_header(b).is_null(), "b freed (unnamed in mapped frame)");
+        assert!(!heap.find_header(c).is_null(), "c survives (conservative span)");
+        assert!(heap.find_header(d).is_null(), "d freed (rooted nowhere)");
+
+        // Keep both frames alive so their addresses stayed valid through the scan.
+        assert_eq!(mapped[0], a);
+        assert_eq!(unmapped[0], c);
+    }
+
+    /// `collect_mixed(slots, &[])` is exactly `collect_precise(slots)`: with no
+    /// regions it frees an unnamed-slot look-alike just as the precise collector does.
+    #[test]
+    fn collect_mixed_slots_only_equals_collect_precise() {
+        let mut heap = FlatHeap::new();
+        let a = heap.alloc(16, 0) as usize;
+        let b = heap.alloc(16, 0) as usize;
+        let frame: [usize; 2] = [a, b];
+        let rec = StackMapRecord::new(0, vec![0]); // names only slot 0 (a)
+        let mut slots = Vec::new();
+        frame_root_slots(frame.as_ptr() as usize, &rec, &mut slots);
+
+        let stats = unsafe { heap.collect_mixed(&slots, &[]) };
+        assert_eq!(stats.freed, 1, "the unnamed-slot object is reclaimed");
+        assert!(!heap.find_header(a).is_null());
+        assert!(heap.find_header(b).is_null());
+        assert_eq!(frame[0], a);
+    }
+
+    /// `collect_mixed(&[], &[(base, len)])` is exactly `collect_region(base, len)`:
+    /// with no slots it conservatively retains everything the span look-alikes.
+    #[test]
+    fn collect_mixed_regions_only_equals_collect_region() {
+        let mut heap = FlatHeap::new();
+        let a = heap.alloc(16, 0) as usize;
+        let b = heap.alloc(16, 0) as usize;
+        let frame: [usize; 2] = [a, b]; // both physically in the span
+        let region = (frame.as_ptr() as *const u8, std::mem::size_of_val(&frame));
+
+        let stats = unsafe { heap.collect_mixed(&[], &[region]) };
+        assert_eq!(stats.freed, 0, "conservative span retains both");
+        assert_eq!(stats.survived, 2);
+        assert!(!heap.find_header(a).is_null());
+        assert!(!heap.find_header(b).is_null());
+        assert_eq!(frame[1], b);
+    }
+
+    /// `collect_mixed(&[], &[])` roots from nothing and frees the whole heap — the
+    /// degenerate case both siblings share.
+    #[test]
+    fn collect_mixed_empty_frees_all() {
+        let mut heap = FlatHeap::new();
+        let _a = heap.alloc(16, 0);
+        let _b = heap.alloc(16, 0);
+        let stats = unsafe { heap.collect_mixed(&[], &[]) };
+        assert_eq!(stats.freed, 2);
+        assert_eq!(stats.survived, 0);
+        assert_eq!(heap.live_bytes(), 0);
+    }
+
+    /// Multiple regions all contribute roots in one cycle: two disjoint spans plus a
+    /// precise slot, each keeping its own object; a fourth object rooted nowhere dies.
+    #[test]
+    fn collect_mixed_multiple_regions_all_root() {
+        let mut heap = FlatHeap::new();
+        let p = heap.alloc(16, 0) as usize; // precise slot
+        let r1 = heap.alloc(16, 0) as usize; // region 1
+        let r2 = heap.alloc(16, 0) as usize; // region 2
+        let _dead = heap.alloc(16, 0); // rooted nowhere
+
+        let pframe: [usize; 1] = [p];
+        let rec = StackMapRecord::new(0, vec![0]);
+        let mut slots = Vec::new();
+        frame_root_slots(pframe.as_ptr() as usize, &rec, &mut slots);
+
+        let span1: [usize; 1] = [r1];
+        let span2: [usize; 1] = [r2];
+        let regions = [
+            (span1.as_ptr() as *const u8, std::mem::size_of_val(&span1)),
+            (span2.as_ptr() as *const u8, std::mem::size_of_val(&span2)),
+        ];
+
+        let stats = unsafe { heap.collect_mixed(&slots, &regions) };
+        assert_eq!(stats.freed, 1, "only the unrooted object dies");
+        assert_eq!(stats.survived, 3);
+        assert!(!heap.find_header(p).is_null());
+        assert!(!heap.find_header(r1).is_null());
+        assert!(!heap.find_header(r2).is_null());
+        assert_eq!((pframe[0], span1[0], span2[0]), (p, r1, r2));
+    }
+
+    /// Degenerate regions in the slice are inert: a `(null, 0)` tuple and a
+    /// sub-word (`len < 8`) region read nothing (per the documented contract), while
+    /// a real slot root alongside them still keeps its object. Pins the "`base` may
+    /// be null iff `len == 0`" guarantee against future edits.
+    #[test]
+    fn collect_mixed_tolerates_degenerate_regions() {
+        let mut heap = FlatHeap::new();
+        let live = heap.alloc(16, 0) as usize; // kept by a precise slot
+        let _dead = heap.alloc(16, 0); // rooted nowhere
+
+        let frame: [usize; 1] = [live];
+        let rec = StackMapRecord::new(0, vec![0]);
+        let mut slots = Vec::new();
+        frame_root_slots(frame.as_ptr() as usize, &rec, &mut slots);
+
+        // A null/empty region and a 4-byte region — both scan nothing.
+        let tiny: [u8; 4] = [1, 2, 3, 4];
+        let regions = [
+            (std::ptr::null::<u8>(), 0usize),
+            (tiny.as_ptr(), tiny.len()), // len < 8 → mark_region reads nothing
+        ];
+
+        let stats = unsafe { heap.collect_mixed(&slots, &regions) };
+        assert_eq!(stats.freed, 1, "degenerate regions add no roots; dead object dies");
+        assert!(!heap.find_header(live).is_null(), "the slot-rooted object survives");
+        assert_eq!(frame[0], live);
     }
 
     /// Precise interior tracing composes with precise roots: a registered `kind`

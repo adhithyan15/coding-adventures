@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.5.53 — GROUP_CONCAT aggregate
+
+`SELECT group_concat(x) FROM t` now works (was "unknown built-in function"). It
+concatenates the non-NULL values of `x` in row order, joined by a separator that
+defaults to `,` and can be overridden by a literal 2nd argument (e.g.
+`group_concat(x, '|')`, or `''` for no separator). NULLs are skipped, an empty or
+all-NULL group is NULL (not an empty string), and `group_concat(DISTINCT x)`
+deduplicates values before joining — all matching SQLite. Spans sql-planner
+0.2.24 (aggregate recognition + separator capture), sql-codegen 0.6.7
+(`AggFn::GroupConcat`), and sql-vm 0.4.30 (accumulation + dedup + DoS caps).
+Three new differential-oracle cases. Known follow-ups (documented, not yet
+matched): `DISTINCT` compares by storage class so `1` and `1.0` dedup separately
+where SQLite collapses them numerically (shared with `COUNT(DISTINCT)`); a
+non-string-literal separator falls back to `,`; and `group_concat(DISTINCT x,
+sep)` is accepted where SQLite rejects it.
+
 ## 0.5.52 — integer arithmetic overflow promotes to REAL
 
 `SELECT 9223372036854775807 + 1` now returns `9.2233720369e18` (real) instead of

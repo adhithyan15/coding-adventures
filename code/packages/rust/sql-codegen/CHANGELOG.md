@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.6.7] - Unreleased
+
+### Added
+
+- **`AggFn::GroupConcat { sep, distinct }`** for the `GROUP_CONCAT` aggregate. The
+  separator (a plan-time constant) and the `DISTINCT` flag ride on the tag, so the
+  accumulator's value stream stays single-column. `plan_agg_to_agg_fn` /
+  `plan_agg_to_agg_fn_with_distinct` map `AggFunc::GroupConcat`, and the
+  un-aliased column label renders as `GROUP_CONCAT(x)`.
+
 ## [0.6.6] - Unreleased
 
 ### Changed
