@@ -5860,6 +5860,43 @@ fn fold_unary(u: &UnaryExpression, st: &mut FoldState) -> Expression {
                 });
             }
         }
+
+        // Idempotent double-negation collapse (upstream Closure's
+        // `PeepholeMinimizeConditions`): `!!!x` → `!x`. A `!` whose operand is
+        // itself a `!!y` (i.e. `Not(Not(y))`) drops that inner `!!` pair:
+        //
+        //   !!!x    →  !x        !!!!x   →  !!x       !!!!!x  →  !x
+        //   !!x     →  !!x  (KEPT — a lone `!!` is the canonical boolean coercion)
+        //
+        // Sound for ANY operand — a getter, a call, `a+b` — with no side-effect
+        // gate, because the operand is evaluated EXACTLY ONCE no matter how many
+        // `!` wrap it (`!` never re-evaluates its operand, and `ToBoolean`
+        // invokes no user coercion — unlike the `ToNumber`/`valueOf` reordering
+        // that makes bitwise re-association unsound). `!!!x` computes
+        // `¬¬¬ToBoolean(x)` = `¬ToBoolean(x)` = `!x`; three negations of a
+        // boolean equal one. Folding is bottom-up, so `!!!!x`'s inner `!!!x`
+        // collapses to `!x` first, then the outer `!` yields `!!x` — the
+        // even/odd cascade converges in a single pass, matching Closure
+        // byte-for-byte. A lone `!!y` is deliberately preserved: it is the
+        // minified spelling of `Boolean(y)` and dropping it would change the
+        // VALUE (`!!5` is `true`, `5` is `5`).
+        if let Expression::UnaryExpression(inner) = &arg {
+            if inner.operator == UnaryOperator::Not {
+                if let Expression::UnaryExpression(inner2) = &*inner.argument {
+                    if inner2.operator == UnaryOperator::Not {
+                        // `arg` is `!!y`; the whole `!(!!y)` collapses to `!y`.
+                        let parent = u.cv.clone();
+                        let new_cv = st.fork_cv(&parent, "!!!x", "!x");
+                        return Expression::UnaryExpression(UnaryExpression {
+                            cv: new_cv,
+                            operator: UnaryOperator::Not,
+                            prefix: true,
+                            argument: inner2.argument.clone(),
+                        });
+                    }
+                }
+            }
+        }
     }
 
     Expression::UnaryExpression(UnaryExpression {
@@ -7444,6 +7481,99 @@ mod tests {
                 other => panic!("expected BooleanLiteral; got {:?}", other),
             }
         }
+    }
+
+    // ------------- idempotent double-negation collapse (!!!x → !x) -----
+
+    /// Prefix `!expr`.
+    fn not(arg: Expression) -> Expression {
+        Expression::UnaryExpression(UnaryExpression {
+            cv: None,
+            operator: UnaryOperator::Not,
+            prefix: true,
+            argument: Box::new(arg),
+        })
+    }
+
+    /// Count the `!` prefixes wrapping a leaf, returning `(count, leaf_name)`.
+    fn count_nots(mut e: &Expression) -> (usize, String) {
+        let mut n = 0;
+        while let Expression::UnaryExpression(u) = e {
+            assert_eq!(u.operator, UnaryOperator::Not, "expected only `!` chain");
+            n += 1;
+            e = &u.argument;
+        }
+        let name = match e {
+            Expression::Identifier(id) => id.name.clone(),
+            other => panic!("expected identifier leaf; got {other:?}"),
+        };
+        (n, name)
+    }
+
+    #[test]
+    fn triple_not_collapses_to_single() {
+        // !!!a → !a
+        let expr = not(not(not(ident("a"))));
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed, "!!!a should collapse");
+        assert_eq!(count_nots(extract_expr(&out)), (1, "a".to_string()));
+    }
+
+    #[test]
+    fn double_not_is_preserved() {
+        // !!a is the canonical Boolean(a) coercion — must NOT collapse.
+        let expr = not(not(ident("a")));
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(!changed, "!!a must be preserved");
+        assert_eq!(count_nots(extract_expr(&out)), (2, "a".to_string()));
+    }
+
+    #[test]
+    fn quad_not_collapses_to_double() {
+        // !!!!a → !!a (even count keeps the boolean coercion)
+        let expr = not(not(not(not(ident("a")))));
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed, "!!!!a should collapse to !!a");
+        assert_eq!(count_nots(extract_expr(&out)), (2, "a".to_string()));
+    }
+
+    #[test]
+    fn quint_not_collapses_to_single() {
+        // !!!!!a → !a
+        let expr = not(not(not(not(not(ident("a"))))));
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed, "!!!!!a should collapse to !a");
+        assert_eq!(count_nots(extract_expr(&out)), (1, "a".to_string()));
+    }
+
+    #[test]
+    fn triple_not_over_impure_operand_still_collapses_once_evaluated() {
+        // !!!f() → !f(). Sound: `!` never re-evaluates its operand, so `f` is
+        // called exactly once in both forms; no side-effect gate is needed.
+        let expr = not(not(not(bare_call_local("f"))));
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed, "!!!f() should collapse to !f()");
+        match extract_expr(&out) {
+            Expression::UnaryExpression(u) => {
+                assert_eq!(u.operator, UnaryOperator::Not);
+                assert!(
+                    matches!(&*u.argument, Expression::CallExpression(_)),
+                    "the single surviving `!` must wrap the call directly: {:?}",
+                    u.argument
+                );
+            }
+            other => panic!("expected `!f()`; got {other:?}"),
+        }
+    }
+
+    /// A bare `f()` call — local helper (the module's other `call0` builds a
+    /// method call, and `bare_call` lives in a different test section).
+    fn bare_call_local(callee: &str) -> Expression {
+        Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(ident(callee)),
+            arguments: vec![],
+        })
     }
 
     #[test]
