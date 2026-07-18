@@ -1,0 +1,22 @@
+% ============================================================================
+% kingdoms.query.adj — a worked recall over the biology kingdoms library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is an example of a
+% fungus?": it states no biology fact of its own — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?` against
+% the `kingdom_example` rows and returns the example + the table's source/
+% locator/trust. The fourth query runs the relation BACKWARD (bind the example
+% `mushrooms`, recall its kingdom — fungi). A word that is not one of these
+% kingdoms abstains honestly — the engine never invents an example.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli kingdoms.query.adj
+% ============================================================================
+
+import "kingdoms.adj"
+
+? kingdom_example(animalia, $Example)   % expect humans
+? kingdom_example(fungi, $Example)      % expect mushrooms
+? kingdom_example(bacteria, $Example)   % expect cyanobacteria
+? kingdom_example($Kingdom, mushrooms)  % reverse bind — expect fungi
+? kingdom_example(virus, $Example)      % expect abstain — viruses are not placed in any of these kingdoms
