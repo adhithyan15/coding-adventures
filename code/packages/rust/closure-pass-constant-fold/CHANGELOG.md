@@ -2,6 +2,33 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.107.0] - 2026-07-18
+
+### Fixed — keep `a / b` unfolded past 7 fractional digits (match Closure)
+
+Division folding now mirrors Closure's numeric byte-cost heuristic: `a / b`
+folds to a numeric literal only when the exact quotient has **at most seven
+digits after the decimal point**; otherwise the source `a / b` is kept. The old
+behavior folded every finite non-zero division, so `1/3` became the 16-digit
+`.3333333333333333` (longer than `1/3`, and diverging from the reference jar,
+which keeps `1/3`).
+
+The cut is on the *fractional*-digit count of the result's shortest round-trip
+decimal, not its total length — `811/128` → `6.3359375` (7 fractional digits)
+still folds even though it is longer than `811/128`, while `1/256` → `.00390625`
+(8) and every non-terminating quotient (`1/3`, `2/3`, `1/7`, …) stay as
+`1/256` / `1/3`. Integers and short fractions fold as before (`6/3` → `2`,
+`1/128` → `.0078125`). A new `fractional_digit_count` helper derives the count
+from the JS-exact `format_js_number` (0.105.0), normalizing exponential forms
+(`9.53…e-7` → 20 fractional digits, a huge integer `1e30` → 0). Applies to `/`
+only; `%` results are integral or short. `division/modulo`-by-zero handling is
+unchanged.
+
+Oracle-verified byte-identical to the real Closure jar across 25+ division
+shapes; new `division_with_over_seven_fractional_digits_is_kept_unfolded` and
+`fractional_digit_count_normalizes_exponential_forms` unit tests plus a
+`division-fold-threshold` closurec e2e fixture.
+
 ## [0.106.0] - 2026-07-18
 
 ### Fixed — numeric object-key quoting now matches Closure across the full range
