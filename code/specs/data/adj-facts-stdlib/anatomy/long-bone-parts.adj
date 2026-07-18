@@ -1,0 +1,121 @@
+% ============================================================================
+% long-bone-parts — the defining descriptor the source gives each named region
+% of a long bone (adj-facts-stdlib, ANATOMY).
+% ============================================================================
+% A skeletal-microanatomy fact on the way to medicine: a long bone (femur,
+% humerus, phalanx) is not a uniform rod — it is built from NAMED regions, and
+% the source hands each one a single defining descriptor. From the middle
+% outward and end-ward:
+%
+%     diaphysis        — the SHAFT (the long tubular middle)
+%     epiphysis        — the TIP of the bone (each rounded articulating end)
+%     metaphysis       — the region BETWEEN diaphysis and epiphysis
+%     periosteum       — the membrane that SURROUNDS the bone surface
+%     epiphyseal_plate — the cartilage responsible for LINEAR (length) GROWTH
+%
+% This complements — and does NOT overlap — the sibling anatomy tables. Those
+% map bones to which body region they belong to (foot/hand groupings) or list
+% organs; this table is the INTERNAL microanatomy of a single long bone, a
+% different axis of fact entirely.
+%
+% Recall is a binding query:
+%
+%     ? long_bone_part(diaphysis, $D)     % shaft
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `long_bone_part(part, description)` carrying the table's citation,
+% so the lookup above is the ordinary SLD binding query — the engine returns the
+% descriptor WITH its source, on the CPU, with zero model calls, and abstains on
+% anything that is not one of these named regions (it never invents one).
+%
+% The five regions, as a little truth table:
+%
+%     part               description                      what the source says
+%     ----------------   ------------------------------   --------------------------
+%     diaphysis          shaft                            "Also known as the shaft"
+%     epiphysis          tip_of_bone                      "at the tip of the long bone"
+%     metaphysis         between_diaphysis_and_epiphysis  "between the diaphysis and epiphysis"
+%     periosteum         surrounds_bone_surface           "surrounds the bone surface"
+%     epiphyseal_plate   linear_bone_growth               "responsible for linear bone growth"
+%
+% Why these tokens: each `description` atom is built from the ONE phrase the
+% source states verbatim about that region — the source literally calls the
+% diaphysis "the shaft", places the epiphysis "at the tip of the long bone",
+% names the metaphysis "the region between the diaphysis and epiphysis", says
+% "the periosteum surrounds the bone surface", and states epiphyseal plates are
+% "responsible for linear bone growth". No token is a paraphrase the source
+% does not use, so every value is re-checkable against the spans below.
+%
+% Why the MEDULLARY CAVITY (the marrow-filled hollow center) is NOT a row: the
+% chosen primary source lists "medullary cavity" only as a label in an
+% illustration caption — it never states a defining sentence for it — so
+% grounding a medullary_cavity → contains_marrow row from THIS source would be
+% inventing wording the source does not give. Per byte-provenance it is DROPPED
+% rather than fabricated; a future revision citing a source that defines it
+% cleanly can add it back.
+%
+% The query also runs BACKWARD — bind a descriptor and recall the region:
+%
+%     ? long_bone_part($P, shaft)              % diaphysis — reverse recall
+%
+% Something that is not a named region of a long bone — a tendon, a ligament, a
+% muscle, the whole femur — has no row, so a recall on it ABSTAINS rather than
+% inventing a descriptor. That honest-abstention property is what makes the
+% table safe to reason from before an orthopedics or fracture-classification
+% agent reasons up to fracture LOCATION (which is named precisely by WHICH of
+% these regions is broken — a diaphyseal vs. metaphyseal vs. epiphyseal
+% fracture).
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every part→description pair
+% was read out of a fetched NIH / NCBI Bookshelf page this session, and any pair
+% that could not be grounded there was dropped, e.g. medullary_cavity above).
+% All five pairs come from the SAME primary reference, the NIH National Library
+% of Medicine's NCBI Bookshelf StatPearls chapter "Anatomy, Bones" (NBK537199),
+% each quoted here character-for-character so any reader can re-check it. The
+% page introduces the first three with: "Long bones have 3 distinct anatomical
+% zones:".
+%
+%   diaphysis → shaft
+%     "Diaphysis: Also known as the shaft."
+%
+%   epiphysis → tip_of_bone
+%     "Epiphysis: Located at the tip of the long bone, typically responsible for
+%      articulation."
+%
+%   metaphysis → between_diaphysis_and_epiphysis
+%     "Metaphysis: The region between the diaphysis and epiphysis that contains
+%      the epiphyseal plate in children."
+%
+%   periosteum → surrounds_bone_surface
+%     "The periosteum surrounds the bone surface."
+%
+%   epiphyseal_plate → linear_bone_growth
+%     "Epiphyseal plates are responsible for linear bone growth and remain
+%      cartilaginous until after puberty."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single strongest span: the "Anatomy, Bones" sentence
+% that fixes the first row (diaphysis → shaft). The other rows' per-fact source
+% and verbatim span are listed above, so each pair remains independently
+% checkable. All five rows share the ONE source — NCBI Bookshelf StatPearls, a
+% peer-reviewed reference hosted and distributed by the NIH National Library of
+% Medicine (ncbi.nlm.nih.gov, a primary U.S. government host) — so
+% `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table long_bone_part {
+    columns part, description
+
+    row (diaphysis, shaft)                                % "Diaphysis: Also known as the shaft."
+    row (epiphysis, tip_of_bone)                          % "Epiphysis: Located at the tip of the long bone, ..."
+    row (metaphysis, between_diaphysis_and_epiphysis)     % "Metaphysis: The region between the diaphysis and epiphysis ..."
+    row (periosteum, surrounds_bone_surface)              % "The periosteum surrounds the bone surface."
+    row (epiphyseal_plate, linear_bone_growth)            % "Epiphyseal plates are responsible for linear bone growth ..."
+
+    source "Diaphysis: Also known as the shaft."
+    locator "https://www.ncbi.nlm.nih.gov/books/NBK537199/"
+    trust authoritative
+}
