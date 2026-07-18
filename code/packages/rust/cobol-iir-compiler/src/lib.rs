@@ -145,8 +145,27 @@ impl Item {
     }
 }
 
+/// A PROCEDURE DIVISION paragraph: its name and the statement nodes it holds,
+/// borrowed from the CST so `PERFORM` can re-emit them inline.
+struct Paragraph<'a> {
+    name: String,
+    stmts: Vec<&'a GrammarASTNode>,
+}
+
+/// The deepest `PERFORM` nesting we inline before refusing — a bound on both the
+/// emitted code size and the compiler's own recursion. Real programs nest a
+/// handful deep; a self- or mutually-`PERFORM`ing loop (which the tree-walk
+/// oracle also caps) trips this as a clean error instead of unbounded expansion.
+const MAX_PERFORM_DEPTH: usize = 64;
+
+/// A hard ceiling on emitted instructions — a backstop against `PERFORM`
+/// inlining blowing up the program (e.g. a paragraph that performs itself twice,
+/// which the depth bound alone would let grow exponentially). Real programs are
+/// nowhere near this; exceeding it is a clean error, not an out-of-memory.
+const MAX_EMIT_INSTRS: usize = 300_000;
+
 #[derive(Default)]
-struct Compiler {
+struct Compiler<'a> {
     instrs: Vec<IIRInstr>,
     /// Elementary items by COBOL data-name, in declaration order (for a stable
     /// init prologue) plus a name index for `MOVE` / `DISPLAY` / arithmetic.
@@ -157,9 +176,15 @@ struct Compiler {
     needs_print: bool,
     /// Unique-suffix counter for throwaway registers.
     tmp_counter: usize,
+    /// PROCEDURE DIVISION paragraphs in document order, and a name → index map,
+    /// for `GO TO` (jump to a paragraph label) and `PERFORM` (inline a range).
+    paras: Vec<Paragraph<'a>>,
+    para_index: HashMap<String, usize>,
+    /// Current `PERFORM` inline depth (recursion / code-size bound).
+    perform_depth: usize,
 }
 
-impl Compiler {
+impl<'a> Compiler<'a> {
     fn emit(&mut self, op: &str, dest: Option<&str>, srcs: Vec<Operand>, type_hint: &str) {
         self.instrs.push(IIRInstr::new(op, dest.map(str::to_string), srcs, type_hint));
     }
@@ -170,7 +195,7 @@ impl Compiler {
         format!("{prefix}{n}")
     }
 
-    fn emit_program(&mut self, program: &GrammarASTNode) -> Result<(), CompileError> {
+    fn emit_program(&mut self, program: &'a GrammarASTNode) -> Result<(), CompileError> {
         // 1. Build the item table from WORKING-STORAGE (if any).
         self.collect_items(program)?;
 
@@ -190,15 +215,31 @@ impl Compiler {
             }
         }
 
-        // 3. The PROCEDURE DIVISION's statements, in document order. With no
-        //    PERFORM / GO TO on this rung, control simply falls through.
+        // 3. Collect the PROCEDURE DIVISION paragraphs (name + statement nodes),
+        //    so `GO TO`/`PERFORM` can reference them, then emit each in document
+        //    order behind its label. Control falls through paragraph to paragraph
+        //    exactly as COBOL does; a `GO TO`/`PERFORM` redirects it.
         let pd = child_node(program, "procedure_division")
             .ok_or_else(|| CompileError::Malformed("program without a PROCEDURE DIVISION".into()))?;
         for para in child_nodes(pd, "paragraph") {
-            for sentence in child_nodes(para, "sentence") {
-                for stmt in child_nodes(sentence, "statement") {
-                    self.emit_statement(stmt)?;
-                }
+            let name = first_token(para, "NAME").unwrap_or_default();
+            let stmts: Vec<&'a GrammarASTNode> = child_nodes(para, "sentence")
+                .into_iter()
+                .flat_map(|s| child_nodes(s, "statement"))
+                .collect();
+            if !name.is_empty() {
+                self.para_index.insert(name.clone(), self.paras.len());
+            }
+            self.paras.push(Paragraph { name, stmts });
+        }
+        for idx in 0..self.paras.len() {
+            if !self.paras[idx].name.is_empty() {
+                let label = para_label(&self.paras[idx].name);
+                self.emit("label", None, vec![Operand::Var(label)], "void");
+            }
+            let stmts = self.paras[idx].stmts.clone();
+            for stmt in stmts {
+                self.emit_statement(stmt)?;
             }
         }
 
@@ -317,6 +358,8 @@ impl Compiler {
             "multiply_stmt" => self.emit_multiply(verb),
             "divide_stmt" => self.emit_divide(verb),
             "if_stmt" => self.emit_if(verb),
+            "goto_stmt" => self.emit_goto(verb),
+            "perform_stmt" => self.emit_perform(verb),
             other => Err(CompileError::Unsupported(format!(
                 "the {} statement is a later rung",
                 verb_name(other)
@@ -525,6 +568,223 @@ impl Compiler {
         let cond_reg = self.fresh("_cond");
         self.emit(op, Some(&cond_reg), vec![a, b], "i64");
         Ok(cond_reg)
+    }
+
+    // -----------------------------------------------------------------------
+    // Control flow: GO TO / PERFORM
+    // -----------------------------------------------------------------------
+
+    /// `GO [TO] para` — an unconditional jump to a paragraph's label. Forward and
+    /// back references both resolve (all paragraph labels exist before emission).
+    fn emit_goto(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
+        let name = first_token(verb, "NAME")
+            .ok_or_else(|| CompileError::Malformed("GO TO without a paragraph name".into()))?;
+        if !self.para_index.contains_key(&name) {
+            return Err(CompileError::Malformed(format!("GO TO undefined paragraph {name}")));
+        }
+        self.emit("jmp", None, vec![Operand::Var(para_label(&name))], "void");
+        Ok(())
+    }
+
+    /// `PERFORM para [THRU para2] [n TIMES | UNTIL cond | VARYING …]`.
+    ///
+    /// The performed paragraph range is **inlined** at the call site (COBOL's
+    /// out-of-line-but-returns semantics): the range's statements run, then
+    /// control falls through to just after the PERFORM — exactly what inlining
+    /// gives, since a `STOP RUN` inside returns and a `GO TO` inside jumps away at
+    /// top level (both abandon the fall-through). A recursive/self-`PERFORM` (or a
+    /// code-size blow-up) trips a depth / instruction bound as a clean error.
+    fn emit_perform(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
+        if self.instrs.len() > MAX_EMIT_INSTRS {
+            return Err(CompileError::Unsupported(
+                "program too large to expand (a recursive PERFORM?) — a later rung".into(),
+            ));
+        }
+        self.perform_depth += 1;
+        if self.perform_depth > MAX_PERFORM_DEPTH {
+            self.perform_depth -= 1;
+            return Err(CompileError::Unsupported(
+                "PERFORM nesting too deep (a paragraph performing itself?)".into(),
+            ));
+        }
+        let result = self.emit_perform_inner(verb);
+        self.perform_depth -= 1;
+        result
+    }
+
+    fn emit_perform_inner(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
+        let names: Vec<String> = child_tokens(verb)
+            .into_iter()
+            .filter(|(k, _)| k == "NAME")
+            .map(|(_, v)| v)
+            .collect();
+        if names.is_empty() {
+            return Err(CompileError::Malformed("PERFORM without a paragraph".into()));
+        }
+        let toks = child_tokens(verb);
+        let has_thru = toks.iter().any(|(k, v)| k == "KEYWORD" && (v == "THRU" || v == "THROUGH"));
+        let start = &names[0];
+        let end = if has_thru {
+            names.get(1).ok_or_else(|| CompileError::Malformed("PERFORM THRU without an end paragraph".into()))?
+        } else {
+            start
+        };
+        let si = *self
+            .para_index
+            .get(start)
+            .ok_or_else(|| CompileError::Malformed(format!("PERFORM undefined paragraph {start}")))?;
+        let ei = *self
+            .para_index
+            .get(end)
+            .ok_or_else(|| CompileError::Malformed(format!("PERFORM undefined paragraph {end}")))?;
+        if ei < si {
+            return Err(CompileError::Unsupported(
+                "PERFORM … THRU with a range that runs backwards is a later rung".into(),
+            ));
+        }
+
+        if let Some(v) = child_node(verb, "perform_varying") {
+            self.emit_perform_varying(v, si, ei)
+        } else if toks.iter().any(|(k, x)| k == "KEYWORD" && x == "UNTIL") {
+            let cond = child_node(verb, "condition")
+                .ok_or_else(|| CompileError::Malformed("PERFORM UNTIL without a condition".into()))?;
+            self.emit_perform_until(cond, si, ei)
+        } else if toks.iter().any(|(k, x)| k == "KEYWORD" && x == "TIMES") {
+            let op = child_node(verb, "operand")
+                .ok_or_else(|| CompileError::Malformed("PERFORM … TIMES without a count".into()))?;
+            self.emit_perform_times(op, si, ei)
+        } else {
+            self.inline_range(si, ei)
+        }
+    }
+
+    /// Inline every statement of paragraphs `si..=ei`, in order.
+    fn inline_range(&mut self, si: usize, ei: usize) -> Result<(), CompileError> {
+        for idx in si..=ei {
+            let stmts = self.paras[idx].stmts.clone();
+            for stmt in stmts {
+                self.emit_statement(stmt)?;
+            }
+        }
+        Ok(())
+    }
+
+    /// `PERFORM range n TIMES` — a counted loop (runs zero times for n ≤ 0).
+    fn emit_perform_times(
+        &mut self,
+        count_op: &GrammarASTNode,
+        si: usize,
+        ei: usize,
+    ) -> Result<(), CompileError> {
+        let n = self.integer_operand_value(count_op, "PERFORM … TIMES count")?;
+        let cnt = self.fresh("_cnt");
+        self.emit("mov", Some(&cnt), vec![n], "i64");
+        let (top, done) = (self.fresh("perf_top"), self.fresh("perf_done"));
+        let zero = self.fresh("_z");
+        self.emit("const", Some(&zero), vec![Operand::Int(0)], "i64");
+        self.emit("label", None, vec![Operand::Var(top.clone())], "void");
+        let more = self.fresh("_more");
+        self.emit("cmp_gt", Some(&more), vec![Operand::Var(cnt.clone()), Operand::Var(zero)], "i64");
+        self.emit("jmp_if_false", None, vec![Operand::Var(more), Operand::Var(done.clone())], "void");
+        self.inline_range(si, ei)?;
+        let one = self.fresh("_one");
+        self.emit("const", Some(&one), vec![Operand::Int(1)], "i64");
+        self.emit("sub", Some(&cnt), vec![Operand::Var(cnt.clone()), Operand::Var(one)], "i64");
+        self.emit("jmp", None, vec![Operand::Var(top)], "void");
+        self.emit("label", None, vec![Operand::Var(done)], "void");
+        Ok(())
+    }
+
+    /// `PERFORM range UNTIL cond` — tests **before** the body (may run zero times).
+    fn emit_perform_until(
+        &mut self,
+        cond: &GrammarASTNode,
+        si: usize,
+        ei: usize,
+    ) -> Result<(), CompileError> {
+        let (top, done) = (self.fresh("perf_top"), self.fresh("perf_done"));
+        self.emit("label", None, vec![Operand::Var(top.clone())], "void");
+        let c = self.emit_condition(cond)?;
+        self.emit("jmp_if_true", None, vec![Operand::Var(c), Operand::Var(done.clone())], "void");
+        self.inline_range(si, ei)?;
+        self.emit("jmp", None, vec![Operand::Var(top)], "void");
+        self.emit("label", None, vec![Operand::Var(done)], "void");
+        Ok(())
+    }
+
+    /// `PERFORM range VARYING id FROM x BY y UNTIL cond` — a counted loop over the
+    /// induction variable `id`, tested before the body.
+    fn emit_perform_varying(
+        &mut self,
+        vnode: &GrammarASTNode,
+        si: usize,
+        ei: usize,
+    ) -> Result<(), CompileError> {
+        let id = first_token(vnode, "NAME")
+            .ok_or_else(|| CompileError::Malformed("PERFORM VARYING without an induction variable".into()))?;
+        let ops = child_nodes(vnode, "operand");
+        if ops.len() != 2 {
+            return Err(CompileError::Malformed("PERFORM VARYING needs FROM and BY operands".into()));
+        }
+        let cond = child_node(vnode, "condition")
+            .ok_or_else(|| CompileError::Malformed("PERFORM VARYING without an UNTIL condition".into()))?;
+
+        self.move_operand_into(ops[0], &id)?; // id = x
+        let (top, done) = (self.fresh("perf_top"), self.fresh("perf_done"));
+        self.emit("label", None, vec![Operand::Var(top.clone())], "void");
+        let c = self.emit_condition(cond)?;
+        self.emit("jmp_if_true", None, vec![Operand::Var(c), Operand::Var(done.clone())], "void");
+        self.inline_range(si, ei)?;
+        self.increment_by(&id, ops[1])?; // id = id + y
+        self.emit("jmp", None, vec![Operand::Var(top)], "void");
+        self.emit("label", None, vec![Operand::Var(done)], "void");
+        Ok(())
+    }
+
+    /// The integer value of an operand as an `i64` [`Operand`] — for a `TIMES`
+    /// count. Requires a scale-0 (integer) operand.
+    fn integer_operand_value(
+        &mut self,
+        op: &GrammarASTNode,
+        what: &str,
+    ) -> Result<Operand, CompileError> {
+        let term = self.read_arith_term(op)?;
+        if self.term_scale(&term) != 0 {
+            return Err(CompileError::Unsupported(format!("{what} must be an integer")));
+        }
+        Ok(self.emit_term_at_scale(&term, 0))
+    }
+
+    /// `id = <operand>` — store an operand's value into a numeric item (as `MOVE`).
+    fn move_operand_into(&mut self, op: &GrammarASTNode, dst: &str) -> Result<(), CompileError> {
+        match read_operand(op)? {
+            Operandy::Literal(lit) => self.move_literal_into(&lit, dst),
+            Operandy::Name(name) => {
+                let src_idx = self.numeric_index(&name)?;
+                let (src_int, src_scale) = self.numeric_dims(src_idx);
+                let src_reg = self.items[src_idx].reg.clone();
+                self.store_scaled(dst, &src_reg, src_scale, src_int, false)
+            }
+        }
+    }
+
+    /// `id = id + <operand>` — the VARYING step, over the scaled arithmetic path.
+    fn increment_by(&mut self, id: &str, op: &GrammarASTNode) -> Result<(), CompileError> {
+        let base = Term::Item(self.numeric_index(id)?);
+        let step = self.read_arith_term(op)?;
+        let w = self.term_scale(&base).max(self.term_scale(&step));
+        let max_int = self.term_int_digits(&base).max(self.term_int_digits(&step));
+        if max_int + w + 1 > 18 {
+            return Err(CompileError::Unsupported(
+                "PERFORM VARYING step could overflow the i64 intermediate — a later rung".into(),
+            ));
+        }
+        let acc = self.fresh("_acc");
+        let b = self.emit_term_at_scale(&base, w);
+        self.emit("mov", Some(&acc), vec![b], "i64");
+        let s = self.emit_term_at_scale(&step, w);
+        self.emit("add", Some(&acc), vec![Operand::Var(acc.clone()), s], "i64");
+        self.store_scaled(id, &acc, w, max_int + 1, false)
     }
 
     // -----------------------------------------------------------------------
@@ -1227,6 +1487,11 @@ fn first_token(n: &GrammarASTNode, type_name: &str) -> Option<String> {
 /// A register-safe identifier from a COBOL data-name (hyphens → underscores).
 fn sanitise(name: &str) -> String {
     name.chars().map(|c| if c.is_ascii_alphanumeric() { c } else { '_' }).collect()
+}
+
+/// The IIR label for a PROCEDURE DIVISION paragraph.
+fn para_label(name: &str) -> String {
+    format!("para_{}", sanitise(name))
 }
 
 /// A human-readable verb name for the "not yet lowered" error.

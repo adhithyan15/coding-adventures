@@ -398,6 +398,174 @@ fn item_to_item_move_rescales_the_implied_point() {
 }
 
 // -------------------------------------------------------------------------
+// GO TO and PERFORM — vs the oracle.
+// -------------------------------------------------------------------------
+
+/// Build a program from full procedure lines (paragraphs included) with no DATA
+/// division, and assert the compiled output matches the oracle.
+fn run_proc(data: &[&str], proc: &[&str]) -> String {
+    assert_matches_oracle(&wrap(data, proc))
+}
+
+#[test]
+fn go_to_transfers_control_and_skips_fallthrough() {
+    let out = run_proc(
+        &[],
+        &[
+            "DISPLAY \"START\".",
+            "GO TO SKIP.",
+            "MIDDLE.",
+            "DISPLAY \"MIDDLE\".",
+            "SKIP.",
+            "DISPLAY \"END\".",
+            "STOP RUN.",
+        ],
+    );
+    assert_eq!(out, "START\nEND\n");
+}
+
+#[test]
+fn go_to_forms_a_loop_that_terminates() {
+    let out = run_proc(
+        &["01  I  PIC 9 VALUE 0."],
+        &[
+            "MOVE 0 TO I.",
+            "LOOP.",
+            "ADD 1 TO I.",
+            "DISPLAY I.",
+            "IF I LESS 3 GO TO LOOP.",
+            "STOP RUN.",
+        ],
+    );
+    assert_eq!(out, "1\n2\n3\n");
+}
+
+#[test]
+fn perform_runs_a_paragraph_then_returns() {
+    let out = run_proc(
+        &[],
+        &[
+            "PERFORM GREET.",
+            "DISPLAY \"BACK\".",
+            "STOP RUN.",
+            "GREET.",
+            "DISPLAY \"HI\".",
+        ],
+    );
+    assert_eq!(out, "HI\nBACK\n");
+}
+
+#[test]
+fn perform_n_times_and_zero_times() {
+    let out = run_proc(
+        &["01  COUNT  PIC 9 VALUE 0."],
+        &["PERFORM TICK 3 TIMES.", "STOP RUN.", "TICK.", "ADD 1 TO COUNT.", "DISPLAY COUNT."],
+    );
+    assert_eq!(out, "1\n2\n3\n");
+    let z = run_proc(
+        &["01  N  PIC 9 VALUE 0."],
+        &["PERFORM NOISE N TIMES.", "DISPLAY \"DONE\".", "STOP RUN.", "NOISE.", "DISPLAY \"X\"."],
+    );
+    assert_eq!(z, "DONE\n");
+}
+
+#[test]
+fn perform_until_loops_and_tests_before() {
+    let out = run_proc(
+        &["01  I  PIC 9 VALUE 0."],
+        &[
+            "PERFORM STEP UNTIL I GREATER 2.",
+            "DISPLAY \"DONE\".",
+            "STOP RUN.",
+            "STEP.",
+            "ADD 1 TO I.",
+            "DISPLAY I.",
+        ],
+    );
+    assert_eq!(out, "1\n2\n3\nDONE\n");
+    // Condition already true → body never runs.
+    let z = run_proc(
+        &["01  I  PIC 9 VALUE 5."],
+        &["PERFORM NOISE UNTIL I GREATER 2.", "DISPLAY \"DONE\".", "STOP RUN.", "NOISE.", "DISPLAY \"X\"."],
+    );
+    assert_eq!(z, "DONE\n");
+}
+
+#[test]
+fn perform_thru_runs_a_paragraph_range() {
+    let out = run_proc(
+        &[],
+        &[
+            "PERFORM A THRU C.",
+            "DISPLAY \"BACK\".",
+            "STOP RUN.",
+            "A.",
+            "DISPLAY \"A\".",
+            "B.",
+            "DISPLAY \"B\".",
+            "C.",
+            "DISPLAY \"C\".",
+        ],
+    );
+    assert_eq!(out, "A\nB\nC\nBACK\n");
+}
+
+#[test]
+fn perform_varying_counts_with_induction_variable() {
+    let out = run_proc(
+        &["01  I  PIC 9 VALUE 0."],
+        &[
+            "PERFORM SHOW VARYING I FROM 1 BY 1 UNTIL I GREATER 3.",
+            "DISPLAY \"DONE\".",
+            "STOP RUN.",
+            "SHOW.",
+            "DISPLAY I.",
+        ],
+    );
+    assert_eq!(out, "1\n2\n3\nDONE\n");
+    // Step by 2 from 0.
+    let s = run_proc(
+        &["01  I  PIC 9 VALUE 0."],
+        &["PERFORM SHOW VARYING I FROM 0 BY 2 UNTIL I GREATER 6.", "STOP RUN.", "SHOW.", "DISPLAY I."],
+    );
+    assert_eq!(s, "0\n2\n4\n6\n");
+}
+
+#[test]
+fn stop_run_inside_a_performed_paragraph_ends_the_program() {
+    let out = run_proc(
+        &[],
+        &[
+            "PERFORM DONE.",
+            "DISPLAY \"AFTER\".",
+            "STOP RUN.",
+            "DONE.",
+            "DISPLAY \"IN\".",
+            "STOP RUN.",
+        ],
+    );
+    assert_eq!(out, "IN\n");
+}
+
+#[test]
+fn go_to_out_of_a_performed_paragraph_transfers_at_top_level() {
+    let out = run_proc(
+        &[],
+        &[
+            "PERFORM SUB.",
+            "DISPLAY \"AFTER MAIN\".",
+            "STOP RUN.",
+            "SUB.",
+            "GO TO ELSEWHERE.",
+            "ELSEWHERE.",
+            "DISPLAY \"ELSEWHERE\".",
+            "STOP RUN.",
+        ],
+    );
+    assert_eq!(out, "ELSEWHERE\n");
+}
+
+// -------------------------------------------------------------------------
 // Scaled-decimal MULTIPLY / DIVIDE (PR3b) — vs the oracle.
 // -------------------------------------------------------------------------
 
