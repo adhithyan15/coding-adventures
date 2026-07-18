@@ -160,7 +160,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 172 packages present in at least ten implementation languages need 341
+The 172 packages present in at least ten implementation languages need 339
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -169,8 +169,8 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Elixir | 0 | Complete; `python-parser` uses the shared grammar-driven frontend |
 | Lua | 0 | Complete; paired data-structure/storage wave |
 | Perl | 0 | Complete; paired data-structure/storage wave |
-| C# | 16 | Move with F# |
-| F# | 16 | Move with C# |
+| C# | 15 | Move with F# |
+| F# | 15 | Move with C# |
 | Haskell | 34 | Dependency-shaped compression, graphics, ML, and protocol waves |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
@@ -235,6 +235,13 @@ implementations in both lanes, built on their existing `wasm-leb128` and
 sections and import descriptor validation. The package now spans 12 lanes,
 reduces each paired high-consensus gap to 16, and unlocks the later
 `brainfuck-wasm-compiler` and `nib-wasm-compiler` ports.
+
+The second paired C#/F# slice is complete: `x25519` now has native,
+dependency-free implementations in both lanes using the RFC 7748 Montgomery
+ladder over `2^255 - 19`. RFC scalar-multiplication, Diffie-Hellman,
+high-bit-masking, low-order rejection, and 1,000-round iterated vectors provide
+conformance coverage. The package now spans 12 implementation lanes and
+reduces each paired high-consensus gap to 15.
 
 Recommended family order:
 

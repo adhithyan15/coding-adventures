@@ -258,6 +258,7 @@ members = [
     "j-parser",
     "j-runtime",
     "j-repl",
+    "j-to-semantic-ir",
     "reduce-lexer",
     "logic-gates",
     "logic-core",

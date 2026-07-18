@@ -1,0 +1,23 @@
+[package]
+name = "j-to-semantic-ir"
+version = "0.1.0"
+edition = "2021"
+description = "J CST → narrow-waist Semantic IR (SIR22 + SIR22 addendum array/matrix domain). MA-6e."
+
+[dependencies]
+semantic-ir = { path = "../semantic-ir" }
+coding-adventures-j-parser = { path = "../j-parser" }
+# The parser emits a generic `parser::grammar_parser::GrammarASTNode` whose
+# leaf tokens are `lexer::token::Token`; we walk both directly. Note this
+# crate deliberately does NOT depend on `coding-adventures-j-runtime` --
+# lowering only needs the parse tree shape (`j-parser`), not the tree-walking
+# evaluator, mirroring `apl-to-semantic-ir`'s identical choice.
+parser = { path = "../parser" }
+lexer = { path = "../lexer" }
+
+[dev-dependencies]
+# See `apl-to-semantic-ir`'s identical dev-dependency: no backend implements
+# SIR22/SIR22-addendum codegen for the array domain's `Reduce`/`Scan`/etc.
+# yet, so this exists solely to verify the *capability-rejection* path
+# through a real `Backend::check_module`/`compile()` call.
+semantic-ir-to-javascript = { path = "../semantic-ir-to-javascript" }
