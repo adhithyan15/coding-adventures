@@ -1,0 +1,22 @@
+% ============================================================================
+% galaxy-types.query.adj — a worked recall over the astronomy galaxy-types library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does a spiral galaxy
+% look like?": it states no astronomy fact of its own — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?` against
+% the `galaxy_shape` rows and returns the shape + the table's source/locator/
+% trust. The fourth query runs the relation BACKWARD (bind the shape
+% `round_to_oval`, recall its galaxy type — elliptical). A word that is not one
+% of the main galaxy types abstains honestly — the engine never invents a shape.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli galaxy-types.query.adj
+% ============================================================================
+
+import "galaxy-types.adj"
+
+? galaxy_shape(spiral, $Shape)         % expect spiral_arms
+? galaxy_shape(elliptical, $Shape)     % expect round_to_oval
+? galaxy_shape(irregular, $Shape)      % expect unusual_shapes
+? galaxy_shape($Type, round_to_oval)   % reverse bind — expect elliptical
+? galaxy_shape(planet, $Shape)         % expect abstain — a planet is not a galaxy type

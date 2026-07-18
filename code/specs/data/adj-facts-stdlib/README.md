@@ -31,6 +31,7 @@ per rotation, in parallel):
 | `geometry/` | quadrilateral family → its one defining property (rectangle → four_right_angles, rhombus → all_sides_same_length, trapezoid → two_sides_parallel) | Wolfram MathWorld (authoritative) |
 | `astronomy/` | planet → order from the Sun | NASA |
 | `astronomy/` | stellar spectral class letter → the color NASA assigns it (o → blue, g → yellow, m → red) | NASA Science (authoritative) |
+| `astronomy/` | galaxy type → defining shape NASA states (spiral → spiral_arms, elliptical → round_to_oval, irregular → unusual_shapes) | NASA Science (authoritative) |
 | `chemistry/` | element → atomic number | PubChem / NIH |
 | `chemistry/` | common substance → approximate pH | LibreTexts (consensus) |
 | `chemistry/` | element → periodic-table group family | Wikipedia (consensus) |
