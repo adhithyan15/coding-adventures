@@ -83,6 +83,7 @@ per rotation, in parallel):
 | `physics/` | heat-transfer mode → how it moves heat (conduction → direct_contact, convection → motion_of_gasses_and_liquids, radiation → light_waves) | NASA Next Gen STEM (authoritative) |
 | `physics/` | EM-spectrum band → everyday use NASA names (radio → radio_stations, infrared → night_vision, x_ray → teeth) | NASA Imagine the Universe! (authoritative) |
 | `physics/` | Newton's law number → short name NASA labels it (1 → inertia, 2 → force, 3 → action_reaction) | NASA Glenn Beginner's Guide (authoritative) |
+| `physics/` | wave property → what it measures (wavelength → distance_between_identical_parts, frequency → waves_per_second, period → time_for_one_cycle) | OpenStax Physics (consensus) |
 | `anatomy/` | lung → number of lobes (right 3, left 2) | NIH / NCI SEER Training |
 | `anatomy/` | brain part → primary function it controls | NIH / NCI SEER Training + StatPearls |
 | `anatomy/` | skeletal muscle → body region it is located in | Wikipedia (consensus) |
