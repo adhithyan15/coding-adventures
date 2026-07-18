@@ -788,19 +788,58 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
         // `new X(args)` constructs an object — a side-effecting operation, never
         // a constant. Recurse into the callee and each argument (they may hold
         // foldable subexpressions). A `new` on a *standard built-in constructor*
-        // (`Object`/`Array`) then folds to its shorter equivalent — see
-        // [`fold_standard_constructor`]. Everything else preserves the `new`.
+        // then folds to its shorter equivalent: `Error` below, and
+        // `Object`/`Array` via [`fold_standard_constructor`]. Everything else
+        // preserves the `new`.
+        //
+        // **Standard-constructor `new`-drop (`new Error(…)` → `Error(…)`).**
+        // Closure rewrites `new Error(args)` to a plain call `Error(args)`,
+        // saving four bytes. Calling the built-in `Error` as an ordinary
+        // function constructs an Error object *identically* to `new`
+        // (ECMAScript §20.5.1.1: the `Error` constructor's [[Call]] and
+        // [[Construct]] paths converge — `Error(m)` and `new Error(m)` both
+        // yield a fresh Error with the same `.message`), so the drop is
+        // semantics-preserving for **every** argument list, including the
+        // no-arg form (`new Error` → `Error()`).
+        //
+        // Scope:
+        //   * `Object`/`Array` fold via [`fold_standard_constructor`], which
+        //     also collapses their no-arg forms to `{}` / `[]` literals (and
+        //     keeps `new Array(len)`'s single-arg *length* form as a call).
+        //   * `RegExp` is NOT folded: `RegExp(r)` returns its argument unchanged
+        //     when `r` is already a regex, whereas `new RegExp(r)` always makes
+        //     a fresh copy — so `new RegExp(x)` → `RegExp(x)` would be an
+        //     observable change (a potential miscompile). Closure does it
+        //     anyway; we decline to stay sound. (Follow-up.)
+        //   * The `Error` *subtypes* (`TypeError`, `RangeError`, …) are left
+        //     alone because the reference compiler does not fold them.
+        //
+        // Gated to a **bare `Error` identifier** callee: a member callee
+        // (`obj.Error`) or any other name is untouched. Like Closure at SIMPLE,
+        // this assumes the global `Error` binding is not shadowed.
         Expression::NewExpression(n) => {
             let callee = fold_expression(&n.callee, st);
             let arguments: Vec<Expression> =
                 n.arguments.iter().map(|a| fold_expression(a, st)).collect();
-            match fold_standard_constructor(&callee, arguments, &n.cv, st) {
-                Ok(folded) => folded,
-                Err(arguments) => Expression::NewExpression(NewExpression {
-                    cv: n.cv.clone(),
+            // `new Error(...)` → `Error(...)` (bare-ident gate; see comment above).
+            if matches!(&callee, Expression::Identifier(id) if id.name == "Error") {
+                let new_cv = st.fork_cv(&n.cv, "new Error(…)", "Error(…)");
+                Expression::CallExpression(CallExpression {
+                    cv: new_cv,
                     callee: Box::new(callee),
                     arguments,
-                }),
+                })
+            } else {
+                // `new Object(...)` / `new Array(...)` fold via the helper; any
+                // other callee preserves the `new`.
+                match fold_standard_constructor(&callee, arguments, &n.cv, st) {
+                    Ok(folded) => folded,
+                    Err(arguments) => Expression::NewExpression(NewExpression {
+                        cv: n.cv.clone(),
+                        callee: Box::new(callee),
+                        arguments,
+                    }),
+                }
             }
         }
         // `a, b, c` — fold each operand independently. We do NOT drop the
@@ -6531,10 +6570,11 @@ mod tests {
         assert_eq!(ConstantFoldPass::new().cost(), 2);
     }
 
-    // ------------- standard-constructor `new`-drop (Object / Array) -------------
+    // --------- standard-constructor `new`-drop (Error / Object / Array) ---------
 
     fn new_expr(callee: Expression, args: Vec<Expression>) -> Expression {
-        // A traced `cv` so the fold records a provenance contribution.
+        // A traced `cv` so the fold records a provenance contribution (matching
+        // the bridge, which stamps every node) — `fork_cv` no-ops on `None`.
         Expression::NewExpression(NewExpression {
             cv: Some("new.1".to_string()),
             callee: Box::new(callee),
@@ -6548,6 +6588,57 @@ mod tests {
             property: Box::new(ident(prop)),
             computed: false,
         })
+    }
+
+    /// `new Error("x")` → `Error("x")` — the `new` is dropped to a plain call.
+    #[test]
+    fn new_error_with_arg_drops_new() {
+        let expr = new_expr(ident("Error"), vec![string("x", None)]);
+        let (out, contribs, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed);
+        assert!(contribs.iter().any(|c| c.tag == "folded"));
+        match extract_expr(&out) {
+            Expression::CallExpression(c) => {
+                assert!(matches!(c.callee.as_ref(), Expression::Identifier(id) if id.name == "Error"));
+                assert_eq!(c.arguments.len(), 1);
+            }
+            other => panic!("expected a plain call `Error(\"x\")`; got {other:?}"),
+        }
+    }
+
+    /// `new Error` (no args) → `Error()` — still a call, with an empty arg list.
+    #[test]
+    fn new_error_no_args_drops_new() {
+        let expr = new_expr(ident("Error"), vec![]);
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed);
+        match extract_expr(&out) {
+            Expression::CallExpression(c) => {
+                assert!(matches!(c.callee.as_ref(), Expression::Identifier(id) if id.name == "Error"));
+                assert!(c.arguments.is_empty());
+            }
+            other => panic!("expected `Error()`; got {other:?}"),
+        }
+    }
+
+    /// `new TypeError(x)` is LEFT ALONE — the reference compiler folds only
+    /// `Error`, not its subtypes.
+    #[test]
+    fn new_typeerror_subtype_is_not_dropped() {
+        let expr = new_expr(ident("TypeError"), vec![ident("x")]);
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(!changed, "a subtype constructor must not fold");
+        assert!(matches!(extract_expr(&out), Expression::NewExpression(_)));
+    }
+
+    /// `new obj.Error(x)` is LEFT ALONE — the gate requires a BARE `Error`
+    /// identifier callee, not a member access.
+    #[test]
+    fn new_member_error_callee_is_not_dropped() {
+        let expr = new_expr(member_expr(ident("obj"), "Error"), vec![ident("x")]);
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(!changed, "a member `obj.Error` callee must not fold");
+        assert!(matches!(extract_expr(&out), Expression::NewExpression(_)));
     }
 
     /// `new Object(x)` → `Object(x)` — a plain call.
