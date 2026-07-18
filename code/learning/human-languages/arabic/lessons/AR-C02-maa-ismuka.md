@@ -4,7 +4,7 @@ chapter: 2
 type: phrase
 headword: ما اسمك؟
 gloss: what's your name?
-concept_tag: WHATS-YOUR-NAME
+concept_tag: INTRO-WHATS-YOUR-NAME
 prerequisites: [AR-C02-maa, AR-C02-ism, AR-C02-anta-anti]
 sounds: []
 roots: []

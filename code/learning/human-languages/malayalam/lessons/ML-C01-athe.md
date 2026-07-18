@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: അതെ
 gloss: yes (athe — "that [is so]")
-concept_tag: YES
+concept_tag: RESPONSE-YES
 prerequisites: [ML-C01-namaskaram]
 sounds: [independent-vowel-a, the-syllable]
 roots: [athu]

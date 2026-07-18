@@ -4,7 +4,7 @@ chapter: 2
 type: word
 headword: मेरा
 gloss: my
-concept_tag: MY
+concept_tag: PRONOUN-MY
 prerequisites: [HI-C02-naam]
 sounds: [matra-e, matra-aa]
 roots: [ma]

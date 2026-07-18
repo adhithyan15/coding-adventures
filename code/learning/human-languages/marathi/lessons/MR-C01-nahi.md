@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: नाही
 gloss: no / is not (nāhī)
-concept_tag: NO
+concept_tag: RESPONSE-NO
 prerequisites: [MR-C01-ho]
 sounds: []
 roots: [na-pie]

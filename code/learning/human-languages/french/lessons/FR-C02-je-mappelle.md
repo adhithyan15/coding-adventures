@@ -4,7 +4,7 @@ chapter: 2
 type: phrase
 headword: je m'appelle…
 gloss: my name is… (literally "I call myself…")
-concept_tag: MY-NAME-IS
+concept_tag: INTRO-MY-NAME-IS
 prerequisites: [FR-C02-je, FR-C02-me, FR-C02-appeler]
 sounds: [elision]
 roots: [ego, me-latin, appellare, nomen]

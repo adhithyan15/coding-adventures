@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: சரி
 gloss: okay / alright / correct (sari)
-concept_tag: OKAY
+concept_tag: RESPONSE-OKAY
 prerequisites: [TA-C01-aam]
 sounds: [c-sa-one-letter, matra-i]
 roots: [sari]

@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: notte / buonanotte
 gloss: night / good night
-concept_tag: GREETING-NIGHT
+concept_tag: GREETING-GOODNIGHT
 prerequisites: [IT-C01-sera]
 sounds: [double-tt]
 roots: [noctem]

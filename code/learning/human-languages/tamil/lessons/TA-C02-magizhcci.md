@@ -4,7 +4,7 @@ chapter: 2
 type: phrase
 headword: மகிழ்ச்சி
 gloss: joy / pleased to meet you
-concept_tag: PLEASED-TO-MEET
+concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [TA-C02-en-peyar]
 sounds: [zha-retroflex-glide]
 roots: [magizh-dravidian]

@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: bien
 gloss: well / good / fine
-concept_tag: BIEN
+concept_tag: WORD-WELL
 prerequisites: [ES-C01-hola]
 sounds: [diphthong-ie, v-b]
 roots: [bene, bonus]

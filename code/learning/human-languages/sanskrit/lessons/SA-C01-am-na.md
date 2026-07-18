@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: आम् / न
 gloss: yes / no (ām / na)
-concept_tag: FUNCTION-YESNO
+concept_tag: RESPONSE-YESNO
 prerequisites: [SA-C01-svagatam]
 sounds: [independent-vowel, halant, inherent-a]
 roots: [na-negative]

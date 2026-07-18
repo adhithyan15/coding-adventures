@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: nuit
 gloss: night (la nuit — feminine)
-concept_tag: NUIT
+concept_tag: TIME-NIGHT
 prerequisites: [FR-C01-le-la]
 sounds: [vowel-u, silent-final]
 roots: [noctem]

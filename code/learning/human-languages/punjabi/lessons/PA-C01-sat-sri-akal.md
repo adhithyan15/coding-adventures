@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ
 gloss: hello / goodbye, the Sikh greeting (sat srī akāl)
-concept_tag: GREETING-HELLO
+concept_tag: GREETING-FORMAL
 prerequisites: []
 sounds: [inherent-a, vowel-sign, vowel-carrier]
 roots: [satya, sri, akala]

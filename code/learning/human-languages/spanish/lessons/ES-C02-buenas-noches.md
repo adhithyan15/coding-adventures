@@ -4,7 +4,7 @@ chapter: 2
 type: word
 headword: buenas noches
 gloss: good evening / good night
-concept_tag: GREETING-NIGHT
+concept_tag: GREETING-GOODNIGHT
 prerequisites: [ES-C02-buenas-tardes, ES-C02-noche]
 sounds: [diphthong-ue, soft-c]
 roots: [bonus, nox]

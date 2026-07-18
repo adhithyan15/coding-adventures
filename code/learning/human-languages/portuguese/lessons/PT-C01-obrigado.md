@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: obrigado / obrigada
 gloss: thank you
-concept_tag: THANKS
+concept_tag: COURTESY-THANKS
 prerequisites: [PT-C01-ola]
 sounds: [final-o-is-u]
 roots: [obligatus]

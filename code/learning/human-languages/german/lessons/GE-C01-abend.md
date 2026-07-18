@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: Abend
 gloss: evening (der Abend — masculine)
-concept_tag: ABEND
+concept_tag: TIME-EVENING
 prerequisites: [GE-C01-tag]
 sounds: [vowel-a-german, d-t-final]
 roots: [abanths]

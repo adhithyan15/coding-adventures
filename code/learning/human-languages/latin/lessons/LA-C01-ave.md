@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: avē / avēte
 gloss: hail (a formal greeting)
-concept_tag: GREETING-HELLO
+concept_tag: GREETING-FORMAL
 prerequisites: [LA-C01-salve]
 sounds: [v-as-w, macron-long-vowel]
 roots: [avere]

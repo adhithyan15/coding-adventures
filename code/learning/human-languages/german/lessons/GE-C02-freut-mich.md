@@ -4,7 +4,7 @@ chapter: 2
 type: phrase
 headword: freut mich
 gloss: pleased to meet you (literally "it gladdens me")
-concept_tag: PLEASED-TO-MEET
+concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [GE-C02-ich-heisse]
 sounds: [eu-vowel, ich-laut]
 roots: [froh, mek]

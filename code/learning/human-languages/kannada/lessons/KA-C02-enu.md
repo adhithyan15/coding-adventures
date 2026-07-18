@@ -4,7 +4,7 @@ chapter: 2
 type: word
 headword: ಏನು
 gloss: what
-concept_tag: WHAT
+concept_tag: QUESTION-WHAT
 prerequisites: [KA-C02-niinu-niivu]
 sounds: [independent-ee]
 roots: [yaa-dravidian]

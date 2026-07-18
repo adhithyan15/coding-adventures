@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: Morgen
 gloss: morning (der Morgen — masculine)
-concept_tag: MORGEN
+concept_tag: TIME-MORNING
 prerequisites: [GE-C01-tag]
 sounds: [vowel-o-german, r-uvular-german]
 roots: [murganaz]

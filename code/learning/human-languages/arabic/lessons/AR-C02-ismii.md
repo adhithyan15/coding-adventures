@@ -4,7 +4,7 @@ chapter: 2
 type: phrase
 headword: اسمي …
 gloss: my name is… (with no "is")
-concept_tag: MY-NAME-IS
+concept_tag: INTRO-MY-NAME-IS
 prerequisites: [AR-C02-ism, AR-C02-ii-my]
 sounds: []
 roots: []

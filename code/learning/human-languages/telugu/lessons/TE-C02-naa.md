@@ -4,7 +4,7 @@ chapter: 2
 type: word
 headword: నా
 gloss: my
-concept_tag: MY
+concept_tag: PRONOUN-MY
 prerequisites: [TE-C02-peru]
 sounds: [long-aa]
 roots: [neenu-dravidian]

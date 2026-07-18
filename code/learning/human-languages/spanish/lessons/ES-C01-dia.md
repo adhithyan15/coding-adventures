@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: día
 gloss: day (el día — masculine)
-concept_tag: DIA
+concept_tag: TIME-DAY
 prerequisites: [ES-C01-el-la]
 sounds: [accent-i, vowel-a, d-soft]
 roots: [dies]

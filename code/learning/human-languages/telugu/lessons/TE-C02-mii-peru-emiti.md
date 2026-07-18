@@ -4,7 +4,7 @@ chapter: 2
 type: phrase
 headword: మీ పేరు ఏమిటి?
 gloss: what's your name?
-concept_tag: WHATS-YOUR-NAME
+concept_tag: INTRO-WHATS-YOUR-NAME
 prerequisites: [TE-C02-emiti, TE-C02-nuvvu-miiru, TE-C02-peru]
 sounds: []
 roots: []

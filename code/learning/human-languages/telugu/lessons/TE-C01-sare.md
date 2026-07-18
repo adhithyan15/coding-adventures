@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: సరే
 gloss: okay / alright (sarē)
-concept_tag: OKAY
+concept_tag: RESPONSE-OKAY
 prerequisites: [TE-C01-avunu]
 sounds: [sa, e-long-vowel-sign]
 roots: [sari]

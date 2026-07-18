@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: شكرا
 gloss: thank you (shukran)
-concept_tag: THANKS
+concept_tag: COURTESY-THANKS
 prerequisites: [AR-C01-as-salamu-alaykum]
 sounds: [shin, kaf]
 roots: [sh-k-r]

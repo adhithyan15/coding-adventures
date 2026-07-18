@@ -4,7 +4,7 @@ chapter: 2
 type: phrase
 headword: ख़ुशी
 gloss: happiness / pleased to meet you
-concept_tag: PLEASED-TO-MEET
+concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [HI-C02-mera-naam-hai]
 sounds: [nukta-kh, matra-u, matra-i]
 roots: [khush-persian]

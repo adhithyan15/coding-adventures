@@ -4,7 +4,7 @@ chapter: 2
 type: word
 headword: என்
 gloss: my
-concept_tag: MY
+concept_tag: PRONOUN-MY
 prerequisites: [TA-C02-peyar]
 sounds: [independent-e, pulli]
 roots: [naan-dravidian]
