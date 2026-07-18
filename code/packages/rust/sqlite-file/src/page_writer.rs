@@ -480,21 +480,33 @@ fn encode_table_btree(
         return Ok(pages);
     }
 
-    // Multiple leaves: the root becomes an interior page at `root_page`, and the
-    // leaves (each followed by its own overflow pages) are allocated after it.
-    // `pages[0]` is reserved for the interior page, filled once its children's
-    // page numbers are known.
+    // Multiple leaves: the table grows into a b-tree whose ROOT is an interior
+    // page at `root_page`. `pages[0]` is reserved for that root; every other page
+    // (leaves, their overflow chains, and any *intermediate* interior levels) is
+    // allocated contiguously from `root_page + 1` in the order it is pushed, so
+    // the invariant `pages[i]` ⇔ page number `root_page + i` always holds.
+    //
+    // We build the tree BOTTOM-UP, one interior level at a time:
+    //   level 0 = the data leaves,
+    //   level 1 = interior pages whose children are leaves,
+    //   level 2 = interior pages whose children are level-1 interiors, …
+    // until a level collapses to a single node — that node is the root and is
+    // written into `pages[0]`. One interior level (the common case) reproduces
+    // the previous single-root layout exactly.
     let mut pages: Vec<Vec<u8>> = vec![Vec::new()];
     let mut next_page = root_page + 1;
-    // `(left-child page, largest rowid in that leaf)` for each leaf, the raw
-    // material for the interior page's divider cells.
-    let mut leaf_refs: Vec<(u32, i64)> = Vec::with_capacity(leaves.len());
+
+    // Level 0: encode each leaf (plus its overflow pages) and record
+    // `(page, largest-rowid-in-subtree)` — the raw material for divider cells.
+    let mut level: Vec<(u32, i64)> = Vec::with_capacity(leaves.len());
     for leaf_indices in &leaves {
         let leaf_page = next_page;
-        next_page += 1;
         let (leaf, overflow) =
             encode_single_leaf(page_size, usable, data_max_local, leaf_page, &ordered, leaf_indices)?;
-        next_page = u32::try_from(next_page as usize + overflow.len())
+        // Advance past the leaf itself (+1) and its overflow pages, checked so a
+        // table crossing the 2^32-page limit fails cleanly instead of wrapping —
+        // consistent with the interior loop's `checked_add`.
+        next_page = u32::try_from(leaf_page as usize + 1 + overflow.len())
             .map_err(|_| SqliteError::Unsupported("database exceeds the 2^32-page limit"))?;
         let max_rowid = leaf_indices
             .iter()
@@ -503,16 +515,98 @@ fn encode_table_btree(
             .unwrap_or(0);
         pages.push(leaf);
         pages.extend(overflow);
-        leaf_refs.push((leaf_page, max_rowid));
+        level.push((leaf_page, max_rowid));
     }
 
-    // The interior page: one divider cell per leaf except the last (whose rows
-    // are reached via the right-most-child pointer). A divider's key is the
-    // largest rowid in its left child, so `rowid <= key` descends left.
-    let (rightmost_page, _) = *leaf_refs.last().expect("at least two leaves here");
-    let dividers = &leaf_refs[..leaf_refs.len() - 1];
-    pages[0] = pack_interior_page(page_size, dividers, rightmost_page)?;
+    // Build interior levels until one root remains. `group_interior_children`
+    // packs the current level's nodes into as few interior pages as fit, each
+    // group becoming one parent node. A parent's key (for the level above) is the
+    // largest rowid in its whole subtree — i.e. its last child's key, since the
+    // nodes stay rowid-ordered throughout.
+    loop {
+        let groups = group_interior_children(usable, &level);
+        // Root level: a single group is the tree root — write it into `pages[0]`
+        // rather than allocating a fresh page, so the root lands on `root_page`.
+        if groups.len() == 1 {
+            pages[0] = pack_interior_from_children(page_size, &groups[0])?;
+            break;
+        }
+        // Progress guard: a level with >1 node must collapse to strictly fewer
+        // parents, or the loop can't terminate. This holds for every real page
+        // size (≥512 bytes leaves room for dozens of dividers per interior
+        // page), so it can only fail if usable space were pathologically small —
+        // fail loudly instead of looping forever.
+        if groups.len() >= level.len() {
+            return Err(SqliteError::Unsupported(
+                "interior page too small to reduce a b-tree level",
+            ));
+        }
+
+        // Intermediate level: allocate one interior page per group.
+        let mut parents: Vec<(u32, i64)> = Vec::with_capacity(groups.len());
+        for group in &groups {
+            let interior_page = next_page;
+            next_page = next_page
+                .checked_add(1)
+                .ok_or(SqliteError::Unsupported("database exceeds the 2^32-page limit"))?;
+            let parent_key = group.last().expect("group is never empty").1;
+            pages.push(pack_interior_from_children(page_size, group)?);
+            parents.push((interior_page, parent_key));
+        }
+        level = parents;
+    }
     Ok(pages)
+}
+
+/// Partition a level's child nodes (each `(page, key)`, in rowid order) into the
+/// groups that will each become one interior page. A child contributes a
+/// divider cell unless it is the right-most child of its group (that pointer
+/// lives in the page header, not a cell). We size conservatively — charging
+/// *every* child a divider-cell footprint, including the right-most — so the
+/// group is guaranteed to fit `pack_interior_page`'s exact packing, at the cost
+/// of one unused cell's slack per page (negligible, and it keeps the split
+/// decision independent of which child ends up last).
+///
+/// Each group holds at least one child, so this always makes progress: the next
+/// level has strictly fewer nodes whenever the current level has more than one.
+fn group_interior_children(usable: usize, children: &[(u32, i64)]) -> Vec<Vec<(u32, i64)>> {
+    // Interior header is 12 bytes; the cell-pointer array + cells share the rest.
+    // A divider cell is `[u32 child][varint key]` (≤ 13 bytes) plus a 2-byte
+    // pointer. Bound the content region by `usable` (≤ page_size) to stay clear
+    // of any reserved tail region.
+    let capacity = usable.saturating_sub(12);
+    let mut groups: Vec<Vec<(u32, i64)>> = Vec::new();
+    let mut current: Vec<(u32, i64)> = Vec::new();
+    let mut used = 0usize;
+    for &(child, key) in children {
+        // Divider cell length for this child: 4-byte child pointer + key varint.
+        let mut cell = Vec::with_capacity(13);
+        cell.extend_from_slice(&child.to_be_bytes());
+        varint::write(key, &mut cell);
+        let footprint = cell.len() + 2; // + cell-pointer array entry
+        if !current.is_empty() && used + footprint > capacity {
+            groups.push(std::mem::take(&mut current));
+            used = 0;
+        }
+        current.push((child, key));
+        used += footprint;
+    }
+    if !current.is_empty() {
+        groups.push(current);
+    }
+    groups
+}
+
+/// Pack one interior page from an ordered group of child nodes: all but the last
+/// child become divider cells (`key` = largest rowid in that child's subtree),
+/// and the last child is the right-most-child pointer.
+fn pack_interior_from_children(
+    page_size: usize,
+    group: &[(u32, i64)],
+) -> Result<Vec<u8>, SqliteError> {
+    let (rightmost_page, _) = *group.last().expect("interior group is never empty");
+    let dividers = &group[..group.len() - 1];
+    pack_interior_page(page_size, dividers, rightmost_page)
 }
 
 /// Build one data leaf (rooted at `leaf_page`) from the `ordered` cells selected
@@ -558,8 +652,10 @@ fn encode_single_leaf(
 /// from the bottom, exactly like a leaf.
 ///
 /// # Errors
-/// [`SqliteError::Unsupported`] if the dividers do not fit on one interior page
-/// (a multi-level tree is a later rung) or exceed 65535 cells.
+/// [`SqliteError::Unsupported`] if the dividers exceed 65535 cells, or if they do
+/// not fit on one interior page. Callers building multi-level trees pre-split
+/// their children with [`group_interior_children`] so each group fits, so the
+/// size error is an internal invariant guard rather than a reachable limit.
 fn pack_interior_page(
     page_size: usize,
     dividers: &[(u32, i64)],
@@ -726,6 +822,50 @@ mod tests {
         assert_eq!(db[root_off], 0x05, "root should be an interior table page");
 
         // Every row reads back in order, through the interior→leaf descent.
+        let read = crate::schema::read_table(&db, "big").unwrap();
+        assert_eq!(read, rows);
+    }
+
+    /// Enough rows that even the *interior* level overflows one page, forcing a
+    /// **multi-level** tree: root interior → intermediate interiors → leaves. The
+    /// reader's stack-based descent walks all levels and returns every row in
+    /// order.
+    #[test]
+    fn write_table_grows_a_multi_level_btree() {
+        // 3000 small rows on a 512-byte page produce ~90 leaves; a 512-byte
+        // interior page holds only a few dozen dividers, so the leaves can't be
+        // covered by a single interior page — a second interior level is needed.
+        let rows: Vec<(i64, Vec<SqlValue>)> = (1..=3000)
+            .map(|n| (n, vec![SqlValue::Int(n), SqlValue::Text(format!("r{n}"))]))
+            .collect();
+        let db = write_single_table_db(512, "big", "CREATE TABLE big(n, label)", &rows).unwrap();
+
+        let pages = db.len() / 512;
+        let header = crate::header::Header::parse(&db).unwrap();
+        assert_eq!(header.page_count as usize, pages);
+
+        // The root is an interior page (0x05) whose FIRST child is ALSO an
+        // interior page — i.e. the tree is at least three levels deep.
+        let schema = crate::schema::read_schema(&db).unwrap();
+        let root = schema[0].root_page.unwrap() as usize;
+        let root_off = (root - 1) * 512;
+        assert_eq!(db[root_off], 0x05, "root should be an interior table page");
+        // First divider cell's left-child pointer lives at the cell offset named
+        // by the first cell-pointer array slot (interior header is 12 bytes).
+        let first_ptr = u16::from_be_bytes([db[root_off + 12], db[root_off + 13]]) as usize;
+        let first_child = u32::from_be_bytes([
+            db[root_off + first_ptr],
+            db[root_off + first_ptr + 1],
+            db[root_off + first_ptr + 2],
+            db[root_off + first_ptr + 3],
+        ]) as usize;
+        let child_off = (first_child - 1) * 512;
+        assert_eq!(
+            db[child_off], 0x05,
+            "root's child should also be interior (≥3-level tree)"
+        );
+
+        // Every row reads back in rowid order through the full multi-level descent.
         let read = crate::schema::read_table(&db, "big").unwrap();
         assert_eq!(read, rows);
     }
