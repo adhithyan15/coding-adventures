@@ -69,6 +69,7 @@ per rotation, in parallel):
 | `biology/` | vertebrate class → its one distinctive characteristic (bird → feathers, mammal → hair, reptile → dry_scaly_skin, fish → gills) | NPS "Vertebrate Grab Bag" (authoritative) |
 | `biology/` | muscle-tissue type → its one distinctive characteristic (skeletal → voluntary, smooth → involuntary, cardiac → intercalated_disks) | NCI SEER Training Modules (authoritative) |
 | `biology/` | plant tropism → the stimulus it responds to (phototropism → light, gravitropism → gravity, thigmotropism → touch) | Wikipedia "Tropism" (consensus) |
+| `biology/` | insect body region → what it bears / its function (head → eyes_antennae_and_mouthparts, thorax → legs_and_wings, abdomen → digestion_and_reproduction) | UF/IFAS EDIS Entomology (authoritative) |
 | `physics/` | simple machine → everyday example | NASA |
 | `physics/` | phase change → its name (melting, freezing, …) | LibreTexts (consensus) |
 | `physics/` | energy form → defining token (chemical → bonds, thermal → heat) | EIA (energy.gov) |
