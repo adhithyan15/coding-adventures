@@ -114,16 +114,17 @@ and `hash-set` ports, the paired `in-memory-data-store-engine` and
 `x25519`, `brainfuck-wasm-compiler`, `argon2i`, `argon2d`, and `argon2id`
 ports, and the paired C#/F# `chacha20-poly1305`, `xml-lexer`, `block-ram`,
 `nib-wasm-compiler`, `dartmouth-basic-lexer`, and `dartmouth-basic-parser`
-ports:
+ports, followed by the paired `ed25519`, `font-parser`, and
+`asciidoc-parser` ports:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 317 |
+| Present in 10-15 languages | 172 | 313 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,972 |
-| Present in one language | 701 | 9,814 |
+| Present in one language | 703 | 9,842 |
 
-The loop must not start by attempting 9,814 singleton ports. It should finish
+The loop must not start by attempting 9,842 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 ## Priority 0: Inventory And Identity Integrity
@@ -164,7 +165,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 172 packages present in at least ten implementation languages need 315
+The 172 packages present in at least ten implementation languages need 313
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -173,8 +174,8 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Elixir | 0 | Complete; `python-parser` uses the shared grammar-driven frontend |
 | Lua | 0 | Complete; paired data-structure/storage wave |
 | Perl | 0 | Complete; paired data-structure/storage wave |
-| C# | 3 | Move with F# |
-| F# | 3 | Move with C# |
+| C# | 2 | Move with F# |
+| F# | 2 | Move with C# |
 | Haskell | 34 | Dependency-shaped compression, graphics, ML, and protocol waves |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
@@ -353,6 +354,17 @@ sentinels, immutable input ownership, unsupported mappings, shared advances,
 and sorted kerning lookup. The package now spans 12 implementation lanes,
 reduces the high-consensus backlog to 315 slots, and leaves 3 paired gaps in
 each lane.
+
+The fifteenth paired C#/F# slice is complete: `asciidoc-parser` now provides
+native block and inline parsers over each lane's shared `document-ast` model.
+Both implementations cover headings, paragraphs and breaks, source, literal,
+passthrough, and recursive quote blocks, ordered and unordered nested lists,
+comments, thematic breaks, emphasis, strong text, code spans, link and image
+macros, cross-references, and HTTP autolinks. Mirrored package-native suites
+exercise 33 test cases in each lane, including lenient unterminated blocks and
+malformed inline delimiters, with more than 97% line coverage. The
+package now spans 12 implementation lanes, reduces the high-consensus backlog
+to 313 slots, and leaves 2 paired gaps in each lane.
 
 Recommended family order:
 
