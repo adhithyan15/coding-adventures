@@ -2449,10 +2449,26 @@ fn plan_comparison(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
         let high_node = child_nodes_ordered
             .get(2)
             .ok_or_else(|| PlanError::UnsupportedStatement("BETWEEN missing high".to_string()))?;
+        let low = plan_expression(low_node)?;
+        let high = plan_expression(high_node)?;
+        // Optional `COLLATE name` on the left operand (`x COLLATE NOCASE BETWEEN a
+        // AND c`). `x BETWEEN a AND c` is `x >= a AND x <= c`, so wrapping the
+        // value AND both bounds in `__collate` makes each ordered comparison
+        // canonicalise its text before the byte compare — exactly a collated
+        // range test. `__collate` passes NULL/non-text through unchanged, so the
+        // range's NULL propagation and numeric ordering are preserved.
+        let (value, low, high) = match collate_name_after(&direct_tok_uppers)? {
+            Some(name) => (
+                wrap_collate(left, &name),
+                wrap_collate(low, &name),
+                wrap_collate(high, &name),
+            ),
+            None => (left, low, high),
+        };
         return Ok(SqlExpr::Between {
-            value: Box::new(left),
-            low: Box::new(plan_expression(low_node)?),
-            high: Box::new(plan_expression(high_node)?),
+            value: Box::new(value),
+            low: Box::new(low),
+            high: Box::new(high),
             negated,
         });
     }

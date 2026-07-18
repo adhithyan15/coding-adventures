@@ -286,11 +286,13 @@ pub enum Instruction {
     /// SQL `BETWEEN` (or `NOT BETWEEN`) range test.
     ///
     /// Expects the stack to contain `[..., value, low, high]` (high on top).
-    /// Pops all three; pushes `Bool(value >= low AND value <= high)`.
-    /// If `inclusive = false` the bounds are exclusive (value > low AND value < high).
+    /// Pops all three; the payload is `!negated` (`true` for `BETWEEN`, `false`
+    /// for `NOT BETWEEN`). `BETWEEN` pushes the inclusive range test
+    /// `Bool(value >= low AND value <= high)`; `NOT BETWEEN` pushes its logical
+    /// negation `Bool(value < low OR value > high)`. Any NULL operand → NULL.
     ///
     /// ## Stack effect: `[..., value, low, high] → [..., Bool]`
-    Between(bool), // inclusive
+    Between(bool), // !negated: true = BETWEEN, false = NOT BETWEEN
 
     /// SQL `LIKE` / `NOT LIKE` pattern match.
     ///

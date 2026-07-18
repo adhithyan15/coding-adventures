@@ -12,8 +12,12 @@ All notable changes to this project will be documented in this file.
   `COLLATE` on a `cmp_op` comparison, the clause lives INSIDE each alternative —
   not hoisted before the whole alternation — so a bare trailing `COLLATE` (e.g.
   `ORDER BY x COLLATE NOCASE`, where `order_item` owns the clause) still fails the
-  alternative, backtracks, and leaves the token for the caller. (`BETWEEN` and
-  `LIKE`/`GLOB` prefixes follow in the same version.)
+  alternative, backtracks, and leaves the token for the caller. (`LIKE`/`GLOB`
+  prefix follows in the same version.)
+- **`COLLATE name` may now precede `BETWEEN`** (`x COLLATE NOCASE BETWEEN a AND
+  c`, and `NOT BETWEEN`). Same optional `[COLLATE NAME]` prefix on the `BETWEEN`
+  / `NOT BETWEEN` alternatives, with the same inside-the-alternative placement
+  for correct backtracking.
 
 ## [0.1.20] - Unreleased
 

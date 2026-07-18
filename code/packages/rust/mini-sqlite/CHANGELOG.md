@@ -9,8 +9,17 @@ or overriding a column's declared sequence (`COLLATE BINARY` forces byte order).
 It composes with IN's three-valued NULL logic. Previously the grammar accepted
 `COLLATE` only before a comparison operator (`=`, `<`, …), so `COLLATE` before
 `IN` was a parse error. Grammar prefix added in sql-parser 0.1.21; planner lowers
-it to `__collate` wraps in sql-planner 0.2.23. (`BETWEEN` and `LIKE`/`GLOB` land
-in the same version — see below.) New differential-oracle cases.
+it to `__collate` wraps in sql-planner 0.2.23. (`LIKE`/`GLOB` land in the same
+version — see below.) New differential-oracle cases.
+
+Also in this version: **`x COLLATE NOCASE BETWEEN a AND c`** parses and applies
+the collation to the inclusive range test (both `>= a` and `<= c`).
+
+**Bug fix (sql-vm 0.4.28): `NOT BETWEEN` now returns the logical negation** of
+the inclusive range rather than a strict/exclusive-bounds test. `5 NOT BETWEEN 1
+AND 10` was wrongly `1` (5 is in `[1,10]`, so it is `0`); `15 NOT BETWEEN 1 AND
+10` was wrongly `0`. This latent bug had never been exercised by the oracle —
+two cases now guard it — and it was surfaced by the collated `NOT BETWEEN` work.
 
 ## 0.5.49 — text truthiness takes numeric affinity
 

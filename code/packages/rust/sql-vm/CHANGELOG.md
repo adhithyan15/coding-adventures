@@ -3,6 +3,23 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.28] - Unreleased
+
+### Fixed
+
+- **`NOT BETWEEN` now returns the logical negation of the range**, not a
+  strict/exclusive-bounds test. `eval_between`'s non-plain branch computed
+  `val > lo AND val < hi` (exclusive bounds), but codegen only ever emits
+  `Between(false)` for `NOT BETWEEN`, whose meaning is `NOT(lo <= val <= hi)` =
+  `val < lo OR val > hi`. The old code inverted the answer for interior values:
+  `5 NOT BETWEEN 1 AND 10` wrongly returned `1` (5 IS in `[1,10]`, so the result
+  is `0`) and `15 NOT BETWEEN 1 AND 10` wrongly returned `0`. Now it computes the
+  inclusive range once and flips the boolean when negated; NULL operands still
+  yield NULL. The `Between(bool)` payload is documented as `!negated` (true =
+  `BETWEEN`, false = `NOT BETWEEN`). A pre-existing latent bug — no oracle case
+  had exercised `NOT BETWEEN` before; two now do (in mini-sqlite). Also enables
+  correct results for the new explicit-`COLLATE`-before-`BETWEEN` surface.
+
 ## [0.4.27] - Unreleased
 
 ### Fixed

@@ -471,12 +471,26 @@ pub fn parser_grammar() -> ParserGrammar {
                                 ] }) },
                         ] },
                         GrammarElement::Sequence { elements: vec![
+                            // Optional `COLLATE name` on the LEFT operand of a
+                            // BETWEEN range (`x COLLATE NOCASE BETWEEN a AND c`).
+                            // Kept inside the alternative (not hoisted) for the
+                            // same backtracking reason as the IN/cmp_op branches.
+                            // The planner wraps the value AND both bounds so the
+                            // `>= low AND <= high` range test honours the collation.
+                            GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                    GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                                ] }) },
                             GrammarElement::Literal { value: r#"BETWEEN"#.to_string() },
                             GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                             GrammarElement::Literal { value: r#"AND"#.to_string() },
                             GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },
                         ] },
                         GrammarElement::Sequence { elements: vec![
+                            GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                    GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                                ] }) },
                             GrammarElement::Literal { value: r#"NOT"#.to_string() },
                             GrammarElement::Literal { value: r#"BETWEEN"#.to_string() },
                             GrammarElement::RuleReference { name: r#"bitwise"#.to_string() },

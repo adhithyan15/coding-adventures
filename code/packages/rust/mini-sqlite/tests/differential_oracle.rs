@@ -1224,6 +1224,48 @@ const CASES: &[Case] = &[
         setup: &[],
         query: "SELECT ('ABC' COLLATE NOCASE IN ('xyz', NULL)) IS NULL AS a, 'ABC' COLLATE NOCASE IN ('abc', NULL) AS b",
     },
+    // Plain `NOT BETWEEN` is the LOGICAL NEGATION of the inclusive range, not a
+    // strict/exclusive-bounds range. `5 NOT BETWEEN 1 AND 10` is 0 (5 IS in
+    // [1,10]); `15 NOT BETWEEN 1 AND 10` is 1; the boundaries 1 and 10 are IN the
+    // range so their NOT BETWEEN is 0; a NULL operand yields NULL. (Regression
+    // guard: eval_between previously computed `val > lo AND val < hi` for the
+    // negated case, inverting interior values.)
+    Case {
+        id: "not_between_logical_negation",
+        setup: &[],
+        query: "SELECT 5 NOT BETWEEN 1 AND 10 AS a, 15 NOT BETWEEN 1 AND 10 AS b, 1 NOT BETWEEN 1 AND 10 AS c, 10 NOT BETWEEN 1 AND 10 AS d, (NULL NOT BETWEEN 1 AND 10) IS NULL AS e",
+    },
+    // Column form of NOT BETWEEN over a range of integer ids, to exercise the
+    // per-row path (not just constant folding).
+    Case {
+        id: "not_between_column",
+        setup: &[
+            "CREATE TABLE t (id INTEGER)",
+            "INSERT INTO t VALUES (1),(5),(10),(11),(0)",
+        ],
+        query: "SELECT id FROM t WHERE id NOT BETWEEN 1 AND 10 ORDER BY id",
+    },
+    // Explicit `COLLATE` before `BETWEEN`: `x BETWEEN a AND c` is `x >= a AND
+    // x <= c`, and the collation drives both ordered comparisons. `'B' COLLATE
+    // NOCASE BETWEEN 'a' AND 'c'` is 1 (folded 'b' falls in a..c) where the plain
+    // byte compare is 0 (uppercase 'B' sorts below lowercase 'a'). `NOT BETWEEN`
+    // inverts, and a NULL bound propagates NULL through the collation wrap.
+    Case {
+        id: "scalar_explicit_collate_between",
+        setup: &[],
+        query: "SELECT 'B' COLLATE NOCASE BETWEEN 'a' AND 'c' AS a, 'B' BETWEEN 'a' AND 'c' AS b, 'B' COLLATE NOCASE NOT BETWEEN 'a' AND 'c' AS c, 'hi   ' COLLATE RTRIM BETWEEN 'hi' AND 'hi' AS d, ('B' COLLATE NOCASE BETWEEN NULL AND 'c') IS NULL AS e",
+    },
+    // Column form: an explicit `COLLATE NOCASE` on a plain (BINARY) column folds
+    // case for the whole range, so mixed-case names in `a`..`n` all qualify while
+    // an out-of-range uppercase name does not.
+    Case {
+        id: "where_explicit_collate_between",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT)",
+            "INSERT INTO t VALUES (1,'Apple'),(2,'apple'),(3,'ZEBRA'),(4,'mango')",
+        ],
+        query: "SELECT id FROM t WHERE s COLLATE NOCASE BETWEEN 'a' AND 'n' ORDER BY id",
+    },
     // IN membership uses the same equality as `=`: numeric across INTEGER/REAL,
     // and it is three-valued for NULL. `1 IN (1.0)` and `1.0 IN (1)` are true
     // (numeric), `'1' IN (1)` is false (text vs int, no affinity), and a list
