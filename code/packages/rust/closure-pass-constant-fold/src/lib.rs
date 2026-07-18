@@ -5901,6 +5901,38 @@ fn fold_conditional(c: &ConditionalExpression, st: &mut FoldState) -> Expression
         return chosen;
     }
 
+    // Equal-branch collapse: `t ? X : X` → `X` when `t` is side-effect-free.
+    // Both arms are the SAME expression, so the selected value is `X` no matter
+    // which way `t` decides — the branch on `t` is dead. The ONE thing the
+    // rewrite must not silently drop is `t`'s own evaluation, so we require `t`
+    // to be side-effect-free (`is_side_effect_free`, the crate-wide contract:
+    // an identifier / literal / member read is free — a getter on `a.p` is not
+    // modelled, exactly as in `[a.p].length`; a call / assignment / `++` is
+    // NOT). This mirrors the reference Closure Compiler's `PeepholeFoldConstants`
+    // equal-branch case byte-for-byte (`a?b:b`→`b`, `a?1:1`→`1`, `a?b.c:b.c`→
+    // `b.c`, `a?b():b()`→`b()`).
+    //
+    // When `t` IS impure, Closure instead rewrites to the comma sequence
+    // `(t, X)` to preserve the effect (`f()?b:b`→`(f(),b)`, `(a=1)?b:b`→
+    // `(a=1,b)`). That is a DIFFERENT, larger transform (it must build a
+    // `SequenceExpression` and reason about the result position); we DECLINE it
+    // here — leaving the impure-test ternary intact, which is sound — and file
+    // it as a follow-up rather than ship a partial version.
+    //
+    // Branch equality uses derived structural `==`. In the default pipeline
+    // every node carries `cv: None` (the bridge stamps `None`, and folding an
+    // identifier/literal mints nothing), so `a?b:b`'s two `b`s compare equal.
+    // Under `--correlation_vector` the two arms may carry distinct minted CVs;
+    // then `==` is `false` and we conservatively DECLINE — a sound miss, never
+    // a miscompile.
+    if is_side_effect_free(&test) && consequent == alternate {
+        let parent = c.cv.clone();
+        let before = "t ? X : X".to_string();
+        let after = "X".to_string();
+        let _new_cv = st.fork_cv(&parent, &before, &after);
+        return consequent;
+    }
+
     Expression::ConditionalExpression(ConditionalExpression {
         cv: c.cv.clone(),
         test: Box::new(test),
@@ -13426,6 +13458,107 @@ mod tests {
             Expression::NumericLiteral(n) => assert_eq!(n.value, 2.0),
             other => panic!("expected 2; got {:?}", other),
         }
+    }
+
+    // ------------- ternary equal-branch collapse (t?X:X → X) ----------
+
+    /// `cond ? then : else` with the given CV, boxing each arm.
+    fn conditional(test: Expression, then: Expression, els: Expression) -> Expression {
+        Expression::ConditionalExpression(ConditionalExpression {
+            cv: Some("cond.cv".to_string()),
+            test: Box::new(test),
+            consequent: Box::new(then),
+            alternate: Box::new(els),
+        })
+    }
+
+    /// A side-effecting `f()` call — the canonical impure test operand.
+    fn bare_call(callee: &str) -> Expression {
+        Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(ident(callee)),
+            arguments: vec![],
+        })
+    }
+
+    #[test]
+    fn ternary_equal_identifier_branches_collapse_to_branch() {
+        // `a ? b : b` → `b` (test `a` is a side-effect-free identifier).
+        let expr = conditional(ident("a"), ident("b"), ident("b"));
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed, "a?b:b should collapse to b");
+        match extract_expr(&out) {
+            Expression::Identifier(id) => assert_eq!(id.name, "b"),
+            other => panic!("expected identifier b; got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn ternary_equal_literal_branches_collapse() {
+        // `a ? 1 : 1` → `1`.
+        let expr = conditional(ident("a"), num(1.0, None), num(1.0, None));
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed, "a?1:1 should collapse to 1");
+        match extract_expr(&out) {
+            Expression::NumericLiteral(n) => assert_eq!(n.value, 1.0),
+            other => panic!("expected 1; got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn ternary_equal_member_branches_collapse_under_free_test() {
+        // `a ? b.c : b.c` → `b.c`. The test `a` is free; the (equal) member
+        // arms are evaluated exactly once either way.
+        let expr = conditional(
+            ident("a"),
+            member(ident("b"), "c"),
+            member(ident("b"), "c"),
+        );
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed, "a?b.c:b.c should collapse to b.c");
+        match extract_expr(&out) {
+            Expression::MemberExpression(_) => {}
+            other => panic!("expected member b.c; got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn ternary_member_test_still_collapses_free_by_contract() {
+        // `a.p ? b : b` → `b`. A member READ is side-effect-free under the
+        // crate-wide contract (matching Closure; a getter is not modelled), so
+        // the equal-branch collapse fires.
+        let expr = conditional(member(ident("a"), "p"), ident("b"), ident("b"));
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed, "a.p?b:b should collapse (member test is free)");
+        assert!(matches!(extract_expr(&out), Expression::Identifier(id) if id.name == "b"));
+    }
+
+    #[test]
+    fn ternary_impure_test_declines_collapse() {
+        // `f() ? b : b` is LEFT INTACT — collapsing would drop the `f()` call.
+        // (Closure rewrites this to `(f(),b)`; that sequence build is a
+        // deliberately-declined follow-up, not a miscompile.)
+        let expr = conditional(bare_call("f"), ident("b"), ident("b"));
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(!changed, "f()?b:b must NOT collapse (impure test)");
+        match extract_expr(&out) {
+            Expression::ConditionalExpression(c) => {
+                assert!(matches!(&*c.test, Expression::CallExpression(_)));
+            }
+            other => panic!("expected the ternary to survive; got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn ternary_unequal_branches_not_collapsed() {
+        // `a ? b : c` (b ≠ c) is a real branch — never collapse.
+        let expr = conditional(ident("a"), ident("b"), ident("c"));
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(!changed, "a?b:c must not collapse");
+        assert!(matches!(
+            extract_expr(&out),
+            Expression::ConditionalExpression(_)
+        ));
     }
 
     // ------------------- doesn't over-fold ---------------------------
