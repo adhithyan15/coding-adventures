@@ -46,14 +46,17 @@ are two implementations of one documented ABI. The `lispy_runtime_golden`
 unit test pins the C side to the Rust `pub const`s/constructors so they can
 never silently diverge. See `code/specs/LANG77-lisp-native-runtime.md`.
 
-- `runtime/twig_gc.c` — **TWIG-GC**: a conservative mark-and-sweep garbage
-  collector (TWIG-GC, Layer 1 of `code/specs/native-aot-substrate.md`). Every
-  managed allocation (`__twig_gc_alloc`) is preceded by a 32-byte header and
-  tracked in a linked list. Collections trigger automatically when total live
-  bytes exceed an adaptive threshold (starts 1 MB, doubles/halves based on
-  survival rate). The stack scan is conservative: every word (and `word & ~0x7`
-  for NaN-boxed Lispy pointers) is tested as a potential managed pointer.
-  `__twig_lispy_cons` now uses `__twig_gc_alloc` instead of leaking `calloc`.
+- **Garbage collector** — the conservative mark-and-sweep collector is **no longer
+  a C file in this crate**. `runtime/twig_gc.c` was retired (#118b-2b); the collector
+  now lives in the `gc-core-capi` crate (`gc-core`'s flat mark-and-sweep model behind
+  a C ABI), which exports both the generic `__gc_*` names and the `__twig_gc_*` compat
+  aliases the emitted code and `dynval_runtime.c` reference. `build.rs` builds
+  `libgc_core_capi.a` and embeds it; each AOT link site writes it to a temp `.a` and
+  passes it to the linker alongside the runtime archive, so every emitted binary's
+  `__twig_gc_alloc` / `__twig_gc_safepoint` references resolve against one generic
+  collector. `__dyn_cons` still allocates cons cells via `__twig_gc_alloc` — that ABI
+  is unchanged; only its implementation moved. See `code/specs/AOT00-T1-precise-gc.md`
+  and `code/specs/LANG16-gc-core.md`.
 
 LANG-FULL E4 / BA4 literal string output reuses this runtime path: native AOT
 preparation lowers `str_const` + `print_str` to `alloc_bytes`, `store_byte`, and
