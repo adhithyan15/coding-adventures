@@ -24,7 +24,11 @@ const MAX_PERFORM_DEPTH: usize = 100;
 /// here (correct to this many places, then rounded to the receiver). This is a
 /// documented simplification — see PL08 — not the full standard rule. 12 places
 /// stays comfortably inside `i128` for realistic magnitudes.
-const COMPUTE_DIV_SCALE: usize = 12;
+///
+/// Public so the `cobol-iir-compiler` frontend can reproduce the **exact same**
+/// intermediate scale when it lowers a nested COMPUTE division — keeping compiled
+/// output byte-identical to this oracle.
+pub const COMPUTE_DIV_SCALE: usize = 12;
 
 /// One field in the data model. Elementary items carry a picture and character
 /// storage; group items (no picture) are the concatenation of their children.

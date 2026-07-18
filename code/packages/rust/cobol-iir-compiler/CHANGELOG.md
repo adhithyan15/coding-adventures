@@ -8,6 +8,47 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.9.0: nested COMPUTE division (scale-12 intermediate) (PL09 step 4)
+
+Division nested inside a larger `COMPUTE` expression (e.g. `A / B + C`) now lowers
+— previously only a **top-level** `COMPUTE r = a / b` did, and a nested division
+was a clean "later rung" error.
+
+- **Semantics.** The oracle carries *every* COMPUTE division at a fixed
+  intermediate precision of `COMPUTE_DIV_SCALE` (12 fractional digits), truncating
+  toward zero, then lets the surrounding operators combine that scale-12 value
+  exactly. `eval_div_nested` reproduces exactly that quotient —
+  `numerator = a · 10^(b.scale + 12)`, `denominator = b · 10^(a.scale)`,
+  `quotient = numerator / denominator` (i64 `div`, truncating toward zero) — and
+  returns it at scale 12. Because dividing by a fraction can *grow* the integer
+  part, the quotient's integer bound is `a.int_bound + a.scale + b.scale`. The
+  scale-12 result then flows through the existing add/subtract/multiply and final
+  round/truncate store, all already proven byte-identical to the oracle.
+- **`COMPUTE_DIV_SCALE` is now re-exported from `cobol-runtime`**, so the frontend
+  reproduces the oracle's *exact* intermediate scale rather than hard-coding a copy
+  that could drift.
+- **i64 guard.** The oracle keeps the scale-12 math exact in `i128`; here the
+  intermediates are `i64`, so a case whose numerator (`a.int + a.scale + b.scale +
+  12` digits) or denominator could exceed the 18-digit model is a clean later rung,
+  never a silent wrap. This still covers the common small-operand computations.
+- **Zero divisor.** A nested division's zero divisor faults the emitted `div`,
+  matching the oracle's hard `DivideByZero`. Because routing a mid-expression zero
+  divisor to an `ON SIZE ERROR` handler would need to wrap the whole evaluation in
+  a skip (which this rung does not), a COMPUTE that pairs `ON SIZE ERROR` with a
+  nested division stays a later rung. A **top-level** division with a handler still
+  lowers as before.
+- **Portability.** The scale-12 quotient is plain `const`/`mul`/`div` — no new
+  opcode and no dynamic strings — so it rides the same scaled-i64 substrate every
+  backend already accepts (wasm / jvm / clr / native-AOT / LLVM / VM / JIT).
+- **Tests.** 4 new `jit_e2e.rs` cases byte-identical to the oracle (`A / B + C`;
+  division as the right operand of `+`; `A / B * C` ROUNDED; a fractional
+  dividend); unit tests for the nested-division lowering, the `ON SIZE ERROR`
+  deferral, and the over-wide-intermediate deferral (the prior "nested division
+  deferred" test now only pins the variable/negative/fractional/oversized `**`
+  exponent); a `backend_compat` `A / B + C` program (wasm/jvm/clr accept the
+  const/mul/div); a `lang_matrix` COBOL nested-division row across all seven
+  columns. Full suite **120 green** (25 unit + 13 `backend_compat` + 82 `jit_e2e`).
+
 ### Added — v0.8.0: COMPUTE exponentiation (`**`) with a constant exponent (PL09 step 4)
 
 `COMPUTE`'s last deferred operator now lowers for the case that covers almost all

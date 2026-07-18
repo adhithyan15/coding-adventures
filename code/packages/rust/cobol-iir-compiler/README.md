@@ -24,7 +24,7 @@ interpreter_ir::IIRModule   (one `main`, returns i64 exit code)
 NativeAOT · LLVM · WASM · JVM · CLR · VM · JIT
 ```
 
-## This slice (v0.8 — the core plus control flow, `COMPUTE` incl. `**`, `ON SIZE ERROR`, signed, alphanumeric)
+## This slice (v0.9 — the core plus control flow, `COMPUTE` incl. `**` and nested `/`, `ON SIZE ERROR`, signed, alphanumeric)
 
 COBOL's WORKING-STORAGE is a **PICTURE-typed** data model. Each elementary item
 becomes one IIR register: a **numeric** item (`PIC 9…`) is an `i64` holding its
@@ -69,7 +69,14 @@ parentheses) bottom-up in the same scaled-`i64` model; every node carries a
 compile-time `(scale, integer-digit)` bound and every combining step is
 overflow-guarded, so an intermediate that could exceed 18 digits is a clean error
 rather than a silent wrap. A **top-level** division reuses the `DIVIDE` verb's
-rounding and zero-divisor handling. **Exponentiation** (`**`) with a compile-time
+rounding and zero-divisor handling. A division **nested** inside a larger
+expression reproduces the oracle's fixed scale-12 intermediate (`COMPUTE_DIV_SCALE`,
+re-exported so the two stay in lockstep): `a / b` becomes
+`(a · 10^(b.scale+12)) / (b · 10^a.scale)` truncated toward zero, a scale-12 value
+the surrounding operators then combine exactly. (Because the scale-12 math is `i64`
+here but `i128` in the oracle, a numerator/denominator that could exceed 18 digits
+is a clean later rung; and a nested division under `ON SIZE ERROR` — whose zero
+divisor would need routing to the handler — is deferred.) **Exponentiation** (`**`) with a compile-time
 non-negative integer exponent `e` unrolls into a chain of `e − 1` `mul`s of the
 base — the oracle computes `base**e` by multiplying `1` by `base` `e` times, so
 the mul-chain's magnitude (`base_scaled^e`) and scale (`e · base.scale`) match it
@@ -97,10 +104,11 @@ figuratives expanded to the partner operand's length.
 
 Each of these is a clean `CompileError::Unsupported` (never wrong output): group
 items, cross-category item `MOVE` (`numeric↔alphanumeric`, which needs runtime
-int↔string conversion), a numeric-vs-alphanumeric comparison, `COMPUTE` division
-nested inside a larger expression, and a `COMPUTE` `**` whose exponent is a
-variable, a parenthesised expression, negative, fractional, or past the oracle's
-`MAX_POW_EXP` (or whose conservative digit bound could exceed the 18-digit model).
+int↔string conversion), a numeric-vs-alphanumeric comparison, a `COMPUTE` nested
+division whose scale-12 intermediate could exceed the 18-digit `i64` model (or one
+paired with `ON SIZE ERROR`), and a `COMPUTE` `**` whose exponent is a variable, a
+parenthesised expression, negative, fractional, or past the oracle's `MAX_POW_EXP`
+(or whose conservative digit bound could exceed the 18-digit model).
 
 ## Usage
 
