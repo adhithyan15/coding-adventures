@@ -128,3 +128,22 @@ fn scaled_decimal_program_accepted_by_print_backends() {
     let m = compile_source(&src, "scaled").unwrap();
     assert_accepted_by_print_backends(&m, "scaled-decimal arithmetic");
 }
+
+#[test]
+fn if_else_program_accepted_by_print_backends() {
+    // IF/ELSE lowers to cmp_* + jmp_if_false + jmp + label. Every print backend
+    // must accept the branch structure and the comparison op.
+    let src = program(&[
+        "IDENTIFICATION DIVISION.",
+        "PROGRAM-ID. P.",
+        "DATA DIVISION.",
+        "WORKING-STORAGE SECTION.",
+        "01  N  PIC 9(3) VALUE 5.",
+        "PROCEDURE DIVISION.",
+        "MAIN.",
+        "    IF N GREATER 3 DISPLAY \"BIG\" ELSE DISPLAY \"SMALL\".",
+        "    STOP RUN.",
+    ]);
+    let m = compile_source(&src, "if").unwrap();
+    assert_accepted_by_print_backends(&m, "if/else branch");
+}

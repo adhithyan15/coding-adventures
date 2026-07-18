@@ -8,6 +8,28 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.4.0: IF / ELSE with relational conditions (PL09 step 4, PR4)
+
+- **`IF condition then-stmts [ELSE else-stmts]`** → a three-way branch: the
+  condition lowers to a boolean register, a `jmp_if_false` skips the then-branch
+  to the else, and a `jmp` past it closes the then-branch. Nested `IF`s recurse.
+- **Relational conditions** (`operand relop operand`): numeric comparison, with
+  operands aligned to a common scale (the same implied-point machinery as ADD),
+  then `cmp_gt` / `cmp_lt` / `cmp_eq`. **`NOT` inverts the relation directly**
+  (NOT GREATER → `cmp_le`, NOT LESS → `cmp_ge`, NOT EQUAL → `cmp_ne`) — the
+  `cmp_*` ops return a `Value::Bool` that `jmp_if_false` consumes, so inverting
+  the boolean with an integer compare would be a type mismatch.
+- **`STOP RUN` inside a branch** ends the program correctly (the branch's `ret`
+  precedes the branch-closing jump, which is then unreachable).
+- **Deferred** (clean `Unsupported`): alphanumeric comparison (space-padded
+  string compare) is a later rung.
+- **Tests.** Unit tests for the branch shape, the negation-as-cmp_le lowering,
+  and the alphanumeric-comparison boundary; six new `jit_e2e.rs` cases
+  (true/false branches, EQUAL/LESS/negated, multi-statement then, STOP-in-branch,
+  scaled comparison by value, nested IF) each byte-identical to the oracle; an
+  IF `backend_compat` program; and an IF `lang_matrix.rs` COBOL row (`5 > 3`
+  → `BIG`).
+
 ### Added — v0.3.0: scaled-decimal ADD/SUBTRACT + item-to-item MOVE (PL09 step 4, PR3)
 
 - **Scaled-decimal `ADD` / `SUBTRACT`** on `PIC …V…` fields. Terms are aligned to
