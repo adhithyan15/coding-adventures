@@ -3,6 +3,18 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.23] - Unreleased
+
+### Fixed
+
+- **`LENGTH()` now accepts blobs and numbers.** It previously errored on
+  anything but text/NULL; `LENGTH` now measures a blob by its raw byte count
+  (`length(x'0102ff')` = 3, `length(x'')` = 0 — distinct from text's character
+  count) and a number by its decimal-text length (`length(12345)` = 5,
+  `length(-7)` = 2), matching SQLite. Blob literals (0.5.42 / this engine's
+  front end) made the blob case reachable from SQL. Floats stay declined (their
+  text form is subtle — same stance as `OCTET_LENGTH`/`HEX`/`QUOTE`).
+
 ## [0.4.22] - Unreleased
 
 ### Fixed

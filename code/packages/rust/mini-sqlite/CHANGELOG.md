@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.45 — LENGTH() over blobs and numbers
+
+`LENGTH(x'0102ff')` now returns 3 (the byte count) instead of erroring, and
+`LENGTH(12345)` returns 5 (decimal-text length). LENGTH previously accepted only
+text/NULL; now a blob measures its raw bytes (distinct from text's *character*
+count) and a number its text-form length, matching SQLite. Blob literals (0.5.42)
+made the blob case reachable from SQL. Two new differential-oracle cases; sql-vm
+0.4.23. Floats remain declined (subtle text form).
+
 ## 0.5.44 — column COLLATE honored in the IN operator
 
 A column declared `COLLATE NOCASE` / `RTRIM` now folds case (etc.) in `IN`
