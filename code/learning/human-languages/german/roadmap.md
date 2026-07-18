@@ -27,6 +27,10 @@ Spanish and French where a contrast helps. The recurring decoder is the
   *adiós*) → bis bald (*bald* = English *bold*) → bis morgen (*Morgen* =
   *morning/morrow*) → practice. **Authored** — completes the ES/FR/DE farewell
   trilogy; the "bis …" family mirrors Spanish *hasta* / French *à*.
+- **Writing nuances** (`GE-W01`–`W03`, type: writing): the eszett ß (ss↔ß vowel
+  length; a long-s+z ligature); the umlauts ä/ö/ü (a shrunken *e*; the fronting
+  that marks plurals — Mann→Männer); Großschreibung (every noun capitalized).
+  **Authored.**
 
 ## Planned
 
