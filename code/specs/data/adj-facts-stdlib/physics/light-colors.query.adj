@@ -1,0 +1,20 @@
+% ============================================================================
+% light-colors.query.adj — a worked recall over the PHYSICS light-colors library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what do the additive
+% primary colors of light combine to make?": it states no physics fact — it only
+% `import`s the grounded table and asks binding queries. The engine resolves each
+% `?` against the `light_primary` rows and returns the answer + the HyperPhysics
+% source/locator/trust. A color that is NOT an additive primary of light — a
+% secondary color such as yellow — abstains honestly; the engine never invents an
+% answer.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli light-colors.query.adj
+% ============================================================================
+
+import "light-colors.adj"
+
+? light_primary(red, $Makes)     % forward: expect white (red is an additive primary)
+? light_primary($Color, white)   % reverse: expect red ; green ; blue
+? light_primary(yellow, $Makes)  % expect abstain — yellow is a SECONDARY color of light

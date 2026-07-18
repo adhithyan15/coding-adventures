@@ -60,6 +60,7 @@ per rotation, in parallel):
 | `physics/` | named wave → its family (sound → mechanical, radio → electromagnetic) | NASA Science (authoritative) |
 | `physics/` | temperature reference point → the value NIST fixes it at (water_boils_celsius → 100, absolute_zero_kelvin → 0) | NIST (authoritative) |
 | `physics/` | magnetic pole pairing → interaction (like_poles → repel, opposite_poles → attract) | NASA Heliophysics Education (authoritative) |
+| `physics/` | Additive primary colors of light — red → white, green → white, blue → white (the three RGB primaries that combine to make white light) | HyperPhysics, Georgia State University (authoritative) |
 | `anatomy/` | lung → number of lobes (right 3, left 2) | NIH / NCI SEER Training |
 | `anatomy/` | brain part → primary function it controls | NIH / NCI SEER Training + StatPearls |
 | `anatomy/` | skeletal muscle → body region it is located in | Wikipedia (consensus) |
