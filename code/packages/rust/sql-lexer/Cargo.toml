@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-sql-lexer"
-version = "0.1.3"
+version = "0.1.4"
 edition = "2021"
 description = "SQL lexer — tokenizes SQL source text using the grammar-driven lexer and the sql.tokens grammar file"
 

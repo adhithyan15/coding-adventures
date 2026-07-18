@@ -731,6 +731,27 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT FORMAT('%d %d', id) AS a, PRINTF('%q', CHAR(39)) AS b FROM t",
     },
+    // Scientific-notation numeric literals: `1e3`, `2.5e2`, `1.5e-3`, `10e+2`.
+    // A literal carrying an exponent is REAL in SQLite (`typeof(1e3)` = 'real',
+    // value 1000.0), even when the value is integral. Previously the lexer's
+    // NUMBER token had no exponent, so `1e3` tokenised as `1` + `e3` (a NAME) and
+    // failed to parse.
+    Case {
+        id: "scientific_notation_literals",
+        setup: &[],
+        query: "SELECT 1e3 AS a, 2.5e2 AS b, 1.5e-3 AS c, 10e+2 AS d, typeof(1e3) AS e, 1E2*2 AS f",
+    },
+    // The exponent must not disturb ordinary subtraction — `5-3` stays `2` (the
+    // `-` is only consumed as an exponent sign directly after `e`/`E`). Also
+    // checks an exponent literal composing in arithmetic and a WHERE predicate.
+    Case {
+        id: "scientific_notation_arithmetic",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, v REAL)",
+            "INSERT INTO t VALUES (1, 2.0), (2, 3.0), (3, 300.0)",
+        ],
+        query: "SELECT id FROM t WHERE v < 2.5e0 OR v = 3e2 ORDER BY id",
+    },
     // A doubled single quote (`''`) inside a string literal is SQL's escape for
     // one literal quote — `'it''s'` is the 4-character string `it's`. Exercises
     // string literals in the SELECT list AND in an INSERT'd row value.
