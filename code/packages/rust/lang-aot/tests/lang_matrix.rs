@@ -3042,6 +3042,27 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("0K"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // COBOL-60 — character item MOVE + alphanumeric comparison (PL09 step 4).
+    // W = "ABCD" moved into V PIC X(2) truncates to "AB" (str_slice); the
+    // space-padded compare `W GREATER "AB"` is true → prints "AB". Proves the
+    // str_slice / str_cmp substrate lowers on every backend that runs strings.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  W  PIC X(4) VALUE \"ABCD\".\n\
+               000000 01  V  PIC X(2).\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     MOVE W TO V.\n\
+               000000     IF W GREATER \"AB\" DISPLAY V.\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("AB"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses

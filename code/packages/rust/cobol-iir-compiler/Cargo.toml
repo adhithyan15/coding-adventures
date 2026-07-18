@@ -1,8 +1,8 @@
 [package]
 name = "cobol-iir-compiler"
-version = "0.6.0"
+version = "0.7.0"
 edition = "2021"
-description = "COBOL-60 frontend for the LANG VM AOT chain — lowers a parsed COBOL program into interpreter_ir::IIRModule so it runs on every execution backend. v0.6.0: DISPLAY / MOVE / STOP RUN, integer + scaled-decimal (PIC …V…) ADD/SUBTRACT/MULTIPLY/DIVIDE with ROUNDED and ON SIZE ERROR, numeric item-to-item MOVE reshaping, IF/ELSE with relational conditions, GO TO and PERFORM (paragraph / TIMES / UNTIL / VARYING / THRU), COMPUTE with operator precedence, and signed numerics (PIC S9…, trailing overpunch DISPLAY) — over scaled-i64 slots, byte-identical to the cobol-runtime oracle. Group items and alphanumeric comparison remain later rungs. See PL09-codegen.md."
+description = "COBOL-60 frontend for the LANG VM AOT chain — lowers a parsed COBOL program into interpreter_ir::IIRModule so it runs on every execution backend. v0.7.0: DISPLAY / MOVE / STOP RUN, integer + scaled-decimal (PIC …V…) ADD/SUBTRACT/MULTIPLY/DIVIDE with ROUNDED and ON SIZE ERROR, numeric and character item-to-item MOVE reshaping, IF/ELSE with numeric and alphanumeric (space-padded) conditions, GO TO and PERFORM (paragraph / TIMES / UNTIL / VARYING / THRU), COMPUTE with operator precedence, and signed numerics (PIC S9…, trailing overpunch DISPLAY) — over scaled-i64 slots and str slots, byte-identical to the cobol-runtime oracle. Group items and cross-category MOVE remain later rungs. See PL09-codegen.md."
 
 [dependencies]
 coding-adventures-cobol-parser  = { path = "../cobol-parser" }

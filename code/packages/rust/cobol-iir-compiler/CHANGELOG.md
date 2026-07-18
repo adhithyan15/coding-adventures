@@ -8,6 +8,35 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.7.0: alphanumeric item MOVE and comparison (PL09 step 4)
+
+The two most commonly-hit character-handling "later rung" errors now lower,
+byte-identical to the oracle. Both reduce to **fixed-length** string ops because
+a character item's stored image is always exactly its declared width and all
+item sizes are known at compile time.
+
+- **Character item-to-item `MOVE`** reshapes the source into the receiver's
+  picture exactly as the oracle's `move_into_char`: keep the leftmost `N`
+  characters when `N ≤ M` (one `str_slice`), else left-justify and space-pad on
+  the right (one `str_concat`). Cross-category (`numeric↔alphanumeric`) moves
+  stay a clean later rung.
+- **Alphanumeric comparison in `IF`** — `emit_condition` now classifies each
+  operand (numeric vs character) and dispatches. A character comparison
+  space-pads both sides to their common (max) length and applies `str_cmp`
+  (byte-lexical, matching the oracle's space-padded `String` compare);
+  `SPACE`/`ZERO` figuratives expand to the other operand's length. `str_cmp`
+  returns an `i64` ordering (−1/0/1), so the relation is applied with `cmp_* … 0`
+  (no `Bool` mismatch). The relation→`cmp_*` mapping is shared with the numeric
+  path via `relation_op`. A numeric operand compared with an alphanumeric one,
+  and two figuratives with no fixed length to borrow, are later rungs.
+- **Tests.** 8 new `jit_e2e.rs` cases (MOVE truncate / space-pad / same-size;
+  equal / not-equal; lexicographic ordering; shorter-literal padding; `SPACES`
+  figurative; move-then-compare round-trip) each byte-identical to the oracle;
+  unit tests for validation and the deferred cross-category move; a
+  `backend_compat` alphanumeric program (wasm/jvm/clr accept the `str_slice` /
+  `str_concat` / `str_cmp` shapes); a `lang_matrix` COBOL row. Full suite **103
+  green** (20 unit + 11 `backend_compat` + 72 `jit_e2e`).
+
 ### Added — v0.6.0: control flow, COMPUTE, ON SIZE ERROR, signed numerics (PL09 step 4)
 
 A consolidated slice completing the COBOL-60 language surface this compiler
