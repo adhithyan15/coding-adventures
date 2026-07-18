@@ -1,0 +1,111 @@
+% ============================================================================
+% precipitation-types — the common types of precipitation and the defining
+% physical form each one is / reaches the ground as (adj-facts-stdlib,
+% METEOROLOGY).
+% ============================================================================
+% One of the first big ideas of weather watching, and a rung a FORECASTING agent
+% reasons UP from: the water that falls out of the sky arrives in a handful of
+% distinct FORMS, and the National Weather Service names each one by the shape of
+% water it is. "Rain is liquid drops; snow is ice crystals; sleet reaches the
+% ground as frozen rain drops; freezing rain is liquid that glazes to ice on
+% contact; hail is balls of ice from a thunderstorm." Before you can reason about
+% a winter storm, a road-ice warning, or a severe-weather report you must first
+% know WHICH precipitation type you are looking at. Recall is a binding query:
+%
+%     ? precip_form(snow, $Form)      % ice_crystals
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `precip_form(precip, form)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the form
+% WITH its source, on the CPU, with zero model calls, and abstains on a word that
+% is not one of these precipitation types (it never invents a form).
+%
+% Each precipitation type and the defining physical form the source states for
+% it, as a little truth table:
+%
+%     precipitation type   defining physical form   a beginner's cue
+%     ------------------   ----------------------   -----------------------------
+%     rain                 drops                    liquid water drops
+%     snow                 ice_crystals             snowflakes are ice crystals
+%     sleet                frozen_raindrops         ice pellets that bounce
+%     freezing_rain        glaze_of_ice             rain that freezes on contact
+%     hail                 balls_of_ice             from a thunderstorm cloud
+%
+% The query also runs BACKWARD — bind a form and recall its precipitation type:
+%
+%     ? precip_form($Precip, balls_of_ice)   % hail
+%
+% A word that is NOT one of these precipitation types — `fog`, `dew`, `mist` —
+% is deliberately NOT a row, so a precipitation recall ABSTAINS on it rather than
+% inventing a form. (Fog is a suspension of droplets, not falling precipitation;
+% it is left out on purpose.) That honest-abstention property is what makes the
+% table safe to build a reasoner on: it answers exactly the type→form pairs it
+% can ground, and only those.
+%
+% The `form` value of every row is a SINGLE lowercase atom, chosen to be the
+% defining physical form the source EXPLICITLY states for that type — never one
+% the source does not support. Each atom uses the source's own word (the NWS says
+% snowflakes are "ice crystals"; sleet reaches the ground as "frozen rain drops";
+% freezing rain creates "a glaze of ice"; hail is "balls of ice"), so every value
+% stays literally checkable against the quoted span.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every type→form pair below
+% was read out of a fetched U.S. National Weather Service (NOAA) page, and any
+% pair whose form could not be verified there would have been dropped). Each
+% pair, with the primary source it was copied from and the verbatim span that
+% states it:
+%
+%   rain → drops
+%     https://forecast.weather.gov/glossary.php?word=RAIN
+%     (NOAA National Weather Service Glossary — U.S. government)
+%     "Precipitation that falls to earth in drops more than 0.5 mm in diameter."
+%
+%   snow → ice_crystals
+%     https://www.weather.gov/iwx/sleetvsfreezingrain
+%     (NOAA National Weather Service — U.S. government)
+%     "Snowflakes are just collections of ice crystals that cling to each other
+%      as they fall toward the ground."
+%
+%   sleet → frozen_raindrops
+%     https://www.weather.gov/iwx/sleetvsfreezingrain
+%     (NOAA National Weather Service — U.S. government)
+%     "These slushy drops refreeze as they next fall through a deep layer of
+%      freezing air above the surface, and eventually reach the ground as frozen
+%      rain drops that bounce on impact."
+%
+%   freezing_rain → glaze_of_ice
+%     https://www.weather.gov/iwx/sleetvsfreezingrain
+%     (NOAA National Weather Service — U.S. government)
+%     "...they instantly refreeze upon contact with anything that that is at or
+%      below freezing (32 degrees F), creating a glaze of ice."
+%
+%   hail → balls_of_ice
+%     https://forecast.weather.gov/glossary.php?word=HAIL
+%     (NOAA National Weather Service Glossary — U.S. government)
+%     "Showery precipitation in the form of irregular pellets or balls of ice
+%      more than 5 mm in diameter, falling from a cumulonimbus cloud."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the NWS Glossary statement that
+% fixes the first row (rain → drops). Every OTHER row's per-fact source and
+% verbatim span is listed above, so each form remains independently checkable.
+% All sources are the NOAA National Weather Service, a primary U.S. government
+% source, so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table precip_form {
+    columns precip, form
+
+    row (rain, drops)
+    row (snow, ice_crystals)
+    row (sleet, frozen_raindrops)
+    row (freezing_rain, glaze_of_ice)
+    row (hail, balls_of_ice)
+
+    source "Precipitation that falls to earth in drops more than 0.5 mm in diameter."
+    locator "https://forecast.weather.gov/glossary.php?word=RAIN"
+    trust authoritative
+}

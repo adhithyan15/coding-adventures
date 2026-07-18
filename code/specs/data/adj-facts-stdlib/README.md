@@ -97,6 +97,7 @@ per rotation, in parallel):
 | `anatomy/` | respiratory part → function it performs (trachea → main_airway, alveoli → gas_exchange, diaphragm → contracts_inspiration) | NIH / NCI SEER Training (authoritative) |
 | `geology/` | Mohs reference mineral → whole-number hardness (talc → 1, quartz → 7, diamond → 10) | NPS "Mohs Hardness Scale" (authoritative) |
 | `meteorology/` | Beaufort wind force number → the name the source gives it (0 → calm, 6 → strong_breeze, 12 → hurricane) | NWS Beaufort Wind Scale (authoritative) |
+| `meteorology/` | precipitation type → defining physical form (snow → ice_crystals, sleet → frozen_raindrops, hail → balls_of_ice) | NOAA National Weather Service (authoritative) |
 | … | *geography, physical constants, …* | *(expanding)* |
 
 Formulas and laws (Newton's `F = ma`, the ideal gas law `PV = nRT`, area/volume, …) are grown
