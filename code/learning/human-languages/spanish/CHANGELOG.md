@@ -1,5 +1,42 @@
 # Changelog
 
+## Writing nuances — the accent, the ñ, the inverted marks
+
+- **First `writing`-type lessons** (`ES-W01-acento`, `ES-W02-enye`,
+  `ES-W03-inverted`): orthography taught the same etymology-first way as the
+  vocabulary, once enough accented words have accumulated to make it concrete.
+  Each names the mark, explains *why* it exists, and says how to draw it.
+- **The acute accent** (`á é í ó ú`): Spanish's only accent mark, its two jobs
+  (irregular-stress marker + the diacrítica that splits *tu/tú, el/él, si/sí,
+  se/sé, mas/más, como/cómo, que/qué*), and the rule that question words carry it.
+- **ñ**: the tilde as a frozen medieval shorthand for a doubled *nn* (Latin
+  *annus* → *año*, cousin of *annual/anniversary*); ñ as a distinct letter, not
+  an accented n.
+- **¿ ¡**: why Spanish opens a question/exclamation (word order often doesn't
+  change, so the reader needs an early intonation cue — Royal Academy, 1754),
+  and that they bracket the *question*, not necessarily the sentence.
+- These use the new `writing` lesson type in `@coding-adventures/human-language-data`
+  (0.3.0) — exempt from the concept join, no `concept_tag`.
+
+## Chapter 4 — Responding to "¿cómo está usted?"
+
+- **Chapter 4 authored** (`ES-C04-gracias`, `-de-nada`, `-estar`, `-como-esta`,
+  `-regular`, `-practice`): the "how are you?" exchange, built atom-first and
+  reviewing Chapter 3 throughout. Each lesson stays 3–5 minutes and folds prior
+  words back in via `reviews_of`.
+- **The two "to be" verbs.** *estar* is introduced as the *temporary* be-verb
+  (← Latin *stāre*, "to stand" → stay/state/status/estate) and explicitly
+  contrasted with *ser* (identity). "How are you?" is framed as *estar* because
+  it asks about your current state.
+- **Deep etymology hooks**, per the curriculum's method: *gracias* ← *grātia*
+  (grace/grateful/gratis/congratulate); *de nada* ← *(rēs) nāta* "a born thing"
+  → "nothing" (cousin of native/nature/natal, mirroring French *rien* ← *rem*);
+  *regular* ← *rēgula* "straight rod" (rule/ruler/regulate/rail) and flagged as
+  a false friend (so-so, not "normal"); *más o menos* ← *magis* + *minus*.
+- **Taxonomy additions**: canonical `COURTESY-YOUREWELCOME`, `STATE-HOW-ARE-YOU`,
+  `WORD-SOSO` (all `core:false`), plus namespaced `ES-VERB-ESTAR` documented in
+  the examples list, and `CH4-PRACTICE` added to the practice-tag note.
+
 ## Slug-based lesson ids + el/la before día
 
 - **Stopped numbering lessons.** Ordinal ids (`ES-C01-L03`) forced a

@@ -84,6 +84,20 @@ describe("validate", () => {
     expect(issues.some((i) => i.code === "unknown-type")).toBe(true); // quiz flagged
   });
 
+  it("accepts a `writing` (orthography) lesson with no concept_tag", () => {
+    // A writing-nuance lesson teaches a mark, not a word: its headword is the
+    // mark itself and it carries no concept_tag, so it must be exempt from the
+    // concept join and must NOT be flagged as an unknown type.
+    const acento = parseLesson(
+      lesson({ id: "ES-W01-acento", chapter: "1", type: "writing", headword: "◌́", gloss: "the acute accent", concept_tag: "" }),
+      "spanish",
+    );
+    const issues = validate({ taxonomy, lessons: [acento] });
+    expect(issues.some((i) => i.code === "unknown-type")).toBe(false); // writing is known
+    expect(issues.some((i) => i.code === "missing-concept")).toBe(false); // no concept required
+    expect(issues.some((i) => i.code === "unresolved-concept")).toBe(false);
+  });
+
   it("treats missing core coverage as info, but as error for parity-complete tracks", () => {
     const lessons = [good("spanish", "ES1", "GREETING-HELLO")]; // missing COURTESY-THANKS
     const infoIssues = validate({ taxonomy, lessons });
