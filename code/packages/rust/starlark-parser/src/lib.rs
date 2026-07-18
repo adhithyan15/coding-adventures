@@ -5,10 +5,47 @@ use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 
 mod _grammar;
 
+/// Recursion-depth cap for the Starlark [`GrammarParser`] — see
+/// [`GrammarParser::with_max_depth`] for why this guard exists at all (deep
+/// recursion through `parse_rule` can overflow the *native* thread stack —
+/// an uncatchable process abort — before this crate's own callers get a
+/// chance to report anything). Before this constant was applied,
+/// `create_starlark_parser` never called `with_max_depth` at all, leaving
+/// every caller exposed to a native-stack-overflow DoS from adversarial
+/// deeply-nested input (e.g. `x = (((...1...)))`).
+///
+/// **Not the shared engine's bare default** (see `csharp-parser`'s own
+/// identically-named constant for why a blind
+/// [`DEFAULT_MAX_RULE_DEPTH`](parser::grammar_parser::DEFAULT_MAX_RULE_DEPTH)
+/// (128) is unsafe-for-usability on a rich general-purpose grammar).
+/// Measured directly instead (binary search over candidate
+/// `with_max_depth` values against a fixed 5000-level adversarial
+/// `x = (((...1...)))` input — ordinary parenthesised grouping, via
+/// `paren_expr = LPAREN [ paren_body ] RPAREN` — on a default-~2MiB-stack
+/// worker thread in a debug build): safe at **272**, crashes at **273**.
+///
+/// `MAX_RULE_DEPTH` is set to **190** — about 30% below that floor
+/// (comparable margin to `python-parser`'s own ~30%, `sql-parser`'s ~30%,
+/// `verilog-parser`'s/`vhdl-parser`'s ~31%). Measured real-input headroom
+/// at `190`: plain parenthesised nesting parses cleanly to at least 9
+/// levels, matching ordinary hand-written nesting depth.
+///
+/// Starlark's expression grammar has roughly a dozen distinct
+/// self-referential recursion shapes beyond paren-grouping (chained
+/// ternaries via `test`, nested `lambda_expr`, chained `not`/unary
+/// operators, `power` exponent chains, nested `list_expr`/`dict_expr`
+/// literals, nested call/subscript suffixes in `primary`, and nested
+/// `if`/`for`/`def` block bodies via `suite`) — this pass measures only
+/// **one** of them (paren-grouping), the way `ruby-parser`'s own
+/// `MAX_RULE_DEPTH` documents a single-shape measurement across its much
+/// larger shape inventory. A full multi-shape audit (the `css-parser`/
+/// `toml-parser` treatment) is a tracked follow-up.
+const MAX_RULE_DEPTH: usize = 190;
+
 pub fn create_starlark_parser(source: &str) -> GrammarParser {
     let tokens = tokenize_starlark(source);
     let grammar = _grammar::parser_grammar();
-    GrammarParser::new(tokens, grammar)
+    GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH)
 }
 
 pub fn parse_starlark(source: &str) -> GrammarASTNode {
@@ -224,6 +261,36 @@ mod tests {
 
         let has_list = find_rule(&ast, "list_expr");
         assert!(has_list, "Expected to find a list_expr rule in the AST");
+    }
+
+    // -----------------------------------------------------------------------
+    // Recursion-depth guard (DoS hardening) -- see MAX_RULE_DEPTH's own
+    // doc comment for the measurement.
+    // -----------------------------------------------------------------------
+
+    fn nested_paren_source(n: usize) -> String {
+        format!("x = {}1{}\n", "(".repeat(n), ")".repeat(n))
+    }
+
+    /// Deeply-nested input must not overflow the native stack on a
+    /// default-stack thread -- the whole point of the guard.
+    #[test]
+    fn test_deeply_nested_input_does_not_overflow_on_default_stack() {
+        let src = nested_paren_source(5000);
+        let handle = std::thread::spawn(move || {
+            let mut parser = create_starlark_parser(&src);
+            let _ = parser.parse();
+        });
+        handle
+            .join()
+            .expect("MAX_RULE_DEPTH must trip BEFORE native overflow on the default stack");
+    }
+
+    /// Reasonable, hand-writable nesting stays well under the cap.
+    #[test]
+    fn test_reasonable_nesting_stays_under_the_cap() {
+        let mut parser = create_starlark_parser(&nested_paren_source(9));
+        assert!(parser.parse().is_ok());
     }
 
     // -----------------------------------------------------------------------
