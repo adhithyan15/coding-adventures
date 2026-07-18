@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.5.52 — integer arithmetic overflow promotes to REAL
+
+`SELECT 9223372036854775807 + 1` now returns `9.2233720369e18` (real) instead of
+erroring. When the exact `i64` result of `+`/`-`/`*` or unary `-` overflows,
+SQLite redoes the operation in floating point and yields a REAL — never an error
+or a wrap. `min_i64 - 1`, `max_i64 * 2`, and `-(min_i64)` all promote likewise;
+`typeof` of an overflowed result is `'real'`. Non-overflowing arithmetic still
+returns INTEGER. Fixed in sql-vm 0.4.29 (`checked_int_binop` + unary `Neg`). One
+new differential-oracle case. (The `i64::MIN / -1` division/modulo edge, which is
+entangled with SQLite's integer-coercing `%` operator, is a separate follow-up.)
+
 ## 0.5.51 — scientific-notation numeric literals
 
 `SELECT 1e3` now parses (→ `1000.0`), along with `2.5e2`, `1.5e-3`, `10e+2`, and

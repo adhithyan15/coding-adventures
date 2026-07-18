@@ -1561,6 +1561,19 @@ const CASES: &[Case] = &[
         setup: &["CREATE TABLE t (id INTEGER)", "INSERT INTO t VALUES (1)"],
         query: "SELECT (7 / 2) AS a, (-7 / 2) AS b, (7 % 3) AS c, (7.0 / 2) AS d FROM t",
     },
+    // Integer arithmetic OVERFLOW promotes to REAL, matching SQLite: when the
+    // exact i64 result of `+`/`-`/`*` (or unary `-`) does not fit, SQLite redoes
+    // the operation in floating point and returns a REAL rather than erroring or
+    // wrapping. `max_i64 + 1` = 9.2233720369e18 (real), `min_i64 - 1` likewise,
+    // `max_i64 * 2` = 1.8446744074e19, and `-(min_i64)` = 9.2233720369e18.
+    // Previously mini errored ("integer overflow in addition"). Non-overflowing
+    // arithmetic still returns INTEGER (the last two columns guard against
+    // over-promoting the common case).
+    Case {
+        id: "int_overflow_promotes_to_real",
+        setup: &[],
+        query: "SELECT 9223372036854775807 + 1 AS a, typeof(9223372036854775807 + 1) AS at, -9223372036854775807 - 2 AS b, 9223372036854775807 * 2 AS c, -(-9223372036854775808) AS d, 100 + 200 AS e, typeof(100 + 200) AS et",
+    },
     // Binary arithmetic applies NUMERIC affinity to text/blob operands, matching
     // SQLite: `'5'+0` = 5 (integer), `'5.5'+0` = 5.5 (real), `'abc'+1` = 1 (no
     // numeric prefix → 0), `'12abc'+0` = 12, and `'10'-'3'` = 7 (both coerced).
