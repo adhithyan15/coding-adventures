@@ -925,26 +925,45 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
                             PropertyKey::PrivateName(p) => PropertyKey::PrivateName(p.clone()),
                             PropertyKey::StringLiteral(s) => PropertyKey::StringLiteral(s.clone()),
                             PropertyKey::NumericLiteral(n) => {
-                                // A NON-INTEGER numeric object key must be QUOTED:
-                                // its property name is the ECMAScript `ToString` of
-                                // the value, so Closure prints `{0.5:1}` as
-                                // `{"0.5":1}` (a string key), never the bare number.
-                                // (An integer key stays numeric — the emitter prints
-                                // `{1:1}` unquoted.) We convert only finite
-                                // non-integers in JS's plain-decimal `ToString` range
-                                // `[1e-6, 1e21)`, where `format_js_number` (shortest
-                                // round-trip) equals JS `ToString` exactly. Tiny
-                                // (`<1e-6`) or huge non-integers take exponent forms
-                                // (`1e-7` → `"1e-7"`), and large integers (`>2^53`)
-                                // take precision-quoting forms — both a separate
-                                // follow-up, so they stay numeric here (valid output,
-                                // just not yet byte-identical).
+                                // A numeric object key's property name is the
+                                // ECMAScript `ToString` of the value, so Closure
+                                // prints most numeric keys as a QUOTED string
+                                // (`{0.5:1}` → `{"0.5":1}`, `{1e21:0}` → `{"1e+21":0}`).
+                                // It keeps a key BARE (numeric) in exactly one case:
+                                // a non-negative integer strictly below 2^53
+                                // (`Number.MAX_SAFE_INTEGER + 1`). Oracle-verified
+                                // against the reference jar:
+                                //
+                                //   bare:   {0:_} {100:_} {4294967296:_} {1e15:_}
+                                //           {9007199254740991:_}   (all < 2^53 ints)
+                                //   quoted: {1.5:_}→"1.5"  {0.5:_}→"0.5"
+                                //           {1e-7:_}→"1e-7"  {1e-6:_}→"0.000001"
+                                //           {1e20:_}→"100000000000000000000"
+                                //           {1e21:_}→"1e+21"
+                                //           {9007199254740992:_}→"9007199254740992"
+                                //           (2^53 and up, and every non-integer)
+                                //
+                                // The bare-eligible integers are emitted numerically
+                                // by the printer, which independently minifies them
+                                // (`{4e9:_}` → `{4E9:_}`) — matching Closure, whose
+                                // own number printer does the same. Since 2^53 is the
+                                // safe-integer bound, every bare key round-trips
+                                // losslessly. `format_js_number` (now JS-`ToString`-
+                                // exact across the whole range) supplies the quoted
+                                // name, so a huge integer or an exponential-form value
+                                // gets its precise V8 spelling.
+                                //
+                                // A non-finite key can only be `+Infinity` (an
+                                // overflowing literal like `1e400`; `-Infinity`/`NaN`
+                                // are not valid numeric key literals). Closure leaves
+                                // it BARE as `Infinity`, so the `is_finite()` guard
+                                // routes it to the else arm (the printer emits
+                                // `Infinity`), matching the reference compiler.
+                                const TWO_POW_53: f64 = 9_007_199_254_740_992.0;
                                 let v = n.value;
-                                if v.is_finite()
-                                    && v.fract() != 0.0
-                                    && v.abs() >= 1e-6
-                                    && v.abs() < 1e21
-                                {
+                                let bare_safe_integer =
+                                    v.fract() == 0.0 && (0.0..TWO_POW_53).contains(&v);
+                                if v.is_finite() && !bare_safe_integer {
                                     let name = format_js_number(v);
                                     let new_cv =
                                         st.fork_cv(&p.cv, &format!("{{{name}:…}}"), &format!("{{\"{name}\":…}}"));
@@ -5616,6 +5635,50 @@ fn js_to_number(input: &str) -> f64 {
     normalised.parse::<f64>().unwrap_or(f64::NAN)
 }
 
+/// Render `n` exactly as JavaScript's `Number.prototype.toString()` (base 10)
+/// would — the ECMAScript `Number::toString` algorithm (ECMA-262 §6.1.6.1.20 /
+/// legacy §7.1.12.1). This is the string a number *becomes* when it is coerced:
+/// `String(n)`, a template substitution `` `${n}` ``, and — the reason this must
+/// be JS-exact — an object property key, since `{[n]: v}` stores `v` under the
+/// key `ToString(n)` (so `{1e21: 0}` is `{"1e+21": 0}`, quoted).
+///
+/// ## Why Rust's own formatting is not enough
+///
+/// Rust's `f64::to_string()` prints the shortest decimal that round-trips, but
+/// it chooses *positional vs. exponential* notation by different thresholds than
+/// JS, and the previous implementation here had two concrete bugs:
+///
+///   * `n as i64` **saturates**: an integral `1e20` (which is `< 1e21` but far
+///     above `i64::MAX ≈ 9.2e18`) clamped to `9223372036854775807` — a totally
+///     different number. Only `|n| < 2^63` is a lossless `i64`.
+///   * exponential-range values (`|n| ≥ 1e21`, or `|n| < 1e-6`) fell through to
+///     `n.to_string()`, whose spelling (`"1000000000000000000000"` vs JS
+///     `"1e+21"`) does not match V8.
+///
+/// ## The algorithm
+///
+/// Take the shortest round-tripping significant digits and their base-10
+/// exponent from Rust's `{:e}` (which normalises to `D` or `D.DDD…` × 10^E), so
+/// `digits` are those significant figures, `k = digits.len()`, and `point =
+/// E + 1` is ECMAScript's `n` (the count of digits to the left of the decimal
+/// point). Then the spec's four positional cases decide the spelling:
+///
+/// | condition                | form                                    |
+/// |--------------------------|-----------------------------------------|
+/// | `point > 21` or `≤ −6`   | exponential: `d[.ddd]e±(point−1)`       |
+/// | `point ≤ 0`              | `0.` + `−point` zeros + digits          |
+/// | `point ≥ k`              | digits + `point−k` trailing zeros       |
+/// | `0 < point < k`          | digits split by a point after `point`   |
+///
+/// The exponential sign is always explicit (`e+21`, `e-7`) — unlike the emitter's
+/// *code-literal* number rendering, which prints `1E21` (uppercase, no sign) to
+/// match Closure's `CodePrinter`. Those are deliberately different renderings for
+/// different jobs: a minified numeric literal in code vs. a coerced string value.
+///
+/// Worked examples (all cross-checked against V8's `String(n)`):
+/// `1e20`→`"100000000000000000000"`, `1e21`→`"1e+21"`, `1e-6`→`"0.000001"`,
+/// `1e-7`→`"1e-7"`, `123456789012345680000`→`"123456789012345680000"`,
+/// `5e-324`→`"5e-324"`, `-0`→`"0"` (JS drops the sign of `-0` in `ToString`).
 fn format_js_number(n: f64) -> String {
     if n.is_nan() {
         return "NaN".to_string();
@@ -5628,12 +5691,51 @@ fn format_js_number(n: f64) -> String {
         };
     }
     if n == 0.0 {
+        // Both `+0` and `-0`: `String(-0) === "0"` in JS (the sign is dropped by
+        // `ToString`, unlike a numeric literal in code). `n == 0.0` is `true` for
+        // both zeros, so this single branch covers them.
         return "0".to_string();
     }
-    if n.fract() == 0.0 && n.abs() < 1e21 {
-        return format!("{}", n as i64);
+
+    let negative = n < 0.0;
+    // `{:e}` gives the shortest round-tripping mantissa and a base-10 exponent:
+    // `format!("{:e}", 123456789012345680000f64)` → `"1.2345678901234568e20"`.
+    // The mantissa always has exactly one digit before the point.
+    let sci = format!("{:e}", n.abs());
+    let (mantissa, exp_str) = sci.split_once('e').expect("`{:e}` always yields an 'e'");
+    let exp: i32 = exp_str.parse().expect("`{:e}` exponent is a valid integer");
+    // Drop the point to get the raw significant digits; `point = exp + 1`.
+    let digits: String = mantissa.chars().filter(|c| *c != '.').collect();
+    let k = digits.len() as i32;
+    let point = exp + 1;
+
+    let body = if point > 21 || point <= -6 {
+        // Exponential: first digit, optional `.` + rest, then `e±(point-1)`.
+        let e = point - 1;
+        let sign = if e >= 0 { '+' } else { '-' };
+        let mantissa_out = if digits.len() > 1 {
+            format!("{}.{}", &digits[..1], &digits[1..])
+        } else {
+            digits.clone()
+        };
+        format!("{mantissa_out}e{sign}{}", e.abs())
+    } else if point <= 0 {
+        // Small magnitude in `(−6, 0]`: `0.` then `−point` leading zeros, digits.
+        format!("0.{}{}", "0".repeat((-point) as usize), digits)
+    } else if point >= k {
+        // Integral: all digits, then `point − k` trailing zeros to reach `point`.
+        format!("{}{}", digits, "0".repeat((point - k) as usize))
+    } else {
+        // Fraction with `point` digits before the decimal point.
+        let p = point as usize;
+        format!("{}.{}", &digits[..p], &digits[p..])
+    };
+
+    if negative {
+        format!("-{body}")
+    } else {
+        body
     }
-    n.to_string()
 }
 
 // ---------------------------------------------------------------------
@@ -5989,10 +6091,13 @@ fn fold_conditional(c: &ConditionalExpression, st: &mut FoldState) -> Expression
     //
     // When `t` IS impure, Closure instead rewrites to the comma sequence
     // `(t, X)` to preserve the effect (`f()?b:b`→`(f(),b)`, `(a=1)?b:b`→
-    // `(a=1,b)`). That is a DIFFERENT, larger transform (it must build a
-    // `SequenceExpression` and reason about the result position); we DECLINE it
-    // here — leaving the impure-test ternary intact, which is sound — and file
-    // it as a follow-up rather than ship a partial version.
+    // `(a=1,b)`): both arms yield `X`, so the value is `X` regardless of how `t`
+    // decides, but `t`'s own evaluation must still happen and must happen FIRST.
+    // A `SequenceExpression [t, X]` evaluates `t` then `X`, left to right, and
+    // yields `X` — identical to the ternary's evaluation order (`t` once, `X`
+    // once, no re-ordering, so no `valueOf`/`ToNumber` coercion hazard). The
+    // emitter parenthesises a sequence in argument / sub-expression position, so
+    // `w(f()?x:x)` prints `w((f(),x))`, matching the reference compiler.
     //
     // Branch equality uses derived structural `==`. In the default pipeline
     // every node carries `cv: None` (the bridge stamps `None`, and folding an
@@ -6000,12 +6105,20 @@ fn fold_conditional(c: &ConditionalExpression, st: &mut FoldState) -> Expression
     // Under `--correlation_vector` the two arms may carry distinct minted CVs;
     // then `==` is `false` and we conservatively DECLINE — a sound miss, never
     // a miscompile.
-    if is_side_effect_free(&test) && consequent == alternate {
+    if consequent == alternate {
         let parent = c.cv.clone();
-        let before = "t ? X : X".to_string();
-        let after = "X".to_string();
-        let _new_cv = st.fork_cv(&parent, &before, &after);
-        return consequent;
+        if is_side_effect_free(&test) {
+            // Pure test: the branch on `t` is dead AND `t` has no effect, so the
+            // whole conditional is just `X` (`a?b:b`→`b`, `a?1:1`→`1`).
+            let _new_cv = st.fork_cv(&parent, "t ? X : X", "X");
+            return consequent;
+        }
+        // Impure test: keep `t`'s effect via the comma sequence `(t, X)`.
+        let new_cv = st.fork_cv(&parent, "t ? X : X", "(t,X)");
+        return Expression::SequenceExpression(SequenceExpression {
+            cv: new_cv,
+            expressions: vec![test, consequent],
+        });
     }
 
     Expression::ConditionalExpression(ConditionalExpression {
@@ -6644,12 +6757,29 @@ mod tests {
     // ------------------- deep-chain DoS regression -------------------
 
     /// A very deep left-nested operator chain — the shape the bridge builds
-    /// for flat source like `1+1+…+1` (tens of thousands of terms) — must fold
-    /// without overflowing the native stack. The bottom-up `fold_binary` walk
-    /// recurses once per operator; on the caller's ordinary ~2 MiB stack this
-    /// used to overflow (an uncatchable abort). The large-stack worker
-    /// (`FOLD_STACK_SIZE`) absorbs the recursion and still folds the whole
-    /// chain to a single number.
+    /// for flat source like `1+1+…+1` (thousands of terms) — must fold without
+    /// overflowing the native stack. The bottom-up `fold_binary` walk recurses
+    /// once per operator; on the caller's ordinary ~2 MiB stack this used to
+    /// overflow (an uncatchable abort). The large-stack worker
+    /// (`FOLD_STACK_SIZE`, 128 MiB) absorbs the recursion and still folds the
+    /// whole chain to a single number.
+    ///
+    /// ## Why `N = 6_000` and not more
+    ///
+    /// This is a *regression guard* that the worker exists and is used — NOT a
+    /// measurement of the maximum foldable depth. `N` only has to be deep enough
+    /// that folding on the caller's ~2 MiB stack WOULD overflow (each
+    /// `fold_binary` frame is several KiB, so a few thousand levels already blow
+    /// past 2 MiB by an order of magnitude), while sitting comfortably inside
+    /// the 128 MiB worker with room to spare. An earlier `N = 20_000` sat right
+    /// at the worker's edge (~6-7 KiB/frame × 20 000 ≈ the full 128 MiB), so on
+    /// CI runners — fatter debug frames, higher memory pressure under parallel
+    /// tests — it aborted nondeterministically (~2/3 of runs) even though it
+    /// passed locally. `6_000` keeps ~4× headroom under the worker while still
+    /// proving the property. (Truly bounding *production* recursion against a
+    /// hostile deep input is a separate, larger transform — a recursion-depth
+    /// limit that declines to fold rather than a bigger stack — tracked apart
+    /// from this test's reliability fix.)
     #[test]
     fn deeply_nested_binary_chain_folds_without_stack_overflow() {
         const N: usize = 6_000;
@@ -6663,13 +6793,13 @@ mod tests {
             });
         }
         let prog = program_with_expr(expr, false);
-        // `fold_program` runs its recursion on the 64 MiB `FOLD_STACK_SIZE`
+        // `fold_program` runs its recursion on the 128 MiB `FOLD_STACK_SIZE`
         // worker, so this depth folds fine even though the test runs on cargo's
         // ~2 MiB thread. Without the worker, `fold_binary`'s per-operator
         // recursion overflows here — so a regression re-breaks this test. The
-        // 20 000-deep *input* AST's own recursive `Drop` would ALSO overflow
-        // this small thread (orthogonal), so we run the pass by reference and
-        // `forget` the input; the shallow folded output drops fine.
+        // deep *input* AST's own recursive `Drop` would ALSO overflow this small
+        // thread (orthogonal), so we run the pass by reference and `forget` the
+        // input; the shallow folded output drops fine.
         let pass = ConstantFoldPass::new();
         let sidecar = Sidecar::new();
         let mut cv = CVLog::new(true);
@@ -6686,6 +6816,63 @@ mod tests {
             other => panic!("expected a single folded number, got {other:?}"),
         }
         std::mem::forget(prog);
+    }
+
+    // ------------------- JS-exact Number::toString -------------------
+
+    /// `format_js_number` must reproduce V8's `String(n)` byte-for-byte. Every
+    /// expected value below was generated by running `String(n)` under Node
+    /// (V8), so this table is a direct conformance check against a real JS
+    /// engine — covering the positional/exponential boundaries (`1e20` vs
+    /// `1e21`, `1e-6` vs `1e-7`), the former `i64`-saturation range
+    /// (`[2^63, 1e21)`), sign handling, and the `-0 → "0"` coercion rule.
+    #[test]
+    fn format_js_number_matches_v8_tostring() {
+        let cases: &[(f64, &str)] = &[
+            // small integers and simple decimals — unchanged from before
+            (0.0, "0"),
+            (1.0, "1"),
+            (-1.0, "-1"),
+            (100.0, "100"),
+            (-100.0, "-100"),
+            (0.5, "0.5"),
+            (-0.5, "-0.5"),
+            (0.1, "0.1"),
+            (1.5, "1.5"),
+            (3.14159, "3.14159"),
+            (123000000.0, "123000000"),
+            (0.000123, "0.000123"),
+            // positional/exponential boundary at 10^21
+            (1e20, "100000000000000000000"),
+            (1e21, "1e+21"),
+            (1e22, "1e+22"),
+            (-1e21, "-1e+21"),
+            (1.5e21, "1.5e+21"),
+            (9.999999999999999e20, "999999999999999900000"),
+            // former i64-saturation range [2^63 ~ 9.2e18, 1e21): integral but
+            // far above i64::MAX, so `n as i64` used to clamp to garbage
+            (123456789012345680000.0, "123456789012345680000"),
+            (12345678901234567890.0, "12345678901234567000"),
+            // small-magnitude boundary at 10^-6 / 10^-7
+            (1e-5, "0.00001"),
+            (1e-6, "0.000001"),
+            (1e-7, "1e-7"),
+            (2.5e-10, "2.5e-10"),
+            // extremes of the f64 range
+            (5e-324, "5e-324"),
+            (1.7976931348623157e308, "1.7976931348623157e+308"),
+            (6.022e23, "6.022e+23"),
+            // non-finite
+            (f64::NAN, "NaN"),
+            (f64::INFINITY, "Infinity"),
+            (f64::NEG_INFINITY, "-Infinity"),
+        ];
+        for &(n, expected) in cases {
+            assert_eq!(format_js_number(n), expected, "String({n:?})");
+        }
+        // Negative zero: JS `String(-0)` drops the sign (a numeric *literal* in
+        // code keeps `-0`, but that is the emitter's separate job).
+        assert_eq!(format_js_number(-0.0), "0", "String(-0)");
     }
 
     // ------------------- metadata + identity tests -------------------
@@ -11436,6 +11623,67 @@ mod tests {
     }
 
     #[test]
+    fn numeric_object_key_quoting_matches_closure_safe_integer_rule() {
+        // Closure keeps a numeric key BARE only when it is a non-negative
+        // integer strictly below 2^53; every other numeric key is QUOTED with
+        // its JS `ToString`. Each expectation here was captured from the
+        // reference jar (`{k:0}` under SIMPLE). `Some(name)` = quoted string key
+        // with that exact name; `None` = key stays a bare `NumericLiteral`.
+        let cases: &[(f64, Option<&str>)] = &[
+            // bare: non-negative integers below 2^53
+            (0.0, None),
+            (100.0, None),
+            (4_294_967_296.0, None),           // 2^32
+            (1e15, None),
+            (9_007_199_254_740_991.0, None),   // 2^53 - 1 (last bare)
+            // quoted: 2^53 and above (no longer a safe integer)
+            (9_007_199_254_740_992.0, Some("9007199254740992")), // 2^53
+            (1e16, Some("10000000000000000")),
+            (1e20, Some("100000000000000000000")),
+            (1e21, Some("1e+21")),
+            (123456789012345680000.0, Some("123456789012345680000")),
+            // quoted: every non-integer, incl. those outside [1e-6, 1e21)
+            (1.5, Some("1.5")),
+            (0.5, Some("0.5")),
+            (1e-6, Some("0.000001")),
+            (1e-7, Some("1e-7")),
+            // bare: +Infinity (overflow literal like 1e400) prints as `Infinity`
+            (f64::INFINITY, None),
+        ];
+        for &(value, expected) in cases {
+            let o = object_lit(vec![Property {
+                cv: None,
+                kind: PropertyKind::Init,
+                key: PropertyKey::NumericLiteral(NumericLiteral {
+                    cv: None,
+                    value,
+                    raw: format!("{value:?}"),
+                }),
+                value: Box::new(num(1.0, None)),
+                shorthand: false,
+                computed: false,
+                method: false,
+            }]);
+            let (out, _, _, _) = run_pass(program_with_expr(o, true));
+            let Expression::ObjectExpression(obj) = extract_expr(&out) else {
+                panic!("expected an ObjectExpression for key {value:?}");
+            };
+            let ObjectMember::Property(p) = &obj.properties[0] else {
+                panic!("expected a Property for key {value:?}");
+            };
+            match (expected, &p.key) {
+                (Some(name), PropertyKey::StringLiteral(s)) => {
+                    assert_eq!(s.value, name, "quoted name for key {value:?}");
+                }
+                (None, PropertyKey::NumericLiteral(n)) => {
+                    assert_eq!(n.value, value, "bare numeric key for {value:?}");
+                }
+                (exp, got) => panic!("key {value:?}: expected {exp:?}, got {got:?}"),
+            }
+        }
+    }
+
+    #[test]
     fn fold_object_entries_duplicate_key_last_value_first_position() {
         // `{a: 1, b: 2, a: 3}` builds `{a: 3, b: 2}`, so entries are
         // `[["a", 3], ["b", 2]]` — key `a` keeps first position, takes last value.
@@ -13751,18 +13999,50 @@ mod tests {
     }
 
     #[test]
-    fn ternary_impure_test_declines_collapse() {
-        // `f() ? b : b` is LEFT INTACT — collapsing would drop the `f()` call.
-        // (Closure rewrites this to `(f(),b)`; that sequence build is a
-        // deliberately-declined follow-up, not a miscompile.)
+    fn ternary_impure_test_collapses_to_comma_sequence() {
+        // `f() ? b : b` → `(f(), b)`. Both arms are `b`, so the value is `b`
+        // regardless of the test; the impure test `f()` is preserved by a comma
+        // sequence that evaluates `f()` first, then `b` (same order as the
+        // ternary). Matches Closure's `PeepholeFoldConstants`.
         let expr = conditional(bare_call("f"), ident("b"), ident("b"));
         let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
-        assert!(!changed, "f()?b:b must NOT collapse (impure test)");
+        assert!(changed, "f()?b:b should collapse to (f(),b)");
         match extract_expr(&out) {
-            Expression::ConditionalExpression(c) => {
-                assert!(matches!(&*c.test, Expression::CallExpression(_)));
+            Expression::SequenceExpression(s) => {
+                assert_eq!(s.expressions.len(), 2, "expected [f(), b]");
+                assert!(
+                    matches!(&s.expressions[0], Expression::CallExpression(_)),
+                    "first element must be the preserved call f()"
+                );
+                assert!(
+                    matches!(&s.expressions[1], Expression::Identifier(id) if id.name == "b"),
+                    "second element must be the branch value b"
+                );
             }
-            other => panic!("expected the ternary to survive; got {other:?}"),
+            other => panic!("expected a (f(),b) sequence; got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn ternary_impure_assignment_test_collapses_to_comma_sequence() {
+        // `(a = c) ? b : b` → `(a = c, b)` — assignment is impure, so its effect
+        // is kept via the comma sequence.
+        let assign = Expression::AssignmentExpression(AssignmentExpression {
+            cv: None,
+            operator: AssignmentOperator::Eq,
+            left: AssignmentTarget::Identifier(Identifier { cv: None, name: "a".to_string() }),
+            right: Box::new(ident("c")),
+        });
+        let expr = conditional(assign, ident("b"), ident("b"));
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed, "(a=c)?b:b should collapse to (a=c,b)");
+        match extract_expr(&out) {
+            Expression::SequenceExpression(s) => {
+                assert_eq!(s.expressions.len(), 2);
+                assert!(matches!(&s.expressions[0], Expression::AssignmentExpression(_)));
+                assert!(matches!(&s.expressions[1], Expression::Identifier(id) if id.name == "b"));
+            }
+            other => panic!("expected an (a=c,b) sequence; got {other:?}"),
         }
     }
 

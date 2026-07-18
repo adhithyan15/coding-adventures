@@ -1,0 +1,4 @@
+--js
+tests/diff/impure-ternary-comma/input/a.js
+--compilation_level
+SIMPLE

@@ -2,6 +2,106 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.106.0] - 2026-07-18
+
+### Fixed — numeric object-key quoting now matches Closure across the full range
+
+The object-literal transform decides whether a numeric property key is emitted
+bare (`{100:0}`) or quoted with its `ToString` (`{"1.5":0}`). The old predicate
+only quoted **non-integers in `[1e-6, 1e21)`**, leaving several key classes bare
+that Closure quotes. Oracle-probing the reference jar revealed the actual rule:
+a numeric key stays bare in exactly one case — **a non-negative integer strictly
+below `2^53`** (the safe-integer bound) — and is quoted otherwise.
+
+Newly quoted (previously emitted bare, diverging from Closure):
+
+- integers `>= 2^53`: `{1e20:0}` → `{"100000000000000000000":0}`,
+  `{9007199254740992:0}` → `{"9007199254740992":0}`
+- integers rendered exponentially: `{1e21:0}` → `{"1e+21":0}`
+- non-integers outside `[1e-6, 1e21)`: `{1e-7:0}` → `{"1e-7":0}`
+
+Still bare (safe integers): `{0:_}`, `{100:_}`, `{4294967296:_}`,
+`{9007199254740991:_}` (2^53 − 1); the printer independently minifies them
+(`{4e9:_}` → `{4E9:_}`), matching Closure. A `+Infinity` key (overflow literal
+like `1e400`) stays bare as `Infinity`, also matching. The quoted name comes
+from the now-JS-exact `format_js_number` (0.105.0), so exponential and huge-
+integer keys get their precise V8 spelling.
+
+A new `numeric_object_key_quoting_matches_closure_safe_integer_rule` unit test
+and a `numeric-key-quote` closurec e2e fixture verify byte-identity with the
+real jar.
+
+## [0.105.0] - 2026-07-18
+
+### Fixed — `format_js_number` now matches V8's `Number.prototype.toString` exactly
+
+The number-to-string helper (used by every fold that materializes a number as a
+string — `String(n)`, template substitutions, `(n).toString()`, and object
+property keys) is now a faithful implementation of the ECMAScript
+`Number::toString` algorithm rather than a thin wrapper over Rust's formatting.
+Two concrete bugs are fixed:
+
+- **`i64` saturation.** The old integral path used `n as i64` guarded only by
+  `|n| < 1e21`. But `i64::MAX ≈ 9.2e18`, so an integral value in
+  `[2^63, 1e21)` — e.g. `1e20` or `123456789012345680000` — saturated to
+  `9223372036854775807`, a completely different number. These now render
+  correctly (`1e20` → `"100000000000000000000"`).
+- **Exponential-notation thresholds.** Values with `|n| ≥ 1e21` or `|n| < 1e-6`
+  fell through to Rust's `to_string()`, whose positional-vs-exponential choice
+  differs from JS (`"1000000000000000000000"` vs V8's `"1e+21"`). The
+  ECMAScript positional rules are now applied directly: `1e21` → `"1e+21"`,
+  `1e-7` → `"1e-7"`, `1e-6` → `"0.000001"`, `5e-324` → `"5e-324"`, and the
+  exponent sign is always explicit (`e+21`, `e-7`).
+
+The algorithm takes the shortest round-tripping digits and base-10 exponent from
+Rust's `{:e}` and reformats per the spec's four positional cases. A new
+`format_js_number_matches_v8_tostring` table cross-checks 30+ values against
+`String(n)` output captured from Node/V8. No behavior change for the small
+integers and simple decimals that dominate real code; the fix only touches the
+large/small/exponential tails that were previously mis-rendered. This unblocks
+correct quoting of out-of-range numeric object keys.
+
+## [0.104.1] - 2026-07-18
+
+### Fixed — flaky stack-overflow in the deep-chain regression test (CI reliability)
+
+`deeply_nested_binary_chain_folds_without_stack_overflow` built a 20 000-deep
+left-nested `1+1+…` chain and folded it on the 128 MiB `FOLD_STACK_SIZE` worker.
+At that depth (~6-7 KiB per `fold_binary` frame × 20 000 ≈ the full 128 MiB) the
+recursion sat right at the worker's edge, so on CI runners — fatter debug frames
+and higher memory pressure under parallel tests — it aborted with an uncatchable
+`fatal runtime error: stack overflow` on roughly two-thirds of runs, while
+passing locally.
+
+Lowered the depth to `N = 6_000`. This is a regression *guard* that the
+large-stack worker exists and is used (a few thousand levels already overflow
+the caller's ~2 MiB stack by an order of magnitude), not a measurement of the
+maximum foldable depth, so the smaller `N` keeps ~4× headroom under the worker
+while still proving the property. No library behavior changes — test-only.
+(Truly bounding *production* recursion against a hostile deep input is a
+separate, larger transform — a recursion-depth limit that declines to fold
+rather than a bigger stack — tracked apart from this reliability fix.)
+
+## [0.104.0] - 2026-07-18
+
+### Added — impure-test equal-branch ternary collapses to a comma sequence
+
+Extends the equal-branch ternary collapse (0.101.0, `t?X:X`→`X` for a pure test)
+to the impure-test case. When both arms are the same expression `X` but the test
+`t` is side-effectful, the value is still `X` regardless of how `t` decides — but
+`t`'s effect must be preserved. Closure rewrites this to the comma sequence
+`(t, X)`, which evaluates `t` first, then `X`, and yields `X` — the exact same
+evaluation order as the ternary (`t` once, `X` once, left to right, so no
+`valueOf`/`ToNumber` coercion re-ordering hazard):
+
+- `f() ? b : b`   → `(f(), b)`
+- `(a = 1) ? c : c` → `(a = 1, c)`
+- `h() ? a.b : a.b` → `(h(), a.b)`
+
+The emitter parenthesises a sequence in argument / sub-expression position, so
+`w(f()?x:x)` prints `w((f(),x))`. Oracle-verified byte-identical. The pure-test
+case continues to collapse straight to `X`.
+
 ## [0.103.0] - 2026-07-17
 
 ### Fixed — do not fold division / modulo BY ZERO
