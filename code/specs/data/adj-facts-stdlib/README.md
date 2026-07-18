@@ -41,6 +41,7 @@ per rotation, in parallel):
 | `calendar/` | day / month → number | ISO 8601 |
 | `money/` | US coin → cents | US Mint |
 | `earth-science/` | water-cycle stage → step number | USGS Water Science School |
+| `earth-science/` | master soil horizon → what it is (o → organic_matter, c → parent_material, r → bedrock) | UNL passel Plant & Soil Sciences eLibrary (authoritative) |
 | `nutrition/` | common food → MyPlate food group | USDA MyPlate |
 | `agriculture/` | farm animal → product it gives | Iowa State University (CFSPH) |
 | `biology/` | common bone → body region | NIH / MedlinePlus |
