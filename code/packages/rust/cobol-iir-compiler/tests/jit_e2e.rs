@@ -242,6 +242,85 @@ fn overflow_without_handler_truncates_high_order() {
 }
 
 // -------------------------------------------------------------------------
+// IF / ELSE + relational conditions (PR4) — vs the oracle.
+// -------------------------------------------------------------------------
+
+/// Run a program with `01 N PIC 9(3) VALUE <n>` and the given procedure body,
+/// asserting the compiled output matches the oracle.
+fn run_if(n: &str, body: &[&str]) -> String {
+    let mut data = vec![format!("01  N  PIC 9(3) VALUE {n}.")];
+    let mut proc: Vec<String> = body.iter().map(|s| s.to_string()).collect();
+    let _ = &mut data;
+    let _ = &mut proc;
+    let data_refs: Vec<&str> = data.iter().map(|s| s.as_str()).collect();
+    let proc_refs: Vec<&str> = proc.iter().map(|s| s.as_str()).collect();
+    assert_matches_oracle(&wrap(&data_refs, &proc_refs))
+}
+
+#[test]
+fn if_numeric_true_and_false_branches() {
+    // N=5 > 3 → THEN "BIG"; N=1 not > 3 → ELSE "SMALL".
+    assert_eq!(
+        run_if("5", &["IF N GREATER 3 DISPLAY \"BIG\" ELSE DISPLAY \"SMALL\".", "STOP RUN."]),
+        "BIG\n"
+    );
+    assert_eq!(
+        run_if("1", &["IF N GREATER 3 DISPLAY \"BIG\" ELSE DISPLAY \"SMALL\".", "STOP RUN."]),
+        "SMALL\n"
+    );
+}
+
+#[test]
+fn if_equal_less_and_negated() {
+    assert_eq!(run_if("7", &["IF N EQUAL 7 DISPLAY \"EQ\".", "STOP RUN."]), "EQ\n");
+    assert_eq!(run_if("2", &["IF N LESS 5 DISPLAY \"LT\".", "STOP RUN."]), "LT\n");
+    // IS NOT GREATER: 3 is not > 5 → true.
+    assert_eq!(run_if("3", &["IF N IS NOT GREATER THAN 5 DISPLAY \"OK\".", "STOP RUN."]), "OK\n");
+    // A false condition with no ELSE displays nothing.
+    assert_eq!(run_if("9", &["IF N LESS 5 DISPLAY \"NO\".", "STOP RUN."]), "");
+}
+
+#[test]
+fn if_then_branch_runs_multiple_statements() {
+    // Both then-statements run when the condition holds.
+    assert_eq!(
+        run_if("5", &["IF N GREATER 3 MOVE 8 TO N DISPLAY N.", "STOP RUN."]),
+        "008\n"
+    );
+}
+
+#[test]
+fn stop_run_inside_a_branch_ends_the_program() {
+    // STOP RUN in the THEN branch ends everything; the trailing DISPLAY never runs.
+    assert_eq!(
+        run_if("5", &["IF N GREATER 3 DISPLAY \"IN\" STOP RUN.", "DISPLAY \"AFTER\".", "STOP RUN."]),
+        "IN\n"
+    );
+}
+
+#[test]
+fn if_on_scaled_decimal_compares_by_value() {
+    // 2.50 vs 2.5 compare equal despite different receiver scales.
+    let out = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(2)V99 VALUE 2.5."],
+        &["IF R EQUAL 2.5 DISPLAY \"EQ\" ELSE DISPLAY \"NE\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "EQ\n");
+}
+
+#[test]
+fn nested_if_selects_the_inner_branch() {
+    let out = assert_matches_oracle(&wrap(
+        &["01  N  PIC 9(3) VALUE 5."],
+        &[
+            "IF N GREATER 3 IF N LESS 9 DISPLAY \"MID\" ELSE DISPLAY \"HI\".",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "MID\n");
+}
+
+// -------------------------------------------------------------------------
 // Scaled-decimal ADD / SUBTRACT + item→item MOVE (PR3) — vs the oracle.
 // -------------------------------------------------------------------------
 
