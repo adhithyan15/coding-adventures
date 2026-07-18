@@ -913,3 +913,99 @@ fn signed_scaled_field_overpunches_the_last_fractional_digit() {
     ));
     assert_eq!(out, "1N\n");
 }
+
+// -------------------------------------------------------------------------
+// Alphanumeric item-to-item MOVE + comparison — vs the oracle.
+// -------------------------------------------------------------------------
+
+#[test]
+fn char_item_move_truncates_on_the_right() {
+    // W is "ABCD" (X(4)); moved into V PIC X(2) keeps the leftmost two → "AB".
+    let out = assert_matches_oracle(&wrap(
+        &["01  W  PIC X(4) VALUE \"ABCD\".", "01  V  PIC X(2)."],
+        &["MOVE W TO V.", "DISPLAY V.", "STOP RUN."],
+    ));
+    assert_eq!(out, "AB\n");
+}
+
+#[test]
+fn char_item_move_space_pads_on_the_right() {
+    // W is "AB" (X(2)); moved into V PIC X(5) left-justifies and space-pads → "AB   ".
+    let out = assert_matches_oracle(&wrap(
+        &["01  W  PIC X(2) VALUE \"AB\".", "01  V  PIC X(5)."],
+        &["MOVE W TO V.", "DISPLAY V \"|\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "AB   |\n");
+}
+
+#[test]
+fn char_item_move_same_size_copies() {
+    // Equal sizes: a straight copy of the stored image.
+    let out = assert_matches_oracle(&wrap(
+        &["01  W  PIC X(3) VALUE \"XyZ\".", "01  V  PIC X(3)."],
+        &["MOVE W TO V.", "DISPLAY V.", "STOP RUN."],
+    ));
+    assert_eq!(out, "XyZ\n");
+}
+
+#[test]
+fn alphanumeric_equal_and_not_equal() {
+    // Item vs literal, equal (both "AB  " once padded to width 4 vs "AB" padded).
+    let eq = assert_matches_oracle(&wrap(
+        &["01  W  PIC X(4) VALUE \"AB\"."],
+        &["IF W EQUAL \"AB\" DISPLAY \"YES\" ELSE DISPLAY \"NO\".", "STOP RUN."],
+    ));
+    assert_eq!(eq, "YES\n");
+    // Different content → not equal.
+    let ne = assert_matches_oracle(&wrap(
+        &["01  W  PIC X(4) VALUE \"ABCD\"."],
+        &["IF W NOT EQUAL \"AB\" DISPLAY \"DIFF\".", "STOP RUN."],
+    ));
+    assert_eq!(ne, "DIFF\n");
+}
+
+#[test]
+fn alphanumeric_ordering_is_lexicographic() {
+    // "APPLE" > "APPLY"? No — 'E'(0x45) < 'Y'(0x59), so APPLE < APPLY.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(5) VALUE \"APPLE\".", "01  B  PIC X(5) VALUE \"APPLY\"."],
+        &["IF A LESS B DISPLAY \"A<B\" ELSE DISPLAY \"A>=B\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "A<B\n");
+}
+
+#[test]
+fn alphanumeric_shorter_literal_space_pads_for_compare() {
+    // "AB" (item, X(4) → "AB  ") vs "AB  " literal: padded equal length, equal.
+    // And "AB" item vs "ABX" literal: item pads to "AB " (width 3) < "ABX".
+    let out = assert_matches_oracle(&wrap(
+        &["01  W  PIC X(2) VALUE \"AB\"."],
+        &["IF W LESS \"ABX\" DISPLAY \"LT\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "LT\n");
+}
+
+#[test]
+fn alphanumeric_compare_against_spaces_figurative() {
+    // A blank field equals SPACES; a non-blank one does not.
+    let blank = assert_matches_oracle(&wrap(
+        &["01  W  PIC X(3)."],
+        &["IF W EQUAL SPACES DISPLAY \"BLANK\".", "STOP RUN."],
+    ));
+    assert_eq!(blank, "BLANK\n");
+    let filled = assert_matches_oracle(&wrap(
+        &["01  W  PIC X(3) VALUE \"HI\"."],
+        &["IF W NOT EQUAL SPACES DISPLAY \"FILLED\".", "STOP RUN."],
+    ));
+    assert_eq!(filled, "FILLED\n");
+}
+
+#[test]
+fn char_move_then_compare_round_trips() {
+    // Prove the moved value round-trips through the str slot and compares equal.
+    let out = assert_matches_oracle(&wrap(
+        &["01  W  PIC X(4) VALUE \"WXYZ\".", "01  V  PIC X(4)."],
+        &["MOVE W TO V.", "IF V EQUAL W DISPLAY \"SAME\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "SAME\n");
+}

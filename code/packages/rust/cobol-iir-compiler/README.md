@@ -34,10 +34,11 @@ integer `123`); an **alphanumeric** item (`PIC X`/`A`) is a `str`.
 | COBOL | IIR |
 | --- | --- |
 | `VALUE <lit>` / `MOVE <lit> TO item` | the register's `const`/`str_const` — the literal formatted into the item's picture at compile time |
+| `MOVE item TO item` | numeric→numeric rescales the implied point; character→character reshapes to the receiver's size (`str_slice` to truncate, `str_concat` to space-pad) |
 | `ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE … [GIVING r] [ROUNDED] [ON SIZE ERROR …]` | `add`/`sub`/`mul`/`div` on the `i64` slots, the result reduced to the receiver's field; a size error runs the handler and leaves the receiver unchanged |
 | `COMPUTE r [ROUNDED] = expr [ON SIZE ERROR …]` | the precedence cascade evaluated bottom-up over scaled `i64`, each step overflow-guarded |
 | `DISPLAY op…` | each operand's image emitted, then `putchar('\n')` — a literal prints its source text, a numeric item via the fixed-width digit helper (signed items via a trailing-overpunch helper), an alphanumeric via `print_str` |
-| `IF cond then… [ELSE else…]` | `cmp_*` on the aligned operands → `jmp_if_false` over the then-branch; `NOT` inverts the relation |
+| `IF cond then… [ELSE else…]` | numeric conditions align operands and `cmp_*`; alphanumeric conditions space-pad both sides and `str_cmp`; `jmp_if_false` over the then-branch; `NOT` inverts the relation |
 | `GO TO para` | `jmp para_<name>` |
 | `PERFORM para [THRU q] [n TIMES \| UNTIL c \| VARYING v FROM a BY b UNTIL c]` | the paragraph range **inlined** at the call site (out-of-line-but-returns semantics), with loop control emitted around it |
 | `STOP RUN` | `ret 0` |
@@ -81,10 +82,17 @@ paragraph range at the call site, which reproduces COBOL's return semantics
 exactly (a `STOP RUN` inside returns, a `GO TO` inside jumps away), bounded by
 depth and instruction-count caps against a recursive `PERFORM`.
 
+Character handling is fixed-length string work: a character item's slot always
+holds exactly its declared width, so an item-to-item `MOVE` and an alphanumeric
+comparison both reduce to a single compile-time-sized `str_slice`/`str_concat`
+(reshape) or a space-pad plus `str_cmp` (compare), with `SPACE`/`ZERO`
+figuratives expanded to the partner operand's length.
+
 ### Deliberately a later rung
 
 Each of these is a clean `CompileError::Unsupported` (never wrong output): group
-items, alphanumeric item `MOVE` and alphanumeric comparison, `COMPUTE` division
+items, cross-category item `MOVE` (`numeric↔alphanumeric`, which needs runtime
+int↔string conversion), a numeric-vs-alphanumeric comparison, `COMPUTE` division
 nested inside a larger expression, and `COMPUTE` exponentiation (`**`).
 
 ## Usage

@@ -258,3 +258,28 @@ fn signed_program_accepted_by_print_backends() {
     let m = compile_source(&src, "signed").unwrap();
     assert_accepted_by_print_backends(&m, "signed overpunch");
 }
+
+#[test]
+fn alphanumeric_move_and_compare_accepted_by_print_backends() {
+    // Character item-to-item MOVE (str_slice / str_concat) and a space-padded
+    // alphanumeric comparison (str_cmp) — the string-op substrate every print
+    // backend must accept (BEAM excluded, as for any printing program).
+    let src = program(&[
+        "IDENTIFICATION DIVISION.",
+        "PROGRAM-ID. P.",
+        "DATA DIVISION.",
+        "WORKING-STORAGE SECTION.",
+        "01  W  PIC X(4) VALUE \"ABCD\".",
+        "01  V  PIC X(2).",
+        "01  U  PIC X(6).",
+        "PROCEDURE DIVISION.",
+        "MAIN.",
+        "    MOVE W TO V.",
+        "    MOVE W TO U.",
+        "    IF W GREATER \"AB\" DISPLAY V U \"|\".",
+        "    IF W EQUAL SPACES DISPLAY \"BLANK\".",
+        "    STOP RUN.",
+    ]);
+    let m = compile_source(&src, "alnum").unwrap();
+    assert_accepted_by_print_backends(&m, "alphanumeric move and compare");
+}
