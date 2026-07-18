@@ -1,0 +1,88 @@
+% ============================================================================
+% foot-bones — the three groups of bones in the human foot and the region /
+% part of the foot each group occupies (adj-facts-stdlib, ANATOMY).
+% ============================================================================
+% The whole skeleton of the foot is built out of just THREE groups of bones,
+% and each group sits in a characteristic part of the foot. Reading from the
+% heel to the tips of the toes: the TARSALS are the cluster at the back that
+% forms the heel and the ankle; the METATARSALS are the long bones of the
+% midfoot (the body of the foot, the sole and instep); and the PHALANGES are
+% the little bones that make up the toes. Before an anatomy or MEDICINE agent
+% can reason about a fracture, a joint, or an X-ray of the foot it must first
+% know WHICH of the three groups a bone belongs to and WHERE that group lives.
+% Recall is a binding query:
+%
+%     ? foot_region(metatarsals, $Region)      % midfoot
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `foot_region(group, region)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the
+% region WITH its source, on the CPU, with zero model calls, and abstains on a
+% word that is not one of these three foot-bone groups (it never invents a
+% region).
+%
+% Each of the three groups of foot bones and the region / part of the foot the
+% source states for it, as a little truth table:
+%
+%     bone group    region / part of the foot   a beginner's cue
+%     -----------   -------------------------   ------------------------------
+%     tarsals       heel_and_ankle              the cluster at the back of the foot
+%     metatarsals   midfoot                     the long bones of the body / sole
+%     phalanges     toes                        the little bones of the toes
+%
+% The query also runs BACKWARD — bind a region and recall its bone group:
+%
+%     ? foot_region($Group, toes)   % phalanges
+%
+% A word that is NOT one of these three foot-bone groups — `carpals` (those are
+% the WRIST bones, not the foot), `femur`, `rock` — is deliberately NOT a row,
+% so a foot-bone recall ABSTAINS on it rather than inventing a region. That
+% honest-abstention property is what makes the table safe to build a reasoner
+% on: it answers exactly the group→region pairs it can ground, and only those.
+%
+% The `region` value of every row is a SINGLE lowercase atom, chosen to be a
+% region / part of the foot the source EXPLICITLY states for that group —
+% never one the source does not support. Where the source pairs two everyday
+% words for one region (the tarsals "form the heel and the ankle") the atom
+% joins them with an underscore (`heel_and_ankle`) so the value stays literally
+% checkable against the quoted span; where the source names one word for the
+% region (`midfoot`, `toes`) the atom is that word.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every group→region pair
+% below was read out of a fetched Wikipedia foot-anatomy page, and any pair
+% whose region could not be verified there would have been dropped). All three
+% pairs are grounded by a SINGLE defining sentence of the "Metatarsal bones"
+% article, which locates all three groups relative to one another:
+%
+%   tarsals → heel_and_ankle
+%   metatarsals → midfoot
+%   phalanges → toes
+%     https://en.wikipedia.org/wiki/Metatarsal_bones
+%     (Wikipedia — "Metatarsal bones")
+%     "The metatarsal bones, collectively the metatarsus (pl.: metatarsi), are
+%      a group of five long bones in the midfoot, located between the tarsal
+%      bones (which form the heel and the ankle) and the phalanges (toes)."
+%
+% That one sentence fixes every row at once: the metatarsals are "in the
+% midfoot"; the tarsal bones "form the heel and the ankle"; and the phalanges
+% are "(toes)". An ADJ `table` carries ONE provenance envelope, so the
+% `source`/`locator`/`trust` below hold that single sentence — the cleanest
+% span, which grounds all three rows together. Wikipedia is a tertiary,
+% community-edited encyclopedia rather than a primary government or university
+% anatomy resource, so `trust consensus` (not `authoritative`).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table foot_region {
+    columns group, region
+
+    row (tarsals, heel_and_ankle)
+    row (metatarsals, midfoot)
+    row (phalanges, toes)
+
+    source "The metatarsal bones, collectively the metatarsus (pl.: metatarsi), are a group of five long bones in the midfoot, located between the tarsal bones (which form the heel and the ankle) and the phalanges (toes)."
+    locator "https://en.wikipedia.org/wiki/Metatarsal_bones"
+    trust consensus
+}
