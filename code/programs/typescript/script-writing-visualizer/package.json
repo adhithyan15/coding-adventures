@@ -1,0 +1,23 @@
+{
+  "name": "script-writing-visualizer",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Companion app (HL02 MVP): break a non-Latin script apart and learn to write it, letter by letter",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^4.1.0",
+    "jsdom": "^25.0.0",
+    "typescript": "~5.7.0",
+    "vite": "^8.0.0",
+    "vitest": "^4.1.0"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT"
+}
