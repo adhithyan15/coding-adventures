@@ -32,6 +32,7 @@ per rotation, in parallel):
 | `chemistry/` | element → periodic-table group family | Wikipedia (consensus) |
 | `chemistry/` | common chemical → acid or base | LibreTexts (consensus) |
 | `chemistry/` | subatomic particle → electric charge (proton → positive) | DOE "Explains…Nuclei" (authoritative) |
+| `chemistry/` | chemical bond type → defining token (ionic → transfer) | LibreTexts (consensus) |
 | `metrology/` | SI prefix → power of ten | NIST |
 | `mathematics/` | Roman numeral → value | (consensus) |
 | `calendar/` | day / month → number | ISO 8601 |
