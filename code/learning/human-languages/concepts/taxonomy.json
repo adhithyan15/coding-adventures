@@ -1,0 +1,152 @@
+{
+  "$schema": "./taxonomy.schema-notes.md",
+  "version": 1,
+  "note": "Canonical cross-language concept vocabulary for the Human Languages curriculum. See code/specs/HL01-concept-taxonomy-and-data-layer.md. Ids are stable slugs (never renumbered). 'core: true' = expected in every track once it declares parity:complete. 'retires' lists the pre-canonical concept_tags this id replaced during the HL01 normalization, kept for traceability.",
+  "concepts": {
+    "GREETING-HELLO": {
+      "family": "GREETING",
+      "gloss": "hello (neutral, said on meeting)",
+      "core": true,
+      "notes": "The default meeting greeting. Where a track taught two 'hello' words, the more formal/ceremonial one moves to GREETING-FORMAL (avē, namaskāraḥ, sat srī akāl)."
+    },
+    "GREETING-DAY": {
+      "family": "GREETING",
+      "gloss": "good day (general daytime greeting)",
+      "core": false,
+      "notes": "bonjour / Guten Tag / buongiorno / bom dia. Distinct from GREETING-MORNING and from the noun TIME-DAY."
+    },
+    "GREETING-MORNING": { "family": "GREETING", "gloss": "good morning", "core": false },
+    "GREETING-AFTERNOON": { "family": "GREETING", "gloss": "good afternoon", "core": false },
+    "GREETING-EVENING": { "family": "GREETING", "gloss": "good evening (said on meeting)", "core": false },
+    "GREETING-GOODNIGHT": {
+      "family": "GREETING",
+      "gloss": "good night (said on parting / before sleep)",
+      "core": false,
+      "retires": ["GREETING-NIGHT"],
+      "notes": "Parting greeting, distinct from the meeting greeting GREETING-EVENING. Retires Spanish/Italian's older GREETING-NIGHT tag; where a track's 'noches/notte' word doubles as the evening noun, the noun is TIME-NIGHT."
+    },
+    "GREETING-FORMAL": {
+      "family": "GREETING",
+      "gloss": "a more formal / ceremonial greeting",
+      "core": false,
+      "notes": "as-salāmu ʿalaykum, namaskār/namaskāra, avē, sat srī akāl. The formal counterpart to GREETING-HELLO within a track."
+    },
+    "GREETING-PEACE": {
+      "family": "GREETING",
+      "gloss": "peace, used as a greeting (salām)",
+      "core": false
+    },
+    "GREETING-WELCOME": {
+      "family": "GREETING",
+      "gloss": "welcome (svāgatam)",
+      "core": false
+    },
+    "FAREWELL": {
+      "family": "GREETING",
+      "gloss": "goodbye / parting word",
+      "core": true,
+      "retires": ["GREETING-GOODBYE"],
+      "notes": "Unifies the parting word across tracks (valē, āshi, alvidā, येतो/येते)."
+    },
+
+    "COURTESY-THANKS": {
+      "family": "COURTESY",
+      "gloss": "thank you (neutral / default register)",
+      "core": true,
+      "retires": ["THANKS", "GRATITUDE-THANKS", "THANKS-FORMAL"],
+      "notes": "The default 'thank you'. Where a track teaches a second, more colloquial word (often Perso-Arabic), that one is COURTESY-THANKS-CASUAL."
+    },
+    "COURTESY-THANKS-CASUAL": {
+      "family": "COURTESY",
+      "gloss": "thanks (casual / colloquial register)",
+      "core": false,
+      "retires": ["THANKS-CASUAL"],
+      "notes": "e.g. Hindi shukriyā, Punjabi shukrīā — the everyday, often Perso-Arabic-derived alternative to the Sanskritic COURTESY-THANKS."
+    },
+
+    "RESPONSE-YES": {
+      "family": "RESPONSE",
+      "gloss": "yes",
+      "core": true,
+      "notes": "Tracks that teach yes and no in a single lesson use RESPONSE-YESNO until that lesson is split during the parity pass."
+    },
+    "RESPONSE-NO": { "family": "RESPONSE", "gloss": "no", "core": true },
+    "RESPONSE-YESNO": {
+      "family": "RESPONSE",
+      "gloss": "yes / no (taught together in one lesson)",
+      "core": false,
+      "retires": ["FUNCTION-YESNO"],
+      "notes": "A single lesson realizing both yes and no (ita/nōn, hāṇ/nahīṇ, hyã/nā, ām/na). Split into RESPONSE-YES + RESPONSE-NO when the track reaches parity."
+    },
+    "RESPONSE-OKAY": {
+      "family": "RESPONSE",
+      "gloss": "okay / alright",
+      "core": false,
+      "retires": ["OKAY", "FUNCTION-OKAY"]
+    },
+
+    "QUESTION-WHAT": { "family": "QUESTION", "gloss": "what", "core": true, "retires": ["WHAT"] },
+    "QUESTION-HOW": { "family": "QUESTION", "gloss": "how", "core": false, "retires": ["HOW"] },
+
+    "INTRO-MY-NAME-IS": {
+      "family": "INTRO",
+      "gloss": "\"my name is …\"",
+      "core": true,
+      "retires": ["MY-NAME-IS"]
+    },
+    "INTRO-WHATS-YOUR-NAME": {
+      "family": "INTRO",
+      "gloss": "\"what's your name?\"",
+      "core": true,
+      "retires": ["WHATS-YOUR-NAME"]
+    },
+    "INTRO-NICE-TO-MEET-YOU": {
+      "family": "INTRO",
+      "gloss": "pleased to meet you",
+      "core": true,
+      "retires": ["PLEASED-TO-MEET"],
+      "notes": "Some tracks realize this with a bare 'joy/happiness' noun (khushī, magizhchi, santōṣa); that word is the realization."
+    },
+
+    "PRONOUN-I": { "family": "PRONOUN", "gloss": "I (first-person subject)", "core": false },
+    "PRONOUN-ME": { "family": "PRONOUN", "gloss": "me / myself (object / reflexive)", "core": false },
+    "PRONOUN-YOU": {
+      "family": "PRONOUN",
+      "gloss": "you (with informal / formal forms)",
+      "core": true
+    },
+    "PRONOUN-MY": { "family": "PRONOUN", "gloss": "my (first-person possessive)", "core": false, "retires": ["MY"] },
+
+    "TIME-DAY": { "family": "TIME", "gloss": "day (noun)", "core": false, "retires": ["DIA", "JOUR", "TAG", "DAY"] },
+    "TIME-NIGHT": { "family": "TIME", "gloss": "night (noun)", "core": false, "retires": ["NOCHE", "NUIT", "NACHT"] },
+    "TIME-MORNING": { "family": "TIME", "gloss": "morning (noun)", "core": false, "retires": ["MORGEN"] },
+    "TIME-AFTERNOON": { "family": "TIME", "gloss": "afternoon (noun)", "core": false, "retires": ["TARDE"] },
+    "TIME-EVENING": { "family": "TIME", "gloss": "evening (noun)", "core": false, "retires": ["ABEND", "SOIR"] },
+
+    "WORD-GOOD": { "family": "WORD", "gloss": "good (adjective)", "core": false, "retires": ["BON", "GOOD", "GUT"] },
+    "WORD-WELL": { "family": "WORD", "gloss": "well / fine (adverb)", "core": false, "retires": ["BIEN"] },
+    "WORD-NAME": { "family": "WORD", "gloss": "name (noun)", "core": false, "retires": ["NAME"] },
+    "WORD-IS": { "family": "WORD", "gloss": "is (copula, third person)", "core": false, "retires": ["IS"] },
+
+    "GRAMMAR-THE": {
+      "family": "GRAMMAR",
+      "gloss": "the (definite article / gender marker)",
+      "core": false,
+      "retires": ["ARTICLES-EL-LA", "ARTICLES-LE-LA", "ARTICLES-DER-DIE-DAS", "ARTICLE-GENDER", "ARTICLE"],
+      "notes": "One join key for 'the'; the realization holds each language's specific forms (el/la, der/die/das, il/la/lo, o/a, al-)."
+    }
+  },
+  "namespaced": {
+    "note": "Language-local lexical/structural concepts do NOT appear here; they live only in lesson frontmatter as <LANG>-<NAME> (pattern ^[A-Z]{2}-[A-Z0-9-]+$). Current examples, for reference:",
+    "examples": {
+      "ES-VERB-LLAMAR": "llamar — 'to call' (the Spanish naming verb)",
+      "ES-SE-LLAMA": "se llama — 'he/she calls himself' (3rd-person of llamar)",
+      "ES-WORD-MUCHO": "mucho — 'much / a lot'",
+      "FR-VERB-APPELER": "(s')appeler — 'to call (oneself)'",
+      "DE-VERB-HEISSEN": "heißen — 'to be called'"
+    }
+  },
+  "practiceTags": {
+    "note": "Non-word lessons (type: review | practice-mix) carry a session label, not a concept, and are exempt from the cross-language join. Existing labels: CH1-PRACTICE, CH2-PRACTICE, CH3-PRACTICE, REVIEW."
+  }
+}

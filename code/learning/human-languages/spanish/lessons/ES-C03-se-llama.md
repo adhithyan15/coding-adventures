@@ -4,7 +4,7 @@ chapter: 3
 type: word
 headword: se llama
 gloss: he/she calls himself; you (formal) call yourself
-concept_tag: SE-LLAMA
+concept_tag: ES-SE-LLAMA
 prerequisites: [ES-C03-me-llamo, ES-C03-tu-usted]
 sounds: [vowel-e, ll-y]
 roots: [se-latin, clamare]

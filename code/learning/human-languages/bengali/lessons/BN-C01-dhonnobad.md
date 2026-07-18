@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: ধন্যবাদ
 gloss: thank you (dhônyobad)
-concept_tag: GRATITUDE-THANKS
+concept_tag: COURTESY-THANKS
 prerequisites: [BN-C01-nomoshkar]
 sounds: [inherent-o, ny-conjunct, v-to-b]
 roots: [dhanya, vada]

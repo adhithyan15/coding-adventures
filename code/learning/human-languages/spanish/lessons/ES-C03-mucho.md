@@ -4,7 +4,7 @@ chapter: 3
 type: word
 headword: mucho
 gloss: much / a lot
-concept_tag: MUCHO
+concept_tag: ES-WORD-MUCHO
 prerequisites: [ES-C02-noche]
 sounds: [soft-c, vowel-o]
 roots: [multus]

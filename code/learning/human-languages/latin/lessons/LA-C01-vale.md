@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: valē / valēte
 gloss: goodbye (lit. "be strong")
-concept_tag: GREETING-GOODBYE
+concept_tag: FAREWELL
 prerequisites: [LA-C01-ave]
 sounds: [v-as-w, macron-long-vowel]
 roots: [valere]

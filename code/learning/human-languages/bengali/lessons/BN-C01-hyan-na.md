@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: হ্যাঁ / না
 gloss: yes / no (hyã / nā)
-concept_tag: FUNCTION-YESNO
+concept_tag: RESPONSE-YESNO
 prerequisites: [BN-C01-dhonnobad]
 sounds: [ho, y-phola, chandrabindu-nasal]
 roots: [na-negative]

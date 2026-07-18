@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: noite / boa noite
 gloss: night / good night
-concept_tag: GREETING-NIGHT
+concept_tag: GREETING-GOODNIGHT
 prerequisites: [PT-C01-tarde]
 sounds: []
 roots: [noctem]

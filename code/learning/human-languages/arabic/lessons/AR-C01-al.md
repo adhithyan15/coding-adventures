@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: ال
 gloss: the (al- — the attached article)
-concept_tag: ARTICLE
+concept_tag: GRAMMAR-THE
 prerequisites: [AR-C01-salam]
 sounds: [alif-lam, sun-moon-letters]
 roots: []

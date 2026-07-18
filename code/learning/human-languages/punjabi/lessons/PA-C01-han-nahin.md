@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: ਹਾਂ / ਨਹੀਂ
 gloss: yes / no (hāṇ / nahīṇ)
-concept_tag: FUNCTION-YESNO
+concept_tag: RESPONSE-YESNO
 prerequisites: [PA-C01-shukriya]
 sounds: [inherent-a, bindi-nasal, vowel-sign]
 roots: [na-negative]

@@ -4,7 +4,7 @@ chapter: 2
 type: word
 headword: என்ன
 gloss: what
-concept_tag: WHAT
+concept_tag: QUESTION-WHAT
 prerequisites: [TA-C02-nii-niingal]
 sounds: [independent-e, doubled-nn]
 roots: [yaa-dravidian]

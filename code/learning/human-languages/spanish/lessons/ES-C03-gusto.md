@@ -4,7 +4,7 @@ chapter: 3
 type: word
 headword: mucho gusto
 gloss: pleased to meet you (literally "much pleasure")
-concept_tag: PLEASED-TO-MEET
+concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [ES-C03-mucho]
 sounds: [vowel-o, stress-default-vowel-ns]
 roots: [gustus, multus]

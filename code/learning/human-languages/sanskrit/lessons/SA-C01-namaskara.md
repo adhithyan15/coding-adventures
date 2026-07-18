@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: नमस्कारः
 gloss: hello (lit. "the making of a bow") (namaskāraḥ)
-concept_tag: GREETING-HELLO
+concept_tag: GREETING-FORMAL
 prerequisites: [SA-C01-namaste]
 sounds: [inherent-a, visarga, vowel-sign]
 roots: [namas, kara, kr-do]

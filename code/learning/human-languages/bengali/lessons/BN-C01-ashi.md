@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: আসি
 gloss: goodbye, lit. "I'll come [again]" (āshi)
-concept_tag: GREETING-GOODBYE
+concept_tag: FAREWELL
 prerequisites: [BN-C01-achchha]
 sounds: [s-to-sh, i-sign-before]
 roots: [asa-come]

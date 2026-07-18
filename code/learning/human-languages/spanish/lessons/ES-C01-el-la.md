@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: el / la
 gloss: the (masculine / feminine)
-concept_tag: ARTICLES-EL-LA
+concept_tag: GRAMMAR-THE
 prerequisites: [ES-C01-bien]
 sounds: [vowel-e, vowel-a]
 roots: [ille, illa]

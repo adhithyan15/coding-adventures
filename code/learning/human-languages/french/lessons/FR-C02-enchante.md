@@ -4,7 +4,7 @@ chapter: 2
 type: word
 headword: enchanté(e)
 gloss: pleased to meet you (literally "enchanted")
-concept_tag: PLEASED-TO-MEET
+concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [FR-C02-je-mappelle]
 sounds: [nasal-on, nasal-an, ch-sh]
 roots: [in-cantare]

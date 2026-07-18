@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: बरं
 gloss: okay / fine (baraṃ)
-concept_tag: OKAY
+concept_tag: RESPONSE-OKAY
 prerequisites: [MR-C01-ho]
 sounds: [anusvara-nasal]
 roots: []

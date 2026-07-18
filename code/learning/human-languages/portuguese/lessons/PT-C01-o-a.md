@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: o / a
 gloss: the (masculine / feminine)
-concept_tag: ARTICLE-GENDER
+concept_tag: GRAMMAR-THE
 prerequisites: [PT-C01-bom]
 sounds: []
 roots: [ille, illa]

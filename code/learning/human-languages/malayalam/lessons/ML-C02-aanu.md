@@ -4,7 +4,7 @@ chapter: 2
 type: word
 headword: ആണ്
 gloss: is (the copula)
-concept_tag: IS
+concept_tag: WORD-IS
 prerequisites: [ML-C02-peru]
 sounds: [independent-aa, retroflex-nu]
 roots: [aaka-dravidian]

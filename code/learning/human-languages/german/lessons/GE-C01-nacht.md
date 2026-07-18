@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: Nacht
 gloss: night (die Nacht — feminine)
-concept_tag: NACHT
+concept_tag: TIME-NIGHT
 prerequisites: [GE-C01-der-die-das]
 sounds: [ch-ach, vowel-a-german]
 roots: [nahts]

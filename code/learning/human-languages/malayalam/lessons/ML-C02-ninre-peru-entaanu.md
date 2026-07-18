@@ -4,7 +4,7 @@ chapter: 2
 type: phrase
 headword: നിന്റെ പേര് എന്താണ്?
 gloss: what's your name?
-concept_tag: WHATS-YOUR-NAME
+concept_tag: INTRO-WHATS-YOUR-NAME
 prerequisites: [ML-C02-entu, ML-C02-nii-ningal, ML-C02-peru, ML-C02-aanu]
 sounds: []
 roots: []

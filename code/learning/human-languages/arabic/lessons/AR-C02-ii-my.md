@@ -4,7 +4,7 @@ chapter: 2
 type: word
 headword: ي
 gloss: my (possessive suffix -ī)
-concept_tag: MY
+concept_tag: PRONOUN-MY
 prerequisites: [AR-C02-ism]
 sounds: [yaa-suffix]
 roots: []

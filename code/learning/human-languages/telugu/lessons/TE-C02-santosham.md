@@ -4,7 +4,7 @@ chapter: 2
 type: phrase
 headword: సంతోషం
 gloss: joy / pleased to meet you
-concept_tag: PLEASED-TO-MEET
+concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [TE-C02-naa-peru]
 sounds: [anusvara]
 roots: [santosha-sanskrit]

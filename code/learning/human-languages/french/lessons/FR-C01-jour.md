@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: jour
 gloss: day (le jour — masculine)
-concept_tag: JOUR
+concept_tag: TIME-DAY
 prerequisites: [FR-C01-le-la]
 sounds: [j-zh, vowel-ou, r-uvular]
 roots: [diurnum]

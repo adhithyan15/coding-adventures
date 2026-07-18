@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: ధన్యవాదములు
 gloss: thank you (dhanyavādamulu — "utterances of 'worthy'")
-concept_tag: THANKS
+concept_tag: COURTESY-THANKS
 prerequisites: [TE-C01-namaskaram]
 sounds: [nya-conjunct, mulu-plural]
 roots: [dhanya, vada]

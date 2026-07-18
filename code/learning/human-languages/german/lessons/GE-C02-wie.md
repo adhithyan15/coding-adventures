@@ -4,7 +4,7 @@ chapter: 2
 type: word
 headword: wie
 gloss: how
-concept_tag: HOW
+concept_tag: QUESTION-HOW
 prerequisites: [GE-C02-du-sie]
 sounds: [ie-long-ee, w-is-v]
 roots: [hwi]

@@ -4,7 +4,7 @@ chapter: 2
 type: word
 headword: heißen
 gloss: to be called / to be named
-concept_tag: VERB-BE-CALLED
+concept_tag: DE-VERB-HEISSEN
 prerequisites: [GE-C02-ich]
 sounds: [eszett, ei-vowel]
 roots: [haitana]

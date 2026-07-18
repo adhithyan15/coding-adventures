@@ -4,7 +4,7 @@ chapter: 2
 type: word
 headword: (s')appeler
 gloss: to call / to call oneself
-concept_tag: VERB-CALL
+concept_tag: FR-VERB-APPELER
 prerequisites: [FR-C02-je]
 sounds: [er-ending]
 roots: [appellare]

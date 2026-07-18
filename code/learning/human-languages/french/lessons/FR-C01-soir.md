@@ -4,7 +4,7 @@ chapter: 1
 type: word
 headword: soir
 gloss: evening (le soir — masculine)
-concept_tag: SOIR
+concept_tag: TIME-EVENING
 prerequisites: [FR-C01-jour]
 sounds: [vowel-oi, r-uvular]
 roots: [serum-late]
