@@ -112,12 +112,12 @@ the paired `hash-functions` prerequisite, the paired `bloom-filter`, `hash-map`,
 and `hash-set` ports, the paired `in-memory-data-store-engine` and
 `in-memory-data-store` ports, and the paired C#/F# `wasm-module-encoder`,
 `x25519`, `brainfuck-wasm-compiler`, `argon2i`, `argon2d`, and `argon2id`
-ports, and the paired C#/F# `chacha20-poly1305`, `xml-lexer`, `block-ram`, and
-`nib-wasm-compiler` ports:
+ports, and the paired C#/F# `chacha20-poly1305`, `xml-lexer`, `block-ram`,
+`nib-wasm-compiler`, and `dartmouth-basic-lexer` ports:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 323 |
+| Present in 10-15 languages | 172 | 321 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,972 |
 | Present in one language | 701 | 9,814 |
@@ -163,7 +163,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 172 packages present in at least ten implementation languages need 327
+The 172 packages present in at least ten implementation languages need 321
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -172,8 +172,8 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Elixir | 0 | Complete; `python-parser` uses the shared grammar-driven frontend |
 | Lua | 0 | Complete; paired data-structure/storage wave |
 | Perl | 0 | Complete; paired data-structure/storage wave |
-| C# | 8 | Move with F# |
-| F# | 8 | Move with C# |
+| C# | 6 | Move with F# |
+| F# | 6 | Move with C# |
 | Haskell | 34 | Dependency-shaped compression, graphics, ML, and protocol waves |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
@@ -311,6 +311,16 @@ cover executable literals and calls, wrapping-opcode validation, malformed
 source, depth and size limits, defensive results, and optional file output. The
 package now spans 13 implementation lanes, reduces the high-consensus backlog
 to 323 slots, and leaves 7 paired gaps in each lane.
+
+The eleventh paired C#/F# slice is complete: `dartmouth-basic-lexer` now loads
+the shared token grammar from an embedded resource in both lanes. The native
+wrappers normalize case-insensitive token values, relabel only physical-line
+labels as `LINE_NUM`, preserve string case without quotes, and suppress `REM`
+bodies while retaining their terminating newline. Package-native tests cover
+operators, numeric formats, functions, unknown input, CRLF positions, blank
+lines, and multi-line remark recovery. The package now spans 12 implementation
+lanes, reduces the high-consensus backlog to 321 slots, leaves 6 paired gaps in
+each lane, and unlocks the dependency-safe `dartmouth-basic-parser` slice.
 
 Recommended family order:
 
