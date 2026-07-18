@@ -114,12 +114,12 @@ and `hash-set` ports, the paired `in-memory-data-store-engine` and
 `x25519`, `brainfuck-wasm-compiler`, `argon2i`, `argon2d`, and `argon2id`
 ports, and the paired C#/F# `chacha20-poly1305`, `xml-lexer`, `block-ram`,
 `nib-wasm-compiler`, `dartmouth-basic-lexer`, and `dartmouth-basic-parser`
-ports, followed by the paired `ed25519`, `font-parser`, and
-`asciidoc-parser` ports:
+ports, followed by the paired `ed25519`, `font-parser`, `asciidoc-parser`, and
+`fpga` ports:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 313 |
+| Present in 10-15 languages | 172 | 311 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,972 |
 | Present in one language | 703 | 9,842 |
@@ -165,7 +165,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 172 packages present in at least ten implementation languages need 313
+The 172 packages present in at least ten implementation languages need 311
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -174,8 +174,8 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Elixir | 0 | Complete; `python-parser` uses the shared grammar-driven frontend |
 | Lua | 0 | Complete; paired data-structure/storage wave |
 | Perl | 0 | Complete; paired data-structure/storage wave |
-| C# | 2 | Move with F# |
-| F# | 2 | Move with C# |
+| C# | 1 | Move with F# |
+| F# | 1 | Move with C# |
 | Haskell | 34 | Dependency-shaped compression, graphics, ML, and protocol waves |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
@@ -365,6 +365,15 @@ exercise 33 test cases in each lane, including lenient unterminated blocks and
 malformed inline delimiters, with more than 97% line coverage. The
 package now spans 12 implementation lanes, reduces the high-consensus backlog
 to 313 slots, and leaves 2 paired gaps in each lane.
+
+The sixteenth paired C#/F# slice is complete: `fpga` now provides native
+SRAM-backed lookup tables, dual-LUT slices with optional registers and carry
+chains, configurable logic blocks, programmable switch matrices, I/O pads, and
+immutable JSON bitstream configuration in both lanes. The ports compose the
+existing native `logic-gates` and `block-ram` packages, and their package-local
+suites exercise 40 C# and 38 F# cases with more than 97% line coverage. The
+package now spans 12 implementation lanes, reduces the high-consensus backlog
+to 311 slots, and leaves only `zstd` as a paired gap in C# and F#.
 
 Recommended family order:
 
