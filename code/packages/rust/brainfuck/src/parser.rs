@@ -64,6 +64,29 @@ use std::fs;
 use grammar_tools::parser_grammar::parse_parser_grammar;
 use parser::grammar_parser::{GrammarParser, GrammarASTNode};
 
+/// Recursion-depth cap for the Brainfuck [`GrammarParser`] — see
+/// [`GrammarParser::with_max_depth`] for why this guard exists at all (deep
+/// recursion through `parse_rule` can overflow the *native* thread stack —
+/// an uncatchable process abort — before this crate's own callers get a
+/// chance to report anything). Before this constant was applied,
+/// `create_brainfuck_parser` never called `with_max_depth` at all, leaving
+/// every caller exposed to a native-stack-overflow DoS from adversarially
+/// deeply-nested `[` brackets (e.g. `[[[...+...]]]`).
+///
+/// `brainfuck.grammar` has exactly one recursive shape: `instruction ->
+/// loop -> instruction` (via `loop = LOOP_START { instruction } LOOP_END`).
+/// Measured directly (binary search over candidate `with_max_depth`
+/// values against a fixed 5000-level adversarial `[[[...+...]]]` input, on
+/// a default-~2MiB-stack worker thread in a debug build): safe at **248**,
+/// crashes at **249**.
+///
+/// `MAX_RULE_DEPTH` is set to **170** — about 31% below that floor
+/// (comparable margin to `apl-parser`'s own ~26.5%, `j-parser`'s ~30%,
+/// `reduce-parser`'s ~28.5%). Measured real-input headroom at `170`:
+/// nested loops parse cleanly to at least 80 levels — far beyond any
+/// hand-written Brainfuck program's real nesting depth.
+const MAX_RULE_DEPTH: usize = 170;
+
 // ===========================================================================
 // Grammar file location
 // ===========================================================================
@@ -160,7 +183,7 @@ pub fn create_brainfuck_parser(source: &str) -> GrammarParser {
     // GrammarParser takes ownership of both tokens and grammar. It builds
     // internal indexes (rule lookup, memo cache) for efficient recursive
     // descent parsing with packrat memoization.
-    GrammarParser::new(tokens, grammar)
+    GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH)
 }
 
 /// Parse Brainfuck source text into an AST.
@@ -459,5 +482,33 @@ mod tests {
         let ast = parse_brainfuck("+++++[->+<]").expect("complex program should parse");
         assert_program_root(&ast);
         assert!(find_rule(&ast, "loop"), "Expected at least one loop");
+    }
+
+    // -------------------------------------------------------------------
+    // Recursion-depth guard (DoS hardening) -- see MAX_RULE_DEPTH's own
+    // doc comment for the measurement.
+    // -------------------------------------------------------------------
+
+    fn nested_loop_source(n: usize) -> String {
+        format!("{}+{}", "[".repeat(n), "]".repeat(n))
+    }
+
+    /// Deeply-nested input must not overflow the native stack on a
+    /// default-stack thread -- the whole point of the guard.
+    #[test]
+    fn test_deeply_nested_input_does_not_overflow_on_default_stack() {
+        let src = nested_loop_source(5000);
+        let handle = std::thread::spawn(move || {
+            let _ = parse_brainfuck(&src);
+        });
+        handle
+            .join()
+            .expect("MAX_RULE_DEPTH must trip BEFORE native overflow on the default stack");
+    }
+
+    /// Reasonable, hand-writable nesting stays well under the cap.
+    #[test]
+    fn test_reasonable_nesting_stays_under_the_cap() {
+        assert!(parse_brainfuck(&nested_loop_source(20)).is_ok());
     }
 }

@@ -16,9 +16,30 @@ use diagram_ir::{
 use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
 use mermaid_lexer::tokenize_mermaid;
-use parser::grammar_parser::{GrammarASTNode, GrammarParser};
+use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
 const PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/mermaid.grammar");
+
+/// Recursion-depth cap for the Mermaid [`GrammarParser`] — see
+/// [`GrammarParser::with_max_depth`] for why this guard exists at all (deep
+/// recursion through `parse_rule` can overflow the *native* thread stack —
+/// an uncatchable process abort — before this crate's own callers get a
+/// chance to report anything). Before this constant was applied,
+/// `create_mermaid_parser` never called `with_max_depth` at all.
+///
+/// Unlike every other crate in this hardening pass, `mermaid.grammar`
+/// (read in full: 39 lines) has **no self-referential production at all**
+/// — `document -> statement -> (edge_stmt | node_stmt)`, `edge_stmt ->
+/// edge_segment { edge_segment }`, `node_ref -> node_shape`: every
+/// production either bottoms out in tokens or repeats flatly via EBNF
+/// `{ x }`, which costs zero native stack regardless of width (confirmed
+/// in `reduce-parser`'s own `MAX_RULE_DEPTH` doc comment via a throwaway
+/// probe grammar). There is no adversarial input shape that can drive this
+/// specific grammar's own recursion arbitrarily deep. `DEFAULT_MAX_RULE_DEPTH`
+/// (128) is used here as pure defense-in-depth — a cheap, harmless backstop
+/// consistent with every other `GrammarParser` construction site in this
+/// repo now calling `with_max_depth`, not a response to a measured risk.
+const MAX_RULE_DEPTH: usize = DEFAULT_MAX_RULE_DEPTH;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct ParseError {
@@ -142,7 +163,7 @@ pub fn create_mermaid_parser(source: &str) -> GrammarParser {
     let tokens = tokenize_mermaid(source);
     let grammar = parse_parser_grammar(PARSER_GRAMMAR_SOURCE)
         .unwrap_or_else(|e| panic!("Failed to parse mermaid.grammar: {e}"));
-    GrammarParser::new(tokens, grammar)
+    GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH)
 }
 
 pub fn parse_mermaid_ast(source: &str) -> Result<GrammarASTNode, ParseError> {
@@ -935,5 +956,27 @@ mod tests {
         let err = parse_to_diagram("flowchart LR\nA -->\n").unwrap_err();
         assert!(err.line >= 2);
         assert!(err.col >= 1);
+    }
+
+    // -------------------------------------------------------------------
+    // Recursion-depth guard (DoS hardening) -- see MAX_RULE_DEPTH's own
+    // doc comment: this grammar has no self-referential production at
+    // all, so there is no adversarial *nesting* shape to probe. The only
+    // "chain" shape (`edge_stmt`'s own `edge_segment { edge_segment }`
+    // repetition) is iterative, not recursive -- this test confirms a
+    // very long edge chain still parses cleanly even with the cap
+    // applied, i.e. that DEFAULT_MAX_RULE_DEPTH does not falsely reject
+    // wide (as opposed to deep) input.
+    // -------------------------------------------------------------------
+
+    #[test]
+    fn a_very_long_edge_chain_still_parses_cleanly() {
+        let mut src = String::from("flowchart LR\nA");
+        for _ in 0..5000 {
+            src.push_str(" --> A");
+        }
+        src.push('\n');
+        let diagram = parse_to_diagram(&src).expect("wide edge chain must not trip the cap");
+        assert_eq!(diagram.edges.len(), 5000);
     }
 }
