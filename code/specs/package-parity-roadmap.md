@@ -164,7 +164,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 172 packages present in at least ten implementation languages need 317
+The 172 packages present in at least ten implementation languages need 315
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -173,8 +173,8 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Elixir | 0 | Complete; `python-parser` uses the shared grammar-driven frontend |
 | Lua | 0 | Complete; paired data-structure/storage wave |
 | Perl | 0 | Complete; paired data-structure/storage wave |
-| C# | 4 | Move with F# |
-| F# | 4 | Move with C# |
+| C# | 3 | Move with F# |
+| F# | 3 | Move with C# |
 | Haskell | 34 | Dependency-shaped compression, graphics, ML, and protocol waves |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
@@ -342,6 +342,17 @@ tampered signature halves, non-canonical scalars, malformed point encodings,
 and strict seed and secret-key formats. The package now spans 12 implementation
 lanes, reduces the high-consensus backlog to 317 slots, and leaves 4 paired
 gaps in each lane.
+
+The fourteenth paired C#/F# slice is complete: `font-parser` now provides
+dependency-free metrics-only OpenType and TrueType readers in both lanes.
+Native big-endian table parsing covers global metrics and names, BMP `cmap`
+format 4 glyph lookup, complete and shared `hmtx` records, optional `OS/2`
+heights, and legacy `kern` format 0 pairs. Package-native tests exercise the
+shared Inter fixture, in-memory synthetic fonts, malformed directories and
+sentinels, immutable input ownership, unsupported mappings, shared advances,
+and sorted kerning lookup. The package now spans 12 implementation lanes,
+reduces the high-consensus backlog to 315 slots, and leaves 3 paired gaps in
+each lane.
 
 Recommended family order:
 
