@@ -3,6 +3,20 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.22] - Unreleased
+
+### Fixed
+
+- **Unary minus now applies numeric affinity to a text/blob operand.** SQLite
+  coerces the operand of `-` to a number before negating; `eval_unary`'s `Neg`
+  arm previously left non-numeric values unchanged, so `-'5'` wrongly returned
+  the string `'5'`. It now coerces through the shared `text_to_numeric` helper:
+  `-'5'` = -5, `-'12abc'` = -12 (leading numeric prefix), `-'abc'` = 0 (no
+  prefix), `-'3.5'` = -3.5, `-'  7'` = -7 (whitespace tolerated), `-TRUE` = -1.
+  The `-i64::MIN` overflow guard is preserved. Known edge left for later: an
+  exponent-form string (`'3e2'`) stays REAL in SQLite but collapses to an
+  integer here.
+
 ## [0.4.21] - Unreleased
 
 ### Fixed

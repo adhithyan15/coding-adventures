@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.43 — unary minus coerces text/blob operands
+
+`-'5'` now returns `-5`, not the string `'5'`. SQLite applies numeric affinity to
+the operand of unary minus before negating; the engine previously left text
+unchanged. Now `-'12abc'` = -12 (leading numeric prefix), `-'abc'` = 0, `-'3.5'`
+= -3.5, and leading whitespace is tolerated (`-'  7'` = -7). One new
+differential-oracle case + a sql-vm unit test; sql-vm 0.4.22. An exponent-form
+string (`-'3e2'`) is a documented edge left for a float-affinity follow-up.
+
 ## 0.5.42 — blob literals `x'…'` parse
 
 SQL blob literals `x'48656C6C6F'` / `X'FF00'` now parse end to end. Previously
