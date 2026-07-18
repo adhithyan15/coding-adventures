@@ -17,12 +17,16 @@ Spanish and French where a contrast helps. The recurring decoder is the
   **Gute Nacht** → practice.
 - **Ch. 2 — Introducing Yourself**: ich → heißen → **ich heiße** ("my name
   is") → **du / Sie** → wie → **wie heißen Sie?** → freut mich → practice.
+- **Ch. 3 — "Wie geht's?"**: danke (← *denken* "think"; Eng *thank*=*think*) →
+  bitte (← *bitten* "ask/pray"; Eng *bid*/*bead*) → **gehen** ("to go" = Eng
+  *go*; the state-verb, w/ a first taste of the **dative** *mir/dir*) → wie geht
+  es dir/Ihnen → es geht (so-so) → practice. **Authored** — completes the
+  Spanish/French/German how-are-you trilogy.
 
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 3 | Responding: wie geht's, gut danke, und dir/Ihnen |
 | 4 | Farewells: tschüss, auf Wiedersehen, bis morgen |
 | 5+ | Numbers, cases (der→den→dem), family, food — following the shared theme order |
 
