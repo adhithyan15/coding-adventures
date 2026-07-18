@@ -1,5 +1,22 @@
 # Changelog
 
+## Chapter 4 — Farewells (parallel of Spanish Ch. 5)
+
+- **Chapter 4 authored** (`FR-C04-au-revoir`, `-a-plus-tard`, `-a-bientot`,
+  `-a-demain`, `-practice`): closing a conversation, atom-first, reviewing
+  Chapter 3. Reuses the canonical `FAREWELL` + `FAREWELL-LATER/TOMORROW/SOON`
+  concepts introduced with Spanish Ch. 5, mapping each French goodbye to its
+  Spanish twin.
+- **The "see you again" metaphor**: *au revoir* = "until the re-seeing" (*voir* ←
+  *vidēre* → vision/video/revise) — explicitly paired with German *auf
+  Wiedersehen* ("on the seeing-again"), against Spanish *adiós* ("to God").
+- **Cross-language root callbacks**: *à plus tard* — *tard* ← Latin *tarde*, the
+  same word as Spanish *tarde*; *à demain* — *demain* ← *dē māne* "from the
+  morning", sharing *māne* with Spanish *mañana* (and English *matinée*).
+- **A writing-nuance aside**: the circumflex on *bientôt* (← *tost*) as the ghost
+  of a dropped *s* (*hôtel* ← *hostel*), tying back to the accent-mark thread.
+- All soft goodbyes are **à** + a time, mirroring Spanish's **hasta**.
+
 ## Chapter 3 — "Comment ça va ?" (the parallel of Spanish Ch. 4)
 
 - **Chapter 3 authored** (`FR-C03-merci`, `-de-rien`, `-aller`,

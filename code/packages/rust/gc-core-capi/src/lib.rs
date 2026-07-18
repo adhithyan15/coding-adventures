@@ -29,6 +29,9 @@
 //! | `__gc_live_bytes()` | live payload bytes |
 //! | `__gc_collection_count()` | collections run so far |
 //! | `__gc_reset()` | drop the whole heap (frees everything); mainly for tests / process teardown |
+//! | `__gc_register_stackmap(...)` | register a function's stack maps (code range + per-safepoint records) for precise-root resolution |
+//! | `__gc_stackmap_count()` | number of functions registered |
+//! | `__gc_stackmap_reset()` | drop all registered stack maps (tests / teardown) |
 //!
 //! ## State & threading
 //!
@@ -50,6 +53,11 @@ mod stack_scan;
 /// which reference the names `twig_gc.c` used, link against this collector.
 /// See [`twig_compat`].
 mod twig_compat;
+
+/// Code-address → live-reference stack-map registry — the lookup the precise
+/// stack walker consults to turn a return address into the [`gc_core::StackMapRecord`]
+/// live there. Populated by [`__gc_register_stackmap`]. See [`stackmap_registry`].
+mod stackmap_registry;
 
 /// The one process-wide heap.  `None` until the first allocation (lazy init);
 /// `__gc_reset` puts it back to `None`, running `FlatHeap`'s `Drop` to free
@@ -214,6 +222,69 @@ pub extern "C" fn __gc_collection_count() -> i64 {
 pub extern "C" fn __gc_reset() {
     let mut guard = HEAP.lock().unwrap_or_else(|e| e.into_inner());
     *guard = None; // FlatHeap::drop frees all blocks
+}
+
+/// Register one compiled function's **stack maps** so the precise stack walker can
+/// turn a return address inside it into the live-reference slots at that PC.
+/// Returns the number of records stored (`> 0`), or `0` if rejected (see
+/// [`stackmap_registry::register`] for the rejection rules).
+///
+/// A code generator calls this once per function at image start-up — before any
+/// collection — passing the function's code range (`func_start`, `func_len`) and
+/// its `num_records` safepoint records as **parallel flattened arrays**:
+/// `pc_offsets[i]`, `frame_sizes[i]`, `callee_masks[i]`, `slot_counts[i]`, and one
+/// concatenated `slots_flat` read record-by-record through the counts.
+/// `frame_sizes` and `callee_masks` may be null (read as zero) for a first-cut
+/// backend that spills every live reference to the stack.
+///
+/// This is the code-address analogue of [`__gc_register_kind`] (which registers an
+/// object *layout*); together they are the two maps a precise collector needs — one
+/// for stack roots, one for heap-object interiors.
+///
+/// # Safety
+///
+/// `pc_offsets` and `slot_counts` must each point to `num_records` readable words;
+/// `frame_sizes` / `callee_masks` likewise or null; `slots_flat` must cover the sum
+/// of the non-negative `slot_counts` (or be null if that sum is `0`). Standard
+/// C-array contract, upheld by the generated caller.
+#[no_mangle]
+#[allow(clippy::too_many_arguments)]
+pub unsafe extern "C" fn __gc_register_stackmap(
+    func_start: u64,
+    func_len: u64,
+    num_records: i64,
+    pc_offsets: *const u32,
+    frame_sizes: *const u32,
+    callee_masks: *const u16,
+    slot_counts: *const i32,
+    slots_flat: *const i32,
+) -> i64 {
+    // SAFETY: the array contract is forwarded verbatim to `register`.
+    stackmap_registry::register(
+        func_start,
+        func_len,
+        num_records,
+        pc_offsets,
+        frame_sizes,
+        callee_masks,
+        slot_counts,
+        slots_flat,
+    )
+}
+
+/// Number of functions currently registered via [`__gc_register_stackmap`].
+/// Introspection for diagnostics and tests.
+#[no_mangle]
+pub extern "C" fn __gc_stackmap_count() -> i64 {
+    stackmap_registry::count()
+}
+
+/// Drop every registered function's stack maps. Code maps normally live for the
+/// whole process, so this is **not** run by [`__gc_reset`]; it exists for
+/// deterministic test isolation and process teardown.
+#[no_mangle]
+pub extern "C" fn __gc_stackmap_reset() {
+    stackmap_registry::reset()
 }
 
 #[cfg(test)]

@@ -3,6 +3,24 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.29] - Unreleased
+
+### Fixed
+
+- **Integer arithmetic overflow now promotes to REAL instead of erroring.** When
+  the exact `i64` result of `+`, `-`, `*`, or unary `-` does not fit, SQLite
+  redoes the operation in floating point and yields a REAL — it never errors or
+  wraps. `9223372036854775807 + 1` = `9.2233720369e18` (real), `min_i64 - 1` and
+  `max_i64 * 2` likewise, and `-(-9223372036854775808)` = `9.2233720369e18`.
+  `checked_int_binop`'s int/int arm now falls back to `float_op` on the widened
+  `f64` operands (the same float path the mixed-operand arms use), and the unary
+  `Neg` arm falls back to `-(n as f64)` for `i64::MIN`; the `op_name` parameter,
+  which existed only for the removed overflow-error message, was dropped.
+  Non-overflowing arithmetic still returns INTEGER. (Division/modulo of
+  `i64::MIN / -1` — where the operands are true integers rather than
+  overflow-to-REAL literals — is a distinct edge left for a follow-up, tangled
+  with SQLite's integer-coercing `%` semantics.)
+
 ## [0.4.28] - Unreleased
 
 ### Fixed

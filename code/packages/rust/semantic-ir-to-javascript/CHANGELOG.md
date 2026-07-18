@@ -1,5 +1,74 @@
 # Changelog
 
+## 0.39.0 — tagged-float flip: faithful Ruby `Integer#/` vs `Float#/`, and `7.0` prints `7.0`
+
+Wires the dormant tagged-float substrate (0.38.0) into the emitter and every
+numeric runtime path, closing the JS backend's float-faithfulness gap:
+`7.0 / 2` now true-divides to `3.5` (was floored to `3`), `6.0 / 2` is the Float
+`3.0` (was `3`), `puts 7.0` prints `7.0` (was `7`), and `7.0.float?` / `7.to_f`
+/ `7.0.class`-adjacent predicates are honest.
+
+- **Emitter**: a `FloatLit` mints `__Sir.mkFloat(...)` (boxes an integral
+  Float, leaves a non-integral one native). `-` and `%` route through the
+  re-tagging `__Sir.minus`/`__Sir.mod`, unary minus through `__Sir.neg`, and
+  the comparisons `=`/`!=`/`<`/`>`/`<=`/`>=` through thin `numOf`-unwrapping
+  helpers `eq`/`ne`/`lt`/`gt`/`le`/`ge` (byte-identical to the old native
+  operators for every non-boxed value, and additionally correct for a boxed
+  Float — `7.0 == 7` is true, `7.0 < 8` avoids the `NaN` a native `<` on the
+  box would give).
+- **Runtime**: `divide` picks Float#/ true-division vs Integer#/ floor from the
+  operand tags; the shared numeric fold (`plus`/`times`/`-`/`/`) unwraps and
+  re-tags (so `3.5 + 3.5` is the Float `7.0`); `format` renders a boxed Float
+  with its trailing `.0`; `numericMethod` re-tags float-returning methods
+  (`to_f`, `abs`, `fdiv`, `round(n>0)`, `divmod` remainder, `**`, `step`) and
+  gains `integer?`/`float?`/`finite?`/`nan?`/`infinite?`; `numArg`, the dispatch
+  gates, and the value-inspection sites (`dig`/`values_at`/`each_slice` counts,
+  string/array `*` count, tensor `toArrayValue`/`broadcastValues`, the Symbolic
+  numeric constructors) all unwrap via `numOf`.
+- **Hash/Set**: no per-site edits — the interning of integral floats (0.38.0)
+  makes a boxed `7.0` dedup in `Map`/`Set` by identity (Ruby `eql?`), so
+  `[1.0,1.0,2.0].uniq == [1.0,2.0]`, `tally` groups floats, and Integer `7`
+  stays a distinct hash key from Float `7.0`.
+
+Guarded by two node exec-proofs (`tagged_float_end_to_end_division_and_display`,
+`tagged_float_methods_and_collections`) and a cross-backend float-division
+conformance case; the full existing suite (215+ tests, incl. 80 node
+exec-proofs) passes unchanged — the non-integral-float and Integer paths are
+byte-for-byte identical.
+
+## 0.38.0 — tagged-float substrate (dormant): Ruby `Integer` vs `Float`
+
+Groundwork for faithful `Float` semantics on the JS backend. JavaScript has one
+number type (`f64`), so Ruby `Integer` `7` and `Float` `7.0` are the same value
+— which is why `7.0 / 2` still floors to `3` (should be `3.5`) and `puts 7.0`
+prints `7`. The Rust/Go/C backends carry a tagged `Int`/`Float` runtime value;
+this release adds the JS analogue, **dormant** (nothing emits it yet — no
+behavior change; the atomic flip that wires it lands next).
+
+Added to the runtime (all exported on `__Sir`):
+- `SirFloat` — a frozen box wrapping an integral float value.
+- `mkFloat(v)` — the SOLE float factory. Non-integral floats stay native
+  `number` (already distinguishable); integral floats box, **interned** so
+  equal values share one identity (a boxed `7.0` dedups in `Map`/`Set` by
+  Ruby `eql?`, while Integer `7` stays a distinct key). The intern cache is
+  hard-capped (`FLOAT_INTERN_CAP = 4096`) — past the cap `mkFloat` returns
+  fresh un-interned boxes, so memory is bounded (no unbounded-growth DoS).
+- `numOf` (unwrap to raw f64), `isNum`, `isFloat`, `neg`/`minus`/`mod`
+  (re-tagging arithmetic), and `floatToRubyString` (restores the trailing
+  `.0`, incl. `-0.0` and exponent form `1e21` → `1.0e+21`, matching Rust/Go).
+
+Also: `valEq` gains a numeric arm so Ruby `==` is by value across the
+Integer/Float split (`[7.0].include?(7)` is `true`) while hash keys keep
+`eql?` identity semantics.
+
+Invariant established: Ruby Integer ⟺ integral native `number`; Ruby Float ⟺
+non-integral native `number` OR an interned `SirFloat` holding an integral
+value. Non-integral floats stay native, so the entire existing corpus is
+byte-unchanged. Guarded by a dormant-helper node exec-proof
+(`tests/run_with_node.rs::tagged_float_helpers_behave`) and runtime export
+assertions.
+
+
 ## 0.37.0 — Ruby `Integer#/` floors toward −∞ (SIR21 §E3)
 
 The runtime `divide` returned a bare `a / b` — JavaScript float division — so

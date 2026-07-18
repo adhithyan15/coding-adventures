@@ -126,6 +126,53 @@ fn division_matches_ruby_floor_on_every_backend() {
     assert!(ran > 0, "no backend toolchain available — the frontier proved nothing");
 }
 
+/// Float-division cases: the OTHER half of Ruby's polymorphic `/`. `Float#/`
+/// TRUE-divides (never floors), and an integral-valued float result still
+/// displays with a trailing `.0` (`6.0 / 2 == 3.0`, not `3`). Expected strings
+/// are Ruby's `Float#to_s`, which every backend must reproduce — the same
+/// cross-backend parity the integer frontier locks, on the float side. The JS
+/// backend gained this with the tagged-float substrate (its numbers are all
+/// f64, so an integral Float like `6.0` was previously indistinguishable from
+/// Integer `6` and wrongly floored); the tagged-value backends (Rust/Go/C) and
+/// Python/Ruby already carried the distinction.
+const FLOAT_CASES: &[(&str, &str)] = &[
+    ("7.0 / 2", "3.5"),   // Float / Int  → Float
+    ("6.0 / 2", "3.0"),   // integral result still prints `.0`
+    ("6.0 / 3.0", "2.0"), // Float / Float
+    ("7 / 2.0", "3.5"),   // Int / Float  → Float (promotes)
+    ("-7.0 / 2", "-3.5"), // sign preserved (true-divide, not floor)
+];
+
+#[test]
+fn float_division_true_divides_on_every_backend() {
+    let mut ran = 0usize;
+    for &(expr, expected) in FLOAT_CASES {
+        let ruby = format!("puts({})\n", expr);
+        for &target in Target::all() {
+            match run_source("floatdiv", &ruby, target) {
+                RunOutcome::Ran(out) => {
+                    assert_eq!(
+                        out,
+                        expected,
+                        "\nFLOAT DIVISION: backend {} computed `{}` = {out}, Ruby = {expected}\n",
+                        target.tag(),
+                        expr,
+                    );
+                    ran += 1;
+                }
+                RunOutcome::Failed(msg) => panic!(
+                    "FLOAT DIVISION: backend {} failed on `{}`: {}",
+                    target.tag(),
+                    expr,
+                    msg.lines().next().unwrap_or("")
+                ),
+                RunOutcome::Skipped(_) => {}
+            }
+        }
+    }
+    assert!(ran > 0, "no backend toolchain available — float division proved nothing");
+}
+
 /// The Python arm of the frontier, **closed** and guarded. The Python backend's
 /// `Integer#/` now floors (SIR21 §E3 `DivOp::Floor`), so it reproduces Ruby's
 /// `/` on every sign combination end-to-end — emit, run, compare to the oracle.

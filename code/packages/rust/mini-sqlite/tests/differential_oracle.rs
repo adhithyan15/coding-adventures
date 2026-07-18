@@ -731,6 +731,27 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT FORMAT('%d %d', id) AS a, PRINTF('%q', CHAR(39)) AS b FROM t",
     },
+    // Scientific-notation numeric literals: `1e3`, `2.5e2`, `1.5e-3`, `10e+2`.
+    // A literal carrying an exponent is REAL in SQLite (`typeof(1e3)` = 'real',
+    // value 1000.0), even when the value is integral. Previously the lexer's
+    // NUMBER token had no exponent, so `1e3` tokenised as `1` + `e3` (a NAME) and
+    // failed to parse.
+    Case {
+        id: "scientific_notation_literals",
+        setup: &[],
+        query: "SELECT 1e3 AS a, 2.5e2 AS b, 1.5e-3 AS c, 10e+2 AS d, typeof(1e3) AS e, 1E2*2 AS f",
+    },
+    // The exponent must not disturb ordinary subtraction — `5-3` stays `2` (the
+    // `-` is only consumed as an exponent sign directly after `e`/`E`). Also
+    // checks an exponent literal composing in arithmetic and a WHERE predicate.
+    Case {
+        id: "scientific_notation_arithmetic",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, v REAL)",
+            "INSERT INTO t VALUES (1, 2.0), (2, 3.0), (3, 300.0)",
+        ],
+        query: "SELECT id FROM t WHERE v < 2.5e0 OR v = 3e2 ORDER BY id",
+    },
     // A doubled single quote (`''`) inside a string literal is SQL's escape for
     // one literal quote — `'it''s'` is the 4-character string `it's`. Exercises
     // string literals in the SELECT list AND in an INSERT'd row value.
@@ -1539,6 +1560,19 @@ const CASES: &[Case] = &[
         id: "div_mod_nonzero_unaffected",
         setup: &["CREATE TABLE t (id INTEGER)", "INSERT INTO t VALUES (1)"],
         query: "SELECT (7 / 2) AS a, (-7 / 2) AS b, (7 % 3) AS c, (7.0 / 2) AS d FROM t",
+    },
+    // Integer arithmetic OVERFLOW promotes to REAL, matching SQLite: when the
+    // exact i64 result of `+`/`-`/`*` (or unary `-`) does not fit, SQLite redoes
+    // the operation in floating point and returns a REAL rather than erroring or
+    // wrapping. `max_i64 + 1` = 9.2233720369e18 (real), `min_i64 - 1` likewise,
+    // `max_i64 * 2` = 1.8446744074e19, and `-(min_i64)` = 9.2233720369e18.
+    // Previously mini errored ("integer overflow in addition"). Non-overflowing
+    // arithmetic still returns INTEGER (the last two columns guard against
+    // over-promoting the common case).
+    Case {
+        id: "int_overflow_promotes_to_real",
+        setup: &[],
+        query: "SELECT 9223372036854775807 + 1 AS a, typeof(9223372036854775807 + 1) AS at, -9223372036854775807 - 2 AS b, 9223372036854775807 * 2 AS c, -(-9223372036854775808) AS d, 100 + 200 AS e, typeof(100 + 200) AS et",
     },
     // Binary arithmetic applies NUMERIC affinity to text/blob operands, matching
     // SQLite: `'5'+0` = 5 (integer), `'5.5'+0` = 5.5 (real), `'abc'+1` = 1 (no

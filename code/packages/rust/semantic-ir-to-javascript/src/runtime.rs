@@ -98,10 +98,98 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     return c.fn(...args);
   }
 
+  // ── tagged floats (Ruby Integer vs Float) ──────────────────────
+  //
+  // JavaScript has ONE number type (`f64`), so Ruby's `Integer` `7` and
+  // `Float` `7.0` are the same JS value — and Ruby distinguishes them
+  // everywhere: `7 / 2 == 3` (Integer#/ floors) but `7.0 / 2 == 3.5`
+  // (Float#/ true-divides); `puts 7.0` prints `7.0`, not `7`.  The
+  // Rust/Go/C backends carry a tagged `Int`/`Float` runtime value; we do
+  // the same, but only where JS can't already tell the two apart.
+  //
+  //   INVARIANT.  A Ruby Integer is an INTEGRAL native `number`.  A Ruby
+  //   Float is EITHER a non-integral native `number` (`3.5` — already
+  //   distinguishable, so left native) OR a `SirFloat` box wrapping an
+  //   integral value (`7.0` — otherwise indistinguishable from `7`).
+  //
+  // Only integral-valued floats are boxed, so the whole non-integral
+  // corpus stays native and untouched.  `mkFloat` is the SOLE factory;
+  // everything numeric unwraps through `numOf` and re-tags through
+  // `mkFloat`, so the box never escapes to native arithmetic by accident.
+  class SirFloat {
+    constructor(f) { this.f = f; Object.freeze(this); }
+  }
+  // Interning gives equal integral floats a single identity, so a boxed
+  // `7.0` used as a `Map` key or `Set` member (`tally`, `group_by`,
+  // `uniq`, a Hash literal) dedups by identity exactly like Ruby's `eql?`
+  // — while native Integer `7` stays a DISTINCT key (`7.eql?(7.0)` is
+  // false).  The cache is hard-capped: past the cap `mkFloat` returns
+  // fresh un-interned boxes, so memory is bounded (no unbounded-growth
+  // DoS) at the cost of losing dedup for programs with more than
+  // `FLOAT_INTERN_CAP` distinct integral-float keys — bounded and rare.
+  const FLOAT_INTERN_CAP = 4096;
+  const floatIntern = new Map();
+  function mkFloat(v) {
+    if (!Number.isInteger(v)) { return v; } // non-integral float: stays native
+    const hit = floatIntern.get(v);
+    if (hit !== undefined) { return hit; }
+    const box = new SirFloat(v);
+    if (floatIntern.size < FLOAT_INTERN_CAP) { floatIntern.set(v, box); }
+    return box;
+  }
+  // `numOf` unwraps to the raw f64 for arithmetic/comparison; `isNum`
+  // recognises "a number" at type gates; `isFloat` recognises "a Ruby
+  // Float" (boxed integral OR non-integral native).
+  function numOf(x) { return x instanceof SirFloat ? x.f : x; }
+  function isNum(x) { return typeof x === "number" || x instanceof SirFloat; }
+  function isFloat(x) {
+    return x instanceof SirFloat || (typeof x === "number" && !Number.isInteger(x));
+  }
+  // Arithmetic re-tags: the result is a Float iff an operand is a Float
+  // (or the op forces float, e.g. Float#/).  `mkFloat` then leaves a
+  // non-integral result native and boxes an integral one (`3.5 + 3.5`
+  // → boxed `7.0`; `7.0 - 0.5` → native `6.5`).
+  function neg(x) { return isFloat(x) ? mkFloat(-numOf(x)) : -numOf(x); }
+  function minus(a, b) {
+    const r = numOf(a) - numOf(b);
+    return (isFloat(a) || isFloat(b)) ? mkFloat(r) : r;
+  }
+  function mod(a, b) {
+    const r = numOf(a) % numOf(b);
+    return (isFloat(a) || isFloat(b)) ? mkFloat(r) : r;
+  }
+  // Comparisons unwrap through `numOf` before comparing.  Because `numOf`
+  // is the IDENTITY on every non-`SirFloat` value, `eq`/`lt`/… are exactly
+  // the old native `===`/`<`/… for strings, arrays, nil, and plain numbers
+  // — and additionally correct for a boxed Float (`7.0 == 7` true via
+  // value; `7.0 < 8` avoids the `NaN` a native `<` on the box would give).
+  // `eq` returns Ruby `==` for numbers (by value across Integer/Float).
+  function eq(a, b) { return numOf(a) === numOf(b); }
+  function ne(a, b) { return numOf(a) !== numOf(b); }
+  function lt(a, b) { return numOf(a) < numOf(b); }
+  function gt(a, b) { return numOf(a) > numOf(b); }
+  function le(a, b) { return numOf(a) <= numOf(b); }
+  function ge(a, b) { return numOf(a) >= numOf(b); }
+  // Render a boxed float the way Ruby's `to_s` does.  A box only ever
+  // holds a FINITE INTEGRAL value (non-finite/non-integral never box), so
+  // the job is to restore the trailing `.0` that `String(7)` drops:
+  //   7.0        → "7.0"          (append ".0")
+  //   -0.0       → "-0.0"         (String(-0) loses the sign — special-case)
+  //   1e21       → "1.0e+21"      (insert ".0" BEFORE the exponent)
+  // matching the Rust/Go backends ("shortest decimal, `.0` when integral").
+  function floatToRubyString(f) {
+    if (Object.is(f, -0)) { return "-0.0"; }
+    const s = f.toString();
+    const e = s.search(/[eE]/);
+    if (e >= 0) { return s.slice(0, e) + ".0" + s.slice(e); }
+    return s + ".0";
+  }
+
   // ── truthiness ─────────────────────────────────────────────────
   // SIR truthiness, NOT JavaScript's: only `false` and `nil` (null)
   // are falsy.  `0`, `""`, and `NaN` are all truthy — matching Lisp /
-  // Ruby semantics rather than JS's surprising coercions.
+  // Ruby semantics rather than JS's surprising coercions.  A `SirFloat`
+  // box is an object, so it is truthy — matching Ruby (all numbers are).
   function truthy(v) {
     return v !== false && v !== null && v !== undefined;
   }
@@ -128,6 +216,9 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     if (v === true) { return SIR_DISPLAY_RUBY ? "true" : "#t"; }
     if (v === false) { return SIR_DISPLAY_RUBY ? "false" : "#f"; }
     if (typeof v === "string") { return v; }
+    // A boxed Float renders with its trailing `.0` (`7.0`, not `7`); a native
+    // number (Integer, or a non-integral Float like `3.5`) renders as-is.
+    if (v instanceof SirFloat) { return floatToRubyString(v.f); }
     if (typeof v === "number") { return String(v); }
     if (v instanceof Sym) { return v.name; }
     if (v instanceof Pair) {
@@ -171,10 +262,19 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // Reached only for builtins the emitter did not specialise inline
   // (e.g. a variadic `+`, or a builtin referenced as a value via
   // `__Sir.builtins["name"]`).  Each entry is an ordinary JS function.
+  // Numeric fold shared by `plus`/`times`/`-`/`/`.  It unwraps every operand
+  // through `numOf` (so `step` always sees raw f64s), tracks whether ANY
+  // operand — including `init` — was a Ruby Float, and re-tags the result
+  // via `mkFloat` iff so.  Thus `1 + 2` stays a native Integer, `3.5 + 3.5`
+  // becomes the boxed Float `7.0`, and `1 + 2.5` stays the native `3.5`.
   function numFold(args, init, step) {
-    let acc = init;
-    for (const a of args) { acc = step(acc, a); }
-    return acc;
+    let acc = numOf(init);
+    let anyFloat = isFloat(init);
+    for (const a of args) {
+      if (isFloat(a)) { anyFloat = true; }
+      acc = step(acc, numOf(a));
+    }
+    return anyFloat ? mkFloat(acc) : acc;
   }
   const builtins = {
     // `+`/`*` route through the polymorphic helpers (hoisted function
@@ -182,29 +282,31 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     // variadic `(+ 1 2 3)`, gets the same string/array/numeric dispatch
     // as the inlined 2-arg form.
     "+": (...a) => plus(...a),
-    "-": (...a) => a.length === 1 ? -a[0] : numFold(a.slice(1), a[0], (x, y) => x - y),
+    "-": (...a) => a.length === 1 ? neg(a[0]) : numFold(a.slice(1), a[0], (x, y) => x - y),
     "*": (...a) => times(...a),
-    "/": (...a) => a.length === 1 ? 1 / a[0] : numFold(a.slice(1), a[0], (x, y) => x / y),
-    "=": (x, y) => x === y,
+    "/": (...a) => a.length === 1
+      ? (isFloat(a[0]) ? mkFloat(1 / numOf(a[0])) : 1 / numOf(a[0]))
+      : numFold(a.slice(1), a[0], (x, y) => x / y),
+    "=": (x, y) => eq(x, y),
     // Ruby case-equality (`pattern === value`) — the test a `when`/`in` arm
     // runs.  Ruby keys `===` to the pattern's type (Range → membership, Regexp
     // → match); this backend has no Range/Regexp value, so the only patterns
     // that reach here are plain values and the op is ordinary equality (the
     // same `===` the `=` builtin uses).  `when SomeClass` is lowered to
     // `.is_a?` at the frontend and never becomes a case_eq call.
-    "case_eq": (pattern, value) => pattern === value,
-    "<": (x, y) => x < y,
-    ">": (x, y) => x > y,
-    "<=": (x, y) => x <= y,
-    ">=": (x, y) => x >= y,
+    "case_eq": (pattern, value) => eq(pattern, value),
+    "<": (x, y) => lt(x, y),
+    ">": (x, y) => gt(x, y),
+    "<=": (x, y) => le(x, y),
+    ">=": (x, y) => ge(x, y),
     "not": (x) => !truthy(x),
-    "neg": (x) => -x,
+    "neg": (x) => neg(x),
     "cons": (x, y) => new Pair(x, y),
     "car": (p) => p.car,
     "cdr": (p) => p.cdr,
     "pair?": (p) => p instanceof Pair,
     "null?": (x) => x === null || x === undefined,
-    "number?": (x) => typeof x === "number",
+    "number?": (x) => isNum(x),
     "symbol?": (x) => x instanceof Sym,
     "len": (x) => x.length,
     "print": (x) => { console.log(format(x)); return null; },
@@ -370,19 +472,20 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     const first = args[0];
     if (args.length === 2) {
       const rhs = args[1];
-      if (typeof first === "string" && typeof rhs === "number") {
+      if (typeof first === "string" && isNum(rhs)) {
         // String repeat: `"ab" * 3` → "ababab".  Empty receiver short-
         // circuits so a huge count does no work; the guard rejects an
-        // oversized product before `repeat` allocates.
+        // oversized product before `repeat` allocates.  A boxed-Float count
+        // unwraps via `numOf`, then `repeatCount` rejects a non-integer.
         if (first.length === 0) { return ""; }
-        const n = repeatCount(first.length, rhs);
+        const n = repeatCount(first.length, numOf(rhs));
         return n === 0 ? "" : first.repeat(n);
       }
-      if (Array.isArray(first) && typeof rhs === "number") {
+      if (Array.isArray(first) && isNum(rhs)) {
         // Array repeat: `[0] * 3` → [0, 0, 0], a NEW array.  Empty
         // receiver short-circuits; the guard bounds total elements.
         if (first.length === 0) { return []; }
-        const n = repeatCount(first.length, rhs);
+        const n = repeatCount(first.length, numOf(rhs));
         const out = [];
         for (let i = 0; i < n; i++) {
           for (const e of first) { out.push(e); }
@@ -418,26 +521,18 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // `0 === -0` and `0 === 0.0` in JS, so the single `=== 0` test covers the
   // integer-zero, float-zero, and negative-zero divisors uniformly.
   function divide(a, b) {
-    if (b === 0) {
+    const an = numOf(a), bn = numOf(b);
+    if (bn === 0) {
       raiseError("ZeroDivisionError", "divided by 0");
     }
-    // Ruby's `/` is polymorphic: `Integer#/` FLOORS toward −∞ (`-7 / 2 == -4`),
-    // while `Float#/` true-divides (`7.0 / 2 == 3.5`). A bare `a / b` gives
-    // JavaScript's float division, so integer division was wrong (`7 / 2` gave
-    // `3.5`, not `3`). We floor via `Math.floor` when BOTH operands are
-    // integer-valued — matching the SIR21 §E3 oracle `DivOp::Floor` on every
-    // sign combination — and otherwise true-divide.
-    //
-    // KNOWN LIMITATION (needs type-flow, not a runtime fix): JavaScript numbers
-    // are all f64, so a Ruby `Float` that happens to be integral (`7.0`) is
-    // indistinguishable from the `Integer` `7`; `divide(7.0, 2)` therefore
-    // floors to `3` rather than Ruby's `3.5`. Faithful float division requires
-    // the SirType to reach the emitter (a `div_true` op), tracked separately.
-    // The common, corpus-exercised case — integer division — is now correct.
-    if (Number.isInteger(a) && Number.isInteger(b)) {
-      return Math.floor(a / b);
-    }
-    return a / b;
+    // Ruby's `/` is polymorphic on the RECEIVER's type: `Integer#/` FLOORS
+    // toward −∞ (`-7 / 2 == -4`), while `Float#/` true-divides (`7.0 / 2 ==
+    // 3.5`).  With tagged floats the two are now distinguishable: if EITHER
+    // operand is a Ruby Float, true-divide and re-tag the result (`6.0 / 2`
+    // → boxed `3.0`, `7.0 / 2` → native `3.5`); otherwise both are Integers,
+    // so floor — matching the SIR21 §E3 oracle `DivOp::Floor` on every sign
+    // combination.  (A boxed Float is unwrapped via `numOf` for the math.)
+    return (isFloat(a) || isFloat(b)) ? mkFloat(an / bn) : Math.floor(an / bn);
   }
 
   // ── method dispatch (`__method__`) ─────────────────────────────
@@ -579,7 +674,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     if (typeof recv === "boolean" && BOOL_METHODS.has(name)) { return true; }
     // A number resolves the hand-implemented Ruby Numeric catalog (kept in
     // lockstep with `numericMethod`'s case labels), ahead of the native gate.
-    if (typeof recv === "number" && NUMERIC_METHODS.has(name)) { return true; }
+    if (isNum(recv) && NUMERIC_METHODS.has(name)) { return true; }
     // A string resolves the hand-implemented Ruby String catalog (in lockstep
     // with `stringMethod`'s case labels), ahead of the native gate.
     if (typeof recv === "string" && STRING_METHODS.has(name)) { return true; }
@@ -634,10 +729,16 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     "negative?", "succ", "next", "pred", "floor", "ceil", "round",
     "divmod", "fdiv", "clamp", "between?", "gcd",
     "pow", "**", "digits", "times", "upto", "downto", "step",
+    // Tagged-float type predicates: distinguish Integer from Float now that
+    // the runtime carries the tag.
+    "integer?", "float?", "finite?", "nan?", "infinite?",
   ]);
   // Lenient numeric coercion: a non-number argument becomes 0 rather than
   // producing NaN (which would silently break `<=`/`>=` loop guards).
-  function numArg(x) { return typeof x === "number" ? x : 0; }
+  // Unwrap a numeric method argument to a raw f64 (a boxed Float too),
+  // defaulting a non-number to 0 (the lenient coercion Ruby's numeric
+  // methods use for their integer arguments).
+  function numArg(x) { return isNum(x) ? numOf(x) : 0; }
   // Ruby rounds half AWAY from zero (`2.5.round == 3`, `-2.5.round == -3`),
   // unlike JS `Math.round` (half toward +∞).
   function rubyRound(x) {
@@ -650,82 +751,100 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     return a;
   }
   function numericMethod(recv, name, args) {
+    // `recv` may be a native number (Integer, or a non-integral Float like
+    // `3.5`) or a boxed integral Float (`7.0`).  `n` is the raw f64 for the
+    // arithmetic; `rf` is "the receiver is a Ruby Float".  A result that Ruby
+    // types as a Float is re-tagged through `mkFloat` (which boxes an integral
+    // result, leaves a non-integral one native); an Integer result stays
+    // native.  `floatIf(x)` centralises "Float iff the receiver is a Float".
+    const n = numOf(recv);
+    const rf = isFloat(recv);
+    const floatIf = (x) => rf ? mkFloat(x) : x;
     switch (name) {
-      case "abs": return Math.abs(recv);
-      case "to_i": case "to_int": return Math.trunc(recv);
-      case "to_f": return recv;
-      case "even?": return Math.trunc(recv) % 2 === 0;
-      case "odd?": return Math.abs(Math.trunc(recv) % 2) === 1;
-      case "zero?": return recv === 0;
-      case "positive?": return recv > 0;
-      case "negative?": return recv < 0;
-      case "succ": case "next": return recv + 1;
-      case "pred": return recv - 1;
-      case "floor": return Math.floor(recv);
-      case "ceil": return Math.ceil(recv);
+      // Type predicates (now that Integer and Float are distinguishable).
+      case "integer?": return !rf;
+      case "float?": return rf;
+      case "finite?": return Number.isFinite(n);
+      case "nan?": return Number.isNaN(n);
+      case "infinite?": return n === Infinity ? 1 : (n === -Infinity ? -1 : null);
+      case "abs": return floatIf(Math.abs(n));
+      case "to_i": case "to_int": return Math.trunc(n);      // → Integer
+      case "to_f": return mkFloat(n);                        // → Float (7 → 7.0)
+      case "even?": return Math.trunc(n) % 2 === 0;
+      case "odd?": return Math.abs(Math.trunc(n) % 2) === 1;
+      case "zero?": return n === 0;
+      case "positive?": return n > 0;
+      case "negative?": return n < 0;
+      case "succ": case "next": return floatIf(n + 1);
+      case "pred": return floatIf(n - 1);
+      case "floor": return Math.floor(n);                    // → Integer
+      case "ceil": return Math.ceil(n);                      // → Integer
       case "round": {
         // Ruby `round` / `round(ndigits)` — half AWAY from zero (via `rubyRound`,
-        // NOT `Math.round` which is half-toward-+∞).  With no argument (or an
-        // integer receiver and `ndigits >= 0`) the result is an integer; a
-        // positive `ndigits` rounds to that many decimals; `ndigits <= 0` rounds
-        // to a power of ten.  JS numbers are f64 — integers lose exactness past
-        // 2^53, so a hostile-magnitude `ndigits` degrades naturally (the `factor`
-        // saturates to `Infinity` and `recv / Infinity` is `0`), with no bignum
-        // and no allocation.  A non-finite receiver returns unchanged.
-        const nd = typeof args[0] === "number" ? Math.trunc(args[0]) : 0;
-        if (!Number.isFinite(recv)) { return recv; }
-        if (Number.isInteger(recv) && nd >= 0) { return recv; }
-        const factor = Math.pow(10, nd);
-        return rubyRound(recv * factor) / factor;
+        // NOT `Math.round` which is half-toward-+∞).  Return TYPE: an Integer
+        // receiver is always an Integer; a Float receiver is an Integer when
+        // `ndigits <= 0` (`7.5.round == 8`) and a Float when `ndigits > 0`
+        // (`7.0.round(2) == 7.0`).  A non-finite receiver returns unchanged
+        // (tag preserved).  Hostile-magnitude `ndigits` degrades naturally —
+        // `factor` saturates to `Infinity`, `n / Infinity` is `0`.
+        const nd = isNum(args[0]) ? Math.trunc(numOf(args[0])) : 0;
+        if (!Number.isFinite(n)) { return recv; }
+        let result;
+        if (Number.isInteger(n) && nd >= 0) { result = n; }
+        else { const factor = Math.pow(10, nd); result = rubyRound(n * factor) / factor; }
+        return (rf && nd > 0) ? mkFloat(result) : result;
       }
       case "divmod": {
-        // Ruby `divmod(n)` → `[quotient, remainder]` with a FLOORED quotient and
-        // the divisor-signed remainder.  Division by zero raises a typed
-        // `ZeroDivisionError` (so a translated `rescue` catches it).
+        // Ruby `divmod(n)` → `[quotient, remainder]`, FLOORED quotient (always
+        // Integer) and divisor-signed remainder (a Float iff either operand is
+        // a Float: `7.0.divmod(2) == [3, 1.0]`).  Zero divisor raises.
         const d = numArg(args[0]);
         if (d === 0) { raiseError("ZeroDivisionError", "divided by 0"); }
-        const q = Math.floor(recv / d);
-        const r = recv - q * d;
-        return [q, r];
+        const q = Math.floor(n / d);
+        const r = n - q * d;
+        const remFloat = rf || isFloat(args[0]);
+        return [q, remFloat ? mkFloat(r) : r];
       }
       case "fdiv": {
-        // Ruby `fdiv(n)` — floating-point division that NEVER raises: dividing by
-        // zero yields `Infinity`/`-Infinity`/`NaN` (JS `/` already produces
-        // these), honouring the never-raise floor.
-        return recv / numArg(args[0]);
+        // Ruby `fdiv(n)` — floating-point division that NEVER raises (a zero
+        // divisor yields `Infinity`/`-Infinity`/`NaN`).  Always a Float.
+        return mkFloat(n / numArg(args[0]));
       }
       case "clamp": {
         // Ruby `Comparable#clamp(min, max)`: `min` if recv < min, `max` if
-        // recv > max, else recv.  (The Range form is a follow-up.)
-        const lo = numArg(args[0]);
-        const hi = numArg(args[1]);
-        if (recv < lo) { return lo; }
-        if (recv > hi) { return hi; }
+        // recv > max, else recv.  Returns the ORIGINAL bound/receiver value so
+        // its tag is preserved.  (The Range form is a follow-up.)
+        if (n < numArg(args[0])) { return args[0]; }
+        if (n > numArg(args[1])) { return args[1]; }
         return recv;
       }
-      case "between?": {
-        // Ruby `Comparable#between?(min, max)`: `min <= recv <= max`.
-        return recv >= numArg(args[0]) && recv <= numArg(args[1]);
+      case "between?":
+        return n >= numArg(args[0]) && n <= numArg(args[1]);
+      case "gcd": return gcdInt(n, numArg(args[0]));         // → Integer
+      case "pow": case "**": {
+        // Float iff either the base or the exponent is a Float
+        // (`2 ** 3 == 8` Integer; `2.0 ** 3 == 8.0` Float).
+        const p = Math.pow(n, numArg(args[0]));
+        return (rf || isFloat(args[0])) ? mkFloat(p) : p;
       }
-      case "gcd": return gcdInt(recv, numArg(args[0]));
-      case "pow": case "**": return Math.pow(recv, numArg(args[0]));
       case "digits": {
         // Base-10 digits, least-significant first (`123.digits == [3, 2, 1]`).
         // A negative receiver is taken by magnitude (parity with the reference
-        // runtimes, which coerce via absolute value).
-        let n = Math.abs(Math.trunc(recv));
+        // runtimes).  Digits are Integers.
+        let d = Math.abs(Math.trunc(n));
         const out = [];
-        if (n === 0) { out.push(0); }
-        while (n > 0) { out.push(n % 10); n = Math.trunc(n / 10); }
+        if (d === 0) { out.push(0); }
+        while (d > 0) { out.push(d % 10); d = Math.trunc(d / 10); }
         return out;
       }
       case "times": {
         // Block arg arrives already unwrapped to a JS function; a block-less
-        // call returns the receiver (v0 floor for Ruby's Enumerator).
+        // call returns the receiver (v0 floor for Ruby's Enumerator).  Yields
+        // Integer indices (`3.times` yields `0, 1, 2`).
         const blk = args[args.length - 1];
         if (typeof blk === "function") {
-          const n = Math.trunc(recv);
-          for (let i = 0; i < n; i++) { blk(i); }
+          const cnt = Math.trunc(n);
+          for (let i = 0; i < cnt; i++) { blk(i); }
         }
         return recv;
       }
@@ -733,7 +852,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         const blk = args[args.length - 1];
         if (typeof blk === "function") {
           const hi = Math.trunc(numArg(args[0]));
-          for (let i = Math.trunc(recv); i <= hi; i++) { blk(i); }
+          for (let i = Math.trunc(n); i <= hi; i++) { blk(i); }
         }
         return recv;
       }
@@ -741,20 +860,23 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         const blk = args[args.length - 1];
         if (typeof blk === "function") {
           const lo = Math.trunc(numArg(args[0]));
-          for (let i = Math.trunc(recv); i >= lo; i--) { blk(i); }
+          for (let i = Math.trunc(n); i >= lo; i--) { blk(i); }
         }
         return recv;
       }
       case "step": {
         // `a.step(limit, stride=1) { |v| … }`.  A zero (or non-numeric → 0)
         // stride yields nothing rather than spinning forever — the never-hang
-        // floor.  `args` is `[limit, block]` or `[limit, stride, block]`.
+        // floor.  Yielded values are Floats iff the receiver or stride is a
+        // Float (`1.0.step(2.0, 0.5)` yields Floats).
         const blk = args[args.length - 1];
         if (typeof blk === "function") {
           const limit = numArg(args[0]);
           const stride = args.length >= 3 ? numArg(args[1]) : 1;
-          if (stride > 0) { for (let v = recv; v <= limit; v += stride) { blk(v); } }
-          else if (stride < 0) { for (let v = recv; v >= limit; v += stride) { blk(v); } }
+          const yieldFloat = rf || (args.length >= 3 && isFloat(args[1]));
+          const emit = (v) => blk(yieldFloat ? mkFloat(v) : v);
+          if (stride > 0) { for (let v = n; v <= limit; v += stride) { emit(v); } }
+          else if (stride < 0) { for (let v = n; v >= limit; v += stride) { emit(v); } }
         }
         return recv;
       }
@@ -1011,7 +1133,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         let cur = recv;
         for (const k of args) {
           if (cur instanceof Map) { cur = cur.has(k) ? cur.get(k) : null; }
-          else if (Array.isArray(cur) && typeof k === "number") { cur = cur[k] ?? null; }
+          else if (Array.isArray(cur) && isNum(k)) { cur = cur[numOf(k)] ?? null; }
           else { return null; }
           if (cur === null) { return null; }
         }
@@ -1355,6 +1477,13 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // the display path (`formatSeen`) carries for the same cyclic values.
   function valEq(a, b, seen) {
     if (a === b) { return true; }
+    // Ruby `==` on numbers is by VALUE across Integer/Float: `7.0 == 7` is
+    // true, so `[7.0].include?(7)`. Compare unwrapped payloads (a boxed
+    // `7.0` and native `7` are `===`-distinct objects/values but `==`
+    // equal). NaN stays `== NaN` false, matching Ruby. Hash keys use `eql?`
+    // (identity here), NOT this, so Integer `7` and Float `7.0` remain
+    // distinct KEYS while being `==` equal — exactly Ruby's split.
+    if (isNum(a) && isNum(b)) { return numOf(a) === numOf(b); }
     if (a instanceof Sym && b instanceof Sym) { return a.name === b.name; }
     if (Array.isArray(a) && Array.isArray(b)) {
       if (a.length !== b.length) { return false; }
@@ -1540,7 +1669,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         // index from the end once; an out-of-range index yields `null`.
         const out = [];
         for (const a of args) {
-          let idx = typeof a === "number" ? Math.trunc(a) : 0;
+          let idx = isNum(a) ? Math.trunc(numOf(a)) : 0;
           if (idx < 0) { idx += recv.length; }
           out.push(idx >= 0 && idx < recv.length ? recv[idx] : null);
         }
@@ -1607,7 +1736,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         // `each_slice(n)` — consecutive sub-arrays of at most `n` elements (the
         // last may be shorter).  `[1,2,3,4,5].each_slice(2)` → [[1,2],[3,4],[5]].
         // Ruby raises ArgumentError for n <= 0; the never-throw floor yields [].
-        const n = args.length > 0 && Number.isInteger(args[0]) ? args[0] : 0;
+        const n = args.length > 0 && isNum(args[0]) && Number.isInteger(numOf(args[0])) ? numOf(args[0]) : 0;
         if (n <= 0) { return []; }
         const out = [];
         for (let i = 0; i < recv.length; i += n) { out.push(recv.slice(i, i + n)); }
@@ -1617,7 +1746,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         // `each_cons(n)` — every consecutive n-element sliding window.
         // `[1,2,3,4].each_cons(2)` → [[1,2],[2,3],[3,4]].  A window larger than
         // the array (or n <= 0) yields [].
-        const n = args.length > 0 && Number.isInteger(args[0]) ? args[0] : 0;
+        const n = args.length > 0 && isNum(args[0]) && Number.isInteger(numOf(args[0])) ? numOf(args[0]) : 0;
         if (n <= 0) { return []; }
         const out = [];
         for (let i = 0; i + n <= recv.length; i++) { out.push(recv.slice(i, i + n)); }
@@ -1674,7 +1803,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         // Enumerator and infinite no-`n` forms) yields nothing rather than
         // hanging, so emitted programs can never spin forever.
         if (typeof blk !== "function") { return ARR_MISS; }
-        const n = args.length > 0 && Number.isInteger(args[0]) ? args[0] : 0;
+        const n = args.length > 0 && isNum(args[0]) && Number.isInteger(numOf(args[0])) ? numOf(args[0]) : 0;
         if (n <= 0) { return null; }
         for (let p = 0; p < n; p++) { for (const x of recv) { blk(x); } }
         return null;
@@ -1754,10 +1883,11 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       const b = boolMethod(recv, name, args);
       if (b !== BOOL_MISS) { return b; }
     }
-    // Ruby Numeric catalog on a `number` receiver — explicit-switch dispatch
-    // (no `recv[name]`) ahead of the native allowlist, so `gcd`/`digits`/
-    // `upto`/… resolve while `toString`/`toFixed` still fall through below.
-    if (typeof recv === "number") {
+    // Ruby Numeric catalog on a number receiver (native Integer/Float OR a
+    // boxed Float) — explicit-switch dispatch (no `recv[name]`) ahead of the
+    // native allowlist, so `gcd`/`digits`/`upto`/… resolve while
+    // `toString`/`toFixed` still fall through below.
+    if (isNum(recv)) {
       const nm = numericMethod(recv, name, args);
       if (nm !== NUM_MISS) { return nm; }
     }
@@ -1878,7 +2008,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     if (Array.isArray(recv)) { return "an instance of Array"; }
     if (recv instanceof Map) { return "an instance of Hash"; }
     if (typeof recv === "string") { return "an instance of String"; }
-    if (typeof recv === "number") { return "an instance of Numeric"; }
+    if (isNum(recv)) { return "an instance of Numeric"; }
     if (typeof recv === "boolean") { return recv ? "true" : "false"; }
     if (recv instanceof Sym) { return "an instance of Symbol"; }
     return "an instance of Object";
@@ -2340,6 +2470,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
 
     function symTerm(name) { return frozen({ kind: "symbol", name }); }
     function intTerm(value) {
+      value = numOf(value); // boundary unwrap: a tagged Float box → raw f64
       if (!Number.isSafeInteger(value)) {
         throw new RangeError("Symbolic.int: value must be a safe integer");
       }
@@ -2367,6 +2498,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       return frozen({ kind: "rational", numer: numer / g, denom: denom / g });
     }
     function floatTerm(value) {
+      value = numOf(value); // boundary unwrap: a tagged Float box → raw f64
       if (!Number.isFinite(value)) {
         throw new RangeError("Symbolic.numberNode: value must be finite");
       }
@@ -2779,7 +2911,10 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
      * `TypeError` instead of behaving correctly.
      */
     function toArrayValue(v) {
-      return typeof v === "number" ? { shape: [], data: Float64Array.of(v) } : v;
+      // Boundary unwrap: a boxed Float scalar entering the tensor domain
+      // becomes a native f64 in the `Float64Array` (tensor internals are
+      // untagged native numbers — the tagged-float box lives outside SIR22).
+      return isNum(v) ? { shape: [], data: Float64Array.of(numOf(v)) } : v;
     }
 
     function isScalar(a) { return a.data.length === 1; }
@@ -3109,8 +3244,8 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
 
     /** Broadcast a scalar-or-`NDArray` right-hand side to exactly `count` values (mirrors `elementwise`'s scalar-broadcast rule). */
     function broadcastValues(value, count) {
-      if (typeof value === "number") {
-        return new Float64Array(count).fill(value);
+      if (isNum(value)) {
+        return new Float64Array(count).fill(numOf(value));
       }
       if (value.data.length === 1) {
         return new Float64Array(count).fill(value.data[0]);
@@ -3171,6 +3306,11 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     Sym, Pair, Closure,
     intern, applyClosure, truthy, format, print, puts,
     plus, times, divide,
+    // Tagged floats (Ruby Integer vs Float). Exported so the emitter can
+    // mint a boxed float at a `FloatLit` and route `-`/`%`/`neg` through
+    // the re-tagging helpers. `mkFloat` is the sole factory.
+    SirFloat, mkFloat, numOf, isNum, isFloat, neg, minus, mod, floatToRubyString,
+    eq, ne, lt, gt, le, ge,
     builtins, builtinClosure, callBuiltin, callMethod,
     SirError, raiseError, rescueMatches, registerAncestry,
     // OOP (O3): instantiation, method definition + dispatch, super,
@@ -3249,6 +3389,25 @@ mod tests {
             "includeModule",
             "extendModule",
             "callClassMethod",
+            // Tagged floats (Ruby Integer vs Float): the boxed-float
+            // factory + tag helpers the emitter mints/routes through.
+            "class SirFloat",
+            "mkFloat",
+            "numOf",
+            "isNum",
+            "isFloat",
+            "floatToRubyString",
+            // Re-tagging arithmetic + `numOf`-unwrapping comparisons the
+            // emitter routes `-`/`%`/`neg` and `=`/`!=`/`<`/`>`/`<=`/`>=` through.
+            "minus",
+            "mod",
+            "neg",
+            "eq",
+            "ne",
+            "lt",
+            "gt",
+            "le",
+            "ge",
         ] {
             assert!(RUNTIME.contains(needed), "runtime missing `{needed}`");
         }

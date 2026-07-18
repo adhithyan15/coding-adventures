@@ -19,13 +19,21 @@ and Italian's habit of keeping final vowels Latin's other children dropped.
   sta / **va** (also *andare* "to go") → così così → practice. **Authored.**
   *(Reordered ahead of introductions to widen the cross-language how-are-you set;
   register tu/Lei introduced inline.)*
+- **Ch. 4 — Farewells**: arrivederci (← *a + rivedere + ci*, "to our re-seeing";
+  the *au revoir* / *auf Wiedersehen* family; final variant *addio* = *adiós*) →
+  a domani (*domani* ← *dē māne*) → a presto (*presto* ← *praestō*) → a più tardi
+  (*più*/plus + *tardi*/tardy) → practice. **Authored** (Ch. 3 introductions to
+  slot in below it).
+
+- **Ch. 3 — Introducing Yourself**: io (← *ego*; pro-drop) → mi chiamo
+  (*chiamarsi* ← *clāmāre*; *ch* = hard *k*) → come ti chiami / come si chiama →
+  piacere (← *placēre*; twin of *prazer*) → practice. **Authored** — fills the
+  gap so Italian runs greet → introduce → how-are-you → goodbye end to end.
 
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |
 |---|---|
-| 3 | Introducing yourself: *mi chiamo*, come ti chiami, piacere |
-| 4 | Farewells: arrivederci, a presto, a domani |
 | 5+ | Numbers, time, days & months, family, food — following the shared theme order |
 
 Note: Italian's formal "you" is **Lei** — literally "she" (a 3rd-person

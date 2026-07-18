@@ -2,6 +2,38 @@
 
 All notable changes to this crate are documented here.
 
+## [0.9.0] — 2026-07-18
+
+### Added
+
+- **Stack-map registry — the code-address → live-reference lookup for precise
+  roots** (the format + lookup half of the native precise-root walk; the gc-core
+  data structures landed in gc-core 0.8.0):
+  - **`__gc_register_stackmap(func_start, func_len, num_records, pc_offsets,
+    frame_sizes, callee_masks, slot_counts, slots_flat) -> i64`** — registers one
+    compiled function's stack maps (its code range plus per-safepoint records, as
+    parallel flattened arrays; `slots_flat` is demultiplexed record-by-record
+    through `slot_counts`). Returns records stored, or `0` if rejected (`func_len
+    == 0`, `func_len > u32::MAX` (a `pc_offset` is a `u32`), `num_records <= 0`, a
+    required array null, `slots_flat` null while a record claims a positive count
+    (fail-loud against under-marking a safepoint), the range wraps, or it overlaps
+    an already-registered function). `frame_sizes`/`callee_masks` may be null (zero)
+    and are carried for the walker; a negative `slot_counts[i]` is clamped to `0`.
+  - **`__gc_stackmap_count()`** / **`__gc_stackmap_reset()`** — introspection and
+    (test/teardown) clearing of the registry.
+  - The registry keeps functions **sorted by code address and non-overlapping**, so
+    an internal `resolve(return_address)` (consumed by the precise stack walker in a
+    follow-up PR) finds the containing function in `O(log n)`, computes its
+    `pc_offset`, and returns the `StackMapRecord` live there — or `None` for an
+    unmapped address (a C-runtime frame or un-migrated backend), which the walker
+    scans conservatively. This is the code-address analogue of `__gc_register_kind`
+    (object-layout map); together they are the two maps a precise collector needs.
+  - Pure-Rust: no `asm!`, no machine-stack dereference (that is the walker's job).
+    The only `unsafe` is reading the caller's parallel arrays, under the same
+    C-array contract as `__gc_register_kind`. 8 unit tests cover resolution,
+    binary-search function selection, slot demultiplexing, overlap/degenerate
+    rejection, and negative-count clamping.
+
 ## [0.8.0] — 2026-07-18
 
 ### Added

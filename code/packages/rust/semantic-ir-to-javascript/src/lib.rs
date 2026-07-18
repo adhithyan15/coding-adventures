@@ -991,8 +991,9 @@ mod tests {
         let a = compile(&module).expect("compile");
         // The `if` lowers through the truthy ternary.
         assert!(a.source.contains("__Sir.truthy"), "got:\n{}", a.source);
-        // Native comparison and recursive direct call.
-        assert!(a.source.contains("(n === 0)"), "got:\n{}", a.source);
+        // Comparison routes through the `numOf`-unwrapping helper, and the
+        // recursive call is a direct invocation.
+        assert!(a.source.contains("__Sir.eq(n, 0)"), "got:\n{}", a.source);
         assert!(a.source.contains("fact("), "got:\n{}", a.source);
     }
 

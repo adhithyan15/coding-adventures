@@ -200,6 +200,133 @@ fn floats_arithmetic_promotion_prints_3_5() {
     }
 }
 
+/// Run a raw-JS `snippet` against the embedded `__Sir` runtime.  A compiled
+/// module ends with the top-level `const __Sir = (…)();` followed by
+/// `main();`, so appending JS after it can call the runtime helpers directly
+/// — the way to exercise runtime-level behaviour (here: the dormant
+/// tagged-float helpers) without a program that reaches them yet.  Returns
+/// `None` when Node is unavailable.
+fn run_runtime_snippet(snippet: &str, tag: &str) -> Option<String> {
+    let module = module_with_main(vec![], Expr::NilLit { span: sp() }, &[]);
+    let artifact = compile(&module).expect("compile to javascript");
+    if !node_available() {
+        eprintln!("note: `node` unavailable — skipping runtime snippet `{tag}`");
+        return None;
+    }
+    let program = format!("{}\n{}\n", artifact.source, snippet);
+    let mut path: PathBuf = std::env::temp_dir();
+    path.push(format!("sir_js_rt_{}_{}.js", tag, std::process::id()));
+    std::fs::write(&path, &program).expect("write temp js");
+    let output = Command::new("node").arg(&path).output().expect("spawn node");
+    let _ = std::fs::remove_file(&path);
+    assert!(
+        output.status.success(),
+        "node exited non-zero for `{tag}`:\nstderr: {}\nprogram:\n{}",
+        String::from_utf8_lossy(&output.stderr),
+        program,
+    );
+    let stdout = String::from_utf8(output.stdout).expect("utf8 stdout");
+    Some(stdout.trim_end_matches(['\n', '\r']).to_string())
+}
+
+#[test]
+fn tagged_float_helpers_behave() {
+    // Exercises the dormant tagged-float substrate directly (nothing emits
+    // boxed floats yet).  Confirms the invariant before the atomic flip:
+    //   - `floatToRubyString` restores the trailing `.0` (incl. `-0.0` and
+    //     exponent form), matching Ruby / the Rust/Go backends;
+    //   - only INTEGRAL floats box (`mkFloat(3.5) === 3.5` stays native);
+    //   - equal integral floats INTERN to one identity (Map/Set dedup);
+    //   - `isFloat`/`isNum`/`numOf` classify and unwrap correctly.
+    let snippet = r#"
+const F = __Sir; const o = [];
+o.push(F.floatToRubyString(7));                 // 7.0
+o.push(F.floatToRubyString(-0));                // -0.0
+o.push(F.floatToRubyString(1e21));              // 1.0e+21
+o.push(String(F.isFloat(F.mkFloat(7))));        // true  (boxed integral float)
+o.push(String(F.isFloat(3.5)));                 // true  (non-integral native float)
+o.push(String(F.isFloat(7)));                   // false (integer)
+o.push(String(F.mkFloat(3.5) === 3.5));         // true  (non-integral stays native)
+o.push(String(F.mkFloat(7) === F.mkFloat(7)));  // true  (interned singleton)
+o.push(String(F.numOf(F.mkFloat(7))));          // 7
+o.push(String(F.isNum(F.mkFloat(7))));          // true
+console.log(o.join("|"));
+"#;
+    if let Some(stdout) = run_runtime_snippet(snippet, "tagfloat") {
+        assert_eq!(
+            stdout,
+            "7.0|-0.0|1.0e+21|true|true|false|true|true|7|true",
+        );
+    }
+}
+
+fn puts_(arg: Expr) -> Stmt {
+    Stmt::ExprStmt { expr: bc("puts", vec![arg]), span: sp() }
+}
+
+#[test]
+fn tagged_float_end_to_end_division_and_display() {
+    // The FULL emitter path: `FloatLit` → `__Sir.mkFloat(...)`, then division
+    // and display honour the Integer/Float tag.  This is the faithful fix for
+    // the SIR21 §E3 JS float-division gap — a boxed Float `7.0` true-divides
+    // (`3.5`) while Integers still floor, and `7.0` prints as `7.0`.
+    let module = module_with_main(
+        vec![
+            puts_(bc("/", vec![float(7.0), int(2)])), // Float#/  → 3.5
+            puts_(bc("/", vec![float(6.0), int(2)])), // Float#/  → 3.0 (boxed)
+            puts_(bc("/", vec![int(7), int(2)])),     // Integer#/ floors → 3
+            puts_(bc("/", vec![int(-7), int(2)])),    // Integer#/ floors → -4
+            puts_(float(7.0)),                         // display  → 7.0
+            puts_(float(3.5)),                         // display  → 3.5
+            puts_(bc("+", vec![float(3.5), float(3.5)])), // Float+Float → 7.0
+            puts_(bc("*", vec![float(2.0), float(3.0)])), // Float*Float → 6.0
+            puts_(bc("-", vec![float(7.0), int(1)])),  // Float-Int → 6.0
+            puts_(bc("neg", vec![float(7.0)])),        // -Float → -7.0
+            puts_(bc("+", vec![int(1), float(2.5)])),  // Int+Float → 3.5 (native)
+        ],
+        Expr::NilLit { span: sp() },
+        &[Feature::Floats],
+    );
+    if let Some(stdout) = run_module(&module, "tagfloate2e") {
+        assert_eq!(
+            stdout,
+            "3.5\n3.0\n3\n-4\n7.0\n3.5\n7.0\n6.0\n6.0\n-7.0\n3.5",
+        );
+    }
+}
+
+#[test]
+fn tagged_float_methods_and_collections() {
+    // Method dispatch + collection behaviour on tagged floats: type predicates,
+    // conversions, Ruby `==` across the Integer/Float split, and — the highest
+    // risk — Map-key / Set dedup, which the INTERNING of integral floats makes
+    // correct with no per-site edits (a boxed `7.0` is a distinct hash key from
+    // Integer `7` by `eql?`, and equal boxed floats dedup by identity).
+    let snippet = r#"
+const F = __Sir; const o = [];  // callMethod is variadic: callMethod(recv, name, ...args)
+o.push(String(F.callMethod(F.mkFloat(7), "float?")));        // true
+o.push(String(F.callMethod(7, "integer?")));                 // true
+o.push(String(F.callMethod(F.mkFloat(7), "integer?")));      // false
+o.push(F.format(F.callMethod(7, "to_f")));                   // 7.0
+o.push(F.format(F.callMethod(F.mkFloat(7), "to_i")));        // 7
+o.push(F.format(F.callMethod(F.mkFloat(7), "abs")));         // 7.0 (Float#abs → Float)
+o.push(F.format(F.callMethod(7, "fdiv", 2)));                // 3.5
+o.push(String(F.eq(F.mkFloat(7), 7)));                       // true  (7.0 == 7)
+o.push(String(F.callMethod([F.mkFloat(7)], "include?", 7))); // true ([7.0].include?(7))
+const m = new Map(); m.set(7, "int"); m.set(F.mkFloat(7), "flt");
+o.push(String(m.size) + ":" + m.get(7) + ":" + m.get(F.mkFloat(7))); // 2:int:flt
+o.push(F.format(F.callMethod([F.mkFloat(1), F.mkFloat(1), F.mkFloat(2)], "uniq")));
+o.push(F.format(F.callMethod([F.mkFloat(1), F.mkFloat(1), F.mkFloat(2)], "tally")));
+console.log(o.join("|"));
+"#;
+    if let Some(stdout) = run_runtime_snippet(snippet, "tagfloatmeth") {
+        assert_eq!(
+            stdout,
+            "true|true|false|7.0|7|7.0|3.5|true|true|2:int:flt|[1.0, 2.0]|{1.0: 2, 2.0: 1}",
+        );
+    }
+}
+
 #[test]
 fn short_circuit_does_not_evaluate_rhs() {
     // (false && <print "boom">) must NOT print "boom"; the whole

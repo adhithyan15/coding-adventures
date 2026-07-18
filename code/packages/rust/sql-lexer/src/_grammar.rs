@@ -37,7 +37,16 @@ pub fn token_grammar() -> TokenGrammar {
             },
             TokenDefinition {
                 name: r#"NUMBER"#.to_string(),
-                pattern: r#"[0-9]+\.?[0-9]*"#.to_string(),
+                // A numeric literal: an integer or decimal part, followed by an
+                // OPTIONAL scientific-notation exponent (`e`/`E`, an optional sign,
+                // then one or more digits). So `1e3`, `2.5e2`, `1.5E-3`, `10e+2`
+                // all tokenise as a single NUMBER (matching SQLite). The exponent
+                // requires at least one digit after `e`, so plain subtraction like
+                // `5-3` is unaffected (the `-` is only consumed right after an `e`),
+                // and a trailing bare `e` (`1e`) leaves `e` as a separate token.
+                // The planner decodes any exponent form to a REAL (`f64` parse
+                // succeeds where `i64` fails), so `typeof(1e3)` is `'real'`.
+                pattern: r#"[0-9]+\.?[0-9]*([eE][+-]?[0-9]+)?"#.to_string(),
                 is_regex: true,
                 line_number: 18,
                 alias: None,

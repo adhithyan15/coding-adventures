@@ -46,6 +46,9 @@ The interpreters use `gc-core`'s managed-object collector; native output uses
 | `int64_t __gc_live_bytes(void)` | live payload bytes |
 | `int64_t __gc_collection_count(void)` | collections run so far |
 | `void __gc_reset(void)` | drop the whole heap; free everything |
+| `int64_t __gc_register_stackmap(func_start, func_len, num_records, pc_offsets, frame_sizes, callee_masks, slot_counts, slots_flat)` | register a function's stack maps (code range + per-safepoint live-ref records) for precise-root resolution; returns records stored, `0` if rejected |
+| `int64_t __gc_stackmap_count(void)` | number of functions registered |
+| `void __gc_stackmap_reset(void)` | drop all registered stack maps (tests / teardown) |
 
 `__gc_alloc` returns a **real, 16-byte-aligned pointer** to memory the caller reads
 and writes directly. Tracing is conservative (raw + tag-stripped candidate words);
@@ -90,18 +93,31 @@ The archive also exports **twig-compat aliases** — `__twig_gc_alloc` /
 `twig_gc.c` exported; these aliases let this archive satisfy them so `twig_gc.c`
 can be retired without changing the emitters.
 
-**Precise interior tracing** is now available: `__gc_register_kind` records an
+**Precise interior tracing** is available: `__gc_register_kind` records an
 object layout's ref-field offsets and returns a `kind` id for `__gc_alloc_kind`,
 so typed objects are traced exactly (only their ref fields) rather than
-conservatively — the first rung of the precision ladder, and what lets the
-collector serve typed-object languages.
+conservatively. **Generational** collection is wired through the C ABI too
+(`__gc_write_barrier` + `__gc_collect_minor`).
 
-Still to come (own PRs) — the rest of the ladder, all as `gc-core` algorithms:
+**Precise roots** are now under way. The `gc-core` side — `StackMapRecord` /
+`StackMapTable` and `collect_precise` (mark from exactly the slots a stack map
+names) — landed in `gc-core` 0.8.0. This crate now adds the code-address half:
+`__gc_register_stackmap` registers each compiled function's stack maps into a
+sorted, non-overlapping registry, so an internal `resolve(return_address)` can
+map any unwound return address to the `StackMapRecord` live there in `O(log n)`.
+That is the code-address analogue of `__gc_register_kind` (object-layout map) —
+together, the two maps a precise collector needs.
 
-- **Precise roots** (stack maps: the backend emits a live-ref-slot map at each
-  safepoint so the *stack* scan is exact, not just interiors).
-- **Generational** (nursery + write barrier — the biggest win for high-churn
-  object allocation), then **moving / compacting**, then **incremental**.
+Still to come (own PRs):
+
+- **The precise stack walk** — an argument-less `__gc_collect_precise` that
+  unwinds the frame-pointer chain, `resolve`s each return address to its record,
+  computes `frame_base + slot_offset` for every named slot (`frame_root_slots`),
+  and hands the flat slot list to `collect_precise`; an unmapped frame falls back
+  to the conservative `__gc_collect_region` scan. Then the backends
+  (aarch64 / x86_64 / LLVM) emit the records at safepoints and call sites.
+- **Moving / compacting**, then **incremental** — the rest of the ladder, all as
+  `gc-core` algorithms.
 
 ## Build & test
 

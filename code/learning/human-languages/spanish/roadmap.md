@@ -31,11 +31,17 @@ order lives in the book, which LaTeX auto-numbers, and in `session-map.md`.)
   (← *nāta*, "born thing" → "nothing") → **estar** (the *temporary* to-be, ←
   *stāre* "to stand"; vs *ser*) → ¿cómo está usted? / ¿cómo estás? (assembled;
   formal vs informal) → regular / más o menos ("so-so") → practice. **Authored.**
+- **Ch. 5 — Farewells**: adiós (← *a Dios* "to God"; twin of *goodbye*) →
+  **hasta** (← Arabic *ḥattā* — the **first Arabic-loanword deep dive**: 800
+  years of al-Andalus, ~4000 loans, and *hasta* as a rare borrowed *function*
+  word) → hasta luego (*luego* ← *loco* "place" → then) → hasta mañana (*mañana*
+  ← *maneana*; the **ñ** returns) → hasta pronto (*pronto* ← *promptus* →
+  *prompt*) → practice. **Authored.**
 
-Next: **Ch. 5** — **farewells** (hasta luego / hasta mañana / hasta pronto,
-adiós — and *hasta* ← Arabic *ḥattā*, the first of the Arabic-loanword deep
-dives). Sentences grow as grammar accumulates piece by piece. The theme skeleton
-below plans the wider road ahead.
+Next: **Ch. 6** — the courtesy pair **por favor** / **de nada** completed, then
+into **everyday verbs** (the present tense of *-ar* verbs: *hablar, trabajar*),
+where sentences start to move. Grammar accumulates piece by piece. The theme
+skeleton below plans the wider road ahead.
 
 ## Theme Skeleton (planning only)
 
