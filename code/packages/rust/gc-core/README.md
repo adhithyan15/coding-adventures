@@ -62,9 +62,14 @@ rung strictly additive over conservative fallback:
 4. **Precise roots (this rung's core)** — `StackMapRecord` / `StackMapTable`
    describe exactly which slots hold references at each safepoint;
    `collect_precise(root_slots)` reads only those, so stack-integer false roots
-   disappear and root cost drops to O(live roots). The `gc-core` half (format,
-   lookup, precise mark) is done; the native stack walk that feeds it and the
-   backend record emission are `gc-core-capi` / codegen follow-ups. ✓ (core)
+   disappear and root cost drops to O(live roots). `collect_mixed(root_slots,
+   regions)` collects precise slots **and** conservative spans in one cycle — the
+   primitive a real stack walk needs, because it always sees a *mix* of mapped
+   frames (exact slots) and unmapped frames (C-runtime / collector / un-migrated
+   backends, scanned conservatively). Both siblings are special cases of it. The
+   `gc-core` half (format, lookup, precise mark, mixed collect) is done; the native
+   stack walk that feeds it and the backend record emission are `gc-core-capi` /
+   codegen follow-ups. ✓ (core)
 5. **Moving / compacting**, then **incremental** — planned.
 
 ## Quick start
