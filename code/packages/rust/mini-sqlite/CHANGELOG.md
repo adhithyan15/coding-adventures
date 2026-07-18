@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.5.40 — ORDER BY positional (ordinal) column references
+
+`ORDER BY <n>` now treats a bare integer as a 1-based reference to the n-th
+SELECT output column, matching SQLite: `SELECT a, b FROM u ORDER BY 2` sorts by
+`b`. Direction, collation, and multi-key tie-breaks carry through
+(`ORDER BY 2 DESC, 1`). The rule is narrow — only a lone integer literal is
+positional, so `ORDER BY 1+0` still sorts by the constant `1` (no reordering),
+and an out-of-range ordinal errors like SQLite's "ORDER BY term out of range".
+Four new differential-oracle cases pass; a fifth — positional over an *aggregate*
+output column — is a documented ledger entry (the sort can't re-evaluate an
+aggregate per row yet). `SELECT *` positional keys are left unchanged for now.
+Touches sql-planner 0.2.19.
+
 ## 0.5.39 — upper()/lower() are ASCII-only
 
 `upper()` and `lower()` now match SQLite: they case-fold only ASCII letters and

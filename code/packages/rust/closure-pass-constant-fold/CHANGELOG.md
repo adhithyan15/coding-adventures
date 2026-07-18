@@ -30,6 +30,40 @@ with a literal-zero right operand (`±0`); all other arithmetic is untouched.
 NON-terminating quotient — `1/3` stays `1/3` rather than the 16-digit
 `.3333333333333333` — governed by its numeric byte-cost heuristic. That is a
 separate, subtler transform and is not addressed here.
+## [0.98.0] - 2026-07-17
+
+### Added — standard-constructor `new`-drop: `new Error(…)` → `Error(…)`
+
+The reference Closure Compiler rewrites `new Error(args)` to a plain call
+`Error(args)` (saving four bytes). Calling the built-in `Error` as an ordinary
+function constructs an Error object *identically* to `new` — ECMAScript
+§20.5.1.1: the `Error` constructor's `[[Call]]` and `[[Construct]]` paths
+converge, so `Error(m)` and `new Error(m)` both yield a fresh Error with the
+same `.message`. The drop is therefore semantics-preserving for **every**
+argument list, including the no-arg form:
+
+- `throw new Error("x")` → `throw Error("x")`
+- `x = new Error(y)` → `x = Error(y)`, `g(new Error("x"))` → `g(Error("x"))`
+- `new Error` / `new Error()` → `Error()`
+
+Byte-identical to the reference compiler at `SIMPLE` across all of the above.
+
+**Scope — deliberately `Error` only.** Gated to a *bare* `Error` identifier
+callee (a member callee `obj.Error` or any other name is untouched); like
+Closure at SIMPLE this assumes the global `Error` is not shadowed. Three
+adjacent folds are intentionally **excluded**:
+
+- **`RegExp`** — `RegExp(r)` returns its argument unchanged when `r` is already
+  a regex, whereas `new RegExp(r)` always makes a fresh copy, so
+  `new RegExp(x)` → `RegExp(x)` would be an observable change (a potential
+  miscompile). The reference compiler does it anyway; we decline to stay sound.
+- **`Object` / `Array`** — also spec-safe to drop, but Closure folds their
+  *no-arg* forms further to `{}` / `[]` literals, a larger transform.
+- **Error subtypes** (`TypeError`, `RangeError`, …) — the reference compiler
+  does not fold them, so neither do we.
+
+All three are follow-ups. Additive; MINOR bump 0.96.0 → 0.98.0 (0.97.0 is the
+in-flight numeric-object-key PR).
 ## [0.97.0] - 2026-07-17
 
 ### Added — a non-integer numeric object key is quoted (`{0.5:1}` → `{"0.5":1}`)
