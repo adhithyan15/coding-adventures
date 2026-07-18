@@ -39,6 +39,7 @@ The interpreters use `gc-core`'s managed-object collector; native output uses
 | `int64_t __gc_collect_roots(const int64_t *roots, int64_t count)` | mark from `count` root words, sweep; returns objects freed |
 | `int64_t __gc_collect_region(const uint8_t *base, int64_t len)` | mark from every candidate pointer in a raw region, sweep; returns objects freed |
 | `int64_t __gc_collect(void)` | conservative collection rooted at this thread's live stack + callee-saved registers (no caller roots); returns objects freed |
+| `int64_t __gc_safepoint(void)` | paced collect — runs `__gc_collect` only when the live set has reached the adaptive threshold; returns objects freed (0 if throttled) |
 | `int64_t __gc_live_bytes(void)` | live payload bytes |
 | `int64_t __gc_collection_count(void)` | collections run so far |
 | `void __gc_reset(void)` | drop the whole heap; free everything |
@@ -64,7 +65,9 @@ __gc_collect_roots(roots, 1);         /* cell is rooted → survives */
 This is **T1 rung 0** — the linkable flat collector. It now covers the full
 conservative collector `twig_gc.c` shipped, in three layers: explicit roots
 (`__gc_collect_roots`), a raw memory region (`__gc_collect_region`), and the
-argument-less **conservative C-stack scan** (`__gc_collect`) — all pure Rust, no C.
+argument-less **conservative C-stack scan** (`__gc_collect`) — plus the **paced**
+`__gc_safepoint` (collect only past the adaptive threshold) that `__gc_alloc` also
+drives under memory pressure. All pure Rust, no C.
 
 `__gc_collect` is the drop-in for `twig_gc.c`'s `__twig_gc_collect`: it spills the
 callee-saved registers to the stack (an `asm!` block replacing `setjmp`), reads the

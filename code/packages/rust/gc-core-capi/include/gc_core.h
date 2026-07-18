@@ -63,6 +63,14 @@ int64_t __gc_collect_region(const uint8_t *base, int64_t len);
  * whatever the machine is holding. Returns objects freed. Single-threaded. */
 int64_t __gc_collect(void);
 
+/* Paced collect: run __gc_collect ONLY if the live set has reached the heap's
+ * adaptive threshold; otherwise do nothing. Returns objects freed (0 if no
+ * collection ran). Drop-in for twig_gc.c's __twig_gc_safepoint — the native
+ * backend calls it at loop back-edges and function entries, and it collects
+ * only under memory pressure so a tight allocation loop can't starve the GC.
+ * __gc_alloc also runs this same paced collect before allocating. */
+int64_t __gc_safepoint(void);
+
 /* Live payload bytes. */
 int64_t __gc_live_bytes(void);
 
