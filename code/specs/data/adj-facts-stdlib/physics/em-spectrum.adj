@@ -1,0 +1,130 @@
+% ============================================================================
+% em-spectrum — the seven bands of the electromagnetic spectrum and a
+% representative everyday use / thing NASA associates with each one
+% (adj-facts-stdlib, PHYSICS).
+% ============================================================================
+% The electromagnetic spectrum is the same physical thing — light — split by
+% wavelength into named bands, from the longest-wavelength radio waves to the
+% shortest-wavelength, most energetic gamma rays. Between them lie microwaves,
+% infrared, visible light, ultraviolet, and X-rays. This is a rung a PHYSICS (or
+% ASTRONOMY, or MEDICINE) agent reasons UP from: before you can talk about a
+% telescope's detector or an X-ray machine you must first know WHICH band you are
+% in. A famous way to make the seven bands memorable is to attach to each one a
+% familiar, everyday thing that uses or is associated with it: "radio waves come
+% from radio stations, microwaves cook, infrared is night vision, our eyes see
+% visible light, ultraviolet tans skin, X-rays image teeth, and gamma rays are
+% used for medical imaging inside the body." Recall is a binding query:
+%
+%     ? band_use(microwave, $Application)      % cooking
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `band_use(band, application)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the use
+% WITH its source, on the CPU, with zero model calls, and abstains on anything
+% that is not one of the seven EM bands (it never invents a use).
+%
+% Each of the seven bands and the representative everyday use / association NASA
+% states for it, as a little truth table:
+%
+%     band          everyday use / association         a beginner's cue
+%     ----------    -------------------------------    -------------------------
+%     radio         radio_stations                     your radio catches radio waves
+%     microwave     cooking                            a microwave cooks popcorn
+%     infrared      night_vision                       goggles pick up body heat
+%     visible       eyes                               the only band our eyes detect
+%     ultraviolet   tanning                            the Sun's UV tans and burns skin
+%     x_ray         teeth                              a dentist images your teeth
+%     gamma_ray     medical_imaging                    doctors see inside your body
+%
+% The query also runs BACKWARD — bind a use and recall its band:
+%
+%     ? band_use($Band, night_vision)   % infrared
+%
+% A word that is NOT one of the seven EM bands — `sound` (a mechanical wave, not
+% light at all), `seismic`, `rock` — is deliberately NOT a row, so a band recall
+% ABSTAINS on it rather than inventing a use. That honest-abstention property is
+% what makes the table safe to build a reasoner on: it answers exactly the
+% band->use pairs it can ground, and only those.
+%
+% The `application` value of every row is a SINGLE lowercase atom, chosen to be a
+% representative everyday use / association the source EXPLICITLY names for that
+% band — never one the source does not support. (Where the everyday word differs
+% from the source's exact word — the source says "cook your popcorn", not
+% "cooking"; "gamma-ray imaging ... inside your body", not "medical imaging" —
+% the atom is a light normalization of the source's own noun, so every value
+% stays checkable against the quoted span below.)
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every band->use pair below
+% was read out of a fetched NASA "Introduction to the Electromagnetic Spectrum"
+% page, and any pair whose use could not be verified there would have been
+% dropped). Each pair, with the primary source it was copied from and the
+% verbatim span that states it:
+%
+%   radio -> radio_stations
+%     https://imagine.gsfc.nasa.gov/science/toolbox/emspectrum1.html
+%     (NASA Goddard Space Flight Center — Imagine the Universe!)
+%     "Your radio captures radio waves emitted by radio stations, bringing your
+%      favorite tunes."
+%
+%   microwave -> cooking
+%     https://imagine.gsfc.nasa.gov/science/toolbox/emspectrum1.html
+%     (NASA Goddard Space Flight Center — Imagine the Universe!)
+%     "Microwave radiation will cook your popcorn in just a few minutes, but is
+%      also used by astronomers to learn about the structure of nearby galaxies."
+%
+%   infrared -> night_vision
+%     https://imagine.gsfc.nasa.gov/science/toolbox/emspectrum1.html
+%     (NASA Goddard Space Flight Center — Imagine the Universe!)
+%     "Night vision goggles pick up the infrared light emitted by our skin and
+%      objects with heat."
+%
+%   visible -> eyes
+%     https://imagine.gsfc.nasa.gov/science/toolbox/emspectrum1.html
+%     (NASA Goddard Space Flight Center — Imagine the Universe!)
+%     "Our eyes detect visible light. Fireflies, light bulbs, and stars all emit
+%      visible light."
+%
+%   ultraviolet -> tanning
+%     https://imagine.gsfc.nasa.gov/science/toolbox/emspectrum1.html
+%     (NASA Goddard Space Flight Center — Imagine the Universe!)
+%     "Ultraviolet radiation is emitted by the Sun and are the reason skin tans
+%      and burns."
+%
+%   x_ray -> teeth
+%     https://imagine.gsfc.nasa.gov/science/toolbox/emspectrum1.html
+%     (NASA Goddard Space Flight Center — Imagine the Universe!)
+%     "A dentist uses X-rays to image your teeth, and airport security uses them
+%      to see through your bag."
+%
+%   gamma_ray -> medical_imaging
+%     https://imagine.gsfc.nasa.gov/science/toolbox/emspectrum1.html
+%     (NASA Goddard Space Flight Center — Imagine the Universe!)
+%     "Doctors use gamma-ray imaging to see inside your body."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the NASA statement that fixes the
+% first row (radio -> radio_stations). Every OTHER row's per-fact source and
+% verbatim span is listed above, so each use remains independently checkable. All
+% seven rows come from the SAME primary source, NASA Goddard Space Flight
+% Center's "Imagine the Universe!" education page (imagine.gsfc.nasa.gov), a
+% primary U.S. government teaching resource, so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table band_use {
+    columns band, application
+
+    row (radio, radio_stations)
+    row (microwave, cooking)
+    row (infrared, night_vision)
+    row (visible, eyes)
+    row (ultraviolet, tanning)
+    row (x_ray, teeth)
+    row (gamma_ray, medical_imaging)
+
+    source "Your radio captures radio waves emitted by radio stations, bringing your favorite tunes."
+    locator "https://imagine.gsfc.nasa.gov/science/toolbox/emspectrum1.html"
+    trust authoritative
+}
