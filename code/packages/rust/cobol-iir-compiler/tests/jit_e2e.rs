@@ -398,6 +398,51 @@ fn item_to_item_move_rescales_the_implied_point() {
 }
 
 // -------------------------------------------------------------------------
+// ON SIZE ERROR — vs the oracle.
+// -------------------------------------------------------------------------
+
+#[test]
+fn add_on_size_error_fires_on_overflow() {
+    // R is 9(2) (max 99). 50 + 60 = 110 overflows → handler runs, R unchanged (50).
+    let out = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(2) VALUE 50."],
+        &["ADD 60 TO R ON SIZE ERROR DISPLAY \"OVER\".", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "OVER\n50\n");
+}
+
+#[test]
+fn add_on_size_error_does_not_fire_when_it_fits() {
+    // 50 + 40 = 90 fits 9(2) → no handler, R = 90.
+    let out = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(2) VALUE 50."],
+        &["ADD 40 TO R ON SIZE ERROR DISPLAY \"OVER\".", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "90\n");
+}
+
+#[test]
+fn multiply_on_size_error_fires_on_overflow() {
+    // 10 * 3 * ... a product that overflows the receiver runs the handler.
+    // 40 * 40 = 1600 into 9(2) overflows → handler, R unchanged.
+    let out = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(2) VALUE 7."],
+        &["MULTIPLY 40 BY 40 GIVING R ON SIZE ERROR DISPLAY \"BIG\".", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "BIG\n07\n");
+}
+
+#[test]
+fn divide_by_zero_with_on_size_error_runs_the_handler() {
+    // A zero divisor is a size-error condition; with a handler it is caught.
+    let out = assert_matches_oracle(&wrap(
+        &["01  R  PIC 9(3) VALUE 7."],
+        &["DIVIDE 0 INTO 10 GIVING R ON SIZE ERROR DISPLAY \"DIVZERO\".", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "DIVZERO\n007\n");
+}
+
+// -------------------------------------------------------------------------
 // GO TO and PERFORM — vs the oracle.
 // -------------------------------------------------------------------------
 

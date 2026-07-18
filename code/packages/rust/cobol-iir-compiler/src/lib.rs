@@ -808,8 +808,7 @@ impl<'a> Compiler<'a> {
     /// **working scale** `w` (the largest fractional-digit count among the base
     /// field and the operands — so every term scales *up* to `w` without loss),
     /// accumulate, then store into the receiver at *its* scale (rounding or
-    /// truncating any excess). `ON SIZE ERROR` still needs the branch machinery
-    /// of a later rung, so it is rejected; `ROUNDED` is honoured here.
+    /// truncating any excess). `ROUNDED` and `ON SIZE ERROR` are both honoured.
     fn emit_additive(
         &mut self,
         verb: &GrammarASTNode,
@@ -817,7 +816,6 @@ impl<'a> Compiler<'a> {
         is_subtract: bool,
     ) -> Result<(), CompileError> {
         let name = if is_subtract { "SUBTRACT" } else { "ADD" };
-        self.reject_size_error(verb, name)?;
         let rounded = has_rounded(verb);
         let (base, giving) = self.two_targets(verb, keyword)?;
 
@@ -860,7 +858,8 @@ impl<'a> Compiler<'a> {
         // k terms each with < max_int integer digits); store_scaled uses this to
         // bound any up-scale into a wider-scale GIVING receiver.
         let recv = giving.clone().unwrap_or(base);
-        self.store_scaled(&recv, &acc, w, max_int + count_digits, rounded)
+        let handler = size_error_handler(verb);
+        self.store_scaled_handled(&recv, &acc, w, max_int + count_digits, rounded, &handler)
     }
 
     /// `MULTIPLY a BY b [GIVING g]` — `a * b` into `g` (or `b`). The raw product
@@ -868,7 +867,6 @@ impl<'a> Compiler<'a> {
     /// rounds/truncates it to the receiver's scale. Each operand is ≤ 9 digits, so
     /// the product is < 10^18 and never overflows `i64`.
     fn emit_multiply(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
-        self.reject_size_error(verb, "MULTIPLY")?;
         let rounded = has_rounded(verb);
         let ops = child_nodes(verb, "operand");
         if ops.len() != 2 {
@@ -885,7 +883,8 @@ impl<'a> Compiler<'a> {
         // The product's integer part is < 10^(a_int + b_int); store_scaled bounds
         // any up-scale into a wider-scale receiver by that count.
         let prod_int = self.term_int_digits(&at) + self.term_int_digits(&bt);
-        self.store_scaled(&target, &prod, sa + sb, prod_int, rounded)
+        let handler = size_error_handler(verb);
+        self.store_scaled_handled(&target, &prod, sa + sb, prod_int, rounded, &handler)
     }
 
     /// `DIVIDE a INTO b [GIVING g]` — `b / a` into `g` (or `b`).
@@ -898,8 +897,8 @@ impl<'a> Compiler<'a> {
     /// more fractional digits than the result precision, or an intermediate that
     /// would exceed `i64`, is a clean error.
     fn emit_divide(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
-        self.reject_size_error(verb, "DIVIDE")?;
         let rounded = has_rounded(verb);
+        let handler = size_error_handler(verb);
         let ops = child_nodes(verb, "operand");
         if ops.len() != 2 {
             return Err(CompileError::Malformed("DIVIDE needs two operands".into()));
@@ -939,14 +938,39 @@ impl<'a> Compiler<'a> {
             b_val
         };
         let a_val = self.emit_term_at_scale(&divisor_t, sa);
+
+        // A zero divisor is a size-error condition (as COMPUTE treats it): with an
+        // ON SIZE ERROR handler it is caught before the (faulting) division; without
+        // one the emitted `div` faults at run time, matching the oracle's hard
+        // DivideByZero. When caught, jump past the division and store to a shared end.
+        let end_lbl = if handler.is_empty() {
+            None
+        } else {
+            let zero = self.fresh("_z");
+            self.emit("const", Some(&zero), vec![Operand::Int(0)], "i64");
+            let iszero = self.fresh("_dz");
+            self.emit("cmp_eq", Some(&iszero), vec![a_val.clone(), Operand::Var(zero)], "i64");
+            let (cont, end) = (self.fresh("dz_cont"), self.fresh("dz_end"));
+            self.emit("jmp_if_false", None, vec![Operand::Var(iszero), Operand::Var(cont.clone())], "void");
+            for h in &handler {
+                self.emit_statement(h)?;
+            }
+            self.emit("jmp", None, vec![Operand::Var(end.clone())], "void");
+            self.emit("label", None, vec![Operand::Var(cont)], "void");
+            Some(end)
+        };
+
         let quot = self.fresh("_quot");
-        // i64 division truncates toward zero, as COBOL does. A zero divisor faults
-        // at run time — matching the oracle's hard DivideByZero without a handler.
+        // i64 division truncates toward zero, as COBOL does.
         self.emit("div", Some(&quot), vec![num, a_val], "i64");
         // The quotient at scale w is < 10^(b_int + sa + w); its integer part is
         // < 10^(b_int + sa). store_scaled only down-scales here (w ≥ dec_digits),
-        // so this bound is a formality.
-        self.store_scaled(&target, &quot, w, b_int + sa, rounded)
+        // so the up-scale bound is a formality; the handler catches overflow.
+        self.store_scaled_handled(&target, &quot, w, b_int + sa, rounded, &handler)?;
+        if let Some(end) = end_lbl {
+            self.emit("label", None, vec![Operand::Var(end)], "void");
+        }
+        Ok(())
     }
 
     /// Store a computed `value_reg` (carrying `value_scale` fractional digits)
@@ -978,6 +1002,23 @@ impl<'a> Compiler<'a> {
         value_max_int: usize,
         rounded: bool,
     ) -> Result<(), CompileError> {
+        self.store_scaled_handled(target, value_reg, value_scale, value_max_int, rounded, &[])
+    }
+
+    /// The general store: like [`Self::store_scaled`], but with an optional
+    /// `ON SIZE ERROR` handler. When the (rounded, magnitude) value's integer part
+    /// overflows the receiver — `acc ≥ 10^(int+dec)` — a non-empty `handler` runs
+    /// its statements and the receiver is left **unchanged**; an empty handler
+    /// truncates the high-order digits silently (COBOL's handler-less rule).
+    fn store_scaled_handled(
+        &mut self,
+        target: &str,
+        value_reg: &str,
+        value_scale: usize,
+        value_max_int: usize,
+        rounded: bool,
+        handler: &[&GrammarASTNode],
+    ) -> Result<(), CompileError> {
         let idx = self.numeric_index(target)?;
         let (int_digits, dec_digits) = self.numeric_dims(idx);
         let reg = self.items[idx].reg.clone();
@@ -993,12 +1034,31 @@ impl<'a> Compiler<'a> {
         self.emit("mov", Some(&acc), vec![Operand::Var(value_reg.to_string())], "i64");
         self.rescale(&acc, value_scale, dec_digits, rounded);
         self.emit_abs(&acc);
-        // truncate high-order: value mod 10^(int_digits + dec_digits).
         let modulus = 10i64.pow((int_digits + dec_digits) as u32);
-        let m = self.fresh("_m");
-        self.emit("const", Some(&m), vec![Operand::Int(modulus)], "i64");
-        self.emit("mod", Some(&acc), vec![Operand::Var(acc.clone()), Operand::Var(m)], "i64");
-        self.emit("mov", Some(&reg), vec![Operand::Var(acc)], "i64");
+
+        if handler.is_empty() {
+            // Silent high-order truncation: value mod 10^(int_digits + dec_digits).
+            let m = self.fresh("_m");
+            self.emit("const", Some(&m), vec![Operand::Int(modulus)], "i64");
+            self.emit("mod", Some(&acc), vec![Operand::Var(acc.clone()), Operand::Var(m)], "i64");
+            self.emit("mov", Some(&reg), vec![Operand::Var(acc)], "i64");
+        } else {
+            // ON SIZE ERROR: if acc ≥ 10^(int+dec) the integer part does not fit —
+            // run the handler and leave the receiver unchanged; else store.
+            let m = self.fresh("_m");
+            self.emit("const", Some(&m), vec![Operand::Int(modulus)], "i64");
+            let ovf = self.fresh("_ovf");
+            self.emit("cmp_ge", Some(&ovf), vec![Operand::Var(acc.clone()), Operand::Var(m)], "i64");
+            let (ovf_lbl, end_lbl) = (self.fresh("se_ovf"), self.fresh("se_end"));
+            self.emit("jmp_if_true", None, vec![Operand::Var(ovf), Operand::Var(ovf_lbl.clone())], "void");
+            self.emit("mov", Some(&reg), vec![Operand::Var(acc)], "i64");
+            self.emit("jmp", None, vec![Operand::Var(end_lbl.clone())], "void");
+            self.emit("label", None, vec![Operand::Var(ovf_lbl)], "void");
+            for h in handler {
+                self.emit_statement(h)?;
+            }
+            self.emit("label", None, vec![Operand::Var(end_lbl)], "void");
+        }
         Ok(())
     }
 
@@ -1052,17 +1112,6 @@ impl<'a> Compiler<'a> {
         self.emit("jmp_if_false", None, vec![Operand::Var(neg), Operand::Var(skip.clone())], "void");
         self.emit("sub", Some(acc), vec![Operand::Var(zero), Operand::Var(acc.into())], "i64");
         self.emit("label", None, vec![Operand::Var(skip)], "void");
-    }
-
-    /// Reject `ON SIZE ERROR` (it needs the branch machinery of a later rung);
-    /// `ROUNDED` is handled by `store_scaled`.
-    fn reject_size_error(&self, verb: &GrammarASTNode, name: &str) -> Result<(), CompileError> {
-        if child_node(verb, "size_error").is_some() {
-            return Err(CompileError::Unsupported(format!(
-                "{name} … ON SIZE ERROR is a later rung"
-            )));
-        }
-        Ok(())
     }
 
     /// The `(to/from, giving)` receiver names of an ADD/SUBTRACT: the direct NAME
@@ -1494,6 +1543,14 @@ fn para_label(name: &str) -> String {
     format!("para_{}", sanitise(name))
 }
 
+/// An arithmetic verb's `ON SIZE ERROR` handler statements (empty if none).
+fn size_error_handler(verb: &GrammarASTNode) -> Vec<&GrammarASTNode> {
+    match child_node(verb, "size_error") {
+        Some(se) => child_nodes(se, "statement"),
+        None => vec![],
+    }
+}
+
 /// A human-readable verb name for the "not yet lowered" error.
 fn verb_name(rule: &str) -> &str {
     match rule {
@@ -1576,19 +1633,16 @@ mod tests {
     }
 
     #[test]
-    fn add_rounded_now_compiles_but_on_size_error_stays_unsupported() {
-        // ROUNDED on ADD is honoured now; ON SIZE ERROR still needs branching.
-        let ok = compile_source(
-            &wrap(&["01  R  PIC 9(2)V9 VALUE 0."], &["ADD 1 TO R ROUNDED.", "STOP RUN."]),
-            "r",
-        );
-        assert!(ok.is_ok(), "{ok:?}");
-        let err = compile_source(
-            &wrap(&["01  R  PIC 9(3) VALUE 0."], &["ADD 1 TO R ON SIZE ERROR DISPLAY \"OVR\".", "STOP RUN."]),
-            "x",
-        )
-        .unwrap_err();
-        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    fn add_rounded_and_on_size_error_both_compile() {
+        // Both ROUNDED and ON SIZE ERROR are honoured on ADD now.
+        for body in ["ADD 1 TO R ROUNDED.", "ADD 1 TO R ON SIZE ERROR DISPLAY \"OVR\"."] {
+            let m = compile_source(
+                &wrap(&["01  R  PIC 9(3) VALUE 0."], &[body, "STOP RUN."]),
+                "r",
+            )
+            .unwrap();
+            assert!(m.validate().is_empty(), "{body}: {:?}", m.validate());
+        }
     }
 
     #[test]
@@ -1689,18 +1743,18 @@ mod tests {
     }
 
     #[test]
-    fn multiply_divide_on_size_error_still_deferred() {
-        // ON SIZE ERROR still needs the branch machinery of a later rung.
+    fn multiply_divide_on_size_error_now_compile() {
+        // ON SIZE ERROR is honoured on MULTIPLY/DIVIDE (incl. the zero-divisor guard).
         for body in [
             "MULTIPLY 2 BY R ON SIZE ERROR DISPLAY \"O\".",
             "DIVIDE 2 INTO R ON SIZE ERROR DISPLAY \"O\".",
         ] {
-            let err = compile_source(
+            let m = compile_source(
                 &wrap(&["01  R  PIC 9(3) VALUE 1."], &[body, "STOP RUN."]),
                 "se",
             )
-            .unwrap_err();
-            assert!(matches!(err, CompileError::Unsupported(_)), "{body}: got {err:?}");
+            .unwrap();
+            assert!(m.validate().is_empty(), "{body}: {:?}", m.validate());
         }
     }
 
