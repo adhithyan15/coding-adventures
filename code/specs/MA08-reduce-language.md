@@ -75,19 +75,31 @@ follow-on. This PR is a **design-only** kickoff, with no grammar files yet:
   with an explicit `MAX_RULE_DEPTH` measured the same way `apl-parser`/
   `j-parser`/`derive-parser` measured theirs, not assumed (per
   [MA06](MA06-j-language.md) §6's precedent).
-- **R-4 — `reduce-runtime` + `reduce-repl`.** Lowers the parsed
+- **R-4 — `reduce-runtime` + `reduce-repl`.** (✅ done) Lowers the parsed
   `GrammarASTNode` into `symbolic-ir`, evaluates with `symbolic-vm`'s shared
   `SymbolicBackend` — reused *unchanged*, with no custom `Backend` at all,
   the same reuse `derive-runtime` already demonstrated: R-4's in-scope
   surface (§3) needs nothing the shared handler table doesn't already
-  provide (arithmetic, comparison, logic, the held `Assign`/`Define`/`If`
-  forms, and `List`/`first`/`rest`/`append`/`reverse`, all already
-  implemented for Macsyma/Wolfram/Derive — the *exact same* functions,
-  so all four languages agree on every result these handlers can
-  produce). Plus the interactive `reduce-repl` (Reduce's own session
-  transcript has no numbered-input convention the way Derive's `#n:` or
-  Wolfram's `In[n]:=` do — a plain read-eval-print loop, no numbering)
-  and the `reduce` binary.
+  provide for arithmetic, comparison, logic, and the held `Assign`/
+  `Define`/`If` forms. Plus the interactive `reduce-repl` (Reduce's own
+  session transcript has no numbered-input convention the way Derive's
+  `#n:` or Wolfram's `In[n]:=` do — a plain read-eval-print loop, no
+  numbering) and the `reduce` binary.
+  **Two things this line originally claimed turned out not to hold once
+  R-4 actually grepped `symbolic-vm` rather than assuming family
+  resemblance to Macsyma/Wolfram/Derive — see §3/§5's own corrected text
+  and `reduce-runtime`'s CHANGELOG for the full accounting:** (1) `List`/
+  `first`/`rest`/`append`/`reverse` are **not** "already implemented …
+  the exact same functions" for the *shared* `SymbolicBackend` — only
+  `List` has a handler there; Macsyma's list functions and Wolfram's
+  `CompoundExpression` are each wired through a bespoke `Backend` specific
+  to that language, which R-4 does not build, so `first`/`second`/`third`/
+  `rest`/`part`/`append`/`reverse`/`Cons`/`CompoundExpression` all lower to
+  the structurally-correct head but evaluate as an unresolved call (no
+  crash, just no reduction) until a follow-on item wires real handlers.
+  (2) the arithmetic heads are `Add`/`Sub`/`Mul`/`Div`/`Pow`/`Neg` (what
+  `derive-runtime` already reuses), not `Plus`/`Subtract`/`Times`/`Power`
+  (spellings that do not exist in `symbolic-ir` at all).
 
 ## §3 The supported surface (the grammar)
 
@@ -109,11 +121,11 @@ consulted. Everything is desugared to a `head(args)`-shaped
 | `a . {b, c}` | cons (prepend `a` onto list `{b,c}`) | `Cons[a, List[b, c]]` (R-4 folds a `Cons` onto a literal `List` immediately into one `List`) |
 | `first(l)`, `second(l)`, `third(l)`, `rest(l)`, `part(l, n)` | list accessors | `First`/`Second`/`Third`/`Rest`/`Part` |
 | `append(l1, l2)`, `reverse(l)` | list construction | `Append`/`Reverse` |
-| `a + b`, `a - b` | additive | `Plus` / `Subtract` |
-| `a * b` | multiply *(explicit `*` required — see §4)* | `Times` |
-| `a / b` | divide | `Times[a, Power[b, -1]]` |
-| `a ^ b`, `a ** b` | power (`^` and `**` are the same operator — manual §2.7's own precedence table lists them as one tier) | `Power` |
-| `-a` | negation | `Times[-1, a]` |
+| `a + b`, `a - b` | additive | `Add` / `Sub` |
+| `a * b` | multiply *(explicit `*` required — see §4)* | `Mul` |
+| `a / b` | divide | `Div` |
+| `a ^ b`, `a ** b` | power (`^` and `**` are the same operator — manual §2.7's own precedence table lists them as one tier) | `Pow` |
+| `-a` | negation | `Neg` |
 | `a = b` | equation (boolean-valued; distinct from `:=` — manual §3.4 confirms `=` never assigns, only `on evallhseqp` even evaluates its left side) | `Equal` |
 | `a < b`, `a > b`, `a <= b`, `a >= b`, `a neq b` | relational | `Less`/`Greater`/`LessEqual`/`GreaterEqual`/`NotEqual` |
 | `a and b`, `a or b`, `not a` | logical | `And` / `Or` / `Not` |
@@ -149,6 +161,30 @@ never `1 + (2 . {3,4})`), while still nesting inside an equation (`a . {b}
 spirit as this section's own comparison-tier note above, not a verified
 claim about real Reduce's exact grammar; see `reduce.grammar`'s own header
 comment for the full reasoning.
+
+**R-4 correction to this table** (added once `reduce-runtime` actually
+lowered against `symbolic-ir`/`symbolic-vm` rather than assuming their
+exact head spellings from family resemblance to Macsyma/Wolfram/Derive):
+the arithmetic/negation rows above originally read `Plus`/`Subtract`/
+`Times`/`Power`, with `a / b` and `-a` expanded to `Times[a, Power[b,
+-1]]` and `Times[-1, a]` respectively. None of `Plus`/`Subtract`/`Times`/
+`Power` exist as head names in `symbolic-ir` — `grep -n '"Plus"\|
+"Subtract"\|"Times"\|"Power"' symbolic-ir/src/lib.rs` returns nothing.
+The real, already-implemented-and-reused heads are `Add`/`Sub`/`Mul`/
+`Div`/`Pow`/`Neg` (exactly what `derive-runtime`/`macsyma-compiler`
+already lower `+`/`-`/`*`/`/`/`^`/unary-`-` to), which is what the table
+above now shows and what `reduce-runtime` actually lowers to — using the
+real heads is *more* faithful to this spec's own reuse promise (§5: "the
+exact same functions, so all four languages agree on every result") than
+literally expanding division/negation into `Times`/`Power` applications
+would have been, since that would have sidestepped the very `Div`/`Neg`
+handlers already shared with Derive and Macsyma.
+
+This table's `Cons`/`First`/`Second`/`Third`/`Rest`/`Part`/`Append`/
+`Reverse`/`CompoundExpression` entries remain accurate as *lowering
+targets* — `reduce-runtime` does produce exactly these heads — but §5's
+claim that they are "already implemented … the exact same functions" for
+the shared `SymbolicBackend` did not hold: see §5's own corrected text.
 
 Comments, Reduce's mode-switch mechanism (`on rounded;`, `on complex;`,
 …), and its symbolic (raw-Lisp) mode are not part of this grammar; see §4.
@@ -252,20 +288,42 @@ with the others.
 - **Frontend:** the grammar-tools framework, exactly as Macsyma/MATLAB/
   Wolfram/APL/J/Derive use it. `reduce.tokens`/`reduce.grammar` compile to
   committed `_grammar.rs` in `reduce-lexer`/`reduce-parser` (R-2/R-3).
-- **Lowering + engine (R-4):** the parsed tree lowers to
-  [`symbolic_ir::IRNode`](../packages/rust/symbolic-ir) (surface operators,
-  `:=`/equations, and list operations → canonical `Plus`/`Times`/`Power`/
-  `Assign`/`Define`/`If`/`CompoundExpression`/`List`/`First`/`Rest`/
-  `Append`/`Reverse` heads), evaluated by
-  [`symbolic_vm::VM`](../packages/rust/symbolic-vm) with a Reduce `Backend`
-  over the shared `build_handler_table` pattern — the same rewrite engine
-  Macsyma, Wolfram, and Derive already drive, unchanged. No new engine
-  code is needed for R-4's in-scope surface (§3): every head it lowers to
-  already has a handler, shared verbatim across all four symbolic-family
-  languages now in this repo.
-- **REPL (R-4):** a single-threaded driver mirroring `wolfram-repl`/
-  `maxima-repl`/`derive-repl`; a plain (non-numbered) read-eval-print
-  loop, matching real Reduce's own interactive session transcript style.
+- **Lowering + engine (R-4, ✅ done, `reduce-runtime`):** the parsed tree
+  lowers to [`symbolic_ir::IRNode`](../packages/rust/symbolic-ir) (surface
+  operators, `:=`/equations, and list operations → canonical `Add`/`Sub`/
+  `Mul`/`Div`/`Pow`/`Neg`/`Assign`/`Define`/`If`/`CompoundExpression`/
+  `List`/`First`/`Second`/`Third`/`Rest`/`Part`/`Append`/`Reverse`/`Cons`
+  heads), evaluated by [`symbolic_vm::VM`](../packages/rust/symbolic-vm)
+  over the *stock* [`SymbolicBackend`](../packages/rust/symbolic-vm) —
+  reused directly, unchanged, with **no** Reduce-specific `Backend` at
+  all (this spec's original wording, "a Reduce `Backend` over the shared
+  `build_handler_table` pattern," implied a per-language `Backend` the
+  way Macsyma/Wolfram each have their own; R-4 does not build one) — the
+  same rewrite engine Macsyma, Wolfram, and Derive already drive.
+  **Corrected once implemented, rather than left to quietly mismatch
+  reality:** this spec originally claimed "No new engine code is needed
+  for R-4's in-scope surface (§3): every head it lowers to already has a
+  handler, shared verbatim across all four symbolic-family languages" —
+  grepping `symbolic_vm::handlers::build_handler_table` shows that is
+  true only for the arithmetic/comparison/logic/`Assign`/`Define`/`If`/
+  `List` heads. `CompoundExpression`, `First`/`Second`/`Third`/`Rest`/
+  `Part`/`Append`/`Reverse`, and `Cons` have **no handler at all** in the
+  shared table — Macsyma's list functions and Wolfram's
+  `CompoundExpression` are each wired through a bespoke per-language
+  `Backend`, which is exactly what "no custom `Backend` at all" (above)
+  rules out building here. `reduce-runtime` still lowers to these exact
+  heads (so a later item that adds real handlers to the shared table, or
+  a narrowly-scoped Reduce `Backend` if that turns out to be the right
+  shape, needs no lowering change), but evaluating one of these calls
+  today does not perform the operation — arguments still evaluate (so
+  `Assign`/`Define` side effects inside a `<< ... >>` genuinely happen,
+  in order), the call itself just stays unevaluated, like calling an
+  undefined user function. See `reduce-runtime`'s own module doc comment
+  and CHANGELOG for the full accounting.
+- **REPL (R-4, ✅ done, `reduce-repl`):** a single-threaded driver
+  mirroring `wolfram-repl`/`maxima-repl`/`derive-repl`; a plain
+  (non-numbered) read-eval-print loop, matching real Reduce's own
+  interactive session transcript style.
 
 ## §6 References
 
