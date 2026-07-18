@@ -1,0 +1,98 @@
+% ============================================================================
+% circle-parts — the parts of a circle and the defining phrase the source
+% states for each one (adj-facts-stdlib, GEOMETRY).
+% ============================================================================
+% A circle is not one undifferentiated ring: it is described by a small family
+% of named PARTS and MEASURES, and a mathematics reference pins each one to the
+% ONE phrase that defines it. "The radius runs from the center to the perimeter;
+% the diameter is the maximum distance across; the circumference is the
+% perimeter; a chord is a segment whose ends lie on the circle." Before you can
+% reason about a circle — measure it, draw it, or teach it — you must first know
+% WHICH part you mean and what defines it. Recall is a binding query:
+%
+%     ? circle_part(radius, $D)      % center_to_perimeter
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `circle_part(part, description)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the
+% defining phrase WITH its source, on the CPU, with zero model calls, and
+% abstains on a word that is not one of these circle parts (it never invents a
+% description).
+%
+% Each circle part and the defining phrase the source states for it, as a
+% little truth table:
+%
+%     circle part     defining phrase (atom)      a beginner's cue
+%     -----------     ----------------------      -----------------------------
+%     radius          center_to_perimeter         center out to the edge
+%     diameter        maximum_distance_across      the longest straight cut
+%     circumference   perimeter                    the length once around
+%     chord           ends_on_circle              a segment both ends on the ring
+%
+% The query also runs BACKWARD — bind a description and recall the part:
+%
+%     ? circle_part($Part, perimeter)   % circumference
+%
+% A word that is NOT one of these grounded circle parts — `vertex`, `angle`,
+% `side` — is deliberately NOT a row, so a circle-part recall ABSTAINS on it
+% rather than inventing a description. (A vertex is a corner of a POLYGON; a
+% circle has none.) That honest-abstention property is what makes the table safe
+% to build a reasoner on: it answers exactly the part→description pairs it can
+% ground, and only those.
+%
+% The `description` value of every row is a SINGLE lowercase atom, chosen to be
+% words the source EXPLICITLY uses for that part — never words the source does
+% not support. Where the source's phrase is more than one word (the radius runs
+% "from the center of a circle to its perimeter"), the atom joins the source's
+% own words with underscores, so every value stays literally checkable against
+% the quoted span.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every part→description pair
+% below was read out of a fetched Wolfram MathWorld page this session, and any
+% pair whose description could not be verified there was dropped). MathWorld
+% (mathworld.wolfram.com) is a primary mathematics reference, so every row is
+% `trust authoritative`. Each pair, with the verbatim span that states it:
+%
+%   radius → center_to_perimeter
+%     "The distance from the center of a circle to its perimeter, or from the
+%      center of a sphere to its surface."
+%     https://mathworld.wolfram.com/Radius.html
+%
+%   diameter → maximum_distance_across
+%     "The diameter of a circle is the distance from a point on the circle to a
+%      point pi radians away, and is the maximum distance from one point on a
+%      circle to another."
+%     https://mathworld.wolfram.com/Diameter.html
+%
+%   circumference → perimeter
+%     "In the work, the term "circumference" is used to mean the perimeter of a
+%      circle."
+%     https://mathworld.wolfram.com/Circumference.html
+%
+%   chord → ends_on_circle
+%     "The term is often used to describe a line segment whose ends lie on a
+%      circle."
+%     https://mathworld.wolfram.com/Chord.html
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the MathWorld statement that
+% fixes the first row (radius → center_to_perimeter). Every OTHER row's verbatim
+% span (and its own MathWorld URL) is listed above, so each description remains
+% independently checkable. `trust authoritative` — a primary mathematics
+% reference. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table circle_part {
+    columns part, description
+
+    row (radius, center_to_perimeter)         % "from the center of a circle to its perimeter"
+    row (diameter, maximum_distance_across)    % "the maximum distance from one point on a circle to another"
+    row (circumference, perimeter)             % '"circumference" is used to mean the perimeter of a circle'
+    row (chord, ends_on_circle)               % "a line segment whose ends lie on a circle"
+
+    source "The distance from the center of a circle to its perimeter, or from the center of a sphere to its surface."
+    locator "https://mathworld.wolfram.com/Radius.html"
+    trust authoritative
+}

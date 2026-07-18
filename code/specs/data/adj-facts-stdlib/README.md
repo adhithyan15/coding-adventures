@@ -29,6 +29,7 @@ per rotation, in parallel):
 | `geometry/` | angle type → defining measure-condition (acute → between_0_and_90, right → equals_90, reflex → greater_than_180) | Mathematics LibreTexts (consensus) |
 | `geometry/` | triangle (by sides) → defining side-condition (equilateral → three_equal_sides, isosceles → two_equal_sides, scalene → three_unequal_sides) | Wolfram MathWorld (authoritative) |
 | `geometry/` | quadrilateral family → its one defining property (rectangle → four_right_angles, rhombus → all_sides_same_length, trapezoid → two_sides_parallel) | Wolfram MathWorld (authoritative) |
+| `geometry/` | circle part → its defining description (radius → center_to_perimeter, diameter → maximum_distance_across, chord → ends_on_circle) | Wolfram MathWorld (authoritative) |
 | `astronomy/` | planet → order from the Sun | NASA |
 | `astronomy/` | stellar spectral class letter → the color NASA assigns it (o → blue, g → yellow, m → red) | NASA Science (authoritative) |
 | `astronomy/` | galaxy type → defining shape NASA states (spiral → spiral_arms, elliptical → round_to_oval, irregular → unusual_shapes) | NASA Science (authoritative) |
