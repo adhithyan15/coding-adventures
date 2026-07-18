@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.5.49 — text truthiness takes numeric affinity
+
+`NOT 'abc'` now returns 1 (not 0) and `WHERE <text>` keeps only rows whose text
+is numerically non-zero, matching SQLite. A text/blob in a boolean context takes
+numeric affinity: `'abc'`/`'0'`/`''` are false, `'5'`/`'5.5'` are true. This
+completes the type-affinity work — the boolean-context analog of the arithmetic
+(0.5.48) and unary-minus (0.5.43) coercion — and applies uniformly to WHERE,
+HAVING, AND/OR, NOT, IIF, and CASE WHEN. Two new differential-oracle cases;
+sql-vm 0.4.27.
+
 ## 0.5.48 — arithmetic coerces text/blob operands
 
 `'5' + 0` now returns 5 instead of erroring. Binary arithmetic (`+ - * / %`)

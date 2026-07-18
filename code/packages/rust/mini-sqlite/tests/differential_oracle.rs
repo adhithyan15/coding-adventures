@@ -1455,6 +1455,24 @@ const CASES: &[Case] = &[
         setup: &[],
         query: "SELECT 5 / '2' AS a, (5 / '0') IS NULL AS b, '7' % 3 AS c, '5.5' * 2 AS d",
     },
+    // A text/blob in a BOOLEAN context takes numeric affinity, matching SQLite:
+    // `NOT 'abc'` = 1 ('abc'→0), `NOT '5'` = 0, `NOT '0'` = `NOT ''` = 1, and
+    // `'5' AND 1` = 1 while `'abc' AND 1` = 0. Previously all text was truthy.
+    Case {
+        id: "text_boolean_affinity",
+        setup: &[],
+        query: "SELECT NOT 'abc' AS a, NOT '5' AS b, NOT '0' AS c, 'abc' AND 1 AS d, '5' AND 1 AS e",
+    },
+    // The same rule drives WHERE and CASE: `WHERE <text>` keeps only rows whose
+    // text is numerically non-zero, and `CASE WHEN <text>` picks THEN only then.
+    Case {
+        id: "where_case_text_truthiness",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, s TEXT)",
+            "INSERT INTO t VALUES (1,'abc'), (2,'5'), (3,'0'), (4,'')",
+        ],
+        query: "SELECT id, CASE WHEN s THEN 'y' ELSE 'n' END AS c FROM t WHERE s ORDER BY id",
+    },
     // Unary minus applies NUMERIC affinity to a text/blob operand before
     // negating, matching SQLite: `-'5'` = -5, `-'12abc'` = -12 (leading numeric
     // prefix), `-'abc'` = 0 (no prefix → 0), `-'3.5'` = -3.5, and leading

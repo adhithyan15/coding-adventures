@@ -3,6 +3,18 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.27] - Unreleased
+
+### Fixed
+
+- **Text/blob truthiness now takes numeric affinity.** `is_truthy` treated every
+  non-NULL text/blob as true, so `WHERE <text-column>` kept all rows and `NOT
+  'abc'` returned false. It now coerces via `cast_to_f64` and tests `!= 0`,
+  matching SQLite: `NOT 'abc'` = 1, `NOT '5'` = 0, `'5' AND 1` = 1, `'abc' AND 1`
+  = 0, and `WHERE s` / `CASE WHEN s` keep only numerically-non-zero text. This
+  affects every boolean context uniformly (WHERE, HAVING, AND/OR, NOT, IIF,
+  CASE WHEN) since they all route through `is_truthy`.
+
 ## [0.4.26] - Unreleased
 
 ### Fixed

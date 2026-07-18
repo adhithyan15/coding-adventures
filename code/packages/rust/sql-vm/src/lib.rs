@@ -1903,14 +1903,19 @@ fn call_builtin(name: &str, args: Vec<SqlValue>) -> Result<SqlValue, VmError> {
 /// | Int(n ≠ 0)  | true      |
 /// | Float(0.0)  | false     |
 /// | Float(f≠0)  | true      |
-/// | Text / Blob | true      |
+/// | Text / Blob | numeric affinity ≠ 0 (`'5'`→true, `'abc'`/`'0'`/`''`→false) |
 fn is_truthy(v: &SqlValue) -> bool {
     match v {
         SqlValue::Null => false,
         SqlValue::Bool(b) => *b,
         SqlValue::Int(n) => *n != 0,
         SqlValue::Float(f) => *f != 0.0,
-        SqlValue::Text(_) | SqlValue::Blob(_) => true,
+        // A text/blob in a boolean context takes NUMERIC AFFINITY first, exactly
+        // like SQLite: `WHERE 'abc'` is false (`'abc'`→0), `WHERE '5'` is true,
+        // `NOT 'abc'` = 1, `NOT '5'` = 0. Previously every non-NULL text/blob was
+        // truthy, which wrongly kept `WHERE <text-column>` rows and inverted
+        // `NOT`. `cast_to_f64` takes the leading numeric prefix (0 for non-numeric).
+        SqlValue::Text(_) | SqlValue::Blob(_) => cast_to_f64(v) != 0.0,
     }
 }
 
@@ -3882,6 +3887,23 @@ mod tests {
             Instruction::Halt,
         ]), &mut b).unwrap();
         assert_eq!(r.rows, vec![vec![null()]]);
+    }
+
+    #[test]
+    fn test_is_truthy_text_numeric_affinity() {
+        // Text/blob truthiness takes numeric affinity, matching SQLite.
+        assert!(!is_truthy(&SqlValue::Text("abc".into()))); // → 0 → false
+        assert!(is_truthy(&SqlValue::Text("5".into()))); // → 5 → true
+        assert!(!is_truthy(&SqlValue::Text("0".into())));
+        assert!(!is_truthy(&SqlValue::Text("".into())));
+        assert!(is_truthy(&SqlValue::Text("5.5".into())));
+        assert!(is_truthy(&SqlValue::Text("12abc".into()))); // leading 12 → true
+        assert!(!is_truthy(&SqlValue::Blob(b"abc".to_vec())));
+        assert!(is_truthy(&SqlValue::Blob(b"9".to_vec())));
+        // Numeric/NULL/bool arms unchanged.
+        assert!(!is_truthy(&SqlValue::Int(0)));
+        assert!(is_truthy(&SqlValue::Int(3)));
+        assert!(!is_truthy(&SqlValue::Null));
     }
 
     // ── 7. LIKE ───────────────────────────────────────────────────────────────
