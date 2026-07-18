@@ -1,0 +1,111 @@
+% ============================================================================
+% energy-forms — each named FORM of energy and the single defining token the
+% source uses to describe it (adj-facts-stdlib, PHYSICS).
+% ============================================================================
+% One of the first organizing facts in physics: energy comes in NAMED FORMS,
+% and each form is pinned by one characteristic word — chemical energy is about
+% BONDS, nuclear energy is about the NUCLEUS, thermal energy is HEAT, motion
+% energy is about things MOVING. Before a learner reasons about conservation of
+% energy or converts one form into another, they first learn to NAME the forms
+% and attach each to the word that defines it. Recall is a binding query:
+%
+%     ? energy_form_token(chemical, $T)      % bonds
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `energy_form_token(form, token)` carrying the table's citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns the
+% defining token WITH its source, on the CPU, with zero model calls, and
+% abstains on anything that is not one of the enumerated forms.
+%
+% The forms, as a little truth table (form → what the EIA sentence says → the
+% single defining token we carry):
+%
+%     form            what the EIA definition says                 token
+%     -------------   ------------------------------------------   -------------
+%     chemical        "...stored in the bonds of atoms..."         bonds
+%     mechanical      "...stored in objects by tension"            tension
+%     nuclear         "...stored in the nucleus of an atom..."     nucleus
+%     gravitational   "...stored in an object's height"            height
+%     radiant         "...electromagnetic energy that travels..."  electromagnetic
+%     thermal         "Thermal energy, or heat, is..."             heat
+%     motion          "...stored in moving objects"                moving
+%     electrical      "...charged particles, called electrons..."  electrons
+%
+% EIA groups these forms into two families — POTENTIAL energy (chemical,
+% mechanical, nuclear, gravitational) and KINETIC energy (radiant, thermal,
+% motion, electrical) — but the family split is not part of this table; the
+% table is the single clean axis form → defining token. The query also runs
+% BACKWARD — bind the token and recall the form it defines:
+%
+%     ? energy_form_token($F, heat)          % thermal — reverse recall
+%
+% Every `token` is a SINGLE lowercase atom that appears VERBATIM inside that
+% form's own EIA definition sentence (quoted per-row in the provenance block
+% below), never a synonym or a word the source does not use. Something that is
+% not one of the enumerated forms — magnetic energy, for instance, which is real
+% physics but is NOT one of the forms this EIA page names — has no row, so a
+% recall on it ABSTAINS rather than inventing a token. That honest-abstention
+% property is what makes the table safe to reason from.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every form→token pair was
+% read out of a fetched U.S. Energy Information Administration page this session,
+% and any form whose token could not be found verbatim in its own definition
+% sentence would have been dropped). All eight tokens come from the SAME primary
+% U.S. government source, the EIA "Energy Explained — Forms of energy" page
+% (eia.gov/energyexplained/what-is-energy/forms-of-energy.php), each definition
+% sentence quoted here character-for-character so any reader can re-check it:
+%
+%   chemical → bonds
+%     "Chemical energy is energy stored in the bonds of atoms and molecules."
+%
+%   mechanical → tension
+%     "Mechanical energy is energy stored in objects by tension."
+%
+%   nuclear → nucleus
+%     "Nuclear energy is energy stored in the nucleus of an atom—the energy that
+%      holds the nucleus together."
+%
+%   gravitational → height
+%     "Gravitational energy is energy stored in an object's height."
+%
+%   radiant → electromagnetic
+%     "Radiant energy is electromagnetic energy that travels in transverse waves."
+%
+%   thermal → heat
+%     "Thermal energy, or heat, is the energy that comes from atoms and molecules
+%      moving in a substance."
+%
+%   motion → moving
+%     "Motion energy is energy stored in moving objects."
+%
+%   electrical → electrons
+%     "Electrical energy is delivered by tiny, charged particles, called
+%      electrons, that typically move through a wire."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single strongest span: the EIA sentence that fixes the
+% first row (chemical → bonds). Every OTHER row's per-fact source and verbatim
+% span is listed above, so each token remains independently checkable. The
+% source is a primary U.S. government EIA education page (eia.gov), so
+% `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table energy_form_token {
+    columns form, token
+
+    row (chemical, bonds)
+    row (mechanical, tension)
+    row (nuclear, nucleus)
+    row (gravitational, height)
+    row (radiant, electromagnetic)
+    row (thermal, heat)
+    row (motion, moving)
+    row (electrical, electrons)
+
+    source "Chemical energy is energy stored in the bonds of atoms and molecules."
+    locator "https://www.eia.gov/energyexplained/what-is-energy/forms-of-energy.php"
+    trust authoritative
+}
