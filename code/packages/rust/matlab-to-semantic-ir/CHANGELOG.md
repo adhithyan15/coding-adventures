@@ -140,6 +140,21 @@
   end to end by re-running `compile_source("disp(-2 ^ 2)\n")` →
   `semantic_ir_to_javascript::compile` → `node`: prints `-4`.
 
+- **`matlab-to-semantic-ir` never declared `Feature::ShortCircuit` for
+  `&&`/`||`/`&`/`|`.** `try_logical` (`src/lower.rs`) built
+  `Expr::LogicalAnd`/`Expr::LogicalOr` nodes without ever calling
+  `self.observed.add(Feature::ShortCircuit)`, so any MATLAB program using
+  those operators failed `semantic_ir::validate()` outright with
+  `"manifest does not declare feature short-circuit but module uses it"`
+  even though the lowering itself was otherwise correct (confirmed via
+  probe, `x > 3 && y > 5`; documented in `tests/oracle.rs`'s module doc,
+  same PR as the bugs above). Fixed with a one-line addition of
+  `self.observed.add(Feature::ShortCircuit)` in `try_logical`, right
+  alongside every sibling frontend's own convention for this feature
+  (e.g. `ruby-to-semantic-ir`'s `lower.rs`). Regression test:
+  `tests/test_validator.rs`'s
+  `a_logical_and_program_validates_and_declares_short_circuit`.
+
 ## [0.1.0] - 2026-07-11
 
 ### Added
