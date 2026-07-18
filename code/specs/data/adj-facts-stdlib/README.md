@@ -56,6 +56,7 @@ per rotation, in parallel):
 | `biology/` | diet category → food it eats (herbivore → plants, carnivore → animals, omnivore → anything) | U.S. National Park Service (authoritative) |
 | `biology/` | flower part → function / role (petal → attract_pollinators, stamen → male, ovary → contains_ovules) | University of Illinois Extension (authoritative) |
 | `biology/` | seed part → the role/function the source states (seed_coat → covering, cotyledon → food_storage, embryo → miniature_plant) | USDA Forest Service, Woody Plant Seed Manual, Ch.1 (authoritative) |
+| `biology/` | fungus part → defining token / role (hypha → thread_like, mycelium → made_of_hyphae, gills → holds_spores) | UNLV "The Kingdom Fungi" biology faculty page (consensus) |
 | `physics/` | simple machine → everyday example | NASA |
 | `physics/` | phase change → its name (melting, freezing, …) | LibreTexts (consensus) |
 | `physics/` | energy form → defining token (chemical → bonds, thermal → heat) | EIA (energy.gov) |
