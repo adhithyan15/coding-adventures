@@ -436,23 +436,32 @@ impl<'a> Compiler<'a> {
         for dst in dsts {
             match &src {
                 Operandy::Literal(lit) => self.move_literal_into(lit, &dst)?,
-                // Item-to-item MOVE: only numeric→numeric on this rung (the
-                // receiver picture reshapes the source's value). Alphanumerics
-                // (runtime string reshaping) are a later rung.
+                // Item-to-item MOVE reshapes the source into the receiver's
+                // picture: numeric→numeric rescales the implied point; a
+                // character move truncates or space-pads to the receiver's size.
+                // Cross-category (numeric↔alphanumeric) moves are a later rung.
                 Operandy::Name(name) => {
-                    let src_idx = self.numeric_index(name)?;
-                    let (_, src_scale) = self.numeric_dims(src_idx);
-                    let src_reg = self.items[src_idx].reg.clone();
+                    let src_idx = self.item_index(&name)?;
                     let didx = self.item_index(&dst)?;
-                    if !matches!(self.items[didx].kind, ItemKind::Numeric { .. }) {
-                        return Err(CompileError::Unsupported(format!(
-                            "MOVE from {name} into non-numeric {dst} is a later rung"
-                        )));
+                    match (&self.items[src_idx].kind, &self.items[didx].kind) {
+                        (ItemKind::Numeric { .. }, ItemKind::Numeric { .. }) => {
+                            // Re-validate widths and rescale (truncating, never
+                            // rounding) the source into the receiver's decimals.
+                            self.numeric_index(&name)?;
+                            let (src_int, src_scale) = self.numeric_dims(src_idx);
+                            let src_reg = self.items[src_idx].reg.clone();
+                            self.store_scaled(&dst, &src_reg, src_scale, src_int, false)?;
+                        }
+                        (ItemKind::Char { .. }, ItemKind::Char { .. }) => {
+                            self.move_char_item(src_idx, didx);
+                        }
+                        _ => {
+                            return Err(CompileError::Unsupported(format!(
+                                "cross-category MOVE from {name} into {dst} \
+                                 (numeric↔alphanumeric) is a later rung"
+                            )));
+                        }
                     }
-                    // MOVE truncates (never rounds) when the receiver has fewer
-                    // decimals than the source.
-                    let (src_int, _) = self.numeric_dims(src_idx);
-                    self.store_scaled(&dst, &src_reg, src_scale, src_int, false)?;
                 }
             }
         }
@@ -487,6 +496,48 @@ impl<'a> Compiler<'a> {
             }
         }
         Ok(())
+    }
+
+    /// `MOVE src-item TO recv-item` for two **character** items — reshape the
+    /// source's stored image into the receiver's picture, exactly as the oracle's
+    /// `move_into_char` does: the source is always its declared `m` characters, so
+    /// a receiver of `n` characters keeps the leftmost `n` (truncating on the
+    /// right) when `n ≤ m`, or left-justifies and space-pads on the right when
+    /// `n > m`. Both sizes are known at compile time, so the reshape is a single
+    /// fixed `str_slice` or `str_concat`.
+    fn move_char_item(&mut self, src_idx: usize, didx: usize) {
+        let m = self.items[src_idx].width();
+        let n = self.items[didx].width();
+        let src_reg = self.items[src_idx].reg.clone();
+        let recv_reg = self.items[didx].reg.clone();
+        if n <= m {
+            let start = self.fresh("_s0");
+            self.emit("const", Some(&start), vec![Operand::Int(0)], "i64");
+            let end = self.fresh("_sn");
+            self.emit("const", Some(&end), vec![Operand::Int(n as i64)], "i64");
+            self.emit(
+                "str_slice",
+                Some(&recv_reg),
+                vec![Operand::Var(src_reg), Operand::Var(start), Operand::Var(end)],
+                "str",
+            );
+        } else {
+            let pad = self.spaces_const(n - m);
+            self.emit(
+                "str_concat",
+                Some(&recv_reg),
+                vec![Operand::Var(src_reg), Operand::Var(pad)],
+                "str",
+            );
+        }
+    }
+
+    /// A `str` register holding `k` spaces — the right-padding for a character
+    /// reshape or comparison.
+    fn spaces_const(&mut self, k: usize) -> String {
+        let reg = self.fresh("_sp");
+        self.emit("str_const", Some(&reg), vec![Operand::Str(" ".repeat(k))], "str");
+        reg
     }
 
     /// `STOP RUN` → `ret 0`.
@@ -549,20 +600,46 @@ impl<'a> Compiler<'a> {
     }
 
     /// Evaluate a `condition` (`operand relop operand`) to a boolean `i64`
-    /// register (1 = true). Numeric comparison only: operands align to a common
-    /// scale, then `cmp_gt`/`cmp_lt`/`cmp_eq` per the relation; `NOT` inverts.
-    /// Alphanumeric comparison (space-padded strings) is a later rung.
+    /// register (1 = true). A **numeric** comparison aligns the operands to a
+    /// common scale and applies `cmp_gt`/`cmp_lt`/`cmp_eq` (`NOT` inverts the
+    /// relation); an **alphanumeric** comparison space-pads both sides to a common
+    /// length and applies `str_cmp` (COBOL's rule). A numeric operand compared
+    /// with an alphanumeric one is a later rung.
     fn emit_condition(&mut self, cond: &GrammarASTNode) -> Result<String, CompileError> {
         let operands = child_nodes(cond, "operand");
         if operands.len() != 2 {
             return Err(CompileError::Malformed("condition must be operand relop operand".into()));
         }
-        let left = self.read_arith_term(operands[0])?;
-        let right = self.read_arith_term(operands[1])?;
-        let w = self.term_scale(&left).max(self.term_scale(&right));
-        let a = self.emit_term_at_scale(&left, w);
-        let b = self.emit_term_at_scale(&right, w);
+        let op = self.relation_op(cond)?;
 
+        // Classify each operand: `None` = numeric (literal / numeric item / a
+        // numeric figurative), `Some` = a character value.
+        let ls = self.str_operand(operands[0])?;
+        let rs = self.str_operand(operands[1])?;
+        match (ls, rs) {
+            (None, None) => {
+                let left = self.read_arith_term(operands[0])?;
+                let right = self.read_arith_term(operands[1])?;
+                let w = self.term_scale(&left).max(self.term_scale(&right));
+                let a = self.emit_term_at_scale(&left, w);
+                let b = self.emit_term_at_scale(&right, w);
+                let cond_reg = self.fresh("_cond");
+                self.emit(op, Some(&cond_reg), vec![a, b], "i64");
+                Ok(cond_reg)
+            }
+            (Some(a), Some(b)) => self.emit_str_condition(a, b, op),
+            _ => Err(CompileError::Unsupported(
+                "comparing a numeric operand with an alphanumeric one is a later rung".into(),
+            )),
+        }
+    }
+
+    /// Parse a `relop` node to the `cmp_*` op the relation lowers to. `NOT`
+    /// inverts the *relation* directly (`GREATER` → `cmp_le`, …), so the op still
+    /// yields one boolean — the `cmp_*`/`str_cmp`-vs-0 result `jmp_if_false`
+    /// consumes; inverting the boolean itself with `cmp_eq … 0` would be a type
+    /// mismatch (see [`Self::emit_condition`]).
+    fn relation_op(&self, cond: &GrammarASTNode) -> Result<&'static str, CompileError> {
         let relop = child_node(cond, "relop")
             .ok_or_else(|| CompileError::Malformed("condition without a relational operator".into()))?;
         let toks = child_tokens(relop);
@@ -576,22 +653,106 @@ impl<'a> Compiler<'a> {
                 _ => None,
             })
             .ok_or_else(|| CompileError::Malformed("unrecognised relational operator".into()))?;
-
-        // `NOT` inverts the *relation* directly, so the comparison op still yields
-        // a single boolean (the cmp_* ops return `Value::Bool`, which
-        // `jmp_if_false` consumes — inverting the boolean itself with an integer
-        // `cmp_eq … 0` would be a type mismatch).
-        let op = match (base, negated) {
+        Ok(match (base, negated) {
             ("GREATER", false) => "cmp_gt",
             ("GREATER", true) => "cmp_le",
             ("LESS", false) => "cmp_lt",
             ("LESS", true) => "cmp_ge",
             ("EQUAL", false) => "cmp_eq",
             _ => "cmp_ne", // ("EQUAL", true)
+        })
+    }
+
+    /// Read a `condition` operand for an **alphanumeric** comparison. Returns
+    /// `None` for a numeric operand (a numeric literal or numeric item — those
+    /// take the numeric path). A character item or string literal is a
+    /// fixed-length string; `SPACE`/`ZERO` figuratives become fills whose length
+    /// is resolved from the other operand (COBOL's rule).
+    fn str_operand(&mut self, op: &GrammarASTNode) -> Result<Option<StrOperand>, CompileError> {
+        match read_operand(op)? {
+            Operandy::Name(name) => {
+                let idx = self.item_index(&name)?;
+                match &self.items[idx].kind {
+                    ItemKind::Char { .. } => {
+                        let len = self.items[idx].width();
+                        Ok(Some(StrOperand::Fixed { reg: self.items[idx].reg.clone(), len }))
+                    }
+                    ItemKind::Numeric { .. } => Ok(None),
+                }
+            }
+            Operandy::Literal(Src::Str(s)) => {
+                let len = s.len();
+                let reg = self.fresh("_sl");
+                self.emit("str_const", Some(&reg), vec![Operand::Str(s)], "str");
+                Ok(Some(StrOperand::Fixed { reg, len }))
+            }
+            Operandy::Literal(Src::Space) => Ok(Some(StrOperand::Fig(' '))),
+            // `ZERO` is numeric against a numeric operand but the digit `'0'`
+            // against an alphanumeric one; carry it as a figurative and let the
+            // pairing in `emit_condition` decide.
+            Operandy::Literal(Src::Zero) => Ok(Some(StrOperand::Fig('0'))),
+            Operandy::Literal(Src::Num(_)) => Ok(None),
+        }
+    }
+
+    /// Emit an alphanumeric comparison: resolve any figurative to the other
+    /// operand's length, space-pad both sides to their common (max) length, then
+    /// `str_cmp` and apply the relation against zero. `str_cmp` returns an `i64`
+    /// ordering (−1/0/1), so `cmp_* … 0` is an integer comparison (no `Bool`
+    /// mismatch). Two figuratives with no fixed length to borrow is a later rung.
+    fn emit_str_condition(
+        &mut self,
+        a: StrOperand,
+        b: StrOperand,
+        op: &str,
+    ) -> Result<String, CompileError> {
+        let ((a_reg, a_len), (b_reg, b_len)) = match (a, b) {
+            (StrOperand::Fixed { reg: ar, len: al }, StrOperand::Fixed { reg: br, len: bl }) => {
+                ((ar, al), (br, bl))
+            }
+            (StrOperand::Fixed { reg: ar, len: al }, StrOperand::Fig(c)) => {
+                ((ar, al), (self.fig_const(c, al), al))
+            }
+            (StrOperand::Fig(c), StrOperand::Fixed { reg: br, len: bl }) => {
+                ((self.fig_const(c, bl), bl), (br, bl))
+            }
+            (StrOperand::Fig(_), StrOperand::Fig(_)) => {
+                return Err(CompileError::Unsupported(
+                    "comparing two figurative constants is a later rung".into(),
+                ));
+            }
         };
+        let width = a_len.max(b_len);
+        let ap = self.pad_spaces(a_reg, a_len, width);
+        let bp = self.pad_spaces(b_reg, b_len, width);
+        let cmp = self.fresh("_scmp");
+        self.emit("str_cmp", Some(&cmp), vec![Operand::Var(ap), Operand::Var(bp)], "i64");
+        let zero = self.fresh("_z");
+        self.emit("const", Some(&zero), vec![Operand::Int(0)], "i64");
         let cond_reg = self.fresh("_cond");
-        self.emit(op, Some(&cond_reg), vec![a, b], "i64");
+        self.emit(op, Some(&cond_reg), vec![Operand::Var(cmp), Operand::Var(zero)], "i64");
         Ok(cond_reg)
+    }
+
+    /// A `str` register holding character `c` repeated `len` times — a figurative
+    /// constant expanded to the length its comparison partner requires.
+    fn fig_const(&mut self, c: char, len: usize) -> String {
+        let reg = self.fresh("_fig");
+        self.emit("str_const", Some(&reg), vec![Operand::Str(c.to_string().repeat(len))], "str");
+        reg
+    }
+
+    /// Right-pad `reg` (currently `len` characters) with spaces to `width`,
+    /// returning the register to compare. When already at `width`, `reg` is used
+    /// as-is.
+    fn pad_spaces(&mut self, reg: String, len: usize, width: usize) -> String {
+        if len >= width {
+            return reg;
+        }
+        let pad = self.spaces_const(width - len);
+        let out = self.fresh("_pad");
+        self.emit("str_concat", Some(&out), vec![Operand::Var(reg), Operand::Var(pad)], "str");
+        out
     }
 
     // -----------------------------------------------------------------------
@@ -1926,6 +2087,14 @@ enum Term {
     Item(usize),
 }
 
+/// An operand of an **alphanumeric** comparison: either a known-length string
+/// (a character item's slot or a string-literal `str_const`) or a figurative
+/// constant whose length is resolved from the operand it is compared against.
+enum StrOperand {
+    Fixed { reg: String, len: usize },
+    Fig(char),
+}
+
 /// A parsed `COMPUTE` arithmetic expression — the grammar's precedence cascade
 /// (`arith_expr` → `arith_term` → `arith_factor` → `arith_unary` →
 /// `arith_primary`) folded into a tree, mirroring the oracle's `Expr`. Leaves
@@ -2228,11 +2397,33 @@ mod tests {
     }
 
     #[test]
-    fn alphanumeric_comparison_is_deferred() {
-        // Comparing a character field is a later rung (space-padded string compare).
-        let err = compile_source(
-            &wrap(&["01  W  PIC X(4) VALUE \"AB\"."], &["IF W EQUAL \"AB\" DISPLAY \"M\".", "STOP RUN."]),
+    fn alphanumeric_comparison_and_move_now_compile() {
+        // Space-padded character comparison and character item-to-item MOVE both
+        // lower now (str_cmp / str_slice / str_concat), and validate.
+        let m = compile_source(
+            &wrap(
+                &["01  W  PIC X(4) VALUE \"AB\".", "01  V  PIC X(2)."],
+                &["MOVE W TO V.", "IF W EQUAL \"AB\" DISPLAY \"M\".", "STOP RUN."],
+            ),
             "a",
+        )
+        .unwrap();
+        assert!(m.validate().is_empty(), "{:?}", m.validate());
+        let os = ops(&m);
+        assert!(os.contains(&"str_slice".to_string()), "char MOVE truncates via str_slice");
+        assert!(os.contains(&"str_cmp".to_string()), "alphanumeric IF compares via str_cmp");
+    }
+
+    #[test]
+    fn cross_category_move_is_deferred() {
+        // A numeric→alphanumeric (or reverse) item MOVE needs runtime int↔string
+        // conversion — a clean later rung, never wrong output.
+        let err = compile_source(
+            &wrap(
+                &["01  N  PIC 9(3) VALUE 42.", "01  W  PIC X(4)."],
+                &["MOVE N TO W.", "STOP RUN."],
+            ),
+            "x",
         )
         .unwrap_err();
         assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
