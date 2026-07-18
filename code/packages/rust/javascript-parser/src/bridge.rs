@@ -4137,6 +4137,18 @@ fn unquote_string(raw: &str) -> String {
                     result.push(ch);
                 }
             }
+            // NonOctalDecimalEscapeSequence (ECMAScript Annex B.1.2): `\8` and
+            // `\9` are NOT octal escapes — 8 and 9 are not octal digits, so the
+            // octal arm above (`'0'..='7'`) never matches them. In sloppy-mode
+            // string literals the backslash is simply dropped and the decimal
+            // digit is kept: `"\8"` → "8", `"\9"` → "9". The reference Closure
+            // Compiler decodes them this way (oracle-verified: `"\8\9"` → "89",
+            // `"z\8z"` → "z8z"). Previously they fell through to the generic
+            // `other` arm below, which KEEPS the backslash (`"\8"` → "\8"): a
+            // value miscompile, since the decoded string was two chars, not one.
+            // Strict mode forbids `\8`/`\9`, but sloppy string literals permit
+            // them, so the decode set must handle them.
+            Some(d @ ('8' | '9')) => result.push(d),
             Some('b') => result.push('\x08'),
             Some('f') => result.push('\x0C'),
             Some('v') => result.push('\x0B'),
@@ -5389,6 +5401,32 @@ mod tests {
             (r#""\1010";"#, "A0"),      // 0o101='A' then a literal '0' (3-digit cap)
             (r#""\401";"#, "\u{101}"),   // three digits even w/ leading 4-7 (Closure rule)
             (r#""\777";"#, "\u{1ff}"),   // the max: 0o777 = 511
+        ] {
+            let p = bridge_ok(src);
+            match &p.body[0] {
+                ProgramItem::Statement(Statement::Tagged(
+                    TaggedStatement::ExpressionStatement(es),
+                )) => match &es.expression {
+                    Expression::StringLiteral(s) => assert_eq!(s.value, want, "for {src}"),
+                    other => panic!("expected StringLiteral for {src}, got {other:?}"),
+                },
+                other => panic!("expected an ExpressionStatement for {src}, got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn nonoctal_decimal_escapes_8_and_9_drop_backslash() {
+        use coding_adventures_javascript_ast::statement::TaggedStatement;
+        // `\8` and `\9` (ECMAScript Annex B.1.2 NonOctalDecimalEscapeSequence)
+        // are NOT octal — the backslash is dropped and the digit kept.
+        // Oracle-verified against the reference Closure Compiler.
+        for (src, want) in [
+            (r#""\8";"#, "8"),
+            (r#""\9";"#, "9"),
+            (r#""\8\9";"#, "89"),   // the probe case: g(a,"\8\9") -> "89"
+            (r#""z\8z";"#, "z8z"),  // mid-string
+            (r#""\98";"#, "98"),    // adjacent, each drops its own backslash
         ] {
             let p = bridge_ok(src);
             match &p.body[0] {
