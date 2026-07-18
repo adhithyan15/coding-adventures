@@ -2976,6 +2976,72 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("0667"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // COBOL-60 — PERFORM … TIMES (PL09 step 4). The performed paragraph range is
+    // inlined at the call site with a counted loop around it: TICK runs 3 times,
+    // each ADDing 1 to COUNT and displaying it, so stdout is `123`. This proves
+    // paragraph labels + PERFORM's loop control lower to the shared jmp/label
+    // substrate on every backend.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  COUNT  PIC 9 VALUE 0.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     PERFORM TICK 3 TIMES.\n\
+               000000     STOP RUN.\n\
+               000000 TICK.\n\
+               000000     ADD 1 TO COUNT.\n\
+               000000     DISPLAY COUNT.",
+        expect: Expect::Stdout("1\n2\n3"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL-60 — COMPUTE with operator precedence (PL09 step 4). `A + B * C =
+    // 10 + (3*2) = 16`, stored into `9(4)V99` → `001600`. This proves the
+    // precedence cascade evaluates to plain scaled-i64 arithmetic (add over a
+    // multiply) on every backend.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  A  PIC 9(3) VALUE 10.\n\
+               000000 01  B  PIC 9(3) VALUE 3.\n\
+               000000 01  C  PIC 9(3) VALUE 2.\n\
+               000000 01  R  PIC 9(4)V99.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     COMPUTE R = A + B * C.\n\
+               000000     DISPLAY R.\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("001600"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // COBOL-60 — signed numeric with trailing overpunch (PL09 step 4). `N PIC
+    // S9(2)` starts at 3; SUBTRACT 5 → -2; a signed receiver keeps the sign, and
+    // DISPLAY overpunches the units digit 2 as 'K' (negative) → `0K`. This proves
+    // signed slots + the overpunch print helper lower on every backend.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  N  PIC S9(2) VALUE 3.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     SUBTRACT 5 FROM N.\n\
+               000000     DISPLAY N.\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("0K"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses

@@ -8,6 +8,51 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.6.0: control flow, COMPUTE, ON SIZE ERROR, signed numerics (PL09 step 4)
+
+A consolidated slice completing the COBOL-60 language surface this compiler
+targets. Every feature is asserted **byte-identical to the `cobol-runtime`
+oracle** via `jit_e2e.rs` (compile → run on the generic JIT → compare `DISPLAY`
+bytes), and each deliberately-unimplemented corner is a clean
+`CompileError::Unsupported`, never wrong output.
+
+- **`GO TO para`** — an unconditional jump to a paragraph label. Every paragraph
+  gets a `para_<name>` label; forward and back references both resolve.
+- **`PERFORM`, all five forms** — `PERFORM p`, `p THRU q`, `n TIMES`,
+  `UNTIL cond`, and `VARYING v FROM a BY b UNTIL cond`. The performed paragraph
+  range is **inlined** at the call site, which reproduces COBOL's
+  out-of-line-but-returns semantics exactly: a `STOP RUN` inside returns, a
+  `GO TO` inside jumps away at top level. A recursive `PERFORM` or code-size
+  blow-up trips a depth (`MAX_PERFORM_DEPTH`) / instruction (`MAX_EMIT_INSTRS`)
+  bound as a clean error.
+- **`ON SIZE ERROR`** on `ADD` / `SUBTRACT` / `MULTIPLY` / `DIVIDE` — routed
+  through `store_scaled_handled`: when the (rounded, magnitude) result's integer
+  part overflows the receiver, the handler statements run and the receiver is
+  left unchanged; without a handler the high-order digits truncate silently
+  (COBOL's handler-less rule). `DIVIDE` adds a zero-divisor guard that jumps to
+  the handler (or faults, matching the oracle's `DivideByZero`, when there is
+  none).
+- **`COMPUTE target [ROUNDED] = <expr> [ON SIZE ERROR …]`** — the grammar's
+  `arith_expr` precedence cascade lowered to the same scaled-`i64` model,
+  evaluated bottom-up with a compile-time `(scale, int_bound)` on every node and
+  an overflow guard on every combining step (an intermediate that could exceed 18
+  digits is a clean error, never a silent wrap). `+ - *` and unary minus evaluate
+  exactly (matching the oracle's exact `Decimal`); a top-level division reuses the
+  `DIVIDE` verb's one-guard-digit rounding and zero-divisor branch. Division
+  nested inside a larger expression, and `**`, are later rungs. The parser mirrors
+  the oracle's associativity and shares its `MAX_EXPR_OPERANDS` stack-overflow
+  bound.
+- **Signed numerics (`PIC S9…`)** — a signed item keeps its sign in the `i64`
+  slot (so `ADD` / `SUBTRACT` / `COMPUTE` and `IF` comparisons get signed
+  semantics for free) and shows it as a trailing **overpunch** on `DISPLAY`
+  (`{A-I}` / `{J-R}`, `'{'` / `'}'` for zero) via a synthesized
+  `__cob_print_signed` helper. `MOVE` into an unsigned receiver drops the sign;
+  silent high-order truncation re-applies the sign without relying on any
+  backend's signed-remainder rule.
+- **Tests.** 16 new `jit_e2e.rs` cases (9 GO TO/PERFORM, ON SIZE ERROR across the
+  verbs, 9 COMPUTE, 6 signed) plus unit tests for validation and every deferred
+  corner. Full suite **89 green** (19 unit + 6 `backend_compat` + 64 `jit_e2e`).
+
 ### Added — v0.5.0: scaled-decimal MULTIPLY / DIVIDE (PL09 step 4, PR3b)
 
 - **Scaled `MULTIPLY`** on `PIC …V…` operands: the raw product of the two scaled

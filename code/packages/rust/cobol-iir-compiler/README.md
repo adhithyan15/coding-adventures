@@ -24,7 +24,7 @@ interpreter_ir::IIRModule   (one `main`, returns i64 exit code)
 NativeAOT · LLVM · WASM · JVM · CLR · VM · JIT
 ```
 
-## This slice (v0.2 — the `DISPLAY` / `MOVE` / `STOP RUN` core + integer arithmetic)
+## This slice (v0.6 — the core plus control flow, `COMPUTE`, `ON SIZE ERROR`, signed)
 
 COBOL's WORKING-STORAGE is a **PICTURE-typed** data model. Each elementary item
 becomes one IIR register: a **numeric** item (`PIC 9…`) is an `i64` holding its
@@ -34,9 +34,12 @@ integer `123`); an **alphanumeric** item (`PIC X`/`A`) is a `str`.
 | COBOL | IIR |
 | --- | --- |
 | `VALUE <lit>` / `MOVE <lit> TO item` | the register's `const`/`str_const` — the literal formatted into the item's picture at compile time |
-| `ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE … [GIVING r]` | `add`/`sub`/`mul`/`div` on the `i64` slots, the result reduced to the receiver's field |
-| `DISPLAY op…` | each operand's image emitted, then `putchar('\n')` — a literal prints its source text, a numeric item via the fixed-width digit helper, an alphanumeric via `print_str` |
+| `ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE … [GIVING r] [ROUNDED] [ON SIZE ERROR …]` | `add`/`sub`/`mul`/`div` on the `i64` slots, the result reduced to the receiver's field; a size error runs the handler and leaves the receiver unchanged |
+| `COMPUTE r [ROUNDED] = expr [ON SIZE ERROR …]` | the precedence cascade evaluated bottom-up over scaled `i64`, each step overflow-guarded |
+| `DISPLAY op…` | each operand's image emitted, then `putchar('\n')` — a literal prints its source text, a numeric item via the fixed-width digit helper (signed items via a trailing-overpunch helper), an alphanumeric via `print_str` |
 | `IF cond then… [ELSE else…]` | `cmp_*` on the aligned operands → `jmp_if_false` over the then-branch; `NOT` inverts the relation |
+| `GO TO para` | `jmp para_<name>` |
+| `PERFORM para [THRU q] [n TIMES \| UNTIL c \| VARYING v FROM a BY b UNTIL c]` | the paragraph range **inlined** at the call site (out-of-line-but-returns semantics), with loop control emitted around it |
 | `STOP RUN` | `ret 0` |
 
 ### Why it is exact
@@ -49,23 +52,40 @@ compiler calls the very same picture/value functions the oracle uses —
 this reuse — and stores the resulting scaled value. A numeric *literal* in a
 `DISPLAY`, by contrast, shows its **source text** (`DISPLAY 42` → `42`).
 
-Runtime arithmetic (unsigned receivers) is native `i64` over the scaled slots.
+Runtime arithmetic is native `i64` over the scaled slots.
 `ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE` all honour the implied point (`PIC …V…`):
 additive verbs align operands to a common working scale then accumulate;
 `MULTIPLY` products carry scale `sa + sb`; `DIVIDE` scales the dividend up before
 the truncating division to land the receiver's decimals (plus a guard digit for
 rounding). Every store rounds **half away from zero** with `ROUNDED` (else
-truncates), takes the magnitude, and keeps the low-order `int_digits + dec_digits`
-digits (COBOL's unsigned-magnitude and silent-overflow-truncation rules). Numeric
-**item-to-item `MOVE`** reshapes the source value into the receiver's picture the
-same way. **`IF`** compares operands at a common scale and branches.
+truncates) and keeps the low-order `int_digits + dec_digits` digits (COBOL's
+silent-overflow-truncation rule). `ON SIZE ERROR` turns that silent truncation
+into a caught condition (handler runs, receiver unchanged) when the integer part
+overflows or a divisor is zero.
+
+`COMPUTE` evaluates the grammar's precedence cascade (`+ - * /`, unary minus,
+parentheses) bottom-up in the same scaled-`i64` model; every node carries a
+compile-time `(scale, integer-digit)` bound and every combining step is
+overflow-guarded, so an intermediate that could exceed 18 digits is a clean error
+rather than a silent wrap. A **top-level** division reuses the `DIVIDE` verb's
+rounding and zero-divisor handling.
+
+**Signed numerics (`PIC S9…`)** keep their sign in the `i64` slot — so arithmetic
+and `IF` comparisons are signed — and `DISPLAY` shows the sign as a trailing
+**overpunch** on the units digit (`{A-I}` positive, `{J-R}` negative, `'{'`/`'}'`
+for zero). An unsigned receiver stores only magnitude, so a signed→unsigned `MOVE`
+drops the sign. Numeric **item-to-item `MOVE`** reshapes the source value into the
+receiver's picture. Control flow: **`GO TO`** jumps to a paragraph label;
+**`PERFORM`** (paragraph / `THRU` / `TIMES` / `UNTIL` / `VARYING`) inlines the
+paragraph range at the call site, which reproduces COBOL's return semantics
+exactly (a `STOP RUN` inside returns, a `GO TO` inside jumps away), bounded by
+depth and instruction-count caps against a recursive `PERFORM`.
 
 ### Deliberately a later rung
 
-Each of these is a clean `CompileError::Unsupported` (never wrong output), landing
-on its own PR: `ON SIZE ERROR`, alphanumeric item `MOVE` and alphanumeric
-comparison, `COMPUTE`, `PERFORM`, `GO TO`, group items, and signed numerics
-(`PIC S9…`, trailing-overpunch display).
+Each of these is a clean `CompileError::Unsupported` (never wrong output): group
+items, alphanumeric item `MOVE` and alphanumeric comparison, `COMPUTE` division
+nested inside a larger expression, and `COMPUTE` exponentiation (`**`).
 
 ## Usage
 

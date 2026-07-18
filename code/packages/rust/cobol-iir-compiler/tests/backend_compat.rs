@@ -169,3 +169,92 @@ fn scaled_multiply_divide_program_accepted_by_print_backends() {
     let m = compile_source(&src, "muldiv").unwrap();
     assert_accepted_by_print_backends(&m, "scaled multiply/divide");
 }
+
+#[test]
+fn perform_and_goto_program_accepted_by_print_backends() {
+    // PERFORM (inlined range) + GO TO exercise paragraph labels, jmp, and the
+    // counted-loop control. Every print backend must accept the branch structure.
+    let src = program(&[
+        "IDENTIFICATION DIVISION.",
+        "PROGRAM-ID. P.",
+        "DATA DIVISION.",
+        "WORKING-STORAGE SECTION.",
+        "01  I  PIC 9 VALUE 0.",
+        "PROCEDURE DIVISION.",
+        "MAIN.",
+        "    PERFORM STEP UNTIL I GREATER 2.",
+        "    GO TO DONE.",
+        "    DISPLAY \"UNREACHED\".",
+        "DONE.",
+        "    STOP RUN.",
+        "STEP.",
+        "    ADD 1 TO I.",
+        "    DISPLAY I.",
+    ]);
+    let m = compile_source(&src, "perform").unwrap();
+    assert_accepted_by_print_backends(&m, "perform/go to");
+}
+
+#[test]
+fn on_size_error_program_accepted_by_print_backends() {
+    // ON SIZE ERROR adds the overflow test (cmp_ge) + handler branch on every
+    // arithmetic verb; the zero-divisor guard adds another. Backends must accept it.
+    let src = program(&[
+        "IDENTIFICATION DIVISION.",
+        "PROGRAM-ID. P.",
+        "DATA DIVISION.",
+        "WORKING-STORAGE SECTION.",
+        "01  R  PIC 9(2) VALUE 1.",
+        "PROCEDURE DIVISION.",
+        "MAIN.",
+        "    ADD 99 TO R ON SIZE ERROR DISPLAY \"OVR\".",
+        "    DIVIDE 0 INTO R ON SIZE ERROR DISPLAY \"DIV0\".",
+        "    DISPLAY R.",
+        "    STOP RUN.",
+    ]);
+    let m = compile_source(&src, "size").unwrap();
+    assert_accepted_by_print_backends(&m, "on size error");
+}
+
+#[test]
+fn compute_program_accepted_by_print_backends() {
+    // COMPUTE lowers the precedence cascade + a top-level division to plain
+    // scaled-i64 ops. Every print backend must accept the emitted IIR.
+    let src = program(&[
+        "IDENTIFICATION DIVISION.",
+        "PROGRAM-ID. P.",
+        "DATA DIVISION.",
+        "WORKING-STORAGE SECTION.",
+        "01  A  PIC 9(3) VALUE 20.",
+        "01  B  PIC 9(3) VALUE 3.",
+        "01  R  PIC 9(2)V99.",
+        "PROCEDURE DIVISION.",
+        "MAIN.",
+        "    COMPUTE R ROUNDED = (A + B) / B.",
+        "    DISPLAY R.",
+        "    STOP RUN.",
+    ]);
+    let m = compile_source(&src, "compute").unwrap();
+    assert_accepted_by_print_backends(&m, "compute");
+}
+
+#[test]
+fn signed_program_accepted_by_print_backends() {
+    // A signed field adds the __cob_print_signed overpunch helper (a second
+    // synthesized function that calls the digit printer) and the sign-keeping
+    // store. Every print backend must accept both functions.
+    let src = program(&[
+        "IDENTIFICATION DIVISION.",
+        "PROGRAM-ID. P.",
+        "DATA DIVISION.",
+        "WORKING-STORAGE SECTION.",
+        "01  N  PIC S9(2) VALUE 3.",
+        "PROCEDURE DIVISION.",
+        "MAIN.",
+        "    SUBTRACT 5 FROM N.",
+        "    DISPLAY N.",
+        "    STOP RUN.",
+    ]);
+    let m = compile_source(&src, "signed").unwrap();
+    assert_accepted_by_print_backends(&m, "signed overpunch");
+}
