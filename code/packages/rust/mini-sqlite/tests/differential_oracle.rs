@@ -664,6 +664,25 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT OCTET_LENGTH(s) AS o, LENGTH(s) AS l FROM t ORDER BY id",
     },
+    // LENGTH counts BYTES for a blob but CHARACTERS for text, and measures a
+    // number by its decimal-text length. `length(x'0102ff')` = 3, `length(x'')`
+    // = 0, `length(12345)` = 5, `length('héllo')` = 5. Previously LENGTH errored
+    // on anything but text/NULL; blob literals (0.5.42) made the blob case
+    // reachable from SQL.
+    Case {
+        id: "length_blob_int_text",
+        setup: &[],
+        query: "SELECT LENGTH(x'0102ff') AS a, LENGTH(x'') AS b, LENGTH(12345) AS c, LENGTH(-7) AS d, LENGTH('héllo') AS e",
+    },
+    // LENGTH over a blob column (byte count), including the empty blob.
+    Case {
+        id: "length_blob_column",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, b BLOB)",
+            "INSERT INTO t VALUES (1, x'DEADBEEF'), (2, x''), (3, NULL)",
+        ],
+        query: "SELECT LENGTH(b) AS l FROM t ORDER BY id",
+    },
     // LIKELY / UNLIKELY / LIKELIHOOD are planner hints — semantically the
     // identity function on their first argument.
     Case {
