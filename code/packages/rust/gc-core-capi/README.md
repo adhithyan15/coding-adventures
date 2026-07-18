@@ -70,7 +70,9 @@ argument-less **conservative C-stack scan** (`__gc_collect`) — plus the **pace
 drives under memory pressure. All pure Rust, no C.
 
 `__gc_collect` is the drop-in for `twig_gc.c`'s `__twig_gc_collect`: it spills the
-callee-saved registers to the stack (an `asm!` block replacing `setjmp`), reads the
+callee-saved registers — both integer and FP/SIMD (`d8`–`d15` on aarch64,
+`xmm6`–`xmm15` on Win64), so a NaN-boxed reference held only in an FP register is
+never missed — to the stack (an `asm!` block replacing `setjmp`), reads the
 stack pointer, finds the thread's stack base via the platform thread API (bare
 `extern` bindings — `pthread_get_stackaddr_np` on macOS, `pthread_getattr_np` /
 `pthread_attr_getstack` on Linux, `GetCurrentThreadStackLimits` on Windows), and

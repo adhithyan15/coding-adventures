@@ -2,6 +2,24 @@
 
 All notable changes to this crate are documented here.
 
+## [0.6.0] — 2026-07-17
+
+### Changed
+
+- **Conservative stack scan now spills callee-saved FP/SIMD registers too**
+  (aarch64 `d8`–`d15`; Win64 `xmm6`–`xmm15`, low 64 bits via `movsd`). System V
+  x86-64 has no callee-saved xmm, so its path is unchanged. Closes the
+  missed-root gap flagged in the #118b-1.5 review: a NaN-boxing runtime may keep
+  a managed reference as an `f64` in a callee-saved FP register across a
+  safepoint/alloc call; scanning only integer registers could miss it and free a
+  live object (use-after-free). `twig_gc.c`'s `setjmp` saved these registers on
+  exactly these ABIs — this restores parity. `SPILL_SLOTS` grows 10 → **18**
+  words (the max across ABIs: aarch64 10 int + 8 FP; Win64 8 int + 10 FP), sized
+  to the largest set so the spill never writes out of bounds. Runtime-validated
+  on aarch64 (native, exercises `d8`–`d15`) + x86-64 SysV (Rosetta); Win64
+  validates in CI. Same conservative semantics — a stale FP register is at worst
+  a one-cycle false positive, never unsound.
+
 ## [0.5.0] — 2026-07-17
 
 ### Added
