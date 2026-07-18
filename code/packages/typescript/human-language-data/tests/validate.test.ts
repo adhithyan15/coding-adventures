@@ -118,6 +118,20 @@ describe("validate", () => {
     expect(issues.some((i) => i.code === "uncovered-glyphs")).toBe(false);
   });
 
+  it("handles a logographic script (Chinese characters + tones, no marks/forms)", () => {
+    const chinese: ScriptData = {
+      script: "chinese", name: "Chinese (Simplified)", font: "f", direction: "ltr", system: "logographic",
+      letters: [
+        { glyph: "你", sound: "nǐ", role: "logograph", tone: "3", components: ["亻 (person radical)", "尔"], strokeOrder: [], strokeOrderNote: "conventional" },
+        { glyph: "好", sound: "hǎo", role: "logograph", tone: "3", components: ["女 (woman)", "子 (child)"], strokeOrder: [], strokeOrderNote: "conventional" },
+      ],
+    };
+    const l = good("mandarin", "ZH1", "GREETING-HELLO", { headword: "你好", romanization: "nǐ hǎo" });
+    const issues = validate({ taxonomy, lessons: [l], scripts: { chinese } });
+    expect(issues.some((i) => i.code === "uncovered-glyphs")).toBe(false); // both characters covered
+    expect(hasErrors(issues)).toBe(false);
+  });
+
   it("summarize counts levels", () => {
     const issues = validate({ taxonomy, lessons: [good("spanish", "ES1", "bad!")] });
     expect(summarize(issues)).toMatch(/error\(s\)/);

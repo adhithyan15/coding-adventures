@@ -11,9 +11,15 @@ is data, not code.**
 
 | Family | Examples | How vowels work | Direction |
 |---|---|---|---|
-| **alphabet** | Latin, Greek, Cyrillic | letters spell vowels + consonants | ltr |
+| **alphabet** | Latin, **Cyrillic** (Russian), Greek | letters spell vowels + consonants | ltr |
 | **abugida** | Devanagari, Bengali, Gujarati, Telugu, Kannada, Malayalam, Tamil | consonant carries an inherent vowel; a **mark** (mātrā) changes it; consonants stack into conjuncts | ltr |
-| **abjad** | Arabic, Hebrew | consonants only; vowels are optional diacritic **marks**; letters take contextual **forms** | **rtl** |
+| **abjad** | Arabic, **Hebrew** | consonants only; vowels are optional diacritic **marks**; letters take contextual **forms** (Hebrew: final-position variants) | **rtl** |
+| **logographic** | **Chinese** (Hanzi) | no vowel letters at all; each character is a morpheme, its `sound` is tone-marked pinyin | ltr |
+
+For **logographic** scripts a "letter" is a **character** (`role: "logograph"`) or a
+recurring **radical** (`role: "radical"`); its `components` are the radicals/strokes
+it decomposes into, `sound` carries the tone-marked pinyin, and `tone` optionally
+holds the structured tone (`"1"`–`"4"` | `"neutral"`). No `forms`, no `marks`.
 
 ## Shape of a script file
 

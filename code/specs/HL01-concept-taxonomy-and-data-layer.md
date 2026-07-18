@@ -192,9 +192,10 @@ families and how the schema handles each:
 
 | Family | Examples | Vowels | Direction | Schema features used |
 |---|---|---|---|---|
-| **alphabet** | Latin, Greek, Cyrillic | letters spell them | ltr | `letters` only |
+| **alphabet** | Latin, **Cyrillic**, Greek | letters spell them | ltr | `letters` only |
 | **abugida** | Devanagari, Bengali, Gujarati, Telugu, Kannada, Malayalam, Tamil | inherent vowel + `marks` | ltr | `letters` (+`inherentVowel`), `marks`, `combination` (conjuncts) |
 | **abjad** | Arabic, **Hebrew** | optional diacritic `marks` | **rtl** | `letters` (+`forms`), `marks` (harakat/niqqud) |
+| **logographic** | **Chinese** (Hanzi) | none — tone-marked pinyin in `sound` | ltr | `letters` (`role: logograph`/`radical`, `tone`, `components`=radicals/strokes) |
 
 ```jsonc
 {

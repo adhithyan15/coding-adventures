@@ -91,20 +91,38 @@ export interface Dataset {
 // optionally with positional FORMS), and a set of MARKS (vowel signs OR harakat/
 // niqqud). Every letter/mark carries the component decomposition + typical stroke
 // order that is the whole point — "learn to write it, piece by piece."
+//
+// A fourth family, LOGOGRAPHIC (Chinese Hanzi), fits the same model without any
+// special-casing: a "letter" is a character or a radical, its `components` are the
+// radicals/strokes it's built from, `strokeOrder` is well-defined (and for Chinese
+// actually authoritative), and its `sound` carries tone-marked pinyin (with an
+// optional structured `tone`). No forms, no marks — those fields are simply omitted.
 
 /** Which way the script runs. Abjads (Arabic, Hebrew) are `rtl`. */
 export type Direction = "ltr" | "rtl";
 
-/** The structural family. Open string; these are the ones we describe today. */
-export type WritingSystem = "alphabet" | "abugida" | "abjad" | "syllabary" | string;
+/**
+ * The structural family. Open string — the union members are hints, not a limit,
+ * so a system we haven't named yet still validates.
+ */
+export type WritingSystem =
+  | "alphabet"
+  | "abugida"
+  | "abjad"
+  | "logographic"
+  | "syllabary"
+  | string;
 
-/** A letter's role within its system. */
+/** A letter's role within its system. Open string (logographs, radicals, …). */
 export type LetterRole =
   | "consonant"
   | "vowel"
   | "independent-vowel" // abugida word-initial vowels
   | "letter" // alphabet letters with no vowel/consonant split needed
-  | "other";
+  | "logograph" // a whole-word/morpheme character (Chinese)
+  | "radical" // a recurring component of logographs
+  | "other"
+  | string;
 
 /** Contextual letter forms, for cursive/abjad scripts (Arabic). */
 export interface LetterForms {
@@ -114,14 +132,16 @@ export interface LetterForms {
   final?: string;
 }
 
-/** One base letter of the script. */
+/** One base letter of the script (a letter, a character, or a radical). */
 export interface Letter {
   glyph: string; // the citation form
-  sound: string; // romanization / phonetic value
+  sound: string; // romanization / phonetic value (tone-marked pinyin for Chinese)
   role: LetterRole;
+  /** Tonal languages (Mandarin, Vietnamese, …): the canonical tone, e.g. "1".."4" | "neutral". */
+  tone?: string;
   /** Abugida: the vowel a bare consonant carries (e.g. Devanagari "a"). */
   inherentVowel?: string;
-  /** Cursive scripts: how the letter looks by position in a word. */
+  /** Cursive/abjad scripts: how the letter looks by position in a word. */
   forms?: LetterForms;
   /** The literal "pieces" of the character, for paper practice. */
   components: string[];
