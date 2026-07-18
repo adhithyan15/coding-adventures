@@ -46,17 +46,25 @@ function deriveGender(fm: Frontmatter, gloss: string): Gender {
 
 /**
  * Parse one lesson file's text into a ParsedLesson. `language` is the track slug
- * (the lessons/ directory's parent). Missing fields are left empty/zero here and
- * flagged later by the validator, so parsing never throws on imperfect input.
+ * (the lessons/ directory's parent). `script` may be passed in (the loader
+ * resolves it from the track's `track.json`); when omitted it falls back to the
+ * built-in LANGUAGE_SCRIPT map, then to `latin`. Missing fields are left
+ * empty/zero here and flagged later by the validator, so parsing never throws.
  */
-export function parseLesson(source: string, language: string): ParsedLesson {
+export function parseLesson(
+  source: string,
+  language: string,
+  script?: Script,
+): ParsedLesson {
   const { frontmatter } = splitFrontmatter(source);
   const fm = frontmatter ?? {};
-  const script = LANGUAGE_SCRIPT[language] ?? "latin";
+  const resolvedScript: Script =
+    script ?? (hasOwn(LANGUAGE_SCRIPT, language) ? LANGUAGE_SCRIPT[language] : "latin");
   const headword = str(fm.headword);
   const gloss = str(fm.gloss);
   const chapterRaw = str(fm.chapter);
-  const romanization = str(fm.romanization) || (script === "latin" ? headword : "");
+  const romanization =
+    str(fm.romanization) || (resolvedScript === "latin" ? headword : "");
 
   const realization: Realization = {
     concept: str(fm.concept_tag),
@@ -67,13 +75,13 @@ export function parseLesson(source: string, language: string): ParsedLesson {
     headword,
     gloss,
     romanization,
-    script,
+    script: resolvedScript,
     gender: deriveGender(fm, gloss),
     sounds: arrayify(fm.sounds),
     roots: arrayify(fm.roots),
     etymologyHook: str(fm.etymology_hook),
   };
-  return { language, script, frontmatter: fm, realization };
+  return { language, script: resolvedScript, frontmatter: fm, realization };
 }
 
 /**

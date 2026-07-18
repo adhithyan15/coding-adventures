@@ -59,6 +59,17 @@ describe("parseLesson", () => {
     const p = parseLesson(lesson({ id: "x", chapter: "1", type: "word", headword: "h", gloss: "g", concept_tag: "GREETING-HELLO" }), "esperanto");
     expect(p.script).toBe("latin");
   });
+
+  it("accepts an explicit, open script id (any script — no code change needed)", () => {
+    // A brand-new script the built-in map has never heard of, passed straight in.
+    const p = parseLesson(
+      lesson({ id: "HE1", chapter: "1", type: "word", headword: "שלום", gloss: "hello", concept_tag: "GREETING-HELLO", romanization: "shalom" }),
+      "hebrew",
+      "hebrew",
+    );
+    expect(p.script).toBe("hebrew");
+    expect(p.realization.romanization).toBe("shalom");
+  });
 });
 
 describe("buildDataset", () => {

@@ -92,13 +92,30 @@ describe("validate", () => {
     expect(errIssues.some((i) => i.code === "core-coverage" && i.level === "error")).toBe(true);
   });
 
-  it("warns about headword characters missing from script data", () => {
-    const scripts: Record<string, ScriptData> = {
-      telugu: { script: "telugu", font: "f", abugida: true, glyphs: [{ glyph: "క", sound: "ka", type: "consonant", components: [], strokeOrder: [], strokeOrderNote: "" }], vowelSigns: [] },
-    };
+  it("warns about uncovered glyphs, and escalates to an error once the script is complete", () => {
+    const telugu = (complete: boolean): ScriptData => ({
+      script: "telugu", name: "Telugu", font: "f", direction: "ltr", system: "abugida",
+      letters: [{ glyph: "క", sound: "ka", role: "consonant", components: [], strokeOrder: [], strokeOrderNote: "" }],
+      marks: [], complete,
+    });
     const l = good("telugu", "TE1", "GREETING-HELLO", { headword: "కమ", romanization: "kama" });
-    const issues = validate({ taxonomy, lessons: [l], scripts });
-    expect(issues.some((i) => i.code === "uncovered-glyphs")).toBe(true); // మ not covered
+    const warned = validate({ taxonomy, lessons: [l], scripts: { telugu: telugu(false) } });
+    expect(warned.some((i) => i.code === "uncovered-glyphs" && i.level === "warning")).toBe(true);
+    expect(hasErrors(warned)).toBe(false);
+    const errored = validate({ taxonomy, lessons: [l], scripts: { telugu: telugu(true) } });
+    expect(errored.some((i) => i.code === "uncovered-glyphs" && i.level === "error")).toBe(true);
+  });
+
+  it("covers letters via their contextual forms (abjad/cursive scripts)", () => {
+    const arabic: ScriptData = {
+      script: "arabic", name: "Arabic", font: "f", direction: "rtl", system: "abjad",
+      letters: [{ glyph: "م", sound: "m", role: "consonant", forms: { initial: "مـ", medial: "ـمـ", final: "ـم", isolated: "م" }, components: [], strokeOrder: [], strokeOrderNote: "" }],
+      marks: [{ mark: "َ", sound: "a", role: "diacritic", attachesAs: "above" }],
+    };
+    // Headword built from a form + a mark — both must count as covered.
+    const l = good("arabic", "AR1", "GREETING-HELLO", { headword: "مَ", romanization: "ma" });
+    const issues = validate({ taxonomy, lessons: [l], scripts: { arabic } });
+    expect(issues.some((i) => i.code === "uncovered-glyphs")).toBe(false);
   });
 
   it("summarize counts levels", () => {

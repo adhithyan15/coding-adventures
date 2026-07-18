@@ -6,17 +6,14 @@
 // on meeting someone") — and each language's word for it is a REALIZATION. These
 // types are that model.
 
-/** A writing system. Every track uses exactly one; `latin` needs no script data. */
-export type Script =
-  | "latin"
-  | "devanagari"
-  | "bengali"
-  | "gurmukhi"
-  | "tamil"
-  | "telugu"
-  | "kannada"
-  | "malayalam"
-  | "arabic";
+/**
+ * A writing-system identifier. **Open by design** — this is a plain string, not a
+ * closed union, so teaching a new script (Gujarati, Hebrew, Greek, …) never
+ * requires a code change: you drop in a `data/scripts/<script>.json` and point a
+ * track at it. Values in use today: `latin`, `devanagari`, `bengali`, `gurmukhi`,
+ * `tamil`, `telugu`, `kannada`, `malayalam`, `arabic`.
+ */
+export type Script = string;
 
 /** Grammatical gender tag on a noun. `null` when the language/word carries none. */
 export type Gender = "masc" | "fem" | "neut" | null;
@@ -78,12 +75,54 @@ export interface Dataset {
 }
 
 // ---- Script / character-breakdown data (data/scripts/<script>.json) ----
+//
+// Deliberately GENERAL, so one schema can teach any writing system. It has to
+// describe three structurally different families without special-casing them:
+//
+//   • alphabet  (latin, greek, cyrillic)   — letters spell vowels + consonants.
+//   • abugida   (devanagari, telugu, …)     — consonants carry an inherent vowel;
+//                                             a vowel *mark* changes it; consonants
+//                                             stack into conjuncts.
+//   • abjad     (arabic, hebrew)            — consonants only; vowels are optional
+//                                             diacritic *marks*; written right-to-
+//                                             left; letters take contextual FORMS.
+//
+// The shared vocabulary: a script has DIRECTION, a SYSTEM, a set of LETTERS (each
+// optionally with positional FORMS), and a set of MARKS (vowel signs OR harakat/
+// niqqud). Every letter/mark carries the component decomposition + typical stroke
+// order that is the whole point — "learn to write it, piece by piece."
 
-export interface Glyph {
-  glyph: string;
-  sound: string;
-  type: "consonant" | "vowel" | "sign" | "conjunct" | "other";
+/** Which way the script runs. Abjads (Arabic, Hebrew) are `rtl`. */
+export type Direction = "ltr" | "rtl";
+
+/** The structural family. Open string; these are the ones we describe today. */
+export type WritingSystem = "alphabet" | "abugida" | "abjad" | "syllabary" | string;
+
+/** A letter's role within its system. */
+export type LetterRole =
+  | "consonant"
+  | "vowel"
+  | "independent-vowel" // abugida word-initial vowels
+  | "letter" // alphabet letters with no vowel/consonant split needed
+  | "other";
+
+/** Contextual letter forms, for cursive/abjad scripts (Arabic). */
+export interface LetterForms {
+  isolated?: string;
+  initial?: string;
+  medial?: string;
+  final?: string;
+}
+
+/** One base letter of the script. */
+export interface Letter {
+  glyph: string; // the citation form
+  sound: string; // romanization / phonetic value
+  role: LetterRole;
+  /** Abugida: the vowel a bare consonant carries (e.g. Devanagari "a"). */
   inherentVowel?: string;
+  /** Cursive scripts: how the letter looks by position in a word. */
+  forms?: LetterForms;
   /** The literal "pieces" of the character, for paper practice. */
   components: string[];
   /** Typical handwriting order — conventional, not canonical. */
@@ -92,20 +131,31 @@ export interface Glyph {
   notes?: string;
 }
 
-export interface VowelSign {
-  sign: string;
+/**
+ * A vowel sign / diacritic that attaches to a letter — an abugida mātrā, or the
+ * harakat/niqqud of an abjad. `null`-free: alphabets simply have no marks.
+ */
+export interface Mark {
+  mark: string;
   sound: string;
+  role: "vowel-sign" | "diacritic" | "nasal" | "virama" | "other";
   attachesAs: string;
   example?: { base: string; combined: string; sound: string };
 }
 
 export interface ScriptData {
-  script: Script;
-  font: string;
-  abugida: boolean;
-  glyphs: Glyph[];
-  vowelSigns: VowelSign[];
-  conjunctRule?: string;
+  script: Script; // the id, matches the filename
+  name: string; // human name, e.g. "Devanagari"
+  font: string; // vendored Noto path
+  direction: Direction;
+  system: WritingSystem;
+  letters: Letter[];
+  marks?: Mark[];
+  /** How letters combine: abugida conjuncts, Arabic joining, ligatures, etc. */
+  combination?: string;
+  /** Set true when the inventory is complete enough to enforce glyph coverage. */
+  complete?: boolean;
+  notes?: string;
 }
 
 // ---- Validation ----

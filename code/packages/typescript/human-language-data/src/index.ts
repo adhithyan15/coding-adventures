@@ -17,6 +17,7 @@ export {
 export { validate, hasErrors, summarize, type ValidateInput } from "./validate.js";
 export {
   defaultCurriculumRoot,
+  trackScript,
   loadTaxonomy,
   loadLessons,
   loadScripts,

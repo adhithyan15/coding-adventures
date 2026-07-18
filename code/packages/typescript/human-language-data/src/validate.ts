@@ -91,15 +91,15 @@ export function validate(input: ValidateInput): Issue[] {
     }
 
     // (4) Script glyph references resolve (only where we have the script data).
-    const sd = scripts[r.script];
+    // A gap is a warning while a script is still being authored, and hardens to
+    // an error once the script file declares itself `complete`.
+    const sd = hasOwn(scripts, r.script) ? scripts[r.script] : undefined;
     if (sd) {
       const uncovered = uncoveredGlyphs(r.headword, sd);
       if (uncovered.length > 0) {
-        warn(
-          "uncovered-glyphs",
-          `${id}: characters not yet in ${r.script}.json: ${uncovered.join(" ")}`,
-          id,
-        );
+        const msg = `${id}: characters not yet in ${r.script}.json: ${uncovered.join(" ")}`;
+        if (sd.complete) err("uncovered-glyphs", msg, id);
+        else warn("uncovered-glyphs", msg, id);
       }
     }
   }
@@ -128,8 +128,17 @@ export function validate(input: ValidateInput): Issue[] {
 /** Characters of a headword not represented anywhere in the script data. */
 function uncoveredGlyphs(headword: string, sd: ScriptData): string[] {
   const covered = new Set<string>();
-  for (const g of sd.glyphs) for (const ch of g.glyph) covered.add(ch);
-  for (const v of sd.vowelSigns) for (const ch of v.sign) covered.add(ch);
+  const add = (s?: string) => {
+    if (s) for (const ch of s) covered.add(ch);
+  };
+  for (const l of sd.letters) {
+    add(l.glyph);
+    add(l.forms?.isolated);
+    add(l.forms?.initial);
+    add(l.forms?.medial);
+    add(l.forms?.final);
+  }
+  for (const m of sd.marks ?? []) add(m.mark);
   const skip = /[\s\p{P}‌‍]/u; // spaces, punctuation, ZWNJ/ZWJ
   const out: string[] = [];
   for (const ch of headword) {
