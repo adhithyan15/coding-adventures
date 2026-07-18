@@ -47,6 +47,7 @@ per rotation, in parallel):
 | `biology/` | blood-vessel type → defining function (artery → away from heart) | NCI SEER Training |
 | `biology/` | hormone → endocrine gland that secretes it | NCI SEER Training / NIH MedlinePlus |
 | `biology/` | vitamin → deficiency disease it prevents | NIH Office of Dietary Supplements |
+| `biology/` | leaf part → defining token / function (blade → flattened, stomata → gas_exchange) | Colorado State University Extension (authoritative) |
 | `physics/` | simple machine → everyday example | NASA |
 | `physics/` | phase change → its name (melting, freezing, …) | LibreTexts (consensus) |
 | `physics/` | energy form → defining token (chemical → bonds, thermal → heat) | EIA (energy.gov) |
