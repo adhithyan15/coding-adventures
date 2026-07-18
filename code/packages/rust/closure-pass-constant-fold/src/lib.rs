@@ -5951,10 +5951,13 @@ fn fold_conditional(c: &ConditionalExpression, st: &mut FoldState) -> Expression
     //
     // When `t` IS impure, Closure instead rewrites to the comma sequence
     // `(t, X)` to preserve the effect (`f()?b:b`→`(f(),b)`, `(a=1)?b:b`→
-    // `(a=1,b)`). That is a DIFFERENT, larger transform (it must build a
-    // `SequenceExpression` and reason about the result position); we DECLINE it
-    // here — leaving the impure-test ternary intact, which is sound — and file
-    // it as a follow-up rather than ship a partial version.
+    // `(a=1,b)`): both arms yield `X`, so the value is `X` regardless of how `t`
+    // decides, but `t`'s own evaluation must still happen and must happen FIRST.
+    // A `SequenceExpression [t, X]` evaluates `t` then `X`, left to right, and
+    // yields `X` — identical to the ternary's evaluation order (`t` once, `X`
+    // once, no re-ordering, so no `valueOf`/`ToNumber` coercion hazard). The
+    // emitter parenthesises a sequence in argument / sub-expression position, so
+    // `w(f()?x:x)` prints `w((f(),x))`, matching the reference compiler.
     //
     // Branch equality uses derived structural `==`. In the default pipeline
     // every node carries `cv: None` (the bridge stamps `None`, and folding an
@@ -5962,12 +5965,20 @@ fn fold_conditional(c: &ConditionalExpression, st: &mut FoldState) -> Expression
     // Under `--correlation_vector` the two arms may carry distinct minted CVs;
     // then `==` is `false` and we conservatively DECLINE — a sound miss, never
     // a miscompile.
-    if is_side_effect_free(&test) && consequent == alternate {
+    if consequent == alternate {
         let parent = c.cv.clone();
-        let before = "t ? X : X".to_string();
-        let after = "X".to_string();
-        let _new_cv = st.fork_cv(&parent, &before, &after);
-        return consequent;
+        if is_side_effect_free(&test) {
+            // Pure test: the branch on `t` is dead AND `t` has no effect, so the
+            // whole conditional is just `X` (`a?b:b`→`b`, `a?1:1`→`1`).
+            let _new_cv = st.fork_cv(&parent, "t ? X : X", "X");
+            return consequent;
+        }
+        // Impure test: keep `t`'s effect via the comma sequence `(t, X)`.
+        let new_cv = st.fork_cv(&parent, "t ? X : X", "(t,X)");
+        return Expression::SequenceExpression(SequenceExpression {
+            cv: new_cv,
+            expressions: vec![test, consequent],
+        });
     }
 
     Expression::ConditionalExpression(ConditionalExpression {
@@ -13664,18 +13675,50 @@ mod tests {
     }
 
     #[test]
-    fn ternary_impure_test_declines_collapse() {
-        // `f() ? b : b` is LEFT INTACT — collapsing would drop the `f()` call.
-        // (Closure rewrites this to `(f(),b)`; that sequence build is a
-        // deliberately-declined follow-up, not a miscompile.)
+    fn ternary_impure_test_collapses_to_comma_sequence() {
+        // `f() ? b : b` → `(f(), b)`. Both arms are `b`, so the value is `b`
+        // regardless of the test; the impure test `f()` is preserved by a comma
+        // sequence that evaluates `f()` first, then `b` (same order as the
+        // ternary). Matches Closure's `PeepholeFoldConstants`.
         let expr = conditional(bare_call("f"), ident("b"), ident("b"));
         let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
-        assert!(!changed, "f()?b:b must NOT collapse (impure test)");
+        assert!(changed, "f()?b:b should collapse to (f(),b)");
         match extract_expr(&out) {
-            Expression::ConditionalExpression(c) => {
-                assert!(matches!(&*c.test, Expression::CallExpression(_)));
+            Expression::SequenceExpression(s) => {
+                assert_eq!(s.expressions.len(), 2, "expected [f(), b]");
+                assert!(
+                    matches!(&s.expressions[0], Expression::CallExpression(_)),
+                    "first element must be the preserved call f()"
+                );
+                assert!(
+                    matches!(&s.expressions[1], Expression::Identifier(id) if id.name == "b"),
+                    "second element must be the branch value b"
+                );
             }
-            other => panic!("expected the ternary to survive; got {other:?}"),
+            other => panic!("expected a (f(),b) sequence; got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn ternary_impure_assignment_test_collapses_to_comma_sequence() {
+        // `(a = c) ? b : b` → `(a = c, b)` — assignment is impure, so its effect
+        // is kept via the comma sequence.
+        let assign = Expression::AssignmentExpression(AssignmentExpression {
+            cv: None,
+            operator: AssignmentOperator::Eq,
+            left: AssignmentTarget::Identifier(Identifier { cv: None, name: "a".to_string() }),
+            right: Box::new(ident("c")),
+        });
+        let expr = conditional(assign, ident("b"), ident("b"));
+        let (out, _, changed, _) = run_pass(program_with_expr(expr, true));
+        assert!(changed, "(a=c)?b:b should collapse to (a=c,b)");
+        match extract_expr(&out) {
+            Expression::SequenceExpression(s) => {
+                assert_eq!(s.expressions.len(), 2);
+                assert!(matches!(&s.expressions[0], Expression::AssignmentExpression(_)));
+                assert!(matches!(&s.expressions[1], Expression::Identifier(id) if id.name == "b"));
+            }
+            other => panic!("expected an (a=c,b) sequence; got {other:?}"),
         }
     }
 

@@ -2,6 +2,26 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.104.0] - 2026-07-18
+
+### Added — impure-test equal-branch ternary collapses to a comma sequence
+
+Extends the equal-branch ternary collapse (0.101.0, `t?X:X`→`X` for a pure test)
+to the impure-test case. When both arms are the same expression `X` but the test
+`t` is side-effectful, the value is still `X` regardless of how `t` decides — but
+`t`'s effect must be preserved. Closure rewrites this to the comma sequence
+`(t, X)`, which evaluates `t` first, then `X`, and yields `X` — the exact same
+evaluation order as the ternary (`t` once, `X` once, left to right, so no
+`valueOf`/`ToNumber` coercion re-ordering hazard):
+
+- `f() ? b : b`   → `(f(), b)`
+- `(a = 1) ? c : c` → `(a = 1, c)`
+- `h() ? a.b : a.b` → `(h(), a.b)`
+
+The emitter parenthesises a sequence in argument / sub-expression position, so
+`w(f()?x:x)` prints `w((f(),x))`. Oracle-verified byte-identical. The pure-test
+case continues to collapse straight to `X`.
+
 ## [0.102.0] - 2026-07-17
 
 ### Added — idempotent double-negation collapse: `!!!x` → `!x`
