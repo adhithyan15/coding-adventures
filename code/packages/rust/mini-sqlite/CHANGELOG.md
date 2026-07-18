@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.46 — `||` concatenates blobs as raw bytes
+
+`X'41' || 'B'` now returns `'AB'` (0x41 = 'A'), not `"x'41'B"`. The `||` operator
+was rendering a blob operand in its `x'…'` hex *display* form; it now uses the
+blob's raw bytes as text, matching SQLite (the result is TEXT). blob||text,
+text||blob, and blob||blob all fold to the byte string. One new
+differential-oracle case; sql-vm 0.4.24. (The `1 IN (1.0)` numeric-equality gap
+noted alongside this remains a separate follow-up.)
+
 ## 0.5.45 — LENGTH() over blobs and numbers
 
 `LENGTH(x'0102ff')` now returns 3 (the byte count) instead of erroring, and

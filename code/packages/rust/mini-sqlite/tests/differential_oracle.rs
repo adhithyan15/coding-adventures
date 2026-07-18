@@ -654,6 +654,14 @@ const CASES: &[Case] = &[
         setup: &[],
         query: "SELECT QUOTE(X'DEADBEEF') AS q, HEX(X'ab') AS h",
     },
+    // The `||` operator concatenates a blob as its RAW bytes (as text), not the
+    // `x'…'` display form: `X'41' || 'B'` = 'AB' (0x41 = 'A'), and the result is
+    // TEXT. Blob||text, text||blob, and blob||blob all fold to the byte string.
+    Case {
+        id: "concat_blob_raw_bytes",
+        setup: &[],
+        query: "SELECT X'41' || 'B' AS a, 'A' || X'42' AS b, X'48' || X'69' AS c, TYPEOF(X'41' || 'B') AS t",
+    },
     // OCTET_LENGTH counts BYTES (UTF-8), where LENGTH counts characters:
     // 'héllo' is 5 characters but 6 bytes.
     Case {

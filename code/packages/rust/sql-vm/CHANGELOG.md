@@ -3,6 +3,17 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.24] - Unreleased
+
+### Fixed
+
+- **`||` (concatenate) now treats a blob operand as its raw bytes.** `X'41' ||
+  'B'` was producing `"x'41'B"` (the hex *display* form of the blob) instead of
+  SQLite's `'AB'` (0x41 = 'A'). The `Concat` arm now stringifies a blob via its
+  raw bytes (`concat_operand_to_str`, lossy-UTF-8) while `sql_to_str` keeps its
+  reversible `x'…'` form for display everywhere else. Result is TEXT; NULL still
+  propagates. blob||text, text||blob, and blob||blob all fold to the byte string.
+
 ## [0.4.23] - Unreleased
 
 ### Fixed
