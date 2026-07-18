@@ -107,6 +107,34 @@ pub extern "C" fn __gc_alloc_kind(n: i64, kind: u16) -> i64 {
     with_heap(|h| h.alloc(n as usize, kind) as i64)
 }
 
+/// Register a **reference-field map** for one class of object and return the
+/// `kind` id (≥ 1) to pass to [`__gc_alloc_kind`]. Objects allocated with that id
+/// are traced **precisely** — only the `count` byte offsets at `field_offsets`
+/// (the object's `ref`-typed fields) are followed during marking, instead of
+/// scanning every payload word conservatively.
+///
+/// This is the C-ABI seam a native runtime / language frontend uses to teach the
+/// collector its object layouts (records, tuples, Ruby/Python/JS objects) so a
+/// look-alike-pointer integer in a non-reference field can't pin a phantom child.
+/// Registering nothing (`field_offsets` null or `count <= 0`) yields a kind whose
+/// objects have no ref fields — traced as fully opaque.
+///
+/// # Safety
+///
+/// `field_offsets` must point to `count` readable `int64` words (or be null with
+/// `count <= 0`). Negative offsets are ignored. Standard C-array contract.
+#[no_mangle]
+pub unsafe extern "C" fn __gc_register_kind(field_offsets: *const i64, count: i64) -> i64 {
+    let offsets: Vec<usize> = if field_offsets.is_null() || count <= 0 {
+        Vec::new()
+    } else {
+        // SAFETY: caller guarantees `field_offsets` covers `count` readable words.
+        let slice = std::slice::from_raw_parts(field_offsets, count as usize);
+        slice.iter().filter(|&&o| o >= 0).map(|&o| o as usize).collect()
+    };
+    with_heap(|h| h.register_kind(&offsets) as i64)
+}
+
 /// Mark from the `count` root words at `roots`, then sweep.  Returns the number
 /// of objects reclaimed.  A null `roots` or `count <= 0` means "no roots" — a
 /// full collection that frees everything not otherwise reachable (here, since
@@ -245,5 +273,38 @@ mod tests {
         __gc_reset();
         assert_eq!(__gc_live_bytes(), 0);
         assert_eq!(__gc_collection_count(), 0);
+    }
+
+    /// `__gc_register_kind` + `__gc_alloc_kind` give **precise** interior tracing
+    /// through the C ABI: a heap pointer in a non-reference field of a typed
+    /// object is not followed, so its pointee is reclaimed.
+    #[test]
+    fn c_abi_register_kind_precise_trace() {
+        let _guard = TEST_LOCK.lock().unwrap_or_else(|e| e.into_inner());
+        __gc_reset();
+
+        // A kind whose only ref field is at byte offset 0.
+        let offsets = [0i64];
+        let rec = unsafe { __gc_register_kind(offsets.as_ptr(), 1) };
+        assert!(rec >= 1, "kind ids are 1-based");
+
+        let target = __gc_alloc(16); // opaque pointee
+        let container = __gc_alloc_kind(16, rec as u16);
+        assert!(target != 0 && container != 0);
+        unsafe {
+            *(container as *mut i64) = 0; // field@0 (ref) = null
+            *((container as usize + 8) as *mut i64) = target; // field@8 (non-ref) = phantom
+        }
+        assert_eq!(__gc_live_bytes(), 32);
+
+        // Root only the container; precise tracing follows offset 0 only.
+        let roots = [container];
+        let freed = unsafe { __gc_collect_roots(roots.as_ptr(), 1) };
+        assert_eq!(freed, 1, "the non-ref-field pointee is reclaimed precisely");
+        assert_eq!(__gc_live_bytes(), 16, "the container survives");
+        // Container memory is still valid.
+        assert_eq!(unsafe { *(container as *const i64) }, 0);
+
+        __gc_reset();
     }
 }

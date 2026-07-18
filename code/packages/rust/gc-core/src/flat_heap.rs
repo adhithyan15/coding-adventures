@@ -120,6 +120,15 @@ pub struct FlatHeap {
     collect_threshold: usize,
     /// Adaptive-policy profile shared with the rest of `gc-core`.
     profile: GcProfile,
+    /// Per-kind **reference-field maps** for *precise* interior tracing, indexed
+    /// by `kind_id - 1` (see [`Self::register_kind`]). Entry *k* is the byte
+    /// offsets of the `ref`-typed fields in an object of kind `k + 1`. When an
+    /// object carries a registered kind, [`Self::scan_payload`] follows *only*
+    /// those offsets instead of scanning every payload word conservatively — so
+    /// a look-alike-pointer integer sitting in a non-reference field no longer
+    /// pins a phantom child. Kind id `0` is reserved for "opaque / trace
+    /// conservatively" and never appears here.
+    field_maps: Vec<Box<[usize]>>,
 }
 
 /// Initial collection threshold, and the floor `adapt_threshold` never drops
@@ -156,6 +165,7 @@ impl FlatHeap {
             collection_count: 0,
             collect_threshold: INITIAL_THRESHOLD,
             profile: GcProfile::default(),
+            field_maps: Vec::new(),
         }
     }
 
@@ -226,6 +236,42 @@ impl FlatHeap {
     /// The current collection threshold in bytes (see [`INITIAL_THRESHOLD`]).
     pub fn collect_threshold(&self) -> usize {
         self.collect_threshold
+    }
+
+    /// Register a **reference-field map** for one class of object and return the
+    /// `kind` id to allocate it with. Objects allocated with that id are traced
+    /// **precisely**: [`Self::scan_payload`] follows only the byte offsets in
+    /// `field_offsets` (the object's `ref`-typed fields) instead of scanning every
+    /// payload word conservatively.
+    ///
+    /// This is what makes the flat collector serve **typed-object languages**
+    /// (Ruby/Python/JS objects, records, tuples): a frontend registers each
+    /// object layout's ref-field offsets once at startup, then a look-alike
+    /// pointer sitting in an integer field can no longer keep a dead object alive.
+    ///
+    /// Ids are assigned from **1**; id `0` stays reserved for "opaque / trace
+    /// conservatively", so `alloc(n, 0)` (the default) keeps the exact conservative
+    /// behaviour. Offsets are taken as-is; an offset whose 8-byte word would run
+    /// past an object's payload is skipped at trace time (a malformed map can never
+    /// cause an out-of-bounds read).
+    ///
+    /// # Panics
+    ///
+    /// Panics only if more than `u16::MAX - 1` kinds are registered — far beyond
+    /// any real program.
+    pub fn register_kind(&mut self, field_offsets: &[usize]) -> u16 {
+        let id = self.field_maps.len() + 1;
+        assert!(
+            id <= u16::MAX as usize,
+            "flat-heap kind registry overflow: more than 65534 kinds registered"
+        );
+        self.field_maps.push(field_offsets.into());
+        id as u16
+    }
+
+    /// Number of registered precise kinds (0 = none; ids run 1..=len).
+    pub fn registered_kinds(&self) -> usize {
+        self.field_maps.len()
     }
 
     /// Whether the live set has reached the threshold — i.e. a collection is due.
@@ -423,13 +469,43 @@ impl FlatHeap {
         }
     }
 
-    /// Conservatively scan `h`'s payload for further candidate pointers.
+    /// Scan `h`'s payload for further candidate pointers.
+    ///
+    /// If the object carries a **registered kind** (`kind != 0` with a field map
+    /// from [`Self::register_kind`]), only that kind's `ref`-field offsets are
+    /// followed — **precise** interior tracing, so a look-alike-pointer integer in
+    /// a non-reference field pins nothing. Otherwise the whole payload is scanned
+    /// **conservatively** (kind `0`, or a kind id with no map — a safe fallback
+    /// that never under-traces).
     fn scan_payload(&self, h: *mut FlatHeader, work: &mut Vec<*mut FlatHeader>) {
         // SAFETY: `h` is a live block; its payload is `size` bytes at `h + 32`.
-        let (base, size) = unsafe {
+        let (base, size, kind) = unsafe {
             let payload = (h.add(1)) as *const u8;
-            (payload, (*h).size)
+            (payload, (*h).size, (*h).kind)
         };
+
+        // Precise path: an object of a registered kind is traced through exactly
+        // its ref-field offsets. `kind` ids are 1-based (`0` = conservative).
+        if kind != 0 {
+            if let Some(offsets) = self.field_maps.get((kind - 1) as usize) {
+                for &off in offsets.iter() {
+                    // A malformed map (offset past the payload) is skipped, never
+                    // read out of bounds. Written as `off <= size - 8` (not
+                    // `off + 8 <= size`) so a near-`usize::MAX` offset from a bad
+                    // map can't wrap the add and slip past the guard.
+                    if size >= 8 && off <= size - 8 {
+                        // SAFETY: `off + 8 <= size` keeps the 8-byte read inside
+                        // the payload; `read_unaligned` tolerates sub-alignment.
+                        let word =
+                            unsafe { ptr::read_unaligned(base.add(off) as *const usize) };
+                        self.mark_word(word, work);
+                    }
+                }
+                return;
+            }
+        }
+
+        // Conservative fallback: scan every aligned word of the payload.
         let mut off = 0usize;
         while off + 8 <= size {
             // SAFETY: `off + 8 <= size`, so the 8-byte read stays inside the
@@ -788,5 +864,134 @@ mod tests {
         heap.alloc(64, 0); // unrooted → freed by the collect below
         let _ = heap.collect(&[]); // 0 survive ≤ prev/2 → halve
         assert_eq!(heap.collect_threshold(), 2 * INITIAL_THRESHOLD);
+    }
+
+    // ── Precise interior tracing (HeapKind field maps) ─────────────────────────
+
+    /// Kind ids are assigned from 1 (0 stays reserved for conservative tracing).
+    #[test]
+    fn register_kind_ids_are_one_based() {
+        let mut heap = FlatHeap::new();
+        assert_eq!(heap.registered_kinds(), 0);
+        assert_eq!(heap.register_kind(&[0]), 1);
+        assert_eq!(heap.register_kind(&[0, 8]), 2);
+        assert_eq!(heap.registered_kinds(), 2);
+    }
+
+    /// The headline property: with a precise kind whose only ref field is at
+    /// offset 0, a heap pointer stored in a **non-reference** field (offset 8) is
+    /// NOT followed, so the pointee is reclaimed — no phantom retention.
+    #[test]
+    fn precise_tracing_reclaims_phantom_in_nonref_field() {
+        let mut heap = FlatHeap::new();
+        // Kind 1: a 16-byte object whose only ref field is at offset 0.
+        let rec = heap.register_kind(&[0]);
+        let target = heap.alloc(16, 0) as usize; // opaque pointee
+        let container = heap.alloc(16, rec) as usize;
+        unsafe {
+            *(container as *mut usize) = 0; // field@0 (ref) = null
+            *((container + 8) as *mut usize) = target; // field@8 (non-ref) = look-alike ptr
+        }
+        // Root only the container.
+        let stats = heap.collect(&[container]);
+        // Precise tracing follows offset 0 only → `target` is unreachable → freed.
+        assert!(
+            heap.find_header(target).is_null(),
+            "precise tracing must reclaim a pointee referenced only via a non-ref field"
+        );
+        assert!(!heap.find_header(container).is_null(), "container is rooted");
+        assert_eq!(stats.freed, 1, "exactly the phantom pointee is freed");
+    }
+
+    /// Baseline contrast: the *same* memory layout under conservative tracing
+    /// (kind 0) DOES retain the phantom — proving the precise path is what closes
+    /// the gap, not something else.
+    #[test]
+    fn conservative_retains_phantom_baseline() {
+        let mut heap = FlatHeap::new();
+        let target = heap.alloc(16, 0) as usize;
+        let container = heap.alloc(16, 0) as usize; // kind 0 → conservative
+        unsafe {
+            *(container as *mut usize) = 0;
+            *((container + 8) as *mut usize) = target; // phantom in payload
+        }
+        let stats = heap.collect(&[container]);
+        assert!(
+            !heap.find_header(target).is_null(),
+            "conservative tracing retains the look-alike pointer's pointee"
+        );
+        assert_eq!(stats.freed, 0, "nothing freed — both survive conservatively");
+    }
+
+    /// A pointer in a real **ref** field is still followed under precise tracing.
+    #[test]
+    fn precise_tracing_follows_real_ref_field() {
+        let mut heap = FlatHeap::new();
+        let rec = heap.register_kind(&[0]); // ref field at offset 0
+        let target = heap.alloc(16, 0) as usize;
+        let container = heap.alloc(16, rec) as usize;
+        unsafe {
+            *(container as *mut usize) = target; // field@0 (ref) = target
+            *((container + 8) as *mut usize) = 0;
+        }
+        let stats = heap.collect(&[container]);
+        assert!(
+            !heap.find_header(target).is_null(),
+            "a real ref field must keep its pointee alive"
+        );
+        assert_eq!(stats.freed, 0);
+    }
+
+    /// An object carrying a kind id with no registered map falls back to a
+    /// conservative full-payload scan — a safe default that never under-traces.
+    #[test]
+    fn unregistered_kind_falls_back_to_conservative() {
+        let mut heap = FlatHeap::new();
+        let target = heap.alloc(16, 0) as usize;
+        // kind 99 was never registered → treated conservatively.
+        let container = heap.alloc(16, 99) as usize;
+        unsafe {
+            *((container + 8) as *mut usize) = target;
+        }
+        let _ = heap.collect(&[container]);
+        assert!(
+            !heap.find_header(target).is_null(),
+            "unregistered kind traces conservatively (safe fallback)"
+        );
+    }
+
+    /// A field offset that would run past the payload is skipped, never read out
+    /// of bounds — a malformed map cannot corrupt memory.
+    #[test]
+    fn precise_out_of_range_offset_is_skipped() {
+        let mut heap = FlatHeap::new();
+        // Ref field claimed at offset 16, but the object is only 16 bytes: the
+        // 8-byte read at 16 would end at 24 > 16, so it must be skipped.
+        let rec = heap.register_kind(&[16]);
+        let target = heap.alloc(16, 0) as usize;
+        let container = heap.alloc(16, rec) as usize;
+        unsafe {
+            *(container as *mut usize) = target; // in-bounds but NOT a mapped field
+        }
+        // No mapped offset is in range → nothing traced from container → target freed.
+        let stats = heap.collect(&[container]);
+        assert!(heap.find_header(target).is_null());
+        assert_eq!(stats.freed, 1);
+    }
+
+    /// A pathological offset near `usize::MAX` must not wrap the bounds check and
+    /// trigger an out-of-bounds read — it is simply skipped. (The guard is written
+    /// `off <= size - 8`, not `off + 8 <= size`, precisely to avoid the wrap.)
+    #[test]
+    fn precise_huge_offset_does_not_overflow_the_guard() {
+        let mut heap = FlatHeap::new();
+        let rec = heap.register_kind(&[usize::MAX, usize::MAX - 3]);
+        let container = heap.alloc(16, rec) as usize;
+        unsafe {
+            *(container as *mut usize) = 0;
+        }
+        // Must not read out of bounds; container is rooted so it survives cleanly.
+        let _ = heap.collect(&[container]);
+        assert!(!heap.find_header(container).is_null());
     }
 }

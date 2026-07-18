@@ -2,6 +2,21 @@
 
 All notable changes to this crate are documented here.
 
+## [0.7.0] — 2026-07-17
+
+### Added
+
+- **`__gc_register_kind(field_offsets, count) -> i64`** — C ABI over
+  `FlatHeap::register_kind`. Registers a reference-field map (the byte offsets of
+  an object layout's `ref`-typed fields) and returns a 1-based `kind` id to pass
+  to `__gc_alloc_kind`. Objects of that kind are traced **precisely** — only the
+  mapped offsets are followed during marking — so a look-alike-pointer integer in
+  a non-reference field can't keep a dead object alive. This is the seam a native
+  runtime / language frontend uses to teach the collector its object layouts
+  (records, tuples, Ruby/Python/JS objects). Negative offsets are ignored; a null
+  list / `count <= 0` registers a no-ref-field (opaque) kind. Host test proves a
+  precise collect reclaims a pointee referenced only via a non-ref field.
+
 ## [0.6.0] — 2026-07-17
 
 ### Changed
