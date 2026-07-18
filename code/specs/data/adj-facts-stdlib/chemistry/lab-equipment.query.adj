@@ -1,0 +1,23 @@
+% ============================================================================
+% lab-equipment.query.adj — a worked recall over the chemistry lab-equipment
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is a beaker for?": it
+% states no chemistry fact — it only `import`s the grounded table and asks
+% binding queries. The engine resolves each `?` against the `equipment_use` rows
+% and returns the use + the table's source/locator/trust. The fourth query runs
+% the relation BACKWARD (bind the use `heat`, recall the tool that has it — the
+% Bunsen burner, the open-flame heat source). A stir rod is not in the table, so
+% a recall on it abstains honestly — the engine never invents a use.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli lab-equipment.query.adj
+% ============================================================================
+
+import "lab-equipment.adj"
+
+? equipment_use(beaker, $U)             % expect hold       — holds varying volumes of liquid
+? equipment_use(graduated_cylinder, $U) % expect measuring  — measures many different volumes
+? equipment_use(funnel, $U)             % expect transfer   — aids the transfer of liquids
+? equipment_use($E, heat)               % expect bunsen_burner — reverse recall to the heat source
+? equipment_use(stir_rod, $U)           % expect abstain    — a stir rod is not in the table

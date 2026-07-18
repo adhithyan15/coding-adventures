@@ -34,6 +34,7 @@ per rotation, in parallel):
 | `chemistry/` | subatomic particle → electric charge (proton → positive) | DOE "Explains…Nuclei" (authoritative) |
 | `chemistry/` | chemical bond type → defining token (ionic → transfer) | LibreTexts (consensus) |
 | `chemistry/` | mixture kind → the everyday example the source names (colloid → milk) | LibreTexts (consensus) |
+| `chemistry/` | lab equipment → its use (beaker → hold, bunsen_burner → heat) | LibreTexts (consensus) |
 | `metrology/` | SI prefix → power of ten | NIST |
 | `mathematics/` | Roman numeral → value | (consensus) |
 | `calendar/` | day / month → number | ISO 8601 |

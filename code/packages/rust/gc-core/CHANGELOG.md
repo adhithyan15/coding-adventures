@@ -1,5 +1,23 @@
 # Changelog — gc-core
 
+## 0.6.0 — 2026-07-18
+
+### Added
+
+- **`FlatHeap` generational split (young/old) + promotion** — the foundation for
+  a generational collector, the biggest throughput win for high-churn object
+  allocation (Ruby/Python/JS). Each object's `FlatHeader` now carries a
+  `generation` byte (`GEN_YOUNG` / `GEN_OLD`), stolen from the header's existing
+  padding so `size_of::<FlatHeader>()` stays exactly 32 (compile-assert
+  unchanged). New allocations are born **young**; any object that survives a
+  collection is **promoted (tenured) to old** during sweep. New
+  `object_count_by_generation() -> (young, old)` introspection + public
+  `GEN_YOUNG` / `GEN_OLD` constants. 3 unit tests (born-young,
+  survivor-promoted-then-new-alloc-young, old-stays-old). Every collect is still
+  a full collect — this PR only establishes the split and tenuring; the
+  remembered-set write barrier and the young-only **minor** GC that exploit it
+  are the next rung. No behavioural change to existing collection semantics.
+
 ## 0.5.0 — 2026-07-17
 
 ### Added
