@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.5.51 — scientific-notation numeric literals
+
+`SELECT 1e3` now parses (→ `1000.0`), along with `2.5e2`, `1.5e-3`, `10e+2`, and
+`1E2*2`. A numeric literal carrying an exponent is REAL, so `typeof(1e3)` is
+`'real'` even though the value is integral — matching SQLite. Previously the
+lexer's `NUMBER` token had no exponent, so `1e3` mis-lexed as `1` + a `NAME`
+`e3` and failed to parse. The fix is a one-line lexer regex extension (sql-lexer
+0.1.4); the planner already decoded exponent forms to REAL. Ordinary subtraction
+(`5-3` = 2) is unaffected. Two new differential-oracle cases.
+
 ## 0.5.50 — explicit COLLATE before IN / BETWEEN / LIKE
 
 `x COLLATE NOCASE IN (…)` now parses and applies the collation to the membership

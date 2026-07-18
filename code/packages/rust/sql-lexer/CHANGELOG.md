@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.4] - Unreleased
+
+### Added
+
+- **Scientific-notation exponents in the `NUMBER` token.** The pattern grew an
+  optional trailing `([eE][+-]?[0-9]+)`, so `1e3`, `2.5e2`, `1.5E-3`, and `10e+2`
+  now tokenise as a single `NUMBER` (previously `1e3` lexed as `1` followed by a
+  `NAME` `e3`, causing a parse error). The exponent requires at least one digit
+  after `e`, so ordinary subtraction (`5-3`) is unaffected — the `-` is only
+  consumed as an exponent sign directly after `e`/`E`. The planner already
+  decodes any exponent form to a REAL (`f64` parse succeeds where `i64` fails), so
+  `typeof(1e3)` is `'real'`; no planner change was needed. The regex has no nested
+  quantifier over an overlapping class, so there is no catastrophic-backtracking
+  (ReDoS) risk.
+
 ## [0.1.3] - Unreleased
 
 ### Added
