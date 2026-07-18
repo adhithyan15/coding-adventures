@@ -131,6 +131,7 @@ use Backend::{Clr, Jit, Jvm, Llvm, NativeAot, Vm, Wasm};
 /// called from here (the module's own runner is McCarthy-specific dead code).
 #[path = "clr_support/mod.rs"]
 mod clr_support;
+mod common;
 
 /// The cross-language battery. Each program is deliberately tiny but exercises real
 /// computation (arithmetic, calls, comparisons, loops, I/O) — not just constants —
@@ -3186,15 +3187,17 @@ fn run_llvm(p: &Prog) -> Option<RunResult> {
     // Link the tagged-value lisp runtime iff the program calls a `__dyn_*`
     // primitive (cons/car/box_int/… — McCarthy Lisp + Twig dynamic values,
     // E6d-2b). `dynval_runtime.c` implements the tagged-word model and calls the
-    // conservative GC in `twig_gc.c`; both — plus `twig_runtime.c` for any I/O
-    // the runtime itself needs — are linked from the crate's runtime dir.
+    // conservative GC, which now lives in the `gc-core-capi` staticlib (twig_gc.c
+    // was retired in #118b-2b); `twig_runtime.c` supplies any I/O the runtime
+    // itself needs. The two C files come from the crate's runtime dir; the GC
+    // archive (+ its system libs) is supplied by `common::gc_link_args`.
     if ll.contains("@__dyn_") {
         let rt = |name: &str| {
             std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../twig-aot/runtime").join(name)
         };
         cmd.arg("-x").arg("none")
             .arg(rt("dynval_runtime.c"))
-            .arg(rt("twig_gc.c"))
+            .args(common::gc_link_args())
             .arg(rt("twig_runtime.c"));
     }
     let built = cmd.arg("-x").arg("none").arg("-o").arg(&exe).output().ok()?;

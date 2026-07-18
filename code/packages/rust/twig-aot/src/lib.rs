@@ -50,6 +50,34 @@
 #![warn(missing_docs)]
 #![warn(rust_2018_idioms)]
 
+// Pull gc-core-capi's object code into every binary/test binary built from this
+// crate. The C runtime archive (`libtwig_aot_runtime.a`, embedded below) contains
+// `dynval_runtime.c`, which references `__twig_gc_alloc`; twig_gc.c used to define
+// it, but it has been retired. gc-core-capi provides `__twig_gc_alloc` (and the
+// rest of the `__twig_gc_*` compat ABI) as `#[no_mangle]` exports. Depending on it
+// as an rlib (not the staticlib) means rustc hands gc-core-capi's objects to the
+// final linker so those undefined references resolve — without duplicating Rust
+// std the way linking two staticlibs full of std would.
+//
+// In edition 2021 no `extern crate` is needed: the `#[used]` static below
+// references gc-core-capi by path, which both makes the crate a link input and
+// pins at least one of its symbols so the linker can never drop the whole rlib
+// before resolving the C archive's late-bound `__twig_gc_alloc`.
+
+/// Force the linker to retain gc-core-capi's objects even though nothing in this
+/// crate's Rust code calls them directly — the only references are the C runtime
+/// archive's undefined `__twig_gc_alloc`/`__twig_gc_safepoint`, which rustc cannot
+/// see when deciding whether the rlib is "used". `#[used]` pins this function
+/// pointer into the binary, keeping gc-core-capi on the final link line. The
+/// `__twig_gc_*` compat aliases live in gc-core-capi's private `twig_compat`
+/// module (not reachable as a Rust path here), but they share the rlib archive;
+/// once the rlib is on the link line, the system linker pulls the member that
+/// defines `__twig_gc_alloc` to satisfy the C archive's undefined reference. We
+/// therefore anchor on the crate-root-public `__gc_alloc`, which `__twig_gc_alloc`
+/// forwards to.
+#[used]
+static _FORCE_GC_CORE_CAPI: extern "C" fn(i64) -> i64 = gc_core_capi::__gc_alloc;
+
 use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
 use std::path::{Path, PathBuf};
@@ -100,6 +128,21 @@ static RUNTIME_LINUX_X86_64: &[u8] =
 /// other hosts it is a 1-byte stub.
 static RUNTIME_WINDOWS_X86_64: &[u8] =
     include_bytes!(env!("TWIG_RUNTIME_ARCHIVE_WINDOWS_X86_64"));
+
+/// The native garbage collector, embedded as `gc-core-capi`'s static archive
+/// (`libgc_core_capi.a`), built by `build.rs` (#118b-2b — retires twig_gc.c).
+///
+/// On a supported host it is the real archive; on an unsupported host it is a
+/// 1-byte stub (AOT is refused there anyway). At each AOT link site we write
+/// these bytes to a temp `.a` and pass it to the system linker *after* the
+/// runtime archive, so the emitted executable's `__twig_gc_alloc` /
+/// `__twig_gc_safepoint` references — and dynval_runtime.c's `__twig_gc_alloc`,
+/// pulled in from the runtime archive — resolve against the collector.
+///
+/// Because a static archive contributes only the members needed to satisfy an
+/// undefined symbol, programs that never allocate (e.g. a plain `exit(42)`)
+/// pull nothing from this archive and pay no size/duplicate-symbol cost.
+static GC_CORE_ARCHIVE: &[u8] = include_bytes!(env!("GC_CORE_CAPI_ARCHIVE"));
 use interpreter_ir::function::IIRFunction;
 use interpreter_ir::instr::{IIRInstr, Operand};
 use interpreter_ir::module::IIRModule;
@@ -596,6 +639,18 @@ fn invoke_ld(object_path: &Path, out_path: &Path) -> Result<(), AotError> {
         .tempfile()?;
     runtime_tmp.write_all(RUNTIME_ARCHIVE)?;
 
+    // The GC archive (gc-core-capi) is written to a second temp `.a` and passed
+    // to `ld` *after* the runtime archive (#118b-2b). Ordering matters for a
+    // one-pass archive linker: `dynval_runtime.o` (in the runtime archive) has
+    // the undefined `__twig_gc_alloc`, so the runtime archive must be seen first
+    // and the GC archive after, letting `ld` pull the collector member that
+    // satisfies it. The file stays alive until after `ld` runs, then drops.
+    let mut gc_tmp = tempfile::Builder::new()
+        .prefix("twig_aot_gc_core_")
+        .suffix(".a")
+        .tempfile()?;
+    gc_tmp.write_all(GC_CORE_ARCHIVE)?;
+
     // `-lSystem` is non-negotiable on modern macOS: `ld` refuses to
     // produce a dynamic executable without linking the C runtime.
     // The runtime archive itself uses `printf` (from libSystem), so
@@ -615,14 +670,16 @@ fn invoke_ld(object_path: &Path, out_path: &Path) -> Result<(), AotError> {
         .arg("-o").arg(out_path)
         .arg(object_path)
         .arg(runtime_tmp.path()) // runtime archive: provides __twig_print_i64 etc.
+        .arg(gc_tmp.path())      // GC archive: provides __twig_gc_alloc / _safepoint
         .output()
         .map_err(|e| AotError::Linker {
             status: None,
             stderr: format!("ld not found on PATH or could not be spawned: {e}"),
         })?;
 
-    // `runtime_tmp` drops here — NamedTempFile deletes the temp archive file.
+    // Temp archives drop here — NamedTempFile deletes them after `ld` exits.
     drop(runtime_tmp);
+    drop(gc_tmp);
 
     if !output.status.success() {
         return Err(AotError::Linker {
@@ -1050,12 +1107,25 @@ pub fn link_linux_x86_64_executable(
         .tempfile()?;
     rt_tmp.write_all(RUNTIME_LINUX_X86_64)?;
 
+    // GC archive (gc-core-capi), passed *after* the runtime archive so `cc`'s
+    // left-to-right archive resolution pulls the collector member that satisfies
+    // dynval_runtime.o's undefined `__twig_gc_alloc` (#118b-2b).
+    let mut gc_tmp = tempfile::Builder::new()
+        .prefix("twig_aot_gc_core_")
+        .suffix(".a")
+        .tempfile()?;
+    gc_tmp.write_all(GC_CORE_ARCHIVE)?;
+
     let cc = std::env::var("CC").unwrap_or_else(|_| "cc".into());
     let output = std::process::Command::new(&cc)
         .arg("-o").arg(out)
         .arg(obj_tmp.path())
         .arg(rt_tmp.path())
-        .arg("-lc").arg("-lm")
+        .arg(gc_tmp.path())
+        // `-lc -lm` for the C runtime; `-lpthread -ldl` because the gc-core-capi
+        // staticlib bundles Rust std, which references these on Linux. They come
+        // last so the archive members that need them are already selected.
+        .arg("-lc").arg("-lm").arg("-lpthread").arg("-ldl")
         .output()
         .map_err(|e| AotError::Linker {
             status: None,
@@ -1063,6 +1133,7 @@ pub fn link_linux_x86_64_executable(
         })?;
     drop(obj_tmp);
     drop(rt_tmp);
+    drop(gc_tmp);
 
     if !output.status.success() {
         return Err(AotError::Linker {
@@ -1138,6 +1209,14 @@ pub fn link_windows_x86_64_executable(
         .tempfile()?;
     rt_tmp.write_all(RUNTIME_WINDOWS_X86_64)?;
 
+    // GC archive (gc-core-capi), embedded and passed after the runtime archive
+    // so the linker resolves dynval_runtime.obj's `__twig_gc_alloc` (#118b-2b).
+    let mut gc_tmp = tempfile::Builder::new()
+        .prefix("twig_aot_gc_core_")
+        .suffix(".lib")
+        .tempfile()?;
+    gc_tmp.write_all(GC_CORE_ARCHIVE)?;
+
     let linker = find_windows_linker().ok_or_else(|| AotError::Linker {
         status: None,
         stderr: "twig-aot: no Windows linker found on PATH \
@@ -1152,6 +1231,7 @@ pub fn link_windows_x86_64_executable(
                 .arg("/SUBSYSTEM:CONSOLE")
                 .arg(obj_tmp.path())
                 .arg(rt_tmp.path())
+                .arg(gc_tmp.path())
                 .arg("libcmt.lib")
                 .arg("legacy_stdio_definitions.lib")
                 .output()
@@ -1161,6 +1241,7 @@ pub fn link_windows_x86_64_executable(
                 .arg("-o").arg(out)
                 .arg(obj_tmp.path())
                 .arg(rt_tmp.path())
+                .arg(gc_tmp.path())
                 .output()
         }
     }.map_err(|e| AotError::Linker {
@@ -1169,6 +1250,7 @@ pub fn link_windows_x86_64_executable(
     })?;
     drop(obj_tmp);
     drop(rt_tmp);
+    drop(gc_tmp);
 
     if !output.status.success() {
         return Err(AotError::Linker {

@@ -16,6 +16,8 @@ use lang_aot::{compile_source_to_llvm_with_target, Language};
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
+mod common;
+
 const SRC: &str = "(+ (car (cons 41 0)) 1)";
 
 fn clang_available() -> bool {
@@ -43,7 +45,7 @@ fn run_llvm(src: &str, module: &str) -> i32 {
         // Reset to extension-based mode for the C runtime files (GC + tagged-value + I/O).
         .arg("-x").arg("none")
         .arg(runtime_c("dynval_runtime.c"))
-        .arg(runtime_c("twig_gc.c"))
+        .args(common::gc_link_args()) // gc-core-capi staticlib (retired twig_gc.c)
         .arg(runtime_c("twig_runtime.c"))
         .arg("-o").arg(&exe)
         .output().expect("spawn clang");

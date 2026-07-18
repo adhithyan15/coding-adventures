@@ -23,6 +23,8 @@ fn clang_available() -> bool {
     Command::new("clang").arg("--version").output().map(|o| o.status.success()).unwrap_or(false)
 }
 
+mod common;
+
 fn runtime_c(name: &str) -> std::path::PathBuf {
     std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../twig-aot/runtime").join(name)
 }
@@ -59,7 +61,7 @@ fn run_llvm(src: &str, module: &str) -> i32 {
         .arg("-x")
         .arg("none")
         .arg(runtime_c("dynval_runtime.c"))
-        .arg(runtime_c("twig_gc.c"))
+        .args(common::gc_link_args()) // gc-core-capi staticlib (retired twig_gc.c)
         .arg(runtime_c("twig_runtime.c"))
         .arg("-o")
         .arg(&exe)
