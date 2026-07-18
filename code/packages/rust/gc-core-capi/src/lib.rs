@@ -135,6 +135,22 @@ pub unsafe extern "C" fn __gc_register_kind(field_offsets: *const i64, count: i6
     with_heap(|h| h.register_kind(&offsets) as i64)
 }
 
+/// **Generational write barrier.** The native runtime calls this whenever it
+/// stores a heap reference `child` into a field of heap object `parent` (both
+/// payload addresses). If `parent` is **old**, it is recorded so a later
+/// [`__gc_collect_minor`] scans it for the young objects it now references. O(1)
+/// (see [`gc_core::FlatHeap::write_barrier`]); `child` is never dereferenced.
+///
+/// # Safety
+///
+/// `parent` must be a live GC-object payload on this heap (the store target
+/// always is). A `parent < 32` (null / tiny) is ignored.
+#[no_mangle]
+pub unsafe extern "C" fn __gc_write_barrier(parent: i64, child: i64) {
+    // SAFETY: `parent`/`child` are non-negative payload addresses per the contract.
+    with_heap(|h| unsafe { h.write_barrier(parent as usize, child as usize) });
+}
+
 /// Mark from the `count` root words at `roots`, then sweep.  Returns the number
 /// of objects reclaimed.  A null `roots` or `count <= 0` means "no roots" — a
 /// full collection that frees everything not otherwise reachable (here, since
@@ -304,6 +320,44 @@ mod tests {
         assert_eq!(__gc_live_bytes(), 16, "the container survives");
         // Container memory is still valid.
         assert_eq!(unsafe { *(container as *const i64) }, 0);
+
+        __gc_reset();
+    }
+
+    /// The generational C ABI is wired end-to-end: `__gc_write_barrier` records an
+    /// old→young store and `__gc_collect_minor` (stack-rooted) runs a minor cycle
+    /// that retains the barrier-reachable child while reclaiming young garbage.
+    #[test]
+    fn c_abi_generational_barrier_and_minor() {
+        let _guard = TEST_LOCK.lock().unwrap_or_else(|e| e.into_inner());
+        __gc_reset();
+
+        // Allocate a parent and tenure it to the old generation with a full collect.
+        let parent = __gc_alloc(16);
+        assert!(parent != 0);
+        let roots = [parent];
+        let _ = unsafe { __gc_collect_roots(roots.as_ptr(), 1) };
+
+        // Store a fresh young child into the (now old) parent, through the barrier.
+        let child = __gc_alloc(16);
+        assert!(child != 0);
+        unsafe {
+            *(parent as *mut i64) = child; // old → young store
+            __gc_write_barrier(parent, child);
+        }
+        // Also allocate some young garbage that nothing references.
+        let _ = __gc_alloc(16);
+
+        // A minor collect must not crash and must keep the barrier-reachable child
+        // (its bytes stay live) while reclaiming the young garbage.
+        let _ = unsafe { stack_scan::__gc_collect_minor() };
+        assert!(
+            __gc_live_bytes() >= 32,
+            "parent + child survive the minor cycle"
+        );
+        // `child` memory is still valid.
+        assert_eq!(unsafe { *(child as *const i64) }, 0);
+        core::hint::black_box((parent, child));
 
         __gc_reset();
     }

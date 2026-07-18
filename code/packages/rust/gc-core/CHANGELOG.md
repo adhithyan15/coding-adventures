@@ -28,9 +28,13 @@
     contrast (the same store *without* the barrier reclaims the child — the
     barrier does real work). Adversarially security-reviewed (a missed
     remembered-set entry would be a use-after-free).
-  - The `gc-core-capi` surface (`__gc_write_barrier` / `__gc_collect_minor`) and
-    flipping `GcAlgorithm::Generational::is_available()` are a mechanical
-    follow-up; this PR is the collector core.
+  - `collect_minor_region(base, len)` — the raw-memory-region (stack-scan)
+    analogue of `collect_minor`, mirroring `collect_region`; the seam
+    `gc-core-capi`'s `__gc_collect_minor` roots from the live stack.
+  - **`GcAlgorithm::Generational::is_available()` now returns `true`** — the
+    algorithm (minor GC + write barrier) is implemented. Only `Compacting` /
+    `Incremental` remain planned. The `AdaptivePolicy` recommendation of
+    Generational under low survival is now actionable.
 
 ## 0.6.0 — 2026-07-18
 

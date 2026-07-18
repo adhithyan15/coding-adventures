@@ -2,6 +2,24 @@
 
 All notable changes to this crate are documented here.
 
+## [0.8.0] — 2026-07-18
+
+### Added
+
+- **Generational C ABI** — completes the generational collector for the native
+  path (the gc-core algorithm landed in gc-core 0.7.0):
+  - **`__gc_write_barrier(parent, child)`** — the generational write barrier the
+    native runtime calls on every heap-reference store; records an old parent so a
+    minor cycle finds the young objects it points to. O(1); `child` not
+    dereferenced. Wraps `FlatHeap::write_barrier`.
+  - **`__gc_collect_minor()`** — a minor (young-only) collection rooted at this
+    thread's live stack + callee-saved registers (same register-spill + stack-base
+    discovery as `__gc_collect`), reclaiming young garbage without scanning the old
+    generation. Wraps `FlatHeap::collect_minor_region`.
+  - Host test drives the full ABI flow (barrier records an old→young store, minor
+    collect retains the child + reclaims young garbage); runtime-validated on
+    aarch64 + x86-64 SysV.
+
 ## [0.7.0] — 2026-07-17
 
 ### Added

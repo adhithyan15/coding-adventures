@@ -450,7 +450,7 @@ impl FlatHeap {
 
         let mut work: Vec<*mut FlatHeader> = Vec::new();
         // SAFETY: caller guarantees `[base, base+len)` is readable.
-        self.mark_region(base, len, &mut work);
+        self.mark_region(base, len, &mut work, false);
         while let Some(h) = work.pop() {
             self.scan_payload(h, &mut work, false);
         }
@@ -525,13 +525,41 @@ impl FlatHeap {
     /// uphold the barrier.
     pub fn collect_minor(&mut self, roots: &[usize]) -> GcCycleStats {
         let before = self.object_count();
-
         let mut work: Vec<*mut FlatHeader> = Vec::new();
-        // (a) Roots — mark only the young objects they reach (old are live).
+        // Roots — mark only the young objects they reach (old are live).
         for &r in roots {
             self.mark_word(r, &mut work, true);
         }
-        // (b) Remembered old parents — scan each for the young children it holds.
+        self.minor_finish(before, work)
+    }
+
+    /// A **minor** collection rooted at a **raw memory region** — the stack-scan
+    /// analogue of [`Self::collect_minor`], mirroring [`Self::collect_region`].
+    /// `gc-core-capi`'s argument-less `__gc_collect_minor` discovers the live
+    /// stack `(base, len)` and hands it here.
+    ///
+    /// # Safety
+    ///
+    /// `[base, base + len)` must be readable (or `base` null with `len == 0`),
+    /// exactly as for [`Self::collect_region`].
+    pub unsafe fn collect_minor_region(&mut self, base: *const u8, len: usize) -> GcCycleStats {
+        let before = self.object_count();
+        let mut work: Vec<*mut FlatHeader> = Vec::new();
+        // SAFETY: caller guarantees `[base, base+len)` is readable.
+        self.mark_region(base, len, &mut work, true);
+        self.minor_finish(before, work)
+    }
+
+    /// Shared tail of a minor cycle: scan the remembered old→young parents, drain
+    /// the young worklist, sweep the young generation, and build the stats. Both
+    /// [`Self::collect_minor`] and [`Self::collect_minor_region`] call this after
+    /// their (slice- vs region-sourced) root mark.
+    fn minor_finish(
+        &mut self,
+        before: usize,
+        mut work: Vec<*mut FlatHeader>,
+    ) -> GcCycleStats {
+        // Remembered old parents — scan each for the young children it holds.
         // Snapshot the addresses first so the immutable scan can't alias the set.
         // Each entry is a live old object (a full collect clears the set; a minor
         // never frees old), so its header is at `addr - HEADER_SIZE`.
@@ -578,14 +606,19 @@ impl FlatHeap {
     /// # Safety
     ///
     /// `[base, base + len)` must be readable.
-    unsafe fn mark_region(&self, base: *const u8, len: usize, work: &mut Vec<*mut FlatHeader>) {
+    unsafe fn mark_region(
+        &self,
+        base: *const u8,
+        len: usize,
+        work: &mut Vec<*mut FlatHeader>,
+        young_only: bool,
+    ) {
         let mut off = 0usize;
         while off + 8 <= len {
             // SAFETY: `off + 8 <= len`, so the 8-byte read stays inside the region;
             // `read_unaligned` tolerates any sub-alignment of `base`.
             let word = ptr::read_unaligned(base.add(off) as *const usize);
-            // Region roots feed a full collect (conservative, all generations).
-            self.mark_word(word, work, false);
+            self.mark_word(word, work, young_only);
             off += 8;
         }
     }
