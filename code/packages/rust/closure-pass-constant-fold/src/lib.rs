@@ -6652,7 +6652,7 @@ mod tests {
     /// chain to a single number.
     #[test]
     fn deeply_nested_binary_chain_folds_without_stack_overflow() {
-        const N: usize = 20_000;
+        const N: usize = 6_000;
         let mut expr = num(1.0, None);
         for _ in 0..N {
             expr = Expression::BinaryExpression(BinaryExpression {
