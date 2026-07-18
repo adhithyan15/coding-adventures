@@ -1,0 +1,116 @@
+% ============================================================================
+% light-behaviors — the ways a light wave interacts with matter and what the
+% source says each one DOES to the light (adj-facts-stdlib, PHYSICS).
+% ============================================================================
+% One of the first big ideas of optics, and a rung a PHYSICS agent reasons UP
+% from: when a light wave meets an object it does not just "hit" it — it does
+% one of a small handful of NAMED things, and each named behavior has a
+% characteristic effect the source states in plain words. "Reflection is when
+% light bounces off; refraction is when it changes direction crossing into a new
+% medium; absorption is when photons make atoms vibrate; diffraction is the
+% bending and spreading of waves around an obstacle; scattering is bouncing off
+% in a variety of directions." Before you can reason about a mirror, a lens, a
+% prism, or why the sky is blue you must first know WHICH of these behaviors is
+% happening. Recall is a binding query:
+%
+%     ? light_behavior(reflection, $Effect)      % bounces_off
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `light_behavior(behavior, effect)` carrying the table's citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns the
+% effect WITH its source, on the CPU, with zero model calls, and abstains on a
+% word that is not one of these light behaviors (it never invents an effect).
+%
+% Each way light interacts with matter and the effect the source states for it,
+% as a little truth table:
+%
+%     behavior      effect (source's word)      a beginner's cue
+%     -----------   -------------------------   -------------------------------
+%     reflection    bounces_off                 hits a surface and bounces off
+%     refraction    changes_direction           bends crossing into a new medium
+%     absorption    vibrate                     photons make atoms vibrate
+%     diffraction   bends_and_spreads           bends and spreads round an edge
+%     scattering    variety_of_directions       bounces off every which way
+%
+% The query also runs BACKWARD — bind an effect and recall its behavior:
+%
+%     ? light_behavior($Behavior, bounces_off)   % reflection
+%
+% A word that is NOT one of these light behaviors — `gravity`, `magnetism`,
+% `polarization` — is deliberately NOT a row, so a behavior recall ABSTAINS on
+% it rather than inventing an effect. That honest-abstention property is what
+% makes the table safe to build a reasoner on: it answers exactly the
+% behavior→effect pairs it can ground, and only those.
+%
+% The `effect` value of every row is a SINGLE lowercase atom, chosen to be the
+% effect the source EXPLICITLY states for that behavior — never one the source
+% does not support. (Where the everyday word differs from the source's word —
+% the source says photons "cause them to vibrate", not "absorb the light"; it
+% says light "change[s] direction", not "bends" — the atom uses the source's
+% own word, so every value stays literally checkable against the quoted span.)
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every behavior→effect pair
+% below was read out of a fetched NASA "Wave Behaviors" page, and any pair whose
+% effect could not be verified there was dropped). Each pair, with the primary
+% source it was copied from and the verbatim span that states it:
+%
+%   reflection → bounces_off
+%     https://science.nasa.gov/ems/03_behaviors/
+%     (NASA Science — U.S. National Aeronautics and Space Administration)
+%     "Reflection is when incident light (incoming light) hits an object and
+%      bounces off."
+%
+%   refraction → changes_direction
+%     https://science.nasa.gov/ems/03_behaviors/
+%     (NASA Science — U.S. National Aeronautics and Space Administration)
+%     "Refraction is when light waves change direction as they pass from one
+%      medium to another."
+%
+%   absorption → vibrate
+%     https://science.nasa.gov/ems/03_behaviors/
+%     (NASA Science — U.S. National Aeronautics and Space Administration)
+%     "Absorption occurs when photons from incident light hit atoms and
+%      molecules and cause them to vibrate."
+%
+%   diffraction → bends_and_spreads
+%     https://science.nasa.gov/ems/03_behaviors/
+%     (NASA Science — U.S. National Aeronautics and Space Administration)
+%     "Diffraction is the bending and spreading of waves around an obstacle."
+%
+%   scattering → variety_of_directions
+%     https://science.nasa.gov/ems/03_behaviors/
+%     (NASA Science — U.S. National Aeronautics and Space Administration)
+%     "Scattering occurs when light bounces off an object in a variety of
+%      directions."
+%
+% (The set itself is named on the same page's opening sentence — "When a light
+% wave encounters an object, they are either transmitted, reflected, absorbed,
+% refracted, polarized, diffracted, or scattered..." — another span of the same
+% primary NASA teaching resource. `transmission` is listed there but the page
+% gives it NO defining sentence of what it does to the light, so it is
+% deliberately DROPPED — never grounded from memory.)
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the NASA statement that fixes the
+% first row (reflection → bounces_off). Every OTHER row's per-fact source and
+% verbatim span is listed above, so each effect remains independently checkable.
+% All sources are NASA Science, a primary U.S. government (NASA) teaching
+% resource, so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table light_behavior {
+    columns behavior, effect
+
+    row (reflection, bounces_off)
+    row (refraction, changes_direction)
+    row (absorption, vibrate)
+    row (diffraction, bends_and_spreads)
+    row (scattering, variety_of_directions)
+
+    source "Reflection is when incident light (incoming light) hits an object and bounces off."
+    locator "https://science.nasa.gov/ems/03_behaviors/"
+    trust authoritative
+}

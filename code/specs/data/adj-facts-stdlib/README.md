@@ -87,6 +87,7 @@ per rotation, in parallel):
 | `physics/` | Newton's law number → short name NASA labels it (1 → inertia, 2 → force, 3 → action_reaction) | NASA Glenn Beginner's Guide (authoritative) |
 | `physics/` | wave property → what it measures (wavelength → distance_between_identical_parts, frequency → waves_per_second, period → time_for_one_cycle) | OpenStax Physics (consensus) |
 | `physics/` | friction type → context it acts in (static → at_rest, sliding → sliding_motion, rolling → spherical_object, fluid → fluid_layers) | Testbook "Types of Friction" (consensus) |
+| `physics/` | light behavior → effect on light (reflection → bounces_off, refraction → changes_direction, scattering → variety_of_directions) | NASA Science (authoritative) |
 | `anatomy/` | lung → number of lobes (right 3, left 2) | NIH / NCI SEER Training |
 | `anatomy/` | brain part → primary function it controls | NIH / NCI SEER Training + StatPearls |
 | `anatomy/` | skeletal muscle → body region it is located in | Wikipedia (consensus) |
