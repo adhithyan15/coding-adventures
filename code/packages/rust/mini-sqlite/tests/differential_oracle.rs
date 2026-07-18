@@ -626,6 +626,34 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT HEX(s) AS h, TYPEOF(HEX(s)) AS t FROM t ORDER BY id",
     },
+    // Blob literals `x'…'` / `X'…'` now parse into raw bytes. HEX round-trips
+    // them (upper-case), and TYPEOF reports `blob`. The empty literal `x''` is
+    // the zero-byte blob, so HEX(x'') is the empty string. These exercise the
+    // lexer→parser→planner→VM path end to end for a value kind the VM already
+    // handled but the front end could not previously produce. (LENGTH() over a
+    // blob — byte count — is a separate VM-builtin gap, spun off as a follow-up.)
+    Case {
+        id: "blob_literal_hex_typeof",
+        setup: &[],
+        query: "SELECT HEX(x'48656C6C6F') AS h, TYPEOF(x'00') AS t, HEX(x'') AS e",
+    },
+    // A blob literal compares byte-for-byte and orders after text/numbers per
+    // SQLite's storage-class ordering; here two rows filter on blob equality.
+    Case {
+        id: "blob_literal_equality",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, b BLOB)",
+            "INSERT INTO t VALUES (1, x'0102'), (2, x'03')",
+        ],
+        query: "SELECT id FROM t WHERE b = x'0102' ORDER BY id",
+    },
+    // Upper-case `X'…'` is equivalent to lower-case, and quote() renders a blob
+    // as the `X'…'` SQL literal form.
+    Case {
+        id: "blob_literal_uppercase_quote",
+        setup: &[],
+        query: "SELECT QUOTE(X'DEADBEEF') AS q, HEX(X'ab') AS h",
+    },
     // OCTET_LENGTH counts BYTES (UTF-8), where LENGTH counts characters:
     // 'héllo' is 5 characters but 6 bytes.
     Case {

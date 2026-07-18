@@ -2981,6 +2981,17 @@ fn plan_primary_token(tok: &Token) -> Result<SqlExpr, PlanError> {
 
     let val = &tok.value;
 
+    // Blob literal `x'48656C6C6F'` / `X'…'`. The lexer's `BLOB_HEX` rule aliases
+    // it to `BLOB`; because `TokenType` has no `Blob` variant, the lexer records
+    // the name in `type_name` and falls `type_` back to `Name`. Decode the hex
+    // body into raw bytes: SQLite reads `x'414243'` as the three bytes
+    // `41 42 43`. An odd number of hex digits is a tokenizer error in SQLite
+    // (`x'012'` → "unrecognized token"); we surface it as a plan error rather
+    // than silently truncating. The empty blob `x''` is the zero-byte blob.
+    if tok.type_name.as_deref() == Some("BLOB") || tok.type_name.as_deref() == Some("BLOB_HEX") {
+        return decode_blob_literal(val).map(|bytes| SqlExpr::Literal(SqlValue::Blob(bytes)));
+    }
+
     // NUMBER literal: try integer first, then float.
     if let Ok(i) = val.parse::<i64>() {
         return Ok(SqlExpr::Literal(SqlValue::Int(i)));
@@ -2994,6 +3005,62 @@ fn plan_primary_token(tok: &Token) -> Result<SqlExpr, PlanError> {
         table: None,
         name: val.clone(),
     })
+}
+
+/// Decode the body of a blob literal `x'…'` / `X'…'` into raw bytes.
+///
+/// The `raw` argument is the token text as the lexer captured it. The
+/// `BLOB_HEX` rule (`[xX]'[0-9A-Fa-f]*'`) keeps the surrounding `x'` / `'`, so
+/// we strip them here; we also tolerate a body that has already been unquoted,
+/// so the function is robust to either shape.
+///
+/// SQLite semantics:
+///
+/// | Literal        | Bytes            | Notes                                  |
+/// |----------------|------------------|----------------------------------------|
+/// | `x'414243'`    | `41 42 43`       | two hex digits per byte, case-insens.  |
+/// | `X'FF00'`      | `FF 00`          | leading `X` is equivalent to `x`       |
+/// | `x''`          | *(empty)*        | the zero-byte blob                     |
+/// | `x'012'`       | *error*          | odd digit count is a tokenizer error   |
+///
+/// The lexer's regex already guarantees the body is all hex digits, so the only
+/// failure this needs to guard is an odd digit count; the non-hex check is kept
+/// as defence in depth.
+fn decode_blob_literal(raw: &str) -> Result<Vec<u8>, PlanError> {
+    // Strip a leading `x'` / `X'` and the trailing `'` when present.
+    let body = raw
+        .strip_prefix("x'")
+        .or_else(|| raw.strip_prefix("X'"))
+        .and_then(|s| s.strip_suffix('\''))
+        .unwrap_or(raw);
+
+    if body.len() % 2 != 0 {
+        return Err(PlanError::UnsupportedStatement(format!(
+            "blob literal has an odd number of hex digits: x'{body}'"
+        )));
+    }
+
+    let hex = body.as_bytes();
+    let mut bytes = Vec::with_capacity(hex.len() / 2);
+    let mut i = 0;
+    while i < hex.len() {
+        // Decode a nibble pair straight from the byte slice. Slicing the *bytes*
+        // (never the `&str`) sidesteps any UTF-8 char-boundary panic if a
+        // non-ASCII body ever reaches here; `from_utf8` then rejects it as a
+        // non-hex digit instead. `i` steps by two and `body.len()` is even, so
+        // `i + 2 <= hex.len()` always holds — the slice cannot go out of bounds.
+        let pair = std::str::from_utf8(&hex[i..i + 2])
+            .ok()
+            .and_then(|s| u8::from_str_radix(s, 16).ok())
+            .ok_or_else(|| {
+                PlanError::UnsupportedStatement(format!(
+                    "blob literal has a non-hex digit: x'{body}'"
+                ))
+            })?;
+        bytes.push(pair);
+        i += 2;
+    }
+    Ok(bytes)
 }
 
 /// Plan a `column_ref` node.
@@ -4020,6 +4087,35 @@ mod tests {
     fn test_expr_null_literal() {
         let expr = plan_where_expr("SELECT * FROM t WHERE x IS NULL");
         assert!(matches!(expr, SqlExpr::IsNull(_)));
+    }
+
+    #[test]
+    fn test_expr_blob_literal() {
+        // `x'414243'` → the three bytes `A B C`; upper-case `X'…'` is equivalent.
+        let expr = plan_where_expr("SELECT * FROM t WHERE b = x'414243'");
+        if let SqlExpr::BinaryOp { right, .. } = expr {
+            assert_eq!(*right, SqlExpr::Literal(SqlValue::Blob(vec![0x41, 0x42, 0x43])));
+        } else {
+            panic!("Expected blob literal");
+        }
+        let upper = plan_where_expr("SELECT * FROM t WHERE b = X'FF00'");
+        if let SqlExpr::BinaryOp { right, .. } = upper {
+            assert_eq!(*right, SqlExpr::Literal(SqlValue::Blob(vec![0xFF, 0x00])));
+        } else {
+            panic!("Expected upper-case blob literal");
+        }
+    }
+
+    #[test]
+    fn test_decode_blob_literal() {
+        assert_eq!(decode_blob_literal("x'414243'").unwrap(), vec![0x41, 0x42, 0x43]);
+        assert_eq!(decode_blob_literal("X'FF00'").unwrap(), vec![0xFF, 0x00]);
+        // Empty blob.
+        assert_eq!(decode_blob_literal("x''").unwrap(), Vec::<u8>::new());
+        // Already-unquoted body is tolerated.
+        assert_eq!(decode_blob_literal("0a0B").unwrap(), vec![0x0A, 0x0B]);
+        // Odd digit count is rejected (matches SQLite's tokenizer error).
+        assert!(decode_blob_literal("x'012'").is_err());
     }
 
     #[test]
