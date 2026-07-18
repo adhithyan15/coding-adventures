@@ -38,9 +38,18 @@ extern "C" {
  * n <= 0, size overflow, or allocator failure. */
 int64_t __gc_alloc(int64_t n);
 
-/* As __gc_alloc, tagging the object with a HeapKind id (for later precise
- * interior tracing; 0 = opaque / trace conservatively). */
+/* As __gc_alloc, tagging the object with a HeapKind id (0 = opaque / trace
+ * conservatively; a registered kind id enables precise interior tracing). */
 int64_t __gc_alloc_kind(int64_t n, uint16_t kind);
+
+/* Register a reference-field map (the byte offsets of an object layout's ref
+ * fields) and return a 1-based kind id to pass to __gc_alloc_kind. Objects of
+ * that kind are traced PRECISELY — only the mapped offsets are followed — so a
+ * look-alike-pointer integer in a non-reference field cannot pin a phantom
+ * child. A null list or count <= 0 registers an opaque (no-ref-field) kind;
+ * negative offsets are ignored. This is how a frontend teaches the collector
+ * its object layouts (records, tuples, Ruby/Python/JS objects). */
+int64_t __gc_register_kind(const int64_t *field_offsets, int64_t count);
 
 /* Mark from `count` root words at `roots`, then sweep. Returns objects freed.
  * A null `roots` or count <= 0 means "no roots". */
