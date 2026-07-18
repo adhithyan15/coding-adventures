@@ -63,6 +63,7 @@ per rotation, in parallel):
 | `physics/` | magnetic pole pairing → interaction (like_poles → repel, opposite_poles → attract) | NASA Heliophysics Education (authoritative) |
 | `physics/` | Additive primary colors of light — red → white, green → white, blue → white (the three RGB primaries that combine to make white light) | HyperPhysics, Georgia State University (authoritative) |
 | `physics/` | Basic parts of a simple electric circuit → the role each performs (e.g. `battery` → `provides_dc_power`, `wire` → `carries_current`, `switch` → `opens_or_closes`) | MIT K-12 Maker "Circuit Basics and Components" (consensus) |
+| `physics/` | common energy source → whether renewable or nonrenewable (solar → renewable, coal → nonrenewable, nuclear → nonrenewable) | U.S. EIA Energy Explained (authoritative) |
 | `anatomy/` | lung → number of lobes (right 3, left 2) | NIH / NCI SEER Training |
 | `anatomy/` | brain part → primary function it controls | NIH / NCI SEER Training + StatPearls |
 | `anatomy/` | skeletal muscle → body region it is located in | Wikipedia (consensus) |

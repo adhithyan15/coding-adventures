@@ -1,0 +1,24 @@
+% ============================================================================
+% energy-sources.query.adj — a worked recall over the physics energy-sources library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "is solar renewable?": it
+% states no energy fact — it only `import`s the grounded table and asks binding
+% queries. The engine resolves each `?` against the `energy_source_class` rows
+% and returns the class + the table's source/locator/trust. The fifth query runs
+% the relation BACKWARD (bind the class `nonrenewable`, recall the sources in
+% that family — coal, natural_gas, petroleum, nuclear). Magnetic energy is not
+% one of the sources this EIA page enumerates, so a recall on it abstains
+% honestly — the engine never invents a class.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli energy-sources.query.adj
+% ============================================================================
+
+import "energy-sources.adj"
+
+? energy_source_class(solar, $Class)          % expect renewable
+? energy_source_class(wind, $Class)           % expect renewable
+? energy_source_class(coal, $Class)           % expect nonrenewable
+? energy_source_class(nuclear, $Class)        % expect nonrenewable
+? energy_source_class($Source, nonrenewable)  % expect coal / natural_gas / petroleum / nuclear — reverse recall
+? energy_source_class(magnetic, $Class)       % expect abstain — not one of the enumerated sources
