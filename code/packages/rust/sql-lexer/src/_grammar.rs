@@ -13,6 +13,21 @@ use std::collections::HashMap;
 pub fn token_grammar() -> TokenGrammar {
     TokenGrammar {
         definitions: vec![
+            // Blob literal `x'48656C6C6F'` / `X'...'` — a quoted run of hex
+            // digit pairs. MUST precede NAME: with first-match-wins semantics,
+            // NAME would otherwise consume the leading `x`/`X` and leave the
+            // quoted body to be mis-lexed as a STRING. The alias is `BLOB` so
+            // the parser's `primary` rule references a single `BLOB` token; the
+            // planner decodes the hex body (rejecting odd length) into raw
+            // bytes. The `*` allows the empty blob `x''` (SQLite's zero-byte
+            // blob); odd-length or non-hex content is caught downstream.
+            TokenDefinition {
+                name: r#"BLOB_HEX"#.to_string(),
+                pattern: r#"[xX]'[0-9A-Fa-f]*'"#.to_string(),
+                is_regex: true,
+                line_number: 23,
+                alias: Some(r#"BLOB"#.to_string()),
+            },
             TokenDefinition {
                 name: r#"NAME"#.to_string(),
                 pattern: r#"[a-zA-Z_][a-zA-Z0-9_]*"#.to_string(),

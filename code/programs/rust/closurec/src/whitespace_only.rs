@@ -4758,22 +4758,36 @@ pub(crate) fn decode_js_string(raw: &str) -> String {
                     i += 2;
                 }
             }
-            '0' => {
-                // \0 is the null character ONLY when not followed by
-                // another octal digit (1–9), per ES strict-mode rules
-                // (non-strict also accepts legacy octals \01..\077 but
-                // upstream Closure always treats `\0` as null here).
-                let next_is_octal_digit = i + 2 < chars.len()
-                    && matches!(chars[i + 2], '1'..='9');
-                if !next_is_octal_digit {
-                    result.push('\x00');
-                    i += 2;
-                } else {
-                    // Legacy octal — pass through.
-                    result.push('\\');
-                    result.push(esc);
-                    i += 2;
+            '0'..='7' => {
+                // Legacy octal escape `\NNN` — matching the reference Closure
+                // Compiler, which reads UP TO THREE octal digits regardless of
+                // the leading digit (value `0o0`..=`0o777` = 0..=511) and
+                // decodes the result to a code unit. `\0`→NUL, `\101`→'A',
+                // `\012`→'\n', `\401`→U+0101, `\777`→U+01FF.
+                //
+                // NB: this is NOT the ECMAScript Annex B.1.2 grammar, which
+                // caps a leading `4`–`7` at two digits (`\401` → `\40` + `"1"`).
+                // Closure ignores that cap and reads three digits (`\401` →
+                // U+0101), so byte-identity requires we do too — verified
+                // against the oracle at WHITESPACE_ONLY.
+                //
+                // Previously `\1`–`\7` fell through to the non-escape arm below,
+                // which dropped the backslash (`\101` → `"101"` — a WRONG string
+                // value, i.e. a miscompile).
+                let mut value = esc.to_digit(8).expect("octal digit 0-7");
+                let mut consumed = 2; // the backslash and the first octal digit
+                for _ in 0..2 {
+                    match chars.get(i + consumed).and_then(|c| c.to_digit(8)) {
+                        Some(dv) => {
+                            value = value * 8 + dv;
+                            consumed += 1;
+                        }
+                        None => break,
+                    }
                 }
+                // `value` is at most 0o777 = 511 — always a valid scalar.
+                result.push(char::from_u32(value).unwrap_or('\u{FFFD}'));
+                i += consumed;
             }
             // Per ES spec §12.9.4.1 Non-Escape Characters: a backslash
             // before any other character produces just that character.
@@ -6131,6 +6145,28 @@ mod tests {
     #[test]
     fn empty_source_yields_empty_output() {
         assert_eq!(minify(""), "");
+    }
+
+    #[test]
+    fn legacy_octal_string_escapes_decode_at_whitespace() {
+        // `\NNN` decodes to its code unit, matching Closure (which reads UP TO
+        // THREE octal digits regardless of leading digit — `\401` = U+0101,
+        // not the Annex-B `\40`+`"1"`). Previously `\1`-`\7` dropped the
+        // backslash (`\101` → `"101"` — a wrong string value).
+        for (src, want) in [
+            (r#"x="\101";"#, r#"x="A";"#),   // 0o101 = 65 = 'A'
+            (r#"x="\40";"#, r#"x=" ";"#),    // 0o40 = 32 = space
+            (r#"x="\77";"#, r#"x="?";"#),    // 0o77 = 63 = '?'
+            (r#"x="\1010";"#, r#"x="A0";"#), // three octal digits ('A') then '0'
+        ] {
+            assert_eq!(minify(src), want, "for {src}");
+        }
+        // Leading 4-7 still reads three octal digits (Closure's rule, not the
+        // Annex-B two-digit cap): `\401` = U+0101. The re-encoder escapes the
+        // non-ASCII result, so just assert the value round-trips, not its bytes.
+        assert_eq!(decode_js_string(r#"\401"#), "\u{101}");
+        assert_eq!(decode_js_string(r#"\101"#), "A");
+        assert_eq!(decode_js_string(r#"\1"#), "\u{1}");
     }
 
     #[test]

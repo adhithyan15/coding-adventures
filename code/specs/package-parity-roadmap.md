@@ -111,11 +111,11 @@ on July 18, 2026 after the paired Lua/Perl `fenwick-tree`, `binary-tree`,
 the paired `hash-functions` prerequisite, the paired `bloom-filter`, `hash-map`,
 and `hash-set` ports, the paired `in-memory-data-store-engine` and
 `in-memory-data-store` ports, and the paired C#/F# `wasm-module-encoder`,
-`x25519`, and `brainfuck-wasm-compiler` ports:
+`x25519`, `brainfuck-wasm-compiler`, `argon2i`, and `argon2d` ports:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 337 |
+| Present in 10-15 languages | 172 | 333 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,972 |
 | Present in one language | 699 | 9,786 |
@@ -161,7 +161,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 172 packages present in at least ten implementation languages need 337
+The 172 packages present in at least ten implementation languages need 333
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -170,8 +170,8 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Elixir | 0 | Complete; `python-parser` uses the shared grammar-driven frontend |
 | Lua | 0 | Complete; paired data-structure/storage wave |
 | Perl | 0 | Complete; paired data-structure/storage wave |
-| C# | 14 | Move with F# |
-| F# | 14 | Move with C# |
+| C# | 12 | Move with F# |
+| F# | 12 | Move with C# |
 | Haskell | 34 | Dependency-shaped compression, graphics, ML, and protocol waves |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
@@ -251,6 +251,20 @@ Package-native tests cover source filtering, balanced and depth-limited loops,
 parser/validator round trips, and locally supported runtime execution. The
 package now spans 13 implementation lanes and reduces each paired
 high-consensus gap to 14.
+
+The fourth paired C#/F# slice is complete: `argon2i` now implements the RFC
+9106 data-independent memory-hard password hash in both lanes on top of their
+existing BLAKE2b packages. RFC vectors cover secret keys, associated data,
+multiple lanes and passes, variable tag lengths, and address-block rollover.
+The package now spans 12 target implementation lanes and reduces each paired
+high-consensus gap to 13.
+
+The fifth paired C#/F# slice is complete: `argon2d` now implements the RFC
+9106 data-dependent memory-hard password hash in both lanes on top of their
+existing BLAKE2b packages. RFC vectors cover secret keys, associated data,
+multiple lanes and passes, variable tag lengths, and deterministic memory-cost
+rounding. The package now spans 12 target implementation lanes and reduces
+each paired high-consensus gap to 12.
 
 Recommended family order:
 

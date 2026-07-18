@@ -2,6 +2,30 @@
 
 All notable changes to this crate are documented here.
 
+## [0.3.0] — 2026-07-17
+
+### Added
+
+- **`__gc_collect()`** — the argument-less conservative C-stack scan (new module
+  `stack_scan`). The drop-in for `twig_gc.c`'s `__twig_gc_collect`: roots from this
+  thread's live stack + callee-saved registers with **no caller-supplied roots**,
+  the way the native backend's collect/safepoint points call it. Pure Rust, no C:
+  a per-arch `asm!` block spills callee-saved integer registers to the stack
+  (replacing `setjmp`), reads the stack pointer, finds the thread's stack base via
+  bare `extern` bindings to the platform thread API (`pthread_get_stackaddr_np` on
+  macOS, `pthread_getattr_np`/`pthread_attr_getstack` on Linux,
+  `GetCurrentThreadStackLimits` on Windows), and hands `[sp, base)` to
+  `__gc_collect_region`. Supported targets are exactly the native-AOT ones —
+  aarch64 (macOS), x86_64 (Linux, Windows); any other `(arch, os)` is a hard
+  `compile_error!`, never a silent unsound fallback. A `MAX_STACK_SCAN` (256 MiB)
+  ceiling fences off a bogus stack base (algorithmic-DoS guard). Register-spill
+  asm runtime-validated on both aarch64 and x86_64 (SysV); 3 unit tests (live
+  stack local survives + dead object freed; SP sanity vs. stack base; real
+  `FlatHeap`).
+- With this, `gc-core-capi` covers the **whole** conservative collector
+  `twig_gc.c` shipped — explicit roots, region scan, and stack scan — in generic
+  Rust. Next PR wires `twig-aot` to link the archive and retires `twig_gc.c`.
+
 ## [0.2.0] — 2026-07-17
 
 ### Added

@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.5.43 — unary minus coerces text/blob operands
+
+`-'5'` now returns `-5`, not the string `'5'`. SQLite applies numeric affinity to
+the operand of unary minus before negating; the engine previously left text
+unchanged. Now `-'12abc'` = -12 (leading numeric prefix), `-'abc'` = 0, `-'3.5'`
+= -3.5, and leading whitespace is tolerated (`-'  7'` = -7). One new
+differential-oracle case + a sql-vm unit test; sql-vm 0.4.22. An exponent-form
+string (`-'3e2'`) is a documented edge left for a float-affinity follow-up.
+
+## 0.5.42 — blob literals `x'…'` parse
+
+SQL blob literals `x'48656C6C6F'` / `X'FF00'` now parse end to end. Previously
+the lexer split `x'414243'` into a `NAME` and a `STRING` and the query failed;
+now the whole literal is one token that the planner decodes into raw bytes.
+`HEX(x'414243')` is `'414243'`, `TYPEOF(x'00')` is `'blob'`, `QUOTE(X'DEADBEEF')`
+is `X'DEADBEEF'`, and `WHERE b = x'0102'` filters by byte-exact blob equality.
+The empty literal `x''` is the zero-byte blob; an odd number of hex digits is a
+parse error, as in SQLite. The VM already supported `Blob` values, so this is a
+pure front-end (lexer→parser→planner) fix. Touches sql-lexer 0.1.3, sql-parser
+0.1.20, sql-planner 0.2.21. `LENGTH()` over a blob is a documented follow-up.
+
 ## 0.5.41 — column-defined COLLATE in WHERE comparisons
 
 A column declared `COLLATE NOCASE` / `RTRIM` now folds in WHERE comparisons, not

@@ -1,0 +1,4 @@
+--js
+tests/diff/nonoctal-89/input/a.js
+--compilation_level
+SIMPLE

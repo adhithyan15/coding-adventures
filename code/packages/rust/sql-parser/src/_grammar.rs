@@ -668,6 +668,9 @@ pub fn parser_grammar() -> ParserGrammar {
             body: GrammarElement::Alternation { choices: vec![
                 GrammarElement::TokenReference { name: r#"NUMBER"#.to_string() },
                 GrammarElement::TokenReference { name: r#"STRING"#.to_string() },
+                // Blob literal `x'..'` (lexed as the `BLOB` token). The planner
+                // decodes the hex body into raw bytes (SqlValue::Blob).
+                GrammarElement::TokenReference { name: r#"BLOB"#.to_string() },
                 GrammarElement::Literal { value: r#"NULL"#.to_string() },
                 GrammarElement::Literal { value: r#"TRUE"#.to_string() },
                 GrammarElement::Literal { value: r#"FALSE"#.to_string() },
