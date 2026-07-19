@@ -1,6 +1,6 @@
 [package]
 name = "apl-to-semantic-ir"
-version = "0.1.3"
+version = "0.1.4"
 edition = "2021"
 description = "APL CST → narrow-waist Semantic IR (SIR22 + SIR22 addendum array/matrix domain). MA-4f, the last APL rollout item per HML01."
 
@@ -29,3 +29,11 @@ lexer = { path = "../lexer" }
 # follow-on work per HML01 §4; this backend's own INLINED runtime is what
 # these tests exercise).
 semantic-ir-to-javascript = { path = "../semantic-ir-to-javascript" }
+# `tests/oracle.rs`'s ground truth: the same tree-walking interpreter this
+# frontend's own CST comes from (HML01 §7's oracle/golden testing), mirroring
+# `matlab-to-semantic-ir`'s identical use of `coding-adventures-matlab-runtime`
+# as its own oracle ground truth. Note the OTHER, non-dev `[dependencies]`
+# section above still deliberately does NOT depend on this crate --
+# lowering itself only needs the parse-tree shape, never the evaluator; only
+# this test file needs it, for comparison purposes only.
+coding-adventures-apl-runtime = { path = "../apl-runtime" }

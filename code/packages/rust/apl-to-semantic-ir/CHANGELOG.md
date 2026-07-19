@@ -1,5 +1,89 @@
 # Changelog
 
+## [0.1.4] - 2026-07-19
+
+### Added
+
+- **`tests/oracle.rs` — HML01 §7 oracle/golden testing, cross-checking
+  `apl-runtime` (ground truth) against `apl_to_semantic_ir::compile_source`
+  → `semantic_ir::Module` → `semantic_ir_to_javascript::compile` → a real
+  `node` process.** The direct APL sibling of `matlab-to-semantic-ir`/
+  `octave-to-semantic-ir`'s own `tests/oracle.rs`, completing HML01 §5's
+  "APL/J's own oracle tests remain open follow-on items" note for APL (that
+  spec line is updated by this PR).
+  - Simpler than the MATLAB/Octave template in two ways, both verified
+    empirically rather than assumed: `Case` needs no `setup`/`final_expr`
+    split (APL auto-prints a bare top-level expression natively on both
+    sides, unlike MATLAB's no-op `disp`), and no `normalize()` is needed at
+    all (APL's display format is a literal 1:1 port between
+    `apl-runtime::value::display` and `semantic-ir-to-javascript`'s
+    `ArrayRt.display`, and APL comparisons never surface a JS-native
+    boolean the way MATLAB's do — both confirmed by a temporary
+    `ground_truth == compiled` byte-for-byte check across the whole corpus
+    while drafting this file).
+  - 17-case corpus: the same 9 SIR22-addendum programs `tests/e2e_node.rs`
+    already proves run correctly in `node`, now ALSO cross-checked against
+    `apl-runtime` for the first time (the actual point of an oracle test —
+    `e2e_node.rs` only ever proved the compiled side alone doesn't crash);
+    two more addendum cases (`dyadic_index_of`, `dyadic_catenate`)
+    completing oracle coverage of all 9 SIR22-addendum node kinds (
+    `e2e_node.rs`'s 9 tests only exercise 7 of the 9); and 6 base-cut
+    cases (right-to-left/no-precedence evaluation, a true/false comparison
+    pair, scalar-vector broadcast, an assignment read back by a later
+    statement, and a printed 2-D matrix).
+  - **Three genuine, previously-undiscovered bugs found while scoping this
+    corpus, all excluded from `CORPUS` (documented in the test file's
+    module doc) rather than fixed here — fixing any of them needs a change
+    to `semantic-ir-to-javascript`, a separate crate, out of scope for this
+    test-only PR:**
+    1. Monadic `-` (negate) on a bare scalar prints the numerically correct
+       value with the WRONG glyph: ASCII `-5` instead of APL's own
+       high-minus `¯5`. Root cause: `runtime.rs`'s `neg` returns a plain
+       native JS number for an unboxed operand, and `formatSeen`'s dispatch
+       resolves `typeof v === "number"` (plain `String(v)`, ASCII) before
+       it ever reaches the NDArray branch that calls `ArrayRt.display`
+       (APL's own high-minus convention) — so any bare (non-NDArray) scalar
+       reaching APL's auto-print path gets the wrong glyph for a negative
+       value.
+    2. Monadic `-` (negate) on a genuine array (rank ≥ 1, e.g. `-1 2 ¯3`)
+       silently computes `NaN` instead of the correctly negated array — a
+       wrong VALUE, not just a wrong glyph. Root cause: `neg`'s `numOf`
+       helper only unwraps a boxed `SirFloat` or a rank-0 NDArray, never a
+       genuine rank-≥1 array, so it passes an NDArray object straight
+       through to native JS unary-minus, which coerces to `NaN`. Same
+       failure *class* as the (already-fixed, in `matlab-to-semantic-ir`'s
+       own oracle PR) while-loop/unary-minus-on-power `numOf` bug, but a
+       different, still-open instance — that fix never taught `numOf`
+       about a genuine multi-element array, and a proper fix for `neg`
+       specifically needs real elementwise negation, not just wider
+       unwrapping.
+    3. Monadic `× ÷ ⌈ ⌊` (sign/reciprocal/ceiling/floor) crash with
+       `TypeError: unknown builtin: <name>` for EVERY operand, scalar or
+       array — confirmed live for all four. Root cause: `apl-to-semantic-
+       ir`'s own README/`src/lower.rs` documents these four names as the
+       intended lowering target for monadic `× ÷ ⌈ ⌊`, but
+       `semantic-ir-to-javascript` never actually implements any of them —
+       they are absent from both `emit.rs`'s well-known-builtin tables and
+       `runtime.rs`'s `builtins` dispatch object, so the generic
+       `__Sir.callBuiltin` fallback throws instead of running. Looks like
+       a pure omission: these builtins were designed and documented in this
+       crate's own 0.1.0 release but never given a real backend
+       implementation, and no existing test anywhere exercises any of the
+       four through `node`.
+    - Net effect: of APL's 6 monadic-capable atoms, only `+` (a genuine
+      no-op) round-trips correctly through the compiled path today; the
+      other 5 (`- × ÷ ⌈ ⌊`) are all broken, in one of the three ways above.
+      Reported as follow-up items (a background task was also spawned to
+      track them) rather than fixed inline, per this task's explicit scope
+      boundary (this PR only adds a test file to `apl-to-semantic-ir`; it
+      does not touch `semantic-ir-to-javascript` or `apl-runtime`).
+- Bumped to 0.1.4 (test-only addition, following this crate's own
+  convention of a patch bump per dated CHANGELOG entry, established by
+  0.1.2's test-only `e2e_node.rs` addition) and added a
+  `coding-adventures-apl-runtime` dev-dependency (`tests/oracle.rs`'s
+  ground truth) — the non-dev `[dependencies]` section deliberately still
+  does NOT depend on `apl-runtime`; only this test file needs it.
+
 ## [0.1.3] - 2026-07-18
 
 ### Fixed

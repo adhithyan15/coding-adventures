@@ -107,15 +107,36 @@ onto.
   propagation, and a full multi-line program that validates cleanly via
   `semantic_ir::validate`.
 - `tests/test_validator.rs` — mirrors `matlab-to-semantic-ir`'s own
-  capability-rejection pattern: every lowered module validates, and
-  `semantic-ir-to-javascript` (which does not implement SIR22/SIR22-addendum
-  codegen yet) correctly *rejects* any module using those nodes — which, for
-  APL, is nearly every program (see the "No scalar/array disambiguation"
-  point above: even `3+4` is an `ElementwiseOp`).
-- **No `tests/e2e_node.rs`.** Unlike MATLAB (whose purely-literal arithmetic
-  subset avoids the array domain entirely), APL's *every* dyadic scalar
-  operation is unconditionally `Expr::ElementwiseOp` — there is no
-  literal-only escape hatch. A genuine round-trip through a real backend
-  therefore needs `sir-runtime-array`'s SIR22 codegen, which does not exist
-  yet (tracked separately per HML01 §4) — an e2e-through-`node` test isn't
-  possible for this crate today.
+  capability-acceptance pattern: every lowered module validates, and
+  `semantic-ir-to-javascript` (which now implements real codegen for the
+  full SIR22 domain, including the "addendum" this crate is the first
+  consumer of) correctly *accepts* every module this frontend produces —
+  which, for APL, is nearly every program (see the "No scalar/array
+  disambiguation" point above: even `3+4` is an `ElementwiseOp`). This
+  superseded an earlier version of this test asserting *rejection*, back
+  when the backend had no SIR22-addendum codegen yet — see
+  `CHANGELOG.md`'s 0.1.2 entry.
+- `tests/e2e_node.rs` — real end-to-end, `node`-executed proof: 9 tests,
+  each compiling real APL source (one per SIR22-addendum primitive —
+  reduce, a non-`Add` reduce, scan composed with reduce, two outer-product
+  shapes, shape-of-reshape, reshape with a bare stranded-literal shape,
+  index generator, ravel of a reshaped matrix) through `compile_source` →
+  `semantic_ir::validate` → `semantic_ir_to_javascript::compile` → a temp
+  `.js` file → `node`, asserting the printed stdout.
+- `tests/oracle.rs` — HML01 §7 oracle/golden testing: the SAME APL source
+  cross-checked against `apl-runtime`'s independent tree-walking evaluator
+  (ground truth) as well as the compiled-through-`node` path, closing the
+  "APL/J's own oracle tests remain open follow-on items" note in
+  [HML01](../../../specs/HML01-math-to-semantic-ir.md) §5. 17-case corpus:
+  the 9 programs `tests/e2e_node.rs` already proves run correctly (now also
+  checked against `apl-runtime`), 2 more completing oracle coverage of all
+  9 SIR22-addendum node kinds, and 6 base-cut cases. Unlike the sibling
+  MATLAB/Octave oracle files, this one needs no `setup`/`final_expr` split
+  and no `normalize()` — see that file's own module doc for why, confirmed
+  empirically rather than assumed. Building it also surfaced 3 genuine,
+  previously-undiscovered bugs in monadic `- × ÷ ⌈ ⌊` (a wrong display
+  glyph, a wrong value on array operands, and a hard crash on all 4 of
+  `× ÷ ⌈ ⌊`) — documented in that file's module doc and `CHANGELOG.md`'s
+  0.1.4 entry, excluded from the corpus, and reported as follow-up items
+  rather than fixed here (fixing them needs a change to
+  `semantic-ir-to-javascript`, a separate crate).
