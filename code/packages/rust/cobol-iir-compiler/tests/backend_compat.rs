@@ -169,6 +169,25 @@ fn symbolic_relop_program_accepted_by_print_backends() {
 }
 
 #[test]
+fn compound_condition_program_accepted_by_print_backends() {
+    // A compound `AND`/`OR` condition folds the leaf `cmp_*` booleans with the
+    // bitwise `and`/`or` ops. Every print backend must accept the fold.
+    let src = program(&[
+        "IDENTIFICATION DIVISION.",
+        "PROGRAM-ID. P.",
+        "DATA DIVISION.",
+        "WORKING-STORAGE SECTION.",
+        "01  N  PIC 9(3) VALUE 5.",
+        "PROCEDURE DIVISION.",
+        "MAIN.",
+        "    IF (N > 1 OR N > 9) AND N < 8 DISPLAY \"Y\" ELSE DISPLAY \"N\".",
+        "    STOP RUN.",
+    ]);
+    let m = compile_source(&src, "compound").unwrap();
+    assert_accepted_by_print_backends(&m, "compound AND/OR condition");
+}
+
+#[test]
 fn level_88_condition_name_program_accepted_by_print_backends() {
     // A level-88 condition-name lowers to a plain `const` + `cmp_eq` feeding the
     // same branch structure as a relational IF — no new opcode. Every print

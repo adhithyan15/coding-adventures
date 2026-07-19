@@ -169,14 +169,23 @@ stop_stmt     = "STOP" ( "RUN" | NUMBER | STRING ) ;
 # statements, optional ELSE.  Nested sentences terminate at the enclosing
 # sentence's period.
 #
-# A `condition` is either a relation (`operand relop operand`) or a bare
-# condition-name declared by a level-88 entry.  The ordered choice tries the
+# A `condition` combines *simple* conditions with `AND`/`OR` (and parentheses
+# for grouping). Precedence, tightest first: a simple condition, then `AND`, then
+# `OR` — so `A OR B AND C` parses as `A OR (B AND C)`. Each level is a PEG
+# `head { op tail }` list, folded left-associatively by the reader.
+#
+# A simple condition is a relation (`operand relop operand`), a bare level-88
+# condition-name, or a parenthesised condition. The ordered choice tries the
 # relation first; a bare condition-name has no relop after its NAME, so the
-# relation alternative fails and the parser falls back to `condition_name`.
-if_stmt        = "IF" condition { statement } [ "ELSE" { statement } ] ;
-condition      = relation | condition_name ;
-relation       = operand relop operand ;
-condition_name = NAME ;
+# relation alternative fails and the parser falls back to `condition_name`; a `(`
+# starts neither, so the parenthesised alternative is reached.
+if_stmt          = "IF" condition { statement } [ "ELSE" { statement } ] ;
+condition        = disjunction ;
+disjunction      = conjunction { "OR" conjunction } ;
+conjunction      = simple_condition { "AND" simple_condition } ;
+simple_condition = relation | condition_name | LPAREN condition RPAREN ;
+relation         = operand relop operand ;
+condition_name   = NAME ;
 # The relation operator: a COBOL word form (`GREATER THAN`, …) or a symbol
 # (`>` `<` `=` `>=` `<=` `<>`). `>=`/`<=`/`<>` already encode a negation
 # (`>=` ≡ `NOT <`); a leading `NOT` composes with it (the readers XOR the two).

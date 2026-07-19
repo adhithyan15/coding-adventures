@@ -194,6 +194,12 @@ pub enum Cond {
     /// A bare condition-name (`IF IS-OK`). The interpreter resolves it against the
     /// level-88 entries it collected while building the data model.
     ConditionName(String),
+    /// `c1 AND c2 AND …` — true when *every* part holds. Held as a flat list (not
+    /// a nested tree) so a long `AND` chain evaluates by iteration, never by
+    /// recursion — a crafted `A AND A AND … (thousands)` cannot overflow the stack.
+    And(Vec<Cond>),
+    /// `c1 OR c2 OR …` — true when *any* part holds. Flat, as [`Cond::And`].
+    Or(Vec<Cond>),
 }
 
 /// The relational operator of a condition.
@@ -552,18 +558,64 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
     }
 }
 
-/// Read a `condition` node — either a `relation` (`operand relop operand`) or a
-/// bare `condition_name` (a level-88 shorthand).
+/// Read a `condition` node: a `disjunction` of `AND`-joined simple conditions,
+/// combined left-associatively. `AND` binds tighter than `OR`.
 fn read_condition(cond: &GrammarASTNode) -> Result<Cond, RuntimeError> {
-    // A bare condition-name: `condition_name = NAME`.
-    if let Some(cn) = child_node(cond, "condition_name") {
+    let disjunction = child_node(cond, "disjunction")
+        .ok_or_else(|| RuntimeError::Unsupported("empty condition".into()))?;
+    read_disjunction(disjunction)
+}
+
+/// `disjunction = conjunction { "OR" conjunction }` — collect into [`Cond::Or`].
+fn read_disjunction(node: &GrammarASTNode) -> Result<Cond, RuntimeError> {
+    read_group(node, "conjunction", read_conjunction, Cond::Or)
+}
+
+/// `conjunction = simple_condition { "AND" simple_condition }` — collect into
+/// [`Cond::And`].
+fn read_conjunction(node: &GrammarASTNode) -> Result<Cond, RuntimeError> {
+    read_group(node, "simple_condition", read_simple_condition, Cond::And)
+}
+
+/// Collect a rule's same-named operand children into a **flat** `AND`/`OR` list.
+/// A lone child needs no wrapper (so a plain relation stays a `Relation`); two or
+/// more become one `combine(Vec<Cond>)` node — never a nested tree, so evaluation
+/// iterates rather than recursing on the chain length.
+fn read_group(
+    node: &GrammarASTNode,
+    child_rule: &str,
+    read_child: impl Fn(&GrammarASTNode) -> Result<Cond, RuntimeError>,
+    combine: impl Fn(Vec<Cond>) -> Cond,
+) -> Result<Cond, RuntimeError> {
+    let mut parts = Vec::new();
+    for child in child_nodes(node, child_rule) {
+        parts.push(read_child(child)?);
+    }
+    match parts.len() {
+        0 => Err(RuntimeError::Unsupported("empty condition group".into())),
+        1 => Ok(parts.remove(0)),
+        _ => Ok(combine(parts)),
+    }
+}
+
+/// `simple_condition = relation | condition_name | "(" condition ")"`.
+fn read_simple_condition(node: &GrammarASTNode) -> Result<Cond, RuntimeError> {
+    if let Some(relation) = child_node(node, "relation") {
+        return read_relation(relation);
+    }
+    if let Some(cn) = child_node(node, "condition_name") {
         let name = first_token(cn, "NAME")
             .ok_or_else(|| RuntimeError::Unsupported("condition-name without a NAME".into()))?;
         return Ok(Cond::ConditionName(name));
     }
-    // Otherwise a relation: `operand relop operand`.
-    let relation = child_node(cond, "relation")
-        .ok_or_else(|| RuntimeError::Unsupported("condition must be a relation or a condition-name".into()))?;
+    if let Some(inner) = child_node(node, "condition") {
+        return read_condition(inner);
+    }
+    Err(RuntimeError::Unsupported("condition must be a relation, condition-name, or parenthesised".into()))
+}
+
+/// Read a `relation` node (`operand relop operand`).
+fn read_relation(relation: &GrammarASTNode) -> Result<Cond, RuntimeError> {
     let operands = child_nodes(relation, "operand");
     if operands.len() != 2 {
         return Err(RuntimeError::Unsupported("relation must be `operand relop operand`".into()));

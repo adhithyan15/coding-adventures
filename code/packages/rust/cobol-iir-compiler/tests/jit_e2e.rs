@@ -304,6 +304,35 @@ fn if_symbolic_relational_operators() {
 }
 
 #[test]
+fn if_compound_and_or_and_precedence() {
+    // Compound AND/OR, precedence, and parentheses — each byte-identical to the
+    // oracle (run_if asserts that). AND lowers to bitwise `and`, OR to `or`.
+    let cases = [
+        ("IF N > 3 AND N < 9 DISPLAY \"Y\" ELSE DISPLAY \"N\".", "Y\n"),
+        ("IF N > 3 AND N > 9 DISPLAY \"Y\" ELSE DISPLAY \"N\".", "N\n"),
+        ("IF N < 3 OR N > 4 DISPLAY \"Y\" ELSE DISPLAY \"N\".", "Y\n"),
+        ("IF N < 3 OR N > 9 DISPLAY \"Y\" ELSE DISPLAY \"N\".", "N\n"),
+        // AND binds tighter than OR: N=1 OR (N>3 AND N<9) = false OR true = true.
+        ("IF N = 1 OR N > 3 AND N < 9 DISPLAY \"Y\" ELSE DISPLAY \"N\".", "Y\n"),
+        // Parentheses override: (N=1 OR N>3) AND N<4 = true AND false = false.
+        ("IF (N = 1 OR N > 3) AND N < 4 DISPLAY \"Y\" ELSE DISPLAY \"N\".", "N\n"),
+    ];
+    for (body, want) in cases {
+        assert_eq!(run_if("5", &[body, "STOP RUN."]), want, "{body}");
+    }
+}
+
+#[test]
+fn if_compound_condition_mixing_condition_names() {
+    // A level-88 condition-name combined with a relation via AND/OR.
+    let out = assert_matches_oracle(&wrap(
+        &["01  STATUS-CODE  PIC 9 VALUE 1.", "88  IS-OK  VALUE 1."],
+        &["IF IS-OK AND STATUS-CODE < 5 DISPLAY \"Y\" ELSE DISPLAY \"N\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "Y\n");
+}
+
+#[test]
 fn if_then_branch_runs_multiple_statements() {
     // Both then-statements run when the condition holds.
     assert_eq!(

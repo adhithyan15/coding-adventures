@@ -496,12 +496,56 @@ mod tests {
     }
 
     #[test]
+    fn if_compound_and_or_and_precedence() {
+        // N=5 through AND/OR, precedence, and parenthesised grouping.
+        let t = |body: &str| run_if("5", &[body, "STOP RUN."]);
+        // AND: both hold → true; one fails → false.
+        assert_eq!(t("IF N > 3 AND N < 9 DISPLAY \"Y\" ELSE DISPLAY \"N\"."), "Y\n");
+        assert_eq!(t("IF N > 3 AND N > 9 DISPLAY \"Y\" ELSE DISPLAY \"N\"."), "N\n");
+        // OR: one holds → true; neither → false.
+        assert_eq!(t("IF N < 3 OR N > 4 DISPLAY \"Y\" ELSE DISPLAY \"N\"."), "Y\n");
+        assert_eq!(t("IF N < 3 OR N > 9 DISPLAY \"Y\" ELSE DISPLAY \"N\"."), "N\n");
+        // Precedence: AND binds tighter than OR. `N = 1 OR N > 3 AND N < 9`
+        // parses as `N=1 OR (N>3 AND N<9)` = false OR true = true.
+        assert_eq!(t("IF N = 1 OR N > 3 AND N < 9 DISPLAY \"Y\" ELSE DISPLAY \"N\"."), "Y\n");
+        // Parentheses override: `(N = 1 OR N > 3) AND N < 4` = true AND false = false.
+        assert_eq!(t("IF (N = 1 OR N > 3) AND N < 4 DISPLAY \"Y\" ELSE DISPLAY \"N\"."), "N\n");
+    }
+
+    #[test]
     fn if_then_branch_runs_multiple_statements() {
         // THEN branch has two statements; both run when the condition holds.
         assert_eq!(
             run_if("5", &["IF N GREATER 3 MOVE 8 TO N DISPLAY N.", "STOP RUN."]),
             "008\n"
         );
+    }
+
+    #[test]
+    fn a_huge_flat_and_chain_evaluates_by_iteration_not_recursion() {
+        // A crafted `A AND A AND … (thousands)` is grammar *repetition* — flat
+        // siblings, not depth-capped nesting — so it builds one `Cond::And` with a
+        // long `Vec`. Evaluation iterates that list, so it must NOT overflow the
+        // stack. (Before the n-ary fix this folded into a depth-N tree and blew the
+        // stack.) One `AND` term per card so the 80-column format doesn't truncate
+        // the statement (it flows freely across cards). 5000 terms all hold → THEN.
+        let mut lines = vec![
+            "IDENTIFICATION DIVISION.".to_string(),
+            "PROGRAM-ID. P.".to_string(),
+            "DATA DIVISION.".to_string(),
+            "WORKING-STORAGE SECTION.".to_string(),
+            "01  N  PIC 9 VALUE 5.".to_string(),
+            "PROCEDURE DIVISION.".to_string(),
+            "MAIN.".to_string(),
+            "    IF N > 0".to_string(),
+        ];
+        for _ in 0..5000 {
+            lines.push("    AND N > 0".to_string());
+        }
+        lines.push("    DISPLAY \"OK\".".to_string());
+        lines.push("    STOP RUN.".to_string());
+        let refs: Vec<&str> = lines.iter().map(|s| s.as_str()).collect();
+        assert_eq!(run_cobol(&program(&refs)).unwrap(), "OK\n");
     }
 
     #[test]

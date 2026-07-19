@@ -24,7 +24,7 @@ interpreter_ir::IIRModule   (one `main`, returns i64 exit code)
 NativeAOT · LLVM · WASM · JVM · CLR · VM · JIT
 ```
 
-## This slice (v0.13 — the core plus control flow, `COMPUTE` incl. `**` and nested `/`, `ON SIZE ERROR`, signed, alphanumeric, symbolic relops, level-88 with ranges + `SET … TO TRUE`)
+## This slice (v0.14 — the core plus control flow, `COMPUTE` incl. `**` and nested `/`, `ON SIZE ERROR`, signed, alphanumeric, compound + symbolic conditions, level-88 with ranges + `SET … TO TRUE`)
 
 COBOL's WORKING-STORAGE is a **PICTURE-typed** data model. Each elementary item
 becomes one IIR register: a **numeric** item (`PIC 9…`) is an `i64` holding its
@@ -38,7 +38,7 @@ integer `123`); an **alphanumeric** item (`PIC X`/`A`) is a `str`.
 | `ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE … [GIVING r] [ROUNDED] [ON SIZE ERROR …]` | `add`/`sub`/`mul`/`div` on the `i64` slots, the result reduced to the receiver's field; a size error runs the handler and leaves the receiver unchanged |
 | `COMPUTE r [ROUNDED] = expr [ON SIZE ERROR …]` | the precedence cascade (`+ - * /`, unary minus, `**` with a constant exponent, parentheses) evaluated bottom-up over scaled `i64`, each step overflow-guarded |
 | `DISPLAY op…` | each operand's image emitted, then `putchar('\n')` — a literal prints its source text, a numeric item via the fixed-width digit helper (signed items via a trailing-overpunch helper), an alphanumeric via `print_str` |
-| `IF cond then… [ELSE else…]` | numeric conditions align operands and `cmp_*`; alphanumeric conditions space-pad both sides and `str_cmp`; a level-88 condition-name lowers to `cmp_eq` on its variable's slot; `jmp_if_false` over the then-branch. Relations use word (`GREATER THAN`, …) or symbolic (`> < = >= <= <>`) operators; `NOT`, and the baseline negation `>=`/`<=`/`<>` already carry, compose by XOR and invert the relation directly |
+| `IF cond then… [ELSE else…]` | conditions combine simple conditions with `AND`/`OR` (and parentheses; `AND` binds tighter) — folded with bitwise `and`/`or` on the `0`/`1` leaf booleans. A simple condition is a relation (numeric: align operands + `cmp_*`; alphanumeric: space-pad + `str_cmp`) or a level-88 condition-name (`cmp_eq` on its slot). Relations use word (`GREATER THAN`, …) or symbolic (`> < = >= <= <>`) operators; `NOT`, and the baseline negation `>=`/`<=`/`<>` carry, compose by XOR and invert the relation directly. `jmp_if_false` over the then-branch |
 | `88 cond-name VALUE lit… [lo THRU hi]` | registers a boolean condition-name over the preceding item; `IF cond-name` / `PERFORM … UNTIL cond-name` hold when the variable equals any listed value or falls in any inclusive range — lowered as an OR-fold of `cmp_eq` / `and(cmp_ge, cmp_le)` (numeric) |
 | `SET cond-name TO TRUE` | stores the condition-name's first `VALUE` (a range's low bound) into its conditional variable — a `const` store into the slot (numeric) |
 | `GO TO para` | `jmp para_<name>` |
@@ -111,7 +111,8 @@ division whose scale-12 intermediate could exceed the 18-digit `i64` model (or o
 paired with `ON SIZE ERROR`), a `COMPUTE` `**` whose exponent is a variable, a
 parenthesised expression, negative, fractional, or past the oracle's `MAX_POW_EXP`
 (or whose conservative digit bound could exceed the 18-digit model), and a
-level-88 condition-name over an alphanumeric variable.
+level-88 condition-name over an alphanumeric variable, and a `NOT` over a whole
+compound or parenthesised condition (`NOT` stays relation-level via the operator).
 
 ## Usage
 
