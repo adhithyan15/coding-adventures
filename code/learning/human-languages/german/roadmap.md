@@ -51,12 +51,17 @@ Spanish and French where a contrast helps. The recurring decoder is the
   Latin loanword** in a Germanic system of native numbers & day-gods; *es ist zwei
   Uhr*) → Mittag/Mitternacht (noon/midnight, **native** compounds *Mitte* + *Tag* /
   *Nacht*, unlike the borrowed *Uhr*). **Authored.**
+- **Ch. 9 — Months & seasons**: the **native-vs-Latin split deepens** — the months
+  are **Latin loans** (Januar ← Janus, *März* ← Mars = Dienstag's Tiw; September–
+  Dezember = Latin 7–10), like the clock-word *Uhr*, while the **seasons stay
+  native** (Frühling ← *früh* "early"; *Herbst* = English **harvest**; Sommer/Winter
+  = English twins). **Authored.**
 
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 9+ | Cases (der→den→dem), months & seasons, family, food, sprechen & irregular verbs — following the shared theme order |
+| 10+ | Cases (der→den→dem), family, food, the body, sprechen & irregular verbs — following the shared theme order |
 
 The **du / Sie** lesson (Ch. 2) completes the formal/informal set across the
 languages: Spanish *tú/usted* (from "your grace"), French *tu/vous* (the

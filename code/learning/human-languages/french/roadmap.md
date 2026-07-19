@@ -49,12 +49,16 @@ compared, every Spanish form supplied in full (no prior Spanish assumed).
 - **Ch. 8 — Time & the clock**: heure (← *hōra* ← Greek *hṓrā* → *hour*; *il est
   deux heures*, silent-h liaison) → midi/minuit (noon/midnight ← *medius diēs* /
   *media nox* — "mid-day"/"mid-night"). **Authored.**
+- **Ch. 9 — Months & seasons**: the twelve months as a parade of Roman gods/emperors
+  (janvier ← Janus, **mars ← Mars = mardi**, juillet/août ← Julius/Augustus;
+  septembre–décembre = the Latin **7–10** from the numbers) → the four seasons
+  (printemps = "prime temps" first-time; hiver ← *hibernum* → hibernate). **Authored.**
 
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |
 |---|---|
-| 9+ | Months & seasons, family, food — following the Spanish theme order, with the Spanish cousin supplied for contrast |
+| 10+ | Family, food, the body — following the Spanish theme order, with the Spanish cousin supplied for contrast |
 
 The *tu/vous* lesson (Ch. 2) is the French counterpart to Spanish *tú/usted*:
 same formal/informal split, but French makes the formal from the **plural**

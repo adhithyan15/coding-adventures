@@ -46,12 +46,16 @@ and Italian's habit of keeping final vowels Latin's other children dropped.
 - **Ch. 8 — Time & the clock**: ora (hour ← *hōra* ← Greek *hṓrā*; the **feminine
   article** twist — *è l'una* but *sono le due*) → mezzogiorno/mezzanotte
   (noon/midnight; *mezzo/mezza* ← *medius* + *giorno/notte*). **Authored.**
+- **Ch. 9 — Months & seasons**: the months **closest to Latin** (gennaio ← Januarius,
+  **marzo ← Mars = martedì**, luglio/agosto ← Julius/Augustus; settembre–dicembre =
+  Latin **7–10**) → the seasons (primavera = "prima vera" first-green; *stagione* ←
+  *statiō* "a standing"; inverno ← *hibernum*). **Authored.**
 
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |
 |---|---|
-| 9+ | Months & seasons, family, food — following the shared theme order |
+| 10+ | Family, food, the body — following the shared theme order |
 
 Note: Italian's formal "you" is **Lei** — literally "she" (a 3rd-person
 politeness, like German *Sie*), a different mechanism from Spanish *usted* (a

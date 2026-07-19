@@ -230,6 +230,8 @@
       "IT-DAYS-WEEKEND": "sabato/domenica (Sat/Sun; ← Sabbatum / diēs Dominica 'Lord's day'; = ES sábado/domingo)",
       "IT-TIME-HOUR": "ora (hour ← hōra ← Greek hṓrā; time via feminine article: è l'una / sono le due)",
       "IT-TIME-NOON-MIDNIGHT": "mezzogiorno/mezzanotte (noon/midnight; mezzo/mezza ← medius + giorno/notte)",
+      "IT-MONTHS": "gennaio…dicembre (closest to Latin; marzo=Mars=martedì; settembre…dicembre = Latin 7-10; luglio/agosto = Julius/Augustus)",
+      "IT-SEASONS": "primavera/estate/autunno/inverno (primavera='prima vera' first green; stagione ← statiō 'a standing')",
       "FR-VERB-APPELER": "(s')appeler — 'to call (oneself)'",
       "FR-VERB-ALLER": "aller — 'to go' (suppletive: ambulāre/vādere/īre); drives 'comment ça va?'",
       "FR-VERB-PARLER": "parler — 'to speak' (← parabolāre; the big regular -er verb / present tense)",
@@ -242,6 +244,8 @@
       "FR-DAYS-WEEKEND": "samedi/dimanche (Sat/Sun; samedi ← Sabbatum, dimanche ← diēs Dominica 'Lord's day'; di- moved to front)",
       "FR-TIME-HOUR": "heure (hour ← hōra ← Greek hṓrā; silent h + liaison; il est deux heures)",
       "FR-TIME-NOON-MIDNIGHT": "midi/minuit (noon/midnight ← medius diēs / media nox; mi- 'middle' + di/nuit)",
+      "FR-MONTHS": "janvier…décembre (Roman gods/emperors: janvier←Janus, mars←Mars=mardi, juillet←Julius; septembre…décembre = Latin 7-10)",
+      "FR-SEASONS": "printemps/été/automne/hiver (printemps='prime temps' first time; hiver ← hibernum → hibernate)",
       "DE-VERB-HEISSEN": "heißen — 'to be called'",
       "DE-VERB-GEHEN": "gehen — 'to go' (= English go); drives 'wie geht es dir?'",
       "GE-VERB-WOHNEN": "wohnen — 'to live/dwell' (← wonēn → English 'wont'); first weak verb / present tense",
@@ -254,6 +258,8 @@
       "GE-DAYS-WEEKEND": "Samstag/Sonntag (Sat/Sun; Samstag ← Sabbat/shabbāt NOT Saturn = ES sábado; Sonntag = Sun's day = Sunday)",
       "GE-TIME-HOUR": "Uhr (clock/o'clock ← Latin hōra — a LATIN LOAN, unlike native numbers/day-gods; es ist zwei Uhr)",
       "GE-TIME-NOON-MIDNIGHT": "Mittag/Mitternacht (noon/midnight; NATIVE compounds Mitte+Tag / Mitte+Nacht, vs Latin-loaned Uhr)",
+      "GE-MONTHS": "Januar…Dezember (LATIN loans like Uhr — März←Mars=Dienstag's Tiw; September…Dezember = Latin 7-10; vs native numbers)",
+      "GE-SEASONS": "Frühling/Sommer/Herbst/Winter (NATIVE Germanic, unlike Latin months; Herbst = English HARVEST; Frühling ← früh 'early')",
       "PT-WORD-TUDO": "tudo — 'everything / all' (← Latin tōtus); the heart of 'tudo bem?'",
       "PT-VERB-FALAR": "falar — 'to speak' (← fabulārī = Spanish hablar, but PT kept f-); the regular -ar present",
       "PT-VERB-MORAR": "morar — 'to live/dwell' (← morārī 'to linger' → moratorium; not habitāre)",
@@ -264,7 +270,9 @@
       "PT-DAYS-WEEKDAYS": "segunda/terça/quarta/quinta/sexta(-feira) (Mon-Fri; UNIQUE numbered feira days ← fēria 'feast-day'; ordinals of dois…seis; Church dropped planet-gods)",
       "PT-DAYS-WEEKEND": "sábado/domingo (Sat/Sun; ← Sabbatum / diēs Dominica; domingo counted 1st → Monday='segunda' 2nd)",
       "PT-TIME-HOUR": "hora (hour ← hōra ← Greek hṓrā; horas explicit: é uma hora / são duas horas)",
-      "PT-TIME-NOON-MIDNIGHT": "meio-dia/meia-noite (noon/midnight; meio/meia ← medius; noite ← noctem shows ct→it like oito)"
+      "PT-TIME-NOON-MIDNIGHT": "meio-dia/meia-noite (noon/midnight; meio/meia ← medius; noite ← noctem shows ct→it like oito)",
+      "PT-MONTHS": "janeiro…dezembro (março=Mars; -eiro ending ← -arius like feira; setembro…dezembro = Latin 7-10 = sete/dez)",
+      "PT-SEASONS": "primavera/verão/outono/inverno (verão ← veranum ← vēr 'spring' — summer grew from spring!; outono ← autumnus au→ou)"
     }
   },
   "practiceTags": {
