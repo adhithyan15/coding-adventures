@@ -36,6 +36,15 @@ book.
   nī/niṅṅaḷ, entŭ, **ninṟe pēru entāṇŭ?** ("what's your name?"), santōṣam,
   practice. The Malayalam standout: it *has* a copula *āṇŭ*, unlike its
   zero-copula Dravidian sisters. In the book.
+- **Chapter 3 — How Are You** ([`lessons/ML-C03-*`](./lessons/)): eṅṅane,
+  **sukhamāṇō?** ("are you well?"), ñān, sukham, sāramilla, practice. The copula
+  *āṇŭ* + question *-ō*; Sanskrit *sukha*/*sāraṁ* on native grammar. In the book.
+- **Chapter 4 — Farewells** ([`lessons/ML-C04-*`](./lessons/)): pōkuka/varika,
+  **pōyi varāṁ** ("I'll go and come back"), nāḷe kāṇāṁ, vīṇḍuṁ kāṇāṁ, practice.
+  The Dravidian promise-of-return goodbye. In the book.
+- **Chapter 5 — First Verbs** ([`lessons/ML-C05-*`](./lessons/)): saṁsārikkuka,
+  **ñān malayāḷaṁ saṁsārikkunnu**, tāmasikkuka, jōli ceyyuka, practice. The
+  *-unnu* present — the verb never changes for person. In the book.
 
 ## Book / fonts
 

@@ -35,6 +35,37 @@ independent vowels — all in the service of real greetings.
 | 14 | santosham | സന്തോഷം | "pleased to meet you" — **Sanskrit** (vs. native *nandi* for thanks) |
 | 15 | practice | (dialogue) | the whole exchange |
 
+## Chapter 3 — How Are You
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 16 | engane | എങ്ങനെ | "how" ← the native *e-* question family |
+| 17 | sukhamaano | സുഖമാണോ? | **"how are you?"** = "are you well?"; the copula *āṇŭ* + the question *-ō* |
+| 18 | njaan | ഞാൻ | "I" ← Proto-Dravidian; can't be dropped (verbs don't mark person) |
+| 19 | sukham | സുഖം | "well-being" ← Sanskrit *sukha* (the *su-* that is Greek *eu-*) |
+| 20 | saaramilla | സാരമില്ല | "no matter / you're welcome"; Sanskrit *sāraṁ* + native *illa* |
+| 21 | practice | (dialogue) | the whole how-are-you exchange |
+
+## Chapter 4 — Farewells
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 22 | pokuka | പോകുക / വരിക | "to go" / "to come" — the *-uka* infinitive |
+| 23 | poyi-varaam | പോയി വരാം | **"I'll go and come back"** — the Dravidian promise-of-return goodbye |
+| 24 | naale-kaanaam | നാളെ കാണാം | "see you tomorrow"; *nāḷ* "day" + *kāṇ* "see" + the "let's" *-āṁ* |
+| 25 | veendum-kaanaam | വീണ്ടും കാണാം | "we'll meet again"; native *kāṇ* (where Tamil borrowed *sandi*) |
+| 26 | practice | (dialogue) | the farewells |
+
+## Chapter 5 — The First Verbs
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 27 | samsaarikkuka | സംസാരിക്കുക | "to speak" (Sanskrit-derived); the *-unnu* present |
+| 28 | njaan-malayalam-samsaarikkunnu | ഞാൻ മലയാളം സംസാരിക്കുന്നു | **"I speak Malayalam"**; the verb never changes for person |
+| 29 | taamasikkuka | താമസിക്കുക | "to live" (Sanskrit-derived); the postposition *-il* |
+| 30 | joli-ceyyuka | ജോലി ചെയ്യുക | "to work" (*ceyyuka* = the same root as Tamil *sey*) |
+| 31 | practice | (dialogue) | three verbs, one form for all persons |
+
 ## Next
 
-Chapter 3 — *sukhamāṇō?* ("are you well?") — the responding cycle.
+Chapter 6 — the case-endings (Malayalam's agglutinative suffixes *-e, -il, -ōṭu*).
