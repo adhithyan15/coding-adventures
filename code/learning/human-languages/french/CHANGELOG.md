@@ -1,5 +1,27 @@
 # Changelog
 
+## Chapter 5 — The first verbs (sentences start to move)
+
+- **Chapter 5 authored** (`FR-C05-parler`, `-habiter`, `-travailler`,
+  `-je-parle-francais`, `-practice`): French's first **grammar-engine** chapter,
+  mirroring the Spanish Ch.6 verbs chapter. The learner stops reciting phrases and
+  starts **building sentences from a pattern**.
+- **The regular -er present tense** — the biggest French verb family: drop *-er*,
+  add *-e/-es/-e/-ons/-ez/-ent*. Taught on **parler** and cemented on **habiter**
+  and **travailler**.
+- **The silent-ending insight + the pro-drop contrast**: *-e/-es/-ent* are all
+  **silent**, so *je parle / tu parles / ils parlent* sound identical (*parl*) —
+  which is exactly **why French keeps its subject pronouns** where Spanish/Italian
+  drop them (the ear can't hear the person, so the pronoun must). Stated as the
+  single biggest structural difference from the Iberian cousins.
+- **Etymology**: *parler* ← *parabolāre* "tell parables" (→ parable/parole/
+  palaver/parley); *habiter* ← *habitāre* "keep having a place" (→ habitat/
+  inhabit); *travailler* ← *tripalium* "torture" (→ **travail/travel**; twin of
+  Spanish *trabajar*); *français* ← *Francia* (the Franks, whose name meant
+  "free" → English *frank*). First self-assembled sentence: **Je parle français**.
+- Taxonomy: namespaced `FR-VERB-PARLER/HABITER/TRAVAILLER`, `FR-WORD-FRANCAIS`
+  documented.
+
 ## Writing nuances — the accents, the cédille, the tréma
 
 - **First French `writing`-type lessons** (`FR-W01-accents`, `FR-W02-cedille`,
