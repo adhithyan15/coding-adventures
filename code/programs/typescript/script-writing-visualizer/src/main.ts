@@ -23,6 +23,13 @@ import {
   type DrillQuestion,
   type Score,
 } from "./drill.ts";
+import {
+  initStates,
+  pickNext,
+  reviewIn,
+  masteredCount,
+  type ItemState,
+} from "./scheduler.ts";
 import "./styles.css";
 
 const app = document.getElementById("app");
@@ -37,6 +44,11 @@ let currentLetter = 0;
 let score: Score = emptyScore();
 let question: DrillQuestion | null = null;
 let chosen: number | null = null; // which option the learner picked (null = unanswered)
+// Spaced-repetition state: the scheduler decides WHICH letter to ask next, so
+// missed letters resurface sooner and mastered ones fade back. One session tick
+// per answered question (see scheduler.ts). Rebuilt when the script changes.
+let schedule: ItemState[] = [];
+let sessionTick = 0;
 
 const OPTION_COUNT = 4;
 
@@ -162,16 +174,20 @@ function renderDetail(v: LetterView): HTMLElement {
 /** Start (or restart) a practice session for the current script. */
 function startPractice(): void {
   score = emptyScore();
+  const views = buildScriptView(SCRIPTS[currentScript]!);
+  schedule = initStates(views.length);
+  sessionTick = 0;
   nextQuestion();
 }
 
-/** Pick a fresh random target + options for the current script. */
+/** Let the scheduler choose the next letter; the UI still randomises options. */
 function nextQuestion(): void {
   const views = buildScriptView(SCRIPTS[currentScript]!);
-  const target = randInt(views.length);
+  // The scheduler decides WHICH letter (spaced repetition); randomness is only
+  // for the distractors + answer position.
+  const target = pickNext(schedule, sessionTick);
   const placeAt = randInt(Math.min(OPTION_COUNT, views.length));
-  // Draw distractors from the most-confusable pool, shuffled for variety.
-  question = buildDrillQuestion(views, target, OPTION_COUNT, chooseConfusableShuffled, placeAt);
+  question = buildDrillQuestion(views, target < 0 ? 0 : target, OPTION_COUNT, chooseConfusableShuffled, placeAt);
   chosen = null;
 }
 
@@ -180,11 +196,12 @@ function renderPractice(): HTMLElement {
   const q = question!;
   const wrap = el("div", "practice");
 
-  // Score line
+  // Score line + a spaced-repetition mastery read-out
   const acc = accuracy(score);
+  const mastered = masteredCount(schedule);
   const scoreLine = el("div", "score");
-  scoreLine.textContent =
-    acc === null ? "Score: 0 / 0" : `Score: ${score.correct} / ${score.total}  ·  ${acc}%`;
+  const scoreText = acc === null ? "Score: 0 / 0" : `Score: ${score.correct} / ${score.total}  ·  ${acc}%`;
+  scoreLine.textContent = `${scoreText}   ·   mastered ${mastered} / ${schedule.length}`;
   wrap.appendChild(scoreLine);
 
   // Prompt
@@ -209,7 +226,11 @@ function renderPractice(): HTMLElement {
     b.onclick = () => {
       if (chosen !== null) return; // already answered
       chosen = i;
-      score = record(score, checkAnswer(q, i));
+      const correct = checkAnswer(q, i);
+      score = record(score, correct);
+      // Feed the answer to the scheduler and advance the session clock.
+      schedule = reviewIn(schedule, q.targetIndex, correct, sessionTick);
+      sessionTick += 1;
       render();
     };
     opts.appendChild(b);
