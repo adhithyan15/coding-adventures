@@ -3170,6 +3170,24 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("9"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // COBOL-60 — symbolic relational operator (PL09 step 4). `IF N >= 5` on N=5
+    // holds (boundary), printing "GE". A symbol lowers to the same `cmp_*` a word
+    // relation does (`>=` ≡ `cmp_ge`), so it proves on every backend.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  N  PIC 9 VALUE 5.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     IF N >= 5 DISPLAY \"GE\" ELSE DISPLAY \"LT\".\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("GE"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses

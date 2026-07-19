@@ -478,6 +478,24 @@ mod tests {
     }
 
     #[test]
+    fn if_symbolic_relational_operators() {
+        // N=5 against each symbol: the whole truth table.
+        let t = |body: &str| run_if("5", &[body, "STOP RUN."]);
+        assert_eq!(t("IF N > 3 DISPLAY \"Y\" ELSE DISPLAY \"N\"."), "Y\n"); // 5 > 3
+        assert_eq!(t("IF N > 5 DISPLAY \"Y\" ELSE DISPLAY \"N\"."), "N\n"); // 5 > 5 false
+        assert_eq!(t("IF N < 9 DISPLAY \"Y\" ELSE DISPLAY \"N\"."), "Y\n"); // 5 < 9
+        assert_eq!(t("IF N = 5 DISPLAY \"Y\" ELSE DISPLAY \"N\"."), "Y\n"); // 5 = 5
+        assert_eq!(t("IF N >= 5 DISPLAY \"Y\" ELSE DISPLAY \"N\"."), "Y\n"); // 5 >= 5 (boundary)
+        assert_eq!(t("IF N >= 6 DISPLAY \"Y\" ELSE DISPLAY \"N\"."), "N\n"); // 5 >= 6 false
+        assert_eq!(t("IF N <= 5 DISPLAY \"Y\" ELSE DISPLAY \"N\"."), "Y\n"); // 5 <= 5 (boundary)
+        assert_eq!(t("IF N <= 4 DISPLAY \"Y\" ELSE DISPLAY \"N\"."), "N\n"); // 5 <= 4 false
+        assert_eq!(t("IF N <> 3 DISPLAY \"Y\" ELSE DISPLAY \"N\"."), "Y\n"); // 5 <> 3
+        assert_eq!(t("IF N <> 5 DISPLAY \"Y\" ELSE DISPLAY \"N\"."), "N\n"); // 5 <> 5 false
+        // An explicit NOT composes with a symbol's baseline negation: NOT >= ≡ <.
+        assert_eq!(t("IF N NOT >= 6 DISPLAY \"Y\" ELSE DISPLAY \"N\"."), "Y\n"); // 5 < 6
+    }
+
+    #[test]
     fn if_then_branch_runs_multiple_statements() {
         // THEN branch has two statements; both run when the condition holds.
         assert_eq!(

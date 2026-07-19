@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.17.0 — symbolic relational operators
+
+- `IF` / `PERFORM … UNTIL` conditions accept the symbols `>` `<` `=` `>=` `<=`
+  `<>` as well as the word forms. `read_condition` now maps each operator to a
+  base relation plus a *baseline* negation (`>=` ≡ "not <", `<=` ≡ "not >", `<>` ≡
+  "not ="); a written `NOT` composes with that baseline by XOR. No change to
+  `Cond` — the symbols reduce onto the existing `RelOp` + `negated` model.
+
 ## 0.16.0 — `SET cond-name TO TRUE`
 
 - `Stmt::SetTrue { cond_name }` assigns a level-88 condition-name's conditional

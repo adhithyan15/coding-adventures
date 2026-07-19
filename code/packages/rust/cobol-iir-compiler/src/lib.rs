@@ -826,26 +826,32 @@ impl<'a> Compiler<'a> {
         }
     }
 
-    /// Parse a `relop` node to the `cmp_*` op the relation lowers to. `NOT`
-    /// inverts the *relation* directly (`GREATER` → `cmp_le`, …), so the op still
-    /// yields one boolean — the `cmp_*`/`str_cmp`-vs-0 result `jmp_if_false`
-    /// consumes; inverting the boolean itself with `cmp_eq … 0` would be a type
-    /// mismatch (see [`Self::emit_condition`]).
+    /// Parse a `relop` node to the `cmp_*` op the relation lowers to. Each operator
+    /// resolves to a base relation plus a *baseline* negation — the symbols `>=`,
+    /// `<=`, `<>` already mean "not <", "not >", "not =" — and a written `NOT`
+    /// composes with that baseline by XOR. `NOT` inverts the *relation* directly
+    /// (`GREATER` → `cmp_le`, …), so the op still yields one boolean the
+    /// `cmp_*`/`str_cmp`-vs-0 result `jmp_if_false` consumes; inverting the boolean
+    /// itself with `cmp_eq … 0` would be a type mismatch (see
+    /// [`Self::emit_relation`]).
     fn relation_op(&self, cond: &GrammarASTNode) -> Result<&'static str, CompileError> {
         let relop = child_node(cond, "relop")
             .ok_or_else(|| CompileError::Malformed("condition without a relational operator".into()))?;
         let toks = child_tokens(relop);
-        let negated = toks.iter().any(|(k, v)| k == "KEYWORD" && v == "NOT");
-        let base = toks
+        let explicit_not = toks.iter().any(|(k, v)| k == "KEYWORD" && v == "NOT");
+        let (base, baseline_neg) = toks
             .iter()
             .find_map(|(k, v)| match (k.as_str(), v.as_str()) {
-                ("KEYWORD", "GREATER") => Some("GREATER"),
-                ("KEYWORD", "LESS") => Some("LESS"),
-                ("KEYWORD", "EQUAL") => Some("EQUAL"),
+                ("KEYWORD", "GREATER") | ("GT", _) => Some(("GREATER", false)),
+                ("KEYWORD", "LESS") | ("LT", _) => Some(("LESS", false)),
+                ("KEYWORD", "EQUAL") | ("EQ", _) => Some(("EQUAL", false)),
+                ("GE", _) => Some(("LESS", true)),
+                ("LE", _) => Some(("GREATER", true)),
+                ("NE", _) => Some(("EQUAL", true)),
                 _ => None,
             })
             .ok_or_else(|| CompileError::Malformed("unrecognised relational operator".into()))?;
-        Ok(match (base, negated) {
+        Ok(match (base, explicit_not ^ baseline_neg) {
             ("GREATER", false) => "cmp_gt",
             ("GREATER", true) => "cmp_le",
             ("LESS", false) => "cmp_lt",
@@ -2788,6 +2794,25 @@ mod tests {
         )
         .unwrap();
         assert!(ops(&module).contains(&"cmp_le".to_string()));
+    }
+
+    #[test]
+    fn symbolic_relops_map_to_the_right_cmp_op() {
+        // Each symbol lowers to its `cmp_*`: `>=`→cmp_ge, `<=`→cmp_le, `<>`→cmp_ne,
+        // `>`→cmp_gt, `<`→cmp_lt, `=`→cmp_eq. A `NOT` before a symbol composes with
+        // its baseline negation: `NOT >=` ≡ `<` → cmp_lt.
+        for (body, want) in [
+            ("IF N > 5 DISPLAY \"X\".", "cmp_gt"),
+            ("IF N < 5 DISPLAY \"X\".", "cmp_lt"),
+            ("IF N = 5 DISPLAY \"X\".", "cmp_eq"),
+            ("IF N >= 5 DISPLAY \"X\".", "cmp_ge"),
+            ("IF N <= 5 DISPLAY \"X\".", "cmp_le"),
+            ("IF N <> 5 DISPLAY \"X\".", "cmp_ne"),
+            ("IF N NOT >= 5 DISPLAY \"X\".", "cmp_lt"),
+        ] {
+            let m = compile_source(&wrap(&["01  N  PIC 9(3) VALUE 5."], &[body, "STOP RUN."]), "r").unwrap();
+            assert!(ops(&m).contains(&want.to_string()), "{body} → expected {want}: {:?}", ops(&m));
+        }
     }
 
     #[test]

@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-cobol-lexer"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
 description = "Lexer for COBOL-60 — strips the 80-column card format via a pre-tokenize hook and tokenizes with the grammar-driven lexer and the cobol.tokens grammar file."
 

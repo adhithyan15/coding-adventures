@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.9.0 — symbolic relational operators
+
+- The `relop` rule accepts the symbols `>` `<` `=` `>=` `<=` `<>` alongside the
+  word forms (`GREATER THAN`, …). `>=`/`<=`/`<>` already encode a negation
+  (`>=` ≡ `NOT <`); a leading `NOT` composes with it (the interpreter/compiler
+  readers XOR the two). Uses the new `GT`/`LT`/`GE`/`LE`/`NE` tokens (see
+  `cobol-lexer` 0.4.0); `EQ` was already present. `_grammar.rs` regenerated via
+  `grammar-tools compile-grammar`.
+
 ## 0.8.0 — `SET cond-name TO TRUE`
 
 - Added `set_stmt = "SET" NAME "TO" "TRUE"` to the `statement` alternation — the

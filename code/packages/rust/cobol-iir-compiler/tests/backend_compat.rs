@@ -149,6 +149,26 @@ fn if_else_program_accepted_by_print_backends() {
 }
 
 #[test]
+fn symbolic_relop_program_accepted_by_print_backends() {
+    // A symbolic relop (`>=`) lowers to the same `cmp_*` a word relation does
+    // (`>=` ≡ `cmp_ge`), so it rides the existing branch structure — no new
+    // opcode. Every print backend must accept it.
+    let src = program(&[
+        "IDENTIFICATION DIVISION.",
+        "PROGRAM-ID. P.",
+        "DATA DIVISION.",
+        "WORKING-STORAGE SECTION.",
+        "01  N  PIC 9(3) VALUE 5.",
+        "PROCEDURE DIVISION.",
+        "MAIN.",
+        "    IF N >= 5 DISPLAY \"GE\" ELSE DISPLAY \"LT\".",
+        "    STOP RUN.",
+    ]);
+    let m = compile_source(&src, "relop").unwrap();
+    assert_accepted_by_print_backends(&m, "symbolic relop");
+}
+
+#[test]
 fn level_88_condition_name_program_accepted_by_print_backends() {
     // A level-88 condition-name lowers to a plain `const` + `cmp_eq` feeding the
     // same branch structure as a relational IF — no new opcode. Every print
