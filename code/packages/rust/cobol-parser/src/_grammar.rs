@@ -534,16 +534,29 @@ pub fn parser_grammar() -> ParserGrammar {
                         GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"statement"#.to_string() }) },
                     ] }) },
             ] },
-            line_number: 161,
+            line_number: 167,
         },
         GrammarRule {
             name: r#"condition"#.to_string(),
+            body: GrammarElement::Alternation { choices: vec![
+                GrammarElement::RuleReference { name: r#"relation"#.to_string() },
+                GrammarElement::RuleReference { name: r#"condition_name"#.to_string() },
+            ] },
+            line_number: 168,
+        },
+        GrammarRule {
+            name: r#"relation"#.to_string(),
             body: GrammarElement::Sequence { elements: vec![
                 GrammarElement::RuleReference { name: r#"operand"#.to_string() },
                 GrammarElement::RuleReference { name: r#"relop"#.to_string() },
                 GrammarElement::RuleReference { name: r#"operand"#.to_string() },
             ] },
-            line_number: 162,
+            line_number: 169,
+        },
+        GrammarRule {
+            name: r#"condition_name"#.to_string(),
+            body: GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+            line_number: 170,
         },
         GrammarRule {
             name: r#"relop"#.to_string(),
@@ -565,7 +578,7 @@ pub fn parser_grammar() -> ParserGrammar {
                         ] },
                     ] }) },
             ] },
-            line_number: 163,
+            line_number: 171,
         },
         GrammarRule {
             name: r#"operand"#.to_string(),
@@ -573,7 +586,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
                 GrammarElement::RuleReference { name: r#"literal"#.to_string() },
             ] },
-            line_number: 169,
+            line_number: 177,
         },
         GrammarRule {
             name: r#"literal"#.to_string(),
@@ -582,7 +595,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::TokenReference { name: r#"STRING"#.to_string() },
                 GrammarElement::RuleReference { name: r#"figurative"#.to_string() },
             ] },
-            line_number: 170,
+            line_number: 178,
         },
         GrammarRule {
             name: r#"figurative"#.to_string(),
@@ -599,7 +612,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::Literal { value: r#"QUOTE"#.to_string() },
                 GrammarElement::Literal { value: r#"QUOTES"#.to_string() },
             ] },
-            line_number: 171,
+            line_number: 179,
         },
     ],
         version: 1,

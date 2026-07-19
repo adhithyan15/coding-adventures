@@ -145,6 +145,14 @@ struct Item {
     kind: ItemKind,
 }
 
+/// A level-88 condition-name: the index of the item it qualifies (its
+/// "conditional variable") and the single value that makes it true. Multiple
+/// values and `THRU` ranges are a later rung.
+struct CondName {
+    var: usize,
+    value: Src,
+}
+
 impl Item {
     /// The item's display width in characters/digits.
     fn width(&self) -> usize {
@@ -189,6 +197,9 @@ struct Compiler<'a> {
     /// init prologue) plus a name index for `MOVE` / `DISPLAY` / arithmetic.
     items: Vec<Item>,
     by_name: HashMap<String, usize>,
+    /// Level-88 condition-names → the item they qualify and the value that makes
+    /// them true. A bare `IF IS-OK` lowers to `items[var] == value`.
+    conditions: HashMap<String, CondName>,
     /// Set when a numeric `DISPLAY` emits a call to the digit-print helper, so it
     /// is appended to the module.
     needs_print: bool,
@@ -288,6 +299,13 @@ impl<'a> Compiler<'a> {
         let Some(name) = first_token(entry, "NAME") else {
             return Ok(());
         };
+        // A level-88 entry declares a boolean condition-name over the most recent
+        // item (its "conditional variable"). It takes no storage and no picture —
+        // register the name → (variable, value) and return.
+        let level = first_token(entry, "NUMBER").and_then(|s| s.parse::<u32>().ok());
+        if level == Some(88) {
+            return self.collect_condition_name(&name, entry);
+        }
         // Each `data_clause` wraps one `picture_clause` or `value_clause`. The
         // PICTURE clause (if present) makes this an elementary item.
         let Some(pic_node) = find_clause(entry, "picture_clause") else {
@@ -349,6 +367,23 @@ impl<'a> Compiler<'a> {
         let idx = self.items.len();
         self.items.push(Item { reg, kind });
         self.by_name.insert(name, idx);
+        Ok(())
+    }
+
+    /// Register a level-88 condition-name: it qualifies the item defined just
+    /// before it and is true when that item holds the `VALUE`. A single value is
+    /// this rung; multiple values and `THRU` ranges are a later rung.
+    fn collect_condition_name(&mut self, name: &str, entry: &GrammarASTNode) -> Result<(), CompileError> {
+        let vc = find_clause(entry, "value_clause")
+            .ok_or_else(|| CompileError::Malformed(format!("level-88 {name} without a VALUE")))?;
+        let value = read_literal(
+            child_node(vc, "literal")
+                .ok_or_else(|| CompileError::Malformed("VALUE without a literal".into()))?,
+        )?;
+        let var = self.items.len().checked_sub(1).ok_or_else(|| {
+            CompileError::Unsupported(format!("level-88 {name} must follow an item"))
+        })?;
+        self.conditions.insert(name.to_string(), CondName { var, value });
         Ok(())
     }
 
@@ -601,18 +636,32 @@ impl<'a> Compiler<'a> {
         Ok(())
     }
 
-    /// Evaluate a `condition` (`operand relop operand`) to a boolean `i64`
-    /// register (1 = true). A **numeric** comparison aligns the operands to a
-    /// common scale and applies `cmp_gt`/`cmp_lt`/`cmp_eq` (`NOT` inverts the
-    /// relation); an **alphanumeric** comparison space-pads both sides to a common
-    /// length and applies `str_cmp` (COBOL's rule). A numeric operand compared
-    /// with an alphanumeric one is a later rung.
+    /// Evaluate a `condition` to a boolean `i64` register (1 = true). A condition
+    /// is either a `relation` (`operand relop operand`) or a bare level-88
+    /// `condition_name`; dispatch on which the grammar produced.
     fn emit_condition(&mut self, cond: &GrammarASTNode) -> Result<String, CompileError> {
-        let operands = child_nodes(cond, "operand");
-        if operands.len() != 2 {
-            return Err(CompileError::Malformed("condition must be operand relop operand".into()));
+        if let Some(cn) = child_node(cond, "condition_name") {
+            let name = first_token(cn, "NAME")
+                .ok_or_else(|| CompileError::Malformed("condition-name without a NAME".into()))?;
+            return self.emit_condition_name(&name);
         }
-        let op = self.relation_op(cond)?;
+        let relation = child_node(cond, "relation")
+            .ok_or_else(|| CompileError::Malformed("condition must be a relation or condition-name".into()))?;
+        self.emit_relation(relation)
+    }
+
+    /// Evaluate a `relation` (`operand relop operand`) to a boolean `i64` register.
+    /// A **numeric** comparison aligns the operands to a common scale and applies
+    /// `cmp_gt`/`cmp_lt`/`cmp_eq` (`NOT` inverts the relation); an **alphanumeric**
+    /// comparison space-pads both sides to a common length and applies `str_cmp`
+    /// (COBOL's rule). A numeric operand compared with an alphanumeric one is a
+    /// later rung.
+    fn emit_relation(&mut self, relation: &GrammarASTNode) -> Result<String, CompileError> {
+        let operands = child_nodes(relation, "operand");
+        if operands.len() != 2 {
+            return Err(CompileError::Malformed("relation must be operand relop operand".into()));
+        }
+        let op = self.relation_op(relation)?;
 
         // Classify each operand: `None` = numeric (literal / numeric item / a
         // numeric figurative), `Some` = a character value.
@@ -634,6 +683,39 @@ impl<'a> Compiler<'a> {
                 "comparing a numeric operand with an alphanumeric one is a later rung".into(),
             )),
         }
+    }
+
+    /// Evaluate a level-88 condition-name to a boolean `i64` register: is its
+    /// conditional variable equal to the value that makes it true? This rung
+    /// compares a **numeric** variable against a numeric value (`cmp_eq` on the
+    /// scaled slot); an alphanumeric conditional variable is a later rung.
+    fn emit_condition_name(&mut self, name: &str) -> Result<String, CompileError> {
+        let cn = self.conditions.get(name).ok_or_else(|| {
+            CompileError::Unsupported(format!("reference to condition-name {name} (undeclared)"))
+        })?;
+        let var = cn.var;
+        let (int_digits, dec_digits, signed) = match &self.items[var].kind {
+            ItemKind::Numeric { int_digits, dec_digits, signed, .. } => (*int_digits, *dec_digits, *signed),
+            ItemKind::Char { .. } => {
+                return Err(CompileError::Unsupported(
+                    "a level-88 condition-name on an alphanumeric item is a later rung".into(),
+                ))
+            }
+        };
+        // The value that makes the condition true, formatted into the variable's
+        // picture at compile time (the same reuse `MOVE <literal>` relies on) —
+        // so the comparison constant matches the slot's scaled representation.
+        let picture = Picture::Numeric { int_digits, dec_digits, signed };
+        let digits = format_into_picture(&cn.value, &picture)
+            .map_err(|m| CompileError::Unsupported(format!("level-88 {name} VALUE: {m}")))?;
+        let mag = parse_digits(&digits);
+        let value = if signed && literal_is_negative(&cn.value) { -mag } else { mag };
+        let vreg = self.fresh("_c88");
+        self.emit("const", Some(&vreg), vec![Operand::Int(value)], "i64");
+        let slot = self.items[var].reg.clone();
+        let cond_reg = self.fresh("_cond");
+        self.emit("cmp_eq", Some(&cond_reg), vec![Operand::Var(slot), Operand::Var(vreg)], "i64");
+        Ok(cond_reg)
     }
 
     /// Parse a `relop` node to the `cmp_*` op the relation lowers to. `NOT`
@@ -2591,6 +2673,35 @@ mod tests {
                 &["MOVE N TO W.", "STOP RUN."],
             ),
             "x",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn level_88_condition_name_lowers() {
+        // A level-88 condition-name over a numeric item lowers to a valid cmp_eq.
+        let m = compile_source(
+            &wrap(
+                &["01  STATUS-CODE  PIC 9 VALUE 1.", "88  IS-OK  VALUE 1."],
+                &["IF IS-OK DISPLAY \"OK\".", "STOP RUN."],
+            ),
+            "c88",
+        )
+        .unwrap();
+        assert!(m.validate().is_empty(), "{:?}", m.validate());
+    }
+
+    #[test]
+    fn level_88_on_an_alphanumeric_item_is_deferred() {
+        // A condition-name whose conditional variable is alphanumeric needs a
+        // string compare — a clean later rung, matching the oracle's own deferral.
+        let err = compile_source(
+            &wrap(
+                &["01  FLAG  PIC X VALUE \"Y\".", "88  IS-YES  VALUE \"Y\"."],
+                &["IF IS-YES DISPLAY \"YES\".", "STOP RUN."],
+            ),
+            "c88",
         )
         .unwrap_err();
         assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");

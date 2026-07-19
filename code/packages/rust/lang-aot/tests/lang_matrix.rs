@@ -3108,6 +3108,26 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("000533"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // COBOL-60 — level-88 condition-name (PL09 step 4). `88 IS-OK VALUE 1` over
+    // `STATUS-CODE` (=1) makes `IF IS-OK` true → prints "OK". A condition-name
+    // lowers to a plain `const` + `cmp_eq` feeding the same branch structure a
+    // relational IF uses (no new opcode), so it proves on every backend.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  STATUS-CODE  PIC 9 VALUE 1.\n\
+               000000 88  IS-OK  VALUE 1.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     IF IS-OK DISPLAY \"OK\" ELSE DISPLAY \"NO\".\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses

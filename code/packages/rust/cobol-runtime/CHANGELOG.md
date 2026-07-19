@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.14.0 — level-88 condition-names
+
+- A `88 NAME VALUE lit.` entry now registers a boolean condition-name bound to the
+  most recent item (its conditional variable), instead of being rejected as a
+  deferred level. `Cond` becomes an enum — `Relation { … }` or
+  `ConditionName(String)` — and `IF IS-OK` / `PERFORM … UNTIL IS-OK` evaluate the
+  name as "does the variable equal the value?". This rung compares a **numeric**
+  variable against a numeric value; an alphanumeric conditional variable, multiple
+  values, and `THRU` ranges are clean `Unsupported` later rungs. Level-88 takes no
+  storage, so the item-tree depth bound (≤ 49) is unchanged.
+
 ## 0.13.0 — re-export the PICTURE / value building blocks
 
 - **Public re-exports:** `Picture`, `Decimal`, `move_into_char`, and

@@ -8,6 +8,39 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.10.0: level-88 condition-names (PL09 step 4)
+
+The first COBOL feature that reaches past `cobol-runtime`'s prior surface: a
+**level-88 condition-name** — the boolean shorthand `IF IS-OK` for "does my
+conditional variable hold the value that makes me true?". Implemented oracle-first
+(grammar → `cobol-runtime` → this compiler) so it stays byte-identical.
+
+- **Grammar.** `condition` became `relation | condition_name` in
+  `code/grammars/cobol/cobol.grammar` (regenerated via `grammar-tools
+  compile-grammar`); the relation is tried first and a bare condition-name falls
+  through. A level-88 *entry* already parsed as a `data_entry`, so only the
+  reference site changed.
+- **Registration.** `collect_condition_name` records each `88 NAME VALUE lit.`
+  against the item defined just before it (its conditional variable) — it takes no
+  storage and no register.
+- **Lowering.** `emit_condition` now dispatches: a `condition_name` lowers via
+  `emit_condition_name`, which formats the value into the variable's picture at
+  compile time (the same reuse `MOVE <literal>` relies on) and emits a single
+  `const` + `cmp_eq` on the variable's scaled slot — the same boolean a relational
+  `IF` produces, so it composes with `IF`/`ELSE` and `PERFORM … UNTIL` unchanged
+  and needs no new opcode.
+- **Deferrals (clean errors).** A condition-name whose conditional variable is
+  alphanumeric (needs a string compare), multiple `VALUE`s, and `VALUE … THRU`
+  ranges are later rungs — matching the oracle's own deferrals.
+- **Tests.** 4 new `jit_e2e.rs` cases byte-identical to the oracle (true/false
+  branches; tracking a live value after `MOVE`; a scaled conditional variable; a
+  condition-name driving `PERFORM UNTIL`); unit tests for the lowering and the
+  alphanumeric deferral; a `backend_compat` program (wasm/jvm/clr accept the
+  const/cmp_eq); a `lang_matrix` COBOL condition-name row across all seven columns.
+  Full suite **127 green** (27 unit + 14 `backend_compat` + 86 `jit_e2e`). The
+  oracle gains 3 unit tests (numeric condition-name in `IF` and `PERFORM UNTIL`,
+  plus the alphanumeric deferral).
+
 ### Added — v0.9.0: nested COMPUTE division (scale-12 intermediate) (PL09 step 4)
 
 Division nested inside a larger `COMPUTE` expression (e.g. `A / B + C`) now lowers
