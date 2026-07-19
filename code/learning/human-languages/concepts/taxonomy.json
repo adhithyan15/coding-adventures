@@ -221,7 +221,11 @@
       "GE-VERB-MACHEN": "machen — 'to make/do' (← makōn → make); 'Was machst du?'",
       "GE-VERB-LERNEN": "lernen — 'to learn' (← liznōjan → learn/lore)",
       "GE-WORD-DEUTSCH": "Deutsch — 'German' (the language; ← diutisc 'of the people' → English Dutch)",
-      "PT-WORD-TUDO": "tudo — 'everything / all' (← Latin tōtus); the heart of 'tudo bem?'"
+      "PT-WORD-TUDO": "tudo — 'everything / all' (← Latin tōtus); the heart of 'tudo bem?'",
+      "PT-VERB-FALAR": "falar — 'to speak' (← fabulārī = Spanish hablar, but PT kept f-); the regular -ar present",
+      "PT-VERB-MORAR": "morar — 'to live/dwell' (← morārī 'to linger' → moratorium; not habitāre)",
+      "PT-VERB-TRABALHAR": "trabalhar — 'to work' (← tripaliāre → travail/travel; twin of Spanish trabajar)",
+      "PT-WORD-PORTUGUES": "português — 'Portuguese' (the language; ← Portus Cale)"
     }
   },
   "practiceTags": {
