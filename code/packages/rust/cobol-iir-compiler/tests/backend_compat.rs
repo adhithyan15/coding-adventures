@@ -170,6 +170,27 @@ fn level_88_condition_name_program_accepted_by_print_backends() {
 }
 
 #[test]
+fn level_88_multi_value_range_program_accepted_by_print_backends() {
+    // A multi-value + THRU-range condition-name lowers to an OR-fold of `cmp_eq`
+    // and `and(cmp_ge, cmp_le)`. This is the first COBOL program to emit the `and`
+    // / `or` bitwise ops — every print backend must accept them.
+    let src = program(&[
+        "IDENTIFICATION DIVISION.",
+        "PROGRAM-ID. P.",
+        "DATA DIVISION.",
+        "WORKING-STORAGE SECTION.",
+        "01  N  PIC 99 VALUE 6.",
+        "88  COND  VALUE 1 5 THRU 7 9.",
+        "PROCEDURE DIVISION.",
+        "MAIN.",
+        "    IF COND DISPLAY \"Y\" ELSE DISPLAY \"N\".",
+        "    STOP RUN.",
+    ]);
+    let m = compile_source(&src, "c88r").unwrap();
+    assert_accepted_by_print_backends(&m, "level-88 multi-value/range");
+}
+
+#[test]
 fn scaled_multiply_divide_program_accepted_by_print_backends() {
     // Scaled MULTIPLY and DIVIDE (with ROUNDED) exercise the dividend up-scale
     // (mul by 10^e), the div, and the store rescale/rounding branches. Every

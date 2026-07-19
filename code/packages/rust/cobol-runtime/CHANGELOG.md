@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.15.0 — level-88 multiple values and `THRU` ranges
+
+- A `VALUE` clause now parses into a `Vec<ValueSpec>` (`Single(Lit)` |
+  `Range(Lit, Lit)`); `DataDef.value: Option<Lit>` becomes `DataDef.values`. A
+  level-88 condition-name holds when its conditional variable equals **any** single
+  value or falls within **any** inclusive `THRU` range
+  (`88 OK VALUE 1 5 THRU 7 9`). A plain item must still carry exactly one single
+  value — a multi-value or range `VALUE` on a non-88 item is a clean `Unsupported`
+  error. Still numeric-variable-only; alphanumeric conditional variables remain a
+  later rung.
+
 ## 0.14.0 — level-88 condition-names
 
 - A `88 NAME VALUE lit.` entry now registers a boolean condition-name bound to the

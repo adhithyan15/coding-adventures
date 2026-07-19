@@ -90,7 +90,13 @@ data_entry  = NUMBER ( NAME | "FILLER" ) { data_clause } DOT ;
 data_clause = picture_clause | value_clause ;
 
 picture_clause = ( "PICTURE" | "PIC" ) PIC_STRING ;
-value_clause   = "VALUE" [ "IS" ] literal ;
+
+# A VALUE clause is one or more value-items.  A plain item's VALUE is a single
+# literal; a level-88 condition-name may list several values and `THRU` ranges
+# (`88 OK VALUE 1 THRU 5 9`).  The grammar is permissive — the interpreter and
+# compiler reject a multi/range VALUE on a non-88 item.
+value_clause = "VALUE" [ "IS" ] value_item { value_item } ;
+value_item   = literal [ ( "THRU" | "THROUGH" ) literal ] ;
 
 # ============================================================
 # PROCEDURE DIVISION

@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.7.0 — `VALUE` clause: multiple values and `THRU` ranges
+
+- `value_clause = "VALUE" [ "IS" ] value_item { value_item }` with
+  `value_item = literal [ ( "THRU" | "THROUGH" ) literal ]`. A plain item still
+  parses a single literal; a level-88 condition-name may now list several values
+  and inclusive ranges (`88 OK VALUE 1 5 THRU 7 9`). `THRU`/`THROUGH` were already
+  reserved words, so no lexer change. The grammar is permissive — the interpreter
+  and compiler reject a multi-value/range `VALUE` on a non-88 item.
+- `_grammar.rs` regenerated from `cobol.grammar` via `grammar-tools compile-grammar`.
+
 ## 0.6.0 — level-88 condition-names in `IF` / `PERFORM UNTIL`
 
 - `condition` becomes an ordered choice `relation | condition_name`, where

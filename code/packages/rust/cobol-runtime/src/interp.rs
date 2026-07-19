@@ -4,7 +4,7 @@
 use crate::error::RuntimeError;
 use crate::picture::Picture;
 use crate::program::{
-    ArithOp, Cond, Expr, Fig, Lit, Operand, Paragraph, PerformMode, Program, RelOp, Stmt,
+    ArithOp, Cond, Expr, Fig, Lit, Operand, Paragraph, PerformMode, Program, RelOp, Stmt, ValueSpec,
 };
 use crate::value::{add, div, move_into_char, move_into_numeric, mul, pow, round, sub, Decimal};
 use std::collections::HashMap;
@@ -76,6 +76,21 @@ fn checked(r: Option<Decimal>) -> Result<Decimal, RuntimeError> {
     r.ok_or_else(|| RuntimeError::Unsupported("arithmetic overflow (result exceeds ~38 digits)".into()))
 }
 
+/// The numeric value of a level-88 `VALUE` literal: a numeric literal or `ZERO`.
+/// A non-numeric value (string / other figurative) against a numeric variable is
+/// a later rung.
+fn num_value(lit: &Lit) -> Result<Decimal, RuntimeError> {
+    match lit {
+        Lit::Num(s) => {
+            Decimal::parse_literal(s).ok_or_else(|| RuntimeError::Unsupported(format!("VALUE {s}")))
+        }
+        Lit::Fig(Fig::Zero) => Ok(Decimal::zero()),
+        _ => Err(RuntimeError::Unsupported(
+            "a level-88 VALUE that is not numeric on a numeric item is a later rung".into(),
+        )),
+    }
+}
+
 /// The character form of a source value for an alphanumeric comparison (a
 /// figurative yields `""` here — it is expanded to the other operand's length
 /// by the caller).
@@ -135,11 +150,11 @@ pub struct Machine {
 }
 
 /// A level-88 condition-name: the index of the item it qualifies (its
-/// "conditional variable") and the single value that makes it true. Multiple
-/// values and `THRU` ranges are a later rung.
+/// "conditional variable") and the value-set that makes it true. The name holds
+/// when the variable equals any single value or falls within any `THRU` range.
 struct ConditionName {
     var: usize,
-    value: Lit,
+    values: Vec<ValueSpec>,
 }
 
 impl Machine {
@@ -178,13 +193,14 @@ impl Machine {
                 let name = def.name.clone().ok_or_else(|| {
                     RuntimeError::Unsupported("a level-88 entry needs a condition-name".into())
                 })?;
-                let value = def.value.clone().ok_or_else(|| {
-                    RuntimeError::Unsupported("a level-88 entry needs a VALUE".into())
-                })?;
+                if def.values.is_empty() {
+                    return Err(RuntimeError::Unsupported("a level-88 entry needs a VALUE".into()));
+                }
+                let values = def.values.clone();
                 let var = self.items.len().checked_sub(1).ok_or_else(|| {
                     RuntimeError::Unsupported("a level-88 entry must follow an item".into())
                 })?;
-                if self.conditions.insert(name.clone(), ConditionName { var, value }).is_some() {
+                if self.conditions.insert(name.clone(), ConditionName { var, values }).is_some() {
                     return Err(RuntimeError::DuplicateName(name));
                 }
                 continue;
@@ -248,10 +264,20 @@ impl Machine {
                 stack.push(idx);
             }
 
-            // Apply a VALUE clause as an initialising MOVE.
-            if let Some(lit) = &def.value {
-                let src = self.src_from_lit(lit)?;
-                self.move_into(idx, src)?;
+            // Apply a VALUE clause as an initialising MOVE. A plain item's VALUE
+            // is a single literal; multiple values and `THRU` ranges are only
+            // meaningful on a level-88 condition-name.
+            match def.values.as_slice() {
+                [] => {}
+                [ValueSpec::Single(lit)] => {
+                    let src = self.src_from_lit(lit)?;
+                    self.move_into(idx, src)?;
+                }
+                _ => {
+                    return Err(RuntimeError::Unsupported(
+                        "a multi-value or THRU-range VALUE is only allowed on a level-88 entry".into(),
+                    ))
+                }
             }
         }
         Ok(())
@@ -494,36 +520,35 @@ impl Machine {
         }
     }
 
-    /// Evaluate a level-88 condition-name: is its conditional variable equal to
-    /// the value that makes it true? This rung compares a **numeric** variable
-    /// against a numeric value; an alphanumeric conditional variable is a later
-    /// rung (a clean error, never a wrong answer).
+    /// Evaluate a level-88 condition-name: does its conditional variable equal any
+    /// single value, or fall within any inclusive `THRU` range? This rung compares
+    /// a **numeric** variable against numeric values; an alphanumeric conditional
+    /// variable is a later rung (a clean error, never a wrong answer).
     fn eval_condition_name(&self, name: &str) -> Result<bool, RuntimeError> {
         let cn = self
             .conditions
             .get(name)
             .ok_or_else(|| RuntimeError::UndefinedName(name.to_string()))?;
         let item = &self.items[cn.var];
-        match &item.picture {
-            Some(p) if p.is_numeric() => {
-                let lhs = self.item_as_decimal(cn.var);
-                let rhs = match &cn.value {
-                    Lit::Num(s) => Decimal::parse_literal(s)
-                        .ok_or_else(|| RuntimeError::Unsupported(format!("VALUE {s}")))?,
-                    Lit::Fig(Fig::Zero) => Decimal::zero(),
-                    _ => {
-                        return Err(RuntimeError::Unsupported(
-                            "a level-88 VALUE that is not numeric on a numeric item is a later rung"
-                                .into(),
-                        ))
-                    }
-                };
-                Ok(lhs.cmp_value(&rhs) == std::cmp::Ordering::Equal)
-            }
-            _ => Err(RuntimeError::Unsupported(
+        if !item.picture.as_ref().is_some_and(|p| p.is_numeric()) {
+            return Err(RuntimeError::Unsupported(
                 "a level-88 condition-name on a non-numeric item is a later rung".into(),
-            )),
+            ));
         }
+        let lhs = self.item_as_decimal(cn.var);
+        for spec in &cn.values {
+            let hit = match spec {
+                ValueSpec::Single(lit) => lhs.cmp_value(&num_value(lit)?) == std::cmp::Ordering::Equal,
+                ValueSpec::Range(lo, hi) => {
+                    lhs.cmp_value(&num_value(lo)?) != std::cmp::Ordering::Less
+                        && lhs.cmp_value(&num_value(hi)?) != std::cmp::Ordering::Greater
+                }
+            };
+            if hit {
+                return Ok(true);
+            }
+        }
+        Ok(false)
     }
 
     fn eval_relation(
