@@ -215,6 +215,10 @@
       "ES-VERB-IR": "ir — 'to go' (most suppletive: infinitive ← īre, present voy/vas/va/vamos/van ← vādere → invade/evade; go/went trick)",
       "ES-NEAR-FUTURE": "ir a + infinitive — the 'going-to' future (voy a hablar = I'm going to speak); a ← ad; mirrors English/French",
       "ES-POSSESSIVE": "mi/tu/su (+ mis/tus/sus) — possessives ← meus/tuus/suus → my/thy; agree in NUMBER not gender; tu 'your' vs tú 'you'",
+      "ES-VERB-QUERER": "querer — 'to want/love' (e→ie stem-changer: quiero/quieres…queremos; ← quaerere 'seek' → query/quest/conquer)",
+      "ES-VERB-PODER": "poder — 'to be able/can' (o→ue stem-changer: puedo/puedes…podemos; ← potēre → power/potent/possible; poder+inf)",
+      "ES-STEM-CHANGES": "e→ie & o→ue stem-changes — one sound-law (stressed short e/o broke: terra→tierra, porta→puerta); the 'boot' (all but nosotros)",
+      "ES-POSSESSIVE-OUR": "nuestro/vuestro — 'our/your-pl' (← noster/voster → Paternoster); agree in BOTH gender & number, unlike mi/tu/su",
       "IT-VERB-STARE": "stare — 'to be' (state; ← Latin stare 'to stand', = Spanish estar); drives 'come stai?'",
       "IT-VERB-PARLARE": "parlare — 'to speak' (← parabolāre = French parler; the regular -are present)",
       "IT-VERB-ABITARE": "abitare — 'to live/dwell' (← habitāre → habitat; twin of French habiter)",
@@ -264,6 +268,6 @@
     }
   },
   "practiceTags": {
-    "note": "Non-word lessons (type: review | practice-mix | writing) carry a session/orthography label, not a concept, and are exempt from the cross-language join. Existing labels: CH1-PRACTICE, CH2-PRACTICE, CH3-PRACTICE, CH4-PRACTICE, CH9-PRACTICE, CH10-PRACTICE, REVIEW."
+    "note": "Non-word lessons (type: review | practice-mix | writing) carry a session/orthography label, not a concept, and are exempt from the cross-language join. Existing labels: CH1-PRACTICE, CH2-PRACTICE, CH3-PRACTICE, CH4-PRACTICE, CH9-PRACTICE, CH10-PRACTICE, CH11-PRACTICE, REVIEW."
   }
 }

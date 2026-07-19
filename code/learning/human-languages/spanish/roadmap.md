@@ -72,10 +72,18 @@ order lives in the book, which LaTeX auto-numbers, and in `session-map.md`.)
   **number** not gender; *tu* vs *tú*) → practice. **Authored** — the course now
   runs on rules, not phrases.
 
-Next: **Ch. 11** — *querer/poder* (stem-changing verbs; wants & ability) and more
-possessives (*nuestro*), building toward everyday description. From here the course
-hands over rules, not phrases. Grammar accumulates piece by piece. The theme
-skeleton below plans the wider road.
+- **Ch. 11 — Wants, ability, and the stem-change boot**: **querer** ("to want," ←
+  *quaerere* "seek" → query/quest/conquer; the **e→ie** stem-changer) → **poder**
+  ("to be able," ← *potēre* → power/potent/possible; the **o→ue** stem-changer, +
+  *poder* + infinitive) → the two cracks side by side (one sound-law: stressed short
+  *e→ie*, *o→ue*; *tierra*, *puerta*; the "boot") → **nuestro/vuestro** (← *noster/
+  voster* → Paternoster; agrees in **gender and number**, unlike *mi/tu/su*) →
+  practice. **Authored.**
+
+Next: **Ch. 12** — the rest of the high-frequency verbs (*hacer, decir, ir*
+irregulars) and more description, building toward everyday conversation. From here
+the course hands over rules, not phrases. Grammar accumulates piece by piece. The
+theme skeleton below plans the wider road.
 
 ## Theme Skeleton (planning only)
 
