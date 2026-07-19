@@ -2,6 +2,123 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2026-07-19
+
+### Added
+
+The SIR22 spec's "APL addendum" — `Reduce`/`Scan`/`OuterProduct`/`Shape`/
+`Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate` — deferred since this
+package's 0.1.0 release because no frontend crate emitted these nine `Expr`
+variants yet. That is no longer true: `apl-to-semantic-ir` genuinely lowers
+APL's `/` (reduce), `\` (scan), `∘.` (outer product), `⍴`, `⍳`, and `,`
+glyphs to these nine nodes, and `semantic-ir-to-javascript` (the sibling
+backend, which inlines its own copy of this logic rather than importing this
+package) already shipped real codegen for all nine — see that crate's "SIR22
+APL-addendum codegen" PR (#8595). That already-merged, already-reviewed,
+already-tested port is the primary reference this release mechanically
+ports into real TypeScript source, split across this package's existing
+module-per-concern convention rather than one new giant file. The two Rust
+crates those nine primitives were originally derived from
+(`array_runtime::ops::{reduce,scan,outer}` and `apl_runtime::builtins::
+{shape,reshape,index_generator,index_of,ravel,catenate}`) were read directly
+as well, for the authoritative edge-case semantics the JS port's own
+comments reference.
+
+- **`reduce(op, a)` / `scan(op, a)`** (`src/reduce.ts`) — `+/A`/`+\A`, folding
+  `a` with an arbitrary `ElementwiseOpKind` along its one axis (`reduce`) or
+  keeping every intermediate result (`scan`). Both reuse this package's own
+  `applyOp` (now exported from `elementwise.ts`, not duplicated into a second
+  dispatch switch) for the op application itself. Rank 0 folds to itself;
+  rank 1 is a left fold (`reduce`) or a running fold (`scan`); rank 2 folds
+  **each row** independently across its columns. `reduce` on an empty vector
+  or an empty matrix row is a clean error (no identity element exists for an
+  arbitrary op); `scan` on an empty vector is simply an empty result, not an
+  error. The rank-2 branch's column-major row-fold indexing
+  (`d[col * r + row]`, never `d[row * c + col]`) is the single easiest place
+  to introduce a silent wrong-answer bug in this whole release — a swapped
+  index would produce a plausible-but-transposed result rather than
+  crashing, so it's called out explicitly in both the doc comments and a
+  dedicated regression test.
+- **`outer(op, a, b)`** (`src/outer.ts`) — `A∘.×B`, applying `op` to every
+  pair `(aᵢ, bⱼ)`. Scalar⊗scalar/scalar⊗vector/vector⊗vector, scoped to
+  `rank(a) ≤ 1` and `rank(b) ≤ 1` (the vector⊗vector case already reaches
+  this package's rank-2 ceiling). `m`/`n` are two independent operand
+  lengths; `checkedShapeSize([m, n])` validates the output shape before
+  allocating, since neither length alone bounds their product (an
+  outer-product-shaped call can still request an absurd output even with
+  small individual operands — the same class of gap `matmul`'s own
+  bounded-allocation check closes).
+- **`shape(a)` / `reshape(shapeArg, target)`** (`src/shape.ts`) — monadic and
+  dyadic `⍴`. `shape` returns `a`'s dimensions as a vector (a scalar's shape
+  is the *empty* vector, not a scalar). `reshape` cyclically repeats or
+  truncates `target`'s ravelled elements to fill `shapeArg`'s dimensions.
+  **Correctness trap preserved from the JS port**: the cyclic fill runs in
+  ROW-major order (APL's convention), but this package's storage is
+  COLUMN-major, so a rank-2 target requires transposing the row-major fill
+  into column-major storage (`data[col * r + row] = filled[row * c + col]`)
+  — handing the row-major fill straight to `ndarray` would silently produce
+  the right multiset of values in the wrong positions. A dedicated test
+  constructs exactly this case and confirms the correct (non-transposed)
+  positions.
+- **`indexGenerator(a)` / `indexOf(haystack, needle)`** (`src/iota.ts`) —
+  monadic and dyadic `⍳`. `indexGenerator` produces the **1-based** vector
+  `[1, 2, …, n]` — genuinely 1-based at APL's surface-syntax level, unlike
+  every other index in this package (`indexGet`/`indexSet` are 0-based).
+  `indexOf` returns, for each element of `needle`, its 1-based position in
+  `haystack` (or `haystack.length + 1` if not found). **Security**: `indexOf`
+  does O(len(haystack) × len(needle)) work — a full scan per needle element
+  — so `checkedShapeSize([haystack.data.length, needle.data.length])` caps
+  the *product* before scanning, not each operand's length individually;
+  neither operand alone need be oversized for the work to be.
+- **`ravel(a)` / `catenate(a, b)`** (`src/ravel.ts`) — monadic and dyadic `,`.
+  `ravel` flattens `a` to a rank-1 vector in row-major order via the new
+  `flattenRowMajor` helper (exported from `ravel.ts`, reused by `reshape`).
+  `catenate` supports scalar/vector combinations (producing a vector) and
+  matrix-with-equal-row-counts (column catenate, producing `[r, ca + cb]`).
+  **Security**: the combined-length cap
+  (`checkedShapeSize([a.data.length + b.data.length])`) runs *before* any
+  rank-dispatch, on every call — a script that repeatedly catenates a value
+  with itself doubles the size each time with no other ceiling, so the check
+  must re-run per call rather than being satisfiable once.
+- `applyOp` (in `elementwise.ts`) is now exported, not file-private — the
+  one op-dispatch table `reduce`/`scan`/`outer` import directly instead of
+  reintroducing a second copy of the same switch statement.
+- `index.ts`'s "Deliberately out of scope" doc-comment section is replaced
+  with a "The SIR22 'APL addendum' is now implemented" section, mirroring
+  how `semantic-ir-to-javascript`'s own module doc comment was updated when
+  it made the identical port.
+- 44 new tests (108 total, up from 64), covering every rank case each
+  function documents supporting, the empty-vector/empty-row `reduce` error,
+  the 1-based `indexGenerator`, an adversarial reshape test that would fail
+  with a plausible-but-wrong transposed answer if the row-major/column-major
+  transpose were backwards, and both bounded-allocation checks (`indexOf`'s
+  product cap via two cheap 8,200-element buffers whose product exceeds
+  `MAX_ELEMENTS`; `catenate`'s combined-length cap via two real, if
+  zero-filled and therefore cheap to allocate, ~33.5M-element buffers).
+  100% statement/branch/function/line coverage maintained.
+
+### Not included (deliberate scope decisions, not oversights)
+
+- **No display/auto-print formatting helper.** The JS backend's inlined
+  port needed one (`ArrayRt.display`/`fmtNum`, a 1:1 port of
+  `apl_runtime::value::display`) because APL auto-prints a bare top-level
+  expression and has no bracket-indexing syntax to read a value back with
+  instead — `semantic-ir-to-javascript` had nowhere else to route a
+  computed array's display through. Checked whether
+  `semantic-ir-to-typescript` has the identical problem: it does not — that
+  backend does not yet consume any APL-sourced module at all (wiring codegen
+  for these nine nodes is the separate follow-up below), so there is no real
+  consumer to build a display convention for yet. Adding one now would be
+  exactly the same "speculative, not filling a real gap" mistake this
+  package originally avoided by deferring the nine addendum nodes
+  themselves in 0.1.0.
+- **`semantic-ir-to-typescript` codegen wiring is explicitly out of scope
+  for this release.** That backend's own `find_unimplemented_sir22_addendum_
+  node` tree-walk still rejects a module using any of these nine nodes,
+  unchanged by this package gaining them — this release only makes the
+  primitives available for a future codegen PR to call, mirroring exactly
+  how this package's 0.1.0 base cut preceded its own consumer.
+
 ## [0.2.0] - 2026-07-17
 
 This package went from "built but unconsumed" to actually imported —

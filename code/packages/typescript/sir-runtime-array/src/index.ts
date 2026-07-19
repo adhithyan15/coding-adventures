@@ -37,23 +37,56 @@
  * - **`indexGet`/`indexSet`** (`./indexing`) — `A(i)`/`A(i,j)` read and
  *   in-place write, covering the SIR22 spec's `Scalar`/`Whole`/`Range`
  *   `IndexArg` shapes.
+ * - **`reduce`/`scan`** (`./reduce`) and **`outer`** (`./outer`) — the SIR22
+ *   "APL addendum"'s three `ElementwiseOpKind`-parameterized adverbs (`+/A`,
+ *   `+\A`, `A∘.×B`), mirroring `array_runtime::ops::{reduce,scan,outer}`
+ *   exactly, including their column-major row/column-fold indexing.
+ * - **`shape`/`reshape`** (`./shape`), **`indexGenerator`/`indexOf`**
+ *   (`./iota`), and **`ravel`/`catenate`** (`./ravel`) — the SIR22 addendum's
+ *   six "bespoke" (non-`BinOp`-shaped) APL primitives (`⍴`, `⍳`, `,`),
+ *   mirroring `apl_runtime::builtins::{shape,reshape,index_generator,
+ *   index_of,ravel,catenate}` exactly, including `reshape`'s row-major-fill
+ *   transposed into column-major storage and `indexGenerator`'s 1-based
+ *   (not 0-based) result.
+ *
+ * ## The SIR22 "APL addendum" is now implemented
+ *
+ * `Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/
+ * `IndexOf`/`Ravel`/`Catenate` were deferred when this package first shipped
+ * (0.1.0) — no frontend crate emitted these nine `Expr` variants yet at the
+ * time. That is no longer true: `apl-to-semantic-ir` genuinely lowers APL's
+ * `/` (reduce), `\` (scan), `∘.` (outer product), `⍴`, `⍳`, and `,` glyphs
+ * to these nine nodes, and `semantic-ir-to-javascript` (the sibling backend,
+ * which inlines its own copy of this same logic rather than importing this
+ * package) already ported all nine into real codegen — see that crate's
+ * "SIR22 APL-addendum codegen" PR. This package now carries the identical
+ * port, so a future `semantic-ir-to-typescript` codegen PR wiring
+ * `__SirArray.reduce(...)`/`.scan(...)`/`.outer(...)`/`.shape(...)`/
+ * `.reshape(...)`/`.indexGenerator(...)`/`.indexOf(...)`/`.ravel(...)`/
+ * `.catenate(...)` call sites only has to *wire up calls*, exactly the same
+ * "runtime lands before its codegen consumer" pattern this whole package
+ * followed for the base cut. That wiring is a separate, not-yet-started
+ * follow-up — `semantic-ir-to-typescript` itself still rejects a module
+ * using any of these nine nodes via its own
+ * `find_unimplemented_sir22_addendum_node` tree-walk, unchanged by this
+ * package gaining them.
  *
  * ## Deliberately out of scope
  *
- * The SIR22 spec's "APL addendum" `Expr` variants (`Reduce`/`Scan`/
- * `OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/
- * `Catenate`) are **not** implemented here, even though `array_runtime::ops`
- * already has Rust reference implementations for `reduce`/`scan`/`outer` —
- * no frontend crate emits these nine `Expr` variants yet (per that spec's
- * own "No frontend crate consumes any of these nine variants yet" note), so
- * porting them now would be speculative rather than filling a real gap.
- * They are a natural, cleanly-scoped follow-up once `apl-to-semantic-ir`'s
- * own JS-backend consumption needs them.
- *
- * `Complex`/`Rational` scalar support (shared `SirType`s with SIR23) is also
- * out of scope — `transpose`'s `conjugate` flag is accepted for API-shape
+ * `Complex`/`Rational` scalar support (shared `SirType`s with SIR23) is out
+ * of scope — `transpose`'s `conjugate` flag is accepted for API-shape
  * parity with the spec but is a no-op today, matching `array-runtime`'s own
- * real-only scope.
+ * real-only scope. No operation in this package (including the nine above)
+ * is defined beyond rank ≤ 2, matching every Rust reference's own ceiling.
+ * A display/auto-print formatter (`apl_runtime::value::display`'s
+ * equivalent) is also not included here — unlike `semantic-ir-to-javascript`
+ * (which needs one because APL auto-prints a bare top-level expression and
+ * has no bracket-indexing syntax to read a value back with instead),
+ * `semantic-ir-to-typescript` does not yet consume any APL-sourced module at
+ * all, so there is no real consumer to build a display convention for yet —
+ * adding one now would be exactly the same "speculative, not filling a real
+ * gap" mistake this package originally avoided by deferring the nine
+ * addendum nodes themselves.
  */
 
 export { ndarray, checkedShapeSize, scalar, fromVec, fromRows, zeros, ndims, isScalar, nrows, ncols, get, set, MAX_ELEMENTS, type NDArray } from "./ndarray.js";
@@ -62,3 +95,8 @@ export { matmul } from "./matmul.js";
 export { transpose } from "./transpose.js";
 export { range } from "./range.js";
 export { indexGet, indexSet, type IndexArg } from "./indexing.js";
+export { reduce, scan } from "./reduce.js";
+export { outer } from "./outer.js";
+export { shape, reshape } from "./shape.js";
+export { indexGenerator, indexOf } from "./iota.js";
+export { ravel, catenate } from "./ravel.js";

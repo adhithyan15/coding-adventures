@@ -523,3 +523,419 @@ describe("indexGet / indexSet", () => {
     expect(() => arr.set(a, 0, NaN, 9)).toThrow(/out of bounds/);
   });
 });
+
+// ── SIR22 addendum: APL primitive operators ─────────────────────────────
+//
+// `reduce`/`scan`/`outer`/`shape`/`reshape`/`indexGenerator`/`indexOf`/
+// `ravel`/`catenate` — ported from `array_runtime::ops::{reduce,scan,outer}`
+// and `apl_runtime::builtins::{shape,reshape,index_generator,index_of,
+// ravel,catenate}`, by way of `semantic-ir-to-javascript`'s own already-
+// merged, already-reviewed inlined port of the same nine functions (see
+// that crate's "SIR22 APL-addendum codegen" PR). Every rank case each
+// function documents supporting gets its own test, plus the two named
+// correctness traps (column-major reduce/scan row-folding, and reshape's
+// row-major-fill-transposed-into-column-major-storage requirement) and the
+// two bounded-allocation checks (indexOf's O(len*len) product cap,
+// catenate's combined-length cap).
+
+describe("reduce / scan", () => {
+  it("reduce/scan of a scalar is the scalar itself (nothing to fold)", () => {
+    const s = arr.scalar(7);
+    expect(Array.from(arr.reduce("Add", s).data)).toEqual([7]);
+    expect(Array.from(arr.scan("Add", s).data)).toEqual([7]);
+  });
+
+  it("reduce folds a vector left-to-right", () => {
+    const v = arr.fromVec([1, 2, 3, 4]);
+    // +/v = ((1+2)+3)+4 = 10
+    const r = arr.reduce("Add", v);
+    expect(arr.isScalar(r)).toBe(true);
+    expect(Array.from(r.data)).toEqual([10]);
+    // ×/v = ((1×2)×3)×4 = 24
+    expect(Array.from(arr.reduce("Mul", v).data)).toEqual([24]);
+  });
+
+  it("scan keeps every running fold, same shape as the input", () => {
+    const v = arr.fromVec([1, 2, 3, 4]);
+    // +\v = [1, 1+2, 1+2+3, 1+2+3+4] = [1, 3, 6, 10]
+    const s = arr.scan("Add", v);
+    expect(s.shape).toEqual([4]);
+    expect(Array.from(s.data)).toEqual([1, 3, 6, 10]);
+  });
+
+  it("reduce folds each row of a matrix across its columns (the column-major indexing trap)", () => {
+    // [[1,2,3],[4,5,6]] (2x3): row0 -> 1+2+3=6, row1 -> 4+5+6=15. The
+    // backing store is column-major ([1,4,2,5,3,6], per `fromRows`'s own
+    // test above) — a row/col-swapped indexing bug in the fold (reading
+    // `d[row * c + col]` instead of the correct `d[col * r + row]`) would
+    // silently produce [7, 14] instead: a plausible-looking but WRONG
+        // answer, not a crash, which is exactly why this needs its own test
+    // rather than trusting the code reads correctly.
+    const m = arr.fromRows([
+      [1, 2, 3],
+      [4, 5, 6],
+    ]);
+    const r = arr.reduce("Add", m);
+    expect(r.shape).toEqual([2]);
+    expect(Array.from(r.data)).toEqual([6, 15]);
+  });
+
+  it("scan scans each row of a matrix independently across its columns", () => {
+    // [[1,2,3],[4,5,6]]: row0 running sums [1,3,6], row1 [4,9,15].
+    const m = arr.fromRows([
+      [1, 2, 3],
+      [4, 5, 6],
+    ]);
+    const s = arr.scan("Add", m);
+    expect(s.shape).toEqual([2, 3]);
+    expect(arr.get(s, 0, 0)).toBe(1);
+    expect(arr.get(s, 0, 1)).toBe(3);
+    expect(arr.get(s, 0, 2)).toBe(6);
+    expect(arr.get(s, 1, 0)).toBe(4);
+    expect(arr.get(s, 1, 1)).toBe(9);
+    expect(arr.get(s, 1, 2)).toBe(15);
+  });
+
+  it("reduce/scan work with Max, not just Add/Mul (generic over any ElementwiseOpKind)", () => {
+    const v = arr.fromVec([3, 7, 2, 9, 4]);
+    expect(Array.from(arr.reduce("Max", v).data)).toEqual([9]);
+    expect(Array.from(arr.scan("Max", v).data)).toEqual([3, 7, 7, 9, 9]);
+  });
+
+  it("reduce rejects an empty vector or an empty matrix row (no identity element for an arbitrary op)", () => {
+    const emptyVec = arr.fromVec([]);
+    expect(() => arr.reduce("Add", emptyVec)).toThrow(/cannot fold an empty vector/);
+    expect(() => arr.reduce("Mul", emptyVec)).toThrow(/cannot fold an empty vector/);
+
+    const emptyRowMatrix = arr.ndarray([2, 0], new Float64Array(0));
+    expect(() => arr.reduce("Add", emptyRowMatrix)).toThrow(/cannot fold an empty row/);
+  });
+
+  it("scan of an empty vector is an empty vector, not an error", () => {
+    const empty = arr.fromVec([]);
+    const s = arr.scan("Add", empty);
+    expect(s.shape).toEqual([0]);
+    expect(s.data.length).toBe(0);
+  });
+
+  it("reduce/scan reject rank > 2", () => {
+    const cube = arr.ndarray([2, 2, 2], new Float64Array(8));
+    expect(() => arr.reduce("Add", cube)).toThrow(/rank > 2 not yet supported/);
+    expect(() => arr.scan("Add", cube)).toThrow(/rank > 2 not yet supported/);
+  });
+});
+
+describe("outer", () => {
+  it("scalar outer scalar is a scalar", () => {
+    const r = arr.outer("Mul", arr.scalar(6), arr.scalar(7));
+    expect(arr.isScalar(r)).toBe(true);
+    expect(Array.from(r.data)).toEqual([42]);
+  });
+
+  it("scalar outer vector broadcasts, either side", () => {
+    const v = arr.fromVec([1, 2, 3]);
+    const r1 = arr.outer("Mul", arr.scalar(10), v);
+    expect(r1.shape).toEqual([3]);
+    expect(Array.from(r1.data)).toEqual([10, 20, 30]);
+
+    const r2 = arr.outer("Mul", v, arr.scalar(10));
+    expect(Array.from(r2.data)).toEqual([10, 20, 30]);
+  });
+
+  it("vector outer vector is a rank-sum matrix", () => {
+    // [1,2,3] outer-x [10,100] = [[10,100],[20,200],[30,300]] (3x2).
+    const a = arr.fromVec([1, 2, 3]);
+    const b = arr.fromVec([10, 100]);
+    const r = arr.outer("Mul", a, b);
+    expect(r.shape).toEqual([3, 2]);
+    expect(arr.get(r, 0, 0)).toBe(10);
+    expect(arr.get(r, 0, 1)).toBe(100);
+    expect(arr.get(r, 1, 0)).toBe(20);
+    expect(arr.get(r, 1, 1)).toBe(200);
+    expect(arr.get(r, 2, 0)).toBe(30);
+    expect(arr.get(r, 2, 1)).toBe(300);
+  });
+
+  it("outer Add matches manual pairwise sums", () => {
+    const a = arr.fromVec([1, 2]);
+    const b = arr.fromVec([100, 200, 300]);
+    const r = arr.outer("Add", a, b);
+    expect(r.shape).toEqual([2, 3]);
+    for (let i = 0; i < 2; i++) {
+      for (let j = 0; j < 3; j++) {
+        expect(arr.get(r, i, j)).toBe(a.data[i] + b.data[j]);
+      }
+    }
+  });
+
+  it("outer rejects operands of rank > 1", () => {
+    const m = arr.fromRows([
+      [1, 2],
+      [3, 4],
+    ]);
+    const v = arr.fromVec([1, 2]);
+    expect(() => arr.outer("Add", m, v)).toThrow(/rank > 1 not yet supported/);
+    expect(() => arr.outer("Add", v, m)).toThrow(/rank > 1 not yet supported/);
+  });
+
+  it("outer of an empty vector operand is an empty result, not an error", () => {
+    const empty = arr.fromVec([]);
+    const v = arr.fromVec([1, 2, 3]);
+    const r = arr.outer("Mul", empty, v);
+    expect(r.shape).toEqual([0, 3]);
+    expect(r.data.length).toBe(0);
+  });
+
+  it("an outer-product call whose output would exceed MAX_ELEMENTS is a clean error, not an OOM", () => {
+    // Each operand is individually tiny (its actual `data` is length 1);
+    // only the claimed shape's PRODUCT (m * n) is absurd. Proves the output
+    // shape is validated (`checkedShapeSize`) before `outer` ever allocates
+    // `out`, not after — the same allocate-after-validate ordering
+    // `matmul`'s own equivalent test proves.
+    const a: arr.NDArray = { shape: [100000], data: new Float64Array(1) };
+    const b: arr.NDArray = { shape: [100000], data: new Float64Array(1) };
+    expect(() => arr.outer("Mul", a, b)).toThrow(/exceeds/);
+  });
+});
+
+describe("shape / reshape", () => {
+  it("shape of a scalar is the empty vector, not a scalar", () => {
+    // ⍴5 is ⍳0-shaped: a length-0 vector, not a length-1 one.
+    const s = arr.shape(arr.scalar(7));
+    expect(s.shape).toEqual([0]);
+    expect(s.data.length).toBe(0);
+  });
+
+  it("shape of a vector and a matrix", () => {
+    expect(Array.from(arr.shape(arr.fromVec([1, 2, 3])).data)).toEqual([3]);
+    const m = arr.fromRows([
+      [1, 2, 3],
+      [4, 5, 6],
+    ]);
+    expect(Array.from(arr.shape(m).data)).toEqual([2, 3]);
+  });
+
+  it("reshape cycles a shorter source, filling in ROW-major order (the correctness trap)", () => {
+    // 2 3⍴1 2 -- cycles [1, 2] to fill 6 elements, row-major fill order:
+    // row0 = [1, 2, 1], row1 = [2, 1, 2]. Getting the row-major-fill-
+    // transposed-into-column-major-storage step backwards here would
+    // silently produce row0 = [1, 1, 1], row1 = [2, 2, 2] instead — the
+    // right multiset of values, in the WRONG positions, which is exactly
+    // the plausible-but-wrong failure mode this test exists to catch.
+    const shapeArg = arr.fromVec([2, 3]);
+    const source = arr.fromVec([1, 2]);
+    const r = arr.reshape(shapeArg, source);
+    expect(r.shape).toEqual([2, 3]);
+    expect(arr.get(r, 0, 0)).toBe(1);
+    expect(arr.get(r, 0, 1)).toBe(2);
+    expect(arr.get(r, 0, 2)).toBe(1);
+    expect(arr.get(r, 1, 0)).toBe(2);
+    expect(arr.get(r, 1, 1)).toBe(1);
+    expect(arr.get(r, 1, 2)).toBe(2);
+  });
+
+  it("reshape truncates a longer source", () => {
+    // 2 2⍴1 2 3 4 5 6 -- only the first 4 elements are used.
+    const shapeArg = arr.fromVec([2, 2]);
+    const source = arr.fromVec([1, 2, 3, 4, 5, 6]);
+    const r = arr.reshape(shapeArg, source);
+    expect(r.shape).toEqual([2, 2]);
+    expect(arr.get(r, 0, 0)).toBe(1);
+    expect(arr.get(r, 0, 1)).toBe(2);
+    expect(arr.get(r, 1, 0)).toBe(3);
+    expect(arr.get(r, 1, 1)).toBe(4);
+  });
+
+  it("reshape into a rank <= 1 target needs no row-major/column-major transpose", () => {
+    // Rank <= 1 is the branch where row-major and column-major coincide --
+    // `filled` is handed straight to `ndarray` with no transpose step.
+    const shapeArg = arr.fromVec([4]);
+    const source = arr.fromVec([1, 2]);
+    const r = arr.reshape(shapeArg, source);
+    expect(r.shape).toEqual([4]);
+    expect(Array.from(r.data)).toEqual([1, 2, 1, 2]);
+  });
+
+  it("reshape rejects a rank > 1 shape argument", () => {
+    const shapeArg = arr.fromRows([[2, 2]]);
+    const source = arr.fromVec([1]);
+    expect(() => arr.reshape(shapeArg, source)).toThrow(/must be a scalar or vector/);
+  });
+
+  it("reshape rejects negative or non-integer shape elements", () => {
+    const source = arr.fromVec([1]);
+    expect(() => arr.reshape(arr.fromVec([-1]), source)).toThrow(/non-negative integers/);
+    expect(() => arr.reshape(arr.fromVec([2.5]), source)).toThrow(/non-negative integers/);
+  });
+
+  it("reshape rejects a target shape of rank > 2", () => {
+    const shapeArg = arr.fromVec([2, 2, 2]);
+    const source = arr.fromVec([1]);
+    expect(() => arr.reshape(shapeArg, source)).toThrow(/rank > 2 is not yet supported/);
+  });
+
+  it("reshape of an empty source into a non-empty target is an error", () => {
+    const shapeArg = arr.fromVec([3]);
+    const empty = arr.fromVec([]);
+    expect(() => arr.reshape(shapeArg, empty)).toThrow(/cannot reshape an empty source/);
+  });
+
+  it("reshape caps the target element count before allocating", () => {
+    const shapeArg = arr.fromVec([arr.MAX_ELEMENTS + 1]);
+    const source = arr.fromVec([1]);
+    expect(() => arr.reshape(shapeArg, source)).toThrow(/exceeds/);
+  });
+});
+
+describe("indexGenerator / indexOf", () => {
+  it("indexGenerator produces a 1-based run, unlike this package's 0-based indexGet/indexSet", () => {
+    const r = arr.indexGenerator(arr.scalar(5));
+    expect(Array.from(r.data)).toEqual([1, 2, 3, 4, 5]);
+  });
+
+  it("indexGenerator of zero is empty", () => {
+    const r = arr.indexGenerator(arr.scalar(0));
+    expect(r.data.length).toBe(0);
+  });
+
+  it("indexGenerator rejects negative and non-integer arguments", () => {
+    expect(() => arr.indexGenerator(arr.scalar(-1))).toThrow(/non-negative integer/);
+    expect(() => arr.indexGenerator(arr.scalar(2.5))).toThrow(/non-negative integer/);
+  });
+
+  it("indexGenerator rejects a non-scalar argument", () => {
+    const v = arr.fromVec([1, 2]);
+    expect(() => arr.indexGenerator(v)).toThrow(/must be a scalar/);
+  });
+
+  it("indexGenerator caps n before allocating", () => {
+    const huge = arr.scalar(arr.MAX_ELEMENTS + 1);
+    expect(() => arr.indexGenerator(huge)).toThrow(/exceeds/);
+  });
+
+  it("indexOf finds each needle's 1-based position, or haystack.length + 1 if not found", () => {
+    const haystack = arr.fromVec([10, 20, 30]);
+    const needles = arr.fromVec([20, 99, 10]);
+    const r = arr.indexOf(haystack, needles);
+    // 20 is at 1-based index 2, 99 is not found (len+1 = 4), 10 is at index 1.
+    expect(Array.from(r.data)).toEqual([2, 4, 1]);
+    expect(r.shape).toEqual(needles.shape);
+  });
+
+  it("indexOf rejects a haystack of rank > 1", () => {
+    const m = arr.fromRows([
+      [1, 2],
+      [3, 4],
+    ]);
+    const needles = arr.fromVec([1]);
+    expect(() => arr.indexOf(m, needles)).toThrow(/must be a scalar or vector/);
+  });
+
+  it("indexOf caps the O(len(haystack) * len(needle)) work product before scanning", () => {
+    // Neither operand alone exceeds MAX_ELEMENTS, but their PRODUCT (the
+    // work this does) does: 8200 * 8200 ≈ 67.24M > MAX_ELEMENTS (2^26 ≈
+    // 67.11M) -- this is the shape a security review flags as unbounded if
+    // the cap were missing, or checked each operand's own length instead of
+    // their product. Both buffers are individually tiny to allocate (8200
+    // zero-filled elements), so this stays fast despite exercising the cap.
+    const n = 8200;
+    const haystack = arr.ndarray([n], new Float64Array(n));
+    const needle = arr.ndarray([n], new Float64Array(n));
+    expect(() => arr.indexOf(haystack, needle)).toThrow(/exceeds/);
+  });
+});
+
+describe("ravel / catenate", () => {
+  it("ravel flattens a matrix in row-major order", () => {
+    // [[1,2,3],[4,5,6]] ravels to [1,2,3,4,5,6] (row-major), even though
+    // the backing store is column-major [1,4,2,5,3,6].
+    const m = arr.fromRows([
+      [1, 2, 3],
+      [4, 5, 6],
+    ]);
+    expect(Array.from(arr.ravel(m).data)).toEqual([1, 2, 3, 4, 5, 6]);
+  });
+
+  it("ravel of a scalar and a vector is a no-op reshape", () => {
+    expect(Array.from(arr.ravel(arr.scalar(9)).data)).toEqual([9]);
+    const v = arr.fromVec([1, 2]);
+    expect(Array.from(arr.ravel(v).data)).toEqual([1, 2]);
+  });
+
+  it("ravel is total (not throwing) even on a rank > 2 array, though such input is unreachable via any function in this package", () => {
+    // No function in this package's own public surface *produces* a rank > 2
+    // `NDArray` -- but `ndarray()` itself doesn't reject one either (only
+    // `reduce`/`scan`/`outer` explicitly cap at rank <= 2), so a directly
+    // constructed rank-3 array is a real, if unusual, input `flattenRowMajor`
+    // must stay total over rather than crash on — mirroring the Rust
+    // reference's own `_ => a.data().to_vec()` fallback.
+    const cube = arr.ndarray([2, 2, 2], Float64Array.from([1, 2, 3, 4, 5, 6, 7, 8]));
+    const r = arr.ravel(cube);
+    expect(r.shape).toEqual([8]);
+    expect(Array.from(r.data)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
+  });
+
+  it("catenate scalar and scalar", () => {
+    const r = arr.catenate(arr.scalar(1), arr.scalar(2));
+    expect(Array.from(r.data)).toEqual([1, 2]);
+  });
+
+  it("catenate scalar and vector prepends or appends", () => {
+    const v = arr.fromVec([2, 3]);
+    expect(Array.from(arr.catenate(arr.scalar(1), v).data)).toEqual([1, 2, 3]);
+    expect(Array.from(arr.catenate(v, arr.scalar(4)).data)).toEqual([2, 3, 4]);
+  });
+
+  it("catenate vector and vector", () => {
+    const a = arr.fromVec([1, 2]);
+    const b = arr.fromVec([3, 4, 5]);
+    expect(Array.from(arr.catenate(a, b).data)).toEqual([1, 2, 3, 4, 5]);
+  });
+
+  it("catenate matrices with equal row counts concatenates columns", () => {
+    const a = arr.fromRows([
+      [1, 2],
+      [3, 4],
+    ]); // 2x2
+    const b = arr.fromRows([[5], [6]]); // 2x1
+    const r = arr.catenate(a, b);
+    expect(r.shape).toEqual([2, 3]);
+    expect(arr.get(r, 0, 0)).toBe(1);
+    expect(arr.get(r, 0, 1)).toBe(2);
+    expect(arr.get(r, 0, 2)).toBe(5);
+    expect(arr.get(r, 1, 2)).toBe(6);
+  });
+
+  it("catenate rejects mismatched matrix row counts", () => {
+    const a = arr.fromRows([
+      [1, 2],
+      [3, 4],
+    ]); // 2x2
+    const b = arr.fromRows([[5, 6]]); // 1x2
+    expect(() => arr.catenate(a, b)).toThrow(/equal row counts/);
+  });
+
+  it("catenate rejects a matrix paired with a vector", () => {
+    const a = arr.fromRows([
+      [1, 2],
+      [3, 4],
+    ]);
+    const v = arr.fromVec([1, 2]);
+    expect(() => arr.catenate(a, v)).toThrow(/not yet supported/);
+    expect(() => arr.catenate(v, a)).toThrow(/not yet supported/);
+  });
+
+  it("catenate caps the combined length before allocating, re-checked on every call", () => {
+    // Neither operand alone exceeds MAX_ELEMENTS, but their sum does -- a
+    // script that repeatedly did `A = catenate(A, A)` would otherwise
+    // double the size every call with no ceiling at all. The check reads
+    // the operands' actual `data.length` (not a claimed shape, unlike the
+    // `outer`/`matmul` tests above), so this needs two real buffers -- cheap
+    // to allocate since a `Float64Array` of a given length is zero-filled
+    // directly, not built up incrementally.
+    const half = Math.floor(arr.MAX_ELEMENTS / 2) + 1;
+    const a = arr.ndarray([half], new Float64Array(half));
+    const b = arr.ndarray([half], new Float64Array(half));
+    expect(() => arr.catenate(a, b)).toThrow(/exceeds/);
+  });
+});
