@@ -275,16 +275,20 @@ impl MapleSession {
                 MAX_INPUT_LEN
             ));
         }
-        // Guard 2: reject a long flat chain (arithmetic OR an elif chain)
-        // before it can fold into a stack-overflowing lowered tree (see the
-        // crate "Robustness" doc, point 2 — deeply *nested* source is
-        // already rejected by `maple-parser`'s own `MAX_RULE_DEPTH`, a
-        // *different* vector this guard does not need to re-cover).
-        check_statement_token_counts(src)?;
-
-        // Guard 3 + panics: the lowering, the VM evaluation, and the
-        // printer all run on a worker thread with a large bounded stack,
-        // and any unwinding panic from the reused symbolic stack is
+        // Guard 2 + panics: reject a long flat chain (arithmetic OR an elif
+        // chain) before it can fold into a stack-overflowing lowered tree
+        // (see the crate "Robustness" doc, point 2 — deeply *nested* source
+        // is already rejected by `maple-parser`'s own `MAX_RULE_DEPTH`, a
+        // *different* vector this guard does not need to re-cover). This
+        // check runs INSIDE the worker thread's `catch_unwind`, not on the
+        // caller thread — `/security-review` flagged an earlier draft that
+        // ran it before `std::thread::scope`, which would have let a
+        // hypothetical panic inside the tokenizer it calls unwind straight
+        // through `feed`/the REPL's `run` loop to `main`, contradicting this
+        // crate's own "one crafted statement can never abort the process"
+        // guarantee. Guard 3 + panics: the lowering, the VM evaluation, and
+        // the printer all run on the SAME worker thread with a large bounded
+        // stack, and any unwinding panic from the reused symbolic stack is
         // caught — mirroring `reduce-runtime`'s identical worker-thread
         // design (including its own `/security-review` fix: a thread-spawn
         // failure is folded into the ordinary `Err` path, never a
@@ -296,7 +300,10 @@ impl MapleSession {
             let handle = match std::thread::Builder::new()
                 .stack_size(EVAL_STACK_SIZE)
                 .spawn_scoped(scope, || {
-                    catch_unwind(AssertUnwindSafe(|| eval_source(vm, &src_owned)))
+                    catch_unwind(AssertUnwindSafe(|| {
+                        check_statement_token_counts(&src_owned)?;
+                        eval_source(vm, &src_owned)
+                    }))
                 }) {
                 Ok(handle) => handle,
                 Err(io_err) => {

@@ -107,15 +107,37 @@ impl MapleRepl {
                 _ => {}
             }
         }
+        // Bound the accumulation buffer BEFORE growing it: a stream that
+        // never balances (an endless run of open brackets, or an `if` with
+        // no closer) must not buffer unbounded memory, and neither may a
+        // single caller-supplied `line` that is itself already oversized.
+        // `/security-review` flagged an earlier draft that appended `line`
+        // via `push_str` first and checked the size second — that order
+        // would `push_str` an arbitrarily large `line` into `self.buffer`
+        // (an O(n) copy, possibly reallocating) before the very check meant
+        // to bound it ever ran. This crate's own `run()` loop never feeds
+        // `feed` a `line` longer than `read_bounded_line`'s 64 KiB-per-
+        // physical-line cap, but `feed` is a `pub fn` on a `pub struct`, so
+        // any other embedder calling it directly with an attacker-supplied,
+        // unbounded `&str` must be bounded here too, not just at the one
+        // shipped call site.
+        if self
+            .buffer
+            .len()
+            .saturating_add(line.len())
+            .saturating_add(1)
+            > MAX_INPUT_LEN
+        {
+            self.buffer.clear();
+            return ReplResponse::Output(format!(
+                "input too large: exceeds the {MAX_INPUT_LEN}-byte limit"
+            ));
+        }
+
         self.buffer.push_str(line);
         self.buffer.push('\n');
 
-        // Bound the accumulation buffer: a stream that never balances (an
-        // endless run of open brackets, or an `if` with no closer) must not
-        // buffer unbounded memory. Once over the size the session would
-        // reject anyway, submit so `feed` returns the clean "too large"
-        // error and resets.
-        if self.buffer.len() <= MAX_INPUT_LEN && is_incomplete(&self.buffer) {
+        if is_incomplete(&self.buffer) {
             return ReplResponse::NeedMore;
         }
 
