@@ -13,6 +13,18 @@
 false-friend letters (в р с н), the formal/informal split, and *politeness =
 plural*.
 
+### Writing the letters *(authored)* — the "break it apart and write it" strand
+
+`writing`-type lessons (HL02) that teach the *hand-formation* of the letters the
+Chapter 1 words introduced — component strokes + stroke order, from the canonical
+`cyrillic.json` the companion app renders:
+
+- `RU-W01` — **в** (v ← beta) and **р** (r ← rho), the two false friends in *привет*.
+- `RU-W02` — **с** (s ← sigma) and **н** (n, the *H*-look-alike), completing в·р·с·н.
+- `RU-W03` — **б** (b) and **д** (d ← delta), two shapes with no Latin disguise
+  (and how б differs from в). More letters get a writing lesson as later chapters
+  introduce them (я э ю ч ш ь in Ch.2).
+
 ## Chapter 2 — Introducing yourself *(planned)*
 
 - **меня зовут…** ("I am called…", literally "[they] call me") — the naming
