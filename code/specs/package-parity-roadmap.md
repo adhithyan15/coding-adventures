@@ -116,11 +116,12 @@ ports, and the paired C#/F# `chacha20-poly1305`, `xml-lexer`, `block-ram`,
 `nib-wasm-compiler`, `dartmouth-basic-lexer`, and `dartmouth-basic-parser`
 ports, followed by the paired `ed25519`, `font-parser`, `asciidoc-parser`, and
 `fpga` ports, the paired C#/F# `zstd` ports, and the Haskell `atbash-cipher`,
-`scytale-cipher`, `feature-normalization`, `loss-functions`, and `trig` ports:
+`scytale-cipher`, `feature-normalization`, `loss-functions`, `trig`, and `wave`
+ports:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 304 |
+| Present in 10-15 languages | 172 | 303 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,972 |
 | Present in one language | 703 | 9,842 |
@@ -166,7 +167,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 172 packages present in at least ten implementation languages need 304
+The 172 packages present in at least ten implementation languages need 303
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -177,7 +178,7 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Perl | 0 | Complete; paired data-structure/storage wave |
 | C# | 0 | Complete; paired native package wave |
 | F# | 0 | Complete; paired native package wave |
-| Haskell | 29 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
+| Haskell | 28 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
 | Kotlin | 58 | Move with Java |
@@ -431,6 +432,15 @@ large-input reduction, conversions, domain validation, tangent poles, inverse
 ranges, axes, and all quadrants. The package now spans 14 implementation
 lanes, reduces the high-consensus backlog to 304 slots, leaves 29 gaps in the
 Haskell lane, and unlocks the dependent `wave` port.
+
+The sixth Haskell high-consensus slice is complete: `wave` now builds on the
+local `trig` layer to provide validated PHY01 sinusoidal waves, periods,
+angular frequencies, phase offsets, and time-domain evaluation. Its
+package-native suite exercises 17 examples with 95% expression coverage,
+including construction, validation, derived quantities, the full cycle,
+periodicity, phase offsets, and the zero-amplitude case. The package now spans
+14 implementation lanes, reduces the high-consensus backlog to 303 slots, and
+leaves 28 gaps in the Haskell lane.
 
 Recommended family order:
 
