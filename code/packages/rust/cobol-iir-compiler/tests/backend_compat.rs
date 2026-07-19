@@ -261,6 +261,30 @@ fn exponentiation_program_accepted_by_print_backends() {
 }
 
 #[test]
+fn nested_division_program_accepted_by_print_backends() {
+    // A division nested inside a larger COMPUTE expression lowers to a scale-12
+    // quotient built from plain `const`/`mul`/`div` ops (no new opcode, no
+    // strings). Every print backend must accept the emitted IIR.
+    let src = program(&[
+        "IDENTIFICATION DIVISION.",
+        "PROGRAM-ID. P.",
+        "DATA DIVISION.",
+        "WORKING-STORAGE SECTION.",
+        "01  A  PIC 9(3) VALUE 10.",
+        "01  B  PIC 9(3) VALUE 3.",
+        "01  C  PIC 9(3) VALUE 2.",
+        "01  R  PIC 9(4)V99.",
+        "PROCEDURE DIVISION.",
+        "MAIN.",
+        "    COMPUTE R = A / B + C.",
+        "    DISPLAY R.",
+        "    STOP RUN.",
+    ]);
+    let m = compile_source(&src, "ndiv").unwrap();
+    assert_accepted_by_print_backends(&m, "ndiv");
+}
+
+#[test]
 fn signed_program_accepted_by_print_backends() {
     // A signed field adds the __cob_print_signed overpunch helper (a second
     // synthesized function that calls the digit printer) and the sign-keeping

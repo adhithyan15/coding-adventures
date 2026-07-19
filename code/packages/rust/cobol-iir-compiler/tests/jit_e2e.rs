@@ -873,6 +873,63 @@ fn compute_division_truncates_and_rounds() {
 }
 
 #[test]
+fn compute_nested_division_in_a_sum() {
+    // A / B + C = 10/3 + 2 = 3.333… + 2 = 5.333…, truncated into 9(4)V99 → 5.33.
+    // The oracle carries the division at scale 12, so the leading digits are exact.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC 9(3) VALUE 10.",
+            "01  B  PIC 9(3) VALUE 3.",
+            "01  C  PIC 9(3) VALUE 2.",
+            "01  R  PIC 9(4)V99.",
+        ],
+        &["COMPUTE R = A / B + C.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "000533\n");
+}
+
+#[test]
+fn compute_nested_division_on_the_right_of_an_operator() {
+    // C + A / B — the division is the right operand of the add. Same 5.333… value,
+    // proving precedence puts `/` under `+` regardless of source order.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC 9(3) VALUE 10.",
+            "01  B  PIC 9(3) VALUE 3.",
+            "01  C  PIC 9(3) VALUE 2.",
+            "01  R  PIC 9(4)V99.",
+        ],
+        &["COMPUTE R = C + A / B.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "000533\n");
+}
+
+#[test]
+fn compute_nested_division_then_multiply_rounds() {
+    // A / B * C = 10/3 * 2 = 6.666…; ROUNDED into 9(4)V99 → 6.67.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC 9(3) VALUE 10.",
+            "01  B  PIC 9(3) VALUE 3.",
+            "01  C  PIC 9(3) VALUE 2.",
+            "01  R  PIC 9(4)V99.",
+        ],
+        &["COMPUTE R ROUNDED = A / B * C.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "000667\n");
+}
+
+#[test]
+fn compute_nested_division_of_a_scaled_dividend() {
+    // X / Y + Z with a fractional dividend: 1.5 / 2 + 1 = 0.75 + 1 = 1.75 → 9V99.
+    let out = assert_matches_oracle(&wrap(
+        &["01  X  PIC 9V9 VALUE 1.5.", "01  Y  PIC 9 VALUE 2.", "01  Z  PIC 9 VALUE 1.", "01  R  PIC 9V99."],
+        &["COMPUTE R = X / Y + Z.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "175\n");
+}
+
+#[test]
 fn compute_unary_minus_and_negative_magnitude() {
     // -B + A = -3 + 10 = 7 → 007.
     let pos = assert_matches_oracle(&wrap(

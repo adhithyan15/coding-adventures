@@ -56,7 +56,9 @@
 //! all lowered.
 
 use coding_adventures_cobol_parser::try_parse_cobol;
-use coding_adventures_cobol_runtime::{move_into_char, move_into_numeric, Decimal, Picture, MAX_POW_EXP};
+use coding_adventures_cobol_runtime::{
+    move_into_char, move_into_numeric, Decimal, Picture, COMPUTE_DIV_SCALE, MAX_POW_EXP,
+};
 use interpreter_ir::function::FunctionTypeStatus;
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
@@ -769,10 +771,13 @@ impl<'a> Compiler<'a> {
     /// evaluate **exactly** (matching the oracle's exact `Decimal`); a
     /// **top-level** division reproduces the DIVIDE verb's one-guard-digit
     /// rounding (already proven byte-identical to the oracle), including its
-    /// zero-divisor → size-error branch. `**` with a compile-time non-negative
-    /// integer exponent unrolls to repeated multiplication (see [`Self::eval_pow`]);
-    /// division nested inside a larger expression, and a `**` with a variable,
-    /// negative, fractional, or oversized exponent, are each a later rung.
+    /// zero-divisor → size-error branch. A division **nested** inside a larger
+    /// expression reproduces the oracle's fixed scale-12 intermediate (see
+    /// [`Self::eval_div_nested`]); `**` with a compile-time non-negative integer
+    /// exponent unrolls to repeated multiplication (see [`Self::eval_pow`]). A `**`
+    /// with a variable, negative, fractional, or oversized exponent — and a
+    /// COMPUTE that pairs `ON SIZE ERROR` with a nested division — are each a
+    /// later rung.
     fn emit_compute(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
         let target = first_token(verb, "NAME")
             .ok_or_else(|| CompileError::Malformed("COMPUTE without a receiver".into()))?;
@@ -788,6 +793,18 @@ impl<'a> Compiler<'a> {
         // the same scale/rounding/zero-divisor machinery so it matches the oracle.
         if let AExpr::Div(dividend, divisor) = expr {
             return self.emit_compute_div(&target, &dividend, &divisor, rounded, &handler);
+        }
+
+        // A division *nested* inside a larger expression lowers (see
+        // [`Self::eval_div_nested`]) but its zero-divisor is a hard fault, not a
+        // routed size error. So a COMPUTE that both carries an `ON SIZE ERROR`
+        // handler and contains a nested division stays a later rung — the handler
+        // could not catch a zero divisor buried mid-expression without wrapping
+        // the whole evaluation in a skip, which this rung does not do.
+        if !handler.is_empty() && aexpr_contains_div(&expr) {
+            return Err(CompileError::Unsupported(
+                "a COMPUTE with ON SIZE ERROR and a nested division is a later rung".into(),
+            ));
         }
 
         let val = self.eval_aexpr(&expr)?;
@@ -856,11 +873,68 @@ impl<'a> Compiler<'a> {
                 self.emit("mul", Some(&out), vec![Operand::Var(a.reg), Operand::Var(b.reg)], "i64");
                 Ok(Eval { reg: out, scale, int_bound })
             }
-            AExpr::Div(..) => Err(CompileError::Unsupported(
-                "division nested inside a larger COMPUTE expression is a later rung".into(),
-            )),
+            AExpr::Div(l, r) => self.eval_div_nested(l, r),
             AExpr::Pow(base, exponent) => self.eval_pow(base, exponent),
         }
+    }
+
+    /// A division **nested** inside a larger COMPUTE expression. The oracle
+    /// evaluates every COMPUTE division at a fixed intermediate precision of
+    /// [`COMPUTE_DIV_SCALE`] fractional digits (its `div(a, b, 12)`), truncating
+    /// toward zero, then lets the surrounding operators combine that scale-12
+    /// value exactly — so to stay byte-identical this reproduces exactly that
+    /// scale-12 quotient:
+    ///
+    /// ```text
+    ///   numerator   = a · 10^(b.scale + 12)
+    ///   denominator = b · 10^(a.scale)
+    ///   quotient    = numerator / denominator      (i64 div, truncates toward 0)
+    /// ```
+    ///
+    /// The result carries scale 12. Because dividing by a fraction (`b < 1`) can
+    /// *grow* the integer part, the quotient's integer bound is `a.int_bound +
+    /// a.scale + b.scale` (its magnitude is `< 10^(that + 12)`). The oracle keeps
+    /// this exact in `i128`; here the intermediates are `i64`, so a case whose
+    /// numerator or denominator could exceed the 18-digit model is a clean later
+    /// rung — never a silent wrap. A zero divisor faults the emitted `div`,
+    /// matching the oracle's hard `DivideByZero` (the handler-present case is
+    /// filtered out earlier in [`Self::emit_compute`]).
+    fn eval_div_nested(&mut self, l: &AExpr, r: &AExpr) -> Result<Eval, CompileError> {
+        let a = self.eval_aexpr(l)?;
+        let b = self.eval_aexpr(r)?;
+        let result_scale = COMPUTE_DIV_SCALE;
+        // numerator magnitude < 10^(a.int_bound + a.scale + b.scale + 12).
+        let num_digits = a.int_bound + a.scale + b.scale + result_scale;
+        // denominator magnitude < 10^(b.int_bound + b.scale + a.scale).
+        let den_digits = b.int_bound + b.scale + a.scale;
+        if num_digits > NUMERIC_MAX_DIGITS || den_digits > NUMERIC_MAX_DIGITS {
+            return Err(CompileError::Unsupported(
+                "a COMPUTE nested-division intermediate at scale 12 could overflow i64 — \
+                 a later rung"
+                    .into(),
+            ));
+        }
+        // numerator = a · 10^(b.scale + 12).
+        let numerator = self.scaled_by_pow10(&a.reg, b.scale + result_scale);
+        // denominator = b · 10^(a.scale).
+        let denominator = self.scaled_by_pow10(&b.reg, a.scale);
+        let quot = self.fresh("_ndiv");
+        // i64 division truncates toward zero, as COBOL (and the oracle) does.
+        self.emit("div", Some(&quot), vec![Operand::Var(numerator), Operand::Var(denominator)], "i64");
+        Ok(Eval { reg: quot, scale: result_scale, int_bound: a.int_bound + a.scale + b.scale })
+    }
+
+    /// A register holding `reg · 10^p` (reusing `reg` when `p == 0`). The caller
+    /// guarantees the product fits the `i64` model.
+    fn scaled_by_pow10(&mut self, reg: &str, p: usize) -> String {
+        if p == 0 {
+            return reg.to_string();
+        }
+        let pr = self.fresh("_p10");
+        self.emit("const", Some(&pr), vec![Operand::Int(10i64.pow(p as u32))], "i64");
+        let out = self.fresh("_scl");
+        self.emit("mul", Some(&out), vec![Operand::Var(reg.to_string()), Operand::Var(pr)], "i64");
+        out
     }
 
     /// `base ** exponent` where the exponent is a **compile-time non-negative
@@ -2217,6 +2291,20 @@ fn decimal_scaled_to(d: &Decimal, w: usize) -> i64 {
 /// zeros is rejected, and a negative sign is rejected unless the value is zero
 /// (`-0 = 0`). An integer past `u128` fails to parse (caught here) and one past
 /// `MAX_POW_EXP` is rejected by the caller — both matching the oracle's `None`.
+/// Whether a COMPUTE expression tree contains a division anywhere. Used to
+/// decline `ON SIZE ERROR` alongside a nested division (whose zero divisor this
+/// rung faults rather than routing to the handler).
+fn aexpr_contains_div(e: &AExpr) -> bool {
+    match e {
+        AExpr::Div(..) => true,
+        AExpr::Neg(inner) => aexpr_contains_div(inner),
+        AExpr::Add(l, r) | AExpr::Sub(l, r) | AExpr::Mul(l, r) | AExpr::Pow(l, r) => {
+            aexpr_contains_div(l) || aexpr_contains_div(r)
+        }
+        AExpr::Num(_) | AExpr::Var(_) => false,
+    }
+}
+
 fn const_nonneg_int(e: &AExpr) -> Option<u128> {
     let AExpr::Num(d) = e else { return None };
     // A non-zero fractional digit means it is not an integer.
@@ -2565,14 +2653,13 @@ mod tests {
     }
 
     #[test]
-    fn compute_nested_division_and_variable_exponent_are_deferred() {
-        // Division inside a larger expression, and a `**` whose exponent is not a
-        // compile-time non-negative integer, are each a clean error — never wrong
-        // output. `C ** B` (variable exponent), `C ** -2` (negative), `C ** 1.5`
-        // (fractional), and an oversized exponent all stay a later rung.
+    fn compute_variable_exponent_is_deferred() {
+        // A `**` whose exponent is not a compile-time non-negative integer is a
+        // clean error — never wrong output. `C ** B` (variable exponent),
+        // `C ** -2` (negative), `C ** 1.5` (fractional), and an oversized exponent
+        // all stay a later rung. (Nested division, by contrast, now lowers — see
+        // `compute_nested_division_lowers`.)
         for body in [
-            "COMPUTE R = A / B + C.",
-            "COMPUTE R = A / B * C.",
             "COMPUTE R = C ** B.",
             "COMPUTE R = C ** -2.",
             "COMPUTE R = C ** 1.5.",
@@ -2593,6 +2680,60 @@ mod tests {
             .unwrap_err();
             assert!(matches!(err, CompileError::Unsupported(_)), "{body}: got {err:?}");
         }
+    }
+
+    #[test]
+    fn compute_nested_division_lowers() {
+        // Division inside a larger expression now lowers to valid IIR (scale-12
+        // intermediate). Both `A / B + C` and `A / B * C` compile and validate.
+        for body in ["COMPUTE R = A / B + C.", "COMPUTE R = A / B * C.", "COMPUTE R = C + A / B."] {
+            let m = compile_source(
+                &wrap(
+                    &[
+                        "01  A  PIC 9(3) VALUE 10.",
+                        "01  B  PIC 9(3) VALUE 3.",
+                        "01  C  PIC 9(3) VALUE 2.",
+                        "01  R  PIC 9(4)V99.",
+                    ],
+                    &[body, "STOP RUN."],
+                ),
+                "compute",
+            )
+            .unwrap();
+            assert!(m.validate().is_empty(), "{body}: {:?}", m.validate());
+        }
+    }
+
+    #[test]
+    fn compute_nested_division_with_size_error_handler_is_deferred() {
+        // A nested division's zero divisor faults rather than routing to the
+        // handler, so a COMPUTE that pairs ON SIZE ERROR with a nested division is
+        // a clean later rung. (A top-level division with a handler still lowers.)
+        let err = compile_source(
+            &wrap(
+                &["01  A  PIC 9(3) VALUE 10.", "01  B  PIC 9(3) VALUE 3.", "01  R  PIC 9(4)V99."],
+                &["COMPUTE R = A / B + 1 ON SIZE ERROR DISPLAY \"O\".", "STOP RUN."],
+            ),
+            "compute",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn compute_nested_division_over_wide_intermediate_is_deferred() {
+        // The scale-12 intermediate squeezes the i64 integer range; a dividend
+        // wide enough that `int + scale + 12` exceeds 18 digits is a clean later
+        // rung, never a silent wrap.
+        let err = compile_source(
+            &wrap(
+                &["01  A  PIC 9(9) VALUE 1.", "01  B  PIC 9(3) VALUE 3.", "01  R  PIC 9(4)V99."],
+                &["COMPUTE R = A / B + 1.", "STOP RUN."],
+            ),
+            "compute",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
     }
 
     #[test]

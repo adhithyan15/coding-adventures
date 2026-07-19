@@ -3084,6 +3084,30 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("000064"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // COBOL-60 — nested COMPUTE division (PL09 step 4). `A / B + C = 10/3 + 2`;
+    // the oracle carries the division at a fixed scale-12 intermediate, so the
+    // quotient is 3.333… and the sum 5.333…, truncated into `9(4)V99` → `000533`.
+    // The scale-12 quotient is plain `const`/`mul`/`div` (no new opcode, no
+    // strings), so it proves on every backend the other scaled-i64 arithmetic does.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  A  PIC 9(3) VALUE 10.\n\
+               000000 01  B  PIC 9(3) VALUE 3.\n\
+               000000 01  C  PIC 9(3) VALUE 2.\n\
+               000000 01  R  PIC 9(4)V99.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     COMPUTE R = A / B + C.\n\
+               000000     DISPLAY R.\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("000533"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses

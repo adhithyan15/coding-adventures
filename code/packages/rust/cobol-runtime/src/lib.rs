@@ -49,6 +49,7 @@ pub use error::RuntimeError;
 // fixed-point-value logic. `cobol-iir-compiler` lowers COBOL to IIR and depends
 // on these to format literals into their stored picture image at compile time —
 // so its output is byte-identical to this oracle's `DISPLAY` (PL09).
+pub use interp::COMPUTE_DIV_SCALE;
 pub use picture::Picture;
 pub use value::{move_into_char, move_into_numeric, Decimal, MAX_POW_EXP};
 
