@@ -49,6 +49,7 @@ The interpreters use `gc-core`'s managed-object collector; native output uses
 | `int64_t __gc_register_stackmap(func_start, func_len, num_records, pc_offsets, frame_sizes, callee_masks, slot_counts, slots_flat)` | register a function's stack maps (code range + per-safepoint live-ref records) for precise-root resolution; returns records stored, `0` if rejected |
 | `int64_t __gc_stackmap_count(void)` | number of functions registered |
 | `void __gc_stackmap_reset(void)` | drop all registered stack maps (tests / teardown) |
+| `int64_t __gc_collect_precise(void)` | full collect rooted precisely at this thread's stack — walks the frame-pointer chain (stack-mapped frames precise, rest conservative); returns objects freed |
 
 `__gc_alloc` returns a **real, 16-byte-aligned pointer** to memory the caller reads
 and writes directly. Tracing is conservative (raw + tag-stripped candidate words);
@@ -108,21 +109,23 @@ map any unwound return address to the `StackMapRecord` live there in `O(log n)`.
 That is the code-address analogue of `__gc_register_kind` (object-layout map) —
 together, the two maps a precise collector needs.
 
-The **precise stack walk logic** now lands too: `precise_walk::build_precise_roots`
-unwinds the frame-pointer chain, `resolve`s each return address, and builds the two
-inputs to `gc-core`'s `collect_mixed` — precise slots (`frame_root_slots`) for
-mapped frames, conservative `[fp, caller_fp)` regions for unmapped ones — so a real
-stack (which always mixes stack-mapped and un-migrated frames) collects
-precisely-where-it-can and conservatively-everywhere-else in one cycle. It is pure
-walk logic (no `asm!`), exhaustively tested against synthetic stacks.
+The precise stack walk is now wired end-to-end: `precise_walk::build_precise_roots`
+unwinds the frame-pointer chain into precise slots (`frame_root_slots`) for mapped
+frames and conservative `[fp, caller_fp)` regions for unmapped ones, and the
+argument-less **`__gc_collect_precise`** captures the running thread's frame pointer
+/ stack pointer / base (mirroring `__gc_collect`'s register spill), walks, and
+collects both in one `collect_mixed` cycle. With no stack maps registered it degrades
+to exactly `__gc_collect`; as frames are mapped they shed floating garbage. Safe by
+construction — an omitted frame pointer or unwalkable stack degrades to a
+conservative scan, never a missed root.
 
 Still to come (own PRs):
 
-- **The `asm!` entry** — an argument-less `__gc_collect_precise` that captures the
-  running thread's frame pointer / stack pointer / base (mirroring `__gc_collect`'s
-  register spill) and calls `build_precise_roots` + `collect_mixed`. Then the
-  backends (aarch64 / x86_64 / LLVM) emit the stack-map records at safepoints and
-  call sites.
+- **Backend record emission** — the code generators (aarch64 / x86_64 / LLVM) emit
+  `StackMapRecord`s at safepoints and call sites and register them via
+  `__gc_register_stackmap`, so `__gc_collect_precise` actually resolves real frames
+  in production (until then every frame is unmapped → conservative). Precision also
+  needs the image built with frame pointers (`-Cforce-frame-pointers`).
 - **Moving / compacting**, then **incremental** — the rest of the ladder, all as
   `gc-core` algorithms.
 
