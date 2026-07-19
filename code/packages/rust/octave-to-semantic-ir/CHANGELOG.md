@@ -22,9 +22,10 @@ All notable changes to this project will be documented in this file.
   - `hash_comment_literal_arithmetic` — a `#` comment (MATLAB uses `%`).
   - `bang_equals_not_equal_comparison` — `!=` (MATLAB uses `~=`).
   - `bang_negation_on_comparison` — `!` (MATLAB uses `~`), applied to a
-    parenthesized comparison rather than a bare numeric variable — see the
-    test's own doc comment for a confirmed, deliberately-excluded gap this
-    sidesteps (below).
+    parenthesized comparison. At the time this test was added, negating a
+    *bare numeric variable* directly was a confirmed, deliberately-excluded
+    gap this case sidestepped — since fixed; see the "Fixed" section
+    below.
   - `if_else_endif` — Octave's `endif` block terminator.
   - `for_loop_accumulator_endfor` — Octave's `endfor` block terminator.
   - `while_loop_accumulator_endwhile` — Octave's `endwhile` block
@@ -36,23 +37,27 @@ All notable changes to this project will be documented in this file.
   - All 6 cases pass against `octave-runtime`'s ground truth; no new bug in
     the `octavify` shim itself was found.
 
+### Fixed
+
+- **FIXED (was: "Found", below): negating a bare numeric variable through
+  `!`/`~` disagreed with Octave semantics for zero.** `~x`/`!x` with
+  `x = 0` used to compile to `false` instead of Octave's real `1` (true).
+  Fixed entirely in `matlab-to-semantic-ir` (this crate has no `src/
+  lower.rs` of its own, so the fix — a new `to_matlab_condition` lowering
+  helper applied at `~`, `if`, `while`, and `&&`/`||` — applies here
+  unchanged); see that crate's own `CHANGELOG.md` entry for the full
+  root-cause writeup, including confirmation that Ruby/Python/JS's own
+  truthiness reliance is unaffected. Two new corpus cases exercise the fix
+  through Octave's own `!` spelling specifically (proving the `octavify`
+  `!` → `~` rewrite composes correctly with the fix, not just the `~`
+  spelling MATLAB's own oracle file already covers):
+  `bang_negation_on_bare_zero_is_true` (`!0` → `1`) and
+  `bang_negation_on_bare_nonzero_is_false` (`!5` → `0`).
+  `bang_negation_on_comparison`'s doc comment is trimmed to drop the
+  "confirmed, excluded gap" framing it no longer needs.
+
 ### Found (confirmed, not fixed here — test infrastructure only)
 
-- **Negating a bare numeric variable through `!`/`~` disagrees with Octave
-  semantics for zero.** SIR's shared `truthy()` runtime helper
-  (`semantic-ir-to-javascript/src/runtime.rs`) treats only `false`/`nil` as
-  falsy (a Ruby/Lisp convention); MATLAB/Octave's "logicals are doubles"
-  convention treats numeric `0` as false. So `~x`/`!x` with `x = 0` compiles
-  to `not(0)` → `!__Sir.truthy(0)` → `!true` → `false`, while real
-  Octave/MATLAB gives `1` (true). This is a genuine, confirmed
-  frontend/backend semantic gap inherited unchanged from
-  `matlab-to-semantic-ir` (which has no MATLAB-logicals-aware truthiness
-  recoding) — not something this test-only PR touches. `CORPUS`'s
-  `bang_negation_on_comparison` case sidesteps it by negating a
-  parenthesized *comparison* instead (comparisons already compile to native
-  JS booleans via `__Sir.lt`/`__Sir.gt`/etc., which `truthy()` handles
-  correctly), so the corpus stays green without papering over the gap —
-  flagged here for a follow-up.
 - Confirmed, by inheritance from `matlab-to-semantic-ir` (unchanged, since
   this crate shares 100% of its lowering/codegen): the integer-literal-
   division-floors bug and the missing `Feature::ShortCircuit` declaration
