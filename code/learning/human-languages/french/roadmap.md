@@ -37,12 +37,17 @@ compared, every Spanish form supplied in full (no prior Spanish assumed).
   parle français** (first sentence; *français* ← *Francia*) → practice.
   **Authored** — mirrors Spanish Ch.6, and teaches the **pro-drop contrast**
   (French keeps *je* because its *-er* endings are silent).
+- **Ch. 6 — Numbers 1–10**: un/deux/trois/quatre/cinq (← *ūnus…quīnque*; *un/une*
+  = a/an; *cinq* → English *cinque*) → six/sept/huit/neuf/dix (*octō → huit*
+  erosion; *dix* → *dime* ← *disme*; the **septembre–décembre = Latin 7–10**
+  calendar trick). Spanish twin supplied for each. **Authored** — mirrors Spanish
+  Ch.8's numbers.
 
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |
 |---|---|
-| 6+ | Numbers, time, days & months, family, food — following the Spanish theme order, with the Spanish cousin supplied for contrast |
+| 7+ | Time, days & months, family, food — following the Spanish theme order, with the Spanish cousin supplied for contrast |
 
 The *tu/vous* lesson (Ch. 2) is the French counterpart to Spanish *tú/usted*:
 same formal/informal split, but French makes the formal from the **plural**
