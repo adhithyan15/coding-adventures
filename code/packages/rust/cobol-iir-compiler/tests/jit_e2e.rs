@@ -374,6 +374,48 @@ fn level_88_condition_name_drives_perform_until() {
     assert_eq!(out, "9\n");
 }
 
+#[test]
+fn level_88_multiple_values_or() {
+    // 88 COND VALUE 1 3 5 — an OR of equalities (`or` of `cmp_eq`s). Hits on 3,
+    // misses on 4. Byte-identical to the oracle's any-value match.
+    let hit = assert_matches_oracle(&wrap(
+        &["01  N  PIC 99 VALUE 3.", "88  COND  VALUE 1 3 5."],
+        &["IF COND DISPLAY \"Y\" ELSE DISPLAY \"N\".", "STOP RUN."],
+    ));
+    assert_eq!(hit, "Y\n");
+    let miss = assert_matches_oracle(&wrap(
+        &["01  N  PIC 99 VALUE 4.", "88  COND  VALUE 1 3 5."],
+        &["IF COND DISPLAY \"Y\" ELSE DISPLAY \"N\".", "STOP RUN."],
+    ));
+    assert_eq!(miss, "N\n");
+}
+
+#[test]
+fn level_88_thru_range_inclusive_boundaries() {
+    // 88 COND VALUE 3 THRU 6 — an inclusive range (`and` of `cmp_ge`/`cmp_le`).
+    // Check both boundaries (3, 6) hold and just outside (2, 7) does not.
+    for (v, want) in [("2", "N\n"), ("3", "Y\n"), ("6", "Y\n"), ("7", "N\n")] {
+        let out = assert_matches_oracle(&wrap(
+            &[&format!("01  N  PIC 99 VALUE {v}."), "88  COND  VALUE 3 THRU 6."],
+            &["IF COND DISPLAY \"Y\" ELSE DISPLAY \"N\".", "STOP RUN."],
+        ));
+        assert_eq!(out, want, "N={v}");
+    }
+}
+
+#[test]
+fn level_88_mixed_singles_and_range() {
+    // 88 COND VALUE 1 5 THRU 7 9 — {1} ∪ {5,6,7} ∪ {9}, folding cmp_eq and range
+    // tests with `or`. Byte-identical to the oracle across the whole domain.
+    for (v, want) in [("1", "Y\n"), ("6", "Y\n"), ("9", "Y\n"), ("4", "N\n"), ("8", "N\n")] {
+        let out = assert_matches_oracle(&wrap(
+            &[&format!("01  N  PIC 99 VALUE {v}."), "88  COND  VALUE 1 5 THRU 7 9."],
+            &["IF COND DISPLAY \"Y\" ELSE DISPLAY \"N\".", "STOP RUN."],
+        ));
+        assert_eq!(out, want, "N={v}");
+    }
+}
+
 // -------------------------------------------------------------------------
 // Scaled-decimal ADD / SUBTRACT + item→item MOVE (PR3) — vs the oracle.
 // -------------------------------------------------------------------------

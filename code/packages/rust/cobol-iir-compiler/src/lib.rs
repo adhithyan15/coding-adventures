@@ -146,11 +146,25 @@ struct Item {
 }
 
 /// A level-88 condition-name: the index of the item it qualifies (its
-/// "conditional variable") and the single value that makes it true. Multiple
-/// values and `THRU` ranges are a later rung.
+/// "conditional variable") and the value-set that makes it true. The name holds
+/// when the variable equals any single value or falls within any `THRU` range.
 struct CondName {
     var: usize,
-    value: Src,
+    values: Vec<ValueSpec>,
+}
+
+/// One item of a level-88 `VALUE` clause: a single value or an inclusive
+/// `lo THRU hi` range.
+enum ValueSpec {
+    Single(Src),
+    Range(Src, Src),
+}
+
+/// A value-test resolved to the variable's scaled `i64` representation, ready to
+/// emit: equality with one value, or membership in an inclusive range.
+enum ValueTest {
+    Eq(i64),
+    InRange(i64, i64),
 }
 
 impl Item {
@@ -317,11 +331,22 @@ impl<'a> Compiler<'a> {
         let picture = Picture::parse(&pic_str)
             .map_err(|e| CompileError::Malformed(format!("PICTURE {pic_str}: {e}")))?;
 
+        // A plain item's VALUE is a single literal; a multi-value or THRU-range
+        // VALUE is only meaningful on a level-88 condition-name.
         let value_lit = match find_clause(entry, "value_clause") {
-            Some(vc) => Some(read_literal(
-                child_node(vc, "literal")
-                    .ok_or_else(|| CompileError::Malformed("VALUE without a literal".into()))?,
-            )?),
+            Some(vc) => {
+                let mut specs = read_value_specs(vc)?;
+                match (specs.len(), specs.pop()) {
+                    (1, Some(ValueSpec::Single(src))) => Some(src),
+                    (0, _) => None,
+                    _ => {
+                        return Err(CompileError::Unsupported(
+                            "a multi-value or THRU-range VALUE is only allowed on a level-88 entry"
+                                .into(),
+                        ))
+                    }
+                }
+            }
             None => None,
         };
 
@@ -371,19 +396,19 @@ impl<'a> Compiler<'a> {
     }
 
     /// Register a level-88 condition-name: it qualifies the item defined just
-    /// before it and is true when that item holds the `VALUE`. A single value is
-    /// this rung; multiple values and `THRU` ranges are a later rung.
+    /// before it and is true when that item holds any of the `VALUE` items (a
+    /// single value or an inclusive `THRU` range).
     fn collect_condition_name(&mut self, name: &str, entry: &GrammarASTNode) -> Result<(), CompileError> {
         let vc = find_clause(entry, "value_clause")
             .ok_or_else(|| CompileError::Malformed(format!("level-88 {name} without a VALUE")))?;
-        let value = read_literal(
-            child_node(vc, "literal")
-                .ok_or_else(|| CompileError::Malformed("VALUE without a literal".into()))?,
-        )?;
+        let values = read_value_specs(vc)?;
+        if values.is_empty() {
+            return Err(CompileError::Malformed(format!("level-88 {name} without a VALUE")));
+        }
         let var = self.items.len().checked_sub(1).ok_or_else(|| {
             CompileError::Unsupported(format!("level-88 {name} must follow an item"))
         })?;
-        self.conditions.insert(name.to_string(), CondName { var, value });
+        self.conditions.insert(name.to_string(), CondName { var, values });
         Ok(())
     }
 
@@ -685,11 +710,18 @@ impl<'a> Compiler<'a> {
         }
     }
 
-    /// Evaluate a level-88 condition-name to a boolean `i64` register: is its
-    /// conditional variable equal to the value that makes it true? This rung
-    /// compares a **numeric** variable against a numeric value (`cmp_eq` on the
-    /// scaled slot); an alphanumeric conditional variable is a later rung.
+    /// Evaluate a level-88 condition-name to a boolean `i64` register: does its
+    /// conditional variable equal any single value, or fall within any inclusive
+    /// `THRU` range? This rung compares a **numeric** variable against numeric
+    /// values; an alphanumeric conditional variable is a later rung.
+    ///
+    /// Each value-item becomes one boolean (`cmp_eq` for a single value; `and` of
+    /// `cmp_ge`/`cmp_le` for a range) and they are OR-folded with `or` — because
+    /// each `cmp_*` yields `0`/`1`, bitwise `and`/`or` are exactly logical AND/OR,
+    /// and the combined `i64` feeds `jmp_if_false` like any relational condition.
     fn emit_condition_name(&mut self, name: &str) -> Result<String, CompileError> {
+        // Phase 1 (immutable): resolve the variable and scale every value into the
+        // slot's representation, so the emitted constants compare exactly.
         let cn = self.conditions.get(name).ok_or_else(|| {
             CompileError::Unsupported(format!("reference to condition-name {name} (undeclared)"))
         })?;
@@ -702,20 +734,62 @@ impl<'a> Compiler<'a> {
                 ))
             }
         };
-        // The value that makes the condition true, formatted into the variable's
-        // picture at compile time (the same reuse `MOVE <literal>` relies on) —
-        // so the comparison constant matches the slot's scaled representation.
         let picture = Picture::Numeric { int_digits, dec_digits, signed };
-        let digits = format_into_picture(&cn.value, &picture)
-            .map_err(|m| CompileError::Unsupported(format!("level-88 {name} VALUE: {m}")))?;
-        let mag = parse_digits(&digits);
-        let value = if signed && literal_is_negative(&cn.value) { -mag } else { mag };
-        let vreg = self.fresh("_c88");
-        self.emit("const", Some(&vreg), vec![Operand::Int(value)], "i64");
+        let mut tests: Vec<ValueTest> = Vec::with_capacity(cn.values.len());
+        for spec in &cn.values {
+            tests.push(match spec {
+                ValueSpec::Single(src) => ValueTest::Eq(scale_num_value(src, &picture, signed, name)?),
+                ValueSpec::Range(lo, hi) => ValueTest::InRange(
+                    scale_num_value(lo, &picture, signed, name)?,
+                    scale_num_value(hi, &picture, signed, name)?,
+                ),
+            });
+        }
         let slot = self.items[var].reg.clone();
-        let cond_reg = self.fresh("_cond");
-        self.emit("cmp_eq", Some(&cond_reg), vec![Operand::Var(slot), Operand::Var(vreg)], "i64");
-        Ok(cond_reg)
+
+        // Phase 2 (mutable): emit one boolean per test, OR-folded.
+        let mut acc: Option<String> = None;
+        for test in tests {
+            let b = self.emit_value_test(&slot, test);
+            acc = Some(match acc {
+                None => b,
+                Some(prev) => {
+                    let or = self.fresh("_c88or");
+                    self.emit("or", Some(&or), vec![Operand::Var(prev), Operand::Var(b)], "i64");
+                    or
+                }
+            });
+        }
+        // `values` is non-empty (enforced at registration), so `acc` is always set.
+        acc.ok_or_else(|| CompileError::Malformed(format!("level-88 {name} has no VALUE")))
+    }
+
+    /// Emit one value-test against the variable's slot, returning a `0`/`1`
+    /// boolean register: `cmp_eq` for a single value, or `and(cmp_ge, cmp_le)` for
+    /// an inclusive range.
+    fn emit_value_test(&mut self, slot: &str, test: ValueTest) -> String {
+        match test {
+            ValueTest::Eq(v) => {
+                let vreg = self.fresh("_c88");
+                self.emit("const", Some(&vreg), vec![Operand::Int(v)], "i64");
+                let b = self.fresh("_c88eq");
+                self.emit("cmp_eq", Some(&b), vec![Operand::Var(slot.to_string()), Operand::Var(vreg)], "i64");
+                b
+            }
+            ValueTest::InRange(lo, hi) => {
+                let loreg = self.fresh("_c88lo");
+                self.emit("const", Some(&loreg), vec![Operand::Int(lo)], "i64");
+                let ge = self.fresh("_c88ge");
+                self.emit("cmp_ge", Some(&ge), vec![Operand::Var(slot.to_string()), Operand::Var(loreg)], "i64");
+                let hireg = self.fresh("_c88hi");
+                self.emit("const", Some(&hireg), vec![Operand::Int(hi)], "i64");
+                let le = self.fresh("_c88le");
+                self.emit("cmp_le", Some(&le), vec![Operand::Var(slot.to_string()), Operand::Var(hireg)], "i64");
+                let b = self.fresh("_c88rng");
+                self.emit("and", Some(&b), vec![Operand::Var(ge), Operand::Var(le)], "i64");
+                b
+            }
+        }
     }
 
     /// Parse a `relop` node to the `cmp_*` op the relation lowers to. `NOT`
@@ -2446,6 +2520,43 @@ fn find_clause<'a>(entry: &'a GrammarASTNode, rule: &str) -> Option<&'a GrammarA
     child_nodes(entry, "data_clause").into_iter().find_map(|dc| child_node(dc, rule))
 }
 
+/// Format a level-88 `VALUE` literal into its conditional variable's picture at
+/// compile time and read back the signed scaled `i64` — the same reuse
+/// `MOVE <literal>` relies on, so the comparison constant matches the slot's
+/// stored representation exactly.
+fn scale_num_value(
+    src: &Src,
+    picture: &Picture,
+    signed: bool,
+    name: &str,
+) -> Result<i64, CompileError> {
+    let digits = format_into_picture(src, picture)
+        .map_err(|m| CompileError::Unsupported(format!("level-88 {name} VALUE: {m}")))?;
+    let mag = parse_digits(&digits);
+    Ok(if signed && literal_is_negative(src) { -mag } else { mag })
+}
+
+/// Read every `value_item` of a `value_clause` into a [`ValueSpec`]. A
+/// `value_item` is `literal [ (THRU|THROUGH) literal ]` — two literals form an
+/// inclusive range, one a single value.
+fn read_value_specs(vc: &GrammarASTNode) -> Result<Vec<ValueSpec>, CompileError> {
+    let mut specs = Vec::new();
+    for item in child_nodes(vc, "value_item") {
+        let lits = child_nodes(item, "literal");
+        let spec = match lits.as_slice() {
+            [one] => ValueSpec::Single(read_literal(one)?),
+            [lo, hi] => ValueSpec::Range(read_literal(lo)?, read_literal(hi)?),
+            _ => {
+                return Err(CompileError::Malformed(
+                    "a VALUE item must be `literal` or `literal THRU literal`".into(),
+                ))
+            }
+        };
+        specs.push(spec);
+    }
+    Ok(specs)
+}
+
 fn child_tokens(n: &GrammarASTNode) -> Vec<(String, String)> {
     n.children
         .iter()
@@ -2705,6 +2816,31 @@ mod tests {
         )
         .unwrap_err();
         assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn level_88_multi_value_and_range_lower() {
+        // A condition-name with several values and a THRU range lowers to valid
+        // IIR (an OR-fold of cmp_eq and and(cmp_ge, cmp_le)).
+        let m = compile_source(
+            &wrap(
+                &["01  N  PIC 99 VALUE 3.", "88  COND  VALUE 1 5 THRU 7 9."],
+                &["IF COND DISPLAY \"Y\".", "STOP RUN."],
+            ),
+            "c88",
+        )
+        .unwrap();
+        assert!(m.validate().is_empty(), "{:?}", m.validate());
+    }
+
+    #[test]
+    fn multi_value_on_a_plain_item_is_rejected() {
+        // A multi-value / THRU-range VALUE is only meaningful on a level-88 entry;
+        // on a plain item it is a clean error, matching the oracle.
+        for data in ["01  N  PIC 99 VALUE 1 2 3.", "01  N  PIC 99 VALUE 1 THRU 5."] {
+            let err = compile_source(&wrap(&[data], &["STOP RUN."]), "c88").unwrap_err();
+            assert!(matches!(err, CompileError::Unsupported(_)), "{data}: got {err:?}");
+        }
     }
 
     #[test]

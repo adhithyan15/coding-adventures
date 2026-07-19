@@ -579,6 +579,65 @@ mod tests {
         assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
     }
 
+    /// Build a program with `01 N PIC 99 VALUE {v}` plus a single level-88 line,
+    /// then test `IF COND`.
+    fn run_level88_cond(v: &str, eighty_eight: &str) -> Result<String, RuntimeError> {
+        run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            &format!("01  N  PIC 99 VALUE {v}."),
+            eighty_eight,
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    IF COND DISPLAY \"Y\" ELSE DISPLAY \"N\".",
+            "    STOP RUN.",
+        ]))
+    }
+
+    #[test]
+    fn level_88_multiple_values_is_an_or() {
+        // 88 COND VALUE 1 3 5 — true for any listed value, false otherwise.
+        for (v, want) in [("1", "Y\n"), ("3", "Y\n"), ("5", "Y\n"), ("2", "N\n"), ("4", "N\n")] {
+            assert_eq!(run_level88_cond(v, "88  COND  VALUE 1 3 5.").unwrap(), want, "N={v}");
+        }
+    }
+
+    #[test]
+    fn level_88_thru_range_is_inclusive() {
+        // 88 COND VALUE 3 THRU 6 — true for 3..=6, false just outside (both ends).
+        for (v, want) in [("2", "N\n"), ("3", "Y\n"), ("5", "Y\n"), ("6", "Y\n"), ("7", "N\n")] {
+            assert_eq!(run_level88_cond(v, "88  COND  VALUE 3 THRU 6.").unwrap(), want, "N={v}");
+        }
+    }
+
+    #[test]
+    fn level_88_mixes_singles_and_ranges() {
+        // 88 COND VALUE 1 5 THRU 7 9 — {1} ∪ {5,6,7} ∪ {9}.
+        for (v, want) in [("1", "Y\n"), ("5", "Y\n"), ("7", "Y\n"), ("9", "Y\n"), ("4", "N\n"), ("8", "N\n")] {
+            assert_eq!(run_level88_cond(v, "88  COND  VALUE 1 5 THRU 7 9.").unwrap(), want, "N={v}");
+        }
+    }
+
+    #[test]
+    fn multi_value_on_a_plain_item_is_rejected() {
+        // A multi-value / range VALUE is only meaningful on a level-88 entry; on a
+        // plain item it is a clean error.
+        let err = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  N  PIC 99 VALUE 1 2 3.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    STOP RUN.",
+        ]))
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+    }
+
     #[test]
     fn stop_run_inside_a_branch_ends_the_program() {
         // The STOP RUN is inside the THEN branch; the trailing DISPLAY never runs.

@@ -8,6 +8,36 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.11.0: level-88 multiple values and `THRU` ranges (PL09 step 4)
+
+Level-88 condition-names now accept a **list** of values and inclusive **`THRU`
+ranges** — `88 COND VALUE 1 5 THRU 7 9` holds when the variable is `1`, `5..=7`,
+or `9`. Implemented oracle-first (grammar → `cobol-runtime` → this compiler),
+byte-identical throughout.
+
+- **Grammar.** `value_clause` became `"VALUE" [IS] value_item { value_item }` with
+  `value_item = literal [ (THRU|THROUGH) literal ]` (regenerated via `grammar-tools
+  compile-grammar`; `THRU`/`THROUGH` were already reserved). The clause is shared
+  with plain items, so a multi-value/range `VALUE` on a non-88 item is rejected in
+  both the oracle and this compiler.
+- **Model.** `CondName` now holds `Vec<ValueSpec>` (`Single(Src)` | `Range(Src,
+  Src)`); `read_value_specs` reads every `value_item`.
+- **Lowering.** `emit_condition_name` resolves every value into the variable's
+  scaled slot representation, then emits one boolean per item — `cmp_eq` for a
+  single value, `and(cmp_ge, cmp_le)` for a range — and OR-folds them with `or`.
+  Because each `cmp_*` yields `0`/`1`, the bitwise `and`/`or` are exactly logical
+  AND/OR, and the combined `i64` feeds `jmp_if_false` like any relational
+  condition. **This is the first COBOL program to emit the `and`/`or` ops** — all
+  print backends (wasm/jvm/clr) accept them, as do native-AOT/LLVM/VM/JIT.
+- **Deferrals (clean errors).** An alphanumeric conditional variable is still a
+  later rung. (Multiple values and ranges are now supported.)
+- **Tests.** 3 new `jit_e2e.rs` cases byte-identical to the oracle (multi-value OR
+  hit/miss; range inclusive at both boundaries; mixed singles + range across the
+  domain); unit tests for the multi/range lowering and the multi-value-on-plain-item
+  rejection; a `backend_compat` program emitting `and`/`or`; a `lang_matrix` COBOL
+  multi-value/range row across all seven columns. Full suite **133 green** (29 unit
+  + 15 `backend_compat` + 89 `jit_e2e`). The oracle gains 4 unit tests.
+
 ### Added — v0.10.0: level-88 condition-names (PL09 step 4)
 
 The first COBOL feature that reaches past `cobol-runtime`'s prior surface: a

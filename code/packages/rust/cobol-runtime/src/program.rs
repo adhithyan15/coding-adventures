@@ -28,8 +28,18 @@ pub struct DataDef {
     pub name: Option<String>,
     /// The raw picture string (`"9(3)V99"`), if the entry has a PICTURE clause.
     pub picture: Option<String>,
-    /// The VALUE literal, if present.
-    pub value: Option<Lit>,
+    /// The `VALUE` clause's items, empty if there is no `VALUE`. A plain item has
+    /// exactly one [`ValueSpec::Single`]; a level-88 condition-name may list
+    /// several values and `THRU` ranges (`88 OK VALUE 1 THRU 5 9`).
+    pub values: Vec<ValueSpec>,
+}
+
+/// One item of a `VALUE` clause: a single literal or an inclusive `lo THRU hi`
+/// range.
+#[derive(Debug, Clone)]
+pub enum ValueSpec {
+    Single(Lit),
+    Range(Lit, Lit),
 }
 
 /// A literal or figurative constant.
@@ -278,18 +288,29 @@ fn read_data_entry(e: &GrammarASTNode) -> Result<DataDef, RuntimeError> {
 
     // Clauses: each `data_clause` wraps a `picture_clause` or `value_clause`.
     let mut picture = None;
-    let mut value = None;
+    let mut values = Vec::new();
     for clause in child_nodes(e, "data_clause") {
         if let Some(pc) = child_node(clause, "picture_clause") {
             picture = first_token(pc, "PIC_STRING");
         } else if let Some(vc) = child_node(clause, "value_clause") {
-            let lit = child_node(vc, "literal")
-                .ok_or_else(|| RuntimeError::Unsupported("VALUE without a literal".into()))?;
-            value = Some(read_literal(lit)?);
+            for item in child_nodes(vc, "value_item") {
+                values.push(read_value_item(item)?);
+            }
         }
     }
 
-    Ok(DataDef { level, name, picture, value })
+    Ok(DataDef { level, name, picture, values })
+}
+
+/// Read one `value_item` (`literal [ (THRU|THROUGH) literal ]`) into a
+/// [`ValueSpec`]: two literals form an inclusive range, one a single value.
+fn read_value_item(item: &GrammarASTNode) -> Result<ValueSpec, RuntimeError> {
+    let lits = child_nodes(item, "literal");
+    match lits.as_slice() {
+        [one] => Ok(ValueSpec::Single(read_literal(one)?)),
+        [lo, hi] => Ok(ValueSpec::Range(read_literal(lo)?, read_literal(hi)?)),
+        _ => Err(RuntimeError::Unsupported("a VALUE item must be `literal` or `literal THRU literal`".into())),
+    }
 }
 
 fn read_literal(lit: &GrammarASTNode) -> Result<Lit, RuntimeError> {

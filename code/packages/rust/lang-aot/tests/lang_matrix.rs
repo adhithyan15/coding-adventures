@@ -3128,6 +3128,27 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // COBOL-60 — level-88 condition-name with multiple values and a THRU range
+    // (PL09 step 4). `88 COND VALUE 1 5 THRU 7 9` over N=6 → 6 is in 5 THRU 7, so
+    // `IF COND` prints "OK". This folds `cmp_eq` and `and(cmp_ge, cmp_le)` with
+    // `or` — the first COBOL program to emit the `and`/`or` bitwise ops, proving
+    // they lower on every backend.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  N  PIC 99 VALUE 6.\n\
+               000000 88  COND  VALUE 1 5 THRU 7 9.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     IF COND DISPLAY \"OK\" ELSE DISPLAY \"NO\".\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses
