@@ -31,12 +31,18 @@ compared, every Spanish form supplied in full (no prior Spanish assumed).
   (é aigu / è grave / **ê circonflexe = a lost *s***: forêt→forest); the cédille
   ç (soft *c* before a/o/u; ← "little z"); the tréma ï/ë (split the vowels).
   **Authored.**
+- **Ch. 5 — The first verbs**: parler (← *parabolāre* → parable/parole; the big
+  regular *-er* verb + present tense) → habiter (← *habitāre* → habitat) →
+  travailler (← *tripalium* → travail/travel; twin of Spanish *trabajar*) → **Je
+  parle français** (first sentence; *français* ← *Francia*) → practice.
+  **Authored** — mirrors Spanish Ch.6, and teaches the **pro-drop contrast**
+  (French keeps *je* because its *-er* endings are silent).
 
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |
 |---|---|
-| 5+ | Numbers, time, days & months, family, food — following the Spanish theme order, with the Spanish cousin supplied for contrast |
+| 6+ | Numbers, time, days & months, family, food — following the Spanish theme order, with the Spanish cousin supplied for contrast |
 
 The *tu/vous* lesson (Ch. 2) is the French counterpart to Spanish *tú/usted*:
 same formal/informal split, but French makes the formal from the **plural**
