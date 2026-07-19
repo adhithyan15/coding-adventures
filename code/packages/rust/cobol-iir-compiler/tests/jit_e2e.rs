@@ -281,6 +281,29 @@ fn if_equal_less_and_negated() {
 }
 
 #[test]
+fn if_symbolic_relational_operators() {
+    // Every symbol lowers byte-identically to the oracle (run_if asserts that).
+    // N=5 across the truth table, including the range-boundary >= / <= cases and
+    // an explicit NOT composing with a symbol's baseline negation (NOT >= ≡ <).
+    let cases = [
+        ("IF N > 3 DISPLAY \"Y\" ELSE DISPLAY \"N\".", "Y\n"),
+        ("IF N > 5 DISPLAY \"Y\" ELSE DISPLAY \"N\".", "N\n"),
+        ("IF N < 9 DISPLAY \"Y\" ELSE DISPLAY \"N\".", "Y\n"),
+        ("IF N = 5 DISPLAY \"Y\" ELSE DISPLAY \"N\".", "Y\n"),
+        ("IF N >= 5 DISPLAY \"Y\" ELSE DISPLAY \"N\".", "Y\n"),
+        ("IF N >= 6 DISPLAY \"Y\" ELSE DISPLAY \"N\".", "N\n"),
+        ("IF N <= 5 DISPLAY \"Y\" ELSE DISPLAY \"N\".", "Y\n"),
+        ("IF N <= 4 DISPLAY \"Y\" ELSE DISPLAY \"N\".", "N\n"),
+        ("IF N <> 3 DISPLAY \"Y\" ELSE DISPLAY \"N\".", "Y\n"),
+        ("IF N <> 5 DISPLAY \"Y\" ELSE DISPLAY \"N\".", "N\n"),
+        ("IF N NOT >= 6 DISPLAY \"Y\" ELSE DISPLAY \"N\".", "Y\n"),
+    ];
+    for (body, want) in cases {
+        assert_eq!(run_if("5", &[body, "STOP RUN."]), want, "{body}");
+    }
+}
+
+#[test]
 fn if_then_branch_runs_multiple_statements() {
     // Both then-statements run when the condition holds.
     assert_eq!(

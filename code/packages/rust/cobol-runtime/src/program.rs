@@ -573,22 +573,30 @@ fn read_condition(cond: &GrammarASTNode) -> Result<Cond, RuntimeError> {
     let relop = child_node(relation, "relop")
         .ok_or_else(|| RuntimeError::Unsupported("relation without a relational operator".into()))?;
     let toks = child_tokens(relop);
-    let negated = toks.iter().any(|(k, v)| k == "KEYWORD" && v == "NOT");
-    let op = toks
+    let explicit_not = toks.iter().any(|(k, v)| k == "KEYWORD" && v == "NOT");
+    // Each operator resolves to a base relation plus a *baseline* negation: the
+    // symbols `>=`/`<=`/`<>` already mean "not <", "not >", "not =". A written
+    // `NOT` composes with that baseline by XOR.
+    let (op, baseline_neg) = toks
         .iter()
-        .find_map(|(k, v)| {
-            if k != "KEYWORD" {
-                return None;
-            }
-            match v.as_str() {
-                "GREATER" => Some(RelOp::Greater),
-                "LESS" => Some(RelOp::Less),
-                "EQUAL" => Some(RelOp::Equal),
-                _ => None,
-            }
-        })
+        .find_map(|(k, v)| relop_meaning(k, v))
         .ok_or_else(|| RuntimeError::Unsupported("unrecognised relational operator".into()))?;
-    Ok(Cond::Relation { left, op, negated, right })
+    Ok(Cond::Relation { left, op, negated: explicit_not ^ baseline_neg, right })
+}
+
+/// Map a relop token to `(base relation, baseline negation)`. Word forms
+/// (`GREATER`/`LESS`/`EQUAL`) and the symbols `>`/`<`/`=` are un-negated; `>=`,
+/// `<=`, `<>` carry a baseline negation (`>=` ≡ `NOT <`, etc.).
+fn relop_meaning(kind: &str, value: &str) -> Option<(RelOp, bool)> {
+    match (kind, value) {
+        ("KEYWORD", "GREATER") | ("GT", _) => Some((RelOp::Greater, false)),
+        ("KEYWORD", "LESS") | ("LT", _) => Some((RelOp::Less, false)),
+        ("KEYWORD", "EQUAL") | ("EQ", _) => Some((RelOp::Equal, false)),
+        ("GE", _) => Some((RelOp::Less, true)),
+        ("LE", _) => Some((RelOp::Greater, true)),
+        ("NE", _) => Some((RelOp::Equal, true)),
+        _ => None,
+    }
 }
 
 // ---------------------------------------------------------------------------

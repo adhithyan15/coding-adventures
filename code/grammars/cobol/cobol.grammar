@@ -177,8 +177,12 @@ if_stmt        = "IF" condition { statement } [ "ELSE" { statement } ] ;
 condition      = relation | condition_name ;
 relation       = operand relop operand ;
 condition_name = NAME ;
+# The relation operator: a COBOL word form (`GREATER THAN`, …) or a symbol
+# (`>` `<` `=` `>=` `<=` `<>`). `>=`/`<=`/`<>` already encode a negation
+# (`>=` ≡ `NOT <`); a leading `NOT` composes with it (the readers XOR the two).
 relop          = [ "IS" ] [ "NOT" ]
-            ( "GREATER" [ "THAN" ] | "LESS" [ "THAN" ] | "EQUAL" [ "TO" ] ) ;
+            ( "GREATER" [ "THAN" ] | "LESS" [ "THAN" ] | "EQUAL" [ "TO" ]
+            | GE | LE | NE | GT | LT | EQ ) ;
 
 # ============================================================
 # Operands and literals

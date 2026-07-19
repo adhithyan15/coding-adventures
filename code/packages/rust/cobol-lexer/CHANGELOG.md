@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.4.0 — symbolic relational operator tokens
+
+- Added `GT` (`>`), `LT` (`<`), `GE` (`>=`), `LE` (`<=`), and `NE` (`<>`) so a
+  `relation` can be written with symbols as well as the word forms. `EQ` (`=`) was
+  already present (it doubles as the COMPUTE assignment). The two-character
+  operators are listed before the one-character ones so the lexer's longest-match
+  takes them whole (as `POW` `**` precedes `STAR` `*`). `_grammar.rs` regenerated
+  from `cobol.tokens` via `grammar-tools compile-tokens`.
+
 ## 0.3.0 — `SET` and `TRUE` keywords
 
 - Added `SET` and `TRUE` to the reserved-word list so `SET cond-name TO TRUE`

@@ -8,6 +8,29 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.13.0: symbolic relational operators (`> < = >= <= <>`) (PL09 step 4)
+
+Conditions can now be written with symbols as well as COBOL's word operators:
+`IF N >= 5`, `IF X <> Y`, `PERFORM … UNTIL I > 9`. Implemented oracle-first (lexer
+→ grammar → `cobol-runtime` → this compiler), byte-identical.
+
+- **Lexer/grammar.** New tokens `GT`/`LT`/`GE`/`LE`/`NE` (`cobol-lexer` 0.4.0;
+  `EQ` already existed), 2-char before 1-char for longest-match; the `relop` rule
+  gains the symbolic alternatives (`cobol-parser` 0.9.0). Both generated files
+  regenerated via `grammar-tools`.
+- **Lowering.** `relation_op` now resolves each operator to a base relation plus a
+  *baseline* negation — the symbols `>=`/`<=`/`<>` already mean "not <", "not >",
+  "not =" — and a written `NOT` composes with that baseline by XOR. So `>=` lowers
+  to `cmp_ge`, `<>` to `cmp_ne`, `NOT >=` to `cmp_lt`, etc. The symbols reduce onto
+  the existing `cmp_*` set, so there is **no new opcode** and no change to the
+  branch structure — every backend already accepts it.
+- **Tests.** A new `jit_e2e.rs` case covering the whole symbol truth table
+  (including the `>=`/`<=` range boundaries and `NOT >=` ≡ `<`), byte-identical to
+  the oracle; a unit test asserting each symbol maps to the right `cmp_*`; a
+  `backend_compat` program; a `lang_matrix` COBOL symbolic-relop row across all
+  seven columns. Full suite **141 green** (32 unit + 17 `backend_compat` + 92
+  `jit_e2e`). The oracle gains a symbolic-operator unit test.
+
 ### Added — v0.12.0: `SET cond-name TO TRUE` (PL09 step 4)
 
 The setter counterpart to level-88's condition-name test: `SET IS-DONE TO TRUE`

@@ -105,14 +105,22 @@ RPAREN = ")"
 #     pattern swallows the hyphen); subtraction must be written `A - B`.
 #   * `*` as the column-7 comment indicator never reaches us — the
 #     `strip_cobol_columns` hook removed it before tokenizing.
-# `=` is the COMPUTE assignment operator (COBOL's relational "equals" is the
-# word EQUAL, handled in the grammar, so `=` is unambiguous here).
+# `=` is both the COMPUTE assignment operator and the relational "equals"; the
+# grammar decides by position (after `COMPUTE NAME [ROUNDED]` it assigns; inside a
+# `relation` it compares). The two-character relational operators `>=`, `<=`, `<>`
+# are listed before the one-character `>`/`<` so the lexer's longest-match takes
+# them whole (as POW `**` precedes STAR `*`).
 POW   = "**"
 PLUS  = "+"
 MINUS = "-"
 STAR  = "*"
 SLASH = "/"
 EQ    = "="
+GE    = ">="
+LE    = "<="
+NE    = "<>"
+GT    = ">"
+LT    = "<"
 
 # ============================================================
 # SECTION 3: The `picture` group (context-sensitive)

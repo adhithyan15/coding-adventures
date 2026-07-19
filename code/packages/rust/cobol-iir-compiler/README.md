@@ -24,7 +24,7 @@ interpreter_ir::IIRModule   (one `main`, returns i64 exit code)
 NativeAOT · LLVM · WASM · JVM · CLR · VM · JIT
 ```
 
-## This slice (v0.12 — the core plus control flow, `COMPUTE` incl. `**` and nested `/`, `ON SIZE ERROR`, signed, alphanumeric, level-88 with ranges + `SET … TO TRUE`)
+## This slice (v0.13 — the core plus control flow, `COMPUTE` incl. `**` and nested `/`, `ON SIZE ERROR`, signed, alphanumeric, symbolic relops, level-88 with ranges + `SET … TO TRUE`)
 
 COBOL's WORKING-STORAGE is a **PICTURE-typed** data model. Each elementary item
 becomes one IIR register: a **numeric** item (`PIC 9…`) is an `i64` holding its
@@ -38,7 +38,7 @@ integer `123`); an **alphanumeric** item (`PIC X`/`A`) is a `str`.
 | `ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE … [GIVING r] [ROUNDED] [ON SIZE ERROR …]` | `add`/`sub`/`mul`/`div` on the `i64` slots, the result reduced to the receiver's field; a size error runs the handler and leaves the receiver unchanged |
 | `COMPUTE r [ROUNDED] = expr [ON SIZE ERROR …]` | the precedence cascade (`+ - * /`, unary minus, `**` with a constant exponent, parentheses) evaluated bottom-up over scaled `i64`, each step overflow-guarded |
 | `DISPLAY op…` | each operand's image emitted, then `putchar('\n')` — a literal prints its source text, a numeric item via the fixed-width digit helper (signed items via a trailing-overpunch helper), an alphanumeric via `print_str` |
-| `IF cond then… [ELSE else…]` | numeric conditions align operands and `cmp_*`; alphanumeric conditions space-pad both sides and `str_cmp`; a level-88 condition-name lowers to `cmp_eq` on its variable's slot; `jmp_if_false` over the then-branch; `NOT` inverts the relation |
+| `IF cond then… [ELSE else…]` | numeric conditions align operands and `cmp_*`; alphanumeric conditions space-pad both sides and `str_cmp`; a level-88 condition-name lowers to `cmp_eq` on its variable's slot; `jmp_if_false` over the then-branch. Relations use word (`GREATER THAN`, …) or symbolic (`> < = >= <= <>`) operators; `NOT`, and the baseline negation `>=`/`<=`/`<>` already carry, compose by XOR and invert the relation directly |
 | `88 cond-name VALUE lit… [lo THRU hi]` | registers a boolean condition-name over the preceding item; `IF cond-name` / `PERFORM … UNTIL cond-name` hold when the variable equals any listed value or falls in any inclusive range — lowered as an OR-fold of `cmp_eq` / `and(cmp_ge, cmp_le)` (numeric) |
 | `SET cond-name TO TRUE` | stores the condition-name's first `VALUE` (a range's low bound) into its conditional variable — a `const` store into the slot (numeric) |
 | `GO TO para` | `jmp para_<name>` |
