@@ -1,5 +1,103 @@
 # Changelog
 
+## 0.42.0 — SIR22 "APL addendum" codegen: `Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`
+
+Closes the gap the SIR22 spec's own addendum section and this crate's
+`emit.rs`/`lib.rs` doc comments flagged: `apl-to-semantic-ir` (shipped in
+0.1.0/0.1.1) genuinely lowers APL's `/` (reduce), `\` (scan), `∘.` (outer
+product), `⍴` (shape/reshape), `⍳` (index-generator/index-of), and `,`
+(ravel/catenate) to these nine `Expr` variants, but this backend's `emit.rs`
+still `panic!`ed on all nine and `lib.rs` had a dedicated pre-`emit` tree-walk
+(`find_unimplemented_sir22_addendum_node`) to reject them cleanly instead.
+Since APL's whole reason for existing is these nine operators (ordinary
+scalar arithmetic alone isn't really "APL" — see `code/specs/
+MA05-apl-language.md`), essentially no real APL program could compile to JS
+before this release, which blocked ever writing a meaningful end-to-end test
+for that frontend.
+
+### Added
+
+- **`runtime.rs`**: nine new functions in the inlined `__Sir.Array`
+  sub-runtime, ported 1:1 from two Rust references — `array_runtime::
+  ops::{reduce,scan,outer}` (`reduce`/`scan`/`outer`, reusing the existing
+  `applyOp` dispatch table `elementwise` already uses) and `apl_runtime::
+  builtins::{shape,reshape,index_generator,index_of,ravel,catenate}` (the
+  "bespoke, not `BinOp`-shaped" ones). All bounded-allocation checks reuse
+  this file's ONE existing `MAX_ELEMENTS` cap (67,108,864) via
+  `checkedShapeSize` — `apl_runtime::builtins::MAX_ARRAY_LENGTH`'s smaller
+  1,000,000 figure is deliberately NOT reintroduced as a second, competing
+  constant. Two subtleties called out inline where the Rust reference itself
+  flags them as the likely place to introduce a silent wrong-answer bug:
+  `reduce`/`scan`'s rank-2 (matrix) branch folds/scans EACH ROW across
+  columns (column-major indexing, easy to transpose by accident), and
+  `reshape`'s rank-2 target case explicitly transposes a ROW-major cyclic
+  fill back into COLUMN-major storage.
+- **`runtime.rs`'s `formatSeen`** (the shared `print`/`puts`/`format`
+  display path): a new branch renders a raw `NDArray` (`{ shape, data }`)
+  using `ArrayRt.display`, a 1:1 port of `apl_runtime::value::display` —
+  APL's OWN console convention (high-minus `¯` for negatives, no trailing
+  `.0` on whole values, space-separated vector, right-aligned matrix rows).
+  This was necessary, not a side quest: `apl-to-semantic-ir` auto-prints a
+  bare top-level expression through this backend's `print` builtin, and APL
+  has NO bracket-indexing surface syntax at all (confirmed against `code/
+  grammars/apl/apl.grammar`) to read a scalar back with the way
+  `matlab-to-semantic-ir`'s own `e2e_node.rs` does — so without this,
+  literally no APL program's auto-print (not even a single `Reduce` result)
+  could ever render correctly; every array-domain value stays an opaque
+  `{shape,data}` object at the JS level, `[object Object]` without this fix.
+  MATLAB is unaffected (it always reads a computed array back through a
+  scalar `IndexGet`, never a raw print, per `tests/sir22_array.rs`'s own doc
+  comment) — this is purely additive.
+- **`emit.rs`**: nine real-codegen `match` arms replacing the previous
+  combined `panic!` arm, mirroring the existing `ElementwiseOp`/
+  `Transpose`/`MatMul` arms' style — each recurses into its operand(s) and
+  emits a call into the corresponding `__Sir.Array.*` function;
+  `Reduce`/`Scan`/`OuterProduct` reuse `elementwise_op_js_name` for their
+  `op` field exactly like `ElementwiseOp` does.
+- **`lib.rs`**: removed `find_unimplemented_sir22_addendum_node` (the
+  dedicated tree-walk that rejected these nine node kinds before `emit`
+  could panic on them) — no longer needed now that real codegen exists.
+  `compile()`'s step 3b (the call site) is gone too. Doc comments and
+  `ACCEPTED_FEATURES` updated to describe the full SIR22 domain (base cut
+  + addendum) as accepted and implemented, not "base cut done, addendum
+  deferred."
+
+### Changed
+
+- `tests/lib.rs`'s stale `rejects_reduce_node_cleanly_instead_of_panicking_
+  in_emit` regression test is now `compiles_reduce_node_instead_of_
+  rejecting_it`, asserting `compile()` SUCCEEDS with the exact expected
+  `__Sir.Array.reduce("Add", ...)` call shape, plus a new
+  `emits_all_nine_addendum_nodes_as_sir_array_calls` covering the other
+  eight node kinds' call shapes.
+- `runtime.rs`'s test module gained coverage for the nine new functions'
+  presence, the shared bounded-allocation-cap reuse, the empty-vector
+  reduce error, `⍳`'s 1-based indexing, `reshape`'s row-major-to-column-major
+  transpose, and the new APL-style `display` formatting.
+
+### Verified
+
+- `cargo test -p semantic-ir-to-javascript -p apl-to-semantic-ir`: all
+  green (137 unit tests in this crate, plus `sir22_array.rs`/
+  `sir23_symbolic.rs`/`run_with_node.rs`; 40+7+3 tests in
+  `apl-to-semantic-ir`, including a NEW `tests/e2e_node.rs` — this crate's
+  first real `node`-executed proof that APL's `+/`, non-Add reduce, `+\`
+  composed with a non-commutative reduce (proving prefix order), `∘.×`,
+  `⍴`, `⍳`, and `,` all compute the right numbers end to end).
+- Every downstream frontend crate that carries this backend as a
+  dev-dependency re-verified green: `javascript-to-semantic-ir`,
+  `macsyma-to-semantic-ir`, `matlab-to-semantic-ir`, `octave-to-semantic-ir`,
+  `j-to-semantic-ir` (whose own `tests/test_validator.rs` had the identical
+  stale "Reduce rejected" regression test, updated the same way — see that
+  crate's own CHANGELOG), `wolfram-to-semantic-ir`, `sir-conformance`. None
+  needed source changes — only ADDING codegen for previously-panicking node
+  kinds, not changing behavior for anything another frontend already emits.
+- `cargo build --workspace`: no new failures introduced (pre-existing,
+  environment-specific failures unrelated to this change remain: `uefi`'s
+  duplicate `panic_impl` lang item, `paint-vm-direct2d`/`paint-vm-gdi`
+  requiring Windows, `font-parser-python`/`font-parser-ruby` bridge builds —
+  none reference `semantic-ir`/`apl-to-semantic-ir`/`j-to-semantic-ir`).
+
 ## 0.41.0 — `__Sir.matlabTruthy`: a runtime-decided boolean-context coercion for MATLAB/Octave
 
 ### Added

@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.1.1] - 2026-07-18
+
+### Changed
+
+- **`semantic-ir-to-javascript` now implements real codegen for the SIR22
+  "APL addendum" (`Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/
+  `IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`)** — no code change in this
+  crate; `+/1 2 3` (this crate's own `Expr::Reduce` output, identical to
+  `apl-to-semantic-ir`'s) used to compile down to a clean `compile()`
+  rejection via that backend's now-removed dedicated tree-walk check.
+  Updated `tests/test_validator.rs`'s `reduce_modules_validate_but_
+  compile_still_rejects_them` (renamed `reduce_modules_now_compile_
+  cleanly`) to assert `compile()` now SUCCEEDS instead of asserting the
+  old rejection — mirrors the identical fix in `apl-to-semantic-ir`'s own
+  `tests/test_validator.rs`. No behavioral node-execution test added
+  here; `apl-to-semantic-ir`'s `tests/e2e_node.rs` is the actual
+  node-executed proof for this shared codegen path (both frontends emit
+  the identical `Expr::Reduce`/etc. node shapes).
+
 ## [0.1.0] - 2026-07-17
 
 ### Added
