@@ -56,11 +56,15 @@ export function createTaskEngine(wasmBytes, options = {}) {
     reset() {
       ex.reset();
     },
-    /** Serialize the whole project (raw JSON string) for host-owned persistence. */
+    /** Serialize the whole workspace (raw JSON string) for host-owned persistence. */
     snapshot() {
       return readResult(ex.snapshot());
     },
-    /** Replace the project with a snapshot JSON string. */
+    /**
+     * Replace the workspace with a snapshot JSON string. Accepts either a whole
+     * workspace snapshot or a pre-workspace bare-project snapshot (migrated on load),
+     * so data persisted before workspaces keeps loading.
+     */
     load(json) {
       return callStr("load", json);
     },
@@ -89,10 +93,30 @@ export function createTaskEngine(wasmBytes, options = {}) {
     answerDecision: op("answer_decision"),
     setProjectName: op("set_project_name"),
 
+    // ── workspace operations (across projects) ──
+    createProject: op("create_project"),
+    renameProject: op("rename_project"),
+    deleteProject: op("delete_project"),
+    nestProject: op("nest_project"),
+    unnestProject: op("unnest_project"),
+    /** Create a task in a named project (workspace-global id uniqueness). */
+    createTaskIn: op("create_task_in"),
+    moveTask: op("move_task"),
+    linkCrossProjectDependency: op("link_cross_project_dependency"),
+    unlinkCrossProjectDependency: op("unlink_cross_project_dependency"),
+    upsertSharedResource: op("upsert_shared_resource"),
+    deleteSharedResource: op("delete_shared_resource"),
+
     // ── queries / projections (each returns { ok:true, data }) ──
     checklist: query("checklist"),
     todos: query("todos"),
     flowchart: query("flowchart"),
+    /** The whole workspace: projects, nesting, cross-project edges, shared pool. */
+    workspace: query("workspace"),
+    /** Whole-workspace CPM schedule anchored at a project start (days since epoch). */
+    workspaceSchedule(projectStartDays) {
+      return JSON.parse(readResult(ex.workspace_schedule(projectStartDays | 0)));
+    },
     /** Gantt timeline anchored at a project start (days since the Unix epoch). */
     gantt(projectStartDays) {
       return JSON.parse(readResult(ex.gantt(projectStartDays | 0)));
