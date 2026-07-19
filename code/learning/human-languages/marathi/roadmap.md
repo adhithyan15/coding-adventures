@@ -13,18 +13,31 @@ extra letter ळ, and a Dravidian-flavoured everyday grammar. The script is taug
 
 ## Authored
 
-- **Ch. 1 — Greetings**: namaskār → dhanyavād → ho → nāhī → baraṃ → yeto/yete →
+- **Ch. 1 — Greetings**: namaskār → dhanyavād → ho → nāhī → baraṁ → yeto/yete →
   practice. Devanagari introduced through the words; Marathi's distinctives
   foregrounded.
+- **Ch. 2 — Introducing Yourself**: nāv → mājhaṁ → āhe → "my name is…" → tū/tumhī
+  → kāy → "what's your name?" → ānand → practice. The copula *āhe* going last;
+  three-gender agreement.
+- **Ch. 3 — How Are You**: kasā → "tumhī kase āhāt?" → mī → "mī barā āhe" → kāhī
+  harkat nāhī → practice. The *k-* questions; the Perso-Arabic *harkat*.
+- **Ch. 4 — Farewells**: punhā → bheṭū → "punhā bheṭū" → "udyā bheṭū" → kāḷjī ghyā
+  → practice. The future-wish *-ū*; the retroflex ळ.
+- **Ch. 5 — The First Verbs**: bolṇe → "mī marāṭhī bolto" → rāhṇe → kām karṇe →
+  practice. The *-ṇe* infinitive; the gendered present (*-to/-te*); postposition
+  *-āt*.
 
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 2 | Introducing yourself: *mājhe nāv…* ("my name"), *tū* / *tumhī* (familiar / respectful "you"), the three genders at the first noun |
-| 3 | Responding: *kase āhāt?* ("how are you"), *maja āhe* ("I'm well"), the verb *asaṇe* ("to be," *āhe*) |
-| 4 | The case-endings (Marathi's postpositions), numbers 1–10 |
-| 5+ | Gendered verbs deepened, family, food — always with the Hindi/Dravidian contrast thread |
+| 6 | Numbers 1–10 (native words + Devanagari digits १२३), counting, age |
+| 7 | Family (*āī*, *bābā*, *bhāū*, *bahīṇ*) and the honorific *-jī* / *-rāv* |
+| 8 | Food and the market — where the Perso-Arabic and Portuguese loans cluster |
+| 9+ | The case-endings deepened, past and future tenses (where gender returns on the verb), everyday sentences — always with the Hindi/Dravidian contrast thread |
 
 Note: Marathi marks "you" by **register** (*tū* familiar / *tumhī* respectful,
-also plural) — like the other Indo-Aryan and Romance tracks.
+also plural) — like the other Indo-Aryan and Romance tracks. Its signature is
+gender on the **verb** in the present tense (*yeto/yete*, *bolto/bolte*), the
+**three** genders, and the extra retroflex letter **ळ** — all now surfaced across
+Chapters 1–5.

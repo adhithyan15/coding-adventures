@@ -21,9 +21,17 @@ book.
 ## Progress
 
 - **Chapter 1 — Greetings** ([`lessons/MR-C01-*`](./lessons/)): namaskār,
-  dhanyavād, ho, nāhī, baraṃ, yeto/yete (gendered farewell), practice. In the
-  book.
-- **Chapter 2 — Introducing Yourself** (planned): *mājhe nāv…*, *tū* / *tumhī*.
+  dhanyavād, ho, nāhī, baraṁ, yeto/yete (gendered farewell), practice.
+- **Chapter 2 — Introducing Yourself** ([`lessons/MR-C02-*`](./lessons/)): nāv,
+  mājhaṁ, āhe, "my name is…", tū/tumhī, kāy, "what's your name?", ānand.
+- **Chapter 3 — How Are You** ([`lessons/MR-C03-*`](./lessons/)): kasā, "tumhī
+  kase āhāt?", mī, "mī barā āhe", kāhī harkat nāhī.
+- **Chapter 4 — Farewells** ([`lessons/MR-C04-*`](./lessons/)): punhā, bheṭū,
+  "punhā bheṭū", "udyā bheṭū", kāḷjī ghyā.
+- **Chapter 5 — The First Verbs** ([`lessons/MR-C05-*`](./lessons/)): bolṇe, "mī
+  marāṭhī bolto", rāhṇe, kām karṇe.
+
+All five chapters are in the book.
 
 ## Book / fonts
 
