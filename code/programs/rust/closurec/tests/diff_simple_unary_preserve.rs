@@ -12,8 +12,11 @@
 //! At SIMPLE the fixture optimizes to:
 //!
 //! ```text
-//! var a=first();var b=second();var c=third();report(!a,-b,~c,!(a < b));
+//! var a=first(),b=second(),c=third(),dead=9;report(!a,-b,~c,!(a<b));
 //! ```
+//!
+//! The unused `dead = 4 + 5` binding is KEPT (open-world SIMPLE never deletes
+//! a top-level `var`), but its initializer is still constant-folded to `9`.
 
 use std::process::Command;
 
@@ -76,9 +79,10 @@ fn simple_unary_preserve_keeps_every_prefix_operator() {
 }
 
 /// Regression guard: the output must NOT be the WHITESPACE_ONLY fallback. The
-/// unused `var dead = 4 + 5;` is removed only by the typed pipeline, so its
-/// absence proves the SIMPLE optimizer ran (and therefore the bridge ran, and
-/// the operators survived *it*). WHITESPACE_ONLY keeps `dead` verbatim.
+/// unused `var dead = 4 + 5;` binding is KEPT at open-world SIMPLE, but its
+/// initializer is still constant-folded to `9` — a transform the typed
+/// pipeline performs (and therefore the bridge ran, and the operators survived
+/// *it*) and WHITESPACE_ONLY does not (it leaves `4 + 5` verbatim).
 #[test]
 fn simple_unary_preserve_did_not_fall_back_to_whitespace_only() {
     let out = Command::new(BINARY)
@@ -88,9 +92,13 @@ fn simple_unary_preserve_did_not_fall_back_to_whitespace_only() {
     let actual = String::from_utf8_lossy(&out.stdout);
 
     assert!(
-        !actual.contains("dead"),
-        "expected the unused `dead` binding to be removed by the typed pipeline \
-         (proving this is the SIMPLE optimizer, not the whitespace fallback); \
-         got:\n{actual}",
+        actual.contains("dead=9"),
+        "expected the kept `dead` binding's `4 + 5` initializer to be \
+         constant-folded to `9` (proving this is the SIMPLE optimizer, not the \
+         whitespace fallback); got:\n{actual}",
+    );
+    assert!(
+        !actual.contains("4 + 5") && !actual.contains("4+5"),
+        "expected `4 + 5` to have been folded away; got:\n{actual}",
     );
 }

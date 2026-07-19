@@ -1,11 +1,14 @@
 //! Integration test for the `tests/diff/simple-inline-variables/` fixture.
 //!
-//! Exercises CLOC13.H — the `inline-variables` pass propagates a
-//! top-level `const = literal` to its use sites; remove-unused-vars
-//! deletes the emptied declaration and the fixed-point constant-fold
-//! sweep folds the now-concrete arithmetic. `const RATE = 2;
-//! total(base * RATE); margin(RATE + 1);` becomes
-//! `total(base * 2); margin(3);`.
+//! Exercises CLOC13.H — the `inline-variables` pass propagates a top-level
+//! `const = literal` to its use sites. It is a value-copying pass (it does not
+//! delete the source declaration) and runs at SIMPLE; the fixed-point
+//! `constant-fold` sweep then folds the now-concrete arithmetic it exposes.
+//! What does NOT run at SIMPLE is `remove-unused-vars`, so the emptied
+//! declaration is KEPT (open-world). `const RATE = 2; total(base * RATE);
+//! margin(RATE + 1);` becomes `const RATE=2;total(base*2);margin(3);`. Under
+//! ADVANCED the now-unused `const RATE = 2` is dropped, giving
+//! `total(base*2);margin(3);`.
 
 use std::process::Command;
 

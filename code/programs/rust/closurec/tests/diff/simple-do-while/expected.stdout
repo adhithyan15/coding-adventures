@@ -1,1 +1,1 @@
-report(1);do{var x=3;step(x)}while(cond);foo();
+function log(p){report(p)};log(1);do{var x=3;step(x)}while(cond);foo();

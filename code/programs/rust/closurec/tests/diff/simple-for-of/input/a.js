@@ -6,10 +6,13 @@
 // end-to-end oracle proving the SIMPLE pipeline now runs every pass inside the
 // for-of body and recurses into its iterable expression:
 //
-//   * `log` is single-use, so the inliner folds `log(1)` into its body
-//     `report(1)` and deletes the now-unused declaration.
 //   * `1 + 2` is constant-folded to `3` even though it lives inside the loop
 //     body.
+//   * `function log` is KEPT and `log(1)` stays a call. SIMPLE is
+//     open-world: it never inlines or deletes an observable top-level name
+//     (another script sharing the page could call `log`). The single-use
+//     inline that would fold `log(1)` into `report(1)` runs only at
+//     ADVANCED (closed-world).
 //   * The `for (const item of items) { … }` survives verbatim — control flow
 //     and the loop variable are preserved.
 //   * `after()` AFTER the loop stays reachable: a for-of is not a terminator

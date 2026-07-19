@@ -10,11 +10,14 @@
 //
 // `a`, `b` come from side-effecting calls so they don't fold to literals,
 // keeping the equality comparison (and thus the rewrite) visible. The unused
-// `dead` binding is removed by the typed pipeline, proving this is the SIMPLE
-// optimizer rather than the WHITESPACE_ONLY fallback.
+// `dead = 8 + 9` binding is KEPT — SIMPLE is open-world and never deletes an
+// observable top-level `var` (another script could read it) — but its
+// initializer is still constant-folded to `17`, which proves this is the
+// SIMPLE optimizer rather than the WHITESPACE_ONLY fallback (which would keep
+// `8 + 9` verbatim).
 //
 // At SIMPLE this becomes:
-//   var a=first();var b=second();report(a != b,a !== b,!(a < b));
+//   var a=first(),b=second(),dead=17;report(a!=b,a!==b,!(a<b));
 var a = first();
 var b = second();
 var dead = 8 + 9;

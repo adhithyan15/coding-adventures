@@ -2,6 +2,62 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.235.0] - 2026-07-18
+
+### Fixed — SIMPLE is now open-world: it no longer removes/inlines top-level names
+
+The SIMPLE optimization pipeline was running three CLOSED-WORLD passes —
+`remove-unused-vars` (deletes unreferenced top-level `var/let/const`),
+`treeshake` (deletes unreferenced top-level `function`/`class`), and `inline`
+(inlines a single-use top-level function into its call site) — that the
+reference Closure Compiler performs ONLY at ADVANCED. At SIMPLE the reference
+compiler is *open-world*: a top-level binding may be read or called by another
+script sharing the global object, so it is never removed. Running these at
+SIMPLE was a miscompile — e.g. `var z = 1;` (a global another script might read)
+was dropped, and `function f(){…}f();` was mangled into a hoisted `var`.
+
+These three passes are now gated behind `advanced.is_some()` in
+`run_typed_pipeline`, keeping their canonical order so **ADVANCED output is
+byte-for-byte unchanged**. SIMPLE now keeps top-level `var`/`function`/`class`
+declarations and leaves single-use function calls in place, matching the
+reference compiler's open-world SIMPLE. Function-*local* dead code and unused
+locals are still eligible for removal (scope-local, sound); `constant-fold`,
+`fold-control-flow`, `dce`, `inline-variables`, and `rename` (locals only) run
+unchanged at SIMPLE. The `SIMPLE_PASS_NAMES` CV-trace list drops the two
+global-scope sweepers to match what executes.
+
+Eight in-crate unit tests that had asserted the old (miscompiling)
+aggressive-SIMPLE behavior were rewritten to assert the correct
+open-world-SIMPLE / closed-world-ADVANCED split at both levels.
+
+**Twelve** end-to-end diff fixtures also asserted the old behavior and were
+updated to the new open-world output (the ADVANCED behavior each once
+demonstrated is now described in-fixture as the ADVANCED contrast):
+
+- `simple-remove-unused-vars`, `simple-treeshake`, `simple-inline-multiuse`,
+  `simple-fixpoint` — these exercised `remove-unused-vars` / `treeshake` /
+  `inline` at SIMPLE, the very passes now gated to ADVANCED; at SIMPLE the
+  unreferenced top-level `var`/`function` and single-use functions are now
+  KEPT.
+- `simple-inline-variables` — `inline-variables` still propagates at SIMPLE,
+  but the emptied `const` declaration is now KEPT (remove-unused-vars is
+  ADVANCED-only).
+- `simple-debugger`, `simple-do-while`, `simple-for-in`, `simple-for-of`,
+  `simple-try-catch` — these fold/strip inside a statement form but had a
+  helper `log` inlined at SIMPLE; `function log` is now KEPT. Their
+  "did-not-fall-back-to-whitespace" oracles were re-pointed from the
+  (now-invalid) inline to still-valid typed-pipeline proofs (constant-fold and
+  DCE, which still run at SIMPLE).
+- `simple-negation-fold`, `simple-unary-preserve` — the negation/unary rewrite
+  is unchanged; only the incidental unused `dead` binding is now KEPT (its
+  initializer still constant-folds).
+
+Specs synced to the open-world SIMPLE behavior: CLOC17, CLOC19–CLOC24 fixture
+descriptions updated (they had described the SIMPLE single-use-function inline).
+CLOC11.07/11.08 already correctly scoped `treeshake`/`inline`/`remove-unused-vars`
+to ADVANCED — this change brings the implementation back into line with them.
+ADVANCED output remains byte-for-byte unchanged.
+
 ## [0.234.37] - 2026-07-17
 
 ### Fixed — decode legacy octal string escapes on the WHITESPACE_ONLY path

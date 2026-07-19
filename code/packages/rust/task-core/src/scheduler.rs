@@ -24,9 +24,10 @@
 //! is applied in elapsed time. These are refined in a follow-up.
 
 use crate::calendar::{self, Instant};
-use crate::ids::TaskId;
+use crate::ids::{ProjectId, TaskId};
 use crate::model::{
     Constraint, DependencyKind, DependencyLink, ProjectState, ScheduledDates, Task, TaskKind,
+    Workspace,
 };
 use crate::primitives::{Date, Duration};
 use std::collections::BTreeMap;
@@ -44,6 +45,43 @@ pub struct ScheduleResult {
     pub project_start: Date,
     /// The latest finish across all tasks, or `None` if nothing was scheduled.
     pub project_finish: Option<Date>,
+}
+
+/// The result of scheduling a whole **workspace** — every project at once.
+///
+/// It carries the same per-task `dates` and `conflicts` as a single-project
+/// [`ScheduleResult`] (the tasks map spans *all* projects, since task ids are
+/// workspace-global), plus a `per_project` rollup so a portfolio view can show each
+/// project's — and each parent project's — span without re-deriving it.
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub struct WorkspaceSchedule {
+    /// Computed dates for every scheduled task across every project.
+    pub dates: BTreeMap<TaskId, ScheduledDates>,
+    /// Each project's rolled-up span, aggregated over its own tasks **and** every
+    /// sub-project beneath it in the nesting forest.
+    pub per_project: BTreeMap<ProjectId, ProjectRollup>,
+    /// Problems the scheduler could not satisfy, across all projects.
+    pub conflicts: Vec<Conflict>,
+    /// The start date the schedule was computed from.
+    pub project_start: Date,
+    /// The latest finish across the whole workspace, or `None` if nothing scheduled.
+    pub project_finish: Option<Date>,
+}
+
+/// A project's rolled-up span — the aggregate of its own tasks and its sub-projects.
+/// The workspace analogue of a summary task's rollup.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub struct ProjectRollup {
+    /// Earliest start of any task in the project or its descendants (`None` if empty).
+    pub start: Option<Date>,
+    /// Latest finish of any task in the project or its descendants.
+    pub finish: Option<Date>,
+    /// Whether any task in the project or its descendants is on the critical path.
+    pub critical: bool,
 }
 
 /// A scheduling constraint the engine could not honour.
@@ -81,61 +119,185 @@ pub enum SchedulingError {
     Cycle(Vec<TaskId>),
 }
 
-/// Compute the schedule for `project`, anchoring unconstrained tasks at
+/// Compute the schedule for a single `project`, anchoring unconstrained tasks at
 /// `project_start`. Returns per-task dates and any conflicts, or a `Cycle` error if
 /// the dependency network is not acyclic.
+///
+/// This is the one-project case of [`schedule_workspace`]: it runs the identical CPM
+/// pass over just this project's tasks, so a workspace holding only this project
+/// produces exactly these dates.
 pub fn schedule(
     project: &ProjectState,
     project_start: Date,
 ) -> Result<ScheduleResult, SchedulingError> {
-    // A task participates in the network if it is not a summary and carries a
-    // scheduling block. Summaries are rolled up afterwards; unscheduled leaves (e.g.
-    // bare checklist items) simply get no dates.
-    let schedulable: Vec<&Task> = project
-        .tasks
-        .values()
-        .filter(|t| t.kind != TaskKind::Summary && t.schedule.is_some())
-        .collect();
+    let plan = Plan::for_project(project);
+    let Pass {
+        mut dates,
+        conflicts,
+        finish,
+    } = run(&plan, project_start)?;
 
+    // Leaf → summary rollups within the project.
+    roll_up_summaries(project, &mut dates);
+
+    Ok(ScheduleResult {
+        dates,
+        conflicts,
+        project_start,
+        project_finish: finish.map(|f| finish_date(f.saturating_sub(1), f)),
+    })
+}
+
+/// Compute the schedule for a whole **workspace** — every project at once, as one
+/// network.
+///
+/// This is the point of the workspace layer: because task ids are workspace-global,
+/// the pass runs over *all* projects' tasks in a single CPM graph, so a dependency
+/// can cross a project boundary and a sub-project's dates roll up into its parent.
+/// Each task still resolves calendars against *its own* project, and predecessor →
+/// successor timing is computed in absolute instant-space, so two projects on
+/// different working weeks compose correctly.
+///
+/// Cross-project dependencies are honoured only when the workspace opts into
+/// [`crate::model::WorkspaceSettings::schedule_as_one_network`]; otherwise every
+/// project schedules independently from the same start (the simple default). Either
+/// way, `per_project` reports each project's rolled-up span over the nesting forest.
+pub fn schedule_workspace(
+    ws: &Workspace,
+    project_start: Date,
+) -> Result<WorkspaceSchedule, SchedulingError> {
+    let plan = Plan::for_workspace(ws);
+    let Pass {
+        mut dates,
+        conflicts,
+        finish,
+    } = run(&plan, project_start)?;
+
+    // Leaf → summary rollups happen *within* each project (a summary never spans a
+    // project boundary), then project → parent rollups walk the nesting forest.
+    for project in ws.projects.values() {
+        roll_up_summaries(project, &mut dates);
+    }
+    let per_project = roll_up_projects(ws, &dates);
+
+    Ok(WorkspaceSchedule {
+        dates,
+        per_project,
+        conflicts,
+        project_start,
+        project_finish: finish.map(|f| finish_date(f.saturating_sub(1), f)),
+    })
+}
+
+/// A resolved scheduling problem: every schedulable task mapped to **its owning
+/// project**, plus the dependency edges to honour.
+///
+/// Carrying the owner per task is what lets one CPM pass schedule tasks from many
+/// projects together: calendars, lags, and working-time math for a given task always
+/// resolve against the project the task actually lives in. For a single project every
+/// task simply maps to that one project, so the pass is unchanged.
+struct Plan<'a> {
+    /// Schedulable task id → (the task, its owning project). Excludes summaries and
+    /// tasks with no scheduling block — those get no dates and are rolled up later.
+    tasks: BTreeMap<TaskId, (&'a Task, &'a ProjectState)>,
+    /// The dependency edges to consider (intra-project always; cross-project only
+    /// when the workspace schedules as one network).
+    deps: Vec<&'a DependencyLink>,
+}
+
+impl<'a> Plan<'a> {
+    /// One project's schedulable tasks, every one owned by that project.
+    fn for_project(project: &'a ProjectState) -> Plan<'a> {
+        let mut tasks = BTreeMap::new();
+        for t in project.tasks.values() {
+            if t.kind != TaskKind::Summary && t.schedule.is_some() {
+                tasks.insert(t.id.clone(), (t, project));
+            }
+        }
+        Plan {
+            tasks,
+            deps: project.dependencies.iter().collect(),
+        }
+    }
+
+    /// Every schedulable task across every project. Cross-project dependencies join
+    /// the edge set only when `schedule_as_one_network` is on; otherwise the projects
+    /// share the pass but have no edges between them, i.e. each schedules from the
+    /// same start independently.
+    fn for_workspace(ws: &'a Workspace) -> Plan<'a> {
+        let mut tasks = BTreeMap::new();
+        let mut deps: Vec<&'a DependencyLink> = Vec::new();
+        for project in ws.projects.values() {
+            for t in project.tasks.values() {
+                if t.kind != TaskKind::Summary && t.schedule.is_some() {
+                    tasks.insert(t.id.clone(), (t, project));
+                }
+            }
+            deps.extend(project.dependencies.iter());
+        }
+        if ws.settings.schedule_as_one_network {
+            deps.extend(ws.cross_project_dependencies.iter());
+        }
+        Plan { tasks, deps }
+    }
+
+    fn is_schedulable(&self, id: &TaskId) -> bool {
+        self.tasks.contains_key(id)
+    }
+    /// The task for `id` (present for every id drawn from `tasks`/topo order).
+    fn task(&self, id: &TaskId) -> &'a Task {
+        self.tasks[id].0
+    }
+    /// The project that owns `id` — the one to resolve its calendars against.
+    fn owner(&self, id: &TaskId) -> &'a ProjectState {
+        self.tasks[id].1
+    }
+}
+
+/// The raw output of one CPM pass, before summary/project rollups.
+struct Pass {
+    dates: BTreeMap<TaskId, ScheduledDates>,
+    conflicts: Vec<Conflict>,
+    /// The latest early-finish instant across the pass, or `None` if nothing ran.
+    finish: Option<Instant>,
+}
+
+/// The Critical Path Method itself: forward pass, backward pass, slack, criticality.
+/// Shared by single-project and workspace scheduling — the only difference between
+/// them is the `Plan` handed in (which tasks, which owners, which edges).
+fn run(plan: &Plan, project_start: Date) -> Result<Pass, SchedulingError> {
     // Build the dependency graph over schedulable tasks (reuse directed-graph).
     let mut graph = directed_graph::Graph::new();
-    for t in &schedulable {
-        graph.add_node(t.id.as_str());
+    for id in plan.tasks.keys() {
+        graph.add_node(id.as_str());
     }
-    let is_schedulable = |id: &TaskId| {
-        project
-            .tasks
-            .get(id)
-            .is_some_and(|t| t.kind != TaskKind::Summary && t.schedule.is_some())
-    };
-    for dep in &project.dependencies {
+    for dep in &plan.deps {
         // A self-dependency (predecessor == successor) is meaningless and is skipped;
         // `directed_graph` rejects self-loops anyway, and admitting it into the
         // adjacency maps below would make a task depend on its own unscheduled dates.
+        // Edges whose endpoints are not both schedulable are likewise dropped.
         if dep.predecessor != dep.successor
-            && is_schedulable(&dep.predecessor)
-            && is_schedulable(&dep.successor)
+            && plan.is_schedulable(&dep.predecessor)
+            && plan.is_schedulable(&dep.successor)
         {
             let _ = graph.add_edge(dep.predecessor.as_str(), dep.successor.as_str());
         }
     }
 
-    // Topological order (and cycle rejection) for free.
+    // Topological order (and cycle rejection) for free. A cross-project cycle is
+    // detected here exactly like an intra-project one.
     let order = match graph.topological_sort() {
         Ok(o) => o,
-        Err(_) => {
-            let involved = schedulable.iter().map(|t| t.id.clone()).collect();
-            return Err(SchedulingError::Cycle(involved));
-        }
+        Err(_) => return Err(SchedulingError::Cycle(plan.tasks.keys().cloned().collect())),
     };
 
     // Predecessor / successor adjacency carrying the link kind and lag.
     let mut preds: BTreeMap<TaskId, Vec<(TaskId, DependencyKind, Duration)>> = BTreeMap::new();
     let mut succs: BTreeMap<TaskId, Vec<(TaskId, DependencyKind, Duration)>> = BTreeMap::new();
-    for dep in &project.dependencies {
+    for dep in &plan.deps {
         if dep.predecessor != dep.successor
-            && is_schedulable(&dep.predecessor)
-            && is_schedulable(&dep.successor)
+            && plan.is_schedulable(&dep.predecessor)
+            && plan.is_schedulable(&dep.successor)
         {
             record_edge(&mut preds, &dep.successor, dep, dep.predecessor.clone());
             record_edge(&mut succs, &dep.predecessor, dep, dep.successor.clone());
@@ -149,17 +311,21 @@ pub fn schedule(
     // ── Forward pass: earliest start/finish ─────────────────────────────────────
     for id_str in &order {
         let id = TaskId::from_raw(id_str.clone());
-        let task = &project.tasks[&id];
+        let task = plan.task(&id);
+        // The task's OWN project — every calendar/working-time call below resolves
+        // against it, which is what makes cross-project scheduling correct.
+        let owner = plan.owner(&id);
         let sched = task.schedule.as_ref().expect("schedulable ⇒ has schedule");
-        let cal = calendar_for(project, task);
+        let cal = calendar_for(owner, task);
         let dur = sched.duration;
 
         // Floor at the project start (snapped into working time).
-        let floor = calendar::next_working(project, cal, calendar::instant_of(project_start, 0))
+        let floor = calendar::next_working(owner, cal, calendar::instant_of(project_start, 0))
             .unwrap_or_else(|| calendar::instant_of(project_start, 0));
         let mut start = floor;
 
-        // Predecessor constraints per link type.
+        // Predecessor constraints per link type. `ps`/`pf` are absolute instants, so a
+        // predecessor in another project (on another calendar) composes correctly.
         for (pred, kind, lag) in preds.get(&id).into_iter().flatten() {
             // Defensive: predecessors precede successors in topological order, so this
             // is always populated — but never index-panic on an unexpected input.
@@ -167,13 +333,13 @@ pub fn schedule(
                 continue;
             };
             let cand = match kind {
-                DependencyKind::FinishToStart => lag_forward(project, cal, pf, *lag),
-                DependencyKind::StartToStart => lag_forward(project, cal, ps, *lag),
+                DependencyKind::FinishToStart => lag_forward(owner, cal, pf, *lag),
+                DependencyKind::StartToStart => lag_forward(owner, cal, ps, *lag),
                 DependencyKind::FinishToFinish => {
-                    calendar::sub_working(project, cal, lag_forward(project, cal, pf, *lag), dur)
+                    calendar::sub_working(owner, cal, lag_forward(owner, cal, pf, *lag), dur)
                 }
                 DependencyKind::StartToFinish => {
-                    calendar::sub_working(project, cal, lag_forward(project, cal, ps, *lag), dur)
+                    calendar::sub_working(owner, cal, lag_forward(owner, cal, ps, *lag), dur)
                 }
             };
             start = start.max(cand);
@@ -182,12 +348,12 @@ pub fn schedule(
         // Start-anchored constraints.
         match sched.constraint {
             Constraint::StartNoEarlierThan(d) => {
-                let f = calendar::next_working(project, cal, calendar::instant_of(d, 0))
+                let f = calendar::next_working(owner, cal, calendar::instant_of(d, 0))
                     .unwrap_or_else(|| calendar::instant_of(d, 0));
                 start = start.max(f);
             }
             Constraint::MustStartOn(d) => {
-                let must = calendar::next_working(project, cal, calendar::instant_of(d, 0))
+                let must = calendar::next_working(owner, cal, calendar::instant_of(d, 0))
                     .unwrap_or_else(|| calendar::instant_of(d, 0));
                 if start > must {
                     conflicts.push(Conflict {
@@ -201,19 +367,18 @@ pub fn schedule(
                 }
                 start = must;
             }
-            Constraint::StartNoLaterThan(d)
-                if date_of_start(start) > d => {
-                    conflicts.push(Conflict {
-                        task: id.clone(),
-                        kind: ConflictKind::StartTooLate,
-                        message: format!("starts after StartNoLaterThan {:?}", d.to_ymd()),
-                    });
-                }
+            Constraint::StartNoLaterThan(d) if date_of_start(start) > d => {
+                conflicts.push(Conflict {
+                    task: id.clone(),
+                    kind: ConflictKind::StartTooLate,
+                    message: format!("starts after StartNoLaterThan {:?}", d.to_ymd()),
+                });
+            }
             _ => {}
         }
 
-        start = calendar::next_working(project, cal, start).unwrap_or(start);
-        let mut finish = calendar::add_working(project, cal, start, dur);
+        start = calendar::next_working(owner, cal, start).unwrap_or(start);
+        let mut finish = calendar::add_working(owner, cal, start, dur);
 
         // Finish-anchored constraints.
         match sched.constraint {
@@ -221,23 +386,22 @@ pub fn schedule(
                 let req = calendar::instant_of(d, 0);
                 if finish < req {
                     finish = req;
-                    start = calendar::sub_working(project, cal, finish, dur);
+                    start = calendar::sub_working(owner, cal, finish, dur);
                 }
             }
             Constraint::MustFinishOn(d) => {
                 // Approximate: pin the finish to the end of the target day's work.
-                let req = working_day_end(project, cal, d);
+                let req = working_day_end(owner, cal, d);
                 finish = req;
-                start = calendar::sub_working(project, cal, finish, dur);
+                start = calendar::sub_working(owner, cal, finish, dur);
             }
-            Constraint::FinishNoLaterThan(d)
-                if finish_date(start, finish) > d => {
-                    conflicts.push(Conflict {
-                        task: id.clone(),
-                        kind: ConflictKind::FinishTooLate,
-                        message: format!("finishes after FinishNoLaterThan {:?}", d.to_ymd()),
-                    });
-                }
+            Constraint::FinishNoLaterThan(d) if finish_date(start, finish) > d => {
+                conflicts.push(Conflict {
+                    task: id.clone(),
+                    kind: ConflictKind::FinishTooLate,
+                    message: format!("finishes after FinishNoLaterThan {:?}", d.to_ymd()),
+                });
+            }
             _ => {}
         }
 
@@ -263,9 +427,10 @@ pub fn schedule(
     let mut lf: BTreeMap<TaskId, Instant> = BTreeMap::new();
     for id_str in order.iter().rev() {
         let id = TaskId::from_raw(id_str.clone());
-        let task = &project.tasks[&id];
+        let task = plan.task(&id);
+        let owner = plan.owner(&id);
         let sched = task.schedule.as_ref().expect("schedulable ⇒ has schedule");
-        let cal = calendar_for(project, task);
+        let cal = calendar_for(owner, task);
         let dur = sched.duration;
 
         let mut late_finish = project_finish_inst.unwrap_or_else(|| ef[&id]);
@@ -275,18 +440,18 @@ pub fn schedule(
                 continue;
             };
             let cand = match kind {
-                DependencyKind::FinishToStart => lag_backward(project, cal, sls, *lag),
+                DependencyKind::FinishToStart => lag_backward(owner, cal, sls, *lag),
                 DependencyKind::StartToStart => {
-                    calendar::add_working(project, cal, lag_backward(project, cal, sls, *lag), dur)
+                    calendar::add_working(owner, cal, lag_backward(owner, cal, sls, *lag), dur)
                 }
-                DependencyKind::FinishToFinish => lag_backward(project, cal, slf, *lag),
+                DependencyKind::FinishToFinish => lag_backward(owner, cal, slf, *lag),
                 DependencyKind::StartToFinish => {
-                    calendar::add_working(project, cal, lag_backward(project, cal, slf, *lag), dur)
+                    calendar::add_working(owner, cal, lag_backward(owner, cal, slf, *lag), dur)
                 }
             };
             late_finish = late_finish.min(cand);
         }
-        let late_start = calendar::sub_working(project, cal, late_finish, dur);
+        let late_start = calendar::sub_working(owner, cal, late_finish, dur);
         ls.insert(id.clone(), late_start);
         lf.insert(id, late_finish);
     }
@@ -295,16 +460,17 @@ pub fn schedule(
     let mut dates: BTreeMap<TaskId, ScheduledDates> = BTreeMap::new();
     for id_str in &order {
         let id = TaskId::from_raw(id_str.clone());
-        let task = &project.tasks[&id];
-        let cal = calendar_for(project, task);
+        let owner = plan.owner(&id);
+        let task = plan.task(&id);
+        let cal = calendar_for(owner, task);
         let (e_s, e_f, l_s, l_f) = (es[&id], ef[&id], ls[&id], lf[&id]);
-        let total_slack = calendar::working_between(project, cal, e_s, l_s);
+        let total_slack = calendar::working_between(owner, cal, e_s, l_s);
         // Free slack: how long this task can slip without delaying any successor's
         // early start (FS-style gap; a good approximation for the other link types).
         let free_slack = match succs.get(&id) {
             Some(list) if !list.is_empty() => list
                 .iter()
-                .map(|(s, _, _)| calendar::working_between(project, cal, e_f, es[s]).max(0))
+                .map(|(s, _, _)| calendar::working_between(owner, cal, e_f, es[s]).max(0))
                 .min()
                 .unwrap_or(total_slack),
             _ => total_slack,
@@ -325,14 +491,10 @@ pub fn schedule(
         );
     }
 
-    // ── Summary rollups ─────────────────────────────────────────────────────────
-    roll_up_summaries(project, &mut dates);
-
-    Ok(ScheduleResult {
+    Ok(Pass {
         dates,
         conflicts,
-        project_start,
-        project_finish: project_finish_inst.map(|f| finish_date(f.saturating_sub(1), f)),
+        finish: project_finish_inst,
     })
 }
 
@@ -462,6 +624,69 @@ fn roll_up_summaries(project: &ProjectState, dates: &mut BTreeMap<TaskId, Schedu
     }
 }
 
+/// Roll each project's span up the nesting forest: every project's rollup spans its
+/// own tasks **and** those of every sub-project beneath it.
+///
+/// Done in two passes to stay O(tasks + projects·depth): first each project's *own*
+/// span from its tasks' computed dates, then fold each own-span into all of that
+/// project's ancestors. Folding uses the OWN spans (snapshotted), so a grandparent
+/// still gets a grandchild's contribution without double-walking. `ancestors_of` is
+/// cycle-guarded, and a dangling parent id (present in `parent` but not in `projects`)
+/// is simply skipped — hostile snapshots can't panic here.
+fn roll_up_projects(
+    ws: &Workspace,
+    dates: &BTreeMap<TaskId, ScheduledDates>,
+) -> BTreeMap<ProjectId, ProjectRollup> {
+    // Each project's own span (its directly-owned tasks only).
+    let own: BTreeMap<ProjectId, ProjectRollup> = ws
+        .projects
+        .values()
+        .map(|project| {
+            let mut start: Option<Date> = None;
+            let mut finish: Option<Date> = None;
+            let mut critical = false;
+            for t in project.tasks.values() {
+                if let Some(sd) = dates.get(&t.id) {
+                    start = Some(start.map_or(sd.scheduled_start, |x| x.min(sd.scheduled_start)));
+                    finish =
+                        Some(finish.map_or(sd.scheduled_finish, |x| x.max(sd.scheduled_finish)));
+                    critical |= sd.critical;
+                }
+            }
+            (
+                project.id.clone(),
+                ProjectRollup {
+                    start,
+                    finish,
+                    critical,
+                },
+            )
+        })
+        .collect();
+
+    // Fold each project's own span into every ancestor.
+    let mut acc = own.clone();
+    for (pid, span) in &own {
+        for anc in ws.ancestors_of(pid) {
+            if let Some(target) = acc.get_mut(&anc) {
+                merge_rollup(target, span);
+            }
+        }
+    }
+    acc
+}
+
+/// Widen `into` to also cover `from` (min start, max finish, OR criticality).
+fn merge_rollup(into: &mut ProjectRollup, from: &ProjectRollup) {
+    if let Some(s) = from.start {
+        into.start = Some(into.start.map_or(s, |x| x.min(s)));
+    }
+    if let Some(f) = from.finish {
+        into.finish = Some(into.finish.map_or(f, |x| x.max(f)));
+    }
+    into.critical |= from.critical;
+}
+
 /// Whether `task` is a descendant of `ancestor` via the parent chain.
 fn is_descendant(project: &ProjectState, task: &TaskId, ancestor: &TaskId) -> bool {
     let mut cur = project.tasks.get(task).and_then(|t| t.parent.clone());
@@ -482,8 +707,8 @@ fn is_descendant(project: &ProjectState, task: &TaskId, ancestor: &TaskId) -> bo
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ids::{LinkId, ProjectId};
-    use crate::model::{DependencyLink, TaskSchedule};
+    use crate::ids::{LinkId, ProjectId, WorkspaceId};
+    use crate::model::{DependencyLink, TaskSchedule, Workspace};
 
     fn day(y: i32, m: u32, d: u32) -> Date {
         Date::from_ymd(y, m, d).unwrap()
@@ -646,5 +871,128 @@ mod tests {
         let sd = &r.dates[&TaskId::from_raw("s")];
         assert_eq!(sd.scheduled_start, day(2026, 7, 13)); // A's start
         assert_eq!(sd.scheduled_finish, day(2026, 7, 14)); // B's finish
+    }
+
+    // ── Workspace scheduling: projects schedule as one network ──────────────────
+
+    /// A workspace with task `a` in project `p1` and task `b` in project `p2`, linked
+    /// by a **cross-project** FS dependency `a → b`. `one_network` toggles whether the
+    /// scheduler honours that cross-project link.
+    fn two_project_workspace(one_network: bool) -> Workspace {
+        let mut p1 = ProjectState::empty(ProjectId::from_raw("p1"));
+        p1.tasks
+            .insert(TaskId::from_raw("a"), scheduled_task("a", "A", 1));
+        let mut p2 = ProjectState::empty(ProjectId::from_raw("p2"));
+        p2.tasks
+            .insert(TaskId::from_raw("b"), scheduled_task("b", "B", 1));
+
+        let mut ws = Workspace::empty(WorkspaceId::from_raw("w1"), ProjectId::from_raw("p1"));
+        ws.projects.insert(ProjectId::from_raw("p1"), p1);
+        ws.projects.insert(ProjectId::from_raw("p2"), p2);
+        ws.roots = vec![ProjectId::from_raw("p1"), ProjectId::from_raw("p2")];
+        ws.cross_project_dependencies
+            .push(link("x1", "a", "b", DependencyKind::FinishToStart));
+        ws.settings.schedule_as_one_network = one_network;
+        ws
+    }
+
+    #[test]
+    fn cross_project_dependency_sequences_when_one_network() {
+        // a (project p1) → b (project p2): b must start after a finishes, even though
+        // they live in different projects. This is the whole point of the workspace.
+        let ws = two_project_workspace(true);
+        let r = ws.schedule(day(2026, 7, 13)).unwrap();
+        assert_eq!(
+            r.dates[&TaskId::from_raw("a")].early_start,
+            day(2026, 7, 13)
+        ); // Mon
+        assert_eq!(
+            r.dates[&TaskId::from_raw("b")].early_start,
+            day(2026, 7, 14)
+        ); // Tue
+        assert_eq!(r.project_finish, Some(day(2026, 7, 14)));
+    }
+
+    #[test]
+    fn cross_project_dependency_ignored_when_projects_are_independent() {
+        // With one-network off, the cross-project link is not in the graph, so b is
+        // free to start at the workspace start alongside a.
+        let ws = two_project_workspace(false);
+        let r = ws.schedule(day(2026, 7, 13)).unwrap();
+        assert_eq!(
+            r.dates[&TaskId::from_raw("a")].early_start,
+            day(2026, 7, 13)
+        );
+        assert_eq!(
+            r.dates[&TaskId::from_raw("b")].early_start,
+            day(2026, 7, 13)
+        );
+    }
+
+    #[test]
+    fn a_cross_project_cycle_is_rejected() {
+        // a(p1) → b(p2) → a: a cycle that only exists across the boundary must still be
+        // caught, exactly like an intra-project one.
+        let mut ws = two_project_workspace(true);
+        ws.cross_project_dependencies
+            .push(link("x2", "b", "a", DependencyKind::FinishToStart));
+        assert!(matches!(
+            ws.schedule(day(2026, 7, 13)),
+            Err(SchedulingError::Cycle(_))
+        ));
+    }
+
+    #[test]
+    fn a_single_project_workspace_matches_bare_project_scheduling() {
+        // The compatibility guarantee: scheduling a one-project workspace yields the
+        // same per-task dates as scheduling that project directly.
+        let p = project_with(
+            vec![scheduled_task("a", "A", 1), scheduled_task("b", "B", 2)],
+            vec![link("l1", "a", "b", DependencyKind::FinishToStart)],
+        );
+        let bare = schedule(&p, day(2026, 7, 13)).unwrap();
+
+        let ws = Workspace::from_project(WorkspaceId::from_raw("w1"), p);
+        let via_ws = ws.schedule(day(2026, 7, 13)).unwrap();
+
+        assert_eq!(via_ws.dates, bare.dates);
+        assert_eq!(via_ws.project_finish, bare.project_finish);
+    }
+
+    #[test]
+    fn parent_project_span_covers_its_sub_projects() {
+        // par owns task pt (Mon); sub-project sub owns task st, FS after pt (Tue).
+        // sub's rollup spans only st; par's rollup spans BOTH its own task and sub's.
+        let mut par = ProjectState::empty(ProjectId::from_raw("par"));
+        par.tasks
+            .insert(TaskId::from_raw("pt"), scheduled_task("pt", "PT", 1));
+        let mut sub = ProjectState::empty(ProjectId::from_raw("sub"));
+        sub.parent = Some(ProjectId::from_raw("par"));
+        sub.tasks
+            .insert(TaskId::from_raw("st"), scheduled_task("st", "ST", 1));
+
+        let mut ws = Workspace::empty(WorkspaceId::from_raw("w1"), ProjectId::from_raw("par"));
+        ws.projects.insert(ProjectId::from_raw("par"), par);
+        ws.projects.insert(ProjectId::from_raw("sub"), sub);
+        ws.roots = vec![ProjectId::from_raw("par")];
+        ws.cross_project_dependencies
+            .push(link("x1", "pt", "st", DependencyKind::FinishToStart));
+        ws.settings.schedule_as_one_network = true;
+
+        let r = ws.schedule(day(2026, 7, 13)).unwrap();
+        let sub_span = &r.per_project[&ProjectId::from_raw("sub")];
+        let par_span = &r.per_project[&ProjectId::from_raw("par")];
+        assert_eq!(sub_span.start, Some(day(2026, 7, 14)));
+        assert_eq!(sub_span.finish, Some(day(2026, 7, 14)));
+        assert_eq!(
+            par_span.start,
+            Some(day(2026, 7, 13)),
+            "parent covers its own Mon task"
+        );
+        assert_eq!(
+            par_span.finish,
+            Some(day(2026, 7, 14)),
+            "…and its sub-project's Tue task"
+        );
     }
 }

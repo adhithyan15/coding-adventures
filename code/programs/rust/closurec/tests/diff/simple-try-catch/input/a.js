@@ -6,10 +6,13 @@
 // end-to-end oracle proving the SIMPLE pipeline now runs every pass
 // INSIDE the try block, the catch handler, and the finally block:
 //
-//   * `log` is single-use, so the inliner folds `log(1)` into its body
-//     `report(1)` and deletes the now-unused declaration.
 //   * `1 + 2` and `3 * 4` are constant-folded to `3` and `12` even
 //     though they live inside the try/catch blocks.
+//   * `function log` is KEPT and `log(1)` stays a call. SIMPLE is
+//     open-world: it never inlines or deletes an observable top-level name
+//     (another script sharing the page could call `log`). The single-use
+//     inline that would fold `log(1)` into `report(1)` runs only at
+//     ADVANCED (closed-world).
 //   * The `dead(99)` call after the `return` in the catch handler is
 //     unreachable, so block-level DCE truncates it.
 //   * `try`, `catch (e)`, and `finally` survive verbatim — control
