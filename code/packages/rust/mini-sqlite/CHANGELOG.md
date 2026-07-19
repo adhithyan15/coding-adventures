@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.5.55 — `i64::MIN` div/mod overflow + integer `%`
+
+Two `%` / `/` edge cases now match SQLite. **`i64::MIN` overflow:**
+`0x8000000000000000 / -1` promotes to REAL (`9.2233720369e18`) instead of
+erroring, mirroring the `+`/`-`/`*` overflow promotion, and
+`0x8000000000000000 % -1` returns INTEGER `0` (its true remainder). **Integer
+`%`:** SQLite's modulo is an integer operation — both operands are truncated
+toward zero to 64-bit integers before the remainder is taken, and the result is
+REAL only if an operand was REAL. So `7.5 % 2` is now `1.0` (7 % 2), not `1.5`
+(fmod); `10.9 % 3.9` is `1.0` (10 % 3); a real divisor that truncates to zero
+(`5 % 0.9`) is NULL. Division (`/`) is unchanged — it stays true real division
+(`7.5 / 2` = 3.75). Implemented in `sql-vm`'s `Div`/`Mod` arms; verified against
+bundled real SQLite in the differential oracle.
+
 ## 0.5.54 — Hexadecimal integer literals
 
 `SELECT 0x1F` now works (was a parse error). SQLite hex integer literals like
