@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.8.0 — `SET cond-name TO TRUE`
+
+- Added `set_stmt = "SET" NAME "TO" "TRUE"` to the `statement` alternation — the
+  verb that assigns a level-88 condition-name (sets its conditional variable to
+  the value that makes it hold). `SET`/`TRUE` are new keywords (see `cobol-lexer`
+  0.3.0); `TO` was already reserved. `_grammar.rs` regenerated via `grammar-tools
+  compile-grammar`.
+
 ## 0.7.0 — `VALUE` clause: multiple values and `THRU` ranges
 
 - `value_clause = "VALUE" [ "IS" ] value_item { value_item }` with

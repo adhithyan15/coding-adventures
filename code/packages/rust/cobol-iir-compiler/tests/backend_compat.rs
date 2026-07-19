@@ -191,6 +191,27 @@ fn level_88_multi_value_range_program_accepted_by_print_backends() {
 }
 
 #[test]
+fn set_condition_name_program_accepted_by_print_backends() {
+    // SET cond-name TO TRUE lowers to a plain `const` store into the variable's
+    // slot — no new opcode. Every print backend must accept it.
+    let src = program(&[
+        "IDENTIFICATION DIVISION.",
+        "PROGRAM-ID. P.",
+        "DATA DIVISION.",
+        "WORKING-STORAGE SECTION.",
+        "01  STATUS-CODE  PIC 9 VALUE 1.",
+        "88  IS-DONE  VALUE 9.",
+        "PROCEDURE DIVISION.",
+        "MAIN.",
+        "    SET IS-DONE TO TRUE.",
+        "    DISPLAY STATUS-CODE.",
+        "    STOP RUN.",
+    ]);
+    let m = compile_source(&src, "set").unwrap();
+    assert_accepted_by_print_backends(&m, "SET cond-name TO TRUE");
+}
+
+#[test]
 fn scaled_multiply_divide_program_accepted_by_print_backends() {
     // Scaled MULTIPLY and DIVIDE (with ROUNDED) exercise the dividend up-scale
     // (mul by 10^e), the div, and the store rescale/rounding branches. Every

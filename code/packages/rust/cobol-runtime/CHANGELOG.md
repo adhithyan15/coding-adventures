@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.16.0 — `SET cond-name TO TRUE`
+
+- `Stmt::SetTrue { cond_name }` assigns a level-88 condition-name's conditional
+  variable the value that makes it hold: the **first** of its `VALUE` items (the
+  low bound of a leading `THRU` range). Numeric variable only, matching the
+  condition-name test path; an alphanumeric conditional variable is a later rung,
+  and an undeclared condition-name is an `UndefinedName` error.
+
 ## 0.15.0 — level-88 multiple values and `THRU` ranges
 
 - A `VALUE` clause now parses into a `Vec<ValueSpec>` (`Single(Lit)` |

@@ -3149,6 +3149,27 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // COBOL-60 — SET a level-88 condition-name TRUE (PL09 step 4). `SET IS-DONE TO
+    // TRUE` stores 9 (`88 IS-DONE VALUE 9`) into STATUS-CODE (PIC 9), which then
+    // displays as `9`. Lowers to a plain `const` store into the variable's slot —
+    // no new opcode — so it proves on every backend.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  STATUS-CODE  PIC 9 VALUE 1.\n\
+               000000 88  IS-DONE  VALUE 9.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     SET IS-DONE TO TRUE.\n\
+               000000     DISPLAY STATUS-CODE.\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("9"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses

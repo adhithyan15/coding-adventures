@@ -345,8 +345,32 @@ impl Machine {
                 let branch = if self.eval_cond(cond)? { then_branch } else { else_branch };
                 return self.run_stmts(branch);
             }
+            Stmt::SetTrue { cond_name } => self.exec_set_true(cond_name)?,
         }
         Ok(Flow::Normal)
+    }
+
+    /// `SET cond-name TO TRUE` — assign the condition-name's conditional variable
+    /// the value that makes it hold: the **first** of its `VALUE` items (the low
+    /// bound of a leading range). Numeric variable only, matching the test path.
+    fn exec_set_true(&mut self, cond_name: &str) -> Result<(), RuntimeError> {
+        let cn = self
+            .conditions
+            .get(cond_name)
+            .ok_or_else(|| RuntimeError::UndefinedName(cond_name.to_string()))?;
+        let var = cn.var;
+        // The first value item — a single value, or a range's low bound.
+        let lit = match cn.values.first() {
+            Some(ValueSpec::Single(lit)) | Some(ValueSpec::Range(lit, _)) => lit.clone(),
+            None => return Err(RuntimeError::Unsupported(format!("condition-name {cond_name} has no VALUE"))),
+        };
+        if !self.items[var].picture.as_ref().is_some_and(|p| p.is_numeric()) {
+            return Err(RuntimeError::Unsupported(
+                "SET … TO TRUE on an alphanumeric conditional variable is a later rung".into(),
+            ));
+        }
+        let src = self.src_from_lit(&lit)?;
+        self.move_into(var, src)
     }
 
     /// Execute a sequence of statements, short-circuiting on the first non-normal

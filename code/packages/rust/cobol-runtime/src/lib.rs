@@ -639,6 +639,53 @@ mod tests {
     }
 
     #[test]
+    fn set_condition_name_to_true_assigns_the_first_value() {
+        // SET IS-DONE TO TRUE stores 9 (IS-DONE VALUE 9) into STATUS-CODE, which
+        // then displays as 9 and satisfies IS-DONE.
+        let out = run_level88(
+            "1",
+            &[
+                "SET IS-DONE TO TRUE.",
+                "DISPLAY STATUS-CODE.",
+                "IF IS-DONE DISPLAY \"D\".",
+                "STOP RUN.",
+            ],
+        )
+        .unwrap();
+        assert_eq!(out, "9\nD\n");
+    }
+
+    #[test]
+    fn set_condition_name_to_true_uses_a_ranges_low_bound() {
+        // 88 COND VALUE 3 THRU 6 — SET COND TO TRUE assigns the low bound 3.
+        let out = run_level88_cond("0", "88  COND  VALUE 3 THRU 6.").unwrap();
+        // (The helper's IF prints N/Y for COND on N=0 — before the SET, N=0 is
+        // false.) Re-run with a program that SETs then displays.
+        assert_eq!(out, "N\n");
+        let set = run_cobol(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+            "01  N  PIC 99 VALUE 0.",
+            "88  COND  VALUE 3 THRU 6.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    SET COND TO TRUE.",
+            "    DISPLAY N.",
+            "    STOP RUN.",
+        ]))
+        .unwrap();
+        assert_eq!(set, "03\n");
+    }
+
+    #[test]
+    fn set_an_undeclared_condition_name_errors() {
+        let err = run_level88("1", &["SET NOPE TO TRUE.", "STOP RUN."]).unwrap_err();
+        assert!(matches!(err, RuntimeError::UndefinedName(_)), "got {err:?}");
+    }
+
+    #[test]
     fn stop_run_inside_a_branch_ends_the_program() {
         // The STOP RUN is inside the THEN branch; the trailing DISPLAY never runs.
         assert_eq!(

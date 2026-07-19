@@ -120,6 +120,9 @@ pub enum Stmt {
     GoTo { target: String },
     /// `IF cond then… [ELSE else…]`.
     If { cond: Cond, then_branch: Vec<Stmt>, else_branch: Vec<Stmt> },
+    /// `SET cond-name TO TRUE` — assign the condition-name's conditional variable
+    /// the value that makes it hold (the first of its `VALUE` items).
+    SetTrue { cond_name: String },
     StopRun,
 }
 
@@ -511,6 +514,12 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
             let target = first_token(verb, "NAME")
                 .ok_or_else(|| RuntimeError::Unsupported("GO TO without a target paragraph".into()))?;
             Ok(Stmt::GoTo { target })
+        }
+        "set_stmt" => {
+            // SET cond-name TO TRUE.
+            let cond_name = first_token(verb, "NAME")
+                .ok_or_else(|| RuntimeError::Unsupported("SET without a condition-name".into()))?;
+            Ok(Stmt::SetTrue { cond_name })
         }
         "if_stmt" => {
             // Children in order: IF, condition, then-statements…, [ELSE,

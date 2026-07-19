@@ -24,7 +24,7 @@ interpreter_ir::IIRModule   (one `main`, returns i64 exit code)
 NativeAOT · LLVM · WASM · JVM · CLR · VM · JIT
 ```
 
-## This slice (v0.11 — the core plus control flow, `COMPUTE` incl. `**` and nested `/`, `ON SIZE ERROR`, signed, alphanumeric, level-88 with ranges)
+## This slice (v0.12 — the core plus control flow, `COMPUTE` incl. `**` and nested `/`, `ON SIZE ERROR`, signed, alphanumeric, level-88 with ranges + `SET … TO TRUE`)
 
 COBOL's WORKING-STORAGE is a **PICTURE-typed** data model. Each elementary item
 becomes one IIR register: a **numeric** item (`PIC 9…`) is an `i64` holding its
@@ -40,6 +40,7 @@ integer `123`); an **alphanumeric** item (`PIC X`/`A`) is a `str`.
 | `DISPLAY op…` | each operand's image emitted, then `putchar('\n')` — a literal prints its source text, a numeric item via the fixed-width digit helper (signed items via a trailing-overpunch helper), an alphanumeric via `print_str` |
 | `IF cond then… [ELSE else…]` | numeric conditions align operands and `cmp_*`; alphanumeric conditions space-pad both sides and `str_cmp`; a level-88 condition-name lowers to `cmp_eq` on its variable's slot; `jmp_if_false` over the then-branch; `NOT` inverts the relation |
 | `88 cond-name VALUE lit… [lo THRU hi]` | registers a boolean condition-name over the preceding item; `IF cond-name` / `PERFORM … UNTIL cond-name` hold when the variable equals any listed value or falls in any inclusive range — lowered as an OR-fold of `cmp_eq` / `and(cmp_ge, cmp_le)` (numeric) |
+| `SET cond-name TO TRUE` | stores the condition-name's first `VALUE` (a range's low bound) into its conditional variable — a `const` store into the slot (numeric) |
 | `GO TO para` | `jmp para_<name>` |
 | `PERFORM para [THRU q] [n TIMES \| UNTIL c \| VARYING v FROM a BY b UNTIL c]` | the paragraph range **inlined** at the call site (out-of-line-but-returns semantics), with loop control emitted around it |
 | `STOP RUN` | `ret 0` |

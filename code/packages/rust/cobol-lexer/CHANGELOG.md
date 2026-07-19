@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0 — `SET` and `TRUE` keywords
+
+- Added `SET` and `TRUE` to the reserved-word list so `SET cond-name TO TRUE`
+  (assigning a level-88 condition-name) lexes as keywords rather than data-names.
+  `TO` was already reserved. `_grammar.rs` regenerated from `cobol.tokens` via
+  `grammar-tools compile-tokens`.
+
 ## 0.2.0 — arithmetic operator tokens (COMPUTE)
 
 - Added the arithmetic operator tokens used by `COMPUTE` expressions: `POW`
