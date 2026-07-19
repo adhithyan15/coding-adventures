@@ -1,4 +1,4 @@
-# Session Map — Kannada Chapters 1–2
+# Session Map — Kannada Chapters 1–5
 
 Same spaced-repetition schedule as the other tracks (a word from session *N*
 resurfaces at *N+1, N+3, N+7, N+15*). Lessons named by slug; this map is the
@@ -34,7 +34,37 @@ independent vowels — all in the service of real greetings.
 | 13 | santosha | ಸಂತೋಷ | "pleased to meet you" — **Sanskrit** (vs. Tamil's native *magiḻcci*) |
 | 14 | practice | (dialogue) | the whole exchange |
 
+## Chapter 3 — How Are You
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 15 | hege | ಹೇಗೆ | "how" ← the native *ē-/yā-* question family |
+| 16 | niivu-hegiddiira | ನೀವು ಹೇಗಿದ್ದೀರಾ? | **"how are you?"**; the verb *iru* "to be" (same as Tamil) |
+| 17 | naanu | ನಾನು | "I" ← Proto-Dravidian; possessive *nanna* |
+| 18 | cennaagi | ಚೆನ್ನಾಗಿ | "well" ← *cennu* "good/beautiful" — "in a beautiful way" |
+| 19 | paravaagilla | ಪರವಾಗಿಲ್ಲ | "no problem / you're welcome" = "no harm"; the Dravidian *illa* |
+| 20 | practice | (dialogue) | the whole how-are-you exchange |
+
+## Chapter 4 — Farewells
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 21 | hoogu | ಹೋಗು / ಬಾ | "go" / "come" |
+| 22 | hoogi-baruttene | ಹೋಗಿ ಬರುತ್ತೇನೆ | **"I'll go and come back"** — the Dravidian promise-of-return goodbye |
+| 23 | naale-sigona | ನಾಳೆ ಸಿಗೋಣ | "see you tomorrow"; *nāḷ* "day" + *sigu* "meet" + the "let's ___" *-ōṇa* |
+| 24 | matte-sigona | ಮತ್ತೆ ಸಿಗೋಣ | "we'll meet again"; native *sigu* (where Tamil borrowed *sandi*) |
+| 25 | practice | (dialogue) | the farewells |
+
+## Chapter 5 — The First Verbs
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 26 | maatanaadu | ಮಾತನಾಡು | "to speak" ← *mātu* "word"; stem + tense + person |
+| 27 | naanu-kannada-maatanaaduttene | ನಾನು ಕನ್ನಡ ಮಾತನಾಡುತ್ತೇನೆ | **"I speak Kannada"**; no 1st-person gender |
+| 28 | iru | ಇರು | "to be / stay / live" (same as Tamil); the postposition *-alli* |
+| 29 | kelasa-maadu | ಕೆಲಸ ಮಾಡು | "to work" (noun + *māḍu*) — the twin of Hindi's *karnā* |
+| 30 | practice | (dialogue) | three verbs, one engine |
+
 ## Next
 
-Chapter 3 — *hēgiddīra?* ("how are you?") and answering with *chennāgiddēne* —
-the responding cycle.
+Chapter 6 — the case-endings (Kannada's agglutinative suffixes *-ge, -alli, -inda*).
