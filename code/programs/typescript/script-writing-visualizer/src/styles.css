@@ -167,3 +167,24 @@ body {
   font-size: 0.95rem;
   font-weight: 600;
 }
+
+/* --- practice scope (this script / mixed) ------------------------------- */
+.scopes { display: flex; align-items: center; gap: 6px; margin-bottom: 14px; }
+.scopes__label { color: var(--muted); font-size: 0.85rem; margin-right: 2px; }
+.scope {
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  padding: 4px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+.scope--active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.prompt__script {
+  margin-top: 8px;
+  font-size: 0.78rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}

@@ -1,6 +1,6 @@
 {
   "name": "script-writing-visualizer",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "description": "Companion app (HL02 MVP): break a non-Latin script apart and learn to write it, letter by letter",
   "type": "module",
