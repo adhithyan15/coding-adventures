@@ -698,15 +698,70 @@ impl<'a> Compiler<'a> {
     /// Evaluate a `condition` to a boolean `i64` register (1 = true). A condition
     /// is either a `relation` (`operand relop operand`) or a bare level-88
     /// `condition_name`; dispatch on which the grammar produced.
+    /// Evaluate a `condition` to a boolean `i64` register. A condition is a
+    /// `disjunction` of `AND`-joined simple conditions; `AND` binds tighter than
+    /// `OR`. Each leaf (relation / condition-name / parenthesised group) already
+    /// yields a `0`/`1` boolean, so `AND`/`OR` fold with the bitwise `and`/`or`
+    /// ops — exactly logical AND/OR on `0`/`1`, and byte-identical to the oracle's
+    /// short-circuit `&&`/`||` because COBOL relations have no side effects and a
+    /// comparison never faults (full evaluation gives the same boolean).
     fn emit_condition(&mut self, cond: &GrammarASTNode) -> Result<String, CompileError> {
-        if let Some(cn) = child_node(cond, "condition_name") {
+        let disjunction = child_node(cond, "disjunction")
+            .ok_or_else(|| CompileError::Malformed("empty condition".into()))?;
+        self.emit_disjunction(disjunction)
+    }
+
+    /// `disjunction = conjunction { "OR" conjunction }` — fold with bitwise `or`.
+    fn emit_disjunction(&mut self, node: &GrammarASTNode) -> Result<String, CompileError> {
+        let mut acc: Option<String> = None;
+        for child in child_nodes(node, "conjunction") {
+            let b = self.emit_conjunction(child)?;
+            acc = Some(match acc {
+                None => b,
+                Some(prev) => {
+                    let r = self.fresh("_or");
+                    self.emit("or", Some(&r), vec![Operand::Var(prev), Operand::Var(b)], "i64");
+                    r
+                }
+            });
+        }
+        acc.ok_or_else(|| CompileError::Malformed("empty disjunction".into()))
+    }
+
+    /// `conjunction = simple_condition { "AND" simple_condition }` — fold with
+    /// bitwise `and`.
+    fn emit_conjunction(&mut self, node: &GrammarASTNode) -> Result<String, CompileError> {
+        let mut acc: Option<String> = None;
+        for child in child_nodes(node, "simple_condition") {
+            let b = self.emit_simple_condition(child)?;
+            acc = Some(match acc {
+                None => b,
+                Some(prev) => {
+                    let r = self.fresh("_and");
+                    self.emit("and", Some(&r), vec![Operand::Var(prev), Operand::Var(b)], "i64");
+                    r
+                }
+            });
+        }
+        acc.ok_or_else(|| CompileError::Malformed("empty conjunction".into()))
+    }
+
+    /// `simple_condition = relation | condition_name | "(" condition ")"`.
+    fn emit_simple_condition(&mut self, node: &GrammarASTNode) -> Result<String, CompileError> {
+        if let Some(relation) = child_node(node, "relation") {
+            return self.emit_relation(relation);
+        }
+        if let Some(cn) = child_node(node, "condition_name") {
             let name = first_token(cn, "NAME")
                 .ok_or_else(|| CompileError::Malformed("condition-name without a NAME".into()))?;
             return self.emit_condition_name(&name);
         }
-        let relation = child_node(cond, "relation")
-            .ok_or_else(|| CompileError::Malformed("condition must be a relation or condition-name".into()))?;
-        self.emit_relation(relation)
+        if let Some(inner) = child_node(node, "condition") {
+            return self.emit_condition(inner);
+        }
+        Err(CompileError::Malformed(
+            "condition must be a relation, condition-name, or parenthesised".into(),
+        ))
     }
 
     /// Evaluate a `relation` (`operand relop operand`) to a boolean `i64` register.
@@ -2794,6 +2849,23 @@ mod tests {
         )
         .unwrap();
         assert!(ops(&module).contains(&"cmp_le".to_string()));
+    }
+
+    #[test]
+    fn compound_conditions_fold_with_bitwise_and_or() {
+        // `A AND B` emits `and`; `A OR B` emits `or`; a parenthesised group nests.
+        let m = compile_source(
+            &wrap(
+                &["01  N  PIC 9(3) VALUE 5."],
+                &["IF (N > 1 OR N > 9) AND N < 8 DISPLAY \"X\".", "STOP RUN."],
+            ),
+            "c",
+        )
+        .unwrap();
+        let ops = ops(&m);
+        assert!(ops.contains(&"and".to_string()), "expected `and`: {ops:?}");
+        assert!(ops.contains(&"or".to_string()), "expected `or`: {ops:?}");
+        assert!(m.validate().is_empty(), "{:?}", m.validate());
     }
 
     #[test]

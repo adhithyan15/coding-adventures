@@ -541,6 +541,25 @@ impl Machine {
         match cond {
             Cond::Relation { left, op, negated, right } => self.eval_relation(left, *op, *negated, right),
             Cond::ConditionName(name) => self.eval_condition_name(name),
+            // Iterate the flat parts (short-circuiting) rather than recursing on
+            // the chain length: a long `AND`/`OR` recurses only into nested
+            // parenthesised groups, whose depth the parser already caps.
+            Cond::And(parts) => {
+                for c in parts {
+                    if !self.eval_cond(c)? {
+                        return Ok(false);
+                    }
+                }
+                Ok(true)
+            }
+            Cond::Or(parts) => {
+                for c in parts {
+                    if self.eval_cond(c)? {
+                        return Ok(true);
+                    }
+                }
+                Ok(false)
+            }
         }
     }
 

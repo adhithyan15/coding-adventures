@@ -8,6 +8,35 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.14.0: compound conditions (`AND` / `OR` / parentheses) (PL09 step 4)
+
+`IF` and `PERFORM … UNTIL` conditions can now combine simple conditions with
+`AND`/`OR` and parentheses: `IF N > 3 AND N < 9`, `IF (A OR B) AND C`. Implemented
+oracle-first (grammar → `cobol-runtime` → this compiler), byte-identical.
+
+- **Grammar (no lexer change).** `condition` became a precedence cascade —
+  `disjunction` (`OR`) of `conjunction`s (`AND`) of `simple_condition`s (relation /
+  condition-name / parenthesised `condition`) — so `AND` binds tighter than `OR`
+  (`cobol-parser` 0.10.0). `AND`/`OR`/`(`/`)` were already tokens.
+- **Lowering.** `emit_condition` recurses the cascade: each leaf already yields a
+  `0`/`1` boolean, and `AND`/`OR` fold with the bitwise `and`/`or` ops (the same
+  machinery level-88 ranges use) — exactly logical AND/OR on `0`/`1`, feeding
+  `jmp_if_false` unchanged, **no new opcode**. This is **byte-identical to the
+  oracle's short-circuit `&&`/`||`**: COBOL relations here have no side effects and
+  a comparison never faults, so the compiler's full evaluation gives the same
+  boolean.
+- **Deferral.** `NOT` over a whole compound/parenthesised condition stays a later
+  rung (`NOT` remains relation-level via the `relop`).
+- **Tests.** 2 new `jit_e2e.rs` cases byte-identical to the oracle (the AND/OR +
+  precedence + parentheses truth table; a condition-name combined with a relation);
+  a unit test asserting the `and`/`or` fold; a `backend_compat` program; a
+  `lang_matrix` COBOL compound-condition row across all seven columns. Full suite
+  **145 green** (33 unit + 18 `backend_compat` + 94 `jit_e2e`). The oracle gains a
+  compound-condition unit test and a DoS regression test (a 5000-term flat `AND`
+  chain evaluates by iteration, not recursion — see the `cobol-runtime` 0.18.0
+  note; `Cond`'s `AND`/`OR` are a flat `Vec`, so the chain cannot overflow the
+  stack).
+
 ### Added — v0.13.0: symbolic relational operators (`> < = >= <= <>`) (PL09 step 4)
 
 Conditions can now be written with symbols as well as COBOL's word operators:

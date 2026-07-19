@@ -3188,6 +3188,25 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("GE"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // COBOL-60 — compound condition with AND/OR and parentheses (PL09 step 4).
+    // `(N > 1 OR N > 9) AND N < 8` on N=5 = (true OR false) AND true = true →
+    // prints "Y". Folds the leaf `cmp_*` booleans with bitwise `and`/`or`, proving
+    // the compound-condition lowering on every backend.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  N  PIC 9 VALUE 5.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     IF (N > 1 OR N > 9) AND N < 8 DISPLAY \"Y\" ELSE DISPLAY \"N\".\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("Y"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses

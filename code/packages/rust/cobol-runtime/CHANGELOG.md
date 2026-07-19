@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.18.0 — compound conditions (`AND` / `OR` / parentheses)
+
+- `Cond` gains `And(Vec<Cond>)` and `Or(Vec<Cond>)`. `read_condition` reads a
+  `disjunction` of `AND`-joined simple conditions (relation / condition-name /
+  parenthesised), with `AND` binding tighter than `OR`. `eval_cond` short-circuits
+  (`all` / `any`). `IF` and `PERFORM … UNTIL` accept compound conditions.
+- The `AND`/`OR` parts are held as a **flat list**, not a nested binary tree, so a
+  long chain (`A AND A AND …`, which is grammar *repetition* and so is not bounded
+  by the parser's rule-depth cap) is evaluated by **iteration**. Recursion happens
+  only into parenthesised groups, whose depth the parser does cap — so a crafted
+  chain of thousands of terms cannot overflow the stack (covered by a regression
+  test).
+
 ## 0.17.0 — symbolic relational operators
 
 - `IF` / `PERFORM … UNTIL` conditions accept the symbols `>` `<` `=` `>=` `<=`

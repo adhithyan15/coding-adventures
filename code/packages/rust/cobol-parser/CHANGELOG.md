@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.10.0 — compound conditions (`AND` / `OR` / parentheses)
+
+- `condition` is now a precedence cascade: `disjunction` of `AND`-joined
+  `simple_condition`s, where a `simple_condition` is a relation, a level-88
+  condition-name, or a parenthesised `condition`. `AND` binds tighter than `OR`
+  (`A OR B AND C` = `A OR (B AND C)`); parentheses group. `AND`/`OR`/`NOT` and
+  `(`/`)` were already tokens, so no lexer change. Applies to `IF` and both
+  `PERFORM … UNTIL` forms (all reference `condition`). `_grammar.rs` regenerated
+  via `grammar-tools compile-grammar`.
+
 ## 0.9.0 — symbolic relational operators
 
 - The `relop` rule accepts the symbols `>` `<` `=` `>=` `<=` `<>` alongside the
