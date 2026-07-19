@@ -9,8 +9,18 @@
 use crate::ids::*;
 use crate::model::*;
 use crate::primitives::Date;
-use crate::scheduler::{self, ScheduleResult, SchedulingError};
+use crate::scheduler::{self, ScheduleResult, SchedulingError, WorkspaceSchedule};
 use std::collections::{HashMap, HashSet};
+
+impl Workspace {
+    /// Run the CPM scheduler across every project at once (convenience wrapper over
+    /// [`scheduler::schedule_workspace`]). Honours cross-project dependencies when the
+    /// workspace opts into one-network scheduling, and rolls sub-projects up into their
+    /// parents either way.
+    pub fn schedule(&self, project_start: Date) -> Result<WorkspaceSchedule, SchedulingError> {
+        scheduler::schedule_workspace(self, project_start)
+    }
+}
 
 impl ProjectState {
     /// Run the CPM scheduler (convenience wrapper over [`scheduler::schedule`]).
