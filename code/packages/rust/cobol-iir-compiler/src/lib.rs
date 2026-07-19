@@ -439,6 +439,7 @@ impl<'a> Compiler<'a> {
             "compute_stmt" => self.emit_compute(verb),
             "goto_stmt" => self.emit_goto(verb),
             "perform_stmt" => self.emit_perform(verb),
+            "set_stmt" => self.emit_set(verb),
             other => Err(CompileError::Unsupported(format!(
                 "the {} statement is a later rung",
                 verb_name(other)
@@ -557,6 +558,39 @@ impl<'a> Compiler<'a> {
                 self.emit("const", Some(&reg), vec![Operand::Int(value)], "i64");
             }
         }
+        Ok(())
+    }
+
+    /// `SET cond-name TO TRUE` — assign the condition-name's conditional variable
+    /// the value that makes it hold: the **first** of its `VALUE` items (a range's
+    /// low bound). The value is formatted into the variable's picture at compile
+    /// time — the same `const`-into-slot store `MOVE <literal>` emits. Numeric
+    /// variable only, matching the test path; an alphanumeric one is a later rung.
+    fn emit_set(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
+        let cond_name = first_token(verb, "NAME")
+            .ok_or_else(|| CompileError::Malformed("SET without a condition-name".into()))?;
+        let cn = self.conditions.get(&cond_name).ok_or_else(|| {
+            CompileError::Unsupported(format!("reference to condition-name {cond_name} (undeclared)"))
+        })?;
+        let var = cn.var;
+        let (int_digits, dec_digits, signed) = match &self.items[var].kind {
+            ItemKind::Numeric { int_digits, dec_digits, signed, .. } => (*int_digits, *dec_digits, *signed),
+            ItemKind::Char { .. } => {
+                return Err(CompileError::Unsupported(
+                    "SET … TO TRUE on an alphanumeric conditional variable is a later rung".into(),
+                ))
+            }
+        };
+        let picture = Picture::Numeric { int_digits, dec_digits, signed };
+        let src = match cn.values.first() {
+            Some(ValueSpec::Single(s)) | Some(ValueSpec::Range(s, _)) => s,
+            None => {
+                return Err(CompileError::Malformed(format!("condition-name {cond_name} has no VALUE")))
+            }
+        };
+        let value = scale_num_value(src, &picture, signed, &cond_name)?;
+        let reg = self.items[var].reg.clone();
+        self.emit("const", Some(&reg), vec![Operand::Int(value)], "i64");
         Ok(())
     }
 
@@ -2841,6 +2875,30 @@ mod tests {
             let err = compile_source(&wrap(&[data], &["STOP RUN."]), "c88").unwrap_err();
             assert!(matches!(err, CompileError::Unsupported(_)), "{data}: got {err:?}");
         }
+    }
+
+    #[test]
+    fn set_condition_name_to_true_lowers() {
+        // SET cond-name TO TRUE lowers to a const store of the first value.
+        let m = compile_source(
+            &wrap(
+                &["01  N  PIC 99 VALUE 0.", "88  COND  VALUE 3 THRU 6."],
+                &["SET COND TO TRUE.", "DISPLAY N.", "STOP RUN."],
+            ),
+            "set",
+        )
+        .unwrap();
+        assert!(m.validate().is_empty(), "{:?}", m.validate());
+    }
+
+    #[test]
+    fn set_an_undeclared_condition_name_is_an_error() {
+        let err = compile_source(
+            &wrap(&["01  N  PIC 99 VALUE 0."], &["SET NOPE TO TRUE.", "STOP RUN."]),
+            "set",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
     }
 
     #[test]

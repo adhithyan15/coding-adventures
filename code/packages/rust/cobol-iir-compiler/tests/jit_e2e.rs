@@ -375,6 +375,32 @@ fn level_88_condition_name_drives_perform_until() {
 }
 
 #[test]
+fn set_condition_name_to_true_assigns_first_value() {
+    // SET IS-DONE TO TRUE stores 9 (IS-DONE VALUE 9) into STATUS-CODE; it then
+    // displays as 9 and satisfies IS-DONE. Byte-identical to the oracle.
+    let out = assert_matches_oracle(&wrap(
+        &["01  STATUS-CODE  PIC 9 VALUE 1.", "88  IS-DONE  VALUE 9."],
+        &[
+            "SET IS-DONE TO TRUE.",
+            "DISPLAY STATUS-CODE.",
+            "IF IS-DONE DISPLAY \"D\".",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "9\nD\n");
+}
+
+#[test]
+fn set_condition_name_to_true_uses_a_ranges_low_bound() {
+    // 88 COND VALUE 3 THRU 6 — SET COND TO TRUE assigns the low bound 3 → "03".
+    let out = assert_matches_oracle(&wrap(
+        &["01  N  PIC 99 VALUE 0.", "88  COND  VALUE 3 THRU 6."],
+        &["SET COND TO TRUE.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "03\n");
+}
+
+#[test]
 fn level_88_multiple_values_or() {
     // 88 COND VALUE 1 3 5 — an OR of equalities (`or` of `cmp_eq`s). Hits on 3,
     // misses on 4. Byte-identical to the oracle's any-value match.

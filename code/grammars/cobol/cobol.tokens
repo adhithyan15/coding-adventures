@@ -197,6 +197,7 @@ keywords:
   RUN
   ALTER
   EXAMINE
+  SET
   IF
   ELSE
   # -- Prepositions / connectives / operators-in-words --
@@ -229,6 +230,8 @@ keywords:
   WHEN
   NEXT
   SENTENCE
+  # -- Condition-name value (SET cond-name TO TRUE) --
+  TRUE
   # -- Figurative constants --
   ZERO
   ZEROS

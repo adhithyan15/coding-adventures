@@ -111,9 +111,12 @@ sentence  = statement { statement } DOT ;
 
 statement = move_stmt | display_stmt | accept_stmt
           | add_stmt | subtract_stmt | multiply_stmt | divide_stmt | compute_stmt
-          | perform_stmt | goto_stmt | if_stmt | stop_stmt ;
+          | perform_stmt | goto_stmt | if_stmt | set_stmt | stop_stmt ;
 
 move_stmt     = "MOVE" operand "TO" NAME { NAME } ;
+# SET a level-88 condition-name TRUE: assign its conditional variable the value
+# that makes the name hold (its first VALUE).
+set_stmt      = "SET" NAME "TO" "TRUE" ;
 display_stmt  = "DISPLAY" operand { operand } ;
 accept_stmt   = "ACCEPT" NAME ;
 # The four arithmetic verbs share two optional trailing clauses with COMPUTE:

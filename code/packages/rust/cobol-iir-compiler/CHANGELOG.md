@@ -8,6 +8,28 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.12.0: `SET cond-name TO TRUE` (PL09 step 4)
+
+The setter counterpart to level-88's condition-name test: `SET IS-DONE TO TRUE`
+assigns the conditional variable the value that makes the name hold. Implemented
+oracle-first (lexer → grammar → `cobol-runtime` → this compiler), byte-identical.
+
+- **Lexer/grammar.** `SET`/`TRUE` become keywords (`cobol-lexer` 0.3.0); the
+  grammar gains `set_stmt = "SET" NAME "TO" "TRUE"` (`cobol-parser` 0.8.0). Both
+  generated files regenerated via `grammar-tools`.
+- **Lowering.** `emit_set` resolves the condition-name to its conditional variable
+  and its **first** `VALUE` item (a range's low bound), formats that value into the
+  variable's picture at compile time, and emits a single `const` store into the
+  variable's slot — the same store `MOVE <literal>` uses, so no new opcode. Every
+  print backend (wasm/jvm/clr) accepts it, as do native-AOT/LLVM/VM/JIT.
+- **Deferrals / errors.** `SET … TO TRUE` on an alphanumeric conditional variable
+  is a later rung; an undeclared condition-name is a clean error.
+- **Tests.** 2 new `jit_e2e.rs` cases byte-identical to the oracle (assign the
+  first value; a range's low bound); unit tests for the lowering and the undeclared
+  error; a `backend_compat` program; a `lang_matrix` COBOL `SET` row across all
+  seven columns. Full suite **138 green** (31 unit + 16 `backend_compat` + 91
+  `jit_e2e`). The oracle gains 3 unit tests.
+
 ### Added — v0.11.0: level-88 multiple values and `THRU` ranges (PL09 step 4)
 
 Level-88 condition-names now accept a **list** of values and inclusive **`THRU`
