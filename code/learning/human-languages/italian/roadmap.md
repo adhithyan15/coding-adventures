@@ -39,12 +39,16 @@ and Italian's habit of keeping final vowels Latin's other children dropped.
   *-que*; Latin's *-pt-*/*-ct-* assimilate to doubled *-tt-*: *septem→sette*,
   *octō→otto*), with the **settembre–dicembre = Latin 7–10** calendar trick.
   Spanish/French twins supplied. **Authored.**
+- **Ch. 7 — Days of the week**: lunedì–venerdì (the **planet-week** with the
+  accented *-dì* ← *diēs* kept audible; three-sister lines *lunedì/lunes/lundi*;
+  *giovedì* = Giove/Jupiter) → sabato/domenica (*Sabbatum* / *diēs Dominica* "Lord's
+  day," twins of Spanish *sábado/domingo*). **Authored.**
 
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |
 |---|---|
-| 7+ | Time, days & months, family, food — following the shared theme order |
+| 8+ | Time & the clock, months, family, food — following the shared theme order |
 
 Note: Italian's formal "you" is **Lei** — literally "she" (a 3rd-person
 politeness, like German *Sie*), a different mechanism from Spanish *usted* (a

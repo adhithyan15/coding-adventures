@@ -64,9 +64,18 @@ order lives in the book, which LaTeX auto-numbers, and in `session-map.md`.)
   (location → estar; *en* ← *in*) → practice. **Authored** — the pilot's payoff
   chapter; the two "to be" verbs sorted for good.
 
-Next: **Ch. 10** — the **near future** (*ir a* + infinitive, "going to…") and
-**possessives** (*mi/tu/su*). From here the course hands over rules, not phrases.
-Grammar accumulates piece by piece. The theme skeleton below plans the wider road.
+- **Ch. 10 — The near future and possessives**: **ir** ("to go," the most
+  suppletive verb — infinitive ← *īre*, present *voy/vas/va/vamos/van* ← *vādere* →
+  invade/evade; the *go/went* trick) → the **near future** *ir a* + infinitive
+  (*voy a hablar* "I'm going to speak," Spanish building tomorrow from "to go," like
+  English/French) → possessives **mi/tu/su** (← *meus/tuus/suus* → my/thy; agree in
+  **number** not gender; *tu* vs *tú*) → practice. **Authored** — the course now
+  runs on rules, not phrases.
+
+Next: **Ch. 11** — *querer/poder* (stem-changing verbs; wants & ability) and more
+possessives (*nuestro*), building toward everyday description. From here the course
+hands over rules, not phrases. Grammar accumulates piece by piece. The theme
+skeleton below plans the wider road.
 
 ## Theme Skeleton (planning only)
 

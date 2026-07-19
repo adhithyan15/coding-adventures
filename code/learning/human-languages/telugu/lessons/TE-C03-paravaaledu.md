@@ -4,7 +4,7 @@ chapter: 3
 type: phrase
 headword: పరవాలేదు
 gloss: it's okay / no problem / you're welcome
-concept_tag: YOURE-WELCOME
+concept_tag: COURTESY-YOUREWELCOME
 prerequisites: [TE-C01-ledu, TE-C01-dhanyavadamulu]
 sounds: [ledu-negative]
 roots: [ledu-not-dravidian]

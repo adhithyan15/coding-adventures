@@ -28,6 +28,11 @@ on every result.
 | Transpose | `transpose(a, conjugate?)` | `array_runtime::ops::transpose` |
 | Range | `range(start, stop, step?)` | `matlab-runtime`'s `eval_colon` |
 | Indexing | `indexGet`/`indexSet` | (SIR-level only — no Rust runtime equivalent yet) |
+| Reduce / scan | `reduce(op, a)` / `scan(op, a)` | `array_runtime::ops::{reduce,scan}` |
+| Outer product | `outer(op, a, b)` | `array_runtime::ops::outer` |
+| Shape / reshape | `shape(a)` / `reshape(shapeArg, target)` | `apl_runtime::builtins::{shape,reshape}` |
+| Index generator / index-of | `indexGenerator(a)` / `indexOf(haystack, needle)` | `apl_runtime::builtins::{index_generator,index_of}` |
+| Ravel / catenate | `ravel(a)` / `catenate(a, b)` | `apl_runtime::builtins::{ravel,catenate}` |
 
 ## Backend consumers
 
@@ -42,6 +47,19 @@ the wiring. This package landed first (mirroring exactly how
 `sir-runtime-symbolic`, SIR23's runtime, preceded its own Stream-B codegen)
 so those backend PRs only had to wire up calls, not design an array
 representation from scratch.
+
+The SIR22 "APL addendum" (`reduce`/`scan`/`outer`/`shape`/`reshape`/
+`indexGenerator`/`indexOf`/`ravel`/`catenate`, below) followed the same
+pattern one release later: `semantic-ir-to-javascript` shipped real codegen
+for all nine first (its "SIR22 APL-addendum codegen" PR), since
+`apl-to-semantic-ir` genuinely emits these nine nodes for APL's `/`/`\`/
+`∘.`/`⍴`/`⍳`/`,` glyphs. This package now carries the identical port, but
+`semantic-ir-to-typescript` has **not** wired codegen for them yet — that
+backend still rejects a module using any of these nine nodes via its own
+`find_unimplemented_sir22_addendum_node` tree-walk, unchanged by this
+package gaining them. Wiring `__SirArray.reduce(...)`/etc. call sites into
+`semantic-ir-to-typescript`'s `emit.rs` is a separate, not-yet-started
+follow-up.
 
 ## How emitted code uses it
 
@@ -86,24 +104,43 @@ const row0 = __SirArray.indexGet(A, [{ kind: "scalar", value: 0 }, { kind: "whol
   `IndexSet` mutates in place rather than returning a new array, matching
   MATLAB assignment semantics and the spec's own "statement, not
   expression" treatment of it.
+- **`reduce`/`scan`** (`reduce.ts`) and **`outer`** (`outer.ts`) — the SIR22
+  "APL addendum"'s three `ElementwiseOpKind`-parameterized adverbs (`+/A`,
+  `+\A`, `A∘.×B`), mirroring `array_runtime::ops::{reduce,scan,outer}`
+  exactly, including their column-major row/column-fold indexing (getting
+  that indexing backwards silently transposes the result instead of
+  throwing — see `reduce.ts`'s own doc comment).
+- **`shape`/`reshape`** (`shape.ts`), **`indexGenerator`/`indexOf`**
+  (`iota.ts`), and **`ravel`/`catenate`** (`ravel.ts`) — the SIR22
+  addendum's six "bespoke" (non-`BinOp`-shaped) APL primitives (`⍴`, `⍳`,
+  `,`), mirroring `apl_runtime::builtins::{shape,reshape,index_generator,
+  index_of,ravel,catenate}` exactly. `reshape`'s row-major cyclic fill must
+  be transposed into this package's column-major storage for a rank-2
+  target (`shape.ts`'s own doc comment covers this in detail — it is the
+  single easiest place in this whole package to introduce a silent
+  wrong-answer bug); `indexGenerator` is 1-based (`⍳n` is `[1, …, n]`),
+  unlike every other index in this package.
 
 ## Deliberately out of scope
 
-The SIR22 spec's "APL addendum" `Expr` variants (`Reduce`/`Scan`/
-`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/
-`Catenate`) are **not** implemented here, even though `array_runtime::ops`
-already has Rust reference implementations for `reduce`/`scan`/`outer` and
-`apl-to-semantic-ir`'s real lowering already emits `Reduce`/`Scan`/
-`OuterProduct` for APL's `+/`/`+\`/`∘.×` operators — porting them is a
-natural, cleanly-scoped follow-up once a JS/TS-backend consumer actually
-needs them, not speculative work. Both backend consumers guard against a
-module using one of these nine slipping past their feature-flag check (the
-addendum shares its three features with the base cut above) via an explicit
-tree walk that fails cleanly instead of reaching an emit-time panic — see
-`find_unimplemented_sir22_addendum_node` in each backend crate.
+`Complex`/`Rational` scalar support (shared `SirType`s with SIR23) is out of
+scope — `transpose`'s `conjugate` flag is accepted for API-shape parity with
+the spec but is a no-op today, matching `array-runtime`'s own real-only
+scope. No operation in this package (including the nine APL-addendum
+functions above) is defined beyond rank ≤ 2, matching every Rust reference's
+own ceiling.
 
-`Complex`/`Rational` scalar support (shared `SirType`s with SIR23) is also
-out of scope for the same reason.
+This package also does **not** include a display/auto-print formatting
+helper (the equivalent of `apl_runtime::value::display`/
+`semantic-ir-to-javascript`'s inlined `ArrayRt.display`). That JS backend
+needed one because APL auto-prints a bare top-level expression and has no
+bracket-indexing syntax to read a value back with instead — there was
+nowhere else to route a computed array's display through.
+`semantic-ir-to-typescript` does not have that problem today because it does
+not yet consume any APL-sourced module at all (see "Backend consumers"
+above) — building a display convention now, with no real consumer, would be
+exactly the same "speculative, not filling a real gap" mistake this package
+avoided by deferring the APL addendum itself for two releases.
 
 ## Security: bounded allocation
 
@@ -120,6 +157,17 @@ late, since the allocation attempt itself can throw an uncaught
 reject anything cleanly. `checkedShapeSize` also rejects negative and
 non-integer dimensions, closing a variant where two negative dimensions
 multiply to a small, cap-passing positive product.
+
+The APL-addendum functions reuse this exact same `MAX_ELEMENTS` cap for two
+allocation-adjacent gaps that are easy to miss because no single operand is
+oversized: `indexOf`'s work is O(len(haystack) × len(needle)) — each length
+can individually sit well under `MAX_ELEMENTS` while their *product* is
+still absurd — and `catenate`'s combined output length is the *sum* of two
+operands that can each individually be valid on their own (a script that
+repeatedly does `A = catenate(A, A)` doubles the size every call with no
+other ceiling). Both check the product/sum *before* any allocation or
+scanning, on every call, exactly like every other bounded-allocation check
+in this package.
 
 ## Where it fits
 

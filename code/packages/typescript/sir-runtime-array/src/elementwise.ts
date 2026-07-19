@@ -43,7 +43,19 @@ export type ElementwiseOpKind =
   | "Ge"
   | "Gt";
 
-function applyOp(op: ElementwiseOpKind, a: number, b: number): number {
+/**
+ * Apply one `ElementwiseOpKind` to a pair of plain numbers — the single
+ * op-dispatch table this whole package uses. Exported (not file-private)
+ * so `reduce`/`scan`/`outer` (`./reduce.ts`, `./outer.ts` — the SIR22 "APL
+ * addendum", which reuses this exact table per `array_runtime::ops::
+ * {reduce,scan,outer}` and the SIR22 spec's own "`Reduce`/`Scan`/
+ * `OuterProduct` reuse the whole `ElementwiseOpKind` enum" note) can import
+ * it directly instead of duplicating this switch a second time. Mirrors
+ * `semantic-ir-to-javascript`'s inlined port, which reuses its own
+ * (file-scoped, not exported — JS has no module boundary to cross there)
+ * `applyOp` for the identical reason.
+ */
+export function applyOp(op: ElementwiseOpKind, a: number, b: number): number {
   const b2f = (cond: boolean): number => (cond ? 1 : 0);
   switch (op) {
     case "Add":

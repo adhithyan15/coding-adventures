@@ -212,6 +212,9 @@
       "ES-SER-VS-ESTAR": "ser vs estar — the two 'to be' verbs (essence vs state); minimal pairs flip meaning (es/está aburrido, rico, verde, listo)",
       "ES-ORIGIN-SER": "soy de… — origin/profession/nationality take ser (essence); de ← Latin dē; ¿De dónde eres?",
       "ES-LOCATION-ESTAR": "está en… — physical location always takes estar (← stāre 'to stand'); en ← Latin in; ¿Dónde estás?",
+      "ES-VERB-IR": "ir — 'to go' (most suppletive: infinitive ← īre, present voy/vas/va/vamos/van ← vādere → invade/evade; go/went trick)",
+      "ES-NEAR-FUTURE": "ir a + infinitive — the 'going-to' future (voy a hablar = I'm going to speak); a ← ad; mirrors English/French",
+      "ES-POSSESSIVE": "mi/tu/su (+ mis/tus/sus) — possessives ← meus/tuus/suus → my/thy; agree in NUMBER not gender; tu 'your' vs tú 'you'",
       "IT-VERB-STARE": "stare — 'to be' (state; ← Latin stare 'to stand', = Spanish estar); drives 'come stai?'",
       "IT-VERB-PARLARE": "parlare — 'to speak' (← parabolāre = French parler; the regular -are present)",
       "IT-VERB-ABITARE": "abitare — 'to live/dwell' (← habitāre → habitat; twin of French habiter)",
@@ -219,6 +222,8 @@
       "IT-WORD-ITALIANO": "italiano — 'Italian' (the language; ← Italia)",
       "IT-NUM-1-5": "uno/due/tre/quattro/cinque (1-5; ← ūnus…quīnque; Italian closest to Latin — cinque keeps -que)",
       "IT-NUM-6-10": "sei/sette/otto/nove/dieci (6-10; septem/octō → -tt-: sette/otto; sette…dieci → settembre…dicembre)",
+      "IT-DAYS-WEEKDAYS": "lunedì/martedì/mercoledì/giovedì/venerdì (Mon-Fri; [planet] + dì ← diēs; accented -dì kept; = ES lunes/FR lundi)",
+      "IT-DAYS-WEEKEND": "sabato/domenica (Sat/Sun; ← Sabbatum / diēs Dominica 'Lord's day'; = ES sábado/domingo)",
       "FR-VERB-APPELER": "(s')appeler — 'to call (oneself)'",
       "FR-VERB-ALLER": "aller — 'to go' (suppletive: ambulāre/vādere/īre); drives 'comment ça va?'",
       "FR-VERB-PARLER": "parler — 'to speak' (← parabolāre; the big regular -er verb / present tense)",
@@ -227,6 +232,8 @@
       "FR-WORD-FRANCAIS": "français — 'French' (the language; ← Francia, land of the Franks)",
       "FR-NUM-1-5": "un/deux/trois/quatre/cinq (1-5; ← ūnus…quīnque; un/une = a/an; cinq → English cinque)",
       "FR-NUM-6-10": "six/sept/huit/neuf/dix (6-10; octō→huit erosion; dix→dime; sept…dix → septembre…décembre)",
+      "FR-DAYS-WEEKDAYS": "lundi/mardi/mercredi/jeudi/vendredi (Mon-Fri; [planet-god] + di ← diēs; mardi=Mars=English Tuesday/Tiw)",
+      "FR-DAYS-WEEKEND": "samedi/dimanche (Sat/Sun; samedi ← Sabbatum, dimanche ← diēs Dominica 'Lord's day'; di- moved to front)",
       "DE-VERB-HEISSEN": "heißen — 'to be called'",
       "DE-VERB-GEHEN": "gehen — 'to go' (= English go); drives 'wie geht es dir?'",
       "GE-VERB-WOHNEN": "wohnen — 'to live/dwell' (← wonēn → English 'wont'); first weak verb / present tense",
@@ -235,16 +242,20 @@
       "GE-WORD-DEUTSCH": "Deutsch — 'German' (the language; ← diutisc 'of the people' → English Dutch)",
       "GE-NUM-1-5": "eins/zwei/drei/vier/fünf (1-5; Germanic twins of one…five, NOT Latin loans; Grimm's law p→f in fünf/five)",
       "GE-NUM-6-10": "sechs/sieben/acht/neun/zehn (6-10; Germanic twins of six…ten; zehn↔ten↔decem d→t; acht↔eight/Nacht -cht-)",
+      "GE-DAYS-WEEKDAYS": "Montag/Dienstag/Mittwoch/Donnerstag/Freitag (Mon-Fri; Germanic gods = English days; Donnerstag=Thor=Thursday; Mittwoch 'mid-week' replaced Woden)",
+      "GE-DAYS-WEEKEND": "Samstag/Sonntag (Sat/Sun; Samstag ← Sabbat/shabbāt NOT Saturn = ES sábado; Sonntag = Sun's day = Sunday)",
       "PT-WORD-TUDO": "tudo — 'everything / all' (← Latin tōtus); the heart of 'tudo bem?'",
       "PT-VERB-FALAR": "falar — 'to speak' (← fabulārī = Spanish hablar, but PT kept f-); the regular -ar present",
       "PT-VERB-MORAR": "morar — 'to live/dwell' (← morārī 'to linger' → moratorium; not habitāre)",
       "PT-VERB-TRABALHAR": "trabalhar — 'to work' (← tripaliāre → travail/travel; twin of Spanish trabajar)",
       "PT-WORD-PORTUGUES": "português — 'Portuguese' (the language; ← Portus Cale)",
       "PT-NUM-1-5": "um/dois/três/quatro/cinco (1-5; ← ūnus…quīnque; um nasal; GENDER kept on two: dois/duas ← duo/duae)",
-      "PT-NUM-6-10": "seis/sete/oito/nove/dez (6-10; ct→it shift octō→oito, noite/leite; sete…dez → setembro…dezembro)"
+      "PT-NUM-6-10": "seis/sete/oito/nove/dez (6-10; ct→it shift octō→oito, noite/leite; sete…dez → setembro…dezembro)",
+      "PT-DAYS-WEEKDAYS": "segunda/terça/quarta/quinta/sexta(-feira) (Mon-Fri; UNIQUE numbered feira days ← fēria 'feast-day'; ordinals of dois…seis; Church dropped planet-gods)",
+      "PT-DAYS-WEEKEND": "sábado/domingo (Sat/Sun; ← Sabbatum / diēs Dominica; domingo counted 1st → Monday='segunda' 2nd)"
     }
   },
   "practiceTags": {
-    "note": "Non-word lessons (type: review | practice-mix | writing) carry a session/orthography label, not a concept, and are exempt from the cross-language join. Existing labels: CH1-PRACTICE, CH2-PRACTICE, CH3-PRACTICE, CH4-PRACTICE, CH9-PRACTICE, REVIEW."
+    "note": "Non-word lessons (type: review | practice-mix | writing) carry a session/orthography label, not a concept, and are exempt from the cross-language join. Existing labels: CH1-PRACTICE, CH2-PRACTICE, CH3-PRACTICE, CH4-PRACTICE, CH9-PRACTICE, CH10-PRACTICE, REVIEW."
   }
 }

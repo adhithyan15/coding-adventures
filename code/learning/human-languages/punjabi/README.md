@@ -25,7 +25,18 @@ book.
 
 - **Chapter 1 — Greetings** ([`lessons/PA-C01-*`](./lessons/)): sat srī akāl,
   namaste, dhannavād, shukrīā, hāṇ/nahīṇ, practice. In the book.
-- **Chapter 2 — Introducing Yourself** (planned): *merā nāṇ…*, *tūṇ* / *tusīṇ*.
+- **Chapter 2 — Introducing Yourself** ([`lessons/PA-C02-*`](./lessons/)): nāṁ,
+  merā, hai, **merā nāṁ … hai**, tū̃/tusī̃, kī, **tuhāḍā nāṁ kī hai?**, khushī,
+  practice. Every atom traced; SOV order; two-level "you". In the book.
+- **Chapter 3 — How Are You** ([`lessons/PA-C03-*`](./lessons/)): kivēṁ, **tusī̃
+  kivēṁ ho?**, maiṁ, ṭhīk, koī gall nahīṁ, practice. The copula set; the *hāṁ*
+  "am"/"yes" homophone. In the book.
+- **Chapter 4 — Farewells** ([`lessons/PA-C04-*`](./lessons/)): phir, milāṁge,
+  **phir milāṁge**, rabb rākhā ("God keep you"; Arabic + Sanskrit), practice. In
+  the book.
+- **Chapter 5 — First Verbs** ([`lessons/PA-C05-*`](./lessons/)): bolṇā, **maiṁ
+  panjābī boldā hāṁ** (*panj* "five" + *āb* "river"), rahiṇā, kamm karnā, practice.
+  The gendered present habitual. In the book.
 
 ## Book / fonts
 
