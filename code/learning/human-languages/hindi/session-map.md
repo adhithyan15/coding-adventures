@@ -1,4 +1,4 @@
-# Session Map — Hindi Chapters 1–2
+# Session Map — Hindi Chapters 1–5
 
 Same spaced-repetition schedule as the other tracks (a word from session *N*
 resurfaces at *N+1, N+3, N+7, N+15*). Lessons named by slug; this map is the
@@ -35,7 +35,39 @@ in the service of real greetings.
 | 14 | khushi | ख़ुशी | "pleased to meet you"; *khushī* ← Persian (the second vocabulary) |
 | 15 | practice | (dialogue) | the whole exchange |
 
+## Chapter 3 — How Are You
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 16 | kaise | कैसे | "how" ← interrogative *k-* (PIE *kʷo-*), the *k-* question family |
+| 17 | aap-kaise-hain | आप कैसे हैं? | **"how are you?"**; respect is grammatically plural |
+| 18 | main | मैं | "I" ← *ma-* → English *me/my* |
+| 19 | hun | हूँ | "am" ← Sanskrit *asmi* → English *am*; the copula trio hūṁ/hai/haiṁ |
+| 20 | thik | ठीक | "fine" (native, no European cognate); reply *maiṁ ṭhīk hūṁ* |
+| 21 | aapka-swagat-hai | आपका स्वागत है | "you're welcome"; *svāgat* = *su* + *āgata* = "well come" |
+| 22 | practice | (dialogue) | the whole how-are-you exchange |
+
+## Chapter 4 — Farewells
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 23 | phir | फिर | "again" — turns a parting into a promise |
+| 24 | milenge | मिलेंगे | "(we) will meet" ← *mil-* "to join"; the future is an ending |
+| 25 | phir-milenge | फिर मिलेंगे | **"we'll meet again"**; warm/native vs. formal *alvidā* |
+| 26 | kal-milte-hain | कल मिलते हैं | "see you tomorrow"; *kal* = tomorrow *and* yesterday ← *kāla* |
+| 27 | chalta-hun | चलता हूँ | "I'll be off" (m. *chaltā* / f. *chaltī*); ← *cal-* "to move" |
+| 28 | practice | (dialogue) | the farewells by register |
+
+## Chapter 5 — The First Verbs
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 29 | bolna | बोलना | "to speak"; every infinitive ends in *-nā*; stem *bol-* |
+| 30 | main-hindi-bolta-hun | मैं हिंदी बोलता हूँ | **"I speak Hindi"**; present habitual; *hindī* ← *sindhu* (Indus) |
+| 31 | rahna | रहना | "to live" ← *rah-* "to remain"; the postposition *meṁ* ("in") |
+| 32 | karna | करना | "to do" ← √kṛ — the root of *karma*, *namaskār*, *Sanskrit* |
+| 33 | practice | (dialogue) | three verbs, one engine — sentences about yourself |
+
 ## Next
 
-Chapter 3 — *āp kaise haiṁ?* ("how are you?") and answering with *ṭhīk* — the
-responding cycle.
+Chapter 6 — postpositions (*ko, se, meṁ, par*) and the ergative *ne*.

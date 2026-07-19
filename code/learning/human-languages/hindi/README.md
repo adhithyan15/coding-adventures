@@ -36,6 +36,15 @@ Two things shape this track.
   hai?** ("what's your name?"), khushī, practice. Every atom traced (nām ←
   *nāman* → *name*; hai ← *asti* → *is*); SOV order; the three-level "you". In
   the book.
+- **Chapter 3 — How Are You** ([`lessons/HI-C03-*`](./lessons/)): kaise, **āp
+  kaise haiṁ?**, maiṁ, hūṁ, ṭhīk, āpkā svāgat hai, practice. The copula trio
+  hūṁ/hai/haiṁ (← *asmi/asti* → *am/is*); respect-as-plural. In the book.
+- **Chapter 4 — Farewells** ([`lessons/HI-C04-*`](./lessons/)): phir, milenge,
+  **phir milenge**, kal milte haiṁ (*kal* = tomorrow *and* yesterday), chaltā
+  hūṁ, practice. In the book.
+- **Chapter 5 — First Verbs** ([`lessons/HI-C05-*`](./lessons/)): bolnā, **maiṁ
+  hindī boltā hūṁ**, rahnā, karnā (← √kṛ), practice. The present habitual and
+  gender agreement. In the book.
 
 ## Book / fonts
 

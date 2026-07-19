@@ -22,13 +22,23 @@ reading course.
   merā ← *ma-* → *my*; kyā ← *ka-* → *what*); SOV word order; the three-level
   "you."
 
+- **Ch. 3 — How Are You**: kaise (how) → āp kaise haiṁ (how are you) → maiṁ (I)
+  → hūṁ (am) → ṭhīk (fine) → āpkā svāgat hai (you're welcome) → practice. The
+  copula trio *hūṁ/hai/haiṁ* (← *asmi/asti*, English *am/is*); respect-as-plural.
+- **Ch. 4 — Farewells**: phir (again) → milenge (we'll meet) → phir milenge → kal
+  milte haiṁ (see you tomorrow; *kal* = tomorrow *and* yesterday ← *kāla*) →
+  chaltā/chaltī hūṁ (I'll be off, gendered) → practice. Deepens Ch.1's *alvidā*.
+- **Ch. 5 — First Verbs**: bolnā (to speak) → maiṁ hindī boltā hūṁ (I speak
+  Hindi; *hindī* ← *sindhu*) → rahnā (to live; postposition *meṁ*) → karnā (to
+  do; ← √kṛ, the root of *karma/namaskār/Sanskrit*) → practice. The present
+  habitual (stem + *-tā/-tī/-te* + *honā*), verb-last, gender agreement.
+
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 3 | Responding: *āp kaise haiṅ* ("how are you"), *ṭhīk hūṅ* ("I'm fine"), the verb *honā* ("to be") |
-| 4 | Farewells deepened, *phir milenge* ("we'll meet again"); numbers 1–10 |
-| 5+ | Postpositions (Hindi's "back-placed" prepositions), the ergative *ne*, family, food — always with the two-vocabularies thread |
+| 6 | Postpositions (*ko, se, meṁ, par*), the ergative *ne*; more -nā verbs |
+| 7+ | Numbers, family, food, negation — always with the two-vocabularies thread |
 
 Note: Hindi splits "you" by **register** (*āp* formal / *tum* familiar / *tū*
 intimate) — like Spanish/French/German, and unlike Arabic's gender split.
