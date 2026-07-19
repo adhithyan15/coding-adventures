@@ -6,6 +6,26 @@ All notable changes to `task-core` are documented here.
 
 ### Added
 
+- **The view selection pipeline — filter → sort → group** (`view` module — Phase 3 PR-2
+  of `code/specs/task-app-view-layer.md`). Built entirely on `cell()`, so what a view
+  filters on, sorts by, and groups on is the same interpretation of a field.
+  - `select(project, view, schedule) -> Vec<SelectionGroup>` — applies a `View`'s filter,
+    multi-key sort, and grouping, returning ordered, grouped task ids. Summary tasks are
+    excluded (they're outline structure, not rows); an ungrouped view returns one group.
+  - `SelectionGroup { key, key_label, tasks }` — a group's raw key, its display label
+    (via `format_cell`), and its task ids in sort order.
+  - Sorting is **multi-key with direction**, tie-broken by outline order then id for
+    determinism; `cmp_cell` is a **total order** (`Empty` sorts last, numbers by
+    `total_cmp` so `NaN` can't break it, unlike types fall back to a stable type rank, so
+    a mixed column never panics). Grouping puts the no-value group **last**.
+  - `ProjectState::view_selection(view, project_start)` computes the schedule once so a
+    view can filter/sort on **computed columns** (start/finish/slack/critical); a cyclic
+    network degrades to an empty schedule rather than failing the selection.
+  - The current `Filter` fields (status set / completion / name search) are evaluated
+    here; the richer field-predicate tree from the spec layers on in a follow-up.
+  - 4 tests: summary exclusion + each filter predicate, multi-key sort with direction and
+    Empty-last, group-by with the no-value group last, and computed-column sorting.
+
 - **The view/query layer's shared field accessor** (`view` module — Phase 3 PR-1 of
   `code/specs/task-app-view-layer.md`). The linchpin the whole "fat engine" view layer
   resolves through, so filter, sort, group, and display can never disagree about a

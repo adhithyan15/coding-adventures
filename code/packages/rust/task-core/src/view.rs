@@ -32,11 +32,14 @@
 //! (formula/rollup) resolution is layered on where the recompute already runs, in the
 //! filter/sort PR.
 
+use crate::ids::TaskId;
 use crate::model::{
-    DurationUnit, FieldRef, FieldValue, ProjectSettings, ProjectState, Task, TaskKind,
+    DurationUnit, FieldRef, FieldValue, Filter, ProjectSettings, ProjectState, SortKey, Task,
+    TaskKind, View,
 };
 use crate::primitives::Date;
 use crate::scheduler::ScheduleResult;
+use std::cmp::Ordering;
 
 /// A resolved, comparable, formattable field value — the common currency of the view
 /// layer. Filter predicates compare it, sorts order it, groups key on it, and
@@ -189,6 +192,173 @@ fn trim_number(n: f64) -> String {
         let s = format!("{n:.2}");
         s.trim_end_matches('0').trim_end_matches('.').to_string()
     }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// The selection pipeline: filter → sort → group
+// ─────────────────────────────────────────────────────────────────────────────
+//
+// This is the second half of the view layer: given a `View`, produce the tasks it
+// shows, in order, partitioned into its groups. Every step resolves field values
+// through [`cell`], so what you filter on, sort by, group on, and display are the same
+// interpretation of a field. Shape-specific projections (table, calendar, the filtered
+// todo/kanban/gantt) are thin maps over this selection.
+
+/// One group of a view's selection: the tasks sharing a group-by key, already in the
+/// view's sort order. An ungrouped view yields a single group with an `Empty` key.
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub struct SelectionGroup {
+    /// The raw group key (`Empty` for the no-value group, or an ungrouped view).
+    pub key: CellValue,
+    /// A display label for the key (via [`format_cell`]), for a section header.
+    pub key_label: String,
+    /// The task ids in this group, in the view's sort order.
+    pub tasks: Vec<TaskId>,
+}
+
+/// Apply a view's **filter → sort → group** to a project's tasks.
+///
+/// Summary tasks are excluded — they are outline structure, not rows. The result is a
+/// list of groups; an ungrouped view returns exactly one group (`Empty` key) holding
+/// every matching task in sort order.
+pub fn select(
+    project: &ProjectState,
+    view: &View,
+    schedule: &ScheduleResult,
+) -> Vec<SelectionGroup> {
+    // 1. Filter.
+    let mut tasks: Vec<&Task> = project
+        .tasks
+        .values()
+        .filter(|t| t.kind != TaskKind::Summary)
+        .filter(|t| passes_filter(t, &view.filter))
+        .collect();
+
+    // 2. Sort by the view's keys, tie-broken by outline order then id so the result is
+    //    deterministic even when every key compares equal.
+    tasks.sort_by(|a, b| {
+        compare_by_keys(project, a, b, &view.sort, schedule)
+            .then_with(|| a.order.cmp(&b.order))
+            .then_with(|| a.id.0.cmp(&b.id.0))
+    });
+
+    // 3. Group.
+    match &view.group_by {
+        None => vec![SelectionGroup {
+            key: CellValue::Empty,
+            key_label: String::new(),
+            tasks: tasks.iter().map(|t| t.id.clone()).collect(),
+        }],
+        Some(field) => group_tasks(project, &tasks, field, schedule),
+    }
+}
+
+/// Whether a task satisfies a filter. The current `Filter` fields (status set,
+/// completion, name search) are evaluated directly; the richer field-predicate tree
+/// from the spec layers on here in a follow-up.
+fn passes_filter(task: &Task, filter: &Filter) -> bool {
+    if !filter.statuses.is_empty() {
+        match &task.status {
+            Some(s) if filter.statuses.contains(s) => {}
+            _ => return false,
+        }
+    }
+    if let Some(want) = filter.completed {
+        if task.completed != want {
+            return false;
+        }
+    }
+    if let Some(q) = &filter.search {
+        if !task.name.to_lowercase().contains(&q.to_lowercase()) {
+            return false;
+        }
+    }
+    true
+}
+
+/// Compare two tasks by a list of sort keys, first non-equal key wins. A descending key
+/// reverses that key's order; ties fall through to the next key.
+fn compare_by_keys(
+    project: &ProjectState,
+    a: &Task,
+    b: &Task,
+    keys: &[SortKey],
+    schedule: &ScheduleResult,
+) -> Ordering {
+    for key in keys {
+        let va = cell(project, a, &key.field, schedule);
+        let vb = cell(project, b, &key.field, schedule);
+        let ord = cmp_cell(&va, &vb);
+        let ord = if key.ascending { ord } else { ord.reverse() };
+        if ord != Ordering::Equal {
+            return ord;
+        }
+    }
+    Ordering::Equal
+}
+
+/// A total order over cell values: **`Empty` sorts last** (missing data at the bottom),
+/// same-typed values compare naturally (numbers by `total_cmp` so `NaN` can't break the
+/// order), and unlike-typed values fall back to a stable type rank so a mixed column
+/// never panics.
+fn cmp_cell(a: &CellValue, b: &CellValue) -> Ordering {
+    use CellValue::*;
+    match (a, b) {
+        (Empty, Empty) => Ordering::Equal,
+        (Empty, _) => Ordering::Greater, // Empty last
+        (_, Empty) => Ordering::Less,
+        (Text(x), Text(y)) => x.cmp(y),
+        (Number(x), Number(y)) => x.total_cmp(y),
+        (Bool(x), Bool(y)) => x.cmp(y), // false < true
+        (Date(x), Date(y)) => match (x, y) {
+            (Some(dx), Some(dy)) => dx.0.cmp(&dy.0),
+            (Some(_), None) => Ordering::Less,
+            (None, Some(_)) => Ordering::Greater,
+            (None, None) => Ordering::Equal,
+        },
+        // Unlike types: order by a stable rank so the sort stays total.
+        _ => type_rank(a).cmp(&type_rank(b)),
+    }
+}
+
+fn type_rank(v: &CellValue) -> u8 {
+    match v {
+        CellValue::Bool(_) => 0,
+        CellValue::Number(_) => 1,
+        CellValue::Date(_) => 2,
+        CellValue::Text(_) => 3,
+        CellValue::Empty => 4,
+    }
+}
+
+/// Partition already-sorted tasks into groups keyed by `field`. Group order follows the
+/// key order ([`cmp_cell`], so the no-value group lands last); within a group tasks keep
+/// their incoming sort order.
+fn group_tasks(
+    project: &ProjectState,
+    tasks: &[&Task],
+    field: &FieldRef,
+    schedule: &ScheduleResult,
+) -> Vec<SelectionGroup> {
+    let mut groups: Vec<SelectionGroup> = Vec::new();
+    for t in tasks {
+        let key = cell(project, t, field, schedule);
+        match groups.iter_mut().find(|g| g.key == key) {
+            Some(g) => g.tasks.push(t.id.clone()),
+            None => {
+                let key_label = format_cell(&key, field, &project.settings);
+                groups.push(SelectionGroup {
+                    key,
+                    key_label,
+                    tasks: vec![t.id.clone()],
+                });
+            }
+        }
+    }
+    groups.sort_by(|a, b| cmp_cell(&a.key, &b.key));
+    groups
 }
 
 #[cfg(test)]
@@ -388,5 +558,191 @@ mod tests {
             format_cell(&CellValue::Number(90.0), &builtin("totalSlack"), &minutes),
             "90m"
         );
+    }
+
+    // ── selection pipeline: filter → sort → group ───────────────────────────────
+
+    use crate::ids::{StatusId as SId, ViewId};
+    use crate::model::{Filter, SortKey, View, ViewShape};
+
+    /// A project with four leaf tasks + one summary (which the pipeline must exclude).
+    fn sample() -> ProjectState {
+        let mut p = project();
+        let mk = |id: &str, name: &str, done: bool, status: Option<&str>, pct: u8| {
+            let mut t = Task::new(TaskId::from_raw(id), name);
+            t.completed = done;
+            t.status = status.map(SId::from_raw);
+            t.percent_complete = pct;
+            t
+        };
+        for t in [
+            mk("a", "Alpha", false, Some("doing"), 10),
+            mk("b", "Bravo", true, Some("done"), 100),
+            mk("c", "Charlie", false, Some("doing"), 60),
+            mk("d", "Delta", false, None, 0),
+        ] {
+            p.tasks.insert(t.id.clone(), t);
+        }
+        let mut summary = Task::new(TaskId::from_raw("s"), "Summary");
+        summary.kind = TaskKind::Summary;
+        p.tasks.insert(summary.id.clone(), summary);
+        p
+    }
+
+    fn view(filter: Filter, sort: Vec<SortKey>, group_by: Option<FieldRef>) -> View {
+        View {
+            id: ViewId::from_raw("v1"),
+            name: "V".into(),
+            shape: ViewShape::Table,
+            filter,
+            group_by,
+            sort,
+            visible_fields: vec![],
+        }
+    }
+    fn asc(field: &str) -> SortKey {
+        SortKey {
+            field: builtin(field),
+            ascending: true,
+        }
+    }
+    /// The flat id order of a single-group (ungrouped) selection.
+    fn ids(groups: &[SelectionGroup]) -> Vec<String> {
+        assert_eq!(groups.len(), 1, "expected an ungrouped selection");
+        groups[0].tasks.iter().map(|t| t.0.clone()).collect()
+    }
+
+    #[test]
+    fn filter_excludes_summaries_and_honours_the_predicates() {
+        let p = sample();
+        let sched = no_schedule();
+
+        // No filter: all four leaves, never the summary.
+        let all = select(
+            &p,
+            &view(Filter::default(), vec![asc("name")], None),
+            &sched,
+        );
+        assert_eq!(ids(&all), ["a", "b", "c", "d"]);
+
+        // completed = false.
+        let f = Filter {
+            completed: Some(false),
+            ..Filter::default()
+        };
+        assert_eq!(
+            ids(&select(&p, &view(f, vec![asc("name")], None), &sched)),
+            ["a", "c", "d"]
+        );
+
+        // status ∈ {doing}.
+        let f = Filter {
+            statuses: vec![SId::from_raw("doing")],
+            ..Filter::default()
+        };
+        assert_eq!(
+            ids(&select(&p, &view(f, vec![asc("name")], None), &sched)),
+            ["a", "c"]
+        );
+
+        // case-insensitive name search.
+        let f = Filter {
+            search: Some("ALP".into()),
+            ..Filter::default()
+        };
+        assert_eq!(
+            ids(&select(&p, &view(f, vec![asc("name")], None), &sched)),
+            ["a"]
+        );
+    }
+
+    #[test]
+    fn sort_is_multi_key_with_direction_and_empty_last() {
+        let p = sample();
+        let sched = no_schedule();
+
+        // Descending percentComplete: 100, 60, 10, 0 → b, c, a, d.
+        let desc = SortKey {
+            field: builtin("percentComplete"),
+            ascending: false,
+        };
+        assert_eq!(
+            ids(&select(
+                &p,
+                &view(Filter::default(), vec![desc], None),
+                &sched
+            )),
+            ["b", "c", "a", "d"]
+        );
+
+        // Sort by status (a,c = "doing"; b = "done"; d = Empty → last), tie-break name.
+        let by_status = select(
+            &p,
+            &view(Filter::default(), vec![asc("status"), asc("name")], None),
+            &sched,
+        );
+        assert_eq!(ids(&by_status), ["a", "c", "b", "d"]); // doing<done, Empty(d) last
+    }
+
+    #[test]
+    fn group_by_partitions_with_no_value_group_last() {
+        let p = sample();
+        let sched = no_schedule();
+        let groups = select(
+            &p,
+            &view(
+                Filter::default(),
+                vec![asc("name")],
+                Some(builtin("status")),
+            ),
+            &sched,
+        );
+        // Groups ordered by key: "doing", "done", then the Empty (no-status) group last.
+        let labels: Vec<_> = groups.iter().map(|g| g.key_label.clone()).collect();
+        assert_eq!(labels, ["doing", "done", ""]);
+        assert_eq!(
+            groups[0]
+                .tasks
+                .iter()
+                .map(|t| t.0.clone())
+                .collect::<Vec<_>>(),
+            ["a", "c"]
+        );
+        assert_eq!(groups[2].key, CellValue::Empty);
+        assert_eq!(
+            groups[2]
+                .tasks
+                .iter()
+                .map(|t| t.0.clone())
+                .collect::<Vec<_>>(),
+            ["d"]
+        );
+    }
+
+    #[test]
+    fn view_selection_computes_the_schedule_for_computed_columns() {
+        // Two scheduled tasks (b finishes after a via FS); sort by finish date.
+        let mut p = project();
+        for (id, name) in [("a", "A"), ("b", "B")] {
+            let mut t = Task::new(TaskId::from_raw(id), name);
+            t.schedule = Some(TaskSchedule {
+                duration: crate::primitives::Duration::minutes(8 * 60),
+                ..TaskSchedule::default()
+            });
+            p.tasks.insert(t.id.clone(), t);
+        }
+        p.dependencies.push(crate::model::DependencyLink {
+            id: crate::ids::LinkId::from_raw("l1"),
+            predecessor: TaskId::from_raw("a"),
+            successor: TaskId::from_raw("b"),
+            kind: crate::model::DependencyKind::FinishToStart,
+            lag: crate::primitives::Duration::zero(),
+        });
+        let groups = p.view_selection(
+            &view(Filter::default(), vec![asc("finish")], None),
+            Date::from_ymd(2026, 7, 13).unwrap(),
+        );
+        // a finishes Monday, b Tuesday → a before b by the computed finish column.
+        assert_eq!(ids(&groups), ["a", "b"]);
     }
 }
