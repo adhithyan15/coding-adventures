@@ -983,40 +983,96 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
             emit_index_args(out, indices, indent);
             out.push_str("])");
         }
-        // ── SIR22 addendum: APL primitive operators (still deferred) ──
-        // `Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/
-        // `IndexGenerator`/`IndexOf`/`Ravel`/`Catenate` observe the SAME
-        // `NDArrays`/`MatrixOps`/`ArrayColumnMajor` features as the base
-        // cut above (the SIR22 addendum gives them no feature flag of
-        // their own), so accepting those features for the base cut also
-        // lets a module using these nine past the capability check —
-        // unlike every other still-deferred arm in this function, these
-        // nine are NOT purely a "capability check ever drifts" guard.
-        // This is safe today only because no frontend crate emits any of
-        // these nine `Expr` variants yet (`apl-to-semantic-ir` does not
-        // lower APL's reduce/scan/outer-product/shape/reshape/iota/
-        // index-of/ravel/catenate operators to them — see the SIR22 spec's
-        // addendum and `sir-runtime-array`'s own README, which scoped them
-        // out of the runtime package for the identical reason). Wiring
-        // real codegen for these requires porting `array_runtime::ops::
-        // {reduce,scan,outer}` and `apl-runtime::builtins`'s bespoke
-        // shape/reshape/iota/index-of/ravel/catenate logic into this
-        // runtime first — a natural, cleanly-scoped follow-up once a
-        // frontend actually needs them, not part of this PR.
-        Expr::Reduce { span, .. }
-        | Expr::Scan { span, .. }
-        | Expr::OuterProduct { span, .. }
-        | Expr::Shape { span, .. }
-        | Expr::Reshape { span, .. }
-        | Expr::IndexGenerator { span, .. }
-        | Expr::IndexOf { span, .. }
-        | Expr::Ravel { span, .. }
-        | Expr::Catenate { span, .. }
+        // ── SIR22 addendum: APL primitive operators — real codegen ────
+        // Each of the nine maps 1:1 onto a call into the ported
+        // `__Sir.Array.*` sub-runtime (see `runtime.rs`'s "SIR22 addendum"
+        // section) — the same treatment `ElementwiseOp`/`Transpose`/
+        // `MatMul` above already get for the SIR22 base cut.
+        // `Reduce`/`Scan`/`OuterProduct` carry an `ElementwiseOpKind` and
+        // so reuse `elementwise_op_js_name` exactly like `ElementwiseOp`
+        // does; the remaining six have no `op` field at all (they are
+        // "bespoke, not BinOp-shaped" per the SIR22 spec addendum and
+        // `apl-runtime::builtins`'s own doc comment) and just recurse into
+        // their operand(s).
+        Expr::Reduce { op, target, .. } => {
+            let _ = write!(
+                out,
+                "__Sir.Array.reduce({}, ",
+                quote_js_string(elementwise_op_js_name(*op))
+            );
+            emit_expr(out, target, indent);
+            out.push(')');
+        }
+        Expr::Scan { op, target, .. } => {
+            let _ = write!(
+                out,
+                "__Sir.Array.scan({}, ",
+                quote_js_string(elementwise_op_js_name(*op))
+            );
+            emit_expr(out, target, indent);
+            out.push(')');
+        }
+        Expr::OuterProduct { op, lhs, rhs, .. } => {
+            let _ = write!(
+                out,
+                "__Sir.Array.outer({}, ",
+                quote_js_string(elementwise_op_js_name(*op))
+            );
+            emit_expr(out, lhs, indent);
+            out.push_str(", ");
+            emit_expr(out, rhs, indent);
+            out.push(')');
+        }
+        Expr::Shape { target, .. } => {
+            out.push_str("__Sir.Array.shape(");
+            emit_expr(out, target, indent);
+            out.push(')');
+        }
+        // Field order here is `shape, target` (per the SIR22 spec: the
+        // shape vector is not interchangeable with the data being
+        // reshaped, so the node spells out the roles instead of reusing
+        // `lhs`/`rhs`) — `__Sir.Array.reshape(shapeArg, target)` takes the
+        // same order, so no argument reordering is needed at this call
+        // site (contrast `Expr::Range`'s `start, step, stop` vs.
+        // `range`'s `start, stop, step` just above, which DOES reorder).
+        Expr::Reshape { shape, target, .. } => {
+            out.push_str("__Sir.Array.reshape(");
+            emit_expr(out, shape, indent);
+            out.push_str(", ");
+            emit_expr(out, target, indent);
+            out.push(')');
+        }
+        Expr::IndexGenerator { count, .. } => {
+            out.push_str("__Sir.Array.indexGenerator(");
+            emit_expr(out, count, indent);
+            out.push(')');
+        }
+        Expr::IndexOf {
+            haystack, needle, ..
+        } => {
+            out.push_str("__Sir.Array.indexOf(");
+            emit_expr(out, haystack, indent);
+            out.push_str(", ");
+            emit_expr(out, needle, indent);
+            out.push(')');
+        }
+        Expr::Ravel { target, .. } => {
+            out.push_str("__Sir.Array.ravel(");
+            emit_expr(out, target, indent);
+            out.push(')');
+        }
+        Expr::Catenate { lhs, rhs, .. } => {
+            out.push_str("__Sir.Array.catenate(");
+            emit_expr(out, lhs, indent);
+            out.push_str(", ");
+            emit_expr(out, rhs, indent);
+            out.push(')');
+        }
         // SIR26 `Convert` — `Conversions` not accepted; unreachable in a
         // validated module (capability check rejects it).
-        | Expr::Convert { span, .. } => {
+        Expr::Convert { span, .. } => {
             panic!(
-                "javascript backend reached a deferred SIR22/SIR26 expression ({}) at {span} — not accepted yet",
+                "javascript backend reached a deferred SIR26 expression ({}) at {span} — not accepted yet",
                 e.kind_name()
             );
         }

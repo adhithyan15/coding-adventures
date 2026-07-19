@@ -9,16 +9,18 @@
 //!
 //! `semantic-ir-to-javascript` now implements real codegen for the SIR22
 //! *base cut* (`ElementwiseOp` among them, which is all a simple dyadic
-//! program like `3+4` needs), so those modules are accepted. The SIR22
-//! "APL addendum" nodes (`Reduce`/`Scan`/`OuterProduct`/...) remain
-//! deferred — this crate's own lowering is exactly what motivated adding
-//! `semantic-ir-to-javascript`'s dedicated tree-walk rejection for them
-//! (see that crate's `find_unimplemented_sir22_addendum_node`), since they
-//! share `NDArrays`/`MatrixOps`/`ArrayColumnMajor` with the now-accepted
-//! base cut and so are NOT caught by the plain `Backend::check_module`
-//! feature check alone — the `reduce_and_outer_product_modules...` test
-//! below calls `compile()`, not `check_module()` directly, for exactly
-//! that reason.
+//! program like `3+4` needs) AND for the SIR22 "APL addendum" (`Reduce`/
+//! `Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/`IndexOf`/
+//! `Ravel`/`Catenate`) — this crate's own lowering is exactly what
+//! motivated adding that codegen (the addendum nodes share `NDArrays`/
+//! `MatrixOps`/`ArrayColumnMajor` with the base cut, so a plain
+//! feature-flag `Backend::check_module` check alone could never
+//! distinguish "base cut only" from "also uses the addendum" — real
+//! codegen for both closes that gap by making the distinction moot).
+//! `reduce_and_outer_product_modules_now_compile_cleanly` below is the
+//! regression test for the OLD rejection behavior: it now asserts
+//! `compile()` SUCCEEDS. Real, node-executed behavioral proof (not just
+//! "doesn't error") lives in `tests/e2e_node.rs`.
 
 use apl_to_semantic_ir::compile_source;
 use semantic_ir::backend::Backend;
@@ -63,26 +65,27 @@ fn a_pure_scalar_literal_with_no_operator_at_all_still_validates() {
 }
 
 #[test]
-fn reduce_and_outer_product_modules_validate_but_compile_still_rejects_them() {
-    // `Reduce`/`OuterProduct` share `NDArrays`/`MatrixOps`/`ArrayColumnMajor`
-    // with the SIR22 base cut the JS backend now accepts, so
-    // `check_module()` alone (a plain feature-flag check) no longer
-    // catches these -- only the dedicated tree-walk inside `compile()`
-    // does. Confirms both that the module still fails cleanly (not a
-    // panic) AND that the coarse feature check by itself is genuinely
-    // insufficient here (documenting, not just asserting, the gap).
+fn reduce_and_outer_product_modules_now_compile_cleanly() {
+    // Regression test for the gap this crate's own real lowering exposed:
+    // `Reduce`/`OuterProduct` share `NDArrays`/`MatrixOps`/
+    // `ArrayColumnMajor` with the SIR22 base cut, so `check_module()`
+    // alone (a plain feature-flag check) was never able to distinguish
+    // "base cut only" from "also uses the addendum" -- before the JS
+    // backend gained real codegen for these nine nodes, that meant a
+    // dedicated tree-walk had to reject them explicitly inside
+    // `compile()` (a belt-and-suspenders check `check_module()` alone
+    // could not provide). Now that real codegen exists, both
+    // `check_module()` AND `compile()` accept these modules -- the
+    // distinction the old test had to document (coarse feature check vs.
+    // dedicated tree-walk) no longer needs to exist at all.
     let module = assert_valid("+/1 2 3\n");
     let backend = JavaScriptBackend;
     assert!(
         backend.check_module(&module).is_empty(),
-        "check_module alone no longer rejects Reduce -- it shares features with the accepted base cut"
+        "check_module should accept a Reduce-using module"
     );
-    let err = semantic_ir_to_javascript::compile(&module)
-        .expect_err("compile() should still cleanly reject a Reduce-using module");
-    assert_eq!(err.kind, semantic_ir::BackendErrorKind::UnsupportedFeature);
+    semantic_ir_to_javascript::compile(&module).expect("Reduce-using module now compiles");
 
     let module = assert_valid("1∘.×2\n");
-    let err = semantic_ir_to_javascript::compile(&module)
-        .expect_err("compile() should still cleanly reject an OuterProduct-using module");
-    assert_eq!(err.kind, semantic_ir::BackendErrorKind::UnsupportedFeature);
+    semantic_ir_to_javascript::compile(&module).expect("OuterProduct-using module now compiles");
 }

@@ -41,22 +41,25 @@ fn a_pure_scalar_literal_with_no_operator_at_all_still_validates() {
 }
 
 #[test]
-fn reduce_modules_validate_but_compile_still_rejects_them() {
-    // `Reduce` shares `NDArrays`/`MatrixOps`/`ArrayColumnMajor` with the
-    // SIR22 base cut the JS backend now accepts, so `check_module()` alone
-    // (a plain feature-flag check) no longer catches this -- only the
-    // dedicated tree-walk inside `compile()` does. Confirms both that the
-    // module still fails cleanly (not a panic) AND that the coarse feature
-    // check by itself is genuinely insufficient here.
+fn reduce_modules_now_compile_cleanly() {
+    // Regression test for the gap `apl-to-semantic-ir`'s own real lowering
+    // exposed (this crate's `+/` compiles to the identical `Expr::Reduce`
+    // node): `Reduce` shares `NDArrays`/`MatrixOps`/`ArrayColumnMajor` with
+    // the SIR22 base cut, so `check_module()` alone (a plain feature-flag
+    // check) could never distinguish "base cut only" from "also uses the
+    // addendum" -- before `semantic-ir-to-javascript` gained real codegen
+    // for the SIR22 "APL addendum" nodes, a dedicated tree-walk inside
+    // `compile()` rejected them explicitly. Now that real codegen exists,
+    // `compile()` succeeds -- see `semantic-ir-to-javascript`'s own
+    // CHANGELOG and `apl-to-semantic-ir`'s `tests/e2e_node.rs` for the
+    // actual node-executed proof.
     let module = assert_valid("+/1 2 3\n");
     let backend = JavaScriptBackend;
     assert!(
         backend.check_module(&module).is_empty(),
-        "check_module alone no longer rejects Reduce -- it shares features with the accepted base cut"
+        "check_module should accept a Reduce-using module"
     );
-    let err = semantic_ir_to_javascript::compile(&module)
-        .expect_err("compile() should still cleanly reject a Reduce-using module");
-    assert_eq!(err.kind, semantic_ir::BackendErrorKind::UnsupportedFeature);
+    semantic_ir_to_javascript::compile(&module).expect("Reduce-using module now compiles");
 }
 
 #[test]

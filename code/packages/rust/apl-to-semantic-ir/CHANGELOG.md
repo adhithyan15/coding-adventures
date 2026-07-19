@@ -1,5 +1,77 @@
 # Changelog
 
+## [0.1.2] - 2026-07-18
+
+### Added
+
+- **`tests/e2e_node.rs`** — this crate's first real end-to-end,
+  `node`-executed test, made possible by `semantic-ir-to-javascript`
+  0.41.0 gaining real codegen for the SIR22 "APL addendum" (`Reduce`/
+  `Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/`IndexOf`/
+  `Ravel`/`Catenate`) — the nine node kinds essentially every non-trivial
+  APL program uses. Seven tests, each compiling real APL source through
+  `compile_source` → `semantic_ir::validate` → `semantic_ir_to_javascript::
+  compile` → a temp `.js` file → `node`, asserting the printed stdout:
+  `+/1 2 3 4` (reduce-Add) → `10`; `⌈/3 1 4 1 5` (a non-Add reduce, proving
+  the op dispatch isn't hardcoded) → `5`; `-/+\1 2 3` (scan composed with a
+  non-commutative reduce, which only reproduces `¯8` if the three prefix
+  sums were folded in the correct left-to-right order) → `¯8`;
+  `+/,(⍳2)∘.×(⍳3)` (outer product, ravelled and summed) → `18`;
+  `⍴(,2 3)⍴⍳6` (shape of a reshaped matrix) → `2 3`; `⍳5` (index generator)
+  → `1 2 3 4 5`; `,(,2 3)⍴⍳6` (ravel of a reshaped matrix, proving
+  row-major flatten order) → `1 2 3 4 5 6`.
+- Corrected this crate's own stale claim: 0.1.0's changelog entry said "No
+  `tests/e2e_node.rs`: ... a real round-trip through a backend needs
+  `sir-runtime-array`'s SIR22 codegen, which does not exist yet." That
+  premise described the WRONG backend (`sir-runtime-array` is the
+  TypeScript backend's imported npm package, separate, still not shipped)
+  — the actual blocker was `semantic-ir-to-javascript`'s own INLINED
+  runtime lacking codegen for the addendum, now fixed. No further action
+  needed on the 0.1.0 entry itself (changelogs are a historical record,
+  not edited after the fact) beyond this correction here.
+
+### Fixed (test-only, no lowering behavior changed)
+
+- **`tests/test_validator.rs`**: `reduce_and_outer_product_modules_
+  validate_but_compile_still_rejects_them` (asserting `compile()`
+  REJECTED a `Reduce`/`OuterProduct`-using module) renamed
+  `reduce_and_outer_product_modules_now_compile_cleanly` and rewritten to
+  assert `compile()` SUCCEEDS — the old assertion is now false, and
+  leaving it in place would have made this crate's own test suite
+  document a stale, no-longer-true fact about a *different* crate's
+  capabilities.
+
+### Discovered (not fixed here — out of scope, flagged separately)
+
+- **A stranded numeric literal (`1 2 3`) lowers to a single-row
+  `Expr::ArrayLit`, which this backend's (unchanged) base-cut codegen
+  turns into a genuine RANK-2 `[1, n]` "row matrix" at the JS runtime-value
+  level** (`__Sir.Array.fromRows([[1, 2, 3]])`), not a true rank-1 `[n]`
+  vector — contrast `apl-runtime`'s OWN tree-walking evaluator, which
+  builds a true `[n]` via `Array::from_vec` for the identical source (see
+  `apl-runtime/src/eval.rs`). `reduce`/`scan` happen to compute identical
+  numbers either way (their rank-2 branch folds/scans each row
+  independently, and a lone row coincides with a rank-1 fold/scan of the
+  same elements), so `+/`/`+\` on stranded literals are unaffected. `outer`
+  and dyadic `⍴`'s shape ARGUMENT, however, are both scoped to rank <= 1
+  operands ONLY (faithfully mirroring `array_runtime::ops::outer` /
+  `apl_runtime::builtins::reshape`'s own identical restrictions) — so `1
+  2∘.×3 4` and `2 3⍴⍳6` (two bare stranded literals used this way) both
+  throw a clean runtime `Error` today, discovered while writing
+  `tests/e2e_node.rs` above. Worked around in that test file by building
+  the outer-product operands from `⍳` (which constructs a genuine rank-1
+  `[n]` directly, sidestepping `ArrayLit`/`fromRows` entirely) and the
+  reshape shape argument from `,2 3` (ravel of the literal, which — like
+  `⍳` — always constructs a genuine rank-1 result regardless of its
+  input's rank). Root cause is this crate's `ArrayLit` lowering reusing
+  the MATLAB-oriented SIR22 base cut, which has no representation for "a
+  true rank-1 vector distinct from a 1-row matrix" (MATLAB itself has no
+  such distinction — everything is a matrix). A proper fix needs either a
+  new SIR representation for a genuine rank-1 literal, or a
+  targeted `apl-to-semantic-ir`-side workaround routing `OuterProduct`/
+  `Reshape` operands through an implicit ravel; either is a real,
+  separately-scoped follow-up, not a small patch to make inline here.
+
 ## [0.1.1] - 2026-07-16
 
 ### Changed

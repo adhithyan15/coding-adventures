@@ -305,6 +305,23 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       const s = Symbolic.toDisplayString(v);
       if (s !== undefined) { return s; }
     }
+    // SIR22/APL: an `NDArray` (the `{ shape, data }` value this file's
+    // "array/matrix domain" section below constructs) has no Ruby/Scheme
+    // display convention of its own. The MATLAB frontend never reaches this
+    // branch -- it always reads a computed array back through a scalar
+    // `IndexGet` instead of printing the whole thing (see
+    // `semantic-ir-to-javascript`'s own `tests/sir22_array.rs` doc
+    // comments) -- but APL auto-prints a bare top-level expression (see
+    // `apl-to-semantic-ir`'s "Auto-print, not MATLAB-style suppression"),
+    // and APL has no bracket-indexing syntax to read a value back with, so
+    // a real APL program's `print` call can only ever be made to work by
+    // rendering the NDArray itself. `ArrayRt.display` (below) is a 1:1 port
+    // of `apl_runtime::value::display` -- APL's OWN console convention
+    // (high-minus `¯` negatives, no name/`ans=` prefix), which is exactly
+    // what an `apl-runtime` session would print for the same value.
+    if (v !== null && typeof v === "object" && Array.isArray(v.shape) && v.data instanceof Float64Array) {
+      return ArrayRt.display(v);
+    }
     return String(v);
   }
 
@@ -2882,17 +2899,24 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // whole scope, like the Rust reference and the TypeScript sibling, is
   // rank ≤ 2.
   //
-  // ## Scope: the SIR22 "APL addendum" is NOT ported here
+  // ## The SIR22 "APL addendum" (`Reduce`/`Scan`/`OuterProduct`/`Shape`/
+  // `Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`)
   //
-  // `Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/
-  // `IndexOf`/`Ravel`/`Catenate` remain deferred in `emit.rs` (still a
-  // `panic!`, unchanged by this port) — no frontend crate emits these
-  // nine `Expr` variants yet (`apl-to-semantic-ir` does not lower APL's
-  // reduce/scan/outer-product operators to them), and the TypeScript
-  // sibling package deliberately scoped them out for the same reason
-  // (see `sir-runtime-array`'s own `src/index.ts` doc comment). Porting
-  // them now would be speculative rather than filling a real gap —
-  // exactly the same reasoning that package's own README states.
+  // These nine were deferred when the base cut above first landed (no
+  // frontend crate emitted them yet) but `apl-to-semantic-ir` now does —
+  // APL's `/` (reduce), `\` (scan), `∘.` (outer product), `⍴`, `⍳`, and `,`
+  // are first-class glyphs, not library calls, so real APL source reaches
+  // every one of these nodes. They are ported here (below, after the base
+  // cut's own helpers) from TWO Rust references, exactly as the SIR22
+  // spec's addendum section describes: `array_runtime::ops::{reduce,scan,
+  // outer}` (the three that take an `ElementwiseOpKind` and so reuse
+  // `applyOp` above, unchanged) and `apl_runtime::builtins::{shape,reshape,
+  // index_generator,index_of,ravel,catenate}` (the "bespoke, not
+  // BinOp-shaped" ones — see that Rust file's own module doc comment for
+  // why). The TypeScript sibling (`sir-runtime-array`) still does not
+  // implement these — that package gaining them is separate, unstarted
+  // follow-on work (SIR22 spec, "Backend impact"), not a precondition for
+  // this inlined port.
   const ArrayRt = (() => {
     // SECURITY: every factory below validates a shape/output size
     // *before* allocating a `Float64Array` from it — a compiled
@@ -3346,9 +3370,481 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       throw new Error(`indexSet: only 1 or 2 index arguments are supported (rank <= 2 scope), got ${indices.length}`);
     }
 
+    // ── SIR22 addendum: APL primitive operators ────────────────────
+    // `Reduce`/`Scan`/`OuterProduct` reuse `applyOp` above (the same
+    // dispatch table `elementwise` uses) — see this section's own module
+    // doc comment for the two Rust references every function below ports
+    // 1:1. `MAX_ELEMENTS` (defined above) is reused as-is for every new
+    // bounded-allocation check here — this file has exactly one array-size
+    // cap, not one per domain, so `⍳`/dyadic `⍴`/`⍳` (index-of)/`,`
+    // (catenate) share it with `matmul`/`range`/`indexGet` rather than
+    // reintroducing `apl_runtime::builtins::MAX_ARRAY_LENGTH`'s smaller
+    // 1,000,000 figure as a second, competing constant.
+
+    /**
+     * `+/A` (APL reduce, dyadic-op monadic-adverb) — fold `target` with
+     * `op` along its one axis. Ported 1:1 from `array_runtime::ops::
+     * reduce`:
+     * - rank 0 (scalar): nothing to fold, returns `target` itself.
+     * - rank 1 (vector `[n]`): left-fold across all `n` elements
+     *   (`op(op(op(v0, v1), v2), …)`); an EMPTY vector is a clean error —
+     *   unlike `sum`/`mean` (which have a built-in identity, 0), `reduce`
+     *   is generic over any `op`, and guessing an identity (is it `0` for
+     *   `Add`, `1` for `Mul`, `-Infinity` for `Max`?) for an arbitrary,
+     *   possibly-future op would be silently wrong for most of them.
+     * - rank 2 (matrix `[r, c]`): folds EACH ROW independently across its
+     *   `c` columns, producing a `[r]` vector (one folded value per row).
+     *   Column-major storage means element `(row, col)` lives at
+     *   `col * r + row` — the row loop reads `d[row]` as the seed (column
+     *   0) then walks `d[col * r + row]` for `col = 1..c`; getting `row`
+     *   and `col` swapped here silently transposes the result instead of
+     *   throwing, so this indexing is the single easiest place to
+     *   introduce a wrong-answer bug when reading this function.
+     */
+    function reduce(op, a) {
+      a = toArrayValue(a);
+      const shape = a.shape;
+      if (shape.length === 0) {
+        return a;
+      }
+      if (shape.length === 1) {
+        const n = shape[0];
+        if (n === 0) {
+          throw new Error("reduce: cannot fold an empty vector (no identity element for an arbitrary op)");
+        }
+        const d = a.data;
+        let acc = d[0];
+        for (let i = 1; i < n; i++) {
+          acc = applyOp(op, acc, d[i]);
+        }
+        return ndarray([], Float64Array.of(acc));
+      }
+      if (shape.length === 2) {
+        const [r, c] = shape;
+        if (c === 0) {
+          throw new Error("reduce: cannot fold an empty row (no identity element for an arbitrary op)");
+        }
+        const d = a.data;
+        const out = new Float64Array(r);
+        for (let row = 0; row < r; row++) {
+          let acc = d[row]; // column-major: (row, 0) lives at plain `row`
+          for (let col = 1; col < c; col++) {
+            acc = applyOp(op, acc, d[col * r + row]);
+          }
+          out[row] = acc;
+        }
+        return ndarray([r], out);
+      }
+      throw new Error(`reduce: rank > 2 not yet supported (shape ${JSON.stringify(shape)})`);
+    }
+
+    /**
+     * `+\A` (APL scan) — the same fold as `reduce`, but keeping EVERY
+     * intermediate result instead of only the last; output has the same
+     * shape as `target`. Ported 1:1 from `array_runtime::ops::scan`. An
+     * empty axis is NOT an error here (unlike `reduce`): there is simply
+     * nothing to scan, and the (empty) output shape already says so.
+     */
+    function scan(op, a) {
+      a = toArrayValue(a);
+      const shape = a.shape;
+      if (shape.length === 0) {
+        return a;
+      }
+      if (shape.length === 1) {
+        const n = shape[0];
+        const d = a.data;
+        const out = new Float64Array(n);
+        let acc;
+        let started = false;
+        for (let i = 0; i < n; i++) {
+          acc = started ? applyOp(op, acc, d[i]) : d[i];
+          started = true;
+          out[i] = acc;
+        }
+        return ndarray([n], out);
+      }
+      if (shape.length === 2) {
+        const [r, c] = shape;
+        const d = a.data;
+        const out = new Float64Array(d.length);
+        for (let row = 0; row < r; row++) {
+          let acc;
+          let started = false;
+          for (let col = 0; col < c; col++) {
+            const x = d[col * r + row]; // column-major
+            acc = started ? applyOp(op, acc, x) : x;
+            started = true;
+            out[col * r + row] = acc;
+          }
+        }
+        return ndarray([r, c], out);
+      }
+      throw new Error(`scan: rank > 2 not yet supported (shape ${JSON.stringify(shape)})`);
+    }
+
+    /**
+     * `A∘.×B` (APL outer product) — apply `op` to every pair `(aᵢ, bⱼ)`,
+     * producing a result of rank `rank(a) + rank(b)`. Ported 1:1 from
+     * `array_runtime::ops::outer`, scoped identically to `rank(a) <= 1`
+     * and `rank(b) <= 1` (the vector⊗vector case below already reaches
+     * this domain's rank-2 ceiling). `checkedShapeSize` validates the
+     * `[m, n]` output shape *before* allocating — `m`/`n` are two
+     * INDEPENDENT operand lengths, each individually under
+     * `MAX_ELEMENTS`, but nothing bounds their product alone (the same
+     * outer-product-shaped allocation `matmul`/`indexGet` above guard).
+     */
+    function outer(op, a, b) {
+      a = toArrayValue(a);
+      b = toArrayValue(b);
+      const as = a.shape;
+      const bs = b.shape;
+      if (as.length === 0 && bs.length === 0) {
+        return ndarray([], Float64Array.of(applyOp(op, a.data[0], b.data[0])));
+      }
+      if (as.length === 0 && bs.length === 1) {
+        const x = a.data[0];
+        return ndarray([bs[0]], Float64Array.from(b.data, (y) => applyOp(op, x, y)));
+      }
+      if (as.length === 1 && bs.length === 0) {
+        const y = b.data[0];
+        return ndarray([as[0]], Float64Array.from(a.data, (x) => applyOp(op, x, y)));
+      }
+      if (as.length === 1 && bs.length === 1) {
+        const m = as[0];
+        const n = bs[0];
+        const outLen = checkedShapeSize([m, n]);
+        const ad = a.data;
+        const bd = b.data;
+        const out = new Float64Array(outLen);
+        for (let j = 0; j < n; j++) {
+          for (let i = 0; i < m; i++) {
+            out[j * m + i] = applyOp(op, ad[i], bd[j]); // column-major
+          }
+        }
+        return ndarray([m, n], out);
+      }
+      throw new Error(`outer: operands of rank > 1 not yet supported (shapes ${JSON.stringify(as)}, ${JSON.stringify(bs)})`);
+    }
+
+    /**
+     * Flatten (rank <= 2, this domain's ceiling) `a` to ROW-major order —
+     * last axis varies fastest. `a` itself stores COLUMN-major (`get`'s
+     * own doc comment), so a matrix must be walked "row, then column" via
+     * `get` to produce true row-major order; returning the raw
+     * column-major buffer would silently ravel in the WRONG order. Always
+     * returns a fresh `Float64Array` (never `a.data` itself, even in the
+     * rank <= 1 no-op case) — mirrors `apl_runtime::builtins::flatten`
+     * returning an owned `Vec`, not a borrow, so the result never
+     * accidentally aliases `a`'s own buffer.
+     */
+    function flattenRowMajor(a) {
+      const shape = a.shape;
+      if (shape.length <= 1) {
+        return Float64Array.from(a.data);
+      }
+      if (shape.length === 2) {
+        const [r, c] = shape;
+        const out = new Float64Array(r * c);
+        let k = 0;
+        for (let row = 0; row < r; row++) {
+          for (let col = 0; col < c; col++) {
+            out[k++] = get(a, row, col);
+          }
+        }
+        return out;
+      }
+      // Unreachable in practice (this domain's rank <= 2 ceiling) -- total
+      // rather than throwing, mirroring the Rust reference's own fallback.
+      return Float64Array.from(a.data);
+    }
+
+    /**
+     * Monadic `⍴` (shape-of) — `target`'s dimensions as a vector. Ported
+     * 1:1 from `apl_runtime::builtins::shape`: a SCALAR has zero
+     * dimensions, so its shape is the EMPTY vector (not a scalar!) — `⍴5`
+     * is `⍳0`-shaped, a length-0 vector, mirroring `shape.length === 0`
+     * exactly. A vector `[n]` has shape `[n]` (one element); a matrix
+     * `[r, c]` has shape `[r, c]` (two elements).
+     */
+    function shape(a) {
+      a = toArrayValue(a);
+      const dims = Float64Array.from(a.shape);
+      return ndarray([dims.length], dims);
+    }
+
+    /**
+     * Dyadic `⍴` (reshape) — reinterpret `target`'s data under the new
+     * dimensions `shapeArg`. Ported 1:1 from `apl_runtime::builtins::
+     * reshape`. `shapeArg` must itself be a scalar or vector (rank <= 1)
+     * of non-negative integers, and is itself capped at rank <= 2 (this
+     * domain's ceiling — a longer target shape is a clean error, not a
+     * silent truncation). `target`'s elements are ravelled
+     * (`flattenRowMajor`) then cyclically repeated or truncated to fill
+     * the target shape's element count.
+     *
+     * CRITICAL: the cyclic fill happens in ROW-major order (APL's reshape
+     * fills the LAST axis fastest, same convention as ravel), but this
+     * domain's storage is COLUMN-major — so for a rank-2 target the
+     * row-major `filled` sequence must be TRANSPOSED into column-major
+     * storage (`data[col * r + row] = filled[row * c + col]`) before
+     * calling `ndarray`. Handing `filled` straight to `ndarray` would
+     * silently reshape column-major instead of APL's row-major
+     * convention — a wrong answer that still LOOKS plausible (right
+     * multiset of values, wrong positions).
+     */
+    function reshape(shapeArg, target) {
+      shapeArg = toArrayValue(shapeArg);
+      target = toArrayValue(target);
+      if (shapeArg.shape.length > 1) {
+        throw new Error(`reshape: shape argument must be a scalar or vector (got rank ${shapeArg.shape.length})`);
+      }
+      const dims = Array.from(shapeArg.data, (x) => {
+        if (!(Number.isInteger(x) && x >= 0)) {
+          throw new Error(`reshape: shape elements must be non-negative integers, got ${x}`);
+        }
+        return x;
+      });
+      if (dims.length > 2) {
+        throw new Error(`reshape: reshape to rank > 2 is not yet supported (target shape ${JSON.stringify(dims)})`);
+      }
+      const total = checkedShapeSize(dims);
+      const source = flattenRowMajor(target);
+      if (total > 0 && source.length === 0) {
+        throw new Error("reshape: cannot reshape an empty source into a non-empty shape");
+      }
+      const filled = new Float64Array(total);
+      for (let k = 0; k < total; k++) {
+        filled[k] = source[k % source.length];
+      }
+      if (dims.length <= 1) {
+        return ndarray(dims, filled);
+      }
+      const [r, c] = dims;
+      const data = new Float64Array(total);
+      for (let row = 0; row < r; row++) {
+        for (let col = 0; col < c; col++) {
+          data[col * r + row] = filled[row * c + col];
+        }
+      }
+      return ndarray(dims, data);
+    }
+
+    /**
+     * Monadic `⍳` (index generator / iota) — `⍳n` is the 1-BASED vector
+     * `[1, 2, …, n]`. Ported 1:1 from `apl_runtime::builtins::
+     * index_generator` — note this is 1-based, unlike every 0-based index
+     * elsewhere in this domain (`indexGet`/`indexSet`), because that is
+     * genuinely what APL's `⍳` means at the SURFACE-SYNTAX level (the
+     * `Expr::IndexGenerator` doc comment in `semantic-ir`'s `nodes.rs`
+     * makes the same point). `checkedShapeSize([n])` both validates `n`
+     * is a non-negative integer AND caps it at `MAX_ELEMENTS` before
+     * allocating — `n` is a runtime value a compiled program computes,
+     * not a fixed constant, so `⍳` of an absurd size must fail cleanly.
+     */
+    function indexGenerator(a) {
+      a = toArrayValue(a);
+      if (!isScalar(a)) {
+        throw new Error("indexGenerator: monadic argument must be a scalar");
+      }
+      const x = a.data[0];
+      if (!(Number.isInteger(x) && x >= 0)) {
+        throw new Error(`indexGenerator: monadic argument must be a non-negative integer, got ${x}`);
+      }
+      const n = checkedShapeSize([x]);
+      const out = new Float64Array(n);
+      for (let i = 0; i < n; i++) {
+        out[i] = i + 1;
+      }
+      return ndarray([n], out);
+    }
+
+    /**
+     * Dyadic `⍳` (index-of / search) — for every element of `needle`, the
+     * 1-based index of its first occurrence in the vector `haystack` (or
+     * `haystack.length + 1` if not found — "not found" is a valid,
+     * always-in-range position, not `-1`/`undefined`). Ported 1:1 from
+     * `apl_runtime::builtins::index_of`: plain EXACT equality (no
+     * floating-point tolerance — `Float64Array.prototype.indexOf` already
+     * uses strict `===`, so `NaN` correctly never matches, same as Rust's
+     * `==`). The work done is O(len(haystack) * len(needle)) (a full
+     * linear scan per needle element) — `checkedShapeSize` is reused here
+     * purely for its "product <= MAX_ELEMENTS" check (both lengths are
+     * already valid non-negative integers, so its dimension-validity half
+     * is a no-op) to cap the PRODUCT before scanning, since each operand
+     * individually staying under `MAX_ELEMENTS` does not bound their
+     * product (up to ~4.5 * 10^15 comparisons otherwise).
+     */
+    function indexOf(a, b) {
+      a = toArrayValue(a);
+      b = toArrayValue(b);
+      if (a.shape.length > 1) {
+        throw new Error(`indexOf: left argument must be a scalar or vector (got rank ${a.shape.length})`);
+      }
+      checkedShapeSize([a.data.length, b.data.length]);
+      const haystack = a.data;
+      const out = Float64Array.from(b.data, (needle) => {
+        const idx = haystack.indexOf(needle);
+        return idx === -1 ? haystack.length + 1 : idx + 1;
+      });
+      return ndarray(b.shape, out);
+    }
+
+    /**
+     * Monadic `,` (ravel) — flatten `target` to a rank-1 vector, in
+     * row-major order (see `flattenRowMajor`'s own doc comment for the
+     * column-major-storage-vs-row-major-order subtlety). Ported 1:1 from
+     * `apl_runtime::builtins::ravel`.
+     */
+    function ravel(a) {
+      a = toArrayValue(a);
+      const flat = flattenRowMajor(a);
+      return ndarray([flat.length], flat);
+    }
+
+    /**
+     * Dyadic `,` (catenate) — supports scalar-scalar, scalar-vector,
+     * vector-scalar, vector-vector (all producing a vector), and
+     * matrix-matrix-with-equal-row-counts (column/last-axis catenate,
+     * producing `[r, ca + cb]`). Any other rank combination is a clean
+     * "not yet supported" error. Ported 1:1 from `apl_runtime::builtins::
+     * catenate`. The combined-length cap check happens ONCE, up front,
+     * regardless of which rank combination follows (mirroring the Rust
+     * reference's own structure) — neither operand alone need be
+     * oversized for the RESULT to be, since a script that repeatedly
+     * catenates a value with itself (`A←A,A`) doubles the size every line
+     * with no other ceiling.
+     */
+    function catenate(a, b) {
+      a = toArrayValue(a);
+      b = toArrayValue(b);
+      checkedShapeSize([a.data.length + b.data.length]);
+      const ra = a.shape.length;
+      const rb = b.shape.length;
+      if (ra === 0 && rb === 0) {
+        return ndarray([2], Float64Array.of(a.data[0], b.data[0]));
+      }
+      if (ra === 0 && rb === 1) {
+        const out = new Float64Array(1 + b.data.length);
+        out[0] = a.data[0];
+        out.set(b.data, 1);
+        return ndarray([out.length], out);
+      }
+      if (ra === 1 && rb === 0) {
+        const out = new Float64Array(a.data.length + 1);
+        out.set(a.data, 0);
+        out[a.data.length] = b.data[0];
+        return ndarray([out.length], out);
+      }
+      if (ra === 1 && rb === 1) {
+        const out = new Float64Array(a.data.length + b.data.length);
+        out.set(a.data, 0);
+        out.set(b.data, a.data.length);
+        return ndarray([out.length], out);
+      }
+      if (ra === 2 && rb === 2) {
+        const r = nrows(a);
+        if (r !== nrows(b)) {
+          throw new Error(`catenate: matrix catenate needs equal row counts (${r} vs ${nrows(b)})`);
+        }
+        const ca = ncols(a);
+        const cb = ncols(b);
+        const outLen = checkedShapeSize([r, ca + cb]);
+        const data = new Float64Array(outLen);
+        for (let row = 0; row < r; row++) {
+          for (let col = 0; col < ca; col++) {
+            data[col * r + row] = get(a, row, col);
+          }
+          for (let col = 0; col < cb; col++) {
+            data[(ca + col) * r + row] = get(b, row, col);
+          }
+        }
+        return ndarray([r, ca + cb], data);
+      }
+      throw new Error(`catenate: catenate of rank ${ra} and rank ${rb} is not yet supported`);
+    }
+
+    /**
+     * Format one number the way `apl_runtime::value::fmt_num` does (ported
+     * 1:1): the high-minus glyph `¯` (never ASCII `-`) prefixes a negative
+     * number; a whole-valued float prints without a trailing `.0`. Unlike
+     * the Rust source, no separate integer-vs-float branch is needed for
+     * the whole-value case — `String(5)` and `String(5.0)` are both `"5"`
+     * in JS, where Rust needs `format!("{}", mag as i64)` specifically to
+     * avoid `5.0`'s `Display` impl printing a trailing `.0`. `x < 0` (a
+     * numeric comparison) already excludes `-0` from the high-minus branch
+     * on its own — `-0 < 0` is `false` in JS — so, unlike Rust's
+     * `is_sign_negative()` (a bit-level check that says `true` for `-0`),
+     * no separate `-0`-is-plain-`0` guard is needed here either.
+     */
+    function fmtNum(x) {
+      if (Number.isNaN(x)) {
+        return "NaN";
+      }
+      if (!Number.isFinite(x)) {
+        return x < 0 ? "¯∞" : "∞";
+      }
+      const body = String(Math.abs(x));
+      return x < 0 ? "¯" + body : body;
+    }
+
+    /**
+     * Render `a` the way an APL session echoes a bare (auto-printed)
+     * result — ported 1:1 from `apl_runtime::value::display`. This is
+     * APL's OWN display convention (high-minus negatives, no name/`ans=`
+     * prefix), distinct from MATLAB's own `Array` `Display` impl (never
+     * reached from this backend — MATLAB always reads a computed array
+     * back through a scalar `IndexGet` instead, see `formatSeen`'s call
+     * site above).
+     *
+     * - rank 0 (scalar): the one number.
+     * - rank 1 (vector): elements, space-separated, on one line (the
+     *   empty vector prints as the empty string — an APL session shows a
+     *   blank line for `⍳0`, `⍴5`, etc.).
+     * - rank 2 (matrix): one row per line, elements space-separated and
+     *   right-aligned to the widest cell's width IN THIS DISPLAY.
+     */
+    function display(a) {
+      const shape = a.shape;
+      if (shape.length === 0) {
+        return fmtNum(a.data[0]);
+      }
+      if (shape.length === 1) {
+        const n = shape[0];
+        if (n === 0) {
+          return "";
+        }
+        return Array.from(a.data, fmtNum).join(" ");
+      }
+      if (shape.length === 2) {
+        const [r, c] = shape;
+        // Formatted once, up front (in the array's own column-major
+        // storage order), so the alignment width is independent of
+        // row/column traversal order -- only the WIDEST cell matters, and
+        // order doesn't affect a max().
+        const width = Array.from(a.data, fmtNum).reduce((w, s) => Math.max(w, s.length), 1);
+        const lines = [];
+        for (let row = 0; row < r; row++) {
+          const rowCells = [];
+          for (let col = 0; col < c; col++) {
+            rowCells.push(fmtNum(get(a, row, col)).padStart(width, " "));
+          }
+          lines.push(rowCells.join(" "));
+        }
+        return lines.join("\n");
+      }
+      // Unreachable in practice (this domain's rank <= 2 ceiling) --
+      // render something total rather than throwing, mirroring the Rust
+      // reference's own `_ => format!("{a}")` fallback.
+      return String(Array.from(a.data));
+    }
+
     return {
       ndarray, fromRows, isScalar, nrows, ncols, get, set,
       elementwise, matmul, transpose, range, indexGet, indexSet,
+      // SIR22 addendum (APL primitives).
+      reduce, scan, outer, shape, reshape, indexGenerator, indexOf, ravel,
+      catenate, display,
     };
   })();
 
@@ -3783,5 +4279,96 @@ mod tests {
         // `assertValidPosition` first), but it is part of this module's
         // exported public surface, so it must stay NaN-safe on its own.
         assert!(RUNTIME.contains("if (!(r >= 0 && c >= 0 && r < nrows(a) && c < ncols(a))) {"));
+    }
+
+    // ── SIR22 addendum: APL primitive operators ────────────────────────
+
+    #[test]
+    fn runtime_defines_array_addendum_functions() {
+        // `apl-to-semantic-ir` emits `Reduce`/`Scan`/`OuterProduct`/`Shape`/
+        // `Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`; the
+        // emitter's arms for all nine call into these, plus `display` (the
+        // APL auto-print formatter `formatSeen` dispatches to).
+        for needed in [
+            "function reduce(",
+            "function scan(",
+            "function outer(",
+            "function shape(",
+            "function reshape(",
+            "function indexGenerator(",
+            "function indexOf(",
+            "function ravel(",
+            "function catenate(",
+            "function flattenRowMajor(",
+            "function fmtNum(",
+            "function display(",
+        ] {
+            assert!(RUNTIME.contains(needed), "Array runtime missing `{needed}`");
+        }
+        assert!(RUNTIME.contains("reduce, scan, outer, shape, reshape, indexGenerator, indexOf, ravel,"));
+    }
+
+    #[test]
+    fn array_addendum_reuses_the_one_bounded_allocation_cap() {
+        // SECURITY: `⍳`'s length, dyadic `⍴`'s target element count,
+        // `⍳`(index-of)'s O(len*len) product, and `,`(catenate)'s combined
+        // length are all runtime-computed from potentially attacker-
+        // influenced program values -- every one of them must route
+        // through `checkedShapeSize` (this file's ONE existing
+        // `MAX_ELEMENTS`-capped guard), not a freshly-invented cap value
+        // (`apl_runtime::builtins::MAX_ARRAY_LENGTH` is a *different*,
+        // smaller Rust-side constant that this port deliberately does not
+        // reintroduce -- see the addendum's own module doc comment).
+        assert!(RUNTIME.contains("const n = checkedShapeSize([x]);"));
+        assert!(RUNTIME.contains("const total = checkedShapeSize(dims);"));
+        assert!(RUNTIME.contains("checkedShapeSize([a.data.length, b.data.length]);"));
+        assert!(RUNTIME.contains("checkedShapeSize([a.data.length + b.data.length]);"));
+        // (A JS-side doc comment nearby mentions the Rust constant's NAME in
+        // prose, explaining why it is deliberately NOT reintroduced here —
+        // so this asserts there is no `const MAX_ARRAY_LENGTH` DECLARATION,
+        // not that the identifier never appears as text anywhere at all.)
+        assert!(!RUNTIME.contains("const MAX_ARRAY_LENGTH"));
+    }
+
+    #[test]
+    fn reduce_on_an_empty_vector_is_a_clean_error_not_a_guessed_identity() {
+        // `reduce` has no built-in identity for an arbitrary op (unlike
+        // `sum`, which hardcodes 0) -- an empty axis must throw, not
+        // silently return e.g. 0.
+        assert!(RUNTIME.contains(
+            "throw new Error(\"reduce: cannot fold an empty vector (no identity element for an arbitrary op)\");"
+        ));
+    }
+
+    #[test]
+    fn index_generator_is_one_based_unlike_the_rest_of_this_domain() {
+        // `⍳n` is `[1, 2, ..., n]` -- 1-based, unlike `indexGet`/`indexSet`
+        // elsewhere in this same Array namespace, which are 0-based. This
+        // is a real APL-surface-syntax fact (see `semantic-ir`'s
+        // `Expr::IndexGenerator` doc comment), not an inconsistency.
+        assert!(RUNTIME.contains("out[i] = i + 1;"));
+    }
+
+    #[test]
+    fn reshape_transposes_row_major_fill_into_column_major_storage() {
+        // The single easiest place to introduce a silent wrong-answer bug
+        // in this whole port: reshape's cyclic fill is computed in
+        // ROW-major order (APL convention) but must be written back into
+        // COLUMN-major storage (this domain's convention) for a rank-2
+        // target -- `filled[row * c + col]` read, `data[col * r + row]`
+        // written, never the other way around.
+        assert!(RUNTIME.contains("data[col * r + row] = filled[row * c + col];"));
+    }
+
+    #[test]
+    fn array_display_uses_apl_high_minus_and_no_trailing_dot_zero() {
+        // `apl-to-semantic-ir` auto-prints a bare top-level expression
+        // through this backend's shared `print` builtin, and APL has no
+        // bracket-indexing syntax to read a scalar back with (unlike
+        // MATLAB) -- so `formatSeen` must render a raw NDArray using APL's
+        // OWN console convention (high-minus `¯`, matching
+        // `apl_runtime::value::fmt_num` 1:1), not `[object Object]`.
+        assert!(RUNTIME.contains("return x < 0 ? \"¯\" + body : body;"));
+        assert!(RUNTIME.contains("ArrayRt.display(v)"));
     }
 }
