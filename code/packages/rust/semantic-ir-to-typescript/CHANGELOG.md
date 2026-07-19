@@ -1,5 +1,89 @@
 # Changelog
 
+## 0.11.0 — SIR22 "APL addendum" codegen: `Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`
+
+Closes the gap 0.10.0's own CHANGELOG entry (below) flagged as a "scope
+boundary, not silently swept away": `apl-to-semantic-ir` genuinely lowers
+APL's `/` (reduce), `\` (scan), `∘.` (outer product), `⍴` (shape/reshape),
+`⍳` (index-generator/index-of), and `,` (ravel/catenate) to these nine
+`Expr` variants, but this backend's `emit.rs` still `panic!`ed on all nine
+and `lib.rs` had a dedicated pre-`emit` tree-walk
+(`find_unimplemented_sir22_addendum_node`) to reject them cleanly instead.
+The blocker that kept this deferred at 0.10.0 — `sir-runtime-array` itself
+not implementing these nine — is now gone: that package's own SIR22-
+addendum port (mirroring the identical primitives `semantic-ir-to-javascript`
+already inlined) shipped ahead of this release, so this PR is purely
+*wiring up calls* into functions that already exist, exactly the
+"runtime lands before its codegen consumer" pattern the base cut (0.9.0/
+0.10.0) followed too.
+
+Unlike the JavaScript backend's identical fix, this crate imports the
+published npm package rather than inlining a copy of its logic — so there
+is no `runtime.rs` port to write here at all, only call-site wiring in
+`emit.rs` and capability-gate removal in `lib.rs`.
+
+### Added
+
+- **`emit.rs`**: nine real-codegen `match` arms replacing the previous
+  combined `panic!` arm, mirroring the existing `ArrayLit`/`Range`/`MatMul`/
+  `ElementwiseOp`/`Transpose`/`IndexGet` arms' style exactly — each recurses
+  into its operand(s) and emits a call into the corresponding
+  `__SirArray.*` function; `Reduce`/`Scan`/`OuterProduct` reuse
+  `elementwise_op_ts_name` for their `op` field exactly like `ElementwiseOp`
+  does. `Reshape`'s field order was checked directly against
+  `sir-runtime-array`'s `reshape(shapeArg, target)` (`shape.ts`) rather than
+  assumed: `semantic_ir::Expr::Reshape`'s own field order is `shape,
+  target`, which already matches — unlike `Expr::Range`'s `start, step,
+  stop` vs. `range`'s `start, stop, step` (which DOES reorder, see the
+  0.10.0 entry above), no argument reordering was needed at this call site.
+- **`lib.rs`**: removed `find_unimplemented_sir22_addendum_node` (the
+  dedicated tree-walk that rejected these nine node kinds before `emit`
+  could panic on them) and its `compile()` step-3b call site — no longer
+  needed now that real codegen exists. Doc comments and
+  `ACCEPTED_FEATURES` updated to describe the full SIR22 domain (base cut
+  + addendum) as accepted and implemented, not "base cut done, addendum
+  deferred."
+
+### Changed
+
+- The stale `rejects_reduce_node_cleanly_instead_of_panicking_in_emit`
+  regression test is now `compiles_reduce_node_instead_of_rejecting_it`,
+  asserting `compile()` SUCCEEDS with the exact expected
+  `__SirArray.reduce("Add", ...)` call shape, plus a new
+  `emits_all_nine_addendum_nodes_as_sir_array_calls` covering the other
+  seven node kinds' call shapes (`Reshape` gets its own dedicated
+  `emits_reshape_with_shape_before_target_argument_order`, using two
+  DISTINCT operands so a real argument-swap bug would fail the assertion
+  rather than pass by coincidence). These follow this crate's own
+  established structural-test convention for the SIR22 base cut — a
+  hand-crafted `Module` compiled and asserted against the emitted source
+  STRING — not a new real-node-execution harness: TypeScript source
+  carries type annotations `node` cannot run directly, and this crate's
+  existing `tests/run_with_node.rs` already covers that gap for other
+  constructs via a hand-rolled stripping-plus-inline-stub shim, which
+  would need `sir-runtime-array`'s full logic hand-ported into it (or a
+  real `tsc`/`ts-node` dependency) to cover these nine new calls too —
+  out of scope for this PR, same as it was out of scope for the base cut.
+
+### Verified
+
+- `cargo test -p semantic-ir-to-typescript`: 143 tests green (118 in
+  `src/lib.rs` + `src/emit.rs`/`src/runtime.rs` unit tests, 6 in
+  `tests/polymorphic_operators.rs`, 19 in `tests/run_with_node.rs`).
+- `cargo clippy -p semantic-ir-to-typescript --all-targets`: clean.
+- Every downstream frontend crate that carries this backend as a
+  dev-dependency re-verified green: `apl-to-semantic-ir`,
+  `javascript-to-semantic-ir`, `macsyma-to-semantic-ir`,
+  `matlab-to-semantic-ir`, `octave-to-semantic-ir`, `j-to-semantic-ir`,
+  `wolfram-to-semantic-ir`, `sir-conformance`. None needed source
+  changes — this PR only ADDS codegen for previously-panicking/rejected
+  node kinds, it does not change behavior for any node kind another
+  frontend already emits.
+- `cargo build --workspace`: no new failures introduced (the one
+  pre-existing, environment-specific failure — `uefi`'s duplicate
+  `panic_impl` lang item — is unrelated to this change and was present
+  before it).
+
 ## 0.10.0 — SIR22 array/matrix codegen (HML01 Stream A, item 7 TS half)
 
 Real codegen for the SIR22 array/matrix domain's *base cut* — `ArrayLit`,
