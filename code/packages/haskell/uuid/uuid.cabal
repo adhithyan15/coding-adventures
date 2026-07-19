@@ -1,0 +1,34 @@
+cabal-version: 3.0
+name:          uuid
+version:       0.1.0
+synopsis:      UUID generation and parsing from first principles
+description:   RFC 4122 and RFC 9562 UUID v1, v3, v4, v5, and v7 support.
+category:      Data
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+extra-doc-files:
+    README.md
+    CHANGELOG.md
+
+library
+    exposed-modules:  UUID
+    build-depends:    base >=4.14 && <5
+                    , md5 >=0.1 && <0.2
+                    , random >=1.2 && <1.3
+                    , sha1 >=0.1 && <0.2
+                    , time >=1.9 && <1.13
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    UUIDSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14 && <5
+                    , hspec == 2.*
+                    , time >=1.9 && <1.13
+                    , uuid
+    default-language: Haskell2010

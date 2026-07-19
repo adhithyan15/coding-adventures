@@ -167,7 +167,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 172 packages present in at least ten implementation languages need 301
+The 172 packages present in at least ten implementation languages need 300
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -178,7 +178,7 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Perl | 0 | Complete; paired data-structure/storage wave |
 | C# | 0 | Complete; paired native package wave |
 | F# | 0 | Complete; paired native package wave |
-| Haskell | 26 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
+| Haskell | 25 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
 | Kotlin | 58 | Move with Java |
@@ -460,6 +460,17 @@ Unicode pass-through, invalid keys, round trips, three recovery key lengths,
 and short-input behavior. The package now spans 14 implementation lanes,
 reduces the high-consensus backlog to 301 slots, and leaves 26 gaps in the
 Haskell lane.
+
+The ninth Haskell high-consensus slice is complete: `uuid` now provides strict
+128-bit construction, parsing and rendering, standard namespaces, metadata,
+and native v1, v3, v4, v5, and v7 generation. It builds name-based UUIDs on the
+existing Haskell MD5 and SHA-1 ports and uses native time and randomness for
+the generated versions. Its package-native suite exercises 17 examples with
+87% expression coverage, including accepted and rejected text forms, integer
+and byte round trips, all variants, RFC name-based vectors, Unicode names,
+random uniqueness, multicast nodes, and v7 timestamps. The package now spans
+14 implementation lanes, reduces the high-consensus backlog to 300 slots, and
+leaves 25 gaps in the Haskell lane.
 
 Recommended family order:
 
