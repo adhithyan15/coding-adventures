@@ -63,6 +63,43 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // `true`/`false` rather than the Lisp `#t`/`#f`; existing Twig output is
   // unchanged.
   const SIR_DISPLAY_RUBY = __SIR_DISPLAY_RUBY__;
+  // A second, independent display-convention flag: `true` when the
+  // module's `source_language` is APL, else `false`. APL's own console
+  // convention renders a negative number with the high-minus glyph `¯`
+  // (U+00AF), never ASCII `-` (`apl_runtime::value::fmt_num`,
+  // `negative_numbers_use_high_minus_not_ascii`). `formatSeen` (below)
+  // reads this flag wherever a value could reach `print` as a BARE
+  // (unboxed) number or a boxed `SirFloat` -- i.e. every case that is
+  // NOT already a genuine (rank >= 1, or rank-0-and-caught-by-the-NDArray
+  // branch) `NDArray`, which already renders high-minus unconditionally
+  // via `ArrayRt.display`/`fmtNum` (see that branch's own comment).
+  //
+  // Why this can't be decided from the VALUE alone (a bug-history note):
+  // a rank-0 SIR22 `NDArray` is NOT unique to APL -- `matlab-to-semantic-
+  // ir`'s `^`/`.^` unconditionally lower to `ElementwiseOp::Pow` even for
+  // two literals (no scalar fast path exists for power), so a plain
+  // MATLAB `2 ^ 2` is ALSO a rank-0 `{shape: [], data}` object by the
+  // time it reaches a consumer -- the identical runtime representation
+  // APL's own scalars can arrive as. Yet the two must print with
+  // DIFFERENT glyphs: APL wants `¯4` for `-2 ^ 2`-shaped values, while
+  // `matlab-to-semantic-ir/tests/oracle.rs`'s own `unary_minus_on_power`
+  // case asserts plain ASCII `-4` for the identical shape. A value-shape
+  // test genuinely cannot distinguish the two cases; only the SOURCE
+  // LANGUAGE that emitted the module can -- hence a second per-module
+  // flag, mirroring `SIR_DISPLAY_RUBY` immediately above rather than
+  // inventing a new mechanism.
+  //
+  // Given that, the actual fix keeps `neg`/`sign`/`recip`/`ceil`/`floor`
+  // (below) blissfully unaware of source language: a rank-0 (or non-
+  // array) operand ALWAYS unwraps to a bare number exactly as before
+  // (never boxed into an NDArray just to carry a glyph decision), and
+  // ONLY `formatSeen`'s bare-number/`SirFloat` branches consult this flag
+  // at the one place the glyph is actually chosen. This is deliberately
+  // NOT specific to `neg` — any bare scalar an APL program prints (a
+  // literal `-5`, a negated float literal `-3.0`, `sign`/`recip`/`ceil`/
+  // `floor`'s own scalar results) goes through the same two branches, so
+  // fixing it there fixes all of them in one place.
+  const SIR_DISPLAY_APL_HIGH_MINUS = __SIR_DISPLAY_APL_HIGH_MINUS__;
   // ── value model ────────────────────────────────────────────────
   // A symbol is an interned name; `===` on two interned symbols with
   // the same name is therefore identity-equal.
@@ -179,7 +216,45 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // (or the op forces float, e.g. Float#/).  `mkFloat` then leaves a
   // non-integral result native and boxes an integral one (`3.5 + 3.5`
   // → boxed `7.0`; `7.0 - 0.5` → native `6.5`).
-  function neg(x) { return isFloat(x) ? mkFloat(-numOf(x)) : -numOf(x); }
+  //
+  // `x` may ALSO be a genuine SIR22 `{shape, data}` NDArray of rank >= 1
+  // (a real APL array, e.g. `-1 2 ¯3`) -- historically this silently gave
+  // `NaN`: the old code always fell through to `-numOf(x)`, and `numOf`
+  // does not recognise a rank >= 1 NDArray, so native JS unary minus ran
+  // on a plain object (`ToPrimitive` coercion) instead of negating any
+  // element. Fixed below by mapping over `.data` into a NEW NDArray with
+  // the SAME shape (`mapNDArrayRank1Plus`, defined just below `isFloat`'s
+  // sibling helpers) -- this is unconditionally correct regardless of
+  // source language: no OTHER frontend ever `print`/`disp`s a computed
+  // array through `neg`'s result without first reading a scalar element
+  // back via `IndexGet` (`formatSeen`'s own NDArray-branch comment below),
+  // so only APL's own auto-print ever observes this branch's output today.
+  //
+  // A rank-0 NDArray operand (e.g. APL's `-(3+4)`, or MATLAB's `-2 ^ 2`,
+  // whose `^` always lowers through the SIR22 array domain even for two
+  // literals) is DELIBERATELY **not** given its own array-preserving
+  // branch here: `mapNDArrayRank1Plus` only matches rank >= 1, so a rank-0
+  // operand falls through to the plain `numOf`-unwrapping fallback below,
+  // exactly as it always has. The high-minus-vs-ASCII glyph question for
+  // that bare scalar RESULT is answered entirely by `formatSeen`'s
+  // `SIR_DISPLAY_APL_HIGH_MINUS`-gated branches (see that flag's own
+  // comment for why the value itself can't carry the decision) -- not by
+  // this function boxing or not boxing its return value.
+  function mapNDArrayRank1Plus(x, f) {
+    if (
+      x !== null && typeof x === "object" &&
+      Array.isArray(x.shape) && x.data instanceof Float64Array &&
+      x.shape.length >= 1
+    ) {
+      return ArrayRt.ndarray(x.shape, Float64Array.from(x.data, f));
+    }
+    return undefined; // not an array (or a rank-0 scalar): caller handles it
+  }
+  function neg(x) {
+    const arr = mapNDArrayRank1Plus(x, (v) => -v);
+    if (arr !== undefined) { return arr; }
+    return isFloat(x) ? mkFloat(-numOf(x)) : -numOf(x);
+  }
   function minus(a, b) {
     const r = numOf(a) - numOf(b);
     return (isFloat(a) || isFloat(b)) ? mkFloat(r) : r;
@@ -268,8 +343,22 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     if (typeof v === "string") { return v; }
     // A boxed Float renders with its trailing `.0` (`7.0`, not `7`); a native
     // number (Integer, or a non-integral Float like `3.5`) renders as-is.
-    if (v instanceof SirFloat) { return floatToRubyString(v.f); }
-    if (typeof v === "number") { return String(v); }
+    // This is Ruby/Lisp's OWN convention -- an APL-sourced module renders
+    // EITHER shape through `ArrayRt.fmtNum` instead (high-minus `¯`, no
+    // trailing `.0` ever), matching `apl_runtime::value::fmt_num` exactly.
+    // See `SIR_DISPLAY_APL_HIGH_MINUS`'s own comment (near the top of this
+    // file) for why this decision has to live HERE (at display time) and
+    // not inside `neg`/`sign`/`recip`/`ceil`/`floor` themselves: a rank-0
+    // SIR22 NDArray -- the representation a bare/boxed scalar RESULT from
+    // any of those five degenerately unwraps from -- is not unique to APL
+    // (MATLAB's `2 ^ 2` reaches the identical shape), so only the source
+    // language, not the value's own shape, can decide the glyph.
+    if (v instanceof SirFloat) {
+      return SIR_DISPLAY_APL_HIGH_MINUS ? ArrayRt.fmtNum(v.f) : floatToRubyString(v.f);
+    }
+    if (typeof v === "number") {
+      return SIR_DISPLAY_APL_HIGH_MINUS ? ArrayRt.fmtNum(v) : String(v);
+    }
     if (v instanceof Sym) { return v.name; }
     if (v instanceof Pair) {
       return "(" + formatSeen(v.car, seen) + " . " + formatSeen(v.cdr, seen) + ")";
@@ -343,6 +432,67 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     }
     return anyFloat ? mkFloat(acc) : acc;
   }
+  // ── SIR22/APL monadic scalar atoms: sign / reciprocal / ceiling / floor ──
+  //
+  // APL's monadic `× ÷ ⌈ ⌊` (`apl-to-semantic-ir/src/lower.rs`'s
+  // `apply_monadic_scalar`) lower to `BuiltinCall("sign"/"recip"/"ceil"/
+  // "floor", [x])`. These four names were documented (this crate's own
+  // README/CHANGELOG) but never given a runtime implementation anywhere in
+  // this file OR in `emit.rs`'s fixed-arm table, so every one of them
+  // crashed with `TypeError: unknown builtin: <name>` for EVERY operand,
+  // scalar or array (found by `apl-to-semantic-ir/tests/oracle.rs`, this
+  // crate's own oracle harness). Ported 1:1 from `apl_runtime::eval::
+  // apply_monadic_scalar`/`apl_sign` (`code/packages/rust/apl-runtime/
+  // src/eval.rs`):
+  //   - `aplSign`: NaN → NaN; positive → 1; negative → -1; zero (either
+  //     sign) → 0. Deliberately NOT `Math.sign()`: although `Math.sign(0)
+  //     === 0` and `Math.sign(-0) === -0` happen to compare `=== 0` (so a
+  //     bare `Math.sign` call would likely also pass), `aplSign` is
+  //     written to match the Rust reference's explicit if/else branching
+  //     literally rather than lean on that coincidence.
+  //   - `aplRecip`: plain `1 / v`, IEEE-754 -- `aplRecip(0)` is `Infinity`,
+  //     never an error/`NaN` (unlike Ruby's `ZeroDivisionError`-raising
+  //     `divide()` elsewhere in this file).
+  //   - ceiling/floor: plain `Math.ceil`/`Math.floor` directly -- no APL
+  //     comparison-tolerance quirk exists anywhere in this codebase for
+  //     these two. (`runtime.rs` also has `"floor"`/`"ceil"` CASE LABELS
+  //     inside `numericMethod`'s `switch`, but that is Ruby's UNRELATED
+  //     `recv.floor`/`recv.ceil` METHOD-call dispatch, reached only via
+  //     `BuiltinCall("__method__", ...)` -- never via a bare top-level
+  //     `BuiltinCall("floor"/"ceil", ...)` the way APL's monadic atoms emit
+  //     one. The two mechanisms coexist without collision.)
+  //
+  // `monadicScalarAtom` is the scalar/array dispatch every one of the four
+  // needs: a genuine NDArray of rank >= 1 maps `f` elementwise (reusing
+  // `mapNDArrayRank1Plus`, defined next to `neg` above -- the exact same
+  // "rank >= 1 preserves the box, everything else falls through" split
+  // `neg`'s own array branch uses); anything else (a bare number, a boxed
+  // `SirFloat`, or a rank-0 NDArray) unwraps via `numOf` and returns a BARE
+  // result -- deliberately never re-boxing through `mkFloat` the way `neg`/
+  // `minus`/`mod` do for Ruby, because none of these four names is ever
+  // emitted by a Ruby-sourced module (confirmed by a repo-wide grep for
+  // `"sign"`/`"recip"`/`"ceil"`/`"floor"` as `BuiltinCall` names: only
+  // `apl-to-semantic-ir` and the not-yet-`node`-tested `j-to-semantic-ir`
+  // emit them) -- so there is no Integer-vs-Float distinction to preserve,
+  // and re-boxing would actively be WRONG: `mkFloat` would box a whole-
+  // valued result like `⌈3.2` (`Math.ceil(3.2) === 4`) into a `SirFloat`,
+  // which `formatSeen` would then render Ruby-style with a spurious
+  // trailing `.0` (`"4.0"`) instead of APL's own `"4"`. As with `neg`, the
+  // glyph question for a bare/rank-0 result is answered entirely by
+  // `formatSeen`'s `SIR_DISPLAY_APL_HIGH_MINUS`-gated branches, not here.
+  function aplSign(v) {
+    if (Number.isNaN(v)) { return NaN; }
+    if (v > 0) { return 1; }
+    if (v < 0) { return -1; }
+    return 0;
+  }
+  function aplRecip(v) { return 1 / v; }
+  function monadicScalarAtom(x, f) {
+    const arr = mapNDArrayRank1Plus(x, f);
+    if (arr !== undefined) { return arr; }
+    return f(numOf(x));
+  }
+
   const builtins = {
     // `+`/`*` route through the polymorphic helpers (hoisted function
     // declarations below) so a builtin referenced as a VALUE, or a
@@ -368,6 +518,12 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     ">=": (x, y) => ge(x, y),
     "not": (x) => !truthy(x),
     "neg": (x) => neg(x),
+    // SIR22/APL monadic scalar atoms (see the section just above this
+    // table for the full root-cause writeup and ground-truth citations).
+    "sign": (x) => monadicScalarAtom(x, aplSign),
+    "recip": (x) => monadicScalarAtom(x, aplRecip),
+    "ceil": (x) => monadicScalarAtom(x, Math.ceil),
+    "floor": (x) => monadicScalarAtom(x, Math.floor),
     "cons": (x, y) => new Pair(x, y),
     "car": (p) => p.car,
     "cdr": (p) => p.cdr,
@@ -3845,6 +4001,11 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       // SIR22 addendum (APL primitives).
       reduce, scan, outer, shape, reshape, indexGenerator, indexOf, ravel,
       catenate, display,
+      // Exported so `formatSeen` (defined outside this IIFE, near the top
+      // of the file) can render a bare/boxed scalar through the SAME
+      // high-minus-aware number formatter a raw NDArray already uses via
+      // `display` -- see `SIR_DISPLAY_APL_HIGH_MINUS`'s own comment.
+      fmtNum,
     };
   })();
 
@@ -4370,5 +4531,62 @@ mod tests {
         // `apl_runtime::value::fmt_num` 1:1), not `[object Object]`.
         assert!(RUNTIME.contains("return x < 0 ? \"¯\" + body : body;"));
         assert!(RUNTIME.contains("ArrayRt.display(v)"));
+    }
+
+    #[test]
+    fn neg_negates_a_rank1_plus_ndarray_elementwise_instead_of_relying_on_numof() {
+        // Regression guard for bug #2 (`apl-to-semantic-ir/tests/oracle.rs`):
+        // a genuine rank >= 1 NDArray operand must be mapped elementwise into
+        // a NEW NDArray (never coerced to `NaN` via native unary minus on a
+        // plain object).
+        assert!(RUNTIME.contains("function mapNDArrayRank1Plus(x, f) {"));
+        assert!(RUNTIME.contains("x.shape.length >= 1"));
+        assert!(RUNTIME.contains("ArrayRt.ndarray(x.shape, Float64Array.from(x.data, f));"));
+    }
+
+    #[test]
+    fn runtime_registers_apl_monadic_scalar_atom_builtins() {
+        // Regression guard for bug #3: `sign`/`recip`/`ceil`/`floor` were
+        // documented but never registered in the `builtins` dispatch table,
+        // so `__Sir.callBuiltin` crashed with `TypeError: unknown builtin:
+        // <name>` for every one of them. `monadicScalarAtom` is the shared
+        // scalar/array dispatch all four route through.
+        assert!(RUNTIME.contains("function aplSign(v) {"));
+        assert!(RUNTIME.contains("function aplRecip(v) { return 1 / v; }"));
+        assert!(RUNTIME.contains("function monadicScalarAtom(x, f) {"));
+        for (name, helper) in [
+            ("\"sign\"", "aplSign"),
+            ("\"recip\"", "aplRecip"),
+            ("\"ceil\"", "Math.ceil"),
+            ("\"floor\"", "Math.floor"),
+        ] {
+            assert!(
+                RUNTIME.contains(&format!("{name}: (x) => monadicScalarAtom(x, {helper}),")),
+                "builtins table missing {name} -> monadicScalarAtom(x, {helper})"
+            );
+        }
+        // `aplSign` is explicit if/else branching (matching `apl_runtime::
+        // eval::apl_sign` 1:1) -- confirmed by the `function aplSign(v) {`
+        // assertion above; see that function's own doc comment for why a
+        // bare `Math.sign()` call is deliberately not used instead.
+    }
+
+    #[test]
+    fn formatseen_gates_bare_number_and_boxed_float_glyph_on_apl_high_minus_flag() {
+        // Regression guard for bug #1: a rank-0 SIR22 NDArray is not unique
+        // to APL (MATLAB's `2 ^ 2` reaches the same shape), so the glyph
+        // decision for a BARE/boxed scalar has to live in `formatSeen`,
+        // gated by a per-module flag -- never inferred from the value's own
+        // shape the way `neg`'s array branch is.
+        assert!(RUNTIME.contains("const SIR_DISPLAY_APL_HIGH_MINUS = __SIR_DISPLAY_APL_HIGH_MINUS__;"));
+        assert!(RUNTIME.contains(
+            "return SIR_DISPLAY_APL_HIGH_MINUS ? ArrayRt.fmtNum(v.f) : floatToRubyString(v.f);"
+        ));
+        assert!(RUNTIME.contains(
+            "return SIR_DISPLAY_APL_HIGH_MINUS ? ArrayRt.fmtNum(v) : String(v);"
+        ));
+        // `fmtNum` must be reachable from OUTSIDE the `ArrayRt` IIFE (where
+        // `formatSeen` lives) for the branches above to compile at all.
+        assert!(RUNTIME.contains("fmtNum,"));
     }
 }

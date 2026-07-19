@@ -19,8 +19,8 @@ use std::process::Command;
 
 use semantic_ir::nodes::MapEntry;
 use semantic_ir::{
-    Block, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Module, RescueClause,
-    Scope, Span, Stmt,
+    Block, EffectSet, ElementwiseOpKind, Expr, Feature, FeatureManifest, Function, Metadata,
+    Module, RescueClause, Scope, Span, Stmt,
 };
 use semantic_ir_to_javascript::compile;
 
@@ -71,6 +71,21 @@ fn let_(name: &str, value: Expr) -> Stmt {
 /// Wrap a `main` function (the `stmts` run for effect, `value` is its
 /// return) into a complete, SIR16-flagged module ready for `compile`.
 fn module_with_main(stmts: Vec<Stmt>, value: Expr, features: &[Feature]) -> Module {
+    module_with_lang_and_main(stmts, value, features, "handbuilt")
+}
+
+/// Like `module_with_main`, but tagged with an explicit `source_language`
+/// rather than always `"handbuilt"`. Needed to exercise the emitter's
+/// per-module display-convention substitutions (`SIR_DISPLAY_RUBY`,
+/// `SIR_DISPLAY_APL_HIGH_MINUS` — see `emit.rs::emit_module`), which key
+/// off `metadata.source_language` and so can never be turned on through
+/// `module_with_main`'s hardcoded `"handbuilt"` tag.
+fn module_with_lang_and_main(
+    stmts: Vec<Stmt>,
+    value: Expr,
+    features: &[Feature],
+    lang: &str,
+) -> Module {
     Module {
         name: "sir16".into(),
         manifest: FeatureManifest::from_features(features),
@@ -88,7 +103,7 @@ fn module_with_main(stmts: Vec<Stmt>, value: Expr, features: &[Feature]) -> Modu
         }],
         globals: vec![],
         metadata: Metadata::new()
-            .with_source_language("handbuilt")
+            .with_source_language(lang)
             .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
         span: sp(),
     }
@@ -207,7 +222,16 @@ fn floats_arithmetic_promotion_prints_3_5() {
 /// tagged-float helpers) without a program that reaches them yet.  Returns
 /// `None` when Node is unavailable.
 fn run_runtime_snippet(snippet: &str, tag: &str) -> Option<String> {
-    let module = module_with_main(vec![], Expr::NilLit { span: sp() }, &[]);
+    run_runtime_snippet_lang(snippet, tag, "handbuilt")
+}
+
+/// Like `run_runtime_snippet`, but against a module tagged with an explicit
+/// `source_language` rather than always `"handbuilt"` — needed to turn on
+/// `SIR_DISPLAY_APL_HIGH_MINUS` (`true` only when `source_language` is
+/// exactly `"apl"`; see `emit.rs::emit_module`), which `run_runtime_snippet`
+/// itself can never do.
+fn run_runtime_snippet_lang(snippet: &str, tag: &str, lang: &str) -> Option<String> {
+    let module = module_with_lang_and_main(vec![], Expr::NilLit { span: sp() }, &[], lang);
     let artifact = compile(&module).expect("compile to javascript");
     if !node_available() {
         eprintln!("note: `node` unavailable — skipping runtime snippet `{tag}`");
@@ -294,6 +318,163 @@ console.log(o.join("|"));
 "#;
     if let Some(stdout) = run_runtime_snippet(snippet, "ndarray_numof") {
         assert_eq!(stdout, "7|true|false|false|true|true|-7|3");
+    }
+}
+
+// ── APL monadic scalar atoms (`- × ÷ ⌈ ⌊`): three bugs found by
+// `apl-to-semantic-ir/tests/oracle.rs`'s oracle harness, fixed here ──
+//
+// See `runtime.rs`'s `SIR_DISPLAY_APL_HIGH_MINUS` and `neg`/
+// `monadicScalarAtom` doc comments for the full root-cause writeups this
+// section's tests are regression coverage for.
+
+#[test]
+fn apl_monadic_neg_bare_and_boxed_scalar_uses_high_minus_only_for_apl_modules() {
+    // Bug #1: monadic `-` on a bare scalar (`-5`, lowered to a bare
+    // `neg(5)` call -- no NDArray involved at all) printed the right
+    // NUMBER with the WRONG GLYPH (ASCII `-5`, not APL's own high-minus
+    // `¯5`). Root cause: the glyph decision lives in `formatSeen`, not in
+    // `neg` itself -- ANY bare number or boxed `SirFloat` an APL program
+    // prints needs the same fix, which is why this snippet checks both a
+    // bare-IntLit-shaped operand (`neg(5)`) and a boxed-integral-float-
+    // literal-shaped one (`neg(mkFloat(3))`, mirroring how `-3.0` compiles)
+    // in one pass.
+    let snippet = r#"
+const F = __Sir; const o = [];
+o.push(F.format(F.neg(5)));            // bare IntLit-shaped operand
+o.push(F.format(F.neg(F.mkFloat(3))));  // boxed integral-float operand
+o.push(F.format(5));                    // a positive bare number: glyph is moot either way
+console.log(o.join("|"));
+"#;
+    // APL-sourced module: high-minus, no trailing `.0`.
+    if let Some(stdout) = run_runtime_snippet_lang(snippet, "apl_neg_scalar_apl", "apl") {
+        assert_eq!(stdout, "¯5|¯3|5");
+    }
+    // The IDENTICAL snippet against a non-APL module must be byte-for-byte
+    // UNCHANGED from before this fix (Ruby's own `SirFloat` trailing-`.0`
+    // convention, ASCII sign) -- this is the regression guard for every
+    // OTHER consumer of `neg` (Ruby/MATLAB/Python/JS all reach it the same
+    // way for a non-array operand).
+    if let Some(stdout) = run_runtime_snippet(snippet, "apl_neg_scalar_nonapl") {
+        assert_eq!(stdout, "-5|-3.0|5");
+    }
+}
+
+#[test]
+fn apl_monadic_neg_rank1_array_negates_elementwise_instead_of_nan() {
+    // Bug #2: monadic `-` on a genuine ARRAY (rank >= 1, e.g. `-1 2 ¯3`)
+    // silently computed `NaN` (native unary minus on a plain `{shape,
+    // data}` object coerces through `ToPrimitive`) instead of the
+    // correctly negated array. Matches `apl-runtime`'s own ground truth
+    // for `-1 2 ¯3` exactly: negate `[1, 2, -3]` -> `[-1, -2, 3]`, printed
+    // high-minus, space-separated.
+    let snippet = r#"
+const F = __Sir;
+const v = F.Array.ndarray([3], Float64Array.of(1, 2, -3));
+F.print(F.neg(v));
+"#;
+    if let Some(stdout) = run_runtime_snippet_lang(snippet, "apl_neg_array", "apl") {
+        assert_eq!(stdout, "¯1 ¯2 3");
+    }
+}
+
+#[test]
+fn apl_monadic_neg_rank0_ndarray_matches_matlab_ascii_convention_unchanged() {
+    // A rank-0 NDArray (e.g. from a nested dyadic op, `-(3+4)`) is NOT
+    // unique to APL -- `matlab-to-semantic-ir`'s `^`/`.^` unconditionally
+    // lower to `ElementwiseOp::Pow` even for two literals, so a plain
+    // MATLAB `2 ^ 2` reaches `neg` as the IDENTICAL rank-0 `{shape: [],
+    // data}` shape. `neg` must therefore keep unwrapping a rank-0 operand
+    // to a bare number (never boxing it) regardless of source language --
+    // only `formatSeen`'s `SIR_DISPLAY_APL_HIGH_MINUS` branch may pick the
+    // glyph. This is the regression guard for
+    // `matlab-to-semantic-ir/tests/oracle.rs`'s own `unary_minus_on_power`
+    // case (`-2 ^ 2` must print ASCII `-4`, not `¯4`), reproduced here at
+    // the SIR level since this crate cannot depend on that frontend crate.
+    let matlab_module = module_with_lang_and_main(
+        vec![puts_(bc(
+            "neg",
+            vec![Expr::ElementwiseOp {
+                op: ElementwiseOpKind::Pow,
+                lhs: Box::new(int(2)),
+                rhs: Box::new(int(2)),
+                span: sp(),
+            }],
+        ))],
+        Expr::NilLit { span: sp() },
+        &[Feature::NDArrays, Feature::MatrixOps, Feature::ArrayColumnMajor],
+        "matlab",
+    );
+    if let Some(stdout) = run_module(&matlab_module, "matlab_neg_power_rank0") {
+        assert_eq!(stdout, "-4", "MATLAB's own ASCII convention must be unchanged");
+    }
+
+    // The identical rank-0 shape, printed through an APL-tagged module,
+    // must instead use high-minus -- proving the SAME `neg` function
+    // serves both conventions correctly, gated purely by source language.
+    let snippet = r#"
+const F = __Sir;
+const seven = F.Array.ndarray([], Float64Array.of(7));
+F.print(F.neg(seven));
+"#;
+    if let Some(stdout) = run_runtime_snippet_lang(snippet, "apl_neg_rank0", "apl") {
+        assert_eq!(stdout, "¯7");
+    }
+}
+
+#[test]
+fn apl_monadic_sign_recip_ceil_floor_builtins_work_on_scalar_and_array() {
+    // Bug #3: `sign`/`recip`/`ceil`/`floor` crashed with `TypeError:
+    // unknown builtin: <name>` for EVERY operand (these four names were
+    // documented but never registered in `runtime.rs`'s `builtins` table).
+    // Covers the two explicitly-called-out edge cases from
+    // `apl_runtime::eval::apply_monadic_scalar`/`apl_sign`: `sign(0) == 0`
+    // (NOT `f64::signum()`'s `1`-for-`+0` convention) and `recip(0) ==
+    // Infinity` (never an error/`NaN`) -- plus each of the four over a
+    // genuine rank-1 array, matching how `neg`/`ElementwiseOp` already
+    // treat "scalar or any-rank array" uniformly.
+    let snippet = r#"
+const F = __Sir; const o = [];
+o.push(String(F.callBuiltin("sign", [5])));     // 1
+o.push(String(F.callBuiltin("sign", [-5])));    // -1
+o.push(String(F.callBuiltin("sign", [0])));     // 0 -- the sign(0) == 0 edge case
+o.push(String(F.callBuiltin("recip", [4])));    // 0.25
+o.push(String(F.callBuiltin("recip", [0])));    // Infinity -- the recip(0) edge case
+o.push(String(F.callBuiltin("ceil", [3.2])));   // 4
+o.push(String(F.callBuiltin("floor", [3.8])));  // 3
+const signArr = F.Array.ndarray([3], Float64Array.of(-2, 0, 3));
+o.push(F.Array.display(F.callBuiltin("sign", [signArr])));   // ¯1 0 1
+const recipArr = F.Array.ndarray([2], Float64Array.of(2, 4));
+o.push(F.Array.display(F.callBuiltin("recip", [recipArr]))); // 0.5 0.25
+console.log(o.join("|"));
+"#;
+    if let Some(stdout) = run_runtime_snippet(snippet, "apl_monadic_builtins") {
+        assert_eq!(stdout, "1|-1|0|0.25|Infinity|4|3|¯1 0 1|0.5 0.25");
+    }
+}
+
+#[test]
+fn apl_monadic_sign_recip_ceil_floor_use_high_minus_via_print_when_apl_sourced() {
+    // Same four builtins, but through the FULL `print`/`formatSeen` path
+    // (not a direct `String(...)`/`Array.display` call) on an APL-tagged
+    // module, confirming their bare-scalar results respect
+    // `SIR_DISPLAY_APL_HIGH_MINUS` exactly like `neg`'s own scalar case
+    // does -- these values are never re-boxed through `mkFloat` (see
+    // `monadicScalarAtom`'s own comment for why that would be WRONG for
+    // APL specifically), so they only ever reach `formatSeen`'s bare-
+    // number branch, never the `SirFloat` one.
+    let snippet = r#"
+const F = __Sir; const o = [];
+o.push(F.format(F.callBuiltin("sign", [-5])));    // ¯1
+o.push(F.format(F.callBuiltin("recip", [-4])));   // ¯0.25
+o.push(F.format(F.callBuiltin("ceil", [-3.8])));  // ¯3 (Math.ceil(-3.8) === -3)
+o.push(F.format(F.callBuiltin("floor", [-3.2]))); // ¯4 (Math.floor(-3.2) === -4)
+console.log(o.join("|"));
+"#;
+    if let Some(stdout) =
+        run_runtime_snippet_lang(snippet, "apl_monadic_builtins_high_minus", "apl")
+    {
+        assert_eq!(stdout, "¯1|¯0.25|¯3|¯4");
     }
 }
 
