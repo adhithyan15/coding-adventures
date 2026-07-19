@@ -440,6 +440,7 @@ impl<'a> Compiler<'a> {
             "goto_stmt" => self.emit_goto(verb),
             "perform_stmt" => self.emit_perform(verb),
             "set_stmt" => self.emit_set(verb),
+            "evaluate_stmt" => self.emit_evaluate(verb),
             other => Err(CompileError::Unsupported(format!(
                 "the {} statement is a later rung",
                 verb_name(other)
@@ -591,6 +592,49 @@ impl<'a> Compiler<'a> {
         let value = scale_num_value(src, &picture, signed, &cond_name)?;
         let reg = self.items[var].reg.clone();
         self.emit("const", Some(&reg), vec![Operand::Int(value)], "i64");
+        Ok(())
+    }
+
+    /// `EVALUATE subject WHEN v… WHEN OTHER … END-EVALUATE` — COBOL's case
+    /// statement, lowered as a `cmp_eq` + `jmp_if_false` branch cascade (a chain of
+    /// `IF`s). Each value branch compares the subject to its value at a common
+    /// scale; a mismatch jumps to the next branch, a match runs the branch and
+    /// jumps to the end (no fall-through). `WHEN OTHER` runs unconditionally once
+    /// reached. Branches are emitted by **iteration**, so thousands of `WHEN`s
+    /// stay flat. Numeric subject/value this rung; an alphanumeric one is a later
+    /// rung ([`Self::read_arith_term`] rejects it cleanly).
+    fn emit_evaluate(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
+        let subject_node = child_node(verb, "operand")
+            .ok_or_else(|| CompileError::Malformed("EVALUATE without a subject".into()))?;
+        let subject = self.read_arith_term(subject_node)?;
+        let end_lbl = self.fresh("eval_end");
+        for wb in child_nodes(verb, "when_branch") {
+            let is_other = child_tokens(wb).iter().any(|(k, v)| k == "KEYWORD" && v == "OTHER");
+            let stmts = child_nodes(wb, "statement");
+            if is_other {
+                for s in stmts {
+                    self.emit_statement(s)?;
+                }
+                self.emit("jmp", None, vec![Operand::Var(end_lbl.clone())], "void");
+                continue;
+            }
+            let value_node = child_node(wb, "operand")
+                .ok_or_else(|| CompileError::Malformed("WHEN without a value".into()))?;
+            let value = self.read_arith_term(value_node)?;
+            let w = self.term_scale(&subject).max(self.term_scale(&value));
+            let a = self.emit_term_at_scale(&subject, w);
+            let b = self.emit_term_at_scale(&value, w);
+            let cond = self.fresh("_wcond");
+            self.emit("cmp_eq", Some(&cond), vec![a, b], "i64");
+            let next_lbl = self.fresh("when_next");
+            self.emit("jmp_if_false", None, vec![Operand::Var(cond), Operand::Var(next_lbl.clone())], "void");
+            for s in stmts {
+                self.emit_statement(s)?;
+            }
+            self.emit("jmp", None, vec![Operand::Var(end_lbl.clone())], "void");
+            self.emit("label", None, vec![Operand::Var(next_lbl)], "void");
+        }
+        self.emit("label", None, vec![Operand::Var(end_lbl)], "void");
         Ok(())
     }
 
@@ -2886,6 +2930,45 @@ mod tests {
         assert!(ops.contains(&"xor".to_string()), "expected `xor`: {ops:?}");
         assert!(ops.contains(&"or".to_string()), "expected `or`: {ops:?}");
         assert!(m.validate().is_empty(), "{:?}", m.validate());
+    }
+
+    #[test]
+    fn evaluate_lowers_to_a_cmp_eq_cascade() {
+        // EVALUATE lowers to a cmp_eq + jmp_if_false cascade — one cmp_eq per value
+        // WHEN. A 3-value EVALUATE plus WHEN OTHER validates and emits the cascade.
+        let m = compile_source(
+            &wrap(
+                &["01  N  PIC 9(3) VALUE 5."],
+                &[
+                    "EVALUATE N",
+                    "WHEN 1 DISPLAY \"A\"",
+                    "WHEN 2 DISPLAY \"B\"",
+                    "WHEN 5 DISPLAY \"C\"",
+                    "WHEN OTHER DISPLAY \"D\"",
+                    "END-EVALUATE.",
+                    "STOP RUN.",
+                ],
+            ),
+            "ev",
+        )
+        .unwrap();
+        let n_cmp_eq = ops(&m).iter().filter(|o| *o == "cmp_eq").count();
+        assert_eq!(n_cmp_eq, 3, "one cmp_eq per value WHEN: {:?}", ops(&m));
+        assert!(m.validate().is_empty(), "{:?}", m.validate());
+    }
+
+    #[test]
+    fn evaluate_on_an_alphanumeric_subject_is_deferred() {
+        // A non-numeric subject needs a string compare — a clean later rung.
+        let err = compile_source(
+            &wrap(
+                &["01  W  PIC X(3) VALUE \"ABC\"."],
+                &["EVALUATE W", "WHEN \"ABC\" DISPLAY \"Y\"", "END-EVALUATE.", "STOP RUN."],
+            ),
+            "ev",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
     }
 
     #[test]

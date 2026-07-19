@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.0 — `EVALUATE` / `OTHER` / `END-EVALUATE` keywords
+
+- Added `EVALUATE`, `OTHER`, and the hyphenated `END-EVALUATE` to the reserved-word
+  list so COBOL's case statement lexes as keywords (`WHEN` was already reserved).
+  `END-EVALUATE` works like the existing hyphenated keywords (`WORKING-STORAGE`,
+  `HIGH-VALUE`): the NAME pattern accepts internal hyphens and the keyword list
+  promotes it to a KEYWORD. `_grammar.rs` regenerated from `cobol.tokens` via
+  `grammar-tools compile-tokens`.
+
 ## 0.4.0 — symbolic relational operator tokens
 
 - Added `GT` (`>`), `LT` (`<`), `GE` (`>=`), `LE` (`<=`), and `NE` (`<>`) so a

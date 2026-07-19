@@ -3226,6 +3226,29 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("Y"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // COBOL-60 — EVALUATE case statement (PL09 step 4). `EVALUATE N` on N=5 with
+    // `WHEN 1 / WHEN 5 / WHEN OTHER` matches the second WHEN → prints "FIVE". Lowers
+    // to a cmp_eq + jmp_if_false branch cascade (the ops IF uses, no new opcode),
+    // proving the case statement on every backend.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  N  PIC 9 VALUE 5.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     EVALUATE N\n\
+               000000     WHEN 1 DISPLAY \"ONE\"\n\
+               000000     WHEN 5 DISPLAY \"FIVE\"\n\
+               000000     WHEN OTHER DISPLAY \"OTHER\"\n\
+               000000     END-EVALUATE.\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("FIVE"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses

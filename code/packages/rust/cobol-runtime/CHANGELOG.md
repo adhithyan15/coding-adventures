@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.20.0 — `EVALUATE` (case statement)
+
+- `Stmt::Evaluate { subject, branches }` — COBOL's case statement. Each branch's
+  `when` is `Some(value)` or `None` (`WHEN OTHER`). `exec_evaluate` compares the
+  subject to each value top-to-bottom and runs the **first** match's statements
+  (`WHEN OTHER` matches once reached), with no fall-through; the branch's `Flow`
+  propagates so a `STOP RUN`/`GO TO` inside a `WHEN` unwinds, like an `IF` branch.
+  Branches are tested by **iteration**, so thousands of `WHEN`s cannot overflow the
+  stack (covered by a regression test). Numeric subject/value this rung; an
+  alphanumeric one is a later rung.
+
 ## 0.19.0 — `NOT` over a condition
 
 - `Cond` gains `Not(Box<Cond>)`. The new `negation = [ "NOT" ] simple_condition`
