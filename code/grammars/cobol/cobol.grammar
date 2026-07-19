@@ -182,7 +182,13 @@ stop_stmt     = "STOP" ( "RUN" | NUMBER | STRING ) ;
 if_stmt          = "IF" condition { statement } [ "ELSE" { statement } ] ;
 condition        = disjunction ;
 disjunction      = conjunction { "OR" conjunction } ;
-conjunction      = simple_condition { "AND" simple_condition } ;
+conjunction      = negation { "AND" negation } ;
+# `NOT` negates the whole following simple condition (a relation, a
+# condition-name, or a parenthesised condition) — it binds tighter than `AND`.
+# A relation may *also* carry its own `NOT` inside the `relop` (`A IS NOT > B`);
+# the two never collide because the negation `NOT` precedes the first operand
+# while the relop `NOT` sits between the operands.
+negation         = [ "NOT" ] simple_condition ;
 simple_condition = relation | condition_name | LPAREN condition RPAREN ;
 relation         = operand relop operand ;
 condition_name   = NAME ;

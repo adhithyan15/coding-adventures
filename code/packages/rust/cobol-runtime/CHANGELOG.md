@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.19.0 — `NOT` over a condition
+
+- `Cond` gains `Not(Box<Cond>)`. The new `negation = [ "NOT" ] simple_condition`
+  grammar layer reads a leading `NOT` (`read_negation`) and wraps the simple
+  condition in `Cond::Not`; `eval_cond` returns `!eval_cond(inner)`. `NOT` binds
+  tighter than `AND`/`OR` and works over a relation, a condition-name, or a
+  parenthesised group (de Morgan, etc.).
+
 ## 0.18.0 — compound conditions (`AND` / `OR` / parentheses)
 
 - `Cond` gains `And(Vec<Cond>)` and `Or(Vec<Cond>)`. `read_condition` reads a

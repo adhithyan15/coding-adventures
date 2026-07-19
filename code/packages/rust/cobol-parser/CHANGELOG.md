@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.11.0 — `NOT` over a condition
+
+- The condition cascade gains a `negation` layer between `conjunction` and
+  `simple_condition`: `conjunction = negation { "AND" negation }`,
+  `negation = [ "NOT" ] simple_condition`. `NOT` binds tighter than `AND`/`OR` and
+  negates the following relation, condition-name, or parenthesised group. It does
+  not collide with a relation's own `IS NOT …`: the negation `NOT` precedes the
+  first operand, the relop `NOT` sits between the operands. `NOT` was already a
+  keyword, so no lexer change. `_grammar.rs` regenerated via `grammar-tools
+  compile-grammar`.
+
 ## 0.10.0 — compound conditions (`AND` / `OR` / parentheses)
 
 - `condition` is now a precedence cascade: `disjunction` of `AND`-joined

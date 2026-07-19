@@ -200,6 +200,8 @@ pub enum Cond {
     And(Vec<Cond>),
     /// `c1 OR c2 OR …` — true when *any* part holds. Flat, as [`Cond::And`].
     Or(Vec<Cond>),
+    /// `NOT c` — true when `c` does not hold.
+    Not(Box<Cond>),
 }
 
 /// The relational operator of a condition.
@@ -571,10 +573,19 @@ fn read_disjunction(node: &GrammarASTNode) -> Result<Cond, RuntimeError> {
     read_group(node, "conjunction", read_conjunction, Cond::Or)
 }
 
-/// `conjunction = simple_condition { "AND" simple_condition }` — collect into
-/// [`Cond::And`].
+/// `conjunction = negation { "AND" negation }` — collect into [`Cond::And`].
 fn read_conjunction(node: &GrammarASTNode) -> Result<Cond, RuntimeError> {
-    read_group(node, "simple_condition", read_simple_condition, Cond::And)
+    read_group(node, "negation", read_negation, Cond::And)
+}
+
+/// `negation = [ "NOT" ] simple_condition` — wrap in [`Cond::Not`] when the `NOT`
+/// keyword is present.
+fn read_negation(node: &GrammarASTNode) -> Result<Cond, RuntimeError> {
+    let simple = child_node(node, "simple_condition")
+        .ok_or_else(|| RuntimeError::Unsupported("negation without a condition".into()))?;
+    let inner = read_simple_condition(simple)?;
+    let negated = child_tokens(node).iter().any(|(k, v)| k == "KEYWORD" && v == "NOT");
+    Ok(if negated { Cond::Not(Box::new(inner)) } else { inner })
 }
 
 /// Collect a rule's same-named operand children into a **flat** `AND`/`OR` list.

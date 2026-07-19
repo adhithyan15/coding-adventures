@@ -728,12 +728,11 @@ impl<'a> Compiler<'a> {
         acc.ok_or_else(|| CompileError::Malformed("empty disjunction".into()))
     }
 
-    /// `conjunction = simple_condition { "AND" simple_condition }` — fold with
-    /// bitwise `and`.
+    /// `conjunction = negation { "AND" negation }` — fold with bitwise `and`.
     fn emit_conjunction(&mut self, node: &GrammarASTNode) -> Result<String, CompileError> {
         let mut acc: Option<String> = None;
-        for child in child_nodes(node, "simple_condition") {
-            let b = self.emit_simple_condition(child)?;
+        for child in child_nodes(node, "negation") {
+            let b = self.emit_negation(child)?;
             acc = Some(match acc {
                 None => b,
                 Some(prev) => {
@@ -744,6 +743,26 @@ impl<'a> Compiler<'a> {
             });
         }
         acc.ok_or_else(|| CompileError::Malformed("empty conjunction".into()))
+    }
+
+    /// `negation = [ "NOT" ] simple_condition` — a leading `NOT` inverts the
+    /// boolean. The leaf yields a `0`/`1` value, so the inverse is `xor` with `1`
+    /// (`0 ^ 1 = 1`, `1 ^ 1 = 0`) — a logical NOT. (IIR's `not` is *bitwise* `~x`,
+    /// which would not map `0`/`1` to `1`/`0`, so `xor` is the right op.) The result
+    /// is still `0`/`1` and feeds `jmp_if_false` like any other condition boolean.
+    fn emit_negation(&mut self, node: &GrammarASTNode) -> Result<String, CompileError> {
+        let simple = child_node(node, "simple_condition")
+            .ok_or_else(|| CompileError::Malformed("negation without a condition".into()))?;
+        let inner = self.emit_simple_condition(simple)?;
+        let negated = child_tokens(node).iter().any(|(k, v)| k == "KEYWORD" && v == "NOT");
+        if !negated {
+            return Ok(inner);
+        }
+        let one = self.fresh("_one");
+        self.emit("const", Some(&one), vec![Operand::Int(1)], "i64");
+        let out = self.fresh("_not");
+        self.emit("xor", Some(&out), vec![Operand::Var(inner), Operand::Var(one)], "i64");
+        Ok(out)
     }
 
     /// `simple_condition = relation | condition_name | "(" condition ")"`.
@@ -2849,6 +2868,24 @@ mod tests {
         )
         .unwrap();
         assert!(ops(&module).contains(&"cmp_le".to_string()));
+    }
+
+    #[test]
+    fn not_over_a_condition_emits_xor() {
+        // `NOT (…)` inverts the group's boolean with `xor` (IIR `not` is bitwise, so
+        // xor-with-1 is the logical negation). The `or` inside the group is present.
+        let m = compile_source(
+            &wrap(
+                &["01  N  PIC 9(3) VALUE 5."],
+                &["IF NOT (N < 3 OR N > 9) DISPLAY \"X\".", "STOP RUN."],
+            ),
+            "c",
+        )
+        .unwrap();
+        let ops = ops(&m);
+        assert!(ops.contains(&"xor".to_string()), "expected `xor`: {ops:?}");
+        assert!(ops.contains(&"or".to_string()), "expected `or`: {ops:?}");
+        assert!(m.validate().is_empty(), "{:?}", m.validate());
     }
 
     #[test]
