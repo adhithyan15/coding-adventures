@@ -31,6 +31,9 @@
 //! - [`calendar`] — the working-time engine: resolve calendars, snap into working
 //!   time, add working durations, and count working minutes. The unit the scheduler
 //!   measures in.
+//! - [`view`] — the view/query layer's shared field accessor (`cell`) and display
+//!   formatter (`format_cell`): the one place filter/sort/group/display read a task's
+//!   field values, so they agree by construction.
 //!
 //! The CPM scheduler (a forward/backward pass over `directed-graph`, built on
 //! [`calendar`]) and the command/reducer surface land in follow-up modules; the
@@ -44,6 +47,7 @@ pub mod ops;
 mod primitives;
 pub mod projections;
 pub mod scheduler;
+pub mod view;
 
 pub use ids::*;
 pub use model::*;
