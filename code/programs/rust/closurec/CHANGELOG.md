@@ -26,9 +26,17 @@ locals are still eligible for removal (scope-local, sound); `constant-fold`,
 unchanged at SIMPLE. The `SIMPLE_PASS_NAMES` CV-trace list drops the two
 global-scope sweepers to match what executes.
 
-No end-to-end fixture changed; eight in-crate unit tests that had asserted the
-old (miscompiling) aggressive-SIMPLE behavior were rewritten to assert the
-correct open-world-SIMPLE / closed-world-ADVANCED split at both levels.
+Eight in-crate unit tests that had asserted the old (miscompiling)
+aggressive-SIMPLE behavior were rewritten to assert the correct
+open-world-SIMPLE / closed-world-ADVANCED split at both levels. One end-to-end
+diff fixture — `tests/diff/simple-debugger` — also asserted the old behavior
+(it expected the single-use `log` to be inlined into `report(1)` at SIMPLE);
+its `expected.stdout` and the `diff_simple_debugger` integration test's
+"did-not-fall-back-to-whitespace" oracle were updated to the new open-world
+output (`function log(p){report(p)};log(1);var x=3;use(x);`), re-proving the
+typed pipeline ran via the `1 + 2` → `3` fold and the `debugger;` strip
+instead of the (now-invalid) inline. ADVANCED output remains byte-for-byte
+unchanged.
 
 ## [0.234.37] - 2026-07-17
 
