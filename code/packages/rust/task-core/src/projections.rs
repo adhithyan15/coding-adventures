@@ -28,6 +28,30 @@ impl ProjectState {
         scheduler::schedule(self, project_start)
     }
 
+    // ── view selection (filter → sort → group) ─────────────────────────────────────
+
+    /// Apply a saved [`View`]'s filter, sort, and grouping to this project's tasks,
+    /// returning the ordered, grouped task ids (see [`crate::view::select`]).
+    ///
+    /// The schedule is computed once at `project_start` so the view can filter and sort
+    /// on computed columns (start/finish/slack/critical); a cyclic network degrades to an
+    /// empty schedule (those columns read `Empty`) rather than failing the selection.
+    pub fn view_selection(
+        &self,
+        view: &View,
+        project_start: Date,
+    ) -> Vec<crate::view::SelectionGroup> {
+        let schedule = self
+            .schedule(project_start)
+            .unwrap_or_else(|_| ScheduleResult {
+                dates: std::collections::BTreeMap::new(),
+                conflicts: Vec::new(),
+                project_start,
+                project_finish: None,
+            });
+        crate::view::select(self, view, &schedule)
+    }
+
     // ── checklist ────────────────────────────────────────────────────────────────
 
     /// Flatten the tasks into a checklist, honouring decision branches: a decision
