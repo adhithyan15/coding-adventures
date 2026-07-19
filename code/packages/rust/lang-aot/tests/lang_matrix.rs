@@ -3249,6 +3249,28 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("FIVE"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // COBOL-60 — EVALUATE with a multi-value / THRU-range WHEN (PL09 step 4).
+    // `EVALUATE N` on N=6 with `WHEN 1 5 THRU 7 9` matches (6 is in 5 THRU 7) →
+    // prints "Y". The WHEN OR-folds cmp_eq and and(cmp_ge, cmp_le) — the level-88
+    // ranges machinery, no new opcode — proving it on every backend.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  N  PIC 9 VALUE 6.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     EVALUATE N\n\
+               000000     WHEN 1 5 THRU 7 9 DISPLAY \"Y\"\n\
+               000000     WHEN OTHER DISPLAY \"N\"\n\
+               000000     END-EVALUATE.\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("Y"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses

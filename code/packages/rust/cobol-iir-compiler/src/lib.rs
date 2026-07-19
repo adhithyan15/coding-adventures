@@ -596,13 +596,15 @@ impl<'a> Compiler<'a> {
     }
 
     /// `EVALUATE subject WHEN v… WHEN OTHER … END-EVALUATE` — COBOL's case
-    /// statement, lowered as a `cmp_eq` + `jmp_if_false` branch cascade (a chain of
-    /// `IF`s). Each value branch compares the subject to its value at a common
-    /// scale; a mismatch jumps to the next branch, a match runs the branch and
-    /// jumps to the end (no fall-through). `WHEN OTHER` runs unconditionally once
-    /// reached. Branches are emitted by **iteration**, so thousands of `WHEN`s
-    /// stay flat. Numeric subject/value this rung; an alphanumeric one is a later
-    /// rung ([`Self::read_arith_term`] rejects it cleanly).
+    /// statement, lowered as a branch cascade (a chain of `IF`s). Each value branch
+    /// tests the subject against its value-list — a single value is `cmp_eq`, a
+    /// `THRU` range is `and(cmp_ge, cmp_le)`, and several values `OR`-fold — exactly
+    /// the level-88-ranges boolean machinery; a mismatch jumps to the next branch, a
+    /// match runs the branch and jumps to the end (no fall-through). `WHEN OTHER`
+    /// runs unconditionally once reached. Branches (and the values within each) are
+    /// emitted by **iteration**, so thousands of `WHEN`s / values stay flat.
+    /// Numeric subject/value this rung; an alphanumeric one is a later rung
+    /// ([`Self::read_arith_term`] rejects it cleanly).
     fn emit_evaluate(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
         let subject_node = child_node(verb, "operand")
             .ok_or_else(|| CompileError::Malformed("EVALUATE without a subject".into()))?;
@@ -618,14 +620,7 @@ impl<'a> Compiler<'a> {
                 self.emit("jmp", None, vec![Operand::Var(end_lbl.clone())], "void");
                 continue;
             }
-            let value_node = child_node(wb, "operand")
-                .ok_or_else(|| CompileError::Malformed("WHEN without a value".into()))?;
-            let value = self.read_arith_term(value_node)?;
-            let w = self.term_scale(&subject).max(self.term_scale(&value));
-            let a = self.emit_term_at_scale(&subject, w);
-            let b = self.emit_term_at_scale(&value, w);
-            let cond = self.fresh("_wcond");
-            self.emit("cmp_eq", Some(&cond), vec![a, b], "i64");
+            let cond = self.emit_when_match(&subject, wb)?;
             let next_lbl = self.fresh("when_next");
             self.emit("jmp_if_false", None, vec![Operand::Var(cond), Operand::Var(next_lbl.clone())], "void");
             for s in stmts {
@@ -636,6 +631,53 @@ impl<'a> Compiler<'a> {
         }
         self.emit("label", None, vec![Operand::Var(end_lbl)], "void");
         Ok(())
+    }
+
+    /// Emit a boolean register that is true when the subject matches any value in a
+    /// `when_branch`'s list: a single value → `cmp_eq(subject, value)`; a `THRU`
+    /// range → `and(cmp_ge(subject, lo), cmp_le(subject, hi))`; the whole list
+    /// `OR`-folds. Comparisons align the subject and each value to a common scale.
+    fn emit_when_match(&mut self, subject: &Term, wb: &GrammarASTNode) -> Result<String, CompileError> {
+        let mut acc: Option<String> = None;
+        for wv in child_nodes(wb, "when_value") {
+            let ops = child_nodes(wv, "operand");
+            let b = match ops.as_slice() {
+                [one] => {
+                    let value = self.read_arith_term(one)?;
+                    self.emit_scaled_cmp("cmp_eq", subject, &value)
+                }
+                [lo, hi] => {
+                    let lo = self.read_arith_term(lo)?;
+                    let hi = self.read_arith_term(hi)?;
+                    let ge = self.emit_scaled_cmp("cmp_ge", subject, &lo);
+                    let le = self.emit_scaled_cmp("cmp_le", subject, &hi);
+                    let r = self.fresh("_wrng");
+                    self.emit("and", Some(&r), vec![Operand::Var(ge), Operand::Var(le)], "i64");
+                    r
+                }
+                _ => return Err(CompileError::Malformed("a WHEN value must be `operand` or `operand THRU operand`".into())),
+            };
+            acc = Some(match acc {
+                None => b,
+                Some(prev) => {
+                    let r = self.fresh("_wor");
+                    self.emit("or", Some(&r), vec![Operand::Var(prev), Operand::Var(b)], "i64");
+                    r
+                }
+            });
+        }
+        acc.ok_or_else(|| CompileError::Malformed("WHEN without a value".into()))
+    }
+
+    /// Emit `op(left, right)` (a `cmp_*`) with both terms taken to a common scale,
+    /// returning the boolean register.
+    fn emit_scaled_cmp(&mut self, op: &str, left: &Term, right: &Term) -> String {
+        let w = self.term_scale(left).max(self.term_scale(right));
+        let a = self.emit_term_at_scale(left, w);
+        let b = self.emit_term_at_scale(right, w);
+        let out = self.fresh("_wcmp");
+        self.emit(op, Some(&out), vec![a, b], "i64");
+        out
     }
 
     /// `MOVE src-item TO recv-item` for two **character** items — reshape the
@@ -2954,6 +2996,25 @@ mod tests {
         .unwrap();
         let n_cmp_eq = ops(&m).iter().filter(|o| *o == "cmp_eq").count();
         assert_eq!(n_cmp_eq, 3, "one cmp_eq per value WHEN: {:?}", ops(&m));
+        assert!(m.validate().is_empty(), "{:?}", m.validate());
+    }
+
+    #[test]
+    fn evaluate_multi_value_and_range_when_or_folds() {
+        // `WHEN 1 2 5 THRU 7` OR-folds cmp_eq (singles) and and(cmp_ge,cmp_le)
+        // (the range): so `or`, `and`, `cmp_ge`, `cmp_le` all appear.
+        let m = compile_source(
+            &wrap(
+                &["01  N  PIC 9(3) VALUE 5."],
+                &["EVALUATE N", "WHEN 1 2 5 THRU 7 DISPLAY \"X\"", "END-EVALUATE.", "STOP RUN."],
+            ),
+            "ev",
+        )
+        .unwrap();
+        let ops = ops(&m);
+        for want in ["or", "and", "cmp_ge", "cmp_le", "cmp_eq"] {
+            assert!(ops.contains(&want.to_string()), "expected `{want}`: {ops:?}");
+        }
         assert!(m.validate().is_empty(), "{:?}", m.validate());
     }
 

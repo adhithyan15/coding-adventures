@@ -230,6 +230,28 @@ fn evaluate_program_accepted_by_print_backends() {
 }
 
 #[test]
+fn evaluate_multi_value_range_program_accepted_by_print_backends() {
+    // A WHEN with several values and a THRU range OR-folds cmp_eq / and(cmp_ge,
+    // cmp_le) — the same bitwise machinery level-88 ranges use, no new opcode.
+    let src = program(&[
+        "IDENTIFICATION DIVISION.",
+        "PROGRAM-ID. P.",
+        "DATA DIVISION.",
+        "WORKING-STORAGE SECTION.",
+        "01  N  PIC 9(3) VALUE 6.",
+        "PROCEDURE DIVISION.",
+        "MAIN.",
+        "    EVALUATE N",
+        "    WHEN 1 5 THRU 7 9 DISPLAY \"Y\"",
+        "    WHEN OTHER DISPLAY \"N\"",
+        "    END-EVALUATE.",
+        "    STOP RUN.",
+    ]);
+    let m = compile_source(&src, "evr").unwrap();
+    assert_accepted_by_print_backends(&m, "EVALUATE multi-value/range");
+}
+
+#[test]
 fn level_88_condition_name_program_accepted_by_print_backends() {
     // A level-88 condition-name lowers to a plain `const` + `cmp_eq` feeding the
     // same branch structure as a relational IF — no new opcode. Every print

@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.21.0 — `EVALUATE` multiple values and `THRU` ranges per `WHEN`
+
+- A `WHEN` now carries a value-*list*: `Stmt::Evaluate`'s branch `when` becomes
+  `Option<Vec<WhenValue>>` (`None` = `WHEN OTHER`), with `WhenValue::Single(Operand)`
+  / `WhenValue::Range(Operand, Operand)`. A branch matches when the subject equals
+  any single value or falls within any inclusive `THRU` range
+  (`WHEN 1 5 THRU 7 9`). Each side is an `Operand` (literal or data-name), evaluated
+  at match time. First matching branch runs (no fall-through); still iterative over
+  both branches and the values within a branch (no recursion).
+
 ## 0.20.0 — `EVALUATE` (case statement)
 
 - `Stmt::Evaluate { subject, branches }` — COBOL's case statement. Each branch's

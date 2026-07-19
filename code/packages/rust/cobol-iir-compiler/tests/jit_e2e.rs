@@ -386,6 +386,37 @@ fn evaluate_on_a_scaled_subject() {
 }
 
 #[test]
+fn evaluate_multi_value_and_thru_ranges() {
+    // A WHEN with several values and a WHEN with a THRU range — each byte-identical
+    // to the oracle (run_if asserts that). Multi-value OR-folds cmp_eq; a range is
+    // and(cmp_ge, cmp_le).
+    let body = &[
+        "EVALUATE N",
+        "WHEN 1 2 5 DISPLAY \"SET\"",
+        "WHEN 7 THRU 9 DISPLAY \"RANGE\"",
+        "WHEN OTHER DISPLAY \"OTHER\"",
+        "END-EVALUATE.",
+        "STOP RUN.",
+    ];
+    assert_eq!(run_if("2", body), "SET\n"); // listed value
+    assert_eq!(run_if("5", body), "SET\n"); // last of the list
+    assert_eq!(run_if("7", body), "RANGE\n"); // range low boundary
+    assert_eq!(run_if("9", body), "RANGE\n"); // range high boundary
+    assert_eq!(run_if("6", body), "OTHER\n"); // between the sets → OTHER
+    // A WHEN mixing singles and a range: WHEN 1 5 THRU 7 9 = {1} ∪ {5,6,7} ∪ {9}.
+    let mixed = &[
+        "EVALUATE N",
+        "WHEN 1 5 THRU 7 9 DISPLAY \"Y\"",
+        "WHEN OTHER DISPLAY \"N\"",
+        "END-EVALUATE.",
+        "STOP RUN.",
+    ];
+    for (n, want) in [("1", "Y\n"), ("6", "Y\n"), ("9", "Y\n"), ("4", "N\n"), ("8", "N\n")] {
+        assert_eq!(run_if(n, mixed), want, "N={n}");
+    }
+}
+
+#[test]
 fn if_compound_condition_mixing_condition_names() {
     // A level-88 condition-name combined with a relation via AND/OR.
     let out = assert_matches_oracle(&wrap(

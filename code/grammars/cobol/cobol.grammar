@@ -117,13 +117,15 @@ move_stmt     = "MOVE" operand "TO" NAME { NAME } ;
 # SET a level-88 condition-name TRUE: assign its conditional variable the value
 # that makes the name hold (its first VALUE).
 set_stmt      = "SET" NAME "TO" "TRUE" ;
-# EVALUATE: COBOL's case statement. Compare the subject against each WHEN value
-# top-to-bottom; the FIRST match runs its statements (no fall-through), else the
-# WHEN OTHER branch. `END-EVALUATE` closes the scope; a WHEN's statement list ends
-# at the next WHEN or END-EVALUATE (both keywords, so a statement can't consume
-# them). This first cut is the simple form: one value per WHEN, numeric subject.
+# EVALUATE: COBOL's case statement. Compare the subject against each WHEN's
+# value-list top-to-bottom; the FIRST branch that matches runs its statements (no
+# fall-through), else the WHEN OTHER branch. A WHEN may list several values and
+# inclusive `THRU` ranges (`WHEN 1 5 THRU 7 9`). `END-EVALUATE` closes the scope; a
+# WHEN's statement list ends at the next WHEN or END-EVALUATE (both keywords, so a
+# statement can't consume them). Numeric subject this cut.
 evaluate_stmt = "EVALUATE" operand { when_branch } "END-EVALUATE" ;
-when_branch   = "WHEN" ( "OTHER" | operand ) { statement } ;
+when_branch   = "WHEN" ( "OTHER" | when_value { when_value } ) { statement } ;
+when_value    = operand [ ( "THRU" | "THROUGH" ) operand ] ;
 display_stmt  = "DISPLAY" operand { operand } ;
 accept_stmt   = "ACCEPT" NAME ;
 # The four arithmetic verbs share two optional trailing clauses with COMPUTE:

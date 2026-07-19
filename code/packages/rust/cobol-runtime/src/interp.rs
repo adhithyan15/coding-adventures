@@ -5,6 +5,7 @@ use crate::error::RuntimeError;
 use crate::picture::Picture;
 use crate::program::{
     ArithOp, Cond, Expr, Fig, Lit, Operand, Paragraph, PerformMode, Program, RelOp, Stmt, ValueSpec,
+    WhenValue,
 };
 use crate::value::{add, div, move_into_char, move_into_numeric, mul, pow, round, sub, Decimal};
 use std::collections::HashMap;
@@ -360,19 +361,38 @@ impl Machine {
     fn exec_evaluate(
         &mut self,
         subject: &Operand,
-        branches: &[(Option<Operand>, Vec<Stmt>)],
+        branches: &[(Option<Vec<WhenValue>>, Vec<Stmt>)],
     ) -> Result<Flow, RuntimeError> {
         let subj = self.operand_decimal(subject)?;
         for (when, stmts) in branches {
             let matches = match when {
                 None => true, // WHEN OTHER
-                Some(value) => subj.cmp_value(&self.operand_decimal(value)?) == std::cmp::Ordering::Equal,
+                Some(values) => self.subject_in_when(&subj, values)?,
             };
             if matches {
                 return self.run_stmts(stmts);
             }
         }
         Ok(Flow::Normal)
+    }
+
+    /// Whether the subject equals any single `WHEN` value or falls within any
+    /// inclusive `THRU` range in the list.
+    fn subject_in_when(&self, subj: &Decimal, values: &[WhenValue]) -> Result<bool, RuntimeError> {
+        use std::cmp::Ordering;
+        for wv in values {
+            let hit = match wv {
+                WhenValue::Single(v) => subj.cmp_value(&self.operand_decimal(v)?) == Ordering::Equal,
+                WhenValue::Range(lo, hi) => {
+                    subj.cmp_value(&self.operand_decimal(lo)?) != Ordering::Less
+                        && subj.cmp_value(&self.operand_decimal(hi)?) != Ordering::Greater
+                }
+            };
+            if hit {
+                return Ok(true);
+            }
+        }
+        Ok(false)
     }
 
     /// `SET cond-name TO TRUE` — assign the condition-name's conditional variable
