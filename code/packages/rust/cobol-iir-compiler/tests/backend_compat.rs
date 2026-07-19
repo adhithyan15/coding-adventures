@@ -149,6 +149,27 @@ fn if_else_program_accepted_by_print_backends() {
 }
 
 #[test]
+fn level_88_condition_name_program_accepted_by_print_backends() {
+    // A level-88 condition-name lowers to a plain `const` + `cmp_eq` feeding the
+    // same branch structure as a relational IF — no new opcode. Every print
+    // backend must accept it.
+    let src = program(&[
+        "IDENTIFICATION DIVISION.",
+        "PROGRAM-ID. P.",
+        "DATA DIVISION.",
+        "WORKING-STORAGE SECTION.",
+        "01  STATUS-CODE  PIC 9 VALUE 1.",
+        "88  IS-OK  VALUE 1.",
+        "PROCEDURE DIVISION.",
+        "MAIN.",
+        "    IF IS-OK DISPLAY \"OK\" ELSE DISPLAY \"NO\".",
+        "    STOP RUN.",
+    ]);
+    let m = compile_source(&src, "c88").unwrap();
+    assert_accepted_by_print_backends(&m, "level-88 condition-name");
+}
+
+#[test]
 fn scaled_multiply_divide_program_accepted_by_print_backends() {
     // Scaled MULTIPLY and DIVIDE (with ROUNDED) exercise the dividend up-scale
     // (mul by 10^e), the div, and the store rescale/rounding branches. Every

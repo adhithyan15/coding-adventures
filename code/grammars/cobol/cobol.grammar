@@ -156,11 +156,19 @@ perform_varying = "VARYING" NAME "FROM" operand "BY" operand "UNTIL" condition ;
 goto_stmt     = "GO" [ "TO" ] NAME ;
 stop_stmt     = "STOP" ( "RUN" | NUMBER | STRING ) ;
 
-# IF: a simple relational condition, a then-branch of statements, optional ELSE.
-# Nested sentences terminate at the enclosing sentence's period.
-if_stmt   = "IF" condition { statement } [ "ELSE" { statement } ] ;
-condition = operand relop operand ;
-relop     = [ "IS" ] [ "NOT" ]
+# IF: a relational condition or a level-88 condition-name, a then-branch of
+# statements, optional ELSE.  Nested sentences terminate at the enclosing
+# sentence's period.
+#
+# A `condition` is either a relation (`operand relop operand`) or a bare
+# condition-name declared by a level-88 entry.  The ordered choice tries the
+# relation first; a bare condition-name has no relop after its NAME, so the
+# relation alternative fails and the parser falls back to `condition_name`.
+if_stmt        = "IF" condition { statement } [ "ELSE" { statement } ] ;
+condition      = relation | condition_name ;
+relation       = operand relop operand ;
+condition_name = NAME ;
+relop          = [ "IS" ] [ "NOT" ]
             ( "GREATER" [ "THAN" ] | "LESS" [ "THAN" ] | "EQUAL" [ "TO" ] ) ;
 
 # ============================================================

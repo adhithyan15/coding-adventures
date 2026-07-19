@@ -124,11 +124,22 @@ fn overpunch_trailing(magnitude: &str, neg: bool) -> String {
 pub struct Machine {
     items: Vec<Item>,
     by_name: HashMap<String, usize>,
+    /// Level-88 condition-names → the item they qualify and the value that makes
+    /// them true. `IF IS-OK` tests `items[var] == value`.
+    conditions: HashMap<String, ConditionName>,
     paragraphs: Vec<Paragraph>,
     para_index: HashMap<String, usize>,
     /// Current `PERFORM` nesting depth, bounded by [`MAX_PERFORM_DEPTH`].
     perform_depth: usize,
     output: String,
+}
+
+/// A level-88 condition-name: the index of the item it qualifies (its
+/// "conditional variable") and the single value that makes it true. Multiple
+/// values and `THRU` ranges are a later rung.
+struct ConditionName {
+    var: usize,
+    value: Lit,
 }
 
 impl Machine {
@@ -144,6 +155,7 @@ impl Machine {
         let mut m = Machine {
             items: Vec::new(),
             by_name: HashMap::new(),
+            conditions: HashMap::new(),
             paragraphs: program.paragraphs.clone(),
             para_index,
             perform_depth: 0,
@@ -158,9 +170,29 @@ impl Machine {
         let mut stack: Vec<usize> = Vec::new();
 
         for def in &program.data {
+            // A level-88 entry is not an item — it declares a boolean
+            // condition-name that qualifies the most recently defined item (its
+            // "conditional variable"). Register it and move on: it takes no
+            // storage and never joins the item tree.
+            if def.level == 88 {
+                let name = def.name.clone().ok_or_else(|| {
+                    RuntimeError::Unsupported("a level-88 entry needs a condition-name".into())
+                })?;
+                let value = def.value.clone().ok_or_else(|| {
+                    RuntimeError::Unsupported("a level-88 entry needs a VALUE".into())
+                })?;
+                let var = self.items.len().checked_sub(1).ok_or_else(|| {
+                    RuntimeError::Unsupported("a level-88 entry must follow an item".into())
+                })?;
+                if self.conditions.insert(name.clone(), ConditionName { var, value }).is_some() {
+                    return Err(RuntimeError::DuplicateName(name));
+                }
+                continue;
+            }
+
             // Only the hierarchy levels 01–49 and the standalone 77 are modelled
-            // in v0.1. Rejecting anything else is faithful COBOL (66/88 are
-            // deferred features; 50+ are invalid) and bounds the item-tree depth
+            // in v0.1. Rejecting anything else is faithful COBOL (66 is a
+            // deferred feature; 50+ are invalid) and bounds the item-tree depth
             // to ≤ 49, so `group_image` recursion can never overflow the stack.
             if !(1..=49).contains(&def.level) && def.level != 77 {
                 return Err(RuntimeError::Unsupported(format!(
@@ -456,9 +488,54 @@ impl Machine {
     /// otherwise an alphanumeric (space-padded) character comparison — COBOL's
     /// rule. Figurative constants take the category/length of the other operand.
     fn eval_cond(&self, cond: &Cond) -> Result<bool, RuntimeError> {
+        match cond {
+            Cond::Relation { left, op, negated, right } => self.eval_relation(left, *op, *negated, right),
+            Cond::ConditionName(name) => self.eval_condition_name(name),
+        }
+    }
+
+    /// Evaluate a level-88 condition-name: is its conditional variable equal to
+    /// the value that makes it true? This rung compares a **numeric** variable
+    /// against a numeric value; an alphanumeric conditional variable is a later
+    /// rung (a clean error, never a wrong answer).
+    fn eval_condition_name(&self, name: &str) -> Result<bool, RuntimeError> {
+        let cn = self
+            .conditions
+            .get(name)
+            .ok_or_else(|| RuntimeError::UndefinedName(name.to_string()))?;
+        let item = &self.items[cn.var];
+        match &item.picture {
+            Some(p) if p.is_numeric() => {
+                let lhs = self.item_as_decimal(cn.var);
+                let rhs = match &cn.value {
+                    Lit::Num(s) => Decimal::parse_literal(s)
+                        .ok_or_else(|| RuntimeError::Unsupported(format!("VALUE {s}")))?,
+                    Lit::Fig(Fig::Zero) => Decimal::zero(),
+                    _ => {
+                        return Err(RuntimeError::Unsupported(
+                            "a level-88 VALUE that is not numeric on a numeric item is a later rung"
+                                .into(),
+                        ))
+                    }
+                };
+                Ok(lhs.cmp_value(&rhs) == std::cmp::Ordering::Equal)
+            }
+            _ => Err(RuntimeError::Unsupported(
+                "a level-88 condition-name on a non-numeric item is a later rung".into(),
+            )),
+        }
+    }
+
+    fn eval_relation(
+        &self,
+        left: &Operand,
+        op: RelOp,
+        negated: bool,
+        right: &Operand,
+    ) -> Result<bool, RuntimeError> {
         use std::cmp::Ordering;
-        let l = self.src_from_operand(&cond.left)?;
-        let r = self.src_from_operand(&cond.right)?;
+        let l = self.src_from_operand(left)?;
+        let r = self.src_from_operand(right)?;
 
         let ordering = match (&l, &r) {
             (Src::Num(a), Src::Num(b)) => a.cmp_value(b),
@@ -483,12 +560,12 @@ impl Machine {
             }
         };
 
-        let base = match cond.op {
+        let base = match op {
             RelOp::Greater => ordering == Ordering::Greater,
             RelOp::Less => ordering == Ordering::Less,
             RelOp::Equal => ordering == Ordering::Equal,
         };
-        Ok(base ^ cond.negated)
+        Ok(base ^ negated)
     }
 
     fn exec_display(&mut self, ops: &[Operand]) -> Result<(), RuntimeError> {

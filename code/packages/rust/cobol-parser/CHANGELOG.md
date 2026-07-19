@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.6.0 — level-88 condition-names in `IF` / `PERFORM UNTIL`
+
+- `condition` becomes an ordered choice `relation | condition_name`, where
+  `relation = operand relop operand` (the former body) and `condition_name = NAME`
+  (a bare level-88 condition-name, e.g. `IF IS-OK`). The relation is tried first;
+  a bare condition-name has no relop after its NAME, so the parser cleanly falls
+  back to `condition_name`. No lexer change — a condition-name is an ordinary NAME.
+- Level-88 data entries already parse as a `data_entry` (`88` is a NUMBER, `VALUE`
+  is a `value_clause`), so no data-division grammar change was needed — only the
+  *reference* site (`condition`) grew the new alternative.
+- `_grammar.rs` regenerated from `cobol.grammar` via `grammar-tools compile-grammar`.
+
 ## 0.5.0 — ROUNDED / ON SIZE ERROR on the arithmetic verbs
 
 - `add_stmt` / `subtract_stmt` / `multiply_stmt` / `divide_stmt` gain the trailing

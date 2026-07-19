@@ -320,6 +320,60 @@ fn nested_if_selects_the_inner_branch() {
     assert_eq!(out, "MID\n");
 }
 
+#[test]
+fn level_88_condition_name_true_and_false() {
+    // STATUS-CODE = 1 makes IS-OK true (IS-OK VALUE 1); the ELSE never runs.
+    let ok = assert_matches_oracle(&wrap(
+        &["01  STATUS-CODE  PIC 9 VALUE 1.", "88  IS-OK  VALUE 1.", "88  IS-DONE  VALUE 9."],
+        &["IF IS-OK DISPLAY \"OK\" ELSE DISPLAY \"NO\".", "STOP RUN."],
+    ));
+    assert_eq!(ok, "OK\n");
+    // The same variable does not satisfy IS-DONE (VALUE 9) → ELSE branch.
+    let done = assert_matches_oracle(&wrap(
+        &["01  STATUS-CODE  PIC 9 VALUE 1.", "88  IS-OK  VALUE 1.", "88  IS-DONE  VALUE 9."],
+        &["IF IS-DONE DISPLAY \"DONE\" ELSE DISPLAY \"NO\".", "STOP RUN."],
+    ));
+    assert_eq!(done, "NO\n");
+}
+
+#[test]
+fn level_88_condition_name_after_a_move() {
+    // The condition tracks its variable's live value: after MOVE 9, IS-DONE holds.
+    let out = assert_matches_oracle(&wrap(
+        &["01  STATUS-CODE  PIC 9 VALUE 1.", "88  IS-DONE  VALUE 9."],
+        &["MOVE 9 TO STATUS-CODE.", "IF IS-DONE DISPLAY \"DONE\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "DONE\n");
+}
+
+#[test]
+fn level_88_condition_name_on_a_scaled_variable() {
+    // A condition-name over a scaled item compares by value: RATE = 1.5 satisfies
+    // IS-HALF (VALUE 1.5) once both are taken to the slot's scaled representation.
+    let out = assert_matches_oracle(&wrap(
+        &["01  RATE  PIC 9V9 VALUE 1.5.", "88  IS-HALF  VALUE 1.5."],
+        &["IF IS-HALF DISPLAY \"HALF\" ELSE DISPLAY \"NO\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "HALF\n");
+}
+
+#[test]
+fn level_88_condition_name_drives_perform_until() {
+    // PERFORM STEP UNTIL IS-DONE: STEP adds 2 (1→3→5→7→9); stops at 9. The
+    // condition-name works anywhere a condition does, PERFORM UNTIL included.
+    let out = assert_matches_oracle(&wrap(
+        &["01  STATUS-CODE  PIC 9 VALUE 1.", "88  IS-DONE  VALUE 9."],
+        &[
+            "PERFORM STEP UNTIL IS-DONE.",
+            "DISPLAY STATUS-CODE.",
+            "STOP RUN.",
+            "STEP.",
+            "ADD 2 TO STATUS-CODE.",
+        ],
+    ));
+    assert_eq!(out, "9\n");
+}
+
 // -------------------------------------------------------------------------
 // Scaled-decimal ADD / SUBTRACT + item→item MOVE (PR3) — vs the oracle.
 // -------------------------------------------------------------------------

@@ -166,13 +166,21 @@ pub enum Operand {
     Lit(Lit),
 }
 
-/// A simple relational condition: `left <relop> right`, optionally negated.
+/// A condition tested by `IF` (and `PERFORM … UNTIL`). Either a relation between
+/// two operands, or a **level-88 condition-name** — a boolean shorthand a data
+/// entry declares for "does my parent item hold one of these values?".
 #[derive(Debug, Clone)]
-pub struct Cond {
-    pub left: Operand,
-    pub op: RelOp,
-    pub negated: bool,
-    pub right: Operand,
+pub enum Cond {
+    /// `left <relop> right`, optionally negated.
+    Relation {
+        left: Operand,
+        op: RelOp,
+        negated: bool,
+        right: Operand,
+    },
+    /// A bare condition-name (`IF IS-OK`). The interpreter resolves it against the
+    /// level-88 entries it collected while building the data model.
+    ConditionName(String),
 }
 
 /// The relational operator of a condition.
@@ -514,16 +522,26 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
     }
 }
 
-/// Read a `condition` node (`operand relop operand`).
+/// Read a `condition` node — either a `relation` (`operand relop operand`) or a
+/// bare `condition_name` (a level-88 shorthand).
 fn read_condition(cond: &GrammarASTNode) -> Result<Cond, RuntimeError> {
-    let operands = child_nodes(cond, "operand");
+    // A bare condition-name: `condition_name = NAME`.
+    if let Some(cn) = child_node(cond, "condition_name") {
+        let name = first_token(cn, "NAME")
+            .ok_or_else(|| RuntimeError::Unsupported("condition-name without a NAME".into()))?;
+        return Ok(Cond::ConditionName(name));
+    }
+    // Otherwise a relation: `operand relop operand`.
+    let relation = child_node(cond, "relation")
+        .ok_or_else(|| RuntimeError::Unsupported("condition must be a relation or a condition-name".into()))?;
+    let operands = child_nodes(relation, "operand");
     if operands.len() != 2 {
-        return Err(RuntimeError::Unsupported("condition must be `operand relop operand`".into()));
+        return Err(RuntimeError::Unsupported("relation must be `operand relop operand`".into()));
     }
     let left = read_operand(operands[0])?;
     let right = read_operand(operands[1])?;
-    let relop = child_node(cond, "relop")
-        .ok_or_else(|| RuntimeError::Unsupported("condition without a relational operator".into()))?;
+    let relop = child_node(relation, "relop")
+        .ok_or_else(|| RuntimeError::Unsupported("relation without a relational operator".into()))?;
     let toks = child_tokens(relop);
     let negated = toks.iter().any(|(k, v)| k == "KEYWORD" && v == "NOT");
     let op = toks
@@ -540,7 +558,7 @@ fn read_condition(cond: &GrammarASTNode) -> Result<Cond, RuntimeError> {
             }
         })
         .ok_or_else(|| RuntimeError::Unsupported("unrecognised relational operator".into()))?;
-    Ok(Cond { left, op, negated, right })
+    Ok(Cond::Relation { left, op, negated, right })
 }
 
 // ---------------------------------------------------------------------------
