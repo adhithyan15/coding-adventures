@@ -105,7 +105,7 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. Regenerated
-on July 18, 2026 after the paired Lua/Perl `fenwick-tree`, `binary-tree`,
+on July 19, 2026 after the paired Lua/Perl `fenwick-tree`, `binary-tree`,
 `binary-search-tree`, `in-memory-data-store-protocol`, `avl-tree`, `tree-set`,
 `skip-list`, `hyperloglog`, `trie`, `radix-tree`, and `resp-protocol` ports,
 the paired `hash-functions` prerequisite, the paired `bloom-filter`, `hash-map`,
@@ -116,17 +116,17 @@ ports, and the paired C#/F# `chacha20-poly1305`, `xml-lexer`, `block-ram`,
 `nib-wasm-compiler`, `dartmouth-basic-lexer`, and `dartmouth-basic-parser`
 ports, followed by the paired `ed25519`, `font-parser`, `asciidoc-parser`, and
 `fpga` ports, the paired C#/F# `zstd` ports, and the Haskell `atbash-cipher`,
-`scytale-cipher`, `feature-normalization`, `loss-functions`, `trig`, and `wave`
-ports:
+`scytale-cipher`, `feature-normalization`, `loss-functions`, `trig`, `wave`,
+`matrix`, `vigenere-cipher`, `uuid`, and `document-ast` ports:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 303 |
+| Present in 10-15 languages | 172 | 299 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,972 |
-| Present in one language | 703 | 9,842 |
+| Present in one language | 705 | 9,870 |
 
-The loop must not start by attempting 9,842 singleton ports. It should finish
+The loop must not start by attempting 9,870 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 ## Priority 0: Inventory And Identity Integrity
@@ -167,7 +167,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 172 packages present in at least ten implementation languages need 300
+The 172 packages present in at least ten implementation languages need 299
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -178,7 +178,7 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Perl | 0 | Complete; paired data-structure/storage wave |
 | C# | 0 | Complete; paired native package wave |
 | F# | 0 | Complete; paired native package wave |
-| Haskell | 25 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
+| Haskell | 24 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
 | Kotlin | 58 | Move with Java |
@@ -471,6 +471,16 @@ and byte round trips, all variants, RFC name-based vectors, Unicode names,
 random uniqueness, multicast nodes, and v7 timestamps. The package now spans
 14 implementation lanes, reduces the high-consensus backlog to 300 slots, and
 leaves 25 gaps in the Haskell lane.
+
+The tenth Haskell high-consensus slice is complete: `document-ast` now provides
+immutable algebraic data types for the TE00 block and inline model together
+with the shared GFM task-list, strikethrough, and table extensions. Exhaustive
+unions and stable discriminator helpers support typed parser and renderer
+traversal without external dependencies. Its package-native suite exercises
+11 examples with 100% expression and alternative coverage across every node
+family, payload accessor, nesting shape, and discriminator. The package now
+spans 14 implementation lanes, reduces the high-consensus backlog to 299 slots,
+and leaves 24 gaps in the Haskell lane.
 
 Recommended family order:
 
