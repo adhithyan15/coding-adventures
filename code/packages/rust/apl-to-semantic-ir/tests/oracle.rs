@@ -84,109 +84,77 @@
 //! later statement, and a printed matrix (2-D display, not just a vector
 //! line).
 //!
-//! Deliberately absent from `CORPUS`: any monadic use of `- × ÷ ⌈ ⌊`. Every
-//! one of the 5 (every monadic scalar atom except `+`, a genuine no-op) is
-//! broken in the compiled path today, in one of three ways — see "Bugs
-//! found" below. `CORPUS` sticks to what round-trips correctly: all 12
-//! dyadic scalar atoms (via plain `ElementwiseOp`, unaffected — see
-//! `comparison_true`/`false`, `right_to_left_no_operator_precedence`,
-//! `scalar_vector_broadcast` above) and monadic `+` (a true pass-through,
-//! per this crate's own README table, so trivial to the point of not
-//! needing its own corpus entry).
+//! `CORPUS` also covers all 5 non-`+` monadic scalar atoms (`- × ÷ ⌈ ⌊`) —
+//! see "Three genuine bugs, now fixed" below for why they were absent when
+//! this file was first written, and `monadic_negate_scalar`/
+//! `monadic_negate_array`/`monadic_sign_positive`/`monadic_sign_negative`/
+//! `monadic_sign_zero`/`monadic_reciprocal`/`monadic_ceiling`/
+//! `monadic_floor` (further down `CORPUS`) for the cases themselves.
+//! Monadic `+` (conjugate) remains without its own entry: a true
+//! pass-through per this crate's own README table, trivial to the point of
+//! not needing one.
 //!
-//! ## Three genuine, previously-undiscovered bugs found while building this
-//! harness — EXCLUDED from `CORPUS`, not fixed here (out of scope: fixing
-//! any of them needs a change to `semantic-ir-to-javascript`, a separate
-//! crate)
+//! ## Three genuine bugs, now fixed (`semantic-ir-to-javascript` 0.43.0)
 //!
-//! None of the three is exercised by any of this crate's existing tests
-//! (`test_lower.rs`, `test_validator.rs`, `e2e_node.rs`) or mentioned in
-//! `apl-to-semantic-ir`'s own `README.md`/`CHANGELOG.md` — all three were
-//! only ever found by hand-checking the actual generated JavaScript and
-//! `node`'s stdout/stderr while scoping this corpus (specifically, while
-//! trying to add monadic-atom coverage per this task's own suggestion),
-//! i.e. this oracle harness doing exactly the job HML01 §7 describes. All
-//! three trace back to the same underlying story: **this frontend's
-//! monadic-scalar-atom lowering (`- × ÷ ⌈ ⌊`) was designed and documented
-//! (0.1.0's README/CHANGELOG) but never actually exercised end to end
-//! through a real backend + `node`** — `e2e_node.rs`'s 9 tests all happen
-//! to use dyadic operators or the SIR22-addendum operators exclusively.
+//! While this file was first being written, every monadic use of `- × ÷ ⌈
+//! ⌊` (every monadic scalar atom except `+`, a genuine no-op) was broken in
+//! the compiled path, in one of three ways — discovered by hand-checking
+//! the actual generated JavaScript and `node`'s stdout/stderr while scoping
+//! this corpus, i.e. this oracle harness doing exactly the job HML01 §7
+//! describes. None of the three was exercised by any of this crate's other
+//! tests (`test_lower.rs`, `test_validator.rs`, `e2e_node.rs`, whose 9
+//! `e2e_node.rs` cases all happen to use dyadic operators or the
+//! SIR22-addendum operators exclusively) or mentioned in this crate's own
+//! `README.md`/`CHANGELOG.md` prior to their discovery. All three lived in
+//! `semantic-ir-to-javascript` (a separate, SHARED backend crate serving
+//! many frontends), so were deliberately reported as follow-ups rather than
+//! fixed in the PR that added this file — fixed in that crate's 0.43.0
+//! (see its `CHANGELOG.md` for the full writeup); `CORPUS` now exercises
+//! every case below directly.
 //!
-//! 1. **Monadic `-` (negate) on a bare SCALAR prints the right NUMBER with
-//!    the WRONG GLYPH: ASCII `-5`, not APL's own high-minus `¯5`.** `-5`
-//!    gives `apl-runtime`'s correct `¯5`, but the compiled path prints
-//!    `-5` (confirmed live: `monadic_negate_scalar` was in an earlier
-//!    draft of `CORPUS` as a presumed-working case and failed this exact
-//!    way). Root cause, traced through `runtime.rs`: `emit.rs` compiles
-//!    monadic `-` to `__Sir.neg(x)`, and `neg` (for an unboxed operand)
-//!    returns a *plain native JS number* (`isFloat(x) ? mkFloat(-numOf(x))
-//!    : -numOf(x)` — a bare integer stays a bare integer). `print`'s
-//!    `formatSeen` dispatch checks `typeof v === "number"` (returning
-//!    `String(v)`, i.e. ASCII formatting) *before* it ever reaches the
-//!    NDArray branch that calls `ArrayRt.display` (APL's own high-minus
-//!    convention — see the "No `normalize()`" section above). So ANY bare
-//!    (non-NDArray-boxed) JS number printed via APL's auto-print path gets
-//!    the wrong glyph for a negative value — this is not specific to `neg`,
-//!    it would affect any expression whose SIR-level value is a raw scalar
-//!    rather than a genuine (even rank-0) NDArray, but `neg` is the only
-//!    monadic atom that reaches `print` with a value at all (the other
-//!    four crash first — see #3 below) so it's the only one this shows up
-//!    on today. The value is numerically correct; only the printed
-//!    spelling is wrong, which is nonetheless a real bug given this
-//!    crate's whole point is reproducing APL's OWN console convention
-//!    (`src/value.rs`'s own `negative_numbers_use_high_minus_not_ascii`
-//!    test asserts exactly this glyph, just on the `apl-runtime` side).
-//! 2. **Monadic `-` (negate) on a genuine ARRAY (rank ≥ 1) silently
-//!    computes `NaN` instead of the correctly negated array** — a wrong
-//!    VALUE, not just a wrong glyph. `-1 2 ¯3` (negate the 3-element vector
-//!    `1 2 ¯3`) gives `apl-runtime`'s correct `¯1 ¯2 3`, but the compiled
-//!    path prints `NaN`. Root cause: `neg`'s `numOf` (same file) only
-//!    unwraps a boxed `SirFloat` or a *rank-0* (`x.shape.length === 0`)
-//!    NDArray — a genuine rank-1 NDArray (exactly what a stranded literal
-//!    like `1 2 ¯3` lowers to, per the `Ravel`-wrapping fix in 0.1.3) fails
-//!    both checks and passes through `numOf` unchanged, so `neg` computes
-//!    native JS unary-minus on a plain object, which coerces to `NaN`.
-//!    Same failure *class* as the (now-fixed) MATLAB oracle file's
-//!    while-loop/unary-minus-on-power bug — `numOf` not recognizing an
-//!    NDArray shape it should have — but a different, still-open instance:
-//!    that fix only taught `numOf` to unwrap a *rank-0* NDArray; it was
-//!    never taught anything about a genuine rank-≥1 array, and doing so
-//!    wouldn't even be the right fix for `neg` specifically — negating a
-//!    real array needs to produce a new array (elementwise), not coerce to
-//!    a single unwrapped number the way a comparison/subtraction against a
-//!    scalar-shaped array correctly does.
-//! 3. **Monadic `× ÷ ⌈ ⌊` (sign/reciprocal/ceiling/floor) crash with
-//!    `TypeError: unknown builtin: <name>` for EVERY operand, scalar or
-//!    array — not a wrong-value/wrong-glyph bug like #1/#2, a hard runtime
-//!    crash.** Confirmed live for all four (`×5`, `÷4`, `⌈3.2`, `⌊3.8` each
-//!    threw `TypeError: unknown builtin: sign` / `recip` / `ceil` / `floor`
-//!    respectively). Root cause: `apl-to-semantic-ir`'s own README/
-//!    `src/lower.rs` documents these exact four names as the intended
-//!    `BuiltinCall` targets for monadic `× ÷ ⌈ ⌊` — but
-//!    `semantic-ir-to-javascript` never actually implements any of them.
-//!    `emit.rs`'s `emit_builtin_call` has a fixed 1-arg match (`"not"`,
-//!    `"matlab_truthy"`, `"neg"`, `"len"`) and a fixed named-helper table
-//!    (`print`/`puts`/`cons`/`car`/`cdr`/`pair?`/`null?`/`number?`/
-//!    `symbol?`) — neither lists any of the four, so all four fall through
-//!    to the generic `__Sir.callBuiltin(name, args)` path (documented in
-//!    that same file as the correct behavior for "a new builtin [that]
-//!    needs no backend change to *run*" — except here it was never added
-//!    to `runtime.rs`'s `builtins` dispatch table either, so the fallback
-//!    itself throws instead of running). `runtime.rs` does have `"floor"`/
-//!    `"ceil"` cases, but they live in a completely different mechanism — a
-//!    Ruby-style `__method__` dispatch switch keyed on method name
-//!    (`7.5.floor`), never reachable from a bare top-level `BuiltinCall`
-//!    the way APL's monadic atoms emit one. `"sign"`/`"recip"` do not exist
-//!    ANYWHERE in either file. This looks like a pure omission — these
-//!    four builtins were designed and documented (this crate's own 0.1.0
-//!    CHANGELOG/README) but never actually given backend implementations.
-//!
-//! All three are reported in this PR's summary as follow-up items (and
-//! flagged as a spawned background task) rather than fixed inline, per
-//! this task's explicit scope boundary. Net effect: monadic `- × ÷ ⌈ ⌊`
-//! (5 of APL's 6 monadic-capable atoms) are ALL broken end to end through
-//! the compiled path today, in three different ways — only monadic `+`
-//! (the no-op) is unaffected.
+//! 1. **FIXED: monadic `-` (negate) on a bare SCALAR printed the right
+//!    NUMBER with the WRONG GLYPH: ASCII `-5`, not APL's own high-minus
+//!    `¯5`.** Root cause: the glyph decision was implicitly tied to
+//!    whether a value happened to already be a genuine `NDArray` by the
+//!    time it reached `print` — but a bare `-5` compiles to a bare
+//!    `__Sir.neg(5)` call (APL has no dyadic-op wrapping for a monadic atom
+//!    applied directly to a literal), so it never was one, and always fell
+//!    through `formatSeen`'s ASCII `typeof v === "number"` branch. Fixed by
+//!    moving the glyph decision into `formatSeen` itself, gated by a new
+//!    per-module flag (`SIR_DISPLAY_APL_HIGH_MINUS`, mirroring the existing
+//!    `SIR_DISPLAY_RUBY` boolean-spelling flag) rather than the value's own
+//!    shape — necessary because a rank-0 `NDArray` turns out NOT to be
+//!    unique to APL (`matlab-to-semantic-ir`'s `2 ^ 2` reaches the
+//!    identical representation via `ElementwiseOp::Pow`, yet must keep
+//!    printing ASCII `-4`), so only the source language can decide.
+//!    `monadic_negate_scalar` below is the regression case.
+//! 2. **FIXED: monadic `-` (negate) on a genuine ARRAY (rank ≥ 1) silently
+//!    computed `NaN` instead of the correctly negated array.** `-1 2 ¯3`
+//!    now gives `apl-runtime`'s correct `¯1 ¯2 3` on both sides. Root
+//!    cause: `neg` always unwrapped through `numOf`, which only recognised
+//!    a *rank-0* NDArray; a genuine rank-1 NDArray (what a stranded literal
+//!    like `1 2 ¯3` lowers to) passed through unchanged, so native JS
+//!    unary-minus coerced it to `NaN`. Fixed: `neg` now recognises a
+//!    genuine NDArray of rank ≥ 1 and maps `-` elementwise into a NEW
+//!    NDArray with the same shape. `monadic_negate_array` below is the
+//!    regression case.
+//! 3. **FIXED: monadic `× ÷ ⌈ ⌊` (sign/reciprocal/ceiling/floor) crashed
+//!    with `TypeError: unknown builtin: <name>` for EVERY operand, scalar
+//!    or array.** Root cause: this crate's own `src/lower.rs`/README
+//!    documented `"sign"`/`"recip"`/`"ceil"`/`"floor"` as the intended
+//!    `BuiltinCall` targets, but `semantic-ir-to-javascript` never
+//!    registered any of the four in its `builtins` dispatch table (the
+//!    generic `__Sir.callBuiltin` fallback every unrecognised builtin name
+//!    routes through), so all four crashed unconditionally — a pure
+//!    omission, not a subtler bug. Fixed: all four are now registered,
+//!    ported 1:1 from `apl_runtime::eval::apply_monadic_scalar`/`apl_sign`.
+//!    `monadic_sign_positive`/`monadic_sign_negative`/`monadic_sign_zero`/
+//!    `monadic_reciprocal`/`monadic_reciprocal_zero`/`monadic_ceiling`/
+//!    `monadic_floor` below are the regression cases — `monadic_sign_zero`
+//!    and `monadic_reciprocal_zero` specifically pin down the `sign(0) ==
+//!    0` (not `f64::signum()`'s `1`-for-`+0`) and `recip(0) == Infinity`
+//!    (never an error) edge cases the ground-truth reference calls out
+//!    explicitly.
 
 use std::fs::OpenOptions;
 use std::io::Write as _;
@@ -344,10 +312,72 @@ const CORPUS: &[Case] = &[
         source: "2 2⍴1 2 3 4\n",
         expected: "1 2\n3 4",
     },
-    // No monadic `- × ÷ ⌈ ⌊` entry: every one of the 5 non-`+` monadic
-    // scalar atoms is broken in the compiled path today -- see this file's
-    // module doc "Bugs found" section (#1 wrong glyph, #2 wrong value, #3
-    // hard crash).
+    // --- Monadic scalar atoms (`- × ÷ ⌈ ⌊`), previously excluded entirely
+    // -- see this file's module doc "Three genuine bugs, now fixed" section
+    // for the full root-cause writeup of each bug these cases regression-
+    // guard. (Monadic `+`, conjugate, is a true pass-through with no
+    // interesting case of its own -- see this crate's own README table.)
+    //
+    // Bug #1 (wrong glyph) and bug #2 (wrong value, NaN) both traced back
+    // to the SAME builtin, `neg` -- these two cases are its regression
+    // guards. `-5` is a BARE scalar (no dyadic wrapping at all: APL has no
+    // literal-only fast path, but a monadic atom applied directly to a
+    // literal never goes through `ElementwiseOp` either), so it is the
+    // case that used to print ASCII `-5` instead of `¯5`.
+    Case {
+        name: "monadic_negate_scalar",
+        source: "-5\n",
+        expected: "¯5",
+    },
+    // `1 2 ¯3` is a genuine rank-1 vector (stranded literal, wrapped in
+    // `Ravel` per the 0.1.3 fix) -- negating it used to silently compute
+    // `NaN` instead of the correctly negated `¯1 ¯2 3`.
+    Case {
+        name: "monadic_negate_array",
+        source: "-1 2 ¯3\n",
+        expected: "¯1 ¯2 3",
+    },
+    // Bug #3 (hard `TypeError: unknown builtin` crash) covered `sign`/
+    // `recip`/`ceil`/`floor` -- one case per builtin below, plus the two
+    // edge cases `apl_runtime::eval::apl_sign`/`apply_monadic_scalar`'s own
+    // doc comments call out explicitly: `sign(0) == 0` (NOT
+    // `f64::signum()`'s `1`-for-positive-zero convention) and
+    // `recip(0) == Infinity` (never an error/`NaN`).
+    Case {
+        name: "monadic_sign_positive",
+        source: "×5\n",
+        expected: "1",
+    },
+    Case {
+        name: "monadic_sign_negative",
+        source: "×¯5\n",
+        expected: "¯1",
+    },
+    Case {
+        name: "monadic_sign_zero",
+        source: "×0\n",
+        expected: "0",
+    },
+    Case {
+        name: "monadic_reciprocal",
+        source: "÷4\n",
+        expected: "0.25",
+    },
+    Case {
+        name: "monadic_reciprocal_zero",
+        source: "÷0\n",
+        expected: "∞",
+    },
+    Case {
+        name: "monadic_ceiling",
+        source: "⌈3.2\n",
+        expected: "4",
+    },
+    Case {
+        name: "monadic_floor",
+        source: "⌊3.8\n",
+        expected: "3",
+    },
 ];
 
 /// Ground truth: run `source` through `apl-runtime`'s own `eval`, which
