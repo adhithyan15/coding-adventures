@@ -70,21 +70,32 @@ fn high_minus_negative_float_literal() {
 }
 
 #[test]
-fn stranded_literal_is_a_single_row_array_lit() {
+fn stranded_literal_is_a_ravelled_single_row_array_lit_rank_1_vector() {
+    // A stranded literal must lower to a genuine rank-1 vector, not the
+    // genuinely rank-2 `[1, n]` "row vector" a bare single-row `ArrayLit`
+    // represents on its own (see `semantic-ir`'s own `ArrayLit` doc comment
+    // in `nodes.rs`). The frontend achieves this by wrapping the single-row
+    // `ArrayLit` in `Expr::Ravel`, which flattens it down to a true rank-1
+    // result -- see `lower_term`'s doc comment in `lower.rs` for the full
+    // explanation of why the bare `ArrayLit` alone was the wrong shape.
     let m = compile_ok("1 2 3\n");
     let main = main_fn(&m);
     match printed_value(&main.body.stmts[0]) {
-        Expr::ArrayLit { rows, .. } => {
-            assert_eq!(rows.len(), 1, "stranded literal must be a single row (rank-1 vector)");
-            assert_eq!(rows[0].len(), 3);
-            assert!(matches!(rows[0][0], Expr::IntLit { value: 1, .. }));
-            assert!(matches!(rows[0][1], Expr::IntLit { value: 2, .. }));
-            assert!(matches!(rows[0][2], Expr::IntLit { value: 3, .. }));
-        }
-        other => panic!("expected ArrayLit, got {other:?}"),
+        Expr::Ravel { target, .. } => match &**target {
+            Expr::ArrayLit { rows, .. } => {
+                assert_eq!(rows.len(), 1, "stranded literal's inner ArrayLit must be a single row");
+                assert_eq!(rows[0].len(), 3);
+                assert!(matches!(rows[0][0], Expr::IntLit { value: 1, .. }));
+                assert!(matches!(rows[0][1], Expr::IntLit { value: 2, .. }));
+                assert!(matches!(rows[0][2], Expr::IntLit { value: 3, .. }));
+            }
+            other => panic!("expected Ravel's target to be ArrayLit, got {other:?}"),
+        },
+        other => panic!("expected Ravel wrapping ArrayLit, got {other:?}"),
     }
     assert!(m.manifest.iter().any(|f| f == Feature::NDArrays));
     assert!(m.manifest.iter().any(|f| f == Feature::ArrayColumnMajor));
+    assert!(m.manifest.iter().any(|f| f == Feature::MatrixOps));
 }
 
 #[test]
@@ -245,7 +256,9 @@ fn reduce_over_stranded_vector() {
     match printed_value(&main.body.stmts[0]) {
         Expr::Reduce { op, target, .. } => {
             assert_eq!(*op, ElementwiseOpKind::Add);
-            assert!(matches!(**target, Expr::ArrayLit { .. }));
+            // The stranded literal `1 2 3` now lowers to a `Ravel`-wrapped
+            // `ArrayLit` (a genuine rank-1 vector), not a bare `ArrayLit`.
+            assert!(matches!(**target, Expr::Ravel { .. }));
         }
         other => panic!("expected Reduce, got {other:?}"),
     }
@@ -306,6 +319,32 @@ fn outer_product_used_monadically_is_rejected() {
     );
 }
 
+#[test]
+fn outer_product_accepts_two_bare_stranded_literals_as_genuine_rank_1_operands() {
+    // Regression test for the stranded-literal-rank bug: before the fix, a
+    // bare stranded literal lowered to a bare (genuinely rank-2, `[1, n]`)
+    // `ArrayLit`, and `outer` is scoped to rank <= 1 operands only -- so
+    // `1 2∘.×3 4` would compile and validate fine here (this crate's Rust
+    // side never rank-checks; only `semantic-ir-to-javascript`'s runtime
+    // does), but throw at `node` runtime. See `tests/e2e_node.rs`'s
+    // `outer_product_of_two_bare_stranded_literals_runs_in_node` for the
+    // actual node-executed proof; this test only checks the IR shape: both
+    // operands must be `Expr::Ravel` (not a bare `Expr::ArrayLit`), which is
+    // what makes them genuinely rank-1 by construction.
+    let m = compile_ok("1 2∘.×3 4\n");
+    let main = main_fn(&m);
+    match printed_value(&main.body.stmts[0]) {
+        Expr::OuterProduct { op, lhs, rhs, .. } => {
+            assert_eq!(*op, ElementwiseOpKind::Mul);
+            assert!(matches!(**lhs, Expr::Ravel { .. }), "lhs must be Ravel-wrapped, not bare ArrayLit");
+            assert!(matches!(**rhs, Expr::Ravel { .. }), "rhs must be Ravel-wrapped, not bare ArrayLit");
+        }
+        other => panic!("expected OuterProduct, got {other:?}"),
+    }
+    let report = semantic_ir::validate(&m);
+    assert!(report.is_ok(), "expected clean validation, got: {:?}", report.errors().collect::<Vec<_>>());
+}
+
 // ── ⍴ (shape / reshape) ───────────────────────────────────────────────────
 
 #[test]
@@ -322,11 +361,40 @@ fn dyadic_rho_is_reshape_with_a_as_shape_and_b_as_target() {
     let main = main_fn(&m);
     match printed_value(&main.body.stmts[0]) {
         Expr::Reshape { shape, target, .. } => {
-            assert!(matches!(**shape, Expr::ArrayLit { .. }));
+            // The stranded literal `2 3` now lowers to a `Ravel`-wrapped
+            // `ArrayLit` (a genuine rank-1 vector), not a bare `ArrayLit`.
+            assert!(matches!(**shape, Expr::Ravel { .. }));
             assert!(matches!(**target, Expr::IntLit { value: 1, .. }));
         }
         other => panic!("expected Reshape, got {other:?}"),
     }
+}
+
+#[test]
+fn reshape_accepts_bare_stranded_literal_shape_and_target_as_genuine_rank_1_operands() {
+    // Regression test for the stranded-literal-rank bug: before the fix, a
+    // bare stranded literal used as dyadic `⍴`'s shape ARGUMENT (here, `2
+    // 3`) lowered to a bare (genuinely rank-2, `[1, n]`) `ArrayLit`, and
+    // `reshape` requires its shape argument to be rank <= 1 -- so this
+    // would compile and validate fine here (rank-checking is a
+    // `semantic-ir-to-javascript` runtime concern, not this crate's), but
+    // throw at `node` runtime. See `tests/e2e_node.rs`'s
+    // `reshape_with_bare_stranded_literal_shape_and_target_runs_in_node`
+    // for the actual node-executed proof; this test only checks the IR
+    // shape: the shape argument must be `Expr::Ravel` (not a bare
+    // `Expr::ArrayLit`), which is what makes it genuinely rank-1 by
+    // construction.
+    let m = compile_ok("2 3⍴1 2 3 4 5 6\n");
+    let main = main_fn(&m);
+    match printed_value(&main.body.stmts[0]) {
+        Expr::Reshape { shape, target, .. } => {
+            assert!(matches!(**shape, Expr::Ravel { .. }), "shape must be Ravel-wrapped, not bare ArrayLit");
+            assert!(matches!(**target, Expr::Ravel { .. }), "target must be Ravel-wrapped, not bare ArrayLit");
+        }
+        other => panic!("expected Reshape, got {other:?}"),
+    }
+    let report = semantic_ir::validate(&m);
+    assert!(report.is_ok(), "expected clean validation, got: {:?}", report.errors().collect::<Vec<_>>());
 }
 
 // ── ⍳ (index generator / index-of) ───────────────────────────────────────

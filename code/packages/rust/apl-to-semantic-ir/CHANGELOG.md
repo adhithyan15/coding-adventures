@@ -1,5 +1,77 @@
 # Changelog
 
+## [0.1.3] - 2026-07-18
+
+### Fixed
+
+- **Stranded literals (`1 2 3`) now lower to a genuine rank-1 vector,
+  closing the gap 0.1.2's changelog flagged and explicitly left as an
+  out-of-scope follow-up** ("Discovered (not fixed here...)" below).
+  Root cause was a doc-comment/implementation mismatch, not a design gap:
+  `lower_term`'s multi-number ("stranding") branch built a bare
+  `Expr::ArrayLit { rows: vec![row], .. }` directly, justified by a comment
+  claiming "`rows.len() == 1` is precisely how a row/rank-1 vector is
+  represented." That claim contradicted `semantic-ir`'s own `ArrayLit` doc
+  comment (`nodes.rs`), which is explicit that a 1-row literal is a *row
+  vector* — under this IR's MATLAB-derived column-major storage convention
+  (`Feature::ArrayColumnMajor`), that means a genuinely rank-2 `[1, n]`
+  value, not rank-1 `[n]`. This crate's own module doc comment always
+  stated the correct INTENT ("`1 2 3` → one rank-1 `Expr::ArrayLit`"); the
+  implementation simply picked the wrong IR node to realize it. The
+  consequence: any SIR22-addendum operation correctly scoped to rank <= 1
+  operands only — `outer` (`A∘.×B`) and dyadic `⍴`'s shape argument — threw
+  a clean runtime `Error` in the generated JS (`outer: operands of rank > 1
+  not yet supported`; `reshape: shape argument must be a scalar or vector`)
+  whenever given a bare stranded literal, even though real APL accepts one
+  there without hesitation.
+- **The fix**: `lower_term`'s stranding branch now builds the same
+  single-row `Expr::ArrayLit` as before, then wraps it in `Expr::Ravel`
+  (SIR22 addendum "monadic `,A`", which already existed and already
+  flattens any input rank down to a genuine rank-1 result — this crate's
+  own monadic `,A` lowering already builds the identical node for the
+  exact same reason). This is invisible to APL source: nothing about the
+  surface syntax changes, only which IR node shape represents a stranded
+  literal. No new `Feature` was needed: `Ravel` observes `MatrixOps` +
+  `ArrayColumnMajor` (on top of the `NDArrays` + `ArrayColumnMajor` the
+  inner `ArrayLit` already added), the same three features every other
+  SIR22-addendum node in this file already observes — `lower_term` now
+  adds `Feature::MatrixOps` alongside the two it already added, matching
+  what `semantic-ir`'s validator independently derives when it walks the
+  emitted `Expr::Ravel` node (omitting it would have made every stranded
+  literal fail validation with "manifest does not declare feature
+  `MatrixOps` but module uses it").
+- **`tests/test_lower.rs`**: three existing tests that asserted a stranded
+  literal's lowered shape directly against a bare `Expr::ArrayLit` now
+  match `Expr::Ravel { target, .. }` first and drill into `**target` for
+  the `ArrayLit` (or just the variant, where the row contents weren't the
+  point) — `stranded_literal_is_a_single_row_array_lit` (renamed
+  `stranded_literal_is_a_ravelled_single_row_array_lit_rank_1_vector` to
+  reflect the new shape), `reduce_over_stranded_vector`, and
+  `dyadic_rho_is_reshape_with_a_as_shape_and_b_as_target` (the `2 3` shape
+  argument). Two new regression tests added:
+  `outer_product_accepts_two_bare_stranded_literals_as_genuine_rank_1_operands`
+  (`1 2∘.×3 4`) and
+  `reshape_accepts_bare_stranded_literal_shape_and_target_as_genuine_rank_1_operands`
+  (`2 3⍴1 2 3 4 5 6`), both asserting the IR shape (`Ravel`-wrapped
+  operands) and clean `semantic_ir::validate`.
+- **`tests/e2e_node.rs`**: two new `node`-executed tests proving the bug is
+  actually fixed end to end, not just at the IR-shape level —
+  `outer_product_of_two_bare_stranded_literals_runs_in_node` (`+/,1
+  2∘.×3 4` → `21`) and
+  `reshape_with_bare_stranded_literal_shape_and_target_runs_in_node`
+  (`⍴2 3⍴1 2 3 4 5 6` → `"2 3"`), neither needing the `⍳`/`,` workaround
+  the file's existing tests use. Confirmed these would have failed before
+  the fix by reverting just the `lower.rs` change locally and re-running
+  them: `node` threw exactly the two errors described above (`outer:
+  operands of rank > 1 not yet supported (shapes [1,2], [1,2])` and
+  `reshape: shape argument must be a scalar or vector (got rank 2)`). The
+  file's module doc comment's "Two representational quirks" section, point
+  2, is updated to record that this gap is now closed — the existing
+  `⍳`/`,`-based tests are left untouched (they remain valid; they exercise
+  prefix order and ravel's row-major-vs-column-major correctness, not this
+  gap) since the workaround they use is harmless, just no longer
+  necessary.
+
 ## [0.1.2] - 2026-07-18
 
 ### Added
