@@ -30,6 +30,12 @@
   - `RU-W03-new-shapes-b-d` — writing **б** (b) and **д** (d, ← Greek delta), two
     shapes with no Latin disguise; contrasts б vs в (the top flag + one belly vs
     two bellies).
+  - `RU-W04-privet-letters-p-i` — writing **п** (p, ← Greek pi Π) and **и** (ee,
+    the quiet false friend — a *backwards* Latin N: its diagonal **rises** where
+    N's falls); contrasts п (top bar) vs н (middle bar).
+  - `RU-W05-privet-letters-e-t` — writing **е** (ye, an *iotated* honest vowel) and
+    **т** (t, ← Greek tau); **completes every letter of привет** (п·р·и·в·е·т), so
+    the learner can hand-write their first Russian word end to end.
 - Stroke data is the canonical `data/scripts/cyrillic.json` the companion
   `script-writing-visualizer` app renders, so the lessons and the app agree.
 
