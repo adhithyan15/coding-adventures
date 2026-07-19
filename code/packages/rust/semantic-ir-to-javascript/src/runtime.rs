@@ -224,6 +224,26 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     return v !== false && v !== null && v !== undefined;
   }
 
+  // Real MATLAB/Octave has no separate boolean type: logicals are doubles,
+  // and truthiness is "nonzero is true, zero is false" — the OPPOSITE
+  // convention from `truthy()` above (canonical SIR truthy(0) is `true`;
+  // MATLAB's `~0` is `1`, i.e. `0` is falsy there). A MATLAB/Octave-sourced
+  // value reaching a boolean context can be EITHER a genuine JS boolean
+  // (the output of a comparison/`~`/`&&`/`||`, which this backend already
+  // renders as native `true`/`false`) OR a bare number (a variable, a
+  // function-call result, an array-element read, …) that has never passed
+  // through a comparison at all — `matlabTruthy` handles both correctly in
+  // one place, so the frontend never has to prove, via static shape
+  // analysis alone, which case it's looking at (an earlier version of this
+  // fix tried exactly that — a lowering-time-only `!= 0` wrap gated on
+  // recognising "already boolean" shapes — and got it wrong for the most
+  // ordinary case, a variable holding a stored comparison result, silently
+  // inverting `false`; see `matlab-to-semantic-ir::lower::to_matlab_condition`
+  // for the corrected, always-wrap-through-here approach).
+  function matlabTruthy(x) {
+    return typeof x === "boolean" ? x : (numOf(x) !== 0);
+  }
+
   // ── display / formatting ───────────────────────────────────────
   // `format` renders any SIR value to the string `print` writes.
   // Strings render WITHOUT surrounding quotes (so `print` of a string
@@ -3334,7 +3354,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
 
   return {
     Sym, Pair, Closure,
-    intern, applyClosure, truthy, format, print, puts,
+    intern, applyClosure, truthy, matlabTruthy, format, print, puts,
     plus, times, divide,
     // Tagged floats (Ruby Integer vs Float). Exported so the emitter can
     // mint a boxed float at a `FloatLit` and route `-`/`%`/`neg` through

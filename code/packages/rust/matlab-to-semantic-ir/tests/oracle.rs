@@ -167,6 +167,28 @@
 //! genuine array/matrix (SIR22) cases already proven executable by
 //! `e2e_node.rs` (matrix multiplication, elementwise scalar broadcast),
 //! now cross-checked against `matlab-runtime` for the first time.
+//!
+//! - **FIXED: bare-numeric-value truthiness disagreed with MATLAB's
+//!   "logicals are doubles" convention.** MATLAB/Octave truthiness is
+//!   "nonzero is true, zero is false" for ANY number, not just a comparison
+//!   result — `~0` must be `1`, `~5` must be `0`. This frontend's
+//!   `lower_unary` (`~`), `lower_if`, `lower_while`, and `try_logical`
+//!   (`&&`/`||`) used to pass a bare numeric operand straight through to
+//!   the shared JS backend's `truthy()` runtime helper, which implements
+//!   SIR's OWN canonical truthiness instead (only `false`/`nil` are falsy —
+//!   the Ruby/Lisp convention `ruby-to-semantic-ir` genuinely depends on).
+//!   So `~0` compiled to `false` — backwards. `to_matlab_condition`
+//!   (`src/lower.rs`) now wraps a bare-numeric boolean-context operand in
+//!   an explicit `!= 0` SIR comparison at lowering time, leaving an
+//!   already-boolean operand (a comparison, `~`, or `&&`/`||` result)
+//!   unchanged. See `negation_of_bare_zero_is_true`,
+//!   `negation_of_bare_nonzero_is_false`, `if_bare_zero_condition_is_false`,
+//!   `if_bare_nonzero_condition_is_true`,
+//!   `logical_and_short_circuits_false_on_bare_zero_operand`, and
+//!   `logical_or_true_via_bare_nonzero_second_operand` below. (This gap was
+//!   first documented — deliberately sidestepped, not fixed — by
+//!   `octave-to-semantic-ir/tests/oracle.rs`'s `bang_negation_on_comparison`
+//!   case; see that file's updated doc comment.)
 
 use std::fs::OpenOptions;
 use std::io::Write as _;
@@ -287,6 +309,105 @@ const CORPUS: &[Case] = &[
         setup: "A = [1 2; 3 4];\nB = A .* 2;\n",
         final_expr: "B(2, 2)",
         expected: "8",
+    },
+    // Regression corpus for the (now-fixed) bare-numeric-truthiness bug:
+    // MATLAB has no separate boolean type -- "logicals are doubles", and
+    // truthiness is simply "nonzero is true, zero is false" for ANY number,
+    // not just a comparison result. `~0`/`~5` here negate a BARE numeric
+    // literal directly (no comparison in sight), unlike the `comparison`
+    // case above which negates a comparison RESULT (already a genuine JS
+    // boolean either way a truthy-check reads it). Before the fix, this
+    // frontend's `lower_unary`/`lower_if`/`lower_while`/`try_logical` passed
+    // a bare numeric operand straight through to `BuiltinCall("not", ..)` /
+    // `Expr::If` / `Stmt::While` / `Expr::LogicalAnd`/`LogicalOr` with no
+    // MATLAB-truthiness recoding; the shared JS backend's `truthy()` then
+    // read it under SIR's OWN canonical convention (only `false`/`nil` are
+    // falsy -- see `semantic-ir-to-javascript/src/runtime.rs`), so `~0`
+    // compiled to `false` (wrong; MATLAB's `~0` is `1`) while `matlab-
+    // runtime`'s own ground-truth interpreter (`src/eval.rs`: `Some("~") =>
+    // unary_map(&v, |x| if x == 0.0 { 1.0 } else { 0.0 })`) already got it
+    // right. The fix lives in THIS frontend's lowering
+    // (`to_matlab_condition`, `src/lower.rs`), not the shared runtime: a
+    // bare-numeric operand reaching a boolean context is now wrapped in an
+    // explicit `!= 0` SIR comparison at lowering time, so by the time any
+    // backend's truthy-check sees it, it already IS a genuine boolean --
+    // correct under either convention.
+    Case {
+        name: "negation_of_bare_zero_is_true",
+        setup: "",
+        final_expr: "~0",
+        expected: "1",
+    },
+    Case {
+        name: "negation_of_bare_nonzero_is_false",
+        setup: "",
+        final_expr: "~5",
+        expected: "0",
+    },
+    // `if` on a BARE numeric condition (no comparison at all). Same
+    // pre-declaration workaround as `if_else` above. Zero must NOT enter
+    // the `if` branch; any nonzero number must.
+    Case {
+        name: "if_bare_zero_condition_is_false",
+        setup: "y = 0;\nif 0\n  y = 1;\nelse\n  y = 2;\nend\n",
+        final_expr: "y",
+        expected: "2",
+    },
+    Case {
+        name: "if_bare_nonzero_condition_is_true",
+        setup: "y = 0;\nif 5\n  y = 1;\nelse\n  y = 2;\nend\n",
+        final_expr: "y",
+        expected: "1",
+    },
+    // Regression case for a second bug the first fix attempt introduced
+    // (`/security-review` caught it before push): a bare `VarRef` holding a
+    // STORED comparison result is never recognisably boolean by static
+    // shape analysis alone, so a lowering-time-only fix that decides
+    // "already boolean, skip the wrap" vs. "bare number, wrap in `!= 0`" by
+    // inspecting the operand's immediate shape gets this case wrong --
+    // `tf` gets wrapped in `tf != 0` regardless of its actual value, and
+    // the JS runtime's strict-identity `!=` (`numOf(a) !== numOf(b)`) makes
+    // `false != 0` unconditionally `true` (a `boolean` and a `number` are
+    // never `===`), silently taking the `if` branch no matter what `tf`
+    // holds. The fix (`to_matlab_condition` wrapping every operand in the
+    // `matlab_truthy` runtime intrinsic, unconditionally, deciding
+    // boolean-vs-number AT RUNTIME instead) makes this correct regardless
+    // of the operand's static shape. `y` must become `2` (`tf` is `false`).
+    Case {
+        name: "if_condition_on_a_variable_holding_a_stored_false_comparison",
+        setup: "y = 0;\ntf = (5 < 3);\nif tf\n  y = 1;\nelse\n  y = 2;\nend\n",
+        final_expr: "y",
+        expected: "2",
+    },
+    Case {
+        name: "if_condition_on_a_variable_holding_a_stored_true_comparison",
+        setup: "y = 0;\ntf = (5 > 3);\nif tf\n  y = 1;\nelse\n  y = 2;\nend\n",
+        final_expr: "y",
+        expected: "1",
+    },
+    // `&&`/`||` given a BARE-ZERO operand, observed through an `if` branch
+    // decision rather than a `disp`ed raw value -- `disp`ing a `LogicalAnd`/
+    // `LogicalOr` result directly is deliberately NOT done anywhere in this
+    // corpus (see the module doc's corpus-scope note): this frontend's
+    // short-circuit nodes return the Ruby-style "deciding operand" verbatim
+    // (`emit.rs`), while `matlab-runtime` returns a coerced 0.0/1.0 double
+    // (`eval.rs`'s `"&" | "&&"` arm) -- a representational difference
+    // unrelated to this bug, already excluded from the corpus. Routing
+    // through `if` sidesteps that mismatch entirely: only the BRANCH TAKEN
+    // is observed, which is representation-independent. `0 && 1` must be
+    // false (zero operand short-circuits); `0 || 5` must be true (the
+    // nonzero second operand decides).
+    Case {
+        name: "logical_and_short_circuits_false_on_bare_zero_operand",
+        setup: "y = 0;\nif 0 && 1\n  y = 1;\nelse\n  y = 2;\nend\n",
+        final_expr: "y",
+        expected: "2",
+    },
+    Case {
+        name: "logical_or_true_via_bare_nonzero_second_operand",
+        setup: "y = 0;\nif 0 || 5\n  y = 1;\nelse\n  y = 2;\nend\n",
+        final_expr: "y",
+        expected: "1",
     },
 ];
 
