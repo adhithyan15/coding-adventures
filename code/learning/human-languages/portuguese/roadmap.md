@@ -46,12 +46,16 @@ French.
   planet-gods (Bishop Martinho de Braga, 6th c.) → sábado/domingo (*Sabbatum* /
   *diēs Dominica*; *domingo* counted first, so Monday is *segunda* "second").
   **Authored.**
+- **Ch. 8 — Time & the clock**: hora (hour ← *hōra* ← Greek *hṓrā*; *horas* kept
+  explicit — *é uma hora* / *são duas horas*, with the *dois/duas* gender) →
+  meio-dia/meia-noite (noon/midnight; *noite* ← *noctem* shows the **ct→it** shift
+  from the numbers, like *oito*). **Authored.**
 
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |
 |---|---|
-| 8+ | Time & the clock, months, family, food — following the shared theme order |
+| 9+ | Months & seasons, family, food — following the shared theme order |
 
 Note: Portuguese's polite "you" is **você** (← *vossa mercê*, "your mercy") — the
 same "your grace" mechanism as Spanish *usted*, worn down differently. Worth

@@ -43,12 +43,15 @@ and Italian's habit of keeping final vowels Latin's other children dropped.
   accented *-dì* ← *diēs* kept audible; three-sister lines *lunedì/lunes/lundi*;
   *giovedì* = Giove/Jupiter) → sabato/domenica (*Sabbatum* / *diēs Dominica* "Lord's
   day," twins of Spanish *sábado/domingo*). **Authored.**
+- **Ch. 8 — Time & the clock**: ora (hour ← *hōra* ← Greek *hṓrā*; the **feminine
+  article** twist — *è l'una* but *sono le due*) → mezzogiorno/mezzanotte
+  (noon/midnight; *mezzo/mezza* ← *medius* + *giorno/notte*). **Authored.**
 
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |
 |---|---|
-| 8+ | Time & the clock, months, family, food — following the shared theme order |
+| 9+ | Months & seasons, family, food — following the shared theme order |
 
 Note: Italian's formal "you" is **Lei** — literally "she" (a 3rd-person
 politeness, like German *Sie*), a different mechanism from Spanish *usted* (a

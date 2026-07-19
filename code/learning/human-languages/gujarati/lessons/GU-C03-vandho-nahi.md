@@ -4,7 +4,7 @@ chapter: 3
 type: phrase
 headword: વાંધો નહીં
 gloss: no problem / it's okay / you're welcome
-concept_tag: YOURE-WELCOME
+concept_tag: COURTESY-YOUREWELCOME
 prerequisites: [GU-C01-haa-naa, GU-C01-aabhaar]
 sounds: [nasal-aa, no-top-line]
 roots: [na-negative]

@@ -47,12 +47,16 @@ Spanish and French where a contrast helps. The recurring decoder is the
   "mid-week" exception where the Church dropped Woden, mirroring English keeping
   *Wednesday*) → Samstag/Sonntag (*Samstag* ← *Sabbat*, the Sabbath, **not** Saturn,
   twin of Spanish *sábado*; *Sonntag* = Sun's day = *Sunday*). **Authored.**
+- **Ch. 8 — Time & the clock**: Uhr (clock/o'clock ← Latin *hōra* — the **standout
+  Latin loanword** in a Germanic system of native numbers & day-gods; *es ist zwei
+  Uhr*) → Mittag/Mitternacht (noon/midnight, **native** compounds *Mitte* + *Tag* /
+  *Nacht*, unlike the borrowed *Uhr*). **Authored.**
 
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 8+ | Cases (der→den→dem), time & the clock, family, food, sprechen & irregular verbs — following the shared theme order |
+| 9+ | Cases (der→den→dem), months & seasons, family, food, sprechen & irregular verbs — following the shared theme order |
 
 The **du / Sie** lesson (Ch. 2) completes the formal/informal set across the
 languages: Spanish *tú/usted* (from "your grace"), French *tu/vous* (the

@@ -46,12 +46,15 @@ compared, every Spanish form supplied in full (no prior Spanish assumed).
   = *[planet]* + *-di* ← *diēs*; *mardi* = Mars = English *Tuesday*/Tiw, the
   Roman-planet ↔ Germanic-god bridge) → samedi/dimanche (*Sabbatum* / *diēs
   Dominica* "Lord's day" — where religion overwrote the planets). **Authored.**
+- **Ch. 8 — Time & the clock**: heure (← *hōra* ← Greek *hṓrā* → *hour*; *il est
+  deux heures*, silent-h liaison) → midi/minuit (noon/midnight ← *medius diēs* /
+  *media nox* — "mid-day"/"mid-night"). **Authored.**
 
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |
 |---|---|
-| 8+ | Time & the clock, months, family, food — following the Spanish theme order, with the Spanish cousin supplied for contrast |
+| 9+ | Months & seasons, family, food — following the Spanish theme order, with the Spanish cousin supplied for contrast |
 
 The *tu/vous* lesson (Ch. 2) is the French counterpart to Spanish *tú/usted*:
 same formal/informal split, but French makes the formal from the **plural**

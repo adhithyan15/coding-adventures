@@ -1,5 +1,19 @@
 # Changelog
 
+## Chapter 8 — Time & the clock
+
+- **Chapter 8 authored** (`FR-C08-heure`, `-midi-minuit`): telling the time,
+  atom-first, reviewing Ch.6–7 via `reviews_of`.
+- **heure** ← Latin *hōra* ← Greek *hṓrā* ("a time of day," the *Horae* being the
+  season-goddesses) → English *hour*, the same word spelt apart (both keep the
+  silent Latin *h-*). Telling time: *il est une heure / deux heures* ("it is two
+  hours"), with the liaison *deu-z-eur*.
+- **midi / minuit** ← *medius diēs* "mid-day" / *media nox* "mid-night" — the two
+  unnumbered hours, each *mi-* ("middle," ← *medius*) + *-di* (*diēs*, the day of
+  *lundi*) / *-nuit* (*noctem*, cousin of English *night*). Aside: English *noon*
+  is Latin *nōna hōra* "ninth hour," drifted from mid-afternoon to midday.
+- Taxonomy: namespaced `FR-TIME-HOUR`, `FR-TIME-NOON-MIDNIGHT`.
+
 ## Chapter 7 — Days of the week
 
 - **Chapter 7 authored** (`FR-C07-jours-1`, `-jours-2`): the seven days, atom-first,
