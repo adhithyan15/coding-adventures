@@ -117,11 +117,11 @@ ports, and the paired C#/F# `chacha20-poly1305`, `xml-lexer`, `block-ram`,
 ports, followed by the paired `ed25519`, `font-parser`, `asciidoc-parser`, and
 `fpga` ports, the paired C#/F# `zstd` ports, and the Haskell `atbash-cipher`,
 `scytale-cipher`, `feature-normalization`, `loss-functions`, `trig`, `wave`,
-`matrix`, `vigenere-cipher`, `uuid`, and `document-ast` ports:
+`matrix`, `vigenere-cipher`, `uuid`, `document-ast`, and `lz78` ports:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 299 |
+| Present in 10-15 languages | 172 | 298 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,972 |
 | Present in one language | 705 | 9,870 |
@@ -167,7 +167,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 172 packages present in at least ten implementation languages need 299
+The 172 packages present in at least ten implementation languages need 298
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -178,7 +178,7 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Perl | 0 | Complete; paired data-structure/storage wave |
 | C# | 0 | Complete; paired native package wave |
 | F# | 0 | Complete; paired native package wave |
-| Haskell | 24 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
+| Haskell | 23 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
 | Kotlin | 58 | Move with Java |
@@ -481,6 +481,16 @@ traversal without external dependencies. Its package-native suite exercises
 family, payload accessor, nesting shape, and discriminator. The package now
 spans 14 implementation lanes, reduces the high-consensus backlog to 299 slots,
 and leaves 24 gaps in the Haskell lane.
+
+The eleventh Haskell high-consensus slice is complete: `lz78` now provides the
+CMP01 token model, an immutable byte-trie cursor, dictionary-capped encoding,
+checked decoding, strict big-endian wire serialization, and deterministic
+one-shot compression. Its package-native suite exercises 13 examples with 98%
+expression and 96% alternative coverage, including both canonical token
+vectors, end-of-stream flushing, dictionary caps, text and binary round trips,
+exact wire bytes, and every malformed-input error family. The package now spans
+13 implementation lanes, reduces the high-consensus backlog to 298 slots, and
+leaves 23 gaps in the Haskell lane.
 
 Recommended family order:
 
