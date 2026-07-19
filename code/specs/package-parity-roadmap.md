@@ -167,7 +167,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 172 packages present in at least ten implementation languages need 303
+The 172 packages present in at least ten implementation languages need 302
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -178,7 +178,7 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Perl | 0 | Complete; paired data-structure/storage wave |
 | C# | 0 | Complete; paired native package wave |
 | F# | 0 | Complete; paired native package wave |
-| Haskell | 28 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
+| Haskell | 27 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
 | Kotlin | 58 | Move with Java |
@@ -441,6 +441,15 @@ including construction, validation, derived quantities, the full cycle,
 periodicity, phase offsets, and the zero-amplitude case. The package now spans
 14 implementation lanes, reduces the high-consensus backlog to 303 slots, and
 leaves 28 gaps in the Haskell lane.
+
+The seventh Haskell high-consensus slice is complete: `matrix` now provides
+immutable rectangular matrices with factories, arithmetic, multiplication,
+indexed updates, reductions, element-wise math, shape operations, and exact or
+tolerant comparison. Its package-native suite exercises 34 examples with 96%
+expression coverage, including rectangular validation, every operation family,
+empty and zero-width shapes, mismatched dimensions, invalid indices, and
+half-open slices. The package now spans 14 implementation lanes, reduces the
+high-consensus backlog to 302 slots, and leaves 27 gaps in the Haskell lane.
 
 Recommended family order:
 
