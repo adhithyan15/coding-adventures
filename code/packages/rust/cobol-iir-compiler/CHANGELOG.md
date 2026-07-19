@@ -8,6 +8,30 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.18.0: alphanumeric `EVALUATE` subject (PL09 step 4)
+
+`EVALUATE` now works over a **character** subject, not just numeric:
+`EVALUATE GRADE WHEN "A" DISPLAY … WHEN "A" THRU "M" DISPLAY …`. Implemented
+oracle-first, byte-identical, reusing the alphanumeric-IF `str_cmp` machinery.
+
+- **No grammar/lexer change** — `EVALUATE`'s operands already cover string
+  literals and character items.
+- **Lowering.** `emit_evaluate` classifies the subject via `str_operand`: a
+  character subject takes `emit_when_match_str`, which compares each `WHEN` value
+  with `emit_str_condition` (space-pad + `str_cmp` + `cmp_* vs 0`) — a single value
+  is `cmp_eq`, a `THRU` range is `and(cmp_ge, cmp_le)` — OR-folded, exactly like the
+  numeric path but over strings. `str_cmp` is the same op alphanumeric `IF` uses, so
+  every backend that runs strings already accepts it.
+- **Deferral.** A numeric `WHEN` value against a character subject (or vice versa)
+  is a later rung, matching a relation's numeric-vs-alphanumeric deferral.
+- **Tests.** A new `jit_e2e.rs` case byte-identical to the oracle (character subject
+  by value, `WHEN OTHER`, and a `THRU` range at both boundaries); unit tests for the
+  str_cmp lowering and the numeric-value deferral (the prior "alphanumeric EVALUATE
+  deferred" test now asserts it lowers); a `backend_compat` program; a `lang_matrix`
+  alphanumeric `EVALUATE` row across all seven columns. Full suite **159 green** (38
+  unit + 22 `backend_compat` + 99 `jit_e2e`). The oracle gains 2 alphanumeric
+  `EVALUATE` unit tests.
+
 ### Added — v0.17.0: `EVALUATE` multiple values and `THRU` ranges per `WHEN` (PL09 step 4)
 
 A `WHEN` can now list several values and inclusive `THRU` ranges:

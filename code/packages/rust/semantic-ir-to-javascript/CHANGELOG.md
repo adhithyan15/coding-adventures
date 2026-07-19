@@ -1,5 +1,100 @@
 # Changelog
 
+## 0.43.0 — Fix three APL monadic-scalar-atom bugs found by `apl-to-semantic-ir`'s oracle harness
+
+`apl-to-semantic-ir/tests/oracle.rs` (the oracle/golden-test harness added in
+0.1.4, cross-checking this backend's compiled `node` output against
+`apl-runtime`'s own tree-walking evaluator) found three genuine,
+previously-undiscovered bugs in this crate while scoping coverage for APL's
+monadic (single-operand) scalar atoms `- × ÷ ⌈ ⌊` — deliberately excluded
+from that file's corpus and reported as follow-ups rather than fixed there
+(out of scope for a test-only PR). This release fixes all three.
+
+### Fixed
+
+- **Monadic `-` (`neg`) printed the wrong GLYPH for a bare/boxed scalar.**
+  `-5` gave `apl-runtime`'s correct high-minus `¯5`, but the compiled path
+  printed ASCII `-5` — the value was right, only the spelling was wrong.
+  Root cause: the glyph decision was baked into whether a value happened to
+  be a genuine (rank ≥ 0) `NDArray` by the time it reached `print`, but a
+  bare `IntLit`/boxed `SirFloat` scalar (what a plain `-5` or `-3.0` actually
+  compiles to — APL has no dyadic-op wrapping for a monadic atom applied
+  directly to a literal) never was one, so it always fell through
+  `formatSeen`'s ASCII `typeof v === "number"` branch. Fixed by moving the
+  glyph decision into `formatSeen` itself, gated by a new per-module
+  display-convention flag, `SIR_DISPLAY_APL_HIGH_MINUS` (substituted by
+  `emit.rs::emit_module` exactly like the existing `SIR_DISPLAY_RUBY`
+  flag, `true` only when `source_language` is `"apl"`) — `formatSeen`'s
+  bare-number AND boxed-`SirFloat` branches now render through
+  `ArrayRt.fmtNum` (already the correct, 1:1-ported-from-`apl_runtime`
+  formatter used for a genuine `NDArray`) when that flag is set.
+  **Why this needed its own flag, not a value-shape test**: a rank-0
+  `NDArray` is not unique to APL — `matlab-to-semantic-ir`'s `^`/`.^`
+  unconditionally lower to `ElementwiseOp::Pow` even for two literals, so a
+  plain MATLAB `2 ^ 2` reaches the exact same `{shape: [], data}`
+  representation an APL scalar does, yet must print ASCII `-4`
+  (`matlab-to-semantic-ir/tests/oracle.rs`'s own `unary_minus_on_power`
+  case) rather than high-minus `¯4`. Verified this specific MATLAB case is
+  unaffected by hand-building its exact SIR shape in this crate's own test
+  suite (`apl_monadic_neg_rank0_ndarray_matches_matlab_ascii_convention_
+  unchanged`, `tests/run_with_node.rs`) since this crate cannot depend on
+  the `matlab-to-semantic-ir` frontend crate directly.
+- **Monadic `-` (`neg`) on a genuine ARRAY (rank ≥ 1) silently computed
+  `NaN`.** `-1 2 ¯3` should give `¯1 ¯2 3`; the compiled path printed `NaN`.
+  Root cause: `neg` always fell through to `-numOf(x)`, and `numOf` only
+  ever unwrapped a rank-0 NDArray — a rank ≥ 1 array passed through
+  unchanged, so native JS unary minus ran on a plain `{shape,data}` object
+  (`ToPrimitive` coercion → `NaN`). Fixed: `neg` now recognises a genuine
+  NDArray of rank ≥ 1 and maps `-` over `.data` into a NEW NDArray with the
+  same shape (`mapNDArrayRank1Plus`, a small shared helper `neg` and the
+  new `monadicScalarAtom` below both use for their array branch). A rank-0
+  operand deliberately still falls through to the old `numOf`-unwrapping
+  path unconditionally (see the previous bullet for why: the glyph
+  question for a bare/rank-0 result is `formatSeen`'s job, not `neg`'s).
+- **Monadic `× ÷ ⌈ ⌊` (sign/reciprocal/ceiling/floor) crashed with
+  `TypeError: unknown builtin: <name>` for EVERY operand.**
+  `apl-to-semantic-ir`'s own `src/lower.rs`/README documented `"sign"`/
+  `"recip"`/`"ceil"`/`"floor"` as the intended `BuiltinCall` targets for
+  these four monadic atoms, but none of the four was ever registered in
+  `runtime.rs`'s `builtins` dispatch table (the generic `__Sir.callBuiltin`
+  fallback `emit.rs`'s `emit_builtin_call` already routes an unrecognised
+  name through), so all four crashed unconditionally. Fixed: all four are
+  now registered, ported 1:1 from `apl_runtime::eval::apply_monadic_scalar`/
+  `apl_sign` — `sign(0) === 0` (explicit if/else branching, matching the
+  Rust reference, not a bare `Math.sign()` call), `recip(0) === Infinity`
+  (plain IEEE-754 `1/v`, never an error), and plain `Math.ceil`/`Math.floor`
+  (no APL comparison-tolerance quirk exists anywhere in this codebase for
+  either). Each works over a bare/boxed scalar OR a genuine NDArray of any
+  rank via the same shared `monadicScalarAtom(x, f)` helper `neg`'s fix
+  introduces — deliberately never re-boxing a scalar result through
+  `mkFloat` the way `neg`/`minus`/`mod` do for Ruby, since none of these
+  four names is ever emitted by a Ruby-sourced module and re-boxing would
+  actively be wrong here (`⌈3.2` would otherwise render Ruby-style `"4.0"`
+  instead of APL's own `"4"`). No `emit.rs` change was needed beyond the
+  `SIR_DISPLAY_APL_HIGH_MINUS` substitution above — the existing generic
+  `__Sir.callBuiltin(name, [args])` fallback is sufficient once the
+  `builtins` table has the entries; a dedicated fixed-arm inline emission
+  (the way `neg`/`not`/`len` get) would be extra code with no behavioral
+  difference, since these four names are variadic-arity-1 already.
+
+### Verification
+
+- Confirmed (repo-wide grep across every `-to-semantic-ir`/`-to-javascript`
+  frontend crate for `BuiltinCall` names) that `neg` is shared by many
+  frontends (Ruby, MATLAB, Python, JS, J, APL) but `"sign"`/`"recip"`/
+  `"ceil"`/`"floor"` are emitted only by `apl-to-semantic-ir` and the
+  not-yet-`node`-tested `j-to-semantic-ir` (no `oracle.rs`/`e2e_node.rs` of
+  its own yet) — so the array-branch fix for all five is safe to apply
+  unconditionally (rank ≥ 1 is never displayed raw by any non-APL frontend
+  today), and the new builtins carry no legacy-behavior risk at all.
+- New regression tests in `tests/run_with_node.rs` (actually executed
+  under `node`, not skipped) cover all three bugs: bare/boxed scalar
+  negate showing high-minus for an APL-tagged module and unchanged ASCII
+  for a non-APL one, rank-1 array negate computing the correct value, the
+  MATLAB rank-0-power regression guard described above, and all four new
+  builtins over both a scalar and an array — including the `sign(0) == 0`
+  and `recip(0) == Infinity` edge cases explicitly.
+
 ## 0.42.0 — SIR22 "APL addendum" codegen: `Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`
 
 Closes the gap the SIR22 spec's own addendum section and this crate's

@@ -452,6 +452,10 @@ rungs, because precision must be built *in* `gc-core`, not `twig_gc.c`:
 3. **Rung A in `gc-core`** — NativeAot stack-map emission at call sites (aarch64
    first) → a `.rodata` table + a `stackmap_lookup`; `gc-core`'s native collector
    consumes it (`mark_precise`) with the conservative scan as the per-frame fallback.
+   *The runtime consumer half of this (registry, walk, `collect_mixed`,
+   `__gc_collect_precise`) is now merged (#8539–#8571); the remaining **emission** half
+   — backends producing the records — has its own detailed design in
+   [`AOT00-T1-stackmap-emission.md`](AOT00-T1-stackmap-emission.md).*
 4. **GC-stress differential** (§8.2) proving `live_bytes` tightens on the NativeAot
    column while staying output-identical to the other six engines.
 

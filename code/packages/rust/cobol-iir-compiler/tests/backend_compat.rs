@@ -252,6 +252,30 @@ fn evaluate_multi_value_range_program_accepted_by_print_backends() {
 }
 
 #[test]
+fn evaluate_alphanumeric_program_accepted_by_print_backends() {
+    // An alphanumeric EVALUATE subject compares each WHEN with `str_cmp` (the same
+    // op alphanumeric IF uses), folding a range with `and`. Every print backend
+    // must accept the str_cmp branch cascade.
+    let src = program(&[
+        "IDENTIFICATION DIVISION.",
+        "PROGRAM-ID. P.",
+        "DATA DIVISION.",
+        "WORKING-STORAGE SECTION.",
+        "01  GRADE  PIC X VALUE \"B\".",
+        "PROCEDURE DIVISION.",
+        "MAIN.",
+        "    EVALUATE GRADE",
+        "    WHEN \"A\" DISPLAY \"TOP\"",
+        "    WHEN \"A\" THRU \"M\" DISPLAY \"FIRST\"",
+        "    WHEN OTHER DISPLAY \"REST\"",
+        "    END-EVALUATE.",
+        "    STOP RUN.",
+    ]);
+    let m = compile_source(&src, "eva").unwrap();
+    assert_accepted_by_print_backends(&m, "alphanumeric EVALUATE (str_cmp)");
+}
+
+#[test]
 fn level_88_condition_name_program_accepted_by_print_backends() {
     // A level-88 condition-name lowers to a plain `const` + `cmp_eq` feeding the
     // same branch structure as a relational IF — no new opcode. Every print

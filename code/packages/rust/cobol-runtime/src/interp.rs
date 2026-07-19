@@ -363,11 +363,10 @@ impl Machine {
         subject: &Operand,
         branches: &[(Option<Vec<WhenValue>>, Vec<Stmt>)],
     ) -> Result<Flow, RuntimeError> {
-        let subj = self.operand_decimal(subject)?;
         for (when, stmts) in branches {
             let matches = match when {
                 None => true, // WHEN OTHER
-                Some(values) => self.subject_in_when(&subj, values)?,
+                Some(values) => self.subject_in_when(subject, values)?,
             };
             if matches {
                 return self.run_stmts(stmts);
@@ -377,15 +376,16 @@ impl Machine {
     }
 
     /// Whether the subject equals any single `WHEN` value or falls within any
-    /// inclusive `THRU` range in the list.
-    fn subject_in_when(&self, subj: &Decimal, values: &[WhenValue]) -> Result<bool, RuntimeError> {
+    /// inclusive `THRU` range in the list. Comparisons go through
+    /// [`Self::compare_operands`], so a numeric *or* alphanumeric subject works.
+    fn subject_in_when(&self, subject: &Operand, values: &[WhenValue]) -> Result<bool, RuntimeError> {
         use std::cmp::Ordering;
         for wv in values {
             let hit = match wv {
-                WhenValue::Single(v) => subj.cmp_value(&self.operand_decimal(v)?) == Ordering::Equal,
+                WhenValue::Single(v) => self.compare_operands(subject, v)? == Ordering::Equal,
                 WhenValue::Range(lo, hi) => {
-                    subj.cmp_value(&self.operand_decimal(lo)?) != Ordering::Less
-                        && subj.cmp_value(&self.operand_decimal(hi)?) != Ordering::Greater
+                    self.compare_operands(subject, lo)? != Ordering::Less
+                        && self.compare_operands(subject, hi)? != Ordering::Greater
                 }
             };
             if hit {
@@ -648,17 +648,28 @@ impl Machine {
         right: &Operand,
     ) -> Result<bool, RuntimeError> {
         use std::cmp::Ordering;
+        let ordering = self.compare_operands(left, right)?;
+        let base = match op {
+            RelOp::Greater => ordering == Ordering::Greater,
+            RelOp::Less => ordering == Ordering::Less,
+            RelOp::Equal => ordering == Ordering::Equal,
+        };
+        Ok(base ^ negated)
+    }
+
+    /// Order two operands the way COBOL's relational and `EVALUATE` comparisons
+    /// do: a **numeric** comparison when both are numeric (or one is the `ZERO`
+    /// figurative), else an **alphanumeric** comparison — each side's characters
+    /// (a numeric's are its digit image), a figurative expanded to the other's
+    /// length, then both space-padded to a common length and byte-compared.
+    fn compare_operands(&self, left: &Operand, right: &Operand) -> Result<std::cmp::Ordering, RuntimeError> {
         let l = self.src_from_operand(left)?;
         let r = self.src_from_operand(right)?;
-
-        let ordering = match (&l, &r) {
+        Ok(match (&l, &r) {
             (Src::Num(a), Src::Num(b)) => a.cmp_value(b),
             (Src::Num(a), Src::Fig(Fig::Zero)) => a.cmp_value(&Decimal::zero()),
             (Src::Fig(Fig::Zero), Src::Num(b)) => Decimal::zero().cmp_value(b),
             _ => {
-                // Alphanumeric comparison: build each side's characters, expand a
-                // figurative to the other operand's length, then space-pad both
-                // to equal length and compare.
                 let mut ls = src_chars(&l);
                 let mut rs = src_chars(&r);
                 if let Src::Fig(f) = &l {
@@ -668,18 +679,9 @@ impl Machine {
                     rs = fill_fig(f, ls.len().max(1));
                 }
                 let width = ls.len().max(rs.len());
-                let lp = format!("{ls:<width$}");
-                let rp = format!("{rs:<width$}");
-                lp.cmp(&rp)
+                format!("{ls:<width$}").cmp(&format!("{rs:<width$}"))
             }
-        };
-
-        let base = match op {
-            RelOp::Greater => ordering == Ordering::Greater,
-            RelOp::Less => ordering == Ordering::Less,
-            RelOp::Equal => ordering == Ordering::Equal,
-        };
-        Ok(base ^ negated)
+        })
     }
 
     fn exec_display(&mut self, ops: &[Operand]) -> Result<(), RuntimeError> {

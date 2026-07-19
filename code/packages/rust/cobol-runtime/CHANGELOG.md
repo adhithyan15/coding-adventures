@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.22.0 — alphanumeric `EVALUATE` subject
+
+- `EVALUATE` now works over an **alphanumeric** subject (`EVALUATE GRADE WHEN "A"
+  … WHEN "A" THRU "M" …`), not just numeric. The numeric-or-alphanumeric ordering
+  used by relational conditions is factored out of `eval_relation` into
+  `compare_operands(a, b) -> Ordering` (numeric `cmp_value` when both are numeric,
+  else the space-padded character compare), and `exec_evaluate`/`subject_in_when`
+  now use it — so a `WHEN` value matches by equality and a `THRU` range by
+  `subject >= lo && subject <= hi` for character subjects too. No behavioural change
+  to relations.
+
 ## 0.21.0 — `EVALUATE` multiple values and `THRU` ranges per `WHEN`
 
 - A `WHEN` now carries a value-*list*: `Stmt::Evaluate`'s branch `when` becomes

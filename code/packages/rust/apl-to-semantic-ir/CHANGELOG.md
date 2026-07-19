@@ -1,5 +1,49 @@
 # Changelog
 
+## [0.1.5] - 2026-07-19
+
+### Added
+
+- **`tests/oracle.rs`: 9 new corpus cases covering all 5 non-`+` monadic
+  scalar atoms (`- × ÷ ⌈ ⌊`)** — `monadic_negate_scalar`,
+  `monadic_negate_array`, `monadic_sign_positive`, `monadic_sign_negative`,
+  `monadic_sign_zero`, `monadic_reciprocal`, `monadic_reciprocal_zero`,
+  `monadic_ceiling`, `monadic_floor` — now that the three bugs blocking them
+  (see below) are fixed in `semantic-ir-to-javascript` 0.43.0. `CORPUS` grows
+  from 17 to 26 cases. `monadic_sign_zero`/`monadic_reciprocal_zero`
+  specifically pin down the `sign(0) == 0` (not `f64::signum()`'s
+  `1`-for-positive-zero convention) and `recip(0) == Infinity` (never an
+  error) edge cases `apl_runtime::eval::apl_sign`/`apply_monadic_scalar`'s
+  own doc comments call out.
+
+### Changed
+
+- **`tests/oracle.rs`'s module doc**: the "Three genuine,
+  previously-undiscovered bugs ... EXCLUDED from `CORPUS`, not fixed here"
+  section is now "Three genuine bugs, now fixed" — each bug entry rewritten
+  in the "FIXED: ..." style (matching `matlab-to-semantic-ir/tests/
+  oracle.rs`'s own convention for a resolved bug) with a pointer to
+  `semantic-ir-to-javascript` 0.43.0's `CHANGELOG.md` for the full
+  root-cause writeup, and to the new regression case(s) below it. The
+  "Deliberately absent from `CORPUS`" paragraph is likewise replaced with a
+  pointer to the new cases.
+
+### Fixed (upstream, `semantic-ir-to-javascript` 0.43.0)
+
+Not a change to this crate's own code — recorded here because this crate's
+own oracle harness found all three (see `tests/oracle.rs`'s module doc for
+the full writeup this entry summarizes):
+
+1. Monadic `-` (negate) on a bare scalar printed the numerically correct
+   value with the WRONG glyph (ASCII `-5`, not APL's own high-minus `¯5`).
+2. Monadic `-` (negate) on a genuine array (rank ≥ 1) silently computed
+   `NaN` instead of the correctly negated array.
+3. Monadic `× ÷ ⌈ ⌊` (sign/reciprocal/ceiling/floor) crashed with
+   `TypeError: unknown builtin: <name>` for every operand — these four
+   names were documented (this crate's own 0.1.0 README/CHANGELOG,
+   `src/lower.rs`) but never given a `semantic-ir-to-javascript` runtime
+   implementation.
+
 ## [0.1.4] - 2026-07-19
 
 ### Added
