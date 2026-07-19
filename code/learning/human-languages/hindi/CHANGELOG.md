@@ -7,7 +7,7 @@
   Devanagari inline; every root traced (`lessons/HI-C0{3,4,5}-*`,
   `book/chapters/ch0{3,4,5}-*.tex`). Concept tags reuse the universal `HL01`
   taxonomy (`QUESTION-HOW`, `STATE-HOW-ARE-YOU`, `PRONOUN-I`, `WORD-WELL`,
-  `YOURE-WELCOME`, `FAREWELL-*`); verbs are namespaced (`HI-VERB-*`).
+  `COURTESY-YOUREWELCOME`, `FAREWELL-*`); verbs are namespaced (`HI-VERB-*`).
 - **Ch. 3 — How Are You**: *kaise* (how; the *k-* question family) → *āp kaise
   haiṁ?* (respect-as-plural) → *maiṁ* (I ← *ma-*) → *hūṁ* (am ← Sanskrit *asmi* →
   English **am**; the copula trio hūṁ/hai/haiṁ) → *ṭhīk* (fine — native, no

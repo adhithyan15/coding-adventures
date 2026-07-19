@@ -208,6 +208,10 @@
       "ES-VERB-COMER": "comer — 'to eat' (first -er verb; ← comedere → edible)",
       "ES-VERB-VIVIR": "vivir — 'to live' (first -ir verb; ← vīvere → vivid/survive)",
       "ES-VERB-BEBER": "beber — 'to drink' (-er; ← bibere → beverage/imbibe)",
+      "ES-VERB-SER": "ser — 'to be' (identity/essence; ← esse (+ sedēre); suppletive soy/eres/es/somos/son, cousins of English is/am/are)",
+      "ES-SER-VS-ESTAR": "ser vs estar — the two 'to be' verbs (essence vs state); minimal pairs flip meaning (es/está aburrido, rico, verde, listo)",
+      "ES-ORIGIN-SER": "soy de… — origin/profession/nationality take ser (essence); de ← Latin dē; ¿De dónde eres?",
+      "ES-LOCATION-ESTAR": "está en… — physical location always takes estar (← stāre 'to stand'); en ← Latin in; ¿Dónde estás?",
       "IT-VERB-STARE": "stare — 'to be' (state; ← Latin stare 'to stand', = Spanish estar); drives 'come stai?'",
       "IT-VERB-PARLARE": "parlare — 'to speak' (← parabolāre = French parler; the regular -are present)",
       "IT-VERB-ABITARE": "abitare — 'to live/dwell' (← habitāre → habitat; twin of French habiter)",
@@ -233,6 +237,6 @@
     }
   },
   "practiceTags": {
-    "note": "Non-word lessons (type: review | practice-mix | writing) carry a session/orthography label, not a concept, and are exempt from the cross-language join. Existing labels: CH1-PRACTICE, CH2-PRACTICE, CH3-PRACTICE, CH4-PRACTICE, REVIEW."
+    "note": "Non-word lessons (type: review | practice-mix | writing) carry a session/orthography label, not a concept, and are exempt from the cross-language join. Existing labels: CH1-PRACTICE, CH2-PRACTICE, CH3-PRACTICE, CH4-PRACTICE, CH9-PRACTICE, REVIEW."
   }
 }
