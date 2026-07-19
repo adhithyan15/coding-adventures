@@ -55,3 +55,15 @@ constructs internally.
 ```sh
 cargo test -p octave-to-semantic-ir
 ```
+
+`tests/oracle.rs` adds HML01 §7 oracle/golden testing: the same Octave
+computation, run through (a) `octave-runtime` (ground truth) and (b) this
+crate's `compile_source` → `semantic-ir-to-javascript` → an actual `node`
+process, diffed. It is the direct sibling of
+[`matlab-to-semantic-ir`'s own `tests/oracle.rs`](../matlab-to-semantic-ir/tests/oracle.rs)
+(same `Case`/`ground_truth`/`compiled`/`normalize` shape), but its 6-case
+corpus is deliberately restricted to programs exercising Octave-only syntax
+`octavify` actually rewrites — `#` comments, `!=`, `!`, and the `endif`/
+`endfor`/`endwhile` block terminators — rather than re-testing plain MATLAB
+arithmetic the MATLAB oracle file already covers. Skips cleanly (does not
+fail) if `node` is not on `PATH`.

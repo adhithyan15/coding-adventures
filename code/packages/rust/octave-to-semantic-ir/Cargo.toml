@@ -8,3 +8,10 @@ description = "GNU Octave source -> narrow-waist Semantic IR, via octave-runtime
 semantic-ir = { path = "../semantic-ir" }
 matlab-to-semantic-ir = { path = "../matlab-to-semantic-ir" }
 coding-adventures-octave-runtime = { path = "../octave-runtime" }
+
+[dev-dependencies]
+# `tests/oracle.rs`'s compiled path: the scalar-only subset of a lowered
+# module round-trips through the JS backend and actually executes with the
+# system `node` (gated on availability), mirroring `matlab-to-semantic-ir`'s
+# own dev-dependency of the same crate for the same reason.
+semantic-ir-to-javascript = { path = "../semantic-ir-to-javascript" }
