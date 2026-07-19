@@ -1,0 +1,10 @@
+[package]
+name = "coding-adventures-maple-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "Tokenizer for the Maple symbolic-CAS frontend (MP-2)"
+license = "MIT"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
