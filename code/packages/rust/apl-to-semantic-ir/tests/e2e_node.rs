@@ -67,10 +67,22 @@
 //!    stranded literal, which — like `outer` above — sidesteps the issue
 //!    because `ravel` always constructs a genuine rank-1 result
 //!    regardless of its input's rank) as the shape argument instead of the
-//!    bare literal. This ArrayLit-representation gap is pre-existing
+//!    bare literal. This ArrayLit-representation gap was pre-existing
 //!    (shipped in this crate's v0.1.0/v0.1.1, unrelated to and unchanged
-//!    by the codegen work that unblocked this file) and out of scope to
-//!    fix here — flagged separately, not patched around silently.
+//!    by the codegen work that unblocked this file) and left out of scope
+//!    to fix at the time — flagged separately, not patched around
+//!    silently. **It has since been fixed** in `src/lower.rs`'s
+//!    `lower_term`: a stranded literal now lowers to `Expr::Ravel` wrapping
+//!    the single-row `Expr::ArrayLit`, so it is a genuine rank-1 vector at
+//!    the IR level, exactly like `⍳n`. The tests below that route around
+//!    the old gap via `⍳`/`,` are left exactly as they were — they remain
+//!    valid (they exercise prefix order and ravel's row-major-vs-column-
+//!    major correctness, not this gap) and the workaround is harmless now
+//!    that it is no longer necessary. `outer_product_of_two_bare_stranded_
+//!    literals_runs_in_node` and `reshape_with_bare_stranded_literal_
+//!    shape_and_target_runs_in_node` below are the new, added coverage
+//!    proving the fix: the same two operations, but with bare stranded
+//!    literals as operands and NO `⍳`/`,` workaround at all.
 
 use std::fs::OpenOptions;
 use std::io::Write as _;
@@ -190,6 +202,29 @@ fn outer_product_of_two_iota_vectors_runs_in_node() {
 }
 
 #[test]
+fn outer_product_of_two_bare_stranded_literals_runs_in_node() {
+    if !node_available() {
+        eprintln!(
+            "skipping outer_product_of_two_bare_stranded_literals_runs_in_node: `node` not available"
+        );
+        return;
+    }
+    // `1 2∘.×3 4` -- the fix this file's module doc comment describes:
+    // outer product between two BARE stranded literals, no `⍳` workaround
+    // needed. Before the fix, both `1 2` and `3 4` lowered to a bare,
+    // genuinely rank-2 `[1, n]` `ArrayLit`, and `outer` is scoped to rank
+    // <= 1 operands only -- so this exact program used to throw
+    // `outer: operands of rank > 1 not yet supported` at `node` runtime
+    // (confirmed by reverting just the `lower.rs` change locally: the
+    // error fires with shapes `[1,2]`/`[1,2]`). Now both operands lower to
+    // `Expr::Ravel`-wrapped `ArrayLit`s, genuinely rank-1, so `outer`
+    // accepts them: `1 2 outer* 3 4 = [[3,4],[6,8]]`, ravelled and
+    // reduce-summed (`+/,`) gives `3+4+6+8 = 21`.
+    let out = run_via_node("outer_product_bare", "+/,1 2∘.×3 4\n");
+    assert_eq!(out, "21");
+}
+
+#[test]
 fn shape_of_a_reshaped_matrix_runs_in_node() {
     if !node_available() {
         eprintln!("skipping shape_of_a_reshaped_matrix_runs_in_node: `node` not available");
@@ -205,6 +240,31 @@ fn shape_of_a_reshaped_matrix_runs_in_node() {
     // "shape argument must be rank <= 1" check); `,2 3` ravels it down to
     // a genuine rank-1 `[2]` vector first, which reshape then accepts.
     let out = run_via_node("shape_of_reshape", "⍴(,2 3)⍴⍳6\n");
+    assert_eq!(out, "2 3");
+}
+
+#[test]
+fn reshape_with_bare_stranded_literal_shape_and_target_runs_in_node() {
+    if !node_available() {
+        eprintln!(
+            "skipping reshape_with_bare_stranded_literal_shape_and_target_runs_in_node: `node` not available"
+        );
+        return;
+    }
+    // `⍴2 3⍴1 2 3 4 5 6` -- the fix this file's module doc comment
+    // describes: dyadic `⍴`'s shape argument is the BARE stranded literal
+    // `2 3`, no `,` (ravel) prefix needed, unlike the previous test's `(,2
+    // 3)`. Before the fix, a bare `2 3` lowered to a genuinely rank-2
+    // `[1, 2]` `ArrayLit`, and `reshape` requires its shape argument to be
+    // rank <= 1 -- so this exact program used to throw `reshape: shape
+    // argument must be a scalar or vector (got rank 2)` at `node` runtime
+    // (confirmed by reverting just the `lower.rs` change locally). Now `2
+    // 3` lowers to an `Expr::Ravel`-wrapped `ArrayLit`, genuinely rank-1,
+    // so `reshape` accepts it: builds a real 2x3 matrix from `1 2 3 4 5
+    // 6`, and monadic `⍴` reads its dimensions back, printed "2 3" --
+    // identical result to the previous test, but with neither operand
+    // needing any workaround.
+    let out = run_via_node("reshape_bare", "⍴2 3⍴1 2 3 4 5 6\n");
     assert_eq!(out, "2 3");
 }
 
