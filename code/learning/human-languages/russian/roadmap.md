@@ -22,8 +22,11 @@ Chapter 1 words introduced — component strokes + stroke order, from the canoni
 - `RU-W01` — **в** (v ← beta) and **р** (r ← rho), the two false friends in *привет*.
 - `RU-W02` — **с** (s ← sigma) and **н** (n, the *H*-look-alike), completing в·р·с·н.
 - `RU-W03` — **б** (b) and **д** (d ← delta), two shapes with no Latin disguise
-  (and how б differs from в). More letters get a writing lesson as later chapters
-  introduce them (я э ю ч ш ь in Ch.2).
+  (and how б differs from в).
+- `RU-W04` — **п** (p ← pi) and **и** (ee, the backwards-N quiet false friend).
+- `RU-W05` — **е** (ye, iotated) and **т** (t ← tau), which **completes every
+  letter of привет** — the learner can now hand-write the whole word. More letters
+  get a writing lesson as later chapters introduce them (я э ю ч ш ь in Ch.2).
 
 ## Chapter 2 — Introducing yourself *(planned)*
 
