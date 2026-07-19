@@ -608,7 +608,13 @@ impl<'a> Compiler<'a> {
     fn emit_evaluate(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
         let subject_node = child_node(verb, "operand")
             .ok_or_else(|| CompileError::Malformed("EVALUATE without a subject".into()))?;
-        let subject = self.read_arith_term(subject_node)?;
+        // Classify the subject: `Some` = a character value (matched with `str_cmp`),
+        // `None` = numeric (matched with the scaled `cmp_*` path).
+        let subject_str = self.str_operand(subject_node)?;
+        let subject_num = match &subject_str {
+            Some(_) => None,
+            None => Some(self.read_arith_term(subject_node)?),
+        };
         let end_lbl = self.fresh("eval_end");
         for wb in child_nodes(verb, "when_branch") {
             let is_other = child_tokens(wb).iter().any(|(k, v)| k == "KEYWORD" && v == "OTHER");
@@ -620,7 +626,10 @@ impl<'a> Compiler<'a> {
                 self.emit("jmp", None, vec![Operand::Var(end_lbl.clone())], "void");
                 continue;
             }
-            let cond = self.emit_when_match(&subject, wb)?;
+            let cond = match &subject_str {
+                Some(s) => self.emit_when_match_str(s.clone(), wb)?,
+                None => self.emit_when_match(subject_num.as_ref().unwrap(), wb)?,
+            };
             let next_lbl = self.fresh("when_next");
             self.emit("jmp_if_false", None, vec![Operand::Var(cond), Operand::Var(next_lbl.clone())], "void");
             for s in stmts {
@@ -678,6 +687,53 @@ impl<'a> Compiler<'a> {
         let out = self.fresh("_wcmp");
         self.emit(op, Some(&out), vec![a, b], "i64");
         out
+    }
+
+    /// Like [`Self::emit_when_match`], but for an **alphanumeric** subject: each
+    /// value is compared with `str_cmp` (space-padded, [`Self::emit_str_condition`])
+    /// — a single value is `cmp_eq`, a `THRU` range is `and(cmp_ge, cmp_le)` — and
+    /// the value-list `OR`-folds. A numeric `WHEN` value against a character subject
+    /// is a later rung (matching a relation's numeric-vs-alphanumeric deferral).
+    fn emit_when_match_str(&mut self, subject: StrOperand, wb: &GrammarASTNode) -> Result<String, CompileError> {
+        let mut acc: Option<String> = None;
+        for wv in child_nodes(wb, "when_value") {
+            let ops = child_nodes(wv, "operand");
+            let b = match ops.as_slice() {
+                [one] => {
+                    let value = self.str_value(one)?;
+                    self.emit_str_condition(subject.clone(), value, "cmp_eq")?
+                }
+                [lo, hi] => {
+                    let lo = self.str_value(lo)?;
+                    let hi = self.str_value(hi)?;
+                    let ge = self.emit_str_condition(subject.clone(), lo, "cmp_ge")?;
+                    let le = self.emit_str_condition(subject.clone(), hi, "cmp_le")?;
+                    let r = self.fresh("_wrng");
+                    self.emit("and", Some(&r), vec![Operand::Var(ge), Operand::Var(le)], "i64");
+                    r
+                }
+                _ => return Err(CompileError::Malformed("a WHEN value must be `operand` or `operand THRU operand`".into())),
+            };
+            acc = Some(match acc {
+                None => b,
+                Some(prev) => {
+                    let r = self.fresh("_wor");
+                    self.emit("or", Some(&r), vec![Operand::Var(prev), Operand::Var(b)], "i64");
+                    r
+                }
+            });
+        }
+        acc.ok_or_else(|| CompileError::Malformed("WHEN without a value".into()))
+    }
+
+    /// A `WHEN` value as a [`StrOperand`] for an alphanumeric `EVALUATE`. A numeric
+    /// value against a character subject is a later rung.
+    fn str_value(&mut self, op: &GrammarASTNode) -> Result<StrOperand, CompileError> {
+        self.str_operand(op)?.ok_or_else(|| {
+            CompileError::Unsupported(
+                "a numeric WHEN value against an alphanumeric EVALUATE subject is a later rung".into(),
+            )
+        })
     }
 
     /// `MOVE src-item TO recv-item` for two **character** items — reshape the
@@ -2571,6 +2627,7 @@ enum Term {
 /// An operand of an **alphanumeric** comparison: either a known-length string
 /// (a character item's slot or a string-literal `str_const`) or a figurative
 /// constant whose length is resolved from the operand it is compared against.
+#[derive(Clone)]
 enum StrOperand {
     Fixed { reg: String, len: usize },
     Fig(char),
@@ -3019,12 +3076,36 @@ mod tests {
     }
 
     #[test]
-    fn evaluate_on_an_alphanumeric_subject_is_deferred() {
-        // A non-numeric subject needs a string compare — a clean later rung.
+    fn evaluate_on_an_alphanumeric_subject_lowers_to_str_cmp() {
+        // A character subject compares each WHEN value with str_cmp; a THRU range is
+        // and(cmp_ge, cmp_le) over str_cmp results.
+        let m = compile_source(
+            &wrap(
+                &["01  W  PIC X(3) VALUE \"ABC\"."],
+                &[
+                    "EVALUATE W",
+                    "WHEN \"ABC\" DISPLAY \"Y\"",
+                    "WHEN \"AAA\" THRU \"MMM\" DISPLAY \"R\"",
+                    "END-EVALUATE.",
+                    "STOP RUN.",
+                ],
+            ),
+            "ev",
+        )
+        .unwrap();
+        let ops = ops(&m);
+        assert!(ops.contains(&"str_cmp".to_string()), "expected `str_cmp`: {ops:?}");
+        assert!(ops.contains(&"and".to_string()), "expected `and` for the range: {ops:?}");
+        assert!(m.validate().is_empty(), "{:?}", m.validate());
+    }
+
+    #[test]
+    fn evaluate_numeric_value_against_alphanumeric_subject_is_deferred() {
+        // A numeric WHEN value against a character subject is a later rung.
         let err = compile_source(
             &wrap(
                 &["01  W  PIC X(3) VALUE \"ABC\"."],
-                &["EVALUATE W", "WHEN \"ABC\" DISPLAY \"Y\"", "END-EVALUATE.", "STOP RUN."],
+                &["EVALUATE W", "WHEN 5 DISPLAY \"Y\"", "END-EVALUATE.", "STOP RUN."],
             ),
             "ev",
         )

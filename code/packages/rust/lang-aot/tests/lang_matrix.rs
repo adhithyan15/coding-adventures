@@ -3271,6 +3271,29 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("Y"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // COBOL-60 — alphanumeric EVALUATE subject (PL09 step 4). `EVALUATE GRADE` on
+    // GRADE="B" with `WHEN "A" THRU "M"` (byte-lexical) matches → prints "FIRST".
+    // The character subject compares each WHEN with `str_cmp` (the op alphanumeric
+    // IF uses), folding a range with `and` — proving the str cascade on every
+    // backend that runs strings.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  GRADE  PIC X VALUE \"B\".\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     EVALUATE GRADE\n\
+               000000     WHEN \"A\" THRU \"M\" DISPLAY \"FIRST\"\n\
+               000000     WHEN OTHER DISPLAY \"REST\"\n\
+               000000     END-EVALUATE.\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("FIRST"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses
