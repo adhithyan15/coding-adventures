@@ -21,14 +21,22 @@ individual pass improvement.
 ## Empirical proof
 
 ```js
-// No assignment anywhere → full optimization:
+// No assignment anywhere → the typed pipeline runs (folds, DCE, local rename):
 function f(p){ log(p); } f(1);
-// SIMPLE ⇒ log(1);          (inlined, declaration removed)
+// SIMPLE ⇒ function f(p){log(p)};f(1);   (typed pipeline; f KEPT — SIMPLE is
+//                                         open-world, it never inlines/removes
+//                                         a top-level name)
 
 // Add ONE unrelated assignment → the WHOLE program degrades to whitespace-only:
 function f(p){ log(p); } f(1); a = 2;
-// SIMPLE ⇒ function f(p){log(p)};f(1);a=2;   (f NOT inlined — only spaces removed)
+// SIMPLE ⇒ function f(p){log(p)};f(1);a=2;   (only spaces removed)
 ```
+
+The two outputs happen to coincide on `f` here (open-world SIMPLE never inlines
+`f` either way); the load-bearing difference is elsewhere — e.g. arithmetic
+folds and dead code drop in the typed pipeline but survive verbatim under the
+whitespace fallback. See CLOC24's `simple-debugger` oracle for a case where the
+two diverge visibly (`debugger;` stripped vs. kept).
 
 The single `a = 2;` forces fallback for the entire program. Verified on
 `closurec --compilation_level SIMPLE` (2026-06-19).

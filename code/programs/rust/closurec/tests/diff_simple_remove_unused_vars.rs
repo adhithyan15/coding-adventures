@@ -1,29 +1,26 @@
 //! Integration test for the `tests/diff/simple-remove-unused-vars/`
 //! fixture.
 //!
-//! Exercises the CLOC12.158 addition of the `remove-unused-vars` pass to
-//! the `--compilation_level SIMPLE` pipeline, which is now
-//! `constant-fold → fold-control-flow → dce → inline → remove-unused-vars`.
-//! The pass deletes top-level bindings nothing references when their
-//! initializer is side-effect-free:
+//! `remove-unused-vars` (deletes unreferenced top-level `var/let/const`) is a
+//! CLOSED-WORLD pass and runs ONLY at ADVANCED. At `--compilation_level
+//! SIMPLE` the compiler is open-world — a top-level binding may be read by
+//! another script sharing the global object — so nothing at top level is
+//! removed. `constant-fold` still runs, folding each initializer:
 //!
 //! ```text
-//! var dead = 1 + 2;     ⇒  (removed — folds to a literal, then dropped)
-//! var live = 10;        ⇒  var live=10;   (referenced by log(live))
-//! var impure = run();   ⇒  var impure=run();   (kept — call may have a side effect)
+//! var dead = 1 + 2;     ⇒  var dead=3,      (KEPT — folded, but open-world)
+//! var live = 10;        ⇒  live=10,         (referenced by log(live))
+//! var impure = run();   ⇒  impure=run();    (KEPT — call may have a side effect)
 //! log(live);            ⇒  log(live);
 //! ```
 //!
-//! The `var dead = 1 + 2` row is the load-bearing one: `constant-fold`
-//! turns `1 + 2` into the literal `3`, and only then does
-//! `remove-unused-vars` see a pure (literal) initializer it can drop —
-//! proving the two passes compose. The same input under WHITESPACE_ONLY
-//! keeps every declaration (see the `simple_remove_unused_*` unit tests
-//! in `src/run.rs`).
-//!
-//! `remove-unused-vars` needs `inline` registered (it declares
-//! `depends_on = ["dce", "inline"]`); `inline` is an identity pass today
-//! and is wired in alongside to satisfy the scheduler.
+//! The `var dead = 1 + 2` row is the load-bearing one: `constant-fold` turns
+//! `1 + 2` into the literal `3` (so it emits as `dead=3`), but
+//! `remove-unused-vars` is NOT in the SIMPLE pipeline, so the now-pure binding
+//! is still kept. Under ADVANCED, `dead` would be dropped while `impure` is
+//! kept by the purity gate; under WHITESPACE_ONLY every declaration survives
+//! AND `1 + 2` stays unfolded (see the `simple_remove_unused_*` unit tests in
+//! `src/run.rs`).
 
 use std::process::Command;
 

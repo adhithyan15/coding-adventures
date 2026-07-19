@@ -74,15 +74,19 @@ design.
 
 ## End-to-end oracle (`closurec` diff fixture)
 
-* **`simple-debugger`** — at SIMPLE: a single-use function inlines, surrounding
-  arithmetic folds, and the `debugger;` statement is preserved verbatim. A
-  companion assertion proves the output is NOT the whitespace fallback (the
-  `log` ⇒ `report` inline can only come from the typed pipeline).
+* **`simple-debugger`** — at SIMPLE: surrounding arithmetic folds and
+  `function log` is KEPT — SIMPLE is open-world and never inlines or removes a
+  top-level name (that inline is ADVANCED-only). The `debugger;` statement was
+  preserved verbatim as of CLOC21; CLOC24 later made it **stripped** at
+  SIMPLE/ADVANCED, which is the current fixture behavior. A companion assertion
+  proves the output is NOT the whitespace fallback (the `1 + 2` ⇒ `3` fold, and
+  post-CLOC24 the `debugger;` strip, can only come from the typed pipeline).
 
 ## Out of scope (future work)
 
 * **Stripping `debugger`** at SIMPLE/ADVANCED to match upstream Closure — a
   focused follow-up (a behaviour change, cleanly separable from this PR).
+  **Delivered in CLOC24.**
 * `ForInStatement`, `ForOfStatement`, and `WithStatement` remain the last
   bridge-unsupported Phase-2 statements; they follow the same playbook (with
   more involved left-binding handling for the for-in/of forms).
