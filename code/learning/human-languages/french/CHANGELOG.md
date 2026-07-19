@@ -1,5 +1,20 @@
 # Changelog
 
+## Chapter 7 — Days of the week
+
+- **Chapter 7 authored** (`FR-C07-jours-1`, `-jours-2`): the seven days, atom-first,
+  reviewing Ch.6 via `reviews_of`, with the **planet-god week** as the through-line.
+- **jours-1** (lundi–vendredi): every weekday is *[planet-god]* + **-di** (← *diēs*
+  "day") — *lundi* = *lūnae diēs* "Moon's day," etc. The centrepiece is the
+  **Roman-planet ↔ Germanic-god bridge**: *mardi* and English *Tuesday* are the same
+  day (the war-god's), named *Mars* in Latin but *Tiw* in Germanic; *jeudi*
+  (Jupiter) = *Thursday* (Thor) — *interpretatio germanica*.
+- **jours-2** (samedi, dimanche): where **religion overwrote astronomy** — *samedi*
+  ← *Sabbatum* (the Hebrew Sabbath, so English *Saturday*/Saturn and French *samedi*
+  are the same day, two names); *dimanche* ← *diēs Dominica* "the **Lord's** day"
+  (*Dominus* → dominion/dame), the *di-* fossil moved to the front.
+- Taxonomy: namespaced `FR-DAYS-WEEKDAYS`, `FR-DAYS-WEEKEND`.
+
 ## Chapter 6 — Numbers 1–10
 
 - **Chapter 6 authored** (`FR-C06-nombres-1-5`, `-nombres-6-10`): counting to ten,

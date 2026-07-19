@@ -4,7 +4,7 @@ chapter: 3
 type: phrase
 headword: ਕੋਈ ਗੱਲ ਨਹੀਂ
 gloss: it's nothing / no problem / you're welcome
-concept_tag: YOURE-WELCOME
+concept_tag: COURTESY-YOUREWELCOME
 prerequisites: [PA-C01-han-nahin, PA-C01-dhanvaad]
 sounds: [double-ll, bindi-nasal]
 roots: [na-negative, gall-word]
