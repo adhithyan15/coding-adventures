@@ -195,21 +195,36 @@ without any change to the IR or the frontends.
 `SIR22` spec → `semantic-ir` core additions → `matlab-to-semantic-ir` →
 `octave-to-semantic-ir` → `sir-runtime-array` → JS/TS backend codegen →
 `apl-to-semantic-ir` (SIR22 addendum for APL primitives) →
-`j-to-semantic-ir` → golden/oracle tests (MATLAB's own now shipped — see
-`matlab-to-semantic-ir/tests/oracle.rs`, the first true oracle diff
-anywhere in this track: the same computation run through `matlab-runtime`
-and through this frontend's compiled-JS-via-`node` path, asserted equal,
-for a 7-case corpus spanning literal arithmetic, comparisons, `if`/`elseif`
-branching, a `for`-loop accumulator, and two real SIR22 array/matrix cases
-(matrix multiplication, elementwise scalar broadcast). Building it also
-surfaced several confirmed bugs/gaps — an integer-literal-division bug, a
-unary-minus-on-power bug, a missing `Feature::ShortCircuit` declaration, a
-severe `while`-loop-accumulator correctness bug, and two `matlab-runtime`
-gaps (no function-definition support, no indexed-assignment support) — see
-that crate's `CHANGELOG.md` for the full write-up. Octave/APL/J's own
-oracle tests remain open follow-on items — Octave's thin
-`octave-to-semantic-ir` wrapper and APL's distinct primitive vocabulary
-each need their own corpus, not just MATLAB's reused).
+`j-to-semantic-ir` → golden/oracle tests (MATLAB's own and Octave's own now
+shipped. MATLAB — see `matlab-to-semantic-ir/tests/oracle.rs`, the first
+true oracle diff anywhere in this track: the same computation run through
+`matlab-runtime` and through this frontend's compiled-JS-via-`node` path,
+asserted equal, for a 7-case corpus spanning literal arithmetic,
+comparisons, `if`/`elseif` branching, a `for`-loop accumulator, and two real
+SIR22 array/matrix cases (matrix multiplication, elementwise scalar
+broadcast). Building it also surfaced several confirmed bugs/gaps — an
+integer-literal-division bug (still open), a unary-minus-on-power bug (now
+fixed), a missing `Feature::ShortCircuit` declaration (now fixed), a severe
+`while`-loop-accumulator correctness bug (now fixed), and two
+`matlab-runtime` gaps (no function-definition support, no
+indexed-assignment support) — see that crate's `CHANGELOG.md` for the full
+write-up. Octave — see `octave-to-semantic-ir/tests/oracle.rs`, the direct
+sibling of MATLAB's oracle file (same `Case`/`ground_truth`/`compiled`
+shape), with a 6-case corpus deliberately restricted to Octave-only syntax
+`octavify` actually rewrites rather than re-testing plain MATLAB arithmetic:
+a `#` comment, `!=`, `!` (applied to a parenthesized comparison, not a bare
+numeric variable — see below), and the `endif`/`endfor`/`endwhile` block
+terminators, including a direct regression check (via `endwhile`) that the
+now-fixed while-loop-accumulator bug stays fixed through Octave syntax too.
+All 6 cases pass; building it also confirmed one more gap, inherited from
+`matlab-to-semantic-ir`: negating a bare numeric variable via `!`/`~`
+disagrees with Octave's "logicals are doubles, 0 is false" semantics,
+because SIR's shared `truthy()` runtime helper treats only `false`/`nil` as
+falsy (a Ruby/Lisp convention) — `CORPUS` sidesteps this by negating a
+comparison instead, and the gap is recorded in that crate's `CHANGELOG.md`
+for a follow-up. APL/J's own oracle tests remain open follow-on items —
+APL's distinct primitive vocabulary needs its own corpus, not just MATLAB's
+reused).
 All items through JS/TS backend codegen are shipped.
 
 **Stream B (symbolic/CAS, backs Wolfram/Macsyma/Maxima and future

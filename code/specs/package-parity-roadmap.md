@@ -115,11 +115,12 @@ and `hash-set` ports, the paired `in-memory-data-store-engine` and
 ports, and the paired C#/F# `chacha20-poly1305`, `xml-lexer`, `block-ram`,
 `nib-wasm-compiler`, `dartmouth-basic-lexer`, and `dartmouth-basic-parser`
 ports, followed by the paired `ed25519`, `font-parser`, `asciidoc-parser`, and
-`fpga` ports, and the paired C#/F# `zstd` ports:
+`fpga` ports, the paired C#/F# `zstd` ports, and the Haskell `atbash-cipher`
+and `scytale-cipher` ports:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 309 |
+| Present in 10-15 languages | 172 | 307 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,972 |
 | Present in one language | 703 | 9,842 |
@@ -176,7 +177,7 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Perl | 0 | Complete; paired data-structure/storage wave |
 | C# | 0 | Complete; paired native package wave |
 | F# | 0 | Complete; paired native package wave |
-| Haskell | 34 | Dependency-shaped compression, graphics, ML, and protocol waves |
+| Haskell | 32 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
 | Kotlin | 58 | Move with Java |
@@ -385,6 +386,23 @@ multi-block frames, malformed input, compression ratios, and cross-language
 compatibility with the established Ruby implementation. The package now spans
 12 implementation lanes, reduces the high-consensus backlog to 309 slots, and
 closes the remaining high-consensus gaps in both C# and F#.
+
+The first Haskell high-consensus slice is complete: `atbash-cipher` now
+provides a dependency-free CR01 implementation that mirrors ASCII letters
+while preserving case and passing all other characters through unchanged.
+Its package-native suite exercises 11 examples with 100% expression coverage,
+including complete alphabets, non-ASCII pass-through, and the cipher's
+self-inverse property. The package now spans 13 implementation lanes, reduces
+the high-consensus backlog to 308 slots, and leaves 33 gaps in the Haskell
+lane.
+
+The second Haskell high-consensus slice is complete: `scytale-cipher` now
+provides dependency-free CR02 encryption, decryption, explicit key validation,
+and brute-force candidate generation. Its package-native suite exercises 17
+examples with 98% expression coverage, including reference vectors, padded and
+uneven grids, mixed-character round trips, and the complete shared key range.
+The package now spans 14 implementation lanes, reduces the high-consensus
+backlog to 307 slots, and leaves 32 gaps in the Haskell lane.
 
 Recommended family order:
 

@@ -1,5 +1,66 @@
 # Changelog
 
+## 0.40.0 — `numOf` unwraps a scalar NDArray too (fixes a silent MATLAB `while`-loop non-termination bug)
+
+### Fixed
+
+- **`numOf` (`src/runtime.rs`), the shared helper every comparison
+  (`eq`/`ne`/`lt`/`gt`/`le`/`ge`) and re-tagging arithmetic helper
+  (`neg`/`minus`/`mod`) unwraps its operands through, only ever recognised
+  a tagged `SirFloat` box.** A rank-0 (scalar) SIR22 `NDArray` — `{ shape:
+  [], data: <one element> }`, exactly what `ArrayRt.elementwise` (the
+  `ElementwiseOp` codegen target) returns even when both operands are
+  plain numbers — fell through as an opaque object. A bare `<`/`>`/`-` on
+  that object coerces through `ToPrimitive` to `NaN`, which is silently
+  *wrong* rather than a crash (`NaN < 10` is `false`, not an error).
+  `numOf` now also unwraps a `shape.length === 0` NDArray to its sole
+  `data[0]` element, alongside the existing `SirFloat` case. `numOf` is
+  the identity on any value it doesn't recognise, and only MATLAB/APL/
+  J-style SIR22 frontends ever construct an NDArray in the first place, so
+  this is a no-op for every other language this backend serves (Ruby, JS,
+  Wolfram/Macsyma's symbolic domain, …) and a real, general fix for
+  "compare/negate/subtract-from a value that happens to have taken the
+  array-domain codegen path" — not specific to any one construct's shape.
+  - **Found by**: `matlab-to-semantic-ir`'s oracle test (`tests/
+    oracle.rs`, added in the PR immediately before this one),
+    `known_bug_while_loop_accumulator_terminates_after_one_iteration`: a
+    MATLAB `while` loop whose condition variable is also a non-literal
+    (variable-involving) arithmetic accumulator ran its body exactly
+    **once** instead of converging, because `matlab-to-semantic-ir`'s
+    scalar/array disambiguation heuristic (`expr_is_known_scalar`, see
+    that crate's `src/lower.rs`) only ever treats a *literal*-derived
+    expression as provably scalar — a variable, even one that only ever
+    holds scalars at runtime, always takes the `ElementwiseOp` path, so
+    the accumulator becomes an NDArray-shaped object after its first
+    update, and the loop's own `n < 10` condition (compiled to
+    `__Sir.lt(n, 10)`) silently evaluated to `false` every time from the
+    second iteration on. This is the most severe bug that PR found: a
+    silent wrong *computation*, not merely a wrong *display*.
+  - **Also fixes, for free, in the same commit**: unary minus on a power
+    expression (`-2 ^ 2` gave `NaN` instead of `-4`, also documented in
+    `matlab-to-semantic-ir`'s oracle test module doc) — `^`/`.^`
+    unconditionally lower to `ElementwiseOp::Pow` (no literal-only scalar
+    fast path at all, unlike `+`/`-`/`*`), so even two literal operands
+    produce a scalar NDArray, and `neg`'s codegen calls this same `numOf`.
+    Confirmed by re-running the exact repro through the real pipeline
+    after the fix (`compile_source` → `compile` → `node`): prints `-4`.
+  - Regression test: `tests/run_with_node.rs`'s
+    `numof_unwraps_scalar_ndarray_for_comparison_and_negation`, exercising
+    `numOf`/`lt`/`gt`/`eq`/`ne`/`neg`/`minus` directly against a
+    hand-built scalar `__Sir.Array.ndarray([], Float64Array.of(7))` via a
+    raw-JS runtime snippet (mirrors the existing
+    `tagged_float_helpers_behave` test's own pattern for exercising
+    runtime helpers directly).
+  - Full existing suite (228 tests across `src/` unit tests +
+    `run_with_node.rs` + `sir22_array.rs` + `sir23_symbolic.rs` + doctest)
+    passes unchanged, plus every downstream frontend crate with this
+    backend as a dev-dependency (`apl-to-semantic-ir`,
+    `javascript-to-semantic-ir`, `macsyma-to-semantic-ir`,
+    `j-to-semantic-ir`, `matlab-to-semantic-ir`, `sir-conformance`,
+    `wolfram-to-semantic-ir`) re-verified green — the new branch is only
+    ever reachable by a value an SIR22 array-domain frontend constructed,
+    so it is provably inert for every other consumer.
+
 ## 0.39.0 — tagged-float flip: faithful Ruby `Integer#/` vs `Float#/`, and `7.0` prints `7.0`
 
 Wires the dormant tagged-float substrate (0.38.0) into the emitter and every

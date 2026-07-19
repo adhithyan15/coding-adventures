@@ -949,6 +949,16 @@ impl Lowerer {
             return Ok(None);
         }
         self.check_chain_length(node)?;
+        // `Expr::LogicalAnd`/`Expr::LogicalOr` (built below) require
+        // `Feature::ShortCircuit` in the manifest -- see
+        // `semantic-ir/src/validator.rs`'s `check_expr`, and every sibling
+        // frontend that emits these nodes (e.g. `ruby-to-semantic-ir`'s
+        // `lower.rs`) declares it right alongside construction. This crate
+        // used to omit it entirely, so any MATLAB program using `&&`/`||`/
+        // `&`/`|` failed `semantic_ir::validate()` outright with "manifest
+        // does not declare feature short-circuit but module uses it" even
+        // though the lowering itself was otherwise correct.
+        self.observed.add(Feature::ShortCircuit);
         let mut acc: Option<Expr> = None;
         for child in &node.children {
             if let ASTNodeOrToken::Node(n) = child {

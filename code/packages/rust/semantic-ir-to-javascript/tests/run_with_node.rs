@@ -260,6 +260,43 @@ console.log(o.join("|"));
     }
 }
 
+#[test]
+fn numof_unwraps_scalar_ndarray_for_comparison_and_negation() {
+    // Regression test for the while-loop-accumulator bug found by
+    // `matlab-to-semantic-ir`'s oracle test (`tests/oracle.rs`, previously
+    // `known_bug_while_loop_accumulator_terminates_after_one_iteration`, now
+    // fixed): a rank-0 (scalar) SIR22 `NDArray` -- `{ shape: [], data: [x] }`,
+    // exactly what `__Sir.Array.elementwise` returns even for two plain-number
+    // operands (any variable-involving arithmetic takes this path, since the
+    // frontend's scalar heuristic only recognises *literal* chains as
+    // provably scalar) -- must compare/negate/subtract exactly like the
+    // plain number `x` it degenerately holds. Before this fix, `numOf` only
+    // unwrapped a tagged `SirFloat`; a scalar NDArray fell through as an
+    // opaque object, and a native `<`/`>`/`-` on it coerced through
+    // `ToPrimitive` to `NaN` -- `NaN < 10` is silently `false`, not an error,
+    // which is exactly why a `while n < 10 ... n = n + 1 ... end` loop whose
+    // `n` starts as a literal but is re-assigned via variable-involving
+    // arithmetic used to terminate after its first iteration instead of
+    // converging.
+    let snippet = r#"
+const F = __Sir; const o = [];
+const seven = F.Array.ndarray([], Float64Array.of(7));
+const ten = F.Array.ndarray([], Float64Array.of(10));
+o.push(String(F.numOf(seven)));       // 7  -- unwrapped to a plain number
+o.push(String(F.lt(seven, 10)));      // true  (7 < 10; used to be NaN < 10 = false)
+o.push(String(F.lt(ten, 7)));         // false (10 < 7)
+o.push(String(F.gt(seven, ten)));     // false (7 > 10)
+o.push(String(F.eq(seven, 7)));       // true  (value equality vs. the plain number)
+o.push(String(F.ne(seven, ten)));     // true
+o.push(String(F.neg(seven)));         // -7    (bare native `-` on the old object gave NaN)
+o.push(String(F.minus(ten, seven)));  // 3
+console.log(o.join("|"));
+"#;
+    if let Some(stdout) = run_runtime_snippet(snippet, "ndarray_numof") {
+        assert_eq!(stdout, "7|true|false|false|true|true|-7|3");
+    }
+}
+
 fn puts_(arg: Expr) -> Stmt {
     Stmt::ExprStmt { expr: bc("puts", vec![arg]), span: sp() }
 }

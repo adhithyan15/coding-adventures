@@ -57,6 +57,14 @@ pure, unit-tested `src/drill.ts` (`buildDrillQuestion`, `confusabilityOrder`,
 `checkAnswer`, scoring); all randomness is injected by the UI so the core stays
 deterministic.
 
+**Spaced repetition.** Which letter you're asked isn't random — a Leitner /
+SM-2-lite scheduler (`src/scheduler.ts`, measured in *sessions*, no `Date`)
+picks the most-overdue letter each question. Get it right and it drifts into the
+future (1 → 3 → 7 → 15 → 30 sessions); miss it and it comes straight back. A
+**"mastered N / total"** read-out shows progress. The scheduler is pure and
+unit-tested — per `HL02` it's "the core module … where test coverage matters
+most."
+
 ## Scope and what's next
 
 Today the app does **read + decompose** (Browse) and **recall** (Practice). Still
