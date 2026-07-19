@@ -429,7 +429,312 @@ impl ProjectState {
     }
 }
 
+// ═════════════════════════════════════════════════════════════════════════════════
+// Workspace operations
+// ═════════════════════════════════════════════════════════════════════════════════
+
+/// Mutations on a whole [`Workspace`] — the same validated-method style as
+/// `ProjectState`, but for the things that only make sense across projects: the
+/// project forest, cross-project dependencies, workspace-global task creation, moving
+/// a task between projects, and the shared resource pool.
+///
+/// Ordinary within-a-project edits are still done on the project itself
+/// (`workspace.projects.get_mut(id)?.rename_task(...)`); these ops cover only what a
+/// single `ProjectState` cannot see.
+impl Workspace {
+    // ── project lifecycle ──────────────────────────────────────────────────────────
+
+    /// Create a new (empty) project. `parent = None` makes it a top-level project
+    /// (appended to `roots`); `Some(p)` nests it under an existing project. Rejects a
+    /// duplicate id or a missing parent.
+    pub fn create_project(
+        &mut self,
+        id: ProjectId,
+        name: impl Into<String>,
+        parent: Option<ProjectId>,
+    ) -> Result<(), OpError> {
+        if self.projects.contains_key(&id) {
+            return Err(OpError::Duplicate);
+        }
+        if let Some(p) = &parent {
+            if !self.projects.contains_key(p) {
+                return Err(OpError::NotFound);
+            }
+        }
+        let mut project = ProjectState::empty(id.clone());
+        project.name = name.into();
+        project.parent = parent.clone();
+        self.projects.insert(id.clone(), project);
+        if parent.is_none() {
+            self.roots.push(id);
+        }
+        Ok(())
+    }
+
+    /// Rename a project.
+    pub fn rename_project(
+        &mut self,
+        id: &ProjectId,
+        name: impl Into<String>,
+    ) -> Result<(), OpError> {
+        self.projects.get_mut(id).ok_or(OpError::NotFound)?.name = name.into();
+        Ok(())
+    }
+
+    /// Delete a project (and its tasks). Rejected if it still has **sub-projects** —
+    /// the caller must move or delete those first, so nested work is never lost
+    /// silently. Cross-project dependencies that referenced this project's tasks are
+    /// pruned.
+    pub fn delete_project(&mut self, id: &ProjectId) -> Result<(), OpError> {
+        if !self.projects.contains_key(id) {
+            return Err(OpError::NotFound);
+        }
+        if self
+            .projects
+            .values()
+            .any(|p| p.parent.as_ref() == Some(id))
+        {
+            return Err(OpError::Invalid("project has sub-projects"));
+        }
+        // Prune cross-project edges touching any task that is about to disappear.
+        let gone: std::collections::BTreeSet<TaskId> =
+            self.projects[id].tasks.keys().cloned().collect();
+        self.cross_project_dependencies
+            .retain(|d| !gone.contains(&d.predecessor) && !gone.contains(&d.successor));
+        self.projects.remove(id);
+        self.roots.retain(|r| r != id);
+        Ok(())
+    }
+
+    /// Nest `child` under `new_parent`. Rejects a missing project, self-parenting, or a
+    /// cycle in the project forest (making `child` an ancestor of its own parent).
+    pub fn nest_project(
+        &mut self,
+        child: &ProjectId,
+        new_parent: &ProjectId,
+    ) -> Result<(), OpError> {
+        if !self.projects.contains_key(child) || !self.projects.contains_key(new_parent) {
+            return Err(OpError::NotFound);
+        }
+        if child == new_parent || project_is_ancestor(self, child, new_parent) {
+            return Err(OpError::WouldCycle);
+        }
+        self.projects.get_mut(child).unwrap().parent = Some(new_parent.clone());
+        self.roots.retain(|r| r != child);
+        Ok(())
+    }
+
+    /// Detach `child` from its parent, making it a top-level project again.
+    pub fn unnest_project(&mut self, child: &ProjectId) -> Result<(), OpError> {
+        let p = self.projects.get_mut(child).ok_or(OpError::NotFound)?;
+        if p.parent.is_some() {
+            p.parent = None;
+            if !self.roots.contains(child) {
+                self.roots.push(child.clone());
+            }
+        }
+        Ok(())
+    }
+
+    // ── tasks (workspace-global) ────────────────────────────────────────────────────
+
+    /// Create a task in `project`, enforcing **workspace-global** id uniqueness: a task
+    /// id may exist in at most one project, so cross-project dependencies (which
+    /// reference tasks by id alone) are always unambiguous. Rejects a duplicate id
+    /// anywhere, a missing project, or a parent that is not in the same project.
+    pub fn create_task(
+        &mut self,
+        project: &ProjectId,
+        id: TaskId,
+        name: impl Into<String>,
+        parent: Option<TaskId>,
+    ) -> Result<(), OpError> {
+        if self.project_of_task(&id).is_some() {
+            return Err(OpError::Duplicate);
+        }
+        self.projects
+            .get_mut(project)
+            .ok_or(OpError::NotFound)?
+            .create_task(id, name, parent)
+    }
+
+    /// Move `task` from its current project to `to`. Its WBS parent is cleared (the old
+    /// parent lives in the source project and does not move), and any children pointing
+    /// at it there become top-level; moving a whole subtree is out of scope.
+    ///
+    /// Dependencies are migrated so the intra/cross invariant holds: an intra-project
+    /// edge that now straddles the boundary moves into `cross_project_dependencies`, and
+    /// a cross-project edge whose endpoints are now co-located collapses into that
+    /// project's own `dependencies`.
+    ///
+    /// The task's **resource assignments** and **non-scheduling links** are *dropped*
+    /// (not migrated): both reference things that live in the source project — its
+    /// resource pool and its other tasks — and neither travels with the task. Leaving
+    /// them would strand a reference to a task the source project no longer owns (the
+    /// same dangling-reference hazard `delete_task` guards against). Re-add assignments
+    /// in the destination project as needed.
+    pub fn move_task(&mut self, task: &TaskId, to: &ProjectId) -> Result<(), OpError> {
+        let from = self
+            .project_of_task(task)
+            .cloned()
+            .ok_or(OpError::NotFound)?;
+        if !self.projects.contains_key(to) {
+            return Err(OpError::NotFound);
+        }
+        if &from == to {
+            return Ok(());
+        }
+
+        // Move the task itself; detach it from its (source-project) WBS parent.
+        let src = self.projects.get_mut(&from).unwrap();
+        let mut moved = src.tasks.remove(task).ok_or(OpError::NotFound)?;
+        moved.parent = None;
+        for other in src.tasks.values_mut() {
+            if other.parent.as_ref() == Some(task) {
+                other.parent = None;
+            }
+        }
+        // Drop source-project references that don't move with the task, so `from` is
+        // left with no dangling pointers to a task it no longer owns.
+        src.assignments.retain(|a| &a.task != task);
+        src.links.retain(|l| &l.from != task && &l.to != task);
+        self.projects
+            .get_mut(to)
+            .unwrap()
+            .tasks
+            .insert(task.clone(), moved);
+
+        // Source-project edges that touch the moved task now cross the boundary.
+        let src = self.projects.get_mut(&from).unwrap();
+        let (straddle, keep): (Vec<_>, Vec<_>) = src
+            .dependencies
+            .drain(..)
+            .partition(|d| &d.predecessor == task || &d.successor == task);
+        src.dependencies = keep;
+        self.cross_project_dependencies.extend(straddle);
+
+        // Cross-project edges whose endpoints are now co-located collapse to intra.
+        let mut i = 0;
+        while i < self.cross_project_dependencies.len() {
+            let (pred, succ) = {
+                let d = &self.cross_project_dependencies[i];
+                (d.predecessor.clone(), d.successor.clone())
+            };
+            if &pred == task || &succ == task {
+                let po = self.project_of_task(&pred).cloned();
+                let so = self.project_of_task(&succ).cloned();
+                if let (Some(po), Some(so)) = (po, so) {
+                    if po == so {
+                        let d = self.cross_project_dependencies.remove(i);
+                        self.projects.get_mut(&po).unwrap().dependencies.push(d);
+                        continue; // don't advance: element i is now the next one
+                    }
+                }
+            }
+            i += 1;
+        }
+        Ok(())
+    }
+
+    // ── cross-project dependencies ──────────────────────────────────────────────────
+
+    /// Add a dependency whose endpoints live in **different** projects. Rejects a
+    /// self-link, unknown endpoints, a same-project link (use the project's
+    /// `link_dependency` for those), a duplicate, or a link that would make the
+    /// workspace-wide dependency network cyclic.
+    pub fn link_cross_project_dependency(&mut self, link: DependencyLink) -> Result<(), OpError> {
+        if link.predecessor == link.successor {
+            return Err(OpError::Invalid("self-dependency"));
+        }
+        let po = self
+            .project_of_task(&link.predecessor)
+            .cloned()
+            .ok_or(OpError::NotFound)?;
+        let so = self
+            .project_of_task(&link.successor)
+            .cloned()
+            .ok_or(OpError::NotFound)?;
+        if po == so {
+            return Err(OpError::Invalid("not a cross-project dependency"));
+        }
+        if self
+            .cross_project_dependencies
+            .iter()
+            .any(|d| d.predecessor == link.predecessor && d.successor == link.successor)
+        {
+            return Err(OpError::Duplicate);
+        }
+        if cross_project_would_cycle(self, &link) {
+            return Err(OpError::WouldCycle);
+        }
+        self.cross_project_dependencies.push(link);
+        Ok(())
+    }
+
+    /// Remove a cross-project dependency by id.
+    pub fn unlink_cross_project_dependency(&mut self, id: &LinkId) {
+        self.cross_project_dependencies.retain(|d| &d.id != id);
+    }
+
+    // ── shared resource pool ────────────────────────────────────────────────────────
+
+    /// Create or replace a resource in the workspace-wide shared pool.
+    pub fn upsert_shared_resource(&mut self, resource: Resource) {
+        self.shared_resources.insert(resource.id.clone(), resource);
+    }
+
+    /// Remove a shared resource, and drop any assignment to it in every project.
+    pub fn delete_shared_resource(&mut self, id: &ResourceId) {
+        self.shared_resources.remove(id);
+        for project in self.projects.values_mut() {
+            project.assignments.retain(|a| &a.resource != id);
+        }
+    }
+}
+
 // ── validation helpers ───────────────────────────────────────────────────────────
+
+/// Whether `ancestor` appears on the parent chain of `project` in the project forest
+/// (so nesting `project` under `ancestor`… — or rather making `ancestor` a descendant
+/// of `project` — would cycle). Bounded by the project count, so a corrupt forest with
+/// a pre-existing cycle can't hang this check.
+fn project_is_ancestor(ws: &Workspace, ancestor: &ProjectId, project: &ProjectId) -> bool {
+    let mut cur = ws.projects.get(project).and_then(|p| p.parent.clone());
+    let mut guard = 0;
+    while let Some(p) = cur {
+        if &p == ancestor {
+            return true;
+        }
+        cur = ws.projects.get(&p).and_then(|p| p.parent.clone());
+        guard += 1;
+        if guard > ws.projects.len() {
+            break;
+        }
+    }
+    false
+}
+
+/// Whether adding `link` would introduce a cycle in the **workspace-wide** dependency
+/// network (every project's edges plus all cross-project edges plus the candidate).
+/// Reuses `directed-graph`'s cycle detector, exactly like the single-project check.
+fn cross_project_would_cycle(ws: &Workspace, link: &DependencyLink) -> bool {
+    let mut g = directed_graph::Graph::new();
+    for project in ws.projects.values() {
+        for t in project.tasks.keys() {
+            g.add_node(t.as_str());
+        }
+    }
+    for project in ws.projects.values() {
+        for d in &project.dependencies {
+            let _ = g.add_edge(d.predecessor.as_str(), d.successor.as_str());
+        }
+    }
+    for d in &ws.cross_project_dependencies {
+        let _ = g.add_edge(d.predecessor.as_str(), d.successor.as_str());
+    }
+    let _ = g.add_edge(link.predecessor.as_str(), link.successor.as_str());
+    g.has_cycle()
+}
 
 /// A day schedule is valid when every interval is well-formed (`start < end <= 1440`)
 /// and there are not pathologically many of them.
@@ -635,5 +940,256 @@ mod tests {
         a.create_task(tid("x"), "X", None).unwrap();
         assert_eq!(a.tasks.len(), 1);
         assert_eq!(b.tasks.len(), 0);
+    }
+
+    // ── Workspace operations ────────────────────────────────────────────────────
+
+    fn pid(s: &str) -> ProjectId {
+        ProjectId::from_raw(s)
+    }
+    fn ws() -> Workspace {
+        // One empty root project "p1".
+        Workspace::empty(WorkspaceId::from_raw("w1"), pid("p1"))
+    }
+    fn dep(id: &str, pred: &str, succ: &str) -> DependencyLink {
+        DependencyLink {
+            id: LinkId::from_raw(id),
+            predecessor: tid(pred),
+            successor: tid(succ),
+            kind: DependencyKind::FinishToStart,
+            lag: Duration::zero(),
+        }
+    }
+
+    #[test]
+    fn create_project_roots_and_nesting() {
+        let mut w = ws();
+        w.create_project(pid("p2"), "Second", None).unwrap();
+        w.create_project(pid("sub"), "Sub", Some(pid("p2")))
+            .unwrap();
+
+        assert!(
+            w.roots.contains(&pid("p2")),
+            "a top-level project joins roots"
+        );
+        assert!(!w.roots.contains(&pid("sub")), "a nested project does not");
+        assert_eq!(w.projects[&pid("sub")].parent, Some(pid("p2")));
+
+        assert_eq!(
+            w.create_project(pid("p1"), "dup", None),
+            Err(OpError::Duplicate)
+        );
+        assert_eq!(
+            w.create_project(pid("x"), "x", Some(pid("nope"))),
+            Err(OpError::NotFound)
+        );
+    }
+
+    #[test]
+    fn delete_project_refuses_to_orphan_sub_projects() {
+        let mut w = ws();
+        w.create_project(pid("p2"), "Second", None).unwrap();
+        w.create_project(pid("sub"), "Sub", Some(pid("p2")))
+            .unwrap();
+
+        assert_eq!(
+            w.delete_project(&pid("p2")),
+            Err(OpError::Invalid("project has sub-projects"))
+        );
+        // Delete the child first, then the parent succeeds and leaves roots clean.
+        w.delete_project(&pid("sub")).unwrap();
+        w.delete_project(&pid("p2")).unwrap();
+        assert!(!w.projects.contains_key(&pid("p2")));
+        assert!(!w.roots.contains(&pid("p2")));
+    }
+
+    #[test]
+    fn nest_project_rejects_a_forest_cycle() {
+        let mut w = ws();
+        w.create_project(pid("a"), "A", None).unwrap();
+        w.create_project(pid("b"), "B", Some(pid("a"))).unwrap();
+        // Nesting a under its own descendant b would cycle.
+        assert_eq!(
+            w.nest_project(&pid("a"), &pid("b")),
+            Err(OpError::WouldCycle)
+        );
+        assert_eq!(
+            w.nest_project(&pid("a"), &pid("a")),
+            Err(OpError::WouldCycle)
+        );
+        // Unnest detaches and re-roots.
+        w.unnest_project(&pid("b")).unwrap();
+        assert!(w.projects[&pid("b")].parent.is_none());
+        assert!(w.roots.contains(&pid("b")));
+    }
+
+    #[test]
+    fn create_task_is_globally_unique_across_projects() {
+        let mut w = ws();
+        w.create_project(pid("p2"), "Second", None).unwrap();
+        w.create_task(&pid("p1"), tid("t"), "T", None).unwrap();
+        // The same id in a *different* project is rejected — ids are workspace-global.
+        assert_eq!(
+            w.create_task(&pid("p2"), tid("t"), "T again", None),
+            Err(OpError::Duplicate)
+        );
+        assert_eq!(
+            w.create_task(&pid("nope"), tid("u"), "U", None),
+            Err(OpError::NotFound)
+        );
+    }
+
+    #[test]
+    fn cross_project_dependency_validation() {
+        let mut w = ws();
+        w.create_project(pid("p2"), "Second", None).unwrap();
+        w.create_task(&pid("p1"), tid("a"), "A", None).unwrap();
+        w.create_task(&pid("p2"), tid("b"), "B", None).unwrap();
+
+        // Same-project is rejected (use the project's own link_dependency).
+        w.create_task(&pid("p1"), tid("a2"), "A2", None).unwrap();
+        assert_eq!(
+            w.link_cross_project_dependency(dep("x0", "a", "a2")),
+            Err(OpError::Invalid("not a cross-project dependency"))
+        );
+        // Unknown endpoint / self-link.
+        assert_eq!(
+            w.link_cross_project_dependency(dep("x1", "a", "ghost")),
+            Err(OpError::NotFound)
+        );
+        assert_eq!(
+            w.link_cross_project_dependency(dep("x2", "a", "a")),
+            Err(OpError::Invalid("self-dependency"))
+        );
+        // A valid cross-project link, then a duplicate, then a cycle.
+        w.link_cross_project_dependency(dep("x3", "a", "b"))
+            .unwrap();
+        assert_eq!(
+            w.link_cross_project_dependency(dep("x4", "a", "b")),
+            Err(OpError::Duplicate)
+        );
+        assert_eq!(
+            w.link_cross_project_dependency(dep("x5", "b", "a")),
+            Err(OpError::WouldCycle)
+        );
+    }
+
+    #[test]
+    fn move_task_migrates_dependencies_both_ways() {
+        let mut w = ws();
+        w.create_project(pid("p2"), "Second", None).unwrap();
+        // p1: a → b (intra). p2: c.
+        w.create_task(&pid("p1"), tid("a"), "A", None).unwrap();
+        w.create_task(&pid("p1"), tid("b"), "B", None).unwrap();
+        w.create_task(&pid("p2"), tid("c"), "C", None).unwrap();
+        w.projects
+            .get_mut(&pid("p1"))
+            .unwrap()
+            .link_dependency(dep("l1", "a", "b"))
+            .unwrap();
+        // cross: b → c.
+        w.link_cross_project_dependency(dep("x1", "b", "c"))
+            .unwrap();
+        // b also carries a p1 resource assignment and a non-scheduling link a—b.
+        {
+            let p1 = w.projects.get_mut(&pid("p1")).unwrap();
+            p1.resources.insert(
+                ResourceId::from_raw("r1"),
+                Resource {
+                    id: ResourceId::from_raw("r1"),
+                    name: "Dev".into(),
+                    kind: ResourceKind::Work,
+                    calendar: None,
+                    max_units: 1.0,
+                    std_rate: crate::primitives::Money::zero("USD"),
+                    cost_per_use: crate::primitives::Money::zero("USD"),
+                },
+            );
+            p1.assignments.push(Assignment {
+                task: tid("b"),
+                resource: ResourceId::from_raw("r1"),
+                units: 1.0,
+                work: crate::primitives::Work::zero(),
+                contour: WorkContour::Flat,
+            });
+            p1.links.push(GenericLink {
+                id: LinkId::from_raw("g1"),
+                from: tid("a"),
+                to: tid("b"),
+                kind: LinkKind::Relates,
+            });
+        }
+
+        // Move b into p2. Now a(p1)→b(p2) straddles → cross; b(p2)→c(p2) collapses → intra.
+        w.move_task(&tid("b"), &pid("p2")).unwrap();
+
+        // The moved task's source-project assignment and link are pruned, not dangling.
+        assert!(
+            w.projects[&pid("p1")].assignments.is_empty(),
+            "b's p1 assignment dropped on move"
+        );
+        assert!(
+            w.projects[&pid("p1")].links.is_empty(),
+            "the a—b link dropped on move (b left p1)"
+        );
+
+        assert_eq!(w.project_of_task(&tid("b")), Some(&pid("p2")));
+        assert!(
+            w.projects[&pid("p1")].dependencies.is_empty(),
+            "the a→b edge left p1"
+        );
+        assert!(
+            w.cross_project_dependencies
+                .iter()
+                .any(|d| d.id == LinkId::from_raw("l1")),
+            "a→b is now cross-project"
+        );
+        assert!(
+            w.projects[&pid("p2")]
+                .dependencies
+                .iter()
+                .any(|d| d.id == LinkId::from_raw("x1")),
+            "b→c collapsed into p2"
+        );
+        assert!(
+            !w.cross_project_dependencies
+                .iter()
+                .any(|d| d.id == LinkId::from_raw("x1")),
+            "…and left the cross-project set"
+        );
+    }
+
+    #[test]
+    fn shared_resource_pool_drops_assignments_on_delete() {
+        let mut w = ws();
+        w.create_task(&pid("p1"), tid("a"), "A", None).unwrap();
+        w.upsert_shared_resource(Resource {
+            id: ResourceId::from_raw("r1"),
+            name: "Shared Dev".into(),
+            kind: ResourceKind::Work,
+            calendar: None,
+            max_units: 1.0,
+            std_rate: crate::primitives::Money::zero("USD"),
+            cost_per_use: crate::primitives::Money::zero("USD"),
+        });
+        w.projects
+            .get_mut(&pid("p1"))
+            .unwrap()
+            .assignments
+            .push(Assignment {
+                task: tid("a"),
+                resource: ResourceId::from_raw("r1"),
+                units: 1.0,
+                work: crate::primitives::Work::zero(),
+                contour: WorkContour::Flat,
+            });
+        assert_eq!(w.shared_resources.len(), 1);
+
+        w.delete_shared_resource(&ResourceId::from_raw("r1"));
+        assert!(w.shared_resources.is_empty());
+        assert!(
+            w.projects[&pid("p1")].assignments.is_empty(),
+            "assignments to a deleted shared resource are pruned"
+        );
     }
 }
