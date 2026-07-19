@@ -19,14 +19,28 @@ where a word needs them.
   practice. Devanagari introduced through the words; the both-ways cognate web
   (*te*↔*thee*, *su-*↔*eu-*, √gam↔*come*, *na*↔*nōn*) foregrounded.
 
+- **Ch. 2 — Introducing Yourself**: nāma (← *nāman* → *name*) → mama (← *me/my*)
+  → asti (← *is/est*; Sanskrit keeps the copula Tamil/Bengali drop) → mama nāma …
+  asti → bhavān/tvam (respect by 3rd person) → kim (← *what/quis*) → tava nāma
+  kim? → ānandaḥ (joy; "seeing you, joy") → practice.
+- **Ch. 3 — How Are You**: katham (how) → bhavān katham asti? → aham (← *ego* →
+  English **I**) → kuśalam (well; ← *kuśa* grass → "skilled" → "well") → na cintā
+  (you're welcome = "no worry") → practice. The copula trio asmi/asi/asti.
+- **Ch. 4 — Farewells**: gacchāmi ("I go"; ← *gam* → English *come*) → punaḥ
+  (again) → punar-darśanāya ("for seeing again"; the dative; *darśana* = a
+  beholding) → śvaḥ ("tomorrow"; kept distinct from *hyaḥ* "yesterday," unlike
+  Hindi *kal*) → practice.
+- **Ch. 5 — First Verbs**: vadāmi (← *vad*; the **dual** *vadāvaḥ* "we two speak")
+  → ahaṁ saṁskṛtaṁ vadāmi (I speak Sanskrit; *saṁskṛta* = "perfected"; sandhi) →
+  vasāmi (← *vas* → English **was**; the locative *-e*) → karomi (← √kṛ, the root
+  of *namaskāra/karma/Sanskrit*) → practice.
+
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 2 | Introducing yourself: *mama nāma…* ("my name…"), *bhavān* / *tvam* (respectful / familiar "you"), the first-person verb ending |
-| 3 | The verb *as-* ("to be": *asti* "is") — ancestor of Latin *est*, English *is*; numbers *eka–daśa* (1–10), cognate with Latin/Greek |
-| 4 | The astonishing Sanskrit **dual** — singular / dual / plural — and the first noun case beyond the nominative |
-| 5+ | The declensions and the root-and-affix system, each introduced where a phrase needs it; sandhi deepened — always tracing roots east and west |
+| 6 | The eight cases, one at a time (nominative, accusative…); numbers *eka–daśa* (1–10), cognate with Latin/Greek |
+| 7+ | The declensions and the root-and-affix system; the dual deepened; sandhi — always tracing roots east and west |
 
 Note: Sanskrit's showpiece features — the **dual number**, three genders, eight
 cases, and pervasive **sandhi** — are introduced one at a time as real phrases

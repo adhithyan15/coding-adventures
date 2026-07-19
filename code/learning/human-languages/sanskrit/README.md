@@ -23,8 +23,19 @@ book.
 
 - **Chapter 1 — Greetings** ([`lessons/SA-C01-*`](./lessons/)): namaste,
   namaskāraḥ, dhanyavādaḥ, svāgatam, ām/na, practice. In the book.
-- **Chapter 2 — Introducing Yourself** (planned): *mama nāma…*, and the Sanskrit
-  verb that marks singular, **dual**, and plural.
+- **Chapter 2 — Introducing Yourself** ([`lessons/SA-C02-*`](./lessons/)): nāma,
+  mama, asti, **mama nāma … asti** (Sanskrit keeps the copula), bhavān/tvam, kim,
+  **tava nāma kim?**, ānandaḥ, practice. Each atom a *source* (→ *name/my/is/what*).
+  In the book.
+- **Chapter 3 — How Are You** ([`lessons/SA-C03-*`](./lessons/)): katham, **bhavān
+  katham asti?**, aham (← *ego* → *I*), kuśalam, na cintā, practice. The copula
+  trio asmi/asi/asti. In the book.
+- **Chapter 4 — Farewells** ([`lessons/SA-C04-*`](./lessons/)): gacchāmi (← *gam*
+  → *come*), punaḥ, **punar-darśanāya**, śvaḥ (kept distinct from *hyaḥ*),
+  practice. The dative case. In the book.
+- **Chapter 5 — First Verbs** ([`lessons/SA-C05-*`](./lessons/)): vadāmi (the
+  **dual** *vadāvaḥ*), **ahaṁ saṁskṛtaṁ vadāmi**, vasāmi (← *vas* → *was*),
+  karomi (← √kṛ), practice. In the book.
 
 ## Book / fonts
 
