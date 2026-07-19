@@ -195,8 +195,9 @@ without any change to the IR or the frontends.
 `SIR22` spec → `semantic-ir` core additions → `matlab-to-semantic-ir` →
 `octave-to-semantic-ir` → `sir-runtime-array` → JS/TS backend codegen →
 `apl-to-semantic-ir` (SIR22 addendum for APL primitives) →
-`j-to-semantic-ir` → golden/oracle tests (MATLAB's own and Octave's own now
-shipped. MATLAB — see `matlab-to-semantic-ir/tests/oracle.rs`, the first
+`j-to-semantic-ir` → golden/oracle tests (MATLAB's, Octave's, and APL's own
+now shipped; J's remains open. MATLAB — see
+`matlab-to-semantic-ir/tests/oracle.rs`, the first
 true oracle diff anywhere in this track: the same computation run through
 `matlab-runtime` and through this frontend's compiled-JS-via-`node` path,
 asserted equal, for a 7-case corpus spanning literal arithmetic,
@@ -222,9 +223,11 @@ disagrees with Octave's "logicals are doubles, 0 is false" semantics,
 because SIR's shared `truthy()` runtime helper treats only `false`/`nil` as
 falsy (a Ruby/Lisp convention) — `CORPUS` sidesteps this by negating a
 comparison instead, and the gap is recorded in that crate's `CHANGELOG.md`
-for a follow-up. APL/J's own oracle tests remain open follow-on items —
-APL's distinct primitive vocabulary needs its own corpus, not just MATLAB's
-reused).
+for a follow-up. APL — see `apl-to-semantic-ir/tests/oracle.rs`, its own
+distinct 17-case corpus (not just MATLAB's reused), which also surfaced 3
+new bugs in monadic `- × ÷ ⌈ ⌊` (a wrong display glyph, a wrong value on
+array operands, and a hard crash on `× ÷ ⌈ ⌊`), all still open — see that
+crate's `CHANGELOG.md`. J's own oracle tests remain an open follow-on item.
 All items through JS/TS backend codegen are shipped.
 
 **Stream B (symbolic/CAS, backs Wolfram/Macsyma/Maxima and future
