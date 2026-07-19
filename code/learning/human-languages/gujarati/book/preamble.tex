@@ -1,0 +1,67 @@
+% Preamble for "Gujarati, Step by Step, Root by Root" (HL00 book format).
+% XeLaTeX only. Uses the vendored static Noto Sans Gujarati (see _fonts/),
+% loaded by relative path so local and CI builds are identical. Rendered
+% font-only via Script=Gujarati (no polyglossia Gujarati module needed).
+
+\usepackage{fontspec}
+\setmainfont{Latin Modern Roman}
+\setsansfont{Latin Modern Sans}
+\setmonofont{Latin Modern Mono}
+
+\usepackage{newunicodechar}
+\newunicodechar{ṁ}{\.{m}}
+\newunicodechar{ṉ}{\b{n}}
+\newunicodechar{ṟ}{\b{r}}
+\newunicodechar{ḻ}{\b{l}}
+\newunicodechar{ḷ}{\d{l}}
+\newunicodechar{ũ}{\~{u}}
+\newunicodechar{ĩ}{\~{\i}}
+\newunicodechar{ã}{\~{a}}
+
+\usepackage[table]{xcolor}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage[hidelinks]{hyperref}
+\usepackage{titlesec}
+
+\usepackage{polyglossia}
+\setmainlanguage{english}
+
+% Vendored Gujarati font (../../_fonts/ from <lang>/book/); \gu{...} = inline
+% Gujarati snippet.
+\newfontfamily\gujaratifont[Path=../../_fonts/, Script=Gujarati]{NotoSansGujarati-Static.ttf}
+\newcommand{\gu}[1]{{\gujaratifont #1}}
+
+\hypersetup{
+  pdftitle={Gujarati, Step by Step, Root by Root},
+  pdfauthor={Adhithya Rajasekaran},
+  pdfsubject={Etymology-driven Gujarati curriculum},
+  pdfkeywords={Gujarati, Gandhi, Indo-Aryan, language learning}
+}
+
+\newtcolorbox{cousinweb}{
+  breakable, skin=enhanced, colback=yellow!8, colframe=yellow!45!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={The word, taken apart --- its roots and family}
+}
+\newtcolorbox{culture}{
+  breakable, skin=enhanced, colback=red!5, colframe=red!40!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={Why it's said this way}
+}
+\newtcolorbox{grammarlens}{
+  breakable, skin=enhanced, colback=blue!5, colframe=blue!35!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={Grammar Lens}
+}
+\newtcolorbox{sounds}{
+  breakable, skin=enhanced, colback=green!6, colframe=green!30!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={The letters in this word}
+}
+
+\titleformat{\chapter}[display]
+  {\normalfont\Large\bfseries}{Chapter \thechapter}{10pt}{\huge}
