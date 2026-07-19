@@ -78,6 +78,23 @@ fn a_float_literal_program_validates_and_declares_floats() {
 }
 
 #[test]
+fn a_logical_and_program_validates_and_declares_short_circuit() {
+    // Regression test for a confirmed, previously-shipped bug: `try_logical`
+    // (`src/lower.rs`) built `Expr::LogicalAnd`/`Expr::LogicalOr` nodes for
+    // `&&`/`||`/`&`/`|` without ever calling `self.observed.add(Feature::
+    // ShortCircuit)`, so any MATLAB program using them failed
+    // `semantic_ir::validate()` outright with "manifest does not declare
+    // feature short-circuit but module uses it" -- even though the lowering
+    // itself was otherwise correct. Found while scoping `tests/oracle.rs`'s
+    // corpus (probe: `x > 3 && y > 5`), fixed here alongside it.
+    let module = assert_valid("x = 5;\ny = 10;\nif x > 3 && y > 5\n  disp(1);\nend\n");
+    assert!(module
+        .manifest
+        .iter()
+        .any(|f| f == semantic_ir::Feature::ShortCircuit));
+}
+
+#[test]
 fn control_flow_with_a_variable_accumulator_validates_but_needs_array_features() {
     let module = assert_valid(
         "total = 0;\nfor i = 1:10\n  if i > 5\n    total = total + i;\n  end\nend\ndisp(total);\n",
