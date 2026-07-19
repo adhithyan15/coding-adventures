@@ -117,11 +117,12 @@ ports, and the paired C#/F# `chacha20-poly1305`, `xml-lexer`, `block-ram`,
 ports, followed by the paired `ed25519`, `font-parser`, `asciidoc-parser`, and
 `fpga` ports, the paired C#/F# `zstd` ports, and the Haskell `atbash-cipher`,
 `scytale-cipher`, `feature-normalization`, `loss-functions`, `trig`, `wave`,
-`matrix`, `vigenere-cipher`, `uuid`, `document-ast`, and `lz78` ports:
+`matrix`, `vigenere-cipher`, `uuid`, `document-ast`, `lz78`, and `deflate`
+ports:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 298 |
+| Present in 10-15 languages | 172 | 297 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,972 |
 | Present in one language | 705 | 9,870 |
@@ -167,7 +168,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 172 packages present in at least ten implementation languages need 298
+The 172 packages present in at least ten implementation languages need 297
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -178,7 +179,7 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Perl | 0 | Complete; paired data-structure/storage wave |
 | C# | 0 | Complete; paired native package wave |
 | F# | 0 | Complete; paired native package wave |
-| Haskell | 23 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
+| Haskell | 22 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
 | Kotlin | 58 | Move with Java |
@@ -491,6 +492,15 @@ vectors, end-of-stream flushing, dictionary caps, text and binary round trips,
 exact wire bytes, and every malformed-input error family. The package now spans
 13 implementation lanes, reduces the high-consensus backlog to 298 slots, and
 leaves 23 gaps in the Haskell lane.
+
+The twelfth Haskell high-consensus slice is complete: `deflate` now provides a
+pure CMP05 encoder and strict decoder that compose the existing Haskell LZSS
+and canonical Huffman packages. Its package-native suite exercises 26 examples
+with 91% expression coverage, including exact Python-compatible wire vectors,
+literal-only and match-heavy streams, binary round trips, parameter validation,
+and malformed headers, tables, prefixes, backreferences, and output lengths.
+The package now spans 13 implementation lanes, reduces the high-consensus
+backlog to 297 slots, and leaves 22 gaps in the Haskell lane.
 
 Recommended family order:
 
