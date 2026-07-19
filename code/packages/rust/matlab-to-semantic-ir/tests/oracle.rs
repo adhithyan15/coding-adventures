@@ -359,6 +359,32 @@ const CORPUS: &[Case] = &[
         final_expr: "y",
         expected: "1",
     },
+    // Regression case for a second bug the first fix attempt introduced
+    // (`/security-review` caught it before push): a bare `VarRef` holding a
+    // STORED comparison result is never recognisably boolean by static
+    // shape analysis alone, so a lowering-time-only fix that decides
+    // "already boolean, skip the wrap" vs. "bare number, wrap in `!= 0`" by
+    // inspecting the operand's immediate shape gets this case wrong --
+    // `tf` gets wrapped in `tf != 0` regardless of its actual value, and
+    // the JS runtime's strict-identity `!=` (`numOf(a) !== numOf(b)`) makes
+    // `false != 0` unconditionally `true` (a `boolean` and a `number` are
+    // never `===`), silently taking the `if` branch no matter what `tf`
+    // holds. The fix (`to_matlab_condition` wrapping every operand in the
+    // `matlab_truthy` runtime intrinsic, unconditionally, deciding
+    // boolean-vs-number AT RUNTIME instead) makes this correct regardless
+    // of the operand's static shape. `y` must become `2` (`tf` is `false`).
+    Case {
+        name: "if_condition_on_a_variable_holding_a_stored_false_comparison",
+        setup: "y = 0;\ntf = (5 < 3);\nif tf\n  y = 1;\nelse\n  y = 2;\nend\n",
+        final_expr: "y",
+        expected: "2",
+    },
+    Case {
+        name: "if_condition_on_a_variable_holding_a_stored_true_comparison",
+        setup: "y = 0;\ntf = (5 > 3);\nif tf\n  y = 1;\nelse\n  y = 2;\nend\n",
+        final_expr: "y",
+        expected: "1",
+    },
     // `&&`/`||` given a BARE-ZERO operand, observed through an `if` branch
     // decision rather than a `disp`ed raw value -- `disp`ing a `LogicalAnd`/
     // `LogicalOr` result directly is deliberately NOT done anywhere in this

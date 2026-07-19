@@ -1552,6 +1552,20 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
                 out.push_str("))");
                 return;
             }
+            // MATLAB/Octave-family truthiness ("nonzero is true") for a
+            // boolean-context operand that may be a genuine JS boolean
+            // (an already-lowered comparison/`~`/`&&`/`||`) or a bare
+            // number — `matlabTruthy` handles both correctly, unlike the
+            // canonical `truthy()` above, which implements the unrelated
+            // Ruby/Lisp convention (`0` is truthy there). See
+            // `matlab-to-semantic-ir::lower::to_matlab_condition`, the
+            // sole emitter of this builtin.
+            "matlab_truthy" => {
+                out.push_str("__Sir.matlabTruthy(");
+                emit_expr(out, &args[0], indent);
+                out.push(')');
+                return;
+            }
             "neg" => {
                 // Unary minus re-tags: `-(7.0)` is the boxed Float `-7.0`,
                 // which native `-` on a `SirFloat` object cannot produce.

@@ -123,31 +123,52 @@
     addressed here.) `apl-to-semantic-ir`/`j-to-semantic-ir` are NOT
     affected: v0.1.0 of both has no `if`/`while`/`&&`/`||`/`~` lowering at
     all yet (no boolean-context construct exists to have the bug).
-  - **Fix:** a new `to_matlab_condition` helper (`src/lower.rs`) coerces
-    an already-lowered expression to MATLAB truthiness at the point it
-    reaches a boolean context — wrapping anything that is not already a
-    genuine SIR boolean (per the new `expr_is_known_bool` predicate: a
-    comparison, a `not` call, or `LogicalAnd`/`LogicalOr`) in an explicit
-    `!= 0` comparison. Applied at all four call sites: `lower_if`'s and
-    `lower_while`'s condition, `lower_unary`'s `~` operand, and each
-    operand `try_logical` folds into `LogicalAnd`/`LogicalOr` (so the
-    "deciding operand" a short-circuit returns is always already boolean,
-    by construction, all the way down through nesting). An already-boolean
-    operand (`~(x > 3)`, `if x > 0`) is left untouched — wrapping it again
-    would be wrong, not just redundant (`false != 0` is `true`).
-  - **Regression tests:** 8 new structural tests in `tests/test_lower.rs`
-    (bare-variable negation wraps in `!= 0`; a comparison operand is NOT
-    double-wrapped, for both `~` and `if`; `if`/`while` on a bare variable
-    wrap in `!= 0`; `&&`/`||` wrap each bare operand independently while
-    leaving an already-boolean operand alone) plus 6 new end-to-end
-    `tests/oracle.rs` corpus cases cross-checked against real
-    `matlab-runtime` through an actual `node` process: `~0` is `1`, `~5` is
-    `0`, `if 0`/`if 5` take the correct branch, and `0 && 1` / `0 || 5`
-    resolve correctly through an `if` (observing the branch taken rather
-    than `disp`ing the raw short-circuit value directly, which would hit
-    an unrelated, already-documented representational difference between
-    this frontend's Ruby-style "return the deciding operand" `&&`/`||` and
-    `matlab-runtime`'s coerced-0.0/1.0-double convention).
+  - **First fix attempt had a HIGH-severity regression, caught by
+    `/security-review` before push and corrected in this same PR.** The
+    initial approach wrapped an operand in an explicit `!= 0` comparison
+    only when a new `expr_is_known_bool` predicate could NOT statically
+    prove the operand was already a genuine SIR boolean (matching only
+    `BoolLit`, `LogicalAnd`/`LogicalOr`, or a comparison/`not`
+    `BuiltinCall` by shape). That predicate cannot see through a `VarRef`:
+    a variable that *holds* a stored comparison result (`tf = (5 < 3); if
+    tf`) is indistinguishable, by static shape alone, from a variable
+    holding a bare number — so it fell into the "wrap in `!= 0`" branch
+    too. The shared JS runtime's `ne(a, b)` is `numOf(a) !== numOf(b)`
+    (strict), so `false != 0` evaluates to `true` unconditionally,
+    regardless of whether `tf` was really `true` or `false` — silently
+    inverting (or always-taking) the `if` branch for exactly this pattern.
+  - **Corrected fix:** the boolean-vs-number decision moved from
+    lowering-time static shape analysis to a RUNTIME intrinsic.
+    `to_matlab_condition` (`src/lower.rs`) now UNCONDITIONALLY wraps every
+    operand reaching a boolean context in a new `matlab_truthy`
+    `BuiltinCall`, which `semantic-ir-to-javascript` emits as
+    `__Sir.matlabTruthy(x)` — a runtime helper (`typeof x === "boolean" ?
+    x : numOf(x) !== 0`) that decides "already a genuine boolean, pass
+    through" vs. "a bare number, apply `!= 0`" using the ACTUAL value at
+    runtime, not a static guess. `expr_is_known_bool` is deleted entirely;
+    there is no shape check left to be wrong. Applied at all four call
+    sites unconditionally: `lower_if`'s and `lower_while`'s condition,
+    `lower_unary`'s `~` operand, and each operand `try_logical` folds into
+    `LogicalAnd`/`LogicalOr`.
+  - **Regression tests:** `tests/test_lower.rs` rewrote the structural
+    tests to assert the unconditional `matlab_truthy` wrap (bare-variable
+    and already-a-comparison operands both wrap, for `~`/`if`/`while`/
+    `&&`/`||`), and added the exact regression case that broke the first
+    attempt: `if_condition_on_a_variable_holding_a_stored_comparison_
+    still_wraps_in_matlab_truthy` (a `VarRef` holding a stored comparison
+    result). `tests/oracle.rs` adds two end-to-end cases cross-checked
+    against real `matlab-runtime` through `node`:
+    `if_condition_on_a_variable_holding_a_stored_false_comparison` and
+    `..._true_comparison` — a variable holding `(5 < 3)`/`(5 > 3)` takes
+    the correct `if`/`else` branch, which is the case the first fix
+    attempt got backwards. Plus the original 6 end-to-end oracle cases:
+    `~0` is `1`, `~5` is `0`, `if 0`/`if 5` take the correct branch, and
+    `0 && 1` / `0 || 5` resolve correctly through an `if` (observing the
+    branch taken rather than `disp`ing the raw short-circuit value
+    directly, which would hit an unrelated, already-documented
+    representational difference between this frontend's Ruby-style
+    "return the deciding operand" `&&`/`||` and `matlab-runtime`'s
+    coerced-0.0/1.0-double convention).
   - `octave-to-semantic-ir/tests/oracle.rs`'s `bang_negation_on_comparison`
     doc comment is updated to drop the "confirmed, excluded gap" framing,
     and two new corpus cases (`bang_negation_on_bare_zero_is_true`,

@@ -1,5 +1,58 @@
 # Changelog
 
+## 0.41.0 — `__Sir.matlabTruthy`: a runtime-decided boolean-context coercion for MATLAB/Octave
+
+### Added
+
+- **`matlabTruthy(x)` (`src/runtime.rs`)**: `typeof x === "boolean" ? x :
+  numOf(x) !== 0`. A new runtime intrinsic, exported on the `__Sir`
+  namespace object alongside `truthy`, and emitted by `emit_builtin_call`
+  (`src/emit.rs`) for a new one-argument `"matlab_truthy"` SIR builtin
+  (`__Sir.matlabTruthy(x)`).
+  - **Why this exists**: `matlab-to-semantic-ir`'s `~`/`if`/`while`/`&&`/
+    `||` lowering needs to coerce an operand to MATLAB's "logicals are
+    doubles" truthiness (any nonzero number is true, only `0` is false —
+    the OPPOSITE of this backend's own canonical `truthy()`, which treats
+    `0` as truthy per the Ruby/Lisp convention `ruby-to-semantic-ir`
+    depends on). The first attempt at this (in `matlab-to-semantic-ir`,
+    same PR) tried to decide statically at lowering time whether an
+    operand was "already a genuine boolean" (skip wrapping) or "a bare
+    number" (wrap in `!= 0`), using a shape check on the *unevaluated*
+    expression tree. `/security-review` caught a HIGH-severity regression
+    in that approach: a bare `VarRef` holding a *stored* comparison result
+    (`tf = (5 < 3); if tf`) is indistinguishable, by shape alone, from a
+    `VarRef` holding a bare number — so it always got wrapped in `!= 0`,
+    and this backend's own `ne(a, b)` (`numOf(a) !== numOf(b)`, strict)
+    makes `false != 0` unconditionally `true` — silently inverting the
+    `if` regardless of what `tf` actually held.
+  - **The fix**: push the decision to runtime, where the actual value
+    (not its static shape) is known. `matlabTruthy` is applied
+    UNCONDITIONALLY to every operand reaching a MATLAB boolean context —
+    no shape analysis needed, no way for it to be wrong, since it branches
+    on `typeof x` at the moment the value actually exists.
+  - **Regression test**: `tests/run_with_node.rs`'s new
+    `matlab_truthy_passes_through_a_genuine_boolean_and_coerces_a_bare_number`
+    exercises `__Sir.matlabTruthy` directly against both a real JS
+    `true`/`false` and a bare `0`/`5`, via a raw-JS runtime snippet
+    (mirrors `tagged_float_helpers_behave`'s existing pattern). End-to-end
+    coverage of the actual regression case (a variable holding a stored
+    comparison, taking the correct `if`/`else` branch) lives in
+    `matlab-to-semantic-ir/tests/oracle.rs` — see that crate's own
+    CHANGELOG entry for the full write-up.
+  - **Known pre-existing gap, NOT introduced or worsened by this
+    change**: `semantic-ir-to-typescript`'s `emit_builtin_call` only
+    explicitly dispatches a handful of builtins (`+ - * / = < >` among
+    them); anything else, including `!=`/`<=`/`>=` and now
+    `matlab_truthy`, falls through to `__Sir.callBuiltin(name, args)` — a
+    runtime dispatch table in the vendored
+    `code/packages/typescript/sir-runtime-core/src/runtime.ts` whose
+    `builtins` table does not register `!=`/`<=`/`>=` either. Any frontend
+    emitting those comparisons and targeting TypeScript already throws
+    `SIR builtin "..." is not implemented in sir-runtime-core's dispatch
+    table` at runtime — confirmed pre-existing (this PR does not touch
+    `semantic-ir-to-typescript` or `sir-runtime-core`) and flagged as a
+    separate, unfixed, out-of-scope follow-up.
+
 ## 0.40.0 — `numOf` unwraps a scalar NDArray too (fixes a silent MATLAB `while`-loop non-termination bug)
 
 ### Fixed

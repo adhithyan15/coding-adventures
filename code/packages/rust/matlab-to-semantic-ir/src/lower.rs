@@ -969,9 +969,7 @@ impl Lowerer {
                 // Each operand is forced to MATLAB truthiness ("nonzero is
                 // true") BEFORE it can become the "deciding operand" a
                 // short-circuit returns — see `to_matlab_condition`'s doc
-                // comment. This is what lets `expr_is_known_bool` treat a
-                // `LogicalAnd`/`LogicalOr` node as already-boolean: by
-                // construction, every operand reaching one already is.
+                // comment.
                 let operand = to_matlab_condition(self.lower_expr_d(n, ctx, depth + 1)?);
                 acc = Some(match acc.take() {
                     None => operand,
@@ -1476,10 +1474,7 @@ impl Lowerer {
                 name: "not".to_string(),
                 // `~5` must be `0` and `~0` must be `1` — MATLAB truthiness
                 // ("nonzero is true"), not the shared backend's own — see
-                // `to_matlab_condition`'s doc comment. `to_matlab_condition`
-                // leaves an already-boolean operand (e.g. `~(x > 3)`)
-                // unchanged, so this is a no-op for the case the frontend
-                // already handled correctly.
+                // `to_matlab_condition`'s doc comment.
                 args: vec![to_matlab_condition(operand)],
                 effects: EffectSet::PURE,
                 span,
@@ -2088,30 +2083,6 @@ fn expr_is_known_scalar_d(e: &Expr, depth: usize) -> bool {
     }
 }
 
-/// Is `e` already a genuine SIR boolean — i.e. it produces `true`/`false`
-/// regardless of which convention a backend's truthy-check uses?
-///
-/// A comparison (`= != < > <= >=`, this frontend's `BuiltinCall` spelling
-/// per [`Lowerer::try_comparison`]), a `~`-negation (`BuiltinCall("not",
-/// ..)` per [`Lowerer::lower_unary`]), and `&&`/`||` ([`Expr::LogicalAnd`]/
-/// [`Expr::LogicalOr`]) all qualify. `LogicalAnd`/`LogicalOr` qualify
-/// unconditionally rather than recursively, because [`to_matlab_condition`]
-/// is *always* applied to each of their own operands at the point they are
-/// built (see [`Lowerer::try_logical`]) — so by construction their
-/// "deciding operand" (Ruby-style short-circuit: the node returns whichever
-/// operand decided the result, not a separately-computed bool) is already
-/// one of these same already-boolean shapes, all the way down.
-fn expr_is_known_bool(e: &Expr) -> bool {
-    match e {
-        Expr::BoolLit { .. } => true,
-        Expr::LogicalAnd { .. } | Expr::LogicalOr { .. } => true,
-        Expr::BuiltinCall { name, .. } => {
-            matches!(name.as_str(), "=" | "!=" | "<" | ">" | "<=" | ">=" | "not")
-        }
-        _ => false,
-    }
-}
-
 /// Coerce an already-lowered MATLAB/Octave expression to genuine MATLAB
 /// truthiness at the point it reaches a **boolean context**: an `if`/
 /// `while` condition, the operand of unary `~`, or an operand of `&&`/`||`.
@@ -2129,35 +2100,38 @@ fn expr_is_known_bool(e: &Expr) -> bool {
 /// would silently get Ruby's truthiness instead of MATLAB's: canonical SIR
 /// `truthy(0)` is `true`, backwards from MATLAB's `~0 == 1`.
 ///
-/// The fix belongs HERE, at MATLAB/Octave lowering time, rather than in
-/// the shared runtime — this frontend already knows its own language's
-/// truthiness rule, so it makes the fact `x != 0` an explicit SIR
-/// comparison *before* the value ever reaches a backend's truthy check.
-/// After that, a real SIR boolean means the same thing to every backend
-/// and every source language, canonical-SIR-truthy or not.
+/// The fix belongs HERE, at MATLAB/Octave lowering time (this frontend
+/// already knows its own language's truthiness rule), but it does **not**
+/// try to decide, via static shape analysis of the operand, whether the
+/// value is "already a genuine boolean" (a comparison/`~`/`&&`/`||` result)
+/// versus "a bare number" — an earlier version of this function did
+/// exactly that (an `expr_is_known_bool` shape check gating whether to
+/// wrap in an explicit `!= 0` comparison) and got it wrong for the most
+/// ordinary case there is: a **variable holding a stored comparison
+/// result** (`tf = (5 < 3); if tf ... end`). A bare `VarRef` is never
+/// "known bool" by shape alone, so the old code wrapped it in `tf != 0`
+/// regardless of what `tf` actually held — and the runtime's `!=`
+/// (`numOf(a) !== numOf(b)`) compares a genuine JS `boolean` against the
+/// number `0` by strict identity, which is unconditionally `true` for
+/// EITHER `true` or `false` (`false !== 0` is `true` — different types are
+/// never `===`). So `if tf` silently took its `if` branch regardless of
+/// `tf`'s value, a shape-analysis blind spot no amount of pattern-matching
+/// on the immediate node can close (the same problem recurs for a
+/// function-call result, an array-element read, …).
 ///
-/// A value that [`expr_is_known_bool`] already recognises as one is
-/// returned UNCHANGED — wrapping it again would be both redundant and
-/// actively wrong: the runtime's `!=` unwraps a tagged float via `numOf`
-/// but otherwise compares by strict identity, so `false != 0` is `true`
-/// (a JS `boolean` and `number` are never `===`), which would invert an
-/// already-correct boolean. Everything else — a bare variable, a numeric
-/// literal, an arithmetic result, a function call, an index read, … —
-/// is wrapped in an explicit `!= 0`.
+/// Instead, every operand reaching a boolean context is wrapped,
+/// unconditionally, in the dedicated runtime intrinsic
+/// [`__Sir.matlabTruthy`](../../semantic-ir-to-javascript/src/runtime.rs)
+/// (`BuiltinCall("matlab_truthy", [expr])`), which decides at **runtime**
+/// instead of at compile time: `typeof x === "boolean" ? x : (numOf(x) !==
+/// 0)`. This is correct for every shape uniformly — a genuine boolean
+/// passes through unchanged, a bare number gets MATLAB's `!= 0` rule —
+/// without this frontend ever needing to prove which case it's looking at.
 fn to_matlab_condition(expr: Expr) -> Expr {
-    if expr_is_known_bool(&expr) {
-        return expr;
-    }
     let span = expr.span().clone();
     Expr::BuiltinCall {
-        name: "!=".to_string(),
-        args: vec![
-            expr,
-            Expr::IntLit {
-                value: 0,
-                span: span.clone(),
-            },
-        ],
+        name: "matlab_truthy".to_string(),
+        args: vec![expr],
         effects: EffectSet::PURE,
         span,
     }

@@ -297,6 +297,31 @@ console.log(o.join("|"));
     }
 }
 
+#[test]
+fn matlab_truthy_passes_through_a_genuine_boolean_and_coerces_a_bare_number() {
+    // `matlab-to-semantic-ir` wraps every operand reaching a boolean
+    // context (`~`/`if`/`while`/`&&`/`||`) in `matlab_truthy`, UNCONDITIONALLY
+    // -- no static "is this already boolean?" shape check, because the first
+    // attempt at that check (caught by /security-review before push) could
+    // not see through a `VarRef` holding a *stored* comparison result, and
+    // silently mis-wrapped it in a `!= 0` comparison instead. `matlabTruthy`
+    // makes the boolean-vs-number call at RUNTIME instead, where the actual
+    // value (not its static shape) is known: pass a genuine JS boolean
+    // through unchanged, otherwise apply MATLAB's "nonzero is true" rule.
+    let snippet = r#"
+const F = __Sir; const o = [];
+o.push(String(F.matlabTruthy(true)));   // true  (genuine boolean passes through)
+o.push(String(F.matlabTruthy(false)));  // false (genuine boolean passes through)
+o.push(String(F.matlabTruthy(0)));      // false (bare zero: falsy)
+o.push(String(F.matlabTruthy(5)));      // true  (bare nonzero: truthy)
+o.push(String(F.matlabTruthy(-3)));     // true  (bare negative nonzero: truthy)
+console.log(o.join("|"));
+"#;
+    if let Some(stdout) = run_runtime_snippet(snippet, "matlab_truthy") {
+        assert_eq!(stdout, "true|false|false|true|true");
+    }
+}
+
 fn puts_(arg: Expr) -> Stmt {
     Stmt::ExprStmt { expr: bc("puts", vec![arg]), span: sp() }
 }
