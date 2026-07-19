@@ -469,7 +469,9 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
                         ],
                         "i64" | "i32",
                     ) => {
-                        // Accepted — lower.rs materialises literal ordering.
+                        // Accepted — lower.rs folds a literal ordering to a
+                        // constant, or emits a `$__str_cmp` call for runtime
+                        // operands (the two Vars may be runtime string handles).
                     }
                     _ => {
                         errors.push(format!(

@@ -1,5 +1,43 @@
 # Changelog — iir-to-wasm
 
+## [0.39.0] — 2026-07-19 (LANG-FULL E4-dyn E4d-3b: runtime `str_cmp`)
+
+Give `str_cmp` a **runtime path** on WASM, mirroring the runtime `str_eq` that
+already landed. A `str_cmp` whose operands are both compile-time literals still
+folds to a `-1`/`0`/`1` constant. But when an operand is a runtime string handle
+(a function parameter, a call result, a branch-selected slot), there is no
+compile-time answer — the two `[i32 len][bytes]` blocks must be compared at run
+time. Previously that shape errored (`str_cmp left source … is not a direct
+str_const local`); now it lowers to a `call` of a self-contained in-module
+`$__str_cmp(i32,i32) -> i32` helper.
+
+- **`$__str_cmp` helper.** A shared-prefix scan (`n = min(len a, len b)`, then a
+  byte-by-byte `i32.load8_u` compare — **unsigned**, so bytes ≥ 0x80 sort above
+  ASCII) with a length tiebreak (a prefix sorts before the longer string),
+  returning `-1`/`0`/`1`. The result is **byte-identical to the folded literal
+  path** (`left.bytes.cmp(&right.bytes)`, Rust slice ordering). Emitted once per
+  module (gated by a new `uses_str_cmp_runtime` feature) and appended directly
+  after the `$__str_eq` helper; `str_cmp_fn_idx` accounts for that preceding slot.
+  In-module rather than a host import for the same reason as `$__str_eq`: string
+  ordering is pure computation, so the emitted WASM stays self-contained (mirrors
+  the native/LLVM `__twig_str_cmp`).
+- **Signed widening.** Unlike `str_eq`'s `0`/`1` result (zero-extended), a
+  `str_cmp` result is a **signed** `-1`/`0`/`1`, so widening to an `i64` result
+  slot uses `i64.extend_i32_s` — a `-1` stays `-1`, matching the folded
+  `encode_i64_const(-1)` path exactly.
+- A folded-literal operand paired with a runtime operand is promoted to a runtime
+  `[i32 len][bytes]` block (same `lay_runtime_str_block` path as `str_eq`) so it
+  presents a real header to the helper.
+- No validator change: `str_cmp` already accepted two `Var` operands (it never
+  enforced literals); only the stale "materialises literal ordering" comment was
+  refreshed.
+- Tests: `tests/str_cmp_runtime.rs` runs the emitted module on the real
+  `WasmRuntime` and checks equal / first-differing-byte / prefix / byte-value /
+  empty-string cases against the `left.bytes.cmp(&right.bytes)` oracle.
+
+Runtime `str_slice`/`str_index` over promoted operands remain the last deferred
+E4d-3b pieces.
+
 ## [0.38.0] — 2026-07-12 (LANG-FULL E6d-3b: nil `const 0 : ref<…>` → `ref.null`)
 
 The `const` lowering's nil special-case previously required an **empty** source
