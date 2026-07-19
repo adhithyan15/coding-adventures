@@ -324,6 +324,20 @@ impl<'a> Emitter<'a> {
             }
             self.emit_program_item(item);
         }
+        // Trailing normalization (compact only): when a program's LAST item is a
+        // function/class *declaration*, the reference compiler appends a `;`
+        // (`function f(){};` / `class C{};` at EOF). A declaration mid-program
+        // prints bare — see [`Self::emit_function_declaration`] — so this final
+        // `;` is added here exactly once, only for the last item. Pretty mode
+        // keeps the unparenthesized shape.
+        if !self.opts.pretty {
+            if let Some(ProgramItem::Declaration(
+                Declaration::FunctionDeclaration(_) | Declaration::ClassDeclaration(_),
+            )) = p.body.last()
+            {
+                self.write_str(";");
+            }
+        }
     }
 
     fn emit_program_item(&mut self, item: &ProgramItem) {
@@ -1131,18 +1145,13 @@ impl<'a> Emitter<'a> {
         self.write_str(")");
         self.pretty_ws();
         self.emit_block_statement(&f.body);
-        // gap-030 part B: emit a trailing `;` after the
-        // function-declaration's closing `}` in compact mode.
-        // Upstream Closure does this to normalise the
-        // function-declaration output shape — even at EOF it's
-        // a no-op `EmptyStatement`, but in concatenation
-        // contexts (multiple top-level declarations) it keeps
-        // the next statement unambiguously separated. Pretty
-        // mode preserves the unparenthesised shape for
-        // readability.
-        if !self.opts.pretty {
-            self.write_str(";");
-        }
+        // A function declaration is NOT an expression statement, so it needs no
+        // trailing `;` — `function f(){}g()` is valid and the reference compiler
+        // emits exactly that (no separator before `g()`). The one place it does
+        // add a `;` is after the LAST item of a program when that item is a
+        // function/class declaration (`function f(){};` at EOF) — that trailing
+        // normalization is handled once in [`Self::emit_program`], not per
+        // declaration, so a non-final or block-nested declaration prints bare.
     }
 
     /// Emit a [`FunctionExpression`] — a function in *value* position.
@@ -4578,13 +4587,13 @@ mod tests {
     #[test]
     fn field_with_initializer() {
         // `class C{x=1;}` — an instance field with an initializer, terminated `;`.
-        assert_eq!(emit_class_decl("C", None, vec![field("x", Some(num(1.0)), false)]), "class C{x=1;}");
+        assert_eq!(emit_class_decl("C", None, vec![field("x", Some(num(1.0)), false)]), "class C{x=1;};");
     }
 
     #[test]
     fn bare_field_has_no_value() {
         // `class C{y;}` — a bare field: just the key and the terminator.
-        assert_eq!(emit_class_decl("C", None, vec![field("y", None, false)]), "class C{y;}");
+        assert_eq!(emit_class_decl("C", None, vec![field("y", None, false)]), "class C{y;};");
     }
 
     // ---- private-name keys (CLOC12.177) ------------------------------
@@ -4618,14 +4627,14 @@ mod tests {
         // `class C{#x=1;}` — the `#` is prepended to the stored bare name.
         assert_eq!(
             emit_class_decl("C", None, vec![private_field("x", Some(num(1.0)), false)]),
-            "class C{#x=1;}"
+            "class C{#x=1;};"
         );
     }
 
     #[test]
     fn bare_private_field() {
         // `class C{#x;}` — a bare private field, no initializer.
-        assert_eq!(emit_class_decl("C", None, vec![private_field("x", None, false)]), "class C{#x;}");
+        assert_eq!(emit_class_decl("C", None, vec![private_field("x", None, false)]), "class C{#x;};");
     }
 
     #[test]
@@ -4633,14 +4642,14 @@ mod tests {
         // `class C{static #x=1;}` — `static` stacks before the private key.
         assert_eq!(
             emit_class_decl("C", None, vec![private_field("x", Some(num(1.0)), true)]),
-            "class C{static #x=1;}"
+            "class C{static #x=1;};"
         );
     }
 
     #[test]
     fn private_method_prints_hash() {
         // `class C{#m(){}}` — a private method key also prints `#`.
-        assert_eq!(emit_class_decl("C", None, vec![private_method("m")]), "class C{#m(){}}");
+        assert_eq!(emit_class_decl("C", None, vec![private_method("m")]), "class C{#m(){}};");
     }
 
     #[test]
@@ -4652,7 +4661,7 @@ mod tests {
                 None,
                 vec![private_field("x", Some(num(1.0)), false), method("m", MethodKind::Method, false)],
             ),
-            "class C{#x=1;m(){}}"
+            "class C{#x=1;m(){}};"
         );
     }
 
@@ -4661,7 +4670,7 @@ mod tests {
         // `class C{static z=2;}` — the `static` prefix, then `key=value;`.
         assert_eq!(
             emit_class_decl("C", None, vec![field("z", Some(num(2.0)), true)]),
-            "class C{static z=2;}"
+            "class C{static z=2;};"
         );
     }
 
@@ -4675,7 +4684,7 @@ mod tests {
             computed: true,
             is_static: false,
         });
-        assert_eq!(emit_class_decl("C", None, vec![f]), "class C{[k]=v;}");
+        assert_eq!(emit_class_decl("C", None, vec![f]), "class C{[k]=v;};");
     }
 
     #[test]
@@ -4688,7 +4697,7 @@ mod tests {
                 None,
                 vec![field("x", Some(num(1.0)), false), method("m", MethodKind::Method, false)],
             ),
-            "class C{x=1;m(){}}"
+            "class C{x=1;m(){}};"
         );
     }
 
@@ -4696,7 +4705,7 @@ mod tests {
     fn class_declaration_empty_is_bare_and_unterminated() {
         // `class C {}` — bare (no wrapping paren, unlike the expression form's
         // `(class C{});`) and NO trailing `;` (unlike `function f(){};`).
-        assert_eq!(emit_class_decl("C", None, vec![]), "class C{}");
+        assert_eq!(emit_class_decl("C", None, vec![]), "class C{};");
     }
 
     // ---- static initialization blocks (CLOC12.176) -------------------
@@ -4715,7 +4724,7 @@ mod tests {
     fn empty_static_block() {
         // `class C{static{}}` — the `static` keyword abuts the `{` with no space,
         // and the empty block is brace-terminated (no trailing `;`).
-        assert_eq!(emit_class_decl("C", None, vec![static_block(vec![])]), "class C{static{}}");
+        assert_eq!(emit_class_decl("C", None, vec![static_block(vec![])]), "class C{static{}};");
     }
 
     #[test]
@@ -4723,7 +4732,7 @@ mod tests {
         // `class C{static{x}}` — a single statement body prints inside the block.
         assert_eq!(
             emit_class_decl("C", None, vec![static_block(vec![expr_stmt(ident("x"))])]),
-            "class C{static{x}}"
+            "class C{static{x}};"
         );
     }
 
@@ -4736,7 +4745,7 @@ mod tests {
                 None,
                 vec![static_block(vec![expr_stmt(ident("x")), expr_stmt(ident("y"))])],
             ),
-            "class C{static{x;y}}"
+            "class C{static{x;y}};"
         );
     }
 
@@ -4755,7 +4764,7 @@ mod tests {
                     method("m", MethodKind::Method, false),
                 ],
             ),
-            "class C{x=1;static{}m(){}}"
+            "class C{x=1;static{}m(){}};"
         );
     }
 
@@ -4765,7 +4774,7 @@ mod tests {
         // identifier is a LeftHandSide, tighter than the class body).
         assert_eq!(
             emit_class_decl("C", Some(ident("B")), vec![]),
-            "class C extends B{}"
+            "class C extends B{};"
         );
     }
 
@@ -4776,19 +4785,19 @@ mod tests {
         // uses), back-to-back with no separators.
         assert_eq!(
             emit_class_decl("C", None, vec![method("m", MethodKind::Method, false)]),
-            "class C{m(){}}"
+            "class C{m(){}};"
         );
         assert_eq!(
             emit_class_decl("C", None, vec![method("m", MethodKind::Method, true)]),
-            "class C{static m(){}}"
+            "class C{static m(){}};"
         );
         assert_eq!(
             emit_class_decl("C", None, vec![method("x", MethodKind::Get, false)]),
-            "class C{get x(){}}"
+            "class C{get x(){}};"
         );
         assert_eq!(
             emit_class_decl("C", None, vec![method("x", MethodKind::Set, false)]),
-            "class C{set x(){}}"
+            "class C{set x(){}};"
         );
     }
 
@@ -4798,7 +4807,7 @@ mod tests {
         // matters to the passes). A computed key `[k]` is bracketed.
         assert_eq!(
             emit_class_decl("C", None, vec![method("constructor", MethodKind::Constructor, false)]),
-            "class C{constructor(){}}"
+            "class C{constructor(){}};"
         );
         let computed = ClassMember::Method(MethodDefinition {
             cv: None,
@@ -4808,7 +4817,7 @@ mod tests {
             computed: true,
             is_static: false,
         });
-        assert_eq!(emit_class_decl("C", None, vec![computed]), "class C{[k](){}}");
+        assert_eq!(emit_class_decl("C", None, vec![computed]), "class C{[k](){}};");
     }
 
     #[test]
@@ -4816,7 +4825,7 @@ mod tests {
         // `class C extends B { m() {} }` — the whole shape in one assertion.
         assert_eq!(
             emit_class_decl("C", Some(ident("B")), vec![method("m", MethodKind::Method, false)]),
-            "class C extends B{m(){}}"
+            "class C extends B{m(){}};"
         );
     }
 

@@ -1729,7 +1729,7 @@ mod tests {
         // `helper` is never in the TDZ, and propagation is sound.
         assert_eq!(
             propagate_source("function helper() { return X; } const X = 5; run(helper);"),
-            "function helper(){return 5};const X=5;run(helper);"
+            "function helper(){return 5}const X=5;run(helper);"
         );
     }
 

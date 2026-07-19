@@ -178,7 +178,8 @@ fn assert_emits(id: &str, super_class: Option<Expression>, body: Vec<ClassMember
 }
 
 // =====================================================================
-// Active — the declaration is bare (no wrap, no trailing `;`)
+// Active — the declaration is bare (no wrap); the full-program printer adds a
+// trailing `;` after a last-item declaration (matches the reference jar)
 // =====================================================================
 
 /// `class C{}` — the minimal declaration. Emitted bare: the name prints after
@@ -187,16 +188,19 @@ fn assert_emits(id: &str, super_class: Option<Expression>, body: Vec<ClassMember
 /// (unlike the class *expression* form, which at statement start is `(class …);`).
 #[test]
 fn empty_class_declaration_is_bare() {
-    assert_emits("C", None, vec![], "class C{}");
+    assert_emits("C", None, vec![], "class C{};");
 }
 
 /// The bare shape is exactly the emitted string — a regression guard on both
 /// the missing trailing `;` and the missing wrap, together.
 #[test]
-fn empty_declaration_has_no_semicolon_and_no_paren() {
+fn empty_last_declaration_terminated_and_not_parenthesized() {
+    // A class *declaration* is not paren-wrapped (unlike a class *expression* at
+    // statement start, `(class …);`). As the LAST item of the program it does
+    // get a trailing `;` — the reference jar emits `class C{};` for a lone
+    // `class C{}` — but that `;` comes from the program printer, not a wrapping.
     let code = emit_decl("C", None, vec![]);
-    assert!(code.ends_with('}'), "must terminate with }}, got {code:?}");
-    assert!(!code.ends_with("};"), "must NOT append a trailing ;, got {code:?}");
+    assert_eq!(code, "class C{};", "lone class declaration terminates with a semicolon");
     assert!(!code.starts_with('('), "must NOT be wrapped in parens, got {code:?}");
 }
 
@@ -208,13 +212,13 @@ fn empty_declaration_has_no_semicolon_and_no_paren() {
 /// mandatory spaces around `extends`.
 #[test]
 fn extends_identifier() {
-    assert_emits("C", Some(ident("B")), vec![], "class C extends B{}");
+    assert_emits("C", Some(ident("B")), vec![], "class C extends B{};");
 }
 
 /// `class C extends ns.B{}` — a member heritage binds at primary and stays bare.
 #[test]
 fn extends_member_is_bare() {
-    assert_emits("C", Some(member(ident("ns"), "B")), vec![], "class C extends ns.B{}");
+    assert_emits("C", Some(member(ident("ns"), "B")), vec![], "class C extends ns.B{};");
 }
 
 /// `class C extends mixin(B){}` — a call heritage (`extends mixin(Base)`) binds
@@ -225,7 +229,7 @@ fn extends_call_is_bare() {
         "C",
         Some(call(ident("mixin"), vec![ident("B")])),
         vec![],
-        "class C extends mixin(B){}",
+        "class C extends mixin(B){};",
     );
 }
 
@@ -237,7 +241,7 @@ fn extends_conditional_is_wrapped() {
         "C",
         Some(cond(ident("a"), ident("b"), ident("c"))),
         vec![],
-        "class C extends (a?b:c){}",
+        "class C extends (a?b:c){};",
     );
 }
 
@@ -248,7 +252,7 @@ fn extends_conditional_is_wrapped() {
 /// `class C{m(){}}` — one plain method, no separators.
 #[test]
 fn one_method() {
-    assert_emits("C", None, vec![method("m", MethodKind::Method, plain(), false)], "class C{m(){}}");
+    assert_emits("C", None, vec![method("m", MethodKind::Method, plain(), false)], "class C{m(){}};");
 }
 
 /// `class C{m(x){return x}}` — params + a body statement print through the
@@ -259,20 +263,20 @@ fn method_with_params_and_body() {
         "C",
         None,
         vec![method("m", MethodKind::Method, func(&["x"], vec![ret(Some(ident("x")))], false, false), false)],
-        "class C{m(x){return x}}",
+        "class C{m(x){return x}};",
     );
 }
 
 /// `class C{static m(){}}` — a `static` member prints the keyword first.
 #[test]
 fn static_method() {
-    assert_emits("C", None, vec![method("m", MethodKind::Method, plain(), true)], "class C{static m(){}}");
+    assert_emits("C", None, vec![method("m", MethodKind::Method, plain(), true)], "class C{static m(){}};");
 }
 
 /// `class C{get x(){}}` — a getter accessor.
 #[test]
 fn getter() {
-    assert_emits("C", None, vec![method("x", MethodKind::Get, plain(), false)], "class C{get x(){}}");
+    assert_emits("C", None, vec![method("x", MethodKind::Get, plain(), false)], "class C{get x(){}};");
 }
 
 /// `class C{set x(v){}}` — a setter accessor with its one parameter.
@@ -282,7 +286,7 @@ fn setter() {
         "C",
         None,
         vec![method("x", MethodKind::Set, func(&["v"], vec![], false, false), false)],
-        "class C{set x(v){}}",
+        "class C{set x(v){}};",
     );
 }
 
@@ -294,7 +298,7 @@ fn constructor() {
         "C",
         None,
         vec![method("constructor", MethodKind::Constructor, plain(), false)],
-        "class C{constructor(){}}",
+        "class C{constructor(){}};",
     );
 }
 
@@ -306,7 +310,7 @@ fn static_getter() {
         "C",
         None,
         vec![method("x", MethodKind::Get, plain(), true)],
-        "class C{static get x(){}}",
+        "class C{static get x(){}};",
     );
 }
 
@@ -317,7 +321,7 @@ fn generator_method() {
         "C",
         None,
         vec![method("m", MethodKind::Method, func(&[], vec![], true, false), false)],
-        "class C{*m(){}}",
+        "class C{*m(){}};",
     );
 }
 
@@ -329,14 +333,14 @@ fn async_method() {
         "C",
         None,
         vec![method("m", MethodKind::Method, func(&[], vec![], false, true), false)],
-        "class C{async m(){}}",
+        "class C{async m(){}};",
     );
 }
 
 /// `class C{[k](){}}` — a computed key is bracketed.
 #[test]
 fn computed_key_method() {
-    assert_emits("C", None, vec![computed_method(ident("k"), plain())], "class C{[k](){}}");
+    assert_emits("C", None, vec![computed_method(ident("k"), plain())], "class C{[k](){}};");
 }
 
 /// `class C{a(){}b(){}}` — two members print back-to-back with no separator
@@ -351,7 +355,7 @@ fn two_members_back_to_back() {
             method("a", MethodKind::Method, plain(), false),
             method("b", MethodKind::Method, plain(), false),
         ],
-        "class C{a(){}b(){}}",
+        "class C{a(){}b(){}};",
     );
 }
 
@@ -366,7 +370,7 @@ fn full_shape_named_heritage_and_member() {
         "C",
         Some(ident("B")),
         vec![method("m", MethodKind::Method, plain(), false)],
-        "class C extends B{m(){}}",
+        "class C extends B{m(){}};",
     );
 }
 
@@ -378,7 +382,7 @@ fn computed_numeric_key() {
         "C",
         None,
         vec![computed_method(num(0.0, "0"), plain())],
-        "class C{[0](){}}",
+        "class C{[0](){}};",
     );
 }
 
@@ -399,6 +403,6 @@ fn computed_binary_key() {
             }),
             plain(),
         )],
-        "class C{[a+b](){}}",
+        "class C{[a+b](){}};",
     );
 }

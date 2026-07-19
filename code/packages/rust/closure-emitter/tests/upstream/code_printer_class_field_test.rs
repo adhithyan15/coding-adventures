@@ -136,13 +136,13 @@ fn assert_emits(body: Vec<ClassMember>, expected: &str) {
 /// no surrounding spaces and the member terminates with `;`.
 #[test]
 fn field_with_initializer() {
-    assert_emits(vec![field(ident_key("x"), Some(num(1.0, "1")), false, false)], "class C{x=1;}");
+    assert_emits(vec![field(ident_key("x"), Some(num(1.0, "1")), false, false)], "class C{x=1;};");
 }
 
 /// The initializer is an identifier reference — `class C{x=y;}`.
 #[test]
 fn field_with_identifier_initializer() {
-    assert_emits(vec![field(ident_key("x"), Some(ident("y")), false, false)], "class C{x=y;}");
+    assert_emits(vec![field(ident_key("x"), Some(ident("y")), false, false)], "class C{x=y;};");
 }
 
 // =====================================================================
@@ -153,7 +153,7 @@ fn field_with_identifier_initializer() {
 /// terminating `;`.
 #[test]
 fn bare_field_has_no_equals() {
-    assert_emits(vec![field(ident_key("y"), None, false, false)], "class C{y;}");
+    assert_emits(vec![field(ident_key("y"), None, false, false)], "class C{y;};");
 }
 
 /// The bare shape is exactly the emitted string — a regression guard that a
@@ -161,7 +161,7 @@ fn bare_field_has_no_equals() {
 #[test]
 fn bare_field_emits_no_equals_char() {
     let code = emit_body(vec![field(ident_key("y"), None, false, false)]);
-    assert_eq!(code, "class C{y;}");
+    assert_eq!(code, "class C{y;};");
     assert!(!code.contains('='), "a bare field must not emit `=`, got {code:?}");
 }
 
@@ -173,13 +173,13 @@ fn bare_field_emits_no_equals_char() {
 /// space) before the key.
 #[test]
 fn static_field() {
-    assert_emits(vec![field(ident_key("z"), Some(num(2.0, "2")), false, true)], "class C{static z=2;}");
+    assert_emits(vec![field(ident_key("z"), Some(num(2.0, "2")), false, true)], "class C{static z=2;};");
 }
 
 /// `class C{static z;}` — a static *bare* field.
 #[test]
 fn static_bare_field() {
-    assert_emits(vec![field(ident_key("z"), None, false, true)], "class C{static z;}");
+    assert_emits(vec![field(ident_key("z"), None, false, true)], "class C{static z;};");
 }
 
 // =====================================================================
@@ -191,7 +191,7 @@ fn static_bare_field() {
 fn computed_key_field() {
     assert_emits(
         vec![field(PropertyKey::Expression(Box::new(ident("k"))), Some(ident("v")), true, false)],
-        "class C{[k]=v;}",
+        "class C{[k]=v;};",
     );
 }
 
@@ -200,7 +200,7 @@ fn computed_key_field() {
 fn static_computed_key_field() {
     assert_emits(
         vec![field(PropertyKey::Expression(Box::new(ident("k"))), Some(ident("v")), true, true)],
-        "class C{static [k]=v;}",
+        "class C{static [k]=v;};",
     );
 }
 
@@ -214,7 +214,7 @@ fn numeric_key_field() {
             false,
             false,
         )],
-        "class C{0=1;}",
+        "class C{0=1;};",
     );
 }
 
@@ -233,7 +233,7 @@ fn string_key_field_stays_quoted() {
             false,
             false,
         )],
-        "class C{\"a-b\"=1;}",
+        "class C{\"a-b\"=1;};",
     );
 }
 
@@ -256,7 +256,7 @@ fn sequence_initializer_is_wrapped() {
             false,
             false,
         )],
-        "class C{x=(a,b);}",
+        "class C{x=(a,b);};",
     );
 }
 
@@ -270,7 +270,7 @@ fn sequence_initializer_is_wrapped() {
 fn field_then_method() {
     assert_emits(
         vec![field(ident_key("x"), Some(num(1.0, "1")), false, false), method("m")],
-        "class C{x=1;m(){}}",
+        "class C{x=1;m(){}};",
     );
 }
 
@@ -280,7 +280,7 @@ fn field_then_method() {
 fn method_then_field() {
     assert_emits(
         vec![method("m"), field(ident_key("x"), Some(num(1.0, "1")), false, false)],
-        "class C{m(){}x=1;}",
+        "class C{m(){}x=1;};",
     );
 }
 
@@ -294,6 +294,6 @@ fn three_fields_back_to_back() {
             field(ident_key("y"), None, false, false),
             field(ident_key("z"), Some(num(2.0, "2")), false, true),
         ],
-        "class C{x=1;y;static z=2;}",
+        "class C{x=1;y;static z=2;};",
     );
 }

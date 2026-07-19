@@ -1684,7 +1684,7 @@ mod tests {
             rename_source(
                 "function computeTotal(items) { return items; } var result = computeTotal(list);"
             ),
-            "function a(items){return items};var b=a(list);"
+            "function a(items){return items}var b=a(list);"
         );
     }
 
@@ -1702,7 +1702,7 @@ mod tests {
         // never candidates. Only the declared `greet` is renamed.
         assert_eq!(
             rename_source("function greet() { console.log(window); } greet();"),
-            "function a(){console.log(window)};a();"
+            "function a(){console.log(window)}a();"
         );
     }
 
@@ -1715,7 +1715,7 @@ mod tests {
                 "function apiHandler() { return helper(); } function helper() { return 1; }",
                 &["apiHandler"]
             ),
-            "function apiHandler(){return a()};function a(){return 1};"
+            "function apiHandler(){return a()}function a(){return 1};"
         );
     }
 
@@ -1744,7 +1744,7 @@ mod tests {
         // Already minimal — nothing to gain, so the program is unchanged.
         assert_eq!(
             rename_source("function f() { return 1; } f();"),
-            "function f(){return 1};f();"
+            "function f(){return 1}f();"
         );
     }
 
@@ -1758,7 +1758,7 @@ mod tests {
             rename_source(
                 "function helper() { return 1; } function other(helper) { return helper; }"
             ),
-            "function helper(){return 1};function a(helper){return helper};"
+            "function helper(){return 1}function a(helper){return helper};"
         );
     }
 
@@ -1769,7 +1769,7 @@ mod tests {
         // local); it gets the next free name `b`.
         assert_eq!(
             rename_source("function topName() { return 0; } function g() { var a = 1; return a + topName(); }"),
-            "function b(){return 0};function g(){var a=1;return a+b()};"
+            "function b(){return 0}function g(){var a=1;return a+b()};"
         );
     }
 
@@ -1779,7 +1779,7 @@ mod tests {
         // rewritten (the walk recurses into function bodies).
         assert_eq!(
             rename_source("var SHARED = 5; function read() { return SHARED; } read();"),
-            "var a=5;function b(){return a};b();"
+            "var a=5;function b(){return a}b();"
         );
     }
 

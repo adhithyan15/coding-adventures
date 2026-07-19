@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.236.0] - 2026-07-19
+
+### Changed — minified output no longer emits a stray `;` after a non-last function/class declaration
+
+Picks up `closure-emitter` 0.55.0: a top-level `function`/`class` declaration is
+terminated with `;` only when it is the LAST program item. Previously the emitter
+appended a redundant `;` after every function declaration's `}`, so SIMPLE and
+ADVANCED output drifted from the reference Closure Compiler by one byte whenever a
+declaration was followed by another statement:
+
+- `function f(){}g()`   (was `function f(){};g()`)
+- `function f(){}function g(){}` (was `function f(){};function g(){}`)
+
+both oracle-verified against `closure-compiler-v20260712.jar`. A lone/last
+declaration still terminates (`function f(){};`, `class C{};`). WHITESPACE_ONLY is
+unaffected by this release — it runs through the separate `whitespace_only`
+minifier, which still carries the drift; closing that gap is tracked as its own
+task and documented in `run.rs`'s `simple_treeshake_whitespace_only_keeps_function`.
+
 ## [0.235.0] - 2026-07-18
 
 ### Fixed — SIMPLE is now open-world: it no longer removes/inlines top-level names

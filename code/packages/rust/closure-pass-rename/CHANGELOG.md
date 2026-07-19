@@ -2,6 +2,15 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename` crate will be documented in this file.
 
+## [0.22.1] - 2026-07-19
+
+### Changed — test goldens updated for `closure-emitter` 0.55.0
+
+`closure-emitter` 0.55.0 terminates a top-level function/class declaration with
+`;` only when it is the last program item. This pass's emit-shape test goldens
+were regenerated to the new byte-identical-to-Closure output. No behaviour change
+in this crate — only the expected emitted strings moved.
+
 ## [0.22.0] - 2026-07-14
 
 ### Changed — rename references inside default-parameter expressions — CLOC12.191 PR1

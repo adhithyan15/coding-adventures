@@ -2,6 +2,29 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.55.0] - 2026-07-19
+
+### Changed — a function/class declaration is terminated only when it is the last program item
+
+Previously the emitter appended a redundant `;` after every top-level function
+declaration's closing `}` (and, for classes, the class body already self-terminates
+with `}`). But a declaration's `}` is self-terminating: the following statement
+begins cleanly with no separator needed. The reference Closure Compiler emits the
+extra `;` in exactly one spot — after the LAST program item, when that item is a
+`function`/`class` declaration (a trailing terminator, mirroring how any final
+statement is terminated). Everywhere else the declaration abuts the next item bare:
+
+- `function f(){}g()`            (no `;` between the decl and the call)
+- `function f(){}function g(){}` (no `;` between two decls)
+- `function f(){};`              (a lone/last decl DOES get the trailing `;`)
+- `class C{}`                    (a class body self-terminates; a lone class gets `;`)
+
+The terminator is now emitted once in `emit_program`, only when the final program
+item is a `FunctionDeclaration` or `ClassDeclaration` and we are in compact mode.
+`emit_function_declaration` no longer appends its own `;`. This removes a byte of
+drift from every minified module that placed a function/class declaration before
+another statement — the common case.
+
 ## [0.54.0] - 2026-07-18
 
 ### Changed — `in` / `instanceof` drop their space at hard token boundaries

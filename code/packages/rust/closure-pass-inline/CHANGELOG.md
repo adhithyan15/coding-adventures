@@ -2,6 +2,17 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.30.1] - 2026-07-19
+
+### Changed — test goldens updated for `closure-emitter` 0.55.0
+
+`closure-emitter` 0.55.0 stopped emitting a redundant `;` after a top-level
+function declaration that is not the last program item. This pass's emit-shape
+test goldens (which run source through the real emitter) were regenerated to the
+new, byte-identical-to-Closure output (e.g. `function f(x){return x*2}a(f(1));`
+instead of `function f(x){return x*2};a(f(1));`). No behaviour change in this
+crate — inlining logic is unchanged; only the expected emitted strings moved.
+
 ## [0.30.0] - 2026-07-14
 
 ### Changed — decline to inline functions with a default parameter — CLOC12.191 PR1
