@@ -4,7 +4,7 @@ chapter: 3
 type: phrase
 headword: பரவாயில்லை
 gloss: it's okay / no problem / you're welcome
-concept_tag: YOURE-WELCOME
+concept_tag: COURTESY-YOUREWELCOME
 prerequisites: [TA-C01-illai, TA-C01-nandri]
 sounds: [illai-negative]
 roots: [illai-not-dravidian]

@@ -1,5 +1,21 @@
 # Changelog
 
+## Chapter 6 — Numbers 1–10
+
+- **Chapter 6 authored** (`FR-C06-nombres-1-5`, `-nombres-6-10`): counting to ten,
+  atom-first, each ~4–5 min, reviewing Ch.5 via `reviews_of`; every number carries
+  its Latin source, **Spanish twin** (French grounds in its Romance sibling), and
+  English cousins.
+- **1–5** (*un/deux/trois/quatre/cinq* ← *ūnus/duo/trēs/quattuor/quīnque*): *un/une*
+  doubles as "a/an" (like Spanish *un/una*); *cinq* → English *cinque* (the 5 on
+  dice).
+- **6–10** (*six/sept/huit/neuf/dix*): the dramatic erosion of *octō → oit → huit*
+  (the 8 survives only in the month *octobre*); *dix* → English **dime** (via Old
+  French *disme* ← *decima*); and the **septembre–décembre = Latin 7–10** calendar
+  trick (the Roman year began in March; *juillet/août* pushed the counting months
+  down two).
+- Taxonomy: namespaced `FR-NUM-1-5`, `FR-NUM-6-10`.
+
 ## Chapter 5 — The first verbs (sentences start to move)
 
 - **Chapter 5 authored** (`FR-C05-parler`, `-habiter`, `-travailler`,

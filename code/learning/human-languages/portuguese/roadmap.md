@@ -35,12 +35,17 @@ French.
   moratorium) → trabalhar (← *tripalium* → travail/travel; twin of *trabajar*) →
   **Falo português** (first sentence; *português* ← *Portus Cale*) → practice.
   **Authored** — the **fifth and final** track to reach real sentences.
+- **Ch. 6 — Numbers 1–10**: um/dois/três/quatro/cinco → seis/sete/oito/nove/dez.
+  Two Portuguese signatures: **gender survives on "two"** (*dois/duas* ← *duo/duae*,
+  where Spanish levelled to *dos*), and the **ct→it shift** (*octō→oito*, like
+  *noite/leite*) — contrasted with Spanish *ocho* (*ct→ch*). Plus the
+  **setembro–dezembro = Latin 7–10** calendar trick. **Authored.**
 
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |
 |---|---|
-| 6+ | Numbers, time, days & months, family, food — following the shared theme order |
+| 7+ | Time, days & months, family, food — following the shared theme order |
 
 Note: Portuguese's polite "you" is **você** (← *vossa mercê*, "your mercy") — the
 same "your grace" mechanism as Spanish *usted*, worn down differently. Worth

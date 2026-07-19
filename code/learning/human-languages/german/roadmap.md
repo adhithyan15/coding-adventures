@@ -36,12 +36,18 @@ Spanish and French where a contrast helps. The recurring decoder is the
   *learn/lore*) → **Ich lerne Deutsch** (first sentence; *Deutsch* ← *diutisc* →
   *Dutch*) → practice. **Authored** — parallel to French Ch.5, and completes the
   three-way pronoun rule (ES drops / FR keeps for silence / DE keeps for structure).
+- **Ch. 6 — Numbers 1–10**: eins/zwei/drei/vier/fünf → sechs/sieben/acht/neun/zehn.
+  The **distinctive German story**: these are *not* Latin loans (unlike the Romance
+  tracks) but **Germanic twins of English one…ten**, with **Grimm's Law** as the
+  through-line (*p→f* in *fünf/five ← \*pénkʷe*; *d→t→z* in *decem→ten→zehn*;
+  *acht/eight* ~ *Nacht/night*). The month names *are* Latin loans, so the 7–10
+  calendar trick still shows. **Authored.**
 
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 6+ | Numbers, cases (der→den→dem), family, food, sprechen & irregular verbs — following the shared theme order |
+| 7+ | Cases (der→den→dem), time, family, food, sprechen & irregular verbs — following the shared theme order |
 
 The **du / Sie** lesson (Ch. 2) completes the formal/informal set across the
 languages: Spanish *tú/usted* (from "your grace"), French *tu/vous* (the
