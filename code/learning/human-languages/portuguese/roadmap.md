@@ -50,12 +50,16 @@ French.
   explicit — *é uma hora* / *são duas horas*, with the *dois/duas* gender) →
   meio-dia/meia-noite (noon/midnight; *noite* ← *noctem* shows the **ct→it** shift
   from the numbers, like *oito*). **Authored.**
+- **Ch. 9 — Months & seasons**: the months (**março ← Mars**, julho/agosto ←
+  Julius/Augustus; setembro–dezembro = Latin **7–10** = *sete/dez*) → the seasons,
+  with the twist that **verão** ("summer") ← *veranum* ← *vēr* "**spring**" — the
+  summer-word grew out of spring; *outono* ← *autumnus* (au→ou). **Authored.**
 
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |
 |---|---|
-| 9+ | Months & seasons, family, food — following the shared theme order |
+| 10+ | Family, food, the body — following the shared theme order |
 
 Note: Portuguese's polite "you" is **você** (← *vossa mercê*, "your mercy") — the
 same "your grace" mechanism as Spanish *usted*, worn down differently. Worth

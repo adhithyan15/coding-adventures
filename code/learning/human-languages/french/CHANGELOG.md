@@ -1,5 +1,21 @@
 # Changelog
 
+## Chapter 9 — Months & seasons
+
+- **Chapter 9 authored** (`FR-C09-mois`, `-saisons`): the calendar year, atom-first,
+  reviewing Ch.6–8 via `reviews_of`.
+- **The months** are a parade of Roman gods and emperors: *janvier* ← Janus (the
+  two-faced god of beginnings), *février* ← the *Februa* purification, *mai* ← Maia,
+  *juin* ← Juno, with **two big payoffs** — *mars* is the **same Mars** behind
+  *mardi* (Tuesday), and *septembre–décembre* still mean the Latin **7–10** learned
+  in the numbers chapter (the Roman year began in March; *juillet/août* ← Julius/
+  Augustus were inserted and shifted the count).
+- **The seasons**: *printemps* = *prime* + *temps*, "the **first time / prime
+  season**"; *été* ← *aestas* "heat"; *automne* ← *autumnus*; *hiver* ← *hibernum*
+  "wintry" (cousin of English **hibernate**). Plus the *au printemps* / *en été…*
+  preposition split.
+- Taxonomy: namespaced `FR-MONTHS`, `FR-SEASONS`.
+
 ## Chapter 8 — Time & the clock
 
 - **Chapter 8 authored** (`FR-C08-heure`, `-midi-minuit`): telling the time,
