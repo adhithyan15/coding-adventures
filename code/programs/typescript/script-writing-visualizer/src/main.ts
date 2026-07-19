@@ -30,6 +30,7 @@ import {
   masteredCount,
   type ItemState,
 } from "./scheduler.ts";
+import { buildPool, type PoolEntry } from "./interleave.ts";
 import "./styles.css";
 
 const app = document.getElementById("app");
@@ -41,16 +42,32 @@ let currentScript = 0;
 let currentLetter = 0;
 
 // Practice state
+type Scope = "script" | "mixed";
+let scope: Scope = "script"; // drill the current script, or all scripts interleaved
 let score: Score = emptyScore();
 let question: DrillQuestion | null = null;
 let chosen: number | null = null; // which option the learner picked (null = unanswered)
 // Spaced-repetition state: the scheduler decides WHICH letter to ask next, so
 // missed letters resurface sooner and mastered ones fade back. One session tick
-// per answered question (see scheduler.ts). Rebuilt when the script changes.
+// per answered question (see scheduler.ts). Rebuilt when the scope/script changes.
 let schedule: ItemState[] = [];
 let sessionTick = 0;
+// In "mixed" scope, `schedule` indexes a combined pool spanning every script;
+// `pool[i]` maps that index back to (scriptIndex, letterIndex). Empty in "script"
+// scope, where the schedule index IS the letter index of the current script.
+let pool: PoolEntry[] = [];
+// Which script + schedule-index the CURRENT question belongs to (they diverge in
+// mixed scope, where the schedule index is a pool index, not a letter index).
+let questionScript = 0;
+let scheduleIndex = 0;
 
 const OPTION_COUNT = 4;
+
+/** Resolve a schedule index to a concrete (script, letter), per scope. */
+function resolve(idx: number): PoolEntry {
+  if (scope === "mixed") return pool[idx] ?? { scriptIndex: 0, letterIndex: 0 };
+  return { scriptIndex: currentScript, letterIndex: idx };
+}
 
 // --- shared chrome ----------------------------------------------------------
 
@@ -84,7 +101,33 @@ function renderModeToggle(): HTMLElement {
   return wrap;
 }
 
-/** A tab per script (both modes). Switching script resets practice. */
+/** In Practice, choose per-script drilling or all scripts interleaved. */
+function renderScopeToggle(): HTMLElement {
+  const wrap = el("div", "scopes");
+  const label = el("span", "scopes__label");
+  label.textContent = "Practice:";
+  wrap.appendChild(label);
+  (
+    [
+      ["script", "This script"],
+      ["mixed", "Mixed (all scripts)"],
+    ] as [Scope, string][]
+  ).forEach(([s, text]) => {
+    const b = el("button", "scope" + (s === scope ? " scope--active" : ""));
+    b.textContent = text;
+    b.setAttribute("aria-pressed", String(s === scope));
+    b.onclick = () => {
+      if (scope === s) return;
+      scope = s;
+      startPractice();
+      render();
+    };
+    wrap.appendChild(b);
+  });
+  return wrap;
+}
+
+/** A tab per script. Hidden while practising a mixed (all-scripts) session. */
 function renderTabs(): HTMLElement {
   const tabs = el("div", "tabs");
   SCRIPTS.forEach((data, i) => {
@@ -171,32 +214,47 @@ function renderDetail(v: LetterView): HTMLElement {
 
 // --- practice mode ----------------------------------------------------------
 
-/** Start (or restart) a practice session for the current script. */
+/** Start (or restart) a practice session, per scope. */
 function startPractice(): void {
   score = emptyScore();
-  const views = buildScriptView(SCRIPTS[currentScript]!);
-  schedule = initStates(views.length);
   sessionTick = 0;
+  if (scope === "mixed") {
+    pool = buildPool(SCRIPTS.map((s) => s.letters.length));
+    schedule = initStates(pool.length);
+  } else {
+    pool = [];
+    schedule = initStates(SCRIPTS[currentScript]!.letters.length);
+  }
   nextQuestion();
 }
 
-/** Let the scheduler choose the next letter; the UI still randomises options. */
+/** Let the scheduler choose the next item; the UI still randomises options. */
 function nextQuestion(): void {
-  const views = buildScriptView(SCRIPTS[currentScript]!);
-  // The scheduler decides WHICH letter (spaced repetition); randomness is only
-  // for the distractors + answer position.
-  const target = pickNext(schedule, sessionTick);
+  // The scheduler decides WHICH item (spaced repetition, interleaved in mixed
+  // scope); randomness is only for the distractors + answer position.
+  const idx = pickNext(schedule, sessionTick);
+  scheduleIndex = idx < 0 ? 0 : idx;
+  const { scriptIndex, letterIndex } = resolve(scheduleIndex);
+  questionScript = scriptIndex;
+  const views = buildScriptView(SCRIPTS[scriptIndex]!);
   const placeAt = randInt(Math.min(OPTION_COUNT, views.length));
-  question = buildDrillQuestion(views, target < 0 ? 0 : target, OPTION_COUNT, chooseConfusableShuffled, placeAt);
+  // Distractors come from the target's OWN script, so a Cyrillic prompt never
+  // offers a Hebrew decoy.
+  question = buildDrillQuestion(views, letterIndex, OPTION_COUNT, chooseConfusableShuffled, placeAt);
   chosen = null;
 }
 
 function renderPractice(): HTMLElement {
-  const views = buildScriptView(SCRIPTS[currentScript]!);
+  // Options + reveal come from the QUESTION's script (may differ from the tab in
+  // mixed scope).
+  const views = buildScriptView(SCRIPTS[questionScript]!);
   const q = question!;
   const wrap = el("div", "practice");
 
-  // Score line + a spaced-repetition mastery read-out
+  wrap.appendChild(renderScopeToggle());
+
+  // Score line + a spaced-repetition mastery read-out (across the whole pool in
+  // mixed scope).
   const acc = accuracy(score);
   const mastered = masteredCount(schedule);
   const scoreLine = el("div", "score");
@@ -211,6 +269,11 @@ function renderPractice(): HTMLElement {
   const sound = el("div", "prompt__sound");
   sound.textContent = q.promptSound;
   prompt.append(label, sound);
+  if (scope === "mixed") {
+    const tag = el("div", "prompt__script");
+    tag.textContent = SCRIPTS[questionScript]!.name;
+    prompt.appendChild(tag);
+  }
   wrap.appendChild(prompt);
 
   // Options
@@ -228,8 +291,9 @@ function renderPractice(): HTMLElement {
       chosen = i;
       const correct = checkAnswer(q, i);
       score = record(score, correct);
-      // Feed the answer to the scheduler and advance the session clock.
-      schedule = reviewIn(schedule, q.targetIndex, correct, sessionTick);
+      // Feed the answer to the scheduler at the SCHEDULE index (a pool index in
+      // mixed scope, a letter index otherwise), and advance the session clock.
+      schedule = reviewIn(schedule, scheduleIndex, correct, sessionTick);
       sessionTick += 1;
       render();
     };
@@ -265,7 +329,9 @@ function renderPractice(): HTMLElement {
 function render(): void {
   const data = SCRIPTS[currentScript]!;
   app!.replaceChildren();
-  app!.append(renderHeader(), renderTabs());
+  app!.append(renderHeader());
+  // The script tabs steer per-script work; hide them during a mixed session.
+  if (!(mode === "practice" && scope === "mixed")) app!.appendChild(renderTabs());
 
   if (mode === "browse") {
     const views = buildScriptView(data);

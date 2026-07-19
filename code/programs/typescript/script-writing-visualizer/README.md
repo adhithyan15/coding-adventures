@@ -65,6 +65,13 @@ future (1 → 3 → 7 → 15 → 30 sessions); miss it and it comes straight bac
 unit-tested — per `HL02` it's "the core module … where test coverage matters
 most."
 
+**Interleaving (Mixed mode).** Toggle **Practice → Mixed (all scripts)** to drill
+every script at once. `src/interleave.ts` lays all letters into one
+round-robin pool and the scheduler picks across it, so a Cyrillic prompt is
+followed by Hebrew, then Devanagari, … — the mixing that HL02 says "forces
+discrimination and transfers better." Distractors still come from the target's
+own script; mastery counts across the whole pool.
+
 ## Scope and what's next
 
 Today the app does **read + decompose** (Browse) and **recall** (Practice). Still
