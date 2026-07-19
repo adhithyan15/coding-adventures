@@ -50,9 +50,15 @@ order lives in the book, which LaTeX auto-numbers, and in `session-map.md`.)
   unde*) → practice. **Authored** — the three verb families are complete and the
   learner asks/answers real questions (*¿Dónde vives?*).
 
-Next: **Ch. 8** — **numbers** (uno–diez, then the *dieciséis* fusion), age and
-"how many" (*cuántos años tienes?*), introducing *tener* and *cuándo/cuánto*. Then
-**ser vs estar** head-on. From here the course hands over rules, not phrases.
+- **Ch. 8 — Numbers, having, and age**: números 1–5 (← *ūnus…quīnque*) → números
+  6–10 (*siete/ocho/nueve/diez* → September–December; the *dieciséis* fusion) →
+  **tener** (first irregular / *e→ie* stem-changer; ← *tenēre* → tenant/retain) →
+  **¿cuántos años tienes?** (age is *had*, not *been*; *años* ← *annus*, the ñ) →
+  practice. **Authored.**
+
+Next: **Ch. 9** — **ser vs estar** head-on: the two "to be" verbs sorted for good
+(permanent identity vs temporary state/location), then possessives and the near
+future (*ir a* + infinitive). From here the course hands over rules, not phrases.
 Grammar accumulates piece by piece. The theme skeleton below plans the wider road.
 
 ## Theme Skeleton (planning only)
