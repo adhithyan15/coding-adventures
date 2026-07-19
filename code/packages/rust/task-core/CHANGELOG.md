@@ -6,6 +6,34 @@ All notable changes to `task-core` are documented here.
 
 ### Added
 
+- **Workspace operations — the validated mutations that only make sense across
+  projects** (Phase 2 PR-3 of `code/specs/task-app-workspace.md`). Same
+  `Result<(), OpError>` style as the `ProjectState` ops; within-a-project edits are
+  still done on the project itself.
+  - **Project lifecycle**: `create_project` (roots vs. nested), `rename_project`,
+    `delete_project` (rejected while it still has sub-projects, so nested work is never
+    lost silently; prunes cross-project edges to its tasks), `nest_project` /
+    `unnest_project` (forest-cycle-rejected, roots kept in sync).
+  - **`create_task` with workspace-global id uniqueness** — a task id may exist in at
+    most one project, so cross-project dependencies (which reference tasks by id alone)
+    are always unambiguous. Closes the "duplicate id across projects" gap the Phase-2
+    scheduler review flagged.
+  - **`move_task`** — relocate a task between projects, migrating dependencies so the
+    intra/cross invariant holds: an edge that now straddles the boundary moves into
+    `cross_project_dependencies`, and a cross-project edge whose endpoints are now
+    co-located collapses into that project's own `dependencies`. The moved task's
+    resource assignments and non-scheduling links are dropped from the source (they
+    reference the source project's pool/tasks and don't travel), leaving no dangling
+    references.
+  - **`link_cross_project_dependency` / `unlink_cross_project_dependency`** — validated
+    like `link_dependency` but workspace-wide: rejects a self-link, unknown endpoints, a
+    *same-project* link (use the project's own op), a duplicate, or a link that would
+    cycle the whole-workspace network (cycle check reuses `directed-graph`).
+  - **Shared resource pool**: `upsert_shared_resource` / `delete_shared_resource` (the
+    latter prunes assignments to it across every project).
+  - Helpers `project_is_ancestor` and `cross_project_would_cycle` are bounded /
+    `directed-graph`-based, so hostile input can't hang them. 7 new tests.
+
 - **Cross-project scheduling — projects schedule as one CPM network** (Phase 2 PR-2 of
   `code/specs/task-app-workspace.md`).
   - `scheduler::schedule_workspace(ws, project_start) -> WorkspaceSchedule` (and the
@@ -27,8 +55,8 @@ All notable changes to `task-core` are documented here.
     and `ProjectRollup { start, finish, critical }`: a two-level rollup — leaf → summary
     within each project, then **project → parent** across the nesting forest, so a parent
     project's span covers its own tasks and every sub-project beneath it.
-  - 5 new tests (62 total): cross-project sequencing, the independence toggle,
-    cross-project cycle rejection, single-project equivalence, and forest rollup.
+  - 5 new tests: cross-project sequencing, the independence toggle, cross-project cycle
+    rejection, single-project equivalence, and forest rollup.
 
 - **`Workspace` — projects become first-class, plural, and nestable** (Phase 2 PR-1 of
   `code/specs/task-app-workspace.md`). The model layer only; no behaviour changes yet.
