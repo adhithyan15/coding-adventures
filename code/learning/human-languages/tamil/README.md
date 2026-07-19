@@ -35,6 +35,15 @@ shown, LaTeX book.
   **uṅgaḷ peyar eṉṉa?** ("what's your name?"), magiḻcci, practice. Every atom
   native Dravidian and traced (*peyar* ≠ Indo-European *name*); the **zero
   copula** (no word for "is"). In the book.
+- **Chapter 3 — How Are You** ([`lessons/TA-C03-*`](./lessons/)): eppaḍi, **nīṅgaḷ
+  eppaḍi irukkiṟīrgaḷ?**, nāṉ, nalam, paravāyillai, practice. The verb *iru*
+  ("to be") — the copula returns for states; the *iru*/*illai* pair. In the book.
+- **Chapter 4 — Farewells** ([`lessons/TA-C04-*`](./lessons/)): pō/vā, **pōy
+  varugiṟēṉ** ("I'll go and come back"), nāḷai pārkkalām, mīṇḍum sandippōm,
+  practice. The Dravidian promise-of-return goodbye. In the book.
+- **Chapter 5 — First Verbs** ([`lessons/TA-C05-*`](./lessons/)): pēsu, **nāṉ
+  tamiḻ pēsugiṟēṉ**, vāḻ, vēlai sey, practice. Stem + tense + person; no gender
+  in the 1st person. In the book.
 
 ## Book / fonts
 
