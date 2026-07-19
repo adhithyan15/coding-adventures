@@ -4,7 +4,7 @@ chapter: 3
 type: phrase
 headword: ಪರವಾಗಿಲ್ಲ
 gloss: it's okay / no problem / you're welcome
-concept_tag: YOURE-WELCOME
+concept_tag: COURTESY-YOUREWELCOME
 prerequisites: [KA-C01-illa, KA-C01-dhanyavada]
 sounds: [illa-negative]
 roots: [illa-not-dravidian]

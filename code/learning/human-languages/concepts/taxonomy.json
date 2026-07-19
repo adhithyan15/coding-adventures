@@ -212,6 +212,9 @@
       "ES-SER-VS-ESTAR": "ser vs estar — the two 'to be' verbs (essence vs state); minimal pairs flip meaning (es/está aburrido, rico, verde, listo)",
       "ES-ORIGIN-SER": "soy de… — origin/profession/nationality take ser (essence); de ← Latin dē; ¿De dónde eres?",
       "ES-LOCATION-ESTAR": "está en… — physical location always takes estar (← stāre 'to stand'); en ← Latin in; ¿Dónde estás?",
+      "ES-VERB-IR": "ir — 'to go' (most suppletive: infinitive ← īre, present voy/vas/va/vamos/van ← vādere → invade/evade; go/went trick)",
+      "ES-NEAR-FUTURE": "ir a + infinitive — the 'going-to' future (voy a hablar = I'm going to speak); a ← ad; mirrors English/French",
+      "ES-POSSESSIVE": "mi/tu/su (+ mis/tus/sus) — possessives ← meus/tuus/suus → my/thy; agree in NUMBER not gender; tu 'your' vs tú 'you'",
       "IT-VERB-STARE": "stare — 'to be' (state; ← Latin stare 'to stand', = Spanish estar); drives 'come stai?'",
       "IT-VERB-PARLARE": "parlare — 'to speak' (← parabolāre = French parler; the regular -are present)",
       "IT-VERB-ABITARE": "abitare — 'to live/dwell' (← habitāre → habitat; twin of French habiter)",
@@ -245,6 +248,6 @@
     }
   },
   "practiceTags": {
-    "note": "Non-word lessons (type: review | practice-mix | writing) carry a session/orthography label, not a concept, and are exempt from the cross-language join. Existing labels: CH1-PRACTICE, CH2-PRACTICE, CH3-PRACTICE, CH4-PRACTICE, CH9-PRACTICE, REVIEW."
+    "note": "Non-word lessons (type: review | practice-mix | writing) carry a session/orthography label, not a concept, and are exempt from the cross-language join. Existing labels: CH1-PRACTICE, CH2-PRACTICE, CH3-PRACTICE, CH4-PRACTICE, CH9-PRACTICE, CH10-PRACTICE, REVIEW."
   }
 }
