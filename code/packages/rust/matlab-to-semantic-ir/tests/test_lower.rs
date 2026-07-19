@@ -274,6 +274,168 @@ fn logical_not_lowers_to_a_not_builtin_call() {
     }
 }
 
+// ── MATLAB truthiness: bare-numeric boolean-context coercion ────────────
+//
+// MATLAB/Octave has no separate boolean type ("logicals are doubles"):
+// truthiness is "nonzero is true, zero is false" for ANY number, not just a
+// comparison result. The shared JS/Python backends' `truthy()` runtime
+// instead implements SIR's OWN canonical truthiness (only `false`/`nil` are
+// falsy — the Ruby/Lisp convention `ruby-to-semantic-ir` depends on), so a
+// bare numeric operand reaching `~`/`if`/`while`/`&&`/`||` must be coerced
+// to an explicit `!= 0` SIR comparison AT LOWERING TIME (`to_matlab_condition`,
+// `src/lower.rs`) — before it ever reaches a backend's truthy check.
+// `tests/oracle.rs` proves this end-to-end against real `matlab-runtime`/
+// `node`; these are the fast, structural (no `node` needed) SIR-shape
+// counterparts.
+
+#[test]
+fn logical_not_on_a_bare_variable_wraps_the_operand_in_a_not_equal_zero_comparison() {
+    let m = compile_ok("x = 0;\ny = ~x;\n");
+    let main = main_fn(&m);
+    match &main.body.stmts[1] {
+        Stmt::LetStarBinding { value, .. } => match value {
+            Expr::BuiltinCall { name, args, .. } if name == "not" => {
+                assert_eq!(args.len(), 1);
+                match &args[0] {
+                    Expr::BuiltinCall { name, args, .. } if name == "!=" => {
+                        assert!(matches!(args[0], Expr::VarRef { .. }));
+                        assert!(matches!(args[1], Expr::IntLit { value: 0, .. }));
+                    }
+                    other => panic!(
+                        "expected the `not` operand to be a `!= 0` comparison, got {other:?}"
+                    ),
+                }
+            }
+            other => panic!("expected a `not` BuiltinCall, got {other:?}"),
+        },
+        other => panic!("expected LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn logical_not_on_a_comparison_result_is_not_double_wrapped() {
+    // `~(x > 3)` -- the operand is ALREADY a genuine boolean (a comparison),
+    // so `to_matlab_condition` must leave it exactly as `try_comparison`
+    // built it, not wrap it again in a redundant (and, for a real boolean,
+    // actively wrong) `!= 0`.
+    let m = compile_ok("x = 5;\ny = ~(x > 3);\n");
+    let main = main_fn(&m);
+    match &main.body.stmts[1] {
+        Stmt::LetStarBinding { value, .. } => match value {
+            Expr::BuiltinCall { name, args, .. } if name == "not" => {
+                assert_eq!(args.len(), 1);
+                assert!(
+                    matches!(&args[0], Expr::BuiltinCall { name, .. } if name == ">"),
+                    "expected the `not` operand to stay the bare `>` comparison, got {:?}",
+                    args[0]
+                );
+            }
+            other => panic!("expected a `not` BuiltinCall, got {other:?}"),
+        },
+        other => panic!("expected LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn if_condition_on_a_bare_variable_wraps_in_a_not_equal_zero_comparison() {
+    let m = compile_ok("x = 0;\nif x\n  y = 1;\nend\n");
+    let main = main_fn(&m);
+    match &main.body.stmts[1] {
+        Stmt::ExprStmt {
+            expr: Expr::If { cond, .. },
+            ..
+        } => match cond.as_ref() {
+            Expr::BuiltinCall { name, args, .. } if name == "!=" => {
+                assert!(matches!(args[0], Expr::VarRef { .. }));
+                assert!(matches!(args[1], Expr::IntLit { value: 0, .. }));
+            }
+            other => panic!("expected the `if` condition to be a `!= 0` comparison, got {other:?}"),
+        },
+        other => panic!("expected ExprStmt(If), got {other:?}"),
+    }
+}
+
+#[test]
+fn if_condition_already_a_comparison_is_not_double_wrapped() {
+    let m = compile_ok("x = 5;\nif x > 3\n  y = 1;\nend\n");
+    let main = main_fn(&m);
+    match &main.body.stmts[1] {
+        Stmt::ExprStmt {
+            expr: Expr::If { cond, .. },
+            ..
+        } => {
+            assert!(
+                matches!(cond.as_ref(), Expr::BuiltinCall { name, .. } if name == ">"),
+                "expected the `if` condition to stay the bare `>` comparison, got {cond:?}"
+            );
+        }
+        other => panic!("expected ExprStmt(If), got {other:?}"),
+    }
+}
+
+#[test]
+fn while_condition_on_a_bare_variable_wraps_in_a_not_equal_zero_comparison() {
+    let m = compile_ok("x = 5;\nwhile x\n  x = x - 1;\nend\n");
+    let main = main_fn(&m);
+    match &main.body.stmts[1] {
+        Stmt::While { cond, .. } => match cond {
+            Expr::BuiltinCall { name, args, .. } if name == "!=" => {
+                assert!(matches!(args[0], Expr::VarRef { .. }));
+                assert!(matches!(args[1], Expr::IntLit { value: 0, .. }));
+            }
+            other => {
+                panic!("expected the `while` condition to be a `!= 0` comparison, got {other:?}")
+            }
+        },
+        other => panic!("expected Stmt::While, got {other:?}"),
+    }
+}
+
+#[test]
+fn logical_and_wraps_each_bare_operand_in_a_not_equal_zero_comparison() {
+    let m = compile_ok("x = 1;\ny = 0;\nz = x && y;\n");
+    let main = main_fn(&m);
+    match &main.body.stmts[2] {
+        Stmt::LetStarBinding { value, .. } => match value {
+            Expr::LogicalAnd { lhs, rhs, .. } => {
+                for operand in [lhs.as_ref(), rhs.as_ref()] {
+                    match operand {
+                        Expr::BuiltinCall { name, args, .. } if name == "!=" => {
+                            assert!(matches!(args[0], Expr::VarRef { .. }));
+                            assert!(matches!(args[1], Expr::IntLit { value: 0, .. }));
+                        }
+                        other => panic!("expected a `!= 0` comparison operand, got {other:?}"),
+                    }
+                }
+            }
+            other => panic!("expected Expr::LogicalAnd, got {other:?}"),
+        },
+        other => panic!("expected LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn logical_or_operand_already_a_comparison_is_not_double_wrapped() {
+    let m = compile_ok("x = 1;\ny = 2;\nz = (x > 3) || y;\n");
+    let main = main_fn(&m);
+    match &main.body.stmts[2] {
+        Stmt::LetStarBinding { value, .. } => match value {
+            Expr::LogicalOr { lhs, rhs, .. } => {
+                assert!(
+                    matches!(lhs.as_ref(), Expr::BuiltinCall { name, .. } if name == ">"),
+                    "expected lhs to stay the bare `>` comparison, got {lhs:?}"
+                );
+                assert!(
+                    matches!(rhs.as_ref(), Expr::BuiltinCall { name, .. } if name == "!="),
+                    "expected rhs (a bare variable) to be wrapped in `!= 0`, got {rhs:?}"
+                );
+            }
+            other => panic!("expected Expr::LogicalOr, got {other:?}"),
+        },
+        other => panic!("expected LetStarBinding, got {other:?}"),
+    }
+}
+
 // ── ranges, transpose, matrices ─────────────────────────────────────────
 
 #[test]

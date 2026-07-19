@@ -88,6 +88,73 @@
 
 ### Fixed
 
+- **Correctness: bare-numeric truthiness disagreed with MATLAB/Octave's
+  "logicals are doubles" convention.** Real MATLAB/Octave has no separate
+  boolean type — truthiness is "nonzero is true, zero is false" for ANY
+  number (`~0` is `1`, `~5` is `0`), not just the result of a comparison.
+  But `lower_unary` (`~`), `lower_if`, `lower_while`, and `try_logical`
+  (`&&`/`||`) all passed an already-lowered operand straight through to
+  `Expr::If`/`Stmt::While`/`Expr::LogicalAnd`/`Expr::LogicalOr`/
+  `BuiltinCall("not", ..)` unchanged, so a **bare numeric variable or
+  literal** reaching one of these boolean contexts fell through to the
+  shared JS/Python backends' `truthy()` runtime helper, which implements
+  SIR's OWN canonical truthiness instead (only `false`/`nil` are falsy —
+  the Ruby/Lisp convention `ruby-to-semantic-ir` genuinely depends on, per
+  the `sir-runtime` spec's own verification rule that Ruby `0 && x` must
+  yield `x`). So `n = 0; ~n` compiled to `false` — backwards; MATLAB's
+  `~0` is `1`. This was deliberately diagnosed-but-NOT-fixed by PR #8534/
+  #8535 (`octave-to-semantic-ir/tests/oracle.rs`'s `bang_negation_on_
+  comparison` case only ever negated a *comparison result*, which already
+  produces a genuine boolean regardless of convention, sidestepping the
+  bug rather than exercising it).
+  - **Root-cause investigation confirmed the fix belongs in THIS
+    frontend's lowering, not the shared runtime.** `sir-conformance`
+    proves real Ruby source's `&&`/`||`/`~`-equivalent semantics agree
+    across every backend end-to-end (`corpus_agrees_across_all_backends`,
+    still passing, unmodified) — Ruby's own frontend deliberately does NOT
+    wrap a bare numeric operand, because Ruby treats `0` as truthy too, so
+    changing the shared `truthy()` convention globally would silently
+    break every Ruby-sourced program. (Separately confirmed:
+    `python-to-semantic-ir` and `javascript-to-semantic-ir` do not wrap a
+    bare native-falsy operand — `0`/`""`/`[]`/`{}` — either, and appear to
+    share this exact class of latent bug for their own languages' native
+    truthiness; no existing test in either crate exercises it, so it is
+    flagged as a separate, unfixed, out-of-scope finding rather than
+    addressed here.) `apl-to-semantic-ir`/`j-to-semantic-ir` are NOT
+    affected: v0.1.0 of both has no `if`/`while`/`&&`/`||`/`~` lowering at
+    all yet (no boolean-context construct exists to have the bug).
+  - **Fix:** a new `to_matlab_condition` helper (`src/lower.rs`) coerces
+    an already-lowered expression to MATLAB truthiness at the point it
+    reaches a boolean context — wrapping anything that is not already a
+    genuine SIR boolean (per the new `expr_is_known_bool` predicate: a
+    comparison, a `not` call, or `LogicalAnd`/`LogicalOr`) in an explicit
+    `!= 0` comparison. Applied at all four call sites: `lower_if`'s and
+    `lower_while`'s condition, `lower_unary`'s `~` operand, and each
+    operand `try_logical` folds into `LogicalAnd`/`LogicalOr` (so the
+    "deciding operand" a short-circuit returns is always already boolean,
+    by construction, all the way down through nesting). An already-boolean
+    operand (`~(x > 3)`, `if x > 0`) is left untouched — wrapping it again
+    would be wrong, not just redundant (`false != 0` is `true`).
+  - **Regression tests:** 8 new structural tests in `tests/test_lower.rs`
+    (bare-variable negation wraps in `!= 0`; a comparison operand is NOT
+    double-wrapped, for both `~` and `if`; `if`/`while` on a bare variable
+    wrap in `!= 0`; `&&`/`||` wrap each bare operand independently while
+    leaving an already-boolean operand alone) plus 6 new end-to-end
+    `tests/oracle.rs` corpus cases cross-checked against real
+    `matlab-runtime` through an actual `node` process: `~0` is `1`, `~5` is
+    `0`, `if 0`/`if 5` take the correct branch, and `0 && 1` / `0 || 5`
+    resolve correctly through an `if` (observing the branch taken rather
+    than `disp`ing the raw short-circuit value directly, which would hit
+    an unrelated, already-documented representational difference between
+    this frontend's Ruby-style "return the deciding operand" `&&`/`||` and
+    `matlab-runtime`'s coerced-0.0/1.0-double convention).
+  - `octave-to-semantic-ir/tests/oracle.rs`'s `bang_negation_on_comparison`
+    doc comment is updated to drop the "confirmed, excluded gap" framing,
+    and two new corpus cases (`bang_negation_on_bare_zero_is_true`,
+    `bang_negation_on_bare_nonzero_is_false`) exercise the fix through
+    Octave's own `!` spelling — this crate needed no change of its own
+    since it shares 100% of its lowering.
+
 - **Correctness: `Feature::Floats` was never observed for a `FloatLit`.**
   `number_literal_expr` was a free function with no access to the
   lowerer's feature-tracking state, so a module containing a float

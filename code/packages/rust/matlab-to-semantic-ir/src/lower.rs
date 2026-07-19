@@ -588,7 +588,9 @@ impl Lowerer {
             None => empty_block(if_span.clone()),
         };
         for clause in clauses.into_iter().rev() {
-            let cond = self.lower_expr(clause.cond, ctx)?;
+            // MATLAB truthiness ("nonzero is true"), not the shared
+            // backend's own — see `to_matlab_condition`'s doc comment.
+            let cond = to_matlab_condition(self.lower_expr(clause.cond, ctx)?);
             let then_branch = self.lower_block_body(clause.body, ctx, depth + 1)?;
             let span = cond.span().clone();
             let folded = Expr::If {
@@ -620,7 +622,9 @@ impl Lowerer {
                 ))
             }
         };
-        let cond = self.lower_expr(cond_node, ctx)?;
+        // MATLAB truthiness ("nonzero is true"), not the shared backend's
+        // own — see `to_matlab_condition`'s doc comment.
+        let cond = to_matlab_condition(self.lower_expr(cond_node, ctx)?);
         let body = self.lower_block_body(body_node, ctx, depth + 1)?;
         self.observed.add(Feature::Loops);
         Ok(Stmt::While {
@@ -962,7 +966,13 @@ impl Lowerer {
         let mut acc: Option<Expr> = None;
         for child in &node.children {
             if let ASTNodeOrToken::Node(n) = child {
-                let operand = self.lower_expr_d(n, ctx, depth + 1)?;
+                // Each operand is forced to MATLAB truthiness ("nonzero is
+                // true") BEFORE it can become the "deciding operand" a
+                // short-circuit returns — see `to_matlab_condition`'s doc
+                // comment. This is what lets `expr_is_known_bool` treat a
+                // `LogicalAnd`/`LogicalOr` node as already-boolean: by
+                // construction, every operand reaching one already is.
+                let operand = to_matlab_condition(self.lower_expr_d(n, ctx, depth + 1)?);
                 acc = Some(match acc.take() {
                     None => operand,
                     Some(lhs) => {
@@ -1464,7 +1474,13 @@ impl Lowerer {
             },
             "~" => Expr::BuiltinCall {
                 name: "not".to_string(),
-                args: vec![operand],
+                // `~5` must be `0` and `~0` must be `1` — MATLAB truthiness
+                // ("nonzero is true"), not the shared backend's own — see
+                // `to_matlab_condition`'s doc comment. `to_matlab_condition`
+                // leaves an already-boolean operand (e.g. `~(x > 3)`)
+                // unchanged, so this is a no-op for the case the frontend
+                // already handled correctly.
+                args: vec![to_matlab_condition(operand)],
                 effects: EffectSet::PURE,
                 span,
             },
@@ -2069,6 +2085,81 @@ fn expr_is_known_scalar_d(e: &Expr, depth: usize) -> bool {
             args.iter().all(|a| expr_is_known_scalar_d(a, depth + 1))
         }
         _ => false,
+    }
+}
+
+/// Is `e` already a genuine SIR boolean — i.e. it produces `true`/`false`
+/// regardless of which convention a backend's truthy-check uses?
+///
+/// A comparison (`= != < > <= >=`, this frontend's `BuiltinCall` spelling
+/// per [`Lowerer::try_comparison`]), a `~`-negation (`BuiltinCall("not",
+/// ..)` per [`Lowerer::lower_unary`]), and `&&`/`||` ([`Expr::LogicalAnd`]/
+/// [`Expr::LogicalOr`]) all qualify. `LogicalAnd`/`LogicalOr` qualify
+/// unconditionally rather than recursively, because [`to_matlab_condition`]
+/// is *always* applied to each of their own operands at the point they are
+/// built (see [`Lowerer::try_logical`]) — so by construction their
+/// "deciding operand" (Ruby-style short-circuit: the node returns whichever
+/// operand decided the result, not a separately-computed bool) is already
+/// one of these same already-boolean shapes, all the way down.
+fn expr_is_known_bool(e: &Expr) -> bool {
+    match e {
+        Expr::BoolLit { .. } => true,
+        Expr::LogicalAnd { .. } | Expr::LogicalOr { .. } => true,
+        Expr::BuiltinCall { name, .. } => {
+            matches!(name.as_str(), "=" | "!=" | "<" | ">" | "<=" | ">=" | "not")
+        }
+        _ => false,
+    }
+}
+
+/// Coerce an already-lowered MATLAB/Octave expression to genuine MATLAB
+/// truthiness at the point it reaches a **boolean context**: an `if`/
+/// `while` condition, the operand of unary `~`, or an operand of `&&`/`||`.
+///
+/// Real MATLAB/Octave has no separate boolean type — logicals are doubles,
+/// and truthiness is simply "nonzero is true, zero is false" (`~0` is `1`,
+/// `~5` is `0`), for ANY numeric value, not just the result of a
+/// comparison. But this backend's shared runtime truthy-check (see
+/// `semantic-ir-to-javascript`'s `truthy()`, also reused as
+/// `semantic-ir-to-python`'s `_sir_truthy`) implements SIR's OWN canonical
+/// truthiness instead — only `false`/`nil` are falsy, the Ruby/Lisp
+/// convention `ruby-to-semantic-ir` depends on (per the `sir-runtime`
+/// spec's own verification rule: a Ruby `0 && x` must yield `x`, i.e. `0`
+/// is truthy there). Passed straight through, a bare MATLAB numeric value
+/// would silently get Ruby's truthiness instead of MATLAB's: canonical SIR
+/// `truthy(0)` is `true`, backwards from MATLAB's `~0 == 1`.
+///
+/// The fix belongs HERE, at MATLAB/Octave lowering time, rather than in
+/// the shared runtime — this frontend already knows its own language's
+/// truthiness rule, so it makes the fact `x != 0` an explicit SIR
+/// comparison *before* the value ever reaches a backend's truthy check.
+/// After that, a real SIR boolean means the same thing to every backend
+/// and every source language, canonical-SIR-truthy or not.
+///
+/// A value that [`expr_is_known_bool`] already recognises as one is
+/// returned UNCHANGED — wrapping it again would be both redundant and
+/// actively wrong: the runtime's `!=` unwraps a tagged float via `numOf`
+/// but otherwise compares by strict identity, so `false != 0` is `true`
+/// (a JS `boolean` and `number` are never `===`), which would invert an
+/// already-correct boolean. Everything else — a bare variable, a numeric
+/// literal, an arithmetic result, a function call, an index read, … —
+/// is wrapped in an explicit `!= 0`.
+fn to_matlab_condition(expr: Expr) -> Expr {
+    if expr_is_known_bool(&expr) {
+        return expr;
+    }
+    let span = expr.span().clone();
+    Expr::BuiltinCall {
+        name: "!=".to_string(),
+        args: vec![
+            expr,
+            Expr::IntLit {
+                value: 0,
+                span: span.clone(),
+            },
+        ],
+        effects: EffectSet::PURE,
+        span,
     }
 }
 
