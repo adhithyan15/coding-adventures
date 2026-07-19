@@ -31,12 +31,17 @@ Spanish and French where a contrast helps. The recurring decoder is the
   length; a long-s+z ligature); the umlauts ä/ö/ü (a shrunken *e*; the fronting
   that marks plurals — Mann→Männer); Großschreibung (every noun capitalized).
   **Authored.**
+- **Ch. 5 — The first verbs**: wohnen (← *wonēn* → *wont*; the regular WEAK
+  present -e/-st/-t) → machen (← *makōn* = *make*) → lernen (← *liznōjan* =
+  *learn/lore*) → **Ich lerne Deutsch** (first sentence; *Deutsch* ← *diutisc* →
+  *Dutch*) → practice. **Authored** — parallel to French Ch.5, and completes the
+  three-way pronoun rule (ES drops / FR keeps for silence / DE keeps for structure).
 
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 5+ | Numbers, cases (der→den→dem), family, food — following the shared theme order |
+| 6+ | Numbers, cases (der→den→dem), family, food, sprechen & irregular verbs — following the shared theme order |
 
 The **du / Sie** lesson (Ch. 2) completes the formal/informal set across the
 languages: Spanish *tú/usted* (from "your grace"), French *tu/vous* (the
