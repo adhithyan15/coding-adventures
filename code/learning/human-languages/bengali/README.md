@@ -26,7 +26,19 @@ book.
 - **Chapter 1 — Greetings** ([`lessons/BN-C01-*`](./lessons/)): nômoshkar,
   dhônyobad, hyã/nā, āchchhā, āshi (the "I'll come again" goodbye), practice. In
   the book.
-- **Chapter 2 — Introducing Yourself** (planned): *āmār nām…*, *tumi* / *āpni*.
+- **Chapter 2 — Introducing Yourself** ([`lessons/BN-C02-*`](./lessons/)): nām,
+  āmār, **āmār nām …** ("my name is," zero copula), tumi/āpni (+ tui), ki, **tomār
+  nām ki?**, ālāp kore bhālo lāglo, practice. The zero copula; no gender. In the
+  book.
+- **Chapter 3 — How Are You** ([`lessons/BN-C03-*`](./lessons/)): kemon, **tumi
+  kemon āchho?**, āmi (← *asmi* → *am*), bhālo, kono bæpār nā, practice. The verb
+  *āchhā* returns for state. In the book.
+- **Chapter 4 — Farewells** ([`lessons/BN-C04-*`](./lessons/)): ābār, dækhā hôbe,
+  **ābār dækhā hôbe**, kāl dækhā hôbe, practice. The impersonal future. In the
+  book.
+- **Chapter 5 — First Verbs** ([`lessons/BN-C05-*`](./lessons/)): bôlā, **āmi
+  bānglā bôli**, thākā (← *sthā* → *stand/stay*), kāj kôrā, practice. The verb
+  never changes for gender. In the book.
 
 ## Book / fonts
 
