@@ -4,7 +4,7 @@ chapter: 3
 type: phrase
 headword: কোনো ব্যাপার না
 gloss: it's no matter / no problem / you're welcome
-concept_tag: YOURE-WELCOME
+concept_tag: COURTESY-YOUREWELCOME
 prerequisites: [BN-C01-hyan-na, BN-C01-dhonnobad]
 sounds: [ya-phola, long-aa]
 roots: [vyapaara-sanskrit, na-negative]

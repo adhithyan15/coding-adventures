@@ -1,6 +1,6 @@
 [package]
 name = "semantic-ir-to-typescript"
-version = "0.10.0"
+version = "0.11.0"
 edition = "2021"
 description = "Semantic IR → self-contained TypeScript source code (SIR12). First backend for the SIR10 narrow-waist IR."
 
