@@ -44,10 +44,16 @@ order lives in the book, which LaTeX auto-numbers, and in `session-map.md`.)
   español** (first self-assembled sentence; pro-drop; *español* ← *Hispania*) →
   practice. **Authored** — the pilot's first grammar-engine chapter.
 
-Next: **Ch. 7** — the **-er/-ir** verbs (comer, vivir) to complete the regular
-present tense, and the first real **questions** (*qué*, *dónde*, *cuándo*). From
-here the course hands over rules, not phrases. Grammar accumulates piece by
-piece. The theme skeleton below plans the wider road ahead.
+- **Ch. 7 — The rest of the present tense + first questions**: comer (← *comedere*
+  → edible; first *-er*) → vivir (← *vīvere* → vivid; first *-ir*, singular =
+  *-er*) → beber (← *bibere* → beverage) → **qué** (← *quid*) → **dónde** (← *de
+  unde*) → practice. **Authored** — the three verb families are complete and the
+  learner asks/answers real questions (*¿Dónde vives?*).
+
+Next: **Ch. 8** — **numbers** (uno–diez, then the *dieciséis* fusion), age and
+"how many" (*cuántos años tienes?*), introducing *tener* and *cuándo/cuánto*. Then
+**ser vs estar** head-on. From here the course hands over rules, not phrases.
+Grammar accumulates piece by piece. The theme skeleton below plans the wider road.
 
 ## Theme Skeleton (planning only)
 
