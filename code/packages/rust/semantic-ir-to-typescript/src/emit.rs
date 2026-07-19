@@ -1710,38 +1710,103 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
             emit_index_args(out, indices, indent);
             out.push_str("])");
         }
-        // ── SIR22 addendum: APL primitive operators (still deferred) ──
-        // `Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/
-        // `IndexGenerator`/`IndexOf`/`Ravel`/`Catenate` observe the SAME
-        // `NDArrays`/`MatrixOps`/`ArrayColumnMajor` features as the base
-        // cut above (the SIR22 addendum spec gives them no feature flag of
-        // their own) — `sir-runtime-array` itself never implemented them
-        // (no frontend needed them when that package shipped), so
-        // real codegen for these nine requires porting
-        // `array_runtime::ops::{reduce,scan,outer}` +
-        // `apl-runtime::builtins`'s bespoke shape/reshape/iota/index-of/
-        // ravel/catenate logic into that package first — a natural,
-        // cleanly-scoped follow-up, not part of this PR. See `lib.rs`'s
-        // `find_unimplemented_sir22_addendum_node` for why accepting
-        // `NDArrays`/`MatrixOps`/`ArrayColumnMajor` for the base cut above
-        // does not, by itself, silently let one of these nine slip past
-        // the capability check and reach this panic.
-        Expr::Reduce { .. }
-        | Expr::Scan { .. }
-        | Expr::OuterProduct { .. }
-        | Expr::Shape { .. }
-        | Expr::Reshape { .. }
-        | Expr::IndexGenerator { .. }
-        | Expr::IndexOf { .. }
-        | Expr::Ravel { .. }
-        | Expr::Catenate { .. }
+        // ── SIR22 addendum: APL primitive operators — real codegen ────
+        // Each of the nine maps 1:1 onto a call into the published
+        // `@coding-adventures/sir-runtime-array` package's own SIR22-
+        // addendum port (see that package's `reduce.ts`/`outer.ts`/
+        // `shape.ts`/`iota.ts`/`ravel.ts`) — the SAME `__SirArray` import
+        // the base cut above already gates in via `uses_array`, so no new
+        // import-gating logic is needed here. `Reduce`/`Scan`/
+        // `OuterProduct` carry an `ElementwiseOpKind` and so reuse
+        // `elementwise_op_ts_name` exactly like `ElementwiseOp` above does;
+        // the remaining six have no `op` field at all (they are "bespoke,
+        // not BinOp-shaped" per the SIR22 spec addendum and
+        // `apl_runtime::builtins`'s own doc comment) and just recurse into
+        // their operand(s).
+        Expr::Reduce { op, target, .. } => {
+            let _ = write!(
+                out,
+                "__SirArray.reduce({}, ",
+                quote_ts_string(elementwise_op_ts_name(*op))
+            );
+            emit_expr(out, target, indent);
+            out.push(')');
+        }
+        Expr::Scan { op, target, .. } => {
+            let _ = write!(
+                out,
+                "__SirArray.scan({}, ",
+                quote_ts_string(elementwise_op_ts_name(*op))
+            );
+            emit_expr(out, target, indent);
+            out.push(')');
+        }
+        Expr::OuterProduct { op, lhs, rhs, .. } => {
+            let _ = write!(
+                out,
+                "__SirArray.outer({}, ",
+                quote_ts_string(elementwise_op_ts_name(*op))
+            );
+            emit_expr(out, lhs, indent);
+            out.push_str(", ");
+            emit_expr(out, rhs, indent);
+            out.push(')');
+        }
+        Expr::Shape { target, .. } => {
+            out.push_str("__SirArray.shape(");
+            emit_expr(out, target, indent);
+            out.push(')');
+        }
+        // Field order here is `shape, target` (per the SIR22 spec: the
+        // shape vector is not interchangeable with the data being
+        // reshaped, so the node spells out the roles instead of reusing
+        // `lhs`/`rhs` — see `semantic_ir::Expr::Reshape`'s own doc comment
+        // in `nodes.rs`) — `sir-runtime-array`'s `reshape(shapeArg, target)`
+        // (`shape.ts`) takes that SAME order, so no argument reordering is
+        // needed at this call site (contrast `Expr::Range`'s `start, step,
+        // stop` vs. `range`'s `start, stop, step` just above, which DOES
+        // reorder — checked both directly rather than assumed, since this
+        // crate's own base-cut `Range` arm already proves field order can
+        // legitimately differ between a SIR node and its runtime callee).
+        Expr::Reshape { shape, target, .. } => {
+            out.push_str("__SirArray.reshape(");
+            emit_expr(out, shape, indent);
+            out.push_str(", ");
+            emit_expr(out, target, indent);
+            out.push(')');
+        }
+        Expr::IndexGenerator { count, .. } => {
+            out.push_str("__SirArray.indexGenerator(");
+            emit_expr(out, count, indent);
+            out.push(')');
+        }
+        Expr::IndexOf {
+            haystack, needle, ..
+        } => {
+            out.push_str("__SirArray.indexOf(");
+            emit_expr(out, haystack, indent);
+            out.push_str(", ");
+            emit_expr(out, needle, indent);
+            out.push(')');
+        }
+        Expr::Ravel { target, .. } => {
+            out.push_str("__SirArray.ravel(");
+            emit_expr(out, target, indent);
+            out.push(')');
+        }
+        Expr::Catenate { lhs, rhs, .. } => {
+            out.push_str("__SirArray.catenate(");
+            emit_expr(out, lhs, indent);
+            out.push_str(", ");
+            emit_expr(out, rhs, indent);
+            out.push(')');
+        }
         // SIR26 `Convert` — `Conversions` not accepted; unreachable in a
         // validated module.
-        | Expr::Convert { .. } => {
+        Expr::Convert { span, .. } => {
             panic!(
-                "typescript backend reached a deferred SIR22/SIR26 expression ({}) at {} — not accepted yet",
-                e.kind_name(),
-                e.span()
+                "typescript backend reached a deferred SIR26 expression ({}) at {span} — not accepted yet",
+                e.kind_name()
             );
         }
         // SIR23 symbolic-expression/pattern nodes — construct/consume a
