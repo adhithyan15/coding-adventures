@@ -6,6 +6,30 @@ All notable changes to `task-core` are documented here.
 
 ### Added
 
+- **Cross-project scheduling — projects schedule as one CPM network** (Phase 2 PR-2 of
+  `code/specs/task-app-workspace.md`).
+  - `scheduler::schedule_workspace(ws, project_start) -> WorkspaceSchedule` (and the
+    `Workspace::schedule` convenience method) run one CPM pass over **every project's
+    tasks at once**. Because task ids are workspace-global, a `DependencyLink` can cross
+    a project boundary and sequence a task in one project after a task in another.
+  - The CPM pass was refactored around a `Plan` that maps each schedulable task to **its
+    owning project**, so calendars and working-time math resolve where the task actually
+    lives; predecessor → successor timing is computed in absolute instant-space, so two
+    projects on different working weeks compose correctly. `scheduler::schedule` (single
+    project) is now the one-project case of the same `run`, and is **unchanged
+    behaviourally** — all 8 pre-existing scheduler tests pass byte-for-byte, and a new
+    test asserts a one-project workspace reproduces bare-project dates exactly.
+  - Cross-project dependencies are honoured only when
+    `WorkspaceSettings::schedule_as_one_network` is on; off (the default) schedules each
+    project independently from the same start. A cross-project cycle is rejected exactly
+    like an intra-project one.
+  - `WorkspaceSchedule { dates, per_project, conflicts, project_start, project_finish }`
+    and `ProjectRollup { start, finish, critical }`: a two-level rollup — leaf → summary
+    within each project, then **project → parent** across the nesting forest, so a parent
+    project's span covers its own tasks and every sub-project beneath it.
+  - 5 new tests (62 total): cross-project sequencing, the independence toggle,
+    cross-project cycle rejection, single-project equivalence, and forest rollup.
+
 - **`Workspace` — projects become first-class, plural, and nestable** (Phase 2 PR-1 of
   `code/specs/task-app-workspace.md`). The model layer only; no behaviour changes yet.
   - `Workspace { id, name, projects, roots, cross_project_dependencies,
