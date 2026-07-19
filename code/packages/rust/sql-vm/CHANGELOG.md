@@ -3,6 +3,25 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.31] - Unreleased
+
+### Changed
+
+- **`i64::MIN` division/modulo overflow now matches SQLite instead of erroring.**
+  `i64::MIN / -1` has no `i64` representation, so it now PROMOTES to REAL
+  (`9223372036854775808.0`), mirroring the existing `+`/`-`/`*` overflow
+  promotion. `i64::MIN % -1` (the only overflow `%` can hit) returns INTEGER `0`,
+  its true remainder. Both previously surfaced a `VmError` ("integer overflow in
+  division/modulo").
+- **`%` is now an INTEGER operation, matching SQLite.** Both operands are
+  converted to 64-bit integers (numeric affinity, then truncation toward zero,
+  with out-of-range reals clamped to the i64 bounds via Rust's saturating
+  `as i64` float cast) before the remainder is taken; the result is REAL only if
+  an operand carried REAL affinity. So `7.5 % 2` is now `1.0` (7 % 2), not `1.5`
+  (fmod), and `10.9 % 3.9` is `1.0` (10 % 3). A real divisor that truncates to
+  zero (`5 % 0.9`) is NULL, as before. Division (`/`) is unchanged — it stays
+  true real division (`7.5 / 2` = 3.75).
+
 ## [0.4.30] - Unreleased
 
 ### Added

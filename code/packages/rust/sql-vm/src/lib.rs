@@ -1989,10 +1989,10 @@ fn eval_binary(op: &BinaryOp, l: SqlValue, r: SqlValue) -> Result<SqlValue, VmEr
         //
         // Integer arithmetic uses checked variants so overflow is detected rather
         // than panicking (debug) or silently wrapping (release). For `+`/`-`/`*`
-        // an overflow PROMOTES the operation to REAL (see `checked_int_binop`),
-        // matching SQLite; only `/` and `%` still surface the rare `i64::MIN`
-        // overflow as a VmError (a follow-up). Float arithmetic wraps naturally
-        // (IEEE 754 semantics).
+        // and `/` an overflow PROMOTES the operation to REAL (see
+        // `checked_int_binop` and the `Div` arm), matching SQLite; the only i64
+        // overflow `%` can hit is `i64::MIN % -1`, whose remainder is 0. Float
+        // arithmetic wraps naturally (IEEE 754 semantics).
         BinaryOp::Add => checked_int_binop(l, r, i64::checked_add, |a, b| a + b),
         BinaryOp::Sub => checked_int_binop(l, r, i64::checked_sub, |a, b| a - b),
         BinaryOp::Mul => checked_int_binop(l, r, i64::checked_mul, |a, b| a * b),
@@ -2008,9 +2008,14 @@ fn eval_binary(op: &BinaryOp, l: SqlValue, r: SqlValue) -> Result<SqlValue, VmEr
                 (_, SqlValue::Int(0)) => Ok(SqlValue::Null),
                 (_, SqlValue::Float(f)) if *f == 0.0 => Ok(SqlValue::Null),
                 (SqlValue::Int(a), SqlValue::Int(b)) => {
-                    a.checked_div(*b).map(SqlValue::Int).ok_or_else(|| {
-                        VmError::TypeMismatch("integer overflow in division".to_string())
-                    })
+                    // `checked_div` is `None` only for `i64::MIN / -1` (the zero
+                    // divisor was handled above), which overflows i64. SQLite
+                    // PROMOTES that to REAL — `-9223372036854775808 / -1` is
+                    // `9223372036854775808.0` — mirroring the +/-/* overflow
+                    // promotion, so fall back to the widened float quotient.
+                    Ok(a.checked_div(*b)
+                        .map(SqlValue::Int)
+                        .unwrap_or_else(|| SqlValue::Float(*a as f64 / *b as f64)))
                 }
                 (SqlValue::Float(a), SqlValue::Float(b)) => Ok(SqlValue::Float(a / b)),
                 (SqlValue::Int(a), SqlValue::Float(b)) => Ok(SqlValue::Float(*a as f64 / b)),
@@ -2022,20 +2027,39 @@ fn eval_binary(op: &BinaryOp, l: SqlValue, r: SqlValue) -> Result<SqlValue, VmEr
             }
         }
         BinaryOp::Mod => {
-          // Numeric affinity applies first (`'7' % 3` = 1); then modulo by zero
-          // is NULL in SQLite (`5%0`, `5.5%0`, `5%0.0`), not an error.
+          // SQLite's `%` is fundamentally an INTEGER operation, unlike `/`: both
+          // operands are first converted to 64-bit integers (numeric affinity,
+          // then truncation TOWARD ZERO — `7.5`→7, `-7.5`→-7 — with out-of-range
+          // reals clamped to the i64 bounds, exactly what Rust's `as i64` float
+          // cast does), the integer remainder is taken, and the RESULT is REAL
+          // when either operand was REAL and INTEGER otherwise. So `7.5 % 2` is
+          // `1.0` (7 % 2 = 1, rendered real), NOT `1.5` (which is what `fmod`
+          // would give). Modulo by zero is NULL — including a real divisor that
+          // truncates to zero, e.g. `5 % 0.9` — never an error.
           let (l, r) = (coerce_arith(l), coerce_arith(r));
-          match (&l, &r) {
-            (_, SqlValue::Int(0)) => Ok(SqlValue::Null),
-            (_, SqlValue::Float(f)) if *f == 0.0 => Ok(SqlValue::Null),
-            (SqlValue::Int(a), SqlValue::Int(b)) => {
-                a.checked_rem(*b).map(SqlValue::Int).ok_or_else(|| {
-                    VmError::TypeMismatch("integer overflow in modulo".to_string())
-                })
+          // `coerce_arith` leaves only Int/Float for numeric operands; map each to
+          // an i64 (truncating floats), remembering whether either side was REAL.
+          let to_i64 = |v: &SqlValue| -> Option<i64> {
+              match v {
+                  SqlValue::Int(n) => Some(*n),
+                  SqlValue::Float(f) => Some(*f as i64),
+                  _ => None,
+              }
+          };
+          match (to_i64(&l), to_i64(&r)) {
+            (Some(_), Some(0)) => Ok(SqlValue::Null),
+            (Some(a), Some(b)) => {
+                // `checked_rem` is `None` only for `i64::MIN % -1` (the zero
+                // divisor is handled above); the true remainder there is 0, since
+                // -1 divides evenly. So the fallback is 0, never an error.
+                let m = a.checked_rem(b).unwrap_or(0);
+                // REAL if either operand carried REAL affinity, else INTEGER.
+                if matches!(l, SqlValue::Float(_)) || matches!(r, SqlValue::Float(_)) {
+                    Ok(SqlValue::Float(m as f64))
+                } else {
+                    Ok(SqlValue::Int(m))
+                }
             }
-            (SqlValue::Float(a), SqlValue::Float(b)) => Ok(SqlValue::Float(a % b)),
-            (SqlValue::Int(a), SqlValue::Float(b)) => Ok(SqlValue::Float(*a as f64 % b)),
-            (SqlValue::Float(a), SqlValue::Int(b)) => Ok(SqlValue::Float(a % *b as f64)),
             _ => Err(VmError::TypeMismatch(format!(
                 "cannot mod {:?} by {:?}", l.type_name(), r.type_name()
             ))),
@@ -3564,6 +3588,43 @@ mod tests {
         assert_eq!(bin(BinaryOp::Mod, t("7"), int(3)), int(1));
         // NULL still short-circuits to NULL (handled before coercion).
         assert_eq!(bin(BinaryOp::Add, t("5"), null()), null());
+    }
+
+    #[test]
+    fn test_div_mod_i64_min_overflow() {
+        // `i64::MIN / -1` overflows i64 → SQLite promotes to REAL. `i64::MIN % -1`
+        // overflows Rust's `%` but its true remainder is 0 (integer).
+        let bin = |op: BinaryOp, l: SqlValue, r: SqlValue| eval_binary(&op, l, r).unwrap();
+        assert_eq!(
+            bin(BinaryOp::Div, int(i64::MIN), int(-1)),
+            SqlValue::Float(9223372036854775808.0)
+        );
+        assert_eq!(bin(BinaryOp::Mod, int(i64::MIN), int(-1)), int(0));
+        // Non-overflowing div/mod are unchanged.
+        assert_eq!(bin(BinaryOp::Div, int(7), int(2)), int(3));
+        assert_eq!(bin(BinaryOp::Mod, int(7), int(3)), int(1));
+        assert_eq!(bin(BinaryOp::Div, int(-7), int(2)), int(-3));
+    }
+
+    #[test]
+    fn test_modulo_integer_truncation() {
+        // SQLite's `%` truncates both operands to i64 (toward zero) before taking
+        // the remainder; the result is REAL iff an operand was REAL. So `7.5 % 2`
+        // is `1.0` (7 % 2), NOT `1.5` (fmod).
+        let bin = |op: BinaryOp, l: SqlValue, r: SqlValue| eval_binary(&op, l, r).unwrap();
+        let f = SqlValue::Float;
+        assert_eq!(bin(BinaryOp::Mod, f(7.5), int(2)), f(1.0)); // 7 % 2 = 1
+        assert_eq!(bin(BinaryOp::Mod, f(10.9), f(3.9)), f(1.0)); // 10 % 3 = 1
+        assert_eq!(bin(BinaryOp::Mod, f(-7.5), int(2)), f(-1.0)); // -7 % 2 = -1
+        assert_eq!(bin(BinaryOp::Mod, int(7), f(2.5)), f(1.0)); // 7 % 2 = 1, real
+        assert_eq!(bin(BinaryOp::Mod, int(7), int(2)), int(1)); // pure int stays int
+        // A real divisor that truncates to zero is NULL, like an integer zero.
+        assert_eq!(bin(BinaryOp::Mod, int(5), f(0.9)), null());
+        // Out-of-range real dividend clamps to i64::MAX before the remainder
+        // (matching SQLite's `doubleToInt64`): 9223372036854775807 % 2 = 1.
+        assert_eq!(bin(BinaryOp::Mod, f(1e19), int(2)), f(1.0));
+        // Division, by contrast, stays true real division.
+        assert_eq!(bin(BinaryOp::Div, f(7.5), int(2)), f(3.75));
     }
 
     #[test]

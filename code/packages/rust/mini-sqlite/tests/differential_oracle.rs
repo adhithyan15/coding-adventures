@@ -1641,6 +1641,29 @@ const CASES: &[Case] = &[
         setup: &[],
         query: "SELECT 9223372036854775807 + 1 AS a, typeof(9223372036854775807 + 1) AS at, -9223372036854775807 - 2 AS b, 9223372036854775807 * 2 AS c, -(-9223372036854775808) AS d, 100 + 200 AS e, typeof(100 + 200) AS et",
     },
+    // Division overflow also promotes to REAL: `i64::MIN / -1` has no `i64`
+    // representation, so SQLite yields `9223372036854775808.0` (real). The only
+    // `i64` overflow modulo can hit is `i64::MIN % -1`, whose remainder is 0
+    // (integer). `i64::MIN` is written as `0x8000000000000000` (hex literals,
+    // added last cycle) since the decimal `9223372036854775808` is itself a REAL.
+    // Previously mini errored ("integer overflow in division/modulo").
+    Case {
+        id: "div_mod_i64_min_overflow",
+        setup: &[],
+        query: "SELECT 0x8000000000000000 / -1 AS a, typeof(0x8000000000000000 / -1) AS at, 0x8000000000000000 % -1 AS b, typeof(0x8000000000000000 % -1) AS bt",
+    },
+    // SQLite's `%` is an INTEGER operation, unlike `/`: both operands are
+    // truncated toward zero to 64-bit integers before the remainder is taken, and
+    // the result is REAL only if an operand was REAL. So `7.5 % 2` = `1.0` (7 % 2,
+    // rendered real), NOT `1.5` (fmod); `10.9 % 3.9` = `1.0` (10 % 3); a real
+    // divisor that truncates to zero (`5 % 0.9`) is NULL; `-7.5 % 2` = `-1.0`.
+    // Division by contrast stays true real division (`7.5 / 2` = 3.75). Previously
+    // mini used fmod for the float cases (`7.5 % 2` gave 1.5).
+    Case {
+        id: "modulo_integer_truncation",
+        setup: &[],
+        query: "SELECT 7.5 % 2 AS a, typeof(7.5 % 2) AS at, 10.9 % 3.9 AS b, -7.5 % 2 AS c, (5 % 0.9) IS NULL AS d, 7.5 / 2 AS e, 7 % 2 AS f, typeof(7 % 2) AS ft",
+    },
     // Binary arithmetic applies NUMERIC affinity to text/blob operands, matching
     // SQLite: `'5'+0` = 5 (integer), `'5.5'+0` = 5.5 (real), `'abc'+1` = 1 (no
     // numeric prefix → 0), `'12abc'+0` = 12, and `'10'-'3'` = 7 (both coerced).
