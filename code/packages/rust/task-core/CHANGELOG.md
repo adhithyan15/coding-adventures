@@ -6,6 +6,26 @@ All notable changes to `task-core` are documented here.
 
 ### Added
 
+- **The `table()` (sheet) projection — render-ready rows over the selection** (`view`
+  module — Phase 3 PR-3 of `code/specs/task-app-view-layer.md`). A thin map over PR-2's
+  `select()`: nothing new is computed, it's just shaped for a spreadsheet host.
+  - `table(project, view, schedule) -> TableView` (and `ProjectState::table(view,
+    project_start)`). `TableView { columns, groups }`, `ColumnHeader { field, label,
+    kind }`, `ColumnKind { Text, Number, Date, Bool }`, `TableGroup { key_label, rows }`,
+    `TableRow { task, cells }`, `Cell { value, display }`.
+  - Columns come from the view's `visible_fields` (defaulting to a single **Name** column
+    when none are set), each with a friendly header **label** and a value **kind** (so a
+    host can right-align numbers, draw a checkbox for bools, etc.). `kind` matches how
+    `cell()` resolves the field, so it never contradicts the values.
+  - Every cell carries **both** the typed `CellValue` *and* its engine-formatted `display`
+    string, so a host can render a control or just draw text — no field access, no
+    formatting, no sorting on its side. This is the dumb-UI contract the Phase-5 sheet
+    component renders.
+  - `ProjectState::table`/`view_selection` share a `schedule_or_empty` helper (a cyclic
+    network degrades to empty computed columns rather than failing the projection).
+  - 3 tests (82 total): column labels + kinds, grouped/ordered/formatted rows (typed
+    value and display string both present), and the default name column.
+
 - **The view selection pipeline — filter → sort → group** (`view` module — Phase 3 PR-2
   of `code/specs/task-app-view-layer.md`). Built entirely on `cell()`, so what a view
   filters on, sorts by, and groups on is the same interpretation of a field.

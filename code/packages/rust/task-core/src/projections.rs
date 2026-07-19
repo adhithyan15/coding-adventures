@@ -41,15 +41,26 @@ impl ProjectState {
         view: &View,
         project_start: Date,
     ) -> Vec<crate::view::SelectionGroup> {
-        let schedule = self
-            .schedule(project_start)
+        crate::view::select(self, view, &self.schedule_or_empty(project_start))
+    }
+
+    /// The render-ready **table** (sheet) for a [`View`]: its `visible_fields` become
+    /// columns and its filter/sort/grouping order the rows, with every cell resolved and
+    /// formatted by the engine (see [`crate::view::table`]).
+    pub fn table(&self, view: &View, project_start: Date) -> crate::view::TableView {
+        crate::view::table(self, view, &self.schedule_or_empty(project_start))
+    }
+
+    /// The CPM schedule at `project_start`, or an empty schedule if the network is cyclic
+    /// — so view projections read computed columns as `Empty` rather than failing.
+    fn schedule_or_empty(&self, project_start: Date) -> ScheduleResult {
+        self.schedule(project_start)
             .unwrap_or_else(|_| ScheduleResult {
                 dates: std::collections::BTreeMap::new(),
                 conflicts: Vec::new(),
                 project_start,
                 project_finish: None,
-            });
-        crate::view::select(self, view, &schedule)
+            })
     }
 
     // ── checklist ────────────────────────────────────────────────────────────────
