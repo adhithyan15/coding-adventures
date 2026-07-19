@@ -196,7 +196,21 @@ sequence of one-PR items run through the autonomous loop (§8).
   (reusing APL's verb/noun split almost wholesale, plus one genuinely new
   production for tacit hook/fork trains) before any lexer/parser/runtime
   code lands. No substrate gap this time — array-runtime + AR-2, already
-  built for APL, cover J's in-scope value model unchanged.)*
+  built for APL, cover J's in-scope value model unchanged. See
+  [`MA10`](MA10-scilab-language.md) for Scilab — Wave 6's second language,
+  and the one language in this survey's own table honestly marked
+  "MATLAB-like with syntax differences" rather than given its own one-line
+  characterization; checked directly against current help.scilab.org
+  documentation rather than assumed from that family resemblance, the
+  answer came out the *opposite* of Octave's: Scilab's `+` operator
+  concatenates strings where MATLAB's adds their character codes — a real
+  runtime-semantic divergence in shared syntax, not just a respelling — and
+  Scilab ships its own official MATLAB→Scilab translator (M2SCI) as
+  first-party evidence the two are not one language twice-spelled. So
+  Scilab gets its own `scilab-lexer`/`scilab-parser`/`scilab-runtime` (the
+  APL→J pattern), forking `matlab.grammar`'s shape at the grammar-source
+  level rather than reusing `matlab-runtime` as a crate dependency the way
+  `octave-runtime` does.)*
 - **Wave 7 — Axiom, Julia (subset).** The research-grade lifts (typed CAS;
   multiple dispatch) — last, and only if warranted.
 
