@@ -251,6 +251,39 @@ mod tests {
         assert_eq!(pairs[0].1, "3.14");
     }
 
+    /// Hexadecimal integer literals `0x1F` / `0X10` lex as a single NUMBER token
+    /// carrying the original `0x…` text (the planner decodes the prefix). The
+    /// `HEX_INT` rule is aliased to `NUMBER`, so the emitted `type_` is `Number`.
+    /// Crucially the whole `0x1F` is one token — without the rule (which must sit
+    /// *before* `NUMBER`) the leading `0` alone would match and leave `x1F` as a
+    /// separate NAME.
+    ///
+    /// | Input                | type_  | value                |
+    /// |----------------------|--------|----------------------|
+    /// | "0x1F"               | Number | "0x1F"               |
+    /// | "0X10"               | Number | "0X10"               |
+    /// | "0xff"               | Number | "0xff"               |
+    /// | "0xFFFFFFFFFFFFFFFF" | Number | "0xFFFFFFFFFFFFFFFF" |
+    #[test]
+    fn test_number_hex() {
+        for input in &["0x1F", "0X10", "0xff", "0xFFFFFFFFFFFFFFFF"] {
+            let pairs = lex(input);
+            assert_eq!(pairs.len(), 1, "{input} should be a single token");
+            assert_eq!(pairs[0].0, TokenType::Number, "{input} type");
+            assert_eq!(pairs[0].1, *input, "{input} value preserved verbatim");
+        }
+    }
+
+    /// A bare `0` (no `x`) still lexes as an ordinary NUMBER — the `[xX]` in the
+    /// hex rule is mandatory, so it never swallows a plain zero.
+    #[test]
+    fn test_number_bare_zero_not_hex() {
+        let pairs = lex("0");
+        assert_eq!(pairs.len(), 1);
+        assert_eq!(pairs[0].0, TokenType::Number);
+        assert_eq!(pairs[0].1, "0");
+    }
+
     // -----------------------------------------------------------------------
     // Test 5: STRING token (single-quoted, quotes stripped)
     // -----------------------------------------------------------------------

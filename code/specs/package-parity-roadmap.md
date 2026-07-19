@@ -115,11 +115,11 @@ and `hash-set` ports, the paired `in-memory-data-store-engine` and
 ports, and the paired C#/F# `chacha20-poly1305`, `xml-lexer`, `block-ram`,
 `nib-wasm-compiler`, `dartmouth-basic-lexer`, and `dartmouth-basic-parser`
 ports, followed by the paired `ed25519`, `font-parser`, `asciidoc-parser`, and
-`fpga` ports:
+`fpga` ports, and the paired C#/F# `zstd` ports:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 311 |
+| Present in 10-15 languages | 172 | 309 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,972 |
 | Present in one language | 703 | 9,842 |
@@ -165,7 +165,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 172 packages present in at least ten implementation languages need 311
+The 172 packages present in at least ten implementation languages need 309
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -174,8 +174,8 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Elixir | 0 | Complete; `python-parser` uses the shared grammar-driven frontend |
 | Lua | 0 | Complete; paired data-structure/storage wave |
 | Perl | 0 | Complete; paired data-structure/storage wave |
-| C# | 1 | Move with F# |
-| F# | 1 | Move with C# |
+| C# | 0 | Complete; paired native package wave |
+| F# | 0 | Complete; paired native package wave |
 | Haskell | 34 | Dependency-shaped compression, graphics, ML, and protocol waves |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
@@ -374,6 +374,17 @@ existing native `logic-gates` and `block-ram` packages, and their package-local
 suites exercise 40 C# and 38 F# cases with more than 97% line coverage. The
 package now spans 12 implementation lanes, reduces the high-consensus backlog
 to 311 slots, and leaves only `zstd` as a paired gap in C# and F#.
+
+The seventeenth paired C#/F# slice is complete: `zstd` now provides native
+CMP07 educational Zstandard codecs in both lanes. The ports compose their
+existing native `lzss` packages and implement frame headers, 128 KiB raw, RLE,
+and compressed blocks, raw literal sections, and the predefined
+literal-length, match-length, and offset FSE tables. Package-native suites
+exercise 29 C# and 20 F# cases with more than 90% line coverage, including
+multi-block frames, malformed input, compression ratios, and cross-language
+compatibility with the established Ruby implementation. The package now spans
+12 implementation lanes, reduces the high-consensus backlog to 309 slots, and
+closes the remaining high-consensus gaps in both C# and F#.
 
 Recommended family order:
 

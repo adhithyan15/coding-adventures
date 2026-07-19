@@ -193,6 +193,43 @@ unsafe fn spill_and_sp(buf: *mut usize) -> usize {
     sp
 }
 
+// ── 2b. Current frame pointer (for the precise walk) ────────────────────────
+//
+// `current_fp()` returns this frame's **frame pointer** (`x29` on AArch64, `rbp`
+// on x86-64) — the anchor the precise stack walk unwinds from. It MUST be
+// `#[inline(always)]`: inlined into the `#[inline(never)]` collect entry, it reads
+// that entry's own frame pointer; as a separate call it would read its *own* frame
+// and mislead the walk.
+//
+// **Frame-pointer dependency.** This reads whatever the register holds; it is a
+// valid chain anchor only if the compiler maintains a frame pointer for the collect
+// entry. That is guaranteed on `aarch64-apple-darwin` (the Apple ABI mandates the
+// `x29` chain) and holds under Rust's current x86-64-host defaults, but is *not*
+// enforced by this crate's build. While **no stack maps are registered** a bogus
+// anchor is still safe: `build_precise_roots` then classifies every frame
+// conservatively and its regions tile all of `[sp, base)`, so precise collection
+// degrades to exactly `__gc_collect`. Once maps ARE registered, a valid frame
+// pointer becomes load-bearing for safety (a garbage anchor whose `[fp+8]` aliased a
+// stale return address into a mapped function could exclude a live span) — so the
+// backend-record-emission rung must build this crate with `-Cforce-frame-pointers`
+// (or rely on the aarch64 ABI guarantee). Tracked as a prerequisite of that rung.
+
+#[cfg(target_arch = "aarch64")]
+#[inline(always)]
+unsafe fn current_fp() -> usize {
+    let fp: usize;
+    core::arch::asm!("mov {}, x29", out(reg) fp, options(nomem, nostack, preserves_flags));
+    fp
+}
+
+#[cfg(target_arch = "x86_64")]
+#[inline(always)]
+unsafe fn current_fp() -> usize {
+    let fp: usize;
+    core::arch::asm!("mov {}, rbp", out(reg) fp, options(nomem, nostack, preserves_flags));
+    fp
+}
+
 // ── 3. Thread stack base (the high end of the down-growing stack) ───────────
 
 /// macOS: `pthread_get_stackaddr_np` returns the base (highest address) directly.
@@ -360,6 +397,76 @@ pub unsafe extern "C" fn __gc_safepoint() -> i64 {
     }
 }
 
+/// A full collection rooted **precisely** at this thread's stack: the argument-less
+/// entry that gives the precise-root machinery a real machine stack to walk.
+///
+/// Where [`__gc_collect`] scans the whole `[sp, base)` span *conservatively*, this
+/// captures the current frame pointer and hands it, plus `sp`/`base`, to
+/// [`crate::precise_walk::build_precise_roots`], which unwinds the frame-pointer
+/// chain into **precise slots** for stack-mapped frames (registered via
+/// [`__gc_register_stackmap`](crate::__gc_register_stackmap)) and **conservative
+/// regions** for the rest, then collects both in one [`gc_core::FlatHeap::collect_mixed`]
+/// cycle. It is to `collect_mixed` what `__gc_collect` is to `collect_region`.
+///
+/// Callee-saved registers are spilled and handed to the collector as an explicit
+/// conservative region: a reference live *only* in a callee-saved register is named
+/// by no stack map yet (that needs a per-safepoint `callee_saved_mask`, a later
+/// rung), so it must be scanned, exactly as `__gc_collect` scans the spill. The
+/// buffer also lives in this frame — inside the walk's `[sp, fp)` collector region —
+/// so the explicit region is belt-and-suspenders against an absent/garbage frame
+/// pointer.
+///
+/// **Precision is opportunistic and safe:** with no stack maps registered, every
+/// frame resolves to a conservative region whose spans tile all of `[sp, base)`, so
+/// this degrades exactly to `__gc_collect` — safe even if the captured frame pointer
+/// is garbage. As backends register maps, matching frames shed their floating
+/// garbage; at that point a *valid* frame pointer becomes load-bearing for safety
+/// (see [`current_fp`]), so the map-emitting rung must build this crate with frame
+/// pointers (guaranteed by ABI on the aarch64 primary target). An unwalkable stack
+/// still degrades to a conservative scan; if the stack base cannot be established,
+/// it collects **nothing** this cycle rather than risk freeing a live object — the
+/// same bias-to-leak as `__gc_collect`.
+///
+/// # Safety
+///
+/// Same contract as [`__gc_collect`]: sound to call from any thread that owns its
+/// stack (the single-threaded native runtime always does); it must not run while
+/// another thread mutates the same heap.
+#[no_mangle]
+#[inline(never)]
+pub unsafe extern "C" fn __gc_collect_precise() -> i64 {
+    // Spill callee-saved registers into a stack buffer (in this frame), then SP.
+    let mut regs = [0usize; SPILL_SLOTS];
+    let sp = spill_and_sp(regs.as_mut_ptr());
+    // Capture this frame's frame pointer — the walk's unwind anchor. `current_fp`
+    // is `#[inline(always)]`, so this reads *this* frame's fp, not a callee's.
+    let fp = current_fp();
+    let base = stack_base();
+
+    // Only collect when the stack range is trustworthy. As in `__gc_collect`, a
+    // failed base detection (base == 0) or an absurd span means we cannot enumerate
+    // all roots — collecting then could free a live object, so we leak this cycle.
+    let freed = if base != 0 && sp < base && base - sp <= MAX_STACK_SCAN {
+        let mut slots: Vec<usize> = Vec::new();
+        let mut regions: Vec<(*const u8, usize)> = Vec::new();
+        // Walk the frame-pointer chain into precise slots + conservative regions.
+        crate::precise_walk::build_precise_roots(fp, sp, base, &mut slots, &mut regions);
+        // Always scan the spilled callee-saved registers, independent of the walk.
+        regions.push((
+            regs.as_ptr() as *const u8,
+            SPILL_SLOTS * core::mem::size_of::<usize>(),
+        ));
+        with_heap(|h| h.collect_mixed(&slots, &regions).freed as i64)
+    } else {
+        0
+    };
+
+    // Keep `regs` materialised across the collect: its address is what makes the
+    // spilled registers part of the scanned roots.
+    core::hint::black_box(&regs);
+    freed
+}
+
 /// Upper bound on how many bytes of stack a single conservative scan will walk
 /// (256 MiB). A corrupt or absurd `base` (far above `sp`) would otherwise make
 /// `collect_region` read hundreds of GB and appear to hang — an
@@ -457,6 +564,42 @@ mod tests {
         );
         assert_eq!(__gc_collection_count(), 1);
 
+        core::hint::black_box(kept);
+    }
+
+    /// End-to-end smoke test for the argument-less `__gc_collect_precise`: an object
+    /// held in a live stack local survives, a dead one is reclaimed, and the whole
+    /// asm-capture → frame-pointer-walk → `collect_mixed` path runs without crashing.
+    ///
+    /// With no stack maps registered, every frame resolves conservatively, so this
+    /// exercises the same safety guarantee as `__gc_collect` (the live local, sitting
+    /// in a walked/tiled frame, is never dropped) while driving the precise plumbing.
+    #[test]
+    fn precise_collect_keeps_live_local_frees_dead() {
+        let _guard = crate::TEST_LOCK.lock().unwrap_or_else(|e| e.into_inner());
+        __gc_reset();
+        run_precise_collect_case();
+        __gc_reset();
+    }
+
+    #[inline(never)]
+    fn run_precise_collect_case() {
+        let kept = __gc_alloc(16);
+        assert!(kept != 0);
+        let _ = __gc_alloc(16); // dead: no stack slot retains it
+        assert_eq!(__gc_live_bytes(), 32);
+        unsafe { *(kept as *mut i64) = 0x9a11 };
+
+        let freed = unsafe { __gc_collect_precise() };
+
+        assert!(freed >= 1, "the unreferenced object must be reclaimed");
+        assert_eq!(
+            unsafe { *(kept as *const i64) },
+            0x9a11,
+            "the stack-rooted object must survive the precise collect"
+        );
+        assert!(__gc_live_bytes() >= 16);
+        assert_eq!(__gc_collection_count(), 1);
         core::hint::black_box(kept);
     }
 

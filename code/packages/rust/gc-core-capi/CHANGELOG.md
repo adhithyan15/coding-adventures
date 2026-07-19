@@ -2,6 +2,80 @@
 
 All notable changes to this crate are documented here.
 
+## [0.11.0] — 2026-07-18
+
+### Added
+
+- **`__gc_collect_precise()` — the argument-less precise-root collect entry** (the
+  `asm!` half that gives the precise machinery a real machine stack to walk). It is
+  to `collect_mixed` what `__gc_collect` is to `collect_region`:
+  - Spills callee-saved registers (via the same `spill_and_sp` as `__gc_collect`),
+    captures the current **frame pointer** (`x29` / `rbp`, via a new
+    `#[inline(always)]` `current_fp`) and the stack base, then hands `fp`/`sp`/`base`
+    to `precise_walk::build_precise_roots`. The resulting precise **slots**
+    (stack-mapped frames) and conservative **regions** (unmapped frames) go to
+    `gc_core::FlatHeap::collect_mixed` in one cycle. The spilled registers are also
+    handed over as an explicit conservative region — a reference live only in a
+    callee-saved register is named by no stack map yet (that needs a
+    `callee_saved_mask`, a later rung), so it must be scanned, exactly as
+    `__gc_collect` scans it.
+  - **Opportunistic + safe:** with no stack maps registered, every frame resolves
+    conservatively and the regions tile all of `[sp, base)`, so it degrades to
+    exactly `__gc_collect` — safe even if the captured frame pointer is garbage. As
+    backends register maps, matching frames shed floating garbage; at that point a
+    *valid* frame pointer becomes load-bearing (a garbage anchor whose `[fp+8]`
+    aliased a stale return address into a mapped function could exclude a live span),
+    so the map-emitting rung must build this crate with frame pointers (guaranteed by
+    ABI on the aarch64 primary target; tracked as a prerequisite of that rung). If
+    the stack base can't be established it collects **nothing** this cycle
+    (bias-to-leak, matching `__gc_collect`).
+  - Smoke-tested end-to-end (`precise_collect_keeps_live_local_frees_dead`): a live
+    stack local survives, a dead object is reclaimed, and the asm-capture →
+    frame-walk → `collect_mixed` path runs without crashing. (The precise reclaim of
+    a named slot vs. an unnamed neighbour is proven by `precise_walk`'s
+    synthetic-stack tests from 0.10.0.)
+
+## [0.10.0] — 2026-07-18
+
+### Added
+
+- **Precise stack walk — the frame-pointer-chain root builder** (the walk-logic
+  half of the native precise-root collection; the `asm!` entry that captures the
+  running thread's registers and calls it is a follow-up):
+  - Internal `precise_walk::build_precise_roots(start_fp, sp, base, &mut slots,
+    &mut regions)` — walks the frame-pointer chain from `start_fp` toward the stack
+    `base`, classifying each frame into the two inputs of `gc-core`'s
+    `FlatHeap::collect_mixed`: a **mapped** return address (resolved via the
+    stack-map registry) contributes exact precise slots (`frame_root_slots` relative
+    to the caller's frame pointer); an **unmapped** one contributes its frame span
+    `[fp, caller_fp)` as a conservative region. The collector's own frames below the
+    first frame pointer (`[sp, start_fp)`) are always conservative.
+  - The precise-root analogue of the fully-conservative `__gc_collect` C-stack scan:
+    where that hands the whole `[sp, base)` span to `collect_region`, this classifies
+    the stack frame-by-frame, so mapped frames shed their floating garbage while
+    everything else stays exactly as safe as the conservative scan.
+  - **Soundness (no missed root → no use-after-free):** the union of everything
+    emitted covers every stack word that could be a heap reference. A mapped frame
+    only excludes its non-reference locals and the saved-fp / return-address words
+    (never heap pointers). A broken/again-unmappable chain link falls back to
+    conservatively scanning the entire remaining `[fp, base)` before stopping.
+  - **Guards (all fail *safe*, never dropping a root):** `fp + 16 <= base` keeps the
+    two frame-pointer reads in-bounds; a `caller_fp` not strictly above `fp` (stack
+    grows down) or outside the stack is rejected (chain end / corruption), which also
+    guarantees termination; a `MAX_FRAMES` backstop bounds the loop unconditionally,
+    and **both** a rejected link and budget exhaustion fall through to a conservative
+    scan of the remaining `[fp, base)`. A `start_fp` outside `[sp, base]` (or
+    degenerate `sp`/`base`) falls back to a whole-stack conservative scan rather than
+    walking nothing — defense-in-depth for the `asm!` entry that feeds real registers.
+  - Pure walk logic — **no `asm!`, no real thread stack** — so it is exhaustively
+    unit-tested against *synthetic* stacks: all-unmapped (regions tile the stack),
+    all-mapped (precise slots), mixed, backward / out-of-range `caller_fp` rejection,
+    and an end-to-end drive through `collect_mixed` proving a precisely-named object
+    survives while an unnamed local inside the same (excluded) mapped frame is
+    reclaimed. `build_precise_roots` carries `#[allow(dead_code)]` until the `asm!`
+    entry consumes it, exactly as `gc-core` shipped `collect_mixed` ahead of its
+    consumer.
+
 ## [0.9.0] — 2026-07-18
 
 ### Added

@@ -131,6 +131,16 @@ int64_t __gc_register_stackmap(uint64_t func_start, uint64_t func_len,
                                const int32_t *slot_counts,
                                const int32_t *slots_flat);
 
+/* Full collection rooted PRECISELY at this thread's stack. Captures the current
+ * frame pointer and unwinds the frame-pointer chain: frames with a registered stack
+ * map (see __gc_register_stackmap) contribute exact reference slots, the rest are
+ * scanned conservatively — all collected in one cycle. Callee-saved registers are
+ * spilled and scanned conservatively too. With no maps registered it degrades to
+ * exactly __gc_collect; an unwalkable stack likewise degrades to a conservative
+ * scan, never a missed root. Returns objects freed. Same threading contract as
+ * __gc_collect. (For precision the image must be built with frame pointers.) */
+int64_t __gc_collect_precise(void);
+
 /* Number of functions currently registered via __gc_register_stackmap. */
 int64_t __gc_stackmap_count(void);
 

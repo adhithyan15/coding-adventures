@@ -104,3 +104,66 @@ body {
 .strokes li { margin: 3px 0; }
 .detail__notes { margin: 0; }
 .muted { color: var(--muted); font-style: italic; }
+
+/* --- mode toggle + practice mode ---------------------------------------- */
+.modes { display: flex; gap: 6px; margin-top: 10px; }
+.mode {
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  padding: 5px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.mode--active { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+.practice { max-width: 560px; }
+.score { color: var(--muted); font-size: 0.9rem; margin-bottom: 14px; }
+
+.prompt {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 22px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+.prompt__label { color: var(--muted); font-size: 0.85rem; margin-bottom: 8px; }
+.prompt__sound { font-size: 1.8rem; font-weight: 700; }
+
+.options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  gap: 10px;
+}
+.option {
+  font-size: 2.4rem;
+  line-height: 1;
+  padding: 18px 8px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  cursor: pointer;
+}
+.option:hover:not(:disabled) { border-color: var(--accent); }
+.option:disabled { cursor: default; }
+.option--correct { background: #e6f6ec; border-color: #38a169; }
+.option--wrong { background: #fdecea; border-color: #e05353; }
+
+.reveal { margin-top: 18px; }
+.reveal__verdict { font-weight: 700; margin-bottom: 10px; }
+.reveal__verdict.ok { color: #2f855a; }
+.reveal__verdict.no { color: #c53030; }
+.next {
+  margin-top: 12px;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: #fff;
+  padding: 8px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
