@@ -120,15 +120,29 @@ pub fn emit_module(m: &Module) -> String {
     // other source language keeps the default Lisp `#t`/`#f`, so existing Twig
     // output is unchanged.
     //
-    // SECURITY: the replacement value MUST remain a hardcoded literal selected
-    // by a boolean — never text derived from `source_language` or any other
-    // source-controlled field — so this substitution can never inject into the
-    // emitted JavaScript.
+    // A second, independent placeholder: an APL-sourced module renders a bare/
+    // boxed negative number with APL's own high-minus glyph `¯` rather than
+    // ASCII `-` (see `runtime.rs`'s `SIR_DISPLAY_APL_HIGH_MINUS` for the full
+    // writeup, including why this can't be decided from the value's shape
+    // alone — a rank-0 SIR22 NDArray is not unique to APL).
+    //
+    // SECURITY: both replacement values MUST remain a hardcoded literal
+    // selected by a boolean — never text derived from `source_language` or
+    // any other source-controlled field — so this substitution can never
+    // inject into the emitted JavaScript.
     let display_ruby = m.metadata.source_language.as_deref() == Some("ruby");
-    out.push_str(&RUNTIME.replace(
-        "__SIR_DISPLAY_RUBY__",
-        if display_ruby { "true" } else { "false" },
-    ));
+    let display_apl_high_minus = m.metadata.source_language.as_deref() == Some("apl");
+    out.push_str(
+        &RUNTIME
+            .replace(
+                "__SIR_DISPLAY_RUBY__",
+                if display_ruby { "true" } else { "false" },
+            )
+            .replace(
+                "__SIR_DISPLAY_APL_HIGH_MINUS__",
+                if display_apl_high_minus { "true" } else { "false" },
+            ),
+    );
     emit_ancestry_registration(&mut out, m);
     emit_globals(&mut out, &m.globals);
     for f in &m.functions {

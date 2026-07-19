@@ -127,16 +127,20 @@ onto.
   cross-checked against `apl-runtime`'s independent tree-walking evaluator
   (ground truth) as well as the compiled-through-`node` path, closing the
   "APL/J's own oracle tests remain open follow-on items" note in
-  [HML01](../../../specs/HML01-math-to-semantic-ir.md) §5. 17-case corpus:
+  [HML01](../../../specs/HML01-math-to-semantic-ir.md) §5. 26-case corpus:
   the 9 programs `tests/e2e_node.rs` already proves run correctly (now also
   checked against `apl-runtime`), 2 more completing oracle coverage of all
-  9 SIR22-addendum node kinds, and 6 base-cut cases. Unlike the sibling
+  9 SIR22-addendum node kinds, 6 base-cut cases, and 9 covering all 5
+  non-`+` monadic scalar atoms (`- × ÷ ⌈ ⌊`, added in 0.1.5 once the three
+  bugs blocking them — see below — were fixed). Unlike the sibling
   MATLAB/Octave oracle files, this one needs no `setup`/`final_expr` split
   and no `normalize()` — see that file's own module doc for why, confirmed
-  empirically rather than assumed. Building it also surfaced 3 genuine,
-  previously-undiscovered bugs in monadic `- × ÷ ⌈ ⌊` (a wrong display
-  glyph, a wrong value on array operands, and a hard crash on all 4 of
-  `× ÷ ⌈ ⌊`) — documented in that file's module doc and `CHANGELOG.md`'s
-  0.1.4 entry, excluded from the corpus, and reported as follow-up items
-  rather than fixed here (fixing them needs a change to
-  `semantic-ir-to-javascript`, a separate crate).
+  empirically rather than assumed. Building the original 17-case corpus
+  also surfaced 3 genuine, previously-undiscovered bugs in monadic
+  `- × ÷ ⌈ ⌊` (a wrong display glyph, a wrong value on array operands, and
+  a hard crash on all 4 of `× ÷ ⌈ ⌊`) in `semantic-ir-to-javascript` (a
+  separate, shared backend crate) — documented in that file's module doc
+  and `CHANGELOG.md`'s 0.1.4 entry, excluded from the corpus at the time,
+  and fixed in `semantic-ir-to-javascript` 0.43.0 (see this crate's own
+  0.1.5 `CHANGELOG.md` entry and that crate's `CHANGELOG.md` for the full
+  writeup).
