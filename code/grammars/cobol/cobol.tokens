@@ -208,6 +208,8 @@ keywords:
   SET
   IF
   ELSE
+  EVALUATE
+  END-EVALUATE
   # -- Prepositions / connectives / operators-in-words --
   TO
   FROM
@@ -236,6 +238,7 @@ keywords:
   DEPENDING
   ON
   WHEN
+  OTHER
   NEXT
   SENTENCE
   # -- Condition-name value (SET cond-name TO TRUE) --

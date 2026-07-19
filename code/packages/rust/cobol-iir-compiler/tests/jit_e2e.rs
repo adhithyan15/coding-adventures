@@ -339,6 +339,53 @@ fn if_not_negates_a_condition() {
 }
 
 #[test]
+fn evaluate_case_statement() {
+    // EVALUATE lowers to a cmp_eq + jmp_if_false cascade — byte-identical to the
+    // oracle (run_if asserts that). The subject N is matched against each WHEN.
+    let eval = &[
+        "EVALUATE N",
+        "WHEN 1 DISPLAY \"ONE\"",
+        "WHEN 5 DISPLAY \"FIVE\"",
+        "WHEN OTHER DISPLAY \"OTHER\"",
+        "END-EVALUATE.",
+        "STOP RUN.",
+    ];
+    assert_eq!(run_if("5", eval), "FIVE\n"); // matches the second WHEN
+    assert_eq!(run_if("1", eval), "ONE\n"); // matches the first WHEN
+    assert_eq!(run_if("7", eval), "OTHER\n"); // no value matches → WHEN OTHER
+    // No match and no OTHER → nothing runs; control continues after END-EVALUATE.
+    assert_eq!(
+        run_if("7", &["EVALUATE N", "WHEN 1 DISPLAY \"ONE\"", "END-EVALUATE.", "DISPLAY \"AFTER\".", "STOP RUN."]),
+        "AFTER\n"
+    );
+    // A STOP RUN inside the matched WHEN ends the program.
+    assert_eq!(
+        run_if(
+            "5",
+            &["EVALUATE N", "WHEN 5 DISPLAY \"IN\" STOP RUN", "END-EVALUATE.", "DISPLAY \"AFTER\".", "STOP RUN."],
+        ),
+        "IN\n"
+    );
+}
+
+#[test]
+fn evaluate_on_a_scaled_subject() {
+    // A scaled subject/value compare by value: RATE = 1.5 matches WHEN 1.5.
+    let out = assert_matches_oracle(&wrap(
+        &["01  RATE  PIC 9V9 VALUE 1.5."],
+        &[
+            "EVALUATE RATE",
+            "WHEN 1.0 DISPLAY \"ONE\"",
+            "WHEN 1.5 DISPLAY \"HALF\"",
+            "WHEN OTHER DISPLAY \"OTHER\"",
+            "END-EVALUATE.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "HALF\n");
+}
+
+#[test]
 fn if_compound_condition_mixing_condition_names() {
     // A level-88 condition-name combined with a relation via AND/OR.
     let out = assert_matches_oracle(&wrap(

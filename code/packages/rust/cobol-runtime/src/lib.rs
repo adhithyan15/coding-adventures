@@ -531,6 +531,86 @@ mod tests {
         assert_eq!(t("IF NOT (N IS NOT GREATER 3) DISPLAY \"Y\" ELSE DISPLAY \"N\"."), "Y\n");
     }
 
+    /// The `EVALUATE N WHEN 1 … WHEN 5 … WHEN OTHER … END-EVALUATE` body one card
+    /// per line, wrapped around `01 N PIC 9(3) VALUE {n}`.
+    const EVAL_BODY: &[&str] = &[
+        "EVALUATE N",
+        "WHEN 1 DISPLAY \"ONE\"",
+        "WHEN 5 DISPLAY \"FIVE\"",
+        "WHEN OTHER DISPLAY \"OTHER\"",
+        "END-EVALUATE.",
+        "STOP RUN.",
+    ];
+
+    #[test]
+    fn evaluate_runs_the_first_matching_when() {
+        // N=5 matches the second WHEN → "FIVE"; no fall-through to OTHER.
+        assert_eq!(run_if("5", EVAL_BODY), "FIVE\n");
+        // N=1 matches the first WHEN → "ONE".
+        assert_eq!(run_if("1", EVAL_BODY), "ONE\n");
+    }
+
+    #[test]
+    fn evaluate_falls_through_to_when_other() {
+        // N=7 matches no value → the WHEN OTHER branch.
+        assert_eq!(run_if("7", EVAL_BODY), "OTHER\n");
+    }
+
+    #[test]
+    fn evaluate_with_no_match_and_no_other_does_nothing() {
+        assert_eq!(
+            run_if(
+                "7",
+                &["EVALUATE N", "WHEN 1 DISPLAY \"ONE\"", "END-EVALUATE.", "DISPLAY \"AFTER\".", "STOP RUN."],
+            ),
+            "AFTER\n"
+        );
+    }
+
+    #[test]
+    fn evaluate_branch_may_stop_run() {
+        // A STOP RUN inside the matched WHEN ends the program (the trailing DISPLAY
+        // never runs) — the branch's Flow propagates.
+        assert_eq!(
+            run_if(
+                "5",
+                &[
+                    "EVALUATE N",
+                    "WHEN 5 DISPLAY \"IN\" STOP RUN",
+                    "WHEN OTHER DISPLAY \"OTHER\"",
+                    "END-EVALUATE.",
+                    "DISPLAY \"AFTER\".",
+                    "STOP RUN.",
+                ],
+            ),
+            "IN\n"
+        );
+    }
+
+    #[test]
+    fn evaluate_with_thousands_of_whens_iterates_not_recurses() {
+        // A crafted EVALUATE with thousands of WHEN branches must evaluate by
+        // iteration, never recursion — no stack overflow. The subject matches the
+        // last value; branches are one card each so the 80-column format is fine.
+        let mut lines = vec![
+            "IDENTIFICATION DIVISION.".to_string(),
+            "PROGRAM-ID. P.".to_string(),
+            "DATA DIVISION.".to_string(),
+            "WORKING-STORAGE SECTION.".to_string(),
+            "01  N  PIC 9(4) VALUE 2000.".to_string(),
+            "PROCEDURE DIVISION.".to_string(),
+            "MAIN.".to_string(),
+            "    EVALUATE N".to_string(),
+        ];
+        for i in 1..=2000 {
+            lines.push(format!("    WHEN {i} DISPLAY \"HIT\""));
+        }
+        lines.push("    END-EVALUATE.".to_string());
+        lines.push("    STOP RUN.".to_string());
+        let refs: Vec<&str> = lines.iter().map(|s| s.as_str()).collect();
+        assert_eq!(run_cobol(&program(&refs)).unwrap(), "HIT\n");
+    }
+
     #[test]
     fn if_then_branch_runs_multiple_statements() {
         // THEN branch has two statements; both run when the condition holds.

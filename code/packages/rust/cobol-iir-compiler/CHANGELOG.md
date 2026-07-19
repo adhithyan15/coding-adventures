@@ -8,6 +8,33 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.16.0: `EVALUATE` (case statement, simple form) (PL09 step 4)
+
+COBOL's case statement: `EVALUATE N WHEN 1 … WHEN 5 … WHEN OTHER … END-EVALUATE`.
+Implemented oracle-first (lexer → grammar → `cobol-runtime` → this compiler),
+byte-identical.
+
+- **Lexer/grammar.** New `EVALUATE`/`OTHER`/`END-EVALUATE` keywords (`cobol-lexer`
+  0.5.0; `END-EVALUATE` is hyphenated like `WORKING-STORAGE`); grammar
+  `evaluate_stmt = "EVALUATE" operand { when_branch } "END-EVALUATE"`,
+  `when_branch = "WHEN" ( "OTHER" | operand ) { statement }` (`cobol-parser` 0.12.0).
+  Both generated files regenerated via `grammar-tools`.
+- **Lowering.** `emit_evaluate` lowers to a **`cmp_eq` + `jmp_if_false` branch
+  cascade** — the same ops `IF` uses, no new opcode. Each value `WHEN` compares the
+  subject to its value at a common scale; a mismatch jumps to the next branch, a
+  match runs the branch and jumps to the end (no fall-through). `WHEN OTHER` runs
+  unconditionally once reached. Branches are emitted by **iteration**, so thousands
+  of `WHEN`s stay flat. Every backend accepts the cascade.
+- **Deferrals (clean errors).** An alphanumeric subject/value ([`read_arith_term`]
+  rejects it), and multiple-value / `THRU` / `EVALUATE TRUE` / multi-subject forms.
+- **Tests.** 2 new `jit_e2e.rs` cases byte-identical to the oracle (match a value /
+  `WHEN OTHER` / no-match-no-OTHER / `STOP RUN` in a branch; a scaled subject); unit
+  tests for the cmp_eq-cascade shape and the alphanumeric deferral; a
+  `backend_compat` program; a `lang_matrix` `EVALUATE` row across all seven columns.
+  Full suite **153 green** (36 unit + 20 `backend_compat` + 97 `jit_e2e`). The oracle
+  gains 5 unit tests including a 2000-`WHEN` DoS regression (iterates, never
+  overflows).
+
 ### Added — v0.15.0: `NOT` over a condition (PL09 step 4)
 
 `NOT` now negates a whole condition — a relation, a level-88 condition-name, or a

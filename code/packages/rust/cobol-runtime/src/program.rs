@@ -123,6 +123,11 @@ pub enum Stmt {
     /// `SET cond-name TO TRUE` — assign the condition-name's conditional variable
     /// the value that makes it hold (the first of its `VALUE` items).
     SetTrue { cond_name: String },
+    /// `EVALUATE subject WHEN v1 …  WHEN OTHER … END-EVALUATE` — COBOL's case
+    /// statement. Each branch's `when` is the value to match (`None` = `WHEN
+    /// OTHER`); the first branch whose value equals the subject (or the reached
+    /// `OTHER`) runs its statements, with no fall-through.
+    Evaluate { subject: Operand, branches: Vec<(Option<Operand>, Vec<Stmt>)> },
     StopRun,
 }
 
@@ -528,6 +533,31 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
             let cond_name = first_token(verb, "NAME")
                 .ok_or_else(|| RuntimeError::Unsupported("SET without a condition-name".into()))?;
             Ok(Stmt::SetTrue { cond_name })
+        }
+        "evaluate_stmt" => {
+            // EVALUATE subject { WHEN (OTHER|value) stmt… } END-EVALUATE. The
+            // subject operand is a direct child; each WHEN value is nested under a
+            // `when_branch` node, so they don't collide.
+            let subject_node = child_node(verb, "operand")
+                .ok_or_else(|| RuntimeError::Unsupported("EVALUATE without a subject".into()))?;
+            let subject = read_operand(subject_node)?;
+            let mut branches = Vec::new();
+            for wb in child_nodes(verb, "when_branch") {
+                let is_other = child_tokens(wb).iter().any(|(k, v)| k == "KEYWORD" && v == "OTHER");
+                let when = if is_other {
+                    None
+                } else {
+                    let op = child_node(wb, "operand")
+                        .ok_or_else(|| RuntimeError::Unsupported("WHEN without a value".into()))?;
+                    Some(read_operand(op)?)
+                };
+                let stmts = child_nodes(wb, "statement")
+                    .into_iter()
+                    .map(read_statement)
+                    .collect::<Result<Vec<_>, _>>()?;
+                branches.push((when, stmts));
+            }
+            Ok(Stmt::Evaluate { subject, branches })
         }
         "if_stmt" => {
             // Children in order: IF, condition, then-statements…, [ELSE,

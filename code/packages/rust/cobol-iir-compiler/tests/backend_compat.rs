@@ -207,6 +207,29 @@ fn not_condition_program_accepted_by_print_backends() {
 }
 
 #[test]
+fn evaluate_program_accepted_by_print_backends() {
+    // EVALUATE lowers to a cmp_eq + jmp_if_false + jmp + label cascade — the same
+    // ops IF uses, no new opcode. Every print backend must accept the cascade.
+    let src = program(&[
+        "IDENTIFICATION DIVISION.",
+        "PROGRAM-ID. P.",
+        "DATA DIVISION.",
+        "WORKING-STORAGE SECTION.",
+        "01  N  PIC 9(3) VALUE 5.",
+        "PROCEDURE DIVISION.",
+        "MAIN.",
+        "    EVALUATE N",
+        "    WHEN 1 DISPLAY \"ONE\"",
+        "    WHEN 5 DISPLAY \"FIVE\"",
+        "    WHEN OTHER DISPLAY \"OTHER\"",
+        "    END-EVALUATE.",
+        "    STOP RUN.",
+    ]);
+    let m = compile_source(&src, "eval").unwrap();
+    assert_accepted_by_print_backends(&m, "EVALUATE cascade");
+}
+
+#[test]
 fn level_88_condition_name_program_accepted_by_print_backends() {
     // A level-88 condition-name lowers to a plain `const` + `cmp_eq` feeding the
     // same branch structure as a relational IF — no new opcode. Every print

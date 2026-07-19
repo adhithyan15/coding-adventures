@@ -346,6 +346,31 @@ impl Machine {
                 return self.run_stmts(branch);
             }
             Stmt::SetTrue { cond_name } => self.exec_set_true(cond_name)?,
+            Stmt::Evaluate { subject, branches } => return self.exec_evaluate(subject, branches),
+        }
+        Ok(Flow::Normal)
+    }
+
+    /// `EVALUATE subject WHEN … END-EVALUATE` — run the first branch whose value
+    /// equals the subject (a `WHEN OTHER` matches unconditionally once reached),
+    /// then stop (no fall-through). Numeric comparison this rung; an alphanumeric
+    /// subject/value is a later rung. Branches are tested by **iteration**, so many
+    /// `WHEN`s cannot overflow the stack. The branch's `Flow` propagates (a
+    /// `STOP RUN` or `GO TO` inside a `WHEN` unwinds), like an `IF` branch.
+    fn exec_evaluate(
+        &mut self,
+        subject: &Operand,
+        branches: &[(Option<Operand>, Vec<Stmt>)],
+    ) -> Result<Flow, RuntimeError> {
+        let subj = self.operand_decimal(subject)?;
+        for (when, stmts) in branches {
+            let matches = match when {
+                None => true, // WHEN OTHER
+                Some(value) => subj.cmp_value(&self.operand_decimal(value)?) == std::cmp::Ordering::Equal,
+            };
+            if matches {
+                return self.run_stmts(stmts);
+            }
         }
         Ok(Flow::Normal)
     }

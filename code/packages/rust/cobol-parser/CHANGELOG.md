@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.12.0 — `EVALUATE` (case statement)
+
+- Added `evaluate_stmt = "EVALUATE" operand { when_branch } "END-EVALUATE"` and
+  `when_branch = "WHEN" ( "OTHER" | operand ) { statement }` to the `statement`
+  alternation. A WHEN's statement list ends at the next `WHEN` or `END-EVALUATE`
+  (both keywords, so a statement can't consume them). Uses the new
+  `EVALUATE`/`OTHER`/`END-EVALUATE` keywords (see `cobol-lexer` 0.5.0). This first
+  cut is the simple form: one value per `WHEN`. `_grammar.rs` regenerated via
+  `grammar-tools compile-grammar`.
+
 ## 0.11.0 — `NOT` over a condition
 
 - The condition cascade gains a `negation` layer between `conjunction` and
