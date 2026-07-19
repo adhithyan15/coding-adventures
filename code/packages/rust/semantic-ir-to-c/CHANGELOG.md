@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.4.0 — control flow, mutation & the rest of the comparisons (SIR16)
+
+Accepts `Feature::Loops` and `Feature::MutableBindings`, and:
+
+- Renders `Stmt::While` as a portable `for (;;) { SirValue c; c = <cond>; if
+  (!_sir_truthy(c)) break; <body> }` — the condition is re-evaluated each
+  iteration, so it may be compound.
+- Renders `Stmt::Assign` (re-binding an already-declared `SirValue`).
+- Adds the missing comparison builtins `<=`, `>=`, `==`, `!=` (runtime helpers
+  `_sir_le`/`_sir_ge`/`_sir_ne`; previously only `<`/`>`/`=` were lowered, so a
+  `<=` reached `_sir_unknown_builtin` and failed).
+- **Portability fix:** user functions named `min`/`max` are now escaped (trailing
+  `_`).  `<stdlib.h>` on MSVC/UCRT defines `min`/`max` as function-like macros,
+  so `SirValue min(SirValue a, SirValue b)` expanded to garbage under clang-cl /
+  MSVC — now they compile on all three compilers.
+
 ## 0.3.0 — lower unary minus (`neg` builtin) — negative literals no longer skip
 
 Ruby lowers unary minus (`-x`) to `BuiltinCall("neg", [x])`, but the v0 C

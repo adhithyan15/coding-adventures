@@ -63,6 +63,13 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     Feature::SizedIntegers,
     Feature::Unsigned,
     Feature::WrappingArithmetic,
+    // ── SIR16 control flow / mutation ────────────────────────────────
+    // `Stmt::While` (loops) and `Stmt::Assign` (re-binding) render as Ruby's
+    // native `while … end` and `name = value` — Ruby is fully mutable and
+    // expression-oriented, so these are direct.  The C frontend's milestone-2
+    // `if`/`while`/`for` lower to these plus `Expr::If` (which needs no feature).
+    Feature::Loops,
+    Feature::MutableBindings,
 ];
 
 impl Backend for RubyBackend {

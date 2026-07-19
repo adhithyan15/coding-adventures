@@ -114,9 +114,11 @@ fn self_contained_no_external_headers() {
 
 #[test]
 fn unaccepted_feature_is_rejected_cleanly() {
-    // `while` declares Feature::Loops, which the v0 backend does not accept.
-    let m = lower_ruby("i = 0\nwhile i < 3\n  i = i + 1\nend\nputs i");
-    let err = compile(&m).expect_err("v0 rejects loops");
+    // An array literal declares Feature::Sequences, which this backend does not
+    // accept (loops and mutation are now accepted, so a `while` no longer
+    // exercises the rejection path — an array still does).
+    let m = lower_ruby("puts [1, 2, 3]");
+    let err = compile(&m).expect_err("backend rejects Sequences");
     assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
 }
 

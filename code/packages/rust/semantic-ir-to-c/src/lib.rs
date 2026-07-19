@@ -66,6 +66,13 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     Feature::SizedIntegers,
     Feature::Unsigned,
     Feature::WrappingArithmetic,
+    // ── SIR16 control flow / mutation ────────────────────────────────
+    // `Stmt::While` renders as a portable `for (;;) { … if (!truthy) break; }`
+    // (the condition is re-evaluated each iteration, so it may be compound);
+    // `Stmt::Assign` re-binds an already-declared `SirValue`.  Both are needed by
+    // the C frontend's milestone-2 `if`/`while`/`for` lowering.
+    Feature::Loops,
+    Feature::MutableBindings,
 ];
 
 impl Backend for CBackend {

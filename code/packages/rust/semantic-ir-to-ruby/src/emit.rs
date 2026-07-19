@@ -205,9 +205,25 @@ fn emit_stmt(s: &Stmt) -> String {
             format!("{} = {}", sanitize_ident(name), emit_expr(value))
         }
         Stmt::ExprStmt { expr, .. } => emit_expr(expr),
-        // SIR16+ statements are not accepted in v0; the capability check rejects
-        // such modules before emit, so these are unreachable.
-        other => unreachable!("v0 Ruby backend reached unsupported statement: {other:?}"),
+        // SIR16 re-binding: Ruby locals are mutable, so this is a plain `=`.
+        Stmt::Assign { name, value, .. } => {
+            format!("{} = {}", sanitize_ident(name), emit_expr(value))
+        }
+        // SIR16 loop: Ruby's `while` re-tests the (already-bool) condition each
+        // iteration.  The body's statements run for effect; its value is nil and
+        // is discarded (a loop yields nothing).
+        Stmt::While { cond, body, .. } => {
+            let mut s = format!("while sir_truthy({})\n", emit_expr(cond));
+            for st in &body.stmts {
+                s.push_str(&emit_stmt(st));
+                s.push('\n');
+            }
+            s.push_str("end");
+            s
+        }
+        // Other SIR16+ statements (ForRange/ForEach/index-set/class/try) are not
+        // accepted; the capability check rejects such modules before emit.
+        other => unreachable!("Ruby backend reached unsupported statement: {other:?}"),
     }
 }
 
