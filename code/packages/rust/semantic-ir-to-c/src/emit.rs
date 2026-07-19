@@ -314,10 +314,32 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                 let _ = writeln!(out, "{pad}(void){tmp};");
             }
         }
-        // SIR16+ statements (Assign / loops / index-set / class / try) are not
-        // accepted in v0; the capability check rejects such modules before
-        // emit, so these are unreachable here.
-        other => unreachable!("v0 C backend reached unsupported statement: {other:?}"),
+        // SIR16 re-binding: the target `SirValue` is already declared (by an
+        // earlier `LetStarBinding`), so this reuses `emit_assign` (which handles
+        // a simple value or a compound `If`/`Convert`).
+        Stmt::Assign { name, value, .. } => {
+            let n = sanitize_ident(name);
+            emit_assign(out, &n, value, indent);
+        }
+        // SIR16 loop.  Portable shape that re-evaluates a possibly-compound
+        // condition every iteration:
+        //   for (;;) { SirValue c; <c = cond>; if (!_sir_truthy(c)) break; <body> }
+        Stmt::While { cond, body, .. } => {
+            let _ = writeln!(out, "{pad}for (;;) {{");
+            let inner = indent + 1;
+            let ipad = indent_str(inner);
+            let ctmp = format!("_sir_w{}", fresh_id());
+            let _ = writeln!(out, "{ipad}SirValue {ctmp};");
+            emit_assign(out, &ctmp, cond, inner);
+            let _ = writeln!(out, "{ipad}if (!_sir_truthy({ctmp})) break;");
+            for st in &body.stmts {
+                emit_stmt(out, st, inner);
+            }
+            let _ = writeln!(out, "{pad}}}");
+        }
+        // Other SIR16+ statements (ForRange/ForEach/index-set/class/try) are not
+        // accepted; the capability check rejects such modules before emit.
+        other => unreachable!("C backend reached unsupported statement: {other:?}"),
     }
 }
 
@@ -804,6 +826,11 @@ fn fixed_helper(name: &str) -> Option<(&'static str, usize)> {
         "case_eq" => ("_sir_case_eq", 2),
         "<" => ("_sir_lt", 2),
         ">" => ("_sir_gt", 2),
+        // Milestone 2 comparisons (the C frontend emits the operator spellings).
+        "<=" => ("_sir_le", 2),
+        ">=" => ("_sir_ge", 2),
+        "==" => ("_sir_eq", 2),
+        "!=" => ("_sir_ne", 2),
         "cons" => ("_sir_cons", 2),
         "car" => ("_sir_car", 1),
         "cdr" => ("_sir_cdr", 1),
@@ -848,6 +875,7 @@ pub fn sanitize_ident(s: &str) -> String {
         out.push('_');
     }
     if is_c_keyword(&out)
+        || is_reserved_macro(&out)
         || out.starts_with("_sir")
         || out == "main"
         || out == "user_main"
@@ -856,6 +884,16 @@ pub fn sanitize_ident(s: &str) -> String {
         out.push('_');
     }
     out
+}
+
+/// Standard-library / platform *function-like macros* that are not C keywords
+/// but would wreck a same-named function definition.  `<stdlib.h>` on MSVC/UCRT
+/// (and `<windows.h>`) define `min`/`max` as macros, so `SirValue min(SirValue
+/// a, SirValue b)` expands to garbage under clang-cl / MSVC — a portability trap
+/// the three-compiler mandate must dodge.  Escaping them (a trailing `_`) keeps
+/// a user function called `min` compiling everywhere.
+fn is_reserved_macro(s: &str) -> bool {
+    matches!(s, "min" | "max")
 }
 
 fn is_c_keyword(s: &str) -> bool {

@@ -254,6 +254,57 @@ fn corpus() -> Vec<Case> {
                    int add(int a, int b) { return a + b; }\n\
                    int main(void) { printf(\"%d\\n\", add(2, 3)); return 0; }",
         },
+        // ── milestone 2: control flow & comparisons ──────────────────────────
+        Case {
+            label: "for-loop accumulator sum(1..100) → 5050",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { uint32_t sum = 0; \
+                   for (int i = 1; i <= 100; i = i + 1) { sum = sum + i; } \
+                   printf(\"%u\\n\", sum); return 0; }",
+        },
+        Case {
+            label: "while countdown sum(5..1) → 15",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { int32_t i = 5; int32_t acc = 0; \
+                   while (i > 0) { acc = acc + i; i = i - 1; } \
+                   printf(\"%d\\n\", acc); return 0; }",
+        },
+        Case {
+            label: "if/else min(7,3) → 3",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int min(int a, int b) { int r = 0; \
+                   if (a < b) { r = a; } else { r = b; } return r; }\n\
+                   int main(void) { printf(\"%d\\n\", min(7, 3)); return 0; }",
+        },
+        Case {
+            label: "factorial loop 10! → 3628800",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { uint32_t f = 1; \
+                   for (int i = 1; i <= 10; i = i + 1) { f = f * i; } \
+                   printf(\"%u\\n\", f); return 0; }",
+        },
+        Case {
+            // The headline of milestone 2: fixed-width wraparound survives loop
+            // mutation — `x = x + 100` on a uint8_t, ten times, wraps every step.
+            label: "uint8 wraparound accumulated in a loop → 232",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { uint8_t x = 0; \
+                   for (int i = 0; i < 10; i = i + 1) { x = x + 100; } \
+                   printf(\"%d\\n\", x); return 0; }",
+        },
+        Case {
+            label: "comparison as a value (5 > 3) → 1",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int main(void) { int a = 5; int b = 3; int c = a > b; \
+                   printf(\"%d\\n\", c); return 0; }",
+        },
+        Case {
+            label: "equality branch classify(0) → 100",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int classify(int x) { int r = 0; \
+                   if (x == 0) { r = 100; } else { r = 200; } return r; }\n\
+                   int main(void) { printf(\"%d\\n\", classify(0)); return 0; }",
+        },
     ]
 }
 

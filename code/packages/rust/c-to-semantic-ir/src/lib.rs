@@ -70,6 +70,71 @@ mod tests {
         );
     }
 
+    // ── milestone 2: control flow & comparisons ─────────────────────────────
+
+    #[test]
+    fn while_loop_lowers_to_sir_while_with_bool_cond() {
+        let m = lower("int main(void) { int32_t i = 0; while (i < 3) { i = i + 1; } return 0; }");
+        let text = semantic_ir::print_module(&m);
+        assert!(text.contains("(while"), "no while stmt:\n{text}");
+        // The condition is the comparison builtin directly (already a bool),
+        // not wrapped in a `!= 0`.
+        assert!(text.contains("(builtin-call <"), "no `<` cond:\n{text}");
+        assert!(text.contains("(assign i local"), "no reassign:\n{text}");
+    }
+
+    #[test]
+    fn for_loop_desugars_to_while_with_trailing_step() {
+        let m = lower(
+            "int main(void) { uint32_t s = 0; for (int i = 1; i <= 3; i = i + 1) { s = s + i; } return 0; }",
+        );
+        let text = semantic_ir::print_module(&m);
+        assert!(
+            text.contains("(while"),
+            "for did not desugar to while:\n{text}"
+        );
+        // init `i` is bound before the loop; the step reassigns it inside.
+        assert!(text.contains("(let* i "), "no loop-var init:\n{text}");
+        assert!(text.contains("(assign i local"), "no step assign:\n{text}");
+    }
+
+    #[test]
+    fn bare_int_condition_gets_ne_zero() {
+        // `while (n)` — a non-comparison condition — must become `!= 0`, since
+        // SIR treats 0 as truthy (C treats it as false).
+        let m = lower("int main(void) { int32_t n = 2; while (n) { n = n - 1; } return 0; }");
+        let text = semantic_ir::print_module(&m);
+        assert!(
+            text.contains("(builtin-call != (effects pure) (var-ref n local) (int 0))"),
+            "condition not bridged via != 0:\n{text}"
+        );
+    }
+
+    #[test]
+    fn comparison_as_value_is_if_one_else_zero() {
+        // `int c = a > b;` — the comparison is used as a value, so it is
+        // `If(cmp, 1, 0)` (C's int-typed 0/1 result).
+        let m = lower("int main(void) { int a = 5; int b = 3; int c = a > b; return 0; }");
+        let text = semantic_ir::print_module(&m);
+        assert!(text.contains("(if (builtin-call >"), "no if-int:\n{text}");
+    }
+
+    #[test]
+    fn early_return_is_a_clean_error() {
+        // A `return` that is not the function's last statement has no SIR
+        // representation (no early exit) and must error, not miscompile.
+        let err = compile_source(
+            "int f(int x) { if (x == 0) { return 1; } return 0; }",
+            "test",
+        )
+        .unwrap_err();
+        assert!(
+            err.message.contains("early `return`"),
+            "wrong error: {}",
+            err.message
+        );
+    }
+
     // ── end-to-end helpers ──────────────────────────────────────────────────
 
     fn run_ruby(m: &semantic_ir::Module) -> Option<String> {

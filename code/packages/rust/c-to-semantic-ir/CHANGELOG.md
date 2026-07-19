@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+### Milestone 2 — control flow & comparisons
+
+- Comparisons `< > <= >= == !=` (with the usual arithmetic conversions on their
+  operands).  As a condition they lower to a SIR bool directly; as a **value**
+  they lower to `If(cmp, 1, 0)`, restoring C's int-typed `0`/`1`.
+- `if`/`else` → an `Expr::If` evaluated as a statement; `while` → `Stmt::While`;
+  `for` desugars to `init; while (cond) { body; step }`; re-assignment `x = e`
+  → `Stmt::Assign` (RHS converted to `x`'s declared type).
+- The **C-vs-SIR truthiness bridge**: a non-comparison condition `e` becomes
+  `!=(e, 0)` (C treats `0` as false; SIR treats it as truthy), so `while (n)`
+  terminates correctly.
+- Manifest now declares `Loops` + `MutableBindings`.
+- Early `return` (anywhere but the function's last statement) is a clean,
+  positioned error — SIR functions yield a block value with no early exit.
+- Conformance corpus grows with control-flow programs (accumulator `for`,
+  `while` countdown, `if/else` min, factorial, **uint8 wraparound accumulated in
+  a loop → 232**, comparison-as-value, equality branch) — all byte-identical
+  across reference `clang -fwrapv`, emitted Ruby, and emitted C.
+
 - Tests: `tests/three_way_conformance.rs` — a three-way conformance corpus that,
   for each milestone-1 C program, asserts byte-identical stdout across (1)
   reference C compiled `clang -fwrapv`, (2) emitted Ruby run with `ruby`, and (3)

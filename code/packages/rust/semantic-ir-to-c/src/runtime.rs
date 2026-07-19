@@ -286,6 +286,14 @@ SirValue _sir_gt(SirValue a, SirValue b) {
     if (a.tag == SIR_STR && b.tag == SIR_STR) return _sir_bool(strcmp(a.as.s, b.as.s) > 0);
     return _sir_bool(_sir_as_num(a) > _sir_as_num(b));
 }
+SirValue _sir_le(SirValue a, SirValue b) {
+    if (a.tag == SIR_STR && b.tag == SIR_STR) return _sir_bool(strcmp(a.as.s, b.as.s) <= 0);
+    return _sir_bool(_sir_as_num(a) <= _sir_as_num(b));
+}
+SirValue _sir_ge(SirValue a, SirValue b) {
+    if (a.tag == SIR_STR && b.tag == SIR_STR) return _sir_bool(strcmp(a.as.s, b.as.s) >= 0);
+    return _sir_bool(_sir_as_num(a) >= _sir_as_num(b));
+}
 
 int _sir_value_eq(SirValue a, SirValue b) {
     if (_sir_is_num(a) && _sir_is_num(b)) {
@@ -305,6 +313,7 @@ int _sir_value_eq(SirValue a, SirValue b) {
     }
 }
 SirValue _sir_eq(SirValue a, SirValue b) { return _sir_bool(_sir_value_eq(a, b)); }
+SirValue _sir_ne(SirValue a, SirValue b) { return _sir_bool(!_sir_value_eq(a, b)); }
 
 /* Ruby `===` (case subsumption).  For the v0 value set — no classes, ranges, or
  * regexps yet — `pattern === value` reduces to structural equality, so `case`
@@ -476,6 +485,10 @@ SirValue _sir_builtin_dispatch(SirValue *caps, SirValue *args, int argc) {
     if (strcmp(name, "=") == 0)        return _sir_eq(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "<") == 0)        return _sir_lt(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, ">") == 0)        return _sir_gt(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
+    if (strcmp(name, "<=") == 0)       return _sir_le(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
+    if (strcmp(name, ">=") == 0)       return _sir_ge(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
+    if (strcmp(name, "==") == 0)       return _sir_eq(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
+    if (strcmp(name, "!=") == 0)       return _sir_ne(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "cons") == 0)     return _sir_cons(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "car") == 0)      return _sir_car(_sir_arg(args, argc, 0));
     if (strcmp(name, "cdr") == 0)      return _sir_cdr(_sir_arg(args, argc, 0));

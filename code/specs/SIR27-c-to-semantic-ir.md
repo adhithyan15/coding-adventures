@@ -122,6 +122,57 @@ narrows to u8 → `300 → 44`.  The Ruby backend renders
 `c = sir_u8(sir_i32(sir_i32(a) + sir_i32(b)))`; the C backend renders the
 equivalent `_sir_convert(...)` chain; both agree with `clang -fwrapv`.
 
+## Control flow & comparisons (milestone 2)
+
+Milestone 1 delivered typed `+`/`-`/`*`, casts, declarations, `printf`, and a
+trailing `return`.  Milestone 2 adds **comparisons and control flow**, whose one
+subtlety is a **truthiness mismatch** between the two languages:
+
+- In **C**, a condition is an integer: `0` is false, any non-zero is true, and a
+  comparison (`a < b`) yields an `int` that is `0` or `1`.
+- In **SIR**, only `nil`/`false` are falsy — **`0` is truthy** — and a comparison
+  builtin yields a `bool`.
+
+So the lowering must bridge in two directions:
+
+1. **C condition → SIR bool** (used by `if`/`while`/`for`).  `lower_cond(e)`:
+   - if `e` is syntactically a comparison (`relational`/`equality`), lower it to
+     the SIR comparison builtin directly — that already yields a `bool`;
+   - otherwise `e` is an integer expression, so emit `!=(e, 0)` — the SIR bool
+     that is true exactly when C would treat `e` as true.  This is what stops
+     `while (x)` from looping forever on `x == 0` (which SIR would call truthy).
+
+2. **C comparison as an r-value → SIR int** (`int b = a < c;`).  A comparison has
+   type `int` in C, so when its result is *used as a value* it lowers to
+   `If(cmp, 1, 0)` typed `i32` — restoring C's `0`/`1`.  (`If`'s two branches are
+   the SIR blocks `{1}` and `{0}`.)
+
+Both comparison forms apply the **usual arithmetic conversions** to their
+operands first (promote, then common type), exactly like arithmetic — so
+`(uint8_t)200 < (uint8_t)100` compares the promoted `int` values, matching C.
+
+**Statements added:**
+
+| C | SIR |
+|---|---|
+| `if (c) S1 else S2` | `ExprStmt(If{ lower_cond(c), block(S1), block(S2) })` |
+| `while (c) S` | `Stmt::While{ lower_cond(c), block(S) }` (feature `Loops`) |
+| `for (init; c; step) S` | desugars to `init; While{ c′, block(S; step) }` |
+| `x = e;` | `Stmt::Assign{ x, scope, Convert{type(x)}(e) }` (feature `MutableBindings`) |
+
+`for` desugars to the `while` form: the init clause (a declaration or an
+expression) is emitted before the loop, the step expression is appended to the
+end of the loop body, and an absent condition becomes `true`.  A nested `{ … }`
+block is spliced into the enclosing statement list (v1 does not model per-block
+scopes; the flat symbol table is shared).
+
+**Early `return` is still out of scope.**  SIR functions yield their block's
+*value* — there is no early-return statement — so `return` is accepted **only as
+the function's last statement** (where it supplies that value).  A `return`
+inside an `if`/`while`/`for` body is a clear, positioned error rather than a
+silent miscompile; lifting it into nested `If` values is a later milestone.
+Logical `&& ||`, unary `!`, bitwise, and `/`/`%` also remain deferred.
+
 ## Pipeline
 
 ```text

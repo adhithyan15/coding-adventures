@@ -8,9 +8,17 @@
 //! SIR arithmetic stays exact, the `Convert` after each width-bounded operation
 //! is what reproduces C's fixed-width overflow at every step (see SIR27).
 //!
-//! Milestone 1: functions, typed integer arithmetic/bitwise, casts,
-//! declarations & assignments, `printf`, and `return`.  Control flow and
-//! comparisons (which involve C-vs-SIR truthiness) land in a later milestone.
+//! Milestone 1: functions, typed integer `+`/`-`/`*`, casts, declarations,
+//! `printf`, and a trailing `return`.
+//!
+//! Milestone 2 (this revision) adds **comparisons and control flow** —
+//! `< > <= >= == !=`, `if`/`else`, `while`, `for`, and re-assignment — bridging
+//! the C-vs-SIR *truthiness mismatch* (C: `0` is false and a comparison yields
+//! `int` `0`/`1`; SIR: only nil/false are falsy and comparisons yield `bool`).
+//! A C condition lowers to a SIR bool (`!=(e, 0)`, or the comparison builtin
+//! directly), and a comparison used as a value lowers back to an int via
+//! `If(cmp, 1, 0)`.  Early `return` (anywhere but the function's last statement)
+//! stays deferred: SIR functions yield their block value, with no early exit.
 
 use std::collections::HashMap;
 
@@ -226,6 +234,27 @@ fn builtin(name: &str, args: Vec<Expr>) -> Expr {
     }
 }
 
+/// A block that is just a value expression (no statements) — the branches of a
+/// value-producing `If`, and the shape a nested `{ }` block reduces to.
+fn value_block(value: Expr) -> Block {
+    Block {
+        stmts: vec![],
+        value,
+        span: sp(),
+    }
+}
+
+/// Turn a SIR **bool** `cond` into the C **int** `0`/`1` it denotes as a value:
+/// `If(cond, 1, 0)`.  This restores C's rule that a comparison has type `int`.
+fn if_int(cond: Expr) -> Expr {
+    Expr::If {
+        cond: Box::new(cond),
+        then_branch: Box::new(value_block(int_lit(1))),
+        else_branch: Box::new(value_block(int_lit(0))),
+        span: sp(),
+    }
+}
+
 // ── The lowerer ──────────────────────────────────────────────────────────────
 
 struct Lowerer {
@@ -266,6 +295,11 @@ pub fn compile(tree: &GrammarASTNode, module_name: &str) -> Result<Module, CLowe
         Feature::SizedIntegers,
         Feature::Unsigned,
         Feature::WrappingArithmetic,
+        // Milestone 2: `while`/`for` → `Stmt::While` (Loops); re-assignment →
+        // `Stmt::Assign` (MutableBindings).  `Expr::If` and the comparison
+        // builtins need no feature of their own (core control flow / intrinsics).
+        Feature::Loops,
+        Feature::MutableBindings,
     ]);
 
     let module = Module {
@@ -384,52 +418,38 @@ impl Lowerer {
     }
 
     /// Lower a `compound_stmt` as a function body: statements, then the value of
-    /// a trailing `return` (SIR functions return their block's value).
+    /// a trailing `return` (SIR functions return their block's value).  A
+    /// `return` anywhere but the last position has no SIR representation (no
+    /// early exit) and is a positioned error.
     fn lower_body(
         &mut self,
         body: &GrammarASTNode,
         ret: Option<IntSpec>,
     ) -> Result<Block, CLowerError> {
+        let items: Vec<&GrammarASTNode> = child_nodes(body)
+            .into_iter()
+            .filter(|x| x.rule_name == "block_item")
+            .collect();
         let mut stmts = Vec::new();
         let mut value = Expr::NilLit { span: sp() };
-        for item in child_nodes(body) {
-            if item.rule_name != "block_item" {
-                continue;
-            }
+        let last = items.len().saturating_sub(1);
+        for (i, item) in items.iter().enumerate() {
             let inner = peel_block_item(item);
             match inner.rule_name.as_str() {
                 "declaration" => stmts.push(self.lower_declaration(inner)?),
                 "statement" => {
                     let s = peel(inner);
-                    match s.rule_name.as_str() {
-                        "return_stmt" => {
-                            // Milestone 1: the return supplies the block value.
-                            value = match first_node(s, "expr") {
-                                Some(e) => {
-                                    let (ex, ty) = self.lower_expr(e)?;
-                                    match ret {
-                                        Some(rt) => convert_to(ex, ty, rt),
-                                        None => ex,
-                                    }
-                                }
-                                None => Expr::NilLit { span: sp() },
-                            };
-                        }
-                        "expr_stmt" => {
-                            if let Some(e) = first_node(s, "expr") {
-                                let (ex, _) = self.lower_expr(e)?;
-                                stmts.push(Stmt::ExprStmt {
-                                    expr: ex,
-                                    span: sp(),
-                                });
-                            }
-                        }
-                        other => {
+                    if s.rule_name == "return_stmt" {
+                        if i != last {
                             return err(
-                                format!("statement `{other}` not supported in milestone 1"),
+                                "early `return` is not supported yet (a `return` may appear \
+                                 only as the function's last statement)",
                                 s,
-                            )
+                            );
                         }
+                        value = self.lower_return(s, ret)?;
+                    } else {
+                        self.lower_stmt(s, &mut stmts)?;
                     }
                 }
                 other => return err(format!("block item `{other}` unsupported"), inner),
@@ -442,12 +462,367 @@ impl Lowerer {
         })
     }
 
+    /// The value a trailing `return e;` (or bare `return;`) supplies, converted
+    /// to the function's declared return type.
+    fn lower_return(
+        &mut self,
+        s: &GrammarASTNode,
+        ret: Option<IntSpec>,
+    ) -> Result<Expr, CLowerError> {
+        Ok(match first_node(s, "expr") {
+            Some(e) => {
+                let (ex, ty) = self.lower_expr(e)?;
+                match ret {
+                    Some(rt) => convert_to(ex, ty, rt),
+                    None => ex,
+                }
+            }
+            None => Expr::NilLit { span: sp() },
+        })
+    }
+
+    // ── statements (milestone 2) ─────────────────────────────────────────────
+
+    /// Lower one *statement-kind* node (already peeled from `statement`),
+    /// appending the resulting SIR statement(s) to `out`.
+    fn lower_stmt(&mut self, s: &GrammarASTNode, out: &mut Vec<Stmt>) -> Result<(), CLowerError> {
+        match s.rule_name.as_str() {
+            "compound_stmt" => {
+                // A nested `{ … }` block: splice its statements in (v1 shares one
+                // flat symbol table — no per-block scoping).
+                let inner = self.lower_block_items(s)?;
+                out.extend(inner);
+            }
+            "expr_stmt" => {
+                if let Some(e) = first_node(s, "expr") {
+                    self.lower_expr_stmt(e, out)?;
+                }
+            }
+            "if_stmt" => self.lower_if(s, out)?,
+            "while_stmt" => self.lower_while(s, out)?,
+            "for_stmt" => self.lower_for(s, out)?,
+            "return_stmt" => {
+                return err(
+                    "early `return` is not supported yet (a `return` may appear \
+                     only as the function's last statement)",
+                    s,
+                )
+            }
+            other => return err(format!("statement `{other}` not supported"), s),
+        }
+        Ok(())
+    }
+
+    /// Lower every `block_item` of a `compound_stmt` into a flat `Vec<Stmt>`.
+    fn lower_block_items(&mut self, compound: &GrammarASTNode) -> Result<Vec<Stmt>, CLowerError> {
+        let mut out = Vec::new();
+        for item in child_nodes(compound) {
+            if item.rule_name != "block_item" {
+                continue;
+            }
+            let inner = peel_block_item(item);
+            match inner.rule_name.as_str() {
+                "declaration" => out.push(self.lower_declaration(inner)?),
+                "statement" => {
+                    let s = peel(inner);
+                    self.lower_stmt(s, &mut out)?;
+                }
+                other => return err(format!("block item `{other}` unsupported"), inner),
+            }
+        }
+        Ok(out)
+    }
+
+    /// Lower a loop/branch body (`statement`, possibly a `compound_stmt`) to a
+    /// SIR `Block` with a nil value — control-flow bodies are evaluated for
+    /// their effects, not a value.
+    fn lower_void_block(&mut self, stmt: &GrammarASTNode) -> Result<Block, CLowerError> {
+        let s = peel(stmt);
+        let stmts = if s.rule_name == "compound_stmt" {
+            self.lower_block_items(s)?
+        } else {
+            let mut v = Vec::new();
+            self.lower_stmt(s, &mut v)?;
+            v
+        };
+        Ok(Block {
+            stmts,
+            value: Expr::NilLit { span: sp() },
+            span: sp(),
+        })
+    }
+
+    /// An expression used as a statement: an assignment `x = e` becomes
+    /// `Stmt::Assign`, anything else a bare `ExprStmt` (evaluated for effect).
+    fn lower_expr_stmt(
+        &mut self,
+        expr_node: &GrammarASTNode,
+        out: &mut Vec<Stmt>,
+    ) -> Result<(), CLowerError> {
+        let p = peel(expr_node);
+        if p.rule_name == "assignment" && child_tokens(p).iter().any(|t| t.value == "=") {
+            out.push(self.lower_assignment(p)?);
+        } else {
+            let (ex, _) = self.lower_expr(expr_node)?;
+            out.push(Stmt::ExprStmt {
+                expr: ex,
+                span: sp(),
+            });
+        }
+        Ok(())
+    }
+
+    /// `x = e` → `Stmt::Assign` with the RHS converted to `x`'s declared type.
+    /// The LHS must be a bare, already-declared name (the only lvalue in v1).
+    fn lower_assignment(&mut self, n: &GrammarASTNode) -> Result<Stmt, CLowerError> {
+        let nodes = child_nodes(n);
+        let lhs = nodes.first().copied().ok_or_else(|| CLowerError {
+            message: "assignment without a left-hand side".into(),
+            line: n.start_line.unwrap_or(0),
+            column: n.start_column.unwrap_or(0),
+        })?;
+        let name = child_tokens(peel(lhs))
+            .iter()
+            .find(|t| t.effective_type_name() == "NAME")
+            .map(|t| t.value.clone())
+            .ok_or_else(|| CLowerError {
+                message: "assignment target is not a plain variable".into(),
+                line: n.start_line.unwrap_or(0),
+                column: n.start_column.unwrap_or(0),
+            })?;
+        let (ty, scope) = self.vars.get(&name).copied().ok_or_else(|| CLowerError {
+            message: format!("assignment to undeclared variable `{name}`"),
+            line: n.start_line.unwrap_or(0),
+            column: n.start_column.unwrap_or(0),
+        })?;
+        let rhs = nodes.get(1).copied().ok_or_else(|| CLowerError {
+            message: "assignment without a right-hand side".into(),
+            line: n.start_line.unwrap_or(0),
+            column: n.start_column.unwrap_or(0),
+        })?;
+        let (e, et) = self.lower_expr(rhs)?;
+        Ok(Stmt::Assign {
+            name,
+            scope,
+            value: convert_to(e, et, ty),
+            span: sp(),
+        })
+    }
+
+    /// `if (c) S1 [else S2]` → an `If` expression evaluated as a statement.
+    fn lower_if(&mut self, s: &GrammarASTNode, out: &mut Vec<Stmt>) -> Result<(), CLowerError> {
+        let cond_node = first_node(s, "expr").ok_or_else(|| CLowerError {
+            message: "`if` without a condition".into(),
+            line: s.start_line.unwrap_or(0),
+            column: s.start_column.unwrap_or(0),
+        })?;
+        let cond = self.lower_cond(cond_node)?;
+        let branches: Vec<&GrammarASTNode> = child_nodes(s)
+            .into_iter()
+            .filter(|x| x.rule_name == "statement")
+            .collect();
+        let then_branch =
+            self.lower_void_block(branches.first().ok_or_else(|| CLowerError {
+                message: "`if` without a body".into(),
+                line: s.start_line.unwrap_or(0),
+                column: s.start_column.unwrap_or(0),
+            })?)?;
+        let else_branch = match branches.get(1) {
+            Some(e) => self.lower_void_block(e)?,
+            None => Block {
+                stmts: vec![],
+                value: Expr::NilLit { span: sp() },
+                span: sp(),
+            },
+        };
+        out.push(Stmt::ExprStmt {
+            expr: Expr::If {
+                cond: Box::new(cond),
+                then_branch: Box::new(then_branch),
+                else_branch: Box::new(else_branch),
+                span: sp(),
+            },
+            span: sp(),
+        });
+        Ok(())
+    }
+
+    /// `while (c) S` → `Stmt::While`.
+    fn lower_while(&mut self, s: &GrammarASTNode, out: &mut Vec<Stmt>) -> Result<(), CLowerError> {
+        let cond_node = first_node(s, "expr").ok_or_else(|| CLowerError {
+            message: "`while` without a condition".into(),
+            line: s.start_line.unwrap_or(0),
+            column: s.start_column.unwrap_or(0),
+        })?;
+        let cond = self.lower_cond(cond_node)?;
+        let body_node = first_node(s, "statement").ok_or_else(|| CLowerError {
+            message: "`while` without a body".into(),
+            line: s.start_line.unwrap_or(0),
+            column: s.start_column.unwrap_or(0),
+        })?;
+        let body = self.lower_void_block(body_node)?;
+        out.push(Stmt::While {
+            cond,
+            body,
+            span: sp(),
+        });
+        Ok(())
+    }
+
+    /// `for (init; cond; step) S` desugars to `init; while (cond) { S; step }`.
+    /// Children are walked in order, bucketed by the two `;` separators.
+    fn lower_for(&mut self, s: &GrammarASTNode, out: &mut Vec<Stmt>) -> Result<(), CLowerError> {
+        let (mut init, mut cond, mut step, mut body) = (None, None, None, None);
+        let mut semicolons = 0;
+        for child in &s.children {
+            match child {
+                ASTNodeOrToken::Token(t) if t.value == ";" => semicolons += 1,
+                ASTNodeOrToken::Token(_) => {}
+                ASTNodeOrToken::Node(x) => match x.rule_name.as_str() {
+                    "for_clause" => init = Some(x),
+                    "statement" => body = Some(x),
+                    "expr" if semicolons == 1 => cond = Some(x),
+                    "expr" => step = Some(x),
+                    _ => {}
+                },
+            }
+        }
+
+        // init clause: a declaration (`int i = 0`) or an expression (`i = 0`).
+        if let Some(fc) = init {
+            let inner = child_nodes(fc)
+                .into_iter()
+                .next()
+                .ok_or_else(|| CLowerError {
+                    message: "empty `for` init clause".into(),
+                    line: fc.start_line.unwrap_or(0),
+                    column: fc.start_column.unwrap_or(0),
+                })?;
+            if inner.rule_name == "init_declarator" {
+                out.push(self.lower_init_declarator(inner)?);
+            } else {
+                self.lower_expr_stmt(inner, out)?;
+            }
+        }
+
+        // condition: absent means `true` (an unconditional loop).
+        let cond_expr = match cond {
+            Some(c) => self.lower_cond(c)?,
+            None => Expr::BoolLit {
+                value: true,
+                span: sp(),
+            },
+        };
+
+        // body then the step expression, all inside the loop.
+        let body_node = body.ok_or_else(|| CLowerError {
+            message: "`for` without a body".into(),
+            line: s.start_line.unwrap_or(0),
+            column: s.start_column.unwrap_or(0),
+        })?;
+        let mut body_block = self.lower_void_block(body_node)?;
+        if let Some(st) = step {
+            self.lower_expr_stmt(st, &mut body_block.stmts)?;
+        }
+        out.push(Stmt::While {
+            cond: cond_expr,
+            body: body_block,
+            span: sp(),
+        });
+        Ok(())
+    }
+
+    // ── conditions & comparisons (milestone 2) ───────────────────────────────
+
+    /// Lower a C condition expression to a SIR **bool**, bridging truthiness.
+    /// A syntactic comparison yields a bool directly; any other integer
+    /// expression `e` becomes `!=(e, 0)` (C: non-zero is true; SIR: 0 is truthy,
+    /// so the explicit compare is required).
+    fn lower_cond(&mut self, node: &GrammarASTNode) -> Result<Expr, CLowerError> {
+        let n = peel(node);
+        if matches!(n.rule_name.as_str(), "equality" | "relational") && child_nodes(n).len() >= 2 {
+            self.lower_compare_bool(n)
+        } else {
+            let (e, _t) = self.lower_expr(node)?;
+            Ok(builtin("!=", vec![e, int_lit(0)]))
+        }
+    }
+
+    /// Lower an `equality`/`relational` node to a SIR bool.  Left-associative:
+    /// an intermediate comparison result feeds the next as an `int` `0`/`1`
+    /// (matching C's chained-comparison semantics), and the final step is the
+    /// bool we return.
+    fn lower_compare_bool(&mut self, n: &GrammarASTNode) -> Result<Expr, CLowerError> {
+        let mut acc: Option<(Expr, IntSpec)> = None;
+        let mut pending_op: Option<String> = None;
+        let mut last_bool: Option<Expr> = None;
+        for c in &n.children {
+            match c {
+                ASTNodeOrToken::Node(operand) => {
+                    let (e, t) = self.lower_expr(operand)?;
+                    match acc.take() {
+                        None => acc = Some((e, t)),
+                        Some((le, lt)) => {
+                            let op = pending_op.take().ok_or_else(|| CLowerError {
+                                message: "comparison operands with no operator between them".into(),
+                                line: n.start_line.unwrap_or(0),
+                                column: n.start_column.unwrap_or(0),
+                            })?;
+                            let b = self.compare(&op, le, lt, e, t)?;
+                            last_bool = Some(b.clone());
+                            acc = Some((if_int(b), i32_spec()));
+                        }
+                    }
+                }
+                ASTNodeOrToken::Token(t) => pending_op = Some(t.value.clone()),
+            }
+        }
+        last_bool.ok_or_else(|| CLowerError {
+            message: "comparison without an operator".into(),
+            line: n.start_line.unwrap_or(0),
+            column: n.start_column.unwrap_or(0),
+        })
+    }
+
+    /// Emit a comparison builtin, applying the usual arithmetic conversions to
+    /// the operands first (like arithmetic).  The result is a SIR bool.
+    fn compare(
+        &self,
+        op: &str,
+        le: Expr,
+        lt: IntSpec,
+        re: Expr,
+        rt: IntSpec,
+    ) -> Result<Expr, CLowerError> {
+        let lp = promote(lt);
+        let rp = promote(rt);
+        let le = convert_to(le, lt, lp);
+        let re = convert_to(re, rt, rp);
+        let c = common_type(lp, rp);
+        let le = convert_to(le, lp, c);
+        let re = convert_to(re, rp, c);
+        match op {
+            "<" | ">" | "<=" | ">=" | "==" | "!=" => Ok(builtin(op, vec![le, re])),
+            other => Err(CLowerError {
+                message: format!("comparison operator `{other}` unsupported"),
+                line: 0,
+                column: 0,
+            }),
+        }
+    }
+
     fn lower_declaration(&mut self, decl: &GrammarASTNode) -> Result<Stmt, CLowerError> {
         let init = first_node(decl, "init_declarator").ok_or_else(|| CLowerError {
             message: "declaration without declarator".into(),
             line: decl.start_line.unwrap_or(0),
             column: decl.start_column.unwrap_or(0),
         })?;
+        self.lower_init_declarator(init)
+    }
+
+    /// Lower an `init_declarator` (`T name [= expr]`) to a `LetStarBinding`.
+    /// Shared by ordinary declarations and `for`-init clauses.
+    fn lower_init_declarator(&mut self, init: &GrammarASTNode) -> Result<Stmt, CLowerError> {
         let ts = first_node(init, "type_spec").ok_or_else(|| CLowerError {
             message: "declaration without a type specifier".into(),
             line: init.start_line.unwrap_or(0),
@@ -487,15 +862,19 @@ impl Lowerer {
             "additive" | "multiplicative" | "shift" | "bit_and" | "bit_or" | "bit_xor" => {
                 self.lower_binary(n)
             }
+            // A comparison used as a *value* has type `int` in C (0 or 1), so it
+            // lowers to `If(cmp, 1, 0)` — restoring the integer from the bool.
+            "equality" | "relational" if child_nodes(n).len() >= 2 => {
+                let b = self.lower_compare_bool(n)?;
+                Ok((if_int(b), i32_spec()))
+            }
             "cast" => self.lower_cast(n),
             "unary" => self.lower_unary(n),
             "postfix" => self.lower_postfix(n),
             "primary" => self.lower_primary(n),
-            // Comparison / logical / assignment operators are deferred.
-            other => err(
-                format!("expression `{other}` not supported in milestone 1"),
-                n,
-            ),
+            // Logical `&& ||`, unary `!`, and assignment-as-subexpression remain
+            // deferred (assignment is handled in statement position).
+            other => err(format!("expression `{other}` not yet supported"), n),
         }
     }
 

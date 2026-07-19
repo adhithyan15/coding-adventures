@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.0 — control flow & mutation (SIR16)
+
+Accepts `Feature::Loops` and `Feature::MutableBindings`, and renders the two
+statements the C frontend's milestone-2 `if`/`while`/`for` produce:
+
+- `Stmt::While { cond, body }` → Ruby `while sir_truthy(<cond>) … end` (the
+  condition, already a bool, is re-tested each iteration).
+- `Stmt::Assign { name, value }` → `name = value` (Ruby locals are mutable).
+
+`Expr::If` and the comparison builtins were already rendered, so a C `for`-loop
+now round-trips to running Ruby.
+
 ## 0.2.0 — render SIR26 integer conversions
 
 Accepts `Feature::Conversions` (plus the SIR21 type-implied `SizedIntegers`,
