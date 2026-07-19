@@ -21,14 +21,27 @@ by piece, on the first word that needs it.
   pēru … āṇŭ** ("my name is") → nī/niṅṅaḷ → entŭ → **ninṟe pēru entāṇŭ?** →
   santōṣam → practice. Every atom traced (*pēru* ← *\*pēr*, twin of Tamil
   *peyar*); the standout **copula *āṇŭ*** where the Dravidian sisters use none.
+- **Ch. 3 — How Are You**: eṅṅane (how; the native *e-* questions) → sukhamāṇō?
+  ("are you well?", the copula *āṇŭ* + the question *-ō*) → ñān (I ←
+  Proto-Dravidian; can't be dropped) → sukham (well ← Sanskrit *sukha*) →
+  sāramilla (you're welcome = "no matter," Sanskrit *sāraṁ* + native *illa*) →
+  practice.
+- **Ch. 4 — Farewells**: pōkuka/varika (go/come) → pōyi varāṁ ("I'll go and come
+  back") → nāḷe kāṇāṁ (see you tomorrow; *nāḷ* "day" + *kāṇ* "see" + *-āṁ*
+  "let's") → vīṇḍuṁ kāṇāṁ (we'll meet again; native *kāṇ*, where Tamil borrowed
+  *sandi*) → practice.
+- **Ch. 5 — First Verbs**: saṁsārikkuka (to speak, Sanskrit-derived) → ñān
+  malayāḷaṁ saṁsārikkunnu (I speak Malayalam; the *-unnu* present; **the verb
+  never changes for person** — Malayalam's great simplification) → tāmasikkuka
+  (to live; postposition *-il*) → jōli ceyyuka (to work; *ceyyuka* = the same
+  root as Tamil *sey*) → practice.
 
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 3 | Responding: *sukhamāṇō?* ("are you well"), *sukhamāṇŭ* ("I'm well"), the verb *uṇṭŭ* ("to be") |
-| 4 | The case-endings (Malayalam's agglutinative suffixes), numbers 1–10 |
-| 5+ | Postpositions, tense on the verb, family, food — always with the Dravidian-cognate thread |
+| 6 | Case-endings (Malayalam's agglutinative suffixes: *-e, -il, -ōṭu*); more verbs |
+| 7+ | Tense, numbers, family, food — always with the Dravidian-cognate thread |
 
 Note: Malayalam marks "you" by **register** (*nī* familiar / *niṅṅaḷ*
 respectful, also plural) — like the other tracks, worth teaching beside them.
