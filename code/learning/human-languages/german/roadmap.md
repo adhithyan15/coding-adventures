@@ -42,12 +42,17 @@ Spanish and French where a contrast helps. The recurring decoder is the
   through-line (*p→f* in *fünf/five ← \*pénkʷe*; *d→t→z* in *decem→ten→zehn*;
   *acht/eight* ~ *Nacht/night*). The month names *are* Latin loans, so the 7–10
   calendar trick still shows. **Authored.**
+- **Ch. 7 — Days of the week**: Montag–Freitag (**Germanic gods = the English
+  days**, not Latin planets: *Donnerstag* = Thor's day = *Thursday*; the *Mittwoch*
+  "mid-week" exception where the Church dropped Woden, mirroring English keeping
+  *Wednesday*) → Samstag/Sonntag (*Samstag* ← *Sabbat*, the Sabbath, **not** Saturn,
+  twin of Spanish *sábado*; *Sonntag* = Sun's day = *Sunday*). **Authored.**
 
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 7+ | Cases (der→den→dem), time, family, food, sprechen & irregular verbs — following the shared theme order |
+| 8+ | Cases (der→den→dem), time & the clock, family, food, sprechen & irregular verbs — following the shared theme order |
 
 The **du / Sie** lesson (Ch. 2) completes the formal/informal set across the
 languages: Spanish *tú/usted* (from "your grace"), French *tu/vous* (the

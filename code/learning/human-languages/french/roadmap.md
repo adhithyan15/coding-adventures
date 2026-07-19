@@ -42,12 +42,16 @@ compared, every Spanish form supplied in full (no prior Spanish assumed).
   erosion; *dix* → *dime* ← *disme*; the **septembre–décembre = Latin 7–10**
   calendar trick). Spanish twin supplied for each. **Authored** — mirrors Spanish
   Ch.8's numbers.
+- **Ch. 7 — Days of the week**: lundi–vendredi (the **planet-god week**: each day
+  = *[planet]* + *-di* ← *diēs*; *mardi* = Mars = English *Tuesday*/Tiw, the
+  Roman-planet ↔ Germanic-god bridge) → samedi/dimanche (*Sabbatum* / *diēs
+  Dominica* "Lord's day" — where religion overwrote the planets). **Authored.**
 
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |
 |---|---|
-| 7+ | Time, days & months, family, food — following the Spanish theme order, with the Spanish cousin supplied for contrast |
+| 8+ | Time & the clock, months, family, food — following the Spanish theme order, with the Spanish cousin supplied for contrast |
 
 The *tu/vous* lesson (Ch. 2) is the French counterpart to Spanish *tú/usted*:
 same formal/informal split, but French makes the formal from the **plural**
