@@ -1,10 +1,13 @@
 //! Integration test for the `tests/diff/simple-inline-multiuse/` fixture.
 //!
-//! Exercises CLOC13.G — multi-use inlining. The small pure function `sq`
-//! is called at two sites; the inliner substitutes its body at both
-//! (it fits the size budget), treeshake removes the now-dead `sq`, and
-//! the fixed-point `constant-fold` sweep folds `3 * 3` / `4 * 4` to
-//! `9` / `16`. Result: `a(9);b(16);`.
+//! Inlining a top-level function's body into its call sites is a
+//! CLOSED-WORLD transform (it rewrites an observable global) and runs ONLY at
+//! ADVANCED. At `--compilation_level SIMPLE` the compiler is open-world, so
+//! the small pure function `sq` is KEPT and both `a(sq(3))` / `b(sq(4))` stay
+//! as calls — the arithmetic `3 * 3` / `4 * 4` never appears because the body
+//! is not substituted. Result: `function sq(x){return x*x};a(sq(3));b(sq(4));`.
+//! Under ADVANCED the body is inlined at both sites, `sq` is tree-shaken, and
+//! constant-fold folds `3 * 3` / `4 * 4` to `9` / `16`, giving `a(9);b(16);`.
 
 use std::process::Command;
 

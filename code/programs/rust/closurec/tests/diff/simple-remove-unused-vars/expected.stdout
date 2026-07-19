@@ -1,1 +1,1 @@
-var live=10,impure=run();log(live);
+var dead=3,live=10,impure=run();log(live);

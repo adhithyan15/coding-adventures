@@ -1,15 +1,18 @@
-// SIMPLE-level multi-use inlining (CLOC13.G).
+// SIMPLE does not inline top-level functions (open-world); function inlining
+// is ADVANCED-only (CLOC13.G originally inlined at SIMPLE; that was an
+// open-world miscompile and is now reverted).
 //
-// `inline` now substitutes a small pure function at ALL its call sites,
-// not just when it is used once — provided every use is an inlinable
-// call and the body fits the size budget (here `x * x` is 3 nodes, the
-// budget for one parameter is 2 + 1 = 3).
+// Substituting a top-level function's body into its call sites — and then
+// dropping the now-unreferenced declaration — rewrites an observable global,
+// so it is a CLOSED-WORLD transform that runs ONLY at ADVANCED. At SIMPLE the
+// function and every call are left verbatim:
 //
-//   sweep 1: both `sq(3)` and `sq(4)` are replaced by `3 * 3` / `4 * 4`;
-//            `sq` is now unreferenced and removed by treeshake.
-//   sweep 2: constant-fold folds `3 * 3` → 9 and `4 * 4` → 16.
+//   `sq` is KEPT; `a(sq(3))` and `b(sq(4))` stay as calls (the arithmetic
+//   `3 * 3` / `4 * 4` never appears, because the body is not substituted).
 //
-// Result: `a(9); b(16);`.
+// Result: `function sq(x){return x*x};a(sq(3));b(sq(4));`. Under ADVANCED the
+// body is inlined at both sites, `sq` is tree-shaken, and constant-fold folds
+// `3 * 3` → 9 and `4 * 4` → 16, giving `a(9);b(16);`.
 function sq(x) {
   return x * x;
 }

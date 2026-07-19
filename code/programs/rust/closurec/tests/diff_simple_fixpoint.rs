@@ -1,11 +1,15 @@
 //! Integration test for the `tests/diff/simple-fixpoint/` fixture.
 //!
-//! Exercises CLOC13.F — the pass pipeline runs to a FIXED POINT. The
-//! input needs two sweeps to fully optimize: sweep 1 inlines the
-//! single-use `double(7)` call into `log(7 * 2)` (and removes the dead
-//! `double`); sweep 2 constant-folds `7 * 2` to `14`. Before fixed-point
-//! iteration the pipeline ran each pass once and stopped at
-//! `log(7 * 2);`.
+//! Exercises CLOC13.F — the pass pipeline runs to a FIXED POINT. Inlining a
+//! top-level function is the classic multi-sweep trigger, but it rewrites an
+//! observable global, so it runs ONLY at ADVANCED. At open-world SIMPLE the
+//! single-use `double` is KEPT and `double(7)` stays a call — no inline, hence
+//! no `7 * 2` for a later sweep to fold — so the output is
+//! `function double(x){return x*2};log(double(7));`. Under ADVANCED the fixed
+//! point inlines `double(7)` → `7 * 2`, tree-shakes `double`, then folds
+//! `7 * 2` → `14`, giving `log(14);`. (The fixed-point interplay that survives
+//! at SIMPLE — `inline-variables` exposing a later `constant-fold` — is
+//! covered by `simple-inline-variables`.)
 
 use std::process::Command;
 

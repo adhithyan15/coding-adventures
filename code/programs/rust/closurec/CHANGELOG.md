@@ -28,15 +28,35 @@ global-scope sweepers to match what executes.
 
 Eight in-crate unit tests that had asserted the old (miscompiling)
 aggressive-SIMPLE behavior were rewritten to assert the correct
-open-world-SIMPLE / closed-world-ADVANCED split at both levels. One end-to-end
-diff fixture — `tests/diff/simple-debugger` — also asserted the old behavior
-(it expected the single-use `log` to be inlined into `report(1)` at SIMPLE);
-its `expected.stdout` and the `diff_simple_debugger` integration test's
-"did-not-fall-back-to-whitespace" oracle were updated to the new open-world
-output (`function log(p){report(p)};log(1);var x=3;use(x);`), re-proving the
-typed pipeline ran via the `1 + 2` → `3` fold and the `debugger;` strip
-instead of the (now-invalid) inline. ADVANCED output remains byte-for-byte
-unchanged.
+open-world-SIMPLE / closed-world-ADVANCED split at both levels.
+
+**Twelve** end-to-end diff fixtures also asserted the old behavior and were
+updated to the new open-world output (the ADVANCED behavior each once
+demonstrated is now described in-fixture as the ADVANCED contrast):
+
+- `simple-remove-unused-vars`, `simple-treeshake`, `simple-inline-multiuse`,
+  `simple-fixpoint` — these exercised `remove-unused-vars` / `treeshake` /
+  `inline` at SIMPLE, the very passes now gated to ADVANCED; at SIMPLE the
+  unreferenced top-level `var`/`function` and single-use functions are now
+  KEPT.
+- `simple-inline-variables` — `inline-variables` still propagates at SIMPLE,
+  but the emptied `const` declaration is now KEPT (remove-unused-vars is
+  ADVANCED-only).
+- `simple-debugger`, `simple-do-while`, `simple-for-in`, `simple-for-of`,
+  `simple-try-catch` — these fold/strip inside a statement form but had a
+  helper `log` inlined at SIMPLE; `function log` is now KEPT. Their
+  "did-not-fall-back-to-whitespace" oracles were re-pointed from the
+  (now-invalid) inline to still-valid typed-pipeline proofs (constant-fold and
+  DCE, which still run at SIMPLE).
+- `simple-negation-fold`, `simple-unary-preserve` — the negation/unary rewrite
+  is unchanged; only the incidental unused `dead` binding is now KEPT (its
+  initializer still constant-folds).
+
+Specs synced to the open-world SIMPLE behavior: CLOC17, CLOC19–CLOC24 fixture
+descriptions updated (they had described the SIMPLE single-use-function inline).
+CLOC11.07/11.08 already correctly scoped `treeshake`/`inline`/`remove-unused-vars`
+to ADVANCED — this change brings the implementation back into line with them.
+ADVANCED output remains byte-for-byte unchanged.
 
 ## [0.234.37] - 2026-07-17
 

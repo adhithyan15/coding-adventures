@@ -1,1 +1,1 @@
-report(1);try{var x=3;risky(x)}catch(e){var y=12;handle(e,y);return}finally{cleanup()}
+function log(p){report(p)};log(1);try{var x=3;risky(x)}catch(e){var y=12;handle(e,y);return}finally{cleanup()}
