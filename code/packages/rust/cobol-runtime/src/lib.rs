@@ -654,6 +654,55 @@ mod tests {
         }
     }
 
+    /// Build a program whose `01 GRADE PIC X VALUE "{g}"` drives an alphanumeric
+    /// EVALUATE, then run `body`.
+    fn run_alpha_evaluate(g: &str, body: &[&str]) -> Result<String, RuntimeError> {
+        let mut lines = vec![
+            "IDENTIFICATION DIVISION.".to_string(),
+            "PROGRAM-ID. P.".to_string(),
+            "DATA DIVISION.".to_string(),
+            "WORKING-STORAGE SECTION.".to_string(),
+            format!("01  GRADE  PIC X VALUE \"{g}\"."),
+            "PROCEDURE DIVISION.".to_string(),
+            "MAIN.".to_string(),
+        ];
+        lines.extend(body.iter().map(|s| format!("    {s}")));
+        let refs: Vec<&str> = lines.iter().map(|s| s.as_str()).collect();
+        run_cobol(&program(&refs))
+    }
+
+    #[test]
+    fn evaluate_on_an_alphanumeric_subject() {
+        // A char subject matched against string literals — space-padded compare.
+        let body = &[
+            "EVALUATE GRADE",
+            "WHEN \"A\" DISPLAY \"TOP\"",
+            "WHEN \"F\" DISPLAY \"FAIL\"",
+            "WHEN OTHER DISPLAY \"MID\"",
+            "END-EVALUATE.",
+            "STOP RUN.",
+        ];
+        assert_eq!(run_alpha_evaluate("A", body).unwrap(), "TOP\n");
+        assert_eq!(run_alpha_evaluate("F", body).unwrap(), "FAIL\n");
+        assert_eq!(run_alpha_evaluate("C", body).unwrap(), "MID\n"); // no value → OTHER
+    }
+
+    #[test]
+    fn evaluate_on_an_alphanumeric_thru_range() {
+        // A THRU range over characters: "A" THRU "M" (byte-lexical). B and M are in
+        // range; Z is above.
+        let body = &[
+            "EVALUATE GRADE",
+            "WHEN \"A\" THRU \"M\" DISPLAY \"FIRST-HALF\"",
+            "WHEN OTHER DISPLAY \"REST\"",
+            "END-EVALUATE.",
+            "STOP RUN.",
+        ];
+        assert_eq!(run_alpha_evaluate("B", body).unwrap(), "FIRST-HALF\n");
+        assert_eq!(run_alpha_evaluate("M", body).unwrap(), "FIRST-HALF\n"); // high boundary
+        assert_eq!(run_alpha_evaluate("Z", body).unwrap(), "REST\n"); // above the range
+    }
+
     #[test]
     fn if_then_branch_runs_multiple_statements() {
         // THEN branch has two statements; both run when the condition holds.

@@ -417,6 +417,37 @@ fn evaluate_multi_value_and_thru_ranges() {
 }
 
 #[test]
+fn evaluate_on_an_alphanumeric_subject() {
+    // A character subject matched with str_cmp — each case byte-identical to the
+    // oracle. Single values, a THRU range, and WHEN OTHER.
+    let eval = |g: &str, body: &[&str]| {
+        assert_matches_oracle(&wrap(&[&format!("01  GRADE  PIC X VALUE \"{g}\".")], body))
+    };
+    let by_value = &[
+        "EVALUATE GRADE",
+        "WHEN \"A\" DISPLAY \"TOP\"",
+        "WHEN \"F\" DISPLAY \"FAIL\"",
+        "WHEN OTHER DISPLAY \"MID\"",
+        "END-EVALUATE.",
+        "STOP RUN.",
+    ];
+    assert_eq!(eval("A", by_value), "TOP\n");
+    assert_eq!(eval("F", by_value), "FAIL\n");
+    assert_eq!(eval("C", by_value), "MID\n"); // no value → OTHER
+    // A THRU range over characters (byte-lexical): "A" THRU "M".
+    let by_range = &[
+        "EVALUATE GRADE",
+        "WHEN \"A\" THRU \"M\" DISPLAY \"FIRST\"",
+        "WHEN OTHER DISPLAY \"REST\"",
+        "END-EVALUATE.",
+        "STOP RUN.",
+    ];
+    assert_eq!(eval("B", by_range), "FIRST\n");
+    assert_eq!(eval("M", by_range), "FIRST\n"); // high boundary
+    assert_eq!(eval("Z", by_range), "REST\n"); // above the range
+}
+
+#[test]
 fn if_compound_condition_mixing_condition_names() {
     // A level-88 condition-name combined with a relation via AND/OR.
     let out = assert_matches_oracle(&wrap(
