@@ -29,12 +29,17 @@ and Italian's habit of keeping final vowels Latin's other children dropped.
   (*chiamarsi* ← *clāmāre*; *ch* = hard *k*) → come ti chiami / come si chiama →
   piacere (← *placēre*; twin of *prazer*) → practice. **Authored** — fills the
   gap so Italian runs greet → introduce → how-are-you → goodbye end to end.
+- **Ch. 5 — The first verbs**: parlare (← *parabolāre* = French *parler*; the
+  regular *-are* present, pro-drop) → abitare (← *habitāre* → habitat) → lavorare
+  (← *labōrāre* → labor/laboratory — the "labour" road, not Spanish/French
+  "torture") → **Parlo italiano** (first sentence; *italiano* ← *Italia*) →
+  practice. **Authored** — closes the pronoun-rule circle (ES+IT drop, FR+DE keep).
 
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |
 |---|---|
-| 5+ | Numbers, time, days & months, family, food — following the shared theme order |
+| 6+ | Numbers, time, days & months, family, food — following the shared theme order |
 
 Note: Italian's formal "you" is **Lei** — literally "she" (a 3rd-person
 politeness, like German *Sie*), a different mechanism from Spanish *usted* (a
