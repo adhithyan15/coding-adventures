@@ -3207,6 +3207,25 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("Y"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // COBOL-60 — NOT over a parenthesised condition (PL09 step 4). `NOT (N<3 OR
+    // N>9)` on N=5 = NOT (false OR false) = true → prints "Y". The negation inverts
+    // the group's boolean with `xor` (the first COBOL program to emit `xor`),
+    // proving it lowers on every backend.
+    Prog {
+        lang: Language::Cobol60,
+        ext: "cob",
+        src: "000000 IDENTIFICATION DIVISION.\n\
+               000000 PROGRAM-ID. P.\n\
+               000000 DATA DIVISION.\n\
+               000000 WORKING-STORAGE SECTION.\n\
+               000000 01  N  PIC 9 VALUE 5.\n\
+               000000 PROCEDURE DIVISION.\n\
+               000000 MAIN.\n\
+               000000     IF NOT (N < 3 OR N > 9) DISPLAY \"Y\" ELSE DISPLAY \"N\".\n\
+               000000     STOP RUN.",
+        expect: Expect::Stdout("Y"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses

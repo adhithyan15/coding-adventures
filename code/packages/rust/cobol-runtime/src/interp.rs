@@ -560,6 +560,7 @@ impl Machine {
                 }
                 Ok(false)
             }
+            Cond::Not(inner) => Ok(!self.eval_cond(inner)?),
         }
     }
 

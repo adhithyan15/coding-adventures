@@ -188,6 +188,25 @@ fn compound_condition_program_accepted_by_print_backends() {
 }
 
 #[test]
+fn not_condition_program_accepted_by_print_backends() {
+    // `NOT (…)` inverts the group's boolean with the `xor` op. This is the first
+    // COBOL program to emit `xor` — every print backend must accept it.
+    let src = program(&[
+        "IDENTIFICATION DIVISION.",
+        "PROGRAM-ID. P.",
+        "DATA DIVISION.",
+        "WORKING-STORAGE SECTION.",
+        "01  N  PIC 9(3) VALUE 5.",
+        "PROCEDURE DIVISION.",
+        "MAIN.",
+        "    IF NOT (N < 3 OR N > 9) DISPLAY \"Y\" ELSE DISPLAY \"N\".",
+        "    STOP RUN.",
+    ]);
+    let m = compile_source(&src, "not").unwrap();
+    assert_accepted_by_print_backends(&m, "NOT condition (xor)");
+}
+
+#[test]
 fn level_88_condition_name_program_accepted_by_print_backends() {
     // A level-88 condition-name lowers to a plain `const` + `cmp_eq` feeding the
     // same branch structure as a relational IF — no new opcode. Every print

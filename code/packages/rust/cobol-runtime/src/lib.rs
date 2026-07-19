@@ -513,6 +513,25 @@ mod tests {
     }
 
     #[test]
+    fn if_not_negates_a_condition() {
+        // N=5. `NOT` binds tighter than AND/OR and negates the following simple
+        // condition (relation, parenthesised group, or condition-name).
+        let t = |body: &str| run_if("5", &[body, "STOP RUN."]);
+        // NOT over a relation: NOT (5 > 3) = false.
+        assert_eq!(t("IF NOT N > 3 DISPLAY \"Y\" ELSE DISPLAY \"N\"."), "N\n");
+        // NOT over a parenthesised group (de Morgan): NOT (5<3 OR 5>9) = true.
+        assert_eq!(t("IF NOT (N < 3 OR N > 9) DISPLAY \"Y\" ELSE DISPLAY \"N\"."), "Y\n");
+        // Precedence: NOT tighter than OR. `NOT N = 5 OR N > 0` = (NOT 5=5) OR 5>0
+        // = false OR true = true.
+        assert_eq!(t("IF NOT N = 5 OR N > 0 DISPLAY \"Y\" ELSE DISPLAY \"N\"."), "Y\n");
+        // NOT tighter than AND: `N > 0 AND NOT N > 9` = true AND (NOT false) = true.
+        assert_eq!(t("IF N > 0 AND NOT N > 9 DISPLAY \"Y\" ELSE DISPLAY \"N\"."), "Y\n");
+        // A negation-level NOT composes with a relop-level NOT (double negation):
+        // NOT (5 IS NOT > 3) = NOT (NOT true) = true.
+        assert_eq!(t("IF NOT (N IS NOT GREATER 3) DISPLAY \"Y\" ELSE DISPLAY \"N\"."), "Y\n");
+    }
+
+    #[test]
     fn if_then_branch_runs_multiple_statements() {
         // THEN branch has two statements; both run when the condition holds.
         assert_eq!(

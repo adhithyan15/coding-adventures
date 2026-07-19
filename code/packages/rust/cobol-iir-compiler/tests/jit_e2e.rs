@@ -323,6 +323,22 @@ fn if_compound_and_or_and_precedence() {
 }
 
 #[test]
+fn if_not_negates_a_condition() {
+    // NOT binds tighter than AND/OR and inverts the boolean (via `xor` with 1).
+    // Each case is byte-identical to the oracle (run_if asserts that).
+    let cases = [
+        ("IF NOT N > 3 DISPLAY \"Y\" ELSE DISPLAY \"N\".", "N\n"), // NOT (5>3) = false
+        ("IF NOT (N < 3 OR N > 9) DISPLAY \"Y\" ELSE DISPLAY \"N\".", "Y\n"), // de Morgan
+        ("IF NOT N = 5 OR N > 0 DISPLAY \"Y\" ELSE DISPLAY \"N\".", "Y\n"), // (NOT 5=5) OR 5>0
+        ("IF N > 0 AND NOT N > 9 DISPLAY \"Y\" ELSE DISPLAY \"N\".", "Y\n"), // NOT tighter than AND
+        ("IF NOT (N IS NOT GREATER 3) DISPLAY \"Y\" ELSE DISPLAY \"N\".", "Y\n"), // double negation
+    ];
+    for (body, want) in cases {
+        assert_eq!(run_if("5", &[body, "STOP RUN."]), want, "{body}");
+    }
+}
+
+#[test]
 fn if_compound_condition_mixing_condition_names() {
     // A level-88 condition-name combined with a relation via AND/OR.
     let out = assert_matches_oracle(&wrap(

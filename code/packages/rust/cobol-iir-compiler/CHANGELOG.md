@@ -8,6 +8,33 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.15.0: `NOT` over a condition (PL09 step 4)
+
+`NOT` now negates a whole condition — a relation, a level-88 condition-name, or a
+parenthesised group: `IF NOT (A AND B)`, `IF NOT IS-OK`, `IF N > 0 AND NOT N > 9`.
+This completes the condition story (word/symbolic relations, `AND`/`OR`,
+parentheses, and now `NOT`). Implemented oracle-first, byte-identical.
+
+- **Grammar (no lexer change).** A `negation = [ "NOT" ] simple_condition` layer
+  sits between `conjunction` and `simple_condition`, so `NOT` binds tighter than
+  `AND`/`OR` (`cobol-parser` 0.11.0). A relation's own `IS NOT …` still works and
+  never collides (negation `NOT` precedes the first operand; relop `NOT` is between
+  operands).
+- **Lowering.** `emit_negation` inverts the leaf's `0`/`1` boolean with **`xor`
+  against `1`** (`0^1=1`, `1^1=0`) — the logical NOT. IIR's `not` is *bitwise*
+  (`~x`), which would not map `0`/`1` to `1`/`0`, so `xor` is the right op; the
+  result is still `0`/`1` and feeds `jmp_if_false` like any condition boolean. This
+  is **the first COBOL program to emit `xor`** — every print backend (wasm/jvm/clr)
+  accepts it, as do native-AOT/LLVM/VM/JIT.
+- **Byte-identical** to the oracle's `!eval_cond` (a comparison never faults and
+  has no side effects).
+- **Tests.** A new `jit_e2e.rs` case byte-identical to the oracle (NOT over a
+  relation; de Morgan over a parenthesised group; NOT vs `AND`/`OR` precedence;
+  double negation with a relop-level `NOT`); a unit test asserting `xor` is emitted;
+  a `backend_compat` program; a `lang_matrix` COBOL `NOT` row across all seven
+  columns. Full suite **148 green** (34 unit + 19 `backend_compat` + 95 `jit_e2e`).
+  The oracle gains a `NOT` unit test.
+
 ### Added — v0.14.0: compound conditions (`AND` / `OR` / parentheses) (PL09 step 4)
 
 `IF` and `PERFORM … UNTIL` conditions can now combine simple conditions with
