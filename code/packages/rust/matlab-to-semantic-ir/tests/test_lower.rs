@@ -274,6 +274,209 @@ fn logical_not_lowers_to_a_not_builtin_call() {
     }
 }
 
+// ── MATLAB truthiness: boolean-context coercion via `matlab_truthy` ─────
+//
+// MATLAB/Octave has no separate boolean type ("logicals are doubles"):
+// truthiness is "nonzero is true, zero is false" for ANY number, not just a
+// comparison result. The shared JS backend's `truthy()` runtime instead
+// implements SIR's OWN canonical truthiness (only `false`/`nil` are falsy —
+// the Ruby/Lisp convention `ruby-to-semantic-ir` depends on), so every
+// operand reaching a boolean context (`~`/`if`/`while`/`&&`/`||`) is wrapped,
+// UNCONDITIONALLY, in the `matlab_truthy` builtin (`to_matlab_condition`,
+// `src/lower.rs`) — a runtime intrinsic (`semantic-ir-to-javascript`'s
+// `__Sir.matlabTruthy`) that decides "already a genuine boolean, pass
+// through" vs. "a bare number, apply `!= 0`" at RUNTIME, not by static shape
+// analysis at lowering time.
+//
+// An earlier version of this fix instead tried to decide statically,
+// wrapping in an explicit `!= 0` SIR comparison only when the operand's
+// immediate shape wasn't already recognisably boolean — and got it wrong
+// for the most ordinary case there is: a bare `VarRef` holding a STORED
+// comparison result (`tf = (5 < 3); if tf ... end`) is never recognisably
+// boolean by shape alone, so it got wrapped in `tf != 0` regardless of
+// `tf`'s actual value, and the runtime's strict-identity `!=` made that
+// unconditionally `true` for either `true` or `false` — silently always
+// taking the `if` branch. `always_wraps_a_stored_comparison_variable...`
+// below is the regression test for exactly that case; `tests/oracle.rs`
+// proves the fix end-to-end against real `matlab-runtime`/`node`; these are
+// the fast, structural (no `node` needed) SIR-shape counterparts.
+
+fn assert_matlab_truthy_wraps(expr: &Expr) -> &Expr {
+    match expr {
+        Expr::BuiltinCall { name, args, .. } if name == "matlab_truthy" => {
+            assert_eq!(args.len(), 1);
+            &args[0]
+        }
+        other => panic!("expected a `matlab_truthy` BuiltinCall wrapping the operand, got {other:?}"),
+    }
+}
+
+#[test]
+fn logical_not_on_a_bare_variable_wraps_the_operand_in_matlab_truthy() {
+    let m = compile_ok("x = 0;\ny = ~x;\n");
+    let main = main_fn(&m);
+    match &main.body.stmts[1] {
+        Stmt::LetStarBinding { value, .. } => match value {
+            Expr::BuiltinCall { name, args, .. } if name == "not" => {
+                assert_eq!(args.len(), 1);
+                let inner = assert_matlab_truthy_wraps(&args[0]);
+                assert!(matches!(inner, Expr::VarRef { .. }));
+            }
+            other => panic!("expected a `not` BuiltinCall, got {other:?}"),
+        },
+        other => panic!("expected LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn logical_not_on_a_comparison_result_still_wraps_in_matlab_truthy() {
+    // `~(x > 3)` -- the operand is already a genuine boolean at runtime, but
+    // `to_matlab_condition` no longer tries to prove that statically: it
+    // always wraps in `matlab_truthy`, which passes an already-boolean value
+    // through unchanged AT RUNTIME. Wrapping unconditionally, rather than
+    // skipping based on a (possibly wrong) static shape check, is the whole
+    // point of the fix -- see the module doc comment above.
+    let m = compile_ok("x = 5;\ny = ~(x > 3);\n");
+    let main = main_fn(&m);
+    match &main.body.stmts[1] {
+        Stmt::LetStarBinding { value, .. } => match value {
+            Expr::BuiltinCall { name, args, .. } if name == "not" => {
+                assert_eq!(args.len(), 1);
+                let inner = assert_matlab_truthy_wraps(&args[0]);
+                assert!(
+                    matches!(inner, Expr::BuiltinCall { name, .. } if name == ">"),
+                    "expected the wrapped operand to be the bare `>` comparison, got {inner:?}"
+                );
+            }
+            other => panic!("expected a `not` BuiltinCall, got {other:?}"),
+        },
+        other => panic!("expected LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn if_condition_on_a_bare_variable_wraps_in_matlab_truthy() {
+    let m = compile_ok("x = 0;\nif x\n  y = 1;\nend\n");
+    let main = main_fn(&m);
+    match &main.body.stmts[1] {
+        Stmt::ExprStmt {
+            expr: Expr::If { cond, .. },
+            ..
+        } => {
+            let inner = assert_matlab_truthy_wraps(cond);
+            assert!(matches!(inner, Expr::VarRef { .. }));
+        }
+        other => panic!("expected ExprStmt(If), got {other:?}"),
+    }
+}
+
+#[test]
+fn if_condition_already_a_comparison_still_wraps_in_matlab_truthy() {
+    let m = compile_ok("x = 5;\nif x > 3\n  y = 1;\nend\n");
+    let main = main_fn(&m);
+    match &main.body.stmts[1] {
+        Stmt::ExprStmt {
+            expr: Expr::If { cond, .. },
+            ..
+        } => {
+            let inner = assert_matlab_truthy_wraps(cond);
+            assert!(
+                matches!(inner, Expr::BuiltinCall { name, .. } if name == ">"),
+                "expected the wrapped condition to be the bare `>` comparison, got {inner:?}"
+            );
+        }
+        other => panic!("expected ExprStmt(If), got {other:?}"),
+    }
+}
+
+#[test]
+fn while_condition_on_a_bare_variable_wraps_in_matlab_truthy() {
+    let m = compile_ok("x = 5;\nwhile x\n  x = x - 1;\nend\n");
+    let main = main_fn(&m);
+    match &main.body.stmts[1] {
+        Stmt::While { cond, .. } => {
+            let inner = assert_matlab_truthy_wraps(cond);
+            assert!(matches!(inner, Expr::VarRef { .. }));
+        }
+        other => panic!("expected Stmt::While, got {other:?}"),
+    }
+}
+
+#[test]
+fn if_condition_on_a_variable_holding_a_stored_comparison_still_wraps_in_matlab_truthy() {
+    // The exact regression this fix closes: `tf` is a `VarRef`, never
+    // recognisably boolean by static shape alone, even though it holds a
+    // stored comparison result at runtime. `matlab_truthy` (not a static
+    // "is this shape already boolean?" check) is what makes this correct
+    // regardless -- see the module doc comment above. `tests/oracle.rs`
+    // asserts the actual (correct) end-to-end runtime VALUE for this case.
+    let m = compile_ok("x = 5;\ntf = (x > 3);\nif tf\n  y = 1;\nelse\n  y = 2;\nend\n");
+    let main = main_fn(&m);
+    match &main.body.stmts[2] {
+        Stmt::ExprStmt {
+            expr: Expr::If { cond, .. },
+            ..
+        } => {
+            let inner = assert_matlab_truthy_wraps(cond);
+            assert!(
+                matches!(inner, Expr::VarRef { .. }),
+                "expected the wrapped condition to be the bare `tf` variable, got {inner:?}"
+            );
+        }
+        other => panic!("expected ExprStmt(If), got {other:?}"),
+    }
+}
+
+#[test]
+fn logical_and_wraps_each_bare_operand_in_matlab_truthy() {
+    let m = compile_ok("x = 1;\ny = 0;\nz = x && y;\n");
+    let main = main_fn(&m);
+    match &main.body.stmts[2] {
+        Stmt::LetStarBinding { value, .. } => match value {
+            Expr::LogicalAnd { lhs, rhs, .. } => {
+                for operand in [lhs.as_ref(), rhs.as_ref()] {
+                    let inner = assert_matlab_truthy_wraps(operand);
+                    assert!(
+                        matches!(inner, Expr::VarRef { .. }),
+                        "expected the wrapped operand to be a bare variable, got {inner:?}"
+                    );
+                }
+            }
+            other => panic!("expected Expr::LogicalAnd, got {other:?}"),
+        },
+        other => panic!("expected LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn logical_or_operand_already_a_comparison_still_wraps_in_matlab_truthy() {
+    // `(x > 3) || y` -- the lhs is already a genuine boolean at runtime, but
+    // (as with `~`/`if`/`while` above) `to_matlab_condition` wraps it in
+    // `matlab_truthy` anyway rather than trying to prove it's already boolean
+    // by static shape. `matlabTruthy` passes an already-boolean value through
+    // unchanged at runtime, so this stays correct either way.
+    let m = compile_ok("x = 1;\ny = 2;\nz = (x > 3) || y;\n");
+    let main = main_fn(&m);
+    match &main.body.stmts[2] {
+        Stmt::LetStarBinding { value, .. } => match value {
+            Expr::LogicalOr { lhs, rhs, .. } => {
+                let lhs_inner = assert_matlab_truthy_wraps(lhs.as_ref());
+                assert!(
+                    matches!(lhs_inner, Expr::BuiltinCall { name, .. } if name == ">"),
+                    "expected the wrapped lhs to be the bare `>` comparison, got {lhs_inner:?}"
+                );
+                let rhs_inner = assert_matlab_truthy_wraps(rhs.as_ref());
+                assert!(
+                    matches!(rhs_inner, Expr::VarRef { .. }),
+                    "expected the wrapped rhs to be a bare variable, got {rhs_inner:?}"
+                );
+            }
+            other => panic!("expected Expr::LogicalOr, got {other:?}"),
+        },
+        other => panic!("expected LetStarBinding, got {other:?}"),
+    }
+}
+
 // ── ranges, transpose, matrices ─────────────────────────────────────────
 
 #[test]

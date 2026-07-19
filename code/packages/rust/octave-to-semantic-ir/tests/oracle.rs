@@ -41,7 +41,7 @@
 //! |----------------------------------------|-------------------------|--------------|
 //! | `# comment`                             | `% comment`             | `hash_comment_literal_arithmetic` |
 //! | `!=`                                    | `~=`                    | `bang_equals_not_equal_comparison` |
-//! | `!` (logical not)                       | `~`                     | `bang_negation_on_comparison` |
+//! | `!` (logical not)                       | `~`                     | `bang_negation_on_comparison`, `bang_negation_on_bare_zero_is_true`, `bang_negation_on_bare_nonzero_is_false` |
 //! | `endif`                                 | `end`                   | `if_else_endif` |
 //! | `endfor`                                | `end`                   | `for_loop_accumulator_endfor` |
 //! | `endwhile`                              | `end`                   | `while_loop_accumulator_endwhile` |
@@ -147,28 +147,46 @@ const CORPUS: &[Case] = &[
         expected: "1",
     },
     // Octave-only `!` (logical not; MATLAB uses `~`), applied to a
-    // PARENTHESIZED COMPARISON rather than a bare numeric variable. This
-    // choice is deliberate, not incidental: SIR's shared `truthy()` runtime
-    // helper (`semantic-ir-to-javascript/src/runtime.rs`) treats only
-    // `false`/`nil` as falsy -- a Ruby/Lisp convention, unlike MATLAB's
-    // "any nonzero number is true, 0 is false" logicals-are-doubles
-    // convention. `~(x > 3)` negates a genuine native-JS boolean (comparison
-    // builtins compile to `__Sir.lt`/`__Sir.gt`/etc., which return real
-    // `true`/`false`, not a MATLAB-style 0.0/1.0 double) -- so `not`'s
-    // `!__Sir.truthy(...)` (`emit.rs`) agrees with MATLAB/Octave semantics
-    // here. Negating a bare numeric variable directly (e.g. `!x` with
-    // `x = 0`) would NOT agree -- `truthy(0)` is `true` under SIR's
-    // convention, so `not(0)` would wrongly give `false` where Octave gives
-    // `1` (true) -- a real, confirmed frontend/backend semantic gap (this
-    // crate inherits it from `matlab-to-semantic-ir`, which has no
-    // MATLAB-logicals-aware truthiness recoding, the same class of gap as
-    // the `comparison` case's `#t`/`#f`-vs-`1`/`0` spelling difference in
-    // the MATLAB oracle file, except this one is NOT just a spelling
-    // difference -- it is excluded from `CORPUS` for exactly that reason.
+    // PARENTHESIZED COMPARISON. `~(x > 3)` negates a genuine native-JS
+    // boolean (comparison builtins compile to `__Sir.lt`/`__Sir.gt`/etc.,
+    // which return real `true`/`false`) -- so `not`'s `!__Sir.truthy(...)`
+    // (`emit.rs`) agrees with MATLAB/Octave semantics here regardless of
+    // the bare-numeric-truthiness gap documented below.
     Case {
         name: "bang_negation_on_comparison",
         setup: "x = 5;\n",
         final_expr: "!(x > 3)",
+        expected: "0",
+    },
+    // FIXED (was: excluded from `CORPUS` as a confirmed, open gap). Octave
+    // `!` applied to a BARE numeric literal -- no comparison in sight --
+    // exercising `octavify`'s `!` -> `~` rewrite together with the negation
+    // fix. MATLAB/Octave has no separate boolean type: "logicals are
+    // doubles", and truthiness is "nonzero is true, zero is false" for ANY
+    // number. This frontend's `lower_unary` (inherited unchanged from
+    // `matlab-to-semantic-ir`, since this crate has no `src/lower.rs` of
+    // its own) used to pass a bare numeric `~`/`!` operand straight through
+    // to the shared JS backend's `truthy()` runtime helper, which
+    // implements SIR's OWN canonical truthiness instead (only `false`/`nil`
+    // are falsy -- the Ruby/Lisp convention `ruby-to-semantic-ir` genuinely
+    // depends on, NOT just a spelling difference the way the `comparison`
+    // case's `#t`/`#f`-vs-`1`/`0` difference in the MATLAB oracle file is).
+    // So `!0` used to compile to `false` -- backwards; Octave's own `!0` is
+    // `1` (true). `matlab-to-semantic-ir`'s `to_matlab_condition`
+    // (`src/lower.rs`) now wraps a bare-numeric boolean-context operand in
+    // an explicit `!= 0` SIR comparison at lowering time, so this crate
+    // gets the fix for free (100% shared lowering) -- see the MATLAB oracle
+    // file's own module doc for the full root-cause writeup.
+    Case {
+        name: "bang_negation_on_bare_zero_is_true",
+        setup: "",
+        final_expr: "!0",
+        expected: "1",
+    },
+    Case {
+        name: "bang_negation_on_bare_nonzero_is_false",
+        setup: "",
+        final_expr: "!5",
         expected: "0",
     },
     // if/else terminated by Octave's `endif` instead of bare `end`. Same

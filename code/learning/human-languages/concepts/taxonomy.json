@@ -201,6 +201,10 @@
       "ES-VERB-TRABAJAR": "trabajar — 'to work' (← tripaliāre 'to torture' → travail/travel)",
       "ES-VERB-ESTUDIAR": "estudiar — 'to study' (← studēre 'to be eager' → student)",
       "ES-WORD-ESPANOL": "español — 'Spanish' (the language; ← Hispania)",
+      "ES-NUM-1-5": "uno/dos/tres/cuatro/cinco (1-5; ← ūnus/duo/trēs/quattuor/quīnque)",
+      "ES-NUM-6-10": "seis/siete/ocho/nueve/diez (6-10; siete/ocho/nueve/diez → September/October/November/December)",
+      "ES-VERB-TENER": "tener — 'to have' (irregular; ← tenēre 'to hold' → tenant/retain; tengo, e→ie)",
+      "ES-QUESTION-AGE": "¿cuántos años tienes? — age via tener ('have years'); años ← annus",
       "ES-VERB-COMER": "comer — 'to eat' (first -er verb; ← comedere → edible)",
       "ES-VERB-VIVIR": "vivir — 'to live' (first -ir verb; ← vīvere → vivid/survive)",
       "ES-VERB-BEBER": "beber — 'to drink' (-er; ← bibere → beverage/imbibe)",
@@ -221,7 +225,11 @@
       "GE-VERB-MACHEN": "machen — 'to make/do' (← makōn → make); 'Was machst du?'",
       "GE-VERB-LERNEN": "lernen — 'to learn' (← liznōjan → learn/lore)",
       "GE-WORD-DEUTSCH": "Deutsch — 'German' (the language; ← diutisc 'of the people' → English Dutch)",
-      "PT-WORD-TUDO": "tudo — 'everything / all' (← Latin tōtus); the heart of 'tudo bem?'"
+      "PT-WORD-TUDO": "tudo — 'everything / all' (← Latin tōtus); the heart of 'tudo bem?'",
+      "PT-VERB-FALAR": "falar — 'to speak' (← fabulārī = Spanish hablar, but PT kept f-); the regular -ar present",
+      "PT-VERB-MORAR": "morar — 'to live/dwell' (← morārī 'to linger' → moratorium; not habitāre)",
+      "PT-VERB-TRABALHAR": "trabalhar — 'to work' (← tripaliāre → travail/travel; twin of Spanish trabajar)",
+      "PT-WORD-PORTUGUES": "português — 'Portuguese' (the language; ← Portus Cale)"
     }
   },
   "practiceTags": {

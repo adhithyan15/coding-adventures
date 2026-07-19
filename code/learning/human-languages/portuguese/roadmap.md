@@ -30,12 +30,17 @@ French.
   (*chamar-se* ← *clāmāre*; *ch* = *sh*; alt. *o meu nome é* ← *nōmen*) → como se
   chama → prazer (← *placēre*; twin of *piacere*) → practice. **Authored** —
   Portuguese now runs greet → introduce → how-are-you → goodbye end to end.
+- **Ch. 5 — The first verbs**: falar (← *fabulārī* = Spanish *hablar*, but PT kept
+  the *f-*; the regular *-ar* present, pro-drop) → morar (← *morārī* "to linger" →
+  moratorium) → trabalhar (← *tripalium* → travail/travel; twin of *trabajar*) →
+  **Falo português** (first sentence; *português* ← *Portus Cale*) → practice.
+  **Authored** — the **fifth and final** track to reach real sentences.
 
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |
 |---|---|
-| 5+ | Numbers, time, days & months, family, food — following the shared theme order |
+| 6+ | Numbers, time, days & months, family, food — following the shared theme order |
 
 Note: Portuguese's polite "you" is **você** (← *vossa mercê*, "your mercy") — the
 same "your grace" mechanism as Spanish *usted*, worn down differently. Worth
