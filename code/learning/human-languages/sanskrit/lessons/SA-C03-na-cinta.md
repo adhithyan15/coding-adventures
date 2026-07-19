@@ -4,7 +4,7 @@ chapter: 3
 type: phrase
 headword: न चिन्ता
 gloss: no worry / it's nothing / you're welcome
-concept_tag: YOURE-WELCOME
+concept_tag: COURTESY-YOUREWELCOME
 prerequisites: [SA-C01-am-na, SA-C01-dhanyavada]
 sounds: [inherent-a, nt-conjunct]
 roots: [na-negative, cint-think]
