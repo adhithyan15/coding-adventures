@@ -1,4 +1,4 @@
-# Session Map — Tamil Chapters 1–2
+# Session Map — Tamil Chapters 1–5
 
 Same spaced-repetition schedule as the other tracks (a word from session *N*
 resurfaces at *N+1, N+3, N+7, N+15*). Lessons named by slug; this map is the
@@ -34,7 +34,37 @@ puḷḷi, the common vowel signs, the independent vowels, and the three-way
 | 13 | magizhcci | மகிழ்ச்சி | "pleased to meet you" ("joy"); the rare ழ (*ḻ*) |
 | 14 | practice | (dialogue) | the whole exchange |
 
+## Chapter 3 — How Are You
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 15 | eppadi | எப்படி | "how" ← the native *e-* question family (not Hindi's *k-*) |
+| 16 | eppadi-irukkirirgal | நீங்கள் எப்படி இருக்கிறீர்கள்? | **"how are you?"**; the verb *iru* — copula returns for states |
+| 17 | naan | நான் | "I" ← Proto-Dravidian (unrelated to English *me*); possessive *eṉ* |
+| 18 | nalam | நலம் | "well" ← *nal-* "good" — the root of *naṉṟi* ("thanks") |
+| 19 | paravayillai | பரவாயில்லை | "no problem / you're welcome" = "there is no harm"; the *iru*/*illai* pair |
+| 20 | practice | (dialogue) | the whole how-are-you exchange |
+
+## Chapter 4 — Farewells
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 21 | po | போ / வா | "go" / "come" — the two oldest verbs |
+| 22 | poy-varugiren | போய் வருகிறேன் | **"I'll go and come back"** — the Dravidian promise-of-return goodbye |
+| 23 | naalai | நாளை பார்க்கலாம் | "see you tomorrow"; *nāḷ* "day" + *pār* "to see" |
+| 24 | mindum-sandippom | மீண்டும் சந்திப்போம் | "we'll meet again"; native *mīṇḍum* + Sanskrit *sandi* |
+| 25 | practice | (dialogue) | the farewells |
+
+## Chapter 5 — The First Verbs
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 26 | pesu | பேசு | "to speak"; stem + tense + person (*pēsu-giṟ-ēṉ*) |
+| 27 | naan-tamizh-pesugiren | நான் தமிழ் பேசுகிறேன் | **"I speak Tamil"**; the retroflex *ḻ*; no gender in the 1st person |
+| 28 | vaazh | வாழ் | "to live/flourish" → *vāḻkkai* "life," *vāḻga* "long live" |
+| 29 | velai-sey | வேலை செய் | "to work" (noun + *sey*) — the twin of Hindi's *karnā* |
+| 30 | practice | (dialogue) | three verbs, one engine |
+
 ## Next
 
-Chapter 3 — *eppaḍi irukkīṅgaḷ?* ("how are you?") and answering with *nallā* —
-the responding cycle.
+Chapter 6 — the case-endings (Tamil's agglutinative suffixes *-ai, -il, -ukku*).

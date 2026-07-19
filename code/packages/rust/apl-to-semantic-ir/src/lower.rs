@@ -25,8 +25,10 @@
 //!
 //! **Supported** (every construct `apl-parser`'s grammar can produce):
 //! - Number literals (`NUMBER`, high-minus `¯` negative sign), stranded
-//!   literals (`1 2 3` → one rank-1 [`Expr::ArrayLit`]), variables (`NAME`),
-//!   parenthesised grouping.
+//!   literals (`1 2 3` → one genuine rank-1 vector, represented as
+//!   [`Expr::Ravel`] wrapping a single-row [`Expr::ArrayLit`] — see
+//!   `lower_term`'s doc comment for why the bare `ArrayLit` alone is not
+//!   enough), variables (`NAME`), parenthesised grouping.
 //! - Assignment (`←`), including right-associative chained assignment
 //!   (`A←B←3`) — see "Chained assignment" below.
 //! - All 12 scalar dyadic atoms (`+ - × ÷ ⌈ ⌊ = ≠ < ≤ ≥ >`), unconditionally
@@ -505,17 +507,52 @@ impl Lowerer {
                 if numbers.len() == 1 {
                     self.number_literal(numbers[0])
                 } else {
-                    // Per the SIR22 spec's own doc comment on `ArrayLit`,
-                    // `rows.len() == 1` is precisely how a row/rank-1 vector
-                    // is represented -- exactly APL's stranded-literal shape.
+                    // `semantic-ir`'s own `ArrayLit` doc comment (`nodes.rs`)
+                    // is explicit that a 1-row literal (`rows.len() == 1`) is
+                    // a *row vector* -- under this IR's MATLAB-derived
+                    // column-major storage convention (`Feature::
+                    // ArrayColumnMajor`), that means a genuinely rank-2
+                    // `[1, n]` value, NOT a rank-1 `[n]` vector. A bare
+                    // `ArrayLit { rows: vec![row], .. }` is therefore the
+                    // WRONG shape for APL's stranded literal, which genuinely
+                    // is rank 1 -- using it directly here used to silently
+                    // fail any op correctly scoped to rank <= 1 operands only
+                    // (`outer`/`A∘.×B`, and dyadic `⍴`'s shape argument),
+                    // even though real APL accepts a stranded literal there.
+                    //
+                    // Fix: build the row-vector `ArrayLit` as before, then
+                    // wrap it in `Expr::Ravel` (SIR22 addendum "monadic
+                    // `,A`" -- see its doc comment in `nodes.rs`), which
+                    // flattens ANY input rank down to a genuine rank-1
+                    // result. This is invisible to APL source -- nothing
+                    // about the surface syntax changes, only which IR node
+                    // shape represents it, matching this file's module doc
+                    // comment's stated intent ("`1 2 3` -> one rank-1
+                    // `Expr::ArrayLit`", i.e. a rank-1 *value*, not literally
+                    // a bare `ArrayLit` node).
+                    //
+                    // `Ravel` needs no additional `Feature` beyond what
+                    // every other SIR22-addendum node already observes in
+                    // this file (see e.g. the `Expr::Ravel` arm in
+                    // `apply_monadic`, for monadic `,A`): `MatrixOps` +
+                    // `ArrayColumnMajor`, on top of the `NDArrays` +
+                    // `ArrayColumnMajor` the inner `ArrayLit` construction
+                    // already added below. Omitting `MatrixOps` here would
+                    // make the validator reject the module with "manifest
+                    // does not declare feature `MatrixOps` but module uses
+                    // it", since the validator independently observes
+                    // `MatrixOps` when it walks the emitted `Expr::Ravel`
+                    // node (see `semantic-ir`'s `validator.rs`).
                     self.observed.add(Feature::NDArrays);
                     self.observed.add(Feature::ArrayColumnMajor);
+                    self.observed.add(Feature::MatrixOps);
                     let span = self.span_of(node);
                     let row: Vec<Expr> = numbers
                         .iter()
                         .map(|tok| self.number_literal(tok))
                         .collect::<Result<Vec<_>, _>>()?;
-                    Ok(Expr::ArrayLit { rows: vec![row], span })
+                    let array_lit = Expr::ArrayLit { rows: vec![row], span: span.clone() };
+                    Ok(Expr::Ravel { target: Box::new(array_lit), span })
                 }
             }
             Some(ASTNodeOrToken::Token(t)) if t.effective_type_name() == "NAME" => {

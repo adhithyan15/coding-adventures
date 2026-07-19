@@ -22,13 +22,26 @@ that needs it.
   Every atom native Dravidian and traced (*peyar* ≠ *name*); the **zero copula**
   (no word for "is"); respect-by-plural like French *vous*.
 
+- **Ch. 3 — How Are You**: eppaḍi (how; the native *e-* questions) → nīṅgaḷ
+  eppaḍi irukkiṟīrgaḷ? (the verb *iru* "to be" — the copula returns for states) →
+  nāṉ (I ← Proto-Dravidian, unrelated to *me*) → nalam (well ← *nal-* "good," the
+  root of *naṉṟi*) → paravāyillai (you're welcome; the *iru*/*illai* pair) →
+  practice.
+- **Ch. 4 — Farewells**: pō/vā (go/come) → pōy varugiṟēṉ ("I'll go and come
+  back" — the Dravidian promise-of-return goodbye) → nāḷai pārkkalām (see you
+  tomorrow) → mīṇḍum sandippōm (we'll meet again; native *mīṇḍum* + Sanskrit
+  *sandi*) → practice.
+- **Ch. 5 — First Verbs**: pēsu (to speak; stem + tense + person) → nāṉ tamiḻ
+  pēsugiṟēṉ (I speak Tamil; the retroflex *ḻ*; no gender in the 1st person) →
+  vāḻ (to live/flourish) → vēlai sey (to work; noun + *sey*, the twin of Hindi's
+  *karnā*) → practice.
+
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 3 | Responding: *eppaḍi irukkīṅgaḷ?* ("how are you"), *nallā irukkēṉ* ("I'm well"), the verb *iru* ("to be") |
-| 4 | The case-endings (Tamil's agglutinative suffixes), numbers 1–10 |
-| 5+ | Postpositions, tense on the verb, family, food — always with the Dravidian-cognate thread |
+| 6 | Case-endings (Tamil's agglutinative suffixes: *-ai, -il, -ukku*); more verbs |
+| 7+ | Tense (past/future), numbers, family, food — always with the Dravidian-cognate thread |
 
 Note: Tamil marks "you" by **register** (*nī* familiar / *nīṅgaḷ* respectful,
 also plural) — like the Romance/Germanic tracks, and worth teaching beside

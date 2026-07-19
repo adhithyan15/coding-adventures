@@ -1,6 +1,6 @@
 [package]
 name = "apl-to-semantic-ir"
-version = "0.1.2"
+version = "0.1.3"
 edition = "2021"
 description = "APL CST → narrow-waist Semantic IR (SIR22 + SIR22 addendum array/matrix domain). MA-4f, the last APL rollout item per HML01."
 

@@ -35,6 +35,15 @@ book.
   **nimma hesaru ēnu?** ("what's your name?"), santōṣa, practice. Every atom
   traced (*hesaru* ← *\*pesar*, p→h; *santōṣa* Sanskrit vs. Tamil *magiḻcci*).
   In the book.
+- **Chapter 3 — How Are You** ([`lessons/KA-C03-*`](./lessons/)): hēge, **nīvu
+  hēgiddīrā?**, nānu, cennāgi, paravāgilla, practice. The verb *iru* ("to be,"
+  same as Tamil); the Dravidian *illa*. In the book.
+- **Chapter 4 — Farewells** ([`lessons/KA-C04-*`](./lessons/)): hōgu/bā, **hōgi
+  baruttēne** ("I'll go and come back"), nāḷe sigōṇa, matte sigōṇa, practice. The
+  Dravidian promise-of-return goodbye. In the book.
+- **Chapter 5 — First Verbs** ([`lessons/KA-C05-*`](./lessons/)): mātanāḍu, **nānu
+  kannaḍa mātanāḍuttēne**, iru, kelasa māḍu, practice. Stem + tense + person; no
+  1st-person gender. In the book.
 
 ## Book / fonts
 

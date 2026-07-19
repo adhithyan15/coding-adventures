@@ -34,12 +34,17 @@ and Italian's habit of keeping final vowels Latin's other children dropped.
   (← *labōrāre* → labor/laboratory — the "labour" road, not Spanish/French
   "torture") → **Parlo italiano** (first sentence; *italiano* ← *Italia*) →
   practice. **Authored** — closes the pronoun-rule circle (ES+IT drop, FR+DE keep).
+- **Ch. 6 — Numbers 1–10**: uno/due/tre/quattro/cinque → sei/sette/otto/nove/dieci.
+  Italian is the sister that **kept the numbers closest to Latin** (*cinque* keeps
+  *-que*; Latin's *-pt-*/*-ct-* assimilate to doubled *-tt-*: *septem→sette*,
+  *octō→otto*), with the **settembre–dicembre = Latin 7–10** calendar trick.
+  Spanish/French twins supplied. **Authored.**
 
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |
 |---|---|
-| 6+ | Numbers, time, days & months, family, food — following the shared theme order |
+| 7+ | Time, days & months, family, food — following the shared theme order |
 
 Note: Italian's formal "you" is **Lei** — literally "she" (a 3rd-person
 politeness, like German *Sie*), a different mechanism from Spanish *usted* (a

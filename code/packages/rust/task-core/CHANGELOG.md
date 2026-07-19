@@ -6,6 +6,28 @@ All notable changes to `task-core` are documented here.
 
 ### Added
 
+- **The view/query layer's shared field accessor** (`view` module — Phase 3 PR-1 of
+  `code/specs/task-app-view-layer.md`). The linchpin the whole "fat engine" view layer
+  resolves through, so filter, sort, group, and display can never disagree about a
+  field's value.
+  - `CellValue { Text, Number, Date(Option<Date>), Bool, Empty }` — the comparable,
+    formattable common currency of the view layer.
+  - `cell(project, task, field, schedule) -> CellValue` — resolves a `FieldRef` to a
+    value. Built-ins (`name`/`status`/`kind`/`completed`/`percentComplete`/`duration`/
+    `deadline`/`start`/`finish`/`early*`/`late*`/`totalSlack`/`freeSlack`/`critical`)
+    read the task or its computed `ScheduledDates`; a task absent from the schedule, or
+    an unknown built-in name, yields `Empty` — graceful, never a panic. Custom fields
+    read their stored `FieldValue` (money/duration → numeric magnitude for sorting;
+    multi-selects joined); computed formula/rollup resolution is layered on in the
+    filter/sort PR where the recompute already runs. The built-in catalogue is documented
+    inline as the wire contract.
+  - `format_cell(value, field, settings) -> String` — render-ready display owned by the
+    engine: dates `YYYY-MM-DD`, booleans `✓`/`○`, `percentComplete` with `%`, and the
+    working-time built-ins in the project's `DurationUnit` (`3d`/`1.5d`/`8h`/`90m`). This
+    is where the web host's row-string formatting will move.
+  - 6 tests: every built-in, computed scheduled fields, custom stored values, multi-select
+    join, render-ready formatting golden strings, and duration-unit switching.
+
 - **Workspace operations — the validated mutations that only make sense across
   projects** (Phase 2 PR-3 of `code/specs/task-app-workspace.md`). Same
   `Result<(), OpError>` style as the `ProjectState` ops; within-a-project edits are

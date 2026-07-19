@@ -24,13 +24,25 @@ needs it.
   *peyar*; *santōṣa* a Sanskrit loan for "pleased" vs. Tamil's native
   *magiḻcci*); the zero copula.
 
+- **Ch. 3 — How Are You**: hēge (how; the native *ē-/yā-* questions) → nīvu
+  hēgiddīrā? (the verb *iru* "to be") → nānu (I ← Proto-Dravidian) → cennāgi
+  (well ← *cennu* "beautiful") → paravāgilla (you're welcome = "no harm," on the
+  Dravidian *illa* shared with Tamil/Malayalam) → practice.
+- **Ch. 4 — Farewells**: hōgu/bā (go/come) → hōgi baruttēne ("I'll go and come
+  back") → nāḷe sigōṇa (see you tomorrow; *nāḷ* "day" shared with Tamil) → matte
+  sigōṇa (we'll meet again; native *sigu*, where Tamil borrowed Sanskrit *sandi*)
+  → practice.
+- **Ch. 5 — First Verbs**: mātanāḍu (to speak ← *mātu* "word") → nānu kannaḍa
+  mātanāḍuttēne (I speak Kannada; no 1st-person gender) → iru (to be/stay/live;
+  postposition *-alli*) → kelasa māḍu (to work; noun + *māḍu*, the twin of
+  Hindi's *karnā*) → practice.
+
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 3 | Responding: *hēgiddīra?* ("how are you"), *chennāgiddēne* ("I'm well"), the verb *iru* ("to be") |
-| 4 | The case-endings (Kannada's agglutinative suffixes), numbers 1–10 |
-| 5+ | Postpositions, tense on the verb, family, food — always with the Dravidian-cognate thread |
+| 6 | Case-endings (Kannada's agglutinative suffixes: *-ge, -alli, -inda*); more verbs |
+| 7+ | Tense, numbers, family, food — always with the Dravidian-cognate thread |
 
 Note: Kannada marks "you" by **register** (*nīnu* familiar / *nīvu* respectful,
 also plural) — like the other tracks, worth teaching beside them.

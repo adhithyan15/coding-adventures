@@ -56,9 +56,16 @@ order lives in the book, which LaTeX auto-numbers, and in `session-map.md`.)
   **¿cuántos años tienes?** (age is *had*, not *been*; *años* ← *annus*, the ñ) →
   practice. **Authored.**
 
-Next: **Ch. 9** — **ser vs estar** head-on: the two "to be" verbs sorted for good
-(permanent identity vs temporary state/location), then possessives and the near
-future (*ir a* + infinitive). From here the course hands over rules, not phrases.
+- **Ch. 9 — ser vs estar, head-on**: **ser** (← *esse* → essence; the suppletive
+  *soy/eres/es/somos/son*, cousins of English *is/am/are*) → the **contrast**
+  *ser vs estar* — essence vs state, with **minimal pairs** that flip meaning
+  (*es/está aburrido* "boring"/"bored"; *es/está rico* "rich"/"delicious"; *listo*,
+  *verde*) → **soy de…** (origin/profession → ser; *de* ← *dē*) → **está en…**
+  (location → estar; *en* ← *in*) → practice. **Authored** — the pilot's payoff
+  chapter; the two "to be" verbs sorted for good.
+
+Next: **Ch. 10** — the **near future** (*ir a* + infinitive, "going to…") and
+**possessives** (*mi/tu/su*). From here the course hands over rules, not phrases.
 Grammar accumulates piece by piece. The theme skeleton below plans the wider road.
 
 ## Theme Skeleton (planning only)
