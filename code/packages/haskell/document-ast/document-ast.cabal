@@ -1,0 +1,29 @@
+cabal-version: 3.0
+name:          document-ast
+version:       0.1.0
+synopsis:      Format-agnostic intermediate representation for documents
+description:   Immutable typed block and inline nodes shared by document parsers and renderers.
+category:      Data
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+extra-doc-files:
+    README.md
+    CHANGELOG.md
+
+library
+    exposed-modules:  DocumentAst
+    build-depends:    base >=4.14 && <5
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    DocumentAstSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14 && <5
+                    , document-ast
+                    , hspec == 2.*
+    default-language: Haskell2010
