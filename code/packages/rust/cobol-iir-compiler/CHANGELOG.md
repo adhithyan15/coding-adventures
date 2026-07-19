@@ -8,6 +8,30 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.17.0: `EVALUATE` multiple values and `THRU` ranges per `WHEN` (PL09 step 4)
+
+A `WHEN` can now list several values and inclusive `THRU` ranges:
+`EVALUATE N WHEN 1 5 THRU 7 9 …`. Implemented oracle-first, byte-identical, reusing
+the level-88-ranges boolean machinery.
+
+- **Grammar (no lexer change).** `when_branch = "WHEN" ( "OTHER" | when_value
+  { when_value } )`, `when_value = operand [ (THRU|THROUGH) operand ]`
+  (`cobol-parser` 0.13.0). `THRU`/`THROUGH` were already reserved.
+- **Lowering.** `emit_when_match` builds each `WHEN`'s boolean by **OR-folding** its
+  value-list — a single value is `cmp_eq(subject, value)`, a `THRU` range is
+  `and(cmp_ge, cmp_le)` — exactly the bitwise `and`/`or`-on-`0`/`1` machinery
+  level-88 ranges use; the folded boolean feeds the existing `jmp_if_false` cascade.
+  No new opcode; every backend already accepts it. Values within a `WHEN` are
+  emitted by iteration, so a `WHEN` with thousands of values stays flat.
+- **Deferral.** An alphanumeric subject/value is still a later rung. (`EVALUATE
+  TRUE`, multiple subjects remain deferred.)
+- **Tests.** A new `jit_e2e.rs` case byte-identical to the oracle (a multi-value
+  `WHEN`; a `THRU` range at both boundaries; a mixed singles+range `WHEN`); a unit
+  test asserting the `or`/`and`/`cmp_ge`/`cmp_le` fold; a `backend_compat` program; a
+  `lang_matrix` multi-value/range `EVALUATE` row across all seven columns. Full
+  suite **156 green** (37 unit + 21 `backend_compat` + 98 `jit_e2e`). The oracle
+  gains 3 multi-value/range unit tests.
+
 ### Added — v0.16.0: `EVALUATE` (case statement, simple form) (PL09 step 4)
 
 COBOL's case statement: `EVALUATE N WHEN 1 … WHEN 5 … WHEN OTHER … END-EVALUATE`.

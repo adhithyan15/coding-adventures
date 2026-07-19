@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.13.0 — `EVALUATE` multiple values and `THRU` ranges per `WHEN`
+
+- `when_branch` now takes a value-*list*: `"WHEN" ( "OTHER" | when_value
+  { when_value } )` with `when_value = operand [ ( "THRU" | "THROUGH" ) operand ]`.
+  So a `WHEN` may list several values and inclusive ranges (`WHEN 1 5 THRU 7 9`).
+  A `when_value` stops at the next `WHEN`/`END-EVALUATE` or a statement verb
+  (all keywords, so a value operand can't consume them). `THRU`/`THROUGH` were
+  already reserved. `_grammar.rs` regenerated via `grammar-tools compile-grammar`.
+
 ## 0.12.0 — `EVALUATE` (case statement)
 
 - Added `evaluate_stmt = "EVALUATE" operand { when_branch } "END-EVALUATE"` and

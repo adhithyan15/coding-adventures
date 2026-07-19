@@ -123,12 +123,22 @@ pub enum Stmt {
     /// `SET cond-name TO TRUE` — assign the condition-name's conditional variable
     /// the value that makes it hold (the first of its `VALUE` items).
     SetTrue { cond_name: String },
-    /// `EVALUATE subject WHEN v1 …  WHEN OTHER … END-EVALUATE` — COBOL's case
-    /// statement. Each branch's `when` is the value to match (`None` = `WHEN
-    /// OTHER`); the first branch whose value equals the subject (or the reached
-    /// `OTHER`) runs its statements, with no fall-through.
-    Evaluate { subject: Operand, branches: Vec<(Option<Operand>, Vec<Stmt>)> },
+    /// `EVALUATE subject WHEN v… … WHEN OTHER … END-EVALUATE` — COBOL's case
+    /// statement. Each branch's `when` is its value-list (`None` = `WHEN OTHER`);
+    /// the first branch whose list contains the subject (or the reached `OTHER`)
+    /// runs its statements, with no fall-through. A value-list entry is a single
+    /// value or an inclusive `THRU` range.
+    Evaluate { subject: Operand, branches: Vec<(Option<Vec<WhenValue>>, Vec<Stmt>)> },
     StopRun,
+}
+
+/// One item of a `WHEN` value-list: a single value or an inclusive `lo THRU hi`
+/// range. Each side is an [`Operand`] (a literal or a data-name), evaluated at
+/// match time.
+#[derive(Debug, Clone)]
+pub enum WhenValue {
+    Single(Operand),
+    Range(Operand, Operand),
 }
 
 /// How a [`Stmt::Perform`] repeats its paragraph.
@@ -359,6 +369,17 @@ fn read_operand(op: &GrammarASTNode) -> Result<Operand, RuntimeError> {
     Err(RuntimeError::Unsupported("unrecognised operand".into()))
 }
 
+/// Read one `when_value` (`operand [ (THRU|THROUGH) operand ]`) into a
+/// [`WhenValue`]: two operands form an inclusive range, one a single value.
+fn read_when_value(wv: &GrammarASTNode) -> Result<WhenValue, RuntimeError> {
+    let ops = child_nodes(wv, "operand");
+    match ops.as_slice() {
+        [one] => Ok(WhenValue::Single(read_operand(one)?)),
+        [lo, hi] => Ok(WhenValue::Range(read_operand(lo)?, read_operand(hi)?)),
+        _ => Err(RuntimeError::Unsupported("a WHEN value must be `operand` or `operand THRU operand`".into())),
+    }
+}
+
 fn read_procedure(pd: &GrammarASTNode) -> Result<Vec<Paragraph>, RuntimeError> {
     let mut paragraphs = Vec::new();
     for para in child_nodes(pd, "paragraph") {
@@ -547,9 +568,11 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                 let when = if is_other {
                     None
                 } else {
-                    let op = child_node(wb, "operand")
-                        .ok_or_else(|| RuntimeError::Unsupported("WHEN without a value".into()))?;
-                    Some(read_operand(op)?)
+                    let mut values = Vec::new();
+                    for wv in child_nodes(wb, "when_value") {
+                        values.push(read_when_value(wv)?);
+                    }
+                    Some(values)
                 };
                 let stmts = child_nodes(wb, "statement")
                     .into_iter()

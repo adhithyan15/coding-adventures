@@ -611,6 +611,49 @@ mod tests {
         assert_eq!(run_cobol(&program(&refs)).unwrap(), "HIT\n");
     }
 
+    /// `EVALUATE N WHEN 1 2 5 DISPLAY "SET" WHEN 7 THRU 9 DISPLAY "RANGE" WHEN
+    /// OTHER DISPLAY "OTHER" END-EVALUATE` — a multi-value WHEN and a THRU range.
+    const EVAL_RANGES: &[&str] = &[
+        "EVALUATE N",
+        "WHEN 1 2 5 DISPLAY \"SET\"",
+        "WHEN 7 THRU 9 DISPLAY \"RANGE\"",
+        "WHEN OTHER DISPLAY \"OTHER\"",
+        "END-EVALUATE.",
+        "STOP RUN.",
+    ];
+
+    #[test]
+    fn evaluate_matches_a_multi_value_when() {
+        // Any listed value matches the first branch.
+        for n in ["1", "2", "5"] {
+            assert_eq!(run_if(n, EVAL_RANGES), "SET\n", "N={n}");
+        }
+    }
+
+    #[test]
+    fn evaluate_matches_a_thru_range_inclusive() {
+        // 7..=9 match the range branch; 6 falls through to OTHER.
+        assert_eq!(run_if("7", EVAL_RANGES), "RANGE\n"); // low boundary
+        assert_eq!(run_if("9", EVAL_RANGES), "RANGE\n"); // high boundary
+        assert_eq!(run_if("6", EVAL_RANGES), "OTHER\n"); // just below → OTHER
+        assert_eq!(run_if("3", EVAL_RANGES), "OTHER\n"); // between the sets → OTHER
+    }
+
+    #[test]
+    fn evaluate_a_when_may_mix_values_and_a_range() {
+        // WHEN 1 5 THRU 7 9 = {1} ∪ {5,6,7} ∪ {9}.
+        let body = &[
+            "EVALUATE N",
+            "WHEN 1 5 THRU 7 9 DISPLAY \"Y\"",
+            "WHEN OTHER DISPLAY \"N\"",
+            "END-EVALUATE.",
+            "STOP RUN.",
+        ];
+        for (n, want) in [("1", "Y\n"), ("6", "Y\n"), ("9", "Y\n"), ("4", "N\n"), ("8", "N\n")] {
+            assert_eq!(run_if(n, body), want, "N={n}");
+        }
+    }
+
     #[test]
     fn if_then_branch_runs_multiple_statements() {
         // THEN branch has two statements; both run when the condition holds.

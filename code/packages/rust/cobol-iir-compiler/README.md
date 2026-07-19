@@ -24,7 +24,7 @@ interpreter_ir::IIRModule   (one `main`, returns i64 exit code)
 NativeAOT · LLVM · WASM · JVM · CLR · VM · JIT
 ```
 
-## This slice (v0.16 — the core plus control flow, `EVALUATE`, `COMPUTE` incl. `**` and nested `/`, `ON SIZE ERROR`, signed, alphanumeric, compound (AND/OR/NOT) + symbolic conditions, level-88 with ranges + `SET … TO TRUE`)
+## This slice (v0.17 — the core plus control flow, `EVALUATE` (multi-value/`THRU`), `COMPUTE` incl. `**` and nested `/`, `ON SIZE ERROR`, signed, alphanumeric, compound (AND/OR/NOT) + symbolic conditions, level-88 with ranges + `SET … TO TRUE`)
 
 COBOL's WORKING-STORAGE is a **PICTURE-typed** data model. Each elementary item
 becomes one IIR register: a **numeric** item (`PIC 9…`) is an `i64` holding its
@@ -41,7 +41,7 @@ integer `123`); an **alphanumeric** item (`PIC X`/`A`) is a `str`.
 | `IF cond then… [ELSE else…]` | conditions combine simple conditions with `AND`/`OR`/`NOT` (and parentheses; `NOT` tightest, then `AND`, then `OR`) — `AND`/`OR` fold the `0`/`1` leaf booleans with bitwise `and`/`or`, and a `NOT` inverts one with `xor` against `1`. A simple condition is a relation (numeric: align operands + `cmp_*`; alphanumeric: space-pad + `str_cmp`) or a level-88 condition-name (`cmp_eq` on its slot). Relations use word (`GREATER THAN`, …) or symbolic (`> < = >= <= <>`) operators; a relop `NOT` and the baseline negation `>=`/`<=`/`<>` carry compose by XOR and invert the relation directly. `jmp_if_false` over the then-branch |
 | `88 cond-name VALUE lit… [lo THRU hi]` | registers a boolean condition-name over the preceding item; `IF cond-name` / `PERFORM … UNTIL cond-name` hold when the variable equals any listed value or falls in any inclusive range — lowered as an OR-fold of `cmp_eq` / `and(cmp_ge, cmp_le)` (numeric) |
 | `SET cond-name TO TRUE` | stores the condition-name's first `VALUE` (a range's low bound) into its conditional variable — a `const` store into the slot (numeric) |
-| `EVALUATE subj WHEN v… WHEN OTHER … END-EVALUATE` | a `cmp_eq` + `jmp_if_false` branch cascade (a chain of `IF`s): each value `WHEN` compares the subject to its value; the first match runs and jumps to the end (no fall-through); `WHEN OTHER` runs unconditionally once reached (numeric subject) |
+| `EVALUATE subj WHEN v… [lo THRU hi]… WHEN OTHER … END-EVALUATE` | a `jmp_if_false` branch cascade (a chain of `IF`s): each `WHEN` OR-folds its value-list (a single value → `cmp_eq`, a `THRU` range → `and(cmp_ge, cmp_le)`) into one boolean; the first match runs and jumps to the end (no fall-through); `WHEN OTHER` runs unconditionally once reached (numeric subject) |
 | `GO TO para` | `jmp para_<name>` |
 | `PERFORM para [THRU q] [n TIMES \| UNTIL c \| VARYING v FROM a BY b UNTIL c]` | the paragraph range **inlined** at the call site (out-of-line-but-returns semantics), with loop control emitted around it |
 | `STOP RUN` | `ret 0` |
