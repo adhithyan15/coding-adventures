@@ -36,6 +36,15 @@ book.
   **mī pēru ēmiṭi?** ("what's your name?"), santōṣam, practice. Every atom
   traced (*pēru* ← *\*pēr*, twin of Tamil *peyar*; *santōṣam* Sanskrit). In the
   book.
+- **Chapter 3 — How Are You** ([`lessons/TE-C03-*`](./lessons/)): elā, **mīru elā
+  unnāru?**, nēnu, bāgā, paravālēdu, practice. The verb *uṇḍu* ("to be"); Telugu's
+  own *lēdu* where its sisters use *illa*. In the book.
+- **Chapter 4 — Farewells** ([`lessons/TE-C04-*`](./lessons/)): veḷḷu/vaccu,
+  **veḷḷi vastānu** ("I'll go and come back"), rēpu kaluddām, maḷḷī kaluddām,
+  practice. The Dravidian promise-of-return goodbye. In the book.
+- **Chapter 5 — First Verbs** ([`lessons/TE-C05-*`](./lessons/)): māṭlāḍu, **nēnu
+  telugu māṭlāḍatānu**, uṇḍu, pani cēyu, practice. Stem + tense + person; no
+  1st-person gender. In the book.
 
 ## Book / fonts
 
