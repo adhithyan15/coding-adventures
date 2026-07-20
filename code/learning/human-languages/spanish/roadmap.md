@@ -87,10 +87,18 @@ order lives in the book, which LaTeX auto-numbers, and in `session-map.md`.)
   the **-go club** (*tengo/hago/digo/pongo/salgo/vengo* — yo-only, a closed
   Latin-inherited set of the oldest, most-used verbs) → practice. **Authored.**
 
-Next: **Ch. 13** — more everyday description and the remaining high-frequency
-irregulars (*ir* preterite, *poner/salir/venir* completing the *-go* club), building
-toward real conversation. From here the course hands over rules, not phrases.
-Grammar accumulates piece by piece. The theme skeleton below plans the wider road.
+- **Ch. 13 — Completing the -go club**: **poner** ("to put," ← *pōnere* →
+  position/compose/deposit; the *-go* yo-form *pongo*; *poner la mesa*) → **salir**
+  ("to leave/go out," ← *salīre* "to leap" → salient/salmon/somersault; *salgo*;
+  *la salida* "the exit") → **venir** ("to come," ← *venīre* → adventure/event/
+  convene; **doubly** irregular — *-go* *vengo* **and** *e→ie* *vienes*, the mirror
+  twin of *tener*) → practice recapping all six (*tengo/hago/digo/pongo/salgo/
+  vengo*). **Authored.**
+
+Next: **Ch. 14** — everyday description and more high-frequency irregulars (the
+*ir/ser* preterite), building toward real conversation. From here the course hands
+over rules, not phrases. Grammar accumulates piece by piece. The theme skeleton
+below plans the wider road.
 
 ## Theme Skeleton (planning only)
 
