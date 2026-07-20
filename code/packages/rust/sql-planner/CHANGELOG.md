@@ -6,6 +6,16 @@ All notable changes to this package will be documented in this file.
 
 ### Fixed
 
+- **The ORDER BY alias lookup is precomputed, not scanned per key.** The first
+  cut of the fix below scanned `output_columns` for every sort key, which is
+  O(keys × columns) with both dimensions attacker-controlled — the exact shape
+  the sibling collation-map precompute 500 lines earlier was written to avoid
+  (a wide `SELECT x AS a1, …` with many NON-matching keys never short-circuits).
+  `plan_order_by` now builds a lowercased alias → expression map once, and skips
+  building it entirely when there is no collation context. FIRST alias wins on a
+  duplicate (`or_insert`), matching SQLite's `resolveAsName`: `SELECT x AS c,
+  y AS c … ORDER BY c` binds to `x`. Caught by security review before push.
+
 - **An ORDER BY key naming an output ALIAS no longer inherits an unrelated
   column's `COLLATE`.** `plan_order_item` resolved a bare ORDER BY name straight
   against the base table, so `SELECT x AS c FROM t ORDER BY c` — where `x` is

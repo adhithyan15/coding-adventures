@@ -1719,6 +1719,18 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT c AS y FROM t ORDER BY y",
     },
+    // Duplicate output aliases: SQLite's alias resolution returns the FIRST
+    // select-list match (no ambiguity error for ORDER BY), so this sorts by `x`
+    // (BINARY, 'P' before 'p') and NOT by the NOCASE `y`. Pins the first-wins
+    // rule that the precomputed alias map must preserve (`or_insert`).
+    Case {
+        id: "order_by_duplicate_alias_first_wins",
+        setup: &[
+            "CREATE TABLE t (x TEXT, y TEXT COLLATE NOCASE)",
+            "INSERT INTO t VALUES('p','B'),('P','a')",
+        ],
+        query: "SELECT x AS c, y AS c FROM t ORDER BY c",
+    },
     // The same table's BINARY column is NOT folded — all four values are distinct.
     // (Guards against over-applying the collation to every column.)
     Case {
