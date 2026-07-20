@@ -244,6 +244,8 @@
       "IT-FAMILY-SIBLINGS": "fratello/sorella (brother/sister; frāter/soror + diminutive -ello/-ella = 'little brother/sister'; → fraternal/sorority)",
       "IT-FOOD-BREAD": "pane (bread; closest to Latin pānis; → companion 'one you share bread with', pantry; companatico = 'what you eat WITH bread')",
       "IT-FOOD-DRINKS": "acqua/vino (water/wine; acqua KEPT Latin aqua whole, -cq- doubled, vs French eau; vino ← vīnum → wine/vine/vinegar)",
+      "IT-NUM-11-16": "undici…sedici (11-16; digit + -dici, and -dici is still visibly Latin decem = dieci — clearer than French's worn-down -ze)",
+      "IT-NUM-17-20": "diciassette…venti (17-20; at 17 the ORDER FLIPS — sedici 'six-ten' but diciassette 'ten-and-seven'; venti ← vīgintī)",
       "FR-VERB-APPELER": "(s')appeler — 'to call (oneself)'",
       "FR-VERB-ALLER": "aller — 'to go' (suppletive: ambulāre/vādere/īre); drives 'comment ça va?'",
       "FR-VERB-PARLER": "parler — 'to speak' (← parabolāre; the big regular -er verb / present tense)",
@@ -262,6 +264,8 @@
       "FR-FAMILY-SIBLINGS": "frère/sœur (brother/sister ← frāter/soror; → fraternal/friar, sorority; œ ligature spells soror worn down)",
       "FR-FOOD-BREAD": "pain (bread ← pānis; nasal -ain; → companion 'one you share bread with', company, pantry)",
       "FR-FOOD-DRINKS": "eau/vin (water/wine; eau ← aqua worn to a bare 'oh' — most eroded of all, vs English aquatic; vin ← vīnum → wine/vine/vinegar)",
+      "FR-NUM-11-16": "onze…seize (11-16; the six Latin fusions ūndecim…sēdecim; shared -ze = decem 'ten', the same ten as dix/décembre)",
+      "FR-NUM-17-20": "dix-sept…vingt (17-20; at 17 French GIVES UP fusing and goes transparent 'ten-seven', the order flipping too; vingt ← vīgintī → vigesimal)",
       "DE-VERB-HEISSEN": "heißen — 'to be called'",
       "DE-VERB-GEHEN": "gehen — 'to go' (= English go); drives 'wie geht es dir?'",
       "GE-VERB-WOHNEN": "wohnen — 'to live/dwell' (← wonēn → English 'wont'); first weak verb / present tense",
@@ -280,6 +284,8 @@
       "GE-FAMILY-SIBLINGS": "Bruder/Schwester (brother/sister; Germanic twins of English brother/sister; Geschwister 'siblings' via collective ge-)",
       "GE-FOOD-BREAD": "Brot (bread; INHERITED Germanic twin of English bread, NOT Latin pānis; introduces the neuter das + capitalized nouns)",
       "GE-FOOD-DRINKS": "Wasser/Wein (water/wine; Wasser NATIVE Germanic twin of water; but Wein is an ANCIENT Latin loan ← vīnum, borrowed with the vine — like English wine)",
+      "GE-NUM-11-12": "elf/zwölf (11-12; ← ainlif/twalif, -lif = 'leave' → 'ONE/TWO left over' after ten fingers; the exact inherited twins of English eleven/twelve)",
+      "GE-NUM-13-20": "dreizehn…zwanzig (13-20; digit + zehn with NO exceptions, mirroring English -teen which IS ten; zwanzig ← twaintig 'two tens'; German never breaks, unlike Romance)",
       "PT-WORD-TUDO": "tudo — 'everything / all' (← Latin tōtus); the heart of 'tudo bem?'",
       "PT-VERB-FALAR": "falar — 'to speak' (← fabulārī = Spanish hablar, but PT kept f-); the regular -ar present",
       "PT-VERB-MORAR": "morar — 'to live/dwell' (← morārī 'to linger' → moratorium; not habitāre)",
@@ -296,7 +302,9 @@
       "PT-FAMILY-PARENTS": "pai/mãe (father/mother; most worn-down of the sisters — pater→pae→pai, māter→mãe nasal, -t- vanished; os pais 'parents' lit. 'the fathers'; o país=country)",
       "PT-FAMILY-SIBLINGS": "irmão/irmã (brother/sister; NOT from frāter but germānus 'of the same stock' — frāter germānus 'full brother'; = ES hermano; cousins germane/German)",
       "PT-FOOD-BREAD": "pão (bread ← pānis, worn to one nasal syllable pānis→pão — same erosion as pai; plural pães; → companion/pantry)",
-      "PT-FOOD-DRINKS": "água/vinho (water/wine; água KEPT aqua's body vs French eau; vinho ← vīnum with signature -nh- = Spanish ñ → wine/vine/vinegar)"
+      "PT-FOOD-DRINKS": "água/vinho (water/wine; água KEPT aqua's body vs French eau; vinho ← vīnum with signature -nh- = Spanish ñ → wine/vine/vinegar)",
+      "PT-NUM-11-15": "onze…quinze (11-15; only FIVE fused teens — fewer than any sister; -ze = decem as in dez/dezembro; catorze keeps the c-)",
+      "PT-NUM-16-20": "dezesseis…vinte (16-20; PT breaks EARLIEST at 16, rebuilding as dez + e + seis = literally 'ten AND six', the 'and' still audible; vinte ← vīgintī)"
     }
   },
   "practiceTags": {
