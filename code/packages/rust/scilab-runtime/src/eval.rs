@@ -899,6 +899,17 @@ impl Interpreter {
         // Scilab, like MATLAB, iterates over the COLUMNS of the range/matrix;
         // for a row vector that is each element in turn.
         let (nr, nc) = (cols.nrows(), cols.ncols());
+        // Defense in depth, matching `while`'s own explicit `MAX_ITERS`: `nc`
+        // is transitively bounded today by whatever produced `cols` (a range
+        // capped by `eval_colon`'s own `MAX_RANGE`, or a constructed/
+        // concatenated array now capped by `builtins::check_total_elements`,
+        // per the security review that added both of those), but an explicit,
+        // `while`-consistent cap here doesn't depend on every future array
+        // producer remembering its own size guard.
+        const MAX_ITERS: usize = 10_000_000;
+        if nc > MAX_ITERS {
+            return Err(format!("for: exceeded the {MAX_ITERS}-iteration limit"));
+        }
         for c in 0..nc {
             let col: Vec<f64> = (0..nr).map(|r| cols.get(r, c).unwrap()).collect();
             let v = if col.len() == 1 {
@@ -1231,6 +1242,16 @@ fn unary_map(v: &ScilabValue, f: impl Fn(f64) -> f64) -> Result<ScilabValue, Str
 
 /// Concatenate arrays horizontally (a matrix row): all must share their row
 /// count; columns are appended. (`[1 2 3]`, `[A B]`.)
+///
+/// `[A A]` repeated (`A = [A A];` a few dozen times) *doubles* the element
+/// count each time with no per-call size individually large enough to look
+/// suspicious — a purely local `nrows`/`ncols` check on each call's INPUTS
+/// can't catch this (each input is small; only the accumulated OUTPUT grows
+/// exponentially), so the guard has to be on the constructed RESULT's total
+/// element count, matching `builtins::check_total_elements`'s identical cap.
+/// Found during security review of MA-10d: 24 repetitions (~260 bytes of
+/// source, trivially under every other limit in this crate — `MAX_INPUT_LEN`,
+/// `MAX_DEPTH`) reached 2^24 elements with no error before this guard existed.
 fn hcat(cells: &[Array]) -> Result<Array, String> {
     let cells: Vec<&Array> = cells.iter().filter(|a| !a.is_empty()).collect();
     let Some(first) = cells.first() else {
@@ -1242,6 +1263,7 @@ fn hcat(cells: &[Array]) -> Result<Array, String> {
         if a.nrows() != nrows {
             return Err("horizontal concatenation: row counts must match".to_string());
         }
+        crate::builtins::check_total_elements("matrix literal", nrows, cols.len() + a.ncols())?;
         for c in 0..a.ncols() {
             cols.push((0..nrows).map(|r| a.get(r, c).unwrap()).collect());
         }
@@ -1257,19 +1279,26 @@ fn hcat(cells: &[Array]) -> Result<Array, String> {
 }
 
 /// Stack row-arrays vertically (`[a; b]`): all must share their column count.
+/// See `hcat`'s own doc comment for why the guard must bound the accumulated
+/// OUTPUT size (`[A; A]` repeated has the identical exponential-doubling
+/// shape), not just each individual input.
 fn vcat(rows: &[Array]) -> Result<Array, String> {
     let rows: Vec<&Array> = rows.iter().filter(|a| !a.is_empty()).collect();
     let Some(first) = rows.first() else {
         return Array::from_shape(vec![], vec![0, 0]);
     };
     let ncols = first.ncols();
-    let total_rows: usize = rows.iter().map(|a| a.nrows()).sum();
-    let mut data = vec![0.0; total_rows * ncols];
-    let mut row_off = 0;
+    let mut total_rows: usize = 0;
     for a in &rows {
         if a.ncols() != ncols {
             return Err("vertical concatenation: column counts must match".to_string());
         }
+        total_rows += a.nrows();
+        crate::builtins::check_total_elements("matrix literal", total_rows, ncols)?;
+    }
+    let mut data = vec![0.0; total_rows * ncols];
+    let mut row_off = 0;
+    for a in &rows {
         for c in 0..ncols {
             for r in 0..a.nrows() {
                 data[c * total_rows + (row_off + r)] = a.get(r, c).unwrap();

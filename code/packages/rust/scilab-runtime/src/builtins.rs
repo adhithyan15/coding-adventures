@@ -105,6 +105,7 @@ fn constructor(name: &str, args: &[ScilabValue], fill: f64) -> Result<ScilabValu
 /// `eye(n)` → the `n×n` identity.
 fn eye(args: &[ScilabValue]) -> Result<ScilabValue, String> {
     let n = count(arg_num("eye", args, 0)?, "eye")?;
+    check_total_elements("eye", n, n)?;
     Ok(ScilabValue::Num(Array::eye(n)))
 }
 
@@ -146,15 +147,27 @@ fn unary(name: &str, args: &[ScilabValue], f: fn(f64) -> f64) -> Result<ScilabVa
 // --- argument helpers ----------------------------------------------------
 
 /// Interpret a constructor's arguments: `f(n)` → `(n, n)`, `f(r, c)` → `(r, c)`.
+///
+/// `count()` alone only bounds *each* dimension independently (`1<<26`) — two
+/// in-bounds dimensions can still multiply to an astronomical total (e.g.
+/// `zeros(67108864, 67108864)` is ~4.5e15 elements, ~36 petabytes at 8
+/// bytes/element), which either aborts the process via an allocator failure
+/// (uncatchable — `catch_unwind` in `lib.rs` cannot protect against this) or
+/// drives the host into severe memory pressure. `check_total_elements` closes
+/// this: found during security review of MA-10d (the identical per-dimension-
+/// only gap exists in the already-shipped `matlab-runtime::builtins`, flagged
+/// separately for that crate rather than fixed here).
 fn dims(name: &str, args: &[ScilabValue]) -> Result<(usize, usize), String> {
-    match args {
+    let (r, c) = match args {
         [n] => {
             let n = count(n.as_num(name)?, name)?;
-            Ok((n, n))
+            (n, n)
         }
-        [r, c] => Ok((count(r.as_num(name)?, name)?, count(c.as_num(name)?, name)?)),
-        _ => Err(format!("{name}: expected 1 or 2 size arguments")),
-    }
+        [r, c] => (count(r.as_num(name)?, name)?, count(c.as_num(name)?, name)?),
+        _ => return Err(format!("{name}: expected 1 or 2 size arguments")),
+    };
+    check_total_elements(name, r, c)?;
+    Ok((r, c))
 }
 
 /// Read a non-negative dimension count from a scalar array, capped so a
@@ -166,6 +179,21 @@ fn count(a: &Array, name: &str) -> Result<usize, String> {
         return Err(format!("{name}: size must be in 0..={}", MAX_DIM as u64));
     }
     Ok(x.round() as usize)
+}
+
+/// The same total-element cap `eval::hcat`/`eval::vcat`/`eval::eval_colon`
+/// use (`1<<26`, ~67.1M elements, ~512 MiB of `f64`s) — checked via
+/// `checked_mul` so the multiplication itself can never silently wrap before
+/// the comparison runs.
+pub(crate) const MAX_TOTAL_ELEMENTS: usize = 1 << 26;
+
+pub(crate) fn check_total_elements(name: &str, rows: usize, cols: usize) -> Result<(), String> {
+    match rows.checked_mul(cols) {
+        Some(total) if total <= MAX_TOTAL_ELEMENTS => Ok(()),
+        _ => Err(format!(
+            "{name}: {rows}x{cols} exceeds the {MAX_TOTAL_ELEMENTS}-element limit"
+        )),
+    }
 }
 
 fn one_arg<'a>(name: &str, args: &'a [ScilabValue]) -> Result<&'a ScilabValue, String> {
@@ -233,6 +261,28 @@ mod tests {
     #[test]
     fn unknown_builtin_is_an_error() {
         assert!(call("not_a_real_function", &[]).is_err());
+    }
+
+    #[test]
+    fn constructors_reject_a_dimension_product_that_overflows_the_element_cap() {
+        // Security regression: each dimension alone is within count()'s own
+        // per-dimension cap (1<<26), but their PRODUCT (~4.5e15 elements) is
+        // not -- `dims`/`eye` must reject this before `Array::filled`/
+        // `Array::eye` ever attempts the allocation.
+        let big = ScilabValue::scalar((1u64 << 26) as f64);
+        assert!(call("zeros", &[big.clone(), big.clone()]).is_err());
+        assert!(call("eye", &[big]).is_err());
+        // A genuinely small, in-bounds construction still works.
+        assert!(call("zeros", &[ScilabValue::scalar(3.0), ScilabValue::scalar(4.0)]).is_ok());
+    }
+
+    #[test]
+    fn check_total_elements_rejects_overflowing_products_directly() {
+        assert!(check_total_elements("t", 1 << 26, 1 << 26).is_err());
+        assert!(check_total_elements("t", 1000, 1000).is_ok());
+        // usize::MAX * usize::MAX must not panic via multiplication overflow;
+        // `checked_mul` must catch it and report a clean error.
+        assert!(check_total_elements("t", usize::MAX, 2).is_err());
     }
 
     #[test]

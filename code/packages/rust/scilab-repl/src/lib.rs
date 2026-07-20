@@ -131,11 +131,28 @@ impl ScilabRepl {
 /// a bracket is open, a `"`-string or `/* ... */` block comment is
 /// unterminated, or a block keyword (`if`/`select`/`while`/`for`/`function`)
 /// has no matching `end`/`endfunction`. `//` line comments are skipped to
-/// end of line; `'` is not tracked at all (Scilab strings are always
-/// single-line, so a `'`-string can never itself *cause* multi-line
-/// continuation the way an unterminated bracket/block can — the same
-/// simplification `matlab-repl::is_incomplete`'s own doc comment makes for
-/// MATLAB's char arrays).
+/// end of line.
+///
+/// `'` is deliberately **not** tracked at all — not just because a
+/// `'`-string can never itself *cause* multi-line continuation (Scilab
+/// strings are always single-line, the same reasoning
+/// `matlab-repl::is_incomplete`'s own doc comment gives for MATLAB's char
+/// arrays), but because `'` is genuinely ambiguous here in a way `"` is not:
+/// it is EITHER a string delimiter OR the postfix transpose operator (`A'`),
+/// and disambiguating the two correctly requires `scilab-lexer`'s own
+/// context-sensitive `prev_value`-tracking hook (see that crate's
+/// `protect_quotes`) — machinery this lightweight, best-effort heuristic
+/// deliberately does not replicate. The tradeoff this accepts, found during
+/// security review of MA-10d: a bracket-shaped or `//`/`/* `-shaped character
+/// *inside* an otherwise-complete single-quoted string (e.g. `s = '[['`) can
+/// be miscounted as a real bracket/comment, desyncing `bracket`/
+/// `in_block_comment` for later lines in a piped/scripted session. This is
+/// accepted rather than "fixed" by tracking every bare `'` as a string
+/// delimiter, because `'` is used for the (far more common) transpose
+/// operator constantly in ordinary Scilab code (`A'`, `(A+B)'`, `A''`) — a
+/// naive toggle-on-every-`'` tracker would misfire on nearly every transpose,
+/// a strictly worse outcome than the rare string-content edge case it would
+/// close.
 ///
 /// This is only a continuation *heuristic*: whatever is submitted still
 /// passes through [`Interpreter::feed`], which re-parses with the real
