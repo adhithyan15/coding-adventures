@@ -195,9 +195,17 @@ pre-storage validation step.
 > anything. **`adj-verify`** (`ADJ-REASON-MATH.md` §E.5–E.6) is the deeper check
 > *inside* a single engine artifact: it re-runs each step's own reasoning — re-unify,
 > re-multiply the likelihood ratios, re-select the table bracket, re-evaluate the
-> derivation tree exactly, re-check the solver witness — and re-fetches each quoted
-> span at its locator to confirm it still appears **verbatim**. It reports the *first*
-> failing step, which localizes an error to one clause plus one citation.
+> derivation tree exactly, re-check the solver witness — and re-checks each quoted span
+> against the **pinned ingest-time snapshot**, at the recorded byte range, to confirm it
+> still appears **verbatim**. It reports the *first* failing step, which localizes an
+> error to one clause plus one citation.
+>
+> `adj-verify` is **offline by default**: it does not fetch `locator` URLs, which are
+> authored by the spider from untrusted sources. Live re-fetch is opt-in and routes
+> through the ADJ39 `CitationVerifier` adapter registry rather than issuing generic HTTP
+> requests — see `ADJ-REASON-MATH.md` §E.5 for the required guards. A live mismatch is
+> reported as `SourceDrifted`, and unreachability as `SourceUnreachable`; neither fails
+> the reasoning step, so a third party's outage cannot invalidate a sound trail.
 >
 > The division of labour: **`adj-replay` re-runs the pipeline; `adj-verify` re-checks
 > the reasoning.** A trail can pass this linter (nothing dangles) and still fail
