@@ -1,0 +1,23 @@
+[package]
+name = "maple-to-semantic-ir"
+version = "0.1.0"
+edition = "2021"
+description = "Maple CST → narrow-waist Semantic IR (SIR23 symbolic/pattern domain, Stream B). Fifth and final frontend to target SIR23, sibling to wolfram-to-semantic-ir, macsyma-to-semantic-ir, derive-to-semantic-ir, and reduce-to-semantic-ir."
+
+[dependencies]
+semantic-ir = { path = "../semantic-ir" }
+coding-adventures-maple-parser = { path = "../maple-parser" }
+# The reusable canonical head-name constants (`ADD`/`SUB`/`MUL`/…) so the
+# surface→canonical bridging table stays typo-proof and in lockstep with
+# the native `maple-runtime`'s own identical table.
+symbolic-ir = { path = "../symbolic-ir" }
+# The parser emits a generic `parser::grammar_parser::GrammarASTNode`
+# whose leaf tokens are `lexer::token::Token`; we walk both directly.
+parser = { path = "../parser" }
+lexer = { path = "../lexer" }
+
+[dev-dependencies]
+# Used by tests/test_validator.rs (confirms the JS backend accepts every
+# module this frontend produces, all of which use SIR23 nodes) and
+# tests/e2e_node.rs (actually runs the compiled JS through `node`).
+semantic-ir-to-javascript = { path = "../semantic-ir-to-javascript" }
