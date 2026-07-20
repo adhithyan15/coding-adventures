@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.5.56 — arithmetic operands keep real-syntax text REAL (`'9.0'/2` = 4.5)
+
+Text operands in arithmetic were coerced with SQLite's `CAST(… AS NUMERIC)` rule,
+which collapses an integral real to an integer — so `'9.0' / 2` did integer
+division and returned `4` where SQLite returns `4.5`. Arithmetic operands use a
+*different* rule (`applyNumericAffinity`): the type follows the text's **syntax**,
+not its value. `sql-vm` now applies that rule (new `text_to_numeric_operand`) in
+binary `+ - * / %` and unary minus, leaving `CAST(… AS NUMERIC)` untouched.
+
+Verified against the real `sqlite3` binary — `'9.0'/2`→`4.5` real, `'9'/2`→`4`
+integer, `'1e2'+0`→`100.0` real, `-'3e2'`→`-300.0` real, while `'3e'`/`'3e+'`
+(incomplete exponent) stay integer `3` and `'abc'`/`'.'` stay integer `0`. Three
+new differential-oracle cases cover the fix, the prefix-syntax boundaries, and the
+deliberate CAST-vs-operand contrast; the oracle was confirmed to *fail* without the
+fix. Retires the last documented item of the type-affinity arc.
+
 ## 0.5.55 — `i64::MIN` div/mod overflow + integer `%`
 
 Two `%` / `/` edge cases now match SQLite. **`i64::MIN` overflow:**
