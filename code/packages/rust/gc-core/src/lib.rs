@@ -103,6 +103,10 @@ pub mod kind;
 pub mod policy;
 pub mod profile;
 pub mod root_set;
+/// Producer side of the precise-root stack-map format: the helper a native code
+/// generator drives while lowering a function to emit its per-safepoint records.
+/// See [`stackmap_builder`].
+pub mod stackmap_builder;
 pub mod write_barrier;
 
 // Top-level re-exports for the most commonly used types.
@@ -114,4 +118,5 @@ pub use kind::{HeapKind, KindRegistry};
 pub use policy::{AdaptivePolicy, DefaultPolicy, GcAlgorithm, GcPolicy, PolicyDecision};
 pub use profile::{GcCycleStats, GcProfile};
 pub use root_set::RootSet;
+pub use stackmap_builder::StackMapBuilder;
 pub use write_barrier::{CardTableBarrier, NoOpBarrier, WriteBarrier};

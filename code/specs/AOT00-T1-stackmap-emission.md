@@ -72,7 +72,7 @@ frame model is deliberately simple:
    `bl`/`call`, which is exactly the `StackMapRecord.pc_offset` (return address minus
    function start) the registry keys on.
 4. **No liveness.** Slots are never freed, so "which refs are live *at* this PC" is
-   unknown. §4 gives a safe conservative-precise rule that needs no liveness pass, and
+   unknown. §4 gives a safe flow-insensitive rule (R1) that needs no liveness pass, and
    defers a real pass to a later refinement rung.
 
 ---
@@ -127,28 +127,67 @@ The precise answer is *"every slot holding a reference that is still live-after 
 PC."* We have no liveness pass, so we adopt a **sound over-approximation** that needs
 none, and refine later:
 
-> **Rule R0 (conservative-precise).** A ref-typed slot is a root at safepoint PC *p*
-> iff its defining instruction appears **at or before** *p* in the function's linear
-> instruction order (params count as "defined at entry").
+> **Rule R1 (flow-insensitive).** Every safepoint in a function names **every** stack
+> slot that function ever uses to hold a GC reference.
 
-Why R0 is **safe** (never misses a live root): if a reference is live at *p*, it was
-necessarily defined before *p*, so its slot is included. R0 can only *over*-approximate
-— it may keep a slot whose value is dead (defined earlier, never used again) — which
-retains floating garbage for a cycle exactly as the conservative scan would. It is
-**strictly better** than the conservative scan, because it still excludes:
+Why R1 is **safe**: the named set is a superset of the live set at every PC by
+construction, so a live root can never be missed. It can only *over*-approximate —
+naming a reference slot that is dead at this particular PC — which retains floating
+garbage for a cycle exactly as the conservative scan would. It is still **strictly
+better** than the conservative scan, because it excludes **every non-reference slot**
+(integers, floats, booleans) — the main win: a stack integer that look-alikes a heap
+address no longer pins anything.
 
-- every non-reference slot (integers, floats, booleans) — the main win; a stack
-  integer that look-alikes a heap address no longer pins anything;
-- references defined *after* the safepoint.
+R1 is trivial to compute in the single lowering pass the backends already make:
+collect the ref slots and the safepoint PCs independently, then join them at the end.
+`gc_core::StackMapBuilder` implements exactly this.
 
-R0 is trivial to compute in the single lowering pass the backends already make: keep a
-running set of "ref slots defined so far," and snapshot it at each safepoint.
+> ### WARNING — why NOT the flow-sensitive "defined at or before" rule
+>
+> An earlier draft of this spec proposed *"a ref slot is a root at PC p iff its
+> defining instruction appears at or before p in the function's linear instruction
+> order."* **That rule is unsound and must not be used.** It silently equates the
+> order the backend *emits* code with the order the machine *executes* it, which a
+> backward edge breaks:
+>
+> ```text
+>   loop_top:  call use(x)      <- safepoint emitted here, before x's definition
+>              x = alloc()      <- slot defined AFTER it in emission order
+>              b loop_top       <- on iteration 2+, x IS live at the safepoint
+> ```
+>
+> The record for `loop_top` would omit a slot holding a live reference. And an
+> **incomplete record is more dangerous than a missing one**: the walker treats a
+> `resolve` hit as authoritative and *skips the conservative scan of that frame*, so
+> the omission frees a live object rather than merely retaining garbage. The same trap
+> springs for any backend that lays blocks out of execution order (outlined cold
+> paths, tail duplication, landing pads emitted last).
+>
+> Because a builder cannot *detect* such a violation, `StackMapBuilder` is
+> order-independent by construction rather than trusting the backend to avoid it.
 
 **Refinement rung (later, own spec/PR):** a backward liveness pass over the CIR to
-compute live-out sets per safepoint, shrinking R0's set to exactly-live. This is the
-difference between "no dead references named" and "no dead references named *after
-their last use*." It is a pure precision gain (never a safety change) and is
-explicitly out of scope here (§8).
+compute live-out sets per safepoint, shrinking R1's set to exactly-live — but only a
+pass reasoning about *execution* paths, never emission order. It is a pure precision
+gain (never a safety change) and is explicitly out of scope here (§8).
+
+### 4.1 Safety contract on the backend
+
+Getting a record *wrong* is worse than emitting none, so these are obligations:
+
+1. **Spill before the safepoint.** Every GC reference live across a safepoint must be
+   in a stack slot of the current frame there, and that slot declared. The builder
+   describes *stack slots only* (`callee_saved_mask` is always `0`), so a reference
+   kept solely in a callee-saved register across a call is named by **nobody** —
+   neither the caller's record nor the callee's — and is freed while live. The
+   slot-per-variable native backends satisfy this naturally (§1.1).
+2. **Declare incoming reference parameters** — they arrive in registers and the
+   prologue spills them.
+3. **Declare only reference-typed slots** (a non-reference slot is a wasted root, not
+   unsafe).
+
+Naming a slot the executed path has not written yet is safe: every slot word goes
+through the same validated candidate-pointer lookup as a conservative scan.
 
 ---
 
@@ -216,7 +255,7 @@ rung**: build `gc-core-capi` with `-Cforce-frame-pointers=yes` for the x86-64 ta
 
 ## 8. Non-goals (this rung)
 
-- **A real liveness pass** — R0 (§4) ships first; exact live-out is a refinement rung.
+- **A real liveness pass** — R1 (§4) ships first; exact live-out is a refinement rung.
 - **References in callee-saved registers** — the slot-spill model keeps refs on the
   stack at safepoints, so `callee_saved_mask` stays 0; a register-allocating backend
   would need the mask, which is a later concern.
@@ -251,7 +290,7 @@ rung**: build `gc-core-capi` with `-Cforce-frame-pointers=yes` for the x86-64 ta
 1. **This spec.** (spec-first)
 2. **`StackMapPlan` builder in a shared crate** (e.g. `codegen-core` or a new
    `gc-stackmap` helper): given a function's ordered instrs + params + the
-   name→slot-offset map, produce records under Rule R0. Pure, unit-tested, no
+   name→slot-offset map, produce records under Rule R1. Pure, unit-tested, no
    backend wiring yet.
 3. **aarch64: capture `pc_offset` at call sites** and thread the name→offset map into
    the plan builder; expose the per-function `StackMapPlan` (still not emitted).
@@ -275,6 +314,6 @@ The runtime can already collect precisely; it just has nothing to resolve agains
 This rung feeds it: the native backends' fixed, frame-pointer-anchored, name-keyed
 slot model means a root map is a near-mechanical join of *slot offsets* (already
 FP-relative) with *ref-typed dests* (already in `type_hint`), snapshotted at each
-call site under a liveness rule (R0) that needs no analysis pass and is provably safe.
+call site under a liveness rule (R1) that needs no analysis pass and is provably safe.
 The first visible payoff — the GC-stress `live_bytes` differential — is four small PRs
 away, and it turns the whole precise-roots ladder from *plumbed* into *load-bearing*.
