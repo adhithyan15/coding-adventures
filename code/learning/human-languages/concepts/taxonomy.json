@@ -227,6 +227,8 @@
       "ES-VERB-VENIR": "venir — 'to come' (doubly irregular: -go yo-form vengo + e→ie stem-change vienes/viene; ← venīre → adventure/event/convene; twin of tener)",
       "ES-PRETERITE-SER-IR": "the preterite of ser AND ir — one shared set fui/fuiste/fue/fuimos/fueron (← Latin fuī, a 2nd 'be' root = English be/future); context decides: fui a=went, fui X=was",
       "ES-PRETERITE-AR": "the regular -ar preterite — hablé/hablaste/habló/hablamos/hablaron (← Latin perfect -āvī; accent marks the final stress, hablo→habló; hablamos present=preterite)",
+      "ES-PRETERITE-ER-IR": "the regular -er/-ir preterite — comí/comiste/comió/comimos/comieron, viví/viviste/vivió (ONE shared set, unlike the present where -er/-ir differ; ← Latin perfect -ī/-istī/-it, -istī→-iste nearly intact; vivimos present=preterite but comemos≠comimos)",
+      "ES-PRETERITE-STRONG": "the strong preterites — tener→tuve, hacer→hice, estar→estuve (stress moves OFF the ending onto the stem, TUve/HIce, hence NO written accent, the reverse of hablé/habló; yo ending -e not -é; hizo c→z; ← Latin strong perfects tenuī/fēcī/stetī, inherited not rebuilt)",
       "IT-VERB-STARE": "stare — 'to be' (state; ← Latin stare 'to stand', = Spanish estar); drives 'come stai?'",
       "IT-VERB-PARLARE": "parlare — 'to speak' (← parabolāre = French parler; the regular -are present)",
       "IT-VERB-ABITARE": "abitare — 'to live/dwell' (← habitāre → habitat; twin of French habiter)",
@@ -308,6 +310,6 @@
     }
   },
   "practiceTags": {
-    "note": "Non-word lessons (type: review | practice-mix | writing) carry a session/orthography label, not a concept, and are exempt from the cross-language join. Existing labels: CH1-PRACTICE, CH2-PRACTICE, CH3-PRACTICE, CH4-PRACTICE, CH9-PRACTICE, CH10-PRACTICE, CH11-PRACTICE, CH12-PRACTICE, CH13-PRACTICE, CH14-PRACTICE, REVIEW."
+    "note": "Non-word lessons (type: review | practice-mix | writing) carry a session/orthography label, not a concept, and are exempt from the cross-language join. Existing labels: CH1-PRACTICE, CH2-PRACTICE, CH3-PRACTICE, CH4-PRACTICE, CH9-PRACTICE, CH10-PRACTICE, CH11-PRACTICE, CH12-PRACTICE, CH13-PRACTICE, CH14-PRACTICE, CH15-PRACTICE, REVIEW."
   }
 }
