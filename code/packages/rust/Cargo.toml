@@ -270,6 +270,7 @@ members = [
     "maple-runtime",
     "maple-repl",
     "maple-to-semantic-ir",
+    "scilab-lexer",
     "logic-gates",
     "logic-core",
     "lookup-core",
