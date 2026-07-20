@@ -72,6 +72,19 @@ French.
   *dez* + **e** + *seis*, "**ten AND six**," the *and* still audible. *vinte* ←
   *vīgintī*. **Authored.**
 
+- **Ch. 13 — Colours**: the strangest set of the four. **preto/branco** — Portuguese
+  keeps **two blacks**: literary *negro* ← *niger*, and the everyday **preto** ←
+  Latin ***pressus*** ("pressed, dense" → thick → **dark**; cf. *press/compress*);
+  **branco** ← Germanic ***blank*** with the Portuguese **l→r** swap (*blanc→branco*,
+  as *plaza→praça*), and *albus* survives in **alvorada/alva** ("dawn") →
+  **vermelho/azul** — **vermelho ← *vermiculus*, "little worm"**: the **kermes**
+  scale insect crushed for scarlet dye, the dye's name becoming the colour's (→
+  English **vermilion**; *vermis* → *vermin*), so Portuguese **alone** skips the
+  ancient red root, keeping it only in *rubro/ruivo*; and **azul** ← Arabic
+  ***lāzaward*** ("lapis lazuli") → **azure**, the al-Andalus thread reaching a basic
+  colour. Payoff: **not one** of the four is a plain inherited Latin colour word.
+  **Authored.**
+
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |
