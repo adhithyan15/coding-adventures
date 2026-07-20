@@ -80,10 +80,17 @@ order lives in the book, which LaTeX auto-numbers, and in `session-map.md`.)
   voster* → Paternoster; agrees in **gender and number**, unlike *mi/tu/su*) →
   practice. **Authored.**
 
-Next: **Ch. 12** — the rest of the high-frequency verbs (*hacer, decir, ir*
-irregulars) and more description, building toward everyday conversation. From here
-the course hands over rules, not phrases. Grammar accumulates piece by piece. The
-theme skeleton below plans the wider road.
+- **Ch. 12 — Doing, making, saying, and the -go club**: **hacer** ("to do/make,"
+  ← *facere* → fact/factory/perfect; f→h softening; the *-go* yo-form *hago*;
+  weather *hace calor*) → **decir** ("to say," ← *dīcere* → dictate/diction/verdict;
+  **doubly** irregular — *-go* yo-form *digo* **and** the **e→i** stem-change) →
+  the **-go club** (*tengo/hago/digo/pongo/salgo/vengo* — yo-only, a closed
+  Latin-inherited set of the oldest, most-used verbs) → practice. **Authored.**
+
+Next: **Ch. 13** — more everyday description and the remaining high-frequency
+irregulars (*ir* preterite, *poner/salir/venir* completing the *-go* club), building
+toward real conversation. From here the course hands over rules, not phrases.
+Grammar accumulates piece by piece. The theme skeleton below plans the wider road.
 
 ## Theme Skeleton (planning only)
 
