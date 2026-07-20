@@ -1,0 +1,161 @@
+% ============================================================================
+% air-quality-index — the U.S. EPA Air Quality Index (AQI) breakpoints: each
+% band's MINIMUM index value → the "Level of Concern" category the source names
+% for that band (adj-facts-stdlib, ENVIRONMENT).
+% ============================================================================
+% Every other table in this library is an EXACT lookup: you hand it a key that
+% is literally a row (`category_3`, `hydrogen`, `tuesday`) and it hands back
+% that row's value. The AQI is not shaped like that. When the monitor near you
+% reports an AQI of 75, there is no row labelled 75 — 75 lives INSIDE a band,
+% and what you actually want to know is which band swallowed it. The AQI is a
+% STEP FUNCTION over the whole number line: it is flat across a band, then
+% jumps at a breakpoint, then is flat again.
+%
+% So this table is stored as its BREAKPOINTS. Each `row` is keyed by the
+% MINIMUM index value of a band — 0, 51, 101, 151, 201, 301 — and carries the
+% category that band is called. A query for 75 does NOT ask "is there a row
+% named 75?"; it asks "which breakpoint is the greatest one still `<=` 75?".
+% That is 51, so the answer is `moderate`. This is the ADJ-TABLES RS-5c RANGE /
+% BRACKET lookup, and this library is the first shipped facts table to use it:
+%
+%     ? lookup air_quality_index min_aqi = 75 mode range give category
+%                                                          % moderate
+%
+% Read the keyword form literally — `lookup`, `mode`, `give` are all keywords:
+%
+%     ? lookup <table> <key_col> = <number> mode range give <value_col>
+%              ^^^^^^^ ^^^^^^^^^   ^^^^^^^^           ^^^^^      ^^^^^^^^^
+%              which    the        the value          bracket    which column
+%              table    numeric    you are            select,    to hand back
+%                       key col    classifying        not exact
+%
+% The key column MUST be numeric. That is what makes "greatest key `<=` n" a
+% meaningful question at all: you cannot bracket-search a column of atoms, and
+% the engine rejects an attempt to do so rather than guessing an ordering.
+%
+% The six EPA bands, as a truth table. The `min_aqi` column is what is STORED;
+% the "band" column is the interval that key implies (it runs up to just below
+% the next breakpoint) and is shown here only to make the step visible:
+%
+%     min_aqi   band (implied)    category                          source's colour
+%     -------   ---------------   -------------------------------   ---------------
+%           0   0 to 50           good                              Green
+%          51   51 to 100         moderate                          Yellow
+%         101   101 to 150        unhealthy_for_sensitive_groups    Orange
+%         151   151 to 200        unhealthy                         Red
+%         201   201 to 300        very_unhealthy                    Purple
+%         301   301 and higher    hazardous                         Maroon
+%
+% Note that the interval column is DERIVED, not stored. Storing `0 to 50` as a
+% pair would duplicate 51 in two places (as the top of one band and the bottom
+% of the next) and let them drift apart. Storing only the minima makes the bands
+% contiguous by construction: there is no gap between 50 and 51 to fall into,
+% because 51 IS the next step. The top band is deliberately OPEN — the source
+% says "301 and higher", so an AQI of 480 (a bad wildfire-smoke day) is still
+% `hazardous`; there is no upper breakpoint to fall off.
+%
+% Boundaries are EXACT, not fuzzy. A query for exactly 101 is not "near" the
+% orange band, it IS the orange band: the greatest key `<=` 101 is 101 itself,
+% so it binds `unhealthy_for_sensitive_groups`, not `moderate`. This matters,
+% because 101 is precisely the point where the source's prose says air quality
+% turns unhealthy ("When AQI values are above 100, air quality is unhealthy: at
+% first for certain sensitive groups of people"), and a table that rounded the
+% boundary the wrong way would put a real health threshold on the wrong side.
+%
+% HONEST ABSTENTION BELOW THE DOMAIN. The AQI starts at 0. There is no
+% breakpoint below 0, so a query for -5 has NO key `<=` it, and the engine
+% ABSTAINS — it reports that the value is below the table's domain rather than
+% inventing a category for it. This is the correct answer, not a failure: a
+% negative AQI is not "extra good air", it is not an AQI at all. The same
+% honesty that makes the exact-lookup tables abstain on a key they do not have
+% makes the range table abstain below its floor:
+%
+%     ? lookup air_quality_index min_aqi = -5 mode range give category
+%                                                          % abstains
+%
+% Contrast the two edges deliberately. ABOVE the top breakpoint the table does
+% NOT abstain, because the source explicitly wrote an open-ended band ("301 and
+% higher") — the answer is grounded. BELOW the bottom breakpoint it DOES
+% abstain, because the source's domain simply starts at 0 and says nothing about
+% what lies beneath it. The table answers exactly what its source covers, and
+% only that.
+%
+% The `category` value of every row is the source's own "Levels of Concern"
+% wording collapsed to a single snake_case atom, with no editorial rewording:
+% "Good" → `good`, "Moderate" → `moderate`, "Unhealthy for Sensitive Groups" →
+% `unhealthy_for_sensitive_groups`, "Unhealthy" → `unhealthy`, "Very Unhealthy"
+% → `very_unhealthy`, "Hazardous" → `hazardous`. In particular the third band
+% keeps the full four-word phrase rather than being shortened to something
+% tidier like `sensitive`, because the distinction the source is drawing there
+% is exactly that it is unhealthy for SOME people and not yet for everyone.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — all six breakpoint→category
+% pairs were read out of the fetched EPA / AirNow "Air Quality Index (AQI)
+% Basics" page, from the table titled "AQI Basics for Ozone and Particle
+% Pollution", and any band whose category wording or numeric range could not be
+% verified there would have been dropped). All six spans come from the SAME
+% primary source, https://www.airnow.gov/aqi/aqi-basics/ :
+%
+%   framing (why the table has exactly six steps)
+%     "The U.S. Air Quality Index (AQI) is EPA's tool for communicating about
+%      outdoor air quality and health. The AQI includes six color-coded
+%      categories, each corresponding to a range of index values."
+%
+%   0 → good
+%     "Green   Good   0 to 50   Air quality is satisfactory, and air pollution
+%      poses little or no risk."
+%
+%   51 → moderate
+%     "Yellow   Moderate   51 to 100   Air quality is acceptable. However, there
+%      may be a risk for some people, particularly those who are unusually
+%      sensitive to air pollution."
+%
+%   101 → unhealthy_for_sensitive_groups
+%     "Orange   Unhealthy for Sensitive Groups   101 to 150   Members of
+%      sensitive groups may experience health effects. The general public is
+%      less likely to be affected."
+%
+%   151 → unhealthy
+%     "Red   Unhealthy   151 to 200   Some members of the general public may
+%      experience health effects; members of sensitive groups may experience
+%      more serious health effects."
+%
+%   201 → very_unhealthy
+%     "Purple   Very Unhealthy   201 to 300   Health alert: The risk of health
+%      effects is increased for everyone."
+%
+%   301 → hazardous
+%     "Maroon   Hazardous   301 and higher   Health warning of emergency
+%      conditions: everyone is more likely to be affected."
+%
+% The open top band is grounded in that last span's "301 and higher" — the
+% source writes no upper bound, which is why the 301 row is an open step rather
+% than a closed interval. The 0 floor is grounded in the "0 to 50" span, which
+% is why anything below 0 abstains: the source's domain starts there.
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the AirNow statement that fixes
+% the first breakpoint row (0 → good). Every OTHER row's per-fact source and
+% verbatim span is listed above, so each band remains independently checkable.
+% All spans are from the same EPA / AirNow page — AirNow is run by the U.S.
+% Environmental Protection Agency and the AQI is EPA's own index, a primary U.S.
+% government source — so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table air_quality_index {
+    columns min_aqi, category
+
+    row (0, good)                              % "Green   Good   0 to 50"
+    row (51, moderate)                         % "Yellow   Moderate   51 to 100"
+    row (101, unhealthy_for_sensitive_groups)  % "Orange   Unhealthy for Sensitive Groups   101 to 150"
+    row (151, unhealthy)                       % "Red   Unhealthy   151 to 200"
+    row (201, very_unhealthy)                  % "Purple   Very Unhealthy   201 to 300"
+    row (301, hazardous)                       % "Maroon   Hazardous   301 and higher" (open top band)
+
+    source "Green Good 0 to 50 Air quality is satisfactory, and air pollution poses little or no risk."
+    locator "https://www.airnow.gov/aqi/aqi-basics/"
+    trust authoritative
+}

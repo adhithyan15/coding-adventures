@@ -1,0 +1,37 @@
+% ============================================================================
+% air-quality-index.query.adj — a worked RANGE (bracket) recall over the
+% environment air-quality-index library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "the AQI here is 75 — how
+% bad is that?": it states no air-quality fact of its own — it only `import`s
+% the grounded breakpoint table and asks range lookups. The engine selects, for
+% each queried value, the breakpoint row whose `min_aqi` is the GREATEST key
+% still `<=` that value, and returns that row's `category` together with the
+% table's source/locator/trust.
+%
+% The queries below walk the three behaviours that matter for a step function:
+%
+%   * INSIDE a band (75, 260) — no row is literally 75, so the lookup brackets
+%     down to the 51 breakpoint and answers `moderate`.
+%   * EXACTLY ON a breakpoint (101, 0) — the greatest key `<=` 101 is 101
+%     itself, so it binds the band that STARTS there
+%     (`unhealthy_for_sensitive_groups`), not the band below it. Boundaries are
+%     exact; nothing is rounded across a health threshold.
+%   * OFF the ends — 480 is above the last breakpoint and is still answered
+%     (`hazardous`), because the source wrote that band open-ended as "301 and
+%     higher". But -5 is BELOW the smallest key, has no breakpoint `<=` it, and
+%     honestly ABSTAINS: a negative AQI is not exceptionally clean air, it is
+%     not an AQI at all, and the engine never invents a category for it.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli air-quality-index.query.adj
+% ============================================================================
+
+import "air-quality-index.adj"
+
+? lookup air_quality_index min_aqi = 75 mode range give category    % inside 51..100 → moderate
+? lookup air_quality_index min_aqi = 101 mode range give category   % exactly on a breakpoint → unhealthy_for_sensitive_groups
+? lookup air_quality_index min_aqi = 0 mode range give category     % the very floor of the domain → good
+? lookup air_quality_index min_aqi = 260 mode range give category   % inside 201..300 → very_unhealthy
+? lookup air_quality_index min_aqi = 480 mode range give category   % above the last breakpoint, open band → hazardous
+? lookup air_quality_index min_aqi = -5 mode range give category    % below the domain → abstains
