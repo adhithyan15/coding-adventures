@@ -93,6 +93,21 @@ compared, every Spanish form supplied in full (no prior Spanish assumed).
   theirs.** **Authored.** (Also the prerequisite for the compound past — *avoir* is
   the auxiliary the *passé composé* is built on.)
 
+- **Ch. 15 — The compound past, and the tense it drove out**: the **passé
+  composé** — *avoir* + past participle (*j'ai parlé*; *-er*→*-é* ← *-ātum*,
+  *-ir*→*-i*, *-re*→*-u*), with the note that *parler / parlé / parlez* are
+  **homophones**. The etymology is the whole lesson: *j'ai parlé* was once
+  literally "**I have [a thing] spoken**" — Latin *habeō litterās scriptās*, "I
+  have letters written," a **possessive** whose participle was an **adjective**
+  agreeing with the object. That construction **hardened into a tense**, and the
+  fossil is still visible: the participle **still agrees** with a preceding object
+  (*les lettres que j'ai écrit**es***) → the **passé simple** (*il parla* ←
+  Vulgar Latin **\*parabolāvit**) — the direct inheritance, and the **same tense** as Spanish *habló*
+  and Portuguese *falou*, but exiled to **literature**: recognise it, don't produce
+  it. The cross-language payoff: **French, German and Italian all**
+  let a "have" compound push the inherited simple past out of speech, while
+  **Spanish and Portuguese kept theirs**. **Authored.**
+
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |

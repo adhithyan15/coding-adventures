@@ -1,5 +1,30 @@
 # Changelog
 
+## Chapter 15 — The compound past, and the tense it drove out
+
+- **Chapter 15 authored** (`FR-C15-passe-compose`, `-passe-simple`): the everyday
+  past, built on Ch.14's *avoir* — reviewing Ch.5/14 via `reviews_of`.
+- **passé composé** (`FR-C15-passe-compose`): *avoir* + past participle (*-er*→*-é*
+  ← *-ātum*, *-ir*→*-i* ← *-ītum*, *-re*→*-u* ← *-ūtum*), noting that *parler*,
+  *parlé* and *parlez* are **homophones** — three spellings, one sound. The
+  etymology carries the lesson: *j'ai parlé* was once literally "**I have [a thing]
+  spoken**," from Latin *habeō litterās scriptās* ("I have letters written") — a
+  **possessive** in which the participle was an **adjective** agreeing with the
+  object. Over centuries "I possess a written thing" slid into "I wrote," so a
+  possessive construction **hardened into a tense** — and the fossil is still
+  working: when the object comes first, the participle **still agrees** (*les
+  lettres que j'ai écrit**es***), a two-thousand-year-old adjective ending doing its
+  old job.
+- **passé simple** (`FR-C15-passe-simple`): *il parla* ← Vulgar Latin **\*parabolāvit**, the
+  direct inheritance — framed as recognise-don't-produce, since it fills the past
+  tense of essentially all French literature and appears in no conversation. Its
+  value here is comparative: it is the **same tense** as Spanish *habló*, Portuguese
+  *falou* and Italian *parlò*, and the chapter closes on the cross-language
+  observation that **French, German and Italian all** built a "have"
+  compound and let it push the inherited simple past out of speech, while
+  **Spanish and Portuguese, at the western edge, kept theirs**.
+- Taxonomy: namespaced `FR-PAST-COMPOUND`, `FR-PAST-SIMPLE-LITERARY`.
+
 ## Chapter 14 — avoir, and having your years
 
 - **Chapter 14 authored** (`FR-C14-avoir`, `-age`): the verb the rest of the
