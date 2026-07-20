@@ -4,6 +4,30 @@ All notable changes to this project will be documented in this file.
 
 ## [0.41.0] — 2026-07-20 — ordered, addressed proof steps + visible negation (RS-4 PR-B)
 
+### Fixed (security)
+
+- **Both resolvers had unbounded mutual recursion; a self-recursive rule aborted
+  the process.** `solve`/`solve_body` (enumeration) and
+  `find_first_with`/`prove_body` (deterministic) recursed with no termination
+  guard, so `p(X, Y) :- p(X, Y)` descended until the stack overflowed —
+  a `SIGABRT`, which cannot be caught, so a host embedding this crate dies with
+  it. The deterministic path is the one `search(.., AutoDetect)` selects for an
+  all-`Certain` KB, i.e. the adjudication connector's normal mode.
+- **The obvious fix would have been worse than the crash.** Returning "no proof"
+  at the cap is what negation-as-failure reads as *absence*, so a truncated
+  search would have satisfied a `not G` guard and this release's new
+  `FromNegation` step would have asserted a check that never happened. Both caps
+  therefore raise `ResolutionLimitExceeded` and **propagate**; the `?` in each
+  negation branch is load-bearing.
+- **`MAX_SLD_DEPTH = 128`** bounds rule-chain nesting. **`MAX_BODY_CONJUNCTS = 1024`**
+  bounds a separate axis the depth cap cannot: `solve_body` recurses over a
+  rule's *remaining literals* while `depth` stays constant across the body, so a
+  ~14,000-conjunct body overflowed at depth 1.
+- A query that hits either cap **abstains** rather than reporting the proofs
+  found first — a truncated search presented as a complete one is the accounting
+  failure this release exists to prevent.
+
+
 ### Added
 
 - **`ProofStep.depth`.** A step now records how deeply nested it is: the root

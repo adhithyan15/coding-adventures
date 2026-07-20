@@ -85,6 +85,19 @@ fn rename_literal(lit: &BodyLiteral, renames: &mut HashMap<u64, LogicVar>) -> Bo
 /// reach it by legitimate nesting.
 pub const MAX_SLD_DEPTH: usize = 128;
 
+/// The most conjuncts a single rule body may contain.
+///
+/// `solve_body` recurses over the body's *remaining* literals, and that
+/// recursion is a **different axis** from `MAX_SLD_DEPTH`: `depth` is
+/// deliberately held constant across a body (all conjuncts of one rule sit at
+/// the same nesting level), so it cannot bound body length. A rule with ~14,000
+/// conjuncts overflows the stack even though its `depth` never exceeds 1.
+///
+/// Capping the length at entry bounds the recursion directly, since the slice
+/// shrinks by one per frame. 1024 is far past any hand-written or generated
+/// rule and an order of magnitude below the observed failure point.
+pub const MAX_BODY_CONJUNCTS: usize = 1024;
+
 /// The resolver abandoned the search because it hit [`MAX_SLD_DEPTH`].
 ///
 /// This is deliberately an **error, not an empty result**. The distinction is
@@ -199,6 +212,12 @@ fn solve_body(
 ) -> Result<Vec<(Substitution, Vec<ProofStep>)>, ResolutionLimitExceeded> {
     if body.is_empty() {
         return Ok(vec![(subst.clone(), Vec::new())]);
+    }
+    // Bounds the `rest` recursion below — see MAX_BODY_CONJUNCTS. `Err`, not an
+    // empty vec, for the same reason as the depth cap: a body we refused to
+    // evaluate must never be observable as a goal that failed.
+    if body.len() > MAX_BODY_CONJUNCTS {
+        return Err(ResolutionLimitExceeded);
     }
 
     let (first, rest) = body.split_first().unwrap();
