@@ -1,1 +1,1 @@
-function double(x){return x*2};log(double(7));
+function double(x){return x*2}log(double(7));

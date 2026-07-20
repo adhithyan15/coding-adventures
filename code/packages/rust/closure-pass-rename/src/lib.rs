@@ -2122,7 +2122,7 @@ mod tests {
             rename_source(
                 "function outer(param) { function inner(innerArg) { return innerArg; } return inner(param); }"
             ),
-            "function outer(param){function inner(a){return a};return inner(param)};"
+            "function outer(param){function inner(a){return a}return inner(param)};"
         );
     }
 

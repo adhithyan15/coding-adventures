@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-closure-pass-inline-variables"
-version = "0.15.0"
+version = "0.15.1"
 edition = "2021"
 description = "Constant-propagation pass for the Closure Compiler clone. Per CLOC06's canonical pass set. Replaces references to a top-level `const` bound to a literal with the literal itself, so the binding becomes unused and remove-unused-vars deletes it."
 

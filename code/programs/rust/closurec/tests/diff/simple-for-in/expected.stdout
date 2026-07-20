@@ -1,1 +1,1 @@
-function log(p){report(p)};log(1);for(var key in obj){var x=3;use(key,x)}after();
+function log(p){report(p)}log(1);for(var key in obj){var x=3;use(key,x)}after();

@@ -1,1 +1,1 @@
-class C{static{x=3}}
+class C{static{x=3}};

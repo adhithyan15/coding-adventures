@@ -1,1 +1,1 @@
-function dead(){return 1};function live(){return 2};log(live());sink(live);
+function dead(){return 1}function live(){return 2}log(live());sink(live);

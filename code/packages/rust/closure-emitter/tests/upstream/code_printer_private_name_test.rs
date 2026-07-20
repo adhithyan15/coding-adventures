@@ -131,13 +131,13 @@ fn assert_emits(body: Vec<ClassMember>, expected: &str) {
 /// `class C{#x=1;}` — a private key prepends `#` to the stored bare name.
 #[test]
 fn private_field_with_initializer() {
-    assert_emits(vec![field(private_key("x"), Some(num(1.0, "1")), false)], "class C{#x=1;}");
+    assert_emits(vec![field(private_key("x"), Some(num(1.0, "1")), false)], "class C{#x=1;};");
 }
 
 /// `class C{#x;}` — a bare private field: just `#name` and the terminator.
 #[test]
 fn bare_private_field() {
-    assert_emits(vec![field(private_key("x"), None, false)], "class C{#x;}");
+    assert_emits(vec![field(private_key("x"), None, false)], "class C{#x;};");
 }
 
 /// The stored name omits the `#` but the emitted form has exactly one — a
@@ -157,7 +157,7 @@ fn private_field_emits_single_hash() {
 /// `#` private key.
 #[test]
 fn static_private_field() {
-    assert_emits(vec![field(private_key("x"), Some(num(1.0, "1")), true)], "class C{static #x=1;}");
+    assert_emits(vec![field(private_key("x"), Some(num(1.0, "1")), true)], "class C{static #x=1;};");
 }
 
 // =====================================================================
@@ -168,7 +168,7 @@ fn static_private_field() {
 /// brace-terminated (no `;`).
 #[test]
 fn private_method() {
-    assert_emits(vec![method(private_key("m"))], "class C{#m(){}}");
+    assert_emits(vec![method(private_key("m"))], "class C{#m(){}};");
 }
 
 // =====================================================================
@@ -181,7 +181,7 @@ fn private_method() {
 fn private_field_then_public_method() {
     assert_emits(
         vec![field(private_key("x"), Some(num(1.0, "1")), false), method(ident_key("m"))],
-        "class C{#x=1;m(){}}",
+        "class C{#x=1;m(){}};",
     );
 }
 
@@ -194,6 +194,6 @@ fn public_field_then_private_field() {
             field(ident_key("x"), Some(num(1.0, "1")), false),
             field(private_key("y"), Some(num(2.0, "2")), false),
         ],
-        "class C{x=1;#y=2;}",
+        "class C{x=1;#y=2;};",
     );
 }

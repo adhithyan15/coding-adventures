@@ -76,7 +76,7 @@ fn inlines_zero_param_constant_return() {
     // → the call becomes `1`.
     assert_eq!(
         inline_source("function f() { return 1; } g(f());"),
-        "function f(){return 1};g(1);"
+        "function f(){return 1}g(1);"
     );
 }
 
@@ -84,7 +84,7 @@ fn inlines_zero_param_constant_return() {
 fn inlines_string_literal_return() {
     assert_eq!(
         inline_source("function s() { return \"hi\"; } g(s());"),
-        "function s(){return\"hi\"};g(\"hi\");"
+        "function s(){return\"hi\"}g(\"hi\");"
     );
 }
 
@@ -94,7 +94,7 @@ fn inlines_zero_param_body_at_two_sites() {
     // sites are inlined.
     assert_eq!(
         inline_source("function one() { return 1; } a(one()); b(one());"),
-        "function one(){return 1};a(1);b(1);"
+        "function one(){return 1}a(1);b(1);"
     );
 }
 
@@ -103,7 +103,7 @@ fn substitutes_argument_into_member_object() {
     // `o` → `arr`, but `.length` (the property name) is untouched.
     assert_eq!(
         inline_source("function len(o) { return o.length; } use(len(arr));"),
-        "function len(o){return o.length};use(arr.length);"
+        "function len(o){return o.length}use(arr.length);"
     );
 }
 
@@ -111,7 +111,7 @@ fn substitutes_argument_into_member_object() {
 fn inlines_call_nested_in_binary_expression() {
     assert_eq!(
         inline_source("function id(v) { return v; } use(id(a) + id(b));"),
-        "function id(v){return v};use(a+b);"
+        "function id(v){return v}use(a+b);"
     );
 }
 
@@ -121,7 +121,7 @@ fn does_not_inline_when_a_use_is_not_a_call() {
     // calls would leave `f` referenced, so the decl couldn't be removed.
     assert_eq!(
         inline_source("function f(x) { return x * 2; } a(f(1)); keep(f);"),
-        "function f(x){return x*2};a(f(1));keep(f);"
+        "function f(x){return x*2}a(f(1));keep(f);"
     );
 }
 
@@ -131,7 +131,7 @@ fn does_not_inline_multi_use_over_budget() {
     // call sites are declined to avoid output growth.
     assert_eq!(
         inline_source("function cube(x) { return x * x * x; } a(cube(p)); b(cube(q));"),
-        "function cube(x){return x*x*x};a(cube(p));b(cube(q));"
+        "function cube(x){return x*x*x}a(cube(p));b(cube(q));"
     );
 }
 

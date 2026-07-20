@@ -167,7 +167,7 @@ fn assert_emits(body: Vec<ClassMember>, expected: &str) {
 /// the empty block is brace-terminated (no trailing `;`).
 #[test]
 fn empty_static_block() {
-    assert_emits(vec![static_block(vec![])], "class C{static{}}");
+    assert_emits(vec![static_block(vec![])], "class C{static{}};");
 }
 
 /// The `static` keyword and the opening brace are adjacent — a regression guard
@@ -187,7 +187,7 @@ fn static_and_brace_are_adjacent() {
 /// `class C{static{x}}` — a single expression statement prints inside the block.
 #[test]
 fn static_block_with_statement() {
-    assert_emits(vec![static_block(vec![expr_stmt(ident("x"))])], "class C{static{x}}");
+    assert_emits(vec![static_block(vec![expr_stmt(ident("x"))])], "class C{static{x}};");
 }
 
 /// `class C{static{x=1}}` — a real initializer assignment, the canonical use of
@@ -196,7 +196,7 @@ fn static_block_with_statement() {
 fn static_block_with_assignment() {
     assert_emits(
         vec![static_block(vec![expr_stmt(assign("x", num(1.0, "1")))])],
-        "class C{static{x=1}}",
+        "class C{static{x=1}};",
     );
 }
 
@@ -206,7 +206,7 @@ fn static_block_with_assignment() {
 fn static_block_with_two_statements() {
     assert_emits(
         vec![static_block(vec![expr_stmt(ident("x")), expr_stmt(ident("y"))])],
-        "class C{static{x;y}}",
+        "class C{static{x;y}};",
     );
 }
 
@@ -219,14 +219,14 @@ fn static_block_with_two_statements() {
 /// method with no separator.
 #[test]
 fn static_block_then_method_no_separator() {
-    assert_emits(vec![static_block(vec![]), method("m")], "class C{static{}m(){}}");
+    assert_emits(vec![static_block(vec![]), method("m")], "class C{static{}m(){}};");
 }
 
 /// `class C{m(){}static{}}` — a method then a static block: the method's `}`
 /// abuts the `static` keyword with no separator.
 #[test]
 fn method_then_static_block_no_separator() {
-    assert_emits(vec![method("m"), static_block(vec![])], "class C{m(){}static{}}");
+    assert_emits(vec![method("m"), static_block(vec![])], "class C{m(){}static{}};");
 }
 
 /// Two static blocks back-to-back — `class C{static{}static{}}`. Each is
@@ -234,7 +234,7 @@ fn method_then_static_block_no_separator() {
 /// class may hold multiple static blocks).
 #[test]
 fn two_static_blocks_back_to_back() {
-    assert_emits(vec![static_block(vec![]), static_block(vec![])], "class C{static{}static{}}");
+    assert_emits(vec![static_block(vec![]), static_block(vec![])], "class C{static{}static{}};");
 }
 
 // =====================================================================
@@ -253,6 +253,6 @@ fn field_static_block_method_interleave() {
             static_block(vec![expr_stmt(assign("y", num(2.0, "2")))]),
             method("m"),
         ],
-        "class C{x=1;static{y=2}m(){}}",
+        "class C{x=1;static{y=2}m(){}};",
     );
 }

@@ -1,1 +1,1 @@
-function sq(x){return x*x};a(sq(3));b(sq(4));
+function sq(x){return x*x}a(sq(3));b(sq(4));

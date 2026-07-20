@@ -4885,7 +4885,7 @@ mod tests {
         // (now dead) declaration stays — its removal is a later pass.
         assert_eq!(
             inline_source("function double(x) { return x * 2; } log(double(7));"),
-            "function double(x){return x*2};log(7*2);"
+            "function double(x){return x*2}log(7*2);"
         );
     }
 
@@ -4895,7 +4895,7 @@ mod tests {
         // → `value`.
         assert_eq!(
             inline_source("function id(v) { return v; } print(id(value));"),
-            "function id(v){return v};print(value);"
+            "function id(v){return v}print(value);"
         );
     }
 
@@ -4903,7 +4903,7 @@ mod tests {
     fn inlines_two_param_function() {
         assert_eq!(
             inline_source("function add(a, b) { return a + b; } use(add(p, q));"),
-            "function add(a,b){return a+b};use(p+q);"
+            "function add(a,b){return a+b}use(p+q);"
         );
     }
 
@@ -4913,7 +4913,7 @@ mod tests {
         // `.x` property name must NOT be touched.
         assert_eq!(
             inline_source("function get(o) { return o.x; } use(get(obj));"),
-            "function get(o){return o.x};use(obj.x);"
+            "function get(o){return o.x}use(obj.x);"
         );
     }
 
@@ -4922,7 +4922,7 @@ mod tests {
         // A computed `o[i]` IS a use position — both params substitute.
         assert_eq!(
             inline_source("function at(o, i) { return o[i]; } use(at(arr, idx));"),
-            "function at(o,i){return o[i]};use(arr[idx]);"
+            "function at(o,i){return o[i]}use(arr[idx]);"
         );
     }
 
@@ -4931,7 +4931,7 @@ mod tests {
         // The call can be nested inside another call's arguments.
         assert_eq!(
             inline_source("function double(x) { return x * 2; } outer(inner(double(5)));"),
-            "function double(x){return x*2};outer(inner(5*2));"
+            "function double(x){return x*2}outer(inner(5*2));"
         );
     }
 
@@ -4942,7 +4942,7 @@ mod tests {
         // declaration is left for the downstream passes to remove.
         assert_eq!(
             inline_source("function d(x) { return x * 2; } a(d(1)); b(d(2));"),
-            "function d(x){return x*2};a(1*2);b(2*2);"
+            "function d(x){return x*2}a(1*2);b(2*2);"
         );
     }
 
@@ -4954,7 +4954,7 @@ mod tests {
         // WOULD still be inlined — see the single-use tests.)
         assert_eq!(
             inline_source("function cube(x) { return x * x * x; } a(cube(p)); b(cube(q));"),
-            "function cube(x){return x*x*x};a(cube(p));b(cube(q));"
+            "function cube(x){return x*x*x}a(cube(p));b(cube(q));"
         );
     }
 
@@ -4966,7 +4966,7 @@ mod tests {
         // net loss. We decline the whole function (uses != inlinable).
         assert_eq!(
             inline_source("function f(x) { return x * 2; } a(f(1)); b(f(2)); keep(f);"),
-            "function f(x){return x*2};a(f(1));b(f(2));keep(f);"
+            "function f(x){return x*2}a(f(1));b(f(2));keep(f);"
         );
     }
 
@@ -4977,7 +4977,7 @@ mod tests {
         // function is declined (no partial inlining).
         assert_eq!(
             inline_source("function d(x) { return x * 2; } a(d(1)); b(d(g()));"),
-            "function d(x){return x*2};a(d(1));b(d(g()));"
+            "function d(x){return x*2}a(d(1));b(d(g()));"
         );
     }
 
@@ -4987,7 +4987,7 @@ mod tests {
         // not a candidate — recursion is excluded by the capture guard.
         assert_eq!(
             inline_source("function f(x) { return f(x); } g(f(1));"),
-            "function f(x){return f(x)};g(f(1));"
+            "function f(x){return f(x)}g(f(1));"
         );
     }
 
@@ -4998,7 +4998,7 @@ mod tests {
         // `g`. Rejected.
         assert_eq!(
             inline_source("function f(x) { return x + g; } h(f(1));"),
-            "function f(x){return x+g};h(f(1));"
+            "function f(x){return x+g}h(f(1));"
         );
     }
 
@@ -5009,7 +5009,7 @@ mod tests {
         // either binding. Rejected by the shadow guard.
         assert_eq!(
             inline_source("function f(x) { return x * 2; } function uses(f) { return f(1); }"),
-            "function f(x){return x*2};function uses(f){return f(1)};"
+            "function f(x){return x*2}function uses(f){return f(1)};"
         );
     }
 
@@ -5019,7 +5019,7 @@ mod tests {
         // arity check fails, so the call is left intact.
         assert_eq!(
             inline_source("function add(a, b) { return a + b; } k(add(1));"),
-            "function add(a,b){return a+b};k(add(1));"
+            "function add(a,b){return a+b}k(add(1));"
         );
     }
 
@@ -5031,7 +5031,7 @@ mod tests {
         // plus `g` — but the simple-arg gate is the operative reason.)
         assert_eq!(
             inline_source("function f(x) { return x * 2; } m(f(g()));"),
-            "function f(x){return x*2};m(f(g()));"
+            "function f(x){return x*2}m(f(g()));"
         );
     }
 
@@ -5041,7 +5041,7 @@ mod tests {
         // called. There is no call to substitute, so nothing changes.
         assert_eq!(
             inline_source("function f(x) { return x * 2; } h(f);"),
-            "function f(x){return x*2};h(f);"
+            "function f(x){return x*2}h(f);"
         );
     }
 
@@ -5053,7 +5053,7 @@ mod tests {
         // candidate for either inliner.
         assert_eq!(
             inline_source("function f(x) { var t = x * 2; return t; } use(f(3));"),
-            "function f(x){var t=x*2;return t};use(f(3));"
+            "function f(x){var t=x*2;return t}use(f(3));"
         );
     }
 
@@ -5072,7 +5072,7 @@ mod tests {
             inline_source(
                 "function track(n, v) { const e = n+v; metrics.push(e); } track(a, b);"
             ),
-            "function track(n,v){const e=n+v;metrics.push(e)};const c=a+b;metrics.push(c);"
+            "function track(n,v){const e=n+v;metrics.push(e)}const c=a+b;metrics.push(c);"
         );
     }
 
@@ -5082,7 +5082,7 @@ mod tests {
         // body run with the argument substituted in.
         assert_eq!(
             inline_source("function log2(x) { console.log(x); console.log(x); } log2(v);"),
-            "function log2(x){console.log(x);console.log(x)};console.log(v);console.log(v);"
+            "function log2(x){console.log(x);console.log(x)}console.log(v);console.log(v);"
         );
     }
 
@@ -5093,7 +5093,7 @@ mod tests {
         // keeps them distinct — the soundness crux of statement splicing.
         assert_eq!(
             inline_source("function f(x) { const c = x; sink(c); } f(c);"),
-            "function f(x){const c=x;sink(c)};const a=c;sink(a);"
+            "function f(x){const c=x;sink(c)}const a=c;sink(a);"
         );
     }
 
@@ -5114,7 +5114,7 @@ mod tests {
         // first would be guarded by the condition.
         assert_eq!(
             inline_source("function f() { a(); b(); } if (c) f();"),
-            "function f(){a();b()};if(c){a();b()}"
+            "function f(){a();b()}if(c){a();b()}"
         );
     }
 
@@ -5124,7 +5124,7 @@ mod tests {
         // discarded statement call. This slice declines it.
         assert_eq!(
             inline_source("function f() { sink(1); } var x = f();"),
-            "function f(){sink(1)};var x=f();"
+            "function f(){sink(1)}var x=f();"
         );
     }
 
@@ -5136,7 +5136,7 @@ mod tests {
         // (nothing else references `b`). Previously this slice declined `var`.
         assert_eq!(
             inline_source("function f(x) { var t = x; sink(t); } f(a);"),
-            "function f(x){var t=x;sink(t)};var b=a;sink(b);"
+            "function f(x){var t=x;sink(t)}var b=a;sink(b);"
         );
     }
 
@@ -5148,7 +5148,7 @@ mod tests {
         // provably inert and dropped entirely; the rest splices as usual.
         assert_eq!(
             inline_source("function f(x) { sink(x); return 1; } f(a);"),
-            "function f(x){sink(x);return 1};sink(a);"
+            "function f(x){sink(x);return 1}sink(a);"
         );
     }
 
@@ -5157,7 +5157,7 @@ mod tests {
         // A bare `return;` is a no-op once the value is discarded — dropped.
         assert_eq!(
             inline_source("function f(x) { sink(x); return; } f(a);"),
-            "function f(x){sink(x);return};sink(a);"
+            "function f(x){sink(x);return}sink(a);"
         );
     }
 
@@ -5167,7 +5167,7 @@ mod tests {
         // the read neither throws nor has a side effect; dropped.
         assert_eq!(
             inline_source("function f(x) { sink(x); return x; } f(a);"),
-            "function f(x){sink(x);return x};sink(a);"
+            "function f(x){sink(x);return x}sink(a);"
         );
     }
 
@@ -5177,7 +5177,7 @@ mod tests {
         // but the call is KEPT as a statement (`setup();`) for its effect.
         assert_eq!(
             inline_source("function f(x) { log(x); return setup(); } f(a);"),
-            "function f(x){log(x);return setup()};log(a);setup();"
+            "function f(x){log(x);return setup()}log(a);setup();"
         );
     }
 
@@ -5188,7 +5188,7 @@ mod tests {
         // this, but the discarded-result statement splice can: `g();`.
         assert_eq!(
             inline_source("function f() { return setup(); } f();"),
-            "function f(){return setup()};setup();"
+            "function f(){return setup()}setup();"
         );
     }
 
@@ -5198,7 +5198,7 @@ mod tests {
         // if undeclared — so the read is preserved as `glob;`, not dropped.
         assert_eq!(
             inline_source("function f(x) { sink(x); return glob; } f(a);"),
-            "function f(x){sink(x);return glob};sink(a);glob;"
+            "function f(x){sink(x);return glob}sink(a);glob;"
         );
     }
 
@@ -5209,7 +5209,7 @@ mod tests {
         // so the candidate is declined.
         assert_eq!(
             inline_source("function f(x) { return; sink(x); } f(a);"),
-            "function f(x){return;sink(x)};f(a);"
+            "function f(x){return;sink(x)}f(a);"
         );
     }
 
@@ -5219,7 +5219,7 @@ mod tests {
         // rebind it. Rejected.
         assert_eq!(
             inline_source("function f() { sink(arguments); } f();"),
-            "function f(){sink(arguments)};f();"
+            "function f(){sink(arguments)}f();"
         );
     }
 
@@ -5238,7 +5238,7 @@ mod tests {
         // remove-unused-vars / treeshake, not by this pass.)
         assert_eq!(
             inline_source("const K = 5; function f() { sink(K); } f();"),
-            "const K=5;function f(){sink(K)};sink(K);"
+            "const K=5;function f(){sink(K)}sink(K);"
         );
     }
 
@@ -5251,11 +5251,9 @@ mod tests {
         // body.
         assert_eq!(
             inline_source(
-                "function dep(x) { trace(x); return x*2; } dep(0); \
-                 function f(p) { log(p); use(dep(p)); } f(5);"
+                "function dep(x) { trace(x); return x*2; } dep(0); function f(p) { log(p); use(dep(p)); } f(5);"
             ),
-            "function dep(x){trace(x);return x*2};dep(0);\
-             function f(p){log(p);use(dep(p))};log(5);use(dep(5));"
+            "function dep(x){trace(x);return x*2}dep(0);function f(p){log(p);use(dep(p))}log(5);use(dep(5));"
         );
     }
 
@@ -5273,10 +5271,9 @@ mod tests {
         // Slice B behaviour change.
         assert_eq!(
             inline_source(
-                "const K = 5; function f() { sink(K); } \
-                 function main() { f(); } main(); main();"
+                "const K = 5; function f() { sink(K); } function main() { f(); } main(); main();"
             ),
-            "const K=5;function f(){sink(K)};function main(){sink(K)};main();main();"
+            "const K=5;function f(){sink(K)}function main(){sink(K)}main();main();"
         );
     }
 
@@ -5286,7 +5283,7 @@ mod tests {
         // so the splice is sound there too.
         assert_eq!(
             inline_source("const K = 5; function f() { sink(K); } { f(); }"),
-            "const K=5;function f(){sink(K)};{sink(K)}"
+            "const K=5;function f(){sink(K)}{sink(K)}"
         );
     }
 
@@ -5301,12 +5298,9 @@ mod tests {
         // so it is not itself inlined; `g` is multi-use so it stays.
         assert_eq!(
             inline_source(
-                "function dep() { keep(); return 1; } dep(); \
-                 function f() { log(0); use(dep); } \
-                 function g() { let dep = 99; f(); } g(); g();"
+                "function dep() { keep(); return 1; } dep(); function f() { log(0); use(dep); } function g() { let dep = 99; f(); } g(); g();"
             ),
-            "function dep(){keep();return 1};dep();\
-             function f(){log(0);use(dep)};function g(){let dep=99;f()};g();g();"
+            "function dep(){keep();return 1}dep();function f(){log(0);use(dep)}function g(){let dep=99;f()}g();g();"
         );
     }
 
@@ -5319,12 +5313,9 @@ mod tests {
         // exercised now that the uniqueness gate handles the single-decl case.
         assert_eq!(
             inline_source(
-                "function dep() { keep(); return 1; } dep(); \
-                 function f() { log(0); use(dep); } f(); \
-                 function other() { let dep = 5; return dep; } other(); other();"
+                "function dep() { keep(); return 1; } dep(); function f() { log(0); use(dep); } f(); function other() { let dep = 5; return dep; } other(); other();"
             ),
-            "function dep(){keep();return 1};dep();function f(){log(0);use(dep)};\
-             log(0);use(dep);function other(){let dep=5;return dep};other();other();"
+            "function dep(){keep();return 1}dep();function f(){log(0);use(dep)}log(0);use(dep);function other(){let dep=5;return dep}other();other();"
         );
     }
 
@@ -5339,12 +5330,9 @@ mod tests {
         // `g`'s nested `dep` (99) instead of the top-level one.
         assert_eq!(
             inline_source(
-                "function dep() { return 1; } dep(); \
-                 function f() { log(0); use(dep); } \
-                 function g() { function dep() { return 99; } f(); dep(); } g(); g();"
+                "function dep() { return 1; } dep(); function f() { log(0); use(dep); } function g() { function dep() { return 99; } f(); dep(); } g(); g();"
             ),
-            "function dep(){return 1};dep();function f(){log(0);use(dep)};\
-             function g(){function dep(){return 99};f();dep()};g();g();"
+            "function dep(){return 1}dep();function f(){log(0);use(dep)}function g(){function dep(){return 99}f();dep()}g();g();"
         );
     }
 
@@ -5358,11 +5346,9 @@ mod tests {
         // on `f`).
         assert_eq!(
             inline_source(
-                "function other(q) { trace(q); return q; } other(1); other(2); \
-                 function f() { sink(q); } f();"
+                "function other(q) { trace(q); return q; } other(1); other(2); function f() { sink(q); } f();"
             ),
-            "function other(q){trace(q);return q};other(1);other(2);\
-             function f(){sink(q)};f();"
+            "function other(q){trace(q);return q}other(1);other(2);function f(){sink(q)}f();"
         );
     }
 
@@ -5376,7 +5362,7 @@ mod tests {
         // declined this; PR-4a admits it.)
         assert_eq!(
             inline_source("function f(x) { sink(x); } f(g());"),
-            "function f(x){sink(x)};const a=g();sink(a);"
+            "function f(x){sink(x)}const a=g();sink(a);"
         );
     }
 
@@ -5386,7 +5372,7 @@ mod tests {
         // twice: the temp captures the read once, both uses read the temp.
         assert_eq!(
             inline_source("function f(p) { sink(p); use(p); } f(obj.x);"),
-            "function f(p){sink(p);use(p)};const a=obj.x;sink(a);use(a);"
+            "function f(p){sink(p);use(p)}const a=obj.x;sink(a);use(a);"
         );
     }
 
@@ -5396,7 +5382,7 @@ mod tests {
         // are hoisted in source order, preserving left-to-right evaluation.
         assert_eq!(
             inline_source("function f(p, q) { sink(p, q); } f(5, obj.x);"),
-            "function f(p,q){sink(p,q)};const a=5;const b=obj.x;sink(a,b);"
+            "function f(p,q){sink(p,q)}const a=5;const b=obj.x;sink(a,b);"
         );
     }
 
@@ -5406,7 +5392,7 @@ mod tests {
         // non-simple argument hoists the arg temp before the captured body.
         assert_eq!(
             inline_source("function f(p) { g(); return p + 1; } var x = f(obj.y);"),
-            "function f(p){g();return p+1};const b=obj.y;g();const a=b+1;var x=a;"
+            "function f(p){g();return p+1}const b=obj.y;g();const a=b+1;var x=a;"
         );
     }
 
@@ -5416,7 +5402,7 @@ mod tests {
         // preserved byte-for-byte — the no-churn guarantee.
         assert_eq!(
             inline_source("function f(p) { sink(p); use(p); } f(v);"),
-            "function f(p){sink(p);use(p)};sink(v);use(v);"
+            "function f(p){sink(p);use(p)}sink(v);use(v);"
         );
     }
 
@@ -5428,7 +5414,7 @@ mod tests {
         // verbatim with the parameter substituted in.
         assert_eq!(
             inline_source("function f(x) { if (x > 0) log(x); else warn(x); } f(v);"),
-            "function f(x){if(x>0)log(x);else warn(x);};if(v>0)log(v);else warn(v);"
+            "function f(x){if(x>0)log(x);else warn(x);}if(v>0)log(v);else warn(v);"
         );
     }
 
@@ -5437,7 +5423,7 @@ mod tests {
         // A block branch of expression statements is spliced as a block.
         assert_eq!(
             inline_source("function f(x) { if (x) { a(x); b(x); } } f(v);"),
-            "function f(x){if(x){a(x);b(x)}};if(v){a(v);b(v)}"
+            "function f(x){if(x){a(x);b(x)}}if(v){a(v);b(v)}"
         );
     }
 
@@ -5447,7 +5433,7 @@ mod tests {
         // and branch that read it are renamed consistently.
         assert_eq!(
             inline_source("function f(x) { const t = x > 0; if (t) sink(x); } f(v);"),
-            "function f(x){const t=x>0;if(t)sink(x);};const a=v>0;if(a)sink(v);"
+            "function f(x){const t=x>0;if(t)sink(x);}const a=v>0;if(a)sink(v);"
         );
     }
 
@@ -5457,7 +5443,7 @@ mod tests {
         // temp once, and the `if` reads the temp.
         assert_eq!(
             inline_source("function f(p) { if (p) sink(p); } f(g());"),
-            "function f(p){if(p)sink(p);};const a=g();if(a)sink(a);"
+            "function f(p){if(p)sink(p);}const a=g();if(a)sink(a);"
         );
     }
 
@@ -5467,7 +5453,7 @@ mod tests {
         // splice would mis-scope — the whole helper is declined.
         assert_eq!(
             inline_source("function f(x) { if (x) return; sink(x); } f(v);"),
-            "function f(x){if(x)return;sink(x)};f(v);"
+            "function f(x){if(x)return;sink(x)}f(v);"
         );
     }
 
@@ -5477,7 +5463,7 @@ mod tests {
         // name-based renamer cannot shadow-correctly — declined.
         assert_eq!(
             inline_source("function f(x) { if (x) { let t = 1; sink(t); } } f(v);"),
-            "function f(x){if(x){let t=1;sink(t)}};f(v);"
+            "function f(x){if(x){let t=1;sink(t)}}f(v);"
         );
     }
 
@@ -5487,7 +5473,7 @@ mod tests {
         // branch fails the restriction — declined (kept for a later slice).
         assert_eq!(
             inline_source("function f(x) { if (x) { if (y) a(); } } f(v);"),
-            "function f(x){if(x){if(y)a();}};f(v);"
+            "function f(x){if(x){if(y)a();}}f(v);"
         );
     }
 
@@ -5500,7 +5486,7 @@ mod tests {
         // OUTER `if` (it must NOT capture the inner else-less `if`).
         assert_eq!(
             inline_source("function g(x) { if (x) a(x); } if (c) g(v); else other();"),
-            "function g(x){if(x)a(x);};if(c){if(v)a(v);}else other();"
+            "function g(x){if(x)a(x);}if(c){if(v)a(v);}else other();"
         );
     }
 
@@ -5510,7 +5496,7 @@ mod tests {
         // separate, budgeted concern (a non-goal for PR-1). Declined.
         assert_eq!(
             inline_source("function f(x) { sink(x); } f(a); f(b);"),
-            "function f(x){sink(x)};f(a);f(b);"
+            "function f(x){sink(x)}f(a);f(b);"
         );
     }
 
@@ -5522,7 +5508,7 @@ mod tests {
         // mis-rename. Defense in depth against a non-conformant parser.
         assert_eq!(
             inline_source("function f(x) { const x = 1; sink(x); } f(a);"),
-            "function f(x){const x=1;sink(x)};f(a);"
+            "function f(x){const x=1;sink(x)}f(a);"
         );
     }
 
@@ -5533,7 +5519,7 @@ mod tests {
         // invariant preserved.
         assert_eq!(
             inline_source("function f(x) { if (x) f(x); } g(f);"),
-            "function f(x){if(x)f(x);};g(f);"
+            "function f(x){if(x)f(x);}g(f);"
         );
     }
 
@@ -5551,8 +5537,7 @@ mod tests {
             inline_source(
                 "function compute(a) { const t = a+1; return t*2; } var x = compute(5);"
             ),
-            "function compute(a){const t=a+1;return t*2};\
-             const c=5+1;const b=c*2;var x=b;"
+            "function compute(a){const t=a+1;return t*2}const c=5+1;const b=c*2;var x=b;"
         );
     }
 
@@ -5562,7 +5547,7 @@ mod tests {
         // and runs before the binding; the returned value is captured.
         assert_eq!(
             inline_source("function make(a) { setup(a); return build(a); } var r = make(x);"),
-            "function make(a){setup(a);return build(a)};setup(x);const b=build(x);var r=b;"
+            "function make(a){setup(a);return build(a)}setup(x);const b=build(x);var r=b;"
         );
     }
 
@@ -5572,7 +5557,7 @@ mod tests {
         // tail `return a` (a parameter) is captured after substitution.
         assert_eq!(
             inline_source("function f(a) { g(); return a; } let x = f(7);"),
-            "function f(a){g();return a};g();const b=7;let x=b;"
+            "function f(a){g();return a}g();const b=7;let x=b;"
         );
     }
 
@@ -5583,7 +5568,7 @@ mod tests {
         // read — declined.
         assert_eq!(
             inline_source("function f(p) { g(); return p; } var x = k + f(1);"),
-            "function f(p){g();return p};var x=k+f(1);"
+            "function f(p){g();return p}var x=k+f(1);"
         );
     }
 
@@ -5593,7 +5578,7 @@ mod tests {
         // declined (the call is not the initializer's top expression).
         assert_eq!(
             inline_source("function f(a) { g(); return a; } var x = h(f(2));"),
-            "function f(a){g();return a};var x=h(f(2));"
+            "function f(a){g();return a}var x=h(f(2));"
         );
     }
 
@@ -5604,7 +5589,7 @@ mod tests {
         // preserve that ordering — declined.
         assert_eq!(
             inline_source("function f(a) { g(); return a; } var x = f(1), y = 2;"),
-            "function f(a){g();return a};var x=f(1),y=2;"
+            "function f(a){g();return a}var x=f(1),y=2;"
         );
     }
 
@@ -5615,7 +5600,7 @@ mod tests {
         // `undefined`, which this slice does not synthesize — declined.
         assert_eq!(
             inline_source("function f(a) { g(); return; } var x = f(1);"),
-            "function f(a){g();return};var x=f(1);"
+            "function f(a){g();return}var x=f(1);"
         );
     }
 
@@ -5629,7 +5614,7 @@ mod tests {
         // caller's own `return 7` — no temp, the value flows straight out.
         assert_eq!(
             inline_source("function f(a) { g(); return a; } function main() { return f(7); }"),
-            "function f(a){g();return a};function main(){g();return 7};"
+            "function f(a){g();return a}function main(){g();return 7};"
         );
     }
 
@@ -5642,11 +5627,9 @@ mod tests {
         // the caller's return value.
         assert_eq!(
             inline_source(
-                "function f(p) { const t = p+1; return t; } \
-                 function main() { return f(compute()); }"
+                "function f(p) { const t = p+1; return t; } function main() { return f(compute()); }"
             ),
-            "function f(p){const t=p+1;return t};\
-             function main(){const a=compute();const b=a+1;return b};"
+            "function f(p){const t=p+1;return t}function main(){const a=compute();const b=a+1;return b};"
         );
     }
 
@@ -5661,7 +5644,7 @@ mod tests {
             inline_source(
                 "function f(a) { g(); return a; } function main() { return cond&&f(7); }"
             ),
-            "function f(a){g();return a};function main(){return cond&&f(7)};"
+            "function f(a){g();return a}function main(){return cond&&f(7)};"
         );
     }
 
@@ -5674,7 +5657,7 @@ mod tests {
             inline_source(
                 "function f(a) { g(); return a; } function main() { return c ? f(7) : 0; }"
             ),
-            "function f(a){g();return a};function main(){return c?f(7):0};"
+            "function f(a){g();return a}function main(){return c?f(7):0};"
         );
     }
 
@@ -5686,7 +5669,7 @@ mod tests {
         // call is left intact rather than mis-spliced.
         assert_eq!(
             inline_source("function f(a) { g(); return; } function main() { return f(1); }"),
-            "function f(a){g();return};function main(){return f(1)};"
+            "function f(a){g();return}function main(){return f(1)};"
         );
     }
 
@@ -5702,7 +5685,7 @@ mod tests {
         // statements parse (CLOC17).
         assert_eq!(
             inline_source("function f(a) { g(); return a; } var h; h = f(7);"),
-            "function f(a){g();return a};var h;g();h=7;"
+            "function f(a){g();return a}var h;g();h=7;"
         );
     }
 
@@ -5715,7 +5698,7 @@ mod tests {
         // assignment's right-hand side.
         assert_eq!(
             inline_source("function f(p) { const t = p + 1; return t; } var h; h = f(compute());"),
-            "function f(p){const t=p+1;return t};var h;const a=compute();const b=a+1;h=b;"
+            "function f(p){const t=p+1;return t}var h;const a=compute();const b=a+1;h=b;"
         );
     }
 
@@ -5727,7 +5710,7 @@ mod tests {
         // declined (the call is left intact).
         assert_eq!(
             inline_source("function f(a) { g(); return a; } var h = 0; h += f(7);"),
-            "function f(a){g();return a};var h=0;h+=f(7);"
+            "function f(a){g();return a}var h=0;h+=f(7);"
         );
     }
 
@@ -5738,7 +5721,7 @@ mod tests {
         // `o` getter, or the body mutating `o`). Member targets are declined.
         assert_eq!(
             inline_source("function f(a) { g(); return a; } var o = {}; o.k = f(7);"),
-            "function f(a){g();return a};var o={};o.k=f(7);"
+            "function f(a){g();return a}var o={};o.k=f(7);"
         );
     }
 
@@ -5750,7 +5733,7 @@ mod tests {
         // declined.
         assert_eq!(
             inline_source("function f(a) { g(); return a; } var h; h = f(7) + 1;"),
-            "function f(a){g();return a};var h;h=f(7)+1;"
+            "function f(a){g();return a}var h;h=f(7)+1;"
         );
     }
 
@@ -5762,7 +5745,7 @@ mod tests {
         // intact rather than mis-spliced.
         assert_eq!(
             inline_source("function f(a) { g(); return; } var h; h = f(1);"),
-            "function f(a){g();return};var h;h=f(1);"
+            "function f(a){g();return}var h;h=f(1);"
         );
     }
 
@@ -5784,7 +5767,7 @@ mod tests {
         // just `var g = 8;`.)
         assert_eq!(
             inline_source("function f(x) { x = x + 1; return x; } var g = f(7);"),
-            "function f(x){x=x+1;return x};let b=7;b=b+1;const a=b;var g=a;"
+            "function f(x){x=x+1;return x}let b=7;b=b+1;const a=b;var g=a;"
         );
     }
 
@@ -5794,7 +5777,7 @@ mod tests {
         // materialisation, with the compound operator preserved.
         assert_eq!(
             inline_source("function f(x) { x += 1; return x; } var g = f(7);"),
-            "function f(x){x+=1;return x};let b=7;b+=1;const a=b;var g=a;"
+            "function f(x){x+=1;return x}let b=7;b+=1;const a=b;var g=a;"
         );
     }
 
@@ -5807,7 +5790,7 @@ mod tests {
         // `c`.) `f(7)` returns 5, so `var g = 5`.
         assert_eq!(
             inline_source("function f(x) { var y; y = (x = 5); return y; } var g = f(7);"),
-            "function f(x){var y;y=x=5;return y};let b=7;var c;c=b=5;const a=c;var g=a;"
+            "function f(x){var y;y=x=5;return y}let b=7;var c;c=b=5;const a=c;var g=a;"
         );
     }
 
@@ -5820,7 +5803,7 @@ mod tests {
         // becomes `c = c + b`. `f(p(), 1)` ⇒ `g = 1 + p()`.
         assert_eq!(
             inline_source("function f(x, y) { y = y + x; return y; } var g = f(p(), 1);"),
-            "function f(x,y){y=y+x;return y};const b=p();let c=1;c=c+b;const a=c;var g=a;"
+            "function f(x,y){y=y+x;return y}const b=p();let c=1;c=c+b;const a=c;var g=a;"
         );
     }
 
@@ -5831,7 +5814,7 @@ mod tests {
         // reads of `x` in `x + x`.
         assert_eq!(
             inline_source("function f(x) { x = x + 1; return x + x; } var g = f(side());"),
-            "function f(x){x=x+1;return x+x};let b=side();b=b+1;const a=b+b;var g=a;"
+            "function f(x){x=x+1;return x+x}let b=side();b=b+1;const a=b+b;var g=a;"
         );
     }
 
@@ -5846,7 +5829,7 @@ mod tests {
         // temp to `var g = 7` in the full SIMPLE pipeline.)
         assert_eq!(
             inline_source("function f(x) { glob = x; return x; } var g = f(7);"),
-            "function f(x){glob=x;return x};glob=7;const a=7;var g=a;"
+            "function f(x){glob=x;return x}glob=7;const a=7;var g=a;"
         );
     }
 
@@ -5860,7 +5843,7 @@ mod tests {
         // hoisted `var b` is inert because `b` appears nowhere else.
         assert_eq!(
             inline_source("function f(x) { var t = x + 1; return t * 2; } var g = f(7);"),
-            "function f(x){var t=x+1;return t*2};var b=7+1;const a=b*2;var g=a;"
+            "function f(x){var t=x+1;return t*2}var b=7+1;const a=b*2;var g=a;"
         );
     }
 
@@ -5872,7 +5855,7 @@ mod tests {
         // guard above, which declines mutating a *parameter*.)
         assert_eq!(
             inline_source("function f(x) { var t = x; t = t + 1; return t; } var g = f(7);"),
-            "function f(x){var t=x;t=t+1;return t};var b=7;b=b+1;const a=b;var g=a;"
+            "function f(x){var t=x;t=t+1;return t}var b=7;b=b+1;const a=b;var g=a;"
         );
     }
 
@@ -5884,7 +5867,7 @@ mod tests {
         // `t` (declared `var t = 9` → kept as `var t=9`) is untouched.
         assert_eq!(
             inline_source("var t = 9; function f(x) { var t = x; return t; } var g = f(5);"),
-            "var t=9;function f(x){var t=x;return t};var b=5;const a=b;var g=a;"
+            "var t=9;function f(x){var t=x;return t}var b=5;const a=b;var g=a;"
         );
     }
 

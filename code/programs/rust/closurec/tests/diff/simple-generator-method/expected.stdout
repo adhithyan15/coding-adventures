@@ -1,1 +1,1 @@
-class C{*gen(){return 3}}
+class C{*gen(){return 3}};

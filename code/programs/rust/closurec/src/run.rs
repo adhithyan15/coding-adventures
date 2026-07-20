@@ -5990,7 +5990,7 @@ mod tests {
         let out = transform_source("function f() { g(); return 1; dead(); } f(); f();", &cfg)
             .expect("ok");
         assert_eq!(
-            out, "function f(){g();return 1};f();f();",
+            out, "function f(){g();return 1}f();f();",
             "dce must drop the statement after the return"
         );
     }
@@ -6018,7 +6018,7 @@ mod tests {
         )
         .expect("ok");
         assert_eq!(
-            out, "function f(){return 2};f();sink(f);",
+            out, "function f(){return 2}f();sink(f);",
             "dce must sweep the empty statement left by fold-control-flow"
         );
     }
@@ -6161,7 +6161,7 @@ mod tests {
         };
         assert_eq!(
             mk(crate::config::CompilationLevel::Simple),
-            "function dead(){return 1};used();",
+            "function dead(){return 1}used();",
             "SIMPLE is open-world: the unused top-level function must be KEPT"
         );
         assert_eq!(
@@ -6187,7 +6187,7 @@ mod tests {
         let out = transform_source("function f() { return 2; } log(f()); sink(f);", &cfg)
             .expect("ok");
         assert_eq!(
-            out, "function f(){return 2};log(f());sink(f);",
+            out, "function f(){return 2}log(f());sink(f);",
             "a called function must be kept"
         );
     }
@@ -6205,6 +6205,13 @@ mod tests {
         };
         let out =
             transform_source("function dead() { return 1; } used();", &cfg).expect("ok");
+        // NOTE: the extra `;` after the function `}` is a known WHITESPACE_ONLY
+        // drift — the `whitespace_only` module is a comment/whitespace minifier
+        // separate from the AST emitter, so the emitter's "terminate only the
+        // last program item" rule does not reach it. The real Closure emits
+        // `function dead(){return 1}used();` (no `;`) here too; closing that gap
+        // is tracked as a separate task. This assertion documents current
+        // behaviour and the survival of the (unused) function under WHITESPACE.
         assert_eq!(
             out, "function dead(){return 1};used();",
             "whitespace_only must NOT remove the function"
@@ -6231,7 +6238,7 @@ mod tests {
             &cfg,
         )
         .expect("ok");
-        assert_eq!(out, "function f(a){return a+1};f(5);sink(f);");
+        assert_eq!(out, "function f(a){return a+1}f(5);sink(f);");
     }
 
     #[test]
@@ -6252,7 +6259,7 @@ mod tests {
             &cfg,
         )
         .expect("ok");
-        assert_eq!(out, "function f(a){return a.longName};f(x);sink(f);");
+        assert_eq!(out, "function f(a){return a.longName}f(x);sink(f);");
     }
 
     #[test]
@@ -6435,7 +6442,7 @@ mod tests {
             },
         )
         .expect("ok");
-        assert_eq!(advanced, "function f(a){return a+1};f(5);sink(f);");
+        assert_eq!(advanced, "function f(a){return a+1}f(5);sink(f);");
         assert_ne!(advanced, src, "ADVANCED must no longer be an identity no-op");
     }
 
@@ -6463,7 +6470,7 @@ mod tests {
         };
         assert_eq!(
             mk(crate::config::CompilationLevel::Simple),
-            "var dead=3;function g(a){return a*2};use(g(4));",
+            "var dead=3;function g(a){return a*2}use(g(4));",
             "SIMPLE keeps the top-level var and function (open-world)"
         );
         assert_eq!(
@@ -6500,11 +6507,11 @@ mod tests {
         let advanced = mk(crate::config::CompilationLevel::Advanced);
         assert_eq!(
             simple,
-            "function helper(){sideEffect();return value};helper();helper();"
+            "function helper(){sideEffect();return value}helper();helper();"
         );
         assert_eq!(
             advanced,
-            "function a(){sideEffect();return value};a();a();"
+            "function a(){sideEffect();return value}a();a();"
         );
         assert!(
             advanced.len() < simple.len(),
@@ -6676,7 +6683,7 @@ mod tests {
         };
         assert_eq!(
             mk(crate::config::CompilationLevel::Simple),
-            "function double(x){return x*2};log(double(7));",
+            "function double(x){return x*2}log(double(7));",
             "SIMPLE keeps the top-level function and its call (open-world)"
         );
         assert_eq!(
@@ -6708,7 +6715,7 @@ mod tests {
         };
         assert_eq!(
             mk(crate::config::CompilationLevel::Simple),
-            "function sq(x){return x*x};a(sq(3));b(sq(4));",
+            "function sq(x){return x*x}a(sq(3));b(sq(4));",
             "SIMPLE keeps the top-level function and its calls (open-world)"
         );
         assert_eq!(
