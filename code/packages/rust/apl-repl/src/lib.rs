@@ -222,19 +222,39 @@ impl AplRepl {
                 "quit" | "exit" | "quit()" | "exit()" => return ReplResponse::Quit,
                 _ => {}
             }
+        }
+
+        // Bound the accumulation buffer BEFORE growing it: a stream that
+        // never balances (an endless run of open parens) must not buffer
+        // unbounded memory, and neither may a single caller-supplied `line`
+        // that is itself already oversized. Checking the size only after
+        // `push_str` would let an arbitrarily large `line` be copied into
+        // `self.buffer` (an O(n) copy, possibly reallocating) before the
+        // check meant to bound it ever ran — see `maple-repl::MapleRepl::
+        // feed`'s identical fix for the full rationale. `separator_len`
+        // accounts for the joining space this else-branch below adds when
+        // the buffer already holds a still-open continuation.
+        let separator_len = if self.buffer.is_empty() { 0 } else { 1 };
+        if self
+            .buffer
+            .len()
+            .saturating_add(separator_len)
+            .saturating_add(line.len())
+            > MAX_CONTINUATION_BUFFER
+        {
+            self.buffer.clear();
+            return ReplResponse::Output(format!(
+                "Error: statement exceeds the {MAX_CONTINUATION_BUFFER}-byte continuation limit; discarded\n"
+            ));
+        }
+
+        if separator_len == 0 {
             self.buffer.push_str(line);
         } else {
             // See this module's doc comment: joining with a space (not a
             // real '\n') keeps a still-open `(...)` on one logical line.
             self.buffer.push(' ');
             self.buffer.push_str(line);
-        }
-
-        if self.buffer.len() > MAX_CONTINUATION_BUFFER {
-            self.buffer.clear();
-            return ReplResponse::Output(format!(
-                "Error: statement exceeds the {MAX_CONTINUATION_BUFFER}-byte continuation limit; discarded\n"
-            ));
         }
 
         if paren_depth(&self.buffer) > 0 {
