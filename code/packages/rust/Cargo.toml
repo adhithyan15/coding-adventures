@@ -264,6 +264,7 @@ members = [
     "reduce-parser",
     "reduce-runtime",
     "reduce-repl",
+    "reduce-to-semantic-ir",
     "maple-lexer",
     "maple-parser",
     "maple-runtime",
