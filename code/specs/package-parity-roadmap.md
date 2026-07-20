@@ -120,17 +120,17 @@ ports, followed by the paired `ed25519`, `font-parser`, `asciidoc-parser`, and
 `matrix`, `vigenere-cipher`, `uuid`, `document-ast`, `lz78`, `deflate`,
 `point2d`, `affine2d`, `bezier2d`, and `arc2d`
 ports, followed by the Haskell `gradient-descent`, `perceptron`, and
-`type-checker-protocol` ports, and the Haskell `paint-vm-ascii` and
-`barcode-layout-1d` ports:
+`type-checker-protocol` ports, and the Haskell `paint-vm-ascii`,
+`barcode-layout-1d`, and `itf` ports:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 288 |
+| Present in 10-15 languages | 172 | 287 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,972 |
-| Present in one language | 709 | 9,926 |
+| Present in one language | 710 | 9,940 |
 
-The loop must not start by attempting 9,926 singleton ports. It should finish
+The loop must not start by attempting 9,940 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 ## Priority 0: Inventory And Identity Integrity
@@ -182,7 +182,7 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Perl | 0 | Complete; paired data-structure/storage wave |
 | C# | 0 | Complete; paired native package wave |
 | F# | 0 | Complete; paired native package wave |
-| Haskell | 13 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
+| Haskell | 12 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
 | Kotlin | 58 | Move with Java |
@@ -605,6 +605,17 @@ package now spans 12 implementation lanes, reduces the high-consensus backlog
 to 288 slots, leaves 13 gaps in the Haskell lane, and unlocks the dependent
 Code 39, Codabar, ITF, UPC-A, EAN-13, Code 128, and `barcode-1d` ports.
 
+The twenty-second Haskell high-consensus slice is complete: `itf` now provides
+the pure Interleaved 2 of 5 encoder unlocked by `barcode-layout-1d`. It
+validates non-empty even-length ASCII digit payloads, exposes typed digit-pair
+patterns, interleaves first-digit bar widths with second-digit space widths,
+and emits explicit start, data, and stop symbol geometry plus authoritative
+symbology metadata. Its package-native suite exercises shared patterns, the
+complete digit table, source attribution, exact module geometry, customized
+paint output, metadata precedence, aliases, and both local and shared
+validation paths. The package now spans 12 implementation lanes, reduces the
+high-consensus backlog to 287 slots, and leaves 12 gaps in the Haskell lane.
+
 Recommended family order:
 
 1. Leaf algorithms and data structures.
@@ -631,7 +642,7 @@ This phase covers 121 package identities and 911 current missing slots.
 
 ## Priority 4: Classify Sparse And Singleton Families
 
-The singleton inventory is led by 514 Rust, 86 Python, and 84 TypeScript
+The singleton inventory is led by 515 Rust, 86 Python, and 84 TypeScript
 packages. Classify families before opening implementation PRs.
 
 ### Likely portable Rust-led families
