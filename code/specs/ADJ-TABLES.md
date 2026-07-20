@@ -174,6 +174,14 @@ value columns; a non-numeric column is a compile/lookup error.
 - This is what makes the audit trail honest at the table level: *every asserted fact quotes the
   byte span that supports **it***. A row without a block still inherits the envelope, so tables
   authored before RS-5e keep working unchanged.
+- **How a table appears in the audit trail (RS-4).** `ADJ-REASON-MATH.md` §E — the normative
+  audit-trail contract — gives tables two of its step kinds: `FromTableRow { table, row_index }`
+  for an exact hit and `FromRangeBracket { table, key, matched_key, mode }` for a bracket select.
+  `matched_key` is recorded explicitly because *which breakpoint you landed on* is the entire
+  content of a bracket decision, and RS-5e is what lets that step quote a span defending the row
+  it names. Abstention below a table's floor is likewise a typed reason there
+  (`BelowTableDomain { table, key, min_key }`), distinct from a malformed key
+  (`NonNumericKey`) — the two are opposite failures and must never render alike.
 - Every lookup answer (exact, range, or interpolated) carries the table's citation. For
   interpolated answers the derivation records the two bracketing rows it combined — the answer
   remains auditable to the source rows, honouring *hallucination is an accounting failure;

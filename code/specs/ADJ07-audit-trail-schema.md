@@ -179,6 +179,15 @@ adds, for each proof step that cited an LP19 fact or rule, the ADJ IR
 node id those clauses were lowered from — via a separate `id_mapping`
 table in the engine artifacts.
 
+> **Relationship to RS-4 (`ADJ-REASON-MATH.md` §E).** The engine artifact embedded
+> here is the `ReasoningTrace` specified in §E, and **§E governs its shape** — the
+> closed `StepKind` sum, per-step ordering and addressing, inline resolved
+> provenance, the `quote`/`source` split, and the typed `AbstentionReason`. This
+> document governs the *enclosing* trail: documents, spans, IR lowering, checker
+> passes, dialogue, and the `id_mapping` above. In short: **ADJ07 is the envelope,
+> §E is the engine artifact inside it.** An abstention is not a missing artifact —
+> §E requires it to be recorded as the trace's terminal step, with its reason.
+
 ### Configuration
 
 ```text
