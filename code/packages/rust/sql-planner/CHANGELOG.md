@@ -2,6 +2,24 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.28] - Unreleased
+
+### Fixed
+
+- **An ORDER BY key naming an output ALIAS no longer inherits an unrelated
+  column's `COLLATE`.** `plan_order_item` resolved a bare ORDER BY name straight
+  against the base table, so `SELECT x AS c FROM t ORDER BY c` — where `x` is
+  BINARY but the table also has a `c TEXT COLLATE NOCASE` — sorted
+  case-insensitively, silently borrowing the collating sequence of a column the
+  query never referenced. The key now resolves through the output list first:
+  when an UNQUALIFIED name matches an output alias, the collation comes from what
+  that alias STANDS FOR. So `x AS c ... ORDER BY c` is byte order, while
+  `c AS y ... ORDER BY y` still folds NOCASE — the collation follows the
+  expression, not the label. A qualified name (`t.c`) is always the column and is
+  unaffected, as is an explicit `COLLATE` on the key, which still wins outright.
+  Found while testing DISTINCT collation; same name-shadowing trap, different
+  code path.
+
 ## [0.2.27] - Unreleased
 
 ### Added

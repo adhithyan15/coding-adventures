@@ -1561,7 +1561,28 @@ fn plan_order_item(
     let collation = if has_explicit_collate {
         collation
     } else {
-        collate_ctx.and_then(|ctx| resolve_column_collation(&expr, ctx))
+        // A bare ORDER BY name may be an OUTPUT ALIAS rather than a base-table
+        // column. When it is, the collation comes from what the alias STANDS FOR,
+        // never from a base-table column that merely shares the name:
+        //
+        //   CREATE TABLE t (x TEXT, c TEXT COLLATE NOCASE);
+        //   SELECT x AS c FROM t ORDER BY c;   -- byte order: `c` here IS `x`
+        //   SELECT c AS y FROM t ORDER BY y;   -- NOCASE: `y` stands for `c`
+        //
+        // Previously the name was resolved straight against the base table, so
+        // the first query sorted case-insensitively — the alias silently
+        // inherited an unrelated column's collating sequence. Only an
+        // UNQUALIFIED name can be an alias; `t.c` always means the column.
+        let via_alias = match &expr {
+            SqlExpr::Column { table: None, name } => output_columns.iter().find(|oc| {
+                oc.alias
+                    .as_deref()
+                    .is_some_and(|a| a.eq_ignore_ascii_case(name))
+            }),
+            _ => None,
+        };
+        let source = via_alias.map_or(&expr, |oc| &oc.expr);
+        collate_ctx.and_then(|ctx| resolve_column_collation(source, ctx))
     };
 
     Ok(SortKey {
