@@ -51,6 +51,11 @@ and Italian's habit of keeping final vowels Latin's other children dropped.
   Latin **7–10**) → the seasons (primavera = "prima vera" first-green; *stagione* ←
   *statiō* "a standing"; inverno ← *hibernum*). **Authored.**
 
+- **Ch. 10 — Family**: **padre/madre** (closest to Latin *pater/māter*, *-t-→-d-*;
+  *padre* = the English loan; **genitori** "parents" ← *genitor* "begetter" → genesis;
+  *parenti*=relatives false friend) → **fratello/sorella** (← *frāter/soror* + the
+  diminutive *-ello/-ella*, "little brother/sister"). **Authored.**
+
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |

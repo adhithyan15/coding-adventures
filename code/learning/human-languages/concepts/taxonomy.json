@@ -235,6 +235,8 @@
       "IT-TIME-NOON-MIDNIGHT": "mezzogiorno/mezzanotte (noon/midnight; mezzo/mezza ← medius + giorno/notte)",
       "IT-MONTHS": "gennaio…dicembre (closest to Latin; marzo=Mars=martedì; settembre…dicembre = Latin 7-10; luglio/agosto = Julius/Augustus)",
       "IT-SEASONS": "primavera/estate/autunno/inverno (primavera='prima vera' first green; stagione ← statiō 'a standing')",
+      "IT-FAMILY-PARENTS": "padre/madre (father/mother; closest to Latin pater/māter, -t-→-d-; padre = English loan; genitori 'parents' ← genitor 'begetter'; parenti=relatives false friend)",
+      "IT-FAMILY-SIBLINGS": "fratello/sorella (brother/sister; frāter/soror + diminutive -ello/-ella = 'little brother/sister'; → fraternal/sorority)",
       "FR-VERB-APPELER": "(s')appeler — 'to call (oneself)'",
       "FR-VERB-ALLER": "aller — 'to go' (suppletive: ambulāre/vādere/īre); drives 'comment ça va?'",
       "FR-VERB-PARLER": "parler — 'to speak' (← parabolāre; the big regular -er verb / present tense)",
@@ -249,6 +251,8 @@
       "FR-TIME-NOON-MIDNIGHT": "midi/minuit (noon/midnight ← medius diēs / media nox; mi- 'middle' + di/nuit)",
       "FR-MONTHS": "janvier…décembre (Roman gods/emperors: janvier←Janus, mars←Mars=mardi, juillet←Julius; septembre…décembre = Latin 7-10)",
       "FR-SEASONS": "printemps/été/automne/hiver (printemps='prime temps' first time; hiver ← hibernum → hibernate)",
+      "FR-FAMILY-PARENTS": "père/mère (father/mother ← pater/māter; same PIE as English father/mother via Grimm's law p→f/t→th; → paternal/maternal)",
+      "FR-FAMILY-SIBLINGS": "frère/sœur (brother/sister ← frāter/soror; → fraternal/friar, sorority; œ ligature spells soror worn down)",
       "DE-VERB-HEISSEN": "heißen — 'to be called'",
       "DE-VERB-GEHEN": "gehen — 'to go' (= English go); drives 'wie geht es dir?'",
       "GE-VERB-WOHNEN": "wohnen — 'to live/dwell' (← wonēn → English 'wont'); first weak verb / present tense",
@@ -263,6 +267,8 @@
       "GE-TIME-NOON-MIDNIGHT": "Mittag/Mitternacht (noon/midnight; NATIVE compounds Mitte+Tag / Mitte+Nacht, vs Latin-loaned Uhr)",
       "GE-MONTHS": "Januar…Dezember (LATIN loans like Uhr — März←Mars=Dienstag's Tiw; September…Dezember = Latin 7-10; vs native numbers)",
       "GE-SEASONS": "Frühling/Sommer/Herbst/Winter (NATIVE Germanic, unlike Latin months; Herbst = English HARVEST; Frühling ← früh 'early')",
+      "GE-FAMILY-PARENTS": "Vater/Mutter (father/mother; INHERITED Germanic, NOT Latin loans like the months; Grimm's law twins of English father/mother, V=f)",
+      "GE-FAMILY-SIBLINGS": "Bruder/Schwester (brother/sister; Germanic twins of English brother/sister; Geschwister 'siblings' via collective ge-)",
       "PT-WORD-TUDO": "tudo — 'everything / all' (← Latin tōtus); the heart of 'tudo bem?'",
       "PT-VERB-FALAR": "falar — 'to speak' (← fabulārī = Spanish hablar, but PT kept f-); the regular -ar present",
       "PT-VERB-MORAR": "morar — 'to live/dwell' (← morārī 'to linger' → moratorium; not habitāre)",
@@ -275,7 +281,9 @@
       "PT-TIME-HOUR": "hora (hour ← hōra ← Greek hṓrā; horas explicit: é uma hora / são duas horas)",
       "PT-TIME-NOON-MIDNIGHT": "meio-dia/meia-noite (noon/midnight; meio/meia ← medius; noite ← noctem shows ct→it like oito)",
       "PT-MONTHS": "janeiro…dezembro (março=Mars; -eiro ending ← -arius like feira; setembro…dezembro = Latin 7-10 = sete/dez)",
-      "PT-SEASONS": "primavera/verão/outono/inverno (verão ← veranum ← vēr 'spring' — summer grew from spring!; outono ← autumnus au→ou)"
+      "PT-SEASONS": "primavera/verão/outono/inverno (verão ← veranum ← vēr 'spring' — summer grew from spring!; outono ← autumnus au→ou)",
+      "PT-FAMILY-PARENTS": "pai/mãe (father/mother; most worn-down of the sisters — pater→pae→pai, māter→mãe nasal, -t- vanished; os pais 'parents' lit. 'the fathers'; o país=country)",
+      "PT-FAMILY-SIBLINGS": "irmão/irmã (brother/sister; NOT from frāter but germānus 'of the same stock' — frāter germānus 'full brother'; = ES hermano; cousins germane/German)"
     }
   },
   "practiceTags": {

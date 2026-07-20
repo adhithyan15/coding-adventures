@@ -1,5 +1,20 @@
 # Changelog
 
+## Chapter 10 — Family
+
+- **Chapter 10 authored** (`GE-C10-eltern`, `-geschwister`): the immediate family,
+  atom-first, reviewing Ch.9/Ch.1 via `reviews_of` — and the **mirror image of the
+  months chapter**.
+- **der Vater / die Mutter** — taught as **inherited Germanic** words (NOT Latin
+  loans like the months), the Grimm's-law twins of English *father / mother*: the
+  *V* of *Vater* is pronounced *f*, and German/English agree (*f-*, *m-*) precisely
+  because both are Germanic, while French/Latin sit across Grimm's line. The
+  standout thread: **family is native where the calendar was borrowed**.
+- **der Bruder / die Schwester** — Germanic twins of *brother / sister*; plus
+  **die Geschwister** ("siblings"), built with the **collective ge-** prefix that
+  English lacks.
+- Taxonomy: namespaced `GE-FAMILY-PARENTS`, `GE-FAMILY-SIBLINGS`.
+
 ## Chapter 9 — Months & seasons
 
 - **Chapter 9 authored** (`GE-C09-monate`, `-jahreszeiten`): the calendar year,
