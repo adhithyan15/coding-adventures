@@ -695,10 +695,19 @@ pub fn parser_grammar() -> ParserGrammar {
         GrammarRule {
             name: r#"operand"#.to_string(),
             body: GrammarElement::Alternation { choices: vec![
-                GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                GrammarElement::Sequence { elements: vec![
+                    GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                    GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                            GrammarElement::TokenReference { name: r#"LPAREN"#.to_string() },
+                            GrammarElement::RuleReference { name: r#"operand"#.to_string() },
+                            GrammarElement::TokenReference { name: r#"COLON"#.to_string() },
+                            GrammarElement::Optional { element: Box::new(GrammarElement::RuleReference { name: r#"operand"#.to_string() }) },
+                            GrammarElement::TokenReference { name: r#"RPAREN"#.to_string() },
+                        ] }) },
+                ] },
                 GrammarElement::RuleReference { name: r#"literal"#.to_string() },
             ] },
-            line_number: 214,
+            line_number: 221,
         },
         GrammarRule {
             name: r#"literal"#.to_string(),
@@ -707,7 +716,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::TokenReference { name: r#"STRING"#.to_string() },
                 GrammarElement::RuleReference { name: r#"figurative"#.to_string() },
             ] },
-            line_number: 215,
+            line_number: 222,
         },
         GrammarRule {
             name: r#"figurative"#.to_string(),
@@ -724,7 +733,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::Literal { value: r#"QUOTE"#.to_string() },
                 GrammarElement::Literal { value: r#"QUOTES"#.to_string() },
             ] },
-            line_number: 216,
+            line_number: 223,
         },
     ],
         version: 1,

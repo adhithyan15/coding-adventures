@@ -41,9 +41,11 @@ recognises a level by value and position.
 ## Scope
 
 A historically faithful first cut: the column-strip hook, a focused reserved-word
-subset, core PICTURE symbols (`9 X A V S P` + repetition), and literals — enough
-to lex a complete four-division program. Editing PICTUREs, the full ~300-word
-reserved list, and Area A/B enforcement are future work (see PL07).
+subset, core PICTURE symbols (`9 X A V S P` + repetition), literals, and the
+punctuation the verbs need — including `COLON` (`:`), which separates the start
+and length in a reference modification (`WS-NAME(2:3)`). Enough to lex a complete
+four-division program. Editing PICTUREs, the full ~300-word reserved list, and
+Area A/B enforcement are future work (see PL07).
 
 ## Regenerating the grammar
 

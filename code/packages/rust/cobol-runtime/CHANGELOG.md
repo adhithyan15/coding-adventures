@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.23.0 — reference modification `IDENT(start:len)`
+
+- The oracle now evaluates COBOL **reference modification** — `base(start:len)`
+  selects `len` characters of alphanumeric item `base` from 1-based position
+  `start`; `base(start:)` (omitted length) runs to the end of the item.
+  `Operand::RefMod { base, start, len }` is added to the `Operand` enum and
+  constructed in `read_operand` when the parser's reference-modification suffix
+  is present (both `start` and `len` must be integer NUMBER literals on this
+  rung; a computed start/length is a later rung). `src_from_operand` and
+  `display_image` gain a `RefMod` case that slices the base item's characters
+  `[start-1, start-1+len)` via a new `refmod_string` helper, so DISPLAY prints
+  the substring and alphanumeric comparisons compare it — byte-identical to the
+  `cobol-iir-compiler`'s constant-index `str_slice`. Reference modification of a
+  numeric item, or as a MOVE source / in a numeric context, is a
+  `RuntimeError::Unsupported` "later rung".
+
 ## 0.22.0 — alphanumeric `EVALUATE` subject
 
 - `EVALUATE` now works over an **alphanumeric** subject (`EVALUATE GRADE WHEN "A"

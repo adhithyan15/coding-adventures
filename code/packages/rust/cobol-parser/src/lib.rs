@@ -205,6 +205,73 @@ mod tests {
         assert!(has_rule(&ast, "display_stmt"));
     }
 
+    /// Whether any token in the tree has the given effective type name.
+    fn has_token(node: &GrammarASTNode, type_name: &str) -> bool {
+        node.children.iter().any(|c| match c {
+            ASTNodeOrToken::Token(t) => t.effective_type_name() == type_name,
+            ASTNodeOrToken::Node(n) => has_token(n, type_name),
+        })
+    }
+
+    #[test]
+    fn reference_modification_operand_shape() {
+        // `DISPLAY WS(2:3).` — the operand carries a reference-modification suffix:
+        // a COLON token separates two nested `operand` subnodes (start 2, len 3),
+        // so the whole DISPLAY holds three `operand`s (outer + start + len) versus
+        // one for a bare `DISPLAY WS.`.
+        let refmod = root(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    DISPLAY WS(2:3).",
+            "    STOP RUN.",
+        ]));
+        let display = {
+            fn find<'a>(n: &'a GrammarASTNode, rule: &str) -> Option<&'a GrammarASTNode> {
+                if n.rule_name == rule {
+                    return Some(n);
+                }
+                n.children.iter().find_map(|c| match c {
+                    ASTNodeOrToken::Node(x) => find(x, rule),
+                    ASTNodeOrToken::Token(_) => None,
+                })
+            }
+            find(&refmod, "display_stmt").expect("a display_stmt").clone()
+        };
+        // Outer operand + the two inner index operands.
+        assert_eq!(count_rule(&display, "operand"), 3);
+        // The reference-modification COLON is present.
+        assert!(has_token(&display, "COLON"));
+
+        // A bare NAME still parses to exactly one operand and no COLON.
+        let plain = root(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    DISPLAY WS.",
+            "    STOP RUN.",
+        ]));
+        assert!(!has_token(&plain, "COLON"));
+    }
+
+    #[test]
+    fn reference_modification_omitted_length_shape() {
+        // `WS(3:)` omits the length — one inner operand, still with a COLON.
+        let ast = root(&program(&[
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "PROCEDURE DIVISION.",
+            "MAIN.",
+            "    DISPLAY WS(3:).",
+            "    STOP RUN.",
+        ]));
+        assert!(has_token(&ast, "COLON"));
+        // Outer operand + a single inner start operand (no length).
+        assert_eq!(count_rule(&ast, "operand"), 2);
+    }
+
     #[test]
     fn perform_until_and_times() {
         // PERFORM … UNTIL <condition> carries a condition node; PERFORM … TIMES

@@ -73,6 +73,12 @@ const NUMERIC_MAX_DIGITS: usize = 18;
 /// digits < `i64::MAX`). A wider field in an arithmetic verb is unsupported here.
 const ARITH_MAX_DIGITS: usize = 9;
 
+/// Rejection message for a reference modification used outside the two contexts
+/// this rung supports (DISPLAY operands and alphanumeric comparison operands).
+/// Numeric/arithmetic and MOVE-source uses are a later rung.
+const REFMOD_CONTEXT_MSG: &str =
+    "reference modification is only supported in DISPLAY and comparison contexts on this rung";
+
 /// A COBOL → IIR compilation failure.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum CompileError {
@@ -476,6 +482,10 @@ impl<'a> Compiler<'a> {
                     self.emit("str_const", Some(&tmp), vec![Operand::Str(image)], "str");
                     self.emit("print_str", None, vec![Operand::Var(tmp)], "void");
                 }
+                Operandy::RefMod { base, start, len } => {
+                    let (reg, _len) = self.ref_mod_slice(&base, start, len)?;
+                    self.emit("print_str", None, vec![Operand::Var(reg)], "void");
+                }
             }
         }
         self.emit_newline();
@@ -526,6 +536,11 @@ impl<'a> Compiler<'a> {
                             )));
                         }
                     }
+                }
+                // A reference modification as a MOVE source is a later rung — the
+                // supported contexts on this rung are DISPLAY and comparison.
+                Operandy::RefMod { .. } => {
+                    return Err(CompileError::Unsupported(REFMOD_CONTEXT_MSG.into()));
                 }
             }
         }
@@ -768,6 +783,73 @@ impl<'a> Compiler<'a> {
                 "str",
             );
         }
+    }
+
+    /// Emit the constant-index `str_slice` for a reference modification
+    /// `base(start:len)` and return `(sliced_reg, actual_len)`.
+    ///
+    /// COBOL reference modification is 1-based: `base(start:len)` selects the
+    /// characters at 1-based positions `start .. start+len-1`, i.e. the 0-based
+    /// half-open byte range `[start-1, start-1+len)`. An omitted `len` runs to
+    /// the end of the item, so `len = width - (start-1)`.
+    ///
+    /// ```text
+    ///   base = "ABCDE"  (width 5)          positions:  1 2 3 4 5
+    ///   base(2:3)  ->  start0 = 1, len 3  ->  slice [1,4)  ->  "BCD"
+    ///   base(3:)   ->  start0 = 2, len 2  ->  slice [2,5)  ->  "CDE"
+    /// ```
+    ///
+    /// Both indices are compile-time constants, so this mirrors
+    /// [`Self::move_char_item`]'s const-index `str_slice`: two `const` i64
+    /// registers feed a `str_slice` producing a fresh `str`. Bounds are validated
+    /// here (`start >= 1`, `start-1+len <= width`); an out-of-range *constant*
+    /// reference modification is rejected at compile time (a later rung), never
+    /// lowered to a runtime trap. The base must be an alphanumeric item.
+    fn ref_mod_slice(
+        &mut self,
+        base: &str,
+        start: usize,
+        len: Option<usize>,
+    ) -> Result<(String, usize), CompileError> {
+        let idx = self.item_index(base)?;
+        let width = match &self.items[idx].kind {
+            ItemKind::Char { .. } => self.items[idx].width(),
+            ItemKind::Numeric { .. } => {
+                return Err(CompileError::Unsupported(
+                    "reference modification of a numeric item is a later rung".into(),
+                ));
+            }
+        };
+        if start < 1 {
+            return Err(CompileError::Malformed(
+                "reference modification start position must be at least 1".into(),
+            ));
+        }
+        let start0 = start - 1;
+        let actual_len = len.unwrap_or(width.saturating_sub(start0));
+        // Subtractive bounds test — `start0 + actual_len` would overflow `usize`
+        // for a crafted `WS(1e19:1e19)` (both parse as full `usize`), panicking in
+        // debug / wrapping past the guard in release. `width - start0` is only
+        // reached once `start0 <= width`, so it never underflows.
+        if start0 > width || actual_len > width - start0 {
+            return Err(CompileError::Unsupported(format!(
+                "reference modification {base}({start}:{}) runs past the {width}-character item — a later rung",
+                len.map(|l| l.to_string()).unwrap_or_default()
+            )));
+        }
+        let src_reg = self.items[idx].reg.clone();
+        let start_reg = self.fresh("_rm0");
+        self.emit("const", Some(&start_reg), vec![Operand::Int(start0 as i64)], "i64");
+        let end_reg = self.fresh("_rmn");
+        self.emit("const", Some(&end_reg), vec![Operand::Int((start0 + actual_len) as i64)], "i64");
+        let out = self.fresh("_rm");
+        self.emit(
+            "str_slice",
+            Some(&out),
+            vec![Operand::Var(src_reg), Operand::Var(start_reg), Operand::Var(end_reg)],
+            "str",
+        );
+        Ok((out, actual_len))
     }
 
     /// A `str` register holding `k` spaces — the right-padding for a character
@@ -1106,6 +1188,10 @@ impl<'a> Compiler<'a> {
             // pairing in `emit_condition` decide.
             Operandy::Literal(Src::Zero) => Ok(Some(StrOperand::Fig('0'))),
             Operandy::Literal(Src::Num(_)) => Ok(None),
+            Operandy::RefMod { base, start, len } => {
+                let (reg, actual_len) = self.ref_mod_slice(&base, start, len)?;
+                Ok(Some(StrOperand::Fixed { reg, len: actual_len }))
+            }
         }
     }
 
@@ -1803,6 +1889,7 @@ impl<'a> Compiler<'a> {
                 let src_reg = self.items[src_idx].reg.clone();
                 self.store_scaled(dst, &src_reg, src_scale, src_int, false)
             }
+            Operandy::RefMod { .. } => Err(CompileError::Unsupported(REFMOD_CONTEXT_MSG.into())),
         }
     }
 
@@ -2217,6 +2304,7 @@ impl<'a> Compiler<'a> {
             Operandy::Literal(_) => Err(CompileError::Unsupported(format!(
                 "{no_giving_msg} without GIVING has no receiver"
             ))),
+            Operandy::RefMod { .. } => Err(CompileError::Unsupported(REFMOD_CONTEXT_MSG.into())),
         }
     }
 
@@ -2273,6 +2361,7 @@ impl<'a> Compiler<'a> {
                 Err(CompileError::Unsupported("an alphanumeric operand in arithmetic".into()))
             }
             Operandy::Name(n) => Ok(Term::Item(self.numeric_index(&n)?)),
+            Operandy::RefMod { .. } => Err(CompileError::Unsupported(REFMOD_CONTEXT_MSG.into())),
         }
     }
 
@@ -2505,10 +2594,17 @@ fn print_signed_function() -> IIRFunction {
 // Literals & picture formatting (the reuse boundary with cobol-runtime)
 // ---------------------------------------------------------------------------
 
-/// A source value in flight: a literal or a data-name reference.
+/// A source value in flight: a literal, a data-name reference, or a reference
+/// modification of a data-name.
 enum Operandy {
     Literal(Src),
     Name(String),
+    /// `base(start:len)` / `base(start:)` — a reference modification selecting
+    /// `len` characters of alphanumeric item `base` from 1-based position
+    /// `start`; an omitted `len` runs to the end of the item. On this rung both
+    /// `start` and `len` are integer NUMBER literals (kept here as `usize`);
+    /// a computed start/length is a later rung, rejected in [`read_operand`].
+    RefMod { base: String, start: usize, len: Option<usize> },
 }
 
 /// A literal source, mirroring the runtime's `Src` for the values this rung
@@ -2525,15 +2621,49 @@ enum Src {
     Space,
 }
 
-/// Read an `operand` node into either a literal or a data-name reference.
+/// Read an `operand` node into a literal, a data-name reference, or a reference
+/// modification.
+///
+/// The grammar is `operand = NAME [ LPAREN operand COLON [ operand ] RPAREN ] |
+/// literal ;`. A bare NAME (no parenthesised suffix) is an [`Operandy::Name`]
+/// exactly as before. When the reference-modification suffix is present the
+/// inner start/length operands appear as nested `operand` child nodes; each must
+/// be a plain integer NUMBER literal on this rung (a data-name or expression
+/// there is a *computed* reference modification — a later rung).
 fn read_operand(op: &GrammarASTNode) -> Result<Operandy, CompileError> {
     if let Some(lit) = child_node(op, "literal") {
         return Ok(Operandy::Literal(read_literal(lit)?));
     }
     if let Some(name) = first_token(op, "NAME") {
+        let inner = child_nodes(op, "operand");
+        if !inner.is_empty() {
+            let start = read_refmod_index(inner[0])?;
+            let len = match inner.get(1) {
+                Some(l) => Some(read_refmod_index(l)?),
+                None => None,
+            };
+            return Ok(Operandy::RefMod { base: name, start, len });
+        }
         return Ok(Operandy::Name(name));
     }
     Err(CompileError::Malformed("unrecognised operand".into()))
+}
+
+/// Read a reference-modification start or length subnode: it must be a plain
+/// integer NUMBER literal. Anything else (a data-name, a signed/fractional
+/// literal, a nested reference modification) is a *computed* reference
+/// modification, which is a later rung.
+fn read_refmod_index(op: &GrammarASTNode) -> Result<usize, CompileError> {
+    let computed = || {
+        CompileError::Unsupported(
+            "reference modification with a computed start/length is a later rung".into(),
+        )
+    };
+    let lit = child_node(op, "literal").ok_or_else(computed)?;
+    match read_literal(lit)? {
+        Src::Num(s) => s.parse::<usize>().map_err(|_| computed()),
+        _ => Err(computed()),
+    }
 }
 
 /// Read a `literal` node (NUMBER / STRING / figurative) into a [`Src`].
@@ -3504,5 +3634,74 @@ mod tests {
         let err = compile_source(&program(&["IDENTIFICATION DIVISION.", "PROGRAM-ID. P."]), "p")
             .unwrap_err();
         assert!(matches!(err, CompileError::Parse(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn refmod_display_lowers_to_a_str_slice() {
+        // A reference modification in DISPLAY lowers to a constant-index str_slice.
+        let m = compile_source(
+            &wrap(&["01  WS  PIC X(5) VALUE \"ABCDE\"."], &["DISPLAY WS(2:3).", "STOP RUN."]),
+            "rm",
+        )
+        .unwrap();
+        assert!(m.validate().is_empty(), "{:?}", m.validate());
+        let os = ops(&m);
+        assert!(os.contains(&"str_slice".to_string()), "refmod DISPLAY slices: {os:?}");
+        assert!(os.contains(&"print_str".to_string()));
+    }
+
+    #[test]
+    fn refmod_computed_start_is_a_later_rung() {
+        // A data-name start (`WS(J:2)`) is a *computed* reference modification —
+        // rejected cleanly on this rung, never miscompiled.
+        let err = compile_source(
+            &wrap(
+                &["01  WS  PIC X(5) VALUE \"ABCDE\".", "01  J  PIC 9 VALUE 2."],
+                &["DISPLAY WS(J:2).", "STOP RUN."],
+            ),
+            "rmj",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn refmod_of_a_numeric_item_is_a_later_rung() {
+        // Reference modification is defined on alphanumeric items; a numeric item
+        // is a later rung.
+        let err = compile_source(
+            &wrap(&["01  N  PIC 9(5) VALUE 12345."], &["DISPLAY N(2:3).", "STOP RUN."]),
+            "rmn",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn refmod_out_of_range_constant_is_a_later_rung() {
+        // A constant slice past the end of the item is rejected at compile time
+        // (a later rung) — never lowered to a runtime trap.
+        let err = compile_source(
+            &wrap(&["01  WS  PIC X(3) VALUE \"ABC\"."], &["DISPLAY WS(2:5).", "STOP RUN."]),
+            "rmoob",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn refmod_huge_indices_do_not_overflow() {
+        // Both start and length parse as full `usize`, so `start-1 + len` would
+        // overflow: a crafted program must be a clean Unsupported reject, never a
+        // panic (the subtractive bounds test guarantees this).
+        let err = compile_source(
+            &wrap(
+                &["01  WS  PIC X(5) VALUE \"ABCDE\"."],
+                &["DISPLAY WS(18446744073709551615:18446744073709551615).", "STOP RUN."],
+            ),
+            "rmhuge",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
     }
 }

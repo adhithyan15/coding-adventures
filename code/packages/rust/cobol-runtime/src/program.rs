@@ -187,11 +187,17 @@ pub enum ArithOp {
     Pow,
 }
 
-/// A statement operand: a data-name or a literal.
+/// A statement operand: a data-name, a literal, or a reference modification.
 #[derive(Debug, Clone)]
 pub enum Operand {
     Ident(String),
     Lit(Lit),
+    /// `base(start:len)` / `base(start:)` — a reference modification selecting
+    /// `len` characters of alphanumeric item `base` from 1-based position
+    /// `start`; an omitted `len` runs to the end of the item. On this rung both
+    /// `start` and `len` are integer NUMBER literals; a computed start/length is
+    /// a later rung, rejected in [`read_operand`].
+    RefMod { base: String, start: usize, len: Option<usize> },
 }
 
 /// A condition tested by `IF` (and `PERFORM … UNTIL`). Either a relation between
@@ -364,9 +370,36 @@ fn read_operand(op: &GrammarASTNode) -> Result<Operand, RuntimeError> {
         return Ok(Operand::Lit(read_literal(lit)?));
     }
     if let Some(name) = first_token(op, "NAME") {
+        // A reference-modification suffix appears as nested `operand` child nodes
+        // (the start, and optionally the length). A bare NAME has none.
+        let inner = child_nodes(op, "operand");
+        if !inner.is_empty() {
+            let start = read_refmod_index(inner[0])?;
+            let len = match inner.get(1) {
+                Some(l) => Some(read_refmod_index(l)?),
+                None => None,
+            };
+            return Ok(Operand::RefMod { base: name, start, len });
+        }
         return Ok(Operand::Ident(name));
     }
     Err(RuntimeError::Unsupported("unrecognised operand".into()))
+}
+
+/// Read a reference-modification start or length subnode: it must be a plain
+/// integer NUMBER literal on this rung (a data-name or expression there is a
+/// *computed* reference modification — a later rung).
+fn read_refmod_index(op: &GrammarASTNode) -> Result<usize, RuntimeError> {
+    let computed = || {
+        RuntimeError::Unsupported(
+            "reference modification with a computed start/length is a later rung".into(),
+        )
+    };
+    let lit = child_node(op, "literal").ok_or_else(computed)?;
+    match read_literal(lit)? {
+        Lit::Num(s) => s.parse::<usize>().map_err(|_| computed()),
+        _ => Err(computed()),
+    }
 }
 
 /// Read one `when_value` (`operand [ (THRU|THROUGH) operand ]`) into a

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.0 — `COLON` token for reference modification
+
+- Added `COLON = ":"` to SECTION 2 (Punctuation), next to `LPAREN`/`RPAREN`. It
+  separates the start position from the length in a reference modification
+  (`WS-NAME(2:3)`). It is a single character with no maximal-munch conflict
+  against any other punctuation. `_grammar.rs` regenerated from `cobol.tokens`
+  via `grammar-tools compile-tokens`.
+
 ## 0.5.0 — `EVALUATE` / `OTHER` / `END-EVALUATE` keywords
 
 - Added `EVALUATE`, `OTHER`, and the hyphenated `END-EVALUATE` to the reserved-word

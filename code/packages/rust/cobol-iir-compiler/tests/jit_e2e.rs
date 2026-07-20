@@ -1446,3 +1446,113 @@ fn char_move_then_compare_round_trips() {
     ));
     assert_eq!(out, "SAME\n");
 }
+
+// ---------------------------------------------------------------------------
+// Reference modification `IDENT(start:len)` — DISPLAY and comparison contexts.
+// A 1-based `start`; an omitted length runs to the end of the item. Every case
+// asserts the compiled slice is byte-identical to the oracle's.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn refmod_display_mid_substring() {
+    // WS = "ABCDE"; WS(2:3) selects positions 2..4 → "BCD".
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(5) VALUE \"ABCDE\"."],
+        &["DISPLAY WS(2:3).", "STOP RUN."],
+    ));
+    assert_eq!(out, "BCD\n");
+}
+
+#[test]
+fn refmod_display_omitted_length_runs_to_end() {
+    // WS(3:) has no length → from position 3 to the end → "CDE".
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(5) VALUE \"ABCDE\"."],
+        &["DISPLAY WS(3:).", "STOP RUN."],
+    ));
+    assert_eq!(out, "CDE\n");
+}
+
+#[test]
+fn refmod_display_single_leading_char() {
+    // WS(1:1) is the first character.
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(5) VALUE \"ABCDE\"."],
+        &["DISPLAY WS(1:1).", "STOP RUN."],
+    ));
+    assert_eq!(out, "A\n");
+}
+
+#[test]
+fn refmod_display_whole_item_via_full_length() {
+    // A length equal to the item width selects the whole thing.
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(5) VALUE \"ABCDE\"."],
+        &["DISPLAY WS(1:5).", "STOP RUN."],
+    ));
+    assert_eq!(out, "ABCDE\n");
+}
+
+#[test]
+fn refmod_in_if_comparison_against_literal() {
+    // The leading 3 characters equal "ABC" → the THEN branch.
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(5) VALUE \"ABCDE\"."],
+        &[
+            "IF WS(1:3) = \"ABC\" DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "MATCH\n");
+}
+
+#[test]
+fn refmod_in_if_comparison_false_branch() {
+    // WS(2:2) = "BC", which is not "ZZ" → the ELSE branch.
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(5) VALUE \"ABCDE\"."],
+        &[
+            "IF WS(2:2) = \"ZZ\" DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "NO\n");
+}
+
+#[test]
+fn refmod_as_evaluate_subject() {
+    // EVALUATE over WS(2:2) = "BC".
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(5) VALUE \"ABCDE\"."],
+        &[
+            "EVALUATE WS(2:2)",
+            "WHEN \"BC\" DISPLAY \"HIT\"",
+            "WHEN OTHER DISPLAY \"MISS\"",
+            "END-EVALUATE.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "HIT\n");
+}
+
+#[test]
+fn refmod_compared_against_another_refmod() {
+    // WS(1:2) = "AB" and WS(4:2) = "DE": both slices of the same item, unequal.
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(5) VALUE \"ABCDE\"."],
+        &[
+            "IF WS(1:2) = WS(4:2) DISPLAY \"SAME\" ELSE DISPLAY \"DIFF\".",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "DIFF\n");
+    // Two slices that ARE equal: WS = "ABAB", WS(1:2) = WS(3:2) = "AB".
+    let eq = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(4) VALUE \"ABAB\"."],
+        &[
+            "IF WS(1:2) = WS(3:2) DISPLAY \"SAME\" ELSE DISPLAY \"DIFF\".",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(eq, "SAME\n");
+}

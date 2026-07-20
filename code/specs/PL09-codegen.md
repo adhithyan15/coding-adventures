@@ -171,7 +171,12 @@ per D1; `X`/`A` = `str`); the item tree → a flat symbol table.
   `cmp_*` + `jmp_if_*`; `MOVE`/`ADD`/…/`COMPUTE` → `mov`/`add`/… on scaled
   integers with scale-alignment; `DISPLAY` → `str_const` + `print_str` (numeric
   items via a synthesized digit-print helper, as BASIC does); signed `S` via the
-  integer sign; overpunch display via a small formatting helper.
+  integer sign; overpunch display via a small formatting helper. **Reference
+  modification** `IDENT(start:len)` / `IDENT(start:)` (constant integer indices,
+  alphanumeric base) → a constant-index `str_slice` over `[start-1, start-1+len)`
+  (an omitted length runs to the item's end), reused in `DISPLAY` and
+  alphanumeric-comparison operands; bounds are validated at compile time and an
+  out-of-range constant slice is a clean `Unsupported`, not a runtime trap.
 * **SIR:** paragraphs → `Function`s; `PERFORM` → `DirectCall`; `PERFORM … UNTIL`
   → `While`; `IF` → `If`; arithmetic → `BuiltinCall` on `Int(IntSpec)` with
   `Convert` for scale/width; `DISPLAY` → `BuiltinCall("puts"/"print")`;

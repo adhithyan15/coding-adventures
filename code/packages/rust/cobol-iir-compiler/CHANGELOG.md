@@ -8,6 +8,38 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.19.0: reference modification `IDENT(start:len)` (PL09 step 5)
+
+COBOL **reference modification** — `base(start:len)` selects `len` characters of
+alphanumeric item `base` from 1-based position `start`; `base(start:)` (omitted
+length) runs to the end of the item. Supported this rung with **constant integer
+NUMBER-literal** start/length, on an alphanumeric (PIC X) base, in **DISPLAY**
+operands and **IF / EVALUATE alphanumeric-comparison** operands (either side, or
+against a literal). Implemented oracle-first, byte-identical.
+
+- **Grammar/lexer.** New `COLON = ":"` token (`cobol-lexer` 0.6.0) and an optional
+  reference-modification suffix on the `operand` rule (`cobol-parser` 0.14.0):
+  `operand = NAME [ LPAREN operand COLON [ operand ] RPAREN ] | literal`. A bare
+  NAME still parses exactly as before.
+- **Reader.** `Operandy` gains `RefMod { base, start, len }`. `read_operand`
+  detects the suffix (nested `operand` child nodes) and reads each index via
+  `read_refmod_index`, which requires a plain integer NUMBER literal — a
+  data-name/expression start or length is a *computed* reference modification, a
+  clean `Unsupported` later rung.
+- **Lowering.** A shared `ref_mod_slice(base, start, len) -> (reg, actual_len)`
+  helper resolves the base to a `Char` item, computes `start0 = start-1` and
+  `actual_len = len.unwrap_or(width - start0)`, validates bounds at compile time
+  (`start >= 1`, `start-1+len <= width`), and emits a constant-index `str_slice`
+  (mirroring `move_char_item`). `str_operand` and `emit_display` reuse it.
+- **Deferral.** Reference modification of a numeric item, a computed start/length,
+  and any numeric/arithmetic/MOVE-source use are `Unsupported` later rungs; an
+  out-of-range **constant** reference modification is rejected at compile time,
+  never lowered to a runtime trap.
+- **Tests.** New `jit_e2e.rs` cases (DISPLAY of `WS(2:3)`, `WS(3:)`, `WS(1:1)`,
+  full-width; `IF WS(1:3) = "ABC"`; `EVALUATE WS(2:2)`; ref-mod vs ref-mod) all
+  byte-identical to the oracle; unit tests for the `str_slice` lowering and the
+  computed-start / numeric-item / out-of-range `Unsupported` paths.
+
 ### Added — v0.18.0: alphanumeric `EVALUATE` subject (PL09 step 4)
 
 `EVALUATE` now works over a **character** subject, not just numeric:
