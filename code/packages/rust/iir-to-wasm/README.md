@@ -108,7 +108,11 @@ through a deprecated intermediate.
   [bytes]` block and `memory.copy`s the source's `[start, end)` run into it (the
   same shape as runtime `str_concat`), with a bounds trap (`unreachable` unless
   `0 ≤ start ≤ end ≤ len`, via unsigned compares) and `i32.wrap`ped index slots.
-  Runtime `str_index` over promoted operands remains deferred.
+  and **`str_index` (v0.41.0)** reads the source's header length for the bounds
+  trap (`idx >=u len` → `unreachable`) and loads the byte with `i32.load8_u(handle
+  + 4 + idx)` (skipping the header; the literal path loads `offset + idx` with no
+  header) — read-only, so no bump-alloc. This **closes the E4d-3b runtime string
+  surface**: every `str_*` op now has a runtime path over promoted operands.
 - **All functions exported**: every function in the IIR module is exported by
   name so host runtimes can invoke them.
 
