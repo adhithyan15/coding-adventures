@@ -3539,6 +3539,16 @@ fn collate_text(s: &str, collation: &str) -> String {
 /// The Debug output is deterministic for all `SqlValue` variants, so collisions
 /// can only happen between rows that are genuinely equal.
 fn apply_distinct(rows: &mut Vec<Vec<(String, SqlValue)>>, collations: &[Option<String>]) {
+    // The collation slice is indexed by output-column POSITION, so it is only
+    // meaningful when it describes exactly the row being keyed. If the widths
+    // disagree, the planner's view of the output columns and what was actually
+    // emitted have diverged (e.g. an unexpanded `SELECT DISTINCT *`), and
+    // applying it would put a collation on the WRONG column — silently folding
+    // values that must stay distinct, i.e. dropping rows. Fall back to BINARY,
+    // which dedupes strictly and can never merge rows that genuinely differ.
+    let widths_agree = rows.iter().all(|r| r.len() == collations.len());
+    let collations: &[Option<String>] = if widths_agree { collations } else { &[] };
+
     let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
     rows.retain(|row| {
         // Build a canonical string key: "col1=<val1>,col2=<val2>,..."

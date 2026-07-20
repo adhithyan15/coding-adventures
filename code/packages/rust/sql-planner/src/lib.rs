@@ -1375,6 +1375,17 @@ fn distinct_output_collations(
     if !find_nodes(stmt, "join_clause").is_empty() {
         return none_for_each(output_columns.len());
     }
+    // BAIL on GROUP BY / aggregates. This vector is indexed by output-column
+    // POSITION, but the aggregate emitter emits group-key columns in GROUP BY
+    // order, not SELECT-list order — so the two are shifted relative to each
+    // other and a collation would land on the wrong column, silently folding
+    // values that must stay distinct (rows would vanish from the result). E.g.
+    // `SELECT DISTINCT x, c FROM t GROUP BY c, x` emits `[c, x]` while this
+    // list describes `[x, c]`. Falling back to BINARY is the fail-safe
+    // direction: it dedupes strictly, never merging rows that differ.
+    if find_node(stmt, "group_clause").is_some() {
+        return none_for_each(output_columns.len());
+    }
     let Some((table, alias)) = base_table_ref.as_ref() else {
         return none_for_each(output_columns.len());
     };

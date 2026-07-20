@@ -1661,6 +1661,29 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT DISTINCT c||'' AS e FROM t ORDER BY e",
     },
+    // REGRESSION GUARD (data loss): with DISTINCT over a GROUP BY, the aggregate
+    // emitter emits group-key columns in GROUP BY order, NOT SELECT-list order,
+    // so a positional collation vector built from the SELECT list is SHIFTED and
+    // would fold the WRONG column — here NOCASE would land on `x`, merging 'p'
+    // and 'P' and losing a row. The planner therefore falls back to BINARY
+    // whenever a GROUP BY is present, and the VM additionally ignores the vector
+    // if its width disagrees with the emitted row. Found by security review.
+    Case {
+        id: "distinct_over_group_by_no_misfold",
+        setup: &[
+            "CREATE TABLE t (c TEXT COLLATE NOCASE, x TEXT)",
+            "INSERT INTO t VALUES('A','p'),('A','P')",
+        ],
+        query: "SELECT DISTINCT x, c FROM t GROUP BY c, x ORDER BY 1, 2",
+    },
+    Case {
+        id: "distinct_over_group_by_single_col",
+        setup: &[
+            "CREATE TABLE t (c TEXT COLLATE NOCASE, x TEXT)",
+            "INSERT INTO t VALUES('A','p'),('A','P')",
+        ],
+        query: "SELECT DISTINCT c FROM t GROUP BY x ORDER BY 1",
+    },
     // The same table's BINARY column is NOT folded — all four values are distinct.
     // (Guards against over-applying the collation to every column.)
     Case {
@@ -2101,6 +2124,26 @@ const LEDGER: &[(&str, &str)] = &[
     (
         "distinct_star_collate",
         "SELECT DISTINCT * does not expand the star into the table's columns (projection gap, not a collation gap)",
+    ),
+    // The aggregate emitter emits the GROUP BY key columns, in GROUP BY order,
+    // instead of projecting the SELECT list: `SELECT DISTINCT x, c ... GROUP BY
+    // c, x` comes back as columns `[c, x]`, and `SELECT DISTINCT c ... GROUP BY
+    // x` comes back as the group key `x` rather than `c`. Pre-existing — the
+    // aggregate path never re-projects over its input (`compile_project` compiles
+    // the inner plan directly for an Aggregate/Having input).
+    //
+    // This is what makes a POSITIONAL per-output-column collation vector unsafe
+    // over a GROUP BY, so `distinct_output_collations` bails to BINARY whenever a
+    // GROUP BY is present (and the VM ignores the vector if its width disagrees
+    // with the emitted row). Without those guards the NOCASE of `c` landed on `x`
+    // and merged 'p'/'P', LOSING a row — caught by security review before merge.
+    (
+        "distinct_over_group_by_no_misfold",
+        "aggregate path emits GROUP BY key columns instead of projecting the SELECT list (column order/identity differ)",
+    ),
+    (
+        "distinct_over_group_by_single_col",
+        "aggregate path emits the GROUP BY key column instead of the SELECT-list column",
     ),
     (
         "distinct_explicit_collate",
