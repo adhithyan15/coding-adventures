@@ -99,6 +99,20 @@ French.
   Portuguese **simplified** it to *n*, Spanish **palatalized** it into **ñ**
   (*año*) — which is where *ñ* came from in the first place. **Authored.**
 
+- **Ch. 15 — The past Portuguese kept, and the compound that means something
+  else**: the **pretérito perfeito** — *falei/falaste/falou/falámos/falaram* ←
+  Vulgar Latin perfect **\*fabulāvī** (= Spanish *hablé*), **one word, no auxiliary**. The
+  interest isn't the endings but that Portuguese still **uses** it in daily speech:
+  French exiled the same inherited tense to **literature**, German pushed it aside,
+  northern Italy dropped it — and Portuguese and Spanish, at the **western edge**,
+  simply kept it → **tenho falado**, which does **not** mean "I have spoken." It
+  means "I **have been** speaking" — **repeatedly, over a recent stretch, possibly
+  still going**; a single finished act is *falei*. The explanation is the good
+  part: Portuguese built the **same** *have* + participle machine as French and
+  Italian, but ***falei* never vacated the plain-past slot** — with no vacancy, the
+  new construction drifted into an **iterative** job instead. Same parts, same era,
+  different outcome, because of what was already in the way. (This is a very common English-speaker error in Portuguese.) **Authored.**
+
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |
