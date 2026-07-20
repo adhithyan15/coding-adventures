@@ -77,9 +77,52 @@ use std::cell::RefCell;
 use std::rc::Rc;
 mod _grammar;
 
-/// Shared store of the original string lexemes, indexed by the integer in
-/// the `` `N` `` placeholder. The pre-hook fills it; the post-hook reads it.
-type LiteralTable = Rc<RefCell<Vec<String>>>;
+/// One recorded placeholder insertion: the original literal text (still
+/// quoted, `''`-escaped) and the (line, column) at which the pre-tokenize
+/// hook wrote the placeholder's opening backtick into the transformed
+/// source -- the exact position [`GrammarLexer`]'s own char-by-char cursor
+/// will later assign to the `STRING_PLACEHOLDER` token produced there (see
+/// [`push_tracked`]).
+///
+/// Recording *where* a placeholder was legitimately inserted, not just
+/// *what* its content was, closes a real content-confusion hole: backtick
+/// has no legitimate meaning anywhere else in this grammar, but nothing
+/// stops a `` `N` `` sequence typed verbatim in ordinary (otherwise
+/// syntactically invalid) Scilab source from surviving [`protect_quotes`]
+/// completely unmodified and reaching the grammar indistinguishable from a
+/// genuine placeholder. An index-only lookup would resolve such a token
+/// against whichever real table entry its digits happened to name, silently
+/// splicing an unrelated string literal's content into a source position
+/// where the user never wrote a string at all. [`restore_placeholders`]
+/// checks a token's actual position against the position recorded here
+/// before trusting it.
+struct Placeholder {
+    text: String,
+    line: usize,
+    column: usize,
+}
+
+/// Shared store of placeholder insertions, indexed by the integer in the
+/// `` `N` `` placeholder. The pre-hook fills it; the post-hook reads it.
+type LiteralTable = Rc<RefCell<Vec<Placeholder>>>;
+
+/// Push one character onto `out`, advancing `line`/`col` in lockstep with
+/// how [`GrammarLexer`]'s cursor (`advance`) will later count position over
+/// this exact (transformed) string -- so a placeholder's recorded insertion
+/// point exactly matches the line/column the grammar assigns to the token
+/// it produces there. Every character [`protect_quotes`] writes to its
+/// output MUST go through this function exactly once, or the tracked
+/// position silently drifts out of sync with the grammar's own count.
+#[inline]
+fn push_tracked(out: &mut String, c: char, line: &mut usize, col: &mut usize) {
+    out.push(c);
+    if c == '\n' {
+        *line += 1;
+        *col = 1;
+    } else {
+        *col += 1;
+    }
+}
 
 /// Resolve the transpose/string ambiguity for `'`, passing `//`/`/* */`
 /// comments and `"..."` strings through untouched.
@@ -104,6 +147,12 @@ fn protect_quotes(source: String, table: &LiteralTable) -> String {
     let mut i = 0;
     let n = chars.len();
     let mut prev_value = false;
+    // Tracks position in `out` (NOT in `source`) -- see `push_tracked` and
+    // `Placeholder`'s doc comment for why this must be the transformed
+    // string's own position, and why every character reaching `out` must
+    // pass through `push_tracked`.
+    let mut out_line: usize = 1;
+    let mut out_col: usize = 1;
 
     while i < n {
         let c = chars[i];
@@ -111,7 +160,7 @@ fn protect_quotes(source: String, table: &LiteralTable) -> String {
             // `//` line comment: copy verbatim to end of line (grammar skips it).
             '/' if i + 1 < n && chars[i + 1] == '/' => {
                 while i < n && chars[i] != '\n' {
-                    out.push(chars[i]);
+                    push_tracked(&mut out, chars[i], &mut out_line, &mut out_col);
                     i += 1;
                 }
             }
@@ -121,36 +170,37 @@ fn protect_quotes(source: String, table: &LiteralTable) -> String {
             // inline with code (MA10 §3) -- unlike MATLAB's `%{`/`%}`, there
             // is no "must be alone on its line" restriction to enforce here.
             '/' if i + 1 < n && chars[i + 1] == '*' => {
-                out.push('/');
-                out.push('*');
+                push_tracked(&mut out, '/', &mut out_line, &mut out_col);
+                push_tracked(&mut out, '*', &mut out_line, &mut out_col);
                 i += 2;
                 while i < n {
                     if chars[i] == '*' && i + 1 < n && chars[i + 1] == '/' {
-                        out.push('*');
-                        out.push('/');
+                        push_tracked(&mut out, '*', &mut out_line, &mut out_col);
+                        push_tracked(&mut out, '/', &mut out_line, &mut out_col);
                         i += 2;
                         break;
                     }
-                    out.push(chars[i]);
+                    push_tracked(&mut out, chars[i], &mut out_line, &mut out_col);
                     i += 1;
                 }
             }
             // Double-quoted string: copy whole, respecting the `""` escape.
             '"' => {
-                out.push('"');
+                push_tracked(&mut out, '"', &mut out_line, &mut out_col);
                 i += 1;
                 while i < n {
                     if chars[i] == '"' {
                         if i + 1 < n && chars[i + 1] == '"' {
-                            out.push_str("\"\"");
+                            push_tracked(&mut out, '"', &mut out_line, &mut out_col);
+                            push_tracked(&mut out, '"', &mut out_line, &mut out_col);
                             i += 2;
                         } else {
-                            out.push('"');
+                            push_tracked(&mut out, '"', &mut out_line, &mut out_col);
                             i += 1;
                             break;
                         }
                     } else {
-                        out.push(chars[i]);
+                        push_tracked(&mut out, chars[i], &mut out_line, &mut out_col);
                         i += 1;
                     }
                 }
@@ -158,7 +208,7 @@ fn protect_quotes(source: String, table: &LiteralTable) -> String {
             }
             '\'' if prev_value => {
                 // Transpose: leave the quote for the grammar to lex as TRANSPOSE.
-                out.push('\'');
+                push_tracked(&mut out, '\'', &mut out_line, &mut out_col);
                 i += 1;
                 prev_value = true; // the transposed result is itself a value
             }
@@ -185,23 +235,35 @@ fn protect_quotes(source: String, table: &LiteralTable) -> String {
                         i += 1;
                     }
                 }
+                // Record the insertion point BEFORE writing the opening
+                // backtick -- this is the (line, column) the grammar will
+                // assign to the STRING_PLACEHOLDER token produced here, and
+                // is what `restore_placeholders` checks a token's own
+                // position against before trusting it (see `Placeholder`).
+                let (placeholder_line, placeholder_col) = (out_line, out_col);
                 let idx = {
                     let mut t = table.borrow_mut();
-                    t.push(lit);
+                    t.push(Placeholder {
+                        text: lit,
+                        line: placeholder_line,
+                        column: placeholder_col,
+                    });
                     t.len() - 1
                 };
-                out.push('`');
-                out.push_str(&idx.to_string());
-                out.push('`');
+                push_tracked(&mut out, '`', &mut out_line, &mut out_col);
+                for ch in idx.to_string().chars() {
+                    push_tracked(&mut out, ch, &mut out_line, &mut out_col);
+                }
+                push_tracked(&mut out, '`', &mut out_line, &mut out_col);
                 prev_value = true; // a string is a value
             }
             ' ' | '\t' => {
-                out.push(c);
+                push_tracked(&mut out, c, &mut out_line, &mut out_col);
                 i += 1;
                 prev_value = false; // whitespace breaks the transpose context
             }
             '\n' | '\r' => {
-                out.push(c);
+                push_tracked(&mut out, c, &mut out_line, &mut out_col);
                 i += 1;
                 prev_value = false;
             }
@@ -211,7 +273,7 @@ fn protect_quotes(source: String, table: &LiteralTable) -> String {
             // included too -- it denotes a VALUE, the same as a closing
             // bracket, so `A($)'` and a bare `$'` both read as transposes.
             _ => {
-                out.push(c);
+                push_tracked(&mut out, c, &mut out_line, &mut out_col);
                 i += 1;
                 prev_value = c.is_alphanumeric()
                     || c == '_'
@@ -244,24 +306,41 @@ fn decode_string_literal(raw: &str) -> String {
 /// only one string type (MA10 §3), unlike MATLAB's CHARARRAY-vs-STRING
 /// split. Restoration keys off the distinct `STRING_PLACEHOLDER` *type*,
 /// never the value -- so a crafted double-quoted string whose content
-/// happens to look like `` `N` `` is never mistaken for a placeholder.
+/// happens to look like `` `N` `` is never mistaken for a placeholder
+/// (`"` strings never reach this hook typed `STRING_PLACEHOLDER` in the
+/// first place -- see [`collapse_dq_string_escapes`]).
+///
+/// A token's *index* is not enough to trust it, though: nothing in this
+/// grammar stops a `` `N` `` sequence from being typed verbatim as ordinary
+/// (otherwise invalid) Scilab source -- backtick has no other meaning here.
+/// Such a token would carry a real, in-range index by coincidence and, if
+/// resolved on index alone, would splice an unrelated string literal's
+/// content into a source position the user never wrote a string at (or, for
+/// an out-of-range index, would be accepted as a well-formed `STRING` when
+/// it should be a lex error). So resolution also requires the token's own
+/// `(line, column)` to match the position [`protect_quotes`] actually wrote
+/// that placeholder at (per [`Placeholder`]) -- a token whose value merely
+/// *parses* as `` `N` `` but was never legitimately inserted there is left
+/// unresolved, still typed `STRING_PLACEHOLDER`, an honest failure for a
+/// future parser to reject rather than a silently wrong or silently
+/// accepted value.
 fn restore_placeholders(mut tokens: Vec<Token>, table: &LiteralTable) -> Vec<Token> {
     let lits = table.borrow();
     for tok in &mut tokens {
         if tok.effective_type_name() == "STRING_PLACEHOLDER" {
-            if let Some(inner) = tok
+            let resolved = tok
                 .value
                 .strip_prefix('`')
                 .and_then(|s| s.strip_suffix('`'))
-            {
-                if let Ok(idx) = inner.parse::<usize>() {
-                    if let Some(orig) = lits.get(idx) {
-                        tok.value = decode_string_literal(orig);
-                    }
-                }
+                .and_then(|inner| inner.parse::<usize>().ok())
+                .and_then(|idx| lits.get(idx))
+                .filter(|entry| entry.line == tok.line && entry.column == tok.column)
+                .map(|entry| decode_string_literal(&entry.text));
+            if let Some(decoded) = resolved {
+                tok.value = decoded;
+                tok.type_ = TokenType::String;
+                tok.type_name = Some("STRING".to_string());
             }
-            tok.type_ = TokenType::String;
-            tok.type_name = Some("STRING".to_string());
         }
     }
     tokens
@@ -452,6 +531,40 @@ mod tests {
         let p = lex("a = 'x'; b = \"`0`\"\n");
         let last_string = p.iter().rev().find(|(t, _)| t == "STRING").unwrap();
         assert_eq!(last_string.1, "`0`");
+    }
+
+    #[test]
+    fn bare_placeholder_shaped_text_is_not_hijacked_by_an_unrelated_string() {
+        // Security regression: a literal `` `0` `` typed as ordinary
+        // (otherwise invalid) source text must NOT resolve against an
+        // unrelated real string literal's table entry just because its
+        // digits happen to match that entry's index. Resolution requires
+        // the token's own (line, column) to match the position
+        // `protect_quotes` actually inserted a placeholder at -- a bare
+        // backtick sequence typed elsewhere in the file was never inserted
+        // there, so it must stay unresolved (STRING_PLACEHOLDER, not
+        // STRING) rather than silently taking on `'HELLO'`'s content.
+        let p = lex("x = 'HELLO'\ny = `0`\n");
+        let placeholder = p
+            .iter()
+            .rev()
+            .find(|(t, _)| t == "STRING_PLACEHOLDER")
+            .expect("the bare `0` on line 2 must not resolve to STRING");
+        assert_eq!(
+            placeholder.1, "`0`",
+            "value must stay the raw literal text, not 'HELLO'"
+        );
+    }
+
+    #[test]
+    fn out_of_range_placeholder_index_is_not_silently_accepted() {
+        // Security regression: a `` `N` `` sequence whose index has no
+        // corresponding real placeholder (here: no string literal exists
+        // anywhere in the file, so index 42 is out of range) must not be
+        // silently promoted to a well-formed STRING -- it stays
+        // STRING_PLACEHOLDER, an honest failure for a future parser to
+        // reject rather than a silently accepted bogus value.
+        assert_eq!(types("z = `42`\n"), ["NAME", "EQ", "STRING_PLACEHOLDER"]);
     }
 
     // --- Comments: `//` line, `/* */` block, INLINE mid-line-with-code ---

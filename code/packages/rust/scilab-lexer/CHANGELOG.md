@@ -63,6 +63,22 @@
   this crate's own decode function) to actually honor the doubled-quote
   escaping MA10 §4 promises, rather than leaving `"a""b"` half-decoded to
   `a""b`.
+- Security hardening in `restore_placeholders`: resolving a
+  `STRING_PLACEHOLDER` token now requires its `(line, column)` to match the
+  exact position `protect_quotes` recorded when it inserted that placeholder
+  (tracked via a new `push_tracked` helper threading `out_line`/`out_col`
+  through every character `protect_quotes` writes), not just its numeric
+  index. Backtick has no legitimate meaning anywhere else in `scilab.tokens`,
+  so nothing previously stopped a `` `N` `` sequence typed verbatim as
+  ordinary (otherwise invalid) source text from surviving `protect_quotes`
+  unmodified and reaching the grammar indistinguishable from a genuine
+  placeholder: an index-only lookup would then either splice an unrelated
+  string literal's content into a source position the user never wrote a
+  string at (an in-range index collision), or silently accept it as a
+  well-formed `STRING` (an out-of-range index). Position-checking closes
+  both: a token whose value merely parses as `` `N` `` but was never
+  legitimately inserted there is left unresolved (still typed
+  `STRING_PLACEHOLDER`), an honest failure for a future parser to reject.
 - Known, accepted edge case (documented, not "fixed" further): a `%`-word
   that is not one of the eight constants but happens to start with one of
   the single-letter ones (e.g. `%foo`, which starts with the real constant
@@ -71,11 +87,13 @@
   followed by more identifier characters." This is not valid Scilab either
   way and is expected to be rejected at parse time (MA-10c), so no extra
   lexer-level guard was added for it.
-- 33 tests covering the transpose-vs-string `'` ambiguity (including the
+- 35 tests covering the transpose-vs-string `'` ambiguity (including the
   classic `A' * B'` two-transposes trap and `$`-as-a-value before a
   transpose), single- and double-quoted strings resolving to the same
-  `STRING` type (including doubled-quote escaping and the
-  placeholder-collision regression), `//`/`/* */` comments (including a
+  `STRING` type (including doubled-quote escaping and both placeholder
+  regressions above — an unrelated real string's content not being
+  hijacked, and an out-of-range index not being silently accepted), `//`/`/*
+  */` comments (including a
   block comment appearing inline mid-line with code on both sides, and one
   spanning multiple lines), every one of the eight `PERCENT_CONST`
   constants (plus a regression guarding `%inf`/`%eps` against being split
