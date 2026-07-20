@@ -54,6 +54,11 @@ compared, every Spanish form supplied in full (no prior Spanish assumed).
   septembre–décembre = the Latin **7–10** from the numbers) → the four seasons
   (printemps = "prime temps" first-time; hiver ← *hibernum* → hibernate). **Authored.**
 
+- **Ch. 10 — Family**: **père/mère** (← *pater/māter* — the same PIE words as English
+  *father/mother*, split by **Grimm's law** *p→f, t→th*; → paternal/maternal) →
+  **frère/sœur** (← *frāter/soror* → fraternal/friar, sorority; the **œ** ligature
+  spells worn-down *soror*). **Authored.**
+
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |

@@ -1,5 +1,19 @@
 # Changelog
 
+## Chapter 10 — Family
+
+- **Chapter 10 authored** (`IT-C10-genitori`, `-fratello-sorella`): the immediate
+  family, atom-first, reviewing Ch.9/Ch.1 via `reviews_of`.
+- **padre / madre** — the sisters' **closest to Latin** *pater / māter* (only the
+  *-t-* softened to *-d-*); *padre* is the very word English borrowed for a priest.
+  **i genitori** ("parents") ← *genitor* "**begetter**" (*gignere* "beget") →
+  genesis/gene/progenitor; with the **false-friend** warning that *parenti* means
+  **relatives**, not "parents."
+- **fratello / sorella** — Italian rebuilt "brother/sister" with its **diminutive**
+  *-ello / -ella* ("little brother/sister"), keeping the *frat- / soror-* roots
+  (→ fraternal, sorority).
+- Taxonomy: namespaced `IT-FAMILY-PARENTS`, `IT-FAMILY-SIBLINGS`.
+
 ## Chapter 9 — Months & seasons
 
 - **Chapter 9 authored** (`IT-C09-mesi`, `-stagioni`): the calendar year, atom-first,

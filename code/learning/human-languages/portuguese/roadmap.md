@@ -55,6 +55,12 @@ French.
   with the twist that **verão** ("summer") ← *veranum* ← *vēr* "**spring**" — the
   summer-word grew out of spring; *outono* ← *autumnus* (au→ou). **Authored.**
 
+- **Ch. 10 — Family**: the most worn-down parents of all — **pai/mãe** (← *pater/māter*,
+  the *-t-* vanished: *pater→pae→pai*, *mãe* nasal; *os pais* "parents" = lit. "the
+  fathers"; mind *o país*=country) → the Iberian surprise **irmão/irmã** (← *germānus*
+  "of the same stock," from *frāter germānus* "full brother," **not** *frāter*; = ES
+  *hermano*; cousins *germane*/*German*). **Authored.**
+
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |

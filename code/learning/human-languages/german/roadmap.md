@@ -57,6 +57,12 @@ Spanish and French where a contrast helps. The recurring decoder is the
   native** (Frühling ← *früh* "early"; *Herbst* = English **harvest**; Sommer/Winter
   = English twins). **Authored.**
 
+- **Ch. 10 — Family**: the mirror of the months — **Vater/Mutter** are **inherited
+  Germanic** (NOT Latin loans), Grimm's-law twins of English *father/mother* (*V* = *f*)
+  → **Bruder/Schwester** (Germanic twins of *brother/sister*; **Geschwister** "siblings"
+  via the collective **ge-**). The standout: family is native where the months were
+  borrowed. **Authored.**
+
 ## Planned
 
 | Chapter | Theme |

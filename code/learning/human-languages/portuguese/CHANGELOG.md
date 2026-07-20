@@ -1,5 +1,19 @@
 # Changelog
 
+## Chapter 10 — Family
+
+- **Chapter 10 authored** (`PT-C10-pais`, `-irmaos`): the immediate family,
+  atom-first, reviewing Ch.9/Ch.1 via `reviews_of` — with **two Iberian twists**.
+- **pai / mãe** — the **most worn-down** parents of any sister: Latin *pater / māter*
+  lost the intervocalic *-t-* entirely (*pater → pae → pai*; *mãe* went nasal). The
+  masculine plural **os pais** means "the parents" (literally "the fathers"), with a
+  spelling-trap note vs *o país* ("the country").
+- **irmão / irmã** — the surprise: **not** from *frāter* but from Latin **germānus**
+  "of the same stock" (*frāter germānus* "full brother," the *frāter* later dropped).
+  Ties to the English cousins **germane** and **German** (the people-name), and to
+  the identical Spanish swap *hermano / hermana*.
+- Taxonomy: namespaced `PT-FAMILY-PARENTS`, `PT-FAMILY-SIBLINGS`.
+
 ## Chapter 9 — Months & seasons
 
 - **Chapter 9 authored** (`PT-C09-meses`, `-estacoes`): the calendar year, atom-first,

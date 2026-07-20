@@ -1,5 +1,17 @@
 # Changelog
 
+## Chapter 10 — Family
+
+- **Chapter 10 authored** (`FR-C10-parents`, `-freres-soeurs`): the immediate
+  family, atom-first, reviewing Ch.9/Ch.1 via `reviews_of`.
+- **père / mère** ← *pater / māter* ← PIE *\*ph₂tḗr / \*méh₂tēr*. Taught as the
+  **same inherited words** as English *father / mother*, split only by **Grimm's
+  law** (*p → f*, *t → th*) — French kept Latin's *p*, English shifted it. Root
+  payoff: paternal/patron, maternal/matron.
+- **frère / sœur** ← *frāter / soror* → fraternal/friar, sorority; the **œ**
+  ligature is introduced as the fused vowel spelling worn-down *soror*.
+- Taxonomy: namespaced `FR-FAMILY-PARENTS`, `FR-FAMILY-SIBLINGS`.
+
 ## Chapter 9 — Months & seasons
 
 - **Chapter 9 authored** (`FR-C09-mois`, `-saisons`): the calendar year, atom-first,
