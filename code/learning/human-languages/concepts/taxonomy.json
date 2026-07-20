@@ -222,6 +222,9 @@
       "ES-VERB-HACER": "hacer — 'to do/make' (-go yo-form hago, like tengo; ← facere → fact/factory/perfect; f→h softening; weather: hace calor)",
       "ES-VERB-DECIR": "decir — 'to say/tell' (doubly irregular: -go yo-form digo + e→i stem-change dices/dice; ← dīcere → dictate/diction/verdict)",
       "ES-YO-GO": "the -go club — verbs whose yo-form grows a hard g (tengo/hago/digo/pongo/salgo/vengo); yo-only, a closed Latin-inherited set of high-frequency verbs",
+      "ES-VERB-PONER": "poner — 'to put/place' (-go yo-form pongo; ← pōnere → position/compose/deposit/postpone; poner la mesa 'set the table', ponerse 'put on/become')",
+      "ES-VERB-SALIR": "salir — 'to leave/go out' (-go yo-form salgo; ← salīre 'to leap' → salient/sally/salmon/somersault; la salida 'the exit')",
+      "ES-VERB-VENIR": "venir — 'to come' (doubly irregular: -go yo-form vengo + e→ie stem-change vienes/viene; ← venīre → adventure/event/convene; twin of tener)",
       "IT-VERB-STARE": "stare — 'to be' (state; ← Latin stare 'to stand', = Spanish estar); drives 'come stai?'",
       "IT-VERB-PARLARE": "parlare — 'to speak' (← parabolāre = French parler; the regular -are present)",
       "IT-VERB-ABITARE": "abitare — 'to live/dwell' (← habitāre → habitat; twin of French habiter)",
@@ -287,6 +290,6 @@
     }
   },
   "practiceTags": {
-    "note": "Non-word lessons (type: review | practice-mix | writing) carry a session/orthography label, not a concept, and are exempt from the cross-language join. Existing labels: CH1-PRACTICE, CH2-PRACTICE, CH3-PRACTICE, CH4-PRACTICE, CH9-PRACTICE, CH10-PRACTICE, CH11-PRACTICE, CH12-PRACTICE, REVIEW."
+    "note": "Non-word lessons (type: review | practice-mix | writing) carry a session/orthography label, not a concept, and are exempt from the cross-language join. Existing labels: CH1-PRACTICE, CH2-PRACTICE, CH3-PRACTICE, CH4-PRACTICE, CH9-PRACTICE, CH10-PRACTICE, CH11-PRACTICE, CH12-PRACTICE, CH13-PRACTICE, REVIEW."
   }
 }
