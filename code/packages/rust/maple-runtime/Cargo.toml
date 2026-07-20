@@ -1,0 +1,25 @@
+[package]
+name = "coding-adventures-maple-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "Maple runtime — lowers Maple syntax to symbolic-ir and evaluates via symbolic-vm (MP-4)"
+license = "MIT"
+
+[dependencies]
+# The MP-3 frontend: parses Maple source into a generic GrammarASTNode that
+# this crate lowers to symbolic-ir.
+coding-adventures-maple-parser = { path = "../maple-parser" }
+# The MP-2 lexer. Tokenized once up front (the lexer is iterative, so unlike
+# the parser it cannot stack-overflow) to measure per-statement token counts
+# from the *real* token stream, mirroring reduce-runtime/derive-runtime's
+# identical guard against a long flat operator/elif chain folding into a
+# deeply nested lowered tree (see MAX_STATEMENT_TOKENS's doc comment).
+coding-adventures-maple-lexer = { path = "../maple-lexer" }
+# The shared symbolic substrate: the term IR everything lowers to and the VM
+# that rewrites it.
+symbolic-ir = { path = "../symbolic-ir" }
+symbolic-vm = { path = "../symbolic-vm" }
+# The generic parser AST types (GrammarASTNode / ASTNodeOrToken) and the lexer
+# Token type the lowering walks.
+parser = { path = "../parser" }
+lexer = { path = "../lexer" }

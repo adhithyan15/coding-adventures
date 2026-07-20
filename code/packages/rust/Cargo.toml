@@ -265,6 +265,8 @@ members = [
     "reduce-repl",
     "maple-lexer",
     "maple-parser",
+    "maple-runtime",
+    "maple-repl",
     "logic-gates",
     "logic-core",
     "lookup-core",

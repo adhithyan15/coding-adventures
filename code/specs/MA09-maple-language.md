@@ -132,7 +132,7 @@ prefix (MATLAB's `ML-`, not `M-`), not overload it. This PR is a
   with an explicit `MAX_RULE_DEPTH` measured the same way
   `apl-parser`/`j-parser`/`derive-parser`/`reduce-parser` measured theirs
   (per [MA06](MA06-j-language.md) §6's precedent), rather than assumed.
-- **MP-4 — `maple-runtime` + `maple-repl`.** Lowers the parsed
+- **MP-4 — `maple-runtime` + `maple-repl`.** (✅ done) Lowers the parsed
   `GrammarASTNode` into `symbolic-ir`, evaluates with `symbolic-vm`'s shared
   `SymbolicBackend` — reused *unchanged*, with no custom `Backend` at all,
   the same reuse story `derive-runtime`/`reduce-runtime` already demonstrate
@@ -149,6 +149,22 @@ prefix (MATLAB's `ML-`, not `M-`), not overload it. This PR is a
   unnumbered `reduce-repl`) and the `maple` binary. `proc(...) ... end proc`
   block-structured procedures, `for`/`while` loops, and the rest of the
   `cas-*` surface under Maple names are **not** MP-4's scope — see §4.
+  **Every claim in this bullet held up unchanged once `maple-runtime`
+  actually landed** (unlike R-4's own two corrections, MA08 §2 — no
+  surface-table row here turned out to be wrong): §3's own table, checked
+  row by row against the shipped `crate::lower`/`crate::printer`, needed no
+  correction. `proc`/`for`/`while` and the remember-table `f(x) := e`
+  spelling are confirmed rejected at **parse** time by the already-merged
+  `maple-parser` itself (none of those keywords exist in `maple.tokens`, so
+  they lex as ordinary `NAME`s and the leftover tokens fail
+  `statement_line`'s own terminator check) — `maple-runtime` needed no
+  special-case rejection logic of its own, just to forward the parser's
+  `Err`. One disclosed addition beyond this spec's own text: `maple-repl`
+  tracks `if` / `end if`|`fi` block-keyword balance (in addition to bracket
+  balance) for its line-continuation heuristic — Maple's `if_expr`, unlike
+  Reduce's, requires an explicit closer, so an ordinary multi-line `if`
+  needed this to be usable interactively at all; see `maple-repl`'s own
+  README/CHANGELOG.
 
 ## §3 The supported surface (the grammar)
 
@@ -334,7 +350,7 @@ rules and block procedures.
 - **Frontend:** the grammar-tools framework, exactly as Macsyma/MATLAB/
   Wolfram/APL/J/Derive/Reduce use it. `maple.tokens`/`maple.grammar` compile
   to committed `_grammar.rs` in `maple-lexer`/`maple-parser` (MP-2/MP-3).
-- **Lowering + engine (MP-4):** the parsed tree lowers to
+- **Lowering + engine (MP-4, ✅ done, `maple-runtime`):** the parsed tree lowers to
   [`symbolic_ir::IRNode`](../packages/rust/symbolic-ir) (surface operators,
   `:=`, the arrow operator, and list/set literals → canonical `Add`/`Sub`/
   `Mul`/`Div`/`Pow`/`Neg`/`Equal`/`NotEqual`/`Less`/`Greater`/`LessEqual`/
@@ -383,12 +399,25 @@ rules and block procedures.
   handlers Derive's `DIF`/`INT` and Wolfram's `D`/`Integrate` already call
   under their own names — one function, four languages agreeing on its
   result, the same "reuse, not reimplementation" story §1 promises.
-- **REPL (MP-4):** a single-threaded driver mirroring
+- **REPL (MP-4, ✅ done, `maple-repl`):** a single-threaded driver mirroring
   `reduce-repl`/`derive-repl`/`wolfram-repl`/`maxima-repl`; a plain
   (non-numbered) read-eval-print loop, matching real Maple's own
   interactive-session convention (§5.3 "Statement Separators" — a
   `;`/`:`-terminated statement, no `#n:`/`In[n]:=` numbering), the same
   convention [MA08](MA08-reduce-language.md) documents for `reduce-repl`.
+  One addition beyond bracket balance: Maple's `if_expr` (unlike Reduce's)
+  requires an explicit `end if`/`fi` closer, so `maple-repl`'s own
+  continuation heuristic also tracks `if`/`end if`|`fi` block-keyword
+  balance — closer in spirit to `matlab-repl`'s/`octave-repl`'s own
+  keyword-block tracking than to any other CAS-family REPL in this repo.
+  The **`maple` binary itself is not a separate `code/programs/rust/maple`
+  crate** — verified directly against the sibling CAS-family languages
+  (`reduce`, `derive`, `wolfram`): none of them has a `code/programs/rust/`
+  entry either; each `-repl` crate's own `Cargo.toml` declares the binary
+  directly via `[[bin]] name = "..."`, and `maple-repl` follows that exact,
+  empirically-confirmed convention rather than the generic `code/programs/
+  rust/<name>` shape this repo's `CLAUDE.md` "Project Structure" section
+  describes for standalone programs in general.
 
 ## §6 References
 
