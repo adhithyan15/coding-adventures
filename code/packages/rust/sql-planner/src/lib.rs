@@ -752,11 +752,30 @@ fn plan_select(
 
     // Build an Aggregate node if there's a GROUP BY or any aggregate calls.
     if group_clause.is_some() || !aggregates.is_empty() {
-        let group_by = if let Some(gc) = group_clause {
+        let mut group_by = if let Some(gc) = group_clause {
             plan_group_by_exprs(gc)?
         } else {
             Vec::new()
         };
+        // Column-defined COLLATE flows into the GROUP BY key, so a column
+        // declared `COLLATE NOCASE` groups 'A' with 'a'. Restricted to a single
+        // base table (no JOINs) like the ORDER BY / WHERE passes, since with
+        // joins a bare column's owning table is ambiguous. A key that already
+        // carries an explicit `COLLATE` is left alone — explicit outranks
+        // declared. Codegen peels the `__collate` wrapper back off so the
+        // collation folds only the grouping key, never the emitted value.
+        if find_nodes(stmt, "join_clause").is_empty() {
+            if let Some((table, alias)) = base_table_ref.as_ref() {
+                let ctx = build_collate_ctx(schema, table, alias.as_deref());
+                group_by = group_by
+                    .into_iter()
+                    .map(|k| match resolve_column_collation(&k, &ctx) {
+                        Some(coll) => wrap_collate(k, &coll),
+                        None => k,
+                    })
+                    .collect();
+            }
+        }
         plan = LogicalPlan::Aggregate {
             input: Box::new(plan),
             group_by,

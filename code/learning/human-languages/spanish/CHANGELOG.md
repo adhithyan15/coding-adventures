@@ -1,5 +1,97 @@
 # Changelog
 
+## Chapter 15 — Completing the preterite
+
+- **Chapter 15 authored** (`ES-C15-comer-vivir-preterite`, `-preterite-fuertes`,
+  `-practice`): finishes the everyday past tense opened in Ch.14, reviewing
+  Ch.4/7/8/12/14 via `reviews_of`.
+- **the regular -er/-ir preterite** (`ES-C15-comer-vivir-preterite`):
+  *comí/comiste/comió/comimos/comieron*, *viví/viviste/vivió*. The point worth
+  making explicit — **-er and -ir share ONE set of preterite endings**, though in
+  the **present** they pull apart (*comemos* vs *vivimos*): two conjugations
+  **merge** in the past, a genuine simplification. ← Latin perfect *-ī/-istī/-it*,
+  where *-istī* → *-iste* survives almost intact. Trap kept from Ch.14: *vivimos*
+  is present **and** preterite, but *comemos* ≠ *comimos*.
+- **the strong preterites** (`ES-C15-preterite-fuertes`): *tener→tuve*,
+  *hacer→hice*, *estar→estuve*. The stress moves **off** the ending and back into
+  the **stem** (*TUve*, *HIce*) — so the written accent **vanishes**, the exact
+  reverse of Ch.14's *hablÉ/hablÓ*; the *yo* ending is **-e**, not *-é*. Also
+  *hizo*'s **c→z** (the letter changes so the sound won't). Etymology: these are
+  Latin's **strong perfects** (*tenuī*, *fēcī*, *stetī*) inherited whole instead of
+  rebuilt — irregular precisely because they were too common to be re-made; *tuv-*
+  and *estuv-* even share the *-uv-* shape.
+- **practice** — the full five-row map (*-ar*, *-er*, *-ir*, strong, *ser/ir*) and
+  a single diagnostic: **where does the stress land?** Ending → regular, accent on
+  *yo*/*él*; stem → strong, no accent. Re-drills the tense-ambiguous *nosotros*
+  forms and *fui* = "I was"/"I went."
+- Taxonomy: namespaced `ES-PRETERITE-ER-IR`, `ES-PRETERITE-STRONG`; practice label
+  `CH15-PRACTICE`.
+
+## Chapter 14 — The preterite (the first past tense)
+
+- **Chapter 14 authored** (`ES-C14-ser-ir-preterite`, `-hablar-preterite`,
+  `-practice`): the course's **first past tense**, the everyday **preterite** —
+  reviewing Ch.6/9/10/13 via `reviews_of`.
+- **ser & ir — one shared preterite** (`ES-C14-ser-ir-preterite`):
+  *fui/fuiste/fue/fuimos/fueron* serves **both** verbs, so *fui* = "I **was**" **and**
+  "I **went**," disambiguated only by **context** (*fui a Madrid* = went; *fui
+  profesor* = was). The etymology: *fuī* is the perfect of a **second** Latin "be"
+  root (PIE *\*bʰuH-* "become," cousin of English *be/been/future/physics*) grafted
+  onto *sum/es/est* (**suppletion**, like *go/went*); *ir* then borrowed it after
+  Latin's own past of *īre* wore away — so **"to be" and "to go" merged in the past.**
+- **the regular -ar preterite** (`ES-C14-hablar-preterite`):
+  *hablé/hablaste/habló/hablamos/hablaron* ← Latin perfect *-āvī* (*amāvī→amé*), the
+  *-āv-* dissolving to leave a **stressed final vowel** the accent now marks. The
+  key insight: the **accent carries the tense** (*HAblo* "I speak" vs *hablÓ* "s/he
+  spoke"); plus the *hablamos* present=preterite trap (context / *ayer* disambiguates).
+- **practice** — switches present↔past, drills the accent-flip, and the *ser*-vs-*ir*
+  reading of *fui/fue*.
+- Taxonomy: namespaced `ES-PRETERITE-SER-IR`, `ES-PRETERITE-AR`; practice label
+  `CH14-PRACTICE`.
+
+## Chapter 13 — Completing the -go club
+
+- **Chapter 13 authored** (`ES-C13-poner`, `-salir`, `-venir`, `-practice`):
+  closes the *-go* club opened in Ch.12, reviewing Ch.8/11/12 via `reviews_of`.
+- **poner** ("to put/place") — plain *-go* yo-form **pongo**; ← *pōnere* →
+  position/compose/deposit/postpone/component; everyday *poner la mesa* ("set the
+  table") and reflexive *ponerse* ("put on / become").
+- **salir** ("to leave/go out") — *-go* yo-form **salgo**; ← *salīre* "**to
+  leap**" → salient/sally/somersault, and *salmō* "the leaper" (**salmon**); *la
+  salida* = "the **exit**." Notes that English *exit* is the rival *exīre*, not
+  this leaping root.
+- **venir** ("to come") — the **doubly irregular** finale: *-go* yo-form
+  **vengo** **and** the **e→ie** stem-change (*vienes/viene/vienen*, *venimos*
+  escaping the boot) — the exact mirror of *tener*. ← *venīre* →
+  adventure/event/convene/invent/avenue/souvenir.
+- **practice** — the full six-member roll-call (*tengo/hago/digo/pongo/salgo/
+  vengo*), sorted into plain-*-go* / *-go*+e→i / *-go*+e→ie, plus the *tener*↔*venir*
+  boot twins.
+- Taxonomy: namespaced `ES-VERB-PONER`, `ES-VERB-SALIR`, `ES-VERB-VENIR`; practice
+  label `CH13-PRACTICE`.
+
+## Chapter 12 — Doing, making, saying, and the -go club
+
+- **Chapter 12 authored** (`ES-C12-hacer`, `-decir`, `-yo-go`, `-practice`): two
+  workhorse irregular verbs plus the pattern that unites their *yo*-forms —
+  reviewing Ch.8/10/11 via `reviews_of`.
+- **hacer** ("to do/make") — covers **both** English "do" and "make"; the Latin
+  **f→h** softening (*facere → hacer*, the same change as Ch.6 *hablar/hijo*), the
+  **-go** *yo*-form **hago** (echoing *tengo*), and the everyday weather idiom
+  *hace calor/frío/sol* ("it **makes** heat…"). Root payoff: *facere* →
+  fact/factory/perfect/manufacture/satisfy/affect.
+- **decir** ("to say/tell") — the **doubly irregular** verb: it stacks the **-go**
+  *yo*-form (**digo**) **and** an **e→i** stem-change (*dices/dice/dicen*, with
+  *decimos* escaping the boot). Root payoff: *dīcere* →
+  dictate/diction/dictionary/predict/verdict/contradict. Anchored on the learner's
+  most useful question, *¿Cómo se dice…?*
+- **-go club** (`ES-C12-yo-go`) — a pattern lesson: *tengo/hago/digo/pongo/salgo/
+  vengo* form a small, closed set whose *yo*-form grows a hard *g* (yo-only, the
+  rest regular). Framed as a Latin fossil kept by the oldest, most-used verbs —
+  three met (*tengo/hago/digo*), three flagged for Ch.13 (*pongo/salgo/vengo*).
+- Taxonomy: namespaced `ES-VERB-HACER`, `ES-VERB-DECIR`, `ES-YO-GO`; practice
+  label `CH12-PRACTICE`.
+
 ## Chapter 11 — Wants, ability, and the stem-change boot
 
 - **Chapter 11 authored** (`ES-C11-querer`, `-poder`, `-stem-changes`, `-nuestro`,

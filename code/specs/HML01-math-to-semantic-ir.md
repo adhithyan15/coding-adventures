@@ -153,6 +153,85 @@ pub fn compile_source(source: &str, module_name: &str)
 - **`maxima-to-semantic-ir`** (✅ v0.1.0 shipped) — a thin alias reusing
   `macsyma-to-semantic-ir` wholesale, mirroring Maxima's existing reuse of
   `macsyma-runtime`.
+- **`derive-to-semantic-ir`** (✅ v0.1.0 shipped) — walks the
+  `derive-parser` CST using the same rule-name dispatch already proven in
+  `derive-runtime` (`"assignment"`, `"additive"`, `"postfix"`, `"vector"`,
+  …), emits SIR23 nodes. Same "everything is symbolic data" design as
+  `wolfram-to-semantic-ir`/`macsyma-to-semantic-ir` (this grammar has no
+  pattern-matching syntax at all either, verified directly against
+  `derive.grammar`/`derive.tokens`, not just trusted from
+  `derive-runtime`'s own doc comment). Much thinner than either sibling:
+  no `f[x]`-universal-application syntax and no control-flow grammar
+  productions at all (`IF(…)` is an ordinary UPPERCASE builtin call, not a
+  special `if_expr` rule the way Macsyma has one), but needs a BIGGER
+  surface→canonical head-bridge table than Wolfram's, since Derive's
+  built-ins are conventionally UPPERCASE and `SymSymbol` equality is
+  case-sensitive. Also the first SIR23 frontend with a vector/matrix
+  literal (`[a,b,c]`/`[a,b;c,d]`, structural `List` data only); also
+  round-trips through `node` from v0.1.0 (unlike `macsyma-to-semantic-ir`,
+  which shipped its `tests/e2e_node.rs` in a follow-up once the JS backend
+  gained SIR23 codegen).
+- **`reduce-to-semantic-ir`** (✅ v0.1.0 shipped) — walks the
+  `reduce-parser` CST using the same rule-name dispatch already proven in
+  `reduce-runtime` (`"assignment"`, `"additive"`, `"postfix"`, `"cons"`,
+  `"if_expr"`, `"group_expr"`, …), emits SIR23 nodes. Same "everything is
+  symbolic data" design as the other three (this grammar has no
+  pattern-matching syntax in this subset either, verified directly
+  against `reduce.grammar`/`reduce.tokens`, not just trusted from
+  `reduce-runtime`'s own doc comment). Much of the lowering is a direct
+  copy of `derive-to-semantic-ir`'s shape (`reduce-runtime`'s own doc
+  comment says so), but Reduce's grammar has three constructs no Derive
+  analogue exists for: an expression-shaped `if`, a `<< s1; s2; ... >>`
+  group statement (`CompoundExpression`), and `.` cons — plus flat
+  curly-brace lists (`{a,b,c}`, unlike Derive's row-counting
+  `[a,b;c,d]`). Confirms, and reuses, a REAL divergence MA08 §3's own
+  prose has from the actual shared IR: arithmetic lowers to the same
+  `Add`/`Sub`/`Mul`/`Div`/`Pow`/`Neg` heads Derive/Macsyma use, not the
+  literal (and non-existent in `symbolic-ir`) `Plus`/`Subtract`/`Times`/
+  `Power` MA08 §3's table spells out — a disclosed, deliberate divergence,
+  not new-head invention. Also reuses `reduce-runtime`'s disclosed gap
+  that `CompoundExpression`/`First`/`Second`/`Third`/`Rest`/`Part`/
+  `Append`/`Reverse`/non-folding `Cons` have no evaluation handler in the
+  shared `symbolic-vm` — moot for this frontend (it never evaluates
+  anything), confirmed structurally accepted by the JS backend's
+  head-name-agnostic `SymApply` codegen regardless. Also round-trips
+  through `node` from v0.1.0.
+- **`maple-to-semantic-ir`** (✅ v0.1.0 shipped) — walks the
+  `maple-parser` CST using the same rule-name dispatch already proven in
+  `maple-runtime` (`"assignment"`, `"arrow_def"`, `"if_expr"`,
+  `"postfix"`, `"set_literal"`, …), emits SIR23 nodes. Same "everything is
+  symbolic data" design as the other four (this grammar has no
+  pattern-matching syntax in this subset either, verified directly
+  against `maple.grammar`/`maple.tokens` — the `ARROW` token exists but
+  only for `arrow_def`, never a pattern-rule arrow — not just trusted
+  from `maple-runtime`'s own doc comment). Much of the lowering is a
+  direct copy of `reduce-to-semantic-ir`'s shape (both languages are
+  "surface operators + `head(args)` calls" with no pattern vocabulary),
+  but `maple.grammar` draws a REAL structural line Reduce's grammar does
+  not: `statement = if_expr | assignment` sits in its own nonterminal,
+  never reachable from `expr` at all, so `if`/`:=` can never nest inside
+  an arithmetic/comparison/logical operand the way Reduce's can
+  (`x := if a then 1 end if;` and `a := b := c;` are both syntax errors).
+  Assignment's left-hand side is a bare `NAME` token only — Maple's
+  `f(x) := expr` means a narrower remember-table patch in real Maple
+  (MA09 §1/§4), so the grammar rejects it outright rather than pushing an
+  interpretation question onto this frontend — general function
+  definition instead uses a dedicated `arrow_def`/`arrow_params`
+  production (`f := (x, y) -> x + y`) lowering to the same `Define` shape
+  Derive/Reduce use. `if`/`elif`/`else` right-folds like Macsyma's own
+  elif chain (unlike Reduce's simpler 2-or-3-child `if`), guarded by a
+  new `check_elif_chain_length`. Introduces `Set` (`{a,b,c}`, unordered)
+  as a canonical head genuinely new to this repo — Maple is the first
+  language here with two distinct bracketed aggregate literals (`[a,b,c]`
+  → shared `List`, `{a,b,c}` → new local `Set`) — plus the first literal
+  `true`/`false` boolean TOKENS in this CAS family (bridged to the shared
+  backend's pre-bound `True`/`False` symbols). `postfix` is deliberately
+  NOT chainable (`f(x)(y)` fails to parse), so this is the first SIR23
+  frontend needing no `check_postfix_chain_length`-equivalent guard at
+  all. Also round-trips through `node` from v0.1.0. **This closes Stream
+  B's previously-tracked language list** — every math-CAS language this
+  spec names (Wolfram, Macsyma, Maxima, Derive, Reduce, Maple) now has a
+  shipped SIR23 frontend.
 - **`apl-to-semantic-ir`** (✅ v0.1.0 shipped, MA-4f) — the first Stream A
   frontend beyond MATLAB/Octave, confirming the array/matrix domain
   generalizes past the language it was designed against; emits SIR22 nodes
@@ -230,14 +309,19 @@ array operands, and a hard crash on `× ÷ ⌈ ⌊`), all still open — see tha
 crate's `CHANGELOG.md`. J's own oracle tests remain an open follow-on item.
 All items through JS/TS backend codegen are shipped.
 
-**Stream B (symbolic/CAS, backs Wolfram/Macsyma/Maxima and future
-Reduce/Derive/Maple):** `SIR23` spec → `semantic-ir` core additions →
+**Stream B (symbolic/CAS, backs Wolfram/Macsyma/Maxima/Derive/Reduce/
+Maple):** `SIR23` spec → `semantic-ir` core additions →
 `wolfram-to-semantic-ir` → `macsyma-to-semantic-ir` → `maxima-to-semantic-ir`
-→ `sir-runtime-symbolic` → JS/TS backend codegen → golden/oracle tests
-(in progress — real `node`-execution proof shipped for `wolfram-to-semantic-ir`
-and `macsyma-to-semantic-ir` via each crate's `tests/e2e_node.rs`; a true
-oracle diff against each language's native runtime remains open).
-All items through JS/TS backend codegen are shipped.
+→ `derive-to-semantic-ir` → `reduce-to-semantic-ir` → `maple-to-semantic-ir`
+→ `sir-runtime-symbolic` → JS/TS backend codegen → golden/oracle tests (in
+progress — real `node`-execution proof shipped for `wolfram-to-semantic-ir`,
+`macsyma-to-semantic-ir`, `derive-to-semantic-ir`, `reduce-to-semantic-ir`,
+and `maple-to-semantic-ir` via each crate's `tests/e2e_node.rs`; a true
+oracle diff against each language's native runtime remains the one open
+item). **All five frontends this stream's own language list names are now
+shipped** — `maple-to-semantic-ir` was the last open follow-on item and is
+done as of this crate landing. All items through JS/TS backend codegen are
+shipped.
 
 The streams touch disjoint crates except `semantic-ir` core and the two JS
 backends — a short serialization point, not a merge of the whole effort.

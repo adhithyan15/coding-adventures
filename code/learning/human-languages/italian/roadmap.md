@@ -46,12 +46,32 @@ and Italian's habit of keeping final vowels Latin's other children dropped.
 - **Ch. 8 — Time & the clock**: ora (hour ← *hōra* ← Greek *hṓrā*; the **feminine
   article** twist — *è l'una* but *sono le due*) → mezzogiorno/mezzanotte
   (noon/midnight; *mezzo/mezza* ← *medius* + *giorno/notte*). **Authored.**
+- **Ch. 9 — Months & seasons**: the months **closest to Latin** (gennaio ← Januarius,
+  **marzo ← Mars = martedì**, luglio/agosto ← Julius/Augustus; settembre–dicembre =
+  Latin **7–10**) → the seasons (primavera = "prima vera" first-green; *stagione* ←
+  *statiō* "a standing"; inverno ← *hibernum*). **Authored.**
+
+- **Ch. 10 — Family**: **padre/madre** (closest to Latin *pater/māter*, *-t-→-d-*;
+  *padre* = the English loan; **genitori** "parents" ← *genitor* "begetter" → genesis;
+  *parenti*=relatives false friend) → **fratello/sorella** (← *frāter/soror* + the
+  diminutive *-ello/-ella*, "little brother/sister"). **Authored.**
+
+- **Ch. 11 — Food (bread, water, wine)**: **pane** (closest to Latin *pānis* →
+  **companion**, *companatico* "what you eat with bread") → **acqua/vino** —
+  **acqua** **kept** Latin *aqua* whole (doubled *-cq-*), the loud original French
+  wore down to *eau*; **vino** ← *vīnum* → wine/vine/vinegar. **Authored.**
+
+- **Ch. 12 — Numbers 11–20**: **undici–sedici**, where the *-dici* is still visibly
+  Latin *decem* (= *dieci*) — clearer than French's worn-down *-ze* → **diciassette–
+  venti**, where Italian **flips the order** at 17 (*se*-*dici* "six-ten" becomes
+  *dici*-*assette* "ten-and-seven"). Includes the three-sister comparison of *where*
+  each breaks: PT at 16, FR and IT at 17. **Authored.**
 
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |
 |---|---|
-| 9+ | Months & seasons, family, food — following the shared theme order |
+| 10+ | Family, food, the body — following the shared theme order |
 
 Note: Italian's formal "you" is **Lei** — literally "she" (a 3rd-person
 politeness, like German *Sie*), a different mechanism from Spanish *usted* (a

@@ -80,10 +80,45 @@ order lives in the book, which LaTeX auto-numbers, and in `session-map.md`.)
   voster* → Paternoster; agrees in **gender and number**, unlike *mi/tu/su*) →
   practice. **Authored.**
 
-Next: **Ch. 12** — the rest of the high-frequency verbs (*hacer, decir, ir*
-irregulars) and more description, building toward everyday conversation. From here
-the course hands over rules, not phrases. Grammar accumulates piece by piece. The
-theme skeleton below plans the wider road.
+- **Ch. 12 — Doing, making, saying, and the -go club**: **hacer** ("to do/make,"
+  ← *facere* → fact/factory/perfect; f→h softening; the *-go* yo-form *hago*;
+  weather *hace calor*) → **decir** ("to say," ← *dīcere* → dictate/diction/verdict;
+  **doubly** irregular — *-go* yo-form *digo* **and** the **e→i** stem-change) →
+  the **-go club** (*tengo/hago/digo/pongo/salgo/vengo* — yo-only, a closed
+  Latin-inherited set of the oldest, most-used verbs) → practice. **Authored.**
+
+- **Ch. 13 — Completing the -go club**: **poner** ("to put," ← *pōnere* →
+  position/compose/deposit; the *-go* yo-form *pongo*; *poner la mesa*) → **salir**
+  ("to leave/go out," ← *salīre* "to leap" → salient/salmon/somersault; *salgo*;
+  *la salida* "the exit") → **venir** ("to come," ← *venīre* → adventure/event/
+  convene; **doubly** irregular — *-go* *vengo* **and** *e→ie* *vienes*, the mirror
+  twin of *tener*) → practice recapping all six (*tengo/hago/digo/pongo/salgo/
+  vengo*). **Authored.**
+
+- **Ch. 14 — The preterite (the first past tense)**: the biggest tense-jump so far.
+  **ser & ir share ONE preterite** — *fui/fuiste/fue/fuimos/fueron* (← Latin *fuī*,
+  a second "be" root, cousin of English *be/future*), so *fui* means both "I was"
+  and "I went," context deciding (*fui a X* = went; *fui X* = was) → the **regular
+  -ar preterite** *hablé/hablaste/habló/hablamos/hablaron* (← Latin perfect *-āvī*;
+  the **accent** carries the tense, *hablo→habló*; *hablamos* present=preterite) →
+  practice switching present↔past. **Authored.**
+
+- **Ch. 15 — Completing the preterite**: the **regular -er/-ir preterite**
+  *comí/comiste/comió/comimos/comieron*, *viví/viviste/vivió* — where *-er* and
+  *-ir* take **one shared set** of endings though their **presents** differ (←
+  Latin perfect *-ī/-istī/-it*, with *-istī* → *-iste* nearly intact; *vivimos* is
+  present=preterite, but *comemos* ≠ *comimos*) → the **strong preterites**
+  *tuve/hice/estuve*, where the stress moves **off** the ending onto the stem
+  (*TUve*, *HIce*) so the written accent **disappears** — the exact reverse of
+  *hablÉ/hablÓ*, plus *hizo*'s c→z; they are the Latin **strong perfects**
+  (*tenuī*, *fēcī*, *stetī*) inherited whole rather than rebuilt → practice
+  sorting all three families by the single question *where does the stress land?*
+  **Authored.**
+
+Next: **Ch. 16** — the **imperfect**, the past that kept going, and its contrast
+with the preterite; then everyday description, building toward real conversation.
+From here the course hands over rules, not phrases. Grammar accumulates piece by
+piece. The theme skeleton below plans the wider road.
 
 ## Theme Skeleton (planning only)
 

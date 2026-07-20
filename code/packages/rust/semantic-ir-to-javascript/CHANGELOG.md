@@ -1,5 +1,61 @@
 # Changelog
 
+## 0.44.0 — Ruby type reflection: `.class`, `is_a?`, `kind_of?`, `instance_of?`
+
+The backend implemented NO type reflection: `7.class` compiled fine and then
+raised `NoMethodError` at runtime, and the `is_a?` builtin — which the Ruby
+frontend emits for `x.is_a?(Foo)` AND for a `case/in Foo` class pattern — had
+no lowering at all. Measured against the siblings, Python and Go both answer
+`.class`; JavaScript did not.
+
+- **`rubyClassName(v)`** mirrors the Go backend's `_sir_ruby_class_name` so
+  `.class` reads identically on both: `NilClass`, `TrueClass`/`FalseClass`,
+  `Integer`, `Float`, `String`, `Symbol`, `Array`, `Hash`, `Proc`, a user
+  instance's own class tag, else `Object`.
+- **The `Integer`/`Float` split is only representable because of tagged
+  floats.** JS numbers are all `f64`, so `7` and `7.0` are the same value —
+  `7.0.class` was unanswerable in principle before the tag, not merely
+  unimplemented. It now correctly reports `Float`.
+- **`is_a?`/`kind_of?`** honour ancestry — the built-in surface (`Integer`
+  and `Float` are `Numeric` and `Comparable`, `String` is `Comparable`,
+  `Object`/`BasicObject` match everything) plus, for a user instance, its
+  superclass chain (the same cycle-guarded `ancestry` walk `rescue` matching
+  uses) and any module included by it or an ancestor. **`instance_of?`** is an
+  exact class match. The ancestry table is a `Map`, so a user-defined class
+  name can never reach `Object.prototype` keys on lookup.
+- Reachable BOTH as methods (via the universal M6 surface, so any receiver
+  answers) and as builtins — the frontend passes the class as a NAME string,
+  so no constant-reference support is needed. `respond_to?` reports all four
+  honestly, matching Go.
+
+Reflection also covers **exceptions**: a raised/caught value is an `Error`, not
+a `SirInstance`, so it routes through `classOfThrown` — the SAME bucketing
+`rescue` matching uses — and reflection can never disagree with rescue. A
+`SirError` reports its own class tag; a native JS error reports
+`StandardError`, exactly the class `rescue` catches it as. Without this,
+`rescue => e; handle if e.is_a?(StandardError)` silently skipped the handler
+for a value `rescue` had just caught.
+
+Module matching is **transitive** (Ruby's MRO): `C` includes `M` and `M`
+includes `N` ⇒ `c.is_a?(N)`. The module search is deliberately ITERATIVE (an
+explicit worklist, not recursion) because include-graph depth is shaped by the
+source — a recursive walk exhausts the JS call stack on a long chain. Proven
+against a 20,000-deep chain, plus cyclic and self-including graphs.
+
+**Security hardening (pre-existing issue, found while reviewing this change):**
+the `builtins` table is indexed by a SOURCE-DERIVED name, but was a plain
+object literal — so `builtins["toString"]`, `["constructor"]`,
+`["__defineGetter__"]` resolved inherited `Object.prototype` functions, passed
+the `f === undefined` check in `callBuiltin`/`builtinClosure`, and were
+INVOKED (a define-a-getter-on-global gadget). It is now built with
+`Object.create(null)`, so an unknown name is `undefined` and raises cleanly —
+matching how the runtime's other name-indexed tables are already constructed.
+
+Guarded by three node exec-proofs (`ruby_class_reflection_names_every_type`,
+`ruby_is_a_honours_ancestry_and_instance_of_is_exact`,
+`ruby_reflection_covers_exceptions_modules_and_rejects_prototype_names`) and an
+end-to-end per-backend conformance guard in `sir-conformance`.
+
 ## 0.43.0 — Fix three APL monadic-scalar-atom bugs found by `apl-to-semantic-ir`'s oracle harness
 
 `apl-to-semantic-ir/tests/oracle.rs` (the oracle/golden-test harness added in

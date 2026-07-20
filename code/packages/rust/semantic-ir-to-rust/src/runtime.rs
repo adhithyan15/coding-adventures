@@ -1452,8 +1452,89 @@ pub const RUNTIME: &str = r##"mod __sir {
                 Some(b @ Value::Closure(_)) => Some(apply_closure(b, vec![recv.clone()])),
                 _ => Some(recv.clone()),
             },
+            // Type reflection on ANY receiver: `7.class` → "Integer",
+            // `7.0.class` → "Float", `obj.class` → its own class tag.  This
+            // reuses `ruby_class_name`, which until now existed ONLY to build a
+            // `NoMethodError` message — so `.class` raised `NoMethodError`
+            // (surfacing as an unrescued panic) even though the mapping was
+            // sitting right there.
+            "class" => Some(Value::Str(Rc::from(ruby_class_name(recv).as_str()))),
+            // `is_a?`/`kind_of?` honour ancestry; `instance_of?` is an EXACT
+            // class match.  The class argument arrives as a NAME — the frontend
+            // lowers a class pattern to its name string — so no constant-
+            // reference support is required here.
+            "is_a?" | "kind_of?" | "instance_of?" => {
+                let target = args.first().map(method_name).unwrap_or_default();
+                let actual = ruby_class_name(recv);
+                Some(Value::Bool(if name == "instance_of?" {
+                    actual == target
+                } else {
+                    value_is_a(recv, &actual, &target)
+                }))
+            }
             _ => None,
         }
+    }
+
+    // Ruby `is_a?`: the receiver's own class, a BUILT-IN ancestor (`Integer`
+    // and `Float` are `Numeric` and `Comparable`; `String` is `Comparable`),
+    // the universal `Object`/`BasicObject`, or — for a user instance — its
+    // superclass chain (the same cycle-guarded walk `rescue` matching uses)
+    // plus any module mixed in along that chain.
+    fn value_is_a(recv: &Value, actual: &str, target: &str) -> bool {
+        if actual == target || target == "Object" || target == "BasicObject" {
+            return true;
+        }
+        let builtin: &[&str] = match actual {
+            "Integer" | "Float" => &["Numeric", "Comparable"],
+            "String" => &["Comparable"],
+            _ => &[],
+        };
+        if builtin.contains(&target) {
+            return true;
+        }
+        if matches!(recv, Value::Instance(_)) {
+            return is_ancestor_or_self(actual, target)
+                || includes_module_transitively(actual, target);
+        }
+        false
+    }
+
+    // Does `owner` reach `target` through the modules mixed into it or into any
+    // of its ancestors?  Ruby's MRO is TRANSITIVE — `class C; include M; end`
+    // where `module M; include N; end` makes `c.is_a?(N)` true.
+    //
+    // Deliberately ITERATIVE (an explicit worklist, not recursion): include-graph
+    // depth is shaped by the source, so a recursive walk could exhaust the stack
+    // on a long chain.  `seen` expands each module at most once and `chain`
+    // guards a cyclic ancestry edge, so any graph terminates.
+    fn includes_module_transitively(owner: &str, target: &str) -> bool {
+        let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
+        let mut work: Vec<String> = vec![owner.to_string()];
+        while let Some(start) = work.pop() {
+            let mut cur = start;
+            let mut chain: std::collections::HashSet<String> = std::collections::HashSet::new();
+            loop {
+                if !chain.insert(cur.clone()) {
+                    break; // cyclic ancestry edge — stop this chain.
+                }
+                if let Some(mods) = INCLUDED_MODULES.with(|t| t.borrow().get(&cur).cloned()) {
+                    for m in mods {
+                        if m == target {
+                            return true;
+                        }
+                        if seen.insert(m.clone()) {
+                            work.push(m);
+                        }
+                    }
+                }
+                match super_of(&cur) {
+                    Some(next) => cur = next,
+                    None => break,
+                }
+            }
+        }
+        false
     }
 
     // Does dispatch on `recv` resolve `name`?  Mirrors the Python reference's
@@ -1468,6 +1549,9 @@ pub const RUNTIME: &str = r##"mod __sir {
             name,
             "to_s" | "respond_to?" | "send" | "__send__" | "public_send" | "tap"
                 | "then" | "yield_self"
+                // Type reflection answers on every receiver (matching the Go
+                // and JavaScript backends).
+                | "class" | "is_a?" | "kind_of?" | "instance_of?"
         ) {
             return true;
         }

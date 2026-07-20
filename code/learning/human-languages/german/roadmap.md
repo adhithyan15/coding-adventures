@@ -51,12 +51,36 @@ Spanish and French where a contrast helps. The recurring decoder is the
   Latin loanword** in a Germanic system of native numbers & day-gods; *es ist zwei
   Uhr*) → Mittag/Mitternacht (noon/midnight, **native** compounds *Mitte* + *Tag* /
   *Nacht*, unlike the borrowed *Uhr*). **Authored.**
+- **Ch. 9 — Months & seasons**: the **native-vs-Latin split deepens** — the months
+  are **Latin loans** (Januar ← Janus, *März* ← Mars = Dienstag's Tiw; September–
+  Dezember = Latin 7–10), like the clock-word *Uhr*, while the **seasons stay
+  native** (Frühling ← *früh* "early"; *Herbst* = English **harvest**; Sommer/Winter
+  = English twins). **Authored.**
+
+- **Ch. 10 — Family**: the mirror of the months — **Vater/Mutter** are **inherited
+  Germanic** (NOT Latin loans), Grimm's-law twins of English *father/mother* (*V* = *f*)
+  → **Bruder/Schwester** (Germanic twins of *brother/sister*; **Geschwister** "siblings"
+  via the collective **ge-**). The standout: family is native where the months were
+  borrowed. **Authored.**
+
+- **Ch. 11 — Food (bread, water, wine)**: **Brot** (**inherited Germanic** twin of
+  English *bread*, NOT Latin *pānis*; introduces the neuter **das** + capitalized
+  nouns) → **Wasser/Wein** — the native-vs-borrowed split: **Wasser** a native
+  Germanic twin of *water*, but **Wein** an **ancient Latin loan** (← *vīnum*),
+  borrowed with the grapevine, which is why *Wein/wine/vīnum* all match. **Authored.**
+
+- **Ch. 12 — Numbers 11–20**: **elf/zwölf** (← *ainlif/twalif*, *-lif* = "leave" →
+  "**one/two left over**" after ten fingers — the exact inherited twins of English
+  *eleven/twelve*) → **dreizehn–zwanzig**, digit + *zehn* with **no exceptions**,
+  mirroring English *-teen* (which **is** ten); *zwanzig* ← *twaintig* "two tens."
+  The contrast: the Romance sisters all **break** their teens pattern; German
+  **never does**. **Authored.**
 
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 9+ | Cases (der→den→dem), months & seasons, family, food, sprechen & irregular verbs — following the shared theme order |
+| 10+ | Cases (der→den→dem), family, food, the body, sprechen & irregular verbs — following the shared theme order |
 
 The **du / Sie** lesson (Ch. 2) completes the formal/informal set across the
 languages: Spanish *tú/usted* (from "your grace"), French *tu/vous* (the

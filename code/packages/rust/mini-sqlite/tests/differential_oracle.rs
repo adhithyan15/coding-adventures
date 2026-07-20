@@ -1597,6 +1597,85 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT id FROM t WHERE name COLLATE NOCASE = 'apple' ORDER BY id",
     },
+    // ---- Lane 3: COLLATE in DISTINCT / GROUP BY --------------------------
+    // DISTINCT dedupes using the operand's collation. On a column DECLARED
+    // `COLLATE NOCASE`, 'a' and 'A' are the same distinct value — and the row
+    // that survives keeps its ORIGINAL casing (the first occurrence), so the
+    // collation canonicalises the grouping KEY without rewriting the output.
+    Case {
+        id: "distinct_column_collate_nocase",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, c TEXT COLLATE NOCASE, b TEXT)",
+            "INSERT INTO t VALUES (1,'a','a'),(2,'A','A'),(3,'b','b'),(4,'B','B')",
+        ],
+        query: "SELECT DISTINCT c FROM t ORDER BY c",
+    },
+    // The same table's BINARY column is NOT folded — all four values are distinct.
+    // (Guards against over-applying the collation to every column.)
+    Case {
+        id: "distinct_binary_column_unfolded",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, c TEXT COLLATE NOCASE, b TEXT)",
+            "INSERT INTO t VALUES (1,'a','a'),(2,'A','A'),(3,'b','b'),(4,'B','B')",
+        ],
+        query: "SELECT DISTINCT b FROM t ORDER BY b",
+    },
+    // An EXPLICIT `COLLATE` in the DISTINCT operand folds a binary column.
+    Case {
+        id: "distinct_explicit_collate",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, c TEXT COLLATE NOCASE, b TEXT)",
+            "INSERT INTO t VALUES (1,'a','a'),(2,'A','A'),(3,'b','b'),(4,'B','B')",
+        ],
+        query: "SELECT DISTINCT b COLLATE NOCASE FROM t ORDER BY b",
+    },
+    // GROUP BY likewise groups on the collated key: a declared-NOCASE column
+    // yields two groups of two, keyed by the first occurrence's original casing.
+    Case {
+        id: "group_by_column_collate_nocase",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, c TEXT COLLATE NOCASE, b TEXT)",
+            "INSERT INTO t VALUES (1,'a','a'),(2,'A','A'),(3,'b','b'),(4,'B','B')",
+        ],
+        query: "SELECT c, COUNT(*) AS n FROM t GROUP BY c ORDER BY c",
+    },
+    // Regression guard for "canonicalise the KEY, keep the ORIGINAL value": with
+    // the UPPER-case row inserted FIRST, the surviving text must be 'A'/'B', not
+    // the case-folded 'a'/'b'. Emitting the collated expression instead of the
+    // underlying column would silently pass the lowercase-first case above while
+    // failing here.
+    Case {
+        id: "group_by_collate_keeps_original_case",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, c TEXT COLLATE NOCASE)",
+            "INSERT INTO t VALUES (1,'A'),(2,'a'),(3,'B'),(4,'b')",
+        ],
+        query: "SELECT c, COUNT(*) AS n FROM t GROUP BY c ORDER BY c",
+    },
+    // The multi-column group key is built by joining per-column `"t:<value>"`
+    // segments with the 0x1F separator. Text containing that separator followed
+    // by a type tag could therefore forge a segment boundary, merging two DISTINCT
+    // key tuples into one group (and reporting the first tuple's values for both).
+    // Here `('x\x1Ft:y','z')` and `('x','y\x1Ft:z')` both serialise to
+    // `t:x\x1Ft:y\x1Ft:z` unless each segment is length-prefixed. SQLite keeps
+    // them as two groups.
+    Case {
+        id: "group_key_separator_injection",
+        setup: &[
+            "CREATE TABLE t (a TEXT, b TEXT)",
+            "INSERT INTO t VALUES (char(120)||char(31)||'t:'||char(121), 'z'), ('x', char(121)||char(31)||'t:'||char(122))",
+        ],
+        query: "SELECT a, b, COUNT(*) AS n FROM t GROUP BY a, b ORDER BY a, b",
+    },
+    // An explicit `GROUP BY <col> COLLATE NOCASE` folds a binary column.
+    Case {
+        id: "group_by_explicit_collate",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, c TEXT COLLATE NOCASE, b TEXT)",
+            "INSERT INTO t VALUES (1,'a','a'),(2,'A','A'),(3,'b','b'),(4,'B','B')",
+        ],
+        query: "SELECT b, COUNT(*) AS n FROM t GROUP BY b COLLATE NOCASE ORDER BY b",
+    },
     // ---- Lane 2: division / modulo by zero → NULL ------------------------
     // SQLite yields NULL (not an error) for any division or modulo by zero,
     // integer or float, including 0/0. Aliased so both engines name the columns
@@ -1641,6 +1720,29 @@ const CASES: &[Case] = &[
         setup: &[],
         query: "SELECT 9223372036854775807 + 1 AS a, typeof(9223372036854775807 + 1) AS at, -9223372036854775807 - 2 AS b, 9223372036854775807 * 2 AS c, -(-9223372036854775808) AS d, 100 + 200 AS e, typeof(100 + 200) AS et",
     },
+    // Division overflow also promotes to REAL: `i64::MIN / -1` has no `i64`
+    // representation, so SQLite yields `9223372036854775808.0` (real). The only
+    // `i64` overflow modulo can hit is `i64::MIN % -1`, whose remainder is 0
+    // (integer). `i64::MIN` is written as `0x8000000000000000` (hex literals,
+    // added last cycle) since the decimal `9223372036854775808` is itself a REAL.
+    // Previously mini errored ("integer overflow in division/modulo").
+    Case {
+        id: "div_mod_i64_min_overflow",
+        setup: &[],
+        query: "SELECT 0x8000000000000000 / -1 AS a, typeof(0x8000000000000000 / -1) AS at, 0x8000000000000000 % -1 AS b, typeof(0x8000000000000000 % -1) AS bt",
+    },
+    // SQLite's `%` is an INTEGER operation, unlike `/`: both operands are
+    // truncated toward zero to 64-bit integers before the remainder is taken, and
+    // the result is REAL only if an operand was REAL. So `7.5 % 2` = `1.0` (7 % 2,
+    // rendered real), NOT `1.5` (fmod); `10.9 % 3.9` = `1.0` (10 % 3); a real
+    // divisor that truncates to zero (`5 % 0.9`) is NULL; `-7.5 % 2` = `-1.0`.
+    // Division by contrast stays true real division (`7.5 / 2` = 3.75). Previously
+    // mini used fmod for the float cases (`7.5 % 2` gave 1.5).
+    Case {
+        id: "modulo_integer_truncation",
+        setup: &[],
+        query: "SELECT 7.5 % 2 AS a, typeof(7.5 % 2) AS at, 10.9 % 3.9 AS b, -7.5 % 2 AS c, (5 % 0.9) IS NULL AS d, 7.5 / 2 AS e, 7 % 2 AS f, typeof(7 % 2) AS ft",
+    },
     // Binary arithmetic applies NUMERIC affinity to text/blob operands, matching
     // SQLite: `'5'+0` = 5 (integer), `'5.5'+0` = 5.5 (real), `'abc'+1` = 1 (no
     // numeric prefix → 0), `'12abc'+0` = 12, and `'10'-'3'` = 7 (both coerced).
@@ -1652,14 +1754,37 @@ const CASES: &[Case] = &[
     },
     // Division/modulo also coerce: `5 / '2'` = 2, `5 / '0'` = NULL (affinity makes
     // '0' the integer zero, so the divide-by-zero → NULL rule fires), `'7' % 3` = 1.
-    // (Known edge left for later, shared with unary minus: an *integral* real-
-    // syntax string like `'9.0'` collapses to an integer here, so `'9.0' / 2` is
-    // 4 not SQLite's 4.5 — the float-affinity follow-up. Non-integral `'5.5'`
-    // is fine.)
     Case {
         id: "div_mod_text_affinity",
         setup: &[],
         query: "SELECT 5 / '2' AS a, (5 / '0') IS NULL AS b, '7' % 3 AS c, '5.5' * 2 AS d",
+    },
+    // An arithmetic operand keeps the type its SYNTAX implies — an integral real
+    // like '9.0' stays REAL rather than collapsing to an integer, so `'9.0' / 2` is
+    // 4.5 (real division), while integer-syntax `'9' / 2` is still 4 (integer
+    // division). This is the operand rule (`applyNumericAffinity`), deliberately
+    // different from `CAST(… AS NUMERIC)` below, which DOES collapse.
+    Case {
+        id: "arith_real_syntax_text_affinity",
+        setup: &[],
+        query: "SELECT '9.0'/2 AS a, typeof('9.0'/2) AS at, '9'/2 AS b, typeof('9'/2) AS bt, '3.0'+0 AS c, typeof('3.0'+0) AS ct, '1e2'+0 AS d, typeof('1e2'+0) AS dt, '9.0'*2 AS e, typeof('9.0'*2) AS et, -'9.0' AS f, typeof(-'9.0') AS ft, -'3e2' AS g, typeof(-'3e2') AS gt",
+    },
+    // The numeric prefix boundaries that decide integer-vs-real. A trailing `.` and
+    // a leading `.` are real syntax; an INCOMPLETE exponent (`'3e'`, `'3e+'`) is not
+    // consumed at all, so the prefix stays the integer 3; digitless text is integer
+    // zero; and integer syntax overflowing i64 promotes to real.
+    Case {
+        id: "arith_numeric_prefix_syntax_edges",
+        setup: &[],
+        query: "SELECT typeof('3.'+0) AS a, '3.'+0 AS av, typeof('.5'+0) AS b, '.5'+0 AS bv, typeof('3e'+0) AS c, '3e'+0 AS cv, typeof('3e+'+0) AS d, '3e+'+0 AS dv, typeof('3e2x'+0) AS e, '3e2x'+0 AS ev, typeof('3abc'+0) AS f, '3abc'+0 AS fv, typeof('.'+0) AS g, '.'+0 AS gv, typeof('  3.0  '+0) AS h, '  3.0  '+0 AS hv, typeof('99999999999999999999'+0) AS i",
+    },
+    // The contrast that keeps the two rules honest: CAST(… AS NUMERIC) COLLAPSES an
+    // integral real to an integer, while the same text as an arithmetic operand
+    // stays real. Both behaviours are SQLite's; they must not be unified.
+    Case {
+        id: "cast_numeric_vs_operand_affinity",
+        setup: &[],
+        query: "SELECT typeof(CAST('3.0' AS NUMERIC)) AS a, CAST('3.0' AS NUMERIC) AS av, typeof(CAST('1e3' AS NUMERIC)) AS b, typeof('3.0'+0) AS c, typeof('1e3'+0) AS d, typeof(CAST('3.5' AS NUMERIC)) AS e",
     },
     // A text/blob in a BOOLEAN context takes numeric affinity, matching SQLite:
     // `NOT 'abc'` = 1 ('abc'→0), `NOT '5'` = 0, `NOT '0'` = `NOT ''` = 1, and
@@ -1906,6 +2031,33 @@ const LEDGER: &[(&str, &str)] = &[
     (
         "order_by_ordinal_over_aggregate",
         "positional ORDER BY over an aggregate output column not yet re-bound to the materialized column",
+    ),
+    // An EXPLICIT `COLLATE` suffix in a DISTINCT select-item or a GROUP BY term
+    // does not parse yet: the grammar only accepts a `COLLATE` tail inside a
+    // comparison (`x COLLATE C = y`), not on a bare select-list expression or a
+    // group-by key. The *semantics* half — a column's DECLARED collation folding
+    // the DISTINCT/GROUP BY key — is implemented (see the `distinct_column_*` /
+    // `group_by_column_*` cases); closing these two needs hand-edits to the
+    // sql-parser grammar (`select_item` and `group_by` gaining an optional
+    // `COLLATE NAME` tail), which is the next increment in this lane.
+    // DISTINCT does not yet fold on a column's declared collation. GROUP BY does
+    // (see the `group_by_column_*` cases) — the two use different machinery: the
+    // group key is built per row by `SaveGroupKey`, which now takes a per-key
+    // collation, whereas DISTINCT dedupes whole output rows in `apply_distinct`
+    // after the fact and has no collation channel yet. Closing this means giving
+    // `DistinctResult` per-output-column collations, the next increment in this
+    // lane.
+    (
+        "distinct_column_collate_nocase",
+        "DISTINCT does not yet fold on a column's declared COLLATE (apply_distinct has no per-column collation channel)",
+    ),
+    (
+        "distinct_explicit_collate",
+        "explicit COLLATE suffix on a DISTINCT select-item does not parse yet (grammar: select_item lacks a COLLATE tail)",
+    ),
+    (
+        "group_by_explicit_collate",
+        "explicit COLLATE suffix on a GROUP BY term does not parse yet (grammar: group_by lacks a COLLATE tail)",
     ),
 ];
 

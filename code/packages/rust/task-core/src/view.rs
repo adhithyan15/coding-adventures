@@ -34,8 +34,8 @@
 
 use crate::ids::TaskId;
 use crate::model::{
-    DurationUnit, FieldRef, FieldValue, Filter, ProjectSettings, ProjectState, SortKey, Task,
-    TaskKind, View,
+    DurationUnit, FieldKind, FieldRef, FieldValue, Filter, ProjectSettings, ProjectState, SortKey,
+    Task, TaskKind, View,
 };
 use crate::primitives::Date;
 use crate::scheduler::ScheduleResult;
@@ -359,6 +359,195 @@ fn group_tasks(
     }
     groups.sort_by(|a, b| cmp_cell(&a.key, &b.key));
     groups
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// The table (sheet) projection — a render-ready map over the selection
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// A render-ready spreadsheet: the columns to draw and the grouped, ordered rows, every
+/// cell already resolved **and** formatted. A host draws this directly — no field access,
+/// no formatting, no sorting on its side. This is the "dumb UI" contract the sheet
+/// component (Phase 5) renders.
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub struct TableView {
+    /// The columns, in display order.
+    pub columns: Vec<ColumnHeader>,
+    /// The rows, partitioned into the view's groups (one group if ungrouped).
+    pub groups: Vec<TableGroup>,
+}
+
+/// A column: which field it shows, its header label, and its value kind (so a host can
+/// right-align numbers, render a checkbox for bools, etc.).
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub struct ColumnHeader {
+    /// The field this column resolves.
+    pub field: FieldRef,
+    /// The human-facing header label.
+    pub label: String,
+    /// The column's value kind.
+    pub kind: ColumnKind,
+}
+
+/// The kind of a column's values — a rendering hint, not the exact `CellValue` variant.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub enum ColumnKind {
+    /// Free text.
+    Text,
+    /// A number (percent, duration, money, computed).
+    Number,
+    /// A date.
+    Date,
+    /// A boolean.
+    Bool,
+}
+
+/// A group of rows under a group-by key (the whole table is one group when ungrouped).
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub struct TableGroup {
+    /// The group's display label (empty for the ungrouped / no-value group).
+    pub key_label: String,
+    /// The rows in this group, in the view's sort order.
+    pub rows: Vec<TableRow>,
+}
+
+/// One row: the task it's for, and one cell per column, in column order.
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub struct TableRow {
+    /// The task this row renders.
+    pub task: TaskId,
+    /// One cell per column, in the same order as [`TableView::columns`].
+    pub cells: Vec<Cell>,
+}
+
+/// A single cell: the typed value (for a host that wants a control) **and** its
+/// engine-formatted display string (for a host that just draws text).
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub struct Cell {
+    /// The resolved value.
+    pub value: CellValue,
+    /// The value rendered per project conventions (via [`format_cell`]).
+    pub display: String,
+}
+
+/// Build the render-ready table for `view`. The view's `visible_fields` become the
+/// columns (defaulting to a single `name` column when none are set); [`select`] provides
+/// the grouped, ordered rows.
+pub fn table(project: &ProjectState, view: &View, schedule: &ScheduleResult) -> TableView {
+    let fields: Vec<FieldRef> = if view.visible_fields.is_empty() {
+        vec![FieldRef::Builtin("name".into())]
+    } else {
+        view.visible_fields.clone()
+    };
+
+    let columns = fields
+        .iter()
+        .map(|f| ColumnHeader {
+            field: f.clone(),
+            label: column_label(project, f),
+            kind: column_kind(project, f),
+        })
+        .collect();
+
+    let groups = select(project, view, schedule)
+        .into_iter()
+        .map(|g| TableGroup {
+            key_label: g.key_label,
+            rows: g
+                .tasks
+                .iter()
+                .filter_map(|id| {
+                    project.tasks.get(id).map(|t| TableRow {
+                        task: id.clone(),
+                        cells: fields
+                            .iter()
+                            .map(|f| {
+                                let value = cell(project, t, f, schedule);
+                                let display = format_cell(&value, f, &project.settings);
+                                Cell { value, display }
+                            })
+                            .collect(),
+                    })
+                })
+                .collect(),
+        })
+        .collect();
+
+    TableView { columns, groups }
+}
+
+/// A column's header label: a friendly name for a built-in, or the custom field's name.
+fn column_label(project: &ProjectState, field: &FieldRef) -> String {
+    match field {
+        FieldRef::Builtin(name) => builtin_label(name).to_string(),
+        FieldRef::Custom(id) => project
+            .fields
+            .get(id)
+            .map(|f| f.name.clone())
+            .unwrap_or_else(|| id.0.clone()),
+    }
+}
+
+/// Friendly labels for the built-in columns; an unknown name is shown verbatim.
+fn builtin_label(name: &str) -> &str {
+    match name {
+        "name" => "Name",
+        "notes" => "Notes",
+        "status" => "Status",
+        "kind" => "Type",
+        "completed" => "Done",
+        "percentComplete" => "% Complete",
+        "duration" => "Duration",
+        "deadline" => "Deadline",
+        "start" | "scheduledStart" => "Start",
+        "finish" | "scheduledFinish" => "Finish",
+        "earlyStart" => "Early Start",
+        "earlyFinish" => "Early Finish",
+        "lateStart" => "Late Start",
+        "lateFinish" => "Late Finish",
+        "totalSlack" => "Total Slack",
+        "freeSlack" => "Free Slack",
+        "critical" => "Critical",
+        other => other,
+    }
+}
+
+/// A column's value kind, for a host's rendering choices. Matches how [`cell`] resolves
+/// the field, so the hint never contradicts the values.
+fn column_kind(project: &ProjectState, field: &FieldRef) -> ColumnKind {
+    match field {
+        FieldRef::Builtin(name) => match name.as_str() {
+            "completed" | "critical" => ColumnKind::Bool,
+            "percentComplete" | "duration" | "totalSlack" | "freeSlack" => ColumnKind::Number,
+            "deadline" | "start" | "scheduledStart" | "finish" | "scheduledFinish"
+            | "earlyStart" | "earlyFinish" | "lateStart" | "lateFinish" => ColumnKind::Date,
+            _ => ColumnKind::Text,
+        },
+        FieldRef::Custom(id) => match project.fields.get(id).map(|f| &f.kind) {
+            Some(FieldKind::Bool) => ColumnKind::Bool,
+            Some(
+                FieldKind::Number
+                | FieldKind::Duration
+                | FieldKind::Money
+                | FieldKind::Formula { .. }
+                | FieldKind::Rollup { .. },
+            ) => ColumnKind::Number,
+            Some(FieldKind::Date) => ColumnKind::Date,
+            _ => ColumnKind::Text,
+        },
+    }
 }
 
 #[cfg(test)]
@@ -744,5 +933,91 @@ mod tests {
         );
         // a finishes Monday, b Tuesday → a before b by the computed finish column.
         assert_eq!(ids(&groups), ["a", "b"]);
+    }
+
+    // ── table projection ─────────────────────────────────────────────────────────
+
+    #[test]
+    fn table_columns_carry_labels_and_kinds() {
+        let p = sample();
+        let sched = no_schedule();
+        let v = View {
+            visible_fields: vec![
+                builtin("name"),
+                builtin("completed"),
+                builtin("percentComplete"),
+            ],
+            ..view(Filter::default(), vec![asc("name")], None)
+        };
+        let t = table(&p, &v, &sched);
+        assert_eq!(
+            t.columns
+                .iter()
+                .map(|c| c.label.clone())
+                .collect::<Vec<_>>(),
+            ["Name", "Done", "% Complete"]
+        );
+        assert_eq!(t.columns[0].kind, ColumnKind::Text);
+        assert_eq!(t.columns[1].kind, ColumnKind::Bool);
+        assert_eq!(t.columns[2].kind, ColumnKind::Number);
+    }
+
+    #[test]
+    fn table_rows_are_grouped_ordered_and_formatted() {
+        let p = sample();
+        let sched = no_schedule();
+        let v = View {
+            visible_fields: vec![
+                builtin("name"),
+                builtin("completed"),
+                builtin("percentComplete"),
+            ],
+            ..view(
+                Filter::default(),
+                vec![asc("name")],
+                Some(builtin("status")),
+            )
+        };
+        let t = table(&p, &v, &sched);
+
+        // Groups follow the selection: doing, done, then the no-status group.
+        assert_eq!(
+            t.groups
+                .iter()
+                .map(|g| g.key_label.clone())
+                .collect::<Vec<_>>(),
+            ["doing", "done", ""]
+        );
+        // First group ("doing") holds a, c in name order; check a's formatted cells.
+        let doing = &t.groups[0];
+        assert_eq!(
+            doing
+                .rows
+                .iter()
+                .map(|r| r.task.0.clone())
+                .collect::<Vec<_>>(),
+            ["a", "c"]
+        );
+        let a = &doing.rows[0];
+        assert_eq!(a.cells[0].display, "Alpha"); // name
+        assert_eq!(a.cells[1].display, "○"); // completed=false → glyph
+        assert_eq!(a.cells[1].value, CellValue::Bool(false)); // typed value still available
+        assert_eq!(a.cells[2].display, "10%"); // percentComplete formatted
+    }
+
+    #[test]
+    fn table_defaults_to_a_name_column_when_none_are_set() {
+        let p = sample();
+        let sched = no_schedule();
+        let t = table(
+            &p,
+            &view(Filter::default(), vec![asc("name")], None),
+            &sched,
+        );
+        assert_eq!(t.columns.len(), 1);
+        assert_eq!(t.columns[0].label, "Name");
+        // Ungrouped → one group with all four leaves.
+        assert_eq!(t.groups.len(), 1);
+        assert_eq!(t.groups[0].rows.len(), 4);
     }
 }

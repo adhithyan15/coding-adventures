@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.14.0 — reference-modification suffix on an operand
+
+- The `operand` rule gains an optional reference-modification suffix:
+  `operand = NAME [ LPAREN operand COLON [ operand ] RPAREN ] | literal ;`.
+  A `NAME` may now be followed by `(start:len)` or `(start:)` (omitted length),
+  selecting a substring of an alphanumeric item. A bare `NAME` still parses
+  exactly as before. The inner start/length are themselves `operand`s (so an
+  integer NUMBER literal parses); the readers reject non-literal start/length as
+  a later rung. Uses the new `COLON` token (see `cobol-lexer` 0.6.0).
+  `_grammar.rs` regenerated via `grammar-tools compile-grammar`.
+
 ## 0.13.0 — `EVALUATE` multiple values and `THRU` ranges per `WHEN`
 
 - `when_branch` now takes a value-*list*: `"WHEN" ( "OTHER" | when_value

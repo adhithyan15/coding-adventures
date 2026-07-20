@@ -1,0 +1,336 @@
+# Scilab Language Token Grammar
+# ============================================================================
+#
+# Tokenizes Scilab (INRIA/ENPC "Meta2" project, 1990, itself descended from
+# François Delebecque's 1982 in-house "Basile" tool) — a numerical/array
+# language that LOOKS like a close cousin of MATLAB (matrix literals, ranges,
+# the operator-precedence cascade, indexing all carry over) but genuinely is
+# not one: MA10 §1 documents that `+` means numeric addition on strings in
+# MATLAB but concatenation in Scilab, among five further corroborating
+# differences. See code/specs/MA10-scilab-language.md §1/§3 for the full
+# derivation of why this is a forked grammar, not a thin MATLAB rewrite the
+# way `octave-runtime::octavify` is (MA10 §1's whole point).
+#
+# This file is FORKED FROM `code/grammars/matlab/matlab.tokens` at the
+# grammar-SOURCE level (copied, then diverged) — not a Rust-crate dependency;
+# `scilab-lexer` does not depend on `matlab-lexer` (MA10 §5). Everything not
+# called out below as a deliberate divergence is inherited from matlab.tokens
+# essentially unchanged: the arithmetic/element-wise operator set, matrix
+# literal brackets, numeric literals, identifier syntax, and the
+# newline-is-significant/bracket-vs-paren newline model.
+#
+# CASE-SENSITIVE, like MATLAB (and per MA10 §3/§4, matching every sibling
+# language grammar in this repo's own case-sensitivity convention).
+#
+# THE FIVE LEXER DIVERGENCES FROM matlab.tokens (MA10 §3 "Lexer differences")
+# ----------------------------------------------------------------------------
+# 1. Comments are `//` line and `/* ... */` block — NOT MATLAB's `%`/`%{ %}`.
+#    Unlike MATLAB's `%{`/`%}` (which MUST sit alone on their own line —
+#    matlab-lexer's `strip_block_comments` enforces exactly that), Scilab's
+#    `/* ... */` may appear inline mid-line with code (MA10 §1 finding 3, §3):
+#    there is no "alone on its line" restriction to enforce, so (genuinely
+#    simpler than MATLAB) this grammar's `BLOCK_COMMENT` is an ordinary `skip:`
+#    regex, needing no pre-tokenize hook at all.
+# 2. `'...'` and `"..."` produce the SAME token type (STRING) — unlike
+#    MATLAB's CHARARRAY-vs-DQ_STRING split, which exists there only because
+#    modern MATLAB's own char-array/string-scalar value-model distinction
+#    (MA01 §2) needs two spellings kept apart until a post-hook unifies them.
+#    Scilab has no such distinction to begin with (MA10 §3: `"matrix"==
+#    "mat"+"rix"` treats both spellings interchangeably) — but the `'`/`.'`
+#    transpose-vs-string-open ambiguity MA01 §3 designed a fix for still
+#    applies verbatim to Scilab's own `'`, so the SAME placeholder-splicing
+#    *strategy* (not matlab-lexer's code — independent code in scilab-lexer)
+#    is still needed for `'`. `"` has no such ambiguity (no double-quote
+#    transpose exists in either language) so it stays a single ordinary regex
+#    rule, same shape as MATLAB's own DQ_STRING.
+# 3. `PERCENT_CONST` — a new token class with no MATLAB analogue at all.
+#    `%` immediately followed by an identifier-start character lexes as one
+#    of exactly eight fixed spellings (MA10 §3/§4): `%pi %e %i %inf %nan %eps
+#    %t %f`. Since Scilab has no `%`-comment (the opposite of MATLAB, where
+#    `%` ALWAYS means "comment starts here" — MA10 §1 finding 3), there is no
+#    conflict to guard against; the closed eight-word set is enforced by the
+#    pattern itself, not by any extra rejection logic layered on top (MA10 §4
+#    "absence, not special-cased exclusion", citing MA06 §4) — a source byte
+#    sequence like `%foo` (not one of the eight) simply does not match this
+#    pattern and falls through to an honest per-character lex error.
+# 4. `$` — a single, unambiguous last-index token (MA10 §1 finding 5). Unlike
+#    MATLAB's own context-sensitive `end` (block-terminator AND last-index,
+#    disambiguated only by the parser), Scilab's classic/preferred `$` needs
+#    no context sensitivity at all — it is always DOLLAR, in every position.
+# 5. `<>` — a second, symbol-spelled not-equal digraph alongside `~=` (MA10
+#    §1 finding 6, §4): both spellings are valid in this cut. Declared here
+#    as its OWN token (`NE_ALT`), not aliased to `NE` — mirroring how
+#    maple.tokens keeps its own `;`/`:` statement terminators as two distinct
+#    token types even though a later parser unifies them onto one production
+#    ("the parser, not this lexer, is where the two spellings collapse").
+#    Declared ahead of the bare `LT`/`GT` tokens (SECTION 7), the same
+#    longest-match-before-bare-prefix discipline `apl.tokens`/`j.tokens`
+#    already use for their own digraphs.
+#
+# ONE DELIBERATE OMISSION vs. matlab.tokens: no AT ("@") token.
+# ----------------------------------------------------------------------------
+# MATLAB's `@` is the function-handle sigil — not in this cut's in-scope
+# surface (MA10 §4 never lists function handles). Scilab's OWN historical use
+# of `@` is the deprecated legacy spelling for `~` (not) — also explicitly
+# deferred (MA10 §1 finding 6, §4). Since NEITHER meaning is in scope, `@` is
+# simply left out of this grammar entirely (falls to the `errors:` catch-all
+# below) rather than silently inheriting MATLAB's unrelated meaning or
+# quietly supporting the deprecated Scilab spelling this cut isn't ready to
+# claim — "absence, not special-cased exclusion" (MA10 §4) applies here too.
+#
+# WHAT IS DELIBERATELY NOT HERE (MA10 §4's deferred list — simple omission,
+# no rejection logic): the Kronecker trigraphs `.*.`/`./.`/`.\.`; the
+# `end`-as-last-index convergence (this cut's `end` is ONLY the generic
+# block-closer keyword, exactly like MATLAB's); the deprecated legacy `**`
+# spelling for `^` (so `a ** b` lexes as two bare STAR tokens, exactly
+# mirroring maple.tokens's own documented `**` non-treatment); and the
+# general `%name` sigil-dispatch mechanism beyond the fixed eight-word
+# PERCENT_CONST vocabulary above.
+#
+# @version 1
+
+case_sensitive: true
+
+# ============================================================================
+# SECTION 1: Multi-character operators (longest-match-first)
+#
+# Identical to matlab.tokens's own SECTION 1, plus NE_ALT (divergence #5
+# above). The element-wise `.`-prefixed operators MUST precede bare `.` and
+# the plain operator they contain, so `.*` never lexes as `.`+`*`. `.'`
+# (non-conjugate transpose) likewise precedes `.`. NE/NE_ALT/LE/GE MUST
+# precede the bare TILDE/LT/GT tokens in SECTION 7, so `~=`/`<>`/`<=`/`>=`
+# never lex as two single-character tokens.
+# ============================================================================
+
+ELEM_POW       = ".^"
+ELEM_MUL       = ".*"
+ELEM_RDIV      = "./"
+ELEM_LDIV      = /\.\\/
+ELEM_TRANSPOSE = ".'"
+
+EQ_EQ   = "=="
+NE      = "~="
+
+# Scilab's OWN not-equal spelling (MA10 §1 finding 6, §4) — real syntax
+# alongside `~=`, not a MATLAB carryover. Kept as its own distinct token
+# rather than aliased to NE (see divergence #5 in the header above); a
+# future scilab-parser unifies both spellings onto one relational-operator
+# production, the same deferral discipline maple.tokens documents for its
+# own SEMI/COLON pair ("the parser, not this lexer, is where the two
+# spellings collapse onto one production").
+NE_ALT  = "<>"
+
+LE      = "<="
+GE      = ">="
+AND_AND = "&&"
+OR_OR   = "||"
+
+# ============================================================================
+# SECTION 2: String-like literals
+#
+# STRING_PLACEHOLDER is the backtick placeholder scilab-lexer's own
+# pre-tokenize hook emits for a single-quoted string (`'abc'`, `'it''s'`) —
+# the identical mechanism MA01 §3 designed for MATLAB's CHARARRAY (a
+# `prev_value`-tracking hook resolves the `'`-is-transpose-or-string-open
+# ambiguity before this grammar ever runs), renamed here because Scilab has
+# no "char array vs. string scalar" value-model distinction for the name to
+# imply (MA10 §3) — by the time a `'...'` literal reaches this grammar it is
+# already known to be a string, exactly as ordinary as a `"..."` one. Kept a
+# DISTINCT token type from DQ_STRING (not the same pattern) for the same
+# reason matlab.tokens keeps CHARARRAY distinct: a post-tokenize hook
+# restores the placeholder's decoded content and relabels it to STRING,
+# keying off the distinct *type*, not the *value* — so a crafted
+# double-quoted string whose content happens to look like a placeholder
+# (e.g. "`5`") is never mistaken for one.
+#
+# DQ_STRING is the double-quoted spelling. Scilab's `"` has NO transpose
+# ambiguity (there is no double-quote transpose in either language), so it
+# needs only an ordinary greedy regex rule, the same shape as MATLAB's own
+# DQ_STRING — including the doubled-quote (`""`) escape (MA10 §4).
+# `'...'` and `"..."` both end up as the same STRING token type (MA10 §3:
+# "`"matrix"=="mat"+"rix"` treats both spellings interchangeably"), unlike
+# MATLAB's own CHARARRAY-vs-STRING(-scalar) split.
+#
+# Deliberately NOT aliased to STRING at the grammar level (unlike MATLAB's
+# own `-> STRING` alias on this identical pattern): the shared `GrammarLexer`
+# engine strips DQ_STRING's outer quotes automatically (any token name
+# ending in "STRING" gets that treatment) but does NOT collapse the doubled
+# `""` escape itself -- that needs scilab-lexer's own post-tokenize step
+# (mirroring how STRING_PLACEHOLDER's `''` escape is collapsed by this
+# crate's own decode function). Keeping DQ_STRING un-aliased lets that
+# post-hook tell "this token still needs its `""` collapsed" apart from "this
+# token is already a fully-decoded STRING" during the one pass where both
+# would otherwise look identical.
+# ============================================================================
+
+STRING_PLACEHOLDER = /`[0-9]+`/
+DQ_STRING          = /"([^"]|"")*"/
+
+# ============================================================================
+# SECTION 3: `%`-prefixed special constants — NEW, no MATLAB analogue
+# (divergence #3 above; MA10 §3/§4).
+#
+# The alternation is ordered longest-spelling-first (the SAME longest-
+# match-first discipline as SECTION 1, applied *within* one pattern this
+# time): `inf` before `i` and `eps` before `e`, so `%inf`/`%eps` are each
+# matched whole rather than as `%i`+`nf` / `%e`+`ps`. This repo's regex
+# engine (the `regex` crate) uses leftmost-FIRST alternation semantics (like
+# Perl/PCRE, not POSIX leftmost-longest) and has no lookaround, so the
+# ordering below is load-bearing, not cosmetic — get it wrong and `%inf`
+# silently mis-lexes as two tokens instead of failing loudly or matching
+# correctly.
+# ============================================================================
+
+PERCENT_CONST = /%(inf|nan|eps|pi|i|e|t|f)/
+
+# ============================================================================
+# SECTION 4: `$` — last-index token, NEW, no MATLAB analogue (divergence #4
+# above; MA10 §1 finding 5, §3). A single, always-unambiguous token: unlike
+# MATLAB's own `end` (both block-terminator keyword AND last-index
+# sentinel, disambiguated only by the parser), `$` never means anything but
+# "the last index along this dimension" and needs no context sensitivity.
+# ============================================================================
+
+DOLLAR = "$"
+
+# ============================================================================
+# SECTION 5: Numbers — unchanged from matlab.tokens.
+#
+# Decimal and scientific. A digit is REQUIRED after the dot (`3.5`, `.5`) so
+# a trailing dot is never absorbed — `3.*4` lexes as `3` `.*` `4`
+# (element-wise), not `3.` `*` `4`.
+# ============================================================================
+
+NUMBER = /([0-9]+(\.[0-9]+)?|\.[0-9]+)([eE][+-]?[0-9]+)?/
+
+# ============================================================================
+# SECTION 6: Identifiers and keywords
+#
+# A Scilab name is letter/underscore then letters/digits/underscores — no
+# dots — unchanged from matlab.tokens.
+#
+# The keyword list itself is NOT a straight copy of matlab.tokens's own list
+# — it is exactly MA10 §4's in-scope control-flow/function surface, no more:
+#
+#   if / elseif / else / end        — conditional (§4)
+#   select / case / else / end      — Scilab's OWN multi-way conditional;
+#                                      note `else` is reused, matching real
+#                                      Scilab's own `select ... case ... else
+#                                      ... end` shape (there is no MATLAB
+#                                      `switch`/`otherwise` here — Scilab has
+#                                      neither spelling, MA10 §1 finding 4)
+#   then                             — optional linker for if/elseif/case
+#                                      (MA10 §1 finding 4, §3 `stmt_sep`)
+#   while / end, do                  — loop + its optional linker
+#   for / end, do                    — loop + its optional linker (shared
+#                                      `do` keyword — one token, two use
+#                                      sites, MA10 §3)
+#   break / continue                — unchanged from MATLAB
+#   function / endfunction           — Scilab's historically-mandated,
+#                                      still-preferred function terminator
+#                                      (MA10 §1 finding 7), kept as ITS OWN
+#                                      keyword distinct from the generic
+#                                      `end` above — MA-10c's parser needs
+#                                      that distinction as a separate
+#                                      production, so the lexer draws it now.
+#
+# Deliberately EXCLUDED, even though matlab.tokens has them: `switch`,
+# `otherwise` (Scilab has neither spelling at all — its own construct is
+# `select`/`case`/`else`, MA10 §1 finding 4), `return`, `global`,
+# `persistent`, `try`, `catch` (none are in MA10 §4's in-scope surface for
+# this cut; `global` is explicitly named as deferred, §4). Keeping them out
+# means ordinary Scilab identifiers spelled `switch`, `return`, etc. are NOT
+# incorrectly reserved by this grammar.
+# ============================================================================
+
+NAME = /[A-Za-z_][A-Za-z0-9_]*/
+
+keywords:
+  if
+  elseif
+  else
+  end
+  select
+  case
+  then
+  while
+  do
+  for
+  break
+  continue
+  function
+  endfunction
+
+# ============================================================================
+# SECTION 7: Single-character operators and punctuation
+#
+# Unchanged from matlab.tokens's own SECTION 5, with ONE deliberate omission:
+# no AT ("@") — see the header comment's "ONE DELIBERATE OMISSION" note.
+#
+#   '   transpose (the pre-hook guarantees string quotes never reach here)
+#   + - * / \ ^   arithmetic / matrix divide / power
+#   < > =   comparison / assignment       ~ & |   logical
+#   :   colon (ranges, whole-dimension)    .   field access / decimal
+#   ( ) [ ] { }   grouping / indexing / matrix / cell    , ;   separators
+# ============================================================================
+
+TRANSPOSE = "'"
+PLUS      = "+"
+MINUS     = "-"
+STAR      = "*"
+SLASH     = "/"
+BACKSLASH = /\\/
+CARET     = "^"
+LT        = "<"
+GT        = ">"
+EQ        = "="
+TILDE     = "~"
+AMP       = "&"
+PIPE      = "|"
+COLON     = ":"
+DOT       = "."
+LPAREN    = "("
+RPAREN    = ")"
+LBRACKET  = "["
+RBRACKET  = "]"
+LBRACE    = "{"
+RBRACE    = "}"
+COMMA     = ","
+SEMICOLON = ";"
+
+# ============================================================================
+# SECTION 8: Newlines (significant — statement / matrix-row terminators)
+#
+# Identical rationale to matlab.tokens's own SECTION 6: a newline ends a
+# statement, and inside `[ ]`/`{ }` it ALSO separates matrix rows — the
+# identical rule MA10 §1's closing paragraph confirms Scilab inherits
+# verbatim from MATLAB's own matrix-literal grammar. scilab-lexer's own
+# post-hook (independent code, same shape as matlab-lexer's
+# `drop_paren_newlines`) keeps bracket-interior newlines and only drops them
+# inside `( )` (call/grouping).
+# ============================================================================
+
+NEWLINE = /\r?\n/
+
+# ============================================================================
+# SECTION 9: Skip — horizontal whitespace and comments
+#
+# Genuinely simpler than MATLAB's own SECTION 7 (divergence #1 above): `//`
+# runs to end of line; `/* ... */` runs (non-greedily, so it stops at the
+# FIRST `*/`) across as many lines as it needs to, with NO "must be alone on
+# its own line" restriction the way MATLAB's `%{`/`%}` markers have — so,
+# unlike matlab-lexer, scilab-lexer needs no block-comment pre-tokenize hook
+# at all; both comment forms are ordinary skip-section regexes.
+# ============================================================================
+
+skip:
+  WHITESPACE    = /[ \t]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*[\s\S]*?\*\//
+
+# ============================================================================
+# SECTION 10: Error recovery
+# ============================================================================
+
+errors:
+  UNKNOWN = /./

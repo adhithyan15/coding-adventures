@@ -1,5 +1,60 @@
 # Changelog
 
+## Chapter 12 — Numbers 11–20
+
+- **Chapter 12 authored** (`FR-C12-nombres-11-16`, `-17-20`): the teens, atom-first,
+  reviewing Ch.6/Ch.11 via `reviews_of`.
+- **onze–seize** — the six numbers French inherited **already fused** from Latin
+  (*ūndecim, duodecim … sēdecim*). The shared **-ze** is *decem* ("ten") worn thin —
+  the **same ten** the learner already knows in **dix** and **décembre** (Ch.9).
+  Each word's front is its Chapter 6 digit (*deux→dou-*, *six→sei-*).
+- **dix-sept–vingt** — the **seam**: at 17 French **abandons** the fusion and goes
+  transparent, *dix-sept* = plainly "ten-seven" — and the **order flips** with it
+  (digit-first *seize* → ten-first *dix-sept*). Notes that Latin itself wobbled here
+  (*duodēvīgintī*, "two-from-twenty"), a subtraction all the sisters dropped.
+  *vingt* ← *vīgintī* → English **vigesimal**, and the seed of *quatre-vingts*.
+- Taxonomy: namespaced `FR-NUM-11-16`, `FR-NUM-17-20`.
+
+## Chapter 11 — Food (bread, water, wine)
+
+- **Chapter 11 authored** (`FR-C11-pain`, `-eau-vin`): the everyday table trio,
+  atom-first, reviewing Ch.10/Ch.1 via `reviews_of`.
+- **pain** ("bread") ← *pānis* — with the payoff that a **companion** is literally
+  "one you **share bread** with" (*com-* + *pānis*); also *company*, *pantry*.
+- **eau / vin** — **eau** ("water") is French's **most eroded** loan from Latin:
+  *aqua → eau*, worn down to a bare vowel "oh" (three silent letters for one
+  sound), while English kept the loud original in *aquatic/aquarium*. **vin** ←
+  *vīnum* held its shape → *wine/vine/vinegar/vintage*.
+- Taxonomy: namespaced `FR-FOOD-BREAD`, `FR-FOOD-DRINKS`.
+
+## Chapter 10 — Family
+
+- **Chapter 10 authored** (`FR-C10-parents`, `-freres-soeurs`): the immediate
+  family, atom-first, reviewing Ch.9/Ch.1 via `reviews_of`.
+- **père / mère** ← *pater / māter* ← PIE *\*ph₂tḗr / \*méh₂tēr*. Taught as the
+  **same inherited words** as English *father / mother*, split only by **Grimm's
+  law** (*p → f*, *t → th*) — French kept Latin's *p*, English shifted it. Root
+  payoff: paternal/patron, maternal/matron.
+- **frère / sœur** ← *frāter / soror* → fraternal/friar, sorority; the **œ**
+  ligature is introduced as the fused vowel spelling worn-down *soror*.
+- Taxonomy: namespaced `FR-FAMILY-PARENTS`, `FR-FAMILY-SIBLINGS`.
+
+## Chapter 9 — Months & seasons
+
+- **Chapter 9 authored** (`FR-C09-mois`, `-saisons`): the calendar year, atom-first,
+  reviewing Ch.6–8 via `reviews_of`.
+- **The months** are a parade of Roman gods and emperors: *janvier* ← Janus (the
+  two-faced god of beginnings), *février* ← the *Februa* purification, *mai* ← Maia,
+  *juin* ← Juno, with **two big payoffs** — *mars* is the **same Mars** behind
+  *mardi* (Tuesday), and *septembre–décembre* still mean the Latin **7–10** learned
+  in the numbers chapter (the Roman year began in March; *juillet/août* ← Julius/
+  Augustus were inserted and shifted the count).
+- **The seasons**: *printemps* = *prime* + *temps*, "the **first time / prime
+  season**"; *été* ← *aestas* "heat"; *automne* ← *autumnus*; *hiver* ← *hibernum*
+  "wintry" (cousin of English **hibernate**). Plus the *au printemps* / *en été…*
+  preposition split.
+- Taxonomy: namespaced `FR-MONTHS`, `FR-SEASONS`.
+
 ## Chapter 8 — Time & the clock
 
 - **Chapter 8 authored** (`FR-C08-heure`, `-midi-minuit`): telling the time,

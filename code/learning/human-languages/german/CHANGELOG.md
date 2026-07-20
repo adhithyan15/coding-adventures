@@ -1,5 +1,66 @@
 # Changelog
 
+## Chapter 12 — Numbers 11–20
+
+- **Chapter 12 authored** (`GE-C12-elf-zwoelf`, `-zahlen-13-20`): the teens,
+  atom-first, reviewing Ch.6/Ch.11 via `reviews_of`.
+- **elf / zwölf** — the showpiece: ← *ainlif / twalif*, where **-lif** means "**to
+  leave, remain**," so they literally say "**one left over**" and "**two left
+  over**" — left over from your **ten fingers**. English *eleven/twelve* are not
+  merely similar but **the same inherited words**, which is why both languages share
+  the oddity. Extends the Germanic-twin thread from *Vater/father*, *Wasser/water*.
+- **dreizehn–zwanzig** — then the pattern turns perfectly regular: **digit + zehn**,
+  no exceptions, exactly mirroring English *-teen* (which **is** *ten*: *thir-teen* =
+  "three-ten"). *Sechzehn/siebzehn* clip a sound just as English clipped
+  *three→thir-*, *five→fif-*; *zwanzig* ← *twaintig* "two tens" (= English *-ty*).
+- **The contrast made explicit**: the Romance sisters all **break** their teens
+  pattern partway (PT at 16, FR/IT at 17); **German never breaks** — two leftovers,
+  then one clean rule to twenty, with English marching alongside the whole way.
+- Taxonomy: namespaced `GE-NUM-11-12`, `GE-NUM-13-20`.
+
+## Chapter 11 — Food (bread, water, wine)
+
+- **Chapter 11 authored** (`GE-C11-brot`, `-wasser-wein`): the everyday table
+  trio, atom-first, reviewing Ch.10/Ch.1 via `reviews_of`.
+- **Brot** ("bread") — **inherited Germanic**, the direct twin of English *bread*
+  (NOT the Latin *pānis* the Romance sisters use); introduces the **neuter das**
+  (completing *der/die/das*) and the rule that German **capitalizes all nouns**.
+- **Wasser / Wein** — the native-vs-borrowed pair: **Wasser** ("water," *w*=*v*) is
+  a native Germanic twin of *water*, but **Wein** ("wine," *ei*="eye") is an
+  **ancient Latin loan** ← *vīnum*, taken with the grapevine Rome carried north —
+  which is exactly why *Wein*, English *wine*, and *vīnum* all match (one loan, not
+  three cousins).
+- Taxonomy: namespaced `GE-FOOD-BREAD`, `GE-FOOD-DRINKS`.
+
+## Chapter 10 — Family
+
+- **Chapter 10 authored** (`GE-C10-eltern`, `-geschwister`): the immediate family,
+  atom-first, reviewing Ch.9/Ch.1 via `reviews_of` — and the **mirror image of the
+  months chapter**.
+- **der Vater / die Mutter** — taught as **inherited Germanic** words (NOT Latin
+  loans like the months), the Grimm's-law twins of English *father / mother*: the
+  *V* of *Vater* is pronounced *f*, and German/English agree (*f-*, *m-*) precisely
+  because both are Germanic, while French/Latin sit across Grimm's line. The
+  standout thread: **family is native where the calendar was borrowed**.
+- **der Bruder / die Schwester** — Germanic twins of *brother / sister*; plus
+  **die Geschwister** ("siblings"), built with the **collective ge-** prefix that
+  English lacks.
+- Taxonomy: namespaced `GE-FAMILY-PARENTS`, `GE-FAMILY-SIBLINGS`.
+
+## Chapter 9 — Months & seasons
+
+- **Chapter 9 authored** (`GE-C09-monate`, `-jahreszeiten`): the calendar year,
+  atom-first, reviewing Ch.6–8 via `reviews_of`.
+- **The native-vs-Latin split deepens** (numbers native, weekday-gods Germanic,
+  clock *Uhr* Latin — now): the **months are Latin loans** (Januar ← Janus, *März*
+  ← Mars = *Dienstag*'s Tiw, September–Dezember = Latin 7–10), reaching for Rome
+  just as *Uhr* did — while German's own numbers stay *sieben, acht, neun, zehn*.
+- **The seasons swing back to native Germanic**: *Frühling* ← *früh* "early" (the
+  early-season); *Sommer/Winter* = the plain twins of English *summer/winter*; and
+  the surprise, **Herbst = English harvest** — the same Germanic reaping-word, which
+  English narrowed to the *act* while taking Latin *autumn* for the season.
+- Taxonomy: namespaced `GE-MONTHS`, `GE-SEASONS`.
+
 ## Chapter 8 — Time & the clock
 
 - **Chapter 8 authored** (`GE-C08-uhr`, `-mittag-mitternacht`): telling the time,

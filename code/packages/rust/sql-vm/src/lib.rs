@@ -700,7 +700,7 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
             // "val0\x1Fval1\x1F..." using ASCII unit-separator as delimiter).
             // On the first invocation we record the column names; subsequent
             // invocations must use the same columns.
-            Instruction::SaveGroupKey(cols) => {
+            Instruction::SaveGroupKey(cols, colls) => {
                 // Activate group mode on first SaveGroupKey.
                 if !group_mode {
                     group_mode = true;
@@ -717,10 +717,35 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
                         .unwrap_or(SqlValue::Null)
                 }).collect();
                 // Compute a canonical key string: "type:value\x1Ftype:value..."
-                let key_str: String = key_vals.iter().map(|v| match v {
+                // Each key column may carry a collation (from a declared
+                // `COLLATE` on the column). It folds ONLY this key string — the
+                // original `key_vals` are what get emitted — so `GROUP BY c` on a
+                // NOCASE column groups 'A' with 'a' while still reporting the
+                // first row's original text. Collation applies to TEXT only;
+                // numbers, blobs and NULL have no collating sequence in SQLite.
+                let key_str: String = key_vals.iter().zip(colls.iter().chain(std::iter::repeat(&None)))
+                    .map(|(v, coll)| match v {
                     SqlValue::Int(n)   => format!("i:{}", n),
                     SqlValue::Float(f) => format!("f:{}", f),
-                    SqlValue::Text(s)  => format!("t:{}", s),
+                    // TEXT is LENGTH-PREFIXED (`t:<byte-len>:<text>`). It is the
+                    // only segment that can hold arbitrary bytes, so without the
+                    // length a value containing the `\x1F` separator followed by a
+                    // type tag could forge a segment boundary and make two
+                    // DIFFERENT key tuples serialise identically — merging them
+                    // into one group and reporting the first tuple's values for
+                    // both. With the byte length up front the reader cannot be
+                    // fooled: the separator inside the counted region is data.
+                    // (`('x\x1Ft:y','z')` and `('x','y\x1Ft:z')` are two groups,
+                    // as in SQLite.) The other segments are self-delimiting —
+                    // numbers and bools have a fixed alphabet and a blob renders
+                    // as hex — so they need no prefix.
+                    SqlValue::Text(s)  => match coll {
+                        Some(c) => {
+                            let folded = collate_text(s, c);
+                            format!("t:{}:{}", folded.len(), folded)
+                        }
+                        None => format!("t:{}:{}", s.len(), s),
+                    },
                     SqlValue::Bool(b)  => format!("b:{}", b),
                     SqlValue::Null     => "null".to_string(),
                     SqlValue::Blob(bytes) => {
@@ -1989,10 +2014,10 @@ fn eval_binary(op: &BinaryOp, l: SqlValue, r: SqlValue) -> Result<SqlValue, VmEr
         //
         // Integer arithmetic uses checked variants so overflow is detected rather
         // than panicking (debug) or silently wrapping (release). For `+`/`-`/`*`
-        // an overflow PROMOTES the operation to REAL (see `checked_int_binop`),
-        // matching SQLite; only `/` and `%` still surface the rare `i64::MIN`
-        // overflow as a VmError (a follow-up). Float arithmetic wraps naturally
-        // (IEEE 754 semantics).
+        // and `/` an overflow PROMOTES the operation to REAL (see
+        // `checked_int_binop` and the `Div` arm), matching SQLite; the only i64
+        // overflow `%` can hit is `i64::MIN % -1`, whose remainder is 0. Float
+        // arithmetic wraps naturally (IEEE 754 semantics).
         BinaryOp::Add => checked_int_binop(l, r, i64::checked_add, |a, b| a + b),
         BinaryOp::Sub => checked_int_binop(l, r, i64::checked_sub, |a, b| a - b),
         BinaryOp::Mul => checked_int_binop(l, r, i64::checked_mul, |a, b| a * b),
@@ -2008,9 +2033,14 @@ fn eval_binary(op: &BinaryOp, l: SqlValue, r: SqlValue) -> Result<SqlValue, VmEr
                 (_, SqlValue::Int(0)) => Ok(SqlValue::Null),
                 (_, SqlValue::Float(f)) if *f == 0.0 => Ok(SqlValue::Null),
                 (SqlValue::Int(a), SqlValue::Int(b)) => {
-                    a.checked_div(*b).map(SqlValue::Int).ok_or_else(|| {
-                        VmError::TypeMismatch("integer overflow in division".to_string())
-                    })
+                    // `checked_div` is `None` only for `i64::MIN / -1` (the zero
+                    // divisor was handled above), which overflows i64. SQLite
+                    // PROMOTES that to REAL — `-9223372036854775808 / -1` is
+                    // `9223372036854775808.0` — mirroring the +/-/* overflow
+                    // promotion, so fall back to the widened float quotient.
+                    Ok(a.checked_div(*b)
+                        .map(SqlValue::Int)
+                        .unwrap_or_else(|| SqlValue::Float(*a as f64 / *b as f64)))
                 }
                 (SqlValue::Float(a), SqlValue::Float(b)) => Ok(SqlValue::Float(a / b)),
                 (SqlValue::Int(a), SqlValue::Float(b)) => Ok(SqlValue::Float(*a as f64 / b)),
@@ -2022,20 +2052,39 @@ fn eval_binary(op: &BinaryOp, l: SqlValue, r: SqlValue) -> Result<SqlValue, VmEr
             }
         }
         BinaryOp::Mod => {
-          // Numeric affinity applies first (`'7' % 3` = 1); then modulo by zero
-          // is NULL in SQLite (`5%0`, `5.5%0`, `5%0.0`), not an error.
+          // SQLite's `%` is fundamentally an INTEGER operation, unlike `/`: both
+          // operands are first converted to 64-bit integers (numeric affinity,
+          // then truncation TOWARD ZERO — `7.5`→7, `-7.5`→-7 — with out-of-range
+          // reals clamped to the i64 bounds, exactly what Rust's `as i64` float
+          // cast does), the integer remainder is taken, and the RESULT is REAL
+          // when either operand was REAL and INTEGER otherwise. So `7.5 % 2` is
+          // `1.0` (7 % 2 = 1, rendered real), NOT `1.5` (which is what `fmod`
+          // would give). Modulo by zero is NULL — including a real divisor that
+          // truncates to zero, e.g. `5 % 0.9` — never an error.
           let (l, r) = (coerce_arith(l), coerce_arith(r));
-          match (&l, &r) {
-            (_, SqlValue::Int(0)) => Ok(SqlValue::Null),
-            (_, SqlValue::Float(f)) if *f == 0.0 => Ok(SqlValue::Null),
-            (SqlValue::Int(a), SqlValue::Int(b)) => {
-                a.checked_rem(*b).map(SqlValue::Int).ok_or_else(|| {
-                    VmError::TypeMismatch("integer overflow in modulo".to_string())
-                })
+          // `coerce_arith` leaves only Int/Float for numeric operands; map each to
+          // an i64 (truncating floats), remembering whether either side was REAL.
+          let to_i64 = |v: &SqlValue| -> Option<i64> {
+              match v {
+                  SqlValue::Int(n) => Some(*n),
+                  SqlValue::Float(f) => Some(*f as i64),
+                  _ => None,
+              }
+          };
+          match (to_i64(&l), to_i64(&r)) {
+            (Some(_), Some(0)) => Ok(SqlValue::Null),
+            (Some(a), Some(b)) => {
+                // `checked_rem` is `None` only for `i64::MIN % -1` (the zero
+                // divisor is handled above); the true remainder there is 0, since
+                // -1 divides evenly. So the fallback is 0, never an error.
+                let m = a.checked_rem(b).unwrap_or(0);
+                // REAL if either operand carried REAL affinity, else INTEGER.
+                if matches!(l, SqlValue::Float(_)) || matches!(r, SqlValue::Float(_)) {
+                    Ok(SqlValue::Float(m as f64))
+                } else {
+                    Ok(SqlValue::Int(m))
+                }
             }
-            (SqlValue::Float(a), SqlValue::Float(b)) => Ok(SqlValue::Float(a % b)),
-            (SqlValue::Int(a), SqlValue::Float(b)) => Ok(SqlValue::Float(*a as f64 % b)),
-            (SqlValue::Float(a), SqlValue::Int(b)) => Ok(SqlValue::Float(a % *b as f64)),
             _ => Err(VmError::TypeMismatch(format!(
                 "cannot mod {:?} by {:?}", l.type_name(), r.type_name()
             ))),
@@ -2137,17 +2186,20 @@ fn sql_shift(value: i64, count: i64, left: bool) -> i64 {
 /// `int_op` is a checked variant (returns `Option<i64>`); `float_op` is unchecked
 /// (IEEE 754 overflow saturates to ±∞ which is the standard SQL behaviour).
 /// Apply SQLite numeric affinity to an arithmetic operand. Text/blob take their
-/// leading numeric prefix (`'5'`→5, `'5.5'`→5.5, `'12abc'`→12, `'abc'`→0, via
-/// [`text_to_numeric`]); a bool is its integer value; INTEGER/REAL pass through.
-/// NULL never reaches here — `eval_binary` short-circuits NULL operands before
-/// dispatching to arithmetic. Scoped to arithmetic only: comparison and bitwise
-/// operators apply their own (different) coercion rules.
+/// leading numeric prefix (`'5'`→5, `'5.5'`→5.5, `'12abc'`→12, `'abc'`→0) via
+/// [`text_to_numeric_operand`], which keeps the type the *syntax* implies — so
+/// `'3.0'` stays the real `3.0` and `'9.0' / 2` is `4.5`. (Note this is the operand
+/// rule, **not** [`text_to_numeric`]'s `CAST(… AS NUMERIC)` rule, which would
+/// collapse `'3.0'` to the integer `3`.) A bool is its integer value; INTEGER/REAL
+/// pass through. NULL never reaches here — `eval_binary` short-circuits NULL
+/// operands before dispatching to arithmetic. Scoped to arithmetic only: comparison
+/// and bitwise operators apply their own (different) coercion rules.
 fn coerce_arith(v: SqlValue) -> SqlValue {
     match v {
         SqlValue::Int(_) | SqlValue::Float(_) => v,
         SqlValue::Bool(b) => SqlValue::Int(b as i64),
-        SqlValue::Text(s) => text_to_numeric(&s),
-        SqlValue::Blob(b) => text_to_numeric(&String::from_utf8_lossy(&b)),
+        SqlValue::Text(s) => text_to_numeric_operand(&s),
+        SqlValue::Blob(b) => text_to_numeric_operand(&String::from_utf8_lossy(&b)),
         SqlValue::Null => SqlValue::Null,
     }
 }
@@ -2228,16 +2280,17 @@ fn eval_unary(op: &UnaryOp, v: SqlValue) -> Result<SqlValue, VmError> {
                 //   `-'5'`   = -5      `-'12abc'` = -12    `-'abc'` = 0
                 //   `-'3.5'` = -3.5    `-'  7'`   = -7     `-TRUE`  = -1
                 // A leading numeric prefix is taken (whitespace-trimmed) and the
-                // rest ignored; text with no numeric prefix is 0. `text_to_numeric`
-                // is the shared affinity helper (Int when integral, else Float).
-                // Known edge left for later: a string in *exponent* form such as
-                // `'3e2'` stays REAL in SQLite (`-'3e2'` = -300.0) but collapses to
-                // an integer here — see the float-affinity follow-up.
+                // rest ignored; text with no numeric prefix is 0.
+                // [`text_to_numeric_operand`] is the shared operand-affinity helper:
+                // it keeps the type the *syntax* implies, so real-form text stays
+                // REAL — `-'3.0'` = -3.0 and `-'3e2'` = -300.0, matching SQLite.
                 let num = match v {
                     SqlValue::Int(_) | SqlValue::Float(_) => v,
                     SqlValue::Bool(b) => SqlValue::Int(b as i64),
-                    SqlValue::Text(s) => text_to_numeric(&s),
-                    SqlValue::Blob(b) => text_to_numeric(&String::from_utf8_lossy(&b)),
+                    SqlValue::Text(s) => text_to_numeric_operand(&s),
+                    SqlValue::Blob(b) => {
+                        text_to_numeric_operand(&String::from_utf8_lossy(&b))
+                    }
                     SqlValue::Null => unreachable!("NULL handled by the outer match"),
                 };
                 match num {
@@ -2252,7 +2305,7 @@ fn eval_unary(op: &UnaryOp, v: SqlValue) -> Result<SqlValue, VmError> {
                         None => SqlValue::Float(-(n as f64)),
                     }),
                     SqlValue::Float(f) => Ok(SqlValue::Float(-f)),
-                    _ => unreachable!("text_to_numeric returns Int or Float"),
+                    _ => unreachable!("text_to_numeric_operand returns Int or Float"),
                 }
             }
             UnaryOp::Not => Ok(SqlValue::Bool(!is_truthy(&v))),
@@ -2859,6 +2912,100 @@ fn text_to_numeric(s: &str) -> SqlValue {
         SqlValue::Int(r as i64)
     } else {
         SqlValue::Float(r)
+    }
+}
+
+/// Parse text to a number for an **arithmetic operand**, matching SQLite's
+/// `applyNumericAffinity`. This is a *different* rule from [`text_to_numeric`]
+/// (`CAST(… AS NUMERIC)`), and the difference is the whole point:
+///
+/// - `CAST` **collapses** an integral real to an integer — `CAST('3.0' AS NUMERIC)`
+///   is the integer `3`.
+/// - An arithmetic operand **keeps the type its syntax implies** — `'3.0' + 0` is
+///   the *real* `3.0`, so `'9.0' / 2` is `4.5`, not `4`.
+///
+/// So the result type is decided by how the text is *written*, never by whether the
+/// value happens to be integral:
+///
+/// | input        | result        | why                                          |
+/// |--------------|---------------|----------------------------------------------|
+/// | `'3'`        | `Int(3)`      | integer syntax                               |
+/// | `'3abc'`     | `Int(3)`      | integer prefix, trailing junk ignored        |
+/// | `'3.0'`      | `Float(3.0)`  | a `.` makes it real — even though 3.0 is integral |
+/// | `'3.'`       | `Float(3.0)`  | a trailing `.` still counts as real syntax   |
+/// | `'.5'`       | `Float(0.5)`  | leading `.`, no integer digits               |
+/// | `'1e3'`      | `Float(1000.0)` | a *complete* exponent makes it real        |
+/// | `'3e2x'`     | `Float(300.0)`| complete exponent, trailing junk ignored     |
+/// | `'3e'`       | `Int(3)`      | incomplete exponent is NOT consumed → the prefix is just `3` |
+/// | `'3e+'`      | `Int(3)`      | likewise — no exponent digits                |
+/// | `'  3.0  '`  | `Float(3.0)`  | leading whitespace trimmed                   |
+/// | `'abc'`, `'.'`, `'-'`, `''` | `Int(0)` | no digits at all → integer zero |
+/// | `'99999999999999999999'` | `Float(1e20)` | integer syntax that overflows `i64` → real |
+///
+/// Every row above was verified against the real `sqlite3` binary.
+fn text_to_numeric_operand(s: &str) -> SqlValue {
+    let t = s.trim_start();
+    let b = t.as_bytes();
+    let mut i = 0;
+    if i < b.len() && (b[i] == b'+' || b[i] == b'-') {
+        i += 1;
+    }
+
+    // Mantissa: digits, then optionally `.` and more digits. A `.` anywhere in the
+    // mantissa makes the literal real regardless of the value.
+    let int_start = i;
+    while i < b.len() && b[i].is_ascii_digit() {
+        i += 1;
+    }
+    let mut digits = i - int_start;
+    let mut is_real = false;
+    if i < b.len() && b[i] == b'.' {
+        is_real = true;
+        i += 1;
+        let frac_start = i;
+        while i < b.len() && b[i].is_ascii_digit() {
+            i += 1;
+        }
+        digits += i - frac_start;
+    }
+
+    // No digits anywhere in the mantissa (`'abc'`, `'.'`, `'-'`, `''`) — SQLite reads
+    // that as the integer zero, not as a real.
+    if digits == 0 {
+        return SqlValue::Int(0);
+    }
+
+    // Exponent, but ONLY when it is complete (`[eE][+-]?digit+`). A dangling `'3e'`
+    // or `'3e+'` leaves the `e` unconsumed, so the prefix stays the integer `3` —
+    // this is why we scan ahead with `j` and only commit on success.
+    if i < b.len() && (b[i] == b'e' || b[i] == b'E') {
+        let mut j = i + 1;
+        if j < b.len() && (b[j] == b'+' || b[j] == b'-') {
+            j += 1;
+        }
+        let exp_start = j;
+        while j < b.len() && b[j].is_ascii_digit() {
+            j += 1;
+        }
+        if j > exp_start {
+            is_real = true;
+            i = j;
+        }
+    }
+
+    let prefix = &t[..i];
+    if is_real {
+        // Rust's `f64` parser accepts exactly this shape (including `'3.'`, `'.5'`
+        // and a leading `+`), and yields ±inf on overflow just as SQLite does
+        // (`'1e999'` → `Inf`). `parse_real_prefix` is the belt-and-braces fallback.
+        SqlValue::Float(prefix.parse::<f64>().unwrap_or_else(|_| parse_real_prefix(s)))
+    } else {
+        // Integer syntax. Parse exactly so an `i64` overflow becomes the real value
+        // (SQLite promotes rather than saturating) instead of clamping.
+        match prefix.parse::<i64>() {
+            Ok(n) => SqlValue::Int(n),
+            Err(_) => SqlValue::Float(parse_real_prefix(s)),
+        }
     }
 }
 
@@ -3564,6 +3711,140 @@ mod tests {
         assert_eq!(bin(BinaryOp::Mod, t("7"), int(3)), int(1));
         // NULL still short-circuits to NULL (handled before coercion).
         assert_eq!(bin(BinaryOp::Add, t("5"), null()), null());
+    }
+
+    /// An arithmetic operand keeps the type its **syntax** implies, never collapsing
+    /// an integral real to an integer. This is the rule that makes `'9.0' / 2` =
+    /// `4.5` rather than `4`. Every expectation was verified against real `sqlite3`.
+    #[test]
+    fn test_text_to_numeric_operand_keeps_syntax_type() {
+        let f = |x: f64| SqlValue::Float(x);
+        // Integer syntax → INTEGER (trailing junk ignored).
+        assert_eq!(text_to_numeric_operand("3"), int(3));
+        assert_eq!(text_to_numeric_operand("3abc"), int(3));
+        assert_eq!(text_to_numeric_operand("-7"), int(-7));
+        // A `.` makes it REAL even when the value is integral — the headline fix.
+        assert_eq!(text_to_numeric_operand("3.0"), f(3.0));
+        assert_eq!(text_to_numeric_operand("9.0"), f(9.0));
+        assert_eq!(text_to_numeric_operand("0.0"), f(0.0));
+        assert_eq!(text_to_numeric_operand("3."), f(3.0)); // trailing dot still real
+        assert_eq!(text_to_numeric_operand(".5"), f(0.5)); // no integer digits
+        assert_eq!(text_to_numeric_operand("-.5"), f(-0.5));
+        assert_eq!(text_to_numeric_operand("+3.0"), f(3.0));
+        assert_eq!(text_to_numeric_operand("  3.0  "), f(3.0)); // leading ws trimmed
+        assert_eq!(text_to_numeric_operand("3.5"), f(3.5));
+        // A *complete* exponent makes it REAL (even when integral).
+        assert_eq!(text_to_numeric_operand("1e3"), f(1000.0));
+        assert_eq!(text_to_numeric_operand("3e2x"), f(300.0)); // junk after exponent
+        // An *incomplete* exponent is not consumed → the prefix is just the integer.
+        assert_eq!(text_to_numeric_operand("3e"), int(3));
+        assert_eq!(text_to_numeric_operand("3e+"), int(3));
+        // No digits anywhere → integer zero (not a real).
+        assert_eq!(text_to_numeric_operand("abc"), int(0));
+        assert_eq!(text_to_numeric_operand("."), int(0));
+        assert_eq!(text_to_numeric_operand("-"), int(0));
+        assert_eq!(text_to_numeric_operand(""), int(0));
+        // Integer syntax that overflows i64 promotes to REAL rather than saturating.
+        assert_eq!(text_to_numeric_operand("99999999999999999999"), f(1e20));
+        assert_eq!(text_to_numeric_operand("9223372036854775807"), int(i64::MAX));
+        // Exponent overflow → ±inf, as SQLite reports for `'1e999' + 0`.
+        match text_to_numeric_operand("1e999") {
+            SqlValue::Float(v) => assert!(v.is_infinite() && v > 0.0),
+            other => panic!("expected +inf real, got {other:?}"),
+        }
+    }
+
+    /// The prefix scan walks *bytes* and then slices `&t[..i]`, so multi-byte UTF-8
+    /// must never split a character (which would panic). It cannot: the scan only
+    /// advances over ASCII sign/digit/`.`/`e` bytes, and every byte of a multi-byte
+    /// UTF-8 sequence is `>= 0x80`, so the scan always stops on a char boundary.
+    #[test]
+    fn test_text_to_numeric_operand_utf8_never_panics() {
+        assert_eq!(text_to_numeric_operand("3.0日本"), SqlValue::Float(3.0));
+        assert_eq!(text_to_numeric_operand("42日本"), int(42));
+        assert_eq!(text_to_numeric_operand("日本"), int(0));
+        assert_eq!(text_to_numeric_operand("3e日本"), int(3)); // exponent incomplete
+        assert_eq!(text_to_numeric_operand("  ✓3.5"), int(0)); // non-numeric lead
+        assert_eq!(text_to_numeric_operand("−5"), int(0)); // U+2212 minus, not ASCII
+        // Emoji / 4-byte sequences right after a numeric prefix.
+        assert_eq!(text_to_numeric_operand("7.25🎉"), SqlValue::Float(7.25));
+    }
+
+    /// `CAST(… AS NUMERIC)` keeps its own, *different* rule: it DOES collapse an
+    /// integral real to an integer. Guards against anyone "unifying" the two helpers.
+    #[test]
+    fn test_cast_numeric_still_collapses_unlike_operand_rule() {
+        // CAST collapses …
+        assert_eq!(text_to_numeric("3.0"), int(3));
+        assert_eq!(text_to_numeric("1e3"), int(1000));
+        // … while the operand rule keeps the real.
+        assert_eq!(text_to_numeric_operand("3.0"), SqlValue::Float(3.0));
+        assert_eq!(text_to_numeric_operand("1e3"), SqlValue::Float(1000.0));
+        // Both agree when the value is genuinely non-integral.
+        assert_eq!(text_to_numeric("3.5"), SqlValue::Float(3.5));
+        assert_eq!(text_to_numeric_operand("3.5"), SqlValue::Float(3.5));
+    }
+
+    /// The end-to-end payoff through real arithmetic: division, and the other
+    /// operators, now return REAL for real-syntax text operands.
+    #[test]
+    fn test_arith_real_syntax_text_yields_real() {
+        let bin = |op: BinaryOp, l: SqlValue, r: SqlValue| eval_binary(&op, l, r).unwrap();
+        let t = |s: &str| SqlValue::Text(s.to_string());
+        // The headline: `'9.0' / 2` = 4.5 (was 4 when the real collapsed to an int).
+        assert_eq!(bin(BinaryOp::Div, t("9.0"), int(2)), SqlValue::Float(4.5));
+        // Integer-syntax text still does integer division: `'9' / 2` = 4.
+        assert_eq!(bin(BinaryOp::Div, t("9"), int(2)), int(4));
+        assert_eq!(bin(BinaryOp::Add, t("3.0"), int(0)), SqlValue::Float(3.0));
+        assert_eq!(bin(BinaryOp::Mul, t("9.0"), int(2)), SqlValue::Float(18.0));
+        assert_eq!(bin(BinaryOp::Add, t("1e2"), int(0)), SqlValue::Float(100.0));
+        // Unary minus follows the same operand rule.
+        assert_eq!(
+            eval_unary(&UnaryOp::Neg, t("9.0")).unwrap(),
+            SqlValue::Float(-9.0)
+        );
+        assert_eq!(
+            eval_unary(&UnaryOp::Neg, t("3e2")).unwrap(),
+            SqlValue::Float(-300.0)
+        );
+        assert_eq!(eval_unary(&UnaryOp::Neg, t("9")).unwrap(), int(-9));
+    }
+
+    #[test]
+    fn test_div_mod_i64_min_overflow() {
+        // `i64::MIN / -1` overflows i64 → SQLite promotes to REAL. `i64::MIN % -1`
+        // overflows Rust's `%` but its true remainder is 0 (integer).
+        let bin = |op: BinaryOp, l: SqlValue, r: SqlValue| eval_binary(&op, l, r).unwrap();
+        assert_eq!(
+            bin(BinaryOp::Div, int(i64::MIN), int(-1)),
+            SqlValue::Float(9223372036854775808.0)
+        );
+        assert_eq!(bin(BinaryOp::Mod, int(i64::MIN), int(-1)), int(0));
+        // Non-overflowing div/mod are unchanged.
+        assert_eq!(bin(BinaryOp::Div, int(7), int(2)), int(3));
+        assert_eq!(bin(BinaryOp::Mod, int(7), int(3)), int(1));
+        assert_eq!(bin(BinaryOp::Div, int(-7), int(2)), int(-3));
+    }
+
+    #[test]
+    fn test_modulo_integer_truncation() {
+        // SQLite's `%` truncates both operands to i64 (toward zero) before taking
+        // the remainder; the result is REAL iff an operand was REAL. So `7.5 % 2`
+        // is `1.0` (7 % 2), NOT `1.5` (fmod).
+        let bin = |op: BinaryOp, l: SqlValue, r: SqlValue| eval_binary(&op, l, r).unwrap();
+        let f = SqlValue::Float;
+        assert_eq!(bin(BinaryOp::Mod, f(7.5), int(2)), f(1.0)); // 7 % 2 = 1
+        assert_eq!(bin(BinaryOp::Mod, f(10.9), f(3.9)), f(1.0)); // 10 % 3 = 1
+        assert_eq!(bin(BinaryOp::Mod, f(-7.5), int(2)), f(-1.0)); // -7 % 2 = -1
+        assert_eq!(bin(BinaryOp::Mod, int(7), f(2.5)), f(1.0)); // 7 % 2 = 1, real
+        assert_eq!(bin(BinaryOp::Mod, int(7), int(2)), int(1)); // pure int stays int
+        // A real divisor that truncates to zero is NULL, like an integer zero.
+        assert_eq!(bin(BinaryOp::Mod, int(5), f(0.9)), null());
+        // Out-of-range real dividend clamps to i64::MAX before the remainder
+        // (matching SQLite's `doubleToInt64`): 9223372036854775807 % 2 = 1.
+        assert_eq!(bin(BinaryOp::Mod, f(1e19), int(2)), f(1.0));
+        // Division, by contrast, stays true real division.
+        assert_eq!(bin(BinaryOp::Div, f(7.5), int(2)), f(3.75));
     }
 
     #[test]

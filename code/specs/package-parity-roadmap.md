@@ -117,18 +117,20 @@ ports, and the paired C#/F# `chacha20-poly1305`, `xml-lexer`, `block-ram`,
 ports, followed by the paired `ed25519`, `font-parser`, `asciidoc-parser`, and
 `fpga` ports, the paired C#/F# `zstd` ports, and the Haskell `atbash-cipher`,
 `scytale-cipher`, `feature-normalization`, `loss-functions`, `trig`, `wave`,
-`matrix`, `vigenere-cipher`, `uuid`, `document-ast`, `lz78`, `deflate`, and
-`point2d`
-ports:
+`matrix`, `vigenere-cipher`, `uuid`, `document-ast`, `lz78`, `deflate`,
+`point2d`, `affine2d`, `bezier2d`, and `arc2d`
+ports, followed by the Haskell `gradient-descent`, `perceptron`, and
+`type-checker-protocol` ports, and the Haskell `paint-vm-ascii`,
+`barcode-layout-1d`, and `itf` ports:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 296 |
+| Present in 10-15 languages | 172 | 287 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,972 |
-| Present in one language | 705 | 9,870 |
+| Present in one language | 710 | 9,940 |
 
-The loop must not start by attempting 9,870 singleton ports. It should finish
+The loop must not start by attempting 9,940 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 ## Priority 0: Inventory And Identity Integrity
@@ -169,7 +171,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 172 packages present in at least ten implementation languages need 296
+The 172 packages present in at least ten implementation languages need 288
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -180,7 +182,7 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Perl | 0 | Complete; paired data-structure/storage wave |
 | C# | 0 | Complete; paired native package wave |
 | F# | 0 | Complete; paired native package wave |
-| Haskell | 21 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
+| Haskell | 12 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
 | Kotlin | 58 | Move with Java |
@@ -513,6 +515,107 @@ now spans 12 implementation lanes, reduces the high-consensus backlog to 296
 slots, leaves 21 gaps in the Haskell lane, and unlocks the dependent `affine2d`,
 `bezier2d`, and `arc2d` graphics wave.
 
+The fourteenth Haskell high-consensus slice is complete: `affine2d` now
+provides the immutable G2D01 six-scalar matrix, all standard factories,
+ordered composition, separate point and vector application, determinant,
+checked inversion, tolerance predicates, and SVG/Canvas component ordering.
+It composes the existing pure Haskell `point2d` and `trig` packages and covers
+centered rotation, skew, non-commutativity, singularity thresholds, and inverse
+round trips in its package-native suite. The package now spans 12 implementation
+lanes, reduces the high-consensus backlog to 295 slots, and leaves 20 gaps in
+the Haskell lane.
+
+The fifteenth Haskell high-consensus slice is complete: `bezier2d` now
+provides immutable G2D02 quadratic and cubic curves, numerically stable de
+Casteljau evaluation and exact splitting, unnormalized derivatives, adaptive
+polyline flattening, tight derivative-root bounds, and exact quadratic degree
+elevation. It composes only the existing pure Haskell `point2d` package. Its
+package-native suite exercises 21 examples with 100% expression and
+alternative coverage, including exact reparameterized splits, tolerance-driven
+subdivision, both quadratic extrema paths, and full, linear, constant, and
+negative-discriminant cubic derivative cases. The package now spans 12
+implementation lanes, reduces the high-consensus backlog to 294 slots, leaves
+19 gaps in the Haskell lane, and unlocks the dependent `arc2d` port.
+
+The sixteenth Haskell high-consensus slice is complete: `arc2d` now provides
+G2D03 SVG endpoint and center arc forms, W3C endpoint-to-center conversion,
+parametric evaluation, unnormalized tangents, analytic bounds for rotated
+ellipse arcs, and cubic Bezier approximation. It composes the existing pure
+Haskell `point2d`, `bezier2d`, and `trig` packages. Its package-native suite
+exercises 25 examples with 99% expression and 100% alternative coverage,
+including degeneracy thresholds, both sweep corrections, radius scaling,
+nonzero rotation, positive and negative tight-bound extrema, zero sweep, the
+quarter-circle magic controls, segmentation, and continuity. The package now
+spans 12 implementation lanes, reduces the high-consensus backlog to 293 slots,
+and leaves 18 gaps in the Haskell lane.
+
+The seventeenth Haskell high-consensus slice is complete: `gradient-descent`
+now provides the dependency-free ML02 stochastic-gradient-descent update with
+explicit rejection of empty and length-mismatched vectors. Its package-native
+suite exercises 11 examples with 100% expression and alternative coverage,
+including the shared parity vector, singleton and multi-element inputs, zero
+and negative learning rates, mixed gradient signs, input preservation, and all
+validation paths. The package now spans 11 implementation lanes, reduces the
+high-consensus backlog to 292 slots, and leaves 17 gaps in the Haskell lane.
+
+The eighteenth Haskell high-consensus slice is complete: `perceptron` now
+provides a pure sigmoid/BCE single-neuron classifier that composes the existing
+Haskell `matrix`, `loss-functions`, and `activation-functions` packages. Its
+package-native suite exercises 14 examples covering shared AND-gate
+convergence, scalar and column labels, epoch-zero updates, deterministic
+refitting, prediction guards, hyperparameter validation, feature shapes, label
+counts, and finite-value checks. The package now spans 11 implementation
+lanes, reduces the high-consensus backlog to 291 slots, and leaves 16 gaps in
+the Haskell lane.
+
+The nineteenth Haskell high-consensus slice is complete:
+`type-checker-protocol` now provides immutable diagnostics and typed results,
+a functional checker contract, and pure phase/kind hook dispatch with explicit
+fall-through, exact-before-wildcard precedence, source-location helpers, and
+clean diagnostic lifecycles. Its base-only package-native suite exercises 19
+examples covering checker outcomes, partial typed ASTs, normalization, hook
+ordering, wildcard and argument dispatch, error collection, and reusable
+state, with 100% alternative and 99% expression coverage. The package now
+spans 11 implementation lanes, reduces the high-consensus backlog to 290
+slots, leaves 15 gaps in the Haskell lane, and establishes the shared contract
+needed by later typed-frontend ports.
+
+The twentieth Haskell high-consensus slice is complete: `paint-vm-ascii` now
+provides a pure terminal renderer for the shared `paint-instructions` IR. It
+maps scene coordinates through configurable character-cell scales, clips
+visible filled rectangles into the scene buffer, trims terminal whitespace,
+and rejects paths explicitly rather than returning incomplete output. Its
+package-native suite exercises 13 examples covering shared defaults, filled
+rectangles, clipping, transparent paints, default scaling, half-cell rounding,
+zero-sized scenes, unsupported paths, invalid scales, scene dimensions, and
+rectangle geometry. The package now spans 11 implementation lanes, reduces the
+high-consensus backlog to 289 slots, and leaves 14 gaps in the Haskell lane.
+
+The twenty-first Haskell high-consensus slice is complete:
+`barcode-layout-1d` now provides the shared pure geometry layer for linear
+barcodes. It validates alternating bar/space runs, expands binary and
+narrow/wide patterns, computes inferred or explicit symbol spans and quiet
+zones, and emits metadata-rich rectangle-only scenes through the existing
+Haskell `paint-instructions` package. Its package-native suite exercises 18
+examples with 97% expression and 89% alternative coverage across shared
+defaults, both pattern families, custom ratios and markers, attribution,
+symbol inference and descriptors, empty content, rendering geometry and
+metadata, every validation family, and the deliberate text-shaping guard. The
+package now spans 12 implementation lanes, reduces the high-consensus backlog
+to 288 slots, leaves 13 gaps in the Haskell lane, and unlocks the dependent
+Code 39, Codabar, ITF, UPC-A, EAN-13, Code 128, and `barcode-1d` ports.
+
+The twenty-second Haskell high-consensus slice is complete: `itf` now provides
+the pure Interleaved 2 of 5 encoder unlocked by `barcode-layout-1d`. It
+validates non-empty even-length ASCII digit payloads, exposes typed digit-pair
+patterns, interleaves first-digit bar widths with second-digit space widths,
+and emits explicit start, data, and stop symbol geometry plus authoritative
+symbology metadata. Its package-native suite exercises shared patterns, the
+complete digit table, source attribution, exact module geometry, customized
+paint output, metadata precedence, aliases, and both local and shared
+validation paths. The package now spans 12 implementation lanes, reduces the
+high-consensus backlog to 287 slots, and leaves 12 gaps in the Haskell lane.
+
 Recommended family order:
 
 1. Leaf algorithms and data structures.
@@ -535,11 +638,11 @@ After the high-consensus set is complete:
 5. Add missing shared conformance fixtures before porting when current tests are
    language-specific and cannot prove equivalent behavior.
 
-This phase covers 122 package identities and 917 current missing slots.
+This phase covers 121 package identities and 911 current missing slots.
 
 ## Priority 4: Classify Sparse And Singleton Families
 
-The singleton inventory is led by 501 Rust, 86 Python, and 83 TypeScript
+The singleton inventory is led by 515 Rust, 86 Python, and 84 TypeScript
 packages. Classify families before opening implementation PRs.
 
 ### Likely portable Rust-led families

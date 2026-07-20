@@ -1,5 +1,62 @@
 # Changelog
 
+## Chapter 12 — Numbers 11–20
+
+- **Chapter 12 authored** (`IT-C12-numeri-11-16`, `-17-20`): the teens, atom-first,
+  reviewing Ch.6/Ch.11 via `reviews_of`.
+- **undici–sedici** — Italian keeps the Latin fusions **most legibly**: the shared
+  **-dici** is still visibly *decem* ("ten"), the very word the learner says as
+  **dieci**. Set against the sisters, the clarity is the point — Latin *sēdecim* →
+  Italian **sedici** (ten audible) vs French **seize** (worn to *-ze*) vs Portuguese
+  **dezesseis** (rebuilt entirely).
+- **diciassette–venti** — the **reversal**: at 17 Italian turns the count around,
+  *se-dici* ("six-ten") becoming *dici-assette* ("**ten**-and-seven"), the ten
+  jumping to the front; the linking sounds (*diciAssette*, *diciANnove*) are just
+  Italian smoothing the joint. *venti* ← *vīgintī*.
+- Includes the three-sister table of **where each breaks** — Portuguese 16, French
+  and Italian 17 — one inherited Latin system, three different seams.
+- Taxonomy: namespaced `IT-NUM-11-16`, `IT-NUM-17-20`.
+
+## Chapter 11 — Food (bread, water, wine)
+
+- **Chapter 11 authored** (`IT-C11-pane`, `-acqua-vino`): the everyday table trio,
+  atom-first, reviewing Ch.10/Ch.1 via `reviews_of`.
+- **pane** ("bread") — **closest to Latin** *pānis*; the **companion** payoff
+  (*com-* + *pānis*, "one you share bread with"), plus the purely Italian
+  **companatico** — "whatever you eat **with** bread."
+- **acqua / vino** — **acqua** ("water") **kept** Latin *aqua* almost whole (even
+  doubling *-cq-*), a sharp contrast with French *eau* worn to a single vowel;
+  **vino** ← *vīnum* → *wine/vine/vinegar*.
+- Taxonomy: namespaced `IT-FOOD-BREAD`, `IT-FOOD-DRINKS`.
+
+## Chapter 10 — Family
+
+- **Chapter 10 authored** (`IT-C10-genitori`, `-fratello-sorella`): the immediate
+  family, atom-first, reviewing Ch.9/Ch.1 via `reviews_of`.
+- **padre / madre** — the sisters' **closest to Latin** *pater / māter* (only the
+  *-t-* softened to *-d-*); *padre* is the very word English borrowed for a priest.
+  **i genitori** ("parents") ← *genitor* "**begetter**" (*gignere* "beget") →
+  genesis/gene/progenitor; with the **false-friend** warning that *parenti* means
+  **relatives**, not "parents."
+- **fratello / sorella** — Italian rebuilt "brother/sister" with its **diminutive**
+  *-ello / -ella* ("little brother/sister"), keeping the *frat- / soror-* roots
+  (→ fraternal, sorority).
+- Taxonomy: namespaced `IT-FAMILY-PARENTS`, `IT-FAMILY-SIBLINGS`.
+
+## Chapter 9 — Months & seasons
+
+- **Chapter 9 authored** (`IT-C09-mesi`, `-stagioni`): the calendar year, atom-first,
+  reviewing Ch.6–8 via `reviews_of`, with Spanish twins supplied.
+- **The months, closest to Latin** of the sisters (*gennaio* keeps *Januarius*'s
+  *-aio*; *ottobre* echoes *otto*): the god/emperor parade (Janus, Mars, Maia, Juno,
+  Julius, Augustus), with the payoffs — *marzo* is the **same Mars** as *martedì*,
+  and *settembre–dicembre* are the Latin **7–10** (Roman year began in March).
+- **The seasons**: *primavera* = *prima vera*, "**first spring / first green**"
+  (from Latin *vēr*); *estate* ← *aestas*; *autunno* ← *autumnus*; *inverno* ←
+  *hibernum*. Even *stagione* is Latin *statiō*, "a standing" — a *station* of the
+  year.
+- Taxonomy: namespaced `IT-MONTHS`, `IT-SEASONS`.
+
 ## Chapter 8 — Time & the clock
 
 - **Chapter 8 authored** (`IT-C08-ora`, `-mezzogiorno-mezzanotte`): telling the

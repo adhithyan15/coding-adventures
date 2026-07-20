@@ -187,6 +187,20 @@ two literals still folds), so nothing regresses; the runtime path is what's new.
    the emitted wasm. Deferred (like E4d-2b): runtime `str_len`/`str_concat`/
    `str_slice`/`str_index`/`str_cmp` over promoted operands (E4d-3b — not needed by
    the foothold, which only *observes* a runtime string via `print_str`). *(needs 1, 1a)*
+   **E4d-3b progress:** runtime `str_len`/`print_str`/`str_concat` (header read /
+   bump-alloc + `memory.copy`) and runtime `str_eq` (in-module `$__str_eq` helper)
+   landed with the E4d-AL / BA payoffs below; **runtime `str_cmp`** landed
+   `iir-to-wasm` 0.39.0 (sibling `$__str_cmp` helper: min-length prefix scan +
+   length tiebreak → `-1`/`0`/`1`, byte-identical to the folded
+   `bytes.cmp` fold, sign-extended to `i64`); **runtime `str_slice`** landed
+   `iir-to-wasm` 0.40.0 (bump-alloc a fresh `[i32 len][bytes]` block +
+   `memory.copy` the source's `[start, end)` run — the runtime `str_concat` shape
+   — with a bounds trap `unreachable` unless `0 ≤ start ≤ end ≤ len` via unsigned
+   compares, and `i32.wrap`ped index slots); and **runtime `str_index`** landed
+   `iir-to-wasm` 0.41.0 (header-length bounds trap `idx >=u len` + `i32.load8_u(
+   handle + 4 + idx)`, read-only so no bump-alloc; also fixes a latent
+   promoted-literal source-dispatch bug). **E4d-3b runtime string surface is now
+   complete** — every `str_*` op has a runtime path over promoted operands.
 4. **E4d-4 — native runtime strings.** ✅ **Landed** (`twig-aot` 0.27.0 /
    `lang-aot` 0.174.0). Key finding: the native path *already* had everything —
    `lower_string_literals_for_aot` builds each `str_const`'s `[i64 len][bytes]`

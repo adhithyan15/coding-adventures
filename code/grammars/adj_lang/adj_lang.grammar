@@ -412,7 +412,13 @@ table_decl   = "table" IDENT LBRACE { use_decl } columns_decl { table_row } { an
 
 columns_decl = "columns" IDENT { COMMA IDENT } ;
 
-table_row    = "row" LPAREN row_item { COMMA row_item } RPAREN ;
+# A row may carry its OWN provenance block (ADJ-TABLES RS-5e), overriding the
+# table envelope field-by-field for that row — so a lookup cites the span that
+# defends the row it actually SELECTED, not the table's first sentence. The block
+# is BRACED deliberately: a table's envelope is written AFTER its rows, so a bare
+# trailing annotation would be ambiguous (last row's? or the table's?). LBRACE
+# disambiguates, and a row with no block inherits the envelope exactly as before.
+table_row    = "row" LPAREN row_item { COMMA row_item } RPAREN [ LBRACE { annotation } RBRACE ] ;
 
 row_item     = NUMBER | IDENT | STRING ;
 

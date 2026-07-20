@@ -95,9 +95,24 @@ through a deprecated intermediate.
   `load` + `getelementptr … i64 8` runtime path (E4d-2), and lets
   `10 INPUT N … 30 LET A$="LO" … 50 LET A$="HI" … 60 PRINT A$` print the branch's
   string at run time. Single-assignment (and straight-line-reassigned) strings
-  keep the folded literal fast path unchanged. Runtime `str_len`/`str_concat`/
-  `str_slice`/`str_index`/`str_cmp` over promoted operands are still deferred
-  (E4d-3b).
+  keep the folded literal fast path unchanged. **Over runtime (non-folded)
+  operands** (E4d-3b): `str_len` reads the header length with `i32.load`;
+  `print_str` reads it to pass `(handle + 4, len)`; `str_concat` bump-allocates a
+  fresh `[i32 len][bytes]` block and `memory.copy`s both runs into it; `str_eq`
+  calls the self-contained in-module `$__str_eq(i32,i32)->i32` helper (a length
+  check + byte-compare loop); and **`str_cmp` (v0.39.0)** calls the sibling
+  `$__str_cmp(i32,i32)->i32` helper — a shared-prefix scan (`i32.load8_u`, unsigned)
+  with a length tiebreak returning `-1`/`0`/`1`, byte-identical to the folded
+  `left.bytes.cmp(&right.bytes)` path — sign-extended to `i64` when the result slot
+  is 64-bit; and **`str_slice` (v0.40.0)** bump-allocates a fresh `[i32 len]
+  [bytes]` block and `memory.copy`s the source's `[start, end)` run into it (the
+  same shape as runtime `str_concat`), with a bounds trap (`unreachable` unless
+  `0 ≤ start ≤ end ≤ len`, via unsigned compares) and `i32.wrap`ped index slots.
+  and **`str_index` (v0.41.0)** reads the source's header length for the bounds
+  trap (`idx >=u len` → `unreachable`) and loads the byte with `i32.load8_u(handle
+  + 4 + idx)` (skipping the header; the literal path loads `offset + idx` with no
+  header) — read-only, so no bump-alloc. This **closes the E4d-3b runtime string
+  surface**: every `str_*` op now has a runtime path over promoted operands.
 - **All functions exported**: every function in the IIR module is exported by
   name so host runtimes can invoke them.
 

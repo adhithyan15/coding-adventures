@@ -195,6 +195,25 @@ opaque token — see the lexer design.
 - **Numeric literals**: `42`, `-3`, `3.14` (period as decimal point).
 - **Nonnumeric literals**: `"..."` or `'...'` (quoted strings).
 
+### Reference modification
+
+Any alphanumeric operand can be **reference-modified** to a substring:
+`identifier(start:length)` selects `length` characters starting at 1-based
+position `start`; `identifier(start:)` (omitted length) runs to the end of the
+item. So for `WS-NAME PIC X(5) VALUE "ABCDE"`, `WS-NAME(2:3)` is `"BCD"` and
+`WS-NAME(3:)` is `"CDE"`. The grammar carries it as an optional suffix on a `NAME`
+operand (`NAME [ LPAREN operand COLON [ operand ] RPAREN ]`), the `:` being the
+new `COLON` token.
+
+The first implementation targets **constant integer** start/length on an
+alphanumeric item, in `DISPLAY` and alphanumeric-comparison (`IF`/`EVALUATE`)
+operands. Semantics are 1-based, so the byte range is `[start-1, start-1+length)`;
+an omitted length is `item_width - (start-1)`. The compiler validates the range at
+compile time and lowers to a constant-index `str_slice`, byte-identical to the
+oracle's slice. A computed (data-name) start/length, reference modification of a
+numeric item, and use in a numeric/arithmetic/`MOVE`-source context are later
+rungs.
+
 ## Layer Position
 
 ```

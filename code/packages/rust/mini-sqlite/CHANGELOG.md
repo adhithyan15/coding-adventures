@@ -1,5 +1,51 @@
 # Changelog
 
+## 0.5.57 — GROUP BY honours a column's declared COLLATE
+
+`GROUP BY c` on a column declared `COLLATE NOCASE` now groups case-insensitively,
+matching SQLite: `'A'` and `'a'` land in one group. Crucially the collation folds
+only the grouping KEY — each group still reports its ORIGINAL text, so a group of
+`{'A','a'}` shows `'A'` when that row came first (not the case-folded `'a'`), under
+its real column name. Restricted to a single base table (no JOINs), matching the
+existing ORDER BY / WHERE collation passes; an explicit `COLLATE` on the key still
+outranks the declared one.
+
+`DISTINCT` does not yet fold on a declared collation, and an explicit `COLLATE`
+suffix in a DISTINCT select-item or GROUP BY term does not parse yet — all three
+are recorded as known divergences in the oracle ledger and are the next
+increments in this lane.
+
+## 0.5.56 — arithmetic operands keep real-syntax text REAL (`'9.0'/2` = 4.5)
+
+Text operands in arithmetic were coerced with SQLite's `CAST(… AS NUMERIC)` rule,
+which collapses an integral real to an integer — so `'9.0' / 2` did integer
+division and returned `4` where SQLite returns `4.5`. Arithmetic operands use a
+*different* rule (`applyNumericAffinity`): the type follows the text's **syntax**,
+not its value. `sql-vm` now applies that rule (new `text_to_numeric_operand`) in
+binary `+ - * / %` and unary minus, leaving `CAST(… AS NUMERIC)` untouched.
+
+Verified against the real `sqlite3` binary — `'9.0'/2`→`4.5` real, `'9'/2`→`4`
+integer, `'1e2'+0`→`100.0` real, `-'3e2'`→`-300.0` real, while `'3e'`/`'3e+'`
+(incomplete exponent) stay integer `3` and `'abc'`/`'.'` stay integer `0`. Three
+new differential-oracle cases cover the fix, the prefix-syntax boundaries, and the
+deliberate CAST-vs-operand contrast; the oracle was confirmed to *fail* without the
+fix. Retires the last documented item of the type-affinity arc.
+
+
+## 0.5.55 — `i64::MIN` div/mod overflow + integer `%`
+
+Two `%` / `/` edge cases now match SQLite. **`i64::MIN` overflow:**
+`0x8000000000000000 / -1` promotes to REAL (`9.2233720369e18`) instead of
+erroring, mirroring the `+`/`-`/`*` overflow promotion, and
+`0x8000000000000000 % -1` returns INTEGER `0` (its true remainder). **Integer
+`%`:** SQLite's modulo is an integer operation — both operands are truncated
+toward zero to 64-bit integers before the remainder is taken, and the result is
+REAL only if an operand was REAL. So `7.5 % 2` is now `1.0` (7 % 2), not `1.5`
+(fmod); `10.9 % 3.9` is `1.0` (10 % 3); a real divisor that truncates to zero
+(`5 % 0.9`) is NULL. Division (`/`) is unchanged — it stays true real division
+(`7.5 / 2` = 3.75). Implemented in `sql-vm`'s `Div`/`Mod` arms; verified against
+bundled real SQLite in the differential oracle.
+
 ## 0.5.54 — Hexadecimal integer literals
 
 `SELECT 0x1F` now works (was a parse error). SQLite hex integer literals like

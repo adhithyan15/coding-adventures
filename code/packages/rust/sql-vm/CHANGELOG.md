@@ -3,6 +3,79 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.33] - Unreleased
+
+### Fixed
+
+- **Group-key separator injection could merge two distinct GROUP BY groups.**
+  The multi-column group key joins per-column `"t:<value>"` segments with `\x1F`;
+  because TEXT can hold arbitrary bytes, a value containing that separator
+  followed by a type tag forged a segment boundary, so two DIFFERENT key tuples
+  serialised identically — they collapsed into one group and the first tuple's
+  values were reported for both (the other row's data went missing and was
+  misattributed). TEXT segments are now LENGTH-PREFIXED (`t:<byte-len>:<text>`),
+  so a separator inside the counted region is unambiguously data. Found by the
+  security review of the GROUP BY collation work; the value is attacker-
+  controlled, so this was a real data-integrity bug rather than a theoretical
+  one. The other segment kinds are self-delimiting (fixed alphabets) and are
+  unchanged.
+
+### Added
+
+- **`SaveGroupKey` honours per-key collations.** The group key string is now
+  built from collation-folded TEXT (via `collate_text`) when a key column
+  declares a collating sequence, so `GROUP BY c` on a `COLLATE NOCASE` column
+  puts `'A'` and `'a'` in one group. Only the key string is folded — the
+  original values stay in `key_vals` and are what the group reports, matching
+  SQLite (a group of `{'A','a'}` reports `'A'` when that row came first).
+  Collation applies to TEXT only; numbers, blobs and NULL have no collating
+  sequence in SQLite.
+
+## [0.4.32] - Unreleased
+
+### Fixed
+
+- **Arithmetic operands keep the type their syntax implies — `'9.0' / 2` is now
+  `4.5`, not `4`.** Arithmetic was applying SQLite's `CAST(… AS NUMERIC)` rule
+  (`text_to_numeric`) to text/blob operands, which deliberately *collapses* an
+  integral real to an integer (`CAST('3.0' AS NUMERIC)` really is the integer `3`).
+  But an *arithmetic operand* uses a different SQLite rule (`applyNumericAffinity`):
+  the result type follows how the text is **written**, never whether the value
+  happens to be integral. So `'3.0' + 0` is the real `3.0`, and real division
+  applies.
+  - New `text_to_numeric_operand` implements the operand rule and is now used by
+    `coerce_arith` (binary `+ - * / %`) and unary minus. `text_to_numeric` is
+    unchanged and still backs `CAST(… AS NUMERIC)` — the two rules are deliberately
+    different and a test now pins that difference.
+  - The prefix boundaries were verified against the real `sqlite3` binary: a `.`
+    anywhere (`'3.0'`, `'3.'`, `'.5'`) or a **complete** exponent (`'1e3'`,
+    `'3e2x'`) makes it REAL; an **incomplete** exponent is not consumed, so `'3e'`
+    and `'3e+'` stay the integer `3`; digitless text (`'abc'`, `'.'`, `'-'`, `''`)
+    is integer `0`; integer syntax overflowing `i64` promotes to REAL.
+  - Fixes the "float-affinity edge" previously documented in-code as a known
+    divergence for both binary arithmetic and unary minus (`-'3e2'` is now
+    `-300.0`). 3 new unit tests; 3 new differential-oracle cases.
+
+
+## [0.4.31] - Unreleased
+
+### Changed
+
+- **`i64::MIN` division/modulo overflow now matches SQLite instead of erroring.**
+  `i64::MIN / -1` has no `i64` representation, so it now PROMOTES to REAL
+  (`9223372036854775808.0`), mirroring the existing `+`/`-`/`*` overflow
+  promotion. `i64::MIN % -1` (the only overflow `%` can hit) returns INTEGER `0`,
+  its true remainder. Both previously surfaced a `VmError` ("integer overflow in
+  division/modulo").
+- **`%` is now an INTEGER operation, matching SQLite.** Both operands are
+  converted to 64-bit integers (numeric affinity, then truncation toward zero,
+  with out-of-range reals clamped to the i64 bounds via Rust's saturating
+  `as i64` float cast) before the remainder is taken; the result is REAL only if
+  an operand carried REAL affinity. So `7.5 % 2` is now `1.0` (7 % 2), not `1.5`
+  (fmod), and `10.9 % 3.9` is `1.0` (10 % 3). A real divisor that truncates to
+  zero (`5 % 0.9`) is NULL, as before. Division (`/`) is unchanged — it stays
+  true real division (`7.5 / 2` = 3.75).
+
 ## [0.4.30] - Unreleased
 
 ### Added

@@ -92,6 +92,11 @@ STRING_SQ = /'[^']*'/ -> STRING
 DOT    = "."
 LPAREN = "("
 RPAREN = ")"
+# COLON separates the start position from the length in a reference
+# modification — `WS-NAME(2:3)` selects 3 characters starting at position 2.
+# It is a single character with no maximal-munch conflict against any other
+# punctuation, so its placement here is safe.
+COLON  = ":"
 
 # Arithmetic operators, used by COMPUTE expressions (`COMPUTE X = A + B * C`).
 # Ordering note: `**` (exponentiation) is listed before `*` so maximal-munch

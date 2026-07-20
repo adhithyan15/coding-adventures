@@ -211,7 +211,14 @@ relop          = [ "IS" ] [ "NOT" ]
 # ============================================================
 # Operands and literals
 # ============================================================
-operand    = NAME | literal ;
+#
+# Reference modification — `NAME(start:len)` or `NAME(start:)` — selects a
+# substring of an alphanumeric item: `len` characters beginning at 1-based
+# position `start`, running to the end of the item when the length is omitted.
+# The suffix is optional so a bare NAME still parses exactly as before. The
+# inner `start`/`len` are themselves `operand`s (so an integer NUMBER literal
+# parses); the reader rejects non-literal start/length as a later rung.
+operand    = NAME [ LPAREN operand COLON [ operand ] RPAREN ] | literal ;
 literal    = NUMBER | STRING | figurative ;
 figurative = "ZERO" | "ZEROS" | "ZEROES"
            | "SPACE" | "SPACES"

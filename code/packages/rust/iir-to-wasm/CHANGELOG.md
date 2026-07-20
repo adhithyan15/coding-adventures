@@ -1,5 +1,109 @@
 # Changelog — iir-to-wasm
 
+## [0.41.0] — 2026-07-20 (LANG-FULL E4-dyn E4d-3b: runtime `str_index` — rung closed)
+
+Give `str_index` a **runtime path** on WASM, closing the last E4d-3b rung. A
+`str_index` on a literal source still folds to a data-segment byte load. But when
+the source is a runtime string handle (a function parameter, a call result, a
+runtime slice/concat), the byte lives in a `[i32 len][bytes]` block whose length
+is only known at run time. Previously that shape errored (`str_index source … is
+not a direct str_const local`); now it reads the header for the bounds check and
+loads the byte from the block body.
+
+- **Runtime lowering.** Bounds `idx >=u len` (with `len = i32.load handle`) →
+  `unreachable`; a negative i64 index becomes a huge unsigned and trips the same
+  compare (E4 §2.2). Then `byte = i32.load8_u(handle + 4 + idx)`, skipping the i32
+  length header, zero-extended to i64 when the result slot is 64-bit (unlike the
+  literal path, whose bytes sit raw in the data segment at `offset + idx`, no
+  header). Unlike runtime `str_slice`/`str_concat`, `str_index` only **reads** —
+  no bump-allocation — so no `__array_bump` global is needed (the source handle's
+  producer already established linear memory).
+- **Source dispatch fix.** The arm now selects the literal vs. runtime path by
+  `runtime_str_vars.contains(src) || !string_literals.contains_key(src)` — the
+  same test `str_slice` uses. This also corrects a latent bug: a **promoted**
+  literal (in the string table *and* laid out as a runtime block) previously took
+  the literal raw-offset path, which would read the block's length-header bytes as
+  string data; it now correctly reads through the header.
+- **Tests.** `tests/str_index_runtime.rs` indexes inside an `at(a: str, i: i64)`
+  helper (params force the runtime path) and checks the returned byte against the
+  Rust `src.as_bytes()[i]` oracle across every position, first/last, plus three
+  out-of-bounds trap cases (`idx == len`, `idx > len`, negative idx). (A byte
+  ≥ 0x80 would exercise the unsigned zero-extension, but the WASM `str_const`
+  slice only accepts printable-ASCII literals, so it is untestable here and moot —
+  the runtime path reuses the literal path's identical extension.)
+
+## [0.40.0] — 2026-07-20 (LANG-FULL E4-dyn E4d-3b: runtime `str_slice`)
+
+Give `str_slice` a **runtime path** on WASM, mirroring the runtime `str_concat`
+that already bump-allocates blocks. A `str_slice` with a literal source and
+compile-time, in-bounds indices still folds to a constant slice at compile time
+(`collect_module_features`). But when the source is a runtime string handle (a
+function parameter, a call result) or an index is a runtime value, there is no
+compile-time answer — the `[start, end)` run must be copied into a fresh
+`[i32 len][bytes]` block at run time. Previously that shape errored (`str_slice
+missing module string table entry for …`); now it lowers to an inline
+bump-allocate-and-`memory.copy` sequence.
+
+- **Runtime lowering.** `new = bump; bump += 4 + (end - start); mem[new] =
+  end - start; memory.copy(new+4, src_base + start, end - start)` — the same
+  block-building shape as a runtime `str_concat`, but splicing one operand's
+  `[start, end)` run. The source's `len`/bytes-base come from its `[i32 len]
+  [bytes]` header when it is a runtime handle, or from its compile-time literal
+  offset/length when it is a folded literal reached only with runtime indices
+  (whose bytes sit raw in the data segment, no header). Index slots are the
+  widened i64 value model, so they are `i32.wrap`ped to the memory-op width
+  exactly as `str_index` does.
+- **Bounds trap.** `unreachable` unless `0 ≤ start ≤ end ≤ len`, via two
+  **unsigned** compares (`start >u end`, `end >u len`) — a negative index (a huge
+  unsigned) fails one of them, matching `str_index`'s trap rule and E4 §2.2.
+- **Feature gating.** A non-folding `str_slice` now marks `uses_memory` and
+  injects the `__array_bump` global in `collect_module_features` (a pure
+  runtime-slice program has no array op, so this is where they get injected for
+  it) — otherwise the lowering would fail to find the bump global.
+- **Tests.** `tests/str_slice_runtime.rs` slices inside a `slice(a: str, s: i64,
+  e: i64)` helper (params force the runtime path) and `str_eq`s the result
+  against a Rust `&src[start..end]` oracle — a byte-exact content+length check —
+  across middle/prefix/suffix/whole/empty slices, plus a mismatch sanity case and
+  three out-of-bounds trap cases (`end > len`, `start > end`, negative start).
+
+## [0.39.0] — 2026-07-19 (LANG-FULL E4-dyn E4d-3b: runtime `str_cmp`)
+
+Give `str_cmp` a **runtime path** on WASM, mirroring the runtime `str_eq` that
+already landed. A `str_cmp` whose operands are both compile-time literals still
+folds to a `-1`/`0`/`1` constant. But when an operand is a runtime string handle
+(a function parameter, a call result, a branch-selected slot), there is no
+compile-time answer — the two `[i32 len][bytes]` blocks must be compared at run
+time. Previously that shape errored (`str_cmp left source … is not a direct
+str_const local`); now it lowers to a `call` of a self-contained in-module
+`$__str_cmp(i32,i32) -> i32` helper.
+
+- **`$__str_cmp` helper.** A shared-prefix scan (`n = min(len a, len b)`, then a
+  byte-by-byte `i32.load8_u` compare — **unsigned**, so bytes ≥ 0x80 sort above
+  ASCII) with a length tiebreak (a prefix sorts before the longer string),
+  returning `-1`/`0`/`1`. The result is **byte-identical to the folded literal
+  path** (`left.bytes.cmp(&right.bytes)`, Rust slice ordering). Emitted once per
+  module (gated by a new `uses_str_cmp_runtime` feature) and appended directly
+  after the `$__str_eq` helper; `str_cmp_fn_idx` accounts for that preceding slot.
+  In-module rather than a host import for the same reason as `$__str_eq`: string
+  ordering is pure computation, so the emitted WASM stays self-contained (mirrors
+  the native/LLVM `__twig_str_cmp`).
+- **Signed widening.** Unlike `str_eq`'s `0`/`1` result (zero-extended), a
+  `str_cmp` result is a **signed** `-1`/`0`/`1`, so widening to an `i64` result
+  slot uses `i64.extend_i32_s` — a `-1` stays `-1`, matching the folded
+  `encode_i64_const(-1)` path exactly.
+- A folded-literal operand paired with a runtime operand is promoted to a runtime
+  `[i32 len][bytes]` block (same `lay_runtime_str_block` path as `str_eq`) so it
+  presents a real header to the helper.
+- No validator change: `str_cmp` already accepted two `Var` operands (it never
+  enforced literals); only the stale "materialises literal ordering" comment was
+  refreshed.
+- Tests: `tests/str_cmp_runtime.rs` runs the emitted module on the real
+  `WasmRuntime` and checks equal / first-differing-byte / prefix / byte-value /
+  empty-string cases against the `left.bytes.cmp(&right.bytes)` oracle.
+
+Runtime `str_slice`/`str_index` over promoted operands remain the last deferred
+E4d-3b pieces.
+
 ## [0.38.0] — 2026-07-12 (LANG-FULL E6d-3b: nil `const 0 : ref<…>` → `ref.null`)
 
 The `const` lowering's nil special-case previously required an **empty** source

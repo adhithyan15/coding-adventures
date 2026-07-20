@@ -50,12 +50,33 @@ French.
   explicit — *é uma hora* / *são duas horas*, with the *dois/duas* gender) →
   meio-dia/meia-noite (noon/midnight; *noite* ← *noctem* shows the **ct→it** shift
   from the numbers, like *oito*). **Authored.**
+- **Ch. 9 — Months & seasons**: the months (**março ← Mars**, julho/agosto ←
+  Julius/Augustus; setembro–dezembro = Latin **7–10** = *sete/dez*) → the seasons,
+  with the twist that **verão** ("summer") ← *veranum* ← *vēr* "**spring**" — the
+  summer-word grew out of spring; *outono* ← *autumnus* (au→ou). **Authored.**
+
+- **Ch. 10 — Family**: the most worn-down parents of all — **pai/mãe** (← *pater/māter*,
+  the *-t-* vanished: *pater→pae→pai*, *mãe* nasal; *os pais* "parents" = lit. "the
+  fathers"; mind *o país*=country) → the Iberian surprise **irmão/irmã** (← *germānus*
+  "of the same stock," from *frāter germānus* "full brother," **not** *frāter*; = ES
+  *hermano*; cousins *germane*/*German*). **Authored.**
+
+- **Ch. 11 — Food (bread, water, wine)**: **pão** (← *pānis*, worn to one **nasal**
+  syllable *pānis→pão* — the same erosion as *pai*; plural *pães*) → **água/vinho**
+  — **água** **kept** *aqua*'s body (vs French *eau*); **vinho** ← *vīnum* with the
+  signature **-nh-** (= Spanish *ñ*) → wine/vine/vinegar. **Authored.**
+
+- **Ch. 12 — Numbers 11–20**: **onze–quinze**, only **five** fused teens (fewer than
+  any sister; *-ze* = *decem*, as in *dez*/*dezembro*) → **dezesseis–vinte**, where
+  Portuguese **breaks earliest of all — at 16** — and rebuilds transparently as
+  *dez* + **e** + *seis*, "**ten AND six**," the *and* still audible. *vinte* ←
+  *vīgintī*. **Authored.**
 
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |
 |---|---|
-| 9+ | Months & seasons, family, food — following the shared theme order |
+| 10+ | Family, food, the body — following the shared theme order |
 
 Note: Portuguese's polite "you" is **você** (← *vossa mercê*, "your mercy") — the
 same "your grace" mechanism as Spanish *usted*, worn down differently. Worth

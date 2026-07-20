@@ -1,5 +1,62 @@
 # Changelog
 
+## Chapter 12 — Numbers 11–20
+
+- **Chapter 12 authored** (`PT-C12-numeros-11-15`, `-16-20`): the teens, atom-first,
+  reviewing Ch.6/Ch.11 via `reviews_of`.
+- **onze–quinze** — Portuguese kept only **five** fused teens, **fewer than any
+  sister**. The shared **-ze** is *decem* ("ten") worn thin, the same ten inside
+  **dez** and **dezembro** (Ch.9); *catorze* keeps the *c-* where French says
+  *quatorze* and Spanish *catorce*.
+- **dezesseis–vinte** — the distinctive move: Portuguese **breaks earliest of all,
+  at 16**, and rebuilds from living words — *dez* + **e** + *seis* = literally
+  "**ten AND six**," with the **and still audible** (*dezoito* swallows it before
+  the vowel of *oito*). Nothing to memorise, only to assemble.
+- Includes the three-sister comparison — **PT breaks at 16**, French and Italian at
+  17 — and the note that German never breaks at all. *vinte* ← *vīgintī*.
+- Taxonomy: namespaced `PT-NUM-11-15`, `PT-NUM-16-20`.
+
+## Chapter 11 — Food (bread, water, wine)
+
+- **Chapter 11 authored** (`PT-C11-pao`, `-agua-vinho`): the everyday table trio,
+  atom-first, reviewing Ch.10/Ch.1 via `reviews_of`.
+- **pão** ("bread") ← *pānis*, worn to a single **nasal** syllable (*pānis → pão*)
+  — the **same nasalizing erosion** that made *pai* from *pater* and *mãe* from
+  *māter*; tricky plural **pães**. Root still gives *companion/pantry*.
+- **água / vinho** — **água** ("water") **kept** *aqua*'s body (unlike French
+  *eau*); **vinho** ("wine") ← *vīnum* carries Portuguese's signature **-nh-** (the
+  palatal *ny*, = Spanish **ñ**, met before in *amanhã*) → *wine/vine/vinegar*.
+- Taxonomy: namespaced `PT-FOOD-BREAD`, `PT-FOOD-DRINKS`.
+
+## Chapter 10 — Family
+
+- **Chapter 10 authored** (`PT-C10-pais`, `-irmaos`): the immediate family,
+  atom-first, reviewing Ch.9/Ch.1 via `reviews_of` — with **two Iberian twists**.
+- **pai / mãe** — the **most worn-down** parents of any sister: Latin *pater / māter*
+  lost the intervocalic *-t-* entirely (*pater → pae → pai*; *mãe* went nasal). The
+  masculine plural **os pais** means "the parents" (literally "the fathers"), with a
+  spelling-trap note vs *o país* ("the country").
+- **irmão / irmã** — the surprise: **not** from *frāter* but from Latin **germānus**
+  "of the same stock" (*frāter germānus* "full brother," the *frāter* later dropped).
+  Ties to the English cousins **germane** and **German** (the people-name), and to
+  the identical Spanish swap *hermano / hermana*.
+- Taxonomy: namespaced `PT-FAMILY-PARENTS`, `PT-FAMILY-SIBLINGS`.
+
+## Chapter 9 — Months & seasons
+
+- **Chapter 9 authored** (`PT-C09-meses`, `-estacoes`): the calendar year, atom-first,
+  reviewing Ch.6–8 via `reviews_of`, with Spanish twins supplied.
+- **The months** (the *-eiro* ending ← *-arius*, the same suffix as *feira*): the
+  god/emperor parade, with the payoffs — *março* is **Mars**, and *setembro–dezembro*
+  are the Latin **7–10** you can hear in *sete/dez* (Roman year began in March;
+  *julho/agosto* ← Julius/Augustus were inserted).
+- **The seasons**, with a twist: *primavera* = "**first spring**" (*prima* + *vēr*),
+  and **verão** ("summer") also grew from *vēr* "spring" — via *vēranum*
+  "spring-like/warm," so Portuguese's summer-word literally came from *spring*.
+  *outono* ← *autumnus* shows the *au→ou* softening (cf. *oito/noite*); *inverno* ←
+  *hibernum*.
+- Taxonomy: namespaced `PT-MONTHS`, `PT-SEASONS`.
+
 ## Chapter 8 — Time & the clock
 
 - **Chapter 8 authored** (`PT-C08-hora`, `-meio-dia-meia-noite`): telling the

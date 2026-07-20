@@ -2,6 +2,21 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.26] - Unreleased
+
+### Added
+
+- **Column-defined `COLLATE` flows into GROUP BY keys.** A key that is a bare
+  reference to a column declared `COLLATE NOCASE` is wrapped in
+  `__collate(col, 'NOCASE')`, so `GROUP BY c` groups `'A'` with `'a'` — reusing
+  the representation the ORDER BY and WHERE collation passes already use, via
+  the shared `build_collate_ctx` / `resolve_column_collation` helpers. Codegen
+  peels the wrapper back off so the collation folds only the grouping key and
+  the group still reports its original text. Restricted to a single base table
+  (no JOINs), matching the existing ORDER BY / WHERE restriction, since a bare
+  column's owning table is ambiguous under a join. A key that already carries an
+  explicit `COLLATE` is left alone — explicit outranks declared.
+
 ## [0.2.25] - Unreleased
 
 ### Added

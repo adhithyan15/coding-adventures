@@ -1,5 +1,62 @@
 # Changelog — gc-core
 
+## 0.10.0 — 2026-07-18
+
+### Added
+
+- **`StackMapBuilder` — the producer side of the precise-root stack-map format**
+  (first implementation rung of `AOT00-T1-stackmap-emission.md`). `gc-core` already
+  owned the *format* (`StackMapRecord` / `StackMapTable`) and the *consumer*
+  (`frame_root_slots`); this is the helper a native code generator drives while
+  lowering a function so it can actually hand the runtime a table. Until backends
+  emit records, `resolve(return_address)` finds nothing and every frame falls back
+  to a conservative scan — this is the first step of closing that gap.
+  - Driven while lowering: `define_ref_slot(fp_relative_offset)` for each slot that
+    holds a GC reference, `safepoint(pc_offset)` at each call site / safepoint, then
+    `into_records()` / `into_table()`. The two calls are independent — see the
+    order-independence note below.
+  - **Rule R1 (flow-insensitive, safe by construction):** every safepoint names
+    every stack slot the function ever uses for a GC reference. The named set is a
+    superset of the live set at every PC, so a root can never be missed; it only
+    over-approximates (retaining floating garbage a cycle, exactly as a conservative
+    scan would). It still delivers the main prize — excluding **every non-reference
+    slot**, so a stack integer that look-alikes a heap address stops pinning dead
+    objects. An exact backward-liveness pass is a later refinement rung: pure
+    precision, never a safety change.
+  - **Deliberately order-independent.** An earlier flow-*sensitive* draft ("only the
+    slots defined before this safepoint") was **unsound**: it equates the order code
+    is *emitted* with the order it *executes*, which a backward edge breaks — in
+    `loop { use(x); x = alloc(); }` the slot is declared after the loop-top safepoint
+    yet holds a live reference there on iteration 2+. An *incomplete* record is worse
+    than a missing one, because a `resolve` hit suppresses that frame's conservative
+    scan, so the omission would free a live object. Slots and safepoint PCs are now
+    collected independently and joined at `into_records()` time, so no drive order
+    can produce an incomplete record. A regression test pins this.
+  - **Documented backend safety contract:** references live across a safepoint must be
+    spilled to a frame slot and declared (the builder describes stack slots only —
+    `callee_saved_mask` is always `0`, so a reference kept solely in a callee-saved
+    register is named by nobody); incoming reference parameters must be declared; only
+    reference-typed slots may be declared. Naming a not-yet-written slot is safe —
+    every slot word goes through the same validated candidate-pointer lookup as a
+    conservative scan.
+  - Duplicate safepoint PCs collapse to one record (two records at one PC would make
+    `StackMapTable::lookup`\'s binary search return an arbitrary one), and PCs recorded
+    out of order are sorted.
+  - Slots are kept sorted and deduplicated, so records are canonical and
+    byte-comparable; re-declaring a variable (the backends give each name one
+    permanent slot) is idempotent.
+  - A safepoint with **no** live references still emits a record: an absent record
+    makes the walker fall back to scanning the frame conservatively, whereas an
+    empty record is the precise claim "nothing here is a reference".
+  - Offsets are frame-pointer-relative, matching `StackMapRecord::slots`. Both
+    native backends make that free (aarch64 pins `x29 == sp`; x86-64 already
+    addresses slots from `rbp`). Reference-ness stays the backend's decision, so
+    `gc-core` keeps no compiler-frontend dependency.
+  - 11 unit tests including the R1 full-set property, the loop-regression above,
+    idempotent re-declaration, duplicate/out-of-order PCs, extreme `i32` offsets, the
+    empty-safepoint record, a `lookup` round-trip, and an end-to-end hand-off into
+    `frame_root_slots`.
+
 ## 0.9.0 — 2026-07-18
 
 ### Added

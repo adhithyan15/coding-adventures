@@ -49,12 +49,32 @@ compared, every Spanish form supplied in full (no prior Spanish assumed).
 - **Ch. 8 — Time & the clock**: heure (← *hōra* ← Greek *hṓrā* → *hour*; *il est
   deux heures*, silent-h liaison) → midi/minuit (noon/midnight ← *medius diēs* /
   *media nox* — "mid-day"/"mid-night"). **Authored.**
+- **Ch. 9 — Months & seasons**: the twelve months as a parade of Roman gods/emperors
+  (janvier ← Janus, **mars ← Mars = mardi**, juillet/août ← Julius/Augustus;
+  septembre–décembre = the Latin **7–10** from the numbers) → the four seasons
+  (printemps = "prime temps" first-time; hiver ← *hibernum* → hibernate). **Authored.**
+
+- **Ch. 10 — Family**: **père/mère** (← *pater/māter* — the same PIE words as English
+  *father/mother*, split by **Grimm's law** *p→f, t→th*; → paternal/maternal) →
+  **frère/sœur** (← *frāter/soror* → fraternal/friar, sorority; the **œ** ligature
+  spells worn-down *soror*). **Authored.**
+
+- **Ch. 11 — Food (bread, water, wine)**: **pain** (← *pānis* → **companion**
+  "one you share bread with", pantry) → **eau/vin** (**eau** ← *aqua*, the **most
+  eroded** word French took from Latin — worn to a bare "oh," vs English *aquatic*;
+  **vin** ← *vīnum* → wine/vine/vinegar). **Authored.**
+
+- **Ch. 12 — Numbers 11–20**: **onze–seize**, the six Latin fusions (*ūndecim…
+  sēdecim*; the shared **-ze** is *decem* "ten," the same ten as *dix* and
+  *décembre*) → **dix-sept–vingt**, where French **gives up fusing** and goes
+  transparent ("ten-seven"), **flipping the order** at the same seam; *vingt* ←
+  *vīgintī* → **vigesimal**. **Authored.**
 
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |
 |---|---|
-| 9+ | Months & seasons, family, food — following the Spanish theme order, with the Spanish cousin supplied for contrast |
+| 10+ | Family, food, the body — following the Spanish theme order, with the Spanish cousin supplied for contrast |
 
 The *tu/vous* lesson (Ch. 2) is the French counterpart to Spanish *tú/usted*:
 same formal/informal split, but French makes the formal from the **plural**

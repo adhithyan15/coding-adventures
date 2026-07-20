@@ -67,9 +67,15 @@ rung strictly additive over conservative fallback:
    primitive a real stack walk needs, because it always sees a *mix* of mapped
    frames (exact slots) and unmapped frames (C-runtime / collector / un-migrated
    backends, scanned conservatively). Both siblings are special cases of it. The
-   `gc-core` half (format, lookup, precise mark, mixed collect) is done; the native
-   stack walk that feeds it and the backend record emission are `gc-core-capi` /
-   codegen follow-ups. ✓ (core)
+   `gc-core` half (format, lookup, precise mark, mixed collect) is done, as is the
+   native stack walk that feeds it (`gc-core-capi`'s `__gc_collect_precise`).
+   `StackMapBuilder` now adds the **producer** side — the helper a code generator
+   drives while lowering a function to emit its per-safepoint records (Rule R1: every
+   safepoint names every reference slot the function uses — safe without a liveness
+   pass and independent of emission order, while still excluding every non-reference
+   slot). The remaining
+   step is the backends calling it and registering the tables, after which precise
+   roots fire in production. ✓ (core + producer)
 5. **Moving / compacting**, then **incremental** — planned.
 
 ## Quick start
