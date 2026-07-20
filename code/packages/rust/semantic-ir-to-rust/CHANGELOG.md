@@ -1,5 +1,37 @@
 # Changelog
 
+## 0.37.0 — Ruby type reflection: `.class`, `is_a?`, `kind_of?`, `instance_of?`
+
+`.class` **crashed the program**. The backend already had the full class-name
+mapping (`ruby_class_name`: `NilClass`, `TrueClass`/`FalseClass`, `Integer`,
+`Float`, `String`, `Symbol`, `Array`, `Hash`, `Pair`, `Proc`, a user instance's
+own tag, `Object`) — but it was documented as being "for a `NoMethodError`
+message and nothing else" and was never dispatched. So `7.class` resolved no
+method, raised `NoMethodError`, and — unrescued — surfaced as a panic that
+killed the process (exit 101). Measured: Python and Go answered `.class`; Rust
+aborted.
+
+- `object_method` gains `class`, `is_a?`, `kind_of?` and `instance_of?`, so
+  every receiver answers, reusing the existing `ruby_class_name`.
+- `is_a?`/`kind_of?` honour ancestry — the built-in surface (`Integer` and
+  `Float` are `Numeric` and `Comparable`, `String` is `Comparable`,
+  `Object`/`BasicObject` match everything) plus, for a user instance, its
+  superclass chain (the same cycle-guarded `is_ancestor_or_self` walk `rescue`
+  matching uses) and any module mixed in along it. `instance_of?` is an exact
+  class match.
+- Transitive module matching (Ruby's MRO: `C` includes `M`, `M` includes `N` ⇒
+  `c.is_a?(N)`) uses an ITERATIVE worklist rather than recursion, because
+  include-graph depth is shaped by the source — the same design the JavaScript
+  backend uses. Cyclic and self-including graphs terminate.
+- The class argument arrives as a NAME string (the frontend lowers a class
+  pattern to its name), so no constant-reference support is needed.
+- `responds_to` reports all four universally, matching the Go and JavaScript
+  backends, keeping `respond_to?` honest.
+
+This closes the Rust arm of the cross-backend reflection frontier — the
+`sir-conformance` guard is now a live all-backend assertion rather than
+per-backend.
+
 ## 0.36.0 — Ruby `Integer#/` floors toward −∞ (SIR21 §E3)
 
 The inline `__sir` runtime's `divide` truncated integer division toward zero
