@@ -30,6 +30,15 @@ word lessons — never as a gated reading course.
   and the assembly of a whole word — **سلام** — from *sīn/lām/alif/mīm*. Ties the
   Arabic letters back to their Phoenician ancestors (*ʾālep/bēt/mem* = **A/B/M**).
 
+- **Ch. 2 — Writing set** (`AR-W04`–`AR-W06`, `writing` type): the writing
+  companion to the self-introduction words. Completes the **bowl-skeleton
+  dots-family** as a truth-table (ب/ن/ت/ث — one-below/one-above/two/three, + ي
+  two-below), teaches **ي** (*yāʾ*: consonant *y*, long vowel *ī*, and the "-ī my"
+  suffix) and assembles **اسم → اسمي** ("name" → "my name") from already-known
+  letters, then pays off Ch. 1's *abjad* idea with the **ḥarakāt** (short-vowel
+  marks) and the **hamza** — the showpiece being that a single *fatḥa*/*kasra*
+  flips **أنتَ** ("you," m.) to **أنتِ** ("you," f.).
+
 ## Planned
 
 | Chapter | Theme |
