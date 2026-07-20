@@ -40,6 +40,25 @@ word lessons — never as a gated reading course.
   **Muḥammad** ("the much-praised") → practice running the full greet-ask-answer
   exchange. **Authored.**
 
+- **Ch. 4 — Farewells**: the word lessons for the phrase `AR-W12` already taught
+  the learner to **hand-write**. **مع** (*maʿa*, "with") — the first preposition
+  that does **not** attach, unlike *al-*, *bi-*, *li-*; ← Semitic *\*ʿimma*, cousin
+  of Hebrew *ʿim* (the *salām/shalom*, *ism/shem* pairing a third time) → **السلامة**
+  (*as-salāma*) — **not a new word**: Ch. 1's *salām* poured into the ***faʿāla***
+  pattern, which turns a thing into **the state of** that thing (peace → safety),
+  plus *al-* and the feminine **ة**, with **س** as a sun letter doubling the *s* →
+  **مع السلامة** ("with safety"), whose root **s–l–m** is the **same one the course
+  opened on** in *as-salāmu ʿalaykum*, so Arabic begins and ends a conversation
+  with one idea — set beside English **goodbye** ← "*God be **with** ye*," which
+  hinges on "with" too → **إلى اللقاء** (*ilā l-liqāʾ*, "until the meeting," root
+  **l–q–y**), whose "until + a future point" shape is exactly Spanish *hasta
+  luego* — and ***hasta*** is itself the **Arabic loan** *ḥattā*, so Spanish
+  borrowed the very word that builds this farewell → practice: the full
+  greet-introduce-ask-part dialogue, a **root ledger** of the six roots that carry
+  it, and the attaching-pieces table. **Authored.** (Honest note in the lesson:
+  **ق** *qāf* and **ى** *alif maqṣūra* are beyond the writing track's letter set,
+  so they are read, not drawn.)
+
 - **Ch. 1 — Writing set** (`AR-W01`–`AR-W03`, `writing` type): the
   "break-it-apart-and-draw-it" companion to the greetings, rendered by the
   script-writing-visualizer app (parallel to the Cyrillic `RU-W*` set). Right-to-
@@ -80,7 +99,6 @@ word lessons — never as a gated reading course.
 
 | Chapter | Theme |
 |---|---|
-| 4 | Farewells: *maʿa s-salāma* ("with safety"), *ilā l-liqāʾ* — the **word** lessons for the farewell already hand-written in `AR-W12` |
 | 5+ | Numbers, the pattern system (verb forms I–X), family, food — always with the root engine and the Spanish-loanword thread |
 
 Note: Arabic marks **gender on "you"** (*anta* to a man, *anti* to a woman) —
