@@ -103,8 +103,20 @@ order lives in the book, which LaTeX auto-numbers, and in `session-map.md`.)
   the **accent** carries the tense, *hablo→habló*; *hablamos* present=preterite) →
   practice switching present↔past. **Authored.**
 
-Next: **Ch. 15** — more of the past (regular *-er/-ir* preterite, *tener/hacer*
-irregular preterites) and everyday description, building toward real conversation.
+- **Ch. 15 — Completing the preterite**: the **regular -er/-ir preterite**
+  *comí/comiste/comió/comimos/comieron*, *viví/viviste/vivió* — where *-er* and
+  *-ir* take **one shared set** of endings though their **presents** differ (←
+  Latin perfect *-ī/-istī/-it*, with *-istī* → *-iste* nearly intact; *vivimos* is
+  present=preterite, but *comemos* ≠ *comimos*) → the **strong preterites**
+  *tuve/hice/estuve*, where the stress moves **off** the ending onto the stem
+  (*TUve*, *HIce*) so the written accent **disappears** — the exact reverse of
+  *hablÉ/hablÓ*, plus *hizo*'s c→z; they are the Latin **strong perfects**
+  (*tenuī*, *fēcī*, *stetī*) inherited whole rather than rebuilt → practice
+  sorting all three families by the single question *where does the stress land?*
+  **Authored.**
+
+Next: **Ch. 16** — the **imperfect**, the past that kept going, and its contrast
+with the preterite; then everyday description, building toward real conversation.
 From here the course hands over rules, not phrases. Grammar accumulates piece by
 piece. The theme skeleton below plans the wider road.
 
