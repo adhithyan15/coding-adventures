@@ -121,11 +121,11 @@ ports, followed by the paired `ed25519`, `font-parser`, `asciidoc-parser`, and
 `point2d`, `affine2d`, `bezier2d`, and `arc2d`
 ports, followed by the Haskell `gradient-descent`, `perceptron`, and
 `type-checker-protocol` ports, and the Haskell `paint-vm-ascii`,
-`barcode-layout-1d`, and `itf` ports:
+`barcode-layout-1d`, `itf`, and `code39` ports:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 287 |
+| Present in 10-15 languages | 172 | 286 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,972 |
 | Present in one language | 710 | 9,940 |
@@ -182,7 +182,7 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Perl | 0 | Complete; paired data-structure/storage wave |
 | C# | 0 | Complete; paired native package wave |
 | F# | 0 | Complete; paired native package wave |
-| Haskell | 12 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
+| Haskell | 11 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
 | Kotlin | 58 | Move with Java |
@@ -615,6 +615,18 @@ complete digit table, source attribution, exact module geometry, customized
 paint output, metadata precedence, aliases, and both local and shared
 validation paths. The package now spans 12 implementation lanes, reduces the
 high-consensus backlog to 287 slots, and leaves 12 gaps in the Haskell lane.
+
+The twenty-third Haskell high-consensus slice is complete: `code39` now
+provides the pure linear-barcode encoder unlocked by `barcode-layout-1d`. It
+normalizes lowercase input, validates the complete standard alphabet, protects
+the reserved delimiter, exposes all 44 typed narrow/wide symbol patterns, and
+emits attributed start, data, stop, and inter-character-gap runs through the
+shared paint geometry. Its package-native suite exercises normalization,
+educational errors, the complete symbol table, exact patterns and module
+counts, semantic attribution, empty payloads, customized paint output,
+metadata precedence, aliases, and both local and shared validation paths. The
+package now spans 12 implementation lanes, reduces the high-consensus backlog
+to 286 slots, and leaves 11 gaps in the Haskell lane.
 
 Recommended family order:
 
