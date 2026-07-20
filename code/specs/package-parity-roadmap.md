@@ -120,11 +120,12 @@ ports, followed by the paired `ed25519`, `font-parser`, `asciidoc-parser`, and
 `matrix`, `vigenere-cipher`, `uuid`, `document-ast`, `lz78`, `deflate`,
 `point2d`, `affine2d`, `bezier2d`, and `arc2d`
 ports, followed by the Haskell `gradient-descent`, `perceptron`, and
-`type-checker-protocol` ports, and the Haskell `paint-vm-ascii` port:
+`type-checker-protocol` ports, and the Haskell `paint-vm-ascii` and
+`barcode-layout-1d` ports:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 289 |
+| Present in 10-15 languages | 172 | 288 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,972 |
 | Present in one language | 709 | 9,926 |
@@ -170,7 +171,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 172 packages present in at least ten implementation languages need 289
+The 172 packages present in at least ten implementation languages need 288
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -181,7 +182,7 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Perl | 0 | Complete; paired data-structure/storage wave |
 | C# | 0 | Complete; paired native package wave |
 | F# | 0 | Complete; paired native package wave |
-| Haskell | 14 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
+| Haskell | 13 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
 | Kotlin | 58 | Move with Java |
@@ -589,6 +590,20 @@ rectangles, clipping, transparent paints, default scaling, half-cell rounding,
 zero-sized scenes, unsupported paths, invalid scales, scene dimensions, and
 rectangle geometry. The package now spans 11 implementation lanes, reduces the
 high-consensus backlog to 289 slots, and leaves 14 gaps in the Haskell lane.
+
+The twenty-first Haskell high-consensus slice is complete:
+`barcode-layout-1d` now provides the shared pure geometry layer for linear
+barcodes. It validates alternating bar/space runs, expands binary and
+narrow/wide patterns, computes inferred or explicit symbol spans and quiet
+zones, and emits metadata-rich rectangle-only scenes through the existing
+Haskell `paint-instructions` package. Its package-native suite exercises 18
+examples with 97% expression and 89% alternative coverage across shared
+defaults, both pattern families, custom ratios and markers, attribution,
+symbol inference and descriptors, empty content, rendering geometry and
+metadata, every validation family, and the deliberate text-shaping guard. The
+package now spans 12 implementation lanes, reduces the high-consensus backlog
+to 288 slots, leaves 13 gaps in the Haskell lane, and unlocks the dependent
+Code 39, Codabar, ITF, UPC-A, EAN-13, Code 128, and `barcode-1d` ports.
 
 Recommended family order:
 
