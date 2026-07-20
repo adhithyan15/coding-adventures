@@ -48,6 +48,17 @@ word lessons — never as a gated reading course.
   *ṣabāḥ al-khayr*, so a greeting and its reply are now both hand-writable.
   Phoenician cousins continue: *ḥēth*→H, *gīml*→C/G, *kaph*→K, *rēsh*→R.
 
+- **Ch. 4 — Writing set** (`AR-W10`–`AR-W12`, `writing` type): closes the
+  conversation. **ع** (*ʿayn*) — the signature throat-sound, a new shape, and a
+  **third** dots-family (skeleton shared with **غ**); its Phoenician ancestor
+  *ʿayin* meant "**eye**," and the Greeks, having no such sound, repurposed the
+  sign as the vowel **O**. Then **ه** (*hāʾ*, the most shape-shifting loop;
+  *hē*→**E**) and **ة** (*tāʾ marbūṭa*, "tied tāʾ" = *hāʾ*'s loop + *tāʾ*'s two
+  dots) marking the **feminine**. Finally assembles the farewell **مع السلامة**
+  ("with safety") — whose core **سلام** was already written in Lesson 3, so the
+  track ends where it began, on the root **s–l–m**: greeting and farewell from one
+  idea. The learner can now hand-write a conversation end to end.
+
 ## Planned
 
 | Chapter | Theme |
