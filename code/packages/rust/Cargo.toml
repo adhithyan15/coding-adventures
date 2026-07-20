@@ -272,6 +272,8 @@ members = [
     "maple-to-semantic-ir",
     "scilab-lexer",
     "scilab-parser",
+    "scilab-runtime",
+    "scilab-repl",
     "logic-gates",
     "logic-core",
     "lookup-core",
