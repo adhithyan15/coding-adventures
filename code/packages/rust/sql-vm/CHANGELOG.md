@@ -3,6 +3,34 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.33] - Unreleased
+
+### Fixed
+
+- **Group-key separator injection could merge two distinct GROUP BY groups.**
+  The multi-column group key joins per-column `"t:<value>"` segments with `\x1F`;
+  because TEXT can hold arbitrary bytes, a value containing that separator
+  followed by a type tag forged a segment boundary, so two DIFFERENT key tuples
+  serialised identically — they collapsed into one group and the first tuple's
+  values were reported for both (the other row's data went missing and was
+  misattributed). TEXT segments are now LENGTH-PREFIXED (`t:<byte-len>:<text>`),
+  so a separator inside the counted region is unambiguously data. Found by the
+  security review of the GROUP BY collation work; the value is attacker-
+  controlled, so this was a real data-integrity bug rather than a theoretical
+  one. The other segment kinds are self-delimiting (fixed alphabets) and are
+  unchanged.
+
+### Added
+
+- **`SaveGroupKey` honours per-key collations.** The group key string is now
+  built from collation-folded TEXT (via `collate_text`) when a key column
+  declares a collating sequence, so `GROUP BY c` on a `COLLATE NOCASE` column
+  puts `'A'` and `'a'` in one group. Only the key string is folded — the
+  original values stay in `key_vals` and are what the group reports, matching
+  SQLite (a group of `{'A','a'}` reports `'A'` when that row came first).
+  Collation applies to TEXT only; numbers, blobs and NULL have no collating
+  sequence in SQLite.
+
 ## [0.4.32] - Unreleased
 
 ### Fixed
@@ -27,6 +55,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   - Fixes the "float-affinity edge" previously documented in-code as a known
     divergence for both binary arithmetic and unary minus (`-'3e2'` is now
     `-300.0`). 3 new unit tests; 3 new differential-oracle cases.
+
 
 ## [0.4.31] - Unreleased
 

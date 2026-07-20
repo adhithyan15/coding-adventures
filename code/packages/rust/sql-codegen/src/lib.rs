@@ -424,9 +424,16 @@ pub enum Instruction {
     /// Push the current `GROUP BY` key values onto the stack and record them
     /// as the "current group" in the VM.
     ///
-    /// `Vec<String>` lists the column names making up the group key.
+    /// The first `Vec<String>` lists the column names making up the group key;
+    /// the parallel `Vec<Option<String>>` gives each key's collation (`None` =
+    /// the default BINARY, i.e. compare the bytes as-is).
+    ///
+    /// The collation folds ONLY the key string the VM groups on — the original
+    /// column values are kept for output, so `GROUP BY c` on a `COLLATE NOCASE`
+    /// column reports the first row's original text (`'A'`, not `'a'`) while
+    /// still grouping `'A'` with `'a'`.
     /// This instruction is emitted inside the scan loop, before `UpdateAgg`.
-    SaveGroupKey(Vec<String>),
+    SaveGroupKey(Vec<String>, Vec<Option<String>>),
 
     // ── Control flow ─────────────────────────────────────────────────────────
 
@@ -1268,14 +1275,8 @@ impl Compiler {
         // Allocate accumulator slots: one per aggregate in declaration order.
         self.emit(Instruction::InitAgg(n));
 
-        // Build group key column names for SaveGroupKey.
-        let group_key_cols: Vec<String> = group_by
-            .iter()
-            .map(|e| match e {
-                SqlExpr::Column { name, .. } => name.clone(),
-                _ => "?".to_string(),
-            })
-            .collect();
+        // Build group key column names for SaveGroupKey, plus each key's collation.
+        let (group_key_cols, group_key_colls) = group_key_cols_and_collations(group_by);
 
         // Compute all the agg function tags upfront so the borrow checker
         // can release the borrow on `aggregates` before we use the compiler.
@@ -1294,7 +1295,7 @@ impl Compiler {
         // This body is injected into the scan loop for both Scan and Filter inputs.
         let emit_agg_body = |compiler: &mut Compiler| {
             if !group_key_cols.is_empty() {
-                compiler.emit(Instruction::SaveGroupKey(group_key_cols.clone()));
+                compiler.emit(Instruction::SaveGroupKey(group_key_cols.clone(), group_key_colls.clone()));
             }
             for (i, (fn_tag, arg)) in agg_fns.iter().zip(agg_args.iter()).enumerate() {
                 if let Some(arg_expr) = arg {
@@ -1361,7 +1362,13 @@ impl Compiler {
         // then we assemble a row from group key values + aggregate values.
         self.emit(Instruction::BeginRow);
         // Emit group-by columns first (as LoadColumn for each group key expr).
+        // A collated key is emitted from its UNDERLYING column, not from the
+        // `__collate(...)` wrapper: the collation decides which rows share a
+        // group, but the reported value is the group's original text (SQLite
+        // shows 'A' for a group of {'A','a'} keyed case-insensitively). Compiling
+        // the wrapper instead would emit the folded value and rename the column.
         for e in group_by {
+            let e = strip_collate(e);
             self.compile_expr(e);
             let name = match e {
                 SqlExpr::Column { name, .. } => name.clone(),
@@ -1399,13 +1406,7 @@ impl Compiler {
                 let n = aggregates.len();
                 self.emit(Instruction::InitAgg(n));
 
-                let group_key_cols: Vec<String> = group_by
-                    .iter()
-                    .map(|e| match e {
-                        SqlExpr::Column { name, .. } => name.clone(),
-                        _ => "?".to_string(),
-                    })
-                    .collect();
+                let (group_key_cols, group_key_colls) = group_key_cols_and_collations(group_by);
 
                 let agg_fns: Vec<AggFn> = aggregates
                     .iter()
@@ -1429,7 +1430,7 @@ impl Compiler {
                             end_lbl.clone(),
                         ));
                         if !group_key_cols.is_empty() {
-                            self.emit(Instruction::SaveGroupKey(group_key_cols.clone()));
+                            self.emit(Instruction::SaveGroupKey(group_key_cols.clone(), group_key_colls.clone()));
                         }
                         for (i, (fn_tag, arg)) in
                             agg_fns.iter().zip(agg_args.iter()).enumerate()
@@ -1446,7 +1447,7 @@ impl Compiler {
                     other => {
                         self.compile_inner(other);
                         if !group_key_cols.is_empty() {
-                            self.emit(Instruction::SaveGroupKey(group_key_cols.clone()));
+                            self.emit(Instruction::SaveGroupKey(group_key_cols.clone(), group_key_colls.clone()));
                         }
                         for (i, (fn_tag, arg)) in
                             agg_fns.iter().zip(agg_args.iter()).enumerate()
@@ -1482,7 +1483,10 @@ impl Compiler {
                 self.emit(Instruction::JumpIfFalse(skip_lbl.clone()));
 
                 self.emit(Instruction::BeginRow);
+                // As above: emit a collated key from its underlying column so the
+                // group's ORIGINAL text (and column name) is reported.
                 for e in group_by {
+                    let e = strip_collate(e);
                     self.compile_expr(e);
                     let name = match e {
                         SqlExpr::Column { name, .. } => name.clone(),
@@ -2436,6 +2440,58 @@ fn map_unary_op(op: &PlanUnaryOp) -> UnaryOp {
 /// The `is_star` flag distinguishes `COUNT(*)` (no argument) from
 /// `COUNT(col)` (with an argument).  The planner uses a `None` argument
 /// for `COUNT(*)`, which we map to `AggFn::CountStar`.
+/// Peel a `__collate(<expr>, '<COLL>')` wrapper down to `<expr>`, leaving any
+/// other expression untouched.
+///
+/// A collated GROUP BY key is *grouped* by the collated value but *reported* as
+/// the underlying column's original value, so every site that emits the key —
+/// as opposed to keying on it — must strip the wrapper first. Without this the
+/// group `{'A','a'}` would report the folded `'a'` and be named `?` instead of
+/// reporting `'A'` under the name `c`.
+fn strip_collate(expr: &SqlExpr) -> &SqlExpr {
+    match expr {
+        SqlExpr::FunctionCall { name, args, .. } if name == "__collate" && args.len() == 2 => {
+            &args[0]
+        }
+        other => other,
+    }
+}
+
+/// Split GROUP BY key expressions into the column names the VM reads per row and
+/// the collation each key groups under (`None` = default BINARY).
+///
+/// A key that carries a collation arrives wrapped as `__collate(<column>,
+/// '<COLL>')` — the same representation explicit `COLLATE` and the planner's
+/// column-collation pass already use elsewhere. We **peel** that wrapper here
+/// rather than evaluating it, because the collation must fold only the grouping
+/// KEY, never the emitted value: SQLite reports the first row of each group with
+/// its ORIGINAL text (`'A'` stays `'A'` even though it grouped case-insensitively
+/// with `'a'`). The VM keeps the untouched values in `key_vals` for output and
+/// applies these collations only when building the key string.
+///
+/// | GROUP BY expression              | column | collation |
+/// |----------------------------------|--------|-----------|
+/// | `c`                              | `c`    | `None`    |
+/// | `__collate(c, 'NOCASE')`         | `c`    | `NOCASE`  |
+/// | anything else (computed key)     | `?`    | `None`    |
+fn group_key_cols_and_collations(group_by: &[SqlExpr]) -> (Vec<String>, Vec<Option<String>>) {
+    group_by
+        .iter()
+        .map(|e| match e {
+            SqlExpr::Column { name, .. } => (name.clone(), None),
+            SqlExpr::FunctionCall { name, args, .. } if name == "__collate" && args.len() == 2 => {
+                match (&args[0], &args[1]) {
+                    (SqlExpr::Column { name: col, .. }, SqlExpr::Literal(SqlValue::Text(coll))) => {
+                        (col.clone(), Some(coll.clone()))
+                    }
+                    _ => ("?".to_string(), None),
+                }
+            }
+            _ => ("?".to_string(), None),
+        })
+        .unzip()
+}
+
 fn plan_agg_to_agg_fn(func: &AggFunc, is_star: bool) -> AggFn {
     match func {
         AggFunc::Count => {
@@ -3113,7 +3169,7 @@ mod tests {
         });
         let v = instrs(&plan);
         assert!(
-            v.iter().any(|i| matches!(i, Instruction::SaveGroupKey(_))),
+            v.iter().any(|i| matches!(i, Instruction::SaveGroupKey(..))),
             "GROUP BY should emit SaveGroupKey"
         );
     }

@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.5.57 — GROUP BY honours a column's declared COLLATE
+
+`GROUP BY c` on a column declared `COLLATE NOCASE` now groups case-insensitively,
+matching SQLite: `'A'` and `'a'` land in one group. Crucially the collation folds
+only the grouping KEY — each group still reports its ORIGINAL text, so a group of
+`{'A','a'}` shows `'A'` when that row came first (not the case-folded `'a'`), under
+its real column name. Restricted to a single base table (no JOINs), matching the
+existing ORDER BY / WHERE collation passes; an explicit `COLLATE` on the key still
+outranks the declared one.
+
+`DISTINCT` does not yet fold on a declared collation, and an explicit `COLLATE`
+suffix in a DISTINCT select-item or GROUP BY term does not parse yet — all three
+are recorded as known divergences in the oracle ledger and are the next
+increments in this lane.
+
 ## 0.5.56 — arithmetic operands keep real-syntax text REAL (`'9.0'/2` = 4.5)
 
 Text operands in arithmetic were coerced with SQLite's `CAST(… AS NUMERIC)` rule,
@@ -15,6 +30,7 @@ integer, `'1e2'+0`→`100.0` real, `-'3e2'`→`-300.0` real, while `'3e'`/`'3e+'
 new differential-oracle cases cover the fix, the prefix-syntax boundaries, and the
 deliberate CAST-vs-operand contrast; the oracle was confirmed to *fail* without the
 fix. Retires the last documented item of the type-affinity arc.
+
 
 ## 0.5.55 — `i64::MIN` div/mod overflow + integer `%`
 

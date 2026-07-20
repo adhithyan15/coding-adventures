@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.6.8] - Unreleased
+
+### Added
+
+- **GROUP BY keys carry a collation.** `Instruction::SaveGroupKey` now takes a
+  parallel `Vec<Option<String>>` giving each key column's collating sequence
+  (`None` = default BINARY). Keys arrive from the planner wrapped as
+  `__collate(<column>, '<COLL>')`; the new `group_key_cols_and_collations`
+  helper **peels** that wrapper into (column, collation) rather than evaluating
+  it, because the collation must fold only the grouping KEY.
+- **`strip_collate` for value-emitting sites.** Both places that emit a group
+  key as an output column now strip the `__collate` wrapper first, so a collated
+  group reports its ORIGINAL text under its real column name (`'A'` named `c`),
+  not the case-folded value under `?`. Compiling the wrapper would have silently
+  produced the folded value.
+
 ## [0.6.7] - Unreleased
 
 ### Added

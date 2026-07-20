@@ -700,7 +700,7 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
             // "val0\x1Fval1\x1F..." using ASCII unit-separator as delimiter).
             // On the first invocation we record the column names; subsequent
             // invocations must use the same columns.
-            Instruction::SaveGroupKey(cols) => {
+            Instruction::SaveGroupKey(cols, colls) => {
                 // Activate group mode on first SaveGroupKey.
                 if !group_mode {
                     group_mode = true;
@@ -717,10 +717,35 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
                         .unwrap_or(SqlValue::Null)
                 }).collect();
                 // Compute a canonical key string: "type:value\x1Ftype:value..."
-                let key_str: String = key_vals.iter().map(|v| match v {
+                // Each key column may carry a collation (from a declared
+                // `COLLATE` on the column). It folds ONLY this key string — the
+                // original `key_vals` are what get emitted — so `GROUP BY c` on a
+                // NOCASE column groups 'A' with 'a' while still reporting the
+                // first row's original text. Collation applies to TEXT only;
+                // numbers, blobs and NULL have no collating sequence in SQLite.
+                let key_str: String = key_vals.iter().zip(colls.iter().chain(std::iter::repeat(&None)))
+                    .map(|(v, coll)| match v {
                     SqlValue::Int(n)   => format!("i:{}", n),
                     SqlValue::Float(f) => format!("f:{}", f),
-                    SqlValue::Text(s)  => format!("t:{}", s),
+                    // TEXT is LENGTH-PREFIXED (`t:<byte-len>:<text>`). It is the
+                    // only segment that can hold arbitrary bytes, so without the
+                    // length a value containing the `\x1F` separator followed by a
+                    // type tag could forge a segment boundary and make two
+                    // DIFFERENT key tuples serialise identically — merging them
+                    // into one group and reporting the first tuple's values for
+                    // both. With the byte length up front the reader cannot be
+                    // fooled: the separator inside the counted region is data.
+                    // (`('x\x1Ft:y','z')` and `('x','y\x1Ft:z')` are two groups,
+                    // as in SQLite.) The other segments are self-delimiting —
+                    // numbers and bools have a fixed alphabet and a blob renders
+                    // as hex — so they need no prefix.
+                    SqlValue::Text(s)  => match coll {
+                        Some(c) => {
+                            let folded = collate_text(s, c);
+                            format!("t:{}:{}", folded.len(), folded)
+                        }
+                        None => format!("t:{}:{}", s.len(), s),
+                    },
                     SqlValue::Bool(b)  => format!("b:{}", b),
                     SqlValue::Null     => "null".to_string(),
                     SqlValue::Blob(bytes) => {
