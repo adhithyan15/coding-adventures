@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.7.0 — `STRING` verb keywords
+
+- Added the reserved words the `STRING` statement needs: `STRING`, `DELIMITED`,
+  `WITH`, `POINTER`, `OVERFLOW`, and the hyphenated `END-STRING` (`BY`, `INTO`,
+  `SIZE`, `ON`, `NOT` were already reserved). Promoting the bare word `STRING` to a
+  KEYWORD does **not** disturb the *string-literal* token type (also named
+  `STRING`, produced by the quoted `"…"` / `'…'` patterns): keyword promotion only
+  rewrites bare `NAME` words, never the quoted-literal tokens. `END-STRING` works
+  like the other hyphenated keywords (`END-EVALUATE`, `WORKING-STORAGE`).
+  `_grammar.rs` regenerated from `cobol.tokens` via `grammar-tools compile-tokens`.
+
 ## 0.6.0 — `COLON` token for reference modification
 
 - Added `COLON = ":"` to SECTION 2 (Punctuation), next to `LPAREN`/`RPAREN`. It

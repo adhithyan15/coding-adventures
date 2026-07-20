@@ -1652,4 +1652,79 @@ mod tests {
             "0P\n"
         );
     }
+
+    /// Wrap DATA and PROCEDURE lines into a minimal well-formed program.
+    fn wrap(data: &[&str], proc: &[&str]) -> String {
+        let mut lines = vec![
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+        ];
+        lines.extend_from_slice(data);
+        lines.push("PROCEDURE DIVISION.");
+        lines.push("MAIN.");
+        lines.extend_from_slice(proc);
+        program(&lines)
+    }
+
+    #[test]
+    fn string_concatenates_delimited_by_size() {
+        // "ABC" ++ "DE" = "ABCDE", left-justified into a 10-wide field; the
+        // untouched tail stays as its original spaces.
+        let out = run_cobol(&wrap(
+            &[
+                "01  A  PIC X(3) VALUE \"ABC\".",
+                "01  B  PIC X(2) VALUE \"DE\".",
+                "01  T  PIC X(10) VALUE SPACES.",
+            ],
+            &["STRING A B DELIMITED BY SIZE INTO T.", "DISPLAY T.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(out, "ABCDE     \n");
+    }
+
+    #[test]
+    fn string_truncates_and_preserves_untouched_tail() {
+        // Wider-than-receiver concatenation truncates …
+        let trunc = run_cobol(&wrap(
+            &[
+                "01  A  PIC X(3) VALUE \"ABC\".",
+                "01  B  PIC X(2) VALUE \"DE\".",
+                "01  T  PIC X(4) VALUE SPACES.",
+            ],
+            &["STRING A B DELIMITED BY SIZE INTO T.", "DISPLAY T.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(trunc, "ABCD\n");
+        // … and a short write leaves the receiver's prior (non-space) tail intact.
+        let nofill = run_cobol(&wrap(
+            &["01  A  PIC X(2) VALUE \"AB\".", "01  T  PIC X(6) VALUE \"ZZZZZZ\"."],
+            &["STRING A DELIMITED BY SIZE INTO T.", "DISPLAY T.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(nofill, "ABZZZZ\n");
+    }
+
+    #[test]
+    fn string_later_rung_options_are_clean_errors() {
+        // A real delimiter needs a scan (later rung) …
+        let delim = run_cobol(&wrap(
+            &["01  A  PIC X(3) VALUE \"ABC\".", "01  T  PIC X(6) VALUE SPACES."],
+            &["STRING A DELIMITED BY \"-\" INTO T.", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(delim, RuntimeError::Unsupported(_)), "got {delim:?}");
+        // … and so is WITH POINTER.
+        let ptr = run_cobol(&wrap(
+            &[
+                "01  A  PIC X(3) VALUE \"ABC\".",
+                "01  T  PIC X(6) VALUE SPACES.",
+                "01  P  PIC 9(2) VALUE 1.",
+            ],
+            &["STRING A DELIMITED BY SIZE INTO T WITH POINTER P.", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(ptr, RuntimeError::Unsupported(_)), "got {ptr:?}");
+    }
 }

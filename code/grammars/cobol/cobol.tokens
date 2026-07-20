@@ -215,6 +215,16 @@ keywords:
   ELSE
   EVALUATE
   END-EVALUATE
+  # STRING concatenates several sources into one alphanumeric receiver.  The bare
+  # word STRING becomes a KEYWORD here; the *string-literal* token type (also
+  # named STRING, produced by the quoted patterns above) is unaffected — keyword
+  # promotion only rewrites bare NAME words, never the quoted-literal tokens.
+  STRING
+  DELIMITED
+  POINTER
+  OVERFLOW
+  WITH
+  END-STRING
   # -- Prepositions / connectives / operators-in-words --
   TO
   FROM

@@ -30,7 +30,8 @@ sentences built from the core verbs (`MOVE`, `DISPLAY`, `ACCEPT`,
 `ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE … GIVING`, `COMPUTE … = <expr>` with a
 precedence-layered arithmetic expression (`+ - * / **`, unary sign, parentheses)
 and optional `ROUNDED` / `ON SIZE ERROR`, `PERFORM`, `GO TO`, `IF … ELSE`,
-`STOP RUN`), plus a minimal ENVIRONMENT (CONFIGURATION / INPUT-OUTPUT sections).
+`EVALUATE`, `STRING … DELIMITED BY … INTO`, `STOP RUN`), plus a minimal
+ENVIRONMENT (CONFIGURATION / INPUT-OUTPUT sections).
 An operand may carry a **reference-modification** suffix —
 `operand = NAME [ LPAREN operand COLON [ operand ] RPAREN ] | literal` — so a
 data-name can be written `WS-NAME(2:3)` or `WS-NAME(3:)` (omitted length); a bare

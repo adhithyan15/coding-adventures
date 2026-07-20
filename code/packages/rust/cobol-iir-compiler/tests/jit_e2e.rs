@@ -1556,3 +1556,95 @@ fn refmod_compared_against_another_refmod() {
     ));
     assert_eq!(eq, "SAME\n");
 }
+
+// STRING — concatenate sending fields into an alphanumeric receiver
+// (DELIMITED BY SIZE = each source taken in full). The receiver is LEFT-
+// justified, truncated at its width, and — the COBOL surprise — its tail beyond
+// what STRING wrote is left UNCHANGED (no space-fill). Every case pins the
+// compiled JIT output to the oracle byte-for-byte.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn string_concatenates_two_items() {
+    // "ABC" ++ "DE" = "ABCDE", left-justified into a 10-wide field that started
+    // as spaces — the untouched tail stays blank.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(3) VALUE \"ABC\".",
+            "01  B  PIC X(2) VALUE \"DE\".",
+            "01  T  PIC X(10) VALUE SPACES.",
+        ],
+        &["STRING A B DELIMITED BY SIZE INTO T.", "DISPLAY T.", "STOP RUN."],
+    ));
+    assert_eq!(out, "ABCDE     \n");
+}
+
+#[test]
+fn string_truncates_at_receiver_width() {
+    // Concatenation "ABCDE" is wider than the 4-char receiver → truncated to
+    // "ABCD".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(3) VALUE \"ABC\".",
+            "01  B  PIC X(2) VALUE \"DE\".",
+            "01  T  PIC X(4) VALUE SPACES.",
+        ],
+        &["STRING A B DELIMITED BY SIZE INTO T.", "DISPLAY T.", "STOP RUN."],
+    ));
+    assert_eq!(out, "ABCD\n");
+}
+
+#[test]
+fn string_mixes_a_literal_source() {
+    // A string literal between two items: "ABC" ++ "-" ++ "DE" = "ABC-DE".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(3) VALUE \"ABC\".",
+            "01  B  PIC X(2) VALUE \"DE\".",
+            "01  T  PIC X(8) VALUE SPACES.",
+        ],
+        &["STRING A \"-\" B DELIMITED BY SIZE INTO T.", "DISPLAY T.", "STOP RUN."],
+    ));
+    assert_eq!(out, "ABC-DE  \n");
+}
+
+#[test]
+fn string_includes_a_full_width_item_with_its_spaces() {
+    // DELIMITED BY SIZE takes each item in FULL — a PIC X(5) holding "HI" carries
+    // its trailing spaces into the result: "HI   " ++ "!" = "HI   !".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(5) VALUE \"HI\".",
+            "01  T  PIC X(8) VALUE SPACES.",
+        ],
+        &["STRING A \"!\" DELIMITED BY SIZE INTO T.", "DISPLAY T.", "STOP RUN."],
+    ));
+    assert_eq!(out, "HI   !  \n");
+}
+
+#[test]
+fn string_leaves_the_untouched_tail_unchanged() {
+    // The no-fill rule made visible: T starts with a non-space VALUE. STRING
+    // writes only "AB" (2 chars); the remaining "ZZZZ" of the original stays put.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(2) VALUE \"AB\".",
+            "01  T  PIC X(6) VALUE \"ZZZZZZ\".",
+        ],
+        &["STRING A DELIMITED BY SIZE INTO T.", "DISPLAY T.", "STOP RUN."],
+    ));
+    assert_eq!(out, "ABZZZZ\n");
+}
+
+#[test]
+fn string_with_numeric_literal_source() {
+    // A numeric literal contributes its source digits verbatim: "IT" ++ "42".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  A  PIC X(2) VALUE \"IT\".",
+            "01  T  PIC X(6) VALUE SPACES.",
+        ],
+        &["STRING A 42 DELIMITED BY SIZE INTO T.", "DISPLAY T.", "STOP RUN."],
+    ));
+    assert_eq!(out, "IT42  \n");
+}

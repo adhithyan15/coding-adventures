@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.15.0 — `STRING` statement (first rung)
+
+- Added `string_stmt` to the `statement` alternation:
+  `string_stmt = "STRING" operand { operand } "DELIMITED" "BY" string_delim
+  "INTO" NAME [ "WITH" "POINTER" NAME ] [ "ON" "OVERFLOW" { statement } ]
+  [ "NOT" "ON" "OVERFLOW" { statement } ] [ "END-STRING" ]` with
+  `string_delim = "SIZE" | operand`. The sending fields are `operand` children;
+  the delimiter operand is nested under `string_delim`, so it does not collide.
+  The grammar deliberately *accepts* the later-rung options (a real
+  identifier/literal delimiter, `WITH POINTER`, `ON`/`NOT ON OVERFLOW`) so the
+  reader can reject them with a friendly "later rung" error rather than a bare
+  parse failure. Uses the new `STRING`/`DELIMITED`/`WITH`/`POINTER`/`OVERFLOW`/
+  `END-STRING` keywords (see `cobol-lexer` 0.7.0). `_grammar.rs` regenerated via
+  `grammar-tools compile-grammar`.
+
 ## 0.14.0 — reference-modification suffix on an operand
 
 - The `operand` rule gains an optional reference-modification suffix:
