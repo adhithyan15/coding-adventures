@@ -531,7 +531,11 @@ pub enum Instruction {
     ///
     /// Emitted after `Halt` (and after `SortResult` if both are present) for
     /// `SELECT DISTINCT`.
-    DistinctResult,
+    /// Deduplicate the output rows. The `Vec<Option<String>>` gives one collation
+    /// per OUTPUT column, positionally parallel to the emitted row (`None` =
+    /// default BINARY). Only the dedupe KEY is folded — the surviving row keeps
+    /// its ORIGINAL text, since dedup retains the first occurrence.
+    DistinctResult(Vec<Option<String>>),
 
     /// Truncate the result set to at most `count` rows, starting from `offset`.
     ///
@@ -1036,7 +1040,7 @@ impl Compiler {
             // We still handle them defensively by recursing into their child.
             OptimizedPlan::Sort { input, .. }
             | OptimizedPlan::Limit { input, .. }
-            | OptimizedPlan::Distinct(input) => {
+            | OptimizedPlan::Distinct(input, _) => {
                 self.compile_inner(input);
             }
 
@@ -2225,8 +2229,8 @@ fn peel_post_ops(plan: &OptimizedPlan) -> (&OptimizedPlan, Vec<Instruction>) {
                 post_ops.push(Instruction::LimitResult(*count, *offset));
                 current = input;
             }
-            OptimizedPlan::Distinct(inner) => {
-                post_ops.push(Instruction::DistinctResult);
+            OptimizedPlan::Distinct(inner, colls) => {
+                post_ops.push(Instruction::DistinctResult(colls.clone()));
                 current = inner;
             }
             _ => break,
@@ -2983,10 +2987,10 @@ mod tests {
 
     #[test]
     fn test_distinct_emits_distinct_result_after_halt() {
-        let plan = optimize(LogicalPlan::Distinct(Box::new(scan("t"))));
+        let plan = optimize(LogicalPlan::Distinct(Box::new(scan("t")), vec![]));
         let v = instrs(&plan);
         let halt_idx = first_idx(&v, |i| matches!(i, Instruction::Halt)).unwrap();
-        let dist_idx = first_idx(&v, |i| matches!(i, Instruction::DistinctResult)).unwrap();
+        let dist_idx = first_idx(&v, |i| matches!(i, Instruction::DistinctResult(_))).unwrap();
         assert!(dist_idx > halt_idx, "DistinctResult must come after Halt");
     }
 
@@ -3707,14 +3711,17 @@ mod tests {
 
     #[test]
     fn test_distinct_and_limit_ordering() {
-        let plan = optimize(LogicalPlan::Distinct(Box::new(LogicalPlan::Limit {
-            input: Box::new(scan("t")),
-            count: Some(3),
-            offset: None,
-        })));
+        let plan = optimize(LogicalPlan::Distinct(
+            Box::new(LogicalPlan::Limit {
+                input: Box::new(scan("t")),
+                count: Some(3),
+                offset: None,
+            }),
+            vec![],
+        ));
         let v = instrs(&plan);
         let halt_idx = first_idx(&v, |i| matches!(i, Instruction::Halt)).unwrap();
-        let dist_idx = first_idx(&v, |i| matches!(i, Instruction::DistinctResult)).unwrap();
+        let dist_idx = first_idx(&v, |i| matches!(i, Instruction::DistinctResult(_))).unwrap();
         let limit_idx =
             first_idx(&v, |i| matches!(i, Instruction::LimitResult(..))).unwrap();
         // Both post-ops must come after Halt.

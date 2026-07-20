@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.6.9] - Unreleased
+
+### Changed
+
+- `Instruction::DistinctResult` now carries `Vec<Option<String>>` — one collation
+  per OUTPUT column, positionally parallel to the emitted row — taken from
+  `OptimizedPlan::Distinct`. Only the dedupe KEY is folded; the surviving row
+  keeps its original text.
+
 ## [0.6.8] - Unreleased
 
 ### Added

@@ -3,6 +3,17 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.34] - Unreleased
+
+### Added
+
+- **`apply_distinct` honours per-output-column collations.** A DISTINCT column
+  declared `COLLATE NOCASE` now folds 'A' and 'a' to one dedupe key. Only the KEY
+  is folded — `retain` keeps the FIRST matching row, so the surviving row still
+  carries its ORIGINAL text, matching SQLite. Collation applies to TEXT only. A
+  short (or empty) collation slice leaves the remaining columns at BINARY, the
+  stricter fail-safe direction.
+
 ## [0.4.33] - Unreleased
 
 ### Fixed

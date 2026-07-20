@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.5.58 — DISTINCT honours a column's declared COLLATE
+
+`SELECT DISTINCT c` on a column declared `COLLATE NOCASE` now dedupes
+case-insensitively, matching SQLite, and the surviving row keeps its ORIGINAL
+text ('A' when that row came first). Retires the `distinct_column_collate_nocase`
+ledger entry.
+
+The fold applies only where SQLite applies it — to a bare column reference.
+Verified against real SQLite and locked in by oracle cases: `c` folds, `c AS y`
+folds (an alias is just a label), `x AS c` does NOT fold (the name is irrelevant;
+`x` is BINARY), and `c||''` does NOT fold (expressions drop the collation).
+
+Newly recorded in the ledger: `SELECT DISTINCT *` does not expand the star into
+the table's columns — a projection gap unrelated to collation, and the first
+case to exercise `DISTINCT *` at all.
+
 ## 0.5.57 — GROUP BY honours a column's declared COLLATE
 
 `GROUP BY c` on a column declared `COLLATE NOCASE` now groups case-insensitively,
