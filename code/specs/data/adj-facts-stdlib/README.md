@@ -114,6 +114,7 @@ per rotation, in parallel):
 | `meteorology/` | Beaufort wind force number → the name the source gives it (0 → calm, 6 → strong_breeze, 12 → hurricane) | NWS Beaufort Wind Scale (authoritative) |
 | `meteorology/` | precipitation type → defining physical form (snow → ice_crystals, sleet → frozen_raindrops, hail → balls_of_ice) | NOAA National Weather Service (authoritative) |
 | `meteorology/` | Saffir-Simpson hurricane category → the damage descriptor NHC uses (1 → some_damage, 3 → devastating_damage, 5 → catastrophic_damage) | NOAA/NHC Saffir-Simpson Hurricane Wind Scale (authoritative) |
+| `environment/` | **RANGE table** — AQI value → EPA level of concern, keyed by band minimum (0 → good, 51 → moderate, 101 → unhealthy_for_sensitive_groups, 301 → hazardous, open top band) | EPA AirNow "AQI Basics" (authoritative) |
 | `geography/` | common landform → defining descriptor (mountain → projects_above_surroundings, plateau → flat_elevated, canyon → deep_narrow) | USGS Feature Type Thesaurus (authoritative) |
 | `geography/` | globe reference line → what it marks (equator → zero_degrees_latitude, prime_meridian → zero_degrees_longitude, tropic_of_cancer → northernmost_sun_overhead) | NOAA National Ocean Service / NESDIS (authoritative) |
 | … | *geography, physical constants, …* | *(expanding)* |
