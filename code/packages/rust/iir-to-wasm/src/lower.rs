@@ -1242,32 +1242,157 @@ fn emit_instr(
         }
 
         // ── str_slice → literal data-segment metadata ────────────────────────
+        // ── str_slice → literal slice metadata OR runtime bump-alloc + copy ──
+        //
+        // Literal fast path: `collect_module_features` already folded a
+        // literal-source / compile-time-index slice into the module string table,
+        // so the handle is that constant offset (mirrors `str_concat`).
+        //
+        // Runtime path (E4d-3b): a runtime-handle source and/or runtime indices
+        // have no compile-time answer, so build a fresh `[i32 len][bytes]` block —
+        // exactly like a runtime `str_concat`, but copying one operand's
+        // `[start, end)` run:
+        //   trap unless 0 ≤ start ≤ end ≤ len          ;; unsigned, per E4 §2.2
+        //   new  = bump                                ;; base of the sliced block
+        //   bump = bump + 4 + (end - start)            ;; reserve header + the run
+        //   mem[new]      = end - start                ;; the i32 length header
+        //   memory.copy(new+4, src_base + start, end - start)
+        // `src_base`/`len` come from the source's header at run time when it is a
+        // runtime handle, or from its compile-time literal offset/length when it is
+        // a folded literal reached only with runtime indices.
         "str_slice" => {
             let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
                 function: fn_name.to_string(),
                 detail: "str_slice must have a dest".to_string(),
             })?;
             let rd = get_reg(dest)?;
-            let lit = string_literals.get(dest).ok_or_else(|| IIRWasmError::InvalidOperand {
-                function: fn_name.to_string(),
-                detail: format!("str_slice missing module string table entry for {dest:?}"),
-            })?;
-            // Like `str_concat`: a folded slice handed to a callee needs its runtime
-            // block handle (with a real header), not the raw sliced-bytes offset.
-            if runtime_str_vars.contains(dest) {
-                let key = String::from_utf8_lossy(&lit.bytes);
-                let block_offset =
-                    runtime_str_blocks.get(key.as_ref()).copied().ok_or_else(|| {
+            if let Some(lit) = string_literals.get(dest) {
+                // Like `str_concat`: a folded slice handed to a callee needs its
+                // runtime block handle (with a real header), not the raw
+                // sliced-bytes offset.
+                if runtime_str_vars.contains(dest) {
+                    let key = String::from_utf8_lossy(&lit.bytes);
+                    let block_offset =
+                        runtime_str_blocks.get(key.as_ref()).copied().ok_or_else(|| {
+                            IIRWasmError::InvalidOperand {
+                                function: fn_name.to_string(),
+                                detail: format!("str_slice missing runtime block for folded {dest:?}"),
+                            }
+                        })?;
+                    code.extend(encode_i32_const(block_offset as i32));
+                } else {
+                    code.extend(encode_i32_const(lit.offset as i32));
+                }
+                code.extend(encode_local_set(rd));
+            } else {
+                // Runtime slice.
+                let (src, start, end) = match instr.srcs.as_slice() {
+                    [Operand::Var(s), Operand::Var(a), Operand::Var(b)] => (s, a, b),
+                    _ => {
+                        return Err(IIRWasmError::InvalidOperand {
+                            function: fn_name.to_string(),
+                            detail: "runtime str_slice requires srcs [Var(str), Var(start), Var(end)]"
+                                .to_string(),
+                        });
+                    }
+                };
+                let src_slot = get_reg(src)?;
+                let start_slot = get_reg(start)?;
+                let end_slot = get_reg(end)?;
+                let bump = *global_map.get(ARRAY_BUMP_GLOBAL).ok_or_else(|| {
+                    IIRWasmError::UnsupportedOp {
+                        function: fn_name.to_string(),
+                        op: "str_slice (missing __array_bump global)".to_string(),
+                    }
+                })?;
+
+                // Reusable byte sequences that push a value onto the stack.  The
+                // index slots are widened i64 in the Brainfuck value model, so wrap
+                // to i32 (the memory-op width) exactly as `str_index` does.
+                let mut push_start = encode_local_get(start_slot);
+                if slot_is_i64(start_slot) { push_start.extend(encode_i32_wrap_i64()); }
+                let mut push_end = encode_local_get(end_slot);
+                if slot_is_i64(end_slot) { push_end.extend(encode_i32_wrap_i64()); }
+
+                // The source's length + bytes base.  A runtime handle (or any src
+                // without a compile-time literal) carries a `[i32 len][bytes]` block,
+                // so read the header; a folded literal reached with runtime indices
+                // has its offset/length known at compile time (its bytes sit raw in
+                // the data segment, no header).
+                let src_is_runtime =
+                    runtime_str_vars.contains(src) || !string_literals.contains_key(src);
+                let (push_src_len, push_src_base) = if src_is_runtime {
+                    let mut len_seq = encode_local_get(src_slot);
+                    len_seq.extend(encode_i32_load(0));
+                    let mut base_seq = encode_local_get(src_slot);
+                    base_seq.extend(encode_i32_const(4));
+                    base_seq.extend(encode_i32_add());
+                    (len_seq, base_seq)
+                } else {
+                    let lit = string_literals.get(src).ok_or_else(|| {
                         IIRWasmError::InvalidOperand {
                             function: fn_name.to_string(),
-                            detail: format!("str_slice missing runtime block for folded {dest:?}"),
+                            detail: format!("str_slice literal source {src:?} missing string table entry"),
                         }
                     })?;
-                code.extend(encode_i32_const(block_offset as i32));
-            } else {
-                code.extend(encode_i32_const(lit.offset as i32));
+                    (encode_i32_const(lit.len as i32), encode_i32_const(lit.offset as i32))
+                };
+
+                // Bounds: `unreachable` (trap) unless 0 ≤ start ≤ end ≤ len.  The
+                // compares are UNSIGNED, so a negative index (a huge unsigned) fails
+                // one of them — matching `str_index`'s trap rule and E4 §2.2.
+                // if start >u end { unreachable }
+                code.extend_from_slice(&push_start);
+                code.extend_from_slice(&push_end);
+                code.push(I32_GT_U);
+                code.push(IF);
+                code.push(BLOCK_EMPTY);
+                code.push(UNREACHABLE);
+                code.push(END);
+                // if end >u len { unreachable }
+                code.extend_from_slice(&push_end);
+                code.extend_from_slice(&push_src_len);
+                code.push(I32_GT_U);
+                code.push(IF);
+                code.push(BLOCK_EMPTY);
+                code.push(UNREACHABLE);
+                code.push(END);
+
+                // rd = new = i32.wrap(bump)  — the fresh block's base handle.
+                code.extend(encode_global_get(bump));
+                code.extend(encode_i32_wrap_i64());
+                code.extend(encode_local_set(rd));
+
+                // bump = bump + i64(4 + (end - start))  — reserve header + the run.
+                code.extend(encode_global_get(bump));
+                code.extend(encode_i32_const(4));
+                code.extend_from_slice(&push_end);
+                code.extend_from_slice(&push_start);
+                code.push(I32_SUB);
+                code.push(I32_ADD);
+                code.extend(encode_i64_extend_i32_u());
+                code.push(I64_ADD);
+                code.extend(encode_global_set(bump));
+
+                // mem[new] = end - start  — write the i32 length header.
+                code.extend(encode_local_get(rd));
+                code.extend_from_slice(&push_end);
+                code.extend_from_slice(&push_start);
+                code.push(I32_SUB);
+                code.extend(encode_i32_store(0));
+
+                // memory.copy(new+4, src_base + start, end - start)  — splice the run.
+                code.extend(encode_local_get(rd));
+                code.extend(encode_i32_const(4));
+                code.extend(encode_i32_add());
+                code.extend_from_slice(&push_src_base);
+                code.extend_from_slice(&push_start);
+                code.extend(encode_i32_add());
+                code.extend_from_slice(&push_end);
+                code.extend_from_slice(&push_start);
+                code.push(I32_SUB);
+                code.extend(encode_memory_copy());
             }
-            code.extend(encode_local_set(rd));
         }
 
         // ── str_index → bounds-checked literal byte load ───────────────────────
@@ -4211,52 +4336,64 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                         [Operand::Var(src), Operand::Var(start), Operand::Var(end)],
                     ) = (instr.dest.as_ref(), instr.srcs.as_slice())
                     {
-                        let Some(src_lit) = string_literals
-                            .get(&fn_.name)
-                            .and_then(|fn_strings| fn_strings.get(src))
-                        else {
-                            continue;
-                        };
-                        let (Some(start), Some(end)) =
-                            (fn_ints.get(start).copied(), fn_ints.get(end).copied())
-                        else {
-                            continue;
-                        };
-                        let (Ok(start), Ok(end)) =
-                            (usize::try_from(start), usize::try_from(end))
-                        else {
-                            continue;
-                        };
-                        if end < start || end > src_lit.bytes.len() {
-                            continue;
+                        // Try to constant-fold the slice: a literal source with
+                        // compile-time, in-bounds indices yields the sliced bytes at
+                        // compile time.  `folded` is `Some(bytes)` on success.
+                        let folded: Option<Vec<u8>> = (|| {
+                            let src_lit = string_literals
+                                .get(&fn_.name)
+                                .and_then(|fn_strings| fn_strings.get(src))?;
+                            let start = usize::try_from(fn_ints.get(start).copied()?).ok()?;
+                            let end = usize::try_from(fn_ints.get(end).copied()?).ok()?;
+                            if end < start || end > src_lit.bytes.len() {
+                                return None;
+                            }
+                            Some(src_lit.bytes[start..end].to_vec())
+                        })();
+                        match folded {
+                            Some(bytes) => {
+                                let offset = string_data.len() as u32;
+                                let len = bytes.len() as u32;
+                                string_data.extend_from_slice(&bytes);
+                                // Same promotion as `str_concat`: a folded slice passed
+                                // across a call boundary (e.g. `(strlen (substring …))`)
+                                // needs a real header, or the callee reads the first
+                                // sliced byte as the length.
+                                if fn_runtime_vars.contains(dest) {
+                                    lay_runtime_str_block(
+                                        &mut runtime_str_blocks,
+                                        &mut runtime_str_vars,
+                                        &mut string_data,
+                                        &fn_.name,
+                                        dest,
+                                        &bytes,
+                                        len,
+                                    );
+                                }
+                                string_literals
+                                    .entry(fn_.name.clone())
+                                    .or_default()
+                                    .insert(dest.clone(), WasmStringLiteral {
+                                        offset,
+                                        len,
+                                        bytes,
+                                    });
+                            }
+                            None => {
+                                // Runtime slice (a runtime-handle source and/or
+                                // runtime indices): the lowering bump-allocates a
+                                // fresh `[i32 len][bytes]` block and `memory.copy`s the
+                                // `[start, end)` run into it — exactly like a runtime
+                                // `str_concat` — so the module needs linear memory and
+                                // the `__array_bump` global.  (A pure runtime-slice
+                                // program has no array op, so this is where they get
+                                // injected for it.)
+                                uses_memory = true;
+                                if global_names_seen.insert(ARRAY_BUMP_GLOBAL.to_string()) {
+                                    global_names.push(ARRAY_BUMP_GLOBAL.to_string());
+                                }
+                            }
                         }
-                        let bytes = src_lit.bytes[start..end].to_vec();
-                        let offset = string_data.len() as u32;
-                        let len = bytes.len() as u32;
-                        string_data.extend_from_slice(&bytes);
-                        // Same promotion as `str_concat`: a folded slice passed
-                        // across a call boundary (e.g. `(strlen (substring …))`)
-                        // needs a real header, or the callee reads the first sliced
-                        // byte as the length.
-                        if fn_runtime_vars.contains(dest) {
-                            lay_runtime_str_block(
-                                &mut runtime_str_blocks,
-                                &mut runtime_str_vars,
-                                &mut string_data,
-                                &fn_.name,
-                                dest,
-                                &bytes,
-                                len,
-                            );
-                        }
-                        string_literals
-                            .entry(fn_.name.clone())
-                            .or_default()
-                            .insert(dest.clone(), WasmStringLiteral {
-                                offset,
-                                len,
-                                bytes,
-                            });
                     }
                 }
                 // A `str_eq` folds to a compile-time constant only when BOTH

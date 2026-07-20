@@ -104,7 +104,11 @@ through a deprecated intermediate.
   `$__str_cmp(i32,i32)->i32` helper — a shared-prefix scan (`i32.load8_u`, unsigned)
   with a length tiebreak returning `-1`/`0`/`1`, byte-identical to the folded
   `left.bytes.cmp(&right.bytes)` path — sign-extended to `i64` when the result slot
-  is 64-bit. Runtime `str_slice`/`str_index` over promoted operands remain deferred.
+  is 64-bit; and **`str_slice` (v0.40.0)** bump-allocates a fresh `[i32 len]
+  [bytes]` block and `memory.copy`s the source's `[start, end)` run into it (the
+  same shape as runtime `str_concat`), with a bounds trap (`unreachable` unless
+  `0 ≤ start ≤ end ≤ len`, via unsigned compares) and `i32.wrap`ped index slots.
+  Runtime `str_index` over promoted operands remains deferred.
 - **All functions exported**: every function in the IIR module is exported by
   name so host runtimes can invoke them.
 
