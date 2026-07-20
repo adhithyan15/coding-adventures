@@ -2,6 +2,19 @@
 
 All notable changes to the `sir-conformance` crate will be documented in this file.
 
+## [0.17.0] - Reflection frontier goes cross-backend (Rust arm closed)
+
+`tests/reflection.rs` grows from a per-backend guard into a live **all-backend**
+assertion, `class_reflection_matches_ruby_on_every_backend`: every backend that
+runs a case must produce the same Ruby class-name string, failing by name the
+day one diverges.
+
+That was gated on the Rust arm, which previously **panicked at runtime**
+(exit 101) because `.class` was undispatched; `semantic-ir-to-rust` 0.37.0
+implements it. Adds `rust_class_reflection_is_ruby_faithful` alongside the
+existing JavaScript and Go granular guards. Python, Go, JavaScript and Rust all
+answer; C does not yet emit reflection and skips.
+
 ## [0.16.0] - Type-reflection conformance: `.class` across the backends
 
 Adds `tests/reflection.rs` — every backend must reproduce Ruby's class-NAME

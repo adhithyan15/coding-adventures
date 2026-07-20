@@ -11,14 +11,15 @@
 //! | Python     | ✅ |
 //! | Go         | ✅ (`_sir_ruby_class_name`) |
 //! | JavaScript | ✅ **as of this change** — previously raised `NoMethodError` |
-//! | Rust       | ❌ **panics at runtime** (exit 101) — tracked separately |
+//! | Rust       | ✅ **as of this change** — previously panicked at runtime (exit 101) |
 //! | C          | not yet emitted (skips) |
 //! | Ruby       | ✅ (the reference; skips without a `ruby` toolchain) |
 //!
-//! Because the Rust arm still crashes, this is a **per-backend** guard in the
-//! style of `division.rs`'s `python_division_is_ruby_floor_faithful` rather
-//! than an all-backend frontier; it locks the arms that are closed and will
-//! grow into a cross-backend assertion once Rust's `.class` is implemented.
+//! With the Rust arm now closed, the guard has grown from per-backend into a
+//! **cross-backend** assertion: [`class_reflection_matches_ruby_on_every_backend`]
+//! holds every backend that runs to the same class-name strings, exactly like
+//! `division.rs`'s frontier. The per-backend tests remain as granular guards
+//! that name the offending backend directly when one regresses.
 //!
 //! The JavaScript arm is the interesting one: JS numbers are all `f64`, so
 //! `7` and `7.0` are the SAME value there. Distinguishing `Integer` from
@@ -84,4 +85,51 @@ fn go_class_reflection_is_ruby_faithful() {
     if ran == 0 {
         eprintln!("note: `go` unavailable — Go reflection not proved");
     }
+}
+
+/// The Rust arm, **closed by this change**. Rust already had the class-name
+/// mapping (`ruby_class_name`) but used it ONLY to build a `NoMethodError`
+/// message — `.class` itself was undispatched, so it raised, and the unrescued
+/// raise surfaced as a process-killing panic (exit 101).
+#[test]
+fn rust_class_reflection_is_ruby_faithful() {
+    let ran = assert_class_names_on(Target::Rust, "Rust `.class`");
+    if ran == 0 {
+        eprintln!("note: `rustc` unavailable — Rust reflection not proved");
+    }
+}
+
+/// The frontier: **every** backend that runs a case must produce the same
+/// Ruby class name. Now that Python, Go, JavaScript and Rust all answer, this
+/// is a live cross-backend assertion — it fails, naming the backend, the day
+/// one diverges. Backends without a toolchain (or that do not yet emit
+/// reflection, e.g. C) report `Skipped` and are not asserted.
+#[test]
+fn class_reflection_matches_ruby_on_every_backend() {
+    let mut ran = 0usize;
+    for &(src, expected) in CASES {
+        for &target in Target::all() {
+            match run_source("reflection_all", src, target) {
+                RunOutcome::Ran(out) => {
+                    assert_eq!(
+                        out, expected,
+                        "\nREFLECTION FRONTIER: backend {} gave `{}` = {out}, Ruby says {expected}\n",
+                        target.tag(),
+                        src.trim(),
+                    );
+                    ran += 1;
+                }
+                // A backend that emits reflection but crashes on it is a
+                // frontier failure, not a skip — surface it by name.
+                RunOutcome::Failed(msg) => panic!(
+                    "REFLECTION FRONTIER: backend {} failed on `{}`: {}",
+                    target.tag(),
+                    src.trim(),
+                    msg.lines().next().unwrap_or("")
+                ),
+                RunOutcome::Skipped(_) => {}
+            }
+        }
+    }
+    assert!(ran > 0, "no backend toolchain available — reflection proved nothing");
 }
