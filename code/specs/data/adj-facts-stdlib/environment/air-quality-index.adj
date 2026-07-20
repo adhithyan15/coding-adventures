@@ -134,10 +134,13 @@
 % than a closed interval. The 0 floor is grounded in the "0 to 50" span, which
 % is why anything below 0 abstains: the source's domain starts there.
 %
-% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
-% `trust` below hold the single cleanest span: the AirNow statement that fixes
-% the first breakpoint row (0 → good). Every OTHER row's per-fact source and
-% verbatim span is listed above, so each band remains independently checkable.
+% Each of those six spans is machine-attached to the row it defends (ADJ-TABLES
+% RS-5e per-row provenance), so a lookup answer quotes the band it actually
+% selected: ask for AQI 120 and the citation is the "Orange … 101 to 150" span,
+% not the table's framing sentence. The table-level `source` below is the
+% FRAMING claim — that the AQI has exactly these six categories — which is what
+% defends the table as a whole; `locator` and `trust` are shared, and every row
+% inherits them rather than restating them.
 % All spans are from the same EPA / AirNow page — AirNow is run by the U.S.
 % Environmental Protection Agency and the AQI is EPA's own index, a primary U.S.
 % government source — so `trust authoritative`.
@@ -148,14 +151,38 @@
 table air_quality_index {
     columns min_aqi, category
 
-    row (0, good)                              % "Green   Good   0 to 50"
-    row (51, moderate)                         % "Yellow   Moderate   51 to 100"
-    row (101, unhealthy_for_sensitive_groups)  % "Orange   Unhealthy for Sensitive Groups   101 to 150"
-    row (151, unhealthy)                       % "Red   Unhealthy   151 to 200"
-    row (201, very_unhealthy)                  % "Purple   Very Unhealthy   201 to 300"
-    row (301, hazardous)                       % "Maroon   Hazardous   301 and higher" (open top band)
+    % ADJ-TABLES RS-5e — PER-ROW PROVENANCE. Each row carries the span that
+    % defends IT, so a lookup answer quotes the band it actually selected: ask
+    % for AQI 120 and the citation is the "Orange … 101 to 150" row, not the
+    % table's framing sentence. Before RS-5e a table had one envelope, so every
+    % answer in every band quoted the same cell — an accounting error the range
+    % lookup made glaring by naming the selected row in the audit.
+    % None of these rows restates `locator`/`trust`: they all come from the one
+    % AirNow page at one tier, and a row inherits every field it does not write.
+    row (0, good) {
+        source "Green Good 0 to 50 Air quality is satisfactory, and air pollution poses little or no risk."
+    }
+    row (51, moderate) {
+        source "Yellow Moderate 51 to 100 Air quality is acceptable. However, there may be a risk for some people, particularly those who are unusually sensitive to air pollution."
+    }
+    row (101, unhealthy_for_sensitive_groups) {
+        source "Orange Unhealthy for Sensitive Groups 101 to 150 Members of sensitive groups may experience health effects. The general public is less likely to be affected."
+    }
+    row (151, unhealthy) {
+        source "Red Unhealthy 151 to 200 Some members of the general public may experience health effects; members of sensitive groups may experience more serious health effects."
+    }
+    row (201, very_unhealthy) {
+        source "Purple Very Unhealthy 201 to 300 Health alert: The risk of health effects is increased for everyone."
+    }
+    row (301, hazardous) {
+        % The open top band is grounded in this span's "301 and higher".
+        source "Maroon Hazardous 301 and higher Health warning of emergency conditions: everyone is more likely to be affected."
+    }
 
-    source "Green Good 0 to 50 Air quality is satisfactory, and air pollution poses little or no risk."
+    % The table-level envelope now carries the FRAMING span — what defends the
+    % table as a whole, namely that the AQI has exactly these six categories —
+    % plus the shared locator and trust tier every row above inherits.
+    source "The AQI includes six color-coded categories, each corresponding to a range of index values."
     locator "https://www.airnow.gov/aqi/aqi-basics/"
     trust authoritative
 }

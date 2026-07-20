@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.55.0] — 2026-07-18
+
+### Added — RS-5e: per-row provenance on a `table` (ADJ-TABLES)
+
+**A table row can now carry the span that defends *it*.** Until now a `table` had ONE
+`source`/`locator`/`trust` envelope, so every answer — in every band, from every row — quoted the
+same sentence. That is an accounting error, not a cosmetic one: the audit trail asserted a fact and
+cited a span that did not support it. The RS-5c range lookup made it glaring (the selected row is
+explicit in the audit), but exact lookup had always been mis-cited the same way.
+
+- **Grammar**: `table_row` gains an optional `[ LBRACE { annotation } RBRACE ]` block. The braces
+  are deliberate — a table's envelope is written *after* its rows, so a bare trailing annotation
+  would be ambiguous (last row's, or the table's?). `LBRACE` disambiguates. Regenerated
+  `_parser_grammar.rs`.
+- **AST**: `TableRow` gains `annotations: Vec<Annotation>`.
+- **Lower**: new `row_provenance()` folds a row's block **over** the envelope *field by field*, so a
+  row supplies only what differs — usually just its own `source` span — and inherits the shared
+  `locator`/`trust`. Corroborating `cites` are appended. Duplicate keys inside one row block stay a
+  clean `DuplicateAnnotation`.
+- **No renderer change was needed**, which is the elegant part: each row already lowered to its
+  **own** `Fact`, and every citation path (exact recall, range lookup, the proof DAG's `via_facts`)
+  already cites *the fact that produced the answer*. Giving that fact the row's provenance was the
+  entire fix.
+- **Backward compatible**: a row with no block inherits the whole envelope, exactly as before, so
+  every table authored pre-RS-5e is unchanged.
+
 ## [0.54.0] — 2026-07-18
 
 ### Added — RS-5c: range / bracket lookup over a `table` read as a step function (ADJ-TABLES)

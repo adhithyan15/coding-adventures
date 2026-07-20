@@ -1057,7 +1057,12 @@ fn adapt_table(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
                         }
                     }
                 }
-                rows.push(crate::ast::TableRow { cells });
+                // ADJ-TABLES RS-5e: the row's OWN `{ … }` provenance block, if it
+                // wrote one. `collect_annotations` walks this row node's direct
+                // `annotation` children — the braces keep them scoped to the row,
+                // so the table's trailing envelope is never absorbed here.
+                let annotations = collect_annotations(row_node)?;
+                rows.push(crate::ast::TableRow { cells, annotations });
             }
         }
     }

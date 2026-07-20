@@ -64,9 +64,29 @@ Grammar (added to the `statement` alternation; see [ADJ01 grammar](ADJ01-adjudic
 ```
 table_decl   = "table" IDENT LBRACE { use_decl } columns_decl { table_row } { annotation } RBRACE ;
 columns_decl = "columns" IDENT { COMMA IDENT } ;
-table_row    = "row" LPAREN row_item { COMMA row_item } RPAREN ;
+table_row    = "row" LPAREN row_item { COMMA row_item } RPAREN [ LBRACE { annotation } RBRACE ] ;
 row_item     = NUMBER | IDENT | STRING ;
 ```
+
+**Per-row provenance (RS-5e).** A row may carry its **own** `{ … }` annotation block, which
+overrides the table envelope *field by field* for that row — so a row can supply just the span
+that defends **it** and inherit the shared `locator`/`trust`:
+
+```
+table air_quality_index {
+    columns min_aqi, category
+    row (0,   good)     { source "Green   Good   0 to 50" }
+    row (51,  moderate) { source "Yellow   Moderate   51 to 100" }
+    source  "The AQI includes six color-coded categories, each corresponding to a range of index values."
+    locator "https://www.airnow.gov/aqi/aqi-basics/"
+    trust   authoritative
+}
+```
+
+The block is **braced deliberately**: a table's envelope is conventionally written *after* its
+rows, so a bare trailing annotation would be ambiguous — the parser could not tell whether it
+belonged to the last row or to the table. `LBRACE` disambiguates, and a row with no block behaves
+exactly as before (inherits the whole envelope), so every existing table is unchanged.
 
 - **`use <dict>`** (optional): vocabulary-check column entities against a `dictionary`, as a
   `rulebook`/`formulabook` does.
@@ -142,6 +162,18 @@ value columns; a non-numeric column is a compile/lookup error.
   `annotations_to_provenance` surface used by `relate`, `rule`, `prior`, `contributes`, and
   `formula`. Trust tiers are the existing five (`consensus`/`authoritative`/`empirical`/
   `inferred`/`unattributed`).
+- **Per-row override (RS-5e).** A row's own `{ … }` block overrides the envelope *field by field*
+  for that row, so the answer cites **the span that defends the row actually selected** — not the
+  table's first sentence. This closes a real accounting gap: a six-band table with one envelope
+  made every answer, in every band, cite the *same* sentence. A range lookup made it glaring,
+  because the selected row is explicit in the audit; but it affected every multi-row table.
+  Mechanically it is nearly free — each row already lowers to its **own** `Fact`, and every
+  citation path (exact recall, range lookup, the proof DAG's `via_facts`) already cites *the fact
+  that produced the answer*. Giving that fact the row's provenance is the whole fix; no renderer
+  changes.
+- This is what makes the audit trail honest at the table level: *every asserted fact quotes the
+  byte span that supports **it***. A row without a block still inherits the envelope, so tables
+  authored before RS-5e keep working unchanged.
 - Every lookup answer (exact, range, or interpolated) carries the table's citation. For
   interpolated answers the derivation records the two bracketing rows it combined — the answer
   remains auditable to the source rows, honouring *hallucination is an accounting failure;
@@ -172,12 +204,13 @@ per conversion, one table cites the NIST page once and every conversion is audit
 |-------|------|--------|
 | RS-5a | this spec | **this PR** |
 | RS-5b | grammar + AST + adapter + lower; rows→relations; **exact lookup** e2e; shipped NIST table | **this PR** |
-| RS-5c | **range/bracket** lookup tactic (reuses the exact `BigRational` order) + e2e (inline BMI bands) | **this PR** |
+| RS-5c | **range/bracket** lookup tactic (reuses the exact `BigRational` order) + e2e (inline BMI bands) | shipped |
+| RS-5e | **per-row provenance** — a row's `{ … }` block overrides the envelope; the answer cites the SELECTED row's span | **this PR** |
 | RS-5d | **interpolated** lookup tactic (new, on `BigRational`) + e2e (nomogram) | follow-up |
 
-**Explicitly deferred:** per-row provenance (table-level only for now); multi-key composite
-lookup beyond positional binding; typed/dimensioned columns (columns are untyped atoms/numbers
-today). These are additive and do not change the row-as-relation core.
+**Explicitly deferred:** multi-key composite lookup beyond positional binding; typed/dimensioned
+columns (columns are untyped atoms/numbers today). These are additive and do not change the
+row-as-relation core. (*Per-row provenance was deferred at RS-5b and is now delivered by RS-5e.*)
 
 ---
 
