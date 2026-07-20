@@ -344,6 +344,14 @@ decomposes and binds" contract robust to the words a real question actually uses
 
 ## 11. The full audit trail — multi-step reasoning, end to end
 
+> **Scope note.** This section states the *requirement* — why the audit trail exists and
+> what it must be true of. The **normative technical contract** (the `ReasoningTrace`
+> object, the closed `StepKind` sum, step ordering/addressing, the `quote`/`source`
+> split, the typed `AbstentionReason`, the checkability invariant, and `adj-verify`)
+> lives in **`ADJ-REASON-MATH.md` §E**, which is where RS-4 is implemented from. This
+> rung — **FL-7 — is the same work as RS-4**; the two labels name one deliverable, and
+> §E stages it PR-A…PR-D. Read this section for the *why*, §E for the *what*.
+
 The north-star invariant, stated sharply: **for *any* answer — a single formula, a formula that
 composes lower formulas, a recalled fact feeding a computation, a constraint solve, or all of them in
 one question — the engine can render the complete chain of how it got there, and an independent
@@ -378,3 +386,13 @@ multi-step, cross-modality case, and there is **no full-explanation renderer** (
 
 This rung is what turns "the engine computed 22.86" into "here is the auditable derivation, and it
 re-checks" — the property the whole ladder exists to demonstrate at MLE scale.
+
+**Since this section was first written**, two things changed the picture, both recorded in
+`ADJ-REASON-MATH.md` §E.7. First, the substrate grew two more answer-producing constructs that a
+user can ask "why?" about — `table` lookup (ADJ-TABLES RS-5) and defeasible precedence (ADJ73) — so
+the step sum gained `FromTableRow`, `FromRangeBracket`, and `FromGoverning`. Second, and more
+importantly, **RS-5e made a table answer cite the row it actually selected** rather than the table's
+one shared envelope. That was a hard prerequisite for this rung: an explanation renderer is only as
+honest as the citations it renders, and before RS-5e every band of a table quoted the same sentence.
+Building `explain` first would have shipped a trail that *looked* rigorous and misattributed every
+tabular fact in it.

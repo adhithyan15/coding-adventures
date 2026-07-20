@@ -189,6 +189,22 @@ own internal references are consistent. Conditions checked:
 The linter runs in milliseconds and is suitable for use as a
 pre-storage validation step.
 
+> **`adj-verify` versus this tool — two layers, do not merge them.** The linter above
+> checks that the trail's references *dangle nowhere*: every span points into a real
+> document range, every proof step cites an existing clause. It does not re-execute
+> anything. **`adj-verify`** (`ADJ-REASON-MATH.md` §E.5–E.6) is the deeper check
+> *inside* a single engine artifact: it re-runs each step's own reasoning — re-unify,
+> re-multiply the likelihood ratios, re-select the table bracket, re-evaluate the
+> derivation tree exactly, re-check the solver witness — and re-fetches each quoted
+> span at its locator to confirm it still appears **verbatim**. It reports the *first*
+> failing step, which localizes an error to one clause plus one citation.
+>
+> The division of labour: **`adj-replay` re-runs the pipeline; `adj-verify` re-checks
+> the reasoning.** A trail can pass this linter (nothing dangles) and still fail
+> `adj-verify` (a cited page changed under us, or an arithmetic step does not
+> reproduce). This linter should *call* `adj-verify` per engine artifact rather than
+> reimplement step re-checking.
+
 ## Worked Example
 
 Take the audit trail produced by `ADJ10`'s TSA example. Run replay:
