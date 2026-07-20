@@ -447,6 +447,7 @@ impl<'a> Compiler<'a> {
             "perform_stmt" => self.emit_perform(verb),
             "set_stmt" => self.emit_set(verb),
             "evaluate_stmt" => self.emit_evaluate(verb),
+            "string_stmt" => self.emit_string(verb),
             other => Err(CompileError::Unsupported(format!(
                 "the {} statement is a later rung",
                 verb_name(other)
@@ -857,6 +858,158 @@ impl<'a> Compiler<'a> {
     fn spaces_const(&mut self, k: usize) -> String {
         let reg = self.fresh("_sp");
         self.emit("str_const", Some(&reg), vec![Operand::Str(" ".repeat(k))], "str");
+        reg
+    }
+
+    /// `STRING s… DELIMITED BY SIZE INTO t` — concatenate the sending fields
+    /// (each taken in full) with a `str_concat` chain, then overlay the result
+    /// onto the receiver from the left. COBOL's STRING writes only what it
+    /// produced and leaves the rest of `t` UNCHANGED (no space-fill, unlike
+    /// `MOVE`), truncating at `t`'s width. Every source and the receiver have a
+    /// compile-time-known length, so the overlay is a fixed `str_slice`/`str_concat`
+    /// sequence — and byte-identical to the `cobol-runtime` oracle's `exec_string`:
+    ///
+    ///   * result longer than `t`  →  `t = str_slice(concat, 0, width)` (truncate);
+    ///   * result shorter than `t` →  `t = str_concat(concat, str_slice(t, len, width))`
+    ///     — the head is the whole concatenation, the preserved tail is the
+    ///     receiver's old `[len, width)` bytes.
+    fn emit_string(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
+        // Reject the later-rung options the grammar accepts (so the message is a
+        // clean Unsupported, not a parse error).
+        let toks = child_tokens(verb);
+        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "POINTER") {
+            return Err(CompileError::Unsupported(
+                "STRING … WITH POINTER is a later rung".into(),
+            ));
+        }
+        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "OVERFLOW") {
+            return Err(CompileError::Unsupported(
+                "STRING … ON OVERFLOW / NOT ON OVERFLOW is a later rung".into(),
+            ));
+        }
+        let delim = child_node(verb, "string_delim")
+            .ok_or_else(|| CompileError::Malformed("STRING without DELIMITED BY".into()))?;
+        let is_size = child_tokens(delim).iter().any(|(k, v)| k == "KEYWORD" && v == "SIZE");
+        if !is_size {
+            return Err(CompileError::Unsupported(
+                "STRING … DELIMITED BY <identifier/literal> (only DELIMITED BY SIZE) is a later rung"
+                    .into(),
+            ));
+        }
+        // Each sending field as a (register, compile-time length) pair. The
+        // delimiter operand is nested under `string_delim`, so it does not appear
+        // among these `operand` children.
+        let sources = child_nodes(verb, "operand");
+        if sources.is_empty() {
+            return Err(CompileError::Malformed("STRING without a sending field".into()));
+        }
+        let mut pieces: Vec<(String, usize)> = Vec::with_capacity(sources.len());
+        for op in sources {
+            pieces.push(self.string_source(op)?);
+        }
+        // Concatenate left-to-right; the total length is known at compile time.
+        let (mut concat, mut total) = pieces[0].clone();
+        for (reg, len) in &pieces[1..] {
+            let out = self.fresh("_scat");
+            self.emit(
+                "str_concat",
+                Some(&out),
+                vec![Operand::Var(concat), Operand::Var(reg.clone())],
+                "str",
+            );
+            concat = out;
+            total += len;
+        }
+        // Resolve the receiver — an alphanumeric item this rung.
+        let target = first_token(verb, "NAME")
+            .ok_or_else(|| CompileError::Malformed("STRING without an INTO receiver".into()))?;
+        let didx = self.item_index(&target)?;
+        let width = match &self.items[didx].kind {
+            ItemKind::Char { .. } => self.items[didx].width(),
+            ItemKind::Numeric { .. } => {
+                return Err(CompileError::Unsupported(
+                    "STRING into a numeric receiver is a later rung".into(),
+                ))
+            }
+        };
+        let recv = self.items[didx].reg.clone();
+        if total >= width {
+            // Truncate at the receiver width; the whole receiver is overwritten.
+            let start = self.str_index(0);
+            let end = self.str_index(width as i64);
+            self.emit(
+                "str_slice",
+                Some(&recv),
+                vec![Operand::Var(concat), Operand::Var(start), Operand::Var(end)],
+                "str",
+            );
+        } else {
+            // Preserve the receiver's tail `[total, width)`: the head is the entire
+            // concatenation (its length is exactly `total`), then re-append the old
+            // tail read from the receiver's current register.
+            let start = self.str_index(total as i64);
+            let end = self.str_index(width as i64);
+            let tail = self.fresh("_stail");
+            self.emit(
+                "str_slice",
+                Some(&tail),
+                vec![Operand::Var(recv.clone()), Operand::Var(start), Operand::Var(end)],
+                "str",
+            );
+            self.emit(
+                "str_concat",
+                Some(&recv),
+                vec![Operand::Var(concat), Operand::Var(tail)],
+                "str",
+            );
+        }
+        Ok(())
+    }
+
+    /// A `STRING` sending field lowered to a `(register, length)` pair. An
+    /// alphanumeric item contributes its whole fixed-width slot; a string literal
+    /// its text; a numeric literal its lexed source digits verbatim (the same text
+    /// the oracle concatenates). A numeric item and a figurative constant as a
+    /// sending field are later rungs.
+    fn string_source(&mut self, op: &GrammarASTNode) -> Result<(String, usize), CompileError> {
+        match read_operand(op)? {
+            Operandy::Name(name) => {
+                let idx = self.item_index(&name)?;
+                match &self.items[idx].kind {
+                    ItemKind::Char { .. } => Ok((self.items[idx].reg.clone(), self.items[idx].width())),
+                    ItemKind::Numeric { .. } => Err(CompileError::Unsupported(
+                        "a numeric item as a STRING sending field is a later rung".into(),
+                    )),
+                }
+            }
+            Operandy::Literal(Src::Str(s)) => {
+                let len = s.chars().count();
+                let reg = self.fresh("_slit");
+                self.emit("str_const", Some(&reg), vec![Operand::Str(s)], "str");
+                Ok((reg, len))
+            }
+            Operandy::Literal(Src::Num(s)) => {
+                let len = s.chars().count();
+                let reg = self.fresh("_snum");
+                self.emit("str_const", Some(&reg), vec![Operand::Str(s)], "str");
+                Ok((reg, len))
+            }
+            Operandy::Literal(Src::Space) | Operandy::Literal(Src::Zero) => {
+                Err(CompileError::Unsupported(
+                    "a figurative constant as a STRING sending field is a later rung".into(),
+                ))
+            }
+            Operandy::RefMod { .. } => Err(CompileError::Unsupported(
+                "a reference modification as a STRING sending field is a later rung".into(),
+            )),
+        }
+    }
+
+    /// A fresh `i64` register holding the constant `k` — a compile-time-known
+    /// `str_slice` bound.
+    fn str_index(&mut self, k: i64) -> String {
+        let reg = self.fresh("_sidx");
+        self.emit("const", Some(&reg), vec![Operand::Int(k)], "i64");
         reg
     }
 
@@ -3700,6 +3853,61 @@ mod tests {
                 &["DISPLAY WS(18446744073709551615:18446744073709551615).", "STOP RUN."],
             ),
             "rmhuge",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn string_compiles_to_str_ops_and_validates() {
+        // The happy path lowers to string primitives (a concat chain + the
+        // slice/concat overlay) and passes IIR validation.
+        let module = compile_source(
+            &wrap(
+                &[
+                    "01  A  PIC X(3) VALUE \"ABC\".",
+                    "01  B  PIC X(2) VALUE \"DE\".",
+                    "01  T  PIC X(10) VALUE SPACES.",
+                ],
+                &["STRING A B DELIMITED BY SIZE INTO T.", "DISPLAY T.", "STOP RUN."],
+            ),
+            "str",
+        )
+        .unwrap();
+        assert!(module.validate().is_empty(), "{:?}", module.validate());
+        let os = ops(&module);
+        assert!(os.contains(&"str_concat".to_string()), "STRING concatenates sources");
+        assert!(os.contains(&"str_slice".to_string()), "STRING preserves the receiver tail");
+    }
+
+    #[test]
+    fn string_delimited_by_real_delimiter_is_a_later_rung() {
+        // Only DELIMITED BY SIZE this rung; a real (literal) delimiter needs a
+        // run-time scan — a clean Unsupported, not a parse error.
+        let err = compile_source(
+            &wrap(
+                &["01  A  PIC X(3) VALUE \"ABC\".", "01  T  PIC X(6) VALUE SPACES."],
+                &["STRING A DELIMITED BY \"-\" INTO T.", "STOP RUN."],
+            ),
+            "str_delim",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn string_with_pointer_is_a_later_rung() {
+        // WITH POINTER is accepted by the grammar but rejected here as a later rung.
+        let err = compile_source(
+            &wrap(
+                &[
+                    "01  A  PIC X(3) VALUE \"ABC\".",
+                    "01  T  PIC X(6) VALUE SPACES.",
+                    "01  P  PIC 9(2) VALUE 1.",
+                ],
+                &["STRING A DELIMITED BY SIZE INTO T WITH POINTER P.", "STOP RUN."],
+            ),
+            "str_ptr",
         )
         .unwrap_err();
         assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");

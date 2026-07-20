@@ -348,8 +348,91 @@ impl Machine {
             }
             Stmt::SetTrue { cond_name } => self.exec_set_true(cond_name)?,
             Stmt::Evaluate { subject, branches } => return self.exec_evaluate(subject, branches),
+            Stmt::String { sources, target } => self.exec_string(sources, target)?,
         }
         Ok(Flow::Normal)
+    }
+
+    /// `STRING s… DELIMITED BY SIZE INTO t` — concatenate every sending field,
+    /// each taken in FULL (`DELIMITED BY SIZE`), then overlay the result onto the
+    /// receiver `t` from the left. COBOL's STRING is unusual: it writes only as
+    /// many characters as it produced and **leaves the rest of `t` unchanged** — no
+    /// space-fill (unlike `MOVE`). So a result longer than `t` is truncated at
+    /// `t`'s width, and a shorter one leaves `t`'s trailing bytes exactly as they
+    /// were. This is the ANSI-85 rule, implemented identically in the
+    /// `cobol-iir-compiler` so the compiled program matches this oracle
+    /// byte-for-byte.
+    fn exec_string(&mut self, sources: &[Operand], target: &str) -> Result<(), RuntimeError> {
+        // Concatenate the sending fields left-to-right.
+        let mut concat = String::new();
+        for op in sources {
+            concat.push_str(&self.string_source_chars(op)?);
+        }
+        let idx = *self
+            .by_name
+            .get(target)
+            .ok_or_else(|| RuntimeError::UndefinedName(target.to_string()))?;
+        let size = match &self.items[idx].picture {
+            Some(Picture::Alphanumeric { size }) | Some(Picture::Alphabetic { size }) => *size,
+            Some(_) => {
+                return Err(RuntimeError::Unsupported(
+                    "STRING into a numeric receiver is a later rung".into(),
+                ))
+            }
+            None => {
+                return Err(RuntimeError::Unsupported(
+                    "STRING into a group receiver is a later rung".into(),
+                ))
+            }
+        };
+        // Overlay the leftmost `min(len, size)` characters, preserving the tail.
+        let src: Vec<char> = concat.chars().collect();
+        let mut dst: Vec<char> = self.items[idx].storage.chars().collect();
+        // Elementary alphanumeric storage is always exactly `size` chars; keep the
+        // overlay robust against any drift.
+        if dst.len() < size {
+            dst.resize(size, ' ');
+        } else {
+            dst.truncate(size);
+        }
+        let n = src.len().min(size);
+        dst[..n].copy_from_slice(&src[..n]);
+        self.items[idx].storage = dst.into_iter().collect();
+        Ok(())
+    }
+
+    /// The character image a sending field contributes to a `STRING` (taken in
+    /// full — `DELIMITED BY SIZE`). An alphanumeric item gives its whole storage
+    /// (trailing spaces and all); a string literal gives its text; a numeric
+    /// literal gives its source digits verbatim (matching the compiler, which
+    /// concatenates the literal's lexed text). A numeric item, a group item, and a
+    /// figurative constant as a source are later rungs.
+    fn string_source_chars(&self, op: &Operand) -> Result<String, RuntimeError> {
+        match op {
+            Operand::Lit(Lit::Str(s)) => Ok(s.clone()),
+            Operand::Lit(Lit::Num(s)) => Ok(s.clone()),
+            Operand::Lit(Lit::Fig(_)) => Err(RuntimeError::Unsupported(
+                "a figurative constant as a STRING sending field is a later rung".into(),
+            )),
+            Operand::RefMod { .. } => Err(RuntimeError::Unsupported(
+                "a reference modification as a STRING sending field is a later rung".into(),
+            )),
+            Operand::Ident(name) => {
+                let idx = *self
+                    .by_name
+                    .get(name)
+                    .ok_or_else(|| RuntimeError::UndefinedName(name.clone()))?;
+                match &self.items[idx].picture {
+                    Some(p) if p.is_numeric() => Err(RuntimeError::Unsupported(
+                        "a numeric item as a STRING sending field is a later rung".into(),
+                    )),
+                    Some(_) => Ok(self.items[idx].storage.clone()),
+                    None => Err(RuntimeError::Unsupported(
+                        "a group item as a STRING sending field is a later rung".into(),
+                    )),
+                }
+            }
+        }
     }
 
     /// `EVALUATE subject WHEN … END-EVALUATE` — run the first branch whose value

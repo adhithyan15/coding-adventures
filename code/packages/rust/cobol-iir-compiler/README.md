@@ -24,7 +24,7 @@ interpreter_ir::IIRModule   (one `main`, returns i64 exit code)
 NativeAOT · LLVM · WASM · JVM · CLR · VM · JIT
 ```
 
-## This slice (v0.19 — the core plus control flow, reference modification `IDENT(start:len)`, `EVALUATE` (numeric/alphanumeric, multi-value/`THRU`), `COMPUTE` incl. `**` and nested `/`, `ON SIZE ERROR`, signed, alphanumeric, compound (AND/OR/NOT) + symbolic conditions, level-88 with ranges + `SET … TO TRUE`)
+## This slice (v0.20 — the core plus control flow, reference modification `IDENT(start:len)`, `STRING … DELIMITED BY SIZE INTO`, `EVALUATE` (numeric/alphanumeric, multi-value/`THRU`), `COMPUTE` incl. `**` and nested `/`, `ON SIZE ERROR`, signed, alphanumeric, compound (AND/OR/NOT) + symbolic conditions, level-88 with ranges + `SET … TO TRUE`)
 
 COBOL's WORKING-STORAGE is a **PICTURE-typed** data model. Each elementary item
 becomes one IIR register: a **numeric** item (`PIC 9…`) is an `i64` holding its
@@ -43,6 +43,7 @@ integer `123`); an **alphanumeric** item (`PIC X`/`A`) is a `str`.
 | `88 cond-name VALUE lit… [lo THRU hi]` | registers a boolean condition-name over the preceding item; `IF cond-name` / `PERFORM … UNTIL cond-name` hold when the variable equals any listed value or falls in any inclusive range — lowered as an OR-fold of `cmp_eq` / `and(cmp_ge, cmp_le)` (numeric) |
 | `SET cond-name TO TRUE` | stores the condition-name's first `VALUE` (a range's low bound) into its conditional variable — a `const` store into the slot (numeric) |
 | `EVALUATE subj WHEN v… [lo THRU hi]… WHEN OTHER … END-EVALUATE` | a `jmp_if_false` branch cascade (a chain of `IF`s): each `WHEN` OR-folds its value-list (a single value → `cmp_eq`, a `THRU` range → `and(cmp_ge, cmp_le)`) into one boolean; the first match runs and jumps to the end (no fall-through); `WHEN OTHER` runs unconditionally once reached. A **numeric** subject compares with scaled `cmp_*`; an **alphanumeric** subject compares with `str_cmp` (space-padded) |
+| `STRING s… DELIMITED BY SIZE INTO t` | the sending fields concatenated with a `str_concat` chain (each source a `(reg, compile-time len)` pair — an item's slot or a `str_const` literal), then overlaid onto the receiver: a result at least as wide is truncated (`str_slice(concat, 0, width)`), a shorter one preserves the receiver's old tail (`str_concat(concat, str_slice(t, len, width))`) — COBOL's no-space-fill rule |
 | `GO TO para` | `jmp para_<name>` |
 | `PERFORM para [THRU q] [n TIMES \| UNTIL c \| VARYING v FROM a BY b UNTIL c]` | the paragraph range **inlined** at the call site (out-of-line-but-returns semantics), with loop control emitted around it |
 | `STOP RUN` | `ret 0` |
@@ -113,11 +114,13 @@ division whose scale-12 intermediate could exceed the 18-digit `i64` model (or o
 paired with `ON SIZE ERROR`), a `COMPUTE` `**` whose exponent is a variable, a
 parenthesised expression, negative, fractional, or past the oracle's `MAX_POW_EXP`
 (or whose conservative digit bound could exceed the 18-digit model), a
-level-88 condition-name over an alphanumeric variable, and a **reference
+level-88 condition-name over an alphanumeric variable, a **reference
 modification** with a computed (data-name) start/length, of a numeric item, or in
 a numeric/arithmetic/`MOVE`-source context (an out-of-range *constant* reference
 modification is likewise rejected at compile time, never lowered to a runtime
-trap).
+trap), and a `STRING` with a real (identifier/literal) delimiter, `WITH POINTER`,
+`ON`/`NOT ON OVERFLOW`, a numeric item or figurative as a sending field, or a
+non-alphanumeric receiver.
 
 ## Usage
 

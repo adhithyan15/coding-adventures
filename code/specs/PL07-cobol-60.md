@@ -336,11 +336,32 @@ procedure_division = "PROCEDURE" "DIVISION" DOT { paragraph } ;
 paragraph          = NAME DOT { sentence } ;
 sentence           = { statement } DOT ;
 statement          = move_stmt | add_stmt | display_stmt | perform_stmt
-                   | if_stmt | goto_stmt | stop_stmt | … ;
+                   | if_stmt | goto_stmt | evaluate_stmt | string_stmt
+                   | stop_stmt | … ;
 move_stmt          = "MOVE" operand "TO" NAME { NAME } ;
 add_stmt           = "ADD" operand { operand } "TO" NAME [ "GIVING" NAME ] ;
+string_stmt        = "STRING" operand { operand } "DELIMITED" "BY" string_delim
+                     "INTO" NAME [ "WITH" "POINTER" NAME ]
+                     [ "ON" "OVERFLOW" { statement } ]
+                     [ "NOT" "ON" "OVERFLOW" { statement } ] [ "END-STRING" ] ;
+string_delim       = "SIZE" | operand ;
 stop_stmt          = "STOP" ( "RUN" | NUMBER ) ;
 ```
+
+### `STRING` (data-name reference note)
+
+`STRING` is a reserved verb *and* the type name of the quoted string-literal
+token. They coexist because keyword promotion only rewrites bare `NAME` words,
+while a quoted `"…"`/`'…'` always lexes as the literal token regardless of the
+keyword list. The **first rung** implements `STRING s… DELIMITED BY SIZE INTO t`:
+each sending field (an alphanumeric item or a string/numeric literal) is taken in
+FULL (`DELIMITED BY SIZE`), the pieces are concatenated left-to-right, and the
+result is stored LEFT-JUSTIFIED into the alphanumeric receiver `t`, truncated at
+`t`'s width. Per ANSI-85, STRING writes only what it produced and **does not
+space-fill** the untouched tail of `t` (unlike `MOVE`) — the receiver's trailing
+bytes keep their prior content. The grammar also *accepts* a real
+(identifier/literal) delimiter, `WITH POINTER`, and `ON`/`NOT ON OVERFLOW` so the
+reader can reject them as a clean "later rung" error rather than a parse failure.
 
 Grammar scope tracks the lexer scope below.
 
@@ -408,6 +429,8 @@ list, `COPY`) is documented as future work.
 | Editing PICTUREs | `Z * $ , + - CR DB` and floating insertion |
 | Complete reserved-word list | The full ~300 COBOL-60 reserved words |
 | `COPY` library text | A pre-tokenize include-style hook |
+| `STRING` real delimiters / `WITH POINTER` / `ON OVERFLOW` | Later rungs beyond the first `DELIMITED BY SIZE` cut (need a run-time scan and a receiver pointer) |
+| `UNSTRING`, `INSPECT`, other string verbs | The rest of the string-handling verb family |
 | IR / interpreter | Run a COBOL program; out of scope for the frontend |
 
 [PL06]: PL06-flow-matic.md

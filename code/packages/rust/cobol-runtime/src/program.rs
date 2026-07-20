@@ -129,6 +129,13 @@ pub enum Stmt {
     /// runs its statements, with no fall-through. A value-list entry is a single
     /// value or an inclusive `THRU` range.
     Evaluate { subject: Operand, branches: Vec<(Option<Vec<WhenValue>>, Vec<Stmt>)> },
+    /// `STRING s… DELIMITED BY SIZE INTO t` — concatenate each source (taken in
+    /// full, `DELIMITED BY SIZE`) left-to-right and store the result into the
+    /// alphanumeric receiver `t`, LEFT-JUSTIFIED and truncated at `t`'s width,
+    /// **without** space-filling the untouched tail (bytes past what STRING wrote
+    /// keep their prior content — the ANSI-85 STRING rule). A real delimiter,
+    /// `WITH POINTER`, and `ON OVERFLOW` are later rungs (rejected at build time).
+    String { sources: Vec<Operand>, target: String },
     StopRun,
 }
 
@@ -641,6 +648,47 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                 }
             }
             Ok(Stmt::If { cond, then_branch, else_branch })
+        }
+        "string_stmt" => {
+            // STRING s… DELIMITED BY SIZE INTO t. The grammar also *accepts* the
+            // later-rung options (a real delimiter, WITH POINTER, ON OVERFLOW) so
+            // that we can reject them here with a friendly Unsupported instead of a
+            // bare parse error.
+            let toks = child_tokens(verb);
+            if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "POINTER") {
+                return Err(RuntimeError::Unsupported(
+                    "STRING … WITH POINTER is a later rung".into(),
+                ));
+            }
+            if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "OVERFLOW") {
+                return Err(RuntimeError::Unsupported(
+                    "STRING … ON OVERFLOW / NOT ON OVERFLOW is a later rung".into(),
+                ));
+            }
+            // The delimiter is `SIZE` or a general operand; only SIZE this rung.
+            let delim = child_node(verb, "string_delim")
+                .ok_or_else(|| RuntimeError::Unsupported("STRING without DELIMITED BY".into()))?;
+            let is_size = child_tokens(delim).iter().any(|(k, v)| k == "KEYWORD" && v == "SIZE");
+            if !is_size {
+                return Err(RuntimeError::Unsupported(
+                    "STRING … DELIMITED BY <identifier/literal> (only DELIMITED BY SIZE) is a later rung"
+                        .into(),
+                ));
+            }
+            // The sending fields are the `operand` children (the delimiter operand
+            // is nested under `string_delim`, so it does not collide).
+            let sources = child_nodes(verb, "operand")
+                .into_iter()
+                .map(read_operand)
+                .collect::<Result<Vec<_>, _>>()?;
+            if sources.is_empty() {
+                return Err(RuntimeError::Unsupported("STRING without a sending field".into()));
+            }
+            // The receiver is the first NAME token (INTO t precedes any WITH POINTER
+            // name, which we have already rejected above).
+            let target = first_token(verb, "NAME")
+                .ok_or_else(|| RuntimeError::Unsupported("STRING without an INTO receiver".into()))?;
+            Ok(Stmt::String { sources, target })
         }
         other => Err(RuntimeError::Unsupported(format!("the {} verb", verb_name(other)))),
     }

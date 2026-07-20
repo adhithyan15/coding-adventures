@@ -111,7 +111,8 @@ sentence  = statement { statement } DOT ;
 
 statement = move_stmt | display_stmt | accept_stmt
           | add_stmt | subtract_stmt | multiply_stmt | divide_stmt | compute_stmt
-          | perform_stmt | goto_stmt | if_stmt | set_stmt | evaluate_stmt | stop_stmt ;
+          | perform_stmt | goto_stmt | if_stmt | set_stmt | evaluate_stmt
+          | string_stmt | stop_stmt ;
 
 move_stmt     = "MOVE" operand "TO" NAME { NAME } ;
 # SET a level-88 condition-name TRUE: assign its conditional variable the value
@@ -126,6 +127,25 @@ set_stmt      = "SET" NAME "TO" "TRUE" ;
 evaluate_stmt = "EVALUATE" operand { when_branch } "END-EVALUATE" ;
 when_branch   = "WHEN" ( "OTHER" | when_value { when_value } ) { statement } ;
 when_value    = operand [ ( "THRU" | "THROUGH" ) operand ] ;
+# STRING: concatenate several sending fields into one alphanumeric receiver.
+# First rung: `STRING s… DELIMITED BY SIZE INTO t` — each source (an alphanumeric
+# item or a literal) is taken in FULL (`DELIMITED BY SIZE`), the pieces are joined
+# left-to-right, and the result is stored LEFT-JUSTIFIED into `t`, truncated at
+# `t`'s width and — the COBOL surprise — WITHOUT space-filling the untouched tail
+# (bytes beyond what STRING wrote keep their prior content).
+#   The delimiter is parsed as `SIZE` OR a general `operand`; a real
+# (literal/identifier) delimiter needs a run-time scan and is rejected as a later
+# rung by the reader — the grammar accepts it so the rejection is a clean
+# "Unsupported", not a parse error.  `WITH POINTER` and the `ON OVERFLOW` /
+# `NOT ON OVERFLOW` handlers are likewise accepted-then-rejected this rung.
+# `END-STRING` closes the scope; like the simpler verbs the statement also ends at
+# a period.
+string_stmt   = "STRING" operand { operand } "DELIMITED" "BY" string_delim
+                        "INTO" NAME [ "WITH" "POINTER" NAME ]
+                        [ "ON" "OVERFLOW" { statement } ]
+                        [ "NOT" "ON" "OVERFLOW" { statement } ]
+                        [ "END-STRING" ] ;
+string_delim  = "SIZE" | operand ;
 display_stmt  = "DISPLAY" operand { operand } ;
 accept_stmt   = "ACCEPT" NAME ;
 # The four arithmetic verbs share two optional trailing clauses with COMPUTE:

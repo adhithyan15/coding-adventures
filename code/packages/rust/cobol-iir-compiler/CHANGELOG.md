@@ -8,6 +8,34 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.20.0: `STRING … DELIMITED BY SIZE INTO` (first rung)
+
+Lowered COBOL's `STRING` verb, oracle-first and byte-identical to
+`cobol-runtime` 0.24.0.
+
+- **`emit_string`** — concatenates the sending fields with a `str_concat` chain
+  (each source is a `(register, compile-time length)` pair: an alphanumeric item's
+  slot, or a `str_const` for a string / numeric literal), then overlays the result
+  onto the receiver. The overlay honours COBOL's no-space-fill rule: when the
+  concatenation is at least as wide as the receiver it is truncated
+  (`t = str_slice(concat, 0, width)`); when shorter, the receiver's old tail is
+  preserved (`t = str_concat(concat, str_slice(t, len, width))`). All indices are
+  compile-time constants, mirroring the exact bytes the oracle's `exec_string`
+  writes.
+- Only `DELIMITED BY SIZE` this rung. A real (identifier/literal) delimiter,
+  `WITH POINTER`, `ON`/`NOT ON OVERFLOW`, a numeric item as a sending field, a
+  figurative sending field, and a non-alphanumeric receiver are clean
+  `CompileError::Unsupported` "later rung" errors (the grammar accepts the
+  delimiter/POINTER/OVERFLOW syntax so the rejection is friendly, not a parse
+  error).
+- Grammar/lexer: new `string_stmt` rule and the `STRING`/`DELIMITED`/`WITH`/
+  `POINTER`/`OVERFLOW`/`END-STRING` keywords (`cobol-parser` 0.15.0 /
+  `cobol-lexer` 0.7.0).
+- Tests: six `jit_e2e` cases (concatenation, truncation, a literal source, a
+  full-width item with its spaces, the no-space-fill tail, a numeric literal
+  source) plus unit tests for the str-op lowering and the `DELIMITED BY <delim>`
+  and `WITH POINTER` later-rung errors.
+
 ### Added — v0.19.0: reference modification `IDENT(start:len)` (PL09 step 5)
 
 COBOL **reference modification** — `base(start:len)` selects `len` characters of

@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.24.0 — `STRING … DELIMITED BY SIZE INTO` (first rung)
+
+- Added `Stmt::String { sources, target }` and its executor. `STRING s… DELIMITED
+  BY SIZE INTO t` concatenates every sending field — each taken in FULL
+  (`DELIMITED BY SIZE`), so a `PIC X(5)` carries its trailing spaces — left to
+  right, then overlays the result onto the alphanumeric receiver `t` from the
+  left. Following the ANSI-85 rule, STRING writes only the characters it produced
+  and **leaves the rest of `t` unchanged** (no space-fill, unlike `MOVE`),
+  truncating at `t`'s width when the result is longer.
+- Sending fields this rung: alphanumeric items and string / numeric literals (a
+  numeric literal contributes its source digits verbatim). A numeric item, a group
+  item, and a figurative constant as a sending field are clean
+  `RuntimeError::Unsupported` "later rung" errors, as are a real
+  (identifier/literal) delimiter, `WITH POINTER`, and `ON`/`NOT ON OVERFLOW`, and a
+  non-alphanumeric receiver.
+
 ## 0.23.0 — reference modification `IDENT(start:len)`
 
 - The oracle now evaluates COBOL **reference modification** — `base(start:len)`
