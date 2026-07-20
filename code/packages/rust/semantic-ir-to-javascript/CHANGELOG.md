@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.45.0 — fix stack-overflow DoS in method dispatch (`resolveMethod`)
+
+**Any method call on an instance whose class has a deep `include` chain killed
+the program.** `resolveMethod`'s inner module search recursed once per level of
+the include graph, so a long chain exhausted the JS call stack —
+`RangeError: Maximum call stack size exceeded` (measured: fine at ~5k deep,
+fatal by ~9k). Because `resolveMethod` runs on EVERY method call to a
+`SirInstance`, this was not an exotic path: one deep mixin graph made every
+call on such an object crash. Reproduced end-to-end through `callMethod`.
+
+The module search is now an explicit STACK rather than recursion, keeping the
+JS stack at O(1) regardless of include-graph depth. The same shape the
+`is_a?` module walk already uses.
+
+**Method resolution order is preserved exactly.** The old walk visited a
+module's includes newest-first (`for (i = len-1; i >= 0; i--)`), fully
+exploring each subtree before the next sibling. A LIFO stack reproduces that
+by PUSHING children in ascending index order — they then pop newest-first, and
+a popped module's own children go on top so its subtree is exhausted before
+its older siblings. The shared `seen` set (checked on pop) still terminates a
+cyclic or repeated include.
+
+New `method_resolution_order_survives_the_iterative_module_search` exec-proof
+pins every ordering rule that must not change: a class's own method beats its
+modules; the most-recently-included module wins; a module's own includes are
+searched depth-first, newest-first, before an older sibling; and the
+superclass chain is consulted only after the whole subclass subtree misses.
+The deep-chain regression test now drives the REAL `callMethod` path (it
+previously had to route around this crash via the builtin form).
+
 ## 0.44.0 — Ruby type reflection: `.class`, `is_a?`, `kind_of?`, `instance_of?`
 
 The backend implemented NO type reflection: `7.class` compiled fine and then
