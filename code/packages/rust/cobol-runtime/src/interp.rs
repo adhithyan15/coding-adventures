@@ -695,6 +695,14 @@ impl Machine {
     }
 
     fn exec_move(&mut self, src: &Operand, dsts: &[String]) -> Result<(), RuntimeError> {
+        // A reference modification as a MOVE source is a later rung — the
+        // supported contexts on this rung are DISPLAY and comparison (as in the
+        // compiler, which rejects the same shape).
+        if let Operand::RefMod { .. } = src {
+            return Err(RuntimeError::Unsupported(
+                "reference modification is only supported in DISPLAY and comparison contexts on this rung — a MOVE source is a later rung".into(),
+            ));
+        }
         for dst in dsts {
             // Resolve the source afresh per receiver (its category can differ).
             let value = self.src_from_operand(src)?;
@@ -1007,7 +1015,52 @@ impl Machine {
                     None => Ok(Src::Chars(self.group_image(idx))),
                 }
             }
+            // A reference modification always yields the selected characters — an
+            // alphanumeric value. In a numeric context this `Src::Chars` is
+            // rejected downstream (`operand_decimal`), matching the compiler.
+            Operand::RefMod { base, start, len } => {
+                Ok(Src::Chars(self.refmod_string(base, *start, *len)?))
+            }
         }
+    }
+
+    /// Slice an alphanumeric item for a reference modification `base(start:len)`.
+    ///
+    /// COBOL reference modification is 1-based: `base(start:len)` selects the
+    /// characters at 1-based positions `start .. start+len-1`, i.e. the 0-based
+    /// half-open range `[start-1, start-1+len)`. An omitted `len` runs to the end
+    /// of the item, so `len = width - (start-1)`. This slices the *same*
+    /// character range the compiler emits as a constant-index `str_slice`, so the
+    /// DISPLAY output and comparisons agree byte-for-byte. The base must be an
+    /// alphanumeric item (a numeric item is a later rung).
+    fn refmod_string(&self, base: &str, start: usize, len: Option<usize>) -> Result<String, RuntimeError> {
+        let idx = *self.by_name.get(base).ok_or_else(|| RuntimeError::UndefinedName(base.to_string()))?;
+        let item = &self.items[idx];
+        let content = match &item.picture {
+            Some(p) if p.is_numeric() => {
+                return Err(RuntimeError::Unsupported(
+                    "reference modification of a numeric item is a later rung".into(),
+                ));
+            }
+            Some(_) => item.storage.clone(),
+            None => self.group_image(idx),
+        };
+        let chars: Vec<char> = content.chars().collect();
+        let width = chars.len();
+        if start < 1 {
+            return Err(RuntimeError::Unsupported(
+                "reference modification start position must be at least 1 — a later rung".into(),
+            ));
+        }
+        let start0 = start - 1;
+        let actual_len = len.unwrap_or(width.saturating_sub(start0));
+        if start0 + actual_len > width {
+            return Err(RuntimeError::Unsupported(format!(
+                "reference modification {base}({start}:{}) runs past the {width}-character item — a later rung",
+                len.map(|l| l.to_string()).unwrap_or_default()
+            )));
+        }
+        Ok(chars[start0..start0 + actual_len].iter().collect())
     }
 
     /// A numeric item's value as a [`Decimal`], split by its implied decimal.
@@ -1034,6 +1087,7 @@ impl Machine {
                 let idx = *self.by_name.get(name).ok_or_else(|| RuntimeError::UndefinedName(name.clone()))?;
                 Ok(self.item_image(idx))
             }
+            Operand::RefMod { base, start, len } => self.refmod_string(base, *start, *len),
         }
     }
 
