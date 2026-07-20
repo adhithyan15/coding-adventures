@@ -2,6 +2,22 @@
 
 All notable changes to the `sir-conformance` crate will be documented in this file.
 
+## [0.16.0] - Type-reflection conformance: `.class` across the backends
+
+Adds `tests/reflection.rs` — every backend must reproduce Ruby's class-NAME
+strings (`7.class == Integer`, `7.0.class == Float`, `nil.class == NilClass`,
+…). A **per-backend** guard (the `division.rs` `python_division_is_ruby_floor_faithful`
+style) rather than an all-backend frontier, because the arms are not yet all
+closed:
+
+- JavaScript — **closed by this change** (previously raised `NoMethodError`;
+  its `Integer`/`Float` split is representable only via its tagged floats).
+- Go — already closed (`_sir_ruby_class_name`); pinned against regression.
+- Rust — **`.class` panics at runtime (exit 101)**, tracked separately.
+- C — not yet emitted (skips).
+
+Grows into a cross-backend assertion once the Rust arm is implemented.
+
 ## [0.15.0] - Float-division frontier: `Float#/` true-divides on every backend
 
 Adds `float_division_true_divides_on_every_backend` — the float half of the

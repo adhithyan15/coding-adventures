@@ -571,6 +571,123 @@ console.log(o.join("|"));
 }
 
 #[test]
+fn ruby_class_reflection_names_every_type() {
+    // `.class` on every runtime type, matching the Go backend's
+    // `_sir_ruby_class_name`. The Integer-vs-Float answer is only possible
+    // because numbers carry a tag — `7` and `7.0` are the same f64 in JS.
+    let snippet = r#"
+const F = __Sir; const o = [];
+o.push(F.callMethod(7, "class"));                  // Integer
+o.push(F.callMethod(F.mkFloat(7), "class"));       // Float  (tagged!)
+o.push(F.callMethod(3.5, "class"));                // Float  (non-integral native)
+o.push(F.callMethod("hi", "class"));               // String
+o.push(F.callMethod(F.intern("sym"), "class"));    // Symbol
+o.push(F.callMethod([1, 2], "class"));             // Array
+o.push(F.callMethod(new Map(), "class"));          // Hash
+o.push(F.callMethod(null, "class"));               // NilClass
+o.push(F.callMethod(true, "class"));               // TrueClass
+o.push(F.callMethod(false, "class"));              // FalseClass
+console.log(o.join("|"));
+"#;
+    if let Some(stdout) = run_runtime_snippet(snippet, "rbclass") {
+        assert_eq!(
+            stdout,
+            "Integer|Float|Float|String|Symbol|Array|Hash|NilClass|TrueClass|FalseClass",
+        );
+    }
+}
+
+#[test]
+fn ruby_is_a_honours_ancestry_and_instance_of_is_exact() {
+    // `is_a?`/`kind_of?` walk ancestry; `instance_of?` is an EXACT match.
+    // Reached BOTH as a method and as the `is_a?` builtin (the form the Ruby
+    // frontend emits for `x.is_a?(Foo)` and for a `case/in Foo` pattern,
+    // passing the class as its NAME so no constant-reference support is
+    // needed). `respond_to?` reports them honestly.
+    let snippet = r#"
+const F = __Sir; const o = [];
+o.push(String(F.callMethod(7, "is_a?", "Integer")));      // true  (exact)
+o.push(String(F.callMethod(7, "is_a?", "Numeric")));      // true  (ancestor)
+o.push(String(F.callMethod(7, "is_a?", "Comparable")));   // true  (ancestor)
+o.push(String(F.callMethod(7, "is_a?", "Object")));       // true  (universal)
+o.push(String(F.callMethod(7, "is_a?", "Float")));        // false
+o.push(String(F.callMethod(F.mkFloat(7), "is_a?", "Float")));   // true (tagged)
+o.push(String(F.callMethod(F.mkFloat(7), "is_a?", "Integer"))); // false
+o.push(String(F.callMethod(7, "kind_of?", "Numeric")));   // true (alias)
+o.push(String(F.callMethod(7, "instance_of?", "Integer")));// true  (exact)
+o.push(String(F.callMethod(7, "instance_of?", "Numeric")));// false (NOT ancestry)
+o.push(String(F.builtins["is_a?"](7, "Numeric")));        // true  (builtin form)
+o.push(String(F.builtins["instance_of?"](7, "Numeric"))); // false (builtin form)
+o.push(String(F.builtins["class"](F.mkFloat(7))));        // Float (builtin form)
+o.push(String(F.callMethod(7, "respond_to?", F.intern("class")))); // true
+console.log(o.join("|"));
+"#;
+    if let Some(stdout) = run_runtime_snippet(snippet, "rbisa") {
+        assert_eq!(
+            stdout,
+            "true|true|true|true|false|true|false|true|true|false|true|false|Float|true",
+        );
+    }
+}
+
+#[test]
+fn ruby_reflection_covers_exceptions_modules_and_rejects_prototype_names() {
+    // Three edges a security review surfaced:
+    //  1. A caught exception is a `SirError`, NOT a `SirInstance` — it must
+    //     still report its own class and walk exception ancestry, or
+    //     `rescue => e; e.is_a?(StandardError)` silently takes the wrong branch.
+    //  2. Ruby's MRO is TRANSITIVE: `C` includes `M`, `M` includes `N` ⇒
+    //     `c.is_a?(N)` is true.
+    //  3. The `builtins` table is indexed by a source-derived name, so it must
+    //     be null-prototype — otherwise `builtins["toString"]` resolves an
+    //     inherited function and `callBuiltin` INVOKES it (a gadget).
+    let snippet = r#"
+const F = __Sir; const o = [];
+// (1) exceptions
+const e = new F.SirError("ArgumentError", "boom");
+o.push(F.callMethod(e, "class"));                              // ArgumentError
+o.push(String(F.callMethod(e, "is_a?", "ArgumentError")));     // true (exact)
+o.push(String(F.callMethod(e, "is_a?", "StandardError")));     // true (ancestry)
+o.push(String(F.callMethod(e, "is_a?", "TypeError")));         // false
+// (2) transitive module includes: C < M < N
+F.includeModule("C", "M"); F.includeModule("M", "N");
+const inst = new F.SirInstance("C");
+o.push(String(F.callMethod(inst, "class")));                   // C
+o.push(String(F.callMethod(inst, "is_a?", "M")));              // true (direct)
+o.push(String(F.callMethod(inst, "is_a?", "N")));              // true (transitive)
+o.push(String(F.callMethod(inst, "is_a?", "Q")));              // false
+// (3) prototype-name gadget is closed
+o.push(String(F.builtins["toString"]));                        // undefined
+o.push(String(F.builtins["__defineGetter__"]));                // undefined
+try { F.callBuiltin("constructor", []); o.push("INVOKED"); }
+catch (err) { o.push("raised"); }                              // raised
+// (4) a NATIVE JS error reflects as the class `rescue` catches it as, so
+//     reflection and rescue matching never disagree.
+const native = new TypeError("internal");
+o.push(F.callMethod(native, "class"));                         // StandardError
+o.push(String(F.callMethod(native, "is_a?", "StandardError"))); // true
+// (5) a pathological include CHAIN must not exhaust the JS stack — the module
+//     walk behind `is_a?` is an explicit worklist, not recursion.  Driven
+//     through the BUILTIN form on purpose: `callMethod` on a SirInstance first
+//     consults `resolveMethod`, whose `searchModule` is recursive and blows
+//     the stack on a chain this deep — a PRE-EXISTING DoS in method dispatch,
+//     tracked separately and deliberately not exercised here.
+for (let i = 0; i < 20000; i++) { F.includeModule("D" + i, "D" + (i + 1)); }
+const deep = new F.SirInstance("D0");
+o.push(String(F.builtins["is_a?"](deep, "D20000")));           // true, no overflow
+o.push(String(F.builtins["is_a?"](deep, "Nope")));             // false, no overflow
+console.log(o.join("|"));
+"#;
+    if let Some(stdout) = run_runtime_snippet(snippet, "rbrefledge") {
+        assert_eq!(
+            stdout,
+            "ArgumentError|true|true|false|C|true|true|false|undefined|undefined|raised|\
+             StandardError|true|true|false",
+        );
+    }
+}
+
+#[test]
 fn short_circuit_does_not_evaluate_rhs() {
     // (false && <print "boom">) must NOT print "boom"; the whole
     // expression prints #f.  Routing through truthy keeps `false` falsy.
