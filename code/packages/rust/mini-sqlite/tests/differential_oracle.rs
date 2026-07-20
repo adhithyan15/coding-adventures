@@ -1610,6 +1610,57 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT DISTINCT c FROM t ORDER BY c",
     },
+    // Upper-case row FIRST: the surviving row must keep its ORIGINAL text ('A'),
+    // proving the collation folds only the dedupe KEY, not the emitted value.
+    Case {
+        id: "distinct_collate_keeps_original_case",
+        setup: &[
+            "CREATE TABLE t (id INTEGER, c TEXT COLLATE NOCASE)",
+            "INSERT INTO t VALUES (1,'A'),(2,'a'),(3,'B'),(4,'b')",
+        ],
+        query: "SELECT DISTINCT c FROM t ORDER BY c",
+    },
+    // `SELECT DISTINCT *` folds too, because `*` expands to bare column
+    // references — each contributing its own declared collation.
+    Case {
+        id: "distinct_star_collate",
+        setup: &[
+            "CREATE TABLE t (c TEXT COLLATE NOCASE)",
+            "INSERT INTO t VALUES ('A'),('a'),('B')",
+        ],
+        query: "SELECT DISTINCT * FROM t ORDER BY 1",
+    },
+    // An ALIAS is just a label — the collation comes from the EXPRESSION, so a
+    // collated column aliased to another name still folds.
+    Case {
+        id: "distinct_aliased_collated_column_still_folds",
+        setup: &[
+            "CREATE TABLE t (c TEXT COLLATE NOCASE)",
+            "INSERT INTO t VALUES ('A'),('a'),('B')",
+        ],
+        query: "SELECT DISTINCT c AS y FROM t ORDER BY y",
+    },
+    // ...and conversely, aliasing a BINARY column TO a collated column's name
+    // must NOT fold: the name is irrelevant, `x` is BINARY. This is the guard
+    // that rules out keying the collation by output column NAME.
+    Case {
+        id: "distinct_alias_name_does_not_inherit_collate",
+        setup: &[
+            "CREATE TABLE t (x TEXT, c TEXT COLLATE NOCASE)",
+            "INSERT INTO t VALUES ('p','z'),('P','z')",
+        ],
+        query: "SELECT DISTINCT x AS c FROM t ORDER BY 1",
+    },
+    // An EXPRESSION over a collated column drops the collation, so 'A' and 'a'
+    // stay distinct through `||`.
+    Case {
+        id: "distinct_expression_drops_collate",
+        setup: &[
+            "CREATE TABLE t (c TEXT COLLATE NOCASE)",
+            "INSERT INTO t VALUES ('A'),('a')",
+        ],
+        query: "SELECT DISTINCT c||'' AS e FROM t ORDER BY e",
+    },
     // The same table's BINARY column is NOT folded — all four values are distinct.
     // (Guards against over-applying the collation to every column.)
     Case {
@@ -2040,16 +2091,16 @@ const LEDGER: &[(&str, &str)] = &[
     // `group_by_column_*` cases); closing these two needs hand-edits to the
     // sql-parser grammar (`select_item` and `group_by` gaining an optional
     // `COLLATE NAME` tail), which is the next increment in this lane.
-    // DISTINCT does not yet fold on a column's declared collation. GROUP BY does
-    // (see the `group_by_column_*` cases) — the two use different machinery: the
-    // group key is built per row by `SaveGroupKey`, which now takes a per-key
-    // collation, whereas DISTINCT dedupes whole output rows in `apply_distinct`
-    // after the fact and has no collation channel yet. Closing this means giving
-    // `DistinctResult` per-output-column collations, the next increment in this
-    // lane.
+    // `SELECT DISTINCT *` does not expand `*` — mini returns a single column
+    // literally named "*" holding NULL, where SQLite returns the table's columns.
+    // Plain `SELECT * FROM t` expands correctly, so this is specific to the
+    // DISTINCT projection path and is UNRELATED to collation: the collation
+    // vector this lane added already expands `*` via the schema's ordered
+    // `column_names`, so it will line up once the projection does. Pre-existing
+    // (this is the first case to exercise `DISTINCT *` at all).
     (
-        "distinct_column_collate_nocase",
-        "DISTINCT does not yet fold on a column's declared COLLATE (apply_distinct has no per-column collation channel)",
+        "distinct_star_collate",
+        "SELECT DISTINCT * does not expand the star into the table's columns (projection gap, not a collation gap)",
     ),
     (
         "distinct_explicit_collate",

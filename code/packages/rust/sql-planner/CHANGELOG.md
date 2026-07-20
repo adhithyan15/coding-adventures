@@ -2,6 +2,23 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.27] - Unreleased
+
+### Added
+
+- **Column-defined `COLLATE` flows into DISTINCT.** `LogicalPlan::Distinct` now
+  carries one collation per OUTPUT column, computed by the new
+  `distinct_output_collations`. SQLite folds a DISTINCT column only when the
+  output expression is a BARE COLUMN REFERENCE to a column that declares a
+  collation — verified against real SQLite: `c` folds; `*` folds (it expands to
+  bare columns); `c AS y` folds (an alias is only a label — the collation comes
+  from the expression); `x AS c` does NOT fold (the name `c` is irrelevant, `x`
+  is BINARY); `c||''` does NOT fold (an expression drops the collation). The
+  mapping is therefore POSITIONAL, never by output name — keying by name would
+  wrongly fold `x AS c`. `*` is expanded through the schema's ordered
+  `column_names` so the vector stays aligned with what is emitted. Single base
+  table only (no JOINs), matching the other collation passes.
+
 ## [0.2.26] - Unreleased
 
 ### Added

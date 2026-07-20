@@ -2,6 +2,16 @@
 
 All notable changes to this crate will be documented here.
 
+## [0.1.6] - Unreleased
+
+### Changed
+
+- `OptimizedPlan::Distinct` carries the per-output-column collations added in
+  sql-planner 0.2.27; every transform that rebuilds a Distinct node (lift,
+  constant folding, predicate pushdown, projection pruning, limit pushdown,
+  dead-code elimination, and the `Filter(Distinct(x))` → `Distinct(Filter(x))`
+  rewrite) threads them through unchanged.
+
 ## [0.1.5] - Unreleased
 
 ### Changed

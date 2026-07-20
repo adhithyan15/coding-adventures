@@ -358,7 +358,11 @@ pub enum LogicalPlan {
     },
 
     /// `SELECT DISTINCT` — removes duplicate rows from the output.
-    Distinct(Box<LogicalPlan>),
+    /// Remove duplicate rows. The `Vec<Option<String>>` gives one collation per
+    /// OUTPUT column (positionally parallel to the emitted row); `None` = default
+    /// BINARY. Only a bare column reference to a column with a declared COLLATE
+    /// gets `Some` — see `distinct_output_collations`.
+    Distinct(Box<LogicalPlan>, Vec<Option<String>>),
 
     /// `UNION [ALL]` of two plan subtrees.
     Union {
@@ -797,9 +801,10 @@ fn plan_select(
     // -----------------------------------------------------------------------
     // Grammar: select_stmt = SELECT [ DISTINCT | ALL ] ...
     // We check for the DISTINCT keyword token among the direct children of select_stmt.
-    if has_token(stmt, "DISTINCT") {
-        plan = LogicalPlan::Distinct(Box::new(plan));
-    }
+    // NOTE: the node itself is built AFTER `output_columns` is computed (just
+    // below), because DISTINCT needs one collation per OUTPUT column. Nothing
+    // between here and there mutates `plan`, so the tree shape is unchanged.
+    let is_distinct = has_token(stmt, "DISTINCT");
 
     // -----------------------------------------------------------------------
     // Projected output columns — computed HERE (before ORDER BY) so a
@@ -819,6 +824,18 @@ fn plan_select(
             alias: None,
         }]
     };
+
+    // Now that the output list is known, build the DISTINCT node with one
+    // collation per output column. SQLite folds a DISTINCT column only when the
+    // output expression is a BARE COLUMN REFERENCE whose column declares a
+    // collation — an alias to a collated column's *name* does not inherit it
+    // (`SELECT DISTINCT x AS c` keeps 'p' and 'P' apart even when `c` is
+    // NOCASE), and an expression drops it (`c||''` keeps 'A' and 'a' apart).
+    // `SELECT DISTINCT *` does fold, because `*` expands to bare columns.
+    if is_distinct {
+        let collations = distinct_output_collations(schema, &output_columns, &base_table_ref, stmt);
+        plan = LogicalPlan::Distinct(Box::new(plan), collations);
+    }
 
     // -----------------------------------------------------------------------
     // Step 7: ORDER BY.
@@ -1326,6 +1343,63 @@ fn collate_comparisons(expr: SqlExpr, ctx: &OrderCollateCtx) -> SqlExpr {
         }
         other => other,
     }
+}
+
+/// One collation per DISTINCT **output** column, positionally parallel to the
+/// emitted row (`None` = default BINARY, i.e. dedupe on the bytes as-is).
+///
+/// SQLite folds a DISTINCT column only when the output expression is a BARE
+/// COLUMN REFERENCE to a column that declares a collation. Verified against real
+/// SQLite:
+///
+/// | `SELECT DISTINCT …` (with `c TEXT COLLATE NOCASE`, `x TEXT`) | folds? |
+/// |---------------------------------------------------------------|--------|
+/// | `c`                                                           | yes    |
+/// | `*`                                                           | yes — expands to bare columns |
+/// | `c AS y`                                                      | yes — an alias is just a label, the collation comes from the expression |
+/// | `x AS c` (alias shadowing a collated column's NAME)           | NO — `x` is BINARY; the name `c` is irrelevant |
+/// | `c||''`                                                       | NO — an expression drops the collation |
+///
+/// So the mapping must be POSITIONAL, never by output name: keying on the name
+/// would wrongly fold `x AS c`. `*` is expanded here through the schema's
+/// ordered `column_names` so the vector still lines up with what is emitted.
+/// Restricted to a single base table (no JOINs) like the other collation passes;
+/// with a join we return all-`None` and DISTINCT keeps byte semantics.
+fn distinct_output_collations(
+    schema: &dyn SchemaProvider,
+    output_columns: &[OutputColumn],
+    base_table_ref: &Option<(String, Option<String>)>,
+    stmt: &GrammarASTNode,
+) -> Vec<Option<String>> {
+    let none_for_each = |n: usize| vec![None; n];
+    if !find_nodes(stmt, "join_clause").is_empty() {
+        return none_for_each(output_columns.len());
+    }
+    let Some((table, alias)) = base_table_ref.as_ref() else {
+        return none_for_each(output_columns.len());
+    };
+    let ctx = build_collate_ctx(schema, table, alias.as_deref());
+
+    let mut out = Vec::new();
+    for col in output_columns {
+        match &col.expr {
+            // `*` expands to every column of the base table, in declaration
+            // order, each a bare reference — so each contributes its own
+            // declared collation (or None).
+            SqlExpr::Column { name, .. } if name == "*" => {
+                for cname in schema.column_names(table).unwrap_or_default() {
+                    out.push(ctx.collations.get(&cname.to_ascii_lowercase()).cloned());
+                }
+            }
+            // A bare column reference inherits its declared collation. An ALIAS
+            // is irrelevant — the collation comes from the expression, so
+            // `c AS y` still folds. (`resolve_column_collation` yields `None` for
+            // any non-column expression, which is exactly the "expressions drop
+            // the collation" rule.)
+            expr => out.push(resolve_column_collation(expr, &ctx)),
+        }
+    }
+    out
 }
 
 fn resolve_column_collation(expr: &SqlExpr, ctx: &OrderCollateCtx) -> Option<String> {
@@ -3817,7 +3891,7 @@ mod tests {
     fn test_select_distinct() {
         let plan = plan_ok("SELECT DISTINCT city FROM users");
         if let LogicalPlan::Project { input, .. } = &plan {
-            assert!(matches!(**input, LogicalPlan::Distinct(_)), "Expected Distinct below Project");
+            assert!(matches!(**input, LogicalPlan::Distinct(..)), "Expected Distinct below Project");
         } else {
             panic!("Expected Project root");
         }
@@ -4020,7 +4094,7 @@ mod tests {
                 LogicalPlan::Sort { keys, .. } => Some(keys.clone()),
                 LogicalPlan::Project { input, .. }
                 | LogicalPlan::Filter { input, .. }
-                | LogicalPlan::Distinct(input)
+                | LogicalPlan::Distinct(input, _)
                 | LogicalPlan::Limit { input, .. } => walk(input),
                 _ => None,
             }
@@ -4066,7 +4140,7 @@ mod tests {
                 LogicalPlan::Filter { predicate, .. } => Some(predicate.clone()),
                 LogicalPlan::Project { input, .. }
                 | LogicalPlan::Sort { input, .. }
-                | LogicalPlan::Distinct(input)
+                | LogicalPlan::Distinct(input, _)
                 | LogicalPlan::Limit { input, .. } => walk(input),
                 _ => None,
             }
@@ -4587,7 +4661,7 @@ mod tests {
             panic!("Expected Sort below Limit");
         };
         // Distinct
-        let distinct_input = if let LogicalPlan::Distinct(input) = sort_input.as_ref() {
+        let distinct_input = if let LogicalPlan::Distinct(input, _) = sort_input.as_ref() {
             input
         } else {
             panic!("Expected Distinct below Sort");

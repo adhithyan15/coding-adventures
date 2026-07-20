@@ -138,7 +138,9 @@ pub enum OptimizedPlan {
     },
 
     /// SELECT DISTINCT deduplication.
-    Distinct(Box<OptimizedPlan>),
+    /// Remove duplicate rows; carries one collation per OUTPUT column (see
+    /// `LogicalPlan::Distinct`).
+    Distinct(Box<OptimizedPlan>, Vec<Option<String>>),
 
     /// UNION [ALL].
     Union {
@@ -386,7 +388,7 @@ fn lift(plan: LogicalPlan) -> OptimizedPlan {
             count,
             offset,
         },
-        LogicalPlan::Distinct(inner) => OptimizedPlan::Distinct(Box::new(lift(*inner))),
+        LogicalPlan::Distinct(inner, colls) => OptimizedPlan::Distinct(Box::new(lift(*inner)), colls),
         LogicalPlan::Union { left, right, all } => OptimizedPlan::Union {
             left: Box::new(lift(*left)),
             right: Box::new(lift(*right)),
@@ -550,8 +552,8 @@ fn fold_plan(plan: OptimizedPlan) -> OptimizedPlan {
             offset,
         },
 
-        OptimizedPlan::Distinct(inner) => {
-            OptimizedPlan::Distinct(Box::new(fold_plan(*inner)))
+        OptimizedPlan::Distinct(inner, colls) => {
+            OptimizedPlan::Distinct(Box::new(fold_plan(*inner)), colls)
         }
 
         OptimizedPlan::Union { left, right, all } => OptimizedPlan::Union {
@@ -1031,8 +1033,8 @@ fn push_predicate(plan: OptimizedPlan) -> OptimizedPlan {
             offset,
         },
 
-        OptimizedPlan::Distinct(inner) => {
-            OptimizedPlan::Distinct(Box::new(push_predicate(*inner)))
+        OptimizedPlan::Distinct(inner, colls) => {
+            OptimizedPlan::Distinct(Box::new(push_predicate(*inner)), colls)
         }
 
         OptimizedPlan::Union { left, right, all } => OptimizedPlan::Union {
@@ -1077,11 +1079,14 @@ fn push_filter_through(input: OptimizedPlan, predicate: SqlExpr) -> OptimizedPla
 
         // Through Distinct: Filter(Distinct(x), pred) → Distinct(Filter(x, pred))
         // Filtering before dedup yields the same unique rows.
-        OptimizedPlan::Distinct(distinct_input) => {
-            OptimizedPlan::Distinct(Box::new(OptimizedPlan::Filter {
-                input: distinct_input,
-                predicate,
-            }))
+        OptimizedPlan::Distinct(distinct_input, colls) => {
+            OptimizedPlan::Distinct(
+                Box::new(OptimizedPlan::Filter {
+                    input: distinct_input,
+                    predicate,
+                }),
+                colls,
+            )
         }
 
         // All other nodes: leave Filter on top.
@@ -1239,8 +1244,8 @@ fn prune_plan(plan: OptimizedPlan, required: Option<&HashSet<String>>) -> Optimi
             offset,
         },
 
-        OptimizedPlan::Distinct(inner) => {
-            OptimizedPlan::Distinct(Box::new(prune_plan(*inner, required)))
+        OptimizedPlan::Distinct(inner, colls) => {
+            OptimizedPlan::Distinct(Box::new(prune_plan(*inner, required)), colls)
         }
 
         OptimizedPlan::Join {
@@ -1482,12 +1487,12 @@ fn eliminate_dead_code(plan: OptimizedPlan) -> OptimizedPlan {
             }
         }
 
-        OptimizedPlan::Distinct(inner) => {
+        OptimizedPlan::Distinct(inner, colls) => {
             let inner = eliminate_dead_code(*inner);
             if matches!(inner, OptimizedPlan::EmptyResult) {
                 OptimizedPlan::EmptyResult
             } else {
-                OptimizedPlan::Distinct(Box::new(inner))
+                OptimizedPlan::Distinct(Box::new(inner), colls)
             }
         }
 
@@ -1666,8 +1671,8 @@ fn push_limit(plan: OptimizedPlan) -> OptimizedPlan {
             predicate,
         },
 
-        OptimizedPlan::Distinct(inner) => {
-            OptimizedPlan::Distinct(Box::new(push_limit(*inner)))
+        OptimizedPlan::Distinct(inner, colls) => {
+            OptimizedPlan::Distinct(Box::new(push_limit(*inner)), colls)
         }
 
         OptimizedPlan::Join {
@@ -2224,12 +2229,12 @@ mod tests {
         // Filter(Distinct(Scan), pred) → Distinct(Filter(Scan, pred))
         let pred = bin(BinaryOp::Eq, col("id"), lit_int(1));
         let plan = LogicalPlan::Filter {
-            input: Box::new(LogicalPlan::Distinct(Box::new(scan("t")))),
+            input: Box::new(LogicalPlan::Distinct(Box::new(scan("t")), vec![])),
             predicate: pred,
         };
         let opt = optimize_with_passes(plan, &[&PredicatePushdownPass]);
-        assert!(matches!(&opt, OptimizedPlan::Distinct(_)));
-        if let OptimizedPlan::Distinct(inner) = &opt {
+        assert!(matches!(&opt, OptimizedPlan::Distinct(..)));
+        if let OptimizedPlan::Distinct(inner, _) = &opt {
             assert!(matches!(inner.as_ref(), OptimizedPlan::Filter { .. }));
         }
     }
@@ -2718,9 +2723,9 @@ mod tests {
 
     #[test]
     fn test_distinct_plan_lifted() {
-        let plan = LogicalPlan::Distinct(Box::new(scan("t")));
+        let plan = LogicalPlan::Distinct(Box::new(scan("t")), vec![]);
         let opt = optimize(plan);
-        assert!(matches!(&opt, OptimizedPlan::Distinct(_)));
+        assert!(matches!(&opt, OptimizedPlan::Distinct(..)));
     }
 
     #[test]
@@ -2830,7 +2835,7 @@ mod tests {
     #[test]
     fn test_dce_distinct_on_empty() {
         // Distinct(Filter(Scan, FALSE)) → EmptyResult
-        let plan = LogicalPlan::Distinct(Box::new(filter(scan("t"), lit_bool(false))));
+        let plan = LogicalPlan::Distinct(Box::new(filter(scan("t"), lit_bool(false))), vec![]);
         let opt = optimize_with_passes(plan, &[&DeadCodeEliminationPass]);
         assert_eq!(opt, OptimizedPlan::EmptyResult);
     }

@@ -288,6 +288,7 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
     let mut post_sort: Option<Vec<CompiledSortKey>> = None;
     let mut post_limit: Option<(Option<i64>, Option<i64>)> = None;
     let mut post_distinct = false;
+    let mut post_distinct_colls: Vec<Option<String>> = Vec::new();
     // TruncateOutputColumns: strip hidden sort-key columns after SortResult.
     let mut post_truncate: Option<usize> = None;
     // DML counter.
@@ -1000,8 +1001,9 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
                 post_sort = Some(keys);
             }
 
-            Instruction::DistinctResult => {
+            Instruction::DistinctResult(colls) => {
                 post_distinct = true;
+                post_distinct_colls = colls;
             }
 
             Instruction::LimitResult(count, offset) => {
@@ -1027,8 +1029,9 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
             Instruction::SortResult(keys) => {
                 post_sort = Some(keys);
             }
-            Instruction::DistinctResult => {
+            Instruction::DistinctResult(colls) => {
                 post_distinct = true;
+                post_distinct_colls = colls;
             }
             Instruction::LimitResult(count, offset) => {
                 post_limit = Some((count, offset));
@@ -1057,7 +1060,7 @@ pub fn execute(program: &Program, backend: &mut dyn Backend) -> Result<QueryResu
         output_columns.truncate(n);
     }
     if post_distinct {
-        apply_distinct(&mut output_rows);
+        apply_distinct(&mut output_rows, &post_distinct_colls);
     }
     if let Some((count, offset)) = post_limit {
         apply_limit(&mut output_rows, count, offset);
@@ -3535,14 +3538,29 @@ fn collate_text(s: &str, collation: &str) -> String {
 /// average serialised row width — far better than the previous O(n²) Vec scan.
 /// The Debug output is deterministic for all `SqlValue` variants, so collisions
 /// can only happen between rows that are genuinely equal.
-fn apply_distinct(rows: &mut Vec<Vec<(String, SqlValue)>>) {
+fn apply_distinct(rows: &mut Vec<Vec<(String, SqlValue)>>, collations: &[Option<String>]) {
     let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
     rows.retain(|row| {
         // Build a canonical string key: "col1=<val1>,col2=<val2>,..."
         // Column names are included so that (A=1,B=2) ≠ (A=2,B=1).
+        //
+        // `collations[i]` is the collating sequence of output column `i` (rows are
+        // positional and parallel to the output columns — see the Phase-4 note),
+        // so a column declared `COLLATE NOCASE` folds 'A' and 'a' to one key.
+        // Only the KEY is folded: `retain` keeps the FIRST matching row, so the
+        // surviving row still carries its ORIGINAL text, matching SQLite.
+        // Collation applies to TEXT only — no other storage class has one.
+        // A short `collations` (or none at all) leaves the remaining columns at
+        // BINARY, which is the stricter, fail-safe direction.
         let key: String = row
             .iter()
-            .map(|(col, val)| format!("{}={:?}", col, val))
+            .enumerate()
+            .map(|(i, (col, val))| match (val, collations.get(i).and_then(|c| c.as_ref())) {
+                (SqlValue::Text(s), Some(coll)) => {
+                    format!("{}={:?}", col, SqlValue::Text(collate_text(s, coll)))
+                }
+                _ => format!("{}={:?}", col, val),
+            })
             .collect::<Vec<_>>()
             .join(",");
         // `insert` returns true if the key was NOT already present → keep row.
@@ -4972,7 +4990,7 @@ mod tests {
             Instruction::Label("end".to_string()),
             Instruction::CloseScan(None),
             Instruction::Halt,
-            Instruction::DistinctResult,
+            Instruction::DistinctResult(vec![]),
         ]), &mut b).unwrap();
         assert_eq!(r.rows.len(), 3);
         assert!(r.rows.contains(&vec![int(1)]));
@@ -5426,7 +5444,7 @@ mod tests {
             Instruction::CloseScan(None),
             Instruction::Halt,
             Instruction::SortResult(vec![CompiledSortKey { column: "x".to_string(), ascending: true, nulls_first: None, collation: None }]),
-            Instruction::DistinctResult,
+            Instruction::DistinctResult(vec![]),
         ]), &mut b).unwrap();
         assert_eq!(r.rows, vec![vec![int(1)], vec![int(2)], vec![int(3)]]);
     }
