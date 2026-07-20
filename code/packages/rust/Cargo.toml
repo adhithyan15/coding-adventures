@@ -249,6 +249,7 @@ members = [
     "derive-parser",
     "derive-runtime",
     "derive-repl",
+    "derive-to-semantic-ir",
     "apl-lexer",
     "apl-parser",
     "apl-runtime",

@@ -153,6 +153,24 @@ pub fn compile_source(source: &str, module_name: &str)
 - **`maxima-to-semantic-ir`** (✅ v0.1.0 shipped) — a thin alias reusing
   `macsyma-to-semantic-ir` wholesale, mirroring Maxima's existing reuse of
   `macsyma-runtime`.
+- **`derive-to-semantic-ir`** (✅ v0.1.0 shipped) — walks the
+  `derive-parser` CST using the same rule-name dispatch already proven in
+  `derive-runtime` (`"assignment"`, `"additive"`, `"postfix"`, `"vector"`,
+  …), emits SIR23 nodes. Same "everything is symbolic data" design as
+  `wolfram-to-semantic-ir`/`macsyma-to-semantic-ir` (this grammar has no
+  pattern-matching syntax at all either, verified directly against
+  `derive.grammar`/`derive.tokens`, not just trusted from
+  `derive-runtime`'s own doc comment). Much thinner than either sibling:
+  no `f[x]`-universal-application syntax and no control-flow grammar
+  productions at all (`IF(…)` is an ordinary UPPERCASE builtin call, not a
+  special `if_expr` rule the way Macsyma has one), but needs a BIGGER
+  surface→canonical head-bridge table than Wolfram's, since Derive's
+  built-ins are conventionally UPPERCASE and `SymSymbol` equality is
+  case-sensitive. Also the first SIR23 frontend with a vector/matrix
+  literal (`[a,b,c]`/`[a,b;c,d]`, structural `List` data only); also
+  round-trips through `node` from v0.1.0 (unlike `macsyma-to-semantic-ir`,
+  which shipped its `tests/e2e_node.rs` in a follow-up once the JS backend
+  gained SIR23 codegen).
 - **`apl-to-semantic-ir`** (✅ v0.1.0 shipped, MA-4f) — the first Stream A
   frontend beyond MATLAB/Octave, confirming the array/matrix domain
   generalizes past the language it was designed against; emits SIR22 nodes
@@ -230,13 +248,16 @@ array operands, and a hard crash on `× ÷ ⌈ ⌊`), all still open — see tha
 crate's `CHANGELOG.md`. J's own oracle tests remain an open follow-on item.
 All items through JS/TS backend codegen are shipped.
 
-**Stream B (symbolic/CAS, backs Wolfram/Macsyma/Maxima and future
-Reduce/Derive/Maple):** `SIR23` spec → `semantic-ir` core additions →
+**Stream B (symbolic/CAS, backs Wolfram/Macsyma/Maxima/Derive and future
+Reduce/Maple):** `SIR23` spec → `semantic-ir` core additions →
 `wolfram-to-semantic-ir` → `macsyma-to-semantic-ir` → `maxima-to-semantic-ir`
-→ `sir-runtime-symbolic` → JS/TS backend codegen → golden/oracle tests
-(in progress — real `node`-execution proof shipped for `wolfram-to-semantic-ir`
-and `macsyma-to-semantic-ir` via each crate's `tests/e2e_node.rs`; a true
-oracle diff against each language's native runtime remains open).
+→ `derive-to-semantic-ir` → `sir-runtime-symbolic` → JS/TS backend codegen
+→ golden/oracle tests (in progress — real `node`-execution proof shipped
+for `wolfram-to-semantic-ir`, `macsyma-to-semantic-ir`, and
+`derive-to-semantic-ir` via each crate's `tests/e2e_node.rs`; a true
+oracle diff against each language's native runtime remains open;
+`reduce-to-semantic-ir`/`maple-to-semantic-ir` remain open follow-on
+items).
 All items through JS/TS backend codegen are shipped.
 
 The streams touch disjoint crates except `semantic-ir` core and the two JS
