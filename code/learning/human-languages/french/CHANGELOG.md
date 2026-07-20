@@ -1,5 +1,17 @@
 # Changelog
 
+## Chapter 11 — Food (bread, water, wine)
+
+- **Chapter 11 authored** (`FR-C11-pain`, `-eau-vin`): the everyday table trio,
+  atom-first, reviewing Ch.10/Ch.1 via `reviews_of`.
+- **pain** ("bread") ← *pānis* — with the payoff that a **companion** is literally
+  "one you **share bread** with" (*com-* + *pānis*); also *company*, *pantry*.
+- **eau / vin** — **eau** ("water") is French's **most eroded** loan from Latin:
+  *aqua → eau*, worn down to a bare vowel "oh" (three silent letters for one
+  sound), while English kept the loud original in *aquatic/aquarium*. **vin** ←
+  *vīnum* held its shape → *wine/vine/vinegar/vintage*.
+- Taxonomy: namespaced `FR-FOOD-BREAD`, `FR-FOOD-DRINKS`.
+
 ## Chapter 10 — Family
 
 - **Chapter 10 authored** (`FR-C10-parents`, `-freres-soeurs`): the immediate

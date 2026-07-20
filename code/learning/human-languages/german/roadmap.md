@@ -63,6 +63,12 @@ Spanish and French where a contrast helps. The recurring decoder is the
   via the collective **ge-**). The standout: family is native where the months were
   borrowed. **Authored.**
 
+- **Ch. 11 — Food (bread, water, wine)**: **Brot** (**inherited Germanic** twin of
+  English *bread*, NOT Latin *pānis*; introduces the neuter **das** + capitalized
+  nouns) → **Wasser/Wein** — the native-vs-borrowed split: **Wasser** a native
+  Germanic twin of *water*, but **Wein** an **ancient Latin loan** (← *vīnum*),
+  borrowed with the grapevine, which is why *Wein/wine/vīnum* all match. **Authored.**
+
 ## Planned
 
 | Chapter | Theme |
