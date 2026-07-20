@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.41.0] — 2026-07-20 — ordered, addressed proof steps + visible negation (RS-4 PR-B)
+
+### Added
+
+- **`ProofStep.depth`.** A step now records how deeply nested it is: the root
+  query sits at depth 0, and a rule's body steps are one deeper than the rule
+  step that introduced them. `Proof.steps` was already a preorder walk, so
+  preorder + depth is a complete encoding of the derivation tree — a step's
+  parent is the nearest preceding step one level shallower, exactly the way an
+  indented outline works. Without it the flat vector was ambiguous: you could
+  not tell a sibling from a child without re-deriving each rule's body arity,
+  which is why the audit trail could show a LIST but never a STRUCTURE.
+- **`DerivationOrigin::FromNegation { goal }`.** Negation-as-failure now records
+  a step. It previously recorded **none**, so a rule guarded by
+  `not contraindicated(D)` would fire while the trail stayed silent about the
+  check that licensed it — a reader could not distinguish "we confirmed no
+  contraindication" from "nobody looked." An audit trail that omits a
+  load-bearing inference is not a shorter trail, it is a wrong one. The step
+  carries no clause id because there is no clause: the justification IS the
+  empty proof set, which is what a re-checker re-runs to verify it.
+
+### Changed
+
+- `collect_ids` handles `FromNegation` by contributing **nothing** — deliberately.
+  NAF *used* nothing; that is precisely what it established. Attributing the
+  absent goal's clauses as support would invert the meaning of the step.
+
+
 ## [0.40.0] — 2026-07-14 — exact rendering of a computed result (ADJ-EXACT-NUMBERS NX-4)
 
 ### Added

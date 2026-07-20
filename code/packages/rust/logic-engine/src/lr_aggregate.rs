@@ -797,6 +797,7 @@ pub fn lr_aggregate(query: &Term, kb: &KnowledgeBase) -> LRAggregateResult {
                     clause_id: prior.id,
                     prior_logit: prior.prior_logit,
                 },
+                depth: 0,
             });
             prior.prior_logit
         }
@@ -829,6 +830,7 @@ pub fn lr_aggregate(query: &Term, kb: &KnowledgeBase) -> LRAggregateResult {
                     evidence_proof: observed.proof.clone(),
                     logit_delta,
                 },
+                depth: 0,
             });
             running_logit += logit_delta;
             via_facts.extend(observed.fact_ids);
@@ -871,6 +873,7 @@ pub fn lr_aggregate(query: &Term, kb: &KnowledgeBase) -> LRAggregateResult {
                     evidence_proofs: joint_evidence_proofs,
                     joint_logit_delta,
                 },
+                depth: 0,
             });
             running_logit += joint_logit_delta;
             via_facts.extend(joint_evidence_facts);
@@ -901,6 +904,7 @@ pub fn lr_aggregate(query: &Term, kb: &KnowledgeBase) -> LRAggregateResult {
                         observed,
                         logit_delta: pc.logit_delta,
                     },
+                    depth: 0,
                 });
                 running_logit += pc.logit_delta;
             }

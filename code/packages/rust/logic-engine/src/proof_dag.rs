@@ -67,6 +67,24 @@ pub enum DerivationOrigin {
         /// reason as `prior_logit`.
         logit_delta: f64,
     },
+    /// The step succeeded by **negation as failure**: the goal `not G`
+    /// held because `G` had *zero* proofs.
+    ///
+    /// This variant exists because an absence used to leave no trace at
+    /// all. A rule guarded by `not contraindicated(D)` would fire, and the
+    /// audit trail would show every positive step and stay **silent about
+    /// the check that actually licensed the conclusion** — the reader
+    /// could not tell "we confirmed no contraindication" from "nobody
+    /// looked." An audit trail that omits a load-bearing inference is not
+    /// a shorter trail, it is a wrong one.
+    ///
+    /// It carries no clause id because there is no clause: what justified
+    /// the step is the *empty* proof set for `goal`, which is exactly what
+    /// a re-checker re-runs to verify it (§E.5).
+    FromNegation {
+        /// The goal that was shown to have no proof.
+        goal: Term,
+    },
     /// The step applied a joint-evidence interaction term — synergy
     /// (positive delta) or explaining-away (negative delta) beyond
     /// the product of atomic LRs.
@@ -110,6 +128,32 @@ pub struct ProofStep {
     pub goal: Term,
     /// What clause this step was derived from.
     pub origin: DerivationOrigin,
+    /// How deeply nested this step is. The root query's own step is at
+    /// depth 0; a rule's body steps are one deeper than the rule step
+    /// that introduced them.
+    ///
+    /// # Why a plain number is enough to rebuild the tree
+    ///
+    /// `steps` is a **preorder** walk (a rule's own step is pushed before
+    /// its body's steps — see `enumerate::solve`). Preorder plus depth is
+    /// a complete encoding of a tree: a step's parent is simply **the
+    /// nearest preceding step whose depth is one less**. That is the same
+    /// trick an indented outline uses — you never write "this line belongs
+    /// to that line", you just indent, and the nesting is unambiguous.
+    ///
+    /// ```text
+    ///   idx depth  step                      parent
+    ///    0    0    treat(X)      [rule]      —
+    ///    1    1      infected(X) [rule]      0
+    ///    2    2        culture(X)[fact]      1
+    ///    3    1      allergy(X)  [fact]      0     <- back out one level
+    /// ```
+    ///
+    /// Without this field the flat vector is ambiguous: you cannot tell
+    /// step 3 above from a second child of step 1 without re-deriving
+    /// every rule's body arity. That is why the audit trail could show a
+    /// list but never a *structure*.
+    pub depth: usize,
 }
 
 /// One complete proof of the root query.
@@ -200,6 +244,11 @@ pub(crate) fn collect_ids(steps: &[ProofStep]) -> (Vec<FactId>, Vec<RuleId>) {
             // Fact ids inline. If evidence was rule-derived, the nested
             // SLD proof carries the facts and rules that licensed it.
             DerivationOrigin::FromPrior { .. } => {}
+            // Negation-as-failure USED nothing — that is precisely what it
+            // established. Contributing a FactId here would claim the
+            // absent goal's clauses supported the conclusion, which is
+            // backwards.
+            DerivationOrigin::FromNegation { .. } => {}
             DerivationOrigin::FromContribution {
                 evidence_fact_ids,
                 evidence_proof,

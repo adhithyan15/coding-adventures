@@ -35,7 +35,7 @@
 
 use std::collections::HashMap;
 
-use logic_core::{LogicVar, Substitution, Term, unify};
+use logic_core::{unify, LogicVar, Substitution, Term};
 
 use crate::proof_dag::{collect_ids, DerivationOrigin, Proof, ProofDAG, ProofStep};
 use crate::{BodyLiteral, KnowledgeBase};
@@ -71,7 +71,7 @@ fn rename_literal(lit: &BodyLiteral, renames: &mut HashMap<u64, LogicVar>) -> Bo
 /// Enumerate every successful proof of `query` against `kb`. Returns a
 /// `ProofDAG` containing one `Proof` per successful derivation.
 pub fn enumerate_all(query: &Term, kb: &KnowledgeBase) -> ProofDAG {
-    let raw = solve(query, kb, &Substitution::empty());
+    let raw = solve(query, kb, &Substitution::empty(), 0);
     let proofs = raw
         .into_iter()
         .map(|(bindings, steps)| {
@@ -104,6 +104,7 @@ fn solve(
     goal: &Term,
     kb: &KnowledgeBase,
     subst: &Substitution,
+    depth: usize,
 ) -> Vec<(Substitution, Vec<ProofStep>)> {
     let resolved = subst.walk(goal);
     let mut results: Vec<(Substitution, Vec<ProofStep>)> = Vec::new();
@@ -116,6 +117,7 @@ fn solve(
             let step = ProofStep {
                 goal: resolved.clone(),
                 origin: DerivationOrigin::FromFact(fact.id),
+                depth,
             };
             results.push((s, vec![step]));
         }
@@ -132,11 +134,15 @@ fn solve(
             .collect();
 
         if let Some(s) = unify(&resolved, &renamed_head, subst) {
-            for (body_subst, body_steps) in solve_body(&renamed_body, kb, &s) {
+            // The body is proved one level DEEPER than the rule step that
+            // introduces it. That single `+ 1` is what turns the flat step
+            // vector into a reconstructable tree (see `ProofStep::depth`).
+            for (body_subst, body_steps) in solve_body(&renamed_body, kb, &s, depth + 1) {
                 let mut steps = Vec::with_capacity(1 + body_steps.len());
                 steps.push(ProofStep {
                     goal: resolved.clone(),
                     origin: DerivationOrigin::FromRule(rule.id),
+                    depth,
                 });
                 steps.extend(body_steps);
                 results.push((body_subst, steps));
@@ -154,6 +160,7 @@ fn solve_body(
     body: &[BodyLiteral],
     kb: &KnowledgeBase,
     subst: &Substitution,
+    depth: usize,
 ) -> Vec<(Substitution, Vec<ProofStep>)> {
     if body.is_empty() {
         return vec![(subst.clone(), Vec::new())];
@@ -165,8 +172,8 @@ fn solve_body(
     match first {
         BodyLiteral::Pos(t) => {
             // Find every way to prove `t`; for each, recurse on `rest`.
-            for (after_first, steps_first) in solve(t, kb, subst) {
-                for (after_rest, steps_rest) in solve_body(rest, kb, &after_first) {
+            for (after_first, steps_first) in solve(t, kb, subst, depth) {
+                for (after_rest, steps_rest) in solve_body(rest, kb, &after_first, depth) {
                     let mut all_steps = Vec::with_capacity(steps_first.len() + steps_rest.len());
                     all_steps.extend(steps_first.iter().cloned());
                     all_steps.extend(steps_rest);
@@ -176,9 +183,30 @@ fn solve_body(
         }
         BodyLiteral::Neg(t) => {
             // Negation-as-failure: succeed iff `t` has zero proofs.
-            // Substitution and steps are unchanged on success.
-            if solve(t, kb, subst).is_empty() {
-                results.extend(solve_body(rest, kb, subst));
+            //
+            // This RECORDS A STEP. It previously recorded none, which meant
+            // a rule guarded by `not contraindicated(D)` would fire and the
+            // audit trail would never mention the guard — a reader could not
+            // distinguish "we checked, and found no contraindication" from
+            // "nobody checked." The absence IS the justification, so it has
+            // to appear in the trail like any other justification.
+            //
+            // The substitution is unchanged: NAF binds nothing (it succeeded
+            // precisely because there was no proof to bind from).
+            if solve(t, kb, subst, depth + 1).is_empty() {
+                let neg_goal = subst.walk(t);
+                for (after_rest, steps_rest) in solve_body(rest, kb, subst, depth) {
+                    let mut all_steps = Vec::with_capacity(1 + steps_rest.len());
+                    all_steps.push(ProofStep {
+                        goal: neg_goal.clone(),
+                        origin: DerivationOrigin::FromNegation {
+                            goal: neg_goal.clone(),
+                        },
+                        depth,
+                    });
+                    all_steps.extend(steps_rest);
+                    results.push((after_rest, all_steps));
+                }
             }
         }
     }
@@ -218,10 +246,7 @@ mod tests {
         // Check that the bindings cover all three children.
         let mut children: Vec<Term> = dag.proofs.iter().map(|p| p.bindings.walk_var(&x)).collect();
         children.sort_by_key(|a| a.to_string());
-        assert_eq!(
-            children,
-            vec![atom("bart"), atom("lisa"), atom("maggie")]
-        );
+        assert_eq!(children, vec![atom("bart"), atom("lisa"), atom("maggie")]);
     }
 
     #[test]
