@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.14.0] — 2026-07-18 — table answers now cite the row that produced them (ADJ-TABLES RS-5e)
+
+### Changed
+
+- **A table-backed answer's `citations` now quote the span defending *that row*** — not the table's
+  single envelope. Ask the shipped `environment/air-quality-index` table for AQI 120 and the answer
+  cites *"Orange Unhealthy for Sensitive Groups 101 to 150 …"*; previously it cited the `0 → good`
+  sentence regardless of which band was selected. This holds for **exact** recall and **range**
+  lookup alike, and flows through the proof DAG's `via_facts` the same way.
+- **No CLI source changed.** Each row already lowered to its own `Fact`, and the citation path
+  already cited *the fact that produced the answer*; adj-lang 0.55.0 simply gives that fact the
+  row's provenance. The version bump records the observable change in emitted citations.
+- Tables whose rows carry no provenance block are byte-for-byte unchanged.
+
 ## [0.13.0] — 2026-07-18 — RS-5c: range / bracket lookup answers (ADJ-TABLES)
 
 ### Added

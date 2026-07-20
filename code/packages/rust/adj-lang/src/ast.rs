@@ -562,6 +562,19 @@ pub struct FormulaStep {
 pub struct TableRow {
     /// The row's cells, in column order.
     pub cells: Vec<TableCell>,
+    /// This row's OWN provenance block (ADJ-TABLES RS-5e), if it wrote one. Empty
+    /// for a row that inherits the table's envelope wholesale (the pre-RS-5e
+    /// behaviour, and still the common case for a table whose every row is
+    /// defended by the same sentence).
+    ///
+    /// When non-empty these annotations override the table envelope **field by
+    /// field** for this row — so a row can supply just the `source` span that
+    /// defends *it* and keep the table's shared `locator`/`trust`. The point is
+    /// that a lookup answer cites the span supporting **the row it selected**,
+    /// not the table's first sentence: with one envelope, a six-band table made
+    /// every answer in every band quote the same cell, which is an accounting
+    /// error the moment the selected row is explicit (as a range lookup makes it).
+    pub annotations: Vec<Annotation>,
 }
 
 /// A single table cell (ADJ-TABLES RS-5). One of the three GROUND term kinds the

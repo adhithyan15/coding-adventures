@@ -791,7 +791,15 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                         });
                     }
                     let args: Vec<CoreTerm> = row.cells.iter().map(lower_cell).collect();
-                    kb.add_fact(Fact::certain(compound(name, args)).with_provenance(prov.clone()));
+                    // ADJ-TABLES RS-5e: each row already becomes its OWN `Fact`, and
+                    // every citation path (exact recall, range lookup, the proof
+                    // DAG's `via_facts`) cites *the fact that produced the answer* —
+                    // so stamping the ROW's provenance here is the whole fix, with no
+                    // renderer change. A row that wrote its own `{ … }` block
+                    // overrides the envelope field-by-field; a row without one gets
+                    // the envelope unchanged (pre-RS-5e behaviour).
+                    let row_prov = row_provenance(&prov, &row.annotations)?;
+                    kb.add_fact(Fact::certain(compound(name, args)).with_provenance(row_prov));
                 }
             }
             // ---- import (MYCIN-2026 M3) ----
@@ -1266,6 +1274,75 @@ fn lower_cmp_op(op: CmpOp) -> EngineCmpOp {
         CmpOp::Lt => EngineCmpOp::Lt,
         CmpOp::Eq => EngineCmpOp::Eq,
     }
+}
+
+/// Fold a table row's OWN `{ … }` provenance block over the table's envelope
+/// (ADJ-TABLES RS-5e), producing the provenance stamped on *that row's* fact.
+///
+/// ## Why a row needs its own provenance
+///
+/// A table carries one `source`/`locator`/`trust` envelope. With six bands and one
+/// envelope, **every** answer — in every band — quotes the same sentence. That is an
+/// accounting error: the audit trail asserts a fact and cites a span that does not
+/// defend it. A range lookup makes it glaring (the selected row is explicit in the
+/// audit), but it was equally wrong for exact lookup all along.
+///
+/// ## Override, don't replace
+///
+/// The row's fields are folded **over** the envelope rather than replacing it, so a
+/// row supplies only what differs — usually just the `source` span of its own cell —
+/// and inherits the shared `locator` and `trust`. That keeps the common case terse
+/// (one `source` per row, one `locator` for the page) and means an empty block is
+/// exactly the old behaviour. Corroborating `cites` are *appended* to the envelope's,
+/// since they are additional independent support, not a correction.
+///
+/// Duplicate keys **within one row block** are the same clean error they are anywhere
+/// else (`source` twice in one block is a typo, not an override of itself).
+fn row_provenance(
+    table: &Provenance,
+    row_annotations: &[Annotation],
+) -> Result<Provenance, LowerError> {
+    if row_annotations.is_empty() {
+        return Ok(table.clone());
+    }
+    let mut prov = table.clone();
+    let (mut saw_source, mut saw_locator, mut saw_trust) = (false, false, false);
+    for a in row_annotations {
+        match a {
+            Annotation::Source(s) => {
+                if saw_source {
+                    return Err(LowerError::DuplicateAnnotation { name: "source" });
+                }
+                saw_source = true;
+                prov.source = s.clone();
+            }
+            Annotation::Locator(s) => {
+                if saw_locator {
+                    return Err(LowerError::DuplicateAnnotation { name: "locator" });
+                }
+                saw_locator = true;
+                prov.locator = Some(s.clone());
+            }
+            Annotation::Trust(name) => {
+                if saw_trust {
+                    return Err(LowerError::DuplicateAnnotation { name: "trust" });
+                }
+                saw_trust = true;
+                prov.trust_tier = match name {
+                    TrustTierName::Consensus => TrustTier::Consensus,
+                    TrustTierName::Authoritative => TrustTier::Authoritative,
+                    TrustTierName::Empirical => TrustTier::Empirical,
+                    TrustTierName::Inferred => TrustTier::Inferred,
+                    TrustTierName::Unattributed => TrustTier::Unattributed,
+                };
+            }
+            Annotation::Cites { source, locator } => {
+                prov.corroborations
+                    .push(Citation::new(source.clone(), locator.clone()));
+            }
+        }
+    }
+    Ok(prov)
 }
 
 fn annotations_to_provenance(annotations: &[Annotation]) -> Result<Provenance, LowerError> {
