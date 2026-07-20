@@ -1,0 +1,23 @@
+{
+  "profile_id": "umbrella_today_v1",
+  "hosts": [
+    {
+      "host_id": "weather_fetcher",
+      "max_tier": "tier1",
+      "allowed_tools": ["weather.fetch_current"],
+      "capabilities": ["weather_api_read"]
+    },
+    {
+      "host_id": "weather_classifier",
+      "max_tier": "tier1",
+      "allowed_tools": ["weather.classify_umbrella"],
+      "capabilities": ["internal_reasoning"]
+    },
+    {
+      "host_id": "file_writer",
+      "max_tier": "tier1",
+      "allowed_tools": ["file.write_text"],
+      "capabilities": ["filesystem_write"]
+    }
+  ]
+}

@@ -22,11 +22,15 @@ use capability_os_sandbox::{
     current_kernel_sandbox_support, plan_all_supported, plan_for_current_os,
     run_with_kernel_sandbox, OsFamily, SandboxPlan, SandboxPlanSummary,
 };
+use chief_of_staff_host_runtime::{
+    ActiveOrchestratorRuntime, HostRuntimeError, OrchestratorProfileRuntime,
+    OrchestratorProfileSummary,
+};
 use chief_of_staff_tool_api::{
-    InMemoryToolRuntime, JsonSchema, PrivilegeTier, RequestedBy, SchemaProperty, ToolApiError,
-    ToolCallError, ToolConcurrency, ToolDefinition, ToolErrorKind, ToolEventKind,
-    ToolExecutionJournal, ToolExecutionJournalHealthSummary, ToolHandlerOutput, ToolIdempotency,
-    ToolInvocationRequest, ToolSideEffects, ToolStability, ToolStreaming,
+    JsonSchema, PrivilegeTier, RequestedBy, SchemaProperty, ToolApiError, ToolCallError,
+    ToolConcurrency, ToolDefinition, ToolErrorKind, ToolEventKind, ToolExecutionJournal,
+    ToolExecutionJournalHealthSummary, ToolHandlerOutput, ToolIdempotency, ToolInvocationRequest,
+    ToolSideEffects, ToolStability, ToolStreaming,
 };
 use coding_adventures_json_value::{JsonNumber, JsonValue};
 use context_store::{
@@ -72,6 +76,7 @@ const FETCH_TOOL_ID: &str = "weather.fetch_current";
 const CLASSIFY_TOOL_ID: &str = "weather.classify_umbrella";
 const WRITE_TOOL_ID: &str = "file.write_text";
 const WEATHER_API_DOMAIN: &str = "api.weather.gov";
+const WEATHER_ORCHESTRATOR_PROFILE: &str = include_str!("../orchestrator_profile.json");
 
 pub type UmbrellaResult<T> = Result<T, UmbrellaAgentError>;
 
@@ -116,6 +121,12 @@ impl From<StorageError> for UmbrellaAgentError {
 
 impl From<ToolApiError> for UmbrellaAgentError {
     fn from(value: ToolApiError) -> Self {
+        Self::new(value.to_string())
+    }
+}
+
+impl From<HostRuntimeError> for UmbrellaAgentError {
+    fn from(value: HostRuntimeError) -> Self {
         Self::new(value.to_string())
     }
 }
@@ -486,6 +497,7 @@ pub struct UmbrellaAgentRun {
     pub sandbox_plan: UmbrellaSandboxPlanSummary,
     pub kernel_sandbox: UmbrellaKernelSandboxSummary,
     pub supervisor: UmbrellaSupervisorSummary,
+    pub orchestrator_profile: OrchestratorProfileSummary,
     pub tool_journal_health: ToolExecutionJournalHealthSummary,
     pub context_inventory: ContextStoreInventorySummary,
     pub artifact_inventory: ArtifactInventorySummary,
@@ -645,6 +657,7 @@ pub fn run_umbrella_today_agent(config: UmbrellaAgentConfig) -> UmbrellaResult<U
         sandbox_plan,
         kernel_sandbox,
         supervisor: supervisor_summary(&system, &actor_stats, supervisor_events),
+        orchestrator_profile: pipeline.tool_runtime.summary(),
         tool_journal_health,
         context_inventory,
         artifact_inventory,
@@ -660,7 +673,7 @@ pub fn run_umbrella_today_agent(config: UmbrellaAgentConfig) -> UmbrellaResult<U
 
 struct UmbrellaPipeline {
     config: UmbrellaAgentConfig,
-    tool_runtime: InMemoryToolRuntime,
+    tool_runtime: ActiveOrchestratorRuntime,
     journal: Mutex<ToolExecutionJournal>,
     channel: Mutex<Channel>,
     context_store: ContextStore<InMemoryStorageBackend>,
@@ -675,7 +688,7 @@ struct UmbrellaPipeline {
 
 impl UmbrellaPipeline {
     fn new(config: UmbrellaAgentConfig) -> UmbrellaResult<Self> {
-        let mut tool_runtime = InMemoryToolRuntime::new();
+        let mut tool_runtime = OrchestratorProfileRuntime::from_json(WEATHER_ORCHESTRATOR_PROFILE)?;
         let http_client = generated_operations::generated_http_client()?;
         register_weather_fetch_tool(
             &mut tool_runtime,
@@ -687,6 +700,7 @@ impl UmbrellaPipeline {
         .map_err(UmbrellaAgentError::from)?;
         register_weather_classifier_tool(&mut tool_runtime)?;
         register_file_writer_tool(&mut tool_runtime, writer_manifest(&config.output_path)?)?;
+        let tool_runtime = tool_runtime.activate()?;
 
         Ok(Self {
             config,
@@ -968,7 +982,7 @@ impl UmbrellaPipeline {
             deadline_at: Some(self.config.fetched_at_ms.saturating_add(30_000)),
             idempotency_key: Some(format!("{}-{}", self.config.tick_id, call_id)),
         };
-        let trace = self.tool_runtime.invoke_with_events(&request);
+        let trace = self.tool_runtime.invoke_with_events(&request)?;
         let result = trace.result.clone();
         self.journal
             .lock()
@@ -1178,12 +1192,12 @@ fn unwrap_pipeline_state(state: Box<dyn std::any::Any>) -> Arc<UmbrellaPipeline>
 }
 
 fn register_weather_fetch_tool(
-    runtime: &mut InMemoryToolRuntime,
+    runtime: &mut OrchestratorProfileRuntime,
     source: WeatherSource,
     fetched_at_ms: u64,
     fetched_at_iso: String,
     http_client: GeneratedOperationHttpClient,
-) -> Result<(), ToolApiError> {
+) -> Result<(), HostRuntimeError> {
     runtime.register_handler(
         tool_definition(
             FETCH_TOOL_ID,
@@ -1468,7 +1482,9 @@ fn snapshot_from_nws_forecast(
     })
 }
 
-fn register_weather_classifier_tool(runtime: &mut InMemoryToolRuntime) -> Result<(), ToolApiError> {
+fn register_weather_classifier_tool(
+    runtime: &mut OrchestratorProfileRuntime,
+) -> Result<(), HostRuntimeError> {
     runtime.register_handler(
         tool_definition(
             CLASSIFY_TOOL_ID,
@@ -1510,9 +1526,9 @@ fn register_weather_classifier_tool(runtime: &mut InMemoryToolRuntime) -> Result
 }
 
 fn register_file_writer_tool(
-    runtime: &mut InMemoryToolRuntime,
+    runtime: &mut OrchestratorProfileRuntime,
     manifest: Manifest,
-) -> Result<(), ToolApiError> {
+) -> Result<(), HostRuntimeError> {
     runtime.register_handler(
         tool_definition(
             WRITE_TOOL_ID,

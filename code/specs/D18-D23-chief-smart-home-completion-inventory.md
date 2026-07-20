@@ -235,10 +235,16 @@ network I/O into the Chief bridge:
 
 ## Chief Of Staff Remaining Work
 
+The Chief host-profile slice now provides JSON orchestrator profiles, isolated
+host tool ownership, privilege ceilings, capability coverage checks, catalog
+completeness gates, and executable routing. The Weather Agent uses three host
+profiles for fetch, classify, and write instead of wiring an unrestricted tool
+runtime directly.
+
 These items are Chief of Staff architecture, not smart-home platform work:
 
-- Load D18D tool catalogs into a host/orchestrator profile instead of only
-  using in-memory tests.
+- Connect active host/orchestrator profiles to supervised process lifecycle,
+  signed package verification, host RPC, and deny-all Deno workers.
 - Run a Chief job end to end through scheduler or job framework, tool runtime,
   approval checks, result journal, and final user-visible report.
 - Add approval UX and policy wiring for Tier2 or stronger actions such as
