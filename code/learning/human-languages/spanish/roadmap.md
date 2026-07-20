@@ -95,10 +95,18 @@ order lives in the book, which LaTeX auto-numbers, and in `session-map.md`.)
   twin of *tener*) → practice recapping all six (*tengo/hago/digo/pongo/salgo/
   vengo*). **Authored.**
 
-Next: **Ch. 14** — everyday description and more high-frequency irregulars (the
-*ir/ser* preterite), building toward real conversation. From here the course hands
-over rules, not phrases. Grammar accumulates piece by piece. The theme skeleton
-below plans the wider road.
+- **Ch. 14 — The preterite (the first past tense)**: the biggest tense-jump so far.
+  **ser & ir share ONE preterite** — *fui/fuiste/fue/fuimos/fueron* (← Latin *fuī*,
+  a second "be" root, cousin of English *be/future*), so *fui* means both "I was"
+  and "I went," context deciding (*fui a X* = went; *fui X* = was) → the **regular
+  -ar preterite** *hablé/hablaste/habló/hablamos/hablaron* (← Latin perfect *-āvī*;
+  the **accent** carries the tense, *hablo→habló*; *hablamos* present=preterite) →
+  practice switching present↔past. **Authored.**
+
+Next: **Ch. 15** — more of the past (regular *-er/-ir* preterite, *tener/hacer*
+irregular preterites) and everyday description, building toward real conversation.
+From here the course hands over rules, not phrases. Grammar accumulates piece by
+piece. The theme skeleton below plans the wider road.
 
 ## Theme Skeleton (planning only)
 
