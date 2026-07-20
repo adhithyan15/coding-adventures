@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.5.59 — ORDER BY alias no longer borrows a column's COLLATE
+
+`SELECT x AS c FROM t ORDER BY c` sorted case-insensitively when the table
+happened to contain an unrelated `c TEXT COLLATE NOCASE` column — the ORDER BY
+key resolved the bare name against the base table instead of the output list, so
+the alias inherited a collating sequence from a column the query never used.
+Now the collation follows what the alias stands for: `x AS c ... ORDER BY c` is
+byte order, `c AS y ... ORDER BY y` still folds NOCASE. Verified against
+bundled real SQLite with all three shapes (shadowing alias, alias of a collated
+column, and a genuine collated-column reference as a control).
+
 ## 0.5.58 — DISTINCT honours a column's declared COLLATE
 
 `SELECT DISTINCT c` on a column declared `COLLATE NOCASE` now dedupes

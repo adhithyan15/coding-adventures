@@ -1684,6 +1684,53 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT DISTINCT c FROM t GROUP BY x ORDER BY 1",
     },
+    // An ORDER BY key that names an OUTPUT ALIAS must use that expression's
+    // collation, not the collation of a base-table column that happens to share
+    // the name. Here `c` is an alias for the BINARY column `x`, so the sort is
+    // byte order ('P' before 'p') even though the table also has a NOCASE column
+    // literally called `c`. Previously the ORDER BY collation pass resolved the
+    // bare name `c` straight against the base table and sorted case-insensitively.
+    Case {
+        id: "order_by_alias_shadowing_collated_column",
+        setup: &[
+            "CREATE TABLE t (x TEXT, c TEXT COLLATE NOCASE)",
+            "INSERT INTO t VALUES('p','z'),('P','z')",
+        ],
+        query: "SELECT x AS c FROM t ORDER BY c",
+    },
+    // Control: a genuine reference to the NOCASE column still sorts
+    // case-insensitively ('a' before 'B'), so the fix must not over-correct.
+    Case {
+        id: "order_by_real_collated_column_still_folds",
+        setup: &[
+            "CREATE TABLE t (c TEXT COLLATE NOCASE)",
+            "INSERT INTO t VALUES('B'),('a')",
+        ],
+        query: "SELECT c FROM t ORDER BY c",
+    },
+    // Conversely, an alias STANDING FOR the NOCASE column does carry its
+    // collation ('a' before 'B') — the collation follows what the alias means,
+    // so the fix must not simply drop collation for every aliased key.
+    Case {
+        id: "order_by_alias_of_collated_column",
+        setup: &[
+            "CREATE TABLE t (c TEXT COLLATE NOCASE)",
+            "INSERT INTO t VALUES('B'),('a')",
+        ],
+        query: "SELECT c AS y FROM t ORDER BY y",
+    },
+    // Duplicate output aliases: SQLite's alias resolution returns the FIRST
+    // select-list match (no ambiguity error for ORDER BY), so this sorts by `x`
+    // (BINARY, 'P' before 'p') and NOT by the NOCASE `y`. Pins the first-wins
+    // rule that the precomputed alias map must preserve (`or_insert`).
+    Case {
+        id: "order_by_duplicate_alias_first_wins",
+        setup: &[
+            "CREATE TABLE t (x TEXT, y TEXT COLLATE NOCASE)",
+            "INSERT INTO t VALUES('p','B'),('P','a')",
+        ],
+        query: "SELECT x AS c, y AS c FROM t ORDER BY c",
+    },
     // The same table's BINARY column is NOT folded — all four values are distinct.
     // (Guards against over-applying the collation to every column.)
     Case {
