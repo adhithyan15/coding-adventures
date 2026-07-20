@@ -192,8 +192,12 @@ two literals still folds), so nothing regresses; the runtime path is what's new.
    landed with the E4d-AL / BA payoffs below; **runtime `str_cmp`** landed
    `iir-to-wasm` 0.39.0 (sibling `$__str_cmp` helper: min-length prefix scan +
    length tiebreak → `-1`/`0`/`1`, byte-identical to the folded
-   `bytes.cmp` fold, sign-extended to `i64`). Remaining E4d-3b: runtime
-   `str_slice` / `str_index` over promoted operands.
+   `bytes.cmp` fold, sign-extended to `i64`); **runtime `str_slice`** landed
+   `iir-to-wasm` 0.40.0 (bump-alloc a fresh `[i32 len][bytes]` block +
+   `memory.copy` the source's `[start, end)` run — the runtime `str_concat` shape
+   — with a bounds trap `unreachable` unless `0 ≤ start ≤ end ≤ len` via unsigned
+   compares, and `i32.wrap`ped index slots). Remaining E4d-3b: runtime
+   `str_index` over promoted operands.
 4. **E4d-4 — native runtime strings.** ✅ **Landed** (`twig-aot` 0.27.0 /
    `lang-aot` 0.174.0). Key finding: the native path *already* had everything —
    `lower_string_literals_for_aot` builds each `str_const`'s `[i64 len][bytes]`

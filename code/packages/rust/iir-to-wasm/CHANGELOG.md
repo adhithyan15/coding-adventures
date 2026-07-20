@@ -1,5 +1,39 @@
 # Changelog — iir-to-wasm
 
+## [0.40.0] — 2026-07-20 (LANG-FULL E4-dyn E4d-3b: runtime `str_slice`)
+
+Give `str_slice` a **runtime path** on WASM, mirroring the runtime `str_concat`
+that already bump-allocates blocks. A `str_slice` with a literal source and
+compile-time, in-bounds indices still folds to a constant slice at compile time
+(`collect_module_features`). But when the source is a runtime string handle (a
+function parameter, a call result) or an index is a runtime value, there is no
+compile-time answer — the `[start, end)` run must be copied into a fresh
+`[i32 len][bytes]` block at run time. Previously that shape errored (`str_slice
+missing module string table entry for …`); now it lowers to an inline
+bump-allocate-and-`memory.copy` sequence.
+
+- **Runtime lowering.** `new = bump; bump += 4 + (end - start); mem[new] =
+  end - start; memory.copy(new+4, src_base + start, end - start)` — the same
+  block-building shape as a runtime `str_concat`, but splicing one operand's
+  `[start, end)` run. The source's `len`/bytes-base come from its `[i32 len]
+  [bytes]` header when it is a runtime handle, or from its compile-time literal
+  offset/length when it is a folded literal reached only with runtime indices
+  (whose bytes sit raw in the data segment, no header). Index slots are the
+  widened i64 value model, so they are `i32.wrap`ped to the memory-op width
+  exactly as `str_index` does.
+- **Bounds trap.** `unreachable` unless `0 ≤ start ≤ end ≤ len`, via two
+  **unsigned** compares (`start >u end`, `end >u len`) — a negative index (a huge
+  unsigned) fails one of them, matching `str_index`'s trap rule and E4 §2.2.
+- **Feature gating.** A non-folding `str_slice` now marks `uses_memory` and
+  injects the `__array_bump` global in `collect_module_features` (a pure
+  runtime-slice program has no array op, so this is where they get injected for
+  it) — otherwise the lowering would fail to find the bump global.
+- **Tests.** `tests/str_slice_runtime.rs` slices inside a `slice(a: str, s: i64,
+  e: i64)` helper (params force the runtime path) and `str_eq`s the result
+  against a Rust `&src[start..end]` oracle — a byte-exact content+length check —
+  across middle/prefix/suffix/whole/empty slices, plus a mismatch sanity case and
+  three out-of-bounds trap cases (`end > len`, `start > end`, negative start).
+
 ## [0.39.0] — 2026-07-19 (LANG-FULL E4-dyn E4d-3b: runtime `str_cmp`)
 
 Give `str_cmp` a **runtime path** on WASM, mirroring the runtime `str_eq` that
