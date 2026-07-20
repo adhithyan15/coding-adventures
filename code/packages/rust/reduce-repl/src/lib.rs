@@ -92,14 +92,32 @@ impl ReduceRepl {
                 _ => {}
             }
         }
+
+        // Bound the accumulation buffer BEFORE growing it: a stream that
+        // never balances (an endless run of open brackets) must not buffer
+        // unbounded memory, and neither may a single caller-supplied `line`
+        // that is itself already oversized. Checking the size only after
+        // `push_str` would let an arbitrarily large `line` be copied into
+        // `self.buffer` (an O(n) copy, possibly reallocating) before the
+        // check meant to bound it ever ran — see `maple-repl::MapleRepl::
+        // feed`'s identical fix for the full rationale.
+        if self
+            .buffer
+            .len()
+            .saturating_add(line.len())
+            .saturating_add(1)
+            > MAX_INPUT_LEN
+        {
+            self.buffer.clear();
+            return ReplResponse::Output(format!(
+                "input too large: exceeds the {MAX_INPUT_LEN}-byte limit"
+            ));
+        }
+
         self.buffer.push_str(line);
         self.buffer.push('\n');
 
-        // Bound the accumulation buffer: a stream that never balances (an
-        // endless run of open brackets) must not buffer unbounded memory.
-        // Once over the size the session would reject anyway, submit so
-        // `feed` returns the clean "too large" error and resets.
-        if self.buffer.len() <= MAX_INPUT_LEN && is_incomplete(&self.buffer) {
+        if is_incomplete(&self.buffer) {
             return ReplResponse::NeedMore;
         }
 

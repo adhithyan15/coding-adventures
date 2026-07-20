@@ -1,5 +1,31 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- **`DeriveRepl::feed` now bounds `self.buffer` *before* growing it, not
+  after** — the previous order always ran `self.buffer.push_str(line)` +
+  `push('\n')` first and only then checked `self.buffer.len() <=
+  MAX_INPUT_LEN`, so a single, caller-supplied `line` that was itself
+  already oversized was fully copied into `self.buffer` (an O(n) copy,
+  possibly reallocating) before the check meant to bound it ever ran, and
+  the oversized submission relied on `DeriveSession::feed`'s own internal
+  length guard to eventually reject it. Found while propagating
+  `maple-repl::MapleRepl::feed`'s identical `/security-review` fix (MP-4,
+  #8647) to this crate's sibling REPLs — this crate's own shipped
+  `read_bounded_line` never feeds `feed` a `line` longer than
+  `MAX_LINE_LEN`, but `feed` is a `pub fn` on a `pub struct`, so any other
+  embedder calling it directly with an attacker-supplied, unbounded `&str`
+  needed the same bound at this layer too, not just at the one shipped
+  call site. The buffer is now never grown past the cap; an oversized
+  `line` is rejected immediately (buffer cleared, `"input too large:
+  exceeds the {MAX_INPUT_LEN}-byte limit"`) without ever reaching
+  `DeriveSession::feed`. The numbered `#n: ` prompt still advances for a
+  rejected oversized submission exactly as it does for any other
+  submission — `self.input_index` increments in the new early-return path
+  too, preserving the existing `#1: ` → `#2: ` test expectation.
+
 ## [0.1.0] - 2026-07-13
 
 ### Added
