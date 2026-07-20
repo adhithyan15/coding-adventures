@@ -67,6 +67,16 @@ and Italian's habit of keeping final vowels Latin's other children dropped.
   *dici*-*assette* "ten-and-seven"). Includes the three-sister comparison of *where*
   each breaks: PT at 16, FR and IT at 17. **Authored.**
 
+- **Ch. 13 — Colours**: **nero/bianco** — *nero* ← *niger* straight from Rome, but
+  **bianco ← Germanic *blank*** ("shining"), most likely carried in by the
+  **Lombards** (who also named **Lombardia**); Latin *albus* was pushed out of the
+  colour slot and survives as **alba** ("dawn"), *albume*, *album* → **rosso/blu**
+  (+ **azzurro**) — *rosso* ← *russus* ← PIE ***h₁rewdʰ-***, a **cousin** of
+  *red/rot/rouge*; *blu* is the **second** Germanic loan; and **azzurro** ← Arabic
+  ***lāzaward*** ("lapis lazuli") ← Persian *lāžward*, the *l-* swallowed as if an
+  article → English **azure** — so Italy's teams, **gli Azzurri**, are named after a
+  blue stone mined in Afghanistan. **Authored.**
+
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |

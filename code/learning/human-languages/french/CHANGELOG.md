@@ -1,5 +1,25 @@
 # Changelog
 
+## Chapter 13 — Colours
+
+- **Chapter 13 authored** (`FR-C13-noir-blanc`, `-rouge-bleu`): the **borrowing**
+  chapter, reviewing Ch.11/12 via `reviews_of`.
+- **noir & blanc** (`FR-C13-noir-blanc`): *noir* ← Latin *niger* (→ *denigrate*) is
+  the expected inheritance — but **blanc is not from Latin *albus*** at all. It is
+  **Frankish *blank*** ("shining, gleaming"), a **Germanic** word borrowed **into**
+  French: the reverse of the usual Latin→Germanic flow, and it displaced *albus*
+  entirely, probably by being the more **vivid** option. *Albus* didn't die, it just
+  stopped being a colour: **aube** ("dawn"), *aubépine* ("white thorn"), *album*,
+  *albinos*.
+- **rouge & bleu** (`FR-C13-rouge-bleu`): *rouge* ← *rubeus* ← PIE ***h₁rewdʰ-***,
+  making *rouge*, English *red/rust/ruby* and German *rot* **cousins by descent**,
+  not borrowings — one of the oldest reconstructible colour words. *Bleu* is a
+  **second** Germanic loan (*blāo*), and English then borrowed **back** from French,
+  so *blue* is a Germanic word that came home in disguise; *azur* (← Arabic
+  *lāzaward*) noted alongside. Payoff: of **bleu-blanc-rouge**, **two of three are
+  loanwords**.
+- Taxonomy: namespaced `FR-COLOUR-BLACK-WHITE`, `FR-COLOUR-RED-BLUE`.
+
 ## Chapter 12 — Numbers 11–20
 
 - **Chapter 12 authored** (`FR-C12-nombres-11-16`, `-17-20`): the teens, atom-first,

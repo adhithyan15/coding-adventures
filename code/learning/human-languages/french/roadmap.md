@@ -70,6 +70,16 @@ compared, every Spanish form supplied in full (no prior Spanish assumed).
   transparent ("ten-seven"), **flipping the order** at the same seam; *vingt* ←
   *vīgintī* → **vigesimal**. **Authored.**
 
+- **Ch. 13 — Colours**: the borrowing chapter. **noir/blanc** — *noir* ← *niger* as
+  expected, but **blanc is NOT from Latin *albus***: it's **Frankish *blank***
+  ("shining"), a **Germanic** word borrowed **into** Romance, the reverse of the
+  usual flow; *albus* survives only outside the colour slot, in **aube** ("dawn"),
+  *aubépine*, *album* → **rouge/bleu** — *rouge* ← *rubeus* ← PIE ***h₁rewdʰ-***, so
+  *rouge* and English *red* and German *rot* are **cousins by descent**, not
+  borrowings; *bleu* is a **second** Germanic loan (*blāo*), which English then
+  borrowed **back** from French. Payoff: of *bleu-blanc-rouge*, **two of three are
+  loanwords**. **Authored.**
+
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |

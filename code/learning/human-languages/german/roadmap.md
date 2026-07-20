@@ -76,6 +76,18 @@ Spanish and French where a contrast helps. The recurring decoder is the
   The contrast: the Romance sisters all **break** their teens pattern; German
   **never does**. **Authored.**
 
+- **Ch. 13 — Colours**: German as the **lender** for once. **schwarz/weiß** — both
+  **native Germanic**: *schwarz* ← *swartaz* (English **swarthy**; kin to Latin
+  *sordēs* → *sordid*), *weiß* ← *hwītaz* = **exactly** English *white* (with the
+  **ß** rule: sharp *s* after a long vowel, written *weiss* in Switzerland). The
+  showpiece: German's own **blank** ("shiny, polished") is the very word Romance
+  **borrowed** for **white** — *blanc/bianco/branco* — Germanic lending **into**
+  Latin's daughters, the reverse of *Fenster*/*Wein* → **rot/blau** — *rot* ←
+  *raudaz* ← PIE ***h₁rewdʰ-***, a cousin of *rouge/rosso* **by descent, not
+  borrowing**; *blau* is the **second** German colour word Romance took (*bleu*,
+  *blu*), and English took *blue* from **French** rather than from Germanic.
+  **Authored.**
+
 ## Planned
 
 | Chapter | Theme |
