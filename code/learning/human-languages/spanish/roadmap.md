@@ -115,8 +115,25 @@ order lives in the book, which LaTeX auto-numbers, and in `session-map.md`.)
   sorting all three families by the single question *where does the stress land?*
   **Authored.**
 
-Next: **Ch. 16** — the **imperfect**, the past that kept going, and its contrast
-with the preterite; then everyday description, building toward real conversation.
+- **Ch. 16 — The imperfect, and choosing between the two pasts**: the **regular
+  imperfect** *hablaba…hablábamos* / *comía…comíamos* — the ongoing-or-habitual
+  past, and the **most regular tense in the language**, with **-er and -ir sharing
+  one set a third time** (← Latin *-ābam* / *-ēbam*, the *b* surviving whole in
+  *-aba* but wearing away in *-ēbam → -ía*); the two accent jobs (*hablábamos* =
+  stress three syllables back; *comía* = **breaking the diphthong** into
+  *co-mí-a*); and a **pro-drop exception** — *yo* and *él* forms are identical, so
+  Spanish puts *yo* back → the **only three irregular imperfects in the entire
+  language**: *ser→era*, *ir→iba*, *ver→veía* (which barely counts). The payoff:
+  ***iba* ← Latin *īre*** is the **one tense where *ir* uses its own verb** — its
+  present came from *vādere* (Ch. 10) and its preterite from *fuī* (Ch. 14), so
+  *ir* is stitched together from **three different Latin verbs** → practice on the
+  **aspect** contrast English doesn't grammatically mark: **point vs line**,
+  imperfect setting the background and preterite interrupting it, plus the verbs
+  where the choice changes the **meaning** (*sabía* "knew" vs *supe* "found out";
+  *conocía* "knew" vs *conocí* "met"). **Authored.**
+
+Next: **Ch. 17** — the **future** and the conditional; then everyday description,
+building toward real conversation.
 From here the course hands over rules, not phrases. Grammar accumulates piece by
 piece. The theme skeleton below plans the wider road.
 
