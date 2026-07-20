@@ -493,7 +493,15 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     return f(numOf(x));
   }
 
-  const builtins = {
+  // NULL-PROTOTYPE table.  `builtins[name]` is indexed by a SOURCE-DERIVED
+  // name, so a plain object literal would resolve inherited `Object.prototype`
+  // members — `builtins["toString"]`, `["constructor"]`, `["__defineGetter__"]`
+  // all yield functions, sail past the `f === undefined` check in
+  // `callBuiltin`/`builtinClosure`, and get INVOKED (a define-a-getter-on-
+  // global gadget).  `Object.create(null)` removes the prototype chain, so an
+  // unknown name is `undefined` and raises cleanly.  This matches how the
+  // runtime's other name-indexed tables (`ancestry`, the ivar bags) are built.
+  const builtins = Object.assign(Object.create(null), {
     // `+`/`*` route through the polymorphic helpers (hoisted function
     // declarations below) so a builtin referenced as a VALUE, or a
     // variadic `(+ 1 2 3)`, gets the same string/array/numeric dispatch
@@ -531,6 +539,14 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     "null?": (x) => x === null || x === undefined,
     "number?": (x) => isNum(x),
     "symbol?": (x) => x instanceof Sym,
+    // Type reflection as BUILTINS: the Ruby frontend lowers `x.is_a?(Foo)`
+    // and a `case/in Foo` class pattern to `BuiltinCall("is_a?", [x,
+    // StrLit("Foo")])` — the class arrives as its NAME, so no constant-
+    // reference support is needed here.
+    "is_a?": (v, cls) => isA(v, methodNameArg(cls)),
+    "kind_of?": (v, cls) => isA(v, methodNameArg(cls)),
+    "instance_of?": (v, cls) => rubyClassName(v) === methodNameArg(cls),
+    "class": (v) => rubyClassName(v),
     "len": (x) => x.length,
     "print": (x) => { console.log(format(x)); return null; },
     "puts": (...args) => puts(...args),
@@ -541,7 +557,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       else { for (let i = start; i > stop; i += s) { out.push(i); } }
       return out;
     },
-  };
+  });
   // A builtin referenced as a value (e.g. passed to `map`) becomes a
   // Closure wrapping the table entry, so it round-trips through
   // `applyClosure` like any other first-class function.
@@ -894,6 +910,9 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     if (name === "respond_to?" || SEND_METHODS.has(name) || OBJECT_BLOCK_METHODS.has(name)) {
       return true;
     }
+    // Type reflection answers on every receiver (matching the Go backend,
+    // which reports `class`/`is_a?`/`kind_of?`/`instance_of?` universally).
+    if (name === "class" || REFLECT_PREDICATES.has(name)) { return true; }
     if (typeof recv === "boolean" && BOOL_METHODS.has(name)) { return true; }
     // A number resolves the hand-implemented Ruby Numeric catalog (kept in
     // lockstep with `numericMethod`'s case labels), ahead of the native gate.
@@ -2035,6 +2054,98 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     return ARR_MISS;
   }
 
+  // ── Ruby type reflection (`class`, `is_a?`, `instance_of?`) ────
+  //
+  // The Ruby CLASS NAME of a runtime value, mirroring the Go backend's
+  // `_sir_ruby_class_name` so `.class` reads identically on both.  The
+  // Integer-vs-Float split is answerable only because numbers now carry a
+  // tag: an integral native number is an `Integer`, while a `SirFloat` box
+  // (or a non-integral native number) is a `Float`.  Before tagged floats
+  // this distinction was literally unrepresentable here — `7` and `7.0`
+  // were the same JS value.
+  function rubyClassName(v) {
+    if (v === null || v === undefined) { return "NilClass"; }
+    // A user instance reports its own class tag, so `obj.class` names the
+    // real class (e.g. `Dog`) rather than a generic label.
+    if (v instanceof SirInstance) { return v.sirClass; }
+    // A raised/caught exception is an `Error`, NOT a `SirInstance`.  Route it
+    // through `classOfThrown` — the SAME bucketing `rescue` matching uses — so
+    // reflection and rescue never disagree: a `SirError` reports its own class
+    // tag, and a native JS error (a `TypeError` from an internal operation)
+    // reports `StandardError`, which is exactly the class `rescue` catches it
+    // as.  Without this, `rescue => e; handle if e.is_a?(StandardError)` would
+    // silently skip the handler for a value `rescue` had just caught.
+    if (v instanceof Error) { return classOfThrown(v); }
+    if (v === true) { return "TrueClass"; }
+    if (v === false) { return "FalseClass"; }
+    if (isNum(v)) { return isFloat(v) ? "Float" : "Integer"; }
+    if (typeof v === "string") { return "String"; }
+    if (v instanceof Sym) { return "Symbol"; }
+    if (Array.isArray(v)) { return "Array"; }
+    if (v instanceof Map) { return "Hash"; }
+    if (v instanceof Closure) { return "Proc"; }
+    return "Object";
+  }
+  // Built-in ancestry for `is_a?`/`kind_of?`: a value is an instance of its
+  // own class AND of each ancestor.  Ruby's real MRO is deeper; this is the
+  // v0 surface (`Integer`/`Float` are `Numeric` and `Comparable`, `String`
+  // is `Comparable`), with `Object`/`BasicObject` matching everything.
+  // A `Map` (not an object literal) so a user-defined class name can never
+  // reach `Object.prototype` keys like `__proto__` on lookup.
+  const BUILTIN_ANCESTORS = new Map([
+    ["Integer", ["Numeric", "Comparable"]],
+    ["Float", ["Numeric", "Comparable"]],
+    ["String", ["Comparable"]],
+  ]);
+  const REFLECT_PREDICATES = new Set(["is_a?", "kind_of?", "instance_of?"]);
+  function isA(v, className) {
+    const actual = rubyClassName(v);
+    if (actual === className) { return true; }
+    if (className === "Object" || className === "BasicObject") { return true; }
+    const builtin = BUILTIN_ANCESTORS.get(actual);
+    if (builtin !== undefined && builtin.indexOf(className) >= 0) { return true; }
+    // A user instance — or an exception, which is a `SirError` — also matches
+    // its SUPERCLASS chain (the same cycle-guarded `ancestry` walk `rescue`
+    // matching uses) and any module mixed in along that chain.
+    if (v instanceof SirInstance || v instanceof Error) {
+      if (isAncestorOrSelf(actual, className)) { return true; }
+      if (includesModuleTransitively(actual, className)) { return true; }
+    }
+    return false;
+  }
+  // Does `owner` (a class) reach `target` through the modules mixed into it
+  // or into any of its ancestors?  Ruby's MRO is TRANSITIVE — `class C;
+  // include M; end` where `module M; include N; end` makes `c.is_a?(N)` true
+  // — so the module graph must be searched, not just scanned one level.
+  //
+  // Deliberately ITERATIVE (an explicit worklist, not recursion): the graph's
+  // depth is attacker-shaped by the source, and a recursive walk over a long
+  // `include` chain would exhaust the JS call stack.  A worklist keeps the JS
+  // stack at O(1) and the shared `seen` set makes each module name expand at
+  // most once, so a cyclic or self-including graph terminates.
+  function includesModuleTransitively(owner, target) {
+    const seen = new Set();
+    const work = [owner];
+    while (work.length > 0) {
+      // Walk this owner's SUPERCLASS chain, collecting the modules mixed in
+      // at every level; `chain` guards a cyclic ancestry table.
+      let cur = work.pop();
+      const chain = new Set();
+      while (cur !== undefined && cur !== null && !chain.has(cur)) {
+        chain.add(cur);
+        const mods = includedModules.get(cur);
+        if (mods !== undefined) {
+          for (const m of mods) {
+            if (m === target) { return true; }
+            if (!seen.has(m)) { seen.add(m); work.push(m); }
+          }
+        }
+        cur = ancestry[cur];
+      }
+    }
+    return false;
+  }
+
   // Dispatch the universal M6 surface on ANY receiver.  Returns `M6_MISS` when
   // `name` is not an M6 method, so `callMethod` continues to its type-specific
   // paths.  `rawArgs` is the UN-unwrapped argument list — a trailing block is
@@ -2051,6 +2162,16 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     }
     if (name === "respond_to?") {
       return respondsTo(recv, methodNameArg(rawArgs[0]));
+    }
+    // Type reflection on ANY receiver: `7.class` → "Integer", `7.0.class` →
+    // "Float" (the tagged-float split), `obj.class` → its own class tag.
+    if (name === "class") { return rubyClassName(recv); }
+    // `is_a?`/`kind_of?` honour ancestry; `instance_of?` is an EXACT class
+    // match.  The class argument arrives as a NAME (the frontend lowers a
+    // constant reference to its name string, and a Symbol is accepted too).
+    if (REFLECT_PREDICATES.has(name) && rawArgs.length > 0) {
+      const cls = methodNameArg(rawArgs[0]);
+      return name === "instance_of?" ? rubyClassName(recv) === cls : isA(recv, cls);
     }
     // `tap`/`then`/`yield_self` with an actual trailing Closure block.  `tap`
     // returns the receiver; `then`/`yield_self` return the block's result.
