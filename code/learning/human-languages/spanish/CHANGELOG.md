@@ -1,5 +1,42 @@
 # Changelog
 
+## Chapter 16 — The imperfect, and choosing between the two pasts
+
+- **Chapter 16 authored** (`ES-C16-imperfecto`, `-tres-irregulares`,
+  `-practice`): the second past tense, and the first genuinely **new distinction**
+  (rather than new forms) the course has asked for — reviewing Ch.6/7/9/10/14/15
+  via `reviews_of`.
+- **the regular imperfect** (`ES-C16-imperfecto`): *hablaba/hablabas/hablaba/
+  hablábamos/hablaban*, *comía/vivía* — the ongoing-or-habitual past, and the
+  **most regular tense in the language**, deliberately framed as relief after
+  Ch.15's strong preterites. **-er and -ir share one set a third time.**
+  Etymology: ← Latin *-ābam* / *-ēbam*, where the **b survived whole** in *-aba*
+  but **wore away** in *-ēbam → -ea → -ía* — one Latin ending, two fates in one
+  language. The two accents do **different jobs**: *hablábamos* marks stress three
+  syllables back (the only accented *-ar* form), while *comía* **breaks the
+  diphthong** so *co-mí-a* is three syllables (every *-er/-ir* form needs it). And
+  a **pro-drop exception**: *yo* and *él* forms are identical, so Spanish — which
+  normally drops pronouns (Ch.6) — puts *yo* back when the ending stops doing its
+  job.
+- **the three irregulars** (`ES-C16-tres-irregulares`): *ser→era*, *ir→iba*,
+  *ver→veía* — **three verbs, not three families**, the complete inventory for the
+  whole language; *ver* barely counts, keeping an extra *-e-* from older *veer*.
+  The chapter's payoff is **ir**: its present comes from *vādere* (Ch.10), its
+  preterite from *fuī* (Ch.14), and the **imperfect is the one tense where *ir*
+  uses its own original verb, *īre*** — so *ir* is stitched together from **three
+  different Latin verbs**, with *ir* and *iba* the last surviving pieces of the
+  real one. *Era* ← *eram*, the same *es-* root as *soy/es* and English *is/are*
+  (Ch.9), which *ser* then abandons for *fuī* in the preterite: *era* vs *fue*.
+- **practice** — **preterite vs imperfect**, the aspect contrast English marks only
+  lexically and never with an ending. Framed as **point vs line**: the imperfect
+  sets the background and the preterite interrupts it (*hablaba cuando llegó*),
+  plus the verbs where the choice changes the **meaning** — *sabía* "knew" vs
+  *supe* "**found out**"; *conocía* "knew" vs *conocí* "**met**"; *tenía* "had" vs
+  *tuve* "**got**"; *quería* "wanted" vs *quise* "tried" / *no quise* "**refused**"
+  — all one consistent logic: the preterite marks the **instant the state began**.
+- Taxonomy: namespaced `ES-IMPERFECT`, `ES-IMPERFECT-IRREGULARS`; practice label
+  `CH16-PRACTICE`.
+
 ## Chapter 15 — Completing the preterite
 
 - **Chapter 15 authored** (`ES-C15-comer-vivir-preterite`, `-preterite-fuertes`,

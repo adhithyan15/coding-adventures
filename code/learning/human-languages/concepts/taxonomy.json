@@ -231,6 +231,8 @@
       "ES-PRETERITE-AR": "the regular -ar preterite — hablé/hablaste/habló/hablamos/hablaron (← Latin perfect -āvī; accent marks the final stress, hablo→habló; hablamos present=preterite)",
       "ES-PRETERITE-ER-IR": "the regular -er/-ir preterite — comí/comiste/comió/comimos/comieron, viví/viviste/vivió (ONE shared set, unlike the present where -er/-ir differ; ← Latin perfect -ī/-istī/-it, -istī→-iste nearly intact; vivimos present=preterite but comemos≠comimos)",
       "ES-PRETERITE-STRONG": "the strong preterites — tener→tuve, hacer→hice, estar→estuve (stress moves OFF the ending onto the stem, TUve/HIce, hence NO written accent, the reverse of hablé/habló; yo ending -e not -é; hizo c→z; ← Latin strong perfects tenuī/fēcī/stetī, inherited not rebuilt)",
+      "ES-IMPERFECT": "the imperfect — hablaba/hablabas/hablaba/hablábamos/hablaban and comía/vivía (the ongoing/habitual past; -er and -ir share ONE set a THIRD time). ← Latin -ābam / -ēbam, the b surviving whole in -aba but wearing away in -ēbam→-ía. Accents do two different jobs: hablábamos = stress 3 syllables back; comía = breaking the diphthong into co-mí-a. yo and él forms are IDENTICAL, so Spanish often un-drops yo here — a pro-drop exception",
+      "ES-IMPERFECT-IRREGULARS": "the only THREE irregular imperfects in the language — ser→era (← eram, same es- root as soy/es and English is/are), ir→iba (← ībam), ver→veía (barely irregular: keeps an -e- from older veer). PAYOFF: iba is the ONE tense where ir uses its OWN Latin verb īre — its present came from vādere and its preterite from fuī, so ir is stitched from THREE different Latin verbs",
       "IT-VERB-STARE": "stare — 'to be' (state; ← Latin stare 'to stand', = Spanish estar); drives 'come stai?'",
       "IT-VERB-PARLARE": "parlare — 'to speak' (← parabolāre = French parler; the regular -are present)",
       "IT-VERB-ABITARE": "abitare — 'to live/dwell' (← habitāre → habitat; twin of French habiter)",
@@ -320,6 +322,6 @@
     }
   },
   "practiceTags": {
-    "note": "Non-word lessons (type: review | practice-mix | writing) carry a session/orthography label, not a concept, and are exempt from the cross-language join. Existing labels: CH1-PRACTICE, CH2-PRACTICE, CH3-PRACTICE, CH4-PRACTICE, CH9-PRACTICE, CH10-PRACTICE, CH11-PRACTICE, CH12-PRACTICE, CH13-PRACTICE, CH14-PRACTICE, CH15-PRACTICE, REVIEW."
+    "note": "Non-word lessons (type: review | practice-mix | writing) carry a session/orthography label, not a concept, and are exempt from the cross-language join. Existing labels: CH1-PRACTICE, CH2-PRACTICE, CH3-PRACTICE, CH4-PRACTICE, CH9-PRACTICE, CH10-PRACTICE, CH11-PRACTICE, CH12-PRACTICE, CH13-PRACTICE, CH14-PRACTICE, CH15-PRACTICE, CH16-PRACTICE, REVIEW."
   }
 }
