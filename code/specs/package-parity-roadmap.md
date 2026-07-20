@@ -105,7 +105,7 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. Regenerated
-on July 19, 2026 after the paired Lua/Perl `fenwick-tree`, `binary-tree`,
+on July 20, 2026 after the paired Lua/Perl `fenwick-tree`, `binary-tree`,
 `binary-search-tree`, `in-memory-data-store-protocol`, `avl-tree`, `tree-set`,
 `skip-list`, `hyperloglog`, `trie`, `radix-tree`, and `resp-protocol` ports,
 the paired `hash-functions` prerequisite, the paired `bloom-filter`, `hash-map`,
@@ -121,16 +121,16 @@ ports, followed by the paired `ed25519`, `font-parser`, `asciidoc-parser`, and
 `point2d`, `affine2d`, `bezier2d`, and `arc2d`
 ports, followed by the Haskell `gradient-descent`, `perceptron`, and
 `type-checker-protocol` ports, and the Haskell `paint-vm-ascii`,
-`barcode-layout-1d`, `itf`, `code39`, and `codabar` ports:
+`barcode-layout-1d`, `itf`, `code39`, `codabar`, and `code128` ports:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 285 |
+| Present in 10-15 languages | 172 | 284 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,972 |
-| Present in one language | 710 | 9,940 |
+| Present in one language | 712 | 9,968 |
 
-The loop must not start by attempting 9,940 singleton ports. It should finish
+The loop must not start by attempting 9,968 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 ## Priority 0: Inventory And Identity Integrity
@@ -182,7 +182,7 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Perl | 0 | Complete; paired data-structure/storage wave |
 | C# | 0 | Complete; paired native package wave |
 | F# | 0 | Complete; paired native package wave |
-| Haskell | 10 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
+| Haskell | 9 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
 | Kotlin | 58 | Move with Java |
@@ -639,6 +639,17 @@ counts, semantic attribution, empty payloads, customized paint output,
 metadata precedence, aliases, and both local and shared validation paths. The
 package now spans 12 implementation lanes, reduces the high-consensus backlog
 to 285 slots, and leaves 10 gaps in the Haskell lane.
+
+The twenty-fifth Haskell high-consensus slice is complete: `code128` now
+provides the pure Code Set B encoder unlocked by `barcode-layout-1d`. It
+validates printable ASCII, exposes the complete 107-pattern symbol table,
+computes the required weighted modulo-103 checksum, and emits attributed start,
+data, check, and stop runs through the shared paint geometry. Its package-native
+suite exercises ASCII boundaries, educational errors, the complete pattern
+table, reference values and checksums, empty payloads, exact module geometry,
+customized paint output, metadata precedence, aliases, and both local and shared
+validation paths. The package now spans 12 implementation lanes, reduces the
+high-consensus backlog to 284 slots, and leaves 9 gaps in the Haskell lane.
 
 Recommended family order:
 
