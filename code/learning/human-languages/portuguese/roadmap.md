@@ -61,6 +61,11 @@ French.
   "of the same stock," from *frāter germānus* "full brother," **not** *frāter*; = ES
   *hermano*; cousins *germane*/*German*). **Authored.**
 
+- **Ch. 11 — Food (bread, water, wine)**: **pão** (← *pānis*, worn to one **nasal**
+  syllable *pānis→pão* — the same erosion as *pai*; plural *pães*) → **água/vinho**
+  — **água** **kept** *aqua*'s body (vs French *eau*); **vinho** ← *vīnum* with the
+  signature **-nh-** (= Spanish *ñ*) → wine/vine/vinegar. **Authored.**
+
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |

@@ -56,6 +56,11 @@ and Italian's habit of keeping final vowels Latin's other children dropped.
   *parenti*=relatives false friend) → **fratello/sorella** (← *frāter/soror* + the
   diminutive *-ello/-ella*, "little brother/sister"). **Authored.**
 
+- **Ch. 11 — Food (bread, water, wine)**: **pane** (closest to Latin *pānis* →
+  **companion**, *companatico* "what you eat with bread") → **acqua/vino** —
+  **acqua** **kept** Latin *aqua* whole (doubled *-cq-*), the loud original French
+  wore down to *eau*; **vino** ← *vīnum* → wine/vine/vinegar. **Authored.**
+
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |

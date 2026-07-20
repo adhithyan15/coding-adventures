@@ -59,6 +59,11 @@ compared, every Spanish form supplied in full (no prior Spanish assumed).
   **frère/sœur** (← *frāter/soror* → fraternal/friar, sorority; the **œ** ligature
   spells worn-down *soror*). **Authored.**
 
+- **Ch. 11 — Food (bread, water, wine)**: **pain** (← *pānis* → **companion**
+  "one you share bread with", pantry) → **eau/vin** (**eau** ← *aqua*, the **most
+  eroded** word French took from Latin — worn to a bare "oh," vs English *aquatic*;
+  **vin** ← *vīnum* → wine/vine/vinegar). **Authored.**
+
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |

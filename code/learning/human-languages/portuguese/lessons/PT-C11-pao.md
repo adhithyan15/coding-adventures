@@ -1,0 +1,52 @@
+---
+id: PT-C11-pao
+chapter: 11
+type: word
+headword: o pão
+gloss: bread — pānis worn to a single nasal syllable, just like pai
+concept_tag: PT-FOOD-BREAD
+prerequisites: [PT-C10-irmaos, PT-C01-ola]
+sounds: [nasal-ao, p-clear]
+roots: [panis-latin]
+etymology_hook: "pão ← pānis, worn to one nasal syllable (pānis→pãe→pão) — the same nasalizing erosion that made pai from pater; the root still gives companion, pantry"
+est_minutes: 4
+reviews_of: [PT-C10-irmaos, PT-C10-pais]
+---
+
+# o pão — bread, worn down to a hum
+
+## Warm-up
+
+[PAUSE 2s] **o pão** ("bread") — and Portuguese does to it exactly what it did to
+"father." Just as *pater* eroded to the one-syllable **pai**, Latin *pānis* wore
+down to the single **nasal** syllable **pão** ("**powng**"). Same word as French
+*pain* and Italian *pane*, taken furthest.
+
+## Taken apart
+
+- **o pão** ("bread") ← Latin **pānis**. The intervocalic *-n-* dissolved and left
+  its **nasality** behind on the vowel: *pānis → pãe → pão*, the tilde marking the
+  hum — the identical process behind **pai** (← *pater*) and **mãe** (← *māter*)
+  from the family chapter. Masculine: *o* pão; the plural is the tricky **pães**.
+
+## The "bread" family — still there
+
+Even worn to a hum, the root keeps its English relatives: **companion / company**
+(*com-* + *pānis*, "one you **share bread with**"), **pantry**, **pannier**. So
+*pão* and *companion* are the near-vanished and the well-preserved ends of one
+Latin word.
+
+## Guided Practice
+
+[PAUSE 1s]
+- [YOU SAY: "o pão" — fully nasal, "powng"; plural "pães"]
+- [YOU SAY: the parallel — "*pater* → **pai**, *pānis* → **pão** — same nasal
+  erosion"]
+- [YOU SAY: "pão → companion, pantry"]
+
+## Wrap-up Recall
+
+[PAUSE 3s] Give "bread" with its article. (**o pão**.) What Latin word is it from,
+and what happened to it? (*pānis* — worn to a single **nasal** syllable, *pānis →
+pão*.) Which family word followed the *same* erosion? (**pai**, ← *pater* — and
+*mãe* ← *māter*.) Next: **a água** and **o vinho** — water and wine.

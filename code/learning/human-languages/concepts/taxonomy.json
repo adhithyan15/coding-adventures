@@ -240,6 +240,8 @@
       "IT-SEASONS": "primavera/estate/autunno/inverno (primavera='prima vera' first green; stagione ← statiō 'a standing')",
       "IT-FAMILY-PARENTS": "padre/madre (father/mother; closest to Latin pater/māter, -t-→-d-; padre = English loan; genitori 'parents' ← genitor 'begetter'; parenti=relatives false friend)",
       "IT-FAMILY-SIBLINGS": "fratello/sorella (brother/sister; frāter/soror + diminutive -ello/-ella = 'little brother/sister'; → fraternal/sorority)",
+      "IT-FOOD-BREAD": "pane (bread; closest to Latin pānis; → companion 'one you share bread with', pantry; companatico = 'what you eat WITH bread')",
+      "IT-FOOD-DRINKS": "acqua/vino (water/wine; acqua KEPT Latin aqua whole, -cq- doubled, vs French eau; vino ← vīnum → wine/vine/vinegar)",
       "FR-VERB-APPELER": "(s')appeler — 'to call (oneself)'",
       "FR-VERB-ALLER": "aller — 'to go' (suppletive: ambulāre/vādere/īre); drives 'comment ça va?'",
       "FR-VERB-PARLER": "parler — 'to speak' (← parabolāre; the big regular -er verb / present tense)",
@@ -256,6 +258,8 @@
       "FR-SEASONS": "printemps/été/automne/hiver (printemps='prime temps' first time; hiver ← hibernum → hibernate)",
       "FR-FAMILY-PARENTS": "père/mère (father/mother ← pater/māter; same PIE as English father/mother via Grimm's law p→f/t→th; → paternal/maternal)",
       "FR-FAMILY-SIBLINGS": "frère/sœur (brother/sister ← frāter/soror; → fraternal/friar, sorority; œ ligature spells soror worn down)",
+      "FR-FOOD-BREAD": "pain (bread ← pānis; nasal -ain; → companion 'one you share bread with', company, pantry)",
+      "FR-FOOD-DRINKS": "eau/vin (water/wine; eau ← aqua worn to a bare 'oh' — most eroded of all, vs English aquatic; vin ← vīnum → wine/vine/vinegar)",
       "DE-VERB-HEISSEN": "heißen — 'to be called'",
       "DE-VERB-GEHEN": "gehen — 'to go' (= English go); drives 'wie geht es dir?'",
       "GE-VERB-WOHNEN": "wohnen — 'to live/dwell' (← wonēn → English 'wont'); first weak verb / present tense",
@@ -272,6 +276,8 @@
       "GE-SEASONS": "Frühling/Sommer/Herbst/Winter (NATIVE Germanic, unlike Latin months; Herbst = English HARVEST; Frühling ← früh 'early')",
       "GE-FAMILY-PARENTS": "Vater/Mutter (father/mother; INHERITED Germanic, NOT Latin loans like the months; Grimm's law twins of English father/mother, V=f)",
       "GE-FAMILY-SIBLINGS": "Bruder/Schwester (brother/sister; Germanic twins of English brother/sister; Geschwister 'siblings' via collective ge-)",
+      "GE-FOOD-BREAD": "Brot (bread; INHERITED Germanic twin of English bread, NOT Latin pānis; introduces the neuter das + capitalized nouns)",
+      "GE-FOOD-DRINKS": "Wasser/Wein (water/wine; Wasser NATIVE Germanic twin of water; but Wein is an ANCIENT Latin loan ← vīnum, borrowed with the vine — like English wine)",
       "PT-WORD-TUDO": "tudo — 'everything / all' (← Latin tōtus); the heart of 'tudo bem?'",
       "PT-VERB-FALAR": "falar — 'to speak' (← fabulārī = Spanish hablar, but PT kept f-); the regular -ar present",
       "PT-VERB-MORAR": "morar — 'to live/dwell' (← morārī 'to linger' → moratorium; not habitāre)",
@@ -286,7 +292,9 @@
       "PT-MONTHS": "janeiro…dezembro (março=Mars; -eiro ending ← -arius like feira; setembro…dezembro = Latin 7-10 = sete/dez)",
       "PT-SEASONS": "primavera/verão/outono/inverno (verão ← veranum ← vēr 'spring' — summer grew from spring!; outono ← autumnus au→ou)",
       "PT-FAMILY-PARENTS": "pai/mãe (father/mother; most worn-down of the sisters — pater→pae→pai, māter→mãe nasal, -t- vanished; os pais 'parents' lit. 'the fathers'; o país=country)",
-      "PT-FAMILY-SIBLINGS": "irmão/irmã (brother/sister; NOT from frāter but germānus 'of the same stock' — frāter germānus 'full brother'; = ES hermano; cousins germane/German)"
+      "PT-FAMILY-SIBLINGS": "irmão/irmã (brother/sister; NOT from frāter but germānus 'of the same stock' — frāter germānus 'full brother'; = ES hermano; cousins germane/German)",
+      "PT-FOOD-BREAD": "pão (bread ← pānis, worn to one nasal syllable pānis→pão — same erosion as pai; plural pães; → companion/pantry)",
+      "PT-FOOD-DRINKS": "água/vinho (water/wine; água KEPT aqua's body vs French eau; vinho ← vīnum with signature -nh- = Spanish ñ → wine/vine/vinegar)"
     }
   },
   "practiceTags": {
