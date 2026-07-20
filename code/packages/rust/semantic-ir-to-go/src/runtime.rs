@@ -1389,6 +1389,14 @@ func _sir_ruby_class_name(v Value) string {
 	if inst, ok := v.(*SirInstance); ok {
 		return inst.Class
 	}
+	// A raised/caught exception is a *SirError, NOT a *SirInstance — it carries
+	// its class tag the same way.  Without this it fell to the "Object" default,
+	// so `rescue => e; e.class` said "Object" and `e.is_a?(StandardError)` was
+	// FALSE for every exception — silently skipping a handler guarded that way,
+	// even though `_sir_ancestry` holds the whole exception hierarchy.
+	if se, ok := v.(*SirError); ok {
+		return se.Class
+	}
 	switch t := v.(type) {
 	case bool:
 		if t {
@@ -1416,12 +1424,37 @@ func _sir_object_method(recv Value, name string, args []Value) (Value, bool) {
 	switch name {
 	case "nil?":
 		return recv == nil, true
+	// Guard `args[0]`: a zero-argument `x.==()` would otherwise index an empty
+	// slice and PANIC, killing the program.  Ruby raises ArgumentError; the
+	// never-crash floor here is to compare against nil.
 	case "==":
+		if len(args) == 0 {
+			return recv == nil, true
+		}
 		return _sir_value_eq(recv, args[0]), true
 	case "!=":
+		if len(args) == 0 {
+			return recv != nil, true
+		}
 		return !_sir_value_eq(recv, args[0]), true
 	case "class":
 		return _sir_ruby_class_name(recv), true
+	// `is_a?`/`kind_of?` honour ancestry; `instance_of?` is an EXACT class
+	// match.  These were listed in `_sir_responds_to` but never IMPLEMENTED,
+	// so `respond_to?(:is_a?)` answered true while an actual call fell through
+	// to `NoMethodError` and killed the program.  The class argument arrives
+	// as a NAME (the frontend lifts a `Const` to a `StrLit`), so no
+	// constant-reference support is needed here.
+	case "is_a?", "kind_of?", "instance_of?":
+		if len(args) == 0 {
+			return false, true
+		}
+		target := _sir_method_name(args[0])
+		actual := _sir_ruby_class_name(recv)
+		if name == "instance_of?" {
+			return actual == target, true
+		}
+		return _sir_value_is_a(recv, actual, target), true
 	case "to_s":
 		return _sir_ruby_to_s(recv), true
 	case "inspect":
@@ -3981,6 +4014,68 @@ func _sir_class_of_thrown(r any) string {
 		return se.Class
 	}
 	return "StandardError"
+}
+
+// Ruby `is_a?`: the receiver's own class, a BUILT-IN ancestor (`Integer` and
+// `Float` are `Numeric` and `Comparable`; `String` is `Comparable`), the
+// universal `Object`/`BasicObject`, or — for a user instance — its superclass
+// chain plus any module mixed in along it.
+func _sir_value_is_a(recv Value, actual string, target string) bool {
+	if actual == target || target == "Object" || target == "BasicObject" {
+		return true
+	}
+	switch actual {
+	case "Integer", "Float":
+		if target == "Numeric" || target == "Comparable" {
+			return true
+		}
+	case "String":
+		if target == "Comparable" {
+			return true
+		}
+	}
+	// A user instance — or an exception, which is a *SirError carrying the same
+	// kind of class tag — also matches its superclass chain and any module
+	// mixed in along it.  Exceptions matter here: `_sir_ancestry` holds the
+	// built-in hierarchy, so `e.is_a?(StandardError)` resolves through it.
+	switch recv.(type) {
+	case *SirInstance, *SirError:
+		return _sir_is_ancestor_or_self(actual, target) ||
+			_sir_includes_module_transitively(actual, target)
+	}
+	return false
+}
+
+// Does `owner` reach `target` through the modules mixed into it or into any of
+// its ancestors?  Ruby's MRO is TRANSITIVE — `class C; include M; end` where
+// `module M; include N; end` makes `c.is_a?(N)` true.
+//
+// Deliberately ITERATIVE (an explicit worklist, not recursion): include-graph
+// depth is shaped by the source, so a recursive walk could exhaust the stack on
+// a long chain.  `seen` expands each module at most once and `chain` guards a
+// cyclic ancestry edge, so any graph terminates.
+func _sir_includes_module_transitively(owner string, target string) bool {
+	seen := make(map[string]bool)
+	work := []string{owner}
+	for len(work) > 0 {
+		cur := work[len(work)-1]
+		work = work[:len(work)-1]
+		chain := make(map[string]bool)
+		for cur != "" && !chain[cur] {
+			chain[cur] = true
+			for _, m := range _sir_included_modules[cur] {
+				if m == target {
+					return true
+				}
+				if !seen[m] {
+					seen[m] = true
+					work = append(work, m)
+				}
+			}
+			cur = _sir_ancestry[cur]
+		}
+	}
+	return false
 }
 
 // True iff `actual` is `target` or descends from it via `_sir_ancestry`.

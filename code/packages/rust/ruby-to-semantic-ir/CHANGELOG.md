@@ -2,6 +2,28 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## 0.7.0 — lift a class CONSTANT to its name for `is_a?` / `when SomeClass`
+
+`case x when Integer` and `x.is_a?(Integer)` compiled on **Python alone**. Both
+lower to `is_a?`, and both passed the class as a bare `Const` `VarRef`. Only
+Python's backend could cope: Go and Rust REJECT a constant reference at emit
+("cannot lower a constant reference" — a `Const` is accepted only as an
+exception class in `raise Foo`), and JavaScript emitted an undefined reference
+that blew up at run time. Ruby type-dispatch is ordinary code, so this was a
+large hole rather than an exotic one.
+
+Both sites now surface the class as a `StrLit` of its NAME — exactly the
+convention `lower_class_pattern` (Phase FC) already documented and used
+("so no constant declaration is required and no `Constants` feature is pulled
+in"):
+
+- `when SomeClass` in a `case`.
+- A direct `x.is_a?(C)` / `x.kind_of?(C)` / `x.instance_of?(C)` call.
+
+Every backend's `is_a?` compares class NAMES, so the name is the honest thing
+to hand them, and no backend needs general constant-reference support. All four
+running backends (Python, JavaScript, Go, Rust) now agree.
+
 ## [0.6.3] - 2026-07-03
 
 ### Fixed (FC — sequential local assignments: `x = a` where `a` is an earlier local)

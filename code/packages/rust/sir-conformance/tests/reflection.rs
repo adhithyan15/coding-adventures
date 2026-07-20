@@ -133,3 +133,54 @@ fn class_reflection_matches_ruby_on_every_backend() {
     }
     assert!(ran > 0, "no backend toolchain available — reflection proved nothing");
 }
+
+/// `(ruby source, expected output)` — the `is_a?` family and `case/when
+/// SomeClass`, whose class argument is a bare CONSTANT in the source.
+const IS_A_CASES: &[(&str, &str)] = &[
+    ("puts(7.is_a?(Integer))\n", "#t"),
+    ("puts(7.is_a?(String))\n", "#f"),
+    ("puts(7.kind_of?(Numeric))\n", "#t"),
+    ("puts(7.instance_of?(Integer))\n", "#t"),
+    ("puts(7.instance_of?(Numeric))\n", "#f"),
+    ("case 7\nwhen Integer\n  puts(\"int\")\nend\n", "int"),
+    ("case \"s\"\nwhen Integer\n  puts(\"int\")\nelse\n  puts(\"other\")\nend\n", "other"),
+];
+
+/// The `is_a?` frontier. A bare constant (`Integer`, `MyClass`) as the class
+/// argument used to reach the backends as a `Const` reference, which only
+/// Python could cope with: Go and Rust REJECTED the program at emit ("cannot
+/// lower a constant reference"), and JavaScript emitted an undefined reference
+/// that blew up at run time. Since `when SomeClass` lowers to `is_a?`, that
+/// meant ordinary Ruby type-dispatch compiled on exactly one backend.
+///
+/// The frontend now lifts the constant to a `StrLit` of its NAME — the
+/// convention `lower_class_pattern` already used — so no backend needs general
+/// constant-reference support, and every backend's `is_a?` (which compares
+/// class names) just works.
+#[test]
+fn is_a_and_case_when_match_ruby_on_every_backend() {
+    let mut ran = 0usize;
+    for &(src, expected) in IS_A_CASES {
+        for &target in Target::all() {
+            match run_source("is_a_frontier", src, target) {
+                RunOutcome::Ran(out) => {
+                    assert_eq!(
+                        out, expected,
+                        "\nIS_A FRONTIER: backend {} gave `{}` = {out}, Ruby says {expected}\n",
+                        target.tag(),
+                        src.trim(),
+                    );
+                    ran += 1;
+                }
+                RunOutcome::Failed(msg) => panic!(
+                    "IS_A FRONTIER: backend {} failed on `{}`: {}",
+                    target.tag(),
+                    src.trim(),
+                    msg.lines().next().unwrap_or("")
+                ),
+                RunOutcome::Skipped(_) => {}
+            }
+        }
+    }
+    assert!(ran > 0, "no backend toolchain available — is_a? proved nothing");
+}

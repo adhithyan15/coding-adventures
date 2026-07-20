@@ -1,5 +1,37 @@
 # Changelog
 
+## 0.35.0 — implement `is_a?` / `kind_of?` / `instance_of?`
+
+These were listed in `_sir_responds_to` but **never implemented**, so
+`respond_to?(:is_a?)` answered `true` while an actual call fell through to
+`NoMethodError` and killed the program. (`class` was already implemented; the
+predicates were not.)
+
+`_sir_object_method` gains the three arms, reusing the existing
+`_sir_ruby_class_name`. `is_a?`/`kind_of?` honour ancestry — the built-in
+surface (`Integer`/`Float` are `Numeric` and `Comparable`, `String` is
+`Comparable`, `Object`/`BasicObject` match everything) plus, for a user
+instance, its superclass chain (`_sir_is_ancestor_or_self`) and any module
+mixed in along it. `instance_of?` is an exact class match.
+
+Transitive module matching (Ruby MRO: `C` includes `M`, `M` includes `N` ⇒
+`c.is_a?(N)`) uses an ITERATIVE worklist rather than recursion, because
+include-graph depth is shaped by the source — the same design the JavaScript
+and Rust backends use. Cyclic and self-including graphs terminate.
+
+The class argument arrives as a NAME (ruby-to-semantic-ir 0.7.0 lifts a
+`Const` to a `StrLit`), so no constant-reference support is needed.
+
+Two adjacent fixes found while reviewing the above:
+- `_sir_ruby_class_name` now recognises `*SirError`. A raised/caught exception
+  is not a `*SirInstance`, so it fell to the `Object` default — `rescue => e;
+  e.class` said `Object` and `e.is_a?(StandardError)` was FALSE for every
+  exception, silently skipping a handler guarded that way, even though
+  `_sir_ancestry` holds the whole exception hierarchy. `_sir_value_is_a` walks
+  ancestry for `*SirError` too.
+- The `==` / `!=` object arms indexed `args[0]` with no length check, so a
+  zero-argument `x.==()` PANICKED and killed the program. Both are guarded.
+
 ## 0.34.0 — Ruby `Integer#/` floors toward −∞ (SIR21 §E3)
 
 The inline `__sir` runtime's `_sir_divide` truncated integer division toward
