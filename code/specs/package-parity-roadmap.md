@@ -119,11 +119,11 @@ ports, followed by the paired `ed25519`, `font-parser`, `asciidoc-parser`, and
 `scytale-cipher`, `feature-normalization`, `loss-functions`, `trig`, `wave`,
 `matrix`, `vigenere-cipher`, `uuid`, `document-ast`, `lz78`, `deflate`,
 `point2d`, `affine2d`, `bezier2d`, and `arc2d`
-ports:
+ports, followed by the Haskell `gradient-descent` port:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 293 |
+| Present in 10-15 languages | 172 | 292 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,972 |
 | Present in one language | 705 | 9,870 |
@@ -180,7 +180,7 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Perl | 0 | Complete; paired data-structure/storage wave |
 | C# | 0 | Complete; paired native package wave |
 | F# | 0 | Complete; paired native package wave |
-| Haskell | 18 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
+| Haskell | 17 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
 | Kotlin | 58 | Move with Java |
@@ -546,6 +546,15 @@ nonzero rotation, positive and negative tight-bound extrema, zero sweep, the
 quarter-circle magic controls, segmentation, and continuity. The package now
 spans 12 implementation lanes, reduces the high-consensus backlog to 293 slots,
 and leaves 18 gaps in the Haskell lane.
+
+The seventeenth Haskell high-consensus slice is complete: `gradient-descent`
+now provides the dependency-free ML02 stochastic-gradient-descent update with
+explicit rejection of empty and length-mismatched vectors. Its package-native
+suite exercises 11 examples with 100% expression and alternative coverage,
+including the shared parity vector, singleton and multi-element inputs, zero
+and negative learning rates, mixed gradient signs, input preservation, and all
+validation paths. The package now spans 11 implementation lanes, reduces the
+high-consensus backlog to 292 slots, and leaves 17 gaps in the Haskell lane.
 
 Recommended family order:
 
