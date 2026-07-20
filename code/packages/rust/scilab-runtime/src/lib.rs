@@ -617,6 +617,27 @@ mod tests {
     }
 
     #[test]
+    fn two_d_indexing_rejects_a_product_overflow() {
+        // Security regression: each index vector's own length is bounded
+        // independently (here, by `ones`'s own dimension cap) but nothing
+        // bounded their PRODUCT -- `A(idx, idx)` with two
+        // independently-in-bounds index vectors could still request an
+        // astronomical result. 8200x8200 (67,240,000 elements) exceeds the
+        // 1<<26 (67,108,864) total-element cap and must be rejected before
+        // any allocation is attempted.
+        let mut m = Interpreter::new();
+        m.feed("A = 0;\n").unwrap();
+        m.feed("idx = ones(1, 8200);\n").unwrap();
+        assert!(m.feed("B = A(idx, idx);\n").is_err());
+
+        // A genuinely small, in-bounds 2-D index still works.
+        let mut m2 = Interpreter::new();
+        m2.feed("A = 0;\n").unwrap();
+        m2.feed("idx2 = ones(1, 3);\n").unwrap();
+        assert!(m2.feed("B = A(idx2, idx2);\n").is_ok());
+    }
+
+    #[test]
     fn deeply_nested_input_errors_instead_of_crashing() {
         let src = format!("{}1{}\n", "(".repeat(2000), ")".repeat(2000));
         assert!(eval(&src).is_err());

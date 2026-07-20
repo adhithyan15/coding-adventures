@@ -631,6 +631,18 @@ impl Interpreter {
             [ri, ci] => {
                 let rows = dim_indices(ri, a.nrows(), "row")?;
                 let cols = dim_indices(ci, a.ncols(), "column")?;
+                // Each index VECTOR's own length is bounded independently
+                // (by `hcat`/`vcat`/`dims`/`eval_colon`'s own caps on
+                // whatever constructed it) but nothing bounds their
+                // PRODUCT: `A(idx, idx)` with two independently-in-bounds
+                // index vectors can still request an astronomical result
+                // (e.g. `ones(1, 1<<26)` used as both subscripts requests
+                // `(1<<26)^2` elements) -- the same vulnerability class
+                // `builtins::check_total_elements` already closes for
+                // constructors/concatenation, found during security review
+                // of MA-10d. Checked before `Vec::with_capacity`/
+                // `Array::from_shape` ever allocate.
+                crate::builtins::check_total_elements("indexing", rows.len(), cols.len())?;
                 let mut out = Vec::with_capacity(rows.len() * cols.len());
                 for &c in &cols {
                     for &r in &rows {
