@@ -192,6 +192,8 @@
   "namespaced": {
     "note": "Language-local lexical/structural concepts do NOT appear here; they live only in lesson frontmatter as <LANG>-<NAME> (pattern ^[A-Z]{2}-[A-Z0-9-]+$). Current examples, for reference:",
     "examples": {
+      "AR-WORD-HAL": "ḥāl — 'state, condition' (← root ḥ-w-l 'to TURN/change', so a state is how things have turned; cf. ḥawla 'around', taḥwīl 'transformation', ḥawl 'a year' = one full turn — contrast Spanish estar ← stāre 'to STAND')",
+      "AR-PRAISE-GOD": "al-ḥamdu lillāh — 'praise be to God', the everyday reply to kayfa ḥāluka; al- + ḥamd + li- + allāh (itself al- + ilāh 'THE god', cousin of Hebrew El/Elohim). Root ḥ-m-d 'praise' also yields the names Aḥmad and Muḥammad ('the much-praised')",
       "ES-VERB-LLAMAR": "llamar — 'to call' (the Spanish naming verb)",
       "ES-SE-LLAMA": "se llama — 'he/she calls himself' (3rd-person of llamar)",
       "ES-WORD-MUCHO": "mucho — 'much / a lot'",
