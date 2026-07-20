@@ -66,6 +66,12 @@ French.
   — **água** **kept** *aqua*'s body (vs French *eau*); **vinho** ← *vīnum* with the
   signature **-nh-** (= Spanish *ñ*) → wine/vine/vinegar. **Authored.**
 
+- **Ch. 12 — Numbers 11–20**: **onze–quinze**, only **five** fused teens (fewer than
+  any sister; *-ze* = *decem*, as in *dez*/*dezembro*) → **dezesseis–vinte**, where
+  Portuguese **breaks earliest of all — at 16** — and rebuilds transparently as
+  *dez* + **e** + *seis*, "**ten AND six**," the *and* still audible. *vinte* ←
+  *vīgintī*. **Authored.**
+
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |

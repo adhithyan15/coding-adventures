@@ -64,6 +64,12 @@ compared, every Spanish form supplied in full (no prior Spanish assumed).
   eroded** word French took from Latin — worn to a bare "oh," vs English *aquatic*;
   **vin** ← *vīnum* → wine/vine/vinegar). **Authored.**
 
+- **Ch. 12 — Numbers 11–20**: **onze–seize**, the six Latin fusions (*ūndecim…
+  sēdecim*; the shared **-ze** is *decem* "ten," the same ten as *dix* and
+  *décembre*) → **dix-sept–vingt**, where French **gives up fusing** and goes
+  transparent ("ten-seven"), **flipping the order** at the same seam; *vingt* ←
+  *vīgintī* → **vigesimal**. **Authored.**
+
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |

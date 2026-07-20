@@ -61,6 +61,12 @@ and Italian's habit of keeping final vowels Latin's other children dropped.
   **acqua** **kept** Latin *aqua* whole (doubled *-cq-*), the loud original French
   wore down to *eau*; **vino** ← *vīnum* → wine/vine/vinegar. **Authored.**
 
+- **Ch. 12 — Numbers 11–20**: **undici–sedici**, where the *-dici* is still visibly
+  Latin *decem* (= *dieci*) — clearer than French's worn-down *-ze* → **diciassette–
+  venti**, where Italian **flips the order** at 17 (*se*-*dici* "six-ten" becomes
+  *dici*-*assette* "ten-and-seven"). Includes the three-sister comparison of *where*
+  each breaks: PT at 16, FR and IT at 17. **Authored.**
+
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |

@@ -1,5 +1,20 @@
 # Changelog
 
+## Chapter 12 — Numbers 11–20
+
+- **Chapter 12 authored** (`FR-C12-nombres-11-16`, `-17-20`): the teens, atom-first,
+  reviewing Ch.6/Ch.11 via `reviews_of`.
+- **onze–seize** — the six numbers French inherited **already fused** from Latin
+  (*ūndecim, duodecim … sēdecim*). The shared **-ze** is *decem* ("ten") worn thin —
+  the **same ten** the learner already knows in **dix** and **décembre** (Ch.9).
+  Each word's front is its Chapter 6 digit (*deux→dou-*, *six→sei-*).
+- **dix-sept–vingt** — the **seam**: at 17 French **abandons** the fusion and goes
+  transparent, *dix-sept* = plainly "ten-seven" — and the **order flips** with it
+  (digit-first *seize* → ten-first *dix-sept*). Notes that Latin itself wobbled here
+  (*duodēvīgintī*, "two-from-twenty"), a subtraction all the sisters dropped.
+  *vingt* ← *vīgintī* → English **vigesimal**, and the seed of *quatre-vingts*.
+- Taxonomy: namespaced `FR-NUM-11-16`, `FR-NUM-17-20`.
+
 ## Chapter 11 — Food (bread, water, wine)
 
 - **Chapter 11 authored** (`FR-C11-pain`, `-eau-vin`): the everyday table trio,

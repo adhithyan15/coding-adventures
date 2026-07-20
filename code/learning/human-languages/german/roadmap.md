@@ -69,6 +69,13 @@ Spanish and French where a contrast helps. The recurring decoder is the
   Germanic twin of *water*, but **Wein** an **ancient Latin loan** (← *vīnum*),
   borrowed with the grapevine, which is why *Wein/wine/vīnum* all match. **Authored.**
 
+- **Ch. 12 — Numbers 11–20**: **elf/zwölf** (← *ainlif/twalif*, *-lif* = "leave" →
+  "**one/two left over**" after ten fingers — the exact inherited twins of English
+  *eleven/twelve*) → **dreizehn–zwanzig**, digit + *zehn* with **no exceptions**,
+  mirroring English *-teen* (which **is** ten); *zwanzig* ← *twaintig* "two tens."
+  The contrast: the Romance sisters all **break** their teens pattern; German
+  **never does**. **Authored.**
+
 ## Planned
 
 | Chapter | Theme |
