@@ -119,16 +119,17 @@ ports, followed by the paired `ed25519`, `font-parser`, `asciidoc-parser`, and
 `scytale-cipher`, `feature-normalization`, `loss-functions`, `trig`, `wave`,
 `matrix`, `vigenere-cipher`, `uuid`, `document-ast`, `lz78`, `deflate`,
 `point2d`, `affine2d`, `bezier2d`, and `arc2d`
-ports, followed by the Haskell `gradient-descent` and `perceptron` ports:
+ports, followed by the Haskell `gradient-descent`, `perceptron`, and
+`type-checker-protocol` ports:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 291 |
+| Present in 10-15 languages | 172 | 290 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,972 |
-| Present in one language | 708 | 9,912 |
+| Present in one language | 709 | 9,926 |
 
-The loop must not start by attempting 9,870 singleton ports. It should finish
+The loop must not start by attempting 9,926 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 ## Priority 0: Inventory And Identity Integrity
@@ -169,7 +170,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 172 packages present in at least ten implementation languages need 291
+The 172 packages present in at least ten implementation languages need 290
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -180,7 +181,7 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Perl | 0 | Complete; paired data-structure/storage wave |
 | C# | 0 | Complete; paired native package wave |
 | F# | 0 | Complete; paired native package wave |
-| Haskell | 16 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
+| Haskell | 15 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
 | Kotlin | 58 | Move with Java |
@@ -566,6 +567,18 @@ counts, and finite-value checks. The package now spans 11 implementation
 lanes, reduces the high-consensus backlog to 291 slots, and leaves 16 gaps in
 the Haskell lane.
 
+The nineteenth Haskell high-consensus slice is complete:
+`type-checker-protocol` now provides immutable diagnostics and typed results,
+a functional checker contract, and pure phase/kind hook dispatch with explicit
+fall-through, exact-before-wildcard precedence, source-location helpers, and
+clean diagnostic lifecycles. Its base-only package-native suite exercises 19
+examples covering checker outcomes, partial typed ASTs, normalization, hook
+ordering, wildcard and argument dispatch, error collection, and reusable
+state, with 100% alternative and 99% expression coverage. The package now
+spans 11 implementation lanes, reduces the high-consensus backlog to 290
+slots, leaves 15 gaps in the Haskell lane, and establishes the shared contract
+needed by later typed-frontend ports.
+
 Recommended family order:
 
 1. Leaf algorithms and data structures.
@@ -588,11 +601,11 @@ After the high-consensus set is complete:
 5. Add missing shared conformance fixtures before porting when current tests are
    language-specific and cannot prove equivalent behavior.
 
-This phase covers 122 package identities and 917 current missing slots.
+This phase covers 121 package identities and 911 current missing slots.
 
 ## Priority 4: Classify Sparse And Singleton Families
 
-The singleton inventory is led by 501 Rust, 86 Python, and 83 TypeScript
+The singleton inventory is led by 514 Rust, 86 Python, and 84 TypeScript
 packages. Classify families before opening implementation PRs.
 
 ### Likely portable Rust-led families
