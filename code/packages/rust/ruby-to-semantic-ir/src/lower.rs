@@ -1893,15 +1893,41 @@ impl Lowerer {
             //     which dispatches Range→membership, Regexp→match, else `==`.
             // The `case_eq` floor is `==`, so plain literals keep their old
             // behaviour.
-            let cmp = if matches!(
-                val,
+            let const_class_name = match &val {
                 Expr::VarRef {
+                    name,
                     scope: Scope::Const,
                     ..
-                }
-            ) {
+                } => Some(name.clone()),
+                _ => None,
+            };
+            let cmp = if let Some(class_name) = const_class_name {
                 self.features_used.insert(Feature::Classes);
-                // The synthetic `"is_a?"` method-name is a string literal.
+                // Both the synthetic `"is_a?"` method-name AND the CLASS NAME
+                // are string literals.  Surfacing the class as a `StrLit` of
+                // its name — rather than passing the `Const` `VarRef` through —
+                // is the same convention `lower_class_pattern` (Phase FC)
+                // already uses, and it is what makes `when SomeClass` portable:
+                // a bare constant reference is not lowerable by the Go or Rust
+                // backends (they accept a `Const` only as an exception class in
+                // `raise Foo`), and JavaScript emitted an undefined reference
+                // that blew up at run time — so `when Integer` used to work on
+                // Python alone.  The backends' `is_a?` all compare class NAMES,
+                // so the name is the honest thing to hand them.
+                //
+                // LIMITATION (pre-existing, but now SILENT rather than loud):
+                // this arm treats ANY `Const` as a class pattern, whereas
+                // Ruby's `when FOO` is `FOO === x` — for a non-class constant
+                // (`FOO = "root"`) that means `==`.  Such a `when` lowers to an
+                // `is_a?` against the constant's NAME and is therefore always
+                // false, a fail-open shape for a deny-list.  Before this lift
+                // it at least failed to COMPILE on Go/Rust; that accidental
+                // signal is gone, so it is called out here.  Likewise a
+                // namespaced `Foo::Bar` lifts to the qualified string, which
+                // will not match a class registered under its simple name.
+                // Telling a class constant from a value constant needs
+                // const-binding knowledge the lowerer does not have — the
+                // honest fix is a resolved constant table.
                 self.features_used.insert(Feature::Strings);
                 Expr::BuiltinCall {
                     name: "__method__".to_string(),
@@ -1911,7 +1937,10 @@ impl Lowerer {
                             value: "is_a?".to_string(),
                             span: span.clone(),
                         },
-                        val,
+                        Expr::StrLit {
+                            value: class_name,
+                            span: span.clone(),
+                        },
                     ],
                     effects: EffectSet::PURE,
                     span: span.clone(),
@@ -9677,6 +9706,34 @@ impl Lowerer {
                 span,
             });
         }
+
+        // The reflection predicates take a CLASS as their argument, and every
+        // backend's `is_a?` compares class NAMES.  Lift a bare `Const`
+        // argument to a `StrLit` of its name here — the same convention
+        // `lower_class_pattern` (Phase FC) and `when SomeClass` use — so no
+        // backend needs general constant-reference support.  Without this,
+        // `x.is_a?(Integer)` was rejected at EMIT by the Go and Rust backends
+        // (they lower a `Const` only as an exception class in `raise Foo`) and
+        // produced an undefined reference at run time on JavaScript, leaving
+        // the whole family working on Python alone.
+        let is_reflection_predicate = matches!(
+            method_name.as_str(),
+            "is_a?" | "kind_of?" | "instance_of?"
+        );
+        let args = if is_reflection_predicate {
+            args.into_iter()
+                .map(|a| match a {
+                    Expr::VarRef {
+                        name,
+                        scope: Scope::Const,
+                        span,
+                    } => Expr::StrLit { value: name, span },
+                    other => other,
+                })
+                .collect()
+        } else {
+            args
+        };
 
         // Pack as BuiltinCall("__method__", [receiver, StrLit(method),
         // ...args]) — see apply_dot_chain doc for rationale.

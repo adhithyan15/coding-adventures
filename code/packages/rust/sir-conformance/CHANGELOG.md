@@ -2,6 +2,17 @@
 
 All notable changes to the `sir-conformance` crate will be documented in this file.
 
+## [0.18.0] - `is_a?` / `case-when` frontier across the backends
+
+Adds `is_a_and_case_when_match_ruby_on_every_backend` — the `is_a?` family and
+`case x when SomeClass`, whose class argument is a bare CONSTANT in the source.
+
+This previously compiled on Python alone: Go and Rust rejected the constant
+reference at emit, and JavaScript blew up at run time. With the frontend now
+lifting the constant to its name (ruby-to-semantic-ir 0.7.0) and Go implementing
+the predicates (semantic-ir-to-go 0.35.0), all four running backends agree —
+so it is a live cross-backend assertion, not a per-backend guard.
+
 ## [0.17.0] - Reflection frontier goes cross-backend (Rust arm closed)
 
 `tests/reflection.rs` grows from a per-backend guard into a live **all-backend**
