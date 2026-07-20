@@ -1,5 +1,27 @@
 # Changelog
 
+## Chapter 14 — avoir, and having your years
+
+- **Chapter 14 authored** (`FR-C14-avoir`, `-age`): the verb the rest of the
+  course is built on, reviewing Ch.5/9/12/13 via `reviews_of`.
+- **avoir** (`FR-C14-avoir`): *j'ai/tu as/il a/nous avons/vous avez/ils ont* —
+  with the observation that the three singular forms are **homophones** (*ai · as
+  · a*), so only the pronoun tells you who. Etymology: ← *habēre*, and the payoff
+  is that Chapter 5 already taught this root — **habiter** ← *habitāre* is
+  *habēre*'s frequentative, "to keep having a place," so *avoir* and *habiter* are
+  the same word twice. English took the family whole: *habit* (what you have
+  regularly), *inhabit*, *exhibit* ("hold out"), *prohibit* ("hold back"). Plus how
+  far it wore down — Latin *habeō* → **j'ai**, a single vowel sound, French's usual
+  erosion (cf. *aqua* → *eau*).
+- **j'ai vingt ans** (`FR-C14-age`): age takes **avoir**, never *être*, and *ans*
+  is **obligatory** where English drops "years old." *An* ← *annus* →
+  *annual/anniversary/annals*. Includes **liaison** — the silent *t* of *vingt*
+  wakes up before a vowel: *vin-t-an*. Closes on the five-language table:
+  **French, Spanish, Italian and Portuguese all *have* their years; German and
+  English *are* theirs** — age as possession vs age as identity.
+- Sets up the compound past: *avoir* is the auxiliary the *passé composé* needs.
+- Taxonomy: namespaced `FR-VERB-HAVE`, `FR-AGE`.
+
 ## Chapter 13 — Colours
 
 - **Chapter 13 authored** (`FR-C13-noir-blanc`, `-rouge-bleu`): the **borrowing**

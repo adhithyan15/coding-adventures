@@ -77,6 +77,18 @@ and Italian's habit of keeping final vowels Latin's other children dropped.
   article → English **azure** — so Italy's teams, **gli Azzurri**, are named after a
   blue stone mined in Afghanistan. **Authored.**
 
+- **Ch. 14 — *avere*, and having your years**: **avere** (*ho/hai/ha/abbiamo/
+  avete/hanno*) ← *habēre*, the same source as French *avoir* (→ English
+  *habit/inhabit/exhibit/prohibit*). It houses **Italian's only silent letter**:
+  the **h** of *ho/hai/ha/hanno* is never pronounced and survives **purely to keep
+  them apart in writing** from *o* ("or"), *ai* ("to the"), *a* ("to") and *anno*
+  ("**year**") — spelling doing a job sound cannot → **ho venti anni**, age via
+  *avere* and never *essere* (*anno* ← *annus* → *annual/anniversary*, with a held
+  **double n**). The silent *h* then earns its keep in this very chapter:
+  ***hanno*** ("they have") and ***anno*** ("year") are **homophones** that turn up
+  in the same sentence. **Authored.** (Also the prerequisite for the *passato
+  prossimo*.)
+
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |

@@ -85,6 +85,20 @@ French.
   colour. Payoff: **not one** of the four is a plain inherited Latin colour word.
   **Authored.**
 
+- **Ch. 14 — *ter*, and holding your years**: **ter** (*tenho/tens/tem/temos/
+  têm*), with the **-nh-** already met in *vinho* and a **circumflex** that alone
+  separates *tem* ("he has") from *têm* ("**they** have") — an accent doing
+  grammar, not sound. The chapter's point is the **Iberian swap**: Portuguese and
+  Spanish **alone** took Latin ***tenēre*** "to **hold**" (→ English
+  *tenant/retain/maintain/tenacious/tenure*) as their word for *have*, while French
+  and Italian kept *habēre* — and Portuguese's own *habēre* survivor, **haver**,
+  was **demoted** to an auxiliary and to *há* ("there is"). The two verbs swapped
+  jobs → **tenho vinte anos**, age via *ter* and never *ser*, which given the root
+  literally says "**I hold twenty years**" — the most physical version of the
+  idiom. And *ano* ← *annus* shows the two Iberian outcomes of Latin **-nn-**:
+  Portuguese **simplified** it to *n*, Spanish **palatalized** it into **ñ**
+  (*año*) — which is where *ñ* came from in the first place. **Authored.**
+
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |
