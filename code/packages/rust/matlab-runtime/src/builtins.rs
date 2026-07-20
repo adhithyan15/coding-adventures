@@ -48,6 +48,7 @@ fn constructor(name: &str, args: &[MatValue], fill: f64) -> Result<MatValue, Str
 /// `eye(n)` → the `n×n` identity.
 fn eye(args: &[MatValue]) -> Result<MatValue, String> {
     let n = count(arg_num("eye", args, 0)?, "eye")?;
+    check_total_elements("eye", n, n)?;
     Ok(MatValue::Num(Array::eye(n)))
 }
 
@@ -89,13 +90,38 @@ fn unary(name: &str, args: &[MatValue], f: fn(f64) -> f64) -> Result<MatValue, S
 
 /// Interpret a constructor's arguments: `f(n)` → `(n, n)`, `f(r, c)` → `(r, c)`.
 fn dims(name: &str, args: &[MatValue]) -> Result<(usize, usize), String> {
-    match args {
+    let (r, c) = match args {
         [n] => {
             let n = count(n.as_num(name)?, name)?;
-            Ok((n, n))
+            (n, n)
         }
-        [r, c] => Ok((count(r.as_num(name)?, name)?, count(c.as_num(name)?, name)?)),
-        _ => Err(format!("{name}: expected 1 or 2 size arguments")),
+        [r, c] => (count(r.as_num(name)?, name)?, count(c.as_num(name)?, name)?),
+        _ => return Err(format!("{name}: expected 1 or 2 size arguments")),
+    };
+    // Each dimension alone is within `count()`'s own per-dimension cap, but
+    // their PRODUCT is not -- `zeros(1<<26, 1<<26)` would otherwise request
+    // an allocation of ~4.5e15 elements before this ever runs. Security
+    // regression, mirrors the fix already shipped in scilab-runtime.
+    check_total_elements(name, r, c)?;
+    Ok((r, c))
+}
+
+/// The total-element cap every array-constructing/-growing operation must
+/// enforce on its FINAL size -- not just on each dimension independently.
+/// Capping each dimension alone (as `count()` already does) does not bound
+/// their PRODUCT: two independently-in-bounds dimensions, or two
+/// independently-in-bounds index vectors used as `A(idx, idx)`, can still
+/// combine into an astronomical total. Uses `checked_mul` so the
+/// multiplication itself cannot silently overflow before the comparison
+/// runs.
+pub(crate) const MAX_TOTAL_ELEMENTS: usize = 1 << 26;
+
+pub(crate) fn check_total_elements(name: &str, rows: usize, cols: usize) -> Result<(), String> {
+    match rows.checked_mul(cols) {
+        Some(total) if total <= MAX_TOTAL_ELEMENTS => Ok(()),
+        _ => Err(format!(
+            "{name}: {rows}x{cols} exceeds the {MAX_TOTAL_ELEMENTS}-element limit"
+        )),
     }
 }
 
