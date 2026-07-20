@@ -1,0 +1,31 @@
+cabal-version: 3.0
+name:          type-checker-protocol
+version:       0.1.0
+synopsis:      Pure generic type-checker protocol and hook dispatch
+description:   Immutable diagnostics, typed results, checker functions, and dependency-free AST hook dispatch.
+category:      Compiler
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+extra-doc-files:
+    README.md
+    CHANGELOG.md
+
+library
+    exposed-modules:  TypeCheckerProtocol
+    build-depends:    base >=4.14 && <5
+    hs-source-dirs:   src
+    ghc-options:      -Wall
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    TypeCheckerProtocolSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14 && <5
+                    , hspec == 2.*
+                    , type-checker-protocol
+    ghc-options:      -Wall
+    default-language: Haskell2010
