@@ -3,6 +3,31 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.32] - Unreleased
+
+### Fixed
+
+- **Arithmetic operands keep the type their syntax implies — `'9.0' / 2` is now
+  `4.5`, not `4`.** Arithmetic was applying SQLite's `CAST(… AS NUMERIC)` rule
+  (`text_to_numeric`) to text/blob operands, which deliberately *collapses* an
+  integral real to an integer (`CAST('3.0' AS NUMERIC)` really is the integer `3`).
+  But an *arithmetic operand* uses a different SQLite rule (`applyNumericAffinity`):
+  the result type follows how the text is **written**, never whether the value
+  happens to be integral. So `'3.0' + 0` is the real `3.0`, and real division
+  applies.
+  - New `text_to_numeric_operand` implements the operand rule and is now used by
+    `coerce_arith` (binary `+ - * / %`) and unary minus. `text_to_numeric` is
+    unchanged and still backs `CAST(… AS NUMERIC)` — the two rules are deliberately
+    different and a test now pins that difference.
+  - The prefix boundaries were verified against the real `sqlite3` binary: a `.`
+    anywhere (`'3.0'`, `'3.'`, `'.5'`) or a **complete** exponent (`'1e3'`,
+    `'3e2x'`) makes it REAL; an **incomplete** exponent is not consumed, so `'3e'`
+    and `'3e+'` stay the integer `3`; digitless text (`'abc'`, `'.'`, `'-'`, `''`)
+    is integer `0`; integer syntax overflowing `i64` promotes to REAL.
+  - Fixes the "float-affinity edge" previously documented in-code as a known
+    divergence for both binary arithmetic and unary minus (`-'3e2'` is now
+    `-300.0`). 3 new unit tests; 3 new differential-oracle cases.
+
 ## [0.4.31] - Unreleased
 
 ### Changed

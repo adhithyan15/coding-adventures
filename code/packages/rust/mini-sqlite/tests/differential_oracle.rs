@@ -1675,14 +1675,37 @@ const CASES: &[Case] = &[
     },
     // Division/modulo also coerce: `5 / '2'` = 2, `5 / '0'` = NULL (affinity makes
     // '0' the integer zero, so the divide-by-zero → NULL rule fires), `'7' % 3` = 1.
-    // (Known edge left for later, shared with unary minus: an *integral* real-
-    // syntax string like `'9.0'` collapses to an integer here, so `'9.0' / 2` is
-    // 4 not SQLite's 4.5 — the float-affinity follow-up. Non-integral `'5.5'`
-    // is fine.)
     Case {
         id: "div_mod_text_affinity",
         setup: &[],
         query: "SELECT 5 / '2' AS a, (5 / '0') IS NULL AS b, '7' % 3 AS c, '5.5' * 2 AS d",
+    },
+    // An arithmetic operand keeps the type its SYNTAX implies — an integral real
+    // like '9.0' stays REAL rather than collapsing to an integer, so `'9.0' / 2` is
+    // 4.5 (real division), while integer-syntax `'9' / 2` is still 4 (integer
+    // division). This is the operand rule (`applyNumericAffinity`), deliberately
+    // different from `CAST(… AS NUMERIC)` below, which DOES collapse.
+    Case {
+        id: "arith_real_syntax_text_affinity",
+        setup: &[],
+        query: "SELECT '9.0'/2 AS a, typeof('9.0'/2) AS at, '9'/2 AS b, typeof('9'/2) AS bt, '3.0'+0 AS c, typeof('3.0'+0) AS ct, '1e2'+0 AS d, typeof('1e2'+0) AS dt, '9.0'*2 AS e, typeof('9.0'*2) AS et, -'9.0' AS f, typeof(-'9.0') AS ft, -'3e2' AS g, typeof(-'3e2') AS gt",
+    },
+    // The numeric prefix boundaries that decide integer-vs-real. A trailing `.` and
+    // a leading `.` are real syntax; an INCOMPLETE exponent (`'3e'`, `'3e+'`) is not
+    // consumed at all, so the prefix stays the integer 3; digitless text is integer
+    // zero; and integer syntax overflowing i64 promotes to real.
+    Case {
+        id: "arith_numeric_prefix_syntax_edges",
+        setup: &[],
+        query: "SELECT typeof('3.'+0) AS a, '3.'+0 AS av, typeof('.5'+0) AS b, '.5'+0 AS bv, typeof('3e'+0) AS c, '3e'+0 AS cv, typeof('3e+'+0) AS d, '3e+'+0 AS dv, typeof('3e2x'+0) AS e, '3e2x'+0 AS ev, typeof('3abc'+0) AS f, '3abc'+0 AS fv, typeof('.'+0) AS g, '.'+0 AS gv, typeof('  3.0  '+0) AS h, '  3.0  '+0 AS hv, typeof('99999999999999999999'+0) AS i",
+    },
+    // The contrast that keeps the two rules honest: CAST(… AS NUMERIC) COLLAPSES an
+    // integral real to an integer, while the same text as an arithmetic operand
+    // stays real. Both behaviours are SQLite's; they must not be unified.
+    Case {
+        id: "cast_numeric_vs_operand_affinity",
+        setup: &[],
+        query: "SELECT typeof(CAST('3.0' AS NUMERIC)) AS a, CAST('3.0' AS NUMERIC) AS av, typeof(CAST('1e3' AS NUMERIC)) AS b, typeof('3.0'+0) AS c, typeof('1e3'+0) AS d, typeof(CAST('3.5' AS NUMERIC)) AS e",
     },
     // A text/blob in a BOOLEAN context takes numeric affinity, matching SQLite:
     // `NOT 'abc'` = 1 ('abc'→0), `NOT '5'` = 0, `NOT '0'` = `NOT ''` = 1, and
