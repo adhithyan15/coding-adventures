@@ -121,11 +121,11 @@ ports, followed by the paired `ed25519`, `font-parser`, `asciidoc-parser`, and
 `point2d`, `affine2d`, `bezier2d`, and `arc2d`
 ports, followed by the Haskell `gradient-descent`, `perceptron`, and
 `type-checker-protocol` ports, and the Haskell `paint-vm-ascii`,
-`barcode-layout-1d`, `itf`, `code39`, `codabar`, and `code128` ports:
+`barcode-layout-1d`, `itf`, `code39`, `codabar`, `code128`, and `upc-a` ports:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 284 |
+| Present in 10-15 languages | 172 | 283 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,972 |
 | Present in one language | 712 | 9,968 |
@@ -171,7 +171,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 172 packages present in at least ten implementation languages need 288
+The 172 packages present in at least ten implementation languages need 283
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -182,7 +182,7 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Perl | 0 | Complete; paired data-structure/storage wave |
 | C# | 0 | Complete; paired native package wave |
 | F# | 0 | Complete; paired native package wave |
-| Haskell | 9 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
+| Haskell | 8 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
 | Kotlin | 58 | Move with Java |
@@ -650,6 +650,19 @@ table, reference values and checksums, empty payloads, exact module geometry,
 customized paint output, metadata precedence, aliases, and both local and shared
 validation paths. The package now spans 12 implementation lanes, reduces the
 high-consensus backlog to 284 slots, and leaves 9 gaps in the Haskell lane.
+
+The twenty-sixth Haskell high-consensus slice is complete: `upc-a` now provides
+the pure retail-barcode encoder unlocked by `barcode-layout-1d`. It accepts
+11-digit payloads or validated 12-digit codes, computes the required modulo-10
+check digit, exposes all twenty left/right digit patterns, and emits the fixed
+95-module start, digit, center, and end structure with typed source attribution
+and explicit symbol spans. Its package-native suite exercises 23 examples with
+91% expression and 81% alternative coverage, including reference checksums,
+all standard patterns, computed and supplied checks, ASCII and length guards,
+exact module geometry, metadata precedence, aliases, and shared validation
+paths. The package now spans 12 implementation lanes, reduces the
+high-consensus backlog to 283 slots, leaves 8 gaps in the Haskell lane, and
+unlocks the dependent `ean-13` port.
 
 Recommended family order:
 
