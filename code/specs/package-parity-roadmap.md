@@ -119,14 +119,14 @@ ports, followed by the paired `ed25519`, `font-parser`, `asciidoc-parser`, and
 `scytale-cipher`, `feature-normalization`, `loss-functions`, `trig`, `wave`,
 `matrix`, `vigenere-cipher`, `uuid`, `document-ast`, `lz78`, `deflate`,
 `point2d`, `affine2d`, `bezier2d`, and `arc2d`
-ports, followed by the Haskell `gradient-descent` port:
+ports, followed by the Haskell `gradient-descent` and `perceptron` ports:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 292 |
+| Present in 10-15 languages | 172 | 291 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,972 |
-| Present in one language | 705 | 9,870 |
+| Present in one language | 708 | 9,912 |
 
 The loop must not start by attempting 9,870 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
@@ -169,7 +169,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 172 packages present in at least ten implementation languages need 293
+The 172 packages present in at least ten implementation languages need 291
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -180,7 +180,7 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Perl | 0 | Complete; paired data-structure/storage wave |
 | C# | 0 | Complete; paired native package wave |
 | F# | 0 | Complete; paired native package wave |
-| Haskell | 17 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
+| Haskell | 16 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
 | Kotlin | 58 | Move with Java |
@@ -555,6 +555,16 @@ including the shared parity vector, singleton and multi-element inputs, zero
 and negative learning rates, mixed gradient signs, input preservation, and all
 validation paths. The package now spans 11 implementation lanes, reduces the
 high-consensus backlog to 292 slots, and leaves 17 gaps in the Haskell lane.
+
+The eighteenth Haskell high-consensus slice is complete: `perceptron` now
+provides a pure sigmoid/BCE single-neuron classifier that composes the existing
+Haskell `matrix`, `loss-functions`, and `activation-functions` packages. Its
+package-native suite exercises 14 examples covering shared AND-gate
+convergence, scalar and column labels, epoch-zero updates, deterministic
+refitting, prediction guards, hyperparameter validation, feature shapes, label
+counts, and finite-value checks. The package now spans 11 implementation
+lanes, reduces the high-consensus backlog to 291 slots, and leaves 16 gaps in
+the Haskell lane.
 
 Recommended family order:
 
