@@ -271,6 +271,7 @@ members = [
     "maple-repl",
     "maple-to-semantic-ir",
     "scilab-lexer",
+    "scilab-parser",
     "logic-gates",
     "logic-core",
     "lookup-core",
