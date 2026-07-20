@@ -40,14 +40,6 @@ CASE_GROUPS = (
         ),
     },
     {
-        "axis": "insanely-badly-nested-table-sequence",
-        "reason": (
-            "remaining finish-time recovery for html5lib's insanely badly "
-            "nested table sequence"
-        ),
-        "sources": ("tricky01.dat:8",),
-    },
-    {
         "axis": "tricky-center-table-void-recovery",
         "reason": (
             "remaining repair evidence for center, font, and void-element "
