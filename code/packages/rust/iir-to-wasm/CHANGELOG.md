@@ -1,5 +1,37 @@
 # Changelog — iir-to-wasm
 
+## [0.41.0] — 2026-07-20 (LANG-FULL E4-dyn E4d-3b: runtime `str_index` — rung closed)
+
+Give `str_index` a **runtime path** on WASM, closing the last E4d-3b rung. A
+`str_index` on a literal source still folds to a data-segment byte load. But when
+the source is a runtime string handle (a function parameter, a call result, a
+runtime slice/concat), the byte lives in a `[i32 len][bytes]` block whose length
+is only known at run time. Previously that shape errored (`str_index source … is
+not a direct str_const local`); now it reads the header for the bounds check and
+loads the byte from the block body.
+
+- **Runtime lowering.** Bounds `idx >=u len` (with `len = i32.load handle`) →
+  `unreachable`; a negative i64 index becomes a huge unsigned and trips the same
+  compare (E4 §2.2). Then `byte = i32.load8_u(handle + 4 + idx)`, skipping the i32
+  length header, zero-extended to i64 when the result slot is 64-bit (unlike the
+  literal path, whose bytes sit raw in the data segment at `offset + idx`, no
+  header). Unlike runtime `str_slice`/`str_concat`, `str_index` only **reads** —
+  no bump-allocation — so no `__array_bump` global is needed (the source handle's
+  producer already established linear memory).
+- **Source dispatch fix.** The arm now selects the literal vs. runtime path by
+  `runtime_str_vars.contains(src) || !string_literals.contains_key(src)` — the
+  same test `str_slice` uses. This also corrects a latent bug: a **promoted**
+  literal (in the string table *and* laid out as a runtime block) previously took
+  the literal raw-offset path, which would read the block's length-header bytes as
+  string data; it now correctly reads through the header.
+- **Tests.** `tests/str_index_runtime.rs` indexes inside an `at(a: str, i: i64)`
+  helper (params force the runtime path) and checks the returned byte against the
+  Rust `src.as_bytes()[i]` oracle across every position, first/last, plus three
+  out-of-bounds trap cases (`idx == len`, `idx > len`, negative idx). (A byte
+  ≥ 0x80 would exercise the unsigned zero-extension, but the WASM `str_const`
+  slice only accepts printable-ASCII literals, so it is untestable here and moot —
+  the runtime path reuses the literal path's identical extension.)
+
 ## [0.40.0] — 2026-07-20 (LANG-FULL E4-dyn E4d-3b: runtime `str_slice`)
 
 Give `str_slice` a **runtime path** on WASM, mirroring the runtime `str_concat`

@@ -1418,41 +1418,90 @@ fn emit_instr(
             };
             let src_slot = get_reg(src)?;
             let idx_slot = get_reg(idx)?;
-            let lit = string_literals.get(src).ok_or_else(|| IIRWasmError::InvalidOperand {
-                function: fn_name.to_string(),
-                detail: format!("str_index source {src:?} is not a direct str_const local"),
-            })?;
 
-            // Bounds: idx >=u len → unreachable. On i64 indices, a negative value
-            // becomes huge under the unsigned compare, matching E4's trap rule.
-            code.extend(encode_local_get(idx_slot));
-            if slot_is_i64(idx_slot) {
-                code.extend(encode_i64_const(lit.len as i64));
-                code.push(I64_GE_U);
-            } else {
-                let len = i32::try_from(lit.len).map_err(|_| IIRWasmError::InvalidOperand {
+            // A folded literal source (in the string table, not promoted to a
+            // runtime block) has its bytes sitting raw in the data segment — the
+            // slot holds that offset, and the length is known at compile time.  A
+            // runtime handle (a param, a call result, a runtime slice/concat — or a
+            // literal promoted to a real block) instead carries a `[i32 len][bytes]`
+            // block, so the length is read from the header and the bytes start at
+            // `handle + 4`.  This is the same source dispatch `str_slice` uses.
+            let src_is_runtime =
+                runtime_str_vars.contains(src) || !string_literals.contains_key(src);
+            if !src_is_runtime {
+                let lit = string_literals.get(src).ok_or_else(|| IIRWasmError::InvalidOperand {
                     function: fn_name.to_string(),
-                    detail: format!("str_index literal length {} does not fit i32", lit.len),
+                    detail: format!("str_index source {src:?} is not a direct str_const local"),
                 })?;
-                code.extend(encode_i32_const(len));
-                code.push(I32_GE_U);
-            }
-            code.push(IF);
-            code.push(BLOCK_EMPTY);
-            code.push(UNREACHABLE);
-            code.push(END);
 
-            code.extend(encode_local_get(src_slot));
-            code.extend(encode_local_get(idx_slot));
-            if slot_is_i64(idx_slot) {
-                code.extend(encode_i32_wrap_i64());
+                // Bounds: idx >=u len → unreachable. On i64 indices, a negative
+                // value becomes huge under the unsigned compare, matching E4's trap
+                // rule.
+                code.extend(encode_local_get(idx_slot));
+                if slot_is_i64(idx_slot) {
+                    code.extend(encode_i64_const(lit.len as i64));
+                    code.push(I64_GE_U);
+                } else {
+                    let len = i32::try_from(lit.len).map_err(|_| IIRWasmError::InvalidOperand {
+                        function: fn_name.to_string(),
+                        detail: format!("str_index literal length {} does not fit i32", lit.len),
+                    })?;
+                    code.extend(encode_i32_const(len));
+                    code.push(I32_GE_U);
+                }
+                code.push(IF);
+                code.push(BLOCK_EMPTY);
+                code.push(UNREACHABLE);
+                code.push(END);
+
+                // byte = load8_u(offset + idx)  — the literal has no header.
+                code.extend(encode_local_get(src_slot));
+                code.extend(encode_local_get(idx_slot));
+                if slot_is_i64(idx_slot) {
+                    code.extend(encode_i32_wrap_i64());
+                }
+                code.extend(encode_i32_add());
+                code.extend(encode_i32_load8_u());
+                if slot_is_i64(rd) {
+                    code.extend(encode_i64_extend_i32_u());
+                }
+                code.extend(encode_local_set(rd));
+            } else {
+                // Runtime handle: read the header length, then load the byte from
+                // the block body.  Bounds: idx >=u len(= i32.load handle) → trap; a
+                // negative i64 index becomes a huge unsigned and trips the same
+                // compare (E4 §2.2).
+                code.extend(encode_local_get(idx_slot));
+                if slot_is_i64(idx_slot) {
+                    code.extend(encode_local_get(src_slot));
+                    code.extend(encode_i32_load(0));
+                    code.extend(encode_i64_extend_i32_u());
+                    code.push(I64_GE_U);
+                } else {
+                    code.extend(encode_local_get(src_slot));
+                    code.extend(encode_i32_load(0));
+                    code.push(I32_GE_U);
+                }
+                code.push(IF);
+                code.push(BLOCK_EMPTY);
+                code.push(UNREACHABLE);
+                code.push(END);
+
+                // byte = load8_u(handle + 4 + idx)  — skip the i32 length header.
+                code.extend(encode_local_get(src_slot));
+                code.extend(encode_i32_const(4));
+                code.extend(encode_i32_add());
+                code.extend(encode_local_get(idx_slot));
+                if slot_is_i64(idx_slot) {
+                    code.extend(encode_i32_wrap_i64());
+                }
+                code.extend(encode_i32_add());
+                code.extend(encode_i32_load8_u());
+                if slot_is_i64(rd) {
+                    code.extend(encode_i64_extend_i32_u());
+                }
+                code.extend(encode_local_set(rd));
             }
-            code.extend(encode_i32_add());
-            code.extend(encode_i32_load8_u());
-            if slot_is_i64(rd) {
-                code.extend(encode_i64_extend_i32_u());
-            }
-            code.extend(encode_local_set(rd));
         }
 
         // ── str_len → literal byte count ─────────────────────────────────────
