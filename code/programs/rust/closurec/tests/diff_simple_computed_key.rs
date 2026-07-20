@@ -75,7 +75,7 @@ fn simple_computed_key_folds_initializer() {
     //     fallback for a class *expression* would wrap; a declaration must not).
     let t = actual.trim_end_matches('\n');
     assert!(
-        t.ends_with('}') && !t.starts_with('('),
-        "class declaration must emit bare (no wrap): {actual}"
+        t.ends_with("};") && !t.starts_with('('),
+        "class declaration must terminate with a semicolon as the last program item and not be paren-wrapped: {actual}"
     );
 }

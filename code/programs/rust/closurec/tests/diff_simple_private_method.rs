@@ -73,11 +73,17 @@ fn simple_private_method_folds_body() {
         !a.contains("1+2"),
         "unfolded arithmetic present — pipeline fell back to WHITESPACE_ONLY: {actual}"
     );
-    // (3) a class *declaration* emits bare — NO trailing `;` after the closing
-    //     `}` and NO wrapping paren (a WHITESPACE_ONLY fallback appends `;`).
+    // (3) a class *declaration* terminates with `};` when it is the LAST
+    //     program item (oracle-verified: the real Closure emits
+    //     `class C{m(){return 3}};`) and is NOT paren-wrapped (unlike the
+    //     class *expression* form `(class …);`). NOTE: the trailing `;` used
+    //     to double as a WHITESPACE_ONLY-fallback detector; it no longer can,
+    //     since both paths now end in `;`. The constant-fold assertion above
+    //     is the real fallback discriminator — a whitespace-only pass cannot
+    //     fold, so a folded body proves the optimizing pipeline ran.
     let t = actual.trim_end_matches('\n');
     assert!(
-        t.ends_with('}') && !t.ends_with("};") && !t.starts_with('('),
-        "class declaration must emit bare (no trailing `;`, no wrap): {actual}"
+        t.ends_with("};") && !t.starts_with('('),
+        "class declaration must terminate with a semicolon as the last program item and not be paren-wrapped: {actual}"
     );
 }

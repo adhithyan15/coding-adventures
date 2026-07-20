@@ -15,7 +15,8 @@
 //!   2. the method body folds — `return 1 + 2` → `return 3` — proving the
 //!      constant-fold pass descended into the method's `FunctionExpression`
 //!      body (PR1 wired `fold_class_declaration`); and
-//!   3. there is **no trailing `;`** and **no wrapping paren** — a class
+//!   3. it terminates with **`};`** as the last program item (oracle-
+//!      verified) and has **no wrapping paren** — a class
 //!      *declaration* is emitted bare (unlike the *expression* form's
 //!      `(class C{…});`), the point of the PR1 emit contract.
 //! A WHITESPACE_ONLY fallback — which a bridge decline forces for the *whole*
@@ -79,13 +80,18 @@ fn simple_class_decl_fixture_matches_expected_stdout() {
         a.contains("return 3") || a.contains("return3}"),
         "method body `1 + 2` did not fold to `3`: {actual}"
     );
-    // (3) a class *declaration* is emitted bare — NO trailing `;` after the
-    //     closing `}` (unlike a function declaration's gap-030 `;`) and NO
-    //     wrapping paren (unlike the class *expression* form's `(class …);`).
+    // (3) a class *declaration* terminates with `};` when it is the LAST
+    //     program item (oracle-verified: the real Closure emits
+    //     `class C{m(){return 3}};`) and is NOT paren-wrapped (unlike the
+    //     class *expression* form `(class …);`). NOTE: the trailing `;` used
+    //     to double as a WHITESPACE_ONLY-fallback detector; it no longer can,
+    //     since both paths now end in `;`. The constant-fold assertion above
+    //     is the real fallback discriminator — a whitespace-only pass cannot
+    //     fold, so a folded body proves the optimizing pipeline ran.
     let t = actual.trim_end_matches('\n');
     assert!(
-        t.ends_with('}') && !t.ends_with("};") && !t.starts_with('('),
-        "class declaration must emit bare (no trailing `;`, no wrap): {actual}"
+        t.ends_with("};") && !t.starts_with('('),
+        "class declaration must terminate with a semicolon as the last program item and not be paren-wrapped: {actual}"
     );
     assert!(
         !a.contains("1+2"),

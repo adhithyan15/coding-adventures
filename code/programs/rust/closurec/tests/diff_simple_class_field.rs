@@ -84,11 +84,13 @@ fn simple_class_field_folds_initializers() {
         a.contains("statics=11;"),
         "the `static` field modifier was dropped: {actual}"
     );
-    // (4) a class *declaration* emits bare — NO trailing `;` after the closing
-    //     `}` and NO wrapping paren (mirrors simple-class-decl).
+    // (4) a class *declaration* terminates with `};` when it is the LAST
+    //     program item (oracle-verified: the real Closure emits
+    //     `class C{m(){return 3}};`) and is NOT paren-wrapped (unlike the
+    //     class *expression* form `(class …);`). Mirrors simple-class-decl.
     let t = actual.trim_end_matches('\n');
     assert!(
-        t.ends_with('}') && !t.ends_with("};") && !t.starts_with('('),
-        "class declaration must emit bare (no trailing `;`, no wrap): {actual}"
+        t.ends_with("};") && !t.starts_with('('),
+        "class declaration must terminate with a semicolon as the last program item and not be paren-wrapped: {actual}"
     );
 }
