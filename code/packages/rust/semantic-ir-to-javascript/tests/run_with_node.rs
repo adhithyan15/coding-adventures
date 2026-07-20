@@ -666,16 +666,15 @@ catch (err) { o.push("raised"); }                              // raised
 const native = new TypeError("internal");
 o.push(F.callMethod(native, "class"));                         // StandardError
 o.push(String(F.callMethod(native, "is_a?", "StandardError"))); // true
-// (5) a pathological include CHAIN must not exhaust the JS stack — the module
-//     walk behind `is_a?` is an explicit worklist, not recursion.  Driven
-//     through the BUILTIN form on purpose: `callMethod` on a SirInstance first
-//     consults `resolveMethod`, whose `searchModule` is recursive and blows
-//     the stack on a chain this deep — a PRE-EXISTING DoS in method dispatch,
-//     tracked separately and deliberately not exercised here.
+// (5) a pathological include CHAIN must not exhaust the JS stack — BOTH the
+//     module walk behind `is_a?` and `resolveMethod`'s own module search are
+//     explicit worklists, not recursion.  Driven through `callMethod` (the
+//     REAL dispatch path, which consults `resolveMethod` first) — that path
+//     used to die with `RangeError: Maximum call stack size exceeded`.
 for (let i = 0; i < 20000; i++) { F.includeModule("D" + i, "D" + (i + 1)); }
 const deep = new F.SirInstance("D0");
-o.push(String(F.builtins["is_a?"](deep, "D20000")));           // true, no overflow
-o.push(String(F.builtins["is_a?"](deep, "Nope")));             // false, no overflow
+o.push(String(F.callMethod(deep, "is_a?", "D20000")));         // true, no overflow
+o.push(String(F.callMethod(deep, "is_a?", "Nope")));           // false, no overflow
 console.log(o.join("|"));
 "#;
     if let Some(stdout) = run_runtime_snippet(snippet, "rbrefledge") {
@@ -684,6 +683,47 @@ console.log(o.join("|"));
             "ArgumentError|true|true|false|C|true|true|false|undefined|undefined|raised|\
              StandardError|true|true|false",
         );
+    }
+}
+
+#[test]
+fn method_resolution_order_survives_the_iterative_module_search() {
+    // `resolveMethod`'s module search became an explicit stack (it used to
+    // recurse and blow the JS stack on a deep `include` chain). MRO order is
+    // the thing that MUST NOT change, so pin every ordering rule:
+    //   1. a class's OWN method beats any module it includes;
+    //   2. the most-recently-included module wins over an earlier one;
+    //   3. a module's own includes are searched depth-first, newest-first,
+    //      BEFORE moving on to an older sibling module;
+    //   4. the superclass chain is consulted only after the whole subclass
+    //      subtree (class + its modules) misses.
+    let snippet = r#"
+const F = __Sir; const o = [];
+const m = (tag) => new F.Closure(() => tag);
+// 1. own method beats an included module
+F.defMethod("K1", "who", m("own")); F.includeModule("K1", "MA"); F.defMethod("MA", "who", m("MA"));
+o.push(F.callMethod(new F.SirInstance("K1"), "who"));            // own
+// 2. newest include wins (MB included after MA)
+F.includeModule("K2", "MA"); F.includeModule("K2", "MB"); F.defMethod("MB", "who", m("MB"));
+o.push(F.callMethod(new F.SirInstance("K2"), "who"));            // MB
+// 3. depth-first: MC's OWN include (MD) is searched before older sibling MA.
+//    K3 includes MA then MC; MC includes MD; only MD and MA define `who`.
+F.includeModule("K3", "MA"); F.includeModule("K3", "MC");
+F.includeModule("MC", "MD"); F.defMethod("MD", "who", m("MD"));
+o.push(F.callMethod(new F.SirInstance("K3"), "who"));            // MD (not MA)
+// 4. superclass only after the whole subclass subtree misses
+F.registerAncestry({ K4: "K4Base" });
+F.includeModule("K4", "ME");                                      // ME defines nothing
+F.defMethod("K4Base", "who", m("base"));
+o.push(F.callMethod(new F.SirInstance("K4"), "who"));            // base
+// ...but a module on the SUBCLASS still beats the superclass.
+F.registerAncestry({ K5: "K5Base" });
+F.includeModule("K5", "MA"); F.defMethod("K5Base", "who", m("base5"));
+o.push(F.callMethod(new F.SirInstance("K5"), "who"));            // MA
+console.log(o.join("|"));
+"#;
+    if let Some(stdout) = run_runtime_snippet(snippet, "mroorder") {
+        assert_eq!(stdout, "own|MB|MD|base|MA");
     }
 }
 

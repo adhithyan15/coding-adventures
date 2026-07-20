@@ -2614,20 +2614,34 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // name))` — explicit data, never `[name]` / reflection.
   function resolveMethod(ownerTable, cls, name, topModules) {
     const seen = new Set();
-    // Search a MODULE `mod` (and, depth-first, its own included modules).
+    // Search a MODULE `start` (and, depth-first, its own included modules).
     // A module's methods always live in `methodTable` (instance methods).
-    function searchModule(mod) {
-      if (mod === undefined || mod === null || seen.has(mod)) {
-        return undefined;
-      }
-      seen.add(mod);
-      const own = methodTable.get(methodKey(mod, name));
-      if (own !== undefined) { return own; }
-      const mods = includedModules.get(mod);
-      if (mods !== undefined) {
-        for (let i = mods.length - 1; i >= 0; i--) {
-          const fn = searchModule(mods[i]);
-          if (fn !== undefined) { return fn; }
+    //
+    // ITERATIVE (an explicit stack), NOT recursion.  A module's include graph
+    // is shaped by the source program, so a long `include` chain used to
+    // recurse once per level and exhaust the JS call stack — and because
+    // `resolveMethod` runs on EVERY method call to an instance, that made ANY
+    // call on such an object die with `RangeError: Maximum call stack size
+    // exceeded` (measured: fine at ~5k deep, fatal by ~9k).
+    //
+    // MRO ORDER IS PRESERVED EXACTLY.  The old walk visited a module's
+    // includes newest-first (`for (i = len-1; i >= 0; i--)`), fully exploring
+    // each subtree before the next sibling.  A LIFO stack reproduces that if
+    // children are PUSHED in ascending index order — they then POP in
+    // descending order, and a popped module's own children go on top, so its
+    // subtree is exhausted before its older siblings.  `seen` is the same
+    // shared set, checked on pop, so a cyclic or repeated include terminates.
+    function searchModuleTree(start) {
+      const stack = [start];
+      while (stack.length > 0) {
+        const mod = stack.pop();
+        if (mod === undefined || mod === null || seen.has(mod)) { continue; }
+        seen.add(mod);
+        const own = methodTable.get(methodKey(mod, name));
+        if (own !== undefined) { return own; }
+        const mods = includedModules.get(mod);
+        if (mods !== undefined) {
+          for (let i = 0; i < mods.length; i++) { stack.push(mods[i]); }
         }
       }
       return undefined;
@@ -2644,7 +2658,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       const mods = topModules === undefined ? undefined : topModules.get(owner);
       if (mods !== undefined) {
         for (let i = mods.length - 1; i >= 0; i--) {
-          const fn = searchModule(mods[i]);
+          const fn = searchModuleTree(mods[i]);
           if (fn !== undefined) { return fn; }
         }
       }
