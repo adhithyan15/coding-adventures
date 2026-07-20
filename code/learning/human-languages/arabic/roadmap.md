@@ -39,6 +39,15 @@ word lessons — never as a gated reading course.
   marks) and the **hamza** — the showpiece being that a single *fatḥa*/*kasra*
   flips **أنتَ** ("you," m.) to **أنتِ** ("you," f.).
 
+- **Ch. 3 — Writing set** (`AR-W07`–`AR-W09`, `writing` type): builds toward the
+  reply *bi-khayr* ("well"). Introduces a **second dots-family** — the
+  hook-and-tail body **ح/خ/ج** (no-dot/above/below → ḥ/kh/j), a structural rhyme
+  with the Ch. 2 bowl-family — then **ك** (*kāf*) and **ر** (*rā*, another
+  non-joiner like *alif*), and assembles **خير → بخير** ("good" → "well," lit. "in
+  goodness"). The anchor **خير** is the word already hiding in the Ch. 1 greeting
+  *ṣabāḥ al-khayr*, so a greeting and its reply are now both hand-writable.
+  Phoenician cousins continue: *ḥēth*→H, *gīml*→C/G, *kaph*→K, *rēsh*→R.
+
 ## Planned
 
 | Chapter | Theme |
