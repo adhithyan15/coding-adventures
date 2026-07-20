@@ -120,11 +120,11 @@ ports, followed by the paired `ed25519`, `font-parser`, `asciidoc-parser`, and
 `matrix`, `vigenere-cipher`, `uuid`, `document-ast`, `lz78`, `deflate`,
 `point2d`, `affine2d`, `bezier2d`, and `arc2d`
 ports, followed by the Haskell `gradient-descent`, `perceptron`, and
-`type-checker-protocol` ports:
+`type-checker-protocol` ports, and the Haskell `paint-vm-ascii` port:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 290 |
+| Present in 10-15 languages | 172 | 289 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,972 |
 | Present in one language | 709 | 9,926 |
@@ -170,7 +170,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 172 packages present in at least ten implementation languages need 290
+The 172 packages present in at least ten implementation languages need 289
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -181,7 +181,7 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Perl | 0 | Complete; paired data-structure/storage wave |
 | C# | 0 | Complete; paired native package wave |
 | F# | 0 | Complete; paired native package wave |
-| Haskell | 15 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
+| Haskell | 14 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
 | Kotlin | 58 | Move with Java |
@@ -578,6 +578,17 @@ state, with 100% alternative and 99% expression coverage. The package now
 spans 11 implementation lanes, reduces the high-consensus backlog to 290
 slots, leaves 15 gaps in the Haskell lane, and establishes the shared contract
 needed by later typed-frontend ports.
+
+The twentieth Haskell high-consensus slice is complete: `paint-vm-ascii` now
+provides a pure terminal renderer for the shared `paint-instructions` IR. It
+maps scene coordinates through configurable character-cell scales, clips
+visible filled rectangles into the scene buffer, trims terminal whitespace,
+and rejects paths explicitly rather than returning incomplete output. Its
+package-native suite exercises 13 examples covering shared defaults, filled
+rectangles, clipping, transparent paints, default scaling, half-cell rounding,
+zero-sized scenes, unsupported paths, invalid scales, scene dimensions, and
+rectangle geometry. The package now spans 11 implementation lanes, reduces the
+high-consensus backlog to 289 slots, and leaves 14 gaps in the Haskell lane.
 
 Recommended family order:
 
