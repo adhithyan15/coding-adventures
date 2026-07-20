@@ -88,6 +88,20 @@ Spanish and French where a contrast helps. The recurring decoder is the
   *blu*), and English took *blue* from **French** rather than from Germanic.
   **Authored.**
 
+- **Ch. 14 — *haben*, and being your years**: **haben** (*habe/hast/hat/haben/
+  habt/haben*), where *du hast* and *er hat* **drop the b** exactly as English
+  *have* → *ha**s***. The showpiece is a **false cognate**: *haben* ← Germanic
+  *\*habjaną* ← PIE *\*kap-* "to **seize**," whose Latin child is ***capere***
+  (*capture/captive/accept*) — while Latin ***habēre*** (the source of *avoir* and
+  *avere*) descends from *\*gʰabʰ-*, whose English child is **give**. The two
+  words that look most alike, mean the same thing, and come from **opposite**
+  directions → **ich bin zwanzig Jahre alt** — the one everyday slot where German
+  **refuses** *haben*: age takes **sein**, word for word the English sentence
+  (*Jahr* ← *\*jēra* = *year*; *alt* ← *\*aldaz* = *old*). The split: **all four
+  Romance sisters *have* their years; German sides with English and *is* its
+  years.** **Authored.** (Also the prerequisite for the *Perfekt*, built on
+  *haben*.)
+
 ## Planned
 
 | Chapter | Theme |
