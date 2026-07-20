@@ -298,3 +298,56 @@ fn likelihood_ratio_steps_are_rendered_instead_of_being_silently_dropped() {
         "the contribution's cited span: {out}"
     );
 }
+
+// ---------------------------------------------------------------------------
+// (7) A self-recursive rule ABSTAINS instead of aborting the process, and a
+//     capped search never fabricates a negation step.
+//
+//     Found by the security review of this PR. The mutual recursion in
+//     `solve`/`solve_body` had no termination guard, so `p(X) :- p(X)` drove
+//     the resolver until the process overflowed its stack — a SIGABRT, which
+//     cannot be caught, so an embedding process dies with it.
+//
+//     The naive fix (return "no proofs" at the cap) would have been worse than
+//     the crash HERE, because this PR introduces `FromNegation`: a negated
+//     subgoal that hit the cap would look "absent", and the trail would assert
+//     a guard held that was never established. So the cap raises an error that
+//     propagates, and the query abstains.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn a_self_recursive_rule_abstains_instead_of_overflowing_the_stack() {
+    let dir = scratch("recursion");
+    let p = write(
+        &dir,
+        "case.adj",
+        "relate p(a, b)\n\
+             source \"A seed edge.\"\n\
+             trust empirical\n\
+         rule {\n\
+             head: p($X, $Y)\n\
+             when: p($X, $Y)\n\
+             source \"A rule that requires itself — no base case.\"\n\
+             trust authoritative\n\
+         }\n\
+         ? p($A, $B)\n",
+    );
+    let (ok, out, err) = run(&p);
+    // The process must EXIT NORMALLY. Before the guard this aborted with
+    // "fatal runtime error: stack overflow" and a signal, not an exit code.
+    assert!(
+        ok,
+        "a self-recursive rule must not abort the process; stderr={err}"
+    );
+    assert!(
+        !err.contains("stack overflow"),
+        "no stack overflow may occur: {err}"
+    );
+    // And it abstains rather than reporting the proofs found before the cap:
+    // a truncated search presented as a complete one is the exact accounting
+    // failure this whole arc exists to prevent.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "a search that hit the depth cap must abstain: {out}"
+    );
+}

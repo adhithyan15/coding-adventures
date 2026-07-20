@@ -68,10 +68,41 @@ fn rename_literal(lit: &BodyLiteral, renames: &mut HashMap<u64, LogicVar>) -> Bo
     }
 }
 
+/// The deepest chain of rule applications the resolver will follow before
+/// giving up.
+///
+/// # Why a cap is required at all
+///
+/// `solve` and `solve_body` are mutually recursive, and a self-recursive rule
+/// (`p(X) :- p(X)`) has no base case — the resolver descends until the process
+/// **overflows its stack and aborts**. That abort is a `SIGABRT`: it cannot be
+/// caught, so an embedding process dies with it, not just the CLI.
+///
+/// Every other recursive descent in the stack is already capped —
+/// `adj_lang::MAX_RULE_DEPTH` in the parser, `compute::MAX_EVAL_DEPTH` in the
+/// arithmetic evaluator. The resolver was the remaining hole. 128 sits above
+/// the parser's own 90-deep rule limit, so no program the frontend accepts can
+/// reach it by legitimate nesting.
+pub const MAX_SLD_DEPTH: usize = 128;
+
+/// The resolver abandoned the search because it hit [`MAX_SLD_DEPTH`].
+///
+/// This is deliberately an **error, not an empty result**. The distinction is
+/// the whole point: "I found no proof" and "I stopped looking" are different
+/// claims, and conflating them is exactly the accounting failure the audit
+/// trail exists to prevent. It matters most under negation — see `solve_body`.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ResolutionLimitExceeded;
+
 /// Enumerate every successful proof of `query` against `kb`. Returns a
 /// `ProofDAG` containing one `Proof` per successful derivation.
+///
+/// If the search hits [`MAX_SLD_DEPTH`], this returns a DAG with **no proofs**
+/// — i.e. the caller abstains. Reporting the proofs found before the cap would
+/// present a truncated search as a complete one, which is the failure mode the
+/// whole audit-trail effort is aimed at.
 pub fn enumerate_all(query: &Term, kb: &KnowledgeBase) -> ProofDAG {
-    let raw = solve(query, kb, &Substitution::empty(), 0);
+    let raw = solve(query, kb, &Substitution::empty(), 0).unwrap_or_default();
     let proofs = raw
         .into_iter()
         .map(|(bindings, steps)| {
@@ -105,7 +136,11 @@ fn solve(
     kb: &KnowledgeBase,
     subst: &Substitution,
     depth: usize,
-) -> Vec<(Substitution, Vec<ProofStep>)> {
+) -> Result<Vec<(Substitution, Vec<ProofStep>)>, ResolutionLimitExceeded> {
+    // The guard that turns an infinite descent into an honest abstention.
+    if depth >= MAX_SLD_DEPTH {
+        return Err(ResolutionLimitExceeded);
+    }
     let resolved = subst.walk(goal);
     let mut results: Vec<(Substitution, Vec<ProofStep>)> = Vec::new();
 
@@ -137,7 +172,7 @@ fn solve(
             // The body is proved one level DEEPER than the rule step that
             // introduces it. That single `+ 1` is what turns the flat step
             // vector into a reconstructable tree (see `ProofStep::depth`).
-            for (body_subst, body_steps) in solve_body(&renamed_body, kb, &s, depth + 1) {
+            for (body_subst, body_steps) in solve_body(&renamed_body, kb, &s, depth + 1)? {
                 let mut steps = Vec::with_capacity(1 + body_steps.len());
                 steps.push(ProofStep {
                     goal: resolved.clone(),
@@ -150,7 +185,7 @@ fn solve(
         }
     }
 
-    results
+    Ok(results)
 }
 
 /// Prove every literal in `body`, threading substitutions forward and
@@ -161,9 +196,9 @@ fn solve_body(
     kb: &KnowledgeBase,
     subst: &Substitution,
     depth: usize,
-) -> Vec<(Substitution, Vec<ProofStep>)> {
+) -> Result<Vec<(Substitution, Vec<ProofStep>)>, ResolutionLimitExceeded> {
     if body.is_empty() {
-        return vec![(subst.clone(), Vec::new())];
+        return Ok(vec![(subst.clone(), Vec::new())]);
     }
 
     let (first, rest) = body.split_first().unwrap();
@@ -172,8 +207,8 @@ fn solve_body(
     match first {
         BodyLiteral::Pos(t) => {
             // Find every way to prove `t`; for each, recurse on `rest`.
-            for (after_first, steps_first) in solve(t, kb, subst, depth) {
-                for (after_rest, steps_rest) in solve_body(rest, kb, &after_first, depth) {
+            for (after_first, steps_first) in solve(t, kb, subst, depth)? {
+                for (after_rest, steps_rest) in solve_body(rest, kb, &after_first, depth)? {
                     let mut all_steps = Vec::with_capacity(steps_first.len() + steps_rest.len());
                     all_steps.extend(steps_first.iter().cloned());
                     all_steps.extend(steps_rest);
@@ -193,9 +228,18 @@ fn solve_body(
             //
             // The substitution is unchanged: NAF binds nothing (it succeeded
             // precisely because there was no proof to bind from).
-            if solve(t, kb, subst, depth + 1).is_empty() {
+            //
+            // THE CAP MUST NOT BE READ AS ABSENCE. `?` here is load-bearing:
+            // if the negated subgoal's own search hit MAX_SLD_DEPTH we
+            // propagate the error instead of observing an empty result set.
+            // Swallowing it would let a truncated search masquerade as "no
+            // proof exists", and this function would then emit a
+            // `FromNegation` step asserting a guard held that was never
+            // actually established — a fabricated justification in the audit
+            // trail, which is worse than the crash it replaces.
+            if solve(t, kb, subst, depth + 1)?.is_empty() {
                 let neg_goal = subst.walk(t);
-                for (after_rest, steps_rest) in solve_body(rest, kb, subst, depth) {
+                for (after_rest, steps_rest) in solve_body(rest, kb, subst, depth)? {
                     let mut all_steps = Vec::with_capacity(1 + steps_rest.len());
                     all_steps.push(ProofStep {
                         goal: neg_goal.clone(),
@@ -211,7 +255,7 @@ fn solve_body(
         }
     }
 
-    results
+    Ok(results)
 }
 
 #[cfg(test)]
