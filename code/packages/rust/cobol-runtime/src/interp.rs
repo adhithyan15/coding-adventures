@@ -1054,7 +1054,11 @@ impl Machine {
         }
         let start0 = start - 1;
         let actual_len = len.unwrap_or(width.saturating_sub(start0));
-        if start0 + actual_len > width {
+        // Subtractive bounds test — `start0 + actual_len` would overflow `usize`
+        // for a crafted `WS(1e19:1e19)` (both parse as full `usize`), panicking in
+        // debug / wrapping past the guard (then an out-of-bounds slice) in release.
+        // `width - start0` is only reached once `start0 <= width`.
+        if start0 > width || actual_len > width - start0 {
             return Err(RuntimeError::Unsupported(format!(
                 "reference modification {base}({start}:{}) runs past the {width}-character item — a later rung",
                 len.map(|l| l.to_string()).unwrap_or_default()

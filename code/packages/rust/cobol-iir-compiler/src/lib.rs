@@ -827,7 +827,11 @@ impl<'a> Compiler<'a> {
         }
         let start0 = start - 1;
         let actual_len = len.unwrap_or(width.saturating_sub(start0));
-        if start0 + actual_len > width {
+        // Subtractive bounds test — `start0 + actual_len` would overflow `usize`
+        // for a crafted `WS(1e19:1e19)` (both parse as full `usize`), panicking in
+        // debug / wrapping past the guard in release. `width - start0` is only
+        // reached once `start0 <= width`, so it never underflows.
+        if start0 > width || actual_len > width - start0 {
             return Err(CompileError::Unsupported(format!(
                 "reference modification {base}({start}:{}) runs past the {width}-character item — a later rung",
                 len.map(|l| l.to_string()).unwrap_or_default()
@@ -3680,6 +3684,22 @@ mod tests {
         let err = compile_source(
             &wrap(&["01  WS  PIC X(3) VALUE \"ABC\"."], &["DISPLAY WS(2:5).", "STOP RUN."]),
             "rmoob",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn refmod_huge_indices_do_not_overflow() {
+        // Both start and length parse as full `usize`, so `start-1 + len` would
+        // overflow: a crafted program must be a clean Unsupported reject, never a
+        // panic (the subtractive bounds test guarantees this).
+        let err = compile_source(
+            &wrap(
+                &["01  WS  PIC X(5) VALUE \"ABCDE\"."],
+                &["DISPLAY WS(18446744073709551615:18446744073709551615).", "STOP RUN."],
+            ),
+            "rmhuge",
         )
         .unwrap_err();
         assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
