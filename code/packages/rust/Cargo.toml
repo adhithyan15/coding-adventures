@@ -276,6 +276,7 @@ members = [
     "scilab-repl",
     "scilab-to-semantic-ir",
     "q-lexer",
+    "q-parser",
     "logic-gates",
     "logic-core",
     "lookup-core",
