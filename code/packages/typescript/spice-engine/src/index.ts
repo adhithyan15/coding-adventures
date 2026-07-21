@@ -1674,6 +1674,7 @@ export interface Diode {
   readonly junctionPotential: number;
   readonly gradingCoefficient: number;
   readonly forwardBiasDepletionCoefficient: number;
+  readonly saturationCurrentTemperatureExponent: number;
 }
 
 export type JfetPolarity = "NJF" | "PJF";
@@ -1984,7 +1985,7 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_KINDS: readonly ModelCardKind[] = 
 const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   Record<ModelCardKind, readonly [number, number, number, number]>
 > = {
-  D: [10, 16, 5, 3],
+  D: [11, 17, 5, 3],
   NPN: [7, 15, 4, 4],
   PNP: [7, 15, 4, 4],
   NJF: [5, 11, 5, 3],
@@ -3572,7 +3573,7 @@ function cloneSubcktElement(
     case "custom-model":
       return { ...element, name, positive: mapSubcktNode(element.positive, instanceName, nodeMap), negative: mapSubcktNode(element.negative, instanceName, nodeMap) };
     case "diode":
-      return diode(name, mapSubcktNode(element.anode, instanceName, nodeMap), mapSubcktNode(element.cathode, instanceName, nodeMap), element.saturationCurrent, element.thermalVoltage, element.emissionCoefficient, element.breakdownVoltage, element.breakdownCurrent, element.junctionCapacitance, element.transitTime);
+      return diode(name, mapSubcktNode(element.anode, instanceName, nodeMap), mapSubcktNode(element.cathode, instanceName, nodeMap), element.saturationCurrent, element.thermalVoltage, element.emissionCoefficient, element.breakdownVoltage, element.breakdownCurrent, element.junctionCapacitance, element.transitTime, element.junctionPotential, element.gradingCoefficient, element.forwardBiasDepletionCoefficient, element.saturationCurrentTemperatureExponent);
     case "jfet":
       return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation, element.gateSourceCapacitance, element.gateDrainCapacitance);
     case "bjt":
@@ -7532,6 +7533,7 @@ export function diode(
   junctionPotential = 1.0,
   gradingCoefficient = 0.5,
   forwardBiasDepletionCoefficient = 0.5,
+  saturationCurrentTemperatureExponent = 3.0,
 ): Diode {
   return {
     kind: "diode",
@@ -7548,6 +7550,7 @@ export function diode(
     junctionPotential,
     gradingCoefficient,
     forwardBiasDepletionCoefficient,
+    saturationCurrentTemperatureExponent,
   };
 }
 
@@ -7569,13 +7572,20 @@ export function diodeAtTemperature(
   if (!Number.isFinite(element.emissionCoefficient) || element.emissionCoefficient <= 0.0) {
     throw invalidElement(element.name, "emission coefficient must be finite and positive");
   }
+  if (!Number.isFinite(element.saturationCurrentTemperatureExponent)) {
+    throw invalidElement(
+      element.name,
+      "saturation-current temperature exponent must be finite",
+    );
+  }
   const ratio = temperatureKelvin / nominalTemperatureKelvin;
   const exponent =
     (energyGapElectronVolts * ELECTRON_CHARGE) /
     (element.emissionCoefficient * BOLTZMANN) *
     (1.0 / nominalTemperatureKelvin - 1.0 / temperatureKelvin);
   const saturationScale =
-    ratio ** 3 * Math.exp(Math.max(-100.0, Math.min(100.0, exponent)));
+    ratio ** element.saturationCurrentTemperatureExponent *
+    Math.exp(Math.max(-100.0, Math.min(100.0, exponent)));
   return {
     ...element,
     saturationCurrent: element.saturationCurrent * saturationScale,
@@ -7810,6 +7820,7 @@ const DIODE_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   M: "M",
   MJ: "M",
   FC: "FC",
+  XTI: "XTI",
 };
 
 const BJT_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
@@ -8295,6 +8306,7 @@ export function diodeFromModelCard(
     p.VJ ?? 1.0,
     p.M ?? 0.5,
     p.FC ?? 0.5,
+    p.XTI ?? 3.0,
   );
 }
 
@@ -19181,6 +19193,12 @@ function validateDiode(element: Diode): void {
     throw invalidElement(
       element.name,
       "forward-bias depletion coefficient must be finite and in [0, 1)",
+    );
+  }
+  if (!Number.isFinite(element.saturationCurrentTemperatureExponent)) {
+    throw invalidElement(
+      element.name,
+      "saturation-current temperature exponent must be finite",
     );
   }
   if (!Number.isFinite(element.transitTime) || element.transitTime < 0.0) {
