@@ -31,7 +31,25 @@ is assumed: the text supplies every Spanish form in full, as enrichment, so the
   comment, **comment vous appelez-vous?** ("what's your name?"), enchanté(e),
   practice. In the book. (Every atom — *je*, *me*, *appelle* — traced to its
   root.)
-- Later chapters mirror the Spanish roadmap's themes.
+- **Chapter 3 — How Are You**: merci, de rien, aller, *comment ça va*, *comme ci
+  comme ça*, practice.
+- **Chapter 4 — Farewells**: au revoir, à plus tard, à bientôt, à demain, practice.
+- **Chapter 5 — The First Verbs**: parler, habiter, travailler, *je parle
+  français*, practice.
+- **Chapter 6 — Numbers One to Ten**: nombres 1–5, 6–10.
+- **Chapter 7 — The Days of the Week**: jours (the planet-gods).
+- **Chapter 8 — Telling the Time**: l'heure, midi/minuit.
+- **Chapter 9 — Months and Seasons**: mois, saisons.
+- **Chapter 10 — Family**: parents, frères/sœurs (Grimm's law).
+- **Chapter 11 — Bread, Water, Wine**: pain, eau/vin.
+- **Chapter 12 — Numbers Eleven to Twenty**: 11–16, 17–20.
+- **Chapter 13 — Colours**: noir/blanc, rouge/bleu.
+- **Chapter 14 — To Have, and How Old You Are**: avoir, âge.
+- **Chapter 15 — The Compound Past**: passé composé, passé simple.
+- **Chapter 16 — To Be, and the Past That Takes It**: être, passé composé with
+  *être*.
+
+**All sixteen chapters are authored and in the book (79 pages).**
 
 ## Files
 
