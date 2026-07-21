@@ -210,6 +210,8 @@ to shape `CJO` depletion capacitance continuously around the `FC * VJ`
 transition.
 Diode cards also accept `XTI` (default `3`) and `EG` (default `1.11 eV`) to
 control saturation-current temperature scaling.
+BJT cards accept `XTI` (default `3`) for the same saturation-current
+temperature exponent behavior.
 `model_card_unsupported_parameter_issues()`,
 `format_model_card_unsupported_parameter_issue_table()`,
 `model_card_unsupported_parameter_issue_records()`,
@@ -235,7 +237,7 @@ catalog by model kind for compact release dashboards and Mosaic UI inventories.
 `model_card_supported_parameter_coverage_gate_issue_records()`,
 `format_model_card_supported_parameter_coverage_gate_issue_csv()`, and
 `format_model_card_supported_parameter_coverage_gate_issue_json()` validate the
-expected seven-kind, 72-row supported-parameter catalog and expose stable issue
+expected seven-kind, 74-row supported-parameter catalog and expose stable issue
 rows for release automation.
 `model_card_supported_parameter_coverage_dashboard()`,
 `format_model_card_supported_parameter_coverage_dashboard_table()`,

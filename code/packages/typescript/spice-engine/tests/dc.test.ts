@@ -7,6 +7,7 @@ import {
   bSourceCurrent,
   bSourceVoltage,
   bjt,
+  bjtAtTemperature,
   bjtFromModelCard,
   circuitAtTemperature,
   cccs,
@@ -124,7 +125,7 @@ describe("dcOp", () => {
 
   it("exports stable model-card supported parameter coverage", () => {
     const coverage = modelCardSupportedParameterCoverage();
-    expect(coverage).toHaveLength(72);
+    expect(coverage).toHaveLength(74);
     expect(coverage[0]).toStrictEqual({
       kind: "D",
       canonicalParameter: "IS",
@@ -144,7 +145,7 @@ describe("dcOp", () => {
     expect(table).toContain("NMOS\tVT0\tVT0|VTO|VTH\t3");
     expect(table.split("\n").at(-1)).toBe("PMOS\tMJ\tMJ\t1");
     const records = modelCardSupportedParameterCoverageRecords();
-    expect(records).toHaveLength(72);
+    expect(records).toHaveLength(74);
     expect(records[0]).toStrictEqual({
       kind: "D",
       canonical_parameter: "IS",
@@ -209,15 +210,15 @@ describe("dcOp", () => {
       passed: true,
       kindCount: 7,
       expectedKindCount: 7,
-      canonicalParameterCount: 72,
-      expectedCanonicalParameterCount: 72,
-      acceptedNameCount: 120,
+      canonicalParameterCount: 74,
+      expectedCanonicalParameterCount: 74,
+      acceptedNameCount: 122,
       aliasedParameterCount: 35,
       maxAliasCount: 4,
       issues: [],
     });
     expect(formatModelCardSupportedParameterCoverageGateReport(report)).toBe(
-      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t72\t72\t120\t35\t4\t0",
+      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t74\t74\t122\t35\t4\t0",
     );
     expect(formatModelCardSupportedParameterCoverageGateIssueTable(report)).toBe(
       "kind\tfield\tmessage",
@@ -240,8 +241,8 @@ describe("dcOp", () => {
 
     expect(report.passed).toBe(false);
     expect(report.kindCount).toBe(7);
-    expect(report.canonicalParameterCount).toBe(71);
-    expect(report.acceptedNameCount).toBe(117);
+    expect(report.canonicalParameterCount).toBe(73);
+    expect(report.acceptedNameCount).toBe(119);
     expect(report.aliasedParameterCount).toBe(34);
     expect(report.maxAliasCount).toBe(4);
     expect(report.issues).toHaveLength(4);
@@ -256,7 +257,7 @@ describe("dcOp", () => {
       message: "expected NMOS max alias count 3, found 2",
     });
     expect(formatModelCardSupportedParameterCoverageGateReport(report)).toBe(
-      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t71\t72\t117\t34\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical supported parameters, found 17\nNMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card names, found 22\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2",
+      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t73\t74\t119\t34\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical supported parameters, found 17\nNMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card names, found 22\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2",
     );
     const records = modelCardSupportedParameterCoverageGateIssueRecords(report);
     expect(records[0]).toStrictEqual({
@@ -330,12 +331,17 @@ describe("dcOp", () => {
     expectClose(diodeModel.saturationCurrentTemperatureExponent, 2.2);
     expectClose(diodeModel.energyGapElectronVolts, 1.05);
 
-    const bjtCard = normalizeModelCard("Qsmall", "npn", { BETA: 125.0, CBE: 2.0e-12 });
+    const bjtCard = normalizeModelCard("Qsmall", "npn", {
+      BETA: 125.0,
+      CBE: 2.0e-12,
+      XTI: 2.4,
+    });
     const bjtModel = bjtFromModelCard("Q1", "c", "b", "e", bjtCard);
-    expect(bjtCard.parameters).toStrictEqual({ BF: 125.0, CJE: 2.0e-12 });
+    expect(bjtCard.parameters).toStrictEqual({ BF: 125.0, CJE: 2.0e-12, XTI: 2.4 });
     expect(bjtModel.polarity).toBe("NPN");
     expectClose(bjtModel.forwardBeta, 125.0);
     expectClose(bjtModel.baseEmitterCapacitance, 2.0e-12);
+    expectClose(bjtModel.saturationCurrentTemperatureExponent, 2.4);
 
     const jfetCard = normalizeModelCard("Jn", "njfet", { BET: 9.0e-4, VT0: -1.8, LAM: 0.02 });
     const jfetModel = jfetFromModelCard("J1", "d", "g", "s", jfetCard);
@@ -964,6 +970,22 @@ describe("dcOp", () => {
     expectClose(expanded.energyGapElectronVolts, 1.05);
   });
 
+  it("preserves the BJT temperature exponent through subcircuit expansion", () => {
+    const circuit = new Circuit();
+    circuit.defineSubcircuit(
+      subcircuitDefinition("bjt-cell", ["c", "b", "e"], [
+        bjt("Qcell", "c", "b", "e", "NPN", 1e-14, 100, 0.02585, 0, 0, 0, 0, 2.4),
+      ]),
+    );
+    circuit.add(xInstance("X1", ["c1", "b1", "0"], "bjt-cell"));
+
+    const expanded = circuit.elements().find((element) => element.kind === "bjt");
+    expect(expanded?.kind).toBe("bjt");
+    if (expanded?.kind === "bjt") {
+      expectClose(expanded.saturationCurrentTemperatureExponent, 2.4);
+    }
+  });
+
   it("uses positive-to-negative orientation for current sources", () => {
     const circuit = new Circuit();
     circuit.add(currentSource("I1", "0", "n1", 1.0e-3));
@@ -1275,6 +1297,12 @@ describe("dcOp", () => {
 
     expect(coldResult.voltage("out")).toBeLessThan(nominalResult.voltage("out")!);
     expect(hotResult.voltage("out")).toBeGreaterThan(nominalResult.voltage("out")!);
+  });
+
+  it("uses the BJT model temperature exponent", () => {
+    const low = bjtAtTemperature(bjt("Qlow", "c", "b", "e", "NPN", 1e-14, 100, 0.02585, 0, 0, 0, 0, 0), 350);
+    const high = bjtAtTemperature(bjt("Qhigh", "c", "b", "e", "NPN", 1e-14, 100, 0.02585, 0, 0, 0, 0, 4), 350);
+    expect(high.saturationCurrent).toBeGreaterThan(low.saturationCurrent);
   });
 
   it("uses MOSFET temperature scaling in common-source drain voltage", () => {

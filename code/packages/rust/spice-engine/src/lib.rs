@@ -418,7 +418,7 @@ fn clone_subckt_element(
             element.gate_source_capacitance,
             element.gate_drain_capacitance,
         )),
-        Element::Bjt(element) => Element::Bjt(Bjt::with_model(
+        Element::Bjt(element) => Element::Bjt(Bjt::with_model_and_temperature_parameters(
             format!("{instance_name}.{}", element.name),
             map_subckt_node(&element.collector, instance_name, node_map),
             map_subckt_node(&element.base, instance_name, node_map),
@@ -431,6 +431,7 @@ fn clone_subckt_element(
             element.base_collector_capacitance,
             element.forward_transit_time,
             element.reverse_transit_time,
+            element.saturation_current_temperature_exponent,
         )),
         Element::Mosfet(element) => Element::Mosfet(Mosfet::with_model(
             format!("{instance_name}.{}", element.name),
@@ -2648,7 +2649,14 @@ pub fn bjt_at_temperature(
     let ratio = temperature_kelvin / nominal_temperature_kelvin;
     let exponent = energy_gap_electron_volts * ELECTRON_CHARGE / BOLTZMANN
         * (1.0 / nominal_temperature_kelvin - 1.0 / temperature_kelvin);
-    let saturation_scale = ratio.powi(3) * exponent.clamp(-100.0, 100.0).exp();
+    if !bjt.saturation_current_temperature_exponent.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "saturation-current temperature exponent must be finite".to_string(),
+        });
+    }
+    let saturation_scale = ratio.powf(bjt.saturation_current_temperature_exponent)
+        * exponent.clamp(-100.0, 100.0).exp();
     let mut adjusted = bjt.clone();
     adjusted.saturation_current *= saturation_scale;
     adjusted.thermal_voltage *= ratio;
@@ -2826,6 +2834,7 @@ pub struct Bjt {
     pub base_collector_capacitance: f64,
     pub forward_transit_time: f64,
     pub reverse_transit_time: f64,
+    pub saturation_current_temperature_exponent: f64,
 }
 
 impl Bjt {
@@ -2865,6 +2874,39 @@ impl Bjt {
         forward_transit_time: f64,
         reverse_transit_time: f64,
     ) -> Self {
+        Self::with_model_and_temperature_parameters(
+            name,
+            collector,
+            base,
+            emitter,
+            polarity,
+            saturation_current,
+            forward_beta,
+            thermal_voltage,
+            base_emitter_capacitance,
+            base_collector_capacitance,
+            forward_transit_time,
+            reverse_transit_time,
+            3.0,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub fn with_model_and_temperature_parameters(
+        name: impl Into<String>,
+        collector: impl Into<String>,
+        base: impl Into<String>,
+        emitter: impl Into<String>,
+        polarity: BjtPolarity,
+        saturation_current: f64,
+        forward_beta: f64,
+        thermal_voltage: f64,
+        base_emitter_capacitance: f64,
+        base_collector_capacitance: f64,
+        forward_transit_time: f64,
+        reverse_transit_time: f64,
+        saturation_current_temperature_exponent: f64,
+    ) -> Self {
         Self {
             name: name.into(),
             collector: collector.into(),
@@ -2878,6 +2920,7 @@ impl Bjt {
             base_collector_capacitance,
             forward_transit_time,
             reverse_transit_time,
+            saturation_current_temperature_exponent,
         }
     }
 }
@@ -3268,8 +3311,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     usize,
 )] = &[
     (ModelCardKind::Diode, 12, 18, 5, 3),
-    (ModelCardKind::Npn, 7, 15, 4, 4),
-    (ModelCardKind::Pnp, 7, 15, 4, 4),
+    (ModelCardKind::Npn, 8, 16, 4, 4),
+    (ModelCardKind::Pnp, 8, 16, 4, 4),
     (ModelCardKind::Njf, 5, 11, 5, 3),
     (ModelCardKind::Pjf, 5, 11, 5, 3),
     (ModelCardKind::Nmos, 18, 25, 6, 3),
@@ -3311,6 +3354,7 @@ const BJT_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("CBC", "CJC"),
     ("TF", "TF"),
     ("TR", "TR"),
+    ("XTI", "XTI"),
 ];
 const JFET_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("BETA", "BETA"),
@@ -3950,7 +3994,7 @@ pub fn bjt_from_model_card(
         ModelCardKind::Pnp => BjtPolarity::Pnp,
         _ => return Err(model_card_kind_error(&name, "BJT", model.kind)),
     };
-    Ok(Bjt::with_model(
+    Ok(Bjt::with_model_and_temperature_parameters(
         name,
         collector,
         base,
@@ -3963,6 +4007,7 @@ pub fn bjt_from_model_card(
         model_card_value(model, "CJC", 0.0),
         model_card_value(model, "TF", 0.0),
         model_card_value(model, "TR", 0.0),
+        model_card_value(model, "XTI", 3.0),
     ))
 }
 
@@ -23145,6 +23190,12 @@ fn validate_bjt(bjt: &Bjt) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: bjt.name.clone(),
             reason: "reverse transit time must be finite and non-negative".to_string(),
+        });
+    }
+    if !bjt.saturation_current_temperature_exponent.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "saturation-current temperature exponent must be finite".to_string(),
         });
     }
     Ok(())
