@@ -199,6 +199,27 @@ impl VerbatimSpan {
     pub fn byte_offset(&self) -> Option<usize> {
         self.byte_offset
     }
+
+    /// Build a span **without** the visible-content check.
+    ///
+    /// This exists for exactly one purpose: to model a value that arrives by
+    /// *deserialization*, which bypasses every constructor and is therefore the
+    /// one path on which a blank span can still reach a verifier. `verify.rs`
+    /// re-checks the invariant itself rather than trusting that a value was
+    /// built the honest way, and that defence needs a way to be exercised.
+    ///
+    /// It is `#[cfg(test)]` and `pub(crate)`, so no shipping path can reach it
+    /// — the door stays closed everywhere it matters.
+    #[cfg(test)]
+    pub(crate) fn from_parts_unchecked(
+        text: impl Into<String>,
+        byte_offset: Option<usize>,
+    ) -> Self {
+        Self {
+            text: text.into(),
+            byte_offset,
+        }
+    }
 }
 
 /// `true` if `s` contains at least one character a human would actually see.

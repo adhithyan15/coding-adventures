@@ -1,5 +1,78 @@
 # Changelog
 
+## [0.44.0] — 2026-07-21 — `verify`: re-execute a proof instead of believing it (RS-4 PR-D2)
+
+Implements the checkability invariant of `ADJ-REASON-MATH.md` §E.5.
+
+Every earlier PR in this arc made the audit trail *richer*. None made it
+*checkable*. A richer trail nobody can re-run is still **testimony** — the engine
+asserting what it did, in a format a confidently wrong system produces just as
+fluently. This module turns testimony into **evidence**: it never reads the
+trail's claims as authority, and instead goes back to the knowledge base and
+does the work again.
+
+### Added
+
+- **`logic_engine::verify`** — `verify_proof(&Proof, &KnowledgeBase, &dyn SnapshotStore)`
+  returns a `TraceVerification`: one verdict per step, in the proof's own
+  preorder. Every one of the seven `DerivationOrigin` variants is re-executed:
+  - `FromFact` / `FromRule` — the cited clause still exists and still unifies
+    with the goal the step claims it proved.
+  - `FromNegation` — the subgoal is **re-run** and must still have an empty
+    proof set. A truncated search is a `NegationSearchTruncated` **failure**,
+    not an absence: "I stopped looking" and "there is none" are different
+    claims, and conflating them is the accounting failure this arc exists to
+    prevent.
+  - `FromPrior` / `FromContribution` / `FromJointContribution` — the clause is
+    found by id, its evidence is re-observed, and `log(LR) × confidence` must
+    reproduce the step's inline delta.
+  - `FromPredicateContribution` — the slot is re-read and the comparison
+    re-evaluated on CPU. The trail's own `observed` and `threshold` are the
+    claim under test, never the inputs.
+- **Two independent verdicts per step.** `LogicStatus` (did the inference go
+  through?) and `QuoteStatus` (do the bytes say what it claims?) are reported
+  separately. Collapsing them would lose the most interesting failure in the
+  system: a *valid derivation from an invented fact*.
+- **`QuoteStatus`, the five-valued outcome of §E.5** — `Verified`,
+  `QuoteMissing` (the only status that fails a step), `Unverified`,
+  `SourceDrifted`, `SourceUnreachable`, plus `NotApplicable` for negation steps,
+  which rest on an absence and so have no sentence in any document. Separating
+  drift and unreachability from "the quote is wrong" means a third party's
+  outage — or a deliberate network denial — cannot invalidate a true trail.
+- **Anchored quote checking.** The check requires a recorded byte offset and
+  compares that exact range in the pinned snapshot. A span with no offset is
+  `Unverified`, never verified-by-searching: on a long document a short phrase
+  occurs *somewhere* with near-certainty, so an unanchored search would confirm
+  the words exist, not that they support the clause. `byte_len` is reported
+  alongside every verified span, because §E.3 declines to impose a minimum span
+  length — false precision — so the honest alternative is to surface it.
+- **`SnapshotStore`** (+ `NoSnapshots`, `MemorySnapshots`) — the seam through
+  which the caller supplies snapshot *bytes*, since `Provenance` stores only a
+  hash. A store that has nothing yields `Unverified(SnapshotUnavailable)`:
+  honestly unchecked, never a pass.
+
+### Security
+
+- **The verifier re-checks the blank-span invariant itself** rather than trusting
+  that a `VerbatimSpan` was built through its validating constructor. A blank or
+  zero-width-only span is a substring of *every* document at *every* offset, so
+  accepting one hands out `Verified` for free — and deserialization writes fields
+  directly, running no constructor. The duplication of `is_invisible` between
+  `provenance.rs` and `verify.rs` is deliberate: a check that only exists on the
+  producer's side does not defend the consumer.
+- **Every slice is bounds- and boundary-checked before it is taken.** An offset
+  past the end, or inside a UTF-8 character, yields a verdict
+  (`RangeOutOfBounds` / `NotACharBoundary`) rather than a panic. A verifier that
+  panics on malformed input is a denial-of-service handed to whoever writes the
+  trail.
+- **No network access, by construction.** There is no HTTP client in this
+  module. `locator`s are spider-authored strings from untrusted pages; fetching
+  one would make the verifier an SSRF primitive aimed by anyone who can land a
+  single KB entry. Live re-fetch belongs behind ADJ39's adapter registry.
+- **An empty trace is not fully verified.** `all()` over nothing is `true`, and
+  that vacuous truth would award the system's strongest verdict for having
+  checked nothing.
+
 ## [0.43.0] — 2026-07-21 — the verbatim quote and its pinned snapshot (RS-4 PR-D1)
 
 Implements `ADJ-REASON-MATH.md` §E.3 — the two fields that turn the audit trail

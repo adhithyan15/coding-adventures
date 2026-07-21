@@ -42,6 +42,7 @@ pub mod govern;
 pub mod lr_aggregate;
 pub mod proof_dag;
 pub mod provenance;
+pub mod verify;
 pub mod wmc;
 
 use std::collections::{HashMap, HashSet};
@@ -67,6 +68,11 @@ pub use lr_aggregate::{
 };
 pub use proof_dag::{DerivationOrigin, Proof, ProofDAG, ProofStep};
 pub use provenance::{Citation, ContentHash, Provenance, Quote, TrustTier, VerbatimSpan};
+pub use verify::{
+    verify_proof, verify_quote, verify_step, LogicFailure, LogicStatus, MemorySnapshots,
+    NoSnapshots, QuoteMiss, QuoteStatus, SnapshotStore, StepVerification, TraceVerification,
+    UnverifiedReason,
+};
 pub use wmc::weighted_model_count;
 
 // ---------------------------------------------------------------------------
