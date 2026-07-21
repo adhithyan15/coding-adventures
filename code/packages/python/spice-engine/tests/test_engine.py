@@ -411,7 +411,7 @@ def test_model_card_type_aliases_are_normalized() -> None:
 
 def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     coverage = model_card_supported_parameter_coverage()
-    assert len(coverage) == 71
+    assert len(coverage) == 72
     assert coverage[0].kind == "D"
     assert coverage[0].canonical_parameter == "IS"
     assert coverage[0].accepted_names == ("IS", "JS")
@@ -426,7 +426,7 @@ def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     assert "NMOS\tVT0\tVT0|VTO|VTH\t3" in table
     assert table.splitlines()[-1] == "PMOS\tMJ\tMJ\t1"
     records = model_card_supported_parameter_coverage_records()
-    assert len(records) == 71
+    assert len(records) == 72
     assert records[0] == {
         "kind": "D",
         "canonical_parameter": "IS",
@@ -443,8 +443,8 @@ def test_model_card_supported_parameter_coverage_summary_exports_are_stable() ->
     summary = model_card_supported_parameter_coverage_summary()
     assert len(summary) == 7
     assert summary[0].kind == "D"
-    assert summary[0].canonical_parameter_count == 11
-    assert summary[0].accepted_name_count == 17
+    assert summary[0].canonical_parameter_count == 12
+    assert summary[0].accepted_name_count == 18
     assert summary[0].aliased_parameter_count == 5
     assert summary[0].max_alias_count == 3
     assert summary[0].aliased_parameters == ("IS", "VT", "CJO", "VJ", "M")
@@ -469,7 +469,7 @@ def test_model_card_supported_parameter_coverage_summary_exports_are_stable() ->
         == "kind\tcanonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\taliased_parameters"
     )
-    assert table.splitlines()[1] == "D\t11\t17\t5\t3\tIS|VT|CJO|VJ|M"
+    assert table.splitlines()[1] == "D\t12\t18\t5\t3\tIS|VT|CJO|VJ|M"
     assert (
         table.splitlines()[-1]
         == "PMOS\t18\t25\t6\t3\tVT0|LAMBDA|N_SUB|T_NOM|CBS|CBD"
@@ -478,8 +478,8 @@ def test_model_card_supported_parameter_coverage_summary_exports_are_stable() ->
     assert len(records) == 7
     assert records[0] == {
         "kind": "D",
-        "canonical_parameter_count": "11",
-        "accepted_name_count": "17",
+        "canonical_parameter_count": "12",
+        "accepted_name_count": "18",
         "aliased_parameter_count": "5",
         "max_alias_count": "3",
         "aliased_parameters": "IS|VT|CJO|VJ|M",
@@ -487,7 +487,7 @@ def test_model_card_supported_parameter_coverage_summary_exports_are_stable() ->
     assert format_model_card_supported_parameter_coverage_summary_csv().startswith(
         "kind,canonical_parameter_count,accepted_name_count,"
         "aliased_parameter_count,max_alias_count,aliased_parameters\n"
-        "D,11,17,5,3,IS|VT|CJO|VJ|M\n"
+        "D,12,18,5,3,IS|VT|CJO|VJ|M\n"
     )
     assert (
         json.loads(format_model_card_supported_parameter_coverage_summary_json())
@@ -500,9 +500,9 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
     assert report.passed is True
     assert report.kind_count == 7
     assert report.expected_kind_count == 7
-    assert report.canonical_parameter_count == 71
-    assert report.expected_canonical_parameter_count == 71
-    assert report.accepted_name_count == 119
+    assert report.canonical_parameter_count == 72
+    assert report.expected_canonical_parameter_count == 72
+    assert report.accepted_name_count == 120
     assert report.aliased_parameter_count == 35
     assert report.max_alias_count == 4
     assert report.issues == ()
@@ -510,7 +510,7 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "true\t7\t7\t71\t71\t119\t35\t4\t0"
+        "true\t7\t7\t72\t72\t120\t35\t4\t0"
     )
     assert (
         format_model_card_supported_parameter_coverage_gate_issue_table(report)
@@ -538,8 +538,8 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
 
     assert report.passed is False
     assert report.kind_count == 7
-    assert report.canonical_parameter_count == 70
-    assert report.accepted_name_count == 116
+    assert report.canonical_parameter_count == 71
+    assert report.accepted_name_count == 117
     assert report.aliased_parameter_count == 34
     assert report.max_alias_count == 4
     assert len(report.issues) == 4
@@ -554,7 +554,7 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "false\t7\t7\t70\t71\t116\t34\t4\t4\n"
+        "false\t7\t7\t71\t72\t117\t34\t4\t4\n"
         "kind\tfield\tmessage\n"
         "NMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical "
         "supported parameters, found 17\n"
@@ -593,6 +593,7 @@ def test_model_card_aliases_build_device_instances() -> None:
             "MJ": 0.4,
             "FC": 0.35,
             "XTI": 2.2,
+            "EG": 1.05,
             "RS": 10.0,
         },
     )
@@ -605,6 +606,7 @@ def test_model_card_aliases_build_device_instances() -> None:
         "M": 0.4,
         "FC": 0.35,
         "XTI": 2.2,
+        "EG": 1.05,
     }
     assert diode_card.unsupported_parameters == ("RS",)
     diode_issues = model_card_unsupported_parameter_issues(diode_card)
@@ -641,6 +643,7 @@ def test_model_card_aliases_build_device_instances() -> None:
     assert pytest.approx(0.4) == diode_model.M
     assert pytest.approx(0.35) == diode_model.Fc
     assert pytest.approx(2.2) == diode_model.Xti
+    assert pytest.approx(1.05) == diode_model.Eg
 
     bjt_card = normalize_model_card("Qsmall", "npn", {"BETA": 125.0, "CBE": 2.0e-12})
     bjt_model = bjt_from_model_card("Q1", "c", "b", "e", bjt_card)
@@ -2199,7 +2202,7 @@ def test_subcircuit_expansion_preserves_complete_diode_model():
     cell = SubcircuitDefinition(
         "diode-cell",
         ("in",),
-        (Diode("Dcell", "in", "0", Vj=0.8, M=0.4, Fc=0.35, Xti=2.2),),
+        (Diode("Dcell", "in", "0", Vj=0.8, M=0.4, Fc=0.35, Xti=2.2, Eg=1.05),),
     )
     c = Circuit()
     c.define_subcircuit(cell)
@@ -2210,6 +2213,7 @@ def test_subcircuit_expansion_preserves_complete_diode_model():
     assert pytest.approx(0.4) == expanded.M
     assert expanded.Fc == pytest.approx(0.35)
     assert expanded.Xti == pytest.approx(2.2)
+    assert expanded.Eg == pytest.approx(1.05)
 
 
 def test_branch_current_in_voltage_source():
@@ -2331,6 +2335,18 @@ def test_diode_temperature_scaling_uses_model_saturation_current_exponent():
     assert default_hot.Is / flat_hot.Is == pytest.approx(
         (temperature_kelvin / nominal_temperature_kelvin) ** 3
     )
+
+
+def test_circuit_temperature_scaling_uses_model_energy_gap():
+    silicon = Circuit(elements=[Diode("D1", "a", "0", Eg=1.11)])
+    lower_gap = Circuit(elements=[Diode("D1", "a", "0", Eg=0.8)])
+
+    silicon_hot = circuit_at_temperature(silicon, 350.0)
+    lower_gap_hot = circuit_at_temperature(lower_gap, 350.0)
+
+    assert isinstance(silicon_hot.elements[0], Diode)
+    assert isinstance(lower_gap_hot.elements[0], Diode)
+    assert silicon_hot.elements[0].Is > lower_gap_hot.elements[0].Is
 
 
 def test_dc_temperature_sweep_runs_operating_points_and_formats_table():

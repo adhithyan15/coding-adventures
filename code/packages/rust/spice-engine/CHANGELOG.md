@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add diode model-card `EG` energy-gap support to temperature scaling,
+  preserving it through subcircuit expansion and matching Python and
+  TypeScript.
 - Add diode model-card `XTI` saturation-current temperature-exponent support,
   preserving it through subcircuit expansion and matching Python and
   TypeScript.
@@ -24,7 +27,7 @@
   `model_card_supported_parameter_coverage_gate_issue_records`,
   `format_model_card_supported_parameter_coverage_gate_issue_csv`, and
   `format_model_card_supported_parameter_coverage_gate_issue_json`, stable
-  release-gate checks and issue exports for the seven-kind, 71-row supported
+  release-gate checks and issue exports for the seven-kind, 72-row supported
   model-card parameter catalog, matching Python and TypeScript.
 - Add `model_card_supported_parameter_coverage_summary`,
   `format_model_card_supported_parameter_coverage_summary_table`,

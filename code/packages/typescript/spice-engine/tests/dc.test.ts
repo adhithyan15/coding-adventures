@@ -124,7 +124,7 @@ describe("dcOp", () => {
 
   it("exports stable model-card supported parameter coverage", () => {
     const coverage = modelCardSupportedParameterCoverage();
-    expect(coverage).toHaveLength(71);
+    expect(coverage).toHaveLength(72);
     expect(coverage[0]).toStrictEqual({
       kind: "D",
       canonicalParameter: "IS",
@@ -144,7 +144,7 @@ describe("dcOp", () => {
     expect(table).toContain("NMOS\tVT0\tVT0|VTO|VTH\t3");
     expect(table.split("\n").at(-1)).toBe("PMOS\tMJ\tMJ\t1");
     const records = modelCardSupportedParameterCoverageRecords();
-    expect(records).toHaveLength(71);
+    expect(records).toHaveLength(72);
     expect(records[0]).toStrictEqual({
       kind: "D",
       canonical_parameter: "IS",
@@ -162,8 +162,8 @@ describe("dcOp", () => {
     expect(summary).toHaveLength(7);
     expect(summary[0]).toStrictEqual({
       kind: "D",
-      canonicalParameterCount: 11,
-      acceptedNameCount: 17,
+      canonicalParameterCount: 12,
+      acceptedNameCount: 18,
       aliasedParameterCount: 5,
       maxAliasCount: 3,
       aliasedParameters: ["IS", "VT", "CJO", "VJ", "M"],
@@ -182,7 +182,7 @@ describe("dcOp", () => {
     expect(table.split("\n")[0]).toBe(
       "kind\tcanonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\taliased_parameters",
     );
-    expect(table.split("\n")[1]).toBe("D\t11\t17\t5\t3\tIS|VT|CJO|VJ|M");
+    expect(table.split("\n")[1]).toBe("D\t12\t18\t5\t3\tIS|VT|CJO|VJ|M");
     expect(table.split("\n").at(-1)).toBe(
       "PMOS\t18\t25\t6\t3\tVT0|LAMBDA|N_SUB|T_NOM|CBS|CBD",
     );
@@ -190,14 +190,14 @@ describe("dcOp", () => {
     expect(records).toHaveLength(7);
     expect(records[0]).toStrictEqual({
       kind: "D",
-      canonical_parameter_count: "11",
-      accepted_name_count: "17",
+      canonical_parameter_count: "12",
+      accepted_name_count: "18",
       aliased_parameter_count: "5",
       max_alias_count: "3",
       aliased_parameters: "IS|VT|CJO|VJ|M",
     });
     expect(formatModelCardSupportedParameterCoverageSummaryCsv()).toMatch(
-      /^kind,canonical_parameter_count,accepted_name_count,aliased_parameter_count,max_alias_count,aliased_parameters\nD,11,17,5,3,IS\|VT\|CJO\|VJ\|M\n/,
+      /^kind,canonical_parameter_count,accepted_name_count,aliased_parameter_count,max_alias_count,aliased_parameters\nD,12,18,5,3,IS\|VT\|CJO\|VJ\|M\n/,
     );
     expect(JSON.parse(formatModelCardSupportedParameterCoverageSummaryJson())).toStrictEqual(records);
   });
@@ -209,15 +209,15 @@ describe("dcOp", () => {
       passed: true,
       kindCount: 7,
       expectedKindCount: 7,
-      canonicalParameterCount: 71,
-      expectedCanonicalParameterCount: 71,
-      acceptedNameCount: 119,
+      canonicalParameterCount: 72,
+      expectedCanonicalParameterCount: 72,
+      acceptedNameCount: 120,
       aliasedParameterCount: 35,
       maxAliasCount: 4,
       issues: [],
     });
     expect(formatModelCardSupportedParameterCoverageGateReport(report)).toBe(
-      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t71\t71\t119\t35\t4\t0",
+      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t72\t72\t120\t35\t4\t0",
     );
     expect(formatModelCardSupportedParameterCoverageGateIssueTable(report)).toBe(
       "kind\tfield\tmessage",
@@ -240,8 +240,8 @@ describe("dcOp", () => {
 
     expect(report.passed).toBe(false);
     expect(report.kindCount).toBe(7);
-    expect(report.canonicalParameterCount).toBe(70);
-    expect(report.acceptedNameCount).toBe(116);
+    expect(report.canonicalParameterCount).toBe(71);
+    expect(report.acceptedNameCount).toBe(117);
     expect(report.aliasedParameterCount).toBe(34);
     expect(report.maxAliasCount).toBe(4);
     expect(report.issues).toHaveLength(4);
@@ -256,7 +256,7 @@ describe("dcOp", () => {
       message: "expected NMOS max alias count 3, found 2",
     });
     expect(formatModelCardSupportedParameterCoverageGateReport(report)).toBe(
-      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t70\t71\t116\t34\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical supported parameters, found 17\nNMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card names, found 22\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2",
+      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t71\t72\t117\t34\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical supported parameters, found 17\nNMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card names, found 22\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2",
     );
     const records = modelCardSupportedParameterCoverageGateIssueRecords(report);
     expect(records[0]).toStrictEqual({
@@ -281,6 +281,7 @@ describe("dcOp", () => {
       MJ: 0.4,
       FC: 0.35,
       XTI: 2.2,
+      EG: 1.05,
       RS: 10.0,
     });
     const diodeModel = diodeFromModelCard("D1", "a", "k", diodeCard);
@@ -292,6 +293,7 @@ describe("dcOp", () => {
       M: 0.4,
       FC: 0.35,
       XTI: 2.2,
+      EG: 1.05,
     });
     expect(diodeCard.unsupportedParameters).toStrictEqual(["RS"]);
     const diodeIssues = modelCardUnsupportedParameterIssues(diodeCard);
@@ -326,6 +328,7 @@ describe("dcOp", () => {
     expectClose(diodeModel.gradingCoefficient, 0.4);
     expectClose(diodeModel.forwardBiasDepletionCoefficient, 0.35);
     expectClose(diodeModel.saturationCurrentTemperatureExponent, 2.2);
+    expectClose(diodeModel.energyGapElectronVolts, 1.05);
 
     const bjtCard = normalizeModelCard("Qsmall", "npn", { BETA: 125.0, CBE: 2.0e-12 });
     const bjtModel = bjtFromModelCard("Q1", "c", "b", "e", bjtCard);
@@ -944,7 +947,7 @@ describe("dcOp", () => {
     const circuit = new Circuit();
     circuit.defineSubcircuit(
       subcircuitDefinition("diode-cell", ["in"], [
-        diode("Dcell", "in", "0", 2.0e-14, 0.026, 1.2, 6.0, 2.0e-6, 1.5e-12, 4.0e-9, 0.8, 0.4, 0.35, 2.2),
+        diode("Dcell", "in", "0", 2.0e-14, 0.026, 1.2, 6.0, 2.0e-6, 1.5e-12, 4.0e-9, 0.8, 0.4, 0.35, 2.2, 1.05),
       ]),
     );
     circuit.add(xInstance("X1", ["a"], "diode-cell"));
@@ -958,6 +961,7 @@ describe("dcOp", () => {
     expectClose(expanded.gradingCoefficient, 0.4);
     expectClose(expanded.forwardBiasDepletionCoefficient, 0.35);
     expectClose(expanded.saturationCurrentTemperatureExponent, 2.2);
+    expectClose(expanded.energyGapElectronVolts, 1.05);
   });
 
   it("uses positive-to-negative orientation for current sources", () => {
@@ -1180,6 +1184,23 @@ describe("dcOp", () => {
       (temperatureKelvin / nominalTemperatureKelvin) ** 3,
       12,
     );
+  });
+
+  it("uses the diode model energy gap for circuit temperature scaling", () => {
+    const silicon = new Circuit();
+    silicon.add(diode("D1", "a", "0", 1.0e-15, 0.02585, 1.0, undefined, 1.0e-3, 0.0, 0.0, 1.0, 0.5, 0.5, 3.0, 1.11));
+    const lowerGap = new Circuit();
+    lowerGap.add(diode("D1", "a", "0", 1.0e-15, 0.02585, 1.0, undefined, 1.0e-3, 0.0, 0.0, 1.0, 0.5, 0.5, 3.0, 0.8));
+
+    const siliconHot = circuitAtTemperature(silicon, 350.0).elements()[0];
+    const lowerGapHot = circuitAtTemperature(lowerGap, 350.0).elements()[0];
+
+    expect(siliconHot.kind).toBe("diode");
+    expect(lowerGapHot.kind).toBe("diode");
+    if (siliconHot.kind !== "diode" || lowerGapHot.kind !== "diode") {
+      throw new Error("expected diode temperature fixtures");
+    }
+    expect(siliconHot.saturationCurrent).toBeGreaterThan(lowerGapHot.saturationCurrent);
   });
 
   it("runs DC temperature sweeps and formats stable table output", () => {

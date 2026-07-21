@@ -492,6 +492,7 @@ class Diode:
     M: float = 0.5  # junction grading coefficient
     Fc: float = 0.5  # forward-bias depletion coefficient
     Xti: float = 3.0  # saturation-current temperature exponent
+    Eg: float = 1.11  # energy gap in electron volts
 
 
 @dataclass(frozen=True, slots=True)

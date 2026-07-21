@@ -33,14 +33,14 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language diode saturation-current temperature exponent.
+1. Cross-language diode energy gap.
    - Status: current PR completion candidate.
-   - Add Berkeley diode `XTI` saturation-current temperature-exponent
-     model-card support in Rust, Python, and TypeScript.
-   - Apply `XTI` to diode saturation-current temperature scaling and preserve
-     the full diode model through hierarchical subcircuit expansion.
-   - Extend the supported-parameter coverage gate from 70 to 71 canonical rows
-     and lock temperature scaling across all three engines.
+   - Add Berkeley diode `EG` energy-gap model-card support in Rust, Python, and
+     TypeScript.
+   - Apply each diode model's `EG` value to saturation-current temperature
+     scaling and preserve it through hierarchical subcircuit expansion.
+   - Extend the supported-parameter coverage gate from 71 to 72 canonical rows
+     and lock model-specific temperature scaling across all three engines.
 
 ## Completed Slices
 
@@ -2978,6 +2978,13 @@ the Rust, Python, and TypeScript surfaces together.
      the continuous Berkeley piecewise depletion-capacitance law around the
      `FC * VJ` transition in AC and transient analysis.
    - The supported-parameter release gate now covers 70 canonical rows.
+
+216. Cross-language diode saturation-current temperature exponent.
+   - Status: completed in PR 8716.
+   - Rust, Python, and TypeScript diode model cards now accept `XTI` and apply
+     it to saturation-current temperature scaling.
+   - Hierarchical subcircuit expansion now preserves the complete diode model,
+     and the supported-parameter release gate now covers 71 canonical rows.
 
 ## Backlog
 

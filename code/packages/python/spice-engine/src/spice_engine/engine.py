@@ -404,7 +404,7 @@ def circuit_at_temperature(
                 element,
                 temperature_kelvin,
                 nominal_temperature_kelvin=nominal_temperature_kelvin,
-                energy_gap_ev=energy_gap_ev,
+                energy_gap_ev=element.Eg,
             )
         if isinstance(element, BJT):
             return bjt_at_temperature(
@@ -585,6 +585,7 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
             element.M,
             element.Fc,
             element.Xti,
+            element.Eg,
         )
     if isinstance(element, JFET):
         return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_, element.Cgs, element.Cgd)
@@ -8667,6 +8668,8 @@ def _diode_effective_vt(el: Diode) -> float:
         raise ValueError(
             f"{el.name}: diode saturation-current temperature exponent must be finite"
         )
+    if not math.isfinite(el.Eg) or el.Eg <= 0.0:
+        raise ValueError(f"{el.name}: diode energy gap must be finite and positive")
     if not math.isfinite(el.Tt) or el.Tt < 0.0:
         raise ValueError(f"{el.name}: diode transit time must be finite and non-negative")
     return el.Vt * el.N
@@ -13804,6 +13807,7 @@ def sens_dc(
                     el.M,
                     el.Fc,
                     el.Xti,
+                    el.Eg,
                 ),
             )
 
@@ -14053,6 +14057,7 @@ def _vary_element(el: Element, tolerance: float, distribution: str) -> Element:
             el.M,
             el.Fc,
             el.Xti,
+            el.Eg,
         )
 
     if isinstance(el, BJT):

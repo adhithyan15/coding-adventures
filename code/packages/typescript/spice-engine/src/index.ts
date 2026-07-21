@@ -1675,6 +1675,7 @@ export interface Diode {
   readonly gradingCoefficient: number;
   readonly forwardBiasDepletionCoefficient: number;
   readonly saturationCurrentTemperatureExponent: number;
+  readonly energyGapElectronVolts: number;
 }
 
 export type JfetPolarity = "NJF" | "PJF";
@@ -1985,7 +1986,7 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_KINDS: readonly ModelCardKind[] = 
 const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   Record<ModelCardKind, readonly [number, number, number, number]>
 > = {
-  D: [11, 17, 5, 3],
+  D: [12, 18, 5, 3],
   NPN: [7, 15, 4, 4],
   PNP: [7, 15, 4, 4],
   NJF: [5, 11, 5, 3],
@@ -3573,7 +3574,7 @@ function cloneSubcktElement(
     case "custom-model":
       return { ...element, name, positive: mapSubcktNode(element.positive, instanceName, nodeMap), negative: mapSubcktNode(element.negative, instanceName, nodeMap) };
     case "diode":
-      return diode(name, mapSubcktNode(element.anode, instanceName, nodeMap), mapSubcktNode(element.cathode, instanceName, nodeMap), element.saturationCurrent, element.thermalVoltage, element.emissionCoefficient, element.breakdownVoltage, element.breakdownCurrent, element.junctionCapacitance, element.transitTime, element.junctionPotential, element.gradingCoefficient, element.forwardBiasDepletionCoefficient, element.saturationCurrentTemperatureExponent);
+      return diode(name, mapSubcktNode(element.anode, instanceName, nodeMap), mapSubcktNode(element.cathode, instanceName, nodeMap), element.saturationCurrent, element.thermalVoltage, element.emissionCoefficient, element.breakdownVoltage, element.breakdownCurrent, element.junctionCapacitance, element.transitTime, element.junctionPotential, element.gradingCoefficient, element.forwardBiasDepletionCoefficient, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts);
     case "jfet":
       return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation, element.gateSourceCapacitance, element.gateDrainCapacitance);
     case "bjt":
@@ -7534,6 +7535,7 @@ export function diode(
   gradingCoefficient = 0.5,
   forwardBiasDepletionCoefficient = 0.5,
   saturationCurrentTemperatureExponent = 3.0,
+  energyGapElectronVolts = 1.11,
 ): Diode {
   return {
     kind: "diode",
@@ -7551,6 +7553,7 @@ export function diode(
     gradingCoefficient,
     forwardBiasDepletionCoefficient,
     saturationCurrentTemperatureExponent,
+    energyGapElectronVolts,
   };
 }
 
@@ -7663,7 +7666,7 @@ export function circuitAtTemperature(
           element,
           temperatureKelvin,
           nominalTemperatureKelvin,
-          energyGapElectronVolts,
+          element.energyGapElectronVolts,
         ),
       );
     } else if (element.kind === "bjt") {
@@ -7821,6 +7824,7 @@ const DIODE_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   MJ: "M",
   FC: "FC",
   XTI: "XTI",
+  EG: "EG",
 };
 
 const BJT_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
@@ -8307,6 +8311,7 @@ export function diodeFromModelCard(
     p.M ?? 0.5,
     p.FC ?? 0.5,
     p.XTI ?? 3.0,
+    p.EG ?? 1.11,
   );
 }
 
@@ -19200,6 +19205,9 @@ function validateDiode(element: Diode): void {
       element.name,
       "saturation-current temperature exponent must be finite",
     );
+  }
+  if (!Number.isFinite(element.energyGapElectronVolts) || element.energyGapElectronVolts <= 0.0) {
+    throw invalidElement(element.name, "energy gap must be finite and positive");
   }
   if (!Number.isFinite(element.transitTime) || element.transitTime < 0.0) {
     throw invalidElement(element.name, "transit time must be finite and non-negative");
