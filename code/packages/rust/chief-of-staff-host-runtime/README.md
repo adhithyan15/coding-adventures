@@ -7,9 +7,18 @@ tool and routes calls only to that host. Activation fails unless every
 allowlisted tool has been registered and every definition fits those bounds.
 
 This is the first production-shaped replacement for wiring an unrestricted
-`InMemoryToolRuntime` directly inside each Chief job. It deliberately does not
-spawn Deno yet; process supervision and host RPC can wrap the same active
-runtime without changing catalog policy.
+`InMemoryToolRuntime` directly inside each Chief job. Profiles can now activate
+either that in-process runtime or a supervised external-host runtime. The
+external path adapts the repo-owned `generic-job-runtime` stdio process pool,
+requires exactly one process specification per profile host, routes each RPC to
+the sole owner of its tool id, exposes worker health snapshots, applies bounded
+restart policy after crashes, and supports orchestrator shutdown.
+
+The child protocol is the versioned `generic-job-protocol` envelope carrying a
+`HostRpcRequest` and `HostRpcResponse`. This proves the process and RPC boundary
+without weakening the profile gate. A deny-all Deno worker can implement the
+same JSON-lines protocol in the next slice; it does not need a parallel process
+manager or a second tool-routing policy.
 
 An orchestrator profile has this shape:
 
