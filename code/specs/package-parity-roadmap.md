@@ -183,7 +183,7 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Perl | 0 | Complete; paired data-structure/storage wave |
 | C# | 0 | Complete; paired native package wave |
 | F# | 0 | Complete; paired native package wave |
-| Haskell | 5 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
+| Haskell | 4 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
 | Kotlin | 58 | Move with Java |
@@ -703,6 +703,19 @@ block families, multi-block RLE, dictionary-id and content-size header forms,
 checksums, deterministic binary data, compression ratios, and malformed
 frames. The package now spans 13 implementation lanes, reduces the
 high-consensus backlog to 280 slots, and leaves 5 gaps in the Haskell lane.
+
+The thirtieth Haskell high-consensus slice is complete: `barcode-1d` now
+coordinates the six existing native Haskell symbology packages for Code 39,
+Codabar, Code 128, EAN-13, ITF, and UPC-A. It normalizes user-facing
+symbology names, preserves typed encoder and layout failures, forwards shared
+paint options and Codabar guards, emits backend-neutral `PaintScene` values,
+and renders them through the pure ASCII Paint VM without claiming an absent
+native raster backend. Its package-native suite exercises 13 examples with
+93% expression and 100% alternative coverage, including every route, default
+selection, normalized spellings, unsupported names, custom geometry, custom
+guards, typed failures, and ASCII backend errors. The package now spans 12
+implementation lanes, reduces the high-consensus backlog to 279 slots, and
+leaves 4 gaps in the Haskell lane.
 
 Recommended family order:
 
