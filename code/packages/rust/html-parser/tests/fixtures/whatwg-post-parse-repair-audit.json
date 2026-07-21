@@ -1,5 +1,5 @@
 {
-  "case_count": 6,
+  "case_count": 5,
   "cases": [
     {
       "axis": "adoption-table-foster-parenting",
@@ -30,18 +30,11 @@
       "id": "tricky01-dat-7",
       "reason": "remaining repair evidence for paragraph and anchor recovery crossing table row-group insertion modes",
       "source": "tricky01.dat:7"
-    },
-    {
-      "axis": "insanely-badly-nested-table-sequence",
-      "id": "tricky01-dat-8",
-      "reason": "remaining finish-time recovery for html5lib's insanely badly nested table sequence",
-      "source": "tricky01.dat:8"
     }
   ],
   "counts_by_axis": {
     "adoption-table-foster-parenting": 1,
     "fostered-nobr-cell-continuation": 2,
-    "insanely-badly-nested-table-sequence": 1,
     "tricky-center-table-void-recovery": 1,
     "tricky-paragraph-rowgroup-recovery": 1
   },

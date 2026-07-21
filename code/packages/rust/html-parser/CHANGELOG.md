@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- The insanely badly nested html5lib table sequence is now repaired while
+  processing the EOF token, retiring one finish-time post-parse shim while
+  preserving its focused table and formatting audit coverage.
 - The WHATWG post-parse repair audit now has a focused fixture and Rust replay
   guard over the remaining html5lib rows that still justify finish-time repair
   shims.

@@ -46,12 +46,6 @@ const POST_PARSE_REPAIR_EVIDENCE: &[PostParseRepairEvidence] = &[
         data_snippet: "<b><nobr>1<table><tr><td><nobr></b><i><nobr>2<nobr></i>3",
     },
     PostParseRepairEvidence {
-        id: "tricky01-dat-8",
-        source: "tricky01.dat:8",
-        axis: "insanely-badly-nested-table-sequence",
-        data_snippet: "This page contains an insanely badly-nested tag sequence.",
-    },
-    PostParseRepairEvidence {
         id: "tricky01-dat-6",
         source: "tricky01.dat:6",
         axis: "tricky-center-table-void-recovery",
@@ -189,37 +183,6 @@ const POST_PARSE_REPAIR_CROSS_AXIS_EVIDENCE: &[PostParseRepairCrossAxisEvidence]
             ("table", WHATWG_TABLE_AUDIT, "row-group-boundary"),
         ],
     },
-    PostParseRepairCrossAxisEvidence {
-        id: "tricky01-dat-8",
-        suites: &[
-            (
-                "block-boundary",
-                WHATWG_BLOCK_BOUNDARY_AUDIT,
-                "block-table-boundary",
-            ),
-            (
-                "form-interactive",
-                WHATWG_FORM_INTERACTIVE_AUDIT,
-                "interactive-formatting",
-            ),
-            (
-                "formatting",
-                WHATWG_FORMATTING_AUDIT,
-                "interactive-formatting-boundary",
-            ),
-            (
-                "legacy-element",
-                WHATWG_LEGACY_ELEMENT_AUDIT,
-                "tricky-parser-recovery",
-            ),
-            (
-                "paragraph",
-                WHATWG_PARAGRAPH_AUDIT,
-                "paragraph-table-boundary",
-            ),
-            ("table", WHATWG_TABLE_AUDIT, "cell-boundary"),
-        ],
-    },
 ];
 
 #[derive(Debug, Deserialize)]
@@ -261,10 +224,9 @@ fn whatwg_post_parse_repair_audit_fixture_parses() {
     assert_eq!(suite.source_fixture, "html5lib-tree-construction-smoke.dat");
     assert!(!suite.description.is_empty());
     assert_eq!(suite.case_count, suite.cases.len());
-    assert_eq!(suite.case_count, 6);
+    assert_eq!(suite.case_count, 5);
     assert_axis_count(&suite, "adoption-table-foster-parenting", 1);
     assert_axis_count(&suite, "fostered-nobr-cell-continuation", 2);
-    assert_axis_count(&suite, "insanely-badly-nested-table-sequence", 1);
     assert_axis_count(&suite, "tricky-center-table-void-recovery", 1);
     assert_axis_count(&suite, "tricky-paragraph-rowgroup-recovery", 1);
 }
