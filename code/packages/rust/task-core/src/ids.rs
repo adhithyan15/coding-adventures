@@ -84,6 +84,10 @@ id_type!(
     FieldId
 );
 id_type!(
+    /// Identifies a label (a colour-coded tag applied to tasks).
+    LabelId
+);
+id_type!(
     /// Identifies a captured baseline (a schedule snapshot).
     BaselineId
 );
