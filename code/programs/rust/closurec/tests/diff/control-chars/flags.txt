@@ -1,0 +1,4 @@
+--compilation_level
+SIMPLE
+--js
+tests/diff/control-chars/input/a.js
