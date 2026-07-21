@@ -38,6 +38,18 @@ receives no differentiated OS permissions; it communicates only through the
 versioned stdio RPC envelope. The executable test proves all five observable OS
 surfaces are denied and that post-signing code tampering prevents launch.
 
+The trusted build and runtime paths now share `DenoLaunchPlan`. It emits the
+literal `launch.sh` stored inside the signed package, verifies that exact script
+before activation, and derives the child process arguments from the same fixed
+flag list. A package cannot sign one command while the runtime executes another.
+
+Subprocess-originated `HostRpcRequest` values can be handled by
+`ActiveHostToolRuntime::handle_rpc` or routed across profile hosts with
+`ActiveOrchestratorRuntime::handle_rpc`. The Rust host parses the untrusted JSON,
+constructs the canonical D18D invocation context, and executes only the
+allowlisted, capability-checked handler catalog. Unknown tools and malformed
+arguments are rejected before any handler can run.
+
 An orchestrator profile has this shape:
 
 ```json

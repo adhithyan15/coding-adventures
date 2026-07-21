@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Add a canonical deny-all Deno launch plan shared by package generation,
+  verification, and process activation.
+- Route subprocess host RPC calls through profile-gated D18D handlers in Rust.
+
+## Unreleased
+
 - Added JSON host profiles with exact D18D tool allowlists, privilege ceilings,
   capability coverage checks, catalog completeness validation, and an active
   runtime wrapper for executable Chief jobs.

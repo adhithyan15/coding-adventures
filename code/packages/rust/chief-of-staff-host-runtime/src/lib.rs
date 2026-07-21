@@ -5,14 +5,15 @@
 mod package;
 
 pub use package::{
-    verify_agent_package, PackageKeyType, PackageKeyring, PackageVerificationError,
+    verify_agent_package, DenoLaunchPlan, PackageKeyType, PackageKeyring, PackageVerificationError,
     TrustedPackageKey, VerifiedAgentPackage,
 };
 
 use chief_of_staff_tool_api::{
-    validate_tool_id, InMemoryToolRuntime, PrivilegeTier, ToolApiError, ToolDefinition,
-    ToolExecutionTrace, ToolHandler, ToolInvocationRequest,
+    validate_tool_id, InMemoryToolRuntime, PrivilegeTier, RequestedBy, ToolApiError,
+    ToolDefinition, ToolExecutionTrace, ToolHandler, ToolInvocationRequest,
 };
+use coding_adventures_json_serializer::serialize as serialize_json;
 use coding_adventures_json_value::{parse as parse_json, JsonValue};
 use generic_job_protocol::{JobRequest, JobResponse};
 use generic_job_runtime::{
@@ -412,30 +413,16 @@ impl HostProcessSpec {
         package: &VerifiedAgentPackage,
         restart_policy: StdioWorkerRestartPolicy,
     ) -> Result<Self, HostRuntimeError> {
-        let entrypoint = package.path().join("code/agent_runtime.ts");
+        let entrypoint = package.path().join(DenoLaunchPlan::entrypoint_relative());
         if !entrypoint.is_file() {
             return Err(HostRuntimeError::MissingDenoEntrypoint(entrypoint));
         }
-        let entrypoint = entrypoint
-            .to_str()
-            .ok_or_else(|| HostRuntimeError::InvalidDenoEntrypoint(entrypoint.clone()))?;
         Ok(Self::new(
             host_id,
             StdioWorkerCommand::new(
                 deno_program,
-                vec![
-                    "run".to_string(),
-                    "--quiet".to_string(),
-                    "--no-prompt".to_string(),
-                    "--deny-net".to_string(),
-                    "--deny-read".to_string(),
-                    "--deny-write".to_string(),
-                    "--deny-env".to_string(),
-                    "--deny-sys".to_string(),
-                    "--deny-run".to_string(),
-                    "--deny-ffi".to_string(),
-                    entrypoint.to_string(),
-                ],
+                DenoLaunchPlan::arguments(&entrypoint)
+                    .map_err(|_| HostRuntimeError::InvalidDenoEntrypoint(entrypoint.clone()))?,
             ),
             restart_policy,
         ))
@@ -659,6 +646,19 @@ impl ActiveOrchestratorRuntime {
             .expect("active orchestrator must retain each tool owner")
             .invoke_with_events(request))
     }
+
+    /// Dispatch one subprocess-originated call through the canonical D18D
+    /// handler runtime owned by the tool's profile host.
+    pub fn handle_rpc(&self, request: HostRpcRequest) -> Result<HostRpcResponse, HostRuntimeError> {
+        let host_id = self
+            .tool_owners
+            .get(&request.tool_id)
+            .ok_or_else(|| HostRuntimeError::ToolNotAllowed(request.tool_id.clone()))?;
+        self.hosts
+            .get(host_id)
+            .expect("active orchestrator must retain each tool owner")
+            .handle_rpc(request)
+    }
 }
 
 impl ActiveHostToolRuntime {
@@ -684,6 +684,43 @@ impl ActiveHostToolRuntime {
 
     pub fn definitions(&self) -> Vec<&ToolDefinition> {
         self.runtime.list()
+    }
+
+    /// Convert an untrusted subprocess RPC frame into the repository-owned
+    /// invocation contract, then execute only through registered handlers.
+    pub fn handle_rpc(&self, request: HostRpcRequest) -> Result<HostRpcResponse, HostRuntimeError> {
+        validate_label("call_id", &request.call_id)?;
+        validate_tool_id(&request.tool_id).map_err(HostRuntimeError::ToolApi)?;
+        if !self.profile.allows_tool(&request.tool_id) {
+            return Err(HostRuntimeError::ToolNotAllowed(request.tool_id));
+        }
+        let arguments = parse_json(&request.arguments_json)
+            .map_err(|error| HostRuntimeError::InvalidRpcArguments(error.message.to_string()))?;
+        let invocation = ToolInvocationRequest {
+            call_id: request.call_id,
+            tool_id: request.tool_id,
+            arguments,
+            requested_by: RequestedBy::Agent,
+            session_id: None,
+            job_id: None,
+            agent_id: Some(self.profile.host_id.clone()),
+            user_id: None,
+            requested_at: 0,
+            deadline_at: None,
+            idempotency_key: None,
+        };
+        let trace = self.runtime.invoke_with_events(&invocation);
+        if let Some(error) = trace.result.error {
+            return Err(HostRuntimeError::ToolExecution {
+                tool_id: invocation.tool_id,
+                kind: error.kind.to_string(),
+                message: error.message,
+            });
+        }
+        let output = trace.result.output.unwrap_or(JsonValue::Null);
+        let output_json = serialize_json(&output)
+            .map_err(|error| HostRuntimeError::InvalidRpcOutput(error.message))?;
+        Ok(HostRpcResponse { output_json })
     }
 }
 
@@ -720,6 +757,12 @@ pub enum HostRuntimeError {
     MissingProcessHosts(Vec<String>),
     UnknownProcessHost(String),
     InvalidRpcArguments(String),
+    InvalidRpcOutput(String),
+    ToolExecution {
+        tool_id: String,
+        kind: String,
+        message: String,
+    },
     ProcessIo {
         host_id: String,
         message: String,
@@ -801,6 +844,14 @@ impl Display for HostRuntimeError {
             Self::InvalidRpcArguments(message) => {
                 write!(f, "invalid host RPC arguments JSON: {message}")
             }
+            Self::InvalidRpcOutput(message) => {
+                write!(f, "host RPC output could not be serialized: {message}")
+            }
+            Self::ToolExecution {
+                tool_id,
+                kind,
+                message,
+            } => write!(f, "host handler '{tool_id}' failed with {kind}: {message}"),
             Self::ProcessIo { host_id, message } => {
                 write!(f, "host '{host_id}' process I/O failed: {message}")
             }
@@ -926,7 +977,10 @@ mod tests {
     use coding_adventures_ed25519::{generate_keypair, sign};
     use generic_job_protocol::JobResult;
     use std::process::Command;
+    use std::sync::atomic::{AtomicU64, Ordering};
     use std::time::{SystemTime, UNIX_EPOCH};
+
+    static NEXT_PACKAGE_ID: AtomicU64 = AtomicU64::new(0);
 
     const PROFILE: &str = r#"{
       "profile_id": "test_profile",
@@ -1018,16 +1072,17 @@ mod tests {
 
     fn signed_deno_package() -> (std::path::PathBuf, PackageKeyring) {
         let path = std::env::temp_dir().join(format!(
-            "chief-deno-package-{}-{}",
+            "chief-deno-package-{}-{}-{}",
             std::process::id(),
             SystemTime::now()
                 .duration_since(UNIX_EPOCH)
                 .unwrap()
-                .as_nanos()
+                .as_nanos(),
+            NEXT_PACKAGE_ID.fetch_add(1, Ordering::Relaxed)
         ));
         std::fs::create_dir_all(path.join("code")).unwrap();
         std::fs::write(path.join("manifest.json"), b"{\"runtime\":\"typescript\"}").unwrap();
-        std::fs::write(path.join("launch.sh"), b"generated by host runtime").unwrap();
+        DenoLaunchPlan::write_launch_script(&path).unwrap();
         std::fs::write(path.join("PUBKEY_ID"), b"dev-deno").unwrap();
         std::fs::write(
             path.join("code/agent_runtime.ts"),
@@ -1110,6 +1165,94 @@ while (true) {
                 .output,
             Some(JsonValue::String("ok".to_string()))
         );
+    }
+
+    #[test]
+    fn active_host_dispatches_rpc_through_profile_gated_handler() {
+        let mut runtime = HostProfileRuntime::from_json(PROFILE).unwrap();
+        runtime
+            .register_handler(
+                definition("demo.read", PrivilegeTier::Tier1, &["demo_read"]),
+                |arguments, context: chief_of_staff_tool_api::ToolExecutionContext| {
+                    assert_eq!(context.requested_by, RequestedBy::Agent);
+                    assert_eq!(context.agent_id.as_deref(), Some("test_host"));
+                    assert_eq!(arguments, JsonValue::Object(vec![]));
+                    Ok(ToolHandlerOutput::new(JsonValue::String(
+                        "rust".to_string(),
+                    )))
+                },
+            )
+            .unwrap();
+        let active = runtime.activate().unwrap();
+
+        let response = active
+            .handle_rpc(HostRpcRequest {
+                call_id: "rpc_1".to_string(),
+                tool_id: "demo.read".to_string(),
+                arguments_json: "{}".to_string(),
+            })
+            .unwrap();
+
+        assert_eq!(
+            parse_json(&response.output_json).unwrap(),
+            JsonValue::String("rust".to_string())
+        );
+    }
+
+    #[test]
+    fn active_host_rejects_rpc_before_unregistered_handler_execution() {
+        let mut runtime = HostProfileRuntime::from_json(PROFILE).unwrap();
+        runtime
+            .register_handler(
+                definition("demo.read", PrivilegeTier::Tier1, &["demo_read"]),
+                |_arguments, _context| {
+                    Ok(ToolHandlerOutput::new(JsonValue::String("ok".to_string())))
+                },
+            )
+            .unwrap();
+        let active = runtime.activate().unwrap();
+
+        assert!(matches!(
+            active.handle_rpc(HostRpcRequest {
+                call_id: "rpc_2".to_string(),
+                tool_id: "demo.write".to_string(),
+                arguments_json: "{}".to_string(),
+            }),
+            Err(HostRuntimeError::ToolNotAllowed(tool_id)) if tool_id == "demo.write"
+        ));
+    }
+
+    #[test]
+    fn deno_process_arguments_match_signed_launch_plan() {
+        let (package_path, keyring) = signed_deno_package();
+        let package = verify_agent_package(&package_path, &keyring).unwrap();
+        let spec = HostProcessSpec::deny_all_deno(
+            "deno_host",
+            "deno",
+            &package,
+            StdioWorkerRestartPolicy::Never,
+        )
+        .unwrap();
+        let expected = DenoLaunchPlan::launch_script()
+            .lines()
+            .nth(1)
+            .unwrap()
+            .strip_prefix("exec deno ")
+            .unwrap()
+            .split_whitespace()
+            .map(str::to_string)
+            .collect::<Vec<_>>();
+        assert_eq!(
+            spec.command.args[..spec.command.args.len() - 1],
+            expected[..expected.len() - 1]
+        );
+        assert!(spec
+            .command
+            .args
+            .last()
+            .unwrap()
+            .ends_with(expected.last().unwrap()));
+        std::fs::remove_dir_all(package_path).unwrap();
     }
 
     #[test]
@@ -1329,7 +1472,11 @@ for line in sys.stdin:
 
     #[test]
     fn signed_package_launches_deny_all_deno_rpc_worker() {
-        if Command::new("deno").arg("--version").output().is_err() {
+        if !Command::new("deno")
+            .arg("--version")
+            .output()
+            .is_ok_and(|output| output.status.success())
+        {
             eprintln!("skipping test because Deno is unavailable");
             return;
         }
