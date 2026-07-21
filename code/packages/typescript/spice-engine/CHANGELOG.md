@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add BJT model-card `XTI` saturation-current temperature-exponent support,
+  preserving it through subcircuit expansion and matching Python and Rust. The
+  supported-parameter catalog now contains 74 canonical rows.
 - Add diode model-card `EG` energy-gap support to temperature scaling,
   preserving it through subcircuit expansion and matching Python and Rust.
 - Add diode model-card `XTI` saturation-current temperature-exponent support,

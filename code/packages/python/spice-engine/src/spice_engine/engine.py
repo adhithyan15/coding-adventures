@@ -349,7 +349,11 @@ def bjt_at_temperature(
         / _BOLTZMANN
         * (1.0 / nominal_temperature_kelvin - 1.0 / temperature_kelvin)
     )
-    saturation_scale = ratio**3 * math.exp(max(-100.0, min(100.0, exponent)))
+    if not math.isfinite(bjt.Xti):
+        raise ValueError(
+            f"{bjt.name}: BJT saturation-current temperature exponent must be finite"
+        )
+    saturation_scale = ratio**bjt.Xti * math.exp(max(-100.0, min(100.0, exponent)))
     return replace(
         bjt,
         Is=bjt.Is * saturation_scale,
@@ -592,7 +596,7 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
-        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr)
+        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti)
     if isinstance(element, VCVS):
         return VCVS(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), _map_subckt_node(element.ctrl_plus, instance_name, node_map), _map_subckt_node(element.ctrl_minus, instance_name, node_map), element.gain)
     if isinstance(element, VCCS):
@@ -9129,6 +9133,10 @@ def _validate_bjt(el: BJT) -> None:
         raise ValueError(f"{el.name}: BJT forward transit time must be finite and non-negative")
     if not math.isfinite(el.Tr) or el.Tr < 0.0:
         raise ValueError(f"{el.name}: BJT reverse transit time must be finite and non-negative")
+    if not math.isfinite(el.Xti):
+        raise ValueError(
+            f"{el.name}: BJT saturation-current temperature exponent must be finite"
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -13829,6 +13837,7 @@ def sens_dc(
                     Cjc=el.Cjc,
                     Tf=el.Tf,
                     Tr=el.Tr,
+                    Xti=el.Xti,
                 ),
             )
             delta_beta = max(abs(el.beta_f) * perturbation, abs_floor)
@@ -13845,6 +13854,7 @@ def sens_dc(
                     Cjc=el.Cjc,
                     Tf=el.Tf,
                     Tr=el.Tr,
+                    Xti=el.Xti,
                 ),
             )
 
@@ -14071,6 +14081,7 @@ def _vary_element(el: Element, tolerance: float, distribution: str) -> Element:
             Cjc=el.Cjc,
             Tf=el.Tf,
             Tr=el.Tr,
+            Xti=el.Xti,
         )
 
     # Capacitor, Inductor, Mosfet — no tunable DC parameter; return unchanged.

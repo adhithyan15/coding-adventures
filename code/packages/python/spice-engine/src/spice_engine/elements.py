@@ -589,6 +589,8 @@ class BJT:
     Tr:
         Reverse transit time in seconds; contributes base-collector diffusion
         capacitance in small-signal AC analysis.
+    Xti:
+        Saturation-current temperature exponent (default 3.0).
     """
 
     name: str
@@ -603,6 +605,7 @@ class BJT:
     Cjc: float = 0.0        # base-collector junction capacitance (F)
     Tf: float = 0.0         # forward transit time (s)
     Tr: float = 0.0         # reverse transit time (s)
+    Xti: float = 3.0        # saturation-current temperature exponent
 
 
 # ---------------------------------------------------------------------------

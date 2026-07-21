@@ -1710,6 +1710,7 @@ export interface Bjt {
   readonly baseCollectorCapacitance: number;
   readonly forwardTransitTime: number;
   readonly reverseTransitTime: number;
+  readonly saturationCurrentTemperatureExponent: number;
 }
 
 export type MosfetType = "NMOS" | "PMOS";
@@ -1987,8 +1988,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   Record<ModelCardKind, readonly [number, number, number, number]>
 > = {
   D: [12, 18, 5, 3],
-  NPN: [7, 15, 4, 4],
-  PNP: [7, 15, 4, 4],
+  NPN: [8, 16, 4, 4],
+  PNP: [8, 16, 4, 4],
   NJF: [5, 11, 5, 3],
   PJF: [5, 11, 5, 3],
   NMOS: [18, 25, 6, 3],
@@ -3578,7 +3579,7 @@ function cloneSubcktElement(
     case "jfet":
       return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation, element.gateSourceCapacitance, element.gateDrainCapacitance);
     case "bjt":
-      return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime);
+      return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime, element.saturationCurrentTemperatureExponent);
     case "mosfet":
       return mosfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), mapSubcktNode(element.body, instanceName, nodeMap), element.type, element.params);
     case "vccs":
@@ -7616,8 +7617,12 @@ export function bjtAtTemperature(
     (energyGapElectronVolts * ELECTRON_CHARGE) /
     BOLTZMANN *
     (1.0 / nominalTemperatureKelvin - 1.0 / temperatureKelvin);
+  if (!Number.isFinite(element.saturationCurrentTemperatureExponent)) {
+    throw invalidElement(element.name, "saturation-current temperature exponent must be finite");
+  }
   const saturationScale =
-    ratio ** 3 * Math.exp(Math.max(-100.0, Math.min(100.0, exponent)));
+    ratio ** element.saturationCurrentTemperatureExponent *
+    Math.exp(Math.max(-100.0, Math.min(100.0, exponent)));
   return {
     ...element,
     saturationCurrent: element.saturationCurrent * saturationScale,
@@ -7727,6 +7732,7 @@ export function bjt(
   baseCollectorCapacitance = 0.0,
   forwardTransitTime = 0.0,
   reverseTransitTime = 0.0,
+  saturationCurrentTemperatureExponent = 3.0,
 ): Bjt {
   return {
     kind: "bjt",
@@ -7742,6 +7748,7 @@ export function bjt(
     baseCollectorCapacitance,
     forwardTransitTime,
     reverseTransitTime,
+    saturationCurrentTemperatureExponent,
   };
 }
 
@@ -7843,6 +7850,7 @@ const BJT_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   CBC: "CJC",
   TF: "TF",
   TR: "TR",
+  XTI: "XTI",
 };
 
 const JFET_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
@@ -8339,6 +8347,7 @@ export function bjtFromModelCard(
     p.CJC ?? 0.0,
     p.TF ?? 0.0,
     p.TR ?? 0.0,
+    p.XTI ?? 3.0,
   );
 }
 
@@ -19514,6 +19523,9 @@ function validateBjt(element: Bjt): void {
   }
   if (!Number.isFinite(element.reverseTransitTime) || element.reverseTransitTime < 0.0) {
     throw invalidElement(element.name, "reverse transit time must be finite and non-negative");
+  }
+  if (!Number.isFinite(element.saturationCurrentTemperatureExponent)) {
+    throw invalidElement(element.name, "saturation-current temperature exponent must be finite");
   }
 }
 
