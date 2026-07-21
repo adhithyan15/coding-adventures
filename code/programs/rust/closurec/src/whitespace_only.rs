@@ -3708,24 +3708,46 @@ pub fn whitespace_only_minify(
             // `function f({a=1}={}){}` → `…{};`).
             let next_is_param_continuation =
                 matches!(next_val, Some("=") | Some(",") | Some(")"));
+            // A brace-terminated construct takes the synthetic `;` ONLY when
+            // nothing follows it. gap-052 already established this for
+            // `Other` blocks; the same rule holds for every other kind, and
+            // the unconditional `true`s below were a divergence.
+            //
+            // Oracle-verified against `closure-compiler-v20260712.jar`
+            // (WHITESPACE_ONLY, `--language_in ECMASCRIPT_2020
+            // `--language_out NO_TRANSPILE`). Mid-stream, upstream emits NO
+            // terminator:
+            //
+            //   function f(){}g();            not `function f(){};g();`
+            //   class C{m(){}}after();        not `class C{m(){}};after();`
+            //   switch(x){case 1:break}g();   not `...break};g();`
+            //   try{a()}catch(e){b()}g();     not `...{b()};g();`
+            //
+            // while at EOF every one of them DOES take the `;`
+            // (`function f(){return 1};`, `g();switch(x){case 1:break};`).
+            // This mirrors the emitter-side rule "terminate only the last
+            // program item" that closure-emitter 0.55.0 adopted; the two
+            // output paths now agree.
+            //
+            // Gating Function here also fixes `{function f(){}}g();` for
+            // free: an inner declaration whose follower is `}` no longer
+            // arms `deferred_synthetic_semi`, so nothing is flushed at the
+            // enclosing brace.
             let kind_wants_semi = match kind {
-                BlockKind::Function => true,
-                BlockKind::Class => true,    // gap-034
-                BlockKind::Switch => true,   // gap-036
+                BlockKind::Function => next_val.is_none(),
+                BlockKind::Class => next_val.is_none(), // gap-034
+                BlockKind::Switch => next_val.is_none(), // gap-036
                 BlockKind::TryChain => {
-                    // gap-033: chain continues iff next is
-                    // `catch` / `finally`.
-                    !next_is_chain_continuation
+                    // gap-033: a chain continues iff the next token is
+                    // `catch` / `finally`. At EOF there is no follower at
+                    // all, so the continuation test is vacuously false --
+                    // kept explicit so the intent survives a future edit.
+                    !next_is_chain_continuation && next_val.is_none()
                 }
-                // gap-052: extend trailing-`;` to Other-blocks
-                // at EOF. Upstream Closure emits `;` after ANY
-                // top-level `}` at EOF (`if(x){...};`,
-                // `foo:{...};`, `for(;;){...};`, bare
-                // `{a;b;};`). Mid-stream Other-`}` blocks
-                // still don't get a `;` — that would change
-                // statement boundaries inside expressions or
-                // produce stray `;` inside multi-statement
-                // sequences.
+                // gap-052: `if(x){...};`, `foo:{...};`, `for(;;){...};` and
+                // bare `{a;b;};` take the `;` at EOF. Mid-stream they must
+                // not -- that would change statement boundaries inside
+                // expressions or leave a stray `;` in a sequence.
                 BlockKind::Other => next_val.is_none(),
             };
             // gap-041: when a synthetic `;` is owed at this
@@ -9802,7 +9824,7 @@ mod tests {
         // misfire on non-IIFE patterns.
         assert_eq!(
             minify("function f(){return 1;}f();"),
-            "function f(){return 1};f();"
+            "function f(){return 1}f();"
         );
     }
 
