@@ -1,5 +1,114 @@
 # Changelog
 
+## [0.1.1] - 2026-07-21
+
+### Added
+
+- **`tests/oracle.rs` — HML01 §7 oracle/golden testing, cross-checking
+  `derive-runtime` (ground truth) against `derive_to_semantic_ir::
+  compile_source` → `semantic_ir::Module` → `semantic_ir_to_javascript::
+  compile` → a real `node` process.** The direct Derive sibling of
+  `j-to-semantic-ir/tests/oracle.rs`, completing HML01 §5's "a true oracle
+  diff [for Stream B] remains the one open item" note *for
+  `derive-to-semantic-ir` specifically* (that spec line is updated by this
+  PR; `wolfram-to-semantic-ir`/`macsyma-to-semantic-ir`/`reduce-to-
+  semantic-ir`/`maple-to-semantic-ir` are unaffected and still have no
+  oracle file of their own). 38-case corpus: bare integer/float/symbol
+  atoms; ordinary (non-J/APL) operator precedence and right-associative
+  `^`; unary minus binding looser than `^`; exact-integer vs. genuine-
+  rational division; an additive-identity simplification; assignment and
+  vector-assignment read back by a later statement; single- and
+  multi-parameter user-defined function definition/call; `DIF`/`INT` via
+  the shared calculus handlers (including the differentiate-then-call-at-
+  a-point worksheet idiom `derive-runtime`'s own test suite uses); `IF`'s
+  two branches; every comparison/logic keyword (`= <= < > >= AND OR NOT`,
+  including a 3-term `AND` chain exercising the n-ary logical-chain fold);
+  flat/singleton/elementwise-evaluated vectors and 2×2/3-row-1-column
+  matrices (D-5 structural `List` data).
+- Adds a dev-dependency on `coding-adventures-derive-runtime` (this
+  frontend's own sibling native-runtime crate) for `tests/oracle.rs`'s
+  ground truth only — the non-dev `[dependencies]` section still does not
+  depend on it; lowering itself only ever needs the parse-tree shape.
+
+### Found, NOT fixed here (shared `semantic-ir-to-javascript` crate — follow-up task)
+
+Building this corpus found that comparing *evaluated values* — the entire
+point of an oracle test — is currently blocked for this frontend (and, by
+the same root cause, for `wolfram-to-semantic-ir`/`macsyma-to-semantic-ir`,
+Stream B's other two shipped frontends, which is presumably why neither
+has ever shipped an oracle file either) by two gaps in the SHARED
+`semantic-ir-to-javascript` crate, not in this frontend's own lowering
+(confirmed independently: `tests/test_lower.rs`'s ~40 pre-existing shape
+assertions all still pass unmodified, so `derive_to_semantic_ir` itself
+emits exactly the `SymApply`/`SymSymbol` shapes MA07 §3 calls for).
+Recorded here — mirroring how `j-to-semantic-ir`'s own oracle file
+documented its two shared-crate bugs excluded-not-fixed — rather than
+patched in this PR, per this task's own scope discipline (`tests/
+oracle.rs`'s module doc has the full write-up with confirmed emitted-JS
+examples for each):
+
+- **No SIR23 evaluation or simplification of any kind.** `Expr::SymApply`
+  compiles unconditionally to `__Sir.Symbolic.apply(head, [args])` — a
+  pure, inert term constructor, confirmed by hand-compiling and running
+  representative programs through `node`: `1 + 2*3` stays `Add(1, Mul(2,
+  3))` (never folds to `7`); `x := 5` / `x + 1` compiles to `Assign(x, 5)`
+  then `Add(x, 1)` (the second statement's `x` is never substituted, so it
+  never reads back `6`); `DIF(x^2, x)` stays `D(Pow(x, 2), x)` (never
+  differentiates to `2*x`); `5 > 3` stays `Greater(5, 3)` (never evaluates
+  to the symbol `True`); `F(x) := x*x` / `F(5)` never registers `F` or
+  dispatches the call. The SIR23 domain's `SymReplaceAll`/
+  `SymReplaceRepeated` nodes DO have a real pattern-rewrite implementation
+  (`runtime.rs`'s `Symbolic.replaceAll`/`replaceRepeated`), but Derive's
+  grammar has no rewrite-rule syntax at all (MA07 §4) to ever emit those
+  nodes, so this frontend can never reach that machinery either. 29 of
+  this crate's 38 new oracle cases hit this gap (every case beyond a bare
+  literal/symbol atom and beyond the 5 display-only cases below).
+- **No per-source-language SIR23 display convention.** Even a term that
+  WAS already fully reduced would still print wrong: the sole SIR23
+  stringifier, `Symbolic.toDisplayString`, renders every compound term
+  generically as `head(args, ...)` — `Add(x, 1)`, `List(1, 2, 3)`,
+  `Neg(x)` — with no infix `+`/`*`/`^`, no `[...]`/`[...;...]` bracket
+  convention, no prefix `-`/`NOT`, and no case-bridging back to Derive's
+  own UPPERCASE builtin spelling (`derive-runtime::printer::print_derive`
+  reverses all four). Unlike the SIR22 array domain's `ArrayRt.fmtNum`/
+  `display` (which already has per-language flags —
+  `SIR_DISPLAY_APL_HIGH_MINUS`, `SIR_DISPLAY_J_UNDERSCORE`), the SIR23
+  domain has no such mechanism for any source language yet. 5 of this
+  crate's 38 new oracle cases (`equation_with_a_free_variable_stays_
+  symbolic`, `flat_vector_literal`, `singleton_vector_literal`,
+  `two_by_two_matrix_literal`, `three_row_one_column_matrix_literal`) hit
+  ONLY this gap — the value needs no evaluation at all, but the printed
+  notation still disagrees.
+
+### Known limitations
+
+- **No local lowering bugs were found in this pass** (unlike
+  `j-to-semantic-ir`'s oracle PR, which found and fixed two bugs genuinely
+  local to that frontend's own `src/lower.rs`). This crate's lowering was
+  already independently verified, node-by-node, against
+  `derive-runtime::lower`'s identical dispatch table (see this crate's
+  0.1.0 entry above), and `tests/test_lower.rs`'s ~40 shape-assertion
+  tests already cover every grammar production directly — an oracle test
+  that can only ever compare unevaluated term SHAPES (per the two gaps
+  above) cannot surface a new class of bug beyond what those direct shape
+  assertions already check.
+- `tests/oracle.rs` performs one test-local transformation neither
+  `j-to-semantic-ir`'s nor `apl-to-semantic-ir`'s own oracle file needed:
+  after `compile_source` + `semantic_ir::validate` (so validation still
+  exercises exactly what shipped, unmodified), it wraps each top-level
+  statement's `Expr` in `BuiltinCall("print", [expr])` using only
+  `semantic_ir`'s own public `Module`/`Stmt`/`Expr` types, purely so a
+  value is observable on the compiled side at all. `derive_to_semantic_ir
+  ::compile_source` itself is intentionally unchanged and still emits no
+  `print`/`console.log` of its own for any other caller — `tests/
+  e2e_node.rs`'s own module doc comment's "no `disp`-equivalent stdout"
+  design note is still accurate for the crate's real, shipped behavior.
+- Given the above, only 4 of the 38 corpus cases are `known_bug: None`
+  (bare integer/float/symbol literals) — a much lower "clean" fraction than
+  `j-to-semantic-ir`'s 21-of-36, reflecting the actual, current state of
+  the shared SIR23 JS backend rather than a shortfall in this frontend's
+  own corpus design.
+
 ## [0.1.0] - 2026-07-19
 
 ### Added
