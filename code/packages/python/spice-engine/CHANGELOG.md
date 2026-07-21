@@ -4,6 +4,10 @@
 
 ### Added
 
+- **Diode energy gap** — diode model cards now accept `EG`, apply it to
+  saturation-current temperature scaling, and preserve it through subcircuit
+  expansion, matching Rust and TypeScript.
+
 - **Diode saturation-current temperature exponent** — diode model cards now
   accept `XTI`, apply it to saturation-current temperature scaling, and
   preserve it through subcircuit expansion, matching Rust and TypeScript.
@@ -33,7 +37,7 @@
   `model_card_supported_parameter_coverage_gate_issue_records()`,
   `format_model_card_supported_parameter_coverage_gate_issue_csv()`, and
   `format_model_card_supported_parameter_coverage_gate_issue_json()` now
-  validate the expected seven-kind, 71-row supported-parameter catalog and
+  validate the expected seven-kind, 72-row supported-parameter catalog and
   expose stable issue rows for release automation, matching Rust and
   TypeScript.
 

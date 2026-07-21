@@ -389,7 +389,7 @@ fn clone_subckt_element(
             cloned.negative = map_subckt_node(&element.negative, instance_name, node_map);
             Element::CustomModel(cloned)
         }
-        Element::Diode(element) => Element::Diode(Diode::with_model_and_temperature_exponent(
+        Element::Diode(element) => Element::Diode(Diode::with_model_and_temperature_parameters(
             format!("{instance_name}.{}", element.name),
             map_subckt_node(&element.anode, instance_name, node_map),
             map_subckt_node(&element.cathode, instance_name, node_map),
@@ -404,6 +404,7 @@ fn clone_subckt_element(
             element.grading_coefficient,
             element.forward_bias_depletion_coefficient,
             element.saturation_current_temperature_exponent,
+            element.energy_gap_electron_volts,
         )),
         Element::Jfet(element) => Element::Jfet(Jfet::with_model_and_capacitance(
             format!("{instance_name}.{}", element.name),
@@ -2353,6 +2354,7 @@ pub struct Diode {
     pub grading_coefficient: f64,
     pub forward_bias_depletion_coefficient: f64,
     pub saturation_current_temperature_exponent: f64,
+    pub energy_gap_electron_volts: f64,
 }
 
 impl Diode {
@@ -2514,6 +2516,43 @@ impl Diode {
         forward_bias_depletion_coefficient: f64,
         saturation_current_temperature_exponent: f64,
     ) -> Self {
+        Self::with_model_and_temperature_parameters(
+            name,
+            anode,
+            cathode,
+            saturation_current,
+            thermal_voltage,
+            emission_coefficient,
+            breakdown_voltage,
+            breakdown_current,
+            junction_capacitance,
+            transit_time,
+            junction_potential,
+            grading_coefficient,
+            forward_bias_depletion_coefficient,
+            saturation_current_temperature_exponent,
+            1.11,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub fn with_model_and_temperature_parameters(
+        name: impl Into<String>,
+        anode: impl Into<String>,
+        cathode: impl Into<String>,
+        saturation_current: f64,
+        thermal_voltage: f64,
+        emission_coefficient: f64,
+        breakdown_voltage: Option<f64>,
+        breakdown_current: f64,
+        junction_capacitance: f64,
+        transit_time: f64,
+        junction_potential: f64,
+        grading_coefficient: f64,
+        forward_bias_depletion_coefficient: f64,
+        saturation_current_temperature_exponent: f64,
+        energy_gap_electron_volts: f64,
+    ) -> Self {
         Self {
             name: name.into(),
             anode: anode.into(),
@@ -2529,6 +2568,7 @@ impl Diode {
             grading_coefficient,
             forward_bias_depletion_coefficient,
             saturation_current_temperature_exponent,
+            energy_gap_electron_volts,
         }
     }
 }
@@ -2657,7 +2697,7 @@ pub fn circuit_at_temperature(
                 diode,
                 temperature_kelvin,
                 nominal_temperature_kelvin,
-                energy_gap_electron_volts,
+                diode.energy_gap_electron_volts,
             )?),
             Element::Bjt(bjt) => Element::Bjt(bjt_at_temperature(
                 bjt,
@@ -3227,7 +3267,7 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     usize,
     usize,
 )] = &[
-    (ModelCardKind::Diode, 11, 17, 5, 3),
+    (ModelCardKind::Diode, 12, 18, 5, 3),
     (ModelCardKind::Npn, 7, 15, 4, 4),
     (ModelCardKind::Pnp, 7, 15, 4, 4),
     (ModelCardKind::Njf, 5, 11, 5, 3),
@@ -3253,6 +3293,7 @@ const DIODE_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("MJ", "M"),
     ("FC", "FC"),
     ("XTI", "XTI"),
+    ("EG", "EG"),
 ];
 const BJT_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("IS", "IS"),
@@ -3877,7 +3918,7 @@ pub fn diode_from_model_card(
     if model.kind != ModelCardKind::Diode {
         return Err(model_card_kind_error(&name, "diode", model.kind));
     }
-    Ok(Diode::with_model_and_temperature_exponent(
+    Ok(Diode::with_model_and_temperature_parameters(
         name,
         anode,
         cathode,
@@ -3892,6 +3933,7 @@ pub fn diode_from_model_card(
         model_card_value(model, "M", 0.5),
         model_card_value(model, "FC", 0.5),
         model_card_value(model, "XTI", 3.0),
+        model_card_value(model, "EG", 1.11),
     ))
 }
 
@@ -23045,6 +23087,12 @@ fn validate_diode(diode: &Diode) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: diode.name.clone(),
             reason: "saturation-current temperature exponent must be finite".to_string(),
+        });
+    }
+    if !diode.energy_gap_electron_volts.is_finite() || diode.energy_gap_electron_volts <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: diode.name.clone(),
+            reason: "energy gap must be finite and positive".to_string(),
         });
     }
     if !diode.transit_time.is_finite() || diode.transit_time < 0.0 {
