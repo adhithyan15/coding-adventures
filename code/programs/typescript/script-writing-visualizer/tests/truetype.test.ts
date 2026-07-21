@@ -380,14 +380,18 @@ describe("Tamil letter shapes the lessons make claims about", () => {
     // Control: the measure must be able to report a non-vertical final stroke,
     // otherwise "<= 1" is satisfied by a metric that always returns 0. Across
     // the letters this track teaches it returns a range of values.
-    const spreads = ["ண", "ன", "ம", "வ", "அ", "இ", "ல", "ற", "க"]
+    // Built from letters NOT under test, so the control is independent of the
+    // subjects. Deliberately wider than it needs to be: with a bare handful the
+    // survivor count sits right on the guard, and a raster-resolution change
+    // would flip it.
+    const spreads = ["ம", "வ", "அ", "இ", "ல", "ற", "க", "ய", "ப", "ள", "எ"]
       .map((ch) => {
         const cs = f.glyphFor(ch)!.contours;
         return finalStrokeSpread(raster(cs, windowFor(cs)));
       })
       .filter((r) => r.samples > 8)
       .map((r) => r.spread);
-    expect(spreads.length).toBeGreaterThan(3);
+    expect(spreads.length).toBeGreaterThan(5);
     expect(Math.max(...spreads)).toBeGreaterThan(1);
   });
 
