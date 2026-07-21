@@ -154,6 +154,7 @@ A condensed quick-reference of mistakes made during development, grouped by cate
 - **Recursive local functions need a 2-step declaration.** Short assignment `addConstant := func(...)` can't reference itself. Use `var addConstant func(...)` then `addConstant = func(...)`. (Same pattern in Go.)
 - **Validate caller-controlled lengths before `int` casts.** Binary parsers must explicit-bounds-check `u4`/`u8` lengths against host capacity; never recursively decode nested structures unless the format requires it.
 - **Don't run `cargo fmt --all` for package-scoped work** — it reformats hundreds of unrelated crates and buries the feature diff. Use `cargo fmt -p <pkg>`.
+- **`cargo fmt -p moslayout-compiler` is especially destructive: it rewrites the GENERATED `src/_grammar.rs` (600+ lines) AND explodes the hand-formatted compact `PRIMITIVES` array (several entries per line) into one-per-line.** Adding two UI35 primitives — a genuinely +15-line change — produced an 837-line diff across a generated file and a roster nobody asked me to reformat. Verify with `git diff --stat`: a purely additive registration should show insertions only. Fix: `git checkout --` both files and re-apply the addition by hand in the file's existing compact style, skipping `cargo fmt` for this crate entirely. Same family as the `adj-lang` generated-grammar lesson below and the `cargo fmt -p <pkg>` scope lesson.
 - **`cargo fmt -p <pkg>` is still not safe — it reformats files *inside that package* you never touched, and `main` is not necessarily clean under YOUR local rustfmt.** Hit twice on `task-core`: adding a struct to `model.rs` and running `cargo fmt -p task-core` also rewrote `scheduler.rs` (~30 lines of match-guard/assert re-wrapping) because the local rustfmt version disagrees with whatever formatted main. That churn is unrelated to the change, invites a "why is scheduler.rs in this diff?" review, and risks conflicting with concurrent PRs. **Always `git diff --stat` right after `cargo fmt -p <pkg>` and `git checkout -- <file>` anything you didn't intend to touch**, then re-run the tests. Corollary: don't "fix" a fmt diff in a file your change doesn't own — CI does not run `cargo fmt --check` as a blocking gate, so leave main's formatting alone. (Same shape as the generated-file lesson below: fmt, then selectively revert.)
 - **wasm-bindgen `JsValue::from_str` aborts on native test targets.** Gate behind `#[cfg(target_arch = "wasm32")]`; use `JsValue::NULL` placeholders for native error-path tests.
 - **FFI input enums must be primitive ints, never `repr(C)` Rust enums.** Foreign callers can pass any bit pattern; observing an out-of-range Rust enum is UB before validation runs. Use `u32`/`c_int` in the ABI struct, then `TryFrom`.
@@ -1722,3 +1723,28 @@ backend, check whether every consumer that can construct that same runtime
 shape agrees on how it should be displayed — grep for other frontends
 lowering to the same builtin/node and read their own oracle/e2e test
 expectations, don't assume the bug report's one example generalizes.
+
+## Inserting a function above another orphans its doc comment (clippy `-D warnings` failure)
+
+Bit me twice in one session, in two different crates. When you insert a new
+function immediately *before* an existing one, you land between that function
+and its `///` doc comment:
+
+```rust
+/// Shared helper: build the `style="..."` attribute …   <- now documents nothing
+                                                          <- blank line
+/// UI35 — lower a `HostDraggable` …                      <- your new fn
+fn emit_host_draggable(…) { … }
+
+fn build_style_attr(…) { … }                              <- lost its docs
+```
+
+`cargo test` passes. `cargo clippy -- -D warnings` fails with `empty line after
+doc comment`, so it only shows up in CI unless you lint locally — which is
+exactly why the repo rule is to run clippy in BOTH feature configs before
+pushing. Insert *after* the preceding function's body instead, anchoring on its
+closing brace rather than on the next function's signature; or if you do anchor
+on a signature, move the doc block down with the insertion. Also worth knowing:
+the clippy message names the function it thinks you meant to document, which is
+your *new* function, not the one that actually lost its docs — read the line
+number, not the name.

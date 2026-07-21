@@ -281,14 +281,19 @@ write-approval policy, D18D execution journal, artifact write, validated
 records one granted write and three completed calls; the unapproved path stops
 at the policy gate and never writes the recommendation.
 
+That job now persists each canonical payload-free D18D audit row through
+`chief-of-staff-tool-audit-store` and the D18A local-folder backend before
+returning actor failures. A fresh store instance reloads the rows and emits a
+compact summary keyed to job, run, host profile, session, and user. Executable
+tests prove both the successful three-call run and the approval-blocked write
+survive a runtime restart without storing arguments, outputs, or credentials.
+
 These items are Chief of Staff architecture, not smart-home platform work:
 
 - Add approval UX and policy wiring for Tier2 or stronger actions such as
   bridge pairing, locks, cameras, alarms, and safety devices.
 - Wire vault leasing so tools receive opaque `VaultRef` handles and never raw
   smart-home secrets.
-- Persist tool execution journals and expose compact audit summaries for jobs,
-  hosts, sessions, and user review.
 
 ## Smart Home Remaining Work
 

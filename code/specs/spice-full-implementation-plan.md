@@ -33,15 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language BJT forward emission coefficient.
+1. Cross-language BJT base-emitter depletion-capacitance shaping.
    - Status: current PR completion candidate.
-   - Add Berkeley BJT `NF` forward emission-coefficient model-card support in
-     Rust, Python, and TypeScript.
-   - Apply `NF` to the forward junction current, transconductance, charge, and
-     noise paths while preserving the full BJT model through hierarchical
-     subcircuit expansion.
-   - Extend the supported-parameter coverage gate from 78 to 80 canonical rows
-     and lock forward-junction behavior across all three engines.
+   - Add Berkeley BJT `VJE` / `PE` base-emitter junction-potential and `MJE` /
+     `ME` grading-coefficient model-card support in Rust, Python, and TypeScript.
+   - Shape `CJE` base-emitter depletion capacitance in AC and transient
+     analysis with the continuous Berkeley piecewise law and default `FC=0.5`,
+     while preserving the full BJT model through hierarchical subcircuits.
+   - Extend the supported-parameter coverage gate from 82 to 86 canonical rows
+     and lock reverse-biased base-emitter capacitance behavior in all engines.
 
 ## Completed Slices
 
@@ -3015,6 +3015,20 @@ the Rust, Python, and TypeScript surfaces together.
      transfer-function, and noise paths.
    - Hierarchical subcircuit expansion preserves the complete BJT model, and
      the supported-parameter release gate now covers 78 canonical rows.
+
+221. Cross-language BJT forward emission coefficient.
+   - Status: completed in PR 8740.
+   - Rust, Python, and TypeScript BJT model cards now accept `NF` and apply it
+     to forward junction current, transconductance, charge, and noise paths.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 80 canonical rows.
+
+222. Cross-language BJT reverse emission coefficient.
+   - Status: completed in PR 8744.
+   - Rust, Python, and TypeScript BJT model cards now accept `NR` and apply it
+     to reverse base-collector diffusion charge in AC and transient analysis.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 82 canonical rows.
 
 ## Backlog
 

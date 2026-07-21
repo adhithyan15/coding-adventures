@@ -12,6 +12,7 @@ capability-os-sandbox = { path = "../capability-os-sandbox" }
 capability-cage = { path = "../capability-cage" }
 chief-of-staff-host-runtime = { path = "../chief-of-staff-host-runtime" }
 chief-of-staff-tool-api = { path = "../chief-of-staff-tool-api" }
+chief-of-staff-tool-audit-store = { path = "../chief-of-staff-tool-audit-store" }
 coding-adventures-json-value = { path = "../json-value" }
 context-store = { path = "../context-store" }
 generic-job-protocol = { path = "../generic-job-protocol" }
@@ -25,6 +26,7 @@ os-job-runtime = { path = "../os-job-runtime" }
 read-write-separation = { path = "../read-write-separation" }
 skill-store = { path = "../skill-store" }
 storage-core = { path = "../storage-core" }
+storage-local-folder = { path = "../storage-local-folder" }
 tls-platform = { path = "../tls-platform" }
 
 [dev-dependencies]

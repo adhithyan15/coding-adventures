@@ -4,6 +4,16 @@
 
 ### Added
 
+- **BJT base-emitter depletion shaping** — BJT model cards now accept
+  `VJE`/`PE` junction potential and `MJE`/`ME` grading coefficient parameters
+  and apply them to `CJE` in AC and transient analysis, matching Rust and
+  TypeScript. The supported-parameter catalog now contains 86 canonical rows.
+
+- **BJT reverse emission coefficient** — BJT model cards now accept `NR` and
+  apply it to reverse base-collector diffusion charge in AC and transient
+  analysis, matching Rust and TypeScript. The supported-parameter catalog now
+  contains 82 canonical rows.
+
 - **BJT forward emission coefficient** — BJT model cards now accept `NF` and
   apply it to DC, transient charge, AC, transfer-function, and noise paths,
   matching Rust and TypeScript. The supported-parameter catalog now contains

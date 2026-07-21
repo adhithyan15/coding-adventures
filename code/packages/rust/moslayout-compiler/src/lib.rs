@@ -153,6 +153,19 @@ const PRIMITIVES: &[&str] = &[
     // `code/specs/UI31-host-table.md` §2 for the structural shape.
     "HostTableColGroup", "HostTableHead", "HostTableBody", "HostTableFoot",
     "Col",
+    // UI35 — the drag-and-drop family. Before this the kernel had **no**
+    // drag primitive of any kind, so "drag a card to another column" —
+    // the defining gesture of board software — could not be expressed in
+    // a `.mll` at all. Composition cannot supply it: each platform has
+    // its own native drag system (HTML pointer events, SwiftUI
+    // `.draggable`/`.dropDestination`, Compose dragAndDropSource/Target,
+    // QDrag, Flutter Draggable/DragTarget, WinUI CanDrag/Drop), and the
+    // keyboard-equivalent path, screen-reader announcements, and touch
+    // support that make dragging usable are per-platform concerns an
+    // author cannot re-derive. Two primitives because a drag has two
+    // ends — a card is typically both. See
+    // `code/specs/UI35-host-drag-drop.md`.
+    "HostDraggable", "HostDropTarget",
 ];
 
 #[allow(dead_code)] // retained as API surface / scaffolding
@@ -2434,6 +2447,44 @@ mod tests {
     /// with built-in ± buttons, mobile platforms' `inputmode="numeric"`
     /// keyboard) that userland composition couldn't reach parity.
     /// The kernel now stands at 21 primitives.
+    /// UI35 — `HostDraggable` and `HostDropTarget` joined the kernel as the
+    /// drag-and-drop family. Before them the kernel had no drag primitive of
+    /// any kind, so a board's defining gesture was inexpressible in a `.mll`.
+    /// Pinned for the same reason as the rest: PRIMITIVES is the roster every
+    /// backend matches against, and a refactor that silently drops an entry
+    /// sends the tag down the unknown-component fallback instead of failing.
+    #[test]
+    fn drag_and_drop_family_in_primitives() {
+        assert!(
+            PRIMITIVES.contains(&"HostDraggable"),
+            "UI35 added HostDraggable (the drag source)"
+        );
+        assert!(
+            PRIMITIVES.contains(&"HostDropTarget"),
+            "UI35 added HostDropTarget (the drop sink)"
+        );
+    }
+
+    /// Registration only matters if a real layout can use it: a board card is a
+    /// drop target wrapping a draggable, the shape every kanban lowering emits.
+    /// Compiling proves the tags resolve as primitives rather than falling
+    /// through to the unknown-component-reference path.
+    #[test]
+    fn a_draggable_card_inside_a_drop_target_compiles() {
+        let src = r#"
+          layout Board {
+            Column [ board ] {
+              HostDropTarget [ column ] {
+                HostDraggable [ card ] {
+                  Text ( content: "Write spec" )
+                }
+              }
+            }
+          }
+        "#;
+        compile(src, None).expect("UI35 drag/drop primitives must compile in a layout");
+    }
+
     #[test]
     fn host_dialog_and_friends_in_primitives() {
         assert!(PRIMITIVES.contains(&"HostInput"));

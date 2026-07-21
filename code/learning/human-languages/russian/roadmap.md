@@ -26,20 +26,36 @@ Chapter 1 words introduced — component strokes + stroke order, from the canoni
 - `RU-W04` — **п** (p ← pi) and **и** (ee, the backwards-N quiet false friend).
 - `RU-W05` — **е** (ye, iotated) and **т** (t ← tau), which **completes every
   letter of привет** — the learner can now hand-write the whole word. More letters
-  get a writing lesson as later chapters introduce them (я э ю ч ш ь in Ch.2).
+  get a writing lesson as later chapters introduce them; **я, ч, ы and ь are
+  read-only in Ch. 2**, and э, ю and ш await the chapters that need them.
 
-## Chapter 2 — Introducing yourself *(planned)*
+## Chapter 2 — Introducing yourself *(authored)*
 
-- **меня зовут…** ("I am called…", literally "[they] call me") — the naming
-  construction, and the accusative *меня*.
-- **как вас зовут?** / **как тебя зовут?** — "what's your name?", formal vs
-  informal, cementing вы/ты.
-- **я** (I) · **ты / вы** (you, informal/formal) · **это** ("this is") — the
-  minimal pronouns.
-- **очень приятно** — "very pleasant [to meet you]."
-- **да / нет** revisited as full answers; **меня** and the idea of case previewed.
-- New letters completed: **я** (ya), **э** (e), **ю** (yu), **ч** (ch),
-  **ш** (sh), and the soft sign **ь**.
+**я** — one letter, PIE \**eǵh₂(om)* → Slavic \**azъ*, cousin of *ego / ich / I*;
+pronouns are the least borrowable part of a language → **ты / вы**, the split
+English threw away when *thou* left standard use in the 1600s. *Вы* is polite the
+way French *vous* is, but the routes differ: Russian and French use the
+**2nd-person plural**, German the **3rd-person** (*Sie*), and Spanish **no plural
+at all** (*usted* ← "your grace") — with the *вы*/*vōs* cognate row flagged as
+only half a set, since English *you* and German *ihr* continue \**yūs*
+→ **меня зовут…**, which is literally "**[they] call me**", so the
+sentence contains **no word for "my" and none for "name"**; the "they" is nobody
+(a bare plural verb, like English *they say it'll rain*), and *меня* is not *я*
+but its **object form** — the course's first look at **case** → **как вас
+зовут?**, which asks **how** they call you, not *what*: Russian, French
+(*comment*) and Spanish (*cómo*) all ask about an **action** where English asks
+about a **possession** → **очень приятно**, "very pleasant", whose *приятно* ←
+Slavic *prijati* "to favour" ← PIE \**preyH-* "to love, please" — the root behind
+Russian **приятель** "friend" *and* English **friend**, with **free** most likely
+in the same family ("belonging to the beloved household") → practice, which
+closes on the **zero copula** — scoped to ***очень приятно***, the one sentence
+with no verb at all (Russian *does* have a present-tense *есть*; it just drops
+the linking verb).
+
+Deliberately deferred, so the chapter stays five atoms plus practice: **это**,
+and *да/нет* revisited as full answers. New letters **я**, **ч**, **ы** and the soft sign **ь** are
+flagged read-now-draw-later — the writing track (RU-W01–W05) has taught
+в р с н б д п и е т and not yet reached them.
 
 ## Chapter 3 — Being and having *(planned)*
 
