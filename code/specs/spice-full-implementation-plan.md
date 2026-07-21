@@ -33,14 +33,14 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language diode depletion-capacitance shaping.
+1. Cross-language diode forward-bias depletion coefficient.
    - Status: current PR completion candidate.
-   - Add Berkeley diode `VJ`/`PB` junction-potential and `M`/`MJ`
-     grading-coefficient model-card parameters in Rust, Python, and TypeScript.
-   - Shape `CJO` depletion capacitance from the operating-point bias in AC and
-     transient analysis while preserving transit-time diffusion capacitance.
-   - Extend the supported-parameter coverage gate from 67 to 69 canonical rows
-     and lock reverse-bias capacitance behavior across all three engines.
+   - Add Berkeley diode `FC` forward-bias depletion-coefficient model-card
+     support in Rust, Python, and TypeScript.
+   - Apply the continuous piecewise depletion-capacitance law around the
+     `FC * VJ` transition in AC and transient analysis.
+   - Extend the supported-parameter coverage gate from 69 to 70 canonical rows
+     and lock forward-bias shaping across all three engines.
 
 ## Completed Slices
 
@@ -2963,6 +2963,14 @@ the Rust, Python, and TypeScript surfaces together.
    - The digest preserves stable schema, routing disposition, action, badge,
      target, compact count, nested summary, and capability metadata while
      leaving parser and cross-language solver behavior unchanged.
+
+214. Cross-language diode depletion-capacitance shaping.
+   - Status: completed in PR 8705.
+   - Rust, Python, and TypeScript diode model cards now accept `VJ`/`PB`
+     junction potential and `M`/`MJ` grading coefficient parameters.
+   - AC and transient analyses shape `CJO` from reverse bias while preserving
+     transit-time diffusion capacitance, and the supported-parameter release
+     gate now covers 69 canonical rows.
 
 ## Backlog
 

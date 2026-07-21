@@ -410,7 +410,7 @@ def test_model_card_type_aliases_are_normalized() -> None:
 
 def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     coverage = model_card_supported_parameter_coverage()
-    assert len(coverage) == 69
+    assert len(coverage) == 70
     assert coverage[0].kind == "D"
     assert coverage[0].canonical_parameter == "IS"
     assert coverage[0].accepted_names == ("IS", "JS")
@@ -425,7 +425,7 @@ def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     assert "NMOS\tVT0\tVT0|VTO|VTH\t3" in table
     assert table.splitlines()[-1] == "PMOS\tMJ\tMJ\t1"
     records = model_card_supported_parameter_coverage_records()
-    assert len(records) == 69
+    assert len(records) == 70
     assert records[0] == {
         "kind": "D",
         "canonical_parameter": "IS",
@@ -442,8 +442,8 @@ def test_model_card_supported_parameter_coverage_summary_exports_are_stable() ->
     summary = model_card_supported_parameter_coverage_summary()
     assert len(summary) == 7
     assert summary[0].kind == "D"
-    assert summary[0].canonical_parameter_count == 9
-    assert summary[0].accepted_name_count == 15
+    assert summary[0].canonical_parameter_count == 10
+    assert summary[0].accepted_name_count == 16
     assert summary[0].aliased_parameter_count == 5
     assert summary[0].max_alias_count == 3
     assert summary[0].aliased_parameters == ("IS", "VT", "CJO", "VJ", "M")
@@ -468,7 +468,7 @@ def test_model_card_supported_parameter_coverage_summary_exports_are_stable() ->
         == "kind\tcanonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\taliased_parameters"
     )
-    assert table.splitlines()[1] == "D\t9\t15\t5\t3\tIS|VT|CJO|VJ|M"
+    assert table.splitlines()[1] == "D\t10\t16\t5\t3\tIS|VT|CJO|VJ|M"
     assert (
         table.splitlines()[-1]
         == "PMOS\t18\t25\t6\t3\tVT0|LAMBDA|N_SUB|T_NOM|CBS|CBD"
@@ -477,8 +477,8 @@ def test_model_card_supported_parameter_coverage_summary_exports_are_stable() ->
     assert len(records) == 7
     assert records[0] == {
         "kind": "D",
-        "canonical_parameter_count": "9",
-        "accepted_name_count": "15",
+        "canonical_parameter_count": "10",
+        "accepted_name_count": "16",
         "aliased_parameter_count": "5",
         "max_alias_count": "3",
         "aliased_parameters": "IS|VT|CJO|VJ|M",
@@ -486,7 +486,7 @@ def test_model_card_supported_parameter_coverage_summary_exports_are_stable() ->
     assert format_model_card_supported_parameter_coverage_summary_csv().startswith(
         "kind,canonical_parameter_count,accepted_name_count,"
         "aliased_parameter_count,max_alias_count,aliased_parameters\n"
-        "D,9,15,5,3,IS|VT|CJO|VJ|M\n"
+        "D,10,16,5,3,IS|VT|CJO|VJ|M\n"
     )
     assert (
         json.loads(format_model_card_supported_parameter_coverage_summary_json())
@@ -499,9 +499,9 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
     assert report.passed is True
     assert report.kind_count == 7
     assert report.expected_kind_count == 7
-    assert report.canonical_parameter_count == 69
-    assert report.expected_canonical_parameter_count == 69
-    assert report.accepted_name_count == 117
+    assert report.canonical_parameter_count == 70
+    assert report.expected_canonical_parameter_count == 70
+    assert report.accepted_name_count == 118
     assert report.aliased_parameter_count == 35
     assert report.max_alias_count == 4
     assert report.issues == ()
@@ -509,7 +509,7 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "true\t7\t7\t69\t69\t117\t35\t4\t0"
+        "true\t7\t7\t70\t70\t118\t35\t4\t0"
     )
     assert (
         format_model_card_supported_parameter_coverage_gate_issue_table(report)
@@ -537,8 +537,8 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
 
     assert report.passed is False
     assert report.kind_count == 7
-    assert report.canonical_parameter_count == 68
-    assert report.accepted_name_count == 114
+    assert report.canonical_parameter_count == 69
+    assert report.accepted_name_count == 115
     assert report.aliased_parameter_count == 34
     assert report.max_alias_count == 4
     assert len(report.issues) == 4
@@ -553,7 +553,7 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "false\t7\t7\t68\t69\t114\t34\t4\t4\n"
+        "false\t7\t7\t69\t70\t115\t34\t4\t4\n"
         "kind\tfield\tmessage\n"
         "NMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical "
         "supported parameters, found 17\n"
@@ -590,6 +590,7 @@ def test_model_card_aliases_build_device_instances() -> None:
             "TT": 4.0e-9,
             "PB": 0.8,
             "MJ": 0.4,
+            "FC": 0.35,
             "RS": 10.0,
         },
     )
@@ -600,6 +601,7 @@ def test_model_card_aliases_build_device_instances() -> None:
         "TT": 4.0e-9,
         "VJ": 0.8,
         "M": 0.4,
+        "FC": 0.35,
     }
     assert diode_card.unsupported_parameters == ("RS",)
     diode_issues = model_card_unsupported_parameter_issues(diode_card)
@@ -634,6 +636,7 @@ def test_model_card_aliases_build_device_instances() -> None:
     assert diode_model.Tt == pytest.approx(4.0e-9)
     assert diode_model.Vj == pytest.approx(0.8)
     assert pytest.approx(0.4) == diode_model.M
+    assert pytest.approx(0.35) == diode_model.Fc
 
     bjt_card = normalize_model_card("Qsmall", "npn", {"BETA": 125.0, "CBE": 2.0e-12})
     bjt_model = bjt_from_model_card("Q1", "c", "b", "e", bjt_card)
@@ -3845,6 +3848,34 @@ def test_ac_diode_depletion_capacitance_falls_with_reverse_bias():
     reverse_biased = high_frequency_voltage(4.0)
 
     assert reverse_biased > zero_bias * 1.8
+
+
+def test_ac_diode_forward_depletion_coefficient_shapes_capacitance():
+    """FC controls the continuous forward-bias depletion continuation."""
+
+    def forward_biased_voltage(coefficient: float) -> float:
+        c = Circuit()
+        c.add(VoltageSource("Vac", "in", "0", 0.75, ac=AcSource(1.0)))
+        c.add(Resistor("R1", "in", "node", 1000.0))
+        c.add(
+            Diode(
+                "D1",
+                anode="node",
+                cathode="0",
+                Is=1.0e-30,
+                Cjo=1.0e-6,
+                Vj=1.0,
+                M=0.5,
+                Fc=coefficient,
+            )
+        )
+        result = ac_sweep(c, f_start=1000.0, f_stop=1000.0, n_points=1)
+        return abs(result.points[0].node_voltages["node"])
+
+    early_transition = forward_biased_voltage(0.2)
+    late_transition = forward_biased_voltage(0.8)
+
+    assert late_transition < early_transition * 0.85
 
 
 def test_ac_diode_transit_time_shunts_forward_bias_at_high_frequency():

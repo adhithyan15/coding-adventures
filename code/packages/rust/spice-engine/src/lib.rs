@@ -2347,6 +2347,7 @@ pub struct Diode {
     pub transit_time: f64,
     pub junction_potential: f64,
     pub grading_coefficient: f64,
+    pub forward_bias_depletion_coefficient: f64,
 }
 
 impl Diode {
@@ -2440,6 +2441,39 @@ impl Diode {
         junction_potential: f64,
         grading_coefficient: f64,
     ) -> Self {
+        Self::with_model_and_forward_depletion(
+            name,
+            anode,
+            cathode,
+            saturation_current,
+            thermal_voltage,
+            emission_coefficient,
+            breakdown_voltage,
+            breakdown_current,
+            junction_capacitance,
+            transit_time,
+            junction_potential,
+            grading_coefficient,
+            0.5,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub fn with_model_and_forward_depletion(
+        name: impl Into<String>,
+        anode: impl Into<String>,
+        cathode: impl Into<String>,
+        saturation_current: f64,
+        thermal_voltage: f64,
+        emission_coefficient: f64,
+        breakdown_voltage: Option<f64>,
+        breakdown_current: f64,
+        junction_capacitance: f64,
+        transit_time: f64,
+        junction_potential: f64,
+        grading_coefficient: f64,
+        forward_bias_depletion_coefficient: f64,
+    ) -> Self {
         Self {
             name: name.into(),
             anode: anode.into(),
@@ -2453,6 +2487,7 @@ impl Diode {
             transit_time,
             junction_potential,
             grading_coefficient,
+            forward_bias_depletion_coefficient,
         }
     }
 }
@@ -3144,7 +3179,7 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     usize,
     usize,
 )] = &[
-    (ModelCardKind::Diode, 9, 15, 5, 3),
+    (ModelCardKind::Diode, 10, 16, 5, 3),
     (ModelCardKind::Npn, 7, 15, 4, 4),
     (ModelCardKind::Pnp, 7, 15, 4, 4),
     (ModelCardKind::Njf, 5, 11, 5, 3),
@@ -3168,6 +3203,7 @@ const DIODE_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("PB", "VJ"),
     ("M", "M"),
     ("MJ", "M"),
+    ("FC", "FC"),
 ];
 const BJT_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("IS", "IS"),
@@ -3792,7 +3828,7 @@ pub fn diode_from_model_card(
     if model.kind != ModelCardKind::Diode {
         return Err(model_card_kind_error(&name, "diode", model.kind));
     }
-    Ok(Diode::with_model_and_depletion(
+    Ok(Diode::with_model_and_forward_depletion(
         name,
         anode,
         cathode,
@@ -3805,6 +3841,7 @@ pub fn diode_from_model_card(
         model_card_value(model, "TT", 0.0),
         model_card_value(model, "VJ", 1.0),
         model_card_value(model, "M", 0.5),
+        model_card_value(model, "FC", 0.5),
     ))
 }
 
@@ -22633,12 +22670,23 @@ fn diode_has_charge_storage(diode: &Diode) -> bool {
 
 fn diode_dynamic_capacitance(diode: &Diode, voltage: f64) -> f64 {
     let (_, conductance) = diode_current_conductance(diode, voltage);
-    mosfet_bulk_junction_capacitance(
-        diode.junction_capacitance,
-        voltage,
-        diode.junction_potential,
-        diode.grading_coefficient,
-    ) + diode.transit_time * conductance
+    diode_depletion_capacitance(diode, voltage) + diode.transit_time * conductance
+}
+
+fn diode_depletion_capacitance(diode: &Diode, voltage: f64) -> f64 {
+    if diode.junction_capacitance <= 0.0 || diode.grading_coefficient == 0.0 {
+        return diode.junction_capacitance;
+    }
+    let normalized_voltage = voltage / diode.junction_potential;
+    if normalized_voltage < diode.forward_bias_depletion_coefficient {
+        return diode.junction_capacitance
+            / (1.0 - normalized_voltage).powf(diode.grading_coefficient);
+    }
+    let coefficient = diode.forward_bias_depletion_coefficient;
+    let transition_scale = (1.0 - coefficient).powf(1.0 + diode.grading_coefficient);
+    let continuation = 1.0 - coefficient * (1.0 + diode.grading_coefficient)
+        + diode.grading_coefficient * normalized_voltage;
+    diode.junction_capacitance * continuation / transition_scale
 }
 
 fn diode_charge_voltage(diode: &Diode, node_voltages: &BTreeMap<String, f64>) -> f64 {
@@ -22932,6 +22980,15 @@ fn validate_diode(diode: &Diode) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: diode.name.clone(),
             reason: "grading coefficient must be finite and non-negative".to_string(),
+        });
+    }
+    if !diode.forward_bias_depletion_coefficient.is_finite()
+        || diode.forward_bias_depletion_coefficient < 0.0
+        || diode.forward_bias_depletion_coefficient >= 1.0
+    {
+        return Err(SpiceError::InvalidElement {
+            name: diode.name.clone(),
+            reason: "forward-bias depletion coefficient must be finite and in [0, 1)".to_string(),
         });
     }
     if !diode.transit_time.is_finite() || diode.transit_time < 0.0 {

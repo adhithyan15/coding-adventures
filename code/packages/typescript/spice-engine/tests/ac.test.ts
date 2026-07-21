@@ -241,6 +241,37 @@ describe("acSweep", () => {
     expect(reverseBiased).toBeGreaterThan(zeroBias * 1.8);
   });
 
+  it("shapes forward-biased diode depletion capacitance with FC", () => {
+    const forwardBiasedVoltage = (coefficient: number): number => {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "in", "0", 0.75, 1.0));
+      circuit.add(resistor("R1", "in", "node", 1_000.0));
+      circuit.add(
+        diode(
+          "D1",
+          "node",
+          "0",
+          1.0e-30,
+          0.02585,
+          1.0,
+          undefined,
+          1.0e-3,
+          1.0e-6,
+          0.0,
+          1.0,
+          0.5,
+          coefficient,
+        ),
+      );
+      return complexAbs(acSweep(circuit, 1_000.0, 1_000.0, 1)[0].voltage("node")!);
+    };
+
+    const earlyTransition = forwardBiasedVoltage(0.2);
+    const lateTransition = forwardBiasedVoltage(0.8);
+
+    expect(lateTransition).toBeLessThan(earlyTransition * 0.85);
+  });
+
   it("stamps forward-biased diode transit-time diffusion capacitance", () => {
     const highFrequencyAnode = (transitTime: number): number => {
       const circuit = new Circuit();

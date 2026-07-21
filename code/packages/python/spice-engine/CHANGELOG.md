@@ -4,6 +4,10 @@
 
 ### Added
 
+- **Diode forward-bias depletion coefficient** — diode model cards now accept
+  `FC` and apply the continuous Berkeley piecewise depletion-capacitance law in
+  AC and transient analysis, matching Rust and TypeScript.
+
 - **Bias-shaped diode depletion capacitance** — diode model cards now accept
   `VJ`/`PB` junction potential and `M`/`MJ` grading coefficient parameters and
   apply them to depletion capacitance in AC and transient analysis, matching
@@ -25,7 +29,7 @@
   `model_card_supported_parameter_coverage_gate_issue_records()`,
   `format_model_card_supported_parameter_coverage_gate_issue_csv()`, and
   `format_model_card_supported_parameter_coverage_gate_issue_json()` now
-  validate the expected seven-kind, 69-row supported-parameter catalog and
+  validate the expected seven-kind, 70-row supported-parameter catalog and
   expose stable issue rows for release automation, matching Rust and
   TypeScript.
 
