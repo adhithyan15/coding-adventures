@@ -294,26 +294,27 @@ fn for_loop_accumulator_converges_in_node() {
 }
 
 #[test]
-fn for_loop_reusing_an_already_assigned_variable_as_the_counter_runs_in_node() {
-    // Security regression (round 3 review, a bug the round-2 `HashSet`
-    // optimization itself introduced): reusing an already-assigned
-    // variable as a `for`-loop counter -- an ordinary Scilab idiom --
-    // previously desynced `FunctionCtx::locals`/`locals_set`, so the name
-    // "forgot" it was already known once the loop's own scope rewound.
-    // The resulting JavaScript had two top-level `let y` declarations in
-    // the same scope, which `node` rejected outright with "Identifier 'y'
-    // has already been declared" -- this test would fail with that exact
-    // error if the bug were still present.
-    if !node_available() {
-        eprintln!(
-            "skipping for_loop_reusing_an_already_assigned_variable_as_the_counter_runs_in_node: \
-             `node` not available"
-        );
-        return;
-    }
-    let out = run_via_node(
-        "for_reuses_existing_var",
-        "y = 1;\nfor y = 1:3\n  disp(y);\nend\ny = 99;\ndisp(y);\n",
-    );
-    assert_eq!(out, "1\n2\n3\n99");
+fn for_loop_reusing_an_already_assigned_variable_as_the_counter_is_rejected() {
+    // History: round 3 review fixed a bug where this idiom (reusing an
+    // already-assigned variable as a `for`-loop counter) produced invalid
+    // duplicate-`let` JavaScript, and added a test asserting it now ran
+    // correctly (always reassigning the reused name before reading it
+    // again). Round 5 review found that "fix" was still unsound for the
+    // more general case: the shared JS backend's `ForRange` codegen
+    // JS-block-scopes the loop variable regardless of this frontend's own
+    // "the same variable, surviving the loop" bookkeeping, so reading the
+    // reused counter after the loop WITHOUT first reassigning it silently
+    // returns the stale pre-loop value, not the loop's true final value.
+    // Confirmed directly: compiling `y = 1;\nfor y = 1:3\n  disp(y);\nend\ndisp(y);\n`
+    // and running it in `node` prints `1\n2\n3\n1`, not `1\n2\n3\n3`. Since
+    // this frontend cannot fix the JS backend's own codegen choice, this
+    // is now a clean, disclosed rejection instead of a "supported but
+    // sometimes silently wrong" feature -- see the non-node-gated
+    // `test_validator.rs` test of the identical rejection.
+    let err = scilab_to_semantic_ir::compile_source(
+        "y = 1;\nfor y = 1:3\n  disp(y);\nend\n",
+        "prog",
+    )
+    .expect_err("reusing an existing variable as a for-loop counter should be rejected");
+    assert!(err.message.contains("for-loop counter"));
 }

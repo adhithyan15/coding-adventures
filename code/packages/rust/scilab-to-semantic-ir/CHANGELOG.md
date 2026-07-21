@@ -87,7 +87,7 @@
   scope) — mirroring `scilab-runtime::eval::Interpreter::register_function`'s
   own more complete three-way reading of this grammar shape, whose doc
   comment confirms its own handling is "exactly correct."
-- 100 tests: 72 unit tests over lowering shapes, every documented scope
+- 99 tests: 72 unit tests over lowering shapes, every documented scope
   limit's rejection, and the DoS-guard regression set
   (`a_pathologically_long_flat_{additive,multiplicative}_chain_is_
   cleanly_rejected` plus the `elseif`/`case`/transpose-suffix chain
@@ -103,8 +103,8 @@
 
 ### Security
 
-Four rounds of pre-merge security review found and fixed nine issues, all
-before this crate ever shipped:
+Five rounds of pre-merge security review found and fixed eleven issues,
+all before this crate ever shipped:
 
 - **CRITICAL/HIGH** (round 1): `lower_if`/`lower_select` folded
   `elseif_clause*`/`case_clause*` — flat `{ x }`-repetition CST nodes,
@@ -201,6 +201,45 @@ before this crate ever shipped:
   candidates) rather than shipping; fixed by reusing `peel_to_named`
   (the same helper `bare_name`/`indexed_target` already use) instead of a
   direct `rule_name` comparison.
+- **HIGH** (round 5, a genuine data-correctness bug the round-4 fix made
+  reachable in a new, inconsistent way): reusing an already-known
+  variable as a `for`-loop's own counter (round 3's own "fixed and
+  supported" idiom) reads back the STALE pre-loop value, not the loop's
+  true final value, if read after the loop without first reassigning it
+  -- confirmed via `node`: `y=1; for y=1:3; disp(y); end; disp(y);`
+  prints `1 2 3 1`, not `1 2 3 3`. Root cause: this crate's own `ctx`
+  bookkeeping treats a reused counter as "the same variable, surviving
+  the loop" (matching `scilab-runtime`'s real semantics), but the shared
+  `semantic-ir-to-javascript` backend's `ForRange` codegen JS-block-scopes
+  the loop variable regardless, so the outer binding is left untouched by
+  the loop entirely. Round 3's own regression test never caught this
+  because it always reassigned the reused name before reading it again.
+  Compounding it: `collect_assigned_names_stmt`'s `for_stmt` arm
+  unconditionally reported a NESTED for-loop's own counter name as a
+  candidate to any ENCLOSING construct's hoist scan -- so the identical
+  program rejected the counter as correctly loop-scoped at the top level,
+  but silently accepted it (with the wrong value) when the same loop was
+  nested one level inside an `if`. Fixed by (1) no longer reporting a
+  `for`-loop's own counter name from `collect_assigned_names_stmt` at all
+  (only the body's own genuinely-new names should ever bubble up to an
+  enclosing scope), and (2) rejecting reuse of an already-known variable
+  as a `for`-loop counter outright, with a clean `ScilabLowerError` --
+  since this frontend has no control over the JS backend's own codegen
+  choice, a disclosed rejection replaces a "supported but sometimes
+  silently wrong" feature. Round 3's regression tests for this idiom were
+  replaced with tests asserting the (now correct) rejection.
+- **MEDIUM/documentation** (round 5): the round-4 module-doc-comment's own
+  description of its disclosed residual limitation (reading a hoisted
+  name before it's genuinely written, e.g. an uninitialised accumulator)
+  understated the actual failure mode as "silently computing a wrong
+  value." Verified directly: it's actually an uncaught `TypeError`
+  exception at the JS layer (`Expr::NilLit` lowers to JS `null`, and the
+  arithmetic reading it dereferences a field on `null`), not a silent
+  wrong numeric result. Fixed by correcting both doc-comment copies
+  (`hoist_assigned_names`'s own, and the module-level section) to
+  accurately describe this as a fail-loud crash, not a fail-silent one --
+  anyone relying on the prior description to accept this residual risk
+  was working from an inaccurate characterization of it.
 
 Also separately discovered (not fixed here, tracked as its own follow-up
 task): `scilab-parser`'s own `elseif_clause*` parsing appears to scale

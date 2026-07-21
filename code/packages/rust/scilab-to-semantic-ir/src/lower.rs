@@ -287,11 +287,20 @@
 //! hoisted name that nothing before it, in this construct, ever actually
 //! assigned" (e.g. an uninitialised accumulator, `for i=1:5; total =
 //! total+i; end` with no `total = 0;` first). Real Scilab would raise a
-//! clean "undefined variable" runtime error for that exact program; this
-//! frontend instead silently reads the `NilLit` placeholder. Closing this
-//! narrower gap needs real data-flow analysis, out of scope for v0.1.0 —
-//! every genuinely common pattern (a value every reachable branch/every
-//! loop iteration that runs at all actually assigns) is unaffected.
+//! clean "undefined variable" runtime error for that exact program.
+//! Verified (round 5 review) what this frontend actually does instead:
+//! NOT a silently-wrong numeric result as first assumed — the shared JS
+//! backend lowers `Expr::NilLit` to JS `null`, and `total + i` lowers to
+//! an `ElementwiseOp` whose runtime helper unconditionally dereferences
+//! `.data` on both operands, so the generated program throws an uncaught
+//! `TypeError: Cannot read properties of null (reading 'data')` and exits
+//! non-zero — a crash, not a silent miscalculation. Still not the clean,
+//! "unsupported: ..." `ScilabLowerError` real definite-assignment
+//! analysis would produce, and still out of scope for v0.1.0 to close
+//! properly, but the failure mode is fail-loud (an exception at the
+//! JS layer), not fail-silent. Every genuinely common pattern (a value
+//! every reachable branch/every loop iteration that runs at all actually
+//! assigns) is unaffected either way.
 
 use std::collections::HashSet;
 
@@ -618,18 +627,25 @@ impl Lowerer {
                 }
             }
             "for_stmt" => {
-                // The loop variable itself is a bare-name assignment
-                // target too -- `lower_for`'s own callers exclude it
-                // explicitly where that matters (it has its own, separate,
-                // correctly loop-scoped handling).
-                if let Some(name) = inner.children.iter().find_map(|c| match c {
-                    ASTNodeOrToken::Token(t) if t.effective_type_name() == "NAME" => {
-                        Some(t.value.clone())
-                    }
-                    _ => None,
-                }) {
-                    out.insert(name);
-                }
+                // Deliberately do NOT insert the loop variable's own name
+                // into `out` here (security regression, round 5 review):
+                // this scan exists so an ENCLOSING construct (an outer
+                // `if`/`while`/`select`/`for` this `for_stmt` is nested
+                // inside) can hoist names that need to survive past ITS
+                // OWN boundary -- but a `for`-loop's counter has its own,
+                // separate, genuinely loop-scoped lifetime (`lower_for`'s
+                // own `scope_mark`/`scope_rewind`), identical whether or
+                // not this `for_stmt` happens to be nested inside another
+                // construct. Reporting it here previously let an
+                // ENCLOSING construct's hoist pre-declare it at ITS OWN
+                // scope -- making the counter spuriously "survive" the
+                // loop (with a stale, JS-block-scoping-dependent value,
+                // not even the loop's true final value) purely because
+                // the identical `for` happened to be nested one level
+                // deeper, while the same loop at the top level correctly
+                // rejected the identical post-loop reference as
+                // undefined. Only the loop BODY's own newly-introduced
+                // names (excluding the counter) should ever bubble up.
                 // `[range, stmt_sep, block_body]` -- see `lower_for`.
                 if let [_r, _s, b] = child_nodes(inner).as_slice() {
                     self.collect_assigned_names(b, depth + 1, out)?;
@@ -686,11 +702,16 @@ impl Lowerer {
     /// `for i = 1:5; total = total + i; end` with no `total = 0;`
     /// beforehand) will read the `NilLit` placeholder instead of getting
     /// the clean "undefined variable" error real Scilab would raise at
-    /// runtime for the identical program -- silently computing a wrong
-    /// value rather than erroring. Closing this residual gap needs real
-    /// data-flow analysis, out of scope for this v0.1.0 cut; every
-    /// genuinely common pattern (conditionally computing a value that
-    /// every reachable branch actually assigns) is unaffected.
+    /// runtime for the identical program. Verified (round 5 review) this
+    /// fails LOUD, not silent: `NilLit` lowers to JS `null`, and the
+    /// arithmetic reading it throws an uncaught `TypeError` at runtime
+    /// (not a silently-wrong numeric result), since the shared JS
+    /// backend's own runtime helpers unconditionally dereference a field
+    /// on both operands. Still not the clean `ScilabLowerError` real
+    /// definite-assignment analysis would produce; closing this residual
+    /// gap properly needs that analysis, out of scope for this v0.1.0
+    /// cut. Every genuinely common pattern (conditionally computing a
+    /// value that every reachable branch actually assigns) is unaffected.
     fn hoist_assigned_names(
         &mut self,
         bodies: &[&GrammarASTNode],
@@ -1388,6 +1409,39 @@ impl Lowerer {
                 _ => None,
             })
             .ok_or_else(|| self.err_at(for_stmt, "malformed for: no loop variable".to_string()))?;
+
+        // Security regression (round 5 review): reusing an already-known
+        // variable as a `for`-loop's own counter was previously ACCEPTED
+        // -- this crate's own `ctx` bookkeeping (correctly, per round 3's
+        // fix) treats it as "the same variable, surviving the loop with
+        // its final value," matching `scilab-runtime::eval_for`'s own
+        // ground-truth semantics (`self.vars.insert` never removes the
+        // binding). But the shared `semantic-ir-to-javascript` backend's
+        // `ForRange` codegen does NOT honour that: it JS-block-scopes the
+        // loop variable, so the OUTER binding is left untouched by the
+        // loop entirely. Confirmed empirically: `y = 1; for y = 1:3;
+        // disp(y); end; disp(y);` prints `1 2 3 1`, not `1 2 3 3` --
+        // reading the counter after the loop without first reassigning it
+        // silently returns the STALE pre-loop value, not the loop's true
+        // final value. (Round 3's own regression test never caught this
+        // because it always reassigns the reused name before reading it
+        // again, masking the gap.) Since this frontend has no control
+        // over the JS backend's own codegen choice, and this is a genuine
+        // silent-wrong-value hazard reachable through an entirely
+        // ordinary-looking idiom, this cut instead rejects the reuse
+        // outright -- a clean, disclosed `ScilabLowerError`, not a
+        // "supported but sometimes wrong" feature.
+        if ctx.has_local(&var) || ctx.params.contains(&var) {
+            return Err(self.err_at(
+                for_stmt,
+                format!(
+                    "unsupported: reusing an existing variable `{var}` as a for-loop counter is \
+                     out of scope for v0.1.0 (the shared JS backend's ForRange codegen \
+                     block-scopes the loop variable, so its value would not correctly persist \
+                     past the loop if read without first reassigning it)"
+                ),
+            ));
+        }
 
         let (iter_node, body_node) = match child_nodes(for_stmt).as_slice() {
             [i, _stmt_sep, b] => (*i, *b),

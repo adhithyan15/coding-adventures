@@ -153,17 +153,20 @@ fn a_percent_constant_program_validates_and_the_js_backend_accepts_it() {
 }
 
 #[test]
-fn for_loop_reusing_an_already_assigned_variable_validates_and_the_js_backend_accepts_it() {
-    // Non-node-gated backstop for the identical e2e regression in
-    // `tests/e2e_node.rs` (round 3 review): reusing an already-assigned
-    // variable as a `for`-loop counter must validate cleanly and the JS
-    // backend must accept it, regardless of whether `node` is available
-    // in the environment running this test.
-    let module = assert_valid("y = 1;\nfor y = 1:3\n  disp(y);\nend\ny = 99;\ndisp(y);\n");
-    let backend = JavaScriptBackend;
-    let errors = backend.check_module(&module);
-    assert!(
-        errors.is_empty(),
-        "expected the JS backend to accept a for-loop reusing an existing variable, got: {errors:?}"
-    );
+fn for_loop_reusing_an_already_assigned_variable_as_the_counter_is_rejected() {
+    // Round 3 review had this idiom lowering "successfully" (validating
+    // and JS-backend-accepting). Round 5 review found that was actually
+    // UNSOUND: the shared `semantic-ir-to-javascript` backend's
+    // `ForRange` codegen JS-block-scopes the loop variable, so reading a
+    // reused counter after the loop WITHOUT first reassigning it silently
+    // returns the stale pre-loop value, not the loop's true final value
+    // (confirmed via `node`: prints the pre-loop value, not the
+    // post-loop one). Round 3's own test masked this by always
+    // reassigning before reading. Since this frontend has no control over
+    // the JS backend's codegen choice, this is now a clean, disclosed
+    // rejection instead of a "supported but sometimes silently wrong"
+    // feature.
+    let err = compile_source("y = 1;\nfor y = 1:3\n  disp(y);\nend\n", "prog")
+        .expect_err("reusing an existing variable as a for-loop counter should be rejected");
+    assert!(err.message.contains("for-loop counter"));
 }
