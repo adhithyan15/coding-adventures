@@ -122,16 +122,16 @@ ports, followed by the paired `ed25519`, `font-parser`, `asciidoc-parser`, and
 ports, followed by the Haskell `gradient-descent`, `perceptron`, and
 `type-checker-protocol` ports, and the Haskell `paint-vm-ascii`,
 `barcode-layout-1d`, `itf`, `code39`, `codabar`, `code128`, `upc-a`, `ean-13`,
-and `sql-csv-source` ports:
+`sql-csv-source`, and `zstd` ports:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 281 |
+| Present in 10-15 languages | 172 | 280 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,972 |
-| Present in one language | 712 | 9,968 |
+| Present in one language | 715 | 10,010 |
 
-The loop must not start by attempting 9,968 singleton ports. It should finish
+The loop must not start by attempting 10,010 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 ## Priority 0: Inventory And Identity Integrity
@@ -172,7 +172,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 172 packages present in at least ten implementation languages need 281
+The 172 packages present in at least ten implementation languages need 280
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -183,7 +183,7 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Perl | 0 | Complete; paired data-structure/storage wave |
 | C# | 0 | Complete; paired native package wave |
 | F# | 0 | Complete; paired native package wave |
-| Haskell | 6 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
+| Haskell | 5 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
 | Kotlin | 58 | Move with Java |
@@ -691,6 +691,19 @@ grouping, aggregates, limits, and total result wrappers. The package now spans
 13 implementation lanes, reduces the high-consensus backlog to 281 slots, and
 leaves 6 gaps in the Haskell lane.
 
+The twenty-ninth Haskell high-consensus slice is complete: `zstd` now provides
+the pure CMP07 educational Zstandard frame codec on top of the existing native
+`lzss` package. It emits standard single-segment frames and 128 KiB raw, RLE,
+and compressed blocks, encodes raw literal sections and the predefined
+literal-length, match-length, and offset FSE tables, and strictly validates
+headers, modes, truncation, backreferences, trailing data, and output limits.
+Its package-native suite exercises 16 examples with 86% expression and 77%
+alternative coverage, including exact cross-language compressed bytes, all
+block families, multi-block RLE, dictionary-id and content-size header forms,
+checksums, deterministic binary data, compression ratios, and malformed
+frames. The package now spans 13 implementation lanes, reduces the
+high-consensus backlog to 280 slots, and leaves 5 gaps in the Haskell lane.
+
 Recommended family order:
 
 1. Leaf algorithms and data structures.
@@ -717,7 +730,7 @@ This phase covers 121 package identities and 911 current missing slots.
 
 ## Priority 4: Classify Sparse And Singleton Families
 
-The singleton inventory is led by 515 Rust, 86 Python, and 84 TypeScript
+The singleton inventory is led by 520 Rust, 86 Python, and 84 TypeScript
 packages. Classify families before opening implementation PRs.
 
 ### Likely portable Rust-led families
