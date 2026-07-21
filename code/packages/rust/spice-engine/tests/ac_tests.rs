@@ -907,6 +907,49 @@ fn ac_bjt_reverse_emission_coefficient_reduces_base_collector_diffusion_capacita
 }
 
 #[test]
+fn ac_bjt_base_emitter_depletion_capacitance_falls_with_reverse_bias() {
+    fn base_amplitude(grading_coefficient: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vac", "in", "0", -1.0, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "base", 1_000.0,
+        )));
+        circuit.add(Element::Bjt(
+            Bjt::with_model_temperature_and_depletion_parameters(
+                "Q1",
+                "0",
+                "base",
+                "0",
+                BjtPolarity::Npn,
+                1.0e-14,
+                100.0,
+                0.02585,
+                1.0e-6,
+                0.0,
+                0.0,
+                0.0,
+                3.0,
+                1.11,
+                0.0,
+                1.0,
+                1.0,
+                0.75,
+                grading_coefficient,
+            ),
+        ));
+
+        ac_sweep(&circuit, 1_000.0, 1_000.0, 1).unwrap()[0]
+            .voltage("base")
+            .unwrap()
+            .abs()
+    }
+
+    assert!(base_amplitude(0.5) > base_amplitude(0.0));
+}
+
+#[test]
 fn ac_mosfet_common_source_suppresses_dc_supplies_without_ac_spec() {
     let mut circuit = Circuit::new();
     circuit.add(Element::VoltageSource(VoltageSource::new(

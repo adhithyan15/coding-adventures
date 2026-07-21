@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add BJT model-card `VJE`/`PE` base-emitter junction-potential and `MJE`/`ME`
+  grading-coefficient support with bias-shaped `CJE` depletion capacitance in
+  AC and transient analysis, matching Python and Rust. The supported-parameter
+  catalog now contains 86 canonical rows.
 - Add BJT model-card `NR` reverse emission-coefficient support to reverse
   base-collector diffusion charge in AC and transient analysis, matching Python
   and Rust. The supported-parameter catalog now contains 82 canonical rows.

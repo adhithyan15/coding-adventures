@@ -605,6 +605,18 @@ describe("acSweep", () => {
     expect(baseAmplitude(2.0)).toBeGreaterThan(baseAmplitude(1.0));
   });
 
+  it("shapes BJT base-emitter depletion capacitance under reverse bias", () => {
+    function baseAmplitude(baseEmitterGradingCoefficient: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "in", "0", -1.0, 1.0));
+      circuit.add(resistor("Rin", "in", "base", 1_000.0));
+      circuit.add(bjt("Q1", "0", "base", "0", "NPN", 1.0e-14, 100.0, 0.02585, 1.0e-6, 0.0, 0.0, 0.0, 3.0, 1.11, 0.0, 1.0, 1.0, 0.75, baseEmitterGradingCoefficient));
+      return complexAbs(acSweep(circuit, 1_000.0, 1_000.0, 1)[0].voltage("base")!);
+    }
+
+    expect(baseAmplitude(0.5)).toBeGreaterThan(baseAmplitude(0.0));
+  });
+
   it("applies VCVS gain in AC analysis", () => {
     const circuit = new Circuit();
     circuit.add(voltageSource("Vin", "in", "0", 1.0));
