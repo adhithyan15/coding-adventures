@@ -1,0 +1,35 @@
+cabal-version: 3.0
+name:          zstd
+version:       0.1.0
+synopsis:      Educational RFC 8878 Zstandard frame codec
+description:   Pure Haskell raw, RLE, and predefined-FSE Zstandard blocks.
+category:      Compression
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+extra-doc-files:
+    README.md
+    CHANGELOG.md
+
+library
+    exposed-modules:  Zstd
+    build-depends:    base >=4.14 && <5
+                    , bytestring >=0.10 && <0.13
+                    , containers >=0.6 && <0.8
+                    , lzss >=0.1 && <0.2
+    hs-source-dirs:   src
+    ghc-options:      -Wall
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    ZstdSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14 && <5
+                    , bytestring >=0.10 && <0.13
+                    , hspec == 2.*
+                    , zstd
+    ghc-options:      -Wall
+    default-language: Haskell2010
