@@ -6,6 +6,25 @@ All notable changes to `task-core` are documented here.
 
 ### Added
 
+- **The `calendar()` projection — dated events over the same selection** (`view` module —
+  Phase 3 PR-4 of `code/specs/task-app-view-layer.md`).
+  - `calendar(project, view, range, schedule) -> CalendarView` (and
+    `ProjectState::calendar(view, range, project_start)`), with `DateRange { start, end }`
+    (inclusive) and `CalendarEvent { task, label, start, finish, all_day, completed,
+    overdue, critical }`.
+  - The task set and order come from the same `select()` pipeline the table uses, so a
+    calendar honours a view's filter exactly like every other shape.
+  - **Two kinds of task land on the calendar**, which is what makes it serve both a
+    project plan and a plain to-do list: a **scheduled** task contributes its computed
+    start…finish span, and an **unscheduled task with a deadline** contributes a one-day
+    marker on that deadline. A task with neither simply doesn't appear.
+  - Events are clipped to the range by intersection (inclusive both ends), sorted by start
+    then label, and flagged `overdue` when they finish past their deadline and aren't done.
+    `all_day` is always true today — the model is day-granular; it's reserved for timed
+    events (time-blocking) in a later phase.
+  - 3 tests (85 total): scheduled + deadline tasks included and undated excluded,
+    out-of-range exclusion, and filter-honouring plus the overdue flag.
+
 - **The `table()` (sheet) projection — render-ready rows over the selection** (`view`
   module — Phase 3 PR-3 of `code/specs/task-app-view-layer.md`). A thin map over PR-2's
   `select()`: nothing new is computed, it's just shaped for a spreadsheet host.

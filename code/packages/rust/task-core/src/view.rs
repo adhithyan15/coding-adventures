@@ -5,8 +5,11 @@
 //! and renders them through **one** function, [`format_cell`]. Because filtering,
 //! sorting, grouping, and display all resolve values the same way, they agree by
 //! construction: a column can never sort by one interpretation of a field and display
-//! another. This module is that single resolver; the pipeline that consumes it (filter →
-//! sort → group → shape) lands in the following PRs. See
+//! another.
+//!
+//! The module holds the whole view layer: the resolver ([`cell`] / [`format_cell`]), the
+//! selection pipeline ([`select`] — filter → sort → group), and the render-ready shapes
+//! built on it ([`table`] for the sheet, [`calendar`] for dated events). See
 //! `code/specs/task-app-view-layer.md`.
 //!
 //! ## The built-in field catalogue (the wire contract)
@@ -550,6 +553,135 @@ fn column_kind(project: &ProjectState, field: &FieldRef) -> ColumnKind {
     }
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// The calendar projection — dated events over the same selection
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// An inclusive span of days, e.g. the month or week a calendar is showing.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub struct DateRange {
+    /// First day shown (inclusive).
+    pub start: Date,
+    /// Last day shown (inclusive).
+    pub end: Date,
+}
+
+impl DateRange {
+    /// Whether the range is well-formed (`start <= end`). An inverted range describes no
+    /// days at all, so a projection over it is empty rather than surprising.
+    fn is_valid(&self) -> bool {
+        self.start.0 <= self.end.0
+    }
+
+    /// Whether `[start, finish]` overlaps this range (both ends inclusive).
+    fn intersects(&self, start: Date, finish: Date) -> bool {
+        finish.0 >= self.start.0 && start.0 <= self.end.0
+    }
+}
+
+/// A render-ready calendar: the range it covers and the dated events inside it.
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub struct CalendarView {
+    /// The span this view covers.
+    pub range: DateRange,
+    /// Events intersecting the range, earliest first (then by label).
+    pub events: Vec<CalendarEvent>,
+}
+
+/// One dated bar on the calendar.
+///
+/// Two kinds of task land here, which is what makes the calendar useful for both a
+/// project plan and a plain to-do list:
+/// - a **scheduled** task contributes its computed start…finish span, and
+/// - an **unscheduled task with a deadline** contributes a single-day event on that
+///   deadline (the "due today" case a todo app needs).
+#[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub struct CalendarEvent {
+    /// The task this event renders.
+    pub task: TaskId,
+    /// Display label (the task name).
+    pub label: String,
+    /// First day of the event (inclusive).
+    pub start: Date,
+    /// Last day of the event (inclusive).
+    pub finish: Date,
+    /// Always true today: the model is day-granular, so every event spans whole days.
+    /// Reserved for timed events (time-blocking) in a later phase.
+    pub all_day: bool,
+    /// Whether the task is complete (a host may strike it through).
+    pub completed: bool,
+    /// Finishes after its deadline and isn't done — the "late" flag.
+    pub overdue: bool,
+    /// On the critical path (only meaningful for scheduled tasks).
+    pub critical: bool,
+}
+
+/// Build the calendar for `view` over `range`.
+///
+/// The task set, and their order, come from the same [`select`] pipeline the table uses —
+/// so a calendar honours the view's filter exactly like every other shape. Tasks with
+/// neither a computed schedule nor a deadline have no date and simply don't appear.
+pub fn calendar(
+    project: &ProjectState,
+    view: &View,
+    range: DateRange,
+    schedule: &ScheduleResult,
+) -> CalendarView {
+    // An inverted range (from corrupt input) covers no days — answer with nothing rather
+    // than the odd subset a naive intersection test would admit.
+    if !range.is_valid() {
+        return CalendarView {
+            range,
+            events: Vec::new(),
+        };
+    }
+
+    let mut events: Vec<CalendarEvent> = select(project, view, schedule)
+        .into_iter()
+        .flat_map(|g| g.tasks)
+        .filter_map(|id| {
+            let task = project.tasks.get(&id)?;
+            let deadline = task.schedule.as_ref().and_then(|s| s.deadline);
+            // A scheduled span if the CPM pass dated it; otherwise a one-day deadline
+            // marker; otherwise the task simply isn't on a calendar.
+            let (start, finish, critical) = match schedule.dates.get(&id) {
+                Some(d) => (d.scheduled_start, d.scheduled_finish, d.critical),
+                None => {
+                    let d = deadline?;
+                    (d, d, false)
+                }
+            };
+            if !range.intersects(start, finish) {
+                return None;
+            }
+            Some(CalendarEvent {
+                task: id.clone(),
+                label: task.name.clone(),
+                start,
+                finish,
+                all_day: true,
+                completed: task.completed,
+                overdue: deadline.is_some_and(|dl| finish.0 > dl.0) && !task.completed,
+                critical,
+            })
+        })
+        .collect();
+
+    events.sort_by(|a, b| {
+        a.start
+            .0
+            .cmp(&b.start.0)
+            .then_with(|| a.label.cmp(&b.label))
+    });
+    CalendarView { range, events }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -1003,6 +1135,114 @@ mod tests {
         assert_eq!(a.cells[1].display, "○"); // completed=false → glyph
         assert_eq!(a.cells[1].value, CellValue::Bool(false)); // typed value still available
         assert_eq!(a.cells[2].display, "10%"); // percentComplete formatted
+    }
+
+    // ── calendar projection ──────────────────────────────────────────────────────
+
+    fn day(y: i32, m: u32, d: u32) -> Date {
+        Date::from_ymd(y, m, d).unwrap()
+    }
+
+    /// A project with: `sched` (a scheduled 1-day task), `due` (unscheduled, deadline
+    /// Wed), and `bare` (neither) — the three calendar cases.
+    fn calendar_project() -> ProjectState {
+        let mut p = project();
+        let mut sched = Task::new(TaskId::from_raw("sched"), "Scheduled");
+        sched.schedule = Some(TaskSchedule {
+            duration: crate::primitives::Duration::minutes(8 * 60),
+            ..TaskSchedule::default()
+        });
+        let mut due = Task::new(TaskId::from_raw("due"), "Due only");
+        due.schedule = Some(TaskSchedule {
+            duration: crate::primitives::Duration::zero(),
+            deadline: Some(day(2026, 7, 15)),
+            ..TaskSchedule::default()
+        });
+        let bare = Task::new(TaskId::from_raw("bare"), "No dates");
+        for t in [sched, due, bare] {
+            p.tasks.insert(t.id.clone(), t);
+        }
+        p
+    }
+
+    #[test]
+    fn calendar_includes_scheduled_and_deadline_tasks_but_not_undated() {
+        let p = calendar_project();
+        let range = DateRange {
+            start: day(2026, 7, 13),
+            end: day(2026, 7, 19),
+        };
+        let cal = p.calendar(
+            &view(Filter::default(), vec![asc("name")], None),
+            range,
+            day(2026, 7, 13),
+        );
+        let labels: Vec<_> = cal.events.iter().map(|e| e.label.clone()).collect();
+        // Both dated tasks appear; the undated one does not.
+        assert!(labels.contains(&"Scheduled".to_string()), "{labels:?}");
+        assert!(labels.contains(&"Due only".to_string()), "{labels:?}");
+        assert!(!labels.contains(&"No dates".to_string()), "{labels:?}");
+        assert!(cal.events.iter().all(|e| e.all_day));
+        assert_eq!(cal.range, range);
+    }
+
+    #[test]
+    fn calendar_excludes_events_outside_the_range() {
+        let p = calendar_project();
+        // A range well after everything → no events.
+        let range = DateRange {
+            start: day(2026, 9, 1),
+            end: day(2026, 9, 30),
+        };
+        let cal = p.calendar(
+            &view(Filter::default(), vec![asc("name")], None),
+            range,
+            day(2026, 7, 13),
+        );
+        assert!(cal.events.is_empty(), "{:?}", cal.events);
+    }
+
+    #[test]
+    fn calendar_over_an_inverted_range_is_empty() {
+        // Corrupt input: end before start. It describes no days, so nothing shows —
+        // rather than the events that would happen to span the inverted gap.
+        let p = calendar_project();
+        let range = DateRange {
+            start: day(2026, 7, 20),
+            end: day(2026, 7, 10),
+        };
+        let cal = p.calendar(
+            &view(Filter::default(), vec![asc("name")], None),
+            range,
+            day(2026, 7, 13),
+        );
+        assert!(cal.events.is_empty(), "{:?}", cal.events);
+    }
+
+    #[test]
+    fn calendar_honours_the_views_filter_and_flags_overdue() {
+        let mut p = calendar_project();
+        // Make the scheduled task run past a deadline → overdue.
+        if let Some(t) = p.tasks.get_mut(&TaskId::from_raw("sched")) {
+            if let Some(s) = t.schedule.as_mut() {
+                s.duration = crate::primitives::Duration::minutes(3 * 8 * 60);
+                s.deadline = Some(day(2026, 7, 13)); // finishes Wed, due Mon
+            }
+        }
+        let range = DateRange {
+            start: day(2026, 7, 13),
+            end: day(2026, 7, 19),
+        };
+
+        // Filter to just the scheduled task by name search.
+        let f = Filter {
+            search: Some("Scheduled".into()),
+            ..Filter::default()
+        };
+        let cal = p.calendar(&view(f, vec![asc("name")], None), range, day(2026, 7, 13));
+        assert_eq!(cal.events.len(), 1, "filter narrowed the calendar");
+        assert_eq!(cal.events[0].label, "Scheduled");
+        assert!(cal.events[0].overdue, "finishes after its deadline");
     }
 
     #[test]

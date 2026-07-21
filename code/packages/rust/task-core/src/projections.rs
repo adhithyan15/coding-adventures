@@ -51,6 +51,18 @@ impl ProjectState {
         crate::view::table(self, view, &self.schedule_or_empty(project_start))
     }
 
+    /// The render-ready **calendar** for a [`View`] over `range`: the view's filter picks
+    /// the tasks, and each contributes either its scheduled span or (when unscheduled) a
+    /// one-day marker on its deadline (see [`crate::view::calendar`]).
+    pub fn calendar(
+        &self,
+        view: &View,
+        range: crate::view::DateRange,
+        project_start: Date,
+    ) -> crate::view::CalendarView {
+        crate::view::calendar(self, view, range, &self.schedule_or_empty(project_start))
+    }
+
     /// The CPM schedule at `project_start`, or an empty schedule if the network is cyclic
     /// — so view projections read computed columns as `Empty` rather than failing.
     fn schedule_or_empty(&self, project_start: Date) -> ScheduleResult {
