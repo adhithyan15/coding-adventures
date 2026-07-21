@@ -16,7 +16,7 @@
 //! confidence at scale, and it would have been the default state of the entire
 //! shipped stdlib on day one.
 
-use logic_engine::{ContentHash, Provenance, Quote};
+use logic_engine::{ContentHash, Provenance, Quote, VerbatimSpan};
 
 // ---------------------------------------------------------------------------
 // (1) The fail-open trap: an un-migrated clause is explicitly unverifiable.
@@ -68,10 +68,7 @@ fn a_migrated_clause_carries_an_anchored_span_and_a_pinned_snapshot() {
 
     assert_eq!(p.quote.text(), Some("Good   0 to 50"));
     assert!(!p.quote.is_unmigrated());
-    match &p.quote {
-        Quote::Verbatim { byte_offset, .. } => assert_eq!(*byte_offset, Some(8)),
-        Quote::Unmigrated => panic!("expected a verbatim quote"),
-    }
+    assert_eq!(p.quote.byte_offset(), Some(8));
     assert_eq!(p.snapshot.as_ref(), Some(&snap));
 }
 
@@ -89,10 +86,11 @@ fn the_anchor_actually_points_at_the_quote_in_the_document() {
         Some(ContentHash::of(doc.as_bytes())),
     );
 
-    let Quote::Verbatim { text, byte_offset } = &p.quote else {
+    let Quote::Verbatim(span) = &p.quote else {
         panic!("expected a verbatim quote");
     };
-    let at = byte_offset.expect("anchored");
+    let text = span.text();
+    let at = span.byte_offset().expect("anchored");
     // CHECKED slicing, deliberately — this is the pattern the verifier copies.
     // `&doc[at..at + text.len()]` panics three ways on stale or hostile input:
     // an offset past the end, an offset off a UTF-8 character boundary, and
@@ -101,7 +99,7 @@ fn the_anchor_actually_points_at_the_quote_in_the_document() {
     let found = doc.get(at..at.checked_add(text.len()).expect("no overflow"));
     assert_eq!(
         found,
-        Some(text.as_str()),
+        Some(text),
         "the recorded offset must land exactly on the recorded span"
     );
 }
@@ -162,14 +160,12 @@ fn a_quote_without_an_anchor_or_snapshot_is_still_incomplete() {
         p.snapshot.is_none(),
         "no snapshot was captured, and the record says so"
     );
-    match &p.quote {
-        Quote::Verbatim { byte_offset, .. } => assert_eq!(
-            *byte_offset, None,
-            "no anchor was captured, and the record says so rather than \
-             implying the span can be located"
-        ),
-        Quote::Unmigrated => panic!("expected a verbatim quote"),
-    }
+    assert_eq!(
+        p.quote.byte_offset(),
+        None,
+        "no anchor was captured, and the record says so rather than implying \
+         the span can be located"
+    );
 }
 
 // ---------------------------------------------------------------------------
@@ -274,5 +270,60 @@ fn recording_a_span_refuses_ranges_that_would_panic_a_verifier() {
     assert!(
         Provenance::cited("x").with_quote_in(utf8, 2, 2).is_none(),
         "an offset off a UTF-8 boundary must be refused, not panicked on"
+    );
+}
+
+// ---------------------------------------------------------------------------
+// (8) The invariant is STRUCTURAL, not merely enforced by the builder.
+//
+//     Round 2 of the security review disproved the builder-only version with a
+//     downstream probe crate: `Quote::Verbatim` was a public struct-variant, so
+//     a consumer could construct an empty span directly and bypass the check.
+//     The reason that mattered more than it looks: DESERIALIZATION builds the
+//     enum directly, so a trail read back from disk — PR-D2's entire job —
+//     would reconstruct exactly the value the builder refused to make.
+//
+//     `VerbatimSpan` now has private fields and one fallible constructor, so
+//     every path is covered, including paths not written yet. This test states
+//     the property through that constructor, which is the only door left.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn a_span_with_no_visible_content_cannot_be_constructed_at_all() {
+    // Ordinary whitespace …
+    for blank in ["", " ", "\t\n  ", "\u{00A0}", "\u{3000}"] {
+        assert!(
+            VerbatimSpan::new(blank, Some(0)).is_none(),
+            "{blank:?} has no visible content and must not become a span"
+        );
+    }
+    // … and the zero-width family, which `str::trim` does NOT treat as
+    // whitespace. A zero-width span renders as nothing, so an auditor would
+    // see an apparently blank quote while the verifier reported a real one.
+    for invisible in ["\u{200B}", "\u{200C}", "\u{200D}", "\u{2060}", "\u{FEFF}"] {
+        assert!(
+            VerbatimSpan::new(invisible, Some(0)).is_none(),
+            "U+{:04X} is invisible in every rendering and must not become a span",
+            invisible.chars().next().unwrap() as u32
+        );
+    }
+    // A span with any visible character is fine, even alongside invisibles.
+    assert!(VerbatimSpan::new("\u{200B}Good 0 to 50", Some(0)).is_some());
+}
+
+#[test]
+fn both_builders_route_through_the_one_constructor() {
+    let doc = "Green\u{200B}\u{FEFF}   Good   0 to 50";
+    let snap = ContentHash::of(doc.as_bytes());
+
+    // `with_quote` degrades an invisible span to the honest absence …
+    let p = Provenance::cited("x").with_quote("\u{200B}\u{FEFF}", Some(0), Some(snap));
+    assert!(p.quote.is_unmigrated(), "invisible span must not verify");
+
+    // … and `with_quote_in` refuses to build one at all.
+    let zw = doc.find('\u{200B}').expect("fixture");
+    assert!(
+        Provenance::cited("x").with_quote_in(doc, zw, 6).is_none(),
+        "the document-anchored builder must apply the same rule"
     );
 }

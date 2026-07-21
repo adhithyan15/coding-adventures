@@ -23,6 +23,10 @@ from something ADJ *reports* into something a third party can *check*.
   search would confirm the words exist somewhere — in a footnote, a nav menu, or
   a passage saying the opposite — not that they support this clause.
 
+- `Quote::Verbatim(VerbatimSpan)` — the payload's fields are **private**, with
+  one fallible constructor. The invariant "a span must be able to support a
+  claim" therefore holds on every construction path, not just inside a builder.
+
 ### Notes on two deliberate choices
 
 - **`Quote` is an enum, not the `String` the spec literally writes.** A plain

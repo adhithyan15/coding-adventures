@@ -99,20 +99,11 @@ pub struct Provenance {
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum Quote {
     /// The recorded span, and where it sits in the pinned snapshot.
-    Verbatim {
-        /// The exact bytes, as captured.
-        text: String,
-        /// Byte offset of `text` within the snapshot document.
-        ///
-        /// Verification is **anchored** to this offset rather than searching
-        /// the document for the text. An unanchored substring search would
-        /// accept a quote that appears anywhere — including in a footnote, a
-        /// navigation menu, or a passage that says the opposite — so it would
-        /// confirm that the words exist somewhere, not that they support this
-        /// clause. `None` means the offset was not recorded, which downgrades
-        /// the step to `Unverified` rather than falling back to searching.
-        byte_offset: Option<usize>,
-    },
+    ///
+    /// The payload's fields are **private**, so the only way to obtain one is
+    /// [`VerbatimSpan::new`], which enforces the invariant. See that type for
+    /// why the check cannot live in a builder.
+    Verbatim(VerbatimSpan),
     /// This clause predates the `quote`/`source` split. **Never verifiable.**
     Unmigrated,
 }
@@ -121,7 +112,15 @@ impl Quote {
     /// The recorded span, if there is one.
     pub fn text(&self) -> Option<&str> {
         match self {
-            Quote::Verbatim { text, .. } => Some(text),
+            Quote::Verbatim(v) => Some(v.text()),
+            Quote::Unmigrated => None,
+        }
+    }
+
+    /// Where the span sits in the snapshot, if both are recorded.
+    pub fn byte_offset(&self) -> Option<usize> {
+        match self {
+            Quote::Verbatim(v) => v.byte_offset(),
             Quote::Unmigrated => None,
         }
     }
@@ -132,6 +131,85 @@ impl Quote {
     pub fn is_unmigrated(&self) -> bool {
         matches!(self, Quote::Unmigrated)
     }
+}
+
+/// A span that is guaranteed, by construction, to be capable of supporting a
+/// claim.
+///
+/// # Why the fields are private
+///
+/// The first version of this enforced "a span must not be blank" inside the
+/// `with_quote` builder. A security review disproved that with a downstream
+/// probe crate: `Quote::Verbatim` was a public struct-variant, so a consumer
+/// could write `Quote::Verbatim { text: String::new(), .. }` directly and
+/// bypass the builder entirely — and an empty span satisfies the verifier's
+/// `doc[at..at + text.len()] == text` at **every offset in every document**.
+///
+/// The builder was never going to be the chokepoint, and the reason matters:
+/// **deserialization builds the enum directly**, so a trail read back from disk
+/// would reconstruct exactly the value the builder refused to make. That is
+/// PR-D2's whole job, which means the hole would have reopened precisely where
+/// it does the most damage. Private fields plus one fallible constructor make
+/// the invariant hold on every path, including ones not written yet.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct VerbatimSpan {
+    text: String,
+    byte_offset: Option<usize>,
+}
+
+impl VerbatimSpan {
+    /// Build a span, or `None` if it could not support a claim.
+    ///
+    /// Rejects text with no **visible** content. `str::trim` alone is not
+    /// enough: it follows the Unicode `White_Space` property, which covers
+    /// U+00A0 and U+3000 but *not* the zero-width family (U+200B–U+200D,
+    /// U+2060, U+FEFF). A zero-width span is invisible in every rendering of
+    /// the trail, so a human auditor would see what looks like a blank quote
+    /// while the verifier reported a real one — the same manufactured
+    /// confidence, in miniature.
+    pub fn new(text: impl Into<String>, byte_offset: Option<usize>) -> Option<Self> {
+        let text = text.into();
+        if !has_visible_content(&text) {
+            return None;
+        }
+        Some(Self { text, byte_offset })
+    }
+
+    /// The exact bytes, as captured.
+    pub fn text(&self) -> &str {
+        &self.text
+    }
+
+    /// Byte offset of the span within the snapshot document.
+    ///
+    /// Verification is **anchored** to this offset rather than searching the
+    /// document for the text. An unanchored substring search would accept a
+    /// quote that appears anywhere — a footnote, a navigation menu, a passage
+    /// saying the opposite — so it would confirm the words exist somewhere, not
+    /// that they support this clause. `None` means no offset was recorded,
+    /// which downgrades the step to `Unverified` rather than falling back to
+    /// searching.
+    ///
+    /// Note what this does **not** promise: a very short span (one or two
+    /// characters) is anchored but weak. Anchoring means it must really occur
+    /// at that offset, so it is not the universal match a blank span would be —
+    /// but it is thin evidence. No arbitrary minimum length is imposed here,
+    /// because any threshold would be false precision; instead `adj-verify`
+    /// (PR-D2) should surface span length so a reader can judge for themselves.
+    pub fn byte_offset(&self) -> Option<usize> {
+        self.byte_offset
+    }
+}
+
+/// `true` if `s` contains at least one character a human would actually see.
+fn has_visible_content(s: &str) -> bool {
+    s.chars().any(|c| !is_invisible(c))
+}
+
+/// Whitespace *plus* the zero-width characters `str::trim` does not treat as
+/// whitespace but which render as nothing.
+fn is_invisible(c: char) -> bool {
+    c.is_whitespace() || matches!(c, '\u{200B}'..='\u{200D}' | '\u{2060}' | '\u{FEFF}')
 }
 
 /// A content-addressed hash of a source document, captured at ingest.
@@ -283,17 +361,13 @@ impl Provenance {
         byte_offset: Option<usize>,
         snapshot: Option<ContentHash>,
     ) -> Self {
-        let text = text.into();
-        // A BLANK SPAN IS NOT A WEAKER QUOTE — IT IS A UNIVERSAL ONE. The
-        // verifier checks `doc[at..at + text.len()] == text`, which is
-        // trivially true for an empty span at every offset in every document.
-        // So an empty `quote` would report Verified while resting on nothing:
-        // exactly the failure the `Unmigrated` variant exists to prevent,
-        // reached through a different door. Record the absence instead.
-        self.quote = if text.trim().is_empty() {
-            Quote::Unmigrated
-        } else {
-            Quote::Verbatim { text, byte_offset }
+        // A BLANK SPAN IS NOT A WEAKER QUOTE — IT IS A UNIVERSAL ONE, matching
+        // at every offset in every document. `VerbatimSpan::new` is the single
+        // place that decides; a span it refuses is recorded as the absence it
+        // is, rather than as a check that would always pass.
+        self.quote = match VerbatimSpan::new(text, byte_offset) {
+            Some(v) => Quote::Verbatim(v),
+            None => Quote::Unmigrated,
         };
         self.snapshot = snapshot;
         self
@@ -316,13 +390,7 @@ impl Provenance {
     pub fn with_quote_in(mut self, doc: &str, byte_offset: usize, len: usize) -> Option<Self> {
         let end = byte_offset.checked_add(len)?;
         let text = doc.get(byte_offset..end)?;
-        if text.trim().is_empty() {
-            return None;
-        }
-        self.quote = Quote::Verbatim {
-            text: text.to_string(),
-            byte_offset: Some(byte_offset),
-        };
+        self.quote = Quote::Verbatim(VerbatimSpan::new(text, Some(byte_offset))?);
         self.snapshot = Some(ContentHash::of(doc.as_bytes()));
         Some(self)
     }
