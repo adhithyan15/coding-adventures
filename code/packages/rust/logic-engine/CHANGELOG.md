@@ -2,6 +2,58 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.41.0] — 2026-07-20 — ordered, addressed proof steps + visible negation (RS-4 PR-B)
+
+### Fixed (security)
+
+- **Both resolvers had unbounded mutual recursion; a self-recursive rule aborted
+  the process.** `solve`/`solve_body` (enumeration) and
+  `find_first_with`/`prove_body` (deterministic) recursed with no termination
+  guard, so `p(X, Y) :- p(X, Y)` descended until the stack overflowed —
+  a `SIGABRT`, which cannot be caught, so a host embedding this crate dies with
+  it. The deterministic path is the one `search(.., AutoDetect)` selects for an
+  all-`Certain` KB, i.e. the adjudication connector's normal mode.
+- **The obvious fix would have been worse than the crash.** Returning "no proof"
+  at the cap is what negation-as-failure reads as *absence*, so a truncated
+  search would have satisfied a `not G` guard and this release's new
+  `FromNegation` step would have asserted a check that never happened. Both caps
+  therefore raise `ResolutionLimitExceeded` and **propagate**; the `?` in each
+  negation branch is load-bearing.
+- **`MAX_SLD_DEPTH = 128`** bounds rule-chain nesting. **`MAX_BODY_CONJUNCTS = 1024`**
+  bounds a separate axis the depth cap cannot: `solve_body` recurses over a
+  rule's *remaining literals* while `depth` stays constant across the body, so a
+  ~14,000-conjunct body overflowed at depth 1.
+- A query that hits either cap **abstains** rather than reporting the proofs
+  found first — a truncated search presented as a complete one is the accounting
+  failure this release exists to prevent.
+
+
+### Added
+
+- **`ProofStep.depth`.** A step now records how deeply nested it is: the root
+  query sits at depth 0, and a rule's body steps are one deeper than the rule
+  step that introduced them. `Proof.steps` was already a preorder walk, so
+  preorder + depth is a complete encoding of the derivation tree — a step's
+  parent is the nearest preceding step one level shallower, exactly the way an
+  indented outline works. Without it the flat vector was ambiguous: you could
+  not tell a sibling from a child without re-deriving each rule's body arity,
+  which is why the audit trail could show a LIST but never a STRUCTURE.
+- **`DerivationOrigin::FromNegation { goal }`.** Negation-as-failure now records
+  a step. It previously recorded **none**, so a rule guarded by
+  `not contraindicated(D)` would fire while the trail stayed silent about the
+  check that licensed it — a reader could not distinguish "we confirmed no
+  contraindication" from "nobody looked." An audit trail that omits a
+  load-bearing inference is not a shorter trail, it is a wrong one. The step
+  carries no clause id because there is no clause: the justification IS the
+  empty proof set, which is what a re-checker re-runs to verify it.
+
+### Changed
+
+- `collect_ids` handles `FromNegation` by contributing **nothing** — deliberately.
+  NAF *used* nothing; that is precisely what it established. Attributing the
+  absent goal's clauses as support would invert the meaning of the step.
+
+
 ## [0.40.0] — 2026-07-14 — exact rendering of a computed result (ADJ-EXACT-NUMBERS NX-4)
 
 ### Added

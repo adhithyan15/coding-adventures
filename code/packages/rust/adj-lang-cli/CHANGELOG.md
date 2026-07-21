@@ -1,5 +1,42 @@
 # Changelog
 
+## [0.15.0] — 2026-07-20 — the unified reasoning trace (RS-4 PR-B)
+
+Implements the ordered/addressed/self-contained step contract of
+`ADJ-REASON-MATH.md` §E.1–E.2. You could already ask ADJ *what* it concluded and
+*what it cited*; now you can ask **how it got there**.
+
+### Added
+
+- **`trace_steps_json` — a TOTAL walker over `DerivationOrigin`.** Renders a
+  proof as an ordered list of steps, each carrying `step` (index), `depth`
+  (nesting), the goal, and its **inline resolved provenance** — not a `FactId`
+  pointer. The trace is therefore self-contained: it can travel to a reviewer or
+  another machine and still be readable without the KB that produced it.
+  The match has **no wildcard arm**. The previous renderer ended in `_ => {}`,
+  which would silently discard four of six step kinds. That arm was latent in
+  shipped paths (the likelihood-ratio kinds are rendered by `proof_json`), but a
+  wildcard that drops reasoning is a trap for whoever adds the next step kind —
+  as `FromNegation` immediately proved. Adding a variant now breaks the build,
+  which is the point.
+- **`steps` on `recall` and `lookups` answers.** Both previously rendered only
+  from `via_facts`, which is `sort()`ed and deduplicated — a citation SET that
+  says which sources were involved but never in what order or through which
+  rules. `citations` is kept unchanged for existing consumers; `steps` is the
+  derivation beside it.
+- **`derivation` on every `derived` value.** The engine builds a
+  `DerivationNode` tree for every `let` and every formula application, and the
+  CLI **dropped it at the JSON boundary** — `derived_json` never read `.tree`.
+  It is now emitted: `op` nodes show the arithmetic, and `leaf` nodes resolve
+  through their real `FactId` to the source fact's provenance. That
+  compute-to-bytes bridge already existed inside the engine; this is what makes
+  it reachable from outside the process.
+
+### Notes
+
+- Additive only: no existing field changed or was removed, and a program with no
+  `let`, recall, or lookup produces byte-identical output.
+
 ## [0.14.0] — 2026-07-18 — table answers now cite the row that produced them (ADJ-TABLES RS-5e)
 
 ### Changed
