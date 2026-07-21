@@ -116,6 +116,25 @@ Spanish and French where a contrast helps. The recurring decoder is the
   cross-language payoff: **German, French and Italian all** let a
   "have" compound displace their simple past, while Spanish and Portuguese kept
   theirs. **Authored.**
+- **Ch. 16 — *sein*, and the Perfekt built on it**: ***sein*** (`GE-C16-sein`) —
+  not one verb but **three PIE roots** under one infinitive: *ist/sind* ←
+  \**h₁es-* (Latin *est/sunt*), *bin/bist* ← \**bʰuH-* "grow, become" (English
+  **be** — and **Spanish *fui***, taught in ES-C14, so the same root landed in
+  German's **present** and Spanish's **past**), *war/waren* ← \**wes-* "dwell,
+  remain" (English **was/were**). With the general principle that explains why
+  "be" verbs are the messiest words in every language: **the most-used words are
+  the most irregular**, because analogy only regularises what you have to guess
+  at → the ***Perfekt* with *sein*** (`GE-C16-perfekt-sein`): the same
+  **motion/change-of-state** split as French, on *gehen/kommen/fahren/werden*
+  plus a learn-them set that isn't motion at all (*sein, bleiben, gelingen,
+  geschehen, begegnen*) — but **in the perfect** the participle **never agrees**
+  (*sie ist gegangen*, no ending), though it still inflects **attributively**
+  (*der angekommen**e** Zug*, *ein geschrieben**er** Brief*). And the split is
+  **not inherited from Latin**: the
+  *haben*/*sein* perfect is a native Germanic development that grew up
+  **alongside** Romance by areal contact — the same Sprachbund Ch.15 blamed for
+  the simple past retreating in three languages at once. Split **parallel**,
+  agreement **not shared**. **Authored.**
 
 ## Planned
 

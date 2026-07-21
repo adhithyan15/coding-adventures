@@ -1,5 +1,60 @@
 # Changelog
 
+## Chapter 16 — *être*, and the half of the past Chapter 15 couldn't reach
+
+- **Chapter 16 authored** (`FR-C16-etre`, `-passe-compose-etre`). Chapter 15
+  could only teach the *avoir* half of the compound past, because ***être* was
+  taught in no lesson of any track**. This chapter supplies it and closes the
+  other half.
+- **être** (`FR-C16-etre`): the six present forms, presented honestly as
+  unpatternable, and then explained. *être* is **suppletive across three stems**:
+  - *es-* — *suis/es/est/sommes/êtes/sont* **and the infinitive** *être*
+    (← \**essere*), all from Latin ***esse***
+  - *fu-* — the passé simple *je fus, il fut* (← the old perfect ***fuī***, PIE
+    \**bʰuH-*), which ties straight back to Ch. 15's tense
+  - ***ét-*** — **every form beginning *ét-***, from ***stāre***, "to stand":
+    the participle *été*, the present participle *étant* (← *stantem*), and the
+    whole imperfect *étais/était* (← *stābam*). Stated as a **limb**, not a stray
+    form, because that is what it is — and it makes the lesson's own thesis
+    stronger, not weaker.
+  - The payoff is comparative: *stāre* is exactly the verb **Spanish** kept as
+    ***estar*** (**ES-C04**, contrasted with *ser* in ES-C09). Spanish keeps the
+    two **apart** and makes you choose; French kept *esse* and **swallowed a
+    large piece** of the other. Noted that *stāre* also left French words outside
+    *être* (*rester* ← *re-stāre*, *coûter* ← *constāre*) — what it didn't do is
+    survive as a **separate** "to be" the way *estar* did. Anchored to English
+    *go/went* so "suppletion" names something the learner already does.
+- **passé composé with être** (`FR-C16-passe-compose-etre`): verbs of **motion
+  and change of state** take *être* — taught as a **shape** (going, coming, being
+  born, dying) rather than a list to memorise — built on *aller* from Ch. 3,
+  **plus all pronominal verbs**. Then the visible part: the participle **agrees
+  with the subject** (*elle est allé**e***, *elles sont allé**es***).
+  - Two warnings included so the rule doesn't mislead: plain motion verbs
+    (*marcher, courir, nager, danser, voyager*) take *avoir*, and
+    *monter/descendre/sortir/rentrer/passer* **switch to *avoir* when
+    transitive** (*j'ai monté les valises*).
+  - **A dedicated "pronominal exception" section**, because the two additions
+    above would otherwise contradict each other: pronominal verbs take *être* but
+    their agreement follows the ***avoir*** rule — a **preceding direct object**,
+    which is usually the reflexive pronoun and sometimes isn't. *Elle s'est
+    lavé**e*** (reflexive = direct object) vs *elle s'est lav**é** les mains*
+    (object follows) vs *elles se sont parl**é*** (reflexive is indirect). This
+    lands as a *third* sighting of Ch. 15's rule rather than a new one — the
+    auxiliary looks like *être*, the agreement behaves like *avoir*. And the one
+    group that escapes even that: **essentially pronominal** verbs (*se
+    souvenir*, *s'enfuir*, *s'évanouir*), which have no non-reflexive form for
+    the pronoun to be an object *of*, so they agree with the subject after all
+    (*elles se sont souvenu**es***).
+  - The chapter's real argument is that this is **not a second rule**. Ch. 15
+    established that *j'ai parlé* was once "I have [a thing] spoken", with the
+    participle an **adjective** agreeing with the object — which is why it still
+    agrees with a *preceding* object. *Elle est allée* was likewise once "**she
+    is** gone", *gone* describing **her**. One idea underneath both: **the
+    participle was an adjective and agrees with whatever it described.** The two
+    auxiliaries differ only in what that was.
+- Prerequisites and `reviews_of` verified against existing ids (Ch. 3 *aller*,
+  Ch. 14 *avoir*, Ch. 15 both lessons).
+
 ## Chapter 15 — The compound past, and the tense it drove out
 
 - **Chapter 15 authored** (`FR-C15-passe-compose`, `-passe-simple`): the everyday

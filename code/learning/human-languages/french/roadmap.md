@@ -107,6 +107,27 @@ compared, every Spanish form supplied in full (no prior Spanish assumed).
   it. The cross-language payoff: **French, German and Italian all**
   let a "have" compound push the inherited simple past out of speech, while
   **Spanish and Portuguese kept theirs**. **Authored.**
+- **Ch. 16 — *être*, and the other compound past**: ***être*** (`FR-C16-etre`) —
+  the most irregular verb in the language, and **suppletive across three stems**:
+  *es-* for the present **and the infinitive** (*suis/es/est*, *être* ←
+  \**essere*, all from Latin ***esse***), *fu-* for the passé simple (*je fus* ←
+  the old perfect ***fuī***), and ***ét-*** for **every form beginning *ét-***
+  — the participle *été*, the present participle *étant* (← *stantem*) and the
+  whole imperfect *étais/était* (← *stābam*) — all from ***stāre***, "to
+  **stand**", the very verb **Spanish** kept separate as ***estar*** (ES-C04). So
+  French absorbed a **whole limb** of *stāre*, not one stray form. Opposite
+  solutions: Spanish split the two, French kept one verb and **swallowed a large
+  piece** of the other → the ***passé composé* with *être***
+  (`FR-C16-passe-compose-etre`): verbs of **motion and change of state**
+  (*aller, venir, naître, mourir*) plus **all pronominal verbs** take *être*, and
+  the participle **agrees with the subject** (*elle est allé**e***) — with the
+  caveats the bare rule hides (*courir/marcher* take *avoir*; *monter/sortir*
+  switch when transitive; and **pronominals follow *avoir*'s** preceding-direct-
+  object agreement, *elle s'est lavé**e*** but *elle s'est lav**é** les mains*).
+  This closes Ch.15's open
+  half — and both agreement rules turn out to be **one** rule, because the
+  participle was an **adjective**: under *avoir* it described the object, under
+  *être* it describes the subject. **Authored.**
 
 ## Planned (mirrors the Spanish theme sequence)
 
