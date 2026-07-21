@@ -20,6 +20,15 @@ without weakening the profile gate. A deny-all Deno worker can implement the
 same JSON-lines protocol in the next slice; it does not need a parallel process
 manager or a second tool-routing policy.
 
+Supervised activation is now verified-only. `verify_agent_package` walks the
+sealed package without following symlinks, requires `manifest.json`, `launch.sh`,
+and at least one `code/` file, and hashes every signed file in sorted path order.
+Each path and payload is length-framed under the `chief-agent-package-v1` domain
+before SHA-256, preventing concatenation ambiguity. `SIGNATURE` is 64 raw
+Ed25519 bytes over that digest, while `PUBKEY_ID` selects a reviewed key from the
+orchestrator keyring. Production, developer, and third-party keys carry explicit
+privilege ceilings; developer keys are structurally capped at Tier 1.
+
 An orchestrator profile has this shape:
 
 ```json
