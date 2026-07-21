@@ -14,7 +14,15 @@ store, and capability boundaries to run as one pipeline.
 The D18D tools are loaded from `orchestrator_profile.json` through
 `chief-of-staff-host-runtime`. Fetch, classification, and file writing belong to
 three isolated host profiles with independent capability sets. The profile must
-be complete and active before the first tool invocation.
+be complete and active before the first tool invocation. The writer host applies
+a centralized policy that requires a call-scoped user approval before filesystem
+output; an absent grant leaves the call pending and the report unwritten.
+
+A successful run now emits a validated D18C `JobRunReceipt` plus a compact
+`UmbrellaUserReport`. The receipt points at the stored report artifact, while the
+user report carries the recommendation, completion time, approval state, and
+journal invocation count. This makes umbrella-today a reusable Chief job with a
+terminal product rather than only an architecture harness.
 
 The primary tests write a real `umbrella-today.txt` file through the capability
 cage, assert that the supervised agent says to bring an umbrella for the rainy
