@@ -2,6 +2,55 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.57.0] - 2026-07-20
+
+### Added - output line wrapping at a 500-column budget
+
+The emitter produced the whole program as ONE line regardless of length. The
+reference compiler wraps, so every output longer than the budget diverged.
+
+Oracle-verified against `closure-compiler-v20260712.jar` by emitting N
+uniform-width call statements and measuring each output line:
+
+```text
+  stmt width | line 1 | previous statement ended at
+  -----------+--------+-----------------------------
+       10    |   510  |  500
+       11    |   506  |  495
+       12    |   504  |  492
+```
+
+In every row the line is cut at the FIRST length exceeding 500, and the
+preceding length is <= 500. The rule is therefore: emit the statement, then if
+the line is now over budget, break AFTER it. Lines routinely run slightly over
+500 -- the break lands after the statement that crosses, not before it.
+
+Verified byte-identical to the oracle at all three widths and across five
+consecutive breaks (`510 510 510 510 510 50` on 260 statements).
+
+### Why a `var` run wraps differently, and why it does not apply here
+
+A run of separate `var v00=1;` statements wraps at 500/495/492 instead -- BEFORE
+the crossing statement. That is a different mechanism (upstream notes a preferred
+break point ahead of certain constructs). It does not reach this code path:
+consecutive `var` declarations are COLLAPSED into a single statement at
+SIMPLE/ADVANCED (oracle-confirmed), and WHITESPACE_ONLY does not route through
+this emitter at all -- closurec has a separate `whitespace_only` minifier. The
+levels this emitter governs only ever see the break-after rule.
+
+Getting this backwards is easy and silent: an early draft of this change derived
+the rule from a `var` bisection and wrapped at the wrong column on every large
+file while still passing every test. Only a byte-comparison against the oracle
+caught it, which is why the constant carries the table and the caveat inline.
+
+### Not covered
+
+A single statement whose own minified form exceeds the budget. The reference
+compiler breaks INSIDE such a statement at safe token boundaries (after a binary
+operator, after an argument comma) and those lines may exceed 500. That needs
+line tracking threaded through every emit method plus a notion of which
+boundaries are ASI-safe, and is tracked separately.
+
 ## [0.56.0] - 2026-07-20
 
 ### Fixed - control characters now render exactly as the reference compiler does
