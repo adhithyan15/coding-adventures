@@ -93,9 +93,15 @@ fn the_anchor_actually_points_at_the_quote_in_the_document() {
         panic!("expected a verbatim quote");
     };
     let at = byte_offset.expect("anchored");
+    // CHECKED slicing, deliberately — this is the pattern the verifier copies.
+    // `&doc[at..at + text.len()]` panics three ways on stale or hostile input:
+    // an offset past the end, an offset off a UTF-8 character boundary, and
+    // `at + len` overflowing. A verifier must treat all three as Unverified,
+    // never as a crash.
+    let found = doc.get(at..at.checked_add(text.len()).expect("no overflow"));
     assert_eq!(
-        &doc[at..at + text.len()],
-        text,
+        found,
+        Some(text.as_str()),
         "the recorded offset must land exactly on the recorded span"
     );
 }
@@ -127,7 +133,7 @@ fn a_snapshot_round_trips_through_its_hex_form() {
     // A trail is stored and re-read; the hash has to survive that trip, or the
     // pin is only good within one process.
     let snap = ContentHash::of(b"The AQI includes six color-coded categories.");
-    let restored = ContentHash::from_hex(snap.as_hex());
+    let restored = ContentHash::from_hex(snap.as_hex()).expect("a real digest");
     assert_eq!(snap, restored);
     assert!(restored.matches(b"The AQI includes six color-coded categories."));
     assert_eq!(snap.as_hex().len(), 64, "SHA-256 hex is 64 chars");
@@ -164,4 +170,109 @@ fn a_quote_without_an_anchor_or_snapshot_is_still_incomplete() {
         ),
         Quote::Unmigrated => panic!("expected a verbatim quote"),
     }
+}
+
+// ---------------------------------------------------------------------------
+// (5) The blank-span door: an empty quote would verify against EVERYTHING.
+//
+//     Found by this PR's security review. The `Unmigrated` variant closes
+//     "the label silently became the quote"; this closes the other way in.
+//     A verifier checks `doc[at..at + text.len()] == text`, which is trivially
+//     true for an empty span at every offset in every document — so an empty
+//     quote reports Verified while resting on nothing, and does it through the
+//     intended builder where nothing looks wrong.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn a_blank_span_is_recorded_as_absent_rather_than_as_a_universal_match() {
+    let snap = ContentHash::of(b"any document at all");
+    for blank in ["", " ", "\t\n  "] {
+        let p = Provenance::cited("EPA AirNow").with_quote(blank, Some(0), Some(snap.clone()));
+        assert!(
+            p.quote.is_unmigrated(),
+            "a blank span ({blank:?}) must degrade to Unmigrated — it would \
+             otherwise match every document at every offset"
+        );
+        assert_eq!(p.quote.text(), None);
+    }
+}
+
+// ---------------------------------------------------------------------------
+// (6) A digest is a digest by CONSTRUCTION, so `==` cannot be satisfied by
+//     two copies of the same garbage out of the same untrusted trail.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn from_hex_rejects_anything_that_is_not_a_real_digest() {
+    for junk in [
+        "not-a-hash",
+        "",
+        "deadbeef",                                                         // too short
+        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b8",   // 62 chars
+        "g3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", // non-hex
+    ] {
+        assert!(
+            ContentHash::from_hex(junk).is_none(),
+            "{junk:?} is not a SHA-256 digest and must not become a ContentHash"
+        );
+    }
+}
+
+#[test]
+fn a_digest_survives_case_and_whitespace_without_becoming_silent_drift() {
+    // A trail round-tripped through something that upcases hex, or leaves a
+    // stray newline, must still read as the SAME digest. Otherwise it would
+    // never match, and that permanent failure is indistinguishable at the call
+    // site from the genuine document drift the snapshot exists to detect.
+    let snap = ContentHash::of(b"Yellow   Moderate   51 to 100");
+    let upper = ContentHash::from_hex(snap.as_hex().to_uppercase()).expect("still a digest");
+    let padded = ContentHash::from_hex(format!("  {}\n", snap.as_hex())).expect("still a digest");
+    assert_eq!(snap, upper);
+    assert_eq!(snap, padded);
+    assert!(upper.matches(b"Yellow   Moderate   51 to 100"));
+}
+
+// ---------------------------------------------------------------------------
+// (7) `with_quote_in` makes the three anchors agree by construction.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn recording_a_span_against_its_document_derives_a_consistent_snapshot() {
+    let doc = "Green   Good   0 to 50   Air quality is satisfactory.";
+    let at = doc.find("Good   0 to 50").expect("fixture");
+    let p = Provenance::cited("EPA AirNow")
+        .with_quote_in(doc, at, "Good   0 to 50".len())
+        .expect("a real span");
+
+    assert_eq!(p.quote.text(), Some("Good   0 to 50"));
+    // The snapshot was DERIVED from the same document, so it cannot disagree
+    // with the offset — which is the whole point of this constructor.
+    assert!(p.snapshot.expect("derived").matches(doc.as_bytes()));
+}
+
+#[test]
+fn recording_a_span_refuses_ranges_that_would_panic_a_verifier() {
+    let doc = "Purple   Very Unhealthy   201 to 300";
+
+    // Past the end.
+    assert!(Provenance::cited("x").with_quote_in(doc, 30, 999).is_none());
+    // Arithmetic overflow rather than a wrapped, in-range-looking end.
+    assert!(Provenance::cited("x")
+        .with_quote_in(doc, usize::MAX, 2)
+        .is_none());
+    // Blank.
+    assert!(Provenance::cited("x").with_quote_in(doc, 6, 3).is_none());
+
+    // A multi-byte document, sliced off a character boundary.
+    // 'R' is byte 0; 'é' occupies bytes 1..3, so byte 2 is INSIDE it — the
+    // offset that would panic a naive `&doc[2..4]`.
+    let utf8 = "Résumé — 51 to 100";
+    assert!(
+        !utf8.is_char_boundary(2),
+        "fixture: byte 2 is mid-character"
+    );
+    assert!(
+        Provenance::cited("x").with_quote_in(utf8, 2, 2).is_none(),
+        "an offset off a UTF-8 boundary must be refused, not panicked on"
+    );
 }

@@ -160,8 +160,23 @@ impl ContentHash {
     }
 
     /// Reconstruct from a stored hex digest (e.g. read back from a trail).
-    pub fn from_hex(hex: impl Into<String>) -> Self {
-        Self { hex: hex.into() }
+    ///
+    /// Returns `None` unless the input really is a 64-character SHA-256 digest.
+    /// Validating here is what makes the type mean something: a `ContentHash`
+    /// value is a well-formed digest **by construction**, so the weaker
+    /// hash-to-hash comparison below cannot be satisfied by two copies of the
+    /// same garbage string read out of the same untrusted trail.
+    ///
+    /// Case and surrounding whitespace are normalized rather than rejected —
+    /// a digest that survived a round trip through a system that upcased it
+    /// should read as the same digest, not as permanent, silent drift.
+    pub fn from_hex(hex: impl AsRef<str>) -> Option<Self> {
+        let h = hex.as_ref().trim().to_ascii_lowercase();
+        if h.len() == 64 && h.bytes().all(|b| b.is_ascii_hexdigit()) {
+            Some(Self { hex: h })
+        } else {
+            None
+        }
     }
 
     /// The hex digest.
@@ -171,6 +186,11 @@ impl ContentHash {
 
     /// `true` iff `bytes` hash to this digest — i.e. the document on hand is
     /// byte-for-byte the one that was captured at ingest.
+    ///
+    /// **This, not `==`, is verification.** Comparing two `ContentHash` values
+    /// compares two hex strings, which says only that a trail agrees with
+    /// itself; it never touches the document. A verifier must re-hash the bytes
+    /// it actually has, which is what this does.
     pub fn matches(&self, bytes: &[u8]) -> bool {
         Self::of(bytes).hex == self.hex
     }
@@ -263,12 +283,48 @@ impl Provenance {
         byte_offset: Option<usize>,
         snapshot: Option<ContentHash>,
     ) -> Self {
-        self.quote = Quote::Verbatim {
-            text: text.into(),
-            byte_offset,
+        let text = text.into();
+        // A BLANK SPAN IS NOT A WEAKER QUOTE — IT IS A UNIVERSAL ONE. The
+        // verifier checks `doc[at..at + text.len()] == text`, which is
+        // trivially true for an empty span at every offset in every document.
+        // So an empty `quote` would report Verified while resting on nothing:
+        // exactly the failure the `Unmigrated` variant exists to prevent,
+        // reached through a different door. Record the absence instead.
+        self.quote = if text.trim().is_empty() {
+            Quote::Unmigrated
+        } else {
+            Quote::Verbatim { text, byte_offset }
         };
         self.snapshot = snapshot;
         self
+    }
+
+    /// Record a span **against the document it came from** — the safer path,
+    /// and the one new grounded libraries should use.
+    ///
+    /// [`with_quote`](Self::with_quote) takes the text, the offset and the
+    /// snapshot as three independent values, so nothing stops them describing
+    /// three different documents: an offset that does not point at the text, or
+    /// a hash of something else entirely. This constructor takes the document
+    /// itself and *derives* the other two, which makes that disagreement
+    /// unrepresentable.
+    ///
+    /// Returns `None` — rather than panicking — when the range does not name a
+    /// real span: past the end, not on a UTF-8 character boundary, arithmetic
+    /// overflow, or blank text. A caller that cannot record a span must find
+    /// that out, not discover it later as a slicing panic inside a verifier.
+    pub fn with_quote_in(mut self, doc: &str, byte_offset: usize, len: usize) -> Option<Self> {
+        let end = byte_offset.checked_add(len)?;
+        let text = doc.get(byte_offset..end)?;
+        if text.trim().is_empty() {
+            return None;
+        }
+        self.quote = Quote::Verbatim {
+            text: text.to_string(),
+            byte_offset: Some(byte_offset),
+        };
+        self.snapshot = Some(ContentHash::of(doc.as_bytes()));
+        Some(self)
     }
 
     /// The common case: a single-line citation at
