@@ -87,7 +87,7 @@
   scope) — mirroring `scilab-runtime::eval::Interpreter::register_function`'s
   own more complete three-way reading of this grammar shape, whose doc
   comment confirms its own handling is "exactly correct."
-- 87 tests: 66 unit tests over lowering shapes, every documented scope
+- 93 tests: 71 unit tests over lowering shapes, every documented scope
   limit's rejection, and the DoS-guard regression pair
   (`a_pathologically_long_flat_{additive,multiplicative}_chain_is_
   cleanly_rejected`, reproducing the identical flat-operand-chain hazard
@@ -99,6 +99,57 @@
 - Marks `scilab-to-semantic-ir` (MA-10e) done in
   `MA10-scilab-language.md` §6 — the last item in the Scilab frontend
   rollout.
+
+### Security
+
+Two rounds of pre-merge security review found and fixed four issues, all
+before this crate ever shipped:
+
+- **CRITICAL/HIGH** (round 1): `lower_if`/`lower_select` folded
+  `elseif_clause*`/`case_clause*` — flat `{ x }`-repetition CST nodes,
+  costing the *parser* zero native stack — into an `Expr::If` chain N
+  levels deep via `Box`, with no cap. A source file with 300,000 `elseif`
+  clauses compiled successfully, but merely dropping the returned
+  `Module` overflowed the native stack and aborted the process
+  (uncatchable by `catch_unwind`). Fixed by capping `clauses.len()`
+  against the existing `MAX_EXPR_DEPTH` (256) in both functions, before
+  any per-clause lowering.
+- **CRITICAL/HIGH** (round 2): the identical hazard, found independently
+  in `lower_postfix`'s `{ transpose_suffix | call_suffix | ... }` suffix
+  fold — the same flat-repetition shape, also unguarded. 300,000 chained
+  transpose/call suffixes reproduced the identical uncatchable
+  stack-overflow abort. Fixed the same way: a `suffixes.len() >
+  MAX_EXPR_DEPTH` cap before the fold.
+- **MEDIUM** (round 1): the `select`/`case` hoisted selector temp was
+  named `__select_N` — an ordinary, fully legal Scilab identifier a
+  program could itself declare, silently colliding with (and producing
+  invalid, duplicate-declaration JavaScript from) a same-named user
+  variable. Fixed by renaming to `$select_N`: `$` is never part of a
+  Scilab `NAME` token, so collision is now structurally impossible.
+- **MEDIUM** (round 1): `if`/`else` and `select`/`case`/`else` bodies
+  (mutually exclusive) were lowered against a single, still-mutating
+  `ctx.locals`, so a name first-assigned in one branch was misclassified
+  as a re-assignment by a sibling branch lowered afterward — breaking the
+  ordinary idiom of a function assigning its own output variable in
+  every branch of an `if`/`select`. Fixed by lowering every branch
+  against the same pre-statement `ctx.locals` snapshot (the existing
+  `for`-loop scope_mark/scope_rewind mechanism), folding the union of
+  every branch's newly-introduced names back in once at the end.
+- **MEDIUM** (round 2): the round-1 fix above, and `lower_assignment`'s
+  pre-existing first-occurrence check, both tested local-name membership
+  via `Vec::contains` — an O(n) scan per check, making a flat sequence of
+  n distinct-name assignments (or an if/select's branches collectively
+  introducing n names) O(n²) overall. Fixed by adding a `HashSet`-backed
+  `FunctionCtx::has_local`/`push_local` pair (kept in sync with the
+  existing `Vec` `scope_mark`/`scope_rewind` needs for ordered
+  truncation), and backing the branch-fix's own `newly_introduced`
+  accumulator with a `HashSet` instead of a `Vec`.
+
+Also separately discovered (not fixed here, tracked as its own follow-up
+task): `scilab-parser`'s own `elseif_clause*` parsing appears to scale
+worse than linearly at very large clause counts (17s to parse 100,000
+`elseif` clauses in `--release`) — a pre-existing, already-merged,
+separate crate, out of scope for this PR.
 
 ### Notes on divergence from the spec
 

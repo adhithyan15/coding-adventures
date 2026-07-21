@@ -132,7 +132,10 @@
 //! e.g. a function call, once per case would be observably wrong — it
 //! would call the function N times instead of once). So [`Lowerer::lower_select`]
 //! first binds the selector to a fresh, compiler-generated local
-//! (`__select_N`, uniquely numbered per `select` statement in the module)
+//! (`$select_N`, uniquely numbered per `select` statement in the module --
+//! `$` is never part of a Scilab `NAME` token, so this can never collide
+//! with a user-declared identifier, unlike an earlier `__select_N` scheme
+//! this crate shipped with briefly and fixed after security review)
 //! via an ordinary `LetStarBinding`, then folds the `case`/`else` clauses
 //! into an `if`-chain of `BuiltinCall("=", [VarRef(temp), case_value])`
 //! conditions — the same equality [`crate::lower::values_equal`]-shaped
@@ -307,14 +310,26 @@ enum Lowered {
 /// function call gets a wholly fresh workspace (`scilab-runtime::eval::
 /// Interpreter::call_user_function`'s own doc comment confirms this: "no
 /// closures, no access to the caller's variables"). So, mirroring
-/// `matlab-to-semantic-ir::FunctionCtx` exactly, `locals` simply
-/// accumulates for the function's lifetime and is never rewound when
-/// leaving an `if`/`while`/`for`/`select` body. The one place `locals` is
-/// temporarily extended and then rewound is a `for`-loop variable, whose
-/// scope genuinely is the loop.
+/// `matlab-to-semantic-ir::FunctionCtx`'s own accumulate-for-the-whole-
+/// function model, `locals` simply grows for the function's lifetime by
+/// default. Two places temporarily extend it and then rewind: a
+/// `for`-loop variable, whose scope genuinely is the loop, and each
+/// mutually-exclusive branch of an `if`/`select` (every branch is lowered
+/// against the *same* pre-statement snapshot, then the union of every
+/// branch's newly-introduced names is folded back in once, after all
+/// branches are done — see `lower_if`/`lower_select`'s own doc comments).
+///
+/// `locals_set` mirrors `locals` (same names, same lifetime) purely so
+/// membership testing (`has_local`) is O(1) instead of the O(n) linear
+/// scan `Vec::contains` would need — with every assignment statement
+/// doing at least one such check, a flat run of n distinct-name
+/// assignments would otherwise cost O(n²) overall. `locals` itself stays
+/// a `Vec` (not replaced by the set) because `scope_mark`/`scope_rewind`
+/// need its *insertion order* to truncate back to an exact prior length.
 struct FunctionCtx {
     params: HashSet<String>,
     locals: Vec<String>,
+    locals_set: HashSet<String>,
 }
 
 impl FunctionCtx {
@@ -322,11 +337,26 @@ impl FunctionCtx {
         Self {
             params,
             locals: Vec::new(),
+            locals_set: HashSet::new(),
         }
     }
 
     fn top_level() -> Self {
         Self::new(HashSet::new())
+    }
+
+    /// O(1) "is `name` an already-known local" check — see this struct's
+    /// own doc comment for why a second, set-backed field exists purely
+    /// for this.
+    fn has_local(&self, name: &str) -> bool {
+        self.locals_set.contains(name)
+    }
+
+    /// Record a newly-introduced local, keeping `locals`/`locals_set` in
+    /// sync.
+    fn push_local(&mut self, name: String) {
+        self.locals_set.insert(name.clone());
+        self.locals.push(name);
     }
 }
 
@@ -342,7 +372,7 @@ struct Lowerer {
     /// The lowered top-level functions, in definition order. `main` is
     /// appended last by [`Self::lower_file`].
     functions: Vec<Function>,
-    /// Counter for the compiler-generated `__select_N` temporaries
+    /// Counter for the compiler-generated `$select_N` temporaries
     /// [`Self::lower_select`] hoists the selector into — see this file's
     /// module doc comment, "`select`/`case`: desugared, no new SIR node".
     /// A single module-wide counter (not per-function) is simplest and
@@ -373,7 +403,9 @@ impl Lowerer {
     }
 
     fn scope_rewind(ctx: &mut FunctionCtx, mark: usize) {
-        ctx.locals.truncate(mark);
+        for name in ctx.locals.drain(mark..) {
+            ctx.locals_set.remove(&name);
+        }
     }
 
     // -------------------------------------------------------------------
@@ -800,7 +832,13 @@ impl Lowerer {
         // mistaken for an already-known local by a sibling branch that
         // happens to lower afterward.
         let mark = Self::scope_mark(ctx);
-        let mut newly_introduced: Vec<String> = Vec::new();
+        // A `HashSet`, not a `Vec` -- membership testing every branch's
+        // names against a growing `Vec` (via `.contains`) would be an O(n²)
+        // scan over the total distinct names across all branches, entirely
+        // unbounded by the `clauses.len()` cap above (that cap bounds
+        // branch *count*, not the *names per branch*, which an ordinary
+        // flat statement list has no size limit on at all).
+        let mut newly_introduced: HashSet<String> = HashSet::new();
 
         let mut else_branch: Block = match else_body {
             Some(b) => {
@@ -816,11 +854,7 @@ impl Lowerer {
             // -- see `to_scilab_condition`'s doc comment).
             let cond = to_scilab_condition(self.lower_expr(clause.cond, ctx)?);
             let then_branch = self.lower_block_body(clause.body, ctx, depth + 1)?;
-            for name in &ctx.locals[mark..] {
-                if !newly_introduced.contains(name) {
-                    newly_introduced.push(name.clone());
-                }
-            }
+            newly_introduced.extend(ctx.locals[mark..].iter().cloned());
             Self::scope_rewind(ctx, mark);
             let span = cond.span().clone();
             let folded = Expr::If {
@@ -831,7 +865,9 @@ impl Lowerer {
             };
             else_branch = value_block(folded);
         }
-        ctx.locals.extend(newly_introduced);
+        for name in newly_introduced {
+            ctx.push_local(name);
+        }
         match else_branch.value {
             Expr::If { .. } => Ok(else_branch.value),
             other => Ok(other),
@@ -880,7 +916,7 @@ impl Lowerer {
         // invalid/duplicate-declaration JavaScript from the JS backend.)
         let temp = format!("$select_{}", self.select_counter);
         self.select_counter += 1;
-        ctx.locals.push(temp.clone());
+        ctx.push_local(temp.clone());
         let mut stmts: Vec<Lowered> = vec![Lowered::Stmt(Box::new(Stmt::LetStarBinding {
             name: temp.clone(),
             sir_type: None,
@@ -943,7 +979,11 @@ impl Lowerer {
         // first-occurrence classification depends on sibling iteration
         // order.
         let mark = Self::scope_mark(ctx);
-        let mut newly_introduced: Vec<String> = Vec::new();
+        // See the identical `HashSet` choice (and full rationale) in
+        // `lower_if`: a `Vec`-backed membership check here would be an
+        // O(n²) scan over the total distinct names across all case/else
+        // bodies, unbounded by the `clauses.len()` cap above.
+        let mut newly_introduced: HashSet<String> = HashSet::new();
 
         let mut else_branch: Block = match else_body {
             Some(b) => {
@@ -972,11 +1012,7 @@ impl Lowerer {
             };
             let cond = to_scilab_condition(eq);
             let then_branch = self.lower_block_body(clause.body, ctx, depth + 1)?;
-            for name in &ctx.locals[mark..] {
-                if !newly_introduced.contains(name) {
-                    newly_introduced.push(name.clone());
-                }
-            }
+            newly_introduced.extend(ctx.locals[mark..].iter().cloned());
             Self::scope_rewind(ctx, mark);
             let if_span = cond.span().clone();
             let folded = Expr::If {
@@ -987,7 +1023,9 @@ impl Lowerer {
             };
             else_branch = value_block(folded);
         }
-        ctx.locals.extend(newly_introduced);
+        for name in newly_introduced {
+            ctx.push_local(name);
+        }
 
         let final_expr = match else_branch.value {
             Expr::If { .. } => else_branch.value,
@@ -1107,7 +1145,7 @@ impl Lowerer {
 
         self.observed.add(Feature::Loops);
         let mark = Self::scope_mark(ctx);
-        ctx.locals.push(var.clone());
+        ctx.push_local(var.clone());
         let body = self.lower_block_body(body_node, ctx, depth + 1)?;
         Self::scope_rewind(ctx, mark);
 
@@ -1185,7 +1223,7 @@ impl Lowerer {
 
         if let Some(name) = self.bare_name(lhs) {
             let value = self.lower_expr(rhs, ctx)?;
-            if ctx.locals.contains(&name) || ctx.params.contains(&name) {
+            if ctx.has_local(&name) || ctx.params.contains(&name) {
                 self.observed.add(Feature::MutableBindings);
                 return Ok(Lowered::Stmt(Box::new(Stmt::Assign {
                     name,
@@ -1194,7 +1232,7 @@ impl Lowerer {
                     span,
                 })));
             }
-            ctx.locals.push(name.clone());
+            ctx.push_local(name.clone());
             return Ok(Lowered::Stmt(Box::new(Stmt::LetStarBinding {
                 name,
                 sir_type: None,
@@ -1204,7 +1242,7 @@ impl Lowerer {
         }
 
         if let Some((base_name, call_suffix)) = self.indexed_target(lhs) {
-            if !(ctx.locals.contains(&base_name) || ctx.params.contains(&base_name)) {
+            if !(ctx.has_local(&base_name) || ctx.params.contains(&base_name)) {
                 return Err(self.err_at(
                     lhs,
                     format!(
@@ -1929,6 +1967,28 @@ impl Lowerer {
         if suffixes.is_empty() {
             return self.lower_primary(primary, ctx, depth + 1).map(Some);
         }
+        // Security regression: `postfix = primary { transpose_suffix |
+        // call_suffix | cell_suffix | field_suffix }` is the identical flat
+        // `{ x }`-repetition CST shape as `elseif_clause*`/`case_clause*`
+        // (costs the *parser* zero native stack) but was folded below into
+        // a `Box`-nested `Expr::Transpose`/`Expr::IndexGet` chain with no
+        // cap at all -- unlike every operator-chain fold in this file,
+        // which calls `check_chain_length` first. A source file with N
+        // chained transpose/call suffixes (`y = x' ' ' ...` or
+        // `y = A(1)(1)(1)...`) previously compiled successfully, but
+        // merely dropping the returned `Module` at large N overflowed the
+        // native stack and aborted the process (uncatchable by
+        // `catch_unwind`) -- the same hazard class the elseif/case fix
+        // closed, reachable through this third, previously-unguarded path.
+        if suffixes.len() > MAX_EXPR_DEPTH {
+            return Err(self.err_at(
+                node,
+                format!(
+                    "expression chain too long ({} operands, exceeds {MAX_EXPR_DEPTH})",
+                    suffixes.len()
+                ),
+            ));
+        }
 
         let mut acc: Option<Expr> = None;
         let mut first = true;
@@ -1960,7 +2020,7 @@ impl Lowerer {
                                 "unsupported: call/index target is not a bare name".to_string(),
                             )
                         })?;
-                        if ctx.locals.contains(&name) || ctx.params.contains(&name) {
+                        if ctx.has_local(&name) || ctx.params.contains(&name) {
                             let span = self.span_of(primary);
                             let indices = self.lower_index_args(suffix, ctx, depth + 1)?;
                             acc = Some(Expr::IndexGet {
@@ -2088,7 +2148,7 @@ impl Lowerer {
                             scope: Scope::Param,
                             span,
                         })
-                    } else if ctx.locals.contains(&name) {
+                    } else if ctx.has_local(&name) {
                         Ok(Expr::VarRef {
                             name,
                             scope: Scope::Local,

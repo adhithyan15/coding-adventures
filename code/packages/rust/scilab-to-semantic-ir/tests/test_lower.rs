@@ -906,3 +906,26 @@ fn a_pathologically_long_case_chain_is_cleanly_rejected() {
     let err = compile_source(&src, "prog").expect_err("an overlong case chain should be rejected");
     assert!(err.message.contains("too many case clauses"));
 }
+
+#[test]
+fn a_pathologically_long_transpose_suffix_chain_is_cleanly_rejected() {
+    // Security regression: `postfix = primary { transpose_suffix |
+    // call_suffix | ... }` is the identical flat CST repetition as
+    // elseif/case above -- found independently in a second security
+    // review round after the elseif/case fix above had already landed.
+    // `lower_postfix` folded the suffix list into a `Box`-nested
+    // `Expr::Transpose`/`Expr::IndexGet` chain with NO cap at all (unlike
+    // every operator-chain fold in this file, which calls
+    // `check_chain_length` first); a source file with enough chained `'`
+    // transpose suffixes compiled successfully, but merely dropping the
+    // returned `Module` overflowed the native stack and aborted the
+    // process (uncatchable).
+    let mut src = String::from("y = x");
+    for _ in 0..100_000 {
+        src.push('\'');
+    }
+    src.push_str(";\n");
+    let err =
+        compile_source(&src, "prog").expect_err("an overlong transpose suffix chain should be rejected");
+    assert!(err.message.contains("too long"));
+}
