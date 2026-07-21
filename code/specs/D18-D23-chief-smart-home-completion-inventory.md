@@ -260,11 +260,16 @@ literal no-prompt and deny flags in Rust, launches the signed
 The executable worker proves environment, filesystem read/write, subprocess,
 and network access are denied; post-signing entrypoint tampering prevents launch.
 
+The host-capability slice now makes the signed `launch.sh` and runtime process
+arguments come from one canonical deny-all launch plan. Launch-time verification
+rejects any script drift. Subprocess-originated RPC is parsed into the canonical
+D18D invocation contract and executed only by the Rust host's profile-gated,
+capability-checked handler catalog; unknown tools never reach a handler.
+
 These items are Chief of Staff architecture, not smart-home platform work:
 
-- Move the deny-all Deno proof worker behind production host-side capability
-  handlers and make the package launch script generation part of the trusted
-  build pipeline.
+- Complete the bidirectional Deno agent transport so agent-originated `host.*`
+  calls use the production Rust dispatcher during a supervised process run.
 - Run a Chief job end to end through scheduler or job framework, tool runtime,
   approval checks, result journal, and final user-visible report.
 - Add approval UX and policy wiring for Tier2 or stronger actions such as

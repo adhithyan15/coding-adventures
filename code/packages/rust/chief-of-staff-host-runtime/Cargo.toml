@@ -8,6 +8,7 @@ license = "MIT"
 [dependencies]
 chief-of-staff-tool-api = { path = "../chief-of-staff-tool-api" }
 coding-adventures-json-value = { path = "../json-value" }
+coding-adventures-json-serializer = { path = "../json-serializer" }
 coding_adventures_ed25519 = { path = "../ed25519" }
 coding_adventures_sha256 = { path = "../sha256" }
 generic-job-protocol = { path = "../generic-job-protocol" }

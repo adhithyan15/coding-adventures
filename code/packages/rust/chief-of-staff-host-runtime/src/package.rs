@@ -9,6 +9,55 @@ use std::path::{Path, PathBuf};
 const SIGNATURE_FILE: &str = "SIGNATURE";
 const KEY_ID_FILE: &str = "PUBKEY_ID";
 const HASH_DOMAIN: &[u8] = b"chief-agent-package-v1\0";
+const DENO_ENTRYPOINT: &str = "code/agent_runtime.ts";
+const DENO_FLAGS: &[&str] = &[
+    "run",
+    "--quiet",
+    "--no-prompt",
+    "--deny-net",
+    "--deny-read",
+    "--deny-write",
+    "--deny-env",
+    "--deny-sys",
+    "--deny-run",
+    "--deny-ffi",
+];
+
+/// Canonical build-time and runtime launch plan for deny-all Deno agents.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct DenoLaunchPlan;
+
+impl DenoLaunchPlan {
+    pub fn entrypoint_relative() -> &'static str {
+        DENO_ENTRYPOINT
+    }
+
+    pub fn arguments(entrypoint: &Path) -> Result<Vec<String>, PackageVerificationError> {
+        let entrypoint = entrypoint
+            .to_str()
+            .ok_or_else(|| PackageVerificationError::NonUtf8Path(entrypoint.to_path_buf()))?;
+        Ok(DENO_FLAGS
+            .iter()
+            .map(|flag| (*flag).to_string())
+            .chain(std::iter::once(entrypoint.to_string()))
+            .collect())
+    }
+
+    pub fn launch_script() -> String {
+        let arguments = DENO_FLAGS
+            .iter()
+            .copied()
+            .chain(std::iter::once(DENO_ENTRYPOINT))
+            .collect::<Vec<_>>()
+            .join(" ");
+        format!("#!/bin/sh\nexec deno {arguments}\n")
+    }
+
+    pub fn write_launch_script(package_path: &Path) -> Result<(), PackageVerificationError> {
+        fs::write(package_path.join("launch.sh"), Self::launch_script())
+            .map_err(PackageVerificationError::Io)
+    }
+}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum PackageKeyType {
@@ -129,6 +178,14 @@ pub fn verify_agent_package(
     if !files.iter().any(|path| path.starts_with("code/")) {
         return Err(PackageVerificationError::MissingCode);
     }
+    if !files.contains(DENO_ENTRYPOINT) {
+        return Err(PackageVerificationError::MissingDenoEntrypoint);
+    }
+    let launch_script =
+        fs::read_to_string(package_path.join("launch.sh")).map_err(PackageVerificationError::Io)?;
+    if launch_script != DenoLaunchPlan::launch_script() {
+        return Err(PackageVerificationError::UntrustedLaunchScript);
+    }
     if !coding_adventures_ed25519::verify(&digest, &signature, &key.public_key) {
         return Err(PackageVerificationError::SignatureMismatch);
     }
@@ -215,6 +272,8 @@ pub enum PackageVerificationError {
     InvalidSignatureLength,
     MissingRequiredFile(&'static str),
     MissingCode,
+    MissingDenoEntrypoint,
+    UntrustedLaunchScript,
     Symlink(PathBuf),
     NonUtf8Path(PathBuf),
     SignatureMismatch,
@@ -234,6 +293,12 @@ impl Display for PackageVerificationError {
             Self::InvalidSignatureLength => f.write_str("package signature must be 64 raw bytes"),
             Self::MissingRequiredFile(path) => write!(f, "agent package is missing '{path}'"),
             Self::MissingCode => f.write_str("agent package must contain at least one code file"),
+            Self::MissingDenoEntrypoint => {
+                f.write_str("agent package is missing 'code/agent_runtime.ts'")
+            }
+            Self::UntrustedLaunchScript => {
+                f.write_str("agent package launch.sh does not match the trusted deny-all plan")
+            }
             Self::Symlink(path) => write!(
                 f,
                 "agent package cannot contain symlink '{}'",
@@ -269,12 +334,12 @@ mod tests {
     fn write_signed_package(path: &Path, key_id: &str, secret_key: &[u8; 64]) {
         fs::create_dir_all(path.join("code")).unwrap();
         fs::write(path.join("manifest.json"), b"{\"runtime\":\"typescript\"}").unwrap();
+        DenoLaunchPlan::write_launch_script(path).unwrap();
         fs::write(
-            path.join("launch.sh"),
-            b"#!/bin/sh\nexec deno run --no-prompt code/agent.ts\n",
+            path.join("code/agent_runtime.ts"),
+            b"console.log('ready');\n",
         )
         .unwrap();
-        fs::write(path.join("code/agent.ts"), b"console.log('ready');\n").unwrap();
         fs::write(path.join(KEY_ID_FILE), key_id).unwrap();
         let (digest, _) = hash_package_contents(path).unwrap();
         fs::write(path.join(SIGNATURE_FILE), sign(&digest, secret_key)).unwrap();
@@ -322,6 +387,43 @@ mod tests {
         );
         fs::remove_dir_all(first).unwrap();
         fs::remove_dir_all(second).unwrap();
+    }
+
+    #[test]
+    fn trusted_launch_plan_is_literal_and_rejects_script_tampering() {
+        let path = package_dir("launch-plan");
+        let (public_key, secret_key) = generate_keypair(&[31; 32]);
+        write_signed_package(&path, "prod-launch", &secret_key);
+        let mut keyring = PackageKeyring::new();
+        keyring
+            .trust(
+                TrustedPackageKey::new(
+                    "prod-launch",
+                    PackageKeyType::Production,
+                    public_key,
+                    PrivilegeTier::Tier3,
+                )
+                .unwrap(),
+            )
+            .unwrap();
+
+        let script = DenoLaunchPlan::launch_script();
+        for flag in DENO_FLAGS {
+            assert!(script.contains(flag));
+        }
+        assert!(!script.contains('$'));
+        verify_agent_package(&path, &keyring).unwrap();
+
+        fs::write(
+            path.join("launch.sh"),
+            "#!/bin/sh\nexec deno run --allow-net code/agent_runtime.ts\n",
+        )
+        .unwrap();
+        assert!(matches!(
+            verify_agent_package(&path, &keyring),
+            Err(PackageVerificationError::UntrustedLaunchScript)
+        ));
+        fs::remove_dir_all(path).unwrap();
     }
 
     #[test]
