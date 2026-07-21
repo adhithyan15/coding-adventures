@@ -1,5 +1,25 @@
 # Changelog — aot-core
 
+## 0.3.0 - 2026-07-18 (`mov` keeps its `any` type — GC-root correctness)
+
+`translate()`'s `mov` arm retyped the CIR instruction to `"u64"` whenever the spec
+type was `"any"`, while the *mnemonic* already fell back to `mov_u64` independently.
+The type string is load-bearing metadata, not a codegen selector — backends dispatch
+on the mnemonic and a move is a 64-bit bit-copy regardless — so the retype bought
+nothing and actively lied.
+
+That lie was a latent use-after-free for the GC precise-root work: `any` is the
+normal type of a boxed dynamic value (a `mov` between boxed registers is an expected
+`lower_dyn_repr` pattern), and the stack-map builder classifies a frame slot as a GC
+root from this string. Claiming `u64` — the most confidently scalar type there is —
+made an aliasing slot look like a plain integer, so a collection at a later safepoint
+would not root it and would free a live cell out from under the mutator.
+
+`mov` now carries `sp` unchanged (`"any"` stays `"any"`); the `mov_u64` mnemonic is
+untouched, so emitted code is identical. Verified across aot-core, aarch64-backend,
+x86_64-backend and twig-aot suites.
+
+
 ## 0.2.2 — 2026-06-15 — `u4` in the AOT type pipeline (LANG-FULL E2)
 
 Added `"u4"` (Nib's 4-bit nibble type) to the two ALLOWED_TYPES whitelists so
