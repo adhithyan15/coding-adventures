@@ -128,6 +128,19 @@ compared, every Spanish form supplied in full (no prior Spanish assumed).
   half — and both agreement rules turn out to be **one** rule, because the
   participle was an **adjective**: under *avoir* it described the object, under
   *être* it describes the subject. **Authored.**
+- **Ch. 17 — The body: the head that was a pot, and the hand inside English**:
+  ***la tête*** (`FR-C17-tete`) — **not** from Latin *caput* but from ***testa***,
+  an **earthenware pot**. Roman soldiers' slang for the skull displaced the
+  proper word across Gaul, so *j'ai mal à la tête* is historically "my pot
+  hurts"; *caput* survives only in **chef** ("chief" = head) and **chapitre**.
+  The **circumflex is a receipt** for a lost *s* (*testa* → *teste* → *tête*),
+  which is why English — borrowing from Old French *before* the *s* fell — still
+  has **test**, originally the shallow pot an alchemist assayed metals in →
+  ***la main*** (`FR-C17-main`): feminine despite the consonant ending, from
+  ***manus***, the most productive hand in English — *manual*, *manuscript*,
+  *maintain* (Latin *manū tenēre*, "hold in the hand"), *manage*, *manoeuvre*,
+  and **manufacture**, "made by hand,"
+  which now names precisely what isn't. **Authored.**
 
 ## Planned (mirrors the Spanish theme sequence)
 

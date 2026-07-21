@@ -145,6 +145,20 @@ pub const KERNEL_PRIMITIVES: &[&str] = &[
     "HostTableBody",
     "HostTableFoot",
     "Col",
+    // UI35 — the drag-and-drop family. The kernel previously had no drag
+    // primitive at all, which made the defining gesture of board software
+    // ("drag a card to another column") inexpressible in a `.mll`.
+    // Composition cannot supply it: every backend has its own native drag
+    // system, and the keyboard-equivalent path, screen-reader
+    // announcements, and touch support that make dragging usable are
+    // per-platform concerns. Two primitives because a drag has two ends —
+    // a source and a sink — and a card is typically both. The drag payload
+    // is an opaque key + kind the kernel never interprets, and a drop
+    // reports `before | after | into` relative to the target, which is what
+    // lets one family express list reorder, cross-container moves, outline
+    // nesting, and calendar drops. See `code/specs/UI35-host-drag-drop.md`.
+    "HostDraggable",
+    "HostDropTarget",
 ];
 
 // ---------------------------------------------------------------------------
@@ -1332,6 +1346,23 @@ version = "1"
         sorted.sort();
         sorted.dedup();
         assert_eq!(sorted.len(), KERNEL_PRIMITIVES.len(), "no duplicates");
+    }
+
+    // ---- Test 11b: UI35 drag-and-drop family ----
+
+    /// The kernel gained no drag primitive until UI35, which is why a board's
+    /// defining gesture was inexpressible. Pinned separately from the UI29/UI31
+    /// roster so a refactor that drops one of the pair is caught here, and so
+    /// `resolve_tag` keeps classifying them as kernel rather than sending them
+    /// down the package-reference path.
+    #[test]
+    fn kernel_set_covers_ui35_drag_and_drop() {
+        for name in ["HostDraggable", "HostDropTarget"] {
+            assert!(
+                KERNEL_PRIMITIVES.contains(&name),
+                "UI35 kernel must include `{name}`"
+            );
+        }
     }
 
     // ---- Test 12: package_path is absolute ----

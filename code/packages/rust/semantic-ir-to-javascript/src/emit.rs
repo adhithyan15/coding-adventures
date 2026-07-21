@@ -126,12 +126,23 @@ pub fn emit_module(m: &Module) -> String {
     // writeup, including why this can't be decided from the value's shape
     // alone — a rank-0 SIR22 NDArray is not unique to APL).
     //
-    // SECURITY: both replacement values MUST remain a hardcoded literal
+    // A THIRD, independent placeholder, added alongside J's own oracle tests
+    // (`j-to-semantic-ir/tests/oracle.rs`, "Bug A"): a J-sourced module
+    // renders a bare/boxed negative number with a leading underscore `_`
+    // and a non-finite value as lowercase `inf`/`_inf`, matching
+    // `j_runtime::value::fmt_num` exactly — neither ASCII `-`/`Infinity`
+    // nor APL's high-minus `¯`/`∞` is J's own convention. Mutually exclusive
+    // with `display_apl_high_minus` by construction (both are computed from
+    // the same single `source_language` field), so `runtime.rs`'s
+    // `fmtNum` never needs to arbitrate between them.
+    //
+    // SECURITY: all three replacement values MUST remain a hardcoded literal
     // selected by a boolean — never text derived from `source_language` or
     // any other source-controlled field — so this substitution can never
     // inject into the emitted JavaScript.
     let display_ruby = m.metadata.source_language.as_deref() == Some("ruby");
     let display_apl_high_minus = m.metadata.source_language.as_deref() == Some("apl");
+    let display_j_underscore = m.metadata.source_language.as_deref() == Some("j");
     out.push_str(
         &RUNTIME
             .replace(
@@ -141,6 +152,10 @@ pub fn emit_module(m: &Module) -> String {
             .replace(
                 "__SIR_DISPLAY_APL_HIGH_MINUS__",
                 if display_apl_high_minus { "true" } else { "false" },
+            )
+            .replace(
+                "__SIR_DISPLAY_J_UNDERSCORE__",
+                if display_j_underscore { "true" } else { "false" },
             ),
     );
     emit_ancestry_registration(&mut out, m);

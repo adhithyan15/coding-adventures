@@ -95,4 +95,4 @@ German participle agree with the subject **in the perfect**? (**No.** *Gegangen*
 never changes.) Where does it still inflect? (**In front of a noun** — *der
 angekommen**e** Zug*.) Does the French participle agree? (**Yes** — *elle est
 allé**e***.) Did German get this split from Latin? (**No** — it grew up
-**alongside** Romance, through contact.) Next chapter: describing what you see.
+**alongside** Romance, through contact.) Next chapter: the **body**.

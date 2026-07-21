@@ -317,12 +317,65 @@ impl<'a> Emitter<'a> {
 
     // ---- Program & top-level -------------------------------------
 
+    /// Maximum output line length, in UTF-16 code units, before the emitter wraps
+    /// at a top-level statement boundary.
+    ///
+    /// Oracle-verified against `closure-compiler-v20260712.jar` by emitting N
+    /// uniform-width statements and measuring the resulting line lengths. Using
+    /// call statements (`sink0000();`), which -- unlike consecutive `var`
+    /// declarations -- are not merged into a single statement:
+    ///
+    /// ```text
+    ///   stmt width | line 1 | previous stmt ended at
+    ///   -----------+--------+------------------------
+    ///        10    |   510  |  500
+    ///        11    |   506  |  495
+    ///        12    |   504  |  492
+    /// ```
+    ///
+    /// In each row the line is cut at the FIRST length exceeding 500, and the
+    /// preceding length is <= 500. So the rule is: emit the statement, then if the
+    /// line is now over budget, break AFTER it. The break lands after the statement
+    /// that crosses the budget, not before it -- lines therefore routinely run a
+    /// little over 500.
+    ///
+    /// # Why `var` runs look different, and why that does not apply here
+    ///
+    /// A run of separate `var v00=1;` statements wraps at 500/495/492 instead --
+    /// i.e. BEFORE the crossing statement. That is a different mechanism (upstream
+    /// notes a preferred break point ahead of certain constructs). It does not
+    /// affect this code path: consecutive `var` declarations are COLLAPSED into one
+    /// statement at SIMPLE/ADVANCED (`var v00=1,v01=1,...`, oracle-confirmed), and
+    /// WHITESPACE_ONLY does not route through this emitter at all -- it uses
+    /// closurec's separate `whitespace_only` minifier. So the levels this function
+    /// governs only ever see the break-after rule above.
+    ///
+    /// # What this does NOT cover
+    ///
+    /// A single statement whose own minified form exceeds the budget. The reference
+    /// compiler breaks INSIDE such a statement at safe token boundaries (after a
+    /// binary operator, after an argument comma). That needs line tracking threaded
+    /// through every emit method plus a notion of which boundaries are ASI-safe,
+    /// and is tracked as its own task.
+    const LINE_LENGTH_BUDGET: u32 = 500;
+
     fn emit_program(&mut self, p: &Program) {
         for (i, item) in p.body.iter().enumerate() {
             if i > 0 && self.opts.pretty {
                 self.newline();
             }
             self.emit_program_item(item);
+
+            // Output line wrapping (compact only). The break goes AFTER the
+            // statement that pushes the line past the budget -- see
+            // `LINE_LENGTH_BUDGET` for the oracle table. Skipped on the final item
+            // so the output does not gain a trailing blank line.
+            if !self.opts.pretty
+                && self.col > Self::LINE_LENGTH_BUDGET
+                && i + 1 < p.body.len()
+            {
+                self.newline();
+            }
         }
         // Trailing normalization (compact only): when a program's LAST item is a
         // function/class *declaration*, the reference compiler appends a `;`
@@ -3405,6 +3458,100 @@ mod tests {
     }
     fn untraced_program() -> Program {
         Program::new_untraced(EsVersion::Es2025, SourceType::Module)
+    }
+
+
+    // =================================================================
+    // Output line wrapping (CLOC #218)
+    //
+    // Expectations are the reference Closure Compiler's ACTUAL line lengths,
+    // captured by emitting N uniform-width call statements through
+    // `closure-compiler-v20260712.jar` and measuring each output line. See
+    // `LINE_LENGTH_BUDGET` for the table and the reasoning.
+    // =================================================================
+
+    /// Emit `n` call statements of the form `sinkNNN();`, each `width` chars
+    /// wide, and return the length of every output line.
+    fn wrapped_line_lengths(n: usize, digits: usize) -> Vec<usize> {
+        let body: Vec<ProgramItem> = (0..n)
+            .map(|i| {
+                let name = format!("sink{:0width$}", i, width = digits);
+                stmt(call(ident(&name), vec![]))
+            })
+            .collect();
+        let out = emit_default(untraced_program().with_body(body));
+        out.code.lines().map(|l| l.chars().count()).collect()
+    }
+
+    #[test]
+    fn short_programs_are_never_wrapped() {
+        // Well under the budget -> a single line, no break.
+        let lens = wrapped_line_lengths(10, 3);
+        assert_eq!(lens, vec![100], "10 statements of width 10 must stay on one line");
+    }
+
+    #[test]
+    fn wraps_after_the_statement_that_crosses_the_budget() {
+        // Oracle, width 10: line 1 is 510 -- the break lands AFTER the statement
+        // that crosses 500, not before it. 50 statements would sit at exactly
+        // 500, which is allowed, so the 51st is what tips it over.
+        let lens = wrapped_line_lengths(70, 3);
+        assert_eq!(lens[0], 510, "width-10 statements: first line must be 510");
+    }
+
+    #[test]
+    fn wrap_point_tracks_statement_width() {
+        // Oracle: width 11 -> 506, width 12 -> 504. Both are the first length
+        // exceeding 500, confirming the rule is not a fixed statement count.
+        assert_eq!(wrapped_line_lengths(70, 4)[0], 506, "width-11 first line");
+        assert_eq!(wrapped_line_lengths(70, 5)[0], 504, "width-12 first line");
+    }
+
+    #[test]
+    fn wrapping_repeats_for_every_subsequent_line() {
+        // Oracle on 260 width-10 statements: 510 x5 then a 50-char remainder.
+        let lens = wrapped_line_lengths(260, 3);
+        assert_eq!(lens, vec![510, 510, 510, 510, 510, 50]);
+    }
+
+    #[test]
+    fn no_trailing_blank_line_when_the_last_statement_crosses() {
+        // The final item must never emit a wrap after itself, which would leave
+        // a stray empty line at EOF.
+        for n in [50usize, 51, 52, 100] {
+            let out = emit_default(
+                untraced_program().with_body(
+                    (0..n).map(|i| stmt(call(ident(&format!("sink{i:03}")), vec![]))).collect(),
+                ),
+            );
+            assert!(
+                !out.code.ends_with('\n'),
+                "n={n}: output must not end with a newline"
+            );
+            assert!(
+                !out.code.contains("\n\n"),
+                "n={n}: output must not contain a blank line"
+            );
+        }
+    }
+
+    #[test]
+    fn pretty_mode_is_unaffected_by_the_budget() {
+        // Pretty mode already puts one statement per line; the budget must not
+        // introduce extra breaks there.
+        let body: Vec<ProgramItem> = (0..70)
+            .map(|i| stmt(call(ident(&format!("sink{i:03}")), vec![])))
+            .collect();
+        let prog = untraced_program().with_body(body);
+        let sidecar = Sidecar::new();
+        let mut cv = CVLog::new(false);
+        let opts = EmitOptions { pretty: true, ..EmitOptions::default() };
+        let out = emit(&prog, &sidecar, &mut cv, &opts).expect("emit failed");
+        assert_eq!(
+            out.code.lines().count(),
+            70,
+            "pretty mode must emit exactly one line per statement"
+        );
     }
 
     // =================================================================

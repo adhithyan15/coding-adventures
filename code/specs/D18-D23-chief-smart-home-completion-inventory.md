@@ -274,18 +274,26 @@ D18D handler catalog, and returns typed rejection frames for denied tools. A
 real-Deno test proves one allowed call reaches Rust and one undeclared call does
 not reach a handler.
 
+The first reusable Chief job slice now takes the existing Weather Agent through
+the in-process D18C job plan and executor, isolated host tool runtime, centralized
+write-approval policy, D18D execution journal, artifact write, validated
+`JobRunReceipt`, and compact user-visible umbrella report. The approved path
+records one granted write and three completed calls; the unapproved path stops
+at the policy gate and never writes the recommendation.
+
+That job now persists each canonical payload-free D18D audit row through
+`chief-of-staff-tool-audit-store` and the D18A local-folder backend before
+returning actor failures. A fresh store instance reloads the rows and emits a
+compact summary keyed to job, run, host profile, session, and user. Executable
+tests prove both the successful three-call run and the approval-blocked write
+survive a runtime restart without storing arguments, outputs, or credentials.
+
 These items are Chief of Staff architecture, not smart-home platform work:
 
-- Run a Chief job end to end through scheduler or job framework, tool runtime,
-  approval checks, result journal, and final user-visible report.
 - Add approval UX and policy wiring for Tier2 or stronger actions such as
   bridge pairing, locks, cameras, alarms, and safety devices.
 - Wire vault leasing so tools receive opaque `VaultRef` handles and never raw
   smart-home secrets.
-- Persist tool execution journals and expose compact audit summaries for jobs,
-  hosts, sessions, and user review.
-- Package at least one reusable Chief job such as "home status brief",
-  "goodnight check", or "device health triage".
 
 ## Smart Home Remaining Work
 

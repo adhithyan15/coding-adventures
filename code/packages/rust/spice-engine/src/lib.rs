@@ -418,23 +418,29 @@ fn clone_subckt_element(
             element.gate_source_capacitance,
             element.gate_drain_capacitance,
         )),
-        Element::Bjt(element) => Element::Bjt(Bjt::with_model_and_temperature_parameters(
-            format!("{instance_name}.{}", element.name),
-            map_subckt_node(&element.collector, instance_name, node_map),
-            map_subckt_node(&element.base, instance_name, node_map),
-            map_subckt_node(&element.emitter, instance_name, node_map),
-            element.polarity,
-            element.saturation_current,
-            element.forward_beta,
-            element.thermal_voltage,
-            element.base_emitter_capacitance,
-            element.base_collector_capacitance,
-            element.forward_transit_time,
-            element.reverse_transit_time,
-            element.saturation_current_temperature_exponent,
-            element.energy_gap_electron_volts,
-            element.forward_early_voltage,
-        )),
+        Element::Bjt(element) => {
+            Element::Bjt(Bjt::with_model_temperature_and_depletion_parameters(
+                format!("{instance_name}.{}", element.name),
+                map_subckt_node(&element.collector, instance_name, node_map),
+                map_subckt_node(&element.base, instance_name, node_map),
+                map_subckt_node(&element.emitter, instance_name, node_map),
+                element.polarity,
+                element.saturation_current,
+                element.forward_beta,
+                element.thermal_voltage,
+                element.base_emitter_capacitance,
+                element.base_collector_capacitance,
+                element.forward_transit_time,
+                element.reverse_transit_time,
+                element.saturation_current_temperature_exponent,
+                element.energy_gap_electron_volts,
+                element.forward_early_voltage,
+                element.forward_emission_coefficient,
+                element.reverse_emission_coefficient,
+                element.base_emitter_junction_potential,
+                element.base_emitter_grading_coefficient,
+            ))
+        }
         Element::Mosfet(element) => Element::Mosfet(Mosfet::with_model(
             format!("{instance_name}.{}", element.name),
             map_subckt_node(&element.drain, instance_name, node_map),
@@ -2839,6 +2845,10 @@ pub struct Bjt {
     pub saturation_current_temperature_exponent: f64,
     pub energy_gap_electron_volts: f64,
     pub forward_early_voltage: f64,
+    pub forward_emission_coefficient: f64,
+    pub reverse_emission_coefficient: f64,
+    pub base_emitter_junction_potential: f64,
+    pub base_emitter_grading_coefficient: f64,
 }
 
 impl Bjt {
@@ -2894,6 +2904,8 @@ impl Bjt {
             3.0,
             1.11,
             0.0,
+            1.0,
+            1.0,
         )
     }
 
@@ -2914,6 +2926,53 @@ impl Bjt {
         saturation_current_temperature_exponent: f64,
         energy_gap_electron_volts: f64,
         forward_early_voltage: f64,
+        forward_emission_coefficient: f64,
+        reverse_emission_coefficient: f64,
+    ) -> Self {
+        Self::with_model_temperature_and_depletion_parameters(
+            name,
+            collector,
+            base,
+            emitter,
+            polarity,
+            saturation_current,
+            forward_beta,
+            thermal_voltage,
+            base_emitter_capacitance,
+            base_collector_capacitance,
+            forward_transit_time,
+            reverse_transit_time,
+            saturation_current_temperature_exponent,
+            energy_gap_electron_volts,
+            forward_early_voltage,
+            forward_emission_coefficient,
+            reverse_emission_coefficient,
+            0.75,
+            0.33,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub fn with_model_temperature_and_depletion_parameters(
+        name: impl Into<String>,
+        collector: impl Into<String>,
+        base: impl Into<String>,
+        emitter: impl Into<String>,
+        polarity: BjtPolarity,
+        saturation_current: f64,
+        forward_beta: f64,
+        thermal_voltage: f64,
+        base_emitter_capacitance: f64,
+        base_collector_capacitance: f64,
+        forward_transit_time: f64,
+        reverse_transit_time: f64,
+        saturation_current_temperature_exponent: f64,
+        energy_gap_electron_volts: f64,
+        forward_early_voltage: f64,
+        forward_emission_coefficient: f64,
+        reverse_emission_coefficient: f64,
+        base_emitter_junction_potential: f64,
+        base_emitter_grading_coefficient: f64,
     ) -> Self {
         Self {
             name: name.into(),
@@ -2931,6 +2990,10 @@ impl Bjt {
             saturation_current_temperature_exponent,
             energy_gap_electron_volts,
             forward_early_voltage,
+            forward_emission_coefficient,
+            reverse_emission_coefficient,
+            base_emitter_junction_potential,
+            base_emitter_grading_coefficient,
         }
     }
 }
@@ -3321,8 +3384,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     usize,
 )] = &[
     (ModelCardKind::Diode, 12, 18, 5, 3),
-    (ModelCardKind::Npn, 10, 19, 5, 4),
-    (ModelCardKind::Pnp, 10, 19, 5, 4),
+    (ModelCardKind::Npn, 14, 25, 7, 4),
+    (ModelCardKind::Pnp, 14, 25, 7, 4),
     (ModelCardKind::Njf, 5, 11, 5, 3),
     (ModelCardKind::Pjf, 5, 11, 5, 3),
     (ModelCardKind::Nmos, 18, 25, 6, 3),
@@ -3368,6 +3431,12 @@ const BJT_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("EG", "EG"),
     ("VAF", "VAF"),
     ("VA", "VAF"),
+    ("NF", "NF"),
+    ("NR", "NR"),
+    ("VJE", "VJE"),
+    ("PE", "VJE"),
+    ("MJE", "MJE"),
+    ("ME", "MJE"),
 ];
 const JFET_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("BETA", "BETA"),
@@ -4007,7 +4076,7 @@ pub fn bjt_from_model_card(
         ModelCardKind::Pnp => BjtPolarity::Pnp,
         _ => return Err(model_card_kind_error(&name, "BJT", model.kind)),
     };
-    Ok(Bjt::with_model_and_temperature_parameters(
+    Ok(Bjt::with_model_temperature_and_depletion_parameters(
         name,
         collector,
         base,
@@ -4023,6 +4092,10 @@ pub fn bjt_from_model_card(
         model_card_value(model, "XTI", 3.0),
         model_card_value(model, "EG", 1.11),
         model_card_value(model, "VAF", 0.0),
+        model_card_value(model, "NF", 1.0),
+        model_card_value(model, "NR", 1.0),
+        model_card_value(model, "VJE", 0.75),
+        model_card_value(model, "MJE", 0.33),
     ))
 }
 
@@ -21671,7 +21744,9 @@ fn collect_noise_sources(
                     BjtPolarity::Npn => base_voltage - emitter_voltage,
                     BjtPolarity::Pnp => emitter_voltage - base_voltage,
                 };
-                let exponent = (junction_voltage / bjt.thermal_voltage).clamp(-40.0, 40.0);
+                let forward_thermal_voltage =
+                    bjt.thermal_voltage * bjt.forward_emission_coefficient;
+                let exponent = (junction_voltage / forward_thermal_voltage).clamp(-40.0, 40.0);
                 let output_voltage = match bjt.polarity {
                     BjtPolarity::Npn => collector_voltage - emitter_voltage,
                     BjtPolarity::Pnp => emitter_voltage - collector_voltage,
@@ -22142,10 +22217,11 @@ fn stamp_bjt(
         BjtPolarity::Npn => base_voltage - emitter_voltage,
         BjtPolarity::Pnp => emitter_voltage - base_voltage,
     };
-    let exponent = (junction_voltage / bjt.thermal_voltage).clamp(-40.0, 40.0);
+    let forward_thermal_voltage = bjt.thermal_voltage * bjt.forward_emission_coefficient;
+    let exponent = (junction_voltage / forward_thermal_voltage).clamp(-40.0, 40.0);
     let exp_value = exponent.exp();
     let base_collector_current = bjt.saturation_current * (exp_value - 1.0);
-    let base_gm = bjt.saturation_current / bjt.thermal_voltage * exp_value;
+    let base_gm = bjt.saturation_current / forward_thermal_voltage * exp_value;
     let output_voltage = match bjt.polarity {
         BjtPolarity::Npn => collector_voltage - emitter_voltage,
         BjtPolarity::Pnp => emitter_voltage - collector_voltage,
@@ -22263,10 +22339,11 @@ fn stamp_bjt_small_signal(
         BjtPolarity::Npn => base_voltage - emitter_voltage,
         BjtPolarity::Pnp => emitter_voltage - base_voltage,
     };
-    let exponent = (junction_voltage / bjt.thermal_voltage).clamp(-40.0, 40.0);
+    let forward_thermal_voltage = bjt.thermal_voltage * bjt.forward_emission_coefficient;
+    let exponent = (junction_voltage / forward_thermal_voltage).clamp(-40.0, 40.0);
     let exp_value = exponent.exp();
     let base_collector_current = bjt.saturation_current * (exp_value - 1.0);
-    let base_gm = bjt.saturation_current / bjt.thermal_voltage * exp_value;
+    let base_gm = bjt.saturation_current / forward_thermal_voltage * exp_value;
     let output_voltage = match bjt.polarity {
         BjtPolarity::Npn => collector_voltage - emitter_voltage,
         BjtPolarity::Pnp => emitter_voltage - collector_voltage,
@@ -22319,11 +22396,13 @@ fn stamp_ac_bjt_small_signal(
         BjtPolarity::Npn => base_voltage - collector_voltage,
         BjtPolarity::Pnp => collector_voltage - base_voltage,
     };
-    let exponent = (junction_voltage / bjt.thermal_voltage).clamp(-40.0, 40.0);
-    let reverse_exponent = (reverse_junction_voltage / bjt.thermal_voltage).clamp(-40.0, 40.0);
+    let forward_thermal_voltage = bjt.thermal_voltage * bjt.forward_emission_coefficient;
+    let exponent = (junction_voltage / forward_thermal_voltage).clamp(-40.0, 40.0);
+    let reverse_thermal_voltage = bjt.thermal_voltage * bjt.reverse_emission_coefficient;
+    let reverse_exponent = (reverse_junction_voltage / reverse_thermal_voltage).clamp(-40.0, 40.0);
     let exp_value = exponent.exp();
     let base_collector_current = bjt.saturation_current * (exp_value - 1.0);
-    let base_gm = bjt.saturation_current / bjt.thermal_voltage * exp_value;
+    let base_gm = bjt.saturation_current / forward_thermal_voltage * exp_value;
     let output_voltage = match bjt.polarity {
         BjtPolarity::Npn => collector_voltage - emitter_voltage,
         BjtPolarity::Pnp => emitter_voltage - collector_voltage,
@@ -22339,12 +22418,14 @@ fn stamp_ac_bjt_small_signal(
         base_collector_current / bjt.forward_early_voltage
     };
     let gm = Complex::new(base_gm * early_factor, 0.0);
-    let reverse_gm = bjt.saturation_current / bjt.thermal_voltage * reverse_exponent.exp();
+    let reverse_gm = bjt.saturation_current / reverse_thermal_voltage * reverse_exponent.exp();
     let diffusion_capacitance = bjt.forward_transit_time * gm.real;
     let reverse_diffusion_capacitance = bjt.reverse_transit_time * reverse_gm;
     let gpi = Complex::new(
-        gm.real / bjt.forward_beta,
-        omega * (bjt.base_emitter_capacitance + diffusion_capacitance),
+        base_gm / bjt.forward_beta,
+        omega
+            * (bjt_base_emitter_depletion_capacitance(bjt, junction_voltage)
+                + diffusion_capacitance),
     );
     let ybc = Complex::new(
         0.0,
@@ -22939,21 +23020,44 @@ fn bjt_base_collector_charge_state_name(bjt: &Bjt) -> String {
     format!("_Q_{}_bc_charge", bjt.name)
 }
 
-fn bjt_junction_transconductance(bjt: &Bjt, voltage: f64) -> f64 {
-    bjt.saturation_current / bjt.thermal_voltage
-        * (voltage / bjt.thermal_voltage).clamp(-40.0, 40.0).exp()
+fn bjt_junction_transconductance(bjt: &Bjt, voltage: f64, emission_coefficient: f64) -> f64 {
+    let effective_thermal_voltage = bjt.thermal_voltage * emission_coefficient;
+    bjt.saturation_current / effective_thermal_voltage
+        * (voltage / effective_thermal_voltage)
+            .clamp(-40.0, 40.0)
+            .exp()
 }
 
 fn bjt_charge_dynamic_capacitance(bjt: &Bjt, kind: BjtChargeStateKind, voltage: f64) -> f64 {
-    let conductance = bjt_junction_transconductance(bjt, voltage);
     match kind {
         BjtChargeStateKind::BaseEmitter => {
-            bjt.base_emitter_capacitance + bjt.forward_transit_time * conductance
+            let conductance =
+                bjt_junction_transconductance(bjt, voltage, bjt.forward_emission_coefficient);
+            bjt_base_emitter_depletion_capacitance(bjt, voltage)
+                + bjt.forward_transit_time * conductance
         }
         BjtChargeStateKind::BaseCollector => {
+            let conductance =
+                bjt_junction_transconductance(bjt, voltage, bjt.reverse_emission_coefficient);
             bjt.base_collector_capacitance + bjt.reverse_transit_time * conductance
         }
     }
+}
+
+fn bjt_base_emitter_depletion_capacitance(bjt: &Bjt, voltage: f64) -> f64 {
+    if bjt.base_emitter_capacitance <= 0.0 || bjt.base_emitter_grading_coefficient == 0.0 {
+        return bjt.base_emitter_capacitance;
+    }
+    let normalized_voltage = voltage / bjt.base_emitter_junction_potential;
+    let coefficient = 0.5;
+    if normalized_voltage < coefficient {
+        return bjt.base_emitter_capacitance
+            / (1.0 - normalized_voltage).powf(bjt.base_emitter_grading_coefficient);
+    }
+    let transition_scale = (1.0_f64 - coefficient).powf(1.0 + bjt.base_emitter_grading_coefficient);
+    let continuation = 1.0 - coefficient * (1.0 + bjt.base_emitter_grading_coefficient)
+        + bjt.base_emitter_grading_coefficient * normalized_voltage;
+    bjt.base_emitter_capacitance * continuation / transition_scale
 }
 
 fn bjt_charge_state_specs(bjt: &Bjt) -> Vec<BjtChargeStateSpec<'_>> {
@@ -23296,6 +23400,34 @@ fn validate_bjt(bjt: &Bjt) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: bjt.name.clone(),
             reason: "forward Early voltage must be finite and non-negative".to_string(),
+        });
+    }
+    if !bjt.forward_emission_coefficient.is_finite() || bjt.forward_emission_coefficient <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "forward emission coefficient must be finite and positive".to_string(),
+        });
+    }
+    if !bjt.reverse_emission_coefficient.is_finite() || bjt.reverse_emission_coefficient <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "reverse emission coefficient must be finite and positive".to_string(),
+        });
+    }
+    if !bjt.base_emitter_junction_potential.is_finite()
+        || bjt.base_emitter_junction_potential <= 0.0
+    {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "base-emitter junction potential must be finite and positive".to_string(),
+        });
+    }
+    if !bjt.base_emitter_grading_coefficient.is_finite()
+        || !(0.0..1.0).contains(&bjt.base_emitter_grading_coefficient)
+    {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "base-emitter grading coefficient must be finite and in [0, 1)".to_string(),
         });
     }
     Ok(())

@@ -104,11 +104,29 @@ describe("loadLessons", () => {
   });
 });
 
+/** A Lesson with everything defaulted, so a test only states what it cares about. */
+export function lesson(over: Partial<Lesson> & { id: string }): Lesson {
+  return {
+    language: "spanish",
+    headword: "",
+    gloss: "",
+    type: "word",
+    chapter: 1,
+    concept: "",
+    prerequisites: [],
+    reviewsOf: [],
+    romanization: "",
+    script: "latin",
+    etymologyHook: "",
+    ...over,
+  };
+}
+
 describe("grouping for interleaving", () => {
   const lessons: Lesson[] = [
-    { id: "A1", language: "spanish", headword: "", gloss: "", type: "word", chapter: 1, concept: "", prerequisites: [], reviewsOf: [] },
-    { id: "B1", language: "tamil", headword: "", gloss: "", type: "word", chapter: 1, concept: "", prerequisites: [], reviewsOf: [] },
-    { id: "A2", language: "spanish", headword: "", gloss: "", type: "word", chapter: 2, concept: "", prerequisites: [], reviewsOf: [] },
+    lesson({ id: "A1", language: "spanish", chapter: 1 }),
+    lesson({ id: "B1", language: "tamil", chapter: 1 }),
+    lesson({ id: "A2", language: "spanish", chapter: 2 }),
   ];
 
   it("lists the distinct languages, sorted", () => {

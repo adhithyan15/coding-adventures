@@ -1,5 +1,31 @@
 # Changelog
 
+## Chapter 17 — The body: a head that was a pot, and a hand inside English
+
+- **Chapter 17 authored** (`FR-C17-tete`, `-main`) — the **body**, which is the
+  theme all four parallel-track roadmaps name next after family and food.
+- **la tête** (`FR-C17-tete`): the headline is that **French threw away the Latin
+  word for "head."** *Tête* is not from *caput* but from ***testa***, an
+  **earthenware pot** — Roman soldiers' slang for the skull, the way English says
+  *noggin*. The joke replaced the real word, so *j'ai mal à la tête* is
+  historically "**my pot hurts**."
+  - *Caput* is shown surviving where it did: French **chef** ("chief" = head) and
+    **chapitre**, and abroad in *cabeza*, *capo*, *captain*, *decapitate*.
+  - The **circumflex is a receipt** — *testa* → Old French *teste* → *tête* — and
+    the payoff is that English, which borrowed *before* the *s* fell, still has
+    **test**, originally the shallow pot an alchemist assayed metals in.
+- **la main** (`FR-C17-main`): flagged as **feminine despite a consonant
+  ending**, because French gender is not predictable from the ending and this
+  course always supplies the article. From ***manus***, presented as the most
+  productive hand in English — *manual*, *manuscript*, *maintain*, *manage*,
+  *manoeuvre* — with two things done deliberately:
+  - **manufacture** ("made by hand") is called out as now naming precisely the
+    thing that isn't.
+  - **maintenir** = Latin *manū tenēre*, "hold in the hand" — so *maintenance* is
+    literally keeping something in hand. (A draft cited "Ch. 14's *tenir*"; the
+    French track has **no *tenir* lesson** — Ch. 14 is *avoir* and *âge*. Caught
+    by grepping. *Ter* ← *tenēre* is the **Portuguese** Ch. 14.)
+
 ## Chapter 16 — *être*, and the half of the past Chapter 15 couldn't reach
 
 - **Chapter 16 authored** (`FR-C16-etre`, `-passe-compose-etre`). Chapter 15

@@ -1,0 +1,4 @@
+--compilation_level
+SIMPLE
+--js
+tests/diff/line-wrap/input/a.js

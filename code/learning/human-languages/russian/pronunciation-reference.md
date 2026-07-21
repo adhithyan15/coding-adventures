@@ -33,6 +33,11 @@ looks like Latin *x* but says a raspy **"kh."**
 - **Sounds English writes with two letters**: **ж** (zh, as in *measure*),
   **ч** (ch), **ш** (sh), **щ** (shch), **ц** (ts), **ю** (yu), **я** (ya),
   **ё** (yo).
+- **The vowel English hasn't got**: **ы** (`yery-vowel`) — not the *ee* of **и**,
+  but a tighter sound made with the tongue **drawn back**. Say English *ill*, then
+  say it again with your tongue pulled towards your throat. It is the single
+  hardest Russian vowel for an English speaker, and it carries real meaning:
+  **ты** (*you*) and **вы** (*you*, formal) both turn on it.
 - **The two signs** — **ъ** (hard sign) and **ь** (soft sign) — spell *no sound
   of their own*; they only tell you how to pronounce the consonant before them
   (ь softens it).

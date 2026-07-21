@@ -89,12 +89,34 @@ exactly where a word needs it:
 - **Chapter 3 — Introducing Yourself**: me → llamar → me llamo (**reflexive
   verbs**) → **tú / usted** (informal vs formal "you," both roots traced) →
   cómo → se llama → ¿cómo se llama usted? → mucho → mucho gusto → practice.
+- **Chapter 4 — How Are You**: gracias → de nada → estar → ¿cómo está usted? →
+  regular → practice.
+- **Chapter 5 — Farewells**: adiós → hasta → hasta luego / mañana / pronto.
+- **Chapter 6 — The First Verbs**: por favor → hablar (the *-ar* template) →
+  trabajar → estudiar → hablo español.
+- **Chapter 7 — The *-er* and *-ir* Verbs**: comer → vivir → beber → qué → dónde.
+- **Chapter 8 — Numbers and Age**: números 1–5, 6–10 → tener → ¿cuántos años?
+- **Chapter 9 — *Ser* and *Estar***: ser → ser vs estar → soy de → está en.
+- **Chapter 10 — Going, and the Near Future**: ir → ir a + infinitive →
+  mi / tu / su.
+- **Chapter 11 — Stem-Changing Verbs**: querer → poder → the boot pattern →
+  nuestro.
+- **Chapter 12 — The *-go* Verb Club**: hacer → decir → the *yo-go* pattern.
+- **Chapter 13 — Completing the *-go* Club**: poner → salir → venir.
+- **Chapter 14 — The Preterite**: ser/ir preterite → hablar preterite.
+- **Chapter 15 — Completing the Preterite**: comer/vivir → the strong preterites.
+- **Chapter 16 — The Imperfect**: imperfecto → the three irregulars → choosing
+  between the two pasts.
+- **Chapter 17 — The Future and the Conditional**: futuro → condicional (one
+  weld, twice).
+- **Chapter 18 — The Subjunctive**: subjuntivo → quiero que (the mood of the
+  not-yet-real).
 
 Every noun carries its gender (*el*/*la*) and plural; every pronoun is traced
-to its root. Fully authored and in the book (20 pages). Lessons are named by
-**slug** (e.g. `ES-C01-dia`), not numbered — order lives in the book (which
-LaTeX auto-numbers) and in `session-map.md`, so inserting a lesson never
-renumbers anything.
+to its root. **All 18 chapters are authored and in the book (114 pages).**
+Lessons are named by **slug** (e.g. `ES-C01-dia`), not numbered — order lives
+in the book (which LaTeX auto-numbers) and in `session-map.md`, so inserting a
+lesson never renumbers anything.
 - **Pronunciation**: [`pronunciation-reference.md`](./pronunciation-reference.md)
   (look-up reference, not a chapter).
 - **Later chapters**: skeleton in [`roadmap.md`](./roadmap.md).

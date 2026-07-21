@@ -33,6 +33,14 @@ import {
 import { buildPool, type PoolEntry } from "./interleave.ts";
 import { loadLessons, indicesByLanguage, nextDue } from "./lessons.ts";
 import {
+  crossLanguageConcepts,
+  datasetFromLessons,
+  unlockedOrAll,
+  type ConceptCard,
+} from "./concepts.ts";
+import taxonomyJson from "../../../../learning/human-languages/concepts/taxonomy.json";
+import type { Taxonomy } from "@coding-adventures/human-language-data/src/types.ts";
+import {
   browserStorage,
   fromSaved,
   loadProgress,
@@ -45,7 +53,7 @@ import "./styles.css";
 const app = document.getElementById("app");
 if (!app) throw new Error("missing #app root");
 
-type Mode = "browse" | "practice" | "lessons";
+type Mode = "browse" | "practice" | "lessons" | "concepts";
 let mode: Mode = "browse";
 
 // --- lesson review state ----------------------------------------------------
@@ -62,6 +70,15 @@ const LESSON_IDS = LESSONS.map((l) => l.id);
 // reviews can walk across languages cheaply.
 const LESSON_GROUPS = indicesByLanguage(LESSONS);
 const LESSON_POOL = buildPool(LESSON_GROUPS.map((g) => g.length));
+
+// Cross-language cards: one concept, several languages. Built once — the join
+// walks every lesson, and neither the curriculum nor the taxonomy changes while
+// the page is open.
+const CONCEPT_CARDS: ConceptCard[] = crossLanguageConcepts(
+  datasetFromLessons(taxonomyJson as unknown as Taxonomy, LESSONS),
+);
+/** Which concept card is expanded; null = none. */
+let openConcept: string | null = null;
 let savedProgress = loadProgress(browserStorage());
 let lessonSchedule: ItemState[] = fromSaved(LESSON_IDS, savedProgress);
 let lessonSession = savedProgress.session;
@@ -127,8 +144,9 @@ function renderModeToggle(): HTMLElement {
     browse: "Browse",
     practice: "Practice",
     lessons: "Lessons",
+    concepts: "Concepts",
   };
-  (["browse", "practice", "lessons"] as Mode[]).forEach((m) => {
+  (["browse", "practice", "lessons", "concepts"] as Mode[]).forEach((m) => {
     const b = el("button", "mode" + (m === mode ? " mode--active" : ""));
     b.textContent = LABELS[m];
     b.setAttribute("aria-pressed", String(m === mode));
@@ -387,6 +405,19 @@ function pickLesson(): void {
     lessonIndex = null;
     return;
   }
+  // PREREQUISITE GATE, applied to the POOL rather than to the pick.
+  //
+  // The scheduler is generic over a numeric index and has no idea that "the
+  // preterite of comer" presupposes "comer". But gating must happen *inside*
+  // the rotation, not after it: picking and then rejecting collapses to serving
+  // the one fallback lesson forever, because the same pick is rejected on every
+  // turn. That is the 0.5.0 bug in a new costume — a review simulation caught
+  // it serving one Arabic lesson 34 times in 40.
+  //
+  // Recomputed per pick because `seen` grows as you study; it is a single pass
+  // over ~700 lessons, dwarfed by the render that follows.
+  const open = new Set(unlockedOrAll(LESSONS, seenLessonIds()));
+
   // The scan itself is a pure function in lessons.ts (and tested there); this
   // only threads the cursor. LESSON_GROUPS / LESSON_POOL are computed once —
   // they are constant for the page's lifetime.
@@ -396,11 +427,36 @@ function pickLesson(): void {
     lessonSchedule,
     lessonSession,
     lessonCursor,
+    (i) => open.has(i),
   );
   lessonCursor = cursor;
-  // Nothing due: fall back to the scheduler's most-overdue pick so the mode is
-  // never a dead end.
-  lessonIndex = index ?? pickNext(lessonSchedule, lessonSession);
+  if (index !== null) {
+    lessonIndex = index;
+    return;
+  }
+
+  // Nothing due among the unlocked lessons: fall back to the most-overdue pick,
+  // but only over the unlocked ones, so the mode is never a dead end AND never
+  // a loop. `pickNext` reads `letterIndex`, which carries the real lesson index
+  // through the filter.
+  const openStates = lessonSchedule.filter((s) => open.has(s.letterIndex));
+  lessonIndex =
+    openStates.length > 0 ? pickNext(openStates, lessonSession) : null;
+}
+
+/**
+ * Lesson ids the learner has actually reviewed.
+ *
+ * Keyed on REVIEW HISTORY, never on `dueAtSession` — fresh items are seeded
+ * with the current session, so a due-based test reports the whole curriculum as
+ * "seen" on any reload after the first. That bug shipped once; see progress.ts.
+ */
+function seenLessonIds(): ReadonlySet<string> {
+  const out = new Set<string>();
+  lessonSchedule.forEach((s, i) => {
+    if (s.reps > 0 || s.lapses > 0 || s.box > 0) out.add(LESSON_IDS[i]!);
+  });
+  return out;
 }
 
 /** Grade the current lesson, advance the clock, and save. */
@@ -411,6 +467,107 @@ function gradeLesson(wasCorrect: boolean): void {
   persistLessons();
   pickLesson();
   render();
+}
+
+/**
+ * Concepts mode — the same idea, side by side, in every language that has it.
+ *
+ * This is the cross-learning the curriculum's shared `concept_tag`s were always
+ * for: *hola / bonjour / नमस्ते* are one concept realized four ways, and seeing
+ * them together is a different act from meeting them four chapters apart.
+ *
+ * Rendered as a collapsed list because there are hundreds of concepts and only
+ * one is ever being studied. Everything goes in via `textContent` — the corpus
+ * is repo-authored, but it is still data, and it is never worth building an
+ * innerHTML habit.
+ */
+function renderConcepts(): HTMLElement {
+  const wrap = el("div", "practice");
+
+  const stats = el("p", "score");
+  stats.textContent =
+    `${CONCEPT_CARDS.length} concepts shared by two or more languages` +
+    ` · from ${LESSONS.length} lessons`;
+  wrap.appendChild(stats);
+
+  if (CONCEPT_CARDS.length === 0) {
+    const empty = el("p", "muted");
+    empty.textContent = "No concept is taught in more than one language yet.";
+    wrap.appendChild(empty);
+    return wrap;
+  }
+
+  const list = el("div", "concept-list");
+  for (const card of CONCEPT_CARDS) {
+    const item = el("div", "concept");
+
+    const langs = new Set(card.realizations.map((r) => r.language));
+    const head = el("button", "concept__head");
+    head.setAttribute("aria-expanded", String(openConcept === card.id));
+    head.textContent = `${card.id} — ${langs.size} languages`;
+    head.onclick = () => {
+      openConcept = openConcept === card.id ? null : card.id;
+      render();
+    };
+    item.appendChild(head);
+
+    if (card.gloss) {
+      const gloss = el("p", "muted concept__gloss");
+      gloss.textContent = card.gloss;
+      item.appendChild(gloss);
+    }
+
+    if (openConcept === card.id) {
+      const rows = el("div", "concept__rows");
+      // One row per language, in track order so the list is stable between
+      // openings rather than reordering under the reader.
+      for (const r of [...card.realizations].sort((a, b) =>
+        a.language.localeCompare(b.language),
+      )) {
+        const row = el("div", "concept__row");
+
+        const lang = el("span", "concept__lang");
+        lang.textContent = r.language;
+        row.appendChild(lang);
+
+        const word = el("span", "concept__word");
+        word.textContent = r.headword;
+        row.appendChild(word);
+
+        // Only useful when it differs from the headword — for Latin-script
+        // tracks the package sets them equal, and repeating it is noise.
+        if (r.romanization && r.romanization !== r.headword) {
+          const rom = el("span", "concept__rom");
+          rom.textContent = r.romanization;
+          row.appendChild(rom);
+        }
+
+        const gloss = el("span", "concept__gloss-inline");
+        gloss.textContent = r.gloss;
+        row.appendChild(gloss);
+
+        rows.appendChild(row);
+      }
+      item.appendChild(rows);
+
+      // The etymology hooks are the reason this curriculum exists; surface them
+      // where the comparison is happening, not three clicks away.
+      const hooks = card.realizations.filter((r) => r.etymologyHook);
+      if (hooks.length > 0) {
+        const why = el("div", "concept__hooks");
+        for (const r of hooks) {
+          const p = el("p", "muted");
+          p.textContent = `${r.language}: ${r.etymologyHook}`;
+          why.appendChild(p);
+        }
+        item.appendChild(why);
+      }
+    }
+
+    list.appendChild(item);
+  }
+  wrap.appendChild(list);
+  return wrap;
 }
 
 function renderLessons(): HTMLElement {
@@ -482,12 +639,16 @@ function render(): void {
   app!.replaceChildren();
   app!.append(renderHeader());
   // The script tabs steer per-script work; hide them during a mixed session,
-  // and in Lessons mode, which spans every language rather than one script.
-  if (mode !== "lessons" && !(mode === "practice" && scope === "mixed")) {
+  // and in Lessons/Concepts modes, which span every language rather than one
+  // script.
+  const spansAllLanguages = mode === "lessons" || mode === "concepts";
+  if (!spansAllLanguages && !(mode === "practice" && scope === "mixed")) {
     app!.appendChild(renderTabs());
   }
 
-  if (mode === "lessons") {
+  if (mode === "concepts") {
+    app!.appendChild(renderConcepts());
+  } else if (mode === "lessons") {
     app!.appendChild(renderLessons());
   } else if (mode === "browse") {
     const views = buildScriptView(data);

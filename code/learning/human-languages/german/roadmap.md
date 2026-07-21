@@ -135,6 +135,21 @@ Spanish and French where a contrast helps. The recurring decoder is the
   **alongside** Romance by areal contact — the same Sprachbund Ch.15 blamed for
   the simple past retreating in three languages at once. Split **parallel**,
   agreement **not shared**. **Authored.**
+- **Ch. 17 — The body: a cup for a head, and a hand with no Latin cousin**:
+  ***der Kopf*** (`GE-C17-kopf`) — originally a **cup or bowl**, Germanic
+  \**kuppaz*, the same word as English **cup**, which displaced the inherited
+  ***das Haupt*** (← \**haubudam*, the true **Grimm's-law** cognate of Latin
+  *caput* and English *head*). *Haupt* survives only in compounds —
+  *Hauptstadt*, *Hauptbahnhof*, *Hauptsache*. **The payoff is a coincidence
+  worth showing**: French *tête* ← *testa* "pot" and German *Kopf* ← "cup" are
+  the **same replacement, invented independently**, and both languages kept the
+  old word for chiefs and capitals → ***die Hand*** (`GE-C17-hand`): Germanic
+  \**handuz*, spelled exactly as English, with final *-d* **devoiced** to *t*
+  (it returns in *die Hände*). **This lesson exists to show a NON-connection** —
+  every Romance track here builds "hand" on *manus*, and \**handuz* is unrelated
+  to it. The course keeps finding links; it matters to mark where the families
+  genuinely diverge. *Manus* reached German only as **borrowed** vocabulary
+  (*Manuskript*, *manuell*). **Authored.**
 
 ## Planned
 

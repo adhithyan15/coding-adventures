@@ -9,6 +9,12 @@ All notable changes to this package will be documented in this file.
 - Loaded the Weather Agent D18D catalog from a reviewed orchestrator profile
   with isolated fetcher, classifier, and writer hosts through
   `chief-of-staff-host-runtime`.
+- Added centralized write approval enforcement, a validated D18C run receipt,
+  and a compact user-visible report backed by canonical journal health.
+- Persist canonical payload-free D18D audit rows through the D18A local-folder
+  backend and reopen them into a compact job, host, session, and user summary.
+- Persist approval-blocked calls before returning the job error so denied work
+  remains available to a restarted audit reader.
 
 - Initial umbrella-today end-to-end harness that exercises the Chief of Staff
   actor, D18A store, D18C job, D18D tool, read/write separation, and
