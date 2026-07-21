@@ -771,10 +771,44 @@ impl Lowerer {
                 }
             }
         }
+        // Security regression: `elseif_clause*` is a flat `{ x }`-repetition
+        // CST node, so a source file with N `elseif` clauses costs the
+        // *parser* zero native stack (sibling repetition, not nested source
+        // text) but folds into an `Expr::If` chain N levels deep via `Box`
+        // below. Merely dropping the returned `Module` at that depth
+        // overflows the native stack and aborts the process (uncatchable by
+        // `catch_unwind`) -- the identical hazard `check_chain_length`
+        // already guards for flat operator chains, here applied to a flat
+        // clause-list fold instead.
+        if clauses.len() > MAX_EXPR_DEPTH {
+            return Err(self.err_at(
+                if_stmt,
+                format!(
+                    "too many elseif clauses ({} exceeds {MAX_EXPR_DEPTH})",
+                    clauses.len()
+                ),
+            ));
+        }
 
         let if_span = self.span_of(if_stmt);
+        // `if`/`elseif`/`else` bodies are mutually exclusive -- see the
+        // identical fix (and full rationale) in `lower_select`, which this
+        // mirrors exactly: every branch is lowered against the same
+        // pre-`if` `ctx.locals` snapshot, then the union of every branch's
+        // newly-introduced names is folded back in once, after all branches
+        // are done, so a name first assigned in one branch is never
+        // mistaken for an already-known local by a sibling branch that
+        // happens to lower afterward.
+        let mark = Self::scope_mark(ctx);
+        let mut newly_introduced: Vec<String> = Vec::new();
+
         let mut else_branch: Block = match else_body {
-            Some(b) => self.lower_block_body(b, ctx, depth + 1)?,
+            Some(b) => {
+                let block = self.lower_block_body(b, ctx, depth + 1)?;
+                newly_introduced.extend(ctx.locals[mark..].iter().cloned());
+                Self::scope_rewind(ctx, mark);
+                block
+            }
             None => empty_block(if_span.clone()),
         };
         for clause in clauses.into_iter().rev() {
@@ -782,6 +816,12 @@ impl Lowerer {
             // -- see `to_scilab_condition`'s doc comment).
             let cond = to_scilab_condition(self.lower_expr(clause.cond, ctx)?);
             let then_branch = self.lower_block_body(clause.body, ctx, depth + 1)?;
+            for name in &ctx.locals[mark..] {
+                if !newly_introduced.contains(name) {
+                    newly_introduced.push(name.clone());
+                }
+            }
+            Self::scope_rewind(ctx, mark);
             let span = cond.span().clone();
             let folded = Expr::If {
                 cond: Box::new(cond),
@@ -791,6 +831,7 @@ impl Lowerer {
             };
             else_branch = value_block(folded);
         }
+        ctx.locals.extend(newly_introduced);
         match else_branch.value {
             Expr::If { .. } => Ok(else_branch.value),
             other => Ok(other),
@@ -826,7 +867,18 @@ impl Lowerer {
         let span = self.span_of(select_stmt);
 
         let selector = self.lower_expr(selector_node, ctx)?;
-        let temp = format!("__select_{}", self.select_counter);
+        // `$` is never part of a Scilab `NAME` token (`NAME =
+        // /[A-Za-z_][A-Za-z0-9_]*/`, `code/grammars/scilab/scilab.tokens`)
+        // -- it lexes as its own distinct `DOLLAR` token, used only for
+        // `$`/`$-1` last-index. So a temp name containing `$` can *never*
+        // collide with a user-declared identifier, by construction, no
+        // runtime collision check needed. (A bare `__select_N` prefix does
+        // NOT have this property: `__select_0` etc. are ordinary, fully
+        // legal Scilab identifiers a program could declare itself, which
+        // would silently merge the compiler's hoisted selector with an
+        // unrelated user variable of the same name -- confirmed to produce
+        // invalid/duplicate-declaration JavaScript from the JS backend.)
+        let temp = format!("$select_{}", self.select_counter);
         self.select_counter += 1;
         ctx.locals.push(temp.clone());
         let mut stmts: Vec<Lowered> = vec![Lowered::Stmt(Box::new(Stmt::LetStarBinding {
@@ -860,9 +912,46 @@ impl Lowerer {
                 }
             }
         }
+        // See the identical guard in `lower_if`: `case_clause*` is the same
+        // flat `{ x }`-repetition shape, folding into an equally deep
+        // `Expr::If` chain with the same uncatchable-stack-overflow hazard.
+        if clauses.len() > MAX_EXPR_DEPTH {
+            return Err(self.err_at(
+                select_stmt,
+                format!(
+                    "too many case clauses ({} exceeds {MAX_EXPR_DEPTH})",
+                    clauses.len()
+                ),
+            ));
+        }
+
+        // `if`/`case` bodies are mutually exclusive -- at most one of them
+        // ever actually executes -- but `FunctionCtx::locals` is a single,
+        // unscoped, append-only accumulator (Scilab has no block scoping,
+        // this file's module doc comment). Lowering the bodies in the wrong
+        // relative order let one sibling's first-occurrence assignment
+        // "leak" into another sibling as an already-known local, silently
+        // misclassifying that sibling's OWN first occurrence of the same
+        // name as a re-assignment (`Stmt::Assign`) instead of a declaration
+        // (`Stmt::LetStarBinding`) -- breaking the ordinary idiom of a
+        // function assigning its own output variable in every branch of a
+        // `select`/`case`. Fixed the same way `for`'s own loop-variable
+        // scope already is (`Self::scope_mark`/`scope_rewind`): every
+        // branch is lowered against the *same* pre-select snapshot, then
+        // the union of every branch's newly-introduced names is folded back
+        // in once, after all branches are done -- so no branch's
+        // first-occurrence classification depends on sibling iteration
+        // order.
+        let mark = Self::scope_mark(ctx);
+        let mut newly_introduced: Vec<String> = Vec::new();
 
         let mut else_branch: Block = match else_body {
-            Some(b) => self.lower_block_body(b, ctx, depth + 1)?,
+            Some(b) => {
+                let block = self.lower_block_body(b, ctx, depth + 1)?;
+                newly_introduced.extend(ctx.locals[mark..].iter().cloned());
+                Self::scope_rewind(ctx, mark);
+                block
+            }
             None => empty_block(span.clone()),
         };
         for clause in clauses.into_iter().rev() {
@@ -883,6 +972,12 @@ impl Lowerer {
             };
             let cond = to_scilab_condition(eq);
             let then_branch = self.lower_block_body(clause.body, ctx, depth + 1)?;
+            for name in &ctx.locals[mark..] {
+                if !newly_introduced.contains(name) {
+                    newly_introduced.push(name.clone());
+                }
+            }
+            Self::scope_rewind(ctx, mark);
             let if_span = cond.span().clone();
             let folded = Expr::If {
                 cond: Box::new(cond),
@@ -892,6 +987,7 @@ impl Lowerer {
             };
             else_branch = value_block(folded);
         }
+        ctx.locals.extend(newly_introduced);
 
         let final_expr = match else_branch.value {
             Expr::If { .. } => else_branch.value,

@@ -468,6 +468,37 @@ fn if_elseif_else_chain_nests_correctly() {
 }
 
 #[test]
+fn if_and_else_both_first_assigning_the_same_new_variable_both_declare_it() {
+    // Regression: `if`/`else` are mutually exclusive -- at most one of them
+    // ever actually runs -- but were previously lowered against a SHARED,
+    // still-mutating `ctx.locals`, so whichever branch happened to lower
+    // second saw the name already "known" (added by its sibling) and was
+    // misclassified as a re-assignment (`Stmt::Assign`) instead of a first
+    // declaration (`Stmt::LetStarBinding`) -- even though, on that branch's
+    // own actual runtime path, no `LetStarBinding` for the name ever
+    // executes. This is the single most ordinary Scilab/MATLAB idiom there
+    // is (a function assigning its own output variable in every branch),
+    // and it previously failed `semantic_ir::validate` outright (a
+    // dangling `var-ref scope=local references unknown name` error) for
+    // any such function whose `if` arm lowered second. Both branches must
+    // independently see `y` as new.
+    let m = compile_ok("x = 1;\nif x == 1\n  y = 1;\nelse\n  y = 2;\nend\n");
+    let main = main_fn(&m);
+    let report = semantic_ir::validate(&m);
+    assert!(report.is_ok(), "module should validate cleanly: {:?}", report.issues);
+    match &main.body.stmts[1] {
+        Stmt::ExprStmt {
+            expr: Expr::If { then_branch, else_branch, .. },
+            ..
+        } => {
+            assert!(matches!(then_branch.stmts[0], Stmt::LetStarBinding { .. }));
+            assert!(matches!(else_branch.stmts[0], Stmt::LetStarBinding { .. }));
+        }
+        other => panic!("expected ExprStmt(If), got {other:?}"),
+    }
+}
+
+#[test]
 fn if_with_comma_linker_instead_of_then_lowers_the_same_way() {
     // MA10 §3: `then`/`do` are ALTERNATIVES to a bare comma/newline, not an
     // addition on top of it.
@@ -547,7 +578,7 @@ fn select_case_desugars_into_a_temp_binding_and_an_if_chain() {
     let main = main_fn(&m);
     // stmts[1] is the hoisted selector temp binding.
     match &main.body.stmts[1] {
-        Stmt::LetStarBinding { name, .. } => assert!(name.starts_with("__select_")),
+        Stmt::LetStarBinding { name, .. } => assert!(name.starts_with("$select_")),
         other => panic!("expected the hoisted selector LetStarBinding, got {other:?}"),
     }
     // stmts[2] is the desugared if-chain.
@@ -579,7 +610,7 @@ fn select_evaluates_the_selector_exactly_once() {
     let mut temp_names = Vec::new();
     for stmt in &main.body.stmts {
         if let Stmt::LetStarBinding { name, .. } = stmt {
-            if name.starts_with("__select_") {
+            if name.starts_with("$select_") {
                 temp_names.push(name.clone());
             }
         }
@@ -593,6 +624,35 @@ fn select_without_a_matching_case_or_else_still_validates() {
     let m = compile_ok("x = 5;\nselect x\n  case 1\n    y = 1;\nend\n");
     let report = semantic_ir::validate(&m);
     assert!(report.is_ok(), "issues: {:?}", report.issues);
+}
+
+#[test]
+fn select_case_and_else_both_first_assigning_the_same_new_variable_both_declare_it() {
+    // Regression: the identical `if`/`else` branch-locals-ordering bug (see
+    // `if_and_else_both_first_assigning_the_same_new_variable_both_declare_it`),
+    // for `select`/`case`/`else`.
+    let m = compile_ok("x = 1;\nselect x\n  case 1\n    y = 1;\n  else\n    y = 2;\nend\n");
+    let report = semantic_ir::validate(&m);
+    assert!(report.is_ok(), "module should validate cleanly: {:?}", report.issues);
+}
+
+#[test]
+fn a_user_variable_literally_named_dunder_select_0_cannot_collide_with_the_hoisted_temp() {
+    // Security regression: the hoisted selector temp used to be named
+    // `__select_N` -- an ordinary, fully legal Scilab identifier a program
+    // could itself declare, which would silently merge the compiler's
+    // hoisted selector with an unrelated user variable of the same name
+    // (confirmed to produce invalid, duplicate-declaration JavaScript from
+    // the JS backend). The temp is now named `$select_N`; `$` is never
+    // part of a Scilab `NAME` token (it lexes as the unrelated `DOLLAR`
+    // token), so a user variable named `__select_0` -- the exact string
+    // the OLD scheme could have collided on -- must lower and validate
+    // without any interference.
+    let m = compile_ok(
+        "function y = f(x)\n  __select_0 = 99;\n  y = 0;\n  select x\n    case 1\n      y = 1;\n  end\nendfunction\n",
+    );
+    let report = semantic_ir::validate(&m);
+    assert!(report.is_ok(), "module should validate cleanly: {:?}", report.issues);
 }
 
 // ── %-constants: constant-folded ─────────────────────────────────────────
@@ -810,4 +870,39 @@ fn a_pathologically_long_flat_multiplicative_chain_is_cleanly_rejected() {
     src.push_str(";\n");
     let err = compile_source(&src, "prog").expect_err("an overlong chain should be rejected");
     assert!(err.message.contains("too long"));
+}
+
+#[test]
+fn a_pathologically_long_elseif_chain_is_cleanly_rejected() {
+    // Security regression: `elseif_clause*` is a flat CST repetition, so N
+    // `elseif`s cost the parser zero native stack but previously folded
+    // into an `Expr::If` chain N levels deep -- deep enough that merely
+    // dropping the returned `Module` overflowed the native stack and
+    // aborted the process (uncatchable). Must now be a clean error well
+    // before that. (5,000 -- ~20x `MAX_EXPR_DEPTH` -- rather than this
+    // file's usual 100,000: `scilab-parser`'s own `elseif_clause*` parsing
+    // has been separately found to scale worse than linearly at very large
+    // clause counts, tracked as its own follow-up task; 5,000 is still a
+    // generous margin over the cap without that unrelated slowdown making
+    // this single test dominate the suite's runtime.)
+    let mut src = String::from("if x == 0\n  y = 1;\n");
+    for _ in 0..5_000 {
+        src.push_str("elseif x == 0\n  y = 1;\n");
+    }
+    src.push_str("end\n");
+    let err = compile_source(&src, "prog").expect_err("an overlong elseif chain should be rejected");
+    assert!(err.message.contains("too many elseif clauses"));
+}
+
+#[test]
+fn a_pathologically_long_case_chain_is_cleanly_rejected() {
+    // Security regression: the identical hazard as the elseif chain above,
+    // for `case_clause*` inside `select`.
+    let mut src = String::from("x = 0;\nselect x\n");
+    for _ in 0..100_000 {
+        src.push_str("case 0\n  y = 1;\n");
+    }
+    src.push_str("end\n");
+    let err = compile_source(&src, "prog").expect_err("an overlong case chain should be rejected");
+    assert!(err.message.contains("too many case clauses"));
 }
