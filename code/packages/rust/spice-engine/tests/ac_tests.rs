@@ -867,6 +867,28 @@ fn ac_bjt_uses_reverse_transit_time_as_base_collector_diffusion_capacitance() {
 }
 
 #[test]
+fn ac_bjt_reverse_early_voltage_reduces_gain() {
+    let gain = |reverse_early_voltage: f64| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vin", "base", "0", 0.65, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rload", "out", "0", 1_000.0,
+        )));
+        let mut transistor = Bjt::new("Q1", "out", "base", "0");
+        transistor.reverse_early_voltage = reverse_early_voltage;
+        circuit.add(Element::Bjt(transistor));
+        ac_sweep(&circuit, 1_000.0, 1_000.0, 1).unwrap()[0]
+            .voltage("out")
+            .unwrap()
+            .abs()
+    };
+
+    assert!(gain(1.0) < gain(0.0));
+}
+
+#[test]
 fn ac_bjt_reverse_emission_coefficient_reduces_base_collector_diffusion_capacitance() {
     fn base_amplitude(reverse_emission_coefficient: f64) -> f64 {
         let mut circuit = Circuit::new();

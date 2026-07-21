@@ -33,15 +33,17 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language BJT forward-bias depletion coefficient.
+1. Cross-language BJT reverse Early voltage.
    - Status: current PR completion candidate.
-   - Add Berkeley BJT `FC` forward-bias depletion-coefficient model-card support
-     in Rust, Python, and TypeScript with the standard `0.5` default.
-   - Apply `FC` as the shared continuous piecewise-law transition point for both
-     `CJE` and `CJC` in AC and transient analysis, while preserving the complete
-     BJT model through hierarchical subcircuits.
-   - Extend the supported-parameter coverage gate from 90 to 92 canonical rows
-     and lock both forward-biased junction behaviors in all engines.
+   - Add Berkeley BJT `VAR` / `VB` reverse Early-voltage model-card support in
+     Rust, Python, and TypeScript with infinite behavior represented by the
+     existing zero default.
+   - Apply reverse Early-effect base-charge modulation in DC, transient, AC,
+     transfer-function, and noise paths while preserving the complete BJT model
+     through hierarchical subcircuits.
+   - Extend the supported-parameter coverage gate from 92 to 94 canonical rows
+     and lock model-card aliases, behavior, validation, and hierarchy in all
+     engines.
 
 ## Completed Slices
 
@@ -3045,6 +3047,14 @@ the Rust, Python, and TypeScript surfaces together.
      AC and transient analysis.
    - Hierarchical subcircuit expansion preserves the complete BJT model, and
      the supported-parameter release gate now covers 90 canonical rows.
+
+225. Cross-language BJT forward-bias depletion coefficient.
+   - Status: completed in PR 8760.
+   - Rust, Python, and TypeScript BJT model cards now accept `FC` and apply it
+     as the shared continuous Berkeley piecewise-law transition point for both
+     `CJE` and `CJC` in AC and transient analysis.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 92 canonical rows.
 
 ## Backlog
 

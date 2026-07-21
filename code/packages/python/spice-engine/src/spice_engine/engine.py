@@ -596,7 +596,7 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
-        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg, element.Vaf, element.Nf, element.Nr, element.Vje, element.Mje, element.Vjc, element.Mjc, element.Fc)
+        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg, element.Vaf, element.Nf, element.Nr, element.Vje, element.Mje, element.Vjc, element.Mjc, element.Fc, element.Var)
     if isinstance(element, VCVS):
         return VCVS(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), _map_subckt_node(element.ctrl_plus, instance_name, node_map), _map_subckt_node(element.ctrl_minus, instance_name, node_map), element.gain)
     if isinstance(element, VCCS):
@@ -9003,6 +9003,22 @@ def _stamp_jfet(
         b[node_to_idx[el.source]] += Ieq
 
 
+def _bjt_early_factor(el: BJT, junction_voltage: float, output_voltage: float) -> float:
+    forward_term = 0.0 if el.Vaf == 0.0 else output_voltage / el.Vaf
+    reverse_term = 0.0 if el.Var == 0.0 else junction_voltage / el.Var
+    return 1.0 + forward_term - reverse_term
+
+
+def _bjt_forward_transconductance(
+    el: BJT,
+    base_collector_current: float,
+    base_gm: float,
+    early_factor: float,
+) -> float:
+    reverse_early_conductance = 0.0 if el.Var == 0.0 else base_collector_current / el.Var
+    return base_gm * early_factor - reverse_early_conductance
+
+
 def _stamp_bjt(
     G: list[list[float]],
     b: list[float],
@@ -9083,10 +9099,10 @@ def _stamp_bjt(
     base_collector_current = el.Is * (exp_term - 1.0)
     base_gm = (el.Is / forward_thermal_voltage) * exp_term
     output_voltage = Vc - Ve if el.polarity == "NPN" else Ve - Vc
-    early_factor = 1.0 if el.Vaf == 0.0 else 1.0 + output_voltage / el.Vaf
+    early_factor = _bjt_early_factor(el, Vjunc, output_voltage)
     output_conductance = 0.0 if el.Vaf == 0.0 else base_collector_current / el.Vaf
     Ic0 = base_collector_current * early_factor
-    gm = base_gm * early_factor
+    gm = _bjt_forward_transconductance(el, base_collector_current, base_gm, early_factor)
     g_pi = base_gm / el.beta_f
     Ib0 = base_collector_current / el.beta_f
 
@@ -9176,6 +9192,8 @@ def _validate_bjt(el: BJT) -> None:
         raise ValueError(f"{el.name}: BJT energy gap must be finite and positive")
     if not math.isfinite(el.Vaf) or el.Vaf < 0.0:
         raise ValueError(f"{el.name}: BJT forward Early voltage must be finite and non-negative")
+    if not math.isfinite(el.Var) or el.Var < 0.0:
+        raise ValueError(f"{el.name}: BJT reverse Early voltage must be finite and non-negative")
     if not math.isfinite(el.Nf) or el.Nf <= 0.0:
         raise ValueError(f"{el.name}: BJT forward emission coefficient must be finite and positive")
     if not math.isfinite(el.Nr) or el.Nr <= 0.0:
@@ -12415,9 +12433,11 @@ def _stamp_ac(
         base_collector_current = el.Is * (exp_t - 1.0)
         base_gm = (el.Is / forward_thermal_voltage) * exp_t
         output_voltage = Vc_dc - Ve_dc if el.polarity == "NPN" else Ve_dc - Vc_dc
-        early_factor = 1.0 if el.Vaf == 0.0 else 1.0 + output_voltage / el.Vaf
+        early_factor = _bjt_early_factor(el, Vjunc, output_voltage)
         output_conductance = 0.0 if el.Vaf == 0.0 else base_collector_current / el.Vaf
-        gm_b: float = base_gm * early_factor
+        gm_b: float = _bjt_forward_transconductance(
+            el, base_collector_current, base_gm, early_factor
+        )
         gm_reverse: float = (el.Is / reverse_thermal_voltage) * exp_reverse
         g_pi: float = base_gm / el.beta_f
         diffusion_capacitance = el.Tf * gm_b
@@ -13032,9 +13052,11 @@ def _build_ss_matrix(
             base_collector_current = el.Is * (exp_t - 1.0)
             base_gm = (el.Is / forward_thermal_voltage) * exp_t
             output_voltage = Vc_dc - Ve_dc if el.polarity == "NPN" else Ve_dc - Vc_dc
-            early_factor = 1.0 if el.Vaf == 0.0 else 1.0 + output_voltage / el.Vaf
+            early_factor = _bjt_early_factor(el, Vjunc, output_voltage)
             output_conductance = 0.0 if el.Vaf == 0.0 else base_collector_current / el.Vaf
-            gm_b: float = base_gm * early_factor
+            gm_b: float = _bjt_forward_transconductance(
+                el, base_collector_current, base_gm, early_factor
+            )
             g_pi: float = base_gm / el.beta_f
             _stamp_g(G, node_to_idx, el.collector, el.emitter, output_conductance)
 
@@ -13914,6 +13936,7 @@ def sens_dc(
                     Xti=el.Xti,
                     Eg=el.Eg,
                     Vaf=el.Vaf,
+                    Var=el.Var,
                     Nf=el.Nf,
                     Nr=el.Nr,
                     Vje=el.Vje,
@@ -13940,6 +13963,7 @@ def sens_dc(
                     Xti=el.Xti,
                     Eg=el.Eg,
                     Vaf=el.Vaf,
+                    Var=el.Var,
                     Nf=el.Nf,
                     Nr=el.Nr,
                     Vje=el.Vje,
@@ -14176,6 +14200,7 @@ def _vary_element(el: Element, tolerance: float, distribution: str) -> Element:
             Xti=el.Xti,
             Eg=el.Eg,
             Vaf=el.Vaf,
+            Var=el.Var,
             Nf=el.Nf,
             Nr=el.Nr,
             Vje=el.Vje,
@@ -14624,7 +14649,7 @@ def _collect_noise_sources(
                 else Ve - Vb
             )
             output_voltage = Vc - Ve if el.polarity == "NPN" else Ve - Vc
-            early_factor = 1.0 if el.Vaf == 0.0 else 1.0 + output_voltage / el.Vaf
+            early_factor = _bjt_early_factor(el, Vjunc, output_voltage)
             I_C = el.Is * math.exp(Vjunc / (el.Vt * el.Nf)) * early_factor
             psd = q2 * abs(I_C)
             n_b = None if _is_ground(el.base) else node_to_idx[el.base]

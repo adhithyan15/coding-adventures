@@ -59,6 +59,18 @@ describe("tf", () => {
     expect(outputImpedance(10.0)).toBeLessThan(outputImpedance(0.0));
   });
 
+  it("uses BJT reverse Early voltage to reduce gain", () => {
+    function gain(reverseEarlyVoltage: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vin", "base", "0", 0.65));
+      circuit.add(resistor("Rload", "out", "0", 1_000.0));
+      circuit.add({ ...bjt("Q1", "out", "base", "0"), reverseEarlyVoltage });
+      return Math.abs(tf(circuit, "out", "Vin").gain());
+    }
+
+    expect(gain(1.0)).toBeLessThan(gain(0.0));
+  });
+
   it("uses BJT forward emission coefficient to reduce gain and raise input impedance", () => {
     function transfer(forwardEmissionCoefficient: number) {
       const circuit = new Circuit();

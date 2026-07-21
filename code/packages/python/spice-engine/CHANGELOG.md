@@ -4,6 +4,11 @@
 
 ### Added
 
+- **BJT reverse Early voltage** — BJT model cards now accept `VAR`/`VB` and
+  apply reverse Early-effect base-charge modulation in DC, transient, AC,
+  transfer-function, and noise paths, matching Rust and TypeScript. The
+  supported-parameter catalog now contains 94 canonical rows.
+
 - **BJT forward-bias depletion coefficient** — BJT model cards now accept `FC`
   and apply it to the shared `CJE` and `CJC` Berkeley continuation law in AC and
   transient analysis, matching Rust and TypeScript. The supported-parameter
