@@ -33,15 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language BJT forward emission coefficient.
+1. Cross-language BJT reverse emission coefficient.
    - Status: current PR completion candidate.
-   - Add Berkeley BJT `NF` forward emission-coefficient model-card support in
+   - Add Berkeley BJT `NR` reverse emission-coefficient model-card support in
      Rust, Python, and TypeScript.
-   - Apply `NF` to the forward junction current, transconductance, charge, and
-     noise paths while preserving the full BJT model through hierarchical
-     subcircuit expansion.
-   - Extend the supported-parameter coverage gate from 78 to 80 canonical rows
-     and lock forward-junction behavior across all three engines.
+   - Apply `NR` to the existing reverse base-collector diffusion-charge path in
+     AC and transient analysis while preserving the full BJT model through
+     hierarchical subcircuit expansion.
+   - Extend the supported-parameter coverage gate from 80 to 82 canonical rows
+     and lock reverse-junction capacitance behavior across all three engines.
 
 ## Completed Slices
 
@@ -3015,6 +3015,13 @@ the Rust, Python, and TypeScript surfaces together.
      transfer-function, and noise paths.
    - Hierarchical subcircuit expansion preserves the complete BJT model, and
      the supported-parameter release gate now covers 78 canonical rows.
+
+221. Cross-language BJT forward emission coefficient.
+   - Status: completed in PR 8740.
+   - Rust, Python, and TypeScript BJT model cards now accept `NF` and apply it
+     to forward junction current, transconductance, charge, and noise paths.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 80 canonical rows.
 
 ## Backlog
 

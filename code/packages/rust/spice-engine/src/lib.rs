@@ -435,6 +435,7 @@ fn clone_subckt_element(
             element.energy_gap_electron_volts,
             element.forward_early_voltage,
             element.forward_emission_coefficient,
+            element.reverse_emission_coefficient,
         )),
         Element::Mosfet(element) => Element::Mosfet(Mosfet::with_model(
             format!("{instance_name}.{}", element.name),
@@ -2841,6 +2842,7 @@ pub struct Bjt {
     pub energy_gap_electron_volts: f64,
     pub forward_early_voltage: f64,
     pub forward_emission_coefficient: f64,
+    pub reverse_emission_coefficient: f64,
 }
 
 impl Bjt {
@@ -2897,6 +2899,7 @@ impl Bjt {
             1.11,
             0.0,
             1.0,
+            1.0,
         )
     }
 
@@ -2918,6 +2921,7 @@ impl Bjt {
         energy_gap_electron_volts: f64,
         forward_early_voltage: f64,
         forward_emission_coefficient: f64,
+        reverse_emission_coefficient: f64,
     ) -> Self {
         Self {
             name: name.into(),
@@ -2936,6 +2940,7 @@ impl Bjt {
             energy_gap_electron_volts,
             forward_early_voltage,
             forward_emission_coefficient,
+            reverse_emission_coefficient,
         }
     }
 }
@@ -3326,8 +3331,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     usize,
 )] = &[
     (ModelCardKind::Diode, 12, 18, 5, 3),
-    (ModelCardKind::Npn, 11, 20, 5, 4),
-    (ModelCardKind::Pnp, 11, 20, 5, 4),
+    (ModelCardKind::Npn, 12, 21, 5, 4),
+    (ModelCardKind::Pnp, 12, 21, 5, 4),
     (ModelCardKind::Njf, 5, 11, 5, 3),
     (ModelCardKind::Pjf, 5, 11, 5, 3),
     (ModelCardKind::Nmos, 18, 25, 6, 3),
@@ -3374,6 +3379,7 @@ const BJT_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("VAF", "VAF"),
     ("VA", "VAF"),
     ("NF", "NF"),
+    ("NR", "NR"),
 ];
 const JFET_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("BETA", "BETA"),
@@ -4030,6 +4036,7 @@ pub fn bjt_from_model_card(
         model_card_value(model, "EG", 1.11),
         model_card_value(model, "VAF", 0.0),
         model_card_value(model, "NF", 1.0),
+        model_card_value(model, "NR", 1.0),
     ))
 }
 
@@ -22332,7 +22339,8 @@ fn stamp_ac_bjt_small_signal(
     };
     let forward_thermal_voltage = bjt.thermal_voltage * bjt.forward_emission_coefficient;
     let exponent = (junction_voltage / forward_thermal_voltage).clamp(-40.0, 40.0);
-    let reverse_exponent = (reverse_junction_voltage / bjt.thermal_voltage).clamp(-40.0, 40.0);
+    let reverse_thermal_voltage = bjt.thermal_voltage * bjt.reverse_emission_coefficient;
+    let reverse_exponent = (reverse_junction_voltage / reverse_thermal_voltage).clamp(-40.0, 40.0);
     let exp_value = exponent.exp();
     let base_collector_current = bjt.saturation_current * (exp_value - 1.0);
     let base_gm = bjt.saturation_current / forward_thermal_voltage * exp_value;
@@ -22351,7 +22359,7 @@ fn stamp_ac_bjt_small_signal(
         base_collector_current / bjt.forward_early_voltage
     };
     let gm = Complex::new(base_gm * early_factor, 0.0);
-    let reverse_gm = bjt.saturation_current / bjt.thermal_voltage * reverse_exponent.exp();
+    let reverse_gm = bjt.saturation_current / reverse_thermal_voltage * reverse_exponent.exp();
     let diffusion_capacitance = bjt.forward_transit_time * gm.real;
     let reverse_diffusion_capacitance = bjt.reverse_transit_time * reverse_gm;
     let gpi = Complex::new(
@@ -22967,7 +22975,8 @@ fn bjt_charge_dynamic_capacitance(bjt: &Bjt, kind: BjtChargeStateKind, voltage: 
             bjt.base_emitter_capacitance + bjt.forward_transit_time * conductance
         }
         BjtChargeStateKind::BaseCollector => {
-            let conductance = bjt_junction_transconductance(bjt, voltage, 1.0);
+            let conductance =
+                bjt_junction_transconductance(bjt, voltage, bjt.reverse_emission_coefficient);
             bjt.base_collector_capacitance + bjt.reverse_transit_time * conductance
         }
     }
@@ -23319,6 +23328,12 @@ fn validate_bjt(bjt: &Bjt) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: bjt.name.clone(),
             reason: "forward emission coefficient must be finite and positive".to_string(),
+        });
+    }
+    if !bjt.reverse_emission_coefficient.is_finite() || bjt.reverse_emission_coefficient <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "reverse emission coefficient must be finite and positive".to_string(),
         });
     }
     Ok(())

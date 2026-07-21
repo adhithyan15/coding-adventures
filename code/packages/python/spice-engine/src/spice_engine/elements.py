@@ -598,6 +598,8 @@ class BJT:
         modulation, matching an infinite Early voltage (default 0.0).
     Nf:
         Forward emission coefficient (default 1.0).
+    Nr:
+        Reverse emission coefficient (default 1.0).
     """
 
     name: str
@@ -616,6 +618,7 @@ class BJT:
     Eg: float = 1.11        # semiconductor energy gap (eV)
     Vaf: float = 0.0        # forward Early voltage (V); 0 means infinite
     Nf: float = 1.0         # forward emission coefficient
+    Nr: float = 1.0         # reverse emission coefficient
 
 
 # ---------------------------------------------------------------------------
