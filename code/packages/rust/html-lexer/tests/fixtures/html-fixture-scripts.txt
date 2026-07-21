@@ -52,7 +52,6 @@ html-parser/tests/fixtures/generate_whatwg_list_item_audit_fixture.py
 html-parser/tests/fixtures/generate_whatwg_misc_recovery_audit_fixture.py
 html-parser/tests/fixtures/generate_whatwg_noscript_audit_fixture.py
 html-parser/tests/fixtures/generate_whatwg_paragraph_audit_fixture.py
-html-parser/tests/fixtures/generate_whatwg_post_parse_repair_audit_fixture.py
 html-parser/tests/fixtures/generate_whatwg_ruby_audit_fixture.py
 html-parser/tests/fixtures/generate_whatwg_select_list_audit_fixture.py
 html-parser/tests/fixtures/generate_whatwg_table_audit_fixture.py

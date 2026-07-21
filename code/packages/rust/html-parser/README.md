@@ -366,15 +366,6 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_select_lis
   --check
 ```
 
-The generated `tests/fixtures/whatwg-post-parse-repair-audit.json` fixture
-indexes the remaining html5lib rows that still justify finish-time post-parse
-repair shims:
-
-```bash
-python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_post_parse_repair_audit_fixture.py \
-  --check
-```
-
 The broad smoke test and the focused audit fixtures use the shared
 `tests/common` html5lib parser and DOM dump helpers, so new parser conformance
 fixtures exercise the same normalization path.

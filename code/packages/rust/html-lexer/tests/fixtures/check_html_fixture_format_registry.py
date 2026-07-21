@@ -201,11 +201,6 @@ FORMAT_REGISTRY: tuple[FixtureFormat, ...] = (
         "parser-audit",
     ),
     FixtureFormat(
-        "html-parser/tests/fixtures/whatwg-post-parse-repair-audit.json",
-        "whatwg-html-post-parse-repair-audit/v1",
-        "parser-audit",
-    ),
-    FixtureFormat(
         "html-parser/tests/fixtures/whatwg-noscript-audit.json",
         "whatwg-html-noscript-audit/v1",
         "parser-audit",

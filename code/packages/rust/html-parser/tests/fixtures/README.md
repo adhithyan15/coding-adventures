@@ -441,15 +441,6 @@ python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_misc_recov
   --check
 ```
 
-`whatwg-post-parse-repair-audit.json` is a generated index over the remaining
-tree-construction rows that justify finish-time post-parse repair shims:
-
-```bash
-python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_post_parse_repair_audit_fixture.py
-python3 code/packages/rust/html-parser/tests/fixtures/generate_whatwg_post_parse_repair_audit_fixture.py \
-  --check
-```
-
 `check_whatwg_audit_coverage.py` verifies that every source marker in
 `html5lib-tree-construction-smoke.dat` is indexed by at least one focused
 `whatwg-*-audit.json` parser fixture, and that those audit fixtures do not
