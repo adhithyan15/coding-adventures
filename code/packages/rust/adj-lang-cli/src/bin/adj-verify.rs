@@ -44,6 +44,7 @@
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::fs;
+use std::io::Read;
 use std::path::PathBuf;
 use std::process::ExitCode;
 
@@ -101,22 +102,37 @@ struct DirSnapshots {
 
 /// Largest snapshot this tool will read into memory.
 ///
-/// The cap has to be enforced *before* the read, not after the hash check:
-/// `fs::read` follows symlinks, so a file named with a valid 64-hex hash could
-/// be a link to `/dev/zero` or a multi-gigabyte file, and the mismatch would
-/// only be discovered once the whole thing was already resident. 64 MiB is far
-/// above any real cited document.
+/// 64 MiB is far above any real cited document. The cap is enforced on the
+/// **read itself**, not on `metadata().len()`, because a size read from `stat`
+/// is not the amount that will actually be read: a character device such as
+/// `/dev/zero` reports `st_size == 0` yet streams forever, so a metadata-based
+/// cap would wave it straight through into an unbounded allocation. It also
+/// closes the `metadata`→`read` TOCTOU, where a small file is swapped for a
+/// large one between the two syscalls.
 const MAX_SNAPSHOT_BYTES: u64 = 64 * 1024 * 1024;
 
 impl DirSnapshots {
     fn read_verified(&self, hash: &ContentHash) -> Option<Vec<u8>> {
         let path = self.root.join(hash.as_hex());
-        // Size first — see MAX_SNAPSHOT_BYTES. `metadata` follows the symlink,
-        // so this measures what would actually be read.
-        if fs::metadata(&path).ok()?.len() > MAX_SNAPSHOT_BYTES {
+        // Only a regular file is a snapshot. Rejecting symlinks/devices/FIFOs
+        // outright means the read below cannot be aimed at `/dev/zero` at all;
+        // `symlink_metadata` does NOT follow the final link, so a link posing as
+        // a hash-named file is refused here rather than followed.
+        if !fs::symlink_metadata(&path).ok()?.file_type().is_file() {
             return None;
         }
-        let bytes = fs::read(&path).ok()?;
+        // Bound the READ, not a reported size. `take(cap + 1)` stops one byte
+        // past the ceiling, so an over-large (or infinite) file is detected by
+        // overshoot instead of trusting `st_size`.
+        let mut file = fs::File::open(&path).ok()?;
+        let mut bytes = Vec::new();
+        file.by_ref()
+            .take(MAX_SNAPSHOT_BYTES + 1)
+            .read_to_end(&mut bytes)
+            .ok()?;
+        if bytes.len() as u64 > MAX_SNAPSHOT_BYTES {
+            return None;
+        }
         // Re-derive rather than believe the filename: anyone who can write into
         // this directory could otherwise make an arbitrary document answer to a
         // pinned hash, which is the exact substitution pinning prevents.

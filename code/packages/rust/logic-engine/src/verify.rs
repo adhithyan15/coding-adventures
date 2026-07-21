@@ -566,20 +566,85 @@ fn is_bare_variable(goal: &Term) -> bool {
 /// the body left to right, so those children appear in **body order** — which is
 /// what lets each one be matched against the literal it is supposed to discharge
 /// rather than merely counted.
-fn body_is_discharged(rule: &crate::Rule, children: &[&ProofStep]) -> bool {
+///
+/// # Why one shared substitution, not per-literal unification
+///
+/// Checking each literal against its child *independently* — unify, throw the
+/// bindings away, repeat — checks the wrong thing. `may_prescribe(D,P) :-
+/// safe_for(D,P), not contraindicated(D,P)` would be "discharged" by a child
+/// proving `safe_for(warfarin, child)` while the head unified with
+/// `may_prescribe(aspirin, adult)`: each literal unifies with *some* child in
+/// isolation, so the structural check passes, and a conclusion about aspirin is
+/// certified by premises about warfarin. The variable `D` is shared between the
+/// head and both body literals, and dropping the head's binding for it — and
+/// not carrying one child's binding into the next — severs exactly the
+/// constraint that makes a derivation a derivation.
+///
+/// So this threads **one** substitution. The rule head and its whole body are
+/// renamed *together* (shared clause variables stay one variable); the head is
+/// unified with the goal to seed it; then each literal, instantiated under the
+/// running substitution, must unify with its child, and the resulting bindings
+/// carry forward. `p(X) :- q(X), r(X)` can no longer be discharged by `q(a)`
+/// and `r(b)`.
+fn body_is_discharged(rule: &crate::Rule, goal: &Term, children: &[&ProofStep]) -> bool {
     if children.len() != rule.body.len() {
         return false;
     }
-    rule.body.iter().zip(children).all(|(lit, child)| match lit {
-        BodyLiteral::Pos(t) => unifies(&child.goal, t),
-        // A negated literal is discharged only by an absence that was actually
-        // established. Accepting any child here would let a positive step stand
-        // in for the guard it was supposed to satisfy.
-        BodyLiteral::Neg(t) => match &child.origin {
-            DerivationOrigin::FromNegation { goal } => unifies(goal, t),
-            _ => false,
-        },
-    })
+    // Rename head + body as ONE unit, so a clause variable that appears in the
+    // head and in a body literal is the same fresh variable in both.
+    let mut renames = HashMap::new();
+    let head = rename_fresh(&rule.head, &mut renames);
+    let body: Vec<BodyLiteral> = rule
+        .body
+        .iter()
+        .map(|lit| match lit {
+            BodyLiteral::Pos(t) => BodyLiteral::Pos(rename_fresh(t, &mut renames)),
+            BodyLiteral::Neg(t) => BodyLiteral::Neg(rename_fresh(t, &mut renames)),
+        })
+        .collect();
+
+    // Seed the running substitution with the head unification, so bindings the
+    // goal forces on clause variables reach the body.
+    let Some(mut subst) = unify(goal, &head, &Substitution::empty()) else {
+        return false;
+    };
+
+    for (lit, child) in body.iter().zip(children) {
+        match lit {
+            BodyLiteral::Pos(t) => {
+                // A positive premise is discharged only by an SLD step — a fact,
+                // a rule, or an established absence. An LR step whose goal
+                // happened to equal the literal only *evidenced* it; it did not
+                // prove it, and must not stand in for a premise.
+                if !matches!(
+                    child.origin,
+                    DerivationOrigin::FromFact(_)
+                        | DerivationOrigin::FromRule(_)
+                        | DerivationOrigin::FromNegation { .. }
+                ) {
+                    return false;
+                }
+                match unify(&child.goal, t, &subst) {
+                    Some(next) => subst = next,
+                    None => return false,
+                }
+            }
+            // A negated literal is discharged only by an absence that was
+            // actually established, on the SAME ground the running substitution
+            // has fixed. Accepting any child here would let a positive step
+            // stand in for the guard it was supposed to satisfy.
+            BodyLiteral::Neg(t) => match &child.origin {
+                DerivationOrigin::FromNegation { goal: neg_goal } => {
+                    match unify(neg_goal, t, &subst) {
+                        Some(next) => subst = next,
+                        None => return false,
+                    }
+                }
+                _ => return false,
+            },
+        }
+    }
+    true
 }
 
 /// The stable name of a step kind, used when a step is rejected before its
@@ -665,7 +730,7 @@ pub fn verify_step(
                 LogicStatus::Failed(LogicFailure::GoalDoesNotUnify),
                 Some(rule.provenance.clone()),
             ),
-            Some(rule) if !body_is_discharged(rule, children) => (
+            Some(rule) if !body_is_discharged(rule, &step.goal, children) => (
                 "FromRule",
                 LogicStatus::Failed(LogicFailure::RuleBodyNotDischarged {
                     expected: rule.body.len(),

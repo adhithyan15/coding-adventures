@@ -440,12 +440,14 @@ fn the_report_localizes_to_the_first_failing_step_but_still_checks_the_rest() {
 fn kb_with_guarded_rule() -> (logic_engine::KnowledgeBase, RuleId) {
     let mut kb = logic_engine::KnowledgeBase::new();
     kb.add_fact(Fact::certain(compound("safe_for", vec![atom("aspirin"), atom("adult")])));
+    let d = Term::Var(var("D"));
+    let pt = Term::Var(var("P"));
     let rid = kb.add_rule(
         Rule::certain(
-            compound("may_prescribe", vec![v("D"), v("P")]),
+            compound("may_prescribe", vec![d.clone(), pt.clone()]),
             vec![
-                BodyLiteral::Pos(compound("safe_for", vec![v("D"), v("P")])),
-                BodyLiteral::Neg(compound("contraindicated", vec![v("D"), v("P")])),
+                BodyLiteral::Pos(compound("safe_for", vec![d.clone(), pt.clone()])),
+                BodyLiteral::Neg(compound("contraindicated", vec![d, pt])),
             ],
         )
         .with_provenance(quoting(0, 32)),
@@ -534,11 +536,13 @@ fn a_real_engine_rule_trail_still_passes_the_body_check() {
         "safe_for",
         vec![atom("aspirin"), atom("adult")],
     )));
+    let d = Term::Var(var("D"));
+    let pt = Term::Var(var("P"));
     kb.add_rule(Rule::certain(
-        compound("may_prescribe", vec![v("D"), v("P")]),
+        compound("may_prescribe", vec![d.clone(), pt.clone()]),
         vec![
-            BodyLiteral::Pos(compound("safe_for", vec![v("D"), v("P")])),
-            BodyLiteral::Neg(compound("contraindicated", vec![v("D"), v("P")])),
+            BodyLiteral::Pos(compound("safe_for", vec![d.clone(), pt.clone()])),
+            BodyLiteral::Neg(compound("contraindicated", vec![d, pt])),
         ],
     ));
 
@@ -617,5 +621,161 @@ fn a_bidi_only_span_does_not_count_as_a_confirmed_quote() {
     assert!(
         !matches!(verify_quote(&prov, &snaps), QuoteStatus::Verified { .. }),
         "an invisible span must never read as a confirmed quote"
+    );
+}
+
+// ---------------------------------------------------------------------------
+// (10) A rule's premises must be established for the SAME entity as its head.
+// ---------------------------------------------------------------------------
+
+/// A rule whose head and both body literals share the variables `D` and `P`.
+/// The whole point of these variables is that they *tie the pieces together* —
+/// a re-check that drops the bindings would let unrelated premises masquerade
+/// as this rule's.
+fn kb_with_shared_var_rule() -> (logic_engine::KnowledgeBase, RuleId) {
+    let mut kb = logic_engine::KnowledgeBase::new();
+    // A real fact about a DIFFERENT entity than the forged conclusion.
+    kb.add_fact(Fact::certain(compound("safe_for", vec![atom("warfarin"), atom("child")])));
+    // The head and both body literals share the SAME LogicVar for D and for P,
+    // exactly as `lower_term_scoped` produces from `$D`/`$P` in surface syntax.
+    // That shared identity is what a binding-consistent re-check relies on.
+    let d = Term::Var(var("D"));
+    let pt = Term::Var(var("P"));
+    let rid = kb.add_rule(
+        Rule::certain(
+            compound("may_prescribe", vec![d.clone(), pt.clone()]),
+            vec![
+                BodyLiteral::Pos(compound("safe_for", vec![d.clone(), pt.clone()])),
+                BodyLiteral::Neg(compound("contraindicated", vec![d, pt])),
+            ],
+        )
+        .with_provenance(quoting(0, 32)),
+    );
+    (kb, rid)
+}
+
+#[test]
+fn premises_for_a_different_entity_do_not_discharge_the_body() {
+    // Head claims may_prescribe(aspirin, adult); children prove things about
+    // warfarin/child. Each literal unifies with its child in ISOLATION, so a
+    // structural count-and-unify check passes. Threading one substitution from
+    // the head through the body is what rejects it: `D` is bound to aspirin by
+    // the head and cannot then also be warfarin.
+    let (kb, rid) = kb_with_shared_var_rule();
+    let proof = Proof {
+        bindings: Substitution::empty(),
+        steps: vec![
+            ProofStep {
+                goal: compound("may_prescribe", vec![atom("aspirin"), atom("adult")]),
+                origin: DerivationOrigin::FromRule(rid),
+                depth: 0,
+            },
+            ProofStep {
+                goal: compound("safe_for", vec![atom("warfarin"), atom("child")]),
+                origin: DerivationOrigin::FromFact(FactId(0)),
+                depth: 1,
+            },
+            ProofStep {
+                goal: compound("contraindicated", vec![atom("warfarin"), atom("child")]),
+                origin: DerivationOrigin::FromNegation {
+                    goal: compound("contraindicated", vec![atom("warfarin"), atom("child")]),
+                },
+                depth: 1,
+            },
+        ],
+        via_facts: vec![FactId(0)],
+        via_rules: vec![rid],
+        posterior_logit: None,
+        posterior_probability: None,
+    };
+
+    let report = verify_proof(&proof, &kb, &snapshots());
+    assert!(
+        matches!(
+            report.steps[0].logic,
+            LogicStatus::Failed(LogicFailure::RuleBodyNotDischarged { .. })
+        ),
+        "a conclusion about aspirin cannot rest on premises about warfarin: {:?}",
+        report.steps[0].logic
+    );
+    assert!(!report.passed());
+}
+
+#[test]
+fn two_body_literals_must_agree_on_a_shared_variable() {
+    // p(X) :- q(X), r(X). Children q(a), r(b): each unifies with its literal,
+    // but X cannot be both a and b. The running substitution binds X=a at the
+    // first child and rejects r(b) at the second.
+    let mut kb = logic_engine::KnowledgeBase::new();
+    kb.add_fact(Fact::certain(compound("q", vec![atom("a")])));
+    kb.add_fact(Fact::certain(compound("r", vec![atom("b")])));
+    let x = Term::Var(var("X"));
+    let rid = kb.add_rule(Rule::certain(
+        compound("p", vec![x.clone()]),
+        vec![
+            BodyLiteral::Pos(compound("q", vec![x.clone()])),
+            BodyLiteral::Pos(compound("r", vec![x])),
+        ],
+    ));
+
+    let proof = Proof {
+        bindings: Substitution::empty(),
+        steps: vec![
+            ProofStep {
+                goal: compound("p", vec![atom("a")]),
+                origin: DerivationOrigin::FromRule(rid),
+                depth: 0,
+            },
+            ProofStep {
+                goal: compound("q", vec![atom("a")]),
+                origin: DerivationOrigin::FromFact(FactId(0)),
+                depth: 1,
+            },
+            ProofStep {
+                goal: compound("r", vec![atom("b")]),
+                origin: DerivationOrigin::FromFact(FactId(1)),
+                depth: 1,
+            },
+        ],
+        via_facts: vec![FactId(0), FactId(1)],
+        via_rules: vec![rid],
+        posterior_logit: None,
+        posterior_probability: None,
+    };
+
+    let report = verify_proof(&proof, &kb, &NoSnapshots);
+    assert!(
+        matches!(
+            report.steps[0].logic,
+            LogicStatus::Failed(LogicFailure::RuleBodyNotDischarged { .. })
+        ),
+        "q(a) and r(b) cannot both discharge a body over a shared X: {:?}",
+        report.steps[0].logic
+    );
+}
+
+#[test]
+fn a_consistent_multi_variable_rule_trail_still_passes() {
+    // The counterweight, again: the SAME entity throughout must survive, or the
+    // tightened check would reject honest derivations.
+    let mut kb = logic_engine::KnowledgeBase::new();
+    kb.add_fact(Fact::certain(compound("q", vec![atom("a")])));
+    kb.add_fact(Fact::certain(compound("r", vec![atom("a")])));
+    let x = Term::Var(var("X"));
+    kb.add_rule(Rule::certain(
+        compound("p", vec![x.clone()]),
+        vec![
+            BodyLiteral::Pos(compound("q", vec![x.clone()])),
+            BodyLiteral::Pos(compound("r", vec![x])),
+        ],
+    ));
+
+    let dag = enumerate_all(&compound("p", vec![atom("a")]), &kb);
+    assert!(!dag.proofs.is_empty(), "fixture must prove");
+    let report = verify_proof(&dag.proofs[0], &kb, &NoSnapshots);
+    assert!(
+        report.passed(),
+        "a consistent q(a),r(a) derivation of p(a) must survive: {:?}",
+        report.first_failure()
     );
 }
