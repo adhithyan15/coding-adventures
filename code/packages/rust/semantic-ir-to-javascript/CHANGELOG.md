@@ -1,5 +1,45 @@
 # Changelog
 
+## 0.46.0 — J's own display convention, and its two missing builtins
+
+Both found by `j-to-semantic-ir/tests/oracle.rs` (that crate's new
+oracle/golden test harness, cross-checking `j-runtime` against this
+backend's compiled-then-`node` path) and reported there as follow-up work,
+per that PR's own scope discipline — fixed here.
+
+**Bug A — no J-specific display convention at all.** `emit.rs`'s
+`SIR_DISPLAY_APL_HIGH_MINUS` flag only ever checked `source_language ==
+"apl"`; there was no equivalent for J. A J-sourced module's bare/boxed
+negative number or non-finite value fell through to plain ASCII (`"-5"`,
+`"Infinity"`) or, for a genuine `NDArray`, APL's own high-minus glyph
+unconditionally (`"¯5"`) — neither is J's own convention (a leading
+underscore, `"_5"`, and lowercase `"inf"`/`"_inf"`, matching
+`j_runtime::value::fmt_num` exactly). Fixed with a third, independent
+per-module display flag, `SIR_DISPLAY_J_UNDERSCORE`, mirroring
+`SIR_DISPLAY_APL_HIGH_MINUS`'s existing pattern in both `emit.rs` (the
+substitution) and `runtime.rs` (`fmtNum`'s glyph choice, and
+`formatSeen`'s bare-scalar gate, now `(SIR_DISPLAY_APL_HIGH_MINUS ||
+SIR_DISPLAY_J_UNDERSCORE)`). Mutually exclusive with the APL flag by
+construction — both are computed from the same `source_language` field —
+so no arbitration between the two is ever needed.
+
+**Bug B — `tally`/`replicate`/`exp` never registered as builtins.**
+`j-to-semantic-ir` has documented `#`'s monadic form as
+`BuiltinCall("tally", ..)`, `#`'s dyadic form as `BuiltinCall("replicate",
+..)`, and `^`'s monadic form as `BuiltinCall("exp", ..)` since its own
+0.1.0/0.1.1 — but this crate's `builtins` dispatch table never gained
+entries for any of the three, so every use crashed with `TypeError:
+unknown builtin: <name>` for every operand. The exact same bug *class* as
+APL's own historical `sign`/`recip`/`ceil`/`floor` omission (fixed in
+0.43.0). Fixed by porting `j_runtime::builtins::{tally, replicate,
+monadic_exp}` 1:1 into a new section of `ArrayRt` (alongside the existing
+SIR22-addendum APL primitives) and registering all three in `builtins`.
+`replicate`'s total output size is validated and capped via
+`checkedShapeSize` *before* allocating — the same bounded-allocation
+discipline every other array-domain factory in this file already follows
+— so a script that replicates its own output repeatedly cannot grow
+unbounded.
+
 ## 0.45.0 — fix stack-overflow DoS in method dispatch (`resolveMethod`)
 
 **Any method call on an instance whose class has a deep `include` chain killed

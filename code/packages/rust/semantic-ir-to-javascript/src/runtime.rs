@@ -100,6 +100,18 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // `floor`'s own scalar results) goes through the same two branches, so
   // fixing it there fixes all of them in one place.
   const SIR_DISPLAY_APL_HIGH_MINUS = __SIR_DISPLAY_APL_HIGH_MINUS__;
+  // A THIRD, independent display-convention flag, added alongside J's own
+  // oracle tests (`j-to-semantic-ir/tests/oracle.rs`, "Bug A"): `true` when
+  // the module's `source_language` is J, else `false`. J's own console
+  // convention renders a negative number with a leading underscore `_`
+  // (never ASCII `-`, never APL's high-minus `¯`) and a non-finite value as
+  // lowercase `inf`/`_inf` (`j_runtime::value::fmt_num`, ported 1:1 in
+  // `ArrayRt.fmtNum` below). Mutually exclusive with
+  // `SIR_DISPLAY_APL_HIGH_MINUS` by construction (both flags are computed
+  // from the same single `source_language` field in `emit.rs`), so
+  // `fmtNum`/`formatSeen` below never need to arbitrate between them —
+  // only one can ever be `true` for a given module.
+  const SIR_DISPLAY_J_UNDERSCORE = __SIR_DISPLAY_J_UNDERSCORE__;
   // ── value model ────────────────────────────────────────────────
   // A symbol is an interned name; `===` on two interned symbols with
   // the same name is therefore identity-equal.
@@ -354,10 +366,10 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     // (MATLAB's `2 ^ 2` reaches the identical shape), so only the source
     // language, not the value's own shape, can decide the glyph.
     if (v instanceof SirFloat) {
-      return SIR_DISPLAY_APL_HIGH_MINUS ? ArrayRt.fmtNum(v.f) : floatToRubyString(v.f);
+      return (SIR_DISPLAY_APL_HIGH_MINUS || SIR_DISPLAY_J_UNDERSCORE) ? ArrayRt.fmtNum(v.f) : floatToRubyString(v.f);
     }
     if (typeof v === "number") {
-      return SIR_DISPLAY_APL_HIGH_MINUS ? ArrayRt.fmtNum(v) : String(v);
+      return (SIR_DISPLAY_APL_HIGH_MINUS || SIR_DISPLAY_J_UNDERSCORE) ? ArrayRt.fmtNum(v) : String(v);
     }
     if (v instanceof Sym) { return v.name; }
     if (v instanceof Pair) {
@@ -532,6 +544,15 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     "recip": (x) => monadicScalarAtom(x, aplRecip),
     "ceil": (x) => monadicScalarAtom(x, Math.ceil),
     "floor": (x) => monadicScalarAtom(x, Math.floor),
+    // SIR22/J: two genuinely new primitives, no APL precedent (see the
+    // `tally`/`replicate`/`monadicExp` definitions in the `ArrayRt` section
+    // above for the full root-cause writeup — found by `j-to-semantic-ir/
+    // tests/oracle.rs`, "Bug B": documented since that crate's 0.1.0/0.1.1
+    // but never registered here, so every use crashed with `TypeError:
+    // unknown builtin: <name>`).
+    "tally": (x) => ArrayRt.tally(x),
+    "replicate": (x, y) => ArrayRt.replicate(x, y),
+    "exp": (x) => ArrayRt.monadicExp(x),
     "cons": (x, y) => new Pair(x, y),
     "car": (p) => p.car,
     "cdr": (p) => p.cdr,
@@ -4055,27 +4076,115 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       throw new Error(`catenate: catenate of rank ${ra} and rank ${rb} is not yet supported`);
     }
 
+    // ── J's two genuinely new primitives: `#` (tally/replicate), `^` ──
+    // (monadic exponential) — no APL precedent at all (`j-to-semantic-ir`'s
+    // own module doc comment, "Two new primitives"; `j_runtime::builtins`'
+    // own module doc comment, "genuinely new relative to this repo's APL
+    // cut"). Documented as `BuiltinCall("tally"/"replicate"/"exp", ...)`
+    // names since `j-to-semantic-ir` 0.1.0/0.1.1, but never registered in
+    // the `builtins` dispatch table below until now — every use crashed
+    // with `TypeError: unknown builtin: <name>` for every operand (found by
+    // `j-to-semantic-ir/tests/oracle.rs`, "Bug B"). Ported 1:1 from
+    // `j_runtime::builtins::{tally, replicate, monadic_exp}`
+    // (`code/packages/rust/j-runtime/src/builtins.rs`).
+
     /**
-     * Format one number the way `apl_runtime::value::fmt_num` does (ported
-     * 1:1): the high-minus glyph `¯` (never ASCII `-`) prefixes a negative
-     * number; a whole-valued float prints without a trailing `.0`. Unlike
-     * the Rust source, no separate integer-vs-float branch is needed for
-     * the whole-value case — `String(5)` and `String(5.0)` are both `"5"`
-     * in JS, where Rust needs `format!("{}", mag as i64)` specifically to
-     * avoid `5.0`'s `Display` impl printing a trailing `.0`. `x < 0` (a
-     * numeric comparison) already excludes `-0` from the high-minus branch
-     * on its own — `-0 < 0` is `false` in JS — so, unlike Rust's
-     * `is_sign_negative()` (a bit-level check that says `true` for `-0`),
-     * no separate `-0`-is-plain-`0` guard is needed here either.
+     * Monadic `#` (tally): the item count along the leading axis — a
+     * scalar has exactly one item (itself), a vector `[n]` has `n` items, a
+     * matrix `[r, c]` has `r` items (one per row). Returned as a genuine
+     * rank-0 `NDArray` (`Array::scalar` on the Rust side), matching
+     * `tally`'s own return type there.
+     */
+    function tally(a) {
+      a = toArrayValue(a);
+      const n = a.shape.length === 0 ? 1 : a.shape[0];
+      return ndarray([], Float64Array.of(n));
+    }
+
+    /**
+     * Dyadic `#` (copy/replicate): `x # y`, where `x` is a vector (or
+     * scalar, for a length-1 `y`) of non-negative integer counts the same
+     * length as `y`'s tally. Each item of `y` is repeated `x[i]` times and
+     * the results concatenated end to end; a count of `0` drops that item
+     * entirely. **Disclosed scope limit, ported from the Rust reference**:
+     * `y` (and `x`) are restricted to rank <= 1 — a rank-2 `y` would need a
+     * genuinely different per-row replicate this cut does not attempt.
+     * SECURITY: every count is validated as a non-negative integer, and
+     * the TOTAL output size is capped via `checkedShapeSize` *before*
+     * allocating — a script that replicates its own output over and over
+     * (`Y=.Y#Y`-shaped) could otherwise grow without bound.
+     */
+    function replicate(x, y) {
+      x = toArrayValue(x);
+      y = toArrayValue(y);
+      if (y.shape.length > 1) {
+        throw new Error(`replicate: dyadic right argument must be a scalar or vector (rank <= 1), got rank ${y.shape.length} -- per-row replicate of a matrix is out of scope for this cut`);
+      }
+      if (x.shape.length > 1) {
+        throw new Error(`replicate: dyadic left argument (counts) must be a scalar or vector (rank <= 1), got rank ${x.shape.length}`);
+      }
+      const items = y.data;
+      const counts = x.data;
+      if (counts.length !== items.length) {
+        throw new Error(`replicate: left argument's length must equal the right argument's tally (${counts.length} vs ${items.length})`);
+      }
+      let total = 0;
+      for (const c of counts) {
+        if (!(Number.isInteger(c) && c >= 0)) {
+          throw new Error(`replicate: counts must be non-negative integers, got ${c}`);
+        }
+        total += c;
+      }
+      checkedShapeSize([total]);
+      const out = new Float64Array(total);
+      let k = 0;
+      for (let i = 0; i < items.length; i++) {
+        for (let j = 0; j < counts[i]; j++) {
+          out[k++] = items[i];
+        }
+      }
+      return ndarray([total], out);
+    }
+
+    /**
+     * Monadic `^` (natural exponential): `e` raised to each element,
+     * elementwise, shape-preserving. `array_runtime::ops::BinOp` has no
+     * `Pow` variant (MA06 §2 confirms this cut needs no new
+     * `array-runtime` substrate), so this is implemented directly here
+     * rather than routing through `applyOp`.
+     */
+    function monadicExp(a) {
+      a = toArrayValue(a);
+      return ndarray(a.shape, Float64Array.from(a.data, Math.exp));
+    }
+
+    /**
+     * Format one number the way `apl_runtime::value::fmt_num` (APL) or
+     * `j_runtime::value::fmt_num` (J, when `SIR_DISPLAY_J_UNDERSCORE` is
+     * set — added alongside `j-to-semantic-ir/tests/oracle.rs`'s "Bug A")
+     * does, ported 1:1 from whichever is active: APL's high-minus glyph
+     * `¯` (never ASCII `-`), or J's leading underscore `_` (never `¯`,
+     * never `-`), prefixes a negative number; a whole-valued float prints
+     * without a trailing `.0`. Unlike the Rust source, no separate
+     * integer-vs-float branch is needed for the whole-value case —
+     * `String(5)` and `String(5.0)` are both `"5"` in JS, where Rust needs
+     * `format!("{}", mag as i64)` specifically to avoid `5.0`'s `Display`
+     * impl printing a trailing `.0`. `x < 0` (a numeric comparison) already
+     * excludes `-0` from either negative-glyph branch on its own — `-0 < 0`
+     * is `false` in JS — so, unlike Rust's `is_sign_negative()` (a
+     * bit-level check that says `true` for `-0`), no separate
+     * `-0`-is-plain-`0` guard is needed here either.
      */
     function fmtNum(x) {
       if (Number.isNaN(x)) {
         return "NaN";
       }
       if (!Number.isFinite(x)) {
+        if (SIR_DISPLAY_J_UNDERSCORE) { return x < 0 ? "_inf" : "inf"; }
         return x < 0 ? "¯∞" : "∞";
       }
       const body = String(Math.abs(x));
+      if (SIR_DISPLAY_J_UNDERSCORE) { return x < 0 ? "_" + body : body; }
       return x < 0 ? "¯" + body : body;
     }
 
@@ -4136,6 +4245,8 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       // SIR22 addendum (APL primitives).
       reduce, scan, outer, shape, reshape, indexGenerator, indexOf, ravel,
       catenate, display,
+      // SIR22 addendum (J's two genuinely new primitives, no APL precedent).
+      tally, replicate, monadicExp,
       // Exported so `formatSeen` (defined outside this IIFE, near the top
       // of the file) can render a bare/boxed scalar through the SAME
       // high-minus-aware number formatter a raw NDArray already uses via
@@ -4715,13 +4826,63 @@ mod tests {
         // shape the way `neg`'s array branch is.
         assert!(RUNTIME.contains("const SIR_DISPLAY_APL_HIGH_MINUS = __SIR_DISPLAY_APL_HIGH_MINUS__;"));
         assert!(RUNTIME.contains(
-            "return SIR_DISPLAY_APL_HIGH_MINUS ? ArrayRt.fmtNum(v.f) : floatToRubyString(v.f);"
+            "return (SIR_DISPLAY_APL_HIGH_MINUS || SIR_DISPLAY_J_UNDERSCORE) ? ArrayRt.fmtNum(v.f) : floatToRubyString(v.f);"
         ));
         assert!(RUNTIME.contains(
-            "return SIR_DISPLAY_APL_HIGH_MINUS ? ArrayRt.fmtNum(v) : String(v);"
+            "return (SIR_DISPLAY_APL_HIGH_MINUS || SIR_DISPLAY_J_UNDERSCORE) ? ArrayRt.fmtNum(v) : String(v);"
         ));
         // `fmtNum` must be reachable from OUTSIDE the `ArrayRt` IIFE (where
         // `formatSeen` lives) for the branches above to compile at all.
         assert!(RUNTIME.contains("fmtNum,"));
+    }
+
+    // ── J's own display convention (`j-to-semantic-ir/tests/oracle.rs`,
+    // "Bug A") and its two new builtins (that file's "Bug B") ──────────────
+
+    #[test]
+    fn fmtnum_gates_the_negative_glyph_and_infinity_spelling_on_the_j_underscore_flag() {
+        // Regression guard for J's "Bug A": `SIR_DISPLAY_APL_HIGH_MINUS`
+        // had no J-specific counterpart at all, so a J-sourced module's
+        // negative numbers/infinity fell through to plain ASCII (via
+        // `formatSeen`'s default) or APL's own high-minus glyph
+        // (`ArrayRt.fmtNum`'s previously-unconditional branch) instead of
+        // J's own leading underscore / lowercase `inf`.
+        assert!(RUNTIME.contains("const SIR_DISPLAY_J_UNDERSCORE = __SIR_DISPLAY_J_UNDERSCORE__;"));
+        assert!(RUNTIME.contains("if (SIR_DISPLAY_J_UNDERSCORE) { return x < 0 ? \"_inf\" : \"inf\"; }"));
+        assert!(RUNTIME.contains("if (SIR_DISPLAY_J_UNDERSCORE) { return x < 0 ? \"_\" + body : body; }"));
+        // The APL branch must still be the DEFAULT (reached when the J flag
+        // is false) -- these two lines are unchanged from before this fix,
+        // confirming APL's own display is untouched by adding J's.
+        assert!(RUNTIME.contains("return x < 0 ? \"¯∞\" : \"∞\";"));
+        assert!(RUNTIME.contains("return x < 0 ? \"¯\" + body : body;"));
+    }
+
+    #[test]
+    fn runtime_registers_js_own_tally_replicate_exp_builtins() {
+        // Regression guard for J's "Bug B": `tally`/`replicate`/`exp` were
+        // documented (`j-to-semantic-ir`'s own README/CHANGELOG since
+        // 0.1.0/0.1.1) but never registered in the `builtins` dispatch
+        // table, so `__Sir.callBuiltin`/`builtinClosure` crashed with
+        // `TypeError: unknown builtin: <name>` for every operand.
+        assert!(RUNTIME.contains("function tally(a) {"));
+        assert!(RUNTIME.contains("function replicate(x, y) {"));
+        assert!(RUNTIME.contains("function monadicExp(a) {"));
+        assert!(RUNTIME.contains("tally, replicate, monadicExp,"));
+        assert!(RUNTIME.contains("\"tally\": (x) => ArrayRt.tally(x),"));
+        assert!(RUNTIME.contains("\"replicate\": (x, y) => ArrayRt.replicate(x, y),"));
+        assert!(RUNTIME.contains("\"exp\": (x) => ArrayRt.monadicExp(x),"));
+    }
+
+    #[test]
+    fn replicate_validates_counts_and_caps_total_output_before_allocating() {
+        // SECURITY: dyadic `#`'s total replicated-output length is a
+        // runtime-computed value (a compiled program's own counts, not a
+        // fixed constant) -- must route through `checkedShapeSize` (this
+        // file's one existing `MAX_ELEMENTS`-capped guard, per
+        // `array_addendum_reuses_the_one_bounded_allocation_cap` above)
+        // *before* `new Float64Array(total)` runs, exactly like every
+        // other bounded-allocation factory in this domain.
+        assert!(RUNTIME.contains("if (!(Number.isInteger(c) && c >= 0)) {"));
+        assert!(RUNTIME.contains("checkedShapeSize([total]);"));
     }
 }
