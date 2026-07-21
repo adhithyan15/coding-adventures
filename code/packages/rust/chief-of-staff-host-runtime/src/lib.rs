@@ -11,7 +11,8 @@ pub use package::{
 
 use chief_of_staff_tool_api::{
     validate_tool_id, InMemoryToolRuntime, PrivilegeTier, RequestedBy, ToolApiError,
-    ToolDefinition, ToolExecutionTrace, ToolHandler, ToolInvocationRequest,
+    ToolApprovalGrant, ToolDefinition, ToolExecutionTrace, ToolHandler, ToolInvocationRequest,
+    ToolPolicyEngine,
 };
 use coding_adventures_json_serializer::serialize as serialize_json;
 use coding_adventures_json_value::{parse as parse_json, JsonValue};
@@ -246,6 +247,18 @@ impl OrchestratorProfileRuntime {
             .register_handler(definition, handler)
     }
 
+    pub fn set_host_policy<P>(&mut self, host_id: &str, policy: P) -> Result<(), HostRuntimeError>
+    where
+        P: ToolPolicyEngine + 'static,
+    {
+        let host = self
+            .hosts
+            .get_mut(host_id)
+            .ok_or_else(|| HostRuntimeError::UnknownProcessHost(host_id.to_string()))?;
+        host.set_policy(policy);
+        Ok(())
+    }
+
     pub fn summary(&self) -> OrchestratorProfileSummary {
         let registered_tool_count = self
             .hosts
@@ -290,6 +303,13 @@ impl HostProfileRuntime {
 
     pub fn profile(&self) -> &HostProfile {
         &self.profile
+    }
+
+    pub fn set_policy<P>(&mut self, policy: P)
+    where
+        P: ToolPolicyEngine + 'static,
+    {
+        self.runtime.set_policy(policy);
     }
 
     pub fn register_handler<H>(
@@ -660,6 +680,22 @@ impl ActiveOrchestratorRuntime {
             .invoke_with_events(request))
     }
 
+    pub fn invoke_with_events_with_approval(
+        &self,
+        request: &ToolInvocationRequest,
+        approval_grant: &ToolApprovalGrant,
+    ) -> Result<ToolExecutionTrace, HostRuntimeError> {
+        let host_id = self
+            .tool_owners
+            .get(&request.tool_id)
+            .ok_or_else(|| HostRuntimeError::ToolNotAllowed(request.tool_id.clone()))?;
+        Ok(self
+            .hosts
+            .get(host_id)
+            .expect("active orchestrator must retain each tool owner")
+            .invoke_with_events_with_approval(request, approval_grant))
+    }
+
     /// Dispatch one subprocess-originated call through the canonical D18D
     /// handler runtime owned by the tool's profile host.
     pub fn handle_rpc(&self, request: HostRpcRequest) -> Result<HostRpcResponse, HostRuntimeError> {
@@ -693,6 +729,15 @@ impl ActiveHostToolRuntime {
 
     pub fn invoke_with_events(&self, request: &ToolInvocationRequest) -> ToolExecutionTrace {
         self.runtime.invoke_with_events(request)
+    }
+
+    pub fn invoke_with_events_with_approval(
+        &self,
+        request: &ToolInvocationRequest,
+        approval_grant: &ToolApprovalGrant,
+    ) -> ToolExecutionTrace {
+        self.runtime
+            .invoke_with_events_with_approval(request, approval_grant)
     }
 
     pub fn definitions(&self) -> Vec<&ToolDefinition> {
@@ -1108,8 +1153,9 @@ fn validate_label(field: &str, value: &str) -> Result<(), HostRuntimeError> {
 mod tests {
     use super::*;
     use chief_of_staff_tool_api::{
-        JsonSchema, RequestedBy, ToolConcurrency, ToolHandlerOutput, ToolIdempotency,
-        ToolInvocationRequest, ToolSideEffects, ToolStability, ToolStreaming,
+        ApprovalState, JsonSchema, RequestedBy, ToolConcurrency, ToolHandlerOutput,
+        ToolIdempotency, ToolInvocationRequest, ToolPolicyProfile, ToolSideEffects, ToolStability,
+        ToolStreaming,
     };
     use coding_adventures_ed25519::{generate_keypair, sign};
     use generic_job_protocol::JobResult;
@@ -1496,6 +1542,54 @@ while (true) {
                 .result
                 .output,
             Some(JsonValue::String("read".to_string()))
+        );
+    }
+
+    #[test]
+    fn orchestrator_profile_enforces_scoped_approval_before_write_handler() {
+        let mut runtime = OrchestratorProfileRuntime::from_json(ORCHESTRATOR_PROFILE).unwrap();
+        runtime
+            .register_handler(
+                definition("demo.read", PrivilegeTier::Tier1, &["demo_read"]),
+                |_arguments, _context| {
+                    Ok(ToolHandlerOutput::new(JsonValue::String(
+                        "read".to_string(),
+                    )))
+                },
+            )
+            .unwrap();
+        let mut write_definition = definition("demo.write", PrivilegeTier::Tier1, &["demo_write"]);
+        write_definition.side_effects = ToolSideEffects::Write;
+        runtime
+            .register_handler(write_definition, |_arguments, _context| {
+                Ok(ToolHandlerOutput::new(JsonValue::String(
+                    "written".to_string(),
+                )))
+            })
+            .unwrap();
+        runtime
+            .set_host_policy(
+                "writer_host",
+                ToolPolicyProfile::allow_all()
+                    .with_approval_required_for(vec![ToolSideEffects::Write]),
+            )
+            .unwrap();
+        let active = runtime.activate().unwrap();
+        let write_request = request("demo.write");
+
+        let pending = active.invoke_with_events(&write_request).unwrap();
+        assert_eq!(pending.record.approval_state, ApprovalState::Pending);
+        assert!(!pending.result.ok);
+
+        let grant =
+            ToolApprovalGrant::new("call_1", "demo.write", "user_1", 100).with_expires_at(200);
+        let approved = active
+            .invoke_with_events_with_approval(&write_request, &grant)
+            .unwrap();
+        assert_eq!(approved.record.approval_state, ApprovalState::Granted);
+        assert_eq!(
+            approved.result.output,
+            Some(JsonValue::String("written".to_string()))
         );
     }
 

@@ -27,10 +27,11 @@ use chief_of_staff_host_runtime::{
     OrchestratorProfileSummary,
 };
 use chief_of_staff_tool_api::{
-    JsonSchema, PrivilegeTier, RequestedBy, SchemaProperty, ToolApiError, ToolCallError,
-    ToolConcurrency, ToolDefinition, ToolErrorKind, ToolEventKind, ToolExecutionJournal,
-    ToolExecutionJournalHealthSummary, ToolHandlerOutput, ToolIdempotency, ToolInvocationRequest,
-    ToolSideEffects, ToolStability, ToolStreaming,
+    ApprovalState, JsonSchema, PrivilegeTier, RequestedBy, SchemaProperty, ToolApiError,
+    ToolApprovalGrant, ToolCallError, ToolConcurrency, ToolDefinition, ToolErrorKind,
+    ToolEventKind, ToolExecutionJournal, ToolExecutionJournalHealthSummary, ToolHandlerOutput,
+    ToolIdempotency, ToolInvocationRequest, ToolPolicyProfile, ToolSideEffects, ToolStability,
+    ToolStreaming,
 };
 use coding_adventures_json_value::{JsonNumber, JsonValue};
 use context_store::{
@@ -50,8 +51,8 @@ use memory_store::{
 };
 use operation_primitives::{OperationError, OperationHttpClientError, OperationHttpRequest};
 use os_job_core::{
-    BackendKind, ConcurrencyPolicy, DateTimeParts, JobAction, JobSpec, JobTrigger, OutputPolicy,
-    RetryPolicy,
+    BackendKind, ConcurrencyPolicy, DateTimeParts, JobAction, JobRunReceipt, JobSpec, JobTrigger,
+    OutputPolicy, RetryPolicy,
 };
 use os_job_runtime::NativeJobRuntime;
 use read_write_separation::{
@@ -188,6 +189,7 @@ pub struct UmbrellaAgentConfig {
     pub fetched_at_iso: String,
     pub weather_source: WeatherSource,
     pub supervisor_probe: UmbrellaSupervisorProbe,
+    pub write_approval: Option<ToolApprovalGrant>,
 }
 
 impl UmbrellaAgentConfig {
@@ -200,6 +202,7 @@ impl UmbrellaAgentConfig {
             fetched_at_iso: "2026-05-12T12:00:00.000Z".to_string(),
             weather_source: WeatherSource::Fixture(WeatherSnapshot::rainy_seattle_fixture()),
             supervisor_probe: UmbrellaSupervisorProbe::default(),
+            write_approval: Some(default_write_approval(1_778_624_400_000)),
         }
     }
 
@@ -218,6 +221,7 @@ impl UmbrellaAgentConfig {
                 user_agent: "coding-adventures-weather-agent-e2e/0.1 (adhithyan15)".to_string(),
             },
             supervisor_probe: UmbrellaSupervisorProbe::default(),
+            write_approval: Some(default_write_approval(fetched_at_ms)),
         }
     }
 
@@ -225,6 +229,16 @@ impl UmbrellaAgentConfig {
         self.supervisor_probe.kill_child_before_tick = Some(actor_id.into());
         self
     }
+
+    pub fn without_write_approval(mut self) -> Self {
+        self.write_approval = None;
+        self
+    }
+}
+
+fn default_write_approval(granted_at: u64) -> ToolApprovalGrant {
+    ToolApprovalGrant::new("write_umbrella_report", WRITE_TOOL_ID, USER_ID, granted_at)
+        .with_expires_at(granted_at.saturating_add(300_000))
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -508,6 +522,24 @@ pub struct UmbrellaAgentRun {
     pub job_executor_status: ExecutorFleetStatusSummary,
     pub rws: HostRwsSummary,
     pub actor_channel_messages: usize,
+    pub job_receipt: JobRunReceipt,
+    pub user_report: UmbrellaUserReport,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct UmbrellaUserReport {
+    pub headline: String,
+    pub detail: String,
+    pub completed_at_iso: String,
+    pub output_ref: String,
+    pub write_approval: ApprovalState,
+    pub journal_invocation_count: usize,
+}
+
+impl UmbrellaUserReport {
+    pub fn render(&self) -> String {
+        format!("{}\n{}", self.headline, self.detail)
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -648,6 +680,30 @@ pub fn run_umbrella_today_agent(config: UmbrellaAgentConfig) -> UmbrellaResult<U
         .lock()
         .expect("actor channel mutex poisoned")
         .len();
+    let job_receipt = JobRunReceipt::succeeded(
+        format!("{}_run", config.tick_id),
+        JOB_ID,
+        config.fetched_at_ms,
+        config.fetched_at_ms.saturating_add(1),
+        vec!["artifact:umbrella_today_report".to_string()],
+    );
+    if !job_receipt.validate().is_valid() {
+        return Err(UmbrellaAgentError::new(
+            "umbrella job produced an invalid D18C run receipt",
+        ));
+    }
+    let user_report = UmbrellaUserReport {
+        headline: if recommendation.kind.needs_umbrella() {
+            "Bring an umbrella today".to_string()
+        } else {
+            "No umbrella needed today".to_string()
+        },
+        detail: recommendation.explanation.clone(),
+        completed_at_iso: config.fetched_at_iso.clone(),
+        output_ref: "artifact:umbrella_today_report".to_string(),
+        write_approval: ApprovalState::Granted,
+        journal_invocation_count: tool_journal_health.invocation_count,
+    };
 
     Ok(UmbrellaAgentRun {
         recommendation,
@@ -668,6 +724,8 @@ pub fn run_umbrella_today_agent(config: UmbrellaAgentConfig) -> UmbrellaResult<U
         job_executor_status,
         rws: validate_host_boundaries(&pipeline.config.output_path)?,
         actor_channel_messages,
+        job_receipt,
+        user_report,
     })
 }
 
@@ -700,6 +758,10 @@ impl UmbrellaPipeline {
         .map_err(UmbrellaAgentError::from)?;
         register_weather_classifier_tool(&mut tool_runtime)?;
         register_file_writer_tool(&mut tool_runtime, writer_manifest(&config.output_path)?)?;
+        tool_runtime.set_host_policy(
+            "file_writer",
+            ToolPolicyProfile::allow_all().with_approval_required_for(vec![ToolSideEffects::Write]),
+        )?;
         let tool_runtime = tool_runtime.activate()?;
 
         Ok(Self {
@@ -982,7 +1044,16 @@ impl UmbrellaPipeline {
             deadline_at: Some(self.config.fetched_at_ms.saturating_add(30_000)),
             idempotency_key: Some(format!("{}-{}", self.config.tick_id, call_id)),
         };
-        let trace = self.tool_runtime.invoke_with_events(&request)?;
+        let trace = if tool_id == WRITE_TOOL_ID {
+            match self.config.write_approval.as_ref() {
+                Some(grant) => self
+                    .tool_runtime
+                    .invoke_with_events_with_approval(&request, grant)?,
+                None => self.tool_runtime.invoke_with_events(&request)?,
+            }
+        } else {
+            self.tool_runtime.invoke_with_events(&request)?
+        };
         let result = trace.result.clone();
         self.journal
             .lock()

@@ -2,6 +2,7 @@ use std::fs;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use capability_os_sandbox::{current_kernel_sandbox_support, OsFamily};
+use chief_of_staff_tool_api::ApprovalState;
 use os_job_core::BackendKind;
 use weather_agent_e2e::{
     run_umbrella_today_agent, RecommendationKind, UmbrellaAgentConfig, WeatherFetchSourceKind,
@@ -97,6 +98,8 @@ fn umbrella_today_agent_exercises_architecture_and_writes_text_file() {
     assert_eq!(run.tool_journal_health.invocation_count, 3);
     assert_eq!(run.tool_journal_health.completed_count, 3);
     assert_eq!(run.tool_journal_health.failed_count, 0);
+    assert_eq!(run.tool_journal_health.approval_granted_count, 1);
+    assert_eq!(run.tool_journal_health.approval_pending_count, 0);
     assert!(run.tool_journal_health.results_with_output_count >= 3);
     assert!(run.tool_journal_health.results_with_artifact_refs_count >= 1);
 
@@ -116,10 +119,47 @@ fn umbrella_today_agent_exercises_architecture_and_writes_text_file() {
     assert_eq!(run.job_plan_file_count, 0);
     assert!(run.job_executor_status.is_quiescent());
     assert!(run.job_executor_status.has_executors());
+    assert!(run.job_receipt.exit_status.is_success());
+    assert_eq!(run.job_receipt.job_id, "umbrella_today_job");
+    assert_eq!(
+        run.job_receipt.output_refs,
+        vec!["artifact:umbrella_today_report"]
+    );
+    assert_eq!(run.user_report.headline, "Bring an umbrella today");
+    assert!(run
+        .user_report
+        .detail
+        .contains("precipitation chance is 72%"));
+    assert_eq!(run.user_report.write_approval, ApprovalState::Granted);
+    assert_eq!(run.user_report.journal_invocation_count, 3);
+    assert!(run.user_report.render().contains("Bring an umbrella today"));
 
     assert_eq!(run.rws.fetcher.untrusted_inputs, 1);
     assert_eq!(run.rws.writer.external_actuations, 1);
     assert!(run.rws.combined_manifest_rejected);
+}
+
+#[test]
+fn umbrella_today_job_blocks_write_without_explicit_approval() {
+    let root = std::env::temp_dir().join(format!(
+        "weather-agent-approval-e2e-{}",
+        SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("clock should be after unix epoch")
+            .as_nanos()
+    ));
+    fs::create_dir_all(&root).expect("temp dir should be created");
+    let output_path = root.join("umbrella-today.txt");
+    let config = UmbrellaAgentConfig::deterministic_seattle(&output_path).without_write_approval();
+
+    let error = run_umbrella_today_agent(config)
+        .expect_err("write step should stop at the centralized approval gate");
+    assert!(error.to_string().contains("requires approval"));
+    let persisted_text = fs::read_to_string(&output_path).unwrap_or_default();
+    if current_kernel_sandbox_support().available {
+        assert_eq!(persisted_text, "kernel sandbox allowed");
+    }
+    assert!(!persisted_text.contains("Bring an umbrella today"));
 }
 
 #[test]
