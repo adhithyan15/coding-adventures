@@ -1,5 +1,34 @@
 # Changelog
 
+## Chapter 17 — The body: a cup for a head, and a hand with no Latin cousin
+
+- **Chapter 17 authored** (`GE-C17-kopf`, `-hand`) — the **body**, the theme the
+  parallel-track roadmaps name next.
+- **der Kopf** (`GE-C17-kopf`): *Kopf* did not originally mean "head." It meant a
+  **cup or bowl** — Germanic \**kuppaz*, the same word as English **cup** — and
+  it displaced the inherited **das Haupt**, which is the genuine Grimm's-law
+  cognate of Latin *caput* and English *head* (*k*→*h*, *p*→*f/d*, as
+  *pater*→*father*). *Haupt* survives in compounds: *Hauptstadt*,
+  *Hauptbahnhof*, *Hauptsache*.
+  - **The chapter's best fact is a coincidence.** French replaced "head" with a
+    **pot** (*testa* → *tête*) and German with a **cup** (\**kuppaz* → *Kopf*),
+    from unrelated words, with nobody coordinating — and **both** kept the old
+    word for chiefs and capitals. Heads look like bowls in any language.
+  - Includes the **-pf** note: one sound, *p* released into *f*, with no English
+    equivalent.
+- **die Hand** (`GE-C17-hand`): the easy word, kept deliberately for what it
+  teaches about **absence of connection**. Germanic \**handuz*, inherited
+  straight into English (*Hand, Arm, Finger, Fuß, Herz*), with the **final-devoicing**
+  note — *Hand* ends in a *t* sound, and the *d* returns in *die Hände*.
+  - **Every Romance track in this course builds "hand" on *manus*** (*main*,
+    *mano*, *mão*), and \**handuz* **is not related to it**. The lesson says this
+    outright, because a curriculum that keeps finding connections can start to
+    imply everything connects. It doesn't — and this is where the two families
+    diverged early and completely.
+  - *Manus* did reach German, but only as **borrowed** learned vocabulary
+    (*Manuskript*, *Maniküre*, *manuell*), sitting beside the native word without
+    displacing it.
+
 ## Chapter 16 — *sein*: three ancient verbs wearing one infinitive
 
 - **Chapter 16 authored** (`GE-C16-sein`, `-perfekt-sein`). Ch. 15 taught only
