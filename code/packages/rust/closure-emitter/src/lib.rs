@@ -3264,6 +3264,60 @@ fn choose_quote_and_escape(value: &str) -> (&'static str, String) {
     }
 }
 
+/// Does this code point need a control-character escape?
+///
+/// The C0 controls (`U+0000`..=`U+001F`) plus `U+007F` DELETE. Everything in
+/// this set is unprintable, so the reference compiler never emits it raw.
+fn needs_control_escape(c: char) -> bool {
+    let u = c as u32;
+    u < 0x20 || u == 0x7F
+}
+
+/// Render one control character exactly as the reference Closure Compiler does.
+///
+/// This table is oracle-verified byte-for-byte against
+/// `closure-compiler-v20260712.jar` (SIMPLE, `--language_in ECMASCRIPT_2020`,
+/// `--language_out NO_TRANSPILE`), by round-tripping `"A\uXXXXB"` for every
+/// code point in `0x00..=0x1F` plus `0x7F` and reading the output with `xxd`:
+///
+/// ```text
+///   0x00                     -> \x00          (see the NUL note below)
+///   0x08 BS                  -> \b
+///   0x09 TAB                 -> \t
+///   0x0A LF                  -> \n
+///   0x0B VT                  -> \v
+///   0x0C FF                  -> \f
+///   0x0D CR                  -> \r
+///   0x01..0x07, 0x0E..0x1F   -> \u0001 .. \u001f
+///   0x7F DEL                 -> \u007f
+/// ```
+///
+/// Two details that look like inconsistencies but are what the reference
+/// compiler actually emits, so we match them for byte-identity:
+///
+/// 1. **NUL is the ONLY code point rendered with the `\x` form.** `\x00` is two
+///    bytes shorter than `\u0000`, but Closure does *not* apply the same
+///    shortening to `\x01`..`\x1f` -- those stay `\u0001`..`\u001f`. Do not
+///    "fix" this into a general `\xXX` rule; it would diverge on every other
+///    control character.
+/// 2. **The hex digits are LOWERCASE** (`\u001b`, not `\u001B`).
+///
+/// `\x00` is unambiguous regardless of what follows: `\x` consumes exactly two
+/// hex digits, so `"\x00" + "0"` prints `\x000` and still reads back as NUL
+/// followed by `'0'`.
+fn push_control_escape(out: &mut String, c: char) {
+    match c {
+        '\u{08}' => out.push_str("\\b"),
+        '\t' => out.push_str("\\t"),
+        '\n' => out.push_str("\\n"),
+        '\u{0B}' => out.push_str("\\v"),
+        '\u{0C}' => out.push_str("\\f"),
+        '\r' => out.push_str("\\r"),
+        '\0' => out.push_str("\\x00"),
+        c => out.push_str(&format!("\\u{:04x}", c as u32)),
+    }
+}
+
 /// Like [`escape_str_dq`] but for a single-quoted string — escape
 /// `'` instead of `"`. Backslash and control char rules are
 /// identical because they're independent of which quote wraps the
@@ -3274,9 +3328,6 @@ fn escape_str_sq(s: &str) -> String {
         match ch {
             '\\' => out.push_str("\\\\"),
             '\'' => out.push_str("\\'"),
-            '\n' => out.push_str("\\n"),
-            '\r' => out.push_str("\\r"),
-            '\t' => out.push_str("\\t"),
             // U+2028 LINE SEPARATOR / U+2029 PARAGRAPH SEPARATOR: these are
             // line terminators in ECMAScript, so before ES2019 an UNESCAPED one
             // inside a string literal is a SyntaxError. They sit above 0x20, so
@@ -3284,7 +3335,7 @@ fn escape_str_sq(s: &str) -> String {
             // (See `escape_ascii_only`, which already escapes them as non-ASCII.)
             '\u{2028}' => out.push_str("\\u2028"),
             '\u{2029}' => out.push_str("\\u2029"),
-            c if (c as u32) < 0x20 => out.push_str(&format!("\\u{:04X}", c as u32)),
+            c if needs_control_escape(c) => push_control_escape(&mut out, c),
             c => out.push(c),
         }
     }
@@ -3300,9 +3351,6 @@ fn escape_str_dq(s: &str) -> String {
         match ch {
             '\\' => out.push_str("\\\\"),
             '"' => out.push_str("\\\""),
-            '\n' => out.push_str("\\n"),
-            '\r' => out.push_str("\\r"),
-            '\t' => out.push_str("\\t"),
             // U+2028 LINE SEPARATOR / U+2029 PARAGRAPH SEPARATOR: line
             // terminators in ECMAScript, so an UNESCAPED one inside a string
             // literal is a SyntaxError before ES2019. They are above 0x20, so the
@@ -3310,7 +3358,7 @@ fn escape_str_dq(s: &str) -> String {
             // `escape_ascii_only`, which already escapes them as non-ASCII.)
             '\u{2028}' => out.push_str("\\u2028"),
             '\u{2029}' => out.push_str("\\u2029"),
-            c if (c as u32) < 0x20 => out.push_str(&format!("\\u{:04X}", c as u32)),
+            c if needs_control_escape(c) => push_control_escape(&mut out, c),
             c => out.push(c),
         }
     }
@@ -3326,10 +3374,7 @@ fn escape_ascii_only(s: &str) -> String {
         match ch {
             '\\' => out.push_str("\\\\"),
             '"' => out.push_str("\\\""),
-            '\n' => out.push_str("\\n"),
-            '\r' => out.push_str("\\r"),
-            '\t' => out.push_str("\\t"),
-            c if (c as u32) < 0x20 => out.push_str(&format!("\\u{:04X}", c as u32)),
+            c if needs_control_escape(c) => push_control_escape(&mut out, c),
             c if c.is_ascii() => out.push(c),
             c if (c as u32) <= 0xFFFF => out.push_str(&format!("\\u{:04X}", c as u32)),
             c => out.push_str(&format!("\\u{{{:X}}}", c as u32)),
@@ -3360,6 +3405,116 @@ mod tests {
     }
     fn untraced_program() -> Program {
         Program::new_untraced(EsVersion::Es2025, SourceType::Module)
+    }
+
+    // =================================================================
+    // Control-character escaping (CLOC #204)
+    //
+    // The expectations below are the reference Closure Compiler's ACTUAL
+    // output, captured by round-tripping each code point through
+    // `closure-compiler-v20260712.jar` at SIMPLE and reading the bytes with
+    // `xxd`. See `push_control_escape` for the full table and the reasoning.
+    // Nothing here is derived from what "looks consistent" -- two of these
+    // cases (NUL, and the lowercase hex) are deliberately asymmetric because
+    // that is what the reference compiler emits.
+    // =================================================================
+
+    /// Build the escaped body of a double-quoted literal, without the quotes.
+    fn esc(s: &str) -> String {
+        escape_str_dq(s)
+    }
+
+    #[test]
+    fn nul_is_the_only_x_form_escape() {
+        // Oracle: `var a = "x\u0000y";` -> `var a="x\x00y"`.
+        assert_eq!(esc("x\u{0}y"), "x\\x00y");
+        // ...and the neighbouring control chars do NOT get the `\x` treatment,
+        // even though `\x01` would be shorter than `\u0001`. Pinning this stops
+        // a future "consistency" refactor from generalising the NUL rule.
+        assert_eq!(esc("x\u{1}y"), "x\\u0001y");
+        assert_eq!(esc("x\u{7}y"), "x\\u0007y");
+    }
+
+    #[test]
+    fn short_escapes_for_bs_tab_lf_vt_ff_cr() {
+        // Oracle: 0x08..0x0D each print as their one-letter escape.
+        assert_eq!(esc("A\u{8}B"), "A\\bB");
+        assert_eq!(esc("A\tB"), "A\\tB");
+        assert_eq!(esc("A\nB"), "A\\nB");
+        assert_eq!(esc("A\u{b}B"), "A\\vB");
+        assert_eq!(esc("A\u{c}B"), "A\\fB");
+        assert_eq!(esc("A\rB"), "A\\rB");
+    }
+
+    #[test]
+    fn other_controls_use_lowercase_u_escapes() {
+        // Oracle emits LOWERCASE hex digits: `\u001b`, never `\u001B`.
+        assert_eq!(esc("A\u{e}B"), "A\\u000eB");
+        assert_eq!(esc("A\u{1b}B"), "A\\u001bB");
+        assert_eq!(esc("A\u{1f}B"), "A\\u001fB");
+        let out = esc("\u{1b}\u{1f}");
+        assert!(
+            !out.chars().any(|c| c.is_ascii_uppercase()),
+            "hex digits must be lowercase, got {out:?}"
+        );
+    }
+
+    #[test]
+    fn del_is_escaped_even_though_it_is_above_0x20() {
+        // 0x7F sits ABOVE the C0 block, so a naive `< 0x20` guard misses it and
+        // emits a raw DEL byte. Oracle: `\u007f`.
+        assert_eq!(esc("A\u{7f}B"), "A\\u007fB");
+    }
+
+    #[test]
+    fn control_rules_are_identical_for_single_quoted_strings() {
+        // The control table is independent of which quote wraps the string.
+        assert_eq!(escape_str_sq("x\u{0}y"), "x\\x00y");
+        assert_eq!(escape_str_sq("A\u{1b}B"), "A\\u001bB");
+        assert_eq!(escape_str_sq("A\u{7f}B"), "A\\u007fB");
+        assert_eq!(escape_str_sq("A\u{b}B"), "A\\vB");
+    }
+
+    #[test]
+    fn control_rules_are_identical_under_ascii_only() {
+        // `ascii_only` changes how NON-ASCII is rendered, never how control
+        // characters are.
+        assert_eq!(escape_ascii_only("x\u{0}y"), "x\\x00y");
+        assert_eq!(escape_ascii_only("A\u{1b}B"), "A\\u001bB");
+        assert_eq!(escape_ascii_only("A\u{7f}B"), "A\\u007fB");
+        assert_eq!(escape_ascii_only("A\u{c}B"), "A\\fB");
+    }
+
+    #[test]
+    fn every_c0_control_and_del_is_escaped_never_emitted_raw() {
+        // Whole-range sweep: no control byte may survive into the output.
+        // Sweep ALL THREE escapers, not just the double-quoted one -- they are
+        // behaviourally identical by construction today, but they drifted apart
+        // once before (that is how DEL went unescaped in one of them), so the
+        // guarantee is asserted independently for each.
+        // Named alias so the array type stays simple -- clippy::type_complexity
+        // rejects the inline `[(&str, fn(&str) -> String); 3]`, and CI denies
+        // clippy warnings.
+        type Escaper = fn(&str) -> String;
+        let escapers: [(&str, Escaper); 3] = [
+            ("escape_str_dq", escape_str_dq),
+            ("escape_str_sq", escape_str_sq),
+            ("escape_ascii_only", escape_ascii_only),
+        ];
+        for (name, f) in escapers {
+            for cp in (0x00u32..=0x1f).chain(std::iter::once(0x7f)) {
+                let c = char::from_u32(cp).unwrap();
+                let out = f(&format!("A{c}B"));
+                assert!(
+                    !out.chars().any(|ch| (ch as u32) < 0x20 || ch as u32 == 0x7f),
+                    "{name}: U+{cp:04X} leaked a raw control byte: {out:?}"
+                );
+                assert!(
+                    out.starts_with('A') && out.ends_with('B'),
+                    "{name}: bad shape: {out:?}"
+                );
+            }
+        }
     }
 
     fn num(v: f64) -> Expression {

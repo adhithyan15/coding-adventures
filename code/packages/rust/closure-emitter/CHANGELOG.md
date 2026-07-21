@@ -2,6 +2,54 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.56.0] - 2026-07-20
+
+### Fixed - control characters now render exactly as the reference compiler does
+
+String-literal escaping diverged from the real Closure Compiler on FOUR counts.
+All four are fixed and pinned by tests; the table below is oracle-verified
+byte-for-byte against `closure-compiler-v20260712.jar` (SIMPLE,
+`--language_in ECMASCRIPT_2020 --language_out NO_TRANSPILE`) by round-tripping
+every code point in `0x00..=0x1F` plus `0x7F` and reading the bytes with `xxd`.
+
+1. **NUL was emitted as `\u0000`; Closure emits `\x00`.** This is the headline
+   fix, and NUL is the ONLY code point Closure renders with the `\x` form -- see
+   (2). 
+2. **The `\x` shortening does NOT generalise.** `\x01` would be shorter than
+   `\u0001`, but Closure keeps `\u0001`. The emitter deliberately special-cases
+   NUL alone; a future "consistency" refactor that turns this into a general
+   `\xXX` rule would diverge on every other control character. The tests pin
+   `\u0001` / `\u0007` precisely to prevent that.
+3. **Hex digits are LOWERCASE.** The emitter used `{:04X}` and produced
+   `\u001B`; Closure emits `\u001b`.
+4. **`\b`, `\v` and `\f` were missing from the short-escape set**, so 0x08 / 0x0B /
+   0x0C fell through to `\u0008` / `\u000B` / `\u000C` instead of the one-letter
+   forms. 0x7F DEL was not escaped AT ALL (the guard was `< 0x20`, and DEL sits
+   above it), so a raw DEL byte could reach the output; it is now `\u007f`.
+
+The full table now implemented:
+
+```text
+  0x00                     -> \x00
+  0x08 0x09 0x0A 0x0B 0x0C 0x0D -> \b \t \n \v \f \r
+  0x01..0x07, 0x0E..0x1F   -> \u0001 .. \u001f   (lowercase)
+  0x7F DEL                 -> \u007f
+```
+
+The logic was triplicated across `escape_str_sq`, `escape_str_dq` and
+`escape_ascii_only`; all three now delegate to one `push_control_escape` helper
+that carries the oracle table and the reasoning in its doc comment.
+
+End-to-end proof: feeding all 33 code points through `closurec` at SIMPLE and
+diffing against the oracle yields byte streams that are IDENTICAL once line
+breaks are normalised. (The residual newline difference is Closure's ~500-char
+output line-wrapping, an unrelated gap tracked as its own task -- closure-emitter
+does not wrap yet.)
+
+Not changed here, tracked separately: astral code points are still emitted as
+`\u{XXXXX}` rather than as surrogate pairs, and non-ASCII is still only escaped
+under `ascii_only` while Closure escapes it by default.
+
 ## [0.55.0] - 2026-07-19
 
 ### Changed — a function/class declaration is terminated only when it is the last program item
@@ -1117,7 +1165,7 @@ quote-choice selects:
 
 - **7 active `#[test]`s** (all pass on the first run — no new emitter bug):
   backslash doubling (`a\b` → `"a\\b"`), the `\n`/`\r`/`\t` short escapes, an
-  "other" control char as upper-case `\uXXXX` (`U+0007` → ``), the
+  "other" control char as upper-case `\uXXXX` (`U+0007` → `\x07`), the
   U+2028/U+2029 line-terminator escapes, printable non-ASCII left verbatim
   (`café` stays `café` in the default non-`ascii_only` mode), and two
   single-quote-path cases (backslash still doubles; the active `'` is escaped
