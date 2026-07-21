@@ -51,6 +51,12 @@ export interface Lesson {
   concept: string;
   prerequisites: string[];
   reviewsOf: string[];
+  /** Latin-script reading; equals `headword` for Latin-script tracks. */
+  romanization: string;
+  /** Script slug the package assigned from the track name. */
+  script: string;
+  /** ≤120-char memory anchor; "" when not yet authored. */
+  etymologyHook: string;
 }
 
 /**
@@ -94,6 +100,9 @@ export function toLesson(parsed: ParsedLesson): Lesson | null {
     concept: r.concept,
     prerequisites: arr(fm.prerequisites),
     reviewsOf: arr(fm.reviews_of),
+    romanization: r.romanization,
+    script: r.script,
+    etymologyHook: r.etymologyHook,
   };
 }
 
@@ -157,6 +166,16 @@ export function nextDue(
   schedule: DueLike[],
   session: number,
   cursor: number,
+  /**
+   * Optional filter, applied DURING the scan.
+   *
+   * This is how prerequisite gating enters the rotation. Filtering afterwards
+   * — picking, then rejecting, then substituting a fallback — collapses to
+   * serving that one fallback over and over, because the same pick is rejected
+   * every time. Skipping unacceptable indices *inside* the scan keeps the
+   * cursor advancing and the rotation intact.
+   */
+  accept: (index: number) => boolean = () => true,
 ): NextDue {
   if (pool.length === 0) return { index: null, cursor };
   let at = cursor;
@@ -165,6 +184,7 @@ export function nextDue(
     const entry = pool[at]!;
     const index = groups[entry.scriptIndex]?.[entry.letterIndex];
     if (index === undefined) continue;
+    if (!accept(index)) continue;
     const state = schedule[index];
     if (state && state.dueAtSession <= session) return { index, cursor: at };
   }

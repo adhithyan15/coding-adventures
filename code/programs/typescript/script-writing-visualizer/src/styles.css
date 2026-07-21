@@ -188,3 +188,48 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
+
+/* --- concepts mode (one idea, several languages) ------------------------- */
+.concept-list { display: flex; flex-direction: column; gap: 8px; }
+.concept {
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.concept__head {
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0;
+}
+.concept__gloss { margin: 4px 0 0; font-size: 0.85rem; }
+.concept__rows { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+.concept__row {
+  display: grid;
+  grid-template-columns: 7rem minmax(6rem, auto) auto 1fr;
+  gap: 10px;
+  align-items: baseline;
+  padding-top: 6px;
+  border-top: 1px solid var(--line);
+}
+.concept__lang {
+  color: var(--muted);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.concept__word { font-size: 1.15rem; }
+.concept__rom { color: var(--muted); font-size: 0.85rem; font-style: italic; }
+.concept__gloss-inline { color: var(--muted); font-size: 0.85rem; }
+.concept__hooks { margin-top: 10px; border-top: 1px solid var(--line); padding-top: 8px; }
+.concept__hooks p { margin: 0 0 6px; font-size: 0.82rem; line-height: 1.45; }
+
+@media (max-width: 560px) {
+  .concept__row { grid-template-columns: 1fr; gap: 2px; }
+}

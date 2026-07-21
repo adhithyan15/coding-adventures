@@ -26,6 +26,7 @@ export default defineConfig({
         "src/drill.ts",
         "src/scheduler.ts",
         "src/interleave.ts",
+        "src/concepts.ts",
         "src/lessons.ts",
         "src/progress.ts",
       ],
