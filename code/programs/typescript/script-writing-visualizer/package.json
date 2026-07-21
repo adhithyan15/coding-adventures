@@ -1,8 +1,8 @@
 {
   "name": "script-writing-visualizer",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "private": true,
-  "description": "Companion app (HL02 MVP): break a non-Latin script apart and learn to write it, letter by letter",
+  "description": "Companion study app (HL02): break a non-Latin script apart and learn to write it — and drill the whole written curriculum with a spaced-repetition schedule that remembers you",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,6 +10,9 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@coding-adventures/human-language-data": "file:../../../packages/typescript/human-language-data"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^4.1.0",
