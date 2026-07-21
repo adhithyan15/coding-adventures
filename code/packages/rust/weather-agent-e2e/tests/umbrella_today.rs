@@ -155,9 +155,11 @@ fn umbrella_today_job_blocks_write_without_explicit_approval() {
     let error = run_umbrella_today_agent(config)
         .expect_err("write step should stop at the centralized approval gate");
     assert!(error.to_string().contains("requires approval"));
-    let probe_text = fs::read_to_string(&output_path).expect("sandbox probe output should exist");
-    assert!(probe_text.contains("kernel sandbox allowed"));
-    assert!(!probe_text.contains("Bring an umbrella today"));
+    let persisted_text = fs::read_to_string(&output_path).unwrap_or_default();
+    if current_kernel_sandbox_support().available {
+        assert_eq!(persisted_text, "kernel sandbox allowed");
+    }
+    assert!(!persisted_text.contains("Bring an umbrella today"));
 }
 
 #[test]
