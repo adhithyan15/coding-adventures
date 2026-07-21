@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add BJT model-card `VJC`/`PC` base-collector junction-potential and `MJC`/`MC`
+  grading-coefficient support with bias-shaped `CJC` depletion capacitance in
+  AC and transient analysis, matching Python and TypeScript. The supported-
+  parameter catalog now contains 90 canonical rows.
 - Add BJT model-card `VJE`/`PE` base-emitter junction-potential and `MJE`/`ME`
   grading-coefficient support with bias-shaped `CJE` depletion capacitance in
   AC and transient analysis, matching Python and TypeScript. The supported-

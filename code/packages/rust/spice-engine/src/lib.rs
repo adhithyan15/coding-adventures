@@ -439,6 +439,8 @@ fn clone_subckt_element(
                 element.reverse_emission_coefficient,
                 element.base_emitter_junction_potential,
                 element.base_emitter_grading_coefficient,
+                element.base_collector_junction_potential,
+                element.base_collector_grading_coefficient,
             ))
         }
         Element::Mosfet(element) => Element::Mosfet(Mosfet::with_model(
@@ -2849,6 +2851,8 @@ pub struct Bjt {
     pub reverse_emission_coefficient: f64,
     pub base_emitter_junction_potential: f64,
     pub base_emitter_grading_coefficient: f64,
+    pub base_collector_junction_potential: f64,
+    pub base_collector_grading_coefficient: f64,
 }
 
 impl Bjt {
@@ -2949,6 +2953,8 @@ impl Bjt {
             reverse_emission_coefficient,
             0.75,
             0.33,
+            0.75,
+            0.33,
         )
     }
 
@@ -2973,6 +2979,8 @@ impl Bjt {
         reverse_emission_coefficient: f64,
         base_emitter_junction_potential: f64,
         base_emitter_grading_coefficient: f64,
+        base_collector_junction_potential: f64,
+        base_collector_grading_coefficient: f64,
     ) -> Self {
         Self {
             name: name.into(),
@@ -2994,6 +3002,8 @@ impl Bjt {
             reverse_emission_coefficient,
             base_emitter_junction_potential,
             base_emitter_grading_coefficient,
+            base_collector_junction_potential,
+            base_collector_grading_coefficient,
         }
     }
 }
@@ -3384,8 +3394,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     usize,
 )] = &[
     (ModelCardKind::Diode, 12, 18, 5, 3),
-    (ModelCardKind::Npn, 14, 25, 7, 4),
-    (ModelCardKind::Pnp, 14, 25, 7, 4),
+    (ModelCardKind::Npn, 16, 29, 9, 4),
+    (ModelCardKind::Pnp, 16, 29, 9, 4),
     (ModelCardKind::Njf, 5, 11, 5, 3),
     (ModelCardKind::Pjf, 5, 11, 5, 3),
     (ModelCardKind::Nmos, 18, 25, 6, 3),
@@ -3437,6 +3447,10 @@ const BJT_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("PE", "VJE"),
     ("MJE", "MJE"),
     ("ME", "MJE"),
+    ("VJC", "VJC"),
+    ("PC", "VJC"),
+    ("MJC", "MJC"),
+    ("MC", "MJC"),
 ];
 const JFET_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("BETA", "BETA"),
@@ -4096,6 +4110,8 @@ pub fn bjt_from_model_card(
         model_card_value(model, "NR", 1.0),
         model_card_value(model, "VJE", 0.75),
         model_card_value(model, "MJE", 0.33),
+        model_card_value(model, "VJC", 0.75),
+        model_card_value(model, "MJC", 0.33),
     ))
 }
 
@@ -22429,7 +22445,9 @@ fn stamp_ac_bjt_small_signal(
     );
     let ybc = Complex::new(
         0.0,
-        omega * (bjt.base_collector_capacitance + reverse_diffusion_capacitance),
+        omega
+            * (bjt_base_collector_depletion_capacitance(bjt, reverse_junction_voltage)
+                + reverse_diffusion_capacitance),
     );
     stamp_complex_conductance(
         matrix,
@@ -23039,7 +23057,8 @@ fn bjt_charge_dynamic_capacitance(bjt: &Bjt, kind: BjtChargeStateKind, voltage: 
         BjtChargeStateKind::BaseCollector => {
             let conductance =
                 bjt_junction_transconductance(bjt, voltage, bjt.reverse_emission_coefficient);
-            bjt.base_collector_capacitance + bjt.reverse_transit_time * conductance
+            bjt_base_collector_depletion_capacitance(bjt, voltage)
+                + bjt.reverse_transit_time * conductance
         }
     }
 }
@@ -23058,6 +23077,23 @@ fn bjt_base_emitter_depletion_capacitance(bjt: &Bjt, voltage: f64) -> f64 {
     let continuation = 1.0 - coefficient * (1.0 + bjt.base_emitter_grading_coefficient)
         + bjt.base_emitter_grading_coefficient * normalized_voltage;
     bjt.base_emitter_capacitance * continuation / transition_scale
+}
+
+fn bjt_base_collector_depletion_capacitance(bjt: &Bjt, voltage: f64) -> f64 {
+    if bjt.base_collector_capacitance <= 0.0 || bjt.base_collector_grading_coefficient == 0.0 {
+        return bjt.base_collector_capacitance;
+    }
+    let normalized_voltage = voltage / bjt.base_collector_junction_potential;
+    let coefficient = 0.5;
+    if normalized_voltage < coefficient {
+        return bjt.base_collector_capacitance
+            / (1.0 - normalized_voltage).powf(bjt.base_collector_grading_coefficient);
+    }
+    let transition_scale =
+        (1.0_f64 - coefficient).powf(1.0 + bjt.base_collector_grading_coefficient);
+    let continuation = 1.0 - coefficient * (1.0 + bjt.base_collector_grading_coefficient)
+        + bjt.base_collector_grading_coefficient * normalized_voltage;
+    bjt.base_collector_capacitance * continuation / transition_scale
 }
 
 fn bjt_charge_state_specs(bjt: &Bjt) -> Vec<BjtChargeStateSpec<'_>> {
@@ -23428,6 +23464,22 @@ fn validate_bjt(bjt: &Bjt) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: bjt.name.clone(),
             reason: "base-emitter grading coefficient must be finite and in [0, 1)".to_string(),
+        });
+    }
+    if !bjt.base_collector_junction_potential.is_finite()
+        || bjt.base_collector_junction_potential <= 0.0
+    {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "base-collector junction potential must be finite and positive".to_string(),
+        });
+    }
+    if !bjt.base_collector_grading_coefficient.is_finite()
+        || !(0.0..1.0).contains(&bjt.base_collector_grading_coefficient)
+    {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "base-collector grading coefficient must be finite and in [0, 1)".to_string(),
         });
     }
     Ok(())

@@ -4,6 +4,11 @@
 
 ### Added
 
+- **BJT base-collector depletion shaping** — BJT model cards now accept
+  `VJC`/`PC` junction potential and `MJC`/`MC` grading coefficient parameters
+  and apply them to `CJC` in AC and transient analysis, matching Rust and
+  TypeScript. The supported-parameter catalog now contains 90 canonical rows.
+
 - **BJT base-emitter depletion shaping** — BJT model cards now accept
   `VJE`/`PE` junction potential and `MJE`/`ME` grading coefficient parameters
   and apply them to `CJE` in AC and transient analysis, matching Rust and

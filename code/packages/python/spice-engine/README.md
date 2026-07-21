@@ -216,7 +216,9 @@ model-specific saturation-current temperature scaling, `VAF`/`VA` (default
 `1`) for forward-junction emission shaping. `NR` (default `1`) shapes reverse
 base-collector diffusion capacitance in AC and transient analysis. `VJE`/`PE`
 (default `0.75 V`) and `MJE`/`ME` (default `0.33`) shape `CJE` base-emitter
-depletion capacitance using the Berkeley default `FC=0.5` continuation.
+depletion capacitance. `VJC`/`PC` (default `0.75 V`) and `MJC`/`MC` (default
+`0.33`) likewise shape `CJC` base-collector depletion capacitance. Both use the
+Berkeley default `FC=0.5` continuation.
 `model_card_unsupported_parameter_issues()`,
 `format_model_card_unsupported_parameter_issue_table()`,
 `model_card_unsupported_parameter_issue_records()`,

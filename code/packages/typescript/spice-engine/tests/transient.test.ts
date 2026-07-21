@@ -475,6 +475,24 @@ describe("transient", () => {
     expect(steppedBaseVoltage(0.5)).toBeGreaterThan(steppedBaseVoltage(0.0));
   });
 
+  it("shapes BJT base-collector depletion capacitance during reverse-biased transients", () => {
+    function steppedCollectorVoltage(baseCollectorGradingCoefficient: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithWaveform(
+        "Vdrive",
+        "in",
+        "0",
+        1.0,
+        new PwlWaveform([[0.0, 1.0], [1.0e-9, 1.0], [2.0e-9, 0.0], [5.0e-9, 0.0]]),
+      ));
+      circuit.add(resistor("Rin", "in", "collector", 1_000.0));
+      circuit.add(bjt("Q1", "collector", "0", "0", "NPN", 1.0e-14, 100.0, 0.02585, 0.0, 1.0e-12, 0.0, 0.0, 3.0, 1.11, 0.0, 1.0, 1.0, 0.75, 0.33, 0.75, baseCollectorGradingCoefficient));
+      return transient(circuit, 1.0e-9, 5.0e-9)[1].voltage("collector")!;
+    }
+
+    expect(steppedCollectorVoltage(0.5)).toBeLessThan(steppedCollectorVoltage(0.0));
+  });
+
   it("uses BJT forward transit time to hold base charge on turnoff", () => {
     function run(forwardTransitTime: number): TransientPoint[] {
       const circuit = new Circuit();
