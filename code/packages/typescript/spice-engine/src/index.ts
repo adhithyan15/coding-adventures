@@ -1719,6 +1719,7 @@ export interface Bjt {
   readonly baseEmitterGradingCoefficient: number;
   readonly baseCollectorJunctionPotential: number;
   readonly baseCollectorGradingCoefficient: number;
+  readonly forwardBiasDepletionCoefficient: number;
 }
 
 export type MosfetType = "NMOS" | "PMOS";
@@ -1996,8 +1997,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   Record<ModelCardKind, readonly [number, number, number, number]>
 > = {
   D: [12, 18, 5, 3],
-  NPN: [16, 29, 9, 4],
-  PNP: [16, 29, 9, 4],
+  NPN: [17, 30, 9, 4],
+  PNP: [17, 30, 9, 4],
   NJF: [5, 11, 5, 3],
   PJF: [5, 11, 5, 3],
   NMOS: [18, 25, 6, 3],
@@ -3587,7 +3588,7 @@ function cloneSubcktElement(
     case "jfet":
       return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation, element.gateSourceCapacitance, element.gateDrainCapacitance);
     case "bjt":
-      return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.forwardEarlyVoltage, element.forwardEmissionCoefficient, element.reverseEmissionCoefficient, element.baseEmitterJunctionPotential, element.baseEmitterGradingCoefficient, element.baseCollectorJunctionPotential, element.baseCollectorGradingCoefficient);
+      return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.forwardEarlyVoltage, element.forwardEmissionCoefficient, element.reverseEmissionCoefficient, element.baseEmitterJunctionPotential, element.baseEmitterGradingCoefficient, element.baseCollectorJunctionPotential, element.baseCollectorGradingCoefficient, element.forwardBiasDepletionCoefficient);
     case "mosfet":
       return mosfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), mapSubcktNode(element.body, instanceName, nodeMap), element.type, element.params);
     case "vccs":
@@ -7749,6 +7750,7 @@ export function bjt(
   baseEmitterGradingCoefficient = 0.33,
   baseCollectorJunctionPotential = 0.75,
   baseCollectorGradingCoefficient = 0.33,
+  forwardBiasDepletionCoefficient = 0.5,
 ): Bjt {
   return {
     kind: "bjt",
@@ -7773,6 +7775,7 @@ export function bjt(
     baseEmitterGradingCoefficient,
     baseCollectorJunctionPotential,
     baseCollectorGradingCoefficient,
+    forwardBiasDepletionCoefficient,
   };
 }
 
@@ -7888,6 +7891,7 @@ const BJT_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   PC: "VJC",
   MJC: "MJC",
   MC: "MJC",
+  FC: "FC",
 };
 
 const JFET_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
@@ -8393,6 +8397,7 @@ export function bjtFromModelCard(
     p.MJE ?? 0.33,
     p.VJC ?? 0.75,
     p.MJC ?? 0.33,
+    p.FC ?? 0.5,
   );
 }
 
@@ -19402,7 +19407,7 @@ function bjtBaseEmitterDepletionCapacitance(element: Bjt, voltage: number): numb
     return element.baseEmitterCapacitance;
   }
   const normalizedVoltage = voltage / element.baseEmitterJunctionPotential;
-  const coefficient = 0.5;
+  const coefficient = element.forwardBiasDepletionCoefficient;
   if (normalizedVoltage < coefficient) {
     return element.baseEmitterCapacitance /
       ((1.0 - normalizedVoltage) ** element.baseEmitterGradingCoefficient);
@@ -19419,7 +19424,7 @@ function bjtBaseCollectorDepletionCapacitance(element: Bjt, voltage: number): nu
     return element.baseCollectorCapacitance;
   }
   const normalizedVoltage = voltage / element.baseCollectorJunctionPotential;
-  const coefficient = 0.5;
+  const coefficient = element.forwardBiasDepletionCoefficient;
   if (normalizedVoltage < coefficient) {
     return element.baseCollectorCapacitance /
       ((1.0 - normalizedVoltage) ** element.baseCollectorGradingCoefficient);
@@ -19672,6 +19677,11 @@ function validateBjt(element: Bjt): void {
       element.baseCollectorGradingCoefficient < 0.0 ||
       element.baseCollectorGradingCoefficient >= 1.0) {
     throw invalidElement(element.name, "base-collector grading coefficient must be finite and in [0, 1)");
+  }
+  if (!Number.isFinite(element.forwardBiasDepletionCoefficient) ||
+      element.forwardBiasDepletionCoefficient < 0.0 ||
+      element.forwardBiasDepletionCoefficient >= 1.0) {
+    throw invalidElement(element.name, "forward-bias depletion coefficient must be finite and in [0, 1)");
   }
 }
 

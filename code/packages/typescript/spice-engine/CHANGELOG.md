@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add BJT model-card `FC` forward-bias depletion-coefficient support for the
+  shared `CJE` and `CJC` Berkeley continuation law in AC and transient analysis,
+  matching Python and Rust. The supported-parameter catalog now contains 92
+  canonical rows.
 - Add BJT model-card `VJC`/`PC` base-collector junction-potential and `MJC`/`MC`
   grading-coefficient support with bias-shaped `CJC` depletion capacitance in
   AC and transient analysis, matching Python and Rust. The supported-parameter

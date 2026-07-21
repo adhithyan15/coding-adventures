@@ -629,6 +629,22 @@ describe("acSweep", () => {
     expect(collectorAmplitude(0.5)).toBeGreaterThan(collectorAmplitude(0.0));
   });
 
+  it("uses BJT FC to shape both forward-biased depletion junctions", () => {
+    function junctionAmplitude(coefficient: number, baseEmitter: boolean): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "in", "0", 0.6, 1.0));
+      circuit.add(resistor("Rin", "in", "base", 1_000.0));
+      circuit.add(bjt("Q1", "0", "base", "0", "NPN", 1.0e-30, 100.0, 0.02585, baseEmitter ? 1.0e-6 : 0.0, baseEmitter ? 0.0 : 1.0e-6, 0.0, 0.0, 3.0, 1.11, 0.0, 1.0, 1.0, 0.75, 0.33, 0.75, 0.33, coefficient));
+      return complexAbs(acSweep(circuit, 1_000.0, 1_000.0, 1)[0].voltage("base")!);
+    }
+
+    for (const baseEmitter of [true, false]) {
+      expect(junctionAmplitude(0.8, baseEmitter)).toBeLessThan(
+        junctionAmplitude(0.2, baseEmitter) * 0.9,
+      );
+    }
+  });
+
   it("applies VCVS gain in AC analysis", () => {
     const circuit = new Circuit();
     circuit.add(voltageSource("Vin", "in", "0", 1.0));

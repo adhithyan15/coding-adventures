@@ -100,7 +100,7 @@ fn model_card_type_aliases_are_normalized() {
 #[test]
 fn model_card_supported_parameter_coverage_exports_are_stable() {
     let coverage = model_card_supported_parameter_coverage();
-    assert_eq!(coverage.len(), 90);
+    assert_eq!(coverage.len(), 92);
     assert_eq!(coverage[0].kind, ModelCardKind::Diode);
     assert_eq!(coverage[0].canonical_parameter, "IS");
     assert_eq!(coverage[0].accepted_names, vec!["IS", "JS"]);
@@ -119,7 +119,7 @@ fn model_card_supported_parameter_coverage_exports_are_stable() {
     assert!(table.contains("NMOS\tVT0\tVT0|VTO|VTH\t3"));
     assert_eq!(lines.last().unwrap(), &"PMOS\tMJ\tMJ\t1");
     let records = model_card_supported_parameter_coverage_records();
-    assert_eq!(records.len(), 90);
+    assert_eq!(records.len(), 92);
     assert_eq!(records[0]["kind"], "D");
     assert_eq!(records[0]["canonical_parameter"], "IS");
     assert_eq!(records[0]["accepted_names"], "IS|JS");
@@ -200,15 +200,15 @@ fn model_card_supported_parameter_coverage_gate_passes_current_catalog() {
     assert!(report.passed);
     assert_eq!(report.kind_count, 7);
     assert_eq!(report.expected_kind_count, 7);
-    assert_eq!(report.canonical_parameter_count, 90);
-    assert_eq!(report.expected_canonical_parameter_count, 90);
-    assert_eq!(report.accepted_name_count, 148);
+    assert_eq!(report.canonical_parameter_count, 92);
+    assert_eq!(report.expected_canonical_parameter_count, 92);
+    assert_eq!(report.accepted_name_count, 150);
     assert_eq!(report.aliased_parameter_count, 45);
     assert_eq!(report.max_alias_count, 4);
     assert!(report.issues.is_empty());
     assert_eq!(
         format_model_card_supported_parameter_coverage_gate_report(&report),
-        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t90\t90\t148\t45\t4\t0"
+        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t92\t92\t150\t45\t4\t0"
     );
     assert_eq!(
         format_model_card_supported_parameter_coverage_gate_issue_table(&report),
@@ -235,8 +235,8 @@ fn model_card_supported_parameter_coverage_gate_reports_missing_alias_family() {
 
     assert!(!report.passed);
     assert_eq!(report.kind_count, 7);
-    assert_eq!(report.canonical_parameter_count, 89);
-    assert_eq!(report.accepted_name_count, 145);
+    assert_eq!(report.canonical_parameter_count, 91);
+    assert_eq!(report.accepted_name_count, 147);
     assert_eq!(report.aliased_parameter_count, 44);
     assert_eq!(report.max_alias_count, 4);
     assert_eq!(report.issues.len(), 4);
@@ -253,7 +253,7 @@ fn model_card_supported_parameter_coverage_gate_reports_missing_alias_family() {
     );
     assert_eq!(
         format_model_card_supported_parameter_coverage_gate_report(&report),
-        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t89\t90\t145\t44\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical supported parameters, found 17\nNMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card names, found 22\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2"
+        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t91\t92\t147\t44\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical supported parameters, found 17\nNMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card names, found 22\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2"
     );
     let records = model_card_supported_parameter_coverage_gate_issue_records(&report);
     assert_eq!(records[0]["kind"], "NMOS");
@@ -437,6 +437,7 @@ fn model_card_aliases_build_device_instances() {
             ("ME", 0.4),
             ("PC", 0.7),
             ("MC", 0.45),
+            ("FC", 0.4),
         ],
     )
     .unwrap();
@@ -452,6 +453,7 @@ fn model_card_aliases_build_device_instances() {
     assert_close(*bjt_card.parameters.get("MJE").unwrap(), 0.4);
     assert_close(*bjt_card.parameters.get("VJC").unwrap(), 0.7);
     assert_close(*bjt_card.parameters.get("MJC").unwrap(), 0.45);
+    assert_close(*bjt_card.parameters.get("FC").unwrap(), 0.4);
     assert_eq!(bjt_model.polarity, BjtPolarity::Npn);
     assert_close(bjt_model.forward_beta, 125.0);
     assert_close(bjt_model.base_emitter_capacitance, 2.0e-12);
@@ -464,6 +466,7 @@ fn model_card_aliases_build_device_instances() {
     assert_close(bjt_model.base_emitter_grading_coefficient, 0.4);
     assert_close(bjt_model.base_collector_junction_potential, 0.7);
     assert_close(bjt_model.base_collector_grading_coefficient, 0.45);
+    assert_close(bjt_model.forward_bias_depletion_coefficient, 0.4);
 
     let jfet_card = normalize_model_card(
         "Jn",
@@ -1382,6 +1385,7 @@ fn subcircuit_expansion_preserves_complete_bjt_model() {
         0.4,
         0.7,
         0.45,
+        0.4,
     );
     let mut circuit = Circuit::new();
     circuit
@@ -1416,6 +1420,7 @@ fn subcircuit_expansion_preserves_complete_bjt_model() {
     assert_close(expanded.base_emitter_grading_coefficient, 0.4);
     assert_close(expanded.base_collector_junction_potential, 0.7);
     assert_close(expanded.base_collector_grading_coefficient, 0.45);
+    assert_close(expanded.forward_bias_depletion_coefficient, 0.4);
 }
 
 #[test]
@@ -2180,6 +2185,7 @@ fn dc_rejects_invalid_bjt_base_emitter_depletion_parameters() {
                 grading_coefficient,
                 0.75,
                 0.33,
+                0.5,
             ),
         ));
         assert!(dc_op(&circuit).unwrap_err().to_string().contains(message));
@@ -2224,9 +2230,24 @@ fn dc_rejects_invalid_bjt_base_collector_depletion_parameters() {
                 0.33,
                 junction_potential,
                 grading_coefficient,
+                0.5,
             ),
         ));
         assert!(dc_op(&circuit).unwrap_err().to_string().contains(message));
+    }
+}
+
+#[test]
+fn dc_rejects_invalid_bjt_forward_bias_depletion_coefficient() {
+    for coefficient in [-0.1, 1.0, f64::NAN] {
+        let mut bjt = Bjt::new("Qbad", "c", "b", "0");
+        bjt.forward_bias_depletion_coefficient = coefficient;
+        let mut circuit = Circuit::new();
+        circuit.add(Element::Bjt(bjt));
+        assert!(dc_op(&circuit)
+            .unwrap_err()
+            .to_string()
+            .contains("forward-bias depletion coefficient must be finite and in [0, 1)"));
     }
 }
 

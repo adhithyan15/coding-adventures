@@ -623,6 +623,7 @@ class BJT:
     Mje: float = 0.33       # base-emitter grading coefficient
     Vjc: float = 0.75       # base-collector junction potential (V)
     Mjc: float = 0.33       # base-collector grading coefficient
+    Fc: float = 0.5         # forward-bias depletion coefficient
 
 
 # ---------------------------------------------------------------------------

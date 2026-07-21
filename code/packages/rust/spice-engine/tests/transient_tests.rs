@@ -565,6 +565,7 @@ fn transient_bjt_base_emitter_depletion_capacitance_falls_with_reverse_bias() {
                 grading_coefficient,
                 0.75,
                 0.33,
+                0.5,
             ),
         ));
         transient(&circuit, 1.0e-9, 5.0e-9).unwrap()[1]
@@ -620,6 +621,7 @@ fn transient_bjt_base_collector_depletion_capacitance_falls_with_reverse_bias() 
                 0.33,
                 0.75,
                 grading_coefficient,
+                0.5,
             ),
         ));
         transient(&circuit, 1.0e-9, 5.0e-9).unwrap()[1]
@@ -628,6 +630,61 @@ fn transient_bjt_base_collector_depletion_capacitance_falls_with_reverse_bias() 
     }
 
     assert!(stepped_collector_voltage(0.5) < stepped_collector_voltage(0.0));
+}
+
+#[test]
+fn transient_bjt_forward_bias_depletion_coefficient_shapes_both_junctions() {
+    fn held_voltage(coefficient: f64, base_emitter: bool) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+            "Vdrive",
+            "in",
+            "0",
+            0.6,
+            Waveform::Pwl(PwlWaveform::new(vec![
+                (0.0, 0.6),
+                (1.0e-9, 0.6),
+                (2.0e-9, 0.0),
+                (5.0e-9, 0.0),
+            ])),
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "base", 1_000.0,
+        )));
+        circuit.add(Element::Bjt(
+            Bjt::with_model_temperature_and_depletion_parameters(
+                "Q1",
+                "0",
+                "base",
+                "0",
+                BjtPolarity::Npn,
+                1.0e-30,
+                100.0,
+                0.02585,
+                if base_emitter { 1.0e-12 } else { 0.0 },
+                if base_emitter { 0.0 } else { 1.0e-12 },
+                0.0,
+                0.0,
+                3.0,
+                1.11,
+                0.0,
+                1.0,
+                1.0,
+                0.75,
+                0.33,
+                0.75,
+                0.33,
+                coefficient,
+            ),
+        ));
+        transient(&circuit, 1.0e-9, 5.0e-9).unwrap()[1]
+            .voltage("base")
+            .unwrap()
+    }
+
+    for base_emitter in [true, false] {
+        assert!(held_voltage(0.8, base_emitter) > held_voltage(0.2, base_emitter));
+    }
 }
 
 #[test]

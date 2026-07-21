@@ -412,7 +412,7 @@ def test_model_card_type_aliases_are_normalized() -> None:
 
 def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     coverage = model_card_supported_parameter_coverage()
-    assert len(coverage) == 90
+    assert len(coverage) == 92
     assert coverage[0].kind == "D"
     assert coverage[0].canonical_parameter == "IS"
     assert coverage[0].accepted_names == ("IS", "JS")
@@ -427,7 +427,7 @@ def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     assert "NMOS\tVT0\tVT0|VTO|VTH\t3" in table
     assert table.splitlines()[-1] == "PMOS\tMJ\tMJ\t1"
     records = model_card_supported_parameter_coverage_records()
-    assert len(records) == 90
+    assert len(records) == 92
     assert records[0] == {
         "kind": "D",
         "canonical_parameter": "IS",
@@ -501,9 +501,9 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
     assert report.passed is True
     assert report.kind_count == 7
     assert report.expected_kind_count == 7
-    assert report.canonical_parameter_count == 90
-    assert report.expected_canonical_parameter_count == 90
-    assert report.accepted_name_count == 148
+    assert report.canonical_parameter_count == 92
+    assert report.expected_canonical_parameter_count == 92
+    assert report.accepted_name_count == 150
     assert report.aliased_parameter_count == 45
     assert report.max_alias_count == 4
     assert report.issues == ()
@@ -511,7 +511,7 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "true\t7\t7\t90\t90\t148\t45\t4\t0"
+        "true\t7\t7\t92\t92\t150\t45\t4\t0"
     )
     assert (
         format_model_card_supported_parameter_coverage_gate_issue_table(report)
@@ -539,8 +539,8 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
 
     assert report.passed is False
     assert report.kind_count == 7
-    assert report.canonical_parameter_count == 89
-    assert report.accepted_name_count == 145
+    assert report.canonical_parameter_count == 91
+    assert report.accepted_name_count == 147
     assert report.aliased_parameter_count == 44
     assert report.max_alias_count == 4
     assert len(report.issues) == 4
@@ -555,7 +555,7 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "false\t7\t7\t89\t90\t145\t44\t4\t4\n"
+        "false\t7\t7\t91\t92\t147\t44\t4\t4\n"
         "kind\tfield\tmessage\n"
         "NMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical "
         "supported parameters, found 17\n"
@@ -647,10 +647,10 @@ def test_model_card_aliases_build_device_instances() -> None:
     assert pytest.approx(1.05) == diode_model.Eg
 
     bjt_card = normalize_model_card(
-        "Qsmall", "npn", {"BETA": 125.0, "CBE": 2.0e-12, "XTI": 2.4, "EG": 1.05, "VA": 80.0, "NF": 1.2, "NR": 1.3, "PE": 0.8, "ME": 0.4, "PC": 0.7, "MC": 0.45}
+        "Qsmall", "npn", {"BETA": 125.0, "CBE": 2.0e-12, "XTI": 2.4, "EG": 1.05, "VA": 80.0, "NF": 1.2, "NR": 1.3, "PE": 0.8, "ME": 0.4, "PC": 0.7, "MC": 0.45, "FC": 0.4}
     )
     bjt_model = bjt_from_model_card("Q1", "c", "b", "e", bjt_card)
-    assert bjt_card.parameters == {"BF": 125.0, "CJE": 2.0e-12, "XTI": 2.4, "EG": 1.05, "VAF": 80.0, "NF": 1.2, "NR": 1.3, "VJE": 0.8, "MJE": 0.4, "VJC": 0.7, "MJC": 0.45}
+    assert bjt_card.parameters == {"BF": 125.0, "CJE": 2.0e-12, "XTI": 2.4, "EG": 1.05, "VAF": 80.0, "NF": 1.2, "NR": 1.3, "VJE": 0.8, "MJE": 0.4, "VJC": 0.7, "MJC": 0.45, "FC": 0.4}
     assert bjt_model.polarity == "NPN"
     assert bjt_model.beta_f == pytest.approx(125.0)
     assert bjt_model.Cje == pytest.approx(2.0e-12)
@@ -663,6 +663,7 @@ def test_model_card_aliases_build_device_instances() -> None:
     assert bjt_model.Mje == pytest.approx(0.4)
     assert bjt_model.Vjc == pytest.approx(0.7)
     assert bjt_model.Mjc == pytest.approx(0.45)
+    assert bjt_model.Fc == pytest.approx(0.4)
 
     jfet_card = normalize_model_card("Jn", "njfet", {"BET": 9.0e-4, "VT0": -1.8, "LAM": 0.02})
     jfet_model = jfet_from_model_card("J1", "d", "g", "s", jfet_card)
@@ -1554,6 +1555,33 @@ def test_transient_bjt_base_collector_depletion_capacitance_falls_with_reverse_b
     assert stepped_collector_voltage(0.5) < stepped_collector_voltage(0.0)
 
 
+def test_transient_bjt_forward_bias_depletion_coefficient_shapes_both_junctions() -> None:
+    def held_voltage(coefficient: float, base_emitter: bool) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource(
+            "Vdrive",
+            "in",
+            "0",
+            0.6,
+            waveform=PwlWaveform(((0.0, 0.6), (1.0e-9, 0.6), (2.0e-9, 0.0), (5.0e-9, 0.0))),
+        ))
+        circuit.add(Resistor("Rin", "in", "base", 1000.0))
+        circuit.add(BJT(
+            "Q1",
+            collector="0",
+            base="base",
+            emitter="0",
+            Is=1.0e-30,
+            Cje=1.0e-12 if base_emitter else 0.0,
+            Cjc=0.0 if base_emitter else 1.0e-12,
+            Fc=coefficient,
+        ))
+        return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler").points[2].node_voltages["base"]
+
+    for base_emitter in (True, False):
+        assert held_voltage(0.8, base_emitter) > held_voltage(0.2, base_emitter)
+
+
 def test_transient_bjt_forward_transit_time_holds_base_charge_on_turnoff() -> None:
     def run(forward_transit_time: float) -> TransientResult:
         circuit = Circuit()
@@ -2266,7 +2294,7 @@ def test_subcircuit_expansion_preserves_complete_bjt_model():
     cell = SubcircuitDefinition(
         "bjt-cell",
         ("c", "b", "e"),
-        (BJT("Qcell", "c", "b", "e", Xti=2.4, Eg=1.05, Vaf=80.0, Nf=1.2, Nr=1.3, Vje=0.8, Mje=0.4, Vjc=0.7, Mjc=0.45),),
+        (BJT("Qcell", "c", "b", "e", Xti=2.4, Eg=1.05, Vaf=80.0, Nf=1.2, Nr=1.3, Vje=0.8, Mje=0.4, Vjc=0.7, Mjc=0.45, Fc=0.4),),
     )
     circuit = Circuit()
     circuit.define_subcircuit(cell)
@@ -2282,6 +2310,7 @@ def test_subcircuit_expansion_preserves_complete_bjt_model():
     assert expanded.Mje == pytest.approx(0.4)
     assert expanded.Vjc == pytest.approx(0.7)
     assert expanded.Mjc == pytest.approx(0.45)
+    assert expanded.Fc == pytest.approx(0.4)
 
 
 def test_branch_current_in_voltage_source():
@@ -2572,6 +2601,7 @@ def test_dc_rejects_invalid_bjt_reverse_emission_coefficient():
         ({"Mje": 1.0}, "BJT base-emitter grading coefficient must be finite and in \\[0, 1\\)"),
         ({"Vjc": 0.0}, "BJT base-collector junction potential must be finite and positive"),
         ({"Mjc": 1.0}, "BJT base-collector grading coefficient must be finite and in \\[0, 1\\)"),
+        ({"Fc": 1.0}, "BJT forward-bias depletion coefficient must be finite and in \\[0, 1\\)"),
     ],
 )
 def test_dc_rejects_invalid_bjt_depletion_parameters(kwargs, message):
@@ -4231,6 +4261,30 @@ def test_ac_bjt_base_collector_depletion_capacitance_falls_with_reverse_bias():
         return abs(result.points[0].node_voltages["collector"])
 
     assert collector_amplitude(0.5) > collector_amplitude(0.0)
+
+
+def test_ac_bjt_forward_bias_depletion_coefficient_shapes_both_junctions():
+    def junction_amplitude(coefficient: float, base_emitter: bool) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vac", "in", "0", 0.6, ac=AcSource(1.0)))
+        circuit.add(Resistor("Rin", "in", "base", 1000.0))
+        circuit.add(BJT(
+            "Q1",
+            collector="0",
+            base="base",
+            emitter="0",
+            Is=1.0e-30,
+            Cje=1.0e-6 if base_emitter else 0.0,
+            Cjc=0.0 if base_emitter else 1.0e-6,
+            Fc=coefficient,
+        ))
+        result = ac_sweep(circuit, f_start=1000.0, f_stop=1000.0, n_points=1)
+        return abs(result.points[0].node_voltages["base"])
+
+    for base_emitter in (True, False):
+        early_transition = junction_amplitude(0.2, base_emitter)
+        late_transition = junction_amplitude(0.8, base_emitter)
+        assert late_transition < early_transition * 0.9
 
 
 def test_ac_mosfet_overlap_capacitance_shunts_high_frequency_gate_drive():

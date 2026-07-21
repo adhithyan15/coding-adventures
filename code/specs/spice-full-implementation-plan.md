@@ -33,15 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language BJT base-collector depletion-capacitance shaping.
+1. Cross-language BJT forward-bias depletion coefficient.
    - Status: current PR completion candidate.
-   - Add Berkeley BJT `VJC` / `PC` base-collector junction-potential and `MJC` /
-     `MC` grading-coefficient model-card support in Rust, Python, and TypeScript.
-   - Shape `CJC` base-collector depletion capacitance in AC and transient
-     analysis with the continuous Berkeley piecewise law and default `FC=0.5`,
-     while preserving the full BJT model through hierarchical subcircuits.
-   - Extend the supported-parameter coverage gate from 86 to 90 canonical rows
-     and lock reverse-biased base-collector capacitance behavior in all engines.
+   - Add Berkeley BJT `FC` forward-bias depletion-coefficient model-card support
+     in Rust, Python, and TypeScript with the standard `0.5` default.
+   - Apply `FC` as the shared continuous piecewise-law transition point for both
+     `CJE` and `CJC` in AC and transient analysis, while preserving the complete
+     BJT model through hierarchical subcircuits.
+   - Extend the supported-parameter coverage gate from 90 to 92 canonical rows
+     and lock both forward-biased junction behaviors in all engines.
 
 ## Completed Slices
 
@@ -3037,6 +3037,14 @@ the Rust, Python, and TypeScript surfaces together.
      AC and transient analysis.
    - Hierarchical subcircuit expansion preserves the complete BJT model, and
      the supported-parameter release gate now covers 86 canonical rows.
+
+224. Cross-language BJT base-collector depletion-capacitance shaping.
+   - Status: completed in PR 8755.
+   - Rust, Python, and TypeScript BJT model cards now accept `VJC` / `PC` and
+     `MJC` / `MC` and apply continuous Berkeley depletion shaping to `CJC` in
+     AC and transient analysis.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 90 canonical rows.
 
 ## Backlog
 
