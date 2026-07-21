@@ -33,14 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language BJT energy gap.
+1. Cross-language BJT forward Early voltage.
    - Status: current PR completion candidate.
-   - Add Berkeley BJT `EG` semiconductor energy-gap model-card
-     support in Rust, Python, and TypeScript.
-   - Apply each model's `EG` to BJT saturation-current temperature scaling and preserve the
-     full BJT model through hierarchical subcircuit expansion.
-   - Extend the supported-parameter coverage gate from 74 to 76 canonical rows
-     and lock model-specific temperature scaling across all three engines.
+   - Add Berkeley BJT `VAF` / `VA` forward Early-voltage model-card support in
+     Rust, Python, and TypeScript.
+   - Apply collector-voltage modulation in DC, transient, AC,
+     transfer-function, and noise paths while preserving the full BJT model
+     through hierarchical subcircuit expansion.
+   - Extend the supported-parameter coverage gate from 76 to 78 canonical rows
+     and lock model-specific output-conductance behavior across all three engines.
 
 ## Completed Slices
 
@@ -2998,7 +2999,14 @@ the Rust, Python, and TypeScript surfaces together.
    - Rust, Python, and TypeScript BJT model cards now accept `XTI` and apply it
      to saturation-current temperature scaling.
    - Hierarchical subcircuit expansion preserves `XTI`, and the supported-
-     parameter release gate now covers 74 canonical rows.
+   parameter release gate now covers 74 canonical rows.
+
+219. Cross-language BJT energy gap.
+   - Status: completed in PR 8730.
+   - Rust, Python, and TypeScript BJT model cards now accept `EG` and apply each
+     model's energy gap to saturation-current temperature scaling.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 76 canonical rows.
 
 ## Backlog
 

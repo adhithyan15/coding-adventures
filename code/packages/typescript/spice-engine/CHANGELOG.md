@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add BJT model-card `VAF`/`VA` forward Early-voltage support with
+  collector-voltage modulation in DC, transient, AC, transfer-function, and
+  noise paths, matching Python and Rust. The supported-parameter catalog now
+  contains 78 canonical rows.
 - Add BJT model-card `EG` energy-gap support to model-specific temperature
   scaling, preserving it through subcircuit expansion and matching Python and
   Rust. The supported-parameter catalog now contains 76 canonical rows.
