@@ -274,6 +274,7 @@ members = [
     "scilab-parser",
     "scilab-runtime",
     "scilab-repl",
+    "scilab-to-semantic-ir",
     "logic-gates",
     "logic-core",
     "lookup-core",
