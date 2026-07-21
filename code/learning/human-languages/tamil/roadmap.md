@@ -36,12 +36,28 @@ that needs it.
   vāḻ (to live/flourish) → vēlai sey (to work; noun + *sey*, the twin of Hindi's
   *karnā*) → practice.
 
+- **Ch. 6 — Case endings, and the sentence with no subject**: **-உக்கு** (*-ukku*,
+  "to/for") — the first case ending, taught as the entry point to
+  **agglutination**: Tamil **adds** a suffix that carries **one** meaning, keeps
+  its shape and leaves the **seam visible** (*peyar* + *ukku*), where a Latin
+  ending like *-īs* **fuses** case *and* number *and* declension into one
+  indivisible lump. Includes the irregular *nāṉ* → **எனக்கு** *enakku* ("to me") →
+  **எனக்குத் தமிழ் தெரியும்** (*enakku tamiḻ teriyum*, "I know Tamil") — literally
+  "**to-me Tamil is-known**," with **no nominative "I"** — the person sits in the
+  dative instead (a **dative subject**), while the theme *tamiḻ* stays unmarked. The
+  **dative-subject** rule: knowing, liking, wanting and being cold *happen to*
+  you rather than being done *by* you, so the experiencer takes the dative
+  (English keeps one fossil of it in "**methinks**"). Closes on the four-sister
+  table — *-ukku / -ku / -ge / -ikku* are visibly the **same suffix**, the
+  Dravidian family showing its bones the way *blanc/bianco/branco* did for
+  Romance. **Authored.**
+
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 6 | Case-endings (Tamil's agglutinative suffixes: *-ai, -il, -ukku*); more verbs |
-| 7+ | Tense (past/future), numbers, family, food — always with the Dravidian-cognate thread |
+| 7 | The rest of the case suffixes — accusative *-ai*, locative *-il* — now that Ch. 6 has established how stacking works |
+| 8+ | Tense (past/future), numbers, family, food — always with the Dravidian-cognate thread |
 
 Note: Tamil marks "you" by **register** (*nī* familiar / *nīṅgaḷ* respectful,
 also plural) — like the Romance/Germanic tracks, and worth teaching beside
