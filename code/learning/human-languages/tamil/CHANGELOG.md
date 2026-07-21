@@ -72,6 +72,18 @@ scripts while six had data. It now renders seven.
   an enumerated list, since the list grows with each new example. Verified
   mechanically: every character the lessons ask the learner to *draw*
   (க ண ந ன ம ற வ ி ்) has a real entry in `tamil.json`.
+- **Letter shapes verified by rasterising the vendored font, not by eye.** A
+  throwaway zero-dependency TTF reader (cmap → loca → glyf) extracted each
+  glyph's true outline and scan-converted it to a text bitmap, which is what the
+  `components` and `strokeOrder` descriptions were written against. This caught
+  three descriptions that were confidently wrong:
+  - **ண vs ன** were described as differing by an arch count. They do not. The
+    two glyphs are **pixel-identical for their left 53%** — same top bar, same
+    loop, same middle arch — and differ *only* in the final stroke: **ன ends in
+    a straight vertical, ண in a curve inward to the baseline.**
+  - **ற** was described as "a single arch, like a Latin n". It has **two**
+    arches and three legs, with the right leg continuing below the baseline,
+    sweeping left and dropping into a long descender.
 - Verified in the browser: Tamil renders with 11 letters and "inventory in
   progress"; console clean.
 

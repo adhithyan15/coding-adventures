@@ -32,19 +32,26 @@ both.
 **ன** — *ṉa*, the **alveolar** n, tongue on the ridge behind the teeth:
 
 1. **a straight top bar**
-2. **a single arch beneath it**
-3. **a right leg down to the baseline**
+2. **a loop on the left**
+3. **an arch in the middle**
+4. **a straight vertical on the right, down to the baseline**
 
-That last one should look familiar: **ன is ண minus its second arch.** One arch
-for ன, two for ண — the cheapest way to keep them apart.
+Compare it with Lesson 2's **ண** and you'll see they are **the same letter up to
+the final stroke**. Top bar, loop, arch — identical. The *only* difference is how
+the letter ends: **ன finishes with a straight vertical; ண's last stroke curves
+inward.** That one stroke is the whole contrast.
 
 With Lesson 2's **ண** (retroflex), that completes the set. Same consonant to an
 English ear; three letters, three tongue positions, in Tamil.
 
 ## ற — "ṟa", the hard r
 
-1. **a single arch, like a Latin *n***
-2. **a right leg running below the baseline and hooking left**
+1. **two arches side by side** — giving it three legs down to the baseline
+2. **the right leg keeps going below the baseline**, sweeps **left**, and drops
+   into a long descender
+
+It is the tallest thing you have drawn: most Tamil letters sit on the baseline,
+and ற hangs well beneath it.
 
 The dot under **ṟ** marks it as the *hard* or trilled r, distinct from Tamil's
 other r. You'll meet the contrast properly later; for now, learn the shape.
@@ -98,7 +105,8 @@ up in the sound that appears nowhere in the spelling.
 
 [PAUSE 1s]
 - [YOU WRITE: ந — "top bar, left vertical, curling right stroke"]
-- [YOU WRITE: ன — "top bar, one arch, right leg to the baseline" — ண minus its second arch]
+- [YOU WRITE: ன — "top bar, left loop, middle arch, **straight** vertical"]
+- [YOU WRITE: ற — "two arches, then the leg that sweeps left and drops"]
 - [YOU WRITE: றி — "ற, then the hook above right"]
 - [YOU WRITE: **நன்றி** — three pieces]
 - [YOU SAY: the cluster — "ன் + ற = **ndr**"]

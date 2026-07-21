@@ -69,10 +69,10 @@
       "sound": "ṇa",
       "role": "consonant",
       "inherentVowel": "a",
-      "components": ["a straight top bar", "two arches beneath it", "a right leg down to the baseline"],
-      "strokeOrder": ["top bar", "first arch", "second arch", "right leg"],
+      "components": ["a straight top bar", "a loop on the left", "an arch in the middle", "a right stroke that CURVES inward as it drops to the baseline"],
+      "strokeOrder": ["top bar", "left loop", "middle arch", "curving right stroke"],
       "strokeOrderNote": "conventional",
-      "notes": "The RETROFLEX n — tongue curled back to the roof of the mouth. Learn it beside ன: ண is ன with one extra arch. Tamil writes three n-sounds with three letters (ந, ன, ண)."
+      "notes": "The RETROFLEX n — tongue curled back to the roof of the mouth. Learn it beside ன: the two letters are IDENTICAL except for the final stroke — ண's curves inward to the baseline, ன's is a straight vertical. Tamil writes three n-sounds with three letters (ந, ன, ண)."
     },
     {
       "glyph": "ந",
@@ -89,10 +89,10 @@
       "sound": "ṉa",
       "role": "consonant",
       "inherentVowel": "a",
-      "components": ["a straight top bar", "a single arch beneath it", "a right leg down to the baseline"],
-      "strokeOrder": ["top bar", "arch", "right leg"],
+      "components": ["a straight top bar", "a loop on the left", "an arch in the middle", "a STRAIGHT VERTICAL on the right down to the baseline"],
+      "strokeOrder": ["top bar", "left loop", "middle arch", "straight right vertical"],
       "strokeOrderNote": "conventional",
-      "notes": "The alveolar n — and visibly ண minus its second arch, which is the easiest way to hold the two apart."
+      "notes": "The alveolar n. Identical to ண but for the last stroke: ன ends in a STRAIGHT VERTICAL, ண in a curve. That final stroke is the only difference — everything to its left is the same shape."
     },
     {
       "glyph": "ல",
@@ -108,8 +108,8 @@
       "sound": "ṟa",
       "role": "consonant",
       "inherentVowel": "a",
-      "components": ["a single arch, like a Latin n", "a right leg running below the baseline and hooking left"],
-      "strokeOrder": ["arch", "right leg and hook"],
+      "components": ["two arches side by side, giving three legs down to the baseline", "the right leg continues BELOW the baseline, sweeps left, and drops into a long descender"],
+      "strokeOrder": ["first arch", "second arch", "right leg", "the sweep left below the baseline and the descender"],
       "strokeOrderNote": "conventional",
       "notes": "The hard/trilled r, distinct from ர. In நன்றி the pair ன் + ற is said as a single cluster."
     }

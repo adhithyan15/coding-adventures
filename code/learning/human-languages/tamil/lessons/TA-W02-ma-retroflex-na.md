@@ -34,8 +34,9 @@ reverse of the Devanagari habit of hanging a shape off a right-hand spine.
 ## ண — "ṇa"
 
 1. **a straight top bar**
-2. **two arches beneath it**
-3. **a right leg down to the baseline**
+2. **a loop on the left**
+3. **an arch in the middle**
+4. **a right stroke that curves inward as it drops to the baseline**
 
 The dot under the romanization — **ṇ**, not plain *n* — is doing real work.
 
@@ -71,21 +72,24 @@ Three letters, three positions, moving backwards through the mouth. English
 spells all three with one letter and hears them as the same sound.
 
 You'll draw ந and ன in Lesson 4, where the word for "thank you" needs them. Keep
-one thing in view until then: **ண is ன with one extra arch.** Learn the pair
-together and neither is hard.
+one thing in view until then: **ண and ன are the same shape except for the very
+last stroke.** Everything to the left — the top bar, the loop, the middle arch —
+is identical. Only the final stroke differs: **ண's curves inward to the
+baseline; ன's is a straight vertical.** Learn the pair together and neither is
+hard.
 
 ## Guided Practice
 
 [PAUSE 1s]
 - [YOU WRITE: ம — "left upright, bottom, **right** arch"]
-- [YOU WRITE: ண — "top bar, two arches, right leg"]
+- [YOU WRITE: ண — "top bar, left loop, middle arch, **curving** right stroke"]
 - [YOU SAY: plain *n*, then curl the tongue back — **ṇ**]
 - [YOU SAY: the three positions — "teeth … ridge … **curled back**"]
 
 ## Wrap-up Recall
 
 [PAUSE 3s] Draw **ம** — which side is the upright on? (**The left**; the
-arch closes it on the right.) Draw **ண** — how many arches? (**Two**.) What does the dot in **ṇ** mean? (**Retroflex** — the tongue curls
+arch closes it on the right.) Draw **ண** — what makes it *not* ன? (Only the **last stroke**: ண's **curves** in to the baseline, ன's is a **straight vertical**.) What does the dot in **ṇ** mean? (**Retroflex** — the tongue curls
 **back** to the roof of the mouth.) Why can't you hear it yet? (**English has no
 such sound**; the ear learns it after the hand.) How many n-letters does Tamil
 have, and what separates them? (**Three** — ந dental, ன alveolar, ண retroflex,
