@@ -33,18 +33,14 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic acknowledgement-record summary digest.
+1. Cross-language diode depletion-capacitance shaping.
    - Status: current PR completion candidate.
-   - Add a Rust-only Berkeley app-deck shell dashboard surface that wraps
-     runtime activation receipt journal summary handoff receipt acknowledgement
-     record receipt acknowledgement record summaries into compact digest/routing
-     payloads for Mosaic and WebAssembly product shells.
-   - Expose native and JSON helpers with stable schema version, digest ID,
-     route/hold disposition, digest action, badge label/tone, routing targets,
-     compact notification/count metadata, and capability metadata.
-   - Preserve the public Berkeley parser contract and Python/TypeScript parser
-     parity while extending the Rust app facade as an app-substrate acceleration
-     layer.
+   - Add Berkeley diode `VJ`/`PB` junction-potential and `M`/`MJ`
+     grading-coefficient model-card parameters in Rust, Python, and TypeScript.
+   - Shape `CJO` depletion capacitance from the operating-point bias in AC and
+     transient analysis while preserving transit-time diffusion capacitance.
+   - Extend the supported-parameter coverage gate from 67 to 69 canonical rows
+     and lock reverse-bias capacitance behavior across all three engines.
 
 ## Completed Slices
 
@@ -2959,6 +2955,14 @@ the Rust, Python, and TypeScript surfaces together.
      deferred counts, nested acknowledgement-record payload, and capability
      metadata while leaving the public Berkeley parser contract and
      Python/TypeScript parser parity unchanged.
+
+213. Rust Berkeley Mosaic acknowledgement-record summary digest.
+   - Status: completed in PR 7718.
+   - Rust `spice-netlist-parser` now exposes native and JSON acknowledgement-
+     record summary digest helpers for Mosaic and WebAssembly product shells.
+   - The digest preserves stable schema, routing disposition, action, badge,
+     target, compact count, nested summary, and capability metadata while
+     leaving parser and cross-language solver behavior unchanged.
 
 ## Backlog
 

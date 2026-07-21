@@ -306,7 +306,7 @@ _MODEL_CARD_SUPPORTED_PARAMETER_KINDS = (
     "PMOS",
 )
 _MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES = {
-    "D": (7, 11, 3, 3),
+    "D": (9, 15, 5, 3),
     "NPN": (7, 15, 4, 4),
     "PNP": (7, 15, 4, 4),
     "NJF": (5, 11, 5, 3),
@@ -345,6 +345,10 @@ _DIODE_PARAMETER_ALIASES: dict[str, str] = {
     "CJ": "CJO",
     "CJ0": "CJO",
     "TT": "TT",
+    "VJ": "VJ",
+    "PB": "VJ",
+    "M": "M",
+    "MJ": "M",
 }
 
 _BJT_PARAMETER_ALIASES: dict[str, str] = {
@@ -854,6 +858,8 @@ def diode_from_model_card(
         IBV=p.get("IBV", 1.0e-3),
         Cjo=p.get("CJO", 0.0),
         Tt=p.get("TT", 0.0),
+        Vj=p.get("VJ", 1.0),
+        M=p.get("M", 0.5),
     )
 
 

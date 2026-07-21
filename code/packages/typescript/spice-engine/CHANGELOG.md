@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Shape diode depletion capacitance from the operating-point bias with model-card
+  `VJ`/`PB` junction-potential and `M`/`MJ` grading-coefficient parameters in AC
+  and transient analysis, matching Python and Rust.
 - Add `modelCardSupportedParameterCoverageDashboard`,
   `formatModelCardSupportedParameterCoverageDashboardTable`,
   `modelCardSupportedParameterCoverageDashboardRecords`,
@@ -15,7 +18,7 @@
   `modelCardSupportedParameterCoverageGateIssueRecords`,
   `formatModelCardSupportedParameterCoverageGateIssueCsv`, and
   `formatModelCardSupportedParameterCoverageGateIssueJson`, stable release-gate
-  checks and issue exports for the seven-kind, 67-row supported model-card
+  checks and issue exports for the seven-kind, 69-row supported model-card
   parameter catalog, matching Python and Rust.
 - Add `modelCardSupportedParameterCoverageSummary`,
   `formatModelCardSupportedParameterCoverageSummaryTable`,

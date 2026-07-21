@@ -8647,6 +8647,10 @@ def _diode_effective_vt(el: Diode) -> float:
         raise ValueError(f"{el.name}: diode breakdown current must be finite and positive")
     if not math.isfinite(el.Cjo) or el.Cjo < 0.0:
         raise ValueError(f"{el.name}: diode junction capacitance must be finite and non-negative")
+    if not math.isfinite(el.Vj) or el.Vj <= 0.0:
+        raise ValueError(f"{el.name}: diode junction potential must be finite and positive")
+    if not math.isfinite(el.M) or el.M < 0.0:
+        raise ValueError(f"{el.name}: diode grading coefficient must be finite and non-negative")
     if not math.isfinite(el.Tt) or el.Tt < 0.0:
         raise ValueError(f"{el.name}: diode transit time must be finite and non-negative")
     return el.Vt * el.N
@@ -8675,7 +8679,7 @@ def _diode_has_charge_storage(el: Diode) -> bool:
 
 def _diode_dynamic_capacitance(el: Diode, vd: float) -> float:
     _, gd = _diode_current_conductance(el, vd)
-    return el.Cjo + el.Tt * gd
+    return bulk_junction_capacitance(el.Cjo, vd, el.Vj, el.M) + el.Tt * gd
 
 
 def _diode_charge_voltage(el: Diode, node_voltages: dict[str, float]) -> float:
@@ -12236,7 +12240,14 @@ def _stamp_ac(
         Vd = Va - Vk
         _, gd = _diode_current_conductance(el, Vd)
         diffusion_capacitance = el.Tt * gd
-        _stamp_g_c(G, node_to_idx, el.anode, el.cathode, gd + 1j * omega * (el.Cjo + diffusion_capacitance))
+        depletion_capacitance = bulk_junction_capacitance(el.Cjo, Vd, el.Vj, el.M)
+        _stamp_g_c(
+            G,
+            node_to_idx,
+            el.anode,
+            el.cathode,
+            gd + 1j * omega * (depletion_capacitance + diffusion_capacitance),
+        )
 
     elif isinstance(el, JFET):
         Vd = 0.0 if _is_ground(el.drain) else dc_x[node_to_idx[el.drain]]
@@ -13751,7 +13762,20 @@ def sens_dc(
             _make_entry(
                 "Is",
                 el.Is,
-                Diode(el.name, el.anode, el.cathode, el.Is + delta_is, el.Vt, el.N, el.BV, el.IBV, el.Cjo, el.Tt),
+                Diode(
+                    el.name,
+                    el.anode,
+                    el.cathode,
+                    el.Is + delta_is,
+                    el.Vt,
+                    el.N,
+                    el.BV,
+                    el.IBV,
+                    el.Cjo,
+                    el.Tt,
+                    el.Vj,
+                    el.M,
+                ),
             )
 
         elif isinstance(el, BJT):
@@ -13985,7 +14009,20 @@ def _vary_element(el: Element, tolerance: float, distribution: str) -> Element:
         )
 
     if isinstance(el, Diode):
-        return Diode(el.name, el.anode, el.cathode, _draw(el.Is), el.Vt, el.N, el.BV, el.IBV, el.Cjo, el.Tt)
+        return Diode(
+            el.name,
+            el.anode,
+            el.cathode,
+            _draw(el.Is),
+            el.Vt,
+            el.N,
+            el.BV,
+            el.IBV,
+            el.Cjo,
+            el.Tt,
+            el.Vj,
+            el.M,
+        )
 
     if isinstance(el, BJT):
         return BJT(
