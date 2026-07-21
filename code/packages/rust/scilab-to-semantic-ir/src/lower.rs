@@ -355,6 +355,25 @@ impl FunctionCtx {
     /// Record a newly-introduced local, keeping `locals`/`locals_set` in
     /// sync.
     fn push_local(&mut self, name: String) {
+        // Security regression (round 3 review): if `name` is ALREADY a
+        // known local (e.g. `lower_for` reusing an existing variable as
+        // the loop counter -- `y = 1; for y = 1:3 ... end`, an ordinary
+        // Scilab idiom), pushing another copy into `locals` would later
+        // be drained by `scope_rewind` at the loop's own scope boundary --
+        // and since `locals_set` is a genuine set (no duplicate-count
+        // tracking), that removal erases the name's PRE-EXISTING
+        // membership too, even though one logical occurrence should
+        // remain. Confirmed empirically: without this guard, `node`
+        // rejects the resulting JS with "Identifier 'y' has already been
+        // declared" (a duplicate top-level `let y`, since the name
+        // silently "forgot" it was already known after the loop). Since a
+        // name that's already known needs no tracking at all here — it
+        // was in scope before this push and stays in scope after,
+        // regardless of what happens inside the interim scope — this is
+        // simply a no-op.
+        if self.locals_set.contains(&name) {
+            return;
+        }
         self.locals_set.insert(name.clone());
         self.locals.push(name);
     }
@@ -896,7 +915,16 @@ impl Lowerer {
             body: &'a GrammarASTNode,
         }
         let kids = child_nodes(select_stmt);
-        if kids.is_empty() {
+        // A well-formed `select_stmt` always has at least `[selector,
+        // stmt_sep]` (even with zero case/else clauses) -- checking only
+        // `is_empty()` (mirrors an earlier revision of this function, but
+        // unlike `lower_if`'s own `kids.len() < 3` guard) let a
+        // single-child tree slip through to the `&kids[2..]` slice below
+        // and panic instead of erroring cleanly. Unreachable via the real
+        // `scilab-parser` (which never emits a malformed `select_stmt`),
+        // but `compile()`/`GrammarASTNode` is a public API, so a
+        // directly-constructed tree must still fail closed, not panic.
+        if kids.len() < 2 {
             return Err(self.err_at(select_stmt, "malformed select: no selector".to_string()));
         }
         let selector_node = kids[0];

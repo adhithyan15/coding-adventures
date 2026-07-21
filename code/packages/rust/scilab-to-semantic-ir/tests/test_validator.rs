@@ -151,3 +151,19 @@ fn a_percent_constant_program_validates_and_the_js_backend_accepts_it() {
         "expected the JS backend to accept a module using a %-constant, got: {errors:?}"
     );
 }
+
+#[test]
+fn for_loop_reusing_an_already_assigned_variable_validates_and_the_js_backend_accepts_it() {
+    // Non-node-gated backstop for the identical e2e regression in
+    // `tests/e2e_node.rs` (round 3 review): reusing an already-assigned
+    // variable as a `for`-loop counter must validate cleanly and the JS
+    // backend must accept it, regardless of whether `node` is available
+    // in the environment running this test.
+    let module = assert_valid("y = 1;\nfor y = 1:3\n  disp(y);\nend\ny = 99;\ndisp(y);\n");
+    let backend = JavaScriptBackend;
+    let errors = backend.check_module(&module);
+    assert!(
+        errors.is_empty(),
+        "expected the JS backend to accept a for-loop reusing an existing variable, got: {errors:?}"
+    );
+}

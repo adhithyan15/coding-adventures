@@ -220,3 +220,28 @@ fn for_loop_accumulator_converges_in_node() {
     );
     assert_eq!(out, "55");
 }
+
+#[test]
+fn for_loop_reusing_an_already_assigned_variable_as_the_counter_runs_in_node() {
+    // Security regression (round 3 review, a bug the round-2 `HashSet`
+    // optimization itself introduced): reusing an already-assigned
+    // variable as a `for`-loop counter -- an ordinary Scilab idiom --
+    // previously desynced `FunctionCtx::locals`/`locals_set`, so the name
+    // "forgot" it was already known once the loop's own scope rewound.
+    // The resulting JavaScript had two top-level `let y` declarations in
+    // the same scope, which `node` rejected outright with "Identifier 'y'
+    // has already been declared" -- this test would fail with that exact
+    // error if the bug were still present.
+    if !node_available() {
+        eprintln!(
+            "skipping for_loop_reusing_an_already_assigned_variable_as_the_counter_runs_in_node: \
+             `node` not available"
+        );
+        return;
+    }
+    let out = run_via_node(
+        "for_reuses_existing_var",
+        "y = 1;\nfor y = 1:3\n  disp(y);\nend\ny = 99;\ndisp(y);\n",
+    );
+    assert_eq!(out, "1\n2\n3\n99");
+}

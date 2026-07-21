@@ -87,22 +87,21 @@
   scope) — mirroring `scilab-runtime::eval::Interpreter::register_function`'s
   own more complete three-way reading of this grammar shape, whose doc
   comment confirms its own handling is "exactly correct."
-- 93 tests: 71 unit tests over lowering shapes, every documented scope
-  limit's rejection, and the DoS-guard regression pair
+- 96 tests: 72 unit tests over lowering shapes, every documented scope
+  limit's rejection, and the DoS-guard regression set
   (`a_pathologically_long_flat_{additive,multiplicative}_chain_is_
-  cleanly_rejected`, reproducing the identical flat-operand-chain hazard
-  `matlab-to-semantic-ir`'s own security review found and fixed, since
-  Scilab's grammar collapses a flat operator run into one many-child CST
-  node the same way); 10 validator/capability-acceptance tests; 11
-  end-to-end tests that actually execute lowered Scilab through
-  `semantic-ir-to-javascript` and `node` (gated on `node` availability).
+  cleanly_rejected` plus the `elseif`/`case`/transpose-suffix chain
+  variants added during security review, see below); 11
+  validator/capability-acceptance tests; 12 end-to-end tests that
+  actually execute lowered Scilab through `semantic-ir-to-javascript` and
+  `node` (gated on `node` availability).
 - Marks `scilab-to-semantic-ir` (MA-10e) done in
   `MA10-scilab-language.md` §6 — the last item in the Scilab frontend
   rollout.
 
 ### Security
 
-Two rounds of pre-merge security review found and fixed four issues, all
+Three rounds of pre-merge security review found and fixed six issues, all
 before this crate ever shipped:
 
 - **CRITICAL/HIGH** (round 1): `lower_if`/`lower_select` folded
@@ -144,6 +143,28 @@ before this crate ever shipped:
   existing `Vec` `scope_mark`/`scope_rewind` needs for ordered
   truncation), and backing the branch-fix's own `newly_introduced`
   accumulator with a `HashSet` instead of a `Vec`.
+- **HIGH** (round 3, a regression introduced by round 2's own fix): the
+  new `push_local` unconditionally appended to `locals`/`locals_set` even
+  when the name was ALREADY a known local — the case hit by `lower_for`
+  reusing an already-assigned variable as the loop counter (`y = 1; for
+  y = 1:3 ... end`, an ordinary Scilab idiom). `scope_rewind` at the
+  loop's own scope boundary then drained that duplicate `locals` entry
+  and removed the name from `locals_set` entirely — since a `HashSet` has
+  no duplicate-count tracking, this erased the variable's pre-existing
+  membership too, not just the loop-local copy. Confirmed via `node`:
+  the resulting JS had two top-level `let y` declarations in the same
+  scope, rejected with "Identifier 'y' has already been declared". Fixed
+  by making `push_local` a no-op when the name is already known — it
+  needs no scope tracking at all in that case, since it was in scope
+  before the push and stays in scope after, regardless of what happens in
+  the interim scope.
+- **LOW** (round 3): `lower_select` checked only `kids.is_empty()` before
+  indexing `kids[0]`/slicing `&kids[2..]`, unlike every sibling function's
+  length-based guard (e.g. `lower_if`'s `kids.len() < 3`). A
+  directly-constructed malformed `select_stmt` (unreachable via the real
+  `scilab-parser`, but `compile()`/`GrammarASTNode` is a public API) with
+  exactly one child panicked on the slice instead of erroring cleanly.
+  Fixed by checking `kids.len() < 2` instead.
 
 Also separately discovered (not fixed here, tracked as its own follow-up
 task): `scilab-parser`'s own `elseif_clause*` parsing appears to scale
