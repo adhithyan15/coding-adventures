@@ -75,6 +75,7 @@ use std::collections::HashMap;
 
 use aarch64_encoder::{Assembler, Cond, EncodeError, ExternalReloc, LabelId, Reg};
 pub use aarch64_encoder::ExternalReloc as Reloc;
+use gc_core::{StackMapBuilder, StackMapRecord};
 use jit_core::backend::{Backend, FunctionContext};
 use jit_core::cir::{CIRInstr, CIROperand};
 use vm_core::value::Value;
@@ -320,7 +321,7 @@ pub struct GlobalWordReloc {
 /// [`compile_with_relocs`] when you need them for AOT cross-function linking.
 pub fn compile(ctx: &FunctionContext<'_>, ir: &[CIRInstr]) -> Result<Vec<u8>, String> {
     compile_inner(ctx, ir, &HashMap::new())
-        .map(|(bytes, _ext, _glob)| bytes)
+        .map(|(bytes, _ext, _glob, _sm)| bytes)
         .map_err(|e| format!("aarch64-backend: {e:?}"))
 }
 
@@ -335,7 +336,7 @@ pub fn compile_with_relocs(
     ir: &[CIRInstr],
 ) -> Result<(Vec<u8>, Vec<ExternalReloc>), String> {
     compile_inner(ctx, ir, &HashMap::new())
-        .map(|(bytes, ext, _glob)| (bytes, ext))
+        .map(|(bytes, ext, _glob, _sm)| (bytes, ext))
         .map_err(|e| format!("aarch64-backend: {e:?}"))
 }
 
@@ -360,7 +361,34 @@ pub fn compile_with_globals(
     global_slots: &HashMap<String, usize>,
 ) -> Result<(Vec<u8>, Vec<ExternalReloc>, Vec<GlobalWordReloc>), String> {
     compile_inner(ctx, ir, global_slots)
+        .map(|(bytes, ext, glob, _sm)| (bytes, ext, glob))
         .map_err(|e| format!("aarch64-backend: {e:?}"))
+}
+
+/// Like [`compile_with_globals`] but *also* returns the function's **GC stack map**
+/// — one [`StackMapRecord`] per call return address, naming the frame slots that may
+/// hold GC references (`AOT00-T1-stackmap-emission.md`).
+///
+/// Registering these via `__gc_register_stackmap` is what finally lets
+/// `__gc_collect_precise` resolve a real frame instead of falling back to a
+/// conservative scan.
+///
+/// This deliberately mirrors [`compile_with_globals`] rather than [`compile`]: it
+/// returns the [`ExternalReloc`]s (a function with a safepoint has, by definition, at
+/// least one call, whose `BL` is an unpatched placeholder until the linker fixes it)
+/// and accepts `global_slots` (so a function using `global_load`/`global_store` can
+/// get a map at all). An entry point that dropped either would hand back code that
+/// cannot be linked, with no signal.
+#[allow(clippy::type_complexity)]
+pub fn compile_with_globals_and_stackmap(
+    ctx: &FunctionContext<'_>,
+    ir: &[CIRInstr],
+    global_slots: &HashMap<String, usize>,
+) -> Result<
+    (Vec<u8>, Vec<ExternalReloc>, Vec<GlobalWordReloc>, Vec<StackMapRecord>),
+    String,
+> {
+    compile_inner(ctx, ir, global_slots).map_err(|e| format!("aarch64-backend: {e:?}"))
 }
 
 // Same intrinsic tuple shape as `compile_with_globals`; not a refactor target.
@@ -369,7 +397,10 @@ fn compile_inner(
     ctx: &FunctionContext<'_>,
     ir: &[CIRInstr],
     global_slots: &HashMap<String, usize>,
-) -> Result<(Vec<u8>, Vec<ExternalReloc>, Vec<GlobalWordReloc>), BackendError> {
+) -> Result<
+    (Vec<u8>, Vec<ExternalReloc>, Vec<GlobalWordReloc>, Vec<StackMapRecord>),
+    BackendError,
+> {
     if ctx.params.len() > 8 {
         return Err(BackendError::TooManyParams(ctx.params.len()));
     }
@@ -484,7 +515,155 @@ fn compile_inner(
 
     let external_relocs = std::mem::take(&mut asm.external_relocs);
     let bytes = asm.finish().map_err(BackendError::from)?;
-    Ok((bytes, external_relocs, global_relocs))
+
+    // ---- GC stack map ----------------------------------------------------
+    // Built from the *finished* code and the *actual* `RegAlloc`, so the slot
+    // offsets a record names are byte-identical to the ones the code stores to.
+    let stack_map = build_stack_map(ctx, ir, &alloc, frame, &bytes)?;
+
+    Ok((bytes, external_relocs, global_relocs, stack_map))
+}
+
+// ===========================================================================
+// GC stack maps (AOT00-T1-stackmap-emission)
+// ===========================================================================
+
+/// CIR types that **provably cannot** hold a GC reference — the machine scalars.
+///
+/// Note the polarity: this is a **deny-list**, and that is deliberate. A root set
+/// must over-approximate, because the two errors are not symmetric — naming a
+/// non-reference costs one cycle of floating garbage, while *failing* to name a live
+/// reference frees it out from under the mutator. So anything not listed here is
+/// treated as a potential reference (see [`is_gc_root_ty`]).
+///
+/// An allow-list of "known reference types" was tried first and was **wrong**:
+/// `aot_core::specialise` validates every type against its own allow-list
+/// (`u4…void`) which does **not** contain `ref<…>`, so every reference is erased to
+/// `"any"` before it reaches this backend. A rule keyed on `ref<…>` therefore never
+/// fires in production and would emit records naming *nothing* — and an empty record
+/// is authoritative, suppressing the frame's conservative scan. This deny-list is
+/// immune to that erasure, and to any type string added later.
+fn is_definitely_not_ref(ty: &str) -> bool {
+    matches!(
+        ty,
+        "u4" | "u8"
+            | "u16"
+            | "u32"
+            | "u64"
+            | "i8"
+            | "i16"
+            | "i32"
+            | "i64"
+            | "f32"
+            | "f64"
+            | "bool"
+            | "void"
+    )
+}
+
+/// Could a value of this CIR type be a GC reference, and therefore need naming as a
+/// root? True for `ref<…>`, `array<…>`, `str` (runtime strings are heap handles),
+/// and — critically — **`any`**.
+///
+/// `any` is not a fallback here; it is the *normal* type of every dynamic value.
+/// `__dyn_cons` and friends allocate through `__twig_gc_alloc`, and the whole
+/// dyn-value world is typed `any` by design, so treating `any` as a non-root would
+/// leave every lispy pair unrooted.
+///
+/// The cost is honest: in a dyn-heavy function most slots are `any`, so the map
+/// approaches a conservative scan *for that frame*. The win is still real for
+/// statically-typed frontends (ALGOL/BASIC/COBOL/…), where integer, float and bool
+/// slots — the ones that produce heap-address look-alikes — are excluded outright.
+/// Tightening `any` further needs the tag-aware or opcode-derived rule that a later
+/// liveness rung brings.
+fn is_gc_root_ty(ty: &str) -> bool {
+    !is_definitely_not_ref(ty)
+}
+
+/// Byte offsets of every **return address** in `code` — i.e. the byte just after
+/// each call instruction. These are exactly the PCs a precise stack walk observes
+/// at `[fp + 8]` in a caller's frame, so each needs a stack-map record.
+///
+/// The scan reads the finished code rather than hooking the ~10 scattered
+/// `bl`/`bl_external` emission sites, so a new call site can never silently escape
+/// the map (an unmapped return address costs precision; a *wrong* one costs safety).
+/// AArch64 is fixed-width and `Asm` stores a `Vec<u32>` of instructions only — no
+/// inline literal pools — so every 4-byte word is a real instruction:
+///
+/// - `BL  imm26` — top 6 bits `100101`
+/// - `BLR Rn`    — `1101_0110_0011_1111_0000_00nn_nnn0_0000`
+///
+/// A word that is neither is skipped. (Were a non-call word ever misread as a call,
+/// the only effect is an inert record at a PC no return address ever equals.)
+fn call_return_offsets(code: &[u8]) -> Vec<u32> {
+    let mut out = Vec::new();
+    for (i, word) in code.chunks_exact(4).enumerate() {
+        let w = u32::from_le_bytes([word[0], word[1], word[2], word[3]]);
+        let is_bl = (w >> 26) == 0b100101;
+        let is_blr = (w & 0xFFFF_FC1F) == 0xD63F_0000;
+        if is_bl || is_blr {
+            // The return address is the *next* instruction.
+            out.push(((i + 1) * 4) as u32);
+        }
+    }
+    out
+}
+
+/// Build this function's stack map: every reference-typed slot, and a record at
+/// every call return address.
+///
+/// **Offsets need no translation.** `RegAlloc` hands out SP-relative offsets and the
+/// prologue pins `fp = sp` for the whole frame, so an SP-relative offset *is* the
+/// FP-relative offset [`gc_core::StackMapRecord::slots`] wants.
+///
+/// Slot lookups are **read-only** (`slots.get`, never `slot_of`): querying a name
+/// that never got a slot must not mint one, which would silently grow the frame the
+/// code was already compiled against.
+fn build_stack_map(
+    ctx: &FunctionContext<'_>,
+    ir: &[CIRInstr],
+    alloc: &RegAlloc,
+    frame: u32,
+    code: &[u8],
+) -> Result<Vec<StackMapRecord>, BackendError> {
+    let mut b = StackMapBuilder::new(frame);
+
+    // Declare every possibly-reference slot. Order is irrelevant (see
+    // `StackMapBuilder`: the set is joined at the end so emission order cannot
+    // matter). A name with no slot, or an offset that will not fit the record
+    // format, is a hard error rather than a skipped iteration — silently dropping a
+    // root is a use-after-free, so it must never be the quiet path. (Neither is
+    // reachable today: the pre-pass mints a slot for every param/dest/src before the
+    // frame is fixed, and the frame is capped well inside `i32`.)
+    let mut declare = |name: &str| -> Result<(), BackendError> {
+        let off = *alloc.slots.get(name).ok_or_else(|| {
+            BackendError::MalformedInstr(format!("stack map: no frame slot for '{name}'"))
+        })?;
+        let off = i32::try_from(off).map_err(|_| {
+            BackendError::MalformedInstr(format!("stack map: slot offset {off} exceeds i32"))
+        })?;
+        b.define_ref_slot(off);
+        Ok(())
+    };
+    // Incoming parameters — spilled to their slots by the prologue.
+    for (name, ty) in ctx.params {
+        if is_gc_root_ty(ty) {
+            declare(name)?;
+        }
+    }
+    // Instruction results.
+    for instr in ir {
+        if let Some(dest) = &instr.dest {
+            if is_gc_root_ty(&instr.ty) {
+                declare(dest)?;
+            }
+        }
+    }
+
+    for pc in call_return_offsets(code) {
+        b.safepoint(pc);
+    }
+    Ok(b.into_records())
 }
 
 // ===========================================================================
@@ -1817,6 +1996,203 @@ fn emit_epilogue(asm: &mut Assembler, frame: u32) -> Result<(), BackendError> {
 mod tests {
     use super::*;
     use jit_core::cir::{CIRInstr, CIROperand};
+
+    // ---- GC stack maps -----------------------------------------------------
+
+    /// Test shim: compile and keep only (code, stack map).
+    fn sm_compile(
+        ctx: &FunctionContext<'_>,
+        ir: &[CIRInstr],
+    ) -> Result<(Vec<u8>, Vec<StackMapRecord>), String> {
+        compile_with_globals_and_stackmap(ctx, ir, &HashMap::new())
+            .map(|(code, _ext, _glob, sm)| (code, sm))
+    }
+
+    /// **Regression for the erasure bug.** `aot_specialise` validates every type
+    /// against its own allow-list, which does NOT contain `ref<…>`, so a heap
+    /// allocation reaches this backend typed `"any"` — never `ref<…>`. An earlier
+    /// draft keyed root-ness on `ref<…>` and therefore named *nothing* in production,
+    /// and an empty record is authoritative: it suppresses the frame's conservative
+    /// scan, freeing live objects. This uses the shape the real pipeline produces.
+    #[test]
+    fn any_typed_alloc_is_rooted_production_shape() {
+        let ir = vec![
+            // Exactly what `aot_specialise` emits for `p = alloc 16` — ty is "any".
+            heap("alloc", Some("p"), vec![CIROperand::Int(16), CIROperand::Int(0)], "any"),
+            const_u64("n", 7),
+            CIRInstr {
+                op: "call".into(),
+                dest: Some("t".into()),
+                srcs: vec![CIROperand::Var("callee".into()), CIROperand::Var("n".into())],
+                ty: "u64".into(),
+                deopt_to: None,
+            },
+            CIRInstr { op: "ret_void".into(), dest: None, srcs: vec![], ty: "void".into(), deopt_to: None },
+        ];
+        let params: [(String, String); 0] = [];
+        let (_code, records) = sm_compile(&ctx("dyn", &params, "void"), &ir).expect("compiles");
+        assert!(!records.is_empty(), "the call is a safepoint");
+        for rec in &records {
+            assert!(
+                !rec.slots.is_empty(),
+                "the `any`-typed allocation MUST be rooted — an empty record here \
+                 would suppress the conservative scan and free it"
+            );
+        }
+    }
+
+    /// The other half: statically-typed scalar slots are NOT rooted. This is the
+    /// actual precision win — an integer that look-alikes a heap address stops
+    /// pinning dead objects.
+    #[test]
+    fn scalar_typed_slots_are_not_rooted() {
+        for ty in ["u8", "u64", "i32", "i64", "f32", "f64", "bool"] {
+            assert!(is_definitely_not_ref(ty), "{ty} must not be a root");
+            assert!(!is_gc_root_ty(ty), "{ty} must not be a root");
+        }
+        // Anything that may carry a heap value IS a root — including unknown types,
+        // so a future type string fails safe.
+        for ty in ["any", "str", "ref<any>", "ref<LispyPair>", "array<u8>", "brand_new_type"] {
+            assert!(is_gc_root_ty(ty), "{ty} must be treated as a root");
+        }
+    }
+
+    /// `call_return_offsets` finds the byte *after* each call — BL and BLR — and
+    /// nothing else. Those are the PCs a precise stack walk sees at `[fp + 8]`.
+    #[test]
+    fn call_return_offsets_finds_bl_and_blr() {
+        // word 0: NOP-ish (MOV X0,X0) · 1: BL · 2: ADD · 3: BLR X8 · 4: RET
+        let words: [u32; 5] = [
+            0xAA0003E0,          // not a call
+            0x94000000,          // BL (imm26 = 0)
+            0x8B010000,          // ADD — not a call
+            0xD63F0100,          // BLR X8
+            0xD65F03C0,          // RET
+        ];
+        let mut code = Vec::new();
+        for w in words {
+            code.extend_from_slice(&w.to_le_bytes());
+        }
+        // Return addresses are the *following* instruction: 2*4 and 4*4.
+        assert_eq!(call_return_offsets(&code), vec![8, 16]);
+    }
+
+    /// A BL with a non-zero imm26 (a real, patched branch) is still recognised, and
+    /// a truncated tail word is ignored rather than panicking.
+    #[test]
+    fn call_return_offsets_handles_patched_bl_and_ragged_tail() {
+        let mut code = Vec::new();
+        code.extend_from_slice(&0x94001234u32.to_le_bytes()); // BL +0x48d0
+        code.extend_from_slice(&0xD65F03C0u32.to_le_bytes()); // RET
+        code.extend_from_slice(&[0xAA, 0xBB]); // ragged partial word
+        assert_eq!(call_return_offsets(&code), vec![4]);
+    }
+
+    /// End-to-end: a function that allocates a `ref<…>` and then calls gets a record
+    /// at the call's return address naming that reference's frame slot — and the
+    /// non-reference locals are NOT named (the whole point of precise roots).
+    #[test]
+    fn compile_with_stackmap_names_ref_slots_at_call_sites() {
+        // r = alloc(...)            → ref<any>, gets a frame slot
+        // n = const_u64 7           → u64, must NOT be named
+        // print(n)                  → a call (BL __twig_print_i64) = a safepoint
+        // ret_void
+        let ir = vec![
+            heap("alloc", Some("r"), vec![CIROperand::Int(16), CIROperand::Int(0)], "ref<any>"),
+            const_u64("n", 7),
+            CIRInstr {
+                op: "call".into(),
+                dest: Some("t".into()),
+                srcs: vec![CIROperand::Var("callee".into()), CIROperand::Var("n".into())],
+                ty: "u64".into(),
+                deopt_to: None,
+            },
+            CIRInstr {
+                op: "ret_void".into(),
+                dest: None,
+                srcs: vec![],
+                ty: "void".into(),
+                deopt_to: None,
+            },
+        ];
+        let params: [(String, String); 0] = [];
+        let (code, records) =
+            sm_compile(&ctx("f", &params, "void"), &ir).expect("compiles");
+        assert!(!code.is_empty());
+        assert!(
+            !records.is_empty(),
+            "the function calls, so it must have at least one safepoint record"
+        );
+        // Exactly one reference slot exists (`r`), and every record names it.
+        for rec in &records {
+            assert_eq!(rec.slots.len(), 1, "only the ref<> slot is a root");
+            assert!(rec.frame_size > 0);
+        }
+        // Every record's PC is a real return address inside the code.
+        for rec in &records {
+            assert!((rec.pc_offset as usize) <= code.len());
+            assert_eq!(rec.pc_offset % 4, 0, "aarch64 PCs are word-aligned");
+        }
+    }
+
+    /// A reference-typed **parameter** is named too — it arrives in a register and
+    /// the prologue spills it, so it is a root like any other slot.
+    #[test]
+    fn compile_with_stackmap_names_ref_params() {
+        let ir = vec![CIRInstr {
+            op: "call".into(),
+            dest: Some("t".into()),
+            srcs: vec![CIROperand::Var("callee".into()), CIROperand::Var("p".into())],
+            ty: "u64".into(),
+            deopt_to: None,
+        }];
+        let params = [("p".to_string(), "ref<any>".to_string())];
+        let (_code, records) =
+            sm_compile(&ctx("g", &params, "void"), &ir).expect("compiles");
+        assert!(!records.is_empty());
+        assert_eq!(records[0].slots.len(), 1, "the ref param is a root");
+    }
+
+    /// A function with no reference-typed values still gets records (with empty slot
+    /// lists) at its call sites — precisely stating "nothing here is a reference",
+    /// which is strictly better than no record (that would force a conservative scan).
+    #[test]
+    fn compile_with_stackmap_emits_empty_records_for_ref_free_functions() {
+        let ir = vec![
+            const_u64("n", 7),
+            CIRInstr {
+                op: "call".into(),
+                dest: Some("t".into()),
+                srcs: vec![CIROperand::Var("callee".into()), CIROperand::Var("n".into())],
+                ty: "u64".into(),
+                deopt_to: None,
+            },
+            CIRInstr { op: "ret_void".into(), dest: None, srcs: vec![], ty: "void".into(), deopt_to: None },
+        ];
+        let params: [(String, String); 0] = [];
+        let (_code, records) =
+            sm_compile(&ctx("h", &params, "void"), &ir).expect("compiles");
+        assert!(!records.is_empty(), "the call still needs a record");
+        assert!(
+            records.iter().all(|r| r.slots.is_empty()),
+            "no ref<> values → every record names nothing"
+        );
+    }
+
+    /// `compile` and the stack-map entry point must produce byte-identical code — the
+    /// stack map is pure metadata and must never perturb codegen.
+    #[test]
+    fn stackmap_does_not_change_emitted_code() {
+        let ir = vec![
+            heap("alloc", Some("r"), vec![CIROperand::Int(16), CIROperand::Int(0)], "ref<any>"),
+            CIRInstr { op: "ret_void".into(), dest: None, srcs: vec![], ty: "void".into(), deopt_to: None },
+        ];
+        let params: [(String, String); 0] = [];
+        let plain = compile(&ctx("k", &params, "void"), &ir).expect("compiles");
+        let (with_map, _) =
+            sm_compile(&ctx("k", &params, "void"), &ir).expect("compiles");
+        assert_eq!(plain, with_map);
+    }
 
     fn ctx<'a>(name: &'a str, params: &'a [(String, String)], ret: &'a str) -> FunctionContext<'a> {
         FunctionContext { name, params, return_type: ret }

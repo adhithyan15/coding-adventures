@@ -1,5 +1,87 @@
 # Changelog
 
+## Chapter 17 — The future and the conditional, or one weld twice
+
+- **Chapter 17 authored** (`ES-C17-futuro`, `-condicional`, `-practice`): two
+  tenses that turn out to be **one construction** — reviewing Ch.6/10/11/12/13/16
+  via `reviews_of`.
+- **the future** (`ES-C17-futuro`): *hablaré…hablarán*, built on the **whole
+  infinitive** — the one tense that doesn't strip the ending — with a single set of
+  endings for all three conjugations. The etymology carries the lesson: Latin's own
+  future ***amābō*** **died out**, and Romance replaced it with a phrase,
+  **infinitive + *habēre*** (*amāre habeō*, "I **have to** love"), exactly parallel
+  to English *I have to go* drifting toward futurity. That phrase then **fused**:
+  *hablar he* → *hablar-he* → **hablaré**. So the endings are not endings at all
+  historically — they are the **present of *haber*** (*he/has/ha/hemos/han*) worn
+  down to a suffix, and lining the two lists up shows them identical. Framed as **a
+  compound tense that closed up into a simple one**, the mirror image of the
+  parallel-4 tracks' Ch.15 compound past, which stayed open. Closes with the seam
+  still faintly visible next door: **formal European Portuguese** can lodge a
+  pronoun **inside** the fused future — **falá-*lo*-ei** — a leftover, not the norm
+  (Brazilian Portuguese and ordinary speech don't).
+- **the conditional** (`ES-C17-condicional`): *hablaría* — the **same weld**, with
+  the **imperfect** of *haber* swapped in for the present, which is precisely why
+  its endings are the ***-ía/-ías/-íamos/-ían*** the learner already met as Ch.16's
+  *-er/-ir* imperfect. One trick, two tenses of one auxiliary. Uses covered:
+  hypothetical *would*, politeness (*¿podrías?*, *me gustaría*), and
+  **future-in-the-past** (*dijo que hablaría*) — which makes sense once you know an
+  imperfect is buried inside it.
+- **practice**: the **ten irregular stems** sorted into three families —
+  drop-the-vowel (*podré, querré, sabré, habré*); drop-then-**wedge-a-d**
+  (*tendré, pondré, vendré, saldré*), because dropping alone squeezed ***-n'r-***
+  or ***-l'r-*** together and Old Spanish resolved it rather than leave it (with a
+  note that modern Spanish says *honra*/*alrededor* perfectly well, and that
+  medieval Spanish first tried **metathesis** — *terné, porné, verné* — before the
+  *d*-forms won); and the choppers (**diré, haré**). Two payoffs: the **same bent
+  stem serves both tenses** (ten shapes, twenty conjugations), and **all six**
+  members of Ch.12–13's *-go club* resurface here — four as the *-dr-* group,
+  *hacer* and *decir* as the choppers — the oldest, most-used verbs misbehaving in
+  the same places again. Ends on the
+  **future of probability** (*¿Dónde estará?* "Where can he be?"; *Serán las tres*
+  "It must be three"), with the conditional doing the same for the past — a leap
+  that follows naturally from a tense built out of "I **have to**."
+- Note: *haber* has no lesson of its own yet; it appears here as **etymology**, with
+  its forms shown as evidence, not as a paradigm the learner must produce.
+- Taxonomy: namespaced `ES-FUTURE`, `ES-CONDITIONAL`; practice label
+  `CH17-PRACTICE`.
+
+## Chapter 16 — The imperfect, and choosing between the two pasts
+
+- **Chapter 16 authored** (`ES-C16-imperfecto`, `-tres-irregulares`,
+  `-practice`): the second past tense, and the first genuinely **new distinction**
+  (rather than new forms) the course has asked for — reviewing Ch.6/7/9/10/14/15
+  via `reviews_of`.
+- **the regular imperfect** (`ES-C16-imperfecto`): *hablaba/hablabas/hablaba/
+  hablábamos/hablaban*, *comía/vivía* — the ongoing-or-habitual past, and the
+  **most regular tense in the language**, deliberately framed as relief after
+  Ch.15's strong preterites. **-er and -ir share one set a third time.**
+  Etymology: ← Latin *-ābam* / *-ēbam*, where the **b survived whole** in *-aba*
+  but **wore away** in *-ēbam → -ea → -ía* — one Latin ending, two fates in one
+  language. The two accents do **different jobs**: *hablábamos* marks stress three
+  syllables back (the only accented *-ar* form), while *comía* **breaks the
+  diphthong** so *co-mí-a* is three syllables (every *-er/-ir* form needs it). And
+  a **pro-drop exception**: *yo* and *él* forms are identical, so Spanish — which
+  normally drops pronouns (Ch.6) — puts *yo* back when the ending stops doing its
+  job.
+- **the three irregulars** (`ES-C16-tres-irregulares`): *ser→era*, *ir→iba*,
+  *ver→veía* — **three verbs, not three families**, the complete inventory for the
+  whole language; *ver* barely counts, keeping an extra *-e-* from older *veer*.
+  The chapter's payoff is **ir**: its present comes from *vādere* (Ch.10), its
+  preterite from *fuī* (Ch.14), and the **imperfect is the one tense where *ir*
+  uses its own original verb, *īre*** — so *ir* is stitched together from **three
+  different Latin verbs**, with *ir* and *iba* the last surviving pieces of the
+  real one. *Era* ← *eram*, the same *es-* root as *soy/es* and English *is/are*
+  (Ch.9), which *ser* then abandons for *fuī* in the preterite: *era* vs *fue*.
+- **practice** — **preterite vs imperfect**, the aspect contrast English marks only
+  lexically and never with an ending. Framed as **point vs line**: the imperfect
+  sets the background and the preterite interrupts it (*hablaba cuando llegó*),
+  plus the verbs where the choice changes the **meaning** — *sabía* "knew" vs
+  *supe* "**found out**"; *conocía* "knew" vs *conocí* "**met**"; *tenía* "had" vs
+  *tuve* "**got**"; *quería* "wanted" vs *quise* "tried" / *no quise* "**refused**"
+  — all one consistent logic: the preterite marks the **instant the state began**.
+- Taxonomy: namespaced `ES-IMPERFECT`, `ES-IMPERFECT-IRREGULARS`; practice label
+  `CH16-PRACTICE`.
+
 ## Chapter 15 — Completing the preterite
 
 - **Chapter 15 authored** (`ES-C15-comer-vivir-preterite`, `-preterite-fuertes`,

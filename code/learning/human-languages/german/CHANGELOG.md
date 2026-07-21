@@ -1,5 +1,55 @@
 # Changelog
 
+## Chapter 15 — The Perfekt, and the tense it pushed aside
+
+- **Chapter 15 authored** (`GE-C15-perfekt`, `-praeteritum`): the everyday past,
+  built on Ch.14's *haben* — reviewing Ch.5/14 via `reviews_of`.
+- **Perfekt** (`GE-C15-perfekt`): *haben* + past participle (*ich habe gesagt*),
+  with two things German does that English can't. First, the weak participle is
+  **wrapped** — a **ge-…-t circumfix**, not a suffix. Second, it goes to the **end
+  of the clause** (*Ich habe gestern Deutsch **gelernt*** — "I have yesterday German
+  learned"), which is simply ungrammatical in English. Plus the semantic note that
+  it means the **plain past** ("I said"), not only "I have said." Etymology: **ge-**
+  ← Germanic *\*ga-* "together, completely," a **perfective** marker — exactly what
+  a past participle is for. English had it as *y-* and dropped it, leaving two
+  fossils: **enough** (Old English *genōg*) and archaic *yclept*. So English once
+  wrapped its participles the same way; German never stopped.
+- **Präteritum** (`GE-C15-praeteritum`): *ich sagte* — the simple past, same
+  meaning as the *Perfekt* but a different register. Its **-te** is the Germanic
+  **dental preterite**, the identical machinery behind English **-ed** (*walked*)
+  and Dutch *-te* — a **Germanic invention** with no Latin equivalent, since Romance
+  builds its past from inherited perfect endings instead (*parla*, *habló*).
+  Register and geography: nearly gone from speech in the south, better preserved in
+  the north, standard in **narrative writing**, with *war*, *hatte* and the modals
+  resisting everywhere. Closes on the three-language table — **German, French and
+  Italian** each let a "have" compound displace their simple past — an AREAL change spread by contact, not three separate inventions.
+- Taxonomy: namespaced `GE-PAST-COMPOUND`, `GE-PAST-SIMPLE-WRITTEN`.
+
+## Chapter 14 — haben, and being your years
+
+- **Chapter 14 authored** (`GE-C14-haben`, `-alter`): the workhorse verb plus the
+  one everyday place German won't use it, reviewing Ch.5/9/10/12/13 via
+  `reviews_of`.
+- **haben** (`GE-C14-haben`): *habe/hast/hat/haben/habt/haben*, where *du hast*
+  and *er hat* **drop the b** — precisely as English *have* → *ha**s*** (and
+  archaic *hast*), one shortcut the two languages inherited together. The
+  showpiece is a **false cognate**: *haben* ← Germanic *\*habjaną* ← PIE *\*kap-*
+  "to **seize**," whose Latin child is ***capere*** (→ *capture, captive, capable,
+  accept*) — while Latin ***habēre*** (which gave French *avoir* and Italian
+  *avere*) descends from *\*gʰabʰ-*, whose English descendant is **give**. The two
+  words that look most alike and mean the same thing come from **opposite**
+  ancestries; German *haben* is kin to *capture*, Latin *habēre* to *give*.
+- **ich bin zwanzig Jahre alt** (`GE-C14-alter`): the one everyday slot where
+  German **refuses** *haben* — age takes **sein**, producing word-for-word the
+  English sentence, and shortening the same way (*ich bin zwanzig*). *Jahr* ←
+  *\*jēra* = **year**; *alt* ← *\*aldaz* = **old**, with the Latin cousin *alere*
+  "to nourish, grow" behind English *adult*. Closes on the five-language table:
+  **all four Romance sisters *have* their years; German sides with English and
+  *is* its years** — and does so even though it borrowed its month names from
+  Latin (Ch.9).
+- Sets up the *Perfekt*, which is built on *haben*.
+- Taxonomy: namespaced `GE-VERB-HAVE`, `GE-AGE`.
+
 ## Chapter 13 — Colours
 
 - **Chapter 13 authored** (`GE-C13-schwarz-weiss`, `-rot-blau`): German as the

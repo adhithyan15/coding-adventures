@@ -77,6 +77,32 @@ and Italian's habit of keeping final vowels Latin's other children dropped.
   article → English **azure** — so Italy's teams, **gli Azzurri**, are named after a
   blue stone mined in Afghanistan. **Authored.**
 
+- **Ch. 14 — *avere*, and having your years**: **avere** (*ho/hai/ha/abbiamo/
+  avete/hanno*) ← *habēre*, the same source as French *avoir* (→ English
+  *habit/inhabit/exhibit/prohibit*). It houses **Italian's only silent letter**:
+  the **h** of *ho/hai/ha/hanno* is never pronounced and survives **purely to keep
+  them apart in writing** from *o* ("or"), *ai* ("to the"), *a* ("to") and *anno*
+  ("**year**") — spelling doing a job sound cannot → **ho venti anni**, age via
+  *avere* and never *essere* (*anno* ← *annus* → *annual/anniversary*, with a held
+  **double n**). The silent *h* then earns its keep in this very chapter:
+  ***hanno*** ("they have") and ***anno*** ("year") are **homophones** that turn up
+  in the same sentence. **Authored.** (Also the prerequisite for the *passato
+  prossimo*.)
+
+- **Ch. 15 — The compound past, and the one geography decides**: the **passato
+  prossimo** — *avere* + past participle (*ho parlato*; *-are*→*-ato*,
+  *-ere*→*-uto*, *-ire*→*-ito*), where Italian keeps the Latin **-t-** (*parlato*)
+  that French wore away (*parlé*) — the conservative sister again, as with *acqua*
+  against *eau*. Same buried possessive as French: *habeō litterās scriptās*, "I
+  have letters written," a possessive whose participle was an **adjective**
+  agreeing with the object — still visible when the object precedes (*le ho
+  vist**e***) → the **passato remoto** (*parlò* ← Vulgar Latin **\*parabolāvit**), and Italian's
+  distinctive fact: its survival is **geographic**, not stylistic — **everyday
+  speech in Sicily and much of the south, literary in the north**. So Italian is
+  the language caught **mid-process**, with the inherited past still holding half
+  the country while French lost it entirely and Spanish/Portuguese never gave it
+  up. **Authored.**
+
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |

@@ -1,5 +1,87 @@
 # Changelog
 
+## Chapter 4 — Farewells (and the root that closes the circle)
+
+- **Chapter 4 authored** (`AR-C04-maa-with`, `-al-salama`, `-maa-salama`,
+  `-ila-liqaa`, `-practice`): the **word** lessons for **مع السلامة**, which
+  `AR-W12` had already taught the learner to hand-write — the same gap-filling
+  move as Ch. 3. Completes the greet → introduce → ask → **part** arc.
+- **مع** (*maʿa*, "with") — the first preposition met that does **not** attach,
+  in explicit contrast to *al-*, *bi-* and *li-* from Chapters 1 and 3; and
+  distinguished from *bi-* by sense (*bi-khayr* = "**in** goodness" vs *maʿa* =
+  "**accompanied by**"). ← Semitic *\*ʿimma*, cousin of Hebrew **ʿim** — the
+  *salām/shalom* and *ism/shem* pairing for a third time, presented as systematic
+  rather than coincidental.
+- **السلامة** (*as-salāma*) — **not a new word**. It is Ch. 1's *salām* run
+  through the ***faʿāla*** pattern, which converts a thing into **the state of
+  being** that thing (peace → safety/soundness), plus *al-* in front and the
+  feminine **ة** behind. Reactivates two already-taught rules: **س** is a **sun
+  letter** so *al-* assimilates (*as-salāma*), and *tāʾ marbūṭa* marks the
+  feminine, as Arabic abstract nouns usually are.
+- **مع السلامة** — the assembly, and the chapter's point: the **first greeting**
+  (*as-salāmu ʿalaykum*) and the **last farewell** are built on the **same root
+  s–l–m**, so Arabic opens and closes a conversation with one idea. Set beside
+  English **goodbye** ← "***God be with ye***" — both languages hinge their
+  farewell on "**with**" — plus Spanish *adiós* / French *adieu* ("to God"): four
+  languages, one instinct.
+- **إلى اللقاء** (*ilā l-liqāʾ*, "until the meeting," root **l–q–y**) — whose
+  "until + a future point" shape is exactly Spanish *hasta luego / hasta mañana*.
+  The payoff: ***hasta*** is **itself an Arabic loanword** (← *ḥattā*), one of the
+  rare borrowed **function** words among al-Andalus's ~4000 — so Spanish didn't
+  just copy the pattern, it borrowed the word that builds it. **Honest letter
+  note**: **ق** (*qāf*) and **ى** (*alif maqṣūra*) are outside
+  `data/scripts/arabic.json`'s letter set, so the lesson says to read them now and
+  draw them later — *alif maqṣūra* is framed via the already-taught dots principle
+  (yāʾ's body, no dots, long *ā*).
+- **practice** — the full four-chapter dialogue with a literal-translation column
+  showing that **no line contains a verb "to be,"** a **root ledger** (s–l–m,
+  s–m–w, ḥ–w–l, kh–y–r, ḥ–m–d, l–q–y — six roots carry the whole conversation),
+  and the attaching-pieces table (*al-*, *bi-*, *li-*, *-ī*, *-ka/-ki*) with *maʿa*
+  as the one that doesn't.
+- Taxonomy: canonical `FAREWELL`, `FAREWELL-LATER`, `REVIEW`; namespaced
+  `AR-PREP-WITH`, `AR-WORD-SALAMA`. Roadmap: Ch. 4 authored and removed from the
+  planned table.
+
+## Chapter 3 — Responding (how are you, and two ways to answer)
+
+- **Chapter 3 authored** (`AR-C03-kayfa`, `-hal`, `-kayfa-haluka`, `-bi-khayr`,
+  `-al-hamdu-lillah`, `-practice`): the **word** chapter the writing set had
+  already prepared — `AR-W07`–`AR-W09` hand-assembled **خير → بخير**, and this
+  chapter finally says what it means. Closes the greet → introduce → **ask after
+  someone** arc.
+- **كيف** (*kayfa*, "how") — the partner to Chapter 2's **ما** (*mā*, "what"). A
+  question word rather than a root-and-pattern noun, but *k-y-f* still generates
+  **kayfiyya**, "quality" — literally "**how-ness**" — and *takyīf*, which in
+  modern Arabic means **air conditioning**. Honest note in the lesson: **ف**
+  (*fāʾ*) is the one letter here the writing track hasn't reached, so it is read,
+  not drawn. (Every other letter in the chapter is in `data/scripts/arabic.json`
+  and has been written by hand.)
+- **حال** (*ḥāl*, "state") — the chapter's best root. **ḥ–w–l** means "**to turn,
+  change**," so a *state* is literally **how things have turned**: *ḥawla*
+  ("around"), *taḥwīl* ("transformation"), *ḥawl* ("**a year**" — one full turn).
+  Set against Spanish *estar* ← *stāre* "to **stand**": two languages, two
+  metaphors — one turns, one stands.
+- **كيف حالك؟** (*kayfa ḥāluka / ḥāluki*) — assembled from parts, not memorised.
+  The **-ka/-ki** "your" suffix attaches exactly as Chapter 2's **-ī** "my" did
+  (*ism* → *ismī*), and splits by **gender** exactly as *anta/anti* did — the same
+  *fatḥa*/*kasra* pair taught in `AR-W06`. Plus the **zero copula** once more:
+  "how — your-state," with no word for "is."
+- **بخير** (*bi-khayr*, "in goodness") — the payoff lesson. *Khayr* is **not a new
+  word**: it was inside Chapter 1's **صباح الخير** all along, and *bi-* is a
+  one-letter preposition that glues on like *al-* (also opening *bismillāh*, which
+  contains Chapter 2's *ism*).
+- **الحمد لله** — *al-* + *ḥamd* + *li-* + *allāh*, where *allāh* is itself *al-* +
+  *ilāh*, "**the** god" (Semitic cousin of Hebrew *El/Elohim*, the same pairing as
+  *salām*/*shalom*). The root **ḥ–m–d** "to praise" also gives **Aḥmad** and
+  **Muḥammad** ("the much-praised") — so the language's commonest phrase and the
+  world's commonest given name come out of the same three consonants.
+- **practice** — the full greet-ask-answer dialogue, with the right-hand
+  literal-translation column showing that **not one line contains a verb "to be,"**
+  and a table of the three attaching particles (*al-*, *bi-*, *li-*) and two
+  suffixes (*-ī*, *-ka/-ki*) that carry most of the chapter.
+- Taxonomy: canonical `QUESTION-HOW`, `STATE-HOW-ARE-YOU`, `WORD-WELL`, `REVIEW`;
+  namespaced `AR-WORD-HAL`, `AR-PRAISE-GOD`.
+
 ## Chapter 4 — Writing set (ʿayn, the feminine ending, and the farewell)
 
 - **Writing lessons added** (`AR-W10-ayn`, `AR-W11-ha-and-ta-marbuta`,

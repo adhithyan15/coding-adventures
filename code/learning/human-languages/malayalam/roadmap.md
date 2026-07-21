@@ -36,12 +36,26 @@ by piece, on the first word that needs it.
   (to live; postposition *-il*) → jōli ceyyuka (to work; *ceyyuka* = the same
   root as Tamil *sey*) → practice.
 
+- **Ch. 6 — Case endings, and the sentence with no subject**: **-ിക്ക്/-ിന്**
+  (*-ikku/-inu*, "to/for") — the first case ending and the entry point to
+  **agglutination**: Malayalam **adds** a suffix carrying **one** meaning with the
+  **seam visible** (*jōli* + *kku*), where a Latin ending like *-īs* **fuses**
+  case+number+declension inseparably; one case, two shapes chosen by the noun's
+  ending. Includes *ñān* → **എനിക്ക്** *enikku* ("to me") → **എനിക്ക് മലയാളം അറിയാം**
+  (*enikku malayāḷam aṟiyām*, "I know Malayalam") — literally "**to-me Malayalam
+  is-knowable**" (*aṟiy-* + the **abilitative** *-ām*, not a passive), with **no
+  nominative "I"**. The **dative-subject** rule:
+  knowing, liking and wanting *happen to* you (English fossil: "**methinks**").
+  Closes on the four-sister table, with the extra observation that **enikku ≈
+  Tamil enakku** — Malayalam and Tamil separated most recently of the four, and it
+  shows. **Authored.**
+
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 6 | Case-endings (Malayalam's agglutinative suffixes: *-e, -il, -ōṭu*); more verbs |
-| 7+ | Tense, numbers, family, food — always with the Dravidian-cognate thread |
+| 7 | The rest of the case suffixes — accusative *-e*, locative *-il*, comitative *-ōṭu* — now that Ch. 6 has established how stacking works |
+| 8+ | Tense, numbers, family, food — always with the Dravidian-cognate thread |
 
 Note: Malayalam marks "you" by **register** (*nī* familiar / *niṅṅaḷ*
 respectful, also plural) — like the other tracks, worth teaching beside them.

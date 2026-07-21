@@ -11,6 +11,11 @@ client refuses undeclared domains before opening TLS sockets. The fixture keeps
 CI stable while still forcing the fetch, classify, supervise, write, journal,
 store, and capability boundaries to run as one pipeline.
 
+The D18D tools are loaded from `orchestrator_profile.json` through
+`chief-of-staff-host-runtime`. Fetch, classification, and file writing belong to
+three isolated host profiles with independent capability sets. The profile must
+be complete and active before the first tool invocation.
+
 The primary tests write a real `umbrella-today.txt` file through the capability
 cage, assert that the supervised agent says to bring an umbrella for the rainy
 fixture, prove the supervisor recreates a killed child before the next tick, and

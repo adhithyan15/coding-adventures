@@ -1,5 +1,50 @@
 # Changelog
 
+## Chapter 15 — The compound past, and the one geography decides
+
+- **Chapter 15 authored** (`IT-C15-passato-prossimo`, `-passato-remoto`): the
+  everyday past, built on Ch.14's *avere* — reviewing Ch.5/14 via `reviews_of`.
+- **passato prossimo** (`IT-C15-passato-prossimo`): *avere* + past participle
+  (*-are*→*-ato*, *-ere*→*-uto*, *-ire*→*-ito*), with two callbacks. The silent
+  **h** from Ch.14 is doing its job again — *ho parlato* can't be misread as *o
+  parlato* ("or spoken"). And Italian **keeps the Latin -t-** (*parlato*) that
+  French wore away (*parlé*), both from *-ātum*: the conservative sister again,
+  matching Ch.11's *acqua* against *eau*. Same buried possessive as French — Latin
+  *habeō litterās scriptās*, where the participle was an **adjective** agreeing with
+  the object, a construction that **hardened into a tense**; the agreement survives
+  when the object precedes (*le ho vist**e***).
+- **passato remoto** (`IT-C15-passato-remoto`): *parlò* ← Vulgar Latin **\*parabolāvit**, with
+  the final written stress the numbers chapter already introduced. Italian's
+  distinctive fact is that this tense's survival is **geographic, not stylistic** —
+  everyday speech in **Sicily and much of the south**, both-with-a-distinction in
+  Tuscany, and literary in the **north**. So the "correct" past tense changes as you
+  travel, and Italian is the language caught **mid-process**: French lost the
+  inherited past from speech entirely, Spanish and Portuguese never gave it up, and
+  Italian still holds it in half the country.
+- Taxonomy: namespaced `IT-PAST-COMPOUND`, `IT-PAST-SIMPLE-REGIONAL`.
+
+## Chapter 14 — avere, and having your years
+
+- **Chapter 14 authored** (`IT-C14-avere`, `-eta`): the workhorse verb and the
+  language's only silent letter, reviewing Ch.5/9/10/11/12/13 via `reviews_of`.
+- **avere** (`IT-C14-avere`): *ho/hai/ha/abbiamo/avete/hanno* ← *habēre*, the same
+  source as French *avoir*, and English's *habit/inhabit/exhibit/prohibit*. The
+  chapter's real subject is the **silent h**: Italian discarded the Latin *h*
+  almost everywhere (*homō* → *uomo*, *herba* → *erba*), but kept it in exactly
+  these four forms because without it they collide with **o** ("or"), **ai** ("to
+  the"), **a** ("to") and **anno** ("**year**"). The letter is never pronounced and
+  survives **only so the eye can tell the words apart** — spelling doing a job
+  sound cannot. Also notes *abbiamo*'s **bb** as the old *habē-* resurfacing while
+  *ho* wore down to one vowel.
+- **ho venti anni** (`IT-C14-eta`): age via *avere*, never *essere*; *anno* ←
+  *annus* → *annual/anniversary*, with a genuinely held **double n**. The silent
+  *h* then pays off inside this very chapter — ***hanno*** ("they have") and
+  ***anno*** ("year") are **homophones** that co-occur in age sentences, which is
+  exactly why the letter was worth keeping. Closes on the five-language table:
+  **Romance has its years; Germanic is its years.**
+- Sets up the *passato prossimo*, which is built on *avere*.
+- Taxonomy: namespaced `IT-VERB-HAVE`, `IT-AGE`.
+
 ## Chapter 13 — Colours
 
 - **Chapter 13 authored** (`IT-C13-nero-bianco`, `-rosso-blu`): two colours from two

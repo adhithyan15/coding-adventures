@@ -85,6 +85,34 @@ French.
   colour. Payoff: **not one** of the four is a plain inherited Latin colour word.
   **Authored.**
 
+- **Ch. 14 — *ter*, and holding your years**: **ter** (*tenho/tens/tem/temos/
+  têm*), with the **-nh-** already met in *vinho* and a **circumflex** that alone
+  separates *tem* ("he has") from *têm* ("**they** have") — an accent doing
+  grammar, not sound. The chapter's point is the **Iberian swap**: Portuguese and
+  Spanish **alone** took Latin ***tenēre*** "to **hold**" (→ English
+  *tenant/retain/maintain/tenacious/tenure*) as their word for *have*, while French
+  and Italian kept *habēre* — and Portuguese's own *habēre* survivor, **haver**,
+  was **demoted** to an auxiliary and to *há* ("there is"). The two verbs swapped
+  jobs → **tenho vinte anos**, age via *ter* and never *ser*, which given the root
+  literally says "**I hold twenty years**" — the most physical version of the
+  idiom. And *ano* ← *annus* shows the two Iberian outcomes of Latin **-nn-**:
+  Portuguese **simplified** it to *n*, Spanish **palatalized** it into **ñ**
+  (*año*) — which is where *ñ* came from in the first place. **Authored.**
+
+- **Ch. 15 — The past Portuguese kept, and the compound that means something
+  else**: the **pretérito perfeito** — *falei/falaste/falou/falámos/falaram* ←
+  Vulgar Latin perfect **\*fabulāvī** (= Spanish *hablé*), **one word, no auxiliary**. The
+  interest isn't the endings but that Portuguese still **uses** it in daily speech:
+  French exiled the same inherited tense to **literature**, German pushed it aside,
+  northern Italy dropped it — and Portuguese and Spanish, at the **western edge**,
+  simply kept it → **tenho falado**, which does **not** mean "I have spoken." It
+  means "I **have been** speaking" — **repeatedly, over a recent stretch, possibly
+  still going**; a single finished act is *falei*. The explanation is the good
+  part: Portuguese built the **same** *have* + participle machine as French and
+  Italian, but ***falei* never vacated the plain-past slot** — with no vacancy, the
+  new construction drifted into an **iterative** job instead. Same parts, same era,
+  different outcome, because of what was already in the way. (This is a very common English-speaker error in Portuguese.) **Authored.**
+
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |

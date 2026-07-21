@@ -37,12 +37,28 @@ needs it.
   postposition *-alli*) → kelasa māḍu (to work; noun + *māḍu*, the twin of
   Hindi's *karnā*) → practice.
 
+- **Ch. 6 — Case endings, and the sentence with no subject**: **-ಗೆ** (*-ge*,
+  "to/for") — the first case ending and the entry point to **agglutination**:
+  Kannada **adds** a suffix carrying **one** meaning with the **seam visible**
+  (*hesar* + *ige*), where a Latin ending like *-īs* **fuses** case+number+
+  declension inseparably. The sound-history payoff: Kannada's **g** is the shared
+  Dravidian dative ***k* softened between vowels** — a change Kannada made and its
+  carried **into the dative** where its sisters kept the hard consonant — while
+  the **geminate** *-kke* form (*kelasakke*) resisted voicing and preserves the old hard
+  doubled consonant. Includes *nānu* → **ನನಗೆ** *nanage* ("to me") → **ನನಗೆ ಕನ್ನಡ
+  ಗೊತ್ತು** (*nanage kannaḍa gottu*, "I know Kannada") — literally "**to-me Kannada
+  known**," with **no nominative subject**, and where *gottu* isn't even an action
+  verb, so nothing in the sentence is *doing* anything. The **dative-subject**
+  rule: knowing and liking *happen to* you (English fossil: "**methinks**").
+  Closes on the four-sister table — *-ge / -ukku / -ku / -ikku*, visibly one
+  suffix. **Authored.**
+
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 6 | Case-endings (Kannada's agglutinative suffixes: *-ge, -alli, -inda*); more verbs |
-| 7+ | Tense, numbers, family, food — always with the Dravidian-cognate thread |
+| 7 | The rest of the case suffixes — locative *-alli*, ablative/instrumental *-inda* — now that Ch. 6 has established how stacking works |
+| 8+ | Tense, numbers, family, food — always with the Dravidian-cognate thread |
 
 Note: Kannada marks "you" by **register** (*nīnu* familiar / *nīvu* respectful,
 also plural) — like the other tracks, worth teaching beside them.

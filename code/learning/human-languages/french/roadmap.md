@@ -80,6 +80,34 @@ compared, every Spanish form supplied in full (no prior Spanish assumed).
   borrowed **back** from French. Payoff: of *bleu-blanc-rouge*, **two of three are
   loanwords**. **Authored.**
 
+- **Ch. 14 — *avoir*, and having your years**: **avoir** — irregular and
+  everywhere (*j'ai/tu as/il a/nous avons/vous avez/ils ont*), where the three
+  singular forms are **homophones** and only the pronoun disambiguates; ←
+  *habēre*, which is the **same root as Ch. 5's *habiter*** (*habitāre* is
+  *habēre*'s frequentative, "to keep having a place") and as English
+  *habit/inhabit/exhibit/prohibit*; *habeō* wore all the way down to **j'ai**, a
+  single vowel → **j'ai vingt ans** — age takes **avoir**, never *être*, and *ans*
+  is obligatory (*an* ← *annus* → *annual/anniversary*), with **liaison** waking
+  the silent *t* of *vingt* (*vin-t-an*). The cross-language payoff: **French,
+  Spanish, Italian and Portuguese all *have* their years; German and English *are*
+  theirs.** **Authored.** (Also the prerequisite for the compound past — *avoir* is
+  the auxiliary the *passé composé* is built on.)
+
+- **Ch. 15 — The compound past, and the tense it drove out**: the **passé
+  composé** — *avoir* + past participle (*j'ai parlé*; *-er*→*-é* ← *-ātum*,
+  *-ir*→*-i*, *-re*→*-u*), with the note that *parler / parlé / parlez* are
+  **homophones**. The etymology is the whole lesson: *j'ai parlé* was once
+  literally "**I have [a thing] spoken**" — Latin *habeō litterās scriptās*, "I
+  have letters written," a **possessive** whose participle was an **adjective**
+  agreeing with the object. That construction **hardened into a tense**, and the
+  fossil is still visible: the participle **still agrees** with a preceding object
+  (*les lettres que j'ai écrit**es***) → the **passé simple** (*il parla* ←
+  Vulgar Latin **\*parabolāvit**) — the direct inheritance, and the **same tense** as Spanish *habló*
+  and Portuguese *falou*, but exiled to **literature**: recognise it, don't produce
+  it. The cross-language payoff: **French, German and Italian all**
+  let a "have" compound push the inherited simple past out of speech, while
+  **Spanish and Portuguese kept theirs**. **Authored.**
+
 ## Planned (mirrors the Spanish theme sequence)
 
 | Chapter | Theme |

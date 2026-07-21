@@ -105,7 +105,7 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. Regenerated
-on July 19, 2026 after the paired Lua/Perl `fenwick-tree`, `binary-tree`,
+on July 20, 2026 after the paired Lua/Perl `fenwick-tree`, `binary-tree`,
 `binary-search-tree`, `in-memory-data-store-protocol`, `avl-tree`, `tree-set`,
 `skip-list`, `hyperloglog`, `trie`, `radix-tree`, and `resp-protocol` ports,
 the paired `hash-functions` prerequisite, the paired `bloom-filter`, `hash-map`,
@@ -121,16 +121,17 @@ ports, followed by the paired `ed25519`, `font-parser`, `asciidoc-parser`, and
 `point2d`, `affine2d`, `bezier2d`, and `arc2d`
 ports, followed by the Haskell `gradient-descent`, `perceptron`, and
 `type-checker-protocol` ports, and the Haskell `paint-vm-ascii`,
-`barcode-layout-1d`, `itf`, and `code39` ports:
+`barcode-layout-1d`, `itf`, `code39`, `codabar`, `code128`, `upc-a`, `ean-13`,
+`sql-csv-source`, and `zstd` ports:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 286 |
+| Present in 10-15 languages | 172 | 280 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,972 |
-| Present in one language | 710 | 9,940 |
+| Present in one language | 715 | 10,010 |
 
-The loop must not start by attempting 9,940 singleton ports. It should finish
+The loop must not start by attempting 10,010 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 ## Priority 0: Inventory And Identity Integrity
@@ -171,7 +172,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 172 packages present in at least ten implementation languages need 288
+The 172 packages present in at least ten implementation languages need 280
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -182,7 +183,7 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Perl | 0 | Complete; paired data-structure/storage wave |
 | C# | 0 | Complete; paired native package wave |
 | F# | 0 | Complete; paired native package wave |
-| Haskell | 11 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
+| Haskell | 5 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
 | Kotlin | 58 | Move with Java |
@@ -628,6 +629,81 @@ metadata precedence, aliases, and both local and shared validation paths. The
 package now spans 12 implementation lanes, reduces the high-consensus backlog
 to 286 slots, and leaves 11 gaps in the Haskell lane.
 
+The twenty-fourth Haskell high-consensus slice is complete: `codabar` now
+provides the pure configurable-guard encoder unlocked by `barcode-layout-1d`.
+It accepts body-only or explicitly guarded input, validates configurable `A`-`D`
+start and stop choices, exposes all 20 typed binary symbol patterns, and emits
+attributed start, data, stop, and inter-character-gap runs through the shared
+paint geometry. Its package-native suite exercises guard insertion and
+preservation, educational errors, the complete symbol table, exact module
+counts, semantic attribution, empty payloads, customized paint output,
+metadata precedence, aliases, and both local and shared validation paths. The
+package now spans 12 implementation lanes, reduces the high-consensus backlog
+to 285 slots, and leaves 10 gaps in the Haskell lane.
+
+The twenty-fifth Haskell high-consensus slice is complete: `code128` now
+provides the pure Code Set B encoder unlocked by `barcode-layout-1d`. It
+validates printable ASCII, exposes the complete 107-pattern symbol table,
+computes the required weighted modulo-103 checksum, and emits attributed start,
+data, check, and stop runs through the shared paint geometry. Its package-native
+suite exercises ASCII boundaries, educational errors, the complete pattern
+table, reference values and checksums, empty payloads, exact module geometry,
+customized paint output, metadata precedence, aliases, and both local and shared
+validation paths. The package now spans 12 implementation lanes, reduces the
+high-consensus backlog to 284 slots, and leaves 9 gaps in the Haskell lane.
+
+The twenty-sixth Haskell high-consensus slice is complete: `upc-a` now provides
+the pure retail-barcode encoder unlocked by `barcode-layout-1d`. It accepts
+11-digit payloads or validated 12-digit codes, computes the required modulo-10
+check digit, exposes all twenty left/right digit patterns, and emits the fixed
+95-module start, digit, center, and end structure with typed source attribution
+and explicit symbol spans. Its package-native suite exercises 23 examples with
+91% expression and 81% alternative coverage, including reference checksums,
+all standard patterns, computed and supplied checks, ASCII and length guards,
+exact module geometry, metadata precedence, aliases, and shared validation
+paths. The package now spans 12 implementation lanes, reduces the
+high-consensus backlog to 283 slots, leaves 8 gaps in the Haskell lane, and
+unlocks the dependent `ean-13` port.
+
+The twenty-seventh Haskell high-consensus slice is complete: `ean-13` now
+provides the pure retail-barcode encoder unlocked by `barcode-layout-1d`. It
+accepts 12-digit payloads or validated 13-digit codes, computes the required
+weighted modulo-10 check digit, exposes all thirty L/G/R digit patterns and all
+ten leading-digit parity sequences, and emits the fixed 95-module guard and
+visible-digit structure with typed source attribution and explicit symbol
+spans. Its package-native suite exercises 26 examples with 92% expression and
+78% alternative coverage, including reference checksums, every standard digit
+and parity pattern, computed and supplied checks, ASCII and length guards,
+exact module geometry, metadata precedence, aliases, and shared validation
+paths. The package now spans 12 implementation lanes, reduces the
+high-consensus backlog to 282 slots, and leaves 7 gaps in the Haskell lane.
+
+The twenty-eighth Haskell high-consensus slice is complete: `sql-csv-source`
+now provides the filesystem adapter for the existing pure
+`sql-execution-engine`. It loads every CSV table through an explicit IO
+boundary, preserves header order in an immutable data-source snapshot, handles
+quoted commas, escaped quotes, embedded newlines, and CRLF, validates malformed
+records, and coerces null, boolean, integer, finite real, and text values into
+the shared SQL types. Its package-native suite exercises 19 examples with 89%
+expression and 86% alternative coverage, including parsing failures, missing
+directories and tables, typed scans, filters, ordering, null predicates, joins,
+grouping, aggregates, limits, and total result wrappers. The package now spans
+13 implementation lanes, reduces the high-consensus backlog to 281 slots, and
+leaves 6 gaps in the Haskell lane.
+
+The twenty-ninth Haskell high-consensus slice is complete: `zstd` now provides
+the pure CMP07 educational Zstandard frame codec on top of the existing native
+`lzss` package. It emits standard single-segment frames and 128 KiB raw, RLE,
+and compressed blocks, encodes raw literal sections and the predefined
+literal-length, match-length, and offset FSE tables, and strictly validates
+headers, modes, truncation, backreferences, trailing data, and output limits.
+Its package-native suite exercises 16 examples with 86% expression and 77%
+alternative coverage, including exact cross-language compressed bytes, all
+block families, multi-block RLE, dictionary-id and content-size header forms,
+checksums, deterministic binary data, compression ratios, and malformed
+frames. The package now spans 13 implementation lanes, reduces the
+high-consensus backlog to 280 slots, and leaves 5 gaps in the Haskell lane.
+
 Recommended family order:
 
 1. Leaf algorithms and data structures.
@@ -654,7 +730,7 @@ This phase covers 121 package identities and 911 current missing slots.
 
 ## Priority 4: Classify Sparse And Singleton Families
 
-The singleton inventory is led by 515 Rust, 86 Python, and 84 TypeScript
+The singleton inventory is led by 520 Rust, 86 Python, and 84 TypeScript
 packages. Classify families before opening implementation PRs.
 
 ### Likely portable Rust-led families

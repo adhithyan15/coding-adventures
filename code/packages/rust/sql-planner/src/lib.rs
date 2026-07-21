@@ -1066,9 +1066,32 @@ fn plan_order_by(
             collations,
         }
     });
+    // Same reasoning for the output ALIAS lookup an unqualified key needs (see
+    // `plan_order_item`): scanning `output_columns` per key would be
+    // O(keys × columns) with both dimensions attacker-controlled — a wide
+    // `SELECT x AS a1, …` with many non-matching ORDER BY keys never
+    // short-circuits. Build the map once instead.
+    //
+    // FIRST alias wins on a duplicate (`or_insert`, not `insert`): SQLite's
+    // `resolveAsName` returns the first select-list match and raises no
+    // ambiguity error for ORDER BY, so `SELECT x AS c, y AS c … ORDER BY c`
+    // binds to `x`. Keys are lowercased to match the collation map's convention.
+    // Skipped entirely when there is no collation context, since the result
+    // would be discarded.
+    let alias_exprs: std::collections::HashMap<String, &SqlExpr> = if order_ctx.is_some() {
+        let mut m = std::collections::HashMap::new();
+        for oc in output_columns {
+            if let Some(a) = oc.alias.as_deref() {
+                m.entry(a.to_ascii_lowercase()).or_insert(&oc.expr);
+            }
+        }
+        m
+    } else {
+        std::collections::HashMap::new()
+    };
     find_nodes(order_clause, "order_item")
         .iter()
-        .map(|item| plan_order_item(item, order_ctx.as_ref(), output_columns))
+        .map(|item| plan_order_item(item, order_ctx.as_ref(), output_columns, &alias_exprs))
         .collect()
 }
 
@@ -1458,6 +1481,10 @@ fn plan_order_item(
     item: &GrammarASTNode,
     collate_ctx: Option<&OrderCollateCtx>,
     output_columns: &[OutputColumn],
+    // Lowercased output alias -> the expression it stands for, precomputed once
+    // in `plan_order_by` so alias lookup stays O(1) per key rather than
+    // O(output columns).
+    alias_exprs: &std::collections::HashMap<String, &SqlExpr>,
 ) -> Result<SortKey, PlanError> {
     // The first child Node is the expression; check for ASC/DESC tokens.
     let expr_node = item
@@ -1561,7 +1588,26 @@ fn plan_order_item(
     let collation = if has_explicit_collate {
         collation
     } else {
-        collate_ctx.and_then(|ctx| resolve_column_collation(&expr, ctx))
+        // A bare ORDER BY name may be an OUTPUT ALIAS rather than a base-table
+        // column. When it is, the collation comes from what the alias STANDS FOR,
+        // never from a base-table column that merely shares the name:
+        //
+        //   CREATE TABLE t (x TEXT, c TEXT COLLATE NOCASE);
+        //   SELECT x AS c FROM t ORDER BY c;   -- byte order: `c` here IS `x`
+        //   SELECT c AS y FROM t ORDER BY y;   -- NOCASE: `y` stands for `c`
+        //
+        // Previously the name was resolved straight against the base table, so
+        // the first query sorted case-insensitively — the alias silently
+        // inherited an unrelated column's collating sequence. Only an
+        // UNQUALIFIED name can be an alias; `t.c` always means the column.
+        let via_alias = match &expr {
+            SqlExpr::Column { table: None, name } => {
+                alias_exprs.get(&name.to_ascii_lowercase()).copied()
+            }
+            _ => None,
+        };
+        let source = via_alias.unwrap_or(&expr);
+        collate_ctx.and_then(|ctx| resolve_column_collation(source, ctx))
     };
 
     Ok(SortKey {

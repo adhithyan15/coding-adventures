@@ -2,6 +2,34 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.28] - Unreleased
+
+### Fixed
+
+- **The ORDER BY alias lookup is precomputed, not scanned per key.** The first
+  cut of the fix below scanned `output_columns` for every sort key, which is
+  O(keys × columns) with both dimensions attacker-controlled — the exact shape
+  the sibling collation-map precompute 500 lines earlier was written to avoid
+  (a wide `SELECT x AS a1, …` with many NON-matching keys never short-circuits).
+  `plan_order_by` now builds a lowercased alias → expression map once, and skips
+  building it entirely when there is no collation context. FIRST alias wins on a
+  duplicate (`or_insert`), matching SQLite's `resolveAsName`: `SELECT x AS c,
+  y AS c … ORDER BY c` binds to `x`. Caught by security review before push.
+
+- **An ORDER BY key naming an output ALIAS no longer inherits an unrelated
+  column's `COLLATE`.** `plan_order_item` resolved a bare ORDER BY name straight
+  against the base table, so `SELECT x AS c FROM t ORDER BY c` — where `x` is
+  BINARY but the table also has a `c TEXT COLLATE NOCASE` — sorted
+  case-insensitively, silently borrowing the collating sequence of a column the
+  query never referenced. The key now resolves through the output list first:
+  when an UNQUALIFIED name matches an output alias, the collation comes from what
+  that alias STANDS FOR. So `x AS c ... ORDER BY c` is byte order, while
+  `c AS y ... ORDER BY y` still folds NOCASE — the collation follows the
+  expression, not the label. A qualified name (`t.c`) is always the column and is
+  unaffected, as is an explicit `COLLATE` on the key, which still wins outright.
+  Found while testing DISTINCT collation; same name-shadowing trap, different
+  code path.
+
 ## [0.2.27] - Unreleased
 
 ### Added

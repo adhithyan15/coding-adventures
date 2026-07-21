@@ -99,6 +99,78 @@ fn value_json(d: &logic_engine::compute::Derived) -> String {
     jnum(d.value)
 }
 
+/// Render a compute derivation tree — **how** a `let`/formula value was
+/// actually calculated, step by arithmetic step.
+///
+/// # Why this matters more than it looks
+///
+/// The engine has always built this tree. It builds one for *every* `let` and
+/// every formula application, and until now it was **discarded at the JSON
+/// boundary**: the CLI printed the final number and its dimension, and the
+/// record of how that number came to be was dropped on the floor. So a reader
+/// could see `bmi = 22.86` and its citation, but could not see that it was
+/// `70 / (1.75 ^ 2)`, nor which observed facts supplied the 70 and the 1.75.
+///
+/// The leaves are the important part. A `Leaf` carries a real `FactId`, so it
+/// resolves to that fact's `source`/`locator`/`trust` — which means **an
+/// arithmetic result is traceable all the way down to bytes**, one operand at a
+/// time. That bridge already existed in the engine; this function is what
+/// finally lets anyone outside the process walk across it.
+///
+/// Node kinds, and what each asserts:
+/// - `leaf`   — asserts a fact (an observed magnitude), so it **quotes**.
+/// - `ref`    — points at another named derived value; its own tree explains it.
+/// - `lit`    — a constant written in the formula; asserts nothing new.
+/// - `op`     — arithmetic over operands; asserts nothing new, and is honest
+///   because its operands are (§E.3: a step that computes over already-cited
+///   inputs quotes nothing — its justification is its operands').
+fn derivation_tree_json(
+    node: &logic_engine::compute::DerivationNode,
+    kb: &KnowledgeBase,
+) -> String {
+    use logic_engine::compute::DerivationNode as D;
+    match node {
+        D::Leaf {
+            slot,
+            value,
+            fact_id,
+        } => {
+            let pv = kb
+                .fact(*fact_id)
+                .map(|f| prov(&f.provenance))
+                .unwrap_or_else(|| UNRESOLVED_PROV.to_string());
+            format!(
+                "{{\"node\":\"leaf\",\"slot\":\"{}\",\"value\":{},{}}}",
+                esc(slot),
+                jnum(*value),
+                pv
+            )
+        }
+        D::DerivedRef { name, value } => format!(
+            "{{\"node\":\"ref\",\"name\":\"{}\",\"value\":{}}}",
+            esc(name),
+            jnum(*value)
+        ),
+        D::Lit { value } => format!("{{\"node\":\"lit\",\"value\":{}}}", jnum(*value)),
+        D::Op {
+            op,
+            operands,
+            result,
+        } => {
+            let kids: Vec<String> = operands
+                .iter()
+                .map(|o| derivation_tree_json(o, kb))
+                .collect();
+            format!(
+                "{{\"node\":\"op\",\"op\":\"{}\",\"value\":{},\"operands\":[{}]}}",
+                esc(op.symbol()),
+                jnum(*result),
+                kids.join(",")
+            )
+        }
+    }
+}
+
 /// Render the `let`-bound derived values as a JSON array, one object per
 /// distinct binding name, each carrying the engine-computed magnitude plus the
 /// [`Dimension`](logic_engine::dimension::Dimension) tag the engine *inferred*
@@ -149,13 +221,19 @@ fn derived_json(kb: &KnowledgeBase) -> String {
                 Some(p) => format!(",{}", prov(p)),
                 None => String::new(),
             };
+            // RS-4: the derivation tree the engine already built for this
+            // value. Previously computed and then dropped here — emitting it is
+            // what turns "the engine says 22.86" into "here is the arithmetic,
+            // and here is the observed fact behind each operand."
+            let derivation = format!(",\"derivation\":{}", derivation_tree_json(&d.tree, kb));
             format!(
-                "{{\"name\":\"{}\",\"value\":{},\"dim\":\"{}\"{}{}}}",
+                "{{\"name\":\"{}\",\"value\":{},\"dim\":\"{}\"{}{}{}}}",
                 esc(&d.name),
                 value_json(d),
                 esc(&d.dim.tag()),
                 exact,
-                provenance
+                provenance,
+                derivation
             )
         })
         .collect();
@@ -201,39 +279,155 @@ fn prov(p: &Provenance) -> String {
     )
 }
 
-fn sld_proof_json(proof: &Proof, kb: &KnowledgeBase) -> String {
+/// The provenance rendered for a step whose clause could not be resolved in the
+/// KB. This should not happen — a step names a clause the engine just used —
+/// but if it ever does, the trail must say "unattributed", never invent one.
+const UNRESOLVED_PROV: &str =
+    "\"source\":\"\",\"locator\":null,\"trust\":\"unattributed\",\"corroborations\":[]";
+
+/// Render one proof as an **ordered, addressed, self-contained** list of
+/// reasoning steps — the `ReasoningTrace` of `ADJ-REASON-MATH.md` §E.
+///
+/// # What each of those three words buys you
+///
+/// - **Ordered.** `Proof.steps` is a preorder walk of the derivation, so
+///   `step` 0, 1, 2 … *is* the order the engine reasoned in. Contrast the
+///   `via_facts` list every other citation surface renders from: that one is
+///   sorted by fact id and deduplicated, which is why those surfaces can show
+///   you *which* sources were used but never *in what order* — a bag, not a
+///   narrative.
+/// - **Addressed.** Each step carries `step` (its index) and `depth` (its
+///   nesting). Parent = the nearest preceding step one level shallower, so a
+///   reader can rebuild the tree without re-deriving any rule's arity.
+/// - **Self-contained.** Each step inlines the *resolved* `source`/`locator`/
+///   `trust` of the clause it fired, not a `FactId` pointer. The trace can then
+///   travel — to a reviewer, to another machine, into an ADJ07 trail — and still
+///   be readable without the knowledge base that produced it.
+///
+/// # Why the match below has no wildcard arm
+///
+/// It is **total** over `DerivationOrigin`, deliberately. The previous renderer
+/// ended in `_ => {}`, which silently discarded every likelihood-ratio step:
+/// a probabilistic conclusion would render a short, tidy, *incomplete* trail,
+/// and nothing in the output marked the omission. A trail with a hole is worse
+/// than no trail, because it looks complete. Adding a variant to
+/// `DerivationOrigin` must now break this function's compilation — that failure
+/// is the feature.
+fn trace_steps_json(proof: &Proof, kb: &KnowledgeBase) -> String {
     let mut steps = Vec::new();
-    for st in &proof.steps {
-        match &st.origin {
+    for (i, st) in proof.steps.iter().enumerate() {
+        // Every step is addressed the same way, whatever its kind.
+        let head = format!(
+            "\"step\":{},\"depth\":{},\"goal\":\"{}\"",
+            i,
+            st.depth,
+            esc(&format!("{}", st.goal))
+        );
+        let body = match &st.origin {
+            // ---- Deduction -------------------------------------------------
             DerivationOrigin::FromFact(id) => {
-                let pv = kb.fact(*id).map(|f| prov(&f.provenance)).unwrap_or_else(|| {
-                    "\"source\":\"\",\"locator\":null,\"trust\":\"unattributed\",\"corroborations\":[]"
-                        .to_string()
-                });
-                steps.push(format!(
-                    "{{\"kind\":\"fact\",\"goal\":\"{}\",{}}}",
-                    esc(&format!("{}", st.goal)),
-                    pv
-                ));
+                let pv = kb
+                    .fact(*id)
+                    .map(|f| prov(&f.provenance))
+                    .unwrap_or_else(|| UNRESOLVED_PROV.to_string());
+                format!("\"kind\":\"fact\",{head},{pv}")
             }
             DerivationOrigin::FromRule(id) => {
                 let pv = kb
                     .find_rule_by_id(*id)
                     .map(|r| prov(&r.provenance))
-                    .unwrap_or_else(|| {
-                        "\"source\":\"\",\"locator\":null,\"trust\":\"unattributed\",\"corroborations\":[]"
-                            .to_string()
-                    });
-                steps.push(format!(
-                    "{{\"kind\":\"rule\",\"goal\":\"{}\",{}}}",
-                    esc(&format!("{}", st.goal)),
-                    pv
-                ));
+                    .unwrap_or_else(|| UNRESOLVED_PROV.to_string());
+                format!("\"kind\":\"rule\",{head},{pv}")
             }
-            _ => {}
-        }
+            // ---- Negation as failure --------------------------------------
+            // No clause fired, so there is no citation to quote: what justified
+            // this step is the *absence* of any proof for `goal`. A re-checker
+            // verifies it by re-running that goal and asserting it still has
+            // none (§E.5).
+            DerivationOrigin::FromNegation { goal } => {
+                format!(
+                    "\"kind\":\"negation\",{head},\"absent_goal\":\"{}\",\"justification\":\"no proof exists for the negated goal\"",
+                    esc(&format!("{goal}"))
+                )
+            }
+            // ---- Probability (likelihood-ratio aggregation) ----------------
+            // These four were the ones the old wildcard dropped.
+            DerivationOrigin::FromPrior {
+                clause_id,
+                prior_logit,
+            } => {
+                format!(
+                    "\"kind\":\"prior\",{head},\"clause_id\":{},\"prior_logit\":{}",
+                    clause_id.0,
+                    jnum(*prior_logit)
+                )
+            }
+            DerivationOrigin::FromContribution {
+                clause_id,
+                evidence_fact_ids,
+                logit_delta,
+                ..
+            } => {
+                format!(
+                    "\"kind\":\"contribution\",{head},\"clause_id\":{},\"logit_delta\":{},\"evidence\":{}",
+                    clause_id.0,
+                    jnum(*logit_delta),
+                    fact_citations_json(evidence_fact_ids, kb)
+                )
+            }
+            DerivationOrigin::FromJointContribution {
+                clause_id,
+                evidence_fact_ids,
+                joint_logit_delta,
+                ..
+            } => {
+                format!(
+                    "\"kind\":\"interaction\",{head},\"clause_id\":{},\"logit_delta\":{},\"evidence\":{}",
+                    clause_id.0,
+                    jnum(*joint_logit_delta),
+                    fact_citations_json(evidence_fact_ids, kb)
+                )
+            }
+            // The literal comparison that fired is the provenance here: the
+            // reader sees `observed <op> threshold` and can recompute it. No
+            // number in this step came from a model.
+            DerivationOrigin::FromPredicateContribution {
+                clause_id,
+                slot,
+                op,
+                threshold,
+                observed,
+                logit_delta,
+            } => {
+                format!(
+                    "\"kind\":\"predicate\",{head},\"clause_id\":{},\"slot\":\"{}\",\"op\":\"{}\",\"threshold\":{},\"observed\":{},\"logit_delta\":{}",
+                    clause_id.0,
+                    esc(slot),
+                    esc(op.symbol()),
+                    jnum(*threshold),
+                    jnum(*observed),
+                    jnum(*logit_delta)
+                )
+            }
+        };
+        steps.push(format!("{{{body}}}"));
     }
     format!("[{}]", steps.join(","))
+}
+
+/// Resolve a list of `FactId`s to their inline citations, in the order given.
+fn fact_citations_json(ids: &[logic_engine::FactId], kb: &KnowledgeBase) -> String {
+    let objs: Vec<String> = ids
+        .iter()
+        .map(|id| {
+            let pv = kb
+                .fact(*id)
+                .map(|f| prov(&f.provenance))
+                .unwrap_or_else(|| UNRESOLVED_PROV.to_string());
+            format!("{{{pv}}}")
+        })
+        .collect();
+    format!("[{}]", objs.join(","))
 }
 
 /// Serialize the proof DAG for one hypothesis: walk each step and join its
@@ -284,7 +478,7 @@ fn proof_json(
                         let evidence_proof = evidence_proof
                             .as_ref()
                             .map(|proof| {
-                                format!(",\"evidence_proof\":{}", sld_proof_json(proof, kb))
+                                format!(",\"evidence_proof\":{}", trace_steps_json(proof, kb))
                             })
                             .unwrap_or_default();
                         steps.push(format!(
@@ -316,7 +510,7 @@ fn proof_json(
                                 ",\"evidence_proofs\":[{}]",
                                 evidence_proofs
                                     .iter()
-                                    .map(|proof| sld_proof_json(proof, kb))
+                                    .map(|proof| trace_steps_json(proof, kb))
                                     .collect::<Vec<_>>()
                                     .join(",")
                             )
@@ -752,10 +946,15 @@ fn recall_json(query: &Term, kb: &KnowledgeBase) -> String {
             .filter_map(|fid| kb.fact(*fid))
             .map(|f| format!("{{{}}}", prov(&f.provenance)))
             .collect();
+        // RS-4: `citations` is a SET (sorted, deduped `via_facts`) — it answers
+        // "what did this rely on?" but cannot answer "in what order, and how?".
+        // `steps` is the ordered derivation. Both are emitted: existing consumers
+        // keep their field, auditors get the narrative.
         answers.push(format!(
-            "{{\"bindings\":{{{}}},\"citations\":[{}]}}",
+            "{{\"bindings\":{{{}}},\"citations\":[{}],\"steps\":{}}}",
             binds.join(","),
-            cites.join(",")
+            cites.join(","),
+            trace_steps_json(proof, kb)
         ));
     }
     format!(
@@ -842,14 +1041,15 @@ fn range_lookup_json(rl: &LoweredRangeLookup, kb: &KnowledgeBase) -> String {
             // The answer names the value column (the binding) AND the matched
             // breakpoint key, so the audit shows WHICH bracket the query fell in.
             format!(
-                "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[{{\"bindings\":{{\"{}\":\"{}\",\"{}\":\"{}\"}},\"citations\":[{}]}}],\"abstained\":false}}",
+                "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[{{\"bindings\":{{\"{}\":\"{}\",\"{}\":\"{}\"}},\"citations\":[{}],\"steps\":{}}}],\"abstained\":false}}",
                 esc(&query_str),
                 esc(&rl.mode),
                 esc(&rl.value_col),
                 esc(&format!("{value_term}")),
                 esc(&rl.key_col),
                 esc(&format!("{key_term}")),
-                cites.join(",")
+                cites.join(","),
+                trace_steps_json(proof, kb)
             )
         }
         None => format!(

@@ -235,10 +235,29 @@ network I/O into the Chief bridge:
 
 ## Chief Of Staff Remaining Work
 
+The Chief host-profile slice now provides JSON orchestrator profiles, isolated
+host tool ownership, privilege ceilings, capability coverage checks, catalog
+completeness gates, and executable routing. The Weather Agent uses three host
+profiles for fetch, classify, and write instead of wiring an unrestricted tool
+runtime directly.
+
+The supervised-host slice now connects those profiles to the repo-owned stdio
+process pool and generic job protocol. Activation requires exactly one process
+specification per declared host; RPC follows profile tool ownership; process
+snapshots expose live-worker and shutdown state; and bounded restart is proven
+by a host that crashes one in-flight call and services the next call after
+restart.
+
+The signed-package gate now hashes sealed agent contents in deterministic,
+length-framed path order, verifies raw Ed25519 signatures with the repo-owned
+crypto crates, rejects symlinks and byte tampering, resolves `PUBKEY_ID` through
+a typed trusted keyring, and enforces signer privilege ceilings before a
+supervised process can launch. Developer keys are capped at Tier 1.
+
 These items are Chief of Staff architecture, not smart-home platform work:
 
-- Load D18D tool catalogs into a host/orchestrator profile instead of only
-  using in-memory tests.
+- Replace the proof worker with deny-all Deno workers that re-verify their
+  package and speak the proven host RPC protocol.
 - Run a Chief job end to end through scheduler or job framework, tool runtime,
   approval checks, result journal, and final user-visible report.
 - Add approval UX and policy wiring for Tier2 or stronger actions such as

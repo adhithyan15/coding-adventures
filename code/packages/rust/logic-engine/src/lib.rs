@@ -55,7 +55,7 @@ pub use datetime::{
 };
 pub use differential::{differential, Differential, DifferentialDecision, RankedHypothesis};
 pub use dimension::{dimensioned_value, DimError, DimOp, Dimension, Dimensioned};
-pub use enumerate::enumerate_all;
+pub use enumerate::{enumerate_all, ResolutionLimitExceeded, MAX_SLD_DEPTH};
 pub use govern::{enumerate_governing, GovernStatus, GovernedAnswer, GovernedResult};
 pub use lr_aggregate::{
     counterfactual, lr_aggregate, sigmoid, source_disagreements,
@@ -1306,10 +1306,27 @@ fn rename_literal(lit: &BodyLiteral, renames: &mut HashMap<u64, LogicVar>) -> Bo
 /// Backtracking is implicit in the iteration: when a clause's body fails,
 /// we drop the substitution and try the next clause.
 pub fn find_first(query: &Term, kb: &KnowledgeBase) -> Option<Substitution> {
-    find_first_with(query, kb, &Substitution::empty())
+    // A depth-capped search that gives up reports "no proof" to this API's
+    // `Option` return. That is the SAFE direction here: `find_first` is a
+    // "can you prove it?" question, and answering "I could not" after an
+    // exhausted budget is honest. The danger is entirely on the NEGATION side,
+    // where "could not prove" is read as "is false" — see `prove_body`, which
+    // consumes the `Result` directly and refuses to make that inference.
+    find_first_with(query, kb, &Substitution::empty(), 0).unwrap_or(None)
 }
 
-fn find_first_with(query: &Term, kb: &KnowledgeBase, subst: &Substitution) -> Option<Substitution> {
+fn find_first_with(
+    query: &Term,
+    kb: &KnowledgeBase,
+    subst: &Substitution,
+    depth: usize,
+) -> Result<Option<Substitution>, ResolutionLimitExceeded> {
+    // Same guard, same reason, as the enumeration resolver: without it a
+    // self-recursive rule descends until the process aborts on a stack
+    // overflow, which is a SIGABRT an embedding process cannot catch.
+    if depth >= MAX_SLD_DEPTH {
+        return Err(ResolutionLimitExceeded);
+    }
     let resolved = subst.walk(query);
 
     // Try facts first — they have no body, so success is immediate.
@@ -1317,7 +1334,7 @@ fn find_first_with(query: &Term, kb: &KnowledgeBase, subst: &Substitution) -> Op
         let mut renames = HashMap::new();
         let renamed = rename_term(&fact.term, &mut renames);
         if let Some(s) = unify(&resolved, &renamed, subst) {
-            return Some(s);
+            return Ok(Some(s));
         }
     }
 
@@ -1332,34 +1349,45 @@ fn find_first_with(query: &Term, kb: &KnowledgeBase, subst: &Substitution) -> Op
             .collect();
 
         if let Some(mut s) = unify(&resolved, &renamed_head, subst) {
-            if prove_body(&renamed_body, kb, &mut s) {
-                return Some(s);
+            if prove_body(&renamed_body, kb, &mut s, depth + 1)? {
+                return Ok(Some(s));
             }
         }
     }
 
-    None
+    Ok(None)
 }
 
 /// Prove every literal in `body` under the substitution `s`, threading
 /// each successful subgoal's resulting substitution forward to the next.
-fn prove_body(body: &[BodyLiteral], kb: &KnowledgeBase, s: &mut Substitution) -> bool {
+fn prove_body(
+    body: &[BodyLiteral],
+    kb: &KnowledgeBase,
+    s: &mut Substitution,
+    depth: usize,
+) -> Result<bool, ResolutionLimitExceeded> {
     for literal in body {
         match literal {
-            BodyLiteral::Pos(t) => match find_first_with(t, kb, s) {
+            BodyLiteral::Pos(t) => match find_first_with(t, kb, s, depth)? {
                 Some(next) => *s = next,
-                None => return false,
+                None => return Ok(false),
             },
             BodyLiteral::Neg(t) => {
-                if find_first_with(t, kb, s).is_some() {
+                // `?` IS LOAD-BEARING. If the negated goal's own search hit the
+                // depth cap we must propagate, not observe `None`. Reading an
+                // exhausted budget as "not provable" would make `not G` succeed
+                // because we STOPPED LOOKING — turning a resource limit into a
+                // positive claim about the world. Same hazard, and same fix, as
+                // the enumeration resolver's negation branch.
+                if find_first_with(t, kb, s, depth)?.is_some() {
                     // The negated goal is provable — negation-as-failure fails.
-                    return false;
+                    return Ok(false);
                 }
                 // Goal not provable; negation succeeds; substitution unchanged.
             }
         }
     }
-    true
+    Ok(true)
 }
 
 // ---------------------------------------------------------------------------

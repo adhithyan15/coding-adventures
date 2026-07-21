@@ -31,13 +31,50 @@ import {
   type ItemState,
 } from "./scheduler.ts";
 import { buildPool, type PoolEntry } from "./interleave.ts";
+import { loadLessons, indicesByLanguage, nextDue } from "./lessons.ts";
+import {
+  browserStorage,
+  fromSaved,
+  loadProgress,
+  saveProgress,
+  seenCount,
+  toSaved,
+} from "./progress.ts";
 import "./styles.css";
 
 const app = document.getElementById("app");
 if (!app) throw new Error("missing #app root");
 
-type Mode = "browse" | "practice";
+type Mode = "browse" | "practice" | "lessons";
 let mode: Mode = "browse";
+
+// --- lesson review state ----------------------------------------------------
+//
+// The letter drills above schedule GLYPHS. This schedules LESSONS — the ~670
+// written chapters — using the very same Leitner machinery, because
+// scheduler.ts is generic over a numeric index and never cared what an item is.
+// The one new thing is that this state SURVIVES: it is keyed by lesson id and
+// written to localStorage (see progress.ts), so the app finally remembers you.
+const LESSONS = loadLessons();
+const LESSON_IDS = LESSONS.map((l) => l.id);
+// Constant for the page's lifetime: lesson indices grouped by language, and the
+// round-robin pool over those groups. Computing them once is why consecutive
+// reviews can walk across languages cheaply.
+const LESSON_GROUPS = indicesByLanguage(LESSONS);
+const LESSON_POOL = buildPool(LESSON_GROUPS.map((g) => g.length));
+let savedProgress = loadProgress(browserStorage());
+let lessonSchedule: ItemState[] = fromSaved(LESSON_IDS, savedProgress);
+let lessonSession = savedProgress.session;
+let lessonIndex: number | null = null;
+let lessonRevealed = false;
+/** Rotating position in the interleaved order — see pickLesson(). */
+let lessonCursor = -1;
+
+/** Persist the current lesson schedule. Silent on failure — see progress.ts. */
+function persistLessons(): void {
+  savedProgress = toSaved(LESSON_IDS, lessonSchedule, lessonSession);
+  saveProgress(browserStorage(), savedProgress);
+}
 let currentScript = 0;
 let currentLetter = 0;
 
@@ -86,14 +123,20 @@ function renderHeader(): HTMLElement {
 
 function renderModeToggle(): HTMLElement {
   const wrap = el("div", "modes");
-  (["browse", "practice"] as Mode[]).forEach((m) => {
+  const LABELS: Record<Mode, string> = {
+    browse: "Browse",
+    practice: "Practice",
+    lessons: "Lessons",
+  };
+  (["browse", "practice", "lessons"] as Mode[]).forEach((m) => {
     const b = el("button", "mode" + (m === mode ? " mode--active" : ""));
-    b.textContent = m === "browse" ? "Browse" : "Practice";
+    b.textContent = LABELS[m];
     b.setAttribute("aria-pressed", String(m === mode));
     b.onclick = () => {
       if (mode === m) return;
       mode = m;
       if (mode === "practice") startPractice();
+      if (mode === "lessons") pickLesson();
       render();
     };
     wrap.appendChild(b);
@@ -326,14 +369,127 @@ function renderPractice(): HTMLElement {
 
 // --- top-level render -------------------------------------------------------
 
+// --- lessons ----------------------------------------------------------------
+
+/**
+ * Choose the next lesson to review.
+ *
+ * Two ideas, both borrowed rather than invented. `pickNext` (scheduler.ts)
+ * already picks the most-overdue item; `buildPool` (interleave.ts) already
+ * round-robins across groups, so grouping lessons BY LANGUAGE and pooling them
+ * gives cross-language interleaving for free — Spanish, then Tamil, then
+ * French, rather than all of Spanish first. That mixing is the point: it forces
+ * you to discriminate between languages instead of coasting inside one.
+ */
+function pickLesson(): void {
+  lessonRevealed = false;
+  if (LESSONS.length === 0) {
+    lessonIndex = null;
+    return;
+  }
+  // The scan itself is a pure function in lessons.ts (and tested there); this
+  // only threads the cursor. LESSON_GROUPS / LESSON_POOL are computed once —
+  // they are constant for the page's lifetime.
+  const { index, cursor } = nextDue(
+    LESSON_GROUPS,
+    LESSON_POOL,
+    lessonSchedule,
+    lessonSession,
+    lessonCursor,
+  );
+  lessonCursor = cursor;
+  // Nothing due: fall back to the scheduler's most-overdue pick so the mode is
+  // never a dead end.
+  lessonIndex = index ?? pickNext(lessonSchedule, lessonSession);
+}
+
+/** Grade the current lesson, advance the clock, and save. */
+function gradeLesson(wasCorrect: boolean): void {
+  if (lessonIndex === null) return;
+  lessonSchedule = reviewIn(lessonSchedule, lessonIndex, wasCorrect, lessonSession);
+  lessonSession += 1;
+  persistLessons();
+  pickLesson();
+  render();
+}
+
+function renderLessons(): HTMLElement {
+  const wrap = el("div", "practice");
+
+  const due = lessonSchedule.filter((s) => s.dueAtSession <= lessonSession).length;
+  const seen = seenCount(LESSON_IDS, savedProgress);
+  const stats = el("p", "score");
+  stats.textContent =
+    `${LESSONS.length} lessons · ${due} due · ` +
+    `${seen} started · mastered ${masteredCount(lessonSchedule)}`;
+  wrap.appendChild(stats);
+
+  if (lessonIndex === null) {
+    const empty = el("p", "muted");
+    empty.textContent = "No lessons found.";
+    wrap.appendChild(empty);
+    return wrap;
+  }
+
+  const lesson = LESSONS[lessonIndex]!;
+  const meta = el("p", "muted");
+  meta.textContent = `${lesson.language} · chapter ${lesson.chapter} · ${lesson.id}`;
+  wrap.appendChild(meta);
+
+  // Prompt: the headword, in its own script. Answer hidden until asked for —
+  // recall, not recognition.
+  const prompt = el("p", "prompt-glyph");
+  prompt.textContent = lesson.headword;
+  wrap.appendChild(prompt);
+
+  if (!lessonRevealed) {
+    const show = el("button", "opt");
+    show.textContent = "Show meaning";
+    show.onclick = () => {
+      lessonRevealed = true;
+      render();
+    };
+    wrap.appendChild(show);
+    return wrap;
+  }
+
+  const gloss = el("p", "");
+  gloss.textContent = lesson.gloss;
+  wrap.appendChild(gloss);
+
+  const buttons = el("div", "opts");
+  ([["Again", false], ["Got it", true]] as [string, boolean][]).forEach(
+    ([label, correct]) => {
+      const b = el("button", "opt");
+      b.textContent = label;
+      b.onclick = () => gradeLesson(correct);
+      buttons.appendChild(b);
+    },
+  );
+  wrap.appendChild(buttons);
+
+  // The curriculum's own review graph, surfaced: every lesson declares what it
+  // revisits. Nothing schedules off this yet — that is the next app item — but
+  // showing it makes the connective tissue visible.
+  if (lesson.reviewsOf.length > 0) {
+    wrap.appendChild(section("Revisits", listOf(lesson.reviewsOf, "links")));
+  }
+  return wrap;
+}
+
 function render(): void {
   const data = SCRIPTS[currentScript]!;
   app!.replaceChildren();
   app!.append(renderHeader());
-  // The script tabs steer per-script work; hide them during a mixed session.
-  if (!(mode === "practice" && scope === "mixed")) app!.appendChild(renderTabs());
+  // The script tabs steer per-script work; hide them during a mixed session,
+  // and in Lessons mode, which spans every language rather than one script.
+  if (mode !== "lessons" && !(mode === "practice" && scope === "mixed")) {
+    app!.appendChild(renderTabs());
+  }
 
-  if (mode === "browse") {
+  if (mode === "lessons") {
+    app!.appendChild(renderLessons());
+  } else if (mode === "browse") {
     const views = buildScriptView(data);
     const active = views[currentLetter] ?? views[0]!;
     app!.appendChild(renderSummary(scriptSummary(data)));

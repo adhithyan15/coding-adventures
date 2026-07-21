@@ -6,12 +6,13 @@ documented in this file.
 ## Unreleased
 
 ### Added
-- The WHATWG post-parse repair audit now has a focused fixture and Rust replay
-  guard over the remaining html5lib rows that still justify finish-time repair
-  shims.
-- The WHATWG formatting audit now includes a focused post-parse repair evidence
-  guard for the html5lib cases that still justify legacy finish-time recovery
-  shims.
+- Fostered `nobr` table-cell continuation nodes are now repaired while
+  processing the EOF token, retiring the final `finish_document` post-parse
+  shim and the now-obsolete focused post-parse repair audit while preserving
+  the rows in their table, formatting, shell, and interaction audits.
+- The insanely badly nested html5lib table sequence is now repaired while
+  processing the EOF token, retiring one finish-time post-parse shim while
+  preserving its focused table and formatting audit coverage.
 - `<hr>` inside open `select` elements is now placed during tree construction,
   removing a post-parse repair while preserving the html5lib select-list DOM
   audit behavior.

@@ -1,5 +1,61 @@
 # Changelog — `aarch64-backend`
 
+## 0.28.0 - 2026-07-18 (GC stack maps: `compile_with_globals_and_stackmap`)
+
+Second implementation rung of `AOT00-T1-stackmap-emission.md`: the backend now
+computes each function's **GC stack map** — the data that lets
+`__gc_collect_precise` resolve a real frame instead of falling back to a
+conservative scan.
+
+- **`compile_with_globals_and_stackmap(ctx, ir, global_slots)`** — like
+  `compile_with_globals`, but also returns one `StackMapRecord` per call return
+  address naming the frame slots that may hold GC references. Built via
+  `gc_core::StackMapBuilder` (Rule R1), so the ordering hazards are handled there.
+  It mirrors `compile_with_globals` rather than `compile` deliberately: a function
+  with a safepoint has by definition at least one call, whose `BL` is an unpatched
+  placeholder until the linker applies its `ExternalReloc` — an entry point that
+  dropped the relocs (or that could not accept `global_slots`) would hand back code
+  that cannot be linked, with no signal.
+- **Root-ness is a DENY-list, not an allow-list.** A slot is a root unless its type
+  is a provable machine scalar (`u4…u64`, `i8…i64`, `f32`, `f64`, `bool`, `void`).
+  Everything else — `any`, `str`, `ref<…>`, `array<…>`, and any type string added
+  later — is treated as a potential reference.
+  - This polarity is the whole correctness story. An earlier draft keyed root-ness on
+    `ref<…>` and was **dead code in production**: `aot_core::specialise` validates
+    every type against its own allow-list, which does not contain `ref<…>`, so every
+    reference is erased to `"any"` before reaching this backend. That draft would
+    have emitted records naming *nothing* — and an empty record is authoritative,
+    suppressing the frame's conservative scan and freeing live objects. A regression
+    test now compiles the exact shape the specialiser produces (`alloc` typed
+    `"any"`) and asserts it is rooted.
+  - `any` is not a fallback but the *normal* type of every dynamic value
+    (`__dyn_cons` allocates through `__twig_gc_alloc`), so it must be a root.
+    Honest cost: in a dyn-heavy function most slots are `any`, so the map approaches
+    a conservative scan for that frame. The win is real for statically-typed
+    frontends, where integer/float/bool slots — the ones producing heap-address
+    look-alikes — are excluded outright.
+- **A missing slot or an out-of-range offset is now a hard `BackendError`**, not a
+  skipped iteration: silently dropping a root is a use-after-free, so it must never
+  be the quiet path. (Neither is reachable today.)
+- **Offsets need no translation.** `RegAlloc` hands out SP-relative offsets and the
+  prologue pins `fp = sp`, so an SP-relative offset *is* the FP-relative offset the
+  record format wants. Slot lookups are **read-only** (`slots.get`, never
+  `slot_of`) — minting a slot post-compile would silently grow the frame the code
+  was already generated against.
+- **Call sites are found by scanning the finished code** for `BL`/`BLR` rather than
+  hooking the ~10 scattered emission sites, so a newly added call can never silently
+  escape the map. AArch64 is fixed-width and the assembler stores instructions only
+  (no inline literal pools), so every 4-byte word is a real instruction.
+- The stack map is **pure metadata**: a test asserts `compile` and the stack-map
+  entry point emit byte-identical code.
+- 9 new tests, including the production-shape `any`-alloc regression above, the
+  scalar-vs-root type classification (with an unknown type failing safe as a root),
+  BL/BLR detection (patched `imm26`, ragged tail), reference parameters, empty
+  records for scalar-only functions, and codegen invariance.
+
+Emitting these into `.rodata` and registering them via `__gc_register_stackmap` at
+start-up is the next rung — that is when precise roots actually fire.
+
 ## 0.27.0 - 2026-07-11 (E6d-2b: dyn_box_int runtime builtin)
 
 E6d-2b: register `dyn_box_int` in `V1_BUILTINS` (`uint64_t __dyn_box_int(int64_t)`), so dynamic arithmetic that re-boxes a machine result at runtime lowers to `bl __dyn_box_int`. Mirrors the existing `dyn_unbox_int`.

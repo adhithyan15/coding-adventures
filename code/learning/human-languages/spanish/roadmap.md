@@ -115,8 +115,48 @@ order lives in the book, which LaTeX auto-numbers, and in `session-map.md`.)
   sorting all three families by the single question *where does the stress land?*
   **Authored.**
 
-Next: **Ch. 16** — the **imperfect**, the past that kept going, and its contrast
-with the preterite; then everyday description, building toward real conversation.
+- **Ch. 16 — The imperfect, and choosing between the two pasts**: the **regular
+  imperfect** *hablaba…hablábamos* / *comía…comíamos* — the ongoing-or-habitual
+  past, and the **most regular tense in the language**, with **-er and -ir sharing
+  one set a third time** (← Latin *-ābam* / *-ēbam*, the *b* surviving whole in
+  *-aba* but wearing away in *-ēbam → -ía*); the two accent jobs (*hablábamos* =
+  stress three syllables back; *comía* = **breaking the diphthong** into
+  *co-mí-a*); and a **pro-drop exception** — *yo* and *él* forms are identical, so
+  Spanish puts *yo* back → the **only three irregular imperfects in the entire
+  language**: *ser→era*, *ir→iba*, *ver→veía* (which barely counts). The payoff:
+  ***iba* ← Latin *īre*** is the **one tense where *ir* uses its own verb** — its
+  present came from *vādere* (Ch. 10) and its preterite from *fuī* (Ch. 14), so
+  *ir* is stitched together from **three different Latin verbs** → practice on the
+  **aspect** contrast English doesn't grammatically mark: **point vs line**,
+  imperfect setting the background and preterite interrupting it, plus the verbs
+  where the choice changes the **meaning** (*sabía* "knew" vs *supe* "found out";
+  *conocía* "knew" vs *conocí* "met"). **Authored.**
+
+- **Ch. 17 — The future and the conditional, or one weld twice**: the **future**
+  *hablaré/hablarás/hablará/hablaremos/hablarán*, built on the **whole
+  infinitive** (uniquely, you don't strip the ending) with **one** ending set for
+  all three conjugations. The etymology is the chapter: Latin's own future
+  (*amābō*) **died**, Romance replaced it with **infinitive + *habēre*** (*amāre
+  habeō*, "I **have to** love" → "I will love"), and the phrase then **fused into a
+  single word** — so the endings *-é/-ás/-á/-emos/-án* are literally the present of
+  *haber* (*he/has/ha/hemos/han*) worn down to a suffix. **A compound tense that
+  closed up into a simple one** — the mirror image of the parallel-4 tracks' Ch. 15
+  compound past, which stayed open as two words. And the seam is still visible next
+  door: Portuguese *falá-**lo**-ei* drops a pronoun **inside** the join → the
+  **conditional** *hablaría* — the **same weld** with the **imperfect** of *haber*
+  instead of the present, which is exactly why its endings are the *-ía/-ías/
+  -íamos/-ían* of Ch. 16's imperfect. One trick, two tenses of one auxiliary →
+  practice on the **ten irregular stems**, which fall into three families
+  (drop-the-vowel *podré/sabré*; drop-then-**wedge-a-d** *tendré/pondré/vendré/
+  saldré*, where Old Spanish refused to leave the squeezed *-n'r-* alone and even
+  tried *terné/porné* first; and the choppers *diré/haré*) — with the payoff that
+  the **same bent stem serves both tenses**, and that **all six -go club** verbs of
+  Ch. 12–13 turn up here, split between the *-dr-* group and the choppers. Closes on the **future of
+  probability** (*Serán las tres* = "it **must be** three"), which makes sense once
+  you know the tense was built from "I **have to**." **Authored.**
+
+Next: **Ch. 18** — the **subjunctive**, the mood for what isn't fact; then everyday description,
+building toward real conversation.
 From here the course hands over rules, not phrases. Grammar accumulates piece by
 piece. The theme skeleton below plans the wider road.
 

@@ -39,6 +39,7 @@ import {
   deviceModelReferenceDeckAuditSummaryRecords,
   deviceModelTemperatureAuditFixtures,
   diode,
+  diodeAtTemperature,
   diodeFromModelCard,
   formatCornerDcSweepTable,
   formatCornerDcTable,
@@ -123,7 +124,7 @@ describe("dcOp", () => {
 
   it("exports stable model-card supported parameter coverage", () => {
     const coverage = modelCardSupportedParameterCoverage();
-    expect(coverage).toHaveLength(67);
+    expect(coverage).toHaveLength(71);
     expect(coverage[0]).toStrictEqual({
       kind: "D",
       canonicalParameter: "IS",
@@ -143,7 +144,7 @@ describe("dcOp", () => {
     expect(table).toContain("NMOS\tVT0\tVT0|VTO|VTH\t3");
     expect(table.split("\n").at(-1)).toBe("PMOS\tMJ\tMJ\t1");
     const records = modelCardSupportedParameterCoverageRecords();
-    expect(records).toHaveLength(67);
+    expect(records).toHaveLength(71);
     expect(records[0]).toStrictEqual({
       kind: "D",
       canonical_parameter: "IS",
@@ -161,11 +162,11 @@ describe("dcOp", () => {
     expect(summary).toHaveLength(7);
     expect(summary[0]).toStrictEqual({
       kind: "D",
-      canonicalParameterCount: 7,
-      acceptedNameCount: 11,
-      aliasedParameterCount: 3,
+      canonicalParameterCount: 11,
+      acceptedNameCount: 17,
+      aliasedParameterCount: 5,
       maxAliasCount: 3,
-      aliasedParameters: ["IS", "VT", "CJO"],
+      aliasedParameters: ["IS", "VT", "CJO", "VJ", "M"],
     });
     expect(summary[5]).toStrictEqual({
       kind: "NMOS",
@@ -181,7 +182,7 @@ describe("dcOp", () => {
     expect(table.split("\n")[0]).toBe(
       "kind\tcanonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\taliased_parameters",
     );
-    expect(table.split("\n")[1]).toBe("D\t7\t11\t3\t3\tIS|VT|CJO");
+    expect(table.split("\n")[1]).toBe("D\t11\t17\t5\t3\tIS|VT|CJO|VJ|M");
     expect(table.split("\n").at(-1)).toBe(
       "PMOS\t18\t25\t6\t3\tVT0|LAMBDA|N_SUB|T_NOM|CBS|CBD",
     );
@@ -189,14 +190,14 @@ describe("dcOp", () => {
     expect(records).toHaveLength(7);
     expect(records[0]).toStrictEqual({
       kind: "D",
-      canonical_parameter_count: "7",
-      accepted_name_count: "11",
-      aliased_parameter_count: "3",
+      canonical_parameter_count: "11",
+      accepted_name_count: "17",
+      aliased_parameter_count: "5",
       max_alias_count: "3",
-      aliased_parameters: "IS|VT|CJO",
+      aliased_parameters: "IS|VT|CJO|VJ|M",
     });
     expect(formatModelCardSupportedParameterCoverageSummaryCsv()).toMatch(
-      /^kind,canonical_parameter_count,accepted_name_count,aliased_parameter_count,max_alias_count,aliased_parameters\nD,7,11,3,3,IS\|VT\|CJO\n/,
+      /^kind,canonical_parameter_count,accepted_name_count,aliased_parameter_count,max_alias_count,aliased_parameters\nD,11,17,5,3,IS\|VT\|CJO\|VJ\|M\n/,
     );
     expect(JSON.parse(formatModelCardSupportedParameterCoverageSummaryJson())).toStrictEqual(records);
   });
@@ -208,15 +209,15 @@ describe("dcOp", () => {
       passed: true,
       kindCount: 7,
       expectedKindCount: 7,
-      canonicalParameterCount: 67,
-      expectedCanonicalParameterCount: 67,
-      acceptedNameCount: 113,
-      aliasedParameterCount: 33,
+      canonicalParameterCount: 71,
+      expectedCanonicalParameterCount: 71,
+      acceptedNameCount: 119,
+      aliasedParameterCount: 35,
       maxAliasCount: 4,
       issues: [],
     });
     expect(formatModelCardSupportedParameterCoverageGateReport(report)).toBe(
-      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t67\t67\t113\t33\t4\t0",
+      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t71\t71\t119\t35\t4\t0",
     );
     expect(formatModelCardSupportedParameterCoverageGateIssueTable(report)).toBe(
       "kind\tfield\tmessage",
@@ -239,9 +240,9 @@ describe("dcOp", () => {
 
     expect(report.passed).toBe(false);
     expect(report.kindCount).toBe(7);
-    expect(report.canonicalParameterCount).toBe(66);
-    expect(report.acceptedNameCount).toBe(110);
-    expect(report.aliasedParameterCount).toBe(32);
+    expect(report.canonicalParameterCount).toBe(70);
+    expect(report.acceptedNameCount).toBe(116);
+    expect(report.aliasedParameterCount).toBe(34);
     expect(report.maxAliasCount).toBe(4);
     expect(report.issues).toHaveLength(4);
     expect(report.issues[0]).toStrictEqual({
@@ -255,7 +256,7 @@ describe("dcOp", () => {
       message: "expected NMOS max alias count 3, found 2",
     });
     expect(formatModelCardSupportedParameterCoverageGateReport(report)).toBe(
-      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t66\t67\t110\t32\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical supported parameters, found 17\nNMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card names, found 22\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2",
+      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t70\t71\t116\t34\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical supported parameters, found 17\nNMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card names, found 22\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2",
     );
     const records = modelCardSupportedParameterCoverageGateIssueRecords(report);
     expect(records[0]).toStrictEqual({
@@ -276,10 +277,22 @@ describe("dcOp", () => {
       JS: 2.0e-14,
       CJ: 1.5e-12,
       TT: 4.0e-9,
+      PB: 0.8,
+      MJ: 0.4,
+      FC: 0.35,
+      XTI: 2.2,
       RS: 10.0,
     });
     const diodeModel = diodeFromModelCard("D1", "a", "k", diodeCard);
-    expect(diodeCard.parameters).toStrictEqual({ IS: 2.0e-14, CJO: 1.5e-12, TT: 4.0e-9 });
+    expect(diodeCard.parameters).toStrictEqual({
+      IS: 2.0e-14,
+      CJO: 1.5e-12,
+      TT: 4.0e-9,
+      VJ: 0.8,
+      M: 0.4,
+      FC: 0.35,
+      XTI: 2.2,
+    });
     expect(diodeCard.unsupportedParameters).toStrictEqual(["RS"]);
     const diodeIssues = modelCardUnsupportedParameterIssues(diodeCard);
     expect(diodeIssues).toStrictEqual([
@@ -309,6 +322,10 @@ describe("dcOp", () => {
     expectClose(diodeModel.saturationCurrent, 2.0e-14);
     expectClose(diodeModel.junctionCapacitance, 1.5e-12);
     expectClose(diodeModel.transitTime, 4.0e-9);
+    expectClose(diodeModel.junctionPotential, 0.8);
+    expectClose(diodeModel.gradingCoefficient, 0.4);
+    expectClose(diodeModel.forwardBiasDepletionCoefficient, 0.35);
+    expectClose(diodeModel.saturationCurrentTemperatureExponent, 2.2);
 
     const bjtCard = normalizeModelCard("Qsmall", "npn", { BETA: 125.0, CBE: 2.0e-12 });
     const bjtModel = bjtFromModelCard("Q1", "c", "b", "e", bjtCard);
@@ -923,6 +940,26 @@ describe("dcOp", () => {
     ).toEqual(["X1.Rtop", "X1.Rbot"]);
   });
 
+  it("preserves the complete diode model through subcircuit expansion", () => {
+    const circuit = new Circuit();
+    circuit.defineSubcircuit(
+      subcircuitDefinition("diode-cell", ["in"], [
+        diode("Dcell", "in", "0", 2.0e-14, 0.026, 1.2, 6.0, 2.0e-6, 1.5e-12, 4.0e-9, 0.8, 0.4, 0.35, 2.2),
+      ]),
+    );
+    circuit.add(xInstance("X1", ["a"], "diode-cell"));
+
+    const expanded = circuit.elements().find((element) => element.kind === "diode");
+    expect(expanded?.kind).toBe("diode");
+    if (expanded?.kind !== "diode") {
+      throw new Error("expected expanded diode");
+    }
+    expectClose(expanded.junctionPotential, 0.8);
+    expectClose(expanded.gradingCoefficient, 0.4);
+    expectClose(expanded.forwardBiasDepletionCoefficient, 0.35);
+    expectClose(expanded.saturationCurrentTemperatureExponent, 2.2);
+  });
+
   it("uses positive-to-negative orientation for current sources", () => {
     const circuit = new Circuit();
     circuit.add(currentSource("I1", "0", "n1", 1.0e-3));
@@ -1123,6 +1160,26 @@ describe("dcOp", () => {
 
     expect(coldResult.voltage("a")).toBeGreaterThan(nominalResult.voltage("a")!);
     expect(hotResult.voltage("a")).toBeLessThan(nominalResult.voltage("a")!);
+  });
+
+  it("uses the diode model saturation-current temperature exponent", () => {
+    const temperatureKelvin = 350.0;
+    const nominalTemperatureKelvin = 300.15;
+    const defaultHot = diodeAtTemperature(
+      diode("D1", "a", "0", 1.0e-15, 0.02585, 1.0, undefined, 1.0e-3, 0.0, 0.0, 1.0, 0.5, 0.5, 3.0),
+      temperatureKelvin,
+      nominalTemperatureKelvin,
+    );
+    const flatHot = diodeAtTemperature(
+      diode("D1", "a", "0", 1.0e-15, 0.02585, 1.0, undefined, 1.0e-3, 0.0, 0.0, 1.0, 0.5, 0.5, 0.0),
+      temperatureKelvin,
+      nominalTemperatureKelvin,
+    );
+
+    expect(defaultHot.saturationCurrent / flatHot.saturationCurrent).toBeCloseTo(
+      (temperatureKelvin / nominalTemperatureKelvin) ** 3,
+      12,
+    );
   });
 
   it("runs DC temperature sweeps and formats stable table output", () => {

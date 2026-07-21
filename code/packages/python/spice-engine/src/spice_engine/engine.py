@@ -308,6 +308,10 @@ def diode_at_temperature(
     effective_n = diode.N
     if not math.isfinite(effective_n) or effective_n <= 0.0:
         raise ValueError(f"{diode.name}: diode emission coefficient must be finite and positive")
+    if not math.isfinite(diode.Xti):
+        raise ValueError(
+            f"{diode.name}: diode saturation-current temperature exponent must be finite"
+        )
     ratio = temperature_kelvin / nominal_temperature_kelvin
     exponent = (
         energy_gap_ev
@@ -315,7 +319,7 @@ def diode_at_temperature(
         / (effective_n * _BOLTZMANN)
         * (1.0 / nominal_temperature_kelvin - 1.0 / temperature_kelvin)
     )
-    saturation_scale = ratio**3 * math.exp(max(-100.0, min(100.0, exponent)))
+    saturation_scale = ratio**diode.Xti * math.exp(max(-100.0, min(100.0, exponent)))
     return replace(
         diode,
         Is=diode.Is * saturation_scale,
@@ -577,6 +581,10 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
             element.IBV,
             element.Cjo,
             element.Tt,
+            element.Vj,
+            element.M,
+            element.Fc,
+            element.Xti,
         )
     if isinstance(element, JFET):
         return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_, element.Cgs, element.Cgd)
@@ -8647,6 +8655,18 @@ def _diode_effective_vt(el: Diode) -> float:
         raise ValueError(f"{el.name}: diode breakdown current must be finite and positive")
     if not math.isfinite(el.Cjo) or el.Cjo < 0.0:
         raise ValueError(f"{el.name}: diode junction capacitance must be finite and non-negative")
+    if not math.isfinite(el.Vj) or el.Vj <= 0.0:
+        raise ValueError(f"{el.name}: diode junction potential must be finite and positive")
+    if not math.isfinite(el.M) or el.M < 0.0:
+        raise ValueError(f"{el.name}: diode grading coefficient must be finite and non-negative")
+    if not math.isfinite(el.Fc) or el.Fc < 0.0 or el.Fc >= 1.0:
+        raise ValueError(
+            f"{el.name}: diode forward-bias depletion coefficient must be finite and in [0, 1)"
+        )
+    if not math.isfinite(el.Xti):
+        raise ValueError(
+            f"{el.name}: diode saturation-current temperature exponent must be finite"
+        )
     if not math.isfinite(el.Tt) or el.Tt < 0.0:
         raise ValueError(f"{el.name}: diode transit time must be finite and non-negative")
     return el.Vt * el.N
@@ -8675,7 +8695,18 @@ def _diode_has_charge_storage(el: Diode) -> bool:
 
 def _diode_dynamic_capacitance(el: Diode, vd: float) -> float:
     _, gd = _diode_current_conductance(el, vd)
-    return el.Cjo + el.Tt * gd
+    return _diode_depletion_capacitance(el, vd) + el.Tt * gd
+
+
+def _diode_depletion_capacitance(el: Diode, vd: float) -> float:
+    if el.Cjo <= 0.0 or el.M == 0.0:
+        return el.Cjo
+    normalized_voltage = vd / el.Vj
+    if normalized_voltage < el.Fc:
+        return el.Cjo / ((1.0 - normalized_voltage) ** el.M)
+    transition_scale = (1.0 - el.Fc) ** (1.0 + el.M)
+    continuation = 1.0 - el.Fc * (1.0 + el.M) + el.M * normalized_voltage
+    return el.Cjo * continuation / transition_scale
 
 
 def _diode_charge_voltage(el: Diode, node_voltages: dict[str, float]) -> float:
@@ -12236,7 +12267,14 @@ def _stamp_ac(
         Vd = Va - Vk
         _, gd = _diode_current_conductance(el, Vd)
         diffusion_capacitance = el.Tt * gd
-        _stamp_g_c(G, node_to_idx, el.anode, el.cathode, gd + 1j * omega * (el.Cjo + diffusion_capacitance))
+        depletion_capacitance = _diode_depletion_capacitance(el, Vd)
+        _stamp_g_c(
+            G,
+            node_to_idx,
+            el.anode,
+            el.cathode,
+            gd + 1j * omega * (depletion_capacitance + diffusion_capacitance),
+        )
 
     elif isinstance(el, JFET):
         Vd = 0.0 if _is_ground(el.drain) else dc_x[node_to_idx[el.drain]]
@@ -13751,7 +13789,22 @@ def sens_dc(
             _make_entry(
                 "Is",
                 el.Is,
-                Diode(el.name, el.anode, el.cathode, el.Is + delta_is, el.Vt, el.N, el.BV, el.IBV, el.Cjo, el.Tt),
+                Diode(
+                    el.name,
+                    el.anode,
+                    el.cathode,
+                    el.Is + delta_is,
+                    el.Vt,
+                    el.N,
+                    el.BV,
+                    el.IBV,
+                    el.Cjo,
+                    el.Tt,
+                    el.Vj,
+                    el.M,
+                    el.Fc,
+                    el.Xti,
+                ),
             )
 
         elif isinstance(el, BJT):
@@ -13985,7 +14038,22 @@ def _vary_element(el: Element, tolerance: float, distribution: str) -> Element:
         )
 
     if isinstance(el, Diode):
-        return Diode(el.name, el.anode, el.cathode, _draw(el.Is), el.Vt, el.N, el.BV, el.IBV, el.Cjo, el.Tt)
+        return Diode(
+            el.name,
+            el.anode,
+            el.cathode,
+            _draw(el.Is),
+            el.Vt,
+            el.N,
+            el.BV,
+            el.IBV,
+            el.Cjo,
+            el.Tt,
+            el.Vj,
+            el.M,
+            el.Fc,
+            el.Xti,
+        )
 
     if isinstance(el, BJT):
         return BJT(

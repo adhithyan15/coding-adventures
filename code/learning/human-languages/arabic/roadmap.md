@@ -23,6 +23,42 @@ word lessons — never as a gated reading course.
   tasharrafnā → practice. Root-and-suffix engine; the **zero copula** (shared
   with the Dravidian tracks); "you" split by **gender**, not register.
 
+- **Ch. 3 — Responding**: كيف (*kayfa*, "how" — partner to Ch. 2's *mā*; the root
+  *k-y-f* also gives *kayfiyya* "**how-ness**" = quality) → حال (*ḥāl*, "state") —
+  the chapter's best root: **ḥ–w–l** means "**to turn, change**," so a *state* is
+  literally **how things have turned** (*ḥawla* "around," *taḥwīl*
+  "transformation," *ḥawl* "a year" = one full turn), a neat contrast with Spanish
+  *estar* ← *stāre* "to **stand**" → **كيف حالك؟** (*kayfa ḥāluka/ḥāluki*) —
+  assembled entirely from known parts, with the **-ka/-ki** "your" suffix
+  reproducing both the *-ī* "my" attachment **and** the *anta/anti* **gender**
+  split, and the **zero copula** again (no word for "is") → **بخير** (*bi-khayr*,
+  "in goodness") — where *khayr* is **not new**: it was already inside Ch. 1's
+  *ṣabāḥ al-khayr*, and was hand-written in `AR-W09`; *bi-* is a one-letter
+  preposition that attaches like *al-* (cf. *bismillāh*) → **الحمد لله** — *al-* +
+  *ḥamd* + *li-* + *allāh* (itself *al-* + *ilāh*, "**the** god," cousin of Hebrew
+  *El*), whose root **ḥ–m–d** "praise" also yields the names **Aḥmad** and
+  **Muḥammad** ("the much-praised") → practice running the full greet-ask-answer
+  exchange. **Authored.**
+
+- **Ch. 4 — Farewells**: the word lessons for the phrase `AR-W12` already taught
+  the learner to **hand-write**. **مع** (*maʿa*, "with") — the first preposition
+  that does **not** attach, unlike *al-*, *bi-*, *li-*; ← Semitic *\*ʿimma*, cousin
+  of Hebrew *ʿim* (the *salām/shalom*, *ism/shem* pairing a third time) → **السلامة**
+  (*as-salāma*) — **not a new word**: Ch. 1's *salām* poured into the ***faʿāla***
+  pattern, which turns a thing into **the state of** that thing (peace → safety),
+  plus *al-* and the feminine **ة**, with **س** as a sun letter doubling the *s* →
+  **مع السلامة** ("with safety"), whose root **s–l–m** is the **same one the course
+  opened on** in *as-salāmu ʿalaykum*, so Arabic begins and ends a conversation
+  with one idea — set beside English **goodbye** ← "*God be **with** ye*," which
+  hinges on "with" too → **إلى اللقاء** (*ilā l-liqāʾ*, "until the meeting," root
+  **l–q–y**), whose "until + a future point" shape is exactly Spanish *hasta
+  luego* — and ***hasta*** is itself the **Arabic loan** *ḥattā*, so Spanish
+  borrowed the very word that builds this farewell → practice: the full
+  greet-introduce-ask-part dialogue, a **root ledger** of the six roots that carry
+  it, and the attaching-pieces table. **Authored.** (Honest note in the lesson:
+  **ق** *qāf* and **ى** *alif maqṣūra* are beyond the writing track's letter set,
+  so they are read, not drawn.)
+
 - **Ch. 1 — Writing set** (`AR-W01`–`AR-W03`, `writing` type): the
   "break-it-apart-and-draw-it" companion to the greetings, rendered by the
   script-writing-visualizer app (parallel to the Cyrillic `RU-W*` set). Right-to-
@@ -63,8 +99,6 @@ word lessons — never as a gated reading course.
 
 | Chapter | Theme |
 |---|---|
-| 3 | Responding: *kayfa ḥāluk* ("how are you"), *bi-khayr* ("well"), *al-ḥamdu lillāh* |
-| 4 | Farewells: *maʿa s-salāma* ("with safety"), *ilā l-liqāʾ* |
 | 5+ | Numbers, the pattern system (verb forms I–X), family, food — always with the root engine and the Spanish-loanword thread |
 
 Note: Arabic marks **gender on "you"** (*anta* to a man, *anti* to a woman) —

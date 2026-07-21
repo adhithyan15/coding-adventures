@@ -191,6 +191,12 @@ with optional `HARMONICS=` and `FROM=` controls.
 `normalizeModelCard`, `diodeFromModelCard`, `bjtFromModelCard`,
 `jfetFromModelCard`, and `mosfetFromModelCard` provide the shared `.model`
 alias surface for diode, BJT, JFET, and Level-1 MOS cards.
+Diode cards accept `VJ`/`PB` junction potential, `M`/`MJ` grading coefficient,
+and `FC` forward-bias depletion coefficient. AC and transient analyses use them
+to shape `CJO` depletion capacitance continuously around the `FC * VJ`
+transition.
+Diode cards also accept `XTI` (default `3`) to control the saturation-current
+temperature exponent used by temperature sweeps.
 `modelCardUnsupportedParameterIssues`,
 `formatModelCardUnsupportedParameterIssueTable`,
 `modelCardUnsupportedParameterIssueRecords`,
@@ -216,7 +222,7 @@ model kind for compact release dashboards and Mosaic UI inventories.
 `modelCardSupportedParameterCoverageGateIssueRecords`,
 `formatModelCardSupportedParameterCoverageGateIssueCsv`, and
 `formatModelCardSupportedParameterCoverageGateIssueJson` validate the expected
-seven-kind, 67-row supported-parameter catalog and expose stable issue rows for
+seven-kind, 71-row supported-parameter catalog and expose stable issue rows for
 release automation.
 `modelCardSupportedParameterCoverageDashboard`,
 `formatModelCardSupportedParameterCoverageDashboardTable`,

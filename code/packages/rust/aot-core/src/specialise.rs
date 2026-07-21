@@ -187,12 +187,23 @@ fn translate(instr: &IIRInstr, env: &HashMap<String, String>) -> Vec<CIRInstr> {
         } else {
             format!("mov_{sp}")
         };
-        let effective_sp = if sp == "any" { "u64".to_string() } else { sp };
+        // The *mnemonic* falls back to `mov_u64` (a move is 64 bits of bit-copy
+        // whatever the value means), but the *type* must keep saying `any` — it is
+        // load-bearing metadata, not a codegen selector.
+        //
+        // Retyping it `u64` here used to be a latent use-after-free: `any` is the
+        // normal type of a boxed dynamic value (a `mov` between boxed regs is an
+        // expected `lower_dyn_repr` pattern), and the GC stack-map builder classifies
+        // a slot as a root from this string. Claiming `u64` — the most confidently
+        // scalar type there is — made the alias slot look like a plain integer, so a
+        // collection at a later safepoint would not root it and would free a live
+        // cell. Backends dispatch on `cir_op`, never on this string, so telling the
+        // truth here costs nothing.
         return vec![CIRInstr::new(
             cir_op,
             instr.dest.clone(),
             lift_srcs(&instr.srcs),
-            effective_sp,
+            sp,
         )];
     }
 

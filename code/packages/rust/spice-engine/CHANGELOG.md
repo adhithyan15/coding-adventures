@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Add diode model-card `XTI` saturation-current temperature-exponent support,
+  preserving it through subcircuit expansion and matching Python and
+  TypeScript.
+- Add diode model-card `FC` forward-bias depletion coefficient support and a
+  continuous piecewise depletion-capacitance law, matching Python and
+  TypeScript.
+- Shape diode depletion capacitance from the operating-point bias with model-card
+  `VJ`/`PB` junction-potential and `M`/`MJ` grading-coefficient parameters in AC
+  and transient analysis, matching Python and TypeScript.
 - Add `model_card_supported_parameter_coverage_dashboard`,
   `format_model_card_supported_parameter_coverage_dashboard_table`,
   `model_card_supported_parameter_coverage_dashboard_records`,
@@ -15,7 +24,7 @@
   `model_card_supported_parameter_coverage_gate_issue_records`,
   `format_model_card_supported_parameter_coverage_gate_issue_csv`, and
   `format_model_card_supported_parameter_coverage_gate_issue_json`, stable
-  release-gate checks and issue exports for the seven-kind, 67-row supported
+  release-gate checks and issue exports for the seven-kind, 71-row supported
   model-card parameter catalog, matching Python and TypeScript.
 - Add `model_card_supported_parameter_coverage_summary`,
   `format_model_card_supported_parameter_coverage_summary_table`,

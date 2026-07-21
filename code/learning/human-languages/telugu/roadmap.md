@@ -34,12 +34,25 @@ piece by piece, on the first word that needs it.
   → uṇḍu (to be/stay/live; postposition *-lō*) → pani cēyu (to work; noun +
   *cēyu*, the twin of Hindi's *karnā*) → practice.
 
+- **Ch. 6 — Case endings, and the sentence with no subject**: **-కు/-కి** (*-ku/-ki*,
+  "to/for") — the first case ending and the entry point to **agglutination**:
+  Telugu **adds** a suffix carrying **one** meaning, keeping its shape with the
+  **seam visible** (*pēru* + *ku*), where a Latin ending like *-īs* **fuses**
+  case+number+declension into one indivisible lump; the two shapes *-ku/-ki* are
+  one suffix adjusting to the preceding vowel. Includes *nēnu* → **నాకు** *nāku*
+  ("to me") → **నాకు తెలుగు వచ్చు** (*nāku telugu vaccu*, "I know Telugu") —
+  literally "**to-me Telugu COMES**," using **వచ్చు**, the very "come" verb from
+  Ch. 4, and with **no nominative subject**. The **dative-subject** rule: knowing,
+  liking and wanting *happen to* you rather than being done *by* you (English
+  keeps the fossil "**methinks**"). Closes on the four-sister table — *-ku /
+  -ukku / -ge / -ikku* are visibly the **same suffix**. **Authored.**
+
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 6 | Case-endings (Telugu's agglutinative suffixes: *-ki, -lō, -tō*); more verbs |
-| 7+ | Tense, numbers, family, food — always with the Dravidian-cognate thread |
+| 7 | The rest of the case suffixes — locative *-lō*, instrumental/comitative *-tō* — now that Ch. 6 has established how stacking works |
+| 8+ | Tense, numbers, family, food — always with the Dravidian-cognate thread |
 
 Note: Telugu marks "you" by **register** (*nuvvu* familiar / *mīru* respectful,
 also plural) — like the other tracks, worth teaching beside them.

@@ -88,6 +88,35 @@ Spanish and French where a contrast helps. The recurring decoder is the
   *blu*), and English took *blue* from **French** rather than from Germanic.
   **Authored.**
 
+- **Ch. 14 — *haben*, and being your years**: **haben** (*habe/hast/hat/haben/
+  habt/haben*), where *du hast* and *er hat* **drop the b** exactly as English
+  *have* → *ha**s***. The showpiece is a **false cognate**: *haben* ← Germanic
+  *\*habjaną* ← PIE *\*kap-* "to **seize**," whose Latin child is ***capere***
+  (*capture/captive/accept*) — while Latin ***habēre*** (the source of *avoir* and
+  *avere*) descends from *\*gʰabʰ-*, whose English child is **give**. The two
+  words that look most alike, mean the same thing, and come from **opposite**
+  directions → **ich bin zwanzig Jahre alt** — the one everyday slot where German
+  **refuses** *haben*: age takes **sein**, word for word the English sentence
+  (*Jahr* ← *\*jēra* = *year*; *alt* ← *\*aldaz* = *old*). The split: **all four
+  Romance sisters *have* their years; German sides with English and *is* its
+  years.** **Authored.** (Also the prerequisite for the *Perfekt*, built on
+  *haben*.)
+
+- **Ch. 15 — The Perfekt, and the tense it pushed aside**: the **Perfekt** —
+  *haben* + past participle (*ich habe gesagt*), where the weak participle is
+  **wrapped** in a **ge-…-t circumfix** and then sent to the **end of the clause**
+  (*Ich habe gestern Deutsch **gelernt***), something English cannot do; and where
+  it means the **plain past** ("I said"), not only "I have said." The **ge-** ←
+  Germanic *\*ga-* "completely," a **perfective** marker English dropped but left
+  fossilised inside **enough** (Old English *genōg*) and archaic *yclept* → the
+  **Präteritum** (*ich sagte*), whose **-te** is the Germanic **dental preterite**
+  — the very same machinery as English **-ed** (*walked*), a Germanic invention
+  Latin has no equivalent for. It is retreating from speech (nearly gone in the
+  south, better held in the north) but **standard in narrative writing**. The
+  cross-language payoff: **German, French and Italian all** let a
+  "have" compound displace their simple past, while Spanish and Portuguese kept
+  theirs. **Authored.**
+
 ## Planned
 
 | Chapter | Theme |
