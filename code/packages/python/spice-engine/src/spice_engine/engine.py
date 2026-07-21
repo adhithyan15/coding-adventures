@@ -308,6 +308,10 @@ def diode_at_temperature(
     effective_n = diode.N
     if not math.isfinite(effective_n) or effective_n <= 0.0:
         raise ValueError(f"{diode.name}: diode emission coefficient must be finite and positive")
+    if not math.isfinite(diode.Xti):
+        raise ValueError(
+            f"{diode.name}: diode saturation-current temperature exponent must be finite"
+        )
     ratio = temperature_kelvin / nominal_temperature_kelvin
     exponent = (
         energy_gap_ev
@@ -315,7 +319,7 @@ def diode_at_temperature(
         / (effective_n * _BOLTZMANN)
         * (1.0 / nominal_temperature_kelvin - 1.0 / temperature_kelvin)
     )
-    saturation_scale = ratio**3 * math.exp(max(-100.0, min(100.0, exponent)))
+    saturation_scale = ratio**diode.Xti * math.exp(max(-100.0, min(100.0, exponent)))
     return replace(
         diode,
         Is=diode.Is * saturation_scale,
@@ -577,6 +581,10 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
             element.IBV,
             element.Cjo,
             element.Tt,
+            element.Vj,
+            element.M,
+            element.Fc,
+            element.Xti,
         )
     if isinstance(element, JFET):
         return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_, element.Cgs, element.Cgd)
@@ -8655,6 +8663,10 @@ def _diode_effective_vt(el: Diode) -> float:
         raise ValueError(
             f"{el.name}: diode forward-bias depletion coefficient must be finite and in [0, 1)"
         )
+    if not math.isfinite(el.Xti):
+        raise ValueError(
+            f"{el.name}: diode saturation-current temperature exponent must be finite"
+        )
     if not math.isfinite(el.Tt) or el.Tt < 0.0:
         raise ValueError(f"{el.name}: diode transit time must be finite and non-negative")
     return el.Vt * el.N
@@ -13791,6 +13803,7 @@ def sens_dc(
                     el.Vj,
                     el.M,
                     el.Fc,
+                    el.Xti,
                 ),
             )
 
@@ -14039,6 +14052,7 @@ def _vary_element(el: Element, tolerance: float, distribution: str) -> Element:
             el.Vj,
             el.M,
             el.Fc,
+            el.Xti,
         )
 
     if isinstance(el, BJT):

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add diode model-card `XTI` saturation-current temperature-exponent support,
+  preserving it through subcircuit expansion and matching Python and Rust.
 - Add diode model-card `FC` forward-bias depletion coefficient support and a
   continuous piecewise depletion-capacitance law, matching Python and Rust.
 - Shape diode depletion capacitance from the operating-point bias with model-card
@@ -20,7 +22,7 @@
   `modelCardSupportedParameterCoverageGateIssueRecords`,
   `formatModelCardSupportedParameterCoverageGateIssueCsv`, and
   `formatModelCardSupportedParameterCoverageGateIssueJson`, stable release-gate
-  checks and issue exports for the seven-kind, 70-row supported model-card
+  checks and issue exports for the seven-kind, 71-row supported model-card
   parameter catalog, matching Python and Rust.
 - Add `modelCardSupportedParameterCoverageSummary`,
   `formatModelCardSupportedParameterCoverageSummaryTable`,

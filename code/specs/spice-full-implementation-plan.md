@@ -33,14 +33,14 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language diode forward-bias depletion coefficient.
+1. Cross-language diode saturation-current temperature exponent.
    - Status: current PR completion candidate.
-   - Add Berkeley diode `FC` forward-bias depletion-coefficient model-card
-     support in Rust, Python, and TypeScript.
-   - Apply the continuous piecewise depletion-capacitance law around the
-     `FC * VJ` transition in AC and transient analysis.
-   - Extend the supported-parameter coverage gate from 69 to 70 canonical rows
-     and lock forward-bias shaping across all three engines.
+   - Add Berkeley diode `XTI` saturation-current temperature-exponent
+     model-card support in Rust, Python, and TypeScript.
+   - Apply `XTI` to diode saturation-current temperature scaling and preserve
+     the full diode model through hierarchical subcircuit expansion.
+   - Extend the supported-parameter coverage gate from 70 to 71 canonical rows
+     and lock temperature scaling across all three engines.
 
 ## Completed Slices
 
@@ -2971,6 +2971,13 @@ the Rust, Python, and TypeScript surfaces together.
    - AC and transient analyses shape `CJO` from reverse bias while preserving
      transit-time diffusion capacitance, and the supported-parameter release
      gate now covers 69 canonical rows.
+
+215. Cross-language diode forward-bias depletion coefficient.
+   - Status: completed in PR 8708.
+   - Rust, Python, and TypeScript diode model cards now accept `FC` and apply
+     the continuous Berkeley piecewise depletion-capacitance law around the
+     `FC * VJ` transition in AC and transient analysis.
+   - The supported-parameter release gate now covers 70 canonical rows.
 
 ## Backlog
 
