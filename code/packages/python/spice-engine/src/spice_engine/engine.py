@@ -596,7 +596,7 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
-        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg, element.Vaf, element.Nf, element.Nr, element.Vje, element.Mje, element.Vjc, element.Mjc)
+        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg, element.Vaf, element.Nf, element.Nr, element.Vje, element.Mje, element.Vjc, element.Mjc, element.Fc)
     if isinstance(element, VCVS):
         return VCVS(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), _map_subckt_node(element.ctrl_plus, instance_name, node_map), _map_subckt_node(element.ctrl_minus, instance_name, node_map), element.gain)
     if isinstance(element, VCCS):
@@ -8746,7 +8746,7 @@ def _bjt_base_emitter_depletion_capacitance(el: BJT, voltage: float) -> float:
     if el.Cje <= 0.0 or el.Mje == 0.0:
         return el.Cje
     normalized_voltage = voltage / el.Vje
-    coefficient = 0.5
+    coefficient = el.Fc
     if normalized_voltage < coefficient:
         return el.Cje / ((1.0 - normalized_voltage) ** el.Mje)
     transition_scale = (1.0 - coefficient) ** (1.0 + el.Mje)
@@ -8758,7 +8758,7 @@ def _bjt_base_collector_depletion_capacitance(el: BJT, voltage: float) -> float:
     if el.Cjc <= 0.0 or el.Mjc == 0.0:
         return el.Cjc
     normalized_voltage = voltage / el.Vjc
-    coefficient = 0.5
+    coefficient = el.Fc
     if normalized_voltage < coefficient:
         return el.Cjc / ((1.0 - normalized_voltage) ** el.Mjc)
     transition_scale = (1.0 - coefficient) ** (1.0 + el.Mjc)
@@ -9188,6 +9188,8 @@ def _validate_bjt(el: BJT) -> None:
         raise ValueError(f"{el.name}: BJT base-collector junction potential must be finite and positive")
     if not math.isfinite(el.Mjc) or not 0.0 <= el.Mjc < 1.0:
         raise ValueError(f"{el.name}: BJT base-collector grading coefficient must be finite and in [0, 1)")
+    if not math.isfinite(el.Fc) or not 0.0 <= el.Fc < 1.0:
+        raise ValueError(f"{el.name}: BJT forward-bias depletion coefficient must be finite and in [0, 1)")
 
 
 # ---------------------------------------------------------------------------
@@ -13918,6 +13920,7 @@ def sens_dc(
                     Mje=el.Mje,
                     Vjc=el.Vjc,
                     Mjc=el.Mjc,
+                    Fc=el.Fc,
                 ),
             )
             delta_beta = max(abs(el.beta_f) * perturbation, abs_floor)
@@ -13943,6 +13946,7 @@ def sens_dc(
                     Mje=el.Mje,
                     Vjc=el.Vjc,
                     Mjc=el.Mjc,
+                    Fc=el.Fc,
                 ),
             )
 
@@ -14178,6 +14182,7 @@ def _vary_element(el: Element, tolerance: float, distribution: str) -> Element:
             Mje=el.Mje,
             Vjc=el.Vjc,
             Mjc=el.Mjc,
+            Fc=el.Fc,
         )
 
     # Capacitor, Inductor, Mosfet — no tunable DC parameter; return unchanged.

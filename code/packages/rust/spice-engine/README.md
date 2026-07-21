@@ -134,8 +134,9 @@ model-specific saturation-current temperature scaling, `VAF`/`VA` (default
 base-collector diffusion capacitance in AC and transient analysis. `VJE`/`PE`
 (default `0.75 V`) and `MJE`/`ME` (default `0.33`) shape `CJE` base-emitter
 depletion capacitance. `VJC`/`PC` (default `0.75 V`) and `MJC`/`MC` (default
-`0.33`) likewise shape `CJC` base-collector depletion capacitance. Both use the
-Berkeley default `FC=0.5` continuation.
+`0.33`) likewise shape `CJC` base-collector depletion capacitance. `FC`
+(default `0.5`) selects the shared Berkeley forward-bias continuation point for
+both junctions.
 `model_card_unsupported_parameter_issues`,
 `format_model_card_unsupported_parameter_issue_table`,
 `model_card_unsupported_parameter_issue_records`,

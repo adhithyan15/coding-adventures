@@ -4,6 +4,11 @@
 
 ### Added
 
+- **BJT forward-bias depletion coefficient** — BJT model cards now accept `FC`
+  and apply it to the shared `CJE` and `CJC` Berkeley continuation law in AC and
+  transient analysis, matching Rust and TypeScript. The supported-parameter
+  catalog now contains 92 canonical rows.
+
 - **BJT base-collector depletion shaping** — BJT model cards now accept
   `VJC`/`PC` junction potential and `MJC`/`MC` grading coefficient parameters
   and apply them to `CJC` in AC and transient analysis, matching Rust and

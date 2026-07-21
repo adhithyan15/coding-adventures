@@ -441,6 +441,7 @@ fn clone_subckt_element(
                 element.base_emitter_grading_coefficient,
                 element.base_collector_junction_potential,
                 element.base_collector_grading_coefficient,
+                element.forward_bias_depletion_coefficient,
             ))
         }
         Element::Mosfet(element) => Element::Mosfet(Mosfet::with_model(
@@ -2853,6 +2854,7 @@ pub struct Bjt {
     pub base_emitter_grading_coefficient: f64,
     pub base_collector_junction_potential: f64,
     pub base_collector_grading_coefficient: f64,
+    pub forward_bias_depletion_coefficient: f64,
 }
 
 impl Bjt {
@@ -2955,6 +2957,7 @@ impl Bjt {
             0.33,
             0.75,
             0.33,
+            0.5,
         )
     }
 
@@ -2981,6 +2984,7 @@ impl Bjt {
         base_emitter_grading_coefficient: f64,
         base_collector_junction_potential: f64,
         base_collector_grading_coefficient: f64,
+        forward_bias_depletion_coefficient: f64,
     ) -> Self {
         Self {
             name: name.into(),
@@ -3004,6 +3008,7 @@ impl Bjt {
             base_emitter_grading_coefficient,
             base_collector_junction_potential,
             base_collector_grading_coefficient,
+            forward_bias_depletion_coefficient,
         }
     }
 }
@@ -3394,8 +3399,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     usize,
 )] = &[
     (ModelCardKind::Diode, 12, 18, 5, 3),
-    (ModelCardKind::Npn, 16, 29, 9, 4),
-    (ModelCardKind::Pnp, 16, 29, 9, 4),
+    (ModelCardKind::Npn, 17, 30, 9, 4),
+    (ModelCardKind::Pnp, 17, 30, 9, 4),
     (ModelCardKind::Njf, 5, 11, 5, 3),
     (ModelCardKind::Pjf, 5, 11, 5, 3),
     (ModelCardKind::Nmos, 18, 25, 6, 3),
@@ -3451,6 +3456,7 @@ const BJT_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("PC", "VJC"),
     ("MJC", "MJC"),
     ("MC", "MJC"),
+    ("FC", "FC"),
 ];
 const JFET_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("BETA", "BETA"),
@@ -4112,6 +4118,7 @@ pub fn bjt_from_model_card(
         model_card_value(model, "MJE", 0.33),
         model_card_value(model, "VJC", 0.75),
         model_card_value(model, "MJC", 0.33),
+        model_card_value(model, "FC", 0.5),
     ))
 }
 
@@ -23068,7 +23075,7 @@ fn bjt_base_emitter_depletion_capacitance(bjt: &Bjt, voltage: f64) -> f64 {
         return bjt.base_emitter_capacitance;
     }
     let normalized_voltage = voltage / bjt.base_emitter_junction_potential;
-    let coefficient = 0.5;
+    let coefficient = bjt.forward_bias_depletion_coefficient;
     if normalized_voltage < coefficient {
         return bjt.base_emitter_capacitance
             / (1.0 - normalized_voltage).powf(bjt.base_emitter_grading_coefficient);
@@ -23084,7 +23091,7 @@ fn bjt_base_collector_depletion_capacitance(bjt: &Bjt, voltage: f64) -> f64 {
         return bjt.base_collector_capacitance;
     }
     let normalized_voltage = voltage / bjt.base_collector_junction_potential;
-    let coefficient = 0.5;
+    let coefficient = bjt.forward_bias_depletion_coefficient;
     if normalized_voltage < coefficient {
         return bjt.base_collector_capacitance
             / (1.0 - normalized_voltage).powf(bjt.base_collector_grading_coefficient);
@@ -23480,6 +23487,14 @@ fn validate_bjt(bjt: &Bjt) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: bjt.name.clone(),
             reason: "base-collector grading coefficient must be finite and in [0, 1)".to_string(),
+        });
+    }
+    if !bjt.forward_bias_depletion_coefficient.is_finite()
+        || !(0.0..1.0).contains(&bjt.forward_bias_depletion_coefficient)
+    {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "forward-bias depletion coefficient must be finite and in [0, 1)".to_string(),
         });
     }
     Ok(())
