@@ -138,6 +138,26 @@ uint64_t __dyn_pair_p(uint64_t v) {
     return ((v & LISPY_TAG_BITS) == LISPY_TAG_HEAP) ? LISPY_TRUE : LISPY_FALSE;
 }
 
+/* `null?` — true iff the value is the nil sentinel (the empty list).
+ *
+ * Returns a *tagged* boolean (#t/#f), exactly like `__dyn_pair_p`, so `null?` is
+ * a first-class lisp value: `(null? (list))` as a whole program exit-codes as #t
+ * (→ 1) through the runtime tag switch, not misread as the nil word.
+ *
+ * Inside the cons-walk helpers (`length`, `append`, …) the result feeds a
+ * `jmp_if_false`; that is safe because the compiler tracks a `dyn_null_p` result
+ * as a tagged `LispyValue` (it is in `dyn_repr`'s LISP_BUILTINS) and inserts a
+ * `dyn_truthy` before the branch — so a tagged #t/#f is normalised to a raw 0/1
+ * there. (A raw #t/#f fed straight to `jmp_if_false` would be wrong, since both
+ * LISPY_TRUE=5 and LISPY_FALSE=3 are non-zero.)
+ *
+ * It compares against the whole-word LISPY_NIL (1), not 0: nil is a tagged
+ * immediate here, so the native `is_null` opcode's zero-test would never match.
+ */
+uint64_t __dyn_null_p(uint64_t v) {
+    return (v == LISPY_NIL) ? LISPY_TRUE : LISPY_FALSE;
+}
+
 /* ── Booleans ───────────────────────────────────────────────────────────
  *
  * `not` follows lispy truthiness: a value is false iff it is #f or nil.

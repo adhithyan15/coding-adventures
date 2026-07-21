@@ -103,6 +103,11 @@ const LISP_BUILTINS: &[&str] = &[
     "dyn_car",
     "dyn_cdr",
     "dyn_pair_p",
+    // `null?` — its result is a tagged #t/#f (like `pair?`), so it must join
+    // `boxed_regs`: this both wraps the cons-walk helpers' `jmp_if_false` with
+    // `dyn_truthy` (→ raw 0/1) AND lets a top-level `(null? …)` exit-code through
+    // the tagged switch instead of being misread as the nil word.
+    "dyn_null_p",
     "dyn_not",
     "dyn_equal",
 ];
@@ -530,10 +535,21 @@ fn insert_unbox_before_lisp_rets(
     // a boolean result is coerced with `dyn_truthy` (→ raw `0`/`1`) instead of
     // `dyn_unbox_int`. A register is "boolean" if the instruction that produced
     // it carries the `bool` type hint (the predicates do).
+    // A "boolean" reg is one typed `bool`, OR one produced by a tagged-bool
+    // **predicate** builtin (`null?`/`pair?`/`not`/`equal?`). The predicates return
+    // a tagged `#t`(5)/`#f`(3), and the frontend often types their result `any`
+    // rather than `bool` — so keying on the type hint alone misses a top-level
+    // `(null? …)` and it wrongly falls to the `unbox_int` path (`5 >> 3 = 0`, i.e.
+    // *true* exits as 0). Recognising them by name routes them to `dyn_truthy`.
+    const BOOL_PREDICATES: &[&str] = &["dyn_null_p", "dyn_pair_p", "dyn_not", "dyn_equal"];
     let bool_regs: HashSet<String> = func
         .instructions
         .iter()
-        .filter(|i| i.type_hint == "bool")
+        .filter(|i| {
+            i.type_hint == "bool"
+                || matches!(i.srcs.first(), Some(Operand::Var(v))
+                    if i.op == "call_builtin" && BOOL_PREDICATES.contains(&v.as_str()))
+        })
         .filter_map(|i| i.dest.clone())
         .collect();
 
@@ -728,6 +744,29 @@ mod tests {
             last.srcs[0],
             Operand::Var("r".into()),
             "ret must consume the unboxed value, not the tagged r",
+        );
+    }
+
+    /// A top-level `null?` (a tagged-`#t`/`#f` predicate result typed `any`) must be
+    /// exit-coerced with `dyn_truthy`, NOT `dyn_unbox_int` — otherwise a true result
+    /// (`#t = 5`) is unboxed to `5 >> 3 = 0` and the program wrongly exits 0.
+    /// Regression for `(null? (list))` exiting 0 instead of 1 on native / LLVM.
+    #[test]
+    fn top_level_null_p_predicate_is_truthy_coerced_not_unboxed() {
+        let mut m = module(vec![
+            konst("nil", 0, "ref<LispyPair>"),
+            // the frontend types the predicate result `any`, not `bool`
+            call_builtin(Some("b"), "dyn_null_p", &["nil"], "any"),
+            ret("b"),
+        ]);
+        lower_dyn_repr(&mut m);
+        assert_eq!(
+            count_builtin(&m, "dyn_truthy"), 1,
+            "a predicate result at the exit boundary is truthy-coerced",
+        );
+        assert_eq!(
+            count_builtin(&m, "dyn_unbox_int"), 0,
+            "it must NOT be unboxed (that would map #t=5 to 0)",
         );
     }
 

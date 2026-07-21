@@ -1,5 +1,8 @@
 # Changelog — iir-builtin-lowering
 
+## 0.31.0 - 2026-07-20 — null? runtime lowering + list-ref/assoc index boxing + predicate exit-coercion (native/LLVM lisp fixes)
+
+Part of the fix restoring McCarthy-lisp list programs on the native-AOT / LLVM backends (`lang-aot` `lang_matrix`). See the umbrella commit for the full story: `null?` was never routed to a runtime call on the tagged native/LLVM path (breaking every cons-walk helper), `list-ref`/`assoc` unboxed a raw-int index/key (→ wrong element), a top-level `(null? …)` predicate result was unboxed instead of truthy-coerced, and cons-cell field access failed the JVM verifier. Verified end-to-end: native list-ref/assoc/length/reverse/append/null? all correct.
 ## 0.30.0 - 2026-07-14 (E6d-7a: closures -> cons-heap + synthesized dispatcher)
 
 New pass `lower_closures_to_heap` (closure_heap.rs): lowers `alloc_closure`/`call_closure` entirely at the IIR level for the backends that lack a native closure model (WASM + NativeAot; LLVM is a follow-up). A closure becomes a cons-chain `(box(dispatch_index) . (caps...))`; `call_closure` boxes its args into a second chain and calls a synthesized `__dyn_call_closure` dispatcher — a chain of dynamic `=` index tests (the proven E6d-6 match/union tag pattern) over statically-known lambda bodies, each a direct `call` threading captures ++ args. Reuses only `cons`/`car`/`cdr`/`=`/`call`/`jmp_if_false` (no new backend codegen; no `call_indirect`/funcref). Dispatch indices are assigned alphabetically (deterministic). Unit-tested; run-verified on WASM + native (exit 42).

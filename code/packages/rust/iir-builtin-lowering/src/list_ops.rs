@@ -325,6 +325,71 @@ fn is_listref_call(instr: &IIRInstr) -> bool {
         && matches!(instr.srcs.first(), Some(Operand::Var(n)) if n == "list-ref")
 }
 
+/// The machine scalar types — a value of one of these is a raw i64/f64/bool, NOT a
+/// boxed `ref<any>` dynamic value.
+fn is_scalar_ty(ty: &str) -> bool {
+    matches!(
+        ty,
+        "u4" | "u8" | "u16" | "u32" | "u64"
+            | "i8" | "i16" | "i32" | "i64"
+            | "f32" | "f64" | "bool"
+    )
+}
+
+/// `list-ref` and `assoc` inject helpers that **unbox** their integer index / key
+/// (`unbox n : i64`), so they require that argument to arrive as a *boxed*
+/// `ref<any>`. But the frontend passes a plain literal index as a raw machine
+/// `const … : i64` (e.g. `(list-ref xs 2)` → `_n = const 2 : i64`). On the tagged
+/// native / LLVM backends `unbox` of a raw `2` is `2 >> 3 = 0`, so the helper always
+/// took its base case and returned element 0 regardless of the index — a silent
+/// wrong-answer that stayed hidden while these programs failed to compile at all
+/// (the `null?` gap). This boxes such an operand so the helper's `unbox` round-trips.
+///
+/// It boxes **only** when the operand is statically a machine scalar; an operand
+/// that is already `ref<any>`/`any` (a genuinely dynamic index) is left alone, so we
+/// never double-box. `scalar_vars` maps every dest to whether its type is scalar,
+/// built from the function's instructions before rewriting.
+fn box_if_scalar(
+    operand: Operand,
+    scalar_vars: &std::collections::HashMap<String, bool>,
+    dest: &str,
+    tag: &str,
+    out: &mut Vec<IIRInstr>,
+) -> Operand {
+    let is_scalar = match &operand {
+        // A literal integer operand is a raw scalar by definition.
+        Operand::Int(_) => true,
+        Operand::Var(v) => *scalar_vars.get(v).unwrap_or(&false),
+        _ => false,
+    };
+    if !is_scalar {
+        return operand;
+    }
+    let boxed = format!("{dest}.{tag}_boxed");
+    out.push(IIRInstr::new(
+        "box",
+        Some(boxed.clone()),
+        vec![operand],
+        "ref<any>",
+    ));
+    Operand::Var(boxed)
+}
+
+/// Build `name → is-scalar-typed` for every value a function defines (params +
+/// instruction dests), so a rewrite can tell a raw machine int from a boxed value.
+fn scalar_var_map(f: &IIRFunction) -> std::collections::HashMap<String, bool> {
+    let mut m = std::collections::HashMap::new();
+    for (name, ty) in &f.params {
+        m.insert(name.clone(), is_scalar_ty(ty));
+    }
+    for instr in &f.instructions {
+        if let Some(dest) = &instr.dest {
+            m.insert(dest.clone(), is_scalar_ty(&instr.type_hint));
+        }
+    }
+    m
+}
+
 /// Replace each `call_builtin "list-ref" lst n -> dest` with
 /// `call __dyn_list_ref, lst, n -> dest : ref<any>`.
 ///
@@ -335,6 +400,7 @@ fn is_listref_call(instr: &IIRInstr) -> bool {
 /// (see [`build_listref_helper`]). The helper returns the lisp element (a `car`
 /// result), so its `ref<any>` return flows straight into `dest`.
 fn rewrite_listref_calls(f: &mut IIRFunction) {
+    let scalar_vars = scalar_var_map(f);
     let old = std::mem::take(&mut f.instructions);
     let mut out: Vec<IIRInstr> = Vec::with_capacity(old.len() + 2);
     for instr in old {
@@ -353,6 +419,8 @@ fn rewrite_listref_calls(f: &mut IIRFunction) {
             (Some(lst), Some(n)) => (lst.clone(), n.clone()),
             _ => { out.push(instr); continue; }
         };
+        // The helper unboxes the index, so it must arrive boxed (see `box_if_scalar`).
+        let n = box_if_scalar(n, &scalar_vars, &dest, "idx", &mut out);
         out.push(IIRInstr::new(
             "call",
             Some(dest),
@@ -709,6 +777,7 @@ fn is_assoc_call(instr: &IIRInstr) -> bool {
 /// `(k . v)` cons pairs) are both lisp `ref<any>`, passed to the helper's two
 /// `ref<any>` params. The helper returns the matching `(k . v)` pair or `nil`.
 fn rewrite_assoc_calls(f: &mut IIRFunction) {
+    let scalar_vars = scalar_var_map(f);
     let old = std::mem::take(&mut f.instructions);
     let mut out: Vec<IIRInstr> = Vec::with_capacity(old.len() + 2);
     for instr in old {
@@ -727,6 +796,8 @@ fn rewrite_assoc_calls(f: &mut IIRFunction) {
             (Some(key), Some(alist)) => (key.clone(), alist.clone()),
             _ => { out.push(instr); continue; }
         };
+        // The helper unboxes the key, so it must arrive boxed (see `box_if_scalar`).
+        let key = box_if_scalar(key, &scalar_vars, &dest, "key", &mut out);
         out.push(IIRInstr::new(
             "call",
             Some(dest),
@@ -831,6 +902,58 @@ fn build_assoc_helper() -> IIRFunction {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// A raw machine-int index / key is boxed before the `list-ref` / `assoc` helper
+    /// call, because the helper unboxes it. Without this the tagged native / LLVM
+    /// backends unbox a raw `n` to `n >> 3` (≈ 0) and silently returned the wrong
+    /// element / pair (regression: `(list-ref (list 10 20 42) 2)` gave 10, not 42).
+    #[test]
+    fn scalar_index_is_boxed_before_listref_helper() {
+        let mut m = module_with(vec![
+            IIRInstr::new("const", Some("idx".into()), vec![Operand::Int(2)], "i64"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("r".into()),
+                vec![Operand::Var("list-ref".into()), Operand::Var("xs".into()), Operand::Var("idx".into())],
+                "any",
+            ),
+        ]);
+        lower_list_ops(&mut m);
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        // A `box idx -> …` must now precede the call, and the call must pass the
+        // boxed name, not the raw `idx`.
+        let boxed = main.instructions.iter().find(|i| i.op == "box").expect("index boxed");
+        assert_eq!(boxed.type_hint, "ref<any>");
+        let call = main.instructions.iter().find(|i| i.op == "call").expect("helper call");
+        let passed = match &call.srcs[2] {
+            Operand::Var(v) => v.clone(),
+            other => panic!("index operand {other:?}"),
+        };
+        assert_eq!(passed, *boxed.dest.as_ref().unwrap(), "call passes the boxed index");
+        assert_ne!(passed, "idx", "the raw scalar index is not passed directly");
+    }
+
+    /// An already-boxed (`ref<any>`/`any`) index is passed through untouched — no
+    /// double-box.
+    #[test]
+    fn dynamic_index_is_not_reboxed() {
+        let mut m = module_with(vec![
+            IIRInstr::new("call_builtin", Some("dynidx".into()),
+                vec![Operand::Var("some-dyn".into())], "any"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("r".into()),
+                vec![Operand::Var("list-ref".into()), Operand::Var("xs".into()), Operand::Var("dynidx".into())],
+                "any",
+            ),
+        ]);
+        lower_list_ops(&mut m);
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        assert!(
+            !main.instructions.iter().any(|i| i.op == "box"),
+            "an already-dynamic index must not be re-boxed"
+        );
+    }
 
     fn module_with(instrs: Vec<IIRInstr>) -> IIRModule {
         IIRModule {

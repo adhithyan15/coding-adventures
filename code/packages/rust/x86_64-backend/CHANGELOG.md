@@ -1,5 +1,8 @@
 # Changelog — `x86_64-backend`
 
+## 0.29.0 - 2026-07-20 — V1_BUILTINS: dyn_null_p (native `null?`)
+
+Part of the fix restoring McCarthy-lisp list programs on the native-AOT / LLVM backends (`lang-aot` `lang_matrix`). See the umbrella commit for the full story: `null?` was never routed to a runtime call on the tagged native/LLVM path (breaking every cons-walk helper), `list-ref`/`assoc` unboxed a raw-int index/key (→ wrong element), a top-level `(null? …)` predicate result was unboxed instead of truthy-coerced, and cons-cell field access failed the JVM verifier. Verified end-to-end: native list-ref/assoc/length/reverse/append/null? all correct.
 ## 0.28.0 - 2026-07-11 (E6d-2b: dyn_box_int runtime builtin)
 
 E6d-2b: register `dyn_box_int` in `V1_BUILTINS` (`call __dyn_box_int`), mirroring aarch64 + the existing `dyn_unbox_int`.
