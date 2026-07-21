@@ -268,6 +268,153 @@ describe("hostile input", () => {
   });
 });
 
+// ---------------------------------------------------------------------------
+// Composite glyphs, built synthetically.
+//
+// Every vendored font tops out at composite DEPTH 1, so five of the six
+// recursion levels had never executed — and composite expansion is where both
+// parser defects found in review lived (the fan-out bomb and the shared
+// budget). These fixtures exercise nesting directly.
+// ---------------------------------------------------------------------------
+type SimpleGlyph = { kind: "simple"; points: Array<[number, number]> };
+type CompositeGlyph = { kind: "composite"; parts: Array<{ glyph: number; dx: number; dy: number }> };
+
+function buildFont(glyphs: Array<SimpleGlyph | CompositeGlyph>, mapFrom = 0x41): ArrayBuffer {
+  const glyphBlobs = glyphs.map((g) => {
+    const bytes: number[] = [];
+    const i16 = (v: number) => bytes.push((v >> 8) & 0xff, v & 0xff);
+    if (g.kind === "simple") {
+      i16(1); // one contour
+      i16(0); i16(0); i16(0); i16(0); // bbox (unused by the reader)
+      i16(g.points.length - 1); // end point index
+      i16(0); // no instructions
+      for (let i = 0; i < g.points.length; i++) bytes.push(0x01); // all on-curve, long deltas
+      let prev = 0;
+      for (const [x] of g.points) { i16(x - prev); prev = x; }
+      prev = 0;
+      for (const [, y] of g.points) { i16(y - prev); prev = y; }
+    } else {
+      i16(-1); // composite
+      i16(0); i16(0); i16(0); i16(0);
+      g.parts.forEach((part, idx) => {
+        const last = idx === g.parts.length - 1;
+        i16(0x0003 | (last ? 0 : 0x0020)); // ARGS_ARE_WORDS | ARGS_ARE_XY [| MORE_COMPONENTS]
+        i16(part.glyph);
+        i16(part.dx);
+        i16(part.dy);
+      });
+    }
+    while (bytes.length % 4) bytes.push(0);
+    return Uint8Array.from(bytes);
+  });
+
+  const n = glyphs.length;
+  const tables = ["cmap", "glyf", "head", "loca", "maxp"];
+  const dir = 12 + tables.length * 16;
+  // 12 bytes of cmap header + encoding record, then the format-12 subtable.
+  const cmapSize = 12 + 16 + 12 * Math.max(1, n);
+  const glyfSize = glyphBlobs.reduce((a, b) => a + b.length, 0);
+  const locaSize = (n + 1) * 4;
+  const off = { cmap: dir, glyf: dir + cmapSize, loca: dir + cmapSize + glyfSize, head: 0, maxp: 0 };
+  off.head = off.loca + locaSize;
+  off.maxp = off.head + 54;
+  const total = off.maxp + 6;
+  const buf = new ArrayBuffer(total);
+  const v = new DataView(buf);
+  v.setUint32(0, 0x00010000);
+  v.setUint16(4, tables.length);
+  const sizes: Record<string, number> = { cmap: cmapSize, glyf: glyfSize, loca: locaSize, head: 54, maxp: 6 };
+  tables.forEach((tag, i) => {
+    const at = 12 + i * 16;
+    for (let k = 0; k < 4; k++) v.setUint8(at + k, tag.charCodeAt(k));
+    v.setUint32(at + 8, (off as Record<string, number>)[tag]);
+    v.setUint32(at + 12, sizes[tag]);
+  });
+  // cmap format 12: one group per glyph
+  v.setUint16(off.cmap + 2, 1);
+  v.setUint16(off.cmap + 4, 3);
+  v.setUint16(off.cmap + 6, 10);
+  v.setUint32(off.cmap + 8, 12);
+  const sub = off.cmap + 12;
+  v.setUint16(sub, 12);
+  v.setUint32(sub + 12, n);
+  for (let i = 0; i < n; i++) {
+    v.setUint32(sub + 16 + i * 12, mapFrom + i);
+    v.setUint32(sub + 20 + i * 12, mapFrom + i);
+    v.setUint32(sub + 24 + i * 12, i);
+  }
+  let p = off.glyf;
+  const starts: number[] = [];
+  for (const blob of glyphBlobs) {
+    starts.push(p - off.glyf);
+    new Uint8Array(buf).set(blob, p);
+    p += blob.length;
+  }
+  starts.push(glyfSize);
+  for (let i = 0; i <= n; i++) v.setUint32(off.loca + i * 4, starts[i]);
+  v.setUint16(off.head + 18, 1000);
+  v.setInt16(off.head + 50, 1); // long loca
+  v.setUint16(off.maxp + 4, n);
+  return buf;
+}
+
+describe("composite glyphs", () => {
+  const triangle: SimpleGlyph = { kind: "simple", points: [[0, 0], [100, 0], [50, 80]] };
+
+  it("accumulates offsets through TWO levels of nesting", () => {
+    const f = parseFont(
+      buildFont([
+        triangle,
+        { kind: "composite", parts: [{ glyph: 0, dx: 100, dy: 0 }] },
+        { kind: "composite", parts: [{ glyph: 1, dx: 0, dy: 200 }] },
+      ]),
+    );
+    const depth2 = f.glyphFor("C")!; // third mapped char
+    expect(depth2.contours.length).toBe(1);
+    // The base triangle, shifted right by the inner component and up by the outer.
+    expect(depth2.contours[0].map((pt) => [pt.x, pt.y])).toEqual([
+      [100, 200],
+      [200, 200],
+      [150, 280],
+    ]);
+  });
+
+  it("stops at the depth cap instead of recursing forever", () => {
+    // A chain 8 deep: each composite wraps the previous one.
+    const glyphs: Array<SimpleGlyph | CompositeGlyph> = [triangle];
+    for (let i = 1; i <= 8; i++) glyphs.push({ kind: "composite", parts: [{ glyph: i - 1, dx: 1, dy: 0 }] });
+    const f = parseFont(buildFont(glyphs));
+    // Within the cap the shape survives; beyond it the reader yields nothing
+    // rather than looping.
+    expect(f.glyphFor("F")!.contours.length).toBe(1); // depth 5
+    expect(f.glyphFor("I")!.contours.length).toBe(0); // depth 8, past the cap
+  });
+
+  it("bounds fan-out that the depth cap alone would not", () => {
+    // 200 components at each of several levels is 200^depth visits unbudgeted.
+    const wide: CompositeGlyph = {
+      kind: "composite",
+      parts: Array.from({ length: 200 }, () => ({ glyph: 0, dx: 1, dy: 1 })),
+    };
+    const f = parseFont(buildFont([triangle, wide, { kind: "composite", parts: Array.from({ length: 200 }, () => ({ glyph: 1, dx: 1, dy: 1 })) }]));
+    const started = Date.now();
+    const g = f.glyphFor("C")!;
+    expect(Date.now() - started).toBeLessThan(5_000);
+    expect(g.contours.length).toBeLessThanOrEqual(10_000);
+  });
+
+  it("gives every lookup its own budget", () => {
+    const wide: CompositeGlyph = {
+      kind: "composite",
+      parts: Array.from({ length: 300 }, () => ({ glyph: 0, dx: 1, dy: 1 })),
+    };
+    const f = parseFont(buildFont([triangle, wide]));
+    const first = f.glyphFor("B")!.contours.length;
+    expect(first).toBe(300);
+    for (let i = 0; i < 200; i++) expect(f.glyphFor("B")!.contours.length).toBe(first);
+  });
+});
+
 describe("contoursToPath", () => {
   it("inserts the implied on-curve midpoint between consecutive off-curve points", () => {
     // Two off-curve points in a row: TrueType implies an on-curve point halfway
