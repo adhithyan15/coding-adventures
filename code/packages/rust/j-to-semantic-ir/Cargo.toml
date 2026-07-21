@@ -1,6 +1,6 @@
 [package]
 name = "j-to-semantic-ir"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 description = "J CST → narrow-waist Semantic IR (SIR22 + SIR22 addendum array/matrix domain). MA-6e."
 
@@ -23,3 +23,11 @@ lexer = { path = "../lexer" }
 # exercise real acceptance, not just the capability-rejection path they
 # originally verified.
 semantic-ir-to-javascript = { path = "../semantic-ir-to-javascript" }
+# `tests/oracle.rs`'s ground truth: the same tree-walking interpreter this
+# frontend's own CST comes from (HML01 §7's oracle/golden testing), mirroring
+# `apl-to-semantic-ir`'s identical use of `coding-adventures-apl-runtime` as
+# its own oracle ground truth. Note the OTHER, non-dev `[dependencies]`
+# section above still deliberately does NOT depend on this crate -- lowering
+# itself only needs the parse-tree shape, never the evaluator; only this test
+# file needs it, for comparison purposes only.
+coding-adventures-j-runtime = { path = "../j-runtime" }
