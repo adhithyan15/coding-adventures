@@ -4,6 +4,11 @@
 
 ### Added
 
+- **BJT forward emission coefficient** — BJT model cards now accept `NF` and
+  apply it to DC, transient charge, AC, transfer-function, and noise paths,
+  matching Rust and TypeScript. The supported-parameter catalog now contains
+  80 canonical rows.
+
 - **BJT forward Early voltage** — BJT model cards now accept `VAF`/`VA` and
   apply collector-voltage modulation in DC, transient, AC, transfer-function,
   and noise paths, matching Rust and TypeScript. The supported-parameter

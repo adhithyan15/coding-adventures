@@ -59,6 +59,21 @@ describe("tf", () => {
     expect(outputImpedance(10.0)).toBeLessThan(outputImpedance(0.0));
   });
 
+  it("uses BJT forward emission coefficient to reduce gain and raise input impedance", () => {
+    function transfer(forwardEmissionCoefficient: number) {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vin", "base", "0", 0.65));
+      circuit.add(resistor("Rload", "out", "0", 1_000.0));
+      circuit.add(bjt("Q1", "out", "base", "0", "NPN", 1e-14, 100, 0.02585, 0, 0, 0, 0, 3, 1.11, 0, forwardEmissionCoefficient));
+      return tf(circuit, "out", "Vin");
+    }
+
+    const ideal = transfer(1.0);
+    const shaped = transfer(2.0);
+    expect(Math.abs(shaped.gain())).toBeLessThan(Math.abs(ideal.gain()));
+    expect(shaped.inputImpedanceOhms).toBeGreaterThan(ideal.inputImpedanceOhms);
+  });
+
   it("formats stable text output tables for transfer-function results", () => {
     const result = {
       transferRatio: 0.5,

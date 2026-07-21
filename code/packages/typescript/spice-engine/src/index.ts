@@ -1713,6 +1713,7 @@ export interface Bjt {
   readonly saturationCurrentTemperatureExponent: number;
   readonly energyGapElectronVolts: number;
   readonly forwardEarlyVoltage: number;
+  readonly forwardEmissionCoefficient: number;
 }
 
 export type MosfetType = "NMOS" | "PMOS";
@@ -1990,8 +1991,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   Record<ModelCardKind, readonly [number, number, number, number]>
 > = {
   D: [12, 18, 5, 3],
-  NPN: [10, 19, 5, 4],
-  PNP: [10, 19, 5, 4],
+  NPN: [11, 20, 5, 4],
+  PNP: [11, 20, 5, 4],
   NJF: [5, 11, 5, 3],
   PJF: [5, 11, 5, 3],
   NMOS: [18, 25, 6, 3],
@@ -3581,7 +3582,7 @@ function cloneSubcktElement(
     case "jfet":
       return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation, element.gateSourceCapacitance, element.gateDrainCapacitance);
     case "bjt":
-      return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.forwardEarlyVoltage);
+      return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.forwardEarlyVoltage, element.forwardEmissionCoefficient);
     case "mosfet":
       return mosfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), mapSubcktNode(element.body, instanceName, nodeMap), element.type, element.params);
     case "vccs":
@@ -7737,6 +7738,7 @@ export function bjt(
   saturationCurrentTemperatureExponent = 3.0,
   energyGapElectronVolts = 1.11,
   forwardEarlyVoltage = 0.0,
+  forwardEmissionCoefficient = 1.0,
 ): Bjt {
   return {
     kind: "bjt",
@@ -7755,6 +7757,7 @@ export function bjt(
     saturationCurrentTemperatureExponent,
     energyGapElectronVolts,
     forwardEarlyVoltage,
+    forwardEmissionCoefficient,
   };
 }
 
@@ -7860,6 +7863,7 @@ const BJT_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   EG: "EG",
   VAF: "VAF",
   VA: "VAF",
+  NF: "NF",
 };
 
 const JFET_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
@@ -8359,6 +8363,7 @@ export function bjtFromModelCard(
     p.XTI ?? 3.0,
     p.EG ?? 1.11,
     p.VAF ?? 0.0,
+    p.NF ?? 1.0,
   );
 }
 
@@ -18287,7 +18292,8 @@ function collectNoiseSources(
         element.polarity === "NPN"
           ? baseVoltage - emitterVoltage
           : emitterVoltage - baseVoltage;
-      const exponent = Math.max(-40.0, Math.min(40.0, junctionVoltage / element.thermalVoltage));
+      const forwardThermalVoltage = element.thermalVoltage * element.forwardEmissionCoefficient;
+      const exponent = Math.max(-40.0, Math.min(40.0, junctionVoltage / forwardThermalVoltage));
       const outputVoltage = element.polarity === "NPN"
         ? collectorVoltage - emitterVoltage
         : emitterVoltage - collectorVoltage;
@@ -18764,10 +18770,11 @@ function stampBjt(
     element.polarity === "NPN"
       ? baseVoltage - emitterVoltage
       : emitterVoltage - baseVoltage;
-  const exponent = Math.max(-40.0, Math.min(40.0, junctionVoltage / element.thermalVoltage));
+  const forwardThermalVoltage = element.thermalVoltage * element.forwardEmissionCoefficient;
+  const exponent = Math.max(-40.0, Math.min(40.0, junctionVoltage / forwardThermalVoltage));
   const expValue = Math.exp(exponent);
   const baseCollectorCurrent = element.saturationCurrent * (expValue - 1.0);
-  const baseTransconductance = element.saturationCurrent / element.thermalVoltage * expValue;
+  const baseTransconductance = element.saturationCurrent / forwardThermalVoltage * expValue;
   const outputVoltage = element.polarity === "NPN"
     ? collectorVoltage - emitterVoltage
     : emitterVoltage - collectorVoltage;
@@ -19328,9 +19335,14 @@ function bjtBaseCollectorChargeStateName(element: Bjt): string {
   return `_Q_${element.name}_bc_charge`;
 }
 
-function bjtJunctionTransconductance(element: Bjt, voltage: number): number {
-  const exponent = Math.max(-40.0, Math.min(40.0, voltage / element.thermalVoltage));
-  return (element.saturationCurrent / element.thermalVoltage) * Math.exp(exponent);
+function bjtJunctionTransconductance(
+  element: Bjt,
+  voltage: number,
+  emissionCoefficient: number,
+): number {
+  const effectiveThermalVoltage = element.thermalVoltage * emissionCoefficient;
+  const exponent = Math.max(-40.0, Math.min(40.0, voltage / effectiveThermalVoltage));
+  return (element.saturationCurrent / effectiveThermalVoltage) * Math.exp(exponent);
 }
 
 function bjtChargeDynamicCapacitance(
@@ -19338,10 +19350,15 @@ function bjtChargeDynamicCapacitance(
   kind: BjtChargeStateKind,
   voltage: number,
 ): number {
-  const conductance = bjtJunctionTransconductance(element, voltage);
   if (kind === "base-emitter") {
+    const conductance = bjtJunctionTransconductance(
+      element,
+      voltage,
+      element.forwardEmissionCoefficient,
+    );
     return element.baseEmitterCapacitance + element.forwardTransitTime * conductance;
   }
+  const conductance = bjtJunctionTransconductance(element, voltage, 1.0);
   return element.baseCollectorCapacitance + element.reverseTransitTime * conductance;
 }
 
@@ -19564,6 +19581,9 @@ function validateBjt(element: Bjt): void {
   }
   if (!Number.isFinite(element.forwardEarlyVoltage) || element.forwardEarlyVoltage < 0.0) {
     throw invalidElement(element.name, "forward Early voltage must be finite and non-negative");
+  }
+  if (!Number.isFinite(element.forwardEmissionCoefficient) || element.forwardEmissionCoefficient <= 0.0) {
+    throw invalidElement(element.name, "forward emission coefficient must be finite and positive");
   }
 }
 
@@ -20874,10 +20894,11 @@ function stampBjtSmallSignal(
     element.polarity === "NPN"
       ? baseVoltage - emitterVoltage
       : emitterVoltage - baseVoltage;
-  const exponent = Math.max(-40.0, Math.min(40.0, junctionVoltage / element.thermalVoltage));
+  const forwardThermalVoltage = element.thermalVoltage * element.forwardEmissionCoefficient;
+  const exponent = Math.max(-40.0, Math.min(40.0, junctionVoltage / forwardThermalVoltage));
   const expValue = Math.exp(exponent);
   const baseCollectorCurrent = element.saturationCurrent * (expValue - 1.0);
-  const baseTransconductance = element.saturationCurrent / element.thermalVoltage * expValue;
+  const baseTransconductance = element.saturationCurrent / forwardThermalVoltage * expValue;
   const outputVoltage = element.polarity === "NPN"
     ? collectorVoltage - emitterVoltage
     : emitterVoltage - collectorVoltage;
@@ -21455,14 +21476,15 @@ function stampAcBjtSmallSignal(
     element.polarity === "NPN"
       ? baseVoltage - collectorVoltage
       : collectorVoltage - baseVoltage;
-  const exponent = Math.max(-40.0, Math.min(40.0, junctionVoltage / element.thermalVoltage));
+  const forwardThermalVoltage = element.thermalVoltage * element.forwardEmissionCoefficient;
+  const exponent = Math.max(-40.0, Math.min(40.0, junctionVoltage / forwardThermalVoltage));
   const reverseExponent = Math.max(
     -40.0,
     Math.min(40.0, reverseJunctionVoltage / element.thermalVoltage),
   );
   const expValue = Math.exp(exponent);
   const baseCollectorCurrent = element.saturationCurrent * (expValue - 1.0);
-  const baseTransconductance = element.saturationCurrent / element.thermalVoltage * expValue;
+  const baseTransconductance = element.saturationCurrent / forwardThermalVoltage * expValue;
   const outputVoltage = element.polarity === "NPN"
     ? collectorVoltage - emitterVoltage
     : emitterVoltage - collectorVoltage;

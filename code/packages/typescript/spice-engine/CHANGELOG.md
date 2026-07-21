@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add BJT model-card `NF` forward emission-coefficient support across DC,
+  transient charge, AC, transfer-function, and noise paths, matching Python and
+  Rust. The supported-parameter catalog now contains 80 canonical rows.
 - Add BJT model-card `VAF`/`VA` forward Early-voltage support with
   collector-voltage modulation in DC, transient, AC, transfer-function, and
   noise paths, matching Python and Rust. The supported-parameter catalog now

@@ -412,7 +412,7 @@ def test_model_card_type_aliases_are_normalized() -> None:
 
 def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     coverage = model_card_supported_parameter_coverage()
-    assert len(coverage) == 78
+    assert len(coverage) == 80
     assert coverage[0].kind == "D"
     assert coverage[0].canonical_parameter == "IS"
     assert coverage[0].accepted_names == ("IS", "JS")
@@ -427,7 +427,7 @@ def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     assert "NMOS\tVT0\tVT0|VTO|VTH\t3" in table
     assert table.splitlines()[-1] == "PMOS\tMJ\tMJ\t1"
     records = model_card_supported_parameter_coverage_records()
-    assert len(records) == 78
+    assert len(records) == 80
     assert records[0] == {
         "kind": "D",
         "canonical_parameter": "IS",
@@ -501,9 +501,9 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
     assert report.passed is True
     assert report.kind_count == 7
     assert report.expected_kind_count == 7
-    assert report.canonical_parameter_count == 78
-    assert report.expected_canonical_parameter_count == 78
-    assert report.accepted_name_count == 128
+    assert report.canonical_parameter_count == 80
+    assert report.expected_canonical_parameter_count == 80
+    assert report.accepted_name_count == 130
     assert report.aliased_parameter_count == 37
     assert report.max_alias_count == 4
     assert report.issues == ()
@@ -511,7 +511,7 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "true\t7\t7\t78\t78\t128\t37\t4\t0"
+        "true\t7\t7\t80\t80\t130\t37\t4\t0"
     )
     assert (
         format_model_card_supported_parameter_coverage_gate_issue_table(report)
@@ -539,8 +539,8 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
 
     assert report.passed is False
     assert report.kind_count == 7
-    assert report.canonical_parameter_count == 77
-    assert report.accepted_name_count == 125
+    assert report.canonical_parameter_count == 79
+    assert report.accepted_name_count == 127
     assert report.aliased_parameter_count == 36
     assert report.max_alias_count == 4
     assert len(report.issues) == 4
@@ -555,7 +555,7 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "false\t7\t7\t77\t78\t125\t36\t4\t4\n"
+        "false\t7\t7\t79\t80\t127\t36\t4\t4\n"
         "kind\tfield\tmessage\n"
         "NMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical "
         "supported parameters, found 17\n"
@@ -647,16 +647,17 @@ def test_model_card_aliases_build_device_instances() -> None:
     assert pytest.approx(1.05) == diode_model.Eg
 
     bjt_card = normalize_model_card(
-        "Qsmall", "npn", {"BETA": 125.0, "CBE": 2.0e-12, "XTI": 2.4, "EG": 1.05, "VA": 80.0}
+        "Qsmall", "npn", {"BETA": 125.0, "CBE": 2.0e-12, "XTI": 2.4, "EG": 1.05, "VA": 80.0, "NF": 1.2}
     )
     bjt_model = bjt_from_model_card("Q1", "c", "b", "e", bjt_card)
-    assert bjt_card.parameters == {"BF": 125.0, "CJE": 2.0e-12, "XTI": 2.4, "EG": 1.05, "VAF": 80.0}
+    assert bjt_card.parameters == {"BF": 125.0, "CJE": 2.0e-12, "XTI": 2.4, "EG": 1.05, "VAF": 80.0, "NF": 1.2}
     assert bjt_model.polarity == "NPN"
     assert bjt_model.beta_f == pytest.approx(125.0)
     assert bjt_model.Cje == pytest.approx(2.0e-12)
     assert bjt_model.Xti == pytest.approx(2.4)
     assert bjt_model.Eg == pytest.approx(1.05)
     assert bjt_model.Vaf == pytest.approx(80.0)
+    assert bjt_model.Nf == pytest.approx(1.2)
 
     jfet_card = normalize_model_card("Jn", "njfet", {"BET": 9.0e-4, "VT0": -1.8, "LAM": 0.02})
     jfet_model = jfet_from_model_card("J1", "d", "g", "s", jfet_card)
@@ -2226,7 +2227,7 @@ def test_subcircuit_expansion_preserves_complete_bjt_model():
     cell = SubcircuitDefinition(
         "bjt-cell",
         ("c", "b", "e"),
-        (BJT("Qcell", "c", "b", "e", Xti=2.4, Eg=1.05, Vaf=80.0),),
+        (BJT("Qcell", "c", "b", "e", Xti=2.4, Eg=1.05, Vaf=80.0, Nf=1.2),),
     )
     circuit = Circuit()
     circuit.define_subcircuit(cell)
@@ -2236,6 +2237,7 @@ def test_subcircuit_expansion_preserves_complete_bjt_model():
     assert expanded.Xti == pytest.approx(2.4)
     assert expanded.Eg == pytest.approx(1.05)
     assert expanded.Vaf == pytest.approx(80.0)
+    assert expanded.Nf == pytest.approx(1.2)
 
 
 def test_branch_current_in_voltage_source():
@@ -2490,6 +2492,25 @@ def test_dc_rejects_invalid_bjt_forward_early_voltage():
     circuit = Circuit()
     circuit.add(BJT("Qbad", "c", "b", "0", Vaf=-1.0))
     with pytest.raises(ValueError, match="BJT forward Early voltage must be finite and non-negative"):
+        dc_op(circuit)
+
+
+def test_bjt_forward_emission_coefficient_reduces_collector_current():
+    def collector_voltage(nf: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vcc", "vcc", "0", 5.0))
+        circuit.add(VoltageSource("Vbase", "base", "0", 0.65))
+        circuit.add(Resistor("Rload", "vcc", "out", 1_000.0))
+        circuit.add(BJT("Q1", "out", "base", "0", Nf=nf))
+        return dc_op(circuit).node_voltages["out"]
+
+    assert collector_voltage(2.0) > collector_voltage(1.0)
+
+
+def test_dc_rejects_invalid_bjt_forward_emission_coefficient():
+    circuit = Circuit()
+    circuit.add(BJT("Qbad", "c", "b", "0", Nf=0.0))
+    with pytest.raises(ValueError, match="BJT forward emission coefficient must be finite and positive"):
         dc_op(circuit)
 
 
@@ -4526,6 +4547,20 @@ def test_tf_bjt_forward_early_voltage_reduces_output_impedance():
         return tf(circuit, output_node="out", input_source="Vin").output_impedance
 
     assert output_impedance(10.0) < output_impedance(0.0)
+
+
+def test_tf_bjt_forward_emission_coefficient_reduces_gain_and_raises_input_impedance():
+    def transfer(nf: float) -> TfResult:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vin", "base", "0", 0.65))
+        circuit.add(Resistor("Rload", "out", "0", 1_000.0))
+        circuit.add(BJT("Q1", "out", "base", "0", Nf=nf))
+        return tf(circuit, output_node="out", input_source="Vin")
+
+    ideal = transfer(1.0)
+    shaped = transfer(2.0)
+    assert abs(shaped.gain) < abs(ideal.gain)
+    assert shaped.input_impedance > ideal.input_impedance
 
 
 # ============================================================================
