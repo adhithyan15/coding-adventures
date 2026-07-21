@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "haskell/sql-csv-source",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads CSV data files from a user-supplied directory to serve as SQL tables."
+    },
+    {
+      "category": "fs",
+      "action": "list",
+      "target": "*",
+      "justification": "Lists a user-supplied directory to discover queryable CSV tables."
+    }
+  ],
+  "justification": "Reads and lists CSV files under a caller-selected directory. It does not write files, access the network, or spawn processes."
+}
