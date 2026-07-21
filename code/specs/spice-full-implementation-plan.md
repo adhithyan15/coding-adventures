@@ -33,15 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language BJT forward Early voltage.
+1. Cross-language BJT forward emission coefficient.
    - Status: current PR completion candidate.
-   - Add Berkeley BJT `VAF` / `VA` forward Early-voltage model-card support in
+   - Add Berkeley BJT `NF` forward emission-coefficient model-card support in
      Rust, Python, and TypeScript.
-   - Apply collector-voltage modulation in DC, transient, AC,
-     transfer-function, and noise paths while preserving the full BJT model
-     through hierarchical subcircuit expansion.
-   - Extend the supported-parameter coverage gate from 76 to 78 canonical rows
-     and lock model-specific output-conductance behavior across all three engines.
+   - Apply `NF` to the forward junction current, transconductance, charge, and
+     noise paths while preserving the full BJT model through hierarchical
+     subcircuit expansion.
+   - Extend the supported-parameter coverage gate from 78 to 80 canonical rows
+     and lock forward-junction behavior across all three engines.
 
 ## Completed Slices
 
@@ -3007,6 +3007,14 @@ the Rust, Python, and TypeScript surfaces together.
      model's energy gap to saturation-current temperature scaling.
    - Hierarchical subcircuit expansion preserves the complete BJT model, and
      the supported-parameter release gate now covers 76 canonical rows.
+
+220. Cross-language BJT forward Early voltage.
+   - Status: completed in PR 8734.
+   - Rust, Python, and TypeScript BJT model cards now accept `VAF` / `VA` and
+     apply collector-voltage modulation in DC, transient, AC,
+     transfer-function, and noise paths.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 78 canonical rows.
 
 ## Backlog
 
