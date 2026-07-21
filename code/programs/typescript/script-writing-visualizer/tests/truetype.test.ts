@@ -73,10 +73,42 @@ function flatten(contours: Contour[], perCurve = 8): Array<Array<[number, number
   return polys;
 }
 
-/** Render contours to a boolean ink grid on a FIXED em box, so two glyphs are directly comparable. */
-function raster(contours: Contour[], W = 100, H = 34): boolean[][] {
+/**
+ * Render contours to a boolean ink grid on a SHARED window, so two glyphs are
+ * directly comparable.
+ *
+ * The window must be passed in and must enclose every glyph being compared.
+ * An earlier version hard-coded x <= 1030 — but ண's outline runs to x=1631, so
+ * it silently amputated 37% of the letter INCLUDING its final stroke, and a
+ * shape description written from that picture claimed the letter ended in a
+ * curve. Clipping does not look like an error; it looks like a letter.
+ * `windowFor()` below derives the box from the glyphs themselves.
+ */
+interface Window { X0: number; X1: number; Y0: number; Y1: number }
+
+function windowFor(...contourSets: Contour[][]): Window {
+  let X0 = Infinity, X1 = -Infinity, Y0 = Infinity, Y1 = -Infinity;
+  for (const cs of contourSets) {
+    const b = boundsOf(cs);
+    X0 = Math.min(X0, b.x0); X1 = Math.max(X1, b.x1);
+    Y0 = Math.min(Y0, b.y0); Y1 = Math.max(Y1, b.y1);
+  }
+  const padX = (X1 - X0) * 0.04, padY = (Y1 - Y0) * 0.08;
+  return { X0: X0 - padX, X1: X1 + padX, Y0: Y0 - padY, Y1: Y1 + padY };
+}
+
+function raster(contours: Contour[], win: Window, W = 110, H = 26): boolean[][] {
   const polys = flatten(contours);
-  const X0 = -30, X1 = 1030, Y0 = -320, Y1 = 880;
+  const { X0, X1, Y0, Y1 } = win;
+  // Guard: the caller's window must actually contain this glyph. Without this
+  // the whole harness silently measures the clip boundary instead of the letter.
+  const b = boundsOf(contours);
+  if (b.x0 < X0 - 1 || b.x1 > X1 + 1 || b.y0 < Y0 - 1 || b.y1 > Y1 + 1) {
+    throw new Error(
+      `raster window [${X0.toFixed(0)},${X1.toFixed(0)}]x[${Y0.toFixed(0)},${Y1.toFixed(0)}] ` +
+        `clips a glyph with bounds [${b.x0},${b.x1}]x[${b.y0},${b.y1}]`,
+    );
+  }
   const grid: boolean[][] = [];
   for (let r = 0; r < H; r++) {
     const y = Y1 - ((r + 0.5) * (Y1 - Y0)) / H;
@@ -254,84 +286,106 @@ describe("contoursToPath", () => {
 // wrong distinguishing feature. Only a mechanical comparison catches that.
 // ---------------------------------------------------------------------------
 describe("Tamil letter shapes the lessons make claims about", () => {
-  it("ண and ன are the same shape except for their final stroke", () => {
+  // These pin, against the rasterised font, what TA-W02 / TA-W04 / tamil.json
+  // say in prose. They exist because BOTH previous attempts at this claim were
+  // wrong: first "ண is ன with one extra arch" was replaced by a false
+  // "they differ only in the final stroke", the replacement having been written
+  // from a raster window that clipped ண at 63% of its width. The lesson is that
+  // the instrument needs checking as much as the memory does.
+
+  /** Count separate ink runs along a row — how many strokes it crosses. */
+  const runs = (row: boolean[]) => row.reduce((n, v, i) => n + (v && !row[i - 1] ? 1 : 0), 0);
+
+  it("ண is ன with exactly one extra arch, and both end in a straight vertical", () => {
     const f = tamil();
-    const na = raster(f.glyphFor("ண")!.contours);
-    const alveolar = raster(f.glyphFor("ன")!.contours);
+    const retroflex = f.glyphFor("ண")!.contours;
+    const alveolar = f.glyphFor("ன")!.contours;
+    const win = windowFor(retroflex, alveolar);
+    const a = raster(retroflex, win);
+    const b = raster(alveolar, win);
 
-    let firstDiff = na[0].length;
-    outer: for (let r = 0; r < na.length; r++) {
-      for (let c = 0; c < na[r].length; c++) {
-        if (na[r][c] !== alveolar[r][c]) {
-          firstDiff = Math.min(firstDiff, c);
-          break outer;
-        }
-      }
-    }
-    // Identical through the left half: same top bar, same loop, same arch.
-    // If this ever drops sharply, the "only the last stroke differs" claim in
-    // TA-W02/TA-W04 has stopped being true and the lessons need revisiting.
-    expect(firstDiff).toBeGreaterThan(45);
+    // Mid-body, each arch shows up as two legs. ண crosses exactly two more
+    // strokes than ன: one extra arch = two extra legs.
+    const midA = runs(a[Math.floor(a.length * 0.55)]);
+    const midB = runs(b[Math.floor(b.length * 0.55)]);
+    expect(midA - midB).toBe(2);
 
-    // ...and they DO differ — otherwise the claim is vacuous.
-    expect(firstDiff).toBeLessThan(na[0].length);
-
-    // Control: the metric must be capable of reporting "these are different
-    // letters". Two unrelated glyphs diverge almost immediately, so a passing
-    // assertion above is a real property of ண/ன and not a quirk of the measure.
-    const unrelated = raster(f.glyphFor("ம")!.contours);
-    let controlDiff = na[0].length;
-    outerControl: for (let r = 0; r < na.length; r++) {
-      for (let c = 0; c < na[r].length; c++) {
-        if (na[r][c] !== unrelated[r][c]) {
-          controlDiff = Math.min(controlDiff, c);
-          break outerControl;
-        }
-      }
-    }
-    expect(controlDiff).toBeLessThan(20);
-  });
-
-  it("ன's final stroke is a straight vertical; ண's is not", () => {
-    const f = tamil();
-    const straightness = (ch: string) => {
-      const g = raster(f.glyphFor(ch)!.contours);
-      const cols = inkColumns(g);
+    // Both finish with a straight vertical. Measured as the SPREAD of the final
+    // stroke's left edge down the rows it spans: a vertical holds its x
+    // position, a curve wanders. Tolerance of one cell, because real typefaces
+    // taper a stem slightly and the raster is coarse.
+    const finalStrokeSpread = (g: boolean[][]) => {
+      const cols = g[0].map((_, c) => g.some((row) => row[c]));
       const right = cols.lastIndexOf(true);
-      // Walk up the rightmost stroke: for a straight vertical, the leftmost
-      // inked column of the final stroke is the same on every row it occupies.
-      // Look only BELOW the top bar. The bar spans the whole letter, so it
-      // touches the rightmost column too and would swamp the measurement.
       const inked = g.map((row) => row.some(Boolean));
       const top = inked.indexOf(true);
       const bottom = inked.lastIndexOf(true);
-      const firstBodyRow = top + Math.ceil((bottom - top) * 0.3);
       const lefts: number[] = [];
-      for (let r = firstBodyRow; r <= bottom; r++) {
+      for (let r = top + Math.ceil((bottom - top) * 0.35); r <= bottom; r++) {
         if (!g[r][right]) continue;
         let c = right;
         while (c > 0 && g[r][c - 1]) c--;
         lefts.push(c);
       }
-      return new Set(lefts).size; // 1 => perfectly straight
+      return Math.max(...lefts) - Math.min(...lefts);
     };
-    expect(straightness("ன")).toBe(1);
-    expect(straightness("ண")).toBeGreaterThan(1);
+    expect(finalStrokeSpread(a)).toBeLessThanOrEqual(1);
+    expect(finalStrokeSpread(b)).toBeLessThanOrEqual(1);
+
+    // Control: the measure must be able to report a non-vertical final stroke,
+    // otherwise "<= 1" is satisfied by a metric that always returns 0. Across
+    // the letters this track teaches it returns a range of values.
+    const spreads = ["ண", "ன", "ம", "வ", "அ", "இ", "ல", "ற", "க"].map((ch) => {
+      const cs = f.glyphFor(ch)!.contours;
+      return finalStrokeSpread(raster(cs, windowFor(cs)));
+    });
+    expect(Math.max(...spreads)).toBeGreaterThan(1);
   });
 
-  it("ற has two arches (three legs at the baseline), not one", () => {
+  it("the two letters share their opening: identical until the extra arch", () => {
     const f = tamil();
-    const g = raster(f.glyphFor("ற")!.contours);
-    // Sample a row inside the letter body, above the baseline.
-    const bodyRow = g[Math.floor(g.length * 0.5)];
-    expect(runsInRow(bodyRow)).toBe(3);
+    const retroflex = f.glyphFor("ண")!.contours;
+    const alveolar = f.glyphFor("ன")!.contours;
+    const win = windowFor(retroflex, alveolar);
+    const a = raster(retroflex, win);
+    const b = raster(alveolar, win);
 
-    // Control: the measure must actually discriminate. Across the letters this
-    // track teaches it returns a RANGE of values, so "3" is a measurement of ற
-    // rather than a constant the metric hands back for anything.
-    const counts = ["வ", "ம", "ண", "ற", "ல"].map((ch) =>
-      runsInRow(raster(f.glyphFor(ch)!.contours)[Math.floor(g.length * 0.5)]),
-    );
-    expect(new Set(counts).size).toBeGreaterThan(1);
+    // Minimum differing column ACROSS ALL ROWS (an earlier version stopped at
+    // the first differing cell in row-major order, so it only ever measured
+    // the topmost differing row).
+    let firstDiff = a[0].length;
+    for (let r = 0; r < a.length; r++)
+      for (let c = 0; c < a[r].length; c++)
+        if (a[r][c] !== b[r][c]) { firstDiff = Math.min(firstDiff, c); break; }
+
+    expect(firstDiff).toBeGreaterThan(20); // a shared opening really exists
+    expect(firstDiff).toBeLessThan(a[0].length); // ...and they do differ
+
+    // Control: unrelated letters diverge almost at once, so the number above
+    // is a property of this pair rather than of the measure.
+    const other = f.glyphFor("ம")!.contours;
+    const win2 = windowFor(retroflex, other);
+    const a2 = raster(retroflex, win2);
+    const c2 = raster(other, win2);
+    let controlDiff = a2[0].length;
+    for (let r = 0; r < a2.length; r++)
+      for (let c = 0; c < a2[r].length; c++)
+        if (a2[r][c] !== c2[r][c]) { controlDiff = Math.min(controlDiff, c); break; }
+    expect(controlDiff).toBeLessThan(firstDiff);
+  });
+
+  it("ற has two arches — three legs at mid-body — and a descender", () => {
+    const f = tamil();
+    const g = f.glyphFor("ற")!.contours;
+    const win = windowFor(g);
+    expect(runs(raster(g, win)[Math.floor(26 * 0.5)])).toBe(3);
+    expect(boundsOf(g).y0).toBeLessThan(-200); // the long tail below the baseline
+  });
+
+  it("the raster window guard fires rather than silently clipping", () => {
+    const f = tamil();
+    const wide = f.glyphFor("ண")!.contours; // runs to x=1631
+    const narrow = windowFor(f.glyphFor("ம")!.contours); // only to x=797
+    expect(() => raster(wide, narrow)).toThrow(/clips a glyph/);
   });
 });

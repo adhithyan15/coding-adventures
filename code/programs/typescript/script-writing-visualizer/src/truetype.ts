@@ -131,6 +131,26 @@ const REQUIRED_TABLES = ["head", "maxp", "cmap", "loca", "glyf"] as const;
 // characters, and Unicode itself only defines ~150k assigned codepoints.
 const MAX_CMAP_GROUPS = 100_000;
 const MAX_MAPPED_CHARACTERS = 200_000;
+// Total character-mapping ITERATIONS allowed, shared by both cmap readers.
+// Capping the map's SIZE is not enough: groups that re-map an already-mapped
+// range grow the map by nothing while still costing a full loop, and format 4
+// has no size pressure at all since its keys can only span the BMP. This
+// bounds the work rather than the result.
+const MAX_CMAP_ITERATIONS = 500_000;
+// Total glyph components visited when expanding composites. The depth cap
+// alone bounds depth but NOT work: a glyph with N components each pointing at
+// the same subglyph costs N^depth visits, so ~70 components is minutes of
+// frozen main thread from a 632-byte file.
+const MAX_COMPONENT_VISITS = 10_000;
+
+/** A decrementing budget shared across one parse, so total work is bounded. */
+class Budget {
+  constructor(private left: number) {}
+  spend(n = 1): boolean {
+    this.left -= n;
+    return this.left > 0;
+  }
+}
 
 /**
  * Read a TrueType font from raw bytes.
@@ -211,18 +231,25 @@ export function parseFont(bytes: ArrayBuffer): Font {
   if (!chosen) throw new Error("font has no Unicode cmap subtable in format 4 or 12");
 
   const charToGlyph = new Map<number, number>();
+  const cmapBudget = new Budget(MAX_CMAP_ITERATIONS);
   if (chosen.format === 4) {
-    readCmapFormat4(view, chosen.offset, charToGlyph);
+    readCmapFormat4(view, chosen.offset, charToGlyph, cmapBudget);
   } else {
-    readCmapFormat12(view, chosen.offset, charToGlyph);
+    readCmapFormat12(view, chosen.offset, charToGlyph, cmapBudget);
   }
 
   // ---- glyf: the outlines ---------------------------------------------------
   const glyfOffset = tableAt("glyf").offset;
 
+  const componentBudget = new Budget(MAX_COMPONENT_VISITS);
+
   function contoursOf(glyphId: number, depth = 0): Contour[] {
-    // Composite glyphs point at other glyphs; a malformed font could loop.
+    // Composite glyphs point at other glyphs. The depth cap stops infinite
+    // recursion; the budget stops FAN-OUT, which the depth cap does not — a
+    // glyph with N components each pointing at the same subglyph costs N^depth
+    // visits, so a few hundred bytes could otherwise freeze the tab for hours.
     if (depth > 5) return [];
+    if (!componentBudget.spend()) return [];
     if (glyphId < 0 || glyphId + 1 >= loca.length) return [];
     if (loca[glyphId] === loca[glyphId + 1]) return []; // empty glyph, e.g. space
 
@@ -258,9 +285,9 @@ export function parseFont(bytes: ArrayBuffer): Font {
 // cmap format 4: parallel arrays of segments. The `idRangeOffset` trick reads
 // into a glyph-id array that *follows* the offsets, addressed relative to the
 // position of the offset entry itself — which is why we remember that position.
-function readCmapFormat4(view: DataView, offset: number, out: Map<number, number>): void {
+function readCmapFormat4(view: DataView, offset: number, out: Map<number, number>, budget: Budget): void {
   const c = new Cursor(view, offset + 6);
-  const segCount = c.u16() / 2;
+  const segCount = Math.floor(c.u16() / 2); // segCountX2; floor guards an odd value
   c.position = offset + 14;
   const ends: number[] = [];
   const starts: number[] = [];
@@ -277,6 +304,7 @@ function readCmapFormat4(view: DataView, offset: number, out: Map<number, number
   }
   for (let i = 0; i < segCount; i++) {
     for (let ch = starts[i]; ch <= ends[i] && ch !== 0xffff; ch++) {
+      if (out.size >= MAX_MAPPED_CHARACTERS || !budget.spend()) return;
       let g: number;
       if (rangeOffsets[i] === 0) {
         g = (ch + deltas[i]) & 0xffff;
@@ -298,7 +326,7 @@ function readCmapFormat4(view: DataView, offset: number, out: Map<number, number
 // from 0 to 0xFFFFFFFF would otherwise ask us to build a four-billion-entry
 // Map and hang the tab. Unicode stops at U+10FFFF; anything beyond that is
 // malformed, and we drop the excess rather than trust it.
-function readCmapFormat12(view: DataView, offset: number, out: Map<number, number>): void {
+function readCmapFormat12(view: DataView, offset: number, out: Map<number, number>, budget: Budget): void {
   const MAX_CODEPOINT = 0x10ffff;
   const groupCount = Math.min(view.getUint32(offset + 12), MAX_CMAP_GROUPS);
   const c = new Cursor(view, offset + 16);
@@ -309,7 +337,7 @@ function readCmapFormat12(view: DataView, offset: number, out: Map<number, numbe
     const startGlyph = c.u32();
     if (startChar > endChar || startChar > MAX_CODEPOINT) continue;
     for (let ch = startChar; ch <= endChar; ch++) {
-      if (out.size >= MAX_MAPPED_CHARACTERS) return;
+      if (out.size >= MAX_MAPPED_CHARACTERS || !budget.spend()) return;
       out.set(ch, startGlyph + (ch - startChar));
     }
   }
@@ -319,8 +347,16 @@ function readCmapFormat12(view: DataView, offset: number, out: Map<number, numbe
 // coordinate stored as a DELTA from the previous one, in one of three widths
 // depending on two flag bits. Repeated flags are run-length encoded.
 function simpleContours(c: Cursor, contourCount: number): Contour[] {
+  // Contour end-indices must ascend: pointCount is taken from the LAST entry,
+  // so a descending set (e.g. [60000, 5]) would let the first contour read past
+  // the coordinate arrays and emit NaN into the path. A wrong shape that still
+  // renders is the failure mode this module exists to prevent, so refuse it.
   const endPoints: number[] = [];
-  for (let i = 0; i < contourCount; i++) endPoints.push(c.u16());
+  for (let i = 0; i < contourCount; i++) {
+    const e = c.u16();
+    if (i > 0 && e <= endPoints[i - 1]) throw new Error("glyph has non-ascending contour end points");
+    endPoints.push(e);
+  }
   const pointCount = contourCount > 0 ? endPoints[contourCount - 1] + 1 : 0;
   c.skip(c.u16()); // hinting instructions — irrelevant to the outline
 
@@ -399,9 +435,13 @@ function compositeContours(
       dx = c.i8();
       dy = c.i8();
     }
-    if (flags & HAS_SCALE) c.skip(2);
-    else if (flags & HAS_XY_SCALE) c.skip(4);
-    else if (flags & HAS_2X2) c.skip(8);
+    // A scaled component would need its transform applied; drawing it
+    // unscaled is a WRONG SHAPE, and a wrong shape that renders is exactly
+    // what this module refuses to produce. None of the vendored fonts use
+    // one, so refuse rather than quietly mis-draw.
+    if (flags & (HAS_SCALE | HAS_XY_SCALE | HAS_2X2)) {
+      throw new Error("composite glyph uses a scaled component, which is not supported");
+    }
 
     // When ARGS_ARE_XY is clear the arguments are point indices to align,
     // not offsets. That is rare; we place the component unshifted rather
