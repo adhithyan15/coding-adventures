@@ -115,7 +115,12 @@ pub struct ResolutionLimitExceeded;
 /// present a truncated search as a complete one, which is the failure mode the
 /// whole audit-trail effort is aimed at.
 pub fn enumerate_all(query: &Term, kb: &KnowledgeBase) -> ProofDAG {
-    let raw = solve(query, kb, &Substitution::empty(), 0).unwrap_or_default();
+    let outcome = solve(query, kb, &Substitution::empty(), 0);
+    // The limit is RECORDED on the DAG, not silently swallowed. Callers that
+    // draw a negative conclusion from an empty result set must be able to see
+    // that the search stopped early — see `ProofDAG::truncated`.
+    let truncated = outcome.is_err();
+    let raw = outcome.unwrap_or_default();
     let proofs = raw
         .into_iter()
         .map(|(bindings, steps)| {
@@ -137,6 +142,7 @@ pub fn enumerate_all(query: &Term, kb: &KnowledgeBase) -> ProofDAG {
     ProofDAG {
         root_query: query.clone(),
         proofs,
+        truncated,
     }
 }
 

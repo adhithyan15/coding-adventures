@@ -56,7 +56,9 @@ pub use datetime::{
 pub use differential::{differential, Differential, DifferentialDecision, RankedHypothesis};
 pub use dimension::{dimensioned_value, DimError, DimOp, Dimension, Dimensioned};
 pub use enumerate::{enumerate_all, ResolutionLimitExceeded, MAX_SLD_DEPTH};
-pub use govern::{enumerate_governing, GovernStatus, GovernedAnswer, GovernedResult};
+pub use govern::{
+    enumerate_governing, ConflictStatus, GovernStatus, GovernedAnswer, GovernedResult,
+};
 pub use lr_aggregate::{
     counterfactual, lr_aggregate, sigmoid, source_disagreements,
     source_disagreements_with_threshold, CmpOp, ContributionClause, JointContributionClause,

@@ -313,6 +313,180 @@ const UNRESOLVED_PROV: &str =
 /// than no trail, because it looks complete. Adding a variant to
 /// `DerivationOrigin` must now break this function's compilation — that failure
 /// is the feature.
+/// Render a typed **abstention reason** (`ADJ-REASON-MATH.md` §E.4).
+///
+/// # Why a boolean was not enough
+///
+/// Every abstention used to be the same value: `"abstained": true`. That
+/// collapses genuinely different situations into one, and two of them are
+/// *opposites*:
+///
+/// - **`below_table_domain`** — the question was well-formed and the source
+///   simply does not cover it. The table is being honest, and the caller now
+///   knows the domain it fell outside of.
+/// - **`non_numeric_key`** — the question was malformed. Nothing is wrong with
+///   the table; the caller is wrong.
+///
+/// Those emitted **byte-identical JSON**. No consumer could tell "your question
+/// is outside what this source covers" from "your question was invalid", which
+/// makes an abstention unactionable — you cannot tell whether to widen the
+/// source or fix the query.
+///
+/// `search_limit_exceeded` is the third and subtlest: the engine did not
+/// establish an absence at all, it *stopped looking*. Reporting that as
+/// "no grounded support" would be a claim about the world derived from a
+/// resource limit.
+///
+/// The rendered object is additive — `"abstained": true` is still emitted
+/// beside it, so existing consumers are untouched.
+/// Longest echoed payload the abstention object will carry.
+///
+/// `ADJ-REASON-MATH.md` §E.4 requires echoed payloads to be length-capped. The
+/// reason is not display tidiness: these fields carry the CALLER'S OWN INPUT
+/// back out into an artifact that is designed to be replayed and shared, and an
+/// unbounded echo is both an amplification and a bigger blast radius for
+/// whatever the caller happened to paste in.
+const ABSTENTION_FIELD_CAP: usize = 256;
+
+/// `true` when this run's input is marked sensitive, so echoed payloads must be
+/// withheld (`ADJ_SENSITIVE_INPUT=1`).
+///
+/// §E.4 requires redaction on a sensitive channel, and names the case: in the
+/// medical arm an unresolved surface form can be free text lifted from a chart,
+/// and the trail it lands in travels. The `reason` and `explanation` still tell
+/// you WHAT went wrong — only the echoed values are withheld, so an abstention
+/// stays actionable without carrying PHI along with it.
+fn sensitive_input() -> bool {
+    // Resolved ONCE per process. Two reasons beyond speed: the warning below
+    // should be emitted once rather than once per rendered field (it printed
+    // four times for a single query before this), and a security decision that
+    // is re-read mid-run could in principle disagree with itself.
+    static DECIDED: std::sync::OnceLock<bool> = std::sync::OnceLock::new();
+    *DECIDED.get_or_init(decide_sensitive_input)
+}
+
+fn decide_sensitive_input() -> bool {
+    let Ok(raw) = std::env::var("ADJ_SENSITIVE_INPUT") else {
+        return false;
+    };
+    let v = raw.trim();
+    if v.is_empty() {
+        return false;
+    }
+    if matches!(
+        v.to_ascii_lowercase().as_str(),
+        "1" | "true" | "yes" | "on" | "y" | "enabled"
+    ) {
+        return true;
+    }
+    if matches!(
+        v.to_ascii_lowercase().as_str(),
+        "0" | "false" | "no" | "off" | "n" | "disabled"
+    ) {
+        return false;
+    }
+    // FAIL CLOSED, LOUDLY. A security toggle whose misspelling is
+    // indistinguishable from being unset is a footgun for exactly the
+    // deployment it exists to protect: `ADJ_SENSITIVE_INPUT=pls` would have
+    // silently emitted chart text. Anyone who set the variable at all meant
+    // something by it, so an unrecognized value is treated as SENSITIVE and
+    // the operator is told.
+    eprintln!(
+        "warning: ADJ_SENSITIVE_INPUT={raw:?} is not a recognized boolean; \
+         treating this run as SENSITIVE and redacting echoed payloads."
+    );
+    true
+}
+
+/// Render a query string for output, honouring the sensitive channel.
+///
+/// # Why this exists as a helper rather than a call at each site
+///
+/// The first draft redacted the abstention object's fields and left the
+/// surrounding `"query"` / `"queries"` echoes alone. Those echoes contain the
+/// SAME values — for a recall abstention the goal *is* the query, and a lookup
+/// query string spells out the table and the key — so the redacted secret was
+/// reprinted verbatim two lines above an object claiming to have redacted it.
+/// That is worse than no redaction: it advertises a protection that is not
+/// there.
+///
+/// Routing every query echo through one function is the fix that stays fixed —
+/// a new renderer cannot forget a check it never had to make.
+fn query_echo(q: &str) -> String {
+    if sensitive_input() {
+        return "[redacted]".to_string();
+    }
+    esc(q)
+}
+
+/// Prepare one echoed payload: redact it on a sensitive channel, otherwise cap
+/// its length (marking the truncation, so a reader never mistakes a cut string
+/// for the whole value) and JSON-escape it.
+fn payload(v: &str) -> String {
+    if sensitive_input() {
+        return "[redacted]".to_string();
+    }
+    if v.chars().count() > ABSTENTION_FIELD_CAP {
+        let head: String = v.chars().take(ABSTENTION_FIELD_CAP).collect();
+        return esc(&format!("{head}…(truncated)"));
+    }
+    esc(v)
+}
+
+fn abstention_json(reason: &AbstentionReason) -> String {
+    match reason {
+        AbstentionReason::NoGroundedSupport { goal } => format!(
+            "{{\"reason\":\"no_grounded_support\",\"goal\":\"{}\",\"explanation\":\"the knowledge base contains no derivation of this goal\"}}",
+            payload(goal)
+        ),
+        AbstentionReason::BelowTableDomain {
+            table,
+            key,
+            min_key,
+        } => format!(
+            "{{\"reason\":\"below_table_domain\",\"table\":\"{}\",\"key\":\"{}\",\"min_key\":\"{}\",\"explanation\":\"the query falls below the lowest breakpoint this source defines; the source does not cover it\"}}",
+            payload(table),
+            payload(key),
+            payload(min_key)
+        ),
+        AbstentionReason::NonNumericKey { table, column, key } => format!(
+            "{{\"reason\":\"non_numeric_key\",\"table\":\"{}\",\"column\":\"{}\",\"key\":\"{}\",\"explanation\":\"a range lookup needs a numeric key; this one could not be read as a number\"}}",
+            payload(table),
+            payload(column),
+            payload(key)
+        ),
+        AbstentionReason::SearchLimitExceeded { goal } => format!(
+            "{{\"reason\":\"search_limit_exceeded\",\"goal\":\"{}\",\"explanation\":\"the proof search hit its depth or width limit and stopped; this is NOT evidence that no proof exists\"}}",
+            payload(goal)
+        ),
+    }
+}
+
+/// The typed reasons an ADJ query can decline to answer.
+///
+/// Closed on purpose: a new way to abstain must be named here and rendered,
+/// rather than quietly reusing a neighbouring reason or falling back to the
+/// bare boolean.
+enum AbstentionReason {
+    /// Nothing in the knowledge base derives the goal.
+    NoGroundedSupport { goal: String },
+    /// The key is below the table's lowest breakpoint — the source's domain
+    /// starts above it.
+    BelowTableDomain {
+        table: String,
+        key: String,
+        min_key: String,
+    },
+    /// A range lookup was handed a key that is not a number.
+    NonNumericKey {
+        table: String,
+        column: String,
+        key: String,
+    },
+    /// The search stopped at a resolution limit. **Not** an absence.
+    SearchLimitExceeded { goal: String },
+}
+
 fn trace_steps_json(proof: &Proof, kb: &KnowledgeBase) -> String {
     let mut steps = Vec::new();
     for (i, st) in proof.steps.iter().enumerate() {
@@ -801,7 +975,16 @@ fn main() -> ExitCode {
 
     // The `"queries"` echo lists every query the program declared (ground +
     // binding), captured before the partition above.
-    let queries: Vec<String> = all_query_strs;
+    // Same gate as every other echo — the `queries` array would otherwise
+    // reprint in full exactly what the abstention object redacts.
+    let queries: Vec<String> = if sensitive_input() {
+        all_query_strs
+            .iter()
+            .map(|_| "\"[redacted]\"".to_string())
+            .collect()
+    } else {
+        all_query_strs
+    };
 
     // Relational recall: each binding query resolves to its bindings + the citing
     // edge's provenance (or abstains with an empty answer set). 0 answer-time
@@ -957,11 +1140,27 @@ fn recall_json(query: &Term, kb: &KnowledgeBase) -> String {
             trace_steps_json(proof, kb)
         ));
     }
+    // An empty answer set is reported with the REASON it is empty. `truncated`
+    // is checked first: a search that stopped early established no absence, so
+    // calling it "no grounded support" would convert a resource limit into a
+    // claim about the knowledge base.
+    let abstention = if dag.proofs.is_empty() {
+        let goal = format!("{query}");
+        let reason = if dag.truncated {
+            AbstentionReason::SearchLimitExceeded { goal }
+        } else {
+            AbstentionReason::NoGroundedSupport { goal }
+        };
+        format!(",\"abstention\":{}", abstention_json(&reason))
+    } else {
+        String::new()
+    };
     format!(
-        "{{\"query\":\"{}\",\"answers\":[{}],\"abstained\":{}}}",
-        esc(&format!("{}", query)),
+        "{{\"query\":\"{}\",\"answers\":[{}],\"abstained\":{}{}}}",
+        query_echo(&format!("{query}")),
         answers.join(","),
-        dag.proofs.is_empty()
+        dag.proofs.is_empty(),
+        abstention
     )
 }
 
@@ -1001,9 +1200,14 @@ fn range_lookup_json(rl: &LoweredRangeLookup, kb: &KnowledgeBase) -> String {
             // The lowerer guarantees a numeric literal, so this is unreachable in
             // practice; abstain rather than panic if a non-numeric ever arrives.
             return format!(
-                "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[],\"abstained\":true}}",
-                esc(&query_str),
-                esc(&rl.mode)
+                "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[],\"abstained\":true,\"abstention\":{}}}",
+                query_echo(&query_str),
+                esc(&rl.mode),
+                abstention_json(&AbstentionReason::NonNumericKey {
+                    table: rl.table.clone(),
+                    column: rl.key_col.clone(),
+                    key: format!("{}", rl.key_value),
+                })
             );
         }
     };
@@ -1042,7 +1246,7 @@ fn range_lookup_json(rl: &LoweredRangeLookup, kb: &KnowledgeBase) -> String {
             // breakpoint key, so the audit shows WHICH bracket the query fell in.
             format!(
                 "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[{{\"bindings\":{{\"{}\":\"{}\",\"{}\":\"{}\"}},\"citations\":[{}],\"steps\":{}}}],\"abstained\":false}}",
-                esc(&query_str),
+                query_echo(&query_str),
                 esc(&rl.mode),
                 esc(&rl.value_col),
                 esc(&format!("{value_term}")),
@@ -1052,11 +1256,49 @@ fn range_lookup_json(rl: &LoweredRangeLookup, kb: &KnowledgeBase) -> String {
                 trace_steps_json(proof, kb)
             )
         }
-        None => format!(
-            "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[],\"abstained\":true}}",
-            esc(&query_str),
-            esc(&rl.mode)
-        ),
+        None => {
+            // No breakpoint is `<= q`, so the query sits BELOW the table's
+            // floor. Report the floor itself: an abstention that names the
+            // domain you fell outside is actionable ("this source starts at
+            // 0"), whereas a bare `true` leaves the caller guessing whether
+            // the table is wrong, the key is wrong, or the source simply does
+            // not reach that far.
+            //
+            // If the search truncated we cannot even claim that — we did not
+            // enumerate every row, so the floor we computed may not be the
+            // real one. That case reports the limit instead.
+            let min_key = dag
+                .proofs
+                .iter()
+                .filter_map(|pr| {
+                    let kt = pr.bindings.walk_var(&cols[rl.key_index]);
+                    numeric_exact_magnitude(&kt).map(|k| (kt, k))
+                })
+                .min_by(|(_, a), (_, b)| {
+                    a.as_ratio()
+                        .partial_cmp(b.as_ratio())
+                        .unwrap_or(std::cmp::Ordering::Equal)
+                })
+                .map(|(kt, _)| format!("{kt}"))
+                .unwrap_or_else(|| "(empty table)".to_string());
+            let reason = if dag.truncated {
+                AbstentionReason::SearchLimitExceeded {
+                    goal: query_str.clone(),
+                }
+            } else {
+                AbstentionReason::BelowTableDomain {
+                    table: rl.table.clone(),
+                    key: format!("{}", rl.key_value),
+                    min_key,
+                }
+            };
+            format!(
+                "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[],\"abstained\":true,\"abstention\":{}}}",
+                query_echo(&query_str),
+                esc(&rl.mode),
+                abstention_json(&reason)
+            )
+        }
     }
 }
 
@@ -1122,11 +1364,31 @@ fn governing_json(query: &Term, kb: &KnowledgeBase) -> String {
             )
         })
         .collect();
+    // `has_conflict()` answers "did I SEE a conflict?". On a truncated search
+    // that is not the same question as "is there one?" — reporting `false`
+    // there would be an affirmative claim reached by failing to find a rival,
+    // which proves nothing if the search gave up before looking. This is the
+    // same laundering PR-C removes from recall and lookup; leaving it in one
+    // renderer would have kept the hole open.
+    let (conflict, abstention) = match res.conflict_status() {
+        logic_engine::ConflictStatus::Conflict => ("true", String::new()),
+        logic_engine::ConflictStatus::NoConflict => ("false", String::new()),
+        logic_engine::ConflictStatus::Unknown => (
+            "null",
+            format!(
+                ",\"abstention\":{}",
+                abstention_json(&AbstentionReason::SearchLimitExceeded {
+                    goal: format!("{query}"),
+                })
+            ),
+        ),
+    };
     format!(
-        "{{\"query\":\"{}\",\"answers\":[{}],\"has_conflict\":{}}}",
-        esc(&format!("{}", query)),
+        "{{\"query\":\"{}\",\"answers\":[{}],\"has_conflict\":{}{}}}",
+        query_echo(&format!("{query}")),
         answers.join(","),
-        res.has_conflict()
+        conflict,
+        abstention
     )
 }
 

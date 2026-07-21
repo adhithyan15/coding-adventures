@@ -95,13 +95,59 @@ impl GovernedResult {
             .filter(|a| a.status == GovernStatus::Governing)
     }
 
+    /// `true` iff the underlying proof search **stopped early** and therefore
+    /// enumerated only some of the answers.
+    ///
+    /// Any caller about to conclude something NEGATIVE from this result — "no
+    /// conflict", "no rival answer", "nothing defeats this" — must check here
+    /// first. Those conclusions are drawn by *failing to find* a counterexample,
+    /// which proves nothing if the search gave up before looking.
+    pub fn truncated(&self) -> bool {
+        self.dag.truncated
+    }
+
     /// `true` iff some conflict group had no unique maximum (an unresolved tie). When set, the
     /// caller should abstain or ask rather than pick — there is no governing answer there.
+    ///
+    /// **`false` is only meaningful when [`truncated`](Self::truncated) is
+    /// false.** This method answers "did I *see* a conflict?", and on a
+    /// truncated search that is not the same question as "is there one?" —
+    /// see [`conflict_status`](Self::conflict_status) for the honest three-way
+    /// answer.
     pub fn has_conflict(&self) -> bool {
         self.answers
             .iter()
             .any(|a| a.status == GovernStatus::ConflictPeer)
     }
+
+    /// The honest three-way answer to "is there a conflict?".
+    ///
+    /// `has_conflict()` collapses two very different situations into `false`:
+    /// *I looked and there is none*, and *I never finished looking*. Only the
+    /// first licenses acting on the governing answer.
+    pub fn conflict_status(&self) -> ConflictStatus {
+        if self.has_conflict() {
+            ConflictStatus::Conflict
+        } else if self.truncated() {
+            ConflictStatus::Unknown
+        } else {
+            ConflictStatus::NoConflict
+        }
+    }
+}
+
+/// Whether a conflict exists among the governed answers — with "I don't know"
+/// as a first-class third case rather than an absence silently reported as a
+/// negative.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ConflictStatus {
+    /// The search completed and found no unresolved tie.
+    NoConflict,
+    /// The search completed and found a genuine split — abstain or ask.
+    Conflict,
+    /// The search did NOT complete, so the absence of an observed conflict is
+    /// not evidence that none exists.
+    Unknown,
 }
 
 /// Deep-resolve a term under a substitution (the engine's `Substitution::walk` only resolves

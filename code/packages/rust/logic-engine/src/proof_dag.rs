@@ -197,12 +197,35 @@ pub struct Proof {
 pub struct ProofDAG {
     pub root_query: Term,
     pub proofs: Vec<Proof>,
+    /// The search **did not finish**: it hit a resolution limit and gave up.
+    ///
+    /// # Why an empty proof list is not enough
+    ///
+    /// Without this flag, "I found no proof" and "I stopped looking" are the
+    /// same value — an empty `proofs`. They are completely different claims.
+    /// The first is a statement about the knowledge base; the second is a
+    /// statement about *this run's budget*, and says nothing about the world.
+    ///
+    /// Conflating them lets a truncated search be laundered into an
+    /// affirmative claim one level up: `enumerate_governing` reports
+    /// "no conflict among the answers" by observing that it found no rival,
+    /// which is worthless if it stopped before looking. Anything that draws a
+    /// NEGATIVE conclusion from an empty result set must consult this first.
+    pub truncated: bool,
 }
 
 impl ProofDAG {
     /// `true` iff at least one proof of the root query exists.
     pub fn has_proof(&self) -> bool {
         !self.proofs.is_empty()
+    }
+
+    /// `true` iff the result set is empty **and** the search actually ran to
+    /// completion — i.e. the emptiness is evidence of absence, not a budget.
+    ///
+    /// This is the predicate to use before asserting anything negative.
+    pub fn is_conclusively_empty(&self) -> bool {
+        self.proofs.is_empty() && !self.truncated
     }
 
     /// The complete set of probabilistic facts referenced by any proof.
