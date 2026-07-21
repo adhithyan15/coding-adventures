@@ -288,10 +288,16 @@ compact summary keyed to job, run, host profile, session, and user. Executable
 tests prove both the successful three-call run and the approval-blocked write
 survive a runtime restart without storing arguments, outputs, or credentials.
 
+The Tier2 approval slice now gives D18D a canonical user-visible challenge and
+explicit-consent, biometric, and hardware-key assurance levels. Host policy can
+require approval at a privilege threshold; Tier2 grants must be biometric and
+bound to the active call challenge before a handler runs, while Tier3 requires
+a hardware key. The scheduled Weather Agent job proves pending, weak-denied,
+and biometric-approved paths through the real host runtime, execution journal,
+user report, and restarted durable audit reader.
+
 These items are Chief of Staff architecture, not smart-home platform work:
 
-- Add approval UX and policy wiring for Tier2 or stronger actions such as
-  bridge pairing, locks, cameras, alarms, and safety devices.
 - Wire vault leasing so tools receive opaque `VaultRef` handles and never raw
   smart-home secrets.
 

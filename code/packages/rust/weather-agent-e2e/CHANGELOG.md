@@ -15,6 +15,9 @@ All notable changes to this package will be documented in this file.
   backend and reopen them into a compact job, host, session, and user summary.
 - Persist approval-blocked calls before returning the job error so denied work
   remains available to a restarted audit reader.
+- Added a Tier 2 scheduled-write mode that rejects weak consent, accepts only a
+  challenge-bound biometric assertion, records the accepted assurance in the
+  journal and user report, and persists denied or granted audit outcomes.
 
 - Initial umbrella-today end-to-end harness that exercises the Chief of Staff
   actor, D18A store, D18C job, D18D tool, read/write separation, and

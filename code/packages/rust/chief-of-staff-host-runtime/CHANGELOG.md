@@ -9,6 +9,8 @@
   session, returning typed Rust handler results and policy rejections.
 - Allow reviewed host profiles to install centralized D18D policy engines and
   route scoped approval grants through active host ownership boundaries.
+- Enforce challenge binding and biometric-strength assurance for Tier 2 host
+  calls before dispatching their profile-owned handlers.
 
 ## Unreleased
 
