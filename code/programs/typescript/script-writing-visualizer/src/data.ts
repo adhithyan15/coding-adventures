@@ -13,6 +13,8 @@ import hebrew from "../../../../learning/human-languages/data/scripts/hebrew.jso
 import chinese from "../../../../learning/human-languages/data/scripts/chinese.json";
 import arabic from "../../../../learning/human-languages/data/scripts/arabic.json";
 import devanagari from "../../../../learning/human-languages/data/scripts/devanagari.json";
+import gujarati from "../../../../learning/human-languages/data/scripts/gujarati.json";
+import tamil from "../../../../learning/human-languages/data/scripts/tamil.json";
 
 // The JSON files are authored to the ScriptData shape; assert it once here.
 export const SCRIPTS: ScriptData[] = [
@@ -21,4 +23,6 @@ export const SCRIPTS: ScriptData[] = [
   chinese as ScriptData,
   arabic as ScriptData,
   devanagari as ScriptData,
+  gujarati as ScriptData,
+  tamil as ScriptData,
 ];
