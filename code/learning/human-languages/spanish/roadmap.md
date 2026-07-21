@@ -155,8 +155,51 @@ order lives in the book, which LaTeX auto-numbers, and in `session-map.md`.)
   probability** (*Serán las tres* = "it **must be** three"), which makes sense once
   you know the tense was built from "I **have to**." **Authored.**
 
-Next: **Ch. 18** — the **subjunctive**, the mood for what isn't fact; then everyday description,
-building toward real conversation.
+- **Ch. 18 — The subjunctive, and how much of it you already knew**: the
+  **present subjunctive** (`ES-C18-subjuntivo`) built **not from the infinitive
+  but from the *yo* form** — drop the *-o*, **flip the vowel** (*-ar* → *-e-*,
+  *-er/-ir* → *-a-*, the two families swapping costumes; *-er* and *-ir* fall
+  together here as they already did in Ch. 15 and Ch. 16). The point of
+  building it that way is the payoff: **every irregular *yo* form is inherited
+  free**, so the entire ***-go* club** of Ch. 12–13 arrives as *tenga/diga/haga/
+  ponga/salga/venga* with **nothing new to memorise**, and Ch. 11's stem-changers
+  give *quiera/pueda* (with plain-stem *queramos/podamos*). Where the recipe runs
+  out is framed as a property of the recipe: it needs a strippable *-o*, and
+  **five** taught verbs lack one (*soy, voy, sé, he, estoy*) — four then being
+  unpredictable (*sea, vaya, sepa, haya*) while ***estar* is not**, since
+  dropping the whole *-oy* leaves the ordinary stem *est-* — its real oddity
+  being **stress**: es-**TÉ**/es-**TÉS**/es-**TÉN** break Spanish's
+  second-to-last default (which *hablar* obeys throughout, *ha-BLE-mos*
+  included), so they take an accent while es-**TE**-mos doesn't. *Dar* is named
+  on *estar*'s side (*doy* → *dé, des, demos, den*), with the caution that its
+  lone accent is the *qué/que* **diacritic**, not a stress mark. The shortcut is
+  flagged as a **memory aid, not history**
+  (*sea* ← *sedeam* — the *sedēre* Ch. 9 already folded into *ser* — *sepa* ←
+  *sapiam*). Name ← Latin *subiūnctīvus*, "**joined
+  underneath**" (*sub-* + *iungere*, whence **join, junction, conjunction**;
+  **yoke** and **yoga** are cousins via PIE \**yewg-*, not descendants), a calque
+  of Greek *hypotaktikḗ* — it describes where the mood
+  **lives**, not what it means → the **trigger** (`ES-C18-quiero-que`): the
+  subjunctive appears when **two different subjects** are joined by *que*
+  (*Quiero hablar* → *Quiero **que hables***), set against reporting (*Sé que
+  **hablas*** stays indicative, because knowing reports the world while wanting
+  tries to change it). Names the commonest English-speaker error outright:
+  English's *"I want **you to speak**"* has no Spanish equivalent **after verbs
+  of wanting** — there is no \**quiero te hablar* — while scoping the ban
+  honestly, since perception and causative verbs *do* take object + infinitive
+  (*te vi salir*, *me hizo hablar*). Then ***ojalá***, which takes the subjunctive **always**
+  and needs no *que* and no main verb because the word **is** the wish — from
+  Andalusi Arabic ***law šāʾ Allāh***, "if God should will," so the *Allāh* is
+  still inside it. That makes it the **second Arabic function word** in the
+  course after Ch. 5's *hasta* ← *ḥattā*: borrowing nouns is ordinary, borrowing
+  a word that **forces a grammatical mood** is not → practice
+  (`ES-C18-practice`, label `CH18-PRACTICE`). **Authored.**
+  - Also **corrects `ES-C05-hasta`**, which gave *ojalá* a different etymology
+    (*wa-šā' allāh*) and filed it among borrowed **nouns** — so Ch. 18 would have
+    contradicted the lesson it cites. Ch. 5 now carries the DRAE derivation and
+    points forward.
+
+Next: **Ch. 19** — everyday description, building toward real conversation.
 From here the course hands over rules, not phrases. Grammar accumulates piece by
 piece. The theme skeleton below plans the wider road.
 
