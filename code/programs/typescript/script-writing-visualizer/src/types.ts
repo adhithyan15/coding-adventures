@@ -1,9 +1,14 @@
-// The shape of the script data we consume. This mirrors the `ScriptData` /
+// The shape of the SCRIPT data we consume. This mirrors the `ScriptData` /
 // `Letter` types published by `@coding-adventures/human-language-data` (HL01),
-// but is redeclared locally so this MVP app carries no package dependency — it
-// reads the JSON files directly. If the two ever need to share a type, promote
-// this to an import; for now, duplication of a handful of field names is the
-// cheaper trade than a cross-package build edge.
+// but is redeclared locally: the app reads `data/scripts/*.json` directly, and
+// duplicating a handful of field names is cheaper than routing the JSON through
+// the package.
+//
+// (The app does now depend on that package — see `lessons.ts`, which uses its
+// pure `parseLesson` to read the ~679 lesson files. It deep-imports
+// `.../src/parse.ts` rather than the barrel, which would drag `node:fs` and
+// `process` into the browser bundle. Only the LESSON types come from the
+// package; the script types below stay local.)
 
 /** One base letter (or character/radical) of a script. */
 export interface Letter {

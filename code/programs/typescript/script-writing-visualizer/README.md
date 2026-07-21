@@ -1,10 +1,37 @@
 # Script Writing Visualizer
 
-**The HL02 companion app, MVP.** The Human Languages curriculum teaches a
-non-Latin script *inline* — a letter is introduced inside the first word that
-needs it. This app is the other half of that promise: it **breaks each letter
-apart** into its pieces and shows a **stroke order**, so you can practise
-*writing it on paper*.
+**The HL02 companion app.** Three modes: **Browse** and **Practice** work on
+*script letters*; **Lessons** drills the *written curriculum* — every lesson in
+every track — on a spaced-repetition schedule that persists between visits.
+
+## Lessons mode
+
+Reads all **679 lessons across 18 languages** straight from the curriculum via
+`@coding-adventures/human-language-data`, and schedules them with the same
+Leitner machinery the letter drills use (`scheduler.ts` is generic over an
+index; it never needed to know what an item is).
+
+- **It remembers you.** Progress is saved to `localStorage` keyed by **lesson
+  id** — never by array index, because indices shift every time a lesson is
+  added and saving by position would reattribute your history to the wrong
+  lesson. New lessons simply appear as unseen items.
+- **It mixes languages.** Consecutive reviews round-robin across tracks — Arabic,
+  then Bengali, then French — rather than marching through one language. That
+  interleaving is deliberate: it forces discrimination instead of coasting.
+- **Recall, not recognition.** You see the headword in its own script; the
+  meaning stays hidden until you ask for it, then you grade yourself
+  *Again* / *Got it*.
+- Each card also surfaces what the lesson **revisits** (`reviews_of`), the
+  curriculum's own review graph.
+
+To clear your progress, delete the `hl-study:progress:v1` key in localStorage.
+
+## Browse & Practice (script letters)
+
+The Human Languages curriculum teaches a non-Latin script *inline* — a letter is
+introduced inside the first word that needs it. These modes are the other half
+of that promise: they **break each letter apart** into its pieces and show a
+**stroke order**, so you can practise *writing it on paper*.
 
 Pick a script, pick a letter, and the detail panel shows:
 
