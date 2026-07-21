@@ -448,7 +448,32 @@ scilab-to-semantic-ir/  src/{lib.rs, lower.rs}       ← MA-10e
 - **MA-10e — `scilab-to-semantic-ir`**, built alongside per `HML01` §2 /
   MA06's own precedent (§5) — `compile`/`compile_source` lowering
   `scilab-parser`'s CST into a `semantic_ir::Module` over the shared
-  SIR22 array/matrix domain.
+  SIR22 array/matrix domain. **Done** — this item's own three predictions
+  (§5) all held exactly as stated: the `stmt_sep` linker keyword needed no
+  SIR representation (it collapses to child-node position by lowering
+  time), `select`/`case` needed no new node (desugared into a nested
+  `if`-chain over a once-evaluated, hoisted selector temporary, mirroring
+  `scilab-runtime::eval::eval_select`), and the eight `%`-prefixed
+  constants were constant-folded directly into `IntLit`/`FloatLit` rather
+  than needing a dedicated node. No new `semantic-ir` core `Expr`/
+  `SirType`/`Feature` variant was added. Three implementation-level
+  refinements below this spec's own level of detail, each traceable to a
+  concrete finding rather than a change to this spec's architectural
+  decisions (full rationale in `scilab-to-semantic-ir/CHANGELOG.md`): (1)
+  `\`/`.\ ` lower *uniformly* as a broadcast reciprocal division,
+  diverging from `matlab-to-semantic-ir`'s own asymmetric `\`-vs-`.\ `
+  template, because `scilab-runtime::eval::apply_binop` — this repo's
+  actual ground-truth Scilab interpreter — already makes exactly that
+  simplification for both spellings; (2) every arithmetic/ordering
+  operator rejects a directly-written string-literal operand, closing a
+  gap the MATLAB template's own scalar/array heuristic leaves open, given
+  §1 finding 1's own concern is precisely about a string reaching such an
+  operator unnoticed; (3) `func_returns` parsing distinguishes single-
+  output, explicit-bracket single-output (`[y] = f(...)`), and explicit
+  zero-output (`[] = f(...)`) from a genuine multi-output name list,
+  mirroring `scilab-runtime::eval::Interpreter::register_function`'s own
+  more complete reading of this grammar shape rather than the MATLAB
+  template's coarser one.
 - **Next**: K/Q or IDL per
   [`HML00`](HML00-historical-math-languages-roadmap.md) Wave 6 — each gets
   its own fresh substrate/grammar-gap analysis, not a rubber stamp, the same

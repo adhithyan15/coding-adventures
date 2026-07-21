@@ -1,0 +1,29 @@
+[package]
+name = "scilab-to-semantic-ir"
+version = "0.1.0"
+edition = "2021"
+description = "Scilab CST → narrow-waist Semantic IR (SIR22 array/matrix domain). MA-10e, the last item in the Scilab frontend rollout per MA10 §6."
+
+[dependencies]
+semantic-ir = { path = "../semantic-ir" }
+coding-adventures-scilab-parser = { path = "../scilab-parser" }
+# The parser emits a generic `parser::grammar_parser::GrammarASTNode` whose
+# leaf tokens are `lexer::token::Token`; we walk both directly. Note this
+# crate deliberately does NOT depend on `coding-adventures-scilab-runtime` --
+# lowering only needs the parse tree shape (`scilab-parser`), not the
+# tree-walking evaluator, mirroring `apl-to-semantic-ir`/`j-to-semantic-ir`'s
+# identical choice (and MA10 §6's own framing: this is a separate,
+# ahead-of-time lowering pass over the same CST shape the runtime walks, not
+# a consumer of the runtime itself).
+parser = { path = "../parser" }
+lexer = { path = "../lexer" }
+
+[dev-dependencies]
+# The scalar-only (non-array) subset of a lowered module can round-trip
+# through the JS backend and actually execute with the system `node`
+# (gated on availability), mirroring `matlab-to-semantic-ir`'s own identical
+# dev-dependency. Array/matrix (SIR22) codegen is exercised too where the JS
+# backend already implements it (see `tests/e2e_node.rs`); anything it
+# doesn't yet accept is instead verified via the capability-rejection path
+# in `tests/test_validator.rs`.
+semantic-ir-to-javascript = { path = "../semantic-ir-to-javascript" }
