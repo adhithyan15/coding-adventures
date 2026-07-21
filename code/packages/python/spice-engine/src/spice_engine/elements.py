@@ -488,6 +488,8 @@ class Diode:
     IBV: float = 1e-3  # reverse current at breakdown voltage
     Cjo: float = 0.0  # zero-bias junction capacitance
     Tt: float = 0.0  # transit time / diffusion capacitance coefficient
+    Vj: float = 1.0  # junction potential
+    M: float = 0.5  # junction grading coefficient
 
 
 @dataclass(frozen=True, slots=True)

@@ -2345,6 +2345,8 @@ pub struct Diode {
     pub breakdown_current: f64,
     pub junction_capacitance: f64,
     pub transit_time: f64,
+    pub junction_potential: f64,
+    pub grading_coefficient: f64,
 }
 
 impl Diode {
@@ -2407,6 +2409,37 @@ impl Diode {
         junction_capacitance: f64,
         transit_time: f64,
     ) -> Self {
+        Self::with_model_and_depletion(
+            name,
+            anode,
+            cathode,
+            saturation_current,
+            thermal_voltage,
+            emission_coefficient,
+            breakdown_voltage,
+            breakdown_current,
+            junction_capacitance,
+            transit_time,
+            1.0,
+            0.5,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub fn with_model_and_depletion(
+        name: impl Into<String>,
+        anode: impl Into<String>,
+        cathode: impl Into<String>,
+        saturation_current: f64,
+        thermal_voltage: f64,
+        emission_coefficient: f64,
+        breakdown_voltage: Option<f64>,
+        breakdown_current: f64,
+        junction_capacitance: f64,
+        transit_time: f64,
+        junction_potential: f64,
+        grading_coefficient: f64,
+    ) -> Self {
         Self {
             name: name.into(),
             anode: anode.into(),
@@ -2418,6 +2451,8 @@ impl Diode {
             breakdown_current,
             junction_capacitance,
             transit_time,
+            junction_potential,
+            grading_coefficient,
         }
     }
 }
@@ -3109,7 +3144,7 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     usize,
     usize,
 )] = &[
-    (ModelCardKind::Diode, 7, 11, 3, 3),
+    (ModelCardKind::Diode, 9, 15, 5, 3),
     (ModelCardKind::Npn, 7, 15, 4, 4),
     (ModelCardKind::Pnp, 7, 15, 4, 4),
     (ModelCardKind::Njf, 5, 11, 5, 3),
@@ -3129,6 +3164,10 @@ const DIODE_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("CJ", "CJO"),
     ("CJ0", "CJO"),
     ("TT", "TT"),
+    ("VJ", "VJ"),
+    ("PB", "VJ"),
+    ("M", "M"),
+    ("MJ", "M"),
 ];
 const BJT_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("IS", "IS"),
@@ -3753,7 +3792,7 @@ pub fn diode_from_model_card(
     if model.kind != ModelCardKind::Diode {
         return Err(model_card_kind_error(&name, "diode", model.kind));
     }
-    Ok(Diode::with_model_and_breakdown(
+    Ok(Diode::with_model_and_depletion(
         name,
         anode,
         cathode,
@@ -3764,6 +3803,8 @@ pub fn diode_from_model_card(
         model_card_value(model, "IBV", 1.0e-3),
         model_card_value(model, "CJO", 0.0),
         model_card_value(model, "TT", 0.0),
+        model_card_value(model, "VJ", 1.0),
+        model_card_value(model, "M", 0.5),
     ))
 }
 
@@ -20985,15 +21026,12 @@ fn build_ac_matrix(
                 let voltage = vector_voltage(operating_point, anode)
                     - vector_voltage(operating_point, cathode);
                 let (_, conductance) = diode_current_conductance(diode, voltage);
-                let diffusion_capacitance = diode.transit_time * conductance;
+                let capacitance = diode_dynamic_capacitance(diode, voltage);
                 stamp_complex_conductance(
                     &mut matrix,
                     anode,
                     cathode,
-                    Complex::new(
-                        conductance,
-                        omega * (diode.junction_capacitance + diffusion_capacitance),
-                    ),
+                    Complex::new(conductance, omega * capacitance),
                 );
             }
             Element::Jfet(jfet) => {
@@ -22595,7 +22633,12 @@ fn diode_has_charge_storage(diode: &Diode) -> bool {
 
 fn diode_dynamic_capacitance(diode: &Diode, voltage: f64) -> f64 {
     let (_, conductance) = diode_current_conductance(diode, voltage);
-    diode.junction_capacitance + diode.transit_time * conductance
+    mosfet_bulk_junction_capacitance(
+        diode.junction_capacitance,
+        voltage,
+        diode.junction_potential,
+        diode.grading_coefficient,
+    ) + diode.transit_time * conductance
 }
 
 fn diode_charge_voltage(diode: &Diode, node_voltages: &BTreeMap<String, f64>) -> f64 {
@@ -22877,6 +22920,18 @@ fn validate_diode(diode: &Diode) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: diode.name.clone(),
             reason: "junction capacitance must be finite and non-negative".to_string(),
+        });
+    }
+    if !diode.junction_potential.is_finite() || diode.junction_potential <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: diode.name.clone(),
+            reason: "junction potential must be finite and positive".to_string(),
+        });
+    }
+    if !diode.grading_coefficient.is_finite() || diode.grading_coefficient < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: diode.name.clone(),
+            reason: "grading coefficient must be finite and non-negative".to_string(),
         });
     }
     if !diode.transit_time.is_finite() || diode.transit_time < 0.0 {

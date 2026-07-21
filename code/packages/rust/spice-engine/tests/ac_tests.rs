@@ -295,6 +295,34 @@ fn ac_diode_junction_capacitance_shunts_high_frequency() {
 }
 
 #[test]
+fn ac_diode_depletion_capacitance_falls_with_reverse_bias() {
+    fn high_frequency_voltage(dc_bias: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vac", "in", "0", dc_bias, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "R1", "in", "node", 1_000.0,
+        )));
+        circuit.add(Element::Diode(Diode::with_model_and_depletion(
+            "D1", "0", "node", 1.0e-15, 0.02585, 1.0, None, 1.0e-3, 1.0e-6, 0.0, 1.0, 0.5,
+        )));
+        ac_sweep(&circuit, 100_000.0, 100_000.0, 1).unwrap()[0]
+            .voltage("node")
+            .unwrap()
+            .abs()
+    }
+
+    let zero_bias = high_frequency_voltage(0.0);
+    let reverse_biased = high_frequency_voltage(4.0);
+
+    assert!(
+        reverse_biased > zero_bias * 1.8,
+        "expected reverse bias to reduce depletion capacitance, got zero={zero_bias} reverse={reverse_biased}"
+    );
+}
+
+#[test]
 fn ac_diode_transit_time_shunts_forward_bias_at_high_frequency() {
     fn high_frequency_anode(transit_time: f64) -> f64 {
         let mut circuit = Circuit::new();

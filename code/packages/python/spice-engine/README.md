@@ -204,6 +204,9 @@ disable the limiter.
 `bjt_from_model_card()`, `jfet_from_model_card()`, and
 `mosfet_from_model_card()` provide the shared `.model` alias surface for diode,
 BJT, JFET, and Level-1 MOS cards.
+Diode cards accept `VJ`/`PB` junction potential and `M`/`MJ` grading coefficient;
+AC and transient analyses use them to shape `CJO` depletion capacitance from the
+operating-point bias.
 `model_card_unsupported_parameter_issues()`,
 `format_model_card_unsupported_parameter_issue_table()`,
 `model_card_unsupported_parameter_issue_records()`,
@@ -229,7 +232,7 @@ catalog by model kind for compact release dashboards and Mosaic UI inventories.
 `model_card_supported_parameter_coverage_gate_issue_records()`,
 `format_model_card_supported_parameter_coverage_gate_issue_csv()`, and
 `format_model_card_supported_parameter_coverage_gate_issue_json()` validate the
-expected seven-kind, 67-row supported-parameter catalog and expose stable issue
+expected seven-kind, 69-row supported-parameter catalog and expose stable issue
 rows for release automation.
 `model_card_supported_parameter_coverage_dashboard()`,
 `format_model_card_supported_parameter_coverage_dashboard_table()`,

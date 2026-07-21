@@ -211,6 +211,36 @@ describe("acSweep", () => {
     expect(high).toBeLessThan(low / 100.0);
   });
 
+  it("reduces diode depletion capacitance with reverse bias", () => {
+    const highFrequencyVoltage = (dcBias: number): number => {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "in", "0", dcBias, 1.0));
+      circuit.add(resistor("R1", "in", "node", 1_000.0));
+      circuit.add(
+        diode(
+          "D1",
+          "0",
+          "node",
+          1.0e-15,
+          0.02585,
+          1.0,
+          undefined,
+          1.0e-3,
+          1.0e-6,
+          0.0,
+          1.0,
+          0.5,
+        ),
+      );
+      return complexAbs(acSweep(circuit, 100_000.0, 100_000.0, 1)[0].voltage("node")!);
+    };
+
+    const zeroBias = highFrequencyVoltage(0.0);
+    const reverseBiased = highFrequencyVoltage(4.0);
+
+    expect(reverseBiased).toBeGreaterThan(zeroBias * 1.8);
+  });
+
   it("stamps forward-biased diode transit-time diffusion capacitance", () => {
     const highFrequencyAnode = (transitTime: number): number => {
       const circuit = new Circuit();
