@@ -32,8 +32,8 @@ use serde::Deserialize;
 use task_core::ops::OpError;
 use task_core::{
     Assignment, Constraint, Date, Decision, DependencyLink, FieldDef, FieldValue, GenericLink,
-    ProjectId, ProjectState, Resource, ResourceId, TaskId, TaskKind, TaskSchedule, WorkflowId,
-    Workspace, WorkspaceId,
+    ProjectId, ProjectState, Resource, ResourceId, TaskId, TaskKind, TaskSchedule, View,
+    WorkflowId, Workspace, WorkspaceId,
 };
 
 thread_local! {
@@ -734,6 +734,171 @@ export_ws_op!(
     }
 );
 
+// ── labels & priority (active project) ────────────────────────────────────────────
+
+export_op!(
+    /// Create or replace a label definition.
+    upsert_label,
+    task_core::Label,
+    |s, a| {
+        s.upsert_label(a);
+        Ok(())
+    }
+);
+
+#[derive(Deserialize)]
+struct LabelIdArg {
+    id: String,
+}
+export_op!(
+    /// Delete a label and remove it from every task.
+    delete_label,
+    LabelIdArg,
+    |s, a| {
+        s.delete_label(&task_core::LabelId::from_raw(a.id));
+        Ok(())
+    }
+);
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct TaskLabelsArgs {
+    id: String,
+    labels: Vec<String>,
+}
+export_op!(
+    /// Replace a task's labels (unknown ids rejected; duplicates collapsed).
+    set_task_labels,
+    TaskLabelsArgs,
+    |s, a| s.set_task_labels(
+        &TaskId::from_raw(a.id),
+        a.labels.into_iter().map(task_core::LabelId::from_raw).collect()
+    )
+);
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct PriorityArgs {
+    id: String,
+    priority: Option<task_core::Priority>,
+}
+export_op!(
+    /// Set or clear a task's triage priority.
+    set_priority,
+    PriorityArgs,
+    |s, a| s.set_priority(&TaskId::from_raw(a.id), a.priority)
+);
+
+// ── view projections (active project) ─────────────────────────────────────────────
+
+/// The widest day-offset accepted from the host (~±8,200 years around the epoch).
+///
+/// Absurdly generous for any real plan, but bounded well below the point where civil-date
+/// conversion overflows: `Date::to_ymd` shifts by 719,468 days internally, so an
+/// unchecked `i32` near the type's limit would overflow and **panic across the FFI
+/// boundary** — which this module promises never to do. The view projections are the
+/// first exports to reach that formatting path (earlier date exports only echoed the raw
+/// integer), so the bound is enforced here, at the boundary that accepts the value.
+const MAX_DAY_OFFSET: i32 = 3_000_000;
+
+/// Convert a host-supplied day offset into a `Date`, rejecting out-of-range values.
+fn checked_day(days: i32) -> Option<Date> {
+    (-MAX_DAY_OFFSET..=MAX_DAY_OFFSET)
+        .contains(&days)
+        .then_some(Date(days))
+}
+
+/// Arguments shared by the view-driven projections: the view config plus the project
+/// start the schedule is anchored at (days since the Unix epoch).
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct ViewArgs {
+    view: View,
+    project_start: i32,
+}
+
+/// The render-ready table (sheet) for a view: columns + grouped, formatted rows.
+///
+/// # Safety
+/// `ptr`/`len` must describe readable bytes, or be null with a zero length.
+#[no_mangle]
+pub unsafe extern "C" fn table(ptr: *const u8, len: usize) -> *mut u8 {
+    let json = unsafe { read_input(ptr, len) };
+    pack(run_view::<ViewArgs>(&json, |project, a| {
+        let Some(start) = checked_day(a.project_start) else {
+            return error_json("projectStart out of range");
+        };
+        ok_data(&project.table(&a.view, start))
+    }))
+}
+
+/// The ordered, grouped task ids for a view (filter → sort → group).
+///
+/// # Safety
+/// `ptr`/`len` must describe readable bytes, or be null with a zero length.
+#[no_mangle]
+pub unsafe extern "C" fn view_selection(ptr: *const u8, len: usize) -> *mut u8 {
+    let json = unsafe { read_input(ptr, len) };
+    pack(run_view::<ViewArgs>(&json, |project, a| {
+        let Some(start) = checked_day(a.project_start) else {
+            return error_json("projectStart out of range");
+        };
+        ok_data(&project.view_selection(&a.view, start))
+    }))
+}
+
+/// The calendar for a view over an inclusive day range.
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct CalendarArgs {
+    view: View,
+    project_start: i32,
+    start: i32,
+    end: i32,
+}
+
+/// Dated events for a view over `[start, end]`.
+///
+/// # Safety
+/// `ptr`/`len` must describe readable bytes, or be null with a zero length.
+#[no_mangle]
+pub unsafe extern "C" fn calendar(ptr: *const u8, len: usize) -> *mut u8 {
+    let json = unsafe { read_input(ptr, len) };
+    pack(run_view::<CalendarArgs>(&json, |project, a| {
+        let (Some(start), Some(from), Some(to)) = (
+            checked_day(a.project_start),
+            checked_day(a.start),
+            checked_day(a.end),
+        ) else {
+            return error_json("date out of range");
+        };
+        let range = task_core::view::DateRange {
+            start: from,
+            end: to,
+        };
+        ok_data(&project.calendar(&a.view, range, start))
+    }))
+}
+
+/// Deserialize view arguments and run a projection against the **active project**,
+/// mirroring [`run_op`]'s error handling: a parse failure or an empty workspace answers
+/// with an error envelope rather than trapping.
+fn run_view<A>(json: &str, f: impl FnOnce(&ProjectState, A) -> String) -> String
+where
+    A: for<'de> Deserialize<'de>,
+{
+    match serde_json::from_str::<A>(json) {
+        Ok(args) => STATE.with(|s| {
+            let ws = s.borrow();
+            match active_project_id(&ws).and_then(|pid| ws.projects.get(&pid)) {
+                Some(project) => f(project, args),
+                None => error_json("no active project"),
+            }
+        }),
+        Err(e) => error_json(&format!("parse error: {e}")),
+    }
+}
+
 // ── workspace queries ─────────────────────────────────────────────────────────────
 
 /// The whole workspace (all projects, nesting, cross-project edges, shared pool).
@@ -925,6 +1090,87 @@ mod tests {
         let sched = take(workspace_schedule(monday));
         assert!(sched.contains(r#""ok":true"#), "{sched}");
         assert!(sched.contains(r#""perProject""#), "{sched}");
+    }
+
+    #[test]
+    fn view_projections_are_exported_and_render_ready() {
+        reset();
+        call1(create_task, r#"{"id":"a","name":"Alpha"}"#);
+        call1(create_task, r#"{"id":"b","name":"Bravo"}"#);
+        let d = r#"{"id":"ID","duration":{"workingMinutes":480,"elapsed":false}}"#;
+        call1(set_duration, &d.replace("ID", "a"));
+        call1(set_duration, &d.replace("ID", "b"));
+        call1(set_completed, r#"{"id":"b","completed":true}"#);
+
+        let monday = Date::from_ymd(2026, 7, 13).unwrap().0;
+        // A view showing name + done, sorted by name.
+        const VIEW: &str = r#""view":{"id":"v","name":"V","shape":"table","filter":{"statuses":[],"completed":null,"search":null},"groupBy":null,"sort":[{"field":{"builtin":"name"},"ascending":true}],"visibleFields":[{"builtin":"name"},{"builtin":"completed"}]}"#;
+        let view_json = format!(r#"{{{VIEW},"projectStart":{monday}}}"#);
+
+        // table(): columns carry labels, cells carry engine-formatted display strings.
+        let t = call1(table, &view_json);
+        assert!(t.contains(r#""ok":true"#), "{t}");
+        assert!(t.contains(r#""label":"Name""#), "{t}");
+        assert!(t.contains(r#""label":"Done""#), "{t}");
+        assert!(t.contains("Alpha"), "{t}");
+        assert!(t.contains('✓'), "the engine formatted the done glyph: {t}");
+
+        // view_selection(): ordered, grouped ids.
+        let sel = call1(view_selection, &view_json);
+        assert!(sel.contains(r#""ok":true"#), "{sel}");
+        assert!(sel.contains(r#""tasks":["a","b"]"#), "{sel}");
+
+        // calendar(): dated events over a range.
+        let cal_json = format!(
+            r#"{{{VIEW},"projectStart":{monday},"start":{monday},"end":{}}}"#,
+            monday + 7
+        );
+        let c = call1(calendar, &cal_json);
+        assert!(c.contains(r#""ok":true"#), "{c}");
+        assert!(c.contains("Alpha"), "{c}");
+    }
+
+    #[test]
+    fn an_out_of_range_date_is_an_envelope_not_a_trap() {
+        // `table` is the first export to reach civil-date formatting, where an unchecked
+        // i32 near the type's limit would overflow and panic ACROSS the FFI boundary.
+        // The bound turns that into an ordinary error envelope.
+        reset();
+        call1(create_task, r#"{"id":"a","name":"Alpha"}"#);
+        const VIEW: &str = r#""view":{"id":"v","name":"V","shape":"table","filter":{"statuses":[],"completed":null,"search":null},"groupBy":null,"sort":[],"visibleFields":[{"builtin":"start"}]}"#;
+
+        let out = call1(table, &format!(r#"{{{VIEW},"projectStart":2147483647}}"#));
+        assert!(out.contains(r#""ok":false"#), "{out}");
+        assert!(out.contains("out of range"), "{out}");
+
+        // The negative extreme is rejected too (and `i32::MIN` must not be negated).
+        let out = call1(table, &format!(r#"{{{VIEW},"projectStart":-2147483648}}"#));
+        assert!(out.contains(r#""ok":false"#), "{out}");
+
+        // A sane date still works.
+        let monday = Date::from_ymd(2026, 7, 13).unwrap().0;
+        let ok = call1(table, &format!(r#"{{{VIEW},"projectStart":{monday}}}"#));
+        assert!(ok.contains(r#""ok":true"#), "{ok}");
+    }
+
+    #[test]
+    fn label_and_priority_ops_are_exported() {
+        reset();
+        call1(create_task, r#"{"id":"a","name":"Alpha"}"#);
+        assert!(
+            call1(upsert_label, r#"{"id":"l1","name":"Bug","color":"red"}"#)
+                .contains(r#""ok":true"#)
+        );
+        assert!(call1(set_task_labels, r#"{"id":"a","labels":["l1"]}"#).contains(r#""ok":true"#));
+        // An unknown label id is a typed error, not a trap.
+        let bad = call1(set_task_labels, r#"{"id":"a","labels":["ghost"]}"#);
+        assert!(
+            bad.contains(r#""ok":false"#) && bad.contains(r#""code":1"#),
+            "{bad}"
+        );
+        assert!(call1(set_priority, r#"{"id":"a","priority":"high"}"#).contains(r#""ok":true"#));
+        // Deleting the label unlinks it everywhere.
+        assert!(call1(delete_label, r#"{"id":"l1"}"#).contains(r#""ok":true"#));
     }
 
     #[test]
