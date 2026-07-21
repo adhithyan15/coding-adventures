@@ -248,11 +248,16 @@ snapshots expose live-worker and shutdown state; and bounded restart is proven
 by a host that crashes one in-flight call and services the next call after
 restart.
 
+The signed-package gate now hashes sealed agent contents in deterministic,
+length-framed path order, verifies raw Ed25519 signatures with the repo-owned
+crypto crates, rejects symlinks and byte tampering, resolves `PUBKEY_ID` through
+a typed trusted keyring, and enforces signer privilege ceilings before a
+supervised process can launch. Developer keys are capped at Tier 1.
+
 These items are Chief of Staff architecture, not smart-home platform work:
 
-- Add signed package verification before supervised host activation and replace
-  the proof worker with deny-all Deno workers speaking the proven host RPC
-  protocol.
+- Replace the proof worker with deny-all Deno workers that re-verify their
+  package and speak the proven host RPC protocol.
 - Run a Chief job end to end through scheduler or job framework, tool runtime,
   approval checks, result journal, and final user-visible report.
 - Add approval UX and policy wiring for Tier2 or stronger actions such as

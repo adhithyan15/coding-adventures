@@ -2,6 +2,13 @@
 
 #![forbid(unsafe_code)]
 
+mod package;
+
+pub use package::{
+    verify_agent_package, PackageKeyType, PackageKeyring, PackageVerificationError,
+    TrustedPackageKey, VerifiedAgentPackage,
+};
+
 use chief_of_staff_tool_api::{
     validate_tool_id, InMemoryToolRuntime, PrivilegeTier, ToolApiError, ToolDefinition,
     ToolExecutionTrace, ToolHandler, ToolInvocationRequest,
@@ -415,7 +422,28 @@ pub struct SupervisedOrchestratorRuntime {
 }
 
 impl SupervisedOrchestratorRuntime {
-    pub fn spawn(
+    pub fn spawn_verified(
+        profile: OrchestratorProfile,
+        specs: Vec<HostProcessSpec>,
+        package: &VerifiedAgentPackage,
+    ) -> Result<Self, HostRuntimeError> {
+        let required_tier = profile
+            .hosts
+            .iter()
+            .map(|host| host.max_tier)
+            .max()
+            .ok_or(HostRuntimeError::EmptyHostCatalog)?;
+        if required_tier > package.maximum_tier() {
+            return Err(HostRuntimeError::PackageTierExceeded {
+                key_id: package.key_id().to_string(),
+                required: required_tier,
+                maximum: package.maximum_tier(),
+            });
+        }
+        Self::spawn_unverified(profile, specs)
+    }
+
+    fn spawn_unverified(
         profile: OrchestratorProfile,
         specs: Vec<HostProcessSpec>,
     ) -> Result<Self, HostRuntimeError> {
@@ -640,6 +668,11 @@ pub enum HostRuntimeError {
         host_id: String,
         message: String,
     },
+    PackageTierExceeded {
+        key_id: String,
+        required: PrivilegeTier,
+        maximum: PrivilegeTier,
+    },
     ToolApi(ToolApiError),
 }
 
@@ -711,6 +744,14 @@ impl Display for HostRuntimeError {
             Self::ProcessSubmit { host_id, message } => {
                 write!(f, "host '{host_id}' rejected RPC submission: {message}")
             }
+            Self::PackageTierExceeded {
+                key_id,
+                required,
+                maximum,
+            } => write!(
+                f,
+                "package key '{key_id}' permits at most {maximum}, below profile requirement {required}"
+            ),
             Self::ToolApi(error) => Display::fmt(error, f),
         }
     }
@@ -1015,7 +1056,7 @@ mod tests {
             hosts: vec![HostProfile::from_json(PROFILE).unwrap()],
         };
         assert!(matches!(
-            SupervisedOrchestratorRuntime::spawn(profile, vec![]),
+            SupervisedOrchestratorRuntime::spawn_unverified(profile, vec![]),
             Err(HostRuntimeError::MissingProcessHosts(host_ids))
                 if host_ids == vec!["test_host".to_string()]
         ));
@@ -1053,7 +1094,14 @@ for line in sys.stdin:
             profile_id: "test_profile".to_string(),
             hosts: vec![HostProfile::from_json(PROFILE).unwrap()],
         };
-        let runtime = SupervisedOrchestratorRuntime::spawn(
+        let package = VerifiedAgentPackage {
+            path: std::env::temp_dir(),
+            digest: [0; 32],
+            key_id: "dev-1".to_string(),
+            key_type: PackageKeyType::Developer,
+            maximum_tier: PrivilegeTier::Tier1,
+        };
+        let runtime = SupervisedOrchestratorRuntime::spawn_verified(
             profile,
             vec![HostProcessSpec::new(
                 "test_host",
@@ -1063,6 +1111,7 @@ for line in sys.stdin:
                     window: Duration::from_secs(60),
                 },
             )],
+            &package,
         )
         .unwrap();
 
@@ -1101,5 +1150,34 @@ for line in sys.stdin:
         runtime.shutdown();
         assert!(runtime.snapshots()[0].process.shutting_down);
         let _ = std::fs::remove_file(marker);
+    }
+
+    #[test]
+    fn verified_package_key_tier_gates_process_launch() {
+        let profile = OrchestratorProfile {
+            profile_id: "test_profile".to_string(),
+            hosts: vec![HostProfile {
+                profile_id: "test_profile".to_string(),
+                host_id: "test_host".to_string(),
+                max_tier: PrivilegeTier::Tier2,
+                allowed_tools: vec!["demo.read".to_string()],
+                capabilities: vec!["demo_read".to_string()],
+            }],
+        };
+        let package = VerifiedAgentPackage {
+            path: std::env::temp_dir(),
+            digest: [0; 32],
+            key_id: "dev-1".to_string(),
+            key_type: PackageKeyType::Developer,
+            maximum_tier: PrivilegeTier::Tier1,
+        };
+        assert!(matches!(
+            SupervisedOrchestratorRuntime::spawn_verified(profile, vec![], &package),
+            Err(HostRuntimeError::PackageTierExceeded {
+                required: PrivilegeTier::Tier2,
+                maximum: PrivilegeTier::Tier1,
+                ..
+            })
+        ));
     }
 }
