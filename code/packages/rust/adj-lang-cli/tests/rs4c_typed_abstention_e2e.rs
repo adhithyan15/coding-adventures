@@ -264,10 +264,19 @@ fn a_sensitive_channel_withholds_the_echoed_payload_but_keeps_the_reason() {
     assert!(out.status.success());
     let s = String::from_utf8(out.stdout).unwrap();
 
-    // The caller's own words are withheld …
+    // THE WHOLE DOCUMENT, not just the abstention object.
+    //
+    // The first version of this assertion was a disjunction —
+    // `!contains(secret) || !contains("\"goal\":\"patient")` — whose second arm
+    // is satisfied by the redaction alone. It therefore passed while the secret
+    // still appeared three times in the surrounding `queries`/`query` echoes.
+    // A test that cannot fail for the reason it exists is worse than no test:
+    // it certifies the thing it is not checking.
     assert!(
-        !s.contains("patient_free_text_secret") || !s.contains("\"goal\":\"patient"),
-        "the echoed goal must be redacted on a sensitive channel: {s}"
+        !s.contains("patient_free_text_secret"),
+        "the caller's text must not appear ANYWHERE in the artifact — the \
+         abstention object claiming redaction while a sibling field reprints \
+         the value is worse than no redaction: {s}"
     );
     assert!(s.contains("[redacted]"), "redaction marker present: {s}");
     // … but the abstention stays ACTIONABLE: you still learn what went wrong.
@@ -278,5 +287,51 @@ fn a_sensitive_channel_withholds_the_echoed_payload_but_keeps_the_reason() {
     assert!(
         s.contains("no derivation of this goal"),
         "nor the explanation: {s}"
+    );
+}
+
+// ---------------------------------------------------------------------------
+// (7) The sensitivity toggle FAILS CLOSED on an unrecognized value.
+//
+//     Found by round 2. `ADJ_SENSITIVE_INPUT=yes` / `on` / `enabled` silently
+//     produced UNREDACTED output, because only `1` and `true` were accepted.
+//     A security toggle whose misspelling is indistinguishable from being unset
+//     is a footgun for exactly the deployment it protects.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn an_unrecognized_sensitivity_value_redacts_rather_than_leaking() {
+    let dir = scratch("failclosed");
+    let p = write(
+        &dir,
+        "case.adj",
+        "relate seen(a, b)\n    source \"A seed.\"\n    trust empirical\n\
+         ? seen(patient_free_text_secret, $V)\n",
+    );
+    for value in ["yes", "on", "enabled", "pls-redact-this"] {
+        let out = Command::new(env!("CARGO_BIN_EXE_adj-lang-cli"))
+            .arg(&p)
+            .env("ADJ_SENSITIVE_INPUT", value)
+            .output()
+            .expect("run adj-lang-cli");
+        assert!(out.status.success(), "ADJ_SENSITIVE_INPUT={value}");
+        let s = String::from_utf8(out.stdout).unwrap();
+        assert!(
+            !s.contains("patient_free_text_secret"),
+            "ADJ_SENSITIVE_INPUT={value} must not leak: {s}"
+        );
+    }
+
+    // An explicit FALSE spelling is honoured — fail-closed must not mean
+    // "ignore the operator", or the toggle becomes unusable.
+    let out = Command::new(env!("CARGO_BIN_EXE_adj-lang-cli"))
+        .arg(&p)
+        .env("ADJ_SENSITIVE_INPUT", "no")
+        .output()
+        .expect("run adj-lang-cli");
+    let s = String::from_utf8(out.stdout).unwrap();
+    assert!(
+        s.contains("patient_free_text_secret"),
+        "an explicit false value must disable redaction: {s}"
     );
 }

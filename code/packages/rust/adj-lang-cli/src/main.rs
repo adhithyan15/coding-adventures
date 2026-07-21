@@ -357,7 +357,66 @@ const ABSTENTION_FIELD_CAP: usize = 256;
 /// you WHAT went wrong — only the echoed values are withheld, so an abstention
 /// stays actionable without carrying PHI along with it.
 fn sensitive_input() -> bool {
-    std::env::var("ADJ_SENSITIVE_INPUT").is_ok_and(|v| v == "1" || v.eq_ignore_ascii_case("true"))
+    // Resolved ONCE per process. Two reasons beyond speed: the warning below
+    // should be emitted once rather than once per rendered field (it printed
+    // four times for a single query before this), and a security decision that
+    // is re-read mid-run could in principle disagree with itself.
+    static DECIDED: std::sync::OnceLock<bool> = std::sync::OnceLock::new();
+    *DECIDED.get_or_init(decide_sensitive_input)
+}
+
+fn decide_sensitive_input() -> bool {
+    let Ok(raw) = std::env::var("ADJ_SENSITIVE_INPUT") else {
+        return false;
+    };
+    let v = raw.trim();
+    if v.is_empty() {
+        return false;
+    }
+    if matches!(
+        v.to_ascii_lowercase().as_str(),
+        "1" | "true" | "yes" | "on" | "y" | "enabled"
+    ) {
+        return true;
+    }
+    if matches!(
+        v.to_ascii_lowercase().as_str(),
+        "0" | "false" | "no" | "off" | "n" | "disabled"
+    ) {
+        return false;
+    }
+    // FAIL CLOSED, LOUDLY. A security toggle whose misspelling is
+    // indistinguishable from being unset is a footgun for exactly the
+    // deployment it exists to protect: `ADJ_SENSITIVE_INPUT=pls` would have
+    // silently emitted chart text. Anyone who set the variable at all meant
+    // something by it, so an unrecognized value is treated as SENSITIVE and
+    // the operator is told.
+    eprintln!(
+        "warning: ADJ_SENSITIVE_INPUT={raw:?} is not a recognized boolean; \
+         treating this run as SENSITIVE and redacting echoed payloads."
+    );
+    true
+}
+
+/// Render a query string for output, honouring the sensitive channel.
+///
+/// # Why this exists as a helper rather than a call at each site
+///
+/// The first draft redacted the abstention object's fields and left the
+/// surrounding `"query"` / `"queries"` echoes alone. Those echoes contain the
+/// SAME values — for a recall abstention the goal *is* the query, and a lookup
+/// query string spells out the table and the key — so the redacted secret was
+/// reprinted verbatim two lines above an object claiming to have redacted it.
+/// That is worse than no redaction: it advertises a protection that is not
+/// there.
+///
+/// Routing every query echo through one function is the fix that stays fixed —
+/// a new renderer cannot forget a check it never had to make.
+fn query_echo(q: &str) -> String {
+    if sensitive_input() {
+        return "[redacted]".to_string();
+    }
+    esc(q)
 }
 
 /// Prepare one echoed payload: redact it on a sensitive channel, otherwise cap
@@ -916,7 +975,16 @@ fn main() -> ExitCode {
 
     // The `"queries"` echo lists every query the program declared (ground +
     // binding), captured before the partition above.
-    let queries: Vec<String> = all_query_strs;
+    // Same gate as every other echo — the `queries` array would otherwise
+    // reprint in full exactly what the abstention object redacts.
+    let queries: Vec<String> = if sensitive_input() {
+        all_query_strs
+            .iter()
+            .map(|_| "\"[redacted]\"".to_string())
+            .collect()
+    } else {
+        all_query_strs
+    };
 
     // Relational recall: each binding query resolves to its bindings + the citing
     // edge's provenance (or abstains with an empty answer set). 0 answer-time
@@ -1089,7 +1157,7 @@ fn recall_json(query: &Term, kb: &KnowledgeBase) -> String {
     };
     format!(
         "{{\"query\":\"{}\",\"answers\":[{}],\"abstained\":{}{}}}",
-        esc(&format!("{}", query)),
+        query_echo(&format!("{query}")),
         answers.join(","),
         dag.proofs.is_empty(),
         abstention
@@ -1133,7 +1201,7 @@ fn range_lookup_json(rl: &LoweredRangeLookup, kb: &KnowledgeBase) -> String {
             // practice; abstain rather than panic if a non-numeric ever arrives.
             return format!(
                 "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[],\"abstained\":true,\"abstention\":{}}}",
-                esc(&query_str),
+                query_echo(&query_str),
                 esc(&rl.mode),
                 abstention_json(&AbstentionReason::NonNumericKey {
                     table: rl.table.clone(),
@@ -1178,7 +1246,7 @@ fn range_lookup_json(rl: &LoweredRangeLookup, kb: &KnowledgeBase) -> String {
             // breakpoint key, so the audit shows WHICH bracket the query fell in.
             format!(
                 "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[{{\"bindings\":{{\"{}\":\"{}\",\"{}\":\"{}\"}},\"citations\":[{}],\"steps\":{}}}],\"abstained\":false}}",
-                esc(&query_str),
+                query_echo(&query_str),
                 esc(&rl.mode),
                 esc(&rl.value_col),
                 esc(&format!("{value_term}")),
@@ -1226,7 +1294,7 @@ fn range_lookup_json(rl: &LoweredRangeLookup, kb: &KnowledgeBase) -> String {
             };
             format!(
                 "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[],\"abstained\":true,\"abstention\":{}}}",
-                esc(&query_str),
+                query_echo(&query_str),
                 esc(&rl.mode),
                 abstention_json(&reason)
             )
@@ -1317,7 +1385,7 @@ fn governing_json(query: &Term, kb: &KnowledgeBase) -> String {
     };
     format!(
         "{{\"query\":\"{}\",\"answers\":[{}],\"has_conflict\":{}{}}}",
-        esc(&format!("{}", query)),
+        query_echo(&format!("{query}")),
         answers.join(","),
         conflict,
         abstention
