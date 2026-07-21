@@ -132,7 +132,30 @@ order lives in the book, which LaTeX auto-numbers, and in `session-map.md`.)
   where the choice changes the **meaning** (*sabía* "knew" vs *supe* "found out";
   *conocía* "knew" vs *conocí* "met"). **Authored.**
 
-Next: **Ch. 17** — the **future** and the conditional; then everyday description,
+- **Ch. 17 — The future and the conditional, or one weld twice**: the **future**
+  *hablaré/hablarás/hablará/hablaremos/hablarán*, built on the **whole
+  infinitive** (uniquely, you don't strip the ending) with **one** ending set for
+  all three conjugations. The etymology is the chapter: Latin's own future
+  (*amābō*) **died**, Romance replaced it with **infinitive + *habēre*** (*amāre
+  habeō*, "I **have to** love" → "I will love"), and the phrase then **fused into a
+  single word** — so the endings *-é/-ás/-á/-emos/-án* are literally the present of
+  *haber* (*he/has/ha/hemos/han*) worn down to a suffix. **A compound tense that
+  closed up into a simple one** — the mirror image of the parallel-4 tracks' Ch. 15
+  compound past, which stayed open as two words. And the seam is still visible next
+  door: Portuguese *falá-**lo**-ei* drops a pronoun **inside** the join → the
+  **conditional** *hablaría* — the **same weld** with the **imperfect** of *haber*
+  instead of the present, which is exactly why its endings are the *-ía/-ías/
+  -íamos/-ían* of Ch. 16's imperfect. One trick, two tenses of one auxiliary →
+  practice on the **ten irregular stems**, which fall into three families
+  (drop-the-vowel *podré/sabré*; drop-then-**wedge-a-d** *tendré/pondré/vendré/
+  saldré*, where Old Spanish refused to leave the squeezed *-n'r-* alone and even
+  tried *terné/porné* first; and the choppers *diré/haré*) — with the payoff that
+  the **same bent stem serves both tenses**, and that **all six -go club** verbs of
+  Ch. 12–13 turn up here, split between the *-dr-* group and the choppers. Closes on the **future of
+  probability** (*Serán las tres* = "it **must be** three"), which makes sense once
+  you know the tense was built from "I **have to**." **Authored.**
+
+Next: **Ch. 18** — the **subjunctive**, the mood for what isn't fact; then everyday description,
 building toward real conversation.
 From here the course hands over rules, not phrases. Grammar accumulates piece by
 piece. The theme skeleton below plans the wider road.
