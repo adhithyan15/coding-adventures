@@ -4,6 +4,65 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - UI35 drag-and-drop lowering (`HostDraggable` / `HostDropTarget`)
+
+The React backend now lowers the kernel's two new drag primitives (see
+`code/specs/UI35-host-drag-drop.md`). Before this, a kanban board — "drag a card
+to another column" — was simply not expressible in Mosaic; every app had to drop
+to hand-written host code.
+
+The lowering deliberately does **not** use the HTML5 drag-and-drop API. Three
+contracts from the spec drive the design:
+
+- **Touch works.** HTML5 `dragstart`/`dragover` never fire on touch devices, so
+  the emitted code uses **pointer events** (`onPointerDown` / `onPointerEnter` /
+  `onPointerUp`), which are unified across mouse, pen, and touch.
+- **Keyboard is equivalent, not an afterthought.** Every draggable is
+  `tabIndex={0}` with `role="button"` and `aria-roledescription="draggable"`.
+  Space/Enter grabs, arrows move the cursor across `[data-mosaic-drop-key]`
+  targets, Space/Enter drops, Escape cancels — and a keyboard drop dispatches
+  the *same* event as a pointer drop, so the app cannot accidentally support one
+  and not the other.
+- **Screen readers are told what happened.** A visually-hidden
+  `aria-live="polite"` region is emitted alongside the tree and updated on grab,
+  move, drop, and cancel.
+
+Implementation notes, following the `HostDialog` precedent:
+
+- `layout_contains_drag` is a presence check, not a node table — the drag
+  controller is *shared* by every draggable in a component, so one flag is all
+  the emitter needs. It gates the `useState`/`useRef` imports and the controller
+  block, so a layout with no drag emits byte-identical output to before (pinned
+  by a test).
+- `emit_drag_controller_hooks` emits the one controller: the grabbed payload
+  (`useRef`), the hovered target (`useState`), the live region (`useRef`), and
+  the `mosaicPosition` helper that turns a pointer's Y within the target's bounds
+  into `before` / `after` / `into` by thirds.
+- **Drops are proposals, not mutations.** The emitted handler dispatches
+  `{ key, kind, targetKey, position }` and does nothing else; the engine decides
+  whether the move is legal. The emitter never reorders anything itself.
+- **Keyboard equivalence is structural, not duplicated.** A keyboard drop does
+  not re-implement the pointer drop — it dispatches a real `pointerup` at the
+  hovered target so the target's own handler runs. There is exactly one drop
+  path, so the two can never drift into dispatching different payloads. A
+  release with no target under the cursor degrades to a cancel rather than
+  leaving the drag stuck in flight.
+- **Target lookup is scoped to the component instance**, via a layout-transparent
+  (`display: contents`) wrapper that also hosts the live region. A document-wide
+  query would let arrow keys in one mounted board walk onto — and announce — a
+  drop target belonging to a different one.
+- **Generated names live in a `mosaic$…` namespace.** Slot identifiers are
+  camel-cased from kebab-case and validated against `^[_A-Za-z][_A-Za-z0-9]*$`,
+  so they can never contain `$`. A slot innocently named `mosaic-drag` therefore
+  cannot collide with the controller — without the namespace it would emit a
+  parameter and a `const` of the same name and fail to compile.
+- Controller helpers are emitted **per half used**: a drop-target-only component
+  does not get the grab/cancel/step helpers, and vice versa, because an unused
+  local trips `noUnusedLocals` (TS6133) under a strict host tsconfig.
+
+8 new tests cover each contract, the scoping, the namespace collision, and the
+absence case (a layout with no drag emits byte-identical output to before).
+
 ### Fixed - destructure only the props the component body references
 
 The generated component previously destructured *every* slot in its parameter
