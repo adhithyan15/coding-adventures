@@ -432,6 +432,7 @@ fn clone_subckt_element(
             element.forward_transit_time,
             element.reverse_transit_time,
             element.saturation_current_temperature_exponent,
+            element.energy_gap_electron_volts,
         )),
         Element::Mosfet(element) => Element::Mosfet(Mosfet::with_model(
             format!("{instance_name}.{}", element.name),
@@ -2693,7 +2694,7 @@ pub fn circuit_at_temperature(
     circuit: &Circuit,
     temperature_kelvin: f64,
     nominal_temperature_kelvin: f64,
-    energy_gap_electron_volts: f64,
+    _energy_gap_electron_volts: f64,
 ) -> Result<Circuit, SpiceError> {
     let mut adjusted = Circuit {
         elements: Vec::new(),
@@ -2711,7 +2712,7 @@ pub fn circuit_at_temperature(
                 bjt,
                 temperature_kelvin,
                 nominal_temperature_kelvin,
-                energy_gap_electron_volts,
+                bjt.energy_gap_electron_volts,
             )?),
             Element::Mosfet(mosfet) => Element::Mosfet(mosfet_at_temperature(
                 mosfet,
@@ -2835,6 +2836,7 @@ pub struct Bjt {
     pub forward_transit_time: f64,
     pub reverse_transit_time: f64,
     pub saturation_current_temperature_exponent: f64,
+    pub energy_gap_electron_volts: f64,
 }
 
 impl Bjt {
@@ -2888,6 +2890,7 @@ impl Bjt {
             forward_transit_time,
             reverse_transit_time,
             3.0,
+            1.11,
         )
     }
 
@@ -2906,6 +2909,7 @@ impl Bjt {
         forward_transit_time: f64,
         reverse_transit_time: f64,
         saturation_current_temperature_exponent: f64,
+        energy_gap_electron_volts: f64,
     ) -> Self {
         Self {
             name: name.into(),
@@ -2921,6 +2925,7 @@ impl Bjt {
             forward_transit_time,
             reverse_transit_time,
             saturation_current_temperature_exponent,
+            energy_gap_electron_volts,
         }
     }
 }
@@ -3311,8 +3316,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     usize,
 )] = &[
     (ModelCardKind::Diode, 12, 18, 5, 3),
-    (ModelCardKind::Npn, 8, 16, 4, 4),
-    (ModelCardKind::Pnp, 8, 16, 4, 4),
+    (ModelCardKind::Npn, 9, 17, 4, 4),
+    (ModelCardKind::Pnp, 9, 17, 4, 4),
     (ModelCardKind::Njf, 5, 11, 5, 3),
     (ModelCardKind::Pjf, 5, 11, 5, 3),
     (ModelCardKind::Nmos, 18, 25, 6, 3),
@@ -3355,6 +3360,7 @@ const BJT_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("TF", "TF"),
     ("TR", "TR"),
     ("XTI", "XTI"),
+    ("EG", "EG"),
 ];
 const JFET_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("BETA", "BETA"),
@@ -4008,6 +4014,7 @@ pub fn bjt_from_model_card(
         model_card_value(model, "TF", 0.0),
         model_card_value(model, "TR", 0.0),
         model_card_value(model, "XTI", 3.0),
+        model_card_value(model, "EG", 1.11),
     ))
 }
 
@@ -23196,6 +23203,12 @@ fn validate_bjt(bjt: &Bjt) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: bjt.name.clone(),
             reason: "saturation-current temperature exponent must be finite".to_string(),
+        });
+    }
+    if !bjt.energy_gap_electron_volts.is_finite() || bjt.energy_gap_electron_volts <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "energy gap must be finite and positive".to_string(),
         });
     }
     Ok(())

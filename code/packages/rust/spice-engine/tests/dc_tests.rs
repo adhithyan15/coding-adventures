@@ -100,7 +100,7 @@ fn model_card_type_aliases_are_normalized() {
 #[test]
 fn model_card_supported_parameter_coverage_exports_are_stable() {
     let coverage = model_card_supported_parameter_coverage();
-    assert_eq!(coverage.len(), 74);
+    assert_eq!(coverage.len(), 76);
     assert_eq!(coverage[0].kind, ModelCardKind::Diode);
     assert_eq!(coverage[0].canonical_parameter, "IS");
     assert_eq!(coverage[0].accepted_names, vec!["IS", "JS"]);
@@ -119,7 +119,7 @@ fn model_card_supported_parameter_coverage_exports_are_stable() {
     assert!(table.contains("NMOS\tVT0\tVT0|VTO|VTH\t3"));
     assert_eq!(lines.last().unwrap(), &"PMOS\tMJ\tMJ\t1");
     let records = model_card_supported_parameter_coverage_records();
-    assert_eq!(records.len(), 74);
+    assert_eq!(records.len(), 76);
     assert_eq!(records[0]["kind"], "D");
     assert_eq!(records[0]["canonical_parameter"], "IS");
     assert_eq!(records[0]["accepted_names"], "IS|JS");
@@ -200,15 +200,15 @@ fn model_card_supported_parameter_coverage_gate_passes_current_catalog() {
     assert!(report.passed);
     assert_eq!(report.kind_count, 7);
     assert_eq!(report.expected_kind_count, 7);
-    assert_eq!(report.canonical_parameter_count, 74);
-    assert_eq!(report.expected_canonical_parameter_count, 74);
-    assert_eq!(report.accepted_name_count, 122);
+    assert_eq!(report.canonical_parameter_count, 76);
+    assert_eq!(report.expected_canonical_parameter_count, 76);
+    assert_eq!(report.accepted_name_count, 124);
     assert_eq!(report.aliased_parameter_count, 35);
     assert_eq!(report.max_alias_count, 4);
     assert!(report.issues.is_empty());
     assert_eq!(
         format_model_card_supported_parameter_coverage_gate_report(&report),
-        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t74\t74\t122\t35\t4\t0"
+        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t76\t76\t124\t35\t4\t0"
     );
     assert_eq!(
         format_model_card_supported_parameter_coverage_gate_issue_table(&report),
@@ -235,8 +235,8 @@ fn model_card_supported_parameter_coverage_gate_reports_missing_alias_family() {
 
     assert!(!report.passed);
     assert_eq!(report.kind_count, 7);
-    assert_eq!(report.canonical_parameter_count, 73);
-    assert_eq!(report.accepted_name_count, 119);
+    assert_eq!(report.canonical_parameter_count, 75);
+    assert_eq!(report.accepted_name_count, 121);
     assert_eq!(report.aliased_parameter_count, 34);
     assert_eq!(report.max_alias_count, 4);
     assert_eq!(report.issues.len(), 4);
@@ -253,7 +253,7 @@ fn model_card_supported_parameter_coverage_gate_reports_missing_alias_family() {
     );
     assert_eq!(
         format_model_card_supported_parameter_coverage_gate_report(&report),
-        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t73\t74\t119\t34\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical supported parameters, found 17\nNMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card names, found 22\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2"
+        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t75\t76\t121\t34\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical supported parameters, found 17\nNMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card names, found 22\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2"
     );
     let records = model_card_supported_parameter_coverage_gate_issue_records(&report);
     assert_eq!(records[0]["kind"], "NMOS");
@@ -425,17 +425,24 @@ fn model_card_aliases_build_device_instances() {
     let bjt_card = normalize_model_card(
         "Qsmall",
         "npn",
-        &[("BETA", 125.0), ("CBE", 2.0e-12), ("XTI", 2.4)],
+        &[
+            ("BETA", 125.0),
+            ("CBE", 2.0e-12),
+            ("XTI", 2.4),
+            ("EG", 1.05),
+        ],
     )
     .unwrap();
     let bjt_model = bjt_from_model_card("Q1", "c", "b", "e", &bjt_card).unwrap();
     assert_close(*bjt_card.parameters.get("BF").unwrap(), 125.0);
     assert_close(*bjt_card.parameters.get("CJE").unwrap(), 2.0e-12);
     assert_close(*bjt_card.parameters.get("XTI").unwrap(), 2.4);
+    assert_close(*bjt_card.parameters.get("EG").unwrap(), 1.05);
     assert_eq!(bjt_model.polarity, BjtPolarity::Npn);
     assert_close(bjt_model.forward_beta, 125.0);
     assert_close(bjt_model.base_emitter_capacitance, 2.0e-12);
     assert_close(bjt_model.saturation_current_temperature_exponent, 2.4);
+    assert_close(bjt_model.energy_gap_electron_volts, 1.05);
 
     let jfet_card = normalize_model_card(
         "Jn",
@@ -1322,7 +1329,7 @@ fn subcircuit_expansion_preserves_complete_diode_model() {
 }
 
 #[test]
-fn subcircuit_expansion_preserves_bjt_temperature_exponent() {
+fn subcircuit_expansion_preserves_bjt_temperature_parameters() {
     let bjt = Bjt::with_model_and_temperature_parameters(
         "Qcell",
         "c",
@@ -1337,6 +1344,7 @@ fn subcircuit_expansion_preserves_bjt_temperature_exponent() {
         3.0e-9,
         4.0e-9,
         2.4,
+        1.05,
     );
     let mut circuit = Circuit::new();
     circuit
@@ -1363,6 +1371,7 @@ fn subcircuit_expansion_preserves_bjt_temperature_exponent() {
         })
         .unwrap();
     assert_close(expanded.saturation_current_temperature_exponent, 2.4);
+    assert_close(expanded.energy_gap_electron_volts, 1.05);
 }
 
 #[test]
@@ -1821,6 +1830,7 @@ fn bjt_temperature_scaling_uses_model_temperature_exponent() {
         0.0,
         0.0,
         0.0,
+        1.11,
     );
     let high_exponent = Bjt::with_model_and_temperature_parameters(
         "Qhigh",
@@ -1836,10 +1846,83 @@ fn bjt_temperature_scaling_uses_model_temperature_exponent() {
         0.0,
         0.0,
         4.0,
+        1.11,
     );
     let low = bjt_at_temperature(&low_exponent, 350.0, 300.15, 1.11).unwrap();
     let high = bjt_at_temperature(&high_exponent, 350.0, 300.15, 1.11).unwrap();
     assert!(high.saturation_current > low.saturation_current);
+}
+
+#[test]
+fn bjt_temperature_scaling_uses_model_energy_gap() {
+    let mut silicon = Circuit::new();
+    silicon.add(Element::Bjt(Bjt::with_model_and_temperature_parameters(
+        "Qsilicon",
+        "c",
+        "b",
+        "e",
+        BjtPolarity::Npn,
+        1.0e-14,
+        100.0,
+        0.02585,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        3.0,
+        1.11,
+    )));
+    let mut lower_gap = Circuit::new();
+    lower_gap.add(Element::Bjt(Bjt::with_model_and_temperature_parameters(
+        "Qlower",
+        "c",
+        "b",
+        "e",
+        BjtPolarity::Npn,
+        1.0e-14,
+        100.0,
+        0.02585,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        3.0,
+        0.8,
+    )));
+    let silicon_hot = circuit_at_temperature(&silicon, 350.0, 300.15, 1.11).unwrap();
+    let lower_gap_hot = circuit_at_temperature(&lower_gap, 350.0, 300.15, 1.11).unwrap();
+    let saturation_current = |circuit: &Circuit| match &circuit.elements()[0] {
+        Element::Bjt(bjt) => bjt.saturation_current,
+        _ => unreachable!(),
+    };
+    assert!(saturation_current(&silicon_hot) > saturation_current(&lower_gap_hot));
+}
+
+#[test]
+fn dc_rejects_invalid_bjt_energy_gap() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::Bjt(Bjt::with_model_and_temperature_parameters(
+        "Qbad",
+        "c",
+        "b",
+        "0",
+        BjtPolarity::Npn,
+        1.0e-14,
+        100.0,
+        0.02585,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        3.0,
+        0.0,
+    )));
+    let error = dc_op(&circuit).unwrap_err();
+    assert!(
+        error
+            .to_string()
+            .contains("energy gap must be finite and positive")
+    );
 }
 
 #[test]

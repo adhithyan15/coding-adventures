@@ -1711,6 +1711,7 @@ export interface Bjt {
   readonly forwardTransitTime: number;
   readonly reverseTransitTime: number;
   readonly saturationCurrentTemperatureExponent: number;
+  readonly energyGapElectronVolts: number;
 }
 
 export type MosfetType = "NMOS" | "PMOS";
@@ -1988,8 +1989,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   Record<ModelCardKind, readonly [number, number, number, number]>
 > = {
   D: [12, 18, 5, 3],
-  NPN: [8, 16, 4, 4],
-  PNP: [8, 16, 4, 4],
+  NPN: [9, 17, 4, 4],
+  PNP: [9, 17, 4, 4],
   NJF: [5, 11, 5, 3],
   PJF: [5, 11, 5, 3],
   NMOS: [18, 25, 6, 3],
@@ -3579,7 +3580,7 @@ function cloneSubcktElement(
     case "jfet":
       return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation, element.gateSourceCapacitance, element.gateDrainCapacitance);
     case "bjt":
-      return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime, element.saturationCurrentTemperatureExponent);
+      return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts);
     case "mosfet":
       return mosfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), mapSubcktNode(element.body, instanceName, nodeMap), element.type, element.params);
     case "vccs":
@@ -7680,7 +7681,7 @@ export function circuitAtTemperature(
           element,
           temperatureKelvin,
           nominalTemperatureKelvin,
-          energyGapElectronVolts,
+          element.energyGapElectronVolts,
         ),
       );
     } else if (element.kind === "mosfet") {
@@ -7733,6 +7734,7 @@ export function bjt(
   forwardTransitTime = 0.0,
   reverseTransitTime = 0.0,
   saturationCurrentTemperatureExponent = 3.0,
+  energyGapElectronVolts = 1.11,
 ): Bjt {
   return {
     kind: "bjt",
@@ -7749,6 +7751,7 @@ export function bjt(
     forwardTransitTime,
     reverseTransitTime,
     saturationCurrentTemperatureExponent,
+    energyGapElectronVolts,
   };
 }
 
@@ -7851,6 +7854,7 @@ const BJT_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   TF: "TF",
   TR: "TR",
   XTI: "XTI",
+  EG: "EG",
 };
 
 const JFET_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
@@ -8348,6 +8352,7 @@ export function bjtFromModelCard(
     p.TF ?? 0.0,
     p.TR ?? 0.0,
     p.XTI ?? 3.0,
+    p.EG ?? 1.11,
   );
 }
 
@@ -19526,6 +19531,9 @@ function validateBjt(element: Bjt): void {
   }
   if (!Number.isFinite(element.saturationCurrentTemperatureExponent)) {
     throw invalidElement(element.name, "saturation-current temperature exponent must be finite");
+  }
+  if (!Number.isFinite(element.energyGapElectronVolts) || element.energyGapElectronVolts <= 0.0) {
+    throw invalidElement(element.name, "energy gap must be finite and positive");
   }
 }
 

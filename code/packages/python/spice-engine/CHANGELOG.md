@@ -4,6 +4,11 @@
 
 ### Added
 
+- **BJT energy gap** — BJT model cards now accept `EG`, apply each model's
+  energy gap to saturation-current temperature scaling, and preserve it through
+  subcircuit expansion, matching Rust and TypeScript. The supported-parameter
+  catalog now contains 76 canonical rows.
+
 - **BJT saturation-current temperature exponent** — BJT model cards now accept
   `XTI`, apply it to saturation-current temperature scaling, and preserve it
   through subcircuit expansion, matching Rust and TypeScript. The supported-
