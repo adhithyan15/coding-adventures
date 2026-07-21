@@ -66,7 +66,7 @@ pub use lr_aggregate::{
     PriorClause, SourceDisagreementReport, SourceLogitDelta, UncertaintyMarker, UncertaintyReport,
 };
 pub use proof_dag::{DerivationOrigin, Proof, ProofDAG, ProofStep};
-pub use provenance::{Citation, Provenance, TrustTier};
+pub use provenance::{Citation, ContentHash, Provenance, Quote, TrustTier};
 pub use wmc::weighted_model_count;
 
 // ---------------------------------------------------------------------------

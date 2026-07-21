@@ -29,6 +29,31 @@
 /// without external grounding" at proof-display time.
 #[derive(Debug, Clone, PartialEq)]
 pub struct Provenance {
+    /// The **verbatim span** this clause rests on — the bytes an auditor
+    /// re-finds at the locator (`ADJ-REASON-MATH.md` §E.3).
+    ///
+    /// # Why this is separate from `source`
+    ///
+    /// Until now the quoted span was *stuffed into* `source` by convention.
+    /// That conflates two different things: the **quotation** (bytes that must
+    /// appear at the locator, unchanged) and the **citation label** (how a
+    /// human names the document). A verifier needs the first; a reader needs
+    /// the second. One string cannot be checked as both.
+    pub quote: Quote,
+    /// A content hash of the source document as captured **at ingest time**.
+    ///
+    /// Verification runs against this snapshot, not against the live web, and
+    /// that is not a performance choice — it is what makes the check mean
+    /// anything. A verbatim check against a live URL is decided by whoever
+    /// controls that URL *at verification time*, so anyone able to publish
+    /// there (a compromised source, a DNS hijack, or just an ordinary content
+    /// edit) could make a fabricated quote verify. Pinning inverts that: the
+    /// snapshot is fixed when the fact enters, and later divergence becomes
+    /// **evidence of drift** rather than a passing grade.
+    ///
+    /// `None` means no snapshot was captured, which is a reason to report the
+    /// step `Unverified` — never `Verified`.
+    pub snapshot: Option<ContentHash>,
     /// Human-readable citation. Typically a journal reference, a
     /// guideline name + year, a statute, a clinical trial id, etc.
     /// Empty string only when `trust_tier == TrustTier::Unattributed`.
@@ -48,6 +73,107 @@ pub struct Provenance {
     /// the same fact would inflate posteriors). Empty for the common
     /// single-citation case; defaults to empty everywhere.
     pub corroborations: Vec<Citation>,
+}
+
+/// The verbatim span a clause rests on, or an explicit admission that it has
+/// not been recorded yet.
+///
+/// # Why this is an enum and not a `String`
+///
+/// `ADJ-REASON-MATH.md` §E.3 writes the field as `quote: String` with an
+/// `Unmigrated` state alongside. A plain `String` cannot express that state
+/// safely — the sentinel would be indistinguishable from a library that
+/// genuinely quoted the word "Unmigrated", and, worse, the obvious migration
+/// (default `quote` to the `source` label) **fails open**.
+///
+/// That failure mode is the reason this type exists. `source` labels are short
+/// — "NIST", "AQI basics" — and would trivially appear *somewhere* on the cited
+/// page. The strongest check in the system would therefore pass while verifying
+/// nothing, and report the step as verified. That manufactures confidence,
+/// which is the precise failure the whole audit-trail effort exists to prevent,
+/// and it would have been the default state of the entire stdlib on day one.
+///
+/// Making it a closed sum moves "never fail open" from a convention someone
+/// must remember into a fact the compiler enforces: you cannot read a quote
+/// without deciding what to do about `Unmigrated`.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub enum Quote {
+    /// The recorded span, and where it sits in the pinned snapshot.
+    Verbatim {
+        /// The exact bytes, as captured.
+        text: String,
+        /// Byte offset of `text` within the snapshot document.
+        ///
+        /// Verification is **anchored** to this offset rather than searching
+        /// the document for the text. An unanchored substring search would
+        /// accept a quote that appears anywhere — including in a footnote, a
+        /// navigation menu, or a passage that says the opposite — so it would
+        /// confirm that the words exist somewhere, not that they support this
+        /// clause. `None` means the offset was not recorded, which downgrades
+        /// the step to `Unverified` rather than falling back to searching.
+        byte_offset: Option<usize>,
+    },
+    /// This clause predates the `quote`/`source` split. **Never verifiable.**
+    Unmigrated,
+}
+
+impl Quote {
+    /// The recorded span, if there is one.
+    pub fn text(&self) -> Option<&str> {
+        match self {
+            Quote::Verbatim { text, .. } => Some(text),
+            Quote::Unmigrated => None,
+        }
+    }
+
+    /// `true` when this clause carries no checkable span. A verifier that sees
+    /// this **must** report `Unverified`; it must not report `Verified`, and it
+    /// must not silently skip the step.
+    pub fn is_unmigrated(&self) -> bool {
+        matches!(self, Quote::Unmigrated)
+    }
+}
+
+/// A content-addressed hash of a source document, captured at ingest.
+///
+/// # Why SHA-256 and not the repo's `hash-functions` crate
+///
+/// This hash is **tamper-evidence**, not a hash-table index. The threat is an
+/// adversary who wants a forged snapshot to verify, so the property required is
+/// collision resistance. FNV, DJB2, murmur and SipHash — everything in
+/// `hash-functions` — are fast non-cryptographic hashes with no such guarantee;
+/// using one here would look like a security control while providing none.
+/// `coding_adventures_sha256` is the repo's own zero-dependency implementation,
+/// so this stays within the no-third-party rule.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct ContentHash {
+    /// Lowercase hex of the SHA-256 digest.
+    hex: String,
+}
+
+impl ContentHash {
+    /// Hash a source document's bytes.
+    pub fn of(bytes: &[u8]) -> Self {
+        Self {
+            hex: coding_adventures_sha256::sha256_hex(bytes),
+        }
+    }
+
+    /// Reconstruct from a stored hex digest (e.g. read back from a trail).
+    pub fn from_hex(hex: impl Into<String>) -> Self {
+        Self { hex: hex.into() }
+    }
+
+    /// The hex digest.
+    pub fn as_hex(&self) -> &str {
+        &self.hex
+    }
+
+    /// `true` iff `bytes` hash to this digest — i.e. the document on hand is
+    /// byte-for-byte the one that was captured at ingest.
+    pub fn matches(&self, bytes: &[u8]) -> bool {
+        Self::of(bytes).hex == self.hex
+    }
 }
 
 /// One corroborating citation (ADJ-A9). Both fields are required: a
@@ -106,14 +232,43 @@ pub enum TrustTier {
 }
 
 impl Provenance {
-    /// Construct a `Provenance` with all three fields explicit.
+    /// Construct a `Provenance` with the classic three fields explicit.
+    ///
+    /// The quote is [`Quote::Unmigrated`] and the snapshot is `None`: every
+    /// existing caller predates the §E.3 split, and the honest record of that
+    /// is "no checkable span was captured", not a guess. A verifier reports
+    /// these `Unverified` — never `Verified`. Use [`with_quote`](Self::with_quote)
+    /// to record a real span.
     pub fn new(source: impl Into<String>, locator: Option<String>, trust_tier: TrustTier) -> Self {
         Self {
+            quote: Quote::Unmigrated,
+            snapshot: None,
             source: source.into(),
             locator,
             trust_tier,
             corroborations: Vec::new(),
         }
+    }
+
+    /// Record the verbatim span this clause rests on, anchored at `byte_offset`
+    /// within the document whose content hashes to `snapshot`.
+    ///
+    /// Both anchors are optional at the type level because real libraries are
+    /// migrated incrementally — but a verifier treats a missing offset or a
+    /// missing snapshot as `Unverified`, so partial migration never reads as
+    /// success.
+    pub fn with_quote(
+        mut self,
+        text: impl Into<String>,
+        byte_offset: Option<usize>,
+        snapshot: Option<ContentHash>,
+    ) -> Self {
+        self.quote = Quote::Verbatim {
+            text: text.into(),
+            byte_offset,
+        };
+        self.snapshot = snapshot;
+        self
     }
 
     /// The common case: a single-line citation at
