@@ -1673,6 +1673,7 @@ export interface Diode {
   readonly transitTime: number;
   readonly junctionPotential: number;
   readonly gradingCoefficient: number;
+  readonly forwardBiasDepletionCoefficient: number;
 }
 
 export type JfetPolarity = "NJF" | "PJF";
@@ -1983,7 +1984,7 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_KINDS: readonly ModelCardKind[] = 
 const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   Record<ModelCardKind, readonly [number, number, number, number]>
 > = {
-  D: [9, 15, 5, 3],
+  D: [10, 16, 5, 3],
   NPN: [7, 15, 4, 4],
   PNP: [7, 15, 4, 4],
   NJF: [5, 11, 5, 3],
@@ -7530,6 +7531,7 @@ export function diode(
   transitTime = 0.0,
   junctionPotential = 1.0,
   gradingCoefficient = 0.5,
+  forwardBiasDepletionCoefficient = 0.5,
 ): Diode {
   return {
     kind: "diode",
@@ -7545,6 +7547,7 @@ export function diode(
     transitTime,
     junctionPotential,
     gradingCoefficient,
+    forwardBiasDepletionCoefficient,
   };
 }
 
@@ -7806,6 +7809,7 @@ const DIODE_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   PB: "VJ",
   M: "M",
   MJ: "M",
+  FC: "FC",
 };
 
 const BJT_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
@@ -8290,6 +8294,7 @@ export function diodeFromModelCard(
     p.TT ?? 0.0,
     p.VJ ?? 1.0,
     p.M ?? 0.5,
+    p.FC ?? 0.5,
   );
 }
 
@@ -19168,6 +19173,16 @@ function validateDiode(element: Diode): void {
   if (!Number.isFinite(element.gradingCoefficient) || element.gradingCoefficient < 0.0) {
     throw invalidElement(element.name, "grading coefficient must be finite and non-negative");
   }
+  if (
+    !Number.isFinite(element.forwardBiasDepletionCoefficient) ||
+    element.forwardBiasDepletionCoefficient < 0.0 ||
+    element.forwardBiasDepletionCoefficient >= 1.0
+  ) {
+    throw invalidElement(
+      element.name,
+      "forward-bias depletion coefficient must be finite and in [0, 1)",
+    );
+  }
   if (!Number.isFinite(element.transitTime) || element.transitTime < 0.0) {
     throw invalidElement(element.name, "transit time must be finite and non-negative");
   }
@@ -19206,14 +19221,23 @@ function diodeHasChargeStorage(element: Diode): boolean {
 
 function diodeDynamicCapacitance(element: Diode, voltage: number): number {
   const [, conductance] = diodeCurrentConductance(element, voltage);
-  return (
-    mosfetBulkJunctionCapacitance(
-      element.junctionCapacitance,
-      voltage,
-      element.junctionPotential,
-      element.gradingCoefficient,
-    ) + element.transitTime * conductance
-  );
+  return diodeDepletionCapacitance(element, voltage) + element.transitTime * conductance;
+}
+
+function diodeDepletionCapacitance(element: Diode, voltage: number): number {
+  if (element.junctionCapacitance <= 0.0 || element.gradingCoefficient === 0.0) {
+    return element.junctionCapacitance;
+  }
+  const normalizedVoltage = voltage / element.junctionPotential;
+  if (normalizedVoltage < element.forwardBiasDepletionCoefficient) {
+    return element.junctionCapacitance /
+      ((1.0 - normalizedVoltage) ** element.gradingCoefficient);
+  }
+  const coefficient = element.forwardBiasDepletionCoefficient;
+  const transitionScale = (1.0 - coefficient) ** (1.0 + element.gradingCoefficient);
+  const continuation = 1.0 - coefficient * (1.0 + element.gradingCoefficient) +
+    element.gradingCoefficient * normalizedVoltage;
+  return element.junctionCapacitance * continuation / transitionScale;
 }
 
 function diodeChargeVoltage(element: Diode, nodeVoltages: ReadonlyMap<string, number>): number {

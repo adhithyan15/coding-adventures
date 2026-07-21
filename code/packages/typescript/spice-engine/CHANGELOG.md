@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add diode model-card `FC` forward-bias depletion coefficient support and a
+  continuous piecewise depletion-capacitance law, matching Python and Rust.
 - Shape diode depletion capacitance from the operating-point bias with model-card
   `VJ`/`PB` junction-potential and `M`/`MJ` grading-coefficient parameters in AC
   and transient analysis, matching Python and Rust.
@@ -18,7 +20,7 @@
   `modelCardSupportedParameterCoverageGateIssueRecords`,
   `formatModelCardSupportedParameterCoverageGateIssueCsv`, and
   `formatModelCardSupportedParameterCoverageGateIssueJson`, stable release-gate
-  checks and issue exports for the seven-kind, 69-row supported model-card
+  checks and issue exports for the seven-kind, 70-row supported model-card
   parameter catalog, matching Python and Rust.
 - Add `modelCardSupportedParameterCoverageSummary`,
   `formatModelCardSupportedParameterCoverageSummaryTable`,

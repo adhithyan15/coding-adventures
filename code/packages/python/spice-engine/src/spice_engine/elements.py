@@ -490,6 +490,7 @@ class Diode:
     Tt: float = 0.0  # transit time / diffusion capacitance coefficient
     Vj: float = 1.0  # junction potential
     M: float = 0.5  # junction grading coefficient
+    Fc: float = 0.5  # forward-bias depletion coefficient
 
 
 @dataclass(frozen=True, slots=True)

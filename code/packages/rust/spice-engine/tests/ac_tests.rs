@@ -323,6 +323,46 @@ fn ac_diode_depletion_capacitance_falls_with_reverse_bias() {
 }
 
 #[test]
+fn ac_diode_forward_depletion_coefficient_shapes_capacitance() {
+    fn forward_biased_voltage(coefficient: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vac", "in", "0", 0.75, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "R1", "in", "node", 1_000.0,
+        )));
+        circuit.add(Element::Diode(Diode::with_model_and_forward_depletion(
+            "D1",
+            "node",
+            "0",
+            1.0e-30,
+            0.02585,
+            1.0,
+            None,
+            1.0e-3,
+            1.0e-6,
+            0.0,
+            1.0,
+            0.5,
+            coefficient,
+        )));
+        ac_sweep(&circuit, 1_000.0, 1_000.0, 1).unwrap()[0]
+            .voltage("node")
+            .unwrap()
+            .abs()
+    }
+
+    let early_transition = forward_biased_voltage(0.2);
+    let late_transition = forward_biased_voltage(0.8);
+
+    assert!(
+        late_transition < early_transition * 0.85,
+        "expected FC to shape forward depletion capacitance, got early={early_transition} late={late_transition}"
+    );
+}
+
+#[test]
 fn ac_diode_transit_time_shunts_forward_bias_at_high_frequency() {
     fn high_frequency_anode(transit_time: f64) -> f64 {
         let mut circuit = Circuit::new();

@@ -8651,6 +8651,10 @@ def _diode_effective_vt(el: Diode) -> float:
         raise ValueError(f"{el.name}: diode junction potential must be finite and positive")
     if not math.isfinite(el.M) or el.M < 0.0:
         raise ValueError(f"{el.name}: diode grading coefficient must be finite and non-negative")
+    if not math.isfinite(el.Fc) or el.Fc < 0.0 or el.Fc >= 1.0:
+        raise ValueError(
+            f"{el.name}: diode forward-bias depletion coefficient must be finite and in [0, 1)"
+        )
     if not math.isfinite(el.Tt) or el.Tt < 0.0:
         raise ValueError(f"{el.name}: diode transit time must be finite and non-negative")
     return el.Vt * el.N
@@ -8679,7 +8683,18 @@ def _diode_has_charge_storage(el: Diode) -> bool:
 
 def _diode_dynamic_capacitance(el: Diode, vd: float) -> float:
     _, gd = _diode_current_conductance(el, vd)
-    return bulk_junction_capacitance(el.Cjo, vd, el.Vj, el.M) + el.Tt * gd
+    return _diode_depletion_capacitance(el, vd) + el.Tt * gd
+
+
+def _diode_depletion_capacitance(el: Diode, vd: float) -> float:
+    if el.Cjo <= 0.0 or el.M == 0.0:
+        return el.Cjo
+    normalized_voltage = vd / el.Vj
+    if normalized_voltage < el.Fc:
+        return el.Cjo / ((1.0 - normalized_voltage) ** el.M)
+    transition_scale = (1.0 - el.Fc) ** (1.0 + el.M)
+    continuation = 1.0 - el.Fc * (1.0 + el.M) + el.M * normalized_voltage
+    return el.Cjo * continuation / transition_scale
 
 
 def _diode_charge_voltage(el: Diode, node_voltages: dict[str, float]) -> float:
@@ -12240,7 +12255,7 @@ def _stamp_ac(
         Vd = Va - Vk
         _, gd = _diode_current_conductance(el, Vd)
         diffusion_capacitance = el.Tt * gd
-        depletion_capacitance = bulk_junction_capacitance(el.Cjo, Vd, el.Vj, el.M)
+        depletion_capacitance = _diode_depletion_capacitance(el, Vd)
         _stamp_g_c(
             G,
             node_to_idx,
@@ -13775,6 +13790,7 @@ def sens_dc(
                     el.Tt,
                     el.Vj,
                     el.M,
+                    el.Fc,
                 ),
             )
 
@@ -14022,6 +14038,7 @@ def _vary_element(el: Element, tolerance: float, distribution: str) -> Element:
             el.Tt,
             el.Vj,
             el.M,
+            el.Fc,
         )
 
     if isinstance(el, BJT):
