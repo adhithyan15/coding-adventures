@@ -107,6 +107,22 @@ export function createTaskEngine(wasmBytes, options = {}) {
     upsertSharedResource: op("upsert_shared_resource"),
     deleteSharedResource: op("delete_shared_resource"),
 
+    // ── labels & priority (active project) ──
+    upsertLabel: op("upsert_label"),
+    deleteLabel: op("delete_label"),
+    setTaskLabels: op("set_task_labels"),
+    setPriority: op("set_priority"),
+
+    // ── view projections (active project) ──
+    // Each takes { view, projectStart } (calendar also { start, end }) and returns
+    // RENDER-READY data: cells already resolved and formatted by the engine.
+    /** Render-ready sheet: { columns, groups: [{ keyLabel, rows: [{ task, cells }] }] }. */
+    table: op("table"),
+    /** Ordered, grouped task ids for a view (filter → sort → group). */
+    viewSelection: op("view_selection"),
+    /** Dated events for a view over an inclusive [start, end] day range. */
+    calendar: op("calendar"),
+
     // ── queries / projections (each returns { ok:true, data }) ──
     checklist: query("checklist"),
     todos: query("todos"),

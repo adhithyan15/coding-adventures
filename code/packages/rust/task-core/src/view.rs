@@ -24,7 +24,7 @@
 //! | `name`, `notes`                   | `Text`                                  |
 //! | `status`                          | `Text` (status id) or `Empty`           |
 //! | `kind`                            | `Text` (`leaf`/`summary`/`milestone`)   |
-//! | `completed`, `critical`           | `Bool`                                  |
+//! | `completed`, `critical`, `overdue` | `Bool` (`overdue` = past deadline & not done) |
 //! | `percentComplete`                 | `Number` (0..=100)                      |
 //! | `priority`                        | `Number` (**rank**, so it sorts by urgency; formats as the name) |
 //! | `labels`                          | `Text` (label *names*, comma-joined) or `Empty` |
@@ -148,6 +148,15 @@ fn builtin_cell(
         }),
         "freeSlack" => dates.map_or(CellValue::Empty, |d| CellValue::Number(d.free_slack as f64)),
         "critical" => dates.map_or(CellValue::Empty, |d| CellValue::Bool(d.critical)),
+        // Whether the task is late: it has a deadline, its computed finish falls after
+        // that deadline, and it isn't done. Derived here rather than in each host so
+        // "show me what's slipping" is one filter, and every UI agrees on the answer.
+        "overdue" => match (task.schedule.as_ref().and_then(|s| s.deadline), dates) {
+            (Some(deadline), Some(d)) => {
+                CellValue::Bool(d.scheduled_finish.0 > deadline.0 && !task.completed)
+            }
+            _ => CellValue::Empty,
+        },
         _ => CellValue::Empty,
     }
 }
@@ -573,6 +582,7 @@ fn builtin_label(name: &str) -> &str {
         "totalSlack" => "Total Slack",
         "freeSlack" => "Free Slack",
         "critical" => "Critical",
+        "overdue" => "Overdue",
         other => other,
     }
 }
@@ -582,7 +592,7 @@ fn builtin_label(name: &str) -> &str {
 fn column_kind(project: &ProjectState, field: &FieldRef) -> ColumnKind {
     match field {
         FieldRef::Builtin(name) => match name.as_str() {
-            "completed" | "critical" => ColumnKind::Bool,
+            "completed" | "critical" | "overdue" => ColumnKind::Bool,
             "percentComplete" | "duration" | "totalSlack" | "freeSlack" | "priority" => {
                 ColumnKind::Number
             }

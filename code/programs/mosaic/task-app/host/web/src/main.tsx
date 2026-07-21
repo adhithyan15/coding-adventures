@@ -16,6 +16,29 @@ import {
 } from "./persistence";
 
 const DAY_MS = 86_400_000;
+
+// The view the task list renders: which columns, in which order, sorted by name.
+// This is the entire "what to show" decision — the engine does filtering, sorting,
+// grouping, and formatting from it. `visibleFields` order defines the cell order.
+const TASK_VIEW = (projectStart: number) => ({
+  view: {
+    id: "tasks",
+    name: "Tasks",
+    shape: "table",
+    filter: { statuses: [], completed: null, search: null },
+    groupBy: null,
+    sort: [{ field: { builtin: "name" }, ascending: true }],
+    visibleFields: [
+      { builtin: "completed" },
+      { builtin: "name" },
+      { builtin: "deadline" },
+      { builtin: "start" },
+      { builtin: "finish" },
+      { builtin: "overdue" },
+    ],
+  },
+  projectStart,
+});
 const isoToDays = (iso: string): number | null => {
   const m = /^\s*(\d{4})-(\d{2})-(\d{2})\s*$/.exec(iso);
   return m ? Math.floor(Date.UTC(+m[1], +m[2] - 1, +m[3]) / DAY_MS) : null;
@@ -47,43 +70,51 @@ function makeController(engine: any, init: ControllerInit = {}) {
   // only after structural mutations (add/toggle/delete) — never on keystrokes.
   const persist = () => onMutate?.(engine.snapshot(), order, counter);
 
-  const todosById = (): Record<string, any> => {
-    const map: Record<string, any> = {};
-    for (const t of engine.todos().data) map[t.task] = t;
-    return map;
+  // Column order matches TASK_VIEW's visibleFields.
+  const [DONE, NAME, DEADLINE, START, FINISH, OVERDUE] = [0, 1, 2, 3, 4, 5];
+
+  /// The ONE source of truth for what's on screen: the engine's table selection,
+  /// keyed by task and ordered by creation. Both rendering and click-index resolution
+  /// must read this same list — deriving them from different queries (e.g. rows from
+  /// `table()` but indices from `todos()`) silently desyncs the moment the two disagree
+  /// about which tasks qualify (milestones, filters), making a click hit the wrong row.
+  const rows = (): { byTask: Map<string, any>; ids: string[] } => {
+    const cells = engine.table(TASK_VIEW(today)).data.groups.flatMap((g: any) =>
+      g.rows.map((r: any) => ({
+        task: r.task as string,
+        display: r.cells.map((c: any) => c.display as string),
+        value: r.cells.map((c: any) => c.value),
+      })),
+    );
+    const byTask = new Map<string, any>(cells.map((c: any) => [c.task, c]));
+    return { byTask, ids: order.filter((id) => byTask.has(id)) };
   };
-  const visible = (): string[] => {
-    const t = todosById();
-    return order.filter((id) => t[id]);
-  };
+  const visible = (): string[] => rows().ids;
 
   return {
     getProps() {
-      const todos = todosById();
-      const g = engine.gantt(today).data;
-      const bars: Record<string, any> = {};
-      for (const b of g.bars) bars[b.task] = b;
-      const ids = order.filter((id) => todos[id]);
-      const rows = ids.map((id) => {
-        const t = todos[id];
-        const b = bars[id];
-        const check = t.completed ? "✓" : "○"; // ✓ / ○
-        const due = t.deadline != null ? ` · due ${daysToIso(t.deadline)}` : "";
-        const sched = b ? ` · ${daysToIso(b.start)} → ${daysToIso(b.finish)}` : "";
-        const overdue =
-          t.deadline != null && b && b.finish > t.deadline && !t.completed
-            ? " · ⚠ overdue"
-            : "";
-        return `${check} ${t.name}${due}${sched}${overdue}`;
+      // Ask the ENGINE for render-ready cells. The host no longer formats dates,
+      // picks the ✓/○ glyph, or decides what "overdue" means — those all come back
+      // already resolved and formatted, identically for every future host. All this
+      // code does is lay the cells out as a text row (presentation, not logic).
+      const { byTask, ids } = rows();
+      const taskRows = ids.map((id) => {
+        const c = byTask.get(id)!;
+        const due = c.display[DEADLINE] ? ` · due ${c.display[DEADLINE]}` : "";
+        const sched = c.display[START] ? ` · ${c.display[START]} → ${c.display[FINISH]}` : "";
+        const late = c.value[OVERDUE]?.value === true ? " · ⚠ overdue" : "";
+        return `${c.display[DONE]} ${c.display[NAME]}${due}${sched}${late}`;
       });
-      const doneCount = ids.filter((id) => todos[id].completed).length;
-      const finish = g.projectFinish != null ? daysToIso(g.projectFinish) : "—";
+      const doneCount = ids.filter((id) => byTask.get(id)!.value[DONE]?.value === true).length;
+      const finish = engine.gantt(today).data.projectFinish;
       return {
         appTitle: "Tasks — auto-scheduled",
         newTaskName: newName,
         newTaskDue: newDue,
-        summary: `${ids.length} task(s) · ${doneCount} done · projected finish ${finish}`,
-        taskRows: rows,
+        summary: `${ids.length} task(s) · ${doneCount} done · projected finish ${
+          finish != null ? daysToIso(finish) : "—"
+        }`,
+        taskRows,
       };
     },
 
@@ -124,9 +155,13 @@ function makeController(engine: any, init: ControllerInit = {}) {
           break;
         }
         case "toggleTask": {
-          const id = visible()[event.index];
+          // Resolve the row AND its current state from the same selection the UI drew,
+          // so the index and the completed flag can never disagree.
+          const { byTask, ids } = rows();
+          const id = ids[event.index];
           if (id) {
-            engine.setCompleted({ id, completed: !todosById()[id].completed });
+            const done = byTask.get(id)?.value[DONE]?.value === true;
+            engine.setCompleted({ id, completed: !done });
             persist();
           }
           break;

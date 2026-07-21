@@ -4,6 +4,21 @@ All notable changes to `task-wasm` are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added
+
+- **View-layer exports** (Phase 3 PR-6 of `code/specs/task-app-view-layer.md`), all acting
+  on the active project and returning **render-ready** data:
+  - `table` — the sheet: columns (label + kind) and grouped rows whose cells carry both
+    the typed value and the engine-formatted display string.
+  - `view_selection` — the ordered, grouped task ids for a view (filter → sort → group).
+  - `calendar` — dated events for a view over an inclusive `[start, end]` day range.
+  - Each takes `{ view, projectStart }` (calendar also `{ start, end }`); a parse failure
+    or an empty workspace answers with an error envelope rather than trapping.
+- **Label and priority ops**: `upsert_label`, `delete_label`, `set_task_labels`,
+  `set_priority`.
+- `task-engine.mjs` gains the matching camelCase methods (`table`, `viewSelection`,
+  `calendar`, `upsertLabel`, `setTaskLabels`, `setPriority`, …).
+
 ### Changed
 
 - **The ABI now holds a whole `Workspace`, not a single `ProjectState`** (Phase 2 PR-4 of
