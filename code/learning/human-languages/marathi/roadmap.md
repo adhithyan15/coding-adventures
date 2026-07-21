@@ -26,6 +26,18 @@ extra letter ळ, and a Dravidian-flavoured everyday grammar. The script is taug
 - **Ch. 5 — The First Verbs**: bolṇe → "mī marāṭhī bolto" → rāhṇe → kām karṇe →
   practice. The *-ṇe* infinitive; the gendered present (*-to/-te*); postposition
   *-āt*.
+- **Ch. 6 — Numbers 1–5** (`MR-C06-numbers-1-5`): *ek, don, tīn, chār, pāch* —
+  nearly Hindi's, and the differences are the lesson, because they are **two
+  different kinds of thing**. **दोन** *don*'s *-n* is an **innovation**: Prakrit
+  *doṇṇi* took its ending **by analogy** from *tiṇṇi* "three" (where the **ṇ**
+  genuinely belongs, ← neuter *trī́ṇi*, the doubling being a Prakrit trade for
+  the lost *r*), so *two* was reshaped to rhyme with
+  *three* — the same thing English *four* did in taking its *f-* from *five*. But
+  **पाच** *pāch* against Hindi's *pāṁch* **is** a plain retention difference.
+  So "neither language is simply older" holds, sharpened: one is an innovation
+  adopted, the other a retention made. Plus a third difference invisible in the
+  spelling — Marathi **च** before *ā* is nearer **ts**, so चार is said *tsār*.
+  **Authored.**
 
 ## Planned
 

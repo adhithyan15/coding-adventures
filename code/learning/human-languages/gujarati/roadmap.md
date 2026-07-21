@@ -25,6 +25,19 @@ trade layer**. The script is taught **inline**, never as a gated reading course.
   The future ending; the retroflex ળ ḷ.
 - **Ch. 5 — The First Verbs**: bolvũ → "hũ gujarātī bolũ chhũ" → rahevũ → kām
   karvũ → practice. Stem + person + copula; postposition *-mā*; the *kṛ* root.
+- **Ch. 6 — Numbers 1–5** (`GU-C06-numbers-1-5`): *ek, be, traṇ, chār, pā̃ch* —
+  **two numbers that don't match the neighbours, each for a reason**. **બે** *be*
+  continues Sanskrit's **feminine/neuter *dvé*** where **Hindi and Marathi**
+  continue the masculine *dváu* (Bengali is a third case, continuing the
+  disyllabic Prakrit *duve*) — a *different inheritance* from the same paradigm,
+  not a corruption — with the *d* taking the **labial place** of the following
+  *v* (*dv* → *bb* → *b*). **ત્રણ** *traṇ* shares its **ṇ** with *tīn*, so both
+  come from the
+  **neuter *trī́ṇi*** via Prakrit *tiṇṇi*, where the *r* was **already gone**;
+  Gujarati's *tr-* is therefore treated as **restored** from Sanskrit rather than
+  inherited unbroken — *traṇ* looks older than *tīn* without being so. Also names
+  the script fact the learner can see: Gujarati is Devanagari **without the
+  shirorekhā**. **Authored.**
 
 ## Planned
 
