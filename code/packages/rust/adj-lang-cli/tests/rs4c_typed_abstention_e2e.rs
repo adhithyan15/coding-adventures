@@ -198,3 +198,85 @@ fn an_answered_query_carries_no_abstention_object() {
         "no abstention object on a successful answer: {out}"
     );
 }
+
+// ---------------------------------------------------------------------------
+// (5) SPEC COMPLIANCE (§E.4): echoed payloads are length-capped and redactable.
+//
+//     Found by this PR's own security review. §E.4 imposes three requirements
+//     on echoed payloads — sanitize, length-cap, redact on a sensitive channel
+//     — and the first draft implemented only sanitization. These fields carry
+//     the CALLER'S INPUT back out into an artifact designed to be replayed and
+//     shared; in the medical arm an unresolved surface form can be free text
+//     lifted from a chart.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn an_echoed_payload_is_length_capped_rather_than_echoed_whole() {
+    let dir = scratch("cap");
+    // A goal far longer than the 256-char cap.
+    let long_atom = "x".repeat(600);
+    let p = write(
+        &dir,
+        "case.adj",
+        &format!(
+            "relate seen(a, b)\n    source \"A seed.\"\n    trust empirical\n? seen({long_atom}, $V)\n"
+        ),
+    );
+    let (ok, out, err) = run(&p);
+    assert!(ok, "cli should succeed; stderr={err}");
+    assert!(out.contains("\"abstained\":true"), "abstains: {out}");
+    assert!(
+        out.contains("(truncated)"),
+        "an over-long payload is capped and MARKED as capped, so a reader never \
+         mistakes a cut string for the whole value: {out}"
+    );
+    // Scope the check to the ABSTENTION payload — which is what §E.4 governs.
+    // The pre-existing `queries` / `query` fields echo the caller's query in
+    // full and always have, so the cap does not reduce the document's total
+    // echo; be honest that its value is bounding the NEW field and giving the
+    // redaction path (below) something well-defined to redact.
+    let goal_field = out
+        .split("\"goal\":\"")
+        .nth(1)
+        .and_then(|t| t.split('"').next())
+        .expect("an abstention goal field");
+    assert!(
+        goal_field.chars().count() <= 300,
+        "the echoed goal is capped (got {} chars): {goal_field}",
+        goal_field.chars().count()
+    );
+}
+
+#[test]
+fn a_sensitive_channel_withholds_the_echoed_payload_but_keeps_the_reason() {
+    let dir = scratch("redact");
+    let p = write(
+        &dir,
+        "case.adj",
+        "relate seen(a, b)\n    source \"A seed.\"\n    trust empirical\n\
+         ? seen(patient_free_text_secret, $V)\n",
+    );
+    let out = Command::new(env!("CARGO_BIN_EXE_adj-lang-cli"))
+        .arg(&p)
+        .env("ADJ_SENSITIVE_INPUT", "1")
+        .output()
+        .expect("run adj-lang-cli");
+    assert!(out.status.success());
+    let s = String::from_utf8(out.stdout).unwrap();
+
+    // The caller's own words are withheld …
+    assert!(
+        !s.contains("patient_free_text_secret") || !s.contains("\"goal\":\"patient"),
+        "the echoed goal must be redacted on a sensitive channel: {s}"
+    );
+    assert!(s.contains("[redacted]"), "redaction marker present: {s}");
+    // … but the abstention stays ACTIONABLE: you still learn what went wrong.
+    assert!(
+        s.contains("\"reason\":\"no_grounded_support\""),
+        "redaction must not cost the reason: {s}"
+    );
+    assert!(
+        s.contains("no derivation of this goal"),
+        "nor the explanation: {s}"
+    );
+}

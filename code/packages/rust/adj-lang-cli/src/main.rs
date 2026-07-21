@@ -339,11 +339,46 @@ const UNRESOLVED_PROV: &str =
 ///
 /// The rendered object is additive — `"abstained": true` is still emitted
 /// beside it, so existing consumers are untouched.
+/// Longest echoed payload the abstention object will carry.
+///
+/// `ADJ-REASON-MATH.md` §E.4 requires echoed payloads to be length-capped. The
+/// reason is not display tidiness: these fields carry the CALLER'S OWN INPUT
+/// back out into an artifact that is designed to be replayed and shared, and an
+/// unbounded echo is both an amplification and a bigger blast radius for
+/// whatever the caller happened to paste in.
+const ABSTENTION_FIELD_CAP: usize = 256;
+
+/// `true` when this run's input is marked sensitive, so echoed payloads must be
+/// withheld (`ADJ_SENSITIVE_INPUT=1`).
+///
+/// §E.4 requires redaction on a sensitive channel, and names the case: in the
+/// medical arm an unresolved surface form can be free text lifted from a chart,
+/// and the trail it lands in travels. The `reason` and `explanation` still tell
+/// you WHAT went wrong — only the echoed values are withheld, so an abstention
+/// stays actionable without carrying PHI along with it.
+fn sensitive_input() -> bool {
+    std::env::var("ADJ_SENSITIVE_INPUT").is_ok_and(|v| v == "1" || v.eq_ignore_ascii_case("true"))
+}
+
+/// Prepare one echoed payload: redact it on a sensitive channel, otherwise cap
+/// its length (marking the truncation, so a reader never mistakes a cut string
+/// for the whole value) and JSON-escape it.
+fn payload(v: &str) -> String {
+    if sensitive_input() {
+        return "[redacted]".to_string();
+    }
+    if v.chars().count() > ABSTENTION_FIELD_CAP {
+        let head: String = v.chars().take(ABSTENTION_FIELD_CAP).collect();
+        return esc(&format!("{head}…(truncated)"));
+    }
+    esc(v)
+}
+
 fn abstention_json(reason: &AbstentionReason) -> String {
     match reason {
         AbstentionReason::NoGroundedSupport { goal } => format!(
             "{{\"reason\":\"no_grounded_support\",\"goal\":\"{}\",\"explanation\":\"the knowledge base contains no derivation of this goal\"}}",
-            esc(goal)
+            payload(goal)
         ),
         AbstentionReason::BelowTableDomain {
             table,
@@ -351,19 +386,19 @@ fn abstention_json(reason: &AbstentionReason) -> String {
             min_key,
         } => format!(
             "{{\"reason\":\"below_table_domain\",\"table\":\"{}\",\"key\":\"{}\",\"min_key\":\"{}\",\"explanation\":\"the query falls below the lowest breakpoint this source defines; the source does not cover it\"}}",
-            esc(table),
-            esc(key),
-            esc(min_key)
+            payload(table),
+            payload(key),
+            payload(min_key)
         ),
         AbstentionReason::NonNumericKey { table, column, key } => format!(
             "{{\"reason\":\"non_numeric_key\",\"table\":\"{}\",\"column\":\"{}\",\"key\":\"{}\",\"explanation\":\"a range lookup needs a numeric key; this one could not be read as a number\"}}",
-            esc(table),
-            esc(column),
-            esc(key)
+            payload(table),
+            payload(column),
+            payload(key)
         ),
         AbstentionReason::SearchLimitExceeded { goal } => format!(
             "{{\"reason\":\"search_limit_exceeded\",\"goal\":\"{}\",\"explanation\":\"the proof search hit its depth or width limit and stopped; this is NOT evidence that no proof exists\"}}",
-            esc(goal)
+            payload(goal)
         ),
     }
 }
@@ -1261,11 +1296,31 @@ fn governing_json(query: &Term, kb: &KnowledgeBase) -> String {
             )
         })
         .collect();
+    // `has_conflict()` answers "did I SEE a conflict?". On a truncated search
+    // that is not the same question as "is there one?" — reporting `false`
+    // there would be an affirmative claim reached by failing to find a rival,
+    // which proves nothing if the search gave up before looking. This is the
+    // same laundering PR-C removes from recall and lookup; leaving it in one
+    // renderer would have kept the hole open.
+    let (conflict, abstention) = match res.conflict_status() {
+        logic_engine::ConflictStatus::Conflict => ("true", String::new()),
+        logic_engine::ConflictStatus::NoConflict => ("false", String::new()),
+        logic_engine::ConflictStatus::Unknown => (
+            "null",
+            format!(
+                ",\"abstention\":{}",
+                abstention_json(&AbstentionReason::SearchLimitExceeded {
+                    goal: format!("{query}"),
+                })
+            ),
+        ),
+    };
     format!(
-        "{{\"query\":\"{}\",\"answers\":[{}],\"has_conflict\":{}}}",
+        "{{\"query\":\"{}\",\"answers\":[{}],\"has_conflict\":{}{}}}",
         esc(&format!("{}", query)),
         answers.join(","),
-        res.has_conflict()
+        conflict,
+        abstention
     )
 }
 
