@@ -4520,7 +4520,6 @@ impl HtmlParser {
     }
 
     fn finish_document(&mut self) -> Document {
-        repair_table_cell_fostered_nobr_adoption(&mut self.document);
         let mut document = normalize_document_shell(std::mem::take(&mut self.document));
         if self.options.scripting == HtmlScriptingMode::Enabled {
             apply_scripted_tree_construction_side_effects(&mut document);
@@ -4577,6 +4576,7 @@ impl HtmlParser {
                     }
                     Token::Eof => {
                         self.populate_selectedcontent_for_open_selects();
+                        repair_table_cell_fostered_nobr_adoption(&mut self.document);
                         repair_insanely_badly_nested_table_sequence(&mut self.document.children);
                         self.open_elements.clear();
                     }
