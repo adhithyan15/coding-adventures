@@ -1,5 +1,54 @@
 # Changelog
 
+## [0.43.0] — 2026-07-21 — the verbatim quote and its pinned snapshot (RS-4 PR-D1)
+
+Implements `ADJ-REASON-MATH.md` §E.3 — the two fields that turn the audit trail
+from something ADJ *reports* into something a third party can *check*.
+
+### Added
+
+- **`Provenance.quote: Quote`.** The verbatim span a clause rests on, separate
+  from `source`. Until now the span was *stuffed into* `source` by convention,
+  which conflates the **quotation** (bytes that must appear at the locator) with
+  the **citation label** (how a human names the document). One string cannot be
+  checked as both.
+- **`Provenance.snapshot: Option<ContentHash>`.** A SHA-256 of the source
+  document as captured at ingest. Verification runs against this, not the live
+  web — a verbatim check against a live URL is decided by whoever controls that
+  URL at verification time, so anyone able to publish there could make a
+  fabricated quote verify. Pinning makes later divergence *evidence of drift*
+  rather than a passing grade.
+- `Quote::Verbatim { text, byte_offset }` records WHERE the span sits, so
+  verification is **anchored** rather than an unanchored substring search. A
+  search would confirm the words exist somewhere — in a footnote, a nav menu, or
+  a passage saying the opposite — not that they support this clause.
+
+- `Quote::Verbatim(VerbatimSpan)` — the payload's fields are **private**, with
+  one fallible constructor. The invariant "a span must be able to support a
+  claim" therefore holds on every construction path, not just inside a builder.
+
+### Notes on two deliberate choices
+
+- **`Quote` is an enum, not the `String` the spec literally writes.** A plain
+  `String` cannot hold the `Unmigrated` state safely, and the obvious migration —
+  defaulting `quote` to the `source` label — **fails open**: labels are short
+  ("NIST", "AQI basics") and would trivially appear somewhere on the cited page,
+  so the strongest check in the system would pass while checking nothing and
+  report the step verified. A closed sum moves "never fail open" from a
+  convention someone must remember into a fact the compiler enforces.
+- **SHA-256, not the repo's `hash-functions` crate.** This hash is
+  tamper-evidence, so it needs collision resistance; FNV/DJB2/murmur/SipHash have
+  none and would look like a security control while providing nothing.
+  `coding_adventures_sha256` is the repo's own zero-dependency implementation, so
+  this stays inside the no-third-party rule.
+
+### Compatibility
+
+- Every existing `Provenance` constructor yields `Quote::Unmigrated` and
+  `snapshot: None` — the honest record of "no checkable span was captured",
+  never a guess. `adj-verify` (PR-D2) reports these `Unverified`, never
+  `Verified`. No existing call site changed.
+
 ## [0.42.0] — 2026-07-21 — an empty result set now says WHY it is empty (RS-4 PR-C)
 
 ### Added
