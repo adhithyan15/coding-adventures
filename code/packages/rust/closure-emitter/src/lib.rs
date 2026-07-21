@@ -3492,7 +3492,11 @@ mod tests {
         // behaviourally identical by construction today, but they drifted apart
         // once before (that is how DEL went unescaped in one of them), so the
         // guarantee is asserted independently for each.
-        let escapers: [(&str, fn(&str) -> String); 3] = [
+        // Named alias so the array type stays simple -- clippy::type_complexity
+        // rejects the inline `[(&str, fn(&str) -> String); 3]`, and CI denies
+        // clippy warnings.
+        type Escaper = fn(&str) -> String;
+        let escapers: [(&str, Escaper); 3] = [
             ("escape_str_dq", escape_str_dq),
             ("escape_str_sq", escape_str_sq),
             ("escape_ascii_only", escape_ascii_only),
