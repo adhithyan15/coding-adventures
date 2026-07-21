@@ -11,3 +11,6 @@
 - Added deterministic SHA-256 package sealing, Ed25519 verification against a
   typed trusted keyring, tamper and symlink rejection, signer privilege ceilings,
   and a verified-only supervised activation API.
+- Added launch-time package re-verification and literal deny-all Deno worker
+  commands, with executable RPC proof that network, file reads and writes,
+  environment access, and subprocess execution remain unavailable.

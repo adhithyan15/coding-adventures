@@ -254,10 +254,17 @@ crypto crates, rejects symlinks and byte tampering, resolves `PUBKEY_ID` through
 a typed trusted keyring, and enforces signer privilege ceilings before a
 supervised process can launch. Developer keys are capped at Tier 1.
 
+The deny-all Deno slice now re-verifies the sealed package at activation, derives
+literal no-prompt and deny flags in Rust, launches the signed
+`code/agent_runtime.ts`, and carries the existing host RPC envelope over stdio.
+The executable worker proves environment, filesystem read/write, subprocess,
+and network access are denied; post-signing entrypoint tampering prevents launch.
+
 These items are Chief of Staff architecture, not smart-home platform work:
 
-- Replace the proof worker with deny-all Deno workers that re-verify their
-  package and speak the proven host RPC protocol.
+- Move the deny-all Deno proof worker behind production host-side capability
+  handlers and make the package launch script generation part of the trusted
+  build pipeline.
 - Run a Chief job end to end through scheduler or job framework, tool runtime,
   approval checks, result journal, and final user-visible report.
 - Add approval UX and policy wiring for Tier2 or stronger actions such as

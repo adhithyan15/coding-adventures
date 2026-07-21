@@ -29,6 +29,15 @@ Ed25519 bytes over that digest, while `PUBKEY_ID` selects a reviewed key from th
 orchestrator keyring. Production, developer, and third-party keys carry explicit
 privilege ceilings; developer keys are structurally capped at Tier 1.
 
+`spawn_deno_verified` closes the next launch boundary. It re-verifies the sealed
+package immediately before creating processes, requires the signed
+`code/agent_runtime.ts` entrypoint, and derives every worker command internally
+with literal `--no-prompt`, `--deny-net`, `--deny-read`, `--deny-write`,
+`--deny-env`, `--deny-sys`, `--deny-run`, and `--deny-ffi` flags. The Deno worker
+receives no differentiated OS permissions; it communicates only through the
+versioned stdio RPC envelope. The executable test proves all five observable OS
+surfaces are denied and that post-signing code tampering prevents launch.
+
 An orchestrator profile has this shape:
 
 ```json
