@@ -121,11 +121,12 @@ ports, followed by the paired `ed25519`, `font-parser`, `asciidoc-parser`, and
 `point2d`, `affine2d`, `bezier2d`, and `arc2d`
 ports, followed by the Haskell `gradient-descent`, `perceptron`, and
 `type-checker-protocol` ports, and the Haskell `paint-vm-ascii`,
-`barcode-layout-1d`, `itf`, `code39`, `codabar`, `code128`, and `upc-a` ports:
+`barcode-layout-1d`, `itf`, `code39`, `codabar`, `code128`, `upc-a`, and
+`ean-13` ports:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 283 |
+| Present in 10-15 languages | 172 | 282 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,972 |
 | Present in one language | 712 | 9,968 |
@@ -171,7 +172,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 172 packages present in at least ten implementation languages need 283
+The 172 packages present in at least ten implementation languages need 282
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -182,7 +183,7 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Perl | 0 | Complete; paired data-structure/storage wave |
 | C# | 0 | Complete; paired native package wave |
 | F# | 0 | Complete; paired native package wave |
-| Haskell | 8 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
+| Haskell | 7 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
 | Kotlin | 58 | Move with Java |
@@ -663,6 +664,19 @@ exact module geometry, metadata precedence, aliases, and shared validation
 paths. The package now spans 12 implementation lanes, reduces the
 high-consensus backlog to 283 slots, leaves 8 gaps in the Haskell lane, and
 unlocks the dependent `ean-13` port.
+
+The twenty-seventh Haskell high-consensus slice is complete: `ean-13` now
+provides the pure retail-barcode encoder unlocked by `barcode-layout-1d`. It
+accepts 12-digit payloads or validated 13-digit codes, computes the required
+weighted modulo-10 check digit, exposes all thirty L/G/R digit patterns and all
+ten leading-digit parity sequences, and emits the fixed 95-module guard and
+visible-digit structure with typed source attribution and explicit symbol
+spans. Its package-native suite exercises 26 examples with 92% expression and
+78% alternative coverage, including reference checksums, every standard digit
+and parity pattern, computed and supplied checks, ASCII and length guards,
+exact module geometry, metadata precedence, aliases, and shared validation
+paths. The package now spans 12 implementation lanes, reduces the
+high-consensus backlog to 282 slots, and leaves 7 gaps in the Haskell lane.
 
 Recommended family order:
 
