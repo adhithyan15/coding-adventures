@@ -15,10 +15,11 @@ the sole owner of its tool id, exposes worker health snapshots, applies bounded
 restart policy after crashes, and supports orchestrator shutdown.
 
 The child protocol is the versioned `generic-job-protocol` envelope carrying a
-`HostRpcRequest` and `HostRpcResponse`. This proves the process and RPC boundary
-without weakening the profile gate. A deny-all Deno worker can implement the
-same JSON-lines protocol in the next slice; it does not need a parallel process
-manager or a second tool-routing policy.
+`HostRpcRequest` and `HostRpcResponse`. It is used in both directions: the
+orchestrator can submit work to supervised external hosts, and a signed Deno
+agent can originate `host.*` requests that the Rust host answers over the same
+JSON-lines stdio channel. Neither direction introduces a second tool-routing
+policy.
 
 Supervised activation is now verified-only. `verify_agent_package` walks the
 sealed package without following symlinks, requires `manifest.json`, `launch.sh`,
@@ -49,6 +50,14 @@ Subprocess-originated `HostRpcRequest` values can be handled by
 constructs the canonical D18D invocation context, and executes only the
 allowlisted, capability-checked handler catalog. Unknown tools and malformed
 arguments are rejected before any handler can run.
+
+`ActiveHostToolRuntime::run_deno_agent_verified` closes the live agent side of
+that boundary. It re-verifies the package and signer tier, launches the canonical
+deny-all Deno command, decodes agent-originated requests, requires the envelope
+id to match the D18D call id, and writes typed success or rejection responses
+back to the child until it exits. The executable Deno test proves an allowed
+call reaches a real Rust handler while a non-allowlisted call receives a terminal
+host rejection and never invokes one.
 
 An orchestrator profile has this shape:
 

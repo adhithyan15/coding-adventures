@@ -15,7 +15,10 @@ use chief_of_staff_tool_api::{
 };
 use coding_adventures_json_serializer::serialize as serialize_json;
 use coding_adventures_json_value::{parse as parse_json, JsonValue};
-use generic_job_protocol::{JobRequest, JobResponse};
+use generic_job_protocol::{
+    decode_request_json_line, encode_response_json_line, JobError, JobErrorOrigin, JobRequest,
+    JobResponse,
+};
 use generic_job_runtime::{
     ExecutorLimits, ExecutorSnapshot, JobExecutor, StdioProcessPool, StdioProcessPoolOptions,
     StdioWorkerCommand, StdioWorkerRestartPolicy,
@@ -24,6 +27,8 @@ use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
 use std::error::Error;
 use std::fmt::{self, Display, Formatter};
+use std::io::{BufRead, BufReader, BufWriter, Write};
+use std::process::{Command, Stdio};
 use std::time::Duration;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -388,6 +393,14 @@ pub struct HostRpcResponse {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DenoAgentRunReport {
+    pub host_id: String,
+    pub calls_served: usize,
+    pub successful_calls: usize,
+    pub rejected_calls: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct HostProcessSpec {
     pub host_id: String,
     pub command: StdioWorkerCommand,
@@ -684,6 +697,130 @@ impl ActiveHostToolRuntime {
 
     pub fn definitions(&self) -> Vec<&ToolDefinition> {
         self.runtime.list()
+    }
+
+    /// Run a signed deny-all Deno agent and service agent-originated host calls
+    /// through this profile's canonical Rust dispatcher until the agent exits.
+    pub fn run_deno_agent_verified(
+        &self,
+        package_path: &std::path::Path,
+        keyring: &PackageKeyring,
+        deno_program: impl Into<String>,
+    ) -> Result<DenoAgentRunReport, HostRuntimeError> {
+        let package = verify_agent_package(package_path, keyring)
+            .map_err(|error| HostRuntimeError::PackageVerification(error.to_string()))?;
+        if self.profile.max_tier > package.maximum_tier() {
+            return Err(HostRuntimeError::PackageTierExceeded {
+                key_id: package.key_id().to_string(),
+                required: self.profile.max_tier,
+                maximum: package.maximum_tier(),
+            });
+        }
+        let spec = HostProcessSpec::deny_all_deno(
+            self.profile.host_id.clone(),
+            deno_program,
+            &package,
+            StdioWorkerRestartPolicy::Never,
+        )?;
+        let mut child = Command::new(&spec.command.program)
+            .args(&spec.command.args)
+            .stdin(Stdio::piped())
+            .stdout(Stdio::piped())
+            .stderr(Stdio::inherit())
+            .spawn()
+            .map_err(|error| self.process_io_error(format!("spawn Deno agent: {error}")))?;
+
+        let result = self.serve_agent_process(&mut child);
+        if result.is_err() {
+            let _ = child.kill();
+            let _ = child.wait();
+        }
+        result
+    }
+
+    fn serve_agent_process(
+        &self,
+        child: &mut std::process::Child,
+    ) -> Result<DenoAgentRunReport, HostRuntimeError> {
+        let stdout = child
+            .stdout
+            .take()
+            .ok_or_else(|| self.process_io_error("Deno agent did not expose stdout"))?;
+        let stdin = child
+            .stdin
+            .take()
+            .ok_or_else(|| self.process_io_error("Deno agent did not expose stdin"))?;
+        let mut reader = BufReader::new(stdout);
+        let mut writer = BufWriter::new(stdin);
+        let mut report = DenoAgentRunReport {
+            host_id: self.profile.host_id.clone(),
+            calls_served: 0,
+            successful_calls: 0,
+            rejected_calls: 0,
+        };
+
+        loop {
+            let mut line = String::new();
+            let bytes_read = reader
+                .read_line(&mut line)
+                .map_err(|error| self.process_io_error(format!("read agent RPC: {error}")))?;
+            if bytes_read == 0 {
+                break;
+            }
+            let request = decode_request_json_line::<HostRpcRequest>(&line)
+                .map_err(|error| self.process_io_error(format!("decode agent RPC: {error}")))?;
+            request
+                .validate_envelope()
+                .map_err(|error| self.process_io_error(format!("validate agent RPC: {error}")))?;
+            if request.id != request.payload.call_id {
+                return Err(self.process_io_error(format!(
+                    "agent RPC id '{}' does not match call_id '{}'",
+                    request.id, request.payload.call_id
+                )));
+            }
+
+            let response = match self.handle_rpc(request.payload) {
+                Ok(payload) => {
+                    report.successful_calls += 1;
+                    JobResponse::ok(request.id, payload).with_metadata(request.metadata)
+                }
+                Err(error) => {
+                    report.rejected_calls += 1;
+                    JobResponse::error(
+                        request.id,
+                        JobError::new(
+                            "host_rpc_rejected",
+                            error.to_string(),
+                            JobErrorOrigin::Executor,
+                        ),
+                    )
+                    .with_metadata(request.metadata)
+                }
+            };
+            report.calls_served += 1;
+            let encoded = encode_response_json_line(&response)
+                .map_err(|error| self.process_io_error(format!("encode host response: {error}")))?;
+            writer
+                .write_all(encoded.as_bytes())
+                .and_then(|_| writer.flush())
+                .map_err(|error| self.process_io_error(format!("write host response: {error}")))?;
+        }
+
+        drop(writer);
+        let status = child
+            .wait()
+            .map_err(|error| self.process_io_error(format!("wait for Deno agent: {error}")))?;
+        if !status.success() {
+            return Err(self.process_io_error(format!("Deno agent exited with {status}")));
+        }
+        Ok(report)
+    }
+
+    fn process_io_error(&self, message: impl Into<String>) -> HostRuntimeError {
+        HostRuntimeError::ProcessIo {
+            host_id: self.profile.host_id.clone(),
+            message: message.into(),
+        }
     }
 
     /// Convert an untrusted subprocess RPC frame into the repository-owned
@@ -1143,6 +1280,39 @@ while (true) {
         (path, keyring)
     }
 
+    fn signed_deno_agent_package(code: &str) -> (std::path::PathBuf, PackageKeyring) {
+        let path = std::env::temp_dir().join(format!(
+            "chief-deno-agent-package-{}-{}-{}",
+            std::process::id(),
+            SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .unwrap()
+                .as_nanos(),
+            NEXT_PACKAGE_ID.fetch_add(1, Ordering::Relaxed)
+        ));
+        std::fs::create_dir_all(path.join("code")).unwrap();
+        std::fs::write(path.join("manifest.json"), b"{\"runtime\":\"typescript\"}").unwrap();
+        DenoLaunchPlan::write_launch_script(&path).unwrap();
+        std::fs::write(path.join("PUBKEY_ID"), b"dev-deno-agent").unwrap();
+        std::fs::write(path.join("code/agent_runtime.ts"), code).unwrap();
+        let (public_key, secret_key) = generate_keypair(&[31; 32]);
+        let (digest, _) = crate::package::hash_package_contents(&path).unwrap();
+        std::fs::write(path.join("SIGNATURE"), sign(&digest, &secret_key)).unwrap();
+        let mut keyring = PackageKeyring::new();
+        keyring
+            .trust(
+                TrustedPackageKey::new(
+                    "dev-deno-agent",
+                    PackageKeyType::Developer,
+                    public_key,
+                    PrivilegeTier::Tier1,
+                )
+                .unwrap(),
+            )
+            .unwrap();
+        (path, keyring)
+    }
+
     #[test]
     fn profile_activates_complete_allowlisted_catalog_and_invokes() {
         let mut runtime = HostProfileRuntime::from_json(PROFILE).unwrap();
@@ -1519,6 +1689,80 @@ for line in sys.stdin:
             other => panic!("expected deny-all Deno response, got {other:?}"),
         }
         runtime.shutdown();
+        std::fs::remove_dir_all(package_path).unwrap();
+    }
+
+    #[test]
+    fn deny_all_deno_agent_calls_profile_gated_rust_dispatcher() {
+        if !Command::new("deno")
+            .arg("--version")
+            .output()
+            .is_ok_and(|output| output.status.success())
+        {
+            eprintln!("skipping test because Deno is unavailable");
+            return;
+        }
+        let agent = r#"
+const encoder = new TextEncoder();
+const decoder = new TextDecoder();
+const reader = Deno.stdin.readable.getReader();
+const writer = Deno.stdout.writable.getWriter();
+let pending = "";
+
+async function readLine() {
+  while (!pending.includes("\n")) {
+    const { value, done } = await reader.read();
+    if (done) throw new Error("host closed stdin before responding");
+    pending += decoder.decode(value, { stream: true });
+  }
+  const index = pending.indexOf("\n");
+  const line = pending.slice(0, index);
+  pending = pending.slice(index + 1);
+  return line;
+}
+
+async function hostCall(id, toolId) {
+  const body = { id, payload: { call_id: id, tool_id: toolId, arguments_json: "{}" }, metadata: {} };
+  await writer.write(encoder.encode(JSON.stringify({ version: 1, kind: "request", body }) + "\n"));
+  return JSON.parse(await readLine()).body;
+}
+
+const allowed = await hostCall("agent_call_1", "demo.read");
+if (allowed.result.status !== "ok" || allowed.result.payload.output_json !== "\"from-rust\"") {
+  throw new Error("allowed host call did not return the Rust handler output");
+}
+const denied = await hostCall("agent_call_2", "demo.write");
+if (denied.result.status !== "error" || denied.result.error.code !== "host_rpc_rejected") {
+  throw new Error("unknown host call was not rejected by Rust");
+}
+writer.releaseLock();
+reader.releaseLock();
+"#;
+        let (package_path, keyring) = signed_deno_agent_package(agent);
+        let invocation_count = std::rc::Rc::new(std::cell::Cell::new(0));
+        let observed_count = std::rc::Rc::clone(&invocation_count);
+        let mut runtime = HostProfileRuntime::from_json(PROFILE).unwrap();
+        runtime
+            .register_handler(
+                definition("demo.read", PrivilegeTier::Tier1, &["demo_read"]),
+                move |_arguments, _context| {
+                    observed_count.set(observed_count.get() + 1);
+                    Ok(ToolHandlerOutput::new(JsonValue::String(
+                        "from-rust".to_string(),
+                    )))
+                },
+            )
+            .unwrap();
+
+        let report = runtime
+            .activate()
+            .unwrap()
+            .run_deno_agent_verified(&package_path, &keyring, "deno")
+            .unwrap();
+        assert_eq!(report.calls_served, 2);
+        assert_eq!(report.successful_calls, 1);
+        assert_eq!(report.rejected_calls, 1);
+        assert_eq!(invocation_count.get(), 1);
         std::fs::remove_dir_all(package_path).unwrap();
     }
 
