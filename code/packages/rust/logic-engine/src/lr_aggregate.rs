@@ -979,6 +979,9 @@ pub fn lr_aggregate(query: &Term, kb: &KnowledgeBase) -> LRAggregateResult {
                 posterior_logit: Some(running_logit),
                 posterior_probability: Some(posterior),
             }],
+            // LR aggregation walks a FIXED clause list rather than searching,
+            // so it has no budget to exhaust and can never be truncated.
+            truncated: false,
         },
         posterior,
         posterior_logit: running_logit,

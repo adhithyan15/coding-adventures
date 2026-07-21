@@ -313,6 +313,86 @@ const UNRESOLVED_PROV: &str =
 /// than no trail, because it looks complete. Adding a variant to
 /// `DerivationOrigin` must now break this function's compilation — that failure
 /// is the feature.
+/// Render a typed **abstention reason** (`ADJ-REASON-MATH.md` §E.4).
+///
+/// # Why a boolean was not enough
+///
+/// Every abstention used to be the same value: `"abstained": true`. That
+/// collapses genuinely different situations into one, and two of them are
+/// *opposites*:
+///
+/// - **`below_table_domain`** — the question was well-formed and the source
+///   simply does not cover it. The table is being honest, and the caller now
+///   knows the domain it fell outside of.
+/// - **`non_numeric_key`** — the question was malformed. Nothing is wrong with
+///   the table; the caller is wrong.
+///
+/// Those emitted **byte-identical JSON**. No consumer could tell "your question
+/// is outside what this source covers" from "your question was invalid", which
+/// makes an abstention unactionable — you cannot tell whether to widen the
+/// source or fix the query.
+///
+/// `search_limit_exceeded` is the third and subtlest: the engine did not
+/// establish an absence at all, it *stopped looking*. Reporting that as
+/// "no grounded support" would be a claim about the world derived from a
+/// resource limit.
+///
+/// The rendered object is additive — `"abstained": true` is still emitted
+/// beside it, so existing consumers are untouched.
+fn abstention_json(reason: &AbstentionReason) -> String {
+    match reason {
+        AbstentionReason::NoGroundedSupport { goal } => format!(
+            "{{\"reason\":\"no_grounded_support\",\"goal\":\"{}\",\"explanation\":\"the knowledge base contains no derivation of this goal\"}}",
+            esc(goal)
+        ),
+        AbstentionReason::BelowTableDomain {
+            table,
+            key,
+            min_key,
+        } => format!(
+            "{{\"reason\":\"below_table_domain\",\"table\":\"{}\",\"key\":\"{}\",\"min_key\":\"{}\",\"explanation\":\"the query falls below the lowest breakpoint this source defines; the source does not cover it\"}}",
+            esc(table),
+            esc(key),
+            esc(min_key)
+        ),
+        AbstentionReason::NonNumericKey { table, column, key } => format!(
+            "{{\"reason\":\"non_numeric_key\",\"table\":\"{}\",\"column\":\"{}\",\"key\":\"{}\",\"explanation\":\"a range lookup needs a numeric key; this one could not be read as a number\"}}",
+            esc(table),
+            esc(column),
+            esc(key)
+        ),
+        AbstentionReason::SearchLimitExceeded { goal } => format!(
+            "{{\"reason\":\"search_limit_exceeded\",\"goal\":\"{}\",\"explanation\":\"the proof search hit its depth or width limit and stopped; this is NOT evidence that no proof exists\"}}",
+            esc(goal)
+        ),
+    }
+}
+
+/// The typed reasons an ADJ query can decline to answer.
+///
+/// Closed on purpose: a new way to abstain must be named here and rendered,
+/// rather than quietly reusing a neighbouring reason or falling back to the
+/// bare boolean.
+enum AbstentionReason {
+    /// Nothing in the knowledge base derives the goal.
+    NoGroundedSupport { goal: String },
+    /// The key is below the table's lowest breakpoint — the source's domain
+    /// starts above it.
+    BelowTableDomain {
+        table: String,
+        key: String,
+        min_key: String,
+    },
+    /// A range lookup was handed a key that is not a number.
+    NonNumericKey {
+        table: String,
+        column: String,
+        key: String,
+    },
+    /// The search stopped at a resolution limit. **Not** an absence.
+    SearchLimitExceeded { goal: String },
+}
+
 fn trace_steps_json(proof: &Proof, kb: &KnowledgeBase) -> String {
     let mut steps = Vec::new();
     for (i, st) in proof.steps.iter().enumerate() {
@@ -957,11 +1037,27 @@ fn recall_json(query: &Term, kb: &KnowledgeBase) -> String {
             trace_steps_json(proof, kb)
         ));
     }
+    // An empty answer set is reported with the REASON it is empty. `truncated`
+    // is checked first: a search that stopped early established no absence, so
+    // calling it "no grounded support" would convert a resource limit into a
+    // claim about the knowledge base.
+    let abstention = if dag.proofs.is_empty() {
+        let goal = format!("{query}");
+        let reason = if dag.truncated {
+            AbstentionReason::SearchLimitExceeded { goal }
+        } else {
+            AbstentionReason::NoGroundedSupport { goal }
+        };
+        format!(",\"abstention\":{}", abstention_json(&reason))
+    } else {
+        String::new()
+    };
     format!(
-        "{{\"query\":\"{}\",\"answers\":[{}],\"abstained\":{}}}",
+        "{{\"query\":\"{}\",\"answers\":[{}],\"abstained\":{}{}}}",
         esc(&format!("{}", query)),
         answers.join(","),
-        dag.proofs.is_empty()
+        dag.proofs.is_empty(),
+        abstention
     )
 }
 
@@ -1001,9 +1097,14 @@ fn range_lookup_json(rl: &LoweredRangeLookup, kb: &KnowledgeBase) -> String {
             // The lowerer guarantees a numeric literal, so this is unreachable in
             // practice; abstain rather than panic if a non-numeric ever arrives.
             return format!(
-                "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[],\"abstained\":true}}",
+                "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[],\"abstained\":true,\"abstention\":{}}}",
                 esc(&query_str),
-                esc(&rl.mode)
+                esc(&rl.mode),
+                abstention_json(&AbstentionReason::NonNumericKey {
+                    table: rl.table.clone(),
+                    column: rl.key_col.clone(),
+                    key: format!("{}", rl.key_value),
+                })
             );
         }
     };
@@ -1052,11 +1153,49 @@ fn range_lookup_json(rl: &LoweredRangeLookup, kb: &KnowledgeBase) -> String {
                 trace_steps_json(proof, kb)
             )
         }
-        None => format!(
-            "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[],\"abstained\":true}}",
-            esc(&query_str),
-            esc(&rl.mode)
-        ),
+        None => {
+            // No breakpoint is `<= q`, so the query sits BELOW the table's
+            // floor. Report the floor itself: an abstention that names the
+            // domain you fell outside is actionable ("this source starts at
+            // 0"), whereas a bare `true` leaves the caller guessing whether
+            // the table is wrong, the key is wrong, or the source simply does
+            // not reach that far.
+            //
+            // If the search truncated we cannot even claim that — we did not
+            // enumerate every row, so the floor we computed may not be the
+            // real one. That case reports the limit instead.
+            let min_key = dag
+                .proofs
+                .iter()
+                .filter_map(|pr| {
+                    let kt = pr.bindings.walk_var(&cols[rl.key_index]);
+                    numeric_exact_magnitude(&kt).map(|k| (kt, k))
+                })
+                .min_by(|(_, a), (_, b)| {
+                    a.as_ratio()
+                        .partial_cmp(b.as_ratio())
+                        .unwrap_or(std::cmp::Ordering::Equal)
+                })
+                .map(|(kt, _)| format!("{kt}"))
+                .unwrap_or_else(|| "(empty table)".to_string());
+            let reason = if dag.truncated {
+                AbstentionReason::SearchLimitExceeded {
+                    goal: query_str.clone(),
+                }
+            } else {
+                AbstentionReason::BelowTableDomain {
+                    table: rl.table.clone(),
+                    key: format!("{}", rl.key_value),
+                    min_key,
+                }
+            };
+            format!(
+                "{{\"query\":\"{}\",\"mode\":\"{}\",\"answers\":[],\"abstained\":true,\"abstention\":{}}}",
+                esc(&query_str),
+                esc(&rl.mode),
+                abstention_json(&reason)
+            )
+        }
     }
 }
 

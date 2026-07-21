@@ -1,5 +1,41 @@
 # Changelog
 
+## [0.16.0] — 2026-07-21 — typed abstention reasons (RS-4 PR-C)
+
+Implements `ADJ-REASON-MATH.md` §E.4. Every abstention used to be one bit —
+`"abstained": true` — for situations that are not merely different but opposite.
+
+### Added
+
+- **`abstention` object on every abstaining answer**, carrying a typed `reason`,
+  the specifics, and a plain-language `explanation`:
+  - `below_table_domain { table, key, min_key }` — the question was well-formed
+    and the source does not reach that far. Reports the table's actual floor, so
+    the caller learns WHICH domain they fell outside.
+  - `non_numeric_key { table, column, key }` — the question was malformed.
+    Nothing is wrong with the table.
+  - `no_grounded_support { goal }` — the search completed and found nothing.
+  - `search_limit_exceeded { goal }` — the search STOPPED. It established no
+    absence at all.
+
+### Fixed
+
+- **Below-domain and malformed-key emitted BYTE-IDENTICAL JSON.** Those are
+  opposite failures — the source being honest versus the caller being wrong —
+  and no consumer could tell them apart, which made the abstention unactionable:
+  you could not tell whether to widen the source or fix the query.
+- **A truncated search could be laundered into a claim of absence.** PR-B's
+  recursion guard made a divergent search abstain; without a reason it was
+  indistinguishable from "the knowledge base has no support for this". It now
+  reports the limit, and says explicitly that this is *not* evidence that no
+  proof exists.
+
+### Notes
+
+- Additive: `"abstained"` is unchanged and still emitted, and the `abstention`
+  object appears only when abstaining — an answered query's bytes are identical
+  to before.
+
 ## [0.15.0] — 2026-07-20 — the unified reasoning trace (RS-4 PR-B)
 
 Implements the ordered/addressed/self-contained step contract of

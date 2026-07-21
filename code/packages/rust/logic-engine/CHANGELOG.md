@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.42.0] — 2026-07-21 — an empty result set now says WHY it is empty (RS-4 PR-C)
+
+### Added
+
+- **`ProofDAG.truncated`.** The search hit a resolution limit and gave up.
+  Without it, "I found no proof" and "I stopped looking" were the SAME VALUE —
+  an empty `proofs` — and they are completely different claims: the first is
+  about the knowledge base, the second is about this run's budget and says
+  nothing about the world. `ProofDAG::is_conclusively_empty()` is the predicate
+  to use before asserting anything negative.
+- **`GovernedResult::truncated()` and `conflict_status()` → `ConflictStatus`.**
+  `has_conflict()` returns `false` both when it looked and found no tie and when
+  it never finished looking. That second case was an affirmative claim ("no
+  conflict among the answers") derived from an incomplete search. `ConflictStatus`
+  makes `Unknown` a first-class third answer rather than an absence silently
+  reported as a negative.
+
+### Notes
+
+- `lr_aggregate` sets `truncated: false` unconditionally and correctly: it walks
+  a fixed clause list rather than searching, so it has no budget to exhaust.
+
 All notable changes to this project will be documented in this file.
 
 ## [0.41.0] — 2026-07-20 — ordered, addressed proof steps + visible negation (RS-4 PR-B)
