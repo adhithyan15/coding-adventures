@@ -714,6 +714,7 @@ members = [
     "vault-auth",
     "vault-policy",
     "vault-leases",
+    "chief-of-staff-vault-runtime",
     "vault-engine-core",
     "vault-engine-kv2",
     "vault-audit",
