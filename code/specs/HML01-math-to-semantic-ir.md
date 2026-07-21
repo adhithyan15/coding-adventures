@@ -328,12 +328,29 @@ Maple):** `SIR23` spec → `semantic-ir` core additions →
 → `sir-runtime-symbolic` → JS/TS backend codegen → golden/oracle tests (in
 progress — real `node`-execution proof shipped for `wolfram-to-semantic-ir`,
 `macsyma-to-semantic-ir`, `derive-to-semantic-ir`, `reduce-to-semantic-ir`,
-and `maple-to-semantic-ir` via each crate's `tests/e2e_node.rs`; a true
-oracle diff against each language's native runtime remains the one open
-item). **All five frontends this stream's own language list names are now
-shipped** — `maple-to-semantic-ir` was the last open follow-on item and is
-done as of this crate landing. All items through JS/TS backend codegen are
-shipped.
+and `maple-to-semantic-ir` via each crate's `tests/e2e_node.rs`. A true
+oracle diff against each language's native runtime is now shipped for
+`derive-to-semantic-ir` — see `derive-to-semantic-ir/tests/oracle.rs`, a
+38-case corpus cross-checking `derive-runtime` against the compiled-JS-via-
+`node` path. Building it found that comparing *evaluated* values is
+currently blocked, for every Stream B frontend alike (not a
+`derive-to-semantic-ir`-specific gap), by two gaps in the shared
+`semantic-ir-to-javascript` crate: its SIR23 codegen constructs a symbolic
+term tree but never evaluates/simplifies one (no arithmetic/comparison/
+calculus folding, no execution of the held `Assign`/`Define`/`If` forms),
+and its sole SIR23 stringifier has no per-source-language display
+convention (generic `head(args)` only, unlike the SIR22 array domain's
+already-per-language-aware `ArrayRt.fmtNum`/`display`) — see that test
+file's own module doc and `derive-to-semantic-ir/CHANGELOG.md`'s 0.1.1
+entry for the full write-up. Both are recorded via `known_bug`, not
+patched in that frontend's own PR, and remain a follow-up item for
+`semantic-ir-to-javascript` itself; a true oracle diff for
+`wolfram-to-semantic-ir`/`macsyma-to-semantic-ir`/`reduce-to-semantic-ir`/
+`maple-to-semantic-ir` remains the open item for the rest of this stream,
+blocked on the same shared-crate gaps). **All five frontends this stream's
+own language list names are now shipped** — `maple-to-semantic-ir` was the
+last open follow-on item and is done as of this crate landing. All items
+through JS/TS backend codegen are shipped.
 
 The streams touch disjoint crates except `semantic-ir` core and the two JS
 backends — a short serialization point, not a merge of the whole effort.
