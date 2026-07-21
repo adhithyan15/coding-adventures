@@ -1,5 +1,50 @@
 # Changelog
 
+## Chapter 17 — The future and the conditional, or one weld twice
+
+- **Chapter 17 authored** (`ES-C17-futuro`, `-condicional`, `-practice`): two
+  tenses that turn out to be **one construction** — reviewing Ch.6/10/11/12/13/16
+  via `reviews_of`.
+- **the future** (`ES-C17-futuro`): *hablaré…hablarán*, built on the **whole
+  infinitive** — the one tense that doesn't strip the ending — with a single set of
+  endings for all three conjugations. The etymology carries the lesson: Latin's own
+  future ***amābō*** **died out**, and Romance replaced it with a phrase,
+  **infinitive + *habēre*** (*amāre habeō*, "I **have to** love"), exactly parallel
+  to English *I have to go* drifting toward futurity. That phrase then **fused**:
+  *hablar he* → *hablar-he* → **hablaré**. So the endings are not endings at all
+  historically — they are the **present of *haber*** (*he/has/ha/hemos/han*) worn
+  down to a suffix, and lining the two lists up shows them identical. Framed as **a
+  compound tense that closed up into a simple one**, the mirror image of the
+  parallel-4 tracks' Ch.15 compound past, which stayed open. Closes with the seam
+  still faintly visible next door: **formal European Portuguese** can lodge a
+  pronoun **inside** the fused future — **falá-*lo*-ei** — a leftover, not the norm
+  (Brazilian Portuguese and ordinary speech don't).
+- **the conditional** (`ES-C17-condicional`): *hablaría* — the **same weld**, with
+  the **imperfect** of *haber* swapped in for the present, which is precisely why
+  its endings are the ***-ía/-ías/-íamos/-ían*** the learner already met as Ch.16's
+  *-er/-ir* imperfect. One trick, two tenses of one auxiliary. Uses covered:
+  hypothetical *would*, politeness (*¿podrías?*, *me gustaría*), and
+  **future-in-the-past** (*dijo que hablaría*) — which makes sense once you know an
+  imperfect is buried inside it.
+- **practice**: the **ten irregular stems** sorted into three families —
+  drop-the-vowel (*podré, querré, sabré, habré*); drop-then-**wedge-a-d**
+  (*tendré, pondré, vendré, saldré*), because dropping alone squeezed ***-n'r-***
+  or ***-l'r-*** together and Old Spanish resolved it rather than leave it (with a
+  note that modern Spanish says *honra*/*alrededor* perfectly well, and that
+  medieval Spanish first tried **metathesis** — *terné, porné, verné* — before the
+  *d*-forms won); and the choppers (**diré, haré**). Two payoffs: the **same bent
+  stem serves both tenses** (ten shapes, twenty conjugations), and **all six**
+  members of Ch.12–13's *-go club* resurface here — four as the *-dr-* group,
+  *hacer* and *decir* as the choppers — the oldest, most-used verbs misbehaving in
+  the same places again. Ends on the
+  **future of probability** (*¿Dónde estará?* "Where can he be?"; *Serán las tres*
+  "It must be three"), with the conditional doing the same for the past — a leap
+  that follows naturally from a tense built out of "I **have to**."
+- Note: *haber* has no lesson of its own yet; it appears here as **etymology**, with
+  its forms shown as evidence, not as a paradigm the learner must produce.
+- Taxonomy: namespaced `ES-FUTURE`, `ES-CONDITIONAL`; practice label
+  `CH17-PRACTICE`.
+
 ## Chapter 16 — The imperfect, and choosing between the two pasts
 
 - **Chapter 16 authored** (`ES-C16-imperfecto`, `-tres-irregulares`,
