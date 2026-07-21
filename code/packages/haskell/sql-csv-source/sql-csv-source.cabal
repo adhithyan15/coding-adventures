@@ -1,0 +1,43 @@
+cabal-version: 3.0
+name:          sql-csv-source
+version:       0.1.0
+synopsis:      CSV-backed data source for the educational SQL engine
+description:   Loads CSV files into typed rows and exposes them through the existing Haskell SQL execution engine.
+category:      Database
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+extra-doc-files:
+    README.md
+    CHANGELOG.md
+extra-source-files:
+    required_capabilities.json
+
+library
+    exposed-modules:  SqlCsvSource
+    build-depends:    base >=4.14 && <5
+                    , containers >=0.6 && <0.9
+                    , directory >=1.3 && <2
+                    , filepath >=1.4 && <2
+                    , sql-execution-engine >=0.1 && <0.2
+                    , text >=1.2 && <3
+    hs-source-dirs:   src
+    ghc-options:      -Wall
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    SqlCsvSourceSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14 && <5
+                    , containers >=0.6 && <0.9
+                    , directory >=1.3 && <2
+                    , filepath >=1.4 && <2
+                    , hspec ==2.*
+                    , sql-csv-source
+                    , sql-execution-engine >=0.1 && <0.2
+                    , text >=1.2 && <3
+    ghc-options:      -Wall
+    default-language: Haskell2010

@@ -121,12 +121,12 @@ ports, followed by the paired `ed25519`, `font-parser`, `asciidoc-parser`, and
 `point2d`, `affine2d`, `bezier2d`, and `arc2d`
 ports, followed by the Haskell `gradient-descent`, `perceptron`, and
 `type-checker-protocol` ports, and the Haskell `paint-vm-ascii`,
-`barcode-layout-1d`, `itf`, `code39`, `codabar`, `code128`, `upc-a`, and
-`ean-13` ports:
+`barcode-layout-1d`, `itf`, `code39`, `codabar`, `code128`, `upc-a`, `ean-13`,
+and `sql-csv-source` ports:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 282 |
+| Present in 10-15 languages | 172 | 281 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,972 |
 | Present in one language | 712 | 9,968 |
@@ -172,7 +172,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 172 packages present in at least ten implementation languages need 282
+The 172 packages present in at least ten implementation languages need 281
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -183,7 +183,7 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Perl | 0 | Complete; paired data-structure/storage wave |
 | C# | 0 | Complete; paired native package wave |
 | F# | 0 | Complete; paired native package wave |
-| Haskell | 7 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
+| Haskell | 6 | Leaf algorithms before dependency-shaped compression, graphics, ML, and protocol waves |
 | Swift | 51 | Data structures and generated frontends before native app surfaces |
 | Java | 58 | Move with Kotlin |
 | Kotlin | 58 | Move with Java |
@@ -677,6 +677,19 @@ and parity pattern, computed and supplied checks, ASCII and length guards,
 exact module geometry, metadata precedence, aliases, and shared validation
 paths. The package now spans 12 implementation lanes, reduces the
 high-consensus backlog to 282 slots, and leaves 7 gaps in the Haskell lane.
+
+The twenty-eighth Haskell high-consensus slice is complete: `sql-csv-source`
+now provides the filesystem adapter for the existing pure
+`sql-execution-engine`. It loads every CSV table through an explicit IO
+boundary, preserves header order in an immutable data-source snapshot, handles
+quoted commas, escaped quotes, embedded newlines, and CRLF, validates malformed
+records, and coerces null, boolean, integer, finite real, and text values into
+the shared SQL types. Its package-native suite exercises 19 examples with 89%
+expression and 86% alternative coverage, including parsing failures, missing
+directories and tables, typed scans, filters, ordering, null predicates, joins,
+grouping, aggregates, limits, and total result wrappers. The package now spans
+13 implementation lanes, reduces the high-consensus backlog to 281 slots, and
+leaves 6 gaps in the Haskell lane.
 
 Recommended family order:
 
