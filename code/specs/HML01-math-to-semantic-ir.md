@@ -274,8 +274,8 @@ without any change to the IR or the frontends.
 `SIR22` spec → `semantic-ir` core additions → `matlab-to-semantic-ir` →
 `octave-to-semantic-ir` → `sir-runtime-array` → JS/TS backend codegen →
 `apl-to-semantic-ir` (SIR22 addendum for APL primitives) →
-`j-to-semantic-ir` → golden/oracle tests (MATLAB's, Octave's, and APL's own
-now shipped; J's remains open. MATLAB — see
+`j-to-semantic-ir` → golden/oracle tests (MATLAB's, Octave's, APL's, and
+J's own now shipped. MATLAB — see
 `matlab-to-semantic-ir/tests/oracle.rs`, the first
 true oracle diff anywhere in this track: the same computation run through
 `matlab-runtime` and through this frontend's compiled-JS-via-`node` path,
@@ -305,9 +305,21 @@ comparison instead, and the gap is recorded in that crate's `CHANGELOG.md`
 for a follow-up. APL — see `apl-to-semantic-ir/tests/oracle.rs`, its own
 distinct 17-case corpus (not just MATLAB's reused), which also surfaced 3
 new bugs in monadic `- × ÷ ⌈ ⌊` (a wrong display glyph, a wrong value on
-array operands, and a hard crash on `× ÷ ⌈ ⌊`), all still open — see that
-crate's `CHANGELOG.md`. J's own oracle tests remain an open follow-on item.
-All items through JS/TS backend codegen are shipped.
+array operands, and a hard crash on `× ÷ ⌈ ⌊`) — all three now fixed, in
+`semantic-ir-to-javascript` 0.43.0, see that crate's `CHANGELOG.md`. J —
+see `j-to-semantic-ir/tests/oracle.rs`, its own 36-case corpus, which
+fixed two bugs genuinely local to that frontend's own lowering (stranded
+literals missing the same rank-1 `Ravel`-wrap fix APL's own lowering
+already had, and monadic/dyadic `i.` silently inheriting APL's 1-based
+`IndexGenerator`/`IndexOf` convention instead of J's own 0-based one with
+a plain-tally not-found sentinel) directly in this PR, and found two more
+bugs in the shared `semantic-ir-to-javascript` crate itself, deliberately
+left open for a follow-up PR (no J-specific display convention for
+negative numbers/infinity at all — only APL's high-minus glyph is wired
+up — and three of J's own builtin names, `tally`/`replicate`/`exp`, never
+registered in that crate's dispatch table) — see that crate's
+`CHANGELOG.md` for the full write-up. All items through JS/TS backend
+codegen are shipped.
 
 **Stream B (symbolic/CAS, backs Wolfram/Macsyma/Maxima/Derive/Reduce/
 Maple):** `SIR23` spec → `semantic-ir` core additions →

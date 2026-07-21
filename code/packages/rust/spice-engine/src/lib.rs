@@ -432,6 +432,8 @@ fn clone_subckt_element(
             element.forward_transit_time,
             element.reverse_transit_time,
             element.saturation_current_temperature_exponent,
+            element.energy_gap_electron_volts,
+            element.forward_early_voltage,
         )),
         Element::Mosfet(element) => Element::Mosfet(Mosfet::with_model(
             format!("{instance_name}.{}", element.name),
@@ -2693,7 +2695,7 @@ pub fn circuit_at_temperature(
     circuit: &Circuit,
     temperature_kelvin: f64,
     nominal_temperature_kelvin: f64,
-    energy_gap_electron_volts: f64,
+    _energy_gap_electron_volts: f64,
 ) -> Result<Circuit, SpiceError> {
     let mut adjusted = Circuit {
         elements: Vec::new(),
@@ -2711,7 +2713,7 @@ pub fn circuit_at_temperature(
                 bjt,
                 temperature_kelvin,
                 nominal_temperature_kelvin,
-                energy_gap_electron_volts,
+                bjt.energy_gap_electron_volts,
             )?),
             Element::Mosfet(mosfet) => Element::Mosfet(mosfet_at_temperature(
                 mosfet,
@@ -2835,6 +2837,8 @@ pub struct Bjt {
     pub forward_transit_time: f64,
     pub reverse_transit_time: f64,
     pub saturation_current_temperature_exponent: f64,
+    pub energy_gap_electron_volts: f64,
+    pub forward_early_voltage: f64,
 }
 
 impl Bjt {
@@ -2888,6 +2892,8 @@ impl Bjt {
             forward_transit_time,
             reverse_transit_time,
             3.0,
+            1.11,
+            0.0,
         )
     }
 
@@ -2906,6 +2912,8 @@ impl Bjt {
         forward_transit_time: f64,
         reverse_transit_time: f64,
         saturation_current_temperature_exponent: f64,
+        energy_gap_electron_volts: f64,
+        forward_early_voltage: f64,
     ) -> Self {
         Self {
             name: name.into(),
@@ -2921,6 +2929,8 @@ impl Bjt {
             forward_transit_time,
             reverse_transit_time,
             saturation_current_temperature_exponent,
+            energy_gap_electron_volts,
+            forward_early_voltage,
         }
     }
 }
@@ -3311,8 +3321,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     usize,
 )] = &[
     (ModelCardKind::Diode, 12, 18, 5, 3),
-    (ModelCardKind::Npn, 8, 16, 4, 4),
-    (ModelCardKind::Pnp, 8, 16, 4, 4),
+    (ModelCardKind::Npn, 10, 19, 5, 4),
+    (ModelCardKind::Pnp, 10, 19, 5, 4),
     (ModelCardKind::Njf, 5, 11, 5, 3),
     (ModelCardKind::Pjf, 5, 11, 5, 3),
     (ModelCardKind::Nmos, 18, 25, 6, 3),
@@ -3355,6 +3365,9 @@ const BJT_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("TF", "TF"),
     ("TR", "TR"),
     ("XTI", "XTI"),
+    ("EG", "EG"),
+    ("VAF", "VAF"),
+    ("VA", "VAF"),
 ];
 const JFET_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("BETA", "BETA"),
@@ -4008,6 +4021,8 @@ pub fn bjt_from_model_card(
         model_card_value(model, "TF", 0.0),
         model_card_value(model, "TR", 0.0),
         model_card_value(model, "XTI", 3.0),
+        model_card_value(model, "EG", 1.11),
+        model_card_value(model, "VAF", 0.0),
     ))
 }
 
@@ -4225,11 +4240,7 @@ pub fn device_model_behavior_audit_fixtures() -> Result<Vec<DeviceModelBehaviorF
         "Rs", "source", "0", 1_000.0,
     )));
     jfet_circuit.add(Element::Jfet(jfet_from_model_card(
-        "J1",
-        "drain",
-        "gate",
-        "source",
-        jfet_model,
+        "J1", "drain", "gate", "source", jfet_model,
     )?));
 
     let mos_model = models.get("Mn").ok_or_else(|| SpiceError::InvalidElement {
@@ -4693,11 +4704,7 @@ pub fn device_model_noise_audit_fixtures(
         "Rs", "source", "0", 1_000.0,
     )));
     jfet_circuit.add(Element::Jfet(jfet_from_model_card(
-        "J1",
-        "drain",
-        "gate",
-        "source",
-        jfet_model,
+        "J1", "drain", "gate", "source", jfet_model,
     )?));
 
     let mos_model = models.get("Mn").ok_or_else(|| SpiceError::InvalidElement {
@@ -6946,9 +6953,11 @@ pub fn select_deck_output_probes(netlist: &str, analysis: &str) -> Result<Vec<St
     let mut selected = Vec::new();
     let mut seen = HashSet::new();
     for selection in summary.selections {
-        if !selection.analysis.as_deref().is_none_or(|requested| {
-            deck_output_analysis_matches(requested, analysis)
-        }) {
+        if !selection
+            .analysis
+            .as_deref()
+            .is_none_or(|requested| deck_output_analysis_matches(requested, analysis))
+        {
             continue;
         }
         for probe in selection.probes {
@@ -6975,9 +6984,11 @@ pub fn select_deck_output_probe_lines(
     let mut selected = Vec::new();
     let mut seen = HashSet::new();
     for selection in summary.selections {
-        if !selection.analysis.as_deref().is_none_or(|requested| {
-            deck_output_analysis_matches(requested, analysis)
-        }) {
+        if !selection
+            .analysis
+            .as_deref()
+            .is_none_or(|requested| deck_output_analysis_matches(requested, analysis))
+        {
             continue;
         }
         for probe in selection.probes {
@@ -7004,9 +7015,11 @@ pub fn select_deck_output_directives(
     let mut selected = Vec::new();
     let mut seen = HashSet::new();
     for selection in summary.selections {
-        if !selection.analysis.as_deref().is_none_or(|requested| {
-            deck_output_analysis_matches(requested, analysis)
-        }) {
+        if !selection
+            .analysis
+            .as_deref()
+            .is_none_or(|requested| deck_output_analysis_matches(requested, analysis))
+        {
             continue;
         }
         if seen.insert(selection.directive.clone()) {
@@ -7030,9 +7043,11 @@ pub fn select_deck_output_directive_analysis_kinds(
     let mut selected = Vec::new();
     let mut seen = HashSet::new();
     for selection in summary.selections {
-        if !selection.analysis.as_deref().is_none_or(|requested| {
-            deck_output_analysis_matches(requested, analysis)
-        }) {
+        if !selection
+            .analysis
+            .as_deref()
+            .is_none_or(|requested| deck_output_analysis_matches(requested, analysis))
+        {
             continue;
         }
         let analysis_kind = selection.analysis.unwrap_or_else(|| "global".to_string());
@@ -7057,9 +7072,11 @@ pub fn select_deck_output_directive_lines(
     let mut selected = Vec::new();
     let mut seen = HashSet::new();
     for selection in summary.selections {
-        if !selection.analysis.as_deref().is_none_or(|requested| {
-            deck_output_analysis_matches(requested, analysis)
-        }) {
+        if !selection
+            .analysis
+            .as_deref()
+            .is_none_or(|requested| deck_output_analysis_matches(requested, analysis))
+        {
             continue;
         }
         if seen.insert(selection.line_number) {
@@ -21646,14 +21663,26 @@ fn collect_noise_sources(
                 validate_bjt(bjt)?;
                 let base = node_index(node_indices, &bjt.base);
                 let emitter = node_index(node_indices, &bjt.emitter);
+                let collector = node_index(node_indices, &bjt.collector);
                 let base_voltage = vector_voltage(operating_point, base);
                 let emitter_voltage = vector_voltage(operating_point, emitter);
+                let collector_voltage = vector_voltage(operating_point, collector);
                 let junction_voltage = match bjt.polarity {
                     BjtPolarity::Npn => base_voltage - emitter_voltage,
                     BjtPolarity::Pnp => emitter_voltage - base_voltage,
                 };
                 let exponent = (junction_voltage / bjt.thermal_voltage).clamp(-40.0, 40.0);
-                let collector_current = bjt.saturation_current * (exponent.exp() - 1.0);
+                let output_voltage = match bjt.polarity {
+                    BjtPolarity::Npn => collector_voltage - emitter_voltage,
+                    BjtPolarity::Pnp => emitter_voltage - collector_voltage,
+                };
+                let early_factor = if bjt.forward_early_voltage == 0.0 {
+                    1.0
+                } else {
+                    1.0 + output_voltage / bjt.forward_early_voltage
+                };
+                let collector_current =
+                    bjt.saturation_current * (exponent.exp() - 1.0) * early_factor;
                 let (positive, negative) = match bjt.polarity {
                     BjtPolarity::Npn => (base, emitter),
                     BjtPolarity::Pnp => (emitter, base),
@@ -22108,18 +22137,38 @@ fn stamp_bjt(
     let emitter = node_index(node_indices, &bjt.emitter);
     let base_voltage = base.map_or(0.0, |index| operating_point[index]);
     let emitter_voltage = emitter.map_or(0.0, |index| operating_point[index]);
+    let collector_voltage = collector.map_or(0.0, |index| operating_point[index]);
     let junction_voltage = match bjt.polarity {
         BjtPolarity::Npn => base_voltage - emitter_voltage,
         BjtPolarity::Pnp => emitter_voltage - base_voltage,
     };
     let exponent = (junction_voltage / bjt.thermal_voltage).clamp(-40.0, 40.0);
     let exp_value = exponent.exp();
-    let collector_current = bjt.saturation_current * (exp_value - 1.0);
-    let gm = bjt.saturation_current / bjt.thermal_voltage * exp_value;
-    let gpi = gm / bjt.forward_beta;
-    let base_current = collector_current / bjt.forward_beta;
-    let equivalent_collector_current = collector_current - gm * junction_voltage;
+    let base_collector_current = bjt.saturation_current * (exp_value - 1.0);
+    let base_gm = bjt.saturation_current / bjt.thermal_voltage * exp_value;
+    let output_voltage = match bjt.polarity {
+        BjtPolarity::Npn => collector_voltage - emitter_voltage,
+        BjtPolarity::Pnp => emitter_voltage - collector_voltage,
+    };
+    let early_factor = if bjt.forward_early_voltage == 0.0 {
+        1.0
+    } else {
+        1.0 + output_voltage / bjt.forward_early_voltage
+    };
+    let output_conductance = if bjt.forward_early_voltage == 0.0 {
+        0.0
+    } else {
+        base_collector_current / bjt.forward_early_voltage
+    };
+    let collector_current = base_collector_current * early_factor;
+    let gm = base_gm * early_factor;
+    let gpi = base_gm / bjt.forward_beta;
+    let base_current = base_collector_current / bjt.forward_beta;
+    let equivalent_collector_current =
+        collector_current - gm * junction_voltage - output_conductance * output_voltage;
     let equivalent_base_current = base_current - gpi * junction_voltage;
+
+    stamp_conductance(matrix, collector, emitter, output_conductance);
 
     match bjt.polarity {
         BjtPolarity::Npn => {
@@ -22209,13 +22258,32 @@ fn stamp_bjt_small_signal(
     let emitter = node_index(node_indices, &bjt.emitter);
     let base_voltage = vector_voltage(operating_point, base);
     let emitter_voltage = vector_voltage(operating_point, emitter);
+    let collector_voltage = vector_voltage(operating_point, collector);
     let junction_voltage = match bjt.polarity {
         BjtPolarity::Npn => base_voltage - emitter_voltage,
         BjtPolarity::Pnp => emitter_voltage - base_voltage,
     };
     let exponent = (junction_voltage / bjt.thermal_voltage).clamp(-40.0, 40.0);
-    let gm = bjt.saturation_current / bjt.thermal_voltage * exponent.exp();
-    let gpi = gm / bjt.forward_beta;
+    let exp_value = exponent.exp();
+    let base_collector_current = bjt.saturation_current * (exp_value - 1.0);
+    let base_gm = bjt.saturation_current / bjt.thermal_voltage * exp_value;
+    let output_voltage = match bjt.polarity {
+        BjtPolarity::Npn => collector_voltage - emitter_voltage,
+        BjtPolarity::Pnp => emitter_voltage - collector_voltage,
+    };
+    let early_factor = if bjt.forward_early_voltage == 0.0 {
+        1.0
+    } else {
+        1.0 + output_voltage / bjt.forward_early_voltage
+    };
+    let output_conductance = if bjt.forward_early_voltage == 0.0 {
+        0.0
+    } else {
+        base_collector_current / bjt.forward_early_voltage
+    };
+    let gm = base_gm * early_factor;
+    let gpi = base_gm / bjt.forward_beta;
+    stamp_conductance(matrix, collector, emitter, output_conductance);
     match bjt.polarity {
         BjtPolarity::Npn => {
             stamp_conductance(matrix, base, emitter, gpi);
@@ -22253,10 +22321,24 @@ fn stamp_ac_bjt_small_signal(
     };
     let exponent = (junction_voltage / bjt.thermal_voltage).clamp(-40.0, 40.0);
     let reverse_exponent = (reverse_junction_voltage / bjt.thermal_voltage).clamp(-40.0, 40.0);
-    let gm = Complex::new(
-        bjt.saturation_current / bjt.thermal_voltage * exponent.exp(),
-        0.0,
-    );
+    let exp_value = exponent.exp();
+    let base_collector_current = bjt.saturation_current * (exp_value - 1.0);
+    let base_gm = bjt.saturation_current / bjt.thermal_voltage * exp_value;
+    let output_voltage = match bjt.polarity {
+        BjtPolarity::Npn => collector_voltage - emitter_voltage,
+        BjtPolarity::Pnp => emitter_voltage - collector_voltage,
+    };
+    let early_factor = if bjt.forward_early_voltage == 0.0 {
+        1.0
+    } else {
+        1.0 + output_voltage / bjt.forward_early_voltage
+    };
+    let output_conductance = if bjt.forward_early_voltage == 0.0 {
+        0.0
+    } else {
+        base_collector_current / bjt.forward_early_voltage
+    };
+    let gm = Complex::new(base_gm * early_factor, 0.0);
     let reverse_gm = bjt.saturation_current / bjt.thermal_voltage * reverse_exponent.exp();
     let diffusion_capacitance = bjt.forward_transit_time * gm.real;
     let reverse_diffusion_capacitance = bjt.reverse_transit_time * reverse_gm;
@@ -22267,6 +22349,12 @@ fn stamp_ac_bjt_small_signal(
     let ybc = Complex::new(
         0.0,
         omega * (bjt.base_collector_capacitance + reverse_diffusion_capacitance),
+    );
+    stamp_complex_conductance(
+        matrix,
+        collector,
+        emitter,
+        Complex::new(output_conductance, 0.0),
     );
     match bjt.polarity {
         BjtPolarity::Npn => {
@@ -23196,6 +23284,18 @@ fn validate_bjt(bjt: &Bjt) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: bjt.name.clone(),
             reason: "saturation-current temperature exponent must be finite".to_string(),
+        });
+    }
+    if !bjt.energy_gap_electron_volts.is_finite() || bjt.energy_gap_electron_volts <= 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "energy gap must be finite and positive".to_string(),
+        });
+    }
+    if !bjt.forward_early_voltage.is_finite() || bjt.forward_early_voltage < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "forward Early voltage must be finite and non-negative".to_string(),
         });
     }
     Ok(())

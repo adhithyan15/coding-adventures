@@ -40,15 +40,20 @@ Arabic article **al-** ("the") fused onto the front:
 
 - **almohada** (pillow), **alcázar** (fortress), **alcalde** (mayor), **alfombra**
   (rug), **aduana** (customs), **álgebra**, **alcohol**.
-- **azúcar** (sugar), **aceite** (oil), **naranja** (orange), **ojalá** ("would
-  that…", literally *wa-šā' allāh*, "God willing").
+- **azúcar** (sugar), **aceite** (oil), **naranja** (orange).
 
-But **hasta** is special and rare: it is a **function word** — a preposition, part
+But **hasta** is rare and special: it is a **function word** — a preposition, part
 of the grammatical skeleton. Languages borrow nouns easily and grammar words
 almost never — so an Arabic *preposition* surviving in everyday Spanish shows how
 deep, how *intimate*, those centuries of contact were. (Its Latin rival *ad*
 "to"/*usque* "up to" simply lost.) You say a piece of al-Andalus every time you
 say goodbye.
+
+And *hasta* is not quite alone. **Ojalá** ("would that…") is also a function
+word, from Andalusi Arabic *law šāʾ Allāh*, "**if God should will**" — the
+*Allāh* is still sitting in its second half. It is arguably the stronger case:
+where *hasta* is a preposition, *ojalá* reaches into the grammar and forces the
+verb after it into a whole different **mood**. Chapter 18 puts it to work.
 
 ## Grammar Lens: hasta = "until," a pointer at a limit
 
@@ -72,4 +77,7 @@ say goodbye.
 — "until.") Why is it remarkable that Spanish borrowed it? (It's a *function
 word* / preposition — languages almost never borrow those; it shows how deep the
 Arabic centuries went.) How do you spot many Arabic nouns in Spanish? (The frozen
-*al-* article: *almohada, azúcar, álgebra*.) Next: **hasta luego**.
+*al-* article: *almohada, azúcar, álgebra*.) Which **other** Arabic function word
+did this lesson mention, and what is hiding inside it? (***Ojalá***, from *law
+šāʾ Allāh* — "**if God should will**"; the *Allāh* is still in it.) Next:
+**hasta luego**.

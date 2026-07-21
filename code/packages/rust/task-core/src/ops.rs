@@ -162,6 +162,47 @@ impl ProjectState {
         Ok(())
     }
 
+    /// Set (or clear) a task's triage priority.
+    pub fn set_priority(&mut self, id: &TaskId, priority: Option<Priority>) -> Result<(), OpError> {
+        self.task_mut(id)?.priority = priority;
+        Ok(())
+    }
+
+    // ── labels ───────────────────────────────────────────────────────────────────
+
+    /// Create or replace a label definition.
+    pub fn upsert_label(&mut self, label: Label) {
+        self.labels.insert(label.id.clone(), label);
+    }
+
+    /// Delete a label and remove it from every task that carried it, so no task is left
+    /// referencing a label that no longer exists.
+    pub fn delete_label(&mut self, id: &LabelId) {
+        self.labels.remove(id);
+        for t in self.tasks.values_mut() {
+            t.labels.retain(|l| l != id);
+        }
+    }
+
+    /// Replace a task's labels. Rejects an unknown label id, and de-duplicates so a
+    /// label can't be applied twice to the same task.
+    pub fn set_task_labels(&mut self, id: &TaskId, labels: Vec<LabelId>) -> Result<(), OpError> {
+        if !self.tasks.contains_key(id) {
+            return Err(OpError::NotFound);
+        }
+        if labels.iter().any(|l| !self.labels.contains_key(l)) {
+            return Err(OpError::NotFound);
+        }
+        let mut deduped: Vec<LabelId> = Vec::with_capacity(labels.len());
+        for l in labels {
+            if !deduped.contains(&l) {
+                deduped.push(l);
+            }
+        }
+        self.task_mut(id)?.labels = deduped;
+        Ok(())
+    }
+
     // ── scheduling ───────────────────────────────────────────────────────────────
 
     /// Set or clear a task's whole scheduling block.

@@ -100,7 +100,34 @@ section for the full reasoning and all three mechanisms.
 `+` (conjugate) is a pass-through no-op, exactly like APL's. `-`/`*`/`%`/
 `<.`/`>.` map onto `"neg"`/`"sign"`/`"recip"`/`"floor"`/`"ceil"` — the
 *exact* names `apl-to-semantic-ir` already introduced. `#`/`^` introduce
-`"tally"`/`"replicate"`/`"exp"`, new to this crate.
+`"tally"`/`"replicate"`/`"exp"`, new to this crate. **As of 0.1.2**,
+`semantic-ir-to-javascript` has not yet registered any of these three
+names in its builtin dispatch table — every use crashes with `TypeError:
+unknown builtin: <name>` (see `tests/oracle.rs`'s module doc, "Bug B", and
+this crate's own `CHANGELOG.md`). This is a shared-crate gap, not a bug in
+this crate's own lowering.
+
+## Two things this crate's own lowering had to work around, not just reuse
+directly, from `apl-to-semantic-ir` (found by `tests/oracle.rs`, fixed in
+0.1.2)
+
+- **Stranded literals of 2+ numbers are `Ravel`-wrapped**, exactly like
+  `apl-to-semantic-ir`'s own identical fix: a bare `Expr::ArrayLit { rows:
+  vec![row], .. }` is a genuinely rank-2 `[1, n]` value under SIR's
+  column-major convention, not the rank-1 `[n]` vector a stranded literal
+  (`2 2`, `1 2 3`, …) actually is. Any op that validates its operand is
+  rank ≤ 1 (dyadic `$`'s shape argument, dyadic `i.`'s haystack) would
+  otherwise reject a perfectly valid J program.
+- **Monadic/dyadic `i.` no longer emits a bare `Expr::IndexGenerator`/
+  `Expr::IndexOf`.** Those two SIR22-addendum nodes hardcode APL's own
+  1-based convention and `len + 1`-not-found sentinel (their
+  `semantic-ir-to-javascript` codegen is "ported 1:1" from
+  `apl_runtime::builtins`) — genuinely wrong for J's 0-based `i.` with a
+  plain-tally not-found sentinel (MA06 §1 bullet 3). `Lowerer::
+  zero_base_index` wraps both node's output in an elementwise `- 1`, an
+  exact arithmetic identity for both the found and not-found cases (see
+  that function's own doc comment in `src/lower.rs` for the proof) — no
+  shared-crate change needed.
 
 ### Testing
 
@@ -114,14 +141,28 @@ section for the full reasoning and all three mechanisms.
   too-deep *chain* of separately-parenthesised hooks — the security-review
   regression — two accepted within-cap cases, and a long chain of
   non-duplicating verbs confirming the cap tracks actual duplication risk
-  rather than raw chain length), stranded/underscore-negative literals,
-  parenthesised grouping, chained assignment,
-  first-occurrence-vs-reassignment, undefined-variable rejection,
-  parse-error propagation, and a full multi-line program that validates
-  via `semantic_ir::validate`.
+  rather than raw chain length), stranded/underscore-negative literals
+  (now `Ravel`-wrapped, see above), parenthesised grouping, chained
+  assignment, first-occurrence-vs-reassignment, undefined-variable
+  rejection, parse-error propagation, and a full multi-line program that
+  validates via `semantic_ir::validate`.
 - `tests/test_validator.rs` — mirrors `apl-to-semantic-ir`'s own
   capability-rejection pattern: `semantic-ir-to-javascript` accepts
   base-cut modules (including hook/fork-using ones, which are ordinary
   nested base-cut applications) and rejects `Reduce`-using ones via its
   dedicated tree-walk (not the plain feature-flag check, which can no
   longer distinguish the two).
+- `tests/oracle.rs` (HML01 §7, added 0.1.2) — the direct J sibling of
+  `apl-to-semantic-ir/tests/oracle.rs`: the SAME J source run through (a)
+  `j-runtime`'s tree-walking interpreter and (b) this crate's own
+  `compile_source` → `semantic_ir::validate` → `semantic_ir_to_javascript
+  ::compile` → a real `node` process, asserted equal. 36-case corpus
+  covering every SIR22/addendum `Expr` variant this crate can emit, both
+  hooks and forks (including a leading-noun fork), `@` compose, and J's
+  own leading-underscore negative-literal spelling. Skips (does not fail)
+  if `node` is not on `PATH`. See that file's own module doc comment for
+  the two bugs found and fixed directly in this crate's own lowering
+  (above) and the two found in the shared `semantic-ir-to-javascript`
+  crate and deliberately left open for a follow-up PR (a missing
+  J-specific display convention for negative numbers/infinity, and three
+  never-registered builtin names — `tally`/`replicate`/`exp`).

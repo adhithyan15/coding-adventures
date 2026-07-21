@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Add BJT model-card `VAF`/`VA` forward Early-voltage support with
+  collector-voltage modulation in DC, transient, AC, transfer-function, and
+  noise paths, matching Python and TypeScript. The supported-parameter catalog
+  now contains 78 canonical rows.
+- Add BJT model-card `EG` energy-gap support to model-specific temperature
+  scaling, preserving it through subcircuit expansion and matching Python and
+  TypeScript. The supported-parameter catalog now contains 76 canonical rows.
 - Add BJT model-card `XTI` saturation-current temperature-exponent support,
   preserving it through subcircuit expansion and matching Python and
   TypeScript. The supported-parameter catalog now contains 74 canonical rows.

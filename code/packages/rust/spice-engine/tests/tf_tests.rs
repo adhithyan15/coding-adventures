@@ -322,6 +322,46 @@ fn tf_bjt_common_emitter_reports_small_signal_gain() {
 }
 
 #[test]
+fn tf_bjt_forward_early_voltage_reduces_output_impedance() {
+    let output_impedance = |forward_early_voltage: f64| {
+        let mut circuit = Circuit::new();
+        let thermal_voltage = 0.02585;
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vcc", "vcc", "0", 5.0,
+        )));
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vin",
+            "base",
+            "0",
+            thermal_voltage * 2.0_f64.ln(),
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rload", "vcc", "out", 1_000.0,
+        )));
+        circuit.add(Element::Bjt(Bjt::with_model_and_temperature_parameters(
+            "Q1",
+            "out",
+            "base",
+            "0",
+            BjtPolarity::Npn,
+            25.85e-6,
+            100.0,
+            thermal_voltage,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            3.0,
+            1.11,
+            forward_early_voltage,
+        )));
+        tf(&circuit, "out", "Vin").unwrap().output_impedance_ohms
+    };
+
+    assert!(output_impedance(10.0) < output_impedance(0.0));
+}
+
+#[test]
 fn tf_mosfet_common_source_uses_gate_bias_for_small_signal_gain() {
     let mut circuit = Circuit::new();
     circuit.add(Element::VoltageSource(VoltageSource::new(

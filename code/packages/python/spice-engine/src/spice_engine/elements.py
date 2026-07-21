@@ -591,6 +591,11 @@ class BJT:
         capacitance in small-signal AC analysis.
     Xti:
         Saturation-current temperature exponent (default 3.0).
+    Eg:
+        Semiconductor energy gap in electron-volts (default 1.11 eV).
+    Vaf:
+        Forward Early voltage in Volts. Zero disables collector-voltage
+        modulation, matching an infinite Early voltage (default 0.0).
     """
 
     name: str
@@ -606,6 +611,8 @@ class BJT:
     Tf: float = 0.0         # forward transit time (s)
     Tr: float = 0.0         # reverse transit time (s)
     Xti: float = 3.0        # saturation-current temperature exponent
+    Eg: float = 1.11        # semiconductor energy gap (eV)
+    Vaf: float = 0.0        # forward Early voltage (V); 0 means infinite
 
 
 # ---------------------------------------------------------------------------

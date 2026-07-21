@@ -5,6 +5,8 @@
 - Add a canonical deny-all Deno launch plan shared by package generation,
   verification, and process activation.
 - Route subprocess host RPC calls through profile-gated D18D handlers in Rust.
+- Serve agent-originated `host.*` calls over the live deny-all Deno stdio
+  session, returning typed Rust handler results and policy rejections.
 
 ## Unreleased
 

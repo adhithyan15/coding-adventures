@@ -415,7 +415,7 @@ def circuit_at_temperature(
                 element,
                 temperature_kelvin,
                 nominal_temperature_kelvin=nominal_temperature_kelvin,
-                energy_gap_ev=energy_gap_ev,
+                energy_gap_ev=element.Eg,
             )
         if isinstance(element, Mosfet):
             return mosfet_at_temperature(
@@ -596,7 +596,7 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
-        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti)
+        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg, element.Vaf)
     if isinstance(element, VCVS):
         return VCVS(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), _map_subckt_node(element.ctrl_plus, instance_name, node_map), _map_subckt_node(element.ctrl_minus, instance_name, node_map), element.gain)
     if isinstance(element, VCCS):
@@ -9047,18 +9047,26 @@ def _stamp_bjt(
     # --- Resolve node voltages at the current Newton iterate -----------------
     Vb = 0.0 if _is_ground(el.base) else x[node_to_idx[el.base]]
     Ve = 0.0 if _is_ground(el.emitter) else x[node_to_idx[el.emitter]]
+    Vc = 0.0 if _is_ground(el.collector) else x[node_to_idx[el.collector]]
 
     # --- Controlling junction voltage (clamped to avoid exp overflow) --------
     Vjunc = min(Vb - Ve, 0.7) if el.polarity == "NPN" else min(Ve - Vb, 0.7)
 
     exp_term = math.exp(Vjunc / el.Vt)
-    Ic0 = el.Is * (exp_term - 1.0)
-    gm = (el.Is / el.Vt) * exp_term
-    g_pi = gm / el.beta_f
-    Ib0 = Ic0 / el.beta_f
+    base_collector_current = el.Is * (exp_term - 1.0)
+    base_gm = (el.Is / el.Vt) * exp_term
+    output_voltage = Vc - Ve if el.polarity == "NPN" else Ve - Vc
+    early_factor = 1.0 if el.Vaf == 0.0 else 1.0 + output_voltage / el.Vaf
+    output_conductance = 0.0 if el.Vaf == 0.0 else base_collector_current / el.Vaf
+    Ic0 = base_collector_current * early_factor
+    gm = base_gm * early_factor
+    g_pi = base_gm / el.beta_f
+    Ib0 = base_collector_current / el.beta_f
 
     Ieq_junc = Ib0 - g_pi * Vjunc      # junction Norton offset
-    Ieq_coll = Ic0 - gm * Vjunc        # VCCS Norton offset
+    Ieq_coll = Ic0 - gm * Vjunc - output_conductance * output_voltage
+
+    _stamp_g(G, node_to_idx, el.collector, el.emitter, output_conductance)
 
     if el.polarity == "NPN":
         # --- Junction stamp: gπ between B and E ------------------------------
@@ -9137,6 +9145,10 @@ def _validate_bjt(el: BJT) -> None:
         raise ValueError(
             f"{el.name}: BJT saturation-current temperature exponent must be finite"
         )
+    if not math.isfinite(el.Eg) or el.Eg <= 0.0:
+        raise ValueError(f"{el.name}: BJT energy gap must be finite and positive")
+    if not math.isfinite(el.Vaf) or el.Vaf < 0.0:
+        raise ValueError(f"{el.name}: BJT forward Early voltage must be finite and non-negative")
 
 
 # ---------------------------------------------------------------------------
@@ -12357,13 +12369,19 @@ def _stamp_ac(
         )
         exp_t = math.exp(Vjunc / el.Vt)
         exp_reverse = math.exp(Vreverse / el.Vt)
-        gm_b: float = (el.Is / el.Vt) * exp_t
+        base_collector_current = el.Is * (exp_t - 1.0)
+        base_gm = (el.Is / el.Vt) * exp_t
+        output_voltage = Vc_dc - Ve_dc if el.polarity == "NPN" else Ve_dc - Vc_dc
+        early_factor = 1.0 if el.Vaf == 0.0 else 1.0 + output_voltage / el.Vaf
+        output_conductance = 0.0 if el.Vaf == 0.0 else base_collector_current / el.Vaf
+        gm_b: float = base_gm * early_factor
         gm_reverse: float = (el.Is / el.Vt) * exp_reverse
-        g_pi: float = gm_b / el.beta_f
+        g_pi: float = base_gm / el.beta_f
         diffusion_capacitance = el.Tf * gm_b
         reverse_diffusion_capacitance = el.Tr * gm_reverse
         y_be = g_pi + 1j * omega * (el.Cje + diffusion_capacitance)
         y_bc = 1j * omega * (el.Cjc + reverse_diffusion_capacitance)
+        _stamp_g_c(G, node_to_idx, el.collector, el.emitter, output_conductance + 0j)
 
         if el.polarity == "NPN":
             _stamp_g_c(G, node_to_idx, el.base, el.emitter, y_be)
@@ -12954,6 +12972,7 @@ def _build_ss_matrix(
         elif isinstance(el, BJT):
             # Small-signal model: g_π (junction conductance) + gm VCCS.
             # Mirrors the AC _stamp_ac BJT block in the real domain.
+            Vc_dc = 0.0 if _is_ground(el.collector) else dc_x[node_to_idx[el.collector]]
             Vb_dc = 0.0 if _is_ground(el.base) else dc_x[node_to_idx[el.base]]
             Ve_dc = 0.0 if _is_ground(el.emitter) else dc_x[node_to_idx[el.emitter]]
             Vjunc = (
@@ -12961,8 +12980,14 @@ def _build_ss_matrix(
                 else min(Ve_dc - Vb_dc, 0.7)
             )
             exp_t = math.exp(Vjunc / el.Vt)
-            gm_b: float = (el.Is / el.Vt) * exp_t
-            g_pi: float = gm_b / el.beta_f
+            base_collector_current = el.Is * (exp_t - 1.0)
+            base_gm = (el.Is / el.Vt) * exp_t
+            output_voltage = Vc_dc - Ve_dc if el.polarity == "NPN" else Ve_dc - Vc_dc
+            early_factor = 1.0 if el.Vaf == 0.0 else 1.0 + output_voltage / el.Vaf
+            output_conductance = 0.0 if el.Vaf == 0.0 else base_collector_current / el.Vaf
+            gm_b: float = base_gm * early_factor
+            g_pi: float = base_gm / el.beta_f
+            _stamp_g(G, node_to_idx, el.collector, el.emitter, output_conductance)
 
             if el.polarity == "NPN":
                 _stamp_g(G, node_to_idx, el.base, el.emitter, g_pi)
@@ -13838,6 +13863,8 @@ def sens_dc(
                     Tf=el.Tf,
                     Tr=el.Tr,
                     Xti=el.Xti,
+                    Eg=el.Eg,
+                    Vaf=el.Vaf,
                 ),
             )
             delta_beta = max(abs(el.beta_f) * perturbation, abs_floor)
@@ -13855,6 +13882,8 @@ def sens_dc(
                     Tf=el.Tf,
                     Tr=el.Tr,
                     Xti=el.Xti,
+                    Eg=el.Eg,
+                    Vaf=el.Vaf,
                 ),
             )
 
@@ -14082,6 +14111,8 @@ def _vary_element(el: Element, tolerance: float, distribution: str) -> Element:
             Tf=el.Tf,
             Tr=el.Tr,
             Xti=el.Xti,
+            Eg=el.Eg,
+            Vaf=el.Vaf,
         )
 
     # Capacitor, Inductor, Mosfet — no tunable DC parameter; return unchanged.
@@ -14517,11 +14548,14 @@ def _collect_noise_sources(
             # Use actual converged dc_x voltages — no clamp — same reasoning as Diode.
             Vb = 0.0 if _is_ground(el.base) else dc_x[node_to_idx[el.base]]
             Ve = 0.0 if _is_ground(el.emitter) else dc_x[node_to_idx[el.emitter]]
+            Vc = 0.0 if _is_ground(el.collector) else dc_x[node_to_idx[el.collector]]
             Vjunc = (
                 Vb - Ve if el.polarity == "NPN"
                 else Ve - Vb
             )
-            I_C = el.Is * math.exp(Vjunc / el.Vt)
+            output_voltage = Vc - Ve if el.polarity == "NPN" else Ve - Vc
+            early_factor = 1.0 if el.Vaf == 0.0 else 1.0 + output_voltage / el.Vaf
+            I_C = el.Is * math.exp(Vjunc / el.Vt) * early_factor
             psd = q2 * abs(I_C)
             n_b = None if _is_ground(el.base) else node_to_idx[el.base]
             n_e = None if _is_ground(el.emitter) else node_to_idx[el.emitter]

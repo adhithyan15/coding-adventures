@@ -26,6 +26,8 @@
 //! | `kind`                            | `Text` (`leaf`/`summary`/`milestone`)   |
 //! | `completed`, `critical`           | `Bool`                                  |
 //! | `percentComplete`                 | `Number` (0..=100)                      |
+//! | `priority`                        | `Number` (**rank**, so it sorts by urgency; formats as the name) |
+//! | `labels`                          | `Text` (label *names*, comma-joined) or `Empty` |
 //! | `duration`, `totalSlack`, `freeSlack` | `Number` (working minutes)          |
 //! | `deadline`                        | `Date`                                  |
 //! | `start`/`scheduledStart`, `finish`/`scheduledFinish` | `Date`               |
@@ -37,8 +39,8 @@
 
 use crate::ids::TaskId;
 use crate::model::{
-    DurationUnit, FieldKind, FieldRef, FieldValue, Filter, ProjectSettings, ProjectState, SortKey,
-    Task, TaskKind, View,
+    DurationUnit, FieldKind, FieldRef, FieldValue, Filter, Priority, ProjectSettings, ProjectState,
+    SortKey, Task, TaskKind, View,
 };
 use crate::primitives::Date;
 use crate::scheduler::ScheduleResult;
@@ -70,24 +72,28 @@ pub enum CellValue {
 /// Resolve `field` on `task` to a [`CellValue`].
 ///
 /// `schedule` supplies the computed dates/slack/critical built-ins (a task absent from
-/// the schedule yields `Empty` for those). `project` is threaded through for the computed
-/// custom-field resolution added in a later PR; today custom fields read their stored
-/// value.
+/// the schedule yields `Empty` for those). `project` resolves label names; it is also
+/// where computed formula/rollup custom fields will resolve in a later PR — today custom
+/// fields read their stored value.
 pub fn cell(
     project: &ProjectState,
     task: &Task,
     field: &FieldRef,
     schedule: &ScheduleResult,
 ) -> CellValue {
-    let _ = project; // reserved for formula/rollup resolution (see module docs)
     match field {
-        FieldRef::Builtin(name) => builtin_cell(task, name, schedule),
+        FieldRef::Builtin(name) => builtin_cell(project, task, name, schedule),
         FieldRef::Custom(id) => task.fields.get(id).map_or(CellValue::Empty, value_cell),
     }
 }
 
 /// Resolve a built-in column. Unknown names are `Empty` (graceful, never an error).
-fn builtin_cell(task: &Task, name: &str, schedule: &ScheduleResult) -> CellValue {
+fn builtin_cell(
+    project: &ProjectState,
+    task: &Task,
+    name: &str,
+    schedule: &ScheduleResult,
+) -> CellValue {
     let dates = schedule.dates.get(&task.id);
     match name {
         "name" => CellValue::Text(task.name.clone()),
@@ -106,6 +112,27 @@ fn builtin_cell(task: &Task, name: &str, schedule: &ScheduleResult) -> CellValue
         ),
         "completed" => CellValue::Bool(task.completed),
         "percentComplete" => CellValue::Number(task.percent_complete as f64),
+        // Priority resolves to its RANK, not its name, so a sort orders by urgency
+        // (Low→Urgent) instead of alphabetically (High→Low→Normal→Urgent).
+        // `format_cell` turns the rank back into the display name.
+        "priority" => task
+            .priority
+            .map_or(CellValue::Empty, |p| CellValue::Number(p.rank() as f64)),
+        // Labels join their *names* (resolved through the project's registry), so a
+        // filter/search sees what the user sees rather than opaque ids.
+        "labels" if !task.labels.is_empty() => CellValue::Text(
+            task.labels
+                .iter()
+                .map(|l| {
+                    project
+                        .labels
+                        .get(l)
+                        .map_or_else(|| l.0.clone(), |lab| lab.name.clone())
+                })
+                .collect::<Vec<_>>()
+                .join(", "),
+        ),
+        "labels" => CellValue::Empty,
         "duration" => task.schedule.as_ref().map_or(CellValue::Empty, |s| {
             CellValue::Number(s.duration.working_minutes as f64)
         }),
@@ -166,6 +193,11 @@ pub fn format_cell(value: &CellValue, field: &FieldRef, settings: &ProjectSettin
 fn format_number(n: f64, field: &FieldRef, settings: &ProjectSettings) -> String {
     if let FieldRef::Builtin(name) = field {
         match name.as_str() {
+            // Priority is stored as a rank so it sorts by urgency; show its name.
+            "priority" => {
+                return Priority::from_rank(n as u8)
+                    .map_or_else(String::new, |p| p.label().to_string())
+            }
             "percentComplete" => return format!("{}%", trim_number(n)),
             "duration" | "totalSlack" | "freeSlack" => return format_working_minutes(n, settings),
             _ => {}
@@ -283,6 +315,11 @@ fn passes_filter(task: &Task, filter: &Filter) -> bool {
 
 /// Compare two tasks by a list of sort keys, first non-equal key wins. A descending key
 /// reverses that key's order; ties fall through to the next key.
+///
+/// **Missing values always sort last**, in *both* directions — reversing a descending
+/// sort would otherwise float every blank to the top, which is not what anyone means by
+/// "sort by priority, highest first". So emptiness is decided before direction is applied,
+/// and only real values are reversed. (Spreadsheets and every board tool behave this way.)
 fn compare_by_keys(
     project: &ProjectState,
     a: &Task,
@@ -293,8 +330,19 @@ fn compare_by_keys(
     for key in keys {
         let va = cell(project, a, &key.field, schedule);
         let vb = cell(project, b, &key.field, schedule);
-        let ord = cmp_cell(&va, &vb);
-        let ord = if key.ascending { ord } else { ord.reverse() };
+        let ord = match (&va, &vb) {
+            (CellValue::Empty, CellValue::Empty) => Ordering::Equal,
+            (CellValue::Empty, _) => Ordering::Greater, // blanks last, either direction
+            (_, CellValue::Empty) => Ordering::Less,
+            _ => {
+                let o = cmp_cell(&va, &vb);
+                if key.ascending {
+                    o
+                } else {
+                    o.reverse()
+                }
+            }
+        };
         if ord != Ordering::Equal {
             return ord;
         }
@@ -511,6 +559,8 @@ fn builtin_label(name: &str) -> &str {
         "status" => "Status",
         "kind" => "Type",
         "completed" => "Done",
+        "priority" => "Priority",
+        "labels" => "Labels",
         "percentComplete" => "% Complete",
         "duration" => "Duration",
         "deadline" => "Deadline",
@@ -533,7 +583,9 @@ fn column_kind(project: &ProjectState, field: &FieldRef) -> ColumnKind {
     match field {
         FieldRef::Builtin(name) => match name.as_str() {
             "completed" | "critical" => ColumnKind::Bool,
-            "percentComplete" | "duration" | "totalSlack" | "freeSlack" => ColumnKind::Number,
+            "percentComplete" | "duration" | "totalSlack" | "freeSlack" | "priority" => {
+                ColumnKind::Number
+            }
             "deadline" | "start" | "scheduledStart" | "finish" | "scheduledFinish"
             | "earlyStart" | "earlyFinish" | "lateStart" | "lateFinish" => ColumnKind::Date,
             _ => ColumnKind::Text,
@@ -982,6 +1034,21 @@ mod tests {
         let p = sample();
         let sched = no_schedule();
 
+        // Blanks stay last even when the sort is DESCENDING: d has no status, so it must
+        // not float to the top just because the direction flipped.
+        let desc_status = SortKey {
+            field: builtin("status"),
+            ascending: false,
+        };
+        assert_eq!(
+            ids(&select(
+                &p,
+                &view(Filter::default(), vec![desc_status, asc("name")], None),
+                &sched
+            )),
+            ["b", "a", "c", "d"] // done > doing, blank (d) still last
+        );
+
         // Descending percentComplete: 100, 60, 10, 0 → b, c, a, d.
         let desc = SortKey {
             field: builtin("percentComplete"),
@@ -1135,6 +1202,126 @@ mod tests {
         assert_eq!(a.cells[1].display, "○"); // completed=false → glyph
         assert_eq!(a.cells[1].value, CellValue::Bool(false)); // typed value still available
         assert_eq!(a.cells[2].display, "10%"); // percentComplete formatted
+    }
+
+    // ── labels & priority ────────────────────────────────────────────────────────
+
+    #[test]
+    fn priority_sorts_by_urgency_and_displays_its_name() {
+        use crate::model::Priority;
+        let mut p = project();
+        for (id, name, pr) in [
+            ("hi", "High one", Some(Priority::High)),
+            ("lo", "Low one", Some(Priority::Low)),
+            ("ur", "Urgent one", Some(Priority::Urgent)),
+            ("no", "Unset one", None),
+        ] {
+            let mut t = Task::new(TaskId::from_raw(id), name);
+            t.priority = pr;
+            p.tasks.insert(t.id.clone(), t);
+        }
+        let sched = no_schedule();
+
+        // Descending priority: Urgent, High, Low, then the unset one (Empty sorts last).
+        let desc = SortKey {
+            field: builtin("priority"),
+            ascending: false,
+        };
+        let got = select(&p, &view(Filter::default(), vec![desc], None), &sched);
+        assert_eq!(ids(&got), ["ur", "hi", "lo", "no"]);
+
+        // The cell is a rank (so it sorts) but displays as the name.
+        let hi = &p.tasks[&TaskId::from_raw("hi")];
+        let v = cell(&p, hi, &builtin("priority"), &sched);
+        assert_eq!(v, CellValue::Number(2.0));
+        assert_eq!(format_cell(&v, &builtin("priority"), &p.settings), "High");
+        // An unset priority renders blank.
+        let none = &p.tasks[&TaskId::from_raw("no")];
+        let v = cell(&p, none, &builtin("priority"), &sched);
+        assert_eq!(format_cell(&v, &builtin("priority"), &p.settings), "");
+    }
+
+    #[test]
+    fn labels_resolve_to_names_and_group() {
+        use crate::ids::LabelId;
+        use crate::model::Label;
+        let mut p = project();
+        p.upsert_label(Label {
+            id: LabelId::from_raw("l1"),
+            name: "Bug".into(),
+            color: "red".into(),
+        });
+        p.upsert_label(Label {
+            id: LabelId::from_raw("l2"),
+            name: "Chore".into(),
+            color: "grey".into(),
+        });
+        for (id, name) in [("a", "Alpha"), ("b", "Bravo"), ("c", "Charlie")] {
+            p.create_task(TaskId::from_raw(id), name, None).unwrap();
+        }
+        p.set_task_labels(&TaskId::from_raw("a"), vec![LabelId::from_raw("l1")])
+            .unwrap();
+        p.set_task_labels(
+            &TaskId::from_raw("b"),
+            vec![LabelId::from_raw("l1"), LabelId::from_raw("l2")],
+        )
+        .unwrap();
+        let sched = no_schedule();
+
+        // The cell shows label NAMES, joined — not opaque ids.
+        let b = &p.tasks[&TaskId::from_raw("b")];
+        assert_eq!(
+            cell(&p, b, &builtin("labels"), &sched),
+            CellValue::Text("Bug, Chore".into())
+        );
+        // A task with no labels is Empty (and groups last).
+        let groups = select(
+            &p,
+            &view(
+                Filter::default(),
+                vec![asc("name")],
+                Some(builtin("labels")),
+            ),
+            &sched,
+        );
+        let labels: Vec<_> = groups.iter().map(|g| g.key_label.clone()).collect();
+        assert_eq!(labels, ["Bug", "Bug, Chore", ""]);
+    }
+
+    #[test]
+    fn label_ops_validate_and_clean_up() {
+        use crate::ids::LabelId;
+        use crate::model::Label;
+        let mut p = project();
+        p.upsert_label(Label {
+            id: LabelId::from_raw("l1"),
+            name: "Bug".into(),
+            color: "red".into(),
+        });
+        p.create_task(TaskId::from_raw("a"), "Alpha", None).unwrap();
+
+        // Unknown label id is rejected.
+        assert_eq!(
+            p.set_task_labels(&TaskId::from_raw("a"), vec![LabelId::from_raw("ghost")]),
+            Err(crate::ops::OpError::NotFound)
+        );
+        // Unknown task is rejected.
+        assert_eq!(
+            p.set_task_labels(&TaskId::from_raw("ghost"), vec![]),
+            Err(crate::ops::OpError::NotFound)
+        );
+        // Duplicates are collapsed.
+        p.set_task_labels(
+            &TaskId::from_raw("a"),
+            vec![LabelId::from_raw("l1"), LabelId::from_raw("l1")],
+        )
+        .unwrap();
+        assert_eq!(p.tasks[&TaskId::from_raw("a")].labels.len(), 1);
+
+        // Deleting the label removes it from the task — no dangling reference.
+        p.delete_label(&LabelId::from_raw("l1"));
+        assert!(p.labels.is_empty());
+        assert!(p.tasks[&TaskId::from_raw("a")].labels.is_empty());
     }
 
     // ── calendar projection ──────────────────────────────────────────────────────

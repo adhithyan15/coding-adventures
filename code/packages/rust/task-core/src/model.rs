@@ -44,6 +44,20 @@ pub struct Task {
     /// UI: is this summary's subtree collapsed.
     pub collapsed: bool,
 
+    /// Colour-coded tags. A first-class filter/group dimension, like every board tool.
+    /// Serialized only when non-empty, so pre-label snapshots still deserialize.
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Vec::is_empty")
+    )]
+    pub labels: Vec<LabelId>,
+    /// Triage priority. `None` means unprioritized (sorts after every set priority).
+    #[cfg_attr(
+        feature = "serde",
+        serde(default, skip_serializing_if = "Option::is_none")
+    )]
+    pub priority: Option<Priority>,
+
     /// Workflow status (kanban/agile). `None` uses the board's default status.
     pub status: Option<StatusId>,
     /// The checklist "done" flag — kept distinct from `status` so a board and a
@@ -75,12 +89,84 @@ impl Task {
             order: 0,
             kind: TaskKind::Leaf,
             collapsed: false,
+            labels: Vec::new(),
+            priority: None,
             status: None,
             completed: false,
             percent_complete: 0,
             schedule: None,
             fields: BTreeMap::new(),
             decision: None,
+        }
+    }
+}
+
+/// A colour-coded tag. Labels are defined once per project and referenced by id, so
+/// renaming or recolouring one updates every task at once.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub struct Label {
+    /// Label identity.
+    pub id: LabelId,
+    /// Display name.
+    pub name: String,
+    /// A host-interpreted colour token (e.g. `"red"` or `"#c0392b"`); the engine never
+    /// parses it, it just round-trips it verbatim.
+    ///
+    /// **Host note:** because this is stored as free text and echoed back unchanged, a
+    /// host that interpolates it into a `style` attribute or a stylesheet must escape or
+    /// validate it there — the engine deliberately takes no view on colour syntax.
+    pub color: String,
+}
+
+/// Triage priority, ordered from least to most urgent.
+///
+/// The discriminants are meaningful: [`Priority::rank`] exposes them so views sort by
+/// *urgency* rather than alphabetically (which would put "High" before "Low").
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub enum Priority {
+    /// Nice to have.
+    Low,
+    /// The default working priority.
+    Normal,
+    /// Should be done soon.
+    High,
+    /// Drop everything.
+    Urgent,
+}
+
+impl Priority {
+    /// The sort rank: `Low` = 0 … `Urgent` = 3.
+    pub fn rank(self) -> u8 {
+        match self {
+            Priority::Low => 0,
+            Priority::Normal => 1,
+            Priority::High => 2,
+            Priority::Urgent => 3,
+        }
+    }
+
+    /// The display name, and the inverse of [`Priority::rank`]'s ordering.
+    pub fn label(self) -> &'static str {
+        match self {
+            Priority::Low => "Low",
+            Priority::Normal => "Normal",
+            Priority::High => "High",
+            Priority::Urgent => "Urgent",
+        }
+    }
+
+    /// The priority for a rank produced by [`Priority::rank`], if it is in range.
+    pub fn from_rank(rank: u8) -> Option<Priority> {
+        match rank {
+            0 => Some(Priority::Low),
+            1 => Some(Priority::Normal),
+            2 => Some(Priority::High),
+            3 => Some(Priority::Urgent),
+            _ => None,
         }
     }
 }
@@ -847,6 +933,9 @@ pub struct ProjectState {
     pub project_calendar: CalendarId,
     /// User-defined custom fields, by id.
     pub fields: BTreeMap<FieldId, FieldDef>,
+    /// Label definitions, by id. Defaulted so pre-label snapshots still deserialize.
+    #[cfg_attr(feature = "serde", serde(default))]
+    pub labels: BTreeMap<LabelId, Label>,
     /// Status workflows, by id.
     pub workflows: BTreeMap<WorkflowId, Workflow>,
     /// Captured baselines, by id.
@@ -878,6 +967,7 @@ impl ProjectState {
             calendars,
             project_calendar: cal_id,
             fields: BTreeMap::new(),
+            labels: BTreeMap::new(),
             workflows: BTreeMap::new(),
             baselines: BTreeMap::new(),
             views: BTreeMap::new(),
