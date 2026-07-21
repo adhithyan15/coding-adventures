@@ -121,6 +121,24 @@ and Italian's habit of keeping final vowels Latin's other children dropped.
   endings (*andato/-a/-i/-e*), same adjective fossil as French. Closes the
   three-way table: French and Italian **keep** the agreement, German **drops**
   it. **Authored.**
+- **Ch. 17 — The body: the pot kept whole, and a noun that breaks the rule**:
+  ***la testa*** (`IT-C17-testa`) — Latin ***testa*** "earthenware pot" kept
+  **almost unchanged**, where French wore the same word down to *tête*: the
+  **conservative-sister** pattern this track keeps meeting (*acqua*/*eau* in
+  Ch. 11, *parlato* keeping the *-t-* that *parlé* lost in Ch. 15). And unlike
+  French, Italian **also kept *caput* alive** as ***il capo***, "boss, chief" —
+  which English borrowed straight out of Italian — plus *capitale*, *capitolo*,
+  *capitano*. So both the old head-word and its slang replacement are live →
+  ***la mano*** (`IT-C17-mano`): **feminine while ending in *-o***, plural *le
+  mani*, breaking the *-o*/*-a* **tendency** (Ch. 1 taught "learn each noun **with**
+  its article", not an ending rule — and this word shows why). Because Latin
+  *manus* was **fourth
+  declension**, a class whose nouns ended *-us* but could be feminine; Italian
+  flattened five Latin declensions to **three** productive classes and left the
+  word stranded with its old
+  gender. **The general lesson**: an "irregular" word is usually a **regular word
+  from a system that no longer exists**. English took **manage** from Italian
+  *maneggiare*, to handle a **horse**. **Authored.**
 
 ## Planned (mirrors the Spanish theme sequence)
 

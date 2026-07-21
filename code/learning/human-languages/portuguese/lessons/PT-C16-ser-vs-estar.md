@@ -137,4 +137,4 @@ essence sense comes from *esse*.) Which verb in "he is dead"? (***Está*** — s
 the test isn't really permanence.) What is the difference between *ela é bonita*
 and *ela está bonita*? (She **is** beautiful, versus she **looks** beautiful
 **right now**.) Which language absorbed one verb into the other? (**French** —
-*être*.) Next chapter: describing what you see.
+*être*.) Next chapter: the **body**.

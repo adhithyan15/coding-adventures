@@ -121,5 +121,4 @@ agree with the subject? (**No** — with a **preceding direct object**, the *avo
 rule: *elle s'est lavé**e***, but *elle s'est lav**é** les mains*.) What does the participle
 agree with under *être*? (**The subject** — *elle est allé**e***.) And under
 *avoir*? (**A preceding object**.) What single idea explains both? (The
-participle was an **adjective**, agreeing with whatever it described.) Next
-chapter: describing what you see.
+participle was an **adjective**, agreeing with whatever it described.) Next chapter: the **body**.
