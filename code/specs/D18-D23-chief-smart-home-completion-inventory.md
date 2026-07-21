@@ -296,10 +296,17 @@ a hardware key. The scheduled Weather Agent job proves pending, weak-denied,
 and biometric-approved paths through the real host runtime, execution journal,
 user report, and restarted durable audit reader.
 
+The vault-leasing slice adds a reusable Chief host runtime over the zeroizing
+`vault-leases` manager. `vault.request_lease` now requires a challenge-bound
+Tier2 approval and returns only a random `VaultRef`; the scheduled Weather Agent
+passes that handle to its fetch host, which atomically consumes the lease and
+keeps the raw credential out of model-visible values, reports, and durable
+audit rows. Executable tests cover approved and approval-denied jobs plus
+one-shot, revoked, malformed, and unknown lease behavior.
+
 These items are Chief of Staff architecture, not smart-home platform work:
 
-- Wire vault leasing so tools receive opaque `VaultRef` handles and never raw
-  smart-home secrets.
+- No remaining items within the D18 Chief architecture completion boundary.
 
 ## Smart Home Remaining Work
 
