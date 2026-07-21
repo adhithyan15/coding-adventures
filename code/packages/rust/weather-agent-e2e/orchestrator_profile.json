@@ -15,7 +15,7 @@
     },
     {
       "host_id": "file_writer",
-      "max_tier": "tier1",
+      "max_tier": "tier2",
       "allowed_tools": ["file.write_text"],
       "capabilities": ["filesystem_write"]
     }

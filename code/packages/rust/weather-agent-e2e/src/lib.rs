@@ -27,11 +27,11 @@ use chief_of_staff_host_runtime::{
     OrchestratorProfileSummary,
 };
 use chief_of_staff_tool_api::{
-    ApprovalState, JsonSchema, PrivilegeTier, RequestedBy, SchemaProperty, ToolApiError,
-    ToolApprovalGrant, ToolAuditRecordQuery, ToolCallError, ToolConcurrency, ToolDefinition,
-    ToolErrorKind, ToolEventKind, ToolExecutionJournal, ToolExecutionJournalHealthSummary,
-    ToolHandlerOutput, ToolIdempotency, ToolInvocationRequest, ToolPolicyProfile, ToolSideEffects,
-    ToolStability, ToolStreaming,
+    ApprovalAssurance, ApprovalState, JsonSchema, PrivilegeTier, RequestedBy, SchemaProperty,
+    ToolApiError, ToolApprovalChallenge, ToolApprovalGrant, ToolAuditRecordQuery, ToolCallError,
+    ToolConcurrency, ToolDefinition, ToolErrorKind, ToolEventKind, ToolExecutionJournal,
+    ToolExecutionJournalHealthSummary, ToolHandlerOutput, ToolIdempotency, ToolInvocationRequest,
+    ToolPolicyProfile, ToolSideEffects, ToolStability, ToolStreaming,
 };
 use chief_of_staff_tool_audit_store::{ToolAuditStore, ToolAuditStoreInventorySummary};
 use coding_adventures_json_value::{JsonNumber, JsonValue};
@@ -193,6 +193,7 @@ pub struct UmbrellaAgentConfig {
     pub weather_source: WeatherSource,
     pub supervisor_probe: UmbrellaSupervisorProbe,
     pub write_approval: Option<ToolApprovalGrant>,
+    pub write_required_tier: PrivilegeTier,
     pub audit_root: PathBuf,
 }
 
@@ -209,6 +210,7 @@ impl UmbrellaAgentConfig {
             weather_source: WeatherSource::Fixture(WeatherSnapshot::rainy_seattle_fixture()),
             supervisor_probe: UmbrellaSupervisorProbe::default(),
             write_approval: Some(default_write_approval(DEFAULT_TICK_ID, 1_778_624_400_000)),
+            write_required_tier: PrivilegeTier::Tier1,
         }
     }
 
@@ -230,6 +232,7 @@ impl UmbrellaAgentConfig {
             },
             supervisor_probe: UmbrellaSupervisorProbe::default(),
             write_approval: Some(default_write_approval(DEFAULT_TICK_ID, fetched_at_ms)),
+            write_required_tier: PrivilegeTier::Tier1,
         }
     }
 
@@ -243,6 +246,21 @@ impl UmbrellaAgentConfig {
         self
     }
 
+    pub fn with_tier2_write_approval(mut self, assurance: ApprovalAssurance) -> Self {
+        self.write_required_tier = PrivilegeTier::Tier2;
+        let call_id = scoped_call_id(&self.tick_id, "write_umbrella_report");
+        self.write_approval = Some(
+            default_write_approval(&self.tick_id, self.fetched_at_ms)
+                .with_assurance(assurance)
+                .with_challenge_id(ToolApprovalChallenge::id_for(
+                    call_id,
+                    WRITE_TOOL_ID,
+                    self.fetched_at_ms,
+                )),
+        );
+        self
+    }
+
     pub fn with_audit_root(mut self, audit_root: impl Into<PathBuf>) -> Self {
         self.audit_root = audit_root.into();
         self
@@ -252,6 +270,13 @@ impl UmbrellaAgentConfig {
         self.tick_id = tick_id.into();
         if let Some(grant) = self.write_approval.as_mut() {
             grant.call_id = scoped_call_id(&self.tick_id, "write_umbrella_report");
+            if self.write_required_tier >= PrivilegeTier::Tier2 {
+                grant.challenge_id = Some(ToolApprovalChallenge::id_for(
+                    &grant.call_id,
+                    WRITE_TOOL_ID,
+                    self.fetched_at_ms,
+                ));
+            }
         }
         self
     }
@@ -593,6 +618,8 @@ pub struct UmbrellaUserReport {
     pub completed_at_iso: String,
     pub output_ref: String,
     pub write_approval: ApprovalState,
+    pub write_required_tier: PrivilegeTier,
+    pub approval_assurance: Option<ApprovalAssurance>,
     pub journal_invocation_count: usize,
 }
 
@@ -764,6 +791,8 @@ pub fn run_umbrella_today_agent(config: UmbrellaAgentConfig) -> UmbrellaResult<U
         completed_at_iso: config.fetched_at_iso.clone(),
         output_ref: "artifact:umbrella_today_report".to_string(),
         write_approval: ApprovalState::Granted,
+        write_required_tier: config.write_required_tier,
+        approval_assurance: config.write_approval.as_ref().map(|grant| grant.assurance),
         journal_invocation_count: tool_journal_health.invocation_count,
     };
 
@@ -870,10 +899,16 @@ impl UmbrellaPipeline {
         )
         .map_err(UmbrellaAgentError::from)?;
         register_weather_classifier_tool(&mut tool_runtime)?;
-        register_file_writer_tool(&mut tool_runtime, writer_manifest(&config.output_path)?)?;
+        register_file_writer_tool(
+            &mut tool_runtime,
+            writer_manifest(&config.output_path)?,
+            config.write_required_tier,
+        )?;
         tool_runtime.set_host_policy(
             "file_writer",
-            ToolPolicyProfile::allow_all().with_approval_required_for(vec![ToolSideEffects::Write]),
+            ToolPolicyProfile::allow_all()
+                .with_approval_required_for(vec![ToolSideEffects::Write])
+                .with_approval_required_at_or_above(PrivilegeTier::Tier2),
         )?;
         let tool_runtime = tool_runtime.activate()?;
 
@@ -1713,57 +1748,57 @@ fn register_weather_classifier_tool(
 fn register_file_writer_tool(
     runtime: &mut OrchestratorProfileRuntime,
     manifest: Manifest,
+    required_tier: PrivilegeTier,
 ) -> Result<(), HostRuntimeError> {
-    runtime.register_handler(
-        tool_definition(
-            WRITE_TOOL_ID,
-            "Write text file",
-            "Write the umbrella recommendation to a text file through capability-caged fs access.",
-            JsonSchema::Object {
-                properties: vec![
-                    SchemaProperty::new("output_path", JsonSchema::String),
-                    SchemaProperty::new("line", JsonSchema::String),
-                ],
-                required: vec!["output_path".to_string(), "line".to_string()],
-                allow_unknown_fields: false,
-            },
-            Some(JsonSchema::Object {
-                properties: vec![
-                    SchemaProperty::new("output_path", JsonSchema::String),
-                    SchemaProperty::new("bytes_written", JsonSchema::Integer),
-                ],
-                required: vec!["output_path".to_string(), "bytes_written".to_string()],
-                allow_unknown_fields: false,
-            }),
-            ToolSideEffects::Write,
-            ToolIdempotency::Conditional,
-            ToolConcurrency::Serialized,
-            ToolStreaming::Events,
-            vec!["filesystem_write"],
-            vec!["file", "write", "e2e"],
-        ),
-        move |arguments, _context| {
-            let output_path = field_string(&arguments, "output_path")?;
-            let line = field_string(&arguments, "line")?;
-            let mut bytes = line.into_bytes();
-            bytes.push(b'\n');
-            secure_file::write_file(&manifest, Path::new(&output_path), &bytes).map_err(|err| {
-                ToolCallError::new(
-                    ToolErrorKind::ToolExecutionError,
-                    format!("failed to write umbrella report: {err}"),
-                )
-            })?;
-            Ok(ToolHandlerOutput::new(object(vec![
-                ("output_path", string(&output_path)),
-                ("bytes_written", int(bytes.len() as i64)),
-            ]))
-            .with_artifact_ref("umbrella_today_report")
-            .with_event(
-                ToolEventKind::Artifact,
-                object(vec![("path", string(&output_path))]),
-            ))
+    let mut definition = tool_definition(
+        WRITE_TOOL_ID,
+        "Write text file",
+        "Write the umbrella recommendation to a text file through capability-caged fs access.",
+        JsonSchema::Object {
+            properties: vec![
+                SchemaProperty::new("output_path", JsonSchema::String),
+                SchemaProperty::new("line", JsonSchema::String),
+            ],
+            required: vec!["output_path".to_string(), "line".to_string()],
+            allow_unknown_fields: false,
         },
-    )
+        Some(JsonSchema::Object {
+            properties: vec![
+                SchemaProperty::new("output_path", JsonSchema::String),
+                SchemaProperty::new("bytes_written", JsonSchema::Integer),
+            ],
+            required: vec!["output_path".to_string(), "bytes_written".to_string()],
+            allow_unknown_fields: false,
+        }),
+        ToolSideEffects::Write,
+        ToolIdempotency::Conditional,
+        ToolConcurrency::Serialized,
+        ToolStreaming::Events,
+        vec!["filesystem_write"],
+        vec!["file", "write", "e2e"],
+    );
+    definition.required_tier = required_tier;
+    runtime.register_handler(definition, move |arguments, _context| {
+        let output_path = field_string(&arguments, "output_path")?;
+        let line = field_string(&arguments, "line")?;
+        let mut bytes = line.into_bytes();
+        bytes.push(b'\n');
+        secure_file::write_file(&manifest, Path::new(&output_path), &bytes).map_err(|err| {
+            ToolCallError::new(
+                ToolErrorKind::ToolExecutionError,
+                format!("failed to write umbrella report: {err}"),
+            )
+        })?;
+        Ok(ToolHandlerOutput::new(object(vec![
+            ("output_path", string(&output_path)),
+            ("bytes_written", int(bytes.len() as i64)),
+        ]))
+        .with_artifact_ref("umbrella_today_report")
+        .with_event(
+            ToolEventKind::Artifact,
+            object(vec![("path", string(&output_path))]),
+        ))
+    })
 }
 
 #[allow(clippy::too_many_arguments)] // builder-style constructor; signature kept as-is

@@ -17,11 +17,15 @@ three isolated host profiles with independent capability sets. The profile must
 be complete and active before the first tool invocation. The writer host applies
 a centralized policy that requires a call-scoped user approval before filesystem
 output; an absent grant leaves the call pending and the report unwritten.
+The same scheduled job can raise the writer to Tier 2: the pending result
+contains the trusted UI challenge, explicit consent is rejected before the file
+handler, and only a challenge-bound biometric assertion completes the run.
 
 A successful run now emits a validated D18C `JobRunReceipt` plus a compact
 `UmbrellaUserReport`. The receipt points at the stored report artifact, while the
 user report carries the recommendation, completion time, approval state, and
-journal invocation count. This makes umbrella-today a reusable Chief job with a
+journal invocation count. It also reports the required tier and accepted
+approval assurance. This makes umbrella-today a reusable Chief job with a
 terminal product rather than only an architecture harness.
 
 Every run also copies the canonical payload-free D18D audit rows into

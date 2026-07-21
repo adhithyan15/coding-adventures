@@ -3,7 +3,9 @@ use std::path::PathBuf;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use capability_os_sandbox::{current_kernel_sandbox_support, OsFamily};
-use chief_of_staff_tool_api::{ApprovalState, ToolAuditRecordQuery};
+use chief_of_staff_tool_api::{
+    ApprovalAssurance, ApprovalState, PrivilegeTier, ToolAuditRecordQuery,
+};
 use chief_of_staff_tool_audit_store::ToolAuditStore;
 use os_job_core::BackendKind;
 use storage_local_folder::LocalFolderStorageBackend;
@@ -128,6 +130,11 @@ fn umbrella_today_agent_exercises_architecture_and_writes_text_file() {
         .detail
         .contains("precipitation chance is 72%"));
     assert_eq!(run.user_report.write_approval, ApprovalState::Granted);
+    assert_eq!(run.user_report.write_required_tier, PrivilegeTier::Tier1);
+    assert_eq!(
+        run.user_report.approval_assurance,
+        Some(ApprovalAssurance::ExplicitConsent)
+    );
     assert_eq!(run.user_report.journal_invocation_count, 3);
     assert!(run.user_report.render().contains("Bring an umbrella today"));
     assert_eq!(run.durable_audit.job_id, "umbrella_today_job");
@@ -183,6 +190,54 @@ fn umbrella_today_job_blocks_write_without_explicit_approval() {
         .expect("denied write row should be persisted");
     assert_eq!(denied_write.approval_state, ApprovalState::Pending);
     assert!(!denied_write.result_summary.ok);
+}
+
+#[test]
+fn tier2_write_rejects_weak_consent_and_persists_denial() {
+    let root = temp_root("weather-agent-tier2-weak-approval-e2e");
+    fs::create_dir_all(&root).expect("temp dir should be created");
+    let output_path = root.join("umbrella-today.txt");
+    let config = UmbrellaAgentConfig::deterministic_seattle(&output_path)
+        .with_tier2_write_approval(ApprovalAssurance::ExplicitConsent);
+
+    let error = run_umbrella_today_agent(config)
+        .expect_err("Tier 2 write should reject weak explicit consent");
+    assert!(error.to_string().contains("weaker than required"));
+    assert!(!fs::read_to_string(&output_path)
+        .unwrap_or_default()
+        .contains("Bring an umbrella today"));
+
+    let restarted_audit = ToolAuditStore::new(LocalFolderStorageBackend::new(
+        output_path.with_extension("audit"),
+    ));
+    let denied_write = restarted_audit
+        .fetch_audit("8a7b0000000000000000000000000001_write_umbrella_report")
+        .expect("durable audit should be readable after weak approval denial")
+        .expect("denied Tier 2 write row should be persisted");
+    assert_eq!(denied_write.approval_state, ApprovalState::Denied);
+    assert!(!denied_write.result_summary.ok);
+}
+
+#[test]
+fn tier2_write_accepts_challenge_bound_biometric_approval() {
+    let root = temp_root("weather-agent-tier2-biometric-approval-e2e");
+    fs::create_dir_all(&root).expect("temp dir should be created");
+    let output_path = root.join("umbrella-today.txt");
+    let config = UmbrellaAgentConfig::deterministic_seattle(&output_path)
+        .with_tier2_write_approval(ApprovalAssurance::Biometric);
+
+    let run = run_umbrella_today_agent(config)
+        .expect("challenge-bound biometric approval should complete the Tier 2 job");
+    assert_eq!(run.user_report.write_required_tier, PrivilegeTier::Tier2);
+    assert_eq!(
+        run.user_report.approval_assurance,
+        Some(ApprovalAssurance::Biometric)
+    );
+    assert_eq!(run.tool_journal_health.approval_biometric_count, 1);
+    assert_eq!(run.tool_journal_health.approval_explicit_consent_count, 0);
+    assert_eq!(run.durable_audit.approval_granted_records, 1);
+    assert!(run.durable_audit.is_complete());
+    assert!(run.output_text.contains("Bring an umbrella today"));
 }
 
 #[test]

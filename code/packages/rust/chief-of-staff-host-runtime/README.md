@@ -64,7 +64,10 @@ Host profiles can install a centralized D18D policy before activation with
 the matching approval-aware invocation path, so a scoped `ToolApprovalGrant`
 travels through the same owner routing and policy engine as an ordinary call.
 Approval tokens cannot bypass an unknown host, unowned tool, profile ceiling,
-or capability check.
+or capability check. Profiles may also require approval at a privilege
+threshold. The host emits a canonical challenge for pending calls, rejects weak
+or unbound assertions, requires biometric assurance for Tier 2 and a hardware
+key for Tier 3, and records the accepted assurance in the execution journal.
 
 An orchestrator profile has this shape:
 
@@ -80,7 +83,7 @@ An orchestrator profile has this shape:
     },
     {
       "host_id": "file_writer",
-      "max_tier": "tier1",
+      "max_tier": "tier2",
       "allowed_tools": ["file.write_text"],
       "capabilities": ["filesystem_write"]
     }
