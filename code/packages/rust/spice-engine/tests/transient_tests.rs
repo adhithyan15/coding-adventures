@@ -524,6 +524,56 @@ fn transient_bjt_base_emitter_capacitance_slows_base_current_step() {
 }
 
 #[test]
+fn transient_bjt_base_emitter_depletion_capacitance_falls_with_reverse_bias() {
+    fn stepped_base_voltage(grading_coefficient: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+            "Vdrive",
+            "in",
+            "0",
+            -1.0,
+            Waveform::Pwl(PwlWaveform::new(vec![
+                (0.0, -1.0),
+                (1.0e-9, -1.0),
+                (2.0e-9, 0.0),
+                (5.0e-9, 0.0),
+            ])),
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "base", 1_000.0,
+        )));
+        circuit.add(Element::Bjt(
+            Bjt::with_model_temperature_and_depletion_parameters(
+                "Q1",
+                "0",
+                "base",
+                "0",
+                BjtPolarity::Npn,
+                1.0e-14,
+                100.0,
+                0.02585,
+                1.0e-12,
+                0.0,
+                0.0,
+                0.0,
+                3.0,
+                1.11,
+                0.0,
+                1.0,
+                1.0,
+                0.75,
+                grading_coefficient,
+            ),
+        ));
+        transient(&circuit, 1.0e-9, 5.0e-9).unwrap()[1]
+            .voltage("base")
+            .unwrap()
+    }
+
+    assert!(stepped_base_voltage(0.5) > stepped_base_voltage(0.0));
+}
+
+#[test]
 fn transient_bjt_forward_transit_time_holds_base_charge_on_turnoff() {
     fn run(forward_transit_time: f64) -> Vec<TransientPoint> {
         let mut circuit = Circuit::new();

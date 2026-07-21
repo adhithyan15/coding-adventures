@@ -619,6 +619,8 @@ class BJT:
     Vaf: float = 0.0        # forward Early voltage (V); 0 means infinite
     Nf: float = 1.0         # forward emission coefficient
     Nr: float = 1.0         # reverse emission coefficient
+    Vje: float = 0.75       # base-emitter junction potential (V)
+    Mje: float = 0.33       # base-emitter grading coefficient
 
 
 # ---------------------------------------------------------------------------
