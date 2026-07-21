@@ -563,7 +563,11 @@ pub fn from_pipeline(
         // UI35 adds `useState`: the drag controller keeps the hovered drop target in
         // state (it drives rendering) while the in-flight drag itself lives in a ref.
         if has_drag {
-            writeln!(out, "import {{ useRef, useEffect, useState }} from \"react\";").unwrap();
+            writeln!(
+                out,
+                "import {{ useRef, useEffect, useState, useId }} from \"react\";"
+            )
+            .unwrap();
         } else {
             writeln!(out, "import {{ useRef, useEffect }} from \"react\";").unwrap();
         }
@@ -756,17 +760,12 @@ fn emit_function(
         // The clip-rect style is the standard visually-hidden recipe: present for
         // assistive tech, invisible and non-layout-affecting for everyone else.
         //
-        // The wrapper is a real element rather than a fragment because the
-        // controller needs a DOM node to scope drop-target lookup to (see
-        // `mosaic$targets`). `display: contents` makes it layout-transparent, so
-        // adding it cannot disturb the author's grid/flex geometry — the children
-        // participate in the parent's layout exactly as if the wrapper were the
-        // fragment it replaces.
-        writeln!(
-            body,
-            "    <div ref={{mosaic$scope}} style={{{{ display: \"contents\" }}}}>"
-        )
-        .unwrap();
+        // A fragment, deliberately: instance scoping is done with `useId`, not by
+        // wrapping the tree, precisely so no element is introduced here. A wrapper
+        // <div> would be invalid inside a <tbody>/<ul>/<select> context — the HTML
+        // parser hoists non-table content out of a table — and this emitter does
+        // lower components into exactly those contexts.
+        writeln!(body, "    <>").unwrap();
         writeln!(
             body,
             "      <div ref={{mosaic$live}} aria-live=\"polite\" role=\"status\" style={{{{ position: \"absolute\", width: 1, height: 1, overflow: \"hidden\", clip: \"rect(0 0 0 0)\", whiteSpace: \"nowrap\" }}}} />"
@@ -783,7 +782,7 @@ fn emit_function(
         None,
     )?);
     if has_drag {
-        writeln!(body, "    </div>").unwrap();
+        writeln!(body, "    </>").unwrap();
     }
     writeln!(body, "  );").unwrap();
 
@@ -2098,47 +2097,54 @@ fn emit_drag_controller_hooks(usage: DragUsage) -> String {
     let mut out = String::new();
 
     // Every generated name lives in a `mosaic$…` namespace. The `$` is not
-    // cosmetic: slot names are validated against `^[_A-Za-z][_A-Za-z0-9]*$` and
-    // are camel-cased from kebab-case, so a slot identifier can *never* contain
-    // `$`. That makes a collision with the controller impossible by
-    // construction — without it, a layout with a slot innocently named
-    // `mosaic-drag` would emit both a destructured parameter and a `const` of
-    // the same name in one scope ("Identifier 'mosaicDrag' has already been
-    // declared"), a build failure with a baffling error message.
+    // cosmetic: author identifiers (slots, `For` bindings) are camel-cased from
+    // kebab-case and validated against `^[_A-Za-z][_A-Za-z0-9]*$`, so they can
+    // never contain `$`. That makes a collision impossible by construction —
+    // without it, a layout with a slot innocently named `mosaic-drag` would emit
+    // both a destructured parameter and a `const` of the same name in one scope
+    // ("Identifier 'mosaicDrag' has already been declared"), a build failure
+    // with a baffling error message.
 
+    // This component *instance*'s identity. Drop targets stamp it, and target
+    // lookup filters on it, so the keyboard cursor can only ever walk the targets
+    // belonging to this instance.
+    //
+    // An earlier revision scoped by wrapping the tree in a `display: contents`
+    // div and querying its subtree. That was wrong twice over: a *child*
+    // component's drop targets are inside that subtree too (so they were still
+    // captured), and the wrapper is a real element where a fragment was not —
+    // dropping a `<div>` into a `<tbody>`/`<ul>`/`<select>` context trips React's
+    // DOM-nesting validation and the HTML parser hoists the content out of the
+    // table entirely. An id compares equal only for *this* instance, needs no
+    // wrapper at all, and is exactly what `useId` exists for.
+    writeln!(out, "  const mosaic$id = useId();").unwrap();
     // The in-flight drag. A ref (not state) because it changes during a gesture
-    // without needing a re-render; `dragOver` is state because it *does* drive
-    // hover styling.
+    // without needing a re-render.
     writeln!(
         out,
         "  const mosaic$drag = useRef<{{ key: string; kind: string; label: string; keyboard: boolean }} | null>(null);"
     )
     .unwrap();
-    // The hovered target's key. A drop-target-only component never *reads* it
-    // (only the keyboard cursor does), so elide the binding there rather than
-    // emit an unused local.
-    if usage.draggable {
-        writeln!(
-            out,
-            "  const [mosaic$dragOver, mosaic$setDragOver] = useState<string | null>(null);"
-        )
-        .unwrap();
-    } else {
-        writeln!(
-            out,
-            "  const [, mosaic$setDragOver] = useState<string | null>(null);"
-        )
-        .unwrap();
-    }
-    // The scope root. Drop-target lookup is scoped to this element, not to
-    // `document`: two mounted instances of the same component each own their own
-    // targets, and a document-wide query would let arrow-keys in one instance
-    // silently walk onto — and announce — a target belonging to another.
+    // The hovered target is held in a ref *and* mirrored into state. The ref is
+    // the authority because it updates synchronously: keyboard auto-repeat fires
+    // ~30 keydowns/sec, far faster than React commits, so a handler reading the
+    // state value would read the same stale key several times in a row and the
+    // cursor would stall while an arrow key is held. The state copy exists only
+    // to trigger the re-render that hover styling needs.
     writeln!(
         out,
-        "  const mosaic$scope = useRef<HTMLDivElement | null>(null);"
+        "  const mosaic$over = useRef<string | null>(null);"
     )
     .unwrap();
+    writeln!(
+        out,
+        "  const [, mosaic$setOverState] = useState<string | null>(null);"
+    )
+    .unwrap();
+    writeln!(out, "  const mosaic$setOver = (key: string | null) => {{").unwrap();
+    writeln!(out, "    mosaic$over.current = key;").unwrap();
+    writeln!(out, "    mosaic$setOverState(key);").unwrap();
+    writeln!(out, "  }};").unwrap();
     writeln!(
         out,
         "  const mosaic$live = useRef<HTMLDivElement | null>(null);"
@@ -2176,15 +2182,19 @@ fn emit_drag_controller_hooks(usage: DragUsage) -> String {
         .unwrap();
         writeln!(out, "    }}").unwrap();
         writeln!(out, "    mosaic$drag.current = null;").unwrap();
-        writeln!(out, "    mosaic$setDragOver(null);").unwrap();
+        writeln!(out, "    mosaic$setOver(null);").unwrap();
         writeln!(out, "  }};").unwrap();
         // The drop targets belonging to *this* component instance, in DOM order.
+        // Disabled targets drop their `data-mosaic-drop-key` entirely, so they are
+        // absent here — the keyboard cursor cannot land on a target the pointer
+        // could never hover.
+        writeln!(out, "  const mosaic$targets = (): HTMLElement[] =>").unwrap();
         writeln!(
             out,
-            "  const mosaic$targets = (): HTMLElement[] => Array.from((mosaic$scope.current ?? document).querySelectorAll<HTMLElement>(\"[data-mosaic-drop-key]\"));"
+            "    Array.from(document.querySelectorAll<HTMLElement>(\"[data-mosaic-drop-key]\")).filter(t => t.dataset.mosaicDropScope === mosaic$id);"
         )
         .unwrap();
-        // Keyboard cursor: walk the registered drop targets in DOM order.
+        // Keyboard cursor: walk this instance's drop targets in DOM order.
         writeln!(
             out,
             "  const mosaic$step = (delta: number): string | null => {{"
@@ -2194,7 +2204,7 @@ fn emit_drag_controller_hooks(usage: DragUsage) -> String {
         writeln!(out, "    if (targets.length === 0) {{ return null; }}").unwrap();
         writeln!(
             out,
-            "    const at = targets.findIndex(t => t.dataset.mosaicDropKey === mosaic$dragOver);"
+            "    const at = targets.findIndex(t => t.dataset.mosaicDropKey === mosaic$over.current);"
         )
         .unwrap();
         writeln!(
@@ -2209,31 +2219,46 @@ fn emit_drag_controller_hooks(usage: DragUsage) -> String {
         .unwrap();
         writeln!(out, "  }};").unwrap();
         // Keyboard drop. Rather than *re-implement* the drop, this dispatches a
-        // real `pointerup` at the hovered target's centre and lets that target's
-        // own handler run. That is what makes keyboard equivalence a fact rather
-        // than a promise: there is literally one drop path, so the two can never
-        // drift apart or dispatch different payloads. Centre-of-box means the
-        // position rule resolves to `into`, the only sensible default when there
-        // is no pointer to read a before/after intent from.
+        // real pointer release at the hovered target's centre and lets that
+        // target's own handler run. That is what makes keyboard equivalence a fact
+        // rather than a promise: there is literally one drop path, so the two can
+        // never drift apart or dispatch different payloads. Centre-of-box means the
+        // position rule resolves to `into`, the only sensible default when there is
+        // no pointer to read a before/after intent from (spec contract 7).
         writeln!(out, "  const mosaic$release = (): boolean => {{").unwrap();
         writeln!(
             out,
-            "    if (mosaic$drag.current === null || mosaic$dragOver === null) {{ return false; }}"
+            "    if (mosaic$drag.current === null || mosaic$over.current === null) {{ return false; }}"
         )
         .unwrap();
         writeln!(
             out,
-            "    const el = mosaic$targets().find(t => t.dataset.mosaicDropKey === mosaic$dragOver);"
+            "    const el = mosaic$targets().find(t => t.dataset.mosaicDropKey === mosaic$over.current);"
         )
         .unwrap();
         writeln!(out, "    if (el === undefined) {{ return false; }}").unwrap();
         writeln!(out, "    const rect = el.getBoundingClientRect();").unwrap();
         writeln!(
             out,
-            "    el.dispatchEvent(new PointerEvent(\"pointerup\", {{ bubbles: true, clientY: rect.top + rect.height / 2 }}));"
+            "    const init = {{ bubbles: true, clientY: rect.top + rect.height / 2 }};"
         )
         .unwrap();
-        writeln!(out, "    return true;").unwrap();
+        // jsdom has no `PointerEvent` constructor, and a host unit-testing a
+        // generated board under Jest/Vitest would otherwise hit a ReferenceError on
+        // the very path that proves the keyboard contract. A `MouseEvent` of type
+        // "pointerup" dispatches to the same React handler.
+        writeln!(
+            out,
+            "    el.dispatchEvent(typeof PointerEvent === \"function\" ? new PointerEvent(\"pointerup\", init) : new MouseEvent(\"pointerup\", init));"
+        )
+        .unwrap();
+        // Report whether a drop actually happened, NOT merely that an event was
+        // dispatched. The target clears the in-flight drag if and only if it
+        // accepted; a disabled target bails and leaves it set. Getting this wrong
+        // means `onDragEnd` claims `dropped: true` after nothing happened AND the
+        // drag stays stuck in flight, so the next Space takes the release branch
+        // instead of grabbing.
+        writeln!(out, "    return mosaic$drag.current === null;").unwrap();
         writeln!(out, "  }};").unwrap();
     }
 
@@ -2353,7 +2378,7 @@ fn emit_host_draggable_jsx(
     let drop_dispatch = end_dispatch("dropped");
     let cancel_dispatch = end_dispatch("false");
     attrs.push_str(&format!(
-        " onKeyDown={{e => {{ if ({disabled_expr}) {{ return; }} if (e.key === \" \" || e.key === \"Enter\") {{ e.preventDefault(); if (mosaic$drag.current === null) {{ mosaic$grab({key_expr}, {kind_expr}, String({label_expr}), true); {start_dispatch}}} else {{ const dropped = mosaic$release(); if (!dropped) {{ mosaic$cancel(); }} {drop_dispatch}}} }} else if (e.key === \"Escape\" && mosaic$drag.current !== null) {{ e.preventDefault(); mosaic$cancel(); {cancel_dispatch}}} else if (mosaic$drag.current !== null && (e.key === \"ArrowDown\" || e.key === \"ArrowUp\")) {{ e.preventDefault(); mosaic$setDragOver(mosaic$step(e.key === \"ArrowDown\" ? 1 : -1)); }} }}}}"
+        " onKeyDown={{e => {{ if ({disabled_expr}) {{ return; }} if (e.key === \" \" || e.key === \"Enter\") {{ e.preventDefault(); if (mosaic$drag.current === null) {{ mosaic$grab({key_expr}, {kind_expr}, String({label_expr}), true); {start_dispatch}}} else {{ const dropped = mosaic$release(); if (!dropped) {{ mosaic$cancel(); }} {drop_dispatch}}} }} else if (e.key === \"Escape\" && mosaic$drag.current !== null) {{ e.preventDefault(); mosaic$cancel(); {cancel_dispatch}}} else if (mosaic$drag.current !== null && (e.key === \"ArrowDown\" || e.key === \"ArrowUp\")) {{ e.preventDefault(); mosaic$setOver(mosaic$step(e.key === \"ArrowDown\" ? 1 : -1)); }} }}}}"
     ));
 
     let mut out = String::new();
@@ -2416,7 +2441,14 @@ fn emit_host_drop_target_jsx(
     };
 
     let mut attrs = String::new();
-    attrs.push_str(&format!(" data-mosaic-drop-key={{{target_expr}}}"));
+    // A disabled target drops its key attribute entirely rather than merely
+    // refusing the drop: that removes it from `mosaic$targets()`, so the keyboard
+    // cursor cannot land on — and announce — a target the pointer could never
+    // hover. `data-mosaic-drop-scope` is what confines lookup to this instance.
+    attrs.push_str(&format!(
+        " data-mosaic-drop-key={{{disabled_expr} ? undefined : {target_expr}}}"
+    ));
+    attrs.push_str(" data-mosaic-drop-scope={mosaic$id}");
     let part_style_str = node
         .part_name
         .as_deref()
@@ -2427,11 +2459,11 @@ fn emit_host_drop_target_jsx(
     }
     // Hover feedback while a drag is in flight.
     attrs.push_str(&format!(
-        " onPointerEnter={{() => {{ if (mosaic$drag.current !== null && !{disabled_expr}) {{ mosaic$setDragOver({target_expr}); }} }}}}"
+        " onPointerEnter={{() => {{ if (mosaic$drag.current !== null && !{disabled_expr}) {{ mosaic$setOver({target_expr}); }} }}}}"
     ));
     // The drop itself. `position` comes from where the pointer sits in the box.
     attrs.push_str(&format!(
-        " onPointerUp={{e => {{ const d = mosaic$drag.current; if (d === null || {disabled_expr}) {{ return; }} const position = mosaic$position(e.clientY, e.currentTarget); {drop_dispatch}mosaic$announce(`Dropped ${{d.label}}`); mosaic$drag.current = null; mosaic$setDragOver(null); }}}}"
+        " onPointerUp={{e => {{ const d = mosaic$drag.current; if (d === null || {disabled_expr}) {{ return; }} const position = mosaic$position(e.clientY, e.currentTarget); {drop_dispatch}mosaic$announce(`Dropped ${{d.label}}`); mosaic$drag.current = null; mosaic$setOver(null); }}}}"
     ));
 
     let mut out = String::new();
@@ -2466,6 +2498,16 @@ fn drag_value_expr(
         let camel = to_camel_case_first_lower(slot);
         validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
         return Ok(Some(camel));
+    }
+    // Present but in a shape we do not lower — fail loudly rather than silently
+    // degrading to an empty key. A silent `""` produces a drop target that still
+    // registers and can be matched against any *other* keyless target, so a
+    // mis-typed key would surface as cards landing in the wrong column rather
+    // than as an error. Same stance as `emit_for_jsx`'s `each:` handling.
+    if node.props.iter().any(|p| p.name == prop) {
+        return Err(PipelineEmitError::UnsafeSlotName(format!(
+            "drag prop `{prop}:` must be a string literal or a slot ref"
+        )));
     }
     Ok(None)
 }
@@ -7235,12 +7277,78 @@ mod tests {
             .unwrap()
             .output;
         assert!(
-            out.contains("(mosaic$scope.current ?? document).querySelectorAll"),
-            "target lookup must be scoped, not document-wide:\n{out}"
+            out.contains("t.dataset.mosaicDropScope === mosaic$id"),
+            "target lookup must be filtered to this instance:\n{out}"
         );
         assert!(
-            out.contains("ref={mosaic$scope}") && out.contains("display: \"contents\""),
-            "the scope root must exist and be layout-transparent:\n{out}"
+            out.contains("data-mosaic-drop-scope={mosaic$id}") && out.contains("useId()"),
+            "targets must be stamped with the instance id:\n{out}"
+        );
+        // Scoping must NOT be done by wrapping the tree: a wrapper element is
+        // invalid inside <tbody>/<ul>/<select>, and this emitter lowers components
+        // into exactly those contexts. The fragment must survive.
+        assert!(
+            !out.contains("display: \"contents\""),
+            "scoping must not introduce a wrapper element:\n{out}"
+        );
+    }
+
+    /// `onDragEnd { dropped }` must report whether a drop actually *happened*, not
+    /// merely that an event was dispatched. A disabled target bails out of its own
+    /// handler; if the release reported success anyway, the drag would stay stuck
+    /// in flight (so the next Space releases instead of grabbing) while
+    /// `onDragEnd` claimed the card had landed.
+    #[test]
+    fn ui35_keyboard_release_reports_the_real_outcome() {
+        let m = component("Board", vec![], vec![]);
+        let out = from_pipeline(&m, &drag_board_layout(), &empty_style("Board"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("return mosaic$drag.current === null;"),
+            "release must report the outcome, not the dispatch:\n{out}"
+        );
+        // ...and a disabled target must not even be reachable by the cursor.
+        assert!(
+            out.contains("data-mosaic-drop-key={false ? undefined : \"todo\"}"),
+            "a disabled target must drop its key so the cursor skips it:\n{out}"
+        );
+    }
+
+    /// jsdom has no `PointerEvent` constructor, so a bare `new PointerEvent` would
+    /// throw in the standard React test environment — on the very path that proves
+    /// the keyboard contract. The lowering feature-tests and falls back.
+    #[test]
+    fn ui35_keyboard_drop_survives_jsdom() {
+        let m = component("Board", vec![], vec![]);
+        let out = from_pipeline(&m, &drag_board_layout(), &empty_style("Board"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("typeof PointerEvent === \"function\"")
+                && out.contains("new MouseEvent(\"pointerup\", init)"),
+            "keyboard drop must not require a PointerEvent constructor:\n{out}"
+        );
+    }
+
+    /// The hovered target is tracked in a ref, not read back from state: keyboard
+    /// auto-repeat outruns React's commit, so a handler reading the state value
+    /// would compute the same next position several times and the cursor would
+    /// stall while an arrow key is held.
+    #[test]
+    fn ui35_hover_cursor_is_synchronous() {
+        let m = component("Board", vec![], vec![]);
+        let out = from_pipeline(&m, &drag_board_layout(), &empty_style("Board"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("mosaic$over.current"),
+            "hover must be readable synchronously:\n{out}"
+        );
+        assert!(
+            out.contains("const mosaic$setOver = (key: string | null) => {")
+                && out.contains("mosaic$setOverState(key);"),
+            "the state mirror must be kept in step with the ref:\n{out}"
         );
     }
 
@@ -7289,8 +7397,8 @@ mod tests {
             "no live region bound, so announcements would go nowhere:\n{out}"
         );
         assert!(
-            out.contains("import { useRef, useEffect, useState }"),
-            "drag needs useState for hover tracking:\n{out}"
+            out.contains("import { useRef, useEffect, useState, useId }"),
+            "drag needs useState for hover and useId for instance scoping:\n{out}"
         );
     }
 

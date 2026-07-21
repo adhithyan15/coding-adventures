@@ -141,11 +141,31 @@ pointer release on the hovered target and lets the target's own handler run.
 > drop into one function both paths call — but the payload must be constructed
 > exactly once.
 
+**`dropped` must mean "the target accepted", not "we tried".** Replaying the release
+through the pointer path introduces a subtle trap: the release now reports what it
+*did*, while `onDragEnd { dropped }` must report what *happened*. A disabled target
+bails out of its own handler, so a release that reports success there both lies to
+`onDragEnd` and leaves the drag stuck in flight — the next grab keypress takes the
+release branch instead, and the user has no way to see or clear the state except
+Escape. React derives `dropped` from whether the in-flight drag was actually cleared.
+
+> **Requirement.** Derive `dropped` from observed state after the drop attempt, never
+> from the fact that a drop was attempted. Additionally, exclude disabled targets from
+> the keyboard cursor's walk — not merely from accepting a drop — or the cursor can
+> land on and announce a target the pointer could never hover.
+
 **Drop-target lookup must be scoped to the component instance.** The keyboard
 cursor walks the registered targets; a process-wide or document-wide registry
 means two mounted copies of the same board share one cursor, so arrow keys in one
-silently move — and *announce* — a target belonging to the other. React scopes the
-lookup to a layout-transparent wrapper element.
+silently move — and *announce* — a target belonging to the other. React stamps each
+target with a per-instance id (`useId`) and filters lookup on it.
+
+Note that scoping by *wrapping* the tree does not actually work, though it looks like
+the obvious answer: a **child** component's drop targets sit inside that subtree too, so
+the parent's cursor still captures them. On web a wrapper element is additionally invalid
+inside `<tbody>`/`<ul>`/`<select>` — the parser hoists non-table content out of a table —
+which an emitter cannot detect locally, because whether a component lands in such a
+context is decided by its *parent*.
 
 > **Requirement.** Scope target enumeration to the component instance, however
 > that backend expresses instance identity (a view subtree, a widget parent, a

@@ -47,10 +47,32 @@ Implementation notes, following the `HostDialog` precedent:
   path, so the two can never drift into dispatching different payloads. A
   release with no target under the cursor degrades to a cancel rather than
   leaving the drag stuck in flight.
-- **Target lookup is scoped to the component instance**, via a layout-transparent
-  (`display: contents`) wrapper that also hosts the live region. A document-wide
-  query would let arrow keys in one mounted board walk onto — and announce — a
-  drop target belonging to a different one.
+- **Target lookup is scoped to the component instance** with `useId`: drop targets
+  are stamped with the instance id and lookup filters on it. A document-wide query
+  would let arrow keys in one mounted board walk onto — and announce — a drop
+  target belonging to a different one. Scoping deliberately does *not* wrap the
+  tree in an element: a wrapper is invalid inside `<tbody>`/`<ul>`/`<select>`
+  (the parser hoists non-table content out of a table), and this emitter lowers
+  components into exactly those contexts. It also would not have worked — a
+  *child* component'''s targets sit inside the wrapper'''s subtree too.
+- **`onDragEnd { dropped }` reports the real outcome.** A keyboard release returns
+  whether the target actually accepted, not merely that an event was dispatched:
+  a disabled target bails out of its own handler, and reporting success there
+  would leave the drag stuck in flight (so the next Space releases instead of
+  grabbing) while claiming the card had landed. Disabled targets also drop their
+  key attribute entirely, so the keyboard cursor cannot land on a target the
+  pointer could never hover.
+- **The hovered target lives in a ref**, mirrored into state only to drive
+  re-render. Keyboard auto-repeat fires far faster than React commits, so reading
+  the state value would recompute the same next position repeatedly and the
+  cursor would stall while an arrow key is held.
+- **The keyboard drop survives jsdom.** `PointerEvent` has no constructor there,
+  so the emitted code feature-tests and falls back to `MouseEvent` — otherwise the
+  standard React test environment would throw on the very path that proves the
+  keyboard contract.
+- An unhandled shape on `drag-key`/`drop-key` is now an **error**, not a silent
+  degradation to an empty key (which would still register and match other keyless
+  targets — cards landing in the wrong column rather than a build failure).
 - **Generated names live in a `mosaic$…` namespace.** Slot identifiers are
   camel-cased from kebab-case and validated against `^[_A-Za-z][_A-Za-z0-9]*$`,
   so they can never contain `$`. A slot innocently named `mosaic-drag` therefore
@@ -60,7 +82,7 @@ Implementation notes, following the `HostDialog` precedent:
   does not get the grab/cancel/step helpers, and vice versa, because an unused
   local trips `noUnusedLocals` (TS6133) under a strict host tsconfig.
 
-8 new tests cover each contract, the scoping, the namespace collision, and the
+12 new tests cover each contract, the scoping, the namespace collision, and the
 absence case (a layout with no drag emits byte-identical output to before).
 
 ### Fixed - destructure only the props the component body references
