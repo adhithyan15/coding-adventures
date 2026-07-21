@@ -6,6 +6,31 @@ All notable changes to `task-core` are documented here.
 
 ### Added
 
+- **Labels and priority — two new first-class view dimensions** (Phase 3 PR-5 of
+  `code/specs/task-app-view-layer.md`).
+  - `Label { id, name, color }` + `LabelId`, registered per project
+    (`ProjectState::labels`) and referenced from `Task::labels`, so renaming or
+    recolouring a label updates every task at once. `Priority { Low, Normal, High,
+    Urgent }` on `Task::priority`, with `rank()`/`label()`/`from_rank()`.
+  - Ops: `upsert_label`, `delete_label` (removes the label from every task, so no task is
+    left pointing at a deleted label), `set_task_labels` (rejects unknown label/task ids
+    and de-duplicates), and `set_priority`.
+  - View built-ins: **`priority` resolves to its numeric *rank*, not its name**, so a
+    sort orders by urgency (Low→Urgent) instead of alphabetically (High→Low→Normal→
+    Urgent); `format_cell` turns the rank back into the display name. **`labels` resolves
+    to the label *names*** (comma-joined via the project registry) so filtering and
+    searching see what the user sees rather than opaque ids.
+  - Both fields are serde-defaulted and skipped when empty, so **pre-label snapshots
+    still deserialize** unchanged.
+
+### Fixed
+
+- **Blank values now sort last in *both* directions.** A descending sort previously
+  reversed the whole ordering, floating every empty cell to the top — not what "sort by
+  priority, highest first" means. Emptiness is now decided before direction is applied,
+  so only real values reverse (matching spreadsheets and every board tool). Caught by the
+  new priority sort test; covered by a dedicated descending-with-blanks case.
+
 - **The `calendar()` projection — dated events over the same selection** (`view` module —
   Phase 3 PR-4 of `code/specs/task-app-view-layer.md`).
   - `calendar(project, view, range, schedule) -> CalendarView` (and
