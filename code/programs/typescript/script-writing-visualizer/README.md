@@ -1,12 +1,33 @@
 # Script Writing Visualizer
 
-**The HL02 companion app.** Three modes: **Browse** and **Practice** work on
+**The HL02 companion app.** Four modes: **Browse** and **Practice** work on
 *script letters*; **Lessons** drills the *written curriculum* — every lesson in
-every track — on a spaced-repetition schedule that persists between visits.
+every track — on a spaced-repetition schedule that persists between visits; and
+**Concepts** shows one idea in every language that has it, side by side.
+
+## Concepts mode
+
+The curriculum tags lessons with a shared `concept_tag`, and canonical tags are
+deliberately the same across tracks. That makes them a **join key**: *gracias /
+merci / danke / धन्यवाद / നന്ദി* are one concept realized eighteen ways.
+
+This mode is that join, and it is the data package's own
+`languagesForConcept` — a function shipped from the start, documented as "what
+the companion app calls," which until now had **no caller**.
+
+- **39 concepts are shared by two or more tracks**, from 701 lessons. A concept
+  only one language tags is filtered out: there is nothing to compare it with,
+  which also removes almost every namespaced (`ES-…`) tag without a special case.
+- Each row shows the **headword**, a **romanization** where it differs, and the
+  gloss — so a non-Latin script is legible next to a Latin one.
+- The **etymology hooks** sit underneath the comparison, where they do the most
+  work: *gracias* ← *gratia* "favour", *merci* ← *mercēs* "wages", *danke* ←
+  *denken* "to think", *спасибо* ← *спаси Бог* "God save you". Four languages'
+  words for the same courtesy, from four unrelated ideas.
 
 ## Lessons mode
 
-Reads all **679 lessons across 18 languages** straight from the curriculum via
+Reads all **701 lessons across 18 languages** straight from the curriculum via
 `@coding-adventures/human-language-data`, and schedules them with the same
 Leitner machinery the letter drills use (`scheduler.ts` is generic over an
 index; it never needed to know what an item is).
