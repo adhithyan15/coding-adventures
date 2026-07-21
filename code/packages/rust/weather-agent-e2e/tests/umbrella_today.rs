@@ -1,22 +1,19 @@
 use std::fs;
+use std::path::PathBuf;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use capability_os_sandbox::{current_kernel_sandbox_support, OsFamily};
-use chief_of_staff_tool_api::ApprovalState;
+use chief_of_staff_tool_api::{ApprovalState, ToolAuditRecordQuery};
+use chief_of_staff_tool_audit_store::ToolAuditStore;
 use os_job_core::BackendKind;
+use storage_local_folder::LocalFolderStorageBackend;
 use weather_agent_e2e::{
     run_umbrella_today_agent, RecommendationKind, UmbrellaAgentConfig, WeatherFetchSourceKind,
 };
 
 #[test]
 fn umbrella_today_agent_exercises_architecture_and_writes_text_file() {
-    let root = std::env::temp_dir().join(format!(
-        "weather-agent-e2e-{}",
-        SystemTime::now()
-            .duration_since(UNIX_EPOCH)
-            .expect("clock should be after unix epoch")
-            .as_nanos()
-    ));
+    let root = temp_root("weather-agent-e2e");
     fs::create_dir_all(&root).expect("temp dir should be created");
     let output_path = root.join("umbrella-today.txt");
 
@@ -133,6 +130,28 @@ fn umbrella_today_agent_exercises_architecture_and_writes_text_file() {
     assert_eq!(run.user_report.write_approval, ApprovalState::Granted);
     assert_eq!(run.user_report.journal_invocation_count, 3);
     assert!(run.user_report.render().contains("Bring an umbrella today"));
+    assert_eq!(run.durable_audit.job_id, "umbrella_today_job");
+    assert_eq!(run.durable_audit.run_id, run.job_receipt.run_id);
+    assert_eq!(run.durable_audit.session_id, "umbrella_today_session");
+    assert_eq!(run.durable_audit.user_id, "seattle_user");
+    assert_eq!(run.durable_audit.profile_id, "umbrella_today_v1");
+    assert_eq!(run.durable_audit.host_count, 3);
+    assert_eq!(run.durable_audit.tool_count, 3);
+    assert_eq!(run.durable_audit.persisted_records, 3);
+    assert_eq!(run.durable_audit.reloaded_records, 3);
+    assert_eq!(run.durable_audit.completed_records, 3);
+    assert_eq!(run.durable_audit.approval_granted_records, 1);
+    assert!(run.durable_audit.records_with_references >= 1);
+    assert_eq!(run.durable_audit.follow_up_records, 0);
+    assert!(run.durable_audit.is_complete());
+
+    let restarted_audit = ToolAuditStore::new(LocalFolderStorageBackend::new(
+        output_path.with_extension("audit"),
+    ));
+    let restarted_rows = restarted_audit
+        .query_audits(&ToolAuditRecordQuery::new())
+        .expect("durable audit should reopen after the job runtime is dropped");
+    assert_eq!(restarted_rows.len(), 3);
 
     assert_eq!(run.rws.fetcher.untrusted_inputs, 1);
     assert_eq!(run.rws.writer.external_actuations, 1);
@@ -141,13 +160,7 @@ fn umbrella_today_agent_exercises_architecture_and_writes_text_file() {
 
 #[test]
 fn umbrella_today_job_blocks_write_without_explicit_approval() {
-    let root = std::env::temp_dir().join(format!(
-        "weather-agent-approval-e2e-{}",
-        SystemTime::now()
-            .duration_since(UNIX_EPOCH)
-            .expect("clock should be after unix epoch")
-            .as_nanos()
-    ));
+    let root = temp_root("weather-agent-approval-e2e");
     fs::create_dir_all(&root).expect("temp dir should be created");
     let output_path = root.join("umbrella-today.txt");
     let config = UmbrellaAgentConfig::deterministic_seattle(&output_path).without_write_approval();
@@ -160,17 +173,55 @@ fn umbrella_today_job_blocks_write_without_explicit_approval() {
         assert_eq!(persisted_text, "kernel sandbox allowed");
     }
     assert!(!persisted_text.contains("Bring an umbrella today"));
+
+    let restarted_audit = ToolAuditStore::new(LocalFolderStorageBackend::new(
+        output_path.with_extension("audit"),
+    ));
+    let denied_write = restarted_audit
+        .fetch_audit("8a7b0000000000000000000000000001_write_umbrella_report")
+        .expect("durable audit should be readable after denial")
+        .expect("denied write row should be persisted");
+    assert_eq!(denied_write.approval_state, ApprovalState::Pending);
+    assert!(!denied_write.result_summary.ok);
+}
+
+#[test]
+fn successive_ticks_append_to_one_durable_audit_root() {
+    let root = temp_root("weather-agent-durable-audit-e2e");
+    fs::create_dir_all(&root).expect("temp dir should be created");
+    let audit_root = root.join("audit");
+
+    let first = run_umbrella_today_agent(
+        UmbrellaAgentConfig::deterministic_seattle(root.join("first.txt"))
+            .with_audit_root(&audit_root),
+    )
+    .expect("first tick should complete");
+    let second = run_umbrella_today_agent(
+        UmbrellaAgentConfig::deterministic_seattle(root.join("second.txt"))
+            .with_tick_id("8a7b0000000000000000000000000002")
+            .with_audit_root(&audit_root),
+    )
+    .expect("second tick should append");
+
+    assert!(first.durable_audit.is_complete());
+    assert!(second.durable_audit.is_complete());
+    let restarted_audit = ToolAuditStore::new(LocalFolderStorageBackend::new(&audit_root));
+    assert_eq!(
+        restarted_audit
+            .query_audits(&ToolAuditRecordQuery::new())
+            .expect("both ticks should survive restart")
+            .len(),
+        6
+    );
+    assert!(restarted_audit
+        .fetch_audit("8a7b0000000000000000000000000002_write_umbrella_report")
+        .expect("second write lookup should succeed")
+        .is_some());
 }
 
 #[test]
 fn supervisor_recreates_killed_fetcher_before_pipeline_tick() {
-    let root = std::env::temp_dir().join(format!(
-        "weather-agent-supervisor-e2e-{}",
-        SystemTime::now()
-            .duration_since(UNIX_EPOCH)
-            .expect("clock should be after unix epoch")
-            .as_nanos()
-    ));
+    let root = temp_root("weather-agent-supervisor-e2e");
     fs::create_dir_all(&root).expect("temp dir should be created");
     let output_path = root.join("umbrella-today.txt");
     let config = UmbrellaAgentConfig::deterministic_seattle(&output_path)
@@ -192,13 +243,7 @@ fn supervisor_recreates_killed_fetcher_before_pipeline_tick() {
 #[test]
 #[ignore = "performs live HTTPS requests to api.weather.gov"]
 fn umbrella_today_agent_fetches_live_weather_over_tls() {
-    let root = std::env::temp_dir().join(format!(
-        "weather-agent-live-e2e-{}",
-        SystemTime::now()
-            .duration_since(UNIX_EPOCH)
-            .expect("clock should be after unix epoch")
-            .as_nanos()
-    ));
+    let root = temp_root("weather-agent-live-e2e");
     fs::create_dir_all(&root).expect("temp dir should be created");
     let output_path = root.join("umbrella-today.txt");
     let config = UmbrellaAgentConfig::live_seattle_with_timestamp(
@@ -235,4 +280,15 @@ fn umbrella_today_agent_fetches_live_weather_over_tls() {
         assert!(!run.kernel_sandbox.host_exact_kernel_enforced);
     }
     assert!(output_path.exists());
+}
+
+fn temp_root(label: &str) -> PathBuf {
+    std::env::temp_dir().join(format!(
+        "{label}-{}-{}",
+        std::process::id(),
+        SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("clock should be after unix epoch")
+            .as_nanos()
+    ))
 }

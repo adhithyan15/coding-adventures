@@ -24,6 +24,15 @@ user report carries the recommendation, completion time, approval state, and
 journal invocation count. This makes umbrella-today a reusable Chief job with a
 terminal product rather than only an architecture harness.
 
+Every run also copies the canonical payload-free D18D audit rows into
+`chief-of-staff-tool-audit-store` over the D18A local-folder backend before actor
+errors are returned. The job then reopens that store as a fresh reader and emits
+an `UmbrellaDurableAuditSummary` keyed to the job, run, session, user, and host
+profile. Approved runs and approval-blocked writes are therefore both durable
+without persisting tool arguments, outputs, or credentials. Durable call IDs are
+scoped by scheduler tick, allowing successive runs to share one audit root while
+preserving duplicate-delivery conflicts inside a tick.
+
 The primary tests write a real `umbrella-today.txt` file through the capability
 cage, assert that the supervised agent says to bring an umbrella for the rainy
 fixture, prove the supervisor recreates a killed child before the next tick, and

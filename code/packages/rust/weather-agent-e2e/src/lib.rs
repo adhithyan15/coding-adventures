@@ -28,11 +28,12 @@ use chief_of_staff_host_runtime::{
 };
 use chief_of_staff_tool_api::{
     ApprovalState, JsonSchema, PrivilegeTier, RequestedBy, SchemaProperty, ToolApiError,
-    ToolApprovalGrant, ToolCallError, ToolConcurrency, ToolDefinition, ToolErrorKind,
-    ToolEventKind, ToolExecutionJournal, ToolExecutionJournalHealthSummary, ToolHandlerOutput,
-    ToolIdempotency, ToolInvocationRequest, ToolPolicyProfile, ToolSideEffects, ToolStability,
-    ToolStreaming,
+    ToolApprovalGrant, ToolAuditRecordQuery, ToolCallError, ToolConcurrency, ToolDefinition,
+    ToolErrorKind, ToolEventKind, ToolExecutionJournal, ToolExecutionJournalHealthSummary,
+    ToolHandlerOutput, ToolIdempotency, ToolInvocationRequest, ToolPolicyProfile, ToolSideEffects,
+    ToolStability, ToolStreaming,
 };
+use chief_of_staff_tool_audit_store::{ToolAuditStore, ToolAuditStoreInventorySummary};
 use coding_adventures_json_value::{JsonNumber, JsonValue};
 use context_store::{
     AppendEntryInput, ContextEntryKind, ContextStore, ContextStoreInventorySummary,
@@ -63,6 +64,7 @@ use skill_store::{
     InstallSkillAssetInput, SkillInventorySummary, SkillListOptions, SkillManifest, SkillStore,
 };
 use storage_core::{InMemoryStorageBackend, StorageError};
+use storage_local_folder::LocalFolderStorageBackend;
 use tls_platform::TlsConfig;
 
 mod generated_operations;
@@ -72,6 +74,7 @@ use generated_operations::GeneratedOperationHttpClient;
 const AGENT_ID: &str = "umbrella_today_agent";
 const SESSION_ID: &str = "umbrella_today_session";
 const JOB_ID: &str = "umbrella_today_job";
+const DEFAULT_TICK_ID: &str = "8a7b0000000000000000000000000001";
 const USER_ID: &str = "seattle_user";
 const FETCH_TOOL_ID: &str = "weather.fetch_current";
 const CLASSIFY_TOOL_ID: &str = "weather.classify_umbrella";
@@ -190,19 +193,22 @@ pub struct UmbrellaAgentConfig {
     pub weather_source: WeatherSource,
     pub supervisor_probe: UmbrellaSupervisorProbe,
     pub write_approval: Option<ToolApprovalGrant>,
+    pub audit_root: PathBuf,
 }
 
 impl UmbrellaAgentConfig {
     pub fn deterministic_seattle(output_path: impl Into<PathBuf>) -> Self {
+        let output_path = output_path.into();
         Self {
             location: "Seattle".to_string(),
-            output_path: output_path.into(),
-            tick_id: "8a7b0000000000000000000000000001".to_string(),
+            audit_root: default_audit_root(&output_path),
+            output_path,
+            tick_id: DEFAULT_TICK_ID.to_string(),
             fetched_at_ms: 1_778_624_400_000,
             fetched_at_iso: "2026-05-12T12:00:00.000Z".to_string(),
             weather_source: WeatherSource::Fixture(WeatherSnapshot::rainy_seattle_fixture()),
             supervisor_probe: UmbrellaSupervisorProbe::default(),
-            write_approval: Some(default_write_approval(1_778_624_400_000)),
+            write_approval: Some(default_write_approval(DEFAULT_TICK_ID, 1_778_624_400_000)),
         }
     }
 
@@ -211,17 +217,19 @@ impl UmbrellaAgentConfig {
         fetched_at_ms: u64,
         fetched_at_iso: impl Into<String>,
     ) -> Self {
+        let output_path = output_path.into();
         Self {
             location: "Seattle".to_string(),
-            output_path: output_path.into(),
-            tick_id: "8a7b0000000000000000000000000001".to_string(),
+            audit_root: default_audit_root(&output_path),
+            output_path,
+            tick_id: DEFAULT_TICK_ID.to_string(),
             fetched_at_ms,
             fetched_at_iso: fetched_at_iso.into(),
             weather_source: WeatherSource::LiveNws {
                 user_agent: "coding-adventures-weather-agent-e2e/0.1 (adhithyan15)".to_string(),
             },
             supervisor_probe: UmbrellaSupervisorProbe::default(),
-            write_approval: Some(default_write_approval(fetched_at_ms)),
+            write_approval: Some(default_write_approval(DEFAULT_TICK_ID, fetched_at_ms)),
         }
     }
 
@@ -234,11 +242,37 @@ impl UmbrellaAgentConfig {
         self.write_approval = None;
         self
     }
+
+    pub fn with_audit_root(mut self, audit_root: impl Into<PathBuf>) -> Self {
+        self.audit_root = audit_root.into();
+        self
+    }
+
+    pub fn with_tick_id(mut self, tick_id: impl Into<String>) -> Self {
+        self.tick_id = tick_id.into();
+        if let Some(grant) = self.write_approval.as_mut() {
+            grant.call_id = scoped_call_id(&self.tick_id, "write_umbrella_report");
+        }
+        self
+    }
 }
 
-fn default_write_approval(granted_at: u64) -> ToolApprovalGrant {
-    ToolApprovalGrant::new("write_umbrella_report", WRITE_TOOL_ID, USER_ID, granted_at)
-        .with_expires_at(granted_at.saturating_add(300_000))
+fn default_audit_root(output_path: &Path) -> PathBuf {
+    output_path.with_extension("audit")
+}
+
+fn default_write_approval(tick_id: &str, granted_at: u64) -> ToolApprovalGrant {
+    ToolApprovalGrant::new(
+        scoped_call_id(tick_id, "write_umbrella_report"),
+        WRITE_TOOL_ID,
+        USER_ID,
+        granted_at,
+    )
+    .with_expires_at(granted_at.saturating_add(300_000))
+}
+
+fn scoped_call_id(tick_id: &str, call_id: &str) -> String {
+    format!("{tick_id}_{call_id}")
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -524,6 +558,32 @@ pub struct UmbrellaAgentRun {
     pub actor_channel_messages: usize,
     pub job_receipt: JobRunReceipt,
     pub user_report: UmbrellaUserReport,
+    pub durable_audit: UmbrellaDurableAuditSummary,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct UmbrellaDurableAuditSummary {
+    pub job_id: String,
+    pub run_id: String,
+    pub session_id: String,
+    pub user_id: String,
+    pub profile_id: String,
+    pub host_count: usize,
+    pub tool_count: usize,
+    pub persisted_records: usize,
+    pub reloaded_records: usize,
+    pub completed_records: usize,
+    pub approval_granted_records: usize,
+    pub records_with_references: usize,
+    pub follow_up_records: usize,
+}
+
+impl UmbrellaDurableAuditSummary {
+    pub fn is_complete(&self) -> bool {
+        self.persisted_records == self.reloaded_records
+            && self.reloaded_records == self.completed_records
+            && self.follow_up_records == 0
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -652,6 +712,8 @@ pub fn run_umbrella_today_agent(config: UmbrellaAgentConfig) -> UmbrellaResult<U
     )?;
     let actor_stats = system.run_until_done();
 
+    let run_id = format!("{}_run", config.tick_id);
+    let durable_audit = persist_and_reload_audit(&pipeline, &config, &run_id)?;
     pipeline.raise_actor_errors()?;
 
     let recommendation = pipeline.recommendation()?;
@@ -681,7 +743,7 @@ pub fn run_umbrella_today_agent(config: UmbrellaAgentConfig) -> UmbrellaResult<U
         .expect("actor channel mutex poisoned")
         .len();
     let job_receipt = JobRunReceipt::succeeded(
-        format!("{}_run", config.tick_id),
+        run_id,
         JOB_ID,
         config.fetched_at_ms,
         config.fetched_at_ms.saturating_add(1),
@@ -726,6 +788,57 @@ pub fn run_umbrella_today_agent(config: UmbrellaAgentConfig) -> UmbrellaResult<U
         actor_channel_messages,
         job_receipt,
         user_report,
+        durable_audit,
+    })
+}
+
+fn persist_and_reload_audit(
+    pipeline: &UmbrellaPipeline,
+    config: &UmbrellaAgentConfig,
+    run_id: &str,
+) -> UmbrellaResult<UmbrellaDurableAuditSummary> {
+    let audit_records = pipeline
+        .journal
+        .lock()
+        .expect("tool journal mutex poisoned")
+        .audit_records()
+        .to_vec();
+    let store = ToolAuditStore::new(LocalFolderStorageBackend::new(&config.audit_root));
+    let write = store.record_audit_batch(audit_records);
+    if !write.completed_without_failures() {
+        return Err(UmbrellaAgentError::new(format!(
+            "failed to persist {} of {} umbrella audit rows",
+            write.failed_records, write.attempted_records
+        )));
+    }
+    drop(store);
+
+    let reopened = ToolAuditStore::new(LocalFolderStorageBackend::new(&config.audit_root));
+    let call_prefix = format!("{}_", config.tick_id);
+    let records = reopened
+        .query_audits(&ToolAuditRecordQuery::new())?
+        .into_iter()
+        .filter(|record| record.call_id.starts_with(&call_prefix))
+        .collect::<Vec<_>>();
+    let inventory = ToolAuditStoreInventorySummary::from_records(&records);
+    let profile = pipeline.tool_runtime.summary();
+    Ok(UmbrellaDurableAuditSummary {
+        job_id: JOB_ID.to_string(),
+        run_id: run_id.to_string(),
+        session_id: SESSION_ID.to_string(),
+        user_id: USER_ID.to_string(),
+        profile_id: profile.profile_id,
+        host_count: profile.host_count,
+        tool_count: profile.registered_tool_count,
+        persisted_records: write.stored_records,
+        reloaded_records: records.len(),
+        completed_records: inventory.completed_records,
+        approval_granted_records: records
+            .iter()
+            .filter(|record| record.approval_state == ApprovalState::Granted)
+            .count(),
+        records_with_references: inventory.records_with_references,
+        follow_up_records: inventory.follow_up_records,
     })
 }
 
@@ -1031,8 +1144,9 @@ impl UmbrellaPipeline {
         tool_id: &str,
         arguments: JsonValue,
     ) -> UmbrellaResult<JsonValue> {
+        let call_id = scoped_call_id(&self.config.tick_id, call_id);
         let request = ToolInvocationRequest {
-            call_id: call_id.to_string(),
+            call_id: call_id.clone(),
             tool_id: tool_id.to_string(),
             arguments,
             requested_by: RequestedBy::Agent,
@@ -1042,7 +1156,7 @@ impl UmbrellaPipeline {
             user_id: Some(USER_ID.to_string()),
             requested_at: self.config.fetched_at_ms,
             deadline_at: Some(self.config.fetched_at_ms.saturating_add(30_000)),
-            idempotency_key: Some(format!("{}-{}", self.config.tick_id, call_id)),
+            idempotency_key: Some(call_id),
         };
         let trace = if tool_id == WRITE_TOOL_ID {
             match self.config.write_approval.as_ref() {
