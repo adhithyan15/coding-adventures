@@ -103,6 +103,11 @@ Same stance as UI31: these are guarantees the *kernel* makes, not suggestions.
    "fat engine, dumb UI" split intact: `onDrop` is the intent event; `move_task` /
    `set_status` is the validated operation.
 6. **RTL correctness.** `before`/`after` follow *reading order*, not raw x-coordinates.
+7. **A keyboard drop resolves to `into`.** There is no pointer to read a
+   before/after intent from, so the keyboard path targets the centre of the
+   target's box. Refining that (a modifier to drop *before* vs *after*) is left to
+   a later revision — silently picking `before` because the cursor happens to sit
+   high in the box would be worse than a predictable default.
 
 ## 4. Per-backend lowering
 
@@ -115,6 +120,53 @@ Same stance as UI31: these are guarantees the *kernel* makes, not suggestions.
 | flutter | `Draggable<String>` | `DragTarget<String>` | |
 | xaml (WinUI) | `CanDrag` + `DragStarting` | `AllowDrop` + `DragOver`/`Drop` | |
 | paint | — | — | out of scope: no input model |
+
+### 4.1 What the React lowering settled (and every backend inherits)
+
+React was built first precisely so the contracts would be *proven* rather than
+asserted. Three constraints emerged that were not obvious from §3, and each is a
+requirement on the remaining backends rather than a React detail.
+
+**Keyboard equivalence must be structural, not duplicated.** The first draft
+implemented the keyboard drop separately from the pointer drop — and quietly got
+it wrong: the second Space press cancelled instead of dropping, so the keyboard
+path could grab and move but never complete. A test that only checks "is the key
+handled" passes happily through that bug. The fix is to make one path
+*impossible* to diverge from the other: the keyboard drop synthesises a real
+pointer release on the hovered target and lets the target's own handler run.
+
+> **Requirement.** A backend must not have two code paths that both construct the
+> `onDrop` payload. Route the keyboard release through the same handler the
+> pointer release uses. If the platform cannot synthesise the event, factor the
+> drop into one function both paths call — but the payload must be constructed
+> exactly once.
+
+**Drop-target lookup must be scoped to the component instance.** The keyboard
+cursor walks the registered targets; a process-wide or document-wide registry
+means two mounted copies of the same board share one cursor, so arrow keys in one
+silently move — and *announce* — a target belonging to the other. React scopes the
+lookup to a layout-transparent wrapper element.
+
+> **Requirement.** Scope target enumeration to the component instance, however
+> that backend expresses instance identity (a view subtree, a widget parent, a
+> registry keyed by instance).
+
+**Generated identifiers need a namespace the author cannot collide with.** The
+controller emits bindings into the same scope as the author's slots. A slot named
+`mosaic-drag` collided with the generated `mosaicDrag`, producing a duplicate
+declaration and a compile error whose message points nowhere near the cause. React
+resolves this by generating into a `mosaic$…` namespace: slot identifiers are
+camel-cased from kebab-case and validated against `^[_A-Za-z][_A-Za-z0-9]*$`, so
+they can never contain `$` — the collision is impossible by construction rather
+than merely unlikely.
+
+> **Requirement.** Emit controller state into a namespace unreachable from author
+> identifiers. Prefer a character the identifier grammar excludes over a prefix
+> that is merely improbable.
+
+A fourth, smaller note: the announcement text is *application data*. It must be
+set as text, never as markup (React uses `textContent`, not `innerHTML`) —
+otherwise every card title becomes a script-injection sink.
 
 ## 5. Implementation plan
 
