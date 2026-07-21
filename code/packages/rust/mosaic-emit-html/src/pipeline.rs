@@ -498,6 +498,304 @@ root.addEventListener("keydown", event => {
   }
 });
 
+
+// ── UI35 — drag and drop ───────────────────────────────────────────────────
+//
+// Deliberately pointer events, not HTML5 drag-and-drop: `dragstart`/`dragover`
+// never fire from a touch, so an HTML5 lowering would silently be desktop-only.
+//
+// But "use pointer events" is not by itself enough to make touch work, and the
+// obvious implementation is quietly broken on exactly the devices it was chosen
+// for. A direct-manipulation pointer (touch, pen) gets **implicit pointer
+// capture** on `pointerdown`: every later event in that gesture is retargeted to
+// the element the gesture began on. So `pointerenter` never fires for any other
+// drop target, and `pointerup`'s target is still the card you started from —
+// every touch drag would resolve back to its source container and the card would
+// snap back. Hit-testing therefore goes through `elementFromPoint`, which
+// reports what is actually under the finger, and capture is embraced rather than
+// fought: it is what makes a release *outside* the component (or outside the
+// window) still deliver `pointerup` to us instead of stranding the gesture.
+//
+// All drag state lives here in module scope, never on DOM nodes, because
+// `render()` replaces `root.innerHTML` wholesale on every host response — a flag
+// stored on an element would vanish mid-gesture. The hovered target is tracked
+// by *key* rather than by element reference for the same reason.
+let mosaicDrag = null;
+let mosaicPending = null;
+let mosaicOverKey = null;
+let mosaicLive = null;
+
+// A press is not a drag. Without a movement threshold every click on a card
+// would grab it and then immediately "drop" it on its own enclosing container,
+// dispatching a spurious reorder whose position depended on where in the card
+// the user happened to click — and any button nested inside a card would be
+// unusable.
+const MOSAIC_DRAG_THRESHOLD_PX = 5;
+
+// The live region is created once and parented to <body>, NOT to root —
+// anything inside root is destroyed by the next render(), which would silently
+// turn every subsequent announcement into a no-op.
+function mosaicAnnounce(message) {
+  if (mosaicLive === null) {
+    mosaicLive = document.createElement("div");
+    mosaicLive.setAttribute("aria-live", "polite");
+    mosaicLive.setAttribute("role", "status");
+    mosaicLive.style.cssText =
+      "position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap";
+    document.body.appendChild(mosaicLive);
+  }
+  // textContent, never innerHTML: the label is application data, and assigning
+  // it as markup would make every drag a script-injection sink.
+  mosaicLive.textContent = message;
+}
+
+// This component instance's drop targets, in DOM order. Disabled targets are
+// excluded from the list itself rather than merely refused at drop time, so the
+// keyboard cursor cannot land on — and announce — a target the pointer could
+// never hover. Keyless targets are excluded too: several of them would all match
+// the same `findIndex` probe, so the cursor could never reach past the first and
+// the host could not tell which one a drop meant.
+function mosaicDropTargets() {
+  return Array.from(root.querySelectorAll("[data-mosaic-drop-key]")).filter(
+    el => !truthy(el.dataset.mosaicDropDisabled) && el.dataset.mosaicDropKey !== "",
+  );
+}
+
+// The drop target under a viewport point, or null. Used for both pointer paths;
+// `elementFromPoint` is unaffected by pointer capture, which is the whole reason
+// it is used here instead of the event's own target.
+function mosaicTargetAt(clientX, clientY) {
+  const hit = document.elementFromPoint(clientX, clientY);
+  const target = hit === null ? null : hit.closest("[data-mosaic-drop-key]");
+  if (target === null || !root.contains(target)) {
+    return null;
+  }
+  return truthy(target.dataset.mosaicDropDisabled) ? null : target;
+}
+
+function mosaicBeginDrag(el, keyboard, pointerId) {
+  const label = el.dataset.mosaicDragLabel ?? el.dataset.mosaicDragKey ?? "";
+  mosaicDrag = {
+    key: el.dataset.mosaicDragKey ?? "",
+    kind: el.dataset.mosaicDragKind ?? "",
+    label,
+    keyboard,
+    pointerId,
+    el,
+    startEmit: el.dataset.onDragStart,
+    endEmit: el.dataset.onDragEnd,
+  };
+  mosaicOverKey = null;
+  mosaicAnnounce(`Grabbed ${label}`);
+  if (mosaicDrag.startEmit) {
+    void dispatchMosaicEvent(mosaicDrag.startEmit, el, {
+      key: mosaicDrag.key,
+      kind: mosaicDrag.kind,
+    });
+  }
+}
+
+async function mosaicEndDrag(dropped) {
+  const drag = mosaicDrag;
+  mosaicDrag = null;
+  mosaicOverKey = null;
+  if (drag === null || !drag.endEmit) {
+    return;
+  }
+  // The originating element, not `root`: passing the root would hand any
+  // author-declared param this emitter does not fill the component's entire
+  // rendered text as its value.
+  await dispatchMosaicEvent(drag.endEmit, drag.el, {
+    key: drag.key,
+    kind: drag.kind,
+    dropped,
+  });
+}
+
+function mosaicCancel() {
+  if (mosaicDrag !== null) {
+    mosaicAnnounce(`Cancelled ${mosaicDrag.label}`);
+  }
+  void mosaicEndDrag(false);
+}
+
+// Where in the target the drop lands: leading third → before, trailing third →
+// after, middle → into. That one rule is what lets a single primitive family
+// express list reorder, cross-container moves, and nesting.
+function mosaicPosition(clientY, el) {
+  const rect = el.getBoundingClientRect();
+  if (rect.height <= 0) {
+    return "into";
+  }
+  const ratio = (clientY - rect.top) / rect.height;
+  return ratio < 1 / 3 ? "before" : ratio > 2 / 3 ? "after" : "into";
+}
+
+// THE single drop path. Both the pointer release and the keyboard release call
+// this, so the proposal payload is constructed in exactly one place and the two
+// input methods cannot drift into dispatching different events.
+//
+// `onDrop` is awaited before `onDragEnd` is dispatched. Firing both without
+// waiting puts two host round-trips in flight at once, each of which merges its
+// own props and re-renders — so an `onDragEnd` response computed from pre-drop
+// state could land last and visually revert the move, intermittently.
+async function mosaicCommitDrop(targetEl, position) {
+  if (mosaicDrag === null || targetEl === null) {
+    return false;
+  }
+  if (truthy(targetEl.dataset.mosaicDropDisabled)) {
+    return false;
+  }
+  const drag = mosaicDrag;
+  const emitName = targetEl.dataset.onDrop;
+  mosaicAnnounce(`Dropped ${drag.label}`);
+  if (emitName) {
+    await dispatchMosaicEvent(emitName, targetEl, {
+      key: drag.key,
+      kind: drag.kind,
+      targetKey: targetEl.dataset.mosaicDropKey ?? "",
+      position,
+    });
+  }
+  await mosaicEndDrag(true);
+  return true;
+}
+
+function mosaicStep(delta) {
+  const targets = mosaicDropTargets();
+  if (targets.length === 0) {
+    return null;
+  }
+  const at = targets.findIndex(el => el.dataset.mosaicDropKey === mosaicOverKey);
+  const next = at < 0 ? 0 : Math.min(targets.length - 1, Math.max(0, at + delta));
+  return targets[next]?.dataset.mosaicDropKey ?? null;
+}
+
+root.addEventListener("pointerdown", event => {
+  if (mosaicDrag !== null || event.button !== 0) {
+    return;
+  }
+  const source = closestEventTarget(event.target, "[data-mosaic-drag-key]");
+  if (source === null || truthy(source.dataset.mosaicDragDisabled)) {
+    return;
+  }
+  // Capture deliberately: it keeps the gesture's events coming to us even when
+  // the pointer leaves the component or the window, which is what stops a
+  // release "somewhere else" from stranding the drag in flight forever.
+  if (typeof source.setPointerCapture === "function") {
+    source.setPointerCapture(event.pointerId);
+  }
+  // Armed, not yet dragging — no state, no events, until the pointer moves far
+  // enough to mean it.
+  mosaicPending = {
+    el: source,
+    pointerId: event.pointerId,
+    x: event.clientX,
+    y: event.clientY,
+  };
+});
+
+root.addEventListener("pointermove", event => {
+  if (mosaicPending !== null && mosaicDrag === null) {
+    const dx = event.clientX - mosaicPending.x;
+    const dy = event.clientY - mosaicPending.y;
+    if (Math.hypot(dx, dy) < MOSAIC_DRAG_THRESHOLD_PX) {
+      return;
+    }
+    mosaicBeginDrag(mosaicPending.el, false, mosaicPending.pointerId);
+  }
+  if (mosaicDrag === null) {
+    return;
+  }
+  const target = mosaicTargetAt(event.clientX, event.clientY);
+  mosaicOverKey = target === null ? null : (target.dataset.mosaicDropKey ?? null);
+});
+
+root.addEventListener("pointerup", event => {
+  mosaicPending = null;
+  if (mosaicDrag === null) {
+    // Never crossed the threshold: this was a click, not a drag. Nothing was
+    // announced and no onDragStart was dispatched, so there is nothing to undo.
+    return;
+  }
+  const target = mosaicTargetAt(event.clientX, event.clientY);
+  if (target === null) {
+    mosaicCancel();
+    return;
+  }
+  void mosaicCommitDrop(target, mosaicPosition(event.clientY, target)).then(ok => {
+    if (!ok) {
+      mosaicCancel();
+    }
+  });
+});
+
+// The browser can reclaim a gesture — most commonly a touch it decides is a
+// scroll. Without this the drag would stay in flight with no way to clear it.
+root.addEventListener("pointercancel", () => {
+  mosaicPending = null;
+  if (mosaicDrag !== null) {
+    mosaicCancel();
+  }
+});
+
+// Keyboard equivalence: Space/Enter grabs, arrows move between targets,
+// Space/Enter drops, Escape cancels — dispatching the identical payloads,
+// because the drop routes through mosaicCommitDrop just as the pointer does.
+// A keyboard drop resolves to "into": there is no pointer to read a
+// before/after intent from, and a predictable default beats guessing.
+//
+// Once a drag is in flight the handler must NOT require the event to originate
+// from the grabbed card. `render()` replaces the whole subtree on the first host
+// response, which detaches the focused element and drops focus to <body> — so a
+// focus-gated Escape would become unreachable at precisely the moment the user
+// needs it, leaving a keyboard-only user with an unresolvable drag.
+root.addEventListener("keydown", event => {
+  if (mosaicDrag === null) {
+    const source = closestEventTarget(event.target, "[data-mosaic-drag-key]");
+    if (source === null || truthy(source.dataset.mosaicDragDisabled)) {
+      return;
+    }
+    if (event.key === " " || event.key === "Enter") {
+      event.preventDefault();
+      mosaicBeginDrag(source, true, null);
+    }
+    return;
+  }
+  if (event.key === " " || event.key === "Enter") {
+    event.preventDefault();
+    const target = mosaicDropTargets().find(
+      el => el.dataset.mosaicDropKey === mosaicOverKey,
+    );
+    if (target === undefined) {
+      mosaicCancel();
+      return;
+    }
+    // `dropped` reports whether the target actually accepted — not merely that
+    // a drop was attempted. Reporting success for a refused drop would both lie
+    // to onDragEnd and leave the drag stuck in flight, so the next Space would
+    // release instead of grabbing with no way out but Escape.
+    void mosaicCommitDrop(target, "into").then(ok => {
+      if (!ok) {
+        mosaicCancel();
+      }
+    });
+    return;
+  }
+  if (event.key === "Escape") {
+    event.preventDefault();
+    mosaicCancel();
+    return;
+  }
+  if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+    event.preventDefault();
+    mosaicOverKey = mosaicStep(event.key === "ArrowDown" ? 1 : -1);
+    if (mosaicOverKey !== null) {
+      mosaicAnnounce(`Over ${mosaicOverKey}`);
+    }
+  }
+});
+
 window.addEventListener(MOSAIC_HOST_READY_EVENT, () => {
   void refreshProps();
 });
@@ -524,11 +822,11 @@ async function refreshProps() {
   applyHostResponse(response);
 }
 
-async function dispatchMosaicEvent(emitName, source) {
+async function dispatchMosaicEvent(emitName, source, overrides) {
   if (!emitName || typeof window.mosaicHost?.handleEvent !== "function") {
     return;
   }
-  const event = buildEvent(emitName, source);
+  const event = buildEvent(emitName, source, overrides);
   const response = await window.mosaicHost.handleEvent({ component: componentName, event });
   applyHostResponse(response);
 }
@@ -636,11 +934,32 @@ function normalizeHostAttributes(scope) {
   }
 }
 
-function buildEvent(emitName, source) {
+// `overrides` carries values the caller already knows and the DOM cannot supply
+// — a drop's position, or which card was grabbed. A declared param prefers the
+// override; an undeclared one is still carried, so a drag works even if the
+// author has not spelled out the payload shape in their mosmodel.
+function buildEvent(emitName, source, overrides) {
   const event = { type: eventTypeFor(emitName) };
   const params = emitPayloads[emitName] ?? [];
+  // `hasOwnProperty`, not `in`: `in` walks the prototype chain, so an emit
+  // param innocently named `constructor` or `toString` would take the override
+  // branch and assign a function off Object.prototype (which JSON.stringify then
+  // drops, silently delivering an event missing a declared param), and one named
+  // `__proto__` would invoke the setter and add no key at all.
+  const own = (obj, key) => Object.prototype.hasOwnProperty.call(obj, key);
+  const hasOverrides = overrides !== undefined && overrides !== null;
   for (const param of params) {
-    event[param.name] = readPayloadValue(param, source);
+    event[param.name] =
+      hasOverrides && own(overrides, param.name)
+        ? overrides[param.name]
+        : readPayloadValue(param, source);
+  }
+  if (hasOverrides) {
+    for (const key of Object.keys(overrides)) {
+      if (!own(event, key)) {
+        event[key] = overrides[key];
+      }
+    }
   }
   return event;
 }
@@ -1133,6 +1452,16 @@ fn emit_html_tree(
     // `dismiss-on-backdrop: false` (to swallow the `cancel` event).
     if node.tag == "HostDialog" {
         out.push_str(&emit_host_dialog(node, indent, part_styles)?);
+        return Ok(out);
+    }
+
+    // UI35 — the drag-and-drop family.
+    if node.tag == "HostDraggable" {
+        out.push_str(&emit_host_draggable(node, indent, part_styles)?);
+        return Ok(out);
+    }
+    if node.tag == "HostDropTarget" {
+        out.push_str(&emit_host_drop_target(node, indent, part_styles)?);
         return Ok(out);
     }
 
@@ -2559,6 +2888,134 @@ fn emit_for_node(
     out.push_str(&emit_children(&node.children, indent + 2, part_styles)?);
     writeln!(out, "{pad}<!-- /mosaic-for -->").unwrap();
     Ok(out)
+}
+
+/// UI35 — lower a `HostDraggable` to a focusable `<div>` carrying its drag
+/// identity in `data-*` attributes.
+///
+/// ## Why there is no inline script here
+///
+/// This backend's discipline is that **author-supplied values never reach
+/// JavaScript source**: they go into attributes through `escape_html_attr`, and
+/// the runtime reads them back with `element.dataset`. HostDialog's inline
+/// scripts interpolate only a machine-generated id for exactly this reason. The
+/// whole drag runtime therefore lives in `HTML_RUNTIME_TEMPLATE` as delegated
+/// listeners, and this function emits nothing but markup — which also means a
+/// drag card costs zero bytes of script per node.
+///
+/// ## Accessibility is markup, not behaviour
+///
+/// `tabindex="0"` + `role="button"` + `aria-roledescription="draggable"` are what
+/// make the element reachable and self-describing. They are emitted here rather
+/// than applied by the runtime so that a page with JavaScript disabled still
+/// announces the card correctly, and so the contract is visible in the output.
+fn emit_host_draggable(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let mut attrs = String::new();
+
+    append_drag_value(&mut attrs, node, "drag-key", "data-mosaic-drag-key");
+    append_drag_value(&mut attrs, node, "drag-kind", "data-mosaic-drag-kind");
+    append_drag_value(&mut attrs, node, "drag-label", "data-mosaic-drag-label");
+    append_drag_flag(&mut attrs, node, "drag-disabled", "data-mosaic-drag-disabled");
+
+    attrs.push_str(" tabindex=\"0\" role=\"button\" aria-roledescription=\"draggable\"");
+    // A disabled card must not be *announced* as an actionable draggable button:
+    // a screen-reader user would tab to it, hear an affordance, press Space, and
+    // get silence. `aria-disabled` (not the `disabled` attribute, which does not
+    // apply to a div) is what closes that hole.
+    match find_prop(node, "drag-disabled") {
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => {
+            attrs.push_str(" aria-disabled=\"true\"");
+        }
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            write!(attrs, " aria-disabled=\"{{{{{}}}}}\"", camel(slot)).unwrap();
+        }
+        _ => {}
+    }
+
+    append_emit_marker(&mut attrs, node, "onDragStart", "data-on-drag-start");
+    append_emit_marker(&mut attrs, node, "onDragEnd", "data-on-drag-end");
+
+    // `touch-action: none` is load-bearing, not styling: without it the browser
+    // treats a touch drag as a scroll, claims the gesture, and fires
+    // `pointercancel` — so on a phone the card would never move.
+    let style_attr = build_style_attr(node, "touch-action: none", part_styles);
+
+    let mut out = String::new();
+    if node.children.is_empty() {
+        writeln!(out, "{pad}<div{attrs}{style_attr}></div>").unwrap();
+        return Ok(out);
+    }
+    writeln!(out, "{pad}<div{attrs}{style_attr}>").unwrap();
+    out.push_str(&emit_children(&node.children, indent + 2, part_styles)?);
+    writeln!(out, "{pad}</div>").unwrap();
+    Ok(out)
+}
+
+/// UI35 — lower a `HostDropTarget` to a `<div>` that reports a *proposed* drop.
+///
+/// It mutates nothing: `onDrop` carries `{ key, kind, targetKey, position }` and
+/// the host hands that to the engine, which validates and performs the move.
+/// That is what keeps the "fat engine, dumb UI" split intact once drag exists.
+fn emit_host_drop_target(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let mut attrs = String::new();
+
+    append_drag_value(&mut attrs, node, "drop-key", "data-mosaic-drop-key");
+    append_drag_flag(&mut attrs, node, "drop-disabled", "data-mosaic-drop-disabled");
+    append_emit_marker(&mut attrs, node, "onDrop", "data-on-drop");
+
+    let style_attr = build_style_attr(node, "", part_styles);
+
+    let mut out = String::new();
+    if node.children.is_empty() {
+        writeln!(out, "{pad}<div{attrs}{style_attr}></div>").unwrap();
+        return Ok(out);
+    }
+    writeln!(out, "{pad}<div{attrs}{style_attr}>").unwrap();
+    out.push_str(&emit_children(&node.children, indent + 2, part_styles)?);
+    writeln!(out, "{pad}</div>").unwrap();
+    Ok(out)
+}
+
+/// Write a drag identity prop as a `data-*` attribute.
+///
+/// A string literal is escaped for attribute context; a slot binding becomes a
+/// `{{mustache}}` the template pass fills in. Anything else is skipped rather
+/// than guessed at — see `emit_host_drop_target`'s callers for why an empty key
+/// is not a safe default.
+fn append_drag_value(attrs: &mut String, node: &LayoutNode, prop: &str, attr: &str) {
+    match find_prop(node, prop) {
+        Some(LayoutPropValue::String(lit)) => {
+            write!(attrs, " {attr}=\"{}\"", escape_html_attr(lit)).unwrap();
+        }
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            write!(attrs, " {attr}=\"{{{{{}}}}}\"", camel(slot)).unwrap();
+        }
+        _ => {}
+    }
+}
+
+/// Write a boolean drag prop. `false` is omitted rather than written out, so the
+/// runtime's `truthy()` check on a missing attribute is the default.
+fn append_drag_flag(attrs: &mut String, node: &LayoutNode, prop: &str, attr: &str) {
+    match find_prop(node, prop) {
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => {
+            write!(attrs, " {attr}=\"true\"").unwrap();
+        }
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            write!(attrs, " {attr}=\"{{{{{}}}}}\"", camel(slot)).unwrap();
+        }
+        _ => {}
+    }
 }
 
 /// Shared helper: build the `style="..."` attribute for a node by
@@ -4361,6 +4818,8 @@ mod tests {
             "HostButton",
             "HostTable",
             "HostDialog",
+            "HostDraggable",
+            "HostDropTarget",
         ] {
             let l = layout("X", node(tag));
             let r = from_pipeline(&component("X", vec![]), &l, &empty_style("X"));
@@ -4369,6 +4828,405 @@ mod tests {
                 "expected primitive {tag} to lower without error, got: {r:?}"
             );
         }
+    }
+
+
+    // ===================================================================
+    // UI35 — the drag-and-drop family
+    // ===================================================================
+
+    /// A board-shaped layout: a drop target (the column) wrapping a draggable
+    /// (the card). This is the exact structure a kanban lowering produces.
+    fn drag_board_layout() -> LayoutDef {
+        layout(
+            "Board",
+            node_with_props_and_children(
+                "HostDropTarget",
+                vec![prop_string("drop-key", "todo"), prop_emit("onDrop", "onCardDropped")],
+                vec![node_with_props(
+                    "HostDraggable",
+                    vec![
+                        prop_string("drag-key", "t1"),
+                        prop_string("drag-kind", "task"),
+                        prop_string("drag-label", "Write spec"),
+                    ],
+                )],
+            ),
+        )
+    }
+
+    fn board_html() -> String {
+        from_pipeline(
+            &component("Board", vec![]),
+            &drag_board_layout(),
+            &empty_style("Board"),
+        )
+        .unwrap()
+        .output
+    }
+
+    /// The emitted markup carries the drag identity in `data-*` attributes and
+    /// nothing else — no inline script. This backend's rule is that
+    /// author-supplied values never reach JavaScript source; they are read back
+    /// through `element.dataset` by the shared runtime.
+    #[test]
+    fn ui35_draggable_is_pure_markup_with_no_inline_script() {
+        let out = board_html();
+        assert!(
+            out.contains("data-mosaic-drag-key=\"t1\"")
+                && out.contains("data-mosaic-drag-kind=\"task\"")
+                && out.contains("data-mosaic-drag-label=\"Write spec\""),
+            "drag identity missing from markup:\n{out}"
+        );
+        assert!(
+            !out.contains("<script"),
+            "drag must not emit an inline script:\n{out}"
+        );
+    }
+
+    /// Contract 1 — the card must be reachable and self-describing *in the
+    /// markup*, so it announces correctly even before (or without) the runtime.
+    #[test]
+    fn ui35_draggable_is_focusable_and_self_describing() {
+        let out = board_html();
+        assert!(out.contains("tabindex=\"0\""), "not focusable:\n{out}");
+        assert!(out.contains("role=\"button\""), "no role:\n{out}");
+        assert!(
+            out.contains("aria-roledescription=\"draggable\""),
+            "a screen reader can't tell this is draggable:\n{out}"
+        );
+    }
+
+    /// The drop target advertises its key and its emit so the delegated runtime
+    /// can find it; the drop itself is a proposal carrying `targetKey` and
+    /// `position`.
+    #[test]
+    fn ui35_drop_target_advertises_key_and_emit() {
+        let out = board_html();
+        assert!(
+            out.contains("data-mosaic-drop-key=\"todo\""),
+            "no drop key:\n{out}"
+        );
+        assert!(
+            out.contains("data-on-drop=\"onCardDropped\""),
+            "no drop emit marker:\n{out}"
+        );
+    }
+
+    /// A slot-bound key becomes a template mustache rather than a literal, so a
+    /// board can render one target per column from data.
+    #[test]
+    fn ui35_slot_bound_keys_become_template_markers() {
+        let l = layout(
+            "B",
+            node_with_props(
+                "HostDropTarget",
+                vec![prop_slot("drop-key", "column-id")],
+            ),
+        );
+        let out = from_pipeline(&component("B", vec![]), &l, &empty_style("B"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("data-mosaic-drop-key=\"{{columnId}}\""),
+            "slot binding must survive as a mustache:\n{out}"
+        );
+    }
+
+    /// A literal key containing attribute-breaking characters must be escaped,
+    /// not interpolated raw.
+    #[test]
+    fn ui35_literal_keys_are_attribute_escaped() {
+        let l = layout(
+            "B",
+            node_with_props(
+                "HostDropTarget",
+                vec![prop_string("drop-key", "a\"><img src=x onerror=alert(1)>")],
+            ),
+        );
+        let out = from_pipeline(&component("B", vec![]), &l, &empty_style("B"))
+            .unwrap()
+            .output;
+        assert!(
+            !out.contains("<img src=x"),
+            "attribute escaping failed — markup injected:\n{out}"
+        );
+        assert!(out.contains("&quot;"), "expected escaped quote:\n{out}");
+    }
+
+    // ---- the runtime half -------------------------------------------------
+
+    fn board_runtime() -> String {
+        let files = from_pipeline_with_options(
+            &component("Board", vec![]),
+            &drag_board_layout(),
+            &empty_style("Board"),
+            &EmitOptions { emit_project: true },
+        )
+        .unwrap()
+        .project
+        .expect("project files");
+        files.main_js
+    }
+
+    /// Contract 3 — touch. HTML5 `dragstart`/`dragover` never fire from a touch,
+    /// so the runtime is built on pointer events. A backend that reached for the
+    /// HTML5 API would be silently desktop-only.
+    #[test]
+    fn ui35_runtime_uses_pointer_events_not_html5_drag() {
+        let js = board_runtime();
+        assert!(
+            js.contains("addEventListener(\"pointerdown\"")
+                && js.contains("addEventListener(\"pointerup\""),
+            "runtime must drive drag from pointer events:\n{js}"
+        );
+        assert!(
+            !js.contains("\"dragstart\"") && !js.contains("\"dragover\""),
+            "runtime must not use HTML5 drag-and-drop:\n{js}"
+        );
+    }
+
+    /// Contract 1 — keyboard equivalence, and specifically that it routes
+    /// through the *same* drop path. Two code paths constructing the proposal
+    /// independently is how the two silently drift apart.
+    #[test]
+    fn ui35_keyboard_and_pointer_share_one_drop_path() {
+        let js = board_runtime();
+        assert!(
+            js.contains("function mosaicCommitDrop("),
+            "there must be a single drop path:\n{js}"
+        );
+        assert_eq!(
+            js.matches("targetKey:").count(),
+            1,
+            "the drop payload must be constructed exactly once:\n{js}"
+        );
+        for key in ["\"Escape\"", "\"ArrowDown\"", "\"Enter\""] {
+            assert!(js.contains(key), "keyboard path missing {key}:\n{js}");
+        }
+    }
+
+    /// `dropped` must report that the target *accepted*, not that a drop was
+    /// attempted — otherwise a refused drop both lies to `onDragEnd` and leaves
+    /// the gesture stuck in flight, so the next Space releases instead of
+    /// grabbing with no way out but Escape.
+    #[test]
+    fn ui35_refused_drop_cancels_rather_than_reporting_success() {
+        let js = board_runtime();
+        assert!(
+            js.contains("void mosaicCommitDrop(target, \"into\").then(ok => {")
+                && js.contains("mosaicCancel();"),
+            "a refused keyboard drop must cancel:\n{js}"
+        );
+        // The pointer path must be symmetric — releasing over a disabled target
+        // has to cancel too, not silently strand the gesture in flight.
+        assert!(
+            js.contains("void mosaicCommitDrop(target, mosaicPosition(event.clientY, target)).then(ok => {"),
+            "a refused pointer drop must cancel:\n{js}"
+        );
+        // A disabled target is refused *and* excluded from the cursor's walk, so
+        // it can never be landed on or announced in the first place.
+        assert!(
+            js.contains("!truthy(el.dataset.mosaicDropDisabled)"),
+            "disabled targets must be excluded from the walk:\n{js}"
+        );
+    }
+
+    /// Contract 2 — announcements, into a live region that must outlive
+    /// `render()`. Parenting it inside `root` would let the next host response
+    /// destroy it and turn every later announcement into a silent no-op.
+    #[test]
+    fn ui35_live_region_survives_rerender() {
+        let js = board_runtime();
+        assert!(
+            js.contains("document.body.appendChild(mosaicLive)"),
+            "live region must not live inside the re-rendered root:\n{js}"
+        );
+        assert!(
+            js.contains("mosaicLive.textContent = message;")
+                && !js.contains("mosaicLive.innerHTML"),
+            "announcements must be text, never markup:\n{js}"
+        );
+    }
+
+    /// Drag state is module-scoped, not stashed on DOM nodes: `render()`
+    /// replaces `root.innerHTML` wholesale, so anything held on an element would
+    /// vanish mid-gesture.
+    #[test]
+    fn ui35_drag_state_survives_rerender() {
+        let js = board_runtime();
+        assert!(
+            js.contains("let mosaicDrag = null;") && js.contains("let mosaicOverKey = null;"),
+            "drag state must be module-scoped:\n{js}"
+        );
+    }
+
+    /// The drop proposal carries values the DOM cannot supply (which card was
+    /// grabbed, where in the target it landed), so the runtime passes them
+    /// explicitly rather than scraping them back out of the element.
+    #[test]
+    fn ui35_payload_overrides_reach_the_host() {
+        let js = board_runtime();
+        assert!(
+            js.contains("function buildEvent(emitName, source, overrides)"),
+            "buildEvent must accept caller-supplied payload values:\n{js}"
+        );
+        assert!(
+            js.contains("function mosaicPosition(clientY, el)"),
+            "position must be computed from the pointer within the target:\n{js}"
+        );
+    }
+
+
+    /// Contract 3 — touch, properly. "Use pointer events" is not sufficient on
+    /// its own: a direct-manipulation pointer gets *implicit pointer capture* on
+    /// `pointerdown`, so every later event retargets to the element the gesture
+    /// began on. `pointerenter` never fires for other targets and `pointerup`'s
+    /// target is still the source card — so a naive implementation resolves every
+    /// touch drop back to the source container and the card snaps back. Hit
+    /// testing must go through `elementFromPoint`, which reports what is actually
+    /// under the finger.
+    #[test]
+    fn ui35_touch_drag_hit_tests_under_the_finger() {
+        let js = board_runtime();
+        assert!(
+            js.contains("document.elementFromPoint(clientX, clientY)"),
+            "hit testing must not rely on the event target (breaks on touch):\n{js}"
+        );
+        assert!(
+            !js.contains("addEventListener(\"pointerenter\""),
+            "pointerenter never fires under implicit capture:\n{js}"
+        );
+        // And the browser must not claim the gesture as a scroll.
+        let html = board_html();
+        assert!(
+            html.contains("touch-action: none"),
+            "without touch-action the browser steals the gesture:\n{html}"
+        );
+    }
+
+    /// A press is not a drag. Without a movement threshold, clicking a card would
+    /// grab it and immediately drop it on its own enclosing container — emitting a
+    /// spurious reorder whose position depended on where in the card the click
+    /// landed, and making any button nested inside a card unusable.
+    #[test]
+    fn ui35_a_click_is_not_a_drag() {
+        let js = board_runtime();
+        assert!(
+            js.contains("MOSAIC_DRAG_THRESHOLD_PX"),
+            "a drag must require movement:\n{js}"
+        );
+        assert!(
+            js.contains("event.button !== 0"),
+            "only the primary button starts a drag:\n{js}"
+        );
+    }
+
+    /// A gesture must never be left in flight with no way to clear it. Capture
+    /// keeps `pointerup` coming to us even when released outside the component or
+    /// the window, and `pointercancel` covers a gesture the browser reclaims.
+    #[test]
+    fn ui35_drag_cannot_be_stranded() {
+        let js = board_runtime();
+        assert!(
+            js.contains("source.setPointerCapture(event.pointerId)"),
+            "release outside the root would strand the drag:\n{js}"
+        );
+        assert!(
+            js.contains("addEventListener(\"pointercancel\""),
+            "a reclaimed gesture would strand the drag:\n{js}"
+        );
+    }
+
+    /// Once a drag is in flight the keyboard handler must not require the event
+    /// to come from the grabbed card: the first host response re-renders the
+    /// subtree, detaching the focused element and dropping focus to <body>. A
+    /// focus-gated Escape becomes unreachable exactly when it is needed, leaving
+    /// a keyboard-only user with an unresolvable drag.
+    #[test]
+    fn ui35_escape_survives_a_rerender_stealing_focus() {
+        let js = board_runtime();
+        // The drag keydown handler is the last one in the runtime.
+        let keydown = js
+            .rsplit("addEventListener(\"keydown\"")
+            .next()
+            .expect("keydown handler");
+        // The `mosaicDrag === null` branch is the not-yet-dragging one: it is the
+        // only place a source element is required, and it returns unconditionally.
+        // Everything after its grab call is the in-flight path, so Escape landing
+        // there is what proves it does not depend on where focus is.
+        let in_flight = keydown
+            .split("mosaicBeginDrag(source, true, null);")
+            .nth(1)
+            .expect("in-flight branch");
+        assert!(
+            in_flight.contains("event.key === \"Escape\""),
+            "Escape must be handled independently of focus:\n{keydown}"
+        );
+    }
+
+    /// `onDrop` is awaited before `onDragEnd`. Firing both unawaited puts two host
+    /// round-trips in flight, each merging props and re-rendering — so an
+    /// `onDragEnd` response computed from pre-drop state can land last and
+    /// visually revert the move, intermittently.
+    #[test]
+    fn ui35_drop_settles_before_drag_end() {
+        let js = board_runtime();
+        assert!(
+            js.contains("async function mosaicCommitDrop(targetEl, position)")
+                && js.contains("await mosaicEndDrag(true);"),
+            "onDrop and onDragEnd must not race:\n{js}"
+        );
+    }
+
+    /// Payload overrides are matched by *own* property. `in` walks the prototype
+    /// chain, so an emit param named `constructor` would take the override branch
+    /// and assign a function off Object.prototype — which JSON.stringify drops,
+    /// silently delivering an event missing a declared param — and one named
+    /// `__proto__` would invoke the setter and add no key at all.
+    #[test]
+    fn ui35_payload_overrides_ignore_the_prototype_chain() {
+        let js = board_runtime();
+        assert!(
+            js.contains("Object.prototype.hasOwnProperty.call(obj, key)"),
+            "override matching must not walk the prototype chain:\n{js}"
+        );
+    }
+
+    /// A disabled card must not be announced as an actionable draggable button —
+    /// a screen-reader user would tab to it, hear an affordance, press Space, and
+    /// get silence.
+    #[test]
+    fn ui35_disabled_draggable_says_so() {
+        let l = layout(
+            "B",
+            node_with_props(
+                "HostDraggable",
+                vec![
+                    prop_string("drag-key", "t1"),
+                    prop_keyword("drag-disabled", "true"),
+                ],
+            ),
+        );
+        let out = from_pipeline(&component("B", vec![]), &l, &empty_style("B"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("aria-disabled=\"true\""),
+            "a disabled card must announce as disabled:\n{out}"
+        );
+    }
+
+    /// Keyless targets are excluded from the cursor: several would all match the
+    /// same probe, so the walk could never reach past the first and a drop could
+    /// not tell the host which target it meant.
+    #[test]
+    fn ui35_keyless_targets_are_not_walkable() {
+        let js = board_runtime();
+        assert!(
+            js.contains("el.dataset.mosaicDropKey !== \"\""),
+            "keyless targets must be excluded from the walk:\n{js}"
+        );
     }
 
     // ===================================================================
