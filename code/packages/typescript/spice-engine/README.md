@@ -198,7 +198,8 @@ transition.
 Diode cards also accept `XTI` (default `3`) and `EG` (default `1.11 eV`) to
 control saturation-current temperature scaling.
 BJT cards accept `XTI` (default `3`) and `EG` (default `1.11` eV) for
-model-specific saturation-current temperature scaling.
+model-specific saturation-current temperature scaling, plus `VAF`/`VA`
+(default `0`, meaning infinite) for forward Early-effect modulation.
 `modelCardUnsupportedParameterIssues`,
 `formatModelCardUnsupportedParameterIssueTable`,
 `modelCardUnsupportedParameterIssueRecords`,

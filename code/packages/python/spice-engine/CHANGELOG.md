@@ -4,6 +4,11 @@
 
 ### Added
 
+- **BJT forward Early voltage** — BJT model cards now accept `VAF`/`VA` and
+  apply collector-voltage modulation in DC, transient, AC, transfer-function,
+  and noise paths, matching Rust and TypeScript. The supported-parameter
+  catalog now contains 78 canonical rows.
+
 - **BJT energy gap** — BJT model cards now accept `EG`, apply each model's
   energy gap to saturation-current temperature scaling, and preserve it through
   subcircuit expansion, matching Rust and TypeScript. The supported-parameter

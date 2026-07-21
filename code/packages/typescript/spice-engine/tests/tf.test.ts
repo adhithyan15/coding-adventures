@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  bjt,
   Circuit,
   capacitor,
   cccs,
@@ -42,6 +43,20 @@ describe("tf", () => {
     expectClose(result.transferRatio, 0.5);
     expectClose(result.inputImpedanceOhms, 2_000.0);
     expectClose(result.outputImpedanceOhms, 500.0);
+  });
+
+  it("uses BJT forward Early voltage to reduce output impedance", () => {
+    function outputImpedance(forwardEarlyVoltage: number): number {
+      const thermalVoltage = 0.02585;
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vcc", "vcc", "0", 5.0));
+      circuit.add(voltageSource("Vin", "base", "0", thermalVoltage * Math.log(2.0)));
+      circuit.add(resistor("Rload", "vcc", "out", 1_000.0));
+      circuit.add(bjt("Q1", "out", "base", "0", "NPN", 25.85e-6, 100.0, thermalVoltage, 0.0, 0.0, 0.0, 0.0, 3.0, 1.11, forwardEarlyVoltage));
+      return tf(circuit, "out", "Vin").outputImpedanceOhms;
+    }
+
+    expect(outputImpedance(10.0)).toBeLessThan(outputImpedance(0.0));
   });
 
   it("formats stable text output tables for transfer-function results", () => {
