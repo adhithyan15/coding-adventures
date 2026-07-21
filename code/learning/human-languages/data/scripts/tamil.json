@@ -79,8 +79,8 @@
       "sound": "na",
       "role": "consonant",
       "inherentVowel": "a",
-      "components": ["a straight top bar", "a vertical on the left", "a right stroke curling below the baseline"],
-      "strokeOrder": ["top bar", "left vertical", "right stroke and curl"],
+      "components": ["a straight top bar", "a vertical on the left", "a second vertical in the middle", "a right stroke that curls below the baseline and sweeps left into a descender"],
+      "strokeOrder": ["top bar", "left vertical", "middle vertical", "right stroke, curl and sweep"],
       "strokeOrderNote": "conventional",
       "notes": "The dental n, tongue against the teeth. Contrast ன (alveolar) and ண (retroflex)."
     },

@@ -27,7 +27,9 @@ both.
 
 1. **a straight top bar**
 2. **a vertical on the left**
-3. **a right stroke curling below the baseline**
+3. **a second vertical in the middle**
+4. **a right stroke that curls below the baseline** and sweeps left into a
+   descender
 
 **ன** — *ṉa*, the **alveolar** n, tongue on the ridge behind the teeth:
 
@@ -104,7 +106,7 @@ up in the sound that appears nowhere in the spelling.
 ## Guided Practice
 
 [PAUSE 1s]
-- [YOU WRITE: ந — "top bar, left vertical, curling right stroke"]
+- [YOU WRITE: ந — "top bar, **two** verticals, then the curl that sweeps left"]
 - [YOU WRITE: ன — "top bar, left loop, **one** arch, straight vertical"]
 - [YOU WRITE: ற — "two arches, then the leg that sweeps left and drops"]
 - [YOU WRITE: றி — "ற, then the hook above right"]

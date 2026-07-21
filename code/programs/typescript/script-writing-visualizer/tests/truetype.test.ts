@@ -233,6 +233,31 @@ describe("hostile input", () => {
     expect(Date.now() - started).toBeLessThan(10_000);
   });
 
+  it("does not degrade to blank outlines over many lookups", () => {
+    // The component budget must be per-LOOKUP. An earlier version created it
+    // once per Font and decremented it forever, so ordinary letters started
+    // coming back with empty contours after a few thousand renders — silent
+    // blank glyphs that read as a font bug. A browse session does exactly this.
+    const f = tamil();
+    const first = f.glyphFor("ண")!.path;
+    for (let i = 0; i < 12_000; i++) {
+      const g = f.glyphFor("ண")!;
+      if (g.contours.length === 0 || g.path !== first) {
+        throw new Error(`glyph degraded on lookup ${i}`);
+      }
+    }
+    expect(f.glyphFor("ண")!.path).toBe(first);
+  });
+
+  it("keeps composite glyphs intact across repeated lookups too", () => {
+    const dev = parseFont(load("NotoSansDevanagari-Static.ttf"));
+    const first = dev.glyphFor("आ")!;
+    expect(first.contours.length).toBeGreaterThan(0);
+    for (let i = 0; i < 5_000; i++) {
+      expect(dev.glyphFor("आ")!.contours.length).toBe(first.contours.length);
+    }
+  });
+
   it("rejects formats it cannot read rather than guessing", () => {
     const otto = new ArrayBuffer(12);
     new DataView(otto).setUint32(0, 0x4f54544f);
@@ -315,30 +340,54 @@ describe("Tamil letter shapes the lessons make claims about", () => {
     // position, a curve wanders. Tolerance of one cell, because real typefaces
     // taper a stem slightly and the raster is coarse.
     const finalStrokeSpread = (g: boolean[][]) => {
-      const cols = g[0].map((_, c) => g.some((row) => row[c]));
-      const right = cols.lastIndexOf(true);
       const inked = g.map((row) => row.some(Boolean));
       const top = inked.indexOf(true);
       const bottom = inked.lastIndexOf(true);
+      const startRow = top + Math.ceil((bottom - top) * 0.35);
+      // Anchor on the rightmost column inked WITHIN THE BODY ROWS. Anchoring on
+      // the whole-glyph profile picks the top bar, which overhangs the final
+      // vertical in both letters — so no body row has ink in that column, no
+      // samples are collected, and Math.max([]) - Math.min([]) is -Infinity,
+      // which satisfies any upper bound. The metric then silently measures
+      // nothing while reporting agreement: the same failure as a clipped
+      // window, one level down.
+      let right = -1;
+      for (let r = startRow; r <= bottom; r++)
+        for (let c = g[r].length - 1; c > right; c--)
+          if (g[r][c]) { right = c; break; }
       const lefts: number[] = [];
-      for (let r = top + Math.ceil((bottom - top) * 0.35); r <= bottom; r++) {
-        if (!g[r][right]) continue;
+      for (let r = startRow; r <= bottom; r++) {
+        if (right < 0 || !g[r][right]) continue;
         let c = right;
         while (c > 0 && g[r][c - 1]) c--;
         lefts.push(c);
       }
-      return Math.max(...lefts) - Math.min(...lefts);
+      // Report the sample count alongside the answer so callers can guard the
+      // metric's INPUT, the same way raster() guards its window.
+      return {
+        samples: lefts.length,
+        spread: lefts.length ? Math.max(...lefts) - Math.min(...lefts) : NaN,
+      };
     };
-    expect(finalStrokeSpread(a)).toBeLessThanOrEqual(1);
-    expect(finalStrokeSpread(b)).toBeLessThanOrEqual(1);
+    const sa = finalStrokeSpread(a);
+    const sb = finalStrokeSpread(b);
+    // The claim is only meaningful if the metric actually looked at the stroke.
+    expect(sa.samples).toBeGreaterThan(8);
+    expect(sb.samples).toBeGreaterThan(8);
+    expect(sa.spread).toBeLessThanOrEqual(1);
+    expect(sb.spread).toBeLessThanOrEqual(1);
 
     // Control: the measure must be able to report a non-vertical final stroke,
     // otherwise "<= 1" is satisfied by a metric that always returns 0. Across
     // the letters this track teaches it returns a range of values.
-    const spreads = ["ண", "ன", "ம", "வ", "அ", "இ", "ல", "ற", "க"].map((ch) => {
-      const cs = f.glyphFor(ch)!.contours;
-      return finalStrokeSpread(raster(cs, windowFor(cs)));
-    });
+    const spreads = ["ண", "ன", "ம", "வ", "அ", "இ", "ல", "ற", "க"]
+      .map((ch) => {
+        const cs = f.glyphFor(ch)!.contours;
+        return finalStrokeSpread(raster(cs, windowFor(cs)));
+      })
+      .filter((r) => r.samples > 8)
+      .map((r) => r.spread);
+    expect(spreads.length).toBeGreaterThan(3);
     expect(Math.max(...spreads)).toBeGreaterThan(1);
   });
 

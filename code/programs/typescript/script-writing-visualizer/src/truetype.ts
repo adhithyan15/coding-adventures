@@ -147,8 +147,9 @@ const MAX_COMPONENT_VISITS = 10_000;
 class Budget {
   constructor(private left: number) {}
   spend(n = 1): boolean {
+    if (this.left < n) return false;
     this.left -= n;
-    return this.left > 0;
+    return true;
   }
 }
 
@@ -241,15 +242,19 @@ export function parseFont(bytes: ArrayBuffer): Font {
   // ---- glyf: the outlines ---------------------------------------------------
   const glyfOffset = tableAt("glyf").offset;
 
-  const componentBudget = new Budget(MAX_COMPONENT_VISITS);
-
-  function contoursOf(glyphId: number, depth = 0): Contour[] {
+  function contoursOf(glyphId: number, depth = 0, budget = new Budget(MAX_COMPONENT_VISITS)): Contour[] {
     // Composite glyphs point at other glyphs. The depth cap stops infinite
     // recursion; the budget stops FAN-OUT, which the depth cap does not — a
     // glyph with N components each pointing at the same subglyph costs N^depth
     // visits, so a few hundred bytes could otherwise freeze the tab for hours.
+    // Charged only for COMPONENT expansion (depth > 0), and the budget is
+    // created fresh per top-level lookup — see glyphFor. A budget shared across
+    // a Font's lifetime would decrement forever and start returning EMPTY
+    // outlines for ordinary letters after enough renders: silent blank glyphs
+    // that read as a font bug, which is the very failure this module exists to
+    // prevent.
     if (depth > 5) return [];
-    if (!componentBudget.spend()) return [];
+    if (depth > 0 && !budget.spend()) return [];
     if (glyphId < 0 || glyphId + 1 >= loca.length) return [];
     if (loca[glyphId] === loca[glyphId + 1]) return []; // empty glyph, e.g. space
 
@@ -258,7 +263,7 @@ export function parseFont(bytes: ArrayBuffer): Font {
     const contourCount = c.i16();
     c.skip(8); // xMin, yMin, xMax, yMax
 
-    if (contourCount < 0) return compositeContours(c, contoursOf, depth);
+    if (contourCount < 0) return compositeContours(c, contoursOf, depth, budget);
     return simpleContours(c, contourCount);
   }
 
@@ -412,8 +417,9 @@ function simpleContours(c: Cursor, contourCount: number): Contour[] {
 // the overwhelming majority use; a scaled component keeps its own shape.
 function compositeContours(
   c: Cursor,
-  contoursOf: (id: number, depth: number) => Contour[],
+  contoursOf: (id: number, depth: number, budget: Budget) => Contour[],
   depth: number,
+  budget: Budget,
 ): Contour[] {
   const ARGS_ARE_WORDS = 0x0001;
   const ARGS_ARE_XY = 0x0002;
@@ -448,7 +454,7 @@ function compositeContours(
     // than pretend the numbers are coordinates.
     const ox = flags & ARGS_ARE_XY ? dx : 0;
     const oy = flags & ARGS_ARE_XY ? dy : 0;
-    for (const contour of contoursOf(componentId, depth + 1)) {
+    for (const contour of contoursOf(componentId, depth + 1, budget)) {
       out.push(contour.map((p) => ({ x: p.x + ox, y: p.y + oy, on: p.on })));
     }
     if (!(flags & MORE_COMPONENTS)) break;

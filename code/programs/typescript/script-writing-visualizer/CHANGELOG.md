@@ -25,7 +25,13 @@
   non-zero winding rule — so shape assertions are checked against what the
   glyph actually looks like. **The raster window is derived from the glyphs'
   own bounding boxes and the rasteriser throws if a glyph would be clipped.**
-  That guard exists because a hard-coded window (x ≤ 1030, against ண's true
+  A second guard checks the metric's INPUT: the final-stroke measure reports
+  its sample count, and the assertion requires samples before believing the
+  answer. Without it the measure anchored on the top bar — which overhangs the
+  final vertical — collected nothing, and `Math.max([]) - Math.min([])` is
+  `-Infinity`, which satisfies any upper bound. It measured nothing and
+  reported agreement.
+  The window guard exists because a hard-coded window (x ≤ 1030, against ண's true
   extent of 1631) silently amputated 37% of the letter and produced a
   confident, wrong description of its final stroke. A clipped raster does not
   look like an error; it looks like a letter.
