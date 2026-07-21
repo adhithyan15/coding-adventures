@@ -728,14 +728,47 @@ impl Lowerer {
                 if numbers.len() == 1 {
                     self.number_literal(numbers[0])
                 } else {
+                    // BUG FIX (found by this crate's own `tests/oracle.rs`,
+                    // root-caused against `apl-to-semantic-ir`'s identical
+                    // fix, its own 0.1.3 CHANGELOG entry): `semantic-ir`'s
+                    // own `ArrayLit` doc comment (`nodes.rs`) is explicit
+                    // that a 1-row literal (`rows.len() == 1`) is a *row
+                    // vector* -- under this IR's MATLAB-derived column-major
+                    // storage convention (`Feature::ArrayColumnMajor`), that
+                    // means a genuinely rank-2 `[1, n]` value, NOT a rank-1
+                    // `[n]` vector. A bare `ArrayLit { rows: vec![row], .. }`
+                    // is therefore the WRONG shape for J's stranded literal,
+                    // which genuinely is rank 1 -- this crate shipped
+                    // (v0.1.0/0.1.1) without the identical fix
+                    // `apl-to-semantic-ir` already carries, so any stranded
+                    // literal of 2+ numbers used where a rank-1 vector is
+                    // required (dyadic `$`'s shape argument, dyadic `i.`'s
+                    // haystack, monadic `,`/`#` on a matrix built from one)
+                    // silently produced a rank-2 `[1, n]` value instead --
+                    // confirmed empirically: `2 2$1 2 3 4` (dyadic reshape
+                    // whose *shape* argument is the stranded literal `2 2`)
+                    // crashed the compiled path with `reshape: shape
+                    // argument must be a scalar or vector (got rank 2)`,
+                    // even though this exact program round-trips correctly
+                    // through `j-runtime`.
+                    //
+                    // Fix (identical to `apl-to-semantic-ir::lower_term`):
+                    // build the row-vector `ArrayLit` as before, then wrap
+                    // it in `Expr::Ravel` (SIR22 addendum "monadic `,A`"),
+                    // which flattens any input rank down to a genuine
+                    // rank-1 result. Invisible to J source -- nothing about
+                    // the surface syntax changes, only which IR node shape
+                    // represents it.
                     self.observed.add(Feature::NDArrays);
                     self.observed.add(Feature::ArrayColumnMajor);
+                    self.observed.add(Feature::MatrixOps);
                     let span = self.span_of(node);
                     let row: Vec<Expr> = numbers
                         .iter()
                         .map(|tok| self.number_literal(tok))
                         .collect::<Result<Vec<_>, _>>()?;
-                    Ok(Expr::ArrayLit { rows: vec![row], span })
+                    let array_lit = Expr::ArrayLit { rows: vec![row], span: span.clone() };
+                    Ok(Expr::Ravel { target: Box::new(array_lit), span })
                 }
             }
             Some(ASTNodeOrToken::Token(t)) if t.effective_type_name() == "NAME" => {
@@ -1035,7 +1068,14 @@ impl Lowerer {
             }
             FnKind::NonScalar(NonScalarAtom::Idot) => {
                 self.observed.add(Feature::NDArrays);
-                Ok(Expr::IndexGenerator { count: Box::new(arg), span })
+                // BUG FIX (found by this crate's own `tests/oracle.rs`):
+                // see `Self::zero_base_index`'s own doc comment for the
+                // full root-cause writeup of why the bare
+                // `Expr::IndexGenerator` node cannot be emitted as-is here.
+                Ok(self.zero_base_index(
+                    Expr::IndexGenerator { count: Box::new(arg), span: span.clone() },
+                    span,
+                ))
             }
             FnKind::NonScalar(NonScalarAtom::Ravel) => {
                 self.observed.add(Feature::MatrixOps);
@@ -1108,7 +1148,11 @@ impl Lowerer {
             }
             FnKind::NonScalar(NonScalarAtom::Idot) => {
                 self.observed.add(Feature::NDArrays);
-                Ok(Expr::IndexOf { haystack: Box::new(lhs), needle: Box::new(rhs), span })
+                // BUG FIX -- see `Self::zero_base_index`'s own doc comment.
+                Ok(self.zero_base_index(
+                    Expr::IndexOf { haystack: Box::new(lhs), needle: Box::new(rhs), span: span.clone() },
+                    span,
+                ))
             }
             FnKind::NonScalar(NonScalarAtom::Ravel) => {
                 self.observed.add(Feature::MatrixOps);
@@ -1217,6 +1261,63 @@ impl Lowerer {
                  \"Two new primitives\" section), so ElementwiseOpKind::Pow only ever reaches \
                  apply_dyadic's own NonScalar(Caret) arm directly, never this scalar-atom table"
             ),
+        }
+    }
+
+    /// Convert an `Expr::IndexGenerator`/`Expr::IndexOf` result (both
+    /// SIR22-addendum nodes this crate shares field-for-field with
+    /// `apl-to-semantic-ir`) from their hardcoded APL convention to J's own
+    /// `i.` convention, by wrapping in an elementwise `- 1`.
+    ///
+    /// **Root cause (found by this crate's own `tests/oracle.rs` diffing
+    /// `j-runtime` against the compiled-then-`node` path):**
+    /// `semantic-ir-to-javascript`'s codegen for these two nodes
+    /// (`runtime.rs`'s `indexGenerator`/`indexOf` functions) hardcodes
+    /// APL's own `⍳` semantics with NO parameterization: monadic `⍳n` is
+    /// the **1-based** `[1, …, n]` (`out[i] = i + 1`, confirmed against
+    /// `apl_runtime::builtins::index_generator`, which it is explicitly
+    /// "ported 1:1" from), and dyadic `⍳` returns a **1-based** position or
+    /// the not-found sentinel `haystack.length + 1`. J's `i.` is
+    /// genuinely different arithmetic, not just a different surface
+    /// spelling of the same thing (MA06 §1 bullet 3, this crate's single
+    /// most safety-critical distinction from APL): `i.n` is the
+    /// **0-based** `[0, …, n-1]` (`j_runtime::builtins::index_generator`),
+    /// and dyadic `i.`'s not-found sentinel is the plain tally
+    /// (`haystack.length`, not `+ 1`, `j_runtime::builtins::index_of`).
+    /// Emitting the bare SIR22-addendum node directly for J's `i.` (as
+    /// this crate did prior to this fix) silently reused APL's 1-based
+    /// values and sentinel, verified to disagree with `j-runtime`'s ground
+    /// truth on every case exercising either primitive.
+    ///
+    /// This is **not** a bug to report against the shared
+    /// `semantic-ir-to-javascript` crate (unlike the display-glyph and
+    /// missing-builtin gaps `tests/oracle.rs`'s own module doc documents):
+    /// the shared node's fixed 1-based-with-`len+1`-sentinel semantics are
+    /// exactly correct for the APL frontend that motivated it, and this
+    /// crate's own choice to reuse that node for a *different* primitive
+    /// with different semantics is what needs correcting, entirely on this
+    /// side. The fix is a pure arithmetic identity, not a hack: for every
+    /// element, `j_value = apl_value - 1` holds in BOTH cases --
+    /// found (`apl_value` is the 1-based position `k+1` for J's 0-based
+    /// `k`, so `apl_value - 1 == k`) and not-found (`apl_value` is
+    /// `len + 1`, so `apl_value - 1 == len`, exactly J's own tally
+    /// sentinel) -- so wrapping the shared node's output in an ordinary
+    /// `Expr::ElementwiseOp { op: Sub, .. }` against the literal `1`
+    /// (broadcasting exactly like `2 * 1 2 3` already does elsewhere in
+    /// this file) produces genuinely correct J values using only
+    /// pre-existing, generic SIR nodes -- no shared-crate change needed.
+    /// Mirrors `Self::lower_term`'s own `Expr::Ravel`-wrapping fix in
+    /// spirit: work around a node whose emitted shape/values don't fit
+    /// this frontend by wrapping it in one more ordinary node, rather than
+    /// changing the node's shared meaning out from under APL.
+    fn zero_base_index(&mut self, apl_convention: Expr, span: Span) -> Expr {
+        self.observed.add(Feature::MatrixOps);
+        self.observed.add(Feature::ArrayColumnMajor);
+        Expr::ElementwiseOp {
+            op: ElementwiseOpKind::Sub,
+            lhs: Box::new(apl_convention),
+            rhs: Box::new(Expr::IntLit { value: 1, span: span.clone() }),
+            span,
         }
     }
 

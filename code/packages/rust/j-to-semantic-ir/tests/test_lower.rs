@@ -76,21 +76,31 @@ fn underscore_negative_float_literal_with_underscore_exponent() {
 }
 
 #[test]
-fn stranded_literal_is_a_single_row_array_lit() {
+fn stranded_literal_is_a_single_row_array_lit_wrapped_in_ravel() {
+    // BUG FIX regression case (found by `tests/oracle.rs`, root-caused
+    // against `apl-to-semantic-ir`'s identical fix): a bare `ArrayLit {
+    // rows: vec![row], .. }` is a genuinely rank-2 `[1, n]` value under
+    // this IR's column-major convention, not the rank-1 `[n]` vector a
+    // stranded literal actually is -- `Expr::Ravel` wraps it to flatten
+    // down to rank 1 (see `src/lower.rs`'s `lower_term` doc comment).
     let m = compile_ok("1 2 3\n");
     let main = main_fn(&m);
     match printed_value(&main.body.stmts[0]) {
-        Expr::ArrayLit { rows, .. } => {
-            assert_eq!(rows.len(), 1, "stranded literal must be a single row (rank-1 vector)");
-            assert_eq!(rows[0].len(), 3);
-            assert!(matches!(rows[0][0], Expr::IntLit { value: 1, .. }));
-            assert!(matches!(rows[0][1], Expr::IntLit { value: 2, .. }));
-            assert!(matches!(rows[0][2], Expr::IntLit { value: 3, .. }));
-        }
-        other => panic!("expected ArrayLit, got {other:?}"),
+        Expr::Ravel { target, .. } => match target.as_ref() {
+            Expr::ArrayLit { rows, .. } => {
+                assert_eq!(rows.len(), 1, "stranded literal must be a single row (rank-1 vector)");
+                assert_eq!(rows[0].len(), 3);
+                assert!(matches!(rows[0][0], Expr::IntLit { value: 1, .. }));
+                assert!(matches!(rows[0][1], Expr::IntLit { value: 2, .. }));
+                assert!(matches!(rows[0][2], Expr::IntLit { value: 3, .. }));
+            }
+            other => panic!("expected Ravel(ArrayLit(..)), got Ravel({other:?})"),
+        },
+        other => panic!("expected Ravel(ArrayLit(..)), got {other:?}"),
     }
     assert!(m.manifest.iter().any(|f| f == Feature::NDArrays));
     assert!(m.manifest.iter().any(|f| f == Feature::ArrayColumnMajor));
+    assert!(m.manifest.iter().any(|f| f == Feature::MatrixOps));
 }
 
 #[test]
@@ -179,7 +189,15 @@ fn dollar_shape_monadic_and_reshape_dyadic() {
     match printed_value(&main_fn(&m).body.stmts[0]) {
         Expr::Reshape { shape, target, .. } => {
             assert!(matches!(**shape, Expr::IntLit { value: 2, .. }));
-            assert!(matches!(**target, Expr::ArrayLit { .. }));
+            // `target` is the stranded literal `1 2 3 4`, so it's wrapped
+            // in `Expr::Ravel` per `lower_term`'s rank-1 fix (see
+            // `stranded_literal_is_a_single_row_array_lit_wrapped_in_ravel`).
+            match target.as_ref() {
+                Expr::Ravel { target: inner, .. } => {
+                    assert!(matches!(**inner, Expr::ArrayLit { .. }));
+                }
+                other => panic!("expected Ravel(ArrayLit(..)), got {other:?}"),
+            }
         }
         other => panic!("expected Reshape, got {other:?}"),
     }
@@ -187,11 +205,32 @@ fn dollar_shape_monadic_and_reshape_dyadic() {
 
 #[test]
 fn idot_index_generator_monadic_and_index_of_dyadic() {
+    // BUG FIX regression case (found by `tests/oracle.rs`): the bare
+    // `Expr::IndexGenerator`/`Expr::IndexOf` nodes hardcode APL's 1-based
+    // convention with a `len + 1` not-found sentinel (see
+    // `semantic-ir-to-javascript`'s `runtime.rs`); J's own `i.` is
+    // genuinely 0-based with a plain-tally not-found sentinel (MA06 §1
+    // bullet 3), so `Self::zero_base_index` wraps both in an elementwise
+    // `- 1` to convert -- see that function's own doc comment for the
+    // arithmetic proof this is correct in both the found and not-found
+    // cases.
     let m = compile_ok("i.5\n");
-    assert!(matches!(printed_value(&main_fn(&m).body.stmts[0]), Expr::IndexGenerator { .. }));
+    match printed_value(&main_fn(&m).body.stmts[0]) {
+        Expr::ElementwiseOp { op: ElementwiseOpKind::Sub, lhs, rhs, .. } => {
+            assert!(matches!(**lhs, Expr::IndexGenerator { .. }));
+            assert!(matches!(**rhs, Expr::IntLit { value: 1, .. }));
+        }
+        other => panic!("expected ElementwiseOp(Sub, IndexGenerator(..), 1), got {other:?}"),
+    }
 
     let m = compile_ok("(1 2 3)i.2\n");
-    assert!(matches!(printed_value(&main_fn(&m).body.stmts[0]), Expr::IndexOf { .. }));
+    match printed_value(&main_fn(&m).body.stmts[0]) {
+        Expr::ElementwiseOp { op: ElementwiseOpKind::Sub, lhs, rhs, .. } => {
+            assert!(matches!(**lhs, Expr::IndexOf { .. }));
+            assert!(matches!(**rhs, Expr::IntLit { value: 1, .. }));
+        }
+        other => panic!("expected ElementwiseOp(Sub, IndexOf(..), 1), got {other:?}"),
+    }
 }
 
 #[test]
@@ -209,7 +248,12 @@ fn ravel_monadic_and_catenate_dyadic() {
 fn hash_tally_monadic_and_replicate_dyadic() {
     let m = compile_ok("#1 2 3\n");
     let args = builtin_call(printed_value(&main_fn(&m).body.stmts[0]), "tally");
-    assert!(matches!(args[0], Expr::ArrayLit { .. }));
+    // `1 2 3` is a stranded literal, wrapped in `Expr::Ravel` per
+    // `lower_term`'s rank-1 fix.
+    match &args[0] {
+        Expr::Ravel { target, .. } => assert!(matches!(**target, Expr::ArrayLit { .. })),
+        other => panic!("expected Ravel(ArrayLit(..)), got {other:?}"),
+    }
 
     let m = compile_ok("2#3\n");
     let args = builtin_call(printed_value(&main_fn(&m).body.stmts[0]), "replicate");
