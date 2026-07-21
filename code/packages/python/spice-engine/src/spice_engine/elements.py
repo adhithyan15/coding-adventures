@@ -621,6 +621,8 @@ class BJT:
     Nr: float = 1.0         # reverse emission coefficient
     Vje: float = 0.75       # base-emitter junction potential (V)
     Mje: float = 0.33       # base-emitter grading coefficient
+    Vjc: float = 0.75       # base-collector junction potential (V)
+    Mjc: float = 0.33       # base-collector grading coefficient
 
 
 # ---------------------------------------------------------------------------

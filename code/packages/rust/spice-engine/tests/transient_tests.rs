@@ -563,6 +563,8 @@ fn transient_bjt_base_emitter_depletion_capacitance_falls_with_reverse_bias() {
                 1.0,
                 0.75,
                 grading_coefficient,
+                0.75,
+                0.33,
             ),
         ));
         transient(&circuit, 1.0e-9, 5.0e-9).unwrap()[1]
@@ -571,6 +573,61 @@ fn transient_bjt_base_emitter_depletion_capacitance_falls_with_reverse_bias() {
     }
 
     assert!(stepped_base_voltage(0.5) > stepped_base_voltage(0.0));
+}
+
+#[test]
+fn transient_bjt_base_collector_depletion_capacitance_falls_with_reverse_bias() {
+    fn stepped_collector_voltage(grading_coefficient: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+            "Vdrive",
+            "in",
+            "0",
+            1.0,
+            Waveform::Pwl(PwlWaveform::new(vec![
+                (0.0, 1.0),
+                (1.0e-9, 1.0),
+                (2.0e-9, 0.0),
+                (5.0e-9, 0.0),
+            ])),
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin",
+            "in",
+            "collector",
+            1_000.0,
+        )));
+        circuit.add(Element::Bjt(
+            Bjt::with_model_temperature_and_depletion_parameters(
+                "Q1",
+                "collector",
+                "0",
+                "0",
+                BjtPolarity::Npn,
+                1.0e-14,
+                100.0,
+                0.02585,
+                0.0,
+                1.0e-12,
+                0.0,
+                0.0,
+                3.0,
+                1.11,
+                0.0,
+                1.0,
+                1.0,
+                0.75,
+                0.33,
+                0.75,
+                grading_coefficient,
+            ),
+        ));
+        transient(&circuit, 1.0e-9, 5.0e-9).unwrap()[1]
+            .voltage("collector")
+            .unwrap()
+    }
+
+    assert!(stepped_collector_voltage(0.5) < stepped_collector_voltage(0.0));
 }
 
 #[test]
