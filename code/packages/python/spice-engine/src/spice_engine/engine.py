@@ -415,7 +415,7 @@ def circuit_at_temperature(
                 element,
                 temperature_kelvin,
                 nominal_temperature_kelvin=nominal_temperature_kelvin,
-                energy_gap_ev=energy_gap_ev,
+                energy_gap_ev=element.Eg,
             )
         if isinstance(element, Mosfet):
             return mosfet_at_temperature(
@@ -596,7 +596,7 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
-        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti)
+        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg)
     if isinstance(element, VCVS):
         return VCVS(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), _map_subckt_node(element.ctrl_plus, instance_name, node_map), _map_subckt_node(element.ctrl_minus, instance_name, node_map), element.gain)
     if isinstance(element, VCCS):
@@ -9137,6 +9137,8 @@ def _validate_bjt(el: BJT) -> None:
         raise ValueError(
             f"{el.name}: BJT saturation-current temperature exponent must be finite"
         )
+    if not math.isfinite(el.Eg) or el.Eg <= 0.0:
+        raise ValueError(f"{el.name}: BJT energy gap must be finite and positive")
 
 
 # ---------------------------------------------------------------------------
@@ -13838,6 +13840,7 @@ def sens_dc(
                     Tf=el.Tf,
                     Tr=el.Tr,
                     Xti=el.Xti,
+                    Eg=el.Eg,
                 ),
             )
             delta_beta = max(abs(el.beta_f) * perturbation, abs_floor)
@@ -13855,6 +13858,7 @@ def sens_dc(
                     Tf=el.Tf,
                     Tr=el.Tr,
                     Xti=el.Xti,
+                    Eg=el.Eg,
                 ),
             )
 
@@ -14082,6 +14086,7 @@ def _vary_element(el: Element, tolerance: float, distribution: str) -> Element:
             Tf=el.Tf,
             Tr=el.Tr,
             Xti=el.Xti,
+            Eg=el.Eg,
         )
 
     # Capacitor, Inductor, Mosfet — no tunable DC parameter; return unchanged.

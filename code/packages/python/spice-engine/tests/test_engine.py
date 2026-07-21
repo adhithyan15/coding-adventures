@@ -412,7 +412,7 @@ def test_model_card_type_aliases_are_normalized() -> None:
 
 def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     coverage = model_card_supported_parameter_coverage()
-    assert len(coverage) == 74
+    assert len(coverage) == 76
     assert coverage[0].kind == "D"
     assert coverage[0].canonical_parameter == "IS"
     assert coverage[0].accepted_names == ("IS", "JS")
@@ -427,7 +427,7 @@ def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     assert "NMOS\tVT0\tVT0|VTO|VTH\t3" in table
     assert table.splitlines()[-1] == "PMOS\tMJ\tMJ\t1"
     records = model_card_supported_parameter_coverage_records()
-    assert len(records) == 74
+    assert len(records) == 76
     assert records[0] == {
         "kind": "D",
         "canonical_parameter": "IS",
@@ -501,9 +501,9 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
     assert report.passed is True
     assert report.kind_count == 7
     assert report.expected_kind_count == 7
-    assert report.canonical_parameter_count == 74
-    assert report.expected_canonical_parameter_count == 74
-    assert report.accepted_name_count == 122
+    assert report.canonical_parameter_count == 76
+    assert report.expected_canonical_parameter_count == 76
+    assert report.accepted_name_count == 124
     assert report.aliased_parameter_count == 35
     assert report.max_alias_count == 4
     assert report.issues == ()
@@ -511,7 +511,7 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "true\t7\t7\t74\t74\t122\t35\t4\t0"
+        "true\t7\t7\t76\t76\t124\t35\t4\t0"
     )
     assert (
         format_model_card_supported_parameter_coverage_gate_issue_table(report)
@@ -539,8 +539,8 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
 
     assert report.passed is False
     assert report.kind_count == 7
-    assert report.canonical_parameter_count == 73
-    assert report.accepted_name_count == 119
+    assert report.canonical_parameter_count == 75
+    assert report.accepted_name_count == 121
     assert report.aliased_parameter_count == 34
     assert report.max_alias_count == 4
     assert len(report.issues) == 4
@@ -555,7 +555,7 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "false\t7\t7\t73\t74\t119\t34\t4\t4\n"
+        "false\t7\t7\t75\t76\t121\t34\t4\t4\n"
         "kind\tfield\tmessage\n"
         "NMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical "
         "supported parameters, found 17\n"
@@ -647,14 +647,15 @@ def test_model_card_aliases_build_device_instances() -> None:
     assert pytest.approx(1.05) == diode_model.Eg
 
     bjt_card = normalize_model_card(
-        "Qsmall", "npn", {"BETA": 125.0, "CBE": 2.0e-12, "XTI": 2.4}
+        "Qsmall", "npn", {"BETA": 125.0, "CBE": 2.0e-12, "XTI": 2.4, "EG": 1.05}
     )
     bjt_model = bjt_from_model_card("Q1", "c", "b", "e", bjt_card)
-    assert bjt_card.parameters == {"BF": 125.0, "CJE": 2.0e-12, "XTI": 2.4}
+    assert bjt_card.parameters == {"BF": 125.0, "CJE": 2.0e-12, "XTI": 2.4, "EG": 1.05}
     assert bjt_model.polarity == "NPN"
     assert bjt_model.beta_f == pytest.approx(125.0)
     assert bjt_model.Cje == pytest.approx(2.0e-12)
     assert bjt_model.Xti == pytest.approx(2.4)
+    assert bjt_model.Eg == pytest.approx(1.05)
 
     jfet_card = normalize_model_card("Jn", "njfet", {"BET": 9.0e-4, "VT0": -1.8, "LAM": 0.02})
     jfet_model = jfet_from_model_card("J1", "d", "g", "s", jfet_card)
@@ -2220,11 +2221,11 @@ def test_subcircuit_expansion_preserves_complete_diode_model():
     assert expanded.Eg == pytest.approx(1.05)
 
 
-def test_subcircuit_expansion_preserves_bjt_temperature_exponent():
+def test_subcircuit_expansion_preserves_bjt_temperature_parameters():
     cell = SubcircuitDefinition(
         "bjt-cell",
         ("c", "b", "e"),
-        (BJT("Qcell", "c", "b", "e", Xti=2.4),),
+        (BJT("Qcell", "c", "b", "e", Xti=2.4, Eg=1.05),),
     )
     circuit = Circuit()
     circuit.define_subcircuit(cell)
@@ -2232,6 +2233,7 @@ def test_subcircuit_expansion_preserves_bjt_temperature_exponent():
 
     expanded = next(element for element in circuit.elements if isinstance(element, BJT))
     assert expanded.Xti == pytest.approx(2.4)
+    assert expanded.Eg == pytest.approx(1.05)
 
 
 def test_branch_current_in_voltage_source():
@@ -2449,6 +2451,23 @@ def test_bjt_temperature_scaling_uses_model_temperature_exponent():
     low = bjt_at_temperature(BJT("Qlow", "c", "b", "e", Xti=0.0), 350.0)
     high = bjt_at_temperature(BJT("Qhigh", "c", "b", "e", Xti=4.0), 350.0)
     assert high.Is > low.Is
+
+
+def test_bjt_temperature_scaling_uses_model_energy_gap():
+    silicon = Circuit()
+    silicon.add(BJT("Qsilicon", "c", "b", "e", Eg=1.11))
+    lower_gap = Circuit()
+    lower_gap.add(BJT("Qlower", "c", "b", "e", Eg=0.8))
+    silicon_hot = circuit_at_temperature(silicon, 350.0)
+    lower_gap_hot = circuit_at_temperature(lower_gap, 350.0)
+    assert silicon_hot.elements[0].Is > lower_gap_hot.elements[0].Is
+
+
+def test_dc_rejects_invalid_bjt_energy_gap():
+    circuit = Circuit()
+    circuit.add(BJT("Qbad", "c", "b", "0", Eg=0.0))
+    with pytest.raises(ValueError, match="BJT energy gap must be finite and positive"):
+        dc_op(circuit)
 
 
 def test_mosfet_temperature_scaling_changes_common_source_bias():

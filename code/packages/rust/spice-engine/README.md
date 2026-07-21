@@ -127,8 +127,8 @@ to shape `CJO` depletion capacitance continuously around the `FC * VJ`
 transition.
 Diode cards also accept `XTI` (default `3`) and `EG` (default `1.11 eV`) to
 control saturation-current temperature scaling.
-BJT cards accept `XTI` (default `3`) for the same saturation-current
-temperature exponent behavior.
+BJT cards accept `XTI` (default `3`) and `EG` (default `1.11` eV) for
+model-specific saturation-current temperature scaling.
 `model_card_unsupported_parameter_issues`,
 `format_model_card_unsupported_parameter_issue_table`,
 `model_card_unsupported_parameter_issue_records`,

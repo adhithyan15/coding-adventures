@@ -33,13 +33,13 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language BJT saturation-current temperature exponent.
+1. Cross-language BJT energy gap.
    - Status: current PR completion candidate.
-   - Add Berkeley BJT `XTI` saturation-current temperature-exponent model-card
+   - Add Berkeley BJT `EG` semiconductor energy-gap model-card
      support in Rust, Python, and TypeScript.
-   - Apply `XTI` to BJT saturation-current temperature scaling and preserve the
+   - Apply each model's `EG` to BJT saturation-current temperature scaling and preserve the
      full BJT model through hierarchical subcircuit expansion.
-   - Extend the supported-parameter coverage gate from 72 to 74 canonical rows
+   - Extend the supported-parameter coverage gate from 74 to 76 canonical rows
      and lock model-specific temperature scaling across all three engines.
 
 ## Completed Slices
@@ -2992,6 +2992,13 @@ the Rust, Python, and TypeScript surfaces together.
      each model's energy gap to saturation-current temperature scaling.
    - Hierarchical subcircuit expansion preserves `EG`, and the supported-
      parameter release gate now covers 72 canonical rows.
+
+218. Cross-language BJT saturation-current temperature exponent.
+   - Status: completed in PR 8725.
+   - Rust, Python, and TypeScript BJT model cards now accept `XTI` and apply it
+     to saturation-current temperature scaling.
+   - Hierarchical subcircuit expansion preserves `XTI`, and the supported-
+     parameter release gate now covers 74 canonical rows.
 
 ## Backlog
 
