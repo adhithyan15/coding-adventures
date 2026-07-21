@@ -102,6 +102,25 @@ and Italian's habit of keeping final vowels Latin's other children dropped.
   the language caught **mid-process**, with the inherited past still holding half
   the country while French lost it entirely and Spanish/Portuguese never gave it
   up. **Authored.**
+- **Ch. 16 — *essere*, and the past built on it**: ***essere*** (`IT-C16-essere`)
+  — the other "to be", against the ***stare*** already taught in **Ch. 2**.
+  Italian's solution to the Latin *esse*/*stāre* pair is the one **between** its
+  sisters: it kept **both** verbs alive (unlike French, which kept *esse* as
+  *être* and absorbed *stāre*'s whole *ét-* limb) but let them **share a
+  participle** — *essere*'s own didn't survive, so
+  it borrowed **stare**'s, and ***sono stato*** means both "I have **been**" and
+  "I have **stayed**". Plus the accent that separates *è* ("is") from *e* ("and")
+  → the ***passato prossimo* with *essere*** (`IT-C16-passato-prossimo-essere`):
+  starts from **`sono stato`** — an *essere*-past needing **zero new vocabulary**
+  — then introduces ***andare*** as a named new verb (itself suppletive:
+  *vado/vai/va/**vanno*** ← *vādere* "stride" against *andiamo/andate/andare/
+  andato*, whose origin is genuinely disputed — most likely *ambitāre*; note
+  *vanno* files with *vado*, so the split is **not** singular-vs-plural — exactly
+  the trick behind Spanish *voy* against *andar*). The participle **agrees with
+  the subject** in all four
+  endings (*andato/-a/-i/-e*), same adjective fossil as French. Closes the
+  three-way table: French and Italian **keep** the agreement, German **drops**
+  it. **Authored.**
 
 ## Planned (mirrors the Spanish theme sequence)
 
