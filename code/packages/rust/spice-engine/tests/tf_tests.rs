@@ -355,6 +355,7 @@ fn tf_bjt_forward_early_voltage_reduces_output_impedance() {
             1.11,
             forward_early_voltage,
             1.0,
+            1.0,
         )));
         tf(&circuit, "out", "Vin").unwrap().output_impedance_ohms
     };
@@ -390,6 +391,7 @@ fn tf_bjt_forward_emission_coefficient_reduces_gain_and_raises_input_impedance()
             1.11,
             0.0,
             forward_emission_coefficient,
+            1.0,
         )));
         tf(&circuit, "out", "Vin").unwrap()
     };

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add BJT model-card `NR` reverse emission-coefficient support to reverse
+  base-collector diffusion charge in AC and transient analysis, matching Python
+  and Rust. The supported-parameter catalog now contains 82 canonical rows.
 - Add BJT model-card `NF` forward emission-coefficient support across DC,
   transient charge, AC, transfer-function, and noise paths, matching Python and
   Rust. The supported-parameter catalog now contains 80 canonical rows.

@@ -596,7 +596,7 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
-        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg, element.Vaf, element.Nf)
+        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg, element.Vaf, element.Nf, element.Nr)
     if isinstance(element, VCVS):
         return VCVS(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), _map_subckt_node(element.ctrl_plus, instance_name, node_map), _map_subckt_node(element.ctrl_minus, instance_name, node_map), element.gain)
     if isinstance(element, VCCS):
@@ -8738,7 +8738,7 @@ def _bjt_charge_dynamic_capacitance(el: BJT, state_kind: str, voltage: float) ->
     if state_kind == "be":
         conductance = _bjt_junction_transconductance(el, voltage, el.Nf)
         return el.Cje + el.Tf * conductance
-    conductance = _bjt_junction_transconductance(el, voltage, 1.0)
+    conductance = _bjt_junction_transconductance(el, voltage, el.Nr)
     return el.Cjc + el.Tr * conductance
 
 
@@ -9154,6 +9154,8 @@ def _validate_bjt(el: BJT) -> None:
         raise ValueError(f"{el.name}: BJT forward Early voltage must be finite and non-negative")
     if not math.isfinite(el.Nf) or el.Nf <= 0.0:
         raise ValueError(f"{el.name}: BJT forward emission coefficient must be finite and positive")
+    if not math.isfinite(el.Nr) or el.Nr <= 0.0:
+        raise ValueError(f"{el.name}: BJT reverse emission coefficient must be finite and positive")
 
 
 # ---------------------------------------------------------------------------
@@ -12373,15 +12375,16 @@ def _stamp_ac(
             else min(Vc_dc - Vb_dc, 0.7)
         )
         forward_thermal_voltage = el.Vt * el.Nf
+        reverse_thermal_voltage = el.Vt * el.Nr
         exp_t = math.exp(Vjunc / forward_thermal_voltage)
-        exp_reverse = math.exp(Vreverse / el.Vt)
+        exp_reverse = math.exp(Vreverse / reverse_thermal_voltage)
         base_collector_current = el.Is * (exp_t - 1.0)
         base_gm = (el.Is / forward_thermal_voltage) * exp_t
         output_voltage = Vc_dc - Ve_dc if el.polarity == "NPN" else Ve_dc - Vc_dc
         early_factor = 1.0 if el.Vaf == 0.0 else 1.0 + output_voltage / el.Vaf
         output_conductance = 0.0 if el.Vaf == 0.0 else base_collector_current / el.Vaf
         gm_b: float = base_gm * early_factor
-        gm_reverse: float = (el.Is / el.Vt) * exp_reverse
+        gm_reverse: float = (el.Is / reverse_thermal_voltage) * exp_reverse
         g_pi: float = base_gm / el.beta_f
         diffusion_capacitance = el.Tf * gm_b
         reverse_diffusion_capacitance = el.Tr * gm_reverse

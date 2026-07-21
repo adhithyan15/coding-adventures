@@ -1714,6 +1714,7 @@ export interface Bjt {
   readonly energyGapElectronVolts: number;
   readonly forwardEarlyVoltage: number;
   readonly forwardEmissionCoefficient: number;
+  readonly reverseEmissionCoefficient: number;
 }
 
 export type MosfetType = "NMOS" | "PMOS";
@@ -1991,8 +1992,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   Record<ModelCardKind, readonly [number, number, number, number]>
 > = {
   D: [12, 18, 5, 3],
-  NPN: [11, 20, 5, 4],
-  PNP: [11, 20, 5, 4],
+  NPN: [12, 21, 5, 4],
+  PNP: [12, 21, 5, 4],
   NJF: [5, 11, 5, 3],
   PJF: [5, 11, 5, 3],
   NMOS: [18, 25, 6, 3],
@@ -3582,7 +3583,7 @@ function cloneSubcktElement(
     case "jfet":
       return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation, element.gateSourceCapacitance, element.gateDrainCapacitance);
     case "bjt":
-      return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.forwardEarlyVoltage, element.forwardEmissionCoefficient);
+      return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.forwardEarlyVoltage, element.forwardEmissionCoefficient, element.reverseEmissionCoefficient);
     case "mosfet":
       return mosfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), mapSubcktNode(element.body, instanceName, nodeMap), element.type, element.params);
     case "vccs":
@@ -7739,6 +7740,7 @@ export function bjt(
   energyGapElectronVolts = 1.11,
   forwardEarlyVoltage = 0.0,
   forwardEmissionCoefficient = 1.0,
+  reverseEmissionCoefficient = 1.0,
 ): Bjt {
   return {
     kind: "bjt",
@@ -7758,6 +7760,7 @@ export function bjt(
     energyGapElectronVolts,
     forwardEarlyVoltage,
     forwardEmissionCoefficient,
+    reverseEmissionCoefficient,
   };
 }
 
@@ -7864,6 +7867,7 @@ const BJT_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   VAF: "VAF",
   VA: "VAF",
   NF: "NF",
+  NR: "NR",
 };
 
 const JFET_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
@@ -8364,6 +8368,7 @@ export function bjtFromModelCard(
     p.EG ?? 1.11,
     p.VAF ?? 0.0,
     p.NF ?? 1.0,
+    p.NR ?? 1.0,
   );
 }
 
@@ -19358,7 +19363,11 @@ function bjtChargeDynamicCapacitance(
     );
     return element.baseEmitterCapacitance + element.forwardTransitTime * conductance;
   }
-  const conductance = bjtJunctionTransconductance(element, voltage, 1.0);
+  const conductance = bjtJunctionTransconductance(
+    element,
+    voltage,
+    element.reverseEmissionCoefficient,
+  );
   return element.baseCollectorCapacitance + element.reverseTransitTime * conductance;
 }
 
@@ -19584,6 +19593,9 @@ function validateBjt(element: Bjt): void {
   }
   if (!Number.isFinite(element.forwardEmissionCoefficient) || element.forwardEmissionCoefficient <= 0.0) {
     throw invalidElement(element.name, "forward emission coefficient must be finite and positive");
+  }
+  if (!Number.isFinite(element.reverseEmissionCoefficient) || element.reverseEmissionCoefficient <= 0.0) {
+    throw invalidElement(element.name, "reverse emission coefficient must be finite and positive");
   }
 }
 
@@ -21478,9 +21490,10 @@ function stampAcBjtSmallSignal(
       : collectorVoltage - baseVoltage;
   const forwardThermalVoltage = element.thermalVoltage * element.forwardEmissionCoefficient;
   const exponent = Math.max(-40.0, Math.min(40.0, junctionVoltage / forwardThermalVoltage));
+  const reverseThermalVoltage = element.thermalVoltage * element.reverseEmissionCoefficient;
   const reverseExponent = Math.max(
     -40.0,
-    Math.min(40.0, reverseJunctionVoltage / element.thermalVoltage),
+    Math.min(40.0, reverseJunctionVoltage / reverseThermalVoltage),
   );
   const expValue = Math.exp(exponent);
   const baseCollectorCurrent = element.saturationCurrent * (expValue - 1.0);
@@ -21498,7 +21511,7 @@ function stampAcBjtSmallSignal(
   const junctionConductance = baseTransconductance / element.forwardBeta;
   const diffusionCapacitance = element.forwardTransitTime * transconductance;
   const reverseTransconductance =
-    element.saturationCurrent / element.thermalVoltage * Math.exp(reverseExponent);
+    element.saturationCurrent / reverseThermalVoltage * Math.exp(reverseExponent);
   const reverseDiffusionCapacitance = element.reverseTransitTime * reverseTransconductance;
   const baseEmitterAdmittance = complex(
     junctionConductance,
