@@ -7,9 +7,16 @@ use chief_of_staff_tool_api::{
     ToolExecutionTrace, ToolHandler, ToolInvocationRequest,
 };
 use coding_adventures_json_value::{parse as parse_json, JsonValue};
+use generic_job_protocol::{JobRequest, JobResponse};
+use generic_job_runtime::{
+    ExecutorLimits, ExecutorSnapshot, JobExecutor, StdioProcessPool, StdioProcessPoolOptions,
+    StdioWorkerCommand, StdioWorkerRestartPolicy,
+};
+use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
 use std::error::Error;
 use std::fmt::{self, Display, Formatter};
+use std::time::Duration;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct HostProfile {
@@ -358,6 +365,179 @@ pub struct ActiveOrchestratorRuntime {
     tool_owners: BTreeMap<String, String>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct HostRpcRequest {
+    pub call_id: String,
+    pub tool_id: String,
+    pub arguments_json: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct HostRpcResponse {
+    pub output_json: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HostProcessSpec {
+    pub host_id: String,
+    pub command: StdioWorkerCommand,
+    pub restart_policy: StdioWorkerRestartPolicy,
+}
+
+impl HostProcessSpec {
+    pub fn new(
+        host_id: impl Into<String>,
+        command: StdioWorkerCommand,
+        restart_policy: StdioWorkerRestartPolicy,
+    ) -> Self {
+        Self {
+            host_id: host_id.into(),
+            command,
+            restart_policy,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SupervisedHostSnapshot {
+    pub host_id: String,
+    pub allowed_tool_count: usize,
+    pub process: ExecutorSnapshot,
+}
+
+pub struct SupervisedOrchestratorRuntime {
+    profile_id: String,
+    tool_owners: BTreeMap<String, String>,
+    allowed_tool_counts: BTreeMap<String, usize>,
+    hosts: BTreeMap<String, StdioProcessPool<HostRpcRequest, HostRpcResponse>>,
+}
+
+impl SupervisedOrchestratorRuntime {
+    pub fn spawn(
+        profile: OrchestratorProfile,
+        specs: Vec<HostProcessSpec>,
+    ) -> Result<Self, HostRuntimeError> {
+        profile.validate()?;
+        let profile_host_ids = profile
+            .hosts
+            .iter()
+            .map(|host| host.host_id.clone())
+            .collect::<BTreeSet<_>>();
+        let mut specs_by_host = BTreeMap::new();
+        for spec in specs {
+            validate_label("host_id", &spec.host_id)?;
+            if !profile_host_ids.contains(&spec.host_id) {
+                return Err(HostRuntimeError::UnknownProcessHost(spec.host_id));
+            }
+            let host_id = spec.host_id.clone();
+            if specs_by_host.insert(host_id.clone(), spec).is_some() {
+                return Err(HostRuntimeError::DuplicateProcessHost(host_id));
+            }
+        }
+
+        let missing = profile_host_ids
+            .iter()
+            .filter(|host_id| !specs_by_host.contains_key(*host_id))
+            .cloned()
+            .collect::<Vec<_>>();
+        if !missing.is_empty() {
+            return Err(HostRuntimeError::MissingProcessHosts(missing));
+        }
+
+        let mut hosts = BTreeMap::new();
+        let mut tool_owners = BTreeMap::new();
+        let mut allowed_tool_counts = BTreeMap::new();
+        for host in profile.hosts {
+            for tool_id in &host.allowed_tools {
+                tool_owners.insert(tool_id.clone(), host.host_id.clone());
+            }
+            allowed_tool_counts.insert(host.host_id.clone(), host.allowed_tools.len());
+            let spec = specs_by_host
+                .remove(&host.host_id)
+                .expect("profile coverage was validated before process launch");
+            let pool = StdioProcessPool::spawn(
+                spec.command,
+                StdioProcessPoolOptions {
+                    worker_count: 1,
+                    limits: ExecutorLimits::default(),
+                    default_job_timeout: Some(Duration::from_secs(30)),
+                    restart_policy: spec.restart_policy,
+                },
+            )
+            .map_err(|error| HostRuntimeError::ProcessIo {
+                host_id: host.host_id.clone(),
+                message: error.to_string(),
+            })?;
+            hosts.insert(host.host_id, pool);
+        }
+
+        Ok(Self {
+            profile_id: profile.profile_id,
+            tool_owners,
+            allowed_tool_counts,
+            hosts,
+        })
+    }
+
+    pub fn profile_id(&self) -> &str {
+        &self.profile_id
+    }
+
+    pub fn submit(&self, request: HostRpcRequest) -> Result<(), HostRuntimeError> {
+        validate_label("call_id", &request.call_id)?;
+        validate_tool_id(&request.tool_id).map_err(HostRuntimeError::ToolApi)?;
+        parse_json(&request.arguments_json)
+            .map_err(|error| HostRuntimeError::InvalidRpcArguments(error.message.to_string()))?;
+        let host_id = self
+            .tool_owners
+            .get(&request.tool_id)
+            .ok_or_else(|| HostRuntimeError::ToolNotAllowed(request.tool_id.clone()))?;
+        self.hosts
+            .get(host_id)
+            .expect("supervised runtime must retain every profile host")
+            .submit(JobRequest::new(request.call_id.clone(), request))
+            .map_err(|error| HostRuntimeError::ProcessSubmit {
+                host_id: host_id.clone(),
+                message: error.to_string(),
+            })
+    }
+
+    pub fn recv_for_host(
+        &self,
+        host_id: &str,
+        timeout: Duration,
+    ) -> Result<Option<JobResponse<HostRpcResponse>>, HostRuntimeError> {
+        let host = self
+            .hosts
+            .get(host_id)
+            .ok_or_else(|| HostRuntimeError::UnknownProcessHost(host_id.to_string()))?;
+        host.recv_response_timeout(timeout)
+            .map_err(|error| HostRuntimeError::ProcessIo {
+                host_id: host_id.to_string(),
+                message: error.to_string(),
+            })
+    }
+
+    pub fn snapshots(&self) -> Vec<SupervisedHostSnapshot> {
+        self.hosts
+            .iter()
+            .map(|(host_id, process)| SupervisedHostSnapshot {
+                host_id: host_id.clone(),
+                allowed_tool_count: self.allowed_tool_counts[host_id],
+                process: process.snapshot(),
+            })
+            .collect()
+    }
+
+    pub fn shutdown(&self) {
+        for host in self.hosts.values() {
+            host.shutdown();
+        }
+    }
+}
+
 impl ActiveOrchestratorRuntime {
     pub fn summary(&self) -> OrchestratorProfileSummary {
         OrchestratorProfileSummary {
@@ -448,6 +628,18 @@ pub enum HostRuntimeError {
         capability: String,
     },
     CatalogIncomplete(Vec<String>),
+    DuplicateProcessHost(String),
+    MissingProcessHosts(Vec<String>),
+    UnknownProcessHost(String),
+    InvalidRpcArguments(String),
+    ProcessIo {
+        host_id: String,
+        message: String,
+    },
+    ProcessSubmit {
+        host_id: String,
+        message: String,
+    },
     ToolApi(ToolApiError),
 }
 
@@ -499,6 +691,26 @@ impl Display for HostRuntimeError {
                 "host profile catalog is incomplete; missing {}",
                 tool_ids.join(", ")
             ),
+            Self::DuplicateProcessHost(host_id) => {
+                write!(f, "duplicate process specification for host '{host_id}'")
+            }
+            Self::MissingProcessHosts(host_ids) => write!(
+                f,
+                "orchestrator process catalog is incomplete; missing {}",
+                host_ids.join(", ")
+            ),
+            Self::UnknownProcessHost(host_id) => {
+                write!(f, "process host '{host_id}' is not declared by the profile")
+            }
+            Self::InvalidRpcArguments(message) => {
+                write!(f, "invalid host RPC arguments JSON: {message}")
+            }
+            Self::ProcessIo { host_id, message } => {
+                write!(f, "host '{host_id}' process I/O failed: {message}")
+            }
+            Self::ProcessSubmit { host_id, message } => {
+                write!(f, "host '{host_id}' rejected RPC submission: {message}")
+            }
             Self::ToolApi(error) => Display::fmt(error, f),
         }
     }
@@ -598,6 +810,8 @@ mod tests {
         JsonSchema, RequestedBy, ToolConcurrency, ToolHandlerOutput, ToolIdempotency,
         ToolInvocationRequest, ToolSideEffects, ToolStability, ToolStreaming,
     };
+    use generic_job_protocol::JobResult;
+    use std::process::Command;
 
     const PROFILE: &str = r#"{
       "profile_id": "test_profile",
@@ -663,6 +877,28 @@ mod tests {
             deadline_at: Some(200),
             idempotency_key: Some("idem_1".to_string()),
         }
+    }
+
+    fn scripted_worker(script: &str) -> Option<StdioWorkerCommand> {
+        let candidates = if cfg!(windows) {
+            vec!["python"]
+        } else {
+            vec!["python3", "python"]
+        };
+        candidates.into_iter().find_map(|program| {
+            Command::new(program)
+                .arg("-c")
+                .arg("import json, sys")
+                .output()
+                .ok()
+                .filter(|output| output.status.success())
+                .map(|_| {
+                    StdioWorkerCommand::new(
+                        program.to_string(),
+                        vec!["-c".to_string(), script.to_string()],
+                    )
+                })
+        })
     }
 
     #[test]
@@ -770,5 +1006,100 @@ mod tests {
             OrchestratorProfile::from_json(&profile),
             Err(HostRuntimeError::DuplicateToolOwner { .. })
         ));
+    }
+
+    #[test]
+    fn supervised_profile_requires_exact_process_coverage() {
+        let profile = OrchestratorProfile {
+            profile_id: "test_profile".to_string(),
+            hosts: vec![HostProfile::from_json(PROFILE).unwrap()],
+        };
+        assert!(matches!(
+            SupervisedOrchestratorRuntime::spawn(profile, vec![]),
+            Err(HostRuntimeError::MissingProcessHosts(host_ids))
+                if host_ids == vec!["test_host".to_string()]
+        ));
+    }
+
+    #[test]
+    fn supervised_profile_routes_rpc_and_recovers_crashed_host() {
+        let marker = std::env::temp_dir().join(format!(
+            "chief-host-runtime-restart-once-{}-{:?}",
+            std::process::id(),
+            std::time::SystemTime::now()
+        ));
+        let marker_literal = format!("{:?}", marker.to_string_lossy());
+        let script = format!(
+            r#"
+import json, os, sys
+marker_path = {marker_literal}
+for line in sys.stdin:
+    frame = json.loads(line)
+    body = frame["body"]
+    payload = body["payload"]
+    if not os.path.exists(marker_path):
+        open(marker_path, "w").close()
+        sys.exit(1)
+    out = {{"output_json": json.dumps({{"host": "test_host", "tool": payload["tool_id"]}})}}
+    response = {{"version": 1, "kind": "response", "body": {{"id": body["id"], "result": {{"status": "ok", "payload": out}}, "metadata": body["metadata"]}}}}
+    print(json.dumps(response), flush=True)
+"#
+        );
+        let Some(command) = scripted_worker(&script) else {
+            eprintln!("skipping test because no Python interpreter was found");
+            return;
+        };
+        let profile = OrchestratorProfile {
+            profile_id: "test_profile".to_string(),
+            hosts: vec![HostProfile::from_json(PROFILE).unwrap()],
+        };
+        let runtime = SupervisedOrchestratorRuntime::spawn(
+            profile,
+            vec![HostProcessSpec::new(
+                "test_host",
+                command,
+                StdioWorkerRestartPolicy::Bounded {
+                    max_restarts: 1,
+                    window: Duration::from_secs(60),
+                },
+            )],
+        )
+        .unwrap();
+
+        runtime
+            .submit(HostRpcRequest {
+                call_id: "call_1".to_string(),
+                tool_id: "demo.read".to_string(),
+                arguments_json: "{}".to_string(),
+            })
+            .unwrap();
+        let first = runtime
+            .recv_for_host("test_host", Duration::from_secs(5))
+            .unwrap()
+            .expect("crashed host should fail its in-flight RPC");
+        assert!(matches!(first.result, JobResult::Error { .. }));
+
+        runtime
+            .submit(HostRpcRequest {
+                call_id: "call_2".to_string(),
+                tool_id: "demo.read".to_string(),
+                arguments_json: "{}".to_string(),
+            })
+            .unwrap();
+        let second = runtime
+            .recv_for_host("test_host", Duration::from_secs(5))
+            .unwrap()
+            .expect("restarted host should answer the next RPC");
+        match second.result {
+            JobResult::Ok { payload } => {
+                assert!(payload.output_json.contains("test_host"));
+                assert!(payload.output_json.contains("demo.read"));
+            }
+            other => panic!("expected restarted host success, got {other:?}"),
+        }
+        assert_eq!(runtime.snapshots()[0].process.live_workers, 1);
+        runtime.shutdown();
+        assert!(runtime.snapshots()[0].process.shutting_down);
+        let _ = std::fs::remove_file(marker);
     }
 }

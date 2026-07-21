@@ -241,10 +241,18 @@ completeness gates, and executable routing. The Weather Agent uses three host
 profiles for fetch, classify, and write instead of wiring an unrestricted tool
 runtime directly.
 
+The supervised-host slice now connects those profiles to the repo-owned stdio
+process pool and generic job protocol. Activation requires exactly one process
+specification per declared host; RPC follows profile tool ownership; process
+snapshots expose live-worker and shutdown state; and bounded restart is proven
+by a host that crashes one in-flight call and services the next call after
+restart.
+
 These items are Chief of Staff architecture, not smart-home platform work:
 
-- Connect active host/orchestrator profiles to supervised process lifecycle,
-  signed package verification, host RPC, and deny-all Deno workers.
+- Add signed package verification before supervised host activation and replace
+  the proof worker with deny-all Deno workers speaking the proven host RPC
+  protocol.
 - Run a Chief job end to end through scheduler or job framework, tool runtime,
   approval checks, result journal, and final user-visible report.
 - Add approval UX and policy wiring for Tier2 or stronger actions such as
