@@ -231,6 +231,67 @@
 //! Falling through to the array-domain node in an ambiguous case is
 //! always semantically safe, just occasionally more conservative than a
 //! full type-inference pass would be.
+//!
+//! # Hoisting a branch/loop body's introduced names
+//!
+//! Scilab has no block scoping (this file's earlier "select/case" section
+//! already leans on that fact): a variable first assigned inside an
+//! `if`/`elseif`/`else` branch, a `select`/`case`/`else` branch, a
+//! `while` body, or a `for` body is visible for the rest of the
+//! *function*, not just inside the construct that introduced it — most
+//! commonly, a function's own designated output variable, computed
+//! conditionally.
+//!
+//! An earlier revision of this file only got half of this right: it
+//! correctly tracked such a name in `ctx.locals`/`ctx.locals_set` (this
+//! crate's own lowering-time bookkeeping, so a *second* occurrence
+//! anywhere classifies consistently as `Stmt::Assign`), but never
+//! actually emitted a declaration for it anywhere OTHER than the
+//! `Stmt::LetStarBinding` nested inside the introducing construct's own
+//! `Block`. `semantic_ir::validate` scopes each `Block` independently
+//! (`check_block` marks/rewinds its own local environment on entry/exit),
+//! so that nested `LetStarBinding` never made the name visible to
+//! anything outside its own immediate block — meaning any function
+//! computing its own output variable inside `if`/`else` (the single most
+//! ordinary Scilab/MATLAB function shape there is) produced a module that
+//! `semantic_ir::validate` *always* rejected, with a dangling "var-ref
+//! scope=local references unknown name" error on the function's own
+//! trailing-value reference to it.
+//!
+//! The fix: `lower_if`/`lower_select`/`lower_while`/`lower_for` all call
+//! [`Lowerer::hoist_assigned_names`] before lowering their branch/loop
+//! body for real, which:
+//! 1. Statically scans the body/bodies (via [`Lowerer::collect_assigned_names`],
+//!    a purely syntactic CST walk — no lowering, no side effects) for
+//!    every bare-`NAME` this construct might introduce for the first
+//!    time, recursing transitively through further-nested control flow.
+//! 2. Filters out any name that's ALREADY known (re-declaring it with a
+//!    placeholder would silently clobber a real value).
+//! 3. Emits a genuine `Stmt::LetStarBinding` for each remaining name, at
+//!    the ENCLOSING scope, with a placeholder `Expr::NilLit` value —
+//!    *before* the construct itself — and marks it known in `ctx` so
+//!    every occurrence inside the construct (any branch, any iteration)
+//!    lowers as `Stmt::Assign` against this real declaration.
+//!
+//! An earlier design considered instead discovering introduced names by
+//! lowering each branch/body TWICE (once to discover, once for real) —
+//! rejected during security review because it would compound into an
+//! exponential `2^K` blowup for K levels of nested control flow (each
+//! level doubling the work of everything nested inside it), a new and
+//! severe DoS vector the static-scan design avoids entirely by
+//! construction (one linear pass, no re-lowering, ever).
+//!
+//! **Known, disclosed residual limitation** (no data-flow/definite-
+//! assignment analysis): this does not distinguish "every reachable path
+//! genuinely writes this name before it's read" from "some path reads a
+//! hoisted name that nothing before it, in this construct, ever actually
+//! assigned" (e.g. an uninitialised accumulator, `for i=1:5; total =
+//! total+i; end` with no `total = 0;` first). Real Scilab would raise a
+//! clean "undefined variable" runtime error for that exact program; this
+//! frontend instead silently reads the `NilLit` placeholder. Closing this
+//! narrower gap needs real data-flow analysis, out of scope for v0.1.0 —
+//! every genuinely common pattern (a value every reachable branch/every
+//! loop iteration that runs at all actually assigns) is unaffected.
 
 use std::collections::HashSet;
 
@@ -425,6 +486,240 @@ impl Lowerer {
         for name in ctx.locals.drain(mark..) {
             ctx.locals_set.remove(&name);
         }
+    }
+
+    // -------------------------------------------------------------------
+    // Hoisting a branch/loop body's introduced names (security review,
+    // round 4). See this file's module doc comment, "Hoisting a
+    // branch/loop body's introduced names", for the full rationale: a
+    // `LetStarBinding` nested inside a `Block` (an `if`/`while`/`for`/
+    // `select` body) does NOT, on its own, make that name visible to
+    // `semantic_ir::validate` from an ENCLOSING block's perspective, even
+    // though this crate's own lowering-time `ctx.locals` bookkeeping
+    // (correctly, since round 1/2/3) treats it as known from that point
+    // forward. `lower_if`/`lower_select`/`lower_while`/`lower_for` all
+    // call `hoist_assigned_names` before lowering their body/bodies for
+    // real, to pre-declare (with a placeholder `Expr::NilLit`) every name
+    // that body might introduce -- so every branch's own first occurrence
+    // of such a name lowers as `Stmt::Assign` (not `Stmt::LetStarBinding`)
+    // against a REAL, enclosing-scope declaration, and code that follows
+    // the construct can reference it too.
+    // -------------------------------------------------------------------
+
+    /// Statically scan a `block_body` node -- WITHOUT lowering anything --
+    /// for every bare-`NAME` assignment target it introduces, recursing
+    /// transitively through nested `if`/`elseif`/`else`/`while`/`for`/
+    /// `select`/`case` bodies (any nested construct's own introduced name
+    /// still needs promoting all the way up, since Scilab has no block
+    /// scoping at all -- this file's module doc comment). Indexed
+    /// assignment (`A(i) = x`) is deliberately NOT collected: it can never
+    /// introduce a genuinely NEW name (`lower_assignment` itself requires
+    /// the base variable to already be assigned).
+    ///
+    /// This is a purely syntactic pre-pass -- no lowering, no `self`/`ctx`
+    /// mutation -- so calling it before the real lowering never
+    /// double-counts a `Feature` or a `select_counter` increment, and
+    /// (critically) never re-lowers anything: an earlier design considered
+    /// during security review instead discovered introduced names by
+    /// lowering each branch/body TWICE (once to discover, once for real),
+    /// which would have compounded into an exponential `2^K` blowup for K
+    /// levels of nested control flow -- a new, severe DoS vector this
+    /// static scan avoids entirely by construction.
+    fn collect_assigned_names(
+        &self,
+        body: &GrammarASTNode,
+        depth: usize,
+        out: &mut HashSet<String>,
+    ) -> Result<(), ScilabLowerError> {
+        if depth > MAX_BLOCK_DEPTH {
+            return Err(self.err_at(
+                body,
+                format!("control-flow nesting too deep (exceeds {MAX_BLOCK_DEPTH} levels)"),
+            ));
+        }
+        for stmt_line in child_nodes(body) {
+            if stmt_line.rule_name != "statement_line" {
+                continue;
+            }
+            let stmt = match self.first_child_named(stmt_line, "statement") {
+                Some(s) => s,
+                None => continue,
+            };
+            let inner = match only_node(stmt, self) {
+                Ok(n) => n,
+                Err(_) => continue,
+            };
+            self.collect_assigned_names_stmt(inner, depth, out)?;
+        }
+        Ok(())
+    }
+
+    /// One statement's contribution to [`Self::collect_assigned_names`] --
+    /// split out so each control-flow shape's own child-node layout is
+    /// documented once, matching the equivalent lowering function's own
+    /// indexing exactly (`lower_if`/`lower_select`/`lower_while`/
+    /// `lower_for`).
+    fn collect_assigned_names_stmt(
+        &self,
+        inner: &GrammarASTNode,
+        depth: usize,
+        out: &mut HashSet<String>,
+    ) -> Result<(), ScilabLowerError> {
+        match inner.rule_name.as_str() {
+            "if_stmt" => {
+                // `[cond, stmt_sep, block_body, elseif_clause*, else_clause?]`
+                // -- see `lower_if`'s own doc comment.
+                let kids = child_nodes(inner);
+                if kids.len() >= 3 {
+                    self.collect_assigned_names(kids[2], depth + 1, out)?;
+                    for rest in &kids[3..] {
+                        match rest.rule_name.as_str() {
+                            "elseif_clause" => {
+                                if let [_c, _s, b] = child_nodes(rest).as_slice() {
+                                    self.collect_assigned_names(b, depth + 1, out)?;
+                                }
+                            }
+                            "else_clause" => {
+                                if let [b] = child_nodes(rest).as_slice() {
+                                    self.collect_assigned_names(b, depth + 1, out)?;
+                                }
+                            }
+                            _ => {}
+                        }
+                    }
+                }
+            }
+            "select_stmt" => {
+                // `[selector, stmt_sep, case_clause*, else_clause?]` --
+                // see `lower_select`'s own doc comment.
+                let kids = child_nodes(inner);
+                if kids.len() >= 2 {
+                    for rest in &kids[2..] {
+                        match rest.rule_name.as_str() {
+                            "case_clause" => {
+                                if let [_v, _s, b] = child_nodes(rest).as_slice() {
+                                    self.collect_assigned_names(b, depth + 1, out)?;
+                                }
+                            }
+                            "else_clause" => {
+                                if let [b] = child_nodes(rest).as_slice() {
+                                    self.collect_assigned_names(b, depth + 1, out)?;
+                                }
+                            }
+                            _ => {}
+                        }
+                    }
+                }
+            }
+            "while_stmt" => {
+                // `[cond, stmt_sep, block_body]` -- see `lower_while`.
+                if let [_c, _s, b] = child_nodes(inner).as_slice() {
+                    self.collect_assigned_names(b, depth + 1, out)?;
+                }
+            }
+            "for_stmt" => {
+                // The loop variable itself is a bare-name assignment
+                // target too -- `lower_for`'s own callers exclude it
+                // explicitly where that matters (it has its own, separate,
+                // correctly loop-scoped handling).
+                if let Some(name) = inner.children.iter().find_map(|c| match c {
+                    ASTNodeOrToken::Token(t) if t.effective_type_name() == "NAME" => {
+                        Some(t.value.clone())
+                    }
+                    _ => None,
+                }) {
+                    out.insert(name);
+                }
+                // `[range, stmt_sep, block_body]` -- see `lower_for`.
+                if let [_r, _s, b] = child_nodes(inner).as_slice() {
+                    self.collect_assigned_names(b, depth + 1, out)?;
+                }
+            }
+            _ => {
+                // `inner`'s own `rule_name` is NOT necessarily literally
+                // `"assignment"` here: `statement`'s `expr` alternative
+                // reaches `assignment` through a chain of single-child
+                // wrapper rules (`logical_or`, etc., per the precedence
+                // cascade) that the CST does not flatten away on its own
+                // -- exactly the same shape `lower_statement_expr` itself
+                // must peel through via its own `if node.rule_name !=
+                // "assignment" { peel... }` logic, which this mirrors via
+                // the same `peel_to_named` helper `bare_name`/
+                // `indexed_target` already use. A peeled node with only
+                // ONE child (`assignment = logical_or [ EQ assignment ]`
+                // with the optional part absent) is a value-only
+                // expression statement, not a real assignment -- no name
+                // to collect.
+                if let Some(assign_node) = self.peel_to_named(inner, "assignment", 0) {
+                    if let [lhs, _rhs] = child_nodes(assign_node).as_slice() {
+                        if let Some(name) = self.bare_name(lhs) {
+                            out.insert(name);
+                        }
+                    }
+                }
+            }
+        }
+        Ok(())
+    }
+
+    /// Pre-declare (hoist) every name [`Self::collect_assigned_names`]
+    /// finds across `bodies`, at the CURRENT enclosing scope, with a
+    /// placeholder [`Expr::NilLit`] value -- returning the hoisted
+    /// [`Stmt::LetStarBinding`]s to prepend before the construct itself.
+    /// `exclude` filters out one name unconditionally (a `for`-loop's own
+    /// counter variable, which already has its own separate, correct,
+    /// loop-scoped handling -- see `lower_for`). Any name that's ALREADY
+    /// known (`ctx.has_local`/`ctx.params.contains`) is filtered too:
+    /// re-declaring an already-assigned variable with a `NilLit`
+    /// placeholder would silently clobber its real value, exactly the
+    /// silent mis-lowering this crate's whole design otherwise refuses to
+    /// do.
+    ///
+    /// **Known, disclosed residual limitation**: this makes a
+    /// branch/loop-introduced name usable both inside every sibling
+    /// branch and after the construct, matching real Scilab's
+    /// whole-function scoping for the load-bearing case this fixes (most
+    /// commonly, a function computing its own output variable
+    /// conditionally). It does NOT perform definite-assignment analysis:
+    /// a body that reads a hoisted name before ever genuinely writing it
+    /// in the SAME construct (e.g. an uninitialised accumulator,
+    /// `for i = 1:5; total = total + i; end` with no `total = 0;`
+    /// beforehand) will read the `NilLit` placeholder instead of getting
+    /// the clean "undefined variable" error real Scilab would raise at
+    /// runtime for the identical program -- silently computing a wrong
+    /// value rather than erroring. Closing this residual gap needs real
+    /// data-flow analysis, out of scope for this v0.1.0 cut; every
+    /// genuinely common pattern (conditionally computing a value that
+    /// every reachable branch actually assigns) is unaffected.
+    fn hoist_assigned_names(
+        &mut self,
+        bodies: &[&GrammarASTNode],
+        exclude: Option<&str>,
+        depth: usize,
+        span: &Span,
+        ctx: &mut FunctionCtx,
+    ) -> Result<Vec<Lowered>, ScilabLowerError> {
+        let mut candidates: HashSet<String> = HashSet::new();
+        for body in bodies {
+            self.collect_assigned_names(body, depth, &mut candidates)?;
+        }
+        if let Some(ex) = exclude {
+            candidates.remove(ex);
+        }
+        let mut hoisted = Vec::new();
+        for name in candidates {
+            if ctx.has_local(&name) || ctx.params.contains(&name) {
+                continue;
+            }
+            ctx.push_local(name.clone());
+            hoisted.push(Lowered::Stmt(Box::new(Stmt::LetStarBinding {
+                name,
+                sir_type: None,
+                value: Expr::NilLit { span: span.clone() },
+                span: span.clone(),
+            })));
+        }
+        Ok(hoisted)
     }
 
     // -------------------------------------------------------------------
@@ -748,14 +1043,10 @@ impl Lowerer {
                 inner,
                 "unsupported: nested function definitions are out of scope for v0.1.0".to_string(),
             )),
-            "if_stmt" => Ok(vec![Lowered::Expr(self.lower_if(inner, ctx, depth)?)]),
+            "if_stmt" => self.lower_if(inner, ctx, depth),
             "select_stmt" => self.lower_select(inner, ctx, depth),
-            "while_stmt" => Ok(vec![Lowered::Stmt(Box::new(
-                self.lower_while(inner, ctx, depth)?,
-            ))]),
-            "for_stmt" => Ok(vec![Lowered::Stmt(Box::new(
-                self.lower_for(inner, ctx, depth)?,
-            ))]),
+            "while_stmt" => self.lower_while(inner, ctx, depth),
+            "for_stmt" => self.lower_for(inner, ctx, depth),
             "break_stmt" => Err(self.err_at(
                 inner,
                 "unsupported: `break` has no SIR equivalent yet (semantic-ir has no early-exit \
@@ -790,7 +1081,7 @@ impl Lowerer {
         if_stmt: &GrammarASTNode,
         ctx: &mut FunctionCtx,
         depth: usize,
-    ) -> Result<Expr, ScilabLowerError> {
+    ) -> Result<Vec<Lowered>, ScilabLowerError> {
         struct Clause<'a> {
             cond: &'a GrammarASTNode,
             body: &'a GrammarASTNode,
@@ -842,30 +1133,25 @@ impl Lowerer {
         }
 
         let if_span = self.span_of(if_stmt);
-        // `if`/`elseif`/`else` bodies are mutually exclusive -- see the
-        // identical fix (and full rationale) in `lower_select`, which this
-        // mirrors exactly: every branch is lowered against the same
-        // pre-`if` `ctx.locals` snapshot, then the union of every branch's
-        // newly-introduced names is folded back in once, after all branches
-        // are done, so a name first assigned in one branch is never
-        // mistaken for an already-known local by a sibling branch that
-        // happens to lower afterward.
-        let mark = Self::scope_mark(ctx);
-        // A `HashSet`, not a `Vec` -- membership testing every branch's
-        // names against a growing `Vec` (via `.contains`) would be an O(n²)
-        // scan over the total distinct names across all branches, entirely
-        // unbounded by the `clauses.len()` cap above (that cap bounds
-        // branch *count*, not the *names per branch*, which an ordinary
-        // flat statement list has no size limit on at all).
-        let mut newly_introduced: HashSet<String> = HashSet::new();
+
+        // Hoist every name any branch might introduce, at the ENCLOSING
+        // scope, BEFORE lowering any branch for real -- see
+        // `hoist_assigned_names`'s own doc comment ("Hoisting a
+        // branch/loop body's introduced names"). This is what makes a
+        // branch-introduced name visible to code AFTER the `if` (most
+        // commonly, a function's own designated output variable computed
+        // conditionally) -- `semantic_ir::validate` scopes each `Block` (an
+        // `If`'s own branches included) independently, so a
+        // `LetStarBinding` nested inside a branch's own block does NOT, on
+        // its own, make that name visible outside it.
+        let mut branch_bodies: Vec<&GrammarASTNode> = clauses.iter().map(|c| c.body).collect();
+        if let Some(b) = else_body {
+            branch_bodies.push(b);
+        }
+        let mut stmts = self.hoist_assigned_names(&branch_bodies, None, depth + 1, &if_span, ctx)?;
 
         let mut else_branch: Block = match else_body {
-            Some(b) => {
-                let block = self.lower_block_body(b, ctx, depth + 1)?;
-                newly_introduced.extend(ctx.locals[mark..].iter().cloned());
-                Self::scope_rewind(ctx, mark);
-                block
-            }
+            Some(b) => self.lower_block_body(b, ctx, depth + 1)?,
             None => empty_block(if_span.clone()),
         };
         for clause in clauses.into_iter().rev() {
@@ -873,8 +1159,6 @@ impl Lowerer {
             // -- see `to_scilab_condition`'s doc comment).
             let cond = to_scilab_condition(self.lower_expr(clause.cond, ctx)?);
             let then_branch = self.lower_block_body(clause.body, ctx, depth + 1)?;
-            newly_introduced.extend(ctx.locals[mark..].iter().cloned());
-            Self::scope_rewind(ctx, mark);
             let span = cond.span().clone();
             let folded = Expr::If {
                 cond: Box::new(cond),
@@ -884,13 +1168,12 @@ impl Lowerer {
             };
             else_branch = value_block(folded);
         }
-        for name in newly_introduced {
-            ctx.push_local(name);
-        }
-        match else_branch.value {
-            Expr::If { .. } => Ok(else_branch.value),
-            other => Ok(other),
-        }
+        let final_expr = match else_branch.value {
+            Expr::If { .. } => else_branch.value,
+            other => other,
+        };
+        stmts.push(Lowered::Expr(final_expr));
+        Ok(stmts)
     }
 
     /// Lower `select selector stmt_sep { case_clause } [ else_clause ] end`
@@ -989,37 +1272,20 @@ impl Lowerer {
             ));
         }
 
-        // `if`/`case` bodies are mutually exclusive -- at most one of them
-        // ever actually executes -- but `FunctionCtx::locals` is a single,
-        // unscoped, append-only accumulator (Scilab has no block scoping,
-        // this file's module doc comment). Lowering the bodies in the wrong
-        // relative order let one sibling's first-occurrence assignment
-        // "leak" into another sibling as an already-known local, silently
-        // misclassifying that sibling's OWN first occurrence of the same
-        // name as a re-assignment (`Stmt::Assign`) instead of a declaration
-        // (`Stmt::LetStarBinding`) -- breaking the ordinary idiom of a
-        // function assigning its own output variable in every branch of a
-        // `select`/`case`. Fixed the same way `for`'s own loop-variable
-        // scope already is (`Self::scope_mark`/`scope_rewind`): every
-        // branch is lowered against the *same* pre-select snapshot, then
-        // the union of every branch's newly-introduced names is folded back
-        // in once, after all branches are done -- so no branch's
-        // first-occurrence classification depends on sibling iteration
-        // order.
-        let mark = Self::scope_mark(ctx);
-        // See the identical `HashSet` choice (and full rationale) in
-        // `lower_if`: a `Vec`-backed membership check here would be an
-        // O(n²) scan over the total distinct names across all case/else
-        // bodies, unbounded by the `clauses.len()` cap above.
-        let mut newly_introduced: HashSet<String> = HashSet::new();
+        // Hoist every name any case/else body might introduce, at the
+        // ENCLOSING scope, BEFORE lowering any branch for real -- see
+        // `hoist_assigned_names`'s own doc comment and `lower_if`'s
+        // identical use of it (this mirrors it exactly): makes a
+        // branch-introduced name visible to code AFTER the `select`, not
+        // just to `ctx`'s own lowering-time bookkeeping.
+        let mut branch_bodies: Vec<&GrammarASTNode> = clauses.iter().map(|c| c.body).collect();
+        if let Some(b) = else_body {
+            branch_bodies.push(b);
+        }
+        stmts.extend(self.hoist_assigned_names(&branch_bodies, None, depth + 1, &span, ctx)?);
 
         let mut else_branch: Block = match else_body {
-            Some(b) => {
-                let block = self.lower_block_body(b, ctx, depth + 1)?;
-                newly_introduced.extend(ctx.locals[mark..].iter().cloned());
-                Self::scope_rewind(ctx, mark);
-                block
-            }
+            Some(b) => self.lower_block_body(b, ctx, depth + 1)?,
             None => empty_block(span.clone()),
         };
         for clause in clauses.into_iter().rev() {
@@ -1040,8 +1306,6 @@ impl Lowerer {
             };
             let cond = to_scilab_condition(eq);
             let then_branch = self.lower_block_body(clause.body, ctx, depth + 1)?;
-            newly_introduced.extend(ctx.locals[mark..].iter().cloned());
-            Self::scope_rewind(ctx, mark);
             let if_span = cond.span().clone();
             let folded = Expr::If {
                 cond: Box::new(cond),
@@ -1050,9 +1314,6 @@ impl Lowerer {
                 span: if_span,
             };
             else_branch = value_block(folded);
-        }
-        for name in newly_introduced {
-            ctx.push_local(name);
         }
 
         let final_expr = match else_branch.value {
@@ -1071,7 +1332,7 @@ impl Lowerer {
         while_stmt: &GrammarASTNode,
         ctx: &mut FunctionCtx,
         depth: usize,
-    ) -> Result<Stmt, ScilabLowerError> {
+    ) -> Result<Vec<Lowered>, ScilabLowerError> {
         let (cond_node, body_node) = match child_nodes(while_stmt).as_slice() {
             [c, _stmt_sep, b] => (*c, *b),
             _ => {
@@ -1081,14 +1342,24 @@ impl Lowerer {
                 ))
             }
         };
+        let span = self.span_of(while_stmt);
+        // Hoist every name the loop body might introduce, at the
+        // ENCLOSING scope, BEFORE lowering the body for real -- see
+        // `hoist_assigned_names`'s own doc comment and `lower_if`'s
+        // identical use of it. A `while` loop's body may run zero or many
+        // times, so (unlike `if`/`select`'s mutually-exclusive branches)
+        // there is no guarantee a hoisted name is ever actually assigned
+        // -- but this exactly matches real Scilab's own behaviour for a
+        // loop that never runs (the variable stays undefined), and this
+        // crate has no data-flow analysis to do better (see
+        // `hoist_assigned_names`'s own disclosed residual-limitation
+        // note).
+        let mut stmts = self.hoist_assigned_names(&[body_node], None, depth + 1, &span, ctx)?;
         let cond = to_scilab_condition(self.lower_expr(cond_node, ctx)?);
         let body = self.lower_block_body(body_node, ctx, depth + 1)?;
         self.observed.add(Feature::Loops);
-        Ok(Stmt::While {
-            cond,
-            body,
-            span: self.span_of(while_stmt),
-        })
+        stmts.push(Lowered::Stmt(Box::new(Stmt::While { cond, body, span })));
+        Ok(stmts)
     }
 
     /// Lower `for NAME = a:b stmt_sep body end` into [`Stmt::ForRange`].
@@ -1105,7 +1376,7 @@ impl Lowerer {
         for_stmt: &GrammarASTNode,
         ctx: &mut FunctionCtx,
         depth: usize,
-    ) -> Result<Stmt, ScilabLowerError> {
+    ) -> Result<Vec<Lowered>, ScilabLowerError> {
         let span = self.span_of(for_stmt);
         let var = for_stmt
             .children
@@ -1172,19 +1443,31 @@ impl Lowerer {
         };
 
         self.observed.add(Feature::Loops);
+
+        // Hoist every name the loop body might introduce (EXCLUDING the
+        // loop counter `var` itself, which keeps its own separate,
+        // correct, loop-scoped handling just below), at the ENCLOSING
+        // scope, BEFORE lowering the body for real -- see
+        // `hoist_assigned_names`'s own doc comment and `lower_if`'s
+        // identical use of it. Same "loop may run zero times" caveat as
+        // `lower_while`.
+        let mut stmts =
+            self.hoist_assigned_names(&[body_node], Some(var.as_str()), depth + 1, &span, ctx)?;
+
         let mark = Self::scope_mark(ctx);
         ctx.push_local(var.clone());
         let body = self.lower_block_body(body_node, ctx, depth + 1)?;
         Self::scope_rewind(ctx, mark);
 
-        Ok(Stmt::ForRange {
+        stmts.push(Lowered::Stmt(Box::new(Stmt::ForRange {
             var,
             start,
             stop,
             step,
             body,
             span,
-        })
+        })));
+        Ok(stmts)
     }
 
     // -------------------------------------------------------------------

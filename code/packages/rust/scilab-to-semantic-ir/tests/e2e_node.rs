@@ -74,6 +74,78 @@ fn a_function_over_pure_literals_runs_in_node() {
 }
 
 #[test]
+fn a_function_computing_its_output_conditionally_in_if_else_runs_in_node() {
+    // Security regression (round 4 review) -- the actual, end-to-end
+    // headline case: a function computing its own designated output
+    // variable inside `if`/`else` (arguably the single most common
+    // Scilab/MATLAB function shape there is) previously produced a
+    // module that ALWAYS failed `semantic_ir::validate` (a dangling
+    // "var-ref scope=local references unknown name" error), since the
+    // output variable's own `LetStarBinding` lived inside a branch's
+    // nested `Block`, invisible to the function's own trailing
+    // `VarRef` reading it as the return value. This is the true
+    // end-to-end proof the fix (hoisting a real pre-declaration to the
+    // enclosing scope) works: it compiles AND actually runs correctly.
+    if !node_available() {
+        eprintln!(
+            "skipping a_function_computing_its_output_conditionally_in_if_else_runs_in_node: \
+             `node` not available"
+        );
+        return;
+    }
+    let out = run_via_node(
+        "conditional_output",
+        "function y = sign_of(x)\n  if x > 0\n    y = 1;\n  elseif x < 0\n    y = -1;\n  else\n    y = 0;\n  end\nendfunction\ndisp(sign_of(5));\ndisp(sign_of(-5));\ndisp(sign_of(0));\n",
+    );
+    assert_eq!(out, "1\n-1\n0");
+}
+
+#[test]
+fn a_while_loop_introducing_a_fresh_variable_is_visible_afterward_in_node() {
+    // Security regression (round 4 review): `lower_while` did zero scope
+    // tracking around its body at all -- a fresh variable assigned inside
+    // a `while` loop was correctly known to this crate's own lowering-time
+    // bookkeeping (no rewind ever undid it, unlike `if`/`select`'s
+    // mutually-exclusive branches or `for`'s own loop-scoped counter), but
+    // its `LetStarBinding` still lived inside the loop body's own nested
+    // `Block`, invisible to `semantic_ir::validate` from the ENCLOSING
+    // scope -- so reading it after the loop failed identically to the
+    // `if`/`else` case.
+    if !node_available() {
+        eprintln!(
+            "skipping a_while_loop_introducing_a_fresh_variable_is_visible_afterward_in_node: \
+             `node` not available"
+        );
+        return;
+    }
+    let out = run_via_node(
+        "while_fresh_var",
+        "n = 3;\nwhile n > 0\n  doubled = n * 2;\n  n = n - 1;\nend\ndisp(doubled);\n",
+    );
+    assert_eq!(out, "2");
+}
+
+#[test]
+fn a_for_loop_body_introducing_a_fresh_non_counter_variable_is_visible_afterward_in_node() {
+    // Security regression (round 4 review): the identical hazard as the
+    // `while` case above, for a `for` loop's BODY (not its own counter
+    // variable, which already has correct, separate, loop-scoped
+    // handling) introducing a fresh name for the first time.
+    if !node_available() {
+        eprintln!(
+            "skipping a_for_loop_body_introducing_a_fresh_non_counter_variable_is_visible_afterward_in_node: \
+             `node` not available"
+        );
+        return;
+    }
+    let out = run_via_node(
+        "for_body_fresh_var",
+        "for i = 1:3\n  last_seen = i * 10;\nend\ndisp(last_seen);\n",
+    );
+    assert_eq!(out, "30");
+}
+
+#[test]
 fn nested_literal_arithmetic_runs_in_node() {
     if !node_available() {
         eprintln!("skipping nested_literal_arithmetic_runs_in_node: `node` not available");

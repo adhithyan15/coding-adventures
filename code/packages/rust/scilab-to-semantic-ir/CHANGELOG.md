@@ -87,21 +87,23 @@
   scope) — mirroring `scilab-runtime::eval::Interpreter::register_function`'s
   own more complete three-way reading of this grammar shape, whose doc
   comment confirms its own handling is "exactly correct."
-- 96 tests: 72 unit tests over lowering shapes, every documented scope
+- 100 tests: 72 unit tests over lowering shapes, every documented scope
   limit's rejection, and the DoS-guard regression set
   (`a_pathologically_long_flat_{additive,multiplicative}_chain_is_
   cleanly_rejected` plus the `elseif`/`case`/transpose-suffix chain
   variants added during security review, see below); 11
-  validator/capability-acceptance tests; 12 end-to-end tests that
+  validator/capability-acceptance tests; 15 end-to-end tests that
   actually execute lowered Scilab through `semantic-ir-to-javascript` and
-  `node` (gated on `node` availability).
+  `node` (gated on `node` availability), including the round-4
+  scope-hoisting fix's own headline case (a function computing its output
+  variable inside `if`/`elseif`/`else`).
 - Marks `scilab-to-semantic-ir` (MA-10e) done in
   `MA10-scilab-language.md` §6 — the last item in the Scilab frontend
   rollout.
 
 ### Security
 
-Three rounds of pre-merge security review found and fixed six issues, all
+Four rounds of pre-merge security review found and fixed nine issues, all
 before this crate ever shipped:
 
 - **CRITICAL/HIGH** (round 1): `lower_if`/`lower_select` folded
@@ -165,6 +167,40 @@ before this crate ever shipped:
   `scilab-parser`, but `compile()`/`GrammarASTNode` is a public API) with
   exactly one child panicked on the slice instead of erroring cleanly.
   Fixed by checking `kids.len() < 2` instead.
+- **HIGH/architectural** (round 4, the most significant finding of the
+  four rounds): `lower_if`/`lower_select`'s round-1 fix, and
+  `lower_while`, only tracked a branch/loop-introduced name in this
+  crate's OWN lowering-time bookkeeping (`ctx.locals`/`ctx.locals_set`) --
+  they never emitted an actual DECLARATION for it anywhere other than the
+  `Stmt::LetStarBinding` nested inside the introducing construct's own
+  `Block`. `semantic_ir::validate` scopes each `Block` independently, so
+  that nested declaration never made the name visible OUTSIDE its own
+  block -- meaning a function computing its own output variable inside
+  `if`/`else` (the single most ordinary Scilab/MATLAB function shape
+  there is) produced a module that `semantic_ir::validate` *always*
+  rejected. `lower_for`'s body had the identical gap for any
+  non-loop-counter name it introduced. Fixed by adding
+  `Lowerer::collect_assigned_names` (a purely syntactic, non-lowering CST
+  pre-scan) and `Lowerer::hoist_assigned_names` (which uses it to
+  pre-declare every name a branch/loop body might introduce, at the
+  ENCLOSING scope, with a placeholder `Expr::NilLit`, before lowering the
+  body for real) -- see `src/lower.rs`'s new "Hoisting a branch/loop
+  body's introduced names" module-doc section for the full design,
+  including the exponential-blowup DoS vector an alternative
+  lower-twice-to-discover design would have introduced (rejected in
+  favour of the static pre-scan) and the one disclosed residual
+  limitation (no data-flow/definite-assignment analysis).
+- **LOW** (round 4, found while implementing the fix above): the new
+  `collect_assigned_names`'s own "is this statement an assignment"
+  detection assumed `inner.rule_name == "assignment"` directly, but the
+  CST reaches `assignment` through a chain of single-child precedence-
+  cascade wrapper rules the grammar does not flatten away -- exactly the
+  shape `lower_statement_expr` itself must peel through via its own
+  `peel_to_named`-style logic. The bug was caught immediately by this
+  round's own new regression tests (the hoist silently found zero
+  candidates) rather than shipping; fixed by reusing `peel_to_named`
+  (the same helper `bare_name`/`indexed_target` already use) instead of a
+  direct `rule_name` comparison.
 
 Also separately discovered (not fixed here, tracked as its own follow-up
 task): `scilab-parser`'s own `elseif_clause*` parsing appears to scale

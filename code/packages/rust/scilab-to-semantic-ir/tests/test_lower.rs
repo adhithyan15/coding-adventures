@@ -438,7 +438,9 @@ fn dollar_last_index_is_rejected() {
 fn if_condition_wraps_in_matlab_truthy() {
     let m = compile_ok("x = 0;\nif x\n  y = 1;\nend\n");
     let main = main_fn(&m);
-    match &main.body.stmts[1] {
+    // stmts[1] is the hoisted pre-declaration of `y` (round 4 review);
+    // the `if` itself is at stmts[2].
+    match &main.body.stmts[2] {
         Stmt::ExprStmt {
             expr: Expr::If { cond, .. },
             ..
@@ -455,7 +457,9 @@ fn if_elseif_else_chain_nests_correctly() {
         "x = 5;\nif x == 1\n  y = 1;\nelseif x == 2\n  y = 2;\nelse\n  y = 3;\nend\n",
     );
     let main = main_fn(&m);
-    match &main.body.stmts[1] {
+    // stmts[1] is the hoisted pre-declaration of `y` (round 4 review);
+    // the `if` itself is at stmts[2].
+    match &main.body.stmts[2] {
         Stmt::ExprStmt {
             expr: Expr::If { else_branch, .. },
             ..
@@ -469,33 +473,53 @@ fn if_elseif_else_chain_nests_correctly() {
 
 #[test]
 fn if_and_else_both_first_assigning_the_same_new_variable_both_declare_it() {
-    // Regression: `if`/`else` are mutually exclusive -- at most one of them
-    // ever actually runs -- but were previously lowered against a SHARED,
-    // still-mutating `ctx.locals`, so whichever branch happened to lower
-    // second saw the name already "known" (added by its sibling) and was
-    // misclassified as a re-assignment (`Stmt::Assign`) instead of a first
-    // declaration (`Stmt::LetStarBinding`) -- even though, on that branch's
-    // own actual runtime path, no `LetStarBinding` for the name ever
-    // executes. This is the single most ordinary Scilab/MATLAB idiom there
-    // is (a function assigning its own output variable in every branch),
-    // and it previously failed `semantic_ir::validate` outright (a
-    // dangling `var-ref scope=local references unknown name` error) for
-    // any such function whose `if` arm lowered second. Both branches must
-    // independently see `y` as new.
-    let m = compile_ok("x = 1;\nif x == 1\n  y = 1;\nelse\n  y = 2;\nend\n");
-    let main = main_fn(&m);
+    // Regression (security review round 4): `if`/`else` are mutually
+    // exclusive -- at most one of them ever actually runs -- and a name
+    // first assigned inside them (a function's own output variable,
+    // computed conditionally, is by far the most common real-world case)
+    // must be visible to code AFTER the `if`, not just inside it.
+    // `semantic_ir::validate` scopes each `Block` (an `If`'s own branches
+    // included) independently, so a `LetStarBinding` NESTED inside a
+    // branch's own block does NOT, on its own, make the name visible
+    // outside it -- an earlier fix (round 1) only corrected this crate's
+    // OWN lowering-time bookkeeping (so each branch's occurrence
+    // classified consistently as `Assign`), without ever emitting an
+    // actual enclosing-scope declaration, so `semantic_ir::validate` still
+    // rejected any code that read the variable after the `if` (or, as
+    // here, the function's own designated-output-variable mechanism
+    // implicitly reading it as the function's return value) with a
+    // dangling "var-ref scope=local references unknown name" error. Fixed
+    // by hoisting a real pre-declaration (`Stmt::LetStarBinding` with a
+    // placeholder `Expr::NilLit`) to the ENCLOSING scope, before the `if`
+    // itself, so every branch's own first occurrence lowers as
+    // `Stmt::Assign` against a genuine declaration, not a fake one -- see
+    // `hoist_assigned_names`'s own doc comment for the full design.
+    let m = compile_ok(
+        "function y = f(x)\n  if x == 1\n    y = 1;\n  else\n    y = 2;\n  end\nendfunction\n",
+    );
     let report = semantic_ir::validate(&m);
     assert!(report.is_ok(), "module should validate cleanly: {:?}", report.issues);
-    match &main.body.stmts[1] {
+    let f = user_fn(&m, "f");
+    // stmts[0] is the hoisted pre-declaration of `y`.
+    assert!(matches!(
+        f.body.stmts[0],
+        Stmt::LetStarBinding { value: Expr::NilLit { .. }, .. }
+    ));
+    // stmts[1] is the desugared if/else; both branches now Assign into
+    // the already-hoisted `y`, not LetStarBinding a second, nested copy.
+    match &f.body.stmts[1] {
         Stmt::ExprStmt {
             expr: Expr::If { then_branch, else_branch, .. },
             ..
         } => {
-            assert!(matches!(then_branch.stmts[0], Stmt::LetStarBinding { .. }));
-            assert!(matches!(else_branch.stmts[0], Stmt::LetStarBinding { .. }));
+            assert!(matches!(then_branch.stmts[0], Stmt::Assign { .. }));
+            assert!(matches!(else_branch.stmts[0], Stmt::Assign { .. }));
         }
         other => panic!("expected ExprStmt(If), got {other:?}"),
     }
+    // The function's own trailing value (a VarRef to `y`) is exactly what
+    // this fix makes resolvable.
+    assert!(matches!(f.body.value, Expr::VarRef { ref name, .. } if name == "y"));
 }
 
 #[test]
@@ -504,8 +528,9 @@ fn if_with_comma_linker_instead_of_then_lowers_the_same_way() {
     // addition on top of it.
     let m = compile_ok("x = 1;\nif x > 0, y = 1;\nend\n");
     let main = main_fn(&m);
+    // stmts[1] is the hoisted pre-declaration of `y` (round 4 review).
     assert!(matches!(
-        main.body.stmts[1],
+        main.body.stmts[2],
         Stmt::ExprStmt { expr: Expr::If { .. }, .. }
     ));
 }
@@ -514,8 +539,9 @@ fn if_with_comma_linker_instead_of_then_lowers_the_same_way() {
 fn if_with_then_linker_lowers_the_same_way() {
     let m = compile_ok("x = 1;\nif x > 0 then\n  y = 1;\nend\n");
     let main = main_fn(&m);
+    // stmts[1] is the hoisted pre-declaration of `y` (round 4 review).
     assert!(matches!(
-        main.body.stmts[1],
+        main.body.stmts[2],
         Stmt::ExprStmt { expr: Expr::If { .. }, .. }
     ));
 }
@@ -581,8 +607,10 @@ fn select_case_desugars_into_a_temp_binding_and_an_if_chain() {
         Stmt::LetStarBinding { name, .. } => assert!(name.starts_with("$select_")),
         other => panic!("expected the hoisted selector LetStarBinding, got {other:?}"),
     }
-    // stmts[2] is the desugared if-chain.
-    match &main.body.stmts[2] {
+    // stmts[2] is the hoisted pre-declaration of `y` (round 4 review,
+    // since every case/else branch assigns it fresh); the desugared
+    // if-chain itself is at stmts[3].
+    match &main.body.stmts[3] {
         Stmt::ExprStmt {
             expr: Expr::If { cond, .. },
             ..
