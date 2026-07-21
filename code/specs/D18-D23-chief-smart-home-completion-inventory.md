@@ -266,10 +266,16 @@ rejects any script drift. Subprocess-originated RPC is parsed into the canonical
 D18D invocation contract and executed only by the Rust host's profile-gated,
 capability-checked handler catalog; unknown tools never reach a handler.
 
+The bidirectional transport slice now runs a signed deny-all Deno agent while
+the active Rust host services agent-originated `host.*` requests over the
+versioned stdio envelope. The host re-verifies the package and signer tier,
+requires envelope and call ids to agree, routes allowed calls through the real
+D18D handler catalog, and returns typed rejection frames for denied tools. A
+real-Deno test proves one allowed call reaches Rust and one undeclared call does
+not reach a handler.
+
 These items are Chief of Staff architecture, not smart-home platform work:
 
-- Complete the bidirectional Deno agent transport so agent-originated `host.*`
-  calls use the production Rust dispatcher during a supervised process run.
 - Run a Chief job end to end through scheduler or job framework, tool runtime,
   approval checks, result journal, and final user-visible report.
 - Add approval UX and policy wiring for Tier2 or stronger actions such as
