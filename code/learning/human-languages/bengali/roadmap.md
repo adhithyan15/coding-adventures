@@ -32,6 +32,17 @@ a gated reading course.
   *bôngo* → the Ganges delta) → thākā (to live ← *sthā* → *stand/stay*) → kāj
   kôrā (to work; ← √kṛ) → practice. **The verb changes for person but never for
   gender** — Bengali's great simplification.
+- **Ch. 6 — Numbers 1–5** (`BN-C06-numbers-1-5`): *ek, dui, tin, chār, pā̃ch* —
+  where **দুই** *dui* keeps a trace of the vowel following the old cluster that
+  Hindi and Marathi flattened into *do*/*don*, which is why it has two syllables
+  where its neighbours have one — its *dui* continuing the **disyllabic Prakrit
+  *duve***, not the *dváu* behind Hindi *do*. Scoped honestly: **Assamese, Odia
+  and Nepali** have *dui* too, so Bengali stands alone only among the four
+  compared here; and the *dv-* cluster is gone from the everyday **numeral**
+  everywhere, though alive in Sanskrit re-borrowings (Bengali **দ্বার** *dvār*
+  "door"). Notes that Ch. 1's
+  o-leaning inherent vowel is **not** demonstrable in these five, since **এক**
+  opens with an independent vowel. **Authored.**
 
 ## Planned
 

@@ -34,6 +34,21 @@ where a word needs them.
   → ahaṁ saṁskṛtaṁ vadāmi (I speak Sanskrit; *saṁskṛta* = "perfected"; sandhi) →
   vasāmi (← *vas* → English **was**; the locative *-e*) → karomi (← √kṛ, the root
   of *namaskāra/karma/Sanskrit*) → practice.
+- **Ch. 6 — Numbers 1–5** (`SA-C06-numbers-1-5`): *eka, dva, tri, catur, pañca*
+  — deliberately the **anchor chapter for the whole Indo-Aryan group**, since
+  these stems are simultaneously the **source** of every modern Indic number and
+  the **cousins** of the English ones. Gives masculine **and neuter** forms
+  (*ekam, dve, **trī́ṇi**, **catvā́ri***) because the modern languages mostly
+  descend from the **neuter** — the daughter chapters depend on that column. The
+  \**kʷ* story goes **three** ways: Latin kept *qu-*, Indo-Iranian merged \**kʷ*
+  into *k* and then **palatalised** it to *c-*, Germanic made it *hw-* (*what*,
+  *who*). Warns explicitly that the **f- of *five* is not from the \**kʷ*** — it
+  is \**p* by **Grimm's law** — and that English *four* is irregular, its *f-*
+  analogical to *five*. "Two" is *dváu* because Sanskrit has a **dual**. Closes
+  on how far *pañca* travelled:
+  **Punjab** (Persian *panj-āb*, "five waters"), *pentagon*, and — on the usual
+  though not universal account — **punch** the drink, for its five ingredients.
+  **Authored.**
 
 ## Planned
 
