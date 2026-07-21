@@ -6,6 +6,10 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Loaded the Weather Agent D18D catalog from a reviewed orchestrator profile
+  with isolated fetcher, classifier, and writer hosts through
+  `chief-of-staff-host-runtime`.
+
 - Initial umbrella-today end-to-end harness that exercises the Chief of Staff
   actor, D18A store, D18C job, D18D tool, read/write separation, and
   capability-caged file-write path with a deterministic Seattle weather fixture.

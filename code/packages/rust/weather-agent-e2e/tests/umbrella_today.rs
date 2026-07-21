@@ -82,6 +82,11 @@ fn umbrella_today_agent_exercises_architecture_and_writes_text_file() {
     }
 
     assert_eq!(run.supervisor.child_count, 3);
+    assert!(run.orchestrator_profile.active);
+    assert_eq!(run.orchestrator_profile.profile_id, "umbrella_today_v1");
+    assert_eq!(run.orchestrator_profile.host_count, 3);
+    assert_eq!(run.orchestrator_profile.allowed_tool_count, 3);
+    assert_eq!(run.orchestrator_profile.registered_tool_count, 3);
     assert_eq!(run.supervisor.stopped_children, 3);
     assert_eq!(run.supervisor.failed_children, 0);
     assert_eq!(run.supervisor.dead_letters, 0);

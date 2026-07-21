@@ -10,6 +10,7 @@ actor = { path = "../actor" }
 artifact-store = { path = "../artifact-store" }
 capability-os-sandbox = { path = "../capability-os-sandbox" }
 capability-cage = { path = "../capability-cage" }
+chief-of-staff-host-runtime = { path = "../chief-of-staff-host-runtime" }
 chief-of-staff-tool-api = { path = "../chief-of-staff-tool-api" }
 coding-adventures-json-value = { path = "../json-value" }
 context-store = { path = "../context-store" }
