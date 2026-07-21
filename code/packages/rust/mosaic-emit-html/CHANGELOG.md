@@ -2,6 +2,97 @@
 
 ## [Unreleased]
 
+### Added - UI35 drag-and-drop (`HostDraggable` / `HostDropTarget`)
+
+The HTML backend now lowers the kernel's two drag primitives (see
+`code/specs/UI35-host-drag-drop.md`), following React as the reference
+implementation but keeping this backend's own discipline.
+
+**The markup half is pure markup.** Author-supplied values never reach
+JavaScript source — they go into `data-*` attributes through
+`escape_html_attr`, and the runtime reads them back via `element.dataset`.
+So unlike `HostDialog`, the drag primitives emit **no inline script at all**,
+and a drag card costs zero bytes of script per node. `tabindex`, `role`, and
+`aria-roledescription` are emitted as markup so the card is announced correctly
+even before the runtime loads.
+
+**The behaviour half lives in the emitted `main.js` runtime**, as delegated
+listeners on the component root — matching how every other event in this backend
+is wired (`data-on-*` marker + delegation), rather than inventing a second
+mechanism.
+
+Contracts, all three proven by tests:
+
+- **Touch works.** Pointer events throughout. HTML5 `dragstart`/`dragover`
+  never fire from a touch, so an HTML5 lowering would be silently desktop-only.
+- **Keyboard equivalence through one drop path.** Space/Enter grabs, arrows move,
+  Space/Enter drops, Escape cancels. Both input methods call the same
+  `mosaicCommitDrop`, so the proposal payload is constructed in exactly one
+  place and the two cannot drift apart (a test pins the payload to a single
+  construction site).
+- **Announcements.** A visually-hidden `aria-live` region, written with
+  `textContent` — never `innerHTML`, since the label is application data.
+
+Two failure modes specific to this backend, both caught by tests:
+
+- **`render()` replaces `root.innerHTML` wholesale** on every host response, so
+  drag state is module-scoped rather than stashed on elements, and the hovered
+  target is tracked by *key* rather than by element reference — the element that
+  key names may be a different object after a re-render.
+- **The live region is parented to `<body>`, not to `root`**, for the same
+  reason: inside `root` the next render would destroy it and turn every later
+  announcement into a silent no-op.
+
+**Choosing pointer events is not by itself enough to make touch work.** A
+direct-manipulation pointer receives *implicit pointer capture* on `pointerdown`,
+so every later event in the gesture retargets to the element it began on:
+`pointerenter` never fires for any other drop target, and `pointerup`'s target is
+still the source card. The obvious implementation therefore resolves every touch
+drop back to its source column and the card snaps back — the precise failure
+pointer events were chosen to avoid. Hit testing goes through `elementFromPoint`
+instead, which reports what is actually under the finger, and the draggable
+carries `touch-action: none` so the browser does not claim the gesture as a
+scroll. Capture is embraced rather than fought: it is what makes a release
+*outside* the component or the window still deliver `pointerup` to us.
+
+Other behaviours worth naming, each with a test:
+
+- **A press is not a drag.** A 5px movement threshold and a primary-button check
+  gate the grab. Without them, clicking a card grabbed it and immediately dropped
+  it on its own enclosing container — a spurious reorder whose position depended
+  on where in the card you clicked, and any button nested in a card was unusable.
+- **A drag cannot be stranded.** `pointercancel` is handled (the browser reclaims
+  touch gestures it decides are scrolls), and capture covers release outside the
+  root. A stuck drag is not benign: the next Space would release instead of
+  grabbing, and the next press would emit a second `onDragStart` with no
+  intervening `onDragEnd`.
+- **Escape survives a re-render.** Once a drag is in flight the keyboard handler
+  no longer requires the event to come from the grabbed card. The first host
+  response replaces the subtree, detaching the focused element and dropping focus
+  to `<body>` — a focus-gated Escape would become unreachable exactly when it is
+  needed, leaving a keyboard-only user with an unresolvable drag.
+- **`onDrop` settles before `onDragEnd`.** Firing both unawaited put two host
+  round-trips in flight, each merging props and re-rendering, so an `onDragEnd`
+  response computed from pre-drop state could land last and visually revert the
+  move.
+- **`dropped` reports acceptance, not attempt** — a refused drop cancels, on the
+  pointer path as well as the keyboard one.
+- **Disabled and keyless targets are excluded from the keyboard walk**, not
+  merely refused: the cursor cannot land on and announce a target the pointer
+  could never hover, and several keyless targets would all match the same probe
+  so the walk could never reach past the first.
+- **A disabled card announces as disabled** (`aria-disabled`), rather than
+  presenting as an actionable button that does nothing when activated.
+
+`buildEvent` gained an `overrides` channel for payload values the DOM cannot
+supply (which card was grabbed, where in the target it landed). It matches by
+*own* property: `in` walks the prototype chain, so an emit param named
+`constructor` would assign a function off `Object.prototype` — which
+`JSON.stringify` then drops, silently delivering an event missing a declared
+param — and one named `__proto__` would invoke the setter and add no key at all.
+
+19 new tests.
+
 ### Added - HTML event hydration markers
 
 `HostButton` now preserves `onClick`/`onTap` emits as `data-on-click`, and
