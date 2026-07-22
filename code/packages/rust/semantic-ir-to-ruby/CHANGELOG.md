@@ -1,5 +1,61 @@
 # Changelog
 
+## 0.4.0 — sequences (SIR16)
+
+Accepts `Feature::Sequences`. Ruby has native arrays, so the SIR16 sequence
+nodes render directly — no runtime value-boxing like the Go/Rust backends'
+`_sir_seq_*`:
+
+- `Expr::SeqLit` (`[1, 2, 3]`) → a native array literal. Structural `Array#==`
+  makes `[1, 2] == [1, 2]` true, matching every backend that carries sequences.
+- `Expr::SeqIndex` (`a[i]`) → `(a)[i]`. Ruby's `Array#[]` already matches the
+  SIR reference exactly: a negative index counts from the end, an out-of-range
+  index returns `nil` (never raises — that is `fetch`).
+- `Expr::SeqLen` (`len a`) → `(a).length`.
+- `Stmt::SeqSet` (`a[i] = v`) → `sir_seq_set(a, i, v)`, a new runtime helper
+  that enforces the reference's bounds rule (RAISES on a negative or
+  out-of-range index, unlike Ruby's native `[]=` which pads with nils / counts
+  from the end) and returns the assigned value.
+- `Stmt::ForEach` (`for x in a`) → `(a).each { |x| … }` — reachable once
+  `Loops` is also accepted. A BLOCK, so `x` (and any body-local) is
+  block-scoped, matching the validator (which rewinds the loop body) and the
+  Go reference (`for _, x := range`, block-local via `:=`); a leaking `for …
+  in` would instead clobber an enclosing same-named local. `ForRange` is
+  block-scoped the same way, via a hoisted `->(x) { … }` body called from the
+  `while`. Safe as blocks because SIR loop bodies have no break/next/return.
+
+Also fixes a **pre-existing** panic surfaced while making the emitter total:
+`Stmt::ForRange` (`for i in 0...3`) is gated by `Feature::Loops` alone
+(accepted since 0.3.0) and is produced by the Ruby frontend, yet was sent to
+the same `unreachable!` — so a numeric `for` loop crashed the backend. It now
+desugars to a `while` mirroring the Go/Rust backends: bounds evaluated once
+into nesting-safe `sir_`-prefixed temporaries, a direction-aware exclusive stop
+(`step >= 0 ? i < stop : i > stop`, so a descending loop works), and a
+block-scoped loop var (the body runs inside a hoisted `->(i) { … }`, so `i`
+does not clobber an enclosing same-named local).
+
+Handling all five sequence nodes plus `ForRange` keeps the emitter TOTAL for
+its accepted feature set: no conforming producer (Ruby, C→SIR, Twig→SIR, …) can
+reach an `unreachable!`. **This was
+caught by security review** — an earlier revision handled only `SeqLit` on the
+false premise that it was the only `Sequences`-gated node; in fact `SeqIndex`/
+`SeqLen`/`SeqSet` are also gated by `Sequences` (the `NDArrays`-gated
+`IndexGet`/`IndexSet` are the different SIR22 nodes), and `ForEach` becomes
+reachable once `Loops` is accepted — all four would have panicked the emitter
+for a non-Ruby producer. Verified with hand-built modules (bypassing the Ruby
+frontend, which masks these nodes) for each of the five.
+
+Array *indexing via `Expr::IndexGet`* and slicing are a DIFFERENT feature
+(`NDArrays`, not accepted); array-*pattern* destructuring needs `ShortCircuit`
+(not accepted) — so those stay rejected at the feature gate.
+
+The `scan_expr`/`scan_stmt` unsupported-builtin pre-check recurses into the new
+nodes' sub-expressions too, so an unsupported builtin nested in `[foo()]`,
+`a[foo()]`, or `for x in [foo()]` is reported cleanly. It also gains a `While`
+arm — a pre-existing hole (also found by the review): an unsupported builtin in
+a `while` body previously escaped the pre-check and hit the emitter, so it now
+rejects cleanly instead of panicking.
+
 ## 0.3.0 — control flow & mutation (SIR16)
 
 Accepts `Feature::Loops` and `Feature::MutableBindings`, and renders the two

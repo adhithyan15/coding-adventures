@@ -56,6 +56,18 @@ def sir_eq(a, b) = a == b
 # Call a closure value (a Ruby lambda) with the given arguments.
 def sir_apply(target, *args) = target.call(*args)
 
+# Indexed write `a[i] = v` with the SIR bounds rule.  The reference
+# (`_sir_seq_set`) treats ONLY `0 <= i < length` as valid and RAISES on a
+# negative or out-of-range index — whereas Ruby's native `a[i] = v` would
+# silently pad with nils (i past the end) or count from the end (negative i).
+# We enforce the reference rule so every backend agrees, and return the value
+# (an indexed assignment evaluates to its right-hand side).
+def sir_seq_set(a, i, v)
+  raise "sequence index out of range: #{i}" if i < 0 || i >= a.length
+  a[i] = v
+  v
+end
+
 # ── SIR26 integer conversions ──
 # Reduce an Integer to a fixed width by two's-complement reinterpretation — the
 # rendering of an Expr::Convert.  Ruby's Integer is arbitrary precision and its

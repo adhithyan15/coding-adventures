@@ -8,10 +8,18 @@
 //! See [SIR25](../../../specs/SIR25-semantic-ir-to-ruby.md) for the design.
 
 use std::fmt::Write;
+use std::sync::atomic::{AtomicUsize, Ordering};
 
 use semantic_ir::{Block, Expr, Function, Global, IntWidth, Module, Scope, Stmt};
 
 use crate::runtime::RUNTIME;
+
+/// Monotonic counter for unique loop-temporary names (`sir_for_i_N`, …). A
+/// `ForRange` desugars to a `while` with three temporaries that must not
+/// collide across NESTED range loops. The `sir_` prefix is guarded by
+/// [`sanitize_ident`] (a user variable spelled the same is renamed away), so
+/// these can never clash with a program's own names.
+static LOOP_TEMP_ID: AtomicUsize = AtomicUsize::new(0);
 
 /// Builtins the v0 backend lowers.  A `BuiltinCall` to anything else is
 /// rejected by [`first_unsupported_builtin`] (mirroring the C backend), so a
@@ -122,6 +130,29 @@ fn scan_stmt(s: &Stmt) -> Option<(String, semantic_ir::Span)> {
         | Stmt::LetStarBinding { value, .. }
         | Stmt::ExprStmt { expr: value, .. }
         | Stmt::Assign { value, .. } => scan_expr(value),
+        // A sequence write / iteration has sub-expressions that may themselves
+        // hide an unsupported builtin — scan them (and a ForEach body) so the
+        // graceful pre-check catches it rather than the emitter.
+        Stmt::SeqSet {
+            seq, index, value, ..
+        } => scan_expr(seq)
+            .or_else(|| scan_expr(index))
+            .or_else(|| scan_expr(value)),
+        // Compound-statement bodies must be scanned too, or an unsupported
+        // builtin hidden in a loop body survives the pre-check and reaches the
+        // emitter's `unreachable!`. (`While` was a pre-existing scan hole.)
+        Stmt::While { cond, body, .. } => scan_expr(cond).or_else(|| scan_block(body)),
+        Stmt::ForEach { iter, body, .. } => scan_expr(iter).or_else(|| scan_block(body)),
+        Stmt::ForRange {
+            start,
+            stop,
+            step,
+            body,
+            ..
+        } => scan_expr(start)
+            .or_else(|| scan_expr(stop))
+            .or_else(|| scan_expr(step))
+            .or_else(|| scan_block(body)),
         _ => None,
     }
 }
@@ -150,6 +181,12 @@ fn scan_expr(e: &Expr) -> Option<(String, semantic_ir::Span)> {
         }
         Expr::MakeClosure { captures, .. } => captures.iter().find_map(|c| scan_expr(&c.value)),
         Expr::Convert { value, .. } => scan_expr(value),
+        // A sequence literal's items are themselves expressions — scan each so
+        // an unsupported builtin nested in `[foo(), bar()]` is caught by the
+        // graceful pre-check rather than reaching the emitter.
+        Expr::SeqLit { items, .. } => items.iter().find_map(scan_expr),
+        Expr::SeqIndex { seq, index, .. } => scan_expr(seq).or_else(|| scan_expr(index)),
+        Expr::SeqLen { seq, .. } => scan_expr(seq),
         _ => None,
     }
 }
@@ -221,8 +258,94 @@ fn emit_stmt(s: &Stmt) -> String {
             s.push_str("end");
             s
         }
-        // Other SIR16+ statements (ForRange/ForEach/index-set/class/try) are not
-        // accepted; the capability check rejects such modules before emit.
+        // `a[i] = v` (indexed write). The SIR reference (`_sir_seq_set`) treats
+        // ONLY `0 <= i < len` as valid and RAISES on a negative or out-of-range
+        // index — unlike Ruby's native `[]=`, which silently extends the array
+        // with nils or counts negatives from the end. The `sir_seq_set` runtime
+        // helper enforces the reference rule and returns the assigned value.
+        Stmt::SeqSet {
+            seq, index, value, ..
+        } => format!(
+            "sir_seq_set({}, {}, {})",
+            emit_expr(seq),
+            emit_expr(index),
+            emit_expr(value)
+        ),
+        // `iter.each { |var| … }` — a BLOCK, so `var` and any body-local are
+        // block-scoped, matching the SIR validator (which `env.add_local`s the
+        // var then `env.rewind`s the whole loop body — body-scoped, NOT
+        // surrounding-scope) and the Go reference (`for _, x := range …`, whose
+        // `:=` var is block-local). A leaking `for … in` would instead clobber
+        // an enclosing local that shares the var's name. Safe as a block
+        // because SIR has no loop break/next/return that a block would reroute.
+        Stmt::ForEach {
+            var, iter, body, ..
+        } => {
+            let mut s = format!("({}).each do |{}|\n", emit_expr(iter), sanitize_ident(var));
+            for st in &body.stmts {
+                s.push_str(&emit_stmt(st));
+                s.push('\n');
+            }
+            s.push_str("end");
+            s
+        }
+        // `for var in start...stop step step`. Gated by `Feature::Loops` alone,
+        // so it is reachable whenever loops are accepted. Desugared to a
+        // `while` (rather than a Ruby Range, whose `step`/exclusivity is fiddly
+        // for a negative step) that mirrors the Go/Rust backends EXACTLY:
+        //   - `start`/`stop`/`step` are evaluated ONCE (they may have side
+        //     effects), into `sir_`-prefixed temporaries unique per loop
+        //     (nesting-safe, and collision-proof — `sanitize_ident` renames any
+        //     user variable out of the `sir_` namespace);
+        //   - the stop is EXCLUSIVE and the direction follows the step's sign
+        //     (`step >= 0 ? i < stop : i > stop`), so a descending loop works;
+        //   - `var` and any body-local are BLOCK-scoped: the body runs inside a
+        //     hoisted `->(var) { … }` lambda, so — like `ForEach`'s block and
+        //     the Go reference's `:=` counter — they never clobber an enclosing
+        //     same-named local (the validator rewinds the loop body).
+        Stmt::ForRange {
+            var,
+            start,
+            stop,
+            step,
+            body,
+            ..
+        } => {
+            let id = LOOP_TEMP_ID.fetch_add(1, Ordering::Relaxed);
+            let v = sanitize_ident(var);
+            let mut s = String::new();
+            // The body runs inside a lambda taking `var`, so — like `ForEach`'s
+            // block and the Go reference's `:=` counter — `var` and any
+            // body-local are block-scoped (the validator rewinds them), never
+            // clobbering an enclosing same-named local. Hoisted once (not
+            // re-created per iteration). Safe because SIR loop bodies have no
+            // break/next/return a lambda would reroute.
+            let _ = writeln!(s, "sir_for_body_{id} = ->({v}) {{");
+            for st in &body.stmts {
+                s.push_str(&emit_stmt(st));
+                s.push('\n');
+            }
+            s.push_str("}\n");
+            // `start`/`stop`/`step` are evaluated ONCE, into `sir_`-namespaced
+            // temporaries (guarded from user names by `sanitize_ident`) unique
+            // per loop for nesting. Direction-aware EXCLUSIVE stop mirrors the
+            // Go/Rust backends: count up while `step >= 0` (`i < stop`), down
+            // otherwise (`i > stop`).
+            let _ = writeln!(s, "sir_for_i_{id} = ({})", emit_expr(start));
+            let _ = writeln!(s, "sir_for_stop_{id} = ({})", emit_expr(stop));
+            let _ = writeln!(s, "sir_for_step_{id} = ({})", emit_expr(step));
+            let _ = writeln!(
+                s,
+                "while (sir_for_step_{id} >= 0 ? sir_for_i_{id} < sir_for_stop_{id} : \
+                 sir_for_i_{id} > sir_for_stop_{id})"
+            );
+            let _ = writeln!(s, "sir_for_body_{id}.call(sir_for_i_{id})");
+            let _ = writeln!(s, "sir_for_i_{id} += sir_for_step_{id}");
+            s.push_str("end");
+            s
+        }
+        // Other SIR16+ statements (index-set/class/try) are not accepted; the
+        // capability check rejects such modules before emit.
         other => unreachable!("Ruby backend reached unsupported statement: {other:?}"),
     }
 }
@@ -286,6 +409,27 @@ fn emit_expr(e: &Expr) -> String {
                 fixed.join(", ")
             )
         }
+        // SIR16 sequence literal (`[1, 2, 3]`).  Ruby has native arrays, so a
+        // `SeqLit` maps directly to an array-literal expression — no runtime
+        // helper (unlike the Go/Rust backends, whose tagged-value runtimes need
+        // `_sir_seq_lit` to box a heap sequence).  Each item is itself an
+        // expression, emitted recursively.  Structural `==` (Array#==) then
+        // makes `[1, 2] == [1, 2]` true, matching every other backend.
+        Expr::SeqLit { items, .. } => {
+            let elems: Vec<String> = items.iter().map(emit_expr).collect();
+            format!("[{}]", elems.join(", "))
+        }
+        // `a[i]` (read). Ruby's `Array#[]` matches the SIR reference EXACTLY:
+        // a negative index counts from the end (`a[-1]` is the last element),
+        // and an index outside `0 .. len-1` returns `nil` (it does not raise —
+        // that is `fetch`). This is the same rule `_sir_seq_index` documents on
+        // the Go/Rust/Python backends, so no helper is needed. The receiver is
+        // parenthesised so a compound `seq` expression indexes correctly.
+        Expr::SeqIndex { seq, index, .. } => {
+            format!("({})[{}]", emit_expr(seq), emit_expr(index))
+        }
+        // `a.length` — native `Array#length`, matching `_sir_seq_len`.
+        Expr::SeqLen { seq, .. } => format!("({}).length", emit_expr(seq)),
         // SIR26: integer conversion → a mask helper chosen by target width +
         // signedness.  A target width of `Arbitrary` is the identity (a widen
         // into Ruby's already-unbounded Integer), so no helper wraps it.

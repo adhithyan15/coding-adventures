@@ -313,3 +313,281 @@ fn e2e_convert_arbitrary_is_identity() {
         None => eprintln!("skip: no ruby on PATH"),
     }
 }
+
+// ── SIR16 sequences (Expr::SeqLit) ──────────────────────────────────────────
+
+#[test]
+fn seq_literal_emits_a_native_ruby_array() {
+    // `[1, 2, 3]` maps to a native array literal — no runtime helper, since
+    // Ruby arrays ARE the value (unlike the Go/Rust tagged-value backends).
+    let rb = ruby_to_ruby("puts([1, 2, 3])");
+    assert!(rb.contains("[1, 2, 3]"), "SeqLit should be a native array:\n{rb}");
+}
+
+#[test]
+fn e2e_seq_literal_displays_as_an_array() {
+    // Ruby's `puts` of an array prints the array (`[1, 2, 3]`) — a
+    // convention-independent check (no boolean display involved).
+    let rb = ruby_to_ruby("puts([1, 2, 3])");
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "[1, 2, 3]"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn e2e_seq_structural_equality_drives_control_flow() {
+    // The point of sequences on this backend: `Array#==` is STRUCTURAL, so
+    // `[1, 2] == [1, 2]` is true even for distinct array objects — matching
+    // the Python/Go/Rust backends that carry sequences. Driven through an
+    // `if` (printing a string) so the assertion does not depend on the
+    // boolean display convention. Also exercises a NEGATIVE and a NESTED case.
+    let rb = ruby_to_ruby(
+        "if [1, 2] == [1, 2]\n  puts \"same\"\nelse\n  puts \"diff\"\nend\n\
+         if [1, 2] == [1, 3]\n  puts \"same\"\nelse\n  puts \"diff\"\nend\n\
+         if [[1, 2], [3]] == [[1, 2], [3]]\n  puts \"same\"\nelse\n  puts \"diff\"\nend",
+    );
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "same\ndiff\nsame"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+// ── SIR16 sequences: HAND-BUILT modules (producer-agnostic) ─────────────────
+//
+// The bundled Ruby frontend cannot yet PRODUCE `SeqIndex`/`SeqLen`/`SeqSet`/
+// `ForEach` (its parser drops `a[i]`, `.length` needs a deferred builtin, etc.),
+// so a source-driven test would MASK them. But SIR is producer-agnostic — a
+// C→SIR or Twig→SIR module can carry these nodes with a `{Sequences, Loops}`
+// manifest that this backend now accepts. These tests build such modules
+// directly and prove the emitter is TOTAL for the feature (no `unreachable!`)
+// and matches the reference semantics.
+
+use semantic_ir::{Effect, Scope, Stmt};
+
+fn s2() -> Span {
+    Span::synthetic()
+}
+fn ilit(v: i64) -> Expr {
+    Expr::IntLit { value: v, span: s2() }
+}
+fn seq(items: Vec<Expr>) -> Expr {
+    Expr::SeqLit { items, span: s2() }
+}
+fn local(name: &str) -> Expr {
+    Expr::VarRef { name: name.into(), scope: Scope::Local, span: s2() }
+}
+fn puts(arg: Expr) -> Stmt {
+    Stmt::ExprStmt {
+        expr: Expr::BuiltinCall {
+            name: "puts".into(),
+            args: vec![arg],
+            effects: EffectSet::PURE.with(Effect::MayPrint),
+            span: s2(),
+        },
+        span: s2(),
+    }
+}
+/// A `main` module carrying the given statements, declaring Sequences + Loops.
+fn seq_module(stmts: Vec<Stmt>) -> Module {
+    Module {
+        name: "seqprog".into(),
+        manifest: FeatureManifest::from_features(&[Feature::Sequences, Feature::Loops]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts, value: Expr::NilLit { span: s2() }, span: s2() },
+            effects: EffectSet::PURE.with(Effect::MayPrint),
+            metadata: Metadata::new(),
+            span: s2(),
+        }],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("test")
+            .with_sir_version(CURRENT_SIR_VERSION),
+        span: s2(),
+    }
+}
+fn emit_seq_module(stmts: Vec<Stmt>) -> String {
+    compile(&seq_module(stmts)).expect("seq module must compile, not panic").source
+}
+
+#[test]
+fn seq_index_matches_ruby_bracket_semantics() {
+    // `a[i]`: in-range, negative-from-end, and OOB→nil (never raises).
+    let rb = emit_seq_module(vec![
+        puts(Expr::SeqIndex { seq: Box::new(seq(vec![ilit(10), ilit(20), ilit(30)])), index: Box::new(ilit(1)), span: s2() }),
+        puts(Expr::SeqIndex { seq: Box::new(seq(vec![ilit(10), ilit(20), ilit(30)])), index: Box::new(ilit(-1)), span: s2() }),
+        puts(Expr::SeqIndex { seq: Box::new(seq(vec![ilit(10), ilit(20), ilit(30)])), index: Box::new(ilit(9)), span: s2() }),
+    ]);
+    assert!(rb.contains("[10, 20, 30])[1]"), "SeqIndex should be native []:\n{rb}");
+    match run_ruby(&rb) {
+        // `a[1]`→20, `a[-1]`→30 (from the end), `a[9]`→nil (OOB never raises).
+        // `sir_puts(nil)` renders nil as "nil" in this backend's convention.
+        Some(out) => assert_eq!(out, "20\n30\nnil"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn seq_len_is_native_length() {
+    let rb = emit_seq_module(vec![puts(Expr::SeqLen {
+        seq: Box::new(seq(vec![ilit(1), ilit(2), ilit(3)])),
+        span: s2(),
+    })]);
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "3"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn seq_set_writes_in_bounds_and_returns_the_value() {
+    // `a = [1,2,3]; a[1] = 99; puts a` → `[1, 99, 3]`.
+    let rb = emit_seq_module(vec![
+        Stmt::LetBinding {
+            name: "a".into(),
+            sir_type: None,
+            value: seq(vec![ilit(1), ilit(2), ilit(3)]),
+            span: s2(),
+        },
+        Stmt::SeqSet { seq: local("a"), index: ilit(1), value: ilit(99), span: s2() },
+        puts(local("a")),
+    ]);
+    assert!(rb.contains("sir_seq_set(a, 1, 99)"), "SeqSet should use the guarded helper:\n{rb}");
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "[1, 99, 3]"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn for_each_iterates_via_each_block() {
+    // `for x in [1,2,3]: puts x` → `1\n2\n3`, emitted as `(…).each { |x| … }`
+    // so the loop var is block-scoped (see `for_each_var_is_block_scoped…`).
+    let rb = emit_seq_module(vec![Stmt::ForEach {
+        var: "x".into(),
+        iter: seq(vec![ilit(1), ilit(2), ilit(3)]),
+        body: Block { stmts: vec![puts(local("x"))], value: Expr::NilLit { span: s2() }, span: s2() },
+        span: s2(),
+    }]);
+    assert!(rb.contains("([1, 2, 3]).each do |x|"), "ForEach should be a .each block:\n{rb}");
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "1\n2\n3"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn for_each_var_is_block_scoped_not_leaking() {
+    // A loop var that SHADOWS an enclosing local must NOT clobber it — the
+    // validator rewinds the loop var (body-scoped), and the Go backend
+    // block-scopes it too. `x = 99; for x in [1,2,3]; end; puts x` → 99.
+    let rb = emit_seq_module(vec![
+        Stmt::LetBinding { name: "x".into(), sir_type: None, value: ilit(99), span: s2() },
+        Stmt::ForEach {
+            var: "x".into(),
+            iter: seq(vec![ilit(1), ilit(2), ilit(3)]),
+            body: Block { stmts: vec![], value: Expr::NilLit { span: s2() }, span: s2() },
+            span: s2(),
+        },
+        puts(local("x")),
+    ]);
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "99"), // block-scoped: enclosing x survives
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+// ── SIR16 ForRange (numeric `for` loop, gated by Loops) ─────────────────────
+//
+// ForRange requires ONLY `Feature::Loops` (accepted since 0.3.0), so it is
+// reachable from the Ruby frontend (`for i in 0...3`) — yet the emitter used to
+// send it to `unreachable!`, a pre-existing panic. Now desugared to a `while`
+// matching the Go/Rust backends: evaluate-once bounds, direction-aware
+// exclusive stop, the loop var leaking to the enclosing scope.
+
+fn forrange(var: &str, start: i64, stop: i64, step: i64, body: Vec<Stmt>) -> Stmt {
+    Stmt::ForRange {
+        var: var.into(),
+        start: ilit(start),
+        stop: ilit(stop),
+        step: ilit(step),
+        body: Block { stmts: body, value: Expr::NilLit { span: s2() }, span: s2() },
+        span: s2(),
+    }
+}
+
+/// A ForRange module needs only Loops; build one so the manifest is minimal.
+fn loops_module(stmts: Vec<Stmt>) -> Module {
+    let mut m = seq_module(stmts);
+    m.manifest = FeatureManifest::from_features(&[Feature::Loops]);
+    m
+}
+
+#[test]
+fn for_range_counts_up_exclusive() {
+    // `for i in 0, 3, 1: puts i` → 0,1,2 (stop is exclusive).
+    let rb = compile(&loops_module(vec![forrange("i", 0, 3, 1, vec![puts(local("i"))])]))
+        .expect("ForRange must compile, not panic")
+        .source;
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "0\n1\n2"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn for_range_counts_down_with_negative_step() {
+    // `for i in 3, 0, -1: puts i` → 3,2,1 (descending, exclusive of 0).
+    let rb = compile(&loops_module(vec![forrange("i", 3, 0, -1, vec![puts(local("i"))])]))
+        .expect("ForRange must compile")
+        .source;
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "3\n2\n1"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn for_range_nested_uses_distinct_temporaries() {
+    // Nested range loops must not clobber each other's temporaries.
+    let inner = forrange("j", 0, 2, 1, vec![puts(local("j"))]);
+    let rb = compile(&loops_module(vec![forrange("i", 0, 2, 1, vec![inner])]))
+        .expect("nested ForRange must compile")
+        .source;
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "0\n1\n0\n1"), // i=0:{j0,j1}, i=1:{j0,j1}
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn unsupported_builtin_in_while_body_is_rejected_not_panicked() {
+    // Gap B (security review): a `While` body was not scanned by the
+    // unsupported-builtin pre-check, so an unknown builtin hidden there
+    // survived validation and hit the emitter's `unreachable!`. It must now be
+    // rejected CLEANLY (a `BackendError`), never panic.
+    let bad_call = Expr::BuiltinCall {
+        name: "totally_unsupported_xyz".into(),
+        args: vec![],
+        effects: EffectSet::PURE,
+        span: s2(),
+    };
+    let while_stmt = Stmt::While {
+        cond: Expr::BoolLit { value: false, span: s2() },
+        body: Block {
+            stmts: vec![Stmt::ExprStmt { expr: bad_call, span: s2() }],
+            value: Expr::NilLit { span: s2() },
+            span: s2(),
+        },
+        span: s2(),
+    };
+    // `compile` must return an Err (clean rejection), not unwind/panic.
+    let result = compile(&loops_module(vec![while_stmt]));
+    assert!(result.is_err(), "an unsupported builtin in a while body must be rejected cleanly");
+}
