@@ -11,7 +11,11 @@ on Python (`NameError`), JavaScript (`unknown builtin`), Go (`panic`) and Rust
 (missing function) — only C and Ruby lowered the operator spellings. String
 ordering is included because Go's comparisons gained a lexicographic string
 path in this same change (they previously panicked on a string operand), so all
-six backends now agree on `"a" < "b"`.
+six backends now agree on `"a" < "b"`. Also covers COMPOSITE equality
+(`[1,2] == [1,2]` structural, not reference) on the four backends that accept
+the `sequences` feature (Python/JavaScript/Go/Rust) — the end-to-end proof that
+the JavaScript `eq`→`valEq` fix agrees cross-backend; C and Ruby skip (no
+`sequences` feature in their v0 backends).
 
 ## [0.18.0] - `is_a?` / `case-when` frontier across the backends
 

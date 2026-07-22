@@ -25,6 +25,14 @@
 //! which PANICS on a string — so `"a" < "b"` crashed rather than ordering.
 //! This change gives Go a lexicographic string fast-path (via `_sir_cmp`),
 //! matching Ruby, C, Rust and Python, so all six now agree on string order.
+//!
+//! **Composite equality.** `==`/`!=` on arrays are STRUCTURAL, not reference
+//! identity — the end-to-end proof that the JavaScript backend's `eq`→`valEq`
+//! change agrees cross-backend (JS used to answer `[1,2] == [1,2]` false). This
+//! runs on Python, JavaScript, Go and Rust; the C and Ruby v0 backends do not
+//! accept the `sequences` feature, so an array-literal program never lowers and
+//! those two `Skip` (a skipped case is not asserted, like a missing toolchain).
+//!
 //! Booleans render in the harness's default (Lisp) convention, so the expected
 //! strings are `#t` / `#f`.
 
@@ -65,6 +73,17 @@ const CASES: &[(&str, &str)] = &[
     ("\"b\" > \"a\"", "#t"),
     ("\"a\" >= \"a\"", "#t"),
     ("\"ab\" < \"b\"", "#t"), // prefix vs longer: 'a' < 'b'
+    // COMPOSITE equality — `==`/`!=` are STRUCTURAL for arrays, not reference
+    // identity. This is the end-to-end proof that the JavaScript `eq`→`valEq`
+    // change agrees cross-backend: JS used to answer `[1,2] == [1,2]` false
+    // (reference), the other backends true (structural). Runs on Python,
+    // JavaScript, Go and Rust; C and Ruby SKIP (their v0 backends do not accept
+    // the `sequences` feature, so a program with an array literal never lowers
+    // — a `Skipped` case is not asserted, exactly like a missing toolchain).
+    ("[1, 2] == [1, 2]", "#t"),
+    ("[1, 2] == [1, 3]", "#f"),
+    ("[1, 2] != [1, 3]", "#t"),
+    ("[1, 2] != [1, 2]", "#f"),
 ];
 
 /// The frontier: every backend that *runs* a case must reproduce Ruby's
