@@ -82,8 +82,8 @@ use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
 use std::path::{Path, PathBuf};
 
-use aarch64_backend::{compile_with_globals, GlobalWordReloc, Reloc};
-use aarch64_encoder::{Assembler, Reg};
+use aarch64_backend::{compile_with_globals_and_stackmap, GlobalWordReloc, Reloc};
+use aarch64_encoder::{Assembler, LabelId, Reg};
 
 /// Symbol of the generated **GC entry wrapper** — the real `_main` of an AOT image.
 /// It registers the module's GC stack maps (via [`GC_INIT_STACKMAPS`]) and then
@@ -91,68 +91,187 @@ use aarch64_encoder::{Assembler, Reg};
 /// program's output; it only adds the pre-`main` registration hook precise GC needs.
 const GC_AOT_ENTRY: &str = "__gc_aot_entry";
 /// Symbol of the generated **stack-map registration** function, called once by the
-/// entry wrapper before the user program. A no-op today (Increment A); a later rung
-/// fills it in to register each function's stack map so `__gc_collect_precise` can
-/// resolve real frames.
+/// entry wrapper before the user program. It registers every user function's stack
+/// map with the GC runtime so `__gc_collect_precise` can resolve real frames to exact
+/// reference slots (Increment B); functions without records degrade to conservative.
 const GC_INIT_STACKMAPS: &str = "__gc_init_stackmaps";
+/// The GC runtime's per-function stack-map registration entry (gc-core-capi). The
+/// generated `__gc_init_stackmaps` calls it once per user function; resolved by the
+/// system linker from the embedded `libgc_core_capi.a` (an external `BL`).
+const GC_REGISTER_STACKMAP: &str = "__gc_register_stackmap";
 
-/// Build the synthetic GC entry functions injected into every aarch64 AOT module:
-/// the registration function [`GC_INIT_STACKMAPS`] and the entry wrapper
-/// [`GC_AOT_ENTRY`]. They are ordinary functions in the compile set — their
-/// intra-module `BL`s (`wrapper → init`, `wrapper → user_entry`) are patched by the
-/// same two-pass linker as any other call.
+/// One `ADR` in `__gc_init_stackmaps` that must be patched to a user function's
+/// runtime address (`func_start`, the first argument of [`GC_REGISTER_STACKMAP`]).
+/// The instruction is emitted as a placeholder; pass 2 fills in its 21-bit byte
+/// displacement once `link()` has assigned every function its `__text` offset.
 ///
-/// The wrapper is a standard AAPCS64 leaf-ish frame:
+/// **Why `ADR`, not `ADRP`+`ADD`.** `ADR` is PC-relative in *bytes*: at run time it
+/// computes `PC + imm`, where both `PC` and the target are `base + offset`, so the
+/// base cancels and the displacement `target_off − adr_off` (a link-time constant) is
+/// correct for *any* load address — no relocation needed. `ADRP` computes
+/// `page(PC) + (imm << 12)`; the `page()` rounding does **not** commute with an
+/// unaligned base, and `ld` places `__text` after the Mach header inside the first
+/// page, so the runtime `__text` base is *not* 4 KiB-aligned. Baking an `ADRP` page
+/// immediate from link offsets would therefore mis-compute `func_start` by up to a
+/// page — a silent, UAF-class defect (the registry only stores the value, so nothing
+/// faults until a precise collection resolves a return address to the wrong map).
+/// `ADR` sidesteps this entirely; its cost is a ±1 MiB reach, enforced fail-loud.
+struct FuncAddrReloc {
+    /// Word index (within `__gc_init_stackmaps`) of the `ADR` instruction.
+    adr_word: usize,
+    /// Name of the user function whose address this instruction loads.
+    target: String,
+}
+
+/// One user function's stack map, flattened to the arrays
+/// [`GC_REGISTER_STACKMAP`] takes: its byte length and, per safepoint record, the
+/// return-address `pc_offset` and the live-reference frame slots.
+struct FnStackMap {
+    /// The function's symbol name (used to resolve `func_start` in pass 2).
+    name: String,
+    /// The function's own code length in bytes (`func_len`).
+    len: usize,
+    /// `(pc_offset, slots)` per safepoint record. `slots` are FP-relative byte
+    /// offsets (may be negative), exactly as the backend emitted them.
+    records: Vec<(u32, Vec<i32>)>,
+}
+
+/// Map an [`aarch64_encoder::EncodeError`] to an [`AotError`].
+fn gc_asm_err(e: aarch64_encoder::EncodeError) -> AotError {
+    AotError::Linker { status: None, stderr: format!("twig-aot: GC entry codegen: {e:?}") }
+}
+
+/// Build the **GC entry wrapper** [`GC_AOT_ENTRY`] — the image's real `_main`.
 ///
 /// ```text
 ///   __gc_aot_entry:
 ///       stp x29, x30, [sp, #-16]!     ; save fp/lr
 ///       mov x29, sp
-///       bl  __gc_init_stackmaps       ; register stack maps (no-op for now)
+///       bl  __gc_init_stackmaps       ; register every function's stack map
 ///       bl  <user_entry>              ; x0 = program result
 ///       ldp x29, x30, [sp], #16       ; restore fp/lr (x0 untouched)
 ///       ret                           ; return the program result verbatim
 /// ```
 ///
-/// `bl __gc_init_stackmaps` *may* clobber the caller-saved registers (x0–x18) per the
-/// ABI — a no-op today, but the follow-up that fills it in will — and that is fine:
-/// it runs *before* the user entry, and a twig `main` takes no arguments, so nothing
-/// live is lost. The user entry's x0 result survives the `ldp`/`ret` unchanged.
-// Same `(name, bytes, ext_relocs, global_relocs)` tuple the per-function compile
-// loop produces; the injected entries join `fn_results` verbatim.
+/// Both `BL`s are intra-module and patched by the two-pass linker. `bl
+/// __gc_init_stackmaps` may clobber caller-saved registers (x0–x18) per the ABI, but
+/// it runs *before* the user entry and a twig `main` takes no arguments, so nothing
+/// live is lost; the user entry's x0 result survives the `ldp`/`ret` unchanged.
+fn build_gc_wrapper(user_entry: &str) -> Result<(Vec<u8>, Vec<Reloc>), AotError> {
+    let mut a = Assembler::new();
+    a.stp_pre(Reg::Fp, Reg::Lr, Reg::Sp, -16).map_err(gc_asm_err)?;
+    a.add_imm(Reg::Fp, Reg::Sp, 0).map_err(gc_asm_err)?; // mov x29, sp
+    a.bl_external(GC_INIT_STACKMAPS); // intra-module BL, patched by the linker
+    a.bl_external(user_entry); // x0 = user program result
+    a.ldp_post(Reg::Fp, Reg::Lr, Reg::Sp, 16).map_err(gc_asm_err)?;
+    a.ret();
+    let relocs = std::mem::take(&mut a.external_relocs);
+    Ok((a.finish().map_err(gc_asm_err)?, relocs))
+}
+
+/// Build the **stack-map registration** function [`GC_INIT_STACKMAPS`]: for every
+/// user function that has safepoint records, marshal the eight
+/// [`GC_REGISTER_STACKMAP`] arguments and call it, so the GC runtime can turn a
+/// return address in that function into its exact live-reference slots.
+///
+/// ```text
+///   __gc_init_stackmaps:
+///       stp x29,x30,[sp,#-16]! ; mov x29,sp
+///       ; ── per function F with records ──
+///       adr  x0, F                   ; x0 = func_start   (patched in pass 2)
+///       mov  x1, #<F byte length>    ; x1 = func_len
+///       mov  x2, #<record count>     ; x2 = num_records
+///       adr  x3, <F.pc_offsets>      ; x3 = pc_offsets[]
+///       mov  x4, #0                  ; x4 = frame_sizes  (NULL — unused)
+///       mov  x5, #0                  ; x5 = callee_masks (NULL — unused)
+///       adr  x6, <F.slot_counts>     ; x6 = slot_counts[]
+///       adr  x7, <F.slots_flat>      ; x7 = slots_flat[]  (or #0 if empty)
+///       bl   __gc_register_stackmap
+///       ; ── … next function … ──
+///       ldp x29,x30,[sp],#16 ; ret
+///   <data pool: each function's pc_offsets / slot_counts / slots_flat words>
+/// ```
+///
+/// **`func_start`** is the only runtime-computed argument: the function's absolute
+/// address, materialised by an `ADR` (PC-relative, byte-granular) patched in pass 2
+/// (see [`FuncAddrReloc`] for why `ADR`, not `ADRP`+`ADD`). Everything else is a
+/// compile-time constant. The three arrays
+/// are constant data emitted as raw words in a **pool after the final `ret`** (never
+/// executed) and pointed at by `adr` (PC-relative, resolved at `finish`) — since the
+/// pool is init-internal the displacement is independent of the module layout, so it
+/// needs no relocation. The registry copies the slot data into owned storage, so the
+/// arrays need not outlive the call.
+///
+/// Returns the function bytes, the external `BL __gc_register_stackmap` relocations
+/// (patched by the system linker), and the [`FuncAddrReloc`]s pass 2 resolves.
 #[allow(clippy::type_complexity)]
-fn build_gc_entry_functions(
-    user_entry: &str,
-) -> Result<Vec<(String, Vec<u8>, Vec<Reloc>, Vec<GlobalWordReloc>)>, AotError> {
-    let asm_err = |e| AotError::Linker {
-        status: None,
-        stderr: format!("twig-aot: GC entry codegen: {e:?}"),
-    };
+fn build_gc_init_stackmaps(
+    fn_maps: &[FnStackMap],
+) -> Result<(Vec<u8>, Vec<Reloc>, Vec<FuncAddrReloc>), AotError> {
+    let mut a = Assembler::new();
+    let mut faddr: Vec<FuncAddrReloc> = Vec::new();
+    // Data-pool contents, bound after the epilogue: (label, words).
+    let mut pool: Vec<(LabelId, Vec<u32>)> = Vec::new();
 
-    // ── __gc_init_stackmaps: no-op (Increment A) — just return. ──────────────
-    let init_bytes = {
-        let mut a = Assembler::new();
-        a.ret();
-        a.finish().map_err(asm_err)?
-    };
+    // Prologue — a real frame; the body makes calls (each `bl` clobbers lr).
+    a.stp_pre(Reg::Fp, Reg::Lr, Reg::Sp, -16).map_err(gc_asm_err)?;
+    a.add_imm(Reg::Fp, Reg::Sp, 0).map_err(gc_asm_err)?; // mov x29, sp
 
-    // ── __gc_aot_entry: register, run the user entry, return its result. ─────
-    let (wrapper_bytes, wrapper_relocs) = {
-        let mut a = Assembler::new();
-        a.stp_pre(Reg::Fp, Reg::Lr, Reg::Sp, -16).map_err(asm_err)?;
-        a.add_imm(Reg::Fp, Reg::Sp, 0).map_err(asm_err)?; // mov x29, sp
-        a.bl_external(GC_INIT_STACKMAPS); // intra-module BL, patched by the linker
-        a.bl_external(user_entry); // x0 = user program result
-        a.ldp_post(Reg::Fp, Reg::Lr, Reg::Sp, 16).map_err(asm_err)?;
-        a.ret();
-        let relocs = std::mem::take(&mut a.external_relocs);
-        (a.finish().map_err(asm_err)?, relocs)
-    };
+    for fm in fn_maps {
+        if fm.records.is_empty() {
+            continue; // no safepoints → nothing to register (conservative frame)
+        }
+        // Flatten this function's records into the three parallel arrays.
+        let mut pc_offsets: Vec<u32> = Vec::with_capacity(fm.records.len());
+        let mut slot_counts: Vec<u32> = Vec::with_capacity(fm.records.len());
+        let mut slots_flat: Vec<u32> = Vec::new();
+        for (pc, slots) in &fm.records {
+            pc_offsets.push(*pc);
+            slot_counts.push(slots.len() as u32);
+            slots_flat.extend(slots.iter().map(|&s| s as u32)); // i32 → u32 bit-cast
+        }
 
-    Ok(vec![
-        (GC_INIT_STACKMAPS.to_string(), init_bytes, Vec::new(), Vec::new()),
-        (GC_AOT_ENTRY.to_string(), wrapper_bytes, wrapper_relocs, Vec::new()),
-    ])
+        let pc_lbl = a.create_label();
+        let cnt_lbl = a.create_label();
+        let slots_lbl = if slots_flat.is_empty() { None } else { Some(a.create_label()) };
+
+        // x0 = func_start — ADR placeholder, patched (base-independently) in pass 2.
+        let adr_word = a.adr_placeholder(Reg::X0);
+        faddr.push(FuncAddrReloc { adr_word, target: fm.name.clone() });
+
+        a.mov_imm64(Reg::X1, fm.len as u64); //          func_len
+        a.mov_imm64(Reg::X2, fm.records.len() as u64); // num_records
+        a.adr(Reg::X3, pc_lbl); //                       pc_offsets
+        a.mov_imm64(Reg::X4, 0); //                      frame_sizes = NULL
+        a.mov_imm64(Reg::X5, 0); //                      callee_masks = NULL
+        a.adr(Reg::X6, cnt_lbl); //                      slot_counts
+        match slots_lbl {
+            Some(l) => a.adr(Reg::X7, l), //             slots_flat
+            None => a.mov_imm64(Reg::X7, 0), //          (no slots → NULL)
+        }
+        a.bl_external(GC_REGISTER_STACKMAP);
+
+        pool.push((pc_lbl, pc_offsets));
+        pool.push((cnt_lbl, slot_counts));
+        if let Some(l) = slots_lbl {
+            pool.push((l, slots_flat));
+        }
+    }
+
+    // Epilogue — restore and return before the data pool.
+    a.ldp_post(Reg::Fp, Reg::Lr, Reg::Sp, 16).map_err(gc_asm_err)?;
+    a.ret();
+
+    // Constant data pool — read via `adr` above, never executed (after `ret`).
+    for (lbl, words) in &pool {
+        a.bind(*lbl).map_err(gc_asm_err)?;
+        for &w in words {
+            a.emit_data_word(w);
+        }
+    }
+
+    let relocs = std::mem::take(&mut a.external_relocs);
+    Ok((a.finish().map_err(gc_asm_err)?, relocs, faddr))
 }
 use aot_core::infer::infer_types;
 use aot_core::link::{entry_point_offset, link};
@@ -2549,20 +2668,28 @@ fn compile_module_to_text_raw(
     let mut fn_results: Vec<(String, Vec<u8>, Vec<Reloc>, Vec<GlobalWordReloc>)> =
         Vec::with_capacity(module.functions.len());
 
+    // Per user function, the GC stack map the registration function will register.
+    let mut fn_maps: Vec<FnStackMap> = Vec::with_capacity(module.functions.len());
     for fn_ in &module.functions {
-        let (bytes, ext_relocs, glob_relocs) = compile_one_with_globals(fn_, &global_slots)
-            .ok_or_else(|| AotError::BackendRefused { function: fn_.name.clone() })?;
+        let (bytes, ext_relocs, glob_relocs, records) =
+            compile_one_with_globals(fn_, &global_slots)
+                .ok_or_else(|| AotError::BackendRefused { function: fn_.name.clone() })?;
+        fn_maps.push(FnStackMap { name: fn_.name.clone(), len: bytes.len(), records });
         fn_results.push((fn_.name.clone(), bytes, ext_relocs, glob_relocs));
     }
 
     // ── Inject the GC entry wrapper + stack-map registration (LANG16/AOT00-T1) ─
     //
-    // These are ordinary functions appended to the compile set, so `link()` gives
-    // them offsets and pass 2 patches the wrapper's `BL`s (→ init, → user entry)
-    // exactly like any other intra-module call. The macOS object path points its
-    // `_main` entry symbol at `__gc_aot_entry` instead of the user's entry (see the
-    // caller); in-process execution keeps calling the user entry directly, so it is
-    // unaffected. Injecting for every module keeps the text layout uniform.
+    // Two synthetic functions are appended to the compile set: `__gc_init_stackmaps`
+    // (registers every user function's stack map with the GC runtime) and the entry
+    // wrapper `__gc_aot_entry` (calls init, then the user entry). They are ordinary
+    // functions, so `link()` gives them offsets and pass 2 patches the wrapper's `BL`s
+    // (→ init, → user entry) exactly like any other intra-module call. The init's
+    // `adrp`+`add` pairs that load each `func_start` are patched by a dedicated pass
+    // below (`fn_addr_relocs`). The macOS object path points its `_main` entry symbol
+    // at `__gc_aot_entry` (see the caller); in-process execution keeps calling the user
+    // entry directly, so it is unaffected. Injecting for every module keeps the text
+    // layout uniform.
     let user_entry = module.entry_point.as_deref().unwrap_or("main");
     // Guard the reserved GC symbols. `link()` is last-write-wins on duplicate names
     // and the synthetic functions are appended last, so a user function named
@@ -2570,10 +2697,10 @@ fn compile_module_to_text_raw(
     // wrapper emits `bl <user_entry>`, so if the module's *entry point* is a reserved
     // name the wrapper resolves it to the synthetic symbol itself: naming the entry
     // `__gc_aot_entry` makes the wrapper `bl` itself (infinite recursion at start-up),
-    // and `__gc_init_stackmaps` makes it call the no-op init instead of the program
-    // (an image that exits with an uninitialised `x0`). Both defeat the wrapper. Guard
-    // BOTH the defined function names and the entry name, and reject rather than
-    // miscompile — the reserved symbols belong to the injected GC entry alone.
+    // and `__gc_init_stackmaps` makes it call the registration function instead of the
+    // program. Both defeat the wrapper. Guard BOTH the defined function names and the
+    // entry name, and reject rather than miscompile — the reserved symbols belong to
+    // the injected GC entry alone.
     for reserved in [GC_AOT_ENTRY, GC_INIT_STACKMAPS] {
         if user_entry == reserved || fn_results.iter().any(|(name, _, _, _)| name == reserved) {
             return Err(AotError::Linker {
@@ -2585,9 +2712,10 @@ fn compile_module_to_text_raw(
             });
         }
     }
-    for synth in build_gc_entry_functions(user_entry)? {
-        fn_results.push(synth);
-    }
+    let (init_bytes, init_relocs, fn_addr_relocs) = build_gc_init_stackmaps(&fn_maps)?;
+    fn_results.push((GC_INIT_STACKMAPS.to_string(), init_bytes, init_relocs, Vec::new()));
+    let (wrapper_bytes, wrapper_relocs) = build_gc_wrapper(user_entry)?;
+    fn_results.push((GC_AOT_ENTRY.to_string(), wrapper_bytes, wrapper_relocs, Vec::new()));
 
     // ── LANG41: external symbols are resolved by the system linker ───────────
     //
@@ -2708,16 +2836,76 @@ fn compile_module_to_text_raw(
         }
     }
 
+    // ── Pass 2b: patch `__gc_init_stackmaps`' func_start ADRs ─────────────────
+    //
+    // Each `ADR x0, F` loads a user function's absolute runtime address into x0 for
+    // the `__gc_register_stackmap` call. `ADR` computes `PC + imm` at run time, so
+    // `imm = target_off − adr_off` (both are `base + offset`; the base cancels) is
+    // correct for *any* load address — no relocation record, no page-alignment
+    // assumption (see [`FuncAddrReloc`] for why this beats `ADRP`+`ADD`). The bytes
+    // carry no `ld` relocation, so they survive linking unchanged. `ADR` reaches
+    // ±1 MiB; a target beyond that is rejected fail-loud rather than mis-encoded.
+    if !fn_addr_relocs.is_empty() {
+        let init_off = *offsets.get(GC_INIT_STACKMAPS).ok_or_else(|| AotError::Linker {
+            status: None,
+            stderr: "twig-aot: internal error: __gc_init_stackmaps missing from link offsets"
+                .to_string(),
+        })?;
+        for r in &fn_addr_relocs {
+            let target_off = *offsets.get(r.target.as_str()).ok_or_else(|| AotError::Linker {
+                status: None,
+                stderr: format!(
+                    "twig-aot: internal error: func_start target '{}' missing from link offsets",
+                    r.target
+                ),
+            })?;
+            let Some(adr_byte) = r.adr_word.checked_mul(4).and_then(|o| init_off.checked_add(o))
+            else {
+                return Err(AotError::Linker {
+                    status: None,
+                    stderr: format!("twig-aot: func_start reloc offset overflow for '{}'", r.target),
+                });
+            };
+
+            // Byte displacement from the ADR to the target function (base cancels).
+            let disp = target_off as i64 - adr_byte as i64;
+            const ADR_MAX: i64 = (1 << 20) - 1; // signed 21-bit → ±1 MiB in bytes
+            const ADR_MIN: i64 = -(1 << 20);
+            if !(ADR_MIN..=ADR_MAX).contains(&disp) {
+                return Err(AotError::Linker {
+                    status: None,
+                    stderr: format!(
+                        "twig-aot: func_start ADR out of range for '{}' (disp={disp} bytes); \
+                         module __text exceeds the ±1 MiB ADR reach",
+                        r.target
+                    ),
+                });
+            }
+
+            // Patch ADR: immlo → bits [30:29], immhi → bits [23:5]; keep opcode + Rd.
+            let adr_old = u32::from_le_bytes(linked[adr_byte..adr_byte + 4].try_into().unwrap());
+            let imm21 = (disp as u32) & 0x001F_FFFF;
+            let immlo = imm21 & 0x3;
+            let immhi = imm21 >> 2;
+            let adr_new =
+                (adr_old & !((0x3 << 29) | (0x0007_FFFF << 5))) | (immlo << 29) | (immhi << 5);
+            linked[adr_byte..adr_byte + 4].copy_from_slice(&adr_new.to_le_bytes());
+        }
+    }
+
     Ok((linked, offsets, n_global_slots, global_byte_relocs, extern_branch_relocs))
 }
 
 /// Compile one `IIRFunction` to ARM64 machine code, returning the bytes,
-/// any cross-function call relocations, and global-access relocations.
+/// any cross-function call relocations, global-access relocations, and the
+/// function's **GC stack-map records** — `(pc_offset, live-ref frame slots)` per
+/// safepoint — which `__gc_init_stackmaps` registers with the GC runtime.
 /// Returns `None` if the function contains opcodes the backend doesn't support.
+#[allow(clippy::type_complexity)]
 fn compile_one_with_globals(
     fn_: &IIRFunction,
     global_slots: &HashMap<String, usize>,
-) -> Option<(Vec<u8>, Vec<Reloc>, Vec<GlobalWordReloc>)> {
+) -> Option<(Vec<u8>, Vec<Reloc>, Vec<GlobalWordReloc>, Vec<(u32, Vec<i32>)>)> {
     let inferred = infer_types(fn_);
     let cir = aot_specialise(fn_, Some(&inferred));
     let ctx = FunctionContext {
@@ -2725,7 +2913,15 @@ fn compile_one_with_globals(
         params:      &fn_.params,
         return_type: &fn_.return_type,
     };
-    compile_with_globals(&ctx, &cir, global_slots).ok()
+    let (bytes, ext, glob, stack_map) =
+        compile_with_globals_and_stackmap(&ctx, &cir, global_slots).ok()?;
+    // Flatten each record to the fields the registration codegen needs; drop the
+    // walker-only frame_size / callee_saved_mask (unused by the current ABI call).
+    let records = stack_map
+        .into_iter()
+        .map(|r| (r.pc_offset, r.slots))
+        .collect();
+    Some((bytes, ext, glob, records))
 }
 
 // ===========================================================================
@@ -2744,22 +2940,12 @@ mod dynval_runtime_golden;
 mod tests {
     use super::*;
 
-    /// The injected GC entry functions are well-formed: the no-op init is a single
-    /// `RET`, and the wrapper's two `BL`s (→ init, → user entry) are recorded as
-    /// relocations for the linker to patch intra-module.
+    /// The GC entry wrapper is well-formed: the two `BL`s (→ init, → user entry)
+    /// are recorded as relocations for the linker to patch intra-module, and it
+    /// ends in `RET`.
     #[test]
-    fn gc_entry_functions_are_well_formed() {
-        let fns = build_gc_entry_functions("main").expect("codegen");
-        assert_eq!(fns.len(), 2);
-
-        let (init_name, init_bytes, init_relocs, _) = &fns[0];
-        assert_eq!(init_name, GC_INIT_STACKMAPS);
-        // No-op init = one 4-byte `RET` (0xD65F03C0), no relocations.
-        assert_eq!(init_bytes, &0xD65F03C0u32.to_le_bytes());
-        assert!(init_relocs.is_empty());
-
-        let (wrap_name, wrap_bytes, wrap_relocs, _) = &fns[1];
-        assert_eq!(wrap_name, GC_AOT_ENTRY);
+    fn gc_wrapper_is_well_formed() {
+        let (wrap_bytes, wrap_relocs) = build_gc_wrapper("main").expect("codegen");
         assert_eq!(wrap_bytes.len() % 4, 0, "whole instructions");
         // Two BLs: one to the init, one to the user entry — both need patching.
         let targets: Vec<&str> = wrap_relocs.iter().map(|r| r.symbol.as_str()).collect();
@@ -2773,11 +2959,130 @@ mod tests {
     /// The wrapper targets whatever the module's entry is named, not a hardcoded
     /// `main`, so a program with a differently-named entry still links.
     #[test]
-    fn gc_entry_wrapper_targets_the_named_entry() {
-        let fns = build_gc_entry_functions("_start").expect("codegen");
-        let wrap_relocs = &fns[1].2;
-        assert!(wrap_relocs.iter().any(|r| r.symbol == "_start"));
-        assert!(!wrap_relocs.iter().any(|r| r.symbol == "main"));
+    fn gc_wrapper_targets_the_named_entry() {
+        let (_bytes, relocs) = build_gc_wrapper("_start").expect("codegen");
+        assert!(relocs.iter().any(|r| r.symbol == "_start"));
+        assert!(!relocs.iter().any(|r| r.symbol == "main"));
+    }
+
+    /// `__gc_init_stackmaps` registers exactly the functions that have records:
+    /// one `BL __gc_register_stackmap` and one `func_start` adrp+add reloc per such
+    /// function, and it embeds each function's arrays as a data pool.
+    #[test]
+    fn gc_init_registers_functions_with_records() {
+        let maps = vec![
+            // Two safepoints, one live ref slot each (slot offset 16).
+            FnStackMap {
+                name: "f".into(),
+                len: 64,
+                records: vec![(8, vec![16]), (20, vec![16])],
+            },
+            // A function with NO records — must be skipped entirely.
+            FnStackMap { name: "leaf".into(), len: 8, records: vec![] },
+            // One safepoint, no ref slots (slots_flat empty → x7 = NULL).
+            FnStackMap { name: "g".into(), len: 16, records: vec![(4, vec![])] },
+        ];
+        let (bytes, relocs, faddr) = build_gc_init_stackmaps(&maps).expect("codegen");
+
+        // One register call + one func_start reloc per function WITH records (f, g).
+        assert_eq!(
+            relocs.iter().filter(|r| r.symbol == GC_REGISTER_STACKMAP).count(),
+            2,
+            "one bl __gc_register_stackmap per function with records",
+        );
+        assert_eq!(faddr.len(), 2, "one func_start ADR per registered function");
+        let targets: Vec<&str> = faddr.iter().map(|r| r.target.as_str()).collect();
+        assert!(targets.contains(&"f") && targets.contains(&"g"));
+        assert!(!targets.contains(&"leaf"), "record-less function is not registered");
+        // The embedded arrays are present verbatim: f's pc_offsets 8 and 20 appear as
+        // little-endian data words somewhere in the pool.
+        let has_word = |w: u32| bytes.windows(4).any(|c| c == w.to_le_bytes());
+        assert!(has_word(8) && has_word(20), "f's pc_offsets embedded");
+        assert!(bytes.len() % 4 == 0);
+    }
+
+    /// A module with no functions (only the synthetic entry) still produces a valid,
+    /// callable init: prologue + epilogue + `RET`, no register calls, no relocs.
+    #[test]
+    fn gc_init_with_no_records_is_a_bare_frame() {
+        let (bytes, relocs, faddr) = build_gc_init_stackmaps(&[]).expect("codegen");
+        assert!(relocs.is_empty() && faddr.is_empty());
+        // stp / mov / ldp / ret = 4 instructions.
+        assert_eq!(bytes.len(), 16);
+        assert_eq!(&bytes[bytes.len() - 4..], 0xD65F03C0u32.to_le_bytes(), "ends in RET");
+    }
+
+    /// The pass-2 `func_start` patch is correct: after linking a module whose `main`
+    /// calls a helper, the `ADR` in `__gc_init_stackmaps` decodes to a byte
+    /// displacement equal to `main_off − adr_off` — i.e. the registered `func_start`
+    /// really points at the function it names, *for any load base* (an `ADR` adds its
+    /// immediate to the runtime PC, so the base cancels — no page-alignment
+    /// assumption, unlike an `ADRP`). This is the UAF-critical piece: a wrong
+    /// `func_start` would resolve return addresses to the wrong (or no) stack map.
+    /// Verified without executing, by decoding the bytes.
+    #[test]
+    fn func_start_adr_resolves_to_target_offset() {
+        use interpreter_ir::function::IIRFunction;
+        use interpreter_ir::instr::{IIRInstr, Operand};
+        use interpreter_ir::module::IIRModule;
+
+        let helper = IIRFunction::new(
+            "helper", vec![], "u64",
+            vec![
+                IIRInstr::new("const", Some("h".into()), vec![Operand::Int(7)], "u64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("h".into())], "u64"),
+            ],
+        );
+        let main = IIRFunction::new(
+            "main", vec![], "u64",
+            vec![
+                IIRInstr::new("call", Some("r".into()), vec![Operand::Var("helper".into())], "u64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "u64"),
+            ],
+        );
+        let mut module = IIRModule::new("m", "twig");
+        module.add_or_replace(helper);
+        module.add_or_replace(main);
+        module.entry_point = Some("main".into());
+
+        let (text, offsets, ..) = compile_module_to_text(&module).expect("compiles");
+        let init_off = *offsets.get(GC_INIT_STACKMAPS).expect("init present");
+        let main_off = *offsets.get("main").expect("main present") as i64;
+
+        // Find init's extent (up to the next function in offset order).
+        let init_end = offsets
+            .values()
+            .copied()
+            .filter(|&o| o > init_off)
+            .min()
+            .unwrap_or(text.len());
+
+        // Scan init for the single func_start ADR (Rd == x0). The data-pool ADRs use
+        // other Rd (x3/x6/x7), so the lone Rd-x0 ADR is `main`'s func_start.
+        let mut found = None;
+        let mut i = init_off;
+        while i + 4 <= init_end {
+            let w = u32::from_le_bytes(text[i..i + 4].try_into().unwrap());
+            // ADR: bits[31]=0, bits[28:24]=10000, opcode mask 0x9F00_0000 == 0x1000_0000.
+            if w & 0x9F00_0000 == 0x1000_0000 && (w & 0x1F) == 0 {
+                // Decode ADR's signed 21-bit BYTE displacement.
+                let immlo = ((w >> 29) & 0x3) as i64;
+                let immhi = ((w >> 5) & 0x0007_FFFF) as i64;
+                let mut imm21 = (immhi << 2) | immlo;
+                if imm21 & (1 << 20) != 0 {
+                    imm21 -= 1 << 21; // sign-extend
+                }
+                // ADR result = PC + imm; the base cancels, so with offsets: i + imm.
+                found = Some(i as i64 + imm21);
+                break;
+            }
+            i += 4;
+        }
+        assert_eq!(
+            found,
+            Some(main_off),
+            "func_start ADR must resolve to main's __text offset {main_off}",
+        );
     }
 
     /// A module that defines one of the reserved GC entry symbols is rejected, not

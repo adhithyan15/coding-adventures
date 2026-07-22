@@ -1,5 +1,56 @@
 # Changelog — `twig-aot`
 
+## 0.40.0 - 2026-07-21 — GC stack-map registration (AOT00-T1 emission, increment B)
+
+`__gc_init_stackmaps` — the no-op start-up hook increment A landed — now **registers
+every user function's GC stack map** with the runtime, so `__gc_collect_precise` can
+resolve a return address to that frame's exact live-reference slots instead of falling
+back to a conservative scan.
+
+The aarch64 compile path switches to `compile_with_globals_and_stackmap`, collecting a
+`Vec<StackMapRecord>` (one per call-return safepoint) per function. `__gc_init_stackmaps`
+is then generated to marshal, for each function that has records, the eight
+`__gc_register_stackmap` arguments and call it:
+
+```
+__gc_init_stackmaps:
+    stp x29,x30,[sp,#-16]! ; mov x29,sp
+    ; per function F with records:
+    adr  x0, F                   ; func_start   (patched in pass 2)
+    mov  x1, #<F len> ; mov x2, #<record count>
+    adr  x3, <F.pc_offsets> ; mov x4,#0 ; mov x5,#0
+    adr  x6, <F.slot_counts> ; adr x7, <F.slots_flat | #0>
+    bl   __gc_register_stackmap
+    ldp x29,x30,[sp],#16 ; ret
+  <data pool: each function's pc_offsets / slot_counts / slots_flat, as words>
+```
+
+Design (avoids any Mach-O object-file surgery — only the existing `BRANCH26` reloc and
+one intra-`__text` patch are used):
+
+- **`func_start`** (a function's runtime address) is the only runtime-computed argument:
+  an `ADR` patched in a new pass-2b step from the linker's offset map. `ADR` is
+  PC-relative in *bytes*, so its displacement `target_off − adr_off` is correct for any
+  load address (the base cancels) — no load-time relocation. It deliberately does **not**
+  use `ADRP`+`ADD`: an `ADRP` page immediate baked from link offsets would be wrong
+  because `ld` places `__text` after the Mach header inside the first page, so the
+  runtime `__text` base is *not* 4 KiB-aligned and `page(PC)` does not commute with it —
+  a silent, UAF-class defect (the registry only stores `func_start`, so it would not
+  fault until a precise collection). `ADR`'s cost is a ±1 MiB reach, enforced fail-loud.
+- **The three arrays** are compile-time constants, emitted as raw data words in a pool
+  **after the final `ret`** (never executed) and pointed at by `adr` (PC-relative,
+  init-internal → needs no relocation). The registry copies the slots into owned
+  storage, so the transient pool need not outlive the call.
+- Functions with **no** safepoint records (e.g. leaves) are skipped — they degrade to a
+  conservative frame, exactly as before.
+
+Needs aarch64-encoder 0.7.0 (`adr` / `adr_placeholder` / `emit_data_word`). Verified: a
+hand-built module whose `main` calls a helper compiles → links → **runs**, returning the
+correct value with the real registration codegen executing at start-up
+(`end_to_end_gc_init_registers_and_runs`); a unit test decodes the patched `ADR` and
+confirms it resolves to the target's exact `__text` offset — base-independently —
+(`func_start_adr_resolves_to_target_offset`).
+
 ## 0.39.0 - 2026-07-21 — GC entry wrapper (AOT00-T1 stack-map emission, increment A)
 
 The aarch64 AOT pipeline now injects two synthetic functions into every module and
