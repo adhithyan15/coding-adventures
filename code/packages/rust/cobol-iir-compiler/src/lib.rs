@@ -448,6 +448,7 @@ impl<'a> Compiler<'a> {
             "set_stmt" => self.emit_set(verb),
             "evaluate_stmt" => self.emit_evaluate(verb),
             "string_stmt" => self.emit_string(verb),
+            "unstring_stmt" => self.emit_unstring(verb),
             other => Err(CompileError::Unsupported(format!(
                 "the {} statement is a later rung",
                 verb_name(other)
@@ -1011,6 +1012,276 @@ impl<'a> Compiler<'a> {
         let reg = self.fresh("_sidx");
         self.emit("const", Some(&reg), vec![Operand::Int(k)], "i64");
         reg
+    }
+
+    /// `UNSTRING source DELIMITED BY delim INTO r1 [r2 …]` — the inverse of
+    /// STRING: scan the alphanumeric `source` left-to-right and split it on the
+    /// SINGLE-character `delim` into successive receivers.
+    ///
+    /// Where STRING's boundaries are all compile-time-known (a fixed
+    /// `str_slice`/`str_concat`), UNSTRING's are DATA-dependent — the delimiter
+    /// falls wherever the run-time bytes put it — so we emit a genuine scan LOOP.
+    /// The source register `S`, its length `len = str_len(S)`, and a cursor `p`
+    /// (i64, init 0) drive the whole statement; the delimiter is reduced to a
+    /// single byte code `D` (a `const` for a 1-char literal, or `str_index(item,0)`
+    /// for a `PIC X(1)` item). Each receiver `r_i` (there are a compile-time-known
+    /// `n` of them) unrolls to a block:
+    ///
+    /// ```text
+    ///   if p <= len  (else jump to us_skip — leave r_i UNCHANGED):
+    ///     j = p
+    ///   us_top:  if j >= len   jmp us_found          # end of source
+    ///            if S[j] == D   jmp us_found          # delimiter here
+    ///            j = j + 1;  jmp us_top
+    ///   us_found:
+    ///     piece = str_slice(S, p, j)                  # the field [p, j)
+    ///     take  = min(str_len(piece), W)              # W = r_i's width
+    ///     r_i   = str_slice(piece,0,take) ++ spaces(W - take)   # MOVE semantics
+    ///     p = j + 1                                   # step past the delimiter
+    ///   us_skip:
+    /// ```
+    ///
+    /// Because `p` never moves when a receiver is skipped, once the source is
+    /// exhausted (`p > len`, a field having run off the end WITHOUT a trailing
+    /// delimiter) this receiver AND every later one is left unchanged — the
+    /// per-receiver guard alone gives the oracle's "remaining receivers keep their
+    /// prior VALUE" rule. `p == len` (a trailing delimiter) still passes the guard
+    /// and yields one final EMPTY field (all spaces). The
+    /// `str_slice(piece,0,take) ++ spaces(W-take)` reshape is exactly the oracle's
+    /// alphanumeric `move_into` (left-justify, space-pad, truncate), so a compiled
+    /// program matches the `cobol-runtime` oracle byte-for-byte. `WITH POINTER`,
+    /// `ON OVERFLOW`, a multi-character delimiter, and a numeric/group source or
+    /// receiver are later rungs (clean `Unsupported`).
+    fn emit_unstring(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
+        // Reject the later-rung options the grammar accepts (clean Unsupported,
+        // not a parse error) — exactly as emit_string does.
+        let toks = child_tokens(verb);
+        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "POINTER") {
+            return Err(CompileError::Unsupported(
+                "UNSTRING … WITH POINTER is a later rung".into(),
+            ));
+        }
+        if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "OVERFLOW") {
+            return Err(CompileError::Unsupported(
+                "UNSTRING … ON OVERFLOW / NOT ON OVERFLOW is a later rung".into(),
+            ));
+        }
+        // The two direct `operand` children are the source and the delimiter, in
+        // order (a reference-modification suffix nests under an operand, so it is
+        // never a third top-level operand).
+        let ops = child_nodes(verb, "operand");
+        let (source_node, delim_node) = match ops.as_slice() {
+            [s, d] => (*s, *d),
+            _ => {
+                return Err(CompileError::Malformed(
+                    "UNSTRING needs a source and a DELIMITED BY delimiter".into(),
+                ))
+            }
+        };
+        // The source must be a plain alphanumeric data-name.
+        let source_name = match read_operand(source_node)? {
+            Operandy::Name(n) => n,
+            Operandy::Literal(_) => {
+                return Err(CompileError::Unsupported(
+                    "UNSTRING with a literal source is a later rung".into(),
+                ))
+            }
+            Operandy::RefMod { .. } => {
+                return Err(CompileError::Unsupported(
+                    "UNSTRING with a reference-modified source is a later rung".into(),
+                ))
+            }
+        };
+        let sidx = self.item_index(&source_name)?;
+        match &self.items[sidx].kind {
+            ItemKind::Char { .. } => {}
+            ItemKind::Numeric { .. } => {
+                return Err(CompileError::Unsupported(
+                    "UNSTRING of a numeric source is a later rung".into(),
+                ))
+            }
+        }
+        let s_reg = self.items[sidx].reg.clone();
+
+        // The delimiter reduced to a single byte code register.
+        let d_reg = self.unstring_delim_code(delim_node)?;
+
+        // Receivers: the direct NAME tokens after INTO (a WITH POINTER name, also a
+        // direct NAME, has already been rejected above). Each must be alphanumeric.
+        let targets: Vec<String> = toks
+            .iter()
+            .filter(|(k, _)| k == "NAME")
+            .map(|(_, v)| v.clone())
+            .collect();
+        if targets.is_empty() {
+            return Err(CompileError::Malformed("UNSTRING without an INTO receiver".into()));
+        }
+        let mut recvs: Vec<(usize, usize)> = Vec::with_capacity(targets.len());
+        for t in &targets {
+            let idx = self.item_index(t)?;
+            let width = match &self.items[idx].kind {
+                ItemKind::Char { .. } => self.items[idx].width(),
+                ItemKind::Numeric { .. } => {
+                    return Err(CompileError::Unsupported(
+                        "UNSTRING into a numeric receiver is a later rung".into(),
+                    ))
+                }
+            };
+            recvs.push((idx, width));
+        }
+
+        // len = str_len(S); p = 0.
+        let len = self.fresh("_uslen");
+        self.emit("str_len", Some(&len), vec![Operand::Var(s_reg.clone())], "i64");
+        let p = self.fresh("_usp");
+        self.emit("const", Some(&p), vec![Operand::Int(0)], "i64");
+
+        for (idx, width) in recvs {
+            let recv_reg = self.items[idx].reg.clone();
+            let skip = self.fresh("us_skip");
+            // Guard: process this receiver only while `p <= len`; otherwise jump
+            // past its block, leaving the receiver register (its prior VALUE)
+            // untouched.
+            let le = self.fresh("_usle");
+            self.emit("cmp_le", Some(&le), vec![Operand::Var(p.clone()), Operand::Var(len.clone())], "i64");
+            self.emit("jmp_if_false", None, vec![Operand::Var(le), Operand::Var(skip.clone())], "void");
+
+            // Scan for the next delimiter (or end-of-source): j runs from p.
+            let j = self.fresh("_usj");
+            self.emit("mov", Some(&j), vec![Operand::Var(p.clone())], "i64");
+            let top = self.fresh("us_top");
+            let found = self.fresh("us_found");
+            self.emit("label", None, vec![Operand::Var(top.clone())], "void");
+            let ge = self.fresh("_usge");
+            self.emit("cmp_ge", Some(&ge), vec![Operand::Var(j.clone()), Operand::Var(len.clone())], "i64");
+            self.emit("jmp_if_true", None, vec![Operand::Var(ge), Operand::Var(found.clone())], "void");
+            let c = self.fresh("_usc");
+            self.emit("str_index", Some(&c), vec![Operand::Var(s_reg.clone()), Operand::Var(j.clone())], "i64");
+            let eq = self.fresh("_useq");
+            self.emit("cmp_eq", Some(&eq), vec![Operand::Var(c), Operand::Var(d_reg.clone())], "i64");
+            self.emit("jmp_if_true", None, vec![Operand::Var(eq), Operand::Var(found.clone())], "void");
+            let one = self.fresh("_us1");
+            self.emit("const", Some(&one), vec![Operand::Int(1)], "i64");
+            self.emit("add", Some(&j), vec![Operand::Var(j.clone()), Operand::Var(one)], "i64");
+            self.emit("jmp", None, vec![Operand::Var(top)], "void");
+            self.emit("label", None, vec![Operand::Var(found)], "void");
+
+            // piece = S[p, j) — the field up to the delimiter (or end).
+            let piece = self.fresh("_uspc");
+            self.emit(
+                "str_slice",
+                Some(&piece),
+                vec![Operand::Var(s_reg.clone()), Operand::Var(p.clone()), Operand::Var(j.clone())],
+                "str",
+            );
+            // take = min(str_len(piece), W).
+            let plen = self.fresh("_uspl");
+            self.emit("str_len", Some(&plen), vec![Operand::Var(piece.clone())], "i64");
+            let wconst = self.fresh("_usw");
+            self.emit("const", Some(&wconst), vec![Operand::Int(width as i64)], "i64");
+            let take = self.fresh("_ustk");
+            self.emit("mov", Some(&take), vec![Operand::Var(plen.clone())], "i64");
+            let gt = self.fresh("_usgt");
+            self.emit("cmp_gt", Some(&gt), vec![Operand::Var(plen), Operand::Var(wconst.clone())], "i64");
+            let noclip = self.fresh("us_noclip");
+            self.emit("jmp_if_false", None, vec![Operand::Var(gt), Operand::Var(noclip.clone())], "void");
+            self.emit("mov", Some(&take), vec![Operand::Var(wconst.clone())], "i64");
+            self.emit("label", None, vec![Operand::Var(noclip)], "void");
+            // head = piece[0, take)  (left-justified content, truncated at W).
+            let z0 = self.str_index(0);
+            let head = self.fresh("_ushd");
+            self.emit(
+                "str_slice",
+                Some(&head),
+                vec![Operand::Var(piece), Operand::Var(z0), Operand::Var(take.clone())],
+                "str",
+            );
+            // pad = spaces(W)[0, W - take)  — the right-padding to the full width.
+            let padlen = self.fresh("_uspad");
+            self.emit("sub", Some(&padlen), vec![Operand::Var(wconst), Operand::Var(take)], "i64");
+            let spaces = self.spaces_const(width);
+            let z0b = self.str_index(0);
+            let pad = self.fresh("_uspd");
+            self.emit(
+                "str_slice",
+                Some(&pad),
+                vec![Operand::Var(spaces), Operand::Var(z0b), Operand::Var(padlen)],
+                "str",
+            );
+            // r_i = head ++ pad  (exactly the oracle's alphanumeric move_into).
+            self.emit(
+                "str_concat",
+                Some(&recv_reg),
+                vec![Operand::Var(head), Operand::Var(pad)],
+                "str",
+            );
+            // Advance the cursor past the delimiter: p = j + 1.
+            let one2 = self.fresh("_us1b");
+            self.emit("const", Some(&one2), vec![Operand::Int(1)], "i64");
+            self.emit("add", Some(&p), vec![Operand::Var(j), Operand::Var(one2)], "i64");
+            self.emit("label", None, vec![Operand::Var(skip)], "void");
+        }
+        Ok(())
+    }
+
+    /// The single delimiter byte of an `UNSTRING … DELIMITED BY delim`, reduced to
+    /// a fresh i64 register: a `const` of the byte for a 1-character string
+    /// literal, or `str_index(item, 0)` for a `PIC X(1)` item. A multi-character
+    /// delimiter, a numeric/figurative delimiter, a reference-modified delimiter,
+    /// and a numeric/group/wider delimiter item are later rungs. (COBOL source is
+    /// ASCII, so a "1-character" literal is a single byte; the scan loop compares
+    /// the source's bytes against this code.)
+    fn unstring_delim_code(&mut self, op: &GrammarASTNode) -> Result<String, CompileError> {
+        match read_operand(op)? {
+            Operandy::Literal(Src::Str(s)) => {
+                let bytes = s.as_bytes();
+                if bytes.len() != 1 {
+                    return Err(CompileError::Unsupported(
+                        "UNSTRING with a multi-character delimiter is a later rung".into(),
+                    ));
+                }
+                let reg = self.fresh("_usd");
+                self.emit("const", Some(&reg), vec![Operand::Int(bytes[0] as i64)], "i64");
+                Ok(reg)
+            }
+            Operandy::Literal(Src::Num(_)) => Err(CompileError::Unsupported(
+                "UNSTRING with a numeric-literal delimiter is a later rung".into(),
+            )),
+            Operandy::Literal(Src::Space) | Operandy::Literal(Src::Zero) => {
+                Err(CompileError::Unsupported(
+                    "UNSTRING with a figurative-constant delimiter is a later rung".into(),
+                ))
+            }
+            Operandy::RefMod { .. } => Err(CompileError::Unsupported(
+                "UNSTRING with a reference-modified delimiter is a later rung".into(),
+            )),
+            Operandy::Name(name) => {
+                let idx = self.item_index(&name)?;
+                match &self.items[idx].kind {
+                    ItemKind::Char { .. } => {
+                        if self.items[idx].width() != 1 {
+                            return Err(CompileError::Unsupported(
+                                "UNSTRING with a delimiter item wider than one character is a later rung"
+                                    .into(),
+                            ));
+                        }
+                        let reg = self.items[idx].reg.clone();
+                        let zero = self.str_index(0);
+                        let out = self.fresh("_usdc");
+                        self.emit(
+                            "str_index",
+                            Some(&out),
+                            vec![Operand::Var(reg), Operand::Var(zero)],
+                            "i64",
+                        );
+                        Ok(out)
+                    }
+                    ItemKind::Numeric { .. } => Err(CompileError::Unsupported(
+                        "UNSTRING with a numeric delimiter item is a later rung".into(),
+                    )),
+                }
+            }
+        }
     }
 
     /// `STOP RUN` → `ret 0`.
@@ -3908,6 +4179,83 @@ mod tests {
                 &["STRING A DELIMITED BY SIZE INTO T WITH POINTER P.", "STOP RUN."],
             ),
             "str_ptr",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn unstring_compiles_to_scan_loop_and_validates() {
+        // The happy path lowers to a data-dependent scan LOOP: str_len over the
+        // source, a str_index/cmp scan for each delimiter, and a
+        // str_slice/str_concat reshape into each receiver. It passes IIR
+        // validation.
+        let module = compile_source(
+            &wrap(
+                &[
+                    "01  S  PIC X(5) VALUE \"A,B,C\".",
+                    "01  R1 PIC X(3) VALUE SPACES.",
+                    "01  R2 PIC X(3) VALUE SPACES.",
+                    "01  R3 PIC X(3) VALUE SPACES.",
+                ],
+                &[
+                    "UNSTRING S DELIMITED BY \",\" INTO R1 R2 R3.",
+                    "STOP RUN.",
+                ],
+            ),
+            "unstr",
+        )
+        .unwrap();
+        assert!(module.validate().is_empty(), "{:?}", module.validate());
+        let os = ops(&module);
+        assert!(os.contains(&"str_len".to_string()), "scans the source length");
+        assert!(os.contains(&"str_index".to_string()), "reads source bytes to find the delimiter");
+        assert!(os.contains(&"str_slice".to_string()), "cuts each field and pads it");
+        assert!(os.contains(&"str_concat".to_string()), "reshapes the field into the receiver");
+    }
+
+    #[test]
+    fn unstring_with_pointer_is_a_later_rung() {
+        // WITH POINTER is accepted by the grammar but rejected here as a later rung.
+        let err = compile_source(
+            &wrap(
+                &[
+                    "01  S  PIC X(3) VALUE \"A,B\".",
+                    "01  R1 PIC X(3) VALUE SPACES.",
+                    "01  P  PIC 9(2) VALUE 1.",
+                ],
+                &["UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P.", "STOP RUN."],
+            ),
+            "unstr_ptr",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn unstring_multi_character_delimiter_is_a_later_rung() {
+        // A single delimiter CHARACTER only this rung; a 2-char literal needs a
+        // multi-char scan — a clean Unsupported.
+        let err = compile_source(
+            &wrap(
+                &["01  S  PIC X(5) VALUE \"A::B\".", "01  R1 PIC X(3) VALUE SPACES."],
+                &["UNSTRING S DELIMITED BY \"::\" INTO R1.", "STOP RUN."],
+            ),
+            "unstr_multi",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn unstring_numeric_receiver_is_a_later_rung() {
+        // A numeric receiver would need numeric editing on receipt — a later rung.
+        let err = compile_source(
+            &wrap(
+                &["01  S  PIC X(3) VALUE \"1,2\".", "01  N  PIC 9(3) VALUE 0."],
+                &["UNSTRING S DELIMITED BY \",\" INTO N.", "STOP RUN."],
+            ),
+            "unstr_num",
         )
         .unwrap_err();
         assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");

@@ -1727,4 +1727,99 @@ mod tests {
         .unwrap_err();
         assert!(matches!(ptr, RuntimeError::Unsupported(_)), "got {ptr:?}");
     }
+
+    #[test]
+    fn unstring_splits_into_receivers() {
+        // "A,B,C" → three fields into three PIC X(3) receivers, each left-
+        // justified and space-padded.
+        let out = run_cobol(&wrap(
+            &[
+                "01  S  PIC X(5) VALUE \"A,B,C\".",
+                "01  R1 PIC X(3) VALUE SPACES.",
+                "01  R2 PIC X(3) VALUE SPACES.",
+                "01  R3 PIC X(3) VALUE SPACES.",
+            ],
+            &[
+                "UNSTRING S DELIMITED BY \",\" INTO R1 R2 R3.",
+                "DISPLAY R1.",
+                "DISPLAY R2.",
+                "DISPLAY R3.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "A  \nB  \nC  \n");
+    }
+
+    #[test]
+    fn unstring_empty_fields_and_unchanged_trailing_receiver() {
+        // "A,,C" bounds an empty middle field (R2 → spaces); a shorter source
+        // leaves the trailing receiver's prior VALUE intact.
+        let empties = run_cobol(&wrap(
+            &[
+                "01  S  PIC X(4) VALUE \"A,,C\".",
+                "01  R1 PIC X(3) VALUE \"...\".",
+                "01  R2 PIC X(3) VALUE \"...\".",
+                "01  R3 PIC X(3) VALUE \"...\".",
+            ],
+            &[
+                "UNSTRING S DELIMITED BY \",\" INTO R1 R2 R3.",
+                "DISPLAY R1.",
+                "DISPLAY R2.",
+                "DISPLAY R3.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(empties, "A  \n   \nC  \n");
+
+        let short = run_cobol(&wrap(
+            &[
+                "01  S  PIC X(3) VALUE \"A,B\".",
+                "01  R1 PIC X(3) VALUE SPACES.",
+                "01  R2 PIC X(3) VALUE SPACES.",
+                "01  R3 PIC X(3) VALUE \"ZZZ\".",
+            ],
+            &[
+                "UNSTRING S DELIMITED BY \",\" INTO R1 R2 R3.",
+                "DISPLAY R1.",
+                "DISPLAY R2.",
+                "DISPLAY R3.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(short, "A  \nB  \nZZZ\n");
+    }
+
+    #[test]
+    fn unstring_later_rung_options_are_clean_errors() {
+        // WITH POINTER needs a receiving pointer (later rung) …
+        let ptr = run_cobol(&wrap(
+            &[
+                "01  S  PIC X(3) VALUE \"A,B\".",
+                "01  R1 PIC X(3) VALUE SPACES.",
+                "01  P  PIC 9(2) VALUE 1.",
+            ],
+            &["UNSTRING S DELIMITED BY \",\" INTO R1 WITH POINTER P.", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(ptr, RuntimeError::Unsupported(_)), "got {ptr:?}");
+
+        // … a multi-character delimiter needs a multi-char scan …
+        let multi = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"A::B\".", "01  R1 PIC X(3) VALUE SPACES."],
+            &["UNSTRING S DELIMITED BY \"::\" INTO R1.", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(multi, RuntimeError::Unsupported(_)), "got {multi:?}");
+
+        // … and a numeric receiver needs numeric editing on receipt.
+        let numeric = run_cobol(&wrap(
+            &["01  S  PIC X(3) VALUE \"1,2\".", "01  N  PIC 9(3) VALUE 0."],
+            &["UNSTRING S DELIMITED BY \",\" INTO N.", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(numeric, RuntimeError::Unsupported(_)), "got {numeric:?}");
+    }
 }

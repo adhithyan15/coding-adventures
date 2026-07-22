@@ -39,7 +39,8 @@ reserved words as case-insensitive `KEYWORD`s, numeric/quoted literals, and the
 recognises a level by value and position. Note `STRING` is a reserved word (the
 verb) *and* the type name of the quoted string-literal token — the two never
 collide: keyword promotion only rewrites bare `NAME` words, while a quoted `"…"`
-always lexes as the literal token regardless of the keyword list.
+always lexes as the literal token regardless of the keyword list. `UNSTRING`
+(with `END-UNSTRING`) is reserved the same way for the inverse verb.
 
 ## Scope
 

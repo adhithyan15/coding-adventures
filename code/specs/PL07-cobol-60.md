@@ -345,6 +345,10 @@ string_stmt        = "STRING" operand { operand } "DELIMITED" "BY" string_delim
                      [ "ON" "OVERFLOW" { statement } ]
                      [ "NOT" "ON" "OVERFLOW" { statement } ] [ "END-STRING" ] ;
 string_delim       = "SIZE" | operand ;
+unstring_stmt      = "UNSTRING" operand "DELIMITED" "BY" operand
+                     "INTO" NAME { NAME } [ "WITH" "POINTER" NAME ]
+                     [ "ON" "OVERFLOW" { statement } ]
+                     [ "NOT" "ON" "OVERFLOW" { statement } ] [ "END-UNSTRING" ] ;
 stop_stmt          = "STOP" ( "RUN" | NUMBER ) ;
 ```
 
@@ -362,6 +366,41 @@ space-fill** the untouched tail of `t` (unlike `MOVE`) — the receiver's traili
 bytes keep their prior content. The grammar also *accepts* a real
 (identifier/literal) delimiter, `WITH POINTER`, and `ON`/`NOT ON OVERFLOW` so the
 reader can reject them as a clean "later rung" error rather than a parse failure.
+
+### `UNSTRING` (first rung)
+
+`UNSTRING` is the inverse of `STRING`: it takes one alphanumeric source apart on a
+delimiter into several receivers. The **first rung** implements `UNSTRING source
+DELIMITED BY delim INTO r1 [r2 …]`, where `delim` is a **single-character**
+delimiter — either a 1-character string literal (`","`, `" "`) or a `PIC X(1)`
+item. The source is scanned left-to-right and split into delimited fields; each
+field is moved into the next receiver as an ordinary alphanumeric `MOVE`
+(left-justified, space-padded, truncated). The exact semantics (oracle = source of
+truth, compiler byte-identical):
+
+- Each receiver **including the last** takes the field up to the NEXT delimiter (or
+  end-of-source) — the last receiver does *not* absorb the remainder. Fields beyond
+  the receiver count are dropped (that would be `ON OVERFLOW`, a later rung).
+- Consecutive or leading delimiters bound an EMPTY field → the receiver gets all
+  spaces.
+- When the source is exhausted (a field ran to end-of-source with no trailing
+  delimiter), the remaining receivers are **left unchanged** (they keep their prior
+  `VALUE`) — *not* space-filled. A trailing delimiter still yields one final empty
+  field.
+
+Worked (delimiter `,`): `"A,B,C" INTO R1 R2 R3` (each `PIC X(3)`) →
+`R1="A  " R2="B  " R3="C  "`; `"A,B,C,D" INTO R1 R2 R3` drops `"D"`; `"A,B" INTO
+R1 R2 R3` (R3 `VALUE "ZZZ"`) leaves `R3="ZZZ"`; `"A,,C" INTO R1 R2 R3` →
+`R2="   "`; `",X" INTO R1 R2` → `R1="   " R2="X  "`.
+
+The grammar takes a single `operand` for the delimiter and `{ NAME }` receivers;
+the reader/compiler enforce the 1-character restriction and reject a
+multi-character / `ALL` / `OR` delimiter, `WITH POINTER`, `ON`/`NOT ON OVERFLOW`,
+and a numeric/group source or receiver as clean "later rung" errors. Because the
+delimiter position is data-dependent, the compiler lowers `UNSTRING` to a run-time
+**scan loop** (`str_len` + `str_index`/`cmp` to find each delimiter, then a
+`str_slice`/`str_concat` reshape into each receiver), whereas `STRING`'s boundaries
+were all compile-time constants.
 
 Grammar scope tracks the lexer scope below.
 
@@ -430,7 +469,8 @@ list, `COPY`) is documented as future work.
 | Complete reserved-word list | The full ~300 COBOL-60 reserved words |
 | `COPY` library text | A pre-tokenize include-style hook |
 | `STRING` real delimiters / `WITH POINTER` / `ON OVERFLOW` | Later rungs beyond the first `DELIMITED BY SIZE` cut (need a run-time scan and a receiver pointer) |
-| `UNSTRING`, `INSPECT`, other string verbs | The rest of the string-handling verb family |
+| `UNSTRING` multi-char / `ALL` / `OR` delimiters, `WITH POINTER`, `ON OVERFLOW`, multiple `DELIMITED` fields, `COUNT`/`DELIMITER IN`/`TALLYING` | Later rungs beyond the first single-character `DELIMITED BY delim INTO r1 [r2 …]` cut |
+| `INSPECT`, other string verbs | The rest of the string-handling verb family |
 | IR / interpreter | Run a COBOL program; out of scope for the frontend |
 
 [PL06]: PL06-flow-matic.md

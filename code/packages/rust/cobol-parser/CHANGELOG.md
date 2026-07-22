@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.16.0 — `UNSTRING` statement (first rung)
+
+- Added `unstring_stmt` to the `statement` alternation:
+  `unstring_stmt = "UNSTRING" operand "DELIMITED" "BY" operand "INTO" NAME { NAME }
+  [ "WITH" "POINTER" NAME ] [ "ON" "OVERFLOW" { statement } ]
+  [ "NOT" "ON" "OVERFLOW" { statement } ] [ "END-UNSTRING" ]`. The source and the
+  delimiter are the two `operand` children (in order); the receivers are the `NAME`
+  tokens after `INTO`. As with `string_stmt`, the grammar deliberately *accepts*
+  the later-rung options (`WITH POINTER`, `ON`/`NOT ON OVERFLOW`) so the
+  reader/compiler can reject them with a friendly "later rung" error rather than a
+  bare parse failure. Uses the new `UNSTRING` / `END-UNSTRING` keywords (see
+  `cobol-lexer` 0.8.0). `_grammar.rs` regenerated via
+  `grammar-tools compile-grammar`.
+
 ## 0.15.0 — `STRING` statement (first rung)
 
 - Added `string_stmt` to the `statement` alternation:
