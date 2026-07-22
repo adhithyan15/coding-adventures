@@ -8,6 +8,36 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.22.0: `INSPECT … TALLYING … FOR ALL` (first rung)
+
+Lowered COBOL's `INSPECT … TALLYING` verb, oracle-first and byte-identical to
+`cobol-runtime` 0.26.0.
+
+- **`emit_inspect`** — `INSPECT source TALLYING counter FOR ALL delim` counts the
+  (non-overlapping, left-to-right) occurrences of the SINGLE-character `delim` in
+  the alphanumeric `source` and **ADDs** that count to the integer `counter`.
+  Like `UNSTRING` the delimiter position is data-dependent, so it emits a genuine
+  **scan loop**: `len = str_len(S)`, a cursor `j` (i64, init 0), and a count
+  accumulator `cnt` (i64, init 0); at each position `S[j]` (read with `str_index`)
+  is compared to the delimiter byte `D` (`cmp_eq`) and `cnt` is bumped on a match,
+  looping while `j < len` (`cmp_ge`). The count is folded into the counter with
+  the SAME numeric-store path `ADD` uses (`store_scaled`), so INSPECT **adds** to
+  the counter (it does not clear it first) and a compiled program matches the
+  oracle's `store_result(counter, counter + cnt)` byte-for-byte. The delimiter
+  reduces to a single byte code via the shared `single_delim_code` (renamed from
+  `unstring_delim_code`).
+- **Later rungs** (clean `CompileError::Unsupported`, accepted by the grammar and
+  rejected here): `FOR LEADING` / `FOR CHARACTERS` tallies, `BEFORE`/`AFTER`
+  regions, several `TALLYING` counters or `FOR` phrases, any `REPLACING`
+  (`INSPECT … REPLACING` and `INSPECT … TALLYING … REPLACING`), a multi-character /
+  figurative / numeric / wider-than-one delimiter, and a numeric source or a
+  non-integer/signed counter.
+- **Tests**: six `jit_e2e.rs` oracle-match cases (count a char; zero occurrences;
+  a non-zero starting counter proving ADD-not-replace; a `PIC X(1)` delimiter
+  item; every character matches; the delimiter at both ends with `END-INSPECT`)
+  plus compiler-unit tests for the happy-path lowering and the `REPLACING`,
+  `TALLYING … REPLACING`, multi-character-delimiter, and `LEADING` rejects.
+
 ### Added — v0.21.0: `UNSTRING … DELIMITED BY … INTO` (first rung)
 
 Lowered COBOL's `UNSTRING` verb, oracle-first and byte-identical to

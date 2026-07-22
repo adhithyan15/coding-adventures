@@ -43,10 +43,15 @@ r1 [r2 …]` (the inverse — split the alphanumeric source on a single-characte
 delimiter into successive receivers; each receiver including the last takes the
 field up to the next delimiter, extra fields are dropped, empty fields become
 spaces, and once the source is exhausted the remaining receivers keep their prior
-value). Anything not yet modelled (the explicit
+value); and `INSPECT source TALLYING counter FOR ALL delim` (count the
+occurrences of a single-character delimiter — a 1-char literal or a `PIC X(1)`
+item — in the alphanumeric source and **ADD** them to the unsigned-integer
+counter; INSPECT adds, it does not clear the counter first). Anything not yet
+modelled (the explicit
 `SIGN` clause with `SEPARATE`/`LEADING`, editing pictures, `COMP`,
 `PERFORM … WITH TEST AFTER`/inline, `GO TO … DEPENDING`, `STRING` with a real
 delimiter / `WITH POINTER` / `ON OVERFLOW`, `UNSTRING` with a multi-character
-delimiter / `WITH POINTER` / `ON OVERFLOW`, tables, files, and every other verb)
-returns a descriptive `RuntimeError` — never wrong output. See PL08 for the
-roadmap toward full COBOL and later standards.
+delimiter / `WITH POINTER` / `ON OVERFLOW`, `INSPECT` with a `LEADING`/
+`CHARACTERS` tally, `BEFORE`/`AFTER` phrases, or any `REPLACING`, tables, files,
+and every other verb) returns a descriptive `RuntimeError` — never wrong output.
+See PL08 for the roadmap toward full COBOL and later standards.

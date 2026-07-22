@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.26.0 — `INSPECT … TALLYING … FOR ALL` (first rung)
+
+- Added `Stmt::Inspect { source, counter, delim }` and its executor.
+  `INSPECT source TALLYING counter FOR ALL delim` counts the (non-overlapping,
+  left-to-right) occurrences of the SINGLE-character `delim` (a 1-character string
+  literal or a `PIC X(1)` item) in the alphanumeric `source`, then **ADDs** that
+  count to the counter.
+- Semantics (oracle = source of truth): INSPECT **adds** to the counter — it does
+  NOT clear it first — so the net effect is `counter := counter + occurrences`.
+  The count folds in through the same `store_result` path the arithmetic verbs use
+  (COBOL's silent high-order truncation on overflow), so the compiled
+  `cobol-iir-compiler` scan loop matches this reference byte-for-byte. The counter
+  must be an unsigned integer numeric item (`PIC 9(n)`).
+- Later rungs (clean `RuntimeError::Unsupported`): `FOR LEADING` / `FOR
+  CHARACTERS` tallies, `BEFORE`/`AFTER` regions, several `TALLYING` counters or
+  `FOR` phrases, any `REPLACING` (`INSPECT … REPLACING` and `INSPECT … TALLYING …
+  REPLACING`), a multi-character / figurative / numeric / wider-than-one delimiter,
+  and a numeric/group source or a non-integer/signed/non-numeric counter.
+
 ## 0.25.0 — `UNSTRING … DELIMITED BY … INTO` (first rung)
 
 - Added `Stmt::Unstring { source, delim, targets }` and its executor — the inverse

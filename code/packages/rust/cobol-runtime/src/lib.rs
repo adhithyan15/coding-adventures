@@ -1822,4 +1822,69 @@ mod tests {
         .unwrap_err();
         assert!(matches!(numeric, RuntimeError::Unsupported(_)), "got {numeric:?}");
     }
+
+    #[test]
+    fn inspect_tallying_counts_and_adds_to_the_counter() {
+        // "BANANA" has three A's, added to C (starting 0) → 3.
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(6) VALUE \"BANANA\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR ALL \"A\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(out, "003\n");
+    }
+
+    #[test]
+    fn inspect_tallying_adds_to_a_nonzero_counter() {
+        // C starts at 5; four S's in "MISSISSIPPI" → 5 + 4 = 9 (ADD, not replace).
+        // A PIC X(1) delimiter item and a zero-count case are covered too.
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(11) VALUE \"MISSISSIPPI\".", "01  C  PIC 9(3) VALUE 5."],
+            &["INSPECT S TALLYING C FOR ALL \"S\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(out, "009\n");
+
+        let none = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"HELLO\".", "01  C  PIC 9(2) VALUE 0."],
+            &["INSPECT S TALLYING C FOR ALL \"Z\".", "DISPLAY C.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(none, "00\n");
+    }
+
+    #[test]
+    fn inspect_tallying_later_rung_forms_are_clean_errors() {
+        // REPLACING is a later rung …
+        let repl = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"ABABA\"."],
+            &["INSPECT S REPLACING ALL \"A\" BY \"X\".", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(repl, RuntimeError::Unsupported(_)), "got {repl:?}");
+
+        // … a multi-character delimiter needs a multi-char scan …
+        let multi = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"AB::B\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR ALL \"::\".", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(multi, RuntimeError::Unsupported(_)), "got {multi:?}");
+
+        // … FOR LEADING counts only a leading run …
+        let lead = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"AABBB\".", "01  C  PIC 9(3) VALUE 0."],
+            &["INSPECT S TALLYING C FOR LEADING \"A\".", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(lead, RuntimeError::Unsupported(_)), "got {lead:?}");
+
+        // … and a non-integer (fractional) counter needs numeric editing.
+        let frac = run_cobol(&wrap(
+            &["01  S  PIC X(3) VALUE \"A.A\".", "01  C  PIC 9V9 VALUE 0."],
+            &["INSPECT S TALLYING C FOR ALL \"A\".", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(frac, RuntimeError::Unsupported(_)), "got {frac:?}");
+    }
 }
