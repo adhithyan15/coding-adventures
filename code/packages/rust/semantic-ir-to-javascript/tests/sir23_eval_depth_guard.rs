@@ -236,7 +236,7 @@ fn eval_term_far_past_the_cap_still_returns_the_sentinel_not_a_crash() {
 /// future regression reintroducing it); printing anything else (the
 /// unevaluated term) means the cap DID fire (the fixed, safe behavior)
 /// — a clean, deterministic pass/fail signal with no dependency on any
-/// machine's actual stack size. `500` — the depth used below — is
+/// machine's actual stack size. `600` — the depth used below — is
 /// comfortably past `MAX_TERM_DEPTH` (512's own cap fires at 513,
 /// meaning the trees must be at least that deep for the cap to have a
 /// chance to trip before reaching the leaves) yet far below
