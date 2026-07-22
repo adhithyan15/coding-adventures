@@ -1,5 +1,28 @@
 # Changelog — `x86_64-backend`
 
+## 0.30.0 - 2026-07-22 — GC precise-roots stack-map emission (AOT00-T1)
+
+`compile_function_with_globals_and_stackmap` — the x86-64 analogue of the aarch64
+backend's `compile_with_globals_and_stackmap` — returns a `gc_core::StackMapRecord` per
+call-return safepoint, naming the reference-typed frame slots live there so
+`__gc_collect_precise` can resolve a return address to its exact roots. First step of
+porting precise roots to the native x86-64 path (Linux/Windows).
+
+- **Reference slots** are chosen by the same deny-list as aarch64 (`is_gc_root_ty`:
+  everything except the machine scalars `u4…void` — notably `any` counts). Their
+  `StackMapRecord::slots` values are the RBP-relative *negative* offsets
+  `[rbp − 8 − 8·slot]` the walker reads back as `rbp + offset`.
+- **Safepoints** are read from the emitted `call rel32` relocations: each `PltRel32`
+  reloc's `patch_offset + 4` is the return address after the call. x86-64 is
+  variable-width, so unlike the fixed-width aarch64 backend (which post-scans finished
+  code) this captures return addresses at their true positions. Every cross-function,
+  builtin and libm call — the collection-triggering ones — is covered; a self-recursive
+  `call_label` (no reloc) is not yet a safepoint, which costs precision on recursive
+  frames (conservative fallback) but is never unsafe.
+- The emitted machine code is **byte-for-byte identical** to
+  `compile_function_with_globals` — the map is derived, not injected. New gc-core
+  dependency; 4 unit tests; existing entry points unchanged.
+
 ## 0.29.0 - 2026-07-20 — V1_BUILTINS: dyn_null_p (native `null?`)
 
 Part of the fix restoring McCarthy-lisp list programs on the native-AOT / LLVM backends (`lang-aot` `lang_matrix`). See the umbrella commit for the full story: `null?` was never routed to a runtime call on the tagged native/LLVM path (breaking every cons-walk helper), `list-ref`/`assoc` unboxed a raw-int index/key (→ wrong element), a top-level `(null? …)` predicate result was unboxed instead of truthy-coerced, and cons-cell field access failed the JVM verifier. Verified end-to-end: native list-ref/assoc/length/reverse/append/null? all correct.

@@ -55,6 +55,7 @@
 
 use std::collections::HashMap;
 
+use gc_core::{StackMapBuilder, StackMapRecord};
 use jit_core::backend::{Backend, FunctionContext};
 use jit_core::cir::{CIRInstr, CIROperand};
 use vm_core::value::Value;
@@ -63,6 +64,45 @@ use x86_64_encoder::{
 };
 
 pub use x86_64_encoder::ExternalReloc as Reloc;
+
+// ===========================================================================
+// GC precise-roots: reference-typed slots (AOT00-T1)
+// ===========================================================================
+
+/// The machine scalar types whose slots can **never** hold a GC reference. A slot of
+/// any other type — notably `any`, `str`, `ref<…>`, `array<…>` — is treated as a
+/// potential root (see [`is_gc_root_ty`]).
+///
+/// This is a **deny-list**, not an allow-list, and deliberately so: `aot_core`'s
+/// specialiser erases every reference type to `"any"` before it reaches a backend, so
+/// a rule keyed on `ref<…>` would never fire and would emit records naming *nothing* —
+/// and an empty record authoritatively suppresses a frame's conservative scan, a
+/// use-after-free. The deny-list is immune to that erasure. Mirrors the aarch64 backend
+/// exactly so both native targets agree on which slots are roots.
+fn is_definitely_not_ref(ty: &str) -> bool {
+    matches!(
+        ty,
+        "u4" | "u8"
+            | "u16"
+            | "u32"
+            | "u64"
+            | "i8"
+            | "i16"
+            | "i32"
+            | "i64"
+            | "f32"
+            | "f64"
+            | "bool"
+            | "void"
+    )
+}
+
+/// Could a value of this CIR type be a GC reference (and so need naming as a root)?
+/// True for everything except the machine scalars in [`is_definitely_not_ref`] —
+/// including, critically, `any`, the normal type of every dynamic heap value.
+fn is_gc_root_ty(ty: &str) -> bool {
+    !is_definitely_not_ref(ty)
+}
 
 // ===========================================================================
 // ABI selection
@@ -172,7 +212,7 @@ pub fn compile_function(
     abi: X86_64Abi,
 ) -> Result<Vec<u8>, String> {
     compile_inner(ctx, ir, abi, &HashMap::new())
-        .map(|(bytes, _relocs)| bytes)
+        .map(|(bytes, _relocs, _stack_map)| bytes)
         .map_err(|e| format!("x86_64-backend: {e:?}"))
 }
 
@@ -189,6 +229,7 @@ pub fn compile_function_with_relocs(
     abi: X86_64Abi,
 ) -> Result<(Vec<u8>, Vec<Reloc>), String> {
     compile_inner(ctx, ir, abi, &HashMap::new())
+        .map(|(bytes, relocs, _stack_map)| (bytes, relocs))
         .map_err(|e| format!("x86_64-backend: {e:?}"))
 }
 
@@ -213,7 +254,24 @@ pub fn compile_function_with_globals(
     global_slots: &HashMap<String, usize>,
 ) -> Result<(Vec<u8>, Vec<Reloc>), String> {
     compile_inner(ctx, ir, abi, global_slots)
+        .map(|(bytes, relocs, _stack_map)| (bytes, relocs))
         .map_err(|e| format!("x86_64-backend: {e:?}"))
+}
+
+/// Like [`compile_function_with_globals`] but also returns the function's **GC
+/// precise-roots stack map** — one [`StackMapRecord`] per call-return safepoint, naming
+/// the reference-typed frame slots live there — for `__gc_collect_precise` to resolve a
+/// return address to its exact roots. The x86-64 analogue of the aarch64 backend's
+/// `compile_with_globals_and_stackmap`; the emitted machine code is byte-for-byte
+/// identical to [`compile_function_with_globals`] (the map is derived, not injected).
+#[allow(clippy::type_complexity)]
+pub fn compile_function_with_globals_and_stackmap(
+    ctx: &FunctionContext<'_>,
+    ir: &[CIRInstr],
+    abi: X86_64Abi,
+    global_slots: &HashMap<String, usize>,
+) -> Result<(Vec<u8>, Vec<Reloc>, Vec<StackMapRecord>), String> {
+    compile_inner(ctx, ir, abi, global_slots).map_err(|e| format!("x86_64-backend: {e:?}"))
 }
 
 // ===========================================================================
@@ -373,12 +431,13 @@ impl From<EncodeError> for BackendError {
 // Top-level compile
 // ===========================================================================
 
+#[allow(clippy::type_complexity)]
 fn compile_inner(
     ctx: &FunctionContext<'_>,
     ir: &[CIRInstr],
     abi: X86_64Abi,
     global_slots: &HashMap<String, usize>,
-) -> Result<(Vec<u8>, Vec<ExternalReloc>), BackendError> {
+) -> Result<(Vec<u8>, Vec<ExternalReloc>, Vec<StackMapRecord>), BackendError> {
     if ctx.params.len() > abi.max_args() {
         return Err(BackendError::TooManyParams {
             abi: match abi { X86_64Abi::SysV => "SysV", X86_64Abi::MsX64 => "MsX64" },
@@ -479,8 +538,68 @@ fn compile_inner(
     emit_epilogue(&mut asm, frame);
 
     let external_relocs = std::mem::take(&mut asm.external_relocs);
+    // Build this function's GC stack map before finishing (it needs the final slot
+    // assignment + the call relocations, both available here).
+    let stack_map = build_stack_map(ctx, ir, &alloc, frame, &external_relocs)?;
     let bytes = asm.finish().map_err(BackendError::from)?;
-    Ok((bytes, external_relocs))
+    Ok((bytes, external_relocs, stack_map))
+}
+
+/// Build this function's GC stack map: every reference-typed slot, and a safepoint
+/// record at every **call return address**.
+///
+/// **Slot offsets are RBP-relative and negative.** Locals live at `[rbp − 8 − 8·slot]`
+/// (see [`RegAlloc::rbp_offset`]), so the value stored in [`StackMapRecord::slots`] is
+/// that signed offset directly — the precise walker reads `rbp + offset` to recover the
+/// slot, exactly as [`gc_core`] expects (offsets "may be negative for slots below FP").
+///
+/// **Safepoints come from the call relocations.** x86-64 is variable-width, so — unlike
+/// the fixed-width aarch64 backend, which post-scans finished code — return addresses
+/// are read from the emitted `call rel32` relocations: each `PltRel32` reloc patches the
+/// 4-byte displacement, so the return address is `patch_offset + 4` (the byte after the
+/// call). This captures every cross-function, builtin and libm call — the ones that can
+/// trigger a collection. A **self-recursive** call uses a label fixup (no reloc) and so
+/// is not yet a safepoint; that costs precision on recursive frames (they fall back to a
+/// conservative scan) but is never unsafe — a missing safepoint only omits precision.
+fn build_stack_map(
+    ctx: &FunctionContext<'_>,
+    ir: &[CIRInstr],
+    alloc: &RegAlloc,
+    frame: u32,
+    relocs: &[ExternalReloc],
+) -> Result<Vec<StackMapRecord>, BackendError> {
+    let mut b = StackMapBuilder::new(frame);
+
+    // Declare every reference-typed slot. A ref-typed name with no assigned slot is a
+    // compiler bug — silently dropping a root is a use-after-free, so error rather than
+    // skip. (Unreachable today: the pre-pass mints a slot for every param/dest/src.)
+    let mut declare = |name: &str| -> Result<(), BackendError> {
+        let slot = *alloc.slots.get(name).ok_or_else(|| {
+            BackendError::MalformedInstr(format!("stack map: no frame slot for '{name}'"))
+        })?;
+        b.define_ref_slot(RegAlloc::rbp_offset(slot));
+        Ok(())
+    };
+    for (name, ty) in ctx.params {
+        if is_gc_root_ty(ty) {
+            declare(name)?;
+        }
+    }
+    for instr in ir {
+        if let Some(dest) = &instr.dest {
+            if is_gc_root_ty(&instr.ty) {
+                declare(dest)?;
+            }
+        }
+    }
+
+    // A safepoint at every call's return address (`patch_offset + 4`).
+    for r in relocs {
+        if r.kind == ExternalRelocKind::PltRel32 {
+            b.safepoint((r.patch_offset + 4) as u32);
+        }
+    }
+    Ok(b.into_records())
 }
 
 fn emit_epilogue(asm: &mut Assembler, _frame: u32) {
@@ -1811,6 +1930,119 @@ mod tests {
         let mut srcs = vec![Op::Var(name.into())];
         srcs.extend(args.iter().map(|a| Op::Var((*a).into())));
         instr("call_builtin", dest, srcs)
+    }
+
+    // ---- AOT00-T1: GC precise-roots stack-map emission ----
+
+    /// Set an instruction's result type (for marking a dest as a GC reference).
+    fn typed(mut i: CIRInstr, ty: &str) -> CIRInstr {
+        i.ty = ty.to_string();
+        i
+    }
+
+    /// A function that produces an `any` value and then makes a call gets a stack map
+    /// whose call-return record names the `any` slot as a root — at the RBP-relative
+    /// (negative) offset the register allocator assigned it.
+    #[test]
+    fn stackmap_names_ref_slot_at_call_site() {
+        // b = dyn_cons(h, t)  [any]  ; then a second call (dyn_car) as a safepoint.
+        let ir = vec![
+            instr("const_u64", Some("h"), vec![Op::Int(1)]),
+            instr("const_u64", Some("t"), vec![Op::Int(2)]),
+            typed(call_builtin(Some("b"), "dyn_cons", &["h", "t"]), "any"),
+            call_builtin(Some("r"), "dyn_car", &["b"]),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let (_bytes, relocs, sm) = compile_function_with_globals_and_stackmap(
+            &fn_ctx("cons", &[], "u64"),
+            &ir,
+            X86_64Abi::SysV,
+            &HashMap::new(),
+        )
+        .expect("compiles");
+
+        // Two external calls → two safepoint records.
+        assert_eq!(sm.len(), 2, "one record per call return address");
+        // Each record names exactly the one `any` slot (`b`); the `u64` slots (h/t/r)
+        // are excluded. `b` is the third slot minted (h=0, t=1, b=2) → rbp offset −24.
+        for rec in &sm {
+            assert_eq!(rec.slots, vec![RegAlloc::rbp_offset(2)], "names only the `any` slot");
+        }
+        // Each record's pc_offset is a real call-return address = a PltRel32 reloc's
+        // patch_offset + 4.
+        let call_rets: Vec<u32> = relocs
+            .iter()
+            .filter(|r| r.kind == ExternalRelocKind::PltRel32)
+            .map(|r| (r.patch_offset + 4) as u32)
+            .collect();
+        for rec in &sm {
+            assert!(call_rets.contains(&rec.pc_offset), "pc_offset is a call return address");
+        }
+    }
+
+    /// An `any`-typed parameter is a root at every safepoint (it is spilled to its slot
+    /// by the prologue and lives across calls).
+    #[test]
+    fn stackmap_names_ref_param() {
+        let params = [("obj".to_string(), "any".to_string())];
+        let ir = vec![
+            call_builtin(Some("r"), "dyn_car", &["obj"]),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let (_b, _r, sm) = compile_function_with_globals_and_stackmap(
+            &fn_ctx("head", &params, "u64"),
+            &ir,
+            X86_64Abi::SysV,
+            &HashMap::new(),
+        )
+        .expect("compiles");
+        assert_eq!(sm.len(), 1);
+        // `obj` is param slot 0 → rbp offset −8.
+        assert_eq!(sm[0].slots, vec![RegAlloc::rbp_offset(0)]);
+    }
+
+    /// A function whose slots are all machine scalars produces records with **empty**
+    /// slot lists at its call sites — nothing to root, but the safepoint still exists.
+    /// (`cell` is a `dyn_cons` result but typed `u64` here, so it is a non-reference
+    /// look-alike — excluded from the map exactly as a real integer slot would be.)
+    #[test]
+    fn stackmap_empty_for_ref_free_function() {
+        let ir = vec![
+            instr("const_u64", Some("h"), vec![Op::Int(1)]),
+            instr("const_u64", Some("t"), vec![Op::Int(2)]),
+            call_builtin(Some("cell"), "dyn_cons", &["h", "t"]), // dest defaults to u64
+            instr("ret_u64", None, vec![Op::Var("cell".into())]),
+        ];
+        let (_b, _r, sm) = compile_function_with_globals_and_stackmap(
+            &fn_ctx("nore", &[], "u64"),
+            &ir,
+            X86_64Abi::SysV,
+            &HashMap::new(),
+        )
+        .expect("compiles");
+        assert_eq!(sm.len(), 1, "one call → one record");
+        assert!(sm[0].slots.is_empty(), "no reference slots to root");
+    }
+
+    /// Deriving the stack map must not change the emitted machine code — the map is
+    /// read off the same compilation, not injected into it.
+    #[test]
+    fn stackmap_does_not_change_emitted_code() {
+        let ir = vec![
+            instr("const_u64", Some("h"), vec![Op::Int(1)]),
+            instr("const_u64", Some("t"), vec![Op::Int(2)]),
+            typed(call_builtin(Some("b"), "dyn_cons", &["h", "t"]), "any"),
+            instr("ret_u64", None, vec![Op::Var("b".into())]),
+        ];
+        let plain = compile_function_with_globals(
+            &fn_ctx("cons", &[], "u64"), &ir, X86_64Abi::SysV, &HashMap::new(),
+        )
+        .expect("compiles");
+        let (bytes, _r, _sm) = compile_function_with_globals_and_stackmap(
+            &fn_ctx("cons", &[], "u64"), &ir, X86_64Abi::SysV, &HashMap::new(),
+        )
+        .expect("compiles");
+        assert_eq!(plain.0, bytes, "stack-map derivation is byte-for-byte transparent");
     }
 
     #[test]
