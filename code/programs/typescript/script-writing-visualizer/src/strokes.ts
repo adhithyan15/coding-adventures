@@ -68,11 +68,31 @@ export interface Stroke {
   segments: Segment[];
 }
 
+/**
+ * Where a letter's stroke ORDER came from.
+ *
+ * The pen path's SHAPE is checked against the font (see the test). Its ORDER
+ * cannot be — no font records it — so the order must trace to a real source:
+ * a handwriting primer, a stroke database, or a named native writer. There is
+ * no authoritative machine-readable stroke database for Tamil (or any Indic
+ * script, Arabic, or Hebrew), so the order is read from a cited teaching
+ * source, and `variation` records that Tamil is taught with school-to-school
+ * differences — this is one attested order, not the only one.
+ */
+export interface StrokeSource {
+  citation: string;
+  url: string;
+  /** How standardised the order is, and where it varies. */
+  variation?: string;
+}
+
 /** A letter's handwriting: the character and the strokes that form it. */
 export interface LetterDuctus {
   glyph: string;
   /** In writing order. `strokes.length - 1` is the number of pen lifts. */
   strokes: Stroke[];
+  /** Provenance of the stroke ORDER. Required — no letter enters uncited. */
+  source: StrokeSource;
 }
 
 /**
@@ -168,13 +188,13 @@ const clamp01 = (n: number) => (n < 0 ? 0 : n > 1 ? 1 : n);
 // ---------------------------------------------------------------------------
 // The authored letters.
 //
-// ம first, and alone, until it is verified against the font and seen by a
-// reader who writes Tamil. It is ONE stroke — the hand does not lift — made of
-// three joined parts: down the left upright, along the bottom, then up the
-// right and over the top and back down the middle toward the left vertical. Each
-// part's path starts on the previous part's last point, so `joinGaps` is zero
-// and the whole thing is a single motion. Coordinates are font units, checked
-// in strokes.test against the rendered glyph, not eyeballed here.
+// ம first, and alone, until every letter after it is sourced the same way. It
+// is ONE stroke — the hand does not lift — made of the FIVE joined parts the
+// cited primer numbers: down the left upright, along the bottom, up the right
+// side, over the top, and down the middle. Each part's path starts on the
+// previous part's last point, so `joinGaps` is zero and the whole thing is a
+// single motion. Coordinates are font units, checked in strokes.test against
+// the rendered glyph (shape) and against `source` (order), not eyeballed here.
 // ---------------------------------------------------------------------------
 
 export const DUCTUS: Record<string, LetterDuctus> = {
@@ -202,15 +222,27 @@ export const DUCTUS: Record<string, LetterDuctus> = {
             ],
           },
           {
-            label: "up the right, over the top, back down the middle",
+            label: "up the right side",
             path: [
               { x: 715, y: 44 },
               { x: 726, y: 180 },
+              { x: 724, y: 430 },
+            ],
+          },
+          {
+            label: "over the top",
+            path: [
               { x: 724, y: 430 },
               { x: 690, y: 510 },
               { x: 600, y: 548 },
               { x: 500, y: 548 },
               { x: 452, y: 512 },
+              { x: 434, y: 430 },
+            ],
+          },
+          {
+            label: "down the middle",
+            path: [
               { x: 434, y: 430 },
               { x: 430, y: 180 },
               { x: 430, y: 44 },
@@ -219,5 +251,15 @@ export const DUCTUS: Record<string, LetterDuctus> = {
         ],
       },
     ],
+    // Five movements, matching the numbered arrows in the cited primer's
+    // Frame 1 (down the left · along the bottom · up the right · over the top ·
+    // down the middle) — one unbroken pen path, exactly as authored.
+    source: {
+      citation:
+        "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 1 (Univ. of Texas at Austin)",
+      url: "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+      variation:
+        "Tamil handwriting is taught with school-to-school variation; there is no single national stroke-order standard. This is one attested order.",
+    },
   },
 };
