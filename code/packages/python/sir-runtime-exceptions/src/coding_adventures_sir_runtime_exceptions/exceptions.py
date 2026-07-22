@@ -153,6 +153,32 @@ def class_of_thrown(exc: object) -> str:
     return "StandardError"
 
 
+def ancestry_chain(class_name: str) -> list[str]:
+    """``class_name`` followed by each of its registered ancestors, in order.
+
+    ``ancestry_chain("ArgumentError")`` is
+    ``["ArgumentError", "StandardError", "Exception"]``.
+
+    The ancestry table is private to this module, but a *caller* sometimes has
+    to visit each link rather than ask a yes/no question about the whole chain:
+    the OOP runtime's ``is_a?`` must check every ancestor for an ``include``d
+    module, which :func:`rescue_matches` (a pure name walk) cannot answer.
+    Exposing the chain keeps :data:`_ANCESTRY` itself private and read-only to
+    the outside.
+
+    Cycle-safe: a malformed registration (``A → B → A``) terminates rather
+    than looping forever, and each class appears at most once.
+    """
+    chain: list[str] = []
+    cur: str | None = class_name
+    seen: set[str] = set()
+    while cur is not None and cur not in seen:
+        seen.add(cur)
+        chain.append(cur)
+        cur = _ANCESTRY.get(cur)
+    return chain
+
+
 def _is_ancestor_or_self(actual: str, target: str) -> bool:
     """``True`` if ``actual`` is ``target`` or any of its registered ancestors."""
     cur: str | None = actual

@@ -1,5 +1,53 @@
 # Changelog
 
+## 0.38.0 — a rescued exception is now an exception VALUE, not its message string
+
+`rescue Foo => e` bound `e` to the message STRING. The rescued value was
+therefore not an exception at all: `e.class` reported `String`,
+`e.is_a?(StandardError)` was **false**, and `e.message` raised
+`NoMethodError: undefined method 'message' for String`. A guard like
+`rescue => e; handle if e.is_a?(Recoverable)` silently skipped its handler.
+
+`Value` gains an `Exception(Rc<SirError>)` variant, and `exc_value` returns it.
+A dedicated variant (rather than reusing a `SirInstance`) is deliberate:
+
+- the message stays a plain `String`, so the display path **cannot recurse**
+  through it and needs no cycle guard;
+- exceptions stay OUT of the never-freed instance table, so
+  `loop { begin … rescue => e … end }` remains O(1) in memory rather than
+  retaining one instance — and its input-derived message — per iteration.
+
+`class`, `is_a?`/`kind_of?` (via the ancestry walk, which already knows
+`ArgumentError → StandardError → Exception`) and the new `message` method all
+answer correctly. **Display is unchanged**: an exception renders as its
+MESSAGE, matching Ruby's `Exception#to_s`, so `rescue => e; puts e` still
+prints `boom`. `respond_to?(:message)` answers true on an exception and false
+on anything else.
+
+`value_eq` gains an `Exception` arm (`Rc::ptr_eq`). The equality match is
+wildcard-terminated, so introducing the variant would otherwise have made
+`e == e` **false** — and every equality path routes through it (`==`/`!=`,
+`when`, `include?`/`index`/`uniq`, Hash keys), so `retry if e == @last_error`
+would never fire and `seen.include?(e)` would never dedupe. Identity is what
+the Go, JavaScript and Python backends give for free, so the four agree.
+This is not yet pinned by a conformance case, because `==` cannot be reached
+from Ruby source on this backend at all: the frontend lowers `a == b` to
+`BuiltinCall("==")`, which only the Go, C and Ruby backends lower — Python,
+JavaScript and Rust reject it as an unknown builtin even for `puts(1 == 1)`.
+That general operator-coverage gap is fixed separately; the arm is added here
+because the variant is introduced here and would be silently wrong without it.
+
+A security review found one more consequence of `e` becoming a real value:
+`"prefix " + e` used to concatenate (the operand was a `Str`), but now reaches
+`plus`\'s String arm reject path — which `panic!`d. A `panic!` payload is a
+`&str`, not a `SirError`, so `exc_from_payload` `resume_unwind`s it and NO
+`rescue`, not even a bare one, can catch it: the program died with a host
+backtrace where Ruby raises a rescuable `TypeError`. Both the `Str` and `Seq`
+reject paths in `plus` now `raise("TypeError", …)`
+(`"no implicit conversion of X into String"`/`Array`), which a `rescue`
+catches. Pinned by a new exec-proof: an outer `rescue` catches the TypeError
+from `"got: " + e` and the process exits 0.
+
 ## 0.37.0 — Ruby type reflection: `.class`, `is_a?`, `kind_of?`, `instance_of?`
 
 `.class` **crashed the program**. The backend already had the full class-name

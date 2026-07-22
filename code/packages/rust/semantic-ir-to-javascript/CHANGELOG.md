@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.47.0 — `Exception#message`, and an exception displays as its message
+
+Two exception-faithfulness fixes:
+
+- **`e.message` raised `NoMethodError`** — everyday Ruby
+  (`rescue => e; puts e.message`) did not work. `objectMetaMethod` gains a
+  `message` arm returning the `SirError`\'s native `.message`, answered by an
+  exception only; `respondsTo` reports it on exceptions and not on anything
+  else.
+- **`puts e` printed `ArgumentError: boom`** instead of Ruby\'s plain `boom`.
+  A `SirError` extends `Error`, whose `toString` prefixes the class, and the
+  display path fell through to the generic `String(v)`. `formatSeen` now
+  renders an exception as its MESSAGE, matching `Exception#to_s`.
+
+A security review then found these three arms gated on `instanceof SirError`
+while the sibling reflection functions (`rubyClassName` → `classOfThrown`,
+`isA`) gate on `instanceof Error`. Because the emitter\'s `catch` binds the
+RAW thrown value, `e` can be a NATIVE JS error (a V8 `RangeError` from deep
+recursion), which `classOfThrown`/`rescueMatches` bucket as `StandardError`.
+So `e.class` reported `StandardError` while `e.message` raised `NoMethodError`
+on the very same value, and `puts e` on a native error took a different path.
+All three arms now gate on `instanceof Error`, so every reflection answer
+about a caught value agrees.
+
 ## 0.46.0 — J's own display convention, and its two missing builtins
 
 Both found by `j-to-semantic-ir/tests/oracle.rs` (that crate's new
