@@ -418,8 +418,8 @@ fn clone_subckt_element(
             element.gate_source_capacitance,
             element.gate_drain_capacitance,
         )),
-        Element::Bjt(element) => Element::Bjt(
-            Bjt::with_model_temperature_depletion_early_rolloff_junction_leakage_and_reverse_beta_parameters(
+        Element::Bjt(element) => {
+            let mut expanded = Bjt::with_model_temperature_depletion_early_rolloff_junction_leakage_and_reverse_beta_parameters(
                 format!("{instance_name}.{}", element.name),
                 map_subckt_node(&element.collector, instance_name, node_map),
                 map_subckt_node(&element.base, instance_name, node_map),
@@ -450,8 +450,10 @@ fn clone_subckt_element(
                 element.base_collector_leakage_emission_coefficient,
                 element.forward_beta_temperature_exponent,
                 element.reverse_beta,
-            ),
-        ),
+            );
+            expanded.reverse_beta_rolloff_current = element.reverse_beta_rolloff_current;
+            Element::Bjt(expanded)
+        }
         Element::Mosfet(element) => Element::Mosfet(Mosfet::with_model(
             format!("{instance_name}.{}", element.name),
             map_subckt_node(&element.drain, instance_name, node_map),
@@ -2887,6 +2889,7 @@ pub struct Bjt {
     pub base_collector_leakage_emission_coefficient: f64,
     pub forward_beta_temperature_exponent: f64,
     pub reverse_beta: f64,
+    pub reverse_beta_rolloff_current: f64,
 }
 
 impl Bjt {
@@ -3348,6 +3351,7 @@ impl Bjt {
             base_collector_leakage_emission_coefficient,
             forward_beta_temperature_exponent,
             reverse_beta,
+            reverse_beta_rolloff_current: 0.0,
         }
     }
 }
@@ -3738,8 +3742,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     usize,
 )] = &[
     (ModelCardKind::Diode, 12, 18, 5, 3),
-    (ModelCardKind::Npn, 25, 41, 12, 4),
-    (ModelCardKind::Pnp, 25, 41, 12, 4),
+    (ModelCardKind::Npn, 26, 42, 12, 4),
+    (ModelCardKind::Pnp, 26, 42, 12, 4),
     (ModelCardKind::Njf, 5, 11, 5, 3),
     (ModelCardKind::Pjf, 5, 11, 5, 3),
     (ModelCardKind::Nmos, 18, 25, 6, 3),
@@ -3789,6 +3793,7 @@ const BJT_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("VB", "VAR"),
     ("IKF", "IKF"),
     ("IK", "IKF"),
+    ("IKR", "IKR"),
     ("ISE", "ISE"),
     ("NE", "NE"),
     ("ISC", "ISC"),
@@ -4446,8 +4451,7 @@ pub fn bjt_from_model_card(
         ModelCardKind::Pnp => BjtPolarity::Pnp,
         _ => return Err(model_card_kind_error(&name, "BJT", model.kind)),
     };
-    Ok(
-        Bjt::with_model_temperature_depletion_early_rolloff_junction_leakage_and_reverse_beta_parameters(
+    let mut bjt = Bjt::with_model_temperature_depletion_early_rolloff_junction_leakage_and_reverse_beta_parameters(
             name,
             collector,
             base,
@@ -4478,8 +4482,9 @@ pub fn bjt_from_model_card(
             model_card_value(model, "NC", 2.0),
             model_card_value(model, "XTB", 0.0),
             model_card_value(model, "BR", 1.0),
-        ),
-    )
+        );
+    bjt.reverse_beta_rolloff_current = model_card_value(model, "IKR", 0.0);
+    Ok(bjt)
 }
 
 pub fn jfet_from_model_card(
@@ -22675,9 +22680,21 @@ fn bjt_reverse_base_current(bjt: &Bjt, junction_voltage: f64) -> (f64, f64) {
     let thermal_voltage = bjt.thermal_voltage * bjt.reverse_emission_coefficient;
     let exponent = (junction_voltage / thermal_voltage).clamp(-40.0, 40.0);
     let exp_value = exponent.exp();
+    let diffusion_current = bjt.saturation_current * (exp_value - 1.0);
+    let diffusion_conductance = bjt.saturation_current / thermal_voltage * exp_value;
+    if bjt.reverse_beta_rolloff_current == 0.0 || diffusion_current <= 0.0 {
+        return (
+            diffusion_current / bjt.reverse_beta,
+            diffusion_conductance / bjt.reverse_beta,
+        );
+    }
+    let root = (1.0 + 4.0 * diffusion_current / bjt.reverse_beta_rolloff_current).sqrt();
+    let charge_factor = 0.5 * (1.0 + root);
+    let charge_derivative = diffusion_conductance / (bjt.reverse_beta_rolloff_current * root);
     (
-        bjt.saturation_current * (exp_value - 1.0) / bjt.reverse_beta,
-        bjt.saturation_current / thermal_voltage * exp_value / bjt.reverse_beta,
+        diffusion_current * charge_factor / bjt.reverse_beta,
+        (diffusion_conductance * charge_factor + diffusion_current * charge_derivative)
+            / bjt.reverse_beta,
     )
 }
 
@@ -23962,6 +23979,12 @@ fn validate_bjt(bjt: &Bjt) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: bjt.name.clone(),
             reason: "forward beta roll-off current must be finite and non-negative".to_string(),
+        });
+    }
+    if !bjt.reverse_beta_rolloff_current.is_finite() || bjt.reverse_beta_rolloff_current < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "reverse beta roll-off current must be finite and non-negative".to_string(),
         });
     }
     if !bjt.base_emitter_leakage_saturation_current.is_finite()

@@ -604,7 +604,7 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
-        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg, element.Vaf, element.Nf, element.Nr, element.Vje, element.Mje, element.Vjc, element.Mjc, element.Fc, element.Var, element.Ikf, element.Ise, element.Ne, element.Isc, element.Nc, element.Xtb, element.beta_r)
+        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg, element.Vaf, element.Nf, element.Nr, element.Vje, element.Mje, element.Vjc, element.Mjc, element.Fc, element.Var, element.Ikf, element.Ise, element.Ne, element.Isc, element.Nc, element.Xtb, element.beta_r, element.Ikr)
     if isinstance(element, VCVS):
         return VCVS(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), _map_subckt_node(element.ctrl_plus, instance_name, node_map), _map_subckt_node(element.ctrl_minus, instance_name, node_map), element.gain)
     if isinstance(element, VCCS):
@@ -9074,9 +9074,17 @@ def _bjt_reverse_base_current(el: BJT, junction_voltage: float) -> tuple[float, 
     thermal_voltage = el.Vt * el.Nr
     exponent = max(-40.0, min(40.0, junction_voltage / thermal_voltage))
     exp_value = math.exp(exponent)
+    diffusion_current = el.Is * (exp_value - 1.0)
+    diffusion_conductance = el.Is / thermal_voltage * exp_value
+    if el.Ikr == 0.0 or diffusion_current <= 0.0:
+        return diffusion_current / el.beta_r, diffusion_conductance / el.beta_r
+    root = math.sqrt(1.0 + 4.0 * diffusion_current / el.Ikr)
+    charge_factor = 0.5 * (1.0 + root)
+    charge_derivative = diffusion_conductance / (el.Ikr * root)
     return (
-        el.Is * (exp_value - 1.0) / el.beta_r,
-        el.Is / thermal_voltage * exp_value / el.beta_r,
+        diffusion_current * charge_factor / el.beta_r,
+        (diffusion_conductance * charge_factor + diffusion_current * charge_derivative)
+        / el.beta_r,
     )
 
 
@@ -9289,6 +9297,10 @@ def _validate_bjt(el: BJT) -> None:
     if not math.isfinite(el.Ikf) or el.Ikf < 0.0:
         raise ValueError(
             f"{el.name}: BJT forward beta roll-off current must be finite and non-negative"
+        )
+    if not math.isfinite(el.Ikr) or el.Ikr < 0.0:
+        raise ValueError(
+            f"{el.name}: BJT reverse beta roll-off current must be finite and non-negative"
         )
     if not math.isfinite(el.Ise) or el.Ise < 0.0:
         raise ValueError(
@@ -14090,6 +14102,7 @@ def sens_dc(
                     Fc=el.Fc,
                     Xtb=el.Xtb,
                     beta_r=el.beta_r,
+                    Ikr=el.Ikr,
                 ),
             )
             delta_beta = max(abs(el.beta_f) * perturbation, abs_floor)
@@ -14124,6 +14137,7 @@ def sens_dc(
                     Fc=el.Fc,
                     Xtb=el.Xtb,
                     beta_r=el.beta_r,
+                    Ikr=el.Ikr,
                 ),
             )
 
@@ -14368,6 +14382,7 @@ def _vary_element(el: Element, tolerance: float, distribution: str) -> Element:
             Fc=el.Fc,
             Xtb=el.Xtb,
             beta_r=el.beta_r,
+            Ikr=el.Ikr,
         )
 
     # Capacitor, Inductor, Mosfet — no tunable DC parameter; return unchanged.

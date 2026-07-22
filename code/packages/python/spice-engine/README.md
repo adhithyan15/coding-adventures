@@ -232,6 +232,8 @@ base-collector conductance, and shot noise.
 `BR`/`BETA_R` (default `1` on model cards) controls reverse current gain and
 adds the base-collector reverse base-current branch. Direct `BJT` constructors
 default to infinite reverse beta to preserve their legacy behavior.
+`IKR` (default `0`, disabled) applies Berkeley reverse high-current base-charge
+modulation to that branch, increasing base current as reverse beta rolls off.
 `XTB` (default `0`) scales both forward and reverse beta with the
 analysis-to-nominal absolute temperature ratio, preserving nominal beta when
 omitted.
@@ -260,7 +262,7 @@ catalog by model kind for compact release dashboards and Mosaic UI inventories.
 `model_card_supported_parameter_coverage_gate_issue_records()`,
 `format_model_card_supported_parameter_coverage_gate_issue_csv()`, and
 `format_model_card_supported_parameter_coverage_gate_issue_json()` validate the
-expected seven-kind, 108-row supported-parameter catalog and expose stable issue
+expected seven-kind, 110-row supported-parameter catalog and expose stable issue
 rows for release automation.
 `model_card_supported_parameter_coverage_dashboard()`,
 `format_model_card_supported_parameter_coverage_dashboard_table()`,

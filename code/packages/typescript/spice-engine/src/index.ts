@@ -1728,6 +1728,7 @@ export interface Bjt {
   readonly baseCollectorLeakageEmissionCoefficient: number;
   readonly forwardBetaTemperatureExponent: number;
   readonly reverseBeta: number;
+  readonly reverseBetaRolloffCurrent: number;
 }
 
 export type MosfetType = "NMOS" | "PMOS";
@@ -2005,8 +2006,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   Record<ModelCardKind, readonly [number, number, number, number]>
 > = {
   D: [12, 18, 5, 3],
-  NPN: [25, 41, 12, 4],
-  PNP: [25, 41, 12, 4],
+  NPN: [26, 42, 12, 4],
+  PNP: [26, 42, 12, 4],
   NJF: [5, 11, 5, 3],
   PJF: [5, 11, 5, 3],
   NMOS: [18, 25, 6, 3],
@@ -3596,7 +3597,7 @@ function cloneSubcktElement(
     case "jfet":
       return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation, element.gateSourceCapacitance, element.gateDrainCapacitance);
     case "bjt":
-      return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.forwardEarlyVoltage, element.forwardEmissionCoefficient, element.reverseEmissionCoefficient, element.baseEmitterJunctionPotential, element.baseEmitterGradingCoefficient, element.baseCollectorJunctionPotential, element.baseCollectorGradingCoefficient, element.forwardBiasDepletionCoefficient, element.reverseEarlyVoltage, element.forwardBetaRolloffCurrent, element.baseEmitterLeakageSaturationCurrent, element.baseEmitterLeakageEmissionCoefficient, element.baseCollectorLeakageSaturationCurrent, element.baseCollectorLeakageEmissionCoefficient, element.forwardBetaTemperatureExponent, element.reverseBeta);
+      return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.forwardEarlyVoltage, element.forwardEmissionCoefficient, element.reverseEmissionCoefficient, element.baseEmitterJunctionPotential, element.baseEmitterGradingCoefficient, element.baseCollectorJunctionPotential, element.baseCollectorGradingCoefficient, element.forwardBiasDepletionCoefficient, element.reverseEarlyVoltage, element.forwardBetaRolloffCurrent, element.baseEmitterLeakageSaturationCurrent, element.baseEmitterLeakageEmissionCoefficient, element.baseCollectorLeakageSaturationCurrent, element.baseCollectorLeakageEmissionCoefficient, element.forwardBetaTemperatureExponent, element.reverseBeta, element.reverseBetaRolloffCurrent);
     case "mosfet":
       return mosfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), mapSubcktNode(element.body, instanceName, nodeMap), element.type, element.params);
     case "vccs":
@@ -7779,6 +7780,7 @@ export function bjt(
   baseCollectorLeakageEmissionCoefficient = 2.0,
   forwardBetaTemperatureExponent = 0.0,
   reverseBeta = Number.POSITIVE_INFINITY,
+  reverseBetaRolloffCurrent = 0.0,
 ): Bjt {
   return {
     kind: "bjt",
@@ -7812,6 +7814,7 @@ export function bjt(
     baseCollectorLeakageEmissionCoefficient,
     forwardBetaTemperatureExponent,
     reverseBeta,
+    reverseBetaRolloffCurrent,
   };
 }
 
@@ -7921,6 +7924,7 @@ const BJT_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   VB: "VAR",
   IKF: "IKF",
   IK: "IKF",
+  IKR: "IKR",
   ISE: "ISE",
   NE: "NE",
   ISC: "ISC",
@@ -8453,6 +8457,7 @@ export function bjtFromModelCard(
     p.NC ?? 2.0,
     p.XTB ?? 0.0,
     p.BR ?? 1.0,
+    p.IKR ?? 0.0,
   );
 }
 
@@ -18963,10 +18968,25 @@ function bjtReverseBaseCurrent(
   const thermalVoltage = element.thermalVoltage * element.reverseEmissionCoefficient;
   const exponent = Math.max(-40.0, Math.min(40.0, junctionVoltage / thermalVoltage));
   const expValue = Math.exp(exponent);
+  const diffusionCurrent = element.saturationCurrent * (expValue - 1.0);
+  const diffusionConductance = element.saturationCurrent / thermalVoltage * expValue;
+  if (element.reverseBetaRolloffCurrent === 0.0 || diffusionCurrent <= 0.0) {
+    return {
+      current: diffusionCurrent / element.reverseBeta,
+      conductance: diffusionConductance / element.reverseBeta,
+    };
+  }
+  const root = Math.sqrt(
+    1.0 + 4.0 * diffusionCurrent / element.reverseBetaRolloffCurrent,
+  );
+  const chargeFactor = 0.5 * (1.0 + root);
+  const chargeDerivative =
+    diffusionConductance / (element.reverseBetaRolloffCurrent * root);
   return {
-    current: element.saturationCurrent * (expValue - 1.0) / element.reverseBeta,
+    current: diffusionCurrent * chargeFactor / element.reverseBeta,
     conductance:
-      element.saturationCurrent / thermalVoltage * expValue / element.reverseBeta,
+      (diffusionConductance * chargeFactor + diffusionCurrent * chargeDerivative)
+      / element.reverseBeta,
   };
 }
 
@@ -19871,6 +19891,9 @@ function validateBjt(element: Bjt): void {
   }
   if (!Number.isFinite(element.forwardBetaRolloffCurrent) || element.forwardBetaRolloffCurrent < 0.0) {
     throw invalidElement(element.name, "forward beta roll-off current must be finite and non-negative");
+  }
+  if (!Number.isFinite(element.reverseBetaRolloffCurrent) || element.reverseBetaRolloffCurrent < 0.0) {
+    throw invalidElement(element.name, "reverse beta roll-off current must be finite and non-negative");
   }
   if (!Number.isFinite(element.baseEmitterLeakageSaturationCurrent) || element.baseEmitterLeakageSaturationCurrent < 0.0) {
     throw invalidElement(element.name, "base-emitter leakage saturation current must be finite and non-negative");
