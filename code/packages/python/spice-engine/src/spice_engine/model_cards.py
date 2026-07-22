@@ -307,8 +307,8 @@ _MODEL_CARD_SUPPORTED_PARAMETER_KINDS = (
 )
 _MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES = {
     "D": (12, 18, 5, 3),
-    "NPN": (27, 44, 13, 4),
-    "PNP": (27, 44, 13, 4),
+    "NPN": (28, 45, 13, 4),
+    "PNP": (28, 45, 13, 4),
     "NJF": (5, 11, 5, 3),
     "PJF": (5, 11, 5, 3),
     "NMOS": (18, 25, 6, 3),
@@ -381,6 +381,7 @@ _BJT_PARAMETER_ALIASES: dict[str, str] = {
     "IKR": "IKR",
     "TNOM": "TNOM",
     "T_NOM": "TNOM",
+    "KF": "KF",
     "ISE": "ISE",
     "NE": "NE",
     "ISC": "ISC",
@@ -943,6 +944,7 @@ def bjt_from_model_card(
         beta_r=p.get("BR", 1.0),
         Ikr=p.get("IKR", 0.0),
         Tnom=(p["TNOM"] + 273.15) if "TNOM" in p else None,
+        Kf=p.get("KF", 0.0),
     )
 
 
