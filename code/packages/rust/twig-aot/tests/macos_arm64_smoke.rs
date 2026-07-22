@@ -444,6 +444,108 @@ fn end_to_end_gc_stress_live_bytes_differential() {
     );
 }
 
+/// AOT00-T1 — the **complete** precise-roots correctness statement: precise roots must
+/// *keep* a genuine heap reference AND *reclaim* a non-reference look-alike, in one run.
+///
+/// The prior differential proves only the reclaim half (its program keeps no live
+/// object, so precise `live_bytes` is 0). This program holds **both**:
+///
+/// ```text
+///   main() -> i64:
+///       z = dyn_box_int(0)       ; any  — a tagged value to build a cell from
+///       b = dyn_cons(z, z)       ; any  — a REAL heap cons cell → a live reference
+///       a = gc_alloc(64)         ; i64  — a heap-address look-alike (garbage)
+///       <collect>
+///       lb = gc_live_bytes()
+///       ret lb
+/// ```
+///
+/// `b` is an `any`-typed slot, so the stack map *names* it → the cons cell survives a
+/// precise collect. `a` is an `i64` slot, *not* named → its 64-byte object is reclaimed.
+/// So `precise == sizeof(cons cell)` and `conservative == sizeof(cons cell) + 64`: the
+/// map both roots the real reference and excludes the look-alike. A precise result of 0
+/// would mean a live reference was wrongly dropped (a UAF); an equal result would mean
+/// the look-alike was wrongly pinned.
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+#[test]
+fn end_to_end_gc_precise_keeps_ref_reclaims_lookalike() {
+    use interpreter_ir::instr::{IIRInstr, Operand};
+
+    fn build(collect: &str, collect_returns: bool) -> IIRModule {
+        let mut body = vec![
+            // A real, live heap reference in an `any` slot: box a tagged int, then
+            // cons it — `dyn_cons` allocates a cell through the GC and returns a
+            // tagged `any` pointer, which the stack map names as a root.
+            IIRInstr::new("const", Some("z0".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("z".into()),
+                vec![Operand::Var("dyn_box_int".into()), Operand::Var("z0".into())],
+                "any",
+            ),
+            IIRInstr::new(
+                "call_builtin",
+                Some("b".into()),
+                vec![Operand::Var("dyn_cons".into()), Operand::Var("z".into()), Operand::Var("z".into())],
+                "any",
+            ),
+            // A non-reference look-alike (garbage) in an `i64` slot.
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(64)], "i64"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("a".into()),
+                vec![Operand::Var("gc_alloc".into()), Operand::Var("n".into())],
+                "i64",
+            ),
+        ];
+        body.push(if collect_returns {
+            IIRInstr::new("call_builtin", Some("freed".into()), vec![Operand::Var(collect.into())], "i64")
+        } else {
+            IIRInstr::new("call_builtin", None, vec![Operand::Var(collect.into())], "void")
+        });
+        body.push(IIRInstr::new(
+            "call_builtin",
+            Some("lb".into()),
+            vec![Operand::Var("gc_live_bytes".into())],
+            "i64",
+        ));
+        body.push(IIRInstr::new("ret", None, vec![Operand::Var("lb".into())], "i64"));
+
+        let mut m = IIRModule::new("gc_keepref", "twig");
+        m.add_or_replace(IIRFunction::new("main", vec![], "i64", body));
+        m.entry_point = Some("main".into());
+        m
+    }
+
+    let dir = tempfile::tempdir().expect("tempdir");
+    let run = |tag: &str, collect: &str, collect_returns: bool| -> i32 {
+        let m = build(collect, collect_returns);
+        let exe = dir.path().join(tag);
+        twig_aot::compile_module_to_macos_executable(&m, &exe)
+            .unwrap_or_else(|e| panic!("{tag} compiles+links: {e}"));
+        let out = Command::new(&exe).output().unwrap_or_else(|e| panic!("{tag} runs: {e}"));
+        out.status.code().unwrap_or_else(|| panic!("{tag} exited by signal: {out:?}"))
+    };
+
+    let conservative = run("gc_keepref_cons", "gc_collect", false);
+    let precise = run("gc_keepref_prec", "gc_collect_precise", true);
+
+    // The cons cell (the live `any` reference) must survive the precise collect …
+    assert!(
+        precise > 0,
+        "precise collect must KEEP the live cons cell referenced by an `any` slot \
+         (live_bytes={precise})",
+    );
+    // … and the 64-byte i64 look-alike garbage must be reclaimed by precise but pinned
+    // by conservative — so the two columns differ by exactly the look-alike's size.
+    assert_eq!(
+        conservative - precise,
+        64,
+        "the i64 look-alike (64 bytes) must be reclaimed by precise and pinned by \
+         conservative (conservative={conservative}, precise={precise})",
+    );
+}
+
 /// Sanity check that the AArch64Backend trait wiring goes end-to-end
 /// for a hand-built CIR-shaped function.
 #[test]
