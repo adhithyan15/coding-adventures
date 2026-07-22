@@ -655,3 +655,21 @@ fn deeply_parenthesised_expression_is_rejected_cleanly_not_a_panic() {
     let src = format!("{}5{}\n", "(".repeat(50), ")".repeat(50));
     assert!(compile_source(&src, "prog").is_err());
 }
+
+#[test]
+fn top_level_variable_named_main_is_rejected_cleanly_not_a_broken_artifact() {
+    // Regression test (/security-review finding): `lower_file` hardcodes
+    // "main" as this module's own synthesized entry-point function name;
+    // Q's `NAME` grammar has no reserved-word exclusion, so a top-level
+    // plain-value binding literally named `main` (e.g. `main:5`) used to
+    // compile and validate cleanly, then produce JS with a MODULE-scope
+    // `let main = null;` sitting next to the module's own
+    // `function main() {...}` -- a genuine `node` SyntaxError, confirmed
+    // empirically before this fix (reverting it makes this test fail).
+    let err = compile_source("main:5\nmain+1\n", "test").expect_err("must be rejected");
+    assert!(
+        err.message.contains("main"),
+        "expected an error mentioning the reserved `main` name, got: {}",
+        err.message
+    );
+}

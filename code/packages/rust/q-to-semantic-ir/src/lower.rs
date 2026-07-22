@@ -790,6 +790,38 @@ impl Lowerer {
                         // previously a known function, it no longer is.
                         self.known_functions.remove(&name);
                         if is_top_level {
+                            // SECURITY (/security-review finding): `lower_file`
+                            // hardcodes the synthesized entry-point function's
+                            // own name as the plain, unprefixed identifier
+                            // "main" (mirroring every sibling frontend). Every
+                            // OTHER sibling frontend keeps its own top-level
+                            // bindings function-LOCAL (`Scope::Local`, inside
+                            // that same `main` function body), so a JS `let
+                            // main = ...` never arises there -- a legal inner
+                            // shadow of the enclosing function's own name is
+                            // fine. THIS crate's own, disclosed choice of
+                            // `Scope::Global` for top-level bindings changes
+                            // that: a top-level Q binding literally named
+                            // `main` (Q's `NAME` grammar has no reserved-word
+                            // exclusion, so `main:5` is ordinary, legal Q
+                            // source) would emit a MODULE-scope `let main =
+                            // null;` sitting alongside the module's own
+                            // `function main() { ... }` -- a genuine
+                            // `SyntaxError: Identifier 'main' has already
+                            // been declared` under Node, confirmed directly.
+                            // `semantic_ir::validate`/`Backend::check_module`
+                            // do not catch a Global/Function name collision,
+                            // so this must be rejected here, at the one place
+                            // that actually knows both names collide.
+                            if name == "main" {
+                                return Err(self.err_at(
+                                    node,
+                                    "a top-level variable cannot be named `main` -- that name is \
+                                     reserved for this module's own synthesized entry-point \
+                                     function"
+                                        .to_string(),
+                                ));
+                            }
                             if self.global_names.insert(name.clone()) {
                                 self.global_order.push(name.clone());
                             }
