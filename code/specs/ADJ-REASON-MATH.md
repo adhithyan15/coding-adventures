@@ -447,6 +447,56 @@ confidence, which is the exact failure this whole rung exists to prevent. `adj-v
 reports an `Unmigrated` step as **`Unverified`** — never `Verified` — and stdlib
 migration is tracked as a checklist, not assumed.
 
+##### E.3.1 The surface binding — how a library POPULATES the quote
+
+§E.3 fixes the *field*; this fixes how a grounded `.adj` library writes it. Today a
+library carries `source "<prose>"` and `locator "<url>"`, which lower to
+`Provenance { quote: Unmigrated, snapshot: None, source, locator }` — sound but
+never `fully_verified`. To pin a quote, three things must reach `with_quote_in`: the
+verbatim span **text**, its **byte offset** in the pinned document, and the document's
+**content hash**. The surface form that carries them:
+
+```
+relate <edge> {
+    quote    "<verbatim span, exactly as it appears in the source>"
+    at       <byte-offset>                 % into the pinned snapshot
+    snapshot "<64-hex sha256 of the source document>"
+    source   "<human-readable citation label>"
+    locator  "<url>"
+    trust    authoritative
+}
+```
+
+**The `at` offset is emitted by the spider, never hand-authored — and never by a
+model.** This is the load-bearing rule, and it is not a convenience: `feedback_no_byte_arithmetic_for_llm`
+forbids asking an LLM for byte offsets, and `feedback_nothing_human_authored` requires
+facts to enter through the spider→gate path. So `quote`/`at`/`snapshot` is **output of
+the grounding spider**, which has the document in hand at ingest and computes the offset
+and hash mechanically; it is not something an author (human or model) types. A library
+reviewer reads the `quote` text and the `source` label; the machine owns the arithmetic.
+
+**Lowering is fail-closed.** `adapt`/`lower` must reject a pin whose `quote` text does
+not occur at `at` in the document hashing to `snapshot` — the same anchored, checked-
+slice test `adj-verify` runs (§E.5), applied at **compile time** against the snapshot the
+spider bundled. A pin that does not verify is a compile error, not a shipped
+`fully_verified: false` surprise. Consequences that follow directly:
+
+- a `quote` **without** `at`+`snapshot` lowers to `Unmigrated` (the honest partial state),
+  never to a `Verbatim` span the verifier would then fail;
+- a blank/invisible `quote` is refused at lowering (`VerbatimSpan::new` already enforces
+  this structurally — the surface just must not smuggle one in another way);
+- the snapshot bytes are content-addressed, so the same bundled document backs both the
+  compile-time check and the later `adj-verify --snapshots` run — one artifact, two
+  gates.
+
+**Migration is the spider re-emitting the stdlib.** Because the offset is machine-
+derived, migrating a library from `source`-only to a pinned `quote` is not hand work: the
+spider re-visits the locator, re-extracts the span it originally grounded, and re-emits
+the edge with `quote`/`at`/`snapshot`. `adj-verify --snapshots <dir>` then flips that
+library from `verified: true, fully_verified: false` to `fully_verified: true`. The
+stdlib checklist in §E.3 becomes a *mechanical* backfill, and the `fully_verified` count
+adj-verify already reports is the live progress meter.
+
 #### E.4 Abstention is a STEP, with a typed reason
 
 The engine abstains in at least seven distinct places, and today **only one of them
@@ -663,6 +713,7 @@ built on citations that point at the wrong row would produce a confident, well-f
 | PR-D1 | `Provenance.quote` / `Provenance.snapshot` — the verbatim span and its pinned document (§E.3) | **shipped** |
 | PR-D2 | `logic_engine::verify` + the `adj-verify` binary — step-level re-checker, offline (§E.5, §E.6) | **shipped** |
 | PR-D3 | Opt-in live re-fetch through the ADJ39 `CitationVerifier` registry → `SourceDrifted` / `SourceUnreachable` | follows D2 |
+| PR-D4 | `quote`/`at`/`snapshot` surface binding (§E.3.1): spider-emitted, fail-closed lowering, stdlib backfill → `fully_verified` | follows D2 |
 
 **What D2 shipped, and what it deliberately did not.** `verify_proof` re-executes all
 seven `DerivationOrigin` variants and checks quotes *anchored* against the pinned
