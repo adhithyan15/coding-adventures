@@ -1,0 +1,19 @@
+% ============================================================================
+% si-derived-units.query.adj — a worked recall over the SI derived-units library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is the SI unit of
+% velocity?": it states no metrology fact — it only `import`s the grounded table
+% and asks binding queries. The engine resolves each `?` against the
+% `si_derived_unit` rows and returns the symbol + the table's source/locator/
+% trust. A quantity the source sentence does not name abstains honestly — the
+% engine never invents a unit.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli si-derived-units.query.adj
+% ============================================================================
+
+import "si-derived-units.adj"
+
+? si_derived_unit(velocity, $Symbol)         % expect "m/s"
+? si_derived_unit(area, $Symbol)             % expect "m2"
+? si_derived_unit(luminance, $Symbol)        % expect abstain — not a named generic derived unit here

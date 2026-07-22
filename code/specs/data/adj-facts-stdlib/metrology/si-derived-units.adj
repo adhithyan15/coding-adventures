@@ -1,0 +1,53 @@
+% ============================================================================
+% si-derived-units — each SI quantity → its generic derived-unit symbol
+% (adj-facts-stdlib, METROLOGY).
+% ============================================================================
+% One rung up from the seven base units: the SI *derived* units with generic
+% names, whose symbol reflects the quantity's mathematical derivation from the
+% base units. Speed is length over time, so its unit is the metre per second;
+% area is length squared, so its unit is the square metre. Recall is a binding
+% query — you name a quantity and get back its unit symbol, WITH the citation:
+%
+%     ? si_derived_unit(velocity, $Symbol)      % "m/s"
+%     ? si_derived_unit(area, $Symbol)          % "m2"
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `si_derived_unit(quantity, symbol)` carrying the table's citation, so
+% the lookup is the ordinary SLD binding query — the engine returns the symbol
+% WITH its source, on the CPU, with zero model calls, and abstains on a quantity
+% the page does not name (it never invents a unit). It pairs with the
+% `si_base_unit` table (the seven base quantities) in this same directory.
+%
+% Why the symbol is a STRING: the derived-unit symbols are compound expressions
+% over the base symbols (`m/s`, `m/s2`) with slashes and digits — not bare atoms.
+% They are carried verbatim as the source page writes them.
+%
+% Provenance: the four quantity→symbol pairs are taken VERBATIM from the sentence
+% on the NIST Office of Weights and Measures "SI Units" page that enumerates the
+% generic-name derived units. The `source` below IS that sentence; each row is a
+% pair read straight off it:
+%
+%   area         → "m2"     (area (m2))
+%   volume       → "m3"     (volume (m3))
+%   velocity     → "m/s"    (velocity (m/s))
+%   acceleration → "m/s2"   (acceleration (m/s2))
+%
+% `trust authoritative` — a primary standards reference, re-fetchable at the
+% `locator`. Nothing here is asserted from memory: every pair is a token of the
+% cited sentence, and only the four quantities the sentence names are included.
+% (See ../README.md; ADJ-TABLES.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table si_derived_unit {
+    columns quantity, symbol
+
+    row (area, "m2")
+    row (volume, "m3")
+    row (velocity, "m/s")
+    row (acceleration, "m/s2")
+
+    source "Derived units with generic names reflect their mathematical derivation, such as area (m2), volume (m3), velocity (m/s), and acceleration (m/s2)."
+    locator "https://www.nist.gov/pml/owm/metric-si/si-units"
+    trust authoritative
+}
