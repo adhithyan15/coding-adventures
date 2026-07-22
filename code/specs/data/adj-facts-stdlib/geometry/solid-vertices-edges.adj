@@ -1,0 +1,63 @@
+% ============================================================================
+% solid-vertices-edges — how many vertices and edges each Platonic solid has
+% (adj-facts-stdlib, GEOMETRY).
+% ============================================================================
+% The companion of solid-shapes.adj (solid -> FACES): this ships the other two
+% columns of the same MathWorld "Platonic Solid" table — solid -> VERTICES and
+% solid -> EDGES. Together the three libraries carry the full (V, E, F) triple
+% for each of the five Platonic solids, so a consumer can recall all three and
+% CHECK Euler's formula for convex polyhedra, V - E + F = 2, entirely on the CPU:
+%
+%     ? solid_vertices(cube, $V)       % 8
+%     ? solid_edges(cube, $E)          % 12
+%     % with solid_faces(cube, 6) from solid-shapes.adj: 8 - 12 + 6 = 2. ✓
+%
+% Each is a native `table` (ADJ-TABLES RS-5): every `row` lowers to a ground
+% relation carrying the table's citation, so the lookup is the ordinary SLD
+% binding query — the engine returns the count WITH its source, on the CPU, with
+% zero model calls, and abstains on a solid not in the table. Because the values
+% are NUMBERS, a recalled count composes straight into a formula — the same
+% concrete RECALL -> COMPUTE bridge as its faces sibling.
+%
+% Provenance: the vertex and edge counts are read straight off the Wolfram
+% MathWorld "Platonic Solid" table, which lists for each solid its number of
+% vertices, edges, and faces. In the standard order (tetrahedron, cube,
+% octahedron, dodecahedron, icosahedron) the vertices are 4, 8, 6, 20, 12 and the
+% edges are 6, 12, 12, 30, 30. `trust authoritative` — a primary mathematics
+% reference. Nothing here is asserted from memory. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Vertices — the corner points where edges meet.
+% ----------------------------------------------------------------------------
+table solid_vertices {
+    columns solid, vertices
+
+    row (tetrahedron, 4)
+    row (cube, 8)
+    row (octahedron, 6)
+    row (dodecahedron, 20)
+    row (icosahedron, 12)
+
+    source "MathWorld's Platonic Solid table gives, for each solid, its number of vertices: tetrahedron 4, cube 8, octahedron 6, dodecahedron 20, icosahedron 12."
+    locator "https://mathworld.wolfram.com/PlatonicSolid.html"
+    trust authoritative
+}
+
+% ----------------------------------------------------------------------------
+% Edges — the line segments where two faces meet.
+% ----------------------------------------------------------------------------
+table solid_edges {
+    columns solid, edges
+
+    row (tetrahedron, 6)
+    row (cube, 12)
+    row (octahedron, 12)
+    row (dodecahedron, 30)
+    row (icosahedron, 30)
+
+    source "MathWorld's Platonic Solid table gives, for each solid, its number of edges: tetrahedron 6, cube 12, octahedron 12, dodecahedron 30, icosahedron 30."
+    locator "https://mathworld.wolfram.com/PlatonicSolid.html"
+    trust authoritative
+}
