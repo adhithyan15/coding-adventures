@@ -148,6 +148,15 @@ pub enum Stmt {
     /// space-filled). `WITH POINTER`, `ON OVERFLOW`, a multi-character or `ALL`/
     /// `OR` delimiter, and a numeric/group source or receiver are later rungs.
     Unstring { source: String, delim: Operand, targets: Vec<String> },
+    /// `INSPECT source TALLYING counter FOR ALL delim` — count the (non-
+    /// overlapping, left-to-right) occurrences of the SINGLE-character `delim`
+    /// (a 1-char literal or a `PIC X(1)` item) in the alphanumeric `source`, and
+    /// **ADD** that count to the unsigned-integer `counter` (`PIC 9(n)`). INSPECT
+    /// adds to the counter; it does NOT clear it first. `LEADING`/`CHARACTERS`
+    /// tallies, `BEFORE`/`AFTER` phrases, several counters or `FOR` phrases, any
+    /// `REPLACING`, and a multi-character/figurative/wider delimiter or a
+    /// numeric/group source or a non-integer/non-numeric counter are later rungs.
+    Inspect { source: String, counter: String, delim: Operand },
     StopRun,
 }
 
@@ -761,8 +770,91 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
             }
             Ok(Stmt::Unstring { source, delim, targets })
         }
+        "inspect_stmt" => {
+            // INSPECT source TALLYING counter FOR ALL delim. The grammar also
+            // accepts the fuller INSPECT surface (LEADING/CHARACTERS, BEFORE/AFTER
+            // regions, several counters, and every REPLACING form) so those reject
+            // as a friendly Unsupported here — not a parse error.
+            if child_node(verb, "inspect_replacing").is_some() {
+                return Err(RuntimeError::Unsupported(
+                    "INSPECT … REPLACING is a later rung".into(),
+                ));
+            }
+            // The source is the first (and only top-level) `operand`; a literal or
+            // reference-modified source is a later rung (its category is checked at
+            // exec time).
+            let source_node = child_node(verb, "operand")
+                .ok_or_else(|| RuntimeError::Unsupported("INSPECT without a source".into()))?;
+            let source = match read_operand(source_node)? {
+                Operand::Ident(name) => name,
+                Operand::Lit(_) => {
+                    return Err(RuntimeError::Unsupported(
+                        "INSPECT of a literal source is a later rung".into(),
+                    ))
+                }
+                Operand::RefMod { .. } => {
+                    return Err(RuntimeError::Unsupported(
+                        "INSPECT of a reference-modified source is a later rung".into(),
+                    ))
+                }
+            };
+            let (counter, delim) = read_inspect_tally_all(verb)?;
+            Ok(Stmt::Inspect { source, counter, delim })
+        }
         other => Err(RuntimeError::Unsupported(format!("the {} verb", verb_name(other)))),
     }
+}
+
+/// Extract the single supported `TALLYING counter FOR ALL delim` phrase from an
+/// `inspect_stmt`, returning `(counter_name, delim_operand)` and rejecting every
+/// later-rung form the grammar also accepts: several counters, several `FOR`
+/// phrases, a `LEADING`/`CHARACTERS` tally, and a `BEFORE`/`AFTER … INITIAL`
+/// region. (`REPLACING` and a non-alphanumeric source/counter are handled by the
+/// caller and exec.)
+fn read_inspect_tally_all(verb: &GrammarASTNode) -> Result<(String, Operand), RuntimeError> {
+    let tallying = child_node(verb, "inspect_tallying").ok_or_else(|| {
+        RuntimeError::Unsupported("INSPECT without a TALLYING clause is a later rung".into())
+    })?;
+    let fors = child_nodes(tallying, "tally_for");
+    let tf = match fors.as_slice() {
+        [one] => *one,
+        _ => {
+            return Err(RuntimeError::Unsupported(
+                "INSPECT TALLYING with several counters is a later rung".into(),
+            ))
+        }
+    };
+    let counter = first_token(tf, "NAME")
+        .ok_or_else(|| RuntimeError::Unsupported("INSPECT TALLYING without a counter".into()))?;
+    let items = child_nodes(tf, "tally_item");
+    let ti = match items.as_slice() {
+        [one] => *one,
+        _ => {
+            return Err(RuntimeError::Unsupported(
+                "INSPECT TALLYING with several FOR phrases is a later rung".into(),
+            ))
+        }
+    };
+    let toks = child_tokens(ti);
+    if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
+        return Err(RuntimeError::Unsupported(
+            "INSPECT TALLYING … FOR CHARACTERS is a later rung".into(),
+        ));
+    }
+    if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING") {
+        return Err(RuntimeError::Unsupported(
+            "INSPECT TALLYING … FOR LEADING is a later rung".into(),
+        ));
+    }
+    if child_node(ti, "inspect_region").is_some() {
+        return Err(RuntimeError::Unsupported(
+            "INSPECT TALLYING … BEFORE/AFTER is a later rung".into(),
+        ));
+    }
+    let delim_node = child_node(ti, "operand").ok_or_else(|| {
+        RuntimeError::Unsupported("INSPECT TALLYING FOR ALL without a delimiter".into())
+    })?;
+    Ok((counter, read_operand(delim_node)?))
 }
 
 /// Read a `condition` node: a `disjunction` of `AND`-joined simple conditions,

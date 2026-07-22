@@ -40,7 +40,11 @@ recognises a level by value and position. Note `STRING` is a reserved word (the
 verb) *and* the type name of the quoted string-literal token — the two never
 collide: keyword promotion only rewrites bare `NAME` words, while a quoted `"…"`
 always lexes as the literal token regardless of the keyword list. `UNSTRING`
-(with `END-UNSTRING`) is reserved the same way for the inverse verb.
+(with `END-UNSTRING`) is reserved the same way for the inverse verb. `INSPECT`
+(with `TALLYING`, `REPLACING`, `LEADING`, `CHARACTERS`, `BEFORE`, `AFTER`, `FOR`,
+and `END-INSPECT`) is reserved for the character-scan verb; `FIRST`/`INITIAL` stay
+unreserved so common data names keep working (they are only needed by the
+still-deferred `REPLACING FIRST` / `BEFORE INITIAL`).
 
 ## Scope
 

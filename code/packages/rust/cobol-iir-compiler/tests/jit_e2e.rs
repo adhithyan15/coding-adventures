@@ -1830,3 +1830,77 @@ fn unstring_truncates_a_long_field() {
     ));
     assert_eq!(out, "ABC\nZ  \n");
 }
+
+// ---------------------------------------------------------------------------
+// INSPECT … TALLYING — count the (non-overlapping, left-to-right) occurrences of
+// a single-character delimiter in an alphanumeric source and ADD the count to an
+// integer counter (INSPECT adds; it does not clear the counter first). Each case
+// pins the compiled JIT output to the tree-walk oracle byte-for-byte.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn inspect_counts_all_occurrences_of_a_char() {
+    // "BANANA" has three A's → C = 0 + 3 = 3.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"BANANA\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"A\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "003\n");
+}
+
+#[test]
+fn inspect_zero_occurrences_leaves_the_counter() {
+    // No 'Z' in "HELLO" → C stays 0.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"HELLO\".", "01  C  PIC 9(2) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"Z\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "00\n");
+}
+
+#[test]
+fn inspect_adds_to_a_nonzero_counter_not_replaces_it() {
+    // C starts at 5; "MISSISSIPPI" has four S's → C = 5 + 4 = 9 (proves ADD, not
+    // a fresh assignment).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(11) VALUE \"MISSISSIPPI\".", "01  C  PIC 9(3) VALUE 5."],
+        &["INSPECT S TALLYING C FOR ALL \"S\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "009\n");
+}
+
+#[test]
+fn inspect_delimiter_is_a_pic_x1_item() {
+    // The delimiter may be a PIC X(1) item (its single stored character), read at
+    // run time: three ';' in "A;B;C;D".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(7) VALUE \"A;B;C;D\".",
+            "01  DL PIC X(1) VALUE \";\".",
+            "01  C  PIC 9(2) VALUE 0.",
+        ],
+        &["INSPECT S TALLYING C FOR ALL DL.", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "03\n");
+}
+
+#[test]
+fn inspect_every_character_matches() {
+    // Every one of "AAAA" is an 'A' → C = 4.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"AAAA\".", "01  C  PIC 9(2) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"A\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "04\n");
+}
+
+#[test]
+fn inspect_delimiter_at_both_ends() {
+    // "*HI*" — the delimiter at both boundaries is still counted (2), and the
+    // optional END-INSPECT terminator parses.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"*HI*\".", "01  C  PIC 9(2) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"*\" END-INSPECT.", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "02\n");
+}

@@ -349,6 +349,17 @@ unstring_stmt      = "UNSTRING" operand "DELIMITED" "BY" operand
                      "INTO" NAME { NAME } [ "WITH" "POINTER" NAME ]
                      [ "ON" "OVERFLOW" { statement } ]
                      [ "NOT" "ON" "OVERFLOW" { statement } ] [ "END-UNSTRING" ] ;
+inspect_stmt       = "INSPECT" operand
+                     ( inspect_tallying [ inspect_replacing ] | inspect_replacing )
+                     [ "END-INSPECT" ] ;
+inspect_tallying   = "TALLYING" tally_for { tally_for } ;
+tally_for          = NAME "FOR" tally_item { tally_item } ;
+tally_item         = ( "ALL" | "LEADING" ) operand { inspect_region }
+                   | "CHARACTERS" { inspect_region } ;
+inspect_replacing  = "REPLACING" replace_item { replace_item } ;
+replace_item       = "CHARACTERS" "BY" operand { inspect_region }
+                   | ( "ALL" | "LEADING" ) operand "BY" operand { inspect_region } ;
+inspect_region     = ( "BEFORE" | "AFTER" ) operand ;
 stop_stmt          = "STOP" ( "RUN" | NUMBER ) ;
 ```
 
@@ -401,6 +412,41 @@ delimiter position is data-dependent, the compiler lowers `UNSTRING` to a run-ti
 **scan loop** (`str_len` + `str_index`/`cmp` to find each delimiter, then a
 `str_slice`/`str_concat` reshape into each receiver), whereas `STRING`'s boundaries
 were all compile-time constants.
+
+### `INSPECT … TALLYING` (first rung)
+
+`INSPECT` scans an alphanumeric item to either **count** characters (`TALLYING`)
+or **substitute** them (`REPLACING`). The **first rung** implements the counting
+form `INSPECT source TALLYING counter FOR ALL delim`:
+
+- `source` is an alphanumeric (`PIC X`) data item.
+- `counter` is an **unsigned integer** numeric item (`PIC 9(n)`, scale 0). INSPECT
+  **ADDs** to the counter — it does **not** clear it first — so the effect is
+  `counter := counter + occurrences`. (This is the standard's rule and the common
+  source of the "why is my count too high?" bug.)
+- `delim` is a **single-character** delimiter — a 1-character string literal
+  (`"A"`) or a `PIC X(1)` item. `ALL` means every (non-overlapping, left-to-right)
+  occurrence is counted.
+- The count is the number of positions `j` where `source[j] == delim` (single-byte
+  ASCII compare — the same char/byte assumption `STRING`/`UNSTRING` use).
+
+Worked (delimiter `"A"`, `counter` `PIC 9(3)`): `"BANANA"` → three A's → counter
+`0 → 3`; a counter starting at `5` over `"MISSISSIPPI"` counting `"S"` → `5 + 4 =
+9` (proving ADD, not replace); `"HELLO"` counting `"Z"` → `0` (unchanged).
+
+The count folds into the counter through the **same numeric-store path the
+arithmetic verbs use** (COBOL's silent high-order truncation on overflow), so the
+oracle (`store_result(counter, counter + count)`) and the compiler
+(a `str_len` + `str_index`/`cmp_eq` **count loop**, then `store_scaled`) agree
+byte-for-byte. The grammar deliberately accepts the fuller `INSPECT` surface —
+`LEADING`/`CHARACTERS` tallies, `BEFORE`/`AFTER` regions, several `TALLYING`
+counters or `FOR` phrases, and every `REPLACING` form (`INSPECT … REPLACING` and
+`INSPECT … TALLYING … REPLACING`) — so the reader/compiler reject each as a clean
+"later rung" error rather than a parse failure. A multi-character / figurative /
+numeric / wider-than-one delimiter, and a numeric/group source or a
+non-integer/signed/non-numeric counter, are likewise clean later rungs. (`FIRST`
+and `INITIAL`, needed only by `REPLACING FIRST` / `BEFORE INITIAL`, are left
+unreserved so common data names keep working.)
 
 Grammar scope tracks the lexer scope below.
 

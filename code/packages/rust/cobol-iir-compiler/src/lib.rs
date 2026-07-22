@@ -449,6 +449,7 @@ impl<'a> Compiler<'a> {
             "evaluate_stmt" => self.emit_evaluate(verb),
             "string_stmt" => self.emit_string(verb),
             "unstring_stmt" => self.emit_unstring(verb),
+            "inspect_stmt" => self.emit_inspect(verb),
             other => Err(CompileError::Unsupported(format!(
                 "the {} statement is a later rung",
                 verb_name(other)
@@ -1104,7 +1105,7 @@ impl<'a> Compiler<'a> {
         let s_reg = self.items[sidx].reg.clone();
 
         // The delimiter reduced to a single byte code register.
-        let d_reg = self.unstring_delim_code(delim_node)?;
+        let d_reg = self.single_delim_code(delim_node, "UNSTRING")?;
 
         // Receivers: the direct NAME tokens after INTO (a WITH POINTER name, also a
         // direct NAME, has already been rejected above). Each must be alphanumeric.
@@ -1224,46 +1225,52 @@ impl<'a> Compiler<'a> {
         Ok(())
     }
 
-    /// The single delimiter byte of an `UNSTRING … DELIMITED BY delim`, reduced to
-    /// a fresh i64 register: a `const` of the byte for a 1-character string
-    /// literal, or `str_index(item, 0)` for a `PIC X(1)` item. A multi-character
-    /// delimiter, a numeric/figurative delimiter, a reference-modified delimiter,
-    /// and a numeric/group/wider delimiter item are later rungs. (COBOL source is
-    /// ASCII, so a "1-character" literal is a single byte; the scan loop compares
-    /// the source's bytes against this code.)
-    fn unstring_delim_code(&mut self, op: &GrammarASTNode) -> Result<String, CompileError> {
+    /// A single delimiter byte reduced to a fresh i64 register: a `const` of the
+    /// byte for a 1-character string literal, or `str_index(item, 0)` for a `PIC
+    /// X(1)` item. A multi-character delimiter, a numeric/figurative delimiter, a
+    /// reference-modified delimiter, and a numeric/group/wider delimiter item are
+    /// later rungs. (COBOL source is ASCII, so a "1-character" literal is a single
+    /// byte; the scan loop compares the source's bytes against this code.)
+    ///
+    /// Shared by `UNSTRING … DELIMITED BY delim` and `INSPECT … FOR ALL delim`
+    /// (which both scan for a single byte); `verb` names the caller so the
+    /// later-rung message reads naturally.
+    fn single_delim_code(
+        &mut self,
+        op: &GrammarASTNode,
+        verb: &str,
+    ) -> Result<String, CompileError> {
         match read_operand(op)? {
             Operandy::Literal(Src::Str(s)) => {
                 let bytes = s.as_bytes();
                 if bytes.len() != 1 {
-                    return Err(CompileError::Unsupported(
-                        "UNSTRING with a multi-character delimiter is a later rung".into(),
-                    ));
+                    return Err(CompileError::Unsupported(format!(
+                        "{verb} with a multi-character delimiter is a later rung"
+                    )));
                 }
                 let reg = self.fresh("_usd");
                 self.emit("const", Some(&reg), vec![Operand::Int(bytes[0] as i64)], "i64");
                 Ok(reg)
             }
-            Operandy::Literal(Src::Num(_)) => Err(CompileError::Unsupported(
-                "UNSTRING with a numeric-literal delimiter is a later rung".into(),
-            )),
+            Operandy::Literal(Src::Num(_)) => Err(CompileError::Unsupported(format!(
+                "{verb} with a numeric-literal delimiter is a later rung"
+            ))),
             Operandy::Literal(Src::Space) | Operandy::Literal(Src::Zero) => {
-                Err(CompileError::Unsupported(
-                    "UNSTRING with a figurative-constant delimiter is a later rung".into(),
-                ))
+                Err(CompileError::Unsupported(format!(
+                    "{verb} with a figurative-constant delimiter is a later rung"
+                )))
             }
-            Operandy::RefMod { .. } => Err(CompileError::Unsupported(
-                "UNSTRING with a reference-modified delimiter is a later rung".into(),
-            )),
+            Operandy::RefMod { .. } => Err(CompileError::Unsupported(format!(
+                "{verb} with a reference-modified delimiter is a later rung"
+            ))),
             Operandy::Name(name) => {
                 let idx = self.item_index(&name)?;
                 match &self.items[idx].kind {
                     ItemKind::Char { .. } => {
                         if self.items[idx].width() != 1 {
-                            return Err(CompileError::Unsupported(
-                                "UNSTRING with a delimiter item wider than one character is a later rung"
-                                    .into(),
-                            ));
+                            return Err(CompileError::Unsupported(format!(
+                                "{verb} with a delimiter item wider than one character is a later rung"
+                            )));
                         }
                         let reg = self.items[idx].reg.clone();
                         let zero = self.str_index(0);
@@ -1276,12 +1283,137 @@ impl<'a> Compiler<'a> {
                         );
                         Ok(out)
                     }
-                    ItemKind::Numeric { .. } => Err(CompileError::Unsupported(
-                        "UNSTRING with a numeric delimiter item is a later rung".into(),
-                    )),
+                    ItemKind::Numeric { .. } => Err(CompileError::Unsupported(format!(
+                        "{verb} with a numeric delimiter item is a later rung"
+                    ))),
                 }
             }
         }
+    }
+
+    /// `INSPECT source TALLYING counter FOR ALL delim` — count the (non-
+    /// overlapping, left-to-right) occurrences of the SINGLE-character `delim` in
+    /// the alphanumeric `source` and **ADD** that count to the integer `counter`.
+    /// INSPECT *adds* to the counter; it does NOT zero it first, so the net effect
+    /// is `counter := counter + occurrences`.
+    ///
+    /// Like UNSTRING this is a data-dependent scan, so we emit a genuine LOOP over
+    /// the source: its register `S`, its length `len = str_len(S)`, a cursor `j`
+    /// (i64, init 0), and a count accumulator `cnt` (i64, init 0). At each position
+    /// `S[j]` (read with `str_index`) is compared to the delimiter byte `D`, and
+    /// `cnt` is bumped on a match:
+    ///
+    /// ```text
+    ///   cnt = 0;  j = 0;  len = str_len(S)
+    /// insp_top:  if j >= len   jmp insp_end
+    ///            if S[j] == D   cnt = cnt + 1        # (skip-around when not equal)
+    ///            j = j + 1;  jmp insp_top
+    /// insp_end:
+    ///   counter := (counter_value + cnt) reduced into counter's picture
+    /// ```
+    ///
+    /// The count is folded into the counter with the SAME numeric-store path `ADD`
+    /// uses (`store_scaled`, which mirrors the oracle's `store_result`/
+    /// `move_into_numeric`), so a compiled program matches `cobol-runtime`'s
+    /// `exec_inspect` byte-for-byte. Every later-rung form — `LEADING`/
+    /// `CHARACTERS` tallies, `BEFORE`/`AFTER` phrases, several counters or `FOR`
+    /// phrases, any `REPLACING`, and a multi-character/figurative/wider delimiter
+    /// or a numeric source or a non-integer/non-numeric counter — is a clean
+    /// `Unsupported`, accepted by the grammar and rejected here.
+    fn emit_inspect(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
+        // REPLACING (with or without TALLYING) is a later rung.
+        if child_node(verb, "inspect_replacing").is_some() {
+            return Err(CompileError::Unsupported(
+                "INSPECT … REPLACING is a later rung".into(),
+            ));
+        }
+        // The source is the first (and only top-level) `operand`.
+        let source_node = child_node(verb, "operand")
+            .ok_or_else(|| CompileError::Malformed("INSPECT without a source".into()))?;
+        let source_name = match read_operand(source_node)? {
+            Operandy::Name(n) => n,
+            Operandy::Literal(_) => {
+                return Err(CompileError::Unsupported(
+                    "INSPECT of a literal source is a later rung".into(),
+                ))
+            }
+            Operandy::RefMod { .. } => {
+                return Err(CompileError::Unsupported(
+                    "INSPECT of a reference-modified source is a later rung".into(),
+                ))
+            }
+        };
+        let sidx = self.item_index(&source_name)?;
+        match &self.items[sidx].kind {
+            ItemKind::Char { .. } => {}
+            ItemKind::Numeric { .. } => {
+                return Err(CompileError::Unsupported(
+                    "INSPECT of a numeric source is a later rung".into(),
+                ))
+            }
+        }
+        let s_reg = self.items[sidx].reg.clone();
+
+        // Extract the single `FOR ALL delim` phrase (rejecting the later rungs).
+        let (counter_name, delim_node) = inspect_tally_all(verb)?;
+
+        // The counter must be an unsigned integer numeric item (`PIC 9(n)`).
+        let cidx = self.numeric_index(&counter_name)?;
+        let (int_digits, dec_digits) = self.numeric_dims(cidx);
+        if dec_digits != 0 {
+            return Err(CompileError::Unsupported(format!(
+                "INSPECT TALLYING into a non-integer counter {counter_name} is a later rung"
+            )));
+        }
+        if self.item_signed(cidx) {
+            return Err(CompileError::Unsupported(format!(
+                "INSPECT TALLYING into a signed counter {counter_name} is a later rung"
+            )));
+        }
+        let counter_reg = self.items[cidx].reg.clone();
+
+        // The delimiter reduced to a single byte code register.
+        let d_reg = self.single_delim_code(delim_node, "INSPECT")?;
+
+        // cnt = 0; j = 0; len = str_len(S).
+        let cnt = self.fresh("_inspc");
+        self.emit("const", Some(&cnt), vec![Operand::Int(0)], "i64");
+        let len = self.fresh("_insplen");
+        self.emit("str_len", Some(&len), vec![Operand::Var(s_reg.clone())], "i64");
+        let j = self.fresh("_inspj");
+        self.emit("const", Some(&j), vec![Operand::Int(0)], "i64");
+
+        let top = self.fresh("insp_top");
+        let end = self.fresh("insp_end");
+        self.emit("label", None, vec![Operand::Var(top.clone())], "void");
+        // if j >= len jmp end.
+        let ge = self.fresh("_inspge");
+        self.emit("cmp_ge", Some(&ge), vec![Operand::Var(j.clone()), Operand::Var(len.clone())], "i64");
+        self.emit("jmp_if_true", None, vec![Operand::Var(ge), Operand::Var(end.clone())], "void");
+        // if S[j] != D skip the bump.
+        let c = self.fresh("_inspc0");
+        self.emit("str_index", Some(&c), vec![Operand::Var(s_reg.clone()), Operand::Var(j.clone())], "i64");
+        let eq = self.fresh("_inspeq");
+        self.emit("cmp_eq", Some(&eq), vec![Operand::Var(c), Operand::Var(d_reg.clone())], "i64");
+        let nobump = self.fresh("insp_nobump");
+        self.emit("jmp_if_false", None, vec![Operand::Var(eq), Operand::Var(nobump.clone())], "void");
+        let one = self.fresh("_insp1");
+        self.emit("const", Some(&one), vec![Operand::Int(1)], "i64");
+        self.emit("add", Some(&cnt), vec![Operand::Var(cnt.clone()), Operand::Var(one)], "i64");
+        self.emit("label", None, vec![Operand::Var(nobump)], "void");
+        // j = j + 1; jmp top.
+        let one2 = self.fresh("_insp1b");
+        self.emit("const", Some(&one2), vec![Operand::Int(1)], "i64");
+        self.emit("add", Some(&j), vec![Operand::Var(j.clone()), Operand::Var(one2)], "i64");
+        self.emit("jmp", None, vec![Operand::Var(top)], "void");
+        self.emit("label", None, vec![Operand::Var(end)], "void");
+
+        // counter := counter_value + cnt, reduced into the counter's picture — the
+        // exact numeric-store ADD uses (COBOL's silent high-order truncation), so
+        // this matches the oracle's `store_result(counter, counter + cnt)`.
+        let sum = self.fresh("_inspsum");
+        self.emit("add", Some(&sum), vec![Operand::Var(counter_reg), Operand::Var(cnt)], "i64");
+        self.store_scaled(&counter_name, &sum, 0, int_digits + 1, false)
     }
 
     /// `STOP RUN` → `ret 0`.
@@ -3090,6 +3222,60 @@ fn read_refmod_index(op: &GrammarASTNode) -> Result<usize, CompileError> {
     }
 }
 
+/// Extract the single supported `TALLYING counter FOR ALL delim` phrase from an
+/// `inspect_stmt`, returning `(counter_name, delim_operand_node)` and rejecting
+/// every later-rung form the grammar also accepts:
+///   * more than one `TALLYING` counter (`{ tally_for }`) — one counter this rung;
+///   * more than one `FOR` phrase on that counter (`{ tally_item }`);
+///   * a `LEADING` or `CHARACTERS` tally (only `ALL` this rung);
+///   * a `BEFORE`/`AFTER` region restricting the scan.
+///
+/// (`REPLACING` and a non-alphanumeric source are rejected by the caller.)
+fn inspect_tally_all(verb: &GrammarASTNode) -> Result<(String, &GrammarASTNode), CompileError> {
+    let tallying = child_node(verb, "inspect_tallying").ok_or_else(|| {
+        CompileError::Unsupported("INSPECT without a TALLYING clause is a later rung".into())
+    })?;
+    let fors = child_nodes(tallying, "tally_for");
+    let tf = match fors.as_slice() {
+        [one] => *one,
+        _ => {
+            return Err(CompileError::Unsupported(
+                "INSPECT TALLYING with several counters is a later rung".into(),
+            ))
+        }
+    };
+    let counter = first_token(tf, "NAME")
+        .ok_or_else(|| CompileError::Malformed("INSPECT TALLYING without a counter".into()))?;
+    let items = child_nodes(tf, "tally_item");
+    let ti = match items.as_slice() {
+        [one] => *one,
+        _ => {
+            return Err(CompileError::Unsupported(
+                "INSPECT TALLYING with several FOR phrases is a later rung".into(),
+            ))
+        }
+    };
+    let toks = child_tokens(ti);
+    if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
+        return Err(CompileError::Unsupported(
+            "INSPECT TALLYING … FOR CHARACTERS is a later rung".into(),
+        ));
+    }
+    if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING") {
+        return Err(CompileError::Unsupported(
+            "INSPECT TALLYING … FOR LEADING is a later rung".into(),
+        ));
+    }
+    if child_node(ti, "inspect_region").is_some() {
+        return Err(CompileError::Unsupported(
+            "INSPECT TALLYING … BEFORE/AFTER is a later rung".into(),
+        ));
+    }
+    let delim = child_node(ti, "operand")
+        .ok_or_else(|| CompileError::Malformed("INSPECT TALLYING FOR ALL without a delimiter".into()))?;
+    Ok((counter, delim))
+}
+
 /// Read a `literal` node (NUMBER / STRING / figurative) into a [`Src`].
 fn read_literal(lit: &GrammarASTNode) -> Result<Src, CompileError> {
     if let Some(fig) = child_node(lit, "figurative") {
@@ -4256,6 +4442,88 @@ mod tests {
                 &["UNSTRING S DELIMITED BY \",\" INTO N.", "STOP RUN."],
             ),
             "unstr_num",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn inspect_compiles_to_scan_loop_and_validates() {
+        // The happy path lowers to a data-dependent count LOOP (str_len over the
+        // source, a str_index/cmp scan bumping a counter register, then an add into
+        // the counter slot) and passes IIR validation.
+        let module = compile_source(
+            &wrap(
+                &["01  S  PIC X(6) VALUE \"BANANA\".", "01  C  PIC 9(3) VALUE 0."],
+                &["INSPECT S TALLYING C FOR ALL \"A\".", "DISPLAY C.", "STOP RUN."],
+            ),
+            "insp",
+        )
+        .unwrap();
+        assert!(module.validate().is_empty(), "{:?}", module.validate());
+        let os = ops(&module);
+        assert!(os.contains(&"str_len".to_string()), "scans the source length");
+        assert!(os.contains(&"str_index".to_string()), "reads source bytes to match the delimiter");
+        assert!(os.contains(&"cmp_eq".to_string()), "compares each byte to the delimiter");
+        assert!(os.contains(&"add".to_string()), "bumps the count and folds it into the counter");
+    }
+
+    #[test]
+    fn inspect_replacing_is_a_later_rung() {
+        // REPLACING (with or without TALLYING) is accepted by the grammar but
+        // rejected here as a later rung.
+        let err = compile_source(
+            &wrap(
+                &["01  S  PIC X(5) VALUE \"ABABA\"."],
+                &["INSPECT S REPLACING ALL \"A\" BY \"X\".", "STOP RUN."],
+            ),
+            "insp_repl",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn inspect_tallying_replacing_is_a_later_rung() {
+        // The combined INSPECT … TALLYING … REPLACING form is likewise rejected.
+        let err = compile_source(
+            &wrap(
+                &["01  S  PIC X(5) VALUE \"ABABA\".", "01  C  PIC 9(3) VALUE 0."],
+                &[
+                    "INSPECT S TALLYING C FOR ALL \"A\" REPLACING ALL \"B\" BY \"X\".",
+                    "STOP RUN.",
+                ],
+            ),
+            "insp_tr",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn inspect_multi_character_delimiter_is_a_later_rung() {
+        // A single delimiter CHARACTER only this rung; a 2-char literal is rejected.
+        let err = compile_source(
+            &wrap(
+                &["01  S  PIC X(5) VALUE \"AB::B\".", "01  C  PIC 9(3) VALUE 0."],
+                &["INSPECT S TALLYING C FOR ALL \"::\".", "STOP RUN."],
+            ),
+            "insp_multi",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn inspect_leading_tally_is_a_later_rung() {
+        // FOR LEADING counts only a run at the start — a later rung; only FOR ALL
+        // is modelled this cut.
+        let err = compile_source(
+            &wrap(
+                &["01  S  PIC X(5) VALUE \"AABBB\".", "01  C  PIC 9(3) VALUE 0."],
+                &["INSPECT S TALLYING C FOR LEADING \"A\".", "STOP RUN."],
+            ),
+            "insp_lead",
         )
         .unwrap_err();
         assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");

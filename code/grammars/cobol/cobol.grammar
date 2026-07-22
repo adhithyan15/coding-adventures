@@ -112,7 +112,7 @@ sentence  = statement { statement } DOT ;
 statement = move_stmt | display_stmt | accept_stmt
           | add_stmt | subtract_stmt | multiply_stmt | divide_stmt | compute_stmt
           | perform_stmt | goto_stmt | if_stmt | set_stmt | evaluate_stmt
-          | string_stmt | unstring_stmt | stop_stmt ;
+          | string_stmt | unstring_stmt | inspect_stmt | stop_stmt ;
 
 move_stmt     = "MOVE" operand "TO" NAME { NAME } ;
 # SET a level-88 condition-name TRUE: assign its conditional variable the value
@@ -162,6 +162,32 @@ unstring_stmt = "UNSTRING" operand "DELIMITED" "BY" operand "INTO" NAME { NAME }
                         [ "ON" "OVERFLOW" { statement } ]
                         [ "NOT" "ON" "OVERFLOW" { statement } ]
                         [ "END-UNSTRING" ] ;
+# INSPECT: scan an alphanumeric item to COUNT occurrences (TALLYING) or SUBSTITUTE
+# characters (REPLACING).  First rung: `INSPECT source TALLYING counter FOR ALL
+# delim` — ADD to `counter` the number of (non-overlapping, left-to-right)
+# occurrences of the single-character `delim` in `source`.
+#   The grammar is deliberately broad — it accepts the fuller INSPECT surface
+# (LEADING/CHARACTERS tallies, BEFORE/AFTER phrases, several counters and FOR
+# phrases, and every REPLACING form) — so the reader/compiler can reject
+# each unimplemented form as a friendly Unsupported instead of a bare parse
+# error, exactly as STRING/UNSTRING do for their later-rung options.  A bare
+# TALLYING form has a following `inspect_replacing` only when REPLACING is also
+# present; a lone REPLACING (no TALLYING) is the second alternative.  `END-INSPECT`
+# closes the scope; like the other verbs the statement also ends at a period.
+inspect_stmt  = "INSPECT" operand
+                        ( inspect_tallying [ inspect_replacing ] | inspect_replacing )
+                        [ "END-INSPECT" ] ;
+inspect_tallying  = "TALLYING" tally_for { tally_for } ;
+tally_for         = NAME "FOR" tally_item { tally_item } ;
+tally_item        = ( "ALL" | "LEADING" ) operand { inspect_region }
+                  | "CHARACTERS" { inspect_region } ;
+inspect_replacing = "REPLACING" replace_item { replace_item } ;
+replace_item      = "CHARACTERS" "BY" operand { inspect_region }
+                  | ( "ALL" | "LEADING" ) operand "BY" operand { inspect_region } ;
+# A BEFORE/AFTER delimiter restricts the scan to part of the item — a later rung;
+# the grammar accepts it so it rejects cleanly. (COBOL's optional `INITIAL` word
+# after BEFORE/AFTER is itself a later rung, so it is not reserved yet.)
+inspect_region    = ( "BEFORE" | "AFTER" ) operand ;
 display_stmt  = "DISPLAY" operand { operand } ;
 accept_stmt   = "ACCEPT" NAME ;
 # The four arithmetic verbs share two optional trailing clauses with COMPUTE:

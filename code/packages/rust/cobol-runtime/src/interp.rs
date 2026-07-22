@@ -352,6 +352,9 @@ impl Machine {
             Stmt::Unstring { source, delim, targets } => {
                 self.exec_unstring(source, delim, targets)?
             }
+            Stmt::Inspect { source, counter, delim } => {
+                return self.exec_inspect(source, counter, delim)
+            }
         }
         Ok(Flow::Normal)
     }
@@ -493,7 +496,7 @@ impl Machine {
         let src: Vec<char> = self.items[sidx].storage.chars().collect();
 
         // The single delimiter character.
-        let delim_ch = self.unstring_delim_char(delim)?;
+        let delim_ch = self.single_delim_char(delim, "UNSTRING")?;
 
         // Every receiver must be an alphanumeric item (validated up front so a
         // numeric/group receiver is a clean error even if the scan never reaches
@@ -542,56 +545,124 @@ impl Machine {
         Ok(())
     }
 
-    /// The single delimiter character of an `UNSTRING … DELIMITED BY delim`. It is
-    /// either a 1-character string literal (`","`, `" "`) or a `PIC X(1)` item. A
-    /// multi-character delimiter, `DELIMITED BY ALL`, several `OR` delimiters, a
-    /// numeric/figurative delimiter, and a numeric/group/wider delimiter item are
-    /// later rungs.
-    fn unstring_delim_char(&self, delim: &Operand) -> Result<char, RuntimeError> {
+    /// The single delimiter character of a scan delimiter. It is either a
+    /// 1-character string literal (`","`, `" "`) or a `PIC X(1)` item. A
+    /// multi-character delimiter, `ALL`/`OR` delimiters, a numeric/figurative
+    /// delimiter, and a numeric/group/wider delimiter item are later rungs.
+    ///
+    /// Shared by `UNSTRING … DELIMITED BY delim` and `INSPECT … FOR ALL delim`;
+    /// `verb` names the caller so the later-rung message reads naturally.
+    fn single_delim_char(&self, delim: &Operand, verb: &str) -> Result<char, RuntimeError> {
         match delim {
             Operand::Lit(Lit::Str(s)) => {
                 let chars: Vec<char> = s.chars().collect();
                 match chars.as_slice() {
                     [c] => Ok(*c),
-                    _ => Err(RuntimeError::Unsupported(
-                        "UNSTRING with a multi-character delimiter is a later rung".into(),
-                    )),
+                    _ => Err(RuntimeError::Unsupported(format!(
+                        "{verb} with a multi-character delimiter is a later rung"
+                    ))),
                 }
             }
-            Operand::Lit(Lit::Num(_)) => Err(RuntimeError::Unsupported(
-                "UNSTRING with a numeric-literal delimiter is a later rung".into(),
-            )),
-            Operand::Lit(Lit::Fig(_)) => Err(RuntimeError::Unsupported(
-                "UNSTRING with a figurative-constant delimiter is a later rung".into(),
-            )),
-            Operand::RefMod { .. } => Err(RuntimeError::Unsupported(
-                "UNSTRING with a reference-modified delimiter is a later rung".into(),
-            )),
+            Operand::Lit(Lit::Num(_)) => Err(RuntimeError::Unsupported(format!(
+                "{verb} with a numeric-literal delimiter is a later rung"
+            ))),
+            Operand::Lit(Lit::Fig(_)) => Err(RuntimeError::Unsupported(format!(
+                "{verb} with a figurative-constant delimiter is a later rung"
+            ))),
+            Operand::RefMod { .. } => Err(RuntimeError::Unsupported(format!(
+                "{verb} with a reference-modified delimiter is a later rung"
+            ))),
             Operand::Ident(name) => {
                 let idx = *self
                     .by_name
                     .get(name)
                     .ok_or_else(|| RuntimeError::UndefinedName(name.clone()))?;
                 match &self.items[idx].picture {
-                    Some(p) if p.is_numeric() => Err(RuntimeError::Unsupported(
-                        "UNSTRING with a numeric delimiter item is a later rung".into(),
-                    )),
+                    Some(p) if p.is_numeric() => Err(RuntimeError::Unsupported(format!(
+                        "{verb} with a numeric delimiter item is a later rung"
+                    ))),
                     Some(_) => {
                         let chars: Vec<char> = self.items[idx].storage.chars().collect();
                         match chars.as_slice() {
                             [c] => Ok(*c),
-                            _ => Err(RuntimeError::Unsupported(
-                                "UNSTRING with a delimiter item wider than one character is a later rung"
-                                    .into(),
-                            )),
+                            _ => Err(RuntimeError::Unsupported(format!(
+                                "{verb} with a delimiter item wider than one character is a later rung"
+                            ))),
                         }
                     }
-                    None => Err(RuntimeError::Unsupported(
-                        "UNSTRING with a group delimiter item is a later rung".into(),
-                    )),
+                    None => Err(RuntimeError::Unsupported(format!(
+                        "{verb} with a group delimiter item is a later rung"
+                    ))),
                 }
             }
         }
+    }
+
+    /// `INSPECT source TALLYING counter FOR ALL delim` — count the (non-
+    /// overlapping, left-to-right) occurrences of the SINGLE-character `delim` in
+    /// the alphanumeric `source`, then **ADD** that count to the unsigned-integer
+    /// `counter`. INSPECT adds to the counter; it does NOT clear it first, so the
+    /// effect is `counter := counter + occurrences`.
+    ///
+    /// The count folds into the counter through the SAME `store_result` path the
+    /// arithmetic verbs use (COBOL's silent high-order truncation on overflow), so
+    /// the compiled `cobol-iir-compiler` scan loop matches this reference output
+    /// byte-for-byte. A numeric/group source, or a non-integer/non-numeric/signed
+    /// counter, is a clean later-rung error.
+    fn exec_inspect(
+        &mut self,
+        source: &str,
+        counter: &str,
+        delim: &Operand,
+    ) -> Result<Flow, RuntimeError> {
+        // The source must be an alphanumeric item; read its stored characters.
+        let sidx = *self
+            .by_name
+            .get(source)
+            .ok_or_else(|| RuntimeError::UndefinedName(source.to_string()))?;
+        match &self.items[sidx].picture {
+            Some(p) if p.is_numeric() => {
+                return Err(RuntimeError::Unsupported(
+                    "INSPECT of a numeric source is a later rung".into(),
+                ))
+            }
+            Some(_) => {}
+            None => {
+                return Err(RuntimeError::Unsupported(
+                    "INSPECT of a group source is a later rung".into(),
+                ))
+            }
+        }
+
+        // The counter must be an UNSIGNED INTEGER numeric item (`PIC 9(n)`): a
+        // fractional (`V`) or signed (`S`) counter is a later rung.
+        let cidx = *self
+            .by_name
+            .get(counter)
+            .ok_or_else(|| RuntimeError::UndefinedName(counter.to_string()))?;
+        match &self.items[cidx].picture {
+            Some(Picture::Numeric { dec_digits: 0, signed: false, .. }) => {}
+            Some(Picture::Numeric { .. }) => {
+                return Err(RuntimeError::Unsupported(format!(
+                    "INSPECT TALLYING into a non-integer or signed counter {counter} is a later rung"
+                )))
+            }
+            _ => {
+                return Err(RuntimeError::Unsupported(format!(
+                    "INSPECT TALLYING into a non-numeric counter {counter} is a later rung"
+                )))
+            }
+        }
+
+        // The single delimiter character, then the occurrence count.
+        let delim_ch = self.single_delim_char(delim, "INSPECT")?;
+        let count = self.items[sidx].storage.chars().filter(|&c| c == delim_ch).count();
+
+        // counter := counter_value + count, reshaped into the counter's picture —
+        // the same store path ADD uses (INSPECT adds; it does not clear first).
+        let addend = Decimal { neg: false, int: count.to_string(), frac: String::new() };
+        let acc = checked(add(&self.named_decimal(counter)?, &addend))?;
+        self.store_result(counter, acc, false, &[])
     }
 
     /// `EVALUATE subject WHEN … END-EVALUATE` — run the first branch whose value

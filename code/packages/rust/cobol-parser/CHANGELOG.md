@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.17.0 — `INSPECT` statement (first rung)
+
+- Added `inspect_stmt` to the `statement` alternation:
+  `inspect_stmt = "INSPECT" operand ( inspect_tallying [ inspect_replacing ] |
+  inspect_replacing ) [ "END-INSPECT" ]`, with the supporting rules
+  `inspect_tallying = "TALLYING" tally_for { tally_for }`,
+  `tally_for = NAME "FOR" tally_item { tally_item }`,
+  `tally_item = ( "ALL" | "LEADING" ) operand { inspect_region } | "CHARACTERS"
+  { inspect_region }`,
+  `inspect_replacing = "REPLACING" replace_item { replace_item }`,
+  `replace_item = "CHARACTERS" "BY" operand { inspect_region } | ( "ALL" |
+  "LEADING" ) operand "BY" operand { inspect_region }`, and
+  `inspect_region = ( "BEFORE" | "AFTER" ) operand`.
+- The source is the first (and only top-level) `operand`; the counter is the
+  `NAME` before `FOR`; the delimiter is the `operand` under the matched
+  `tally_item`. As with `string_stmt`/`unstring_stmt`, the grammar deliberately
+  *accepts* the fuller surface (`LEADING`/`CHARACTERS` tallies, `BEFORE`/`AFTER`
+  regions, several counters or `FOR` phrases, and every `REPLACING` form) so the
+  reader/compiler reject them with a friendly "later rung" error rather than a
+  bare parse failure. Uses the new `INSPECT` keywords (see `cobol-lexer` 0.9.0).
+  `_grammar.rs` regenerated via `grammar-tools compile-grammar`.
+
 ## 0.16.0 — `UNSTRING` statement (first rung)
 
 - Added `unstring_stmt` to the `statement` alternation:
