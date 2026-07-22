@@ -42,12 +42,19 @@ store, a display path, equality, and a builtin-as-value dispatcher).
 
 ## Capability declaration (v0)
 
-Accepts the SIR-v0 feature set: `Closures`, `Pairs`, `Symbols`, `Strings`,
-`DynamicTyping`, `OptionalTypeAnnotations`, `MutualRecursion`, `Globals`.
-Rejects `TailCalls`, `Intrinsics`, and every later feature (SIR16 sequences /
-maps / loops, params, the `Convert` node, collection methods, exceptions, OOP)
-until its cascade batch lands — each a clean, source-positioned
-`UnsupportedFeature`.
+Accepts `Closures`, `Pairs`, `Symbols`, `Strings`, `DynamicTyping`,
+`OptionalTypeAnnotations`, `MutualRecursion`, `Globals`; the SIR26 integer
+conversions (`Conversions`, `SizedIntegers`, `Unsigned`, `WrappingArithmetic`);
+SIR16 control flow and mutation (`Loops` — `While`, `ForRange` (numeric
+`for`, direction-aware), `ForEach`; and `MutableBindings`); and SIR16
+`Sequences` — native arrays for all five sequence nodes: `SeqLit` (`[1, 2, 3]`,
+structural `Array#==`), `SeqIndex` (`a[i]`, nil on OOB), `SeqLen` (`a.length`),
+`SeqSet` (`a[i] = v`, bounds-checked via `sir_seq_set`), and `ForEach`
+(`for x in a`).
+Rejects `TailCalls`, `Intrinsics`, and every not-yet-wired feature (array
+indexing / slicing via `IndexGet` — `NDArrays`; array-pattern destructuring —
+`ShortCircuit`; maps, collection methods, exceptions, OOP) until its cascade
+batch lands — each a clean, source-positioned `UnsupportedFeature`.
 
 ## Verification
 

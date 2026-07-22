@@ -70,6 +70,23 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // `if`/`while`/`for` lower to these plus `Expr::If` (which needs no feature).
     Feature::Loops,
     Feature::MutableBindings,
+    // ── SIR16 sequences ──────────────────────────────────────────────
+    // Ruby has native arrays, so the SIR16 sequence nodes render directly (no
+    // runtime value-boxing like the Go/Rust backends' `_sir_seq_*`). The
+    // emitter handles EVERY construct the `sequences` feature can surface:
+    //   `Expr::SeqLit`   → `[1, 2, 3]`      (structural `Array#==`)
+    //   `Expr::SeqIndex` → `(a)[i]`         (nil on OOB, negative-from-end)
+    //   `Expr::SeqLen`   → `(a).length`
+    //   `Stmt::SeqSet`   → `sir_seq_set(a, i, v)` (raises on OOB, per the ref)
+    //   `Stmt::ForEach`  → `(a).each { |x| … }` (also reachable once `Loops`
+    //                       is accepted — a block, so `x` is block-scoped,
+    //                       matching the validator's rewind and Go's `:=` var)
+    // handling all five keeps the emitter TOTAL for this feature (no
+    // `unreachable!` reachable from a conforming producer). Array *indexing
+    // via `Expr::IndexGet`* and slicing are a DIFFERENT feature (`NDArrays`,
+    // not accepted); array-*pattern* destructuring needs `ShortCircuit` (not
+    // accepted) — so those stay rejected at the feature gate.
+    Feature::Sequences,
 ];
 
 impl Backend for RubyBackend {
