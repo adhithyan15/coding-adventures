@@ -118,6 +118,36 @@ fn bjt_flicker_noise_uses_kf_with_inverse_frequency_scaling() {
     assert_close(flicker_psd(0) / flicker_psd(1), 100.0, 1.0e-10);
 }
 
+#[test]
+fn bjt_flicker_noise_uses_af_base_current_exponent() {
+    let source_psd = |exponent: f64| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vcc", "vcc", "0", 5.0,
+        )));
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vbase", "base", "0", 0.7,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rload", "vcc", "out", 1_000.0,
+        )));
+        let mut transistor = Bjt::new("Q1", "out", "base", "0");
+        transistor.flicker_noise_coefficient = 1.0e-12;
+        transistor.flicker_noise_exponent = exponent;
+        circuit.add(Element::Bjt(transistor));
+        noise_ac(&circuit, "out", "Vbase", &[1_000.0], 300.0)
+            .unwrap()
+            .points[0]
+            .entries
+            .iter()
+            .find(|entry| entry.element_name == "Q1" && entry.noise_type == NoiseType::Flicker)
+            .unwrap()
+            .source_psd
+    };
+
+    assert!(source_psd(2.0) < source_psd(1.0));
+}
+
 const BOLTZMANN: f64 = 1.380_649e-23;
 const MOSFET_CHANNEL_NOISE_GAMMA: f64 = 2.0 / 3.0;
 

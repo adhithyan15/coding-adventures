@@ -100,7 +100,7 @@ fn model_card_type_aliases_are_normalized() {
 #[test]
 fn model_card_supported_parameter_coverage_exports_are_stable() {
     let coverage = model_card_supported_parameter_coverage();
-    assert_eq!(coverage.len(), 114);
+    assert_eq!(coverage.len(), 116);
     assert_eq!(coverage[0].kind, ModelCardKind::Diode);
     assert_eq!(coverage[0].canonical_parameter, "IS");
     assert_eq!(coverage[0].accepted_names, vec!["IS", "JS"]);
@@ -119,7 +119,7 @@ fn model_card_supported_parameter_coverage_exports_are_stable() {
     assert!(table.contains("NMOS\tVT0\tVT0|VTO|VTH\t3"));
     assert_eq!(lines.last().unwrap(), &"PMOS\tMJ\tMJ\t1");
     let records = model_card_supported_parameter_coverage_records();
-    assert_eq!(records.len(), 114);
+    assert_eq!(records.len(), 116);
     assert_eq!(records[0]["kind"], "D");
     assert_eq!(records[0]["canonical_parameter"], "IS");
     assert_eq!(records[0]["accepted_names"], "IS|JS");
@@ -200,15 +200,15 @@ fn model_card_supported_parameter_coverage_gate_passes_current_catalog() {
     assert!(report.passed);
     assert_eq!(report.kind_count, 7);
     assert_eq!(report.expected_kind_count, 7);
-    assert_eq!(report.canonical_parameter_count, 114);
-    assert_eq!(report.expected_canonical_parameter_count, 114);
-    assert_eq!(report.accepted_name_count, 180);
+    assert_eq!(report.canonical_parameter_count, 116);
+    assert_eq!(report.expected_canonical_parameter_count, 116);
+    assert_eq!(report.accepted_name_count, 182);
     assert_eq!(report.aliased_parameter_count, 53);
     assert_eq!(report.max_alias_count, 4);
     assert!(report.issues.is_empty());
     assert_eq!(
         format_model_card_supported_parameter_coverage_gate_report(&report),
-        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t114\t114\t180\t53\t4\t0"
+        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t116\t116\t182\t53\t4\t0"
     );
     assert_eq!(
         format_model_card_supported_parameter_coverage_gate_issue_table(&report),
@@ -235,8 +235,8 @@ fn model_card_supported_parameter_coverage_gate_reports_missing_alias_family() {
 
     assert!(!report.passed);
     assert_eq!(report.kind_count, 7);
-    assert_eq!(report.canonical_parameter_count, 113);
-    assert_eq!(report.accepted_name_count, 177);
+    assert_eq!(report.canonical_parameter_count, 115);
+    assert_eq!(report.accepted_name_count, 179);
     assert_eq!(report.aliased_parameter_count, 52);
     assert_eq!(report.max_alias_count, 4);
     assert_eq!(report.issues.len(), 4);
@@ -253,7 +253,7 @@ fn model_card_supported_parameter_coverage_gate_reports_missing_alias_family() {
     );
     assert_eq!(
         format_model_card_supported_parameter_coverage_gate_report(&report),
-        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t113\t114\t177\t52\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical supported parameters, found 17\nNMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card names, found 22\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2"
+        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t115\t116\t179\t52\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical supported parameters, found 17\nNMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card names, found 22\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2"
     );
     let records = model_card_supported_parameter_coverage_gate_issue_records(&report);
     assert_eq!(records[0]["kind"], "NMOS");
@@ -438,6 +438,7 @@ fn model_card_aliases_build_device_instances() {
             ("IKR", 3.0e-3),
             ("T_NOM", 50.0),
             ("KF", 1.0e-12),
+            ("AF", 1.3),
             ("ISE", 3.0e-13),
             ("NE", 1.7),
             ("ISC", 4.0e-13),
@@ -465,6 +466,7 @@ fn model_card_aliases_build_device_instances() {
     assert_close(*bjt_card.parameters.get("IKR").unwrap(), 3.0e-3);
     assert_close(*bjt_card.parameters.get("TNOM").unwrap(), 50.0);
     assert_close(*bjt_card.parameters.get("KF").unwrap(), 1.0e-12);
+    assert_close(*bjt_card.parameters.get("AF").unwrap(), 1.3);
     assert_close(*bjt_card.parameters.get("ISE").unwrap(), 3.0e-13);
     assert_close(*bjt_card.parameters.get("NE").unwrap(), 1.7);
     assert_close(*bjt_card.parameters.get("ISC").unwrap(), 4.0e-13);
@@ -489,6 +491,7 @@ fn model_card_aliases_build_device_instances() {
     assert_close(bjt_model.reverse_beta_rolloff_current, 3.0e-3);
     assert_close(bjt_model.nominal_temperature_kelvin.unwrap(), 323.15);
     assert_close(bjt_model.flicker_noise_coefficient, 1.0e-12);
+    assert_close(bjt_model.flicker_noise_exponent, 1.3);
     assert_close(bjt_model.base_emitter_leakage_saturation_current, 3.0e-13);
     assert_close(bjt_model.base_emitter_leakage_emission_coefficient, 1.7);
     assert_close(bjt_model.base_collector_leakage_saturation_current, 4.0e-13);
@@ -1431,6 +1434,7 @@ fn subcircuit_expansion_preserves_complete_bjt_model() {
     bjt.reverse_beta_rolloff_current = 3.0e-3;
     bjt.nominal_temperature_kelvin = Some(323.15);
     bjt.flicker_noise_coefficient = 1.0e-12;
+    bjt.flicker_noise_exponent = 1.3;
     let mut circuit = Circuit::new();
     circuit
         .define_subcircuit(SubcircuitDefinition::new(
@@ -1476,6 +1480,7 @@ fn subcircuit_expansion_preserves_complete_bjt_model() {
     assert_close(expanded.reverse_beta_rolloff_current, 3.0e-3);
     assert_close(expanded.nominal_temperature_kelvin.unwrap(), 323.15);
     assert_close(expanded.flicker_noise_coefficient, 1.0e-12);
+    assert_close(expanded.flicker_noise_exponent, 1.3);
 }
 
 #[test]
@@ -2007,6 +2012,18 @@ fn dc_rejects_invalid_bjt_flicker_noise_coefficient() {
     assert!(error
         .to_string()
         .contains("flicker noise coefficient must be finite and non-negative"));
+}
+
+#[test]
+fn dc_rejects_invalid_bjt_flicker_noise_exponent() {
+    let mut transistor = Bjt::new("Qbad", "c", "b", "0");
+    transistor.flicker_noise_exponent = -1.0;
+    let mut circuit = Circuit::new();
+    circuit.add(Element::Bjt(transistor));
+    let error = dc_op(&circuit).unwrap_err();
+    assert!(error
+        .to_string()
+        .contains("flicker noise exponent must be finite and non-negative"));
 }
 
 #[test]

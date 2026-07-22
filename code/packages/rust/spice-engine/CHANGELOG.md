@@ -1,5 +1,7 @@
 # Changelog
 
+- Add BJT model-card `AF` flicker-noise exponent support, defaulting to `1`
+  and applying `KF * abs(Ib)^AF / frequency` across noise analysis.
 - Add BJT model-card `KF` flicker-noise support with a distinct `flicker`
   contribution and Berkeley-default inverse-frequency scaling.
 - Add BJT model-card `TNOM` / `T_NOM` nominal-temperature support, with

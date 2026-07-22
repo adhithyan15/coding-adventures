@@ -33,14 +33,14 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language BJT flicker-noise coefficient.
+1. Cross-language BJT flicker-noise exponent.
    - Status: current PR completion candidate.
-   - Add Berkeley BJT `KF` model-card support in Rust, Python, and TypeScript,
-     defaulting to zero so existing noise results remain unchanged.
-   - Emit a distinct `flicker` contribution from base current and apply the
-     Berkeley-default `AF=1` inverse-frequency exponent through the adjoint
-     noise path while preserving the complete BJT model through subcircuits.
-   - Extend the supported-parameter coverage gate from 112 to 114 canonical
+   - Add Berkeley BJT `AF` model-card support in Rust, Python, and TypeScript,
+     defaulting to one so existing `KF` noise results remain unchanged.
+   - Apply the exponent to base-current flicker noise as
+     `KF * abs(Ib)^AF / frequency` while preserving the complete BJT model
+     through subcircuits.
+   - Extend the supported-parameter coverage gate from 114 to 116 canonical
      rows and lock model-card behavior, validation, hierarchy, and noise
      scaling in all engines.
 
@@ -3118,6 +3118,14 @@ the Rust, Python, and TypeScript surfaces together.
      and use that model-owned value for temperature scaling when present.
    - Hierarchical subcircuit expansion preserves the complete BJT model, and
      the supported-parameter release gate now covers 112 canonical rows.
+
+234. Cross-language BJT flicker-noise coefficient.
+   - Status: completed in PR 8812.
+   - Rust, Python, and TypeScript BJT model cards now accept `KF`, default it
+     to zero, and emit a distinct base-current `flicker` contribution with the
+     Berkeley-default `AF=1` inverse-frequency slope.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 114 canonical rows.
 
 ## Backlog
 

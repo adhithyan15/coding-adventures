@@ -605,7 +605,7 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
-        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg, element.Vaf, element.Nf, element.Nr, element.Vje, element.Mje, element.Vjc, element.Mjc, element.Fc, element.Var, element.Ikf, element.Ise, element.Ne, element.Isc, element.Nc, element.Xtb, element.beta_r, element.Ikr, element.Tnom, element.Kf)
+        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg, element.Vaf, element.Nf, element.Nr, element.Vje, element.Mje, element.Vjc, element.Mjc, element.Fc, element.Var, element.Ikf, element.Ise, element.Ne, element.Isc, element.Nc, element.Xtb, element.beta_r, element.Ikr, element.Tnom, element.Kf, element.Af)
     if isinstance(element, VCVS):
         return VCVS(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), _map_subckt_node(element.ctrl_plus, instance_name, node_map), _map_subckt_node(element.ctrl_minus, instance_name, node_map), element.gain)
     if isinstance(element, VCCS):
@@ -9307,6 +9307,8 @@ def _validate_bjt(el: BJT) -> None:
         raise ValueError(f"{el.name}: BJT nominal temperature must be finite and positive")
     if not math.isfinite(el.Kf) or el.Kf < 0.0:
         raise ValueError(f"{el.name}: BJT flicker noise coefficient must be finite and non-negative")
+    if not math.isfinite(el.Af) or el.Af < 0.0:
+        raise ValueError(f"{el.name}: BJT flicker noise exponent must be finite and non-negative")
     if not math.isfinite(el.Ise) or el.Ise < 0.0:
         raise ValueError(
             f"{el.name}: BJT base-emitter leakage saturation current must be finite and non-negative"
@@ -14854,7 +14856,7 @@ def _collect_noise_sources(
             sources.append((el.name, "shot", n_b, n_e, psd, 0.0))
             if el.Kf > 0.0:
                 base_current = base_collector_current / el.beta_f + leakage_current
-                sources.append((el.name, "flicker", n_b, n_e, el.Kf * abs(base_current), 1.0))
+                sources.append((el.name, "flicker", n_b, n_e, el.Kf * abs(base_current) ** el.Af, 1.0))
 
         elif isinstance(el, Mosfet):
             # Long-channel MOSFET channel thermal noise: S_i = 4kTγgm.

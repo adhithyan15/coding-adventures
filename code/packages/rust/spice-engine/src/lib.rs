@@ -455,6 +455,7 @@ fn clone_subckt_element(
             expanded.reverse_beta_rolloff_current = element.reverse_beta_rolloff_current;
             expanded.nominal_temperature_kelvin = element.nominal_temperature_kelvin;
             expanded.flicker_noise_coefficient = element.flicker_noise_coefficient;
+            expanded.flicker_noise_exponent = element.flicker_noise_exponent;
             Element::Bjt(expanded)
         }
         Element::Mosfet(element) => Element::Mosfet(Mosfet::with_model(
@@ -2898,6 +2899,7 @@ pub struct Bjt {
     pub reverse_beta_rolloff_current: f64,
     pub nominal_temperature_kelvin: Option<f64>,
     pub flicker_noise_coefficient: f64,
+    pub flicker_noise_exponent: f64,
 }
 
 impl Bjt {
@@ -3362,6 +3364,7 @@ impl Bjt {
             reverse_beta_rolloff_current: 0.0,
             nominal_temperature_kelvin: None,
             flicker_noise_coefficient: 0.0,
+            flicker_noise_exponent: 1.0,
         }
     }
 }
@@ -3752,8 +3755,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     usize,
 )] = &[
     (ModelCardKind::Diode, 12, 18, 5, 3),
-    (ModelCardKind::Npn, 28, 45, 13, 4),
-    (ModelCardKind::Pnp, 28, 45, 13, 4),
+    (ModelCardKind::Npn, 29, 46, 13, 4),
+    (ModelCardKind::Pnp, 29, 46, 13, 4),
     (ModelCardKind::Njf, 5, 11, 5, 3),
     (ModelCardKind::Pjf, 5, 11, 5, 3),
     (ModelCardKind::Nmos, 18, 25, 6, 3),
@@ -3807,6 +3810,7 @@ const BJT_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("TNOM", "TNOM"),
     ("T_NOM", "TNOM"),
     ("KF", "KF"),
+    ("AF", "AF"),
     ("ISE", "ISE"),
     ("NE", "NE"),
     ("ISC", "ISC"),
@@ -4502,6 +4506,7 @@ pub fn bjt_from_model_card(
         .get("TNOM")
         .map(|temperature_celsius| temperature_celsius + 273.15);
     bjt.flicker_noise_coefficient = model_card_value(model, "KF", 0.0);
+    bjt.flicker_noise_exponent = model_card_value(model, "AF", 1.0);
     Ok(bjt)
 }
 
@@ -22202,7 +22207,8 @@ fn collect_noise_sources(
                         noise_type: NoiseType::Flicker,
                         positive,
                         negative,
-                        source_psd: bjt.flicker_noise_coefficient * base_current.abs(),
+                        source_psd: bjt.flicker_noise_coefficient
+                            * base_current.abs().powf(bjt.flicker_noise_exponent),
                         frequency_exponent: 1.0,
                     });
                 }
@@ -24041,6 +24047,12 @@ fn validate_bjt(bjt: &Bjt) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: bjt.name.clone(),
             reason: "flicker noise coefficient must be finite and non-negative".to_string(),
+        });
+    }
+    if !bjt.flicker_noise_exponent.is_finite() || bjt.flicker_noise_exponent < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "flicker noise exponent must be finite and non-negative".to_string(),
         });
     }
     if !bjt.base_emitter_leakage_saturation_current.is_finite()
