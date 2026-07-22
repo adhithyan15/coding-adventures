@@ -154,6 +154,9 @@ modulation to that branch, increasing base current as reverse beta rolls off.
 `XTB` (default `0`) scales both forward and reverse beta with the
 analysis-to-nominal absolute temperature ratio, preserving nominal beta when
 omitted.
+`TNOM`/`T_NOM` sets the BJT model's nominal temperature in degrees Celsius.
+It overrides the circuit-level nominal temperature for BJT temperature scaling;
+omitting it preserves the inherited default.
 `model_card_unsupported_parameter_issues`,
 `format_model_card_unsupported_parameter_issue_table`,
 `model_card_unsupported_parameter_issue_records`,

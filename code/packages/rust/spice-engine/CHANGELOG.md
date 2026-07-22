@@ -1,5 +1,9 @@
 # Changelog
 
+- Add BJT model-card `TNOM` / `T_NOM` nominal-temperature support, with
+  Berkeley Celsius card values converted to Kelvin for model-owned temperature
+  scaling and inherited circuit defaults when absent.
+
 ## Unreleased
 
 - Add BJT model-card `IKR` reverse high-current beta roll-off support in DC,

@@ -168,6 +168,7 @@ impl SubcircuitDefinition {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+#[allow(clippy::large_enum_variant)]
 pub enum SubcircuitElement {
     Element(Element),
     XInstance(XInstance),
@@ -452,6 +453,7 @@ fn clone_subckt_element(
                 element.reverse_beta,
             );
             expanded.reverse_beta_rolloff_current = element.reverse_beta_rolloff_current;
+            expanded.nominal_temperature_kelvin = element.nominal_temperature_kelvin;
             Element::Bjt(expanded)
         }
         Element::Mosfet(element) => Element::Mosfet(Mosfet::with_model(
@@ -2655,6 +2657,9 @@ pub fn bjt_at_temperature(
             reason: "temperature must be finite and positive".to_string(),
         });
     }
+    let nominal_temperature_kelvin = bjt
+        .nominal_temperature_kelvin
+        .unwrap_or(nominal_temperature_kelvin);
     if !nominal_temperature_kelvin.is_finite() || nominal_temperature_kelvin <= 0.0 {
         return Err(SpiceError::InvalidElement {
             name: bjt.name.clone(),
@@ -2890,6 +2895,7 @@ pub struct Bjt {
     pub forward_beta_temperature_exponent: f64,
     pub reverse_beta: f64,
     pub reverse_beta_rolloff_current: f64,
+    pub nominal_temperature_kelvin: Option<f64>,
 }
 
 impl Bjt {
@@ -3352,6 +3358,7 @@ impl Bjt {
             forward_beta_temperature_exponent,
             reverse_beta,
             reverse_beta_rolloff_current: 0.0,
+            nominal_temperature_kelvin: None,
         }
     }
 }
@@ -3742,8 +3749,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     usize,
 )] = &[
     (ModelCardKind::Diode, 12, 18, 5, 3),
-    (ModelCardKind::Npn, 26, 42, 12, 4),
-    (ModelCardKind::Pnp, 26, 42, 12, 4),
+    (ModelCardKind::Npn, 27, 44, 13, 4),
+    (ModelCardKind::Pnp, 27, 44, 13, 4),
     (ModelCardKind::Njf, 5, 11, 5, 3),
     (ModelCardKind::Pjf, 5, 11, 5, 3),
     (ModelCardKind::Nmos, 18, 25, 6, 3),
@@ -3794,6 +3801,8 @@ const BJT_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("IKF", "IKF"),
     ("IK", "IKF"),
     ("IKR", "IKR"),
+    ("TNOM", "TNOM"),
+    ("T_NOM", "TNOM"),
     ("ISE", "ISE"),
     ("NE", "NE"),
     ("ISC", "ISC"),
@@ -4484,6 +4493,10 @@ pub fn bjt_from_model_card(
             model_card_value(model, "BR", 1.0),
         );
     bjt.reverse_beta_rolloff_current = model_card_value(model, "IKR", 0.0);
+    bjt.nominal_temperature_kelvin = model
+        .parameters
+        .get("TNOM")
+        .map(|temperature_celsius| temperature_celsius + 273.15);
     Ok(bjt)
 }
 
@@ -23986,6 +23999,14 @@ fn validate_bjt(bjt: &Bjt) -> Result<(), SpiceError> {
             name: bjt.name.clone(),
             reason: "reverse beta roll-off current must be finite and non-negative".to_string(),
         });
+    }
+    if let Some(nominal_temperature_kelvin) = bjt.nominal_temperature_kelvin {
+        if !nominal_temperature_kelvin.is_finite() || nominal_temperature_kelvin <= 0.0 {
+            return Err(SpiceError::InvalidElement {
+                name: bjt.name.clone(),
+                reason: "nominal temperature must be finite and positive".to_string(),
+            });
+        }
     }
     if !bjt.base_emitter_leakage_saturation_current.is_finite()
         || bjt.base_emitter_leakage_saturation_current < 0.0

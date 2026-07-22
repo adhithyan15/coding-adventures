@@ -33,17 +33,17 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language BJT reverse high-current beta roll-off.
+1. Cross-language BJT nominal model temperature.
    - Status: current PR completion candidate.
-   - Add Berkeley BJT `IKR` model-card support in Rust, Python, and TypeScript
-     with a behavior-preserving default of `0`.
-   - Apply reverse high-current base-charge modulation to the base-collector
-     reverse-current branch in DC, transient, AC, transfer-function,
-     temperature, and noise paths while preserving the complete BJT model
-     through subcircuits.
-   - Extend the supported-parameter coverage gate from 108 to 110 canonical
-     rows and lock model-card behavior, validation, and hierarchy in all
-     engines.
+   - Add Berkeley BJT `TNOM` / `T_NOM` model-card support in Rust, Python, and
+     TypeScript, interpreting card values in degrees Celsius and storing the
+     absolute model temperature internally.
+   - Let a model-owned nominal temperature override the circuit-level default
+     in temperature scaling while preserving inherited behavior when `TNOM`
+     is absent and preserving the complete BJT model through subcircuits.
+   - Extend the supported-parameter coverage gate from 110 to 112 canonical
+     rows and lock model-card behavior, validation, hierarchy, and temperature
+     scaling in all engines.
 
 ## Completed Slices
 
@@ -3103,6 +3103,14 @@ the Rust, Python, and TypeScript surfaces together.
    - `XTB` scales both forward and reverse beta, hierarchical subcircuit
      expansion preserves the complete BJT model, and the supported-parameter
      release gate now covers 108 canonical rows.
+
+232. Cross-language BJT reverse high-current beta roll-off.
+   - Status: completed in PR 8801.
+   - Rust, Python, and TypeScript BJT model cards now accept `IKR` and apply
+     reverse high-current base-charge modulation in DC, transient, AC,
+     transfer-function, temperature, and noise paths.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 110 canonical rows.
 
 ## Backlog
 
