@@ -364,6 +364,25 @@ fn tf_bjt_forward_early_voltage_reduces_output_impedance() {
 }
 
 #[test]
+fn tf_bjt_reverse_early_voltage_reduces_gain() {
+    let gain = |reverse_early_voltage: f64| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vin", "base", "0", 0.65,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rload", "out", "0", 1_000.0,
+        )));
+        let mut transistor = Bjt::new("Q1", "out", "base", "0");
+        transistor.reverse_early_voltage = reverse_early_voltage;
+        circuit.add(Element::Bjt(transistor));
+        tf(&circuit, "out", "Vin").unwrap().gain().abs()
+    };
+
+    assert!(gain(1.0) < gain(0.0));
+}
+
+#[test]
 fn tf_bjt_forward_emission_coefficient_reduces_gain_and_raises_input_impedance() {
     let transfer = |forward_emission_coefficient: f64| {
         let mut circuit = Circuit::new();

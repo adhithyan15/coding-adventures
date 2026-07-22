@@ -596,6 +596,9 @@ class BJT:
     Vaf:
         Forward Early voltage in Volts. Zero disables collector-voltage
         modulation, matching an infinite Early voltage (default 0.0).
+    Var:
+        Reverse Early voltage in Volts. Zero matches an infinite reverse Early
+        voltage (default 0.0).
     Nf:
         Forward emission coefficient (default 1.0).
     Nr:
@@ -624,6 +627,7 @@ class BJT:
     Vjc: float = 0.75       # base-collector junction potential (V)
     Mjc: float = 0.33       # base-collector grading coefficient
     Fc: float = 0.5         # forward-bias depletion coefficient
+    Var: float = 0.0        # reverse Early voltage (V); 0 means infinite
 
 
 # ---------------------------------------------------------------------------

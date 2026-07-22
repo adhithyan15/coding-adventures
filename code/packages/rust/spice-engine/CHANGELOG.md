@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add BJT model-card `VAR`/`VB` reverse Early-voltage support with base-charge
+  modulation in DC, transient, AC, transfer-function, and noise paths, matching
+  Python and TypeScript. The supported-parameter catalog now contains 94
+  canonical rows.
 - Add BJT model-card `FC` forward-bias depletion-coefficient support for the
   shared `CJE` and `CJC` Berkeley continuation law in AC and transient analysis,
   matching Python and TypeScript. The supported-parameter catalog now contains
