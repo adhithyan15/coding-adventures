@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.18.0] — 2026-07-22 — NUM-6a: render the `round_to` narrowing in the audit trail
+
+The derivation-tree JSON now renders the new `DerivationNode::Round` (NUM-6a): a
+`{"node":"round","places":n,"mode":"half_even","value":…,"operand":{…}}` object
+exposing the precision, the stated rounding mode, and the operand subtree it
+narrowed — so a checker can re-round the operand's exact value and confirm the
+rendering (ADJ-NUMERIC-SUBSTRATE §4.3). Adds an end-to-end test driving
+`round_to(x, n)` through the built CLI (exact value, audit fields, and a
+non-integer/negative precision rejected as a compile error).
+
 ## [0.17.0] — 2026-07-21 — the `adj-verify` binary (RS-4 PR-D2)
 
 Implements `ADJ-REASON-MATH.md` §E.5/§E.6: a standalone re-checker that reads an

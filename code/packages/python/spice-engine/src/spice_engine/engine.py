@@ -338,6 +338,7 @@ def bjt_at_temperature(
 
     if not math.isfinite(temperature_kelvin) or temperature_kelvin <= 0.0:
         raise ValueError("temperature_kelvin must be finite and positive")
+    nominal_temperature_kelvin = bjt.Tnom if bjt.Tnom is not None else nominal_temperature_kelvin
     if not math.isfinite(nominal_temperature_kelvin) or nominal_temperature_kelvin <= 0.0:
         raise ValueError("nominal_temperature_kelvin must be finite and positive")
     if not math.isfinite(energy_gap_ev) or energy_gap_ev <= 0.0:
@@ -604,7 +605,7 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
-        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg, element.Vaf, element.Nf, element.Nr, element.Vje, element.Mje, element.Vjc, element.Mjc, element.Fc, element.Var, element.Ikf, element.Ise, element.Ne, element.Isc, element.Nc, element.Xtb, element.beta_r, element.Ikr)
+        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg, element.Vaf, element.Nf, element.Nr, element.Vje, element.Mje, element.Vjc, element.Mjc, element.Fc, element.Var, element.Ikf, element.Ise, element.Ne, element.Isc, element.Nc, element.Xtb, element.beta_r, element.Ikr, element.Tnom)
     if isinstance(element, VCVS):
         return VCVS(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), _map_subckt_node(element.ctrl_plus, instance_name, node_map), _map_subckt_node(element.ctrl_minus, instance_name, node_map), element.gain)
     if isinstance(element, VCCS):
@@ -9302,6 +9303,8 @@ def _validate_bjt(el: BJT) -> None:
         raise ValueError(
             f"{el.name}: BJT reverse beta roll-off current must be finite and non-negative"
         )
+    if el.Tnom is not None and (not math.isfinite(el.Tnom) or el.Tnom <= 0.0):
+        raise ValueError(f"{el.name}: BJT nominal temperature must be finite and positive")
     if not math.isfinite(el.Ise) or el.Ise < 0.0:
         raise ValueError(
             f"{el.name}: BJT base-emitter leakage saturation current must be finite and non-negative"
