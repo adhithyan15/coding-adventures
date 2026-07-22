@@ -3120,11 +3120,29 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     // produces a mixed shape (some elements `List`, some not), so this
     // all-or-nothing check is unambiguous for anything this frontend's own
     // lowering can produce.
+    //
+    // SECURITY (CWE-674, /security-review finding): each `row` is itself
+    // ONE tree level below the `List(...)` node this call is rendering
+    // (the same distance every OTHER child in this function family covers
+    // via a single `derivePrintAt(child, ..., depth + 1)` call) — so
+    // entering it must consume exactly one unit of the shared depth
+    // budget, with its own `depth + 1 > MAX_TERM_DEPTH` check, before its
+    // OWN children (two levels below the current node) get `depth + 2`.
+    // Reaching into `row.args` directly with no check and `depth + 1` for
+    // the grandchildren (the original bug) skipped charging for the `row`
+    // level entirely, letting a nested-list-of-lists chain reach roughly
+    // DOUBLE `MAX_TERM_DEPTH` real tree-nesting levels before the "..."
+    // sentinel fires — still short of this walk's proven-safe crash
+    // margin today, but a real, measured erosion of it; see `tests/
+    // sir23_symbolic.rs::derive_display_on_a_deeply_nested_list_of_lists_
+    // truncates_at_the_same_depth_as_any_other_shape` for the executable
+    // proof (reverting this fix makes that test fail).
     function deriveRenderList(args, depth) {
       if (args.length > 0 && args.every(deriveIsListNode)) {
-        const rows = args.map((row) =>
-          row.args.map((a) => derivePrintAt(a, DERIVE_PREC_LOWEST, depth + 1)).join(", ")
-        );
+        const rows = args.map((row) => {
+          if (depth + 1 > MAX_TERM_DEPTH) { return "..."; }
+          return row.args.map((a) => derivePrintAt(a, DERIVE_PREC_LOWEST, depth + 2)).join(", ");
+        });
         return "[" + rows.join("; ") + "]";
       }
       const parts = args.map((a) => derivePrintAt(a, DERIVE_PREC_LOWEST, depth + 1));
