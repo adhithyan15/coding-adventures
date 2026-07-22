@@ -33,15 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language BJT forward high-current beta roll-off.
+1. Cross-language BJT base-emitter leakage.
    - Status: current PR completion candidate.
-   - Add Berkeley BJT `IKF` / `IK` forward beta roll-off model-card support in
+   - Add Berkeley BJT `ISE` / `NE` base-emitter leakage model-card support in
      Rust, Python, and TypeScript with disabled behavior represented by the
-     standard zero default.
-   - Apply forward high-current base-charge modulation in DC, transient, AC,
-     transfer-function, and noise paths while preserving the complete BJT model
+     standard zero `ISE` default.
+   - Apply the leakage branch in DC, transient, AC, transfer-function,
+     temperature, and noise paths while preserving the complete BJT model
      through hierarchical subcircuits.
-   - Extend the supported-parameter coverage gate from 94 to 96 canonical rows
+   - Extend the supported-parameter coverage gate from 96 to 100 canonical rows
      and lock model-card aliases, behavior, validation, and hierarchy in all
      engines.
 
@@ -3063,6 +3063,14 @@ the Rust, Python, and TypeScript surfaces together.
      transfer-function, and noise paths.
    - Hierarchical subcircuit expansion preserves the complete BJT model, and
      the supported-parameter release gate now covers 94 canonical rows.
+
+227. Cross-language BJT forward high-current beta roll-off.
+   - Status: completed in PR 8770.
+   - Rust, Python, and TypeScript BJT model cards now accept `IKF` / `IK` and
+     apply forward high-current base-charge modulation in DC, transient, AC,
+     transfer-function, and noise paths.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 96 canonical rows.
 
 ## Backlog
 

@@ -666,6 +666,9 @@ catch (err) { o.push("raised"); }                              // raised
 const native = new TypeError("internal");
 o.push(F.callMethod(native, "class"));                         // StandardError
 o.push(String(F.callMethod(native, "is_a?", "StandardError"))); // true
+o.push(F.callMethod(native, "message"));                       // internal (NOT NoMethodError)
+o.push(String(F.callMethod(native, "respond_to?", "message"))); // true
+o.push(F.format(native));                                      // internal (message, not "TypeError: internal")
 // (5) a pathological include CHAIN must not exhaust the JS stack — BOTH the
 //     module walk behind `is_a?` and `resolveMethod`'s own module search are
 //     explicit worklists, not recursion.  Driven through `callMethod` (the
@@ -681,7 +684,7 @@ console.log(o.join("|"));
         assert_eq!(
             stdout,
             "ArgumentError|true|true|false|C|true|true|false|undefined|undefined|raised|\
-             StandardError|true|true|false",
+             StandardError|true|internal|true|internal|true|false",
         );
     }
 }

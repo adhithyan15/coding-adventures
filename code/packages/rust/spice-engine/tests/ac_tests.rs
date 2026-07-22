@@ -911,6 +911,32 @@ fn ac_bjt_forward_beta_rolloff_reduces_gain() {
 }
 
 #[test]
+fn ac_bjt_base_emitter_leakage_reduces_gain_through_source_resistance() {
+    let gain = |leakage_current: f64| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vin", "in", "0", 0.65, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "base", 1_000.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rload", "out", "0", 1_000.0,
+        )));
+        let mut transistor = Bjt::new("Q1", "out", "base", "0");
+        transistor.base_emitter_leakage_saturation_current = leakage_current;
+        transistor.base_emitter_leakage_emission_coefficient = 1.5;
+        circuit.add(Element::Bjt(transistor));
+        ac_sweep(&circuit, 1_000.0, 1_000.0, 1).unwrap()[0]
+            .voltage("out")
+            .unwrap()
+            .abs()
+    };
+
+    assert!(gain(1.0e-10) < gain(0.0));
+}
+
+#[test]
 fn ac_bjt_reverse_emission_coefficient_reduces_base_collector_diffusion_capacitance() {
     fn base_amplitude(reverse_emission_coefficient: f64) -> f64 {
         let mut circuit = Circuit::new();

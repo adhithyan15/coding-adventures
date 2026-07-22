@@ -2,6 +2,49 @@
 
 All notable changes to `coding-adventures-sir-runtime-oop` are documented here.
 
+## 0.2.0 — reflection on a rescued exception
+
+A `SirError` is not a `SirInstance`, but it carries its Ruby class tag the same
+way. `class_of` had no case for it, so it fell through to the `Object` default:
+`rescue => e; e.class` said `Object` and `e.is_a?(StandardError)` was **false**
+for every exception — silently skipping a handler guarded that way. `e.message`
+raised.
+
+- `class_of` recognises an exception and reports its Ruby class.
+- `is_a` matches an exception by the SAME ancestry `rescue` dispatches on (that
+  table lives in the exceptions package, not this module\'s class registry, so
+  it consults `rescue_matches` directly).
+- `call_method` answers `message` with the raised text, for an exception
+  receiver only; `_responds_to` reports it for an exception while still falling
+  through to the method tables, so a user-defined `message` is not DENIED by
+  `respond_to?`.
+
+A security review then found four holes, all fixed here — the emitted
+`except Exception as __exc` binds the RAW caught value, so `e` can be a NATIVE
+Python error, not a `SirError`, and every arm above tested `isinstance(_,
+SirError)` only:
+
+- **Native caught error reflected as `Object`.** `class_of` and `is_a` now
+  gate on `BaseException` and route through `class_of_thrown` — the SAME
+  bucketing `rescue` uses — so a caught native error reflects as the
+  `StandardError` it was caught as, instead of falling to `Object` (which made
+  `e.is_a?(StandardError)` false and inverted `retry unless
+  e.is_a?(StandardError)`).
+- **`is_a?` ignored included modules.** `rescue_matches` is a pure ancestry
+  name-walk, so it could not see an `include`. `is_a` now also checks, for each
+  link in the exception's ancestry (`ancestry_chain`), whether the queried name
+  is a transitively-included module — the Rust, Go and JavaScript backends all
+  do, and `retry unless e.is_a?(Recoverable)` took the opposite branch on
+  Python without it.
+- **`respond_to?` missed per-class methods.** `_responds_to` fell through every
+  branch to `False` for a `SirInstance`, so `respond_to?(:m)` lied about a
+  user-defined method that `call_method` then dispatched fine. It now resolves
+  through the same MRO walk (`_resolve_instance_method`).
+
+New helper `_module_closure` (transitive included-module set, cycle-safe).
+Depends on the new `ancestry_chain` export from `sir-runtime-exceptions`
+0.3.0. Twelve new tests; coverage 97%.
+
 ## [0.1.26] - 2026-07-12
 
 ### Added

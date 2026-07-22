@@ -24,7 +24,7 @@ use logic_core::{
     Term as CoreTerm,
 };
 use logic_engine::{
-    compute, BodyLiteral, Citation, CmpOp as EngineCmpOp, ComputeExpr, ComputeOp,
+    compute, BodyLiteral, Citation, CmpOp as EngineCmpOp, ComputeExpr, ComputeOp, ContentHash,
     ContributionClause, Fact, JointContributionClause, KbError, KnowledgeBase,
     PredicateContributionClause, PriorClause, Priority, Provenance, Rule, TrustTier,
     UncertaintyMarker,
@@ -87,6 +87,13 @@ pub enum LowerError {
     },
     DuplicateAnnotation {
         name: &'static str,
+    },
+    /// A `quote … at … snapshot …` pin (RS-4 PR-D4, §E.3.1) was malformed: the
+    /// snapshot was not a 64-char SHA-256 hex, or the quoted text carried no
+    /// visible content to anchor. Fail-closed — a malformed pin is a compile
+    /// error, never a half-built `Verbatim` span the verifier would then reject.
+    MalformedQuotePin {
+        reason: &'static str,
     },
     EngineRejected {
         detail: String,
@@ -377,10 +384,7 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
     // reusable `let` (see the `Statement::Query` arm below).
     let mut formulas: HashMap<&str, &FormulaDef> = HashMap::new();
     for stmt in flat.iter().copied() {
-        if let Statement::Formulabook {
-            formulas: defs, ..
-        } = stmt
-        {
+        if let Statement::Formulabook { formulas: defs, .. } = stmt {
             for fd in defs {
                 validate_formula(fd)?;
                 formulas.insert(fd.name.as_str(), fd);
@@ -397,7 +401,10 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
     let mut tables: HashMap<&str, (&[String], &[crate::ast::TableRow])> = HashMap::new();
     for stmt in flat.iter().copied() {
         if let Statement::Table {
-            name, columns, rows, ..
+            name,
+            columns,
+            rows,
+            ..
         } = stmt
         {
             tables.insert(name.as_str(), (columns.as_slice(), rows.as_slice()));
@@ -592,13 +599,12 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                     // `compute` path a `let` uses.
                     let (expanded, chain) = expand_applies(&substituted, &formulas, 0)?;
                     let cexpr = lower_expr(&expanded);
-                    let derived =
-                        compute(fd.name.clone(), &cexpr, &kb).map_err(|e| {
-                            LowerError::ComputationFailed {
-                                name: fd.name.clone(),
-                                detail: format!("{e:?}"),
-                            }
-                        })?;
+                    let derived = compute(fd.name.clone(), &cexpr, &kb).map_err(|e| {
+                        LowerError::ComputationFailed {
+                            name: fd.name.clone(),
+                            detail: format!("{e:?}"),
+                        }
+                    })?;
                     // The provenance-required lint already guaranteed a non-empty
                     // source at registration; stamp the resolved envelope onto the
                     // value — and COMPOSE the nested chain, so a value computed via
@@ -626,11 +632,12 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                 // ADJ-TABLES RS-5c: validate a `? lookup … mode range …` against the
                 // table registry and resolve the key/value columns to positional
                 // indices, so the runtime tactic never has to re-parse column names.
-                let (columns, rows) = tables.get(table.as_str()).ok_or_else(|| {
-                    LowerError::LookupUnknownTable {
-                        table: table.clone(),
-                    }
-                })?;
+                let (columns, rows) =
+                    tables
+                        .get(table.as_str())
+                        .ok_or_else(|| LowerError::LookupUnknownTable {
+                            table: table.clone(),
+                        })?;
                 // Mode: `range` is built; `interpolated` is the reserved RS-5d
                 // tactic (rejected honestly, not silently treated as range); any
                 // other word is not a tactic at all.
@@ -647,18 +654,20 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                         column: key_col.clone(),
                     }
                 })?;
-                let value_index =
-                    columns.iter().position(|c| c == value_col).ok_or_else(|| {
-                        LowerError::LookupUnknownColumn {
-                            table: table.clone(),
-                            column: value_col.clone(),
-                        }
-                    })?;
+                let value_index = columns.iter().position(|c| c == value_col).ok_or_else(|| {
+                    LowerError::LookupUnknownColumn {
+                        table: table.clone(),
+                        column: value_col.clone(),
+                    }
+                })?;
                 // The key column must be numeric in EVERY row — a `range` lookup
                 // compares the query against it on the exact numeric path, so an
                 // atom/string key cell is a compile error (never a silent skip).
                 for (i, row) in rows.iter().enumerate() {
-                    if !matches!(row.cells.get(key_index), Some(crate::ast::TableCell::Number(_))) {
+                    if !matches!(
+                        row.cells.get(key_index),
+                        Some(crate::ast::TableCell::Number(_))
+                    ) {
                         return Err(LowerError::LookupNonNumericKeyColumn {
                             table: table.clone(),
                             column: key_col.clone(),
@@ -775,11 +784,15 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                 annotations,
             } => {
                 if columns.is_empty() {
-                    return Err(LowerError::TableNoColumns { table: name.clone() });
+                    return Err(LowerError::TableNoColumns {
+                        table: name.clone(),
+                    });
                 }
                 let prov = annotations_to_provenance(annotations)?;
                 if prov.source.trim().is_empty() {
-                    return Err(LowerError::TableMissingProvenance { table: name.clone() });
+                    return Err(LowerError::TableMissingProvenance {
+                        table: name.clone(),
+                    });
                 }
                 for (i, row) in rows.iter().enumerate() {
                     if row.cells.len() != columns.len() {
@@ -1211,7 +1224,9 @@ fn lower_expr(expr: &ExprAst) -> ComputeExpr {
         // reference on a poisoned slot name so `compute` fails cleanly with
         // `UnknownSlot` rather than silently miscomputing — never a panic, never a
         // wrong number.
-        ExprAst::Apply(name, _) => ComputeExpr::Ref(format!("<unexpanded formula application: {name}>")),
+        ExprAst::Apply(name, _) => {
+            ComputeExpr::Ref(format!("<unexpanded formula application: {name}>"))
+        }
     }
 }
 
@@ -1340,6 +1355,29 @@ fn row_provenance(
                 prov.corroborations
                     .push(Citation::new(source.clone(), locator.clone()));
             }
+            Annotation::Quote {
+                text,
+                byte_offset,
+                snapshot_hex,
+            } => {
+                // A row may pin its OWN span (RS-4 PR-D4). Same fail-closed
+                // well-formedness checks as the envelope path; a row that does
+                // not pin simply inherits whatever the table envelope pinned.
+                let hash = ContentHash::from_hex(snapshot_hex).ok_or({
+                    LowerError::MalformedQuotePin {
+                        reason: "snapshot must be a 64-character lowercase SHA-256 hex string",
+                    }
+                })?;
+                let with = prov
+                    .clone()
+                    .with_quote(text.clone(), Some(*byte_offset), Some(hash));
+                if with.quote.is_unmigrated() {
+                    return Err(LowerError::MalformedQuotePin {
+                        reason: "quote text has no visible content to anchor",
+                    });
+                }
+                prov = with;
+            }
         }
     }
     Ok(prov)
@@ -1352,6 +1390,9 @@ fn annotations_to_provenance(annotations: &[Annotation]) -> Result<Provenance, L
     // ADJ-A9: corroborating citations are REPEATABLE — accumulate in source
     // order rather than rejecting duplicates.
     let mut corroborations: Vec<Citation> = Vec::new();
+    // RS-4 PR-D4: a single optional pinned quote (verbatim text, byte offset,
+    // snapshot hash). Applied after the base provenance is built.
+    let mut quote_pin: Option<(String, usize, String)> = None;
 
     for a in annotations {
         match a {
@@ -1382,6 +1423,16 @@ fn annotations_to_provenance(annotations: &[Annotation]) -> Result<Provenance, L
             Annotation::Cites { source, locator } => {
                 corroborations.push(Citation::new(source.clone(), locator.clone()));
             }
+            Annotation::Quote {
+                text,
+                byte_offset,
+                snapshot_hex,
+            } => {
+                if quote_pin.is_some() {
+                    return Err(LowerError::DuplicateAnnotation { name: "quote" });
+                }
+                quote_pin = Some((text.clone(), *byte_offset, snapshot_hex.clone()));
+            }
         }
     }
 
@@ -1400,6 +1451,30 @@ fn annotations_to_provenance(annotations: &[Annotation]) -> Result<Provenance, L
     // ADJ-A9: attach any corroborating citations (documentary only — they do
     // not change the LR arithmetic, only what the audit trail can list).
     prov.corroborations = corroborations;
+
+    // RS-4 PR-D4 (§E.3.1): apply a pinned quote, if one was written. The
+    // hex must parse to a 64-char SHA-256, and the text must carry visible
+    // content — both are FAIL-CLOSED here so a malformed pin never reaches the
+    // engine as a half-built `Verbatim` span. The *anchored* check (does the
+    // text really sit at `byte_offset` in the snapshot?) runs later, once the
+    // program's snapshot bundle is resolvable — a hand-authored offset that
+    // doesn't verify is caught there, not silently trusted.
+    if let Some((text, byte_offset, snapshot_hex)) = quote_pin {
+        let hash = ContentHash::from_hex(&snapshot_hex).ok_or(LowerError::MalformedQuotePin {
+            reason: "snapshot must be a 64-character lowercase SHA-256 hex string",
+        })?;
+        let with = prov.clone().with_quote(text, Some(byte_offset), Some(hash));
+        // `with_quote` degrades a blank/invisible span to `Unmigrated`. A pin
+        // that names a snapshot but carries no checkable text is malformed, not
+        // a silent partial — refuse it.
+        if with.quote.is_unmigrated() {
+            return Err(LowerError::MalformedQuotePin {
+                reason: "quote text has no visible content to anchor",
+            });
+        }
+        prov = with;
+    }
+
     Ok(prov)
 }
 
@@ -1419,21 +1494,20 @@ fn validate_formula(fd: &FormulaDef) -> Result<(), LowerError> {
     // parameters plus ALL step names. An identifier that resolves to none of
     // these is a clean free-variable error.
     let mut in_scope: std::collections::HashSet<String> = fd.params.iter().cloned().collect();
-    let check = |expr: &ExprAst,
-                 scope: &std::collections::HashSet<String>|
-     -> Result<(), LowerError> {
-        let mut refs = Vec::new();
-        collect_refs(expr, &mut refs);
-        for r in refs {
-            if !scope.contains(&r) {
-                return Err(LowerError::FormulaFreeVariable {
-                    formula: fd.name.clone(),
-                    variable: r,
-                });
+    let check =
+        |expr: &ExprAst, scope: &std::collections::HashSet<String>| -> Result<(), LowerError> {
+            let mut refs = Vec::new();
+            collect_refs(expr, &mut refs);
+            for r in refs {
+                if !scope.contains(&r) {
+                    return Err(LowerError::FormulaFreeVariable {
+                        formula: fd.name.clone(),
+                        variable: r,
+                    });
+                }
             }
-        }
-        Ok(())
-    };
+            Ok(())
+        };
     for step in &fd.steps {
         check(&step.expr, &in_scope)?;
         in_scope.insert(step.name.clone());
@@ -1663,7 +1737,15 @@ fn expand_applies(
     // positions (`f(x) = g(x) + g(x)`) is popped off the path between the two uses,
     // so reuse is never mistaken for recursion.
     let mut active: Vec<String> = Vec::new();
-    let expanded = expand_rec(expr, formulas, depth, &mut chain, &mut active, &mut budget, 0)?;
+    let expanded = expand_rec(
+        expr,
+        formulas,
+        depth,
+        &mut chain,
+        &mut active,
+        &mut budget,
+        0,
+    )?;
     Ok((expanded, chain))
 }
 
@@ -1773,12 +1855,24 @@ fn expand_rec(
             Box::new(expand_rec(b, formulas, depth, chain, active, budget, d)?),
         )),
         // Unary nodes: expand the single operand.
-        ExprAst::Abs(a) => Ok(ExprAst::Abs(Box::new(expand_rec(a, formulas, depth, chain, active, budget, d)?))),
-        ExprAst::Floor(a) => Ok(ExprAst::Floor(Box::new(expand_rec(a, formulas, depth, chain, active, budget, d)?))),
-        ExprAst::Ceil(a) => Ok(ExprAst::Ceil(Box::new(expand_rec(a, formulas, depth, chain, active, budget, d)?))),
-        ExprAst::Round(a) => Ok(ExprAst::Round(Box::new(expand_rec(a, formulas, depth, chain, active, budget, d)?))),
-        ExprAst::Trunc(a) => Ok(ExprAst::Trunc(Box::new(expand_rec(a, formulas, depth, chain, active, budget, d)?))),
-        ExprAst::Sign(a) => Ok(ExprAst::Sign(Box::new(expand_rec(a, formulas, depth, chain, active, budget, d)?))),
+        ExprAst::Abs(a) => Ok(ExprAst::Abs(Box::new(expand_rec(
+            a, formulas, depth, chain, active, budget, d,
+        )?))),
+        ExprAst::Floor(a) => Ok(ExprAst::Floor(Box::new(expand_rec(
+            a, formulas, depth, chain, active, budget, d,
+        )?))),
+        ExprAst::Ceil(a) => Ok(ExprAst::Ceil(Box::new(expand_rec(
+            a, formulas, depth, chain, active, budget, d,
+        )?))),
+        ExprAst::Round(a) => Ok(ExprAst::Round(Box::new(expand_rec(
+            a, formulas, depth, chain, active, budget, d,
+        )?))),
+        ExprAst::Trunc(a) => Ok(ExprAst::Trunc(Box::new(expand_rec(
+            a, formulas, depth, chain, active, budget, d,
+        )?))),
+        ExprAst::Sign(a) => Ok(ExprAst::Sign(Box::new(expand_rec(
+            a, formulas, depth, chain, active, budget, d,
+        )?))),
         ExprAst::Call(f, a) => Ok(ExprAst::Call(
             *f,
             Box::new(expand_rec(a, formulas, depth, chain, active, budget, d)?),
@@ -2008,7 +2102,10 @@ mod tests {
         "#;
         let lowered = compile(src).unwrap();
         // A formula application is a derived value, not a differential query.
-        assert!(lowered.queries.is_empty(), "formula query is not a hypothesis");
+        assert!(
+            lowered.queries.is_empty(),
+            "formula query is not a hypothesis"
+        );
         let d = lowered
             .kb
             .derived_for("bmi")
@@ -2018,7 +2115,10 @@ mod tests {
             "expected ≈22.857, got {}",
             d.value
         );
-        let prov = d.provenance.as_ref().expect("derivation carries provenance");
+        let prov = d
+            .provenance
+            .as_ref()
+            .expect("derivation carries provenance");
         assert!(!prov.source.is_empty(), "the WHO source span is attached");
         assert_eq!(prov.trust_tier, TrustTier::Authoritative);
         assert_eq!(
@@ -2043,7 +2143,11 @@ mod tests {
         "#;
         let lowered = compile(src).unwrap();
         let d = lowered.kb.derived_for("bmi").unwrap();
-        assert!((d.value - 20.0).abs() < 1e-9, "80 / 2² = 20, got {}", d.value);
+        assert!(
+            (d.value - 20.0).abs() < 1e-9,
+            "80 / 2² = 20, got {}",
+            d.value
+        );
     }
 
     #[test]
@@ -2103,7 +2207,11 @@ mod tests {
         "#;
         let lowered = compile(src).unwrap();
         let d = lowered.kb.derived_for("weighted3").unwrap();
-        assert!((d.value - 6.0).abs() < 1e-9, "(3+6+9)/3 = 6, got {}", d.value);
+        assert!(
+            (d.value - 6.0).abs() < 1e-9,
+            "(3+6+9)/3 = 6, got {}",
+            d.value
+        );
     }
 
     #[test]
@@ -2137,7 +2245,10 @@ mod tests {
         assert_eq!(formulas.len(), 1);
         let f = &formulas[0];
         assert_eq!(f.name, "bmi");
-        assert_eq!(f.params, vec!["body_mass".to_string(), "height".to_string()]);
+        assert_eq!(
+            f.params,
+            vec!["body_mass".to_string(), "height".to_string()]
+        );
         // body = body_mass / (height * height)
         assert_eq!(
             f.body,
@@ -2188,9 +2299,7 @@ mod tests {
             }
         }
 
-        let bmi_lib = include_str!(
-            "../../../../specs/data/adj-formula-stdlib/clinical/bmi.adj"
-        );
+        let bmi_lib = include_str!("../../../../specs/data/adj-formula-stdlib/clinical/bmi.adj");
         let consumer = "import \"bmi.adj\"\n\
                         observe body_mass(70)\n\
                         observe height(1.75)\n\
@@ -2202,7 +2311,10 @@ mod tests {
 
         let lowered =
             compile_with_imports("consumer.adj", &provider, ImportLimits::default()).unwrap();
-        let d = lowered.kb.derived_for("bmi").expect("applied imported formula");
+        let d = lowered
+            .kb
+            .derived_for("bmi")
+            .expect("applied imported formula");
         assert!(
             (d.value - 22.857).abs() < 0.01,
             "expected ≈22.857, got {}",
@@ -2330,7 +2442,11 @@ mod tests {
         let query = &lowered.queries[0];
         let v = query_var(query);
         let dag = enumerate_all(query, &lowered.kb);
-        assert_eq!(dag.proofs.len(), 1, "exactly one row matches the key `foot`");
+        assert_eq!(
+            dag.proofs.len(),
+            1,
+            "exactly one row matches the key `foot`"
+        );
         // NX-2: a fractional cell binds as an EXACT decimal, not a lossy `f64` (a distinct
         // `Number` variant). Preserving the exact value is the whole intent — `0.3048` is stored
         // with every digit, and only the *rendering* falls back to the f64 form when it fits.
@@ -2381,7 +2497,10 @@ mod tests {
         let v = query_var(query);
         let dag = enumerate_all(query, &lowered.kb);
         assert_eq!(dag.proofs.len(), 1);
-        assert_eq!(dag.proofs[0].bindings.walk_var(&v), CoreTerm::Str("m".into()));
+        assert_eq!(
+            dag.proofs[0].bindings.walk_var(&v),
+            CoreTerm::Str("m".into())
+        );
     }
 
     #[test]
@@ -3057,6 +3176,60 @@ contributes 1000000 from answer == 3 / 10 to opt_a
     fn a_bare_define_outside_a_block_also_registers() {
         let lowered = compile("define dx : hypothesis\n? dx\n").unwrap();
         assert_eq!(lowered.dictionary.len(), 1);
+    }
+
+    #[test]
+    fn a_valid_pinned_quote_lowers_to_a_verbatim_span_and_snapshot() {
+        // RS-4 PR-D4a: quote/at/snapshot populates Provenance.quote + .snapshot.
+        let hex = "0".repeat(64);
+        let src = format!(
+            "relate inhibits(aspirin, cyclooxygenase)\n    \
+             quote \"Aspirin inhibits cyclooxygenase\" at 7 snapshot \"{hex}\"\n    \
+             source \"ref\"\n? inhibits(aspirin, $X)\n"
+        );
+        let lowered = compile(&src).unwrap();
+        let query = &lowered.queries[0];
+        let dag = enumerate_all(query, &lowered.kb);
+        assert_eq!(dag.proofs.len(), 1, "the relate fact matches the query");
+        let fid = dag.proofs[0].via_facts[0];
+        let prov = &lowered.kb.fact(fid).expect("relate fact exists").provenance;
+        assert_eq!(
+            prov.quote.text(),
+            Some("Aspirin inhibits cyclooxygenase"),
+            "the verbatim span is carried through"
+        );
+        assert!(prov.snapshot.is_some(), "and the snapshot hash is pinned");
+    }
+
+    #[test]
+    fn a_malformed_snapshot_hash_is_a_fail_closed_compile_error() {
+        let src = "relate inhibits(a, b)\n    \
+                   quote \"hi\" at 0 snapshot \"nothex\"\n    source \"ref\"\n? inhibits(a, $X)\n";
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::CompileError::Lower(LowerError::MalformedQuotePin { .. })
+            ),
+            "a non-SHA-256 snapshot must be a compile error, not a half-built pin: {err:?}"
+        );
+    }
+
+    #[test]
+    fn a_blank_quote_text_is_a_fail_closed_compile_error() {
+        let hex = "0".repeat(64);
+        let src = format!(
+            "relate inhibits(a, b)\n    quote \"   \" at 0 snapshot \"{hex}\"\n    \
+             source \"ref\"\n? inhibits(a, $X)\n"
+        );
+        let err = compile(&src).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::CompileError::Lower(LowerError::MalformedQuotePin { .. })
+            ),
+            "a quote with no visible content cannot anchor anything: {err:?}"
+        );
     }
 
     #[test]
@@ -3904,7 +4077,10 @@ contributes 1000000 from answer == 60 to correct
         // more operands — so it is a clean, explicit error rather than a silent
         // mis-lowering. (Three-or-more args ARE now accepted; see the n-ary test.)
         let src = "observe a(3)\nlet answer = latex \"$\\min(a)$\"\n? answer\n";
-        assert!(compile(src).is_err(), "one-arg min must be rejected: {src:?}");
+        assert!(
+            compile(src).is_err(),
+            "one-arg min must be rejected: {src:?}"
+        );
     }
 
     #[test]
@@ -4049,8 +4225,7 @@ contributes 1000000 from answer == 60 to correct
         // TWO or more operands), so it is a clean, explicit error via the SAME
         // `latex_nary_fold` guard the `\min(a)` spelling hits — never a silent
         // mis-lowering into a bare product.
-        let src =
-            "observe a(3)\nlet answer = latex \"$\\operatorname{min}(a)$\"\n? answer\n";
+        let src = "observe a(3)\nlet answer = latex \"$\\operatorname{min}(a)$\"\n? answer\n";
         assert!(
             compile(src).is_err(),
             "one-arg operatorname min must be rejected: {src:?}"
@@ -4346,7 +4521,10 @@ contributes 1000000 from answer == 60 to correct
              let answer = latex \"$\\sum_{i=1}^{n} i$\"\n\
              ? answer\n",
         );
-        assert!(symbolic.is_err(), "symbolic-bound sum must reject: {symbolic:?}");
+        assert!(
+            symbolic.is_err(),
+            "symbolic-bound sum must reject: {symbolic:?}"
+        );
         // A definite integral is not a finite sum/product — must reject, never approximate.
         let integral = compile(
             "observe x(5)\n\
@@ -4433,7 +4611,10 @@ contributes 1000000 from answer == 60 to correct
              let answer = latex \"$\\binom{n}{k}$\"\n\
              ? answer\n",
         );
-        assert!(symbolic.is_err(), "symbolic binomial must reject: {symbolic:?}");
+        assert!(
+            symbolic.is_err(),
+            "symbolic binomial must reject: {symbolic:?}"
+        );
         // k > n is out of the supported domain (\binom{3}{5}) — reject rather than emit 0.
         let inverted = compile(
             "let answer = latex \"$\\binom{3}{5}$\"\n\
@@ -4446,13 +4627,19 @@ contributes 1000000 from answer == 60 to correct
             "let answer = latex \"$\\binom{60}{30}$\"\n\
              ? answer\n",
         );
-        assert!(too_large.is_err(), "too-large binomial must reject: {too_large:?}");
+        assert!(
+            too_large.is_err(),
+            "too-large binomial must reject: {too_large:?}"
+        );
         // An upper argument beyond BINOM_N_CAP is rejected before looping.
         let oversized = compile(
             "let answer = latex \"$\\binom{2000}{2}$\"\n\
              ? answer\n",
         );
-        assert!(oversized.is_err(), "oversized-n binomial must reject: {oversized:?}");
+        assert!(
+            oversized.is_err(),
+            "oversized-n binomial must reject: {oversized:?}"
+        );
     }
 
     #[test]
@@ -4738,7 +4925,9 @@ rule { head: r(a) when: x(t) }";
         assert_eq!(prov.source, "ratio def", "ratio's cite is primary");
         // quotient's cite composes in as a corroboration — both are auditable.
         assert!(
-            prov.corroborations.iter().any(|c| c.source == "quotient def"),
+            prov.corroborations
+                .iter()
+                .any(|c| c.source == "quotient def"),
             "quotient's cite composed as a corroboration: {:?}",
             prov.corroborations
         );
@@ -4766,7 +4955,11 @@ rule { head: r(a) when: x(t) }";
         "#;
         let lowered = compile(src).unwrap();
         let d = lowered.kb.derived_for("composed").unwrap();
-        assert!((d.value - 1.5).abs() < 1e-9, "(2*3)/4 = 1.5, got {}", d.value);
+        assert!(
+            (d.value - 1.5).abs() < 1e-9,
+            "(2*3)/4 = 1.5, got {}",
+            d.value
+        );
     }
 
     #[test]
@@ -4847,11 +5040,7 @@ rule { head: r(a) when: x(t) }";
         // it returns `FormulaNestingTooDeep` on a 2 MiB stack instead of aborting.
         let mut spine = ExprAst::Ref("x".to_string());
         for _ in 0..400 {
-            spine = ExprAst::Bin(
-                ArithOp::Add,
-                Box::new(spine),
-                Box::new(ExprAst::Lit(0.0)),
-            );
+            spine = ExprAst::Bin(ArithOp::Add, Box::new(spine), Box::new(ExprAst::Lit(0.0)));
         }
         let formulas: HashMap<&str, &FormulaDef> = HashMap::new();
         let result = expand_applies(&spine, &formulas, 0);
@@ -4932,13 +5121,23 @@ rule { head: r(a) when: x(t) }";
         "#;
         let lowered = compile(src).unwrap();
         // The BMI was computed into a derived slot the predicate gates on.
-        let bmi = lowered.kb.derived_for("bmi").expect("bmi computed for the branch");
-        assert!((bmi.value - 34.602).abs() < 0.01, "bmi ≈ 34.6, got {}", bmi.value);
+        let bmi = lowered
+            .kb
+            .derived_for("bmi")
+            .expect("bmi computed for the branch");
+        assert!(
+            (bmi.value - 34.602).abs() < 0.01,
+            "bmi ≈ 34.6, got {}",
+            bmi.value
+        );
         // The query saturates: the branch fired.
         let query = &lowered.queries[0];
         match search(query, &lowered.kb, SearchMode::LRAggregate) {
             SearchResult::LRAggregateResult { posterior, .. } => {
-                assert!(posterior > 0.9999, "obese fires (saturates), got {posterior}");
+                assert!(
+                    posterior > 0.9999,
+                    "obese fires (saturates), got {posterior}"
+                );
             }
             other => panic!("expected LRAggregateResult, got {other:?}"),
         }
