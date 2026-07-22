@@ -4,6 +4,11 @@
 
 ### Added
 
+- **BJT forward-beta temperature exponent** — BJT model cards now accept `XTB`
+  and scale forward beta by the analysis-to-nominal absolute temperature ratio,
+  matching Rust and TypeScript. The supported-parameter catalog now contains
+  106 canonical rows.
+
 - **BJT base-collector leakage** — BJT model cards now accept `ISC`/`NC` and
   apply the leakage branch in DC, transient, AC, transfer-function,
   temperature, and noise paths, matching Rust and TypeScript. The

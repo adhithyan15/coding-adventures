@@ -216,6 +216,8 @@ small-signal input conductance, and shot noise.
 `ISC` (default `0`, disabled) and `NC` (default `2`) add the mirrored Berkeley
 base-collector leakage branch to DC/transient current, small-signal
 base-collector conductance, and shot noise.
+`XTB` (default `0`) scales forward beta with the analysis-to-nominal absolute
+temperature ratio, preserving the nominal beta when omitted.
 `modelCardUnsupportedParameterIssues`,
 `formatModelCardUnsupportedParameterIssueTable`,
 `modelCardUnsupportedParameterIssueRecords`,
@@ -241,7 +243,7 @@ model kind for compact release dashboards and Mosaic UI inventories.
 `modelCardSupportedParameterCoverageGateIssueRecords`,
 `formatModelCardSupportedParameterCoverageGateIssueCsv`, and
 `formatModelCardSupportedParameterCoverageGateIssueJson` validate the expected
-seven-kind, 104-row supported-parameter catalog and expose stable issue rows for
+seven-kind, 106-row supported-parameter catalog and expose stable issue rows for
 release automation.
 `modelCardSupportedParameterCoverageDashboard`,
 `formatModelCardSupportedParameterCoverageDashboardTable`,
