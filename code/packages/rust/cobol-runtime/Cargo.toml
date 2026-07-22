@@ -1,8 +1,8 @@
 [package]
 name = "coding-adventures-cobol-runtime"
-version = "0.26.0"
+version = "0.27.0"
 edition = "2021"
-description = "Runtime (tree-walking interpreter) for COBOL-60 — a faithful PICTURE-typed data model and statement execution, built on the cobol-parser CST. v0.26.0 adds INSPECT source TALLYING counter FOR ALL delim (count the occurrences of a single-character delimiter — a 1-char literal or PIC X(1) item — in an alphanumeric source and ADD them to an unsigned-integer counter; LEADING/CHARACTERS tallies, BEFORE/AFTER phrases, several counters or FOR phrases, and any REPLACING remain later rungs)."
+description = "Runtime (tree-walking interpreter) for COBOL-60 — a faithful PICTURE-typed data model and statement execution, built on the cobol-parser CST. v0.27.0 adds INSPECT source REPLACING ALL x BY y (replace every occurrence of a single character x — a 1-char literal or PIC X(1) item — with a single character y in an alphanumeric source, in place, via a per-position map; REPLACING CHARACTERS/LEADING/FIRST, BEFORE/AFTER regions, several replace items, the combined TALLYING … REPLACING, and a multi-character/figurative/wider search or replacement or a numeric/group source remain later rungs), on top of v0.26.0's INSPECT source TALLYING counter FOR ALL delim (count the occurrences of a single-character delimiter — a 1-char literal or PIC X(1) item — in an alphanumeric source and ADD them to an unsigned-integer counter; LEADING/CHARACTERS tallies, BEFORE/AFTER phrases, and several counters or FOR phrases remain later rungs)."
 
 [dependencies]
 grammar-tools = { path = "../grammar-tools" }

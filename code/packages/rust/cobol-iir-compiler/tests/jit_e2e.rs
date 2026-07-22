@@ -1904,3 +1904,73 @@ fn inspect_delimiter_at_both_ends() {
     ));
     assert_eq!(out, "02\n");
 }
+
+// INSPECT … REPLACING ALL x BY y — replace EVERY occurrence of the single
+// character `x` in the alphanumeric source with the single character `y`, in
+// place (same width). Each case pins the compiled per-position rebuild to the
+// oracle's map, byte-for-byte.
+
+#[test]
+fn inspect_replacing_maps_a_repeated_char() {
+    // "ABABA" with A→X → "XBXBX".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"ABABA\"."],
+        &["INSPECT S REPLACING ALL \"A\" BY \"X\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "XBXBX\n");
+}
+
+#[test]
+fn inspect_replacing_absent_char_leaves_source_unchanged() {
+    // 'Z' never occurs in "HELLO" → the source is untouched.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"HELLO\"."],
+        &["INSPECT S REPLACING ALL \"Z\" BY \"Q\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "HELLO\n");
+}
+
+#[test]
+fn inspect_replacing_every_character() {
+    // Every one of "AAAA" is an 'A' → "XXXX".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"AAAA\"."],
+        &["INSPECT S REPLACING ALL \"A\" BY \"X\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "XXXX\n");
+}
+
+#[test]
+fn inspect_replacing_search_and_replacement_are_pic_x1_items() {
+    // Both the search and the replacement come from PIC X(1) items: O→0 in
+    // "MOON" → "M00N".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(4) VALUE \"MOON\".",
+            "01  X  PIC X(1) VALUE \"O\".",
+            "01  Y  PIC X(1) VALUE \"0\".",
+        ],
+        &["INSPECT S REPLACING ALL X BY Y.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "M00N\n");
+}
+
+#[test]
+fn inspect_replacing_char_at_both_ends() {
+    // "*HI*" with *→- → "-HI-" (a match at both boundaries is replaced).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"*HI*\"."],
+        &["INSPECT S REPLACING ALL \"*\" BY \"-\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "-HI-\n");
+}
+
+#[test]
+fn inspect_replacing_end_inspect_terminator_parses() {
+    // The optional END-INSPECT terminator parses; "BANANA" with A→o → "BoNoNo".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"BANANA\"."],
+        &["INSPECT S REPLACING ALL \"A\" BY \"o\" END-INSPECT.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "BoNoNo\n");
+}

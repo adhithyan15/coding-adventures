@@ -1321,13 +1321,18 @@ impl<'a> Compiler<'a> {
     /// or a numeric source or a non-integer/non-numeric counter — is a clean
     /// `Unsupported`, accepted by the grammar and rejected here.
     fn emit_inspect(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
-        // REPLACING (with or without TALLYING) is a later rung.
-        if child_node(verb, "inspect_replacing").is_some() {
+        // This rung supports a LONE `TALLYING … FOR ALL` OR a LONE `REPLACING ALL
+        // … BY …`. The combined `TALLYING … REPLACING` in one INSPECT is a later
+        // rung.
+        let has_tally = child_node(verb, "inspect_tallying").is_some();
+        let has_repl = child_node(verb, "inspect_replacing").is_some();
+        if has_tally && has_repl {
             return Err(CompileError::Unsupported(
-                "INSPECT … REPLACING is a later rung".into(),
+                "combined INSPECT … TALLYING … REPLACING is a later rung".into(),
             ));
         }
-        // The source is the first (and only top-level) `operand`.
+        // The source is the first (and only top-level) `operand`; shared by both
+        // the TALLYING and REPLACING forms. It must be a plain alphanumeric item.
         let source_node = child_node(verb, "operand")
             .ok_or_else(|| CompileError::Malformed("INSPECT without a source".into()))?;
         let source_name = match read_operand(source_node)? {
@@ -1344,15 +1349,20 @@ impl<'a> Compiler<'a> {
             }
         };
         let sidx = self.item_index(&source_name)?;
-        match &self.items[sidx].kind {
-            ItemKind::Char { .. } => {}
+        let source_width = match &self.items[sidx].kind {
+            ItemKind::Char { .. } => self.items[sidx].width(),
             ItemKind::Numeric { .. } => {
                 return Err(CompileError::Unsupported(
                     "INSPECT of a numeric source is a later rung".into(),
                 ))
             }
-        }
+        };
         let s_reg = self.items[sidx].reg.clone();
+
+        // REPLACING dispatches to its own lowering (the source rebuild).
+        if has_repl {
+            return self.emit_inspect_replacing(verb, &s_reg, source_width);
+        }
 
         // Extract the single `FOR ALL delim` phrase (rejecting the later rungs).
         let (counter_name, delim_node) = inspect_tally_all(verb)?;
@@ -1414,6 +1424,157 @@ impl<'a> Compiler<'a> {
         let sum = self.fresh("_inspsum");
         self.emit("add", Some(&sum), vec![Operand::Var(counter_reg), Operand::Var(cnt)], "i64");
         self.store_scaled(&counter_name, &sum, 0, int_digits + 1, false)
+    }
+
+    /// `INSPECT source REPLACING ALL x BY y` — rebuild the alphanumeric `source`
+    /// with EVERY occurrence of the single character `x` replaced by the single
+    /// character `y`, in place. Because both are single characters the width `W`
+    /// is unchanged, so the result is a per-position map that we UNROLL over the
+    /// compile-time-known `W`: at each position `j`, the output character is
+    /// `S[j] == x ? y : S[j]`.
+    ///
+    /// ```text
+    ///   result = ""
+    ///   for j in 0..W:                       # W is known at compile time
+    ///       if S[j] == x   result = result ++ y_str
+    ///       else           result = result ++ S[j, j+1)
+    ///   source := result                     # exactly W chars, width unchanged
+    /// ```
+    ///
+    /// The search `x` is reduced to a byte code with the shared
+    /// [`Self::single_delim_code`] (so `str_index(S, j)` compares against it); the
+    /// replacement `y` is reduced to a 1-character string with the parallel
+    /// [`Self::single_delim_str`] so it can be concatenated. Both share
+    /// UNSTRING/TALLYING's single-character validation, so a multi-character/
+    /// figurative/wider/numeric `x` or `y` is a clean later-rung `Unsupported`.
+    /// The rebuilt string is copied into the source register — the same W-wide
+    /// alphanumeric image the oracle's `move_into` produces, byte-for-byte.
+    fn emit_inspect_replacing(
+        &mut self,
+        verb: &GrammarASTNode,
+        s_reg: &str,
+        width: usize,
+    ) -> Result<(), CompileError> {
+        // The single `ALL x BY y` phrase (rejecting the later rungs).
+        let (search_node, replace_node) = inspect_replacing_all(verb)?;
+        // x → a byte code (for the per-position compare); y → a 1-char string
+        // (for the concatenation). Both share the single-character validation.
+        let x_reg = self.single_delim_code(search_node, "INSPECT REPLACING")?;
+        let y_reg = self.single_delim_str(replace_node, "INSPECT REPLACING")?;
+
+        // result = "" — the accumulator we build W characters into.
+        let result = self.fresh("_irres");
+        self.emit("str_const", Some(&result), vec![Operand::Str(String::new())], "str");
+
+        for j in 0..width {
+            // c = S[j]  (the source byte at this position).
+            let jc = self.str_index(j as i64);
+            let c = self.fresh("_irc");
+            self.emit(
+                "str_index",
+                Some(&c),
+                vec![Operand::Var(s_reg.to_string()), Operand::Var(jc.clone())],
+                "i64",
+            );
+            // eq = (c == x).
+            let eq = self.fresh("_ireq");
+            self.emit("cmp_eq", Some(&eq), vec![Operand::Var(c), Operand::Var(x_reg.clone())], "i64");
+            let use_orig = self.fresh("ir_orig");
+            let done = self.fresh("ir_done");
+            // On a match, append the replacement `y`; otherwise the original char.
+            self.emit("jmp_if_false", None, vec![Operand::Var(eq), Operand::Var(use_orig.clone())], "void");
+            self.emit(
+                "str_concat",
+                Some(&result),
+                vec![Operand::Var(result.clone()), Operand::Var(y_reg.clone())],
+                "str",
+            );
+            self.emit("jmp", None, vec![Operand::Var(done.clone())], "void");
+            self.emit("label", None, vec![Operand::Var(use_orig)], "void");
+            // orig = S[j, j+1) — the source character unchanged.
+            let jc1 = self.str_index(j as i64 + 1);
+            let orig = self.fresh("_irorig");
+            self.emit(
+                "str_slice",
+                Some(&orig),
+                vec![Operand::Var(s_reg.to_string()), Operand::Var(jc), Operand::Var(jc1)],
+                "str",
+            );
+            self.emit(
+                "str_concat",
+                Some(&result),
+                vec![Operand::Var(result.clone()), Operand::Var(orig)],
+                "str",
+            );
+            self.emit("label", None, vec![Operand::Var(done)], "void");
+        }
+
+        // source := result. `result` is exactly W chars (each of the W pieces is a
+        // single character), so this is the same fixed-width image the oracle
+        // stores. Copy through an empty concat so the source register (read during
+        // the loop) is only overwritten now, after the last read.
+        let empty = self.fresh("_irempty");
+        self.emit("str_const", Some(&empty), vec![Operand::Str(String::new())], "str");
+        self.emit(
+            "str_concat",
+            Some(s_reg),
+            vec![Operand::Var(result), Operand::Var(empty)],
+            "str",
+        );
+        Ok(())
+    }
+
+    /// A single replacement character reduced to a fresh **string** register: a
+    /// `str_const` of the 1-character string for a 1-char literal, or the item's
+    /// own register for a `PIC X(1)` item (its storage is already exactly one
+    /// character wide). The parallel of [`Self::single_delim_code`] (which yields
+    /// a byte code for a *scan*); this yields a 1-char string for a *concat*. The
+    /// same later-rung rejections apply: a multi-character literal, a numeric/
+    /// figurative/reference-modified operand, and a numeric/wider item.
+    fn single_delim_str(
+        &mut self,
+        op: &GrammarASTNode,
+        verb: &str,
+    ) -> Result<String, CompileError> {
+        match read_operand(op)? {
+            Operandy::Literal(Src::Str(s)) => {
+                if s.len() != 1 {
+                    return Err(CompileError::Unsupported(format!(
+                        "{verb} with a multi-character delimiter is a later rung"
+                    )));
+                }
+                let reg = self.fresh("_usds");
+                self.emit("str_const", Some(&reg), vec![Operand::Str(s)], "str");
+                Ok(reg)
+            }
+            Operandy::Literal(Src::Num(_)) => Err(CompileError::Unsupported(format!(
+                "{verb} with a numeric-literal delimiter is a later rung"
+            ))),
+            Operandy::Literal(Src::Space) | Operandy::Literal(Src::Zero) => {
+                Err(CompileError::Unsupported(format!(
+                    "{verb} with a figurative-constant delimiter is a later rung"
+                )))
+            }
+            Operandy::RefMod { .. } => Err(CompileError::Unsupported(format!(
+                "{verb} with a reference-modified delimiter is a later rung"
+            ))),
+            Operandy::Name(name) => {
+                let idx = self.item_index(&name)?;
+                match &self.items[idx].kind {
+                    ItemKind::Char { .. } => {
+                        if self.items[idx].width() != 1 {
+                            return Err(CompileError::Unsupported(format!(
+                                "{verb} with a delimiter item wider than one character is a later rung"
+                            )));
+                        }
+                        Ok(self.items[idx].reg.clone())
+                    }
+                    ItemKind::Numeric { .. } => Err(CompileError::Unsupported(format!(
+                        "{verb} with a numeric delimiter item is a later rung"
+                    ))),
+                }
+            }
+        }
     }
 
     /// `STOP RUN` → `ret 0`.
@@ -3276,6 +3437,58 @@ fn inspect_tally_all(verb: &GrammarASTNode) -> Result<(String, &GrammarASTNode),
     Ok((counter, delim))
 }
 
+/// Extract the single supported `REPLACING ALL search BY replace` phrase from an
+/// `inspect_stmt`, returning `(search_node, replace_node)` and rejecting every
+/// later-rung form the grammar also accepts:
+///   * more than one replace item (`{ replace_item }`) — one `ALL x BY y` this rung;
+///   * a `CHARACTERS` or `LEADING`/`FIRST` replacement (only `ALL` this rung);
+///   * a `BEFORE`/`AFTER` region restricting the replacement.
+///
+/// (The combined `TALLYING … REPLACING` and a non-alphanumeric source are
+/// rejected by the caller; a multi-character/wider/figurative search or
+/// replacement is rejected by `single_delim_code`/`single_delim_str`.)
+fn inspect_replacing_all(
+    verb: &GrammarASTNode,
+) -> Result<(&GrammarASTNode, &GrammarASTNode), CompileError> {
+    let replacing = child_node(verb, "inspect_replacing").ok_or_else(|| {
+        CompileError::Unsupported("INSPECT without a REPLACING clause is a later rung".into())
+    })?;
+    let items = child_nodes(replacing, "replace_item");
+    let ri = match items.as_slice() {
+        [one] => *one,
+        _ => {
+            return Err(CompileError::Unsupported(
+                "INSPECT REPLACING with several replace items is a later rung".into(),
+            ))
+        }
+    };
+    let toks = child_tokens(ri);
+    if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
+        return Err(CompileError::Unsupported(
+            "INSPECT REPLACING CHARACTERS is a later rung".into(),
+        ));
+    }
+    if toks.iter().any(|(k, v)| k == "KEYWORD" && (v == "LEADING" || v == "FIRST")) {
+        return Err(CompileError::Unsupported(
+            "INSPECT REPLACING LEADING/FIRST is a later rung".into(),
+        ));
+    }
+    if child_node(ri, "inspect_region").is_some() {
+        return Err(CompileError::Unsupported(
+            "INSPECT REPLACING … BEFORE/AFTER is a later rung".into(),
+        ));
+    }
+    // `ALL search BY replace` — the two `operand` children are the search (first)
+    // and the replacement (second), in order.
+    let ops = child_nodes(ri, "operand");
+    match ops.as_slice() {
+        [s, r] => Ok((*s, *r)),
+        _ => Err(CompileError::Malformed(
+            "INSPECT REPLACING ALL without a search and a BY replacement".into(),
+        )),
+    }
+}
+
 /// Read a `literal` node (NUMBER / STRING / figurative) into a [`Src`].
 fn read_literal(lit: &GrammarASTNode) -> Result<Src, CompileError> {
     if let Some(fig) = child_node(lit, "figurative") {
@@ -4469,15 +4682,78 @@ mod tests {
     }
 
     #[test]
-    fn inspect_replacing_is_a_later_rung() {
-        // REPLACING (with or without TALLYING) is accepted by the grammar but
-        // rejected here as a later rung.
+    fn inspect_replacing_compiles_to_source_rebuild_and_validates() {
+        // The happy REPLACING path unrolls a per-position rebuild of the source:
+        // str_index reads each byte, cmp_eq tests it against the search, and
+        // str_slice/str_concat splice either the replacement or the original
+        // character into the accumulator. It passes IIR validation.
+        let module = compile_source(
+            &wrap(
+                &["01  S  PIC X(5) VALUE \"ABABA\"."],
+                &["INSPECT S REPLACING ALL \"A\" BY \"X\".", "DISPLAY S.", "STOP RUN."],
+            ),
+            "insp_repl",
+        )
+        .unwrap();
+        assert!(module.validate().is_empty(), "{:?}", module.validate());
+        let os = ops(&module);
+        assert!(os.contains(&"str_index".to_string()), "reads each source byte");
+        assert!(os.contains(&"cmp_eq".to_string()), "compares each byte to the search");
+        assert!(os.contains(&"str_concat".to_string()), "rebuilds the source string");
+    }
+
+    #[test]
+    fn inspect_replacing_characters_is_a_later_rung() {
+        // REPLACING CHARACTERS BY replaces every position unconditionally — a
+        // later rung; only ALL x BY y is modelled this cut.
         let err = compile_source(
             &wrap(
                 &["01  S  PIC X(5) VALUE \"ABABA\"."],
-                &["INSPECT S REPLACING ALL \"A\" BY \"X\".", "STOP RUN."],
+                &["INSPECT S REPLACING CHARACTERS BY \"X\".", "STOP RUN."],
             ),
-            "insp_repl",
+            "insp_repl_chars",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn inspect_replacing_leading_is_a_later_rung() {
+        // REPLACING LEADING replaces only a leading run — a later rung.
+        let err = compile_source(
+            &wrap(
+                &["01  S  PIC X(5) VALUE \"AABBB\"."],
+                &["INSPECT S REPLACING LEADING \"A\" BY \"X\".", "STOP RUN."],
+            ),
+            "insp_repl_lead",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn inspect_replacing_multi_character_search_is_a_later_rung() {
+        // A 2-char search needs a multi-char scan — a clean Unsupported.
+        let err = compile_source(
+            &wrap(
+                &["01  S  PIC X(5) VALUE \"AB::B\"."],
+                &["INSPECT S REPLACING ALL \"::\" BY \"XY\".", "STOP RUN."],
+            ),
+            "insp_repl_multi",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn inspect_replacing_several_items_is_a_later_rung() {
+        // Two `ALL … BY …` replace items in one INSPECT — a later rung; one this cut.
+        let err = compile_source(
+            &wrap(
+                &["01  S  PIC X(5) VALUE \"ABABA\"."],
+                &["INSPECT S REPLACING ALL \"A\" BY \"X\" ALL \"B\" BY \"Y\".", "STOP RUN."],
+            ),
+            "insp_repl_many",
         )
         .unwrap_err();
         assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
