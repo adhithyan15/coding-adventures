@@ -318,6 +318,7 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     // LANG77 L3b-2c-2 — the ATOM/EQ predicates (return tagged #t/#f) and the
     // COND truthiness normaliser (returns a raw 0/1 for jmp_if_false).
     BuiltinSig { name: "dyn_pair_p",    n_args: 1, returns: true },
+    BuiltinSig { name: "dyn_null_p",    n_args: 1, returns: true },
     BuiltinSig { name: "dyn_not",       n_args: 1, returns: true },
     BuiltinSig { name: "dyn_equal",     n_args: 2, returns: true },
     BuiltinSig { name: "dyn_truthy",    n_args: 1, returns: true },

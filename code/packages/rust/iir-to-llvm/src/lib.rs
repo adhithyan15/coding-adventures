@@ -358,6 +358,7 @@ struct LlvmStringLiteralRef {
 /// | `dyn_cons`     | `__dyn_cons`       | `CONS` — build a pair `[a|b]`  |
 /// | `dyn_car`/`cdr`| `__dyn_car`/`cdr`  | `CAR`/`CDR`                    |
 /// | `dyn_pair_p`   | `__dyn_pair_p`     | `pair?` (→ `ATOM`)            |
+/// | `dyn_null_p`   | `__dyn_null_p`     | `null?` (empty-list test)     |
 /// | `dyn_equal`    | `__dyn_equal`      | `EQ`                          |
 /// | `dyn_not`      | `__dyn_not`        | logical `not`                 |
 /// | `dyn_truthy`   | `__dyn_truthy`     | `COND` clause test            |
@@ -369,6 +370,7 @@ const DYN_BUILTINS: &[(&str, &str, usize)] = &[
     ("dyn_car", "__dyn_car", 1),
     ("dyn_cdr", "__dyn_cdr", 1),
     ("dyn_pair_p", "__dyn_pair_p", 1),
+    ("dyn_null_p", "__dyn_null_p", 1),
     ("dyn_equal", "__dyn_equal", 2),
     ("dyn_not", "__dyn_not", 1),
     ("dyn_truthy", "__dyn_truthy", 1),

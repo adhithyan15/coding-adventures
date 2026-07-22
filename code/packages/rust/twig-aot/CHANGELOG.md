@@ -1,5 +1,8 @@
 # Changelog — `twig-aot`
 
+## 0.38.0 - 2026-07-20 — runtime: __dyn_null_p tagged predicate for native `null?`
+
+Part of the fix restoring McCarthy-lisp list programs on the native-AOT / LLVM backends (`lang-aot` `lang_matrix`). See the umbrella commit for the full story: `null?` was never routed to a runtime call on the tagged native/LLVM path (breaking every cons-walk helper), `list-ref`/`assoc` unboxed a raw-int index/key (→ wrong element), a top-level `(null? …)` predicate result was unboxed instead of truthy-coerced, and cons-cell field access failed the JVM verifier. Verified end-to-end: native list-ref/assoc/length/reverse/append/null? all correct.
 ## 0.37.0 - 2026-07-17 (#118b-2b: retire twig_gc.c, GC comes from gc-core-capi)
 
 The garbage collector is no longer a hand-written C translation unit in this crate.
