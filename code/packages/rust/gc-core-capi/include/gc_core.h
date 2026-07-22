@@ -141,6 +141,28 @@ int64_t __gc_register_stackmap(uint64_t func_start, uint64_t func_len,
  * __gc_collect. (For precision the image must be built with frame pointers.) */
 int64_t __gc_collect_precise(void);
 
+/* One compiled function's stack-map descriptor in a module table (see
+ * __gc_register_stackmap_module). Mirrors the __gc_register_stackmap arguments;
+ * frame_sizes / callee_masks may be NULL. Emitted into the image's read-only data,
+ * one per function, pointing at the per-function pc/count/slot arrays. */
+typedef struct {
+    uint64_t        func_start;
+    uint64_t        func_len;
+    int64_t         num_records;
+    const uint32_t *pc_offsets;
+    const uint32_t *frame_sizes;   /* nullable */
+    const uint16_t *callee_masks;  /* nullable */
+    const int32_t  *slot_counts;
+    const int32_t  *slots_flat;
+} GcStackmapModuleEntry;
+
+/* Register every function of a compiled module in one call — the entry an
+ * AOT image's start-up path invokes (a thin loop over __gc_register_stackmap).
+ * `entries` points to `n` descriptors; a NULL/`n<=0` call is a no-op. Returns the
+ * total records registered. This is what lets __gc_collect_precise resolve real
+ * frames instead of falling back to a conservative scan. */
+int64_t __gc_register_stackmap_module(const GcStackmapModuleEntry *entries, int64_t n);
+
 /* Number of functions currently registered via __gc_register_stackmap. */
 int64_t __gc_stackmap_count(void);
 

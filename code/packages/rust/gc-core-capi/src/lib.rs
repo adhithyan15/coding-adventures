@@ -279,6 +279,82 @@ pub unsafe extern "C" fn __gc_register_stackmap(
     )
 }
 
+/// One compiled function's stack-map descriptor in a **module table** — the flat,
+/// pointer-based layout a native-AOT image emits into its read-only data and hands
+/// to [`__gc_register_stackmap_module`] at start-up.
+///
+/// Each field mirrors a [`__gc_register_stackmap`] argument, so a module is just an
+/// array of these: the image lays down the per-function `pc_offsets` / `slot_counts`
+/// / `slots_flat` arrays in `.rodata`, then one `GcStackmapModuleEntry` per function
+/// pointing at them. `#[repr(C)]` fixes the layout so the code generator and the
+/// runtime agree byte-for-byte. `frame_sizes` / `callee_masks` may be null (read as
+/// zero) for the first-cut backend that spills every reference to the stack.
+#[repr(C)]
+pub struct GcStackmapModuleEntry {
+    /// Runtime start address of the function (a relocated code pointer).
+    pub func_start: u64,
+    /// Byte length of the function's machine code.
+    pub func_len: u64,
+    /// Number of safepoint records for this function.
+    pub num_records: i64,
+    /// `num_records` PC offsets (bytes from `func_start`).
+    pub pc_offsets: *const u32,
+    /// `num_records` frame sizes, or null.
+    pub frame_sizes: *const u32,
+    /// `num_records` callee-saved masks, or null.
+    pub callee_masks: *const u16,
+    /// `num_records` slot counts.
+    pub slot_counts: *const i32,
+    /// The concatenated slot arrays, read record-by-record through `slot_counts`.
+    pub slots_flat: *const i32,
+}
+
+/// Register **every** function in a compiled module in one call — the entry a
+/// native-AOT image's start-up path invokes so `__gc_collect_precise` can resolve
+/// real frames (`AOT00-T1-stackmap-emission.md`).
+///
+/// It is a thin, allocation-free loop over [`__gc_register_stackmap`], one call per
+/// [`GcStackmapModuleEntry`]. An image emits its whole stack-map table as a `.rodata`
+/// array of entries plus a single start-up call to this — far cheaper to generate
+/// (one relocation-filled table + one `bl`) than an unrolled `__gc_register_stackmap`
+/// call sequence per function. Returns the total number of records registered across
+/// all entries (the sum of each entry's accepted-record count; an entry rejected by
+/// `register` contributes 0, exactly as calling `__gc_register_stackmap` directly
+/// would).
+///
+/// # Safety
+///
+/// `entries` must point to `n` readable [`GcStackmapModuleEntry`] values, and every
+/// pointer inside each entry must satisfy the [`__gc_register_stackmap`] array
+/// contract for that entry's `num_records`. A null `entries` with `n == 0` is a
+/// no-op. The image's `.rodata` upholds all of this by construction.
+#[no_mangle]
+pub unsafe extern "C" fn __gc_register_stackmap_module(
+    entries: *const GcStackmapModuleEntry,
+    n: i64,
+) -> i64 {
+    if entries.is_null() || n <= 0 {
+        return 0;
+    }
+    let mut total = 0i64;
+    for i in 0..n {
+        // SAFETY: caller guarantees `entries[0..n]` are readable.
+        let e = &*entries.add(i as usize);
+        // SAFETY: each entry's inner pointers uphold the `register` contract.
+        total += stackmap_registry::register(
+            e.func_start,
+            e.func_len,
+            e.num_records,
+            e.pc_offsets,
+            e.frame_sizes,
+            e.callee_masks,
+            e.slot_counts,
+            e.slots_flat,
+        );
+    }
+    total
+}
+
 /// Number of functions currently registered via [`__gc_register_stackmap`].
 /// Introspection for diagnostics and tests.
 #[no_mangle]
@@ -297,6 +373,81 @@ pub extern "C" fn __gc_stackmap_reset() {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// `__gc_register_stackmap_module` registers every function in one flat table —
+    /// the exact shape a native-AOT image emits into `.rodata`. Each entry must land
+    /// as if `__gc_register_stackmap` had been called for it, and a later
+    /// `resolve(func_start + pc_offset)` must recover that entry's slots.
+    #[test]
+    fn module_registration_registers_every_entry() {
+        // Serialise against every other registry-touching test (shared REGISTRY).
+        let _g = stackmap_registry::REG_TEST_LOCK
+            .lock()
+            .unwrap_or_else(|e| e.into_inner());
+        __gc_stackmap_reset();
+        assert_eq!(__gc_stackmap_count(), 0);
+
+        // Two functions, at disjoint (fake) code ranges. Function 0 has one safepoint
+        // at pc 4 naming slots [-8, -16]; function 1 has one at pc 8 naming [16].
+        let pcs0 = [4u32];
+        let counts0 = [2i32];
+        let slots0 = [-8i32, -16];
+        let pcs1 = [8u32];
+        let counts1 = [1i32];
+        let slots1 = [16i32];
+
+        let entries = [
+            GcStackmapModuleEntry {
+                func_start: 0x1_0000,
+                func_len: 0x100,
+                num_records: 1,
+                pc_offsets: pcs0.as_ptr(),
+                frame_sizes: core::ptr::null(),
+                callee_masks: core::ptr::null(),
+                slot_counts: counts0.as_ptr(),
+                slots_flat: slots0.as_ptr(),
+            },
+            GcStackmapModuleEntry {
+                func_start: 0x2_0000,
+                func_len: 0x80,
+                num_records: 1,
+                pc_offsets: pcs1.as_ptr(),
+                frame_sizes: core::ptr::null(),
+                callee_masks: core::ptr::null(),
+                slot_counts: counts1.as_ptr(),
+                slots_flat: slots1.as_ptr(),
+            },
+        ];
+
+        let n = unsafe { __gc_register_stackmap_module(entries.as_ptr(), 2) };
+        assert_eq!(n, 2, "two records registered (one per function)");
+        assert_eq!(__gc_stackmap_count(), 2, "both functions are in the registry");
+
+        // Each function's record resolves at its own address.
+        let r0 = stackmap_registry::resolve(0x1_0000 + 4).expect("fn0 record");
+        assert_eq!(r0.slots, vec![-8, -16]);
+        let r1 = stackmap_registry::resolve(0x2_0000 + 8).expect("fn1 record");
+        assert_eq!(r1.slots, vec![16]);
+        // An address in neither range resolves to nothing.
+        assert!(stackmap_registry::resolve(0x9_9999).is_none());
+
+        __gc_stackmap_reset();
+    }
+
+    /// Degenerate inputs are inert: a null table or non-positive count is a no-op,
+    /// matching the "image upholds the contract" stance without trapping.
+    #[test]
+    fn module_registration_tolerates_degenerate_inputs() {
+        let _g = stackmap_registry::REG_TEST_LOCK
+            .lock()
+            .unwrap_or_else(|e| e.into_inner());
+        __gc_stackmap_reset();
+        assert_eq!(unsafe { __gc_register_stackmap_module(core::ptr::null(), 0) }, 0);
+        assert_eq!(unsafe { __gc_register_stackmap_module(core::ptr::null(), 5) }, 0);
+        let empty: [GcStackmapModuleEntry; 0] = [];
+        assert_eq!(unsafe { __gc_register_stackmap_module(empty.as_ptr(), 0) }, 0);
+        assert_eq!(__gc_stackmap_count(), 0);
+    }
 
     // The exported functions share one process-wide `HEAP`, so the whole ABI
     // flow lives in a SINGLE test — cargo runs tests in parallel threads, and
