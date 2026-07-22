@@ -657,10 +657,25 @@ built on citations that point at the wrong row would produce a confident, well-f
 
 | Stage | Deliverable | Status |
 |---|---|---|
-| **PR-A** | Spec sync: §E becomes the one normative contract; §11, ADJ07, ADJ08 defer to it | **this PR** |
-| PR-B | `ReasoningTrace` + total `StepKind` walker; ordered/addressed/self-contained steps; serialize `Derived.tree`; wire into recall / lookups / governing; `ask explain` surface | next |
-| PR-C | Typed `AbstentionReason` across all abstention paths (§E.4) | follows B |
-| PR-D | `adj-verify` — step-level re-checker, incl. verbatim-span re-fetch (§E.5, §E.6) | follows B, C |
+| **PR-A** | Spec sync: §E becomes the one normative contract; §11, ADJ07, ADJ08 defer to it | **shipped** |
+| PR-B | `ReasoningTrace` + total `StepKind` walker; ordered/addressed/self-contained steps; serialize `Derived.tree`; wire into recall / lookups / governing | **shipped** |
+| PR-C | Typed `AbstentionReason` across all abstention paths (§E.4) | **shipped** |
+| PR-D1 | `Provenance.quote` / `Provenance.snapshot` — the verbatim span and its pinned document (§E.3) | **shipped** |
+| PR-D2 | `logic_engine::verify` + the `adj-verify` binary — step-level re-checker, offline (§E.5, §E.6) | **shipped** |
+| PR-D3 | Opt-in live re-fetch through the ADJ39 `CitationVerifier` registry → `SourceDrifted` / `SourceUnreachable` | follows D2 |
+
+**What D2 shipped, and what it deliberately did not.** `verify_proof` re-executes all
+seven `DerivationOrigin` variants and checks quotes *anchored* against the pinned
+snapshot, offline. `SourceDrifted` and `SourceUnreachable` exist in `QuoteStatus` but
+are **never produced by the offline pass** — they are the slots D3's adapter-routed
+re-fetch reports into. Shipping the statuses ahead of the fetcher is deliberate: it
+keeps the outcome type closed, so D3 cannot quietly widen what "verified" means.
+
+Two verdicts that must not be conflated, and are not: `verified` (every step
+re-executed) versus `fully_verified` (every step re-executed **and** every quote
+confirmed against a snapshot, over a non-empty trace). Today's stdlib is
+`quote: Unmigrated` throughout, so it reports `verified: true, fully_verified: false`
+— honest, and a standing measure of how much of the corpus is still uncheckable.
 
 Prerequisite **shipped**: ADJ-TABLES RS-5e (per-row provenance) — without it, table
 steps could not quote a span that defends the row actually selected.
