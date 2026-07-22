@@ -1,0 +1,18 @@
+% ============================================================================
+% fraction.query.adj — a worked example of the fraction formula library.
+% ============================================================================
+% Run against the shipped stdlib:
+%
+%   adj-lang-cli fraction.query.adj
+%
+% "A quarter of a 12-metre length" → 0.25 × 12 = 3, computed on the CPU by
+% composing the cited `product` primitive from arithmetic.adj. The answer carries
+% BOTH the fraction definition (primary) and the product primitive it built on
+% (corroboration) — the model performs zero arithmetic.
+% ============================================================================
+import "fraction.adj"
+
+observe fraction(0.25)
+observe whole(12)
+
+? fraction_of(fraction, whole)
