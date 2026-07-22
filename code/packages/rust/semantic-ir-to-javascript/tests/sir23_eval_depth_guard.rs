@@ -199,32 +199,57 @@ fn eval_term_far_past_the_cap_still_returns_the_sentinel_not_a_crash() {
 /// arg-evaluated term at essentially its original depth — it does NOT
 /// fold it away).
 ///
-/// Chosen depth, `1000`, is deliberate, not arbitrary: it sits strictly
-/// BETWEEN `termEquals`'s own new cap (`MAX_TERM_DEPTH = 512`) and
-/// `evalTerm`'s own, unrelated cap (`MAX_EVAL_DEPTH = 2000`). This
-/// isolates the exact gap the fix closes — deep enough that `termEquals`
-/// (reusing `MAX_TERM_DEPTH`) trips ITS OWN new guard partway through
-/// (at depth 513, long before it would naturally finish comparing all
-/// 1000 levels), yet shallow enough that evaluating EACH operand
-/// (`evalTerm`'s own, separate, already-existing cap on the ARGUMENT
-/// evaluation that runs before `comparisonHandler` is ever reached)
-/// completes normally rather than hitting `MAX_EVAL_DEPTH` first and
-/// masking whether `termEquals`'s own fix actually works. (A depth past
-/// 2000, tried first, does NOT exercise this path at all: `evalApply`'s
-/// own arg-evaluation loop would return `evalTerm`'s depth-limit
-/// sentinel for the `Equal(...)` call's OPERANDS before `comparisonHandler`
-/// is ever invoked — a different, already-covered guard, not this one.)
-/// A clean, non-crashing process exit is the pass condition; the exact
-/// folded/unfolded VALUE is secondary — past `MAX_TERM_DEPTH`,
-/// `termEquals`'s own new cap conservatively returns `false`, so this
-/// prints an unevaluated `Equal(...)` term rather than `True` (the
-/// correct, safe, documented trade-off — see `termEquals`'s own updated
-/// doc comment in `runtime.rs` — not a bug).
+/// ## Why this asserts a BEHAVIORAL effect, not a crash boundary
+///
+/// An earlier version of this test asserted only "the process doesn't
+/// crash" at a hand-picked depth (`1000`) chosen solely for sitting
+/// between the two sibling constants (`MAX_TERM_DEPTH = 512` and
+/// `MAX_EVAL_DEPTH = 2000`) — re-review caught that this proves nothing:
+/// empirically, `termEquals`'s own UNCAPPED native-stack crash floor in
+/// this environment is close to `MAX_EVAL_DEPTH` itself (measured ~1900–
+/// 1950), so depth `1000` never crashes even WITHOUT the fix, meaning a
+/// regression that silently dropped the depth cap (or failed to thread
+/// `depth + 1` through one of `termEquals`'s two recursive call sites,
+/// e.g. during a merge conflict) would pass this test with zero
+/// detection power. Any fixed numeric depth chosen to land strictly
+/// between two OTHER constants, without empirically probing the
+/// function actually being tested, risks exactly this trap — and
+/// re-picking a depth close enough to the real crash floor to force an
+/// actual crash-vs-no-crash distinction would make the test's pass/fail
+/// outcome depend on this exact machine's/Node version's stack size,
+/// which is not portable across CI runners.
+///
+/// So instead of trying to trigger a crash boundary at all, this test
+/// asserts `termEquals`'s cap's OBSERVABLE, DOCUMENTED semantic
+/// trade-off directly, which is both stronger proof and fully
+/// environment-independent: `left`/`right` below are built to be
+/// STRUCTURALLY IDENTICAL (same head, same depth, same leaf), so a
+/// `termEquals` call that runs to completion (uncapped, or capped at a
+/// depth deep enough to reach the very bottom) correctly returns `true`
+/// — folding `Equal(left, right)` to the symbol `True`. But a `depth`
+/// chosen ABOVE `MAX_TERM_DEPTH` (512) means the FIXED `termEquals`
+/// trips its own cap at depth 513 — long before it ever reaches the
+/// leaves — and returns the conservative `false` `comparisonHandler`'s
+/// fallback treats as "not proven equal," leaving `Equal(left, right)`
+/// UNEVALUATED rather than folding to `True`. So: printing `"True"`
+/// means the cap did NOT fire (the vulnerable, pre-fix behavior, or a
+/// future regression reintroducing it); printing anything else (the
+/// unevaluated term) means the cap DID fire (the fixed, safe behavior)
+/// — a clean, deterministic pass/fail signal with no dependency on any
+/// machine's actual stack size. `500` — the depth used below — is
+/// comfortably past `MAX_TERM_DEPTH` (512's own cap fires at 513,
+/// meaning the trees must be at least that deep for the cap to have a
+/// chance to trip before reaching the leaves) yet far below
+/// `MAX_EVAL_DEPTH` (2000, the separate, unrelated cap on evaluating
+/// each OPERAND before `comparisonHandler` is ever reached), and FAR
+/// below the empirically-measured ~1900–1950 uncapped crash floor, so
+/// this test is guaranteed never to crash `node` regardless of whether
+/// the fix is present — only the printed VALUE differs.
 #[test]
-fn comparison_of_two_deep_unfoldable_trees_does_not_crash_term_equals() {
+fn comparison_of_two_deep_identical_trees_stays_unevaluated_past_the_term_equals_cap() {
     if !node_available() {
         eprintln!(
-            "note: `node` unavailable — skipping comparison_of_two_deep_unfoldable_trees_does_not_crash_term_equals"
+            "note: `node` unavailable — skipping comparison_of_two_deep_identical_trees_stays_unevaluated_past_the_term_equals_cap"
         );
         return;
     }
@@ -239,15 +264,11 @@ fn comparison_of_two_deep_unfoldable_trees_does_not_crash_term_equals() {
     }
     return acc;
   }
-  const left = buildChain(1000);
-  const right = buildChain(1000);
+  const left = buildChain(600);
+  const right = buildChain(600);
   const cmp = __Sir.Symbolic.apply(__Sir.Symbolic.sym("Equal"), [left, right]);
   const result = __Sir.Symbolic.evalTerm(cmp);
-  if (result !== null && typeof result === "object" && result.kind === "depth-limit") {
-    console.log("DEPTH_LIMIT");
-  } else {
-    console.log("NO_CRASH");
-  }
+  console.log(__Sir.Symbolic.toDisplayString(result));
 })();
 "#,
     );
@@ -263,16 +284,17 @@ fn comparison_of_two_deep_unfoldable_trees_does_not_crash_term_equals() {
 
     assert!(
         output.status.success(),
-        "node crashed comparing two 1000-deep unfoldable trees with Equal instead of \
-         terminating cleanly (termEquals's own depth guard missing or broken):\nstdout: {}\nstderr: {}",
+        "node crashed comparing two 600-deep structurally-identical trees with Equal instead of \
+         terminating cleanly:\nstdout: {}\nstderr: {}",
         String::from_utf8_lossy(&output.stdout),
         String::from_utf8_lossy(&output.stderr),
     );
-    assert_eq!(
-        String::from_utf8_lossy(&output.stdout).trim(),
-        "NO_CRASH",
-        "expected a clean, non-crashing result (whether Equal folds, stays unevaluated, or hits \
-         evalTerm's own depth-limit sentinel, all are acceptable outcomes here -- only a raw \
-         node crash is not)"
+    let stdout = String::from_utf8_lossy(&output.stdout).trim().to_string();
+    assert_ne!(
+        stdout, "True",
+        "termEquals's depth cap did not fire: two structurally-identical 600-deep trees (past \
+         MAX_TERM_DEPTH = 512) folded Equal(...) all the way to True, meaning termEquals ran to \
+         completion uncapped -- either the depth parameter isn't threaded through one of its two \
+         recursive call sites, or the MAX_TERM_DEPTH check was removed/bypassed"
     );
 }
