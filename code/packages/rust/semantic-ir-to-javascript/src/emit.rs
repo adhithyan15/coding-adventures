@@ -136,13 +136,26 @@ pub fn emit_module(m: &Module) -> String {
     // the same single `source_language` field), so `runtime.rs`'s
     // `fmtNum` never needs to arbitrate between them.
     //
-    // SECURITY: all three replacement values MUST remain a hardcoded literal
+    // A FOURTH, independent placeholder (SIR23 addendum item 4 of 4 — see
+    // `code/specs/SIR23-symbolic-pattern-semantic-ir.md`'s "Per-language
+    // display convention" section): a Derive-sourced module renders a
+    // compound SIR23 symbolic term through Derive's OWN precedence-aware
+    // infix/prefix/bracket/case-bridged convention (`runtime.rs`'s
+    // `SIR_DISPLAY_DERIVE`, gating `Symbolic.toDisplayString` rather than
+    // `formatSeen`/`fmtNum` — a DIFFERENT stringifier than the first three
+    // flags gate, since this one is about the SIR23 symbolic-expression
+    // domain, not SIR16 booleans or SIR22 arrays), rather than the
+    // generic, source-language-agnostic `head(args, …)` form every other
+    // language (and Derive, before this item) still gets.
+    //
+    // SECURITY: all four replacement values MUST remain a hardcoded literal
     // selected by a boolean — never text derived from `source_language` or
     // any other source-controlled field — so this substitution can never
     // inject into the emitted JavaScript.
     let display_ruby = m.metadata.source_language.as_deref() == Some("ruby");
     let display_apl_high_minus = m.metadata.source_language.as_deref() == Some("apl");
     let display_j_underscore = m.metadata.source_language.as_deref() == Some("j");
+    let display_derive = m.metadata.source_language.as_deref() == Some("derive");
     out.push_str(
         &RUNTIME
             .replace(
@@ -156,6 +169,10 @@ pub fn emit_module(m: &Module) -> String {
             .replace(
                 "__SIR_DISPLAY_J_UNDERSCORE__",
                 if display_j_underscore { "true" } else { "false" },
+            )
+            .replace(
+                "__SIR_DISPLAY_DERIVE__",
+                if display_derive { "true" } else { "false" },
             ),
     );
     emit_ancestry_registration(&mut out, m);

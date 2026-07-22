@@ -330,3 +330,108 @@ fn print_on_deeply_nested_term_truncates_instead_of_crashing_node() {
         assert!(stdout.contains("..."), "got: {stdout}");
     }
 }
+
+#[test]
+fn derive_display_on_a_deeply_nested_list_of_lists_truncates_at_the_same_depth_as_any_other_shape()
+{
+    // Regression test (/security-review finding on SIR_DISPLAY_DERIVE):
+    // `deriveRenderList`'s matrix branch (every element of a `List(...)`
+    // itself a `List`) used to reach into a `row`'s own `.args` directly,
+    // skipping the `depth + 1 > MAX_TERM_DEPTH` check every OTHER shape
+    // in this function family pays for descending one tree level, and
+    // handing the row's OWN children `depth + 1` instead of `depth + 2` —
+    // so two real tree-nesting levels consumed only one unit of the
+    // shared depth budget. A chain of `N` nested single-element
+    // `List(...)` wrappers (built via a real, compiled `for`-loop — an
+    // ordinary runtime VALUE, not a giant hand-built static AST, exactly
+    // like `print_on_deeply_nested_term_truncates_instead_of_crashing_
+    // node` above) is exactly the shape that bug doubled: pre-fix, this
+    // walk's effective depth budget was roughly `2 * MAX_TERM_DEPTH`
+    // (~1024) real nesting levels before the "..." sentinel fired, vs.
+    // every other shape's `MAX_TERM_DEPTH` (512). `N = 700` sits strictly
+    // between those two numbers, so this is a genuine discriminating
+    // test: reverting the `deriveRenderList` fix makes this test FAIL
+    // (the pre-fix build renders the full 700-level nest with no "..." at
+    // all, since 700 real levels only charged ~350 units of the buggy
+    // halved budget), not just a weaker "doesn't crash" check.
+    //
+    // for i in range(0, 700, 1) { acc = List(acc) }
+    // print(acc)   -- source_language "derive", so SIR_DISPLAY_DERIVE
+    //                 is on and this walk actually goes through
+    //                 deriveRenderList, not the generic toDisplayString.
+    let stmts = vec![
+        Stmt::LetBinding {
+            name: "acc".into(),
+            sir_type: None,
+            value: sym_apply(sym("List"), vec![sym("leaf")]),
+            span: sp(),
+        },
+        Stmt::ForRange {
+            var: "i".into(),
+            start: Expr::IntLit {
+                value: 0,
+                span: sp(),
+            },
+            stop: Expr::IntLit {
+                value: 700,
+                span: sp(),
+            },
+            step: Expr::IntLit {
+                value: 1,
+                span: sp(),
+            },
+            body: Block {
+                stmts: vec![Stmt::Assign {
+                    name: "acc".into(),
+                    scope: Scope::Local,
+                    value: sym_apply(sym("List"), vec![local("acc")]),
+                    span: sp(),
+                }],
+                value: Expr::NilLit { span: sp() },
+                span: sp(),
+            },
+            span: sp(),
+        },
+        print(local("acc")),
+    ];
+    let module = Module {
+        name: "sir23".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::SymbolicExpr,
+            Feature::Loops,
+            Feature::MutableBindings,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts,
+                value: Expr::IntLit {
+                    value: 0,
+                    span: sp(),
+                },
+                span: sp(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: sp(),
+        }],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("derive")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sp(),
+    };
+    if let Some(stdout) = run_module(&module, "sym_deep_derive_display") {
+        assert!(
+            stdout.contains("..."),
+            "expected truncation well before 700 real nesting levels under the intended \
+             MAX_TERM_DEPTH=512 cap, got the full render instead (the deriveRenderList depth-\
+             charging regression this test guards against): {stdout}"
+        );
+    }
+}
