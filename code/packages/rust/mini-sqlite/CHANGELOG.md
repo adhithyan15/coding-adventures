@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.5.60 — GROUP BY output follows the SELECT list
+
+`SELECT x, c FROM t GROUP BY c, x` now returns columns in SELECT-list order
+`[x, c]`, and `SELECT c FROM t GROUP BY x` returns a column named `c` — where
+before, GROUP BY output always came back as the group-key columns in GROUP BY
+order followed by the aggregates, so reordering or renaming the SELECT list had
+no effect (and column identity could be flat wrong). This was the root cause of
+the data-loss near-miss the DISTINCT-collation security review caught.
+
+Retires the `distinct_over_group_by_no_misfold` ledger entry. Two narrower gaps
+remain, now ledgered precisely: a bare non-key column (`SELECT c ... GROUP BY x`)
+projects under the right name but as NULL, since the group keeps no
+representative source row (SQLite's bare-column extension); and an aggregate
+column reordered before a group key still uses the fixed layout, pending
+reconciliation of how `group_concat` is represented in the SELECT list. Verified
+against bundled real SQLite, including two new positive cases (a plain reorder
+and an expression over a group key).
+
 ## 0.5.59 — ORDER BY alias no longer borrows a column's COLLATE
 
 `SELECT x AS c FROM t ORDER BY c` sorted case-insensitively when the table
