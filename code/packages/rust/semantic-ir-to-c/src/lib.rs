@@ -127,6 +127,20 @@ impl Backend for CBackend {
             });
         }
 
+        // 3b. `Stmt::ForEach` observes only `Feature::Loops` (accepted), so it
+        //     is NOT gated out — a module using `for x in <iterable>` would
+        //     otherwise reach the emitter's `unreachable!`. Reject it cleanly
+        //     until the sequences batch gives it an iterator.
+        if let Some(span) = emit::first_foreach(module) {
+            return Err(BackendError {
+                kind: BackendErrorKind::UnsupportedFeature,
+                message: "the v0 C backend does not yet lower `for … in` (ForEach) \
+                          — deferred to the sequences feature batch"
+                    .to_string(),
+                span,
+            });
+        }
+
         // 4. Emit.
         let source = emit::emit_module(module);
         let line_count = source.lines().count();
