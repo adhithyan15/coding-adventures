@@ -2697,6 +2697,54 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                     }
                 }
 
+                // ---- Math.clz32(n) → numeric literal (0..32) ----
+                //
+                // `Math.clz32` (ECMAScript §21.3.2.11) counts the leading zero
+                // bits of `ToUint32(n)`. The result is always a small
+                // non-negative integer (`0..=32`) with an exact numeric-literal
+                // spelling, computed by pure modular arithmetic (`to_uint32`) —
+                // no libm — so it is bit-identical to the reference compiler:
+                // `clz32(0)` → 32, `clz32(1)` → 31, `clz32(-1)` → 0
+                // (`ToUint32(-1)` = 2³²-1). Only the bare global `Math` with one
+                // numeric-literal argument folds. (Unlike the single-argument
+                // block below, clz32 never yields `-0`, so a negative input that
+                // maps to a `0` result — `clz32(-1)` — must still fold, which is
+                // why it is handled here rather than under the shared `-0` gate.)
+                if obj.name == "Math" && prop.name == "clz32" && arguments.len() == 1 {
+                    if let Expression::NumericLiteral(n) = &arguments[0] {
+                        let result = to_uint32(n.value).leading_zeros() as f64;
+                        let parent = c.cv.clone();
+                        let before = format!("Math.clz32({})", n.value);
+                        let after = format_js_number(result);
+                        let new_cv = st.fork_cv(&parent, &before, &after);
+                        return stamp_literal_cv(FoldedLiteral::Number(result), new_cv);
+                    }
+                }
+
+                // ---- Math.imul(a, b) → numeric literal (32-bit signed product) ----
+                //
+                // `Math.imul` (ECMAScript §21.3.2.19) multiplies
+                // `ToUint32(a) · ToUint32(b)` and keeps the low 32 bits
+                // reinterpreted as a signed int. Pure modular arithmetic — no
+                // libm — so bit-identical: `imul(3, 4)` → 12, `imul(-1, 5)` → -5
+                // (`ToUint32(-1)·5` low-32 = 2³²-5 → -5). Only the bare global
+                // `Math` with exactly two numeric-literal arguments folds. The
+                // result is always a finite 32-bit integer (never `-0`), so no
+                // extra gate is needed.
+                if obj.name == "Math" && prop.name == "imul" && arguments.len() == 2 {
+                    if let (Expression::NumericLiteral(a), Expression::NumericLiteral(b)) =
+                        (&arguments[0], &arguments[1])
+                    {
+                        let result =
+                            (to_uint32(a.value).wrapping_mul(to_uint32(b.value)) as i32) as f64;
+                        let parent = c.cv.clone();
+                        let before = format!("Math.imul({}, {})", a.value, b.value);
+                        let after = format_js_number(result);
+                        let new_cv = st.fork_cv(&parent, &before, &after);
+                        return stamp_literal_cv(FoldedLiteral::Number(result), new_cv);
+                    }
+                }
+
                 // ---- Math.abs/floor/ceil/round(n) → numeric literal ----
                 //
                 // The single-argument numeric `Math` methods (ECMAScript
@@ -12741,6 +12789,56 @@ mod tests {
         for c in cases {
             let (out, _, changed, _) = run_pass(program_with_expr(c, true));
             assert!(!changed, "a -0 result must not fold (no -0 literal spelling)");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
+    fn fold_math_clz32_basic() {
+        // clz32 counts leading zero bits of ToUint32(n): 0..32.
+        assert_eq!(folded_number(math_call("clz32", vec![num(0.0, None)])), 32.0);
+        assert_eq!(folded_number(math_call("clz32", vec![num(1.0, None)])), 31.0);
+        assert_eq!(folded_number(math_call("clz32", vec![num(256.0, None)])), 23.0);
+        // ToUint32(-1) == 2^32-1 (top bit set) → 0 leading zeros; must still fold
+        // (a negative input with a 0 result is +0 here, NOT the -0 the unary
+        // fold's gate would decline).
+        assert_eq!(folded_number(math_call("clz32", vec![num(-1.0, None)])), 0.0);
+        // ToUint32 truncates toward zero: clz32(3.9) == clz32(3) == 30.
+        assert_eq!(folded_number(math_call("clz32", vec![num(3.9, None)])), 30.0);
+    }
+
+    #[test]
+    fn fold_math_imul_basic() {
+        // 32-bit signed multiply of ToUint32 operands.
+        assert_eq!(
+            folded_number(math_call("imul", vec![num(3.0, None), num(4.0, None)])),
+            12.0
+        );
+        assert_eq!(
+            folded_number(math_call("imul", vec![num(-1.0, None), num(5.0, None)])),
+            -5.0
+        );
+        // 65536 * 65536 == 2^32, low 32 bits are 0.
+        assert_eq!(
+            folded_number(math_call("imul", vec![num(65536.0, None), num(65536.0, None)])),
+            0.0
+        );
+    }
+
+    #[test]
+    fn math_clz32_imul_non_literal_or_wrong_arity_declines() {
+        // Non-literal arg, and any arity other than clz32/1 and imul/2, decline.
+        let cases = [
+            math_call("clz32", vec![ident("x")]),
+            math_call("clz32", vec![]),
+            math_call("clz32", vec![num(1.0, None), num(2.0, None)]),
+            math_call("imul", vec![num(2.0, None)]),
+            math_call("imul", vec![num(2.0, None), ident("y")]),
+            math_call("imul", vec![num(2.0, None), num(3.0, None), num(4.0, None)]),
+        ];
+        for c in cases {
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "clz32/imul must decline non-literal / wrong arity");
             assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
         }
     }

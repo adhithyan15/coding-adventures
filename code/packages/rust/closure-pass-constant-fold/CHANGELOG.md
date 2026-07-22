@@ -2,6 +2,36 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.109.0] - 2026-07-22
+
+### Added - fold `Math.clz32(n)` and `Math.imul(a, b)` on numeric literals
+
+Two more static `Math` folds, verified byte-identical to the reference Closure
+Compiler (`closure-compiler-v20260712.jar`, SIMPLE) across a 95-case
+differential probe:
+
+- `Math.clz32(n)` -> leading zero bits of `ToUint32(n)` (`0..=32`): `clz32(0)`
+  -> 32, `clz32(1)` -> 31, `clz32(256)` -> 23, `clz32(-1)` -> 0.
+- `Math.imul(a, b)` -> 32-bit signed product of `ToUint32(a)·ToUint32(b)`:
+  `imul(3, 4)` -> 12, `imul(-1, 5)` -> -5, `imul(65536, 65536)` -> 0.
+
+Both compute their result by pure modular arithmetic via the existing
+`to_uint32` helper (`ToUint32`/`ToInt32` semantics) - NO libm - so they are
+bit-exact independent of the platform math library. Each folds only on the bare
+global `Math` with exactly its argument count (clz32/1, imul/2), all numeric
+literals; other arities and non-literal args decline (leaving the call intact is
+always safe). Results are always finite 32-bit integers, never `-0`, so no
+negative-zero gate is needed. clz32 is handled outside the shared single-argument
+`-0` gate because a negative input mapping to a `0` result (`clz32(-1)`) is a
+legitimate `+0` that must still fold.
+
+Not modelled: `Math.pow` - a differential probe showed Rust's `f64::powf`
+diverges from the reference's `Math.pow` in the last ULP for fractional/negative
+exponents (e.g. `pow(2, 1.5)`, `pow(7, -2)`), so folding it via `powf` would emit
+different bytes; a safe pow fold would need integer-exponent-only exact
+arithmetic (tracked separately). The wrong-arity `Math.imul` cases the reference
+folds (`imul(2)` -> 0, `imul(2, 3, 4)` -> 6) are declined here (rare; tracked).
+
 ## [0.108.0] - 2026-07-22
 
 ### Added - fold `Math.trunc(n)` and `Math.sign(n)` on a numeric literal
