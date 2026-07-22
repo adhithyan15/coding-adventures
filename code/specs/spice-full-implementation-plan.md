@@ -33,15 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language BJT reverse Early voltage.
+1. Cross-language BJT forward high-current beta roll-off.
    - Status: current PR completion candidate.
-   - Add Berkeley BJT `VAR` / `VB` reverse Early-voltage model-card support in
-     Rust, Python, and TypeScript with infinite behavior represented by the
-     existing zero default.
-   - Apply reverse Early-effect base-charge modulation in DC, transient, AC,
+   - Add Berkeley BJT `IKF` / `IK` forward beta roll-off model-card support in
+     Rust, Python, and TypeScript with disabled behavior represented by the
+     standard zero default.
+   - Apply forward high-current base-charge modulation in DC, transient, AC,
      transfer-function, and noise paths while preserving the complete BJT model
      through hierarchical subcircuits.
-   - Extend the supported-parameter coverage gate from 92 to 94 canonical rows
+   - Extend the supported-parameter coverage gate from 94 to 96 canonical rows
      and lock model-card aliases, behavior, validation, and hierarchy in all
      engines.
 
@@ -3055,6 +3055,14 @@ the Rust, Python, and TypeScript surfaces together.
      `CJE` and `CJC` in AC and transient analysis.
    - Hierarchical subcircuit expansion preserves the complete BJT model, and
      the supported-parameter release gate now covers 92 canonical rows.
+
+226. Cross-language BJT reverse Early voltage.
+   - Status: completed in PR 8762.
+   - Rust, Python, and TypeScript BJT model cards now accept `VAR` / `VB` and
+     apply reverse Early-effect base-charge modulation in DC, transient, AC,
+     transfer-function, and noise paths.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 94 canonical rows.
 
 ## Backlog
 

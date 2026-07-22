@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add BJT model-card `IKF`/`IK` forward high-current beta roll-off support with
+  shared base-charge modulation in DC, transient, AC, transfer-function, and
+  noise paths, matching Python and TypeScript. The supported-parameter catalog
+  now contains 96 canonical rows.
 - Add BJT model-card `VAR`/`VB` reverse Early-voltage support with base-charge
   modulation in DC, transient, AC, transfer-function, and noise paths, matching
   Python and TypeScript. The supported-parameter catalog now contains 94
