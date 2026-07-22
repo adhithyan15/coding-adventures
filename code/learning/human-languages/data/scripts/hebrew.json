@@ -4,6 +4,7 @@
   "font": "_fonts/NotoSansHebrew-Static.ttf",
   "direction": "rtl",
   "system": "abjad",
+  "signature": "Right-to-left, but blocky and separate — squarish letters sitting apart, not joined into a cursive.",
   "complete": false,
   "combination": "Written right-to-left. Letters are consonants; vowels are usually left UNwritten (modern Hebrew), or shown as small dots/lines called niqqud above, below, or inside a letter. Letters do NOT join cursively (unlike Arabic), but five letters take a special FINAL form when they end a word: כ→ך, מ→ם, נ→ן, פ→ף, צ→ץ. A dagesh (dot inside) hardens some letters (ב v→b, כ kh→k, פ f→p).",
   "notes": "The 22-letter Hebrew alphabet with final forms and the main niqqud. Marked complete:false only because the niqqud set here is the common core, not exhaustive; the letters themselves are complete. Descended from the same Phoenician source as Greek and Latin, so the letter ORDER and names are cousins: alef↔alpha↔A, bet↔beta↔B, gimel↔gamma↔C/G.",

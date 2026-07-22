@@ -40,6 +40,9 @@ export interface ScriptData {
   font: string;
   direction: "ltr" | "rtl";
   system: string; // alphabet | abugida | abjad | logographic | …
+  /** The one visual feature that gives this script away at a glance — for a
+   *  "spot the script" identification mode. Verified by rendering the font. */
+  signature?: string;
   letters: Letter[];
   marks?: unknown[];
   combination?: string;

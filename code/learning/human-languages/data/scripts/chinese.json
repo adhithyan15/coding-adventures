@@ -4,6 +4,7 @@
   "font": "_fonts/NotoSansSC-Subset.ttf",
   "direction": "ltr",
   "system": "logographic",
+  "signature": "Each character is a dense, evenly-sized square block of strokes — not an alphabet of letters at all.",
   "complete": false,
   "combination": "Not an alphabet: each CHARACTER (hànzì) writes a whole syllable/morpheme, and words are one or more characters (你好 = 'you' + 'good' = hello). Characters are built from recurring COMPONENTS called radicals — often one hinting at meaning and one at sound (a phono-semantic compound: 请 qǐng = 讠 'speech' + 青 qīng 'sound'). Stroke order is a real, taught system (top→bottom, left→right, horizontal before vertical, outside before inside), so — unlike the Indic scripts here — the strokeOrder below is authoritative, not merely conventional.",
   "notes": "Simplified characters. An initial inventory of greeting/self-introduction characters plus the radicals they decompose into — it grows as the Mandarin track adds vocabulary. `sound` is tone-marked pinyin; `tone` holds the number (1–4 or neutral). The font is a fonttools subset of NotoSansSC covering exactly these characters (see _fonts/README.md); re-subset when characters are added.",

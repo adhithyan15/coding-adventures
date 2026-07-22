@@ -131,6 +131,15 @@ describe("real script data", () => {
     }
   });
 
+  it("every script carries an identification signature (its at-a-glance tell)", () => {
+    // Powers a "spot the script" identification mode. Each signature was
+    // written against the rendered font, not from memory.
+    for (const data of SCRIPTS) {
+      expect(data.signature, `${data.script} is missing its identification signature`).toBeTruthy();
+      expect((data.signature ?? "").length, `${data.script} signature is too short to be a real tell`).toBeGreaterThan(20);
+    }
+  });
+
   it("Cyrillic flags its Latin-lookalike false friends (в, р, с, н)", () => {
     const cyr = SCRIPTS.find((s) => s.script === "cyrillic")!;
     const ffGlyphs = falseFriends(cyr).map((v) => v.glyph);
