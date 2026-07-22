@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.36.0 — `Exception#message`
+
+`rescue => e; puts e.message` — everyday Ruby — raised `NoMethodError`: the
+method simply did not exist. `_sir_object_method` gains a `message` arm
+returning the text a `raise Foo, "msg"` carried (`SirError.Msg`), answered by
+an exception receiver only so any other receiver still falls through to its own
+catalog. `_sir_responds_to` reports it on exceptions and NOT on anything else,
+reporting it for an exception receiver while still falling through to the user
+method table — so a class that defines its own `message` is not DENIED by
+`respond_to?` (the same dishonest-`respond_to?` shape this fixes elsewhere).
+
+Also: a bare `raise Foo` carries no message, and `e.message` returned `nil`
+where Ruby (and the Python/Rust/JS backends) return the CLASS NAME. It now
+matches.
+
 ## 0.35.0 — implement `is_a?` / `kind_of?` / `instance_of?`
 
 These were listed in `_sir_responds_to` but **never implemented**, so

@@ -1585,3 +1585,138 @@ def test_include_unknown_method_still_raises_no_method_error() -> None:
     with pytest.raises(SirError) as excinfo:
         oop.call_method(robot, "nope")
     assert excinfo.value.sir_class == "NoMethodError"
+
+
+# ── Reflection on a rescued EXCEPTION ────────────────────────────────────────
+#
+# A `SirError` is not a `SirInstance`, but it carries its Ruby class tag the
+# same way.  Before these, `class_of` fell through to the "Object" default, so
+# `rescue => e; e.class` said "Object" and `e.is_a?(StandardError)` was FALSE
+# for every exception — silently skipping a handler guarded that way — and
+# `e.message` (everyday Ruby) raised.
+
+
+def test_class_of_an_exception_is_its_ruby_class() -> None:
+    assert oop.class_of(SirError("ArgumentError", "boom")) == "ArgumentError"
+
+
+def test_exception_is_a_matches_itself_and_its_ancestors() -> None:
+    err = SirError("ArgumentError", "boom")
+    assert oop.is_a(err, "ArgumentError") is True
+    assert oop.is_a(err, "StandardError") is True  # via the exception ancestry
+    assert oop.is_a(err, "Object") is True
+    assert oop.is_a(err, "TypeError") is False
+
+
+def test_exception_message_is_the_raised_text() -> None:
+    assert oop.call_method(SirError("ArgumentError", "boom"), "message") == "boom"
+
+
+def test_exception_message_defaults_to_the_class_name() -> None:
+    # Ruby's default `exception.message` is the class name when none is given.
+    assert oop.call_method(SirError("ArgumentError"), "message") == "ArgumentError"
+
+
+def test_respond_to_message_is_honest_in_both_directions() -> None:
+    err = SirError("ArgumentError", "boom")
+    assert oop.call_method(err, "respond_to?", "message") is True
+    # A non-exception must NOT claim to respond to `message`.
+    assert oop.call_method(7, "respond_to?", "message") is False
+    assert oop.call_method("hi", "respond_to?", "message") is False
+
+
+def test_exception_class_reflection_round_trips_through_call_method() -> None:
+    err = SirError("KeyError", "missing")
+    assert oop.call_method(err, "class") == "KeyError"
+    assert oop.call_method(err, "is_a?", "IndexError") is True  # KeyError < IndexError
+    assert oop.call_method(err, "instance_of?", "IndexError") is False
+    assert oop.call_method(err, "instance_of?", "KeyError") is True
+
+
+def test_respond_to_message_does_not_deny_a_user_defined_message() -> None:
+    # A user `message` method is dispatched by `call_method`, so `respond_to?`
+    # must NOT deny it just because the receiver is not an exception — that is
+    # the same dishonest-`respond_to?` shape this change fixes for exceptions.
+    from coding_adventures_sir_runtime_oop import oop as oop_mod
+
+    oop.define_method("message", lambda recv, args: "custom")
+    try:
+        assert oop.call_method(7, "respond_to?", "message") is True
+        assert oop.call_method(7, "message") == "custom"
+    finally:
+        oop_mod._methods.pop("message", None)
+
+
+# ── Security-review regressions (exception reflection, F2/F3/F4) ──────────────
+#
+# The reviewer compiled and ran all four backends and found three Python-side
+# holes.  Each is pinned below.  The emitted `except Exception as __exc` binds
+# the RAW caught value, so `e` can be a NATIVE Python error, not a `SirError`.
+
+
+def test_class_of_a_native_python_error_matches_the_rescue_bucket() -> None:
+    # F2: a caught native error must reflect as the class `rescue` caught it
+    # as (`StandardError`), not fall through to the "Object" default — else
+    # `retry unless e.is_a?(StandardError)` inverts.
+    try:
+        [].pop()
+    except BaseException as e:  # noqa: BLE001 — modelling Ruby `rescue => e`
+        assert oop.class_of(e) == "StandardError"
+        assert oop.is_a(e, "StandardError") is True
+        assert oop.is_a(e, "Object") is True
+        assert oop.call_method(e, "message")  # non-empty, does not raise
+        assert oop.call_method(e, "respond_to?", "message") is True
+
+
+def test_exception_is_a_honours_an_included_module() -> None:
+    # F3: the other three backends report `true` for a module mixed into the
+    # exception's class (or an ancestor).  This is the exact guard the frontier
+    # protects: `retry unless e.is_a?(Recoverable)`.
+    oop.reset_oop()
+    from coding_adventures_sir_runtime_exceptions import register_ancestry
+
+    register_ancestry({"MyErr": "StandardError"})
+    oop.include_module("MyErr", "Recoverable")
+    err = SirError("MyErr", "x")
+    assert oop.is_a(err, "Recoverable") is True
+    assert oop.is_a(err, "StandardError") is True  # still the ancestry path
+    assert oop.is_a(err, "Nope") is False
+
+
+def test_exception_is_a_honours_a_module_on_an_ancestor() -> None:
+    # The module can sit on an ANCESTOR of the exception's class, not just the
+    # class itself — `_module_closure` is consulted for every link in the chain.
+    oop.reset_oop()
+    from coding_adventures_sir_runtime_exceptions import register_ancestry
+
+    register_ancestry({"Sub": "Mid", "Mid": "StandardError"})
+    oop.include_module("Mid", "Traceable")
+    assert oop.is_a(SirError("Sub", "x"), "Traceable") is True
+
+
+def test_respond_to_finds_a_user_defined_instance_method() -> None:
+    # F4: `respond_to?` must consult the per-class method table, the same one
+    # `call_method` dispatches from.  A `SirInstance` used to fall through every
+    # branch to `False`, so `respond_to?(:message)` lied about a method that
+    # then dispatched fine.
+    oop.reset_oop()
+    oop.def_method("Failure", "message", Closure(lambda: "custom"))
+    obj = oop.new_instance("Failure")
+    assert oop.call_method(obj, "respond_to?", "message") is True
+    assert oop.call_method(obj, "message") == "custom"
+    assert oop.call_method(obj, "respond_to?", "absent") is False
+
+
+def test_respond_to_finds_an_inherited_or_mixed_in_method() -> None:
+    # The resolved method may live on a superclass or an included module —
+    # `_resolve_instance_method` walks the full MRO, and `respond_to?` must
+    # agree with it.
+    oop.reset_oop()
+    oop.def_method("Base", "greet", Closure(lambda: "hi"))
+    oop.define_class("Derived", "Base")
+    oop.include_module("Derived", "Greppable")
+    oop.def_method("Greppable", "grep", Closure(lambda: 1))
+    obj = oop.new_instance("Derived")
+    assert oop.call_method(obj, "respond_to?", "greet") is True  # inherited
+    assert oop.call_method(obj, "respond_to?", "grep") is True  # via module
+    assert oop.call_method(obj, "respond_to?", "absent") is False
