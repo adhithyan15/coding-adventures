@@ -605,7 +605,7 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
-        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg, element.Vaf, element.Nf, element.Nr, element.Vje, element.Mje, element.Vjc, element.Mjc, element.Fc, element.Var, element.Ikf, element.Ise, element.Ne, element.Isc, element.Nc, element.Xtb, element.beta_r, element.Ikr, element.Tnom)
+        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg, element.Vaf, element.Nf, element.Nr, element.Vje, element.Mje, element.Vjc, element.Mjc, element.Fc, element.Var, element.Ikf, element.Ise, element.Ne, element.Isc, element.Nc, element.Xtb, element.beta_r, element.Ikr, element.Tnom, element.Kf)
     if isinstance(element, VCVS):
         return VCVS(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), _map_subckt_node(element.ctrl_plus, instance_name, node_map), _map_subckt_node(element.ctrl_minus, instance_name, node_map), element.gain)
     if isinstance(element, VCCS):
@@ -9305,6 +9305,8 @@ def _validate_bjt(el: BJT) -> None:
         )
     if el.Tnom is not None and (not math.isfinite(el.Tnom) or el.Tnom <= 0.0):
         raise ValueError(f"{el.name}: BJT nominal temperature must be finite and positive")
+    if not math.isfinite(el.Kf) or el.Kf < 0.0:
+        raise ValueError(f"{el.name}: BJT flicker noise coefficient must be finite and non-negative")
     if not math.isfinite(el.Ise) or el.Ise < 0.0:
         raise ValueError(
             f"{el.name}: BJT base-emitter leakage saturation current must be finite and non-negative"
@@ -14681,7 +14683,8 @@ class NoiseEntry:
     noise_type : str
         ``"thermal"`` (Johnson-Nyquist noise, for resistors and MOSFET
         channel noise) or
-        ``"shot"`` (Poisson/shot noise, for diodes and BJTs).
+        ``"shot"`` (Poisson/shot noise, for diodes and BJTs), or
+        ``"flicker"`` (BJT base-current flicker noise).
     source_psd : float
         Noise current power spectral density at the source itself, in A²/Hz.
         For resistors: ``4kT/R``.  For MOSFETs: ``4kTγgm``.  For
@@ -14763,7 +14766,7 @@ def _collect_noise_sources(
     node_to_idx: dict[str, int],
     dc_x: list[float],
     temperature: float,
-) -> list[tuple[str, str, int | None, int | None, float]]:
+) -> list[tuple[str, str, int | None, int | None, float, float]]:
     """Enumerate noise current sources for all noisy circuit elements.
 
     Each element that contributes noise is modelled as an ideal Norton
@@ -14782,15 +14785,17 @@ def _collect_noise_sources(
 
     Returns
     -------
-    list of 5-tuples (element_name, noise_type, n_plus_idx, n_minus_idx, psd)
+    list of 6-tuples
+        (element_name, noise_type, n_plus_idx, n_minus_idx, coefficient,
+        frequency_exponent).
         ``n_plus_idx`` and ``n_minus_idx`` are integer matrix indices, or
         ``None`` when the terminal connects to ground.
-        ``psd`` is the current noise PSD in A²/Hz.
+        The current noise PSD is coefficient / frequency**frequency_exponent.
     """
     kT4 = 4.0 * _BOLTZMANN * temperature  # 4kT factor
     q2 = 2.0 * _ELECTRON_CHARGE           # 2q factor
 
-    sources: list[tuple[str, str, int | None, int | None, float]] = []
+    sources: list[tuple[str, str, int | None, int | None, float, float]] = []
 
     for el in circuit.elements:
         if isinstance(el, Resistor):
@@ -14798,7 +14803,7 @@ def _collect_noise_sources(
             psd = kT4 / el.resistance
             n_p = node_to_idx.get(el.n_plus)   # None for ground
             n_m = node_to_idx.get(el.n_minus)  # None for ground
-            sources.append((el.name, "thermal", n_p, n_m, psd))
+            sources.append((el.name, "thermal", n_p, n_m, psd, 0.0))
 
         elif isinstance(el, Diode):
             # Shot noise: S_i = 2q |I_D|
@@ -14813,7 +14818,7 @@ def _collect_noise_sources(
             psd = q2 * abs(I_D)
             n_a = None if _is_ground(el.anode) else node_to_idx[el.anode]
             n_k = None if _is_ground(el.cathode) else node_to_idx[el.cathode]
-            sources.append((el.name, "shot", n_a, n_k, psd))
+            sources.append((el.name, "shot", n_a, n_k, psd, 0.0))
 
         elif isinstance(el, BJT):
             # Shot noise on the base-emitter junction: S_i = 2q |I_C|
@@ -14846,7 +14851,10 @@ def _collect_noise_sources(
             )
             n_b = None if _is_ground(el.base) else node_to_idx[el.base]
             n_e = None if _is_ground(el.emitter) else node_to_idx[el.emitter]
-            sources.append((el.name, "shot", n_b, n_e, psd))
+            sources.append((el.name, "shot", n_b, n_e, psd, 0.0))
+            if el.Kf > 0.0:
+                base_current = base_collector_current / el.beta_f + leakage_current
+                sources.append((el.name, "flicker", n_b, n_e, el.Kf * abs(base_current), 1.0))
 
         elif isinstance(el, Mosfet):
             # Long-channel MOSFET channel thermal noise: S_i = 4kTγgm.
@@ -14860,7 +14868,7 @@ def _collect_noise_sources(
                 psd = kT4 * _MOSFET_CHANNEL_NOISE_GAMMA * gm
                 n_d = None if _is_ground(el.drain) else node_to_idx[el.drain]
                 n_s = None if _is_ground(el.source) else node_to_idx[el.source]
-                sources.append((el.name, "thermal", n_d, n_s, psd))
+                sources.append((el.name, "thermal", n_d, n_s, psd, 0.0))
 
         elif isinstance(el, JFET):
             Vd = 0.0 if _is_ground(el.drain) else dc_x[node_to_idx[el.drain]]
@@ -14872,7 +14880,7 @@ def _collect_noise_sources(
                 psd = kT4 * _MOSFET_CHANNEL_NOISE_GAMMA * gm
                 n_d = None if _is_ground(el.drain) else node_to_idx[el.drain]
                 n_s = None if _is_ground(el.source) else node_to_idx[el.source]
-                sources.append((el.name, "thermal", n_d, n_s, psd))
+                sources.append((el.name, "thermal", n_d, n_s, psd, 0.0))
 
         # Capacitors, Inductors, VoltageSources, CurrentSources: noiseless in
         # this first-order model.
@@ -14894,7 +14902,7 @@ def noise_ac(
 
     Computes the voltage noise power spectral density (PSD) at ``output_node``
     due to thermal noise (Johnson-Nyquist) in resistors, MOSFET channel
-    thermal noise, and shot noise in diodes and BJTs, at each frequency in
+    thermal noise, and shot plus flicker noise in diodes and BJTs, at each frequency in
     ``freqs``.  Also reports the noise referred back to ``input_source`` so
     you can compare it directly to your signal level.
 
@@ -15079,7 +15087,8 @@ def noise_ac(
                     source_psd=psd,
                     output_psd=0.0,
                 )
-                for (name, ntype, _, _, psd) in noise_sources
+                for (name, ntype, _, _, coefficient, frequency_exponent) in noise_sources
+                for psd in (coefficient / freq**frequency_exponent,)
             )
             points.append(NoisePoint(
                 freq=freq,
@@ -15096,7 +15105,8 @@ def noise_ac(
         entries_list: list[NoiseEntry] = []
         total_psd = 0.0
 
-        for (elem_name, noise_type, n_p, n_m, src_psd) in noise_sources:
+        for (elem_name, noise_type, n_p, n_m, coefficient, frequency_exponent) in noise_sources:
+            src_psd = coefficient / freq**frequency_exponent
             h_p: complex = v_adj[n_p] if n_p is not None else 0j
             h_m: complex = v_adj[n_m] if n_m is not None else 0j
             H_k = h_p - h_m

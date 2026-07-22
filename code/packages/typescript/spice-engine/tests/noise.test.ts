@@ -67,6 +67,26 @@ describe("noiseAc", () => {
 
     expect(sourcePsd(1.0e-10)).toBeGreaterThan(sourcePsd(0.0));
   });
+  it("uses BJT KF for inverse-frequency flicker noise", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vcc", "vcc", "0", 5.0));
+    circuit.add(voltageSource("Vbase", "base", "0", 0.7));
+    circuit.add(resistor("Rload", "vcc", "out", 1_000.0));
+    circuit.add({
+      ...bjt("Q1", "out", "base", "0"),
+      flickerNoiseCoefficient: 1.0e-12,
+    });
+
+    const result = noiseAc(circuit, "out", "Vbase", [10.0, 1_000.0], 300.0);
+    const flickerPsds = result.points.map((point) =>
+      point.entries.find(
+        (entry) => entry.elementName === "Q1" && entry.noiseType === "flicker",
+      )!.sourcePsd,
+    );
+
+    expect(flickerPsds[0]).toBeGreaterThan(0.0);
+    expect(flickerPsds[0] / flickerPsds[1]).toBeCloseTo(100.0, 12);
+  });
   it("computes Johnson noise for a single grounded resistor", () => {
     const circuit = new Circuit();
     circuit.add(currentSource("Iin", "0", "out", 0.0));

@@ -227,6 +227,9 @@ omitted.
 `TNOM`/`T_NOM` sets the BJT model's nominal temperature in degrees Celsius.
 It overrides the circuit-level nominal temperature for BJT temperature scaling;
 omitting it preserves the inherited default.
+`KF` (default `0`, disabled) adds a distinct BJT base-current flicker-noise
+source to `.NOISE`, using Berkeley's default `AF=1` exponent so source PSD is
+`KF * abs(Ib) / frequency`.
 `modelCardUnsupportedParameterIssues`,
 `formatModelCardUnsupportedParameterIssueTable`,
 `modelCardUnsupportedParameterIssueRecords`,
