@@ -1,5 +1,17 @@
 # Changelog — `twig-aot`
 
+## 0.41.1 - 2026-07-22 — test: precise roots keep a real reference AND reclaim a look-alike
+
+Completes the precise-roots correctness statement with an end-to-end test
+(`end_to_end_gc_precise_keeps_ref_reclaims_lookalike`, macOS/aarch64). The increment-C
+differential proved only the *reclaim* half (its program kept no live object, so precise
+`live_bytes` was 0). This program holds **both** a real `any`-typed heap reference (a
+`dyn_cons` cell) and an `i64` look-alike (a `gc_alloc` pointer): the precise collect
+*keeps* the cons cell (`live_bytes > 0`) yet still reclaims the look-alike, so
+`conservative − precise == 64`. This proves the stack map both roots the genuine
+reference and excludes the non-reference slot — a precise result of 0 would be a dropped
+live reference (UAF); an equal result would be a wrongly-pinned look-alike. Test-only.
+
 ## 0.41.0 - 2026-07-21 — precise roots load-bearing: register the entry wrapper (AOT00-T1 increment C)
 
 The GC-stress `live_bytes` differential — precise roots reclaiming a look-alike-pinned
