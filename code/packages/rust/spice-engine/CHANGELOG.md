@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add BJT model-card `ISE`/`NE` base-emitter leakage support in DC, transient,
+  AC, transfer-function, temperature, and noise paths, matching Python and
+  TypeScript. The supported-parameter catalog now contains 100 canonical rows.
 - Add BJT model-card `IKF`/`IK` forward high-current beta roll-off support with
   shared base-charge modulation in DC, transient, AC, transfer-function, and
   noise paths, matching Python and TypeScript. The supported-parameter catalog

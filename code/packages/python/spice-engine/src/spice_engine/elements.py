@@ -629,6 +629,8 @@ class BJT:
     Fc: float = 0.5         # forward-bias depletion coefficient
     Var: float = 0.0        # reverse Early voltage (V); 0 means infinite
     Ikf: float = 0.0        # forward-beta roll-off current (A); 0 disables
+    Ise: float = 0.0        # base-emitter leakage saturation current (A)
+    Ne: float = 1.0         # base-emitter leakage emission coefficient
 
 
 # ---------------------------------------------------------------------------
