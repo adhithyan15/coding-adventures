@@ -434,19 +434,13 @@ const CORPUS: &[Case] = &[
         name: "comparison_true",
         source: "5 > 3;\n",
         expected: "True",
-        known_bug: Some(
-            "Evaluation gap (module doc): compiles to a bare Greater(5, 3) term, never evaluates to \
-             the symbol True.",
-        ),
+        known_bug: None, // item 1: comparison folding to the True symbol.
     },
     Case {
         name: "comparison_false",
         source: "3 > 5;\n",
         expected: "False",
-        known_bug: Some(
-            "Evaluation gap (module doc): compiles to a bare Greater(3, 5) term, never evaluates to \
-             the symbol False.",
-        ),
+        known_bug: None, // item 1: comparison folding to the False symbol.
     },
     Case {
         name: "less_equal_boundary_is_true",
