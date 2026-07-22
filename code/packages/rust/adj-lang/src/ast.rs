@@ -667,6 +667,18 @@ pub enum Annotation {
     /// corroborating citation to `Provenance::corroborations`. Repeatable;
     /// each carries a required locator so the span is re-fetchable.
     Cites { source: String, locator: String },
+    /// `quote "<text>" at <byte_offset> snapshot "<sha256-hex>"`
+    /// (RS-4 PR-D4, `ADJ-REASON-MATH.md` §E.3.1) — a **pinned verbatim span**:
+    /// the exact bytes `text` must occupy at `byte_offset` in the document whose
+    /// SHA-256 is `snapshot_hex`. Populates `Provenance::quote` +
+    /// `Provenance::snapshot`, and is what lets `adj-verify` report
+    /// `fully_verified`. The `byte_offset` is emitted by the spider at ingest —
+    /// never authored by a human or model (`feedback_no_byte_arithmetic_for_llm`).
+    Quote {
+        text: String,
+        byte_offset: usize,
+        snapshot_hex: String,
+    },
 }
 
 /// Surface name for a trust tier — keywords in the language map

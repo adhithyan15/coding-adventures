@@ -2631,8 +2631,54 @@ fn adapt_annotation(node: &GrammarASTNode) -> Result<Annotation, AdapterError> {
             })?;
             Ok(Annotation::Cites { source, locator })
         }
+        "quote_annotation" => {
+            // quote_annotation = "quote" STRING "at" NUMBER "snapshot" STRING
+            // Two STRING tokens in source order: [text, snapshot-hex]; one NUMBER
+            // token: the byte offset. (RS-4 PR-D4, §E.3.1.)
+            let mut strings = child.children.iter().filter_map(|c| match c {
+                ASTNodeOrToken::Token(t) if t.type_ == TokenType::String => {
+                    Some(unquote_string(&t.value))
+                }
+                _ => None,
+            });
+            let text = strings.next().ok_or(AdapterError::MissingChild {
+                rule: "quote_annotation".into(),
+                position: "quote text STRING",
+            })?;
+            let snapshot_hex = strings.next().ok_or(AdapterError::MissingChild {
+                rule: "quote_annotation".into(),
+                position: "snapshot hex STRING",
+            })?;
+            // The offset is a NUMBER token; the grammar guarantees a non-negative
+            // integer literal here, but a fractional or negative value is a clean
+            // adapter error rather than a silent truncation.
+            let raw = child
+                .children
+                .iter()
+                .find_map(|c| match c {
+                    ASTNodeOrToken::Token(t) if t.type_ == TokenType::Number => {
+                        Some(t.value.clone())
+                    }
+                    _ => None,
+                })
+                .ok_or(AdapterError::MissingChild {
+                    rule: "quote_annotation".into(),
+                    position: "byte-offset NUMBER",
+                })?;
+            let byte_offset = raw.parse::<usize>().map_err(|_| AdapterError::BadToken {
+                rule: "quote_annotation".into(),
+                kind: TokenType::Number,
+                value: raw,
+                reason: "byte offset must be a non-negative integer",
+            })?;
+            Ok(Annotation::Quote {
+                text,
+                byte_offset,
+                snapshot_hex,
+            })
+        }
         other => Err(AdapterError::UnexpectedRule {
-            expected: "one of source_annotation / locator_annotation / trust_annotation / cites_annotation",
+            expected: "one of source_annotation / locator_annotation / trust_annotation / cites_annotation / quote_annotation",
             actual: other.to_string(),
         }),
     }
@@ -3302,6 +3348,34 @@ mod tests {
                 assert!(source.contains('"'), "the span must carry a real quote");
             }
             other => panic!("expected Contributes, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn quote_annotation_parses_text_offset_and_snapshot() {
+        // RS-4 PR-D4a: `quote "…" at <offset> snapshot "<hex>"` → Annotation::Quote.
+        let src = r#"relate inhibits(aspirin, cyclooxygenase)
+            quote "Aspirin inhibits cyclooxygenase" at 7 snapshot "abc123"
+            source "Pharmacology reference"
+            trust authoritative"#;
+        match parse_one(src) {
+            Statement::Relate { annotations, .. } => {
+                let q = annotations
+                    .iter()
+                    .find_map(|a| match a {
+                        Annotation::Quote {
+                            text,
+                            byte_offset,
+                            snapshot_hex,
+                        } => Some((text.clone(), *byte_offset, snapshot_hex.clone())),
+                        _ => None,
+                    })
+                    .expect("a Quote annotation");
+                assert_eq!(q.0, "Aspirin inhibits cyclooxygenase");
+                assert_eq!(q.1, 7);
+                assert_eq!(q.2, "abc123");
+            }
+            other => panic!("expected Relate, got {other:?}"),
         }
     }
 }
