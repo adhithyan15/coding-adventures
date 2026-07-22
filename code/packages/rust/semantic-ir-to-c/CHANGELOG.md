@@ -1,5 +1,46 @@
 # Changelog
 
+## 0.6.0 — sequences (SIR16)
+
+Accepts `Feature::Sequences`. `SirValue` gains a `SIR_SEQ` tag — a heap-boxed
+dynamic array (`struct SirSeq { SirValue *items; int64_t len; }`, arena
+allocated like every other heap value) — so a sequence is a shared, mutable
+handle: a `SeqSet` through one binding is visible through every alias, matching
+the Go/Rust `*Seq`. Every construct the feature can surface is lowered:
+
+- `SeqLit` (`[1, 2, 3]`) → `_sir_seq_lit(n, …)`.
+- `SeqIndex` (`a[i]`) → `_sir_seq_index`: a negative index counts from the end,
+  an out-of-range index yields nil (it does NOT raise — matching the reference
+  and every other backend).
+- `SeqLen` (`a.length`) → `_sir_seq_len`.
+- `SeqSet` (`a[i] = v`) → `_sir_seq_set`, which TRAPS (`stderr` + `exit(1)`) on
+  a negative or out-of-range index, matching the Go/Rust `panic`.
+- `ForEach` (`for x in a`) → a `for` loop over `_sir_seq_iter(a)`, which
+  snapshots the iterable (a real sequence is copied so a mutating body does not
+  disturb iteration; a cons-list is flattened). `x` is declared inside the loop
+  body block, so it is block-scoped — matching the validator's rewind and Go's
+  `:=` counter. This is why `ForEach` is no longer rejected by the `first_foreach`
+  pre-pass added in 0.5.0 (that pre-pass and its clean-rejection are removed).
+
+`_sir_value_eq` gains a structural `SIR_SEQ` arm — equal length, element-wise
+equal, with an identical-handle fast path (which also short-circuits the common
+self-referential `a == a`). `_sir_fmt` renders a sequence as `[1, 2, 3]`
+(bracket, comma-space), matching the Go/Rust backends. With this, the
+cross-backend composite-equality conformance (`[1,2] == [1,2]`) now asserts on
+**all six** backends — C was the last that skipped it.
+
+Because `SeqSet` is the first MUTABLE heap aggregate (cons pairs are immutable
+and so cannot form a cycle), a self-referential sequence (`a[0] = a`) is now
+constructible; both `_sir_value_eq` and `_sir_fmt` carry a recursion-depth cap
+so a cyclic structure terminates rather than overflowing the C stack — a guard
+the immutable pair path never needed. (Found by security review, which also
+caught that the earlier "matches the pair arm" claim was wrong.)
+
+Every node is verified by hand-built modules (producer-agnostic), compiled with
+a real `cc` under `-Werror=unused-variable` and run: display, structural
+equality (positive/negative/nested), index (in-range/negative/OOB), length,
+in-bounds set, and block-scoped ForEach.
+
 ## 0.5.0 — `ForRange` (numeric for-loop) + a scan hole (SIR16)
 
 Fixes a **pre-existing panic**: `Stmt::ForRange` (`for i in 0...3`) is gated by

@@ -42,12 +42,13 @@ pub const RUNTIME: &str = r####"/* =============================================
 
 typedef enum {
     SIR_NIL, SIR_BOOL, SIR_INT, SIR_FLOAT,
-    SIR_STR, SIR_SYM, SIR_PAIR, SIR_CLOSURE
+    SIR_STR, SIR_SYM, SIR_PAIR, SIR_CLOSURE, SIR_SEQ
 } SirTag;
 
 typedef struct SirValue SirValue;
 typedef struct SirPair SirPair;
 typedef struct SirClosure SirClosure;
+typedef struct SirSeq SirSeq;
 
 struct SirValue {
     SirTag tag;
@@ -58,10 +59,17 @@ struct SirValue {
         const char *s;    /* SIR_STR / SIR_SYM (interned) */
         SirPair *pair;    /* SIR_PAIR */
         SirClosure *clo;  /* SIR_CLOSURE */
+        SirSeq *seq;      /* SIR_SEQ */
     } as;
 };
 
 struct SirPair { SirValue car; SirValue cdr; };
+
+/* A SIR16 sequence (`[1, 2, 3]`) — a heap-boxed dynamic array. `items` points
+ * at `len` `SirValue`s (arena-allocated, never freed like every other heap
+ * value). Boxed so the value is a shared, mutable handle: a `SeqSet` through
+ * one binding is visible through every alias (matching the Go/Rust `*Seq`). */
+struct SirSeq { SirValue *items; int64_t len; };
 
 /* A closure's function takes its captured environment and the call args. */
 typedef SirValue (*SirFn)(SirValue *caps, SirValue *args, int argc);
@@ -304,7 +312,17 @@ SirValue _sir_ge(SirValue a, SirValue b) {
     return _sir_bool(_sir_as_num(a) >= _sir_as_num(b));
 }
 
-int _sir_value_eq(SirValue a, SirValue b) {
+/* Structural equality can recurse through nested sequences/pairs. `SeqSet` is
+ * this backend's FIRST mutable heap aggregate, so — unlike the immutable cons
+ * pairs, which cannot form a cycle (there is no `set-car!`) — a sequence CAN be
+ * made self-referential (`a[0] = a`). A depth cap keeps such a structure from
+ * overflowing the C stack: past the cap two values are ASSUMED equal (the
+ * co-inductive answer, so a cyclic comparison terminates). The cap is far
+ * beyond any real (non-cyclic) nesting and comfortably under the stack limit. */
+#define SIR_MAX_EQ_DEPTH 5000
+
+int _sir_value_eq_d(SirValue a, SirValue b, int depth) {
+    if (depth > SIR_MAX_EQ_DEPTH) return 1;
     if (_sir_is_num(a) && _sir_is_num(b)) {
         if (a.tag == SIR_INT && b.tag == SIR_INT) return a.as.i == b.as.i;
         return _sir_as_num(a) == _sir_as_num(b);
@@ -315,12 +333,26 @@ int _sir_value_eq(SirValue a, SirValue b) {
         case SIR_BOOL:    return a.as.b == b.as.b;
         case SIR_STR:     return strcmp(a.as.s, b.as.s) == 0;
         case SIR_SYM:     return a.as.s == b.as.s;  /* interned: pointer eq */
-        case SIR_PAIR:    return _sir_value_eq(a.as.pair->car, b.as.pair->car)
-                              && _sir_value_eq(a.as.pair->cdr, b.as.pair->cdr);
+        case SIR_PAIR:    return _sir_value_eq_d(a.as.pair->car, b.as.pair->car, depth + 1)
+                              && _sir_value_eq_d(a.as.pair->cdr, b.as.pair->cdr, depth + 1);
+        case SIR_SEQ: {
+            /* STRUCTURAL: equal length and element-wise equal (`[1, 2] ==
+             * [1, 2]` is true). The identical-handle fast path short-circuits
+             * `a == a` (and the common self-referential `a[0] = a`); the depth
+             * cap above bounds a comparison of two DISTINCT cyclic sequences. */
+            SirSeq *sa = a.as.seq, *sb = b.as.seq;
+            if (sa == sb) return 1;
+            if (sa->len != sb->len) return 0;
+            for (int64_t i = 0; i < sa->len; i++)
+                if (!_sir_value_eq_d(sa->items[i], sb->items[i], depth + 1)) return 0;
+            return 1;
+        }
         case SIR_CLOSURE: return a.as.clo == b.as.clo;
         default:          return 0;
     }
 }
+
+int _sir_value_eq(SirValue a, SirValue b) { return _sir_value_eq_d(a, b, 0); }
 SirValue _sir_eq(SirValue a, SirValue b) { return _sir_bool(_sir_value_eq(a, b)); }
 SirValue _sir_ne(SirValue a, SirValue b) { return _sir_bool(!_sir_value_eq(a, b)); }
 
@@ -341,6 +373,89 @@ SirValue _sir_cons(SirValue a, SirValue b) {
 }
 SirValue _sir_car(SirValue v) { return v.tag == SIR_PAIR ? v.as.pair->car : _sir_nil(); }
 SirValue _sir_cdr(SirValue v) { return v.tag == SIR_PAIR ? v.as.pair->cdr : _sir_nil(); }
+
+/* ---- SIR16 sequences ---------------------------------------- */
+
+/* `[e0, e1, …]` — box `n` values into a fresh heap sequence. The variadic
+ * elements are copied into an arena-allocated array. */
+SirValue _sir_seq_lit(int n, ...) {
+    SirSeq *s = (SirSeq *)_sir_alloc(sizeof(SirSeq));
+    s->len = (int64_t)n;
+    s->items = (n > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)n) : NULL;
+    va_list ap;
+    va_start(ap, n);
+    for (int i = 0; i < n; i++) s->items[i] = va_arg(ap, SirValue);
+    va_end(ap);
+    SirValue v;
+    v.tag = SIR_SEQ; v.as.seq = s;
+    return v;
+}
+
+/* `a[i]` (read). Ruby's `Array#[]`: a negative index counts from the end, and
+ * an index outside `0 .. len-1` yields nil (it does NOT raise — that is
+ * `fetch`). Matches the Go/Rust `_sir_seq_index`. A non-sequence yields nil. */
+SirValue _sir_seq_index(SirValue seq, SirValue idx) {
+    if (seq.tag != SIR_SEQ) return _sir_nil();
+    int64_t n = seq.as.seq->len;
+    int64_t i = _sir_as_int(idx);
+    if (i < 0) i += n;
+    if (i < 0 || i >= n) return _sir_nil();
+    return seq.as.seq->items[i];
+}
+
+/* `a.length` — the element count. A non-sequence has length 0. */
+SirValue _sir_seq_len(SirValue seq) {
+    return _sir_int(seq.tag == SIR_SEQ ? seq.as.seq->len : 0);
+}
+
+/* `a[i] = v` (write). Unlike the lenient read, the SIR reference treats ONLY
+ * `0 <= i < len` as valid and traps on a negative or out-of-range index
+ * (matching the Go/Rust `_sir_seq_set`, which panic). Mutates the shared box
+ * and returns the value (an indexed assignment evaluates to its RHS). */
+SirValue _sir_seq_set(SirValue seq, SirValue idx, SirValue val) {
+    if (seq.tag != SIR_SEQ) {
+        fprintf(stderr, "sir: []= on a non-sequence\n");
+        exit(1);
+    }
+    int64_t n = seq.as.seq->len;
+    int64_t i = _sir_as_int(idx);
+    if (i < 0 || i >= n) {
+        fprintf(stderr, "sir: sequence index out of range\n");
+        exit(1);
+    }
+    seq.as.seq->items[i] = val;
+    return val;
+}
+
+/* Normalise an iterable to a SNAPSHOT sequence for `ForEach`. A real sequence
+ * is copied (so a body that mutates the original does not disturb the
+ * iteration — matching the Go/Rust snapshot semantics); a cons-list is
+ * flattened into a sequence; anything else yields an empty sequence (zero
+ * iterations — the lenient choice, consistent with `_sir_car` returning nil on
+ * a non-pair). Lets the emitter render a `ForEach` body ONCE, over one array. */
+SirValue _sir_seq_iter(SirValue it) {
+    SirSeq *s = (SirSeq *)_sir_alloc(sizeof(SirSeq));
+    if (it.tag == SIR_SEQ) {
+        int64_t n = it.as.seq->len;
+        s->len = n;
+        s->items = (n > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)n) : NULL;
+        for (int64_t i = 0; i < n; i++) s->items[i] = it.as.seq->items[i];
+    } else if (it.tag == SIR_PAIR) {
+        int64_t n = 0;
+        SirValue cur = it;
+        while (cur.tag == SIR_PAIR) { n++; cur = cur.as.pair->cdr; }
+        s->len = n;
+        s->items = (n > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)n) : NULL;
+        cur = it;
+        for (int64_t i = 0; cur.tag == SIR_PAIR; i++) { s->items[i] = cur.as.pair->car; cur = cur.as.pair->cdr; }
+    } else {
+        s->len = 0;
+        s->items = NULL;
+    }
+    SirValue v;
+    v.tag = SIR_SEQ; v.as.seq = s;
+    return v;
+}
 
 SirValue _sir_is_null(SirValue v)   { return _sir_bool(v.tag == SIR_NIL); }
 SirValue _sir_is_pair(SirValue v)   { return _sir_bool(v.tag == SIR_PAIR); }
@@ -404,6 +519,19 @@ SirValue _sir_global_get(SirValue name)               { return _sir_global_get_s
 
 void _sir_fmt(FILE *out, SirValue v);
 
+/* A sequence renders as `[e0, e1, …]` (bracket, comma-space separator),
+ * matching the Go/Rust backends. Elements render through `_sir_fmt`, whose
+ * depth counter bounds a self-referential sequence (constructible via the
+ * mutable `SeqSet`). */
+void _sir_fmt_seq(FILE *out, SirValue v) {
+    fputc('[', out);
+    for (int64_t i = 0; i < v.as.seq->len; i++) {
+        if (i) fputs(", ", out);
+        _sir_fmt(out, v.as.seq->items[i]);
+    }
+    fputc(']', out);
+}
+
 void _sir_fmt_float(FILE *out, double f) {
     /* Ruby keeps a trailing .0 on integral floats and prints non-finite
      * values as Infinity / NaN.  A plain "%g" would drop the .0, so format
@@ -441,8 +569,21 @@ void _sir_fmt_pair(FILE *out, SirValue v) {
     fputc(')', out);
 }
 
+/* Rendering recurses through nested sequences/pairs. A self-referential
+ * sequence (`a[0] = a`, now constructible via the mutable `SeqSet`) would
+ * otherwise recurse forever, so a static depth counter bounds it: past the cap
+ * a `[...]` ellipsis is printed instead of descending (the emitted program is
+ * single-threaded, so a plain static counter is sufficient). */
+#define SIR_MAX_FMT_DEPTH 5000
+static int _sir_fmt_depth = 0;
+
 void _sir_fmt(FILE *out, SirValue v) {
     char buf[32];
+    if (_sir_fmt_depth > SIR_MAX_FMT_DEPTH) {
+        fputs("[...]", out);
+        return;
+    }
+    _sir_fmt_depth++;
     switch (v.tag) {
         case SIR_NIL:   fputs(SIR_DISPLAY_RUBY ? "" : "nil", out); break;
         case SIR_BOOL:  fputs(v.as.b ? (SIR_DISPLAY_RUBY ? "true" : "#t")
@@ -452,9 +593,11 @@ void _sir_fmt(FILE *out, SirValue v) {
         case SIR_STR:   fputs(v.as.s, out); break;
         case SIR_SYM:   fputs(v.as.s, out); break;
         case SIR_PAIR:  _sir_fmt_pair(out, v); break;
+        case SIR_SEQ:   _sir_fmt_seq(out, v); break;
         case SIR_CLOSURE: fputs("#<closure>", out); break;
         default: break;
     }
+    _sir_fmt_depth--;
 }
 
 SirValue _sir_print_v(SirValue *xs, int n) {

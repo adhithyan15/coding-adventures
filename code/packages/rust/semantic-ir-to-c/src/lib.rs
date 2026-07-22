@@ -73,6 +73,15 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // the C frontend's milestone-2 `if`/`while`/`for` lowering.
     Feature::Loops,
     Feature::MutableBindings,
+    // ── SIR16 sequences ──────────────────────────────────────────────
+    // `SirValue` gains a `SIR_SEQ` heap-boxed dynamic array. The emitter
+    // handles every construct the feature can surface: `SeqLit` (`[1, 2, 3]`),
+    // `SeqIndex` (`a[i]`, nil-on-OOB), `SeqLen` (`a.length`), `SeqSet`
+    // (`a[i] = v`, traps out-of-range), and `ForEach` (`for x in a`, over a
+    // `_sir_seq_iter` snapshot — so it is no longer rejected by `first_foreach`
+    // as it was in 0.5.0). Structural `_sir_value_eq` makes `[1, 2] == [1, 2]`
+    // true, matching every backend that carries sequences.
+    Feature::Sequences,
 ];
 
 impl Backend for CBackend {
@@ -127,19 +136,6 @@ impl Backend for CBackend {
             });
         }
 
-        // 3b. `Stmt::ForEach` observes only `Feature::Loops` (accepted), so it
-        //     is NOT gated out — a module using `for x in <iterable>` would
-        //     otherwise reach the emitter's `unreachable!`. Reject it cleanly
-        //     until the sequences batch gives it an iterator.
-        if let Some(span) = emit::first_foreach(module) {
-            return Err(BackendError {
-                kind: BackendErrorKind::UnsupportedFeature,
-                message: "the v0 C backend does not yet lower `for … in` (ForEach) \
-                          — deferred to the sequences feature batch"
-                    .to_string(),
-                span,
-            });
-        }
 
         // 4. Emit.
         let source = emit::emit_module(module);

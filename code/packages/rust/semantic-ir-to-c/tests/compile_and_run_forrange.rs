@@ -195,24 +195,6 @@ fn unsupported_builtin_in_while_body_is_rejected_not_panicked() {
 }
 
 #[test]
-fn for_each_is_rejected_cleanly_not_panicked() {
-    // `Stmt::ForEach` observes only `Feature::Loops` (accepted), so it is NOT
-    // gated out — it must be rejected by the `first_foreach` pre-pass with a
-    // clean `BackendError`, never reach the emitter's `unreachable!`.
-    let for_each = Stmt::ForEach {
-        var: "e".into(),
-        iter: local("xs"),
-        body: Block { stmts: vec![puts(local("e"))], value: Expr::NilLit { span: s() }, span: s() },
-        span: s(),
-    };
-    let result = semantic_ir_to_c::compile(&loops_module(vec![
-        Stmt::LetBinding { name: "xs".into(), sir_type: None, value: ilit(0), span: s() },
-        for_each,
-    ]));
-    assert!(result.is_err(), "ForEach must reject cleanly, not panic");
-}
-
-#[test]
 fn for_range_with_unused_counter_compiles_under_werror() {
     // Regression: an empty-body / unused-counter loop must not emit an unused
     // variable — a `-Werror` consumer would break. Compile a for-range whose
