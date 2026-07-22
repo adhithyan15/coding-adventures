@@ -355,6 +355,9 @@ impl Machine {
             Stmt::Inspect { source, counter, delim } => {
                 return self.exec_inspect(source, counter, delim)
             }
+            Stmt::InspectReplacing { source, search, replace } => {
+                self.exec_inspect_replacing(source, search, replace)?
+            }
         }
         Ok(Flow::Normal)
     }
@@ -663,6 +666,59 @@ impl Machine {
         let addend = Decimal { neg: false, int: count.to_string(), frac: String::new() };
         let acc = checked(add(&self.named_decimal(counter)?, &addend))?;
         self.store_result(counter, acc, false, &[])
+    }
+
+    /// `INSPECT source REPLACING ALL search BY replace` — replace EVERY
+    /// occurrence of the SINGLE character `search` in the alphanumeric `source`
+    /// with the SINGLE character `replace`, in place. Both are single characters
+    /// so the source's width is unchanged: this is a straight per-position map
+    /// (`c == search ? replace : c`), left to right. The rebuilt string is fed
+    /// back through the SAME alphanumeric char-store path a `MOVE` uses
+    /// (`move_into` with `Src::Chars`), which is a no-op on width here (the map
+    /// preserves length), so the compiled `cobol-iir-compiler` lowering matches
+    /// this reference output byte-for-byte. A numeric/group source is a clean
+    /// later-rung error; a multi-character/figurative/wider search or
+    /// replacement is rejected by `single_delim_char`.
+    fn exec_inspect_replacing(
+        &mut self,
+        source: &str,
+        search: &Operand,
+        replace: &Operand,
+    ) -> Result<(), RuntimeError> {
+        // The source must be an alphanumeric item.
+        let sidx = *self
+            .by_name
+            .get(source)
+            .ok_or_else(|| RuntimeError::UndefinedName(source.to_string()))?;
+        match &self.items[sidx].picture {
+            Some(p) if p.is_numeric() => {
+                return Err(RuntimeError::Unsupported(
+                    "INSPECT of a numeric source is a later rung".into(),
+                ))
+            }
+            Some(_) => {}
+            None => {
+                return Err(RuntimeError::Unsupported(
+                    "INSPECT of a group source is a later rung".into(),
+                ))
+            }
+        }
+
+        // The single search and replacement characters (shared validation with
+        // UNSTRING/TALLYING: a multi-character/figurative/wider/numeric operand is
+        // a later rung). Read both BEFORE mutating so an invalid replacement does
+        // not leave the source half-changed.
+        let search_ch = self.single_delim_char(search, "INSPECT REPLACING")?;
+        let replace_ch = self.single_delim_char(replace, "INSPECT REPLACING")?;
+
+        // Map each character in place (same width), then store through the
+        // alphanumeric char path.
+        let rebuilt: String = self.items[sidx]
+            .storage
+            .chars()
+            .map(|c| if c == search_ch { replace_ch } else { c })
+            .collect();
+        self.move_into(sidx, Src::Chars(rebuilt))
     }
 
     /// `EVALUATE subject WHEN … END-EVALUATE` — run the first branch whose value

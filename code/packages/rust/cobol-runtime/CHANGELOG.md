@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.27.0 — `INSPECT … REPLACING ALL … BY …` (first rung)
+
+- Added `Stmt::InspectReplacing { source, search, replace }` and its executor
+  `exec_inspect_replacing`. `INSPECT source REPLACING ALL x BY y` replaces EVERY
+  occurrence of the SINGLE character `x` (a 1-character string literal or a `PIC
+  X(1)` item) in the alphanumeric `source` with the SINGLE character `y`, **in
+  place**.
+- Semantics (oracle = source of truth): both operands are single characters, so
+  the source's width is unchanged — a straight **per-position map**
+  (`c == x ? y : c`), left to right. The rebuilt string is stored back through the
+  same alphanumeric char-store path (`move_into` with `Src::Chars`) a `MOVE` uses,
+  so the compiled `cobol-iir-compiler` unroll matches this reference byte-for-byte.
+  Both `x` and `y` are validated by the shared `single_delim_char`, and both are
+  read before mutating so an invalid replacement leaves the source untouched.
+- The `inspect_stmt` reader now shares its source parsing and dispatches on
+  whether a `TALLYING`, a `REPLACING`, or both clauses are present; the combined
+  `TALLYING … REPLACING` in one `INSPECT` is a clean later rung.
+- Later rungs (clean `RuntimeError::Unsupported`): `REPLACING CHARACTERS BY`,
+  `REPLACING LEADING`/`FIRST`, `BEFORE`/`AFTER` regions, several replace items, the
+  combined `TALLYING … REPLACING`, a multi-character / figurative / numeric /
+  wider-than-one search or replacement, and a numeric/group source.
+- Tests: a positive executor test (a repeated char mapped, an absent char leaving
+  the source unchanged, and `PIC X(1)` search/replacement items) plus a later-rung
+  test covering `CHARACTERS`, `LEADING`, a multi-character search, several replace
+  items, and the combined `TALLYING … REPLACING`.
+
 ## 0.26.0 — `INSPECT … TALLYING … FOR ALL` (first rung)
 
 - Added `Stmt::Inspect { source, counter, delim }` and its executor.

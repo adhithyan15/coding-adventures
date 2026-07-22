@@ -157,6 +157,17 @@ pub enum Stmt {
     /// `REPLACING`, and a multi-character/figurative/wider delimiter or a
     /// numeric/group source or a non-integer/non-numeric counter are later rungs.
     Inspect { source: String, counter: String, delim: Operand },
+    /// `INSPECT source REPLACING ALL search BY replace` — replace EVERY
+    /// occurrence of the SINGLE character `search` in the alphanumeric `source`
+    /// with the SINGLE character `replace`, in place. Because both are single
+    /// characters the source's width is unchanged, so this is a per-position
+    /// map (`source := source with each search→replace`). Each of `search` and
+    /// `replace` is a 1-char literal or a `PIC X(1)` item. `REPLACING
+    /// CHARACTERS`/`LEADING`/`FIRST`, `BEFORE`/`AFTER` regions, several replace
+    /// items, a combined `TALLYING … REPLACING`, and a multi-character/
+    /// figurative/wider search or replacement or a numeric/group source are
+    /// later rungs.
+    InspectReplacing { source: String, search: Operand, replace: Operand },
     StopRun,
 }
 
@@ -771,18 +782,23 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
             Ok(Stmt::Unstring { source, delim, targets })
         }
         "inspect_stmt" => {
-            // INSPECT source TALLYING counter FOR ALL delim. The grammar also
-            // accepts the fuller INSPECT surface (LEADING/CHARACTERS, BEFORE/AFTER
-            // regions, several counters, and every REPLACING form) so those reject
-            // as a friendly Unsupported here — not a parse error.
-            if child_node(verb, "inspect_replacing").is_some() {
+            // The grammar accepts the full INSPECT surface — a TALLYING clause, a
+            // REPLACING clause, or both together (LEADING/CHARACTERS, BEFORE/AFTER
+            // regions, several counters/replace items, …) — so the forms this rung
+            // does not model reject as a friendly Unsupported here, not a parse
+            // error. This rung supports a LONE `TALLYING … FOR ALL` OR a LONE
+            // `REPLACING ALL … BY …`; the combined `TALLYING … REPLACING` in one
+            // INSPECT is a later rung.
+            let has_tally = child_node(verb, "inspect_tallying").is_some();
+            let has_repl = child_node(verb, "inspect_replacing").is_some();
+            if has_tally && has_repl {
                 return Err(RuntimeError::Unsupported(
-                    "INSPECT … REPLACING is a later rung".into(),
+                    "combined INSPECT … TALLYING … REPLACING is a later rung".into(),
                 ));
             }
             // The source is the first (and only top-level) `operand`; a literal or
             // reference-modified source is a later rung (its category is checked at
-            // exec time).
+            // exec time). Shared by both the TALLYING and REPLACING forms.
             let source_node = child_node(verb, "operand")
                 .ok_or_else(|| RuntimeError::Unsupported("INSPECT without a source".into()))?;
             let source = match read_operand(source_node)? {
@@ -798,8 +814,13 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                     ))
                 }
             };
-            let (counter, delim) = read_inspect_tally_all(verb)?;
-            Ok(Stmt::Inspect { source, counter, delim })
+            if has_repl {
+                let (search, replace) = read_inspect_replacing_all(verb)?;
+                Ok(Stmt::InspectReplacing { source, search, replace })
+            } else {
+                let (counter, delim) = read_inspect_tally_all(verb)?;
+                Ok(Stmt::Inspect { source, counter, delim })
+            }
         }
         other => Err(RuntimeError::Unsupported(format!("the {} verb", verb_name(other)))),
     }
@@ -855,6 +876,56 @@ fn read_inspect_tally_all(verb: &GrammarASTNode) -> Result<(String, Operand), Ru
         RuntimeError::Unsupported("INSPECT TALLYING FOR ALL without a delimiter".into())
     })?;
     Ok((counter, read_operand(delim_node)?))
+}
+
+/// Extract the single supported `REPLACING ALL search BY replace` phrase from an
+/// `inspect_stmt`, returning `(search_operand, replace_operand)` and rejecting
+/// every later-rung form the grammar also accepts: several replace items, a
+/// `CHARACTERS` or `LEADING` (or `FIRST`) replacement, and a `BEFORE`/`AFTER …
+/// INITIAL` region. (The combined `TALLYING … REPLACING` and a non-alphanumeric
+/// source are handled by the caller and exec; a multi-character/wider/figurative
+/// search or replacement is rejected by `single_delim_char` at exec time.)
+fn read_inspect_replacing_all(verb: &GrammarASTNode) -> Result<(Operand, Operand), RuntimeError> {
+    let replacing = child_node(verb, "inspect_replacing").ok_or_else(|| {
+        RuntimeError::Unsupported("INSPECT without a REPLACING clause is a later rung".into())
+    })?;
+    let items = child_nodes(replacing, "replace_item");
+    let ri = match items.as_slice() {
+        [one] => *one,
+        _ => {
+            return Err(RuntimeError::Unsupported(
+                "INSPECT REPLACING with several replace items is a later rung".into(),
+            ))
+        }
+    };
+    let toks = child_tokens(ri);
+    if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
+        return Err(RuntimeError::Unsupported(
+            "INSPECT REPLACING CHARACTERS is a later rung".into(),
+        ));
+    }
+    if toks.iter().any(|(k, v)| k == "KEYWORD" && (v == "LEADING" || v == "FIRST")) {
+        return Err(RuntimeError::Unsupported(
+            "INSPECT REPLACING LEADING/FIRST is a later rung".into(),
+        ));
+    }
+    if child_node(ri, "inspect_region").is_some() {
+        return Err(RuntimeError::Unsupported(
+            "INSPECT REPLACING … BEFORE/AFTER is a later rung".into(),
+        ));
+    }
+    // `ALL search BY replace` — the two `operand` children are the search
+    // (first) and the replacement (second), in order.
+    let ops = child_nodes(ri, "operand");
+    let (search_node, replace_node) = match ops.as_slice() {
+        [s, r] => (*s, *r),
+        _ => {
+            return Err(RuntimeError::Unsupported(
+                "INSPECT REPLACING ALL without a search and a BY replacement".into(),
+            ))
+        }
+    };
+    Ok((read_operand(search_node)?, read_operand(replace_node)?))
 }
 
 /// Read a `condition` node: a `disjunction` of `AND`-joined simple conditions,

@@ -8,6 +8,40 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.23.0: `INSPECT … REPLACING ALL … BY …` (first rung)
+
+Lowered COBOL's `INSPECT … REPLACING` verb (the substitution form), oracle-first
+and byte-identical to `cobol-runtime` 0.27.0.
+
+- **`emit_inspect_replacing`** — `INSPECT source REPLACING ALL x BY y` rebuilds the
+  alphanumeric `source` **in place**, replacing every occurrence of the SINGLE
+  character `x` with the SINGLE character `y`. Because both are single characters
+  the width `W` is unchanged, so this is a **per-position map** that the compiler
+  **unrolls** over the compile-time-known `W`: at each position `j`, `str_index`
+  reads the source byte, `cmp_eq` tests it against the search byte, and a branch
+  splices either the replacement (`y`, a 1-char string) or the original character
+  (`str_slice(S, j, j+1)`) onto a `str_concat` accumulator. The `W`-wide result is
+  copied into the source register — the same fixed-width image the oracle's
+  `move_into` produces, byte-for-byte.
+- **`single_delim_str`** — parallel of `single_delim_code`: reduces a
+  single-character operand to a 1-char **string** register (a `str_const` for a
+  1-char literal, or the item register for a `PIC X(1)` item) for the
+  concatenation. The search `x` still reduces to a byte code via the shared
+  `single_delim_code`; both share the single-character validation.
+- **`emit_inspect` dispatch** — the shared source parsing now branches to the
+  `TALLYING` or `REPLACING` lowering; the combined `TALLYING … REPLACING` in one
+  `INSPECT` is rejected up front.
+- **Later rungs** (clean `CompileError::Unsupported`): `REPLACING CHARACTERS BY`,
+  `REPLACING LEADING`/`FIRST`, `BEFORE`/`AFTER` regions, several replace items, the
+  combined `TALLYING … REPLACING`, a multi-character / figurative / numeric /
+  wider-than-one search or replacement, and a numeric/group source.
+- **Tests**: six `jit_e2e.rs` oracle-match cases (a repeated char; an absent char
+  leaving the source unchanged; every character replaced; a `PIC X(1)` search and
+  replacement; the char at both ends; the `END-INSPECT` form) plus compiler-unit
+  tests for the happy-path rebuild and the `CHARACTERS`, `LEADING`,
+  multi-character-search, several-items, and combined-`TALLYING`-`REPLACING`
+  rejects.
+
 ### Added — v0.22.0: `INSPECT … TALLYING … FOR ALL` (first rung)
 
 Lowered COBOL's `INSPECT … TALLYING` verb, oracle-first and byte-identical to

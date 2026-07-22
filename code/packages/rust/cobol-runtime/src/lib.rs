@@ -1854,16 +1854,85 @@ mod tests {
     }
 
     #[test]
-    fn inspect_tallying_later_rung_forms_are_clean_errors() {
-        // REPLACING is a later rung …
-        let repl = run_cobol(&wrap(
+    fn inspect_replacing_maps_every_occurrence_in_place() {
+        // "ABABA" with A→X → "XBXBX" (same width, per-position map).
+        let out = run_cobol(&wrap(
             &["01  S  PIC X(5) VALUE \"ABABA\"."],
-            &["INSPECT S REPLACING ALL \"A\" BY \"X\".", "STOP RUN."],
+            &["INSPECT S REPLACING ALL \"A\" BY \"X\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(out, "XBXBX\n");
+
+        // A character that never occurs leaves the source unchanged.
+        let miss = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"HELLO\"."],
+            &["INSPECT S REPLACING ALL \"Z\" BY \"Q\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(miss, "HELLO\n");
+
+        // The search and replacement can be PIC X(1) items.
+        let via_items = run_cobol(&wrap(
+            &[
+                "01  S  PIC X(4) VALUE \"MOON\".",
+                "01  X  PIC X(1) VALUE \"O\".",
+                "01  Y  PIC X(1) VALUE \"0\".",
+            ],
+            &["INSPECT S REPLACING ALL X BY Y.", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(via_items, "M00N\n");
+    }
+
+    #[test]
+    fn inspect_replacing_later_rung_forms_are_clean_errors() {
+        // REPLACING CHARACTERS replaces unconditionally — a later rung …
+        let chars = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"ABABA\"."],
+            &["INSPECT S REPLACING CHARACTERS BY \"X\".", "STOP RUN."],
         ))
         .unwrap_err();
-        assert!(matches!(repl, RuntimeError::Unsupported(_)), "got {repl:?}");
+        assert!(matches!(chars, RuntimeError::Unsupported(_)), "got {chars:?}");
 
-        // … a multi-character delimiter needs a multi-char scan …
+        // … REPLACING LEADING replaces only a leading run …
+        let lead = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"AABBB\"."],
+            &["INSPECT S REPLACING LEADING \"A\" BY \"X\".", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(lead, RuntimeError::Unsupported(_)), "got {lead:?}");
+
+        // … a multi-character search needs a multi-char scan …
+        let multi = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"AB::B\"."],
+            &["INSPECT S REPLACING ALL \"::\" BY \"XY\".", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(multi, RuntimeError::Unsupported(_)), "got {multi:?}");
+
+        // … several replace items are a later rung …
+        let many = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"ABABA\"."],
+            &["INSPECT S REPLACING ALL \"A\" BY \"X\" ALL \"B\" BY \"Y\".", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(many, RuntimeError::Unsupported(_)), "got {many:?}");
+
+        // … and the combined TALLYING … REPLACING in one INSPECT is a later rung.
+        let combined = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"ABABA\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"A\" REPLACING ALL \"B\" BY \"X\".",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap_err();
+        assert!(matches!(combined, RuntimeError::Unsupported(_)), "got {combined:?}");
+    }
+
+    #[test]
+    fn inspect_tallying_later_rung_forms_are_clean_errors() {
+        // A multi-character delimiter needs a multi-char scan …
         let multi = run_cobol(&wrap(
             &["01  S  PIC X(5) VALUE \"AB::B\".", "01  C  PIC 9(3) VALUE 0."],
             &["INSPECT S TALLYING C FOR ALL \"::\".", "STOP RUN."],

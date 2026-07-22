@@ -440,13 +440,43 @@ oracle (`store_result(counter, counter + count)`) and the compiler
 (a `str_len` + `str_index`/`cmp_eq` **count loop**, then `store_scaled`) agree
 byte-for-byte. The grammar deliberately accepts the fuller `INSPECT` surface —
 `LEADING`/`CHARACTERS` tallies, `BEFORE`/`AFTER` regions, several `TALLYING`
-counters or `FOR` phrases, and every `REPLACING` form (`INSPECT … REPLACING` and
-`INSPECT … TALLYING … REPLACING`) — so the reader/compiler reject each as a clean
+counters or `FOR` phrases — so the reader/compiler reject each as a clean
 "later rung" error rather than a parse failure. A multi-character / figurative /
 numeric / wider-than-one delimiter, and a numeric/group source or a
 non-integer/signed/non-numeric counter, are likewise clean later rungs. (`FIRST`
 and `INITIAL`, needed only by `REPLACING FIRST` / `BEFORE INITIAL`, are left
 unreserved so common data names keep working.)
+
+### `INSPECT … REPLACING` (first rung)
+
+The **substitution** form's first rung implements a LONE
+`INSPECT source REPLACING ALL x BY y`:
+
+- `source` is an alphanumeric (`PIC X`) item, modified **in place**. Because
+  both `x` and `y` are single characters, the result has the **same width** as
+  the source — this is a straight **per-position map**.
+- `x` (the search) and `y` (the replacement) are each a **single character** — a
+  1-character string literal (`"A"`) or a `PIC X(1)` item — reusing the same
+  single-character helpers as `TALLYING`/`UNSTRING`.
+- Semantics: `source := source with each x → y`, left to right. Every position
+  `j` where `source[j] == x` becomes `y`; all others are unchanged.
+
+Worked (search `"A"`, replacement `"X"`): `"ABABA"` → `"XBXBX"`; a search that
+never occurs (`"Z"` in `"HELLO"`) leaves the source unchanged; `"AAAA"` with
+`A → X` → `"XXXX"`.
+
+The oracle rebuilds the string (`source.chars().map(|c| if c == x { y } else
+{ c }`)) and stores it back through the **same alphanumeric char-store path** a
+`MOVE` uses; the compiler **unrolls** the per-position map over the
+compile-time-known width `W` (`str_index`/`cmp_eq` per byte, splicing either the
+replacement or the original character with `str_slice`/`str_concat`), then copies
+the `W`-wide result into the source register. The two agree byte-for-byte.
+
+Deferred as clean later rungs (accepted by the grammar, rejected at read/compile
+time): `REPLACING CHARACTERS BY`, `REPLACING LEADING`/`FIRST`, `BEFORE`/`AFTER`
+regions, **several** replace items, the **combined** `TALLYING … REPLACING` in
+one `INSPECT`, a multi-character / figurative / wider / numeric search or
+replacement, and a numeric/group source.
 
 Grammar scope tracks the lexer scope below.
 

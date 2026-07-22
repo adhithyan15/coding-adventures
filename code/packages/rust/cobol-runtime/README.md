@@ -46,12 +46,18 @@ spaces, and once the source is exhausted the remaining receivers keep their prio
 value); and `INSPECT source TALLYING counter FOR ALL delim` (count the
 occurrences of a single-character delimiter — a 1-char literal or a `PIC X(1)`
 item — in the alphanumeric source and **ADD** them to the unsigned-integer
-counter; INSPECT adds, it does not clear the counter first). Anything not yet
+counter; INSPECT adds, it does not clear the counter first); and `INSPECT source
+REPLACING ALL x BY y` (replace every occurrence of a single character `x` — a
+1-char literal or a `PIC X(1)` item — with a single character `y` in the
+alphanumeric source, **in place**, a per-position map that leaves the width
+unchanged). Anything not yet
 modelled (the explicit
 `SIGN` clause with `SEPARATE`/`LEADING`, editing pictures, `COMP`,
 `PERFORM … WITH TEST AFTER`/inline, `GO TO … DEPENDING`, `STRING` with a real
 delimiter / `WITH POINTER` / `ON OVERFLOW`, `UNSTRING` with a multi-character
 delimiter / `WITH POINTER` / `ON OVERFLOW`, `INSPECT` with a `LEADING`/
-`CHARACTERS` tally, `BEFORE`/`AFTER` phrases, or any `REPLACING`, tables, files,
+`CHARACTERS` tally, `BEFORE`/`AFTER` phrases, `REPLACING CHARACTERS`/`LEADING`/
+`FIRST`, several replace items, or the combined `TALLYING … REPLACING`, tables,
+files,
 and every other verb) returns a descriptive `RuntimeError` — never wrong output.
 See PL08 for the roadmap toward full COBOL and later standards.
