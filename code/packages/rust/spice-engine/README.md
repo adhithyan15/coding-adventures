@@ -143,6 +143,9 @@ high-current base-charge modulation to collector transport and small-signal
 transconductance. `ISE` (default `0`, disabled) and `NE` (default `1`) add the
 Berkeley base-emitter leakage branch to DC/transient base current,
 small-signal input conductance, and shot noise.
+`ISC` (default `0`, disabled) and `NC` (default `2`) add the mirrored Berkeley
+base-collector leakage branch to DC/transient current, small-signal
+base-collector conductance, and shot noise.
 `model_card_unsupported_parameter_issues`,
 `format_model_card_unsupported_parameter_issue_table`,
 `model_card_unsupported_parameter_issue_records`,
@@ -168,7 +171,7 @@ catalog by model kind for compact release dashboards and Mosaic UI inventories.
 `model_card_supported_parameter_coverage_gate_issue_records`,
 `format_model_card_supported_parameter_coverage_gate_issue_csv`, and
 `format_model_card_supported_parameter_coverage_gate_issue_json` validate the
-expected seven-kind, 100-row supported-parameter catalog and expose stable issue
+expected seven-kind, 104-row supported-parameter catalog and expose stable issue
 rows for release automation.
 `model_card_supported_parameter_coverage_dashboard`,
 `format_model_card_supported_parameter_coverage_dashboard_table`,

@@ -50,6 +50,23 @@ describe("noiseAc", () => {
 
     expect(sourcePsd(1.0e-10)).toBeGreaterThan(sourcePsd(0.0));
   });
+  it("uses BJT base-collector leakage to increase shot noise", () => {
+    function sourcePsd(baseCollectorLeakageSaturationCurrent: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vbase", "base", "0", 0.65));
+      circuit.add(resistor("Rload", "out", "0", 1_000.0));
+      circuit.add({
+        ...bjt("Q1", "out", "base", "base"),
+        baseCollectorLeakageSaturationCurrent,
+        baseCollectorLeakageEmissionCoefficient: 1.5,
+      });
+      const entry = noiseAc(circuit, "out", "Vbase", [1_000.0], 300.0).points[0]?.entries
+        .find((candidate) => candidate.elementName === "Q1");
+      return entry!.sourcePsd;
+    }
+
+    expect(sourcePsd(1.0e-10)).toBeGreaterThan(sourcePsd(0.0));
+  });
   it("computes Johnson noise for a single grounded resistor", () => {
     const circuit = new Circuit();
     circuit.add(currentSource("Iin", "0", "out", 0.0));

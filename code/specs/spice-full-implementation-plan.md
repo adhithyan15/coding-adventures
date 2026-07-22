@@ -33,15 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language BJT base-emitter leakage.
+1. Cross-language BJT base-collector leakage.
    - Status: current PR completion candidate.
-   - Add Berkeley BJT `ISE` / `NE` base-emitter leakage model-card support in
+   - Add Berkeley BJT `ISC` / `NC` base-collector leakage model-card support in
      Rust, Python, and TypeScript with disabled behavior represented by the
-     standard zero `ISE` default.
+     standard zero `ISC` default.
    - Apply the leakage branch in DC, transient, AC, transfer-function,
      temperature, and noise paths while preserving the complete BJT model
      through hierarchical subcircuits.
-   - Extend the supported-parameter coverage gate from 96 to 100 canonical rows
+   - Extend the supported-parameter coverage gate from 100 to 104 canonical rows
      and lock model-card aliases, behavior, validation, and hierarchy in all
      engines.
 
@@ -3071,6 +3071,14 @@ the Rust, Python, and TypeScript surfaces together.
      transfer-function, and noise paths.
    - Hierarchical subcircuit expansion preserves the complete BJT model, and
      the supported-parameter release gate now covers 96 canonical rows.
+
+228. Cross-language BJT base-emitter leakage.
+   - Status: completed in PR 8778.
+   - Rust, Python, and TypeScript BJT model cards now accept `ISE` / `NE` and
+     apply the base-emitter leakage branch in DC, transient, AC,
+     transfer-function, temperature, and noise paths.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 100 canonical rows.
 
 ## Backlog
 

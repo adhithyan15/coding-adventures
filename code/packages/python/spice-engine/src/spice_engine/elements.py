@@ -631,6 +631,8 @@ class BJT:
     Ikf: float = 0.0        # forward-beta roll-off current (A); 0 disables
     Ise: float = 0.0        # base-emitter leakage saturation current (A)
     Ne: float = 1.0         # base-emitter leakage emission coefficient
+    Isc: float = 0.0        # base-collector leakage saturation current (A)
+    Nc: float = 2.0         # base-collector leakage emission coefficient
 
 
 # ---------------------------------------------------------------------------

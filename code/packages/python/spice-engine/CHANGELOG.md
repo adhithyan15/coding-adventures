@@ -4,6 +4,11 @@
 
 ### Added
 
+- **BJT base-collector leakage** — BJT model cards now accept `ISC`/`NC` and
+  apply the leakage branch in DC, transient, AC, transfer-function,
+  temperature, and noise paths, matching Rust and TypeScript. The
+  supported-parameter catalog now contains 104 canonical rows.
+
 - **BJT base-emitter leakage** — BJT model cards now accept `ISE`/`NE` and
   apply the leakage branch in DC, transient, AC, transfer-function,
   temperature, and noise paths, matching Rust and TypeScript. The

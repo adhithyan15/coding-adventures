@@ -99,6 +99,21 @@ describe("tf", () => {
     expect(inputImpedance(1.0e-10)).toBeLessThan(inputImpedance(0.0));
   });
 
+  it("uses BJT base-collector leakage to reduce input impedance", () => {
+    function inputImpedance(baseCollectorLeakageSaturationCurrent: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vin", "base", "0", 0.65));
+      circuit.add({
+        ...bjt("Q1", "0", "base", "base"),
+        baseCollectorLeakageSaturationCurrent,
+        baseCollectorLeakageEmissionCoefficient: 1.5,
+      });
+      return tf(circuit, "base", "Vin").inputImpedanceOhms;
+    }
+
+    expect(inputImpedance(1.0e-10)).toBeLessThan(inputImpedance(0.0));
+  });
+
   it("uses BJT forward emission coefficient to reduce gain and raise input impedance", () => {
     function transfer(forwardEmissionCoefficient: number) {
       const circuit = new Circuit();
