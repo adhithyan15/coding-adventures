@@ -422,6 +422,23 @@ fn tf_bjt_base_emitter_leakage_reduces_input_impedance() {
 }
 
 #[test]
+fn tf_bjt_base_collector_leakage_reduces_input_impedance() {
+    let input_impedance = |leakage_current: f64| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vin", "base", "0", 0.65,
+        )));
+        let mut transistor = Bjt::new("Q1", "0", "base", "base");
+        transistor.base_collector_leakage_saturation_current = leakage_current;
+        transistor.base_collector_leakage_emission_coefficient = 1.5;
+        circuit.add(Element::Bjt(transistor));
+        tf(&circuit, "base", "Vin").unwrap().input_impedance_ohms
+    };
+
+    assert!(input_impedance(1.0e-10) < input_impedance(0.0));
+}
+
+#[test]
 fn tf_bjt_forward_emission_coefficient_reduces_gain_and_raises_input_impedance() {
     let transfer = |forward_emission_coefficient: f64| {
         let mut circuit = Circuit::new();

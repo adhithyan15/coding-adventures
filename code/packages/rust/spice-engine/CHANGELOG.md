@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add BJT model-card `ISC`/`NC` base-collector leakage support in DC,
+  transient, AC, transfer-function, temperature, and noise paths, matching
+  Python and TypeScript. The supported-parameter catalog now contains 104
+  canonical rows.
 - Add BJT model-card `ISE`/`NE` base-emitter leakage support in DC, transient,
   AC, transfer-function, temperature, and noise paths, matching Python and
   TypeScript. The supported-parameter catalog now contains 100 canonical rows.

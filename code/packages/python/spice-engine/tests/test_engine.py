@@ -412,7 +412,7 @@ def test_model_card_type_aliases_are_normalized() -> None:
 
 def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     coverage = model_card_supported_parameter_coverage()
-    assert len(coverage) == 100
+    assert len(coverage) == 104
     assert coverage[0].kind == "D"
     assert coverage[0].canonical_parameter == "IS"
     assert coverage[0].accepted_names == ("IS", "JS")
@@ -427,7 +427,7 @@ def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     assert "NMOS\tVT0\tVT0|VTO|VTH\t3" in table
     assert table.splitlines()[-1] == "PMOS\tMJ\tMJ\t1"
     records = model_card_supported_parameter_coverage_records()
-    assert len(records) == 100
+    assert len(records) == 104
     assert records[0] == {
         "kind": "D",
         "canonical_parameter": "IS",
@@ -501,9 +501,9 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
     assert report.passed is True
     assert report.kind_count == 7
     assert report.expected_kind_count == 7
-    assert report.canonical_parameter_count == 100
-    assert report.expected_canonical_parameter_count == 100
-    assert report.accepted_name_count == 162
+    assert report.canonical_parameter_count == 104
+    assert report.expected_canonical_parameter_count == 104
+    assert report.accepted_name_count == 166
     assert report.aliased_parameter_count == 49
     assert report.max_alias_count == 4
     assert report.issues == ()
@@ -511,7 +511,7 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "true\t7\t7\t100\t100\t162\t49\t4\t0"
+        "true\t7\t7\t104\t104\t166\t49\t4\t0"
     )
     assert (
         format_model_card_supported_parameter_coverage_gate_issue_table(report)
@@ -539,8 +539,8 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
 
     assert report.passed is False
     assert report.kind_count == 7
-    assert report.canonical_parameter_count == 99
-    assert report.accepted_name_count == 159
+    assert report.canonical_parameter_count == 103
+    assert report.accepted_name_count == 163
     assert report.aliased_parameter_count == 48
     assert report.max_alias_count == 4
     assert len(report.issues) == 4
@@ -555,7 +555,7 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "false\t7\t7\t99\t100\t159\t48\t4\t4\n"
+        "false\t7\t7\t103\t104\t163\t48\t4\t4\n"
         "kind\tfield\tmessage\n"
         "NMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical "
         "supported parameters, found 17\n"
@@ -647,10 +647,10 @@ def test_model_card_aliases_build_device_instances() -> None:
     assert pytest.approx(1.05) == diode_model.Eg
 
     bjt_card = normalize_model_card(
-        "Qsmall", "npn", {"BETA": 125.0, "CBE": 2.0e-12, "XTI": 2.4, "EG": 1.05, "VA": 80.0, "VB": 120.0, "IK": 2.0e-3, "ISE": 3.0e-13, "NE": 1.7, "NF": 1.2, "NR": 1.3, "PE": 0.8, "ME": 0.4, "PC": 0.7, "MC": 0.45, "FC": 0.4}
+        "Qsmall", "npn", {"BETA": 125.0, "CBE": 2.0e-12, "XTI": 2.4, "EG": 1.05, "VA": 80.0, "VB": 120.0, "IK": 2.0e-3, "ISE": 3.0e-13, "NE": 1.7, "ISC": 4.0e-13, "NC": 1.8, "NF": 1.2, "NR": 1.3, "PE": 0.8, "ME": 0.4, "PC": 0.7, "MC": 0.45, "FC": 0.4}
     )
     bjt_model = bjt_from_model_card("Q1", "c", "b", "e", bjt_card)
-    assert bjt_card.parameters == {"BF": 125.0, "CJE": 2.0e-12, "XTI": 2.4, "EG": 1.05, "VAF": 80.0, "VAR": 120.0, "IKF": 2.0e-3, "ISE": 3.0e-13, "NE": 1.7, "NF": 1.2, "NR": 1.3, "VJE": 0.8, "MJE": 0.4, "VJC": 0.7, "MJC": 0.45, "FC": 0.4}
+    assert bjt_card.parameters == {"BF": 125.0, "CJE": 2.0e-12, "XTI": 2.4, "EG": 1.05, "VAF": 80.0, "VAR": 120.0, "IKF": 2.0e-3, "ISE": 3.0e-13, "NE": 1.7, "ISC": 4.0e-13, "NC": 1.8, "NF": 1.2, "NR": 1.3, "VJE": 0.8, "MJE": 0.4, "VJC": 0.7, "MJC": 0.45, "FC": 0.4}
     assert bjt_model.polarity == "NPN"
     assert bjt_model.beta_f == pytest.approx(125.0)
     assert bjt_model.Cje == pytest.approx(2.0e-12)
@@ -661,6 +661,8 @@ def test_model_card_aliases_build_device_instances() -> None:
     assert bjt_model.Ikf == pytest.approx(2.0e-3)
     assert bjt_model.Ise == pytest.approx(3.0e-13)
     assert bjt_model.Ne == pytest.approx(1.7)
+    assert bjt_model.Isc == pytest.approx(4.0e-13)
+    assert bjt_model.Nc == pytest.approx(1.8)
     assert bjt_model.Nf == pytest.approx(1.2)
     assert bjt_model.Nr == pytest.approx(1.3)
     assert bjt_model.Vje == pytest.approx(0.8)
@@ -2298,7 +2300,7 @@ def test_subcircuit_expansion_preserves_complete_bjt_model():
     cell = SubcircuitDefinition(
         "bjt-cell",
         ("c", "b", "e"),
-        (BJT("Qcell", "c", "b", "e", Xti=2.4, Eg=1.05, Vaf=80.0, Nf=1.2, Nr=1.3, Vje=0.8, Mje=0.4, Vjc=0.7, Mjc=0.45, Fc=0.4, Var=120.0, Ikf=2.0e-3, Ise=3.0e-13, Ne=1.7),),
+        (BJT("Qcell", "c", "b", "e", Xti=2.4, Eg=1.05, Vaf=80.0, Nf=1.2, Nr=1.3, Vje=0.8, Mje=0.4, Vjc=0.7, Mjc=0.45, Fc=0.4, Var=120.0, Ikf=2.0e-3, Ise=3.0e-13, Ne=1.7, Isc=4.0e-13, Nc=1.8),),
     )
     circuit = Circuit()
     circuit.define_subcircuit(cell)
@@ -2319,6 +2321,8 @@ def test_subcircuit_expansion_preserves_complete_bjt_model():
     assert expanded.Ikf == pytest.approx(2.0e-3)
     assert expanded.Ise == pytest.approx(3.0e-13)
     assert expanded.Ne == pytest.approx(1.7)
+    assert expanded.Isc == pytest.approx(4.0e-13)
+    assert expanded.Nc == pytest.approx(1.8)
 
 
 def test_branch_current_in_voltage_source():
@@ -2544,6 +2548,12 @@ def test_bjt_temperature_scales_base_emitter_leakage_saturation_current():
     assert hot.Ise > transistor.Ise
 
 
+def test_bjt_temperature_scales_base_collector_leakage_saturation_current():
+    transistor = BJT("Q1", "c", "b", "e", Isc=2.0e-13)
+    hot = bjt_at_temperature(transistor, 350.0)
+    assert hot.Isc > transistor.Isc
+
+
 def test_bjt_temperature_scaling_uses_model_energy_gap():
     silicon = Circuit()
     silicon.add(BJT("Qsilicon", "c", "b", "e", Eg=1.11))
@@ -2643,6 +2653,28 @@ def test_dc_rejects_invalid_bjt_base_emitter_leakage_parameters():
     circuit = Circuit()
     circuit.add(BJT("Qbad", "c", "b", "0", Ne=0.0))
     with pytest.raises(ValueError, match="base-emitter leakage emission coefficient"):
+        dc_op(circuit)
+
+
+def test_bjt_base_collector_leakage_increases_base_current():
+    def base_current(isc: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vbase", "base", "0", 0.65))
+        circuit.add(BJT("Q1", "0", "base", "base", Isc=isc, Nc=1.5))
+        return abs(dc_op(circuit).branch_currents["I(Vbase)"])
+
+    assert base_current(1.0e-10) > base_current(0.0)
+
+
+def test_dc_rejects_invalid_bjt_base_collector_leakage_parameters():
+    circuit = Circuit()
+    circuit.add(BJT("Qbad", "c", "b", "0", Isc=-1.0))
+    with pytest.raises(ValueError, match="base-collector leakage saturation current"):
+        dc_op(circuit)
+
+    circuit = Circuit()
+    circuit.add(BJT("Qbad", "c", "b", "0", Nc=0.0))
+    with pytest.raises(ValueError, match="base-collector leakage emission coefficient"):
         dc_op(circuit)
 
 
@@ -4360,6 +4392,20 @@ def test_ac_bjt_base_emitter_leakage_reduces_gain_through_source_resistance():
     assert gain(1.0e-10) < gain(0.0)
 
 
+def test_ac_bjt_base_collector_leakage_loads_source_resistance():
+    def amplitude(isc: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vin", "in", "0", 0.65, ac=AcSource(1.0)))
+        circuit.add(Resistor("Rin", "in", "base", 1_000.0))
+        circuit.add(BJT("Q1", "0", "base", "base", Isc=isc, Nc=1.5))
+        point = ac_sweep(
+            circuit, f_start=1_000.0, f_stop=1_000.0, n_points=1, sweep="lin"
+        ).points[0]
+        return abs(point.node_voltages["base"])
+
+    assert amplitude(1.0e-10) < amplitude(0.0)
+
+
 def test_ac_bjt_base_emitter_depletion_capacitance_falls_with_reverse_bias():
     """BJT Vje/Mje shape Cje under reverse base-emitter bias."""
     def base_amplitude(mje: float) -> float:
@@ -4862,6 +4908,16 @@ def test_tf_bjt_base_emitter_leakage_reduces_input_impedance():
         circuit.add(Resistor("Rload", "out", "0", 1_000.0))
         circuit.add(BJT("Q1", "out", "base", "0", Ise=ise, Ne=1.5))
         return tf(circuit, output_node="out", input_source="Vin").input_impedance
+
+    assert input_impedance(1.0e-10) < input_impedance(0.0)
+
+
+def test_tf_bjt_base_collector_leakage_reduces_input_impedance():
+    def input_impedance(isc: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vin", "base", "0", 0.65))
+        circuit.add(BJT("Q1", "0", "base", "base", Isc=isc, Nc=1.5))
+        return tf(circuit, output_node="base", input_source="Vin").input_impedance
 
     assert input_impedance(1.0e-10) < input_impedance(0.0)
 
@@ -6817,6 +6873,22 @@ def test_noise_bjt_base_emitter_leakage_increases_shot_noise() -> None:
         circuit.add(VoltageSource("Vbase", "base", "0", 0.65))
         circuit.add(Resistor("Rload", "out", "0", 1_000.0))
         circuit.add(BJT("Q1", "out", "base", "0", Ise=ise, Ne=1.5))
+        result = noise_ac(circuit, "out", "Vbase", freqs=[1_000.0])
+        return next(
+            entry.source_psd
+            for entry in result.points[0].entries
+            if entry.element_name == "Q1"
+        )
+
+    assert source_psd(1.0e-10) > source_psd(0.0)
+
+
+def test_noise_bjt_base_collector_leakage_increases_shot_noise() -> None:
+    def source_psd(isc: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vbase", "base", "0", 0.65))
+        circuit.add(Resistor("Rload", "out", "0", 1_000.0))
+        circuit.add(BJT("Q1", "out", "base", "base", Isc=isc, Nc=1.5))
         result = noise_ac(circuit, "out", "Vbase", freqs=[1_000.0])
         return next(
             entry.source_psd
