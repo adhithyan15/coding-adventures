@@ -27,14 +27,16 @@ use chief_of_staff_host_runtime::{
     OrchestratorProfileSummary,
 };
 use chief_of_staff_tool_api::{
-    ApprovalState, JsonSchema, PrivilegeTier, RequestedBy, SchemaProperty, ToolApiError,
-    ToolApprovalGrant, ToolAuditRecordQuery, ToolCallError, ToolConcurrency, ToolDefinition,
-    ToolErrorKind, ToolEventKind, ToolExecutionJournal, ToolExecutionJournalHealthSummary,
-    ToolHandlerOutput, ToolIdempotency, ToolInvocationRequest, ToolPolicyProfile, ToolSideEffects,
-    ToolStability, ToolStreaming,
+    ApprovalAssurance, ApprovalState, JsonSchema, PrivilegeTier, RequestedBy, SchemaProperty,
+    ToolApiError, ToolApprovalChallenge, ToolApprovalGrant, ToolAuditRecordQuery, ToolCallError,
+    ToolConcurrency, ToolDefinition, ToolErrorKind, ToolEventKind, ToolExecutionJournal,
+    ToolExecutionJournalHealthSummary, ToolHandlerOutput, ToolIdempotency, ToolInvocationRequest,
+    ToolPolicyProfile, ToolSideEffects, ToolStability, ToolStreaming,
 };
 use chief_of_staff_tool_audit_store::{ToolAuditStore, ToolAuditStoreInventorySummary};
+use chief_of_staff_vault_runtime::ChiefVaultRuntime;
 use coding_adventures_json_value::{JsonNumber, JsonValue};
+use coding_adventures_vault_leases::LeasePayload;
 use context_store::{
     AppendEntryInput, ContextEntryKind, ContextStore, ContextStoreInventorySummary,
     CreateSessionInput, CreateSnapshotInput, SessionListOptions,
@@ -63,6 +65,7 @@ use read_write_separation::{
 use skill_store::{
     InstallSkillAssetInput, SkillInventorySummary, SkillListOptions, SkillManifest, SkillStore,
 };
+use smart_home_core::VaultRef;
 use storage_core::{InMemoryStorageBackend, StorageError};
 use storage_local_folder::LocalFolderStorageBackend;
 use tls_platform::TlsConfig;
@@ -76,6 +79,10 @@ const SESSION_ID: &str = "umbrella_today_session";
 const JOB_ID: &str = "umbrella_today_job";
 const DEFAULT_TICK_ID: &str = "8a7b0000000000000000000000000001";
 const USER_ID: &str = "seattle_user";
+const VAULT_TOOL_ID: &str = "vault.request_lease";
+const WEATHER_SECRET_NAME: &str = "weather-api-key";
+const WEATHER_SECRET_FIXTURE: &[u8] = b"weather-api-key-host-only-fixture";
+const WEATHER_LEASE_TTL_MS: u64 = 30_000;
 const FETCH_TOOL_ID: &str = "weather.fetch_current";
 const CLASSIFY_TOOL_ID: &str = "weather.classify_umbrella";
 const WRITE_TOOL_ID: &str = "file.write_text";
@@ -193,6 +200,8 @@ pub struct UmbrellaAgentConfig {
     pub weather_source: WeatherSource,
     pub supervisor_probe: UmbrellaSupervisorProbe,
     pub write_approval: Option<ToolApprovalGrant>,
+    pub vault_approval: Option<ToolApprovalGrant>,
+    pub write_required_tier: PrivilegeTier,
     pub audit_root: PathBuf,
 }
 
@@ -209,6 +218,8 @@ impl UmbrellaAgentConfig {
             weather_source: WeatherSource::Fixture(WeatherSnapshot::rainy_seattle_fixture()),
             supervisor_probe: UmbrellaSupervisorProbe::default(),
             write_approval: Some(default_write_approval(DEFAULT_TICK_ID, 1_778_624_400_000)),
+            vault_approval: Some(default_vault_approval(DEFAULT_TICK_ID, 1_778_624_400_000)),
+            write_required_tier: PrivilegeTier::Tier1,
         }
     }
 
@@ -230,6 +241,8 @@ impl UmbrellaAgentConfig {
             },
             supervisor_probe: UmbrellaSupervisorProbe::default(),
             write_approval: Some(default_write_approval(DEFAULT_TICK_ID, fetched_at_ms)),
+            vault_approval: Some(default_vault_approval(DEFAULT_TICK_ID, fetched_at_ms)),
+            write_required_tier: PrivilegeTier::Tier1,
         }
     }
 
@@ -243,6 +256,26 @@ impl UmbrellaAgentConfig {
         self
     }
 
+    pub fn without_vault_approval(mut self) -> Self {
+        self.vault_approval = None;
+        self
+    }
+
+    pub fn with_tier2_write_approval(mut self, assurance: ApprovalAssurance) -> Self {
+        self.write_required_tier = PrivilegeTier::Tier2;
+        let call_id = scoped_call_id(&self.tick_id, "write_umbrella_report");
+        self.write_approval = Some(
+            default_write_approval(&self.tick_id, self.fetched_at_ms)
+                .with_assurance(assurance)
+                .with_challenge_id(ToolApprovalChallenge::id_for(
+                    call_id,
+                    WRITE_TOOL_ID,
+                    self.fetched_at_ms,
+                )),
+        );
+        self
+    }
+
     pub fn with_audit_root(mut self, audit_root: impl Into<PathBuf>) -> Self {
         self.audit_root = audit_root.into();
         self
@@ -252,6 +285,21 @@ impl UmbrellaAgentConfig {
         self.tick_id = tick_id.into();
         if let Some(grant) = self.write_approval.as_mut() {
             grant.call_id = scoped_call_id(&self.tick_id, "write_umbrella_report");
+            if self.write_required_tier >= PrivilegeTier::Tier2 {
+                grant.challenge_id = Some(ToolApprovalChallenge::id_for(
+                    &grant.call_id,
+                    WRITE_TOOL_ID,
+                    self.fetched_at_ms,
+                ));
+            }
+        }
+        if let Some(grant) = self.vault_approval.as_mut() {
+            grant.call_id = scoped_call_id(&self.tick_id, "request_weather_lease");
+            grant.challenge_id = Some(ToolApprovalChallenge::id_for(
+                &grant.call_id,
+                VAULT_TOOL_ID,
+                self.fetched_at_ms,
+            ));
         }
         self
     }
@@ -269,6 +317,18 @@ fn default_write_approval(tick_id: &str, granted_at: u64) -> ToolApprovalGrant {
         granted_at,
     )
     .with_expires_at(granted_at.saturating_add(300_000))
+}
+
+fn default_vault_approval(tick_id: &str, granted_at: u64) -> ToolApprovalGrant {
+    let call_id = scoped_call_id(tick_id, "request_weather_lease");
+    ToolApprovalGrant::new(&call_id, VAULT_TOOL_ID, USER_ID, granted_at)
+        .with_expires_at(granted_at.saturating_add(300_000))
+        .with_assurance(ApprovalAssurance::Biometric)
+        .with_challenge_id(ToolApprovalChallenge::id_for(
+            call_id,
+            VAULT_TOOL_ID,
+            granted_at,
+        ))
 }
 
 fn scoped_call_id(tick_id: &str, call_id: &str) -> String {
@@ -542,6 +602,7 @@ pub struct UmbrellaAgentRun {
     pub output_path: PathBuf,
     pub output_text: String,
     pub weather_fetch: WeatherFetchSummary,
+    pub vault_lease: VaultLeaseRunSummary,
     pub sandbox_plan: UmbrellaSandboxPlanSummary,
     pub kernel_sandbox: UmbrellaKernelSandboxSummary,
     pub supervisor: UmbrellaSupervisorSummary,
@@ -559,6 +620,13 @@ pub struct UmbrellaAgentRun {
     pub job_receipt: JobRunReceipt,
     pub user_report: UmbrellaUserReport,
     pub durable_audit: UmbrellaDurableAuditSummary,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct VaultLeaseRunSummary {
+    pub vault_ref: VaultRef,
+    pub ttl_ms: u64,
+    pub consumed_by_host: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -593,6 +661,8 @@ pub struct UmbrellaUserReport {
     pub completed_at_iso: String,
     pub output_ref: String,
     pub write_approval: ApprovalState,
+    pub write_required_tier: PrivilegeTier,
+    pub approval_assurance: Option<ApprovalAssurance>,
     pub journal_invocation_count: usize,
 }
 
@@ -719,6 +789,7 @@ pub fn run_umbrella_today_agent(config: UmbrellaAgentConfig) -> UmbrellaResult<U
     let recommendation = pipeline.recommendation()?;
     let output_text = fs::read_to_string(&config.output_path)?;
     let weather_fetch = pipeline.weather_fetch_summary()?;
+    let vault_lease = pipeline.vault_lease_summary()?;
     let tool_journal_health = pipeline
         .journal
         .lock()
@@ -764,6 +835,8 @@ pub fn run_umbrella_today_agent(config: UmbrellaAgentConfig) -> UmbrellaResult<U
         completed_at_iso: config.fetched_at_iso.clone(),
         output_ref: "artifact:umbrella_today_report".to_string(),
         write_approval: ApprovalState::Granted,
+        write_required_tier: config.write_required_tier,
+        approval_assurance: config.write_approval.as_ref().map(|grant| grant.assurance),
         journal_invocation_count: tool_journal_health.invocation_count,
     };
 
@@ -772,6 +845,7 @@ pub fn run_umbrella_today_agent(config: UmbrellaAgentConfig) -> UmbrellaResult<U
         output_path: config.output_path,
         output_text,
         weather_fetch,
+        vault_lease,
         sandbox_plan,
         kernel_sandbox,
         supervisor: supervisor_summary(&system, &actor_stats, supervisor_events),
@@ -853,6 +927,7 @@ struct UmbrellaPipeline {
     skill_store: SkillStore<InMemoryStorageBackend>,
     snapshot: Mutex<Option<WeatherSnapshot>>,
     weather_fetch_summary: Mutex<Option<WeatherFetchSummary>>,
+    vault_lease_summary: Mutex<Option<VaultLeaseRunSummary>>,
     recommendation: Mutex<Option<UmbrellaRecommendation>>,
     actor_errors: Mutex<Vec<String>>,
 }
@@ -860,6 +935,12 @@ struct UmbrellaPipeline {
 impl UmbrellaPipeline {
     fn new(config: UmbrellaAgentConfig) -> UmbrellaResult<Self> {
         let mut tool_runtime = OrchestratorProfileRuntime::from_json(WEATHER_ORCHESTRATOR_PROFILE)?;
+        let vault = Arc::new(ChiefVaultRuntime::new());
+        vault.register_secret(
+            WEATHER_SECRET_NAME,
+            LeasePayload::new(WEATHER_SECRET_FIXTURE.to_vec()),
+        );
+        register_vault_lease_tool(&mut tool_runtime, vault.clone())?;
         let http_client = generated_operations::generated_http_client()?;
         register_weather_fetch_tool(
             &mut tool_runtime,
@@ -867,13 +948,24 @@ impl UmbrellaPipeline {
             config.fetched_at_ms,
             config.fetched_at_iso.clone(),
             http_client,
+            vault,
         )
         .map_err(UmbrellaAgentError::from)?;
         register_weather_classifier_tool(&mut tool_runtime)?;
-        register_file_writer_tool(&mut tool_runtime, writer_manifest(&config.output_path)?)?;
+        register_file_writer_tool(
+            &mut tool_runtime,
+            writer_manifest(&config.output_path)?,
+            config.write_required_tier,
+        )?;
+        tool_runtime.set_host_policy(
+            "vault",
+            ToolPolicyProfile::allow_all().with_approval_required_at_or_above(PrivilegeTier::Tier2),
+        )?;
         tool_runtime.set_host_policy(
             "file_writer",
-            ToolPolicyProfile::allow_all().with_approval_required_for(vec![ToolSideEffects::Write]),
+            ToolPolicyProfile::allow_all()
+                .with_approval_required_for(vec![ToolSideEffects::Write])
+                .with_approval_required_at_or_above(PrivilegeTier::Tier2),
         )?;
         let tool_runtime = tool_runtime.activate()?;
 
@@ -891,6 +983,7 @@ impl UmbrellaPipeline {
             skill_store: SkillStore::new(InMemoryStorageBackend::new()),
             snapshot: Mutex::new(None),
             weather_fetch_summary: Mutex::new(None),
+            vault_lease_summary: Mutex::new(None),
             recommendation: Mutex::new(None),
             actor_errors: Mutex::new(Vec::new()),
         })
@@ -956,11 +1049,13 @@ impl UmbrellaPipeline {
                         .to_string(),
                 entrypoints: vec!["run_once".to_string()],
                 required_tools: vec![
+                    VAULT_TOOL_ID.to_string(),
                     FETCH_TOOL_ID.to_string(),
                     CLASSIFY_TOOL_ID.to_string(),
                     WRITE_TOOL_ID.to_string(),
                 ],
                 required_capabilities: vec![
+                    "vault_lease".to_string(),
                     "weather_api_read".to_string(),
                     "filesystem_write".to_string(),
                 ],
@@ -979,17 +1074,46 @@ impl UmbrellaPipeline {
 
     fn fetch_step(&self) -> UmbrellaResult<()> {
         self.append_context(
+            "vault_lease_tool_call",
+            ContextEntryKind::ToolCall,
+            object(vec![
+                ("tool_id", string(VAULT_TOOL_ID)),
+                ("secret_name", string(WEATHER_SECRET_NAME)),
+                ("ttl_ms", int(WEATHER_LEASE_TTL_MS as i64)),
+            ]),
+        )?;
+        let lease_output = self.invoke_tool(
+            "request_weather_lease",
+            VAULT_TOOL_ID,
+            object(vec![
+                ("secret_name", string(WEATHER_SECRET_NAME)),
+                ("ttl_ms", int(WEATHER_LEASE_TTL_MS as i64)),
+            ]),
+        )?;
+        let vault_ref =
+            VaultRef::new(field_string(&lease_output, "vault_ref").map_err(tool_error_to_agent)?)
+                .map_err(|error| UmbrellaAgentError::new(error.to_string()))?;
+        self.append_context(
+            "vault_lease_tool_result",
+            ContextEntryKind::ToolResult,
+            lease_output,
+        )?;
+        self.append_context(
             "fetch_tool_call",
             ContextEntryKind::ToolCall,
             object(vec![
                 ("tool_id", string(FETCH_TOOL_ID)),
                 ("location", string(&self.config.location)),
+                ("vault_ref", string(vault_ref.as_str())),
             ]),
         )?;
         let output = self.invoke_tool(
             "fetch_current_weather",
             FETCH_TOOL_ID,
-            object(vec![("location", string(&self.config.location))]),
+            object(vec![
+                ("location", string(&self.config.location)),
+                ("vault_ref", string(vault_ref.as_str())),
+            ]),
         )?;
         let snapshot = WeatherSnapshot::from_json(&output).map_err(tool_error_to_agent)?;
         let fetch_summary = match &self.config.weather_source {
@@ -1004,6 +1128,14 @@ impl UmbrellaPipeline {
             .weather_fetch_summary
             .lock()
             .expect("weather fetch summary mutex poisoned") = Some(fetch_summary);
+        *self
+            .vault_lease_summary
+            .lock()
+            .expect("vault lease summary mutex poisoned") = Some(VaultLeaseRunSummary {
+            vault_ref,
+            ttl_ms: WEATHER_LEASE_TTL_MS,
+            consumed_by_host: true,
+        });
         self.append_context("fetch_tool_result", ContextEntryKind::ToolResult, output)?;
         self.append_channel(
             "weather-fetcher",
@@ -1115,6 +1247,8 @@ impl UmbrellaPipeline {
                 token_estimate: 256,
                 included_entry_ids: vec![
                     "user_request".to_string(),
+                    "vault_lease_tool_call".to_string(),
+                    "vault_lease_tool_result".to_string(),
                     "fetch_tool_call".to_string(),
                     "fetch_tool_result".to_string(),
                     "classify_tool_call".to_string(),
@@ -1160,6 +1294,13 @@ impl UmbrellaPipeline {
         };
         let trace = if tool_id == WRITE_TOOL_ID {
             match self.config.write_approval.as_ref() {
+                Some(grant) => self
+                    .tool_runtime
+                    .invoke_with_events_with_approval(&request, grant)?,
+                None => self.tool_runtime.invoke_with_events(&request)?,
+            }
+        } else if tool_id == VAULT_TOOL_ID {
+            match self.config.vault_approval.as_ref() {
                 Some(grant) => self
                     .tool_runtime
                     .invoke_with_events_with_approval(&request, grant)?,
@@ -1255,6 +1396,14 @@ impl UmbrellaPipeline {
             .expect("weather fetch summary mutex poisoned")
             .clone()
             .ok_or_else(|| UmbrellaAgentError::new("weather fetch summary was not produced"))
+    }
+
+    fn vault_lease_summary(&self) -> UmbrellaResult<VaultLeaseRunSummary> {
+        self.vault_lease_summary
+            .lock()
+            .expect("vault lease summary mutex poisoned")
+            .clone()
+            .ok_or_else(|| UmbrellaAgentError::new("weather VaultRef lease was not consumed"))
     }
 }
 
@@ -1382,6 +1531,7 @@ fn register_weather_fetch_tool(
     fetched_at_ms: u64,
     fetched_at_iso: String,
     http_client: GeneratedOperationHttpClient,
+    vault: Arc<ChiefVaultRuntime>,
 ) -> Result<(), HostRuntimeError> {
     runtime.register_handler(
         tool_definition(
@@ -1389,8 +1539,11 @@ fn register_weather_fetch_tool(
             "Fetch current weather",
             "Fetch the current Seattle weather snapshot through the host weather boundary.",
             JsonSchema::Object {
-                properties: vec![SchemaProperty::new("location", JsonSchema::String)],
-                required: vec!["location".to_string()],
+                properties: vec![
+                    SchemaProperty::new("location", JsonSchema::String),
+                    SchemaProperty::new("vault_ref", JsonSchema::String),
+                ],
+                required: vec!["location".to_string(), "vault_ref".to_string()],
                 allow_unknown_fields: false,
             },
             Some(snapshot_schema()),
@@ -1403,6 +1556,22 @@ fn register_weather_fetch_tool(
         ),
         move |arguments, _context| {
             let location = field_string(&arguments, "location")?;
+            let vault_ref =
+                VaultRef::new(field_string(&arguments, "vault_ref")?).map_err(|error| {
+                    ToolCallError::new(ToolErrorKind::ToolValidationError, error.to_string())
+                })?;
+            let credential = vault.consume(&vault_ref).map_err(|error| {
+                ToolCallError::new(
+                    ToolErrorKind::ToolPermissionDenied,
+                    format!("weather credential lease rejected: {error}"),
+                )
+            })?;
+            if credential.as_bytes().is_empty() {
+                return Err(ToolCallError::new(
+                    ToolErrorKind::ToolPermissionDenied,
+                    "weather credential lease resolved to an empty secret",
+                ));
+            }
             let payload = fetch_weather_from_source(
                 &source,
                 location,
@@ -1436,6 +1605,60 @@ fn register_weather_fetch_tool(
             ))
         },
     )
+}
+
+fn register_vault_lease_tool(
+    runtime: &mut OrchestratorProfileRuntime,
+    vault: Arc<ChiefVaultRuntime>,
+) -> Result<(), HostRuntimeError> {
+    let mut definition = tool_definition(
+        VAULT_TOOL_ID,
+        "Request vault lease",
+        "Issue a short-lived opaque VaultRef for use by a trusted host tool.",
+        JsonSchema::Object {
+            properties: vec![
+                SchemaProperty::new("secret_name", JsonSchema::String),
+                SchemaProperty::new("ttl_ms", JsonSchema::Integer),
+            ],
+            required: vec!["secret_name".to_string(), "ttl_ms".to_string()],
+            allow_unknown_fields: false,
+        },
+        Some(JsonSchema::Object {
+            properties: vec![
+                SchemaProperty::new("vault_ref", JsonSchema::String),
+                SchemaProperty::new("expires_at_ms", JsonSchema::Integer),
+            ],
+            required: vec!["vault_ref".to_string(), "expires_at_ms".to_string()],
+            allow_unknown_fields: false,
+        }),
+        ToolSideEffects::External,
+        ToolIdempotency::Never,
+        ToolConcurrency::Serialized,
+        ToolStreaming::Events,
+        vec!["vault_lease"],
+        vec!["vault", "lease", "secret"],
+    );
+    definition.required_tier = PrivilegeTier::Tier2;
+    runtime.register_handler(definition, move |arguments, _context| {
+        let secret_name = field_string(&arguments, "secret_name")?;
+        let ttl_ms = field_i64(&arguments, "ttl_ms")?;
+        let ttl_ms = u64::try_from(ttl_ms).map_err(|_| {
+            ToolCallError::new(
+                ToolErrorKind::ToolValidationError,
+                "ttl_ms must be a positive integer",
+            )
+        })?;
+        let receipt = vault.request_lease(&secret_name, ttl_ms).map_err(|error| {
+            ToolCallError::new(
+                ToolErrorKind::ToolPermissionDenied,
+                format!("vault lease request rejected: {error}"),
+            )
+        })?;
+        Ok(ToolHandlerOutput::new(object(vec![
+            ("vault_ref", string(receipt.vault_ref.as_str())),
+            ("expires_at_ms", int(receipt.expires_at_ms as i64)),
+        ])))
+    })
 }
 
 fn fetch_weather_from_source(
@@ -1713,57 +1936,57 @@ fn register_weather_classifier_tool(
 fn register_file_writer_tool(
     runtime: &mut OrchestratorProfileRuntime,
     manifest: Manifest,
+    required_tier: PrivilegeTier,
 ) -> Result<(), HostRuntimeError> {
-    runtime.register_handler(
-        tool_definition(
-            WRITE_TOOL_ID,
-            "Write text file",
-            "Write the umbrella recommendation to a text file through capability-caged fs access.",
-            JsonSchema::Object {
-                properties: vec![
-                    SchemaProperty::new("output_path", JsonSchema::String),
-                    SchemaProperty::new("line", JsonSchema::String),
-                ],
-                required: vec!["output_path".to_string(), "line".to_string()],
-                allow_unknown_fields: false,
-            },
-            Some(JsonSchema::Object {
-                properties: vec![
-                    SchemaProperty::new("output_path", JsonSchema::String),
-                    SchemaProperty::new("bytes_written", JsonSchema::Integer),
-                ],
-                required: vec!["output_path".to_string(), "bytes_written".to_string()],
-                allow_unknown_fields: false,
-            }),
-            ToolSideEffects::Write,
-            ToolIdempotency::Conditional,
-            ToolConcurrency::Serialized,
-            ToolStreaming::Events,
-            vec!["filesystem_write"],
-            vec!["file", "write", "e2e"],
-        ),
-        move |arguments, _context| {
-            let output_path = field_string(&arguments, "output_path")?;
-            let line = field_string(&arguments, "line")?;
-            let mut bytes = line.into_bytes();
-            bytes.push(b'\n');
-            secure_file::write_file(&manifest, Path::new(&output_path), &bytes).map_err(|err| {
-                ToolCallError::new(
-                    ToolErrorKind::ToolExecutionError,
-                    format!("failed to write umbrella report: {err}"),
-                )
-            })?;
-            Ok(ToolHandlerOutput::new(object(vec![
-                ("output_path", string(&output_path)),
-                ("bytes_written", int(bytes.len() as i64)),
-            ]))
-            .with_artifact_ref("umbrella_today_report")
-            .with_event(
-                ToolEventKind::Artifact,
-                object(vec![("path", string(&output_path))]),
-            ))
+    let mut definition = tool_definition(
+        WRITE_TOOL_ID,
+        "Write text file",
+        "Write the umbrella recommendation to a text file through capability-caged fs access.",
+        JsonSchema::Object {
+            properties: vec![
+                SchemaProperty::new("output_path", JsonSchema::String),
+                SchemaProperty::new("line", JsonSchema::String),
+            ],
+            required: vec!["output_path".to_string(), "line".to_string()],
+            allow_unknown_fields: false,
         },
-    )
+        Some(JsonSchema::Object {
+            properties: vec![
+                SchemaProperty::new("output_path", JsonSchema::String),
+                SchemaProperty::new("bytes_written", JsonSchema::Integer),
+            ],
+            required: vec!["output_path".to_string(), "bytes_written".to_string()],
+            allow_unknown_fields: false,
+        }),
+        ToolSideEffects::Write,
+        ToolIdempotency::Conditional,
+        ToolConcurrency::Serialized,
+        ToolStreaming::Events,
+        vec!["filesystem_write"],
+        vec!["file", "write", "e2e"],
+    );
+    definition.required_tier = required_tier;
+    runtime.register_handler(definition, move |arguments, _context| {
+        let output_path = field_string(&arguments, "output_path")?;
+        let line = field_string(&arguments, "line")?;
+        let mut bytes = line.into_bytes();
+        bytes.push(b'\n');
+        secure_file::write_file(&manifest, Path::new(&output_path), &bytes).map_err(|err| {
+            ToolCallError::new(
+                ToolErrorKind::ToolExecutionError,
+                format!("failed to write umbrella report: {err}"),
+            )
+        })?;
+        Ok(ToolHandlerOutput::new(object(vec![
+            ("output_path", string(&output_path)),
+            ("bytes_written", int(bytes.len() as i64)),
+        ]))
+        .with_artifact_ref("umbrella_today_report")
+        .with_event(
+            ToolEventKind::Artifact,
+            object(vec![("path", string(&output_path))]),
+        ))
+    })
 }
 
 #[allow(clippy::too_many_arguments)] // builder-style constructor; signature kept as-is

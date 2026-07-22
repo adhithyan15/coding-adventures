@@ -1,5 +1,125 @@
 # Changelog
 
+## [0.1.1] - 2026-07-21
+
+### Added
+
+- **`tests/oracle.rs` — HML01 §7 oracle/golden testing, cross-checking
+  `reduce-runtime` (ground truth) against `reduce_to_semantic_ir::
+  compile_source` → `semantic_ir::Module` → `semantic_ir_to_javascript::
+  compile` → a real `node` process.** The direct Reduce sibling of
+  `derive-to-semantic-ir/tests/oracle.rs`, completing HML01 §5's Stream B
+  rollout note *for `reduce-to-semantic-ir` specifically* (that spec text
+  is updated by this PR; `wolfram-to-semantic-ir`/`macsyma-to-semantic-ir`/
+  `maple-to-semantic-ir` are unaffected and still have no oracle file of
+  their own). 38-case corpus: bare integer/float/symbol atoms; ordinary
+  operator precedence and right-associative `^`/`**`; unary minus binding
+  looser than `^`; exact-integer vs. genuine-rational division; an
+  additive-identity simplification; assignment (plain and list-valued)
+  read back by a later statement; single- and multi-parameter procedure
+  definition/call; `if`/`then`/`else` (both branches, plus the two-branch
+  no-`else` form's "false → `False`" convention); every comparison/logic
+  keyword (`= neq < <= > >= and or not`, including a 3-term `and` chain
+  exercising the n-ary logical-chain fold); flat/singleton/elementwise-
+  evaluated/empty list literals; list accessors (`first`/`append`); cons
+  (`.`), both the literal-list-folding shape and the non-folding shape;
+  and a group statement `<< ... >>` exercising in-order side effects.
+  `DIF`/`INT`/trig calculus are deliberately absent — MA08 §3's own table
+  and `reduce-runtime::lower`'s `standard_function` bridge table confirm
+  Reduce's R-4 scope has no calculus/trig bridging at all (unlike Derive),
+  so there is nothing in that area to test.
+- Adds a dev-dependency on `coding-adventures-reduce-runtime` (this
+  frontend's own sibling native-runtime crate) for `tests/oracle.rs`'s
+  ground truth only — the non-dev `[dependencies]` section still does not
+  depend on it; lowering itself only ever needs the parse-tree shape.
+
+### Found, NOT fixed here — already-documented shared-crate gaps, cited not
+### re-discovered
+
+Building this corpus confirmed Reduce hits the **identical**
+`semantic-ir-to-javascript` gaps `derive-to-semantic-ir`'s own oracle PR
+(#8754) found and documented — see that crate's `CHANGELOG.md`'s `[0.1.1]`
+entry and, now generalized across every Stream B frontend,
+`SIR23-symbolic-pattern-semantic-ir.md`'s own "Addendum — SIR23 symbolic
+evaluator + per-language display convention" section (which explicitly
+confirms `derive-runtime`, `reduce-runtime`, and `maple-runtime` all
+construct `SymbolicBackend::new()` completely unchanged, so all three hit
+this exact gap for the exact same reason). This changelog entry cites that
+finding, it does not re-derive it:
+
+- **No SIR23 evaluation or simplification of any kind.** `Expr::SymApply`
+  compiles unconditionally to `__Sir.Symbolic.apply(head, [args])` — a
+  pure, inert term constructor. 24 of this crate's 38 new oracle cases hit
+  this gap directly (every arithmetic/comparison/logic/assignment/
+  procedure-call/`if` case beyond a bare literal/symbol atom), plus one
+  more (`negation_of_a_free_symbol`) that needs no fold but still fails to
+  print correctly, and one (`group_statement_evaluates_side_effects_in_
+  order`) that combines this gap with the Reduce-specific gap below.
+- **No per-source-language SIR23 display convention.** Even a term that
+  WAS already fully reduced still prints wrong: `Symbolic.
+  toDisplayString` renders every compound term generically as
+  `head(args, ...)`, with no infix, no `{...}` curly-brace convention, no
+  `and`/`or`/`not`/`neq` lowercase-keyword convention, and no
+  case-bridging back to Reduce's own lowercase builtin spelling
+  (`reduce-runtime::printer::print_reduce` reverses all of these). 5 of
+  this crate's 38 new oracle cases (`equation_with_a_free_variable_stays_
+  symbolic`, `flat_list_literal`, `singleton_list_literal`, `empty_list_
+  literal`, `cons_onto_a_literal_list_folds_at_lowering_time`) hit ONLY
+  this gap.
+
+### Found, NOT fixed here — a THIRD, Reduce-specific gap, genuinely
+### different from the two shared `semantic-ir-to-javascript` gaps above
+
+Unlike Derive, three of this crate's oracle cases (`first_of_a_list_has_
+no_shared_vm_handler`, `append_of_two_lists_has_no_shared_vm_handler`,
+`cons_of_two_free_symbols_has_no_shared_vm_handler`) hit a gap **one layer
+further back in the pipeline than `semantic-ir-to-javascript`**: MA08 §5
+and `reduce-runtime`'s own module doc comment already disclose that
+`symbolic_vm::handlers::build_handler_table` (the shared *native* Rust
+evaluator, not the JS backend) has no handler at all for
+`CompoundExpression`/`First`/`Second`/`Third`/`Rest`/`Part`/`Append`/
+`Reverse`/a non-folding `Cons` — confirmed empirically by this crate's own
+oracle corpus: `reduce-runtime::eval("first({1, 2, 3});\n")` itself
+returns the unevaluated string `"first({1, 2, 3})"`, not a numeric or list
+result. For these specific cases, the ground truth is ALREADY
+unevaluated, so the only actual disagreement between it and the compiled
+side is the display-convention gap above, not a missing evaluation the
+compiled side alone is failing to perform. `group_statement_evaluates_
+side_effects_in_order` combines this THIRD gap (the outer
+`CompoundExpression` never collapses to its last statement's value on
+EITHER side) with the ordinary SIR23 evaluation gap (the compiled side's
+inner `Assign` never binds, unlike the ground truth's, where it genuinely
+does).
+
+### Known limitations
+
+- **No local lowering bugs were found in this pass.** This crate's
+  lowering was already independently verified against `reduce-runtime::
+  lower`'s identical dispatch table (0.1.0 entry below), and `tests/
+  test_lower.rs`'s 59 shape-assertion tests (unmodified by this PR, all
+  still passing) already cover every grammar production directly — an
+  oracle test that can only ever compare unevaluated term shapes (per the
+  gaps above) surfaces no new class of bug beyond what those direct shape
+  assertions already check.
+- `tests/oracle.rs` performs the same test-local `wrap_top_level_in_print`
+  transformation `derive-to-semantic-ir/tests/oracle.rs` needed (see that
+  file's own module doc for the full rationale): `reduce_to_semantic_ir::
+  compile_source` itself is unchanged and still emits no `print`/
+  `console.log` of its own for any other caller — `tests/e2e_node.rs`'s
+  own "no `disp`-equivalent stdout" design note is still accurate.
+- Unlike Derive's own oracle file, `ground_truth` here needs **no**
+  worksheet-index-prefix-stripping step: `reduce-runtime::eval`'s output
+  has no numbered-input convention at all (confirmed directly against
+  `reduce-runtime`'s own module doc and by this file's own probe run), so
+  its raw per-line output is already directly comparable to the compiled
+  side's `console.log` output.
+- Given the two shared-crate gaps plus the one Reduce-specific gap above,
+  only 4 of the 38 corpus cases are `known_bug: None` (bare integer/float/
+  symbol literals) — the same "clean" fraction `derive-to-semantic-ir`'s
+  own oracle PR found (4 of 38), confirming this is the actual, current
+  state of the shared SIR23 JS backend, not a shortfall specific to either
+  frontend's corpus design.
+
 ## [0.1.0] - 2026-07-19
 
 ### Added

@@ -100,7 +100,7 @@ fn model_card_type_aliases_are_normalized() {
 #[test]
 fn model_card_supported_parameter_coverage_exports_are_stable() {
     let coverage = model_card_supported_parameter_coverage();
-    assert_eq!(coverage.len(), 86);
+    assert_eq!(coverage.len(), 96);
     assert_eq!(coverage[0].kind, ModelCardKind::Diode);
     assert_eq!(coverage[0].canonical_parameter, "IS");
     assert_eq!(coverage[0].accepted_names, vec!["IS", "JS"]);
@@ -119,7 +119,7 @@ fn model_card_supported_parameter_coverage_exports_are_stable() {
     assert!(table.contains("NMOS\tVT0\tVT0|VTO|VTH\t3"));
     assert_eq!(lines.last().unwrap(), &"PMOS\tMJ\tMJ\t1");
     let records = model_card_supported_parameter_coverage_records();
-    assert_eq!(records.len(), 86);
+    assert_eq!(records.len(), 96);
     assert_eq!(records[0]["kind"], "D");
     assert_eq!(records[0]["canonical_parameter"], "IS");
     assert_eq!(records[0]["accepted_names"], "IS|JS");
@@ -200,15 +200,15 @@ fn model_card_supported_parameter_coverage_gate_passes_current_catalog() {
     assert!(report.passed);
     assert_eq!(report.kind_count, 7);
     assert_eq!(report.expected_kind_count, 7);
-    assert_eq!(report.canonical_parameter_count, 86);
-    assert_eq!(report.expected_canonical_parameter_count, 86);
-    assert_eq!(report.accepted_name_count, 140);
-    assert_eq!(report.aliased_parameter_count, 41);
+    assert_eq!(report.canonical_parameter_count, 96);
+    assert_eq!(report.expected_canonical_parameter_count, 96);
+    assert_eq!(report.accepted_name_count, 158);
+    assert_eq!(report.aliased_parameter_count, 49);
     assert_eq!(report.max_alias_count, 4);
     assert!(report.issues.is_empty());
     assert_eq!(
         format_model_card_supported_parameter_coverage_gate_report(&report),
-        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t86\t86\t140\t41\t4\t0"
+        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t96\t96\t158\t49\t4\t0"
     );
     assert_eq!(
         format_model_card_supported_parameter_coverage_gate_issue_table(&report),
@@ -235,9 +235,9 @@ fn model_card_supported_parameter_coverage_gate_reports_missing_alias_family() {
 
     assert!(!report.passed);
     assert_eq!(report.kind_count, 7);
-    assert_eq!(report.canonical_parameter_count, 85);
-    assert_eq!(report.accepted_name_count, 137);
-    assert_eq!(report.aliased_parameter_count, 40);
+    assert_eq!(report.canonical_parameter_count, 95);
+    assert_eq!(report.accepted_name_count, 155);
+    assert_eq!(report.aliased_parameter_count, 48);
     assert_eq!(report.max_alias_count, 4);
     assert_eq!(report.issues.len(), 4);
     assert_eq!(report.issues[0].kind, "NMOS");
@@ -253,7 +253,7 @@ fn model_card_supported_parameter_coverage_gate_reports_missing_alias_family() {
     );
     assert_eq!(
         format_model_card_supported_parameter_coverage_gate_report(&report),
-        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t85\t86\t137\t40\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical supported parameters, found 17\nNMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card names, found 22\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2"
+        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t95\t96\t155\t48\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical supported parameters, found 17\nNMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card names, found 22\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2"
     );
     let records = model_card_supported_parameter_coverage_gate_issue_records(&report);
     assert_eq!(records[0]["kind"], "NMOS");
@@ -431,10 +431,15 @@ fn model_card_aliases_build_device_instances() {
             ("XTI", 2.4),
             ("EG", 1.05),
             ("VA", 80.0),
+            ("VB", 120.0),
+            ("IK", 2.0e-3),
             ("NF", 1.2),
             ("NR", 1.3),
             ("PE", 0.8),
             ("ME", 0.4),
+            ("PC", 0.7),
+            ("MC", 0.45),
+            ("FC", 0.4),
         ],
     )
     .unwrap();
@@ -444,20 +449,30 @@ fn model_card_aliases_build_device_instances() {
     assert_close(*bjt_card.parameters.get("XTI").unwrap(), 2.4);
     assert_close(*bjt_card.parameters.get("EG").unwrap(), 1.05);
     assert_close(*bjt_card.parameters.get("VAF").unwrap(), 80.0);
+    assert_close(*bjt_card.parameters.get("VAR").unwrap(), 120.0);
+    assert_close(*bjt_card.parameters.get("IKF").unwrap(), 2.0e-3);
     assert_close(*bjt_card.parameters.get("NF").unwrap(), 1.2);
     assert_close(*bjt_card.parameters.get("NR").unwrap(), 1.3);
     assert_close(*bjt_card.parameters.get("VJE").unwrap(), 0.8);
     assert_close(*bjt_card.parameters.get("MJE").unwrap(), 0.4);
+    assert_close(*bjt_card.parameters.get("VJC").unwrap(), 0.7);
+    assert_close(*bjt_card.parameters.get("MJC").unwrap(), 0.45);
+    assert_close(*bjt_card.parameters.get("FC").unwrap(), 0.4);
     assert_eq!(bjt_model.polarity, BjtPolarity::Npn);
     assert_close(bjt_model.forward_beta, 125.0);
     assert_close(bjt_model.base_emitter_capacitance, 2.0e-12);
     assert_close(bjt_model.saturation_current_temperature_exponent, 2.4);
     assert_close(bjt_model.energy_gap_electron_volts, 1.05);
     assert_close(bjt_model.forward_early_voltage, 80.0);
+    assert_close(bjt_model.reverse_early_voltage, 120.0);
+    assert_close(bjt_model.forward_beta_rolloff_current, 2.0e-3);
     assert_close(bjt_model.forward_emission_coefficient, 1.2);
     assert_close(bjt_model.reverse_emission_coefficient, 1.3);
     assert_close(bjt_model.base_emitter_junction_potential, 0.8);
     assert_close(bjt_model.base_emitter_grading_coefficient, 0.4);
+    assert_close(bjt_model.base_collector_junction_potential, 0.7);
+    assert_close(bjt_model.base_collector_grading_coefficient, 0.45);
+    assert_close(bjt_model.forward_bias_depletion_coefficient, 0.4);
 
     let jfet_card = normalize_model_card(
         "Jn",
@@ -1354,7 +1369,7 @@ fn subcircuit_expansion_preserves_complete_diode_model() {
 
 #[test]
 fn subcircuit_expansion_preserves_complete_bjt_model() {
-    let bjt = Bjt::with_model_temperature_and_depletion_parameters(
+    let bjt = Bjt::with_model_temperature_depletion_early_and_rolloff_parameters(
         "Qcell",
         "c",
         "b",
@@ -1374,6 +1389,11 @@ fn subcircuit_expansion_preserves_complete_bjt_model() {
         1.3,
         0.8,
         0.4,
+        0.7,
+        0.45,
+        0.4,
+        120.0,
+        2.0e-3,
     );
     let mut circuit = Circuit::new();
     circuit
@@ -1402,10 +1422,15 @@ fn subcircuit_expansion_preserves_complete_bjt_model() {
     assert_close(expanded.saturation_current_temperature_exponent, 2.4);
     assert_close(expanded.energy_gap_electron_volts, 1.05);
     assert_close(expanded.forward_early_voltage, 80.0);
+    assert_close(expanded.reverse_early_voltage, 120.0);
     assert_close(expanded.forward_emission_coefficient, 1.2);
     assert_close(expanded.reverse_emission_coefficient, 1.3);
     assert_close(expanded.base_emitter_junction_potential, 0.8);
     assert_close(expanded.base_emitter_grading_coefficient, 0.4);
+    assert_close(expanded.base_collector_junction_potential, 0.7);
+    assert_close(expanded.base_collector_grading_coefficient, 0.45);
+    assert_close(expanded.forward_bias_depletion_coefficient, 0.4);
+    assert_close(expanded.forward_beta_rolloff_current, 2.0e-3);
 }
 
 #[test]
@@ -2039,6 +2064,74 @@ fn dc_rejects_invalid_bjt_forward_early_voltage() {
 }
 
 #[test]
+fn bjt_reverse_early_voltage_modulates_collector_current() {
+    let collector_voltage = |reverse_early_voltage: f64| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vcc", "vcc", "0", 5.0,
+        )));
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vbase", "base", "0", 0.65,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rload", "vcc", "out", 1_000.0,
+        )));
+        let mut transistor = Bjt::new("Q1", "out", "base", "0");
+        transistor.reverse_early_voltage = reverse_early_voltage;
+        circuit.add(Element::Bjt(transistor));
+        dc_op(&circuit).unwrap().voltage("out").unwrap()
+    };
+
+    assert!(collector_voltage(20.0) > collector_voltage(0.0));
+}
+
+#[test]
+fn bjt_forward_beta_rolloff_reduces_high_current_transport() {
+    let collector_voltage = |rolloff_current: f64| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vcc", "vcc", "0", 5.0,
+        )));
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vbase", "base", "0", 0.65,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rload", "vcc", "out", 1_000.0,
+        )));
+        let mut transistor = Bjt::new("Q1", "out", "base", "0");
+        transistor.forward_beta_rolloff_current = rolloff_current;
+        circuit.add(Element::Bjt(transistor));
+        dc_op(&circuit).unwrap().voltage("out").unwrap()
+    };
+
+    assert!(collector_voltage(1.0e-4) > collector_voltage(0.0));
+}
+
+#[test]
+fn dc_rejects_invalid_bjt_forward_beta_rolloff_current() {
+    let mut circuit = Circuit::new();
+    let mut transistor = Bjt::new("Qbad", "c", "b", "0");
+    transistor.forward_beta_rolloff_current = -1.0;
+    circuit.add(Element::Bjt(transistor));
+    let error = dc_op(&circuit).unwrap_err();
+    assert!(error
+        .to_string()
+        .contains("forward beta roll-off current must be finite and non-negative"));
+}
+
+#[test]
+fn dc_rejects_invalid_bjt_reverse_early_voltage() {
+    let mut circuit = Circuit::new();
+    let mut transistor = Bjt::new("Qbad", "c", "b", "0");
+    transistor.reverse_early_voltage = -1.0;
+    circuit.add(Element::Bjt(transistor));
+    let error = dc_op(&circuit).unwrap_err();
+    assert!(error
+        .to_string()
+        .contains("reverse Early voltage must be finite and non-negative"));
+}
+
+#[test]
 fn bjt_forward_emission_coefficient_reduces_collector_current() {
     let collector_voltage = |forward_emission_coefficient: f64| {
         let mut circuit = Circuit::new();
@@ -2168,9 +2261,71 @@ fn dc_rejects_invalid_bjt_base_emitter_depletion_parameters() {
                 1.0,
                 junction_potential,
                 grading_coefficient,
+                0.75,
+                0.33,
+                0.5,
             ),
         ));
         assert!(dc_op(&circuit).unwrap_err().to_string().contains(message));
+    }
+}
+
+#[test]
+fn dc_rejects_invalid_bjt_base_collector_depletion_parameters() {
+    for (junction_potential, grading_coefficient, message) in [
+        (
+            0.0,
+            0.33,
+            "base-collector junction potential must be finite and positive",
+        ),
+        (
+            0.75,
+            1.0,
+            "base-collector grading coefficient must be finite and in [0, 1)",
+        ),
+    ] {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::Bjt(
+            Bjt::with_model_temperature_and_depletion_parameters(
+                "Qbad",
+                "c",
+                "b",
+                "0",
+                BjtPolarity::Npn,
+                1.0e-14,
+                100.0,
+                0.02585,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                3.0,
+                1.11,
+                0.0,
+                1.0,
+                1.0,
+                0.75,
+                0.33,
+                junction_potential,
+                grading_coefficient,
+                0.5,
+            ),
+        ));
+        assert!(dc_op(&circuit).unwrap_err().to_string().contains(message));
+    }
+}
+
+#[test]
+fn dc_rejects_invalid_bjt_forward_bias_depletion_coefficient() {
+    for coefficient in [-0.1, 1.0, f64::NAN] {
+        let mut bjt = Bjt::new("Qbad", "c", "b", "0");
+        bjt.forward_bias_depletion_coefficient = coefficient;
+        let mut circuit = Circuit::new();
+        circuit.add(Element::Bjt(bjt));
+        assert!(dc_op(&circuit)
+            .unwrap_err()
+            .to_string()
+            .contains("forward-bias depletion coefficient must be finite and in [0, 1)"));
     }
 }
 

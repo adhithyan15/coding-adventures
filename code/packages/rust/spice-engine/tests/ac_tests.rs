@@ -867,6 +867,50 @@ fn ac_bjt_uses_reverse_transit_time_as_base_collector_diffusion_capacitance() {
 }
 
 #[test]
+fn ac_bjt_reverse_early_voltage_reduces_gain() {
+    let gain = |reverse_early_voltage: f64| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vin", "base", "0", 0.65, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rload", "out", "0", 1_000.0,
+        )));
+        let mut transistor = Bjt::new("Q1", "out", "base", "0");
+        transistor.reverse_early_voltage = reverse_early_voltage;
+        circuit.add(Element::Bjt(transistor));
+        ac_sweep(&circuit, 1_000.0, 1_000.0, 1).unwrap()[0]
+            .voltage("out")
+            .unwrap()
+            .abs()
+    };
+
+    assert!(gain(1.0) < gain(0.0));
+}
+
+#[test]
+fn ac_bjt_forward_beta_rolloff_reduces_gain() {
+    let gain = |rolloff_current: f64| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vin", "base", "0", 0.65, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rload", "out", "0", 1_000.0,
+        )));
+        let mut transistor = Bjt::new("Q1", "out", "base", "0");
+        transistor.forward_beta_rolloff_current = rolloff_current;
+        circuit.add(Element::Bjt(transistor));
+        ac_sweep(&circuit, 1_000.0, 1_000.0, 1).unwrap()[0]
+            .voltage("out")
+            .unwrap()
+            .abs()
+    };
+
+    assert!(gain(1.0e-4) < gain(0.0));
+}
+
+#[test]
 fn ac_bjt_reverse_emission_coefficient_reduces_base_collector_diffusion_capacitance() {
     fn base_amplitude(reverse_emission_coefficient: f64) -> f64 {
         let mut circuit = Circuit::new();
@@ -937,6 +981,9 @@ fn ac_bjt_base_emitter_depletion_capacitance_falls_with_reverse_bias() {
                 1.0,
                 0.75,
                 grading_coefficient,
+                0.75,
+                0.33,
+                0.5,
             ),
         ));
 
@@ -947,6 +994,107 @@ fn ac_bjt_base_emitter_depletion_capacitance_falls_with_reverse_bias() {
     }
 
     assert!(base_amplitude(0.5) > base_amplitude(0.0));
+}
+
+#[test]
+fn ac_bjt_base_collector_depletion_capacitance_falls_with_reverse_bias() {
+    fn collector_amplitude(grading_coefficient: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vac", "in", "0", 1.0, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin",
+            "in",
+            "collector",
+            1_000.0,
+        )));
+        circuit.add(Element::Bjt(
+            Bjt::with_model_temperature_and_depletion_parameters(
+                "Q1",
+                "collector",
+                "0",
+                "0",
+                BjtPolarity::Npn,
+                1.0e-14,
+                100.0,
+                0.02585,
+                0.0,
+                1.0e-6,
+                0.0,
+                0.0,
+                3.0,
+                1.11,
+                0.0,
+                1.0,
+                1.0,
+                0.75,
+                0.33,
+                0.75,
+                grading_coefficient,
+                0.5,
+            ),
+        ));
+
+        ac_sweep(&circuit, 1_000.0, 1_000.0, 1).unwrap()[0]
+            .voltage("collector")
+            .unwrap()
+            .abs()
+    }
+
+    assert!(collector_amplitude(0.5) > collector_amplitude(0.0));
+}
+
+#[test]
+fn ac_bjt_forward_bias_depletion_coefficient_shapes_both_junctions() {
+    fn junction_amplitude(coefficient: f64, base_emitter: bool) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vac", "in", "0", 0.6, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "junction", 1_000.0,
+        )));
+        circuit.add(Element::Bjt(
+            Bjt::with_model_temperature_and_depletion_parameters(
+                "Q1",
+                "0",
+                "junction",
+                "0",
+                BjtPolarity::Npn,
+                1.0e-30,
+                100.0,
+                0.02585,
+                if base_emitter { 1.0e-6 } else { 0.0 },
+                if base_emitter { 0.0 } else { 1.0e-6 },
+                0.0,
+                0.0,
+                3.0,
+                1.11,
+                0.0,
+                1.0,
+                1.0,
+                0.75,
+                0.33,
+                0.75,
+                0.33,
+                coefficient,
+            ),
+        ));
+        ac_sweep(&circuit, 1_000.0, 1_000.0, 1).unwrap()[0]
+            .voltage("junction")
+            .unwrap()
+            .abs()
+    }
+
+    for base_emitter in [true, false] {
+        let early_transition = junction_amplitude(0.2, base_emitter);
+        let late_transition = junction_amplitude(0.8, base_emitter);
+        assert!(
+            late_transition < early_transition * 0.9,
+            "base_emitter={base_emitter} early={early_transition} late={late_transition}"
+        );
+    }
 }
 
 #[test]

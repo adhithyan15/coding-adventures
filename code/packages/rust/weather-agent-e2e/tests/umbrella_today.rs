@@ -3,7 +3,9 @@ use std::path::PathBuf;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use capability_os_sandbox::{current_kernel_sandbox_support, OsFamily};
-use chief_of_staff_tool_api::{ApprovalState, ToolAuditRecordQuery};
+use chief_of_staff_tool_api::{
+    ApprovalAssurance, ApprovalState, PrivilegeTier, ToolAuditRecordQuery,
+};
 use chief_of_staff_tool_audit_store::ToolAuditStore;
 use os_job_core::BackendKind;
 use storage_local_folder::LocalFolderStorageBackend;
@@ -82,9 +84,9 @@ fn umbrella_today_agent_exercises_architecture_and_writes_text_file() {
     assert_eq!(run.supervisor.child_count, 3);
     assert!(run.orchestrator_profile.active);
     assert_eq!(run.orchestrator_profile.profile_id, "umbrella_today_v1");
-    assert_eq!(run.orchestrator_profile.host_count, 3);
-    assert_eq!(run.orchestrator_profile.allowed_tool_count, 3);
-    assert_eq!(run.orchestrator_profile.registered_tool_count, 3);
+    assert_eq!(run.orchestrator_profile.host_count, 4);
+    assert_eq!(run.orchestrator_profile.allowed_tool_count, 4);
+    assert_eq!(run.orchestrator_profile.registered_tool_count, 4);
     assert_eq!(run.supervisor.stopped_children, 3);
     assert_eq!(run.supervisor.failed_children, 0);
     assert_eq!(run.supervisor.dead_letters, 0);
@@ -92,18 +94,18 @@ fn umbrella_today_agent_exercises_architecture_and_writes_text_file() {
     assert_eq!(run.supervisor.restart_count, 0);
     assert_eq!(run.actor_channel_messages, 3);
 
-    assert_eq!(run.tool_journal_health.invocation_count, 3);
-    assert_eq!(run.tool_journal_health.completed_count, 3);
+    assert_eq!(run.tool_journal_health.invocation_count, 4);
+    assert_eq!(run.tool_journal_health.completed_count, 4);
     assert_eq!(run.tool_journal_health.failed_count, 0);
-    assert_eq!(run.tool_journal_health.approval_granted_count, 1);
+    assert_eq!(run.tool_journal_health.approval_granted_count, 2);
     assert_eq!(run.tool_journal_health.approval_pending_count, 0);
-    assert!(run.tool_journal_health.results_with_output_count >= 3);
+    assert!(run.tool_journal_health.results_with_output_count >= 4);
     assert!(run.tool_journal_health.results_with_artifact_refs_count >= 1);
 
     assert_eq!(run.context_inventory.sessions.total_sessions, 1);
     assert_eq!(run.context_inventory.transcripts.user_entries, 1);
-    assert_eq!(run.context_inventory.transcripts.tool_call_entries, 3);
-    assert_eq!(run.context_inventory.transcripts.tool_result_entries, 3);
+    assert_eq!(run.context_inventory.transcripts.tool_call_entries, 4);
+    assert_eq!(run.context_inventory.transcripts.tool_result_entries, 4);
     assert_eq!(run.context_inventory.transcripts.assistant_entries, 1);
     assert_eq!(run.context_inventory.snapshots.total_snapshots, 1);
     assert!(run.context_inventory.sessions_with_tool_activity >= 1);
@@ -128,19 +130,39 @@ fn umbrella_today_agent_exercises_architecture_and_writes_text_file() {
         .detail
         .contains("precipitation chance is 72%"));
     assert_eq!(run.user_report.write_approval, ApprovalState::Granted);
-    assert_eq!(run.user_report.journal_invocation_count, 3);
+    assert_eq!(run.user_report.write_required_tier, PrivilegeTier::Tier1);
+    assert_eq!(
+        run.user_report.approval_assurance,
+        Some(ApprovalAssurance::ExplicitConsent)
+    );
+    assert_eq!(run.user_report.journal_invocation_count, 4);
+    assert!(run
+        .vault_lease
+        .vault_ref
+        .as_str()
+        .starts_with("vault-lease:"));
+    assert_eq!(run.vault_lease.ttl_ms, 30_000);
+    assert!(run.vault_lease.consumed_by_host);
+    assert!(!run
+        .vault_lease
+        .vault_ref
+        .as_str()
+        .contains("host-only-fixture"));
+    assert!(!run
+        .output_text
+        .contains("weather-api-key-host-only-fixture"));
     assert!(run.user_report.render().contains("Bring an umbrella today"));
     assert_eq!(run.durable_audit.job_id, "umbrella_today_job");
     assert_eq!(run.durable_audit.run_id, run.job_receipt.run_id);
     assert_eq!(run.durable_audit.session_id, "umbrella_today_session");
     assert_eq!(run.durable_audit.user_id, "seattle_user");
     assert_eq!(run.durable_audit.profile_id, "umbrella_today_v1");
-    assert_eq!(run.durable_audit.host_count, 3);
-    assert_eq!(run.durable_audit.tool_count, 3);
-    assert_eq!(run.durable_audit.persisted_records, 3);
-    assert_eq!(run.durable_audit.reloaded_records, 3);
-    assert_eq!(run.durable_audit.completed_records, 3);
-    assert_eq!(run.durable_audit.approval_granted_records, 1);
+    assert_eq!(run.durable_audit.host_count, 4);
+    assert_eq!(run.durable_audit.tool_count, 4);
+    assert_eq!(run.durable_audit.persisted_records, 4);
+    assert_eq!(run.durable_audit.reloaded_records, 4);
+    assert_eq!(run.durable_audit.completed_records, 4);
+    assert_eq!(run.durable_audit.approval_granted_records, 2);
     assert!(run.durable_audit.records_with_references >= 1);
     assert_eq!(run.durable_audit.follow_up_records, 0);
     assert!(run.durable_audit.is_complete());
@@ -151,7 +173,11 @@ fn umbrella_today_agent_exercises_architecture_and_writes_text_file() {
     let restarted_rows = restarted_audit
         .query_audits(&ToolAuditRecordQuery::new())
         .expect("durable audit should reopen after the job runtime is dropped");
-    assert_eq!(restarted_rows.len(), 3);
+    assert_eq!(restarted_rows.len(), 4);
+    assert!(restarted_rows
+        .iter()
+        .any(|row| row.tool_id == "vault.request_lease"));
+    assert!(!format!("{restarted_rows:?}").contains("weather-api-key-host-only-fixture"));
 
     assert_eq!(run.rws.fetcher.untrusted_inputs, 1);
     assert_eq!(run.rws.writer.external_actuations, 1);
@@ -186,6 +212,80 @@ fn umbrella_today_job_blocks_write_without_explicit_approval() {
 }
 
 #[test]
+fn umbrella_today_job_blocks_vault_lease_without_tier2_approval() {
+    let root = temp_root("weather-agent-vault-approval-e2e");
+    fs::create_dir_all(&root).expect("temp dir should be created");
+    let output_path = root.join("umbrella-today.txt");
+    let config = UmbrellaAgentConfig::deterministic_seattle(&output_path).without_vault_approval();
+
+    let error = run_umbrella_today_agent(config)
+        .expect_err("vault lease should stop at the centralized Tier 2 approval gate");
+    assert!(error.to_string().contains("requires approval"));
+    assert!(!fs::read_to_string(&output_path)
+        .unwrap_or_default()
+        .contains("Bring an umbrella today"));
+
+    let restarted_audit = ToolAuditStore::new(LocalFolderStorageBackend::new(
+        output_path.with_extension("audit"),
+    ));
+    let denied_lease = restarted_audit
+        .fetch_audit("8a7b0000000000000000000000000001_request_weather_lease")
+        .expect("durable audit should be readable after vault denial")
+        .expect("denied vault lease row should be persisted");
+    assert_eq!(denied_lease.tool_id, "vault.request_lease");
+    assert_eq!(denied_lease.approval_state, ApprovalState::Pending);
+    assert!(!denied_lease.result_summary.ok);
+}
+
+#[test]
+fn tier2_write_rejects_weak_consent_and_persists_denial() {
+    let root = temp_root("weather-agent-tier2-weak-approval-e2e");
+    fs::create_dir_all(&root).expect("temp dir should be created");
+    let output_path = root.join("umbrella-today.txt");
+    let config = UmbrellaAgentConfig::deterministic_seattle(&output_path)
+        .with_tier2_write_approval(ApprovalAssurance::ExplicitConsent);
+
+    let error = run_umbrella_today_agent(config)
+        .expect_err("Tier 2 write should reject weak explicit consent");
+    assert!(error.to_string().contains("weaker than required"));
+    assert!(!fs::read_to_string(&output_path)
+        .unwrap_or_default()
+        .contains("Bring an umbrella today"));
+
+    let restarted_audit = ToolAuditStore::new(LocalFolderStorageBackend::new(
+        output_path.with_extension("audit"),
+    ));
+    let denied_write = restarted_audit
+        .fetch_audit("8a7b0000000000000000000000000001_write_umbrella_report")
+        .expect("durable audit should be readable after weak approval denial")
+        .expect("denied Tier 2 write row should be persisted");
+    assert_eq!(denied_write.approval_state, ApprovalState::Denied);
+    assert!(!denied_write.result_summary.ok);
+}
+
+#[test]
+fn tier2_write_accepts_challenge_bound_biometric_approval() {
+    let root = temp_root("weather-agent-tier2-biometric-approval-e2e");
+    fs::create_dir_all(&root).expect("temp dir should be created");
+    let output_path = root.join("umbrella-today.txt");
+    let config = UmbrellaAgentConfig::deterministic_seattle(&output_path)
+        .with_tier2_write_approval(ApprovalAssurance::Biometric);
+
+    let run = run_umbrella_today_agent(config)
+        .expect("challenge-bound biometric approval should complete the Tier 2 job");
+    assert_eq!(run.user_report.write_required_tier, PrivilegeTier::Tier2);
+    assert_eq!(
+        run.user_report.approval_assurance,
+        Some(ApprovalAssurance::Biometric)
+    );
+    assert_eq!(run.tool_journal_health.approval_biometric_count, 2);
+    assert_eq!(run.tool_journal_health.approval_explicit_consent_count, 0);
+    assert_eq!(run.durable_audit.approval_granted_records, 2);
+    assert!(run.durable_audit.is_complete());
+    assert!(run.output_text.contains("Bring an umbrella today"));
+}
+
+#[test]
 fn successive_ticks_append_to_one_durable_audit_root() {
     let root = temp_root("weather-agent-durable-audit-e2e");
     fs::create_dir_all(&root).expect("temp dir should be created");
@@ -211,7 +311,7 @@ fn successive_ticks_append_to_one_durable_audit_root() {
             .query_audits(&ToolAuditRecordQuery::new())
             .expect("both ticks should survive restart")
             .len(),
-        6
+        8
     );
     assert!(restarted_audit
         .fetch_audit("8a7b0000000000000000000000000002_write_umbrella_report")

@@ -1,19 +1,58 @@
 # Changelog
 
+## The book catches up -- Chapters 3-16 typeset
+
+The lessons had run ahead of the published artifact: 61 authored lessons through
+Chapter 16, but the LaTeX book still stopped at Chapter 2 ("Introducing
+Yourself"). Because the CI book build only compiles what is wired into
+`book.tex`, the missing chapters were invisible to CI and the gap drifted
+silently. This closes it -- **fourteen new book chapters**, written from the
+existing `GE-C03`-`GE-C16` lessons and wired into `book.tex`:
+
+- **Ch3** How Are You (danke, bitte, gehen, wie geht es, es geht)
+- **Ch4** Farewells (auf Wiedersehen, tschuess, bis bald, bis morgen)
+- **Ch5** The First Verbs (wohnen, machen, lernen, ich lerne Deutsch)
+- **Ch6** Numbers One to Ten * **Ch7** The Days of the Week (and Mittwoch)
+- **Ch8** Telling the Time * **Ch9** Months and Seasons (Herbst/harvest)
+- **Ch10** Family * **Ch11** Bread, Water, Wine
+- **Ch12** Numbers Eleven to Twenty (elf/zwoelf, the "-lif = left over" story)
+- **Ch13** Colours * **Ch14** To Have, and How Old You Are (the habere false
+  cognate)
+- **Ch15** The Two Past Tenses (Perfekt, Praeteritum)
+- **Ch16** To Be, and the Past That Takes It (sein -- three ancient verbs in one
+  paradigm -- and the Perfekt built on it)
+
+Each chapter follows the established book conventions: one `\section` per lesson
+with a slug `\label`, the `cousinweb` / `culture` / `grammarlens` / `sounds` /
+`etymology` / `morphologybox` boxes, `booktabs` conjugation tables, and every
+atom traced to its root -- the German/English cognate webs are the spine.
+Content is faithful to the lessons -- no new etymologies introduced.
+Practice-section labels are chapter-qualified (`lesson:chN-practice`).
+
+The book grows to **84 pages**; compiles clean with XeLaTeX (0 errors, 0 missing
+characters, 0 undefined references, 0 duplicate labels) and was rasterized and
+visually QA'd -- the umlauts, the eszett, `fui` with macron, and the PIE
+superscripts all render correctly.
+
 ## Chapter 17 — The body: a cup for a head, and a hand with no Latin cousin
 
 - **Chapter 17 authored** (`GE-C17-kopf`, `-hand`) — the **body**, the theme the
   parallel-track roadmaps name next.
 - **der Kopf** (`GE-C17-kopf`): *Kopf* did not originally mean "head." It meant a
-  **cup or bowl** — Germanic \**kuppaz*, the same word as English **cup** — and
-  it displaced the inherited **das Haupt**, which is the genuine Grimm's-law
-  cognate of Latin *caput* and English *head* (*k*→*h*, *p*→*f/d*, as
-  *pater*→*father*). *Haupt* survives in compounds: *Hauptstadt*,
-  *Hauptbahnhof*, *Hauptsache*.
+  **cup or bowl** — the same word as English **cup**, both early borrowings of
+  Late Latin ***cuppa*** — and it displaced the inherited **das Haupt**, the
+  Grimm's-law cognate of Latin *caput* and English *head*. The clean
+  demonstration there is **k→h** (*caput* / *Haupt* / *head*); the later
+  consonants involve a second shift, so the lesson takes k→h and leaves the rest.
+  *Haupt* survives in compounds: *Hauptstadt*, *Hauptbahnhof*, *Hauptsache*.
   - **The chapter's best fact is a coincidence.** French replaced "head" with a
-    **pot** (*testa* → *tête*) and German with a **cup** (\**kuppaz* → *Kopf*),
-    from unrelated words, with nobody coordinating — and **both** kept the old
-    word for chiefs and capitals. Heads look like bowls in any language.
+    **pot** (*testa* → *tête*) and German with a **cup** (*cuppa* → *Kopf*), with
+    nobody coordinating — and **both** kept the old word for chiefs and capitals.
+    It is the **metaphor** that was invented twice, not the vocabulary: both
+    vessel-words trace back to Latin. Heads look like bowls in any language.
+  - *(Corrected here: #8746 fixed this formula in the lesson, roadmap and
+    taxonomy but missed the CHANGELOG, which kept a wrong `p→f/d` and called
+    \*kuppaz native Germanic. A claim lives in four places.)*
   - Includes the **-pf** note: one sound, *p* released into *f*, with no English
     equivalent.
 - **die Hand** (`GE-C17-hand`): the easy word, kept deliberately for what it

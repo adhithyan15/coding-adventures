@@ -4058,7 +4058,14 @@ fn lower_function(
                 let (arr_slot, _) = lookup_var(&arr_name)?;
                 let (val_slot, _) = lookup_var(&val_name)?;
 
+                // The local is declared `Object` (a `ref<any>` cons cell is not
+                // statically an array), so the verifier rejects a bare AALOAD/AASTORE
+                // with "Expecting to find array of objects or arrays on stack".
+                // A CHECKCAST to the cons-cell array type tells it what we know.
+                let objarr_cidx = cp.add_class("[Ljava/lang/Object;");
                 emit_aload(&mut code, arr_slot);
+                code.push(CHECKCAST);
+                code.extend_from_slice(&objarr_cidx.to_be_bytes());
                 emit_iconst(&mut code, field_idx);
                 emit_aload(&mut code, val_slot);
                 code.push(AASTORE);
@@ -4101,7 +4108,14 @@ fn lower_function(
                 let (dest_slot, _) = lookup_var(dest_name)?;
                 let (arr_slot, _) = lookup_var(&arr_name)?;
 
+                // The local is declared `Object` (a `ref<any>` cons cell is not
+                // statically an array), so the verifier rejects a bare AALOAD/AASTORE
+                // with "Expecting to find array of objects or arrays on stack".
+                // A CHECKCAST to the cons-cell array type tells it what we know.
+                let objarr_cidx = cp.add_class("[Ljava/lang/Object;");
                 emit_aload(&mut code, arr_slot);
+                code.push(CHECKCAST);
+                code.extend_from_slice(&objarr_cidx.to_be_bytes());
                 emit_iconst(&mut code, field_idx);
                 code.push(AALOAD);
                 emit_astore(&mut code, dest_slot);

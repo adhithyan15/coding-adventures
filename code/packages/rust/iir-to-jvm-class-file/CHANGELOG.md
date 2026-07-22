@@ -1,5 +1,8 @@
 # Changelog — iir-to-jvm-class-file
 
+## 0.32.0 - 2026-07-20 — field_load/store CHECKCAST [Ljava/lang/Object; — fixes cons-cell VerifyError
+
+Part of the fix restoring McCarthy-lisp list programs on the native-AOT / LLVM backends (`lang-aot` `lang_matrix`). See the umbrella commit for the full story: `null?` was never routed to a runtime call on the tagged native/LLVM path (breaking every cons-walk helper), `list-ref`/`assoc` unboxed a raw-int index/key (→ wrong element), a top-level `(null? …)` predicate result was unboxed instead of truthy-coerced, and cons-cell field access failed the JVM verifier. Verified end-to-end: native list-ref/assoc/length/reverse/append/null? all correct.
 ## [0.31.0] — 2026-07-11 (LANG-FULL E6d-2a: i64-width `box`/`unbox`)
 
 `box`/`unbox` width-adapt for E6d-2 dynamic arithmetic (i64): `box` of a `long`-slot value emits `lload; l2i` before `Integer.valueOf`; `unbox` into a `long` slot emits `i2l; lstore` after `intValue`. i32-slot lisp box/unbox unchanged.

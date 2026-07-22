@@ -212,11 +212,18 @@ Diode cards also accept `XTI` (default `3`) and `EG` (default `1.11 eV`) to
 control saturation-current temperature scaling.
 BJT cards accept `XTI` (default `3`) and `EG` (default `1.11` eV) for
 model-specific saturation-current temperature scaling, `VAF`/`VA` (default
-`0`, meaning infinite) for forward Early-effect modulation, and `NF` (default
+`0`, meaning infinite) for forward Early-effect modulation, `VAR`/`VB`
+(default `0`, meaning infinite) for reverse Early-effect base-charge
+modulation, and `NF` (default
 `1`) for forward-junction emission shaping. `NR` (default `1`) shapes reverse
 base-collector diffusion capacitance in AC and transient analysis. `VJE`/`PE`
 (default `0.75 V`) and `MJE`/`ME` (default `0.33`) shape `CJE` base-emitter
-depletion capacitance using the Berkeley default `FC=0.5` continuation.
+depletion capacitance. `VJC`/`PC` (default `0.75 V`) and `MJC`/`MC` (default
+`0.33`) likewise shape `CJC` base-collector depletion capacitance. `FC`
+(default `0.5`) selects the shared Berkeley forward-bias continuation point for
+both junctions. `IKF`/`IK` (default `0`, disabled) applies Berkeley forward
+high-current base-charge modulation to collector transport and small-signal
+transconductance.
 `model_card_unsupported_parameter_issues()`,
 `format_model_card_unsupported_parameter_issue_table()`,
 `model_card_unsupported_parameter_issue_records()`,

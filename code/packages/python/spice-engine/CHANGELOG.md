@@ -4,6 +4,26 @@
 
 ### Added
 
+- **BJT forward high-current beta roll-off** — BJT model cards now accept
+  `IKF`/`IK` and apply shared base-charge modulation in DC, transient, AC,
+  transfer-function, and noise paths, matching Rust and TypeScript. The
+  supported-parameter catalog now contains 96 canonical rows.
+
+- **BJT reverse Early voltage** — BJT model cards now accept `VAR`/`VB` and
+  apply reverse Early-effect base-charge modulation in DC, transient, AC,
+  transfer-function, and noise paths, matching Rust and TypeScript. The
+  supported-parameter catalog now contains 94 canonical rows.
+
+- **BJT forward-bias depletion coefficient** — BJT model cards now accept `FC`
+  and apply it to the shared `CJE` and `CJC` Berkeley continuation law in AC and
+  transient analysis, matching Rust and TypeScript. The supported-parameter
+  catalog now contains 92 canonical rows.
+
+- **BJT base-collector depletion shaping** — BJT model cards now accept
+  `VJC`/`PC` junction potential and `MJC`/`MC` grading coefficient parameters
+  and apply them to `CJC` in AC and transient analysis, matching Rust and
+  TypeScript. The supported-parameter catalog now contains 90 canonical rows.
+
 - **BJT base-emitter depletion shaping** — BJT model cards now accept
   `VJE`/`PE` junction potential and `MJE`/`ME` grading coefficient parameters
   and apply them to `CJE` in AC and transient analysis, matching Rust and

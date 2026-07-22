@@ -33,15 +33,17 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language BJT base-emitter depletion-capacitance shaping.
+1. Cross-language BJT forward high-current beta roll-off.
    - Status: current PR completion candidate.
-   - Add Berkeley BJT `VJE` / `PE` base-emitter junction-potential and `MJE` /
-     `ME` grading-coefficient model-card support in Rust, Python, and TypeScript.
-   - Shape `CJE` base-emitter depletion capacitance in AC and transient
-     analysis with the continuous Berkeley piecewise law and default `FC=0.5`,
-     while preserving the full BJT model through hierarchical subcircuits.
-   - Extend the supported-parameter coverage gate from 82 to 86 canonical rows
-     and lock reverse-biased base-emitter capacitance behavior in all engines.
+   - Add Berkeley BJT `IKF` / `IK` forward beta roll-off model-card support in
+     Rust, Python, and TypeScript with disabled behavior represented by the
+     standard zero default.
+   - Apply forward high-current base-charge modulation in DC, transient, AC,
+     transfer-function, and noise paths while preserving the complete BJT model
+     through hierarchical subcircuits.
+   - Extend the supported-parameter coverage gate from 94 to 96 canonical rows
+     and lock model-card aliases, behavior, validation, and hierarchy in all
+     engines.
 
 ## Completed Slices
 
@@ -3029,6 +3031,38 @@ the Rust, Python, and TypeScript surfaces together.
      to reverse base-collector diffusion charge in AC and transient analysis.
    - Hierarchical subcircuit expansion preserves the complete BJT model, and
      the supported-parameter release gate now covers 82 canonical rows.
+
+223. Cross-language BJT base-emitter depletion-capacitance shaping.
+   - Status: completed in PR 8752.
+   - Rust, Python, and TypeScript BJT model cards now accept `VJE` / `PE` and
+     `MJE` / `ME` and apply continuous Berkeley depletion shaping to `CJE` in
+     AC and transient analysis.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 86 canonical rows.
+
+224. Cross-language BJT base-collector depletion-capacitance shaping.
+   - Status: completed in PR 8755.
+   - Rust, Python, and TypeScript BJT model cards now accept `VJC` / `PC` and
+     `MJC` / `MC` and apply continuous Berkeley depletion shaping to `CJC` in
+     AC and transient analysis.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 90 canonical rows.
+
+225. Cross-language BJT forward-bias depletion coefficient.
+   - Status: completed in PR 8760.
+   - Rust, Python, and TypeScript BJT model cards now accept `FC` and apply it
+     as the shared continuous Berkeley piecewise-law transition point for both
+     `CJE` and `CJC` in AC and transient analysis.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 92 canonical rows.
+
+226. Cross-language BJT reverse Early voltage.
+   - Status: completed in PR 8762.
+   - Rust, Python, and TypeScript BJT model cards now accept `VAR` / `VB` and
+     apply reverse Early-effect base-charge modulation in DC, transient, AC,
+     transfer-function, and noise paths.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 94 canonical rows.
 
 ## Backlog
 

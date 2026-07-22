@@ -2423,8 +2423,7 @@ impl ToolResult {
 // ============================================================================
 
 /// Sort order for tool invocation request queries.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[derive(Default)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum ToolInvocationSort {
     #[default]
     RequestedAtAsc,
@@ -2432,7 +2431,6 @@ pub enum ToolInvocationSort {
     ToolIdThenRequestedAt,
     CallId,
 }
-
 
 /// Query options for selecting pending or persisted invocation requests.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -2533,8 +2531,7 @@ where
 }
 
 /// Sort order for durable tool call record queries.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[derive(Default)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum ToolCallRecordSort {
     #[default]
     StartedAtAsc,
@@ -2543,7 +2540,6 @@ pub enum ToolCallRecordSort {
     StatusThenToolId,
     CallId,
 }
-
 
 /// Query options for selecting durable tool call lifecycle records.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -2644,8 +2640,7 @@ where
 }
 
 /// Sort order for tool event stream queries.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[derive(Default)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum ToolEventSort {
     #[default]
     TimeAsc,
@@ -2653,7 +2648,6 @@ pub enum ToolEventSort {
     SequenceAsc,
     SequenceDesc,
 }
-
 
 /// Query options for selecting events from a tool execution stream.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -2739,15 +2733,13 @@ where
 }
 
 /// Sort order for terminal tool result queries.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[derive(Default)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum ToolResultSort {
     #[default]
     CallId,
     RunMsAsc,
     RunMsDesc,
 }
-
 
 /// Query options for selecting terminal tool results.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -3281,6 +3273,43 @@ pub enum ApprovalState {
     Expired,
 }
 
+/// Strength of the user authentication attached to an approval grant.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum ApprovalAssurance {
+    /// An explicit user confirmation without strong re-authentication.
+    ExplicitConsent,
+    /// A biometric assertion produced by a trusted device boundary.
+    Biometric,
+    /// A hardware-backed assertion suitable for the highest privilege tier.
+    HardwareKey,
+}
+
+impl ApprovalAssurance {
+    /// Stable wire label for audit and user-facing summaries.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::ExplicitConsent => "explicit_consent",
+            Self::Biometric => "biometric",
+            Self::HardwareKey => "hardware_key",
+        }
+    }
+
+    /// Minimum assurance required by one Chief privilege tier.
+    pub fn required_for(tier: PrivilegeTier) -> Self {
+        match tier {
+            PrivilegeTier::Tier0 | PrivilegeTier::Tier1 => Self::ExplicitConsent,
+            PrivilegeTier::Tier2 => Self::Biometric,
+            PrivilegeTier::Tier3 => Self::HardwareKey,
+        }
+    }
+}
+
+impl Display for ApprovalAssurance {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
 impl ApprovalState {
     pub fn as_str(self) -> &'static str {
         match self {
@@ -3312,6 +3341,10 @@ pub struct ToolApprovalGrant {
     pub granted_by: String,
     pub granted_at: TimestampMs,
     pub expires_at: Option<TimestampMs>,
+    /// Challenge this grant answers. Tier 2+ grants must be challenge-bound.
+    pub challenge_id: Option<String>,
+    /// Authentication strength asserted by the trusted approval surface.
+    pub assurance: ApprovalAssurance,
 }
 
 impl ToolApprovalGrant {
@@ -3327,6 +3360,8 @@ impl ToolApprovalGrant {
             granted_by: granted_by.into(),
             granted_at,
             expires_at: None,
+            challenge_id: None,
+            assurance: ApprovalAssurance::ExplicitConsent,
         }
     }
 
@@ -3334,6 +3369,113 @@ impl ToolApprovalGrant {
         self.expires_at = Some(expires_at);
         self
     }
+
+    /// Bind this grant to a specific approval challenge.
+    pub fn with_challenge_id(mut self, challenge_id: impl Into<String>) -> Self {
+        self.challenge_id = Some(challenge_id.into());
+        self
+    }
+
+    /// Attach the authentication assurance supplied by the trusted UI.
+    pub fn with_assurance(mut self, assurance: ApprovalAssurance) -> Self {
+        self.assurance = assurance;
+        self
+    }
+}
+
+/// User-visible approval challenge derived from a validated invocation.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ToolApprovalChallenge {
+    pub challenge_id: String,
+    pub call_id: String,
+    pub tool_id: ToolId,
+    pub display_name: String,
+    pub required_tier: PrivilegeTier,
+    pub required_assurance: ApprovalAssurance,
+    pub requested_at: TimestampMs,
+    pub expires_at: Option<TimestampMs>,
+}
+
+impl ToolApprovalChallenge {
+    /// Derive the challenge id expected for one call without exposing payloads.
+    pub fn id_for(
+        call_id: impl AsRef<str>,
+        tool_id: impl AsRef<str>,
+        requested_at: TimestampMs,
+    ) -> String {
+        format!(
+            "approval:{}:{}:{}",
+            call_id.as_ref(),
+            tool_id.as_ref(),
+            requested_at
+        )
+    }
+
+    /// Derive the stable challenge shown by the trusted approval surface.
+    pub fn for_invocation(definition: &ToolDefinition, request: &ToolInvocationRequest) -> Self {
+        Self {
+            challenge_id: approval_challenge_id(request),
+            call_id: request.call_id.clone(),
+            tool_id: request.tool_id.clone(),
+            display_name: definition.display_name.clone(),
+            required_tier: definition.required_tier,
+            required_assurance: ApprovalAssurance::required_for(definition.required_tier),
+            requested_at: request.requested_at,
+            expires_at: request.deadline_at,
+        }
+    }
+
+    /// Create a challenge-bound grant after the trusted UI authenticates a user.
+    pub fn grant(
+        &self,
+        granted_by: impl Into<String>,
+        granted_at: TimestampMs,
+        assurance: ApprovalAssurance,
+    ) -> ToolApprovalGrant {
+        let mut grant = ToolApprovalGrant::new(
+            self.call_id.clone(),
+            self.tool_id.clone(),
+            granted_by,
+            granted_at,
+        )
+        .with_challenge_id(self.challenge_id.clone())
+        .with_assurance(assurance);
+        grant.expires_at = self.expires_at;
+        grant
+    }
+
+    fn details(&self) -> JsonValue {
+        JsonValue::Object(vec![
+            (
+                "challenge_id".to_string(),
+                JsonValue::String(self.challenge_id.clone()),
+            ),
+            (
+                "call_id".to_string(),
+                JsonValue::String(self.call_id.clone()),
+            ),
+            (
+                "tool_id".to_string(),
+                JsonValue::String(self.tool_id.clone()),
+            ),
+            (
+                "display_name".to_string(),
+                JsonValue::String(self.display_name.clone()),
+            ),
+            (
+                "required_tier".to_string(),
+                JsonValue::String(self.required_tier.as_str().to_string()),
+            ),
+            (
+                "required_assurance".to_string(),
+                JsonValue::String(self.required_assurance.as_str().to_string()),
+            ),
+        ])
+    }
+}
+
+fn approval_challenge_id(request: &ToolInvocationRequest) -> String {
+    ToolApprovalChallenge::id_for(&request.call_id, &request.tool_id, request.requested_at)
 }
 
 /// Durable summary of one tool call lifecycle.
@@ -3346,6 +3488,7 @@ pub struct ToolCallRecord {
     pub completed_at: Option<TimestampMs>,
     pub lock_scope: Option<String>,
     pub approval_state: ApprovalState,
+    pub approval_assurance: Option<ApprovalAssurance>,
     pub metrics: ToolMetrics,
 }
 
@@ -3359,6 +3502,7 @@ impl ToolCallRecord {
             completed_at: None,
             lock_scope: definition.and_then(|definition| definition.preferred_lock_scope.clone()),
             approval_state: ApprovalState::NotRequired,
+            approval_assurance: None,
             metrics: ToolMetrics::default(),
         }
     }
@@ -3496,8 +3640,7 @@ impl ToolAuditSink for InMemoryToolAuditSink {
 }
 
 /// Sort order for audit read-side queries.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[derive(Default)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum ToolAuditRecordSort {
     #[default]
     OriginalOrder,
@@ -3507,7 +3650,6 @@ pub enum ToolAuditRecordSort {
     CompletedAtAsc,
     CompletedAtDesc,
 }
-
 
 /// Storage-neutral query for payload-free audit records.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -3769,6 +3911,8 @@ pub struct ToolPolicyProfile {
     pub allowed_capabilities: Vec<String>,
     pub allowed_side_effects: Vec<ToolSideEffects>,
     pub approval_required_side_effects: Vec<ToolSideEffects>,
+    /// Require approval for tools at or above this privilege tier.
+    pub approval_required_at_or_above: Option<PrivilegeTier>,
 }
 
 impl ToolPolicyProfile {
@@ -3783,6 +3927,7 @@ impl ToolPolicyProfile {
                 ToolSideEffects::External,
             ],
             approval_required_side_effects: Vec::new(),
+            approval_required_at_or_above: None,
         }
     }
 
@@ -3792,6 +3937,7 @@ impl ToolPolicyProfile {
             allowed_capabilities: vec!["*".to_string()],
             allowed_side_effects: vec![ToolSideEffects::None, ToolSideEffects::Read],
             approval_required_side_effects: Vec::new(),
+            approval_required_at_or_above: None,
         }
     }
 
@@ -3802,6 +3948,12 @@ impl ToolPolicyProfile {
 
     pub fn with_approval_required_for(mut self, side_effects: Vec<ToolSideEffects>) -> Self {
         self.approval_required_side_effects = side_effects;
+        self
+    }
+
+    /// Require challenge-bound approval for tools at or above `minimum_tier`.
+    pub fn with_approval_required_at_or_above(mut self, minimum_tier: PrivilegeTier) -> Self {
+        self.approval_required_at_or_above = Some(minimum_tier);
         self
     }
 
@@ -3852,10 +4004,15 @@ impl ToolPolicyEngine for ToolPolicyProfile {
         if self
             .approval_required_side_effects
             .contains(&definition.side_effects)
+            || self
+                .approval_required_at_or_above
+                .is_some_and(|minimum_tier| definition.required_tier >= minimum_tier)
         {
             return ToolPolicyDecision::require_approval(format!(
-                "tool side effect '{}' requires approval",
-                definition.side_effects
+                "tool '{}' at {} requires approval with '{}' assurance",
+                definition.tool_id,
+                definition.required_tier,
+                ApprovalAssurance::required_for(definition.required_tier)
             ));
         }
 
@@ -4207,6 +4364,9 @@ pub struct ToolExecutionJournalHealthSummary {
     pub approval_granted_count: usize,
     pub approval_denied_count: usize,
     pub approval_expired_count: usize,
+    pub approval_explicit_consent_count: usize,
+    pub approval_biometric_count: usize,
+    pub approval_hardware_key_count: usize,
     pub terminal_event_count: usize,
     pub terminal_event_mismatch_count: usize,
     pub results_without_terminal_event_count: usize,
@@ -4247,6 +4407,14 @@ impl ToolExecutionJournalHealthSummary {
                 ApprovalState::Granted => summary.approval_granted_count += 1,
                 ApprovalState::Denied => summary.approval_denied_count += 1,
                 ApprovalState::Expired => summary.approval_expired_count += 1,
+            }
+            match record.approval_assurance {
+                Some(ApprovalAssurance::ExplicitConsent) => {
+                    summary.approval_explicit_consent_count += 1
+                }
+                Some(ApprovalAssurance::Biometric) => summary.approval_biometric_count += 1,
+                Some(ApprovalAssurance::HardwareKey) => summary.approval_hardware_key_count += 1,
+                None => {}
             }
         }
 
@@ -4485,10 +4653,12 @@ impl InMemoryToolRuntime {
                 return trace_with_terminal(record, request, Vec::new(), result);
             }
             ToolPolicyOutcome::RequiresApproval => {
+                let challenge = ToolApprovalChallenge::for_invocation(definition, request);
                 if let Some(approval_grant) = approval_grant {
-                    match validate_approval_grant(approval_grant, request) {
+                    match validate_approval_grant(approval_grant, request, definition, &challenge) {
                         Ok(()) => {
                             record.approval_state = ApprovalState::Granted;
+                            record.approval_assurance = Some(approval_grant.assurance);
                         }
                         Err((approval_state, error)) => {
                             let result = ToolResult::failed(request.call_id.clone(), error);
@@ -4504,7 +4674,7 @@ impl InMemoryToolRuntime {
                         ToolCallError {
                             kind: ToolErrorKind::ToolApprovalRequired,
                             message: policy_decision.message,
-                            details: policy_decision.details,
+                            details: challenge.details(),
                         },
                     );
                     record.status = ToolCallStatus::AwaitingApproval;
@@ -4600,6 +4770,8 @@ impl InMemoryToolRuntime {
 fn validate_approval_grant(
     grant: &ToolApprovalGrant,
     request: &ToolInvocationRequest,
+    definition: &ToolDefinition,
+    challenge: &ToolApprovalChallenge,
 ) -> Result<(), (ApprovalState, ToolCallError)> {
     if grant.call_id != request.call_id {
         return Err((
@@ -4623,6 +4795,43 @@ fn validate_approval_grant(
         return Err((
             ApprovalState::Denied,
             approval_error("approval grant is missing granted_by", grant_details(grant)),
+        ));
+    }
+    let required_assurance = ApprovalAssurance::required_for(definition.required_tier);
+    if grant.assurance < required_assurance {
+        return Err((
+            ApprovalState::Denied,
+            approval_error(
+                format!(
+                    "approval assurance '{}' is weaker than required '{}'",
+                    grant.assurance, required_assurance
+                ),
+                challenge.details(),
+            ),
+        ));
+    }
+    if definition.required_tier >= PrivilegeTier::Tier2
+        && grant.challenge_id.as_deref() != Some(challenge.challenge_id.as_str())
+    {
+        return Err((
+            ApprovalState::Denied,
+            approval_error(
+                "Tier 2+ approval grant is not bound to the active challenge",
+                challenge.details(),
+            ),
+        ));
+    }
+    if grant
+        .challenge_id
+        .as_deref()
+        .is_some_and(|challenge_id| challenge_id != challenge.challenge_id)
+    {
+        return Err((
+            ApprovalState::Denied,
+            approval_error(
+                "approval grant challenge_id does not match invocation",
+                challenge.details(),
+            ),
         ));
     }
     if grant
@@ -4664,7 +4873,17 @@ fn grant_details(grant: &ToolApprovalGrant) -> JsonValue {
             "granted_at".to_string(),
             JsonValue::Number(JsonNumber::Integer(grant.granted_at as i64)),
         ),
+        (
+            "assurance".to_string(),
+            JsonValue::String(grant.assurance.as_str().to_string()),
+        ),
     ];
+    if let Some(challenge_id) = &grant.challenge_id {
+        fields.push((
+            "challenge_id".to_string(),
+            JsonValue::String(challenge_id.clone()),
+        ));
+    }
     if let Some(expires_at) = grant.expires_at {
         fields.push((
             "expires_at".to_string(),
@@ -5786,6 +6005,7 @@ mod tests {
             completed_at: None,
             lock_scope: Some("artifact".to_string()),
             approval_state: ApprovalState::NotRequired,
+            approval_assurance: None,
             metrics: ToolMetrics::default(),
         };
         let awaiting_approval = ToolCallRecord {
@@ -5829,7 +6049,8 @@ mod tests {
 
     #[test]
     fn event_queries_filter_terminal_events_and_sequences() {
-        let events = [ToolEvent {
+        let events = [
+            ToolEvent {
                 call_id: "call_1".to_string(),
                 sequence: 0,
                 at: 100,
@@ -5856,7 +6077,8 @@ mod tests {
                 at: 115,
                 kind: ToolEventKind::Completed,
                 payload: JsonValue::Null,
-            }];
+            },
+        ];
 
         let terminal = query_tool_events(
             events.iter(),
@@ -6094,6 +6316,9 @@ mod tests {
                 approval_granted_count: 0,
                 approval_denied_count: 0,
                 approval_expired_count: 0,
+                approval_explicit_consent_count: 0,
+                approval_biometric_count: 0,
+                approval_hardware_key_count: 0,
                 terminal_event_count: 1,
                 terminal_event_mismatch_count: 0,
                 results_without_terminal_event_count: 0,
@@ -6422,6 +6647,79 @@ mod tests {
             ToolErrorKind::ToolApprovalDenied
         );
         assert!(!*called.lock().unwrap());
+    }
+
+    #[test]
+    fn tier2_calls_require_challenge_bound_biometric_assurance() {
+        use std::sync::{Arc, Mutex};
+
+        let called = Arc::new(Mutex::new(false));
+        let called_by_handler = Arc::clone(&called);
+        let policy =
+            ToolPolicyProfile::allow_all().with_approval_required_at_or_above(PrivilegeTier::Tier2);
+        let mut runtime = InMemoryToolRuntime::with_policy(policy);
+        let mut definition = artifact_create_definition();
+        definition.required_tier = PrivilegeTier::Tier2;
+        let challenge_definition = definition.clone();
+        runtime
+            .register_handler(definition, move |_, _| {
+                *called_by_handler.lock().unwrap() = true;
+                Ok(ToolHandlerOutput::new(JsonValue::Object(vec![(
+                    "artifact_ref".to_string(),
+                    JsonValue::String("artifact_1".to_string()),
+                )])))
+            })
+            .unwrap();
+        let request = artifact_create_request();
+
+        let pending = runtime.invoke_with_events(&request);
+        assert_eq!(pending.record.approval_state, ApprovalState::Pending);
+        let challenge = ToolApprovalChallenge::for_invocation(&challenge_definition, &request);
+        assert!(format!("{:?}", pending.result.error.unwrap().details)
+            .contains(&challenge.challenge_id));
+
+        let weak = challenge.grant(
+            "user_1",
+            request.requested_at,
+            ApprovalAssurance::ExplicitConsent,
+        );
+        let denied = runtime.invoke_with_events_with_approval(&request, &weak);
+        assert_eq!(denied.record.approval_state, ApprovalState::Denied);
+        assert!(denied
+            .result
+            .error
+            .unwrap()
+            .message
+            .contains("weaker than required"));
+        assert!(!*called.lock().unwrap());
+
+        let unbound = ToolApprovalGrant::new(
+            request.call_id.clone(),
+            request.tool_id.clone(),
+            "user_1",
+            request.requested_at,
+        )
+        .with_assurance(ApprovalAssurance::Biometric);
+        let unbound_denied = runtime.invoke_with_events_with_approval(&request, &unbound);
+        assert_eq!(unbound_denied.record.approval_state, ApprovalState::Denied);
+        assert!(unbound_denied
+            .result
+            .error
+            .unwrap()
+            .message
+            .contains("not bound"));
+        assert!(!*called.lock().unwrap());
+
+        let biometric =
+            challenge.grant("user_1", request.requested_at, ApprovalAssurance::Biometric);
+        let approved = runtime.invoke_with_events_with_approval(&request, &biometric);
+        assert!(approved.result.ok);
+        assert_eq!(approved.record.approval_state, ApprovalState::Granted);
+        assert_eq!(
+            approved.record.approval_assurance,
+            Some(ApprovalAssurance::Biometric)
+        );
+        assert!(*called.lock().unwrap());
     }
 
     #[test]

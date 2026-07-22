@@ -1,5 +1,8 @@
 # Changelog — iir-to-llvm
 
+## 0.43.0 - 2026-07-20 — builtin whitelist: dyn_null_p (native `null?`)
+
+Part of the fix restoring McCarthy-lisp list programs on the native-AOT / LLVM backends (`lang-aot` `lang_matrix`). See the umbrella commit for the full story: `null?` was never routed to a runtime call on the tagged native/LLVM path (breaking every cons-walk helper), `list-ref`/`assoc` unboxed a raw-int index/key (→ wrong element), a top-level `(null? …)` predicate result was unboxed instead of truthy-coerced, and cons-cell field access failed the JVM verifier. Verified end-to-end: native list-ref/assoc/length/reverse/append/null? all correct.
 ## 0.42.0 - 2026-07-14 (E6d-6-LLVM: structural heap ops + special-char name quoting → records run on LLVM)
 
 Two additions give the LLVM column the word-granular heap model the native

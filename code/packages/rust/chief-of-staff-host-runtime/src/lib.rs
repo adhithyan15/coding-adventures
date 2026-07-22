@@ -1153,9 +1153,9 @@ fn validate_label(field: &str, value: &str) -> Result<(), HostRuntimeError> {
 mod tests {
     use super::*;
     use chief_of_staff_tool_api::{
-        ApprovalState, JsonSchema, RequestedBy, ToolConcurrency, ToolHandlerOutput,
-        ToolIdempotency, ToolInvocationRequest, ToolPolicyProfile, ToolSideEffects, ToolStability,
-        ToolStreaming,
+        ApprovalAssurance, ApprovalState, JsonSchema, RequestedBy, ToolApprovalChallenge,
+        ToolConcurrency, ToolHandlerOutput, ToolIdempotency, ToolInvocationRequest,
+        ToolPolicyProfile, ToolSideEffects, ToolStability, ToolStreaming,
     };
     use coding_adventures_ed25519::{generate_keypair, sign};
     use generic_job_protocol::JobResult;
@@ -1184,7 +1184,7 @@ mod tests {
         },
         {
           "host_id": "writer_host",
-          "max_tier": "tier1",
+          "max_tier": "tier2",
           "allowed_tools": ["demo.write"],
           "capabilities": ["demo_write"]
         }
@@ -1558,8 +1558,9 @@ while (true) {
                 },
             )
             .unwrap();
-        let mut write_definition = definition("demo.write", PrivilegeTier::Tier1, &["demo_write"]);
+        let mut write_definition = definition("demo.write", PrivilegeTier::Tier2, &["demo_write"]);
         write_definition.side_effects = ToolSideEffects::Write;
+        let challenge_definition = write_definition.clone();
         runtime
             .register_handler(write_definition, |_arguments, _context| {
                 Ok(ToolHandlerOutput::new(JsonValue::String(
@@ -1571,7 +1572,8 @@ while (true) {
             .set_host_policy(
                 "writer_host",
                 ToolPolicyProfile::allow_all()
-                    .with_approval_required_for(vec![ToolSideEffects::Write]),
+                    .with_approval_required_for(vec![ToolSideEffects::Write])
+                    .with_approval_required_at_or_above(PrivilegeTier::Tier2),
             )
             .unwrap();
         let active = runtime.activate().unwrap();
@@ -1581,12 +1583,23 @@ while (true) {
         assert_eq!(pending.record.approval_state, ApprovalState::Pending);
         assert!(!pending.result.ok);
 
-        let grant =
-            ToolApprovalGrant::new("call_1", "demo.write", "user_1", 100).with_expires_at(200);
+        let challenge =
+            ToolApprovalChallenge::for_invocation(&challenge_definition, &write_request);
+        let weak = challenge.grant("user_1", 100, ApprovalAssurance::ExplicitConsent);
+        let denied = active
+            .invoke_with_events_with_approval(&write_request, &weak)
+            .unwrap();
+        assert_eq!(denied.record.approval_state, ApprovalState::Denied);
+
+        let grant = challenge.grant("user_1", 100, ApprovalAssurance::Biometric);
         let approved = active
             .invoke_with_events_with_approval(&write_request, &grant)
             .unwrap();
         assert_eq!(approved.record.approval_state, ApprovalState::Granted);
+        assert_eq!(
+            approved.record.approval_assurance,
+            Some(ApprovalAssurance::Biometric)
+        );
         assert_eq!(
             approved.result.output,
             Some(JsonValue::String("written".to_string()))

@@ -1,5 +1,46 @@
 # Changelog
 
+## [0.17.0] — 2026-07-21 — the `adj-verify` binary (RS-4 PR-D2)
+
+Implements `ADJ-REASON-MATH.md` §E.5/§E.6: a standalone re-checker that reads an
+`.adj` program and **re-executes its reasoning**, reporting per step whether it
+still holds. It is not `adj-replay` (ADJ08) — it never invokes a model and never
+leaves the process; it is the deep re-execution *inside* one engine artifact,
+which ADJ08's linter should call rather than reimplement.
+
+### Added
+
+- **`adj-verify <PROGRAM> [--snapshots DIR]`** — prints a JSON report and exits
+  **1 when anything failed**, so it composes as a CI gate rather than as prose a
+  human has to read. Both reasoning paths are examined and labelled: `sld`
+  (recall, rules, tables, negation) and `lr` (likelihood-ratio aggregation).
+  Verifying only one while printing "verified" would leave half the trail
+  unexamined behind a clean headline.
+- `--snapshots DIR` reads pinned source documents from a content-addressed
+  directory whose filenames are the lowercase SHA-256 hex of their contents. The
+  bytes are **re-hashed after reading** — a store that trusted the filename would
+  let anyone who can write into that directory make an arbitrary document answer
+  to a pinned hash, which is the exact substitution pinning exists to prevent.
+- **`verified` and `fully_verified` are different claims.** The first means every
+  step re-executed; the second additionally requires that every proof had its
+  quotes confirmed against a snapshot, and that there was something to check.
+  Today's stdlib is `unmigrated`, so it is honestly `verified: true`,
+  `fully_verified: false` — the report refuses to let a wholly unchecked corpus
+  read as a clean bill of health.
+- **`src/lib.rs`** — `esc`, `payload`, `query_echo`, `sensitive_input` and
+  `FsProvider` moved out of `main.rs` so both binaries link the *same* copy. A
+  security check that exists twice exists zero times: a second implementation of
+  the sensitive-channel test or the import-sandbox containment check would
+  eventually disagree with the first, silently.
+
+### Security
+
+- Quoted spans and goal terms leave through `payload()` — redacted on a sensitive
+  channel, length-capped, and JSON-escaped. Both are untrusted text: a quote is
+  lifted verbatim from a spidered page, and an unescaped newline in a
+  line-oriented trail lets a span forge its own `"logic":"rechecked"` line.
+- No network access. See the `logic-engine` 0.44.0 entry.
+
 ## [0.16.0] — 2026-07-21 — typed abstention reasons (RS-4 PR-C)
 
 Implements `ADJ-REASON-MATH.md` §E.4. Every abstention used to be one bit —

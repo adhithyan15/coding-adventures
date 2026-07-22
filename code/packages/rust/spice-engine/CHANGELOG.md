@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+- Add BJT model-card `IKF`/`IK` forward high-current beta roll-off support with
+  shared base-charge modulation in DC, transient, AC, transfer-function, and
+  noise paths, matching Python and TypeScript. The supported-parameter catalog
+  now contains 96 canonical rows.
+- Add BJT model-card `VAR`/`VB` reverse Early-voltage support with base-charge
+  modulation in DC, transient, AC, transfer-function, and noise paths, matching
+  Python and TypeScript. The supported-parameter catalog now contains 94
+  canonical rows.
+- Add BJT model-card `FC` forward-bias depletion-coefficient support for the
+  shared `CJE` and `CJC` Berkeley continuation law in AC and transient analysis,
+  matching Python and TypeScript. The supported-parameter catalog now contains
+  92 canonical rows.
+- Add BJT model-card `VJC`/`PC` base-collector junction-potential and `MJC`/`MC`
+  grading-coefficient support with bias-shaped `CJC` depletion capacitance in
+  AC and transient analysis, matching Python and TypeScript. The supported-
+  parameter catalog now contains 90 canonical rows.
 - Add BJT model-card `VJE`/`PE` base-emitter junction-potential and `MJE`/`ME`
   grading-coefficient support with bias-shaped `CJE` depletion capacitance in
   AC and transient analysis, matching Python and TypeScript. The supported-

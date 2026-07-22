@@ -6205,15 +6205,14 @@ mod tests {
         };
         let out =
             transform_source("function dead() { return 1; } used();", &cfg).expect("ok");
-        // NOTE: the extra `;` after the function `}` is a known WHITESPACE_ONLY
-        // drift — the `whitespace_only` module is a comment/whitespace minifier
-        // separate from the AST emitter, so the emitter's "terminate only the
-        // last program item" rule does not reach it. The real Closure emits
-        // `function dead(){return 1}used();` (no `;`) here too; closing that gap
-        // is tracked as a separate task. This assertion documents current
-        // behaviour and the survival of the (unused) function under WHITESPACE.
+        // The function survives (WHITESPACE_ONLY does no tree-shaking) and the
+        // declaration is NOT terminated: a brace-terminated construct takes the
+        // synthetic `;` only when nothing follows it, and `used();` follows here.
+        // Oracle-verified. This matches the emitter-side rule from the
+        // "terminate only the last program item" change, so both output paths
+        // now agree.
         assert_eq!(
-            out, "function dead(){return 1};used();",
+            out, "function dead(){return 1}used();",
             "whitespace_only must NOT remove the function"
         );
     }
@@ -6420,7 +6419,7 @@ mod tests {
         };
         let out = transform_source("function f(longName) { return longName + 1; } f(5);", &cfg)
             .expect("ok");
-        assert_eq!(out, "function f(longName){return longName+1};f(5);");
+        assert_eq!(out, "function f(longName){return longName+1}f(5);");
     }
 
     #[test]

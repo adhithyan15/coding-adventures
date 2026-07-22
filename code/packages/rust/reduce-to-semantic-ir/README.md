@@ -195,3 +195,25 @@ with no access to the feature-tracking state).
   calls, lists/cons, `if` expressions, a group statement, a
   multi-statement program) through `node`, proving the SIR23 codegen path
   is genuinely executable end-to-end, not just statically accepted.
+- `tests/oracle.rs` — HML01 §7 oracle/golden testing: the direct Reduce
+  sibling of `derive-to-semantic-ir/tests/oracle.rs`, cross-checking
+  `reduce-runtime` (ground truth, the same `symbolic-vm`-backed evaluator
+  this crate's own CST comes from) against this crate's own
+  `compile_source` → `semantic_ir_to_javascript::compile` → real `node`
+  path, over a 38-case corpus. Only 4 cases (bare integer/float/symbol
+  atoms) currently agree end-to-end — the other 34 are `known_bug` and
+  documented, not fixed here, for three disjoint, already-confirmed
+  reasons: (1) `semantic-ir-to-javascript`'s SIR23 codegen has no
+  evaluator at all (the same gap `derive-to-semantic-ir`'s own oracle PR
+  found, now generalized in `SIR23-symbolic-pattern-semantic-ir.md`'s own
+  addendum — every Stream B frontend whose native runtime reuses
+  `SymbolicBackend::new()` unchanged, which includes `reduce-runtime`,
+  hits it identically); (2) that same backend's sole SIR23 stringifier has
+  no per-source-language display convention; and (3), genuinely
+  Reduce-specific, `symbolic-vm`'s shared handler table has no evaluation
+  handler at all for `CompoundExpression`/the list accessors/a non-folding
+  `Cons` — confirmed empirically that `reduce-runtime` itself already
+  leaves these unevaluated, so the *only* thing those specific corpus
+  cases can find is the display-convention gap, not a compiled-side
+  evaluation shortfall. See `tests/oracle.rs`'s own module doc and
+  `CHANGELOG.md`'s `[0.1.1]` entry for the full, case-by-case accounting.

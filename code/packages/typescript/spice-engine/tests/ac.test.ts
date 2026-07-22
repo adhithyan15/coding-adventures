@@ -605,6 +605,30 @@ describe("acSweep", () => {
     expect(baseAmplitude(2.0)).toBeGreaterThan(baseAmplitude(1.0));
   });
 
+  it("uses BJT reverse Early voltage to reduce AC gain", () => {
+    function gain(reverseEarlyVoltage: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vin", "base", "0", 0.65, 1.0));
+      circuit.add(resistor("Rload", "out", "0", 1_000.0));
+      circuit.add({ ...bjt("Q1", "out", "base", "0"), reverseEarlyVoltage });
+      return complexAbs(acSweep(circuit, 1_000.0, 1_000.0, 1, "lin")[0].voltage("out")!);
+    }
+
+    expect(gain(1.0)).toBeLessThan(gain(0.0));
+  });
+
+  it("uses BJT forward beta roll-off to reduce AC gain", () => {
+    function gain(forwardBetaRolloffCurrent: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vin", "base", "0", 0.65, 1.0));
+      circuit.add(resistor("Rload", "out", "0", 1_000.0));
+      circuit.add({ ...bjt("Q1", "out", "base", "0"), forwardBetaRolloffCurrent });
+      return complexAbs(acSweep(circuit, 1_000.0, 1_000.0, 1, "lin")[0].voltage("out")!);
+    }
+
+    expect(gain(1.0e-4)).toBeLessThan(gain(0.0));
+  });
+
   it("shapes BJT base-emitter depletion capacitance under reverse bias", () => {
     function baseAmplitude(baseEmitterGradingCoefficient: number): number {
       const circuit = new Circuit();
@@ -615,6 +639,34 @@ describe("acSweep", () => {
     }
 
     expect(baseAmplitude(0.5)).toBeGreaterThan(baseAmplitude(0.0));
+  });
+
+  it("shapes BJT base-collector depletion capacitance under reverse bias", () => {
+    function collectorAmplitude(baseCollectorGradingCoefficient: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "in", "0", 1.0, 1.0));
+      circuit.add(resistor("Rin", "in", "collector", 1_000.0));
+      circuit.add(bjt("Q1", "collector", "0", "0", "NPN", 1.0e-14, 100.0, 0.02585, 0.0, 1.0e-6, 0.0, 0.0, 3.0, 1.11, 0.0, 1.0, 1.0, 0.75, 0.33, 0.75, baseCollectorGradingCoefficient));
+      return complexAbs(acSweep(circuit, 1_000.0, 1_000.0, 1)[0].voltage("collector")!);
+    }
+
+    expect(collectorAmplitude(0.5)).toBeGreaterThan(collectorAmplitude(0.0));
+  });
+
+  it("uses BJT FC to shape both forward-biased depletion junctions", () => {
+    function junctionAmplitude(coefficient: number, baseEmitter: boolean): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "in", "0", 0.6, 1.0));
+      circuit.add(resistor("Rin", "in", "base", 1_000.0));
+      circuit.add(bjt("Q1", "0", "base", "0", "NPN", 1.0e-30, 100.0, 0.02585, baseEmitter ? 1.0e-6 : 0.0, baseEmitter ? 0.0 : 1.0e-6, 0.0, 0.0, 3.0, 1.11, 0.0, 1.0, 1.0, 0.75, 0.33, 0.75, 0.33, coefficient));
+      return complexAbs(acSweep(circuit, 1_000.0, 1_000.0, 1)[0].voltage("base")!);
+    }
+
+    for (const baseEmitter of [true, false]) {
+      expect(junctionAmplitude(0.8, baseEmitter)).toBeLessThan(
+        junctionAmplitude(0.2, baseEmitter) * 0.9,
+      );
+    }
   });
 
   it("applies VCVS gain in AC analysis", () => {

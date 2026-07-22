@@ -2,6 +2,15 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- Added canonical approval challenges and explicit-consent, biometric, and
+  hardware-key assurance levels. Tier-aware policy can now require approval at
+  a privilege threshold, and Tier 2+ grants must match the active challenge
+  before a handler can run.
+
 ## [0.1.0] - 2026-05-08
 
 ### Added
