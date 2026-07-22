@@ -3,6 +3,23 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.35] - Unreleased
+
+### Added
+
+- **A GROUP BY over a bare non-key column reports the group's first-row value,
+  not NULL.** `SELECT c FROM t GROUP BY x` (where `c` is neither a GROUP BY key
+  nor inside an aggregate) returned NULL; SQLite reports such a bare column from
+  the group's FIRST row. The GROUP BY state now keeps a representative row per
+  group — the first source row, snapshotted when the group is created — and the
+  Phase-2 fake row is built from it (via `build_group_fake_row`) with the
+  canonical key-column values overlaid on top, so a bare column resolves to a
+  value while a collated key still reports its original text. Both engines scan
+  an in-memory table in rowid order, so "first row of the group" is
+  deterministic. (The min/max-follows refinement — bare columns tracking the row
+  that holds a `min()`/`max()` — needs an aggregate present, which the projection
+  path does not yet combine with bare columns; a separate ledgered gap.)
+
 ## [0.4.34] - Unreleased
 
 ### Added
