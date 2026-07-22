@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.47.0 — the last unmapped comparison operator: `==`, now structural
+
+`!=`, `<=`, `>=` already routed to `__Sir.ne`/`le`/`ge`, but `==` (the operator
+spelling the Ruby frontend emits) was never mapped — so `puts(1 == 1)` threw
+`TypeError: unknown builtin: ==`. The emitter now maps `==`→`__Sir.eq`, and the
+`builtins` dispatch table gains `==`/`!=` (for a first-class `:==`/`:!=` symbol
+reference), matching the `<=`/`>=` already there.
+
+`eq`/`ne` also now route to `valEq` — the STRUCTURAL equality `include?`/
+`index`/`case`-`when` already use — instead of the old `numOf(a) === numOf(b)`.
+That old form was reference equality for arrays/maps, so `[1,2] == [1,2]` was
+false; harmless while `==` threw `unknown builtin`, but wrong once lowered. Now
+`[1,2] == [1,2]` is true, matching the Python, Ruby, Go, C and Rust backends
+(numbers still compare by value across Integer/Float; symbols by name; nested
+composites recurse, cycle-safe). `ne` is the exact negation. Ordering
+(`<`/`>`/`<=`/`>=`) stays a `numOf` unwrap — order is numeric.
+
 ## 0.46.0 — J's own display convention, and its two missing builtins
 
 Both found by `j-to-semantic-ir/tests/oracle.rs` (that crate's new

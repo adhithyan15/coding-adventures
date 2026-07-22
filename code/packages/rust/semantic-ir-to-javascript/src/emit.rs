@@ -1612,6 +1612,12 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
     if args.len() == 2 {
         let cmp = match name {
             "=" => Some("__Sir.eq"),
+            // `==` is the operator spelling the Ruby frontend emits; it is a
+            // synonym for `=` (both structural equality).  The others were
+            // already routed; only `==` was missing, so `puts(1 == 1)` fell
+            // through to `callBuiltin`, which has no `==` and threw
+            // `TypeError: unknown builtin: ==`.
+            "==" => Some("__Sir.eq"),
             "!=" => Some("__Sir.ne"),
             "<" => Some("__Sir.lt"),
             ">" => Some("__Sir.gt"),
@@ -2177,6 +2183,9 @@ mod tests {
         // plain numbers these are exactly the old `===`/`<`/…, and additionally
         // correct for a boxed Float (`7.0 == 7`, `7.0 < 8`).
         assert_eq!(emit_e(&bc("=", two())), "__Sir.eq(1, 2)");
+        // `==` is the operator spelling the Ruby frontend emits — a synonym
+        // for `=`, and the one arm that was missing (so `puts(1 == 1)` threw).
+        assert_eq!(emit_e(&bc("==", two())), "__Sir.eq(1, 2)");
         assert_eq!(emit_e(&bc("!=", two())), "__Sir.ne(1, 2)");
         assert_eq!(emit_e(&bc("<", two())), "__Sir.lt(1, 2)");
         assert_eq!(emit_e(&bc(">", two())), "__Sir.gt(1, 2)");

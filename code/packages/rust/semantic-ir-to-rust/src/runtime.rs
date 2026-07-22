@@ -481,6 +481,28 @@ pub const RUNTIME: &str = r##"mod __sir {
     pub fn gt(a: Value, b: Value) -> Value {
         Value::Bool(num_lt(&b, &a))
     }
+    // `!=`, `<=`, `>=` — the operator spellings the Ruby frontend lowers a
+    // comparison chain to (see `lower_comparison_chain`).  All three are
+    // defined in terms of the two primitives above (`num_lt`, `value_eq`) so
+    // they share one source of truth:
+    //   a != b  ⟺  not (a == b)
+    //   a <= b  ⟺  a < b  or  a == b
+    //   a >= b  ⟺  b < a  or  a == b
+    // `value_eq` equates cross-representation numbers (`1 == 1.0`), so
+    // `1 <= 1.0` is true; and because both `num_lt` and `value_eq` answer
+    // `false` for genuinely uncomparable operands, `le`/`ge` return `false`
+    // there rather than a meaningless order — upholding `num_lt`'s own
+    // never-panic-on-the-OO-surface contract. Matches the C backend's
+    // `_sir_le`/`_sir_ge`/`_sir_ne` on every numeric and string input.
+    pub fn ne(a: Value, b: Value) -> Value {
+        Value::Bool(!value_eq(&a, &b))
+    }
+    pub fn le(a: Value, b: Value) -> Value {
+        Value::Bool(num_lt(&a, &b) || value_eq(&a, &b))
+    }
+    pub fn ge(a: Value, b: Value) -> Value {
+        Value::Bool(num_lt(&b, &a) || value_eq(&a, &b))
+    }
 
     // Ordered numeric comparison.  Both-int compares as i64 (no
     // precision loss for large magnitudes); any float operand lifts the
@@ -1127,9 +1149,16 @@ pub const RUNTIME: &str = r##"mod __sir {
                 Value::Float(f) => Value::Float(-f),
                 other => Value::Int(-as_i64(&other)),
             },
-            "=" => {
+            // `==` is a synonym for `=`; both call `eq`.  This covers a
+            // first-class builtin reference (`:==` passed as a symbol) — the
+            // infix form is routed directly by the emitter.
+            "=" | "==" => {
                 let mut it = args.into_iter();
                 eq(it.next().unwrap_or(Value::Nil), it.next().unwrap_or(Value::Nil))
+            }
+            "!=" => {
+                let mut it = args.into_iter();
+                ne(it.next().unwrap_or(Value::Nil), it.next().unwrap_or(Value::Nil))
             }
             "case_eq" => {
                 let mut it = args.into_iter();
@@ -1142,6 +1171,14 @@ pub const RUNTIME: &str = r##"mod __sir {
             ">" => {
                 let mut it = args.into_iter();
                 gt(it.next().unwrap_or(Value::Nil), it.next().unwrap_or(Value::Nil))
+            }
+            "<=" => {
+                let mut it = args.into_iter();
+                le(it.next().unwrap_or(Value::Nil), it.next().unwrap_or(Value::Nil))
+            }
+            ">=" => {
+                let mut it = args.into_iter();
+                ge(it.next().unwrap_or(Value::Nil), it.next().unwrap_or(Value::Nil))
             }
             "cons" => {
                 let mut it = args.into_iter();
@@ -4551,6 +4588,20 @@ mod tests {
         assert!(RUNTIME.contains("fn any_float"));
         assert!(RUNTIME.contains("fn format_float"));
         assert!(RUNTIME.contains("fn num_lt"));
+    }
+
+    #[test]
+    fn runtime_declares_the_comparison_family() {
+        // `!=`/`<=`/`>=` complete the operator-spelling comparison family the
+        // Ruby frontend lowers to; each is defined from `num_lt`/`value_eq`.
+        assert!(RUNTIME.contains("pub fn ne("));
+        assert!(RUNTIME.contains("pub fn le("));
+        assert!(RUNTIME.contains("pub fn ge("));
+        // And wired into the by-name dispatch (for a first-class `:==` symbol).
+        assert!(RUNTIME.contains("\"=\" | \"==\" =>"));
+        assert!(RUNTIME.contains("\"!=\" =>"));
+        assert!(RUNTIME.contains("\"<=\" =>"));
+        assert!(RUNTIME.contains("\">=\" =>"));
     }
 
     #[test]

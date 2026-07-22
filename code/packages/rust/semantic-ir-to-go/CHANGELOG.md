@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.36.0 — operator-spelling comparisons: `==`, `!=`, `<=`, `>=`
+
+The Ruby frontend lowers a comparison chain to `==`/`!=`/`<=`/`>=` builtins,
+which the Go backend did not lower — so even `puts(1 == 1)` panicked
+`unknown builtin: ==`.
+
+- Runtime gains `_sir_ne` (the exact negation of `_sir_eq`), `_sir_le` and
+  `_sir_ge`. A new shared `_sir_cmp` orders two strings LEXICOGRAPHICALLY and
+  numbers by float64 value (`1 <= 1.0` holds), and `<`/`>`/`<=`/`>=` all route
+  through it.
+- Emitter and the `_sir_call_builtin_by_name` dispatch gain `==`/`!=`/`<=`/`>=`.
+
+This also **fixes a pre-existing panic**: `_sir_lt`/`_sir_gt` coerced their
+operands through `_sir_as_float`, which panics on a string — so `"a" < "b"`
+crashed the program instead of comparing. Both now order strings via
+`_sir_cmp`, so Go agrees with the C, Rust, Ruby and Python backends on string
+ordering (a deep-uncomparable operand — nil/pair vs number — still panics in
+`_sir_as_float`, exactly as before; a total order there is a separate
+refinement).
+
 ## 0.35.0 — implement `is_a?` / `kind_of?` / `instance_of?`
 
 These were listed in `_sir_responds_to` but **never implemented**, so

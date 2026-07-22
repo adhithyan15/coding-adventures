@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.2.0 — comparison helpers: `ne`, `le`, `ge`
+
+Adds the runtime helpers the SIR backends need to lower Ruby's `!=`, `<=`, `>=`
+(previously only `eq`/`lt`/`gt` existed, so those operators had nowhere to go).
+
+- `ne(a, b)` — the exact negation of `eq`, inheriting its symbol-awareness
+  (`:x != :x` is false), so `==` and `!=` never disagree.
+- `le(a, b)` / `ge(a, b)` — native `<=` / `>=`, so `1 <= 1.0` is true (int and
+  float compare by value, as in Ruby).
+
+All three are exported and registered in the `call_builtin` dispatch table
+alongside `==` (a synonym for `=`), so a first-class `:==`/`:!=` symbol
+reference dispatches and the "known builtins" error message lists them.
 All notable changes to `coding-adventures-sir-runtime-core` are documented here.
 
 ## [0.1.10] - 2026-07-07

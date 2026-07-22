@@ -615,13 +615,46 @@ func _sir_is_number_val(v Value) bool {
 	return false
 }
 
+// Ordered comparison, shared by `<`/`>`/`<=`/`>=`.  Returns the sign of
+// `a <=> b`: -1, 0, or +1.  Two strings compare LEXICOGRAPHICALLY (so
+// `"a" < "b"`, matching Ruby and the C/Rust/Python backends); otherwise both
+// operands are coerced to float64 (an int/int pair stays exact via the
+// caller's fast path).  Previously the string case fell through to
+// `_sir_as_float`, which PANICS on a string — so `"a" < "b"` crashed rather
+// than ordering.  The deep-uncomparable case (nil/pair vs number) still
+// panics in `_sir_as_float`, exactly as it did before; a total order there is
+// a separate refinement (Ruby raises `ArgumentError`).
+func _sir_cmp(a Value, b Value) int {
+	if as, aok := a.(string); aok {
+		if bs, bok := b.(string); bok {
+			switch {
+			case as < bs:
+				return -1
+			case as > bs:
+				return 1
+			default:
+				return 0
+			}
+		}
+	}
+	af, bf := _sir_as_float(a), _sir_as_float(b)
+	switch {
+	case af < bf:
+		return -1
+	case af > bf:
+		return 1
+	default:
+		return 0
+	}
+}
+
 func _sir_lt(args []Value) Value {
 	if ai, aok := args[0].(int64); aok {
 		if bi, bok := args[1].(int64); bok {
 			return ai < bi
 		}
 	}
-	return _sir_as_float(args[0]) < _sir_as_float(args[1])
+	return _sir_cmp(args[0], args[1]) < 0
 }
 
 func _sir_gt(args []Value) Value {
@@ -630,7 +663,34 @@ func _sir_gt(args []Value) Value {
 			return ai > bi
 		}
 	}
-	return _sir_as_float(args[0]) > _sir_as_float(args[1])
+	return _sir_cmp(args[0], args[1]) > 0
+}
+
+// `!=`, `<=`, `>=` — the operator spellings the Ruby frontend lowers a
+// comparison chain to (`lower_comparison_chain`).  `_sir_ne` is the exact
+// negation of `_sir_eq` (so `==` and `!=` never disagree).  `_sir_le`/
+// `_sir_ge` share `_sir_cmp` with `_sir_lt`/`_sir_gt`, so all four order
+// strings lexicographically and numbers by value (`1 <= 1.0` holds).
+func _sir_ne(args []Value) Value {
+	return !_sir_value_eq(args[0], args[1])
+}
+
+func _sir_le(args []Value) Value {
+	if ai, aok := args[0].(int64); aok {
+		if bi, bok := args[1].(int64); bok {
+			return ai <= bi
+		}
+	}
+	return _sir_cmp(args[0], args[1]) <= 0
+}
+
+func _sir_ge(args []Value) Value {
+	if ai, aok := args[0].(int64); aok {
+		if bi, bok := args[1].(int64); bok {
+			return ai >= bi
+		}
+	}
+	return _sir_cmp(args[0], args[1]) >= 0
 }
 
 func _sir_cons(args []Value) Value {
@@ -1155,14 +1215,20 @@ func _sir_call_builtin_by_name(name string, args []Value) Value {
 		return _sir_divide(args)
 	case "neg":
 		return _sir_neg(args)
-	case "=":
+	case "=", "==":
 		return _sir_eq(args)
+	case "!=":
+		return _sir_ne(args)
 	case "case_eq":
 		return _sir_case_eq(args)
 	case "<":
 		return _sir_lt(args)
 	case ">":
 		return _sir_gt(args)
+	case "<=":
+		return _sir_le(args)
+	case ">=":
+		return _sir_ge(args)
 	case "cons":
 		return _sir_cons(args)
 	case "car":
@@ -4536,6 +4602,24 @@ mod tests {
         // that covers seqs and maps.
         assert!(RUNTIME.contains("func _sir_value_eq"));
         assert!(RUNTIME.contains("_sir_eq"));
+    }
+
+    #[test]
+    fn runtime_declares_the_comparison_family() {
+        // `!=`/`<=`/`>=` complete the operator-spelling comparison family the
+        // Ruby frontend lowers to; without their helpers `puts(1 == 1)`
+        // panicked `unknown builtin: ==`.
+        assert!(RUNTIME.contains("func _sir_ne"));
+        assert!(RUNTIME.contains("func _sir_le"));
+        assert!(RUNTIME.contains("func _sir_ge"));
+        // Ordered comparison shares `_sir_cmp`, which orders strings
+        // lexicographically (fixing a prior `_sir_as_float` panic on strings).
+        assert!(RUNTIME.contains("func _sir_cmp"));
+        // And they are wired into the by-name dispatch (for `:==` symbols).
+        assert!(RUNTIME.contains("case \"=\", \"==\":"));
+        assert!(RUNTIME.contains("case \"!=\":"));
+        assert!(RUNTIME.contains("case \"<=\":"));
+        assert!(RUNTIME.contains("case \">=\":"));
     }
 
     #[test]

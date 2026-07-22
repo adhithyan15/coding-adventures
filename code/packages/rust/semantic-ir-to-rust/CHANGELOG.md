@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.38.0 — operator-spelling comparisons: `==`, `!=`, `<=`, `>=`
+
+The Ruby frontend lowers a comparison chain to operator-spelling builtins
+(`==`/`!=`/`<=`/`>=`), but the emitter only mapped `=`/`<`/`>` — so `a == b`
+emitted a call to a nonexistent function and `puts(1 == 1)` failed to compile.
+
+- Runtime gains `ne`/`le`/`ge`, each defined from the existing `num_lt`/
+  `value_eq` primitives: `a != b ⟺ not (a == b)`, `a <= b ⟺ a < b or a == b`,
+  `a >= b ⟺ b < a or a == b`. `value_eq` equates cross-representation numbers,
+  so `1 <= 1.0` is true; both primitives answer `false` for uncomparable
+  operands, so `le`/`ge` stay panic-free there. Matches the C backend's
+  `_sir_le`/`_sir_ge`/`_sir_ne`.
+- Emitter maps `==`→`eq`, `!=`→`ne`, `<=`→`le`, `>=`→`ge`. The by-name builtin
+  dispatch gains the same four (so a first-class `:==` symbol dispatches).
+
 ## 0.37.0 — Ruby type reflection: `.class`, `is_a?`, `kind_of?`, `instance_of?`
 
 `.class` **crashed the program**. The backend already had the full class-name

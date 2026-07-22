@@ -1620,6 +1620,15 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         "case_eq" => ("__sir::case_eq", false),
         "<" => ("__sir::lt", false),
         ">" => ("__sir::gt", false),
+        // The Ruby frontend lowers `a == b`/`a != b`/`a <= b`/`a >= b` to these
+        // operator-spelling builtins (`lower_comparison_chain`).  `==` is a
+        // synonym for the `=` handled above; the other three route to the new
+        // `ne`/`le`/`ge` runtime helpers.  Without these arms `puts(1 == 1)`
+        // hit the `_` fallback and emitted a call to a nonexistent function.
+        "==" => ("__sir::eq", false),
+        "!=" => ("__sir::ne", false),
+        "<=" => ("__sir::le", false),
+        ">=" => ("__sir::ge", false),
         "cons" => ("__sir::cons", false),
         "car" => ("__sir::car", false),
         "cdr" => ("__sir::cdr", false),

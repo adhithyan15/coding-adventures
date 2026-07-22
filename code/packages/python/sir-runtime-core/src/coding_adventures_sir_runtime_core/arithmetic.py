@@ -201,3 +201,15 @@ def lt(a: Any, b: Any) -> bool:
 def gt(a: Any, b: Any) -> bool:
     """Greater-than."""
     return bool(a > b)
+
+
+def le(a: Any, b: Any) -> bool:
+    """Less-than-or-equal.  Native ``<=`` — so `1 <= 1.0` is true (Python, like
+    Ruby, compares an int and a float by value).  The Ruby frontend lowers
+    `a <= b` to a `<=` builtin, previously unlowered on this backend."""
+    return bool(a <= b)
+
+
+def ge(a: Any, b: Any) -> bool:
+    """Greater-than-or-equal — the mirror of :func:`le`."""
+    return bool(a >= b)
