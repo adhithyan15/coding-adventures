@@ -52,6 +52,14 @@ def eq(a: Any, b: Any) -> bool:
     return bool(a == b)
 
 
+def ne(a: Any, b: Any) -> bool:
+    """SIR inequality — the exact negation of :func:`eq`, so it inherits the
+    same symbol-awareness (`:x != :x` is false).  The Ruby frontend lowers
+    `a != b` to a `!=` builtin; defining it as `not eq(...)` keeps `==` and
+    `!=` from ever disagreeing (matching the C backend's `_sir_ne`)."""
+    return not eq(a, b)
+
+
 # ── source-language display convention (SIR display-convention spec) ──
 #
 # The default convention is ``"lisp"`` (Twig/Scheme: booleans as ``#t`` / ``#f``),

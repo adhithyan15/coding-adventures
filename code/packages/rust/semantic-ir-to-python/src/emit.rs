@@ -1707,6 +1707,16 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         "=" => "_sir_eq",
         "<" => "_sir_lt",
         ">" => "_sir_gt",
+        // The Ruby frontend lowers `a == b` / `!=` / `<=` / `>=` to these
+        // operator-spelling builtins (`lower_comparison_chain`).  `==` is a
+        // synonym for `=`; the rest route to the matching runtime helpers.
+        // Without these, they fell to the `_sir_call_builtin` fallback, which
+        // has no `==`/`!=`/`<=`/`>=` in its dispatch table — so `puts(1 == 1)`
+        // raised `NameError: SIR builtin '==' is not implemented`.
+        "==" => "_sir_eq",
+        "!=" => "_sir_ne",
+        "<=" => "_sir_le",
+        ">=" => "_sir_ge",
         "cons" => "_sir_cons",
         "car" => "_sir_car",
         "cdr" => "_sir_cdr",

@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.10.0 — operator-spelling comparisons: `==`, `!=`, `<=`, `>=`
+
+The Ruby frontend lowers a comparison chain to `==`/`!=`/`<=`/`>=` builtins,
+which the Python backend did not lower — so `puts(1 == 1)` raised
+`NameError: SIR builtin '==' is not implemented`.
+
+The emitter now maps `==`→`_sir_eq` (a synonym for `=`), `!=`→`_sir_ne`,
+`<=`→`_sir_le`, `>=`→`_sir_ge`, and imports the three new helpers from
+`coding-adventures-sir-runtime-core` 0.2.0. The `call_builtin` dispatch table in
+core gains the same names, so a first-class `:==` symbol dispatches too.
+
 ## 0.9.0 — source-language display convention: Ruby booleans (`true`/`false`)
 
 Emits the display-convention selection (SIR display-convention spec) for the

@@ -1343,6 +1343,15 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         "case_eq" => "_sir_case_eq",
         "<" => "_sir_lt",
         ">" => "_sir_gt",
+        // The Ruby frontend lowers `a == b` / `!=` / `<=` / `>=` to these
+        // operator-spelling builtins (`lower_comparison_chain`).  `==` is a
+        // synonym for `=`; the rest route to the new `ne`/`le`/`ge` helpers.
+        // Without these arms the builtin fell to the runtime dispatch default,
+        // which panicked `unknown builtin: ==` even for `puts(1 == 1)`.
+        "==" => "_sir_eq",
+        "!=" => "_sir_ne",
+        "<=" => "_sir_le",
+        ">=" => "_sir_ge",
         "cons" => "_sir_cons",
         "car" => "_sir_car",
         "cdr" => "_sir_cdr",

@@ -2,6 +2,21 @@
 
 All notable changes to the `sir-conformance` crate will be documented in this file.
 
+## [0.20.0] - Comparison-operator frontier
+
+Adds `comparison_operators_match_ruby_on_every_backend`: `==`, `!=`, `<=`, `>=`
+(plus `<`/`>` regression guards) over integers, a cross int/float pair, string
+equality, AND string ordering, across every backend. Even `puts(1 == 1)` failed
+on Python (`NameError`), JavaScript (`unknown builtin`), Go (`panic`) and Rust
+(missing function) — only C and Ruby lowered the operator spellings. String
+ordering is included because Go's comparisons gained a lexicographic string
+path in this same change (they previously panicked on a string operand), so all
+six backends now agree on `"a" < "b"`. Also covers COMPOSITE equality
+(`[1,2] == [1,2]` structural, not reference) on the four backends that accept
+the `sequences` feature (Python/JavaScript/Go/Rust) — the end-to-end proof that
+the JavaScript `eq`→`valEq` fix agrees cross-backend; C and Ruby skip (no
+`sequences` feature in their v0 backends).
+
 ## [0.19.0] - Exception-reflection frontier
 
 Adds `exception_reflection_matches_ruby_on_every_backend`: `e.class`,

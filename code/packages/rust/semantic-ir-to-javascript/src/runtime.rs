@@ -275,14 +275,29 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     const r = numOf(a) % numOf(b);
     return (isFloat(a) || isFloat(b)) ? mkFloat(r) : r;
   }
-  // Comparisons unwrap through `numOf` before comparing.  Because `numOf`
-  // is the IDENTITY on every non-`SirFloat` value, `eq`/`lt`/… are exactly
-  // the old native `===`/`<`/… for strings, arrays, nil, and plain numbers
-  // — and additionally correct for a boxed Float (`7.0 == 7` true via
-  // value; `7.0 < 8` avoids the `NaN` a native `<` on the box would give).
-  // `eq` returns Ruby `==` for numbers (by value across Integer/Float).
-  function eq(a, b) { return numOf(a) === numOf(b); }
-  function ne(a, b) { return numOf(a) !== numOf(b); }
+  // Equality is Ruby `==`: by VALUE for numbers, STRUCTURAL for composites.
+  //
+  // First unwrap BOTH operands through `numOf` (which reduces a `SirFloat` box
+  // AND a degenerate scalar `NDArray` to a plain number). If both reduce to a
+  // number, compare by value — so `7.0 == 7`, and a scalar NDArray equals the
+  // number it holds (`NaN === NaN` stays false, matching Ruby). Otherwise defer
+  // to `valEq` (hoisted; defined below) — the SAME structural equality
+  // `include?`/`index`/`case`-`when` use — so `[1,2] == [1,2]` is true, symbols
+  // compare by name, and nested composites recurse (cycle-safe). Earlier `eq`
+  // was `numOf(a) === numOf(b)`: right for numbers but REFERENCE equality for
+  // arrays/maps, so `[1,2] == [1,2]` was wrongly false — harmless while `==`
+  // threw `unknown builtin`, but wrong once it is lowered. `ne` is its exact
+  // negation. This now agrees with the Python, Ruby, Go, C and Rust backends.
+  //
+  // Ordering (`lt`/`gt`/`le`/`ge`) stays a `numOf` unwrap: order is numeric
+  // (a boxed Float `7.0 < 8` avoids the `NaN` a native `<` on the box gives),
+  // and Ruby has no structural `<` on composites here.
+  function eq(a, b) {
+    const na = numOf(a), nb = numOf(b);
+    if (typeof na === "number" && typeof nb === "number") { return na === nb; }
+    return valEq(a, b);
+  }
+  function ne(a, b) { return !eq(a, b); }
   function lt(a, b) { return numOf(a) < numOf(b); }
   function gt(a, b) { return numOf(a) > numOf(b); }
   function le(a, b) { return numOf(a) <= numOf(b); }
@@ -535,6 +550,11 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       ? (isFloat(a[0]) ? mkFloat(1 / numOf(a[0])) : 1 / numOf(a[0]))
       : numFold(a.slice(1), a[0], (x, y) => x / y),
     "=": (x, y) => eq(x, y),
+    // `==` is a synonym for `=`; `!=` its negation.  Present in this table (not
+    // only the emitter's infix map) so a first-class `:==`/`:!=` symbol
+    // reference dispatches — matching `<=`/`>=`, which were already here.
+    "==": (x, y) => eq(x, y),
+    "!=": (x, y) => ne(x, y),
     // Ruby case-equality (`pattern === value`) — the test a `when`/`in` arm
     // runs.  Ruby keys `===` to the pattern's type (Range → membership, Regexp
     // → match); this backend has no Range/Regexp value, so the only patterns

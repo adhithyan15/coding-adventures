@@ -73,6 +73,25 @@ def test_eq_symbol_aware() -> None:
     assert sir.eq(1, 2) is False
 
 
+def test_ne_is_exact_negation_of_eq() -> None:
+    # `!=` must never disagree with `==`: symbol-aware, and native otherwise.
+    assert sir.ne(sir.intern("a"), sir.intern("a")) is False
+    assert sir.ne(sir.intern("a"), sir.intern("b")) is True
+    assert sir.ne(1, 2) is True
+    assert sir.ne(1, 1) is False
+    assert sir.ne(1, 1.0) is False  # cross int/float equality
+
+
+def test_le_and_ge() -> None:
+    assert sir.le(1, 2) is True
+    assert sir.le(2, 2) is True
+    assert sir.le(3, 2) is False
+    assert sir.le(1, 1.0) is True  # int vs float compares by value
+    assert sir.ge(2, 1) is True
+    assert sir.ge(2, 2) is True
+    assert sir.ge(1, 2) is False
+
+
 def test_predicates() -> None:
     assert sir.is_null(None) is True
     assert sir.is_null(0) is False
