@@ -2,6 +2,42 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.34.0] - 2026-07-22
+
+### Fixed — a dead `if` branch / `for` loop no longer DROPS a hoisted `var` (miscompile)
+
+A statically-dead `if` branch used to be discarded whole, taking any hoisted
+`var` inside it with it — a **miscompile**, since the `var` still hoists to the
+enclosing function scope and a later read would flip from a declared-`undefined`
+binding to a `ReferenceError` (or a different outer binding):
+
+```js
+if (false) { var z = g(); } sink(z);   // was: sink(z)          → now: var z; sink(z);
+if (false) { var z = 1; } else h();    // was: h()              → now: var z; h();
+if (true)  h(); else { var z = 1; }    // was: h()              → now: var z; h();
+```
+
+The dead branch's hoisted `var`s are now EXTRACTED (initializers stripped, since
+the branch never runs) as a bare `var …;` placed BEFORE the taken branch —
+byte-identical to the reference Closure Compiler at SIMPLE (the same bug class as
+the `while (false)` drop fixed in 0.30.0). This is the `if` counterpart of the
+dead-loop var extraction.
+
+The dead-`for`-loop collapse also no longer DECLINES the last shape it couldn't
+represent — an **expression** init combined with a hoisted body `var`, which is
+two statements:
+
+```js
+for (f(); false; ) { var x = 1; } sink(x);   // was: loop kept   → now: var x; f(); sink(x);
+```
+
+Mechanism: a new `collapse_extracting_dead_vars` helper returns the two
+statements (`var …;` + survivor) wrapped in a `BlockStatement`, which
+`fold_program` / `fold_block_statement` then splice into the enclosing statement
+list (`block_is_scope_safe_to_hoist` admits a `var`-only block; adjacent `var`s
+then coalesce). The `if` literal-branch arms and the `for` collapse both route
+through it; the reversed extraction order matches `extract_dead_loop_vars`.
+
 ## [0.33.0] - 2026-07-21
 
 ### Removed — the `gap-015` function-body `var` hoist/split (net-wrong for byte-identity)

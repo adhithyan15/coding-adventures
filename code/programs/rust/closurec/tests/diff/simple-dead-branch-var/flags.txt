@@ -1,0 +1,4 @@
+--compilation_level
+SIMPLE
+--js
+tests/diff/simple-dead-branch-var/input/a.js
