@@ -279,6 +279,7 @@ members = [
     "q-parser",
     "q-runtime",
     "q-repl",
+    "q-to-semantic-ir",
     "logic-gates",
     "logic-core",
     "lookup-core",
