@@ -2,6 +2,31 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.240.0] - 2026-07-21
+
+### Fixed - SIMPLE/ADVANCED no longer split a function-local `var x = init`
+
+closurec no longer rewrites a function-body `var y = init;` into a hoisted
+`var y;` prefix plus a separate `y = init;` assignment. That split came from
+`closure-pass-fold-control-flow`'s `gap-015` transform, which oracle probing
+proved the reference Closure Compiler never performs in `SIMPLE` output — a
+`var`'s declaration stays exactly where it is written. Removing the transform
+(`closure-pass-fold-control-flow` 0.33.0) makes closurec byte-closer to the
+reference:
+
+- `function f(){var y=2;return y+1}` stays intact (was `function f(){var y;y=2;return y+1}`).
+- `(function(){var y=7})()` stays intact (was `(function(){var y;y=7})()`).
+
+Removing the split surfaced a latent emitter defect where a block-final `var`
+kept a redundant `;` before `}` (`function(){var y=h();}`); the emitter now
+pops it (`closure-emitter` 0.58.0), so `function(){var y=h()}` matches the
+reference. Regenerated the `simple-asi-block`, `simple-function-expression`,
+and `advanced-try-catch-rename` diff fixtures to the new (split-free) output.
+
+This is part A of the "remove function-local unused vars" work; actually
+*removing* the now-unused local (`var y=2;return y+1` → `return 3`) and
+renaming function locals are separate follow-ups.
+
 ## [0.239.0] - 2026-07-21
 
 ### Fixed - synthetic `;` after a brace-terminated construct now only at EOF
