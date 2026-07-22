@@ -8,6 +8,41 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.24.0: combined `INSPECT … TALLYING … REPLACING` (one statement)
+
+Lowered the combined `INSPECT` — one statement carrying BOTH the `TALLYING` and
+the `REPLACING` phrases — oracle-first and byte-identical to `cobol-runtime`
+0.28.0.
+
+- **`emit_inspect` dispatch** — when both phrases are present, `emit_inspect` now
+  composes the two existing lowerings on the SAME source register in ISO order:
+  the tally loop FIRST (reading the ORIGINAL bytes into the counter), then the
+  replace rebuild (overwriting the source). Per the standard the combined form
+  executes "as though an `INSPECT TALLYING` were specified, followed by an
+  `INSPECT REPLACING`", so counting before replacing is what makes a shared
+  delimiter/search character correct — the count sees every occurrence before any
+  is substituted.
+- **`emit_inspect_tallying`** — the count loop and counter store were factored out
+  of `emit_inspect` into this helper so the combined case reuses it verbatim (no
+  duplicated logic); the lone-`TALLYING` path calls the same helper. The tally
+  loop only reads the source register, so a following `REPLACING` still sees the
+  original image.
+- No grammar/lexer/parser change: the grammar already accepted
+  `inspect_tallying [inspect_replacing]`; only the two `has_tally && has_repl`
+  rejects (in the compiler and the oracle) were removed.
+- Later rungs unchanged (clean `CompileError::Unsupported`): a combined statement
+  whose `TALLYING` half is `LEADING`/`CHARACTERS`, has several counters or FOR
+  phrases, or a `BEFORE`/`AFTER` region — or whose `REPLACING` half is
+  `CHARACTERS`/`LEADING`/`FIRST`, has several replace items, or a region — still
+  rejects; the combined gate does not admit the deferred sub-forms. Multi-char /
+  figurative / wider / numeric operands and a numeric/group source stay deferred.
+- Tests: four new `jit_e2e` cases through `assert_matches_oracle` — distinct
+  tally/search/replace chars, the `delim == search` ordering case (proving
+  tally-before-replace), a non-zero counter (ADD preserved), and tallied/replaced
+  chars at the source's ends — plus a still-deferred combined reject
+  (`FOR ALL … ALL …`). The former "combined is a later rung" unit test became a
+  positive "combined now compiles" test.
+
 ### Added — v0.23.0: `INSPECT … REPLACING ALL … BY …` (first rung)
 
 Lowered COBOL's `INSPECT … REPLACING` verb (the substitution form), oracle-first

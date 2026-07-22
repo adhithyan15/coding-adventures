@@ -474,9 +474,36 @@ the `W`-wide result into the source register. The two agree byte-for-byte.
 
 Deferred as clean later rungs (accepted by the grammar, rejected at read/compile
 time): `REPLACING CHARACTERS BY`, `REPLACING LEADING`/`FIRST`, `BEFORE`/`AFTER`
-regions, **several** replace items, the **combined** `TALLYING … REPLACING` in
-one `INSPECT`, a multi-character / figurative / wider / numeric search or
-replacement, and a numeric/group source.
+regions, **several** replace items, a multi-character / figurative / wider /
+numeric search or replacement, and a numeric/group source.
+
+### Combined `INSPECT … TALLYING … REPLACING` (one statement)
+
+A single `INSPECT` may carry **both** phrases:
+`INSPECT source TALLYING counter FOR ALL delim REPLACING ALL x BY y`. Per ISO the
+statement executes "**as though an `INSPECT TALLYING` were specified, followed by
+an `INSPECT REPLACING`**" — so the order is fixed:
+
+1. **Tally first** — count occurrences of `delim` in the **ORIGINAL** `source` and
+   **ADD** them to `counter` (the tally does not modify the source).
+2. **Then replace** — substitute every `x` with `y` in the source.
+
+This tally-before-replace order is observable when `delim == x`: the count must
+see every occurrence in the pre-replacement bytes. Worked (`delim == x == "S"`):
+`"MISSISSIPPI"` TALLYING `S` → `counter += 4`, then `S → Z` → `"MIZZIZZIPPI"`. Had
+the count run after the replace it would have seen zero `S` — so the `4` proves
+the ordering.
+
+Both the oracle and the compiler compose their two existing single-phrase
+lowerings in this exact order on the same source, so the compiled program and the
+reference agree byte-for-byte. No grammar change was needed — the grammar already
+accepted `inspect_tallying [ inspect_replacing ]`; only the two prior "combined is
+a later rung" rejects were removed. Each phrase is still restricted to its
+single-character `FOR ALL`/`ALL … BY` form: a combined statement whose `TALLYING`
+or `REPLACING` half is itself a deferred sub-form (`LEADING`/`CHARACTERS`, several
+counters/FOR/replace items, `BEFORE`/`AFTER`, multi-char/figurative/wider/numeric
+operands, a numeric/group source, or a non-integer counter) remains a clean later
+rung.
 
 Grammar scope tracks the lexer scope below.
 

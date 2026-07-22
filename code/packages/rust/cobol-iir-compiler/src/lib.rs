@@ -1321,16 +1321,13 @@ impl<'a> Compiler<'a> {
     /// or a numeric source or a non-integer/non-numeric counter — is a clean
     /// `Unsupported`, accepted by the grammar and rejected here.
     fn emit_inspect(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
-        // This rung supports a LONE `TALLYING … FOR ALL` OR a LONE `REPLACING ALL
-        // … BY …`. The combined `TALLYING … REPLACING` in one INSPECT is a later
-        // rung.
+        // This rung supports a LONE `TALLYING … FOR ALL`, a LONE `REPLACING ALL …
+        // BY …`, or the COMBINED `TALLYING … REPLACING` in one INSPECT. The
+        // combined form runs the two lowerings in the ISO order — tally FIRST
+        // (counting the ORIGINAL bytes into the counter), replace SECOND (rewriting
+        // the source) — which is what makes a shared delimiter/search char correct.
         let has_tally = child_node(verb, "inspect_tallying").is_some();
         let has_repl = child_node(verb, "inspect_replacing").is_some();
-        if has_tally && has_repl {
-            return Err(CompileError::Unsupported(
-                "combined INSPECT … TALLYING … REPLACING is a later rung".into(),
-            ));
-        }
         // The source is the first (and only top-level) `operand`; shared by both
         // the TALLYING and REPLACING forms. It must be a plain alphanumeric item.
         let source_node = child_node(verb, "operand")
@@ -1359,11 +1356,34 @@ impl<'a> Compiler<'a> {
         };
         let s_reg = self.items[sidx].reg.clone();
 
-        // REPLACING dispatches to its own lowering (the source rebuild).
-        if has_repl {
-            return self.emit_inspect_replacing(verb, &s_reg, source_width);
+        // Dispatch on the phrases present. The COMBINED form composes the two
+        // existing lowerings in ISO order on the SAME source register: the tally
+        // loop reads the original bytes into the counter FIRST, then the replace
+        // rebuild overwrites the source — so a shared delimiter/search character is
+        // counted before it is substituted. The two lone forms are the single
+        // branches of that same composition.
+        match (has_tally, has_repl) {
+            (true, true) => {
+                self.emit_inspect_tallying(verb, &s_reg)?;
+                self.emit_inspect_replacing(verb, &s_reg, source_width)
+            }
+            (false, true) => self.emit_inspect_replacing(verb, &s_reg, source_width),
+            // A lone TALLYING (or neither, which `inspect_tally_all` rejects).
+            _ => self.emit_inspect_tallying(verb, &s_reg),
         }
+    }
 
+    /// `INSPECT source TALLYING counter FOR ALL delim` — the count loop and
+    /// counter store, factored out of [`Self::emit_inspect`] so the combined
+    /// tally-then-replace form can emit it FIRST (over the original source bytes)
+    /// and share the exact ADD-into-counter store path. The loop only reads
+    /// `s_reg`; it never writes it, so a following REPLACING still sees the
+    /// original image.
+    fn emit_inspect_tallying(
+        &mut self,
+        verb: &GrammarASTNode,
+        s_reg: &str,
+    ) -> Result<(), CompileError> {
         // Extract the single `FOR ALL delim` phrase (rejecting the later rungs).
         let (counter_name, delim_node) = inspect_tally_all(verb)?;
 
@@ -1389,7 +1409,7 @@ impl<'a> Compiler<'a> {
         let cnt = self.fresh("_inspc");
         self.emit("const", Some(&cnt), vec![Operand::Int(0)], "i64");
         let len = self.fresh("_insplen");
-        self.emit("str_len", Some(&len), vec![Operand::Var(s_reg.clone())], "i64");
+        self.emit("str_len", Some(&len), vec![Operand::Var(s_reg.to_string())], "i64");
         let j = self.fresh("_inspj");
         self.emit("const", Some(&j), vec![Operand::Int(0)], "i64");
 
@@ -1402,7 +1422,7 @@ impl<'a> Compiler<'a> {
         self.emit("jmp_if_true", None, vec![Operand::Var(ge), Operand::Var(end.clone())], "void");
         // if S[j] != D skip the bump.
         let c = self.fresh("_inspc0");
-        self.emit("str_index", Some(&c), vec![Operand::Var(s_reg.clone()), Operand::Var(j.clone())], "i64");
+        self.emit("str_index", Some(&c), vec![Operand::Var(s_reg.to_string()), Operand::Var(j.clone())], "i64");
         let eq = self.fresh("_inspeq");
         self.emit("cmp_eq", Some(&eq), vec![Operand::Var(c), Operand::Var(d_reg.clone())], "i64");
         let nobump = self.fresh("insp_nobump");
@@ -4760,9 +4780,11 @@ mod tests {
     }
 
     #[test]
-    fn inspect_tallying_replacing_is_a_later_rung() {
-        // The combined INSPECT … TALLYING … REPLACING form is likewise rejected.
-        let err = compile_source(
+    fn inspect_tallying_replacing_now_compiles() {
+        // The combined INSPECT … TALLYING … REPLACING form is now supported — it
+        // composes the two existing lowerings (tally FIRST, then replace), so it
+        // must compile cleanly to a valid module.
+        let module = compile_source(
             &wrap(
                 &["01  S  PIC X(5) VALUE \"ABABA\".", "01  C  PIC 9(3) VALUE 0."],
                 &[
@@ -4771,6 +4793,24 @@ mod tests {
                 ],
             ),
             "insp_tr",
+        )
+        .expect("combined INSPECT should compile");
+        assert!(module.validate().is_empty(), "validate: {:?}", module.validate());
+    }
+
+    #[test]
+    fn inspect_combined_with_a_deferred_half_is_a_later_rung() {
+        // The combined gate does not smuggle in the deferred sub-forms: a combined
+        // statement whose TALLYING half is FOR LEADING still rejects cleanly.
+        let err = compile_source(
+            &wrap(
+                &["01  S  PIC X(5) VALUE \"AABBB\".", "01  C  PIC 9(3) VALUE 0."],
+                &[
+                    "INSPECT S TALLYING C FOR LEADING \"A\" REPLACING ALL \"B\" BY \"X\".",
+                    "STOP RUN.",
+                ],
+            ),
+            "insp_tr_lead",
         )
         .unwrap_err();
         assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");

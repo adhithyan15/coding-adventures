@@ -1974,3 +1974,99 @@ fn inspect_replacing_end_inspect_terminator_parses() {
     ));
     assert_eq!(out, "BoNoNo\n");
 }
+
+// INSPECT … TALLYING … REPLACING — one INSPECT carrying BOTH phrases. Per ISO the
+// statement runs "as though an INSPECT TALLYING were specified, followed by an
+// INSPECT REPLACING": count FIRST (into the counter, over the ORIGINAL bytes),
+// replace SECOND (rewriting the source). The compiler composes its two existing
+// lowerings in that order and the oracle its two exec halves, so the JIT output
+// stays byte-identical to the reference.
+
+#[test]
+fn inspect_combined_distinct_chars() {
+    // TALLYING counts "L" (two in "HELLO") into C; REPLACING then maps O→0.
+    // The two phrases touch different characters, so this pins the plain
+    // count-and-substitute composition: C = 002, S = "HELL0".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"HELLO\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"L\" REPLACING ALL \"O\" BY \"0\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\nHELL0\n");
+}
+
+#[test]
+fn inspect_combined_shared_char_tallies_before_replacing() {
+    // The tallied delimiter and the replaced search are the SAME char ("S"). The
+    // count must see the ORIGINAL source: "SASSY" has three S's → C = 003, and
+    // only AFTERWARDS are they replaced by "Z" → "ZAZZY". If the tally ran after
+    // the replace it would count zero — so the 3 proves tally-before-replace.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"SASSY\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"S\" REPLACING ALL \"S\" BY \"Z\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "003\nZAZZY\n");
+}
+
+#[test]
+fn inspect_combined_adds_to_a_nonzero_counter() {
+    // C starts at 5; "BANANA" has three A's → C = 5 + 3 = 008 (INSPECT ADDS, it
+    // does not clear first — the combined form preserves that). REPLACING then
+    // maps N→n → "BAnAnA".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"BANANA\".", "01  C  PIC 9(3) VALUE 5."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"A\" REPLACING ALL \"N\" BY \"n\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "008\nBAnAnA\n");
+}
+
+#[test]
+fn inspect_combined_chars_at_both_ends() {
+    // The tallied char sits at BOTH ends of the source and the replaced char in
+    // between: "ABCBA" → TALLYING "A" counts the two end bytes (C = 002),
+    // REPLACING "B" BY "-" rewrites the interior → "A-C-A". Exercises the loop's
+    // first and last positions for both halves.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"ABCBA\".", "01  C  PIC 9(3) VALUE 0."],
+        &[
+            "INSPECT S TALLYING C FOR ALL \"A\" REPLACING ALL \"B\" BY \"-\".",
+            "DISPLAY C.",
+            "DISPLAY S.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "002\nA-C-A\n");
+}
+
+#[test]
+fn inspect_combined_second_tally_item_is_a_later_rung() {
+    // A combined statement whose TALLYING half has a second FOR-phrase item
+    // (`FOR ALL "A" ALL "B"`) is still a later rung — it parses, but the combined
+    // gate does not admit the deferred sub-forms, so it is a clean Unsupported.
+    let err = compile_source(
+        &wrap(
+            &["01  S  PIC X(5) VALUE \"ABABA\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"A\" ALL \"B\" REPLACING ALL \"B\" BY \"X\".",
+                "STOP RUN.",
+            ],
+        ),
+        "insp_combined_two_items",
+    )
+    .unwrap_err();
+    assert!(matches!(err, cobol_iir_compiler::CompileError::Unsupported(_)), "got {err:?}");
+}
