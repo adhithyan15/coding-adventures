@@ -1,6 +1,6 @@
 [package]
 name = "reduce-to-semantic-ir"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 description = "Reduce CST → narrow-waist Semantic IR (SIR23 symbolic/pattern domain, Stream B). Fourth frontend to target SIR23, sibling to wolfram-to-semantic-ir, macsyma-to-semantic-ir, and derive-to-semantic-ir."
 

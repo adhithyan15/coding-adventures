@@ -1,5 +1,183 @@
 # Changelog
 
+## 0.49.0 — `Symbolic.evalTerm`: arithmetic/comparison/logic folding (SIR23 addendum, item 1 of 4)
+
+### Security fix (found by this item's own `/security-review` pass)
+
+`comparisonHandler`'s `Equal`/`NotEqual` structural-equality fallback
+calls the pre-existing `termEquals` (`runtime.rs`) — a plain recursive
+tree-equality check that, unlike every other whole-tree-walking function
+in this file (`toDisplayString`/`walkOnce`/`replaceRepeatedTerm`), had
+**no depth cap of its own** (CWE-674). Every pre-existing call site
+(the pattern matcher, the rewrite engine's fixed-point check) only ever
+compares terms already implicitly bounded by a `MAX_TERM_DEPTH`-capped
+traversal elsewhere, so this was never reachable before — but
+`comparisonHandler`'s operands (added by this same item) can be an
+arbitrarily deep symbolic tree built at runtime with no fold available
+(an unrecognized head has no `HANDLERS` entry, so `evalApply`'s
+fallthrough rebuilds the arg-evaluated term at essentially its original
+depth, never folding it away). Comparing two such deep trees with
+`=`/`Equal` could recurse `termEquals` itself past the native stack
+limit — a DIFFERENT recursion path than `evalTerm`/`evalApply`'s own,
+already-capped one, so `MAX_EVAL_DEPTH` never got a chance to intervene.
+Fixed by giving `termEquals` its own `depth` parameter, reusing the
+existing `MAX_TERM_DEPTH` cap (its per-frame cost is no heavier than
+`toDisplayString`'s own, already-proven-safe-at-that-cap frame) and
+returning `false` (the same "give up cleanly" contract `matchPattern`
+already uses for a failed match) past the limit, rather than recursing
+unbounded. Regression test:
+`tests/sir23_eval_depth_guard.rs::comparison_of_two_deep_unfoldable_
+trees_does_not_crash_term_equals`.
+
+Item 1 of the 4-item rollout described by `SIR23-symbolic-pattern-
+semantic-ir.md`'s own "Addendum — SIR23 symbolic evaluator + per-language
+display convention" section. Found by `derive-to-semantic-ir/tests/
+oracle.rs` (PR #8754) and `reduce-to-semantic-ir/tests/oracle.rs` (PR
+#8771): `Expr::SymApply` compiled unconditionally to a bare, inert
+`__Sir.Symbolic.apply(head, [args])` term constructor — no arithmetic
+folding, no comparison evaluation, no logic folding at all. This item
+adds a real (scoped) evaluator; held-form execution (`Assign`/`Define`/
+`If` + user functions, item 2), calculus/elementary-function handlers
+(item 3), and Derive's own SIR23 display convention (item 4) are
+explicitly **not** part of this change — see the addendum for their own
+scope.
+
+### Added
+
+- **`runtime.rs`: `Symbolic.evalTerm(term, depth)`** — a direct JS port
+  of `symbolic-vm`'s `VM::eval`/`eval_apply` head-dispatch architecture
+  (a per-head `Map`, not `SymRule`s through the existing `matchPattern`/
+  `applyRuleTerm` machinery — see the addendum's own "Architecture
+  decision" section for the four-point rationale). Scope: arithmetic
+  (`Add`/`Sub`/`Mul`/`Div`/`Pow`/`Neg`/`Inv`/`Abs`, with a small
+  `Numeric` tower ported from `handlers.rs` — `Number.isSafeInteger`
+  overflow-to-float in place of `checked_add`/`i128`-widened
+  `checked_pow`, exact-rational results via the existing `gcdAbs`/
+  `rationalTerm`), comparison (`Equal`/`NotEqual`/`Less`/`Greater`/
+  `LessEqual`/`GreaterEqual`, folding to the `True`/`False` **symbol**,
+  never a JS boolean), and logic (`And`/`Or`/`Not`, N-ARY, matching each
+  frontend's own flat chain-fold lowering). Identity-law fallbacks
+  (`x+0->x`, `1*x->x`, `x^0->1`, …) are ported alongside the numeric
+  folds — cheap, and needed to flip `additive_identity_simplifies_a_
+  free_symbol` in both oracle corpora.
+  - `HELD_HEADS = {"Assign", "Define", "If"}` is declared now (item 2's
+    scaffold) but wired to NO handler in this item: a held head's args
+    are never evaluated, and with no handler present it falls through
+    to the same "rebuild from evaluated head + ORIGINAL args" path
+    every other unmatched head takes — byte-for-byte today's inert
+    shape, so e.g. `Assign(x, 5+1)` does NOT fold `5+1` to `6` yet.
+  - `List` gets, and per the addendum's own handler table always will
+    get, no handler at all — applicative-order argument evaluation
+    alone folds `List(Add(1,1), Mul(2,3))` into `List(2, 6)` for free.
+  - `MAX_EVAL_DEPTH = 2000` — its own empirically-measured recursion-
+    depth cap (CWE-674), deliberately NOT a reuse of the existing
+    `MAX_TERM_DEPTH = 512` (a different function, `walkOnce`/
+    `replaceRepeatedTerm`'s tree walk, with a different, lighter
+    per-frame cost). Measured directly on a bare default `node` v25
+    stack (no `--stack-size` override) calling this exact `evalTerm`/
+    `evalApply` pair on a runtime-built, right-nested `Add` chain: safe
+    through ~2800 levels, crashes by ~2805 (a few levels of run-to-run
+    ASLR jitter at the exact boundary, confirmed via repeated trials).
+    `MAX_EVAL_DEPTH` is set to 2000 — about 29% below the measured
+    floor, matching this repo's established margin convention
+    (`apl-parser` ~26.5%, `j-parser` ~30%, `q-parser` ~29%,
+    `derive-parser::MAX_RULE_DEPTH` ~33%). See `tests/
+    sir23_eval_depth_guard.rs` for the executable proof (safe at the
+    cap, sentinel — not a crash — one level past it and far past it).
+- **`emit.rs`: `Stmt::ExprStmt` now wraps a top-level SIR23 statement in
+  `evalTerm`.** `Expr::SymApply`'s own codegen arm is UNCHANGED — it
+  still emits a bare, unevaluated `__Sir.Symbolic.apply(...)` — the wrap
+  happens exactly once, at the statement boundary, when the statement's
+  `expr` is one of the three SIR23 root shapes these five frontends ever
+  produce at statement level (`SymApply`/`SymSymbol`/`SymRational`,
+  confirmed exhaustive by `derive-to-semantic-ir/CHANGELOG.md`'s own
+  disclosed scope). `evalTerm` recurses into `head`/every arg itself, so
+  one top-level call evaluates an arbitrarily nested expression
+  bottom-up — wrapping every nested `SymApply` occurrence instead would
+  cause redundant, potentially-exponential re-evaluation.
+  - A refinement found empirically while verifying this item against
+    the two existing oracle harnesses: `derive-to-semantic-ir/tests/
+    oracle.rs`'s and `reduce-to-semantic-ir/tests/oracle.rs`'s own
+    `wrap_top_level_in_print` test helper (needed because neither
+    frontend's lowering auto-prints a statement's value — a separate,
+    already-disclosed gap) re-shapes a bare top-level SIR23 statement
+    into `BuiltinCall("print", [bare SIR23 root])` *before* calling
+    `compile()` — invisible to the check above, so without a further
+    adjustment the printed value stayed unevaluated even with
+    `evalTerm` fully wired (confirmed by temporarily flipping a
+    `known_bug` to `None` and watching it fail). `emit_stmt` therefore
+    also recognizes `print(<bare SIR23 root>)` specifically (via a new
+    `pick_print_of_sym23_root` helper, mirroring the existing
+    `pick_global_set` special-case in the very same arm) and evaluates
+    the inner expression before printing it. Still entirely inside this
+    one `Stmt::ExprStmt` arm, still never touches `Expr::SymApply`'s own
+    codegen, still one `evalTerm` call per statement — this is a
+    refinement of the wrap's trigger condition, not a scope change.
+- `tests/sir23_eval_depth_guard.rs` — the `MAX_EVAL_DEPTH` regression
+  suite described above.
+
+### Security fix (found by this item's own `/security-review` pass)
+
+`comparisonHandler`'s `Equal`/`NotEqual` structural-equality fallback
+calls the pre-existing `termEquals` (`runtime.rs`) — a plain recursive
+tree-equality check that, unlike every other whole-tree-walking function
+in this file (`toDisplayString`/`walkOnce`/`replaceRepeatedTerm`), had
+**no depth cap of its own** (CWE-674). Every pre-existing call site
+(the pattern matcher, the rewrite engine's fixed-point check) only ever
+compares terms already implicitly bounded by a `MAX_TERM_DEPTH`-capped
+traversal elsewhere, so this was never reachable before — but
+`comparisonHandler`'s operands (added by this same item) can be an
+arbitrarily deep symbolic tree built at runtime with no fold available
+(an unrecognized head has no `HANDLERS` entry, so `evalApply`'s
+fallthrough rebuilds the arg-evaluated term at essentially its original
+depth, never folding it away). Comparing two such deep trees with
+`=`/`Equal` could recurse `termEquals` itself past the native stack
+limit — a DIFFERENT recursion path than `evalTerm`/`evalApply`'s own,
+already-capped one, so `MAX_EVAL_DEPTH` never got a chance to intervene.
+Fixed by giving `termEquals` its own `depth` parameter, reusing the
+existing `MAX_TERM_DEPTH` cap (its per-frame cost is no heavier than
+`toDisplayString`'s own, already-proven-safe-at-that-cap frame) and
+returning `false` (the same "give up cleanly" contract `matchPattern`
+already uses for a failed match) past the limit, rather than recursing
+unbounded. Regression test:
+`tests/sir23_eval_depth_guard.rs::comparison_of_two_deep_identical_
+trees_stays_unevaluated_past_the_term_equals_cap` — asserts a behavioral
+effect (whether `Equal(...)` folds to `True`) rather than a crash
+boundary, since crash-boundary timing is not portable across Node
+versions/CI stack sizes.
+
+### Flips 14 of `derive-to-semantic-ir`'s and 17 of `reduce-to-semantic-
+### ir`'s `known_bug` oracle cases to `known_bug: None`
+
+See each crate's own `CHANGELOG.md` entry for the full per-case
+accounting. In short: every case whose ground-truth value is reached by
+pure arithmetic/comparison/logic folding (operator precedence,
+right-associative `^`, unary-minus-then-fold, exact-integer vs. exact-
+rational division, an additive-identity simplification, every
+comparison operator, `and`/`or`/`not` including an n-ary chain) now
+agrees end-to-end. Two additional cases (`vector_of_expressions_
+evaluates_elementwise` in Derive's corpus, `list_of_expressions_
+evaluates_elementwise` in Reduce's) now evaluate correctly element-by-
+element but still disagree on `List`'s bracket notation — their
+`known_bug` reason strings are corrected in place (not flipped) to
+reflect that the remaining gap is display-convention-only (item 4),
+not evaluation.
+
+### Explicitly NOT in this item (see the addendum for the full rollout)
+
+- **Item 2** (held-form execution: environment, `Assign`/`Define`/`If`
+  handlers, self-loop guard, user-function dispatch via `substituteTerm`)
+  — `HELD_HEADS`'s three members still have no handler and stay inert.
+- **Item 3** (calculus/elementary-function handlers: `Sin`/`Cos`/`Sqrt`/
+  `D`/`Integrate`/…, scoped to what the oracle corpora need).
+- **Item 4** (Derive's own SIR23 display convention: infix/prefix/
+  bracket/case-bridging).
+- Everything the addendum itself scopes out of the whole rollout:
+  `Factor`/`Apart`, `Assume`/`Forget`/`ForgetAll`, the reserved
+  special-function heads, and each frontend's own decorator-layer
+  extension builtins (Wolfram's `Map`/`Table`/…, Macsyma's `Solve`/
+  `Expand`/…).
+
 ## 0.48.0 — the last unmapped comparison operator: `==`, now structural
 
 `!=`, `<=`, `>=` already routed to `__Sir.ne`/`le`/`ge`, but `==` (the operator
@@ -40,7 +218,6 @@ So `e.class` reported `StandardError` while `e.message` raised `NoMethodError`
 on the very same value, and `puts e` on a native error took a different path.
 All three arms now gate on `instanceof Error`, so every reflection answer
 about a caught value agrees.
-
 ## 0.46.0 — J's own display convention, and its two missing builtins
 
 Both found by `j-to-semantic-ir/tests/oracle.rs` (that crate's new

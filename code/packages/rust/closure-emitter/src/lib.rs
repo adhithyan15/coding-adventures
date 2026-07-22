@@ -3230,7 +3230,9 @@ fn unary_op_str(op: UnaryOperator) -> &'static str {
 /// | ContinueStatement           | terminator         | YES          |
 /// | ThrowStatement              | terminator         | YES          |
 /// | EmptyStatement              | the statement      | NO (rare; preserve so empty bodies survive) |
-/// | Declaration::*              | terminator-ish     | NO (FunctionDeclaration adds a part-B `;` we want to keep) |
+/// | Declaration::VariableDeclaration | terminator    | YES (block-final `var x=1;` → `var x=1` before `}`) |
+/// | Declaration::Function/Class | ends in `}`        | (no `;` to pop anyway) |
+/// | Declaration::Import/Export  | n/a in a block     | NO (illegal inside a block; never reached) |
 /// | IfStatement                 | body's `;` maybe   | NO  |
 /// | WhileStatement              | body's `;` maybe   | NO  |
 /// | ForStatement                | body's `;` maybe   | NO  |
@@ -3263,13 +3265,18 @@ fn last_stmt_uses_terminator_semi(s: &Statement) -> bool {
                 // closing `}` (ASI re-supplies it). The `;` is NOT a body slot.
                 | TaggedStatement::DebuggerStatement(_)
         ),
-        // Declarations are conservatively excluded. Both
-        // VariableDeclaration and FunctionDeclaration end in
-        // `;` in compact mode, but for the former the saving
-        // is a single byte and for the latter the `;` is
-        // gap-030's part-B addition that we explicitly want to
-        // keep at top-level (popping it here would undo part
-        // B's contribution).
+        // A block-final `var x = 1;` carries a real terminator `;`
+        // that the closing `}` makes redundant (ASI supplies it), so
+        // pop it: `function(){var y=h();}` → `function(){var y=h()}`,
+        // byte-identical to the reference compiler. This gate feeds
+        // ONLY the block emitter (`emit_block_statement`); the
+        // top-level part-B `;` for a trailing function/class
+        // declaration is added separately in `emit_program` and is
+        // untouched here. Function/class declarations end in `}` (no
+        // `;` to pop, so `pop_trailing_semi_if_compact` no-ops on
+        // them); import/export declarations are illegal inside a
+        // block and never reach this point.
+        Statement::Declaration(Declaration::VariableDeclaration(_)) => true,
         Statement::Declaration(_) => false,
     }
 }

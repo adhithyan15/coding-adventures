@@ -1,5 +1,65 @@
 # Changelog
 
+## [0.1.2] - 2026-07-21
+
+### Fixed (upstream — `semantic-ir-to-javascript` 0.47.0, not this crate's own lowering)
+
+`semantic-ir-to-javascript`'s SIR23 addendum item 1 (`Symbolic.evalTerm`
+arithmetic/comparison/logic folding, that crate's own `CHANGELOG.md`
+`[0.47.0]` entry) lands a real, scoped evaluator for the symbolic domain
+— the same shared-crate fix `derive-to-semantic-ir`'s own `CHANGELOG.md`
+`[0.1.2]` entry documents, generalized across every Stream B frontend
+that uses `symbolic-vm::SymbolicBackend` unchanged (confirmed:
+`reduce-runtime` is one of them). This crate's own `src/lower.rs` is
+completely unchanged — every fix here is entirely upstream, confirmed by
+`tests/test_lower.rs`'s ~59 pre-existing shape assertions still passing
+unmodified — but 15 of `tests/oracle.rs`'s 38 `known_bug` cases now
+genuinely agree end-to-end (run and confirmed, not guessed), so their
+markers flip to `known_bug: None` here:
+
+- `multiplication_binds_tighter_than_addition`, `parens_override_
+  precedence`, `power_is_right_associative` — `Add`/`Mul`/`Pow` numeric
+  folding.
+- `unary_minus_binds_looser_than_power`, `negative_integer_literal` —
+  `Neg`'s numeric fold, correcting the same mistaken "would still need
+  display-convention work" assumption `derive-to-semantic-ir`'s own
+  `[0.1.2]` entry describes (a folded `Neg` on a numeric literal is
+  already a plain integer term, not a compound one).
+- `exact_integer_division_folds_to_an_integer`, `inexact_division_folds_
+  to_a_rational` — `Div`'s exact-integer/exact-rational folding.
+- `additive_identity_simplifies_a_free_symbol` — the `x + 0 -> x`
+  identity law.
+- `comparison_true`, `comparison_false`, `less_equal_boundary_is_true`,
+  `not_equal_is_true` — comparison folding to the `True`/`False` symbol
+  (`not_equal_is_true`, Reduce's own `neq` keyword, has no Derive
+  equivalent, so this is one more flip than Derive's 14).
+- `and_short_circuits_to_true`, `three_term_and_chain_folds_n_ary`,
+  `not_negates_a_true_comparison` — `And`/`Or`/`Not` folding (including
+  the n-ary chain fold).
+
+One case's `known_bug` **reason string is corrected in place** (stays
+`Some`, since it still disagrees, but for a narrower, now-accurate
+reason): `list_of_expressions_evaluates_elementwise` (`{1+1, 2*3, 2^3}`)
+now compiles to and evaluates as `List(2, 6, 8)` — `List` still has no
+handler of its own, but `evalTerm`'s applicative-order argument
+evaluation folds each element for free regardless — so the ORIGINAL
+reason ("each element is itself an unfolded Add/Mul/Pow term... never
+{2, 6, 8}") is no longer true; only Reduce's own `{...}` curly-brace
+display convention is still missing (a separate, not-yet-scheduled
+display-convention item — Reduce's own convention isn't part of this
+rollout's item 4, which is Derive-only per the addendum's "Scope
+boundary" section).
+
+The remaining 22 `known_bug` cases are unaffected and still fail for
+their own already-documented reasons: held-form execution (`Assign`/
+`Define`/`If`, item 2 of the rollout — 8 cases), Reduce's own SIR23
+display convention (not part of this rollout at all — 8 cases), and the
+THIRD, Reduce-specific gap (`First`/`Append`/free-symbol `Cons`/
+`CompoundExpression` having no `symbolic-vm` handler at all, a
+native-runtime gap one layer further back than `semantic-ir-to-
+javascript` — 5 cases, one overlapping the held-form gap). None of those
+are in this upstream fix's scope, so none are force-flipped.
+
 ## [0.1.1] - 2026-07-21
 
 ### Added

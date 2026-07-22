@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add BJT model-card `XTB` forward-beta temperature-exponent support, scaling
+  forward beta by the analysis-to-nominal absolute temperature ratio, matching
+  Rust and Python. The supported-parameter catalog now contains 106 canonical
+  rows.
 - Add BJT model-card `ISC`/`NC` base-collector leakage support in DC,
   transient, AC, transfer-function, temperature, and noise paths, matching
   Rust and Python. The supported-parameter catalog now contains 104 canonical

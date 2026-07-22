@@ -2,6 +2,45 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.33.0] - 2026-07-21
+
+### Removed — the `gap-015` function-body `var` hoist/split (net-wrong for byte-identity)
+
+Deleted `hoist_function_body_vars` and its three helpers
+(`hoist_visit_stmt`, `hoist_visit_block`, `hoist_rewrite_var_decl`). The
+transform used to lift every `var x = expr;` from inside a nested block up to
+the function-body top, splitting it into a bare `var x;` prefix plus an
+`x = expr;` assignment left at the original site — e.g.
+
+```js
+function f(){ if (cond) { var y = 1; } }
+// old (wrong):
+function f(){ var y; if (cond) y = 1; }
+```
+
+Its doc comment claimed "upstream Closure makes this hoist *syntactically*
+visible". **Differential probing against the real Closure Compiler jar
+(`closure-compiler-v20260712.jar`, `SIMPLE`, `--language_out NO_TRANSPILE`)
+disproved that across nine shapes** — `var` at the body top, nested in an
+`if`, in a loop, in a plain block, in a labeled block, in a `switch` case,
+deeply nested, and reassigned. In **every** case the reference compiler leaves
+the `var` declaration exactly where it was written; it never emits the
+hoist/split form. The transform therefore only ever moved closurec **away**
+from byte-identity, so it is removed rather than corrected.
+
+This does not touch the separate, oracle-correct dead-loop var extraction
+(`extract_dead_loop_vars`, from the `for(;false;)` / `if(false)` dead-branch
+work), which lifts hoisted `var`s out of a *removed* construct — behaviour the
+reference compiler does perform.
+
+The five call sites (function declaration, method body, static-init block,
+function expression, arrow block body) now fold their bodies and leave the
+result unchanged. Four unit tests that pinned the old split behaviour were
+rewritten to pin the new no-split invariant
+(`var_inside_if_consequent_block_stays_nested`,
+`var_at_top_of_function_body_stays_intact`,
+`nested_function_body_vars_are_isolated`, `bare_var_no_init_stays_nested`).
+
 ## [0.32.0] - 2026-07-17
 
 ### Added — `for` loop body comma-fusion: `for(…){a();b();}` → `for(…)a(),b();`

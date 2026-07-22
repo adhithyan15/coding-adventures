@@ -2257,7 +2257,9 @@ mod tests {
             rename_source(
                 "function f(cond) { if (cond) { var hoisted = 1; } return hoisted; }"
             ),
-            "function f(a){if(a){var b=1;}return b};"
+            // The block-final `var b=1` carries no `;` before `}` — the emitter
+            // pops the redundant terminator (closure-emitter 0.58.0).
+            "function f(a){if(a){var b=1}return b};"
         );
     }
 

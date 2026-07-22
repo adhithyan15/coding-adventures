@@ -462,6 +462,57 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                 let _ = write!(out, "{}{} = ", pad, sanitize_ident(global));
                 emit_expr(out, value, indent);
                 out.push_str(";\n");
+            } else if is_sym23_root_shape(expr) {
+                // SIR23 addendum, item 1: evaluate a top-level symbolic
+                // statement exactly ONCE here, at the statement boundary
+                // — never inside `Expr::SymApply`'s own codegen arm
+                // (which keeps emitting a bare, unevaluated
+                // `__Sir.Symbolic.apply(...)`, unchanged). `SymApply`/
+                // `SymSymbol`/`SymRational` are confirmed exhaustive as
+                // the SIR23 root shapes these frontends' `lower.rs`
+                // modules ever hand back at statement level
+                // (`derive-to-semantic-ir/CHANGELOG.md`'s own disclosed
+                // scope: "this crate therefore only ever constructs
+                // Expr::SymSymbol/Expr::SymApply"). `evalTerm` recurses
+                // into `head`/every arg itself (mirroring
+                // `eval_apply`'s own "evaluate args first" step), so one
+                // top-level call here evaluates an arbitrarily nested
+                // expression bottom-up — wrapping every NESTED
+                // `SymApply` occurrence instead would cause redundant,
+                // potentially-exponential re-evaluation, which the SIR23
+                // addendum calls out explicitly.
+                out.push_str(&pad);
+                out.push_str("__Sir.Symbolic.unwrap(__Sir.Symbolic.evalTerm(");
+                emit_expr(out, expr, indent);
+                out.push_str("));\n");
+            } else if let Some(inner) = pick_print_of_sym23_root(expr) {
+                // `print(<bare SIR23 root shape>)` — the harness-only
+                // observability pattern `derive-to-semantic-ir`'s and
+                // `reduce-to-semantic-ir`'s own `tests/oracle.rs` use
+                // (their frontends' own lowering never wraps a top-level
+                // statement in `print`/`console.log` itself — see each
+                // oracle file's own module doc, "a harness-only 'make it
+                // observable' step" — so this shape never occurs in
+                // production output today, only in a test harness that
+                // needs a value on stdout to diff). Discovered
+                // empirically while verifying this addendum item against
+                // that exact harness: without this arm, the harness's own
+                // `wrap_top_level_in_print` re-shapes the statement's
+                // `expr` from a bare SIR23 root (which the arm above
+                // would evaluate) into `BuiltinCall("print", [bare root])`
+                // — invisible to the check above, so the printed value
+                // stayed unevaluated even with `evalTerm` fully wired.
+                // The fix generalizes the SAME "evaluate the one value
+                // this statement observes" policy to this shape too — the
+                // statement still gets exactly one `evalTerm` call, still
+                // never touches `Expr::SymApply`'s own codegen arm, and
+                // still lives entirely in this `Stmt::ExprStmt` arm,
+                // mirroring the `pick_global_set` special-case immediately
+                // above.
+                out.push_str(&pad);
+                out.push_str("__Sir.print(__Sir.Symbolic.unwrap(__Sir.Symbolic.evalTerm(");
+                emit_expr(out, inner, indent);
+                out.push_str(")));\n");
             } else {
                 out.push_str(&pad);
                 emit_expr(out, expr, indent);
@@ -770,6 +821,33 @@ fn pick_global_set(e: &Expr) -> Option<(&str, &Expr)> {
             {
                 return Some((global_name.as_str(), &args[1]));
             }
+        }
+    }
+    None
+}
+
+/// Is `e` one of the three SIR23 root shapes a symbolic-domain frontend
+/// (Wolfram/Macsyma/Derive/Reduce/Maple) ever hands back at STATEMENT
+/// level? See `emit_stmt`'s `Stmt::ExprStmt` arm for how this gates the
+/// SIR23 addendum's `evalTerm` wrap.
+fn is_sym23_root_shape(e: &Expr) -> bool {
+    matches!(
+        e,
+        Expr::SymApply { .. } | Expr::SymSymbol { .. } | Expr::SymRational { .. }
+    )
+}
+
+/// Detect `BuiltinCall("print", [<bare SIR23 root shape>])` and return
+/// the inner expression. See `emit_stmt`'s `Stmt::ExprStmt` arm for why
+/// this needs the identical `evalTerm` treatment a bare top-level SIR23
+/// statement gets — this shape is the harness-only observability pattern
+/// `derive-to-semantic-ir`'s/`reduce-to-semantic-ir`'s own `tests/
+/// oracle.rs` use (`wrap_top_level_in_print`), not something any
+/// frontend's own lowering emits today.
+fn pick_print_of_sym23_root(e: &Expr) -> Option<&Expr> {
+    if let Expr::BuiltinCall { name, args, .. } = e {
+        if name == "print" && args.len() == 1 && is_sym23_root_shape(&args[0]) {
+            return Some(&args[0]);
         }
     }
     None

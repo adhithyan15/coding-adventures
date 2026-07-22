@@ -2,6 +2,37 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.58.0] - 2026-07-21
+
+### Fixed - drop the redundant `;` after a block-final `var` declaration
+
+A `var`/`let`/`const` declaration that is the **last statement inside a
+block** (`{ … }`) used to keep its terminator `;` right before the closing
+`}`:
+
+```js
+function f(){ var y = h(); }   // was: function(){var y=h();}
+```
+
+The closing `}` already terminates that statement (ECMAScript ASI), so the
+reference Closure Compiler emits no `;` there — `function(){var y=h()}`. The
+compact-mode "drop the redundant terminator `;` before `}`" rule
+(`last_stmt_uses_terminator_semi`) excluded **all** declarations; it now
+returns `true` for a block-final `VariableDeclaration`, so the `;` is popped.
+
+This gate feeds only `emit_block_statement`; the separate top-level part-B
+`;` that `emit_program` appends after a trailing function/class declaration
+(the fix from the previous "extra `;` after a top-level declaration" work) is
+untouched. Function/class declarations end in `}` (no `;` to pop, so the pop
+no-ops on them), and import/export declarations are illegal inside a block and
+never reach the gate.
+
+This defect was latent until now: the fold-control-flow `var` hoist/split
+(removed in `closure-pass-fold-control-flow` 0.33.0) always moved a `var`'s
+initializer off the last-statement position, so a block-final `var` never
+reached the emitter. Removing that transform surfaced this, and the two
+changes ship together.
+
 ## [0.57.0] - 2026-07-20
 
 ### Added - output line wrapping at a 500-column budget
