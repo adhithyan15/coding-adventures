@@ -2937,10 +2937,40 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     }
 
     // Structural equality — used by the matcher (a repeated pattern
-    // variable must bind to the SAME term every occurrence) and by
+    // variable must bind to the SAME term every occurrence), by
     // `replaceRepeated`'s "did this firing actually change anything"
-    // fixed-point check.
-    function termEquals(a, b) {
+    // fixed-point check, and (SIR23 addendum item 1) by
+    // `comparisonHandler`'s `Equal`/`NotEqual` structural-equality
+    // fallback below.
+    //
+    // SECURITY (CWE-674): capped with the SAME `MAX_TERM_DEPTH` guard
+    // `toDisplayString`/`walkOnce`/`replaceRepeatedTerm` already use
+    // (declared below) — reused deliberately, not measured fresh: this
+    // function's per-call-frame footprint (a `kind` check, a `switch`, at
+    // most one more recursive call plus an `Array.prototype.every`
+    // closure per level) is no heavier than `toDisplayString`'s own,
+    // already-proven-safe-at-`MAX_TERM_DEPTH` frame (also just a `kind`
+    // switch plus one more recursive call per level, but with string-
+    // concatenation work on top) — see that function's own doc comment.
+    // `comparisonHandler`'s equality fallback (added by this same PR) is
+    // the first call site whose OPERANDS can be an arbitrarily deep
+    // runtime-built term with no depth cap of its own upstream (every
+    // pre-existing call site below compares a pattern-matcher binding or
+    // a rewrite-rule replacement, both already implicitly bounded by
+    // `MAX_TERM_DEPTH`-capped traversals elsewhere) — without this guard,
+    // `Equal[<deep unfoldable tree>, <same shape>]` at the SIR23
+    // statement level could recurse this function past the native stack
+    // limit before `evalTerm`'s OWN cap (a different function, checked at
+    // a different call boundary) ever gets a chance to intervene. Past
+    // the cap, `false` ("not structurally equal") is the safe, contained
+    // answer — the same policy `matchPattern`'s own "give up cleanly"
+    // contract already uses for a failed match, not a special sentinel
+    // (unlike `toDisplayString`/`walkOnce`, `termEquals` already returns
+    // a plain `bool`, so reusing that same type past the cap needs no new
+    // return shape).
+    function termEquals(a, b, depth) {
+      if (depth === undefined) { depth = 0; }
+      if (depth > MAX_TERM_DEPTH) { return false; }
       if (a.kind !== b.kind) { return false; }
       switch (a.kind) {
         case "symbol": return a.name === b.name;
@@ -2949,9 +2979,9 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         case "float": return Object.is(a.value, b.value);
         case "string": return a.value === b.value;
         case "apply":
-          return termEquals(a.head, b.head)
+          return termEquals(a.head, b.head, depth + 1)
             && a.args.length === b.args.length
-            && a.args.every((arg, i) => termEquals(arg, b.args[i]));
+            && a.args.every((arg, i) => termEquals(arg, b.args[i], depth + 1));
         default: return false;
       }
     }

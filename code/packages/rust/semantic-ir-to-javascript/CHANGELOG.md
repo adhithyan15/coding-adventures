@@ -2,6 +2,33 @@
 
 ## 0.49.0 — `Symbolic.evalTerm`: arithmetic/comparison/logic folding (SIR23 addendum, item 1 of 4)
 
+### Security fix (found by this item's own `/security-review` pass)
+
+`comparisonHandler`'s `Equal`/`NotEqual` structural-equality fallback
+calls the pre-existing `termEquals` (`runtime.rs`) — a plain recursive
+tree-equality check that, unlike every other whole-tree-walking function
+in this file (`toDisplayString`/`walkOnce`/`replaceRepeatedTerm`), had
+**no depth cap of its own** (CWE-674). Every pre-existing call site
+(the pattern matcher, the rewrite engine's fixed-point check) only ever
+compares terms already implicitly bounded by a `MAX_TERM_DEPTH`-capped
+traversal elsewhere, so this was never reachable before — but
+`comparisonHandler`'s operands (added by this same item) can be an
+arbitrarily deep symbolic tree built at runtime with no fold available
+(an unrecognized head has no `HANDLERS` entry, so `evalApply`'s
+fallthrough rebuilds the arg-evaluated term at essentially its original
+depth, never folding it away). Comparing two such deep trees with
+`=`/`Equal` could recurse `termEquals` itself past the native stack
+limit — a DIFFERENT recursion path than `evalTerm`/`evalApply`'s own,
+already-capped one, so `MAX_EVAL_DEPTH` never got a chance to intervene.
+Fixed by giving `termEquals` its own `depth` parameter, reusing the
+existing `MAX_TERM_DEPTH` cap (its per-frame cost is no heavier than
+`toDisplayString`'s own, already-proven-safe-at-that-cap frame) and
+returning `false` (the same "give up cleanly" contract `matchPattern`
+already uses for a failed match) past the limit, rather than recursing
+unbounded. Regression test:
+`tests/sir23_eval_depth_guard.rs::comparison_of_two_deep_unfoldable_
+trees_does_not_crash_term_equals`.
+
 Item 1 of the 4-item rollout described by `SIR23-symbolic-pattern-
 semantic-ir.md`'s own "Addendum — SIR23 symbolic evaluator + per-language
 display convention" section. Found by `derive-to-semantic-ir/tests/

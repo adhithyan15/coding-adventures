@@ -182,3 +182,97 @@ fn eval_term_far_past_the_cap_still_returns_the_sentinel_not_a_crash() {
         assert_eq!(stdout, "DEPTH_LIMIT");
     }
 }
+
+/// Regression test for a security-review finding on this same item:
+/// `comparisonHandler`'s `Equal`/`NotEqual` structural-equality fallback
+/// (`runtime.rs`) calls the pre-existing `termEquals` — a plain recursive
+/// tree-equality check with, before this fix, NO depth cap of its own,
+/// unlike every other whole-tree-walking function in this file
+/// (`toDisplayString`/`walkOnce`/`replaceRepeatedTerm`). Every
+/// PRE-EXISTING call site (the pattern matcher, the rewrite engine's
+/// fixed-point check) only ever compares terms already implicitly
+/// bounded by a `MAX_TERM_DEPTH`-capped traversal elsewhere — but
+/// `comparisonHandler`'s operands can be an arbitrarily deep symbolic
+/// tree a compiled program built at runtime with NO fold available (an
+/// unrecognized head, like the `"F"` used here, has no `HANDLERS` entry,
+/// so `evalApply`'s "no handler matched" fallthrough just rebuilds the
+/// arg-evaluated term at essentially its original depth — it does NOT
+/// fold it away).
+///
+/// Chosen depth, `1000`, is deliberate, not arbitrary: it sits strictly
+/// BETWEEN `termEquals`'s own new cap (`MAX_TERM_DEPTH = 512`) and
+/// `evalTerm`'s own, unrelated cap (`MAX_EVAL_DEPTH = 2000`). This
+/// isolates the exact gap the fix closes — deep enough that `termEquals`
+/// (reusing `MAX_TERM_DEPTH`) trips ITS OWN new guard partway through
+/// (at depth 513, long before it would naturally finish comparing all
+/// 1000 levels), yet shallow enough that evaluating EACH operand
+/// (`evalTerm`'s own, separate, already-existing cap on the ARGUMENT
+/// evaluation that runs before `comparisonHandler` is ever reached)
+/// completes normally rather than hitting `MAX_EVAL_DEPTH` first and
+/// masking whether `termEquals`'s own fix actually works. (A depth past
+/// 2000, tried first, does NOT exercise this path at all: `evalApply`'s
+/// own arg-evaluation loop would return `evalTerm`'s depth-limit
+/// sentinel for the `Equal(...)` call's OPERANDS before `comparisonHandler`
+/// is ever invoked — a different, already-covered guard, not this one.)
+/// A clean, non-crashing process exit is the pass condition; the exact
+/// folded/unfolded VALUE is secondary — past `MAX_TERM_DEPTH`,
+/// `termEquals`'s own new cap conservatively returns `false`, so this
+/// prints an unevaluated `Equal(...)` term rather than `True` (the
+/// correct, safe, documented trade-off — see `termEquals`'s own updated
+/// doc comment in `runtime.rs` — not a bug).
+#[test]
+fn comparison_of_two_deep_unfoldable_trees_does_not_crash_term_equals() {
+    if !node_available() {
+        eprintln!(
+            "note: `node` unavailable — skipping comparison_of_two_deep_unfoldable_trees_does_not_crash_term_equals"
+        );
+        return;
+    }
+    let mut source = runtime_prelude();
+    source.push_str(
+        r#"
+(function () {
+  function buildChain(n) {
+    let acc = __Sir.Symbolic.sym("x");
+    for (let i = 0; i < n; i++) {
+      acc = __Sir.Symbolic.apply(__Sir.Symbolic.sym("F"), [acc]);
+    }
+    return acc;
+  }
+  const left = buildChain(1000);
+  const right = buildChain(1000);
+  const cmp = __Sir.Symbolic.apply(__Sir.Symbolic.sym("Equal"), [left, right]);
+  const result = __Sir.Symbolic.evalTerm(cmp);
+  if (result !== null && typeof result === "object" && result.kind === "depth-limit") {
+    console.log("DEPTH_LIMIT");
+  } else {
+    console.log("NO_CRASH");
+  }
+})();
+"#,
+    );
+
+    let mut path: PathBuf = std::env::temp_dir();
+    path.push(format!(
+        "sir_eval_termequals_depth_{}.js",
+        std::process::id()
+    ));
+    std::fs::write(&path, &source).expect("write temp js");
+    let output = Command::new("node").arg(&path).output().expect("spawn node");
+    let _ = std::fs::remove_file(&path);
+
+    assert!(
+        output.status.success(),
+        "node crashed comparing two 1000-deep unfoldable trees with Equal instead of \
+         terminating cleanly (termEquals's own depth guard missing or broken):\nstdout: {}\nstderr: {}",
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr),
+    );
+    assert_eq!(
+        String::from_utf8_lossy(&output.stdout).trim(),
+        "NO_CRASH",
+        "expected a clean, non-crashing result (whether Equal folds, stays unevaluated, or hits \
+         evalTerm's own depth-limit sentinel, all are acceptable outcomes here -- only a raw \
+         node crash is not)"
+    );
+}
