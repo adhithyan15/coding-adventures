@@ -2937,10 +2937,40 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     }
 
     // Structural equality — used by the matcher (a repeated pattern
-    // variable must bind to the SAME term every occurrence) and by
+    // variable must bind to the SAME term every occurrence), by
     // `replaceRepeated`'s "did this firing actually change anything"
-    // fixed-point check.
-    function termEquals(a, b) {
+    // fixed-point check, and (SIR23 addendum item 1) by
+    // `comparisonHandler`'s `Equal`/`NotEqual` structural-equality
+    // fallback below.
+    //
+    // SECURITY (CWE-674): capped with the SAME `MAX_TERM_DEPTH` guard
+    // `toDisplayString`/`walkOnce`/`replaceRepeatedTerm` already use
+    // (declared below) — reused deliberately, not measured fresh: this
+    // function's per-call-frame footprint (a `kind` check, a `switch`, at
+    // most one more recursive call plus an `Array.prototype.every`
+    // closure per level) is no heavier than `toDisplayString`'s own,
+    // already-proven-safe-at-`MAX_TERM_DEPTH` frame (also just a `kind`
+    // switch plus one more recursive call per level, but with string-
+    // concatenation work on top) — see that function's own doc comment.
+    // `comparisonHandler`'s equality fallback (added by this same PR) is
+    // the first call site whose OPERANDS can be an arbitrarily deep
+    // runtime-built term with no depth cap of its own upstream (every
+    // pre-existing call site below compares a pattern-matcher binding or
+    // a rewrite-rule replacement, both already implicitly bounded by
+    // `MAX_TERM_DEPTH`-capped traversals elsewhere) — without this guard,
+    // `Equal[<deep unfoldable tree>, <same shape>]` at the SIR23
+    // statement level could recurse this function past the native stack
+    // limit before `evalTerm`'s OWN cap (a different function, checked at
+    // a different call boundary) ever gets a chance to intervene. Past
+    // the cap, `false` ("not structurally equal") is the safe, contained
+    // answer — the same policy `matchPattern`'s own "give up cleanly"
+    // contract already uses for a failed match, not a special sentinel
+    // (unlike `toDisplayString`/`walkOnce`, `termEquals` already returns
+    // a plain `bool`, so reusing that same type past the cap needs no new
+    // return shape).
+    function termEquals(a, b, depth) {
+      if (depth === undefined) { depth = 0; }
+      if (depth > MAX_TERM_DEPTH) { return false; }
       if (a.kind !== b.kind) { return false; }
       switch (a.kind) {
         case "symbol": return a.name === b.name;
@@ -2949,9 +2979,9 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         case "float": return Object.is(a.value, b.value);
         case "string": return a.value === b.value;
         case "apply":
-          return termEquals(a.head, b.head)
+          return termEquals(a.head, b.head, depth + 1)
             && a.args.length === b.args.length
-            && a.args.every((arg, i) => termEquals(arg, b.args[i]));
+            && a.args.every((arg, i) => termEquals(arg, b.args[i], depth + 1));
         default: return false;
       }
     }
@@ -3229,6 +3259,592 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       return result;
     }
 
+    // ── evalTerm (SIR23 addendum, item 1 of 4) ──────────────────────
+    //
+    // `Symbolic.evalTerm(term)` is a direct JS port of `symbolic-vm`'s
+    // `VM::eval`/`eval_apply` dispatch architecture
+    // (`code/packages/rust/symbolic-vm/src/{vm,handlers}.rs`) — a plain
+    // per-head `Map<name, Handler>` lookup, NOT expressed as `SymRule`s
+    // run through `matchPattern`/`applyRuleTerm` above. See the SIR23
+    // spec's addendum ("Architecture decision: a dedicated head-dispatch
+    // evaluator, not rewrite-rules-through-the-existing-engine") for the
+    // full four-point rationale; the short version: `Add(2, 3) -> 5`
+    // needs no variable binding, no repeated-name consistency check, no
+    // bottom-up fixed point — the one thing the matcher provides that a
+    // plain `if (a.kind === "integer" ...)` dispatch doesn't — so a
+    // `Handler` is the right shape, not a `SymRule` whose RHS closure
+    // just happens to compute a sum.
+    //
+    // ## Scope: item 1 of 4 (see the addendum's "Crate layout and
+    // rollout (one item = one PR)" section)
+    //
+    // This item wires up ONLY arithmetic (`Add`/`Sub`/`Mul`/`Div`/`Pow`/
+    // `Neg`/`Inv`/`Abs`), comparison (`Equal`/`NotEqual`/`Less`/
+    // `Greater`/`LessEqual`/`GreaterEqual`), and logic (`And`/`Or`/
+    // `Not`) folding:
+    //
+    //   item 1 (this PR)  — arithmetic / comparison / logic folding
+    //   item 2 (future)   — environment + Assign/Define/If + user functions
+    //   item 3 (future)   — calculus / elementary-function handlers
+    //   item 4 (future)   — Derive's own SIR23 display convention
+    //
+    // `HELD_HEADS` is declared now — the held-vs-evaluated ARGUMENT
+    // treatment below is exercised starting this item — but item 1 wires
+    // up NO handler for any of its three members. `Assign`/`Define`/`If`
+    // therefore always fall through to "no handler matched" below, which
+    // rebuilds the term from the evaluated head and the ORIGINAL,
+    // unevaluated args: byte-for-byte the same inert `Apply` shape
+    // today's bare `SymApply` codegen already produces. Concretely:
+    // `Assign(x, 5+1)` must NOT fold `5 + 1` to `6` in this item, even
+    // though `Add`-folding is fully wired elsewhere in the very same
+    // expression — held means held, regardless of what handlers exist
+    // for other heads. Real execution of these three (a binding
+    // environment, a self-loop guard, user-function dispatch reusing
+    // `substituteTerm` above) is item 2's job.
+    //
+    // `List` needs, and per the addendum's own handler table gets,
+    // forever, NO handler at all: applicative-order argument evaluation
+    // alone folds `List(Add(1,1), Mul(2,3))` into `List(2, 6)` "for
+    // free" via the same generic "no handler matched" fallthrough every
+    // other unrecognised head (present or future) takes.
+    const HELD_HEADS = new Set(["Assign", "Define", "If"]);
+
+    // SECURITY (CWE-674): `evalTerm`'s OWN recursion-depth cap — this is
+    // deliberately NOT a reuse of `MAX_TERM_DEPTH` above. That constant
+    // guards `walkOnce`/`replaceRepeatedTerm`'s tree WALK, a different
+    // function whose per-frame cost (rebuild `head`/args, try each rule
+    // in a list) differs from `evalTerm`'s own per-frame cost (a
+    // numeric-tower conversion, a `Map` handler lookup, an argument-array
+    // rebuild). Assuming one function's measured-safe cap is safe for a
+    // DIFFERENT function's stack frames is exactly the mistake this
+    // repo's own `derive-parser::MAX_RULE_DEPTH` doc comment warns
+    // against — a cap is only as good as the function it was measured
+    // against.
+    //
+    // ## Measurement methodology
+    //
+    // Mirrors `derive-parser::MAX_RULE_DEPTH`'s own documented discipline
+    // exactly: measure the real bare-stack crash floor first, on a
+    // representative build of the ACTUAL recursive function (not a
+    // simplified stand-in — `evalTerm`/`evalApply`'s own local-variable
+    // footprint, not which handler happens to run, is what determines
+    // per-frame stack cost), then set the cap with a healthy safety
+    // margin below it — never assume a round number is safe.
+    //
+    // Measured directly: a `node` v25 subprocess (default per-thread V8
+    // stack, NO `--stack-size` override — matching how a compiled SIR
+    // program actually runs in production, not an inflated test-only
+    // stack) calling this exact `evalTerm`/`evalApply` pair on a
+    // right-nested `Add(1, Add(1, Add(1, …)))` term built via a plain
+    // runtime loop of real `Symbolic.apply` calls (not a hand-written
+    // giant static literal — the same "a shallow compiled program can
+    // still build an arbitrarily deep runtime VALUE" concern
+    // `print_on_deeply_nested_term_truncates_instead_of_crashing_node`
+    // (`tests/sir23_symbolic.rs`) already documents for `toDisplayString`):
+    // evaluates safely through **2800** nesting levels, crashes
+    // (`RangeError: Maximum call stack size exceeded`) by **2805** (the
+    // exact boundary jitters by a few levels run to run — ASLR-driven
+    // stack-layout variance, not measurement error; binary-searched with
+    // multiple trials per candidate depth to confirm the jitter band).
+    //
+    // `MAX_EVAL_DEPTH` is set to **2000** — about **29%** below the
+    // measured ~2800-level floor (comparable margin to `apl-parser`'s
+    // ~26.5%, `j-parser`'s ~30%, `q-parser`'s ~29%). Verified (see
+    // `tests/sir23_eval_depth_guard.rs`): 2000 levels evaluates cleanly
+    // to a real folded integer; 2001 levels — and, separately, a term
+    // millions of levels deep, since the guard is checked on EVERY
+    // recursive step, not just once at the top — cleanly returns the
+    // depth-limit sentinel rather than crashing `node`, on a default,
+    // un-widened stack.
+    const MAX_EVAL_DEPTH = 2000;
+
+    // ── numeric tower (handlers.rs::Numeric port) ───────────────────
+    //
+    // `{tag:"int", value}` / `{tag:"rat", n, d}` (lowest terms, d > 0) /
+    // `{tag:"float", value}` — an internal-only representation used
+    // solely inside the arithmetic handlers below; NOT the same shape as
+    // a `{kind:"integer"|"rational"|"float", ...}` TERM (`toNumeric`/
+    // `fromNumeric` convert between the two at each handler's boundary,
+    // mirroring `handlers.rs`'s own `to_numeric`/`from_numeric`).
+    //
+    // Every binary op checks `Number.isSafeInteger` on its exact-integer
+    // result and falls back to a Float — the JS-number analogue of
+    // Rust's `i64::checked_add` returning `None` (`handlers.rs`'s own
+    // documented policy: "Int(i64) — exact integer (checked arithmetic;
+    // overflows to Float)"). `Number.isSafeInteger` is this backend's
+    // existing, established integer ceiling (see this IIFE's own
+    // "Value model" doc comment above), not an arbitrary new choice.
+    function numInt(value) { return { tag: "int", value }; }
+    function numRat(n, d) { return { tag: "rat", n, d }; } // caller pre-reduces
+    function numFloat(value) { return { tag: "float", value }; }
+
+    function numToF64(v) {
+      if (v.tag === "int") { return v.value; }
+      if (v.tag === "rat") { return v.n / v.d; }
+      return v.value;
+    }
+    function numIsZero(v) {
+      if (v.tag === "int") { return v.value === 0; }
+      if (v.tag === "rat") { return v.n === 0; }
+      return v.value === 0;
+    }
+    function numIsOne(v) {
+      if (v.tag === "int") { return v.value === 1; }
+      if (v.tag === "rat") { return v.n === v.d; }
+      return v.value === 1;
+    }
+
+    // Build a lowest-terms Rat, collapsing denom===1 to an Int — a
+    // direct port of `handlers.rs::make_rat`. Reuses `gcdAbs` above
+    // (already used by `rationalTerm`'s own construction-time reduction)
+    // rather than re-implementing GCD a second time.
+    function makeRat(numer, denom) {
+      if (denom < 0) { numer = -numer; denom = -denom; }
+      const g = gcdAbs(numer, denom);
+      const n = numer / g;
+      const d = denom / g;
+      return d === 1 ? numInt(n) : numRat(n, d);
+    }
+
+    function toNumeric(term) {
+      if (term.kind === "integer") { return numInt(term.value); }
+      if (term.kind === "rational") { return numRat(term.numer, term.denom); }
+      if (term.kind === "float") { return numFloat(term.value); }
+      return null; // not a numeric leaf (a Symbol or a compound Apply)
+    }
+    // Convert a Numeric back to the most compact TERM representation —
+    // mirrors `handlers.rs::from_numeric` exactly: `Rat(n, 1)` collapses
+    // to a plain integer term (though `makeRat` above already collapses
+    // that case before it ever reaches here in practice).
+    function fromNumeric(v) {
+      if (v.tag === "int") { return intTerm(v.value); }
+      if (v.tag === "rat") { return v.d === 1 ? intTerm(v.n) : rationalTerm(v.n, v.d); }
+      return floatTerm(v.value);
+    }
+
+    function numAdd(a, b) {
+      if (a.tag === "int" && b.tag === "int") {
+        const s = a.value + b.value;
+        return Number.isSafeInteger(s) ? numInt(s) : numFloat(a.value + b.value);
+      }
+      if (a.tag === "rat" && b.tag === "rat") {
+        const numer = a.n * b.d + b.n * a.d;
+        const denom = a.d * b.d;
+        if (denom !== 0 && Number.isSafeInteger(numer) && Number.isSafeInteger(denom)) {
+          return makeRat(numer, denom);
+        }
+        return numFloat(numToF64(a) + numToF64(b));
+      }
+      if (a.tag === "int" && b.tag === "rat") {
+        const numer = a.value * b.d + b.n;
+        if (Number.isSafeInteger(numer)) { return makeRat(numer, b.d); }
+        return numFloat(numToF64(a) + numToF64(b));
+      }
+      if (a.tag === "rat" && b.tag === "int") {
+        const numer = b.value * a.d + a.n;
+        if (Number.isSafeInteger(numer)) { return makeRat(numer, a.d); }
+        return numFloat(numToF64(a) + numToF64(b));
+      }
+      return numFloat(numToF64(a) + numToF64(b));
+    }
+
+    function numSub(a, b) {
+      if (a.tag === "int" && b.tag === "int") {
+        const s = a.value - b.value;
+        return Number.isSafeInteger(s) ? numInt(s) : numFloat(a.value - b.value);
+      }
+      if (a.tag === "rat" && b.tag === "rat") {
+        const numer = a.n * b.d - b.n * a.d;
+        const denom = a.d * b.d;
+        if (denom !== 0 && Number.isSafeInteger(numer) && Number.isSafeInteger(denom)) {
+          return makeRat(numer, denom);
+        }
+        return numFloat(numToF64(a) - numToF64(b));
+      }
+      if (a.tag === "int" && b.tag === "rat") {
+        const numer = a.value * b.d - b.n;
+        if (Number.isSafeInteger(numer)) { return makeRat(numer, b.d); }
+        return numFloat(numToF64(a) - numToF64(b));
+      }
+      if (a.tag === "rat" && b.tag === "int") {
+        const numer = a.n - b.value * a.d;
+        if (Number.isSafeInteger(numer)) { return makeRat(numer, a.d); }
+        return numFloat(numToF64(a) - numToF64(b));
+      }
+      return numFloat(numToF64(a) - numToF64(b));
+    }
+
+    function numMul(a, b) {
+      if (a.tag === "int" && b.tag === "int") {
+        const p = a.value * b.value;
+        return Number.isSafeInteger(p) ? numInt(p) : numFloat(a.value * b.value);
+      }
+      if (a.tag === "rat" && b.tag === "rat") {
+        const numer = a.n * b.n;
+        const denom = a.d * b.d;
+        if (Number.isSafeInteger(numer) && Number.isSafeInteger(denom)) { return makeRat(numer, denom); }
+        return numFloat(numToF64(a) * numToF64(b));
+      }
+      if (a.tag === "int" && b.tag === "rat") {
+        const numer = a.value * b.n;
+        if (Number.isSafeInteger(numer)) { return makeRat(numer, b.d); }
+        return numFloat(numToF64(a) * numToF64(b));
+      }
+      if (a.tag === "rat" && b.tag === "int") {
+        const numer = b.value * a.n;
+        if (Number.isSafeInteger(numer)) { return makeRat(numer, a.d); }
+        return numFloat(numToF64(a) * numToF64(b));
+      }
+      return numFloat(numToF64(a) * numToF64(b));
+    }
+
+    // `a / b` — mirrors `handlers.rs`'s `impl Div for Numeric` exactly:
+    // dispatches on `b`'s OWN tag (not a symmetric a-vs-b case split),
+    // computing `a * reciprocal(b)`. NEITHER this function NOR the Rust
+    // it ports checks `b`'s zero-ness — that is each CALLER's
+    // responsibility (`divHandler`/`invHandler` below both check
+    // `numIsZero` and throw before ever calling this, exactly mirroring
+    // `div_handler`/`inv_handler`'s own pre-check-then-panic order).
+    function numDiv(a, b) {
+      if (b.tag === "float") { return numFloat(numToF64(a) / b.value); }
+      if (b.tag === "int") { return numMul(a, makeRat(1, b.value)); }
+      return numMul(a, makeRat(b.d, b.n));
+    }
+
+    function numNeg(a) {
+      if (a.tag === "int") { return numInt(-a.value); } // safe: negating a
+      // safe integer never leaves the safe range (`-Number.MIN_SAFE_
+      // INTEGER === Number.MAX_SAFE_INTEGER`, symmetric around 0).
+      if (a.tag === "rat") { return numRat(-a.n, a.d); } // already lowest terms
+      return numFloat(-a.value);
+    }
+
+    // `base^exp` — a direct port of `handlers.rs::pow_numeric`, using
+    // `Number.isSafeInteger` in place of the Rust reference's widen-to-
+    // i128-then-range-check `checked_pow` trick (there is no i128 in
+    // JS, so an explicit repeated-multiplication loop with a
+    // safe-integer check after every step is the equivalent overflow
+    // detector — `checkedIntPow` below).
+    function checkedIntPow(base, exp) {
+      let result = 1;
+      for (let i = 0; i < exp; i++) {
+        result *= base;
+        if (!Number.isSafeInteger(result)) { return null; }
+      }
+      return result;
+    }
+    function powNumeric(base, exp) {
+      if (base.tag === "int" && exp.tag === "int") {
+        if (exp.value >= 0 && exp.value <= 62) {
+          const r = checkedIntPow(base.value, exp.value);
+          if (r !== null) { return numInt(r); }
+        } else if (exp.value < 0) {
+          // b^(-n) = 1 / b^n
+          if (base.value === 0) { throw new RangeError("Symbolic.evalTerm: 0^negative"); }
+          const pos = powNumeric(base, numInt(-exp.value));
+          return numDiv(numInt(1), pos);
+        }
+      }
+      if (base.tag === "rat" && exp.tag === "int" && exp.value >= 0 && exp.value <= 30) {
+        const nn = checkedIntPow(base.n, exp.value);
+        const dd = checkedIntPow(base.d, exp.value);
+        if (nn !== null && dd !== null && dd >= 1) { return makeRat(nn, dd); }
+      }
+      // Fall back to float (also the correct path for a negative-exponent
+      // Rat base and any Float operand, exactly like the Rust reference).
+      return numFloat(Math.pow(numToF64(base), numToF64(exp)));
+    }
+
+    // ── True/False helper (handlers.rs's `is_truthy`/`bool_node`) ───
+    //
+    // `True`/`False` are ordinary SYMBOL terms in this domain — never a
+    // JS boolean, never `1`/`0` (the addendum's own comparison-handler
+    // table entry is explicit about this). `isTruthy` returns `true`/
+    // `false` for a recognised boolean symbol, or `null` (tri-state) for
+    // anything else — the `null` case is what lets `andHandler`/
+    // `orHandler`/`notHandler` below leave a non-boolean operand alone.
+    function isTruthy(term) {
+      if (term.kind === "symbol") {
+        if (term.name === "True") { return true; }
+        if (term.name === "False") { return false; }
+      }
+      return null;
+    }
+
+    // ── arithmetic handlers ──────────────────────────────────────────
+    //
+    // Every handler below shares `handlers.rs`'s own contract: given the
+    // (already evaluated, applicative-order) `args` and the (already
+    // evaluated) `head`, either fold to a fully-reduced term or rebuild
+    // the ORIGINAL, unevaluated-further `applyTerm(head, args)` shape —
+    // never `null`, never something needing a second `evalTerm` pass.
+    // `binary_args`'s `None`-on-wrong-arity early return (`handlers.rs`
+    // line ~7593) is ported as a plain `args.length !== 2` check at the
+    // top of each binary handler.
+    //
+    // Identity-law fallbacks (`x+0->x`, `1*x->x`, …) ARE ported here —
+    // they are a few lines each and match `handlers.rs` exactly (its own
+    // "Reality check" section explicitly says only the nested-Add
+    // canonicalization/flattening special case, "Phase 47", is skippable
+    // since oracle tests only ever compare a DISPLAYED value, never
+    // internal tree shape — these plain identity laws are not that, they
+    // change the displayed/folded result itself, e.g. `x + 0` must
+    // display as bare `x`, not `Add(x, 0)`).
+    function addHandler(head, args) {
+      if (args.length !== 2) { return applyTerm(head, args); }
+      const [aTerm, bTerm] = args;
+      const va = toNumeric(aTerm);
+      const vb = toNumeric(bTerm);
+      if (va !== null && vb !== null) { return fromNumeric(numAdd(va, vb)); }
+      if (va !== null && numIsZero(va)) { return bTerm; } // 0 + x -> x
+      if (vb !== null && numIsZero(vb)) { return aTerm; } // x + 0 -> x
+      return applyTerm(head, args);
+    }
+
+    function subHandler(head, args) {
+      if (args.length !== 2) { return applyTerm(head, args); }
+      const [aTerm, bTerm] = args;
+      const va = toNumeric(aTerm);
+      const vb = toNumeric(bTerm);
+      if (va !== null && vb !== null) { return fromNumeric(numSub(va, vb)); }
+      if (vb !== null && numIsZero(vb)) { return aTerm; } // x - 0 -> x
+      return applyTerm(head, args);
+    }
+
+    function mulHandler(head, args) {
+      if (args.length !== 2) { return applyTerm(head, args); }
+      const [aTerm, bTerm] = args;
+      const va = toNumeric(aTerm);
+      const vb = toNumeric(bTerm);
+      if (va !== null && vb !== null) { return fromNumeric(numMul(va, vb)); }
+      // 0 * x -> 0, x * 0 -> 0
+      if ((va !== null && numIsZero(va)) || (vb !== null && numIsZero(vb))) { return intTerm(0); }
+      if (va !== null && numIsOne(va)) { return bTerm; } // 1 * x -> x
+      if (vb !== null && numIsOne(vb)) { return aTerm; } // x * 1 -> x
+      return applyTerm(head, args);
+    }
+
+    function divHandler(head, args) {
+      if (args.length !== 2) { return applyTerm(head, args); }
+      const [aTerm, bTerm] = args;
+      const va = toNumeric(aTerm);
+      const vb = toNumeric(bTerm);
+      if (va !== null && vb !== null) {
+        if (numIsZero(vb)) { throw new RangeError("Symbolic.evalTerm: division by zero"); }
+        return fromNumeric(numDiv(va, vb));
+      }
+      if (va !== null && numIsZero(va)) { return intTerm(0); } // 0 / x -> 0
+      if (vb !== null && numIsOne(vb)) { return aTerm; } // x / 1 -> x
+      return applyTerm(head, args);
+    }
+
+    function powHandler(head, args) {
+      if (args.length !== 2) { return applyTerm(head, args); }
+      const [baseTerm, expTerm] = args;
+      const vb = toNumeric(baseTerm);
+      const ve = toNumeric(expTerm);
+      if (vb !== null && ve !== null) { return fromNumeric(powNumeric(vb, ve)); }
+      if (ve !== null && numIsZero(ve)) { return intTerm(1); } // x^0 -> 1
+      if (ve !== null && numIsOne(ve)) { return baseTerm; } // x^1 -> x
+      if (vb !== null && numIsZero(vb)) { return intTerm(0); } // 0^n -> 0 (n != 0, above)
+      if (vb !== null && numIsOne(vb)) { return intTerm(1); } // 1^n -> 1
+      return applyTerm(head, args);
+    }
+
+    function negHandler(head, args) {
+      if (args.length !== 1) { return applyTerm(head, args); }
+      const a = args[0];
+      const va = toNumeric(a);
+      if (va !== null) { return fromNumeric(numNeg(va)); }
+      // -(-x) -> x
+      if (a.kind === "apply" && headName(a.head) === "Neg" && a.args.length === 1) {
+        return a.args[0];
+      }
+      return applyTerm(head, args);
+    }
+
+    function invHandler(head, args) {
+      if (args.length !== 1) { return applyTerm(head, args); }
+      const a = args[0];
+      const va = toNumeric(a);
+      if (va !== null) {
+        if (numIsZero(va)) { throw new RangeError("Symbolic.evalTerm: inverse of zero"); }
+        return fromNumeric(numDiv(numInt(1), va));
+      }
+      return applyTerm(head, args);
+    }
+
+    // Numeric fold only (`|n|`, preserving exact int/rational form) —
+    // `handlers.rs::abs_handler`'s further algebraic identities
+    // (`abs(abs(x))->abs(x)`, `abs(-x)->abs(x)`, `abs(x^even)->x^even`,
+    // …) are NOT ported: no Stream B oracle case exercises `Abs` at all
+    // yet, and those rules are meaningfully more involved (one even
+    // recurses back through `vm.eval`) than the "a few lines, matches
+    // the reference exactly" bar the other identity laws above clear.
+    // Deferred alongside the rest of the non-oracle-required
+    // simplification surface, same as calculus/elementary functions.
+    function absHandler(head, args) {
+      if (args.length !== 1) { return applyTerm(head, args); }
+      const inner = args[0];
+      const v = toNumeric(inner);
+      if (v !== null) {
+        if (inner.kind === "integer") { return intTerm(Math.abs(inner.value)); }
+        if (inner.kind === "rational") { return rationalTerm(Math.abs(inner.numer), inner.denom); }
+        return floatTerm(Math.abs(inner.value));
+      }
+      return applyTerm(head, args);
+    }
+
+    // ── comparison handlers ──────────────────────────────────────────
+    //
+    // Folds to the `True`/`False` SYMBOL (never a JS boolean, never
+    // `1`/`0`) when both operands are numeric literals (compared via
+    // `to_f64`, matching `comparison_handler`'s own `op(va.to_f64(),
+    // vb.to_f64())`); `Equal`/`NotEqual` additionally fall back to
+    // structural equality when either side isn't numeric (`eq_based`,
+    // `handlers.rs` lines 1317–1342) — `x == x -> True` even for a free
+    // symbol `x`. Stays unevaluated (arg-evaluated pass-through) when
+    // neither condition applies, e.g. a free symbol on one side of `<`.
+    function comparisonHandler(op, eqBased, isEqualOp) {
+      return function (head, args) {
+        if (args.length !== 2) { return applyTerm(head, args); }
+        const [aTerm, bTerm] = args;
+        const va = toNumeric(aTerm);
+        const vb = toNumeric(bTerm);
+        if (va !== null && vb !== null) {
+          return op(numToF64(va), numToF64(vb)) ? symTerm("True") : symTerm("False");
+        }
+        if (eqBased && termEquals(aTerm, bTerm)) {
+          return symTerm(isEqualOp ? "True" : "False");
+        }
+        return applyTerm(head, args);
+      };
+    }
+
+    // ── logic handlers (N-ARY, per handlers.rs::and_handler/or_handler)
+    //
+    // A flat `And(a, b, c, …)` chain — matching how every frontend's own
+    // lowering already flattens a chain — NOT pairwise binary nesting.
+    // Short-circuits on a `True`/`False` symbol among the (already
+    // evaluated) args, drops the identity element, collapses to a bare
+    // remaining term if exactly one non-boolean arg is left, else
+    // rebuilds an n-ary node from whatever didn't resolve.
+    function andHandler(head, args) {
+      const remaining = [];
+      for (const a of args) {
+        const t = isTruthy(a);
+        if (t === false) { return symTerm("False"); }
+        if (t === true) { continue; } // identity element, drop
+        remaining.push(a);
+      }
+      if (remaining.length === 0) { return symTerm("True"); }
+      if (remaining.length === 1) { return remaining[0]; }
+      return applyTerm(head, remaining);
+    }
+
+    function orHandler(head, args) {
+      const remaining = [];
+      for (const a of args) {
+        const t = isTruthy(a);
+        if (t === true) { return symTerm("True"); }
+        if (t === false) { continue; } // identity element, drop
+        remaining.push(a);
+      }
+      if (remaining.length === 0) { return symTerm("False"); }
+      if (remaining.length === 1) { return remaining[0]; }
+      return applyTerm(head, remaining);
+    }
+
+    function notHandler(head, args) {
+      if (args.length !== 1) { return applyTerm(head, args); }
+      const t = isTruthy(args[0]);
+      if (t === true) { return symTerm("False"); }
+      if (t === false) { return symTerm("True"); }
+      return applyTerm(head, args);
+    }
+
+    // Per-head dispatch table (item 1's scope only — arithmetic /
+    // comparison / logic). A `Map`, not a plain object literal:
+    // `name` is derived from a compiled program's OWN term data (any
+    // source identifier can end up as a SymApply head, e.g. a user
+    // writing a call literally named `__proto__`), and a plain object's
+    // `obj[name]` lookup walks the prototype chain — `Map.prototype.get`
+    // has no such hazard. Mirrors this same file's existing preference
+    // for `Map` over object literals for name-keyed lookups (see
+    // `bindingsEmpty` above).
+    const HANDLERS = new Map([
+      ["Add", addHandler],
+      ["Sub", subHandler],
+      ["Mul", mulHandler],
+      ["Div", divHandler],
+      ["Pow", powHandler],
+      ["Neg", negHandler],
+      ["Inv", invHandler],
+      ["Abs", absHandler],
+      ["Equal", comparisonHandler((a, b) => a === b, true, true)],
+      ["NotEqual", comparisonHandler((a, b) => a !== b, true, false)],
+      ["Less", comparisonHandler((a, b) => a < b, false, false)],
+      ["Greater", comparisonHandler((a, b) => a > b, false, false)],
+      ["LessEqual", comparisonHandler((a, b) => a <= b, false, false)],
+      ["GreaterEqual", comparisonHandler((a, b) => a >= b, false, false)],
+      ["And", andHandler],
+      ["Or", orHandler],
+      ["Not", notHandler],
+    ]);
+
+    // `Apply(head, args)`: evaluate `head` first (mirrors `eval_apply`'s
+    // own treatment of the head), then either hold `args` unevaluated
+    // (a `HELD_HEADS` member — item 1 has no handler for any of them, so
+    // this only matters for keeping their arguments byte-for-byte
+    // unevaluated, see the module doc above) or evaluate every arg in
+    // applicative order, then dispatch on the evaluated head's name
+    // against `HANDLERS`. No handler matched (every held head in this
+    // item, plus any other unknown/future head, plus `List` forever) ->
+    // rebuild the term from the evaluated head and the args just
+    // computed — the single "arg-evaluated, pass-through" policy that
+    // makes `List(Add(1,1), Mul(2,3))` fold its elements "for free".
+    function evalApply(term, depth) {
+      const evaluatedHead = evalTerm(term.head, depth + 1);
+      if (isDepthLimitError(evaluatedHead)) { return evaluatedHead; }
+      const name = headName(evaluatedHead);
+      let args;
+      if (HELD_HEADS.has(name)) {
+        args = term.args; // ORIGINAL, unevaluated -- see module doc above
+      } else {
+        args = [];
+        for (const a of term.args) {
+          const evaluated = evalTerm(a, depth + 1);
+          if (isDepthLimitError(evaluated)) { return evaluated; }
+          args.push(evaluated);
+        }
+      }
+      const handler = HANDLERS.get(name);
+      return handler !== undefined ? handler(evaluatedHead, args) : applyTerm(evaluatedHead, args);
+    }
+
+    // `Symbolic.evalTerm(term, depth)` — the public entry point emitted
+    // once per top-level statement by `emit.rs`'s `Stmt::ExprStmt` arm
+    // (never once per nested `SymApply` — this function recurses into
+    // `head`/args itself, see `evalApply` above). `depth` defaults to 0
+    // at the top call, exactly like `walkOnce`/`replaceRepeatedTerm`'s
+    // own `depth` parameter above, and this function returns the SAME
+    // `{kind: "depth-limit", maxDepth}` sentinel shape those two already
+    // use (checked by the same, unmodified `isDepthLimitError`/
+    // `Symbolic.unwrap`) when `MAX_EVAL_DEPTH` is exceeded.
+    //
+    // A `Symbol`/`integer`/`rational`/`float`/`string` leaf: item 1 has
+    // no environment yet (no `Symbol` lookup — that is item 2's job), so
+    // every leaf, including a bare, unbound `Symbol`, is already its own
+    // fully-reduced value and is returned unchanged.
+    function evalTerm(term, depth) {
+      if (depth === undefined) { depth = 0; }
+      if (depth > MAX_EVAL_DEPTH) {
+        return { kind: "depth-limit", maxDepth: MAX_EVAL_DEPTH };
+      }
+      if (term.kind === "apply") { return evalApply(term, depth); }
+      return term;
+    }
+
     return {
       sym: symTerm, int: intTerm, rational: rationalTerm,
       numberNode: floatTerm, stringNode: stringTerm, apply: applyTerm,
@@ -3237,6 +3853,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       matchPattern, applyRule: applyRuleTerm, substitute: substituteTerm,
       replaceAll: replaceAllTerm, replaceRepeated: replaceRepeatedTerm,
       unwrap: unwrapTerm, toDisplayString, equals: termEquals,
+      evalTerm,
     };
   })();
 
