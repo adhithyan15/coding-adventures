@@ -1661,13 +1661,14 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT DISTINCT c||'' AS e FROM t ORDER BY e",
     },
-    // REGRESSION GUARD (data loss): with DISTINCT over a GROUP BY, the aggregate
-    // emitter emits group-key columns in GROUP BY order, NOT SELECT-list order,
-    // so a positional collation vector built from the SELECT list is SHIFTED and
-    // would fold the WRONG column — here NOCASE would land on `x`, merging 'p'
-    // and 'P' and losing a row. The planner therefore falls back to BINARY
-    // whenever a GROUP BY is present, and the VM additionally ignores the vector
-    // if its width disagrees with the emitted row. Found by security review.
+    // GROUP BY output now follows the SELECT list, not the internal group-key
+    // order: `SELECT x, c ... GROUP BY c, x` yields columns `[x, c]`. This also
+    // guards the earlier data-loss near-miss — a DISTINCT collation vector built
+    // from the SELECT list was SHIFTED against the old `[c, x]` layout and folded
+    // the WRONG column, merging 'p'/'P' and losing a row (caught by security
+    // review). The collation vector still bails to BINARY over a GROUP BY, so
+    // this case is now doubly safe. Retired from the ledger by the SELECT-list
+    // projection fix.
     Case {
         id: "distinct_over_group_by_no_misfold",
         setup: &[
@@ -1676,6 +1677,29 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT DISTINCT x, c FROM t GROUP BY c, x ORDER BY 1, 2",
     },
+    // Plain (non-DISTINCT) reorder: the SELECT list `[x, c]` wins over the GROUP
+    // BY key order `[c, x]`. Newly correct with the projection fix.
+    Case {
+        id: "group_by_output_follows_select_order",
+        setup: &[
+            "CREATE TABLE t (c TEXT, x TEXT)",
+            "INSERT INTO t VALUES('A','p'),('A','q'),('B','r')",
+        ],
+        query: "SELECT x, c FROM t GROUP BY x, c ORDER BY x, c",
+    },
+    // An expression over a group key, in SELECT-list position, projects correctly
+    // (no aggregates → the SELECT list is re-projected verbatim).
+    Case {
+        id: "group_by_expression_over_key",
+        setup: &[
+            "CREATE TABLE t (c TEXT)",
+            "INSERT INTO t VALUES('A'),('A'),('B')",
+        ],
+        query: "SELECT c || '!' AS d, c FROM t GROUP BY c ORDER BY c",
+    },
+    // Still ledgered: a bare non-key column now projects under the RIGHT name
+    // (`c`, was the group key `x`) but as NULL, because the group retains no
+    // representative source row. See the LEDGER entry for details.
     Case {
         id: "distinct_over_group_by_single_col",
         setup: &[
@@ -1683,6 +1707,16 @@ const CASES: &[Case] = &[
             "INSERT INTO t VALUES('A','p'),('A','P')",
         ],
         query: "SELECT DISTINCT c FROM t GROUP BY x ORDER BY 1",
+    },
+    // Still ledgered: an aggregate column reordered before a group key keeps the
+    // fixed keys-then-aggregates layout (`[c, max(x)]` not `[max(x), c]`).
+    Case {
+        id: "group_by_reordered_with_aggregate",
+        setup: &[
+            "CREATE TABLE t (c TEXT, x INTEGER)",
+            "INSERT INTO t VALUES('A',1),('A',9),('B',3)",
+        ],
+        query: "SELECT max(x) AS mx, c FROM t GROUP BY c ORDER BY c",
     },
     // An ORDER BY key that names an OUTPUT ALIAS must use that expression's
     // collation, not the collation of a base-table column that happens to share
@@ -2172,25 +2206,29 @@ const LEDGER: &[(&str, &str)] = &[
         "distinct_star_collate",
         "SELECT DISTINCT * does not expand the star into the table's columns (projection gap, not a collation gap)",
     ),
-    // The aggregate emitter emits the GROUP BY key columns, in GROUP BY order,
-    // instead of projecting the SELECT list: `SELECT DISTINCT x, c ... GROUP BY
-    // c, x` comes back as columns `[c, x]`, and `SELECT DISTINCT c ... GROUP BY
-    // x` comes back as the group key `x` rather than `c`. Pre-existing — the
-    // aggregate path never re-projects over its input (`compile_project` compiles
-    // the inner plan directly for an Aggregate/Having input).
-    //
-    // This is what makes a POSITIONAL per-output-column collation vector unsafe
-    // over a GROUP BY, so `distinct_output_collations` bails to BINARY whenever a
-    // GROUP BY is present (and the VM ignores the vector if its width disagrees
-    // with the emitted row). Without those guards the NOCASE of `c` landed on `x`
-    // and merged 'p'/'P', LOSING a row — caught by security review before merge.
-    (
-        "distinct_over_group_by_no_misfold",
-        "aggregate path emits GROUP BY key columns instead of projecting the SELECT list (column order/identity differ)",
-    ),
+    // A GROUP BY over a BARE non-key column projects that column as NULL rather
+    // than a representative value from the group. The SELECT-list projection now
+    // fixes the column IDENTITY — `SELECT c ... GROUP BY x` returns a column
+    // named `c` (it used to return the group key `x`) — but the value is NULL
+    // because the group's fake row holds only the key columns, not a
+    // representative source row. Closing this needs the VM to retain a
+    // representative row per group (SQLite's "bare column in aggregate"
+    // extension); a tracked follow-up.
     (
         "distinct_over_group_by_single_col",
-        "aggregate path emits the GROUP BY key column instead of the SELECT-list column",
+        "GROUP BY over a bare non-key column projects it as NULL, not a representative row value (VM keeps no representative row per group)",
+    ),
+    // A GROUP BY with an AGGREGATE column still emits the fixed
+    // group-keys-then-aggregates layout, so reordering an aggregate relative to
+    // the key columns in the SELECT list is not yet honoured: `SELECT max(x), c
+    // ... GROUP BY c` comes back as `[c, max(x)]`. Non-aggregate GROUP BY output
+    // now follows the SELECT list; the aggregate case needs `group_concat` (a
+    // FunctionCall in the SELECT list, unlike COUNT/SUM/… which lower to
+    // SqlExpr::Aggregate) reconciled before an output column can be re-projected
+    // reliably. A tracked follow-up.
+    (
+        "group_by_reordered_with_aggregate",
+        "an aggregate column reordered before a group key in the SELECT list keeps the fixed keys-then-aggregates layout (aggregate output-expr representation not yet reconciled)",
     ),
     (
         "distinct_explicit_collate",

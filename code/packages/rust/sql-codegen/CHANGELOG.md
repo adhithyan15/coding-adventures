@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.6.10] - Unreleased
+
+### Fixed
+
+- **GROUP BY output now follows the SELECT list, not the internal group-key
+  order.** The aggregate emitter's Phase-2 projection emitted every GROUP BY key
+  (in GROUP BY order) followed by every aggregate — so reordering or renaming the
+  SELECT list changed nothing: `SELECT x, c FROM t GROUP BY c, x` came back as
+  columns `[c, x]`, and `SELECT c FROM t GROUP BY x` came back as the group key
+  `x` rather than `c`. This was the root cause of a near-miss data-loss
+  regression (a DISTINCT collation vector built from the SELECT list was shifted
+  against the `[c, x]` layout). A new `emit_group_row` helper, threaded the
+  SELECT list (`compile_project` and `compile_inner_with_hidden_sort` now pass it
+  into `compile_aggregate` / `compile_having`), re-projects the row through that
+  list — each item compiled in the group's finalize context, so a group-key
+  column reads its key value (a collated key still reports its original text).
+  Scoped to queries with no aggregate columns for now: an aggregate output column
+  is not reliably re-compilable, because `group_concat(...)` stays a
+  `FunctionCall` in the SELECT list (unlike COUNT/SUM/… which lower to
+  `SqlExpr::Aggregate`); reordering aggregate columns needs that reconciled and
+  is a tracked follow-up. Retires the `distinct_over_group_by_no_misfold` oracle
+  ledger entry.
+
 ## [0.6.9] - Unreleased
 
 ### Changed

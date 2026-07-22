@@ -892,9 +892,22 @@ impl Compiler {
                             compiler.emit(Instruction::Label(skip_lbl.clone()));
                         });
                     }
-                    OptimizedPlan::Aggregate { .. } | OptimizedPlan::Having { .. } => {
-                        // Aggregate output already handles its own projection.
-                        self.compile_inner(input);
+                    OptimizedPlan::Aggregate {
+                        input: agg_input,
+                        group_by,
+                        aggregates,
+                    } => {
+                        // Project through the SELECT list. (Hidden sort-key
+                        // columns aren't appended here — an aggregate emits its
+                        // own row; a positional ORDER BY binds to an output
+                        // column, which needs no hidden column.)
+                        self.compile_aggregate(agg_input, group_by, aggregates, Some(&cols));
+                    }
+                    OptimizedPlan::Having {
+                        input: having_input,
+                        predicate,
+                    } => {
+                        self.compile_having(having_input, predicate, Some(&cols));
                     }
                     _ => {
                         let hidden_clone = hidden_cols.clone();
@@ -977,11 +990,12 @@ impl Compiler {
                 group_by,
                 aggregates,
             } => {
-                self.compile_aggregate(input, group_by, aggregates);
+                // No enclosing Project here: fall back to the fixed layout.
+                self.compile_aggregate(input, group_by, aggregates, None);
             }
 
             OptimizedPlan::Having { input, predicate } => {
-                self.compile_having(input, predicate);
+                self.compile_having(input, predicate, None);
             }
 
             OptimizedPlan::Join {
@@ -1154,12 +1168,22 @@ impl Compiler {
                 self.emit(Instruction::DefineColumns(col_names));
             }
 
-            // ── Aggregate / Having: these already emit rows.  The Project
-            //    wrapper's column aliases are pre-propagated into the
-            //    AggregateItem.alias fields by the planner.  Just compile the
-            //    inner plan directly and skip the extra scan loop. ────────────
-            OptimizedPlan::Aggregate { .. } | OptimizedPlan::Having { .. } => {
-                self.compile_inner(input);
+            // ── Aggregate / Having: these emit one row per group. Pass the
+            //    SELECT list down so the per-group row is projected through it
+            //    (order + identity), instead of the internal group-key-then-
+            //    aggregate layout. ─────────────────────────────────────────────
+            OptimizedPlan::Aggregate {
+                input: agg_input,
+                group_by,
+                aggregates,
+            } => {
+                self.compile_aggregate(agg_input, group_by, aggregates, Some(columns));
+            }
+            OptimizedPlan::Having {
+                input: having_input,
+                predicate,
+            } => {
+                self.compile_having(having_input, predicate, Some(columns));
             }
 
             // ── Join: thread the projection through the join's inner loop so
@@ -1247,6 +1271,67 @@ impl Compiler {
     // Aggregate compilation
     // -----------------------------------------------------------------------
 
+    /// Emit the Phase-2 output columns for one group of a grouped aggregate.
+    ///
+    /// This is the projection step — it runs after `FinalizeAgg` values are
+    /// available and inside a `BeginRow`/`EmitRow` pair supplied by the caller.
+    ///
+    /// **Projected path** — used when an enclosing `SELECT` list is available AND
+    /// the query has no aggregate columns (a pure `GROUP BY` producing only key
+    /// columns and expressions over them). The row then follows the SELECT list
+    /// exactly — order, count, and identity all come from what the user wrote,
+    /// each item compiled in the group's finalize context (a GROUP BY key column
+    /// reads its key value from the group's fake row, so a collated key still
+    /// reports its original text). So `SELECT x, c FROM t GROUP BY c, x` yields
+    /// columns `[x, c]`, not the internal group-key order `[c, x]` — the bug this
+    /// fixes (reordering the SELECT list used to change nothing).
+    ///
+    /// **Fixed path** — used with no projection (an aggregate compiled outside a
+    /// `Project`; rare), OR whenever aggregate columns are present. It emits every
+    /// GROUP BY key (from its underlying column, so the group's original text and
+    /// name are reported) followed by every aggregate in declaration order.
+    ///
+    /// The aggregate case still takes the fixed layout on purpose: an aggregate
+    /// output column is not reliably re-compilable here — `group_concat(...)`
+    /// stays a `FunctionCall` in the SELECT list (unlike COUNT/SUM/… which the
+    /// planner lowers to `SqlExpr::Aggregate`), so routing it through
+    /// `compile_expr` would fail. Reordering aggregate columns to the SELECT
+    /// order needs that representation reconciled first, and is a tracked
+    /// follow-up (see the `group_by_reordered_with_aggregate` ledger entry).
+    fn emit_group_row(
+        &mut self,
+        projection: Option<&[OutputColumn]>,
+        group_by: &[SqlExpr],
+        agg_fns: &[AggFn],
+        aggregates: &[AggregateItem],
+    ) {
+        match projection {
+            // Only re-project when there are no aggregate columns to place; with
+            // aggregates present we fall through to the fixed layout below.
+            Some(cols) if aggregates.is_empty() => {
+                for col in cols {
+                    self.compile_expr(&col.expr);
+                    self.emit(Instruction::EmitColumn(output_column_name(col)));
+                }
+            }
+            _ => {
+                for e in group_by {
+                    let e = strip_collate(e);
+                    self.compile_expr(e);
+                    let name = match e {
+                        SqlExpr::Column { name, .. } => name.clone(),
+                        _ => "?".to_string(),
+                    };
+                    self.emit(Instruction::EmitColumn(name));
+                }
+                for (i, (fn_tag, item)) in agg_fns.iter().zip(aggregates.iter()).enumerate() {
+                    self.emit(Instruction::FinalizeAgg(i, fn_tag.clone()));
+                    self.emit(Instruction::EmitColumn(aggregate_column_name(item)));
+                }
+            }
+        }
+    }
+
     /// Compile `Aggregate { input, group_by, aggregates }`.
     ///
     /// ## Two-phase structure
@@ -1274,6 +1359,7 @@ impl Compiler {
         input: &OptimizedPlan,
         group_by: &[SqlExpr],
         aggregates: &[AggregateItem],
+        projection: Option<&[OutputColumn]>,
     ) {
         let n = aggregates.len();
         // Allocate accumulator slots: one per aggregate in declaration order.
@@ -1361,31 +1447,11 @@ impl Compiler {
             }
         }
 
-        // Phase 2: emit one output row per group.
-        // FinalizeAgg pushes the final accumulated value for each slot,
-        // then we assemble a row from group key values + aggregate values.
+        // Phase 2: emit one output row per group, projected through the SELECT
+        // list (see `emit_group_row`) so column order/identity match what the
+        // user wrote rather than the internal group-key-then-aggregate layout.
         self.emit(Instruction::BeginRow);
-        // Emit group-by columns first (as LoadColumn for each group key expr).
-        // A collated key is emitted from its UNDERLYING column, not from the
-        // `__collate(...)` wrapper: the collation decides which rows share a
-        // group, but the reported value is the group's original text (SQLite
-        // shows 'A' for a group of {'A','a'} keyed case-insensitively). Compiling
-        // the wrapper instead would emit the folded value and rename the column.
-        for e in group_by {
-            let e = strip_collate(e);
-            self.compile_expr(e);
-            let name = match e {
-                SqlExpr::Column { name, .. } => name.clone(),
-                _ => "?".to_string(),
-            };
-            self.emit(Instruction::EmitColumn(name));
-        }
-        // Emit finalized aggregate values, each named the SQLite way
-        // (`SUM(n)`, `COUNT(*)`, …) unless an explicit alias overrides it.
-        for (i, (fn_tag, item)) in agg_fns.iter().zip(aggregates.iter()).enumerate() {
-            self.emit(Instruction::FinalizeAgg(i, fn_tag.clone()));
-            self.emit(Instruction::EmitColumn(aggregate_column_name(item)));
-        }
+        self.emit_group_row(projection, group_by, &agg_fns, aggregates);
         self.emit(Instruction::EmitRow);
     }
 
@@ -1400,7 +1466,12 @@ impl Compiler {
     /// predicate check before the final row emission.
     ///
     /// If the predicate is false, we skip `EmitRow` for that group.
-    fn compile_having(&mut self, input: &OptimizedPlan, predicate: &SqlExpr) {
+    fn compile_having(
+        &mut self,
+        input: &OptimizedPlan,
+        predicate: &SqlExpr,
+        projection: Option<&[OutputColumn]>,
+    ) {
         match input {
             OptimizedPlan::Aggregate {
                 input: agg_input,
@@ -1487,21 +1558,10 @@ impl Compiler {
                 self.emit(Instruction::JumpIfFalse(skip_lbl.clone()));
 
                 self.emit(Instruction::BeginRow);
-                // As above: emit a collated key from its underlying column so the
-                // group's ORIGINAL text (and column name) is reported.
-                for e in group_by {
-                    let e = strip_collate(e);
-                    self.compile_expr(e);
-                    let name = match e {
-                        SqlExpr::Column { name, .. } => name.clone(),
-                        _ => "?".to_string(),
-                    };
-                    self.emit(Instruction::EmitColumn(name));
-                }
-                for (i, (fn_tag, item)) in agg_fns.iter().zip(aggregates.iter()).enumerate() {
-                    self.emit(Instruction::FinalizeAgg(i, fn_tag.clone()));
-                    self.emit(Instruction::EmitColumn(aggregate_column_name(item)));
-                }
+                // Project through the SELECT list (see `emit_group_row`) so the
+                // surviving group's columns follow what the user wrote, not the
+                // internal group-key-then-aggregate order.
+                self.emit_group_row(projection, group_by, &agg_fns, aggregates);
                 self.emit(Instruction::EmitRow);
                 self.emit(Instruction::Label(skip_lbl));
             }
