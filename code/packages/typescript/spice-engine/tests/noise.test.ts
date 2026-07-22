@@ -3,6 +3,7 @@ import {
   Circuit,
   SpiceError,
   capacitor,
+  bjt,
   currentSource,
   deviceModelNoiseAuditFixtures,
   formatCornerNoiseTable,
@@ -18,6 +19,20 @@ const BOLTZMANN = 1.380_649e-23;
 const MOSFET_CHANNEL_NOISE_GAMMA = 2.0 / 3.0;
 
 describe("noiseAc", () => {
+  it("uses BJT forward beta roll-off to reduce shot noise", () => {
+    function sourcePsd(forwardBetaRolloffCurrent: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vcc", "vcc", "0", 5.0));
+      circuit.add(voltageSource("Vbase", "base", "0", 0.65));
+      circuit.add(resistor("Rload", "vcc", "out", 1_000.0));
+      circuit.add({ ...bjt("Q1", "out", "base", "0"), forwardBetaRolloffCurrent });
+      const entry = noiseAc(circuit, "out", "Vbase", [1_000.0], 300.0).points[0]?.entries
+        .find((candidate) => candidate.elementName === "Q1");
+      return entry!.sourcePsd;
+    }
+
+    expect(sourcePsd(1.0e-4)).toBeLessThan(sourcePsd(0.0));
+  });
   it("computes Johnson noise for a single grounded resistor", () => {
     const circuit = new Circuit();
     circuit.add(currentSource("Iin", "0", "out", 0.0));

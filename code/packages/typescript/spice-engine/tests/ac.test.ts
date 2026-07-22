@@ -617,6 +617,18 @@ describe("acSweep", () => {
     expect(gain(1.0)).toBeLessThan(gain(0.0));
   });
 
+  it("uses BJT forward beta roll-off to reduce AC gain", () => {
+    function gain(forwardBetaRolloffCurrent: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vin", "base", "0", 0.65, 1.0));
+      circuit.add(resistor("Rload", "out", "0", 1_000.0));
+      circuit.add({ ...bjt("Q1", "out", "base", "0"), forwardBetaRolloffCurrent });
+      return complexAbs(acSweep(circuit, 1_000.0, 1_000.0, 1, "lin")[0].voltage("out")!);
+    }
+
+    expect(gain(1.0e-4)).toBeLessThan(gain(0.0));
+  });
+
   it("shapes BJT base-emitter depletion capacitance under reverse bias", () => {
     function baseAmplitude(baseEmitterGradingCoefficient: number): number {
       const circuit = new Circuit();

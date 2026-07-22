@@ -383,6 +383,25 @@ fn tf_bjt_reverse_early_voltage_reduces_gain() {
 }
 
 #[test]
+fn tf_bjt_forward_beta_rolloff_reduces_gain() {
+    let gain = |rolloff_current: f64| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vin", "base", "0", 0.65,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rload", "out", "0", 1_000.0,
+        )));
+        let mut transistor = Bjt::new("Q1", "out", "base", "0");
+        transistor.forward_beta_rolloff_current = rolloff_current;
+        circuit.add(Element::Bjt(transistor));
+        tf(&circuit, "out", "Vin").unwrap().gain().abs()
+    };
+
+    assert!(gain(1.0e-4) < gain(0.0));
+}
+
+#[test]
 fn tf_bjt_forward_emission_coefficient_reduces_gain_and_raises_input_impedance() {
     let transfer = |forward_emission_coefficient: f64| {
         let mut circuit = Circuit::new();

@@ -138,7 +138,9 @@ base-collector diffusion capacitance in AC and transient analysis. `VJE`/`PE`
 depletion capacitance. `VJC`/`PC` (default `0.75 V`) and `MJC`/`MC` (default
 `0.33`) likewise shape `CJC` base-collector depletion capacitance. `FC`
 (default `0.5`) selects the shared Berkeley forward-bias continuation point for
-both junctions.
+both junctions. `IKF`/`IK` (default `0`, disabled) applies Berkeley forward
+high-current base-charge modulation to collector transport and small-signal
+transconductance.
 `model_card_unsupported_parameter_issues`,
 `format_model_card_unsupported_parameter_issue_table`,
 `model_card_unsupported_parameter_issue_records`,
