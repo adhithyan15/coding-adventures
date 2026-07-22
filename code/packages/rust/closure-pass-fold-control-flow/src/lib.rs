@@ -980,7 +980,9 @@ fn fold_if_statement(s: &IfStatement, st: &mut FoldState) -> Statement {
     match literal_truthy(&test) {
         Some(true) => {
             // The `alternate` branch is statically unreachable and is
-            // discarded — tombstone it so its span stays auditable.
+            // discarded — tombstone it so its span stays auditable. Any
+            // hoisted `var` inside it must SURVIVE the removal (dropping it is
+            // a miscompile), so extract it before the taken `consequent`.
             let discarded = [alternate.as_ref().and_then(statement_cv)];
             st.record_fold_deleting(
                 &s.cv,
@@ -989,11 +991,18 @@ fn fold_if_statement(s: &IfStatement, st: &mut FoldState) -> Statement {
                 "if (<truthy literal>) { … } else { … }",
                 "{ consequent }",
             );
-            consequent
+            match alternate {
+                Some(alt) => collapse_extracting_dead_vars(&alt, Some(consequent), &s.cv),
+                None => consequent,
+            }
         }
         Some(false) => {
             // The `consequent` branch is statically unreachable and is
-            // discarded — tombstone it so its span stays auditable.
+            // discarded — tombstone it so its span stays auditable. Any
+            // hoisted `var` inside it must SURVIVE the removal (dropping it is
+            // a miscompile), so extract it before the taken `alternate` (or as
+            // the sole survivor when there is no `else`). A no-var branch pick
+            // yields the `alternate` / `;` unchanged, exactly as before.
             let discarded = [statement_cv(&consequent)];
             st.record_fold_deleting(
                 &s.cv,
@@ -1002,13 +1011,7 @@ fn fold_if_statement(s: &IfStatement, st: &mut FoldState) -> Statement {
                 "if (<falsy literal>) { … } else { … }",
                 "{ alternate }",
             );
-            alternate.unwrap_or_else(|| {
-                // No alternate to take — replace with `;`. The
-                // EmptyStatement inherits the IfStatement's cv so
-                // source maps still point at the original
-                // position when tracing is on.
-                Statement::empty_statement(EmptyStatement { cv: s.cv.clone() })
-            })
+            collapse_extracting_dead_vars(&consequent, alternate, &s.cv)
         }
         None => {
             // Non-literal test. Try the if-else→ternary fold first
@@ -1619,6 +1622,68 @@ fn extract_dead_loop_vars(
     }
 }
 
+/// Collapse a dead control-flow construct: `surviving` is the part that is kept
+/// and still runs (`None` when nothing survives — a dead `if` with no `else`),
+/// and `dead` is the statically-unreachable part whose hoisted `var`s must be
+/// rescued. Used for a dead `if` branch (survivor = the taken branch) and for a
+/// dead `for` loop with an expression init (survivor = the once-run init `e;`,
+/// dead = the never-run body).
+///
+/// A hoisted `var` inside the dead branch still hoists to the enclosing function
+/// scope, so — exactly like a dead loop's body `var` (see
+/// [`extract_dead_loop_vars`]) — it must SURVIVE the branch's removal rather than
+/// be dropped. Dropping it is a miscompile: a later `z` / `typeof z` read flips
+/// from reading a declared-`undefined` binding to a `ReferenceError` (or a
+/// different outer `z`). We EXTRACT those bindings — initializers STRIPPED, since
+/// the dead branch never runs — as a bare `var …;` placed BEFORE the surviving
+/// branch, matching the reference Closure Compiler at SIMPLE byte-for-byte:
+///
+/// ```text
+///   if (false) { var z = 1; }              →  var z;
+///   if (false) { var a=1; var b=2; }       →  var b, a;      (reversed, as loops)
+///   if (false) { var z = g(); } else h();  →  var z; h();    (init stripped)
+///   if (true)  h(); else { var z = 1; }     →  var z; h();    (var before survivor)
+/// ```
+///
+/// When the dead branch has no hoistable `var`, this is a plain branch pick and
+/// the surviving branch (or `;`) is returned unchanged. When there IS a `var` and
+/// a surviving branch, the two are wrapped in a `BlockStatement`, which
+/// [`fold_program`] / [`fold_block_statement`] then splice into the enclosing
+/// statement list ([`block_is_scope_safe_to_hoist`] admits a `var`-only block, so
+/// the wrapper is redundant and flattens; adjacent `var`s then coalesce).
+fn collapse_extracting_dead_vars(
+    dead: &Statement,
+    surviving: Option<Statement>,
+    cv: &Option<String>,
+) -> Statement {
+    let mut names: Vec<Identifier> = Vec::new();
+    collect_hoistable_vars(dead, &mut names);
+    names.reverse();
+    if names.is_empty() {
+        return surviving
+            .unwrap_or_else(|| Statement::empty_statement(EmptyStatement { cv: cv.clone() }));
+    }
+    let var_decl = Statement::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+        cv: cv.clone(),
+        kind: VarKind::Var,
+        declarations: names
+            .into_iter()
+            .map(|id| VariableDeclarator {
+                cv: None,
+                id: BindingTarget::Identifier(id),
+                init: None,
+            })
+            .collect(),
+    }));
+    match surviving {
+        None => var_decl,
+        Some(surv) => Statement::block_statement(BlockStatement {
+            cv: None,
+            body: vec![var_decl, surv],
+        }),
+    }
+}
+
 /// Is a `let`/`const` `for`-header safe to *drop* when its loop is dead? Only
 /// when every declarator's initializer is absent or a side-effect-free literal.
 ///
@@ -1650,20 +1715,25 @@ fn lexical_header_is_droppable(v: &VariableDeclaration) -> bool {
 ///                                                      the binding unobservably)
 /// ```
 ///
-/// The collapse is **declined** (loop kept, test folded) in the two cases where
-/// removing more than the loop would delete an observable effect — both flagged
-/// by the security review, and both places Closure keeps the loop or lifts a
-/// binding rather than dropping it:
+/// A hoisted body `var` still hoists to the enclosing function scope, so it is
+/// EXTRACTED (initializer stripped, since the body never runs) rather than
+/// dropped — including when an *expression* init means the result is two
+/// statements, which are wrapped in a block that the enclosing list then
+/// flattens (see [`collapse_extracting_dead_vars`]):
+///
+/// ```text
+///   for (; false; ) { var y = 1; }    →  var y;
+///   for (f(); false; ) { var x = 1; } →  var x; f();     (two statements)
+/// ```
+///
+/// The collapse is **declined** (loop kept, test folded) only when a `let`/
+/// `const` header runs a side-effecting initializer, which is loop-scoped and
+/// cannot be lifted out (§14.7.4) — flagged by the security review:
 ///
 /// ```text
 ///   for (let i = f(); false; ) body   →  loop kept   (lexical init runs once at
 ///                                                      entry; side effect can't
 ///                                                      be lifted out — §14.7.4)
-///   for (; false; ) { var y = 1; }     →  loop kept   (a body `var` hoists to the
-///                                                      function scope and stays
-///                                                      observable; Closure
-///                                                      extracts it, which this
-///                                                      pass does not yet do)
 /// ```
 ///
 /// A **truthy** literal test is instead redundant — the loop runs forever, and
@@ -1713,42 +1783,54 @@ fn fold_for_statement(s: &ForStatement, st: &mut FoldState) -> Statement {
             // `extract_dead_loop_vars` for the exact reversed-body-then-init
             // order).
             //
-            // The one shape we still DECLINE: an *expression* init combined with
-            // a hoisted body `var` — that is two statements (`var x; e;`), which
-            // a single fold return can't represent, so we keep the loop (valid,
-            // no binding dropped). An expression init with no body `var`
-            // collapses to the init expression (`for(a();false;) …` → `a();`),
-            // which runs once at entry.
+            // An *expression* init combined with a hoisted body `var` is two
+            // statements (`var x; e;`); we emit them wrapped in a block that the
+            // enclosing list then flattens (`collapse_extracting_dead_vars`).
+            // An expression init with no body `var` collapses to the init
+            // expression (`for(a();false;) …` → `a();`), which runs once at
+            // entry.
             let mut body_names = Vec::new();
             collect_hoistable_vars(&body, &mut body_names);
-            let expr_init_with_body_vars = matches!(&init, Some(ForInit::Expression(_)))
-                && !body_names.is_empty();
-            if !expr_init_with_body_vars {
-                let discarded = [statement_cv(&body)];
-                st.record_fold_deleting(
-                    &s.cv,
-                    &discarded,
-                    "folded-branch",
-                    "for (…; <falsy literal>; …) { … }",
-                    "<hoisted var(s)> / <init>;",
-                );
-                return match &init {
-                    // Expression init (no body vars): the init runs once, kept.
-                    Some(ForInit::Expression(e)) => {
-                        Statement::expression_statement(ExpressionStatement {
+            let discarded = [statement_cv(&body)];
+            st.record_fold_deleting(
+                &s.cv,
+                &discarded,
+                "folded-branch",
+                "for (…; <falsy literal>; …) { … }",
+                "<hoisted var(s)> / <init>;",
+            );
+            return match &init {
+                // Expression init WITH hoisted body `var`(s): two statements
+                // (`var x; e;`). Extract the body `var`s BEFORE the once-run
+                // init expression, wrapped in a block that `fold_program` /
+                // `fold_block_statement` then splice into the enclosing list
+                // (`for(f();false;){var x=1}` → `var x; f();`).
+                Some(ForInit::Expression(e)) if !body_names.is_empty() => {
+                    collapse_extracting_dead_vars(
+                        &body,
+                        Some(Statement::expression_statement(ExpressionStatement {
                             cv: s.cv.clone(),
                             expression: e.clone(),
-                        })
-                    }
-                    // `None` or `var`/`let`/`const` init: hoist the body `var`s
-                    // out and, for a `var` header, append its declarators (kept
-                    // with initializers). A `let`/`const` header is loop-scoped
-                    // and contributes nothing.
-                    _ => extract_dead_loop_vars(&body, init.as_ref(), &s.cv),
-                };
-            }
+                        })),
+                        &s.cv,
+                    )
+                }
+                // Expression init, no body vars: the init runs once, kept.
+                Some(ForInit::Expression(e)) => {
+                    Statement::expression_statement(ExpressionStatement {
+                        cv: s.cv.clone(),
+                        expression: e.clone(),
+                    })
+                }
+                // `None` or `var`/`let`/`const` init: hoist the body `var`s
+                // out and, for a `var` header, append its declarators (kept
+                // with initializers). A `let`/`const` header is loop-scoped
+                // and contributes nothing.
+                _ => extract_dead_loop_vars(&body, init.as_ref(), &s.cv),
+            };
         }
-        // Declined — fall through to rebuild the loop with the folded test.
+        // A side-effecting lexical header declined above — fall through to
+        // rebuild the loop with the folded test.
     }
 
     // Always-TRUE test → the loop runs forever; the test is redundant, so drop
@@ -3118,6 +3200,98 @@ mod tests {
             Statement::Tagged(TaggedStatement::EmptyStatement(_)) => {}
             other => panic!("expected EmptyStatement; got {:?}", other),
         }
+    }
+
+    /// Build a block `{ var <name> = 1; }` for the dead-branch extraction tests.
+    fn block_with_var(name: &str) -> Statement {
+        use coding_adventures_javascript_ast::{
+            BindingTarget, VariableDeclaration, VariableDeclarator,
+        };
+        Statement::Tagged(TaggedStatement::BlockStatement(BlockStatement {
+            cv: None,
+            body: vec![Statement::Declaration(Declaration::VariableDeclaration(
+                VariableDeclaration {
+                    cv: None,
+                    kind: VarKind::Var,
+                    declarations: vec![VariableDeclarator {
+                        cv: None,
+                        id: BindingTarget::Identifier(Identifier {
+                            cv: None,
+                            name: name.to_string(),
+                        }),
+                        init: Some(num(1.0, None)),
+                    }],
+                },
+            ))],
+        }))
+    }
+
+    /// `if (false) { var z = 1; }` (no `else`) must EXTRACT the dead branch's
+    /// hoisted `var` as `var z;` — dropping it is a miscompile (a later `z` read
+    /// flips from a declared `undefined` binding to a `ReferenceError`).
+    #[test]
+    fn if_false_no_else_extracts_dead_var() {
+        let if_stmt = Statement::if_statement(IfStatement {
+            cv: Some("if.1".to_string()),
+            test: boolean(false, None),
+            consequent: Box::new(block_with_var("z")),
+            alternate: None,
+        });
+        let prog = program().with_body(vec![ProgramItem::Statement(if_stmt)]);
+        let (out, _, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert_hoisted_var_names(first_stmt(&out), &["z"]);
+    }
+
+    /// `if (false) { var z = 1; } else h;` — extract `var z;` BEFORE the taken
+    /// `else` body; the wrapper block flattens into the list: `var z; h;`.
+    #[test]
+    fn if_false_with_else_extracts_dead_var_first() {
+        let if_stmt = Statement::if_statement(IfStatement {
+            cv: Some("if.1".to_string()),
+            test: boolean(false, None),
+            consequent: Box::new(block_with_var("z")),
+            alternate: Some(Box::new(expr_stmt(ident("h"), None))),
+        });
+        let prog = program().with_body(vec![ProgramItem::Statement(if_stmt)]);
+        let (out, _, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 2, "expected [var z; h;]; got {:?}", out.body);
+        assert_hoisted_var_names(first_stmt(&out), &["z"]);
+    }
+
+    /// `if (true) h; else { var z = 1; }` — the DEAD alternate's `var z` is
+    /// extracted before the taken consequent: `var z; h;`.
+    #[test]
+    fn if_true_extracts_dead_alternate_var() {
+        let if_stmt = Statement::if_statement(IfStatement {
+            cv: Some("if.1".to_string()),
+            test: boolean(true, None),
+            consequent: Box::new(expr_stmt(ident("h"), None)),
+            alternate: Some(Box::new(block_with_var("z"))),
+        });
+        let prog = program().with_body(vec![ProgramItem::Statement(if_stmt)]);
+        let (out, _, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 2, "expected [var z; h;]; got {:?}", out.body);
+        assert_hoisted_var_names(first_stmt(&out), &["z"]);
+    }
+
+    /// `for (h; false; ) { var x = 1; }` — an expression init combined with a
+    /// hoisted body `var` is two statements; extract `var x;` before the once-run
+    /// init: `var x; h;`.
+    #[test]
+    fn for_false_expr_init_plus_body_var_extracted() {
+        let f = for_stmt(
+            Some(ForInit::Expression(ident("h"))),
+            Some(boolean(false, None)),
+            block_with_var("x"),
+        );
+        let prog = program().with_body(vec![ProgramItem::Statement(f)]);
+        let (out, _, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 2, "expected [var x; h;]; got {:?}", out.body);
+        assert_hoisted_var_names(first_stmt(&out), &["x"]);
     }
 
     #[test]
