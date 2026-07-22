@@ -2,6 +2,24 @@
 
 All notable changes to this crate are documented here.
 
+## [0.12.0] — 2026-07-22
+
+### Added
+
+- **`__gc_register_stackmap_module(entries, n)` + `GcStackmapModuleEntry`** — the
+  batch registration entry a native-AOT image's start-up path invokes to register
+  **every** function's stack map in one call. It is a thin, allocation-free loop over
+  `__gc_register_stackmap`, one call per `#[repr(C)]` `GcStackmapModuleEntry` (each a
+  1:1 mirror of the `__gc_register_stackmap` arguments). This is what lets an image
+  emit its whole stack-map table as one `.rodata` array of entries plus a single
+  start-up `bl` — far cheaper to generate than an unrolled per-function call
+  sequence — so `__gc_collect_precise` can finally resolve real frames instead of
+  falling back to a conservative scan (`AOT00-T1-stackmap-emission.md`, the
+  registration half of the emission rung). Returns the total records registered; a
+  null table or `n <= 0` is a no-op. 2 unit tests (multi-function round-trip through
+  `resolve`, degenerate-input inertness) + a C `gc_core.h` declaration.
+
+
 ## [0.11.0] — 2026-07-18
 
 ### Added

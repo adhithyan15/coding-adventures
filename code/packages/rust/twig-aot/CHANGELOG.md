@@ -1,5 +1,33 @@
 # Changelog — `twig-aot`
 
+## 0.39.0 - 2026-07-21 — GC entry wrapper (AOT00-T1 stack-map emission, increment A)
+
+The aarch64 AOT pipeline now injects two synthetic functions into every module and
+makes the image's `_main` the wrapper `__gc_aot_entry`, which calls
+`__gc_init_stackmaps` and then the user's entry, returning its result verbatim:
+
+```
+__gc_aot_entry:  stp x29,x30,[sp,#-16]! ; mov x29,sp
+                 bl __gc_init_stackmaps ; bl <user entry>
+                 ldp x29,x30,[sp],#16 ; ret
+```
+
+They are ordinary functions in the compile set, so `link()` gives them offsets and
+the two-pass linker patches the wrapper's intra-module `BL`s exactly like any other
+call. This is the pre-`main` hook precise GC needs to register its stack maps.
+
+`__gc_init_stackmaps` is a no-op (single `RET`) in THIS increment — the wrapper
+mechanism is landed and proven transparent first; a follow-up fills the init in to
+actually register each function's stack map (so `__gc_collect_precise` resolves real
+frames). The wrapper preserves the user entry's `x0` result across `ldp`/`ret`, and
+`bl __gc_init` running before the argument-less twig `main` clobbers nothing live.
+
+Verified: the full twig-aot suite — including the 5 real compile→link→**execute**
+tests — passes with the wrapper interposed, i.e. every AOT program still produces
+its exact exit code. In-process execution is unaffected (it calls the user entry
+directly, not `_main`); only the macOS object path redirects the entry symbol. Two
+unit tests pin the generated wrapper/init shape.
+
 ## 0.38.0 - 2026-07-20 — runtime: __dyn_null_p tagged predicate for native `null?`
 
 Part of the fix restoring McCarthy-lisp list programs on the native-AOT / LLVM backends (`lang-aot` `lang_matrix`). See the umbrella commit for the full story: `null?` was never routed to a runtime call on the tagged native/LLVM path (breaking every cons-walk helper), `list-ref`/`assoc` unboxed a raw-int index/key (→ wrong element), a top-level `(null? …)` predicate result was unboxed instead of truthy-coerced, and cons-cell field access failed the JVM verifier. Verified end-to-end: native list-ref/assoc/length/reverse/append/null? all correct.
