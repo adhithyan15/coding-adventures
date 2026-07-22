@@ -1,1 +1,1 @@
-function area(w){var s;s=3;return w*s}report(area(10));
+function area(w){var s=3;return w*s}report(area(10));

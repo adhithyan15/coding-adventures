@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-closurec"
-version = "0.239.0"
+version = "0.240.0"
 edition = "2021"
 description = "closurec — CLI driver for the Closure Compiler clone. Mirrors the upstream Java Closure Compiler's command-line flag surface (google/closure-compiler @ CommandLineRunner.java) for drop-in compatibility. Per CLOC08."
 
