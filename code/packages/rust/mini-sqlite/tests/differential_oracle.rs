@@ -1620,8 +1620,43 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT DISTINCT c FROM t ORDER BY c",
     },
-    // `SELECT DISTINCT *` folds too, because `*` expands to bare column
-    // references — each contributing its own declared collation.
+    // `SELECT *` expands to the table's columns in declaration order (was a
+    // single NULL column named `*`). Multi-column table.
+    Case {
+        id: "select_star_expands",
+        setup: &[
+            "CREATE TABLE t (a INTEGER, b TEXT)",
+            "INSERT INTO t VALUES (1,'x'),(2,'y')",
+        ],
+        query: "SELECT * FROM t ORDER BY a",
+    },
+    // Because `*` expands before ORDER BY ordinals resolve, `ORDER BY 1` binds
+    // to the first expanded column — matching SQLite (orders by `a` descending).
+    Case {
+        id: "select_star_order_by_ordinal",
+        setup: &[
+            "CREATE TABLE t (a INTEGER, b TEXT)",
+            "INSERT INTO t VALUES (2,'y'),(1,'x'),(3,'z')",
+        ],
+        query: "SELECT * FROM t ORDER BY 1 DESC",
+    },
+    // Still ledgered: `*` mixed with another select item (`SELECT a, *`) does
+    // not PARSE — the grammar's select_list has no bare-`*` alternative in a
+    // comma-separated list. The planner's star expansion handles this shape once
+    // the parser produces it (a grammar follow-up).
+    Case {
+        id: "select_star_in_place",
+        setup: &[
+            "CREATE TABLE t (a INTEGER, b TEXT)",
+            "INSERT INTO t VALUES (1,'x'),(2,'y')",
+        ],
+        query: "SELECT a, * FROM t ORDER BY a",
+    },
+    // `SELECT DISTINCT *` now expands AND folds: `*` becomes the bare column
+    // references, each contributing its own declared collation, so a NOCASE
+    // column dedupes case-insensitively. (Previously `*` stayed a single NULL
+    // column and the DISTINCT collation vector was shifted — the reason this was
+    // ledgered.)
     Case {
         id: "distinct_star_collate",
         setup: &[
@@ -2238,16 +2273,9 @@ const LEDGER: &[(&str, &str)] = &[
     // `group_by_column_*` cases); closing these two needs hand-edits to the
     // sql-parser grammar (`select_item` and `group_by` gaining an optional
     // `COLLATE NAME` tail), which is the next increment in this lane.
-    // `SELECT DISTINCT *` does not expand `*` — mini returns a single column
-    // literally named "*" holding NULL, where SQLite returns the table's columns.
-    // Plain `SELECT * FROM t` expands correctly, so this is specific to the
-    // DISTINCT projection path and is UNRELATED to collation: the collation
-    // vector this lane added already expands `*` via the schema's ordered
-    // `column_names`, so it will line up once the projection does. Pre-existing
-    // (this is the first case to exercise `DISTINCT *` at all).
     (
-        "distinct_star_collate",
-        "SELECT DISTINCT * does not expand the star into the table's columns (projection gap, not a collation gap)",
+        "select_star_in_place",
+        "`*` mixed with other select items (`SELECT a, *`) does not parse (grammar: select_list lacks a bare `*` alternative in a comma list)",
     ),
     (
         "distinct_explicit_collate",

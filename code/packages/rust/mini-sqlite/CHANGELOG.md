@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.5.63 — `SELECT *` (and `SELECT DISTINCT *`) expand to real columns
+
+`SELECT * FROM t` now returns the table's actual columns instead of a single
+NULL column named `*`. Previously `*` survived planning as a placeholder that no
+downstream stage could resolve (`LoadColumn("*")` → NULL). The planner now
+expands `*` into the base table's columns in declaration order — matching SQLite
+— before DISTINCT-collation and ORDER-BY-ordinal resolution, so:
+
+- `SELECT DISTINCT *` folds each column under its own declared collation (a
+  `COLLATE NOCASE` column dedupes case-insensitively) — retires the
+  `distinct_star_collate` ledger entry.
+- `SELECT * FROM t ORDER BY 1` binds the ordinal to the first expanded column,
+  as SQLite does (new `select_star_order_by_ordinal` oracle case).
+
+Scoped to a single base table with no JOIN; joined `*` keeps the placeholder
+(separate gap). `*` mixed with other items (`SELECT a, *`) is newly ledgered as
+`select_star_in_place` — it does not yet PARSE (the grammar's select_list has no
+bare-`*` alternative in a comma list); the planner already handles that shape
+once the parser produces it. Verified against bundled real SQLite. Spans
+sql-planner 0.2.30.
+
 ## 0.5.62 — GROUP BY aggregate columns follow the SELECT list
 
 `SELECT max(x) AS mx, c FROM t GROUP BY c` now returns columns `[mx, c]` — the
