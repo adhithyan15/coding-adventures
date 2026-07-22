@@ -151,6 +151,40 @@ fn derivation_tree_json(
                 kids.join(",")
             )
         }
+        // A `round_to(x, n)` narrowing (NUM-6a): the audit exposes the precision,
+        // the rounding mode, the rounded `value`, and the operand subtree it
+        // narrowed — so a checker can re-round the operand's exact value under the
+        // recorded mode and confirm the rendering (ADJ-NUMERIC-SUBSTRATE §4.3).
+        D::Round {
+            spec,
+            mode,
+            operand,
+            result,
+        } => {
+            let logic_engine::compute::RoundSpec::Places(places) = spec;
+            format!(
+                "{{\"node\":\"round\",\"places\":{},\"mode\":\"{}\",\"value\":{},\"operand\":{}}}",
+                places,
+                rounding_mode_name(*mode),
+                jnum(*result),
+                derivation_tree_json(operand, kb)
+            )
+        }
+    }
+}
+
+/// The stable JSON spelling of a rounding mode for the audit trail — a checker
+/// keys off these, so they are fixed identifiers, not `Debug`.
+fn rounding_mode_name(mode: logic_engine::RoundingMode) -> &'static str {
+    use logic_engine::RoundingMode as M;
+    match mode {
+        M::Down => "down",
+        M::Up => "up",
+        M::Floor => "floor",
+        M::Ceiling => "ceiling",
+        M::HalfUp => "half_up",
+        M::HalfDown => "half_down",
+        M::HalfEven => "half_even",
     }
 }
 

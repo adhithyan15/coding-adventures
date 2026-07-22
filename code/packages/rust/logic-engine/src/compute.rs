@@ -52,7 +52,7 @@
 
 use crate::dimension::{DimOp, Dimension};
 use crate::{FactId, KnowledgeBase};
-use bignum_core::{BigInteger, BigRational};
+use bignum_core::{BigDecimal, BigInteger, BigRational, RoundingMode};
 
 /// An exact rational value for CPU arithmetic — a [`BigRational`] from `bignum-core`, so it is
 /// **unbounded** (no `i128` overflow) and every `+ − × ÷` of rationals stays exact forever.
@@ -409,6 +409,32 @@ pub enum ComputeExpr {
     /// An aggregation over **every** observation of a slot:
     /// `Sum`/`Count`/`Min`/`Max`/`Avg`.
     Agg(ComputeOp, String),
+    /// A **precision narrowing** — `round_to(x, n)` (NUM-6a). Unlike the unary
+    /// rounding family in [`ComputeExpr::Unary`] (which snaps to an *integer*),
+    /// this rounds `expr` to a stated precision (`spec`) under a stated `mode`,
+    /// and is evaluated on the **exact** rational path so the audit records both
+    /// the exact source value and the rounded rendering (ADJ-NUMERIC-SUBSTRATE
+    /// §4.1–§4.4). It is dimension-preserving, like the unary round family
+    /// (`round_to(3.14159 mmol, 2) = 3.14 mmol`). A distinct node — not a
+    /// [`ComputeOp`] in [`ComputeExpr::Unary`] — because it carries a precision
+    /// and a mode that a bare unary op has nowhere to hold.
+    Round {
+        spec: RoundSpec,
+        mode: RoundingMode,
+        expr: Box<ComputeExpr>,
+    },
+}
+
+/// *What* precision a [`ComputeExpr::Round`] narrows to. NUM-6a ships the
+/// decimal-**places** form (`round_to(x, n)`); NUM-6b adds a `SigFigures(u32)`
+/// variant for `round_sig`, reusing the same node and eval path (only the target
+/// scale is derived differently). Kept a named enum, per ADJ-NUMERIC-SUBSTRATE
+/// §4.4, so that later variant is an additive change, not a node reshaping.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RoundSpec {
+    /// Round to exactly `n` digits after the decimal point. `round_to(x, 0)` is
+    /// the precision-parameterized generalization of the integer `Round`.
+    Places(u32),
 }
 
 /// A node in the derivation tree — the provenance-through-math record.
@@ -433,6 +459,18 @@ pub enum DerivationNode {
         operands: Vec<DerivationNode>,
         result: f64,
     },
+    /// A **precision narrowing** node (NUM-6a) — the audit record for a
+    /// `round_to(x, n)`. Carries the `spec`/`mode` it rounded under and its single
+    /// `operand` subtree (the exact source), so `adj-verify` can re-round the
+    /// operand's exact value and confirm the rendered `result`
+    /// (ADJ-NUMERIC-SUBSTRATE §4.3: rounding is a first-class, checkable step,
+    /// never a silent lossy coercion).
+    Round {
+        spec: RoundSpec,
+        mode: RoundingMode,
+        operand: Box<DerivationNode>,
+        result: f64,
+    },
 }
 
 impl DerivationNode {
@@ -443,6 +481,7 @@ impl DerivationNode {
             DerivationNode::DerivedRef { value, .. } => *value,
             DerivationNode::Lit { value } => *value,
             DerivationNode::Op { result, .. } => *result,
+            DerivationNode::Round { result, .. } => *result,
         }
     }
 }
@@ -842,6 +881,8 @@ fn eval(
         // the "clean `TooDeep`, never a stack overflow" contract.
         ComputeExpr::Unary(op, a) => eval_unary(*op, a, kb, depth),
 
+        ComputeExpr::Round { spec, mode, expr } => eval_round(*spec, *mode, expr, kb, depth),
+
         ComputeExpr::Agg(op, slot) => {
             let observations = kb.observed_values_all(slot);
             // `count` is defined even when there are no observations (it's 0);
@@ -1056,6 +1097,83 @@ fn eval_unary(
         result_dim,
         exact,
     ))
+}
+
+/// Evaluate a **precision narrowing** — `round_to(x, n)` (NUM-6a). The rounding
+/// is done on the **exact** rational path so the audit keeps both the exact
+/// source value and its rounded rendering (ADJ-NUMERIC-SUBSTRATE §4.3).
+///
+/// The exact rounding is *uniform* over terminating and repeating operands. An
+/// [`ExactRational`] is `n / d` with `d > 0`; rounding it to `p` decimal places
+/// under `mode` is exactly `round(n / d)` carried out by [`BigDecimal::div_round`]
+/// — dividing the integer numerator by the integer denominator to scale `p` with
+/// the stated rounding — whose result is an exact `BigDecimal` we hand straight
+/// back to a `BigRational`. So `1/3` rounds to `0.33` and `2.54` stays `2.54`
+/// through the same one path, with no `f64` hop deciding a tie.
+///
+/// Split out and `#[inline(never)]` for the same stack-frame reason as
+/// [`eval_unary`] — see there.
+#[inline(never)]
+fn eval_round(
+    spec: RoundSpec,
+    mode: RoundingMode,
+    expr: &ComputeExpr,
+    kb: &KnowledgeBase,
+    depth: usize,
+) -> Result<(DerivationNode, Dimension, Option<ExactRational>), ComputeError> {
+    let (operand, dim, exact) = eval(expr, kb, depth + 1)?;
+    // `round_to` is **dimension-preserving**, exactly like the unary round family:
+    // narrowing `3.14159 mmol` to 2 places is `3.14 mmol`, still an amount.
+    let exact_out = exact.as_ref().map(|r| round_rational(r, spec, mode));
+    // The rendered `f64` is derived FROM the exact rounded value when we have one,
+    // so the labeled-lossy export and the exact audit value never disagree. Only a
+    // genuinely-inexact operand (a transcendental result with no exact sidecar)
+    // falls back to rounding the `f64` directly — itself already approximate.
+    let result = match &exact_out {
+        Some(r) => r.to_f64(),
+        None => round_f64(operand.value(), spec, mode),
+    };
+    // Rounding a finite value can never produce a non-finite one, but a
+    // non-finite operand (an `exp` overflow upstream) must not slip through the
+    // narrowing as a clean number — the same "no silently-wrong number" guard the
+    // other ops apply.
+    if !result.is_finite() {
+        return Err(ComputeError::NonFinite { op: ComputeOp::Round });
+    }
+    Ok((
+        DerivationNode::Round {
+            spec,
+            mode,
+            operand: Box::new(operand),
+            result,
+        },
+        dim,
+        exact_out,
+    ))
+}
+
+/// Round an exact rational to `spec`'s precision under `mode`, staying exact.
+fn round_rational(r: &ExactRational, spec: RoundSpec, mode: RoundingMode) -> ExactRational {
+    let RoundSpec::Places(places) = spec;
+    // `n / d` as two integer `BigDecimal`s, then divide-with-rounding to `places`
+    // decimal places. `d` is a rational denominator, always > 0, so the division
+    // is total (never the divide-by-zero `div_round` guards against).
+    let num = BigDecimal::from_integer(r.numerator().clone());
+    let den = BigDecimal::from_integer(r.denominator().clone());
+    let rounded = num.div_round(&den, places as i64, mode);
+    ExactRational::from_ratio(rounded.to_rational())
+}
+
+/// Round an `f64` to `spec`'s decimal places — the fallback for an operand that
+/// carried no exact value (already inexact, e.g. a transcendental result). It
+/// scales, rounds to the nearest integer, and unscales; on this already-lossy
+/// path the tie rule is `f64::round`'s ties-away rather than `mode`, which is
+/// acceptable because the value is approximate to begin with (the exact path,
+/// which every rational formula takes, honors `mode` precisely).
+fn round_f64(value: f64, spec: RoundSpec, _mode: RoundingMode) -> f64 {
+    let RoundSpec::Places(places) = spec;
+    let factor = 10f64.powi(places as i32);
+    (value * factor).round() / factor
 }
 
 #[cfg(test)]
@@ -2375,6 +2493,94 @@ mod tests {
                 assert!(matches!(&operands[1], DerivationNode::Lit { value } if *value == 2.0));
             }
             other => panic!("expected Op, got {other:?}"),
+        }
+    }
+
+    // ---- NUM-6a: round_to(x, n) — the precision narrowing ----
+
+    fn round_places(n: u32, inner: ComputeExpr) -> ComputeExpr {
+        ComputeExpr::Round {
+            spec: RoundSpec::Places(n),
+            mode: RoundingMode::HalfEven,
+            expr: Box::new(inner),
+        }
+    }
+    fn frac(a: i64, b: i64) -> ComputeExpr {
+        ComputeExpr::Bin(
+            ComputeOp::Div,
+            Box::new(ComputeExpr::Lit(a as f64)),
+            Box::new(ComputeExpr::Lit(b as f64)),
+        )
+    }
+
+    #[test]
+    fn round_to_places_rounds_a_repeating_rational_and_stays_exact() {
+        let kb = KnowledgeBase::new();
+        // 1/3 = 0.333… → 2 places = 0.33 = 33/100, EXACTLY (no f64 hop). The whole
+        // point: the audit value is the exact fraction, not a lossy 0.33000000004.
+        let d = compute("r", &round_places(2, frac(1, 3)), &kb).unwrap();
+        assert!((d.value - 0.33).abs() < 1e-12);
+        assert_eq!(d.exact, ExactRational::new(33, 100));
+        // 2/3 = 0.666… → 0.67 = 67/100 (rounds up, away from the truncation).
+        let d2 = compute("r", &round_places(2, frac(2, 3)), &kb).unwrap();
+        assert_eq!(d2.exact, ExactRational::new(67, 100));
+    }
+
+    #[test]
+    fn round_to_breaks_ties_to_even_not_away_from_zero() {
+        let kb = KnowledgeBase::new();
+        // 5/2 = 2.5 → nearest EVEN = 2. Ties-away (`f64::round`) would give 3, so
+        // this pins the half-even default distinct from the legacy integer Round.
+        let a = compute("r", &round_places(0, frac(5, 2)), &kb).unwrap();
+        assert_eq!(a.exact, ExactRational::new(2, 1));
+        assert_eq!(a.value, 2.0);
+        // 7/2 = 3.5 → nearest even = 4.
+        let b = compute("r", &round_places(0, frac(7, 2)), &kb).unwrap();
+        assert_eq!(b.exact, ExactRational::new(4, 1));
+    }
+
+    #[test]
+    fn round_to_is_exact_on_an_already_terminating_value() {
+        let kb = KnowledgeBase::new();
+        // 15/4 = 3.75 → 3 places is unchanged (adding places is exact); the value
+        // stays 15/4, not a re-parsed 3.75.
+        let d = compute("r", &round_places(3, frac(15, 4)), &kb).unwrap();
+        assert_eq!(d.exact, ExactRational::new(15, 4));
+        assert_eq!(d.value, 3.75);
+    }
+
+    #[test]
+    fn round_to_preserves_dimension_and_records_precision_mode_and_operand() {
+        // Round a dimensioned money value: 10/3 usd → 2 places = 3.33 usd. The
+        // unit must survive (rounding narrows the magnitude, not the dimension),
+        // and the audit node must carry the precision, mode, and operand subtree.
+        let kb = kb_with(vec![money("bal", 10, "usd")]);
+        let expr = round_places(
+            2,
+            ComputeExpr::Bin(
+                ComputeOp::Div,
+                Box::new(refexpr("bal")),
+                Box::new(ComputeExpr::Lit(3.0)),
+            ),
+        );
+        let d = compute("r", &expr, &kb).unwrap();
+        assert_eq!(d.exact, ExactRational::new(333, 100));
+        assert_eq!(d.dim, Dimension::Money("usd".into()));
+        match &d.tree {
+            DerivationNode::Round {
+                spec,
+                mode,
+                result,
+                operand,
+            } => {
+                assert_eq!(*spec, RoundSpec::Places(2));
+                assert_eq!(*mode, RoundingMode::HalfEven);
+                assert!((*result - 3.33).abs() < 1e-12);
+                // The operand subtree is the exact source the narrowing rounded —
+                // 10/3 usd, a division node — so a checker can re-round it.
+                assert!(matches!(operand.as_ref(), DerivationNode::Op { .. }));
+            }
+            other => panic!("expected Round node, got {other:?}"),
         }
     }
 }

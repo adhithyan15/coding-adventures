@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.13.0] - 2026-07-22 — absorb `ComputeExpr::Round` (NUM-6a)
+
+### Changed
+
+- The solver's `ComputeExpr` walkers gain a `ComputeExpr::Round` arm (the new
+  NUM-6a `round_to` narrowing): non-linear/non-polynomial, so the LIA/linear/CAS
+  extractors return `None` (out of scope, like the unary round family), the
+  observed-value substitution rebuilds it with its operand substituted, and
+  `is_constant_expr` recurses into its operand. No behaviour change for existing
+  inputs — this is cross-producer totality for the new engine variant.
+
 ## [0.12.0] - 2026-07-01 — absorb `ComputeExpr::Unary` (`ComputeOp::Abs`)
 
 ### Changed

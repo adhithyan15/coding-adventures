@@ -1,5 +1,32 @@
 # Changelog
 
+## [0.45.0] — 2026-07-22 — NUM-6a: the `round_to` precision narrowing (exact + audited)
+
+Implements the compute-engine half of NUM-6a (`ADJ-NUMERIC-SUBSTRATE.md` §4.1–§4.4):
+`round_to(x, n)` — round a value to `n` decimal places as an **explicit, checkable**
+step, never a silent lossy coercion.
+
+### Added
+
+- `ComputeExpr::Round { spec: RoundSpec, mode: RoundingMode, expr }` — a precision
+  narrowing distinct from the unary rounding family (`Abs`/`Floor`/`Ceil`/`Round`),
+  because it carries a precision and a mode a bare unary op cannot hold. `RoundSpec`
+  ships the `Places(u32)` variant (NUM-6b adds `SigFigures`).
+- `DerivationNode::Round { spec, mode, operand, result }` — the audit record: the
+  precision, the stated mode, and the operand subtree it narrowed, so `adj-verify`
+  can re-round the operand's **exact** value and confirm the rendering.
+- Re-export of `bignum_core::RoundingMode` so consumers can name a rounding mode
+  without depending on `bignum-core` directly.
+
+### Behaviour
+
+- Rounding runs on the **exact rational** path: `n / d` is divided to `n` places via
+  `bignum-core`'s `BigDecimal::div_round`, uniformly for terminating and repeating
+  operands (`1/3 → 33/100`, `2.54 → 2.54`), with **no `f64` hop** deciding a tie.
+  The default mode is round-half-even (`2.5 → 2`, not `3`). Dimension-preserving,
+  like the unary round family. The `f64` result is derived from the exact value, so
+  the labeled-lossy export and the exact audit value never disagree.
+
 ## [0.44.0] — 2026-07-21 — `verify`: re-execute a proof instead of believing it (RS-4 PR-D2)
 
 Implements the checkability invariant of `ADJ-REASON-MATH.md` §E.5.

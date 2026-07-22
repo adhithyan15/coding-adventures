@@ -1211,6 +1211,16 @@ fn lower_expr(expr: &ExprAst) -> ComputeExpr {
         ExprAst::Trunc(a) => ComputeExpr::Unary(ComputeOp::Trunc, Box::new(lower_expr(a))),
         ExprAst::Sign(a) => ComputeExpr::Unary(ComputeOp::Sign, Box::new(lower_expr(a))),
         ExprAst::Call(f, a) => ComputeExpr::Unary(lower_named_fn(*f), Box::new(lower_expr(a))),
+        // `round_to(x, n)` (NUM-6a): the precision-carrying narrowing. Lowers to the
+        // distinct engine `Round` node (not a unary `ComputeOp`) so the precision `n`
+        // and the default half-even mode ride along and the exact-path audit records
+        // them (ADJ-NUMERIC-SUBSTRATE §4.1–§4.4). `n` was validated a non-negative
+        // integer by the adapter.
+        ExprAst::RoundTo(a, places) => ComputeExpr::Round {
+            spec: logic_engine::RoundSpec::Places(*places),
+            mode: bignum_core::RoundingMode::HalfEven,
+            expr: Box::new(lower_expr(a)),
+        },
         ExprAst::Call2(f, a, b) => ComputeExpr::Bin(
             lower_bin_fn(*f),
             Box::new(lower_expr(a)),
@@ -1540,6 +1550,7 @@ fn collect_refs(expr: &ExprAst, out: &mut Vec<String>) {
         | ExprAst::Floor(a)
         | ExprAst::Ceil(a)
         | ExprAst::Round(a)
+        | ExprAst::RoundTo(a, _)
         | ExprAst::Trunc(a)
         | ExprAst::Sign(a)
         | ExprAst::Call(_, a) => collect_refs(a, out),
@@ -1582,6 +1593,14 @@ const FORMULA_MAX_APPLY_DEPTH: usize = 256;
 /// more than any legitimate composed clinical formula needs (they are a handful of
 /// applications deep) yet a negligible fraction of the exponential blow-up.
 const FORMULA_MAX_EXPANSION_NODES: usize = 10_000;
+
+/// The largest `n` accepted by the `round_to(x, n)` built-in (NUM-6a). A DoS
+/// guard: rounding an exact rational to `n` decimal places materializes up to `n`
+/// digits, so an unbounded `n` (`round_to(x, 1000000000)`) would ask the exact
+/// path for a gigabyte-scale mantissa. 100 places is far beyond the engine's own
+/// default precision (256 bits ≈ 77 significant digits, ADJ-NUMERIC-SUBSTRATE §3)
+/// and any real measurement, so the cap constrains only pathological inputs.
+const MAX_ROUND_PLACES: u32 = 100;
 
 /// Maximum AST-nesting depth the expansion/substitution/clone walkers may descend
 /// in a single expression (ADJ-RULE-SUBSTRATE RS-1). The node budget bounds total
@@ -1664,6 +1683,7 @@ fn charged_clone(
         ExprAst::Floor(a) => ExprAst::Floor(Box::new(charged_clone(a, budget, d)?)),
         ExprAst::Ceil(a) => ExprAst::Ceil(Box::new(charged_clone(a, budget, d)?)),
         ExprAst::Round(a) => ExprAst::Round(Box::new(charged_clone(a, budget, d)?)),
+        ExprAst::RoundTo(a, n) => ExprAst::RoundTo(Box::new(charged_clone(a, budget, d)?), *n),
         ExprAst::Trunc(a) => ExprAst::Trunc(Box::new(charged_clone(a, budget, d)?)),
         ExprAst::Sign(a) => ExprAst::Sign(Box::new(charged_clone(a, budget, d)?)),
         ExprAst::Call(f, a) => ExprAst::Call(*f, Box::new(charged_clone(a, budget, d)?)),
@@ -1780,6 +1800,34 @@ fn expand_rec(
     let d = descend(node_depth)?;
     match expr {
         ExprAst::Apply(name, args) => {
+            // NUM-6a built-in: `round_to(x, n)` — the precision narrowing. Recognised
+            // by NAME here, BEFORE the user-formula lookup, so it needs no formula
+            // definition; it reuses the same comma-list application grammar as user
+            // formulas (`quotient(a, b)`), which is why no new grammar or LaTeX
+            // surface is required (ADJ-NUMERIC-SUBSTRATE §4.1). The value arg `x` is
+            // expanded (it may itself be an application); the precision `n` must be a
+            // non-negative INTEGER literal within the DoS cap [`MAX_ROUND_PLACES`] —
+            // a variable, fraction, negative, or oversized `n` is a clean compile
+            // error, never a silent mis-rounding.
+            if name == "round_to" {
+                if args.len() != 2 {
+                    return Err(LowerError::FormulaArity {
+                        formula: name.clone(),
+                        expected: 2,
+                        got: args.len(),
+                    });
+                }
+                let places = match &args[1] {
+                    ExprAst::Lit(v)
+                        if v.fract() == 0.0 && *v >= 0.0 && *v <= MAX_ROUND_PLACES as f64 =>
+                    {
+                        *v as u32
+                    }
+                    _ => return Err(LowerError::FormulaBadArgument { formula: name.clone() }),
+                };
+                let value = expand_rec(&args[0], formulas, depth, chain, active, budget, d)?;
+                return Ok(ExprAst::RoundTo(Box::new(value), places));
+            }
             // Resolve the callee against the SAME registry the top-level query path
             // uses. An unknown name is a clean, specific error — distinct from an
             // aggregation or built-in call, which never reach here (they are separate
@@ -1867,6 +1915,10 @@ fn expand_rec(
         ExprAst::Round(a) => Ok(ExprAst::Round(Box::new(expand_rec(
             a, formulas, depth, chain, active, budget, d,
         )?))),
+        ExprAst::RoundTo(a, n) => Ok(ExprAst::RoundTo(
+            Box::new(expand_rec(a, formulas, depth, chain, active, budget, d)?),
+            *n,
+        )),
         ExprAst::Trunc(a) => Ok(ExprAst::Trunc(Box::new(expand_rec(
             a, formulas, depth, chain, active, budget, d,
         )?))),
@@ -2045,6 +2097,9 @@ fn substitute_expr(
         ExprAst::Floor(a) => ExprAst::Floor(Box::new(substitute_expr(a, subst, budget, d)?)),
         ExprAst::Ceil(a) => ExprAst::Ceil(Box::new(substitute_expr(a, subst, budget, d)?)),
         ExprAst::Round(a) => ExprAst::Round(Box::new(substitute_expr(a, subst, budget, d)?)),
+        ExprAst::RoundTo(a, n) => {
+            ExprAst::RoundTo(Box::new(substitute_expr(a, subst, budget, d)?), *n)
+        }
         ExprAst::Trunc(a) => ExprAst::Trunc(Box::new(substitute_expr(a, subst, budget, d)?)),
         ExprAst::Sign(a) => ExprAst::Sign(Box::new(substitute_expr(a, subst, budget, d)?)),
         ExprAst::Call(f, a) => ExprAst::Call(*f, Box::new(substitute_expr(a, subst, budget, d)?)),
