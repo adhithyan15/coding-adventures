@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.6.11] - Unreleased
+
+### Fixed
+
+- **An aggregate column reordered in the SELECT list of a GROUP BY now follows
+  that order.** `emit_group_row`'s projected path is no longer restricted to
+  aggregate-free queries — it runs for every grouped query with a projection,
+  resolving each aggregate SELECT item through `agg_slots` (like HAVING) and each
+  group-key column from the group's fake row. So `SELECT max(x) AS mx, c FROM t
+  GROUP BY c` yields columns `[mx, c]`, not the old fixed `[c, max(x)]`. This
+  relies on the sql-planner 0.2.29 change lowering `group_concat` to
+  `SqlExpr::Aggregate` (so every aggregate is re-compilable) and on
+  `output_column_name` naming a `SqlExpr::Aggregate` via the new shared
+  `render_aggregate_name` (factored out of `aggregate_column_name`, so the
+  re-projected header matches the fixed-layout one). Retires the
+  `group_by_reordered_with_aggregate` oracle ledger entry.
+
 ## [0.6.10] - Unreleased
 
 ### Fixed

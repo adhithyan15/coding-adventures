@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.5.62 — GROUP BY aggregate columns follow the SELECT list
+
+`SELECT max(x) AS mx, c FROM t GROUP BY c` now returns columns `[mx, c]` — the
+SELECT-list order — where before an aggregate column was always emitted after
+the group keys in a fixed layout (`[c, max(x)]`). This completes the GROUP BY
+projection work: non-aggregate columns already followed the SELECT list, and now
+aggregate columns do too, including `group_concat`.
+
+The enabler is reconciling `group_concat`'s representation: the planner now
+lowers it to `SqlExpr::Aggregate` like COUNT/SUM (it was previously a
+`FunctionCall` in the SELECT list), so codegen can re-compile any aggregate
+column in place. Retires the `group_by_reordered_with_aggregate` ledger entry.
+Verified against bundled real SQLite, including group_concat with a separator,
+count, and key all reordered. Spans sql-planner 0.2.29 and sql-codegen 0.6.11.
+
 ## 0.5.61 — GROUP BY bare column takes the group's first-row value
 
 `SELECT c FROM t GROUP BY x`, where `c` is neither a GROUP BY key nor inside an

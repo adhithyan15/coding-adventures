@@ -1276,28 +1276,25 @@ impl Compiler {
     /// This is the projection step — it runs after `FinalizeAgg` values are
     /// available and inside a `BeginRow`/`EmitRow` pair supplied by the caller.
     ///
-    /// **Projected path** — used when an enclosing `SELECT` list is available AND
-    /// the query has no aggregate columns (a pure `GROUP BY` producing only key
-    /// columns and expressions over them). The row then follows the SELECT list
-    /// exactly — order, count, and identity all come from what the user wrote,
-    /// each item compiled in the group's finalize context (a GROUP BY key column
-    /// reads its key value from the group's fake row, so a collated key still
-    /// reports its original text). So `SELECT x, c FROM t GROUP BY c, x` yields
-    /// columns `[x, c]`, not the internal group-key order `[c, x]` — the bug this
-    /// fixes (reordering the SELECT list used to change nothing).
+    /// **Projected path** — used whenever an enclosing `SELECT` list is available.
+    /// The row follows that list exactly — order, count, and identity all come
+    /// from what the user wrote — with each item compiled in the group's finalize
+    /// context: a GROUP BY key column reads its key value from the group's fake
+    /// row (so a collated key still reports its original text), and an aggregate
+    /// column resolves through `agg_slots` to its `FinalizeAgg` slot (the same
+    /// machinery HAVING uses). So `SELECT x, c FROM t GROUP BY c, x` yields
+    /// columns `[x, c]` (not the internal group-key order `[c, x]`), and
+    /// `SELECT max(x) AS mx, c FROM t GROUP BY c` yields `[mx, c]` (not
+    /// `[c, max(x)]`). This works for aggregate columns because the planner lowers
+    /// EVERY aggregate — including `group_concat` — to `SqlExpr::Aggregate`, so
+    /// `compile_expr` can resolve them, and `output_column_name` names them the
+    /// SQLite way.
     ///
-    /// **Fixed path** — used with no projection (an aggregate compiled outside a
-    /// `Project`; rare), OR whenever aggregate columns are present. It emits every
-    /// GROUP BY key (from its underlying column, so the group's original text and
-    /// name are reported) followed by every aggregate in declaration order.
-    ///
-    /// The aggregate case still takes the fixed layout on purpose: an aggregate
-    /// output column is not reliably re-compilable here — `group_concat(...)`
-    /// stays a `FunctionCall` in the SELECT list (unlike COUNT/SUM/… which the
-    /// planner lowers to `SqlExpr::Aggregate`), so routing it through
-    /// `compile_expr` would fail. Reordering aggregate columns to the SELECT
-    /// order needs that representation reconciled first, and is a tracked
-    /// follow-up (see the `group_by_reordered_with_aggregate` ledger entry).
+    /// **Fixed path** — used only with no projection (an aggregate compiled
+    /// outside a `Project`; rare, mostly defensive / subquery paths). It emits
+    /// every GROUP BY key (from its underlying column, so the group's original
+    /// text and name are reported) followed by every aggregate in declaration
+    /// order.
     fn emit_group_row(
         &mut self,
         projection: Option<&[OutputColumn]>,
@@ -1306,15 +1303,19 @@ impl Compiler {
         aggregates: &[AggregateItem],
     ) {
         match projection {
-            // Only re-project when there are no aggregate columns to place; with
-            // aggregates present we fall through to the fixed layout below.
-            Some(cols) if aggregates.is_empty() => {
+            Some(cols) => {
+                // Let `compile_expr` resolve an aggregate reference in the SELECT
+                // list to its accumulator slot (matched by func/arg/distinct); a
+                // bare column reference falls through to a `LoadColumn` against the
+                // group's fake row instead.
+                self.agg_slots = aggregates.iter().cloned().enumerate().collect();
                 for col in cols {
                     self.compile_expr(&col.expr);
                     self.emit(Instruction::EmitColumn(output_column_name(col)));
                 }
+                self.agg_slots.clear();
             }
-            _ => {
+            None => {
                 for e in group_by {
                     let e = strip_collate(e);
                     self.compile_expr(e);
@@ -2329,6 +2330,14 @@ fn output_column_name(col: &OutputColumn) -> String {
     match &col.expr {
         SqlExpr::Column { name, .. } => name.clone(),
         SqlExpr::FunctionCall { .. } => render_expr_label(&col.expr).unwrap_or_else(|| "?".to_string()),
+        // An un-aliased aggregate column is named after its call text (`SUM(n)`,
+        // `COUNT(*)`, `GROUP_CONCAT(x)`), matching SQLite — the same rule
+        // `aggregate_column_name` applies to the extracted `AggregateItem`. This
+        // is what lets the SELECT-list projection name an aggregate column
+        // correctly when it re-projects (instead of the old fixed layout).
+        SqlExpr::Aggregate { func, arg, distinct } => {
+            render_aggregate_name(func, arg.as_deref(), *distinct)
+        }
         _ => "?".to_string(),
     }
 }
@@ -2385,7 +2394,17 @@ fn aggregate_column_name(item: &AggregateItem) -> String {
     if let Some(alias) = &item.alias {
         return alias.clone();
     }
-    let func = match item.func {
+    render_aggregate_name(&item.func, item.arg.as_ref(), item.distinct)
+}
+
+/// Render an un-aliased aggregate's implicit column name from its parts — the
+/// call text SQLite uses: `COUNT(*)`, `SUM(n)`, `MIN(x)`, `GROUP_CONCAT(x)`,
+/// `COUNT(DISTINCT id)`. Shared by [`aggregate_column_name`] (which names an
+/// extracted `AggregateItem`) and [`output_column_name`] (which names a
+/// `SqlExpr::Aggregate` in the SELECT list); both must agree so a re-projected
+/// aggregate column keeps the same header as the fixed-layout one.
+fn render_aggregate_name(func: &AggFunc, arg: Option<&SqlExpr>, distinct: bool) -> String {
+    let func_name = match func {
         AggFunc::Count => "COUNT",
         AggFunc::Sum => "SUM",
         AggFunc::Avg => "AVG",
@@ -2393,18 +2412,18 @@ fn aggregate_column_name(item: &AggregateItem) -> String {
         AggFunc::Max => "MAX",
         AggFunc::GroupConcat { .. } => "GROUP_CONCAT",
     };
-    let inner = match &item.arg {
+    let inner = match arg {
         None => "*".to_string(),
         Some(expr) => {
             let base = render_expr_label(expr).unwrap_or_else(|| "?".to_string());
-            if item.distinct {
+            if distinct {
                 format!("DISTINCT {base}")
             } else {
                 base
             }
         }
     };
-    format!("{func}({inner})")
+    format!("{func_name}({inner})")
 }
 
 // ===========================================================================
