@@ -136,6 +136,18 @@ pub enum Stmt {
     /// keep their prior content — the ANSI-85 STRING rule). A real delimiter,
     /// `WITH POINTER`, and `ON OVERFLOW` are later rungs (rejected at build time).
     String { sources: Vec<Operand>, target: String },
+    /// `UNSTRING source DELIMITED BY delim INTO r1 [r2 …]` — the inverse of
+    /// STRING. Scan the alphanumeric `source` left-to-right, splitting it into
+    /// delimited fields on each occurrence of the SINGLE-character `delim` (a
+    /// 1-char literal or a `PIC X(1)` item), and move successive fields into
+    /// successive receivers `r1..rn` as ordinary alphanumeric MOVEs (left-
+    /// justified, space-padded, truncated). Each receiver — INCLUDING the last —
+    /// takes the field up to the NEXT delimiter; fields beyond the receiver count
+    /// are dropped (that would be `ON OVERFLOW`, a later rung), and once the
+    /// source is exhausted the remaining receivers are left UNCHANGED (not
+    /// space-filled). `WITH POINTER`, `ON OVERFLOW`, a multi-character or `ALL`/
+    /// `OR` delimiter, and a numeric/group source or receiver are later rungs.
+    Unstring { source: String, delim: Operand, targets: Vec<String> },
     StopRun,
 }
 
@@ -689,6 +701,65 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
             let target = first_token(verb, "NAME")
                 .ok_or_else(|| RuntimeError::Unsupported("STRING without an INTO receiver".into()))?;
             Ok(Stmt::String { sources, target })
+        }
+        "unstring_stmt" => {
+            // UNSTRING source DELIMITED BY delim INTO r1 [r2 …]. The grammar also
+            // *accepts* the later-rung options (WITH POINTER, ON OVERFLOW) so we
+            // reject them here with a friendly Unsupported rather than a parse
+            // error — exactly as the STRING arm above does.
+            let toks = child_tokens(verb);
+            if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "POINTER") {
+                return Err(RuntimeError::Unsupported(
+                    "UNSTRING … WITH POINTER is a later rung".into(),
+                ));
+            }
+            if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "OVERFLOW") {
+                return Err(RuntimeError::Unsupported(
+                    "UNSTRING … ON OVERFLOW / NOT ON OVERFLOW is a later rung".into(),
+                ));
+            }
+            // The two direct `operand` children are the source and the delimiter,
+            // in order (a reference-modification suffix nests *under* an operand,
+            // so it never appears as a third top-level operand).
+            let ops = child_nodes(verb, "operand");
+            let (source_op, delim_op) = match ops.as_slice() {
+                [s, d] => (s, d),
+                _ => {
+                    return Err(RuntimeError::Unsupported(
+                        "UNSTRING needs a source and a DELIMITED BY delimiter".into(),
+                    ))
+                }
+            };
+            // The source must be a plain data-name (a PIC X item is checked at
+            // exec time); a literal or reference-modification source is a later
+            // rung.
+            let source = match read_operand(source_op)? {
+                Operand::Ident(name) => name,
+                Operand::Lit(_) => {
+                    return Err(RuntimeError::Unsupported(
+                        "UNSTRING with a literal source is a later rung".into(),
+                    ))
+                }
+                Operand::RefMod { .. } => {
+                    return Err(RuntimeError::Unsupported(
+                        "UNSTRING with a reference-modified source is a later rung".into(),
+                    ))
+                }
+            };
+            let delim = read_operand(delim_op)?;
+            // Receivers: the direct NAME tokens after INTO (a WITH POINTER name,
+            // which would also appear here, has already been rejected above).
+            let targets: Vec<String> = child_tokens(verb)
+                .into_iter()
+                .filter(|(k, _)| k == "NAME")
+                .map(|(_, v)| v)
+                .collect();
+            if targets.is_empty() {
+                return Err(RuntimeError::Unsupported(
+                    "UNSTRING without an INTO receiver".into(),
+                ));
+            }
+            Ok(Stmt::Unstring { source, delim, targets })
         }
         other => Err(RuntimeError::Unsupported(format!("the {} verb", verb_name(other)))),
     }

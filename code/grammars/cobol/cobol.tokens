@@ -220,11 +220,16 @@ keywords:
   # named STRING, produced by the quoted patterns above) is unaffected — keyword
   # promotion only rewrites bare NAME words, never the quoted-literal tokens.
   STRING
+  # UNSTRING splits one alphanumeric source on a delimiter into several receivers
+  # — the inverse of STRING. Like STRING, the bare word promotes to a KEYWORD;
+  # quoted string-literal tokens (also type-named STRING) are untouched.
+  UNSTRING
   DELIMITED
   POINTER
   OVERFLOW
   WITH
   END-STRING
+  END-UNSTRING
   # -- Prepositions / connectives / operators-in-words --
   TO
   FROM

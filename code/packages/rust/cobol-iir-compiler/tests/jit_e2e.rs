@@ -1648,3 +1648,185 @@ fn string_with_numeric_literal_source() {
     ));
     assert_eq!(out, "IT42  \n");
 }
+
+// ---------------------------------------------------------------------------
+// UNSTRING — split one alphanumeric source on a single delimiter into several
+// receivers (the inverse of STRING). Each receiver — INCLUDING the last — takes
+// only the field up to the NEXT delimiter; extra fields are dropped, an empty
+// field (consecutive/leading delimiter) yields all spaces, and once the source
+// is exhausted the remaining receivers are left UNCHANGED. Each field lands as
+// an ordinary alphanumeric MOVE (left-justified, space-padded, truncated). Every
+// case pins the compiled JIT output to the oracle byte-for-byte.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn unstring_exact_fit() {
+    // "A,B,C" splits into exactly three fields for three receivers; each PIC X(3)
+    // receiver is the field left-justified and space-padded.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"A,B,C\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  R3 PIC X(3) VALUE SPACES.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2 R3.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY R3.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \nC  \n");
+}
+
+#[test]
+fn unstring_drops_extra_fields() {
+    // "A,B,C,D" has four fields but only three receivers — the last receiver takes
+    // "C" (the field up to the NEXT delimiter, NOT the remainder) and "D" is
+    // dropped (that would be ON OVERFLOW, a later rung).
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(7) VALUE \"A,B,C,D\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  R3 PIC X(3) VALUE SPACES.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2 R3.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY R3.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \nC  \n");
+}
+
+#[test]
+fn unstring_leaves_trailing_receiver_unchanged() {
+    // "A,B" fills two receivers; the source is then exhausted, so R3 keeps its
+    // prior VALUE "ZZZ" — it is NOT space-filled.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(3) VALUE \"A,B\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  R3 PIC X(3) VALUE \"ZZZ\".",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2 R3.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY R3.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \nZZZ\n");
+}
+
+#[test]
+fn unstring_empty_field_from_consecutive_delimiters() {
+    // "A,,C" — the two adjacent commas bound an EMPTY field, so R2 becomes all
+    // spaces while R1 and R3 get "A" and "C".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(4) VALUE \"A,,C\".",
+            "01  R1 PIC X(3) VALUE \"...\".",
+            "01  R2 PIC X(3) VALUE \"...\".",
+            "01  R3 PIC X(3) VALUE \"...\".",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2 R3.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY R3.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \n   \nC  \n");
+}
+
+#[test]
+fn unstring_delimiter_at_start() {
+    // A LEADING delimiter bounds an empty first field: ",X" → R1 = spaces, R2 = "X".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(2) VALUE \",X\".",
+            "01  R1 PIC X(3) VALUE \"...\".",
+            "01  R2 PIC X(3) VALUE \"...\".",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "   \nX  \n");
+}
+
+#[test]
+fn unstring_space_delimiter() {
+    // The delimiter can be a space: "A B C" splits on blanks into three fields.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"A B C\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  R3 PIC X(3) VALUE SPACES.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \" \" INTO R1 R2 R3.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY R3.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \nC  \n");
+}
+
+#[test]
+fn unstring_pic_x1_item_delimiter() {
+    // The delimiter may be a PIC X(1) item (its single stored character), not just
+    // a literal — the compiler reads it at run time with str_index.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(5) VALUE \"A;B;C\".",
+            "01  DL PIC X(1) VALUE \";\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+            "01  R3 PIC X(3) VALUE SPACES.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY DL INTO R1 R2 R3.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "DISPLAY R3.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "A  \nB  \nC  \n");
+}
+
+#[test]
+fn unstring_truncates_a_long_field() {
+    // A field wider than its receiver is truncated on the right (left-justified
+    // MOVE): "ABCDE" into a PIC X(3) receiver keeps "ABC".
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(7) VALUE \"ABCDE,Z\".",
+            "01  R1 PIC X(3) VALUE SPACES.",
+            "01  R2 PIC X(3) VALUE SPACES.",
+        ],
+        &[
+            "UNSTRING S DELIMITED BY \",\" INTO R1 R2.",
+            "DISPLAY R1.",
+            "DISPLAY R2.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "ABC\nZ  \n");
+}

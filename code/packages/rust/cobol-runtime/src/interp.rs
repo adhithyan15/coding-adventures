@@ -349,6 +349,9 @@ impl Machine {
             Stmt::SetTrue { cond_name } => self.exec_set_true(cond_name)?,
             Stmt::Evaluate { subject, branches } => return self.exec_evaluate(subject, branches),
             Stmt::String { sources, target } => self.exec_string(sources, target)?,
+            Stmt::Unstring { source, delim, targets } => {
+                self.exec_unstring(source, delim, targets)?
+            }
         }
         Ok(Flow::Normal)
     }
@@ -429,6 +432,162 @@ impl Machine {
                     Some(_) => Ok(self.items[idx].storage.clone()),
                     None => Err(RuntimeError::Unsupported(
                         "a group item as a STRING sending field is a later rung".into(),
+                    )),
+                }
+            }
+        }
+    }
+
+    /// `UNSTRING source DELIMITED BY delim INTO r1 [r2 …]` — the inverse of
+    /// STRING. Scan the alphanumeric `source` left-to-right and split it into
+    /// delimited fields on each occurrence of the single delimiter character,
+    /// moving successive fields into successive receivers `r1..rn`.
+    ///
+    /// The scan holds a cursor `p` over the source characters. For each receiver
+    /// in turn (while the source is not yet exhausted), it finds the next
+    /// delimiter at or after `p` — call its index `q` (or end-of-source if none
+    /// remains) — takes the field `source[p..q]`, moves it into the receiver as an
+    /// ordinary alphanumeric MOVE (so padding/truncation match `move_into`), and
+    /// advances `p` to `q + 1` (past the delimiter). Worked, with delimiter `,`:
+    ///
+    /// ```text
+    ///   "A,B,C"  INTO R1 R2 R3   →  R1="A  " R2="B  " R3="C  "
+    ///   "A,B,C,D" INTO R1 R2 R3  →  R1="A  " R2="B  " R3="C  "  (D dropped)
+    ///   "A,B"    INTO R1 R2 R3   →  R1="A  " R2="B  " R3 UNCHANGED
+    ///   "A,,C"   INTO R1 R2 R3   →  R1="A  " R2="   " R3="C  "  (empty field)
+    ///   ",X"     INTO R1 R2      →  R1="   " R2="X  "
+    /// ```
+    ///
+    /// The cursor tells "exhausted" (a field ran to end-of-source with no trailing
+    /// delimiter, leaving `p` one past the end → remaining receivers UNCHANGED)
+    /// apart from "a trailing delimiter" (`p` lands exactly at the end → one more
+    /// empty field is still produced). Each receiver INCLUDING the last takes only
+    /// its field up to the next delimiter; fields beyond the receiver count are
+    /// dropped (that would be `ON OVERFLOW`, a later rung). The
+    /// `cobol-iir-compiler` emits a run-time scan loop with these exact semantics,
+    /// so a compiled program matches this oracle byte-for-byte.
+    fn exec_unstring(
+        &mut self,
+        source: &str,
+        delim: &Operand,
+        targets: &[String],
+    ) -> Result<(), RuntimeError> {
+        // The source must be an alphanumeric item; read its stored characters.
+        let sidx = *self
+            .by_name
+            .get(source)
+            .ok_or_else(|| RuntimeError::UndefinedName(source.to_string()))?;
+        match &self.items[sidx].picture {
+            Some(p) if p.is_numeric() => {
+                return Err(RuntimeError::Unsupported(
+                    "UNSTRING of a numeric source is a later rung".into(),
+                ))
+            }
+            Some(_) => {}
+            None => {
+                return Err(RuntimeError::Unsupported(
+                    "UNSTRING of a group source is a later rung".into(),
+                ))
+            }
+        }
+        let src: Vec<char> = self.items[sidx].storage.chars().collect();
+
+        // The single delimiter character.
+        let delim_ch = self.unstring_delim_char(delim)?;
+
+        // Every receiver must be an alphanumeric item (validated up front so a
+        // numeric/group receiver is a clean error even if the scan never reaches
+        // it — matching the compiler, which lowers every receiver at build time).
+        let mut tidx: Vec<usize> = Vec::with_capacity(targets.len());
+        for t in targets {
+            let idx = *self
+                .by_name
+                .get(t)
+                .ok_or_else(|| RuntimeError::UndefinedName(t.to_string()))?;
+            match &self.items[idx].picture {
+                Some(p) if p.is_numeric() => {
+                    return Err(RuntimeError::Unsupported(
+                        "UNSTRING into a numeric receiver is a later rung".into(),
+                    ))
+                }
+                Some(_) => {}
+                None => {
+                    return Err(RuntimeError::Unsupported(
+                        "UNSTRING into a group receiver is a later rung".into(),
+                    ))
+                }
+            }
+            tidx.push(idx);
+        }
+
+        // Scan: cursor `p` over `src`; for each receiver take the field up to the
+        // next delimiter (or end-of-source), then step past the delimiter.
+        let mut p: usize = 0;
+        for &idx in &tidx {
+            // `p > len` means the previous field ran off the end WITHOUT a
+            // trailing delimiter — the source is exhausted, so leave this and every
+            // later receiver UNCHANGED. (`p == len` still yields one empty field,
+            // the trailing-delimiter case.)
+            if p > src.len() {
+                break;
+            }
+            let mut q = p;
+            while q < src.len() && src[q] != delim_ch {
+                q += 1;
+            }
+            let field: String = src[p..q].iter().collect();
+            self.move_into(idx, Src::Chars(field))?;
+            p = q + 1;
+        }
+        Ok(())
+    }
+
+    /// The single delimiter character of an `UNSTRING … DELIMITED BY delim`. It is
+    /// either a 1-character string literal (`","`, `" "`) or a `PIC X(1)` item. A
+    /// multi-character delimiter, `DELIMITED BY ALL`, several `OR` delimiters, a
+    /// numeric/figurative delimiter, and a numeric/group/wider delimiter item are
+    /// later rungs.
+    fn unstring_delim_char(&self, delim: &Operand) -> Result<char, RuntimeError> {
+        match delim {
+            Operand::Lit(Lit::Str(s)) => {
+                let chars: Vec<char> = s.chars().collect();
+                match chars.as_slice() {
+                    [c] => Ok(*c),
+                    _ => Err(RuntimeError::Unsupported(
+                        "UNSTRING with a multi-character delimiter is a later rung".into(),
+                    )),
+                }
+            }
+            Operand::Lit(Lit::Num(_)) => Err(RuntimeError::Unsupported(
+                "UNSTRING with a numeric-literal delimiter is a later rung".into(),
+            )),
+            Operand::Lit(Lit::Fig(_)) => Err(RuntimeError::Unsupported(
+                "UNSTRING with a figurative-constant delimiter is a later rung".into(),
+            )),
+            Operand::RefMod { .. } => Err(RuntimeError::Unsupported(
+                "UNSTRING with a reference-modified delimiter is a later rung".into(),
+            )),
+            Operand::Ident(name) => {
+                let idx = *self
+                    .by_name
+                    .get(name)
+                    .ok_or_else(|| RuntimeError::UndefinedName(name.clone()))?;
+                match &self.items[idx].picture {
+                    Some(p) if p.is_numeric() => Err(RuntimeError::Unsupported(
+                        "UNSTRING with a numeric delimiter item is a later rung".into(),
+                    )),
+                    Some(_) => {
+                        let chars: Vec<char> = self.items[idx].storage.chars().collect();
+                        match chars.as_slice() {
+                            [c] => Ok(*c),
+                            _ => Err(RuntimeError::Unsupported(
+                                "UNSTRING with a delimiter item wider than one character is a later rung"
+                                    .into(),
+                            )),
+                        }
+                    }
+                    None => Err(RuntimeError::Unsupported(
+                        "UNSTRING with a group delimiter item is a later rung".into(),
                     )),
                 }
             }

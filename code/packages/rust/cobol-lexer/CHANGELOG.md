@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.8.0 — `UNSTRING` verb keywords
+
+- Added the reserved words the `UNSTRING` statement needs: `UNSTRING` and the
+  hyphenated `END-UNSTRING` (`DELIMITED`, `BY`, `INTO`, `WITH`, `POINTER`, `ON`,
+  `OVERFLOW`, `NOT` were already reserved from the `STRING` cut). As with `STRING`,
+  promoting the bare word `UNSTRING` to a KEYWORD does **not** disturb the
+  string-literal token type (keyword promotion only rewrites bare `NAME` words).
+  `END-UNSTRING` works like the other hyphenated keywords (`END-STRING`,
+  `END-EVALUATE`). `_grammar.rs` regenerated from `cobol.tokens` via
+  `grammar-tools compile-tokens`.
+
 ## 0.7.0 — `STRING` verb keywords
 
 - Added the reserved words the `STRING` statement needs: `STRING`, `DELIMITED`,
