@@ -337,8 +337,60 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             }
             let _ = writeln!(out, "{pad}}}");
         }
-        // Other SIR16+ statements (ForRange/ForEach/index-set/class/try) are not
-        // accepted; the capability check rejects such modules before emit.
+        // `for var in start...stop step step`. Gated by `Feature::Loops` alone,
+        // so it is reachable whenever loops are accepted. Counts in native
+        // `int64_t` mirroring the Go/Rust backends: `start`/`stop`/`step` are
+        // evaluated ONCE into `SirValue` temporaries (they may have side
+        // effects), then reduced to `int64_t`. Direction-aware EXCLUSIVE stop
+        // (`step >= 0 ? i < stop : i > stop`, so a descending loop works). The
+        // outer `{…}` scopes the counter temporaries; `var` is declared INSIDE
+        // the loop body, so it (and any body-local) is block-scoped — matching
+        // the validator (which rewinds the loop body) and Go's `:=` counter,
+        // never clobbering an enclosing same-named local.
+        Stmt::ForRange {
+            var,
+            start,
+            stop,
+            step,
+            body,
+            ..
+        } => {
+            let id = fresh_id();
+            let inner = indent + 1;
+            let ipad = indent_str(inner);
+            let sv = |kind: &str| format!("_sir_fr{kind}v{id}");
+            let _ = writeln!(out, "{pad}{{");
+            for (kind, e) in [("start", start), ("stop", stop), ("step", step)] {
+                let _ = writeln!(out, "{ipad}SirValue {};", sv(kind));
+                emit_assign(out, &sv(kind), e, inner);
+            }
+            let _ = writeln!(out, "{ipad}int64_t _sir_fri{id} = _sir_as_int({});", sv("start"));
+            let _ = writeln!(out, "{ipad}int64_t _sir_frstop{id} = _sir_as_int({});", sv("stop"));
+            let _ = writeln!(out, "{ipad}int64_t _sir_frstep{id} = _sir_as_int({});", sv("step"));
+            let _ = writeln!(
+                out,
+                "{ipad}while (_sir_frstep{id} >= 0 ? _sir_fri{id} < _sir_frstop{id} : \
+                 _sir_fri{id} > _sir_frstop{id}) {{",
+            );
+            let body_i = inner + 1;
+            let bpad = indent_str(body_i);
+            let _ = writeln!(out, "{bpad}SirValue {} = _sir_int(_sir_fri{id});", sanitize_ident(var));
+            // A loop that never reads its counter (an empty body, or `for _ in
+            // 0..n { … }`) would leave `var` unused — `(void)` silences
+            // `-Wunused-variable` so a `-Werror` consumer still compiles.
+            let _ = writeln!(out, "{bpad}(void){};", sanitize_ident(var));
+            for st in &body.stmts {
+                emit_stmt(out, st, body_i);
+            }
+            let _ = writeln!(out, "{bpad}_sir_fri{id} += _sir_frstep{id};");
+            let _ = writeln!(out, "{ipad}}}");
+            let _ = writeln!(out, "{pad}}}");
+        }
+        // Other SIR16+ statements (index-set/class/try) require features this
+        // backend does not accept, so the capability check rejects them before
+        // emit. `ForEach` is the exception — it observes only `Feature::Loops`
+        // (accepted), so `compile`'s `first_foreach` pre-pass rejects it
+        // cleanly rather than letting it reach this `unreachable!`.
         other => unreachable!("C backend reached unsupported statement: {other:?}"),
     }
 }
@@ -772,6 +824,55 @@ pub fn first_unsupported_builtin(m: &Module) -> Option<(String, Span)> {
     None
 }
 
+/// Locate a `Stmt::ForEach` anywhere in the module. `ForEach` observes only
+/// `Feature::Loops` (the validator; same feature as `While`/`ForRange`), which
+/// this backend accepts — so a module using `for x in <iterable>` passes the
+/// capability check and would reach the emitter's `unreachable!`. The emitter
+/// cannot lower it yet (a sequence/`each` iterator is the sequences batch), so
+/// `compile` rejects it CLEANLY via this pre-pass rather than panicking. Walks
+/// the full statement/expression tree so a nested `ForEach` (in a loop or `if`
+/// body) is caught too.
+pub fn first_foreach(m: &Module) -> Option<Span> {
+    fn in_block(b: &Block) -> Option<Span> {
+        b.stmts
+            .iter()
+            .find_map(in_stmt)
+            .or_else(|| in_expr(&b.value))
+    }
+    fn in_stmt(s: &Stmt) -> Option<Span> {
+        match s {
+            Stmt::ForEach { span, .. } => Some(span.clone()),
+            Stmt::While { cond, body, .. } => in_expr(cond).or_else(|| in_block(body)),
+            Stmt::ForRange {
+                start, stop, step, body, ..
+            } => in_expr(start)
+                .or_else(|| in_expr(stop))
+                .or_else(|| in_expr(step))
+                .or_else(|| in_block(body)),
+            Stmt::LetBinding { value, .. }
+            | Stmt::LetStarBinding { value, .. }
+            | Stmt::ExprStmt { expr: value, .. }
+            | Stmt::Assign { value, .. } => in_expr(value),
+            _ => None,
+        }
+    }
+    fn in_expr(e: &Expr) -> Option<Span> {
+        match e {
+            Expr::If {
+                cond,
+                then_branch,
+                else_branch,
+                ..
+            } => in_expr(cond)
+                .or_else(|| in_block(then_branch))
+                .or_else(|| in_block(else_branch)),
+            Expr::Block(b) => in_block(b),
+            _ => None,
+        }
+    }
+    m.functions.iter().find_map(|f| in_block(&f.body))
+}
+
 fn scan_block_for_builtin(b: &Block) -> Option<(String, Span)> {
     for s in &b.stmts {
         let inner = match s {
@@ -779,6 +880,22 @@ fn scan_block_for_builtin(b: &Block) -> Option<(String, Span)> {
             | Stmt::LetStarBinding { value, .. }
             | Stmt::ExprStmt { expr: value, .. }
             | Stmt::Assign { value, .. } => scan_expr_for_builtin(value),
+            // Loop bodies must be scanned too, or an unsupported builtin hidden
+            // in a `while`/`for` body escapes the pre-check and hits the
+            // emitter's `unreachable!`. (`While` was a pre-existing scan hole.)
+            Stmt::While { cond, body, .. } => {
+                scan_expr_for_builtin(cond).or_else(|| scan_block_for_builtin(body))
+            }
+            Stmt::ForRange {
+                start,
+                stop,
+                step,
+                body,
+                ..
+            } => scan_expr_for_builtin(start)
+                .or_else(|| scan_expr_for_builtin(stop))
+                .or_else(|| scan_expr_for_builtin(step))
+                .or_else(|| scan_block_for_builtin(body)),
             _ => None,
         };
         if inner.is_some() {

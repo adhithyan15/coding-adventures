@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.5.0 — `ForRange` (numeric for-loop) + a scan hole (SIR16)
+
+Fixes a **pre-existing panic**: `Stmt::ForRange` (`for i in 0...3`) is gated by
+`Feature::Loops` alone (accepted since 0.4.0), so a producer emitting a numeric
+for-loop reached the emitter — which sent it to `unreachable!`. It now lowers to
+a native `int64_t` counter loop mirroring the Go/Rust backends byte-for-byte:
+
+- `start`/`stop`/`step` are evaluated ONCE (they may have side effects) into
+  `SirValue` temporaries, then reduced to `int64_t` via the new `_sir_as_int`
+  runtime helper (a truncating integer view — a float bound truncates toward
+  zero).
+- the stop is EXCLUSIVE and the direction follows the step's sign
+  (`step >= 0 ? i < stop : i > stop`), so a descending loop with a negative step
+  works — matching Go's `_sir_range_cont`.
+- the loop `var` is declared INSIDE the loop body block, so it (and any
+  body-local) is block-scoped — matching the validator (which rewinds the loop
+  body) and Go's `:=` counter, never clobbering an enclosing same-named local.
+  The outer `{…}` scopes the counter temporaries (nesting-safe via `fresh_id`).
+
+Also closes a **pre-existing scan hole** (same class): the unsupported-builtin
+pre-check (`scan_block_for_builtin`) did not recurse into `While` or `ForRange`
+bodies, so an unknown builtin hidden in a loop body escaped the clean rejection
+and hit the emitter's `unreachable!`. It now scans both; such input rejects
+cleanly with a `BackendError` instead of panicking.
+
+Makes the emitter TOTAL for its accepted feature set. `ForEach` also observes
+only `Feature::Loops` (not gated out), so it was likewise a latent
+`unreachable!` — `compile` now rejects it CLEANLY via a `first_foreach`
+pre-pass (a clear `UnsupportedFeature` error) until the sequences batch gives it
+an iterator, rather than panicking. The sequence nodes stay rejected at the
+feature gate — a follow-up adds `Feature::Sequences` (a real `SIR_SEQ`
+runtime).
+
 ## 0.4.0 — control flow, mutation & the rest of the comparisons (SIR16)
 
 Accepts `Feature::Loops` and `Feature::MutableBindings`, and:

@@ -138,6 +138,15 @@ double _sir_as_num(SirValue v) {
     return 0.0;
 }
 
+/* Truncating integer view of a numeric value — the loop-counter form used by
+ * `ForRange` (which counts in int64, matching the Go/Rust backends).  A float
+ * bound truncates toward zero; a non-number yields 0. */
+int64_t _sir_as_int(SirValue v) {
+    if (v.tag == SIR_INT)   return v.as.i;
+    if (v.tag == SIR_FLOAT) return (int64_t)v.as.f;
+    return 0;
+}
+
 const char *_sir_str_of(SirValue v) {
     return (v.tag == SIR_STR || v.tag == SIR_SYM) ? v.as.s : "";
 }
