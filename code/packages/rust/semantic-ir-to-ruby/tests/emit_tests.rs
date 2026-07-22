@@ -591,3 +591,114 @@ fn unsupported_builtin_in_while_body_is_rejected_not_panicked() {
     let result = compile(&loops_module(vec![while_stmt]));
     assert!(result.is_err(), "an unsupported builtin in a while body must be rejected cleanly");
 }
+
+// ── SIR16 maps: HAND-BUILT modules (producer-agnostic) ──────────────────────
+//
+// The Ruby frontend does not yet PRODUCE MapLit/MapGet/MapSet, so a source
+// test would mask them. SIR is producer-agnostic — a C→SIR / Twig→SIR module
+// can carry these with a `{Maps}` manifest this backend now accepts. Built
+// directly; each proves the emitter is total and matches native Hash.
+
+use semantic_ir::MapEntry;
+
+fn strlit(v: &str) -> Expr {
+    Expr::StrLit { value: v.into(), span: s2() }
+}
+fn maplit(entries: Vec<(Expr, Expr)>) -> Expr {
+    Expr::MapLit {
+        entries: entries.into_iter().map(|(k, v)| MapEntry { key: k, value: v }).collect(),
+        span: s2(),
+    }
+}
+fn mapget(map: Expr, key: Expr) -> Expr {
+    Expr::MapGet { map: Box::new(map), key: Box::new(key), span: s2() }
+}
+/// A `main` module declaring Maps + Sequences + Strings + Loops.
+fn map_module(stmts: Vec<Stmt>) -> Module {
+    let mut m = seq_module(stmts);
+    m.manifest = FeatureManifest::from_features(&[
+        Feature::Maps,
+        Feature::Sequences,
+        Feature::Strings,
+        Feature::Loops,
+    ]);
+    m
+}
+fn run_map(stmts: Vec<Stmt>) -> Option<String> {
+    run_ruby(&compile(&map_module(stmts)).expect("map module must compile, not panic").source)
+}
+fn let_(name: &str, value: Expr) -> Stmt {
+    Stmt::LetBinding { name: name.into(), sir_type: None, value, span: s2() }
+}
+
+#[test]
+fn map_get_reads_present_and_missing_keys() {
+    // `h = {1 => 10, 2 => 20}; puts h[2]; puts h[9]` → 20, then nil (a missing
+    // key yields nil, no raise — matching `_sir_map_get`).
+    let out = run_map(vec![
+        let_("h", maplit(vec![(ilit(1), ilit(10)), (ilit(2), ilit(20))])),
+        puts(mapget(local("h"), ilit(2))),
+        puts(mapget(local("h"), ilit(9))),
+    ]);
+    match out {
+        Some(o) => assert_eq!(o, "20\nnil"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn map_set_inserts_and_updates_the_shared_hash() {
+    // `h = {1 => 10}; h[2] = 20; h[1] = 99; puts h[1]; puts h[2]` → 99, 20.
+    let out = run_map(vec![
+        let_("h", maplit(vec![(ilit(1), ilit(10))])),
+        Stmt::MapSet { map: local("h"), key: ilit(2), value: ilit(20), span: s2() },
+        Stmt::MapSet { map: local("h"), key: ilit(1), value: ilit(99), span: s2() },
+        puts(mapget(local("h"), ilit(1))),
+        puts(mapget(local("h"), ilit(2))),
+    ]);
+    match out {
+        Some(o) => assert_eq!(o, "99\n20"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn map_composite_key_is_structural() {
+    // A composite key `[1, 2]` looks up by VALUE (Ruby Array#eql?/#hash are
+    // structural), so a DISTINCT equal array finds the entry.
+    let out = run_map(vec![
+        let_("h", maplit(vec![(seq(vec![ilit(1), ilit(2)]), strlit("found"))])),
+        puts(mapget(local("h"), seq(vec![ilit(1), ilit(2)]))),
+    ]);
+    match out {
+        Some(o) => assert_eq!(o, "found"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn map_literal_emits_a_native_hash() {
+    let rb = compile(&map_module(vec![puts(maplit(vec![(ilit(1), ilit(2))]))]))
+        .expect("compile")
+        .source;
+    assert!(rb.contains("{1 => 2}"), "MapLit should be a native Hash literal:\n{rb}");
+}
+
+#[test]
+fn for_each_over_a_map_does_not_panic() {
+    // Accepting Maps makes `ForEach` over a Hash reachable (Loops + Maps). The
+    // emitted `(h).each { |kv| … }` works on a Hash (yielding [k, v]) as well
+    // as an Array — so the backend must not panic and the program must run.
+    let m = map_module(vec![Stmt::ForEach {
+        var: "kv".into(),
+        iter: maplit(vec![(ilit(1), ilit(10))]),
+        body: Block { stmts: vec![puts(local("kv"))], value: Expr::NilLit { span: s2() }, span: s2() },
+        span: s2(),
+    }]);
+    // Must compile without an `unreachable!` panic.
+    let rb = compile(&m).expect("ForEach over a map must compile, not panic").source;
+    assert!(rb.contains(").each do |kv|"), "map ForEach is a .each block:\n{rb}");
+    if let Some(out) = run_ruby(&rb) {
+        assert!(!out.is_empty(), "the loop ran and printed the entry");
+    }
+}

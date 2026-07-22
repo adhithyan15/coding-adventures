@@ -87,6 +87,16 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // not accepted); array-*pattern* destructuring needs `ShortCircuit` (not
     // accepted) — so those stay rejected at the feature gate.
     Feature::Sequences,
+    // ── SIR16 maps ───────────────────────────────────────────────────
+    // Ruby has a native Hash, so the three `maps` nodes render directly (no
+    // runtime value-boxing like the Go/Rust `_sir_map_*`):
+    //   `Expr::MapLit` → `{k => v, …}` (a Hash literal; keys compared by
+    //                     `eql?`/`hash`, which is structural for composite keys)
+    //   `Expr::MapGet` → `(h)[k]`      (missing key → nil, no raise)
+    //   `Stmt::MapSet` → `(h)[k] = v`  (insert/update, mutates the shared Hash)
+    // `ForEach` over a Hash is already covered — `(h).each { |kv| … }` works on
+    // a Hash as well as an Array — so accepting Maps adds no new `unreachable!`.
+    Feature::Maps,
 ];
 
 impl Backend for RubyBackend {
