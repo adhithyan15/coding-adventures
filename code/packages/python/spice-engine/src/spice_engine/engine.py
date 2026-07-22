@@ -357,6 +357,7 @@ def bjt_at_temperature(
     return replace(
         bjt,
         Is=bjt.Is * saturation_scale,
+        Ise=bjt.Ise * saturation_scale,
         Vt=bjt.Vt * ratio,
     )
 
@@ -596,7 +597,7 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
-        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg, element.Vaf, element.Nf, element.Nr, element.Vje, element.Mje, element.Vjc, element.Mjc, element.Fc, element.Var, element.Ikf)
+        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg, element.Vaf, element.Nf, element.Nr, element.Vje, element.Mje, element.Vjc, element.Mjc, element.Fc, element.Var, element.Ikf, element.Ise, element.Ne)
     if isinstance(element, VCVS):
         return VCVS(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), _map_subckt_node(element.ctrl_plus, instance_name, node_map), _map_subckt_node(element.ctrl_minus, instance_name, node_map), element.gain)
     if isinstance(element, VCCS):
@@ -9042,6 +9043,15 @@ def _bjt_forward_transport(
     return collector_current, gm, charge_factor
 
 
+def _bjt_base_emitter_leakage(el: BJT, junction_voltage: float) -> tuple[float, float]:
+    if el.Ise == 0.0:
+        return 0.0, 0.0
+    thermal_voltage = el.Vt * el.Ne
+    exponent = max(-40.0, min(40.0, junction_voltage / thermal_voltage))
+    exp_value = math.exp(exponent)
+    return el.Ise * (exp_value - 1.0), el.Ise / thermal_voltage * exp_value
+
+
 def _stamp_bjt(
     G: list[list[float]],
     b: list[float],
@@ -9129,8 +9139,9 @@ def _stamp_bjt(
     output_conductance = (
         0.0 if el.Vaf == 0.0 else base_collector_current / el.Vaf / charge_factor
     )
-    g_pi = base_gm / el.beta_f
-    Ib0 = base_collector_current / el.beta_f
+    leakage_current, leakage_conductance = _bjt_base_emitter_leakage(el, Vjunc)
+    g_pi = base_gm / el.beta_f + leakage_conductance
+    Ib0 = base_collector_current / el.beta_f + leakage_current
 
     Ieq_junc = Ib0 - g_pi * Vjunc      # junction Norton offset
     Ieq_coll = Ic0 - gm * Vjunc - output_conductance * output_voltage
@@ -9223,6 +9234,14 @@ def _validate_bjt(el: BJT) -> None:
     if not math.isfinite(el.Ikf) or el.Ikf < 0.0:
         raise ValueError(
             f"{el.name}: BJT forward beta roll-off current must be finite and non-negative"
+        )
+    if not math.isfinite(el.Ise) or el.Ise < 0.0:
+        raise ValueError(
+            f"{el.name}: BJT base-emitter leakage saturation current must be finite and non-negative"
+        )
+    if not math.isfinite(el.Ne) or el.Ne <= 0.0:
+        raise ValueError(
+            f"{el.name}: BJT base-emitter leakage emission coefficient must be finite and positive"
         )
     if not math.isfinite(el.Nf) or el.Nf <= 0.0:
         raise ValueError(f"{el.name}: BJT forward emission coefficient must be finite and positive")
@@ -12471,7 +12490,8 @@ def _stamp_ac(
             0.0 if el.Vaf == 0.0 else base_collector_current / el.Vaf / charge_factor
         )
         gm_reverse: float = (el.Is / reverse_thermal_voltage) * exp_reverse
-        g_pi: float = base_gm / el.beta_f
+        _, leakage_conductance = _bjt_base_emitter_leakage(el, Vjunc)
+        g_pi: float = base_gm / el.beta_f + leakage_conductance
         diffusion_capacitance = el.Tf * gm_b
         reverse_diffusion_capacitance = el.Tr * gm_reverse
         y_be = g_pi + 1j * omega * (
@@ -13091,7 +13111,8 @@ def _build_ss_matrix(
             output_conductance = (
                 0.0 if el.Vaf == 0.0 else base_collector_current / el.Vaf / charge_factor
             )
-            g_pi: float = base_gm / el.beta_f
+            _, leakage_conductance = _bjt_base_emitter_leakage(el, Vjunc)
+            g_pi: float = base_gm / el.beta_f + leakage_conductance
             _stamp_g(G, node_to_idx, el.collector, el.emitter, output_conductance)
 
             if el.polarity == "NPN":
@@ -13972,6 +13993,8 @@ def sens_dc(
                     Vaf=el.Vaf,
                     Var=el.Var,
                     Ikf=el.Ikf,
+                    Ise=el.Ise,
+                    Ne=el.Ne,
                     Nf=el.Nf,
                     Nr=el.Nr,
                     Vje=el.Vje,
@@ -14000,6 +14023,8 @@ def sens_dc(
                     Vaf=el.Vaf,
                     Var=el.Var,
                     Ikf=el.Ikf,
+                    Ise=el.Ise,
+                    Ne=el.Ne,
                     Nf=el.Nf,
                     Nr=el.Nr,
                     Vje=el.Vje,
@@ -14238,6 +14263,8 @@ def _vary_element(el: Element, tolerance: float, distribution: str) -> Element:
             Vaf=el.Vaf,
             Var=el.Var,
             Ikf=el.Ikf,
+            Ise=el.Ise,
+            Ne=el.Ne,
             Nf=el.Nf,
             Nr=el.Nr,
             Vje=el.Vje,
@@ -14693,7 +14720,8 @@ def _collect_noise_sources(
             I_C, _, _ = _bjt_forward_transport(
                 el, base_collector_current, base_gm, early_factor
             )
-            psd = q2 * abs(I_C)
+            leakage_current, _ = _bjt_base_emitter_leakage(el, Vjunc)
+            psd = q2 * (abs(I_C) + abs(leakage_current))
             n_b = None if _is_ground(el.base) else node_to_idx[el.base]
             n_e = None if _is_ground(el.emitter) else node_to_idx[el.emitter]
             sources.append((el.name, "shot", n_b, n_e, psd))

@@ -34,6 +34,33 @@ fn bjt_forward_beta_rolloff_reduces_shot_noise() {
     assert!(source_psd(1.0e-4) < source_psd(0.0));
 }
 
+#[test]
+fn bjt_base_emitter_leakage_increases_shot_noise() {
+    let source_psd = |leakage_current: f64| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vbase", "base", "0", 0.65,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rload", "out", "0", 1_000.0,
+        )));
+        let mut transistor = Bjt::new("Q1", "out", "base", "0");
+        transistor.base_emitter_leakage_saturation_current = leakage_current;
+        transistor.base_emitter_leakage_emission_coefficient = 1.5;
+        circuit.add(Element::Bjt(transistor));
+        noise_ac(&circuit, "out", "Vbase", &[1_000.0], 300.0)
+            .unwrap()
+            .points[0]
+            .entries
+            .iter()
+            .find(|entry| entry.element_name == "Q1")
+            .unwrap()
+            .source_psd
+    };
+
+    assert!(source_psd(1.0e-10) > source_psd(0.0));
+}
+
 const BOLTZMANN: f64 = 1.380_649e-23;
 const MOSFET_CHANNEL_NOISE_GAMMA: f64 = 2.0 / 3.0;
 
