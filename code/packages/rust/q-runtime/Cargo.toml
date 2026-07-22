@@ -1,0 +1,17 @@
+[package]
+name = "coding-adventures-q-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "Tree-walking evaluator for the Q (kdb+) language over array-runtime"
+
+[dependencies]
+coding-adventures-q-parser = { path = "../q-parser" }
+array-runtime = { package = "coding-adventures-array-runtime", path = "../array-runtime" }
+parser = { path = "../parser" }
+
+[dev-dependencies]
+# Only used by value.rs's own round-trip regression test (confirming this
+# crate's negative-number display re-tokenizes back into a single negative
+# NUMBER, not MINUS) -- the evaluator itself never needs the lexer directly,
+# only `q-parser` (which already depends on it internally).
+coding-adventures-q-lexer = { path = "../q-lexer" }
