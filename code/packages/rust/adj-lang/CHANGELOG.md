@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.57.0] — 2026-07-22
+
+### Added — NUM-6a: the `round_to(x, n)` precision narrowing (ADJ-NUMERIC-SUBSTRATE §4.1–§4.4)
+
+A formula body (or a `let`) can now round to a stated precision:
+
+```
+let dose_rounded = round_to(total / doses, 2)   % 10/3 → 3.33, exactly 333/100
+```
+
+- New `ExprAst::RoundTo(x, n)`, lowering to the engine's exact-path
+  `ComputeExpr::Round` (default half-even mode). Dimension-preserving.
+- Surface is the **native application** grammar — `round_to` is recognised as a
+  built-in during `Apply` lowering, *before* the user-formula lookup, so it reuses
+  the same comma-list call grammar as `quotient(a, b)` with **no new grammar and no
+  LaTeX change**. (The kickoff spec's LaTeX `\operatorname{round}(x, n)` form does
+  not parse a comma-separated argument list — the frontend splits on the top-level
+  comma — so §4.1 was updated to the native surface; see the spec's surface note.)
+- The precision `n` must be a **non-negative integer literal** ≤ 100 (a DoS cap);
+  a non-integer, negative, oversized, or non-literal `n` is a clean compile error
+  (`FormulaBadArgument`), never a silent mis-rounding.
+
 ## [0.56.0] — 2026-07-21
 
 ### Added — RS-4 PR-D4a: the `quote`/`at`/`snapshot` surface binding (ADJ-REASON-MATH §E.3.1)

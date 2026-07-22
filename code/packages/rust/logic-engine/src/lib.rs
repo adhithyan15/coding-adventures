@@ -49,7 +49,13 @@ use std::collections::{HashMap, HashSet};
 
 use logic_core::{unify, LogicVar, Number, Substitution, Term};
 
-pub use compute::{compute, ComputeError, ComputeExpr, ComputeOp, DerivationNode, Derived};
+pub use compute::{
+    compute, ComputeError, ComputeExpr, ComputeOp, DerivationNode, Derived, RoundSpec,
+};
+/// Re-exported so consumers can name the rounding mode of a
+/// [`ComputeExpr::Round`]/[`DerivationNode::Round`] without depending on
+/// `bignum-core` directly (NUM-6a).
+pub use bignum_core::RoundingMode;
 pub use conversion::{add_or_sub, convert_value, ConvError, Conversion, ConversionTable};
 pub use datetime::{
     after, before, date_add, date_ordinal, days_between, read_date, read_duration_days,

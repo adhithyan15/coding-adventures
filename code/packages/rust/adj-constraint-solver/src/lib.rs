@@ -363,6 +363,9 @@ fn expr_to_pred(e: &ComputeExpr) -> Option<Predicate> {
         // piecewise-linear, not affine), so it is out of LIA scope.
         ComputeExpr::Unary(_, _) => None,
         ComputeExpr::Agg(_, _) => None,
+        // A `round_to(x, n)` narrowing is neither linear nor polynomial — out of
+        // scope for this tactic, exactly like a unary round (NUM-6a).
+        ComputeExpr::Round { .. } => None,
     }
 }
 
@@ -653,6 +656,9 @@ fn linearize(e: &ComputeExpr) -> Option<LinForm> {
         // fragment, so it can't be represented as a `LinForm`.
         ComputeExpr::Unary(_, _) => None,
         ComputeExpr::Agg(_, _) => None,
+        // A `round_to(x, n)` narrowing is neither linear nor polynomial — out of
+        // scope for this tactic, exactly like a unary round (NUM-6a).
+        ComputeExpr::Round { .. } => None,
     }
 }
 
@@ -1997,6 +2003,13 @@ fn substitute_observed(
         ComputeExpr::Unary(op, a) => {
             ComputeExpr::Unary(*op, Box::new(substitute_observed(a, variables, kb)))
         }
+        // Rebuild the narrowing with its operand substituted, keeping the precision
+        // and mode (NUM-6a) — mirrors the unary rebuild above.
+        ComputeExpr::Round { spec, mode, expr } => ComputeExpr::Round {
+            spec: *spec,
+            mode: *mode,
+            expr: Box::new(substitute_observed(expr, variables, kb)),
+        },
         ComputeExpr::Agg(_, _) => e.clone(),
     }
 }
@@ -2082,6 +2095,9 @@ fn poly_of(e: &ComputeExpr, x: &str) -> Option<Poly> {
         // polynomial fragment the univariate root-finders handle.
         ComputeExpr::Unary(_, _) => None,
         ComputeExpr::Agg(_, _) => None,
+        // A `round_to(x, n)` narrowing is neither linear nor polynomial — out of
+        // scope for this tactic, exactly like a unary round (NUM-6a).
+        ComputeExpr::Round { .. } => None,
     }
 }
 
@@ -2287,6 +2303,9 @@ fn expr_to_ir(e: &ComputeExpr) -> Option<IRNode> {
         // bridge can solve — reject rather than silently drop.
         ComputeExpr::Unary(_, _) => None,
         ComputeExpr::Agg(_, _) => None,
+        // A `round_to(x, n)` narrowing is neither linear nor polynomial — out of
+        // scope for this tactic, exactly like a unary round (NUM-6a).
+        ComputeExpr::Round { .. } => None,
     }
 }
 
@@ -2308,6 +2327,8 @@ fn is_constant_expr(e: &ComputeExpr) -> bool {
         // `|c|` is constant iff its operand is (the absolute value of a constant
         // is a constant); `|x|` mentions the symbol `x`, so it is not.
         ComputeExpr::Unary(_, a) => is_constant_expr(a),
+        // `round_to(c, n)` is constant iff its operand is — same rule as unary.
+        ComputeExpr::Round { expr, .. } => is_constant_expr(expr),
     }
 }
 

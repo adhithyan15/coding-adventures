@@ -96,27 +96,35 @@ never a silent middle step. Provide, as engine ops and grounded stdlib formulas:
 - Each is provenanced (its definition) and each records the **exact source value** it was
   narrowed from, so the audit shows both the exact number and its rendered form.
 
-### 4.1 Surface — one math frontend, no parallel call grammar
+### 4.1 Surface — a recognised built-in over the existing application grammar
 
-The rounding built-ins are **not** a new native function-call syntax. Every rounding and
-transcendental operator in ADJ today enters through the single `latex "…"` frontend —
-`⌊x⌉` and `\operatorname{round}(x)` both lower to `ComputeOp::Round`, `⌊x⌋` to `Floor`,
-`\sin(x)` to the trig family — and formula bodies compose *user* formulas through
-`Apply` (`quotient(a, b)`). There is deliberately **no** built-in-call grammar. `round_to`
-and `round_sig` honour that one-surface design: they are the **precision-carrying twins** of
-the existing integer roundings, written as the two-argument operator-name applications
+`round_to`/`round_sig` are written as **native applications**, reusing the exact comma-list
+call grammar that user formula applications already use (`quotient(a, b)`):
 
 ```
-\operatorname{round}(x, n)      % round x to n decimal PLACES   → round_to(x, n)
-\operatorname{roundsig}(x, n)   % round x to n significant FIGS  → round_sig(x, n)
+round_to(x, n)      % round x to n decimal PLACES        (NUM-6a)
+round_sig(x, n)     % round x to n significant FIGURES    (NUM-6b)
 ```
 
-where `n` is a **non-negative integer literal**. The existing unary `\operatorname{round}(x)`
-(and `⌊x⌉`) is unchanged — it is exactly `round_to(x, 0)`. The two-argument form is recognised
-by the `latex` adapter from the comma-separated argument list (the same comma/semicolon fence
-machinery the frontend already parses); a non-integer or negative `n` is a **compile error**,
-never a silent truncation. Keeping these on the LaTeX surface means zero new lexer/parser
-grammar and no second way to write a call.
+where `n` is a **non-negative integer literal** no larger than the precision cap (100 places —
+a DoS bound far beyond §3's 256-bit default precision). They are **recognised by name** during
+`Apply` lowering, *before* the user-formula lookup, so they need no formula definition, no new
+grammar production, and no LaTeX change — the application parser already accepts them. A
+non-integer, negative, oversized, or non-literal `n` is a **compile error**, never a silent
+truncation. The existing integer roundings are unchanged: `round_to(x, 0)` is exactly the
+nearest-integer `Round` (also reachable as `⌊x⌉` / `\operatorname{round}(x)` through the
+`latex "…"` frontend).
+
+> **Surface note (divergence from the first §4.1 draft).** The kickoff spec proposed the
+> two-argument *LaTeX* operator-name form `\operatorname{round}(x, n)`. Implementation (NUM-6a)
+> found that the `latex` frontend does **not** keep an operator-name adjacent to a
+> **comma-separated** argument list — a top-level comma splits the expression into a sequence,
+> dropping the `round` — because `round` is not registered as an argument-taking function in the
+> `latex` crate (unlike `\min`/`\max`, which are). Registering it there is a separate cross-crate
+> change. The **native application grammar** already parses `name(a, b)` comma-lists correctly, so
+> `round_to(x, n)` as a recognised `Apply` built-in is the surface that works today with zero new
+> grammar — the same "no second way to write a call" spirit, on the application surface rather
+> than the LaTeX one.
 
 ### 4.2 Rounding mode — stated, defaulting to round-half-even
 
