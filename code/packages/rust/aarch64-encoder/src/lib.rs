@@ -170,6 +170,11 @@ enum BranchKind {
     Imm26,
     /// `B.cond` — 19-bit signed PC-relative immediate (in 4-byte words).
     Imm19,
+    /// `ADR Xd, <label>` — 21-bit signed PC-relative immediate in **bytes**
+    /// (range ±1 MiB), split immlo[1:0] / immhi[20:2]. Unlike the branch kinds
+    /// the displacement is a byte count, not a word count — `ADR` addresses any
+    /// byte, which is what lets it point at a data word embedded in the stream.
+    AdrByte,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -694,6 +699,50 @@ impl Assembler {
         word_idx
     }
 
+    /// `ADR Xd, <label>` — load the **byte address** of `label` (PC-relative,
+    /// ±1 MiB) into `Xd`. Unlike [`adrp_placeholder`](Self::adrp_placeholder)
+    /// (page granularity, needs a companion `ADD`), `ADR` reaches any byte in
+    /// one instruction, so it is the natural way to point a register at a data
+    /// word embedded in the instruction stream (see [`emit_data_word`]).
+    ///
+    /// The displacement is resolved at [`finish`](Self::finish); a target more
+    /// than ±1 MiB away yields `EncodeError::BranchOutOfRange { bits: 21 }`.
+    ///
+    /// [`emit_data_word`]: Self::emit_data_word
+    pub fn adr(&mut self, rd: Reg, target: LabelId) {
+        // ADR encoding: op=0 immlo[30:29] 10000 immhi[23:5] Rd[4:0]  (base 0x10000000).
+        self.emit_branch(target, BranchKind::AdrByte, 0x10000000 | rd.idx());
+    }
+
+    /// Emit `ADR Xd, #0` as a **placeholder** and return its word index, for a
+    /// caller that patches the 21-bit byte displacement itself once a target offset
+    /// is known (the multi-function linker analogue of [`adrp_placeholder`], but for
+    /// `ADR` — see [`adr`] for the range/encoding). `ADR` is PC-relative in bytes, so
+    /// the displacement between two locations in one section is independent of the
+    /// section's runtime base address; that is exactly why it is the right tool for a
+    /// cross-function code address that must be baked without a load-time relocation.
+    ///
+    /// [`adr`]: Self::adr
+    pub fn adr_placeholder(&mut self, rd: Reg) -> usize {
+        let word_idx = self.code.len();
+        // ADR Xd, #0  =  op:0 immlo:00 10000 immhi:0 Rd
+        self.emit(0x10000000 | rd.idx());
+        word_idx
+    }
+
+    /// Append a raw 32-bit **data word** (little-endian) to the stream and
+    /// return its word index. This is not an instruction — it is constant data
+    /// (a `u32`/`i32` table element) that following code reads via [`adr`]. It
+    /// is only safe where control flow cannot fall into it (e.g. after a `ret`,
+    /// or in a region reached only by `adr`, never by execution).
+    ///
+    /// [`adr`]: Self::adr
+    pub fn emit_data_word(&mut self, word: u32) -> usize {
+        let idx = self.code.len();
+        self.emit(word);
+        idx
+    }
+
     // -----------------------------------------------------------------------
     // Arithmetic — immediate form (12-bit, no shift)
     // -----------------------------------------------------------------------
@@ -1181,6 +1230,21 @@ impl Assembler {
                     // imm19 sits in bits [23:5] of the B.cond word.
                     *word = (*word & !(0x0007FFFF << 5)) | (imm19 << 5);
                 }
+                BranchKind::AdrByte => {
+                    // ADR's immediate is a BYTE displacement (any byte, ±1 MiB),
+                    // not a word count — so multiply the word delta by 4.
+                    let delta_bytes = delta_words * 4;
+                    if !(-(1 << 20)..(1 << 20)).contains(&delta_bytes) {
+                        return Err(EncodeError::BranchOutOfRange { bits: 21, delta_words });
+                    }
+                    let imm21 = (delta_bytes as u32) & 0x001F_FFFF;
+                    let immlo = imm21 & 0x3; //  bits [1:0] → word bits [30:29]
+                    let immhi = imm21 >> 2; //  bits [20:2] → word bits [23:5]
+                    // Clear the old immlo/immhi fields, then set them.
+                    *word = (*word & !((0x3 << 29) | (0x0007_FFFF << 5)))
+                        | (immlo << 29)
+                        | (immhi << 5);
+                }
             }
         }
 
@@ -1248,6 +1312,62 @@ mod tests {
         let mut a = Assembler::new();
         a.mov_imm64(Reg::X0, 5);
         assert_eq!(a.finish().unwrap(), words_to_bytes(&[0xD28000A0]));
+    }
+
+    // ---- ADR (PC-relative byte address) + embedded data ----
+
+    #[test]
+    fn adr_forward_to_data_word() {
+        // adr x3, <lbl>; ret; <lbl>: .word 0xDEADBEEF
+        // The label is 2 words (8 bytes) after the ADR → imm21 = 8.
+        //   immlo = 8 & 3 = 0, immhi = 8 >> 2 = 2, Rd = 3
+        //   word  = 0x10000000 | (2 << 5) | 3 = 0x10000043
+        let mut a = Assembler::new();
+        let lbl = a.create_label();
+        a.adr(Reg::X3, lbl);
+        a.ret();
+        a.bind(lbl).unwrap();
+        a.emit_data_word(0xDEAD_BEEF);
+        let bytes = a.finish().unwrap();
+        assert_eq!(&bytes[0..4], &0x10000043u32.to_le_bytes(), "ADR x3, .+8");
+        assert_eq!(&bytes[4..8], &0xD65F03C0u32.to_le_bytes(), "RET");
+        assert_eq!(&bytes[8..12], &0xDEAD_BEEFu32.to_le_bytes(), "data word verbatim");
+    }
+
+    #[test]
+    fn adr_zero_displacement() {
+        // adr x0, <here> where the label is the ADR itself → imm = 0 → 0x10000000.
+        let mut a = Assembler::new();
+        let lbl = a.create_label();
+        a.bind(lbl).unwrap();
+        a.adr(Reg::X0, lbl);
+        assert_eq!(a.finish().unwrap(), words_to_bytes(&[0x10000000]));
+    }
+
+    #[test]
+    fn adr_placeholder_emits_bare_adr() {
+        // adr_placeholder(x0) = `ADR x0, #0` = 0x10000000; caller patches the imm.
+        let mut a = Assembler::new();
+        let idx = a.adr_placeholder(Reg::X0);
+        assert_eq!(idx, 0);
+        assert_eq!(a.finish().unwrap(), words_to_bytes(&[0x10000000]));
+    }
+
+    #[test]
+    fn adr_out_of_range_errors() {
+        // A label > 1 MiB away cannot be reached by ADR (±1 MiB).
+        let mut a = Assembler::new();
+        let lbl = a.create_label();
+        a.adr(Reg::X0, lbl);
+        // 1 MiB / 4 = 262144 words; push one past the limit before binding.
+        for _ in 0..(1 << 18) {
+            a.nop();
+        }
+        a.bind(lbl).unwrap();
+        assert!(matches!(
+            a.finish(),
+            Err(EncodeError::BranchOutOfRange { bits: 21, .. })
+        ));
     }
 
     #[test]
