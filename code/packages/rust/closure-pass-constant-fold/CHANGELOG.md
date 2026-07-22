@@ -2,6 +2,30 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.108.0] - 2026-07-22
+
+### Added - fold `Math.trunc(n)` and `Math.sign(n)` on a numeric literal
+
+Extended the existing single-argument `Math` fold (which already handled
+`abs`/`floor`/`ceil`/`round`) to two more static methods, verified byte-identical
+to the reference Closure Compiler (`closure-compiler-v20260712.jar`, SIMPLE):
+
+- `Math.trunc(4.9)` -> `4`, `Math.trunc(-4.9)` -> `-4` (round toward zero).
+- `Math.sign(7)` -> `1`, `Math.sign(-3)` -> `-1`, `Math.sign(0)` -> `0`.
+
+Both reuse the handler's existing safety gates: fold only when the single
+argument is a numeric literal, and DECLINE any result that is negative zero
+(`Math.trunc(-0.5)` === -0, `Math.sign(-0)` === -0) — the same conservative
+policy already applied to `Math.ceil(-0.5)`, since `-0` has no faithful
+numeric-literal spelling. `js_math_sign` implements the ECMAScript §21.3.2.34
+sign (which preserves signed zero and maps NaN to NaN) rather than Rust's
+`f64::signum`, whose `+-0 -> +-1` mapping would be wrong.
+
+The reference compiler does NOT fold the transcendental `Math` methods
+(`sqrt`/`cbrt`/`hypot`/`exp`/`log*`/`sin`/`cos`/`tan`/`atan`) even when the
+result is exact, so those remain declined and unchanged. `Math.pow`, `clz32`,
+`imul`, and the conditional `fround` are tracked separately.
+
 ## [0.107.0] - 2026-07-18
 
 ### Fixed — keep `a / b` unfolded past 7 fractional digits (match Closure)
