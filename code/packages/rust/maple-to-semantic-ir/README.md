@@ -213,3 +213,33 @@ functions with no access to the feature-tracking state).
   `if`/`elif`/`else`, boolean literals, `diff`/`int` calls, a
   multi-statement program) through `node`, proving the SIR23 codegen
   path is genuinely executable end-to-end, not just statically accepted.
+- `tests/oracle.rs` (HML01 §7) — oracle/golden testing: the same Maple
+  source run through **two** independent implementations
+  (`maple-runtime`, the native ground truth, vs. this crate →
+  `semantic-ir-to-javascript` → real `node`) and diffed, 43-case corpus
+  chosen to exercise Maple's own distinctive surface (bare booleans,
+  `<>` not-equal, the arrow-operator `Define`, the `elif` right-fold,
+  `List` vs. `Set`, `diff`/`int`). The direct Maple sibling of
+  `reduce-to-semantic-ir`'s/`derive-to-semantic-ir`'s own oracle files —
+  the last of the five SIR23 CAS-family frontends to get one. Only 12 of
+  43 cases currently agree end-to-end (bare atoms and pure-arithmetic/
+  identity-law folding); the other 31 are `known_bug` and documented, not
+  fixed here, for three disjoint, already-confirmed reasons (see `tests/
+  oracle.rs`'s own module doc and `CHANGELOG.md`'s `[0.1.1]` entry for
+  the full accounting): (1) the shared `semantic-ir-to-javascript`
+  backend has no held-form execution (`Assign`/`Define`/`If`), no
+  calculus (`D`/`Integrate`), and no per-source-language display
+  convention — the same gap `derive-to-semantic-ir`'s and
+  `reduce-to-semantic-ir`'s own oracle files already found; (2)
+  genuinely NEW here: a `True`/`False` CASE mismatch — Maple is the
+  first CAS-family language in this repo whose own native printer
+  lowercases the shared backend's `True`/`False` symbol to `true`/
+  `false`, so even a comparison/logic case that folds identically on
+  both sides still disagrees on letter case, something neither Reduce's
+  nor Derive's own oracle corpus ever hit (their own native printers
+  already keep `True`/`False` capitalized, matching the JS backend's
+  hardcoded spelling); and (3) `Set` (MA09's own new aggregate type) has
+  no evaluation handler on either side, but — unlike Reduce's `first`/
+  `append` — its elements still fold "for free" via applicative-order
+  argument evaluation on BOTH sides, so its `known_bug` cases are
+  display-convention-only, never a deeper evaluation gap.
