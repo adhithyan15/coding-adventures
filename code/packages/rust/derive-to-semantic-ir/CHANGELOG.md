@@ -1,5 +1,46 @@
 # Changelog
 
+## [0.1.3] - 2026-07-22
+
+### Fixed (upstream — `semantic-ir-to-javascript` 0.50.0, not this crate's own lowering)
+
+`semantic-ir-to-javascript`'s SIR23 addendum item 4 (Derive's own SIR23
+display convention — `SIR_DISPLAY_DERIVE`, that crate's own `CHANGELOG.md`
+`[0.50.0]` entry) gives `Symbolic.toDisplayString` a Derive-specific,
+precedence-aware infix/prefix/bracket/case-bridging renderer, ported
+directly from `derive-runtime::printer::print_derive`. This crate's own
+`src/lower.rs` is completely unchanged — every fix here is entirely
+upstream in the shared backend, confirmed by `tests/test_lower.rs`'s ~40
+pre-existing shape assertions still passing unmodified — but 7 more of
+`tests/oracle.rs`'s 38 `known_bug` cases now genuinely agree end-to-end
+(run and confirmed via `cargo test -p derive-to-semantic-ir --test oracle
+-- --nocapture`, not guessed), so their markers flip to `known_bug: None`
+here:
+
+- `negation_of_a_free_symbol` (`-x`) — prefix `Neg` rendering. Corrected a
+  mistaken assumption baked into its label ("Evaluation/display gap"):
+  there was never anything to evaluate (`x` is free), so this was always
+  a display-convention-only case.
+- `equation_with_a_free_variable_stays_symbolic` (`x = 4`) — infix
+  `Equal` rendering.
+- `flat_vector_literal` (`[1, 2, 3]`), `singleton_vector_literal`
+  (`[5]`), `vector_of_expressions_evaluates_elementwise` (`[1+1, 2*3,
+  2^3]`, whose elements item 1 already folds to `2, 6, 8`) — Derive's flat
+  `[a, b, c]` bracket convention.
+- `two_by_two_matrix_literal` (`[1, 2; 3, 4]`), `three_row_one_column_
+  matrix_literal` (`[1; 2; 3]`) — Derive's `;`-row-separated matrix
+  bracket convention.
+
+The remaining 13 `known_bug` cases stay `known_bug` — all blocked purely
+by the held-form/calculus evaluation gap (items 2/3, not part of this
+PR). Four of them (`vector_assignment_persists_across_statements`,
+`dif_differentiates_a_power`, `dif_of_sin_gives_cos`,
+`int_integrates_a_symbol`) have their reason strings **corrected in
+place** (stay `Some`, since they still disagree, but now note that only
+the evaluation half remains — the display half these reasons used to
+also blame is fixed by this PR and will render correctly the moment
+items 2/3 land).
+
 ## [0.1.2] - 2026-07-21
 
 ### Fixed (upstream — `semantic-ir-to-javascript` 0.47.0, not this crate's own lowering)
