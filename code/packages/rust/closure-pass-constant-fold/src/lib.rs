@@ -2720,7 +2720,10 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                 // finite literal inputs produce finite outputs, so the
                 // `is_finite` check is defense-in-depth.
                 if obj.name == "Math"
-                    && matches!(prop.name.as_str(), "abs" | "floor" | "ceil" | "round")
+                    && matches!(
+                        prop.name.as_str(),
+                        "abs" | "floor" | "ceil" | "round" | "trunc" | "sign"
+                    )
                     && arguments.len() == 1
                 {
                     if let Expression::NumericLiteral(n) = &arguments[0] {
@@ -2730,6 +2733,18 @@ fn fold_call(c: &CallExpression, st: &mut FoldState) -> Expression {
                             "floor" => x.floor(),
                             "ceil" => x.ceil(),
                             "round" => js_math_round(x),
+                            // `Math.trunc(x)` (ECMAScript 21.3.2.38) removes the
+                            // fractional part, rounding toward zero. Rust's
+                            // `f64::trunc` has the identical rule, including
+                            // `trunc(-0.5) == -0.0` — which the shared negative-
+                            // zero gate below then DECLINES, matching how the
+                            // handler already declines `Math.ceil(-0.5)`.
+                            "trunc" => x.trunc(),
+                            // `Math.sign(x)` (ECMAScript 21.3.2.34) yields -1/-0/+0/+1
+                            // (and NaN for NaN). We can't spell Rust's `signum`
+                            // here because it maps +-0 to +-1; see `js_math_sign`.
+                            // A `-0` result is likewise declined by the gate.
+                            "sign" => js_math_sign(x),
                             _ => unreachable!("matches! guard limits the method set"),
                         };
                         let neg_zero_result = result == 0.0
@@ -6230,6 +6245,34 @@ fn js_math_round(x: f64) -> f64 {
         x.floor() + 1.0
     } else {
         x.round()
+    }
+}
+
+/// Evaluate `Math.sign(x)` per ECMAScript §21.3.2.34. The result preserves the
+/// SIGN of a zero input (`sign(+0) == +0`, `sign(-0) == -0`) and is `NaN` for
+/// `NaN`; otherwise it is `+1` for a positive input and `-1` for a negative one.
+///
+/// Rust's `f64::signum` is deliberately NOT used: it maps `+0.0`→`+1.0` and
+/// `-0.0`→`-1.0`, which would corrupt the zero cases. Our callers only pass
+/// finite numeric literals (never `NaN`), and the caller's shared negative-zero
+/// gate then declines the `sign(-0) == -0` result — matching how the same
+/// handler already declines `Math.ceil(-0.5)` — so this stays a faithful,
+/// standalone model.
+///
+/// | x        | Math.sign(x) |
+/// |----------|--------------|
+/// | NaN      | NaN          |
+/// | +0 / -0  | +0 / -0      |
+/// | x > 0    | +1           |
+/// | x < 0    | -1           |
+fn js_math_sign(x: f64) -> f64 {
+    if x.is_nan() || x == 0.0 {
+        // NaN and both zeroes map to themselves (preserving the signed zero).
+        x
+    } else if x > 0.0 {
+        1.0
+    } else {
+        -1.0
     }
 }
 
@@ -12629,8 +12672,9 @@ mod tests {
 
     #[test]
     fn math_other_methods_do_not_fold() {
-        // pow is not among the modelled methods (max/min/abs/floor/ceil/round);
-        // e.g. Math.pow(2, 3) is left alone.
+        // pow is not among the modelled methods
+        // (max/min/abs/floor/ceil/round/trunc/sign); e.g. Math.pow(2, 3) is
+        // left alone. (Modelling pow is tracked separately.)
         let c = math_call("pow", vec![num(2.0, None), num(3.0, None)]);
         let (out, _, changed, _) = run_pass(program_with_expr(c, true));
         assert!(!changed, "Math.pow(2, 3) is not modelled and must not fold");
@@ -12664,6 +12708,44 @@ mod tests {
     }
 
     #[test]
+    fn fold_math_trunc_basic() {
+        // Math.trunc removes the fractional part, rounding toward zero.
+        assert_eq!(folded_number(math_call("trunc", vec![num(4.9, None)])), 4.0);
+        assert_eq!(folded_number(math_call("trunc", vec![num(4.1, None)])), 4.0);
+        assert_eq!(folded_number(math_call("trunc", vec![num(-4.9, None)])), -4.0);
+        assert_eq!(folded_number(math_call("trunc", vec![num(-4.1, None)])), -4.0);
+        assert_eq!(folded_number(math_call("trunc", vec![num(7.0, None)])), 7.0);
+        // A positive fraction truncating to +0 is representable and folds.
+        assert_eq!(folded_number(math_call("trunc", vec![num(0.5, None)])), 0.0);
+    }
+
+    #[test]
+    fn fold_math_sign_basic() {
+        // Math.sign yields -1 / +1 for negative / positive, and preserves +0.
+        assert_eq!(folded_number(math_call("sign", vec![num(7.0, None)])), 1.0);
+        assert_eq!(folded_number(math_call("sign", vec![num(0.5, None)])), 1.0);
+        assert_eq!(folded_number(math_call("sign", vec![num(-3.0, None)])), -1.0);
+        assert_eq!(folded_number(math_call("sign", vec![num(-0.001, None)])), -1.0);
+        assert_eq!(folded_number(math_call("sign", vec![num(0.0, None)])), 0.0);
+    }
+
+    #[test]
+    fn math_trunc_sign_negative_zero_declines() {
+        // A -0 result has no faithful numeric-literal spelling, so both decline
+        // (consistent with the ceil/round -0 policy):
+        //   Math.trunc(-0.5) === -0   Math.sign(-0) === -0
+        let cases = [
+            math_call("trunc", vec![num(-0.5, None)]),
+            math_call("sign", vec![num(-0.0, None)]),
+        ];
+        for c in cases {
+            let (out, _, changed, _) = run_pass(program_with_expr(c, true));
+            assert!(!changed, "a -0 result must not fold (no -0 literal spelling)");
+            assert!(matches!(extract_expr(&out), Expression::CallExpression(_)));
+        }
+    }
+
+    #[test]
     fn math_unary_negative_zero_result_does_not_fold() {
         // Results that are (or, from a negative input, would be) -0 have no
         // faithful numeric-literal spelling, so they DECLINE:
@@ -12686,7 +12768,7 @@ mod tests {
 
     #[test]
     fn math_unary_non_literal_or_wrong_arity_does_not_fold() {
-        for method in ["abs", "floor", "ceil", "round"] {
+        for method in ["abs", "floor", "ceil", "round", "trunc", "sign"] {
             // Non-literal argument.
             let c = math_call(method, vec![ident("x")]);
             let (out, _, changed, _) = run_pass(program_with_expr(c, true));
