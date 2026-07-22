@@ -136,6 +136,25 @@ struct FnStackMap {
     records: Vec<(u32, Vec<i32>)>,
 }
 
+/// Byte offset of every return address in `code` — the byte just after each `BL` /
+/// `BLR`. These are the safepoint PCs a precise stack walk observes; the synthetic GC
+/// wrapper needs its own so its frame (live throughout the program) resolves precisely
+/// instead of forcing a conservative re-scan of its callee. Mirrors the aarch64
+/// backend's own scan (which is private to that crate); AArch64 is fixed-width and the
+/// wrapper carries no inline data, so every 4-byte word is a real instruction.
+fn call_return_offsets(code: &[u8]) -> Vec<u32> {
+    let mut out = Vec::new();
+    for (i, word) in code.chunks_exact(4).enumerate() {
+        let w = u32::from_le_bytes([word[0], word[1], word[2], word[3]]);
+        let is_bl = (w >> 26) == 0b100101; // BL imm26
+        let is_blr = (w & 0xFFFF_FC1F) == 0xD63F_0000; // BLR Rn
+        if is_bl || is_blr {
+            out.push(((i + 1) * 4) as u32);
+        }
+    }
+    out
+}
+
 /// Map an [`aarch64_encoder::EncodeError`] to an [`AotError`].
 fn gc_asm_err(e: aarch64_encoder::EncodeError) -> AotError {
     AotError::Linker { status: None, stderr: format!("twig-aot: GC entry codegen: {e:?}") }
@@ -2712,9 +2731,29 @@ fn compile_module_to_text_raw(
             });
         }
     }
+    // Build the wrapper first, then register IT too (with an empty ref-slot map).
+    // The wrapper is `main`'s caller and is live on the stack during every
+    // collection, so if it were unmapped the precise walk would resolve `main`
+    // precisely but then, finding `main`'s *return address* (into the unmapped
+    // wrapper) unmapped, fall back to conservatively re-scanning `main`'s whole
+    // frame — re-pinning exactly the non-reference look-alikes precise roots exist
+    // to reclaim. Mapping the wrapper (it holds no references, so its records name
+    // no slots) keeps the entire generated call chain precise; the conservative
+    // fallback then only ever covers genuine runtime/libc frames, which hold no
+    // twig heap references in named slots.
+    let (wrapper_bytes, wrapper_relocs) = build_gc_wrapper(user_entry)?;
+    let wrapper_records = call_return_offsets(&wrapper_bytes)
+        .into_iter()
+        .map(|pc| (pc, Vec::new()))
+        .collect();
+    fn_maps.push(FnStackMap {
+        name: GC_AOT_ENTRY.to_string(),
+        len: wrapper_bytes.len(),
+        records: wrapper_records,
+    });
+
     let (init_bytes, init_relocs, fn_addr_relocs) = build_gc_init_stackmaps(&fn_maps)?;
     fn_results.push((GC_INIT_STACKMAPS.to_string(), init_bytes, init_relocs, Vec::new()));
-    let (wrapper_bytes, wrapper_relocs) = build_gc_wrapper(user_entry)?;
     fn_results.push((GC_AOT_ENTRY.to_string(), wrapper_bytes, wrapper_relocs, Vec::new()));
 
     // ── LANG41: external symbols are resolved by the system linker ───────────
@@ -2939,6 +2978,7 @@ mod dynval_runtime_golden;
 #[cfg(test)]
 mod tests {
     use super::*;
+
 
     /// The GC entry wrapper is well-formed: the two `BL`s (→ init, → user entry)
     /// are recorded as relocations for the linker to patch intra-module, and it

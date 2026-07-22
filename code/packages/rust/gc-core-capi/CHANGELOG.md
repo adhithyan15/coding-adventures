@@ -2,6 +2,21 @@
 
 All notable changes to this crate are documented here.
 
+## 0.13.0 - 2026-07-21 — twig-compat precise/observability aliases (AOT00-T1 increment C)
+
+Two `__twig_gc_*` aliases the native code generators emit for the GC-stress
+`live_bytes` differential that makes precise roots observable end to end:
+
+- **`__twig_gc_collect_precise()`** → `__gc_collect_precise` — a full collection
+  rooted **precisely** at the caller's stack via the frame-pointer walk (mapped
+  frames contribute exact reference slots, the rest conservative). Returns the freed
+  count. `#[inline(never)]`, same stack-ownership contract as `__gc_collect_precise`.
+- **`__twig_gc_stackmap_count()`** → `__gc_stackmap_count` — the number of registered
+  functions, a diagnostic that confirms an AOT image's `__gc_init_stackmaps` ran.
+
+Additive (`twig_compat` only); one new test. Enables the twig-aot `gc_collect_precise`
+/ `gc_stackmap_count` builtins.
+
 ## [0.12.0] — 2026-07-22
 
 ### Added

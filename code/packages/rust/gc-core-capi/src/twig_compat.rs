@@ -26,7 +26,7 @@
 //! Once the code generators are migrated to emit the `__gc_*` names directly,
 //! this shim can be deleted.
 
-use crate::stack_scan::{__gc_collect, __gc_safepoint};
+use crate::stack_scan::{__gc_collect, __gc_collect_precise, __gc_safepoint};
 use crate::{__gc_alloc, __gc_collection_count, __gc_live_bytes};
 
 /// `__twig_gc_alloc(n)` → [`__gc_alloc`]. Called by the emitted code and by
@@ -63,6 +63,24 @@ pub unsafe extern "C" fn __twig_gc_safepoint() {
     let _ = __gc_safepoint();
 }
 
+/// `__twig_gc_collect_precise()` → [`__gc_collect_precise`]. A full collection
+/// rooted **precisely** at the caller's stack via the frame-pointer walk (mapped
+/// frames contribute exact reference slots; the rest are conservative). Returns the
+/// freed-object count. This is the `__twig_gc_*` name the native code generators
+/// emit for a precise collect (`gc_collect_precise` builtin), the AOT00-T1
+/// increment-C entry point that makes precise roots observable end to end.
+///
+/// # Safety
+///
+/// Same contract as [`__gc_collect_precise`]: the calling thread must own its stack.
+/// `#[inline(never)]` keeps it a real frame below the mutator so the walk starts at
+/// the caller.
+#[no_mangle]
+#[inline(never)]
+pub unsafe extern "C" fn __twig_gc_collect_precise() -> i64 {
+    __gc_collect_precise()
+}
+
 /// `__twig_gc_live_bytes()` → [`__gc_live_bytes`].
 #[no_mangle]
 pub extern "C" fn __twig_gc_live_bytes() -> i64 {
@@ -73,6 +91,14 @@ pub extern "C" fn __twig_gc_live_bytes() -> i64 {
 #[no_mangle]
 pub extern "C" fn __twig_gc_collection_count() -> i64 {
     __gc_collection_count()
+}
+
+/// `__twig_gc_stackmap_count()` → [`crate::__gc_stackmap_count`]. Number of functions
+/// whose stack maps are currently registered — a diagnostic the native `gc_stackmap_count`
+/// builtin exposes so a program can confirm `__gc_init_stackmaps` ran.
+#[no_mangle]
+pub extern "C" fn __twig_gc_stackmap_count() -> i64 {
+    crate::__gc_stackmap_count()
 }
 
 #[cfg(test)]
@@ -105,6 +131,30 @@ mod tests {
         unsafe { __twig_gc_collect() };
         assert_eq!(__twig_gc_collection_count(), 1);
         assert_eq!(unsafe { *(p as *const i64) }, 0x7161);
+        core::hint::black_box(p);
+
+        __gc_reset();
+    }
+
+    /// The increment-C aliases forward to the precise/observability entry points:
+    /// `__twig_gc_collect_precise` runs a (stack-rooted) collection and returns a
+    /// count, and `__twig_gc_stackmap_count` reports the stack-map registry size.
+    #[test]
+    fn twig_precise_and_count_aliases_forward() {
+        let _guard = crate::TEST_LOCK.lock().unwrap_or_else(|e| e.into_inner());
+        __gc_reset();
+        crate::__gc_stackmap_reset();
+
+        // No functions registered yet → the count alias reads zero.
+        assert_eq!(__twig_gc_stackmap_count(), 0);
+
+        // A stack-rooted allocation survives a precise collect (no maps registered →
+        // the walk degrades to a conservative scan, which roots `p` on this stack).
+        let p = __twig_gc_alloc(16);
+        assert!(p != 0);
+        unsafe { *(p as *mut i64) = 0x5150 };
+        let _freed = unsafe { __twig_gc_collect_precise() };
+        assert_eq!(unsafe { *(p as *const i64) }, 0x5150, "precise collect kept the live root");
         core::hint::black_box(p);
 
         __gc_reset();
