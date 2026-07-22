@@ -120,11 +120,12 @@ everything else (`+` `*` `!` `,` `#` `&` `|` monadically; `!` `,` `#` `_`
 ## DoS guards
 
 - An independent recursion-depth guard in the evaluator
-  (`eval.rs::MAX_DEPTH`, 512) — **genuinely reachable**, unlike
-  `j-runtime`'s identical guard, through a legitimate (if unusual) long
-  chain of already-defined-function calls spread across many separate
-  top-level lines, since Q (unlike J) has real function calls to chain at
-  all.
+  (`eval.rs::MAX_DEPTH`, 760 — empirically measured against this crate's
+  own `call_lambda`-driven recursion, not copied from `j-runtime`'s
+  unrelated constant) — **genuinely reachable**, unlike `j-runtime`'s
+  identical guard, through a legitimate (if unusual) long chain of
+  already-defined-function calls spread across many separate top-level
+  lines, since Q (unlike J) has real function calls to chain at all.
 - `builtins::MAX_ARRAY_LENGTH` (1,000,000) bounds every primitive whose
   output size or work scales with a runtime-computed value (`!n`, take,
   join) and the flat stranded-literal/list-literal element counts, each

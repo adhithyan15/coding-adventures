@@ -96,12 +96,16 @@ All notable changes to this project will be documented in this file.
   negative-literal fold hook, unlike J (whose lexer reserves ASCII `-`
   exclusively for the `MINUS` token).
 - DoS guards: an independent recursion-depth guard in the evaluator
-  (`eval.rs::MAX_DEPTH`, 512) — **genuinely reachable** through a
-  legitimate, sufficiently long chain of already-defined-function calls
-  across many separate top-level lines (unlike `j-runtime`'s identical
-  guard, which per that crate's own doc comment is "never actually
-  reachable through genuine parsed input" since J has no user-defined
-  functions to chain calls through) — plus `builtins::MAX_ARRAY_LENGTH`
+  (`eval.rs::MAX_DEPTH`, 760 — empirically measured against this
+  evaluator's own `call_lambda`-driven recursion on a known 2 MiB stack,
+  not copied from `j-runtime`'s unrelated constant; see that constant's
+  own doc comment for the full binary-search methodology) —
+  **genuinely reachable** through a legitimate, sufficiently long chain
+  of already-defined-function calls across many separate top-level lines
+  (unlike `j-runtime`'s identical guard, which per that crate's own doc
+  comment is "never actually reachable through genuine parsed input"
+  since J has no user-defined functions to chain calls through) — plus
+  `builtins::MAX_ARRAY_LENGTH`
   (1,000,000) capping every primitive whose output size or work scales
   with a runtime-computed value (`!n`, take, join, and the flat
   stranded-literal/list-literal element counts), each checked *before*
