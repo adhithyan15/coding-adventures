@@ -1,5 +1,58 @@
 # Changelog
 
+## [0.1.2] - 2026-07-21
+
+### Fixed (upstream — `semantic-ir-to-javascript` 0.47.0, not this crate's own lowering)
+
+`semantic-ir-to-javascript`'s SIR23 addendum item 1 (`Symbolic.evalTerm`
+arithmetic/comparison/logic folding, that crate's own `CHANGELOG.md`
+`[0.47.0]` entry) lands a real, scoped evaluator for the symbolic domain.
+This crate's own `src/lower.rs` is completely unchanged — every fix here
+is entirely upstream in the shared backend, confirmed by `tests/
+test_lower.rs`'s ~40 pre-existing shape assertions still passing
+unmodified — but 14 of `tests/oracle.rs`'s 38 `known_bug` cases now
+genuinely agree end-to-end (run and confirmed, not guessed), so their
+markers flip to `known_bug: None` here:
+
+- `multiplication_binds_tighter_than_addition`, `parens_override_
+  precedence`, `power_is_right_associative` — `Add`/`Mul`/`Pow` numeric
+  folding.
+- `unary_minus_binds_looser_than_power`, `negative_integer_literal` —
+  `Neg`'s numeric fold. Both corrected a mistaken assumption baked into
+  their ORIGINAL `known_bug` reason strings, which predicted that even a
+  folded `Neg` would still need display-convention work ("would print
+  `Neg(4)`, not `-4`"). That was wrong: `Neg`'s fold on a numeric literal
+  produces the plain integer term `-4`/`-5` directly (never a compound
+  `Neg(...)` term), so `toDisplayString`'s existing generic "integer"
+  case already renders it correctly — no display work needed for either
+  case, confirmed by running them.
+- `exact_integer_division_folds_to_an_integer`, `inexact_division_folds_
+  to_a_rational` — `Div`'s exact-integer/exact-rational folding.
+- `additive_identity_simplifies_a_free_symbol` — the `x + 0 -> x`
+  identity law.
+- `comparison_true`, `comparison_false`, `less_equal_boundary_is_true` —
+  comparison folding to the `True`/`False` symbol.
+- `and_or_short_circuit_to_true`, `three_term_and_chain_folds_n_ary`,
+  `not_negates_a_true_comparison` — `And`/`Or`/`Not` folding (including
+  the n-ary chain fold).
+
+One case's `known_bug` **reason string is corrected in place** (stays
+`Some`, since it still disagrees, but for a narrower, now-accurate
+reason): `vector_of_expressions_evaluates_elementwise` (`[1+1, 2*3,
+2^3]`) now compiles to and evaluates as `List(2, 6, 8)` — `List` still
+has no handler of its own, but `evalTerm`'s applicative-order argument
+evaluation folds each element for free regardless — so the ORIGINAL
+reason ("each element is itself an unfolded Add/Mul/Pow term... never
+[2, 6, 8]") is no longer true; only Derive's own `[...]` bracket display
+convention (item 4 of the addendum's rollout) is still missing.
+
+The remaining 23 `known_bug` cases are unaffected and still fail for
+their own already-documented reasons (held-form execution — `Assign`/
+`Define`/`If`, item 2 of the rollout; calculus/elementary functions —
+`DIF`/`INT`/`SIN`/`COS`/`SQRT`, item 3; and Derive's own SIR23 display
+convention — infix/prefix/bracket/case-bridging, item 4) — none of
+those are in this upstream fix's scope, so none are force-flipped.
+
 ## [0.1.1] - 2026-07-21
 
 ### Added

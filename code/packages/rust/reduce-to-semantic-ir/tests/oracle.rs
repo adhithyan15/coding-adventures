@@ -248,30 +248,23 @@ const CORPUS: &[Case] = &[
         name: "multiplication_binds_tighter_than_addition",
         source: "2*3+4;\n",
         expected: "10",
-        known_bug: Some(
-            "Evaluation gap (module doc): compiles to a bare Add(Mul(2, 3), 4) term, never folds \
-             to 10 -- semantic-ir-to-javascript's SIR23 codegen never evaluates a SymApply, it only \
-             constructs one.",
-        ),
+        // Flipped by the SIR23 addendum's item 1 (`semantic-ir-to-
+        // javascript`'s `Symbolic.evalTerm` arithmetic/comparison/logic
+        // scaffold): `Mul`/`Add` now fold numerically; confirmed by
+        // running this exact case compiled-side.
+        known_bug: None,
     },
     Case {
         name: "parens_override_precedence",
         source: "(2 + 3) * 4;\n",
         expected: "20",
-        known_bug: Some(
-            "Evaluation gap (module doc): compiles to a bare Mul(Add(2, 3), 4) term, never folds \
-             to 20.",
-        ),
+        known_bug: None, // item 1: Add/Mul folding.
     },
     Case {
         name: "power_is_right_associative",
         source: "2^3^2;\n",
         expected: "512",
-        known_bug: Some(
-            "Evaluation gap (module doc): compiles to a bare Pow(2, Pow(3, 2)) term (the shape IS \
-             right-associative, matching tests/test_lower.rs's power_is_right_associative -- only \
-             the numeric fold to 512 is missing), never evaluates.",
-        ),
+        known_bug: None, // item 1: Pow folding (right-associative shape already correct).
     },
     // `-2^2` -> `Neg(Pow(2, 2))` (unary minus binds LOOSER than `^`,
     // mirrors tests/test_lower.rs's unary_minus_binds_looser_than_power)
@@ -280,29 +273,27 @@ const CORPUS: &[Case] = &[
         name: "unary_minus_binds_looser_than_power",
         source: "-2^2;\n",
         expected: "-4",
-        known_bug: Some(
-            "Evaluation gap (module doc): compiles to a bare Neg(Pow(2, 2)) term (the shape IS \
-             correct -- unary minus binds looser than Pow -- only the fold to -4 is missing); even \
-             folded, the display-convention gap (module doc) would print \"Neg(4)\", not \"-4\".",
-        ),
+        // Flipped by item 1. Note this corrects the ORIGINAL known_bug
+        // reason's own prediction, which assumed a folded `Neg` would
+        // still need display-convention work ("even folded... would
+        // print \"Neg(4)\", not \"-4\"") -- that assumption was wrong:
+        // `Neg`'s numeric fold reduces straight to the PLAIN INTEGER
+        // term `-4` (not a compound `Neg(4)` needing a prefix-minus
+        // display rule), so `toDisplayString`'s existing "integer" case
+        // already renders it correctly with no display work at all.
+        known_bug: None,
     },
     Case {
         name: "exact_integer_division_folds_to_an_integer",
         source: "10 / 2;\n",
         expected: "5",
-        known_bug: Some(
-            "Evaluation gap (module doc): compiles to a bare Div(10, 2) term, never folds to the \
-             integer 5.",
-        ),
+        known_bug: None, // item 1: Div folding (exact-integer collapse).
     },
     Case {
         name: "inexact_division_folds_to_a_rational",
         source: "1 / 3;\n",
         expected: "1/3",
-        known_bug: Some(
-            "Evaluation gap (module doc): compiles to a bare Div(1, 3) term, never folds to the \
-             rational 1/3.",
-        ),
+        known_bug: None, // item 1: Div folding (exact-rational result).
     },
     // `x + 0` -> the additive-identity simplification (`x`), confirming a
     // free symbol stays symbolic through the shared handler on the ground
@@ -312,22 +303,21 @@ const CORPUS: &[Case] = &[
         name: "additive_identity_simplifies_a_free_symbol",
         source: "x + 0;\n",
         expected: "x",
-        known_bug: Some(
-            "Evaluation gap (module doc): compiles to a bare Add(x, 0) term; the additive-identity \
-             simplification (x + 0 -> x) never runs, so it never reduces to the bare symbol x.",
-        ),
+        // Flipped by item 1: `addHandler`'s ported identity-law
+        // fallback (`x + 0 -> x`, `0 + x -> x`, mirroring
+        // `handlers.rs::add_handler` exactly) now fires.
+        known_bug: None,
     },
     Case {
         name: "negative_integer_literal",
         source: "-5;\n",
         expected: "-5",
-        known_bug: Some(
-            "Evaluation gap (module doc): -5 lowers to Neg(5) on BOTH sides (reduce-runtime's own \
-             lower_unary is identically unconditional, per that crate's src/lower.rs) -- the ground \
-             truth folds Neg(5) -> -5 at EVAL time; the compiled side never evaluates, so it stays \
-             Neg(5), and even folded the display-convention gap would print \"Neg(5)\" verbatim, not \
-             the surface \"-5\".",
-        ),
+        // Flipped by item 1 -- same correction as
+        // `unary_minus_binds_looser_than_power` above: `Neg`'s numeric
+        // fold produces the plain integer term `-5`, not a compound
+        // `Neg(5)`, so no display-convention work was ever needed here
+        // either, contrary to the original known_bug reason's guess.
+        known_bug: None,
     },
     Case {
         name: "negation_of_a_free_symbol",
@@ -462,9 +452,7 @@ const CORPUS: &[Case] = &[
         name: "less_equal_boundary_is_true",
         source: "3 <= 3;\n",
         expected: "True",
-        known_bug: Some(
-            "Evaluation gap (module doc): compiles to a bare LessEqual(3, 3) term, never evaluates.",
-        ),
+        known_bug: None, // item 1: comparison folding.
     },
     // `neq` is Reduce's own not-equal keyword (Derive has no equivalent
     // token at all -- MA08 §3).
@@ -472,10 +460,7 @@ const CORPUS: &[Case] = &[
         name: "not_equal_is_true",
         source: "3 neq 4;\n",
         expected: "True",
-        known_bug: Some(
-            "Evaluation gap (module doc): compiles to a bare NotEqual(3, 4) term, never evaluates to \
-             the symbol True.",
-        ),
+        known_bug: None, // item 1: NotEqual comparison folding.
     },
     // `=` is Reduce's EQUATION operator (never assignment) and stays
     // symbolic when either side is a free variable -- both sides agree on
@@ -500,29 +485,19 @@ const CORPUS: &[Case] = &[
         name: "and_short_circuits_to_true",
         source: "5 > 3 and 2 < 4;\n",
         expected: "True",
-        known_bug: Some(
-            "Evaluation gap (module doc): compiles to a bare And(Greater(5, 3), Less(2, 4)) term, \
-             never evaluates to True.",
-        ),
+        known_bug: None, // item 1: comparison + And folding.
     },
     Case {
         name: "three_term_and_chain_folds_n_ary",
         source: "5 > 3 and 3 > 1 and 1 > 0;\n",
         expected: "True",
-        known_bug: Some(
-            "Evaluation gap (module doc): compiles to a bare, flat 3-operand And(Greater(5,3), \
-             Greater(3,1), Greater(1,0)) term (the n-ary fold shape IS correct) -- only the \
-             evaluation to True is missing.",
-        ),
+        known_bug: None, // item 1: comparison + n-ary And folding.
     },
     Case {
         name: "not_negates_a_true_comparison",
         source: "not (5 > 3);\n",
         expected: "False",
-        known_bug: Some(
-            "Evaluation gap (module doc): compiles to a bare Not(Greater(5, 3)) term, never \
-             evaluates to False.",
-        ),
+        known_bug: None, // item 1: comparison + Not folding.
     },
 
     // --- Lists: flat, singleton, elementwise-evaluated, and empty (MA08
@@ -552,10 +527,26 @@ const CORPUS: &[Case] = &[
         name: "list_of_expressions_evaluates_elementwise",
         source: "{1+1, 2*3, 2^3};\n",
         expected: "{2, 6, 8}",
+        // UPDATED by item 1 (was: "Evaluation gap ... never {2, 6, 8}").
+        // `List` has no handler of its own (by design, see the SIR23
+        // addendum's own handler table -- "no handler needed at all"),
+        // but `evalTerm`'s applicative-order argument evaluation still
+        // folds each element for free: this now compiles to and
+        // evaluates as `List(2, 6, 8)`, confirmed by direct inspection
+        // of the emitted JS -- the elements are NOT unfolded anymore.
+        // Only Reduce's own `{...}` curly-brace display convention
+        // (item 4) is still missing, so this stays `known_bug`, now for
+        // a purely display-convention reason.
         known_bug: Some(
-            "Evaluation gap (module doc): each element is itself an unfolded Add/Mul/Pow term inside \
-             the List, so this compiles to a bare List(Add(1,1), Mul(2,3), Pow(2,3)) term -- \
-             confirmed by direct inspection of the emitted JS -- never {2, 6, 8}.",
+            "Display-convention gap ONLY (module doc; corrected after item 1 landed) -- NOT an \
+             evaluation gap anymore: evalTerm's applicative-order argument evaluation folds each \
+             List element for free even though List itself has no handler, so this now compiles to \
+             and evaluates as List(2, 6, 8) (confirmed by direct inspection of the emitted JS) -- \
+             only the generic Symbolic.toDisplayString printing \"List(2, 6, 8)\" instead of \
+             Reduce's own curly-brace surface \"{2, 6, 8}\" remains, which is item 4's job (a \
+             per-language SIR23 display convention -- Reduce's own is not scoped for this rollout \
+             either, see the addendum's own \"Scope boundary\" section, so this specific case waits \
+             on a Reduce-oracle-driven display-convention item, not just Derive's item 4).",
         ),
     },
     Case {
