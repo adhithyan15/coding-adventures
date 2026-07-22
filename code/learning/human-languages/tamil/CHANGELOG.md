@@ -77,13 +77,22 @@ scripts while six had data. It now renders seven.
   glyph's true outline and scan-converted it to a text bitmap, which is what the
   `components` and `strokeOrder` descriptions were written against. This caught
   three descriptions that were confidently wrong:
-  - **ண vs ன** were described as differing by an arch count. They do not. The
-    two glyphs are **pixel-identical for their left 53%** — same top bar, same
-    loop, same middle arch — and differ *only* in the final stroke: **ன ends in
-    a straight vertical, ண in a curve inward to the baseline.**
   - **ற** was described as "a single arch, like a Latin n". It has **two**
     arches and three legs, with the right leg continuing below the baseline,
     sweeping left and dropping into a long descender.
+  - **ண vs ன**: ண is **ன with one extra arch** — both open with the same top
+    bar and loop and close with the same straight vertical, and ண carries two
+    arches between them where ன carries one.
+
+    This one is worth recording as a caution, because an intermediate revision
+    of these lessons **replaced that correct statement with a false one** —
+    claiming the two letters differed only in a final curving stroke. The cause
+    was a rasteriser windowed to x≤1030 when **ண's outline runs to x=1631**:
+    it amputated 37% of the letter, including the final vertical, and the
+    description was then written from the truncated picture. A measurement
+    instrument can be as confidently wrong as a memory. The window is now
+    derived from the glyph's own bounding box, and the test asserting this
+    fails if the window ever clips again.
 - Verified in the browser: Tamil renders with 11 letters and "inventory in
   progress"; console clean.
 
