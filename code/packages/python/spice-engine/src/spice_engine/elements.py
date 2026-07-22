@@ -604,7 +604,7 @@ class BJT:
     Nr:
         Reverse emission coefficient (default 1.0).
     Xtb:
-        Forward-beta temperature exponent (default 0.0).
+        Forward- and reverse-beta temperature exponent (default 0.0).
     """
 
     name: str
@@ -636,6 +636,7 @@ class BJT:
     Isc: float = 0.0        # base-collector leakage saturation current (A)
     Nc: float = 2.0         # base-collector leakage emission coefficient
     Xtb: float = 0.0        # forward-beta temperature exponent
+    beta_r: float = float("inf")  # reverse current gain; infinity disables
 
 
 # ---------------------------------------------------------------------------

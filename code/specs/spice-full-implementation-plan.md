@@ -33,13 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language BJT forward-beta temperature exponent.
+1. Cross-language BJT reverse current gain.
    - Status: current PR completion candidate.
-   - Add Berkeley BJT `XTB` model-card support in Rust, Python, and TypeScript
-     with behavior-preserving zero-exponent defaults.
-   - Scale forward beta by the analysis-to-nominal absolute temperature ratio
-     while preserving the complete BJT model through hierarchical subcircuits.
-   - Extend the supported-parameter coverage gate from 104 to 106 canonical
+   - Add Berkeley BJT `BR` / `BETA_R` model-card support in Rust, Python, and
+     TypeScript with a model-card default of `1` and behavior-preserving direct
+     element defaults.
+   - Apply reverse base current in DC, transient, AC, transfer-function,
+     temperature, and noise paths, and scale both forward and reverse beta by
+     `XTB` while preserving the complete BJT model through subcircuits.
+   - Extend the supported-parameter coverage gate from 106 to 108 canonical
      rows and lock model-card aliases, behavior, validation, and hierarchy in
      all engines.
 
@@ -3085,6 +3087,13 @@ the Rust, Python, and TypeScript surfaces together.
      transfer-function, temperature, and noise paths.
    - Hierarchical subcircuit expansion preserves the complete BJT model, and
      the supported-parameter release gate now covers 104 canonical rows.
+
+230. Cross-language BJT beta temperature exponent.
+   - Status: completed in PR 8792.
+   - Rust, Python, and TypeScript BJT model cards now accept `XTB` and scale
+     forward beta by the analysis-to-nominal absolute temperature ratio.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 106 canonical rows.
 
 ## Backlog
 

@@ -1727,6 +1727,7 @@ export interface Bjt {
   readonly baseCollectorLeakageSaturationCurrent: number;
   readonly baseCollectorLeakageEmissionCoefficient: number;
   readonly forwardBetaTemperatureExponent: number;
+  readonly reverseBeta: number;
 }
 
 export type MosfetType = "NMOS" | "PMOS";
@@ -2004,8 +2005,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   Record<ModelCardKind, readonly [number, number, number, number]>
 > = {
   D: [12, 18, 5, 3],
-  NPN: [24, 39, 11, 4],
-  PNP: [24, 39, 11, 4],
+  NPN: [25, 41, 12, 4],
+  PNP: [25, 41, 12, 4],
   NJF: [5, 11, 5, 3],
   PJF: [5, 11, 5, 3],
   NMOS: [18, 25, 6, 3],
@@ -3595,7 +3596,7 @@ function cloneSubcktElement(
     case "jfet":
       return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation, element.gateSourceCapacitance, element.gateDrainCapacitance);
     case "bjt":
-      return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.forwardEarlyVoltage, element.forwardEmissionCoefficient, element.reverseEmissionCoefficient, element.baseEmitterJunctionPotential, element.baseEmitterGradingCoefficient, element.baseCollectorJunctionPotential, element.baseCollectorGradingCoefficient, element.forwardBiasDepletionCoefficient, element.reverseEarlyVoltage, element.forwardBetaRolloffCurrent, element.baseEmitterLeakageSaturationCurrent, element.baseEmitterLeakageEmissionCoefficient, element.baseCollectorLeakageSaturationCurrent, element.baseCollectorLeakageEmissionCoefficient, element.forwardBetaTemperatureExponent);
+      return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.forwardEarlyVoltage, element.forwardEmissionCoefficient, element.reverseEmissionCoefficient, element.baseEmitterJunctionPotential, element.baseEmitterGradingCoefficient, element.baseCollectorJunctionPotential, element.baseCollectorGradingCoefficient, element.forwardBiasDepletionCoefficient, element.reverseEarlyVoltage, element.forwardBetaRolloffCurrent, element.baseEmitterLeakageSaturationCurrent, element.baseEmitterLeakageEmissionCoefficient, element.baseCollectorLeakageSaturationCurrent, element.baseCollectorLeakageEmissionCoefficient, element.forwardBetaTemperatureExponent, element.reverseBeta);
     case "mosfet":
       return mosfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), mapSubcktNode(element.body, instanceName, nodeMap), element.type, element.params);
     case "vccs":
@@ -7637,7 +7638,10 @@ export function bjtAtTemperature(
     throw invalidElement(element.name, "saturation-current temperature exponent must be finite");
   }
   if (!Number.isFinite(element.forwardBetaTemperatureExponent)) {
-    throw invalidElement(element.name, "forward-beta temperature exponent must be finite");
+    throw invalidElement(element.name, "beta temperature exponent must be finite");
+  }
+  if (Number.isNaN(element.reverseBeta) || element.reverseBeta <= 0.0) {
+    throw invalidElement(element.name, "reverse beta must be positive");
   }
   const saturationScale =
     ratio ** element.saturationCurrentTemperatureExponent *
@@ -7650,6 +7654,7 @@ export function bjtAtTemperature(
     baseCollectorLeakageSaturationCurrent:
       element.baseCollectorLeakageSaturationCurrent * saturationScale,
     forwardBeta: element.forwardBeta * ratio ** element.forwardBetaTemperatureExponent,
+    reverseBeta: element.reverseBeta * ratio ** element.forwardBetaTemperatureExponent,
     thermalVoltage: element.thermalVoltage * ratio,
   };
 }
@@ -7773,6 +7778,7 @@ export function bjt(
   baseCollectorLeakageSaturationCurrent = 0.0,
   baseCollectorLeakageEmissionCoefficient = 2.0,
   forwardBetaTemperatureExponent = 0.0,
+  reverseBeta = Number.POSITIVE_INFINITY,
 ): Bjt {
   return {
     kind: "bjt",
@@ -7805,6 +7811,7 @@ export function bjt(
     baseCollectorLeakageSaturationCurrent,
     baseCollectorLeakageEmissionCoefficient,
     forwardBetaTemperatureExponent,
+    reverseBeta,
   };
 }
 
@@ -7919,6 +7926,8 @@ const BJT_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   ISC: "ISC",
   NC: "NC",
   XTB: "XTB",
+  BR: "BR",
+  BETA_R: "BR",
   NF: "NF",
   NR: "NR",
   VJE: "VJE",
@@ -8443,6 +8452,7 @@ export function bjtFromModelCard(
     p.ISC ?? 0.0,
     p.NC ?? 2.0,
     p.XTB ?? 0.0,
+    p.BR ?? 1.0,
   );
 }
 
@@ -18393,6 +18403,8 @@ function collectNoiseSources(
       const leakageCurrent = bjtBaseEmitterLeakage(element, junctionVoltage).current;
       const collectorLeakageCurrent =
         bjtBaseCollectorLeakage(element, reverseJunctionVoltage).current;
+      const reverseBaseCurrent =
+        bjtReverseBaseCurrent(element, reverseJunctionVoltage).current;
       sources.push({
         elementName: element.name,
         noiseType: "shot",
@@ -18401,7 +18413,7 @@ function collectNoiseSources(
         sourcePsd:
           2.0 * ELECTRON_CHARGE *
           (Math.abs(collectorCurrent) + Math.abs(leakageCurrent) +
-            Math.abs(collectorLeakageCurrent)),
+            Math.abs(collectorLeakageCurrent) + Math.abs(reverseBaseCurrent)),
       });
     } else if (element.kind === "jfet") {
       validateJfet(element);
@@ -18941,6 +18953,23 @@ function bjtBaseCollectorLeakage(
   };
 }
 
+function bjtReverseBaseCurrent(
+  element: Bjt,
+  junctionVoltage: number,
+): { current: number; conductance: number } {
+  if (element.reverseBeta === Number.POSITIVE_INFINITY) {
+    return { current: 0.0, conductance: 0.0 };
+  }
+  const thermalVoltage = element.thermalVoltage * element.reverseEmissionCoefficient;
+  const exponent = Math.max(-40.0, Math.min(40.0, junctionVoltage / thermalVoltage));
+  const expValue = Math.exp(exponent);
+  return {
+    current: element.saturationCurrent * (expValue - 1.0) / element.reverseBeta,
+    conductance:
+      element.saturationCurrent / thermalVoltage * expValue / element.reverseBeta,
+  };
+}
+
 function stampBjt(
   element: Bjt,
   capacitorStates: readonly CapacitorState[],
@@ -18993,11 +19022,14 @@ function stampBjt(
   const equivalentBaseCurrent =
     baseCurrent - junctionConductance * junctionVoltage;
   const collectorLeakage = bjtBaseCollectorLeakage(element, reverseJunctionVoltage);
+  const reverseBase = bjtReverseBaseCurrent(element, reverseJunctionVoltage);
+  const baseCollectorJunctionCurrent = collectorLeakage.current + reverseBase.current;
+  const baseCollectorConductance = collectorLeakage.conductance + reverseBase.conductance;
   const equivalentCollectorLeakageCurrent =
-    collectorLeakage.current - collectorLeakage.conductance * reverseJunctionVoltage;
+    baseCollectorJunctionCurrent - baseCollectorConductance * reverseJunctionVoltage;
 
   stampConductance(matrix, collector, emitter, outputConductance);
-  stampConductance(matrix, base, collector, collectorLeakage.conductance);
+  stampConductance(matrix, base, collector, baseCollectorConductance);
   if (element.polarity === "NPN") {
     stampConductance(matrix, base, emitter, junctionConductance);
     stampTransconductance(matrix, collector, emitter, base, emitter, transconductance);
@@ -19803,6 +19835,9 @@ function validateBjt(element: Bjt): void {
   }
   if (!Number.isFinite(element.forwardBeta) || element.forwardBeta <= 0.0) {
     throw invalidElement(element.name, "forward beta must be finite and positive");
+  }
+  if (Number.isNaN(element.reverseBeta) || element.reverseBeta <= 0.0) {
+    throw invalidElement(element.name, "reverse beta must be positive");
   }
   if (!Number.isFinite(element.thermalVoltage) || element.thermalVoltage <= 0.0) {
     throw invalidElement(element.name, "thermal voltage must be finite and positive");
@@ -21211,8 +21246,14 @@ function stampBjtSmallSignal(
   const junctionConductance =
     baseTransconductance / element.forwardBeta + leakage.conductance;
   const collectorLeakage = bjtBaseCollectorLeakage(element, reverseJunctionVoltage);
+  const reverseBase = bjtReverseBaseCurrent(element, reverseJunctionVoltage);
   stampConductance(matrix, collector, emitter, outputConductance);
-  stampConductance(matrix, base, collector, collectorLeakage.conductance);
+  stampConductance(
+    matrix,
+    base,
+    collector,
+    collectorLeakage.conductance + reverseBase.conductance,
+  );
   if (element.polarity === "NPN") {
     stampConductance(matrix, base, emitter, junctionConductance);
     stampTransconductance(matrix, collector, emitter, base, emitter, transconductance);
@@ -21804,6 +21845,7 @@ function stampAcBjtSmallSignal(
   const transconductance = transport.transconductance;
   const leakage = bjtBaseEmitterLeakage(element, junctionVoltage);
   const collectorLeakage = bjtBaseCollectorLeakage(element, reverseJunctionVoltage);
+  const reverseBase = bjtReverseBaseCurrent(element, reverseJunctionVoltage);
   const junctionConductance =
     baseTransconductance / element.forwardBeta + leakage.conductance;
   const diffusionCapacitance = element.forwardTransitTime * transconductance;
@@ -21817,7 +21859,7 @@ function stampAcBjtSmallSignal(
     ),
   );
   const baseCollectorAdmittance = complex(
-    collectorLeakage.conductance,
+    collectorLeakage.conductance + reverseBase.conductance,
     omega * (
       bjtBaseCollectorDepletionCapacitance(element, reverseJunctionVoltage) +
       reverseDiffusionCapacitance

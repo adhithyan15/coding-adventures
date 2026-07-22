@@ -412,7 +412,7 @@ def test_model_card_type_aliases_are_normalized() -> None:
 
 def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     coverage = model_card_supported_parameter_coverage()
-    assert len(coverage) == 106
+    assert len(coverage) == 108
     assert coverage[0].kind == "D"
     assert coverage[0].canonical_parameter == "IS"
     assert coverage[0].accepted_names == ("IS", "JS")
@@ -427,7 +427,7 @@ def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     assert "NMOS\tVT0\tVT0|VTO|VTH\t3" in table
     assert table.splitlines()[-1] == "PMOS\tMJ\tMJ\t1"
     records = model_card_supported_parameter_coverage_records()
-    assert len(records) == 106
+    assert len(records) == 108
     assert records[0] == {
         "kind": "D",
         "canonical_parameter": "IS",
@@ -501,17 +501,17 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
     assert report.passed is True
     assert report.kind_count == 7
     assert report.expected_kind_count == 7
-    assert report.canonical_parameter_count == 106
-    assert report.expected_canonical_parameter_count == 106
-    assert report.accepted_name_count == 168
-    assert report.aliased_parameter_count == 49
+    assert report.canonical_parameter_count == 108
+    assert report.expected_canonical_parameter_count == 108
+    assert report.accepted_name_count == 172
+    assert report.aliased_parameter_count == 51
     assert report.max_alias_count == 4
     assert report.issues == ()
     assert format_model_card_supported_parameter_coverage_gate_report(report) == (
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "true\t7\t7\t106\t106\t168\t49\t4\t0"
+        "true\t7\t7\t108\t108\t172\t51\t4\t0"
     )
     assert (
         format_model_card_supported_parameter_coverage_gate_issue_table(report)
@@ -539,9 +539,9 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
 
     assert report.passed is False
     assert report.kind_count == 7
-    assert report.canonical_parameter_count == 105
-    assert report.accepted_name_count == 165
-    assert report.aliased_parameter_count == 48
+    assert report.canonical_parameter_count == 107
+    assert report.accepted_name_count == 169
+    assert report.aliased_parameter_count == 50
     assert report.max_alias_count == 4
     assert len(report.issues) == 4
     assert report.issues[0].kind == "NMOS"
@@ -555,7 +555,7 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "false\t7\t7\t105\t106\t165\t48\t4\t4\n"
+        "false\t7\t7\t107\t108\t169\t50\t4\t4\n"
         "kind\tfield\tmessage\n"
         "NMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical "
         "supported parameters, found 17\n"
@@ -647,12 +647,13 @@ def test_model_card_aliases_build_device_instances() -> None:
     assert pytest.approx(1.05) == diode_model.Eg
 
     bjt_card = normalize_model_card(
-        "Qsmall", "npn", {"BETA": 125.0, "CBE": 2.0e-12, "XTI": 2.4, "XTB": 1.5, "EG": 1.05, "VA": 80.0, "VB": 120.0, "IK": 2.0e-3, "ISE": 3.0e-13, "NE": 1.7, "ISC": 4.0e-13, "NC": 1.8, "NF": 1.2, "NR": 1.3, "PE": 0.8, "ME": 0.4, "PC": 0.7, "MC": 0.45, "FC": 0.4}
+        "Qsmall", "npn", {"BETA": 125.0, "BETA_R": 0.25, "CBE": 2.0e-12, "XTI": 2.4, "XTB": 1.5, "EG": 1.05, "VA": 80.0, "VB": 120.0, "IK": 2.0e-3, "ISE": 3.0e-13, "NE": 1.7, "ISC": 4.0e-13, "NC": 1.8, "NF": 1.2, "NR": 1.3, "PE": 0.8, "ME": 0.4, "PC": 0.7, "MC": 0.45, "FC": 0.4}
     )
     bjt_model = bjt_from_model_card("Q1", "c", "b", "e", bjt_card)
-    assert bjt_card.parameters == {"BF": 125.0, "CJE": 2.0e-12, "XTI": 2.4, "XTB": 1.5, "EG": 1.05, "VAF": 80.0, "VAR": 120.0, "IKF": 2.0e-3, "ISE": 3.0e-13, "NE": 1.7, "ISC": 4.0e-13, "NC": 1.8, "NF": 1.2, "NR": 1.3, "VJE": 0.8, "MJE": 0.4, "VJC": 0.7, "MJC": 0.45, "FC": 0.4}
+    assert bjt_card.parameters == {"BF": 125.0, "BR": 0.25, "CJE": 2.0e-12, "XTI": 2.4, "XTB": 1.5, "EG": 1.05, "VAF": 80.0, "VAR": 120.0, "IKF": 2.0e-3, "ISE": 3.0e-13, "NE": 1.7, "ISC": 4.0e-13, "NC": 1.8, "NF": 1.2, "NR": 1.3, "VJE": 0.8, "MJE": 0.4, "VJC": 0.7, "MJC": 0.45, "FC": 0.4}
     assert bjt_model.polarity == "NPN"
     assert bjt_model.beta_f == pytest.approx(125.0)
+    assert bjt_model.beta_r == pytest.approx(0.25)
     assert bjt_model.Cje == pytest.approx(2.0e-12)
     assert bjt_model.Xti == pytest.approx(2.4)
     assert bjt_model.Xtb == pytest.approx(1.5)
@@ -2301,7 +2302,7 @@ def test_subcircuit_expansion_preserves_complete_bjt_model():
     cell = SubcircuitDefinition(
         "bjt-cell",
         ("c", "b", "e"),
-        (BJT("Qcell", "c", "b", "e", Xti=2.4, Eg=1.05, Vaf=80.0, Nf=1.2, Nr=1.3, Vje=0.8, Mje=0.4, Vjc=0.7, Mjc=0.45, Fc=0.4, Var=120.0, Ikf=2.0e-3, Ise=3.0e-13, Ne=1.7, Isc=4.0e-13, Nc=1.8, Xtb=1.5),),
+        (BJT("Qcell", "c", "b", "e", Xti=2.4, Eg=1.05, Vaf=80.0, Nf=1.2, Nr=1.3, Vje=0.8, Mje=0.4, Vjc=0.7, Mjc=0.45, Fc=0.4, Var=120.0, Ikf=2.0e-3, Ise=3.0e-13, Ne=1.7, Isc=4.0e-13, Nc=1.8, Xtb=1.5, beta_r=0.25),),
     )
     circuit = Circuit()
     circuit.define_subcircuit(cell)
@@ -2325,6 +2326,7 @@ def test_subcircuit_expansion_preserves_complete_bjt_model():
     assert expanded.Isc == pytest.approx(4.0e-13)
     assert expanded.Nc == pytest.approx(1.8)
     assert expanded.Xtb == pytest.approx(1.5)
+    assert expanded.beta_r == pytest.approx(0.25)
 
 
 def test_branch_current_in_voltage_source():
@@ -2544,16 +2546,17 @@ def test_bjt_temperature_scaling_uses_model_temperature_exponent():
     assert high.Is > low.Is
 
 
-def test_bjt_temperature_scaling_uses_forward_beta_temperature_exponent():
-    transistor = BJT("Q1", "c", "b", "e", beta_f=100.0, Xtb=2.0)
+def test_bjt_temperature_scaling_uses_beta_temperature_exponent():
+    transistor = BJT("Q1", "c", "b", "e", beta_f=100.0, beta_r=2.0, Xtb=2.0)
     hot = bjt_at_temperature(transistor, 350.0)
     assert hot.beta_f > transistor.beta_f
+    assert hot.beta_r > transistor.beta_r
 
 
-def test_dc_rejects_invalid_bjt_forward_beta_temperature_exponent():
+def test_dc_rejects_invalid_bjt_beta_temperature_exponent():
     circuit = Circuit()
     circuit.add(BJT("Qbad", "c", "b", "0", Xtb=math.nan))
-    with pytest.raises(ValueError, match="forward-beta temperature exponent must be finite"):
+    with pytest.raises(ValueError, match="beta temperature exponent must be finite"):
         dc_op(circuit)
 
 
@@ -2638,6 +2641,24 @@ def test_bjt_forward_beta_rolloff_reduces_high_current_transport():
         return dc_op(circuit).node_voltages["out"]
 
     assert collector_voltage(1.0e-4) > collector_voltage(0.0)
+
+
+def test_bjt_reverse_beta_controls_base_collector_junction_current():
+    def base_current(beta_r: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vbase", "base", "0", 0.65))
+        circuit.add(VoltageSource("Vemitter", "emitter", "0", 0.65))
+        circuit.add(BJT("Q1", "0", "base", "emitter", beta_r=beta_r))
+        return abs(dc_op(circuit).branch_currents["I(Vbase)"])
+
+    assert base_current(0.5) > base_current(5.0)
+
+
+def test_dc_rejects_invalid_bjt_reverse_beta():
+    circuit = Circuit()
+    circuit.add(BJT("Qbad", "c", "b", "0", beta_r=0.0))
+    with pytest.raises(ValueError, match="BJT reverse beta must be positive"):
+        dc_op(circuit)
 
 
 def test_dc_rejects_invalid_bjt_forward_beta_rolloff_current():
