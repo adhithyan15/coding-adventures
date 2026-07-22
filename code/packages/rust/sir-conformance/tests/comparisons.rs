@@ -29,9 +29,9 @@
 //! **Composite equality.** `==`/`!=` on arrays are STRUCTURAL, not reference
 //! identity — the end-to-end proof that the JavaScript backend's `eq`→`valEq`
 //! change agrees cross-backend (JS used to answer `[1,2] == [1,2]` false). This
-//! runs on Python, JavaScript, Go and Rust; the C and Ruby v0 backends do not
-//! accept the `sequences` feature, so an array-literal program never lowers and
-//! those two `Skip` (a skipped case is not asserted, like a missing toolchain).
+//! now runs on ALL SIX backends: the Ruby (0.4.0) and C (0.6.0) backends gained
+//! the `sequences` feature, so an array-literal program lowers and asserts on
+//! each — C was the last that skipped it.
 //!
 //! Booleans render in the harness's default (Lisp) convention, so the expected
 //! strings are `#t` / `#f`.
@@ -76,10 +76,8 @@ const CASES: &[(&str, &str)] = &[
     // COMPOSITE equality — `==`/`!=` are STRUCTURAL for arrays, not reference
     // identity. This is the end-to-end proof that the JavaScript `eq`→`valEq`
     // change agrees cross-backend: JS used to answer `[1,2] == [1,2]` false
-    // (reference), the other backends true (structural). Runs on Python,
-    // JavaScript, Go and Rust; C and Ruby SKIP (their v0 backends do not accept
-    // the `sequences` feature, so a program with an array literal never lowers
-    // — a `Skipped` case is not asserted, exactly like a missing toolchain).
+    // (reference), the other backends true (structural). Now asserts on ALL SIX
+    // backends — Ruby and C gained the `sequences` feature (C was last).
     ("[1, 2] == [1, 2]", "#t"),
     ("[1, 2] == [1, 3]", "#f"),
     ("[1, 2] != [1, 3]", "#t"),

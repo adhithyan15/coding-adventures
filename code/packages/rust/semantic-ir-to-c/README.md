@@ -77,13 +77,18 @@ The emitter is **thin**; the semantics live in an inlined C runtime
 
 ## Capability declaration (v0)
 
-**Accepts** the SIR-v0 feature set: `Closures`, `Pairs`, `Symbols`, `Strings`,
-`DynamicTyping`, `OptionalTypeAnnotations`, `MutualRecursion`, `Globals`.
+**Accepts** `Closures`, `Pairs`, `Symbols`, `Strings`, `DynamicTyping`,
+`OptionalTypeAnnotations`, `MutualRecursion`, `Globals`; the SIR26 integer
+conversions (`Conversions`, `SizedIntegers`, `Unsigned`, `WrappingArithmetic`);
+SIR16 control flow and mutation (`Loops` — `While`, `ForRange`, `ForEach`; and
+`MutableBindings`); and SIR16 `Sequences` — a `SIR_SEQ` heap array with
+`SeqLit`/`SeqIndex`/`SeqLen`/`SeqSet` and structural equality.
 
 **Rejects** (cleanly, with a source-positioned error): `TailCalls`,
-`Intrinsics`, and every later feature until its batch lands.  `Bignum` stays
-rejected until a bignum runtime ships — a module needing arbitrary precision is
-refused, never silently truncated.
+`Intrinsics`, `Maps`, `NDArrays`, `ShortCircuit`, exceptions/OOP, and every
+other not-yet-wired feature until its batch lands.  `Bignum` stays rejected
+until a bignum runtime ships — a module needing arbitrary precision is refused,
+never silently truncated.
 
 ## Roadmap to parity
 

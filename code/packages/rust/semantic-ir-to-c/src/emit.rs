@@ -391,6 +391,54 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         // emit. `ForEach` is the exception — it observes only `Feature::Loops`
         // (accepted), so `compile`'s `first_foreach` pre-pass rejects it
         // cleanly rather than letting it reach this `unreachable!`.
+        // `a[i] = v` — mutate the shared sequence box (via `_sir_seq_set`,
+        // which traps on an out-of-range index). Operands are hoisted so
+        // left-to-right evaluation order holds; the returned value is discarded
+        // in statement position.
+        Stmt::SeqSet {
+            seq, index, value, ..
+        } => {
+            let _ = writeln!(out, "{pad}{{");
+            let inner = indent + 1;
+            let ipad = indent_str(inner);
+            let names = hoist_operands(out, &[seq, index, value], inner);
+            let _ = writeln!(
+                out,
+                "{ipad}(void)_sir_seq_set({}, {}, {});",
+                names[0], names[1], names[2]
+            );
+            let _ = writeln!(out, "{pad}}}");
+        }
+        // `for var in iter … end`. `_sir_seq_iter` normalises the iterable to a
+        // snapshot sequence (a real sequence is copied, a cons-list flattened),
+        // so the body renders ONCE over one array. `var` is declared inside the
+        // loop body block → block-scoped (matching the validator's rewind and
+        // the Go reference), never clobbering an enclosing same-named local.
+        Stmt::ForEach {
+            var, iter, body, ..
+        } => {
+            let id = fresh_id();
+            let _ = writeln!(out, "{pad}{{");
+            let inner = indent + 1;
+            let ipad = indent_str(inner);
+            let it = hoist_operands(out, &[iter], inner);
+            let _ = writeln!(out, "{ipad}SirValue _sir_feq{id} = _sir_seq_iter({});", it[0]);
+            let _ = writeln!(out, "{ipad}int64_t _sir_fen{id} = _sir_feq{id}.as.seq->len;");
+            let _ = writeln!(
+                out,
+                "{ipad}for (int64_t _sir_fei{id} = 0; _sir_fei{id} < _sir_fen{id}; _sir_fei{id}++) {{"
+            );
+            let body_i = inner + 1;
+            let bpad = indent_str(body_i);
+            let v = sanitize_ident(var);
+            let _ = writeln!(out, "{bpad}SirValue {v} = _sir_feq{id}.as.seq->items[_sir_fei{id}];");
+            let _ = writeln!(out, "{bpad}(void){v};");
+            for st in &body.stmts {
+                emit_stmt(out, st, body_i);
+            }
+            let _ = writeln!(out, "{ipad}}}");
+            let _ = writeln!(out, "{pad}}}");
+        }
         other => unreachable!("C backend reached unsupported statement: {other:?}"),
     }
 }
@@ -489,6 +537,37 @@ fn emit_assign(out: &mut String, dst: &str, e: &Expr, indent: usize) {
                 let _ = writeln!(out, "{pad}{dst} = _sir_convert({dst}, {bits}, {signed});");
             }
         }
+        // SIR16 sequences with a compound operand: hoist operands into temps
+        // (preserving left-to-right order), then build/read the sequence.
+        Expr::SeqLit { items, .. } => {
+            let _ = writeln!(out, "{pad}{{");
+            let inner = indent + 1;
+            let ipad = indent_str(inner);
+            let ops: Vec<&Expr> = items.iter().collect();
+            let names = hoist_operands(out, &ops, inner);
+            let _ = write!(out, "{ipad}{dst} = _sir_seq_lit({}", items.len());
+            for n in &names {
+                let _ = write!(out, ", {n}");
+            }
+            out.push_str(");\n");
+            let _ = writeln!(out, "{pad}}}");
+        }
+        Expr::SeqIndex { seq, index, .. } => {
+            let _ = writeln!(out, "{pad}{{");
+            let inner = indent + 1;
+            let ipad = indent_str(inner);
+            let names = hoist_operands(out, &[seq.as_ref(), index.as_ref()], inner);
+            let _ = writeln!(out, "{ipad}{dst} = _sir_seq_index({}, {});", names[0], names[1]);
+            let _ = writeln!(out, "{pad}}}");
+        }
+        Expr::SeqLen { seq, .. } => {
+            let _ = writeln!(out, "{pad}{{");
+            let inner = indent + 1;
+            let ipad = indent_str(inner);
+            let names = hoist_operands(out, &[seq.as_ref()], inner);
+            let _ = writeln!(out, "{ipad}{dst} = _sir_seq_len({});", names[0]);
+            let _ = writeln!(out, "{pad}}}");
+        }
         // A call whose arguments contain control flow: hoist every argument
         // into a temp (left-to-right), then make the call.
         _ => emit_compound_call(out, dst, e, indent),
@@ -522,6 +601,28 @@ fn emit_cond(out: &mut String, cond: &Expr, indent: usize) -> String {
 /// Hoist a call's compound arguments into temps, then assign the call to
 /// `dst`.  Every argument becomes a temp so left-to-right evaluation order is
 /// preserved.
+/// Hoist each operand into a fresh `SirValue` temporary (left-to-right, so
+/// evaluation order is preserved even with side effects), returning the temp
+/// names. A simple operand is assigned directly; a compound one goes through
+/// `emit_assign`. Shared by the `Seq*` compound arms below.
+fn hoist_operands(out: &mut String, ops: &[&Expr], indent: usize) -> Vec<String> {
+    let ipad = indent_str(indent);
+    let mut names = Vec::with_capacity(ops.len());
+    for a in ops {
+        let t = format!("_sir_a{}", fresh_id());
+        if is_simple(a) {
+            let _ = write!(out, "{ipad}SirValue {t} = ");
+            emit_expr(out, a, indent);
+            out.push_str(";\n");
+        } else {
+            let _ = writeln!(out, "{ipad}SirValue {t};");
+            emit_assign(out, &t, a, indent);
+        }
+        names.push(t);
+    }
+    names
+}
+
 fn emit_compound_call(out: &mut String, dst: &str, e: &Expr, indent: usize) {
     let pad = indent_str(indent);
     let args = call_args(e).expect("emit_compound_call on a non-call expr");
@@ -618,6 +719,12 @@ fn is_simple(e: &Expr) -> bool {
         Expr::MakeClosure { captures, .. } => captures.iter().all(|c| is_simple(&c.value)),
         // SIR26: a conversion is as simple as its value.
         Expr::Convert { value, .. } => is_simple(value),
+        // SIR16 sequences: a `_sir_seq_*` call is simple iff its operands are
+        // (they render inline as function arguments); otherwise the operands
+        // are hoisted by `emit_assign`.
+        Expr::SeqLit { items, .. } => items.iter().all(is_simple),
+        Expr::SeqIndex { seq, index, .. } => is_simple(seq) && is_simple(index),
+        Expr::SeqLen { seq, .. } => is_simple(seq),
         // SIR16+ nodes / Intrinsic are not accepted in v0 → unreachable after
         // the capability check.  Treat as non-simple defensively.
         _ => false,
@@ -676,6 +783,29 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
             emit_expr(out, &b.value, indent);
         }
         Expr::Convert { value, to, .. } => emit_convert(out, value, to, indent),
+        // SIR16 sequences (simple-operand forms; compound operands are hoisted
+        // by `emit_assign`). `_sir_seq_lit(N, e0, e1, …)` boxes a fresh array;
+        // `_sir_seq_index`/`_sir_seq_len` read it.
+        Expr::SeqLit { items, .. } => {
+            let _ = write!(out, "_sir_seq_lit({}", items.len());
+            for it in items {
+                out.push_str(", ");
+                emit_expr(out, it, indent);
+            }
+            out.push(')');
+        }
+        Expr::SeqIndex { seq, index, .. } => {
+            out.push_str("_sir_seq_index(");
+            emit_expr(out, seq, indent);
+            out.push_str(", ");
+            emit_expr(out, index, indent);
+            out.push(')');
+        }
+        Expr::SeqLen { seq, .. } => {
+            out.push_str("_sir_seq_len(");
+            emit_expr(out, seq, indent);
+            out.push(')');
+        }
         other => unreachable!("emit_expr on compound/unsupported node: {other:?}"),
     }
 }
@@ -824,55 +954,6 @@ pub fn first_unsupported_builtin(m: &Module) -> Option<(String, Span)> {
     None
 }
 
-/// Locate a `Stmt::ForEach` anywhere in the module. `ForEach` observes only
-/// `Feature::Loops` (the validator; same feature as `While`/`ForRange`), which
-/// this backend accepts — so a module using `for x in <iterable>` passes the
-/// capability check and would reach the emitter's `unreachable!`. The emitter
-/// cannot lower it yet (a sequence/`each` iterator is the sequences batch), so
-/// `compile` rejects it CLEANLY via this pre-pass rather than panicking. Walks
-/// the full statement/expression tree so a nested `ForEach` (in a loop or `if`
-/// body) is caught too.
-pub fn first_foreach(m: &Module) -> Option<Span> {
-    fn in_block(b: &Block) -> Option<Span> {
-        b.stmts
-            .iter()
-            .find_map(in_stmt)
-            .or_else(|| in_expr(&b.value))
-    }
-    fn in_stmt(s: &Stmt) -> Option<Span> {
-        match s {
-            Stmt::ForEach { span, .. } => Some(span.clone()),
-            Stmt::While { cond, body, .. } => in_expr(cond).or_else(|| in_block(body)),
-            Stmt::ForRange {
-                start, stop, step, body, ..
-            } => in_expr(start)
-                .or_else(|| in_expr(stop))
-                .or_else(|| in_expr(step))
-                .or_else(|| in_block(body)),
-            Stmt::LetBinding { value, .. }
-            | Stmt::LetStarBinding { value, .. }
-            | Stmt::ExprStmt { expr: value, .. }
-            | Stmt::Assign { value, .. } => in_expr(value),
-            _ => None,
-        }
-    }
-    fn in_expr(e: &Expr) -> Option<Span> {
-        match e {
-            Expr::If {
-                cond,
-                then_branch,
-                else_branch,
-                ..
-            } => in_expr(cond)
-                .or_else(|| in_block(then_branch))
-                .or_else(|| in_block(else_branch)),
-            Expr::Block(b) => in_block(b),
-            _ => None,
-        }
-    }
-    m.functions.iter().find_map(|f| in_block(&f.body))
-}
-
 fn scan_block_for_builtin(b: &Block) -> Option<(String, Span)> {
     for s in &b.stmts {
         let inner = match s {
@@ -896,6 +977,15 @@ fn scan_block_for_builtin(b: &Block) -> Option<(String, Span)> {
                 .or_else(|| scan_expr_for_builtin(stop))
                 .or_else(|| scan_expr_for_builtin(step))
                 .or_else(|| scan_block_for_builtin(body)),
+            // Sequence write / iteration bodies likewise carry sub-expressions.
+            Stmt::SeqSet {
+                seq, index, value, ..
+            } => scan_expr_for_builtin(seq)
+                .or_else(|| scan_expr_for_builtin(index))
+                .or_else(|| scan_expr_for_builtin(value)),
+            Stmt::ForEach { iter, body, .. } => {
+                scan_expr_for_builtin(iter).or_else(|| scan_block_for_builtin(body))
+            }
             _ => None,
         };
         if inner.is_some() {
@@ -932,6 +1022,11 @@ fn scan_expr_for_builtin(e: &Expr) -> Option<(String, Span)> {
             .iter()
             .find_map(|c| scan_expr_for_builtin(&c.value)),
         Expr::Convert { value, .. } => scan_expr_for_builtin(value),
+        Expr::SeqLit { items, .. } => items.iter().find_map(scan_expr_for_builtin),
+        Expr::SeqIndex { seq, index, .. } => {
+            scan_expr_for_builtin(seq).or_else(|| scan_expr_for_builtin(index))
+        }
+        Expr::SeqLen { seq, .. } => scan_expr_for_builtin(seq),
         _ => None,
     }
 }
