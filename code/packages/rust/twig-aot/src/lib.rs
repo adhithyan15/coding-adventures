@@ -83,6 +83,77 @@ use std::collections::{HashMap, HashSet};
 use std::path::{Path, PathBuf};
 
 use aarch64_backend::{compile_with_globals, GlobalWordReloc, Reloc};
+use aarch64_encoder::{Assembler, Reg};
+
+/// Symbol of the generated **GC entry wrapper** — the real `_main` of an AOT image.
+/// It registers the module's GC stack maps (via [`GC_INIT_STACKMAPS`]) and then
+/// tail-calls the user's entry, returning its result unchanged. Transparent to the
+/// program's output; it only adds the pre-`main` registration hook precise GC needs.
+const GC_AOT_ENTRY: &str = "__gc_aot_entry";
+/// Symbol of the generated **stack-map registration** function, called once by the
+/// entry wrapper before the user program. A no-op today (Increment A); a later rung
+/// fills it in to register each function's stack map so `__gc_collect_precise` can
+/// resolve real frames.
+const GC_INIT_STACKMAPS: &str = "__gc_init_stackmaps";
+
+/// Build the synthetic GC entry functions injected into every aarch64 AOT module:
+/// the registration function [`GC_INIT_STACKMAPS`] and the entry wrapper
+/// [`GC_AOT_ENTRY`]. They are ordinary functions in the compile set — their
+/// intra-module `BL`s (`wrapper → init`, `wrapper → user_entry`) are patched by the
+/// same two-pass linker as any other call.
+///
+/// The wrapper is a standard AAPCS64 leaf-ish frame:
+///
+/// ```text
+///   __gc_aot_entry:
+///       stp x29, x30, [sp, #-16]!     ; save fp/lr
+///       mov x29, sp
+///       bl  __gc_init_stackmaps       ; register stack maps (no-op for now)
+///       bl  <user_entry>              ; x0 = program result
+///       ldp x29, x30, [sp], #16       ; restore fp/lr (x0 untouched)
+///       ret                           ; return the program result verbatim
+/// ```
+///
+/// `bl __gc_init_stackmaps` *may* clobber the caller-saved registers (x0–x18) per the
+/// ABI — a no-op today, but the follow-up that fills it in will — and that is fine:
+/// it runs *before* the user entry, and a twig `main` takes no arguments, so nothing
+/// live is lost. The user entry's x0 result survives the `ldp`/`ret` unchanged.
+// Same `(name, bytes, ext_relocs, global_relocs)` tuple the per-function compile
+// loop produces; the injected entries join `fn_results` verbatim.
+#[allow(clippy::type_complexity)]
+fn build_gc_entry_functions(
+    user_entry: &str,
+) -> Result<Vec<(String, Vec<u8>, Vec<Reloc>, Vec<GlobalWordReloc>)>, AotError> {
+    let asm_err = |e| AotError::Linker {
+        status: None,
+        stderr: format!("twig-aot: GC entry codegen: {e:?}"),
+    };
+
+    // ── __gc_init_stackmaps: no-op (Increment A) — just return. ──────────────
+    let init_bytes = {
+        let mut a = Assembler::new();
+        a.ret();
+        a.finish().map_err(asm_err)?
+    };
+
+    // ── __gc_aot_entry: register, run the user entry, return its result. ─────
+    let (wrapper_bytes, wrapper_relocs) = {
+        let mut a = Assembler::new();
+        a.stp_pre(Reg::Fp, Reg::Lr, Reg::Sp, -16).map_err(asm_err)?;
+        a.add_imm(Reg::Fp, Reg::Sp, 0).map_err(asm_err)?; // mov x29, sp
+        a.bl_external(GC_INIT_STACKMAPS); // intra-module BL, patched by the linker
+        a.bl_external(user_entry); // x0 = user program result
+        a.ldp_post(Reg::Fp, Reg::Lr, Reg::Sp, 16).map_err(asm_err)?;
+        a.ret();
+        let relocs = std::mem::take(&mut a.external_relocs);
+        (a.finish().map_err(asm_err)?, relocs)
+    };
+
+    Ok(vec![
+        (GC_INIT_STACKMAPS.to_string(), init_bytes, Vec::new(), Vec::new()),
+        (GC_AOT_ENTRY.to_string(), wrapper_bytes, wrapper_relocs, Vec::new()),
+    ])
+}
 use aot_core::infer::infer_types;
 use aot_core::link::{entry_point_offset, link};
 use aot_core::specialise::aot_specialise;
@@ -274,7 +345,14 @@ pub fn compile_module_macos_arm64_object_with_mode(
     let entry = module.entry_point.as_deref().ok_or(AotError::NoEntryPoint)?;
     let (text, offsets, n_global_slots, global_relocs, extern_relocs) =
         compile_module_to_text(module)?;
-    let entry_off = entry_point_offset(&offsets, Some(entry));
+    // The image's `_main` is the GC entry wrapper (`__gc_aot_entry`), which registers
+    // the module's stack maps and then runs the user entry (see
+    // `build_gc_entry_functions`). Fall back to the user entry only if the wrapper is
+    // somehow absent, so the pipeline degrades gracefully.
+    let entry_off = offsets
+        .get(GC_AOT_ENTRY)
+        .copied()
+        .unwrap_or_else(|| entry_point_offset(&offsets, Some(entry)));
 
     // Use pack_object_with_globals_and_externals for all cases (LANG41).
     //
@@ -2477,6 +2555,40 @@ fn compile_module_to_text_raw(
         fn_results.push((fn_.name.clone(), bytes, ext_relocs, glob_relocs));
     }
 
+    // ── Inject the GC entry wrapper + stack-map registration (LANG16/AOT00-T1) ─
+    //
+    // These are ordinary functions appended to the compile set, so `link()` gives
+    // them offsets and pass 2 patches the wrapper's `BL`s (→ init, → user entry)
+    // exactly like any other intra-module call. The macOS object path points its
+    // `_main` entry symbol at `__gc_aot_entry` instead of the user's entry (see the
+    // caller); in-process execution keeps calling the user entry directly, so it is
+    // unaffected. Injecting for every module keeps the text layout uniform.
+    let user_entry = module.entry_point.as_deref().unwrap_or("main");
+    // Guard the reserved GC symbols. `link()` is last-write-wins on duplicate names
+    // and the synthetic functions are appended last, so a user function named
+    // `__gc_aot_entry` / `__gc_init_stackmaps` would be silently shadowed. Worse, the
+    // wrapper emits `bl <user_entry>`, so if the module's *entry point* is a reserved
+    // name the wrapper resolves it to the synthetic symbol itself: naming the entry
+    // `__gc_aot_entry` makes the wrapper `bl` itself (infinite recursion at start-up),
+    // and `__gc_init_stackmaps` makes it call the no-op init instead of the program
+    // (an image that exits with an uninitialised `x0`). Both defeat the wrapper. Guard
+    // BOTH the defined function names and the entry name, and reject rather than
+    // miscompile — the reserved symbols belong to the injected GC entry alone.
+    for reserved in [GC_AOT_ENTRY, GC_INIT_STACKMAPS] {
+        if user_entry == reserved || fn_results.iter().any(|(name, _, _, _)| name == reserved) {
+            return Err(AotError::Linker {
+                status: None,
+                stderr: format!(
+                    "twig-aot: symbol '{reserved}' is reserved for the GC entry wrapper \
+                     and cannot be a module function or entry point",
+                ),
+            });
+        }
+    }
+    for synth in build_gc_entry_functions(user_entry)? {
+        fn_results.push(synth);
+    }
+
     // ── LANG41: external symbols are resolved by the system linker ───────────
     //
     // Unlike the LANG40 approach (which injected a macOS-specific helper with
@@ -2631,6 +2743,96 @@ mod dynval_runtime_golden;
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// The injected GC entry functions are well-formed: the no-op init is a single
+    /// `RET`, and the wrapper's two `BL`s (→ init, → user entry) are recorded as
+    /// relocations for the linker to patch intra-module.
+    #[test]
+    fn gc_entry_functions_are_well_formed() {
+        let fns = build_gc_entry_functions("main").expect("codegen");
+        assert_eq!(fns.len(), 2);
+
+        let (init_name, init_bytes, init_relocs, _) = &fns[0];
+        assert_eq!(init_name, GC_INIT_STACKMAPS);
+        // No-op init = one 4-byte `RET` (0xD65F03C0), no relocations.
+        assert_eq!(init_bytes, &0xD65F03C0u32.to_le_bytes());
+        assert!(init_relocs.is_empty());
+
+        let (wrap_name, wrap_bytes, wrap_relocs, _) = &fns[1];
+        assert_eq!(wrap_name, GC_AOT_ENTRY);
+        assert_eq!(wrap_bytes.len() % 4, 0, "whole instructions");
+        // Two BLs: one to the init, one to the user entry — both need patching.
+        let targets: Vec<&str> = wrap_relocs.iter().map(|r| r.symbol.as_str()).collect();
+        assert!(targets.contains(&GC_INIT_STACKMAPS), "wrapper calls the init");
+        assert!(targets.contains(&"main"), "wrapper calls the user entry");
+        // The wrapper is a real frame: it ends in `RET` (last word).
+        let last = &wrap_bytes[wrap_bytes.len() - 4..];
+        assert_eq!(last, 0xD65F03C0u32.to_le_bytes());
+    }
+
+    /// The wrapper targets whatever the module's entry is named, not a hardcoded
+    /// `main`, so a program with a differently-named entry still links.
+    #[test]
+    fn gc_entry_wrapper_targets_the_named_entry() {
+        let fns = build_gc_entry_functions("_start").expect("codegen");
+        let wrap_relocs = &fns[1].2;
+        assert!(wrap_relocs.iter().any(|r| r.symbol == "_start"));
+        assert!(!wrap_relocs.iter().any(|r| r.symbol == "main"));
+    }
+
+    /// A module that defines one of the reserved GC entry symbols is rejected, not
+    /// silently miscompiled (the injected wrapper would otherwise shadow it and could
+    /// recurse into itself at start-up).
+    #[test]
+    fn reserved_gc_entry_name_is_rejected() {
+        for reserved in [GC_AOT_ENTRY, GC_INIT_STACKMAPS] {
+            let mut m = IIRModule::new("collide", "twig");
+            m.entry_point = Some(reserved.to_string());
+            let f = IIRFunction::new(
+                reserved,
+                vec![],
+                "i64",
+                vec![
+                    IIRInstr::new("const", Some("v".into()), vec![Operand::Int(0)], "i64"),
+                    IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i64"),
+                ],
+            );
+            m.functions.push(f);
+            let err = compile_module_macos_arm64_object(&m);
+            assert!(
+                matches!(&err, Err(AotError::Linker { stderr, .. }) if stderr.contains("reserved")),
+                "expected a reserved-name error for {reserved}, got {err:?}",
+            );
+        }
+    }
+
+    /// Naming the ENTRY POINT a reserved GC symbol is rejected even when no user
+    /// function is literally named that — otherwise the wrapper's `bl <user_entry>`
+    /// would resolve to the synthetic symbol (self-recursion / no-op) at start-up.
+    #[test]
+    fn reserved_gc_entry_point_without_matching_fn_is_rejected() {
+        for reserved in [GC_AOT_ENTRY, GC_INIT_STACKMAPS] {
+            let mut m = IIRModule::new("collide", "twig");
+            // The entry names a reserved symbol, but the module's only function is an
+            // ordinary `main` — nothing is literally named `reserved`.
+            m.entry_point = Some(reserved.to_string());
+            let f = IIRFunction::new(
+                "main",
+                vec![],
+                "i64",
+                vec![
+                    IIRInstr::new("const", Some("v".into()), vec![Operand::Int(0)], "i64"),
+                    IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i64"),
+                ],
+            );
+            m.functions.push(f);
+            let err = compile_module_macos_arm64_object(&m);
+            assert!(
+                matches!(&err, Err(AotError::Linker { stderr, .. }) if stderr.contains("reserved")),
+                "expected a reserved-entry error for {reserved}, got {err:?}",
+            );
+        }
+    }
 
     #[test]
     fn module_with_no_entry_point_errors() {
