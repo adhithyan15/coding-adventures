@@ -2,6 +2,60 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- **(HIGH) A `/`-comment opened on one physical line of a still-open
+  continuation silently swallowed every subsequently-typed line, forever.**
+  The previous scanner tokenized the *whole accumulated, space-joined*
+  `self.buffer` on every call — but `q-lexer`'s comment rule blanks from `/`
+  through the next **real** `'\n'` or end of input, and this REPL joins
+  continuation lines with a single **space**, never a real `'\n'`. A
+  comment opened on one physical line therefore had no real `'\n'` left to
+  stop at once joined, and silently erased every following line — including
+  whatever closing bracket was supposed to complete the statement — leaving
+  the session stuck reporting `NeedMore` forever (until the 64 KiB
+  continuation cap eventually fired and discarded the whole thing,
+  including legitimately-typed program text). `quit`/`exit` couldn't escape
+  it either, since those are only recognized when the buffer is empty.
+  Concrete repro: `feed("(1 / comment")` then `feed("+2)")` never
+  evaluated to `3`. Fixed by [`blank_line_comment`]: each physical line's
+  own trailing comment is now blanked to spaces **before** it is folded
+  into `self.buffer` at all (not merely accounted for when checking
+  completeness) — a comment's real extent is only knowable one physical
+  line at a time, before the lossy space-join loses track of where each
+  line ended.
+- **(MEDIUM) O(n²) cumulative CPU cost from re-tokenizing the whole
+  buffer on every fed line.** The previous `is_incomplete` re-tokenized the
+  entire accumulated buffer from scratch on every physical line fed while a
+  bracket remained open — cost per call scaled with the buffer's current
+  length, so cumulative cost across a continuation that grows one short
+  line at a time was O(n²) in the number of lines. `QRepl` now tracks
+  running `(parens, braces, brackets)` counts as instance state and
+  tokenizes only the newly-appended (already comment-blanked) line
+  fragment on each call, folding its own delta into the running totals —
+  O(line length) per call, O(buffer length) total per continuation, not
+  O(buffer length²). Sound because no token in this cut's grammar can span
+  a line-fragment boundary (no multi-line string/number literal, MA11 §4).
+  Solving both findings with the same per-line pre-processing step (rather
+  than two separate patches) falls out naturally: once each line's own
+  comment is blanked and tokenized independently, a comment on one line can
+  no longer reach past that line's own end, by construction.
+- Added regression tests: `a_comment_opened_mid_continuation_does_not_swallow_the_rest_of_the_statement`
+  and `a_comment_inside_a_multi_line_function_literal_does_not_swallow_the_closing_brace`
+  (Finding 1), and `per_line_scanning_cost_does_not_scale_with_the_existing_buffer_size`
+  (Finding 2 — a comparative timing measurement: the same number of
+  trivial filler lines against a small vs. a ~60 KiB pre-existing buffer
+  must cost approximately the same, not scale with the existing buffer
+  size).
+- Corrects this file's own earlier (now inaccurate) claim that "comments
+  need zero REPL-level handling of their own" — see above; this crate now
+  does its own narrow, documented, single-physical-line-scoped comment
+  blanking, precisely because whole-buffer delegation to `q-lexer` turned
+  out to be unsound for a REPL that joins lines with spaces rather than
+  real newlines.
+
 ## [0.1.0] - 2026-07-22
 
 ### Added

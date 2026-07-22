@@ -28,8 +28,9 @@
 //! itself bracketed (`{[x;y] ...}`), **bracket** balance (`[`/`]`) too,
 //! even though splitting a parameter list across a line break would be
 //! unusual style. This module does **not** just copy `j-repl`'s scanner
-//! verbatim and assume it is sufficient — see [`is_incomplete`]'s own doc
-//! comment for the verification this claim rests on.
+//! verbatim and assume it is sufficient — see [`QRepl::feed`]'s and
+//! [`line_bracket_delta`]'s own doc comments for the verification this
+//! claim rests on.
 //!
 //! ## Delegating to the real Q lexer, not a hand-rolled character scan
 //!
@@ -41,22 +42,71 @@
 //! A naive character-level scan of the raw buffer would be fooled by that
 //! stray `(` inside the comment and wait forever for a `)` that will never
 //! come. Rather than re-deriving `q-lexer`'s own whitespace-sensitive
-//! comment-stripping rule a second time by hand here (which this repo's
-//! "no hand-written lexers" discipline warns against duplicating), this
-//! scanner tokenizes the accumulated buffer with the *real*
-//! `coding_adventures_q_lexer::try_tokenize_q` (which already strips
+//! comment-stripping rule a second time by hand here for *tokenizing*
+//! purposes (which this repo's "no hand-written lexers" discipline warns
+//! against duplicating), this scanner tokenizes each physical line with the
+//! *real* `coding_adventures_q_lexer::try_tokenize_q` (which already strips
 //! comments via its own pre-tokenize hook) and counts only genuine
 //! `LPAREN`/`RPAREN`/`LBRACE`/`RBRACE`/`LBRACKET`/`RBRACKET` *tokens* — a
 //! bracket character sitting inside a comment is never even tokenized as
-//! one, so it can never be miscounted. Tokenizing a syntactically
-//! incomplete-but-not-yet-closed buffer is always safe here: Q's lexer has
-//! no notion of an "unterminated" token that could fail on partial input
-//! (no multi-line string/char literal in this cut's alphabet at all,
-//! MA11 §4), so a `try_tokenize_q` failure here can only mean a genuinely
-//! unrecognized character — in that case this scanner reports "not
-//! incomplete" (falls through to evaluation) so the *real* lex/parse error
-//! surfaces through [`Interpreter::feed`]'s own `Result`, rather than
-//! silently waiting for more input forever.
+//! one, so it can never be miscounted.
+//!
+//! ## Why comments must be pre-blanked *per physical line*, before the join
+//! (not just accounted for when checking completeness)
+//!
+//! An earlier version of this scanner tokenized the *whole accumulated,
+//! space-joined* `self.buffer` on every call. That has a real bug: `/`
+//! blanks from itself through the next **real** `'\n'` or end of input, but
+//! this REPL joins continuation lines with a single **space** (never a
+//! real `'\n'`, see [`QRepl::feed`]'s own doc comment for why) — so a
+//! comment opened on one physical line, once joined into the single-line
+//! buffer, has no real `'\n'` left to stop at and silently blanks *every
+//! subsequent physical line* too, including whatever closing bracket was
+//! supposed to complete the statement. The session would then wait for
+//! more input forever (the "closing" text was erased before it could be
+//! counted), and — just as badly — even if completeness were somehow
+//! detected some other way, hand raw `self.buffer` to [`Interpreter::feed`]
+//! and the identical problem recurs there: tokenizing the whole
+//! (still-comment-bearing, still-`'\n'`-free) buffer at evaluation time
+//! would blank the exact same "rest of the statement" a second time.
+//!
+//! The fix ([`blank_line_comment`]) blanks each physical line's own
+//! trailing comment (if any) to spaces **before** it is ever appended to
+//! `self.buffer` or tokenized for bracket-counting — both problems have the
+//! same root cause (a comment's real extent is only known one physical
+//! line at a time, before the lossy space-join), so both are fixed by the
+//! same per-line pre-processing step, not two separate patches. This is a
+//! narrow, deliberate, *documented* duplication of `q-lexer`'s comment rule
+//! (that crate's own `strip_slash_comments` is private and built for a
+//! whole, possibly-multi-line source, not a single line) — see
+//! `blank_line_comment`'s own doc comment for why this narrower scope
+//! makes the duplication sound rather than a maintenance hazard.
+//!
+//! ## Incremental, not whole-buffer, bracket counting (avoiding O(n²) cost)
+//!
+//! Tokenizing the *entire* accumulated buffer from scratch on every single
+//! physical line fed (the earlier version's approach) costs O(buffer
+//! length) per call; summed over a continuation that grows to the full
+//! `MAX_CONTINUATION_BUFFER` one short line at a time, the cumulative cost
+//! is O(n²) in the number of lines. [`QRepl`] instead tracks **running**
+//! `(parens, braces, brackets)` counts as instance state and, on each
+//! `feed()` call, tokenizes only the *newly appended* (comment-blanked)
+//! line fragment, folding its own delta into the running totals — O(line
+//! length) per call, O(buffer length) total across an entire continuation,
+//! not O(buffer length²). This is sound because no token in this cut's
+//! grammar can span a line-fragment boundary (no multi-line string/number
+//! literal, MA11 §4) — tokenizing one fragment at a time and summing
+//! deltas gives the identical bracket counts whole-buffer tokenization
+//! would have, every time.
+//!
+//! Tokenizing a syntactically incomplete-but-not-yet-closed fragment is
+//! always safe here: Q's lexer has no notion of an "unterminated" token
+//! that could fail on partial input (no multi-line string/char literal in
+//! this cut's alphabet at all, MA11 §4), so a `try_tokenize_q` failure here
+//! can only mean a genuinely unrecognized character — in that case this
+//! scanner reports "not incomplete" (falls through to evaluation) so the
+//! *real* lex/parse error surfaces through [`Interpreter::feed`]'s own
+//! `Result`, rather than silently waiting for more input forever.
 //!
 //! Hand-rolled rather than built on the generic `repl` crate, mirroring
 //! `j-repl`'s own rationale: the interpreter is single-threaded, and a
@@ -136,75 +186,110 @@ fn read_bounded_line<R: BufRead>(reader: &mut R) -> std::io::Result<Option<Resul
     }
 }
 
-/// Whether `src` (the accumulated continuation buffer) still has an
-/// unbalanced `(`, `{`, or `[` -- i.e. whether the REPL should keep reading
-/// more physical lines before handing `src` to the interpreter.
+/// Blank out a `/`-to-end-of-line comment on a **single physical line**
+/// (never containing an embedded `'\n'` — every line reaching [`QRepl::feed`]
+/// has already had its own trailing newline stripped by [`run`]'s caller
+/// logic before `feed` ever sees it).
 ///
-/// Tokenizes `src` with the *real* Q lexer (see this module's own top doc
-/// comment for why: comment-awareness comes for free this way, with no
-/// risk of a stray bracket character *inside* a comment fooling a naive
-/// character scan) and counts three *independent* running depths — a
-/// bracket type is "still open" only by its *own* count, so `{)` (a brace
-/// opened, then a paren closed with no matching open) correctly stays
-/// "incomplete" on the strength of the still-unbalanced brace, rather than
-/// two mismatched counts happening to cancel out in a combined tally.
+/// Mirrors `q-lexer`'s own (private) `strip_slash_comments` pre-tokenize
+/// hook exactly (MA11 §3 bullet 2's rule: a `/` preceded by whitespace, or
+/// at the very start of the line, opens a comment that runs to the next
+/// real `'\n'` or end of input) — necessarily re-derived here, since that
+/// function is private to `q-lexer` and is built to scan a whole,
+/// potentially multi-line source, tracking whitespace-adjacency across
+/// real embedded newlines. This is **sound to duplicate at this narrower
+/// scope**, not a maintenance hazard, specifically because a single
+/// physical line never contains an embedded `'\n'` at all: the full rule
+/// ("blank until the next real `'\n'` or end of input") degenerates
+/// exactly to "blank to the end of this line", with no multi-line state to
+/// track — and because a real, previously-processed physical line always
+/// had a real `'\n'` (itself whitespace-like) immediately before the next
+/// one in genuine multi-line source, treating "start of this line" as
+/// whitespace-like (this function's own initial state, matching
+/// `q-lexer`'s identical "start of input counts as whitespace-like" rule)
+/// reproduces the exact same decision the real, whole-source algorithm
+/// would have made at that position.
 ///
-/// If tokenizing `src` itself fails (a genuinely unrecognized character —
-/// the only way `try_tokenize_q` can fail, since this cut's lexer has no
-/// literal type that could be "unterminated" on partial input, MA11 §4),
-/// this returns `false` (not incomplete) rather than looping forever: the
-/// real lex error will surface cleanly through [`Interpreter::feed`]'s own
-/// `Result` once this buffer is hu to evaluation, exactly like any other
-/// runtime error this REPL already displays without crashing.
+/// See this module's own top doc comment ("Why comments must be
+/// pre-blanked *per physical line*") for why this must happen **before**
+/// a line is folded into `self.buffer` at all, not merely accounted for
+/// when checking completeness: this REPL joins continuation lines with a
+/// single space, never a real `'\n'` (MA11's own significant-`NEWLINE`
+/// grammar rule forbids injecting one mid-expression), so a comment that
+/// is not blanked here would have no real `'\n'` left anywhere in the
+/// joined buffer to stop at — silently erasing every subsequent line, at
+/// both the completeness-check stage and, just as importantly, at the
+/// final evaluation stage (`Interpreter::feed` tokenizes the very same
+/// joined buffer and would hit the identical problem).
+fn blank_line_comment(line: &str) -> String {
+    let chars: Vec<char> = line.chars().collect();
+    let n = chars.len();
+    let mut out = String::with_capacity(n);
+    let mut prev_is_whitespace_like = true; // start of line counts as whitespace-like
+    let mut i = 0;
+    while i < n {
+        let c = chars[i];
+        if c == '/' && prev_is_whitespace_like {
+            // Comment: blank through to the end of this line -- there is
+            // no embedded '\n' to stop at any earlier.
+            for _ in i..n {
+                out.push(' ');
+            }
+            break;
+        }
+        out.push(c);
+        prev_is_whitespace_like = matches!(c, ' ' | '\t' | '\r' | '\n');
+        i += 1;
+    }
+    out
+}
+
+/// The net change in open-`(`/open-`{`/open-`[` counts contributed by one
+/// already-comment-blanked line fragment, as `(parens, braces, brackets)`
+/// deltas (each may be negative, e.g. a continuation line that is just a
+/// closing `)`) — the incremental building block [`QRepl::feed`] folds
+/// into its own running totals on every call, replacing whole-buffer
+/// re-tokenization (see this module's own top doc comment, "Incremental,
+/// not whole-buffer, bracket counting").
 ///
-/// # Verified by hand-tracing exactly the scenario this module's doc
-/// comment describes (not just asserted)
-///
-/// - `{[x;y]` alone: tokenizes to `LBRACE LBRACKET NAME SEMICOLON NAME
-///   RBRACKET` -- braces=1, brackets=0 (opened then closed) -- still
-///   "incomplete" (`braces > 0`), correctly waiting for the rest of the
-///   body and the closing `}`.
-/// - Continuing with ` x+y}`: the *combined*, space-joined buffer
-///   `{[x;y] x+y}` now tokenizes with braces returning to 0 -- no longer
-///   incomplete, handed off to the interpreter as one complete statement.
-/// - A complete one-line statement, e.g. `2+2`, has no bracket tokens at
-///   all -- all three counters stay `0` -- never spuriously waits.
-/// - `(1+2` (open paren, J's/APL's own classic case): `parens = 1`,
-///   `braces = 0`, `brackets = 0` -- incomplete on the strength of `parens`
-///   alone, exactly like `j-repl`'s own scanner.
-/// - `{)`  (mismatched: a brace opened, then a *paren* closed with nothing
-///   open): `braces = 1` (LBRACE, never decremented -- the RPAREN only
-///   touches the `parens` counter, whose own decrement is clamped at 0 by
-///   `.max(0)` since no LPAREN preceded it) -- correctly still
-///   "incomplete", unlike a single combined depth counter, which would
-///   have let the mismatched close cancel the open out to `0` and stopped
-///   waiting prematurely.
-fn is_incomplete(src: &str) -> bool {
-    let tokens = match coding_adventures_q_lexer::try_tokenize_q(src) {
-        Ok(tokens) => tokens,
-        Err(_) => return false,
-    };
+/// `Ok(None)` means tokenizing `line` itself failed (a genuinely
+/// unrecognized character — the only way `try_tokenize_q` can fail, since
+/// this cut's lexer has no literal type that could be "unterminated" on
+/// partial input, MA11 §4); the caller treats this the same way the
+/// previous whole-buffer version did — proceed to evaluation immediately
+/// rather than waiting forever, letting the real lex/parse error surface
+/// through [`Interpreter::feed`]'s own `Result`.
+fn line_bracket_delta(line: &str) -> Option<(i32, i32, i32)> {
+    let tokens = coding_adventures_q_lexer::try_tokenize_q(line).ok()?;
     let mut parens = 0i32;
     let mut braces = 0i32;
     let mut brackets = 0i32;
     for t in &tokens {
         match t.effective_type_name() {
             "LPAREN" => parens += 1,
-            "RPAREN" => parens = (parens - 1).max(0),
+            "RPAREN" => parens -= 1,
             "LBRACE" => braces += 1,
-            "RBRACE" => braces = (braces - 1).max(0),
+            "RBRACE" => braces -= 1,
             "LBRACKET" => brackets += 1,
-            "RBRACKET" => brackets = (brackets - 1).max(0),
+            "RBRACKET" => brackets -= 1,
             _ => {}
         }
     }
-    parens > 0 || braces > 0 || brackets > 0
+    Some((parens, braces, brackets))
 }
 
 /// A persistent interactive Q session.
 pub struct QRepl {
     interp: Interpreter,
     buffer: String,
+    /// Running open-bracket counts for the CURRENT continuation, updated
+    /// incrementally (one line's own delta at a time) rather than
+    /// recomputed by re-tokenizing all of `buffer` on every call — see this
+    /// module's own top doc comment, "Incremental, not whole-buffer,
+    /// bracket counting".
+    open_parens: i32,
+    open_braces: i32,
+    open_brackets: i32,
 }
 
 impl Default for QRepl {
@@ -218,6 +303,9 @@ impl QRepl {
         QRepl {
             interp: Interpreter::new(),
             buffer: String::new(),
+            open_parens: 0,
+            open_braces: 0,
+            open_brackets: 0,
         }
     }
 
@@ -243,6 +331,17 @@ impl QRepl {
     /// fixed, and mirrored here verbatim: compute `separator_len` first,
     /// check the *prospective* total size, and only `push_str` after that
     /// check passes).
+    ///
+    /// # Comment blanking happens first, before anything else touches `line`
+    ///
+    /// `line` is comment-blanked ([`blank_line_comment`]) *before* it is
+    /// measured for the size cap, appended to `self.buffer`, or tokenized
+    /// for its own bracket delta — see this module's own top doc comment,
+    /// "Why comments must be pre-blanked per physical line", for why this
+    /// single step is what fixes both the comment-swallowing bug and (by
+    /// construction) keeps the incremental bracket count correct. Blanking
+    /// only replaces characters with spaces (same length), so the size
+    /// check's byte-count math is unaffected either way.
     pub fn feed(&mut self, line: &str) -> ReplResponse {
         if self.buffer.is_empty() {
             match line.trim() {
@@ -250,6 +349,8 @@ impl QRepl {
                 _ => {}
             }
         }
+
+        let line = blank_line_comment(line);
 
         // Bound the accumulation buffer BEFORE growing it -- see this
         // method's own doc comment. `separator_len` accounts for the
@@ -264,13 +365,16 @@ impl QRepl {
             > MAX_CONTINUATION_BUFFER
         {
             self.buffer.clear();
+            self.open_parens = 0;
+            self.open_braces = 0;
+            self.open_brackets = 0;
             return ReplResponse::Output(format!(
                 "Error: statement exceeds the {MAX_CONTINUATION_BUFFER}-byte continuation limit; discarded\n"
             ));
         }
 
         if separator_len == 0 {
-            self.buffer.push_str(line);
+            self.buffer.push_str(&line);
         } else {
             // Joining with a single space (not a real '\n') keeps a still-
             // open `{...}`/`(...)`/`[...]` on one logical line -- Q's own
@@ -281,13 +385,33 @@ impl QRepl {
             // mirroring `j-repl`'s identical rationale for its own simpler
             // (paren-only) case.
             self.buffer.push(' ');
-            self.buffer.push_str(line);
+            self.buffer.push_str(&line);
         }
 
-        if is_incomplete(&self.buffer) {
+        // Incremental bracket-delta update (see this module's own top doc
+        // comment, "Incremental, not whole-buffer, bracket counting") --
+        // tokenizes only the just-appended (already comment-blanked) line,
+        // not the whole accumulated buffer. A tokenize failure on this one
+        // fragment forces an immediate attempt at evaluation (matching the
+        // previous whole-buffer version's identical "don't wait forever on
+        // a genuinely bad character" behavior), regardless of the running
+        // counts.
+        let still_incomplete = match line_bracket_delta(&line) {
+            Some((dp, db, dk)) => {
+                self.open_parens = (self.open_parens + dp).max(0);
+                self.open_braces = (self.open_braces + db).max(0);
+                self.open_brackets = (self.open_brackets + dk).max(0);
+                self.open_parens > 0 || self.open_braces > 0 || self.open_brackets > 0
+            }
+            None => false,
+        };
+        if still_incomplete {
             return ReplResponse::NeedMore;
         }
 
+        self.open_parens = 0;
+        self.open_braces = 0;
+        self.open_brackets = 0;
         let src = std::mem::take(&mut self.buffer);
         if src.trim().is_empty() {
             return ReplResponse::Output(String::new());
@@ -418,13 +542,126 @@ mod tests {
         assert!(!r.is_continuing());
     }
 
+    /// Security-review regression (Finding 1, HIGH): a `/`-comment opened on
+    /// one physical line of a still-open continuation must NOT swallow
+    /// every subsequently-typed line. Before the per-line comment-blanking
+    /// fix, the second `feed()` call below returned `NeedMore` forever (the
+    /// combined space-joined buffer has no real `'\n'` for the comment to
+    /// stop at, so it erased `"+2)"` along with the comment) instead of
+    /// completing the statement and evaluating it to `3`.
+    #[test]
+    fn a_comment_opened_mid_continuation_does_not_swallow_the_rest_of_the_statement() {
+        let mut r = QRepl::new();
+        assert_eq!(r.feed("(1 / comment"), ReplResponse::NeedMore);
+        assert!(r.is_continuing());
+        match r.feed("+2)") {
+            ReplResponse::Output(t) => assert_eq!(t.trim(), "3"),
+            other => panic!(
+                "expected the statement to complete and evaluate to 3, got {other:?} \
+                 (a comment on the first line must not swallow the second line)"
+            ),
+        }
+        assert!(!r.is_continuing());
+    }
+
+    /// The same scenario, but with the comment-opening line ending in an
+    /// otherwise-legitimate trailing space before the continuation, and
+    /// with a brace/bracket continuation instead of a paren -- confirms the
+    /// fix isn't accidentally specific to the exact repro shape above.
+    #[test]
+    fn a_comment_inside_a_multi_line_function_literal_does_not_swallow_the_closing_brace() {
+        let mut r = QRepl::new();
+        assert_eq!(r.feed("f:{[x;y] / defines add"), ReplResponse::NeedMore);
+        match r.feed("x+y}") {
+            ReplResponse::Output(t) => assert_eq!(t, ""),
+            other => panic!("expected the function definition to complete silently, got {other:?}"),
+        }
+        assert!(matches!(r.feed("2 f 3"), ReplResponse::Output(t) if t.trim() == "5"));
+    }
+
+    /// Security-review regression (Finding 2, MEDIUM): re-tokenizing the
+    /// *entire* accumulated buffer on every fed line costs O(buffer length)
+    /// per call, summing to O(n²) over a continuation that grows one short
+    /// line at a time.
+    ///
+    /// A pure "N lines must complete within X seconds" bound would be
+    /// confounded by `try_tokenize_q`'s own fixed per-call cost (rebuilding
+    /// ~30 token patterns from `_grammar::token_grammar()` every call,
+    /// independent of input length) — that fixed cost is paid by both the
+    /// old whole-buffer approach and this one, and could easily dominate at
+    /// small N regardless of which is used, telling us nothing about
+    /// *scaling*. Instead this is a **comparative** measurement: feed the
+    /// exact same `n` trivial filler lines twice — once against a small
+    /// starting buffer, once against a buffer already pre-grown to just
+    /// under the continuation cap — and confirm the timing is
+    /// approximately the same either way. Every filler line here is an
+    /// all-comment line (`"/"`, blanked to a single space by
+    /// `blank_line_comment`) specifically so it never adds any real parse-
+    /// tree depth (avoiding `q-parser`'s own `MAX_RULE_DEPTH`, which caps a
+    /// genuine nested/chained expression at only ~13-26 terms — far too
+    /// shallow to build a meaningfully large N through real expression
+    /// content). If the whole-buffer-re-tokenization bug were still
+    /// present, the "large starting buffer" run would take dramatically
+    /// longer, since each of its `n` calls would re-scan the *entire*
+    /// (large) buffer instead of just its own tiny new fragment.
+    #[test]
+    fn per_line_scanning_cost_does_not_scale_with_the_existing_buffer_size() {
+        fn time_n_filler_lines(r: &mut QRepl, n: usize) -> std::time::Duration {
+            let start = std::time::Instant::now();
+            for _ in 0..n {
+                assert_eq!(r.feed("/"), ReplResponse::NeedMore);
+            }
+            start.elapsed()
+        }
+
+        let n = 500;
+
+        // Scenario A: small starting buffer.
+        let mut small = QRepl::new();
+        assert_eq!(small.feed("(0"), ReplResponse::NeedMore);
+        let small_time = time_n_filler_lines(&mut small, n);
+
+        // Scenario B: buffer already grown to just under the 64 KiB
+        // continuation cap via a single long all-comment padding line (one
+        // `feed()` call, not timed) -- still trivially shallow to parse
+        // (it's all blanked to whitespace), so no recursion-depth risk.
+        let mut large = QRepl::new();
+        assert_eq!(large.feed("(0"), ReplResponse::NeedMore);
+        let padding = format!("/{}", "x".repeat(60_000));
+        assert_eq!(large.feed(&padding), ReplResponse::NeedMore);
+        let large_time = time_n_filler_lines(&mut large, n);
+
+        let ratio = large_time.as_secs_f64() / small_time.as_secs_f64().max(1e-6);
+        assert!(
+            ratio < 5.0,
+            "feeding {n} trivial filler lines took {large_time:?} against a ~60 KiB \
+             pre-existing buffer vs {small_time:?} against a small one ({ratio:.1}x) -- \
+             per-line cost should not scale with the EXISTING buffer size (O(1) \
+             amortized per line, not O(buffer length))"
+        );
+
+        // Sanity check the fast path didn't corrupt anything: closing
+        // `small`'s continuation (untouched by all this comment filler,
+        // which contributes zero real tokens) must still evaluate to
+        // plain `0`.
+        match small.feed(")") {
+            ReplResponse::Output(t) => assert_eq!(t.trim(), "0"),
+            other => panic!("expected the statement to close cleanly to 0, got {other:?}"),
+        }
+    }
+
     #[test]
     fn mismatched_bracket_types_stay_incomplete_on_their_own_open_count() {
         // `{)`-shaped input: a brace opened, then a paren "closed" with
         // nothing open -- must stay incomplete on the strength of the
         // still-open BRACE, not have the mismatched close cancel it out
-        // (see `is_incomplete`'s own doc comment for the full rationale).
-        assert!(is_incomplete("{)"));
+        // (see `line_bracket_delta`'s own doc comment for the full
+        // rationale).
+        let (parens, braces, brackets) = line_bracket_delta("{)").unwrap();
+        assert_eq!((parens, braces, brackets), (-1, 1, 0));
+
+        let mut r = QRepl::new();
+        assert_eq!(r.feed("{)"), ReplResponse::NeedMore);
     }
 
     #[test]
