@@ -1729,6 +1729,7 @@ export interface Bjt {
   readonly forwardBetaTemperatureExponent: number;
   readonly reverseBeta: number;
   readonly reverseBetaRolloffCurrent: number;
+  readonly nominalTemperatureKelvin: number | undefined;
 }
 
 export type MosfetType = "NMOS" | "PMOS";
@@ -2006,8 +2007,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   Record<ModelCardKind, readonly [number, number, number, number]>
 > = {
   D: [12, 18, 5, 3],
-  NPN: [26, 42, 12, 4],
-  PNP: [26, 42, 12, 4],
+  NPN: [27, 44, 13, 4],
+  PNP: [27, 44, 13, 4],
   NJF: [5, 11, 5, 3],
   PJF: [5, 11, 5, 3],
   NMOS: [18, 25, 6, 3],
@@ -3597,7 +3598,7 @@ function cloneSubcktElement(
     case "jfet":
       return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation, element.gateSourceCapacitance, element.gateDrainCapacitance);
     case "bjt":
-      return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.forwardEarlyVoltage, element.forwardEmissionCoefficient, element.reverseEmissionCoefficient, element.baseEmitterJunctionPotential, element.baseEmitterGradingCoefficient, element.baseCollectorJunctionPotential, element.baseCollectorGradingCoefficient, element.forwardBiasDepletionCoefficient, element.reverseEarlyVoltage, element.forwardBetaRolloffCurrent, element.baseEmitterLeakageSaturationCurrent, element.baseEmitterLeakageEmissionCoefficient, element.baseCollectorLeakageSaturationCurrent, element.baseCollectorLeakageEmissionCoefficient, element.forwardBetaTemperatureExponent, element.reverseBeta, element.reverseBetaRolloffCurrent);
+      return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.forwardEarlyVoltage, element.forwardEmissionCoefficient, element.reverseEmissionCoefficient, element.baseEmitterJunctionPotential, element.baseEmitterGradingCoefficient, element.baseCollectorJunctionPotential, element.baseCollectorGradingCoefficient, element.forwardBiasDepletionCoefficient, element.reverseEarlyVoltage, element.forwardBetaRolloffCurrent, element.baseEmitterLeakageSaturationCurrent, element.baseEmitterLeakageEmissionCoefficient, element.baseCollectorLeakageSaturationCurrent, element.baseCollectorLeakageEmissionCoefficient, element.forwardBetaTemperatureExponent, element.reverseBeta, element.reverseBetaRolloffCurrent, element.nominalTemperatureKelvin);
     case "mosfet":
       return mosfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), mapSubcktNode(element.body, instanceName, nodeMap), element.type, element.params);
     case "vccs":
@@ -7624,6 +7625,7 @@ export function bjtAtTemperature(
   if (!Number.isFinite(temperatureKelvin) || temperatureKelvin <= 0.0) {
     throw invalidElement(element.name, "temperature must be finite and positive");
   }
+  nominalTemperatureKelvin = element.nominalTemperatureKelvin ?? nominalTemperatureKelvin;
   if (!Number.isFinite(nominalTemperatureKelvin) || nominalTemperatureKelvin <= 0.0) {
     throw invalidElement(element.name, "nominal temperature must be finite and positive");
   }
@@ -7781,6 +7783,7 @@ export function bjt(
   forwardBetaTemperatureExponent = 0.0,
   reverseBeta = Number.POSITIVE_INFINITY,
   reverseBetaRolloffCurrent = 0.0,
+  nominalTemperatureKelvin: number | undefined = undefined,
 ): Bjt {
   return {
     kind: "bjt",
@@ -7815,6 +7818,7 @@ export function bjt(
     forwardBetaTemperatureExponent,
     reverseBeta,
     reverseBetaRolloffCurrent,
+    nominalTemperatureKelvin,
   };
 }
 
@@ -7925,6 +7929,8 @@ const BJT_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   IKF: "IKF",
   IK: "IKF",
   IKR: "IKR",
+  TNOM: "TNOM",
+  T_NOM: "TNOM",
   ISE: "ISE",
   NE: "NE",
   ISC: "ISC",
@@ -8458,6 +8464,7 @@ export function bjtFromModelCard(
     p.XTB ?? 0.0,
     p.BR ?? 1.0,
     p.IKR ?? 0.0,
+    p.TNOM !== undefined ? p.TNOM + 273.15 : undefined,
   );
 }
 
@@ -19894,6 +19901,10 @@ function validateBjt(element: Bjt): void {
   }
   if (!Number.isFinite(element.reverseBetaRolloffCurrent) || element.reverseBetaRolloffCurrent < 0.0) {
     throw invalidElement(element.name, "reverse beta roll-off current must be finite and non-negative");
+  }
+  if (element.nominalTemperatureKelvin !== undefined &&
+      (!Number.isFinite(element.nominalTemperatureKelvin) || element.nominalTemperatureKelvin <= 0.0)) {
+    throw invalidElement(element.name, "nominal temperature must be finite and positive");
   }
   if (!Number.isFinite(element.baseEmitterLeakageSaturationCurrent) || element.baseEmitterLeakageSaturationCurrent < 0.0) {
     throw invalidElement(element.name, "base-emitter leakage saturation current must be finite and non-negative");
