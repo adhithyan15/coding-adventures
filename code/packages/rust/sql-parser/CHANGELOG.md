@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.22] - Unreleased
+
+### Added
+
+- **Optional trailing `COLLATE name` on select-items and GROUP BY keys.** The
+  `select_item` rule now parses `expr COLLATE name [ alias ]` (so `SELECT DISTINCT
+  b COLLATE NOCASE` is accepted) and `group_clause` parses a per-key `COLLATE
+  name` tail (so `GROUP BY b COLLATE NOCASE`, and per-key `GROUP BY g, b COLLATE
+  NOCASE`). Both mirror ORDER BY's existing `COLLATE` tail: `COLLATE` is matched
+  as literal text (it is not a lexer keyword, so it and the collation name arrive
+  as `NAME` tokens) and the collation name is validated in the planner. Previously
+  a `COLLATE` suffix parsed only inside a comparison operand.
+
 ## [0.1.21] - Unreleased
 
 ### Added

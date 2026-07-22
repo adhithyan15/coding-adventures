@@ -608,6 +608,8 @@ class BJT:
     Tnom:
         Optional model nominal temperature in Kelvin. When omitted, temperature
         analysis uses its circuit-level nominal temperature.
+    Kf:
+        Flicker-noise coefficient (default 0.0, disabled).
     """
 
     name: str
@@ -642,6 +644,7 @@ class BJT:
     beta_r: float = float("inf")  # reverse current gain; infinity disables
     Ikr: float = 0.0        # reverse-beta roll-off current (A); 0 disables
     Tnom: float | None = None  # model nominal temperature (K); None inherits
+    Kf: float = 0.0            # flicker-noise coefficient; 0 disables
 
 
 # ---------------------------------------------------------------------------

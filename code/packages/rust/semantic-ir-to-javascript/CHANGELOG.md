@@ -1,5 +1,90 @@
 # Changelog
 
+## 0.50.0 — Derive's own SIR23 display convention (SIR23 addendum, item 4 of 4)
+
+Item 4 of the 4-item rollout described by `SIR23-symbolic-pattern-
+semantic-ir.md`'s own "Addendum — SIR23 symbolic evaluator + per-language
+display convention" section, and the last of the four (items 2 and 3 —
+held-form execution and calculus/elementary-function handlers — remain
+separate, not-yet-landed work; this item has no code dependency on either,
+since it touches only `toDisplayString`, a different function than
+`evalTerm`/`evalApply`). Found by `derive-to-semantic-ir/tests/oracle.rs`:
+even a fully-reduced SIR23 term printed wrong for Derive, because
+`Symbolic.toDisplayString` had no per-source-language display convention
+at all — every compound term rendered generically as `head(args, …)`
+regardless of `source_language`, unlike the SIR22 array domain's
+`ArrayRt.fmtNum`/`display` (already gated by `SIR_DISPLAY_APL_HIGH_MINUS`/
+`SIR_DISPLAY_J_UNDERSCORE`).
+
+### Added
+
+- **`emit.rs`/`runtime.rs`: a fourth `SIR_DISPLAY_*` flag,
+  `SIR_DISPLAY_DERIVE`** — extends the existing, already-proven
+  `SIR_DISPLAY_RUBY`/`SIR_DISPLAY_APL_HIGH_MINUS`/`SIR_DISPLAY_J_UNDERSCORE`
+  mechanism exactly (a mutually-exclusive boolean computed from
+  `m.metadata.source_language`, substituted into the inlined `RUNTIME`
+  blob as a hardcoded literal — never source-derived text, preserving the
+  existing SECURITY invariant), rather than inventing a new one. Unlike
+  the first three flags (which all gate `formatSeen`'s bare-number/
+  `SirFloat` branches), this one gates `Symbolic.toDisplayString` — the
+  SIR23 domain's own stringifier, a different function entirely.
+- **`runtime.rs`: `Symbolic`'s `deriveRender`/`derivePrintAt`/
+  `deriveRenderApply`/`deriveRenderList`/`deriveIsListNode`** — a direct,
+  byte-for-byte JS port of `derive-runtime::printer::print_derive`'s own
+  precedence-based renderer (`render`/`print_at`/`render_apply`/
+  `render_list`/`infix_binary`/`nary_logic`/`ir_head_to_surface`), kept as
+  its own separate function family rather than folded into the generic
+  `toDisplayString` (the two conventions disagree on almost every compound
+  shape). Reproduces, gated behind `SIR_DISPLAY_DERIVE`:
+  - Infix `Add`/`Sub`/`Mul`/`Div` and comparisons `Equal`/`Less`/`Greater`/
+    `LessEqual`/`GreaterEqual`, plus n-ary `And`/`Or`, each with the exact
+    9-level precedence ladder `printer.rs` documents (`Or` < `And` <
+    `Not`/comparisons < `Add`/`Sub` < `Mul`/`Div` < unary `Neg` < `Pow` <
+    atoms), so a looser child gets parenthesised exactly when re-parsing
+    would otherwise disagree with the built tree.
+  - Prefix `Neg` (`-x`) and `Not` (`NOT a`).
+  - Right-associative `Pow` (`a^b^c`, never `(a^b)^c`).
+  - Derive's own `List` bracket convention (D-5): a flat vector prints
+    `[a, b, c]`; a "list of lists" (every element itself a `List`) prints
+    as a `;`-row-separated matrix, `[a, b; c, d]` — the exact reverse of
+    `derive-runtime::lower::lower_vector`.
+  - Case-bridging a fixed table of builtin heads back to Derive's own
+    UPPERCASE surface spelling (`D` → `"DIF"`, `Sin` → `"SIN"`, …, the
+    exact same table as `printer.rs::ir_head_to_surface`); any other head
+    (a user-defined function, or one this subset's printer never bridges
+    either, e.g. `Abs`/`Inv`/`NotEqual`) renders as-typed.
+  - `True`/`False` need **no** special-casing at all: both the generic and
+    Derive-specific conventions already render a bare `Symbol` term as its
+    verbatim name, and `symbolic-ir`'s canonical boolean symbols are
+    already spelled `"True"`/`"False"` — Derive's own printer never
+    intercepts them either (confirmed by reading `printer.rs`: it falls
+    through to the generic `IRNode::Symbol(s) => s.clone()` arm), so there
+    was nothing to fix here.
+  - `Assign`/`Define` need no special-casing either (a finding that
+    shrinks this item's real scope, per the spec's own addendum): once
+    items 2/3 land, those heads' handlers return the bound *value* (or
+    `Symbol(name)`), never an `Assign(...)`/`Define(...)` term, so
+    `toDisplayString` never has to render either head at all — matching
+    every native `<lang>-runtime` printer's own documented invariant.
+  - Depth-capped with the same `MAX_TERM_DEPTH` guard the generic path
+    already uses (CWE-674) — this walk's per-frame cost is no heavier.
+
+### Changed
+
+- **`derive-to-semantic-ir/tests/oracle.rs`**: flips 7 `known_bug` cases
+  to `known_bug: None` — every case whose *only* remaining disagreement
+  was this display-convention gap (verified by actually running the
+  oracle test, not just inferred from source reading):
+  `negation_of_a_free_symbol` (prefix `Neg`), `equation_with_a_free_
+  variable_stays_symbolic` (infix `Equal`), `flat_vector_literal`/
+  `singleton_vector_literal`/`vector_of_expressions_evaluates_
+  elementwise` (flat `List` brackets), `two_by_two_matrix_literal`/
+  `three_row_one_column_matrix_literal` (`;`-row-separated matrix
+  brackets). Every other still-`known_bug` case (the ones also blocked by
+  the held-form/calculus evaluation gaps, items 2/3) has its reason text
+  updated to note the display half is now resolved and only the
+  evaluation half remains.
+
 ## 0.49.0 — `Symbolic.evalTerm`: arithmetic/comparison/logic folding (SIR23 addendum, item 1 of 4)
 
 ### Security fix (found by this item's own `/security-review` pass)

@@ -2,6 +2,27 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.31] - Unreleased
+
+### Added
+
+- **Explicit `COLLATE` on DISTINCT select-items and GROUP BY keys folds the key.**
+  A trailing `COLLATE name` (newly parsed by sql-parser) is lowered to the
+  internal `__collate(inner, 'NAME')` wrapper — the same representation explicit
+  COLLATE already uses in WHERE comparisons:
+  - `plan_select_item` wraps the select-item expression; `distinct_output_collations`
+    reads the collation from the wrapper (via `effective_output_collation` /
+    `collate_wrapper_name`) into the DISTINCT vector, so `SELECT DISTINCT b COLLATE
+    NOCASE` dedupes case-insensitively. An explicit `COLLATE BINARY` overrides a
+    column's declared NOCASE (explicit outranks declared).
+  - `plan_group_by_exprs` now walks `group_clause` children in order, pairing each
+    `column_ref` with the `COLLATE name` tokens that follow it, and wraps that key
+    — so `GROUP BY b COLLATE NOCASE` (and per-key `GROUP BY g, b COLLATE NOCASE`)
+    groups on the collated value while codegen emits the original.
+  - `extract_as_alias` skips the `COLLATE` tail (both tokens are `NAME`-type) so a
+    collation name is never mistaken for an implicit alias. New helpers:
+    `tail_collation`, `direct_token_uppers`.
+
 ## [0.2.30] - Unreleased
 
 ### Changed

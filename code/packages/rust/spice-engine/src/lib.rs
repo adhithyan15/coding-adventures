@@ -454,6 +454,7 @@ fn clone_subckt_element(
             );
             expanded.reverse_beta_rolloff_current = element.reverse_beta_rolloff_current;
             expanded.nominal_temperature_kelvin = element.nominal_temperature_kelvin;
+            expanded.flicker_noise_coefficient = element.flicker_noise_coefficient;
             Element::Bjt(expanded)
         }
         Element::Mosfet(element) => Element::Mosfet(Mosfet::with_model(
@@ -2896,6 +2897,7 @@ pub struct Bjt {
     pub reverse_beta: f64,
     pub reverse_beta_rolloff_current: f64,
     pub nominal_temperature_kelvin: Option<f64>,
+    pub flicker_noise_coefficient: f64,
 }
 
 impl Bjt {
@@ -3359,6 +3361,7 @@ impl Bjt {
             reverse_beta,
             reverse_beta_rolloff_current: 0.0,
             nominal_temperature_kelvin: None,
+            flicker_noise_coefficient: 0.0,
         }
     }
 }
@@ -3749,8 +3752,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     usize,
 )] = &[
     (ModelCardKind::Diode, 12, 18, 5, 3),
-    (ModelCardKind::Npn, 27, 44, 13, 4),
-    (ModelCardKind::Pnp, 27, 44, 13, 4),
+    (ModelCardKind::Npn, 28, 45, 13, 4),
+    (ModelCardKind::Pnp, 28, 45, 13, 4),
     (ModelCardKind::Njf, 5, 11, 5, 3),
     (ModelCardKind::Pjf, 5, 11, 5, 3),
     (ModelCardKind::Nmos, 18, 25, 6, 3),
@@ -3803,6 +3806,7 @@ const BJT_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("IKR", "IKR"),
     ("TNOM", "TNOM"),
     ("T_NOM", "TNOM"),
+    ("KF", "KF"),
     ("ISE", "ISE"),
     ("NE", "NE"),
     ("ISC", "ISC"),
@@ -4497,6 +4501,7 @@ pub fn bjt_from_model_card(
         .parameters
         .get("TNOM")
         .map(|temperature_celsius| temperature_celsius + 273.15);
+    bjt.flicker_noise_coefficient = model_card_value(model, "KF", 0.0);
     Ok(bjt)
 }
 
@@ -11596,6 +11601,7 @@ pub struct CornerSParameterResult {
 pub enum NoiseType {
     Thermal,
     Shot,
+    Flicker,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -17134,6 +17140,7 @@ fn format_noise_type(noise_type: NoiseType) -> &'static str {
     match noise_type {
         NoiseType::Thermal => "thermal",
         NoiseType::Shot => "shot",
+        NoiseType::Flicker => "flicker",
     }
 }
 
@@ -19577,7 +19584,7 @@ pub fn noise_ac(
                 frequency_hz,
                 output_psd: 0.0,
                 input_referred_psd: 0.0,
-                entries: zero_noise_entries(&noise_sources),
+                entries: zero_noise_entries(&noise_sources, frequency_hz),
             });
             continue;
         }
@@ -19599,7 +19606,7 @@ pub fn noise_ac(
                     frequency_hz,
                     output_psd: 0.0,
                     input_referred_psd: 0.0,
-                    entries: zero_noise_entries(&noise_sources),
+                    entries: zero_noise_entries(&noise_sources, frequency_hz),
                 });
                 continue;
             }
@@ -19616,11 +19623,12 @@ pub fn noise_ac(
                     .negative
                     .map_or(Complex::zero(), |index| adjoint[index]);
                 let transfer = h_positive - h_negative;
+                let source_psd = noise_source_psd(source, frequency_hz);
                 NoiseEntry {
                     element_name: source.element_name.clone(),
                     noise_type: source.noise_type,
-                    source_psd: source.source_psd,
-                    output_psd: transfer.abs().powi(2) * source.source_psd,
+                    source_psd,
+                    output_psd: transfer.abs().powi(2) * source_psd,
                 }
             })
             .collect();
@@ -21033,6 +21041,7 @@ struct NoiseSource {
     positive: Option<usize>,
     negative: Option<usize>,
     source_psd: f64,
+    frequency_exponent: f64,
 }
 
 #[derive(Debug, Copy, Clone)]
@@ -22115,6 +22124,7 @@ fn collect_noise_sources(
                     positive: node_index(node_indices, &resistor.n1),
                     negative: node_index(node_indices, &resistor.n2),
                     source_psd: 4.0 * BOLTZMANN * temperature_kelvin / resistor.resistance_ohms,
+                    frequency_exponent: 0.0,
                 });
             }
             Element::Diode(diode) => {
@@ -22131,6 +22141,7 @@ fn collect_noise_sources(
                     positive: anode,
                     negative: cathode,
                     source_psd: 2.0 * ELECTRON_CHARGE * current.abs(),
+                    frequency_exponent: 0.0,
                 });
             }
             Element::Bjt(bjt) => {
@@ -22182,7 +22193,19 @@ fn collect_noise_sources(
                             + leakage_current.abs()
                             + collector_leakage_current.abs()
                             + reverse_base_current.abs()),
+                    frequency_exponent: 0.0,
                 });
+                if bjt.flicker_noise_coefficient > 0.0 {
+                    let base_current = base_collector_current / bjt.forward_beta + leakage_current;
+                    sources.push(NoiseSource {
+                        element_name: bjt.name.clone(),
+                        noise_type: NoiseType::Flicker,
+                        positive,
+                        negative,
+                        source_psd: bjt.flicker_noise_coefficient * base_current.abs(),
+                        frequency_exponent: 1.0,
+                    });
+                }
             }
             Element::Jfet(jfet) => {
                 validate_jfet(jfet)?;
@@ -22209,6 +22232,7 @@ fn collect_noise_sources(
                             * temperature_kelvin
                             * MOSFET_CHANNEL_NOISE_GAMMA
                             * gm,
+                        frequency_exponent: 0.0,
                     });
                 }
             }
@@ -22240,6 +22264,7 @@ fn collect_noise_sources(
                             * temperature_kelvin
                             * MOSFET_CHANNEL_NOISE_GAMMA
                             * gm,
+                        frequency_exponent: 0.0,
                     });
                 }
             }
@@ -22249,13 +22274,17 @@ fn collect_noise_sources(
     Ok(sources)
 }
 
-fn zero_noise_entries(sources: &[NoiseSource]) -> Vec<NoiseEntry> {
+fn noise_source_psd(source: &NoiseSource, frequency_hz: f64) -> f64 {
+    source.source_psd / frequency_hz.powf(source.frequency_exponent)
+}
+
+fn zero_noise_entries(sources: &[NoiseSource], frequency_hz: f64) -> Vec<NoiseEntry> {
     sources
         .iter()
         .map(|source| NoiseEntry {
             element_name: source.element_name.clone(),
             noise_type: source.noise_type,
-            source_psd: source.source_psd,
+            source_psd: noise_source_psd(source, frequency_hz),
             output_psd: 0.0,
         })
         .collect()
@@ -24007,6 +24036,12 @@ fn validate_bjt(bjt: &Bjt) -> Result<(), SpiceError> {
                 reason: "nominal temperature must be finite and positive".to_string(),
             });
         }
+    }
+    if !bjt.flicker_noise_coefficient.is_finite() || bjt.flicker_noise_coefficient < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "flicker noise coefficient must be finite and non-negative".to_string(),
+        });
     }
     if !bjt.base_emitter_leakage_saturation_current.is_finite()
         || bjt.base_emitter_leakage_saturation_current < 0.0

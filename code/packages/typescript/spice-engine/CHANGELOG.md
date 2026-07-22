@@ -1,5 +1,7 @@
 # Changelog
 
+- Add BJT model-card `KF` flicker-noise support with a distinct `flicker`
+  contribution and Berkeley-default inverse-frequency scaling.
 - Add BJT model-card `TNOM` / `T_NOM` nominal-temperature support, with
   Berkeley Celsius card values converted to Kelvin for model-owned temperature
   scaling and inherited circuit defaults when absent.

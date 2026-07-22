@@ -112,6 +112,29 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // `fmtNum`/`formatSeen` below never need to arbitrate between them —
   // only one can ever be `true` for a given module.
   const SIR_DISPLAY_J_UNDERSCORE = __SIR_DISPLAY_J_UNDERSCORE__;
+  // A FOURTH, independent display-convention flag (SIR23 addendum, item 4
+  // of 4 — see `code/specs/SIR23-symbolic-pattern-semantic-ir.md`'s own
+  // "Per-language display convention" section): `true` when the module's
+  // `source_language` is Derive, else `false`. Unlike the three flags
+  // above (which all gate `formatSeen`'s bare-number/`SirFloat` branches),
+  // this one gates `Symbolic.toDisplayString` (further below, in the
+  // "Symbolic expressions" section) — the SIR23 domain's own stringifier,
+  // which until this item had no per-language convention at ALL (every
+  // source language rendered every compound term identically, generically,
+  // as `head(args, …)`). Derive's OWN convention — infix
+  // `+`/`-`/`*`/`/`/`^`, prefix `-`/`NOT`, a `;`-row-separated
+  // `[a, b; c, d]` bracket convention for `List`, and case-bridging a
+  // handful of builtin heads back to Derive's own UPPERCASE surface
+  // spelling (`Sin` → `"SIN"`, …) — is a direct, byte-for-byte port of
+  // `derive-runtime::printer::print_derive`'s existing, already-written
+  // precedence ladder; see `Symbolic`'s own `toDisplayString` for the full
+  // port and its own doc comment for the precedence-level mapping.
+  // Mutually exclusive with the three flags above by construction (all
+  // four are computed from the same single `source_language` field in
+  // `emit.rs`), and orthogonal in EFFECT too, since no `<lang>-to-
+  // semantic-ir` frontend that sets one of the first three (Ruby/APL/J)
+  // emits any SIR23 `SymApply`/`SymSymbol` node at all today.
+  const SIR_DISPLAY_DERIVE = __SIR_DISPLAY_DERIVE__;
   // ── value model ────────────────────────────────────────────────
   // A symbol is an interned name; `===` on two interned symbols with
   // the same name is therefore identity-equal.
@@ -2988,6 +3011,236 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
 
     function headName(node) { return node.kind === "symbol" ? node.name : ""; }
 
+    // ── Derive's own SIR23 display convention (SIR_DISPLAY_DERIVE) ────
+    //
+    // A direct, byte-for-byte JS port of `derive-runtime::printer`'s
+    // precedence-based renderer (`print_derive`/`print_at`/`render`/
+    // `render_apply`/`render_list`/`infix_binary`/`nary_logic`/
+    // `ir_head_to_surface`) — SIR23 addendum item 4 (see `code/specs/
+    // SIR23-symbolic-pattern-semantic-ir.md`'s "Per-language display
+    // convention" section). Kept as its OWN set of functions rather than
+    // folded into the generic `toDisplayString` below, because the two
+    // conventions disagree on almost every compound shape (infix vs.
+    // generic `head(args)`, `;`-row-separated brackets vs. none,
+    // case-bridged builtin names vs. verbatim) — keeping them apart means
+    // neither reader has to mentally subtract the other's special cases.
+    // `toDisplayString` picks between the two wholesale, once, at its own
+    // top (see that function, below).
+    //
+    // Precedence ladder (loosest -> tightest), copied verbatim from
+    // `derive-runtime/src/printer.rs`'s own module-doc table:
+    //
+    //   0 lowest  (top-level / a generic call's argument position)
+    //   1 Or
+    //   2 And
+    //   3 Not (prefix) / comparisons  =  <=  <  >  >=
+    //   4 Add Sub
+    //   5 Mul Div  (and a bare Rational leaf, e.g. `1/3`)
+    //   6 unary Neg
+    //   7 Pow
+    //   8 atoms, F(…)
+    const DERIVE_PREC_LOWEST = 0;
+    const DERIVE_PREC_OR = 1;
+    const DERIVE_PREC_AND = 2;
+    const DERIVE_PREC_NOT_CMP = 3;
+    const DERIVE_PREC_ADD = 4;
+    const DERIVE_PREC_MUL = 5;
+    const DERIVE_PREC_NEG = 6;
+    const DERIVE_PREC_POW = 7;
+    const DERIVE_PREC_ATOM = 8;
+
+    // Binary infix arithmetic/comparison operators — `[surface, prec]`,
+    // mirroring `printer.rs::infix_binary` exactly (a `NotEqual` head has
+    // no entry here, matching that table exactly: Derive's own grammar has
+    // no "<>"/"!=" operator, so a `NotEqual` term — if one is ever built —
+    // falls through to the generic, case-bridged call form below, exactly
+    // as `printer.rs` itself does).
+    const DERIVE_INFIX_BINARY = new Map([
+      ["Add", [" + ", DERIVE_PREC_ADD]],
+      ["Sub", [" - ", DERIVE_PREC_ADD]],
+      ["Mul", ["*", DERIVE_PREC_MUL]],
+      ["Div", ["/", DERIVE_PREC_MUL]],
+      ["Equal", [" = ", DERIVE_PREC_NOT_CMP]],
+      ["Less", [" < ", DERIVE_PREC_NOT_CMP]],
+      ["Greater", [" > ", DERIVE_PREC_NOT_CMP]],
+      ["LessEqual", [" <= ", DERIVE_PREC_NOT_CMP]],
+      ["GreaterEqual", [" >= ", DERIVE_PREC_NOT_CMP]],
+    ]);
+
+    // n-ary associative logic — `[join-text, prec]`, mirroring
+    // `printer.rs::nary_logic`. A flat `And(a, b, c, …)`/`Or(a, b, c, …)`
+    // chain (matching how this frontend's own lowering already flattens a
+    // homogeneous run rather than nesting pairwise) joins with
+    // `" AND "`/`" OR "`.
+    const DERIVE_NARY_LOGIC = new Map([
+      ["And", [" AND ", DERIVE_PREC_AND]],
+      ["Or", [" OR ", DERIVE_PREC_OR]],
+    ]);
+
+    // The IR -> surface head dictionary — the exact same table as
+    // `printer.rs::ir_head_to_surface`. An unrecognised head (a
+    // user-defined function, or a head like `Abs`/`Inv`/`NotEqual` this
+    // subset's own printer never bridges either) renders AS-TYPED, exactly
+    // matching the Rust reference's `unwrap_or(name)` fallback.
+    const DERIVE_HEAD_TO_SURFACE = new Map([
+      ["D", "DIF"],
+      ["Integrate", "INT"],
+      ["If", "IF"],
+      ["Sin", "SIN"],
+      ["Cos", "COS"],
+      ["Tan", "TAN"],
+      ["Sqrt", "SQRT"],
+      ["Exp", "EXP"],
+      ["Log", "LOG"],
+      ["Atan", "ATAN"],
+      ["Asin", "ASIN"],
+      ["Acos", "ACOS"],
+      ["Sinh", "SINH"],
+      ["Cosh", "COSH"],
+      ["Tanh", "TANH"],
+      ["Asinh", "ASINH"],
+      ["Acosh", "ACOSH"],
+      ["Atanh", "ATANH"],
+      ["Coth", "COTH"],
+      ["Sech", "SECH"],
+      ["Csch", "CSCH"],
+    ]);
+
+    // True if `node` is itself a `List(...)` apply — `printer.rs::
+    // is_list_node`'s exact mirror.
+    function deriveIsListNode(node) {
+      return node.kind === "apply" && node.head.kind === "symbol" && node.head.name === "List";
+    }
+
+    // Render a `List(...)` node in Derive's own bracket surface (D-5) —
+    // the exact reverse of `derive-runtime::lower::lower_vector`,
+    // mirroring `printer.rs::render_list`. A matrix (every element ITSELF
+    // a `List`) prints `;`-separated rows; a flat vector (or the empty
+    // list) prints `,`-separated (or empty) — `lower_vector` never
+    // produces a mixed shape (some elements `List`, some not), so this
+    // all-or-nothing check is unambiguous for anything this frontend's own
+    // lowering can produce.
+    //
+    // SECURITY (CWE-674, /security-review finding): each `row` is itself
+    // ONE tree level below the `List(...)` node this call is rendering
+    // (the same distance every OTHER child in this function family covers
+    // via a single `derivePrintAt(child, ..., depth + 1)` call) — so
+    // entering it must consume exactly one unit of the shared depth
+    // budget, with its own `depth + 1 > MAX_TERM_DEPTH` check, before its
+    // OWN children (two levels below the current node) get `depth + 2`.
+    // Reaching into `row.args` directly with no check and `depth + 1` for
+    // the grandchildren (the original bug) skipped charging for the `row`
+    // level entirely, letting a nested-list-of-lists chain reach roughly
+    // DOUBLE `MAX_TERM_DEPTH` real tree-nesting levels before the "..."
+    // sentinel fires — still short of this walk's proven-safe crash
+    // margin today, but a real, measured erosion of it; see `tests/
+    // sir23_symbolic.rs::derive_display_on_a_deeply_nested_list_of_lists_
+    // truncates_at_the_same_depth_as_any_other_shape` for the executable
+    // proof (reverting this fix makes that test fail).
+    function deriveRenderList(args, depth) {
+      if (args.length > 0 && args.every(deriveIsListNode)) {
+        const rows = args.map((row) => {
+          if (depth + 1 > MAX_TERM_DEPTH) { return "..."; }
+          return row.args.map((a) => derivePrintAt(a, DERIVE_PREC_LOWEST, depth + 2)).join(", ");
+        });
+        return "[" + rows.join("; ") + "]";
+      }
+      const parts = args.map((a) => derivePrintAt(a, DERIVE_PREC_LOWEST, depth + 1));
+      return "[" + parts.join(", ") + "]";
+    }
+
+    // Render `node`, returning `[text, ownPrecedence]` — `printer.rs::
+    // render`'s exact mirror.
+    //
+    // SECURITY (CWE-674): capped with the SAME `MAX_TERM_DEPTH` guard
+    // `toDisplayString` uses below (reused deliberately — this walk's
+    // per-frame cost, a `kind` switch plus at most one more recursive call
+    // per level, is no heavier than `toDisplayString`'s own
+    // already-proven-safe-at-that-cap frame).
+    function deriveRender(node, depth) {
+      if (depth > MAX_TERM_DEPTH) { return ["...", DERIVE_PREC_ATOM]; }
+      switch (node.kind) {
+        case "integer": return [String(node.value), DERIVE_PREC_ATOM];
+        case "float": return [String(node.value), DERIVE_PREC_ATOM];
+        case "rational": return [node.numer + "/" + node.denom, DERIVE_PREC_MUL];
+        case "string": return [JSON.stringify(node.value), DERIVE_PREC_ATOM];
+        case "symbol": return [node.name, DERIVE_PREC_ATOM];
+        case "apply": return deriveRenderApply(node, depth);
+        default: return [String(node), DERIVE_PREC_ATOM];
+      }
+    }
+
+    // Render `node`, wrapping it in parentheses if its own precedence is
+    // looser than `parentPrec` — `printer.rs::print_at`'s exact mirror,
+    // the one place parenthesisation is actually decided (so the surface
+    // string re-parses to the same tree).
+    function derivePrintAt(node, parentPrec, depth) {
+      const [text, prec] = deriveRender(node, depth);
+      return prec < parentPrec ? "(" + text + ")" : text;
+    }
+
+    // Render a compound `head(args)` node in Derive's own convention —
+    // `printer.rs::render_apply`'s exact mirror (infix binary, n-ary
+    // logic, then the `Pow`/`Neg`/`Not`/`List` special cases, then the
+    // generic, case-bridged call form).
+    function deriveRenderApply(node, depth) {
+      const head = node.head;
+      const args = node.args;
+      if (head.kind === "symbol") {
+        const name = head.name;
+        const infix = DERIVE_INFIX_BINARY.get(name);
+        if (infix && args.length === 2) {
+          const [op, prec] = infix;
+          const l = derivePrintAt(args[0], prec, depth + 1);
+          const r = derivePrintAt(args[1], prec, depth + 1);
+          return [l + op + r, prec];
+        }
+        const logic = DERIVE_NARY_LOGIC.get(name);
+        if (logic) {
+          const [op, prec] = logic;
+          if (args.length >= 2) {
+            const parts = args.map((a) => derivePrintAt(a, prec, depth + 1));
+            return [parts.join(op), prec];
+          }
+          if (args.length === 1) { return deriveRender(args[0], depth + 1); }
+        }
+        if (name === "Pow" && args.length === 2) {
+          // Right-associative and tighter than unary minus, matching
+          // `printer.rs`'s own `POW` arm exactly (`PREC_POW + 1` for the
+          // base so a LEFT-nested `Pow` parenthesises while a
+          // RIGHT-nested one doesn't; `PREC_NEG` for the exponent so a
+          // bare `Neg` there needs no parens but anything looser does).
+          const base = derivePrintAt(args[0], DERIVE_PREC_POW + 1, depth + 1);
+          const exp = derivePrintAt(args[1], DERIVE_PREC_NEG, depth + 1);
+          return [base + "^" + exp, DERIVE_PREC_POW];
+        }
+        if (name === "Neg" && args.length === 1) {
+          const inner = derivePrintAt(args[0], DERIVE_PREC_NEG, depth + 1);
+          return ["-" + inner, DERIVE_PREC_NEG];
+        }
+        if (name === "Not" && args.length === 1) {
+          const inner = derivePrintAt(args[0], DERIVE_PREC_NOT_CMP, depth + 1);
+          return ["NOT " + inner, DERIVE_PREC_NOT_CMP];
+        }
+        if (name === "List") {
+          return [deriveRenderList(args, depth), DERIVE_PREC_ATOM];
+        }
+        // Ordinary function application: `head(args…)`, bridging the
+        // canonical IR head back to Derive's uppercase surface spelling;
+        // an unrecognised head (a user-defined function) renders as-typed.
+        // Each argument renders at `DERIVE_PREC_LOWEST` (a fresh,
+        // comma-separated slot never needs parens of its own), matching
+        // `printer.rs`'s own `args.iter().map(print_derive)`.
+        const surface = DERIVE_HEAD_TO_SURFACE.get(name) || name;
+        const parts = args.map((a) => derivePrintAt(a, DERIVE_PREC_LOWEST, depth + 1));
+        return [surface + "(" + parts.join(", ") + ")", DERIVE_PREC_ATOM];
+      }
+      // A computed (non-symbol) head — render generically as `(head)(args…)`.
+      const headText = derivePrintAt(head, DERIVE_PREC_ATOM, depth + 1);
+      const parts = args.map((a) => derivePrintAt(a, DERIVE_PREC_LOWEST, depth + 1));
+      return [headText + "(" + parts.join(", ") + ")", DERIVE_PREC_ATOM];
+    }
+
     // A display helper `print`/`puts`/`formatSeen` (above) reach for,
     // mirroring `symbolic-ir`'s own `toDisplayString`. Not part of the
     // SIR23 spec's own contract.
@@ -3007,6 +3260,15 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     function toDisplayString(node, depth) {
       if (depth === undefined) { depth = 0; }
       if (depth > MAX_TERM_DEPTH) { return "..."; }
+      // SIR_DISPLAY_DERIVE (SIR23 addendum item 4): Derive's own
+      // precedence-aware, infix/prefix/bracket/case-bridged convention —
+      // see `deriveRender`'s own doc comment (just above) for the full
+      // port. Entirely separate from the generic `head(args, …)` form
+      // below, which every OTHER source language (and Derive before this
+      // item) still gets.
+      if (SIR_DISPLAY_DERIVE) {
+        return derivePrintAt(node, DERIVE_PREC_LOWEST, depth);
+      }
       switch (node.kind) {
         case "symbol": return node.name;
         case "integer": return String(node.value);

@@ -33,16 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language BJT nominal model temperature.
+1. Cross-language BJT flicker-noise coefficient.
    - Status: current PR completion candidate.
-   - Add Berkeley BJT `TNOM` / `T_NOM` model-card support in Rust, Python, and
-     TypeScript, interpreting card values in degrees Celsius and storing the
-     absolute model temperature internally.
-   - Let a model-owned nominal temperature override the circuit-level default
-     in temperature scaling while preserving inherited behavior when `TNOM`
-     is absent and preserving the complete BJT model through subcircuits.
-   - Extend the supported-parameter coverage gate from 110 to 112 canonical
-     rows and lock model-card behavior, validation, hierarchy, and temperature
+   - Add Berkeley BJT `KF` model-card support in Rust, Python, and TypeScript,
+     defaulting to zero so existing noise results remain unchanged.
+   - Emit a distinct `flicker` contribution from base current and apply the
+     Berkeley-default `AF=1` inverse-frequency exponent through the adjoint
+     noise path while preserving the complete BJT model through subcircuits.
+   - Extend the supported-parameter coverage gate from 112 to 114 canonical
+     rows and lock model-card behavior, validation, hierarchy, and noise
      scaling in all engines.
 
 ## Completed Slices
@@ -3111,6 +3110,14 @@ the Rust, Python, and TypeScript surfaces together.
      transfer-function, temperature, and noise paths.
    - Hierarchical subcircuit expansion preserves the complete BJT model, and
      the supported-parameter release gate now covers 110 canonical rows.
+
+233. Cross-language BJT nominal model temperature.
+   - Status: completed in PR 8807.
+   - Rust, Python, and TypeScript BJT model cards now accept `TNOM` / `T_NOM`,
+     convert Berkeley Celsius card values to an absolute model temperature,
+     and use that model-owned value for temperature scaling when present.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 112 canonical rows.
 
 ## Backlog
 

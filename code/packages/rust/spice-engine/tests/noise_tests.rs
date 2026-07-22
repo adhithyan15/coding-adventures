@@ -88,6 +88,36 @@ fn bjt_base_collector_leakage_increases_shot_noise() {
     assert!(source_psd(1.0e-10) > source_psd(0.0));
 }
 
+#[test]
+fn bjt_flicker_noise_uses_kf_with_inverse_frequency_scaling() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vcc", "vcc", "0", 5.0,
+    )));
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vbase", "base", "0", 0.7,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rload", "vcc", "out", 1_000.0,
+    )));
+    let mut transistor = Bjt::new("Q1", "out", "base", "0");
+    transistor.flicker_noise_coefficient = 1.0e-12;
+    circuit.add(Element::Bjt(transistor));
+
+    let result = noise_ac(&circuit, "out", "Vbase", &[10.0, 1_000.0], 300.0).unwrap();
+    let flicker_psd = |point_index: usize| {
+        result.points[point_index]
+            .entries
+            .iter()
+            .find(|entry| entry.element_name == "Q1" && entry.noise_type == NoiseType::Flicker)
+            .unwrap()
+            .source_psd
+    };
+
+    assert!(flicker_psd(0) > 0.0);
+    assert_close(flicker_psd(0) / flicker_psd(1), 100.0, 1.0e-10);
+}
+
 const BOLTZMANN: f64 = 1.380_649e-23;
 const MOSFET_CHANNEL_NOISE_GAMMA: f64 = 2.0 / 3.0;
 
