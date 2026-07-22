@@ -2,6 +2,20 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.29] - Unreleased
+
+### Changed
+
+- **`GROUP_CONCAT` lowers to `SqlExpr::Aggregate` in expression context.**
+  `plan_function_call` previously left `group_concat(...)` as a `SqlExpr::
+  FunctionCall` (while a separate path recognised it for accumulator
+  allocation), so an aggregate SELECT item had two representations. It now
+  produces `SqlExpr::Aggregate { func: GroupConcat { sep }, arg, distinct }` like
+  COUNT/SUM/…, so codegen's `compile_expr` can resolve it to its slot — which is
+  what lets a `group_concat` column be re-projected into SELECT-list order. The
+  separator is captured onto the func via the same `group_concat_separator`
+  helper the accumulator path uses, so the two stay consistent.
+
 ## [0.2.28] - Unreleased
 
 ### Fixed

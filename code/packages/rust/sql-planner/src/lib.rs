@@ -3403,6 +3403,16 @@ fn plan_function_call(node: &GrammarASTNode) -> Result<SqlExpr, PlanError> {
         "AVG" => Some(AggFunc::Avg),
         "MIN" => Some(AggFunc::Min),
         "MAX" => Some(AggFunc::Max),
+        // `GROUP_CONCAT(x [, sep])` is an aggregate too. Lowering it to
+        // `SqlExpr::Aggregate` here (rather than leaving it a `FunctionCall`, as
+        // it once was) means an aggregate SELECT item has ONE representation, so
+        // `compile_expr` can resolve it to its accumulator slot like COUNT/SUM —
+        // which is what lets a `group_concat` column be re-projected into
+        // SELECT-list order. The separator (the optional 2nd arg, default ",") is
+        // captured onto the func; `arg` below still resolves to the 1st argument.
+        "GROUP_CONCAT" => Some(AggFunc::GroupConcat {
+            sep: group_concat_separator(node),
+        }),
         _ => None,
     };
     // `MIN(a, b, …)` / `MAX(a, b, …)` with two-or-more arguments are the SCALAR

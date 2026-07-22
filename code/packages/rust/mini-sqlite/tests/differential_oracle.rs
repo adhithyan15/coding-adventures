@@ -1729,8 +1729,30 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT g, label FROM t GROUP BY g ORDER BY g",
     },
-    // Still ledgered: an aggregate column reordered before a group key keeps the
-    // fixed keys-then-aggregates layout (`[c, max(x)]` not `[max(x), c]`).
+    // An aggregate column reordered before a group key now follows the SELECT
+    // list (`[mx, c]`, not the old `[c, max(x)]`) — every aggregate, including
+    // group_concat, lowers to SqlExpr::Aggregate so the projection can place it.
+    // group_concat reordered before the group key — exercises the reconcile:
+    // group_concat now lowers to SqlExpr::Aggregate, so the projection places it
+    // in SELECT-list order like any other aggregate.
+    Case {
+        id: "group_by_reordered_group_concat",
+        setup: &[
+            "CREATE TABLE t (g TEXT, v TEXT)",
+            "INSERT INTO t VALUES('a','1'),('a','2'),('b','3')",
+        ],
+        query: "SELECT group_concat(v) AS gc, g FROM t GROUP BY g ORDER BY g",
+    },
+    // group_concat (with separator) + count + key, all reordered relative to the
+    // group key, each named/placed per the SELECT list.
+    Case {
+        id: "group_by_reordered_mixed_aggregates",
+        setup: &[
+            "CREATE TABLE t (g TEXT, v TEXT)",
+            "INSERT INTO t VALUES('a','1'),('a','2'),('b','3')",
+        ],
+        query: "SELECT group_concat(v,'|') AS gc, count(*) AS n, g FROM t GROUP BY g ORDER BY g",
+    },
     Case {
         id: "group_by_reordered_with_aggregate",
         setup: &[
@@ -2226,18 +2248,6 @@ const LEDGER: &[(&str, &str)] = &[
     (
         "distinct_star_collate",
         "SELECT DISTINCT * does not expand the star into the table's columns (projection gap, not a collation gap)",
-    ),
-    // A GROUP BY with an AGGREGATE column still emits the fixed
-    // group-keys-then-aggregates layout, so reordering an aggregate relative to
-    // the key columns in the SELECT list is not yet honoured: `SELECT max(x), c
-    // ... GROUP BY c` comes back as `[c, max(x)]`. Non-aggregate GROUP BY output
-    // now follows the SELECT list; the aggregate case needs `group_concat` (a
-    // FunctionCall in the SELECT list, unlike COUNT/SUM/… which lower to
-    // SqlExpr::Aggregate) reconciled before an output column can be re-projected
-    // reliably. A tracked follow-up.
-    (
-        "group_by_reordered_with_aggregate",
-        "an aggregate column reordered before a group key in the SELECT list keeps the fixed keys-then-aggregates layout (aggregate output-expr representation not yet reconciled)",
     ),
     (
         "distinct_explicit_collate",
