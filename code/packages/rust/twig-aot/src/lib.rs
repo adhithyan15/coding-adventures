@@ -969,6 +969,70 @@ use x86_64_backend::{compile_function_with_globals as x86_64_compile_with_global
 // Return tuple bundles the emitted text bytes, the symbol→offset map, the text
 // size, and the relocation list — a cohesive "compiled module" result; a named
 // struct would add indirection without clarifying this internal helper.
+/// Build the **x86-64 GC entry wrapper** [`GC_AOT_ENTRY`] — the image's real `main`.
+///
+/// The ELF/PE packager exports a global `main` symbol at whatever `entry_off` the
+/// caller supplies (libc's `_start` calls `main`), so — exactly like the aarch64 Mach-O
+/// entry redirect — making the wrapper the entry is a pure offset redirect; no rename.
+///
+/// ```text
+///   __gc_aot_entry (exported as `main`):
+///       push rbp ; mov rbp, rsp
+///       call __gc_init_stackmaps        ; register every function's stack map
+///       call <user entry>              ; rax = program result
+///       mov rsp, rbp ; pop rbp ; ret   ; return rax verbatim → crt0 → exit(rax)
+/// ```
+///
+/// Both `call`s are intra-module `CALL rel32`s the two-pass linker patches in place.
+/// `rsp` is 16-aligned at each call (crt0 enters `main` 16-aligned-minus-8; `push rbp`
+/// restores alignment; a 32-byte reservation keeps it aligned). The user entry's `rax`
+/// survives the epilogue. `call __gc_init_stackmaps` runs before the user entry and a
+/// twig `main` takes no arguments, so clobbering caller-saved registers is harmless.
+///
+/// Under **MsX64** (Windows) the wrapper reserves the 32-byte **shadow space** every
+/// caller must give a callee, matching the rest of the backend (`shadow_space()`); SysV
+/// needs none. The reservation is a 16-byte multiple, so alignment holds either way.
+fn build_gc_wrapper_x86_64(
+    user_entry: &str,
+    abi: X86_64Abi,
+) -> Result<(Vec<u8>, Vec<x86_64_encoder::ExternalReloc>), AotError> {
+    use x86_64_encoder::{Assembler, ExternalRelocKind, Reg};
+    // Win64 mandates a 32-byte caller-provided shadow (home) space; SysV needs none.
+    let shadow: i32 = match abi {
+        X86_64Abi::MsX64 => 32,
+        X86_64Abi::SysV => 0,
+    };
+    let mut a = Assembler::new();
+    a.push(Reg::Rbp);
+    a.mov_r64_r64(Reg::Rbp, Reg::Rsp);
+    if shadow != 0 {
+        a.sub_imm32(Reg::Rsp, shadow); // Win64 shadow / home space for the two calls
+    }
+    a.call_rel32(GC_INIT_STACKMAPS, ExternalRelocKind::PltRel32);
+    a.call_rel32(user_entry, ExternalRelocKind::PltRel32);
+    a.mov_r64_r64(Reg::Rsp, Reg::Rbp); // deallocates the shadow reservation
+    a.pop(Reg::Rbp);
+    a.ret();
+    let relocs = std::mem::take(&mut a.external_relocs);
+    let bytes = a.finish().map_err(|e| AotError::Linker {
+        status: None,
+        stderr: format!("twig-aot: x86_64 GC wrapper codegen: {e:?}"),
+    })?;
+    Ok((bytes, relocs))
+}
+
+/// Build the **no-op** `__gc_init_stackmaps` for x86-64 (a bare `ret`). A later PR
+/// (AOT00-T1 x86_64 PR-x3) fills it in to register each function's stack map; this
+/// increment lands the wrapper mechanism and proves it transparent first.
+fn build_gc_noop_init_x86_64() -> Result<Vec<u8>, AotError> {
+    let mut a = x86_64_encoder::Assembler::new();
+    a.ret();
+    a.finish().map_err(|e| AotError::Linker {
+        status: None,
+        stderr: format!("twig-aot: x86_64 GC init codegen: {e:?}"),
+    })
+}
+
 #[allow(clippy::type_complexity)]
 fn compile_module_x86_64_to_text(
     module: &IIRModule,
@@ -993,14 +1057,46 @@ fn compile_module_x86_64_to_text(
         fn_results.push((fn_.name.clone(), bytes, relocs));
     }
 
+    // ── Inject the GC entry wrapper + (no-op) stack-map registration (AOT00-T1
+    //    x86_64 PR-x2) ──────────────────────────────────────────────────────────
+    //
+    // Mirrors the aarch64 path: the wrapper `__gc_aot_entry` becomes the image entry
+    // (the packager exports the global `main` symbol at `entry_off`, so redirecting
+    // `entry_off` to the wrapper's offset makes it `main` — no rename). It calls the
+    // (currently no-op) `__gc_init_stackmaps`, then the user entry, returning its rax.
+    // Both calls are intra-module and patched in place by pass 2 below.
+    let entry = module.entry_point.as_deref().ok_or(AotError::NoEntryPoint)?;
+    // Reserved-symbol guard: `link()` is last-write-wins and the wrapper emits
+    // `call <entry>`, so a user function OR entry named `__gc_aot_entry` /
+    // `__gc_init_stackmaps` would shadow the synthetic symbol or make the wrapper call
+    // itself/the no-op init. Reject rather than miscompile (same as the aarch64 path).
+    for reserved in [GC_AOT_ENTRY, GC_INIT_STACKMAPS] {
+        if entry == reserved || fn_results.iter().any(|(name, _, _)| name == reserved) {
+            return Err(AotError::Linker {
+                status: None,
+                stderr: format!(
+                    "twig-aot: symbol '{reserved}' is reserved for the GC entry wrapper \
+                     and cannot be a module function or entry point",
+                ),
+            });
+        }
+    }
+    fn_results.push((GC_INIT_STACKMAPS.to_string(), build_gc_noop_init_x86_64()?, Vec::new()));
+    let (wrapper_bytes, wrapper_relocs) = build_gc_wrapper_x86_64(entry, abi)?;
+    fn_results.push((GC_AOT_ENTRY.to_string(), wrapper_bytes, wrapper_relocs));
+
     // Concatenate function bytes and record per-function offsets.
     let plain: Vec<(String, Vec<u8>)> = fn_results.iter()
         .map(|(name, bytes, _)| (name.clone(), bytes.clone()))
         .collect();
     let (mut linked, offsets) = link(&plain);
 
-    let entry = module.entry_point.as_deref().ok_or(AotError::NoEntryPoint)?;
-    let entry_off = entry_point_offset(&offsets, Some(entry));
+    // The image's `main` is the GC entry wrapper; fall back to the user entry only if
+    // the wrapper is somehow absent, so the pipeline degrades gracefully.
+    let entry_off = offsets
+        .get(GC_AOT_ENTRY)
+        .copied()
+        .unwrap_or_else(|| entry_point_offset(&offsets, Some(entry)));
 
     // Pass 2: lift per-function reloc offsets into linked-text offsets, and
     // patch cross-function calls in place.  Keep only truly-external relocs
@@ -2978,6 +3074,88 @@ mod dynval_runtime_golden;
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    // ── AOT00-T1 x86_64 PR-x2: GC entry wrapper + no-op init ──────────────────
+
+    /// The x86_64 wrapper is well-formed: `push rbp` … `ret`, with two intra-module
+    /// `CALL rel32` relocations (→ init, → user entry) for the linker to patch.
+    #[test]
+    fn gc_wrapper_x86_64_is_well_formed() {
+        for abi in [X86_64Abi::SysV, X86_64Abi::MsX64] {
+            let (bytes, relocs) = build_gc_wrapper_x86_64("main", abi).expect("codegen");
+            assert_eq!(bytes.first(), Some(&0x55), "starts with push rbp");
+            assert_eq!(bytes.last(), Some(&0xC3), "ends with ret");
+            let targets: Vec<&str> = relocs
+                .iter()
+                .filter(|r| matches!(r.kind, x86_64_encoder::ExternalRelocKind::PltRel32))
+                .map(|r| r.symbol.as_str())
+                .collect();
+            assert!(targets.contains(&GC_INIT_STACKMAPS), "calls the init ({abi:?})");
+            assert!(targets.contains(&"main"), "calls the user entry ({abi:?})");
+        }
+        // MsX64 reserves the 32-byte shadow space (a `sub rsp, imm32` after the
+        // prologue); SysV does not → the MsX64 wrapper is strictly longer.
+        let sysv = build_gc_wrapper_x86_64("main", X86_64Abi::SysV).unwrap().0;
+        let ms = build_gc_wrapper_x86_64("main", X86_64Abi::MsX64).unwrap().0;
+        assert!(ms.len() > sysv.len(), "MsX64 reserves shadow space");
+    }
+
+    /// The no-op x86_64 init is a bare `ret`.
+    #[test]
+    fn gc_noop_init_x86_64_is_ret() {
+        assert_eq!(build_gc_noop_init_x86_64().expect("codegen"), vec![0xC3]);
+    }
+
+    /// After injection, the x86_64 image entry is the wrapper: `entry_off` equals the
+    /// wrapper's link offset, and the byte there is `push rbp` (0x55). So the packager
+    /// exports `main` at the wrapper, and libc's `_start` runs the GC entry.
+    #[test]
+    fn x86_64_entry_is_the_gc_wrapper() {
+        let main = IIRFunction::new(
+            "main", vec![], "u64",
+            vec![
+                IIRInstr::new("const", Some("v".into()), vec![Operand::Int(7)], "u64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "u64"),
+            ],
+        );
+        let mut m = IIRModule::new("m", "twig");
+        m.add_or_replace(main);
+        m.entry_point = Some("main".into());
+
+        let (linked, offsets, entry_off, _relocs) =
+            compile_module_x86_64_to_text(&m, X86_64Abi::SysV).expect("compiles");
+        assert_eq!(
+            entry_off,
+            *offsets.get(GC_AOT_ENTRY).expect("wrapper present"),
+            "entry redirected to the wrapper",
+        );
+        assert_eq!(linked[entry_off], 0x55, "wrapper begins with push rbp");
+        assert!(offsets.contains_key("__gc_init_stackmaps"), "init injected");
+        // The user's `main` is still present (called by the wrapper), at a different
+        // offset than the entry wrapper.
+        assert_ne!(offsets["main"], entry_off);
+    }
+
+    /// A module whose entry is a reserved GC symbol is rejected on the x86_64 path too.
+    #[test]
+    fn x86_64_reserved_entry_is_rejected() {
+        let f = IIRFunction::new(
+            GC_AOT_ENTRY, vec![], "u64",
+            vec![
+                IIRInstr::new("const", Some("v".into()), vec![Operand::Int(0)], "u64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "u64"),
+            ],
+        );
+        let mut m = IIRModule::new("m", "twig");
+        m.add_or_replace(f);
+        m.entry_point = Some(GC_AOT_ENTRY.into());
+        let err = compile_module_x86_64_to_text(&m, X86_64Abi::SysV);
+        assert!(
+            matches!(&err, Err(AotError::Linker { stderr, .. }) if stderr.contains("reserved")),
+            "expected reserved-name error, got {err:?}",
+        );
+    }
+
 
 
     /// The GC entry wrapper is well-formed: the two `BL`s (→ init, → user entry)
