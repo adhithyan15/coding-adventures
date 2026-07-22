@@ -448,6 +448,7 @@ fn clone_subckt_element(
                 element.base_emitter_leakage_emission_coefficient,
                 element.base_collector_leakage_saturation_current,
                 element.base_collector_leakage_emission_coefficient,
+                element.forward_beta_temperature_exponent,
             ),
         ),
         Element::Mosfet(element) => Element::Mosfet(Mosfet::with_model(
@@ -2672,12 +2673,19 @@ pub fn bjt_at_temperature(
             reason: "saturation-current temperature exponent must be finite".to_string(),
         });
     }
+    if !bjt.forward_beta_temperature_exponent.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "forward-beta temperature exponent must be finite".to_string(),
+        });
+    }
     let saturation_scale = ratio.powf(bjt.saturation_current_temperature_exponent)
         * exponent.clamp(-100.0, 100.0).exp();
     let mut adjusted = bjt.clone();
     adjusted.saturation_current *= saturation_scale;
     adjusted.base_emitter_leakage_saturation_current *= saturation_scale;
     adjusted.base_collector_leakage_saturation_current *= saturation_scale;
+    adjusted.forward_beta *= ratio.powf(bjt.forward_beta_temperature_exponent);
     adjusted.thermal_voltage *= ratio;
     Ok(adjusted)
 }
@@ -2869,6 +2877,7 @@ pub struct Bjt {
     pub base_emitter_leakage_emission_coefficient: f64,
     pub base_collector_leakage_saturation_current: f64,
     pub base_collector_leakage_emission_coefficient: f64,
+    pub forward_beta_temperature_exponent: f64,
 }
 
 impl Bjt {
@@ -3196,6 +3205,7 @@ impl Bjt {
             base_emitter_leakage_emission_coefficient,
             0.0,
             2.0,
+            0.0,
         )
     }
 
@@ -3229,6 +3239,7 @@ impl Bjt {
         base_emitter_leakage_emission_coefficient: f64,
         base_collector_leakage_saturation_current: f64,
         base_collector_leakage_emission_coefficient: f64,
+        forward_beta_temperature_exponent: f64,
     ) -> Self {
         Self {
             name: name.into(),
@@ -3259,6 +3270,7 @@ impl Bjt {
             base_emitter_leakage_emission_coefficient,
             base_collector_leakage_saturation_current,
             base_collector_leakage_emission_coefficient,
+            forward_beta_temperature_exponent,
         }
     }
 }
@@ -3649,8 +3661,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     usize,
 )] = &[
     (ModelCardKind::Diode, 12, 18, 5, 3),
-    (ModelCardKind::Npn, 23, 38, 11, 4),
-    (ModelCardKind::Pnp, 23, 38, 11, 4),
+    (ModelCardKind::Npn, 24, 39, 11, 4),
+    (ModelCardKind::Pnp, 24, 39, 11, 4),
     (ModelCardKind::Njf, 5, 11, 5, 3),
     (ModelCardKind::Pjf, 5, 11, 5, 3),
     (ModelCardKind::Nmos, 18, 25, 6, 3),
@@ -3704,6 +3716,7 @@ const BJT_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("NE", "NE"),
     ("ISC", "ISC"),
     ("NC", "NC"),
+    ("XTB", "XTB"),
     ("NF", "NF"),
     ("NR", "NR"),
     ("VJE", "VJE"),
@@ -4384,6 +4397,7 @@ pub fn bjt_from_model_card(
             model_card_value(model, "NE", 1.0),
             model_card_value(model, "ISC", 0.0),
             model_card_value(model, "NC", 2.0),
+            model_card_value(model, "XTB", 0.0),
         ),
     )
 }
@@ -23805,6 +23819,12 @@ fn validate_bjt(bjt: &Bjt) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: bjt.name.clone(),
             reason: "saturation-current temperature exponent must be finite".to_string(),
+        });
+    }
+    if !bjt.forward_beta_temperature_exponent.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "forward-beta temperature exponent must be finite".to_string(),
         });
     }
     if !bjt.energy_gap_electron_volts.is_finite() || bjt.energy_gap_electron_volts <= 0.0 {
