@@ -29,8 +29,8 @@
 //! even though splitting a parameter list across a line break would be
 //! unusual style. This module does **not** just copy `j-repl`'s scanner
 //! verbatim and assume it is sufficient — see [`QRepl::feed`]'s and
-//! [`line_bracket_delta`]'s own doc comments for the verification this
-//! claim rests on.
+//! [`apply_line_bracket_tokens`]'s own doc comments for the verification
+//! this claim rests on.
 //!
 //! ## Delegating to the real Q lexer, not a hand-rolled character scan
 //!
@@ -91,13 +91,20 @@
 //! is O(n²) in the number of lines. [`QRepl`] instead tracks **running**
 //! `(parens, braces, brackets)` counts as instance state and, on each
 //! `feed()` call, tokenizes only the *newly appended* (comment-blanked)
-//! line fragment, folding its own delta into the running totals — O(line
+//! line fragment, applying that fragment's own tokens to the running
+//! counts **one token at a time** ([`apply_line_bracket_tokens`]), clamping
+//! each counter at 0 immediately after every token that touches it — O(line
 //! length) per call, O(buffer length) total across an entire continuation,
 //! not O(buffer length²). This is sound because no token in this cut's
 //! grammar can span a line-fragment boundary (no multi-line string/number
-//! literal, MA11 §4) — tokenizing one fragment at a time and summing
-//! deltas gives the identical bracket counts whole-buffer tokenization
-//! would have, every time.
+//! literal, MA11 §4) — tokenizing one fragment at a time and replaying its
+//! tokens against the *persisted* running state gives the identical bracket
+//! counts whole-buffer tokenization would have, every time. **Critically,
+//! this must clamp per token against the persisted state, not compute an
+//! independent net delta for the whole fragment and clamp once** — see
+//! `apply_line_bracket_tokens`'s own doc comment for a concrete case where
+//! the two diverge (a security-review finding from an earlier version of
+//! this function that computed net deltas).
 //!
 //! Tokenizing a syntactically incomplete-but-not-yet-closed fragment is
 //! always safe here: Q's lexer has no notion of an "unterminated" token
@@ -244,38 +251,72 @@ fn blank_line_comment(line: &str) -> String {
     out
 }
 
-/// The net change in open-`(`/open-`{`/open-`[` counts contributed by one
-/// already-comment-blanked line fragment, as `(parens, braces, brackets)`
-/// deltas (each may be negative, e.g. a continuation line that is just a
-/// closing `)`) — the incremental building block [`QRepl::feed`] folds
-/// into its own running totals on every call, replacing whole-buffer
-/// re-tokenization (see this module's own top doc comment, "Incremental,
-/// not whole-buffer, bracket counting").
+/// Apply one already-comment-blanked line fragment's own bracket tokens to
+/// the running `(*parens, *braces, *brackets)` counts **one token at a
+/// time**, clamping each counter at 0 immediately after every single token
+/// that touches it — exactly mirroring the original whole-buffer
+/// algorithm's own per-token clamp (`(count - 1).max(0)` applied at each
+/// closing bracket as it is encountered), just replayed over one fragment
+/// at a time instead of the whole buffer from position 0.
 ///
-/// `Ok(None)` means tokenizing `line` itself failed (a genuinely
+/// # Why this must clamp per token, not compute one net delta and clamp once
+///
+/// An earlier version of this function computed a single **net** delta for
+/// the whole line (summing every token's +1/-1 contribution) and let the
+/// caller clamp the *running total* only once, after folding that delta
+/// in. That diverges from the original whole-buffer algorithm whenever a
+/// line's own tokens dip a counter below zero **mid-line** before a later,
+/// genuinely-unmatched open of the same type: an excess close must be
+/// "forgiven" (clamped to 0) at the exact point it occurs, so it can never
+/// later be arithmetically cancelled out by a subsequent open within the
+/// same line. Concretely, `")("` as a lone first line: per-token clamping
+/// gives `RPAREN` -> clamped to 0, then `LPAREN` -> 1 (still incomplete,
+/// matching the original algorithm); a net-delta-then-clamp-once approach
+/// computes `-1 + 1 = 0` and reports "complete" instead — silently wrong.
+/// (Found and confirmed by a second security-review round; see this
+/// module's own regression tests for both this single-line case and a
+/// realistic multi-line sequence with the identical shape.)
+///
+/// This per-token-clamped walk over just the new fragment is mathematically
+/// identical to replaying the *entire* whole-buffer algorithm from
+/// scratch: a per-token-clamped walk's end state is fully determined by its
+/// starting value and its remaining tokens, regardless of whether that
+/// starting value came from replaying from 0 or from resuming a prior
+/// clamped walk that already processed everything before it — which is
+/// exactly what makes tokenizing only the new fragment (not the whole
+/// buffer) a sound, O(line length) replacement for O(buffer length)
+/// whole-buffer re-tokenization on every call.
+///
+/// Returns `false` if tokenizing `line` itself failed (a genuinely
 /// unrecognized character — the only way `try_tokenize_q` can fail, since
 /// this cut's lexer has no literal type that could be "unterminated" on
-/// partial input, MA11 §4); the caller treats this the same way the
-/// previous whole-buffer version did — proceed to evaluation immediately
-/// rather than waiting forever, letting the real lex/parse error surface
-/// through [`Interpreter::feed`]'s own `Result`.
-fn line_bracket_delta(line: &str) -> Option<(i32, i32, i32)> {
-    let tokens = coding_adventures_q_lexer::try_tokenize_q(line).ok()?;
-    let mut parens = 0i32;
-    let mut braces = 0i32;
-    let mut brackets = 0i32;
+/// partial input, MA11 §4) **without touching any of the three counters**;
+/// the caller treats this the same way the original whole-buffer version
+/// did — proceed to evaluation immediately rather than waiting forever,
+/// letting the real lex/parse error surface through [`Interpreter::feed`]'s
+/// own `Result`.
+fn apply_line_bracket_tokens(
+    line: &str,
+    parens: &mut i32,
+    braces: &mut i32,
+    brackets: &mut i32,
+) -> bool {
+    let tokens = match coding_adventures_q_lexer::try_tokenize_q(line) {
+        Ok(tokens) => tokens,
+        Err(_) => return false,
+    };
     for t in &tokens {
         match t.effective_type_name() {
-            "LPAREN" => parens += 1,
-            "RPAREN" => parens -= 1,
-            "LBRACE" => braces += 1,
-            "RBRACE" => braces -= 1,
-            "LBRACKET" => brackets += 1,
-            "RBRACKET" => brackets -= 1,
+            "LPAREN" => *parens += 1,
+            "RPAREN" => *parens = (*parens - 1).max(0),
+            "LBRACE" => *braces += 1,
+            "RBRACE" => *braces = (*braces - 1).max(0),
+            "LBRACKET" => *brackets += 1,
+            "RBRACKET" => *brackets = (*brackets - 1).max(0),
             _ => {}
         }
     }
-    Some((parens, braces, brackets))
+    true
 }
 
 /// A persistent interactive Q session.
@@ -342,7 +383,24 @@ impl QRepl {
     /// construction) keeps the incremental bracket count correct. Blanking
     /// only replaces characters with spaces (same length), so the size
     /// check's byte-count math is unaffected either way.
+    ///
+    /// # Precondition: `line` is a single physical line (no embedded `'\n'`)
+    ///
+    /// [`blank_line_comment`]'s own soundness (see its doc comment) relies
+    /// on `line` never containing an embedded `'\n'` — true by construction
+    /// at this crate's own sole call site ([`run`], which always strips a
+    /// physical line's own trailing newline before calling `feed`), but
+    /// `feed`/`QRepl` are public API: a future direct caller passing a
+    /// string with an embedded `'\n'` would silently reintroduce a scoped
+    /// version of the exact comment-swallowing bug this module's own
+    /// `CHANGELOG.md` documents. Asserted here (debug-only, zero release
+    /// cost) so a violation fails loudly in tests/debug builds rather than
+    /// silently misbehaving.
     pub fn feed(&mut self, line: &str) -> ReplResponse {
+        debug_assert!(
+            !line.contains('\n'),
+            "QRepl::feed expects a single physical line without an embedded newline"
+        );
         if self.buffer.is_empty() {
             match line.trim() {
                 "quit" | "exit" | "quit()" | "exit()" => return ReplResponse::Quit,
@@ -388,23 +446,26 @@ impl QRepl {
             self.buffer.push_str(&line);
         }
 
-        // Incremental bracket-delta update (see this module's own top doc
-        // comment, "Incremental, not whole-buffer, bracket counting") --
-        // tokenizes only the just-appended (already comment-blanked) line,
-        // not the whole accumulated buffer. A tokenize failure on this one
-        // fragment forces an immediate attempt at evaluation (matching the
-        // previous whole-buffer version's identical "don't wait forever on
-        // a genuinely bad character" behavior), regardless of the running
+        // Incremental, per-token-clamped bracket update (see this module's
+        // own top doc comment, "Incremental, not whole-buffer, bracket
+        // counting", and `apply_line_bracket_tokens`'s own doc comment for
+        // exactly why this must clamp per token against the PERSISTED
+        // running state, not compute an independent net delta for the
+        // whole line and clamp once) -- tokenizes only the just-appended
+        // (already comment-blanked) line, not the whole accumulated
+        // buffer. A tokenize failure on this one fragment forces an
+        // immediate attempt at evaluation (matching the previous
+        // whole-buffer version's identical "don't wait forever on a
+        // genuinely bad character" behavior), regardless of the running
         // counts.
-        let still_incomplete = match line_bracket_delta(&line) {
-            Some((dp, db, dk)) => {
-                self.open_parens = (self.open_parens + dp).max(0);
-                self.open_braces = (self.open_braces + db).max(0);
-                self.open_brackets = (self.open_brackets + dk).max(0);
-                self.open_parens > 0 || self.open_braces > 0 || self.open_brackets > 0
-            }
-            None => false,
-        };
+        let tokenized_ok = apply_line_bracket_tokens(
+            &line,
+            &mut self.open_parens,
+            &mut self.open_braces,
+            &mut self.open_brackets,
+        );
+        let still_incomplete = tokenized_ok
+            && (self.open_parens > 0 || self.open_braces > 0 || self.open_brackets > 0);
         if still_incomplete {
             return ReplResponse::NeedMore;
         }
@@ -655,13 +716,56 @@ mod tests {
         // `{)`-shaped input: a brace opened, then a paren "closed" with
         // nothing open -- must stay incomplete on the strength of the
         // still-open BRACE, not have the mismatched close cancel it out
-        // (see `line_bracket_delta`'s own doc comment for the full
-        // rationale).
-        let (parens, braces, brackets) = line_bracket_delta("{)").unwrap();
-        assert_eq!((parens, braces, brackets), (-1, 1, 0));
+        // (see `apply_line_bracket_tokens`'s own doc comment for the full
+        // rationale). The stray RPAREN clamps `parens` to 0 immediately
+        // (not -1) -- it is "forgiven", not carried as a negative value.
+        let (mut parens, mut braces, mut brackets) = (0i32, 0i32, 0i32);
+        assert!(apply_line_bracket_tokens("{)", &mut parens, &mut braces, &mut brackets));
+        assert_eq!((parens, braces, brackets), (0, 1, 0));
 
         let mut r = QRepl::new();
         assert_eq!(r.feed("{)"), ReplResponse::NeedMore);
+    }
+
+    /// Security-review round 2 regression: the simplest counterexample
+    /// where clamping a whole-line NET delta once (an earlier, incorrect
+    /// version of `apply_line_bracket_tokens`) diverges from clamping PER
+    /// TOKEN as the original whole-buffer algorithm did. `")("` as a lone
+    /// first line: per-token clamping gives `RPAREN` -> forgiven (clamped
+    /// to 0), then `LPAREN` -> 1 (still incomplete); a net-delta approach
+    /// computes `-1 + 1 = 0` and would (wrongly) report "complete".
+    #[test]
+    fn a_line_with_more_closes_than_opens_forgives_the_excess_rather_than_cancelling_a_later_open() {
+        let (mut parens, mut braces, mut brackets) = (0i32, 0i32, 0i32);
+        assert!(apply_line_bracket_tokens(")(", &mut parens, &mut braces, &mut brackets));
+        assert_eq!((parens, braces, brackets), (1, 0, 0));
+
+        let mut r = QRepl::new();
+        assert_eq!(r.feed(")("), ReplResponse::NeedMore);
+    }
+
+    /// The same counterexample, at the full `QRepl` session level with a
+    /// realistic multi-line shape: `feed("(1")`, `feed("))+((2")`,
+    /// `feed(")")`. One real `(` from the first line remains unmatched
+    /// throughout (the middle line's first close matches it, its second
+    /// close is forgiven, then it opens two MORE parens; the final line's
+    /// lone close only accounts for one of those two). A net-delta-per-line
+    /// approach would let the middle line's own `-2 + 2 = 0` net delta
+    /// erase all memory that one of its closes was already spurious,
+    /// making the final `")"` look (wrongly) like it completes the
+    /// statement one line early.
+    #[test]
+    fn a_realistic_multi_line_sequence_with_excess_closes_still_waits_for_the_real_unmatched_open() {
+        let mut r = QRepl::new();
+        assert_eq!(r.feed("(1"), ReplResponse::NeedMore);
+        assert_eq!(r.feed("))+((2"), ReplResponse::NeedMore);
+        assert_eq!(
+            r.feed(")"),
+            ReplResponse::NeedMore,
+            "one real unmatched '(' remains open from the very first line -- \
+             must still wait for '... ', not prematurely declare the statement complete"
+        );
+        assert!(r.is_continuing());
     }
 
     #[test]

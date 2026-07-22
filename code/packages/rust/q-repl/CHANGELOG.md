@@ -6,6 +6,32 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- **(MEDIUM, round 2) `apply_line_bracket_tokens` (formerly
+  `line_bracket_delta`) computed one net delta per line and clamped the
+  running total only once, instead of clamping per token against the
+  persisted running state as the original whole-buffer algorithm did.**
+  These diverge whenever a line's own tokens, combined with the count
+  already open, dip a counter below zero *mid-line* before a later,
+  genuinely-unmatched open of the same type — an excess close must be
+  "forgiven" (clamped to 0) at the exact point it occurs, not allowed to
+  arithmetically cancel a later open within the same line. Concrete
+  counterexample: `")("` as a lone first line — per-token clamping
+  correctly reports "incomplete" (the `)` is forgiven, then the `(`
+  opens); the net-delta approach computed `-1 + 1 = 0` and wrongly
+  reported "complete". A realistic multi-line sequence
+  (`feed("(1")`, `feed("))+((2")`, `feed(")")`) triggers the same
+  divergence one line early. Fixed by threading `&mut i32` references to
+  the three running counters straight into the token loop and clamping
+  each one immediately after every token that touches it — mathematically
+  identical to replaying the whole-buffer algorithm from scratch, since a
+  per-token-clamped walk's end state is fully determined by its starting
+  value and remaining tokens regardless of where that starting value came
+  from. Added two regression tests for the counterexamples above.
+- **(LOW/INFO) `blank_line_comment`'s soundness depends on an unenforced
+  precondition** (every line reaching `feed` has no embedded `'\n'`) —
+  added a `debug_assert!` at the top of `feed` so a future direct caller
+  violating it fails loudly in tests/debug builds instead of silently
+  reintroducing a scoped version of the comment-swallowing bug below.
 - **(HIGH) A `/`-comment opened on one physical line of a still-open
   continuation silently swallowed every subsequently-typed line, forever.**
   The previous scanner tokenized the *whole accumulated, space-joined*
