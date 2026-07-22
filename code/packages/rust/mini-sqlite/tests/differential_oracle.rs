@@ -1697,9 +1697,9 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT c || '!' AS d, c FROM t GROUP BY c ORDER BY c",
     },
-    // Still ledgered: a bare non-key column now projects under the RIGHT name
-    // (`c`, was the group key `x`) but as NULL, because the group retains no
-    // representative source row. See the LEDGER entry for details.
+    // A bare non-key column now projects a VALUE, not NULL: SQLite reports such a
+    // column from the group's FIRST row, and the VM now keeps that representative
+    // row. Here each x-group has one row (c='A'), so it's deterministic.
     Case {
         id: "distinct_over_group_by_single_col",
         setup: &[
@@ -1707,6 +1707,27 @@ const CASES: &[Case] = &[
             "INSERT INTO t VALUES('A','p'),('A','P')",
         ],
         query: "SELECT DISTINCT c FROM t GROUP BY x ORDER BY 1",
+    },
+    // Multi-row group: the bare columns `v` and `tag` come from the group's FIRST
+    // row (v=10, tag='a'), matching SQLite. Both engines scan an in-memory table
+    // in insertion/rowid order, so "first row of the group" is deterministic.
+    Case {
+        id: "group_by_bare_column_first_row",
+        setup: &[
+            "CREATE TABLE t (g INTEGER, v INTEGER, tag TEXT)",
+            "INSERT INTO t VALUES (1,10,'a'),(1,20,'b'),(1,30,'c'),(2,40,'d')",
+        ],
+        query: "SELECT g, v, tag FROM t GROUP BY g ORDER BY g",
+    },
+    // Bare column functionally dependent on the key (`c` constant within each
+    // `x`... here within `g`): deterministic regardless of which row is picked.
+    Case {
+        id: "group_by_bare_column_dependent",
+        setup: &[
+            "CREATE TABLE t (g INTEGER, label TEXT)",
+            "INSERT INTO t VALUES (1,'one'),(1,'one'),(2,'two')",
+        ],
+        query: "SELECT g, label FROM t GROUP BY g ORDER BY g",
     },
     // Still ledgered: an aggregate column reordered before a group key keeps the
     // fixed keys-then-aggregates layout (`[c, max(x)]` not `[max(x), c]`).
@@ -2205,18 +2226,6 @@ const LEDGER: &[(&str, &str)] = &[
     (
         "distinct_star_collate",
         "SELECT DISTINCT * does not expand the star into the table's columns (projection gap, not a collation gap)",
-    ),
-    // A GROUP BY over a BARE non-key column projects that column as NULL rather
-    // than a representative value from the group. The SELECT-list projection now
-    // fixes the column IDENTITY — `SELECT c ... GROUP BY x` returns a column
-    // named `c` (it used to return the group key `x`) — but the value is NULL
-    // because the group's fake row holds only the key columns, not a
-    // representative source row. Closing this needs the VM to retain a
-    // representative row per group (SQLite's "bare column in aggregate"
-    // extension); a tracked follow-up.
-    (
-        "distinct_over_group_by_single_col",
-        "GROUP BY over a bare non-key column projects it as NULL, not a representative row value (VM keeps no representative row per group)",
     ),
     // A GROUP BY with an AGGREGATE column still emits the fixed
     // group-keys-then-aggregates layout, so reordering an aggregate relative to
