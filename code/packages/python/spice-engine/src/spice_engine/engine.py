@@ -354,7 +354,9 @@ def bjt_at_temperature(
             f"{bjt.name}: BJT saturation-current temperature exponent must be finite"
         )
     if not math.isfinite(bjt.Xtb):
-        raise ValueError(f"{bjt.name}: BJT forward-beta temperature exponent must be finite")
+        raise ValueError(f"{bjt.name}: BJT beta temperature exponent must be finite")
+    if math.isnan(bjt.beta_r) or bjt.beta_r <= 0.0:
+        raise ValueError(f"{bjt.name}: BJT reverse beta must be positive")
     saturation_scale = ratio**bjt.Xti * math.exp(max(-100.0, min(100.0, exponent)))
     return replace(
         bjt,
@@ -362,6 +364,7 @@ def bjt_at_temperature(
         Ise=bjt.Ise * saturation_scale,
         Isc=bjt.Isc * saturation_scale,
         beta_f=bjt.beta_f * ratio**bjt.Xtb,
+        beta_r=bjt.beta_r * ratio**bjt.Xtb,
         Vt=bjt.Vt * ratio,
     )
 
@@ -601,7 +604,7 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
-        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg, element.Vaf, element.Nf, element.Nr, element.Vje, element.Mje, element.Vjc, element.Mjc, element.Fc, element.Var, element.Ikf, element.Ise, element.Ne, element.Isc, element.Nc, element.Xtb)
+        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg, element.Vaf, element.Nf, element.Nr, element.Vje, element.Mje, element.Vjc, element.Mjc, element.Fc, element.Var, element.Ikf, element.Ise, element.Ne, element.Isc, element.Nc, element.Xtb, element.beta_r)
     if isinstance(element, VCVS):
         return VCVS(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), _map_subckt_node(element.ctrl_plus, instance_name, node_map), _map_subckt_node(element.ctrl_minus, instance_name, node_map), element.gain)
     if isinstance(element, VCCS):
@@ -9065,6 +9068,18 @@ def _bjt_base_collector_leakage(el: BJT, junction_voltage: float) -> tuple[float
     return el.Isc * (exp_value - 1.0), el.Isc / thermal_voltage * exp_value
 
 
+def _bjt_reverse_base_current(el: BJT, junction_voltage: float) -> tuple[float, float]:
+    if math.isinf(el.beta_r):
+        return 0.0, 0.0
+    thermal_voltage = el.Vt * el.Nr
+    exponent = max(-40.0, min(40.0, junction_voltage / thermal_voltage))
+    exp_value = math.exp(exponent)
+    return (
+        el.Is * (exp_value - 1.0) / el.beta_r,
+        el.Is / thermal_voltage * exp_value / el.beta_r,
+    )
+
+
 def _stamp_bjt(
     G: list[list[float]],
     b: list[float],
@@ -9162,12 +9177,19 @@ def _stamp_bjt(
     collector_leakage_current, collector_leakage_conductance = (
         _bjt_base_collector_leakage(el, Vreverse)
     )
+    reverse_base_current, reverse_base_conductance = _bjt_reverse_base_current(
+        el, Vreverse
+    )
+    base_collector_current = collector_leakage_current + reverse_base_current
+    base_collector_conductance = (
+        collector_leakage_conductance + reverse_base_conductance
+    )
     Ieq_collector_leakage = (
-        collector_leakage_current - collector_leakage_conductance * Vreverse
+        base_collector_current - base_collector_conductance * Vreverse
     )
 
     _stamp_g(G, node_to_idx, el.collector, el.emitter, output_conductance)
-    _stamp_g(G, node_to_idx, el.base, el.collector, collector_leakage_conductance)
+    _stamp_g(G, node_to_idx, el.base, el.collector, base_collector_conductance)
 
     if el.polarity == "NPN":
         # --- Junction stamp: gπ between B and E ------------------------------
@@ -9240,6 +9262,8 @@ def _validate_bjt(el: BJT) -> None:
         raise ValueError(f"{el.name}: BJT saturation current must be finite and positive")
     if not math.isfinite(el.beta_f) or el.beta_f <= 0.0:
         raise ValueError(f"{el.name}: BJT forward beta must be finite and positive")
+    if math.isnan(el.beta_r) or el.beta_r <= 0.0:
+        raise ValueError(f"{el.name}: BJT reverse beta must be positive")
     if not math.isfinite(el.Vt) or el.Vt <= 0.0:
         raise ValueError(f"{el.name}: BJT thermal voltage must be finite and positive")
     if not math.isfinite(el.Cje) or el.Cje < 0.0:
@@ -9255,7 +9279,7 @@ def _validate_bjt(el: BJT) -> None:
             f"{el.name}: BJT saturation-current temperature exponent must be finite"
         )
     if not math.isfinite(el.Xtb):
-        raise ValueError(f"{el.name}: BJT forward-beta temperature exponent must be finite")
+        raise ValueError(f"{el.name}: BJT beta temperature exponent must be finite")
     if not math.isfinite(el.Eg) or el.Eg <= 0.0:
         raise ValueError(f"{el.name}: BJT energy gap must be finite and positive")
     if not math.isfinite(el.Vaf) or el.Vaf < 0.0:
@@ -12537,13 +12561,16 @@ def _stamp_ac(
         _, collector_leakage_conductance = _bjt_base_collector_leakage(
             el, Vcollector_leakage
         )
+        _, reverse_base_conductance = _bjt_reverse_base_current(
+            el, Vcollector_leakage
+        )
         g_pi: float = base_gm / el.beta_f + leakage_conductance
         diffusion_capacitance = el.Tf * gm_b
         reverse_diffusion_capacitance = el.Tr * gm_reverse
         y_be = g_pi + 1j * omega * (
             _bjt_base_emitter_depletion_capacitance(el, Vjunc) + diffusion_capacitance
         )
-        y_bc = collector_leakage_conductance + 1j * omega * (
+        y_bc = collector_leakage_conductance + reverse_base_conductance + 1j * omega * (
             _bjt_base_collector_depletion_capacitance(el, Vreverse)
             + reverse_diffusion_capacitance
         )
@@ -13160,8 +13187,16 @@ def _build_ss_matrix(
             )
             _, leakage_conductance = _bjt_base_emitter_leakage(el, Vjunc)
             _, collector_leakage_conductance = _bjt_base_collector_leakage(el, Vreverse)
+            _, reverse_base_conductance = _bjt_reverse_base_current(el, Vreverse)
             g_pi: float = base_gm / el.beta_f + leakage_conductance
             _stamp_g(G, node_to_idx, el.collector, el.emitter, output_conductance)
+            _stamp_g(
+                G,
+                node_to_idx,
+                el.base,
+                el.collector,
+                collector_leakage_conductance + reverse_base_conductance,
+            )
             _stamp_g(G, node_to_idx, el.base, el.collector, collector_leakage_conductance)
 
             if el.polarity == "NPN":
@@ -14054,6 +14089,7 @@ def sens_dc(
                     Mjc=el.Mjc,
                     Fc=el.Fc,
                     Xtb=el.Xtb,
+                    beta_r=el.beta_r,
                 ),
             )
             delta_beta = max(abs(el.beta_f) * perturbation, abs_floor)
@@ -14087,6 +14123,7 @@ def sens_dc(
                     Mjc=el.Mjc,
                     Fc=el.Fc,
                     Xtb=el.Xtb,
+                    beta_r=el.beta_r,
                 ),
             )
 
@@ -14330,6 +14367,7 @@ def _vary_element(el: Element, tolerance: float, distribution: str) -> Element:
             Mjc=el.Mjc,
             Fc=el.Fc,
             Xtb=el.Xtb,
+            beta_r=el.beta_r,
         )
 
     # Capacitor, Inductor, Mosfet — no tunable DC parameter; return unchanged.
@@ -14781,7 +14819,13 @@ def _collect_noise_sources(
             )
             leakage_current, _ = _bjt_base_emitter_leakage(el, Vjunc)
             collector_leakage_current, _ = _bjt_base_collector_leakage(el, Vreverse)
-            psd = q2 * (abs(I_C) + abs(leakage_current) + abs(collector_leakage_current))
+            reverse_base_current, _ = _bjt_reverse_base_current(el, Vreverse)
+            psd = q2 * (
+                abs(I_C)
+                + abs(leakage_current)
+                + abs(collector_leakage_current)
+                + abs(reverse_base_current)
+            )
             n_b = None if _is_ground(el.base) else node_to_idx[el.base]
             n_e = None if _is_ground(el.emitter) else node_to_idx[el.emitter]
             sources.append((el.name, "shot", n_b, n_e, psd))

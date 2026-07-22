@@ -4,6 +4,12 @@
 
 ### Added
 
+- **BJT reverse current gain** — BJT model cards now accept `BR`/`BETA_R` and
+  apply the reverse base-current branch in DC, transient, AC,
+  transfer-function, temperature, and noise paths, matching Rust and
+  TypeScript. `XTB` now scales both forward and reverse beta. The
+  supported-parameter catalog now contains 108 canonical rows.
+
 - **BJT forward-beta temperature exponent** — BJT model cards now accept `XTB`
   and scale forward beta by the analysis-to-nominal absolute temperature ratio,
   matching Rust and TypeScript. The supported-parameter catalog now contains
