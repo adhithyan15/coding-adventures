@@ -1,6 +1,6 @@
 {
   "name": "script-writing-visualizer",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "private": true,
   "description": "Companion study app (HL02): break a non-Latin script apart and learn to write it — and drill the whole written curriculum with a spaced-repetition schedule that remembers you",
   "type": "module",
