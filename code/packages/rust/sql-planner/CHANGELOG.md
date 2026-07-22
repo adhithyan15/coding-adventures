@@ -2,6 +2,28 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.30] - Unreleased
+
+### Changed
+
+- **`SELECT *` is expanded into the base table's columns at plan time.** A `*`
+  in the select list was previously carried through as a placeholder output
+  column `SqlExpr::Column { name: "*" }`. Nothing downstream could resolve it —
+  `LoadColumn("*")` reads no such column and yields NULL — so `SELECT *` (plain
+  or `DISTINCT`) returned a single NULL column literally named `*`. The new
+  `expand_star_columns` (called after the output list is built, before the
+  DISTINCT collation vector) replaces the `*` with the table's concrete columns
+  in schema-declaration order, matching SQLite. Because expansion precedes
+  DISTINCT-collation and ORDER-BY-ordinal resolution, `SELECT DISTINCT *` now
+  folds per-column collations correctly and `SELECT * ... ORDER BY 1` binds to
+  the first real column.
+- Scoped to a single base table with no JOIN: a joined or comma-joined `*` would
+  need every table's columns in join order, which is a separate gap and keeps
+  the `*` placeholder. Unknown tables / tables with no reported columns also
+  pass through unchanged (the query errors elsewhere). `*` mixed with other
+  select items (`SELECT a, *`) is expanded in place once the grammar produces
+  it — a separate parser follow-up tracks the mixed-list parse.
+
 ## [0.2.29] - Unreleased
 
 ### Changed

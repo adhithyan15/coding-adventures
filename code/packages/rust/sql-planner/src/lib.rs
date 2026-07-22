@@ -825,6 +825,13 @@ fn plan_select(
         }]
     };
 
+    // Expand a `*` output column into the base table's columns, in definition
+    // order. `*` is only a placeholder — the rest of the pipeline cannot resolve
+    // it (`LoadColumn("*")` finds no such column and yields NULL), so without
+    // this a `SELECT *` returns a single NULL column literally named `*`. SQLite
+    // expands it to every column of the FROM clause.
+    let output_columns = expand_star_columns(output_columns, schema, &base_table_ref, stmt);
+
     // Now that the output list is known, build the DISTINCT node with one
     // collation per output column. SQLite folds a DISTINCT column only when the
     // output expression is a BARE COLUMN REFERENCE whose column declares a
@@ -1366,6 +1373,62 @@ fn collate_comparisons(expr: SqlExpr, ctx: &OrderCollateCtx) -> SqlExpr {
         }
         other => other,
     }
+}
+
+/// Expand a `*` output column into the base table's columns, in the table's
+/// declaration order (what SQLite uses). `*` is a placeholder that nothing
+/// downstream can resolve — `LoadColumn("*")` reads no column and yields NULL —
+/// so a `SELECT *` (plain OR `DISTINCT`) would otherwise return a single NULL
+/// column named `*`. Replacing it here with the concrete columns fixes both.
+///
+/// Scoped to a single base table with no JOIN: a joined `*` would need every
+/// table's columns in join order (and a qualified `t.*` there would need
+/// per-table resolution), which is a separate gap — a JOIN keeps the `*`
+/// placeholder. On a single base table the qualifier is irrelevant, so `t.*`
+/// expands the same as `*`. An unknown table or a table with no reported
+/// columns also passes through unchanged (the query errors elsewhere). A `*`
+/// mixed with other items (`SELECT a, *`) is expanded in place, preserving
+/// position.
+fn expand_star_columns(
+    cols: Vec<OutputColumn>,
+    schema: &dyn SchemaProvider,
+    base_table_ref: &Option<(String, Option<String>)>,
+    stmt: &GrammarASTNode,
+) -> Vec<OutputColumn> {
+    let has_star = cols
+        .iter()
+        .any(|c| matches!(&c.expr, SqlExpr::Column { name, .. } if name == "*"));
+    if !has_star {
+        return cols;
+    }
+    let Some((table, _alias)) = base_table_ref.as_ref() else {
+        return cols;
+    };
+    if !find_nodes(stmt, "join_clause").is_empty() {
+        return cols;
+    }
+    let names = match schema.column_names(table) {
+        Ok(n) if !n.is_empty() => n,
+        _ => return cols,
+    };
+    let mut out = Vec::with_capacity(cols.len() + names.len());
+    for c in cols {
+        match &c.expr {
+            SqlExpr::Column { name, .. } if name == "*" => {
+                for cn in &names {
+                    out.push(OutputColumn {
+                        expr: SqlExpr::Column {
+                            table: None,
+                            name: cn.clone(),
+                        },
+                        alias: None,
+                    });
+                }
+            }
+            _ => out.push(c),
+        }
+    }
+    out
 }
 
 /// One collation per DISTINCT **output** column, positionally parallel to the
@@ -3776,8 +3839,12 @@ mod tests {
 
     /// The simplest possible plan: project all columns from a single scan.
     ///
+    /// `SELECT *` is expanded at plan time into the base table's columns, in
+    /// schema-definition order (`users` = id, name, age, city, status), so the
+    /// downstream stages see concrete column references — never a `*` placeholder.
+    ///
     /// ```text
-    /// Project { * }
+    /// Project { id, name, age, city, status }
     ///   Scan { users }
     /// ```
     #[test]
@@ -3788,9 +3855,17 @@ mod tests {
             "Root must be Project, got: {plan:?}"
         );
         if let LogicalPlan::Project { input, columns } = &plan {
-            assert!(
-                matches!(columns[0].expr, SqlExpr::Column { name: ref n, .. } if n == "*"),
-                "Expected * projection"
+            let names: Vec<&str> = columns
+                .iter()
+                .map(|c| match &c.expr {
+                    SqlExpr::Column { name, .. } => name.as_str(),
+                    other => panic!("Expected expanded Column, got {other:?}"),
+                })
+                .collect();
+            assert_eq!(
+                names,
+                ["id", "name", "age", "city", "status"],
+                "`*` must expand to the table's columns in definition order"
             );
             assert!(matches!(**input, LogicalPlan::Scan { .. }));
         }
@@ -5058,11 +5133,16 @@ mod tests {
     }
 
     #[test]
-    fn test_order_by_ordinal_over_star_is_unchanged() {
-        // With `SELECT *` the output column count/identity isn't known at plan
-        // time, so a positional key is left as the literal (no guess, no error).
+    fn test_order_by_ordinal_over_expanded_star() {
+        // `SELECT *` is expanded into the base table's columns before ORDER BY
+        // ordinals are resolved, so `ORDER BY 1` now binds to the first expanded
+        // column (`t` = id, x, y, …) exactly as SQLite does, rather than being
+        // left as an unresolved literal.
         let keys = sort_keys_of("SELECT * FROM t ORDER BY 1");
         assert_eq!(keys.len(), 1);
-        assert_eq!(keys[0].expr, SqlExpr::Literal(SqlValue::Int(1)));
+        assert_eq!(
+            keys[0].expr,
+            SqlExpr::Column { table: None, name: "id".to_string() }
+        );
     }
 }
