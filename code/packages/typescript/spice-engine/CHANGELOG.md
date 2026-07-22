@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add BJT model-card `IKR` reverse high-current beta roll-off support in DC,
+  transient, AC, transfer-function, temperature, and noise paths, matching
+  Rust and Python. The supported-parameter catalog now contains 110 canonical
+  rows.
 - Add BJT model-card `BR`/`BETA_R` reverse-current-gain support in DC,
   transient, AC, transfer-function, temperature, and noise paths, matching
   Rust and Python. `XTB` now scales both forward and reverse beta. The

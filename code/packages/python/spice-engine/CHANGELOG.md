@@ -4,6 +4,11 @@
 
 ### Added
 
+- **BJT reverse high-current beta roll-off** — BJT model cards now accept
+  `IKR` and apply reverse base-charge modulation in DC, transient, AC,
+  transfer-function, temperature, and noise paths, matching Rust and
+  TypeScript. The supported-parameter catalog now contains 110 canonical rows.
+
 - **BJT reverse current gain** — BJT model cards now accept `BR`/`BETA_R` and
   apply the reverse base-current branch in DC, transient, AC,
   transfer-function, temperature, and noise paths, matching Rust and

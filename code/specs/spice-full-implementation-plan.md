@@ -33,17 +33,17 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language BJT reverse current gain.
+1. Cross-language BJT reverse high-current beta roll-off.
    - Status: current PR completion candidate.
-   - Add Berkeley BJT `BR` / `BETA_R` model-card support in Rust, Python, and
-     TypeScript with a model-card default of `1` and behavior-preserving direct
-     element defaults.
-   - Apply reverse base current in DC, transient, AC, transfer-function,
-     temperature, and noise paths, and scale both forward and reverse beta by
-     `XTB` while preserving the complete BJT model through subcircuits.
-   - Extend the supported-parameter coverage gate from 106 to 108 canonical
-     rows and lock model-card aliases, behavior, validation, and hierarchy in
-     all engines.
+   - Add Berkeley BJT `IKR` model-card support in Rust, Python, and TypeScript
+     with a behavior-preserving default of `0`.
+   - Apply reverse high-current base-charge modulation to the base-collector
+     reverse-current branch in DC, transient, AC, transfer-function,
+     temperature, and noise paths while preserving the complete BJT model
+     through subcircuits.
+   - Extend the supported-parameter coverage gate from 108 to 110 canonical
+     rows and lock model-card behavior, validation, and hierarchy in all
+     engines.
 
 ## Completed Slices
 
@@ -3094,6 +3094,15 @@ the Rust, Python, and TypeScript surfaces together.
      forward beta by the analysis-to-nominal absolute temperature ratio.
    - Hierarchical subcircuit expansion preserves the complete BJT model, and
      the supported-parameter release gate now covers 106 canonical rows.
+
+231. Cross-language BJT reverse current gain.
+   - Status: completed in PR 8797.
+   - Rust, Python, and TypeScript BJT model cards now accept `BR` / `BETA_R`
+     and apply the reverse base-current branch in DC, transient, AC,
+     transfer-function, temperature, and noise paths.
+   - `XTB` scales both forward and reverse beta, hierarchical subcircuit
+     expansion preserves the complete BJT model, and the supported-parameter
+     release gate now covers 108 canonical rows.
 
 ## Backlog
 

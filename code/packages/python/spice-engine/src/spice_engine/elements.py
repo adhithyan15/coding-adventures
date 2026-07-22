@@ -637,6 +637,7 @@ class BJT:
     Nc: float = 2.0         # base-collector leakage emission coefficient
     Xtb: float = 0.0        # forward-beta temperature exponent
     beta_r: float = float("inf")  # reverse current gain; infinity disables
+    Ikr: float = 0.0        # reverse-beta roll-off current (A); 0 disables
 
 
 # ---------------------------------------------------------------------------
