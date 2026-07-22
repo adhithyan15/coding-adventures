@@ -254,17 +254,19 @@ pub enum ExprAst {
     /// `latex "…"` adapter from a `MathExpr::Call` whose argument is a
     /// two-element `Sequence`.
     Call2(BinFn, Box<ExprAst>, Box<ExprAst>),
-    /// A **precision narrowing** — `round_to(x, n)` (NUM-6a): round the operand to
-    /// `n` decimal places. Unlike [`ExprAst::Round`] (round to the nearest
-    /// *integer*), this carries a precision, so it lowers to the distinct
-    /// `logic_engine::ComputeExpr::Round` node (not a unary `ComputeOp`), rounding
-    /// on the exact path under the default half-even mode (ADJ-NUMERIC-SUBSTRATE
-    /// §4.1–§4.4). The `u32` is `n`, already validated a non-negative integer
-    /// within the precision cap. Produced by the **native application** surface
-    /// `round_to(x, n)` — recognised as a built-in in [`ExprAst::Apply`] lowering,
-    /// which reuses the same comma-list argument grammar as user formula
-    /// applications (`quotient(a, b)`), so no new grammar or LaTeX change is needed.
-    RoundTo(Box<ExprAst>, u32),
+    /// A **precision narrowing** — `round_to(x, n)` (NUM-6a, decimal places) or
+    /// `round_sig(x, n)` (NUM-6b, significant figures). Unlike [`ExprAst::Round`]
+    /// (round to the nearest *integer*), this carries a precision spec, so it lowers
+    /// to the distinct `logic_engine::ComputeExpr::Round` node (not a unary
+    /// `ComputeOp`), rounding on the exact path under the default half-even mode
+    /// (ADJ-NUMERIC-SUBSTRATE §4.1–§4.4). The [`logic_engine::RoundSpec`] is already
+    /// validated (a non-negative integer within the precision cap; ≥ 1 for
+    /// significant figures). Produced by the **native application** surface
+    /// `round_to(x, n)` / `round_sig(x, n)` — recognised as built-ins in
+    /// [`ExprAst::Apply`] lowering, which reuses the same comma-list argument grammar
+    /// as user formula applications (`quotient(a, b)`), so no new grammar or LaTeX
+    /// change is needed.
+    RoundTo(Box<ExprAst>, logic_engine::RoundSpec),
     /// An aggregation over every observation of a slot.
     Agg(AggOp, String),
     /// A **formula application** used as a sub-expression: `name(arg₁, …, argₙ)`

@@ -435,6 +435,13 @@ pub enum RoundSpec {
     /// Round to exactly `n` digits after the decimal point. `round_to(x, 0)` is
     /// the precision-parameterized generalization of the integer `Round`.
     Places(u32),
+    /// Round to `n` **significant figures** — `round_sig(x, n)` (NUM-6b). Rounding
+    /// to `n` sig-figs is rounding to `n − 1 − e` decimal *places*, where `e` is the
+    /// base-10 exponent of `x`'s most-significant digit (`e = ⌊log₁₀|x|⌋`); that
+    /// place count is derived exactly from the operand's magnitude and handed to the
+    /// same exact rounding path as [`RoundSpec::Places`] (the place count may be
+    /// negative — `round_sig(31_459, 3) = 31_500`, rounding to the hundreds). `n ≥ 1`.
+    SigFigures(u32),
 }
 
 /// A node in the derivation tree — the provenance-through-math record.
@@ -1153,26 +1160,74 @@ fn eval_round(
 }
 
 /// Round an exact rational to `spec`'s precision under `mode`, staying exact.
+///
+/// Both forms reduce to "round `n / d` to `places` decimal places" via
+/// [`BigDecimal::div_round`] — `Places` uses the stated count directly;
+/// `SigFigures` derives it from the operand's magnitude ([`msd_exponent`]). `d` is
+/// a rational denominator, always > 0, so the division is total (never the
+/// divide-by-zero `div_round` guards against). `places` may be **negative** for a
+/// significant-figures rounding of a large number (`round_sig(31_459, 3) → 31_500`,
+/// `places = 3 − 1 − 4 = −2`), which `div_round` and `BigDecimal::to_rational`
+/// both handle.
 fn round_rational(r: &ExactRational, spec: RoundSpec, mode: RoundingMode) -> ExactRational {
-    let RoundSpec::Places(places) = spec;
-    // `n / d` as two integer `BigDecimal`s, then divide-with-rounding to `places`
-    // decimal places. `d` is a rational denominator, always > 0, so the division
-    // is total (never the divide-by-zero `div_round` guards against).
+    let places: i64 = match spec {
+        RoundSpec::Places(p) => p as i64,
+        RoundSpec::SigFigures(sig) => {
+            // Zero has no significant figures — `round_sig(0, n)` is exactly 0
+            // (any other place count would still round 0/d to 0, but short-circuit
+            // to avoid a meaningless `msd_exponent(0)`).
+            if r.numerator().is_zero() {
+                return ExactRational::from_i128(0);
+            }
+            // n sig-figs = round to (n − 1 − e) decimal places, e = ⌊log₁₀|x|⌋.
+            (sig as i64) - 1 - msd_exponent(&r.numerator().abs(), r.denominator())
+        }
+    };
     let num = BigDecimal::from_integer(r.numerator().clone());
     let den = BigDecimal::from_integer(r.denominator().clone());
-    let rounded = num.div_round(&den, places as i64, mode);
+    let rounded = num.div_round(&den, places, mode);
     ExactRational::from_ratio(rounded.to_rational())
 }
 
-/// Round an `f64` to `spec`'s decimal places — the fallback for an operand that
-/// carried no exact value (already inexact, e.g. a transcendental result). It
-/// scales, rounds to the nearest integer, and unscales; on this already-lossy
-/// path the tie rule is `f64::round`'s ties-away rather than `mode`, which is
-/// acceptable because the value is approximate to begin with (the exact path,
-/// which every rational formula takes, honors `mode` precisely).
+/// `⌊log₁₀(num / den)⌋` for positive integers `num, den` — the base-10 exponent of
+/// the most-significant digit of the value. Exact and allocation-cheap: from the
+/// decimal digit counts `dn, dd` we have `num/den ∈ (10^(dn−dd−1), 10^(dn−dd+1))`,
+/// so the exponent is either `dn − dd` or one less; a single big-integer comparison
+/// against `10^e` (moved to the numerator side when `e < 0` to stay in integers)
+/// picks the right one. Assumes `num > 0` (the caller short-circuits zero).
+fn msd_exponent(num: &BigInteger, den: &BigInteger) -> i64 {
+    let e0 = num.to_string().len() as i64 - den.to_string().len() as i64;
+    let ten = BigInteger::from_i64(10);
+    // Is `num/den ≥ 10^e0`?  ⟺  `num ≥ den·10^e0` (e0 ≥ 0)  or  `num·10^(−e0) ≥ den` (e0 < 0).
+    let at_least_e0 = if e0 >= 0 {
+        *num >= &den.clone() * &ten.pow(e0 as u32)
+    } else {
+        &num.clone() * &ten.pow((-e0) as u32) >= *den
+    };
+    if at_least_e0 {
+        e0
+    } else {
+        e0 - 1
+    }
+}
+
+/// Round an `f64` to `spec`'s precision — the fallback for an operand that carried
+/// no exact value (already inexact, e.g. a transcendental result). It scales,
+/// rounds to the nearest integer, and unscales; on this already-lossy path the tie
+/// rule is `f64::round`'s ties-away rather than `mode`, which is acceptable because
+/// the value is approximate to begin with (the exact path, which every rational
+/// formula takes, honors `mode` precisely).
 fn round_f64(value: f64, spec: RoundSpec, _mode: RoundingMode) -> f64 {
-    let RoundSpec::Places(places) = spec;
-    let factor = 10f64.powi(places as i32);
+    let places: i32 = match spec {
+        RoundSpec::Places(p) => p as i32,
+        RoundSpec::SigFigures(sig) => {
+            if value == 0.0 || !value.is_finite() {
+                return value;
+            }
+            (sig as i32) - 1 - value.abs().log10().floor() as i32
+        }
+    };
+    let factor = 10f64.powi(places);
     (value * factor).round() / factor
 }
 
@@ -2511,6 +2566,65 @@ mod tests {
             Box::new(ComputeExpr::Lit(a as f64)),
             Box::new(ComputeExpr::Lit(b as f64)),
         )
+    }
+    fn round_sig(n: u32, inner: ComputeExpr) -> ComputeExpr {
+        ComputeExpr::Round {
+            spec: RoundSpec::SigFigures(n),
+            mode: RoundingMode::HalfEven,
+            expr: Box::new(inner),
+        }
+    }
+
+    // ---- NUM-6b: round_sig — the significant-figures narrowing ----
+
+    #[test]
+    fn msd_exponent_is_exact_across_magnitudes() {
+        // ⌊log₁₀(num/den)⌋ for a spread of values, incl. the boundary cases (exact
+        // powers of ten, values just under a power, sub-1 values).
+        let e = |num: i64, den: i64| {
+            super::msd_exponent(
+                &BigInteger::from_i64(num),
+                &BigInteger::from_i64(den),
+            )
+        };
+        assert_eq!(e(314159, 1000), 2); // 314.159 → MSD at 10^2
+        assert_eq!(e(314, 100), 0); // 3.14 → 10^0
+        assert_eq!(e(1, 1), 0); // 1 → 10^0
+        assert_eq!(e(999, 100), 0); // 9.99 → 10^0 (just under 10^1)
+        assert_eq!(e(1000, 1), 3); // 1000 → 10^3 (exact power)
+        assert_eq!(e(1, 2), -1); // 0.5 → 10^-1
+        assert_eq!(e(1, 1000), -3); // 0.001 → 10^-3 (exact power)
+        assert_eq!(e(9, 10000), -4); // 0.0009 → 10^-4
+        assert_eq!(e(314, 100000), -3); // 0.00314 → 10^-3
+    }
+
+    #[test]
+    fn round_sig_rounds_a_large_integer_to_the_hundreds_exactly() {
+        let kb = KnowledgeBase::new();
+        // 31459 to 3 significant figures = 31500 (place count −2 — rounding to the
+        // hundreds — which the exact path handles). Held exactly as 31500/1.
+        let d = compute("r", &round_sig(3, ComputeExpr::Lit(31459.0)), &kb).unwrap();
+        assert_eq!(d.value, 31500.0);
+        assert_eq!(d.exact, ExactRational::new(31500, 1));
+    }
+
+    #[test]
+    fn round_sig_rounds_fractional_values_exactly_across_scales() {
+        let kb = KnowledgeBase::new();
+        // 3.14159 (314159/100000) to 3 sig-figs = 3.14 = 157/50.
+        let a = compute("r", &round_sig(3, frac(314159, 100000)), &kb).unwrap();
+        assert_eq!(a.exact, ExactRational::new(157, 50));
+        // 0.00314159 to 2 sig-figs = 0.0031 = 31/10000 (leading zeros don't count).
+        let b = compute("r", &round_sig(2, frac(314159, 100_000_000)), &kb).unwrap();
+        assert_eq!(b.exact, ExactRational::new(31, 10000));
+    }
+
+    #[test]
+    fn round_sig_of_zero_is_zero() {
+        let kb = KnowledgeBase::new();
+        let d = compute("r", &round_sig(3, ComputeExpr::Lit(0.0)), &kb).unwrap();
+        assert_eq!(d.exact, ExactRational::new(0, 1));
+        assert_eq!(d.value, 0.0);
     }
 
     #[test]

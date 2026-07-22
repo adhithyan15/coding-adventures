@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.19.0] — 2026-07-22 — NUM-6b: render `round_sig` in the audit trail
+
+The derivation-tree renderer now names the KIND of precision narrowing: `"places"`
+for `round_to` (NUM-6a) and `"sig_figures"` for `round_sig` (NUM-6b), e.g.
+`{"node":"round","sig_figures":3,"mode":"half_even","value":31500,"operand":{…}}`.
+Adds an end-to-end test driving `round_sig(x, n)` through the built CLI across
+scales (large integer → power of ten, fraction, sub-1 value) with `n = 0` rejected.
+
 ## [0.18.0] — 2026-07-22 — NUM-6a: render the `round_to` narrowing in the audit trail
 
 The derivation-tree JSON now renders the new `DerivationNode::Round` (NUM-6a): a
