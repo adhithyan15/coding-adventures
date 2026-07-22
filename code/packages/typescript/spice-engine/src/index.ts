@@ -1721,6 +1721,7 @@ export interface Bjt {
   readonly baseCollectorJunctionPotential: number;
   readonly baseCollectorGradingCoefficient: number;
   readonly forwardBiasDepletionCoefficient: number;
+  readonly forwardBetaRolloffCurrent: number;
 }
 
 export type MosfetType = "NMOS" | "PMOS";
@@ -1998,8 +1999,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   Record<ModelCardKind, readonly [number, number, number, number]>
 > = {
   D: [12, 18, 5, 3],
-  NPN: [18, 32, 10, 4],
-  PNP: [18, 32, 10, 4],
+  NPN: [19, 34, 11, 4],
+  PNP: [19, 34, 11, 4],
   NJF: [5, 11, 5, 3],
   PJF: [5, 11, 5, 3],
   NMOS: [18, 25, 6, 3],
@@ -3589,7 +3590,7 @@ function cloneSubcktElement(
     case "jfet":
       return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation, element.gateSourceCapacitance, element.gateDrainCapacitance);
     case "bjt":
-      return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.forwardEarlyVoltage, element.forwardEmissionCoefficient, element.reverseEmissionCoefficient, element.baseEmitterJunctionPotential, element.baseEmitterGradingCoefficient, element.baseCollectorJunctionPotential, element.baseCollectorGradingCoefficient, element.forwardBiasDepletionCoefficient, element.reverseEarlyVoltage);
+      return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.forwardEarlyVoltage, element.forwardEmissionCoefficient, element.reverseEmissionCoefficient, element.baseEmitterJunctionPotential, element.baseEmitterGradingCoefficient, element.baseCollectorJunctionPotential, element.baseCollectorGradingCoefficient, element.forwardBiasDepletionCoefficient, element.reverseEarlyVoltage, element.forwardBetaRolloffCurrent);
     case "mosfet":
       return mosfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), mapSubcktNode(element.body, instanceName, nodeMap), element.type, element.params);
     case "vccs":
@@ -7753,6 +7754,7 @@ export function bjt(
   baseCollectorGradingCoefficient = 0.33,
   forwardBiasDepletionCoefficient = 0.5,
   reverseEarlyVoltage = 0.0,
+  forwardBetaRolloffCurrent = 0.0,
 ): Bjt {
   return {
     kind: "bjt",
@@ -7779,6 +7781,7 @@ export function bjt(
     baseCollectorJunctionPotential,
     baseCollectorGradingCoefficient,
     forwardBiasDepletionCoefficient,
+    forwardBetaRolloffCurrent,
   };
 }
 
@@ -7886,6 +7889,8 @@ const BJT_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   VA: "VAF",
   VAR: "VAR",
   VB: "VAR",
+  IKF: "IKF",
+  IK: "IKF",
   NF: "NF",
   NR: "NR",
   VJE: "VJE",
@@ -8404,6 +8409,7 @@ export function bjtFromModelCard(
     p.MJC ?? 0.33,
     p.FC ?? 0.5,
     p.VAR ?? 0.0,
+    p.IKF ?? 0.0,
   );
 }
 
@@ -18338,7 +18344,16 @@ function collectNoiseSources(
         ? collectorVoltage - emitterVoltage
         : emitterVoltage - collectorVoltage;
       const earlyFactor = bjtEarlyFactor(element, junctionVoltage, outputVoltage);
-      const collectorCurrent = element.saturationCurrent * (Math.exp(exponent) - 1.0) * earlyFactor;
+      const expValue = Math.exp(exponent);
+      const baseCollectorCurrent = element.saturationCurrent * (expValue - 1.0);
+      const baseTransconductance =
+        element.saturationCurrent / forwardThermalVoltage * expValue;
+      const collectorCurrent = bjtForwardTransport(
+        element,
+        baseCollectorCurrent,
+        baseTransconductance,
+        earlyFactor,
+      ).collectorCurrent;
       sources.push({
         elementName: element.name,
         noiseType: "shot",
@@ -18814,6 +18829,40 @@ function bjtForwardTransconductance(
   return baseTransconductance * earlyFactor - reverseEarlyConductance;
 }
 
+function bjtForwardTransport(
+  element: Bjt,
+  baseCollectorCurrent: number,
+  baseTransconductance: number,
+  earlyFactor: number,
+): { collectorCurrent: number; transconductance: number; chargeFactor: number } {
+  const lowCurrentTransconductance = bjtForwardTransconductance(
+    element,
+    baseCollectorCurrent,
+    baseTransconductance,
+    earlyFactor,
+  );
+  if (element.forwardBetaRolloffCurrent === 0.0 || baseCollectorCurrent <= 0.0) {
+    return {
+      collectorCurrent: baseCollectorCurrent * earlyFactor,
+      transconductance: lowCurrentTransconductance,
+      chargeFactor: 1.0,
+    };
+  }
+  const root = Math.sqrt(
+    1.0 + 4.0 * baseCollectorCurrent / element.forwardBetaRolloffCurrent,
+  );
+  const chargeFactor = 0.5 * (1.0 + root);
+  const chargeDerivative =
+    baseTransconductance / (element.forwardBetaRolloffCurrent * root);
+  return {
+    collectorCurrent: baseCollectorCurrent * earlyFactor / chargeFactor,
+    transconductance:
+      lowCurrentTransconductance / chargeFactor
+      - baseCollectorCurrent * earlyFactor * chargeDerivative / chargeFactor ** 2,
+    chargeFactor,
+  };
+}
+
 function stampBjt(
   element: Bjt,
   capacitorStates: readonly CapacitorState[],
@@ -18843,16 +18892,17 @@ function stampBjt(
     ? collectorVoltage - emitterVoltage
     : emitterVoltage - collectorVoltage;
   const earlyFactor = bjtEarlyFactor(element, junctionVoltage, outputVoltage);
-  const outputConductance = element.forwardEarlyVoltage === 0.0
-    ? 0.0
-    : baseCollectorCurrent / element.forwardEarlyVoltage;
-  const collectorCurrent = baseCollectorCurrent * earlyFactor;
-  const transconductance = bjtForwardTransconductance(
+  const transport = bjtForwardTransport(
     element,
     baseCollectorCurrent,
     baseTransconductance,
     earlyFactor,
   );
+  const outputConductance = element.forwardEarlyVoltage === 0.0
+    ? 0.0
+    : baseCollectorCurrent / element.forwardEarlyVoltage / transport.chargeFactor;
+  const collectorCurrent = transport.collectorCurrent;
+  const transconductance = transport.transconductance;
   const junctionConductance = baseTransconductance / element.forwardBeta;
   const baseCurrent = baseCollectorCurrent / element.forwardBeta;
   const equivalentCollectorCurrent =
@@ -19691,6 +19741,9 @@ function validateBjt(element: Bjt): void {
   }
   if (!Number.isFinite(element.reverseEarlyVoltage) || element.reverseEarlyVoltage < 0.0) {
     throw invalidElement(element.name, "reverse Early voltage must be finite and non-negative");
+  }
+  if (!Number.isFinite(element.forwardBetaRolloffCurrent) || element.forwardBetaRolloffCurrent < 0.0) {
+    throw invalidElement(element.name, "forward beta roll-off current must be finite and non-negative");
   }
   if (!Number.isFinite(element.forwardEmissionCoefficient) || element.forwardEmissionCoefficient <= 0.0) {
     throw invalidElement(element.name, "forward emission coefficient must be finite and positive");
@@ -21037,15 +21090,16 @@ function stampBjtSmallSignal(
     ? collectorVoltage - emitterVoltage
     : emitterVoltage - collectorVoltage;
   const earlyFactor = bjtEarlyFactor(element, junctionVoltage, outputVoltage);
-  const outputConductance = element.forwardEarlyVoltage === 0.0
-    ? 0.0
-    : baseCollectorCurrent / element.forwardEarlyVoltage;
-  const transconductance = bjtForwardTransconductance(
+  const transport = bjtForwardTransport(
     element,
     baseCollectorCurrent,
     baseTransconductance,
     earlyFactor,
   );
+  const outputConductance = element.forwardEarlyVoltage === 0.0
+    ? 0.0
+    : baseCollectorCurrent / element.forwardEarlyVoltage / transport.chargeFactor;
+  const transconductance = transport.transconductance;
   const junctionConductance = baseTransconductance / element.forwardBeta;
   stampConductance(matrix, collector, emitter, outputConductance);
   if (element.polarity === "NPN") {
@@ -21627,15 +21681,16 @@ function stampAcBjtSmallSignal(
     ? collectorVoltage - emitterVoltage
     : emitterVoltage - collectorVoltage;
   const earlyFactor = bjtEarlyFactor(element, junctionVoltage, outputVoltage);
-  const outputConductance = element.forwardEarlyVoltage === 0.0
-    ? 0.0
-    : baseCollectorCurrent / element.forwardEarlyVoltage;
-  const transconductance = bjtForwardTransconductance(
+  const transport = bjtForwardTransport(
     element,
     baseCollectorCurrent,
     baseTransconductance,
     earlyFactor,
   );
+  const outputConductance = element.forwardEarlyVoltage === 0.0
+    ? 0.0
+    : baseCollectorCurrent / element.forwardEarlyVoltage / transport.chargeFactor;
+  const transconductance = transport.transconductance;
   const junctionConductance = baseTransconductance / element.forwardBeta;
   const diffusionCapacitance = element.forwardTransitTime * transconductance;
   const reverseTransconductance =

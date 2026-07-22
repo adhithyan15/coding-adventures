@@ -1,6 +1,6 @@
 [package]
 name = "reduce-to-semantic-ir"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Reduce CST → narrow-waist Semantic IR (SIR23 symbolic/pattern domain, Stream B). Fourth frontend to target SIR23, sibling to wolfram-to-semantic-ir, macsyma-to-semantic-ir, and derive-to-semantic-ir."
 
@@ -21,3 +21,13 @@ lexer = { path = "../lexer" }
 # module this frontend produces, all of which use SIR23 nodes) and
 # tests/e2e_node.rs (actually runs the compiled JS through `node`).
 semantic-ir-to-javascript = { path = "../semantic-ir-to-javascript" }
+# tests/oracle.rs's ground truth: the same shared symbolic stack
+# (`symbolic-ir` + `symbolic-vm`) this frontend's own CST comes from,
+# reached through `reduce-runtime`'s own `eval` (HML01 §7's oracle/golden
+# testing), mirroring `derive-to-semantic-ir`'s identical use of its own
+# native runtime crate as ground truth. The other, non-dev
+# `[dependencies]` section above still deliberately does NOT depend on
+# this crate -- lowering itself only needs the parse-tree shape
+# (`coding-adventures-reduce-parser`), never the evaluator; only this test
+# file needs it, for comparison purposes only.
+coding-adventures-reduce-runtime = { path = "../reduce-runtime" }

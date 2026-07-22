@@ -4,6 +4,11 @@
 
 ### Added
 
+- **BJT forward high-current beta roll-off** — BJT model cards now accept
+  `IKF`/`IK` and apply shared base-charge modulation in DC, transient, AC,
+  transfer-function, and noise paths, matching Rust and TypeScript. The
+  supported-parameter catalog now contains 96 canonical rows.
+
 - **BJT reverse Early voltage** — BJT model cards now accept `VAR`/`VB` and
   apply reverse Early-effect base-charge modulation in DC, transient, AC,
   transfer-function, and noise paths, matching Rust and TypeScript. The

@@ -1,9 +1,38 @@
 use spice_engine::{
     device_model_noise_audit_fixtures, format_corner_noise_table, format_noise_table, noise_ac,
-    noise_ac_corners, noise_ac_corners_parallel, noise_ac_default, Capacitor, Circuit,
+    noise_ac_corners, noise_ac_corners_parallel, noise_ac_default, Bjt, Capacitor, Circuit,
     CornerOverride, CornerSpec, CurrentSource, Element, Mosfet, MosfetLevel1Params, MosfetType,
     NoiseType, Resistor, SpiceError, VoltageSource,
 };
+
+#[test]
+fn bjt_forward_beta_rolloff_reduces_shot_noise() {
+    let source_psd = |rolloff_current: f64| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vcc", "vcc", "0", 5.0,
+        )));
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vbase", "base", "0", 0.65,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rload", "vcc", "out", 1_000.0,
+        )));
+        let mut transistor = Bjt::new("Q1", "out", "base", "0");
+        transistor.forward_beta_rolloff_current = rolloff_current;
+        circuit.add(Element::Bjt(transistor));
+        noise_ac(&circuit, "out", "Vbase", &[1_000.0], 300.0)
+            .unwrap()
+            .points[0]
+            .entries
+            .iter()
+            .find(|entry| entry.element_name == "Q1")
+            .unwrap()
+            .source_psd
+    };
+
+    assert!(source_psd(1.0e-4) < source_psd(0.0));
+}
 
 const BOLTZMANN: f64 = 1.380_649e-23;
 const MOSFET_CHANNEL_NOISE_GAMMA: f64 = 2.0 / 3.0;
