@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.6.12] - Unreleased
+
+### Changed
+
+- **Explicit-COLLATE output columns: name after source text, emit the underlying
+  value.** For a select-item carried as `__collate(inner, 'NAME')`,
+  `output_column_name` now renders `inner COLLATE NAME` (SQLite includes the
+  `COLLATE` in the column name, e.g. `b COLLATE NOCASE`), and every output-column
+  value-emit site peels the wrapper with `strip_collate` before compiling — a
+  collation folds comparison/dedup/group keys, never the emitted value, so the
+  projection reports the original text. Complements the planner's explicit-COLLATE
+  DISTINCT/GROUP BY support.
+
 ## [0.6.11] - Unreleased
 
 ### Fixed

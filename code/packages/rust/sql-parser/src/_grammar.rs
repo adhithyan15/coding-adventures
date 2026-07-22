@@ -74,11 +74,25 @@ pub fn parser_grammar() -> ParserGrammar {
             name: r#"select_item"#.to_string(),
             body: GrammarElement::Sequence { elements: vec![
                 GrammarElement::RuleReference { name: r#"expr"#.to_string() },
-                // `select_item = expr [ [ "AS" ] NAME ]` — the AS keyword is
-                // OPTIONAL, so `SELECT a col1` (bare alias) parses the same as
-                // `SELECT a AS col1`. The alias NAME can never eat a following
-                // keyword (FROM/WHERE/…) because NAME only matches Name-type
-                // tokens, and it can't eat a comma, so `SELECT a, b` is safe.
+                // Optional `COLLATE name` suffix on a select-list expression, e.g.
+                // `SELECT DISTINCT b COLLATE NOCASE`. Same shape as ORDER BY's
+                // COLLATE tail (see `order_item`): `COLLATE` is matched by literal
+                // text (it is NOT a lexer keyword, so it — and the collation name
+                // after it — both arrive as NAME tokens), and the planner both
+                // validates the name and wraps the expression in the internal
+                // `__collate` builtin so DISTINCT folds on the collated key.
+                // Placed BEFORE the alias so `SELECT b COLLATE NOCASE AS x` parses.
+                GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                        GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                        GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                    ] }) },
+                // `select_item = expr [ COLLATE name ] [ [ "AS" ] NAME ]` — the AS
+                // keyword is OPTIONAL, so `SELECT a col1` (bare alias) parses the
+                // same as `SELECT a AS col1`. The alias NAME can never eat a
+                // following keyword (FROM/WHERE/…) because NAME only matches
+                // Name-type tokens, and it can't eat a comma, so `SELECT a, b` is
+                // safe. `extract_as_alias` skips the COLLATE tail (both tokens are
+                // Name-type) so the collation name is never mistaken for an alias.
                 GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
                         GrammarElement::Optional { element: Box::new(GrammarElement::Literal { value: r#"AS"#.to_string() }) },
                         GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
@@ -167,9 +181,24 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::Literal { value: r#"GROUP"#.to_string() },
                 GrammarElement::Literal { value: r#"BY"#.to_string() },
                 GrammarElement::RuleReference { name: r#"column_ref"#.to_string() },
+                // Optional per-key `COLLATE name`, e.g. `GROUP BY b COLLATE NOCASE`.
+                // Same tail as ORDER BY (`order_item`); the planner
+                // (`plan_group_by_exprs`) pairs each COLLATE with the `column_ref`
+                // it directly follows and wraps that key in `__collate`, so
+                // grouping folds on the collated value while the emitted key row
+                // keeps its original text. `column_ref` itself stays COLLATE-free
+                // because it is also a general expression atom (used in `primary`).
+                GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                        GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                        GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                    ] }) },
                 GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
                         GrammarElement::Literal { value: r#","#.to_string() },
                         GrammarElement::RuleReference { name: r#"column_ref"#.to_string() },
+                        GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                GrammarElement::Literal { value: r#"COLLATE"#.to_string() },
+                                GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                            ] }) },
                     ] }) },
             ] },
             line_number: 33,
