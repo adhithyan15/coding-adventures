@@ -273,6 +273,59 @@ fn end_to_end_typed_twig_arithmetic_and_branches() {
     }
 }
 
+/// AOT00-T1 increment B: a program whose `main` **calls a helper** exercises the
+/// real `__gc_init_stackmaps` at start-up.
+///
+/// `main` has a call → a safepoint record → the injected `__gc_init_stackmaps`
+/// materialises `main`'s `func_start` (an `ADR`), loads its embedded
+/// `pc_offsets`/`slot_counts`/`slots_flat` arrays via `adr`, and calls
+/// `__gc_register_stackmap` — all before `main` runs. If the *structure* of that
+/// codegen were malformed (unbalanced frame, bad ABI marshalling, a data word decoded
+/// as an instruction, an `adr` whose target is executed) the image would fault at
+/// start-up and never return, so a correct exit code proves the registration path
+/// runs in production. (It does NOT by itself prove `func_start` is numerically
+/// correct — the registry only *stores* it — that is pinned by the byte-decoding unit
+/// test `func_start_adr_resolves_to_target_offset` and, end to end, by increment C's
+/// precise-collection differential.)
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+#[test]
+fn end_to_end_gc_init_registers_and_runs() {
+    use interpreter_ir::instr::{IIRInstr, Operand};
+
+    // helper() -> u64 { 7 }   (no calls → no records → not registered)
+    let helper = IIRFunction::new(
+        "helper", vec![], "u64",
+        vec![
+            IIRInstr::new("const", Some("h".into()), vec![Operand::Int(7)], "u64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("h".into())], "u64"),
+        ],
+    );
+    // main() -> u64 { helper() }   (one call → one safepoint record → registered)
+    let main = IIRFunction::new(
+        "main", vec![], "u64",
+        vec![
+            IIRInstr::new("call", Some("r".into()), vec![Operand::Var("helper".into())], "u64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "u64"),
+        ],
+    );
+    let mut module = IIRModule::new("gc_init_smoke", "twig");
+    module.add_or_replace(helper);
+    module.add_or_replace(main);
+    module.entry_point = Some("main".into());
+
+    let dir = tempfile::tempdir().expect("tempdir");
+    let exe = dir.path().join("gc_init_smoke");
+    twig_aot::compile_module_to_macos_executable(&module, &exe)
+        .expect("module with GC stack-map registration compiles + links");
+
+    let out = Command::new(&exe).output().expect("launch generated executable");
+    assert_eq!(
+        out.status.code(), Some(7),
+        "expected main→helper()==7 after __gc_init_stackmaps ran; got {:?}, stderr={:?}",
+        out.status.code(), String::from_utf8_lossy(&out.stderr),
+    );
+}
+
 /// Sanity check that the AArch64Backend trait wiring goes end-to-end
 /// for a hand-built CIR-shaped function.
 #[test]
