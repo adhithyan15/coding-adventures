@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.46.0] — 2026-07-22 — NUM-6b: `round_sig` — significant-figures rounding (exact)
+
+Adds the significant-figures half of the precision narrowing (NUM-6b,
+`ADJ-NUMERIC-SUBSTRATE.md` §4.1–§4.4), reusing the NUM-6a `Round` node and exact
+eval path.
+
+### Added
+
+- `RoundSpec::SigFigures(u32)` — round to `n` **significant figures**. Rounding to
+  `n` sig-figs is rounding to `n − 1 − e` decimal *places*, where `e = ⌊log₁₀|x|⌋`
+  is the base-10 exponent of the operand's most-significant digit; the place count
+  (which may be **negative** — `round_sig(31_459, 3) = 31_500`) is derived exactly
+  and fed to the same `BigDecimal::div_round` path as `Places`.
+- `msd_exponent` — computes `⌊log₁₀(num/den)⌋` exactly for positive integers from
+  their decimal digit counts plus one big-integer comparison (no `f64` log, no
+  unbounded loop). `round_sig(0, n) = 0` (zero has no significant figures).
+
 ## [0.45.0] — 2026-07-22 — NUM-6a: the `round_to` precision narrowing (exact + audited)
 
 Implements the compute-engine half of NUM-6a (`ADJ-NUMERIC-SUBSTRATE.md` §4.1–§4.4):

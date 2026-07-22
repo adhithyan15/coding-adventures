@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.58.0] — 2026-07-22
+
+### Added — NUM-6b: the `round_sig(x, n)` significant-figures narrowing (ADJ-NUMERIC-SUBSTRATE §4.1–§4.4)
+
+```
+let reported = round_sig(measured / trials, 3)   % 3 significant figures
+```
+
+- `round_sig` joins `round_to` as a built-in recognised during `Apply` lowering
+  (same native comma-list application surface, no new grammar). Both now build a
+  `logic_engine::RoundSpec` — `Places` for `round_to`, `SigFigures` for `round_sig`
+  — carried by the shared `ExprAst::RoundTo` node and lowered to the engine's exact
+  `Round` eval.
+- `n` must be an integer literal within the DoS cap; **≥ 1** for `round_sig` (zero
+  significant figures is meaningless), ≥ 0 for `round_to`. Anything else is a clean
+  `FormulaBadArgument` compile error.
+
 ## [0.57.0] — 2026-07-22
 
 ### Added — NUM-6a: the `round_to(x, n)` precision narrowing (ADJ-NUMERIC-SUBSTRATE §4.1–§4.4)

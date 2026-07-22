@@ -161,10 +161,17 @@ fn derivation_tree_json(
             operand,
             result,
         } => {
-            let logic_engine::compute::RoundSpec::Places(places) = spec;
+            // The precision field names the KIND of narrowing: `places` for
+            // `round_to` (decimal places), `sig_figures` for `round_sig`.
+            let precision = match spec {
+                logic_engine::compute::RoundSpec::Places(p) => format!("\"places\":{p}"),
+                logic_engine::compute::RoundSpec::SigFigures(n) => {
+                    format!("\"sig_figures\":{n}")
+                }
+            };
             format!(
-                "{{\"node\":\"round\",\"places\":{},\"mode\":\"{}\",\"value\":{},\"operand\":{}}}",
-                places,
+                "{{\"node\":\"round\",{},\"mode\":\"{}\",\"value\":{},\"operand\":{}}}",
+                precision,
                 rounding_mode_name(*mode),
                 jnum(*result),
                 derivation_tree_json(operand, kb)

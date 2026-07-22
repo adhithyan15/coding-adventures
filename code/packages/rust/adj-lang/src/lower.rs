@@ -1216,8 +1216,8 @@ fn lower_expr(expr: &ExprAst) -> ComputeExpr {
         // and the default half-even mode ride along and the exact-path audit records
         // them (ADJ-NUMERIC-SUBSTRATE §4.1–§4.4). `n` was validated a non-negative
         // integer by the adapter.
-        ExprAst::RoundTo(a, places) => ComputeExpr::Round {
-            spec: logic_engine::RoundSpec::Places(*places),
+        ExprAst::RoundTo(a, spec) => ComputeExpr::Round {
+            spec: *spec,
             mode: bignum_core::RoundingMode::HalfEven,
             expr: Box::new(lower_expr(a)),
         },
@@ -1800,16 +1800,18 @@ fn expand_rec(
     let d = descend(node_depth)?;
     match expr {
         ExprAst::Apply(name, args) => {
-            // NUM-6a built-in: `round_to(x, n)` — the precision narrowing. Recognised
-            // by NAME here, BEFORE the user-formula lookup, so it needs no formula
-            // definition; it reuses the same comma-list application grammar as user
-            // formulas (`quotient(a, b)`), which is why no new grammar or LaTeX
+            // NUM-6a/6b built-ins: `round_to(x, n)` (n decimal PLACES) and
+            // `round_sig(x, n)` (n significant FIGURES) — the precision narrowings.
+            // Recognised by NAME here, BEFORE the user-formula lookup, so they need no
+            // formula definition; they reuse the same comma-list application grammar as
+            // user formulas (`quotient(a, b)`), which is why no new grammar or LaTeX
             // surface is required (ADJ-NUMERIC-SUBSTRATE §4.1). The value arg `x` is
-            // expanded (it may itself be an application); the precision `n` must be a
-            // non-negative INTEGER literal within the DoS cap [`MAX_ROUND_PLACES`] —
-            // a variable, fraction, negative, or oversized `n` is a clean compile
-            // error, never a silent mis-rounding.
-            if name == "round_to" {
+            // expanded (it may itself be an application); the precision `n` must be an
+            // INTEGER literal within the DoS cap [`MAX_ROUND_PLACES`] — non-negative for
+            // `round_to`, and ≥ 1 for `round_sig` (zero significant figures is
+            // meaningless). A variable, fraction, out-of-range, or oversized `n` is a
+            // clean compile error, never a silent mis-rounding.
+            if name == "round_to" || name == "round_sig" {
                 if args.len() != 2 {
                     return Err(LowerError::FormulaArity {
                         formula: name.clone(),
@@ -1817,16 +1819,22 @@ fn expand_rec(
                         got: args.len(),
                     });
                 }
-                let places = match &args[1] {
+                let min = if name == "round_sig" { 1.0 } else { 0.0 };
+                let n = match &args[1] {
                     ExprAst::Lit(v)
-                        if v.fract() == 0.0 && *v >= 0.0 && *v <= MAX_ROUND_PLACES as f64 =>
+                        if v.fract() == 0.0 && *v >= min && *v <= MAX_ROUND_PLACES as f64 =>
                     {
                         *v as u32
                     }
                     _ => return Err(LowerError::FormulaBadArgument { formula: name.clone() }),
                 };
+                let spec = if name == "round_sig" {
+                    logic_engine::RoundSpec::SigFigures(n)
+                } else {
+                    logic_engine::RoundSpec::Places(n)
+                };
                 let value = expand_rec(&args[0], formulas, depth, chain, active, budget, d)?;
-                return Ok(ExprAst::RoundTo(Box::new(value), places));
+                return Ok(ExprAst::RoundTo(Box::new(value), spec));
             }
             // Resolve the callee against the SAME registry the top-level query path
             // uses. An unknown name is a clean, specific error — distinct from an

@@ -156,11 +156,13 @@ to the target scale — both already in `bignum-core` — then back to an exact 
 the recorded exact-source sidecar for the audit. NUM-6 lands in focused PRs, each spec-sync →
 tests → impl → security-review → babysit:
 
-- **NUM-6a** — `round_to` (decimal places): the `Round`/`RoundSpec::Places` engine node, the
-  `\operatorname{round}(x, n)` LaTeX surface + adapter arm, exact eval, the §4.3 audit record,
-  and an end-to-end formula test. (First increment.)
-- **NUM-6b** — `round_sig` (`RoundSpec::SigFigures`): derive the target scale from the value's
-  most-significant-digit exponent, reusing 6a's eval.
+- **NUM-6a** — `round_to` (decimal places) ✅ **shipped** (#8806): the
+  `Round`/`RoundSpec::Places` engine node, the native `round_to(x, n)` application surface (see
+  §4.1's surface note), exact eval, the §4.3 audit record, and an end-to-end formula test.
+- **NUM-6b** — `round_sig` (`RoundSpec::SigFigures`) ✅ **shipped**: derives the target place
+  count `n − 1 − ⌊log₁₀|x|⌋` from the value's most-significant-digit exponent (computed exactly
+  from big-integer digit counts) and reuses 6a's exact eval. Native `round_sig(x, n)` surface,
+  `n ≥ 1`.
 - **NUM-6c** — the formatters `to_scientific` / `to_percent` / `to_currency` (rendering, on the
   6a/6b core) and per-`KnowledgeBase` `BigDouble` precision (the configurable default §3 defers
   here).
