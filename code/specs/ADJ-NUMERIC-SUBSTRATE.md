@@ -96,6 +96,67 @@ never a silent middle step. Provide, as engine ops and grounded stdlib formulas:
 - Each is provenanced (its definition) and each records the **exact source value** it was
   narrowed from, so the audit shows both the exact number and its rendered form.
 
+### 4.1 Surface — one math frontend, no parallel call grammar
+
+The rounding built-ins are **not** a new native function-call syntax. Every rounding and
+transcendental operator in ADJ today enters through the single `latex "…"` frontend —
+`⌊x⌉` and `\operatorname{round}(x)` both lower to `ComputeOp::Round`, `⌊x⌋` to `Floor`,
+`\sin(x)` to the trig family — and formula bodies compose *user* formulas through
+`Apply` (`quotient(a, b)`). There is deliberately **no** built-in-call grammar. `round_to`
+and `round_sig` honour that one-surface design: they are the **precision-carrying twins** of
+the existing integer roundings, written as the two-argument operator-name applications
+
+```
+\operatorname{round}(x, n)      % round x to n decimal PLACES   → round_to(x, n)
+\operatorname{roundsig}(x, n)   % round x to n significant FIGS  → round_sig(x, n)
+```
+
+where `n` is a **non-negative integer literal**. The existing unary `\operatorname{round}(x)`
+(and `⌊x⌉`) is unchanged — it is exactly `round_to(x, 0)`. The two-argument form is recognised
+by the `latex` adapter from the comma-separated argument list (the same comma/semicolon fence
+machinery the frontend already parses); a non-integer or negative `n` is a **compile error**,
+never a silent truncation. Keeping these on the LaTeX surface means zero new lexer/parser
+grammar and no second way to write a call.
+
+### 4.2 Rounding mode — stated, defaulting to round-half-even
+
+Each narrowing states its **rounding mode**, defaulting to **round-half-even** (banker's
+rounding) to match §3's exactness discipline and `bignum-core::RoundingMode::HalfEven`. This
+is a *deliberate* difference from the legacy integer `Round`/`⌊x⌉`, which rounds ties **away
+from zero** — which is precisely why `round_to` records its mode in the audit rather than
+leaving it implicit: two roundings of the same exact value under different modes are both
+honest and distinguishable from the trail.
+
+### 4.3 Audit record — rounding is a first-class narrowing
+
+Every application records, alongside its own provenance (the op's definition): (a) the
+**exact source value** (the `Rational`/`Decimal` it narrowed, per §3), (b) the **target
+precision** (`n` places or `n` significant figures), (c) the **rounding mode**, and (d) the
+**rendered result**. `adj-verify` re-rounds the exact value under the recorded mode/precision
+and confirms the rendered result — so a rounded number is auditable back to the exact one it
+came from, never asserted. Rounding is thus an explicit, checkable step in the trail, not a
+silent lossy coercion (§3).
+
+### 4.4 Engine shape + sub-staging
+
+`ComputeExpr::Unary(ComputeOp, …)` carries no parameter, so the precision-carrying roundings
+add a new node `ComputeExpr::Round { spec: RoundSpec, mode: RoundingMode, expr }` where
+`RoundSpec = Places(u32) | SigFigures(u32)`. It is **dimension-preserving** (like the unary
+round family) and evaluated on the **exact path**: terminating cases via
+`BigDecimal::round_to_scale`, repeating rationals (e.g. `1/3 → 0.33`) via `BigDecimal::div_round`
+to the target scale — both already in `bignum-core` — then back to an exact `Rational` carrying
+the recorded exact-source sidecar for the audit. NUM-6 lands in focused PRs, each spec-sync →
+tests → impl → security-review → babysit:
+
+- **NUM-6a** — `round_to` (decimal places): the `Round`/`RoundSpec::Places` engine node, the
+  `\operatorname{round}(x, n)` LaTeX surface + adapter arm, exact eval, the §4.3 audit record,
+  and an end-to-end formula test. (First increment.)
+- **NUM-6b** — `round_sig` (`RoundSpec::SigFigures`): derive the target scale from the value's
+  most-significant-digit exponent, reusing 6a's eval.
+- **NUM-6c** — the formatters `to_scientific` / `to_percent` / `to_currency` (rendering, on the
+  6a/6b core) and per-`KnowledgeBase` `BigDouble` precision (the configurable default §3 defers
+  here).
+
 ---
 
 ## 5. Engine integration
@@ -149,7 +210,9 @@ Big arithmetic; a constraint solves over exact rationals where the backend allow
   formatted exports); exactness recorded on `Derived`.
 - **NUM-6 — precision/format ops + stdlib formulas** (`round_to`, `round_sig`,
   `to_scientific`, `to_percent`, `to_currency`) + audit exactness + `adj-verify` precision
-  re-check.
+  re-check. Surface, mode, audit record and engine shape pinned in §4.1–§4.4; lands in
+  focused sub-PRs **NUM-6a** (`round_to`) → **NUM-6b** (`round_sig`) → **NUM-6c** (formatters
+  + per-`KnowledgeBase` `BigDouble` precision).
 - **Later — retire `numeric-tower`'s `num-bigint`** onto `bignum-core` (pays down the
   existing third-party debt; out of this spec's critical path).
 
