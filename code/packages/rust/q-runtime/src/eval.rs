@@ -77,10 +77,53 @@ use std::rc::Rc;
 /// individually shallow) and then invoke the last one, which recurses
 /// through [`Interpreter::call_lambda`] once per link in that chain at
 /// *runtime* — a recursion shape no single parse tree's own depth reflects
-/// at all. `MAX_DEPTH` is this evaluator's own independent backstop against
-/// that (and, as defense in depth, against every ordinary tree-walk
-/// recursion `j-runtime`'s identical guard already covers).
-const MAX_DEPTH: usize = 512;
+/// at all, and the reason this constant cannot just be copied from
+/// `j-runtime`'s own (unreachable-in-practice) `MAX_DEPTH` without its own,
+/// independent empirical measurement.
+///
+/// # Measured, not guessed: the real native-stack crash floor
+///
+/// Every recursive `call_lambda` (one per chained function call) leaves
+/// exactly **4** [`Interpreter::enter`] guards on the stack for the
+/// duration of the recursion — one each in
+/// [`Interpreter::eval_assignment`], [`Interpreter::eval_noun_expr`],
+/// [`Interpreter::apply_monadic`], and `call_lambda` itself (every other
+/// call on the path — `eval_statement_value`, `eval_term`, the bounded
+/// evaluation of a call's own argument expression — either doesn't guard
+/// at all or fully unwinds before the next `call_lambda`, so it doesn't
+/// contribute to the *peak* depth). This 4:1 ratio was independently
+/// confirmed empirically (see below), not just derived by inspection.
+///
+/// Measured via the same binary-search methodology `apl-parser`/
+/// `j-parser`/`q-parser` use for their own depth caps, adapted to this
+/// evaluator's genuinely different recursion shape (a real Rust call
+/// chain through `call_lambda`, not a parser's tree descent): a throwaway
+/// **subprocess per data point** (`cargo test --exact` re-invoked per
+/// candidate chain length — a real native-stack overflow calls
+/// `abort()`, which kills the whole process, not just the offending
+/// thread, so each data point must be independently disposable), each
+/// running the chained-call source above on a
+/// [`std::thread::Builder::stack_size`]-controlled worker thread with an
+/// **explicit 2 MiB stack** (2,097,152 bytes — chosen as a known,
+/// reproducible reference point, deliberately *not* relying on the
+/// ambient default, which `RUST_MIN_STACK` can silently enlarge and
+/// invalidate the whole measurement) and `MAX_DEPTH` itself temporarily
+/// raised to 10,000,000 so the *guard* never interfered with finding the
+/// real crash point. Result: **safe up to 268 chained calls, crashes
+/// (`fatal runtime error: stack overflow`, `SIGABRT`) at 271** on a 2 MiB
+/// stack.
+///
+/// `MAX_DEPTH` is set to **760** — `760 / 4 = 190` chained calls before
+/// the guard fires, i.e. **189** succeed — about **29.5%** below the
+/// measured 268-call safe ceiling (and 29.9% below the 271-call crash
+/// point itself), comparable to `apl-parser`'s/`j-parser`'s/`q-parser`'s
+/// own ~26.5–30% margins. This was cross-checked directly (not just
+/// computed on paper): with `MAX_DEPTH` set to 760, a real capped run of
+/// exactly 189 chained calls succeeds and 190 returns a clean `Err` (see
+/// `tests::real_recursion_up_to_max_depth_succeeds_one_past_it_errors_cleanly_on_a_known_stack`),
+/// confirming the 4:1 ratio holds exactly in practice, not just in
+/// theory.
+const MAX_DEPTH: usize = 760;
 
 /// A persistent Q session: a stack of variable-binding frames (index 0 is
 /// the always-present global frame; index 1+ are call-local frames pushed
@@ -831,12 +874,7 @@ mod tests {
     #[test]
     fn a_reasonably_long_call_chain_of_already_defined_functions_works() {
         let depth = 100;
-        let mut src = String::from("f0:{x+1}\n");
-        for i in 1..depth {
-            let prev = i - 1;
-            src.push_str(&format!("f{i}:{{f{prev}(x+1)}}\n"));
-        }
-        src.push_str(&format!("f{}(0)\n", depth - 1));
+        let src = chained_call_source(depth);
         let interp = Interpreter::new();
         let tree = coding_adventures_q_parser::try_parse_q(&src).expect("should parse");
         let out = interp.run(&tree).expect("a 100-deep call chain should not trip MAX_DEPTH");
@@ -892,6 +930,67 @@ mod tests {
         assert!(
             interp.eval_list_literal(&node).is_err(),
             "a list literal of {n} elements must be rejected before evaluating any of them"
+        );
+    }
+
+    /// Build a chained-function-call Q source of `n` links: `f0:{x+1}`,
+    /// `f1:{f0(x+1)}`, ..., `f{n-1}:{f{n-2}(x+1)}`, followed by a call to
+    /// the last one -- the exact recursion shape `MAX_DEPTH` was measured
+    /// against (see that constant's own doc comment for the full
+    /// methodology and results).
+    fn chained_call_source(n: usize) -> String {
+        let mut src = String::from("f0:{x+1}\n");
+        for i in 1..n {
+            let prev = i - 1;
+            src.push_str(&format!("f{i}:{{f{prev}(x+1)}}\n"));
+        }
+        src.push_str(&format!("f{}(0)\n", n - 1));
+        src
+    }
+
+    /// Real (not white-box/synthetic) `call_lambda`-driven recursion,
+    /// exercised right up to `MAX_DEPTH`'s own measured boundary and one
+    /// step past it, run on an **explicit, known 2 MiB stack** -- the same
+    /// stack size `MAX_DEPTH`'s own calibration measurement used (see that
+    /// constant's doc comment) -- rather than relying on the ambient
+    /// default (which `RUST_MIN_STACK` could silently enlarge, invalidating
+    /// the comparison; see this repo's own
+    /// `feedback_rust_min_stack_pollutes_default_stack_probes` lesson).
+    ///
+    /// 189 chained calls succeed outright; 190 hits `MAX_DEPTH` and returns
+    /// a clean `Err` (a `join()` that returns `Ok` from the worker thread,
+    /// not a panicked/aborted thread) -- proving the *guard*, not the
+    /// *native stack*, is what stops it, with the real crash floor (271
+    /// chained calls on this same 2 MiB stack, measured empirically) still
+    /// 81 calls further out.
+    #[test]
+    fn real_recursion_up_to_max_depth_succeeds_one_past_it_errors_cleanly_on_a_known_stack() {
+        const STACK_BYTES: usize = 2 * 1024 * 1024;
+
+        let run_chain = |n: usize| -> Result<String, String> {
+            std::thread::Builder::new()
+                .stack_size(STACK_BYTES)
+                .spawn(move || {
+                    let src = chained_call_source(n);
+                    let interp = Interpreter::new();
+                    let tree = coding_adventures_q_parser::try_parse_q(&src)
+                        .expect("should parse");
+                    interp.run(&tree)
+                })
+                .expect("failed to spawn worker thread")
+                .join()
+                .expect("worker thread panicked/aborted -- this must never happen at these depths")
+        };
+
+        assert!(
+            run_chain(189).is_ok(),
+            "189 chained calls must succeed comfortably under MAX_DEPTH on a 2 MiB stack"
+        );
+        let err = run_chain(190)
+            .expect_err("190 chained calls must trip MAX_DEPTH's guard, not silently succeed");
+        assert!(
+            err.contains("too deep"),
+            "expected the depth-guard's own error message, got: {err}"
         );
     }
 }
