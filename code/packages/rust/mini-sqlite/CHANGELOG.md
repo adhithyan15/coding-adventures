@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.5.61 — GROUP BY bare column takes the group's first-row value
+
+`SELECT c FROM t GROUP BY x`, where `c` is neither a GROUP BY key nor inside an
+aggregate, now returns a value instead of NULL — SQLite reports such a bare
+column from the group's first row, and the VM now retains a representative row
+per group to do the same. Retires the `distinct_over_group_by_single_col` ledger
+entry.
+
+Verified against bundled real SQLite, including a multi-row group where the bare
+columns come from the first row (`v=10, tag='a'`) and a functionally-dependent
+bare column (deterministic regardless of which row is picked). The min/max-
+follows refinement (bare columns tracking a `min()`/`max()` row) stays out of
+scope — it needs an aggregate combined with bare columns, still ledgered.
+
 ## 0.5.60 — GROUP BY output follows the SELECT list
 
 `SELECT x, c FROM t GROUP BY c, x` now returns columns in SELECT-list order

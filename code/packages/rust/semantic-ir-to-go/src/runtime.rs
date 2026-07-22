@@ -1505,6 +1505,21 @@ func _sir_object_method(recv Value, name string, args []Value) (Value, bool) {
 		return !_sir_value_eq(recv, args[0]), true
 	case "class":
 		return _sir_ruby_class_name(recv), true
+	// `Exception#message` — the text a `raise Foo, "msg"` carried.  Answered
+	// only by an exception; any other receiver falls through to its own
+	// catalog (and ultimately NoMethodError).  Without this, `rescue => e;
+	// puts e.message` — everyday Ruby — raised NoMethodError.
+	case "message":
+		if se, ok := recv.(*SirError); ok {
+			// A bare `raise Foo` carries no message; Ruby's default
+			// `exception.message` is then the CLASS NAME (matching the
+			// Python/Rust/JS backends, which already do this).
+			if se.Msg == nil {
+				return se.Class, true
+			}
+			return se.Msg, true
+		}
+		return nil, false
 	// `is_a?`/`kind_of?` honour ancestry; `instance_of?` is an EXACT class
 	// match.  These were listed in `_sir_responds_to` but never IMPLEMENTED,
 	// so `respond_to?(:is_a?)` answered true while an actual call fell through
@@ -1722,6 +1737,15 @@ func _sir_responds_to(recv Value, name string) bool {
 	switch name {
 	case "is_a?", "kind_of?", "instance_of?", "class":
 		return true
+	case "message":
+		// An EXCEPTION answers `message`.  Do NOT early-return false
+		// otherwise: a user class may define its own `message`, which
+		// `_sir_call_method` dispatches from the instance table below — an
+		// early `false` here would DENY a method that actually works, the
+		// same dishonest-respond_to? shape this change fixes elsewhere.
+		if _, isExc := recv.(*SirError); isExc {
+			return true
+		}
 	}
 	// Universal Object + M6 metaprogramming methods (every receiver).
 	if _sir_object_responds(name) {

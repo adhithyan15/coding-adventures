@@ -368,6 +368,16 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     if (v === true) { return SIR_DISPLAY_RUBY ? "true" : "#t"; }
     if (v === false) { return SIR_DISPLAY_RUBY ? "false" : "#f"; }
     if (typeof v === "string") { return v; }
+    // An EXCEPTION renders as its MESSAGE, matching Ruby's `Exception#to_s`.
+    // `Error`, not `SirError`: `emit.rs`'s `catch` binds the RAW thrown value,
+    // so `e` may be a native JS error (a V8 `RangeError` from deep recursion),
+    // and `classOfThrown` already buckets exactly those as `StandardError`.
+    // Every reflection answer must gate on the same test or they disagree —
+    // `e.class` saying `StandardError` while `puts e` takes a different path.
+    // `Error.prototype.toString` prefixes the class ("ArgumentError: boom"),
+    // so the generic `String(v)` fallback at the end would print that rather
+    // than Ruby's plain "boom".
+    if (v instanceof Error) { return v.message; }
     // A boxed Float renders with its trailing `.0` (`7.0`, not `7`); a native
     // number (Integer, or a non-integral Float like `3.5`) renders as-is.
     // This is Ruby/Lisp's OWN convention -- an APL-sourced module renders
@@ -954,6 +964,15 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     // Type reflection answers on every receiver (matching the Go backend,
     // which reports `class`/`is_a?`/`kind_of?`/`instance_of?` universally).
     if (name === "class" || REFLECT_PREDICATES.has(name)) { return true; }
+    // An EXCEPTION answers `message` — `Error`, not `SirError`, matching
+    // `rubyClassName`/`isA` (a caught native JS error reflects as
+    // `StandardError`, so it must answer `message` too).  Do NOT early-return
+    // false otherwise: a user class may define its own `message`, which
+    // `callMethod` resolves from the `SirInstance` method table below —
+    // returning false here would DENY a method that actually works, the same
+    // dishonest-`respond_to?` shape this change fixes elsewhere.  (Go and
+    // Python fall through for the identical reason.)
+    if (name === "message" && recv instanceof Error) { return true; }
     if (typeof recv === "boolean" && BOOL_METHODS.has(name)) { return true; }
     // A number resolves the hand-implemented Ruby Numeric catalog (kept in
     // lockstep with `numericMethod`'s case labels), ahead of the native gate.
@@ -2207,6 +2226,15 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     // Type reflection on ANY receiver: `7.class` → "Integer", `7.0.class` →
     // "Float" (the tagged-float split), `obj.class` → its own class tag.
     if (name === "class") { return rubyClassName(recv); }
+    // `Exception#message` — the text a `raise Foo, "msg"` carried.  A
+    // `SirError` extends `Error`, so the message is its native `.message`;
+    // gating on `Error` also answers for a caught NATIVE JS error, which
+    // `rubyClassName`/`isA`/`rescueMatches` all treat as a `StandardError`.
+    // Gating on `SirError` here instead would let `e.class` report
+    // `StandardError` while `e.message` raised `NoMethodError` on the very
+    // same value.  Without this arm at all, `rescue => e; puts e.message` —
+    // everyday Ruby — died with `NoMethodError: undefined method 'message'`.
+    if (name === "message" && recv instanceof Error) { return recv.message; }
     // `is_a?`/`kind_of?` honour ancestry; `instance_of?` is an EXACT class
     // match.  The class argument arrives as a NAME (the frontend lowers a
     // constant reference to its name string, and a Symbol is accepted too).

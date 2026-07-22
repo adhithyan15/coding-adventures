@@ -38,9 +38,15 @@ guard); `GO TO para` (unconditional transfer, run as a program counter over
 paragraphs, so back-edge loops work); and `STRING s… DELIMITED BY SIZE INTO t`
 (concatenate the sending fields — each taken in full — into the alphanumeric
 receiver, left-justified, truncated at its width, and, per ANSI-85, **without**
-space-filling the untouched tail). Anything not yet modelled (the explicit
+space-filling the untouched tail); and `UNSTRING source DELIMITED BY delim INTO
+r1 [r2 …]` (the inverse — split the alphanumeric source on a single-character
+delimiter into successive receivers; each receiver including the last takes the
+field up to the next delimiter, extra fields are dropped, empty fields become
+spaces, and once the source is exhausted the remaining receivers keep their prior
+value). Anything not yet modelled (the explicit
 `SIGN` clause with `SEPARATE`/`LEADING`, editing pictures, `COMP`,
 `PERFORM … WITH TEST AFTER`/inline, `GO TO … DEPENDING`, `STRING` with a real
+delimiter / `WITH POINTER` / `ON OVERFLOW`, `UNSTRING` with a multi-character
 delimiter / `WITH POINTER` / `ON OVERFLOW`, tables, files, and every other verb)
 returns a descriptive `RuntimeError` — never wrong output. See PL08 for the
 roadmap toward full COBOL and later standards.

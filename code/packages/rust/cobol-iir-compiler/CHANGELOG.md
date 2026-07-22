@@ -8,6 +8,31 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.21.0: `UNSTRING … DELIMITED BY … INTO` (first rung)
+
+Lowered COBOL's `UNSTRING` verb, oracle-first and byte-identical to
+`cobol-runtime` 0.25.0.
+
+- **`emit_unstring`** — the inverse of `STRING`. Where `STRING`'s field
+  boundaries are all compile-time-known, `UNSTRING`'s delimiter falls wherever the
+  run-time bytes put it, so it emits a genuine **scan loop**. The source register
+  `S`, its length `len = str_len(S)`, and a cursor `p` (i64, init 0) drive the
+  statement; the delimiter reduces to a single byte code `D` (a `const` for a
+  1-char literal, or `str_index(item, 0)` for a `PIC X(1)` item). Each receiver
+  (a compile-time-known `n`) unrolls to a block guarded by `if p <= len`: scan
+  `S[j]` from `p` for the next byte equal to `D` (or end-of-source) with
+  `str_index`/`cmp_eq`/`cmp_ge`, cut the field `piece = str_slice(S, p, q)`, reshape
+  it into the receiver as `str_slice(piece, 0, min(str_len(piece), W)) ++
+  spaces(W - take)` (exactly the oracle's alphanumeric `move_into` — left-justify,
+  space-pad, truncate), and advance `p = q + 1`. Because `p` never moves when a
+  receiver is skipped, an exhausted source (`p > len`) leaves this and every later
+  receiver unchanged; `p == len` (a trailing delimiter) still yields one final
+  empty field.
+- Later rungs (clean `CompileError::Unsupported`): `WITH POINTER`, `ON`/`NOT ON
+  OVERFLOW`, a multi-character delimiter, a numeric/figurative/reference-modified
+  delimiter, a delimiter item wider than one character, and a numeric/group source
+  or receiver.
+
 ### Added — v0.20.0: `STRING … DELIMITED BY SIZE INTO` (first rung)
 
 Lowered COBOL's `STRING` verb, oracle-first and byte-identical to

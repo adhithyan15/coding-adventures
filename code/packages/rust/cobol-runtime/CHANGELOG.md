@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.25.0 — `UNSTRING … DELIMITED BY … INTO` (first rung)
+
+- Added `Stmt::Unstring { source, delim, targets }` and its executor — the inverse
+  of `STRING`. `UNSTRING source DELIMITED BY delim INTO r1 [r2 …]` scans the
+  alphanumeric `source` left to right and splits it into delimited fields on each
+  occurrence of the SINGLE-character `delim` (a 1-character string literal or a
+  `PIC X(1)` item), moving successive fields into successive receivers as ordinary
+  alphanumeric `MOVE`s (left-justified, space-padded, truncated — reusing
+  `move_into`).
+- Semantics (oracle = source of truth): each receiver **including the last** takes
+  the field up to the NEXT delimiter (or end-of-source); extra fields beyond the
+  receiver count are dropped (that would be `ON OVERFLOW`, a later rung); an empty
+  field from consecutive or leading delimiters yields all spaces; and once the
+  source is exhausted (a field ran to end-of-source with no trailing delimiter) the
+  remaining receivers are **left unchanged** — not space-filled.
+- Later rungs (clean `RuntimeError::Unsupported`): `WITH POINTER`, `ON`/`NOT ON
+  OVERFLOW`, a multi-character / `ALL` / `OR` delimiter, a numeric or figurative
+  delimiter, and a numeric/group source or receiver.
+
 ## 0.24.0 — `STRING … DELIMITED BY SIZE INTO` (first rung)
 
 - Added `Stmt::String { sources, target }` and its executor. `STRING s… DELIMITED

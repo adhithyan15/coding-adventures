@@ -30,6 +30,7 @@ from __future__ import annotations
 from .exceptions import (
     SirError,
     Val,
+    ancestry_chain,
     class_of_thrown,
     raise_error,
     register_ancestry,
@@ -39,6 +40,7 @@ from .exceptions import (
 __all__ = [
     "SirError",
     "Val",
+    "ancestry_chain",
     "class_of_thrown",
     "raise_error",
     "register_ancestry",

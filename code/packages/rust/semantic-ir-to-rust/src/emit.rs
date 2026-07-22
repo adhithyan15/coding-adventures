@@ -914,7 +914,10 @@ fn emit_try_catch(
                 dpad, kw, types
             );
             let bpad = indent_str(arm + 2);
-            // `rescue Foo => e` binds the caught exception's message value.
+            // `rescue Foo => e` binds the caught exception ITSELF — a
+            // `Value::Exception` carrying the class tag and message, so
+            // `e.class` / `e.is_a?` / `e.message` all answer.  It used to bind
+            // the message STRING (see `exc_value`).
             if let Some(bind) = &r.binding {
                 let _ = writeln!(
                     out,
