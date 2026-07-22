@@ -326,6 +326,124 @@ fn end_to_end_gc_init_registers_and_runs() {
     );
 }
 
+/// AOT00-T1 increment C — the **GC-stress `live_bytes` differential**: the headline
+/// proof that precise roots are load-bearing in production.
+///
+/// The program allocates one heap object and keeps its address **only in an `i64`
+/// slot** — a non-reference "look-alike" that holds a real heap pointer. Nothing else
+/// references the object, so it is garbage. Then it collects and reports
+/// `__gc_live_bytes` as its exit code:
+///
+/// ```text
+///   main() -> i64:
+///       a  = gc_alloc(64)        ; i64 slot — a heap-address look-alike (only ref)
+///       <collect>                ; gc_collect  (conservative) | gc_collect_precise
+///       lb = gc_live_bytes()
+///       ret lb                   ; exit code = live payload bytes
+/// ```
+///
+/// - **Conservative** (`__gc_collect`) scans the whole stack, sees the look-alike, and
+///   *pins* the object → `live_bytes == 64`.
+/// - **Precise** (`__gc_collect_precise`) walks `main`'s frame through its registered
+///   stack map, which names only *reference* slots — the `i64` look-alike is **not**
+///   among them — so the object is unrooted and reclaimed → `live_bytes == 0`.
+///
+/// The gap (64 → 0) is the whole precise-roots feature made observable: registration
+/// (increment B) fired, `func_start` resolved `main`'s return address to the right map,
+/// and the map correctly excluded the non-reference slot. If any link in that chain
+/// were wrong the two columns would be equal.
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+#[test]
+fn end_to_end_gc_stress_live_bytes_differential() {
+    use interpreter_ir::instr::{IIRInstr, Operand};
+
+    // Build `main` for a given collect builtin. `collect_returns` picks the dest shape
+    // the backend requires (a returning builtin needs a dest; a void one must not).
+    fn build(collect: &str, collect_returns: bool) -> IIRModule {
+        let mut body = vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(64)], "i64"),
+            // The allocation's address lives only here, in an i64 (non-ref) slot.
+            IIRInstr::new(
+                "call_builtin",
+                Some("a".into()),
+                vec![Operand::Var("gc_alloc".into()), Operand::Var("n".into())],
+                "i64",
+            ),
+        ];
+        body.push(if collect_returns {
+            IIRInstr::new(
+                "call_builtin",
+                Some("freed".into()),
+                vec![Operand::Var(collect.into())],
+                "i64",
+            )
+        } else {
+            IIRInstr::new("call_builtin", None, vec![Operand::Var(collect.into())], "void")
+        });
+        body.push(IIRInstr::new(
+            "call_builtin",
+            Some("lb".into()),
+            vec![Operand::Var("gc_live_bytes".into())],
+            "i64",
+        ));
+        body.push(IIRInstr::new("ret", None, vec![Operand::Var("lb".into())], "i64"));
+
+        let mut m = IIRModule::new("gc_stress", "twig");
+        m.add_or_replace(IIRFunction::new("main", vec![], "i64", body));
+        m.entry_point = Some("main".into());
+        m
+    }
+
+    let dir = tempfile::tempdir().expect("tempdir");
+    let run = |tag: &str, collect: &str, collect_returns: bool| -> i32 {
+        let m = build(collect, collect_returns);
+        let exe = dir.path().join(tag);
+        twig_aot::compile_module_to_macos_executable(&m, &exe)
+            .unwrap_or_else(|e| panic!("{tag} compiles+links: {e}"));
+        let out = Command::new(&exe).output().unwrap_or_else(|e| panic!("{tag} runs: {e}"));
+        out.status.code().unwrap_or_else(|| panic!("{tag} exited by signal: {out:?}"))
+    };
+
+    // Diagnostic: a program that just returns __gc_stackmap_count() — proves the
+    // start-up registration actually ran in the linked image (increment B).
+    {
+        let mut m = IIRModule::new("gc_count", "twig");
+        m.add_or_replace(IIRFunction::new(
+            "main", vec![], "i64",
+            vec![
+                IIRInstr::new(
+                    "call_builtin",
+                    Some("c".into()),
+                    vec![Operand::Var("gc_stackmap_count".into())],
+                    "i64",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "i64"),
+            ],
+        ));
+        m.entry_point = Some("main".into());
+        let exe = dir.path().join("gc_count");
+        twig_aot::compile_module_to_macos_executable(&m, &exe).expect("count compiles");
+        let code = Command::new(&exe).output().expect("count runs").status.code().unwrap();
+        eprintln!("DIAG __gc_stackmap_count() = {code}");
+        assert!(code > 0, "registration must have run at start-up (count={code})");
+    }
+
+    let conservative = run("gc_stress_cons", "gc_collect", false);
+    let precise = run("gc_stress_prec", "gc_collect_precise", true);
+
+    // Conservative pins the look-alike-referenced 64-byte object; precise reclaims it.
+    assert_eq!(
+        conservative, 64,
+        "conservative collect must retain the 64-byte look-alike-pinned object \
+         (live_bytes={conservative})",
+    );
+    assert_eq!(
+        precise, 0,
+        "precise collect must reclaim the object reachable only via a non-reference \
+         i64 slot (live_bytes={precise}); conservative kept {conservative}",
+    );
+}
+
 /// Sanity check that the AArch64Backend trait wiring goes end-to-end
 /// for a hand-built CIR-shaped function.
 #[test]

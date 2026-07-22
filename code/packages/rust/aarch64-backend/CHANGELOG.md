@@ -1,5 +1,13 @@
 # Changelog — `aarch64-backend`
 
+## 0.30.0 - 2026-07-21 — V1_BUILTINS: GC collection + observability (AOT00-T1 increment C)
+
+Four `call_builtin` entries the native GC-stress differential drives, resolving to the
+`__twig_gc_*` aliases in gc-core-capi: `gc_collect` (forced conservative full collect,
+void), `gc_collect_precise` (precise-roots frame walk, returns freed count),
+`gc_live_bytes` (live payload bytes), and `gc_stackmap_count` (registered-function
+count). No new lowering — the generic `call_builtin` marshaller emits the `BL`.
+
 ## 0.29.0 - 2026-07-20 — V1_BUILTINS: dyn_null_p (native `null?`)
 
 Part of the fix restoring McCarthy-lisp list programs on the native-AOT / LLVM backends (`lang-aot` `lang_matrix`). See the umbrella commit for the full story: `null?` was never routed to a runtime call on the tagged native/LLVM path (breaking every cons-walk helper), `list-ref`/`assoc` unboxed a raw-int index/key (→ wrong element), a top-level `(null? …)` predicate result was unboxed instead of truthy-coerced, and cons-cell field access failed the JVM verifier. Verified end-to-end: native list-ref/assoc/length/reverse/append/null? all correct.

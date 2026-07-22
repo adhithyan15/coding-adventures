@@ -247,6 +247,17 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     // adaptive threshold.  Used by IIR `safepoint` lowering.
     BuiltinSig { name: "gc_alloc",     n_args: 1, returns: true  },
     BuiltinSig { name: "gc_safepoint", n_args: 0, returns: false },
+    // AOT00-T1 increment C — the GC observability/collection entry points a native
+    // program uses to drive and measure a collection (→ `__twig_gc_*` aliases in
+    // gc-core-capi). `gc_collect` is a forced *conservative* full collect;
+    // `gc_collect_precise` is the precise-roots walk (returns objects freed);
+    // `gc_live_bytes` reports the live payload. Together they let the GC-stress
+    // differential show precise roots reclaiming a look-alike-pinned object that the
+    // conservative scan retains.
+    BuiltinSig { name: "gc_collect",         n_args: 0, returns: false },
+    BuiltinSig { name: "gc_collect_precise", n_args: 0, returns: true  },
+    BuiltinSig { name: "gc_live_bytes",      n_args: 0, returns: true  },
+    BuiltinSig { name: "gc_stackmap_count",  n_args: 0, returns: true  },
 ];
 
 fn lookup_builtin(name: &str) -> Option<BuiltinSig> {

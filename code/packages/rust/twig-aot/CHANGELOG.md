@@ -1,5 +1,30 @@
 # Changelog — `twig-aot`
 
+## 0.41.0 - 2026-07-21 — precise roots load-bearing: register the entry wrapper (AOT00-T1 increment C)
+
+The GC-stress `live_bytes` differential — precise roots reclaiming a look-alike-pinned
+object that a conservative scan retains — now **passes end to end** on native AOT,
+proving the whole precise-roots chain (registration → `func_start` resolution → the map
+excluding non-reference slots) is load-bearing in production, not merely plumbed.
+
+Making it work required one fix: **the synthetic GC entry wrapper `__gc_aot_entry` is
+now itself registered** (with an empty ref-slot map). The wrapper is `main`'s caller
+and is live on the stack during every collection. The precise walk resolves a frame's
+map from the *return address* stored in its callee; when it reached `main` it resolved
+`main` precisely (no roots), but then — finding `main`'s own return address (into the
+*unmapped* wrapper) unmapped — fell back to conservatively re-scanning `main`'s whole
+frame, re-pinning exactly the non-reference look-alikes precise roots exist to reclaim.
+Mapping the wrapper keeps the entire generated call chain precise, so the conservative
+fallback only ever covers genuine runtime/libc frames (which hold no twig heap
+references in named slots). The wrapper's records are derived from its call-return
+offsets (a local `call_return_offsets`, mirroring the backend's own scan).
+
+Verified (`end_to_end_gc_stress_live_bytes_differential`): a program that keeps a
+64-byte allocation's address only in an `i64` slot exits with `live_bytes == 0` after a
+precise collect and `== 64` after a conservative one. Needs aarch64-backend 0.30.0
+(`gc_collect` / `gc_collect_precise` / `gc_live_bytes` / `gc_stackmap_count` builtins)
+and gc-core-capi 0.13.0 (`__twig_gc_collect_precise` / `__twig_gc_stackmap_count`).
+
 ## 0.40.0 - 2026-07-21 — GC stack-map registration (AOT00-T1 emission, increment B)
 
 `__gc_init_stackmaps` — the no-op start-up hook increment A landed — now **registers
