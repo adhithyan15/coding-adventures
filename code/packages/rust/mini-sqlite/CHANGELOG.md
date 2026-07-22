@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.5.64 — explicit `COLLATE` on DISTINCT select-items and GROUP BY keys
+
+`SELECT DISTINCT b COLLATE NOCASE FROM t` and `SELECT b, COUNT(*) FROM t GROUP BY
+b COLLATE NOCASE` now parse AND fold: an explicit collation suffix on a DISTINCT
+select-item or a GROUP BY key groups/dedupes case-insensitively (or by whatever
+collation is named), even when the underlying column is declared BINARY. Explicit
+`COLLATE BINARY` overrides a column's declared NOCASE. The output column is named
+after its source text (`b COLLATE NOCASE`), and the emitted value stays the
+original text (collation folds keys, not values). Retires the
+`distinct_explicit_collate` and `group_by_explicit_collate` ledger entries.
+
+Spans sql-parser 0.1.22 (grammar tail), sql-planner 0.2.31 (`__collate` wrapping +
+DISTINCT vector), and sql-codegen 0.6.12 (name + value peel).
+
+One orthogonal divergence is newly ledgered as
+`distinct_collate_order_by_representative`: with `ORDER BY` present the VM applies
+the sort BEFORE the DISTINCT dedup, so a case-fold keeps the sort-first original
+text rather than SQLite's scan-first. The folding itself is correct; fixing WHICH
+representative survives requires applying DISTINCT before ORDER BY (SQL semantics),
+a VM post-op reordering left to its own increment. Verified against bundled real
+SQLite.
+
 ## 0.5.63 — `SELECT *` (and `SELECT DISTINCT *`) expand to real columns
 
 `SELECT * FROM t` now returns the table's actual columns instead of a single

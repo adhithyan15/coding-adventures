@@ -880,7 +880,12 @@ impl Compiler {
                             compiler.emit(Instruction::JumpIfFalse(skip_lbl.clone()));
                             compiler.emit(Instruction::BeginRow);
                             for col in &cols {
-                                compiler.compile_expr(&col.expr);
+                                // Peel any explicit-COLLATE wrapper: a collation
+                                // never changes the emitted value (only how keys
+                                // compare), so the projection emits the underlying
+                                // expression. `output_column_name` still renders the
+                                // `COLLATE` suffix from the unpeeled column.
+                                compiler.compile_expr(strip_collate(&col.expr));
                                 let name = output_column_name(col);
                                 compiler.emit(Instruction::EmitColumn(name));
                             }
@@ -914,7 +919,12 @@ impl Compiler {
                         self.compile_scan_loop(input, move |compiler, _alias| {
                             compiler.emit(Instruction::BeginRow);
                             for col in &cols {
-                                compiler.compile_expr(&col.expr);
+                                // Peel any explicit-COLLATE wrapper: a collation
+                                // never changes the emitted value (only how keys
+                                // compare), so the projection emits the underlying
+                                // expression. `output_column_name` still renders the
+                                // `COLLATE` suffix from the unpeeled column.
+                                compiler.compile_expr(strip_collate(&col.expr));
                                 let name = output_column_name(col);
                                 compiler.emit(Instruction::EmitColumn(name));
                             }
@@ -1151,7 +1161,10 @@ impl Compiler {
                     compiler.emit(Instruction::JumpIfFalse(skip_lbl.clone()));
                     compiler.emit(Instruction::BeginRow);
                     for col in &cols {
-                        compiler.compile_expr(&col.expr);
+                        // Peel an explicit-COLLATE wrapper: the value is the
+                        // underlying expression (collation only folds keys); the
+                        // name still renders the `COLLATE` suffix.
+                        compiler.compile_expr(strip_collate(&col.expr));
                         let name = output_column_name(col);
                         compiler.emit(Instruction::EmitColumn(name));
                     }
@@ -1204,7 +1217,10 @@ impl Compiler {
                 self.compile_scan_loop(input, |compiler, _alias| {
                     compiler.emit(Instruction::BeginRow);
                     for col in &cols {
-                        compiler.compile_expr(&col.expr);
+                        // Peel an explicit-COLLATE wrapper: the value is the
+                        // underlying expression (collation only folds keys); the
+                        // name still renders the `COLLATE` suffix.
+                        compiler.compile_expr(strip_collate(&col.expr));
                         let name = output_column_name(col);
                         compiler.emit(Instruction::EmitColumn(name));
                     }
@@ -1310,7 +1326,10 @@ impl Compiler {
                 // group's fake row instead.
                 self.agg_slots = aggregates.iter().cloned().enumerate().collect();
                 for col in cols {
-                    self.compile_expr(&col.expr);
+                    // Peel an explicit-COLLATE wrapper before emitting the value
+                    // (collation folds keys, not emitted values); the name still
+                    // renders the `COLLATE` suffix from the unpeeled column.
+                    self.compile_expr(strip_collate(&col.expr));
                     self.emit(Instruction::EmitColumn(output_column_name(col)));
                 }
                 self.agg_slots.clear();
@@ -1877,7 +1896,9 @@ impl Compiler {
     fn emit_row_projection(&mut self, columns: &[OutputColumn]) {
         self.emit(Instruction::BeginRow);
         for col in columns {
-            self.compile_expr(&col.expr);
+            // Peel any explicit-COLLATE wrapper: collation folds keys, not the
+            // emitted value; the name still renders the `COLLATE` suffix.
+            self.compile_expr(strip_collate(&col.expr));
             let name = output_column_name(col);
             self.emit(Instruction::EmitColumn(name));
         }
@@ -2326,6 +2347,20 @@ fn peel_post_ops(plan: &OptimizedPlan) -> (&OptimizedPlan, Vec<Instruction>) {
 fn output_column_name(col: &OutputColumn) -> String {
     if let Some(alias) = &col.alias {
         return alias.clone();
+    }
+    // An explicit `COLLATE` on the select-item is carried as `__collate(inner,
+    // 'NAME')`. SQLite names such a column after its SOURCE TEXT — `b COLLATE
+    // NOCASE`, not just `b` and not the internal builtin — so render the suffix
+    // form. The VALUE is still the underlying `inner` (every projection site
+    // peels the wrapper before emitting), and DISTINCT reads the collation from
+    // the wrapper separately.
+    if let SqlExpr::FunctionCall { name, args, .. } = &col.expr {
+        if name == "__collate" && args.len() == 2 {
+            if let SqlExpr::Literal(SqlValue::Text(coll)) = &args[1] {
+                let inner = render_expr_label(&args[0]).unwrap_or_else(|| "?".to_string());
+                return format!("{inner} COLLATE {coll}");
+            }
+        }
     }
     match &col.expr {
         SqlExpr::Column { name, .. } => name.clone(),

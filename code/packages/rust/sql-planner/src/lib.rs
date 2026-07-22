@@ -1037,12 +1037,45 @@ fn extract_join_condition(join_clause: &GrammarASTNode) -> Result<Option<SqlExpr
 
 /// Plan the `group_clause` into a list of GROUP BY key expressions.
 ///
-/// Grammar: `group_clause = GROUP BY column_ref { "," column_ref }`
+/// Grammar: `group_clause = GROUP BY column_ref [ COLLATE name ]
+///                          { "," column_ref [ COLLATE name ] }`
+///
+/// Because the grammar's optionals/repetitions FLATTEN into `group_clause`'s
+/// direct children, a `COLLATE name` clause appears as two loose tokens sitting
+/// immediately after the `column_ref` node it qualifies (and before the next
+/// key's comma). We therefore walk the children in order — planning each
+/// `column_ref` node, then reading any `COLLATE` tokens that follow it up to the
+/// next node — rather than harvesting `column_ref` nodes in isolation (which
+/// would drop the per-key collation). An explicit collation wraps the key in
+/// `__collate`; codegen groups on the collated value but emits the original.
 fn plan_group_by_exprs(group_clause: &GrammarASTNode) -> Result<Vec<SqlExpr>, PlanError> {
-    find_nodes(group_clause, "column_ref")
-        .iter()
-        .map(|cr| plan_column_ref(cr))
-        .collect()
+    let children = &group_clause.children;
+    let mut keys = Vec::new();
+    for (i, child) in children.iter().enumerate() {
+        let ASTNodeOrToken::Node(node) = child else {
+            continue;
+        };
+        if node.rule_name != "column_ref" {
+            continue;
+        }
+        let mut key = plan_column_ref(node)?;
+        // Collect the loose tokens between this column_ref and the next node —
+        // that window holds this key's optional `COLLATE name` (plus a trailing
+        // comma, which `tail_collation` ignores).
+        let tail: Vec<String> = children[i + 1..]
+            .iter()
+            .take_while(|c| matches!(c, ASTNodeOrToken::Token(_)))
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Token(t) => Some(t.value.to_ascii_uppercase()),
+                ASTNodeOrToken::Node(_) => None,
+            })
+            .collect();
+        if let Some(name) = tail_collation(&tail)? {
+            key = wrap_collate(key, &name);
+        }
+        keys.push(key);
+    }
+    Ok(keys)
 }
 
 /// Plan the `order_clause` into sort keys.
@@ -1488,15 +1521,48 @@ fn distinct_output_collations(
                     out.push(ctx.collations.get(&cname.to_ascii_lowercase()).cloned());
                 }
             }
-            // A bare column reference inherits its declared collation. An ALIAS
-            // is irrelevant — the collation comes from the expression, so
-            // `c AS y` still folds. (`resolve_column_collation` yields `None` for
-            // any non-column expression, which is exactly the "expressions drop
-            // the collation" rule.)
-            expr => out.push(resolve_column_collation(expr, &ctx)),
+            // An explicit `COLLATE` on the select-item (wrapped as
+            // `__collate(inner, 'NAME')`) OUTRANKS any declared collation, and a
+            // bare column reference inherits its declared collation. An ALIAS is
+            // irrelevant — the collation comes from the expression, so `c AS y`
+            // still folds. (`effective_output_collation` yields `None` for any
+            // other expression, which is exactly the "expressions drop the
+            // collation" rule.)
+            expr => out.push(effective_output_collation(expr, &ctx)),
         }
     }
     out
+}
+
+/// The collating sequence a DISTINCT output column dedupes under: an explicit
+/// `COLLATE` (carried as a `__collate` wrapper) if present — with `BINARY`
+/// meaning "compare bytes as-is", represented as `None` — otherwise the column's
+/// declared collation, otherwise `None`.
+fn effective_output_collation(expr: &SqlExpr, ctx: &OrderCollateCtx) -> Option<String> {
+    if let Some(name) = collate_wrapper_name(expr) {
+        return if name.eq_ignore_ascii_case("BINARY") {
+            None
+        } else {
+            Some(name)
+        };
+    }
+    resolve_column_collation(expr, ctx)
+}
+
+/// The collation name from a `__collate(inner, 'NAME')` wrapper, or `None` for
+/// any other expression. The production counterpart to the WHERE-comparison
+/// pass's `is_collate_call` boolean — here we need the name itself, to feed the
+/// DISTINCT collation vector.
+fn collate_wrapper_name(expr: &SqlExpr) -> Option<String> {
+    match expr {
+        SqlExpr::FunctionCall { name, args, .. } if name == "__collate" && args.len() == 2 => {
+            match &args[1] {
+                SqlExpr::Literal(SqlValue::Text(coll)) => Some(coll.clone()),
+                _ => None,
+            }
+        }
+        _ => None,
+    }
 }
 
 fn resolve_column_collation(expr: &SqlExpr, ctx: &OrderCollateCtx) -> Option<String> {
@@ -1790,10 +1856,50 @@ fn plan_select_item(item: &GrammarASTNode) -> Result<OutputColumn, PlanError> {
 
     let expr = plan_expression(expr_node)?;
 
+    // An explicit trailing `COLLATE name` (grammar: `select_item = expr
+    // [ COLLATE name ] [ alias ]`) wraps the expression in the internal
+    // `__collate` builtin — the same representation explicit COLLATE uses in a
+    // WHERE comparison. `distinct_output_collations` reads that wrapper to fold a
+    // `SELECT DISTINCT b COLLATE NOCASE` key, after which `plan_select` peels the
+    // wrapper back off (collation never changes the emitted value or column name).
+    let expr = match tail_collation(&direct_token_uppers(item)) {
+        Ok(Some(name)) => wrap_collate(expr, &name),
+        Ok(None) => expr,
+        Err(e) => return Err(e),
+    };
+
     // Look for an AS alias.
     let alias = extract_as_alias(item);
 
     Ok(OutputColumn { expr, alias })
+}
+
+/// Uppercased text of every DIRECT token child of `node` (nested nodes skipped),
+/// in order — the raw material for reading a trailing `COLLATE name` clause off a
+/// `select_item` or a `group_clause` key.
+fn direct_token_uppers(node: &GrammarASTNode) -> Vec<String> {
+    node.children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Token(t) => Some(t.value.to_ascii_uppercase()),
+            ASTNodeOrToken::Node(_) => None,
+        })
+        .collect()
+}
+
+/// Read an optional trailing `COLLATE name` clause from a token list.
+///
+/// Returns `Ok(Some(NAME))` for a valid `COLLATE NOCASE|RTRIM|BINARY`, an error
+/// for an unknown collation (matching SQLite's "no such collating sequence"), and
+/// `Ok(None)` when there is no `COLLATE` — OR when a bare trailing `collate`
+/// token has nothing after it. That last case is not a collation clause but an
+/// (unusual) identifier named `collate` the grammar left as a select-item alias
+/// or the parser would already have rejected; either way it is not ours to fold.
+fn tail_collation(direct_tok_uppers: &[String]) -> Result<Option<String>, PlanError> {
+    match direct_tok_uppers.iter().position(|t| t == "COLLATE") {
+        Some(p) if p + 1 < direct_tok_uppers.len() => collate_name_after(direct_tok_uppers),
+        _ => Ok(None),
+    }
 }
 
 /// Extract a `select_item` alias.
@@ -1824,9 +1930,24 @@ fn extract_as_alias(node: &GrammarASTNode) -> Option<String> {
     // Implicit `name` (no AS): the first bare identifier token directly under
     // the item. Restricting to Name-type tokens keeps us from mistaking any
     // stray keyword/punctuation for an alias.
+    //
+    // A trailing `COLLATE name` clause (grammar: `expr [ COLLATE name ] [ alias ]`)
+    // arrives as TWO Name-type tokens — `COLLATE` is not a lexer keyword, and the
+    // collation name is a generic NAME — so both must be skipped or the collation
+    // name would be read as an implicit alias (`SELECT b COLLATE NOCASE` would be
+    // named `NOCASE`). Skip the `COLLATE` token and the one immediately after it.
+    let mut skip_next = false;
     for child in children {
+        if skip_next {
+            skip_next = false; // the collation name — never an alias
+            continue;
+        }
         if let ASTNodeOrToken::Token(tok) = child {
             if tok.type_ == lexer::token::TokenType::Name {
+                if tok.value.eq_ignore_ascii_case("COLLATE") {
+                    skip_next = true;
+                    continue;
+                }
                 return Some(tok.value.clone());
             }
         }

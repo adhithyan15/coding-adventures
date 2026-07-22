@@ -114,26 +114,40 @@
 //! any symbolic-domain frontend, not just Derive.
 //!
 //! ## A second, narrower finding layered on top: no per-language SIR23
-//! display convention either (also found, NOT fixed here)
+//! display convention either — FIXED for Derive by this PR (SIR23
+//! addendum, item 4 of 4)
 //!
 //! Independent of the evaluation gap above: even a term that WAS already
 //! fully reduced would still print wrong for Derive. `semantic-ir-to-
 //! javascript`'s only SIR23 stringifier, `Symbolic.toDisplayString`
-//! (`runtime.rs`), renders **every** compound term generically as
-//! `head(args, ...)` — e.g. an unevaluated `Add(x, 1)` prints `"Add(x,
-//! 1)"`, a `List(1, 2, 3)` prints `"List(1, 2, 3)"`, a `Neg(x)` prints
-//! `"Neg(x)"` — with no infix `+`/`*`/`^` convention, no `[...]`/`[...;...]`
-//! bracket convention for `List`, no prefix `-`/`NOT` convention, and no
-//! case-bridging back to Derive's own UPPERCASE builtin surface spelling
-//! (`derive-runtime::printer::print_derive` reverses ALL of these:
-//! `Add(x,1)` → `"x + 1"`, `List(1,2,3)` → `"[1, 2, 3]"`, `Neg(x)` →
-//! `"-x"`, an unresolved `Cos(x)` → `"COS(x)"`). Unlike the SIR22 array
-//! domain's `ArrayRt.fmtNum`/`display` (which already has per-language
-//! flags — `SIR_DISPLAY_APL_HIGH_MINUS`, `SIR_DISPLAY_J_UNDERSCORE`), the
-//! SIR23 domain has no such mechanism for ANY source language yet. Also a
-//! shared-crate gap, also `known_bug`, cited alongside the evaluation gap
-//! above wherever a `CORPUS` entry's compiled output would still disagree
-//! even under a hypothetical fix to the first gap.
+//! (`runtime.rs`), used to render **every** compound term generically as
+//! `head(args, ...)` regardless of source language — e.g. an unevaluated
+//! `Add(x, 1)` printed `"Add(x, 1)"`, a `List(1, 2, 3)` printed `"List(1,
+//! 2, 3)"`, a `Neg(x)` printed `"Neg(x)"` — with no infix `+`/`*`/`^`
+//! convention, no `[...]`/`[...;...]` bracket convention for `List`, no
+//! prefix `-`/`NOT` convention, and no case-bridging back to Derive's own
+//! UPPERCASE builtin surface spelling (`derive-runtime::printer::
+//! print_derive` reverses ALL of these: `Add(x,1)` → `"x + 1"`,
+//! `List(1,2,3)` → `"[1, 2, 3]"`, `Neg(x)` → `"-x"`, an unresolved
+//! `Cos(x)` → `"COS(x)"`). Unlike the SIR22 array domain's `ArrayRt.
+//! fmtNum`/`display` (which already had per-language flags —
+//! `SIR_DISPLAY_APL_HIGH_MINUS`, `SIR_DISPLAY_J_UNDERSCORE`), the SIR23
+//! domain had no such mechanism for ANY source language.
+//!
+//! This PR adds `SIR_DISPLAY_DERIVE` — the fourth instance of that exact
+//! `emit.rs`/`runtime.rs` mechanism — which gates a byte-for-byte JS port
+//! of `derive-runtime::printer::print_derive`'s own precedence-based
+//! renderer (infix `Add`/`Sub`/`Mul`/`Div`/`Equal`/`Less`/`Greater`/
+//! `LessEqual`/`GreaterEqual`, n-ary `And`/`Or`, prefix `Neg`/`Not`,
+//! Derive's own `;`-row-separated `List` bracket convention, and the
+//! `Sin` → `"SIN"`-style UPPERCASE case-bridge). Below, every `CORPUS`
+//! entry whose *only* remaining disagreement was this display gap (not
+//! the evaluation gap above) has been flipped to `known_bug: None` and
+//! re-verified by actually running this file's own oracle test. Every
+//! entry that ALSO needs the evaluation gap (items 2/3, not part of this
+//! PR) to close first stays `known_bug`, with its reason text updated to
+//! call out that the display half is now resolved and only the
+//! evaluation half remains.
 //!
 //! ## Corpus
 //!
@@ -149,9 +163,17 @@
 //! including a 3-term `AND` chain exercising the n-ary logical-chain
 //! fold); vectors and matrices as D-5 structural `List` data (flat,
 //! singleton, elementwise-evaluated, 2×2, and 3-row/1-column shapes); a
-//! free-symbol additive-identity simplification; and bare integer/float/
-//! symbol atoms (this subset's only `known_bug: None` cases, per the
-//! evaluation-gap finding above).
+//! free-symbol additive-identity simplification; free-symbol negation and
+//! equation display; and bare integer/float/symbol atoms. As of item 4
+//! (this PR), 25 of the 38 cases are `known_bug: None` — the bare atoms
+//! (never needed evaluation), every case item 1's arithmetic/comparison/
+//! logic folding alone already flipped, and the 7 cases this PR's own
+//! `SIR_DISPLAY_DERIVE` flips (`negation_of_a_free_symbol`,
+//! `equation_with_a_free_variable_stays_symbolic`, the three flat/
+//! elementwise `List` cases, and the two matrix cases). The remaining 13
+//! stay `known_bug`, all blocked purely by the held-form/calculus
+//! evaluation gap (items 2/3, not part of this PR) — see each entry's own
+//! `known_bug` reason.
 
 use std::fs::OpenOptions;
 use std::io::Write as _;
@@ -189,9 +211,12 @@ struct Case {
 }
 
 const CORPUS: &[Case] = &[
-    // --- Bare atoms: the ONLY `known_bug: None` cases (see module doc's
+    // --- Bare atoms: `known_bug: None` from the start (see module doc's
     // "dominant finding" -- these need no evaluation at all, since the
-    // source already denotes exactly one value). ---
+    // source already denotes exactly one value). No longer the ONLY such
+    // cases as of item 1 (arithmetic/comparison/logic folding) and item 4
+    // (this PR's own Derive display convention) -- see the module doc's
+    // "Corpus" section for the current, complete accounting. ---
     Case {
         name: "bare_integer_literal",
         source: "42\n",
@@ -301,11 +326,13 @@ const CORPUS: &[Case] = &[
         name: "negation_of_a_free_symbol",
         source: "-x\n",
         expected: "-x",
-        known_bug: Some(
-            "Evaluation/display gap (module doc): compiles to a bare Neg(x) term; there is nothing \
-             to fold (x is free), but the display-convention gap alone means this prints \"Neg(x)\", \
-             never the prefix surface \"-x\".",
-        ),
+        // Flipped by item 4 (SIR_DISPLAY_DERIVE): compiles to a bare
+        // Neg(x) term -- there is nothing to fold (x is free), so this
+        // was ALWAYS a display-convention-only case (the original
+        // known_bug reason's "Evaluation/display gap" label was broader
+        // than the actual root cause); Symbolic.toDisplayString's new
+        // Derive-specific prefix-Neg rendering now prints "-x" directly.
+        known_bug: None,
     },
 
     // --- Assignment: read back by a LATER statement (mirrors
@@ -328,10 +355,11 @@ const CORPUS: &[Case] = &[
         source: "v := [1, 2, 3]\nv\n",
         expected: "[1, 2, 3]\n[1, 2, 3]",
         known_bug: Some(
-            "Evaluation gap (module doc): the compiled side's Assign never binds v, so the second \
-             statement compiles to the bare, still-unbound symbol v, not the list; and even a bound \
-             List(1,2,3) would print via the display-convention gap as \"List(1, 2, 3)\", not \
-             \"[1, 2, 3]\".",
+            "Evaluation gap ONLY now (module doc; display half fixed by item 4): the compiled side's \
+             Assign still never binds v (item 2, not part of this PR), so the second statement still \
+             compiles to the bare, still-unbound symbol v, not the list -- once item 2 lands and binds \
+             v to an actual List(1,2,3), it will already print correctly as \"[1, 2, 3]\" via this PR's \
+             own SIR_DISPLAY_DERIVE List bracket convention.",
         ),
     },
 
@@ -365,10 +393,11 @@ const CORPUS: &[Case] = &[
         source: "DIF(x^2, x)\n",
         expected: "2*x",
         known_bug: Some(
-            "Evaluation gap (module doc): compiles to a bare D(Pow(x, 2), x) term -- confirmed by \
-             direct inspection of the emitted JS -- differentiation never runs, so it never reduces \
-             to 2*x; even if it did, the display-convention gap would print \"Mul(2, x)\", not \
-             \"2*x\".",
+            "Evaluation gap ONLY now (module doc; display half fixed by item 4): compiles to a bare \
+             D(Pow(x, 2), x) term -- confirmed by direct inspection of the emitted JS -- \
+             differentiation still never runs (item 3, not part of this PR), so it never reduces to \
+             2*x; once item 3 lands and folds this to Mul(2, x), this PR's own SIR_DISPLAY_DERIVE \
+             infix convention will already render it as \"2*x\".",
         ),
     },
     Case {
@@ -376,9 +405,10 @@ const CORPUS: &[Case] = &[
         source: "DIF(SIN(x), x)\n",
         expected: "COS(x)",
         known_bug: Some(
-            "Evaluation gap (module doc): compiles to a bare D(Sin(x), x) term, never differentiates \
-             to Cos(x); even folded, the display-convention gap has no case-bridge back to Derive's \
-             UPPERCASE surface convention, so it would print \"Cos(x)\", not \"COS(x)\".",
+            "Evaluation gap ONLY now (module doc; display half fixed by item 4): compiles to a bare \
+             D(Sin(x), x) term, still never differentiates to Cos(x) (item 3, not part of this PR); \
+             once item 3 lands and folds this to Cos(x), this PR's own SIR_DISPLAY_DERIVE \
+             case-bridge will already render it as \"COS(x)\".",
         ),
     },
     // Mirrors derive-runtime's own `a_small_derive_program_evaluates_end_
@@ -400,8 +430,10 @@ const CORPUS: &[Case] = &[
         source: "INT(x, x)\n",
         expected: "1/2*x^2",
         known_bug: Some(
-            "Evaluation gap (module doc): compiles to a bare Integrate(x, x) term, never integrates \
-             to 1/2*x^2.",
+            "Evaluation gap ONLY now (module doc; display half fixed by item 4): compiles to a bare \
+             Integrate(x, x) term, still never integrates to 1/2*x^2 (item 3, not part of this PR); \
+             once item 3 lands and folds this to Mul(Rational(1,2), Pow(x,2))-shaped output, this \
+             PR's own SIR_DISPLAY_DERIVE infix/Pow convention will already render it as \"1/2*x^2\".",
         ),
     },
 
@@ -454,12 +486,11 @@ const CORPUS: &[Case] = &[
         name: "equation_with_a_free_variable_stays_symbolic",
         source: "x = 4\n",
         expected: "x = 4",
-        known_bug: Some(
-            "Display-convention gap only (module doc) -- this one needs no evaluation at all (x is \
-             free, so Equal(x, 4) is already the fully-reduced ground-truth value); the compiled \
-             side's generic, non-infix Symbolic.toDisplayString prints \"Equal(x, 4)\", never \
-             Derive's own infix \"x = 4\".",
-        ),
+        // Flipped by item 4 (SIR_DISPLAY_DERIVE): this one needs no
+        // evaluation at all (x is free, so Equal(x, 4) is already the
+        // fully-reduced ground-truth value); Symbolic.toDisplayString's
+        // new Derive-specific infix rendering now prints "x = 4" directly.
+        known_bug: None,
     },
 
     // --- Logic keywords: AND / OR / NOT, including a 3-term AND chain
@@ -517,21 +548,19 @@ const CORPUS: &[Case] = &[
         name: "flat_vector_literal",
         source: "[1, 2, 3]\n",
         expected: "[1, 2, 3]",
-        known_bug: Some(
-            "Display-convention gap (module doc): a flat List(1, 2, 3) needs no evaluation at all \
-             (every element is already a literal), but the compiled side's generic \
-             Symbolic.toDisplayString prints \"List(1, 2, 3)\", never Derive's own bracket surface \
-             \"[1, 2, 3]\".",
-        ),
+        // Flipped by item 4 (SIR_DISPLAY_DERIVE): a flat List(1, 2, 3)
+        // needs no evaluation at all (every element is already a
+        // literal); Symbolic.toDisplayString's new Derive-specific flat
+        // bracket convention now prints "[1, 2, 3]" directly.
+        known_bug: None,
     },
     Case {
         name: "singleton_vector_literal",
         source: "[5]\n",
         expected: "[5]",
-        known_bug: Some(
-            "Display-convention gap only (module doc): List(5) needs no evaluation; prints \
-             \"List(5)\", not \"[5]\".",
-        ),
+        // Flipped by item 4: List(5) needs no evaluation; now prints
+        // "[5]" via the same flat bracket convention.
+        known_bug: None,
     },
     Case {
         name: "vector_of_expressions_evaluates_elementwise",
@@ -544,37 +573,36 @@ const CORPUS: &[Case] = &[
         // folds each element for free: this now compiles to and
         // evaluates as `List(2, 6, 8)`, confirmed by direct inspection
         // of the emitted JS -- the elements are NOT unfolded anymore.
-        // Only Derive's own `[...]` bracket display convention (item 4)
-        // is still missing, so this stays `known_bug`, now for a purely
-        // display-convention reason.
-        known_bug: Some(
-            "Display-convention gap ONLY (module doc; corrected after item 1 landed) -- NOT an \
-             evaluation gap anymore: evalTerm's applicative-order argument evaluation folds each \
-             List element for free even though List itself has no handler, so this now compiles to \
-             and evaluates as List(2, 6, 8) (confirmed by direct inspection of the emitted JS) -- \
-             only the generic Symbolic.toDisplayString printing \"List(2, 6, 8)\" instead of Derive's \
-             own bracket surface \"[2, 6, 8]\" remains, which is item 4's job (Derive's own SIR23 \
-             display convention).",
-        ),
+        // Item 4 (Derive's own `[...]` bracket display convention) is what
+        // flips this one, below.
+        //
+        // Flipped by item 4 (SIR_DISPLAY_DERIVE): NOT an evaluation gap
+        // (fixed by item 1) -- evalTerm's applicative-order argument
+        // evaluation folds each List element for free even though List
+        // itself has no handler, so this compiles to and evaluates as
+        // List(2, 6, 8) (confirmed by direct inspection of the emitted
+        // JS); Symbolic.toDisplayString's new Derive-specific flat
+        // bracket convention now prints "[2, 6, 8]" directly.
+        known_bug: None,
     },
     Case {
         name: "two_by_two_matrix_literal",
         source: "[1, 2; 3, 4]\n",
         expected: "[1, 2; 3, 4]",
-        known_bug: Some(
-            "Display-convention gap only (module doc): List(List(1,2), List(3,4)) needs no \
-             evaluation (a matrix of literals), but prints \"List(List(1, 2), List(3, 4))\", never \
-             the \";\"-separated row surface \"[1, 2; 3, 4]\".",
-        ),
+        // Flipped by item 4: List(List(1,2), List(3,4)) needs no
+        // evaluation (a matrix of literals); Symbolic.toDisplayString's
+        // new Derive-specific matrix convention (every element itself a
+        // List -> ";"-separated rows) now prints "[1, 2; 3, 4]" directly.
+        known_bug: None,
     },
     Case {
         name: "three_row_one_column_matrix_literal",
         source: "[1; 2; 3]\n",
         expected: "[1; 2; 3]",
-        known_bug: Some(
-            "Display-convention gap only (module doc): a three-row matrix of literals needs no \
-             evaluation, but prints generically, not with Derive's own \";\"-separated row surface.",
-        ),
+        // Flipped by item 4: a three-row matrix of literals needs no
+        // evaluation; now prints with Derive's own ";"-separated row
+        // surface via the same matrix convention.
+        known_bug: None,
     },
 ];
 

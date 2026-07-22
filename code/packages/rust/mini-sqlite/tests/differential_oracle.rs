@@ -1853,14 +1853,49 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT DISTINCT b FROM t ORDER BY b",
     },
-    // An EXPLICIT `COLLATE` in the DISTINCT operand folds a binary column.
+    // An EXPLICIT `COLLATE` in the DISTINCT operand folds a binary column: `b` is
+    // declared BINARY, so without the suffix 'a'/'A'/'b'/'B' stay four distinct
+    // rows; `COLLATE NOCASE` collapses them to two, keeping each fold's FIRST
+    // (scan-order) original text — 'a','b'. The output column is named after its
+    // source text `b COLLATE NOCASE` (SQLite includes the COLLATE in the name).
+    //
+    // No ORDER BY on purpose: the surviving representative of a fold is only
+    // well-defined once DISTINCT runs, and mini's VM currently applies ORDER BY
+    // BEFORE DISTINCT (post-op order sort→distinct), which would pick the
+    // sort-first row instead — an orthogonal ordering bug tracked separately as
+    // `distinct_collate_order_by_representative`. Compared unordered as a multiset.
     Case {
         id: "distinct_explicit_collate",
         setup: &[
             "CREATE TABLE t (id INTEGER, c TEXT COLLATE NOCASE, b TEXT)",
             "INSERT INTO t VALUES (1,'a','a'),(2,'A','A'),(3,'b','b'),(4,'B','B')",
         ],
+        query: "SELECT DISTINCT b COLLATE NOCASE FROM t",
+    },
+    // Tracks the orthogonal bug the case above sidesteps: with `ORDER BY b` the
+    // VM sorts (post_sort) BEFORE deduping (post_distinct), so the NOCASE fold of
+    // 'a'/'A' keeps the byte-sort-first 'A' rather than SQLite's scan-first 'a'.
+    // The COLLATE *folding* is correct (two rows out); only WHICH original text
+    // survives diverges. Fix is to apply DISTINCT before ORDER BY (SQL semantics),
+    // a VM post-op reordering left to its own increment.
+    Case {
+        id: "distinct_collate_order_by_representative",
+        setup: &[
+            "CREATE TABLE t (b TEXT)",
+            "INSERT INTO t VALUES ('a'),('A'),('b'),('B')",
+        ],
         query: "SELECT DISTINCT b COLLATE NOCASE FROM t ORDER BY b",
+    },
+    // The mirror direction: an explicit `COLLATE BINARY` on a DISTINCT operand
+    // OVERRIDES the column's declared NOCASE, so 'a' and 'A' stay distinct. Guards
+    // that explicit collation outranks declared (not just "any collation folds").
+    Case {
+        id: "distinct_explicit_binary_overrides_declared",
+        setup: &[
+            "CREATE TABLE t (c TEXT COLLATE NOCASE)",
+            "INSERT INTO t VALUES ('a'),('A'),('b')",
+        ],
+        query: "SELECT DISTINCT c COLLATE BINARY FROM t ORDER BY c",
     },
     // GROUP BY likewise groups on the collated key: a declared-NOCASE column
     // yields two groups of two, keyed by the first occurrence's original casing.
@@ -1900,7 +1935,9 @@ const CASES: &[Case] = &[
         ],
         query: "SELECT a, b, COUNT(*) AS n FROM t GROUP BY a, b ORDER BY a, b",
     },
-    // An explicit `GROUP BY <col> COLLATE NOCASE` folds a binary column.
+    // An explicit `GROUP BY <col> COLLATE NOCASE` folds a binary column: `b` is
+    // BINARY, so it groups case-insensitively only because of the suffix, keying
+    // each group by the first occurrence's original casing.
     Case {
         id: "group_by_explicit_collate",
         setup: &[
@@ -1908,6 +1945,18 @@ const CASES: &[Case] = &[
             "INSERT INTO t VALUES (1,'a','a'),(2,'A','A'),(3,'b','b'),(4,'B','B')",
         ],
         query: "SELECT b, COUNT(*) AS n FROM t GROUP BY b COLLATE NOCASE ORDER BY b",
+    },
+    // Per-key collation on a multi-column GROUP BY: only the second key carries
+    // `COLLATE NOCASE`, so `g` groups by exact bytes while `b` folds case. Guards
+    // that the planner pairs each COLLATE with the column_ref it follows (not the
+    // first, not all of them).
+    Case {
+        id: "group_by_explicit_collate_second_key",
+        setup: &[
+            "CREATE TABLE t (g TEXT, b TEXT)",
+            "INSERT INTO t VALUES ('x','a'),('x','A'),('x','b'),('y','a')",
+        ],
+        query: "SELECT g, b, COUNT(*) AS n FROM t GROUP BY g, b COLLATE NOCASE ORDER BY g, b",
     },
     // ---- Lane 2: division / modulo by zero → NULL ------------------------
     // SQLite yields NULL (not an error) for any division or modulo by zero,
@@ -2265,25 +2314,16 @@ const LEDGER: &[(&str, &str)] = &[
         "order_by_ordinal_over_aggregate",
         "positional ORDER BY over an aggregate output column not yet re-bound to the materialized column",
     ),
-    // An EXPLICIT `COLLATE` suffix in a DISTINCT select-item or a GROUP BY term
-    // does not parse yet: the grammar only accepts a `COLLATE` tail inside a
-    // comparison (`x COLLATE C = y`), not on a bare select-list expression or a
-    // group-by key. The *semantics* half — a column's DECLARED collation folding
-    // the DISTINCT/GROUP BY key — is implemented (see the `distinct_column_*` /
-    // `group_by_column_*` cases); closing these two needs hand-edits to the
-    // sql-parser grammar (`select_item` and `group_by` gaining an optional
-    // `COLLATE NAME` tail), which is the next increment in this lane.
     (
         "select_star_in_place",
         "`*` mixed with other select items (`SELECT a, *`) does not parse (grammar: select_list lacks a bare `*` alternative in a comma list)",
     ),
+    // Explicit COLLATE now parses AND folds (DISTINCT / GROUP BY); the only
+    // remaining divergence is which original row a fold keeps when ORDER BY is
+    // present, because the VM runs sort before distinct. Folding is correct.
     (
-        "distinct_explicit_collate",
-        "explicit COLLATE suffix on a DISTINCT select-item does not parse yet (grammar: select_item lacks a COLLATE tail)",
-    ),
-    (
-        "group_by_explicit_collate",
-        "explicit COLLATE suffix on a GROUP BY term does not parse yet (grammar: group_by lacks a COLLATE tail)",
+        "distinct_collate_order_by_representative",
+        "`SELECT DISTINCT x COLLATE NOCASE ... ORDER BY x` keeps the sort-first original text, not SQLite's scan-first, because the VM applies ORDER BY (post_sort) before DISTINCT (post_distinct); DISTINCT should precede ORDER BY",
     ),
 ];
 
