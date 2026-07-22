@@ -1,5 +1,38 @@
 # Changelog
 
+## [0.56.0] — 2026-07-21
+
+### Added — RS-4 PR-D4a: the `quote`/`at`/`snapshot` surface binding (ADJ-REASON-MATH §E.3.1)
+
+A grounded clause can now write a **pinned verbatim span** — the bytes that make `adj-verify`
+report `fully_verified`:
+
+```
+relate inhibits(aspirin, cyclooxygenase)
+    quote "Aspirin inhibits cyclooxygenase" at 0 snapshot "<64-hex sha256>"
+    source "Pharmacology reference"
+    trust authoritative
+```
+
+- **Grammar**: new `quote_annotation = "quote" STRING "at" NUMBER "snapshot" STRING`, added to the
+  `annotation` alternation (grammars regenerated).
+- **AST**: `Annotation::Quote { text, byte_offset, snapshot_hex }`.
+- **Lower**: the pin populates `Provenance::quote` (a `VerbatimSpan`) + `Provenance::snapshot`
+  (a `ContentHash`) via `with_quote`. It is **fail-closed** on well-formedness — a snapshot that is
+  not a 64-char SHA-256 hex, or a quote whose text has no visible content, is a compile error
+  (`LowerError::MalformedQuotePin`), never a half-built `Verbatim` span the verifier would reject.
+  A `quote` on a table row pins that row's own span. Duplicate `quote` is a `DuplicateAnnotation`.
+
+The `byte_offset` is emitted by the grounding spider at ingest, never hand- or model-authored
+(`feedback_no_byte_arithmetic_for_llm`). Reviewers read the `quote` text and `source` label; the
+machine owns the arithmetic.
+
+**Scoped as D4a** (per feedback_smaller_prs): this is the surface + fail-closed *well-formedness*
+lowering. The *anchored* compile-time check (does the text really sit at `byte_offset` in the named
+snapshot?) and the `adj-verify --snapshots` end-to-end path are D4b — the latter also fixes a latent
+cli-builder flag-parse hang discovered while wiring this up. Until D4b, `adj-verify` still enforces
+the anchored check at verify time, so a bad pin is caught; D4b moves that gate earlier, to compile.
+
 ## [0.55.0] — 2026-07-18
 
 ### Added — RS-5e: per-row provenance on a `table` (ADJ-TABLES)
