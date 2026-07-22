@@ -170,6 +170,26 @@ describe("handwriting ductus", () => {
     expect(penLifts(DUCTUS["ம"])).toBe(0);
     expect(DUCTUS["ம"].strokes).toHaveLength(1);
   });
+
+  // The PROVENANCE GATE. A stroke's SHAPE is checked against the font above;
+  // its ORDER cannot be — so it must trace to a cited source, or it does not
+  // ship. This is the counterpart, for hand-authored order, of "facts enter
+  // only through a source". Where no source exists, the letter is simply not
+  // authored rather than invented.
+  it("every letter cites a real source for its stroke order", () => {
+    for (const letter of letters) {
+      expect(letter.source, `${letter.glyph} has no source`).toBeDefined();
+      expect(letter.source.citation.length, `${letter.glyph} citation is empty`).toBeGreaterThan(10);
+      expect(letter.source.url, `${letter.glyph} source url is not a real link`).toMatch(/^https?:\/\/\S+$/);
+    }
+  });
+
+  it("ம's stroke order traces to the UT Austin primer, and records Tamil's variation", () => {
+    const src = DUCTUS["ம"].source;
+    expect(src.url).toContain("tamilscript");
+    expect(src.citation).toMatch(/Appendix I|Frame 1/);
+    expect(src.variation, "must not present one order as the only order").toMatch(/variation|no single/i);
+  });
 });
 
 describe("pen-path geometry", () => {
