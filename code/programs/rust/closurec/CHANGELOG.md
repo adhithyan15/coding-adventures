@@ -2,6 +2,41 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.239.0] - 2026-07-21
+
+### Fixed - synthetic `;` after a brace-terminated construct now only at EOF
+
+WHITESPACE_ONLY appended a synthetic `;` after every brace-terminated construct
+wherever it appeared. The reference compiler appends it only when nothing
+follows. Oracle-verified (closure-compiler-v20260712.jar, WHITESPACE_ONLY,
+--language_in ECMASCRIPT_2020 --language_out NO_TRANSPILE); mid-stream, upstream
+emits no terminator:
+
+  function f(){}g();            was `function f(){};g();`
+  class C{m(){}}after();        was `class C{m(){}};after();`
+  switch(x){case 1:break}g();   was `...break};g();`
+  try{a()}catch(e){b()}g();     was `...{b()};g();`
+  {function f(){}}g();          was `{function f(){}};g();`
+
+while at EOF every one of them still takes the `;`.
+
+This was NOT limited to function/class declarations as first supposed -- switch,
+try-chains, and a block containing a declaration were all affected. The last case
+is fixed indirectly: an inner declaration whose follower is `}` no longer arms
+the deferred-semicolon flag, so nothing is flushed at the enclosing brace.
+
+The rule already existed in the code for one block kind (`BlockKind::Other =>
+next_val.is_none()`, gap-052) and simply had not been generalised; the other arms
+were unconditional. Each arm is kept explicit rather than collapsed so per-kind
+intent survives future edits.
+
+This mirrors the emitter-side "terminate only the last program item" rule, so
+closurec's two output paths -- the AST emitter and the whitespace_only minifier
+-- now agree. It closes the last known piece of that divergence.
+
+Verified against a 16-case oracle table: all five previously divergent shapes now
+match, and eleven already-correct shapes (every EOF variant, plain blocks, if,
+for, while, nested declarations, consecutive declarations) are unchanged.
 ## [0.238.0] - 2026-07-21
 
 ### Added - minified output is wrapped at a 500-column budget
