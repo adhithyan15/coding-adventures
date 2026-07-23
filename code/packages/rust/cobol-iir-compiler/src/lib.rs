@@ -2375,9 +2375,14 @@ impl<'a> Compiler<'a> {
     ///
     /// An unsigned SCALED operand (`PIC 9(i)V9(d)`) uses its `(i + d)`-digit image
     /// (int part then frac part, no point) — so `IF S = "042"` with `S PIC 9(2)V9 =
-    /// 4.2` is true. A signed (`PIC S9`) numeric operand, a numeric literal (a
-    /// different pairing — kept out of scope), or a group item in a mixed relation
-    /// is a clean later rung (see [`Self::num_digit_str_operand`]).
+    /// 4.2` is true. A SIGNED (`PIC S9…`) operand, integer or scaled, uses that same
+    /// magnitude image with the operational sign folded into a TRAILING OVERPUNCH on
+    /// the units digit ([`Self::emit_signed_num_alpha_image`] — the same bytes the
+    /// signed numeric→alphanumeric MOVE produces), so `IF S = "12L"` with
+    /// `S PIC S9(3) = -123` is true and `= "12C"` (the positive image) is false;
+    /// ordering follows the byte comparison of those images. A numeric literal (a
+    /// different pairing — kept out of scope) or a group item in a mixed relation is
+    /// still a clean later rung (see [`Self::num_digit_str_operand`]).
     fn emit_relation(&mut self, relation: &GrammarASTNode) -> Result<String, CompileError> {
         let operands = child_nodes(relation, "operand");
         if operands.len() != 2 {
@@ -2389,17 +2394,33 @@ impl<'a> Compiler<'a> {
         // numeric figurative), `Some` = a character value.
         let ls = self.str_operand(operands[0])?;
         let rs = self.str_operand(operands[1])?;
+        // The `ZERO` figurative is NUMERIC when paired with a numeric operand
+        // (matching the oracle, whose mixed-comparison gate excludes `Fig::Zero`
+        // and numeric-compares `Num` vs `Fig::Zero`): `numeric = ZERO` is the
+        // numeric comparison `numeric = 0`, NOT an alphanumeric one — so a SIGNED
+        // item is never sent through the overpunch-string path against ZERO (which
+        // would compare e.g. `"00{"` ≠ `"000"` and silently miscompile the ubiquitous
+        // `IF BALANCE = ZERO`). `str_operand` carries ZERO as `Fig('0')`; resolve the
+        // pairing here. ZERO stays alphanumeric only against a character operand, and
+        // ZERO-vs-ZERO stays a string compare (both `Some`), as the oracle does.
+        let numeric_relation = matches!(
+            (&ls, &rs),
+            (None, None)
+                | (None, Some(StrOperand::Fig('0')))
+                | (Some(StrOperand::Fig('0')), None)
+        );
+        if numeric_relation {
+            let left = self.read_arith_term(operands[0])?;
+            let right = self.read_arith_term(operands[1])?;
+            let w = self.term_scale(&left).max(self.term_scale(&right));
+            let a = self.emit_term_at_scale(&left, w);
+            let b = self.emit_term_at_scale(&right, w);
+            let cond_reg = self.fresh("_cond");
+            self.emit(op, Some(&cond_reg), vec![a, b], "i64");
+            return Ok(cond_reg);
+        }
         match (ls, rs) {
-            (None, None) => {
-                let left = self.read_arith_term(operands[0])?;
-                let right = self.read_arith_term(operands[1])?;
-                let w = self.term_scale(&left).max(self.term_scale(&right));
-                let a = self.emit_term_at_scale(&left, w);
-                let b = self.emit_term_at_scale(&right, w);
-                let cond_reg = self.fresh("_cond");
-                self.emit(op, Some(&cond_reg), vec![a, b], "i64");
-                Ok(cond_reg)
-            }
+            (None, None) => unreachable!("numeric_relation handled the (None, None) pairing"),
             (Some(a), Some(b)) => self.emit_str_condition(a, b, op),
             // Mixed numeric ↔ alphanumeric: build the numeric side's digit image
             // and feed both operands through the same alphanumeric `str_cmp` path
@@ -2424,11 +2445,13 @@ impl<'a> Compiler<'a> {
     /// `Decimal::digits()` yields the same image).
     ///
     /// An **unsigned** numeric ITEM — integer (`PIC 9(n)`) or scaled
-    /// (`PIC 9(i)V9(d)`) — has an unambiguous image (`int + frac`, no point) on this
-    /// rung, so both are accepted:
+    /// (`PIC 9(i)V9(d)`) — has an unambiguous image (`int + frac`, no point), so it
+    /// is accepted with its plain magnitude image. A **signed** numeric item
+    /// (`PIC S9…`, integer or scaled) is also accepted: its image is the same
+    /// `(i + d)`-digit magnitude with the operational sign folded into a TRAILING
+    /// OVERPUNCH on the units digit ([`Self::emit_signed_num_alpha_image`]), exactly
+    /// the bytes the signed numeric→alphanumeric MOVE produces. Still rejected here:
     ///
-    /// * a **signed** (`PIC S9`) numeric item — whose image would need sign
-    ///   handling — is a clean later rung;
     /// * a **numeric literal** against an alphanumeric operand is a *different*
     ///   pairing (kept out of scope) and is rejected here too;
     /// * a **group** item never reaches this method — its name is unregistered on
@@ -2450,10 +2473,25 @@ impl<'a> Compiler<'a> {
                         let reg = self.emit_num_digit_string(&num_reg, n);
                         Ok(StrOperand::Fixed { reg, len: n })
                     }
-                    ItemKind::Numeric { .. } => Err(CompileError::Unsupported(format!(
-                        "a signed numeric operand ({name}) compared with an \
-                         alphanumeric operand is a later rung"
-                    ))),
+                    ItemKind::Numeric { int_digits, dec_digits, signed: true, .. } => {
+                        // A SIGNED numeric item's comparison image is its
+                        // `(i + d)`-digit zero-padded MAGNITUDE with the operational
+                        // sign folded into a TRAILING OVERPUNCH on the units digit —
+                        // the exact bytes a signed numeric→alphanumeric MOVE of the
+                        // same item produces (see `emit_signed_num_alpha_image`). Once
+                        // built, the mixed comparison proceeds by the identical
+                        // alphanumeric byte rule the oracle uses (whose
+                        // `overpunch_trailing(magnitude, neg)` yields the same image).
+                        // For example `PIC S9(3) = -123` compares equal to `"12L"`,
+                        // `= +123` equal to `"12C"`, and a scaled `PIC S9V9 = -4.2`
+                        // equal to `"4K"`. A value that truncates to a zero magnitude
+                        // stores `neg = false` (COBOL has no negative zero), so its
+                        // image is `"00{"` — matching the oracle byte-for-byte.
+                        let n = *int_digits + *dec_digits;
+                        let num_reg = self.items[idx].reg.clone();
+                        let reg = self.emit_signed_num_alpha_image(&num_reg, n);
+                        Ok(StrOperand::Fixed { reg, len: n })
+                    }
                     // `str_operand` classified this operand as numeric (`None`); a
                     // character item would have been `Some`. Unreachable in practice,
                     // but handled honestly rather than with `unreachable!`.
@@ -5071,6 +5109,38 @@ mod tests {
         let os = ops(&m);
         assert!(os.contains(&"str_slice".to_string()), "overpunch char slices off the sign table");
         assert!(os.contains(&"str_concat".to_string()), "image reshaped/padded via str_concat");
+    }
+
+    #[test]
+    fn signed_numeric_vs_alphanumeric_comparison_now_compiles() {
+        // A SIGNED numeric operand in a mixed relation is now supported: its
+        // overpunched magnitude image is built (str_slice off the digit table plus the
+        // sign-table overpunch) and the comparison runs the alphanumeric byte rule
+        // (str_cmp). Previously this was a clean `Unsupported`.
+        let m = compile_source(
+            &wrap(
+                &["01  S  PIC S9(3) VALUE -123."],
+                &["IF S = \"12L\" DISPLAY \"T\" ELSE DISPLAY \"F\".", "STOP RUN."],
+            ),
+            "x",
+        )
+        .unwrap();
+        assert!(m.validate().is_empty(), "{:?}", m.validate());
+        let os = ops(&m);
+        assert!(os.contains(&"str_slice".to_string()), "overpunch char slices off the sign table");
+        assert!(os.contains(&"str_cmp".to_string()), "mixed relation compares via str_cmp");
+    }
+
+    #[test]
+    fn numeric_literal_vs_alphanumeric_comparison_is_still_a_later_rung() {
+        // A numeric LITERAL against an alphanumeric operand is a different pairing,
+        // still out of scope on both engines.
+        let err = compile_source(
+            &wrap(&["01  W  PIC X(3) VALUE \"042\"."], &["IF 42 = W DISPLAY \"Y\".", "STOP RUN."]),
+            "x",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
     }
 
     #[test]

@@ -49,13 +49,18 @@ and `ON SIZE ERROR`; divide-by-zero is a clean error or a size-error condition);
 `COMPUTE` with
 precedence-correct arithmetic expressions (`+ - * / **`, unary sign,
 parentheses), `ROUNDED`, and `ON SIZE ERROR`; `IF … ELSE` with numeric,
-alphanumeric, and **mixed unsigned-numeric ↔ alphanumeric** comparison (the
-numeric operand — integer or scaled — treated as its digit image
+alphanumeric, and **mixed numeric ↔ alphanumeric** comparison (**unsigned or
+signed**, integer or scaled; the numeric operand treated as its digit image
 (`Decimal::digits()`, the item's fixed-width zero-padded storage, `int + frac`
 with no point) — then space-padded and byte-compared, so `NUM = "042"` is true but
-`NUM = "42"` is false, and `9(2)V9=4.2 = "042"` is true; a signed numeric operand
-or a group item in such a mixed comparison is a clean later rung, matching the
-compiler); **reference modification** `IDENT(start:len)` /
+`NUM = "42"` is false, and `9(2)V9=4.2 = "042"` is true. A **signed** operand
+compares by that same magnitude with the operational sign folded into a **trailing
+overpunch** on the units digit (`overpunch_trailing`, the same image the
+signed→alphanumeric `MOVE` builds), so `S9(3)=-123` equals `"12L"`, `= +123` equals
+`"12C"`, `S9V9=-4.2` equals `"4K"`; ordering follows the byte comparison of those
+images. A numeric *literal* vs alphanumeric (a different pairing) or a group item in
+such a mixed comparison is a clean later rung, matching the compiler);
+**reference modification** `IDENT(start:len)` /
 `IDENT(start:)` (a 1-based substring of an alphanumeric item, in `DISPLAY` and
 alphanumeric-comparison operands — with **constant** integer indices *or*
 **computed** data-name indices like `WS(J:K)`, the index item an unsigned integer;

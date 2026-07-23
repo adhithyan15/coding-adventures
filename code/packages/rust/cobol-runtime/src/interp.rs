@@ -1139,30 +1139,43 @@ impl Machine {
     /// which `Decimal::digits()` yields as the item's fixed-width zero-padded
     /// storage (`PIC 9(3) = 42` → `"042"`; a scaled `PIC 9(2)V9 = 4.2` → `"042"`,
     /// its `(int + frac)` digits with no point) — and compares by the byte rule. An
-    /// **unsigned** numeric item, integer OR scaled (`PIC 9(i)V9(d)`), has an
-    /// unambiguous image on this rung; a **signed** (`PIC S9`) numeric item, or a
-    /// **group** item, in a mixed comparison is a clean later rung — rejected here so
-    /// the oracle matches the compiler, which rejects the same shapes at compile time.
-    /// (A numeric *literal* vs an alphanumeric operand is a different pairing, left
-    /// as-is — outside this rung's scope.)
+    /// **unsigned** numeric item, integer OR scaled (`PIC 9(i)V9(d)`), has that plain
+    /// magnitude image. A **signed** (`PIC S9…`) numeric item is also supported: its
+    /// comparison image is the same magnitude with the operational sign folded into a
+    /// TRAILING OVERPUNCH on the units (last) digit (`overpunch_trailing`) — exactly
+    /// the bytes the signed numeric→alphanumeric MOVE produces. So `PIC S9(3) = -123`
+    /// compares equal to `"12L"`, `= +123` equal to `"12C"`, and a scaled
+    /// `PIC S9V9 = -4.2` equal to `"4K"`. A value that truncates to a zero magnitude
+    /// stores `neg = false` (COBOL has no negative zero), so its image is `"00{"`.
+    /// A **group** item in a mixed comparison is still a clean later rung — rejected
+    /// here so the oracle matches the compiler, which rejects it at compile time. A
+    /// numeric *literal* vs an alphanumeric operand is a **different pairing** than a
+    /// numeric ITEM vs alphanumeric (outside this rung's scope) and is rejected here
+    /// too, so the oracle matches the compiler rather than silently answering it.
     fn compare_operands(&self, left: &Operand, right: &Operand) -> Result<std::cmp::Ordering, RuntimeError> {
         let l = self.src_from_operand(left)?;
         let r = self.src_from_operand(right)?;
         // A mixed comparison surfaces as one numeric `Src` and one alphanumeric —
         // either a character string (`Src::Chars`) or a figurative such as `SPACE`
         // (`Src::Fig`, but NOT `ZERO`, which is numeric and handled by the value
-        // arms below). Reject the deferred numeric shapes (signed / scaled) and any
-        // group item participating in it, so this engine errors precisely where the
+        // arms below). A signed numeric operand IS supported (its overpunched image
+        // is used in the byte arm below); only a group item participating in a mixed
+        // comparison is still deferred, so this engine errors precisely where the
         // compiler does — including for a numeric-vs-figurative pairing.
         let alnum_fig = |s: &Src| matches!(s, Src::Fig(f) if !matches!(f, Fig::Zero));
         let mixed = matches!(&l, Src::Num(_)) && (matches!(&r, Src::Chars(_)) || alnum_fig(&r))
             || matches!(&r, Src::Num(_)) && (matches!(&l, Src::Chars(_)) || alnum_fig(&l));
         if mixed {
             for op in [left, right] {
-                if self.operand_is_signed_numeric(op) {
+                // A numeric LITERAL against an alphanumeric operand is a *different*
+                // pairing than a numeric ITEM vs alphanumeric — out of this rung's
+                // scope, and rejected by the compiler (`num_digit_str_operand`), so
+                // the oracle rejects it too rather than silently answering (which
+                // would be a stricter-compiler asymmetry).
+                if matches!(op, Operand::Lit(Lit::Num(_))) {
                     return Err(RuntimeError::Unsupported(
-                        "a signed numeric operand compared with an alphanumeric \
-                         operand is a later rung"
+                        "a numeric literal compared with an alphanumeric operand is a later rung \
+                         (a different pairing)"
                             .into(),
                     ));
                 }
@@ -1178,8 +1191,13 @@ impl Machine {
             (Src::Num(a), Src::Fig(Fig::Zero)) => a.cmp_value(&Decimal::zero()),
             (Src::Fig(Fig::Zero), Src::Num(b)) => Decimal::zero().cmp_value(b),
             _ => {
-                let mut ls = src_chars(&l);
-                let mut rs = src_chars(&r);
+                // A SIGNED numeric operand compares by its overpunched magnitude image
+                // (`overpunch_trailing` — the same bytes the signed→alphanumeric MOVE
+                // produces), not its plain digit string; an unsigned numeric, a
+                // figurative, or a literal keeps its ordinary `src_chars` image, so
+                // this changes the compared string ONLY for a signed numeric operand.
+                let mut ls = self.signed_overpunch_image(left).unwrap_or_else(|| src_chars(&l));
+                let mut rs = self.signed_overpunch_image(right).unwrap_or_else(|| src_chars(&r));
                 if let Src::Fig(f) = &l {
                     ls = fill_fig(f, rs.len().max(1));
                 }
@@ -1192,20 +1210,22 @@ impl Machine {
         })
     }
 
-    /// Whether `op` is a data-name referring to a **signed** (`PIC S9…`) numeric
-    /// item — the numeric shape whose mixed comparison with an alphanumeric operand
-    /// is a later rung. An unsigned numeric item (integer OR scaled, `PIC 9(i)V9(d)`,
-    /// whose `(int + frac)` digit image `Decimal::digits()` yields unambiguously) is
-    /// supported, as is a literal or a reference modification (returns `false`).
-    fn operand_is_signed_numeric(&self, op: &Operand) -> bool {
+    /// The overpunched comparison image of a **signed** numeric data-name operand:
+    /// its stored magnitude with the operational sign folded into a trailing
+    /// overpunch on the units digit (`overpunch_trailing`), the exact bytes a signed
+    /// numeric→alphanumeric MOVE of the same item emits — so a mixed comparison
+    /// against an alphanumeric operand byte-matches the compiler's image. Returns
+    /// `None` for any other operand (unsigned numeric, literal, group, ref-mod),
+    /// leaving the caller's ordinary `src_chars` image in place.
+    fn signed_overpunch_image(&self, op: &Operand) -> Option<String> {
         if let Operand::Ident(name) = op {
             if let Some(&idx) = self.by_name.get(name) {
-                if let Some(Picture::Numeric { signed, .. }) = &self.items[idx].picture {
-                    return *signed;
+                if let Some(Picture::Numeric { signed: true, .. }) = &self.items[idx].picture {
+                    return Some(overpunch_trailing(&self.items[idx].storage, self.items[idx].neg));
                 }
             }
         }
-        false
+        None
     }
 
     /// Whether `op` is a data-name referring to a **group** item (no picture — its

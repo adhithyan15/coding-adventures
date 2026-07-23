@@ -724,9 +724,9 @@ scaled integers, and an alphanumeric relation (both character) compares them by
 the **byte rule** — the shorter operand is space-padded on the right to the
 longer's length and the two are compared byte-by-byte. This rung adds the
 **mixed** relation: a relational condition (in `IF` / `EVALUATE` / any condition
-context) comparing an **unsigned-integer numeric** operand (`PIC 9(n)` — no `S`,
-no `V`) with an **alphanumeric** operand (a `PIC X` item **or** a string literal),
-with the numeric operand on either side.
+context) comparing a **numeric item** operand (`PIC [S]9(i)V9(d)` — **unsigned or
+signed**, integer or scaled) with an **alphanumeric** operand (a `PIC X` item **or**
+a string literal), with the numeric operand on either side.
 
 COBOL's rule: **when a numeric and a non-numeric operand are compared, the numeric
 operand is treated as though it were moved to an alphanumeric field** — i.e. by
@@ -748,25 +748,44 @@ Worked (`NUM` is `PIC 9(3)` holding `42`, so its digit image is `"042"`):
 - `IF NUM = W` where `W` is `PIC X(3) = "042"` (the alphanumeric side is an item,
   not a literal) → **equal**.
 
-The oracle's `compare_operands` already yields the numeric operand's characters as
-`Decimal::digits()` — which, for a numeric item, is its fixed-width zero-padded
-storage — and falls into the same alphanumeric arm (space-pad to the common length,
-byte-compare) a character relation uses. The compiler builds the numeric side's
-`n`-digit image at run time with the **same digit helper** the numeric→alphanumeric
-`MOVE` uses, then feeds **both** operands through the **same `str_cmp` / space-pad
-path** an alphanumeric relation emits. Because both engines build the identical
-image and run the identical byte comparison, a mixed relation evaluates
-byte-for-byte the same on both. `EVALUATE`'s subject-vs-`WHEN` comparison reuses
-`compare_operands`, so the oracle applies the same rule there for free.
+A **scaled** unsigned operand (`PIC 9(i)V9(d)`, `d > 0`) uses its `(i + d)`-digit
+image — integer part then fractional part, no decimal point — so `PIC 9(2)V9 = 4.2`
+compares by `"042"` (`IF F = "042"` is true, `IF F > "040"` is true).
+
+A **signed** operand (`PIC S9(i)V9(d)`, integer or scaled) uses that same `(i + d)`-
+digit magnitude image with the operational sign folded into a **trailing overpunch**
+on the units (last) digit — the *same* image the signed numeric → alphanumeric
+`MOVE` produces (`overpunch_trailing`): the units digit `u` maps positive
+`{ A B C D E F G H I`, negative `} J K L M N O P Q R`. So `PIC S9(3) = -123` compares
+**equal** to `"12L"`, `= +123` equal to `"12C"`, and a scaled `PIC S9V9 = -4.2` equal
+to `"4K"`; ordering follows the byte comparison of those images. The overpunch is
+driven by the *item* being signed — a signed **positive** operand still takes the
+positive `{…I` row, which is why an unsigned `PIC 9(3) = 123` (`"123"`) and a signed
+`PIC S9(3) = +123` (`"12C"`) compare differently. A value that truncates to a zero
+magnitude stores `neg = false` (COBOL has no negative zero), so its image is `"00{"`
+on both engines.
+
+The oracle's `compare_operands` yields the numeric operand's characters — for an
+unsigned item its `Decimal::digits()` (fixed-width zero-padded storage), for a
+**signed** item its `overpunch_trailing(storage, neg)` — and falls into the same
+alphanumeric arm (space-pad to the common length, byte-compare) a character relation
+uses. The compiler builds the numeric side's image at run time with the **same
+helper** the numeric→alphanumeric `MOVE` uses (`emit_num_digit_string` for the
+magnitude, `emit_signed_num_alpha_image` for the signed overpunch), then feeds
+**both** operands through the **same `str_cmp` / space-pad path** an alphanumeric
+relation emits. Because both engines build the identical image and run the identical
+byte comparison, a mixed relation evaluates byte-for-byte the same on both.
+`EVALUATE`'s subject-vs-`WHEN` comparison reuses `compare_operands`, so the oracle
+applies the same rule there for free.
 
 Deferred as clean later rungs (rejected on both engines, so they agree on the
-deferral): a **signed** (`PIC S9`) or **scaled** (`PIC 9V9`) or **edited** numeric
-operand in a mixed comparison (its image would need sign / implied-point handling),
-a **group** item on either side, and a **numeric-literal-vs-alphanumeric** pairing
-(a different pairing, kept out of scope — the numeric side must be an item on this
-rung). The compiler's `EVALUATE` mixed lowering (numeric subject vs alphanumeric
-`WHEN`, or the reverse) likewise remains a later rung; its subject/`WHEN` paths are
-same-category only.
+deferral): an **edited** numeric operand in a mixed comparison, a **group** item on
+either side, and a **numeric-literal-vs-alphanumeric** pairing (a different pairing,
+kept out of scope — the numeric side must be an item on this rung; the compiler
+rejects it in `num_digit_str_operand`, and the oracle's `compare_operands` rejects a
+numeric-literal operand in a mixed comparison so the two agree). The compiler's
+`EVALUATE` mixed lowering (numeric subject vs alphanumeric `WHEN`, or the reverse)
+likewise remains a later rung; its subject/`WHEN` paths are same-category only.
 
 ## Scope
 

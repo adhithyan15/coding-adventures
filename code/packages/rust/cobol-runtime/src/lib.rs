@@ -543,8 +543,11 @@ mod tests {
     // though moved to an alphanumeric field — its digit image (`Decimal::digits()`
     // yields the item's fixed-width `(int + frac)` zero-padded storage, no point) —
     // then compares by the alphanumeric byte rule (space-pad the shorter side,
-    // byte-by-byte). A signed numeric operand, or a group item, in a mixed
-    // comparison is a clean later rung, rejected to match the compiler.
+    // byte-by-byte). A SIGNED numeric operand is also supported: its image is that
+    // same magnitude with the operational sign folded into a TRAILING OVERPUNCH on
+    // the units digit (`overpunch_trailing`), so `PIC S9(3) = -123` compares equal
+    // to "12L" and `= +123` equal to "12C". Only a group item in a mixed comparison
+    // is still a clean later rung, rejected to match the compiler.
     // ----------------------------------------------------------------------
 
     #[test]
@@ -597,27 +600,73 @@ mod tests {
     }
 
     #[test]
-    fn mixed_signed_numeric_vs_alphanumeric_is_deferred() {
-        // A SIGNED numeric operand compared with an alphanumeric literal is a
-        // later rung — rejected so it matches the compiler.
-        let err = run_ws(
-            &["01  S  PIC S9(3) VALUE 42."],
-            &["    IF S = \"042\" DISPLAY \"Y\".", "    STOP RUN."],
+    fn mixed_signed_numeric_vs_alphanumeric_uses_overpunched_image() {
+        // A SIGNED numeric operand compares by its magnitude image with a trailing
+        // sign overpunch on the units digit (the same bytes the signed→alphanumeric
+        // MOVE builds): `PIC S9(3) = -123` → "12L", `= +123` → "12C". Equality and an
+        // ORDERING relation both follow the byte comparison of those images.
+        let neg = run_ws(
+            &["01  S  PIC S9(3) VALUE -123."],
+            &[
+                "    IF S = \"12L\" DISPLAY \"EQ\" ELSE DISPLAY \"NE\".",
+                "    IF S = \"12C\" DISPLAY \"EQ\" ELSE DISPLAY \"NE\".",
+                "    IF S < \"12M\" DISPLAY \"LT\" ELSE DISPLAY \"GE\".",
+                "    STOP RUN.",
+            ],
         )
-        .unwrap_err();
-        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+        .unwrap();
+        assert_eq!(neg, "EQ\nNE\nLT\n");
+        // A signed item with an unsigned VALUE is POSITIVE (neg=false), so its image
+        // takes the positive `{…I` overpunch row: 123 → "12C".
+        let pos = run_ws(
+            &["01  S  PIC S9(3) VALUE 123."],
+            &["    IF S = \"12C\" DISPLAY \"EQ\" ELSE DISPLAY \"NE\".", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(pos, "EQ\n");
     }
 
     #[test]
-    fn mixed_signed_numeric_vs_space_figurative_is_deferred() {
-        // Regression: a mixed comparison also surfaces when the alphanumeric side
-        // is a FIGURATIVE (`SPACE`), not just a character string. A signed numeric
-        // vs SPACE must reject identically to the compiler (which defers a signed
-        // operand) — previously the oracle's mixed gate missed the figurative case
-        // and evaluated it, a stricter-compiler asymmetry.
+    fn mixed_signed_units_zero_and_scaled_overpunch() {
+        // Units digit 0 selects '}' (negative) / '{' (positive); a scaled
+        // `PIC S9V9 = -4.2` overpunches the last fraction digit → "4K".
+        let out = run_ws(
+            &["01  S  PIC S9(3) VALUE -120.", "01  P  PIC S9(3) VALUE 120.", "01  F  PIC S9V9 VALUE -4.2."],
+            &[
+                "    IF S = \"12}\" DISPLAY \"EQ\" ELSE DISPLAY \"NE\".",
+                "    IF P = \"12{\" DISPLAY \"EQ\" ELSE DISPLAY \"NE\".",
+                "    IF F = \"4K\" DISPLAY \"EQ\" ELSE DISPLAY \"NE\".",
+                "    STOP RUN.",
+            ],
+        )
+        .unwrap();
+        assert_eq!(out, "EQ\nEQ\nEQ\n");
+    }
+
+    #[test]
+    fn mixed_signed_zero_magnitude_compares_positive() {
+        // COBOL has no negative zero: -1000 truncated into PIC S9(3) stores an
+        // all-zero POSITIVE slot whose overpunched image is "00{" (units 0, positive),
+        // so `IF S = "00{"` is TRUE — no reintroduced sign-of-zero divergence.
+        let out = run_ws(
+            &["01  A  PIC S9(4) VALUE -1000.", "01  S  PIC S9(3)."],
+            &[
+                "    MOVE A TO S.",
+                "    IF S = \"00{\" DISPLAY \"EQ\" ELSE DISPLAY \"NE\".",
+                "    STOP RUN.",
+            ],
+        )
+        .unwrap();
+        assert_eq!(out, "EQ\n");
+    }
+
+    #[test]
+    fn mixed_numeric_literal_vs_alphanumeric_is_deferred() {
+        // A numeric LITERAL against an alphanumeric operand is a different pairing,
+        // still out of scope on both engines.
         let err = run_ws(
-            &["01  S  PIC S9(3) VALUE 42."],
-            &["    IF S = SPACE DISPLAY \"Y\".", "    STOP RUN."],
+            &["01  W  PIC X(3) VALUE \"042\"."],
+            &["    IF 42 = W DISPLAY \"Y\".", "    STOP RUN."],
         )
         .unwrap_err();
         assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
