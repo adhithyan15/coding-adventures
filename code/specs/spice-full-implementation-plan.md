@@ -33,16 +33,16 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language BJT forward excess phase.
+1. Cross-language BJT forward transit-time bias coefficient.
    - Status: current PR completion candidate.
-   - Add Berkeley BJT `PTF` model-card support in Rust, Python, and TypeScript,
-     defaulting to zero so existing AC results remain unchanged.
-   - Rotate forward AC transconductance by the configured excess phase at
-     `1 / (2*pi*TF)` while preserving `TF` diffusion capacitance and the
-     complete BJT model through subcircuits.
-   - Extend the supported-parameter coverage gate from 116 to 118 canonical
-     rows and lock model-card behavior, validation, hierarchy, and AC phase in
-     all engines.
+   - Add Berkeley BJT `XTF` model-card support in Rust, Python, and TypeScript,
+     defaulting to zero so existing AC and transient results remain unchanged.
+   - Scale forward diffusion capacitance and transient base-emitter stored
+     charge by `TF * (1 + XTF)` while preserving the ideal `TF` basis for
+     `PTF` excess phase and the complete BJT model through subcircuits.
+   - Extend the supported-parameter coverage gate from 118 to 120 canonical
+     rows and lock model-card behavior, validation, hierarchy, AC loading, and
+     transient stored-charge behavior in all engines.
 
 ## Completed Slices
 
@@ -3134,6 +3134,14 @@ the Rust, Python, and TypeScript surfaces together.
      `KF * abs(Ib)^AF / frequency`.
    - Hierarchical subcircuit expansion preserves the complete BJT model, and
      the supported-parameter release gate now covers 116 canonical rows.
+
+236. Cross-language BJT forward excess phase.
+   - Status: completed in PR 8828.
+   - Rust, Python, and TypeScript BJT model cards now accept `PTF`, default it
+     to zero, and rotate forward AC transconductance by the configured excess
+     phase at `1 / (2*pi*TF)`.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 118 canonical rows.
 
 ## Backlog
 

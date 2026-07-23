@@ -689,7 +689,10 @@ fn transient_bjt_forward_bias_depletion_coefficient_shapes_both_junctions() {
 
 #[test]
 fn transient_bjt_forward_transit_time_holds_base_charge_on_turnoff() {
-    fn run(forward_transit_time: f64) -> Vec<TransientPoint> {
+    fn run(
+        forward_transit_time: f64,
+        forward_transit_time_bias_coefficient: f64,
+    ) -> Vec<TransientPoint> {
         let mut circuit = Circuit::new();
         circuit.add(Element::VoltageSource(VoltageSource::new(
             "Vcc",
@@ -711,7 +714,7 @@ fn transient_bjt_forward_transit_time_holds_base_charge_on_turnoff() {
         circuit.add(Element::Resistor(Resistor::new(
             "Rshunt", "base", "0", 1.0e12,
         )));
-        circuit.add(Element::Bjt(Bjt::with_model(
+        let mut transistor = Bjt::with_model(
             "Q1",
             "collector",
             "base",
@@ -724,12 +727,15 @@ fn transient_bjt_forward_transit_time_holds_base_charge_on_turnoff() {
             0.0,
             forward_transit_time,
             0.0,
-        )));
+        );
+        transistor.forward_transit_time_bias_coefficient = forward_transit_time_bias_coefficient;
+        circuit.add(Element::Bjt(transistor));
         transient(&circuit, 1.0e-9, 5.0e-9).unwrap()
     }
 
-    let no_storage = run(0.0);
-    let stored = run(1.0e-9);
+    let no_storage = run(0.0, 0.0);
+    let stored = run(1.0e-9, 0.0);
+    let bias_scaled = run(1.0e-9, 9.0);
     let no_storage_first = no_storage[0].voltage("base").unwrap();
     let stored_first = stored[0].voltage("base").unwrap();
 
@@ -742,6 +748,15 @@ fn transient_bjt_forward_transit_time_holds_base_charge_on_turnoff() {
             .unwrap()
             < stored_first
     );
+    let bias_scaled_last = bias_scaled
+        .last()
+        .and_then(|point| point.voltage("base"))
+        .unwrap();
+    let stored_last = stored
+        .last()
+        .and_then(|point| point.voltage("base"))
+        .unwrap();
+    assert!((bias_scaled_last - stored_last).abs() > 1.0e-12);
 }
 
 #[test]

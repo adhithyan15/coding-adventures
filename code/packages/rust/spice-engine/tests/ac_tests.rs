@@ -869,6 +869,46 @@ fn ac_bjt_forward_excess_phase_rotates_transconductance() {
 }
 
 #[test]
+fn ac_bjt_forward_transit_time_bias_coefficient_scales_diffusion_capacitance() {
+    fn base_amplitude(coefficient: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vac", "in", "0", 0.0, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "base", 1_000.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new("Rc", "col", "0", 1_000.0)));
+        let mut transistor = Bjt::with_model(
+            "Q1",
+            "col",
+            "base",
+            "0",
+            BjtPolarity::Npn,
+            25.85e-6,
+            100.0,
+            0.02585,
+            0.0,
+            0.0,
+            1.0e-6,
+            0.0,
+        );
+        transistor.forward_transit_time_bias_coefficient = coefficient;
+        circuit.add(Element::Bjt(transistor));
+
+        ac_sweep(&circuit, 100_000.0, 100_000.0, 1).unwrap()[0]
+            .voltage("base")
+            .unwrap()
+            .abs()
+    }
+
+    let nominal = base_amplitude(0.0);
+    let bias_scaled = base_amplitude(9.0);
+
+    assert!(bias_scaled < nominal / 5.0);
+}
+
+#[test]
 fn ac_bjt_uses_reverse_transit_time_as_base_collector_diffusion_capacitance() {
     fn base_amplitude(reverse_transit_time: f64) -> f64 {
         let mut circuit = Circuit::new();
