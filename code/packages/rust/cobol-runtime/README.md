@@ -50,14 +50,19 @@ counter; INSPECT adds, it does not clear the counter first); and `INSPECT source
 REPLACING ALL x BY y` (replace every occurrence of a single character `x` — a
 1-char literal or a `PIC X(1)` item — with a single character `y` in the
 alphanumeric source, **in place**, a per-position map that leaves the width
-unchanged). Anything not yet
+unchanged); and the **combined** `INSPECT source TALLYING counter FOR ALL delim
+REPLACING ALL x BY y` (one `INSPECT`, both phrases — per ISO it runs as
+tally-then-replace: count `delim` in the ORIGINAL source into `counter` FIRST,
+then replace `x` with `y`, so a shared `delim == x` is counted before it is
+substituted). Anything not yet
 modelled (the explicit
 `SIGN` clause with `SEPARATE`/`LEADING`, editing pictures, `COMP`,
 `PERFORM … WITH TEST AFTER`/inline, `GO TO … DEPENDING`, `STRING` with a real
 delimiter / `WITH POINTER` / `ON OVERFLOW`, `UNSTRING` with a multi-character
 delimiter / `WITH POINTER` / `ON OVERFLOW`, `INSPECT` with a `LEADING`/
 `CHARACTERS` tally, `BEFORE`/`AFTER` phrases, `REPLACING CHARACTERS`/`LEADING`/
-`FIRST`, several replace items, or the combined `TALLYING … REPLACING`, tables,
+`FIRST`, several replace items, or a combined statement whose `TALLYING` or
+`REPLACING` half is itself a deferred sub-form, tables,
 files,
 and every other verb) returns a descriptive `RuntimeError` — never wrong output.
 See PL08 for the roadmap toward full COBOL and later standards.

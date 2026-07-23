@@ -1,5 +1,37 @@
 # Changelog
 
+## 0.28.0 — combined `INSPECT … TALLYING … REPLACING` (one statement)
+
+- Added `Stmt::InspectTallyReplace { source, counter, delim, search, replace }`
+  and its executor `exec_inspect_tally_replace`. One `INSPECT` carrying BOTH
+  phrases: `INSPECT source TALLYING counter FOR ALL delim REPLACING ALL x BY y`.
+- Semantics (oracle = source of truth): per ISO the statement runs "as though an
+  `INSPECT TALLYING` were specified, followed by an `INSPECT REPLACING`". So the
+  order is fixed — count `delim` in the **ORIGINAL** source and ADD to `counter`
+  FIRST, THEN replace every `x` with `y`. When `delim == x` this ordering is
+  observable: the tally must count every pre-replacement occurrence (e.g.
+  `MISSISSIPPI` TALLYING `S` gives 4, then `S`→`Z`), which running the count after
+  the replace would miss.
+- Refactor: the source alphanumeric check, the TALLYING count-and-add, and the
+  REPLACING map were factored out of `exec_inspect`/`exec_inspect_replacing` into
+  `inspect_alnum_source`, `inspect_tally`, and `inspect_replace` so all three
+  execs (lone TALLYING, lone REPLACING, combined) share the exact same logic and
+  the combined case composes them in order — tally on the current storage, then
+  replace in place.
+- The `inspect_stmt` reader now matches on `(has_tally, has_repl)`: the combined
+  case extracts both phrases (each rejecting its own later-rung forms) and builds
+  the new variant; the two `has_tally && has_repl` rejects (reader and exec) are
+  gone. No grammar/lexer/parser change was needed — the grammar already accepted
+  `inspect_tallying [inspect_replacing]`.
+- Later rungs (clean `RuntimeError::Unsupported`): a combined statement whose
+  TALLYING half is `LEADING`/`CHARACTERS`/several counters or FOR phrases/a
+  region, or whose REPLACING half is `CHARACTERS`/`LEADING`/`FIRST`/several
+  items/a region — the combined gate does not admit the deferred sub-forms.
+- Tests: the former "combined is a later rung" assertion became a positive check
+  (combined counts then replaces), plus a shared-char ordering test
+  (`MISSISSIPPI`, `S` counted then replaced) and a still-deferred combined
+  (`FOR LEADING … REPLACING …`) reject.
+
 ## 0.27.0 — `INSPECT … REPLACING ALL … BY …` (first rung)
 
 - Added `Stmt::InspectReplacing { source, search, replace }` and its executor

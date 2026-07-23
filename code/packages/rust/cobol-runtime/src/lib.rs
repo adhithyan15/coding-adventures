@@ -1918,16 +1918,55 @@ mod tests {
         .unwrap_err();
         assert!(matches!(many, RuntimeError::Unsupported(_)), "got {many:?}");
 
-        // … and the combined TALLYING … REPLACING in one INSPECT is a later rung.
+        // … but the combined TALLYING … REPLACING in one INSPECT is now SUPPORTED:
+        // it counts "A" (3 in "ABABA") into C, THEN replaces "B" with "X". The two
+        // phrases touch different characters, so ordering is not yet observable
+        // here (that is exercised by `inspect_tally_replace_*` below).
         let combined = run_cobol(&wrap(
             &["01  S  PIC X(5) VALUE \"ABABA\".", "01  C  PIC 9(3) VALUE 0."],
             &[
                 "INSPECT S TALLYING C FOR ALL \"A\" REPLACING ALL \"B\" BY \"X\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(combined, "003\nAXAXA\n");
+
+        // A combined statement whose TALLYING half is itself a later rung (FOR
+        // LEADING) still rejects — the combined gate does not smuggle in the
+        // deferred sub-forms.
+        let combined_lead = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"AABBB\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR LEADING \"A\" REPLACING ALL \"B\" BY \"X\".",
                 "STOP RUN.",
             ],
         ))
         .unwrap_err();
-        assert!(matches!(combined, RuntimeError::Unsupported(_)), "got {combined:?}");
+        assert!(matches!(combined_lead, RuntimeError::Unsupported(_)), "got {combined_lead:?}");
+    }
+
+    /// The COMBINED `INSPECT … TALLYING … REPLACING` runs tally-then-replace: the
+    /// count sees the ORIGINAL bytes, then the replace overwrites the source. When
+    /// the tallied delimiter and the replaced search character are the SAME, the
+    /// tally must still count every original occurrence.
+    #[test]
+    fn inspect_tally_replace_shared_char_counts_before_replacing() {
+        // "MISSISSIPPI": TALLYING counts "S" (4), THEN REPLACING S→Z. If the tally
+        // ran after the replace it would see zero "S" left — the 4 proves ordering.
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(11) VALUE \"MISSISSIPPI\".", "01  C  PIC 9(3) VALUE 0."],
+            &[
+                "INSPECT S TALLYING C FOR ALL \"S\" REPLACING ALL \"S\" BY \"Z\".",
+                "DISPLAY C.",
+                "DISPLAY S.",
+                "STOP RUN.",
+            ],
+        ))
+        .unwrap();
+        assert_eq!(out, "004\nMIZZIZZIPPI\n");
     }
 
     #[test]

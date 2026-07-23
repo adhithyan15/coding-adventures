@@ -358,6 +358,9 @@ impl Machine {
             Stmt::InspectReplacing { source, search, replace } => {
                 self.exec_inspect_replacing(source, search, replace)?
             }
+            Stmt::InspectTallyReplace { source, counter, delim, search, replace } => {
+                return self.exec_inspect_tally_replace(source, counter, delim, search, replace)
+            }
         }
         Ok(Flow::Normal)
     }
@@ -618,25 +621,41 @@ impl Machine {
         counter: &str,
         delim: &Operand,
     ) -> Result<Flow, RuntimeError> {
-        // The source must be an alphanumeric item; read its stored characters.
+        let sidx = self.inspect_alnum_source(source)?;
+        self.inspect_tally(sidx, counter, delim)
+    }
+
+    /// The source of any INSPECT must resolve to an alphanumeric item. Returns its
+    /// item index (a numeric or group source is a clean later-rung error). Shared
+    /// by the lone TALLYING, lone REPLACING, and combined execs so all three
+    /// diagnose an unsupported source identically.
+    fn inspect_alnum_source(&self, source: &str) -> Result<usize, RuntimeError> {
         let sidx = *self
             .by_name
             .get(source)
             .ok_or_else(|| RuntimeError::UndefinedName(source.to_string()))?;
         match &self.items[sidx].picture {
-            Some(p) if p.is_numeric() => {
-                return Err(RuntimeError::Unsupported(
-                    "INSPECT of a numeric source is a later rung".into(),
-                ))
-            }
-            Some(_) => {}
-            None => {
-                return Err(RuntimeError::Unsupported(
-                    "INSPECT of a group source is a later rung".into(),
-                ))
-            }
+            Some(p) if p.is_numeric() => Err(RuntimeError::Unsupported(
+                "INSPECT of a numeric source is a later rung".into(),
+            )),
+            Some(_) => Ok(sidx),
+            None => Err(RuntimeError::Unsupported(
+                "INSPECT of a group source is a later rung".into(),
+            )),
         }
+    }
 
+    /// The TALLYING half: count occurrences of the single-character `delim` in the
+    /// source's CURRENT storage and ADD them to `counter`. Factored out of
+    /// [`Self::exec_inspect`] so the combined tally-then-replace exec can run it
+    /// FIRST (on the pre-replacement bytes) and share the counter validation and
+    /// store path. Does not mutate the source.
+    fn inspect_tally(
+        &mut self,
+        sidx: usize,
+        counter: &str,
+        delim: &Operand,
+    ) -> Result<Flow, RuntimeError> {
         // The counter must be an UNSIGNED INTEGER numeric item (`PIC 9(n)`): a
         // fractional (`V`) or signed (`S`) counter is a later rung.
         let cidx = *self
@@ -685,25 +704,48 @@ impl Machine {
         search: &Operand,
         replace: &Operand,
     ) -> Result<(), RuntimeError> {
-        // The source must be an alphanumeric item.
-        let sidx = *self
-            .by_name
-            .get(source)
-            .ok_or_else(|| RuntimeError::UndefinedName(source.to_string()))?;
-        match &self.items[sidx].picture {
-            Some(p) if p.is_numeric() => {
-                return Err(RuntimeError::Unsupported(
-                    "INSPECT of a numeric source is a later rung".into(),
-                ))
-            }
-            Some(_) => {}
-            None => {
-                return Err(RuntimeError::Unsupported(
-                    "INSPECT of a group source is a later rung".into(),
-                ))
-            }
-        }
+        let sidx = self.inspect_alnum_source(source)?;
+        self.inspect_replace(sidx, search, replace)
+    }
 
+    /// `INSPECT source TALLYING counter FOR ALL delim REPLACING ALL search BY
+    /// replace` — one INSPECT carrying BOTH phrases. Per ISO this runs "as though
+    /// an INSPECT TALLYING were specified, followed by an INSPECT REPLACING", so
+    /// the order is fixed: FIRST [`Self::inspect_tally`] counts `delim` in the
+    /// ORIGINAL (pre-replacement) storage and adds to `counter`, THEN
+    /// [`Self::inspect_replace`] maps `search`→`replace` in the source. Running
+    /// tally before replace is what makes `delim == search` correct — the count
+    /// sees the bytes as they were, and only afterwards are they overwritten. The
+    /// `cobol-iir-compiler` composes the same two lowerings in the same order, so
+    /// the compiled program matches this reference byte-for-byte.
+    fn exec_inspect_tally_replace(
+        &mut self,
+        source: &str,
+        counter: &str,
+        delim: &Operand,
+        search: &Operand,
+        replace: &Operand,
+    ) -> Result<Flow, RuntimeError> {
+        let sidx = self.inspect_alnum_source(source)?;
+        // Tally FIRST, on the current (original) storage — it does not mutate the
+        // source, so the subsequent replace still sees the original bytes too.
+        self.inspect_tally(sidx, counter, delim)?;
+        // THEN replace, overwriting the source in place.
+        self.inspect_replace(sidx, search, replace)?;
+        Ok(Flow::Normal)
+    }
+
+    /// The REPLACING half: map every `search` character to `replace` in the
+    /// source's storage, in place (same width). Factored out of
+    /// [`Self::exec_inspect_replacing`] so the combined exec can run it AFTER the
+    /// tally. A numeric/group source is rejected by the caller via
+    /// [`Self::inspect_alnum_source`].
+    fn inspect_replace(
+        &mut self,
+        sidx: usize,
+        search: &Operand,
+        replace: &Operand,
+    ) -> Result<(), RuntimeError> {
         // The single search and replacement characters (shared validation with
         // UNSTRING/TALLYING: a multi-character/figurative/wider/numeric operand is
         // a later rung). Read both BEFORE mutating so an invalid replacement does

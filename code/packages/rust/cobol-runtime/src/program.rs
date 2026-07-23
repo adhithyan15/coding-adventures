@@ -164,10 +164,27 @@ pub enum Stmt {
     /// map (`source := source with each search→replace`). Each of `search` and
     /// `replace` is a 1-char literal or a `PIC X(1)` item. `REPLACING
     /// CHARACTERS`/`LEADING`/`FIRST`, `BEFORE`/`AFTER` regions, several replace
-    /// items, a combined `TALLYING … REPLACING`, and a multi-character/
-    /// figurative/wider search or replacement or a numeric/group source are
-    /// later rungs.
+    /// items, and a multi-character/figurative/wider search or replacement or a
+    /// numeric/group source are later rungs.
     InspectReplacing { source: String, search: Operand, replace: Operand },
+    /// `INSPECT source TALLYING counter FOR ALL delim REPLACING ALL search BY
+    /// replace` — one INSPECT carrying BOTH phrases. Per ISO this executes "as
+    /// though an INSPECT TALLYING were specified, followed by an INSPECT
+    /// REPLACING": FIRST count occurrences of `delim` in the ORIGINAL source and
+    /// **ADD** them to `counter`, THEN replace every `search` with `replace` in
+    /// the source. The tally-first ordering matters when `delim == search`: the
+    /// count must see the pre-replacement bytes. Each of `delim`/`search`/
+    /// `replace` is a single character; the same single-form restrictions as the
+    /// lone phrases apply (LEADING/CHARACTERS/FIRST, BEFORE/AFTER, multiple
+    /// counters/FOR/replace items, multi-char/figurative/wider operands, and a
+    /// numeric/group source or non-integer counter are later rungs).
+    InspectTallyReplace {
+        source: String,
+        counter: String,
+        delim: Operand,
+        search: Operand,
+        replace: Operand,
+    },
     StopRun,
 }
 
@@ -786,16 +803,11 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
             // REPLACING clause, or both together (LEADING/CHARACTERS, BEFORE/AFTER
             // regions, several counters/replace items, …) — so the forms this rung
             // does not model reject as a friendly Unsupported here, not a parse
-            // error. This rung supports a LONE `TALLYING … FOR ALL` OR a LONE
-            // `REPLACING ALL … BY …`; the combined `TALLYING … REPLACING` in one
-            // INSPECT is a later rung.
+            // error. This rung supports a LONE `TALLYING … FOR ALL`, a LONE
+            // `REPLACING ALL … BY …`, or the COMBINED `TALLYING … REPLACING` in one
+            // INSPECT (which the standard executes as tally-then-replace).
             let has_tally = child_node(verb, "inspect_tallying").is_some();
             let has_repl = child_node(verb, "inspect_replacing").is_some();
-            if has_tally && has_repl {
-                return Err(RuntimeError::Unsupported(
-                    "combined INSPECT … TALLYING … REPLACING is a later rung".into(),
-                ));
-            }
             // The source is the first (and only top-level) `operand`; a literal or
             // reference-modified source is a later rung (its category is checked at
             // exec time). Shared by both the TALLYING and REPLACING forms.
@@ -814,12 +826,25 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                     ))
                 }
             };
-            if has_repl {
-                let (search, replace) = read_inspect_replacing_all(verb)?;
-                Ok(Stmt::InspectReplacing { source, search, replace })
-            } else {
-                let (counter, delim) = read_inspect_tally_all(verb)?;
-                Ok(Stmt::Inspect { source, counter, delim })
+            match (has_tally, has_repl) {
+                // Combined: tally-then-replace in one statement. Both phrases are
+                // extracted here (each rejecting its own later-rung forms) and the
+                // ordering is enforced at exec time.
+                (true, true) => {
+                    let (counter, delim) = read_inspect_tally_all(verb)?;
+                    let (search, replace) = read_inspect_replacing_all(verb)?;
+                    Ok(Stmt::InspectTallyReplace { source, counter, delim, search, replace })
+                }
+                (false, true) => {
+                    let (search, replace) = read_inspect_replacing_all(verb)?;
+                    Ok(Stmt::InspectReplacing { source, search, replace })
+                }
+                // A lone TALLYING (or neither phrase, which `read_inspect_tally_all`
+                // rejects as a missing TALLYING clause).
+                _ => {
+                    let (counter, delim) = read_inspect_tally_all(verb)?;
+                    Ok(Stmt::Inspect { source, counter, delim })
+                }
             }
         }
         other => Err(RuntimeError::Unsupported(format!("the {} verb", verb_name(other)))),
