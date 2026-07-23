@@ -456,6 +456,7 @@ fn clone_subckt_element(
             expanded.nominal_temperature_kelvin = element.nominal_temperature_kelvin;
             expanded.flicker_noise_coefficient = element.flicker_noise_coefficient;
             expanded.flicker_noise_exponent = element.flicker_noise_exponent;
+            expanded.forward_excess_phase_degrees = element.forward_excess_phase_degrees;
             Element::Bjt(expanded)
         }
         Element::Mosfet(element) => Element::Mosfet(Mosfet::with_model(
@@ -2900,6 +2901,7 @@ pub struct Bjt {
     pub nominal_temperature_kelvin: Option<f64>,
     pub flicker_noise_coefficient: f64,
     pub flicker_noise_exponent: f64,
+    pub forward_excess_phase_degrees: f64,
 }
 
 impl Bjt {
@@ -3365,6 +3367,7 @@ impl Bjt {
             nominal_temperature_kelvin: None,
             flicker_noise_coefficient: 0.0,
             flicker_noise_exponent: 1.0,
+            forward_excess_phase_degrees: 0.0,
         }
     }
 }
@@ -3755,8 +3758,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     usize,
 )] = &[
     (ModelCardKind::Diode, 12, 18, 5, 3),
-    (ModelCardKind::Npn, 29, 46, 13, 4),
-    (ModelCardKind::Pnp, 29, 46, 13, 4),
+    (ModelCardKind::Npn, 30, 47, 13, 4),
+    (ModelCardKind::Pnp, 30, 47, 13, 4),
     (ModelCardKind::Njf, 5, 11, 5, 3),
     (ModelCardKind::Pjf, 5, 11, 5, 3),
     (ModelCardKind::Nmos, 18, 25, 6, 3),
@@ -3811,6 +3814,7 @@ const BJT_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("T_NOM", "TNOM"),
     ("KF", "KF"),
     ("AF", "AF"),
+    ("PTF", "PTF"),
     ("ISE", "ISE"),
     ("NE", "NE"),
     ("ISC", "ISC"),
@@ -4507,6 +4511,7 @@ pub fn bjt_from_model_card(
         .map(|temperature_celsius| temperature_celsius + 273.15);
     bjt.flicker_noise_coefficient = model_card_value(model, "KF", 0.0);
     bjt.flicker_noise_exponent = model_card_value(model, "AF", 1.0);
+    bjt.forward_excess_phase_degrees = model_card_value(model, "PTF", 0.0);
     Ok(bjt)
 }
 
@@ -22996,9 +23001,15 @@ fn stamp_ac_bjt_small_signal(
     } else {
         base_collector_current / bjt.forward_early_voltage / charge_factor
     };
-    let gm = Complex::new(forward_gm, 0.0);
+    let excess_phase =
+        omega * bjt.forward_transit_time * bjt.forward_excess_phase_degrees * std::f64::consts::PI
+            / 180.0;
+    let gm = Complex::new(
+        forward_gm * excess_phase.cos(),
+        -forward_gm * excess_phase.sin(),
+    );
     let reverse_gm = bjt.saturation_current / reverse_thermal_voltage * reverse_exponent.exp();
-    let diffusion_capacitance = bjt.forward_transit_time * gm.real;
+    let diffusion_capacitance = bjt.forward_transit_time * forward_gm;
     let reverse_diffusion_capacitance = bjt.reverse_transit_time * reverse_gm;
     let (_, leakage_conductance) = bjt_base_emitter_leakage(bjt, junction_voltage);
     let (_, collector_leakage_conductance) =
@@ -24053,6 +24064,12 @@ fn validate_bjt(bjt: &Bjt) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: bjt.name.clone(),
             reason: "flicker noise exponent must be finite and non-negative".to_string(),
+        });
+    }
+    if !bjt.forward_excess_phase_degrees.is_finite() || bjt.forward_excess_phase_degrees < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "forward excess phase must be finite and non-negative".to_string(),
         });
     }
     if !bjt.base_emitter_leakage_saturation_current.is_finite()

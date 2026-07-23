@@ -575,6 +575,29 @@ describe("acSweep", () => {
     expect(withTransitTime).toBeLessThan(withoutTransitTime / 100.0);
   });
 
+  it("rotates BJT transconductance by the forward excess phase", () => {
+    function collectorVoltage(forwardExcessPhaseDegrees: number): Complex {
+      const forwardTransitTime = 1.0e-6;
+      const frequency = 1.0 / (TWO_PI_FOR_TEST * forwardTransitTime);
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "base", "0", 0.0, 1.0));
+      circuit.add(resistor("Rc", "col", "0", 1.0));
+      circuit.add({
+        ...bjt("Q1", "col", "base", "0", "NPN", 25.85e-6, 100.0, 0.02585, 0.0, 0.0, forwardTransitTime),
+        forwardExcessPhaseDegrees,
+      });
+      return acSweep(circuit, frequency, frequency, 1)[0].voltage("col")!;
+    }
+
+    const withoutExcessPhase = collectorVoltage(0.0);
+    const withExcessPhase = collectorVoltage(90.0);
+
+    expect(withoutExcessPhase.real).toBeLessThan(-0.0009);
+    expect(Math.abs(withoutExcessPhase.imag)).toBeLessThan(1.0e-9);
+    expect(withExcessPhase.imag).toBeGreaterThan(0.0009);
+    expect(Math.abs(withExcessPhase.real)).toBeLessThan(1.0e-9);
+  });
+
   it("uses BJT reverse transit time as base-collector diffusion capacitance in AC analysis", () => {
     function baseAmplitude(reverseTransitTime: number): number {
       const circuit = new Circuit();

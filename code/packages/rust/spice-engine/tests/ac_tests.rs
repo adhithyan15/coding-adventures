@@ -828,6 +828,47 @@ fn ac_bjt_uses_forward_transit_time_as_diffusion_capacitance() {
 }
 
 #[test]
+fn ac_bjt_forward_excess_phase_rotates_transconductance() {
+    fn collector_voltage(forward_excess_phase_degrees: f64) -> Complex {
+        let forward_transit_time = 1.0e-6;
+        let frequency = 1.0 / (2.0 * std::f64::consts::PI * forward_transit_time);
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vac", "base", "0", 0.0, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new("Rc", "col", "0", 1.0)));
+        let mut transistor = Bjt::with_model(
+            "Q1",
+            "col",
+            "base",
+            "0",
+            BjtPolarity::Npn,
+            25.85e-6,
+            100.0,
+            0.02585,
+            0.0,
+            0.0,
+            forward_transit_time,
+            0.0,
+        );
+        transistor.forward_excess_phase_degrees = forward_excess_phase_degrees;
+        circuit.add(Element::Bjt(transistor));
+
+        ac_sweep(&circuit, frequency, frequency, 1).unwrap()[0]
+            .voltage("col")
+            .unwrap()
+    }
+
+    let without_excess_phase = collector_voltage(0.0);
+    let with_excess_phase = collector_voltage(90.0);
+
+    assert!(without_excess_phase.real < -0.0009);
+    assert!(without_excess_phase.imag.abs() < 1.0e-9);
+    assert!(with_excess_phase.imag > 0.0009);
+    assert!(with_excess_phase.real.abs() < 1.0e-9);
+}
+
+#[test]
 fn ac_bjt_uses_reverse_transit_time_as_base_collector_diffusion_capacitance() {
     fn base_amplitude(reverse_transit_time: f64) -> f64 {
         let mut circuit = Circuit::new();

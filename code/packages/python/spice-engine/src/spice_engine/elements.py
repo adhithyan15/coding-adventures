@@ -612,6 +612,8 @@ class BJT:
         Flicker-noise coefficient (default 0.0, disabled).
     Af:
         Flicker-noise base-current exponent (default 1.0).
+    Ptf:
+        Excess phase at ``1 / (2*pi*Tf)`` in degrees (default 0.0).
     """
 
     name: str
@@ -648,6 +650,7 @@ class BJT:
     Tnom: float | None = None  # model nominal temperature (K); None inherits
     Kf: float = 0.0            # flicker-noise coefficient; 0 disables
     Af: float = 1.0            # flicker-noise base-current exponent
+    Ptf: float = 0.0           # excess phase at 1/(2*pi*Tf), degrees
 
 
 # ---------------------------------------------------------------------------

@@ -33,16 +33,16 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language BJT flicker-noise exponent.
+1. Cross-language BJT forward excess phase.
    - Status: current PR completion candidate.
-   - Add Berkeley BJT `AF` model-card support in Rust, Python, and TypeScript,
-     defaulting to one so existing `KF` noise results remain unchanged.
-   - Apply the exponent to base-current flicker noise as
-     `KF * abs(Ib)^AF / frequency` while preserving the complete BJT model
-     through subcircuits.
-   - Extend the supported-parameter coverage gate from 114 to 116 canonical
-     rows and lock model-card behavior, validation, hierarchy, and noise
-     scaling in all engines.
+   - Add Berkeley BJT `PTF` model-card support in Rust, Python, and TypeScript,
+     defaulting to zero so existing AC results remain unchanged.
+   - Rotate forward AC transconductance by the configured excess phase at
+     `1 / (2*pi*TF)` while preserving `TF` diffusion capacitance and the
+     complete BJT model through subcircuits.
+   - Extend the supported-parameter coverage gate from 116 to 118 canonical
+     rows and lock model-card behavior, validation, hierarchy, and AC phase in
+     all engines.
 
 ## Completed Slices
 
@@ -3126,6 +3126,14 @@ the Rust, Python, and TypeScript surfaces together.
      Berkeley-default `AF=1` inverse-frequency slope.
    - Hierarchical subcircuit expansion preserves the complete BJT model, and
      the supported-parameter release gate now covers 114 canonical rows.
+
+235. Cross-language BJT flicker-noise exponent.
+   - Status: completed in PR 8815.
+   - Rust, Python, and TypeScript BJT model cards now accept `AF`, default it
+     to one, and apply it to base-current flicker noise as
+     `KF * abs(Ib)^AF / frequency`.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 116 canonical rows.
 
 ## Backlog
 
