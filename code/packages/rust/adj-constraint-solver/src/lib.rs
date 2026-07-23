@@ -351,10 +351,12 @@ fn expr_to_pred(e: &ComputeExpr) -> Option<Predicate> {
                             coef: c,
                             term: Box::new(pb),
                         })
-                    } else { int_const(b).map(|c| Predicate::Mul {
+                    } else {
+                        int_const(b).map(|c| Predicate::Mul {
                             coef: c,
                             term: Box::new(pa),
-                        }) }
+                        })
+                    }
                 }
                 _ => None, // division / aggregation: out of LIA scope
             }
@@ -371,6 +373,8 @@ fn expr_to_pred(e: &ComputeExpr) -> Option<Predicate> {
         ComputeExpr::ToScientific { .. } => None,
         // `to_percent(x, places)` likewise renders a number to a boundary string (NUM-6c).
         ComputeExpr::ToPercent { .. } => None,
+        // `to_currency(x, code, places)` likewise renders a number to a boundary string (NUM-6c).
+        ComputeExpr::ToCurrency { .. } => None,
     }
 }
 
@@ -669,6 +673,8 @@ fn linearize(e: &ComputeExpr) -> Option<LinForm> {
         ComputeExpr::ToScientific { .. } => None,
         // `to_percent(x, places)` likewise renders a number to a boundary string (NUM-6c).
         ComputeExpr::ToPercent { .. } => None,
+        // `to_currency(x, code, places)` likewise renders a number to a boundary string (NUM-6c).
+        ComputeExpr::ToCurrency { .. } => None,
     }
 }
 
@@ -2029,11 +2035,18 @@ fn substitute_observed(
             mode: *mode,
             expr: Box::new(substitute_observed(expr, variables, kb)),
         },
-        ComputeExpr::ToPercent {
+        ComputeExpr::ToPercent { places, mode, expr } => ComputeExpr::ToPercent {
+            places: *places,
+            mode: *mode,
+            expr: Box::new(substitute_observed(expr, variables, kb)),
+        },
+        ComputeExpr::ToCurrency {
+            code,
             places,
             mode,
             expr,
-        } => ComputeExpr::ToPercent {
+        } => ComputeExpr::ToCurrency {
+            code: code.clone(),
             places: *places,
             mode: *mode,
             expr: Box::new(substitute_observed(expr, variables, kb)),
@@ -2131,6 +2144,8 @@ fn poly_of(e: &ComputeExpr, x: &str) -> Option<Poly> {
         ComputeExpr::ToScientific { .. } => None,
         // `to_percent(x, places)` likewise renders a number to a boundary string (NUM-6c).
         ComputeExpr::ToPercent { .. } => None,
+        // `to_currency(x, code, places)` likewise renders a number to a boundary string (NUM-6c).
+        ComputeExpr::ToCurrency { .. } => None,
     }
 }
 
@@ -2344,6 +2359,8 @@ fn expr_to_ir(e: &ComputeExpr) -> Option<IRNode> {
         ComputeExpr::ToScientific { .. } => None,
         // `to_percent(x, places)` likewise renders a number to a boundary string (NUM-6c).
         ComputeExpr::ToPercent { .. } => None,
+        // `to_currency(x, code, places)` likewise renders a number to a boundary string (NUM-6c).
+        ComputeExpr::ToCurrency { .. } => None,
     }
 }
 
@@ -2371,6 +2388,8 @@ fn is_constant_expr(e: &ComputeExpr) -> bool {
         ComputeExpr::ToScientific { expr, .. } => is_constant_expr(expr),
         // `to_percent(c, n)` is likewise constant iff its operand is.
         ComputeExpr::ToPercent { expr, .. } => is_constant_expr(expr),
+        // `to_currency(c, code, n)` is likewise constant iff its operand is.
+        ComputeExpr::ToCurrency { expr, .. } => is_constant_expr(expr),
     }
 }
 

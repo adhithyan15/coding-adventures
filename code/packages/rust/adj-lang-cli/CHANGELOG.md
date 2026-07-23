@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.22.0] — 2026-07-23 — NUM-6c: render `to_currency` in the audit trail
+
+The derivation-tree renderer gains a `DerivationNode::ToCurrency` arm (NUM-6c): a
+`{"node":"to_currency","code":"USD","places":n,"mode":"half_even","rendered":"USD 33.33","value":…,"operand":{…}}`
+object exposing the currency code, the decimal-place count, the stated mode, the rendered
+`CODE d.dd` string, the narrowed numeric value (the rounded amount), and the operand subtree —
+everything `adj-verify` needs to re-render from the exact source. Adds an end-to-end test driving
+`to_currency(x, code [, places])` through the built CLI: exact rendering, trailing-zero padding,
+`0`-places (JPY), the optional-`places` default, and rejection of a negative place count and a
+non-identifier currency code.
+
 ## [0.21.0] — 2026-07-23 — NUM-6c: render `to_percent` in the audit trail
 
 The derivation-tree renderer gains a `DerivationNode::ToPercent` arm (NUM-6c): a

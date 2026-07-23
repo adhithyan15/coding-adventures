@@ -215,6 +215,27 @@ fn derivation_tree_json(
             jnum(*result),
             derivation_tree_json(operand, kb)
         ),
+        // A `to_currency(x, code, places)` rendering (NUM-6c): the audit exposes the currency
+        // code, the decimal-place count, the rounding mode, the `rendered` `CODE d.dd` string,
+        // the narrowed numeric `value` (the rounded amount), and the operand subtree — so a
+        // checker can re-round the operand's exact value and confirm the rendered form
+        // (ADJ-NUMERIC-SUBSTRATE §4.3).
+        D::ToCurrency {
+            code,
+            places,
+            mode,
+            rendered,
+            operand,
+            result,
+        } => format!(
+            "{{\"node\":\"to_currency\",\"code\":\"{}\",\"places\":{},\"mode\":\"{}\",\"rendered\":\"{}\",\"value\":{},\"operand\":{}}}",
+            esc(code),
+            places,
+            rounding_mode_name(*mode),
+            esc(rendered),
+            jnum(*result),
+            derivation_tree_json(operand, kb)
+        ),
     }
 }
 
