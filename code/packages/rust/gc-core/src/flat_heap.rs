@@ -63,8 +63,8 @@
 //! respectively.
 
 use crate::profile::{GcCycleStats, GcProfile};
-use std::alloc::{alloc_zeroed, dealloc, Layout};
-use std::collections::HashSet;
+use std::alloc::{alloc, alloc_zeroed, dealloc, Layout};
+use std::collections::{HashMap, HashSet};
 use std::ptr;
 
 /// Bytes of header prepended to every payload.  Chosen as 32 (not the natural
@@ -201,6 +201,70 @@ pub const INITIAL_THRESHOLD: usize = 1024 * 1024;
 /// doubling the threshold up to `usize::MAX` (which would disable the GC and let
 /// an untrusted program exhaust memory). Matches `twig_gc.c`'s `GC_MAX_THRESHOLD`.
 pub const MAX_THRESHOLD: usize = 256 * 1024 * 1024;
+
+/// A contiguous, 16-byte-aligned **bump arena** — the *to-space* a compacting
+/// collection evacuates movable survivors into (AOT00-T3 PR-3). One `alloc`'d block
+/// with a monotonically-advancing cursor; every [`Arena::bump`] rounds up to the
+/// object alignment, so a copied [`FlatHeader`] (and its payload at `header + 32`)
+/// lands 16-aligned exactly as [`FlatHeap::alloc`] guarantees. Owns its block and
+/// frees it on drop.
+// Consumed by `collect_compacting` in the next rung (PR-3b); exercised by tests now.
+#[allow(dead_code)]
+struct Arena {
+    /// Base of the owned allocation (16-aligned), or null for a zero-capacity arena.
+    base: *mut u8,
+    /// Bytes handed out so far (always a multiple of [`ALIGN`]).
+    top: usize,
+    /// Total capacity in bytes.
+    cap: usize,
+}
+
+#[allow(dead_code)] // methods land ahead of their `collect_compacting` consumer (PR-3b)
+impl Arena {
+    /// Allocate an arena of exactly `cap` bytes (rounded to a multiple of [`ALIGN`]).
+    /// A `cap` of `0` yields an empty arena that owns nothing (a collection with no
+    /// movable survivors). Returns `None` only on allocator failure or a `Layout`
+    /// error (a `cap` so large it can't be aligned).
+    fn with_capacity(cap: usize) -> Option<Arena> {
+        if cap == 0 {
+            return Some(Arena { base: ptr::null_mut(), top: 0, cap: 0 });
+        }
+        let layout = Layout::from_size_align(cap, ALIGN).ok()?;
+        // SAFETY: `layout` has non-zero size and a valid power-of-two alignment.
+        let base = unsafe { alloc(layout) };
+        if base.is_null() {
+            return None;
+        }
+        Some(Arena { base, top: 0, cap })
+    }
+
+    /// Reserve `n` bytes at the current 16-aligned cursor and return a pointer to
+    /// them, advancing the cursor by `align_up(n, ALIGN)`. Returns `None` if the
+    /// reservation would overrun the capacity (which never happens when the arena
+    /// was sized to the exact evacuation total). The returned pointer is 16-aligned.
+    fn bump(&mut self, n: usize) -> Option<*mut u8> {
+        // Round the request up to the object alignment so the *next* object also
+        // starts 16-aligned (the base and `top` are always 16-multiples).
+        let n16 = n.checked_add(ALIGN - 1)? & !(ALIGN - 1);
+        if self.top.checked_add(n16)? > self.cap {
+            return None;
+        }
+        // SAFETY: `top + n16 <= cap`, so `base + top` is within the allocation.
+        let p = unsafe { self.base.add(self.top) };
+        self.top += n16;
+        Some(p)
+    }
+}
+
+impl Drop for Arena {
+    fn drop(&mut self) {
+        if !self.base.is_null() {
+            // SAFETY: `base` came from `alloc` with this exact size + alignment.
+            let layout = Layout::from_size_align(self.cap, ALIGN).expect("arena layout");
+            unsafe { dealloc(self.base, layout) };
+        }
+    }
+}
 
 // SAFETY: `FlatHeap` holds raw pointers (`*mut FlatHeader`), which make it
 // `!Send` by default.  The native AOT runtime is single-threaded and the C ABI
@@ -1103,6 +1167,60 @@ impl FlatHeap {
             }
         }
         movable
+    }
+
+    /// **PR-3a scaffold** for the compacting collector: classify mobility, then copy every
+    /// MOVABLE object (header + payload) verbatim into a fresh to-space [`Arena`], returning
+    /// the arena and a **forwarding map** from each moved object's *old* payload address to
+    /// its *new* payload address in the arena.
+    ///
+    /// This is steps 1–2 of the moving cycle (spec §4) — the mark and the copy — and nothing
+    /// else. It does **not** fix up any pointer and does **not** free anything: the from-space
+    /// originals are untouched and the arena copies still hold stale (old-address) pointers.
+    /// It exists so the arena / copy / forwarding-map mechanics land and are reviewed in
+    /// isolation, before the pointer fixup (PR-3b) and from-space reclamation (PR-3c) wire it
+    /// into a live collection. Pinned objects are never copied. Because the arena is returned
+    /// (and normally dropped by the caller), this leaves the heap unchanged — an observable
+    /// dry run.
+    ///
+    /// # Safety
+    /// Each `root_slots` address and each `regions` span must be readable (same contract as
+    /// [`Self::collect_mixed`]).
+    // The full `collect_compacting` (fixup + reclaim) consumes this in PR-3b/c.
+    #[allow(dead_code)]
+    unsafe fn plan_compaction(
+        &mut self,
+        root_slots: &[usize],
+        regions: &[(*const u8, usize)],
+    ) -> (Arena, HashMap<usize, usize>) {
+        let movable = self.classify_mobility(root_slots, regions);
+
+        // Size the arena to the exact evacuation total: Σ align16(HEADER_SIZE + size).
+        // Saturating throughout (every summand fits — each object already occupies live
+        // memory — but saturating makes the no-wrap invariant explicit and fails safe: a
+        // saturated `total` just makes `Arena::with_capacity` fail below, panicking rather
+        // than under-sizing. The real bounds guard is `bump`'s capacity check regardless.
+        let mut total = 0usize;
+        for &payload in &movable {
+            let h = (payload - HEADER_SIZE) as *mut FlatHeader;
+            let obj = HEADER_SIZE.saturating_add((*h).size);
+            let obj16 = obj.saturating_add(ALIGN - 1) & !(ALIGN - 1);
+            total = total.saturating_add(obj16);
+        }
+
+        let mut arena = Arena::with_capacity(total).expect("arena allocation");
+        let mut forward: HashMap<usize, usize> = HashMap::new();
+        for &payload in &movable {
+            let h = (payload - HEADER_SIZE) as *mut FlatHeader;
+            let obj = HEADER_SIZE + (*h).size;
+            let dst = arena.bump(obj).expect("arena sized to the evacuation total");
+            // Copy header + payload verbatim. Source (a malloc'd from-space block) and
+            // destination (the fresh arena) never overlap.
+            ptr::copy_nonoverlapping(h as *const u8, dst, obj);
+            let new_payload = dst as usize + HEADER_SIZE;
+            forward.insert(payload, new_payload);
+        }
+        (arena, forward)
     }
 
     /// Return the header of the live block whose payload contains `addr`, or null.
@@ -2638,5 +2756,78 @@ mod tests {
             unsafe { heap.classify_mobility(&slots, &[]) }.contains(&a),
             "pin bit is a per-classification transient, cleared each call",
         );
+    }
+
+    // ── Moving/compacting collector — arena + copy scaffold (AOT00-T3 PR-3a) ──
+
+    /// A movable object is copied **byte-identically** (header + payload) into the arena
+    /// at a fresh 16-aligned address, and recorded in the forwarding map. The from-space
+    /// original is untouched (no fixup, no free — this is the dry-run scaffold).
+    #[test]
+    fn compaction_copies_movable_object_byte_identical() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]);
+        let a = heap.alloc(16, k) as usize;
+        unsafe { *(a as *mut u64) = 0xDEAD_BEEF_1234_5678 }; // payload content
+
+        let word = a;
+        let slots = [&word as *const usize as usize];
+        let (arena, forward) = unsafe { heap.plan_compaction(&slots, &[]) };
+
+        let na = *forward.get(&a).expect("movable object is forwarded");
+        assert_ne!(na, a, "copied to a fresh address");
+        assert_eq!(na % ALIGN, 0, "arena payload is 16-aligned");
+        assert!(
+            na >= arena.base as usize && na < arena.base as usize + arena.cap,
+            "new address lies inside the arena",
+        );
+
+        // Header + payload bytes are identical between original and arena copy.
+        let obj = HEADER_SIZE + 16;
+        let old = unsafe { std::slice::from_raw_parts((a - HEADER_SIZE) as *const u8, obj) };
+        let new = unsafe { std::slice::from_raw_parts((na - HEADER_SIZE) as *const u8, obj) };
+        assert_eq!(old, new, "arena copy is byte-for-byte identical");
+        drop(arena);
+    }
+
+    /// Pinned objects are **never** copied — the forwarding map excludes them and the
+    /// arena is empty when nothing is movable.
+    #[test]
+    fn compaction_skips_pinned_and_empty_when_all_pinned() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]);
+        let a = heap.alloc(16, k) as usize;
+
+        let word = a;
+        let region = [(&word as *const usize as *const u8, 8usize)];
+        let (arena, forward) = unsafe { heap.plan_compaction(&[], &region) };
+
+        assert!(!forward.contains_key(&a), "a pinned object is not evacuated");
+        assert!(forward.is_empty(), "nothing movable → empty forwarding map");
+        assert_eq!(arena.cap, 0, "nothing movable → zero-capacity arena");
+        drop(arena);
+    }
+
+    /// The forwarding map's keys are **exactly** the movable set, and every mapped address
+    /// is distinct — one arena slot per moved object, no aliasing.
+    #[test]
+    fn compaction_forwarding_map_matches_movable_set() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]);
+        let p = heap.alloc(16, k) as usize;
+        let c = heap.alloc(16, k) as usize;
+        unsafe { *(p as *mut usize) = c }; // p --ref--> c (both movable)
+
+        let root = p;
+        let slots = [&root as *const usize as usize];
+
+        let movable = unsafe { heap.classify_mobility(&slots, &[]) };
+        let (arena, forward) = unsafe { heap.plan_compaction(&slots, &[]) };
+
+        let keys: HashSet<usize> = forward.keys().copied().collect();
+        assert_eq!(keys, movable, "exactly the movable objects are forwarded");
+        let news: HashSet<usize> = forward.values().copied().collect();
+        assert_eq!(news.len(), forward.len(), "each object gets a distinct arena address");
+        drop(arena);
     }
 }

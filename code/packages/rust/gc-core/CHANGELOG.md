@@ -1,5 +1,33 @@
 # Changelog — gc-core
 
+## 0.13.0 — 2026-07-23 — moving-collector to-space arena + copy scaffold (AOT00-T3 PR-3a)
+
+Second step of the moving/compacting collector: the **to-space arena** and the **copy +
+forwarding-map** mechanics. Steps 1–2 of the moving cycle (spec §4) only — the mark and the
+copy. Deliberately **does not fix up any pointer and does not free anything**, so the
+arena/copy machinery lands and is reviewed in isolation before the (separately-reviewed)
+pointer fixup (PR-3b) and from-space reclamation (PR-3c).
+
+- New private `Arena`: a contiguous, 16-byte-aligned bump region (one `alloc`'d block, cursor,
+  frees on drop). `bump(n)` rounds up to `ALIGN` so each copied `FlatHeader` — and its payload
+  at `header + 32` — lands 16-aligned exactly as `alloc` guarantees. A zero-capacity arena
+  owns nothing (a collection with no movable survivors).
+- New `FlatHeap::plan_compaction(root_slots, regions) -> (Arena, HashMap<old_payload,
+  new_payload>)`: classifies mobility (reusing `classify_mobility`), sizes the arena to the
+  exact evacuation total `Σ align16(HEADER_SIZE + size)`, copies each **movable** object's
+  header+payload verbatim into the arena, and records the old→new payload forwarding. Pinned
+  objects are never copied. Because the arena is returned (and normally dropped), the heap is
+  left unchanged — an observable dry run. The arena copies intentionally still hold stale
+  (old-address) pointers; PR-3b rewrites them.
+
+Purely additive; no existing symbol/behaviour change (72 prior tests unchanged). 3 new tests:
+a movable object is copied byte-for-byte to a fresh 16-aligned arena address and forwarded;
+pinned objects are never evacuated and an all-pinned heap yields an empty map + zero-capacity
+arena; the forwarding map's keys are exactly the movable set with distinct new addresses.
+`Arena` / `plan_compaction` carry `#[allow(dead_code)]` until `collect_compacting` (PR-3b)
+consumes them — the same "ship the primitive ahead of its consumer" pattern used for
+`StackMapTable` / `build_precise_roots`. gc-core-only. gc-core 0.12.0 → 0.13.0.
+
 ## 0.12.0 — 2026-07-23 — moving-collector mobility classification (AOT00-T3 PR-2)
 
 First step of the moving/compacting collector (per `code/specs/AOT00-T3-moving-collector.md`):
