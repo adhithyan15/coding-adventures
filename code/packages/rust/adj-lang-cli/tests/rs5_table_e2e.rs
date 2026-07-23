@@ -164,6 +164,48 @@ fn shipped_length_conversions_table_resolves_with_locator() {
 }
 
 // ---------------------------------------------------------------------------
+// (b2) Shipped table — reference/mass-conversions.adj resolves via import, and a
+//      unit absent from the table abstains (never a fabricated factor).
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_mass_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_mass");
+    let src = stdlib().join("reference/mass-conversions.adj");
+    std::fs::copy(&src, dir.join("mass-conversions.adj"))
+        .expect("copy shipped mass-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"mass-conversions.adj\"\n\
+         ? mass_to_kilograms(pound, $Kg)\n\
+         ? mass_to_kilograms(short_ton, $Kg)\n\
+         ? mass_to_kilograms(stone, $Kg)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 factors resolve, character-for-character from the table.
+    assert!(
+        out.contains("\"Kg\":\"0.4535924\""),
+        "shipped pound factor: {out}"
+    );
+    assert!(
+        out.contains("\"Kg\":\"907.1847\""),
+        "shipped short-ton factor: {out}"
+    );
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `stone` is not a row — the engine abstains rather than inventing a factor.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "an absent unit abstains, never a fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 
