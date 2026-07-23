@@ -103,7 +103,10 @@ pub fn emit_module(m: &Module) -> String {
     // `<math.h>` supplies the C99 `INFINITY` / `NAN` macros used to spell a
     // non-finite `FloatLit` (a finite literal needs no macro). Standard and
     // available on every C99 compiler including MSVC.
-    out.push_str("#include <math.h>\n\n");
+    out.push_str("#include <math.h>\n");
+    // `<setjmp.h>` supplies `jmp_buf`/`setjmp`/`longjmp` for the SIR17 exception
+    // handler stack.
+    out.push_str("#include <setjmp.h>\n\n");
 
     // The runtime, with the display-convention placeholder resolved to a
     // boolean-selected LITERAL (never source text — see the security note in
@@ -533,6 +536,105 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                 out,
                 "{ipad}(void)_sir_map_set({}, {}, {});",
                 names[0], names[1], names[2]
+            );
+            let _ = writeln!(out, "{pad}}}");
+        }
+        // SIR17 `begin … rescue … ensure … end`.  C has no unwinding, so this
+        // lowers to a TWO-handler `setjmp`/`longjmp` structure:
+        //   - an OUTER "ensure" handler wraps the whole thing, so `ensure` runs
+        //     even when a rescue body itself raises (Ruby semantics);
+        //   - an INNER "body" handler catches an exception from the guarded body.
+        //     It is popped BEFORE the rescue dispatch, so a raise in a rescue
+        //     clause (or an unmatched exception) unwinds to the OUTER handler.
+        // A `rescue` clause matches by class name against the baked-in ancestry
+        // table (`_sir_rescue_matches`); an empty class list is a catch-all.
+        // Exception-type names are emitted as QUOTED string literals (via
+        // `quote_c_string`), so — unlike a language that emits them as bare
+        // constants — no rescue type can inject source.
+        Stmt::TryCatch {
+            body,
+            rescues,
+            ensure_body,
+            ..
+        } => {
+            let id = fresh_id();
+            let i1 = indent + 1;
+            let i2 = indent + 2;
+            let i3 = indent + 3;
+            let p1 = indent_str(i1);
+            let p2 = indent_str(i2);
+            let p3 = indent_str(i3);
+            let _ = writeln!(out, "{pad}{{");
+            let _ = writeln!(out, "{p1}int _sir_eh{id} = _sir_push_handler();");
+            let _ = writeln!(out, "{p1}volatile int _sir_esc{id} = 0;");
+            let _ = writeln!(
+                out,
+                "{p1}if (setjmp(_sir_handlers[_sir_eh{id}])) {{ _sir_esc{id} = 1; }}"
+            );
+            let _ = writeln!(out, "{p1}if (!_sir_esc{id}) {{");
+            let _ = writeln!(out, "{p2}int _sir_bh{id} = _sir_push_handler();");
+            let _ = writeln!(out, "{p2}volatile int _sir_c{id} = 0;");
+            let _ = writeln!(
+                out,
+                "{p2}if (setjmp(_sir_handlers[_sir_bh{id}])) {{ _sir_c{id} = 1; }}"
+            );
+            let _ = writeln!(out, "{p2}if (!_sir_c{id}) {{");
+            for st in body {
+                emit_stmt(out, st, i3);
+            }
+            let _ = writeln!(out, "{p2}}}");
+            let _ = writeln!(out, "{p2}_sir_pop_handler();");
+            let _ = writeln!(out, "{p2}if (_sir_c{id}) {{");
+            let _ = writeln!(out, "{p3}SirValue _sir_ex{id} = _sir_current_error;");
+            for (k, rc) in rescues.iter().enumerate() {
+                let kw = if k == 0 { "if" } else { "} else if" };
+                if rc.exception_types.is_empty() {
+                    let _ = writeln!(
+                        out,
+                        "{p3}{kw} (_sir_rescue_matches(_sir_ex{id}, NULL, 0)) {{"
+                    );
+                } else {
+                    let lits: Vec<String> =
+                        rc.exception_types.iter().map(|t| quote_c_string(t)).collect();
+                    let _ = writeln!(
+                        out,
+                        "{p3}{kw} (_sir_rescue_matches(_sir_ex{id}, (const char *const[]){{{}}}, {})) {{",
+                        lits.join(", "),
+                        rc.exception_types.len()
+                    );
+                }
+                if let Some(bind) = &rc.binding {
+                    let b = sanitize_ident(bind);
+                    let _ = writeln!(out, "{}SirValue {b} = _sir_ex{id}; (void){b};", indent_str(i3 + 1));
+                }
+                for st in &rc.body {
+                    emit_stmt(out, st, i3 + 1);
+                }
+            }
+            // Unmatched (or no rescue clause): re-raise so it propagates through
+            // the outer ensure handler after `ensure` runs.
+            if rescues.is_empty() {
+                let _ = writeln!(out, "{p3}(void)_sir_raise(_sir_ex{id});");
+            } else {
+                let _ = writeln!(out, "{p3}}} else {{ (void)_sir_raise(_sir_ex{id}); }}");
+            }
+            let _ = writeln!(out, "{p2}}}");
+            let _ = writeln!(out, "{p1}}}");
+            // Snapshot the escaping exception BEFORE `ensure` runs and before
+            // popping this handler: an `ensure` body that itself handles an
+            // exception would otherwise overwrite the global `_sir_current_error`
+            // and propagate the WRONG exception.  (Meaningful only when
+            // `_sir_esc` is set; harmlessly nil on the normal path.)
+            let _ = writeln!(out, "{p1}SirValue _sir_pend{id} = _sir_current_error;");
+            let _ = writeln!(out, "{p1}_sir_pop_handler();");
+            if let Some(ens) = ensure_body {
+                for st in ens {
+                    emit_stmt(out, st, i1);
+                }
+            }
+            let _ = writeln!(
+                out,
+                "{p1}if (_sir_esc{id}) {{ (void)_sir_raise(_sir_pend{id}); }}"
             );
             let _ = writeln!(out, "{pad}}}");
         }
@@ -1121,6 +1223,19 @@ fn emit_var_ref(out: &mut String, name: &str, scope: Scope) {
 
 /// A builtin call whose arguments are all simple.
 fn emit_builtin_simple(out: &mut String, name: &str, args: &[Expr], indent: usize) {
+    // SIR17 `raise`: no argument re-raises the exception being handled; one
+    // argument raises it (an exception object as-is, any other value — a message
+    // string — wrapped in a `RuntimeError`).  Never returns (longjmp/exit).
+    if name == "raise" {
+        if args.is_empty() {
+            out.push_str("_sir_raise(_sir_current_error)");
+        } else {
+            out.push_str("_sir_raise_value(");
+            emit_expr(out, &args[0], indent);
+            out.push(')');
+        }
+        return;
+    }
     // Variadic-shaped builtins take (count, args...).
     if let Some(helper) = variadic_helper(name) {
         let _ = write!(out, "{}({}", helper, args.len());
@@ -1152,6 +1267,14 @@ fn emit_builtin_simple(out: &mut String, name: &str, args: &[Expr], indent: usiz
 
 /// The already-hoisted-args variant used by [`emit_compound_call`].
 fn emit_builtin_with_names(out: &mut String, name: &str, names: &[String]) {
+    if name == "raise" {
+        if names.is_empty() {
+            out.push_str("_sir_raise(_sir_current_error)");
+        } else {
+            let _ = write!(out, "_sir_raise_value({})", names[0]);
+        }
+        return;
+    }
     if let Some(helper) = variadic_helper(name) {
         let _ = write!(out, "{}({}", helper, names.len());
         for n in names {
@@ -1204,7 +1327,9 @@ fn variadic_helper(name: &str) -> Option<&'static str> {
 /// by [`first_unsupported_builtin`] rather than emitted as a call that fails at
 /// runtime.
 fn is_supported_builtin(name: &str) -> bool {
-    variadic_helper(name).is_some() || fixed_helper(name).is_some() || matches!(name, "and" | "or")
+    variadic_helper(name).is_some()
+        || fixed_helper(name).is_some()
+        || matches!(name, "and" | "or" | "raise")
 }
 
 /// The first `BuiltinCall` whose name the v0 emitter cannot lower, if any.  A
@@ -1234,49 +1359,71 @@ pub fn first_unsupported_builtin(m: &Module) -> Option<(String, Span)> {
 }
 
 fn scan_block_for_builtin(b: &Block) -> Option<(String, Span)> {
-    for s in &b.stmts {
-        let inner = match s {
-            Stmt::LetBinding { value, .. }
-            | Stmt::LetStarBinding { value, .. }
-            | Stmt::ExprStmt { expr: value, .. }
-            | Stmt::Assign { value, .. } => scan_expr_for_builtin(value),
-            // Loop bodies must be scanned too, or an unsupported builtin hidden
-            // in a `while`/`for` body escapes the pre-check and hits the
-            // emitter's `unreachable!`. (`While` was a pre-existing scan hole.)
-            Stmt::While { cond, body, .. } => {
-                scan_expr_for_builtin(cond).or_else(|| scan_block_for_builtin(body))
-            }
-            Stmt::ForRange {
-                start,
-                stop,
-                step,
-                body,
-                ..
-            } => scan_expr_for_builtin(start)
-                .or_else(|| scan_expr_for_builtin(stop))
-                .or_else(|| scan_expr_for_builtin(step))
-                .or_else(|| scan_block_for_builtin(body)),
-            // Sequence write / iteration bodies likewise carry sub-expressions.
-            Stmt::SeqSet {
-                seq, index, value, ..
-            } => scan_expr_for_builtin(seq)
-                .or_else(|| scan_expr_for_builtin(index))
-                .or_else(|| scan_expr_for_builtin(value)),
-            Stmt::MapSet {
-                map, key, value, ..
-            } => scan_expr_for_builtin(map)
-                .or_else(|| scan_expr_for_builtin(key))
-                .or_else(|| scan_expr_for_builtin(value)),
-            Stmt::ForEach { iter, body, .. } => {
-                scan_expr_for_builtin(iter).or_else(|| scan_block_for_builtin(body))
-            }
-            _ => None,
-        };
-        if inner.is_some() {
-            return inner;
+    b.stmts
+        .iter()
+        .find_map(scan_stmt_for_builtin)
+        .or_else(|| scan_expr_for_builtin(&b.value))
+}
+
+fn scan_stmt_for_builtin(s: &Stmt) -> Option<(String, Span)> {
+    match s {
+        Stmt::LetBinding { value, .. }
+        | Stmt::LetStarBinding { value, .. }
+        | Stmt::ExprStmt { expr: value, .. }
+        | Stmt::Assign { value, .. } => scan_expr_for_builtin(value),
+        // Loop bodies must be scanned too, or an unsupported builtin hidden
+        // in a `while`/`for` body escapes the pre-check and hits the
+        // emitter's `unreachable!`. (`While` was a pre-existing scan hole.)
+        Stmt::While { cond, body, .. } => {
+            scan_expr_for_builtin(cond).or_else(|| scan_block_for_builtin(body))
         }
+        Stmt::ForRange {
+            start,
+            stop,
+            step,
+            body,
+            ..
+        } => scan_expr_for_builtin(start)
+            .or_else(|| scan_expr_for_builtin(stop))
+            .or_else(|| scan_expr_for_builtin(step))
+            .or_else(|| scan_block_for_builtin(body)),
+        // Sequence write / iteration bodies likewise carry sub-expressions.
+        Stmt::SeqSet {
+            seq, index, value, ..
+        } => scan_expr_for_builtin(seq)
+            .or_else(|| scan_expr_for_builtin(index))
+            .or_else(|| scan_expr_for_builtin(value)),
+        Stmt::MapSet {
+            map, key, value, ..
+        } => scan_expr_for_builtin(map)
+            .or_else(|| scan_expr_for_builtin(key))
+            .or_else(|| scan_expr_for_builtin(value)),
+        Stmt::ForEach { iter, body, .. } => {
+            scan_expr_for_builtin(iter).or_else(|| scan_block_for_builtin(body))
+        }
+        // A `begin … rescue … ensure … end` — scan the guarded body, every
+        // rescue clause body, and the ensure body, so an unsupported builtin
+        // hidden in any of them is caught by the pre-check, not the emitter.
+        Stmt::TryCatch {
+            body,
+            rescues,
+            ensure_body,
+            ..
+        } => body
+            .iter()
+            .find_map(scan_stmt_for_builtin)
+            .or_else(|| {
+                rescues
+                    .iter()
+                    .find_map(|rc| rc.body.iter().find_map(scan_stmt_for_builtin))
+            })
+            .or_else(|| {
+                ensure_body
+                    .as_ref()
+                    .and_then(|e| e.iter().find_map(scan_stmt_for_builtin))
+            }),
+        _ => None,
     }
-    scan_expr_for_builtin(&b.value)
 }
 
 fn scan_expr_for_builtin(e: &Expr) -> Option<(String, Span)> {

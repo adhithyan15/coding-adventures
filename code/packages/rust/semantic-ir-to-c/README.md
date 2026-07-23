@@ -97,10 +97,16 @@ with an `if (_sir_is_missing(p)) { p = <default>; }` prologue (a later default
 may reference an earlier parameter); and SIR19 `KeywordParams` — a keyword
 argument resolved to its callee's parameter slot **by name** at emit time (KW6),
 producing a plain positional C call (omitted optional keywords filled with
-`_sir_missing()` and substituted by the same default prologue).
+`_sir_missing()` and substituted by the same default prologue); and SIR17
+`Exceptions` — `begin/rescue/ensure` + `raise` lowered to a `setjmp`/`longjmp`
+handler stack (a `SIR_ERROR` value, a baked-in exception-class ancestry table
+for `rescue`-by-class matching, and a two-handler structure so `ensure` runs
+even when a rescue body raises). Rescue-type names are emitted as quoted string
+literals (no injection). `raise SomeClass` (needs `Constants`) and `retry` are
+deferred, rejected cleanly.
 
 **Rejects** (cleanly, with a source-positioned error): `TailCalls`,
-`Intrinsics`, `NDArrays`, exceptions/OOP, and every
+`Intrinsics`, `NDArrays`, `Constants`/OOP, and every
 other not-yet-wired feature until its batch lands.  `Bignum` stays rejected
 until a bignum runtime ships — a module needing arbitrary precision is refused,
 never silently truncated.

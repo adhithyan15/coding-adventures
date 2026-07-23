@@ -137,6 +137,16 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // positional `SirValue` C parameter like any other; only the call site
     // resolves by name.
     Feature::KeywordParams,
+    // ── SIR17 exceptions ─────────────────────────────────────────────
+    // `Stmt::TryCatch` (`begin/rescue/ensure`) + the `raise` builtin lower to a
+    // `setjmp`/`longjmp` handler stack (a new `SIR_ERROR` runtime value, a
+    // baked-in exception-class ancestry table for `rescue`-by-class matching,
+    // and a two-handler structure so `ensure` runs even when a rescue body
+    // raises).  Rescue-type names are emitted as QUOTED string literals, so no
+    // rescue type can inject source.  `raise SomeClass` (a specific class) is a
+    // `Const` reference → observes `Feature::Constants` (unaccepted) → rejected;
+    // `retry` is not yet lowered (rejected by the builtin gate) — both deferred.
+    Feature::Exceptions,
 ];
 
 impl Backend for CBackend {
