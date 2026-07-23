@@ -23,10 +23,14 @@ A small but **fully correct** slice, growing one quirk at a time: numeric-displa
 (`X`/`A`) pictures; the item tree from
 level numbers; `VALUE` initialisation; figurative `ZERO`/`SPACE`; `MOVE` with
 the exact justify/pad/truncate rules — same-category (numeric→numeric,
-alphanumeric→alphanumeric) plus the first cross-category shape, an unsigned-integer
+alphanumeric→alphanumeric) plus both cross-category shapes: an unsigned-integer
 numeric source into an alphanumeric receiver (its digit image left-justified,
-space-padded, or truncated; a signed/scaled source or the reverse direction is a
-later rung); `DISPLAY`; `STOP RUN`; fixed-point
+space-padded, or truncated) and the reverse — an alphanumeric source into an
+unsigned-integer numeric receiver (its `m` chars folded into an unsigned integer
+and de-scaled right-justified, keeping the low-order `n` digits: `receiver =
+(integer from the source) mod 10^n`); a signed/scaled numeric item on either side,
+a group, and a source wider than 18 chars are later rungs; `DISPLAY`; `STOP RUN`;
+fixed-point
 decimal `ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE` (decimal-point aligned; `ROUNDED`
 and `ON SIZE ERROR`; divide-by-zero is a clean error or a size-error condition);
 `COMPUTE` with

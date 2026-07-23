@@ -8,6 +8,50 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.28.0: reverse cross-category MOVE (alphanumeric → unsigned-integer numeric)
+
+The **reverse** cross-category `MOVE`: `MOVE alphanumeric-item TO numeric-item`,
+restricted to an alphanumeric source (`PIC X(m)`) into an **unsigned integer**
+receiver (`PIC 9(n)` — no `S`, no `V`). Oracle-first and byte-identical to
+`cobol-runtime` 0.32.0. No grammar change was needed — `MOVE` already parses and
+this reuses existing IIR ops.
+
+- **The rule.** COBOL reads the alphanumeric source's `m` characters as an
+  unsigned integer and de-scales it into the numeric receiver **right-justified**:
+  the receiver keeps the **low-order `n` digits** — left-zero-padded when the
+  source has fewer than `n` digits, high-order-truncated when more —
+  i.e. `receiver = (integer formed from the m source chars) mod 10^n`. So
+  `X(3)="042"` → `9(3)` is `42` (displays `"042"`), `X(2)="05"` → `9(4)` is `0005`,
+  `X(5)="12345"` → `9(3)` is `345`.
+- **Lowering (`emit_str_to_int`).** The `m` source bytes are folded left-to-right
+  into an `i64`: for the character at position `k`, `d = str_index(src,k) - '0'`
+  (each byte read with the IIR `str_index` op, the constant `'0'`=48 subtracted),
+  then `value = value*10 + d` (`mul`/`add`). The folded `value` is stored through
+  the **same** numeric-store helper a numeric `MOVE`/`COMPUTE` uses
+  (`store_scaled` at scale 0), whose `mod 10^(int+dec)` applies the receiver-width
+  truncation — so the compiled result matches the oracle, which folds the identical
+  per-character arithmetic and stores via `move_into_numeric` at scale 0.
+- **All-digit scope / non-digit choice.** This rung scopes to an **all-digit**
+  source. A non-digit byte is *not* rejected: the same `(byte - '0')` arithmetic
+  runs on both engines (defined-but-unspecified, identical by construction), so a
+  clean identical runtime reject is unnecessary and no test exercises it. This was
+  chosen over a runtime reject because the compiled path has no clean way to raise
+  a runtime error for a non-digit that the oracle could mirror byte-for-byte.
+- **Overflow guard.** An `i64` fold of an all-digit source of `≤ 18` characters
+  stays below `10^18 < i64::MAX`, so it never overflows on either engine; a source
+  **wider than 18 characters** is a clean `Unsupported` later rung, rejected
+  identically on both engines.
+- **Deferral gate.** A **signed** (`PIC S9`) or **scaled** (`PIC 9V9`) numeric
+  receiver, and a **group** item on either side, remain clean `Unsupported` later
+  rungs (only `(ItemKind::Char, ItemKind::Numeric { signed:false, dec_digits:0 })`
+  is admitted; every other cross-category shape falls to the catch-all reject).
+- **Tests.** Seven `jit_e2e.rs` cases through `assert_matches_oracle` (exact-fit,
+  shorter source zero-pads, longer source high-order-truncates, single digit,
+  MOVE-then-`ADD`, MOVE-then-`COMPUTE`, and a numeric→alpha→numeric round-trip),
+  plus compiler-unit tests: the reverse move now lowers (asserting `str_index` +
+  `mod`), and clean rejects for a signed receiver, a scaled receiver, a >18-char
+  source, and a group source.
+
 ### Added — v0.27.0: cross-category MOVE (unsigned-integer numeric → alphanumeric)
 
 The first **cross-category** `MOVE`: `MOVE numeric-item TO alphanumeric-item`,

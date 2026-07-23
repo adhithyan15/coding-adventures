@@ -317,12 +317,77 @@ mod tests {
         assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
     }
 
+    // Cross-category alphanumeric → numeric MOVE (the reverse direction): an
+    // alphanumeric source (`PIC X(m)`) read as an unsigned integer and de-scaled
+    // into an UNSIGNED INTEGER receiver — RIGHT-justified, keeping the low-order
+    // `n` digits (`receiver = (integer from the m source chars) mod 10^n`).
+
     #[test]
-    fn alphanumeric_to_numeric_move_is_deferred() {
-        // The reverse direction (alphanumeric → numeric) remains a later rung.
+    fn alphanumeric_to_numeric_move_exact_fit() {
+        // PIC X(3)="042" → PIC 9(3): fold → 42; DISPLAY shows "042".
+        let out = run_ws(
+            &["01  A  PIC X(3) VALUE \"042\".", "01  N  PIC 9(3)."],
+            &["    MOVE A TO N.", "    DISPLAY N.", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(out, "042\n");
+    }
+
+    #[test]
+    fn alphanumeric_to_numeric_move_shorter_source_zero_pads() {
+        // PIC X(2)="05" → PIC 9(4): fold → 5, right-justified into 4 digits.
+        let out = run_ws(
+            &["01  A  PIC X(2) VALUE \"05\".", "01  N  PIC 9(4)."],
+            &["    MOVE A TO N.", "    DISPLAY N.", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(out, "0005\n");
+    }
+
+    #[test]
+    fn alphanumeric_to_numeric_move_longer_source_truncates_high_order() {
+        // PIC X(5)="12345" → PIC 9(3): fold → 12345, keep the low-order 3 → 345.
+        let out = run_ws(
+            &["01  A  PIC X(5) VALUE \"12345\".", "01  N  PIC 9(3)."],
+            &["    MOVE A TO N.", "    DISPLAY N.", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(out, "345\n");
+    }
+
+    #[test]
+    fn alphanumeric_to_signed_numeric_move_is_deferred() {
+        // A SIGNED receiver (`PIC S9`) is a later rung.
         let err = run_ws(
-            &["01  W  PIC X(3) VALUE \"042\".", "01  N  PIC 9(3)."],
-            &["    MOVE W TO N.", "    STOP RUN."],
+            &["01  A  PIC X(3) VALUE \"042\".", "01  N  PIC S9(3)."],
+            &["    MOVE A TO N.", "    STOP RUN."],
+        )
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn alphanumeric_to_scaled_numeric_move_is_deferred() {
+        // A SCALED receiver (`PIC 9V9`) is a later rung.
+        let err = run_ws(
+            &["01  A  PIC X(3) VALUE \"042\".", "01  N  PIC 9V9."],
+            &["    MOVE A TO N.", "    STOP RUN."],
+        )
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn group_to_numeric_move_is_deferred() {
+        // A GROUP source into a numeric receiver is a later rung.
+        let err = run_ws(
+            &[
+                "01  G.",
+                "    05  A  PIC X(2) VALUE \"04\".",
+                "    05  B  PIC X(1) VALUE \"2\".",
+                "01  N  PIC 9(3).",
+            ],
+            &["    MOVE G TO N.", "    STOP RUN."],
         )
         .unwrap_err();
         assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
