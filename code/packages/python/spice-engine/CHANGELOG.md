@@ -1,5 +1,7 @@
 # Changelog
 
+- Add BJT model-card `ITF` forward transit-time current-scale support, applying
+  `(If / (If + ITF))^2` to the `XTF` AC and transient storage enhancement.
 - Add BJT model-card `XTF` forward transit-time bias-coefficient support,
   scaling forward diffusion capacitance and transient stored charge by
   `TF * (1 + XTF)` with the Berkeley default of zero.

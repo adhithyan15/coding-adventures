@@ -616,6 +616,8 @@ class BJT:
         Excess phase at ``1 / (2*pi*Tf)`` in degrees (default 0.0).
     Xtf:
         Coefficient for forward transit-time bias dependence (default 0.0).
+    Itf:
+        Forward-current scale for transit-time bias dependence (default 0.0).
     """
 
     name: str
@@ -654,6 +656,7 @@ class BJT:
     Af: float = 1.0            # flicker-noise base-current exponent
     Ptf: float = 0.0           # excess phase at 1/(2*pi*Tf), degrees
     Xtf: float = 0.0           # forward transit-time bias coefficient
+    Itf: float = 0.0           # forward transit-time current scale (A)
 
 
 # ---------------------------------------------------------------------------

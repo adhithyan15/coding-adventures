@@ -605,7 +605,7 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
-        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg, element.Vaf, element.Nf, element.Nr, element.Vje, element.Mje, element.Vjc, element.Mjc, element.Fc, element.Var, element.Ikf, element.Ise, element.Ne, element.Isc, element.Nc, element.Xtb, element.beta_r, element.Ikr, element.Tnom, element.Kf, element.Af, element.Ptf, element.Xtf)
+        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg, element.Vaf, element.Nf, element.Nr, element.Vje, element.Mje, element.Vjc, element.Mjc, element.Fc, element.Var, element.Ikf, element.Ise, element.Ne, element.Isc, element.Nc, element.Xtb, element.beta_r, element.Ikr, element.Tnom, element.Kf, element.Af, element.Ptf, element.Xtf, element.Itf)
     if isinstance(element, VCVS):
         return VCVS(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), _map_subckt_node(element.ctrl_plus, instance_name, node_map), _map_subckt_node(element.ctrl_minus, instance_name, node_map), element.gain)
     if isinstance(element, VCCS):
@@ -8743,12 +8743,25 @@ def _bjt_junction_transconductance(el: BJT, voltage: float, emission_coefficient
     return (el.Is / effective_thermal_voltage) * math.exp(exponent)
 
 
+def _bjt_forward_transit_time_scale(el: BJT, voltage: float) -> float:
+    effective_thermal_voltage = el.Vt * el.Nf
+    forward_current = max(
+        el.Is * (math.exp(max(-40.0, min(40.0, voltage / effective_thermal_voltage))) - 1.0),
+        0.0,
+    )
+    current_factor = 1.0
+    if el.Itf > 0.0:
+        ratio = forward_current / (forward_current + el.Itf)
+        current_factor = ratio * ratio
+    return 1.0 + el.Xtf * current_factor
+
+
 def _bjt_charge_dynamic_capacitance(el: BJT, state_kind: str, voltage: float) -> float:
     if state_kind == "be":
         conductance = _bjt_junction_transconductance(el, voltage, el.Nf)
         return (
             _bjt_base_emitter_depletion_capacitance(el, voltage)
-            + el.Tf * (1.0 + el.Xtf) * conductance
+            + el.Tf * _bjt_forward_transit_time_scale(el, voltage) * conductance
         )
     conductance = _bjt_junction_transconductance(el, voltage, el.Nr)
     return _bjt_base_collector_depletion_capacitance(el, voltage) + el.Tr * conductance
@@ -9317,6 +9330,10 @@ def _validate_bjt(el: BJT) -> None:
     if not math.isfinite(el.Xtf) or el.Xtf < 0.0:
         raise ValueError(
             f"{el.name}: BJT forward transit-time bias coefficient must be finite and non-negative"
+        )
+    if not math.isfinite(el.Itf) or el.Itf < 0.0:
+        raise ValueError(
+            f"{el.name}: BJT forward transit-time current must be finite and non-negative"
         )
     if not math.isfinite(el.Ise) or el.Ise < 0.0:
         raise ValueError(
@@ -12593,7 +12610,9 @@ def _stamp_ac(
             el, Vcollector_leakage
         )
         g_pi: float = base_gm / el.beta_f + leakage_conductance
-        diffusion_capacitance = el.Tf * (1.0 + el.Xtf) * gm_b
+        diffusion_capacitance = (
+            el.Tf * _bjt_forward_transit_time_scale(el, Vjunc) * gm_b
+        )
         excess_phase = omega * el.Tf * el.Ptf * math.pi / 180.0
         gm_ac = complex(
             gm_b * math.cos(excess_phase),
