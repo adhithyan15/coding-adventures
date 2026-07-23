@@ -1277,31 +1277,50 @@ impl Machine {
             }
             // Cross-category alphanumeric → numeric MOVE (the reverse direction):
             // an alphanumeric source item (`PIC X(m)`) moved into an UNSIGNED
-            // INTEGER receiver (`PIC 9(n)`, no `S`, no `V`). COBOL reads the
-            // source's `m` characters as an unsigned integer and de-scales it into
-            // the receiver, keeping the low-order `n` digits (right-justified:
-            // left-zero-padded when the source is shorter, high-order-truncated when
-            // longer) — `receiver = (integer formed from the m source chars) mod
-            // 10^n`. We fold the `m` bytes left-to-right into an `i64`
-            // (`value = value*10 + (byte - '0')`) and store it through `move_into`
-            // as a scale-0 `Decimal`, whose `move_into_numeric` applies exactly that
-            // digit-count alignment/truncation. This is byte-identical to the
-            // compiler, which folds the identical per-character arithmetic and
-            // truncates via its numeric-store helper. Only an unsigned-integer
-            // receiver and a genuine alphanumeric SOURCE ITEM (not a group, not a
-            // literal) are handled here; every other shape falls through to
-            // `move_into` below, which rejects a `Src::Chars` → numeric MOVE.
+            // numeric receiver `PIC 9(i)V9(d)` (no `S`; `d` may be 0 — an INTEGER —
+            // or > 0 — a SCALED receiver). COBOL reads the source's `m` characters
+            // as an unsigned integer `V` (fold `V = V*10 + (byte - '0')`), and that
+            // folded integer IS the receiver's scaled-slot magnitude directly: it
+            // fills the receiver's `(i + d)` digit positions RIGHT-justified, with
+            // the implied point `d` places from the right, so the slot is
+            // `V mod 10^(i+d)` (left-zero-padded when the source is shorter,
+            // high-order-truncated when longer). This is NOT the arithmetic
+            // decimal-align rule — `V` is not multiplied by `10^d`; the fold already
+            // lands at scale `d`.
+            //
+            //   MOVE "042"   TO 9(2)V9  → V=42    → slot 042 → reads 4.2
+            //   MOVE "12345" TO 9(2)V9  → V=12345 → slot 345 → reads 34.5
+            //
+            // We fold the `m` bytes into an `i64`, then build a `Decimal` that places
+            // the folded magnitude at scale `d` — the point inserted `d` places from
+            // the right: `int` = the magnitude's digits above the last `d`
+            // (empty → "0"), `frac` = its last `d` digits, left-zero-padded to `d`.
+            // `move_into` → `move_into_numeric(int_digits=i, dec_digits=d)` then keeps
+            // the low-order `i` integer digits and the high-order `d` fractional
+            // digits, i.e. exactly `V mod 10^(i+d)` with the point at `d`. This is
+            // byte-identical to the compiler, which folds the identical per-character
+            // arithmetic and hands `store_scaled` the SAME scale `d` (a no-op shift,
+            // then `mag mod 10^(i+d)`). For `d = 0` the split is `int = V_str`,
+            // `frac = ""` — reproducing the old integer-receiver behaviour exactly.
+            // Only an unsigned numeric receiver and a genuine alphanumeric SOURCE
+            // ITEM (not a group, not a literal) are handled here; every other shape
+            // falls through to `move_into` below, which rejects a `Src::Chars` →
+            // numeric MOVE.
             if let Operand::Ident(name) = src {
                 if let Some(&sidx) = self.by_name.get(name) {
                     let src_is_char = matches!(
                         self.items[sidx].picture,
                         Some(Picture::Alphanumeric { .. }) | Some(Picture::Alphabetic { .. })
                     );
-                    let recv_unsigned_int = matches!(
+                    let recv_unsigned = matches!(
                         self.items[idx].picture,
-                        Some(Picture::Numeric { dec_digits: 0, signed: false, .. })
+                        Some(Picture::Numeric { signed: false, .. })
                     );
-                    if src_is_char && recv_unsigned_int {
+                    let recv_dec = match &self.items[idx].picture {
+                        Some(Picture::Numeric { dec_digits, .. }) => *dec_digits,
+                        _ => 0,
+                    };
+                    if src_is_char && recv_unsigned {
                         let chars = self.items[sidx].storage.clone();
                         // Guard the `i64` fold: an all-digit source of ≤ 18
                         // characters stays below `10^18 < i64::MAX`; a wider source
@@ -1319,20 +1338,30 @@ impl Machine {
                         for b in chars.bytes() {
                             value = value.wrapping_mul(10).wrapping_add((b as i64) - (b'0' as i64));
                         }
-                        // Store the MAGNITUDE, exactly as the compiler's scale-0
-                        // `store_scaled` does (`abs(value) mod 10^n`). This matters for a
-                        // source byte below `'0'` — most commonly a SPACE (an
-                        // uninitialised `PIC X` is spaces): `(b - '0')` is then negative
-                        // and the fold goes negative, but a `PIC 9` field is unsigned, so
-                        // both engines keep the magnitude (never a stray `'-'`). A
-                        // non-digit source is defined-but-unspecified, identical on both
-                        // engines by construction. (`unsigned_abs` is total — no panic on
-                        // `i64::MIN`, unreachable here anyway.)
-                        let decimal = Decimal {
-                            neg: false,
-                            int: value.unsigned_abs().to_string(),
-                            frac: String::new(),
+                        // Take the MAGNITUDE, exactly as the compiler's `store_scaled`
+                        // does (it `abs`es the value before `mod 10^(i+d)`). This
+                        // matters for a source byte below `'0'` — most commonly a SPACE
+                        // (an uninitialised `PIC X` is spaces): `(b - '0')` is then
+                        // negative and the fold goes negative, but a `PIC 9` field is
+                        // unsigned, so both engines keep the magnitude (never a stray
+                        // `'-'`). A non-digit source is defined-but-unspecified,
+                        // identical on both engines by construction. (`unsigned_abs`
+                        // is total — no panic on `i64::MIN`, unreachable here anyway.)
+                        let mag = value.unsigned_abs().to_string();
+                        // Split the magnitude at scale `d`: the point sits `d` places
+                        // from the right. Left-pad to at least `d` digits first so the
+                        // fractional slice is always exactly `d` chars and the integer
+                        // slice is whatever remains ("0" when the magnitude has ≤ `d`
+                        // digits). For `d = 0` this is `int = mag`, `frac = ""`.
+                        let padded = if mag.len() < recv_dec {
+                            format!("{mag:0>recv_dec$}")
+                        } else {
+                            mag
                         };
+                        let split = padded.len() - recv_dec;
+                        let int = if split == 0 { "0".to_string() } else { padded[..split].to_string() };
+                        let frac = padded[split..].to_string();
+                        let decimal = Decimal { neg: false, int, frac };
                         self.move_into(idx, Src::Num(decimal))?;
                         continue;
                     }

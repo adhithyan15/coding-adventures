@@ -379,11 +379,62 @@ mod tests {
         assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
     }
 
+    // A SCALED receiver `PIC 9(i)V9(d)` is now supported: the fold IS the scaled
+    // slot magnitude (`V mod 10^(i+d)`), the point sitting `d` places from the
+    // right. DISPLAY shows the raw `(i + d)` digits (no point).
+
     #[test]
-    fn alphanumeric_to_scaled_numeric_move_is_deferred() {
-        // A SCALED receiver (`PIC 9V9`) is a later rung.
+    fn alphanumeric_to_scaled_numeric_move_exact_fit() {
+        // PIC X(3)="042" → PIC 9(2)V9: fold → 42, slot 042, reads 4.2 → DISPLAY "042".
+        let out = run_ws(
+            &["01  A  PIC X(3) VALUE \"042\".", "01  N  PIC 9(2)V9."],
+            &["    MOVE A TO N.", "    DISPLAY N.", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(out, "042\n");
+    }
+
+    #[test]
+    fn alphanumeric_to_scaled_numeric_move_shorter_source_zero_pads() {
+        // PIC X(2)="42" → PIC 9(2)V9: fold → 42, slot 042 (left-zero-padded to the
+        // 3 positions), reads 4.2 → DISPLAY "042".
+        let out = run_ws(
+            &["01  A  PIC X(2) VALUE \"42\".", "01  N  PIC 9(2)V9."],
+            &["    MOVE A TO N.", "    DISPLAY N.", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(out, "042\n");
+    }
+
+    #[test]
+    fn alphanumeric_to_scaled_numeric_move_longer_source_truncates_high_order() {
+        // PIC X(5)="12345" → PIC 9(2)V9: fold → 12345, keep the low-order (i+d)=3
+        // digits → slot 345, reads 34.5 → DISPLAY "345".
+        let out = run_ws(
+            &["01  A  PIC X(5) VALUE \"12345\".", "01  N  PIC 9(2)V9."],
+            &["    MOVE A TO N.", "    DISPLAY N.", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(out, "345\n");
+    }
+
+    #[test]
+    fn alphanumeric_to_scaled_numeric_move_more_fraction_than_source_digits() {
+        // PIC X(1)="5" → PIC 9(1)V99: fold → 5, slot 005 (magnitude has fewer digits
+        // than i+d=3), reads 0.05 → DISPLAY "005".
+        let out = run_ws(
+            &["01  A  PIC X(1) VALUE \"5\".", "01  N  PIC 9(1)V99."],
+            &["    MOVE A TO N.", "    DISPLAY N.", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(out, "005\n");
+    }
+
+    #[test]
+    fn alphanumeric_to_signed_scaled_numeric_move_is_deferred() {
+        // A SIGNED SCALED receiver (`PIC S9V9`) is still a later rung.
         let err = run_ws(
-            &["01  A  PIC X(3) VALUE \"042\".", "01  N  PIC 9V9."],
+            &["01  A  PIC X(3) VALUE \"042\".", "01  N  PIC S9V9."],
             &["    MOVE A TO N.", "    STOP RUN."],
         )
         .unwrap_err();

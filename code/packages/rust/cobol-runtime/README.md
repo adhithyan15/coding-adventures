@@ -28,10 +28,14 @@ source — integer **or** scaled `PIC 9(i)V9(d)`, whose `(i+d)`-digit image
 concatenates the integer and fractional digits with **no** decimal point (the
 oracle's `Decimal::digits()` = `int + frac`) — into an alphanumeric receiver (that
 image left-justified, space-padded, or truncated) and the reverse — an
-alphanumeric source into an unsigned-integer numeric receiver (its `m` chars
-folded into an unsigned integer and de-scaled right-justified, keeping the
-low-order `n` digits: `receiver = (integer from the source) mod 10^n`); a signed
-numeric item on either side, an alphanumeric→scaled-receiver MOVE, a group, and a
+alphanumeric source into an unsigned numeric receiver, **integer or scaled
+`PIC 9(i)V9(d)`**: its `m` chars fold into an unsigned integer `V`, and that fold
+**is the receiver's scaled slot magnitude directly** — the `(i+d)` digit positions
+right-justified with the implied point `d` places from the right, so
+`slot = V mod 10^(i+d)` (`MOVE "042" TO 9(2)V9` → `042` reads `4.2`,
+`MOVE "12345" TO 9(2)V9` → `345` reads `34.5`; NOT the arithmetic decimal-align
+rule — `V` is not multiplied by `10^d`); a signed
+numeric item on either side, a group, and a
 source wider than 18 chars are later rungs; `DISPLAY`; `STOP RUN`;
 fixed-point
 decimal `ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE` (decimal-point aligned; `ROUNDED`
