@@ -32,6 +32,13 @@ import {
 } from "./scheduler.ts";
 import { buildPool, type PoolEntry } from "./interleave.ts";
 import { loadLessons, indicesByLanguage, nextDue } from "./lessons.ts";
+import { planSession } from "./sessionplan.ts";
+import {
+  sweepableConcepts,
+  activeChain,
+  LANGUAGE_CHAIN,
+} from "./sequence.ts";
+import type { SessionStep } from "./session.ts";
 import {
   crossLanguageConcepts,
   datasetFromLessons,
@@ -53,8 +60,26 @@ import "./styles.css";
 const app = document.getElementById("app");
 if (!app) throw new Error("missing #app root");
 
-type Mode = "browse" | "practice" | "lessons" | "concepts";
-let mode: Mode = "browse";
+type Mode = "learn" | "browse" | "practice" | "lessons" | "concepts";
+let mode: Mode = "learn";
+
+// --- the curriculum session (HL03 phase 6) ----------------------------------
+//
+// The whole app is really ONE thing: walk the curriculum the way the book does —
+// concept by concept, forward along the language chain — and let every new
+// language connect back to the ones already learned. `sequence.ts` gives the
+// book-ordered spine of concepts; `sessionplan.ts` assembles one concept into a
+// teaching sweep across the active chain, each stop carrying its connections
+// back to earlier languages that share a root.
+//
+// The whole chain is active: a concept simply appears in whichever of the ten
+// languages actually teach it (a sweep is "the languages that CAN show it").
+const ACTIVE_COUNT = LANGUAGE_CHAIN.length;
+// How far along the spine the learner has walked. Everything up to and including
+// this concept is "covered" (what the review quiz will later draw from); this
+// concept is the one currently being taught. The spine itself (CONCEPT_SPINE) is
+// built just below, once LESSONS is loaded.
+let conceptCursor = 0;
 
 // --- lesson review state ----------------------------------------------------
 //
@@ -65,6 +90,18 @@ let mode: Mode = "browse";
 // written to localStorage (see progress.ts), so the app finally remembers you.
 const LESSONS = loadLessons();
 const LESSON_IDS = LESSONS.map((l) => l.id);
+// Consolidation lessons — chapter practice, mixed drills, dialogues, reviews —
+// are not atomic concepts: their headword is a placeholder ("(practice)"), they
+// carry no roots, and they exist to REVISIT earlier lessons (`reviews_of`).
+// That kind of consolidation is exactly what the review quiz is for, so keep
+// these out of the teaching spine — the learner should walk real words and
+// grammar, one concept at a time, not land on "(practice)".
+const CONSOLIDATION_TYPES = new Set(["practice", "practice-mix", "review"]);
+const CONCEPT_LESSONS = LESSONS.filter((l) => !CONSOLIDATION_TYPES.has(l.type));
+// The book-ordered concept spine the Learn session walks — the concepts taught
+// by any active language, in the order the book first introduces them. Constant
+// for the page's lifetime (the curriculum does not change while it is open).
+const CONCEPT_SPINE = sweepableConcepts(CONCEPT_LESSONS, activeChain(ACTIVE_COUNT));
 // Constant for the page's lifetime: lesson indices grouped by language, and the
 // round-robin pool over those groups. Computing them once is why consecutive
 // reviews can walk across languages cheaply.
@@ -125,15 +162,23 @@ function resolve(idx: number): PoolEntry {
 
 // --- shared chrome ----------------------------------------------------------
 
+const SUBTITLES: Record<Mode, string> = {
+  learn:
+    "Walk the curriculum the way the book does — one concept at a time, across every language that teaches it, with the threads back to what you already know.",
+  browse:
+    "Pick a script and a letter to see its pieces and stroke order — for pen-and-paper practice.",
+  practice:
+    "Recall drill: read the sound, pick the matching letter. Wrong answers are the confusable ones.",
+  lessons: "Spaced review across the whole curriculum, interleaved by language.",
+  concepts: "One idea, side by side, in every language that has it.",
+};
+
 function renderHeader(): HTMLElement {
   const header = el("header", "header");
   const h1 = el("h1", "");
   h1.textContent = "Script writing — learn it, then write it";
   const sub = el("p", "sub");
-  sub.textContent =
-    mode === "browse"
-      ? "Pick a script and a letter to see its pieces and stroke order — for pen-and-paper practice."
-      : "Recall drill: read the sound, pick the matching letter. Wrong answers are the confusable ones.";
+  sub.textContent = SUBTITLES[mode];
   header.append(h1, sub, renderModeToggle());
   return header;
 }
@@ -141,12 +186,13 @@ function renderHeader(): HTMLElement {
 function renderModeToggle(): HTMLElement {
   const wrap = el("div", "modes");
   const LABELS: Record<Mode, string> = {
+    learn: "Learn",
     browse: "Browse",
     practice: "Practice",
     lessons: "Lessons",
     concepts: "Concepts",
   };
-  (["browse", "practice", "lessons", "concepts"] as Mode[]).forEach((m) => {
+  (["learn", "browse", "practice", "lessons", "concepts"] as Mode[]).forEach((m) => {
     const b = el("button", "mode" + (m === mode ? " mode--active" : ""));
     b.textContent = LABELS[m];
     b.setAttribute("aria-pressed", String(m === mode));
@@ -469,6 +515,158 @@ function gradeLesson(wasCorrect: boolean): void {
   render();
 }
 
+// --- learn mode — the curriculum session -----------------------------------
+//
+// This is the app's spine made visible: a single concept, taught across every
+// active language that has it, in chain order, each stop showing the word and —
+// the whole point — the threads back to the languages already learned. The
+// learner walks the concept spine forward one step at a time; "covered" grows
+// with the cursor, which is what the review quiz (a later slice) will draw from.
+//
+// All the sequencing is in the engine (`planSession` → teaching sweep with
+// connections); this function only lays it out. Everything goes in via
+// textContent — the corpus is repo-authored, but it is still data.
+
+/** Humanize a concept tag ("COURTESY-THANKS") for a heading ("courtesy · thanks"). */
+function conceptTitle(tag: string): string {
+  return tag.toLowerCase().replace(/_/g, " ").replace(/-/g, " · ");
+}
+
+/** The gloss of the first lesson taught in the sweep, for the concept subhead. */
+function firstGloss(teaching: SessionStep[]): string {
+  return teaching[0]?.lessons[0]?.gloss ?? "";
+}
+
+/** One stop of the sweep: a language, its word(s) for the concept, its threads back. */
+function renderTeachingStep(step: SessionStep, ordinal: number): HTMLElement {
+  const card = el("div", "step");
+
+  const head = el("div", "step__head");
+  const num = el("span", "step__num");
+  num.textContent = String(ordinal + 1);
+  const lang = el("span", "step__lang");
+  lang.textContent = step.language;
+  head.append(num, lang);
+  if (ordinal === 0) {
+    // The first stop has no connections — it is where the concept enters.
+    const badge = el("span", "step__badge");
+    badge.textContent = "introduced here";
+    head.appendChild(badge);
+  }
+  card.appendChild(head);
+
+  for (const lesson of step.lessons) {
+    const row = el("div", "step__word");
+    const glyph = el("span", "step__glyph");
+    glyph.textContent = lesson.headword; // in its own script
+    row.appendChild(glyph);
+
+    const meta = el("div", "step__meta");
+    // Only show romanization when it adds something the headword doesn't.
+    if (lesson.romanization && lesson.romanization !== lesson.headword) {
+      const rom = el("span", "step__rom");
+      rom.textContent = lesson.romanization;
+      meta.appendChild(rom);
+    }
+    const gl = el("span", "step__gloss");
+    gl.textContent = lesson.gloss;
+    meta.appendChild(gl);
+    row.appendChild(meta);
+    card.appendChild(row);
+
+    if (lesson.etymologyHook) {
+      const hook = el("p", "step__hook");
+      hook.textContent = lesson.etymologyHook;
+      card.appendChild(hook);
+    }
+  }
+
+  // The threads back to earlier languages — the spiral, made literal. Each is a
+  // grounded link: the two words genuinely share the named root.
+  for (const c of step.connections) {
+    const conn = el("p", "step__conn");
+    conn.textContent = `↩ connects to ${c.to} — shared root ${c.sharedRoots.join(", ")}`;
+    card.appendChild(conn);
+  }
+  return card;
+}
+
+/** Prev / Next along the concept spine — walking the curriculum forward. */
+function renderLearnNav(): HTMLElement {
+  const nav = el("div", "learn__nav");
+  const prev = el("button", "opt") as HTMLButtonElement;
+  prev.textContent = "← Previous concept";
+  prev.disabled = conceptCursor === 0;
+  prev.onclick = () => {
+    if (conceptCursor > 0) {
+      conceptCursor -= 1;
+      render();
+    }
+  };
+  const next = el("button", "opt") as HTMLButtonElement;
+  next.textContent = "Next concept →";
+  next.disabled = conceptCursor >= CONCEPT_SPINE.length - 1;
+  next.onclick = () => {
+    if (conceptCursor < CONCEPT_SPINE.length - 1) {
+      conceptCursor += 1;
+      render();
+    }
+  };
+  nav.append(prev, next);
+  return nav;
+}
+
+function renderLearn(): HTMLElement {
+  const wrap = el("div", "learn");
+
+  if (CONCEPT_SPINE.length === 0) {
+    const empty = el("p", "muted");
+    empty.textContent = "No concepts to walk yet.";
+    wrap.appendChild(empty);
+    return wrap;
+  }
+
+  // The cursor only moves via the nav buttons, but clamp defensively so a stray
+  // value can never index off the end of the spine.
+  conceptCursor = Math.max(0, Math.min(conceptCursor, CONCEPT_SPINE.length - 1));
+
+  const concept = CONCEPT_SPINE[conceptCursor]!;
+  // Everything up to and including the current concept is "covered" — the review
+  // quiz (a later slice) draws from exactly this. Here we render the teaching
+  // pass: the current concept alone, swept across the chain.
+  const covered = CONCEPT_SPINE.slice(0, conceptCursor + 1);
+  const plan = planSession(concept, covered, CONCEPT_LESSONS, ACTIVE_COUNT);
+
+  const progress = el("p", "score");
+  progress.textContent =
+    `Concept ${conceptCursor + 1} of ${CONCEPT_SPINE.length}` +
+    ` · taught in ${plan.teaching.length} language${plan.teaching.length === 1 ? "" : "s"}`;
+  wrap.appendChild(progress);
+
+  const heading = el("h2", "learn__concept");
+  heading.textContent = conceptTitle(concept);
+  wrap.appendChild(heading);
+  const gloss = firstGloss(plan.teaching);
+  if (gloss) {
+    const g = el("p", "muted learn__gloss");
+    g.textContent = gloss;
+    wrap.appendChild(g);
+  }
+
+  if (plan.teaching.length === 0) {
+    const none = el("p", "muted");
+    none.textContent = "No active language teaches this concept yet.";
+    wrap.appendChild(none);
+  } else {
+    const sweep = el("div", "sweep");
+    plan.teaching.forEach((step, i) => sweep.appendChild(renderTeachingStep(step, i)));
+    wrap.appendChild(sweep);
+  }
+
+  wrap.appendChild(renderLearnNav());
+  return wrap;
+}
+
 /**
  * Concepts mode — the same idea, side by side, in every language that has it.
  *
@@ -641,12 +839,15 @@ function render(): void {
   // The script tabs steer per-script work; hide them during a mixed session,
   // and in Lessons/Concepts modes, which span every language rather than one
   // script.
-  const spansAllLanguages = mode === "lessons" || mode === "concepts";
+  const spansAllLanguages =
+    mode === "learn" || mode === "lessons" || mode === "concepts";
   if (!spansAllLanguages && !(mode === "practice" && scope === "mixed")) {
     app!.appendChild(renderTabs());
   }
 
-  if (mode === "concepts") {
+  if (mode === "learn") {
+    app!.appendChild(renderLearn());
+  } else if (mode === "concepts") {
     app!.appendChild(renderConcepts());
   } else if (mode === "lessons") {
     app!.appendChild(renderLessons());

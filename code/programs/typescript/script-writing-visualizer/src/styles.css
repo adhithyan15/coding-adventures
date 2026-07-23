@@ -233,3 +233,80 @@ body {
 @media (max-width: 560px) {
   .concept__row { grid-template-columns: 1fr; gap: 2px; }
 }
+
+/* --- learn mode — the curriculum session -------------------------------- */
+.learn { max-width: 640px; }
+.learn__concept {
+  font-size: 1.5rem;
+  margin: 2px 0 2px;
+  text-transform: capitalize;
+}
+.learn__gloss { margin: 0 0 18px; font-size: 1rem; font-style: normal; }
+
+/* The sweep: one card per language stop, read top-to-bottom in chain order. */
+.sweep { display: flex; flex-direction: column; gap: 12px; }
+.step {
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+.step__head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.step__num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: var(--ink);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  flex: none;
+}
+.step__lang {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  font-weight: 600;
+}
+.step__badge {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  padding: 1px 8px;
+}
+.step__word { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.step__glyph { font-size: 1.9rem; line-height: 1.2; }
+.step__meta { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.step__rom { color: var(--muted); font-style: italic; font-size: 0.95rem; }
+.step__gloss { font-size: 0.95rem; }
+.step__hook { margin: 8px 0 0; font-size: 0.85rem; line-height: 1.5; color: var(--muted); }
+/* The threads back to earlier languages — the reason the whole app exists. */
+.step__conn {
+  margin: 8px 0 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--accent);
+  background: #eef1fd;
+  border-left: 3px solid var(--accent);
+  padding: 5px 10px;
+  border-radius: 0 4px 4px 0;
+}
+.learn__nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 20px; }
+.learn__nav .opt {
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.learn__nav .opt:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.learn__nav .opt:disabled { opacity: 0.4; cursor: default; }
