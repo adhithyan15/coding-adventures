@@ -34,12 +34,12 @@ import { buildPool, type PoolEntry } from "./interleave.ts";
 import { loadLessons, indicesByLanguage, nextDue } from "./lessons.ts";
 import {
   planSession,
-  initProgress,
   applyAnswer,
   type Progress,
 } from "./sessionplan.ts";
 import { pickNext as pickReviewCell, makeRng, cellKey, type GridCell } from "./quiz.ts";
 import { confusions } from "./mistakes.ts";
+import { loadReview, saveReview } from "./reviewstore.ts";
 import {
   sweepableConcepts,
   activeChain,
@@ -129,8 +129,13 @@ const CONCEPT_SPINE = sweepableConcepts(CONCEPT_LESSONS, activeChain(ACTIVE_COUN
 // Look up a lesson's word by its cell so a logged confusion (stored as a cellKey)
 // can be shown as the actual word, not an opaque id.
 const LESSON_BY_ID = new Map(LESSONS.map((l) => [l.id, l]));
-let reviewProgress: Progress = initProgress();
-let reviewSession = 0; // advances once per answered question — the SRS clock
+// Restore the review's SRS state + answer log from localStorage so the quiz
+// remembers you between visits (reusing the same storage port progress.ts owns).
+// A missing, corrupt, or wrong-version blob restores as empty — never throws.
+const REVIEW_STORAGE = browserStorage();
+const restoredReview = loadReview(REVIEW_STORAGE);
+let reviewProgress: Progress = restoredReview.progress;
+let reviewSession = restoredReview.session; // advances once per answered question — the SRS clock
 let reviewCell: GridCell | null = null; // the question currently on screen
 let reviewOptions: GridCell[] = []; // its answer options (one is `reviewCell`)
 let reviewChosen: string | null = null; // cellKey of the picked option; null = unanswered
@@ -857,6 +862,8 @@ function renderReview(grid: GridCell[]): HTMLElement {
       // confusion (which wrong word was picked) on a miss; advance the SRS clock.
       reviewProgress = applyAnswer(reviewProgress, cell, correct, reviewSession, correct ? undefined : k);
       reviewSession += 1;
+      // Persist immediately so a reload resumes exactly here. Silent on failure.
+      saveReview(REVIEW_STORAGE, reviewProgress, reviewSession);
       render();
     };
     opts.appendChild(b);

@@ -30,8 +30,11 @@ concept×language grid up to the cursor), leaning on what you keep missing
 from the **same concept in other languages** — the cross-language look-alikes
 the interleaving targets (Telugu ధన్యవాద vs Hindi धन्यवाद). Answers thread
 through `applyAnswer` (promote a hit, demote + log a miss), and a *"what you keep
-confusing"* panel rolls the mistakes up from `confusions(log)`. Progress lives in
-memory for now; persistence is a later slice.
+confusing"* panel rolls the mistakes up from `confusions(log)`. The review
+**persists** (`reviewstore.ts`): its SRS state and answer log are saved to
+`localStorage` after every answer and restored at startup — the same pattern
+`progress.ts` uses for the lesson schedule, with the same defensive parse (a
+corrupt or wrong-version blob restores as empty, never throws).
 
 ## Concepts mode
 
