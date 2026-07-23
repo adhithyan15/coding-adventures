@@ -32,6 +32,7 @@ function lesson(over: Partial<Lesson> & { id: string }): Lesson {
     concept: "",
     prerequisites: [],
     reviewsOf: [],
+    roots: [],
     romanization: "",
     script: "latin",
     etymologyHook: "",

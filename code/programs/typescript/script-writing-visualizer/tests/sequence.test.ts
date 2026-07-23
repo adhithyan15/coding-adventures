@@ -24,6 +24,7 @@ function L(language: string, concept: string, chapter: number, id?: string): Les
     concept,
     prerequisites: [],
     reviewsOf: [],
+    roots: [],
     romanization: "x",
     script: language,
     etymologyHook: "",

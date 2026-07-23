@@ -20,6 +20,7 @@ gloss: the future
 concept_tag: ES-FUTURE
 prerequisites: [ES-C16-practice]
 reviews_of: [ES-C16-practice, ES-C06-hablar]
+roots: [futurus, esse]
 ---
 
 # body
@@ -102,6 +103,22 @@ describe("loadLessons", () => {
     const ids = loadLessons(sources).map((l) => l.id);
     expect([...ids].sort()).toEqual(ids);
   });
+
+  it("threads a lesson's etymological roots through — the cross-language join key", () => {
+    const byId = new Map(loadLessons(sources).map((l) => [l.id, l]));
+    expect(byId.get("ES-C17-futuro")!.roots).toEqual(["futurus", "esse"]);
+    // CONTROL: a lesson that cites no roots gets [], not undefined or a stray value.
+    expect(byId.get("TA-C06-dative-ukku")!.roots).toEqual([]);
+  });
+
+  it("the real curriculum carries roots (a Sanskrit root shared across the chain)", () => {
+    // `dhanya` (the Sanskrit root of "thanks") is cited by Hindi, Kannada and
+    // Telugu lessons — a real shared-root connection. If roots weren't plumbed
+    // through toLesson, every lesson's roots would be [] and this would fail.
+    const withDhanya = loadLessons().filter((l) => l.roots.includes("dhanya"));
+    const langs = new Set(withDhanya.map((l) => l.language));
+    expect(langs.size).toBeGreaterThanOrEqual(2);
+  });
 });
 
 /** A Lesson with everything defaulted, so a test only states what it cares about. */
@@ -115,6 +132,7 @@ export function lesson(over: Partial<Lesson> & { id: string }): Lesson {
     concept: "",
     prerequisites: [],
     reviewsOf: [],
+    roots: [],
     romanization: "",
     script: "latin",
     etymologyHook: "",
