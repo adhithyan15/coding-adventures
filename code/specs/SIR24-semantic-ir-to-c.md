@@ -77,12 +77,14 @@ then (4) `emit::emit_module`.
 **Landed since v0** (`ACCEPTED_FEATURES` grows one version-bumped batch at a
 time — see the roadmap): the SIR26 integer conversions (`Conversions`,
 `SizedIntegers`, `Unsigned`, `WrappingArithmetic`); and the SIR16 batches
-`Loops` + `MutableBindings` (0.3.0–0.5.0), `Sequences` (0.6.0), and `Maps`
-(0.7.0 — the `SIR_MAP` assoc-array with `MapLit`/`MapGet`/`MapSet`).
+`Loops` + `MutableBindings` (0.3.0–0.5.0), `Sequences` (0.6.0), `Maps`
+(0.7.0 — the `SIR_MAP` assoc-array with `MapLit`/`MapGet`/`MapSet`), and
+`Floats` (0.8.0 — `FloatLit` on the v0 `SIR_FLOAT` tag; emitter-only, the
+runtime already carried the float path).
 
 **Still rejects** (clean, source-positioned `UnsupportedFeature`):
 `TailCalls` (C does not guarantee TCO), `Intrinsics` (empty whitelist), and
-every not-yet-landed feature (`Floats`, `ShortCircuit`, `NDArrays`,
+every not-yet-landed feature (`ShortCircuit`, `NDArrays`,
 `Exceptions`, `Classes`, … — see the roadmap).  `Bignum` stays
 rejected until a bignum runtime ships, so a module that *needs* arbitrary
 precision is refused rather than silently truncated.

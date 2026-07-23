@@ -66,6 +66,16 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     Feature::SizedIntegers,
     Feature::Unsigned,
     Feature::WrappingArithmetic,
+    // ── SIR16 floats ─────────────────────────────────────────────────
+    // `SirValue` has carried a `SIR_FLOAT` tag since v0 (`_sir_float`, the
+    // arithmetic helpers' int→float promotion, `_sir_divide_v`'s IEEE float
+    // path, `_sir_fmt_float`), so this batch is purely an EMITTER addition:
+    // `Expr::FloatLit` → `_sir_float(<literal>)` (via `emit_float_literal`,
+    // which spells a finite value as a C `double` literal and a non-finite one
+    // with the `<math.h>` `INFINITY`/`NAN` macros). `Floats` gates ONLY
+    // `FloatLit`; float `+`/`-`/`*`/`/` reuse the existing variadic helpers, so
+    // accepting the feature plus the one emit arm keeps the emitter total.
+    Feature::Floats,
     // ── SIR16 control flow / mutation ────────────────────────────────
     // `Stmt::While` renders as a portable `for (;;) { … if (!truthy) break; }`
     // (the condition is re-evaluated each iteration, so it may be compound);
