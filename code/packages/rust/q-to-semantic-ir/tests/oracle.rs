@@ -22,42 +22,43 @@
 //! is just `name` + `source` (one full program, byte-identical on both
 //! sides) + `expected`, plus `known_bug` (see below).
 //!
-//! ## A pre-existing shared-crate display gap, confirmed here too (matches
-//! `j-to-semantic-ir/tests/oracle.rs`'s own "Bug A")
+//! ## A pre-existing shared-crate display gap (matches `j-to-semantic-ir/
+//! tests/oracle.rs`'s own "Bug A"), FIXED as of task #109
 //!
-//! `semantic-ir-to-javascript` has exactly two per-source-language display
-//! flags (`SIR_DISPLAY_APL_HIGH_MINUS`, `SIR_DISPLAY_J_UNDERSCORE`) and no
-//! third one for Q. Empirically confirmed directly (a throwaway probe that
-//! ran each shape through `node` before this file was finalized, mirroring
-//! `j-to-semantic-ir/tests/oracle.rs`'s own verification discipline):
+//! `semantic-ir-to-javascript` originally had exactly two per-source-
+//! language display flags (`SIR_DISPLAY_APL_HIGH_MINUS`,
+//! `SIR_DISPLAY_J_UNDERSCORE`) and no third one for Q. Empirically
+//! confirmed directly (a throwaway probe that ran each shape through
+//! `node` before this file was finalized, mirroring `j-to-semantic-ir/
+//! tests/oracle.rs`'s own verification discipline):
 //!
 //! - A **bare/boxed scalar** negative result (`formatSeen`'s `typeof v ===
-//!   "number"` branch) renders via plain `String(v)` when neither flag is
+//!   "number"` branch) renders via plain `String(v)` when no display flag is
 //!   set — which happens to be Q's OWN convention already (`-5`, ASCII, no
-//!   high-minus) — so this path has **no bug for Q at all**, unlike J
-//!   (which needs a leading underscore neither flag produces).
+//!   high-minus) — so this path had **no bug for Q at all**, unlike J
+//!   (which needs a leading underscore no pre-existing flag produced).
 //! - A **genuine NDArray** result (any [`semantic_ir::Expr::ElementwiseOp`]/
 //!   `Reduce`/`Scan`/`Ravel`/`Catenate`, or `mapNDArrayRank1Plus`'s rank≥1
-//!   branch inside `neg`/`q_reverse`/etc.) reaches `ArrayRt.display` →
-//!   `ArrayRt.fmtNum`, which renders APL's own high-minus `¯` for ANY
-//!   negative value whenever `SIR_DISPLAY_J_UNDERSCORE` is unset —
+//!   branch inside `neg`/`q_reverse`/etc.) reached `ArrayRt.display` →
+//!   `ArrayRt.fmtNum`, which rendered APL's own high-minus `¯` for ANY
+//!   negative value whenever `SIR_DISPLAY_J_UNDERSCORE` was unset —
 //!   *unconditionally*, with no flag gating it for Q either. Confirmed
-//!   directly: `3-4` (a dyadic `ElementwiseOp`) prints `¯1`, not Q's own
-//!   `-1`; `-/1 2 10` (`Reduce`) prints `¯11`.
+//!   directly: `3-4` (a dyadic `ElementwiseOp`) printed `¯1`, not Q's own
+//!   `-1`; `-/1 2 10` (`Reduce`) printed `¯11`.
 //!
-//! This is the exact same shared-crate gap `j-to-semantic-ir`'s own oracle
-//! file already found and left unfixed (per this task's own "found, NOT
-//! fixed here" discipline for a bug in a crate consumed by many other
-//! frontends) — not a new, Q-specific bug, and not something this crate's
-//! own lowering can route around (same conclusion `j-to-semantic-ir`
-//! reached: fixing it needs a third `SIR_DISPLAY_Q_ASCII`-shaped flag, or
-//! simply making the "no flag set" default apply inside `ArrayRt.fmtNum`
-//! too, in `semantic-ir-to-javascript` itself, out of scope here). Every
-//! `CORPUS` entry below whose `expected` value is a negative number reached
-//! through a genuine-NDArray-producing path carries a `known_bug` note
-//! citing this section; a negative result reached through a BARE-number
-//! path (a literal, or `neg`'s own rank-0 fallback unwrap) is a clean,
-//! both-sides-pass case, confirmed by direct empirical check.
+//! This was the exact same shared-crate gap `j-to-semantic-ir`'s own oracle
+//! file already found and left unfixed (per this repo's "found, NOT fixed
+//! here" discipline for a bug in a crate consumed by many other frontends)
+//! — not a Q-specific bug, and not something this crate's own lowering could
+//! route around. Task #109 closed it directly in `semantic-ir-to-javascript`
+//! (a third, mutually-exclusive `SIR_DISPLAY_Q_ASCII_MINUS` display flag,
+//! following the same pattern `SIR_DISPLAY_J_UNDERSCORE` established for
+//! J — see that crate's own `src/emit.rs`/`src/runtime.rs` and
+//! `CHANGELOG.md` for the full writeup), so every `CORPUS` entry below now
+//! has `known_bug: None` and is checked end-to-end on both sides. The
+//! `known_bug` field itself is kept on [`Case`] (unused by any entry today)
+//! so a future frontier bug can be recorded the same way without a struct
+//! change.
 
 use std::fs::OpenOptions;
 use std::io::Write as _;
@@ -83,16 +84,12 @@ struct Case {
     /// `None`: both `ground_truth` and `compiled` must equal `expected`.
     /// `Some(reason)`: only `ground_truth` is checked against `expected`;
     /// the `compiled`-side call is skipped entirely -- see this file's
-    /// module doc comment's "shared-crate display gap" section.
+    /// module doc comment's "shared-crate display gap" section. No
+    /// `CORPUS` entry uses `Some` today (task #109 fixed the one
+    /// pre-existing gap directly in `semantic-ir-to-javascript`) -- the
+    /// field stays available for a future genuine bug.
     known_bug: Option<&'static str>,
 }
-
-const DISPLAY_GAP: &str =
-    "shared-crate display gap (semantic-ir-to-javascript has no Q-specific ASCII-minus display \
-     flag -- see this file's module doc comment): a genuine NDArray result's negative values \
-     render with APL's high-minus glyph (\u{af}) instead of Q's own ASCII '-', regardless of \
-     source language, whenever SIR_DISPLAY_J_UNDERSCORE is unset. Confirmed by directly running \
-     the generated JavaScript; not a bug in this crate's own lowering.";
 
 const CORPUS: &[Case] = &[
     // --- Base breadth: right-to-left, no precedence, grouping ---
@@ -118,7 +115,7 @@ const CORPUS: &[Case] = &[
         name: "whitespace_sensitive_strand_vs_subtraction_strand",
         source: "2 -1\n",
         expected: "2 -1",
-        known_bug: Some(DISPLAY_GAP),
+        known_bug: None,
     },
     Case {
         name: "whitespace_sensitive_strand_vs_subtraction_subtract",
@@ -149,12 +146,13 @@ const CORPUS: &[Case] = &[
         expected: "3 7",
         known_bug: None,
     },
-    // Dyadic subtraction with a NEGATIVE result -- hits the display gap.
+    // Dyadic subtraction with a NEGATIVE result -- used to hit the display
+    // gap (fixed by task #109; see this file's module doc comment).
     Case {
         name: "dyadic_sub_negative_result",
         source: "3-4\n",
         expected: "-1",
-        known_bug: Some(DISPLAY_GAP),
+        known_bug: None,
     },
 
     // --- Monadic primitives ---
@@ -169,14 +167,14 @@ const CORPUS: &[Case] = &[
         expected: "-7",
         known_bug: None,
     },
-    // Monadic `-` on a genuine VECTOR operand DOES hit the display gap
+    // Monadic `-` on a genuine VECTOR operand used to hit the display gap
     // (`mapNDArrayRank1Plus`'s rank>=1 branch always re-wraps in an
-    // NDArray).
+    // NDArray) -- fixed by task #109; see this file's module doc comment.
     Case {
         name: "monadic_minus_negates_a_vector",
         source: "-(1 2 3)\n",
         expected: "-1 -2 -3",
-        known_bug: Some(DISPLAY_GAP),
+        known_bug: None,
     },
     Case { name: "monadic_star_is_first_not_sign", source: "*1 2 3\n", expected: "1", known_bug: None },
     Case { name: "monadic_percent_is_reciprocal", source: "%4\n", expected: "0.25", known_bug: None },
@@ -242,15 +240,16 @@ const CORPUS: &[Case] = &[
         name: "each_on_an_elementwise_primitive_matches_direct_application",
         source: "-'1 2 3\n",
         expected: "-1 -2 -3",
-        known_bug: Some(DISPLAY_GAP),
+        known_bug: None,
     },
     // Reduce-of-scan with a negative result -- Reduce's own NDArray output
-    // hits the display gap.
+    // used to hit the display gap (fixed by task #109; see this file's
+    // module doc comment).
     Case {
         name: "scan_then_reduce_negative",
         source: "-/+\\1 2 3\n",
         expected: "-8",
-        known_bug: Some(DISPLAY_GAP),
+        known_bug: None,
     },
 
     // --- Assignment: silent, chained, later reference ---
