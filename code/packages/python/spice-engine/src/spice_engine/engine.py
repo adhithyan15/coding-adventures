@@ -605,7 +605,7 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
-        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg, element.Vaf, element.Nf, element.Nr, element.Vje, element.Mje, element.Vjc, element.Mjc, element.Fc, element.Var, element.Ikf, element.Ise, element.Ne, element.Isc, element.Nc, element.Xtb, element.beta_r, element.Ikr, element.Tnom, element.Kf, element.Af, element.Ptf, element.Xtf, element.Itf)
+        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg, element.Vaf, element.Nf, element.Nr, element.Vje, element.Mje, element.Vjc, element.Mjc, element.Fc, element.Var, element.Ikf, element.Ise, element.Ne, element.Isc, element.Nc, element.Xtb, element.beta_r, element.Ikr, element.Tnom, element.Kf, element.Af, element.Ptf, element.Xtf, element.Itf, element.Vtf)
     if isinstance(element, VCVS):
         return VCVS(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), _map_subckt_node(element.ctrl_plus, instance_name, node_map), _map_subckt_node(element.ctrl_minus, instance_name, node_map), element.gain)
     if isinstance(element, VCCS):
@@ -8743,7 +8743,11 @@ def _bjt_junction_transconductance(el: BJT, voltage: float, emission_coefficient
     return (el.Is / effective_thermal_voltage) * math.exp(exponent)
 
 
-def _bjt_forward_transit_time_scale(el: BJT, voltage: float) -> float:
+def _bjt_forward_transit_time_scale(
+    el: BJT,
+    voltage: float,
+    reverse_junction_voltage: float,
+) -> float:
     effective_thermal_voltage = el.Vt * el.Nf
     forward_current = max(
         el.Is * (math.exp(max(-40.0, min(40.0, voltage / effective_thermal_voltage))) - 1.0),
@@ -8753,15 +8757,26 @@ def _bjt_forward_transit_time_scale(el: BJT, voltage: float) -> float:
     if el.Itf > 0.0:
         ratio = forward_current / (forward_current + el.Itf)
         current_factor = ratio * ratio
-    return 1.0 + el.Xtf * current_factor
+    voltage_factor = 1.0
+    if el.Vtf > 0.0:
+        voltage_exponent = max(-40.0, min(40.0, reverse_junction_voltage / (1.44 * el.Vtf)))
+        voltage_factor = math.exp(voltage_exponent)
+    return 1.0 + el.Xtf * current_factor * voltage_factor
 
 
-def _bjt_charge_dynamic_capacitance(el: BJT, state_kind: str, voltage: float) -> float:
+def _bjt_charge_dynamic_capacitance(
+    el: BJT,
+    state_kind: str,
+    voltage: float,
+    reverse_junction_voltage: float,
+) -> float:
     if state_kind == "be":
         conductance = _bjt_junction_transconductance(el, voltage, el.Nf)
         return (
             _bjt_base_emitter_depletion_capacitance(el, voltage)
-            + el.Tf * _bjt_forward_transit_time_scale(el, voltage) * conductance
+            + el.Tf
+            * _bjt_forward_transit_time_scale(el, voltage, reverse_junction_voltage)
+            * conductance
         )
     conductance = _bjt_junction_transconductance(el, voltage, el.Nr)
     return _bjt_base_collector_depletion_capacitance(el, voltage) + el.Tr * conductance
@@ -8798,7 +8813,7 @@ def _bjt_charge_state_specs(el: BJT) -> list[tuple[str, str, str, str]]:
             specs.append((_bjt_base_emitter_charge_state_name(el), el.base, el.emitter, "be"))
         else:
             specs.append((_bjt_base_emitter_charge_state_name(el), el.emitter, el.base, "be"))
-    if el.Cjc > 0.0 or el.Tr > 0.0:
+    if el.Cjc > 0.0 or el.Tr > 0.0 or (el.Tf > 0.0 and el.Xtf > 0.0 and el.Vtf > 0.0):
         if el.polarity == "NPN":
             specs.append((_bjt_base_collector_charge_state_name(el), el.base, el.collector, "bc"))
         else:
@@ -9334,6 +9349,10 @@ def _validate_bjt(el: BJT) -> None:
     if not math.isfinite(el.Itf) or el.Itf < 0.0:
         raise ValueError(
             f"{el.name}: BJT forward transit-time current must be finite and non-negative"
+        )
+    if not math.isfinite(el.Vtf) or el.Vtf < 0.0:
+        raise ValueError(
+            f"{el.name}: BJT forward transit-time voltage must be finite and non-negative"
         )
     if not math.isfinite(el.Ise) or el.Ise < 0.0:
         raise ValueError(
@@ -10073,9 +10092,18 @@ def _build_transient_companions(
 
         # ---- BJT model-card charge companions ------------------------------
         elif isinstance(el, BJT):
+            reverse_junction_voltage = cap_voltages.get(
+                _bjt_base_collector_charge_state_name(el),
+                0.0,
+            )
             for state_name, n_plus, n_minus, state_kind in _bjt_charge_state_specs(el):
                 v_prev = cap_voltages.get(state_name, 0.0)
-                capacitance = _bjt_charge_dynamic_capacitance(el, state_kind, v_prev)
+                capacitance = _bjt_charge_dynamic_capacitance(
+                    el,
+                    state_kind,
+                    v_prev,
+                    reverse_junction_voltage,
+                )
                 if capacitance <= 0.0:
                     continue
                 if method == "trap":
@@ -10315,11 +10343,20 @@ def _update_reactive_state(
                 cap_voltages[state_name] = v_new
 
         elif isinstance(el, BJT):
+            reverse_junction_voltage = cap_voltages.get(
+                _bjt_base_collector_charge_state_name(el),
+                0.0,
+            )
             for state_name, n_plus, n_minus, state_kind in _bjt_charge_state_specs(el):
                 v_new = _bjt_charge_state_voltage(n_plus, n_minus, op.node_voltages)
                 v_prev = cap_voltages.get(state_name, v_new)
                 v_older = cap_voltages_older.get(state_name, v_prev)
-                capacitance = _bjt_charge_dynamic_capacitance(el, state_kind, v_prev)
+                capacitance = _bjt_charge_dynamic_capacitance(
+                    el,
+                    state_kind,
+                    v_prev,
+                    reverse_junction_voltage,
+                )
 
                 if capacitance > 0.0:
                     if method == "trap":
@@ -12611,7 +12648,7 @@ def _stamp_ac(
         )
         g_pi: float = base_gm / el.beta_f + leakage_conductance
         diffusion_capacitance = (
-            el.Tf * _bjt_forward_transit_time_scale(el, Vjunc) * gm_b
+            el.Tf * _bjt_forward_transit_time_scale(el, Vjunc, Vreverse) * gm_b
         )
         excess_phase = omega * el.Tf * el.Ptf * math.pi / 180.0
         gm_ac = complex(

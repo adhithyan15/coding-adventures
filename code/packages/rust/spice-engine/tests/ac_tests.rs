@@ -870,7 +870,12 @@ fn ac_bjt_forward_excess_phase_rotates_transconductance() {
 
 #[test]
 fn ac_bjt_forward_transit_time_bias_coefficient_scales_diffusion_capacitance() {
-    fn base_amplitude(coefficient: f64, transit_time_current: f64) -> f64 {
+    fn base_amplitude(
+        coefficient: f64,
+        transit_time_current: f64,
+        transit_time_voltage: f64,
+        collector_voltage: f64,
+    ) -> f64 {
         let mut circuit = Circuit::new();
         circuit.add(Element::VoltageSource(VoltageSource::with_ac(
             "Vac", "in", "0", 0.0, 1.0, 0.0,
@@ -878,7 +883,12 @@ fn ac_bjt_forward_transit_time_bias_coefficient_scales_diffusion_capacitance() {
         circuit.add(Element::Resistor(Resistor::new(
             "Rin", "in", "base", 1_000.0,
         )));
-        circuit.add(Element::Resistor(Resistor::new("Rc", "col", "0", 1_000.0)));
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vcol",
+            "col",
+            "0",
+            collector_voltage,
+        )));
         let mut transistor = Bjt::with_model(
             "Q1",
             "col",
@@ -895,6 +905,7 @@ fn ac_bjt_forward_transit_time_bias_coefficient_scales_diffusion_capacitance() {
         );
         transistor.forward_transit_time_bias_coefficient = coefficient;
         transistor.forward_transit_time_current = transit_time_current;
+        transistor.forward_transit_time_voltage = transit_time_voltage;
         circuit.add(Element::Bjt(transistor));
 
         ac_sweep(&circuit, 100_000.0, 100_000.0, 1).unwrap()[0]
@@ -903,12 +914,14 @@ fn ac_bjt_forward_transit_time_bias_coefficient_scales_diffusion_capacitance() {
             .abs()
     }
 
-    let nominal = base_amplitude(0.0, 0.0);
-    let bias_scaled = base_amplitude(9.0, 0.0);
-    let current_limited = base_amplitude(9.0, 1.0);
+    let nominal = base_amplitude(0.0, 0.0, 0.0, 0.0);
+    let bias_scaled = base_amplitude(9.0, 0.0, 0.0, 0.0);
+    let current_limited = base_amplitude(9.0, 1.0, 0.0, 0.0);
+    let voltage_limited = base_amplitude(9.0, 0.0, 0.1, 1.0);
 
     assert!(bias_scaled < nominal / 5.0);
     assert!(current_limited > bias_scaled * 5.0);
+    assert!(voltage_limited > bias_scaled * 5.0);
 }
 
 #[test]

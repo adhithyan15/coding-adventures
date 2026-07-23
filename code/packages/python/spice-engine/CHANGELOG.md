@@ -1,5 +1,8 @@
 # Changelog
 
+- Add BJT model-card `VTF` forward transit-time voltage-scale support, applying
+  `exp(Vbc / (1.44 * VTF))` to the `XTF` AC and transient storage enhancement.
+
 - Add BJT model-card `ITF` forward transit-time current-scale support, applying
   `(If / (If + ITF))^2` to the `XTF` AC and transient storage enhancement.
 - Add BJT model-card `XTF` forward transit-time bias-coefficient support,
