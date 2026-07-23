@@ -11,14 +11,20 @@
 //! Milestone 1: functions, typed integer `+`/`-`/`*`, casts, declarations,
 //! `printf`, and a trailing `return`.
 //!
-//! Milestone 2 (this revision) adds **comparisons and control flow** —
+//! Milestone 2 adds **comparisons and control flow** —
 //! `< > <= >= == !=`, `if`/`else`, `while`, `for`, and re-assignment — bridging
 //! the C-vs-SIR *truthiness mismatch* (C: `0` is false and a comparison yields
 //! `int` `0`/`1`; SIR: only nil/false are falsy and comparisons yield `bool`).
 //! A C condition lowers to a SIR bool (`!=(e, 0)`, or the comparison builtin
 //! directly), and a comparison used as a value lowers back to an int via
-//! `If(cmp, 1, 0)`.  Early `return` (anywhere but the function's last statement)
-//! stays deferred: SIR functions yield their block value, with no early exit.
+//! `If(cmp, 1, 0)`.
+//!
+//! Milestone 3 (this revision) adds **early `return`**.  SIR functions have no
+//! early-exit statement — they yield their block's value — so a returning `if`
+//! is *lifted* into a value-producing `Expr::If` whose non-returning branch
+//! continues with the rest of the function (see `lower_seq`).  That makes the
+//! guard-clause shape, and hence idiomatic recursion like `fib`, translatable.
+//! A `return` inside a loop still errors: it would need a break-with-value.
 
 use std::collections::HashMap;
 
@@ -257,18 +263,64 @@ fn if_int(cond: Expr) -> Expr {
 
 // ── The lowerer ──────────────────────────────────────────────────────────────
 
+/// The deepest tree one function may emit, counting lifted guards *and*
+/// expression nesting together — they add in the output, so they share a budget
+/// (`budget_used`).
+///
+/// Same output-depth argument as [`MAX_LIFTED_GUARDS`]: every consumer of the IR
+/// walks it recursively.  Expression depth comes from CST nesting (`((((x))))`)
+/// *and* from a **flat operator chain**, which the parser does not bound at all:
+/// `x + 1 + 1 + …` is one `additive` node with N operands that folds left into
+/// an N-deep tree.  Both are charged here, and a chain's width is *held* while
+/// its operands are lowered — checking without spending let widths at different
+/// nesting levels multiply rather than add, which reached ~14× this cap and
+/// aborted the process on a 369-byte input.
+///
+/// The value is empirical, calibrated against the most hostile realistic
+/// configuration: a **debug** build on a **1 MiB** stack (the Windows
+/// main-thread default — `cargo test` threads are larger, which is exactly how
+/// earlier versions of this bound looked safe while crashing in the wild).
+/// Ordinary C is far below it: an 8-term chain costs 8, a 3-deep `if` costs 9,
+/// 20 guards with small conditions cost ~23.
+const MAX_EXPR_DEPTH: usize = 48;
+
+/// The most early-return `if`s one function may have lifted.
+///
+/// Each lifted guard adds a level of `Expr::If` nesting to the emitted IR, and
+/// every consumer of that IR walks it **recursively** — the validator, all five
+/// backends, the text printer, even `Drop`.  So the bound that matters is on the
+/// *output* depth, not on the lowering (which is iterative).  Measured: a
+/// 150-guard function lowers, validates and emits fine, while 250 aborts the
+/// process inside the validator.  64 is comfortably clear of that and far beyond
+/// any real C function, and exceeding it is a clean positioned error instead of
+/// a stack-overflow crash on untrusted input.
+/// Kept equal to [`MAX_EXPR_DEPTH`] — guards are charged into that joint budget
+/// too, so this only adds a friendlier message for a pure guard chain.
+const MAX_LIFTED_GUARDS: usize = MAX_EXPR_DEPTH;
+
 struct Lowerer {
     /// Function signatures for call-site type resolution.
     fns: HashMap<String, (Vec<IntSpec>, Option<IntSpec>)>,
     /// Current function's in-scope names → (type, SIR scope).  Parameters bind
     /// as `Scope::Param`, local declarations as `Scope::Local`.
     vars: HashMap<String, (IntSpec, Scope)>,
+    /// Early-return `if`s lifted in the function currently being lowered — see
+    /// [`MAX_LIFTED_GUARDS`].  Reset per function.
+    lifted: usize,
+    /// Current expression nesting — see [`MAX_EXPR_DEPTH`].
+    expr_depth: usize,
+    /// Current *statement* nesting (`if`/`while`/`for` bodies and nested
+    /// blocks) — the third dimension of the same budget.
+    stmt_depth: usize,
 }
 
 pub fn compile(tree: &GrammarASTNode, module_name: &str) -> Result<Module, CLowerError> {
     let mut lo = Lowerer {
         fns: HashMap::new(),
         vars: HashMap::new(),
+        lifted: 0,
+        expr_depth: 0,
+        stmt_depth: 0,
     };
 
     // Pre-pass: collect function signatures.
@@ -388,6 +440,7 @@ impl Lowerer {
     fn lower_function(&mut self, f: &GrammarASTNode) -> Result<Function, CLowerError> {
         let (name, params, ret) = self.function_header(f)?;
         self.vars.clear();
+        self.lifted = 0;
         let mut sir_params = Vec::new();
         for (pname, ty) in &params {
             self.vars.insert(pname.clone(), (*ty, Scope::Param));
@@ -417,49 +470,212 @@ impl Lowerer {
         })
     }
 
-    /// Lower a `compound_stmt` as a function body: statements, then the value of
-    /// a trailing `return` (SIR functions return their block's value).  A
-    /// `return` anywhere but the last position has no SIR representation (no
-    /// early exit) and is a positioned error.
+    /// Lower a `compound_stmt` as a function body.
     fn lower_body(
         &mut self,
         body: &GrammarASTNode,
         ret: Option<IntSpec>,
     ) -> Result<Block, CLowerError> {
-        let items: Vec<&GrammarASTNode> = child_nodes(body)
-            .into_iter()
-            .filter(|x| x.rule_name == "block_item")
-            .collect();
-        let mut stmts = Vec::new();
+        let items = block_items_of(body);
+        self.lower_seq(&items, ret)
+    }
+
+    /// **The early-return transformation (milestone 3).**
+    ///
+    /// SIR functions have no early-exit statement — a function yields its
+    /// block's *value*.  C exits early all the time (guard clauses).  So we
+    /// lower a statement sequence to the block whose value *is* the function's
+    /// result, and when an `if` returns we make the **rest of the sequence the
+    /// continuation of the branch that doesn't return**:
+    ///
+    /// ```text
+    /// if (n < 2) return n;          If( n<2,
+    /// return fib(n-1)+fib(n-2);  →      {n},                    // then: returns
+    ///                                   {fib(n-1)+fib(n-2)} )   // else: the rest
+    /// ```
+    ///
+    /// Because the continuation attaches only to a branch that does *not*
+    /// already return, the common guard-clause shape never duplicates code.
+    /// (When *neither* branch returns on all paths yet one contains a return,
+    /// the tail is lowered into both branches — correct, since exactly one runs,
+    /// just larger.)
+    fn lower_seq(
+        &mut self,
+        items: &[&GrammarASTNode],
+        ret: Option<IntSpec>,
+    ) -> Result<Block, CLowerError> {
+        // This walk is **iterative in two dimensions**, and both matter:
+        //
+        //  * per *statement* — a function body is an unbounded statement list,
+        //    and recursing per statement overflowed the stack at a few hundred;
+        //  * per *sibling guard clause* — `if (a) return 1; if (b) return 2; …`
+        //    is the `sign()` idiom, and it is a flat sequence too.  Recursing
+        //    once per guard (lower_seq → lift_if → lower_branch → lower_seq)
+        //    overflowed at ~200 guards.
+        //
+        // So a returning `if` does not recurse into the continuation.  Instead
+        // its condition and its *returning* branch are pushed on a `frames`
+        // stack, the falling-through branch is spliced onto the work queue, and
+        // the nested `Expr::If` is folded bottom-up after the loop.  The only
+        // recursion left is into a *nested* sub-sequence (a returning branch),
+        // whose depth is bounded only incidentally — the C parser is itself
+        // recursive and dies on deeply nested statements before the lowering
+        // would, so this is not a guarantee to lean on.  Giving the parser a
+        // rule-depth counter (and this walk an explicit cap) is a follow-up.
+        struct Frame {
+            cond: Expr,
+            /// The branch that returns — already lowered.
+            branch: Block,
+            /// Is `branch` the `then` side (else the `else` side)?
+            branch_is_then: bool,
+            /// Statements that preceded this `if` at its own level.
+            before: Vec<Stmt>,
+        }
+
+        let mut work: std::collections::VecDeque<&GrammarASTNode> = items.iter().copied().collect();
+        let mut stmts: Vec<Stmt> = Vec::new();
+        let mut frames: Vec<Frame> = Vec::new();
+        // The value of the innermost block, once the walk finishes.  Falling off
+        // the end of a function yields nil.
         let mut value = Expr::NilLit { span: sp() };
-        let last = items.len().saturating_sub(1);
-        for (i, item) in items.iter().enumerate() {
-            let inner = peel_block_item(item);
-            match inner.rule_name.as_str() {
-                "declaration" => stmts.push(self.lower_declaration(inner)?),
-                "statement" => {
-                    let s = peel(inner);
-                    if s.rule_name == "return_stmt" {
-                        if i != last {
-                            return err(
-                                "early `return` is not supported yet (a `return` may appear \
-                                 only as the function's last statement)",
-                                s,
-                            );
-                        }
-                        value = self.lower_return(s, ret)?;
-                    } else {
-                        self.lower_stmt(s, &mut stmts)?;
+
+        while let Some(head) = work.pop_front() {
+            let e = seq_elem(head);
+            match e.rule_name.as_str() {
+                // `return e;` supplies the value — anything after it is dead.
+                "return_stmt" => {
+                    value = self.lower_return(e, ret)?;
+                    break;
+                }
+                // A nested `{ … }` splices into this sequence, in order (v1 has
+                // flat scoping).  Spliced in place rather than by recursing.
+                "compound_stmt" => {
+                    for it in block_items_of(e).into_iter().rev() {
+                        work.push_front(it);
                     }
                 }
-                other => return err(format!("block item `{other}` unsupported"), inner),
+                // An `if` that returns becomes a value-producing `If`.
+                "if_stmt" if if_returns(e) => {
+                    let cond_node = first_node(e, "expr").ok_or_else(|| CLowerError {
+                        message: "`if` without a condition".into(),
+                        line: e.start_line.unwrap_or(0),
+                        column: e.start_column.unwrap_or(0),
+                    })?;
+                    let cond = self.lower_cond(cond_node)?;
+                    let branches = if_branches(e);
+                    let then_items = branches
+                        .first()
+                        .map(|b| branch_items(b))
+                        .unwrap_or_default();
+                    let else_items = branches.get(1).map(|b| branch_items(b)).unwrap_or_default();
+                    let then_ret = always_returns(&then_items);
+                    let else_ret = always_returns(&else_items);
+
+                    // Bound the *emitted* nesting — see `MAX_LIFTED_GUARDS`.
+                    self.lifted += 1;
+                    if self.lifted > MAX_LIFTED_GUARDS {
+                        return err(
+                            format!(
+                                "too many early returns in one function (limit \
+                                 {MAX_LIFTED_GUARDS}); each one nests the emitted IR one \
+                                 level deeper, and every consumer of that IR walks it \
+                                 recursively"
+                            ),
+                            e,
+                        );
+                    }
+
+                    // Nothing left to thread (or both branches exit): lower both
+                    // branches directly.  Any queued statements are unreachable.
+                    if work.is_empty() || (then_ret && else_ret) {
+                        let saved = self.vars.clone();
+                        let tb = self.lower_seq(&then_items, ret)?;
+                        self.vars = saved.clone();
+                        let eb = self.lower_seq(&else_items, ret)?;
+                        self.vars = saved;
+                        value = Expr::If {
+                            cond: Box::new(cond),
+                            then_branch: Box::new(tb),
+                            else_branch: Box::new(eb),
+                            span: sp(),
+                        };
+                        break;
+                    }
+
+                    // Neither branch exits on every path, so the continuation
+                    // would have to be copied into *both*.  Correct but the
+                    // duplication compounds through nesting (4^N nodes), so it
+                    // is refused, like the `return`-inside-a-loop rule.
+                    if !then_ret && !else_ret {
+                        return err(
+                            "an `if` where neither branch returns on all paths but one \
+                             contains a `return` is not supported yet (lifting it would \
+                             duplicate the rest of the function into both branches)",
+                            e,
+                        );
+                    }
+
+                    // Exactly one branch exits; the other receives the
+                    // continuation and is spliced onto the work queue.
+                    let (ret_items, fall_items) = if then_ret {
+                        (then_items, else_items)
+                    } else {
+                        (else_items, then_items)
+                    };
+
+                    // (A declaration in the falling-through branch that shadows
+                    // an outer name would silently re-bind it for the
+                    // continuation, which is lowered inside that branch.  That
+                    // is caught centrally by `lower_init_declarator`, which
+                    // refuses any re-use of a live name.)
+
+                    // Lower the exiting branch now (recursion here is per
+                    // *nesting* level; see the note in `lower_seq`).
+                    let saved = self.vars.clone();
+                    let branch = self.lower_seq(&ret_items, ret)?;
+                    self.vars = saved;
+
+                    frames.push(Frame {
+                        cond,
+                        branch,
+                        branch_is_then: then_ret,
+                        before: std::mem::take(&mut stmts),
+                    });
+                    for it in fall_items.into_iter().rev() {
+                        work.push_front(it);
+                    }
+                }
+                // Anything else is an ordinary statement; lower it and continue.
+                "declaration" => stmts.push(self.lower_declaration(e)?),
+                _ => self.lower_stmt(e, &mut stmts)?,
             }
         }
-        Ok(Block {
+
+        // Fold the guards bottom-up: each frame wraps everything accumulated so
+        // far as the continuation of its non-returning side.
+        let mut cur = Block {
             stmts,
             value,
             span: sp(),
-        })
+        };
+        for f in frames.into_iter().rev() {
+            let (then_branch, else_branch) = if f.branch_is_then {
+                (f.branch, cur)
+            } else {
+                (cur, f.branch)
+            };
+            cur = Block {
+                stmts: f.before,
+                value: Expr::If {
+                    cond: Box::new(f.cond),
+                    then_branch: Box::new(then_branch),
+                    else_branch: Box::new(else_branch),
+                    span: sp(),
+                },
+                span: sp(),
+            };
+        }
+        Ok(cur)
     }
 
     /// The value a trailing `return e;` (or bare `return;`) supplies, converted
@@ -489,8 +705,10 @@ impl Lowerer {
         match s.rule_name.as_str() {
             "compound_stmt" => {
                 // A nested `{ … }` block: splice its statements in (v1 shares one
-                // flat symbol table — no per-block scoping).
-                let inner = self.lower_block_items(s)?;
+                // flat symbol table — no per-block scoping).  Charged for depth
+                // like any other nested body, so this recursion shares the
+                // budget too (see `charge_stmt_nesting`).
+                let inner = self.charge_stmt_nesting(s, |lo| lo.lower_block_items(s))?;
                 out.extend(inner);
             }
             "expr_stmt" => {
@@ -501,10 +719,15 @@ impl Lowerer {
             "if_stmt" => self.lower_if(s, out)?,
             "while_stmt" => self.lower_while(s, out)?,
             "for_stmt" => self.lower_for(s, out)?,
+            // `return` in a *statement* position that the early-return lifting
+            // could not turn into a value — in practice, inside a loop body.
+            // Exiting a loop early needs a break-with-value, which SIR has no
+            // node for, so this is a clear error rather than a miscompile.
             "return_stmt" => {
                 return err(
-                    "early `return` is not supported yet (a `return` may appear \
-                     only as the function's last statement)",
+                    "`return` inside a loop is not supported yet (early return is lifted \
+                     through `if`/`else`, but leaving a `while`/`for` early needs a \
+                     break-with-value)",
                     s,
                 )
             }
@@ -536,7 +759,34 @@ impl Lowerer {
     /// Lower a loop/branch body (`statement`, possibly a `compound_stmt`) to a
     /// SIR `Block` with a nil value — control-flow bodies are evaluated for
     /// their effects, not a value.
+    /// Run `f` one level deeper in statement nesting, charged against the joint
+    /// depth budget (see [`Self::budget_used`]) and restored on every path.
+    /// Both recursion sites for nested statements — loop/branch bodies via
+    /// [`Self::lower_void_block`] and bare `{ }` blocks via [`Self::lower_stmt`]
+    /// — go through here, so neither can grow the emitted tree without paying.
+    fn charge_stmt_nesting<T>(
+        &mut self,
+        at: &GrammarASTNode,
+        f: impl FnOnce(&mut Self) -> Result<T, CLowerError>,
+    ) -> Result<T, CLowerError> {
+        self.stmt_depth += 1;
+        if self.budget_used() > MAX_EXPR_DEPTH {
+            self.stmt_depth -= 1;
+            return err(
+                format!("statement nesting exceeds the limit of {MAX_EXPR_DEPTH}"),
+                at,
+            );
+        }
+        let result = f(self);
+        self.stmt_depth -= 1;
+        result
+    }
+
     fn lower_void_block(&mut self, stmt: &GrammarASTNode) -> Result<Block, CLowerError> {
+        self.charge_stmt_nesting(stmt, |lo| lo.lower_void_block_inner(stmt))
+    }
+
+    fn lower_void_block_inner(&mut self, stmt: &GrammarASTNode) -> Result<Block, CLowerError> {
         let s = peel(stmt);
         let stmts = if s.rule_name == "compound_stmt" {
             self.lower_block_items(s)?
@@ -752,7 +1002,45 @@ impl Lowerer {
     /// an intermediate comparison result feeds the next as an `int` `0`/`1`
     /// (matching C's chained-comparison semantics), and the final step is the
     /// bool we return.
+    /// Charge a flat operator chain's width against the expression-depth
+    /// budget: folding N operands left produces an N-deep tree.  Returns the
+    /// width, which the caller must **hold** (add to `expr_depth`) for as long
+    /// as it lowers the chain's operands — otherwise widths at different
+    /// nesting levels each restart from the same low base and multiply instead
+    /// of adding, which is how `((x+1…) +1…) +1…` reached ~14× the cap.
+    fn charge_chain(&mut self, n: &GrammarASTNode) -> Result<usize, CLowerError> {
+        let operands = child_nodes(n).len();
+        if self.budget_used() + operands > MAX_EXPR_DEPTH {
+            return err(
+                format!(
+                    "operator chain of {operands} operands nests the emitted expression \
+                     deeper than the limit of {MAX_EXPR_DEPTH}"
+                ),
+                n,
+            );
+        }
+        Ok(operands)
+    }
+
+    /// Depth already committed in the emitted tree.  Lifted guards, expression
+    /// nesting and **statement** nesting all add in the same output tree and in
+    /// the same recursive walk, so they share one budget.  Statement nesting is
+    /// weighted 3× because a level of it costs roughly three times the lowering
+    /// stack of one expression level (measured ~23 KB vs ~8 KB in a debug
+    /// build).
+    fn budget_used(&self) -> usize {
+        self.lifted + self.expr_depth + 3 * self.stmt_depth
+    }
+
     fn lower_compare_bool(&mut self, n: &GrammarASTNode) -> Result<Expr, CLowerError> {
+        let width = self.charge_chain(n)?;
+        self.expr_depth += width;
+        let result = self.lower_compare_bool_inner(n);
+        self.expr_depth -= width;
+        result
+    }
+
+    fn lower_compare_bool_inner(&mut self, n: &GrammarASTNode) -> Result<Expr, CLowerError> {
         let mut acc: Option<(Expr, IntSpec)> = None;
         let mut pending_op: Option<String> = None;
         let mut last_bool: Option<Expr> = None;
@@ -838,6 +1126,25 @@ impl Lowerer {
             .find(|t| t.effective_type_name() == "NAME")
             .map(|t| t.value.clone())
             .unwrap_or_default();
+        // v1's symbol table is **flat** — it has no per-block scopes — and the
+        // lowering splices nested `{ }` blocks into the enclosing sequence.  So
+        // a declaration that re-uses a live name cannot be modelled: the two
+        // bindings collapse into one SIR block, which silently takes the wrong
+        // type (a wrong-value miscompile) and makes the emitted C a
+        // `redefinition of 'x'` error.  Refuse it here — one check covering
+        // every path that can bind a name (plain blocks, `if`/`else` branches,
+        // loop bodies, `for`-inits, and the lifted early-return continuation).
+        if self.vars.contains_key(&name) {
+            return err(
+                format!(
+                    "declaration of `{name}` re-uses a name that is already in scope; \
+                     shadowing is not supported yet, because the symbol table has no \
+                     per-block scopes (two sequential `for (int i = …)` loops hit this \
+                     too)"
+                ),
+                init,
+            );
+        }
         let value = match first_node(init, "expr") {
             Some(e) => {
                 let (ex, ety) = self.lower_expr(e)?;
@@ -856,6 +1163,23 @@ impl Lowerer {
 
     /// Lower an expression, returning both the SIR node and its C type.
     fn lower_expr(&mut self, node: &GrammarASTNode) -> Result<(Expr, IntSpec), CLowerError> {
+        // Bound the depth of the tree we emit — see `MAX_EXPR_DEPTH`.  The
+        // counter is restored on every path so a rejected sub-expression does
+        // not poison the rest of the function.
+        self.expr_depth += 1;
+        if self.budget_used() > MAX_EXPR_DEPTH {
+            self.expr_depth -= 1;
+            return err(
+                format!("expression nests deeper than the limit of {MAX_EXPR_DEPTH}"),
+                node,
+            );
+        }
+        let result = self.lower_expr_inner(node);
+        self.expr_depth -= 1;
+        result
+    }
+
+    fn lower_expr_inner(&mut self, node: &GrammarASTNode) -> Result<(Expr, IntSpec), CLowerError> {
         let n = peel(node);
         match n.rule_name.as_str() {
             // Binary arithmetic / bitwise / shift — left-associative fold.
@@ -879,6 +1203,17 @@ impl Lowerer {
     }
 
     fn lower_binary(&mut self, n: &GrammarASTNode) -> Result<(Expr, IntSpec), CLowerError> {
+        // A chain is flat in the CST but folds left into a tree as deep as it is
+        // wide, so its width is charged against the same budget as nesting — and
+        // *held* while its operands are lowered.
+        let width = self.charge_chain(n)?;
+        self.expr_depth += width;
+        let result = self.lower_binary_inner(n);
+        self.expr_depth -= width;
+        result
+    }
+
+    fn lower_binary_inner(&mut self, n: &GrammarASTNode) -> Result<(Expr, IntSpec), CLowerError> {
         // children: operand (op operand)+   — fold left.
         let mut acc: Option<(Expr, IntSpec)> = None;
         let mut pending_op: Option<String> = None;
@@ -1094,6 +1429,101 @@ impl Lowerer {
 
 fn peel_block_item(item: &GrammarASTNode) -> &GrammarASTNode {
     child_nodes(item).into_iter().next().unwrap_or(item)
+}
+
+// ── sequence / control-flow shape analysis (milestone 3) ────────────────────
+//
+// The early-return transformation reasons about *sequences* of statements that
+// may come from a `compound_stmt` (a list of `block_item`s) or from a single
+// unbraced branch (`if (c) return 1;`).  These helpers normalise both shapes so
+// `lower_seq` can walk them uniformly.
+
+/// Reduce a `block_item` (or a bare `statement`) to the node carrying its kind:
+/// a `declaration`, or the peeled statement kind (`return_stmt`, `if_stmt`, …).
+fn seq_elem(n: &GrammarASTNode) -> &GrammarASTNode {
+    let inner = if n.rule_name == "block_item" {
+        peel_block_item(n)
+    } else {
+        n
+    };
+    if inner.rule_name == "declaration" {
+        inner
+    } else {
+        peel(inner)
+    }
+}
+
+/// The `block_item` children of a `compound_stmt`.
+fn block_items_of(compound: &GrammarASTNode) -> Vec<&GrammarASTNode> {
+    child_nodes(compound)
+        .into_iter()
+        .filter(|x| x.rule_name == "block_item")
+        .collect()
+}
+
+/// The `statement` children of an `if_stmt`: `[then]` or `[then, else]`.
+fn if_branches(s: &GrammarASTNode) -> Vec<&GrammarASTNode> {
+    child_nodes(s)
+        .into_iter()
+        .filter(|x| x.rule_name == "statement")
+        .collect()
+}
+
+/// A branch as a statement sequence: a braced branch contributes its
+/// `block_item`s, an unbraced one contributes itself as a single element.
+fn branch_items(branch: &GrammarASTNode) -> Vec<&GrammarASTNode> {
+    let s = peel(branch);
+    if s.rule_name == "compound_stmt" {
+        block_items_of(s)
+    } else {
+        vec![branch]
+    }
+}
+
+/// Does this sequence return on **every** path?  Used to decide whether a
+/// branch needs the continuation appended.  Conservative: an `if` without an
+/// `else` never qualifies, and loops are not analysed (a `while` may run zero
+/// times, so it can never guarantee a return).
+fn always_returns(items: &[&GrammarASTNode]) -> bool {
+    items.iter().any(|it| {
+        let e = seq_elem(it);
+        match e.rule_name.as_str() {
+            "return_stmt" => true,
+            "compound_stmt" => always_returns(&block_items_of(e)),
+            "if_stmt" => {
+                let br = if_branches(e);
+                match (br.first(), br.get(1)) {
+                    (Some(t), Some(f)) => {
+                        always_returns(&branch_items(t)) && always_returns(&branch_items(f))
+                    }
+                    _ => false, // no `else` — the fall-through path doesn't return
+                }
+            }
+            _ => false,
+        }
+    })
+}
+
+/// Does either branch of this `if` contain a `return` in a *liftable* position?
+/// Deliberately does not descend into loops: a `return` inside a `while`/`for`
+/// cannot be turned into a value (it needs a break-with-value), so it is left
+/// for `lower_stmt` to reject with a clear, positioned error.
+fn if_returns(s: &GrammarASTNode) -> bool {
+    if_branches(s)
+        .iter()
+        .any(|b| contains_return(&branch_items(b)))
+}
+
+fn contains_return(items: &[&GrammarASTNode]) -> bool {
+    items.iter().any(|it| {
+        let e = seq_elem(it);
+        match e.rule_name.as_str() {
+            "return_stmt" => true,
+            "compound_stmt" => contains_return(&block_items_of(e)),
+            "if_stmt" => if_returns(e),
+            _ => false,
+        }
+    })
 }
 
 /// The string-literal value inside a call's arg_list (the printf format), with

@@ -2,6 +2,60 @@
 
 ## Unreleased
 
+### Milestone 3 — early `return` (return lifting)
+
+- A returning `if` is now **lifted** into a value-producing `Expr::If`, with the
+  rest of the function becoming the continuation of the branch that does not
+  return.  SIR functions yield a block value with no early-exit statement, so
+  this is what makes C's guard-clause idiom — and therefore idiomatic recursion
+  like `fib` — translatable at all.
+- The continuation attaches only to a branch that can fall through, so the
+  common guard-clause shape **never duplicates code**.
+- `lower_seq` replaces the old "return must be the last statement" body walk;
+  nested `{ }` blocks splice into the enclosing sequence, and `always_returns`
+  drives the branch analysis (conservative: an `if` with no `else` never
+  qualifies, loops are not analysed).  The walk is **iterative in two
+  dimensions** — per statement *and* per sibling guard clause, both of which are
+  flat sequences the parser does not bound.  (Recursing per statement overflowed
+  at ~350; recursing per guard overflowed the `sign()` idiom at ~150.)  A lifted
+  `if` pushes its condition and returning branch on a stack, splices the
+  falling-through branch onto the work queue, and the nested `If` is folded
+  bottom-up at the end.
+- Four shapes are **refused** rather than mis-handled, each a positioned error:
+  - `return` inside a loop (needs a break-with-value, which SIR lacks);
+  - an `if` where neither branch returns on all paths but one contains a
+    `return` — lifting would duplicate the continuation into both branches, and
+    chained that is **4^N** IR nodes (<1 KB of C emitted ~185 MB before this
+    was caught);
+  - a declaration that **re-uses a name already in scope** — the symbol table is
+    flat and nested blocks are spliced into the enclosing sequence, so two
+    bindings collapse into one, silently taking the wrong type *and* emitting C
+    that fails with `redefinition of 'v'`.  Early return sharpens the same
+    hazard (the continuation is lowered inside the falling-through branch), so
+    the check lives on the declaration itself and covers every binding path —
+    blocks, branches, loop bodies, `for`-inits, and the lifted continuation.
+    Two sequential `for (int i = …)` loops are the everyday form of this;
+  - an **emitted tree deeper than the budget** — every IR consumer walks it
+    recursively, and depth accumulates from three sources that all add in the
+    same tree: flat operator chains (`x + 1 + 1 + …` folds left into a tree as
+    deep as it is wide, and nothing else bounds it), expression nesting, and
+    statement nesting (weighted 3× to match its measured stack cost).  All three
+    share **one** budget.  A chain's width is *held* while its operands are
+    lowered — merely checking it let widths at different nesting levels multiply
+    (~14× the cap, crashing on 369 bytes) — and budgeting the sources separately
+    also failed (64 guards each returning a 50-term chain passed two independent
+    caps and still overflowed).  The cap is calibrated against a **debug** build
+    on a **1 MiB** stack, not a roomier test-harness thread;
+  - **more than that many lifted early returns in one function** — each one nests the
+    emitted IR a level deeper and every IR consumer walks it recursively, so 250
+    chained guards aborted the process inside the validator.  The cap makes that
+    a clean error; raising it means making the validator and backends iterative.
+- Corpus grows with 8 early-return programs: **recursive `fib(20)` → 6765**,
+  chained guards, unbraced guards, both-branches-return, statements before a
+  return, a nested `if` in an `else`, an early return of a wrapped `uint8`, and
+  early return combined with a loop result — all byte-identical across reference
+  `clang -fwrapv`, emitted Ruby, and emitted C (and clang+gcc+MSVC).
+
 ### Milestone 2 — control flow & comparisons
 
 - Comparisons `< > <= >= == !=` (with the usual arithmetic conversions on their

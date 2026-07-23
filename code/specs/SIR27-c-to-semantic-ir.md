@@ -166,12 +166,111 @@ end of the loop body, and an absent condition becomes `true`.  A nested `{ … }
 block is spliced into the enclosing statement list (v1 does not model per-block
 scopes; the flat symbol table is shared).
 
-**Early `return` is still out of scope.**  SIR functions yield their block's
-*value* — there is no early-return statement — so `return` is accepted **only as
-the function's last statement** (where it supplies that value).  A `return`
-inside an `if`/`while`/`for` body is a clear, positioned error rather than a
-silent miscompile; lifting it into nested `If` values is a later milestone.
-Logical `&& ||`, unary `!`, bitwise, and `/`/`%` also remain deferred.
+Logical `&& ||`, unary `!`, bitwise, and `/`/`%` remain deferred.
+
+## Early `return` — return lifting (milestone 3)
+
+SIR functions yield their block's **value**; there is no early-exit statement.
+C exits early constantly (guard clauses), so milestone 3 **lifts** a returning
+`if` into a value-producing `Expr::If`, making **the rest of the function the
+continuation of the branch that does not return**:
+
+```text
+int fib(int n) {                     (function fib (n)
+  if (n < 2) return n;                 (block
+  return fib(n-1) + fib(n-2);            (if (< n 2)
+}                                            (block n)
+                                             (block (+ (fib (- n 1)) (fib (- n 2)))))))
+```
+
+The lowering walks a statement sequence (`lower_seq`) and, for each head:
+
+| head | result |
+|---|---|
+| `return e;` | the block's value is `Convert{ret}(e)`; the rest is unreachable |
+| `{ … }` | its items are spliced into this sequence (v1 has flat scoping) |
+| `if` containing a `return` | `If(cond, then′, else′)` — see below |
+| anything else | lower it as a statement, then continue with the tail |
+
+For a lifted `if`, each branch is lowered with the continuation appended **only
+if that branch can fall through** (`always_returns` is false).  So the
+guard-clause shape — where the `then` always returns — attaches the tail to the
+`else` alone and **never duplicates code**.
+
+`always_returns` is deliberately conservative: an `if` without an `else` never
+qualifies, and loops are not analysed (a `while` may iterate zero times).
+
+The sequence walk is **iterative in two dimensions**, and both matter because
+both are *flat* sequences the parser does not bound:
+
+- per **statement** — a function body is an unbounded statement list;
+- per **sibling guard clause** — `if (a) return 1; if (b) return 2; …` (the
+  `sign()` idiom) is equally flat.
+
+So a lifted `if` does not recurse into its continuation.  Its condition and its
+*returning* branch are pushed on a stack, the falling-through branch is spliced
+onto the work queue, and the nested `If` is folded bottom-up once the walk ends.
+Recursion remains only for a *nested* sub-sequence, which the parser's rule-depth
+guard bounds.
+
+### Five shapes that are refused (rather than mis-handled)
+
+1. **`return` inside a loop.**  Leaving a `while`/`for` early needs a
+   break-with-value, which SIR has no node for.
+2. **An `if` where neither branch returns on all paths but one contains a
+   `return`.**  Lifting it would place the continuation in *both* branches.
+   That is semantically fine (exactly one runs) but the duplication compounds
+   through nesting — N chained guards of this shape produce **4^N** IR nodes, so
+   well under 1 KB of C can emit hundreds of megabytes.  A future version can
+   hoist the continuation into a synthesized function called from both branches,
+   making the transform linear; until then it is a positioned error.
+3. **A declaration that re-uses a name already in scope.**  v1's symbol table is
+   **flat** — it has no per-block scopes — and nested `{ }` blocks are spliced
+   into the enclosing sequence, so two bindings of one name collapse into a
+   single SIR block.  That silently takes the wrong type *and* makes the emitted
+   C a `redefinition of 'v'` error:
+
+   ```c
+   int f(int x) { int v = 1; { uint8_t v = 250; v = v + 6; } return v + 1000; }
+   ```
+
+   C scopes the inner `v` and yields **1001**; lowering it flat yields **1000**.
+   Early return sharpens the same hazard, because the continuation is lowered
+   *inside* the branch that falls through.  So the check lives in one place —
+   the declaration itself — covering every path that can bind a name: plain
+   blocks, `if`/`else` branches, loop bodies, `for`-inits, and the lifted
+   continuation.  Sibling branches are unaffected (only one runs, and the table
+   is restored between them).  Two sequential `for (int i = …)` loops are the
+   everyday form of this limitation.
+4. **An emitted tree deeper than the budget.**  Every consumer of the IR walks
+   it recursively, so the frontend caps how deep a tree it will build.  Depth
+   accumulates from **three** independent sources that all add in the same tree
+   and the same recursion, so they share **one** budget:
+   - **flat operator chains** — `x + 1 + 1 + …` is one node with N operands that
+     folds left into an N-deep tree, and nothing else bounds N;
+   - **expression nesting** — `((((x))))`;
+   - **statement nesting** — nested `if`/`while`/`for` bodies and blocks
+     (weighted 3×, matching its measured ~3× lowering-stack cost per level).
+
+   Two subtleties, both found the hard way: a chain's width must be **held**
+   while its operands are lowered, not merely checked on entry (otherwise widths
+   at different nesting levels each restart from the same base and *multiply* —
+   ~14× the cap, aborting on a 369-byte input); and the sources must be budgeted
+   *jointly* (64 guards each returning a 50-term chain passed two independent
+   caps and still overflowed).
+
+   The cap is calibrated empirically against the most hostile realistic
+   configuration — a **debug** build on a **1 MiB** stack.  Calibrating against
+   a test-harness thread instead is exactly how earlier versions looked safe
+   while crashing in the wild.
+5. **More than that many lifted early returns in one function.**  Each lifted guard
+   nests the emitted IR one level deeper, and every consumer of that IR walks it
+   *recursively* — the validator, all five backends, the text printer, even
+   `Drop`.  Measured: 150 chained guards lower, validate and emit fine while 250
+   abort the process inside the validator.  The bound that matters is therefore
+   on the **output** depth, not the lowering, so the frontend caps it and reports
+   a positioned error.  Lifting the cap means making those consumers iterative —
+   a cross-cutting change well beyond this frontend.
 
 ## Pipeline
 
