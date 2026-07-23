@@ -136,9 +136,9 @@ mod unit_tests {
     #[test]
     fn tokenizes_a_print_statement_with_a_single_quoted_string() {
         // PRINT is an ordinary library-routine NAME, not a reserved
-        // keyword -- MA12 Â§4 lists it alongside PLOT/SIN/TOTAL/etc. as an
+        // keyword -- MA12 §4 lists it alongside PLOT/SIN/TOTAL/etc. as an
         // intrinsic procedure/function, resolved by name at a later layer,
-        // not part of the closed keyword set Â§3/Â§6 fix (IF/FOR/.../EQ/
+        // not part of the closed keyword set §3/§6 fix (IF/FOR/.../EQ/
         // AND/...). Only THOSE are promoted to KEYWORD here.
         assert_eq!(types("PRINT, 'hello'"), vec!["NAME", "COMMA", "STRING"]);
         assert_eq!(values("PRINT, 'hello'"), vec!["PRINT", ",", "hello"]);

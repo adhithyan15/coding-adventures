@@ -18,7 +18,7 @@ fn token_values(source: &str) -> Vec<String> {
 }
 
 // ===========================================================================
-// `;` line comments (MA12 Â§3/Â§6) -- an ordinary skip: pattern, no hook.
+// `;` line comments (MA12 §3/§6) -- an ordinary skip: pattern, no hook.
 // ===========================================================================
 
 #[test]
@@ -55,7 +55,7 @@ fn comment_containing_characters_outside_the_grammars_alphabet() {
 }
 
 // ===========================================================================
-// `$` line continuation -- a real token, not stripped (MA12 Â§5).
+// `$` line continuation -- a real token, not stripped (MA12 §5).
 // ===========================================================================
 
 #[test]
@@ -75,7 +75,7 @@ fn dollar_is_its_own_continuation_token_not_silently_stripped() {
 }
 
 // ===========================================================================
-// `&` statement separator (MA12 Â§3/Â§4/Â§6).
+// `&` statement separator (MA12 §3/§4/§6).
 // ===========================================================================
 
 #[test]
@@ -87,7 +87,7 @@ fn ampersand_separates_statements_on_one_line() {
 }
 
 // ===========================================================================
-// Single- and double-quoted strings (MA12 Â§2/Â§4) -- unified STRING type.
+// Single- and double-quoted strings (MA12 §2/§4) -- unified STRING type.
 // ===========================================================================
 
 #[test]
@@ -125,7 +125,7 @@ fn a_double_quote_may_appear_inside_a_single_quoted_string_and_vice_versa() {
 }
 
 // ===========================================================================
-// Word operators -- comparison and logical (MA12 Â§4), case-insensitive.
+// Word operators -- comparison and logical (MA12 §4), case-insensitive.
 // ===========================================================================
 
 #[test]
@@ -154,7 +154,7 @@ fn tokenizes_every_logical_word_operator() {
 
 #[test]
 fn word_operators_have_no_symbolic_alternative_spelling() {
-    // MA12 Â§4 lists ONLY the word forms for IDL's relational operators --
+    // MA12 §4 lists ONLY the word forms for IDL's relational operators --
     // no `<`/`<=`/`!=` symbolic spelling is in this cut's scope, and
     // idl.tokens has no LT/LE/NE glyph token at all -- `<` falls through to
     // an honest lex error rather than silently meaning something.
@@ -189,7 +189,7 @@ fn a_comparison_expression_using_word_operators() {
 }
 
 // ===========================================================================
-// Control-flow / definition keywords (MA12 Â§3/Â§4/Â§6), case-insensitive.
+// Control-flow / definition keywords (MA12 §3/§4/§6), case-insensitive.
 // ===========================================================================
 
 #[test]
@@ -254,7 +254,7 @@ fn keywords_are_case_insensitive_but_names_are_not_altered() {
 }
 
 // ===========================================================================
-// A PRO definition, a FUNCTION definition (MA12 Â§3/Â§4).
+// A PRO definition, a FUNCTION definition (MA12 §3/§4).
 // ===========================================================================
 
 #[test]
@@ -264,9 +264,9 @@ fn tokenizes_a_pro_definition_header_and_end() {
     // END
     //
     // PRINT is an ordinary library-routine NAME, not a reserved keyword --
-    // MA12 Â§4 lists it alongside PLOT/SIN/TOTAL/etc. as an intrinsic
+    // MA12 §4 lists it alongside PLOT/SIN/TOTAL/etc. as an intrinsic
     // procedure/function resolved by name at a later layer, distinct from
-    // the closed keyword set Â§3/Â§6 fix (PRO/END/IF/.../EQ/AND/...).
+    // the closed keyword set §3/§6 fix (PRO/END/IF/.../EQ/AND/...).
     let src = "PRO GREET, name\n  PRINT, name\nEND";
     assert_eq!(
         token_types(src),
@@ -294,7 +294,7 @@ fn tokenizes_a_function_definition_with_return() {
 
 // ===========================================================================
 // Procedure call with keyword arguments and the `/KEYWORD` shorthand
-// (MA12 Â§3 items 2-3) -- the LEXER'S job is only to emit the ordinary
+// (MA12 §3 items 2-3) -- the LEXER'S job is only to emit the ordinary
 // token stream; the boolean-shorthand PRODUCTION itself is idl-parser's.
 // ===========================================================================
 
@@ -316,7 +316,7 @@ fn tokenizes_a_procedure_call_with_keyword_arguments_and_boolean_shorthand() {
 #[test]
 fn slash_before_an_identifier_is_always_plain_division_at_this_layer() {
     // The exact same zero-whitespace "/IDENT" shape as the boolean
-    // shorthand above, but in ordinary expression position -- MA12 Â§3
+    // shorthand above, but in ordinary expression position -- MA12 §3
     // item 3 frames telling these apart as a parse-context (grammatical
     // position) concern, not a lexer one, so both must tokenize IDENTICALLY
     // here: SLASH then NAME, with no special-casing. Compare the trailing
@@ -333,7 +333,7 @@ fn slash_before_an_identifier_is_always_plain_division_at_this_layer() {
 }
 
 // ===========================================================================
-// IF...THEN...ENDIF block (MA12 Â§4).
+// IF...THEN...ENDIF block (MA12 §4).
 // ===========================================================================
 
 #[test]
@@ -352,7 +352,7 @@ fn tokenizes_an_if_then_endif_block() {
 }
 
 // ===========================================================================
-// Array literals and subscripting (MA12 Â§4).
+// Array literals and subscripting (MA12 §4).
 // ===========================================================================
 
 #[test]
@@ -373,7 +373,7 @@ fn tokenizes_simple_subscripting() {
 
 #[test]
 fn tokenizes_negative_from_end_subscripting() {
-    // a[-1] -- unary MINUS, resolved at a later layer (MA12 Â§2 note 2).
+    // a[-1] -- unary MINUS, resolved at a later layer (MA12 §2 note 2).
     assert_eq!(
         token_types("a[-1]"),
         vec!["NAME", "LBRACKET", "MINUS", "NUMBER", "RBRACKET"]
@@ -416,7 +416,7 @@ fn tokenizes_two_dimensional_subscripting() {
 
 // ===========================================================================
 // Matrix-product operators: the `##` vs `#` longest-match regression
-// (MA12 Â§4/Â§6).
+// (MA12 §4/§6).
 // ===========================================================================
 
 #[test]
@@ -445,7 +445,7 @@ fn four_hashes_lex_as_two_double_hashes() {
 }
 
 // ===========================================================================
-// Arithmetic and assignment (MA12 Â§4).
+// Arithmetic and assignment (MA12 §4).
 // ===========================================================================
 
 #[test]
@@ -461,7 +461,7 @@ fn tokenizes_ordinary_arithmetic_operators() {
 
 #[test]
 fn equals_is_one_token_for_both_assignment_and_keyword_binding() {
-    // MA12 Â§3 item 2: telling these apart is idl-parser's job, not this
+    // MA12 §3 item 2: telling these apart is idl-parser's job, not this
     // lexer's -- both contexts emit the same EQUALS token here.
     assert_eq!(token_types("x = 1"), vec!["NAME", "EQUALS", "NUMBER"]);
     assert_eq!(
@@ -471,7 +471,7 @@ fn equals_is_one_token_for_both_assignment_and_keyword_binding() {
 }
 
 // ===========================================================================
-// Numeric literals (MA12 Â§2/Â§4).
+// Numeric literals (MA12 §2/§4).
 // ===========================================================================
 
 #[test]
@@ -495,7 +495,7 @@ fn tokenizes_numbers_with_exponents() {
 
 #[test]
 fn typed_numeric_suffixes_are_not_part_of_this_cuts_number_token() {
-    // MA12 Â§2/Â§4 defer IDL's typed numeric tower entirely -- a literal
+    // MA12 §2/§4 defer IDL's typed numeric tower entirely -- a literal
     // spelled with a type suffix (`5L`) lexes as NUMBER("5") followed by a
     // separate NAME("L"), an honest reflection of the un-typed f64 model
     // rather than a silent guess at what the suffix should mean.
@@ -521,7 +521,7 @@ fn underscore_is_a_valid_continuation_character() {
 
 #[test]
 fn leading_underscore_identifier_is_not_a_valid_name_this_cut() {
-    // _EXTRA/_REF_EXTRA (deferred, MA12 Â§4) would need a leading
+    // _EXTRA/_REF_EXTRA (deferred, MA12 §4) would need a leading
     // underscore, which NAME does not allow in this cut -- a bare leading
     // `_` has no token at all and falls through to an honest lex error.
     assert!(try_tokenize_idl("_EXTRA").is_err());
@@ -551,7 +551,7 @@ fn skips_ordinary_whitespace() {
 #[test]
 fn unrecognized_character_is_an_error() {
     // `@`, `?`, `.` (outside a NUMBER), `\`, `{`, `}` are all deferred/out
-    // of scope per MA12 Â§4 -- none has a token in this cut's grammar.
+    // of scope per MA12 §4 -- none has a token in this cut's grammar.
     assert!(try_tokenize_idl("a@b").is_err());
     assert!(try_tokenize_idl("a?b").is_err());
     assert!(try_tokenize_idl("s.tag").is_err());
