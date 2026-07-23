@@ -35,8 +35,13 @@ decimal `ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE` (decimal-point aligned; `ROUNDED`
 and `ON SIZE ERROR`; divide-by-zero is a clean error or a size-error condition);
 `COMPUTE` with
 precedence-correct arithmetic expressions (`+ - * / **`, unary sign,
-parentheses), `ROUNDED`, and `ON SIZE ERROR`; `IF … ELSE` with numeric and
-alphanumeric comparison; **reference modification** `IDENT(start:len)` /
+parentheses), `ROUNDED`, and `ON SIZE ERROR`; `IF … ELSE` with numeric,
+alphanumeric, and **mixed unsigned-integer-numeric ↔ alphanumeric** comparison
+(the numeric operand treated as its digit image — `Decimal::digits()`, the
+item's fixed-width zero-padded storage — then space-padded and byte-compared, so
+`NUM = "042"` is true but `NUM = "42"` is false; a signed/scaled numeric operand
+or a group item in such a mixed comparison is a clean later rung, matching the
+compiler); **reference modification** `IDENT(start:len)` /
 `IDENT(start:)` (a 1-based substring of an alphanumeric item, in `DISPLAY` and
 alphanumeric-comparison operands — with **constant** integer indices *or*
 **computed** data-name indices like `WS(J:K)`, the index item an unsigned integer;

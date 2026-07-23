@@ -394,6 +394,106 @@ mod tests {
     }
 
     // ----------------------------------------------------------------------
+    // Mixed numeric ↔ alphanumeric comparison.
+    //
+    // A relation comparing an UNSIGNED-INTEGER numeric operand with an
+    // ALPHANUMERIC one treats the numeric operand as though moved to an
+    // alphanumeric field — its digit image (`Decimal::digits()` yields the
+    // item's fixed-width zero-padded storage) — then compares by the
+    // alphanumeric byte rule (space-pad the shorter side, byte-by-byte). A
+    // signed / scaled numeric operand, or a group item, in a mixed comparison is
+    // a clean later rung, rejected to match the compiler.
+    // ----------------------------------------------------------------------
+
+    #[test]
+    fn mixed_numeric_equals_matching_alphanumeric_literal() {
+        // NUM PIC 9(3)=42 → image "042"; "042" = "042" → equal.
+        let out = run_ws(
+            &["01  NUM  PIC 9(3) VALUE 42."],
+            &["    IF NUM = \"042\" DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(out, "MATCH\n");
+    }
+
+    #[test]
+    fn mixed_numeric_space_pad_mismatch() {
+        // "042" vs "42" (space-padded to "42 ") differ — the byte rule, not a
+        // value comparison.
+        let out = run_ws(
+            &["01  NUM  PIC 9(3) VALUE 42."],
+            &["    IF NUM = \"42\" DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(out, "NO\n");
+    }
+
+    #[test]
+    fn mixed_numeric_ordering_and_right_operand() {
+        // Ordering ("042" > "040") and the numeric operand on the RIGHT.
+        let out = run_ws(
+            &["01  NUM  PIC 9(3) VALUE 42."],
+            &[
+                "    IF NUM > \"040\" DISPLAY \"GT\" ELSE DISPLAY \"LE\".",
+                "    IF \"042\" = NUM DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".",
+                "    STOP RUN.",
+            ],
+        )
+        .unwrap();
+        assert_eq!(out, "GT\nMATCH\n");
+    }
+
+    #[test]
+    fn mixed_numeric_against_a_pic_x_item() {
+        // The alphanumeric side is a `PIC X` item, not a literal.
+        let out = run_ws(
+            &["01  NUM  PIC 9(3) VALUE 42.", "01  W  PIC X(3) VALUE \"042\"."],
+            &["    IF NUM = W DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(out, "MATCH\n");
+    }
+
+    #[test]
+    fn mixed_signed_numeric_vs_alphanumeric_is_deferred() {
+        // A SIGNED numeric operand compared with an alphanumeric literal is a
+        // later rung — rejected so it matches the compiler.
+        let err = run_ws(
+            &["01  S  PIC S9(3) VALUE 42."],
+            &["    IF S = \"042\" DISPLAY \"Y\".", "    STOP RUN."],
+        )
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn mixed_scaled_numeric_vs_alphanumeric_is_deferred() {
+        // A SCALED numeric operand's image needs implied-point handling → deferred.
+        let err = run_ws(
+            &["01  F  PIC 9(2)V9 VALUE 4.2."],
+            &["    IF F = \"042\" DISPLAY \"Y\".", "    STOP RUN."],
+        )
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn mixed_group_item_vs_numeric_is_deferred() {
+        // A GROUP item in a mixed numeric comparison is a later rung.
+        let err = run_ws(
+            &[
+                "01  G.",
+                "    05  A  PIC X(2) VALUE \"04\".",
+                "    05  B  PIC X(1) VALUE \"2\".",
+                "01  NUM  PIC 9(3) VALUE 42.",
+            ],
+            &["    IF G = NUM DISPLAY \"Y\".", "    STOP RUN."],
+        )
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+    }
+
+    // ----------------------------------------------------------------------
     // Fixed-point decimal arithmetic
     // ----------------------------------------------------------------------
 

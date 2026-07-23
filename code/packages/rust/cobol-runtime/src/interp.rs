@@ -1132,9 +1132,45 @@ impl Machine {
     /// figurative), else an **alphanumeric** comparison — each side's characters
     /// (a numeric's are its digit image), a figurative expanded to the other's
     /// length, then both space-padded to a common length and byte-compared.
+    ///
+    /// A **mixed** numeric ↔ alphanumeric comparison (one side a numeric item, the
+    /// other alphanumeric) falls into that alphanumeric arm: COBOL treats the
+    /// numeric operand as though moved to an alphanumeric field — its digit image,
+    /// which `Decimal::digits()` yields as the item's fixed-width zero-padded
+    /// storage (`PIC 9(3) = 42` → `"042"`) — and compares by the byte rule. Only an
+    /// **unsigned-integer** numeric item has an unambiguous image on this rung; a
+    /// **signed** (`PIC S9`) or **scaled** (`PIC 9V9`) numeric item, or a **group**
+    /// item, in a mixed comparison is a clean later rung — rejected here so the
+    /// oracle matches the compiler, which rejects the same shapes at compile time.
+    /// (A numeric *literal* vs an alphanumeric operand is a different pairing, left
+    /// as-is — outside this rung's scope.)
     fn compare_operands(&self, left: &Operand, right: &Operand) -> Result<std::cmp::Ordering, RuntimeError> {
         let l = self.src_from_operand(left)?;
         let r = self.src_from_operand(right)?;
+        // A mixed comparison surfaces as exactly one numeric and one character
+        // `Src`. Reject the deferred numeric shapes (signed / scaled) and any group
+        // item participating in it, so this engine errors precisely where the
+        // compiler does.
+        let mixed = matches!(
+            (&l, &r),
+            (Src::Num(_), Src::Chars(_)) | (Src::Chars(_), Src::Num(_))
+        );
+        if mixed {
+            for op in [left, right] {
+                if self.operand_is_signed_or_scaled_numeric(op) {
+                    return Err(RuntimeError::Unsupported(
+                        "a signed or scaled numeric operand compared with an alphanumeric \
+                         operand is a later rung"
+                            .into(),
+                    ));
+                }
+                if self.operand_is_group(op) {
+                    return Err(RuntimeError::Unsupported(
+                        "a group item compared with a numeric operand is a later rung".into(),
+                    ));
+                }
+            }
+        }
         Ok(match (&l, &r) {
             (Src::Num(a), Src::Num(b)) => a.cmp_value(b),
             (Src::Num(a), Src::Fig(Fig::Zero)) => a.cmp_value(&Decimal::zero()),
@@ -1152,6 +1188,34 @@ impl Machine {
                 format!("{ls:<width$}").cmp(&format!("{rs:<width$}"))
             }
         })
+    }
+
+    /// Whether `op` is a data-name referring to a **signed** (`PIC S9…`) or
+    /// **scaled** (`PIC 9V9…`, i.e. `dec_digits > 0`) numeric item — the numeric
+    /// shapes whose mixed comparison with an alphanumeric operand is a later rung.
+    /// A literal, a reference modification, or an unsigned-integer numeric item is
+    /// not one of these (returns `false`).
+    fn operand_is_signed_or_scaled_numeric(&self, op: &Operand) -> bool {
+        if let Operand::Ident(name) = op {
+            if let Some(&idx) = self.by_name.get(name) {
+                if let Some(Picture::Numeric { signed, dec_digits, .. }) = &self.items[idx].picture {
+                    return *signed || *dec_digits != 0;
+                }
+            }
+        }
+        false
+    }
+
+    /// Whether `op` is a data-name referring to a **group** item (no picture — its
+    /// value is the concatenation of its children). A group item in a mixed
+    /// numeric↔alphanumeric comparison is a later rung.
+    fn operand_is_group(&self, op: &Operand) -> bool {
+        if let Operand::Ident(name) = op {
+            if let Some(&idx) = self.by_name.get(name) {
+                return self.items[idx].picture.is_none();
+            }
+        }
+        false
     }
 
     fn exec_display(&mut self, ops: &[Operand]) -> Result<(), RuntimeError> {

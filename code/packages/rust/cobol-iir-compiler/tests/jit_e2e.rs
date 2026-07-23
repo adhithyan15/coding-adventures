@@ -1671,6 +1671,151 @@ fn numeric_alpha_numeric_round_trip() {
     assert_eq!(out, "042\n");
 }
 
+// -------------------------------------------------------------------------
+// Mixed numeric ↔ alphanumeric comparison — vs the oracle.
+//
+// When a relation compares an UNSIGNED-INTEGER numeric operand with an
+// ALPHANUMERIC one (a `PIC X` item or a string literal), COBOL treats the
+// numeric operand as though moved to an alphanumeric field — its n-digit
+// zero-padded digit image — then compares by the alphanumeric byte rule (the
+// shorter side space-padded on the right, byte-by-byte). Both engines build the
+// identical image and run the identical space-padded `str_cmp`, so the compiled
+// program is byte-identical to the oracle. A signed / scaled numeric operand, a
+// numeric literal, or a group item in a mixed relation is a clean later rung.
+// -------------------------------------------------------------------------
+
+#[test]
+fn mixed_numeric_equals_matching_literal() {
+    // NUM PIC 9(3)=42 → image "042"; "042" = "042" → equal.
+    let out = assert_matches_oracle(&wrap(
+        &["01  NUM  PIC 9(3) VALUE 42."],
+        &["IF NUM = \"042\" DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "MATCH\n");
+}
+
+#[test]
+fn mixed_numeric_space_pad_mismatch() {
+    // "042" vs "42" → the shorter literal space-pads to "42 "; '0' < '4' → not
+    // equal. (A DISPLAY-style value comparison would wrongly call these equal —
+    // this pins the alphanumeric byte rule.)
+    let out = assert_matches_oracle(&wrap(
+        &["01  NUM  PIC 9(3) VALUE 42."],
+        &["IF NUM = \"42\" DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "NO\n");
+}
+
+#[test]
+fn mixed_numeric_greater_ordering() {
+    // "042" > "040" → '2' > '0' at the last position → greater.
+    let out = assert_matches_oracle(&wrap(
+        &["01  NUM  PIC 9(3) VALUE 42."],
+        &["IF NUM > \"040\" DISPLAY \"GT\" ELSE DISPLAY \"LE\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "GT\n");
+}
+
+#[test]
+fn mixed_numeric_on_the_right_operand() {
+    // The numeric operand on the RIGHT lowers identically: "042" = "042".
+    let out = assert_matches_oracle(&wrap(
+        &["01  NUM  PIC 9(3) VALUE 42."],
+        &["IF \"042\" = NUM DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "MATCH\n");
+}
+
+#[test]
+fn mixed_numeric_against_a_pic_x_item() {
+    // The alphanumeric side is a `PIC X` item (not a literal): W = "042" equals
+    // NUM's image "042".
+    let out = assert_matches_oracle(&wrap(
+        &["01  NUM  PIC 9(3) VALUE 42.", "01  W  PIC X(3) VALUE \"042\"."],
+        &["IF NUM = W DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "MATCH\n");
+}
+
+#[test]
+fn mixed_numeric_symbolic_operators() {
+    // Symbolic `>=` and `<` operators lower through the same path: "042" >= "042"
+    // (equal) and "042" < "050".
+    let out = assert_matches_oracle(&wrap(
+        &["01  NUM  PIC 9(3) VALUE 42."],
+        &[
+            "IF NUM >= \"042\" DISPLAY \"GE\" ELSE DISPLAY \"LT\".",
+            "IF NUM < \"050\" DISPLAY \"LT\" ELSE DISPLAY \"GE\".",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "GE\nLT\n");
+}
+
+#[test]
+fn mixed_numeric_wider_field_space_pads_the_literal() {
+    // A wider numeric field, shorter literal: NUM PIC 9(4)=42 → "0042"; the
+    // literal "42" pads to "42  " (width 4) → not equal, and "0042" < "42  ".
+    let out = assert_matches_oracle(&wrap(
+        &["01  NUM  PIC 9(4) VALUE 42."],
+        &["IF NUM < \"42\" DISPLAY \"LT\" ELSE DISPLAY \"GE\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "LT\n");
+}
+
+// The deferred numeric shapes in a mixed relation are clean `Unsupported`s in the
+// compiler, matching the oracle (which rejects the same shapes at run time).
+
+#[test]
+fn mixed_signed_numeric_vs_alphanumeric_is_a_later_rung() {
+    // A SIGNED (`PIC S9`) numeric operand compared with an alphanumeric literal
+    // needs sign handling in its image → a later rung.
+    let err = compile_source(
+        &wrap(
+            &["01  S  PIC S9(3) VALUE 42."],
+            &["IF S = \"042\" DISPLAY \"Y\".", "STOP RUN."],
+        ),
+        "e2e",
+    )
+    .unwrap_err();
+    assert!(matches!(err, cobol_iir_compiler::CompileError::Unsupported(_)), "got {err:?}");
+}
+
+#[test]
+fn mixed_scaled_numeric_vs_alphanumeric_is_a_later_rung() {
+    // A SCALED (`PIC 9V9`) numeric operand's image needs implied-point handling
+    // → a later rung.
+    let err = compile_source(
+        &wrap(
+            &["01  F  PIC 9(2)V9 VALUE 4.2."],
+            &["IF F = \"042\" DISPLAY \"Y\".", "STOP RUN."],
+        ),
+        "e2e",
+    )
+    .unwrap_err();
+    assert!(matches!(err, cobol_iir_compiler::CompileError::Unsupported(_)), "got {err:?}");
+}
+
+#[test]
+fn mixed_group_item_vs_numeric_is_a_later_rung() {
+    // A GROUP item on either side of a mixed relation is a later rung — the
+    // compiler does not model group items, so referring to one is `Unsupported`.
+    let err = compile_source(
+        &wrap(
+            &[
+                "01  G.",
+                "    05  A  PIC X(2) VALUE \"04\".",
+                "    05  B  PIC X(1) VALUE \"2\".",
+                "01  NUM  PIC 9(3) VALUE 42.",
+            ],
+            &["IF G = NUM DISPLAY \"Y\".", "STOP RUN."],
+        ),
+        "e2e",
+    )
+    .unwrap_err();
+    assert!(matches!(err, cobol_iir_compiler::CompileError::Unsupported(_)), "got {err:?}");
+}
+
 // ---------------------------------------------------------------------------
 // Reference modification `IDENT(start:len)` — DISPLAY and comparison contexts.
 // A 1-based `start`; an omitted length runs to the end of the item. Every case

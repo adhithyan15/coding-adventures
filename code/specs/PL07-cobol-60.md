@@ -665,6 +665,58 @@ Deferred as clean later rungs (rejected identically on both engines): a **signed
 item on either side, and a **source wider than 18 characters** (whose `i64` fold
 could overflow — an all-digit source of ≤ 18 chars stays below `10^18 < i64::MAX`).
 
+### Comparison (numeric ↔ alphanumeric)
+
+The earlier condition rungs implement **same-category** comparison: a numeric
+relation (`IF A = B`, both numeric) compares the operands by **value** on their
+scaled integers, and an alphanumeric relation (both character) compares them by
+the **byte rule** — the shorter operand is space-padded on the right to the
+longer's length and the two are compared byte-by-byte. This rung adds the
+**mixed** relation: a relational condition (in `IF` / `EVALUATE` / any condition
+context) comparing an **unsigned-integer numeric** operand (`PIC 9(n)` — no `S`,
+no `V`) with an **alphanumeric** operand (a `PIC X` item **or** a string literal),
+with the numeric operand on either side.
+
+COBOL's rule: **when a numeric and a non-numeric operand are compared, the numeric
+operand is treated as though it were moved to an alphanumeric field** — i.e. by
+its **digit image**, the `n`-digit zero-padded magnitude (exactly the
+numeric→alphanumeric `MOVE` image above, and the same digits a `DISPLAY` of the
+same `PIC 9(n)` prints) — and the comparison then proceeds by the **alphanumeric
+(byte) rule**: space-pad the shorter operand on the right to the longer's length,
+then compare byte-by-byte.
+
+Worked (`NUM` is `PIC 9(3)` holding `42`, so its digit image is `"042"`):
+
+- `IF NUM = "042"` → `"042"` vs `"042"` → **equal** (true).
+- `IF NUM = "42"` → `"042"` vs `"42 "` (the shorter literal space-padded) →
+  differ at the first byte (`'0'` ≠ `'4'`) → **not equal** (false). A value
+  comparison would wrongly call these equal — this pins the byte rule.
+- `IF NUM > "040"` → `"042"` vs `"040"` → `'2' > '0'` at the last position →
+  **greater** (true).
+- `IF "042" = NUM` (numeric on the right) lowers identically → **equal**.
+- `IF NUM = W` where `W` is `PIC X(3) = "042"` (the alphanumeric side is an item,
+  not a literal) → **equal**.
+
+The oracle's `compare_operands` already yields the numeric operand's characters as
+`Decimal::digits()` — which, for a numeric item, is its fixed-width zero-padded
+storage — and falls into the same alphanumeric arm (space-pad to the common length,
+byte-compare) a character relation uses. The compiler builds the numeric side's
+`n`-digit image at run time with the **same digit helper** the numeric→alphanumeric
+`MOVE` uses, then feeds **both** operands through the **same `str_cmp` / space-pad
+path** an alphanumeric relation emits. Because both engines build the identical
+image and run the identical byte comparison, a mixed relation evaluates
+byte-for-byte the same on both. `EVALUATE`'s subject-vs-`WHEN` comparison reuses
+`compare_operands`, so the oracle applies the same rule there for free.
+
+Deferred as clean later rungs (rejected on both engines, so they agree on the
+deferral): a **signed** (`PIC S9`) or **scaled** (`PIC 9V9`) or **edited** numeric
+operand in a mixed comparison (its image would need sign / implied-point handling),
+a **group** item on either side, and a **numeric-literal-vs-alphanumeric** pairing
+(a different pairing, kept out of scope — the numeric side must be an item on this
+rung). The compiler's `EVALUATE` mixed lowering (numeric subject vs alphanumeric
+`WHEN`, or the reverse) likewise remains a later rung; its subject/`WHEN` paths are
+same-category only.
+
 ## Scope
 
 This spec's implementation stops at the **frontend** (lex + parse to a CST). No
