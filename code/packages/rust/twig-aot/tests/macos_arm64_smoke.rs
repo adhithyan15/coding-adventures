@@ -546,6 +546,143 @@ fn end_to_end_gc_precise_keeps_ref_reclaims_lookalike() {
     );
 }
 
+/// AOT00-T1 (x86_64 PR-x4 / PR-x5) — precise roots reach through a **self-recursive**
+/// frame, not just the entry frame.
+///
+/// The plain `gc_stress` differential proves precise roots work for `main`'s own frame.
+/// This one proves they work for an *intermediate* frame in a recursion chain — the case
+/// that, on x86-64, is precise only because a self-recursive `call` is now a registered
+/// safepoint (PR-x4). Two functions:
+///
+/// ```text
+///   rec(stop) -> i64:
+///       a = gc_alloc(64)          ; i64 look-alike, one per active frame
+///       if stop != 0 goto base
+///       r = rec(1)                ; SELF-RECURSIVE call — a0 sits in this frame across it
+///       ret r
+///     base:
+///       <collect>                 ; gc_collect | gc_collect_precise  (fires here)
+///       ret gc_live_bytes()
+///   main() -> i64: ret rec(0)
+/// ```
+///
+/// `main → rec(0) → rec(1)`. The collect fires inside `rec(1)`; when the collector walks
+/// out it passes through **`rec(0)`**, an intermediate self-recursive frame holding a
+/// 64-byte look-alike (`a0`) in an `i64` (non-reference) slot.
+///
+/// - **Conservative** scans every frame's stack, sees both look-alikes (`a0`, `a1`), and
+///   pins both objects → `live_bytes == 128`.
+/// - **Precise** walks each frame through its registered map. The return address live on
+///   `rec(0)`'s frame at collect time is the **self-recursive-call site**, so that frame is
+///   precise only if that PC is a mapped safepoint (aarch64 has always mapped it — it
+///   post-scans `BL`; x86-64 does so as of PR-x4). The `i64` slots are not references, so
+///   both objects are unrooted and reclaimed → `live_bytes == 0`.
+///
+/// A `precise` of `64` instead of `0` would mean the intermediate recursive frame fell
+/// back to a conservative scan — exactly the gap PR-x4 closes on x86-64. Here on aarch64
+/// it validates the program shape + GC semantics on a locally-runnable target; the
+/// identical module runs on the x86-64 CI runner (`linux_x86_64_smoke`).
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+#[test]
+fn end_to_end_gc_recursive_frame_live_bytes_differential() {
+    use interpreter_ir::instr::{IIRInstr, Operand};
+
+    fn build(collect: &str, collect_returns: bool) -> IIRModule {
+        // rec(stop: i64) -> i64
+        let mut rec_body = vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(64)], "i64"),
+            // The allocation's address lives only in this i64 (non-ref) slot.
+            IIRInstr::new(
+                "call_builtin",
+                Some("a".into()),
+                vec![Operand::Var("gc_alloc".into()), Operand::Var("n".into())],
+                "i64",
+            ),
+            // stop != 0 → base case; else fall through to the recursive path.
+            IIRInstr::new(
+                "jmp_if_true",
+                None,
+                vec![Operand::Var("stop".into()), Operand::Var("base".into())],
+                "i64",
+            ),
+            // Recursive path (stop == 0): recurse exactly once with stop = 1.
+            IIRInstr::new("const", Some("one".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new(
+                "call",
+                Some("r".into()),
+                vec![Operand::Var("rec".into()), Operand::Var("one".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+            // Base path (stop != 0): collect, then return live payload bytes.
+            IIRInstr::new("label", None, vec![Operand::Var("base".into())], "i64"),
+        ];
+        rec_body.push(if collect_returns {
+            IIRInstr::new(
+                "call_builtin",
+                Some("freed".into()),
+                vec![Operand::Var(collect.into())],
+                "i64",
+            )
+        } else {
+            IIRInstr::new("call_builtin", None, vec![Operand::Var(collect.into())], "void")
+        });
+        rec_body.push(IIRInstr::new(
+            "call_builtin",
+            Some("lb".into()),
+            vec![Operand::Var("gc_live_bytes".into())],
+            "i64",
+        ));
+        rec_body.push(IIRInstr::new("ret", None, vec![Operand::Var("lb".into())], "i64"));
+
+        // main() -> i64  { ret rec(0) }
+        let main_body = vec![
+            IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new(
+                "call",
+                Some("r".into()),
+                vec![Operand::Var("rec".into()), Operand::Var("z".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ];
+
+        let mut m = IIRModule::new("gc_recur", "twig");
+        m.add_or_replace(IIRFunction::new(
+            "rec",
+            vec![("stop".to_string(), "i64".to_string())],
+            "i64",
+            rec_body,
+        ));
+        m.add_or_replace(IIRFunction::new("main", vec![], "i64", main_body));
+        m.entry_point = Some("main".into());
+        m
+    }
+
+    let dir = tempfile::tempdir().expect("tempdir");
+    let run = |tag: &str, collect: &str, ret: bool| -> i32 {
+        let exe = dir.path().join(tag);
+        twig_aot::compile_module_to_macos_executable(&build(collect, ret), &exe)
+            .unwrap_or_else(|e| panic!("{tag} compiles+links: {e}"));
+        let out = Command::new(&exe).output().unwrap_or_else(|e| panic!("{tag} runs: {e}"));
+        out.status.code().unwrap_or_else(|| panic!("{tag} exited by signal: {out:?}"))
+    };
+
+    let conservative = run("gc_recur_cons", "gc_collect", false);
+    let precise = run("gc_recur_prec", "gc_collect_precise", true);
+
+    assert_eq!(
+        conservative, 128,
+        "conservative must pin both recursive frames' 64-byte look-alikes (got {conservative})",
+    );
+    assert_eq!(
+        precise, 0,
+        "precise must reclaim BOTH look-alikes, including a0 in the intermediate \
+         self-recursive frame — which requires that frame be precisely mapped at the \
+         recursive-call return address (got {precise}, conservative={conservative})",
+    );
+}
+
 /// Sanity check that the AArch64Backend trait wiring goes end-to-end
 /// for a hand-built CIR-shaped function.
 #[test]
