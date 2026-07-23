@@ -1,5 +1,46 @@
 # Changelog — `twig-aot`
 
+## 0.43.0 - 2026-07-23 — x86_64 GC stack-map registration, SysV (AOT00-T1 x86_64 PR-x3)
+
+Fills the x86-64 `__gc_init_stackmaps` (a no-op since PR-x2) with **real registration**
+on System V (Linux): `compile_module_x86_64_to_text`'s pass 1 switches to
+`compile_function_with_globals_and_stackmap`, and `build_gc_init_stackmaps_x86_64`
+marshals the eight `__gc_register_stackmap` arguments per function and calls it —
+
+```
+lea  rdi, [rip + F]          ; func_start (patched pass 2b)
+mov  rsi,<F len> ; mov rdx,<records>
+lea  rcx, [rip + F.pc] ; xor r8,r8 ; xor r9,r9
+lea  rax,[rip+F.slots|0]; push rax     ; arg8 slots_flat
+lea  rax,[rip+F.counts]; push rax      ; arg7 slot_counts
+call __gc_register_stackmap ; add rsp,16
+```
+
+so `__gc_collect_precise` resolves an x86-64 return address to its exact roots. Design
+mirrors the merged aarch64 registration:
+
+- **`func_start`** via `LEA rdi, [rip+disp32]` patched in a new pass 2b from link offsets;
+  base-independent (RIP cancels the load base), no relocation — the x86-64 counterpart of
+  the aarch64 `ADR`. Uses the new x86_64-encoder 0.7.0 `lea_rip_placeholder`.
+- **The three arrays** are a data pool after the final `ret`, addressed by
+  `lea_rip_label` (RIP-relative, resolved at `finish()`); registry copies the slots.
+- **Register the wrapper too** (empty ref-slot map) — the increment-C precision fix, so
+  the precise walk never conservatively re-scans the user entry's frame.
+- `rsp` stays 16-aligned at each `call` (2 argument pushes = 16 bytes).
+
+**Windows/MsX64 keeps the no-op init** (its precise walk is a follow-up: the 4-stack-arg
++ shadow-space marshalling needs an `[rsp+disp]` store the encoder lacks, and the
+differential is Linux-only anyway) — so Windows degrades to a **safe conservative**
+collection. Also adds x86_64-backend 0.31.0 GC builtins (`gc_collect` /
+`gc_collect_precise` / `gc_live_bytes` / `gc_stackmap_count`).
+
+Verified: 57 lib tests incl. `x86_64_func_start_lea_resolves_to_target_offset` (decodes
+the patched `LEA`, base-independent) + the structural registration test; clippy clean.
+The registration-ran + `live_bytes` differential (precise reclaims the i64 look-alike
+→ 0, conservative pins it → 64) run on the native x86-64 `ubuntu-latest` CI runner
+(`linux_x86_64_smoke`), the authoritative validator for this arc (the dev host is aarch64
+macOS). Needs x86_64-encoder 0.7.0.
+
 ## 0.42.0 - 2026-07-22 — x86_64 GC entry wrapper + no-op init (AOT00-T1 x86_64 PR-x2)
 
 Ports increment A to the native x86-64 object path (`compile_module_x86_64_to_text`):

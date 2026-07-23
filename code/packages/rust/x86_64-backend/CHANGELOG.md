@@ -1,5 +1,14 @@
 # Changelog — `x86_64-backend`
 
+## 0.31.0 - 2026-07-23 — V1_BUILTINS: GC collection + observability (AOT00-T1 x86_64 PR-x3)
+
+Four `call_builtin` entries the native GC-stress differential drives (→ `__twig_gc_*`
+aliases in gc-core-capi), mirroring the aarch64 backend: `gc_collect` (forced
+conservative full collect, void), `gc_collect_precise` (precise-roots frame walk,
+returns freed count), `gc_live_bytes` (live payload bytes), `gc_stackmap_count`
+(registered-function count). No new lowering — the generic `call_builtin` marshaller
+emits the `CALL`.
+
 ## 0.30.0 - 2026-07-22 — GC precise-roots stack-map emission (AOT00-T1)
 
 `compile_function_with_globals_and_stackmap` — the x86-64 analogue of the aarch64
