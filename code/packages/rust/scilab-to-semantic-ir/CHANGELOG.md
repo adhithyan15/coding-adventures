@@ -1,5 +1,98 @@
 # Changelog
 
+## [0.1.1] - 2026-07-23
+
+### Added
+
+- **`tests/oracle.rs` — HML01 §7 oracle/golden testing, cross-checking
+  `scilab-runtime` (ground truth) against `scilab_to_semantic_ir::
+  compile_source` → `semantic_ir::Module` → `semantic_ir_to_javascript::
+  compile` → a real `node` process.** Scilab is the LAST language in the
+  whole HML01 track to get this test suite — MATLAB, Octave, Wolfram,
+  Macsyma, Maxima, APL, J, Reduce, Derive, and Maple all already have
+  one. Structurally closer to `matlab-to-semantic-ir`'s/`octave-to-
+  semantic-ir`'s own oracle files (a `setup` + `final_expr` `Case` shape,
+  since `scilab-runtime`'s `disp` builtin is a no-op and the only working
+  ground-truth display convention is the unsuppressed `name = value`/
+  `ans = value` echo) than to the CAS-family files, but also carries
+  Maple's/Derive's/J's `known_bug` field for genuinely documented,
+  tracked divergences. 33-case corpus: arithmetic/precedence, both
+  not-equal spellings (`~=`/`<>`), unary `~` and `&&`/`||`/`&`/`|` on bare
+  numeric operands (exercising `to_scilab_condition`'s runtime
+  `matlab_truthy` wrapping), `if`/`elseif`/`select`/`case`/`while`/`for`
+  (confirming this crate's own `hoist_assigned_names` already makes a
+  branch-introduced variable visible afterward with no pre-declaration,
+  unlike `matlab-to-semantic-ir`'s still-open equivalent gap), matrix
+  literal construction/matmul/elementwise-broadcast/transpose, string
+  equality, single-return-value and recursive user-defined functions
+  (genuinely new relative to MATLAB's/Octave's own oracle files, since
+  `matlab-runtime` has no function-definition support at all), and the
+  eight `%`-prefixed special constants. 27 of 33 cases need no
+  `known_bug` marker.
+- Adds a dev-dependency on `coding-adventures-scilab-runtime` (this
+  frontend's own sibling native-runtime crate) for `tests/oracle.rs`'s
+  ground truth only — the non-dev `[dependencies]` section still does
+  not depend on it; lowering itself only ever needs the parse-tree shape.
+
+### Found, NOT fixed here
+
+Six findings, each confirmed by actually running the case through both
+`scilab-runtime` and a real `node` process, not assumed from static
+analysis:
+
+- **Three already-open, shared-crate display-convention gaps, confirmed
+  to also affect Scilab (not independently reintroduced):** a
+  whole-valued float literal (`4.0`) prints with a spurious trailing
+  `.0` on the compiled side (the shared Ruby-family `FloatLit` boxing
+  convention in `emit.rs`); `%inf`/`%eps` diverge in number-formatting
+  style between Rust's `Display` (ground truth) and JS's
+  `Number.prototype.toString` (compiled) — genuinely new *end-to-end*
+  confirmations, since neither the MATLAB nor the Octave oracle
+  `CORPUS` ever `disp`s a bare decimal-point float literal or tests
+  `Inf`/`eps` display at all; and the still-open integer-literal-
+  division-floors bug `matlab-to-semantic-ir/tests/oracle.rs`'s own
+  module doc already documents (`1 / 3` prints `0`, not `0.333...`,
+  because `number_literal_expr` lowers a decimal-point-free literal to
+  `Expr::IntLit` and the shared `divide()` runtime helper floors
+  whenever both operands are integer-valued).
+- **One GENUINE BUG, new here, in the shared `semantic-ir-to-javascript`
+  crate — NOT a display-convention gap, NOT fixed in this PR:**
+  `matmul(a, b)` (`runtime.rs`) reads `a.shape`/`b.shape` unconditionally
+  via its own `nrows`/`ncols` helpers, with no `toArrayValue`
+  normalization step first — unlike its sibling `elementwise(op, a, b)`,
+  which explicitly normalizes both operands before touching either. This
+  crate's own `expr_is_known_scalar` heuristic (mirroring
+  `matlab_to_semantic_ir`'s identical one) can never see through a
+  variable binding, so `x * y` where neither operand is a literal always
+  takes the `Expr::MatMul` path regardless of what `x`/`y` actually hold
+  at runtime — and when they're plain scalars, the emitted
+  `__Sir.matmul(x, y)` call crashes: `TypeError: Cannot read properties
+  of undefined (reading 'length')` at `nrows`. Confirmed directly by
+  running the generated JS through `node` for three independent repro
+  shapes: a bare `x = 5; y = x * x;`, a function parameter squaring
+  itself, and a recursive factorial. Almost certainly reachable through
+  `matlab-to-semantic-ir` too (identical heuristic, identical `matmul`
+  codegen), but never previously surfaced there because
+  `matlab-runtime` has no user-defined functions at all and that oracle
+  file's own `CORPUS` only ever multiplies two variables holding a
+  genuine array literal, never a bare scalar. Flagged for a dedicated
+  follow-up task against `semantic-ir-to-javascript`'s `matmul`; not
+  touched here per this PR's own scope (oracle-TEST only).
+- Also confirmed impossible to oracle-test at all (not merely excluded
+  as "currently buggy"): indexed assignment (`A(2) = 9;` —
+  `scilab-runtime`'s own evaluator rejects any non-bare-variable
+  assignment target, even though this frontend's own `tests/e2e_node.rs`
+  already round-trips it through the JS path successfully — no ground
+  truth to diff against) and `break`/`continue`/`$`/multi-output
+  functions (this frontend's own `lower.rs` already rejects each with a
+  clean, disclosed error, so `compile_source` never produces a `Module`
+  to run in the first place).
+
+### Notes on divergence from the spec
+
+None — this release is oracle-test-only; no lowering, spec, or shared-
+crate behavior changed.
+
 ## [0.1.0] - 2026-07-20
 
 ### Added
