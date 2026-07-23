@@ -33,17 +33,17 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language BJT forward transit-time voltage scale.
+1. Cross-language BJT emitter resistance.
    - Status: current PR completion candidate.
-   - Add Berkeley BJT `VTF` model-card support in Rust, Python, and TypeScript,
-     defaulting to zero so existing AC and transient results remain unchanged.
-   - Apply the Berkeley base-collector voltage factor
-     `exp(Vbc / (1.44 * VTF))` to the `XTF` diffusion-capacitance and transient
-     stored-charge enhancement while preserving the complete BJT model through
-     subcircuits and tracking the control voltage in transient state.
-   - Extend the supported-parameter coverage gate from 122 to 124 canonical
-     rows and lock model-card behavior, validation, hierarchy, AC loading, and
-     transient stored-charge behavior in all engines.
+   - Add Berkeley BJT `RE` model-card support in Rust, Python, and TypeScript,
+     defaulting to zero so existing operating-point, AC, transient, and noise
+     results remain unchanged.
+   - Insert an intrinsic emitter node behind the configured series resistance,
+     use that node for nonlinear and stored-charge behavior, and include the
+     resistor's thermal-noise contribution.
+   - Extend the supported-parameter coverage gate from 124 to 126 canonical
+     rows and lock model-card behavior, validation, hierarchy, operating-point
+     loading, and noise behavior in all engines.
 
 ## Completed Slices
 
@@ -3159,6 +3159,15 @@ the Rust, Python, and TypeScript surfaces together.
      storage enhancement.
    - Hierarchical subcircuit expansion preserves the complete BJT model, and
      the supported-parameter release gate now covers 122 canonical rows.
+
+239. Cross-language BJT forward transit-time voltage scale.
+   - Status: completed in PR 8851.
+   - Rust, Python, and TypeScript BJT model cards now accept `VTF`, default it
+     to zero, and apply `exp(Vbc / (1.44 * VTF))` to the `XTF` AC and transient
+     storage enhancement.
+   - Hierarchical subcircuit expansion preserves the complete BJT model and
+     transient state tracks the controlling base-collector voltage; the
+     supported-parameter release gate now covers 124 canonical rows.
 
 ## Backlog
 

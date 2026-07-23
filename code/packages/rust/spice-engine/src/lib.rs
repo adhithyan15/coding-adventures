@@ -461,6 +461,7 @@ fn clone_subckt_element(
                 element.forward_transit_time_bias_coefficient;
             expanded.forward_transit_time_current = element.forward_transit_time_current;
             expanded.forward_transit_time_voltage = element.forward_transit_time_voltage;
+            expanded.emitter_resistance = element.emitter_resistance;
             Element::Bjt(expanded)
         }
         Element::Mosfet(element) => Element::Mosfet(Mosfet::with_model(
@@ -2909,6 +2910,7 @@ pub struct Bjt {
     pub forward_transit_time_bias_coefficient: f64,
     pub forward_transit_time_current: f64,
     pub forward_transit_time_voltage: f64,
+    pub emitter_resistance: f64,
 }
 
 impl Bjt {
@@ -3378,6 +3380,7 @@ impl Bjt {
             forward_transit_time_bias_coefficient: 0.0,
             forward_transit_time_current: 0.0,
             forward_transit_time_voltage: 0.0,
+            emitter_resistance: 0.0,
         }
     }
 }
@@ -3768,8 +3771,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     usize,
 )] = &[
     (ModelCardKind::Diode, 12, 18, 5, 3),
-    (ModelCardKind::Npn, 33, 50, 13, 4),
-    (ModelCardKind::Pnp, 33, 50, 13, 4),
+    (ModelCardKind::Npn, 34, 51, 13, 4),
+    (ModelCardKind::Pnp, 34, 51, 13, 4),
     (ModelCardKind::Njf, 5, 11, 5, 3),
     (ModelCardKind::Pjf, 5, 11, 5, 3),
     (ModelCardKind::Nmos, 18, 25, 6, 3),
@@ -3828,6 +3831,7 @@ const BJT_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("XTF", "XTF"),
     ("ITF", "ITF"),
     ("VTF", "VTF"),
+    ("RE", "RE"),
     ("ISE", "ISE"),
     ("NE", "NE"),
     ("ISC", "ISC"),
@@ -4528,6 +4532,7 @@ pub fn bjt_from_model_card(
     bjt.forward_transit_time_bias_coefficient = model_card_value(model, "XTF", 0.0);
     bjt.forward_transit_time_current = model_card_value(model, "ITF", 0.0);
     bjt.forward_transit_time_voltage = model_card_value(model, "VTF", 0.0);
+    bjt.emitter_resistance = model_card_value(model, "RE", 0.0);
     Ok(bjt)
 }
 
@@ -21965,6 +21970,9 @@ fn collect_node_indices(circuit: &Circuit) -> HashMap<String, usize> {
                 insert_node(&mut names, &bjt.collector);
                 insert_node(&mut names, &bjt.base);
                 insert_node(&mut names, &bjt.emitter);
+                if bjt.emitter_resistance > 0.0 {
+                    insert_node(&mut names, &bjt_intrinsic_emitter_node(bjt));
+                }
             }
             Element::Mosfet(mosfet) => {
                 insert_node(&mut names, &mosfet.drain);
@@ -22172,6 +22180,24 @@ fn collect_noise_sources(
             }
             Element::Bjt(bjt) => {
                 validate_bjt(bjt)?;
+                let intrinsic_bjt = if bjt.emitter_resistance > 0.0 {
+                    let intrinsic_emitter = bjt_intrinsic_emitter_node(bjt);
+                    sources.push(NoiseSource {
+                        element_name: format!("{}:RE", bjt.name),
+                        noise_type: NoiseType::Thermal,
+                        positive: node_index(node_indices, &bjt.emitter),
+                        negative: node_index(node_indices, &intrinsic_emitter),
+                        source_psd: 4.0 * BOLTZMANN * temperature_kelvin / bjt.emitter_resistance,
+                        frequency_exponent: 0.0,
+                    });
+                    let mut intrinsic = bjt.clone();
+                    intrinsic.emitter = intrinsic_emitter;
+                    intrinsic.emitter_resistance = 0.0;
+                    Some(intrinsic)
+                } else {
+                    None
+                };
+                let bjt = intrinsic_bjt.as_ref().unwrap_or(bjt);
                 let base = node_index(node_indices, &bjt.base);
                 let emitter = node_index(node_indices, &bjt.emitter);
                 let collector = node_index(node_indices, &bjt.collector);
@@ -22776,6 +22802,22 @@ fn stamp_bjt(
     operating_point: &[f64],
 ) -> Result<(), SpiceError> {
     validate_bjt(bjt)?;
+    let intrinsic_bjt = if bjt.emitter_resistance > 0.0 {
+        let intrinsic_emitter = bjt_intrinsic_emitter_node(bjt);
+        stamp_conductance(
+            matrix,
+            node_index(node_indices, &bjt.emitter),
+            node_index(node_indices, &intrinsic_emitter),
+            1.0 / bjt.emitter_resistance,
+        );
+        let mut intrinsic = bjt.clone();
+        intrinsic.emitter = intrinsic_emitter;
+        intrinsic.emitter_resistance = 0.0;
+        Some(intrinsic)
+    } else {
+        None
+    };
+    let bjt = intrinsic_bjt.as_ref().unwrap_or(bjt);
     let collector = node_index(node_indices, &bjt.collector);
     let base = node_index(node_indices, &bjt.base);
     let emitter = node_index(node_indices, &bjt.emitter);
@@ -22896,8 +22938,8 @@ fn stamp_bjt_charge(
             }
             TransientMethod::Euler => conductance * state.previous_voltage,
         };
-        let positive = node_index(node_indices, spec.positive);
-        let negative = node_index(node_indices, spec.negative);
+        let positive = node_index(node_indices, &spec.positive);
+        let negative = node_index(node_indices, &spec.negative);
         stamp_conductance(matrix, positive, negative, conductance);
         if let Some(index) = positive {
             rhs[index] += history_current;
@@ -22930,6 +22972,22 @@ fn stamp_bjt_small_signal(
     operating_point: &[f64],
 ) -> Result<(), SpiceError> {
     validate_bjt(bjt)?;
+    let intrinsic_bjt = if bjt.emitter_resistance > 0.0 {
+        let intrinsic_emitter = bjt_intrinsic_emitter_node(bjt);
+        stamp_conductance(
+            matrix,
+            node_index(node_indices, &bjt.emitter),
+            node_index(node_indices, &intrinsic_emitter),
+            1.0 / bjt.emitter_resistance,
+        );
+        let mut intrinsic = bjt.clone();
+        intrinsic.emitter = intrinsic_emitter;
+        intrinsic.emitter_resistance = 0.0;
+        Some(intrinsic)
+    } else {
+        None
+    };
+    let bjt = intrinsic_bjt.as_ref().unwrap_or(bjt);
     let collector = node_index(node_indices, &bjt.collector);
     let base = node_index(node_indices, &bjt.base);
     let emitter = node_index(node_indices, &bjt.emitter);
@@ -22994,6 +23052,22 @@ fn stamp_ac_bjt_small_signal(
     omega: f64,
 ) -> Result<(), SpiceError> {
     validate_bjt(bjt)?;
+    let intrinsic_bjt = if bjt.emitter_resistance > 0.0 {
+        let intrinsic_emitter = bjt_intrinsic_emitter_node(bjt);
+        stamp_complex_conductance(
+            matrix,
+            node_index(node_indices, &bjt.emitter),
+            node_index(node_indices, &intrinsic_emitter),
+            Complex::new(1.0 / bjt.emitter_resistance, 0.0),
+        );
+        let mut intrinsic = bjt.clone();
+        intrinsic.emitter = intrinsic_emitter;
+        intrinsic.emitter_resistance = 0.0;
+        Some(intrinsic)
+    } else {
+        None
+    };
+    let bjt = intrinsic_bjt.as_ref().unwrap_or(bjt);
     let collector = node_index(node_indices, &bjt.collector);
     let base = node_index(node_indices, &bjt.base);
     let emitter = node_index(node_indices, &bjt.emitter);
@@ -23629,10 +23703,10 @@ enum BjtChargeStateKind {
     BaseCollector,
 }
 
-struct BjtChargeStateSpec<'a> {
+struct BjtChargeStateSpec {
     name: String,
-    positive: &'a str,
-    negative: &'a str,
+    positive: String,
+    negative: String,
     kind: BjtChargeStateKind,
 }
 
@@ -23642,6 +23716,14 @@ fn bjt_base_emitter_charge_state_name(bjt: &Bjt) -> String {
 
 fn bjt_base_collector_charge_state_name(bjt: &Bjt) -> String {
     format!("_Q_{}_bc_charge", bjt.name)
+}
+
+fn bjt_intrinsic_emitter_node(bjt: &Bjt) -> String {
+    if bjt.emitter_resistance == 0.0 {
+        bjt.emitter.clone()
+    } else {
+        format!("__spice_{}_emitter", bjt.name)
+    }
 }
 
 fn bjt_junction_transconductance(bjt: &Bjt, voltage: f64, emission_coefficient: f64) -> f64 {
@@ -23733,12 +23815,13 @@ fn bjt_base_collector_depletion_capacitance(bjt: &Bjt, voltage: f64) -> f64 {
     bjt.base_collector_capacitance * continuation / transition_scale
 }
 
-fn bjt_charge_state_specs(bjt: &Bjt) -> Vec<BjtChargeStateSpec<'_>> {
+fn bjt_charge_state_specs(bjt: &Bjt) -> Vec<BjtChargeStateSpec> {
     let mut specs = Vec::new();
     if bjt.base_emitter_capacitance > 0.0 || bjt.forward_transit_time > 0.0 {
+        let emitter = bjt_intrinsic_emitter_node(bjt);
         let (positive, negative) = match bjt.polarity {
-            BjtPolarity::Npn => (bjt.base.as_str(), bjt.emitter.as_str()),
-            BjtPolarity::Pnp => (bjt.emitter.as_str(), bjt.base.as_str()),
+            BjtPolarity::Npn => (bjt.base.clone(), emitter),
+            BjtPolarity::Pnp => (emitter, bjt.base.clone()),
         };
         specs.push(BjtChargeStateSpec {
             name: bjt_base_emitter_charge_state_name(bjt),
@@ -23754,8 +23837,8 @@ fn bjt_charge_state_specs(bjt: &Bjt) -> Vec<BjtChargeStateSpec<'_>> {
             && bjt.forward_transit_time_voltage > 0.0)
     {
         let (positive, negative) = match bjt.polarity {
-            BjtPolarity::Npn => (bjt.base.as_str(), bjt.collector.as_str()),
-            BjtPolarity::Pnp => (bjt.collector.as_str(), bjt.base.as_str()),
+            BjtPolarity::Npn => (bjt.base.clone(), bjt.collector.clone()),
+            BjtPolarity::Pnp => (bjt.collector.clone(), bjt.base.clone()),
         };
         specs.push(BjtChargeStateSpec {
             name: bjt_base_collector_charge_state_name(bjt),
@@ -23768,10 +23851,10 @@ fn bjt_charge_state_specs(bjt: &Bjt) -> Vec<BjtChargeStateSpec<'_>> {
 }
 
 fn bjt_charge_state_voltage(
-    spec: &BjtChargeStateSpec<'_>,
+    spec: &BjtChargeStateSpec,
     node_voltages: &BTreeMap<String, f64>,
 ) -> f64 {
-    voltage_at(node_voltages, spec.positive) - voltage_at(node_voltages, spec.negative)
+    voltage_at(node_voltages, &spec.positive) - voltage_at(node_voltages, &spec.negative)
 }
 
 struct JfetChargeStateSpec<'a> {
@@ -24155,6 +24238,12 @@ fn validate_bjt(bjt: &Bjt) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: bjt.name.clone(),
             reason: "forward transit-time voltage must be finite and non-negative".to_string(),
+        });
+    }
+    if !bjt.emitter_resistance.is_finite() || bjt.emitter_resistance < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "emitter resistance must be finite and non-negative".to_string(),
         });
     }
     if !bjt.base_emitter_leakage_saturation_current.is_finite()

@@ -1,5 +1,7 @@
 # Changelog
 
+- Add BJT model-card `RE` emitter-resistance support with an intrinsic emitter
+  node in DC, AC, and transient analysis plus thermal noise in noise analysis.
 - Add BJT model-card `VTF` forward transit-time voltage-scale support, applying
   `exp(Vbc / (1.44 * VTF))` to the `XTF` AC and transient storage enhancement.
 
