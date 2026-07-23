@@ -2,6 +2,33 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.35.0] - 2026-07-22
+
+### Added - split a comma-sequence expression statement into separate statements
+
+A comma sequence used as an expression statement at a statement-LIST position
+(program body or block body) now splits into one statement per sub-expression,
+matching the reference Closure Compiler's Normalize at SIMPLE byte-for-byte (the
+inverse of the existing loop-body comma-fusion):
+
+```text
+  a(), b();        ->  a(); b();
+  a(), b(), c();   ->  a(); b(); c();
+  1, a();          ->  1; a();      (each operand kept verbatim)
+```
+
+The comma operator evaluates its operands left-to-right and discards all but the
+last; an expression statement already discards its value, so running each operand
+as its own statement is behaviour-identical. A new `split_sequence_statement`
+helper feeds `fold_block_statement` / `fold_program` (the statement-list
+processors, which already splice), NOT `fold_statement` - a single-statement body
+(`if (x) a(), b();`, `for (;;) a(), b();`) has no braces, so the sequence must
+stay fused there; those cases are verified unchanged.
+
+Not handled (declined; tracked as a follow-up): a comma sequence in a `for`
+INIT (`for(a(),b();c;)d()` -> the reference pulls `a();` out before the loop),
+which is a for-header transform rather than an expression-statement split.
+
 ## [0.34.0] - 2026-07-22
 
 ### Fixed — a dead `if` branch / `for` loop no longer DROPS a hoisted `var` (miscompile)

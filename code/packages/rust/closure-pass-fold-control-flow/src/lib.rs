@@ -324,6 +324,17 @@ fn fold_program(prog: &Program, st: &mut FoldState) -> Program {
                 new_body.extend(body.iter().cloned().map(ProgramItem::Statement));
                 continue;
             }
+            // Split a top-level comma-sequence statement (`a(), b();` → `a(); b();`).
+            if let Some(split) = split_sequence_statement(s) {
+                st.record_fold(
+                    &statement_cv(s),
+                    "split-comma-sequence",
+                    "<a>, <b>;",
+                    "<a>; <b>;",
+                );
+                new_body.extend(split.into_iter().map(ProgramItem::Statement));
+                continue;
+            }
         }
         new_body.push(folded);
     }
@@ -596,6 +607,21 @@ fn fold_block_statement(b: &BlockStatement, st: &mut FoldState) -> BlockStatemen
             if new_body.last().map(is_terminator).unwrap_or(false) {
                 hit_terminator = true;
             }
+            continue;
+        }
+
+        // Split a comma-sequence expression statement into separate statements
+        // (`a(), b();` → `a(); b();`). A `SequenceExpression` never contains a
+        // terminator (they are statements, not expressions), so no
+        // `hit_terminator` re-check is needed.
+        if let Some(split) = split_sequence_statement(&folded) {
+            st.record_fold(
+                &statement_cv(&folded),
+                "split-comma-sequence",
+                "<a>, <b>;",
+                "<a>; <b>;",
+            );
+            new_body.extend(split);
             continue;
         }
 
@@ -884,6 +910,39 @@ fn redundant_block(folded: &Statement) -> Option<(&Option<String>, &[Statement])
         }
         _ => None,
     }
+}
+
+/// A comma sequence used as an EXPRESSION STATEMENT at a statement-list position
+/// splits into one statement per sub-expression, matching the reference Closure
+/// Compiler's Normalize (the inverse of the loop-body comma-fusion): `a(), b();`
+/// -> `a(); b();`, `1, a();` -> `1; a();`. The split is behaviour-preserving —
+/// the comma operator evaluates its operands left-to-right and discards all but
+/// the last, and an expression statement already discards its value, so running
+/// each operand as its own statement is identical.
+///
+/// This is valid ONLY at a statement-LIST position (program / block body), which
+/// is why it lives in [`fold_block_statement`] / [`fold_program`] rather than
+/// [`fold_statement`]: a single-statement body (`if (x) a(), b();`,
+/// `for (;;) a(), b();`) has no braces, so the sequence must stay fused there.
+/// Returns `None` when `folded` is not an `ExpressionStatement` wrapping a
+/// `SequenceExpression`.
+fn split_sequence_statement(folded: &Statement) -> Option<Vec<Statement>> {
+    if let Statement::Tagged(TaggedStatement::ExpressionStatement(es)) = folded {
+        if let Expression::SequenceExpression(seq) = &es.expression {
+            return Some(
+                seq.expressions
+                    .iter()
+                    .map(|e| {
+                        Statement::expression_statement(ExpressionStatement {
+                            cv: None,
+                            expression: e.clone(),
+                        })
+                    })
+                    .collect(),
+            );
+        }
+    }
+    None
 }
 
 /// Is this `else` branch safe to hoist into the enclosing block (CLOC25)?
@@ -4455,6 +4514,46 @@ mod tests {
         let (out, _c, changed, _n) = run_pass(prog);
         assert!(changed);
         assert_eq!(out.body.len(), 2, "both inner statements spliced in");
+    }
+
+    #[test]
+    fn split_comma_sequence_at_program_level() {
+        // `x, y, z;` → `x; y; z;` — a comma-sequence expression STATEMENT at a
+        // statement-list position splits into one statement per sub-expression.
+        let seq = Expression::SequenceExpression(SequenceExpression {
+            cv: None,
+            expressions: vec![ident("x"), ident("y"), ident("z")],
+        });
+        let prog = program().with_body(vec![ProgramItem::Statement(expr_stmt(seq, None))]);
+        let (out, _c, changed, _n) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 3, "expected 3 split statements; got {:?}", out.body);
+        for (i, name) in ["x", "y", "z"].iter().enumerate() {
+            match &out.body[i] {
+                ProgramItem::Statement(Statement::Tagged(
+                    TaggedStatement::ExpressionStatement(es),
+                )) => assert!(
+                    matches!(&es.expression, Expression::Identifier(id) if &id.name == name),
+                    "stmt {i} should be `{name};`; got {:?}",
+                    es.expression
+                ),
+                other => panic!("expected ExpressionStatement for `{name}`; got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn split_comma_sequence_in_block() {
+        // `{ a, b; }` → the block flattens and the sequence splits: `a; b;`.
+        let seq = Expression::SequenceExpression(SequenceExpression {
+            cv: None,
+            expressions: vec![ident("a"), ident("b")],
+        });
+        let prog =
+            program().with_body(vec![ProgramItem::Statement(block(None, vec![expr_stmt(seq, None)]))]);
+        let (out, _c, changed, _n) = run_pass(prog);
+        assert!(changed);
+        assert_eq!(out.body.len(), 2, "expected [a; b;]; got {:?}", out.body);
     }
 
     #[test]
