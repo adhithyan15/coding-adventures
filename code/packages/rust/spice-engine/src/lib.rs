@@ -3787,8 +3787,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     usize,
 )] = &[
     (ModelCardKind::Diode, 12, 18, 5, 3),
-    (ModelCardKind::Npn, 39, 56, 13, 4),
-    (ModelCardKind::Pnp, 39, 56, 13, 4),
+    (ModelCardKind::Npn, 41, 58, 13, 4),
+    (ModelCardKind::Pnp, 41, 58, 13, 4),
     (ModelCardKind::Njf, 5, 11, 5, 3),
     (ModelCardKind::Pjf, 5, 11, 5, 3),
     (ModelCardKind::Nmos, 18, 25, 6, 3),
@@ -3854,8 +3854,10 @@ const BJT_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("IRB", "IRB"),
     ("XCJC", "XCJC"),
     ("ISE", "ISE"),
+    ("C2", "C2"),
     ("NE", "NE"),
     ("ISC", "ISC"),
+    ("C4", "C4"),
     ("NC", "NC"),
     ("XTB", "XTB"),
     ("BR", "BR"),
@@ -4510,13 +4512,24 @@ pub fn bjt_from_model_card(
         ModelCardKind::Pnp => BjtPolarity::Pnp,
         _ => return Err(model_card_kind_error(&name, "BJT", model.kind)),
     };
+    let saturation_current = model_card_value(model, "IS", 1.0e-14);
+    let base_emitter_leakage_saturation_current = model
+        .parameters
+        .get("ISE")
+        .copied()
+        .unwrap_or_else(|| model_card_value(model, "C2", 0.0) * saturation_current);
+    let base_collector_leakage_saturation_current = model
+        .parameters
+        .get("ISC")
+        .copied()
+        .unwrap_or_else(|| model_card_value(model, "C4", 0.0) * saturation_current);
     let mut bjt = Bjt::with_model_temperature_depletion_early_rolloff_junction_leakage_and_reverse_beta_parameters(
             name,
             collector,
             base,
             emitter,
             polarity,
-            model_card_value(model, "IS", 1.0e-14),
+            saturation_current,
             model_card_value(model, "BF", 100.0),
             model_card_value(model, "VT", 0.02585),
             model_card_value(model, "CJE", 0.0),
@@ -4535,9 +4548,9 @@ pub fn bjt_from_model_card(
             model_card_value(model, "FC", 0.5),
             model_card_value(model, "VAR", 0.0),
             model_card_value(model, "IKF", 0.0),
-            model_card_value(model, "ISE", 0.0),
+            base_emitter_leakage_saturation_current,
             model_card_value(model, "NE", 1.0),
-            model_card_value(model, "ISC", 0.0),
+            base_collector_leakage_saturation_current,
             model_card_value(model, "NC", 2.0),
             model_card_value(model, "XTB", 0.0),
             model_card_value(model, "BR", 1.0),

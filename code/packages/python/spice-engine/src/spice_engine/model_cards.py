@@ -307,8 +307,8 @@ _MODEL_CARD_SUPPORTED_PARAMETER_KINDS = (
 )
 _MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES = {
     "D": (12, 18, 5, 3),
-    "NPN": (39, 56, 13, 4),
-    "PNP": (39, 56, 13, 4),
+    "NPN": (41, 58, 13, 4),
+    "PNP": (41, 58, 13, 4),
     "NJF": (5, 11, 5, 3),
     "PJF": (5, 11, 5, 3),
     "NMOS": (18, 25, 6, 3),
@@ -394,8 +394,10 @@ _BJT_PARAMETER_ALIASES: dict[str, str] = {
     "RBM": "RBM",
     "IRB": "IRB",
     "ISE": "ISE",
+    "C2": "C2",
     "NE": "NE",
     "ISC": "ISC",
+    "C4": "C4",
     "NC": "NC",
     "XTB": "XTB",
     "BR": "BR",
@@ -922,13 +924,14 @@ def bjt_from_model_card(
     if model.kind not in {"NPN", "PNP"}:
         raise ValueError(f"{name}: expected BJT model card, got {model.kind}")
     p = model.parameters
+    saturation_current = p.get("IS", 1.0e-14)
     return BJT(
         name,
         collector,
         base,
         emitter,
         polarity=model.kind,
-        Is=p.get("IS", 1.0e-14),
+        Is=saturation_current,
         beta_f=p.get("BF", 100.0),
         Vt=p.get("VT", 0.02585),
         Cje=p.get("CJE", 0.0),
@@ -947,9 +950,9 @@ def bjt_from_model_card(
         Fc=p.get("FC", 0.5),
         Var=p.get("VAR", 0.0),
         Ikf=p.get("IKF", 0.0),
-        Ise=p.get("ISE", 0.0),
+        Ise=p.get("ISE", p.get("C2", 0.0) * saturation_current),
         Ne=p.get("NE", 1.0),
-        Isc=p.get("ISC", 0.0),
+        Isc=p.get("ISC", p.get("C4", 0.0) * saturation_current),
         Nc=p.get("NC", 2.0),
         Xtb=p.get("XTB", 0.0),
         beta_r=p.get("BR", 1.0),

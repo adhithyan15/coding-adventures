@@ -2019,8 +2019,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   Record<ModelCardKind, readonly [number, number, number, number]>
 > = {
   D: [12, 18, 5, 3],
-  NPN: [39, 56, 13, 4],
-  PNP: [39, 56, 13, 4],
+  NPN: [41, 58, 13, 4],
+  PNP: [41, 58, 13, 4],
   NJF: [5, 11, 5, 3],
   PJF: [5, 11, 5, 3],
   NMOS: [18, 25, 6, 3],
@@ -7980,8 +7980,10 @@ const BJT_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   IRB: "IRB",
   XCJC: "XCJC",
   ISE: "ISE",
+  C2: "C2",
   NE: "NE",
   ISC: "ISC",
+  C4: "C4",
   NC: "NC",
   XTB: "XTB",
   BR: "BR",
@@ -8480,13 +8482,14 @@ export function bjtFromModelCard(
     throw invalidElement(name, `expected BJT model card, got ${model.kind}`);
   }
   const p = model.parameters;
+  const saturationCurrent = p.IS ?? 1.0e-14;
   return bjt(
     name,
     collector,
     base,
     emitter,
     model.kind,
-    p.IS ?? 1.0e-14,
+    saturationCurrent,
     p.BF ?? 100.0,
     p.VT ?? 0.02585,
     p.CJE ?? 0.0,
@@ -8505,9 +8508,9 @@ export function bjtFromModelCard(
     p.FC ?? 0.5,
     p.VAR ?? 0.0,
     p.IKF ?? 0.0,
-    p.ISE ?? 0.0,
+    p.ISE ?? (p.C2 ?? 0.0) * saturationCurrent,
     p.NE ?? 1.0,
-    p.ISC ?? 0.0,
+    p.ISC ?? (p.C4 ?? 0.0) * saturationCurrent,
     p.NC ?? 2.0,
     p.XTB ?? 0.0,
     p.BR ?? 1.0,

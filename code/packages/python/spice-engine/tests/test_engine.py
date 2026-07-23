@@ -412,7 +412,7 @@ def test_model_card_type_aliases_are_normalized() -> None:
 
 def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     coverage = model_card_supported_parameter_coverage()
-    assert len(coverage) == 136
+    assert len(coverage) == 140
     assert coverage[0].kind == "D"
     assert coverage[0].canonical_parameter == "IS"
     assert coverage[0].accepted_names == ("IS", "JS")
@@ -427,7 +427,7 @@ def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     assert "NMOS\tVT0\tVT0|VTO|VTH\t3" in table
     assert table.splitlines()[-1] == "PMOS\tMJ\tMJ\t1"
     records = model_card_supported_parameter_coverage_records()
-    assert len(records) == 136
+    assert len(records) == 140
     assert records[0] == {
         "kind": "D",
         "canonical_parameter": "IS",
@@ -501,9 +501,9 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
     assert report.passed is True
     assert report.kind_count == 7
     assert report.expected_kind_count == 7
-    assert report.canonical_parameter_count == 136
-    assert report.expected_canonical_parameter_count == 136
-    assert report.accepted_name_count == 202
+    assert report.canonical_parameter_count == 140
+    assert report.expected_canonical_parameter_count == 140
+    assert report.accepted_name_count == 206
     assert report.aliased_parameter_count == 53
     assert report.max_alias_count == 4
     assert report.issues == ()
@@ -511,7 +511,7 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "true\t7\t7\t136\t136\t202\t53\t4\t0"
+        "true\t7\t7\t140\t140\t206\t53\t4\t0"
     )
     assert (
         format_model_card_supported_parameter_coverage_gate_issue_table(report)
@@ -539,8 +539,8 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
 
     assert report.passed is False
     assert report.kind_count == 7
-    assert report.canonical_parameter_count == 135
-    assert report.accepted_name_count == 199
+    assert report.canonical_parameter_count == 139
+    assert report.accepted_name_count == 203
     assert report.aliased_parameter_count == 52
     assert report.max_alias_count == 4
     assert len(report.issues) == 4
@@ -555,7 +555,7 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "false\t7\t7\t135\t136\t199\t52\t4\t4\n"
+        "false\t7\t7\t139\t140\t203\t52\t4\t4\n"
         "kind\tfield\tmessage\n"
         "NMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical "
         "supported parameters, found 17\n"
@@ -727,6 +727,38 @@ def test_model_card_aliases_build_device_instances() -> None:
     assert pytest.approx(3.0e-13) == mos_model.model.model.params.CBD
     assert pytest.approx(0.9) == mos_model.model.model.params.PB
     assert pytest.approx(0.45) == mos_model.model.model.params.MJ
+
+
+def test_bjt_legacy_leakage_ratios_derive_currents_with_explicit_precedence() -> None:
+    legacy_card = normalize_model_card(
+        "Qlegacy",
+        "npn",
+        {"IS": 2.0e-14, "C2": 15.0, "C4": 20.0},
+    )
+    legacy = bjt_from_model_card("Q1", "c", "b", "e", legacy_card)
+
+    assert legacy_card.parameters == {
+        "IS": 2.0e-14,
+        "C2": 15.0,
+        "C4": 20.0,
+    }
+    assert legacy.Ise == pytest.approx(3.0e-13)
+    assert legacy.Isc == pytest.approx(4.0e-13)
+
+    explicit_card = normalize_model_card(
+        "Qexplicit",
+        "pnp",
+        {
+            "IS": 2.0e-14,
+            "C2": 15.0,
+            "ISE": 5.0e-13,
+            "C4": 20.0,
+            "ISC": 6.0e-13,
+        },
+    )
+    explicit = bjt_from_model_card("Q2", "c", "b", "e", explicit_card)
+    assert explicit.Ise == pytest.approx(5.0e-13)
+    assert explicit.Isc == pytest.approx(6.0e-13)
 
 
 def test_model_card_audit_fixtures_cover_supported_device_families() -> None:
