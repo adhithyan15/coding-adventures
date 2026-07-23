@@ -1,9 +1,26 @@
 # Script Writing Visualizer
 
-**The HL02 companion app.** Four modes: **Browse** and **Practice** work on
-*script letters*; **Lessons** drills the *written curriculum* — every lesson in
-every track — on a spaced-repetition schedule that persists between visits; and
-**Concepts** shows one idea in every language that has it, side by side.
+**The HL02 companion app, growing into the HL03 unified learning app.** Five
+modes. **Learn** (the default) walks the curriculum the way the book does — one
+concept at a time, forward along the language chain, each new language showing
+its threads back to the ones already learned. **Browse** and **Practice** work
+on *script letters*; **Lessons** drills the *written curriculum* — every lesson
+in every track — on a spaced-repetition schedule that persists between visits;
+and **Concepts** shows one idea in every language that has it, side by side.
+
+## Learn mode (the curriculum session)
+
+The spine of the app: [HL03](../../../specs/HL03-unified-language-learning-app.md)
+in one screen. For each concept in book order (`sweepableConcepts`), the
+engine's *teaching pass* (`sessionplan.ts` → `planSession`) is rendered as a
+numbered sweep — one card per language that teaches it, in chain order
+(Spanish → Latin → French → … → Malayalam). Each card carries the word in its
+own script, its etymology hook, and the **connections back** to earlier
+languages that share a root, so the cross-language memory the interleaving is
+meant to build is made visible rather than left implicit. Prev / Next walk the
+spine; consolidation lessons (`practice`/`review`) are left to the review quiz,
+not the teaching sweep. The review pass (`pickNext`/`applyAnswer`) is the next
+slice.
 
 ## Concepts mode
 
