@@ -124,9 +124,19 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // and each function opens with a prologue `if (_sir_is_missing(p)) { p =
     // <default>; }` in declaration order (so a later default may reference an
     // earlier parameter).  The unsupported-builtin pre-check also scans each
-    // default, so the emitter stays total.  Keyword defaults are the separate
-    // (still-unaccepted) `KeywordParams` feature.
+    // default, so the emitter stays total.
     Feature::DefaultParams,
+    // ── SIR19 keyword parameters ─────────────────────────────────────
+    // A keyword parameter (`def f(x:)`) and keyword argument (`f(x: 5)`).  C has
+    // no native keywords, so — like the Go backend's KW6 — a `KeywordArg` is
+    // resolved to its callee's parameter SLOT BY NAME at emit time (using the
+    // thread-local signature map's parameter names), producing a plain
+    // positional C call; an omitted optional keyword is filled with
+    // `_sir_missing()` and substituted by the same default prologue as
+    // `DefaultParams`.  A keyword parameter needs NO special signature — it is a
+    // positional `SirValue` C parameter like any other; only the call site
+    // resolves by name.
+    Feature::KeywordParams,
 ];
 
 impl Backend for CBackend {

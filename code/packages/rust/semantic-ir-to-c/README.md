@@ -91,13 +91,16 @@ native float arithmetic, the division frontier (Float promotes, two Integers
 floor), and IEEE non-finite results; SIR16 `ShortCircuit` — `LogicalAnd`
 (`&&`) and `LogicalOr` (`||`) lowered to an `if (_sir_truthy(...))` overwrite
 that short-circuits the dead operand and yields the deciding operand (not a
-bool); and SIR19 `DefaultParams` — a positional default via a `_sir_missing`
+bool); SIR19 `DefaultParams` — a positional default via a `_sir_missing`
 sentinel: a `DirectCall` pads omitted trailing arguments and each function opens
 with an `if (_sir_is_missing(p)) { p = <default>; }` prologue (a later default
-may reference an earlier parameter).
+may reference an earlier parameter); and SIR19 `KeywordParams` — a keyword
+argument resolved to its callee's parameter slot **by name** at emit time (KW6),
+producing a plain positional C call (omitted optional keywords filled with
+`_sir_missing()` and substituted by the same default prologue).
 
 **Rejects** (cleanly, with a source-positioned error): `TailCalls`,
-`Intrinsics`, `NDArrays`, `KeywordParams`, exceptions/OOP, and every
+`Intrinsics`, `NDArrays`, exceptions/OOP, and every
 other not-yet-wired feature until its batch lands.  `Bignum` stays rejected
 until a bignum runtime ships — a module needing arbitrary precision is refused,
 never silently truncated.

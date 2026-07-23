@@ -1,6 +1,6 @@
 [package]
 name = "semantic-ir-to-c"
-version = "0.10.0"
+version = "0.11.0"
 edition = "2021"
 description = "Semantic IR → self-contained C source code (SIR24). Sixth backend for the SIR10 narrow-waist IR — gives Ruby→C (and Python/JS/Twig→C) through the shared waist."
 

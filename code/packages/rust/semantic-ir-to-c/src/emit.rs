@@ -25,12 +25,13 @@ thread_local! {
     static TEMP_ID: Cell<u64> = const { Cell::new(0) };
 
     /// Per-module map from a user function's RAW name to its declared parameter
-    /// count, snapshotted at the top of [`emit_module`].  A `DirectCall` that
-    /// omits trailing SIR19-defaulted arguments pads the call up to this arity
-    /// with `_sir_missing()`; the callee's prologue then substitutes each
-    /// default.  Thread-local (like `TEMP_ID`) so the deep `emit_expr` /
-    /// `emit_assign` call tree can read it without threading a context.
-    static ARITY: RefCell<HashMap<String, usize>> = RefCell::new(HashMap::new());
+    /// NAMES in order, snapshotted at the top of [`emit_module`].  Used at a
+    /// `DirectCall` for two SIR19 jobs: default-argument padding needs the arity
+    /// (the length), and keyword resolution needs the names (to place a
+    /// `KeywordArg` at its callee slot by name).  Thread-local (like `TEMP_ID`)
+    /// so the deep `emit_expr` / `emit_assign` call tree can read it without
+    /// threading a context.
+    static SIGNATURES: RefCell<HashMap<String, Vec<String>>> = RefCell::new(HashMap::new());
 }
 
 fn fresh_id() -> u64 {
@@ -44,7 +45,14 @@ fn fresh_id() -> u64 {
 /// The declared parameter count of a known user function (by raw name), for
 /// call-site default-argument padding.  `None` for an unknown callee.
 fn callee_arity(fn_name: &str) -> Option<usize> {
-    ARITY.with(|a| a.borrow().get(fn_name).copied())
+    SIGNATURES.with(|a| a.borrow().get(fn_name).map(|p| p.len()))
+}
+
+/// The declared parameter NAMES of a known user function (by raw name), for
+/// resolving a `KeywordArg` to its callee slot.  `None` for an unknown callee
+/// (which the validator guarantees never receives keyword arguments).
+fn callee_param_names(fn_name: &str) -> Option<Vec<String>> {
+    SIGNATURES.with(|a| a.borrow().get(fn_name).cloned())
 }
 
 /// Append `_sir_missing()` arguments to bring a `DirectCall`'s `provided`
@@ -67,13 +75,17 @@ fn emit_default_padding(out: &mut String, fn_name: &str, provided: usize) {
 /// Emit a complete self-contained C source file for `m`.
 pub fn emit_module(m: &Module) -> String {
     TEMP_ID.with(|c| c.set(0));
-    // Snapshot each user function's declared arity for `DirectCall` default
-    // padding (SIR19).  Cleared first so a reused thread starts empty.
-    ARITY.with(|a| {
+    // Snapshot each user function's declared parameter names for `DirectCall`
+    // default padding (needs the count) and keyword resolution (needs the
+    // names).  Cleared first so a reused thread starts empty.
+    SIGNATURES.with(|a| {
         let mut map = a.borrow_mut();
         map.clear();
         for f in &m.functions {
-            map.insert(f.name.clone(), f.params.len());
+            map.insert(
+                f.name.clone(),
+                f.params.iter().map(|p| p.name.clone()).collect(),
+            );
         }
     });
 
@@ -760,6 +772,15 @@ fn hoist_operands(out: &mut String, ops: &[&Expr], indent: usize) -> Vec<String>
 fn emit_compound_call(out: &mut String, dst: &str, e: &Expr, indent: usize) {
     let pad = indent_str(indent);
     let args = call_args(e).expect("emit_compound_call on a non-call expr");
+    // SIR19 keyword call: a `DirectCall` carrying any `KeywordArg` needs by-name
+    // resolution to the callee's declared slots (not the generic left-to-right
+    // hoist below), so route it to the dedicated resolver.
+    if let Expr::DirectCall { fn_name, .. } = e {
+        if args.iter().any(|a| matches!(a, Expr::KeywordArg { .. })) {
+            emit_keyword_call(out, dst, fn_name, args, indent);
+            return;
+        }
+    }
     let _ = writeln!(out, "{pad}{{");
     let inner = indent + 1;
     let ipad = indent_str(inner);
@@ -779,6 +800,86 @@ fn emit_compound_call(out: &mut String, dst: &str, e: &Expr, indent: usize) {
     let _ = write!(out, "{ipad}{dst} = ");
     emit_call_with_arg_names(out, e, &names);
     out.push_str(";\n");
+    let _ = writeln!(out, "{pad}}}");
+}
+
+/// Emit a `DirectCall` that carries keyword arguments (SIR19 `KeywordParams`).
+///
+/// C has no native keyword calls, so — like the Go backend's KW6 — a keyword
+/// argument is resolved to the callee's declared parameter SLOT BY NAME at emit
+/// time, producing a plain positional C call.  For each callee slot, in
+/// declared order, the filler is: the leading positional argument at that index;
+/// else the `KeywordArg` naming that parameter; else `_sir_missing()` (an
+/// omitted optional slot — the validator guarantees a required parameter is
+/// never left out, and the callee's prologue substitutes the default).  Each
+/// filler expression is hoisted into a temp first (matching the statement-
+/// oriented emitter), so a compound argument is evaluated exactly once; the
+/// temps are computed in slot order (matching Go's declared-order evaluation).
+fn emit_keyword_call(out: &mut String, dst: &str, fn_name: &str, args: &[Expr], indent: usize) {
+    let pad = indent_str(indent);
+    let inner = indent + 1;
+    let ipad = indent_str(inner);
+
+    // The validator guarantees every keyword argument trails all positionals, so
+    // the first `KeywordArg` marks the split.
+    let split = args
+        .iter()
+        .position(|a| matches!(a, Expr::KeywordArg { .. }))
+        .unwrap_or(args.len());
+    let positionals = &args[..split];
+    let keywords: Vec<(&str, &Expr)> = args[split..]
+        .iter()
+        .map(|a| match a {
+            Expr::KeywordArg { name, value, .. } => (name.as_str(), value.as_ref()),
+            // Guaranteed by the validator (keywords trail positionals).
+            other => unreachable!("keyword-call tail held a non-KeywordArg: {other:?}"),
+        })
+        .collect();
+
+    // The callee's declared parameter names — present for any function that can
+    // receive keywords (the validator rejects keyword calls to unknown callees).
+    let param_names = callee_param_names(fn_name).unwrap_or_default();
+
+    let _ = writeln!(out, "{pad}{{");
+    // One entry per callee slot: `Some(temp)` for a filled slot, `None` for an
+    // omitted optional (rendered as `_sir_missing()`).
+    let mut slots: Vec<Option<String>> = Vec::with_capacity(param_names.len());
+    for (i, pname) in param_names.iter().enumerate() {
+        let fill: Option<&Expr> = if i < positionals.len() {
+            Some(&positionals[i])
+        } else {
+            keywords
+                .iter()
+                .find(|(kw, _)| *kw == pname)
+                .map(|(_, v)| *v)
+        };
+        match fill {
+            Some(expr) => {
+                let t = format!("_sir_k{}", fresh_id());
+                if is_simple(expr) {
+                    let _ = write!(out, "{ipad}SirValue {t} = ");
+                    emit_expr(out, expr, inner);
+                    out.push_str(";\n");
+                } else {
+                    let _ = writeln!(out, "{ipad}SirValue {t};");
+                    emit_assign(out, &t, expr, inner);
+                }
+                slots.push(Some(t));
+            }
+            None => slots.push(None),
+        }
+    }
+    let _ = write!(out, "{ipad}{dst} = {}(", function_emit_name(fn_name));
+    for (i, slot) in slots.iter().enumerate() {
+        if i > 0 {
+            out.push_str(", ");
+        }
+        match slot {
+            Some(t) => out.push_str(t),
+            None => out.push_str("_sir_missing()"),
+        }
+    }
+    out.push_str(");\n");
     let _ = writeln!(out, "{pad}}}");
 }
 
@@ -1192,6 +1293,10 @@ fn scan_expr_for_builtin(e: &Expr) -> Option<(String, Span)> {
         Expr::IndirectCall { target, args, .. } => {
             scan_expr_for_builtin(target).or_else(|| args.iter().find_map(scan_expr_for_builtin))
         }
+        // A keyword argument (in a `DirectCall`'s arg list) carries its value as
+        // a sub-expression — scan it so a deferred builtin in `f(x: foo())` is
+        // reported cleanly.
+        Expr::KeywordArg { value, .. } => scan_expr_for_builtin(value),
         Expr::If {
             cond,
             then_branch,
