@@ -605,7 +605,7 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
-        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg, element.Vaf, element.Nf, element.Nr, element.Vje, element.Mje, element.Vjc, element.Mjc, element.Fc, element.Var, element.Ikf, element.Ise, element.Ne, element.Isc, element.Nc, element.Xtb, element.beta_r, element.Ikr, element.Tnom, element.Kf, element.Af, element.Ptf, element.Xtf, element.Itf, element.Vtf)
+        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg, element.Vaf, element.Nf, element.Nr, element.Vje, element.Mje, element.Vjc, element.Mjc, element.Fc, element.Var, element.Ikf, element.Ise, element.Ne, element.Isc, element.Nc, element.Xtb, element.beta_r, element.Ikr, element.Tnom, element.Kf, element.Af, element.Ptf, element.Xtf, element.Itf, element.Vtf, element.Re)
     if isinstance(element, VCVS):
         return VCVS(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), _map_subckt_node(element.ctrl_plus, instance_name, node_map), _map_subckt_node(element.ctrl_minus, instance_name, node_map), element.gain)
     if isinstance(element, VCCS):
@@ -7260,7 +7260,10 @@ def _element_nodes(el: Element) -> list[str]:
     if isinstance(el, Mosfet):
         return [el.drain, el.gate, el.source, el.body]
     if isinstance(el, BJT):
-        return [el.collector, el.base, el.emitter]
+        nodes = [el.collector, el.base, el.emitter]
+        if el.Re > 0.0:
+            nodes.append(_bjt_intrinsic_emitter_node(el))
+        return nodes
     if isinstance(el, TransmissionLine):
         return [el.n1, el.n2, el.n3, el.n4]
     if isinstance(el, (VCVS, VCCS)):
@@ -8737,6 +8740,10 @@ def _bjt_base_collector_charge_state_name(el: BJT) -> str:
     return f"_Q_{el.name}_bc_charge"
 
 
+def _bjt_intrinsic_emitter_node(el: BJT) -> str:
+    return el.emitter if el.Re == 0.0 else f"__spice_{el.name}_emitter"
+
+
 def _bjt_junction_transconductance(el: BJT, voltage: float, emission_coefficient: float) -> float:
     effective_thermal_voltage = el.Vt * emission_coefficient
     exponent = max(-40.0, min(40.0, voltage / effective_thermal_voltage))
@@ -8808,11 +8815,12 @@ def _bjt_base_collector_depletion_capacitance(el: BJT, voltage: float) -> float:
 
 def _bjt_charge_state_specs(el: BJT) -> list[tuple[str, str, str, str]]:
     specs: list[tuple[str, str, str, str]] = []
+    emitter = _bjt_intrinsic_emitter_node(el)
     if el.Cje > 0.0 or el.Tf > 0.0:
         if el.polarity == "NPN":
-            specs.append((_bjt_base_emitter_charge_state_name(el), el.base, el.emitter, "be"))
+            specs.append((_bjt_base_emitter_charge_state_name(el), el.base, emitter, "be"))
         else:
-            specs.append((_bjt_base_emitter_charge_state_name(el), el.emitter, el.base, "be"))
+            specs.append((_bjt_base_emitter_charge_state_name(el), emitter, el.base, "be"))
     if el.Cjc > 0.0 or el.Tr > 0.0 or (el.Tf > 0.0 and el.Xtf > 0.0 and el.Vtf > 0.0):
         if el.polarity == "NPN":
             specs.append((_bjt_base_collector_charge_state_name(el), el.base, el.collector, "bc"))
@@ -9187,6 +9195,10 @@ def _stamp_bjt(
     the control voltage (Ve - Vb vs Vb - Ve) yields the correct KCL stamps.
     """
     _validate_bjt(el)
+    if el.Re > 0.0:
+        intrinsic_emitter = _bjt_intrinsic_emitter_node(el)
+        _stamp_g(G, node_to_idx, el.emitter, intrinsic_emitter, 1.0 / el.Re)
+        el = replace(el, emitter=intrinsic_emitter, Re=0.0)
     # --- Resolve node voltages at the current Newton iterate -----------------
     Vb = 0.0 if _is_ground(el.base) else x[node_to_idx[el.base]]
     Ve = 0.0 if _is_ground(el.emitter) else x[node_to_idx[el.emitter]]
@@ -9353,6 +9365,10 @@ def _validate_bjt(el: BJT) -> None:
     if not math.isfinite(el.Vtf) or el.Vtf < 0.0:
         raise ValueError(
             f"{el.name}: BJT forward transit-time voltage must be finite and non-negative"
+        )
+    if not math.isfinite(el.Re) or el.Re < 0.0:
+        raise ValueError(
+            f"{el.name}: BJT emitter resistance must be finite and non-negative"
         )
     if not math.isfinite(el.Ise) or el.Ise < 0.0:
         raise ValueError(
@@ -12609,6 +12625,16 @@ def _stamp_ac(
         # VCCS).  Mirror the DC _stamp_bjt stamps but in the complex domain and
         # without the Norton offsets (which are DC bias terms, zero in AC).
         _validate_bjt(el)
+        if el.Re > 0.0:
+            intrinsic_emitter = _bjt_intrinsic_emitter_node(el)
+            _stamp_g_c(
+                G,
+                node_to_idx,
+                el.emitter,
+                intrinsic_emitter,
+                complex(1.0 / el.Re),
+            )
+            el = replace(el, emitter=intrinsic_emitter, Re=0.0)
         Vc_dc = 0.0 if _is_ground(el.collector) else dc_x[node_to_idx[el.collector]]
         Vb_dc = 0.0 if _is_ground(el.base) else dc_x[node_to_idx[el.base]]
         Ve_dc = 0.0 if _is_ground(el.emitter) else dc_x[node_to_idx[el.emitter]]
@@ -13254,6 +13280,17 @@ def _build_ss_matrix(
         elif isinstance(el, BJT):
             # Small-signal model: g_π (junction conductance) + gm VCCS.
             # Mirrors the AC _stamp_ac BJT block in the real domain.
+            _validate_bjt(el)
+            if el.Re > 0.0:
+                intrinsic_emitter = _bjt_intrinsic_emitter_node(el)
+                _stamp_g(
+                    G,
+                    node_to_idx,
+                    el.emitter,
+                    intrinsic_emitter,
+                    1.0 / el.Re,
+                )
+                el = replace(el, emitter=intrinsic_emitter, Re=0.0)
             Vc_dc = 0.0 if _is_ground(el.collector) else dc_x[node_to_idx[el.collector]]
             Vb_dc = 0.0 if _is_ground(el.base) else dc_x[node_to_idx[el.base]]
             Ve_dc = 0.0 if _is_ground(el.emitter) else dc_x[node_to_idx[el.emitter]]
@@ -14180,6 +14217,7 @@ def sens_dc(
                     Xtb=el.Xtb,
                     beta_r=el.beta_r,
                     Ikr=el.Ikr,
+                    Re=el.Re,
                 ),
             )
             delta_beta = max(abs(el.beta_f) * perturbation, abs_floor)
@@ -14215,6 +14253,7 @@ def sens_dc(
                     Xtb=el.Xtb,
                     beta_r=el.beta_r,
                     Ikr=el.Ikr,
+                    Re=el.Re,
                 ),
             )
 
@@ -14460,6 +14499,7 @@ def _vary_element(el: Element, tolerance: float, distribution: str) -> Element:
             Xtb=el.Xtb,
             beta_r=el.beta_r,
             Ikr=el.Ikr,
+            Re=el.Re,
         )
 
     # Capacitor, Inductor, Mosfet — no tunable DC parameter; return unchanged.
@@ -14896,6 +14936,17 @@ def _collect_noise_sources(
             # Shot noise on the base-emitter junction: S_i = 2q |I_C|
             # I_C ≈ Is × exp(V_BE / Vt)  (dominates for forward-active BJT)
             # Use actual converged dc_x voltages — no clamp — same reasoning as Diode.
+            if el.Re > 0.0:
+                intrinsic_emitter = _bjt_intrinsic_emitter_node(el)
+                sources.append((
+                    f"{el.name}:RE",
+                    "thermal",
+                    node_to_idx.get(el.emitter),
+                    node_to_idx.get(intrinsic_emitter),
+                    kT4 / el.Re,
+                    0.0,
+                ))
+                el = replace(el, emitter=intrinsic_emitter, Re=0.0)
             Vb = 0.0 if _is_ground(el.base) else dc_x[node_to_idx[el.base]]
             Ve = 0.0 if _is_ground(el.emitter) else dc_x[node_to_idx[el.emitter]]
             Vc = 0.0 if _is_ground(el.collector) else dc_x[node_to_idx[el.collector]]

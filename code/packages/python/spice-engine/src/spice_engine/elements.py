@@ -620,6 +620,8 @@ class BJT:
         Forward-current scale for transit-time bias dependence (default 0.0).
     Vtf:
         Base-collector voltage scale for transit-time bias dependence (default 0.0).
+    Re:
+        Constant external-to-intrinsic emitter resistance in Ohms (default 0.0).
     """
 
     name: str
@@ -660,6 +662,7 @@ class BJT:
     Xtf: float = 0.0           # forward transit-time bias coefficient
     Itf: float = 0.0           # forward transit-time current scale (A)
     Vtf: float = 0.0           # forward transit-time voltage scale (V)
+    Re: float = 0.0            # emitter resistance (ohms)
 
 
 # ---------------------------------------------------------------------------
