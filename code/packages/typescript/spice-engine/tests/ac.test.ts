@@ -739,6 +739,24 @@ describe("acSweep", () => {
     expect(collectorAmplitude(0.5)).toBeGreaterThan(collectorAmplitude(0.0));
   });
 
+  it("uses BJT XCJC to partition depletion capacitance to the external base", () => {
+    function baseAmplitude(baseCollectorCapacitanceFraction: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "in", "0", 0.0, 1.0));
+      circuit.add(resistor("Rin", "in", "base", 1_000.0));
+      circuit.add({
+        ...bjt("Q1", "0", "base", "0"),
+        saturationCurrent: 1.0e-30,
+        baseCollectorCapacitance: 1.0e-9,
+        baseResistance: 10_000.0,
+        baseCollectorCapacitanceFraction,
+      });
+      return complexAbs(acSweep(circuit, 1.0e6, 1.0e6, 1)[0].voltage("base")!);
+    }
+
+    expect(baseAmplitude(1.0)).toBeGreaterThan(baseAmplitude(0.0));
+  });
+
   it("uses BJT FC to shape both forward-biased depletion junctions", () => {
     function junctionAmplitude(coefficient: number, baseEmitter: boolean): number {
       const circuit = new Circuit();

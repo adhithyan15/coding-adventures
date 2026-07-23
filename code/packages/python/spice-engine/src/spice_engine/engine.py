@@ -605,7 +605,7 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
-        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg, element.Vaf, element.Nf, element.Nr, element.Vje, element.Mje, element.Vjc, element.Mjc, element.Fc, element.Var, element.Ikf, element.Ise, element.Ne, element.Isc, element.Nc, element.Xtb, element.beta_r, element.Ikr, element.Tnom, element.Kf, element.Af, element.Ptf, element.Xtf, element.Itf, element.Vtf, element.Re, element.Rc, element.Rb, element.Rbm, element.Irb)
+        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg, element.Vaf, element.Nf, element.Nr, element.Vje, element.Mje, element.Vjc, element.Mjc, element.Fc, element.Var, element.Ikf, element.Ise, element.Ne, element.Isc, element.Nc, element.Xtb, element.beta_r, element.Ikr, element.Tnom, element.Kf, element.Af, element.Ptf, element.Xtf, element.Itf, element.Vtf, element.Re, element.Rc, element.Rb, element.Rbm, element.Irb, element.Xcjc)
     if isinstance(element, VCVS):
         return VCVS(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), _map_subckt_node(element.ctrl_plus, instance_name, node_map), _map_subckt_node(element.ctrl_minus, instance_name, node_map), element.gain)
     if isinstance(element, VCCS):
@@ -8744,6 +8744,10 @@ def _bjt_base_collector_charge_state_name(el: BJT) -> str:
     return f"_Q_{el.name}_bc_charge"
 
 
+def _bjt_external_base_collector_charge_state_name(el: BJT) -> str:
+    return f"_Q_{el.name}_bx_charge"
+
+
 def _bjt_intrinsic_emitter_node(el: BJT) -> str:
     return el.emitter if el.Re == 0.0 else f"__spice_{el.name}_emitter"
 
@@ -8797,8 +8801,11 @@ def _bjt_charge_dynamic_capacitance(
             * _bjt_forward_transit_time_scale(el, voltage, reverse_junction_voltage)
             * conductance
         )
+    depletion_capacitance = _bjt_base_collector_depletion_capacitance(el, voltage)
+    if state_kind == "bx":
+        return (1.0 - el.Xcjc) * depletion_capacitance
     conductance = _bjt_junction_transconductance(el, voltage, el.Nr)
-    return _bjt_base_collector_depletion_capacitance(el, voltage) + el.Tr * conductance
+    return el.Xcjc * depletion_capacitance + el.Tr * conductance
 
 
 def _bjt_base_emitter_depletion_capacitance(el: BJT, voltage: float) -> float:
@@ -8840,6 +8847,25 @@ def _bjt_charge_state_specs(el: BJT) -> list[tuple[str, str, str, str]]:
             specs.append((_bjt_base_collector_charge_state_name(el), base, collector, "bc"))
         else:
             specs.append((_bjt_base_collector_charge_state_name(el), collector, base, "bc"))
+    if el.Cjc > 0.0 and el.Xcjc < 1.0:
+        if el.polarity == "NPN":
+            specs.append(
+                (
+                    _bjt_external_base_collector_charge_state_name(el),
+                    el.base,
+                    collector,
+                    "bx",
+                )
+            )
+        else:
+            specs.append(
+                (
+                    _bjt_external_base_collector_charge_state_name(el),
+                    collector,
+                    el.base,
+                    "bx",
+                )
+            )
     return specs
 
 
@@ -9467,6 +9493,10 @@ def _validate_bjt(el: BJT) -> None:
     if not math.isfinite(el.Irb) or el.Irb < 0.0:
         raise ValueError(
             f"{el.name}: BJT base-resistance half-current must be finite and non-negative"
+        )
+    if not math.isfinite(el.Xcjc) or not 0.0 <= el.Xcjc <= 1.0:
+        raise ValueError(
+            f"{el.name}: BJT base-collector capacitance fraction must be between zero and one"
         )
     if not math.isfinite(el.Ise) or el.Ise < 0.0:
         raise ValueError(
@@ -12723,6 +12753,7 @@ def _stamp_ac(
         # VCCS).  Mirror the DC _stamp_bjt stamps but in the complex domain and
         # without the Norton offsets (which are DC bias terms, zero in AC).
         _validate_bjt(el)
+        external_base = el.base
         if el.Re > 0.0:
             intrinsic_emitter = _bjt_intrinsic_emitter_node(el)
             _stamp_g_c(
@@ -12817,11 +12848,16 @@ def _stamp_ac(
         y_be = g_pi + 1j * omega * (
             _bjt_base_emitter_depletion_capacitance(el, Vjunc) + diffusion_capacitance
         )
-        y_bc = collector_leakage_conductance + reverse_base_conductance + 1j * omega * (
-            _bjt_base_collector_depletion_capacitance(el, Vreverse)
-            + reverse_diffusion_capacitance
+        base_collector_depletion = _bjt_base_collector_depletion_capacitance(
+            el, Vreverse
         )
+        y_bc = collector_leakage_conductance + reverse_base_conductance + 1j * omega * (
+            el.Xcjc * base_collector_depletion + reverse_diffusion_capacitance
+        )
+        y_bx = 1j * omega * (1.0 - el.Xcjc) * base_collector_depletion
         _stamp_g_c(G, node_to_idx, el.collector, el.emitter, output_conductance + 0j)
+        if y_bx != 0j:
+            _stamp_g_c(G, node_to_idx, external_base, el.collector, y_bx)
 
         if el.polarity == "NPN":
             _stamp_g_c(G, node_to_idx, el.base, el.emitter, y_be)
@@ -14390,6 +14426,7 @@ def sens_dc(
                     Rb=el.Rb,
                     Rbm=el.Rbm,
                     Irb=el.Irb,
+                    Xcjc=el.Xcjc,
                 ),
             )
             delta_beta = max(abs(el.beta_f) * perturbation, abs_floor)
@@ -14430,6 +14467,7 @@ def sens_dc(
                     Rb=el.Rb,
                     Rbm=el.Rbm,
                     Irb=el.Irb,
+                    Xcjc=el.Xcjc,
                 ),
             )
 
@@ -14680,6 +14718,7 @@ def _vary_element(el: Element, tolerance: float, distribution: str) -> Element:
             Rb=el.Rb,
             Rbm=el.Rbm,
             Irb=el.Irb,
+            Xcjc=el.Xcjc,
         )
 
     # Capacitor, Inductor, Mosfet — no tunable DC parameter; return unchanged.

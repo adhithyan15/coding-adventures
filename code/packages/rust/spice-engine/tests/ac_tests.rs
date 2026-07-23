@@ -1192,6 +1192,32 @@ fn ac_bjt_base_collector_depletion_capacitance_falls_with_reverse_bias() {
 }
 
 #[test]
+fn ac_bjt_xcjc_partitions_depletion_capacitance_to_external_base() {
+    fn base_amplitude(fraction: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+            "Vac", "in", "0", 0.0, 1.0, 0.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "base", 1_000.0,
+        )));
+        let mut transistor = Bjt::new("Q1", "0", "base", "0");
+        transistor.saturation_current = 1.0e-30;
+        transistor.base_collector_capacitance = 1.0e-9;
+        transistor.base_resistance = 10_000.0;
+        transistor.base_collector_capacitance_fraction = fraction;
+        circuit.add(Element::Bjt(transistor));
+
+        ac_sweep(&circuit, 1.0e6, 1.0e6, 1).unwrap()[0]
+            .voltage("base")
+            .unwrap()
+            .abs()
+    }
+
+    assert!(base_amplitude(1.0) > base_amplitude(0.0));
+}
+
+#[test]
 fn ac_bjt_forward_bias_depletion_coefficient_shapes_both_junctions() {
     fn junction_amplitude(coefficient: f64, base_emitter: bool) -> f64 {
         let mut circuit = Circuit::new();

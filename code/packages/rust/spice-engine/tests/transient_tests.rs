@@ -633,6 +633,45 @@ fn transient_bjt_base_collector_depletion_capacitance_falls_with_reverse_bias() 
 }
 
 #[test]
+fn transient_bjt_xcjc_partitions_depletion_charge_to_external_base() {
+    fn stepped_base_voltage(fraction: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+            "Vdrive",
+            "in",
+            "0",
+            0.0,
+            Waveform::Pwl(PwlWaveform::new(vec![
+                (0.0, 0.0),
+                (1.0e-9, 0.0),
+                (2.0e-9, 1.0),
+                (5.0e-9, 1.0),
+            ])),
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "base", 1_000.0,
+        )));
+        let mut transistor = Bjt::new("Q1", "0", "base", "0");
+        transistor.saturation_current = 1.0e-30;
+        transistor.base_collector_capacitance = 1.0e-12;
+        transistor.base_resistance = 10_000.0;
+        transistor.base_collector_capacitance_fraction = fraction;
+        circuit.add(Element::Bjt(transistor));
+
+        transient(&circuit, 1.0e-9, 5.0e-9).unwrap()[1]
+            .voltage("base")
+            .unwrap()
+    }
+
+    let intrinsic = stepped_base_voltage(1.0);
+    let external = stepped_base_voltage(0.0);
+    assert!(
+        intrinsic > external,
+        "intrinsic={intrinsic}, external={external}"
+    );
+}
+
+#[test]
 fn transient_bjt_forward_bias_depletion_coefficient_shapes_both_junctions() {
     fn held_voltage(coefficient: f64, base_emitter: bool) -> f64 {
         let mut circuit = Circuit::new();

@@ -33,18 +33,17 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language BJT bias-dependent base resistance.
+1. Cross-language BJT base-collector capacitance partitioning.
    - Status: current PR completion candidate.
-   - Add Berkeley BJT `RBM` minimum-base-resistance and `IRB`
-     half-resistance-current model-card support in Rust, Python, and
-     TypeScript.
-   - Reuse the intrinsic base topology for Berkeley base-charge and
-     current-dependent resistance reduction in DC, transient, AC,
-     transfer-function, and thermal-noise behavior.
-   - Preserve constant `RB` behavior when `RBM` is omitted, extend the
-     supported-parameter coverage gate from 130 to 134 canonical rows, and
-     lock model-card behavior, validation, hierarchy, operating-point loading,
-     and noise behavior in all engines.
+   - Add Berkeley BJT `XCJC` model-card support in Rust, Python, and
+     TypeScript, defaulting to one.
+   - Partition `CJC` depletion capacitance between the intrinsic
+     base-collector branch and a new external-base/collector charge branch in
+     AC and transient analysis while keeping reverse transit-time diffusion
+     capacitance intrinsic.
+   - Preserve existing behavior by default, extend the supported-parameter
+     coverage gate from 134 to 136 canonical rows, and lock model-card,
+     validation, hierarchy, AC, and transient behavior in all engines.
 
 ## Completed Slices
 
@@ -3196,6 +3195,15 @@ the Rust, Python, and TypeScript surfaces together.
    - DC, transient, AC, transfer-function, and noise paths share the intrinsic
      base topology, including resistor thermal noise; the supported-parameter
      release gate now covers 130 canonical rows.
+
+243. Cross-language BJT bias-dependent base resistance.
+   - Status: completed in PR 8872.
+   - Rust, Python, and TypeScript BJT model cards now accept `RBM` and `IRB`
+     and apply Berkeley base-charge and base-current-dependent resistance
+     reduction.
+   - DC, transient, AC, transfer-function, and noise paths share the
+     bias-dependent intrinsic-base topology; the supported-parameter release
+     gate now covers 134 canonical rows.
 
 ## Backlog
 
