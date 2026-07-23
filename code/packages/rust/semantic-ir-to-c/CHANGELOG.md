@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.9.0 — short-circuit (SIR16)
+
+Accepts `Feature::ShortCircuit`. `Expr::LogicalAnd` / `Expr::LogicalOr`
+(`&&` / `||`) reuse the SAME lowering the emitter already applies to the eager
+`and`/`or` builtins — no new machinery:
+
+- assign the LEFT operand into the destination, then conditionally OVERWRITE it
+  with the right (`dst = lhs; if (_sir_truthy(dst)) { dst = rhs; }` for `&&`,
+  `if (!_sir_truthy(dst))` for `||`).
+
+Because the right operand is emitted only inside the `if` body, it is not
+evaluated when the left already decides (true short-circuit), and `dst` holds
+the DECIDING OPERAND — not a coerced bool. This is the value-returning semantics
+Go models with an IIFE and Ruby gets from native `&&`/`||`: `1 && 2` is `2`,
+`false && 2` is `false`, `nil || 7` is `7`. It is deliberately NOT lowered to a
+bare C `&&`/`||`, which would collapse to an `int` 0/1 and lose the operand.
+
+The nodes are not `is_simple`, so they route through `emit_assign` — and, in
+return position, through the existing "compute a compound value into a temp,
+then return it" tail fallback — so no other emit arm is needed and the emitter
+stays total. The `scan_expr_for_builtin` pre-check recurses into both operands,
+so a deferred builtin nested in a `&&`/`||` is still reported cleanly.
+
+This closes the ShortCircuit parity arc: with the Ruby backend's short-circuit
+(0.7.0), `Feature::ShortCircuit` is now accepted on all six backends. Verified
+with hand-built modules (the frontend constant-folds a literal `&&`) compiled
+and run through a real `cc`: operand-return for both operators, a short-circuit
+proof where the dead operand is `1 / 0` (which traps if evaluated — a correct
+lowering skips it and the program exits 0), and a `LogicalAnd` in tail position.
+Bumps semantic-ir-to-c 0.8.0 → 0.9.0.
+
 ## 0.8.0 — floats (SIR16)
 
 Accepts `Feature::Floats`. Unlike the sequences and maps batches, this needed
