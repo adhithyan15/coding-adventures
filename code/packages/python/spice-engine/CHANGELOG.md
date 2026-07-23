@@ -1,5 +1,7 @@
 # Changelog
 
+- Add BJT model-card `RB` base-resistance support with an intrinsic base node
+  in DC, AC, and transient analysis plus thermal noise in noise analysis.
 - Add BJT model-card `RC` collector-resistance support with an intrinsic
   collector node in DC, AC, and transient analysis plus thermal noise in noise
   analysis.

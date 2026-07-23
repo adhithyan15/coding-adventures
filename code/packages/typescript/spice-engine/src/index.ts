@@ -1738,6 +1738,7 @@ export interface Bjt {
   readonly forwardTransitTimeVoltage: number;
   readonly emitterResistance: number;
   readonly collectorResistance: number;
+  readonly baseResistance: number;
 }
 
 export type MosfetType = "NMOS" | "PMOS";
@@ -2015,8 +2016,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   Record<ModelCardKind, readonly [number, number, number, number]>
 > = {
   D: [12, 18, 5, 3],
-  NPN: [35, 52, 13, 4],
-  PNP: [35, 52, 13, 4],
+  NPN: [36, 53, 13, 4],
+  PNP: [36, 53, 13, 4],
   NJF: [5, 11, 5, 3],
   PJF: [5, 11, 5, 3],
   NMOS: [18, 25, 6, 3],
@@ -3606,7 +3607,7 @@ function cloneSubcktElement(
     case "jfet":
       return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation, element.gateSourceCapacitance, element.gateDrainCapacitance);
     case "bjt":
-      return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.forwardEarlyVoltage, element.forwardEmissionCoefficient, element.reverseEmissionCoefficient, element.baseEmitterJunctionPotential, element.baseEmitterGradingCoefficient, element.baseCollectorJunctionPotential, element.baseCollectorGradingCoefficient, element.forwardBiasDepletionCoefficient, element.reverseEarlyVoltage, element.forwardBetaRolloffCurrent, element.baseEmitterLeakageSaturationCurrent, element.baseEmitterLeakageEmissionCoefficient, element.baseCollectorLeakageSaturationCurrent, element.baseCollectorLeakageEmissionCoefficient, element.forwardBetaTemperatureExponent, element.reverseBeta, element.reverseBetaRolloffCurrent, element.nominalTemperatureKelvin, element.flickerNoiseCoefficient, element.flickerNoiseExponent, element.forwardExcessPhaseDegrees, element.forwardTransitTimeBiasCoefficient, element.forwardTransitTimeCurrent, element.forwardTransitTimeVoltage, element.emitterResistance, element.collectorResistance);
+      return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.forwardEarlyVoltage, element.forwardEmissionCoefficient, element.reverseEmissionCoefficient, element.baseEmitterJunctionPotential, element.baseEmitterGradingCoefficient, element.baseCollectorJunctionPotential, element.baseCollectorGradingCoefficient, element.forwardBiasDepletionCoefficient, element.reverseEarlyVoltage, element.forwardBetaRolloffCurrent, element.baseEmitterLeakageSaturationCurrent, element.baseEmitterLeakageEmissionCoefficient, element.baseCollectorLeakageSaturationCurrent, element.baseCollectorLeakageEmissionCoefficient, element.forwardBetaTemperatureExponent, element.reverseBeta, element.reverseBetaRolloffCurrent, element.nominalTemperatureKelvin, element.flickerNoiseCoefficient, element.flickerNoiseExponent, element.forwardExcessPhaseDegrees, element.forwardTransitTimeBiasCoefficient, element.forwardTransitTimeCurrent, element.forwardTransitTimeVoltage, element.emitterResistance, element.collectorResistance, element.baseResistance);
     case "mosfet":
       return mosfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), mapSubcktNode(element.body, instanceName, nodeMap), element.type, element.params);
     case "vccs":
@@ -7800,6 +7801,7 @@ export function bjt(
   forwardTransitTimeVoltage = 0.0,
   emitterResistance = 0.0,
   collectorResistance = 0.0,
+  baseResistance = 0.0,
 ): Bjt {
   return {
     kind: "bjt",
@@ -7843,6 +7845,7 @@ export function bjt(
     forwardTransitTimeVoltage,
     emitterResistance,
     collectorResistance,
+    baseResistance,
   };
 }
 
@@ -7963,6 +7966,7 @@ const BJT_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   VTF: "VTF",
   RE: "RE",
   RC: "RC",
+  RB: "RB",
   ISE: "ISE",
   NE: "NE",
   ISC: "ISC",
@@ -8505,6 +8509,7 @@ export function bjtFromModelCard(
     p.VTF ?? 0.0,
     p.RE ?? 0.0,
     p.RC ?? 0.0,
+    p.RB ?? 0.0,
   );
 }
 
@@ -18283,6 +18288,9 @@ function collectNodeIndices(circuit: Circuit): Map<string, number> {
         if (element.collectorResistance > 0.0) {
           insertNode(names, bjtIntrinsicCollectorNode(element));
         }
+        if (element.baseResistance > 0.0) {
+          insertNode(names, bjtIntrinsicBaseNode(element));
+        }
         break;
       case "mosfet":
         insertNode(names, element.drain);
@@ -18440,6 +18448,7 @@ function collectNoiseSources(
       validateBjt(element);
       const emitterNode = bjtIntrinsicEmitterNode(element);
       const collectorNode = bjtIntrinsicCollectorNode(element);
+      const baseNode = bjtIntrinsicBaseNode(element);
       if (element.emitterResistance > 0.0) {
         sources.push({
           elementName: `${element.name}:RE`,
@@ -18462,7 +18471,18 @@ function collectNoiseSources(
           frequencyExponent: 0.0,
         });
       }
-      const base = nodeIndex(nodeIndices, element.base);
+      if (element.baseResistance > 0.0) {
+        sources.push({
+          elementName: `${element.name}:RB`,
+          noiseType: "thermal",
+          positive: nodeIndex(nodeIndices, element.base),
+          negative: nodeIndex(nodeIndices, baseNode),
+          sourcePsd:
+            4.0 * BOLTZMANN * temperatureKelvin / element.baseResistance,
+          frequencyExponent: 0.0,
+        });
+      }
+      const base = nodeIndex(nodeIndices, baseNode);
       const emitter = nodeIndex(nodeIndices, emitterNode);
       const collector = nodeIndex(nodeIndices, collectorNode);
       const baseVoltage = vectorVoltage(operatingPoint, base);
@@ -19124,6 +19144,16 @@ function stampBjt(
     );
     element = { ...element, collector: intrinsicCollector, collectorResistance: 0.0 };
   }
+  if (element.baseResistance > 0.0) {
+    const intrinsicBase = bjtIntrinsicBaseNode(element);
+    stampConductance(
+      matrix,
+      nodeIndex(nodeIndices, element.base),
+      nodeIndex(nodeIndices, intrinsicBase),
+      1.0 / element.baseResistance,
+    );
+    element = { ...element, base: intrinsicBase, baseResistance: 0.0 };
+  }
   const collector = nodeIndex(nodeIndices, element.collector);
   const base = nodeIndex(nodeIndices, element.base);
   const emitter = nodeIndex(nodeIndices, element.emitter);
@@ -19739,6 +19769,12 @@ function bjtIntrinsicCollectorNode(element: Bjt): string {
     : `__spice_${element.name}_collector`;
 }
 
+function bjtIntrinsicBaseNode(element: Bjt): string {
+  return element.baseResistance === 0.0
+    ? element.base
+    : `__spice_${element.name}_base`;
+}
+
 function bjtJunctionTransconductance(
   element: Bjt,
   voltage: number,
@@ -19840,11 +19876,12 @@ function bjtChargeStateSpecs(element: Bjt): BjtChargeStateSpec[] {
   const specs: BjtChargeStateSpec[] = [];
   const emitter = bjtIntrinsicEmitterNode(element);
   const collector = bjtIntrinsicCollectorNode(element);
+  const base = bjtIntrinsicBaseNode(element);
   if (element.baseEmitterCapacitance > 0.0 || element.forwardTransitTime > 0.0) {
     const [positive, negative] =
       element.polarity === "NPN"
-        ? [element.base, emitter]
-        : [emitter, element.base];
+        ? [base, emitter]
+        : [emitter, base];
     specs.push({
       name: bjtBaseEmitterChargeStateName(element),
       positive,
@@ -19863,8 +19900,8 @@ function bjtChargeStateSpecs(element: Bjt): BjtChargeStateSpec[] {
   ) {
     const [positive, negative] =
       element.polarity === "NPN"
-        ? [element.base, collector]
-        : [collector, element.base];
+        ? [base, collector]
+        : [collector, base];
     specs.push({
       name: bjtBaseCollectorChargeStateName(element),
       positive,
@@ -20108,6 +20145,9 @@ function validateBjt(element: Bjt): void {
   }
   if (!Number.isFinite(element.collectorResistance) || element.collectorResistance < 0.0) {
     throw invalidElement(element.name, "collector resistance must be finite and non-negative");
+  }
+  if (!Number.isFinite(element.baseResistance) || element.baseResistance < 0.0) {
+    throw invalidElement(element.name, "base resistance must be finite and non-negative");
   }
   if (!Number.isFinite(element.baseEmitterLeakageSaturationCurrent) || element.baseEmitterLeakageSaturationCurrent < 0.0) {
     throw invalidElement(element.name, "base-emitter leakage saturation current must be finite and non-negative");
@@ -21475,6 +21515,16 @@ function stampBjtSmallSignal(
     );
     element = { ...element, collector: intrinsicCollector, collectorResistance: 0.0 };
   }
+  if (element.baseResistance > 0.0) {
+    const intrinsicBase = bjtIntrinsicBaseNode(element);
+    stampConductance(
+      matrix,
+      nodeIndex(nodeIndices, element.base),
+      nodeIndex(nodeIndices, intrinsicBase),
+      1.0 / element.baseResistance,
+    );
+    element = { ...element, base: intrinsicBase, baseResistance: 0.0 };
+  }
   const collector = nodeIndex(nodeIndices, element.collector);
   const base = nodeIndex(nodeIndices, element.base);
   const emitter = nodeIndex(nodeIndices, element.emitter);
@@ -22089,6 +22139,16 @@ function stampAcBjtSmallSignal(
       complex(1.0 / element.collectorResistance, 0.0),
     );
     element = { ...element, collector: intrinsicCollector, collectorResistance: 0.0 };
+  }
+  if (element.baseResistance > 0.0) {
+    const intrinsicBase = bjtIntrinsicBaseNode(element);
+    stampComplexConductance(
+      matrix,
+      nodeIndex(nodeIndices, element.base),
+      nodeIndex(nodeIndices, intrinsicBase),
+      complex(1.0 / element.baseResistance, 0.0),
+    );
+    element = { ...element, base: intrinsicBase, baseResistance: 0.0 };
   }
   const collector = nodeIndex(nodeIndices, element.collector);
   const base = nodeIndex(nodeIndices, element.base);

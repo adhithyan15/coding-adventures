@@ -624,6 +624,8 @@ class BJT:
         Constant external-to-intrinsic emitter resistance in Ohms (default 0.0).
     Rc:
         Constant external-to-intrinsic collector resistance in Ohms (default 0.0).
+    Rb:
+        Constant external-to-intrinsic base resistance in Ohms (default 0.0).
     """
 
     name: str
@@ -666,6 +668,7 @@ class BJT:
     Vtf: float = 0.0           # forward transit-time voltage scale (V)
     Re: float = 0.0            # emitter resistance (ohms)
     Rc: float = 0.0            # collector resistance (ohms)
+    Rb: float = 0.0            # base resistance (ohms)
 
 
 # ---------------------------------------------------------------------------
