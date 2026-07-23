@@ -1,5 +1,30 @@
 # Changelog
 
+## [0.61.0] — 2026-07-23
+
+### Added — NUM-6c: the `to_currency(x, code [, places])` money rendering (ADJ-NUMERIC-SUBSTRATE §4.1, §4.3)
+
+```
+let due  = to_currency(subtotal + tax, usd)      % → "USD 42.50"
+let yen  = to_currency(price, jpy, 0)            % → "JPY 1980"
+```
+
+- `to_currency` joins `round_to`/`round_sig`/`to_scientific`/`to_percent` as a built-in
+  recognised during `Apply` lowering (same native comma-list surface, no new grammar). It lowers
+  to the new `logic_engine::ComputeExpr::ToCurrency` node via a new `ExprAst::ToCurrency(expr,
+  code, places)` AST node, under the default half-even mode.
+- The **currency code** is the second argument, written as a **bare identifier** (`usd`) — it
+  parses as an `ExprAst::Ref` and is read directly at the intercept, never resolved as a slot or
+  expanded. Identifiers lex lowercase, so the code is normalized to the canonical uppercase
+  ISO-4217 form for the rendered string and the audit record (`usd` → `USD 42.50`). A
+  missing/non-identifier code (e.g. a number in the code slot) is a clean compile error.
+- The `places` third argument is **optional**: `to_currency(x, code)` uses the documented default
+  (`DEFAULT_CURRENCY_PLACES = 2`, the common minor-unit precision). A stated count must be a
+  non-negative integer literal (`≥ 0` — `to_currency(x, jpy, 0)`) within the cap
+  (`MAX_ROUND_PLACES = 100`); anything else, or the wrong argument count, is a clean compile error.
+- All four expression walkers carry the new node (cloning the code string), so it composes inside
+  formula bodies, `let`s, and predicate application positions exactly like the other precision ops.
+
 ## [0.60.0] — 2026-07-23
 
 ### Added — NUM-6c: the `to_percent(x [, places])` percentage rendering (ADJ-NUMERIC-SUBSTRATE §4.1, §4.3)

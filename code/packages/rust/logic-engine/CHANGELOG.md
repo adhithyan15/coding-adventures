@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.49.0] — 2026-07-23 — NUM-6c: `to_currency` — money rendering (base-10-exact)
+
+Completes the NUM-6c formatter trio (`ADJ-NUMERIC-SUBSTRATE.md` §4.1, §4.3): a **rendering**
+op that renders a money amount to a stated number of base-10-exact decimal places and prefixes
+a currency code. Unlike `to_scientific`/`to_percent` it carries a **string** (the currency
+code), so it is a distinct node shape.
+
+### Added
+
+- `ComputeExpr::ToCurrency { code, places, mode, expr }` and the matching
+  `DerivationNode::ToCurrency { code, places, mode, rendered, operand, result }`. `result` is
+  the rounded amount the string denotes (`"USD 1234.50"` → `1234.5`).
+- `currency(r, places, mode)` — renders an exact amount as a fixed-point decimal (no code; the
+  caller prefixes it) and returns the narrowed amount alongside, both from one rounding. The
+  scaled integer is `C = round(x·10^places)` under `mode`; the string places the point `places`
+  from `C`'s right (`1234.5 → "1234.50"` at 2 places), the narrowed amount is `C / 10^places`.
+  `places = 0` drops the decimal point; zero renders `"CODE 0.00"`. All big-integer/-decimal —
+  base-10-exact money, no `f64` hop. Dimension-preserving.
+- Extracted a shared `fixed_decimal_body` helper (used by both `percent` and `currency`) — the
+  decimal-point placement + leading-zero padding, behaviour-preserving for `to_percent`.
+
 ## [0.48.0] — 2026-07-23 — NUM-6c: `to_percent` — percentage rendering (exact)
 
 Adds the second NUM-6c formatter (`ADJ-NUMERIC-SUBSTRATE.md` §4.1, §4.3): a **rendering**

@@ -288,6 +288,16 @@ pub enum ExprAst {
     /// surface `to_percent(x [, places])`, recognised as a built-in in [`ExprAst::Apply`]
     /// lowering (same comma-list grammar as `round_to`/`to_scientific`).
     ToPercent(Box<ExprAst>, u32),
+    /// A **currency formatting** — `to_currency(x, code [, places])` (NUM-6c). A rendering
+    /// op like [`ExprAst::ToPercent`] but carrying a currency **code** string (the first
+    /// field) alongside the decimal `places` (the second): it renders the money amount `x`
+    /// to `places` base-10-exact decimal places and prefixes the code (ADJ-NUMERIC-SUBSTRATE
+    /// §4.1, §4.3). Lowers to the distinct `logic_engine::ComputeExpr::ToCurrency` node
+    /// under the default half-even mode. `places ≥ 0` (default resolved at lowering); the
+    /// `code` is a bare identifier (`USD`) taken verbatim from the surface. Produced by the
+    /// native application surface `to_currency(x, code [, places])`, recognised as a built-in
+    /// in [`ExprAst::Apply`] lowering (same comma-list grammar as `round_to`/`to_percent`).
+    ToCurrency(Box<ExprAst>, String, u32),
     /// An aggregation over every observation of a slot.
     Agg(AggOp, String),
     /// A **formula application** used as a sub-expression: `name(arg₁, …, argₙ)`

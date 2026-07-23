@@ -177,7 +177,18 @@ tests → impl → security-review → babysit:
   fixed-point `d.dd%` string, and carries the narrowed *fraction* as the numeric value
   (`"33.33%"` → `3333/10000`); native `to_percent(x [, places])` surface (optional `places`,
   default 2; `≥ 0`, so `to_percent(x, 0) = "50%"`), the §4.3 audit record (`node:to_percent`),
-  and an end-to-end formula test. `to_currency` and per-`KnowledgeBase` precision follow.
+  and an end-to-end formula test. **`to_currency(x, code [, places])`** ✅ **shipped**, closing
+  the formatter trio — `ComputeExpr::ToCurrency { code, places, mode, expr }`: rounds `x` to
+  `places` decimal places on the exact base-10 path (`C = round(x·10^places)` via `BigDecimal`,
+  no `f64` hop), renders the fixed-point `CODE d.dd` string (leading-zero padded; `places = 0`
+  drops the point, e.g. JPY), and carries the narrowed *fraction* as the numeric value
+  (`to_currency(100/3, USD, 2)` → `"USD 33.33"`, exact `3333/100`); native
+  `to_currency(x, code [, places])` surface — the `code` is a bare identifier (lexed lowercase,
+  normalized to the canonical uppercase ISO-4217 form; a non-identifier code is a compile error),
+  `places` optional (default 2, `≥ 0`) — the §4.3 audit record
+  (`node:to_currency`, `code`, `places`, `mode`, `rendered`, operand subtree), and an
+  end-to-end formula test. Per-`KnowledgeBase` `BigDouble` precision (the configurable default
+  §3 defers here) follows.
 
 ---
 

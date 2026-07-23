@@ -182,7 +182,10 @@ impl ExactRational {
         if !(0..=MAX_EXACT_POW).contains(&exp) {
             return None;
         }
-        self.0.try_pow(exp as i32, MAX_EXACT_POW_BITS).ok().map(Self)
+        self.0
+            .try_pow(exp as i32, MAX_EXACT_POW_BITS)
+            .ok()
+            .map(Self)
     }
 }
 
@@ -452,6 +455,22 @@ pub enum ComputeExpr {
         mode: RoundingMode,
         expr: Box<ComputeExpr>,
     },
+    /// A **currency formatting** — `to_currency(x, code [, places])` (NUM-6c). A rendering
+    /// op like [`ComputeExpr::ToPercent`], but it carries a currency **code** string (not
+    /// just a numeric precision), so it is a distinct node shape: it renders the money
+    /// amount `x` to `places` base-10-exact decimal places under `mode` and prefixes the
+    /// stated code (`to_currency(1234.5, USD, 2) = "USD 1234.50"`). The narrowed numeric
+    /// value is the rounded amount (`"USD 1234.50"` → `246900/200 = 1234.5`), so a
+    /// downstream predicate over the binding still sees the money magnitude, and the audit
+    /// carries both the exact source and the rendered form (ADJ-NUMERIC-SUBSTRATE §4.1,
+    /// §4.3). `places ≥ 0`; the default (2, the common minor-unit precision) is resolved at
+    /// lowering. Dimension-preserving (the `code` is a rendering label, not a re-typing).
+    ToCurrency {
+        code: String,
+        places: u32,
+        mode: RoundingMode,
+        expr: Box<ComputeExpr>,
+    },
 }
 
 /// *What* precision a [`ComputeExpr::Round`] narrows to. NUM-6a ships the
@@ -534,6 +553,20 @@ pub enum DerivationNode {
         operand: Box<DerivationNode>,
         result: f64,
     },
+    /// A **currency rendering** node (NUM-6c) — the audit record for a
+    /// `to_currency(x, code, places)`. Carries the `code`/`places`/`mode` it rendered
+    /// under, the `rendered` `CODE d.dd` string, and its single `operand` subtree (the
+    /// exact source amount), so `adj-verify` can re-round the operand's exact value and
+    /// confirm the `rendered` form (ADJ-NUMERIC-SUBSTRATE §4.3). `result` is the narrowed
+    /// numeric value — the rounded money amount.
+    ToCurrency {
+        code: String,
+        places: u32,
+        mode: RoundingMode,
+        rendered: String,
+        operand: Box<DerivationNode>,
+        result: f64,
+    },
 }
 
 impl DerivationNode {
@@ -547,6 +580,7 @@ impl DerivationNode {
             DerivationNode::Round { result, .. } => *result,
             DerivationNode::ToScientific { result, .. } => *result,
             DerivationNode::ToPercent { result, .. } => *result,
+            DerivationNode::ToCurrency { result, .. } => *result,
         }
     }
 }
@@ -954,11 +988,16 @@ fn eval(
             expr,
         } => eval_to_scientific(*figures, *mode, expr, kb, depth),
 
-        ComputeExpr::ToPercent {
+        ComputeExpr::ToPercent { places, mode, expr } => {
+            eval_to_percent(*places, *mode, expr, kb, depth)
+        }
+
+        ComputeExpr::ToCurrency {
+            code,
             places,
             mode,
             expr,
-        } => eval_to_percent(*places, *mode, expr, kb, depth),
+        } => eval_to_currency(code, *places, *mode, expr, kb, depth),
 
         ComputeExpr::Agg(op, slot) => {
             let observations = kb.observed_values_all(slot);
@@ -1136,18 +1175,33 @@ fn eval_unary(
             ComputeOp::Abs => Some(ExactRational::from_ratio(r.as_ratio().abs())),
             ComputeOp::Floor => {
                 let (q, rem) = n.div_rem(d);
-                int(if rem.is_negative() { &q - &BigInteger::one() } else { q })
+                int(if rem.is_negative() {
+                    &q - &BigInteger::one()
+                } else {
+                    q
+                })
             }
             ComputeOp::Ceil => {
                 let (q, rem) = n.div_rem(d);
-                int(if rem.is_positive() { &q + &BigInteger::one() } else { q })
+                int(if rem.is_positive() {
+                    &q + &BigInteger::one()
+                } else {
+                    q
+                })
             }
             ComputeOp::Round => {
                 let (q, rem) = n.div_rem(d);
-                let twice = { let a = rem.abs(); &a + &a };
+                let twice = {
+                    let a = rem.abs();
+                    &a + &a
+                };
                 if twice >= *d {
                     // fractional part ≥ 1/2 → round away from zero (ties away from zero)
-                    int(if n.is_negative() { &q - &BigInteger::one() } else { &q + &BigInteger::one() })
+                    int(if n.is_negative() {
+                        &q - &BigInteger::one()
+                    } else {
+                        &q + &BigInteger::one()
+                    })
                 } else {
                     int(q)
                 }
@@ -1215,7 +1269,9 @@ fn eval_round(
     // narrowing as a clean number — the same "no silently-wrong number" guard the
     // other ops apply.
     if !result.is_finite() {
-        return Err(ComputeError::NonFinite { op: ComputeOp::Round });
+        return Err(ComputeError::NonFinite {
+            op: ComputeOp::Round,
+        });
     }
     Ok((
         DerivationNode::Round {
@@ -1363,11 +1419,8 @@ fn scientific(r: &ExactRational, figures: u32, mode: RoundingMode) -> (String, E
     } else {
         (num, &den * &ten_to((-p) as u32))
     };
-    let c_bd = BigDecimal::from_integer(dividend).div_round(
-        &BigDecimal::from_integer(divisor),
-        0,
-        mode,
-    );
+    let c_bd =
+        BigDecimal::from_integer(dividend).div_round(&BigDecimal::from_integer(divisor), 0, mode);
     let mut c = bigdecimal_to_integer(&c_bd);
 
     // Rounding carry: `9.99…` at 3 figs rounds to `10.0…` = `10^figures`. Bump the
@@ -1482,28 +1535,106 @@ fn percent(r: &ExactRational, places: u32, mode: RoundingMode) -> (String, Exact
     );
     let c = bigdecimal_to_integer(&c_bd);
     let neg = c.is_negative();
-    let mag = c.abs().to_string();
-
-    // Place the decimal point `places` from the right of the magnitude digits, padding on
-    // the left so there is always at least one integer digit (`0.05`, not `.05`).
-    let body = if places == 0 {
-        mag
-    } else {
-        let p = places as usize;
-        let mag = if mag.len() <= p {
-            format!("{}{}", "0".repeat(p + 1 - mag.len()), mag)
-        } else {
-            mag
-        };
-        let split = mag.len() - p;
-        format!("{}.{}", &mag[..split], &mag[split..])
-    };
+    let body = fixed_decimal_body(c.abs().to_string(), places);
     let sign = if neg { "-" } else { "" };
     let rendered = format!("{sign}{body}%");
 
     // Narrowed fraction = C / 10^(places+2) (the percentage magnitude divided back by 100).
     let narrowed = ExactRational::from_ratio(BigRational::new(c, ten_to(scale_pow)));
     (rendered, narrowed)
+}
+
+/// Format a non-negative integer's digit string `mag` as a fixed-point decimal with exactly
+/// `places` fractional digits: it places the decimal point `places` from the right, padding on
+/// the left so there is always at least one integer digit (`"0.05"`, not `".05"`). `places = 0`
+/// returns the integer digits unchanged. Shared by [`percent`] and [`currency`] — the only
+/// difference between those renderers is the scale factor and the suffix/prefix around this body.
+fn fixed_decimal_body(mag: String, places: u32) -> String {
+    if places == 0 {
+        return mag;
+    }
+    let p = places as usize;
+    let mag = if mag.len() <= p {
+        format!("{}{}", "0".repeat(p + 1 - mag.len()), mag)
+    } else {
+        mag
+    };
+    let split = mag.len() - p;
+    format!("{}.{}", &mag[..split], &mag[split..])
+}
+
+/// Evaluate `to_currency(x, code, places)` (NUM-6c): render the money amount `x` to `places`
+/// base-10-exact decimal places, prefixed with the currency `code` (`"USD 1234.50"`). A
+/// **rendering** op — the narrowed numeric value is the rounded amount (so a downstream
+/// predicate over the binding still sees the money magnitude) and the exact sidecar backs the
+/// audit (ADJ-NUMERIC-SUBSTRATE §4.1, §4.3). Dimension-preserving.
+#[inline(never)]
+fn eval_to_currency(
+    code: &str,
+    places: u32,
+    mode: RoundingMode,
+    expr: &ComputeExpr,
+    kb: &KnowledgeBase,
+    depth: usize,
+) -> Result<(DerivationNode, Dimension, Option<ExactRational>), ComputeError> {
+    let (operand, dim, exact) = eval(expr, kb, depth + 1)?;
+    let (rendered, exact_out, result) = match &exact {
+        Some(r) => {
+            let (amount, narrowed) = currency(r, places, mode);
+            let value = narrowed.to_f64();
+            (format!("{code} {amount}"), Some(narrowed), value)
+        }
+        None => {
+            // Already-inexact operand: format the lossy `f64` to `places` decimals.
+            let value = operand.value();
+            (format!("{code} {:.*}", places as usize, value), None, value)
+        }
+    };
+    // A non-finite operand must not render as a clean money string — same guard as the
+    // other ops (op label reuses `Round`: `to_currency` is a rounding-based narrowing).
+    if !result.is_finite() {
+        return Err(ComputeError::NonFinite {
+            op: ComputeOp::Round,
+        });
+    }
+    Ok((
+        DerivationNode::ToCurrency {
+            code: code.to_string(),
+            places,
+            mode,
+            rendered,
+            operand: Box::new(operand),
+            result,
+        },
+        dim,
+        exact_out,
+    ))
+}
+
+/// Render an exact money amount as a fixed-point decimal string with exactly `places` decimal
+/// places (no currency code — the caller prefixes it), and return the **narrowed amount**
+/// alongside — both from one rounding so they always agree. The scaled integer is
+/// `C = round(x · 10^places)` under `mode`; the string places the decimal point `places` from
+/// `C`'s right (`1234.5 → "1234.50"` at 2 places), and the narrowed amount is `C / 10^places`.
+/// Zero and `places = 0` are handled by the shared padding path. All arithmetic is exact
+/// big-integer/-decimal — base-10-exact money, no `f64` hop.
+fn currency(r: &ExactRational, places: u32, mode: RoundingMode) -> (String, ExactRational) {
+    // `C = round(r · 10^places)` — the amount's digits scaled to an integer.
+    let dividend = r.numerator() * &ten_to(places);
+    let c_bd = BigDecimal::from_integer(dividend).div_round(
+        &BigDecimal::from_integer(r.denominator().clone()),
+        0,
+        mode,
+    );
+    let c = bigdecimal_to_integer(&c_bd);
+    let neg = c.is_negative();
+    let body = fixed_decimal_body(c.abs().to_string(), places);
+    let sign = if neg { "-" } else { "" };
+    let amount = format!("{sign}{body}");
+
+    // Narrowed amount = C / 10^places.
+    let narrowed = ExactRational::from_ratio(BigRational::new(c, ten_to(places)));
+    (amount, narrowed)
 }
 
 /// Round an `f64` to `spec`'s precision — the fallback for an operand that carried
@@ -1984,12 +2115,7 @@ mod tests {
         // both operands share a dimension and the remainder carries it (NOT collapsed
         // to Scalar). The exact-rational sidecar is dropped (like gcd/lcm).
         let kb = kb_with(vec![quantity("a", 7, "mmol"), quantity("b", 3, "mmol")]);
-        let d = compute(
-            "m",
-            &bin(ComputeOp::Mod, refexpr("a"), refexpr("b")),
-            &kb,
-        )
-        .unwrap();
+        let d = compute("m", &bin(ComputeOp::Mod, refexpr("a"), refexpr("b")), &kb).unwrap();
         assert_eq!(d.value, 1.0);
         assert_eq!(d.dim, kb.observed_dimensioned("a").unwrap().0.dim);
         assert_eq!(d.exact, None);
@@ -2002,7 +2128,11 @@ mod tests {
         // unlike gcd/lcm).
         let neg = compute(
             "m",
-            &bin(ComputeOp::Mod, ComputeExpr::Lit(-7.0), ComputeExpr::Lit(3.0)),
+            &bin(
+                ComputeOp::Mod,
+                ComputeExpr::Lit(-7.0),
+                ComputeExpr::Lit(3.0),
+            ),
             &kb_with(vec![]),
         )
         .unwrap();
@@ -2877,10 +3007,7 @@ mod tests {
         // ⌊log₁₀(num/den)⌋ for a spread of values, incl. the boundary cases (exact
         // powers of ten, values just under a power, sub-1 values).
         let e = |num: i64, den: i64| {
-            super::msd_exponent(
-                &BigInteger::from_i64(num),
-                &BigInteger::from_i64(den),
-            )
+            super::msd_exponent(&BigInteger::from_i64(num), &BigInteger::from_i64(den))
         };
         assert_eq!(e(314159, 1000), 2); // 314.159 → MSD at 10^2
         assert_eq!(e(314, 100), 0); // 3.14 → 10^0
@@ -3116,7 +3243,7 @@ mod tests {
         let small = compute("r", &to_pct(2, frac(1, 2000)), &kb).unwrap();
         assert_eq!(pct_rendered_of(&small), "0.05%");
         assert_eq!(small.exact, ExactRational::new(5, 10000)); // 0.0005
-        // Negative: −1/4 = −0.25 → 1 place = "-25.0%", value exactly −1/4.
+                                                               // Negative: −1/4 = −0.25 → 1 place = "-25.0%", value exactly −1/4.
         let neg = compute("r", &to_pct(1, frac(-1, 4)), &kb).unwrap();
         assert_eq!(pct_rendered_of(&neg), "-25.0%");
         assert_eq!(neg.exact, ExactRational::new(-1, 4));
@@ -3143,6 +3270,77 @@ mod tests {
         // 1/7 = 0.142857… → 3 places = "14.286%" (half-even on the 4th place: …57→6).
         assert_eq!(pct_rendered_of(&d), "14.286%");
         assert_eq!(d.exact, ExactRational::new(14286, 100000)); // 0.14286
+        assert_eq!(d.dim, Dimension::Money("usd".into()));
+    }
+
+    // ---- NUM-6c: to_currency(x, code, places) — the money rendering ----
+
+    fn to_cur(code: &str, places: u32, inner: ComputeExpr) -> ComputeExpr {
+        ComputeExpr::ToCurrency {
+            code: code.to_string(),
+            places,
+            mode: RoundingMode::HalfEven,
+            expr: Box::new(inner),
+        }
+    }
+    fn cur_rendered_of(d: &Derived) -> String {
+        match &d.tree {
+            DerivationNode::ToCurrency { rendered, .. } => rendered.clone(),
+            other => panic!("expected ToCurrency node, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn to_currency_renders_amount_with_code_and_padded_places() {
+        let kb = KnowledgeBase::new();
+        // 2469/2 = 1234.5 → 2 places pads the trailing zero: "USD 1234.50", value exactly 2469/2.
+        let a = compute("r", &to_cur("USD", 2, frac(2469, 2)), &kb).unwrap();
+        assert_eq!(cur_rendered_of(&a), "USD 1234.50");
+        assert_eq!(a.exact, ExactRational::new(2469, 2));
+        // A repeating amount 10/3 = 3.333… → 2 places (half-even) = "EUR 3.33", value 333/100.
+        let b = compute("r", &to_cur("EUR", 2, frac(10, 3)), &kb).unwrap();
+        assert_eq!(cur_rendered_of(&b), "EUR 3.33");
+        assert_eq!(b.exact, ExactRational::new(333, 100));
+    }
+
+    #[test]
+    fn to_currency_zero_places_sub_one_sign_and_zero() {
+        let kb = KnowledgeBase::new();
+        // 0 places drops the decimal point: 7/2 = 3.5 → "JPY 4" (half-even to nearest even).
+        let z = compute("r", &to_cur("JPY", 0, frac(7, 2)), &kb).unwrap();
+        assert_eq!(cur_rendered_of(&z), "JPY 4");
+        assert_eq!(z.exact, ExactRational::new(4, 1));
+        // Sub-one amount 1/20 = 0.05 → 2 places = "USD 0.05" (leading zero preserved).
+        let small = compute("r", &to_cur("USD", 2, frac(1, 20)), &kb).unwrap();
+        assert_eq!(cur_rendered_of(&small), "USD 0.05");
+        assert_eq!(small.exact, ExactRational::new(1, 20));
+        // Negative: −5/4 = −1.25 → "USD -1.25", value exactly −5/4.
+        let neg = compute("r", &to_cur("USD", 2, frac(-5, 4)), &kb).unwrap();
+        assert_eq!(cur_rendered_of(&neg), "USD -1.25");
+        assert_eq!(neg.exact, ExactRational::new(-5, 4));
+        // Zero → "USD 0.00", exact 0.
+        let zero = compute("r", &to_cur("USD", 2, ComputeExpr::Lit(0.0)), &kb).unwrap();
+        assert_eq!(cur_rendered_of(&zero), "USD 0.00");
+        assert_eq!(zero.exact, ExactRational::new(0, 1));
+    }
+
+    #[test]
+    fn to_currency_is_base_ten_exact_and_preserves_dimension() {
+        // The exactness point: a bill split three ways stays exact until the render. $100
+        // / 3 = 33.333… → "USD 33.33" at 2 places; the money dimension survives.
+        let kb = kb_with(vec![money("bill", 100, "usd")]);
+        let expr = to_cur(
+            "USD",
+            2,
+            ComputeExpr::Bin(
+                ComputeOp::Div,
+                Box::new(refexpr("bill")),
+                Box::new(ComputeExpr::Lit(3.0)),
+            ),
+        );
+        let d = compute("r", &expr, &kb).unwrap();
+        assert_eq!(cur_rendered_of(&d), "USD 33.33");
+        assert_eq!(d.exact, ExactRational::new(3333, 100)); // 33.33 exactly
         assert_eq!(d.dim, Dimension::Money("usd".into()));
     }
 }

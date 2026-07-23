@@ -1240,6 +1240,16 @@ fn lower_expr(expr: &ExprAst) -> ComputeExpr {
             mode: bignum_core::RoundingMode::HalfEven,
             expr: Box::new(lower_expr(a)),
         },
+        // `to_currency(x, code, places)` (NUM-6c): the money rendering. Lowers to the
+        // distinct engine `ToCurrency` node so the currency code, the decimal-place count,
+        // and the default half-even mode ride along and the exact-path audit records both
+        // the exact source amount and the rendered `CODE d.dd` string.
+        ExprAst::ToCurrency(a, code, places) => ComputeExpr::ToCurrency {
+            code: code.clone(),
+            places: *places,
+            mode: bignum_core::RoundingMode::HalfEven,
+            expr: Box::new(lower_expr(a)),
+        },
         ExprAst::Call2(f, a, b) => ComputeExpr::Bin(
             lower_bin_fn(*f),
             Box::new(lower_expr(a)),
@@ -1572,6 +1582,7 @@ fn collect_refs(expr: &ExprAst, out: &mut Vec<String>) {
         | ExprAst::RoundTo(a, _)
         | ExprAst::ToScientific(a, _)
         | ExprAst::ToPercent(a, _)
+        | ExprAst::ToCurrency(a, _, _)
         | ExprAst::Trunc(a)
         | ExprAst::Sign(a)
         | ExprAst::Call(_, a) => collect_refs(a, out),
@@ -1638,6 +1649,13 @@ const DEFAULT_SCI_FIGURES: u32 = 6;
 /// a concrete `places` count and the audit records what was used. Unlike the significant-
 /// figure ops, `places = 0` is a valid explicit argument (`to_percent(x, 0) = "50%"`).
 const DEFAULT_PERCENT_PLACES: u32 = 2;
+
+/// The decimal-place count `to_currency(x, code)` uses when the surface omits it (NUM-6c).
+/// Two is the common minor-unit precision (cents, pence) and matches the ISO-4217 default
+/// for the major currencies; an explicit `to_currency(x, code, n)` overrides it (e.g. `0`
+/// for JPY, `3` for KWD). Applied at lowering, so the engine node always carries a concrete
+/// `places` count and the audit records what was used. `places = 0` is a valid argument.
+const DEFAULT_CURRENCY_PLACES: u32 = 2;
 
 /// Maximum AST-nesting depth the expansion/substitution/clone walkers may descend
 /// in a single expression (ADJ-RULE-SUBSTRATE RS-1). The node budget bounds total
@@ -1724,8 +1742,9 @@ fn charged_clone(
         ExprAst::ToScientific(a, n) => {
             ExprAst::ToScientific(Box::new(charged_clone(a, budget, d)?), *n)
         }
-        ExprAst::ToPercent(a, n) => {
-            ExprAst::ToPercent(Box::new(charged_clone(a, budget, d)?), *n)
+        ExprAst::ToPercent(a, n) => ExprAst::ToPercent(Box::new(charged_clone(a, budget, d)?), *n),
+        ExprAst::ToCurrency(a, code, n) => {
+            ExprAst::ToCurrency(Box::new(charged_clone(a, budget, d)?), code.clone(), *n)
         }
         ExprAst::Trunc(a) => ExprAst::Trunc(Box::new(charged_clone(a, budget, d)?)),
         ExprAst::Sign(a) => ExprAst::Sign(Box::new(charged_clone(a, budget, d)?)),
@@ -1869,7 +1888,11 @@ fn expand_rec(
                     {
                         *v as u32
                     }
-                    _ => return Err(LowerError::FormulaBadArgument { formula: name.clone() }),
+                    _ => {
+                        return Err(LowerError::FormulaBadArgument {
+                            formula: name.clone(),
+                        })
+                    }
                 };
                 let spec = if name == "round_sig" {
                     logic_engine::RoundSpec::SigFigures(n)
@@ -1898,9 +1921,7 @@ fn expand_rec(
                 let figures = if args.len() == 2 {
                     match &args[1] {
                         ExprAst::Lit(v)
-                            if v.fract() == 0.0
-                                && *v >= 1.0
-                                && *v <= MAX_ROUND_PLACES as f64 =>
+                            if v.fract() == 0.0 && *v >= 1.0 && *v <= MAX_ROUND_PLACES as f64 =>
                         {
                             *v as u32
                         }
@@ -1935,9 +1956,7 @@ fn expand_rec(
                 let places = if args.len() == 2 {
                     match &args[1] {
                         ExprAst::Lit(v)
-                            if v.fract() == 0.0
-                                && *v >= 0.0
-                                && *v <= MAX_ROUND_PLACES as f64 =>
+                            if v.fract() == 0.0 && *v >= 0.0 && *v <= MAX_ROUND_PLACES as f64 =>
                         {
                             *v as u32
                         }
@@ -1952,6 +1971,55 @@ fn expand_rec(
                 };
                 let value = expand_rec(&args[0], formulas, depth, chain, active, budget, d)?;
                 return Ok(ExprAst::ToPercent(Box::new(value), places));
+            }
+            // NUM-6c built-in: `to_currency(x, code [, places])` — the money rendering.
+            // Recognised by NAME here, before the user-formula lookup. The SECOND argument
+            // is the currency CODE — a bare identifier (`USD`) taken verbatim: it parses as
+            // an `ExprAst::Ref` and is NOT resolved as a slot (we read its name directly and
+            // never expand it). `places` is OPTIONAL (3rd arg): default [`DEFAULT_CURRENCY_PLACES`];
+            // a stated count must be a NON-NEGATIVE integer literal (`≥ 0` — `to_currency(x,
+            // JPY, 0)`) within the precision cap [`MAX_ROUND_PLACES`]. A missing/non-identifier
+            // code, a non-integer/negative/oversized/non-literal `places`, or the wrong argument
+            // count is a clean compile error.
+            if name == "to_currency" {
+                if args.len() < 2 || args.len() > 3 {
+                    return Err(LowerError::FormulaArity {
+                        formula: name.clone(),
+                        expected: 3,
+                        got: args.len(),
+                    });
+                }
+                // The code is a bare identifier (an un-expanded `Ref`); anything else is a
+                // bad argument (a number, a formula application, an already-substituted value).
+                // Identifiers lex lowercase (`usd`), but currency codes are canonically the
+                // uppercase ISO-4217 form, so we normalize to uppercase for the rendered
+                // `CODE d.dd` string and the audit record — `usd` → `USD 33.33`.
+                let code = match &args[1] {
+                    ExprAst::Ref(c) if !c.is_empty() => c.to_uppercase(),
+                    _ => {
+                        return Err(LowerError::FormulaBadArgument {
+                            formula: name.clone(),
+                        })
+                    }
+                };
+                let places = if args.len() == 3 {
+                    match &args[2] {
+                        ExprAst::Lit(v)
+                            if v.fract() == 0.0 && *v >= 0.0 && *v <= MAX_ROUND_PLACES as f64 =>
+                        {
+                            *v as u32
+                        }
+                        _ => {
+                            return Err(LowerError::FormulaBadArgument {
+                                formula: name.clone(),
+                            })
+                        }
+                    }
+                } else {
+                    DEFAULT_CURRENCY_PLACES
+                };
+                let value = expand_rec(&args[0], formulas, depth, chain, active, budget, d)?;
+                return Ok(ExprAst::ToCurrency(Box::new(value), code, places));
             }
             // Resolve the callee against the SAME registry the top-level query path
             // uses. An unknown name is a clean, specific error — distinct from an
@@ -2050,6 +2118,11 @@ fn expand_rec(
         )),
         ExprAst::ToPercent(a, n) => Ok(ExprAst::ToPercent(
             Box::new(expand_rec(a, formulas, depth, chain, active, budget, d)?),
+            *n,
+        )),
+        ExprAst::ToCurrency(a, code, n) => Ok(ExprAst::ToCurrency(
+            Box::new(expand_rec(a, formulas, depth, chain, active, budget, d)?),
+            code.clone(),
             *n,
         )),
         ExprAst::Trunc(a) => Ok(ExprAst::Trunc(Box::new(expand_rec(
@@ -2239,6 +2312,11 @@ fn substitute_expr(
         ExprAst::ToPercent(a, n) => {
             ExprAst::ToPercent(Box::new(substitute_expr(a, subst, budget, d)?), *n)
         }
+        ExprAst::ToCurrency(a, code, n) => ExprAst::ToCurrency(
+            Box::new(substitute_expr(a, subst, budget, d)?),
+            code.clone(),
+            *n,
+        ),
         ExprAst::Trunc(a) => ExprAst::Trunc(Box::new(substitute_expr(a, subst, budget, d)?)),
         ExprAst::Sign(a) => ExprAst::Sign(Box::new(substitute_expr(a, subst, budget, d)?)),
         ExprAst::Call(f, a) => ExprAst::Call(*f, Box::new(substitute_expr(a, subst, budget, d)?)),
