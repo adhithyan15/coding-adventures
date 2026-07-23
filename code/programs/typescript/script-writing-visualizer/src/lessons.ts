@@ -51,6 +51,12 @@ export interface Lesson {
   concept: string;
   prerequisites: string[];
   reviewsOf: string[];
+  /**
+   * Etymological roots this lesson cites (e.g. `["bonus", "dies"]`). The join
+   * key for cross-language CONNECTIONS: two lessons in different languages that
+   * share a root are etymologically linked. `[]` when the lesson cites none.
+   */
+  roots: string[];
   /** Latin-script reading; equals `headword` for Latin-script tracks. */
   romanization: string;
   /** Script slug the package assigned from the track name. */
@@ -100,6 +106,7 @@ export function toLesson(parsed: ParsedLesson): Lesson | null {
     concept: r.concept,
     prerequisites: arr(fm.prerequisites),
     reviewsOf: arr(fm.reviews_of),
+    roots: arr(fm.roots),
     romanization: r.romanization,
     script: r.script,
     etymologyHook: r.etymologyHook,
