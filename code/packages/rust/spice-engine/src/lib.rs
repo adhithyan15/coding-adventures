@@ -409,6 +409,7 @@ fn clone_subckt_element(
                 element.energy_gap_electron_volts,
             );
             mapped.series_resistance = element.series_resistance;
+            mapped.flicker_noise_coefficient = element.flicker_noise_coefficient;
             Element::Diode(mapped)
         }
         Element::Jfet(element) => Element::Jfet(Jfet::with_model_and_capacitance(
@@ -2398,6 +2399,7 @@ pub struct Diode {
     pub saturation_current_temperature_exponent: f64,
     pub energy_gap_electron_volts: f64,
     pub series_resistance: f64,
+    pub flicker_noise_coefficient: f64,
 }
 
 impl Diode {
@@ -2613,6 +2615,7 @@ impl Diode {
             saturation_current_temperature_exponent,
             energy_gap_electron_volts,
             series_resistance: 0.0,
+            flicker_noise_coefficient: 0.0,
         }
     }
 }
@@ -3792,7 +3795,7 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     usize,
     usize,
 )] = &[
-    (ModelCardKind::Diode, 13, 19, 5, 3),
+    (ModelCardKind::Diode, 14, 20, 5, 3),
     (ModelCardKind::Npn, 41, 58, 13, 4),
     (ModelCardKind::Pnp, 41, 58, 13, 4),
     (ModelCardKind::Njf, 5, 11, 5, 3),
@@ -3820,6 +3823,7 @@ const DIODE_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("XTI", "XTI"),
     ("EG", "EG"),
     ("RS", "RS"),
+    ("KF", "KF"),
 ];
 const BJT_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("IS", "IS"),
@@ -4505,6 +4509,7 @@ pub fn diode_from_model_card(
         model_card_value(model, "EG", 1.11),
     );
     diode.series_resistance = model_card_value(model, "RS", 0.0);
+    diode.flicker_noise_coefficient = model_card_value(model, "KF", 0.0);
     Ok(diode)
 }
 
@@ -22253,6 +22258,16 @@ fn collect_noise_sources(
                     source_psd: 2.0 * ELECTRON_CHARGE * current.abs(),
                     frequency_exponent: 0.0,
                 });
+                if diode.flicker_noise_coefficient > 0.0 {
+                    sources.push(NoiseSource {
+                        element_name: diode.name.clone(),
+                        noise_type: NoiseType::Flicker,
+                        positive: anode,
+                        negative: cathode,
+                        source_psd: diode.flicker_noise_coefficient * current.abs(),
+                        frequency_exponent: 1.0,
+                    });
+                }
                 if diode.series_resistance > 0.0 {
                     sources.push(NoiseSource {
                         element_name: format!("{}:RS", diode.name),
@@ -24414,6 +24429,12 @@ fn mosfet_charge_dynamic_capacitance(
 }
 
 fn validate_diode(diode: &Diode) -> Result<(), SpiceError> {
+    if !diode.flicker_noise_coefficient.is_finite() || diode.flicker_noise_coefficient < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: diode.name.clone(),
+            reason: "flicker-noise coefficient must be finite and non-negative".to_string(),
+        });
+    }
     if !diode.series_resistance.is_finite() || diode.series_resistance < 0.0 {
         return Err(SpiceError::InvalidElement {
             name: diode.name.clone(),

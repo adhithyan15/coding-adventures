@@ -33,15 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language diode series resistance.
+1. Cross-language diode flicker-noise coefficient.
    - Status: current PR completion candidate.
-   - Add Berkeley diode `RS` model-card support in Rust, Python, and TypeScript,
-     defaulting to zero and inserting an intrinsic anode behind the configured
-     external series resistance.
-   - Keep DC, transient, AC, transfer-function, hierarchy, temperature, and
-     noise paths on the shared topology, including resistor thermal noise.
-   - Extend the supported-parameter coverage gate from 140 to 141 canonical
-     rows and lock normalization plus fixed-bias current limiting in all engines.
+   - Add Berkeley diode `KF` model-card support in Rust, Python, and TypeScript,
+     defaulting to zero and emitting a distinct diode-current flicker-noise
+     contribution.
+   - Preserve `KF` through hierarchy, temperature, sensitivity, and Monte Carlo
+     cloning while validating finite non-negative values in every engine.
+   - Extend the supported-parameter coverage gate from 141 to 142 canonical
+     rows and lock inverse-frequency noise scaling in all engines.
 
 ## Completed Slices
 
@@ -3219,6 +3219,15 @@ the Rust, Python, and TypeScript surfaces together.
    - `ISE` defaults to `C2 * IS` and `ISC` defaults to `C4 * IS`, while
      explicit `ISE` and `ISC` retain precedence; the supported-parameter
      release gate now covers 140 canonical rows.
+
+246. Cross-language diode series resistance.
+   - Status: completed in PR 8888.
+   - Rust, Python, and TypeScript diode model cards now accept `RS`, default it
+     to zero, and insert an intrinsic anode behind the configured external
+     series resistance.
+   - DC, transient, AC, transfer-function, hierarchy, temperature, and noise
+     paths share the intrinsic-anode topology, including resistor thermal
+     noise; the supported-parameter release gate now covers 141 canonical rows.
 
 ## Backlog
 

@@ -494,6 +494,7 @@ class Diode:
     Xti: float = 3.0  # saturation-current temperature exponent
     Eg: float = 1.11  # energy gap in electron volts
     Rs: float = 0.0  # ohmic series resistance
+    Kf: float = 0.0  # flicker-noise coefficient
 
 
 @dataclass(frozen=True, slots=True)

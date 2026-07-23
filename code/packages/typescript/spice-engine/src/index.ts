@@ -1677,6 +1677,7 @@ export interface Diode {
   readonly saturationCurrentTemperatureExponent: number;
   readonly energyGapElectronVolts: number;
   readonly seriesResistance: number;
+  readonly flickerNoiseCoefficient: number;
 }
 
 export type JfetPolarity = "NJF" | "PJF";
@@ -2019,7 +2020,7 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_KINDS: readonly ModelCardKind[] = 
 const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   Record<ModelCardKind, readonly [number, number, number, number]>
 > = {
-  D: [13, 19, 5, 3],
+  D: [14, 20, 5, 3],
   NPN: [41, 58, 13, 4],
   PNP: [41, 58, 13, 4],
   NJF: [5, 11, 5, 3],
@@ -3607,7 +3608,7 @@ function cloneSubcktElement(
     case "custom-model":
       return { ...element, name, positive: mapSubcktNode(element.positive, instanceName, nodeMap), negative: mapSubcktNode(element.negative, instanceName, nodeMap) };
     case "diode":
-      return diode(name, mapSubcktNode(element.anode, instanceName, nodeMap), mapSubcktNode(element.cathode, instanceName, nodeMap), element.saturationCurrent, element.thermalVoltage, element.emissionCoefficient, element.breakdownVoltage, element.breakdownCurrent, element.junctionCapacitance, element.transitTime, element.junctionPotential, element.gradingCoefficient, element.forwardBiasDepletionCoefficient, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.seriesResistance);
+      return diode(name, mapSubcktNode(element.anode, instanceName, nodeMap), mapSubcktNode(element.cathode, instanceName, nodeMap), element.saturationCurrent, element.thermalVoltage, element.emissionCoefficient, element.breakdownVoltage, element.breakdownCurrent, element.junctionCapacitance, element.transitTime, element.junctionPotential, element.gradingCoefficient, element.forwardBiasDepletionCoefficient, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.seriesResistance, element.flickerNoiseCoefficient);
     case "jfet":
       return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation, element.gateSourceCapacitance, element.gateDrainCapacitance);
     case "bjt":
@@ -7570,6 +7571,7 @@ export function diode(
   saturationCurrentTemperatureExponent = 3.0,
   energyGapElectronVolts = 1.11,
   seriesResistance = 0.0,
+  flickerNoiseCoefficient = 0.0,
 ): Diode {
   return {
     kind: "diode",
@@ -7589,6 +7591,7 @@ export function diode(
     saturationCurrentTemperatureExponent,
     energyGapElectronVolts,
     seriesResistance,
+    flickerNoiseCoefficient,
   };
 }
 
@@ -7942,6 +7945,7 @@ const DIODE_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   XTI: "XTI",
   EG: "EG",
   RS: "RS",
+  KF: "KF",
 };
 
 const BJT_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
@@ -8473,6 +8477,7 @@ export function diodeFromModelCard(
     p.XTI ?? 3.0,
     p.EG ?? 1.11,
     p.RS ?? 0.0,
+    p.KF ?? 0.0,
   );
 }
 
@@ -18489,6 +18494,16 @@ function collectNoiseSources(
         sourcePsd: 2.0 * ELECTRON_CHARGE * Math.abs(current),
         frequencyExponent: 0.0,
       });
+      if (element.flickerNoiseCoefficient > 0.0) {
+        sources.push({
+          elementName: element.name,
+          noiseType: "flicker",
+          positive: anode,
+          negative: cathode,
+          sourcePsd: element.flickerNoiseCoefficient * Math.abs(current),
+          frequencyExponent: 1.0,
+        });
+      }
       if (element.seriesResistance > 0.0) {
         sources.push({
           elementName: `${element.name}:RS`,
@@ -19783,6 +19798,15 @@ function validateReactiveElements(circuit: Circuit): void {
 }
 
 function validateDiode(element: Diode): void {
+  if (
+    !Number.isFinite(element.flickerNoiseCoefficient) ||
+    element.flickerNoiseCoefficient < 0.0
+  ) {
+    throw invalidElement(
+      element.name,
+      "flicker-noise coefficient must be finite and non-negative",
+    );
+  }
   if (!Number.isFinite(element.seriesResistance) || element.seriesResistance < 0.0) {
     throw invalidElement(element.name, "series resistance must be finite and non-negative");
   }
