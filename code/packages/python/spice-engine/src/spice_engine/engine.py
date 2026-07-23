@@ -599,6 +599,7 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
             element.Fc,
             element.Xti,
             element.Eg,
+            element.Rs,
         )
     if isinstance(element, JFET):
         return JFET(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), element.polarity, element.beta, element.vto, element.lambda_, element.Cgs, element.Cgd)
@@ -7254,7 +7255,10 @@ def _element_nodes(el: Element) -> list[str]:
     if isinstance(el, CustomModel):
         return [el.n_plus, el.n_minus]
     if isinstance(el, Diode):
-        return [el.anode, el.cathode]
+        nodes = [el.anode, el.cathode]
+        if el.Rs > 0.0:
+            nodes.append(_diode_intrinsic_anode_node(el))
+        return nodes
     if isinstance(el, JFET):
         return [el.drain, el.gate, el.source]
     if isinstance(el, Mosfet):
@@ -8650,22 +8654,27 @@ def _stamp_diode(
 
     Newton: I0 = Is*(exp(Vd0/(N*Vt)) - 1), gd = (Is/(N*Vt))*exp(Vd0/(N*Vt)).
     Stamp gd as conductance + (gd*Vd0 - I0) as current source from cathode."""
-    Va = 0.0 if _is_ground(el.anode) else x[node_to_idx[el.anode]]
+    intrinsic_anode = _diode_intrinsic_anode_node(el)
+    Va = 0.0 if _is_ground(intrinsic_anode) else x[node_to_idx[intrinsic_anode]]
     Vk = 0.0 if _is_ground(el.cathode) else x[node_to_idx[el.cathode]]
     Vd = Va - Vk
     # Clamp to avoid exp overflow
     Vd = min(Vd, 0.7 * el.N)
     I0, gd = _diode_current_conductance(el, Vd)
 
-    _stamp_g(G, node_to_idx, el.anode, el.cathode, gd)
+    _stamp_g(G, node_to_idx, intrinsic_anode, el.cathode, gd)
     Ieq = I0 - gd * Vd
-    if not _is_ground(el.anode):
-        b[node_to_idx[el.anode]] -= Ieq
+    if not _is_ground(intrinsic_anode):
+        b[node_to_idx[intrinsic_anode]] -= Ieq
     if not _is_ground(el.cathode):
         b[node_to_idx[el.cathode]] += Ieq
+    if el.Rs > 0.0:
+        _stamp_g(G, node_to_idx, el.anode, intrinsic_anode, 1.0 / el.Rs)
 
 
 def _diode_effective_vt(el: Diode) -> float:
+    if not math.isfinite(el.Rs) or el.Rs < 0.0:
+        raise ValueError(f"{el.name}: diode series resistance must be finite and non-negative")
     if not math.isfinite(el.N) or el.N <= 0.0:
         raise ValueError(f"{el.name}: diode emission coefficient must be finite and positive")
     if not math.isfinite(el.Vt) or el.Vt <= 0.0:
@@ -8712,6 +8721,10 @@ def _diode_charge_state_name(el: Diode) -> str:
     return f"_D_{el.name}_charge"
 
 
+def _diode_intrinsic_anode_node(el: Diode) -> str:
+    return el.anode if el.Rs == 0.0 else f"_D_{el.name}_anode"
+
+
 def _diode_has_charge_storage(el: Diode) -> bool:
     return el.Cjo > 0.0 or el.Tt > 0.0
 
@@ -8733,7 +8746,9 @@ def _diode_depletion_capacitance(el: Diode, vd: float) -> float:
 
 
 def _diode_charge_voltage(el: Diode, node_voltages: dict[str, float]) -> float:
-    return _node_voltage(el.anode, node_voltages) - _node_voltage(el.cathode, node_voltages)
+    return _node_voltage(_diode_intrinsic_anode_node(el), node_voltages) - _node_voltage(
+        el.cathode, node_voltages
+    )
 
 
 def _bjt_base_emitter_charge_state_name(el: BJT) -> str:
@@ -12682,7 +12697,8 @@ def _stamp_ac(
         # Small-signal model: linearised conductance gd = (Is/(N*Vt))·exp(Vd/(N*Vt)).
         # The dynamic (differential) conductance is the derivative of
         # I = Is*(exp(Vd/(N*Vt)) − 1) with respect to Vd, evaluated at the OP.
-        Va = 0.0 if _is_ground(el.anode) else dc_x[node_to_idx[el.anode]]
+        intrinsic_anode = _diode_intrinsic_anode_node(el)
+        Va = 0.0 if _is_ground(intrinsic_anode) else dc_x[node_to_idx[intrinsic_anode]]
         Vk = 0.0 if _is_ground(el.cathode) else dc_x[node_to_idx[el.cathode]]
         Vd = Va - Vk
         _, gd = _diode_current_conductance(el, Vd)
@@ -12691,10 +12707,12 @@ def _stamp_ac(
         _stamp_g_c(
             G,
             node_to_idx,
-            el.anode,
+            intrinsic_anode,
             el.cathode,
             gd + 1j * omega * (depletion_capacitance + diffusion_capacitance),
         )
+        if el.Rs > 0.0:
+            _stamp_g_c(G, node_to_idx, el.anode, intrinsic_anode, 1.0 / el.Rs)
 
     elif isinstance(el, JFET):
         Vd = 0.0 if _is_ground(el.drain) else dc_x[node_to_idx[el.drain]]
@@ -13396,11 +13414,18 @@ def _build_ss_matrix(
 
         elif isinstance(el, Diode):
             # Small-signal conductance: gd = dI/dVd = (Is/(N*Vt))·exp(Vd/(N*Vt)).
-            Va = 0.0 if _is_ground(el.anode) else dc_x[node_to_idx[el.anode]]
+            intrinsic_anode = _diode_intrinsic_anode_node(el)
+            Va = (
+                0.0
+                if _is_ground(intrinsic_anode)
+                else dc_x[node_to_idx[intrinsic_anode]]
+            )
             Vk = 0.0 if _is_ground(el.cathode) else dc_x[node_to_idx[el.cathode]]
             Vd = Va - Vk
             _, gd = _diode_current_conductance(el, Vd)
-            _stamp_g(G, node_to_idx, el.anode, el.cathode, gd)
+            _stamp_g(G, node_to_idx, intrinsic_anode, el.cathode, gd)
+            if el.Rs > 0.0:
+                _stamp_g(G, node_to_idx, el.anode, intrinsic_anode, 1.0 / el.Rs)
 
         elif isinstance(el, JFET):
             Vd = 0.0 if _is_ground(el.drain) else dc_x[node_to_idx[el.drain]]
@@ -14381,6 +14406,7 @@ def sens_dc(
                     el.Fc,
                     el.Xti,
                     el.Eg,
+                    el.Rs,
                 ),
             )
 
@@ -14681,6 +14707,7 @@ def _vary_element(el: Element, tolerance: float, distribution: str) -> Element:
             el.Fc,
             el.Xti,
             el.Eg,
+            el.Rs,
         )
 
     if isinstance(el, BJT):
@@ -15142,14 +15169,34 @@ def _collect_noise_sources(
             # because we are evaluating at the operating point, not iterating Newton.
             # (The 0.7 V clamp in the Newton loop prevents divergence during
             # iterations; at convergence, Vd is the physically correct value.)
-            Va = 0.0 if _is_ground(el.anode) else dc_x[node_to_idx[el.anode]]
+            intrinsic_anode = _diode_intrinsic_anode_node(el)
+            Va = (
+                0.0
+                if _is_ground(intrinsic_anode)
+                else dc_x[node_to_idx[intrinsic_anode]]
+            )
             Vk = 0.0 if _is_ground(el.cathode) else dc_x[node_to_idx[el.cathode]]
             Vd = Va - Vk  # actual operating-point junction voltage
             I_D, _ = _diode_current_conductance(el, Vd, clamp_forward=False)
             psd = q2 * abs(I_D)
-            n_a = None if _is_ground(el.anode) else node_to_idx[el.anode]
+            n_a = (
+                None
+                if _is_ground(intrinsic_anode)
+                else node_to_idx[intrinsic_anode]
+            )
             n_k = None if _is_ground(el.cathode) else node_to_idx[el.cathode]
             sources.append((el.name, "shot", n_a, n_k, psd, 0.0))
+            if el.Rs > 0.0:
+                sources.append(
+                    (
+                        f"{el.name}:RS",
+                        "thermal",
+                        node_to_idx.get(el.anode),
+                        node_to_idx.get(intrinsic_anode),
+                        kT4 / el.Rs,
+                        0.0,
+                    )
+                )
 
         elif isinstance(el, BJT):
             # Shot noise on the base-emitter junction: S_i = 2q |I_C|

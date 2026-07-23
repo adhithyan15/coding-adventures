@@ -51,10 +51,7 @@ use spice_engine::{
     format_model_card_supported_parameter_coverage_summary_csv,
     format_model_card_supported_parameter_coverage_summary_json,
     format_model_card_supported_parameter_coverage_summary_table,
-    format_model_card_supported_parameter_coverage_table,
-    format_model_card_unsupported_parameter_issue_csv,
-    format_model_card_unsupported_parameter_issue_json,
-    format_model_card_unsupported_parameter_issue_table, format_temperature_dc_table,
+    format_model_card_supported_parameter_coverage_table, format_temperature_dc_table,
     jfet_from_model_card, measure_dc_sweep_deck, measure_dc_sweep_probe,
     model_card_supported_parameter_coverage, model_card_supported_parameter_coverage_dashboard,
     model_card_supported_parameter_coverage_dashboard_records,
@@ -62,15 +59,13 @@ use spice_engine::{
     model_card_supported_parameter_coverage_gate_issue_records,
     model_card_supported_parameter_coverage_records,
     model_card_supported_parameter_coverage_summary,
-    model_card_supported_parameter_coverage_summary_records,
-    model_card_unsupported_parameter_issue_records, model_card_unsupported_parameter_issues,
-    mosfet_from_model_card, normalize_model_card, normalize_model_card_type,
-    resolve_deck_initial_conditions, BSource, Bjt, BjtPolarity, Cccs, Ccvs, Circuit,
-    CornerOverride, CornerSpec, CornerTemperatureDcResult, CurrentSource, CustomModel,
-    DcConvergenceAid, DcOpOptions, Diode, Element, Inductor, Jfet, JfetPolarity, ModelCardKind,
-    Mosfet, MosfetLevel1Params, MosfetType, Resistor, SinWaveform, SpiceError,
-    SubcircuitDefinition, SubcircuitElement, TemperatureDcResult, Vccs, Vcvs, VoltageSource,
-    Waveform, XInstance,
+    model_card_supported_parameter_coverage_summary_records, mosfet_from_model_card,
+    normalize_model_card, normalize_model_card_type, resolve_deck_initial_conditions, BSource, Bjt,
+    BjtPolarity, Cccs, Ccvs, Circuit, CornerOverride, CornerSpec, CornerTemperatureDcResult,
+    CurrentSource, CustomModel, DcConvergenceAid, DcOpOptions, Diode, Element, Inductor, Jfet,
+    JfetPolarity, ModelCardKind, Mosfet, MosfetLevel1Params, MosfetType, Resistor, SinWaveform,
+    SpiceError, SubcircuitDefinition, SubcircuitElement, TemperatureDcResult, Vccs, Vcvs,
+    VoltageSource, Waveform, XInstance,
 };
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -100,7 +95,7 @@ fn model_card_type_aliases_are_normalized() {
 #[test]
 fn model_card_supported_parameter_coverage_exports_are_stable() {
     let coverage = model_card_supported_parameter_coverage();
-    assert_eq!(coverage.len(), 140);
+    assert_eq!(coverage.len(), 141);
     assert_eq!(coverage[0].kind, ModelCardKind::Diode);
     assert_eq!(coverage[0].canonical_parameter, "IS");
     assert_eq!(coverage[0].accepted_names, vec!["IS", "JS"]);
@@ -119,7 +114,7 @@ fn model_card_supported_parameter_coverage_exports_are_stable() {
     assert!(table.contains("NMOS\tVT0\tVT0|VTO|VTH\t3"));
     assert_eq!(lines.last().unwrap(), &"PMOS\tMJ\tMJ\t1");
     let records = model_card_supported_parameter_coverage_records();
-    assert_eq!(records.len(), 140);
+    assert_eq!(records.len(), 141);
     assert_eq!(records[0]["kind"], "D");
     assert_eq!(records[0]["canonical_parameter"], "IS");
     assert_eq!(records[0]["accepted_names"], "IS|JS");
@@ -143,8 +138,8 @@ fn model_card_supported_parameter_coverage_summary_exports_are_stable() {
     let summary = model_card_supported_parameter_coverage_summary();
     assert_eq!(summary.len(), 7);
     assert_eq!(summary[0].kind, ModelCardKind::Diode);
-    assert_eq!(summary[0].canonical_parameter_count, 12);
-    assert_eq!(summary[0].accepted_name_count, 18);
+    assert_eq!(summary[0].canonical_parameter_count, 13);
+    assert_eq!(summary[0].accepted_name_count, 19);
     assert_eq!(summary[0].aliased_parameter_count, 5);
     assert_eq!(summary[0].max_alias_count, 3);
     assert_eq!(
@@ -168,7 +163,7 @@ fn model_card_supported_parameter_coverage_summary_exports_are_stable() {
         lines[0],
         "kind\tcanonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\taliased_parameters"
     );
-    assert_eq!(lines[1], "D\t12\t18\t5\t3\tIS|VT|CJO|VJ|M");
+    assert_eq!(lines[1], "D\t13\t19\t5\t3\tIS|VT|CJO|VJ|M");
     assert_eq!(
         lines.last().unwrap(),
         &"PMOS\t18\t25\t6\t3\tVT0|LAMBDA|N_SUB|T_NOM|CBS|CBD"
@@ -176,17 +171,17 @@ fn model_card_supported_parameter_coverage_summary_exports_are_stable() {
     let records = model_card_supported_parameter_coverage_summary_records();
     assert_eq!(records.len(), 7);
     assert_eq!(records[0]["kind"], "D");
-    assert_eq!(records[0]["canonical_parameter_count"], "12");
-    assert_eq!(records[0]["accepted_name_count"], "18");
+    assert_eq!(records[0]["canonical_parameter_count"], "13");
+    assert_eq!(records[0]["accepted_name_count"], "19");
     assert_eq!(records[0]["aliased_parameter_count"], "5");
     assert_eq!(records[0]["max_alias_count"], "3");
     assert_eq!(records[0]["aliased_parameters"], "IS|VT|CJO|VJ|M");
     assert!(format_model_card_supported_parameter_coverage_summary_csv().starts_with(
-        "kind,canonical_parameter_count,accepted_name_count,aliased_parameter_count,max_alias_count,aliased_parameters\nD,12,18,5,3,IS|VT|CJO|VJ|M\n"
+        "kind,canonical_parameter_count,accepted_name_count,aliased_parameter_count,max_alias_count,aliased_parameters\nD,13,19,5,3,IS|VT|CJO|VJ|M\n"
     ));
     let json = format_model_card_supported_parameter_coverage_summary_json();
     assert!(json.starts_with(
-        "[{\"kind\":\"D\",\"canonical_parameter_count\":\"12\",\"accepted_name_count\":\"18\",\"aliased_parameter_count\":\"5\",\"max_alias_count\":\"3\",\"aliased_parameters\":\"IS|VT|CJO|VJ|M\"}"
+        "[{\"kind\":\"D\",\"canonical_parameter_count\":\"13\",\"accepted_name_count\":\"19\",\"aliased_parameter_count\":\"5\",\"max_alias_count\":\"3\",\"aliased_parameters\":\"IS|VT|CJO|VJ|M\"}"
     ));
     assert!(json.ends_with(
         "{\"kind\":\"PMOS\",\"canonical_parameter_count\":\"18\",\"accepted_name_count\":\"25\",\"aliased_parameter_count\":\"6\",\"max_alias_count\":\"3\",\"aliased_parameters\":\"VT0|LAMBDA|N_SUB|T_NOM|CBS|CBD\"}]\n"
@@ -200,15 +195,15 @@ fn model_card_supported_parameter_coverage_gate_passes_current_catalog() {
     assert!(report.passed);
     assert_eq!(report.kind_count, 7);
     assert_eq!(report.expected_kind_count, 7);
-    assert_eq!(report.canonical_parameter_count, 140);
-    assert_eq!(report.expected_canonical_parameter_count, 140);
-    assert_eq!(report.accepted_name_count, 206);
+    assert_eq!(report.canonical_parameter_count, 141);
+    assert_eq!(report.expected_canonical_parameter_count, 141);
+    assert_eq!(report.accepted_name_count, 207);
     assert_eq!(report.aliased_parameter_count, 53);
     assert_eq!(report.max_alias_count, 4);
     assert!(report.issues.is_empty());
     assert_eq!(
         format_model_card_supported_parameter_coverage_gate_report(&report),
-        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t140\t140\t206\t53\t4\t0"
+        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t141\t141\t207\t53\t4\t0"
     );
     assert_eq!(
         format_model_card_supported_parameter_coverage_gate_issue_table(&report),
@@ -235,8 +230,8 @@ fn model_card_supported_parameter_coverage_gate_reports_missing_alias_family() {
 
     assert!(!report.passed);
     assert_eq!(report.kind_count, 7);
-    assert_eq!(report.canonical_parameter_count, 139);
-    assert_eq!(report.accepted_name_count, 203);
+    assert_eq!(report.canonical_parameter_count, 140);
+    assert_eq!(report.accepted_name_count, 204);
     assert_eq!(report.aliased_parameter_count, 52);
     assert_eq!(report.max_alias_count, 4);
     assert_eq!(report.issues.len(), 4);
@@ -253,7 +248,7 @@ fn model_card_supported_parameter_coverage_gate_reports_missing_alias_family() {
     );
     assert_eq!(
         format_model_card_supported_parameter_coverage_gate_report(&report),
-        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t139\t140\t203\t52\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical supported parameters, found 17\nNMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card names, found 22\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2"
+        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t140\t141\t204\t52\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical supported parameters, found 17\nNMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card names, found 22\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2"
     );
     let records = model_card_supported_parameter_coverage_gate_issue_records(&report);
     assert_eq!(records[0]["kind"], "NMOS");
@@ -277,10 +272,10 @@ fn model_card_supported_parameter_coverage_dashboard_exports_are_stable() {
     assert_eq!(dashboard.len(), 7);
     assert_eq!(dashboard[0].kind, ModelCardKind::Diode);
     assert!(dashboard[0].passed);
-    assert_eq!(dashboard[0].canonical_parameter_count, 12);
-    assert_eq!(dashboard[0].expected_canonical_parameter_count, 12);
-    assert_eq!(dashboard[0].accepted_name_count, 18);
-    assert_eq!(dashboard[0].expected_accepted_name_count, 18);
+    assert_eq!(dashboard[0].canonical_parameter_count, 13);
+    assert_eq!(dashboard[0].expected_canonical_parameter_count, 13);
+    assert_eq!(dashboard[0].accepted_name_count, 19);
+    assert_eq!(dashboard[0].expected_accepted_name_count, 19);
     assert_eq!(dashboard[0].aliased_parameter_count, 5);
     assert_eq!(dashboard[0].expected_aliased_parameter_count, 5);
     assert_eq!(dashboard[0].max_alias_count, 3);
@@ -298,7 +293,7 @@ fn model_card_supported_parameter_coverage_dashboard_exports_are_stable() {
         lines[0],
         "kind\tpassed\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\texpected_accepted_name_count\taliased_parameter_count\texpected_aliased_parameter_count\tmax_alias_count\texpected_max_alias_count\tissue_count\tissue_fields"
     );
-    assert_eq!(lines[1], "D\ttrue\t12\t12\t18\t18\t5\t5\t3\t3\t0\t");
+    assert_eq!(lines[1], "D\ttrue\t13\t13\t19\t19\t5\t5\t3\t3\t0\t");
     assert_eq!(
         lines.last().unwrap(),
         &"PMOS\ttrue\t18\t18\t25\t25\t6\t6\t3\t3\t0\t"
@@ -307,15 +302,15 @@ fn model_card_supported_parameter_coverage_dashboard_exports_are_stable() {
     assert_eq!(records.len(), 7);
     assert_eq!(records[0]["kind"], "D");
     assert_eq!(records[0]["passed"], "true");
-    assert_eq!(records[0]["canonical_parameter_count"], "12");
-    assert_eq!(records[0]["expected_canonical_parameter_count"], "12");
+    assert_eq!(records[0]["canonical_parameter_count"], "13");
+    assert_eq!(records[0]["expected_canonical_parameter_count"], "13");
     assert_eq!(records[0]["issue_count"], "0");
     assert_eq!(records[0]["issue_fields"], "");
     assert!(format_model_card_supported_parameter_coverage_dashboard_csv(&coverage).starts_with(
-        "kind,passed,canonical_parameter_count,expected_canonical_parameter_count,accepted_name_count,expected_accepted_name_count,aliased_parameter_count,expected_aliased_parameter_count,max_alias_count,expected_max_alias_count,issue_count,issue_fields\nD,true,12,12,18,18,5,5,3,3,0,\n"
+        "kind,passed,canonical_parameter_count,expected_canonical_parameter_count,accepted_name_count,expected_accepted_name_count,aliased_parameter_count,expected_aliased_parameter_count,max_alias_count,expected_max_alias_count,issue_count,issue_fields\nD,true,13,13,19,19,5,5,3,3,0,\n"
     ));
     assert!(format_model_card_supported_parameter_coverage_dashboard_json(&coverage).starts_with(
-        "[{\"kind\":\"D\",\"passed\":\"true\",\"canonical_parameter_count\":\"12\",\"expected_canonical_parameter_count\":\"12\""
+        "[{\"kind\":\"D\",\"passed\":\"true\",\"canonical_parameter_count\":\"13\",\"expected_canonical_parameter_count\":\"13\""
     ));
 }
 
@@ -382,37 +377,8 @@ fn model_card_aliases_build_device_instances() {
     assert_close(*diode_card.parameters.get("FC").unwrap(), 0.35);
     assert_close(*diode_card.parameters.get("XTI").unwrap(), 2.2);
     assert_close(*diode_card.parameters.get("EG").unwrap(), 1.05);
-    assert_eq!(diode_card.unsupported_parameters, vec!["RS".to_string()]);
-    let diode_issues = model_card_unsupported_parameter_issues(&diode_card);
-    assert_eq!(diode_issues.len(), 1);
-    assert_eq!(diode_issues[0].model_name, "Dfast");
-    assert_eq!(diode_issues[0].kind, ModelCardKind::Diode);
-    assert_eq!(diode_issues[0].parameter, "RS");
-    assert_eq!(
-        diode_issues[0].message,
-        "unsupported D model-card parameter RS"
-    );
-    assert_eq!(
-        format_model_card_unsupported_parameter_issue_table(&diode_card),
-        "model_name\tkind\tparameter\tmessage\nDfast\tD\tRS\tunsupported D model-card parameter RS"
-    );
-    let diode_issue_records = model_card_unsupported_parameter_issue_records(&diode_card);
-    assert_eq!(diode_issue_records.len(), 1);
-    assert_eq!(diode_issue_records[0]["model_name"], "Dfast");
-    assert_eq!(diode_issue_records[0]["kind"], "D");
-    assert_eq!(diode_issue_records[0]["parameter"], "RS");
-    assert_eq!(
-        diode_issue_records[0]["message"],
-        "unsupported D model-card parameter RS"
-    );
-    assert_eq!(
-        format_model_card_unsupported_parameter_issue_csv(&diode_card),
-        "model_name,kind,parameter,message\nDfast,D,RS,unsupported D model-card parameter RS\n"
-    );
-    assert_eq!(
-        format_model_card_unsupported_parameter_issue_json(&diode_card),
-        "[{\"model_name\":\"Dfast\",\"kind\":\"D\",\"parameter\":\"RS\",\"message\":\"unsupported D model-card parameter RS\"}]\n"
-    );
+    assert_close(*diode_card.parameters.get("RS").unwrap(), 10.0);
+    assert!(diode_card.unsupported_parameters.is_empty());
     assert_close(diode_model.saturation_current, 2.0e-14);
     assert_close(diode_model.junction_capacitance, 1.5e-12);
     assert_close(diode_model.transit_time, 4.0e-9);
@@ -421,6 +387,7 @@ fn model_card_aliases_build_device_instances() {
     assert_close(diode_model.forward_bias_depletion_coefficient, 0.35);
     assert_close(diode_model.saturation_current_temperature_exponent, 2.2);
     assert_close(diode_model.energy_gap_electron_volts, 1.05);
+    assert_close(diode_model.series_resistance, 10.0);
 
     let bjt_card = normalize_model_card(
         "Qsmall",
@@ -1414,7 +1381,7 @@ fn dc_subcircuit_instance_expands_resistor_divider() {
 
 #[test]
 fn subcircuit_expansion_preserves_complete_diode_model() {
-    let diode = Diode::with_model_and_temperature_parameters(
+    let mut diode = Diode::with_model_and_temperature_parameters(
         "Dcell",
         "in",
         "0",
@@ -1431,6 +1398,7 @@ fn subcircuit_expansion_preserves_complete_diode_model() {
         2.2,
         1.05,
     );
+    diode.series_resistance = 10.0;
     let mut circuit = Circuit::new();
     circuit
         .define_subcircuit(SubcircuitDefinition::new(
@@ -1456,6 +1424,7 @@ fn subcircuit_expansion_preserves_complete_diode_model() {
     assert_close(expanded.forward_bias_depletion_coefficient, 0.35);
     assert_close(expanded.saturation_current_temperature_exponent, 2.2);
     assert_close(expanded.energy_gap_electron_volts, 1.05);
+    assert_close(expanded.series_resistance, 10.0);
 }
 
 #[test]
@@ -1768,6 +1737,28 @@ fn dc_diode_emission_coefficient_reduces_fixed_bias_current() {
         high_n_result.branch_current("V1").unwrap().abs()
             < base_result.branch_current("V1").unwrap().abs() * 1.0e-3
     );
+}
+
+#[test]
+fn dc_diode_series_resistance_limits_fixed_bias_current() {
+    let mut ideal = Circuit::new();
+    ideal.add(Element::VoltageSource(VoltageSource::new(
+        "V1", "a", "0", 0.7,
+    )));
+    ideal.add(Element::Diode(Diode::new("D1", "a", "0")));
+
+    let mut limited = Circuit::new();
+    limited.add(Element::VoltageSource(VoltageSource::new(
+        "V1", "a", "0", 0.7,
+    )));
+    let mut diode = Diode::new("D1", "a", "0");
+    diode.series_resistance = 100.0;
+    limited.add(Element::Diode(diode));
+
+    let ideal_current = dc_op(&ideal).unwrap().branch_current("V1").unwrap().abs();
+    let limited_current = dc_op(&limited).unwrap().branch_current("V1").unwrap().abs();
+    assert!(limited_current < ideal_current);
+    assert!(limited_current <= 0.7 / 100.0);
 }
 
 #[test]

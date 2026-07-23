@@ -493,6 +493,7 @@ class Diode:
     Fc: float = 0.5  # forward-bias depletion coefficient
     Xti: float = 3.0  # saturation-current temperature exponent
     Eg: float = 1.11  # energy gap in electron volts
+    Rs: float = 0.0  # ohmic series resistance
 
 
 @dataclass(frozen=True, slots=True)
