@@ -179,6 +179,22 @@ before adding; prefer existing methods.
   each recursive call's return address (`asm.len()` after the 5-byte `call rel32`) and
   `build_stack_map` adds a safepoint at each — recursive frames are precise. (aarch64 never
   had this gap: fixed-width, it post-scans finished code for `BL`.) No encoder gaps arose.
+- **PR-x5** *(done — twig-aot 0.43.1, test-only)* — end-to-end recursion differential
+  (`gc_recursive_frame_live_bytes_differential`): a self-recursive `rec(stop)` holds a
+  look-alike in an intermediate recursive frame; precise reclaims through it (`0`),
+  conservative pins (`128`). Runs on the x86-64 CI runner (proves PR-x4) and locally on
+  aarch64 (validates the shape). The end-to-end proof of PR-x4.
+- **PR-x6** *(done — twig-aot 0.44.0)* — **MsX64 (Windows) precise registration**. The
+  Delta-3 §Delta-2 discovery: the encoder *already* has `mov [rsp+disp], reg` (SIB-encoded
+  rsp-base store), so no encoder work was needed — the sole remaining blocker was the
+  twig-aot side. Adds `build_gc_init_stackmaps_x86_64_msx64` (args 1–4 in rcx/rdx/r8/r9;
+  args 5–8 stored at `[rsp+32..56]` above a 32-byte shadow space via a single `sub rsp,64`;
+  16-aligned at the `call`) and routes MsX64 to it, retiring the no-op init. The `func_start`
+  LEA + pass-2b are ABI-independent and reused verbatim. Windows now does **real** precise
+  registration, not safe-conservative. Validated by unit tests (structural byte checks) and
+  — because `windows-latest` **executes** the pipeline (`windows_x86_64_smoke` links via
+  `link.exe`/`lld-link`/`gcc` and runs the `.exe`) — the same `gc_stress` + recursion
+  differentials as Linux, run natively on Windows CI.
 
 ---
 
