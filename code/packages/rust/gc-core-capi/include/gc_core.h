@@ -100,6 +100,15 @@ int64_t __gc_live_bytes(void);
 /* Collections run since process start (or last __gc_reset). */
 int64_t __gc_collection_count(void);
 
+/* Set the generational tenuring age: a young object is promoted to the old
+ * generation only after surviving `threshold` collections (default 1 = immediate
+ * tenuring). A larger value keeps short-lived objects young longer so a cheap minor
+ * GC reclaims them. Clamped to 1..=255 (0/negative -> 1). Safe at any time. */
+void __gc_set_tenure_age(int64_t threshold);
+
+/* The current generational tenuring age (see __gc_set_tenure_age). */
+int64_t __gc_tenure_age(void);
+
 /* Drop the whole heap (frees everything) and reset counters. */
 void __gc_reset(void);
 

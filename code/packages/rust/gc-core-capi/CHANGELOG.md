@@ -2,6 +2,22 @@
 
 All notable changes to this crate are documented here.
 
+## 0.14.0 - 2026-07-23 — generational tenuring-age C ABI
+
+Exposes gc-core 0.11.0's tunable generational **tenuring age** across the C ABI so native
+consumers can tune how many collections a young object survives before promotion:
+
+- `void __gc_set_tenure_age(int64_t threshold)` → `FlatHeap::set_tenure_age`. The `i64`
+  argument is clamped to `1..=255` (`0`/negatives → `1`, over-large → `255`) before the
+  `u8` cast, so tenuring always terminates.
+- `int64_t __gc_tenure_age(void)` → the current threshold (default `1` = immediate
+  tenuring).
+
+Both are thin `with_heap` wrappers over the process-wide heap, declared in `gc_core.h`.
+One host test (`c_abi_set_and_get_tenure_age_clamps`) covers the round-trip + clamp; the
+aging *behaviour* is covered by gc-core's own tests. Purely additive; no existing symbol
+changes. gc-core-capi 0.13.0 → 0.14.0.
+
 ## 0.13.0 - 2026-07-21 — twig-compat precise/observability aliases (AOT00-T1 increment C)
 
 Two `__twig_gc_*` aliases the native code generators emit for the GC-stress

@@ -223,6 +223,24 @@ pub extern "C" fn __gc_collection_count() -> i64 {
     with_heap(|h| h.collection_count() as i64)
 }
 
+/// Set the **generational tenuring age**: a young object is promoted to the old
+/// generation only after surviving `threshold` collections (default `1` =
+/// immediate tenuring). A larger value keeps short-lived-but-not-instantly-dead
+/// objects in the young generation longer so a cheap minor GC reclaims them.
+/// `threshold` is clamped to `1..=255` (`0` and negatives → `1`; the u8 field caps
+/// at `255`), so tenuring always terminates. Idempotent; safe at any time.
+#[no_mangle]
+pub extern "C" fn __gc_set_tenure_age(threshold: i64) {
+    let t = threshold.clamp(1, u8::MAX as i64) as u8;
+    with_heap(|h| h.set_tenure_age(t));
+}
+
+/// The current generational tenuring age (see [`__gc_set_tenure_age`]).
+#[no_mangle]
+pub extern "C" fn __gc_tenure_age() -> i64 {
+    with_heap(|h| h.tenure_age() as i64)
+}
+
 /// Drop the entire heap, freeing every outstanding block, and reset counters.
 /// Primarily for tests and deterministic process teardown.
 #[no_mangle]
@@ -518,6 +536,35 @@ mod tests {
         __gc_reset();
         assert_eq!(__gc_live_bytes(), 0);
         assert_eq!(__gc_collection_count(), 0);
+    }
+
+    /// The generational tenuring age is settable + gettable through the C ABI and
+    /// clamps the threshold to `1..=255`. (The *behaviour* aging drives — a survivor
+    /// staying young `threshold-1` collections — is covered by gc-core's own tests;
+    /// this checks the ABI wiring and the `i64 → u8` clamp.)
+    #[test]
+    fn c_abi_set_and_get_tenure_age_clamps() {
+        let _guard = TEST_LOCK.lock().unwrap_or_else(|e| e.into_inner());
+        __gc_reset();
+
+        // Default is immediate tenuring.
+        assert_eq!(__gc_tenure_age(), 1, "default threshold is 1");
+
+        // Round-trips a normal value.
+        __gc_set_tenure_age(4);
+        assert_eq!(__gc_tenure_age(), 4);
+
+        // Clamps: 0 and negatives → 1; > u8::MAX → 255.
+        __gc_set_tenure_age(0);
+        assert_eq!(__gc_tenure_age(), 1, "0 clamps to 1");
+        __gc_set_tenure_age(-9);
+        assert_eq!(__gc_tenure_age(), 1, "negative clamps to 1");
+        __gc_set_tenure_age(1000);
+        assert_eq!(__gc_tenure_age(), 255, "over-large clamps to u8::MAX");
+
+        // `__gc_reset` drops the heap but a fresh heap re-defaults to 1.
+        __gc_reset();
+        assert_eq!(__gc_tenure_age(), 1, "reset restores the default threshold");
     }
 
     /// `__gc_register_kind` + `__gc_alloc_kind` give **precise** interior tracing
