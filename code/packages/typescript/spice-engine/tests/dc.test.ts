@@ -125,7 +125,7 @@ describe("dcOp", () => {
 
   it("exports stable model-card supported parameter coverage", () => {
     const coverage = modelCardSupportedParameterCoverage();
-    expect(coverage).toHaveLength(136);
+    expect(coverage).toHaveLength(140);
     expect(coverage[0]).toStrictEqual({
       kind: "D",
       canonicalParameter: "IS",
@@ -145,7 +145,7 @@ describe("dcOp", () => {
     expect(table).toContain("NMOS\tVT0\tVT0|VTO|VTH\t3");
     expect(table.split("\n").at(-1)).toBe("PMOS\tMJ\tMJ\t1");
     const records = modelCardSupportedParameterCoverageRecords();
-    expect(records).toHaveLength(136);
+    expect(records).toHaveLength(140);
     expect(records[0]).toStrictEqual({
       kind: "D",
       canonical_parameter: "IS",
@@ -210,15 +210,15 @@ describe("dcOp", () => {
       passed: true,
       kindCount: 7,
       expectedKindCount: 7,
-      canonicalParameterCount: 136,
-      expectedCanonicalParameterCount: 136,
-      acceptedNameCount: 202,
+      canonicalParameterCount: 140,
+      expectedCanonicalParameterCount: 140,
+      acceptedNameCount: 206,
       aliasedParameterCount: 53,
       maxAliasCount: 4,
       issues: [],
     });
     expect(formatModelCardSupportedParameterCoverageGateReport(report)).toBe(
-      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t136\t136\t202\t53\t4\t0",
+      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t140\t140\t206\t53\t4\t0",
     );
     expect(formatModelCardSupportedParameterCoverageGateIssueTable(report)).toBe(
       "kind\tfield\tmessage",
@@ -241,8 +241,8 @@ describe("dcOp", () => {
 
     expect(report.passed).toBe(false);
     expect(report.kindCount).toBe(7);
-    expect(report.canonicalParameterCount).toBe(135);
-    expect(report.acceptedNameCount).toBe(199);
+    expect(report.canonicalParameterCount).toBe(139);
+    expect(report.acceptedNameCount).toBe(203);
     expect(report.aliasedParameterCount).toBe(52);
     expect(report.maxAliasCount).toBe(4);
     expect(report.issues).toHaveLength(4);
@@ -257,7 +257,7 @@ describe("dcOp", () => {
       message: "expected NMOS max alias count 3, found 2",
     });
     expect(formatModelCardSupportedParameterCoverageGateReport(report)).toBe(
-      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t135\t136\t199\t52\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical supported parameters, found 17\nNMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card names, found 22\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2",
+      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t139\t140\t203\t52\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical supported parameters, found 17\nNMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card names, found 22\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2",
     );
     const records = modelCardSupportedParameterCoverageGateIssueRecords(report);
     expect(records[0]).toStrictEqual({
@@ -439,6 +439,34 @@ describe("dcOp", () => {
     expectClose(mosModel.params.CBD, 3.0e-13);
     expectClose(mosModel.params.PB, 0.9);
     expectClose(mosModel.params.MJ, 0.45);
+  });
+
+  it("derives BJT legacy leakage ratios with explicit-current precedence", () => {
+    const legacyCard = normalizeModelCard("Qlegacy", "npn", {
+      IS: 2.0e-14,
+      C2: 15.0,
+      C4: 20.0,
+    });
+    const legacy = bjtFromModelCard("Q1", "c", "b", "e", legacyCard);
+
+    expect(legacyCard.parameters).toStrictEqual({
+      IS: 2.0e-14,
+      C2: 15.0,
+      C4: 20.0,
+    });
+    expectClose(legacy.baseEmitterLeakageSaturationCurrent, 3.0e-13);
+    expectClose(legacy.baseCollectorLeakageSaturationCurrent, 4.0e-13);
+
+    const explicitCard = normalizeModelCard("Qexplicit", "pnp", {
+      IS: 2.0e-14,
+      C2: 15.0,
+      ISE: 5.0e-13,
+      C4: 20.0,
+      ISC: 6.0e-13,
+    });
+    const explicit = bjtFromModelCard("Q2", "c", "b", "e", explicitCard);
+    expectClose(explicit.baseEmitterLeakageSaturationCurrent, 5.0e-13);
+    expectClose(explicit.baseCollectorLeakageSaturationCurrent, 6.0e-13);
   });
 
   it("provides cross-language device model audit fixtures", () => {

@@ -1,5 +1,7 @@
 # Changelog
 
+- Add legacy SPICE2 BJT model-card `C2` and `C4` leakage-ratio support,
+  deriving `ISE` and `ISC` from `IS` when explicit leakage currents are absent.
 - Add BJT model-card `XCJC` support to partition base-collector depletion
   capacitance between intrinsic and external base nodes in AC and transient
   analysis.

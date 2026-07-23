@@ -100,7 +100,7 @@ fn model_card_type_aliases_are_normalized() {
 #[test]
 fn model_card_supported_parameter_coverage_exports_are_stable() {
     let coverage = model_card_supported_parameter_coverage();
-    assert_eq!(coverage.len(), 136);
+    assert_eq!(coverage.len(), 140);
     assert_eq!(coverage[0].kind, ModelCardKind::Diode);
     assert_eq!(coverage[0].canonical_parameter, "IS");
     assert_eq!(coverage[0].accepted_names, vec!["IS", "JS"]);
@@ -119,7 +119,7 @@ fn model_card_supported_parameter_coverage_exports_are_stable() {
     assert!(table.contains("NMOS\tVT0\tVT0|VTO|VTH\t3"));
     assert_eq!(lines.last().unwrap(), &"PMOS\tMJ\tMJ\t1");
     let records = model_card_supported_parameter_coverage_records();
-    assert_eq!(records.len(), 136);
+    assert_eq!(records.len(), 140);
     assert_eq!(records[0]["kind"], "D");
     assert_eq!(records[0]["canonical_parameter"], "IS");
     assert_eq!(records[0]["accepted_names"], "IS|JS");
@@ -200,15 +200,15 @@ fn model_card_supported_parameter_coverage_gate_passes_current_catalog() {
     assert!(report.passed);
     assert_eq!(report.kind_count, 7);
     assert_eq!(report.expected_kind_count, 7);
-    assert_eq!(report.canonical_parameter_count, 136);
-    assert_eq!(report.expected_canonical_parameter_count, 136);
-    assert_eq!(report.accepted_name_count, 202);
+    assert_eq!(report.canonical_parameter_count, 140);
+    assert_eq!(report.expected_canonical_parameter_count, 140);
+    assert_eq!(report.accepted_name_count, 206);
     assert_eq!(report.aliased_parameter_count, 53);
     assert_eq!(report.max_alias_count, 4);
     assert!(report.issues.is_empty());
     assert_eq!(
         format_model_card_supported_parameter_coverage_gate_report(&report),
-        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t136\t136\t202\t53\t4\t0"
+        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t140\t140\t206\t53\t4\t0"
     );
     assert_eq!(
         format_model_card_supported_parameter_coverage_gate_issue_table(&report),
@@ -235,8 +235,8 @@ fn model_card_supported_parameter_coverage_gate_reports_missing_alias_family() {
 
     assert!(!report.passed);
     assert_eq!(report.kind_count, 7);
-    assert_eq!(report.canonical_parameter_count, 135);
-    assert_eq!(report.accepted_name_count, 199);
+    assert_eq!(report.canonical_parameter_count, 139);
+    assert_eq!(report.accepted_name_count, 203);
     assert_eq!(report.aliased_parameter_count, 52);
     assert_eq!(report.max_alias_count, 4);
     assert_eq!(report.issues.len(), 4);
@@ -253,7 +253,7 @@ fn model_card_supported_parameter_coverage_gate_reports_missing_alias_family() {
     );
     assert_eq!(
         format_model_card_supported_parameter_coverage_gate_report(&report),
-        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t135\t136\t199\t52\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical supported parameters, found 17\nNMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card names, found 22\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2"
+        "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t139\t140\t203\t52\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical supported parameters, found 17\nNMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card names, found 22\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2"
     );
     let records = model_card_supported_parameter_coverage_gate_issue_records(&report);
     assert_eq!(records[0]["kind"], "NMOS");
@@ -576,6 +576,38 @@ fn model_card_aliases_build_device_instances() {
     assert_close(mos_model.params.drain_bulk_capacitance, 3.0e-13);
     assert_close(mos_model.params.bulk_junction_potential, 0.9);
     assert_close(mos_model.params.bulk_junction_grading_coefficient, 0.45);
+}
+
+#[test]
+fn bjt_legacy_leakage_ratios_derive_currents_with_explicit_precedence() {
+    let legacy_card = normalize_model_card(
+        "Qlegacy",
+        "npn",
+        &[("IS", 2.0e-14), ("C2", 15.0), ("C4", 20.0)],
+    )
+    .unwrap();
+    let legacy = bjt_from_model_card("Q1", "c", "b", "e", &legacy_card).unwrap();
+
+    assert_close(*legacy_card.parameters.get("C2").unwrap(), 15.0);
+    assert_close(*legacy_card.parameters.get("C4").unwrap(), 20.0);
+    assert_close(legacy.base_emitter_leakage_saturation_current, 3.0e-13);
+    assert_close(legacy.base_collector_leakage_saturation_current, 4.0e-13);
+
+    let explicit_card = normalize_model_card(
+        "Qexplicit",
+        "pnp",
+        &[
+            ("IS", 2.0e-14),
+            ("C2", 15.0),
+            ("ISE", 5.0e-13),
+            ("C4", 20.0),
+            ("ISC", 6.0e-13),
+        ],
+    )
+    .unwrap();
+    let explicit = bjt_from_model_card("Q2", "c", "b", "e", &explicit_card).unwrap();
+    assert_close(explicit.base_emitter_leakage_saturation_current, 5.0e-13);
+    assert_close(explicit.base_collector_leakage_saturation_current, 6.0e-13);
 }
 
 #[test]
