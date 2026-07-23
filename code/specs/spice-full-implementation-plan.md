@@ -33,15 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language BJT emitter resistance.
+1. Cross-language BJT collector resistance.
    - Status: current PR completion candidate.
-   - Add Berkeley BJT `RE` model-card support in Rust, Python, and TypeScript,
+   - Add Berkeley BJT `RC` model-card support in Rust, Python, and TypeScript,
      defaulting to zero so existing operating-point, AC, transient, and noise
      results remain unchanged.
-   - Insert an intrinsic emitter node behind the configured series resistance,
-     use that node for nonlinear and stored-charge behavior, and include the
-     resistor's thermal-noise contribution.
-   - Extend the supported-parameter coverage gate from 124 to 126 canonical
+   - Insert an intrinsic collector node behind the configured series
+     resistance, use that node for nonlinear and base-collector stored-charge
+     behavior, and include the resistor's thermal-noise contribution.
+   - Extend the supported-parameter coverage gate from 126 to 128 canonical
      rows and lock model-card behavior, validation, hierarchy, operating-point
      loading, and noise behavior in all engines.
 
@@ -3168,6 +3168,15 @@ the Rust, Python, and TypeScript surfaces together.
    - Hierarchical subcircuit expansion preserves the complete BJT model and
      transient state tracks the controlling base-collector voltage; the
      supported-parameter release gate now covers 124 canonical rows.
+
+240. Cross-language BJT emitter resistance.
+   - Status: completed in PR 8856.
+   - Rust, Python, and TypeScript BJT model cards now accept `RE`, default it
+     to zero, and insert an intrinsic emitter node behind the configured
+     external series resistance.
+   - DC, transient, AC, transfer-function, and noise paths share the intrinsic
+     emitter topology, including resistor thermal noise; the
+     supported-parameter release gate now covers 126 canonical rows.
 
 ## Backlog
 
