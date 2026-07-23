@@ -1,5 +1,33 @@
 # Changelog
 
+## [0.1.3] - 2026-07-23
+
+### Fixed
+
+- **`tests/test_lower.rs`'s `a_pathologically_long_elseif_chain_is_cleanly_rejected`
+  carried a stale, never-actually-measured claim** (task #91): its comment
+  asserted `scilab-parser`'s own `elseif_clause*` parsing "has been
+  separately found to scale worse than linearly at very large clause
+  counts". That claim was investigated directly with a synthetic
+  benchmark (10 to 80,000 `elseif` clauses, release build): parse time
+  grows by a steady ~2x per doubling of input size (exponent ≈ 1.0-1.1)
+  with no upward trend — linear, not quadratic. `scilab-parser`'s shared
+  `GrammarParser` packrat memo already uses a tuple-keyed `HashMap` (fixed
+  upstream in PR #8181, predating this test), so there was never a live
+  perf bug here. The comment is corrected to state the actual measured
+  result instead of the debunked claim.
+- **A follow-up attempt to also bump this test's clause count from 5,000
+  to 100,000** (to match this file's other pathological-input tests, on
+  the theory that there was no longer a reason to keep it artificially
+  small) **regressed CI**: unlike the flat-token additive/multiplicative
+  chains those other tests build, each `elseif` clause here carries a
+  full nested statement, making its per-clause parse cost much higher —
+  100,000 of them reliably ran the "Build and test affected packages" CI
+  step past its effective time budget. Reverted to 5,000, which already
+  clears `MAX_EXPR_DEPTH` (256) by a comfortable margin without the added
+  CI cost; only the comment (not the clause count) changes in this
+  release.
+
 ## [0.1.2] - 2026-07-22
 
 ### Fixed
