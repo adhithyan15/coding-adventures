@@ -1,6 +1,6 @@
 [package]
 name = "semantic-ir-to-javascript"
-version = "0.51.0"
+version = "0.51.1"
 edition = "2021"
 description = "Semantic IR → self-contained JavaScript source code (SIR18). Fifth backend for the SIR10 narrow-waist IR. Includes __method__ dispatch execution (C3), exception handling (try/catch/raise) with user-class ancestry (E1), user-defined-class OOP — instantiation, method dispatch, super, self, and @ivar/@@cvar access (O3) — and Ruby mixins (module include/extend with MRO method resolution, MX4)."
 

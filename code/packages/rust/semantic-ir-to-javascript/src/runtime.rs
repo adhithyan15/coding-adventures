@@ -4369,8 +4369,21 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
      * bounded by that alone — an outer-product-shaped call could still
      * ask for a huge output), so `checkedShapeSize` validates `[m, n]`
      * *before* allocating `out`, not after.
+     *
+     * Like `elementwise`, normalizes both operands through
+     * `toArrayValue` first: every frontend's scalar/array
+     * disambiguation heuristic (`expr_is_known_scalar` or equivalent)
+     * runs at lowering time and can't see through a plain variable
+     * reference, so a provably-scalar `x * y` between two non-literal
+     * operands can still lower to `Expr::MatMul` and reach here as a
+     * bare boxed number on one or both sides. Reading `.shape` off an
+     * un-normalized number before this fix threw
+     * `TypeError: Cannot read properties of undefined (reading
+     * 'length')` out of `nrows`/`ncols`.
      */
     function matmul(a, b) {
+      a = toArrayValue(a);
+      b = toArrayValue(b);
       const m = nrows(a);
       const ka = ncols(a);
       const kb = nrows(b);

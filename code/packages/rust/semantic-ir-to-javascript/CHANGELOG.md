@@ -1,5 +1,59 @@
 # Changelog
 
+## 0.51.1 — `matmul` normalizes its operands through `toArrayValue` (task #111)
+
+Found by `scilab-to-semantic-ir/tests/oracle.rs`'s oracle/golden test suite
+(front3, HML01 §7) — its "finding six" (see that file's own module doc
+comment) — while cross-checking `scilab-to-semantic-ir` against native
+`scilab-runtime`. Confirmed reachable through `matlab-to-semantic-ir` too in
+principle (identical scalar/array disambiguation heuristic, identical
+`matmul` codegen path), just never previously exercised there because that
+crate's own oracle corpus only ever multiplies array literals, never a bare
+scalar variable.
+
+### Fixed
+
+- **`runtime.rs`: `matmul(a, b)` read `a.shape`/`b.shape` (via its own
+  `nrows`/`ncols` helpers) UNCONDITIONALLY, with no `toArrayValue`
+  normalization step first** — unlike its sibling `elementwise(op, a, b)`,
+  which explicitly calls `a = toArrayValue(a); b = toArrayValue(b);` before
+  touching either operand. Every frontend crate's scalar/array
+  disambiguation heuristic (`expr_is_known_scalar` or equivalent) runs at
+  LOWERING time and can never see through a plain variable reference — a
+  bare `Expr::VarRef` is never "known scalar," even when the variable
+  provably holds a plain number — so `x * y` between two non-literal
+  operands always lowers to `Expr::MatMul`/`__Sir.Array.matmul(x, y)`
+  regardless of what `x`/`y` actually hold at runtime. When they turned out
+  to be plain scalars (not array literals) — e.g. `x = 5; y = x * x;`, or a
+  function computing `x * x` for its own scalar parameter — the emitted JS
+  crashed: `TypeError: Cannot read properties of undefined (reading
+  'length')` at `nrows`, called from `matmul`. Fixed by adding the same
+  `a = toArrayValue(a); b = toArrayValue(b);` normalization `elementwise`
+  already had, as `matmul`'s first two statements — additive only, the
+  existing `checkedShapeSize` DoS guard before allocating `out` is
+  unchanged.
+- **`tests/sir22_array.rs`: two new regression tests** —
+  `scalar_variable_self_multiplication_computes_the_square` (`x = 5; y = x *
+  x;` → `25`) and `function_parameter_self_multiplication_computes_the_square`
+  (a function squaring its own scalar parameter) — both hand-build the exact
+  `Expr::MatMul`-over-bare-`VarRef` shape the bug needed, compile to JS, and
+  run the result through an actual `node` process (mirroring this file's own
+  `elementwise_mul_with_a_bare_scalar_operand_broadcasts` convention).
+  Confirmed both crash with the exact `TypeError` above when run against the
+  pre-fix `matmul`, and pass cleanly against the fix.
+- **`scilab-to-semantic-ir/tests/oracle.rs`**: the two cases this bug was
+  found through — `scalar_variable_self_multiplication_crashes_the_compiled_
+  path` and `function_parameter_self_multiplication_crashes_the_compiled_
+  path` — flipped from `known_bug: Some(...)` to `known_bug: None`, so their
+  compiled-side assertion now actually runs (not just ground truth) and
+  passes. See that crate's own `CHANGELOG.md`.
+- Every change here is **additive only** — no existing function or
+  dispatch-table entry other than `matmul`'s own body was modified.
+  Confirmed no regression: this crate's own full test suite and every other
+  downstream consumer's (`matlab-to-semantic-ir`, `octave-to-semantic-ir`,
+  `apl-to-semantic-ir`, `j-to-semantic-ir`, `q-to-semantic-ir`,
+  `scilab-to-semantic-ir`) still pass unchanged.
+
 ## 0.51.0 — Q's five genuinely new SIR22-domain primitives (MA-11e)
 
 `q-to-semantic-ir` (new frontend crate, MA-11e) needed runtime support for

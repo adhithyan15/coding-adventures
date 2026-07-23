@@ -90,7 +90,8 @@
 //!
 //! ## Six findings, confirmed directly by running every case below through
 //! both `scilab-runtime` and an actual `node` process (not assumed from
-//! static analysis alone) — one of the six is a genuine BUG, NOT fixed here
+//! static analysis alone) — one of the six was a genuine BUG, since FIXED
+//! (task #111 — see finding six below)
 //!
 //! 1. **NOT a bug — already fixed upstream, unlike MATLAB's own history.**
 //!    Every `if`/`elseif`/`select`/`while`/`for` construct in this crate's
@@ -161,8 +162,8 @@
 //!    are integer-valued — so the compiled side prints `0`, not `0.333...`.
 //!    See `integer_literal_division_floors_a_shared_backend_gap` below.
 //! 6. **GENUINE BUG, confirmed directly by running actual `node` output —
-//!    NOT a display-convention gap, NOT fixed in this PR.** `matmul(a, b)`
-//!    in `semantic-ir-to-javascript/src/runtime.rs` reads `a.shape`/
+//!    NOT a display-convention gap. FIXED (task #111).** `matmul(a, b)` in
+//!    `semantic-ir-to-javascript/src/runtime.rs` used to read `a.shape`/
 //!    `b.shape` UNCONDITIONALLY (via its own `nrows`/`ncols` helpers) with
 //!    NO `toArrayValue` normalization step first — unlike its sibling
 //!    `elementwise(op, a, b)`, which explicitly calls `a = toArrayValue(a);
@@ -176,40 +177,49 @@
 //!    provably holds a plain number — so `build_multiplicative`'s `"*"` arm
 //!    falls to its `else` branch (`Expr::MatMul`) for ANY `x * y` where
 //!    NEITHER operand is a literal, regardless of what `x`/`y` actually
-//!    hold at runtime. When `x`/`y` turn out to be plain scalars (not array
-//!    literals), the emitted `__Sir.matmul(x, y)` call crashes at runtime:
-//!    `TypeError: Cannot read properties of undefined (reading 'length')`
-//!    at `nrows`, called from `matmul`. Confirmed three independent ways
-//!    (all reproduced by hand, running the actual generated JS through
-//!    `node`, not merely read from source): a bare top-level
-//!    `x = 5; y = x * x;` (`scalar_variable_self_multiplication_crashes_the_
-//!    compiled_path`), a function computing `y = x * x` for its own
-//!    parameter `x` (`function_parameter_self_multiplication_crashes_the_
-//!    compiled_path`), and a recursive factorial (`y = n * fact(n - 1)`) —
-//!    all three crash identically. **This is almost certainly a
-//!    pre-existing, previously-undiscovered gap in the SHARED
-//!    `semantic-ir-to-javascript` crate** (not specific to this frontend's
-//!    own lowering, which correctly mirrors `matlab_to_semantic_ir`'s own
-//!    scalar-disambiguation heuristic verbatim) — reachable through
-//!    `matlab-to-semantic-ir` too in principle (it shares the identical
-//!    heuristic and the identical `matmul` codegen path), but never
-//!    surfaced there because (a) `matlab-runtime` has no user-defined
-//!    function support at all (so a function-parameter-based repro was
-//!    never reachable), and (b) `matlab-to-semantic-ir/tests/oracle.rs`'s
-//!    own `CORPUS` only ever multiplies two variables when they hold a
-//!    genuine array LITERAL (`A = [1 2; 3 4]; B = A * A;` — always properly
-//!    NDArray-shaped by construction, never a bare scalar), never a plain
-//!    scalar variable times itself. Scilab's oracle harness is the first to
-//!    exercise this exact shape, made possible specifically because
-//!    `scilab-runtime` (unlike `matlab-runtime`) DOES support user-defined
-//!    functions, giving this crate ground truth MATLAB's own oracle file
-//!    could never have compared against even if it had tried. **Not fixed
-//!    here per this task's own scope constraints** (this PR is oracle-TEST
-//!    only; `semantic-ir-to-javascript` is explicitly out of bounds) — see
-//!    `scalar_variable_self_multiplication_crashes_the_compiled_path`/
-//!    `function_parameter_self_multiplication_crashes_the_compiled_path`
-//!    below and this PR's own CHANGELOG entry; flagged for a dedicated
-//!    follow-up task against `semantic-ir-to-javascript`'s `matmul`.
+//!    hold at runtime. When `x`/`y` turned out to be plain scalars (not
+//!    array literals), the emitted `__Sir.matmul(x, y)` call used to crash
+//!    at runtime: `TypeError: Cannot read properties of undefined (reading
+//!    'length')` at `nrows`, called from `matmul`. Confirmed three
+//!    independent ways (all reproduced by hand, running the actual
+//!    generated JS through `node`, not merely read from source): a bare
+//!    top-level `x = 5; y = x * x;`
+//!    (`scalar_variable_self_multiplication_crashes_the_compiled_path`,
+//!    below — name kept for history even though it no longer crashes), a
+//!    function computing `y = x * x` for its own parameter `x`
+//!    (`function_parameter_self_multiplication_crashes_the_compiled_path`,
+//!    same note), and a recursive factorial (`y = n * fact(n - 1)`) — all
+//!    three crashed identically before the fix. This turned out to be a
+//!    pre-existing gap in the SHARED `semantic-ir-to-javascript` crate (not
+//!    specific to this frontend's own lowering, which correctly mirrors
+//!    `matlab_to_semantic_ir`'s own scalar-disambiguation heuristic
+//!    verbatim) — reachable through `matlab-to-semantic-ir` too in
+//!    principle (it shares the identical heuristic and the identical
+//!    `matmul` codegen path), but never previously surfaced there because
+//!    (a) `matlab-runtime` has no user-defined function support at all (so
+//!    a function-parameter-based repro was never reachable), and (b)
+//!    `matlab-to-semantic-ir/tests/oracle.rs`'s own `CORPUS` only ever
+//!    multiplies two variables when they hold a genuine array LITERAL
+//!    (`A = [1 2; 3 4]; B = A * A;` — always properly NDArray-shaped by
+//!    construction, never a bare scalar), never a plain scalar variable
+//!    times itself. Scilab's oracle harness was the first to exercise this
+//!    exact shape, made possible specifically because `scilab-runtime`
+//!    (unlike `matlab-runtime`) DOES support user-defined functions, giving
+//!    this crate ground truth MATLAB's own oracle file could never have
+//!    compared against even if it had tried.
+//!
+//!    **Fixed in `semantic-ir-to-javascript` (task #111):** `matmul(a, b)`
+//!    now normalizes both operands through `toArrayValue` as its first two
+//!    statements, mirroring `elementwise`'s own pattern exactly (see that
+//!    crate's `src/runtime.rs` and its `CHANGELOG.md`). Both cases below —
+//!    `scalar_variable_self_multiplication_crashes_the_compiled_path` and
+//!    `function_parameter_self_multiplication_crashes_the_compiled_path` —
+//!    now run `known_bug: None`, exercising the compiled path for real
+//!    (not just asserting ground truth), and pass. `semantic-ir-to-
+//!    javascript`'s own `tests/sir22_array.rs` also gained two dedicated
+//!    regression tests for this exact shape
+//!    (`scalar_variable_self_multiplication_computes_the_square`,
+//!    `function_parameter_self_multiplication_computes_the_square`).
 //!
 //! ## Constructs confirmed impossible to oracle-test at all (not merely
 //! excluded from `CORPUS` as "currently buggy") — mirrors the MATLAB oracle
@@ -738,52 +748,28 @@ const CORPUS: &[Case] = &[
              identical shared runtime helper, not via any bug of its own.",
         ),
     },
-    // Finding six: GENUINE BUG (not a display-convention gap), confirmed by
-    // actually running the generated JS through node -- see this file's
-    // module doc comment for the full root-cause writeup. NOT fixed here
-    // (semantic-ir-to-javascript is out of scope for this PR); flagged for
-    // a dedicated follow-up task.
+    // Finding six: was a GENUINE BUG (not a display-convention gap),
+    // confirmed by actually running the generated JS through node -- see
+    // this file's module doc comment for the full root-cause writeup. FIXED
+    // (task #111): `semantic-ir-to-javascript`'s `matmul` now normalizes
+    // both operands through `toArrayValue` first, mirroring `elementwise`'s
+    // own pattern. `known_bug` is now `None` for both cases below -- the
+    // compiled-side assertion actually runs (not just the ground-truth
+    // side) and passes. Names kept as-is (`_crashes_the_compiled_path`) for
+    // history/traceability even though they no longer crash.
     Case {
         name: "scalar_variable_self_multiplication_crashes_the_compiled_path",
         setup: "x = 5;\n",
         final_expr: "x * x",
         expected: "25",
-        known_bug: Some(
-            "Finding six (module doc) -- GENUINE BUG, not a display-convention gap, NOT fixed in \
-             this PR. `x * x` where x is a bare VarRef (never \"known scalar\" to this crate's own \
-             expr_is_known_scalar heuristic, even though x provably holds the literal 5) falls to \
-             build_multiplicative's `*` `else` branch, Expr::MatMul. semantic-ir-to-javascript's \
-             matmul(a, b) runtime helper (runtime.rs) reads a.shape/b.shape unconditionally, with \
-             NO toArrayValue normalization step first (unlike its sibling elementwise(), which \
-             explicitly calls toArrayValue on both operands before touching either) -- so passing \
-             two plain JS numbers crashes with `TypeError: Cannot read properties of undefined \
-             (reading 'length')` at nrows, called from matmul. Confirmed directly by running the \
-             actual generated JS through node, not read from source alone. This is almost \
-             certainly reachable through matlab-to-semantic-ir too (identical heuristic, identical \
-             matmul codegen), but was never previously discovered there because that oracle file's \
-             own CORPUS only ever multiplies two variables holding a genuine array literal (always \
-             properly NDArray-shaped), never a bare scalar. Flagged for a dedicated follow-up task \
-             against semantic-ir-to-javascript's matmul; not touched here per this PR's own scope \
-             constraints.",
-        ),
+        known_bug: None,
     },
     Case {
         name: "function_parameter_self_multiplication_crashes_the_compiled_path",
         setup: "function y = square(x)\n y = x * x;\nendfunction\n",
         final_expr: "square(5)",
         expected: "25",
-        known_bug: Some(
-            "Finding six (module doc) -- same root cause as \
-             scalar_variable_self_multiplication_crashes_the_compiled_path, reached instead through \
-             a function PARAMETER (x is Scope::Param, not Scope::Local, but expr_is_known_scalar \
-             treats every bare VarRef identically regardless of scope -- still never \"known \
-             scalar\"). Confirmed directly via node: `TypeError: Cannot read properties of \
-             undefined (reading 'length')` at nrows, called from matmul, called from the compiled \
-             `square` function. This specific repro shape (a function computing x*x for its own \
-             scalar parameter -- arguably one of the most ordinary possible Scilab/MATLAB function \
-             bodies) was only reachable here because scilab-runtime, unlike matlab-runtime, \
-             supports user-defined functions at all; not fixed in this PR.",
-        ),
+        known_bug: None,
     },
 ];
 
