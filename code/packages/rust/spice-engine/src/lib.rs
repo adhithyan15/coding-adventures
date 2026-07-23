@@ -466,6 +466,8 @@ fn clone_subckt_element(
             expanded.base_resistance = element.base_resistance;
             expanded.minimum_base_resistance = element.minimum_base_resistance;
             expanded.base_resistance_half_current = element.base_resistance_half_current;
+            expanded.base_collector_capacitance_fraction =
+                element.base_collector_capacitance_fraction;
             Element::Bjt(expanded)
         }
         Element::Mosfet(element) => Element::Mosfet(Mosfet::with_model(
@@ -2919,6 +2921,7 @@ pub struct Bjt {
     pub base_resistance: f64,
     pub minimum_base_resistance: Option<f64>,
     pub base_resistance_half_current: f64,
+    pub base_collector_capacitance_fraction: f64,
 }
 
 impl Bjt {
@@ -3393,6 +3396,7 @@ impl Bjt {
             base_resistance: 0.0,
             minimum_base_resistance: None,
             base_resistance_half_current: 0.0,
+            base_collector_capacitance_fraction: 1.0,
         }
     }
 }
@@ -3783,8 +3787,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     usize,
 )] = &[
     (ModelCardKind::Diode, 12, 18, 5, 3),
-    (ModelCardKind::Npn, 38, 55, 13, 4),
-    (ModelCardKind::Pnp, 38, 55, 13, 4),
+    (ModelCardKind::Npn, 39, 56, 13, 4),
+    (ModelCardKind::Pnp, 39, 56, 13, 4),
     (ModelCardKind::Njf, 5, 11, 5, 3),
     (ModelCardKind::Pjf, 5, 11, 5, 3),
     (ModelCardKind::Nmos, 18, 25, 6, 3),
@@ -3848,6 +3852,7 @@ const BJT_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("RB", "RB"),
     ("RBM", "RBM"),
     ("IRB", "IRB"),
+    ("XCJC", "XCJC"),
     ("ISE", "ISE"),
     ("NE", "NE"),
     ("ISC", "ISC"),
@@ -4553,6 +4558,7 @@ pub fn bjt_from_model_card(
     bjt.base_resistance = model_card_value(model, "RB", 0.0);
     bjt.minimum_base_resistance = model.parameters.get("RBM").copied();
     bjt.base_resistance_half_current = model_card_value(model, "IRB", 0.0);
+    bjt.base_collector_capacitance_fraction = model_card_value(model, "XCJC", 1.0);
     Ok(bjt)
 }
 
@@ -22928,6 +22934,7 @@ fn stamp_bjt(
     operating_point: &[f64],
 ) -> Result<(), SpiceError> {
     validate_bjt(bjt)?;
+    let charge_bjt = bjt.clone();
     let intrinsic_bjt = if bjt.emitter_resistance > 0.0
         || bjt.collector_resistance > 0.0
         || bjt.base_resistance > 0.0
@@ -23064,7 +23071,7 @@ fn stamp_bjt(
             );
         }
     }
-    stamp_bjt_charge(bjt, capacitor_states, node_indices, matrix, rhs)?;
+    stamp_bjt_charge(&charge_bjt, capacitor_states, node_indices, matrix, rhs)?;
     Ok(())
 }
 
@@ -23268,6 +23275,7 @@ fn stamp_ac_bjt_small_signal(
     omega: f64,
 ) -> Result<(), SpiceError> {
     validate_bjt(bjt)?;
+    let external_base = node_index(node_indices, &bjt.base);
     let intrinsic_bjt = if bjt.emitter_resistance > 0.0
         || bjt.collector_resistance > 0.0
         || bjt.base_resistance > 0.0
@@ -23384,11 +23392,17 @@ fn stamp_ac_bjt_small_signal(
             * (bjt_base_emitter_depletion_capacitance(bjt, junction_voltage)
                 + diffusion_capacitance),
     );
+    let base_collector_depletion =
+        bjt_base_collector_depletion_capacitance(bjt, reverse_junction_voltage);
     let ybc = Complex::new(
         collector_leakage_conductance + reverse_base_conductance,
         omega
-            * (bjt_base_collector_depletion_capacitance(bjt, reverse_junction_voltage)
+            * (bjt.base_collector_capacitance_fraction * base_collector_depletion
                 + reverse_diffusion_capacitance),
+    );
+    let ybx = Complex::new(
+        0.0,
+        omega * (1.0 - bjt.base_collector_capacitance_fraction) * base_collector_depletion,
     );
     stamp_complex_conductance(
         matrix,
@@ -23396,6 +23410,9 @@ fn stamp_ac_bjt_small_signal(
         emitter,
         Complex::new(output_conductance, 0.0),
     );
+    if ybx != Complex::new(0.0, 0.0) {
+        stamp_complex_conductance(matrix, external_base, collector, ybx);
+    }
     match bjt.polarity {
         BjtPolarity::Npn => {
             stamp_complex_conductance(matrix, base, emitter, gpi);
@@ -23962,6 +23979,7 @@ fn diode_charge_voltage(diode: &Diode, node_voltages: &BTreeMap<String, f64>) ->
 enum BjtChargeStateKind {
     BaseEmitter,
     BaseCollector,
+    ExternalBaseCollector,
 }
 
 struct BjtChargeStateSpec {
@@ -23977,6 +23995,10 @@ fn bjt_base_emitter_charge_state_name(bjt: &Bjt) -> String {
 
 fn bjt_base_collector_charge_state_name(bjt: &Bjt) -> String {
     format!("_Q_{}_bc_charge", bjt.name)
+}
+
+fn bjt_external_base_collector_charge_state_name(bjt: &Bjt) -> String {
+    format!("_Q_{}_bx_charge", bjt.name)
 }
 
 fn bjt_intrinsic_emitter_node(bjt: &Bjt) -> String {
@@ -24053,8 +24075,13 @@ fn bjt_charge_dynamic_capacitance(
         BjtChargeStateKind::BaseCollector => {
             let conductance =
                 bjt_junction_transconductance(bjt, voltage, bjt.reverse_emission_coefficient);
-            bjt_base_collector_depletion_capacitance(bjt, voltage)
+            bjt.base_collector_capacitance_fraction
+                * bjt_base_collector_depletion_capacitance(bjt, voltage)
                 + bjt.reverse_transit_time * conductance
+        }
+        BjtChargeStateKind::ExternalBaseCollector => {
+            (1.0 - bjt.base_collector_capacitance_fraction)
+                * bjt_base_collector_depletion_capacitance(bjt, voltage)
         }
     }
 }
@@ -24124,6 +24151,19 @@ fn bjt_charge_state_specs(bjt: &Bjt) -> Vec<BjtChargeStateSpec> {
             positive,
             negative,
             kind: BjtChargeStateKind::BaseCollector,
+        });
+    }
+    if bjt.base_collector_capacitance > 0.0 && bjt.base_collector_capacitance_fraction < 1.0 {
+        let collector = bjt_intrinsic_collector_node(bjt);
+        let (positive, negative) = match bjt.polarity {
+            BjtPolarity::Npn => (bjt.base.clone(), collector),
+            BjtPolarity::Pnp => (collector, bjt.base.clone()),
+        };
+        specs.push(BjtChargeStateSpec {
+            name: bjt_external_base_collector_charge_state_name(bjt),
+            positive,
+            negative,
+            kind: BjtChargeStateKind::ExternalBaseCollector,
         });
     }
     specs
@@ -24550,6 +24590,14 @@ fn validate_bjt(bjt: &Bjt) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: bjt.name.clone(),
             reason: "base-resistance half-current must be finite and non-negative".to_string(),
+        });
+    }
+    if !bjt.base_collector_capacitance_fraction.is_finite()
+        || !(0.0..=1.0).contains(&bjt.base_collector_capacitance_fraction)
+    {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "base-collector capacitance fraction must be between zero and one".to_string(),
         });
     }
     if !bjt.base_emitter_leakage_saturation_current.is_finite()

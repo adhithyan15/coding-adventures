@@ -632,6 +632,9 @@ class BJT:
     Irb:
         Base current where the resistance is halfway between ``Rb`` and
         ``Rbm`` (default 0.0, disabled).
+    Xcjc:
+        Fraction of ``Cjc`` connected to the intrinsic base (default 1.0).
+        The remainder is connected between the external base and collector.
     """
 
     name: str
@@ -677,6 +680,7 @@ class BJT:
     Rb: float = 0.0            # base resistance (ohms)
     Rbm: float | None = None   # minimum base resistance (ohms)
     Irb: float = 0.0           # base-resistance half-current (A)
+    Xcjc: float = 1.0          # intrinsic-base fraction of Cjc
 
 
 # ---------------------------------------------------------------------------

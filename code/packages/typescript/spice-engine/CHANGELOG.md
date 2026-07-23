@@ -1,5 +1,8 @@
 # Changelog
 
+- Add BJT model-card `XCJC` support to partition base-collector depletion
+  capacitance between intrinsic and external base nodes in AC and transient
+  analysis.
 - Add BJT model-card `RBM` and `IRB` support for Berkeley bias-dependent base
   resistance across DC, AC, transient, transfer-function, and noise analysis.
 - Add BJT model-card `RB` base-resistance support with an intrinsic base node

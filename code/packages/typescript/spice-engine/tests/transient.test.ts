@@ -493,6 +493,30 @@ describe("transient", () => {
     expect(steppedCollectorVoltage(0.5)).toBeLessThan(steppedCollectorVoltage(0.0));
   });
 
+  it("uses BJT XCJC to partition depletion charge to the external base", () => {
+    function steppedBaseVoltage(baseCollectorCapacitanceFraction: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithWaveform(
+        "Vdrive",
+        "in",
+        "0",
+        0.0,
+        new PwlWaveform([[0.0, 0.0], [1.0e-9, 0.0], [2.0e-9, 1.0], [5.0e-9, 1.0]]),
+      ));
+      circuit.add(resistor("Rin", "in", "base", 1_000.0));
+      circuit.add({
+        ...bjt("Q1", "0", "base", "0"),
+        saturationCurrent: 1.0e-30,
+        baseCollectorCapacitance: 1.0e-12,
+        baseResistance: 10_000.0,
+        baseCollectorCapacitanceFraction,
+      });
+      return transient(circuit, 1.0e-9, 5.0e-9)[1].voltage("base")!;
+    }
+
+    expect(steppedBaseVoltage(1.0)).toBeGreaterThan(steppedBaseVoltage(0.0));
+  });
+
   it("uses BJT FC to shape both forward-biased transient charge companions", () => {
     function heldVoltage(coefficient: number, baseEmitter: boolean): number {
       const circuit = new Circuit();
