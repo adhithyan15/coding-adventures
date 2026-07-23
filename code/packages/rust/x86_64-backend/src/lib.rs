@@ -538,9 +538,14 @@ fn compile_inner(
     }
 
     // ---- Body --------------------------------------------------------------
+    // Return addresses of self-recursive `call <fn_name>` sites. These use an internal
+    // label fixup (no `PltRel32` reloc), so — unlike cross-function/builtin calls —
+    // `build_stack_map` can't recover them from the relocation list; `emit_instr`
+    // appends each one here as it emits the call (see AOT00-T1 §5, PR-x4).
+    let mut recursive_safepoints: Vec<u32> = Vec::new();
     for instr in ir {
         emit_instr(&mut asm, instr, &mut alloc, &labels, frame, ctx.name, abi,
-                   global_slots)?;
+                   global_slots, &mut recursive_safepoints)?;
     }
 
     // ---- Defensive epilogue (in case CIR falls off the end) ----------------
@@ -549,7 +554,8 @@ fn compile_inner(
     let external_relocs = std::mem::take(&mut asm.external_relocs);
     // Build this function's GC stack map before finishing (it needs the final slot
     // assignment + the call relocations, both available here).
-    let stack_map = build_stack_map(ctx, ir, &alloc, frame, &external_relocs)?;
+    let stack_map = build_stack_map(ctx, ir, &alloc, frame, &external_relocs,
+                                    &recursive_safepoints)?;
     let bytes = asm.finish().map_err(BackendError::from)?;
     Ok((bytes, external_relocs, stack_map))
 }
@@ -562,20 +568,29 @@ fn compile_inner(
 /// that signed offset directly — the precise walker reads `rbp + offset` to recover the
 /// slot, exactly as [`gc_core`] expects (offsets "may be negative for slots below FP").
 ///
-/// **Safepoints come from the call relocations.** x86-64 is variable-width, so — unlike
-/// the fixed-width aarch64 backend, which post-scans finished code — return addresses
-/// are read from the emitted `call rel32` relocations: each `PltRel32` reloc patches the
-/// 4-byte displacement, so the return address is `patch_offset + 4` (the byte after the
-/// call). This captures every cross-function, builtin and libm call — the ones that can
-/// trigger a collection. A **self-recursive** call uses a label fixup (no reloc) and so
-/// is not yet a safepoint; that costs precision on recursive frames (they fall back to a
-/// conservative scan) but is never unsafe — a missing safepoint only omits precision.
+/// **Safepoints come from two sources.** x86-64 is variable-width, so — unlike the
+/// fixed-width aarch64 backend, which post-scans finished code for every `BL` — return
+/// addresses can't be recovered by a byte scan. Instead:
+///
+/// 1. **Cross-function / builtin / libm calls** patch a 4-byte displacement through a
+///    `PltRel32` relocation, so their return address is `patch_offset + 4` (the byte just
+///    after the call). This captures every call that leaves the module — the usual GC
+///    trigger.
+/// 2. **Self-recursive calls** (`call <fn_name>`) resolve through an internal label fixup
+///    and emit *no* reloc, so `compile_one_with_globals` records each one's return address
+///    (`asm.len()` right after the 5-byte `call rel32`) in `recursive_safepoints` and
+///    passes it here (AOT00-T1 §5, PR-x4). A recursive frame that allocates can trigger a
+///    collection just like any other call, so its live references must be mapped too;
+///    before this, recursive frames fell back to a conservative scan (safe but imprecise —
+///    they could pin integer look-alikes). Duplicate PCs across the two sources collapse in
+///    [`StackMapBuilder::safepoint`], so order and overlap are harmless.
 fn build_stack_map(
     ctx: &FunctionContext<'_>,
     ir: &[CIRInstr],
     alloc: &RegAlloc,
     frame: u32,
     relocs: &[ExternalReloc],
+    recursive_safepoints: &[u32],
 ) -> Result<Vec<StackMapRecord>, BackendError> {
     let mut b = StackMapBuilder::new(frame);
 
@@ -602,11 +617,16 @@ fn build_stack_map(
         }
     }
 
-    // A safepoint at every call's return address (`patch_offset + 4`).
+    // A safepoint at every external call's return address (`patch_offset + 4`)...
     for r in relocs {
         if r.kind == ExternalRelocKind::PltRel32 {
             b.safepoint((r.patch_offset + 4) as u32);
         }
+    }
+    // ...and at every self-recursive call's return address (no reloc; recovered at emit
+    // time). `safepoint` dedups + keeps ascending, so overlaps/ordering are harmless.
+    for &pc in recursive_safepoints {
+        b.safepoint(pc);
     }
     Ok(b.into_records())
 }
@@ -635,6 +655,9 @@ fn emit_instr(
     fn_name: &str,
     abi: X86_64Abi,
     global_slots: &HashMap<String, usize>,
+    // Self-recursive `call <fn_name>` return addresses, appended as emitted, so
+    // `build_stack_map` can add them as safepoints (they carry no reloc). AOT00-T1 §5.
+    recursive_safepoints: &mut Vec<u32>,
 ) -> Result<(), BackendError> {
     let op = instr.op.as_str();
 
@@ -883,6 +906,13 @@ fn emit_instr(
                 BackendError::MalformedInstr(format!("call: no label for '{callee_name}'"))
             })?;
             asm.call_label(target_id);
+            // `call_label` emits a 5-byte `call rel32` (no reloc), so `asm.len()` is now
+            // the return address the GC walker will observe at `[rbp + 8]` if a collection
+            // fires inside this recursive call. Record it as a safepoint (AOT00-T1 §5) —
+            // the recursive frame's live references must be mapped, not conservatively
+            // scanned. (Cross-function calls below carry a `PltRel32` reloc instead, which
+            // `build_stack_map` recovers separately.)
+            recursive_safepoints.push(asm.len() as u32);
         } else {
             asm.call_rel32(callee_name, ExternalRelocKind::PltRel32);
         }
@@ -2031,6 +2061,95 @@ mod tests {
         .expect("compiles");
         assert_eq!(sm.len(), 1, "one call → one record");
         assert!(sm[0].slots.is_empty(), "no reference slots to root");
+    }
+
+    /// AOT00-T1 §5 (PR-x4) — a **self-recursive** call is a safepoint too.
+    ///
+    /// A purely self-recursive function makes *no* external call, so it carries zero
+    /// `PltRel32` relocations — before this fix its stack map was therefore empty and a
+    /// collection fired inside the recursion fell back to a conservative frame scan. The
+    /// recursive call's return address is now recovered at emit time (`call_label` carries
+    /// no reloc), so the map gains exactly one record naming the live `any` reference.
+    #[test]
+    fn stackmap_records_self_recursive_call_safepoint() {
+        // rec(acc: any) -> u64  { r = rec(acc); ret r }  — `acc` is live across the call.
+        let params = [("acc".to_string(), "any".to_string())];
+        let ir = vec![
+            instr("call", Some("r"), vec![Op::Var("rec".into()), Op::Var("acc".into())]),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let (bytes, relocs, sm) = compile_function_with_globals_and_stackmap(
+            &fn_ctx("rec", &params, "u64"),
+            &ir,
+            X86_64Abi::SysV,
+            &HashMap::new(),
+        )
+        .expect("compiles");
+
+        // No external call ⇒ no PltRel32 reloc: the safepoint cannot have come from a
+        // relocation — it can only be the recursive one this PR adds.
+        assert!(
+            relocs.iter().all(|r| r.kind != ExternalRelocKind::PltRel32),
+            "a self-recursive-only function makes no external call",
+        );
+        assert_eq!(sm.len(), 1, "the recursive call is now the one safepoint");
+        // `acc` is param slot 0 → rbp offset −8; live across the recursive call.
+        assert_eq!(sm[0].slots, vec![RegAlloc::rbp_offset(0)], "names the live `any` ref");
+
+        // The safepoint PC is the return address: the byte just after the 5-byte
+        // `call rel32` (opcode 0xE8). This minimal function emits exactly one 0xE8 (the
+        // call disp is negative — 0xFFFF_FFxx — so no stray 0xE8 in the operand bytes).
+        let e8_positions: Vec<usize> =
+            bytes.iter().enumerate().filter(|(_, &b)| b == 0xE8).map(|(i, _)| i).collect();
+        assert_eq!(e8_positions.len(), 1, "one `call rel32` in a purely recursive body");
+        assert_eq!(
+            sm[0].pc_offset as usize,
+            e8_positions[0] + 5,
+            "safepoint PC is the return address (byte after the 5-byte call)",
+        );
+    }
+
+    /// A function with **both** a self-recursive call and an external (builtin) call gets a
+    /// safepoint record for *each* — the two safepoint sources (relocations + recorded
+    /// recursive return addresses) compose, and both records name the live reference.
+    #[test]
+    fn stackmap_records_both_recursive_and_external_safepoints() {
+        // rec(acc: any) -> u64 { r1 = dyn_car(acc); r2 = rec(acc); ret r2 }
+        let params = [("acc".to_string(), "any".to_string())];
+        let ir = vec![
+            call_builtin(Some("r1"), "dyn_car", &["acc"]), // external → PltRel32 safepoint
+            instr("call", Some("r2"), vec![Op::Var("rec".into()), Op::Var("acc".into())]),
+            instr("ret_u64", None, vec![Op::Var("r2".into())]),
+        ];
+        let (_bytes, relocs, sm) = compile_function_with_globals_and_stackmap(
+            &fn_ctx("rec", &params, "u64"),
+            &ir,
+            X86_64Abi::SysV,
+            &HashMap::new(),
+        )
+        .expect("compiles");
+
+        // Exactly one external call → one PltRel32 return address.
+        let plt_rets: Vec<u32> = relocs
+            .iter()
+            .filter(|r| r.kind == ExternalRelocKind::PltRel32)
+            .map(|r| (r.patch_offset + 4) as u32)
+            .collect();
+        assert_eq!(plt_rets.len(), 1, "one builtin call");
+
+        // Two distinct safepoints, ascending, both naming the live `any` slot.
+        assert_eq!(sm.len(), 2, "recursive + external = two safepoints");
+        assert!(sm[0].pc_offset < sm[1].pc_offset, "records are ascending by PC");
+        for rec in &sm {
+            assert_eq!(rec.slots, vec![RegAlloc::rbp_offset(0)], "acc rooted at both");
+        }
+        // One record is the builtin's return address; the other is the recursive one.
+        let pcs: Vec<u32> = sm.iter().map(|r| r.pc_offset).collect();
+        assert!(pcs.contains(&plt_rets[0]), "one safepoint is the builtin return address");
+        assert!(
+            pcs.iter().any(|&p| p != plt_rets[0]),
+            "the other safepoint is the recursive call (no reloc)",
+        );
     }
 
     /// Deriving the stack map must not change the emitted machine code — the map is

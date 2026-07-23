@@ -172,7 +172,13 @@ before adding; prefer existing methods.
   Transparency proof #4.1 on CI. Small, low-risk.
 - **PR-x3** — fill `build_gc_init_stackmaps_x86_64` (Deltas 2+3) + wrapper registration
   (increment B+C analogue) + pass-2b. Unit test #4.3 locally; differential #4.4 on CI.
-- **PR-x4** — self-recursive-call safepoints (backend precision follow-up) + any encoder gaps.
+- **PR-x4** *(done — x86_64-backend 0.32.0)* — self-recursive-call safepoints. A
+  self-recursive `call <fn_name>` lowers with an internal label fixup (`call_label`) and
+  carries no `PltRel32` reloc, so `build_stack_map` couldn't recover its return address and
+  recursive frames fell back to a conservative scan. `compile_one_with_globals` now records
+  each recursive call's return address (`asm.len()` after the 5-byte `call rel32`) and
+  `build_stack_map` adds a safepoint at each — recursive frames are precise. (aarch64 never
+  had this gap: fixed-width, it post-scans finished code for `BL`.) No encoder gaps arose.
 
 ---
 

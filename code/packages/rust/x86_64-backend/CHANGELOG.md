@@ -1,5 +1,31 @@
 # Changelog — `x86_64-backend`
 
+## 0.32.0 - 2026-07-23 — GC safepoints at self-recursive calls (AOT00-T1 x86_64 PR-x4)
+
+Closes the recursive-frame precision gap in `compile_function_with_globals_and_stackmap`.
+
+A cross-function/builtin/libm call is lowered as `call rel32` with a `PltRel32`
+relocation, so `build_stack_map` recovers its return address from the reloc
+(`patch_offset + 4`). A **self-recursive** `call <fn_name>`, however, is lowered with an
+internal label fixup (`call_label`) and carries *no* relocation — so it was invisible to
+`build_stack_map`, and a collection fired inside a recursive frame fell back to a
+conservative scan (safe, but it could pin integer look-alikes that happen to look like
+pointers). This mattered in practice: recursive `dynval`/lisp functions that allocate
+(`cons`) are exactly the shape that recurses with live references held across the call.
+
+Now `compile_one_with_globals` records each self-recursive call's return address
+(`asm.len()` immediately after the 5-byte `call rel32`) and passes them to
+`build_stack_map`, which adds a safepoint at each. `StackMapBuilder::safepoint` dedups and
+keeps PCs ascending, so the two safepoint sources compose without ordering hazards. The
+recursive frame's live references are now mapped precisely, exactly like every other call
+site. Machine code is unchanged — this only augments the derived stack map.
+
+Unlike aarch64 (fixed-width; it post-scans finished code for every `BL`, so it never had
+this gap), x86-64 is variable-width and cannot post-scan, so the recursive return address
+must be captured at emit time. No new lowering, no ABI change. Tests: two new unit tests —
+a purely-recursive function (zero relocs) now yields exactly one safepoint naming its live
+`any` slot, and a mixed recursive+builtin function yields two ascending safepoints.
+
 ## 0.31.0 - 2026-07-23 — V1_BUILTINS: GC collection + observability (AOT00-T1 x86_64 PR-x3)
 
 Four `call_builtin` entries the native GC-stress differential drives (→ `__twig_gc_*`
