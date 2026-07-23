@@ -1,5 +1,30 @@
 # Changelog — iir-to-wasm
 
+## [0.42.0] — 2026-07-23 (runtime `str_slice` i64 index truncation guard)
+
+Fix a correctness divergence in the runtime `str_slice` lowering exposed by
+COBOL **computed reference modification** (`IDENT(J:K)` with data-name indices) —
+the first producer to feed genuinely data-dependent `i64` values into
+`str_slice`.
+
+- **The bug:** the runtime `str_slice` bounds check (`0 ≤ start ≤ end ≤ len`) ran
+  on the **i32-wrapped** index operands. A huge `i64` index whose low 32 bits
+  happened to land in `[0, len]` (e.g. `start = 2^32`, which wraps to `0`) slipped
+  past the wrapped check and spliced the wrong run — while the VM interpreter and
+  the oracle (which evaluate the bounds on the full `i64`) correctly trapped. A
+  silent wrong-output divergence on the wasm target only. (Memory-safe — the
+  wrapped indices still satisfied `start ≤ end ≤ len`, so the `memory.copy` stayed
+  in bounds.)
+- **The fix:** an **i64 truncation guard** now runs BEFORE the wrap — for each i64
+  index slot, `index >u len` (full i64, `len` zero-extended) traps, matching the
+  approach `str_index` already used. This makes the wasm trap predicate agree with
+  the VM/oracle `i64` bounds rule. i32 index slots skip the guard (they can't
+  truncate). New `I64_GT_U` (0x55) opcode.
+- **Test:** `str_slice_runtime.rs` gains `runtime_str_slice_huge_i64_index_traps_not_truncates`
+  (`start = 2^32` low-bits-0, and `end = 2^32+len` low-bits-in-range) — both must
+  trap, not alias. All prior `str_slice`/`str_index`/`str_cmp` runtime tests
+  unchanged.
+
 ## [0.41.0] — 2026-07-20 (LANG-FULL E4-dyn E4d-3b: runtime `str_index` — rung closed)
 
 Give `str_index` a **runtime path** on WASM, closing the last E4d-3b rung. A

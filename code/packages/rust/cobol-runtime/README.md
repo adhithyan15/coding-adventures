@@ -29,8 +29,12 @@ and `ON SIZE ERROR`; divide-by-zero is a clean error or a size-error condition);
 precedence-correct arithmetic expressions (`+ - * / **`, unary sign,
 parentheses), `ROUNDED`, and `ON SIZE ERROR`; `IF … ELSE` with numeric and
 alphanumeric comparison; **reference modification** `IDENT(start:len)` /
-`IDENT(start:)` (a 1-based substring of an alphanumeric item, constant integer
-indices, in `DISPLAY` and alphanumeric-comparison operands); `PERFORM para
+`IDENT(start:)` (a 1-based substring of an alphanumeric item, in `DISPLAY` and
+alphanumeric-comparison operands — with **constant** integer indices *or*
+**computed** data-name indices like `WS(J:K)`, the index item an unsigned integer;
+an out-of-range computed refmod is a `RefModOutOfRange` trap under the same
+predicate the compiled `str_slice` enforces, so both engines error identically);
+`PERFORM para
 [THRU para2] [n TIMES | UNTIL cond |
 VARYING id FROM x BY y UNTIL cond]` (out-of-line paragraph or paragraph-range
 invocation — fixed-count, conditional, and counted loops, with a recursion

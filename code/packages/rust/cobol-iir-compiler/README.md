@@ -38,7 +38,7 @@ integer `123`); an **alphanumeric** item (`PIC X`/`A`) is a `str`.
 | `ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE … [GIVING r] [ROUNDED] [ON SIZE ERROR …]` | `add`/`sub`/`mul`/`div` on the `i64` slots, the result reduced to the receiver's field; a size error runs the handler and leaves the receiver unchanged |
 | `COMPUTE r [ROUNDED] = expr [ON SIZE ERROR …]` | the precedence cascade (`+ - * /`, unary minus, `**` with a constant exponent, parentheses) evaluated bottom-up over scaled `i64`, each step overflow-guarded |
 | `DISPLAY op…` | each operand's image emitted, then `putchar('\n')` — a literal prints its source text, a numeric item via the fixed-width digit helper (signed items via a trailing-overpunch helper), an alphanumeric via `print_str` |
-| `IDENT(start:len)` / `IDENT(start:)` (reference modification) | a 1-based substring of an alphanumeric item — constant integer indices lower to a constant-index `str_slice` over the byte range `[start-1, start-1+len)` (omitted length runs to the item's end). Supported in `DISPLAY` and alphanumeric-comparison (`IF`/`EVALUATE`) operands; bounds validated at compile time |
+| `IDENT(start:len)` / `IDENT(start:)` (reference modification) | a 1-based substring of an alphanumeric item over the byte range `[start-1, start-1+len)` (omitted length runs to the item's end), in `DISPLAY` and alphanumeric-comparison (`IF`/`EVALUATE`) operands. **Constant (literal) indices** lower to a constant-index `str_slice`, bounds validated at compile time. **Computed (data-name) indices** — `WS(J:K)`, `WS(J:)`, `WS(2:K)` — read each index into an `i64` register and build `start0 = start-1` / `end = start0+len` (or the item width) with `sub`/`add`, feeding a run-time `str_slice`. The index item must be an unsigned integer. An out-of-range computed refmod **traps at run time** under the same predicate (`start0 < 0 \|\| end < start0 \|\| end > width`) the oracle applies, so both engines error identically |
 | `IF cond then… [ELSE else…]` | conditions combine simple conditions with `AND`/`OR`/`NOT` (and parentheses; `NOT` tightest, then `AND`, then `OR`) — `AND`/`OR` fold the `0`/`1` leaf booleans with bitwise `and`/`or`, and a `NOT` inverts one with `xor` against `1`. A simple condition is a relation (numeric: align operands + `cmp_*`; alphanumeric: space-pad + `str_cmp`) or a level-88 condition-name (`cmp_eq` on its slot). Relations use word (`GREATER THAN`, …) or symbolic (`> < = >= <= <>`) operators; a relop `NOT` and the baseline negation `>=`/`<=`/`<>` carry compose by XOR and invert the relation directly. `jmp_if_false` over the then-branch |
 | `88 cond-name VALUE lit… [lo THRU hi]` | registers a boolean condition-name over the preceding item; `IF cond-name` / `PERFORM … UNTIL cond-name` hold when the variable equals any listed value or falls in any inclusive range — lowered as an OR-fold of `cmp_eq` / `and(cmp_ge, cmp_le)` (numeric) |
 | `SET cond-name TO TRUE` | stores the condition-name's first `VALUE` (a range's low bound) into its conditional variable — a `const` store into the slot (numeric) |
@@ -120,10 +120,11 @@ paired with `ON SIZE ERROR`), a `COMPUTE` `**` whose exponent is a variable, a
 parenthesised expression, negative, fractional, or past the oracle's `MAX_POW_EXP`
 (or whose conservative digit bound could exceed the 18-digit model), a
 level-88 condition-name over an alphanumeric variable, a **reference
-modification** with a computed (data-name) start/length, of a numeric item, or in
-a numeric/arithmetic/`MOVE`-source context (an out-of-range *constant* reference
-modification is likewise rejected at compile time, never lowered to a runtime
-trap), a `STRING` with a real (identifier/literal) delimiter, `WITH POINTER`,
+modification** with a signed/fractional/non-numeric index item, of a numeric item,
+or in a numeric/arithmetic/`MOVE`-source context (an out-of-range *constant*
+reference modification is likewise rejected at compile time, never lowered to a
+runtime trap; a *computed* one traps at run time, matching the oracle), a `STRING`
+with a real (identifier/literal) delimiter, `WITH POINTER`,
 `ON`/`NOT ON OVERFLOW`, a numeric item or figurative as a sending field, or a
 non-alphanumeric receiver, and an `UNSTRING` with a multi-character / `ALL` / `OR`
 delimiter, `WITH POINTER`, `ON`/`NOT ON OVERFLOW`, a numeric/figurative/reference-

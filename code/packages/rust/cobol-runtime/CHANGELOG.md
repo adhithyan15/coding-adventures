@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.30.0 — computed (data-name) reference modification
+
+- Generalised `Operand::RefMod` to carry `start`/`len` as a new `RefIndex`
+  (`Lit(usize)` **or** `Name(String)`) instead of raw `usize`. `read_refmod_index`
+  now accepts a bare data-name index (`RefIndex::Name`) alongside an integer
+  literal (`RefIndex::Lit`); a signed/fractional literal or nested reference
+  modification as the index is a clean later-rung reject. No grammar change.
+- `refmod_string` evaluates the (possibly computed) `start`/`len` to `i64` via the
+  new `refmod_index_value` — a literal is its own value; a data-name must be an
+  **unsigned-integer** item (`PIC 9…`, no `S`, no `V`), its stored digits parsed —
+  then computes `start0 = start - 1` and `end = start0 + len` (or `end = width` for
+  an omitted length) and slices `[start0, end)`.
+- **Out-of-range rule.** A computed reference modification returns the new
+  `RuntimeError::RefModOutOfRange` trap exactly when
+  `start0 < 0 || end < start0 || end > width` — the *identical* predicate the
+  compiled `str_slice` enforces in the VM/wasm backends
+  (`start < 0 || end < start || end > s.len()`). So an in-range computed refmod
+  slices byte-identically to `cobol-iir-compiler` 0.26.0, and an out-of-range one
+  errors on both engines rather than producing a silently wrong slice.
+- Added `RuntimeError::RefModOutOfRange(String)` — a genuine run-time bounds trap,
+  distinct from `Unsupported` (an unmodelled feature).
+- Deferred (unchanged): a signed/fractional/non-numeric index item, reference
+  modification of a numeric item, and use in a numeric/`MOVE`-source context.
+- Tests: 7 new oracle unit tests — computed mid-substring, omitted length,
+  out-of-range and zero-start traps, numeric base reject, signed index reject, and
+  MOVE-source reject.
+
 ## 0.29.0 — `INSPECT … CONVERTING from TO to`
 
 - Added `Stmt::InspectConverting { source, from, to }` and its executor

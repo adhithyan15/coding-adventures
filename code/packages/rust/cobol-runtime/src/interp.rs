@@ -4,8 +4,8 @@
 use crate::error::RuntimeError;
 use crate::picture::Picture;
 use crate::program::{
-    ArithOp, Cond, Expr, Fig, Lit, Operand, Paragraph, PerformMode, Program, RelOp, Stmt, ValueSpec,
-    WhenValue,
+    ArithOp, Cond, Expr, Fig, Lit, Operand, Paragraph, PerformMode, Program, RefIndex, RelOp, Stmt,
+    ValueSpec, WhenValue,
 };
 use crate::value::{add, div, move_into_char, move_into_numeric, mul, pow, round, sub, Decimal};
 use std::collections::HashMap;
@@ -1482,7 +1482,7 @@ impl Machine {
             // alphanumeric value. In a numeric context this `Src::Chars` is
             // rejected downstream (`operand_decimal`), matching the compiler.
             Operand::RefMod { base, start, len } => {
-                Ok(Src::Chars(self.refmod_string(base, *start, *len)?))
+                Ok(Src::Chars(self.refmod_string(base, start, len)?))
             }
         }
     }
@@ -1492,11 +1492,28 @@ impl Machine {
     /// COBOL reference modification is 1-based: `base(start:len)` selects the
     /// characters at 1-based positions `start .. start+len-1`, i.e. the 0-based
     /// half-open range `[start-1, start-1+len)`. An omitted `len` runs to the end
-    /// of the item, so `len = width - (start-1)`. This slices the *same*
-    /// character range the compiler emits as a constant-index `str_slice`, so the
-    /// DISPLAY output and comparisons agree byte-for-byte. The base must be an
-    /// alphanumeric item (a numeric item is a later rung).
-    fn refmod_string(&self, base: &str, start: usize, len: Option<usize>) -> Result<String, RuntimeError> {
+    /// of the item, so `end = width`. `start` and `len` may each be an integer
+    /// literal *or* a data-name read at run time (a **computed** reference
+    /// modification) — [`Self::refmod_index_value`] resolves both to `i64`.
+    ///
+    /// This slices the *same* character range the compiler emits as a `str_slice`
+    /// (constant-index for a literal:literal refmod, register-computed for a
+    /// computed one), so DISPLAY output and comparisons agree byte-for-byte. The
+    /// base must be an alphanumeric item (a numeric item is a later rung).
+    ///
+    /// **Out-of-range rule.** Let `start0 = start - 1` and
+    /// `end = start0 + len` (or `end = width` when the length is omitted). The
+    /// slice traps — [`RuntimeError::RefModOutOfRange`] — exactly when
+    /// `start0 < 0 || end < start0 || end > width`. This is the *identical*
+    /// predicate the compiled `str_slice` enforces in the VM/wasm backends
+    /// (`start < 0 || end < start || end > s.len()`), so an in-range program
+    /// slices identically on both engines and an out-of-range one errors on both.
+    fn refmod_string(
+        &self,
+        base: &str,
+        start: &RefIndex,
+        len: &Option<RefIndex>,
+    ) -> Result<String, RuntimeError> {
         let idx = *self.by_name.get(base).ok_or_else(|| RuntimeError::UndefinedName(base.to_string()))?;
         let item = &self.items[idx];
         let content = match &item.picture {
@@ -1509,25 +1526,59 @@ impl Machine {
             None => self.group_image(idx),
         };
         let chars: Vec<char> = content.chars().collect();
-        let width = chars.len();
-        if start < 1 {
-            return Err(RuntimeError::Unsupported(
-                "reference modification start position must be at least 1 — a later rung".into(),
-            ));
-        }
-        let start0 = start - 1;
-        let actual_len = len.unwrap_or(width.saturating_sub(start0));
-        // Subtractive bounds test — `start0 + actual_len` would overflow `usize`
-        // for a crafted `WS(1e19:1e19)` (both parse as full `usize`), panicking in
-        // debug / wrapping past the guard (then an out-of-bounds slice) in release.
-        // `width - start0` is only reached once `start0 <= width`.
-        if start0 > width || actual_len > width - start0 {
-            return Err(RuntimeError::Unsupported(format!(
-                "reference modification {base}({start}:{}) runs past the {width}-character item — a later rung",
-                len.map(|l| l.to_string()).unwrap_or_default()
+        let width = chars.len() as i128;
+        // Compute the half-open [start0, end) bounds in i128 so an adversarial
+        // index item (e.g. `PIC 9(18)` holding a value near i64::MAX) can never
+        // overflow the `start0 + len` add into a debug-build panic — it is caught
+        // by the bounds check below and reported as a clean RefModOutOfRange. The
+        // predicate `start0 < 0 || end < start0 || end > width` is the identical
+        // rule the emitted run-time `str_slice` enforces on the compiler side.
+        let start_v = self.refmod_index_value(start)?;
+        let start0 = start_v as i128 - 1;
+        let end: i128 = match len {
+            Some(l) => start0 + self.refmod_index_value(l)? as i128,
+            None => width,
+        };
+        if start0 < 0 || end < start0 || end > width {
+            return Err(RuntimeError::RefModOutOfRange(format!(
+                "{base}({start_v}:{}) does not fit the {width}-character item",
+                len.as_ref().map(|_| (end - start0).to_string()).unwrap_or_default()
             )));
         }
-        Ok(chars[start0..start0 + actual_len].iter().collect())
+        // Bounds passed: 0 ≤ start0 ≤ end ≤ width, all within the small char count.
+        Ok(chars[start0 as usize..end as usize].iter().collect())
+    }
+
+    /// Resolve a reference-modification index ([`RefIndex`]) to an `i64`. A
+    /// literal is its own value; a data-name must be an **unsigned integer** item
+    /// (`PIC 9…`, no `S`, no `V`) — its stored digits parsed as an integer. A
+    /// signed, fractional, or non-numeric index item is a later rung.
+    fn refmod_index_value(&self, ix: &RefIndex) -> Result<i64, RuntimeError> {
+        match ix {
+            RefIndex::Lit(v) => Ok(*v as i64),
+            RefIndex::Name(name) => {
+                let idx = *self
+                    .by_name
+                    .get(name)
+                    .ok_or_else(|| RuntimeError::UndefinedName(name.clone()))?;
+                match &self.items[idx].picture {
+                    Some(Picture::Numeric { dec_digits: 0, signed: false, .. }) => {
+                        self.items[idx].storage.parse::<i64>().map_err(|_| {
+                            RuntimeError::RefModOutOfRange(format!(
+                                "index {name} value {} is out of range",
+                                self.items[idx].storage
+                            ))
+                        })
+                    }
+                    Some(Picture::Numeric { .. }) => Err(RuntimeError::Unsupported(format!(
+                        "a signed or fractional reference-modification index ({name}) is a later rung"
+                    ))),
+                    _ => Err(RuntimeError::Unsupported(format!(
+                        "a non-numeric reference-modification index ({name}) is a later rung"
+                    ))),
+                }
+            }
+        }
     }
 
     /// A numeric item's value as a [`Decimal`], split by its implied decimal.
@@ -1554,7 +1605,7 @@ impl Machine {
                 let idx = *self.by_name.get(name).ok_or_else(|| RuntimeError::UndefinedName(name.clone()))?;
                 Ok(self.item_image(idx))
             }
-            Operand::RefMod { base, start, len } => self.refmod_string(base, *start, *len),
+            Operand::RefMod { base, start, len } => self.refmod_string(base, start, len),
         }
     }
 

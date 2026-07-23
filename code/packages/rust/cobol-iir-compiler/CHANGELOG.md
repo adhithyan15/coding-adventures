@@ -8,6 +8,54 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.26.0: computed (data-name) reference modification
+
+Generalised reference modification `IDENT(start:len)` to accept **data-name**
+(run-time integer) indices — `WS(J:K)`, `WS(J:)`, `WS(2:K)` — oracle-first and
+byte-identical to `cobol-runtime` 0.30.0. No grammar change was needed: the
+indices already parse as `operand`s; only the readers rejected non-literals.
+
+- **Data model.** `Operandy::RefMod` / `Operand::RefMod` now carry `start`/`len`
+  as a new `RefIndex` (`Lit(usize)` **or** `Name(String)`) instead of raw
+  `usize`, so the literal and computed cases flow through one path.
+  `read_refmod_index` returns a `RefIndex`; a bare `NAME` index is
+  `RefIndex::Name`, an integer literal is `RefIndex::Lit`, and a
+  signed/fractional literal or nested reference modification as the index is a
+  clean later-rung reject.
+- **`ref_mod_slice`** now returns `(reg, SliceLen)`:
+  - **literal:literal** (and `literal:`) is **constant-folded exactly as before**
+    (`const_refmod_len` validates the range at compile time and rejects an
+    out-of-range constant slice — #8673's behaviour is preserved verbatim);
+  - **computed** — the moment either index is a data-name — reads each index into
+    an `i64` register (`refmod_index_reg`: a `const` for a literal, a `mov` of the
+    live slot for an unsigned-integer item) and builds `start0 = start - 1` and
+    `end = start0 + len` (or `end = width` for an omitted length) with `sub`/`add`,
+    feeding a run-time `str_slice(src, start0, end)`. The slice's run-time length
+    (`end - start0`) rides along as a register.
+- **Out-of-range rule.** The emitted `str_slice` traps in the VM/wasm backends
+  exactly when `start0 < 0 || end < start0 || end > width`; the oracle's
+  `refmod_string` applies the identical predicate (returning `RefModOutOfRange`),
+  so an in-range program slices byte-identically and an out-of-range one errors on
+  both engines.
+- **Comparison contexts.** `StrOperand` gained a `Runtime { reg, len_reg, max_len }`
+  variant for a computed slice whose length is only known at run time.
+  `emit_str_condition` now sizes the common comparison width from each operand's
+  compile-time upper bound and space-pads each side to it — a `Fixed`/`Fig` side
+  at compile time (`pad_spaces`/`fig_const`), a `Runtime` side at run time
+  (`pad_runtime`, slicing a max-width space constant to the run-time pad count, the
+  same trick UNSTRING uses). Padding both sides to any common width ≥ their actual
+  lengths gives the same `str_cmp` result COBOL's max-of-actual-lengths padding
+  does, so a run-time-length slice compares byte-identically to the oracle.
+- **Deferred (unchanged):** a signed/fractional/non-numeric reference-modification
+  index item, reference modification of a numeric item, and use in a
+  numeric/arithmetic/`MOVE`-source context remain later rungs.
+- Tests: 9 new `jit_e2e` cases (computed mid-substring, omitted length, mixed
+  literal-start/data-name-length, `IF` comparison, `EVALUATE` subject,
+  `COMPUTE`-driven index, an equal/unequal computed-vs-computed comparison, and
+  two out-of-range cases asserting **both** engines trap), plus compiler-unit
+  tests for the computed lowering and the still-deferred signed/fractional index,
+  numeric base, and MOVE-source rejects. All #8673 literal-refmod tests still pass.
+
 ### Added — v0.25.0: `INSPECT … CONVERTING from TO to`
 
 Lowered the `INSPECT … CONVERTING` verb — a per-character translation table —
