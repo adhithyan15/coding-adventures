@@ -2062,4 +2062,100 @@ mod tests {
         .unwrap_err();
         assert!(matches!(combined, RuntimeError::Parse(_)), "got {combined:?}");
     }
+
+    // ----------------------------------------------------------------------
+    // Reference modification — computed (data-name) indices (the oracle side)
+    // ----------------------------------------------------------------------
+
+    #[test]
+    fn refmod_computed_mid_substring() {
+        // WS(J:K) with J=2, K=3 over "ABCDE" → positions 2..4 → "BCD".
+        let out = run_cobol(&wrap(
+            &[
+                "01  WS  PIC X(5) VALUE \"ABCDE\".",
+                "01  J   PIC 9 VALUE 2.",
+                "01  K   PIC 9 VALUE 3.",
+            ],
+            &["DISPLAY WS(J:K).", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(out, "BCD\n");
+    }
+
+    #[test]
+    fn refmod_computed_omitted_length_runs_to_end() {
+        // WS(J:) with J=3 over "ABCDE" runs to the end → "CDE".
+        let out = run_cobol(&wrap(
+            &["01  WS  PIC X(5) VALUE \"ABCDE\".", "01  J   PIC 9 VALUE 3."],
+            &["DISPLAY WS(J:).", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(out, "CDE\n");
+    }
+
+    #[test]
+    fn refmod_computed_out_of_range_traps() {
+        // WS(J:K) with J=4, K=5 over a 5-char item runs to position 8 > 5 → a
+        // well-defined RefModOutOfRange trap (never a wrong slice or a panic).
+        let err = run_cobol(&wrap(
+            &[
+                "01  WS  PIC X(5) VALUE \"ABCDE\".",
+                "01  J   PIC 9 VALUE 4.",
+                "01  K   PIC 9 VALUE 5.",
+            ],
+            &["DISPLAY WS(J:K).", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::RefModOutOfRange(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn refmod_computed_zero_start_traps() {
+        // A start of 0 makes start0 = -1 < 0 → an out-of-range trap, matching the
+        // compiled str_slice's `start < 0` bounds check.
+        let err = run_cobol(&wrap(
+            &["01  WS  PIC X(5) VALUE \"ABCDE\".", "01  J   PIC 9 VALUE 0."],
+            &["DISPLAY WS(J:2).", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::RefModOutOfRange(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn refmod_of_numeric_item_is_a_later_rung() {
+        // Reference modification is defined on alphanumeric items; a numeric base
+        // is a later rung — the same reject the compiler makes.
+        let err = run_cobol(&wrap(
+            &["01  N  PIC 9(5) VALUE 12345.", "01  J  PIC 9 VALUE 2."],
+            &["DISPLAY N(J:2).", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn refmod_signed_index_item_is_a_later_rung() {
+        // A signed index item is a later rung (the index model is unsigned integer).
+        let err = run_cobol(&wrap(
+            &["01  WS  PIC X(5) VALUE \"ABCDE\".", "01  J  PIC S9 VALUE 2."],
+            &["DISPLAY WS(J:2).", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn refmod_computed_as_move_source_is_a_later_rung() {
+        // A computed refmod in a MOVE-source (numeric) context stays a later rung.
+        let err = run_cobol(&wrap(
+            &[
+                "01  WS  PIC X(5) VALUE \"ABCDE\".",
+                "01  J   PIC 9 VALUE 2.",
+                "01  DST PIC X(3).",
+            ],
+            &["MOVE WS(J:2) TO DST.", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+    }
 }

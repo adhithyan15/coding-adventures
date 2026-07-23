@@ -259,10 +259,21 @@ pub enum Operand {
     Lit(Lit),
     /// `base(start:len)` / `base(start:)` — a reference modification selecting
     /// `len` characters of alphanumeric item `base` from 1-based position
-    /// `start`; an omitted `len` runs to the end of the item. On this rung both
-    /// `start` and `len` are integer NUMBER literals; a computed start/length is
-    /// a later rung, rejected in [`read_operand`].
-    RefMod { base: String, start: usize, len: Option<usize> },
+    /// `start`; an omitted `len` runs to the end of the item. `start` and `len`
+    /// are each a [`RefIndex`]: an integer literal *or* a data-name whose value
+    /// is read at run time (a **computed** reference modification).
+    RefMod { base: String, start: RefIndex, len: Option<RefIndex> },
+}
+
+/// One index (start or length) of a reference modification: a compile-time
+/// integer literal, or a data-name whose integer value is the index at run time.
+#[derive(Debug, Clone)]
+pub enum RefIndex {
+    /// A plain integer NUMBER literal — the `2`/`3` in `WS(2:3)`.
+    Lit(usize),
+    /// A data-name whose unsigned-integer value is the index — the `J`/`K` in
+    /// `WS(J:K)`.
+    Name(String),
 }
 
 /// A condition tested by `IF` (and `PERFORM … UNTIL`). Either a relation between
@@ -451,19 +462,32 @@ fn read_operand(op: &GrammarASTNode) -> Result<Operand, RuntimeError> {
     Err(RuntimeError::Unsupported("unrecognised operand".into()))
 }
 
-/// Read a reference-modification start or length subnode: it must be a plain
-/// integer NUMBER literal on this rung (a data-name or expression there is a
-/// *computed* reference modification — a later rung).
-fn read_refmod_index(op: &GrammarASTNode) -> Result<usize, RuntimeError> {
-    let computed = || {
-        RuntimeError::Unsupported(
-            "reference modification with a computed start/length is a later rung".into(),
-        )
-    };
-    let lit = child_node(op, "literal").ok_or_else(computed)?;
+/// Read a reference-modification start or length subnode into a [`RefIndex`]:
+/// a plain integer NUMBER literal becomes [`RefIndex::Lit`]; a bare data-name
+/// becomes [`RefIndex::Name`] (a *computed* index resolved at run time). Any
+/// other form — a signed/fractional literal, a figurative, or a nested
+/// reference modification as the index — is a later rung.
+fn read_refmod_index(op: &GrammarASTNode) -> Result<RefIndex, RuntimeError> {
+    let unsupported = |m: &str| RuntimeError::Unsupported(m.into());
+    if child_node(op, "literal").is_none() {
+        if child_nodes(op, "operand").is_empty() {
+            if let Some(name) = first_token(op, "NAME") {
+                return Ok(RefIndex::Name(name));
+            }
+        }
+        return Err(unsupported(
+            "a reference-modified reference-modification index is a later rung",
+        ));
+    }
+    let lit = child_node(op, "literal").unwrap();
     match read_literal(lit)? {
-        Lit::Num(s) => s.parse::<usize>().map_err(|_| computed()),
-        _ => Err(computed()),
+        Lit::Num(s) => s
+            .parse::<usize>()
+            .map(RefIndex::Lit)
+            .map_err(|_| unsupported("a signed or fractional reference-modification index is a later rung")),
+        _ => Err(unsupported(
+            "a non-integer reference-modification index is a later rung",
+        )),
     }
 }
 

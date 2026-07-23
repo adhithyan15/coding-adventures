@@ -18,6 +18,12 @@ pub enum RuntimeError {
     Unsupported(String),
     /// `DIVIDE` by zero with no `ON SIZE ERROR` clause to catch it.
     DivideByZero,
+    /// A **computed** reference modification (`WS(J:K)`) whose run-time indices
+    /// fell outside the item: `start < 1`, a negative length, or the slice runs
+    /// past the item's width. This is a genuine run-time trap (not an unmodelled
+    /// feature) — it mirrors the out-of-bounds trap the compiled `str_slice`
+    /// raises in the VM/wasm backends, so both engines fail identically.
+    RefModOutOfRange(String),
 }
 
 impl fmt::Display for RuntimeError {
@@ -33,6 +39,9 @@ impl fmt::Display for RuntimeError {
             }
             RuntimeError::Unsupported(m) => write!(f, "unsupported in runtime v0.1: {m}"),
             RuntimeError::DivideByZero => write!(f, "divide by zero"),
+            RuntimeError::RefModOutOfRange(m) => {
+                write!(f, "reference modification out of range: {m}")
+            }
         }
     }
 }

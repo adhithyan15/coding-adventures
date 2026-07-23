@@ -205,14 +205,42 @@ item. So for `WS-NAME PIC X(5) VALUE "ABCDE"`, `WS-NAME(2:3)` is `"BCD"` and
 operand (`NAME [ LPAREN operand COLON [ operand ] RPAREN ]`), the `:` being the
 new `COLON` token.
 
-The first implementation targets **constant integer** start/length on an
-alphanumeric item, in `DISPLAY` and alphanumeric-comparison (`IF`/`EVALUATE`)
-operands. Semantics are 1-based, so the byte range is `[start-1, start-1+length)`;
-an omitted length is `item_width - (start-1)`. The compiler validates the range at
-compile time and lowers to a constant-index `str_slice`, byte-identical to the
-oracle's slice. A computed (data-name) start/length, reference modification of a
-numeric item, and use in a numeric/arithmetic/`MOVE`-source context are later
-rungs.
+Semantics are 1-based, so the byte range is `[start-1, start-1+length)`; an
+omitted length runs to the item end (`end = item_width`). Reference modification
+is supported in `DISPLAY` and alphanumeric-comparison (`IF`/`EVALUATE`) operands.
+
+**Constant (literal) indices.** When `start` and `length` are both integer
+literals, the compiler validates the range at compile time and lowers to a
+constant-index `str_slice`, byte-identical to the oracle's slice. An out-of-range
+constant reference modification is a compile-time reject (a later rung), never a
+run-time trap.
+
+**Computed (data-name) indices.** When `start` and/or `length` is a **data-name**
+— `WS(J:K)`, `WS(J:)`, `WS(2:K)` — the index is only known at run time. The
+compiler reads each index into an `i64` register (a literal becomes a `const`; a
+data-name is copied from its slot) and computes `start0 = start - 1` and
+`end = start0 + length` (or `end = item_width` for an omitted length) with
+`sub`/`add`, feeding a run-time `str_slice(src, start0, end)`. The index item
+must be an **unsigned integer** (`PIC 9…`, no `S`, no `V`); a signed, fractional,
+or non-numeric index item is a later rung.
+
+*Out-of-range rule (both engines agree).* A computed reference modification
+**traps at run time** exactly when
+
+```
+start0 < 0  ||  end < start0  ||  end > item_width
+```
+
+(i.e. `start < 1`, a negative length, or the slice running past the item). This
+is the *identical* predicate the emitted `str_slice` enforces in the VM/wasm
+backends (`start < 0 || end < start || end > s.len()`), and the tree-walk oracle
+applies the same predicate in `refmod_string`, returning `RefModOutOfRange`. So an
+**in-range** computed refmod slices byte-identically on the compiler and the
+oracle, and an **out-of-range** one errors on both — never a silently wrong slice.
+
+Reference modification of a numeric item, and use in a
+numeric/arithmetic/`MOVE`-source context, remain later rungs (for both constant
+and computed indices).
 
 ## Layer Position
 

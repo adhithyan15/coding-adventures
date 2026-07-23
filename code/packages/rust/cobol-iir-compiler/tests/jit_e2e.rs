@@ -63,6 +63,50 @@ fn assert_matches_oracle(src: &str) -> String {
     jit
 }
 
+/// Compile and run on the JIT, returning `Err` if either compilation or the run
+/// itself fails (e.g. an out-of-bounds `str_slice` trap) — the compiled-side
+/// mirror of the oracle's `Result`.
+fn run_on_jit_result(src: &str) -> Result<String, String> {
+    let mut module = compile_source(src, "e2e").map_err(|e| format!("compile: {e:?}"))?;
+    if !module.validate().is_empty() {
+        return Err(format!("validate: {:?}", module.validate()));
+    }
+    let mut vm = VMCore::new();
+    let out: Arc<Mutex<Vec<u8>>> = Arc::new(Mutex::new(Vec::new()));
+    {
+        let out = Arc::clone(&out);
+        vm.builtins_mut().register("putchar", move |args| {
+            let b = args.first().and_then(|v| v.as_i64()).unwrap_or(0);
+            out.lock().unwrap().push(b as u8);
+            Ok(Value::Null)
+        });
+    }
+    {
+        let out = Arc::clone(&out);
+        vm.builtins_mut().register("print_str", move |args| {
+            let s = args.first().and_then(Value::as_str).unwrap_or("");
+            out.lock().unwrap().extend_from_slice(s.as_bytes());
+            Ok(Value::Null)
+        });
+    }
+    let backend = GenericCirJit::new();
+    let mut jit = JITCore::new(&mut vm, Box::new(backend));
+    jit.execute_with_jit(&mut vm, &mut module, "main", &[])
+        .map_err(|e| format!("run: {e:?}"))?;
+    let bytes = out.lock().unwrap().clone();
+    Ok(String::from_utf8(bytes).unwrap())
+}
+
+/// A computed reference modification that is out of range must **trap on both
+/// engines**: the oracle returns a `RuntimeError` and the compiled `str_slice`
+/// hits its VM/wasm out-of-bounds bounds check. This pins that agreement.
+fn assert_both_trap(src: &str) {
+    let oracle = run_cobol(src);
+    assert!(oracle.is_err(), "oracle must trap, got {oracle:?}");
+    let jit = run_on_jit_result(src);
+    assert!(jit.is_err(), "compiled path must trap, got {jit:?}");
+}
+
 /// Wrap DATA and PROCEDURE lines into a minimal well-formed program.
 fn wrap(data: &[&str], proc: &[&str]) -> String {
     let mut lines = vec!["IDENTIFICATION DIVISION.", "PROGRAM-ID. P."];
@@ -1555,6 +1599,148 @@ fn refmod_compared_against_another_refmod() {
         ],
     ));
     assert_eq!(eq, "SAME\n");
+}
+
+// COMPUTED reference modification — `WS(J:K)` where the start and/or length are
+// DATA-NAME (run-time integer) operands, lowered to a run-time `str_slice` over
+// registers computed with `sub`/`add`. Each case runs the compiled JIT output
+// against the oracle byte-for-byte; the out-of-range case pins that BOTH engines
+// trap under the identical `start0 < 0 || end < start0 || end > width` rule.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn refmod_computed_mid_substring() {
+    // WS(J:K) with J=2, K=3 over "ABCDE" → "BCD" — both indices are data items.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  WS  PIC X(5) VALUE \"ABCDE\".",
+            "01  J   PIC 9 VALUE 2.",
+            "01  K   PIC 9 VALUE 3.",
+        ],
+        &["DISPLAY WS(J:K).", "STOP RUN."],
+    ));
+    assert_eq!(out, "BCD\n");
+}
+
+#[test]
+fn refmod_computed_omitted_length_runs_to_end() {
+    // WS(J:) with J=3 has no length → from position 3 to the item end → "CDE".
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(5) VALUE \"ABCDE\".", "01  J   PIC 9 VALUE 3."],
+        &["DISPLAY WS(J:).", "STOP RUN."],
+    ));
+    assert_eq!(out, "CDE\n");
+}
+
+#[test]
+fn refmod_computed_literal_start_data_name_length() {
+    // Mixed indices: a literal start with a computed length (WS(2:K), K=3) still
+    // takes the run-time path because the length is a data-name → "BCD".
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(5) VALUE \"ABCDE\".", "01  K   PIC 9 VALUE 3."],
+        &["DISPLAY WS(2:K).", "STOP RUN."],
+    ));
+    assert_eq!(out, "BCD\n");
+}
+
+#[test]
+fn refmod_computed_in_if_comparison_against_literal() {
+    // A computed refmod on the left of an IF comparison: WS(J:K) = "ABC" with
+    // J=1, K=3 over "ABCDE" → the THEN branch.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  WS  PIC X(5) VALUE \"ABCDE\".",
+            "01  J   PIC 9 VALUE 1.",
+            "01  K   PIC 9 VALUE 3.",
+        ],
+        &[
+            "IF WS(J:K) = \"ABC\" DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "MATCH\n");
+}
+
+#[test]
+fn refmod_computed_as_evaluate_subject() {
+    // A computed refmod as the EVALUATE subject: WS(J:2) = "BC" with J=2.
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(5) VALUE \"ABCDE\".", "01  J   PIC 9 VALUE 2."],
+        &[
+            "EVALUATE WS(J:2)",
+            "WHEN \"BC\" DISPLAY \"HIT\"",
+            "WHEN OTHER DISPLAY \"MISS\"",
+            "END-EVALUATE.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "HIT\n");
+}
+
+#[test]
+fn refmod_computed_index_driven_by_compute() {
+    // The indices come from a COMPUTEd value: J = 1 + 1 = 2, then WS(J:2) = "BC".
+    // Exercises reading a numeric slot that was written at run time, not by VALUE.
+    let out = assert_matches_oracle(&wrap(
+        &["01  WS  PIC X(5) VALUE \"ABCDE\".", "01  J   PIC 9 VALUE 0."],
+        &["COMPUTE J = 1 + 1.", "DISPLAY WS(J:2).", "STOP RUN."],
+    ));
+    assert_eq!(out, "BC\n");
+}
+
+#[test]
+fn refmod_computed_same_program_in_range_and_comparison() {
+    // The SAME shape (a computed slice compared against another computed slice)
+    // driven with in-range indices: WS(J:2) vs WS(M:2) with J=1, M=4 over
+    // "ABCDE" → "AB" vs "DE" → DIFF; then equal indices → SAME.
+    let diff = assert_matches_oracle(&wrap(
+        &[
+            "01  WS  PIC X(5) VALUE \"ABCDE\".",
+            "01  J   PIC 9 VALUE 1.",
+            "01  M   PIC 9 VALUE 4.",
+        ],
+        &[
+            "IF WS(J:2) = WS(M:2) DISPLAY \"SAME\" ELSE DISPLAY \"DIFF\".",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(diff, "DIFF\n");
+    let same = assert_matches_oracle(&wrap(
+        &[
+            "01  WS  PIC X(4) VALUE \"ABAB\".",
+            "01  J   PIC 9 VALUE 1.",
+            "01  M   PIC 9 VALUE 3.",
+        ],
+        &[
+            "IF WS(J:2) = WS(M:2) DISPLAY \"SAME\" ELSE DISPLAY \"DIFF\".",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(same, "SAME\n");
+}
+
+#[test]
+fn refmod_computed_out_of_range_traps_on_both_engines() {
+    // WS(J:K) with J=4, K=5 over a 5-char item runs to position 8 > 5. The oracle
+    // returns a RuntimeError and the compiled str_slice hits its out-of-bounds
+    // bounds check — both engines trap identically.
+    assert_both_trap(&wrap(
+        &[
+            "01  WS  PIC X(5) VALUE \"ABCDE\".",
+            "01  J   PIC 9 VALUE 4.",
+            "01  K   PIC 9 VALUE 5.",
+        ],
+        &["DISPLAY WS(J:K).", "STOP RUN."],
+    ));
+}
+
+#[test]
+fn refmod_computed_zero_start_traps_on_both_engines() {
+    // A start of 0 → start0 = -1 < 0 → out-of-range on both engines.
+    assert_both_trap(&wrap(
+        &["01  WS  PIC X(5) VALUE \"ABCDE\".", "01  J   PIC 9 VALUE 0."],
+        &["DISPLAY WS(J:2).", "STOP RUN."],
+    ));
 }
 
 // STRING — concatenate sending fields into an alphanumeric receiver
