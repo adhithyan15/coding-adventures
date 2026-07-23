@@ -196,6 +196,25 @@ fn derivation_tree_json(
             jnum(*result),
             derivation_tree_json(operand, kb)
         ),
+        // A `to_percent(x, places)` rendering (NUM-6c): the audit exposes the decimal-place
+        // count, the rounding mode, the `rendered` `d.dd%` string, the narrowed numeric
+        // `value` (the fraction the percentage denotes), and the operand subtree — so a
+        // checker can re-scale and re-round the operand's exact value and confirm the
+        // rendered form (ADJ-NUMERIC-SUBSTRATE §4.3).
+        D::ToPercent {
+            places,
+            mode,
+            rendered,
+            operand,
+            result,
+        } => format!(
+            "{{\"node\":\"to_percent\",\"places\":{},\"mode\":\"{}\",\"rendered\":\"{}\",\"value\":{},\"operand\":{}}}",
+            places,
+            rounding_mode_name(*mode),
+            esc(rendered),
+            jnum(*result),
+            derivation_tree_json(operand, kb)
+        ),
     }
 }
 

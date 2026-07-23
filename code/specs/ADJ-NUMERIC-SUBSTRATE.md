@@ -171,8 +171,13 @@ tests → impl → security-review → babysit:
   string beside the narrowed exact value, both from one rounding so they can never disagree), the
   native `to_scientific(x [, figures])` application surface (optional `figures`, default 6; `≥ 1`,
   within the precision cap), the §4.3 audit record (`node:to_scientific`, `figures`, `mode`,
-  `rendered`, operand subtree), and an end-to-end formula test. `to_percent` / `to_currency` and
-  per-`KnowledgeBase` precision follow.
+  `rendered`, operand subtree), and an end-to-end formula test. **`to_percent(x [, places])`**
+  ✅ **shipped** — `ComputeExpr::ToPercent { places, mode, expr }`: takes `x` as a dimensionless
+  ratio, scales by 100 and rounds to `places` decimal places on the exact path, renders the
+  fixed-point `d.dd%` string, and carries the narrowed *fraction* as the numeric value
+  (`"33.33%"` → `3333/10000`); native `to_percent(x [, places])` surface (optional `places`,
+  default 2; `≥ 0`, so `to_percent(x, 0) = "50%"`), the §4.3 audit record (`node:to_percent`),
+  and an end-to-end formula test. `to_currency` and per-`KnowledgeBase` precision follow.
 
 ---
 

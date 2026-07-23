@@ -437,6 +437,21 @@ pub enum ComputeExpr {
         mode: RoundingMode,
         expr: Box<ComputeExpr>,
     },
+    /// A **percentage formatting** — `to_percent(x [, places])` (NUM-6c). A rendering
+    /// op like [`ComputeExpr::ToScientific`]: it takes `x` as a dimensionless *ratio*
+    /// (`0.5 → "50%"`), scales it by 100, rounds to `places` decimal places on the
+    /// exact path under `mode`, and renders the fixed-point string with a `%` suffix
+    /// (`to_percent(1/3, 2) = "33.33%"`). The narrowed numeric value is the *fraction*
+    /// the string denotes (`"33.33%"` → `3333/10000`), so a downstream predicate over
+    /// the binding still sees the ratio, and the audit carries both the exact source
+    /// and the rendered form (ADJ-NUMERIC-SUBSTRATE §4.1, §4.3). `places ≥ 0`
+    /// (`to_percent(x, 0) = "50%"`); the default when the surface omits it is resolved
+    /// at lowering. Dimension-preserving.
+    ToPercent {
+        places: u32,
+        mode: RoundingMode,
+        expr: Box<ComputeExpr>,
+    },
 }
 
 /// *What* precision a [`ComputeExpr::Round`] narrows to. NUM-6a ships the
@@ -506,6 +521,19 @@ pub enum DerivationNode {
         operand: Box<DerivationNode>,
         result: f64,
     },
+    /// A **percentage rendering** node (NUM-6c) — the audit record for a
+    /// `to_percent(x, places)`. Carries the `places`/`mode` it rounded under, the
+    /// `rendered` `d.dd%` string, and its single `operand` subtree (the exact source
+    /// ratio), so `adj-verify` can re-scale and re-round the operand's exact value and
+    /// confirm the `rendered` form (ADJ-NUMERIC-SUBSTRATE §4.3). `result` is the
+    /// narrowed numeric value — the *fraction* the percentage denotes.
+    ToPercent {
+        places: u32,
+        mode: RoundingMode,
+        rendered: String,
+        operand: Box<DerivationNode>,
+        result: f64,
+    },
 }
 
 impl DerivationNode {
@@ -518,6 +546,7 @@ impl DerivationNode {
             DerivationNode::Op { result, .. } => *result,
             DerivationNode::Round { result, .. } => *result,
             DerivationNode::ToScientific { result, .. } => *result,
+            DerivationNode::ToPercent { result, .. } => *result,
         }
     }
 }
@@ -924,6 +953,12 @@ fn eval(
             mode,
             expr,
         } => eval_to_scientific(*figures, *mode, expr, kb, depth),
+
+        ComputeExpr::ToPercent {
+            places,
+            mode,
+            expr,
+        } => eval_to_percent(*places, *mode, expr, kb, depth),
 
         ComputeExpr::Agg(op, slot) => {
             let observations = kb.observed_values_all(slot);
@@ -1379,6 +1414,96 @@ fn bigdecimal_to_integer(bd: &BigDecimal) -> BigInteger {
     } else {
         bd.mantissa().clone()
     }
+}
+
+/// Evaluate `to_percent(x, places)` (NUM-6c): render the dimensionless ratio `x` as a
+/// percentage to `places` decimal places (`0.5 → "50%"`, `1/3 → "33.33%"` at 2 places).
+/// A **rendering** op — the narrowed numeric value is the *fraction* the string denotes
+/// (so a downstream predicate over the binding still sees the ratio) and the exact sidecar
+/// backs the audit, per ADJ-NUMERIC-SUBSTRATE §4.1, §4.3. Dimension-preserving.
+#[inline(never)]
+fn eval_to_percent(
+    places: u32,
+    mode: RoundingMode,
+    expr: &ComputeExpr,
+    kb: &KnowledgeBase,
+    depth: usize,
+) -> Result<(DerivationNode, Dimension, Option<ExactRational>), ComputeError> {
+    let (operand, dim, exact) = eval(expr, kb, depth + 1)?;
+    let (rendered, exact_out, result) = match &exact {
+        Some(r) => {
+            let (s, narrowed) = percent(r, places, mode);
+            let value = narrowed.to_f64();
+            (s, Some(narrowed), value)
+        }
+        None => {
+            // Already-inexact operand (a transcendental ratio): format the lossy `f64`
+            // scaled to a percentage. `result` stays the fraction the string denotes.
+            let value = operand.value();
+            let s = format!("{:.*}%", places as usize, value * 100.0);
+            (s, None, value)
+        }
+    };
+    // A non-finite operand must not render as a clean percentage — same guard as the
+    // other ops (op label reuses `Round`: `to_percent` is a rounding-based narrowing).
+    if !result.is_finite() {
+        return Err(ComputeError::NonFinite {
+            op: ComputeOp::Round,
+        });
+    }
+    Ok((
+        DerivationNode::ToPercent {
+            places,
+            mode,
+            rendered,
+            operand: Box::new(operand),
+            result,
+        },
+        dim,
+        exact_out,
+    ))
+}
+
+/// Render an exact ratio as a fixed-point percentage string with exactly `places` decimal
+/// places and a `%` suffix, and return the **narrowed fraction** alongside — both from one
+/// rounding so they always agree. The percentage magnitude is `x · 100`, so the scaled
+/// integer is `C = round(x · 10^(places+2))` under `mode`; the string places the decimal
+/// point `places` from `C`'s right (`"33.33%"`), and the narrowed fraction is `C / 10^(places+2)`
+/// (`= "33.33%" / 100`). Zero and `places = 0` are handled by the same padding path. All
+/// arithmetic is exact big-integer/-decimal.
+fn percent(r: &ExactRational, places: u32, mode: RoundingMode) -> (String, ExactRational) {
+    // `C = round(r · 10^(places+2))` — the percentage's digits scaled to an integer.
+    let scale_pow = places + 2;
+    let dividend = r.numerator() * &ten_to(scale_pow);
+    let c_bd = BigDecimal::from_integer(dividend).div_round(
+        &BigDecimal::from_integer(r.denominator().clone()),
+        0,
+        mode,
+    );
+    let c = bigdecimal_to_integer(&c_bd);
+    let neg = c.is_negative();
+    let mag = c.abs().to_string();
+
+    // Place the decimal point `places` from the right of the magnitude digits, padding on
+    // the left so there is always at least one integer digit (`0.05`, not `.05`).
+    let body = if places == 0 {
+        mag
+    } else {
+        let p = places as usize;
+        let mag = if mag.len() <= p {
+            format!("{}{}", "0".repeat(p + 1 - mag.len()), mag)
+        } else {
+            mag
+        };
+        let split = mag.len() - p;
+        format!("{}.{}", &mag[..split], &mag[split..])
+    };
+    let sign = if neg { "-" } else { "" };
+    let rendered = format!("{sign}{body}%");
+
+    // Narrowed fraction = C / 10^(places+2) (the percentage magnitude divided back by 100).
+    let narrowed = ExactRational::from_ratio(BigRational::new(c, ten_to(scale_pow)));
+    (rendered, narrowed)
 }
 
 /// Round an `f64` to `spec`'s precision — the fallback for an operand that carried
@@ -2944,5 +3069,80 @@ mod tests {
         assert_eq!(rendered_of(&d), "3.33e0"); // 10/3 usd → 3.33e0
         assert_eq!(d.dim, Dimension::Money("usd".into()));
         assert_eq!(d.exact, ExactRational::new(333, 100));
+    }
+
+    // ---- NUM-6c: to_percent(x, places) — the percentage rendering ----
+
+    fn to_pct(places: u32, inner: ComputeExpr) -> ComputeExpr {
+        ComputeExpr::ToPercent {
+            places,
+            mode: RoundingMode::HalfEven,
+            expr: Box::new(inner),
+        }
+    }
+    fn pct_rendered_of(d: &Derived) -> String {
+        match &d.tree {
+            DerivationNode::ToPercent { rendered, .. } => rendered.clone(),
+            other => panic!("expected ToPercent node, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn to_percent_renders_a_ratio_to_the_stated_places() {
+        let kb = KnowledgeBase::new();
+        // 1/3 = 0.333… → 2 places = "33.33%", the narrowed FRACTION held as 3333/10000.
+        let a = compute("r", &to_pct(2, frac(1, 3)), &kb).unwrap();
+        assert_eq!(pct_rendered_of(&a), "33.33%");
+        assert_eq!(a.exact, ExactRational::new(3333, 10000));
+        // 1/2 = 0.5 → 2 places pads the trailing zeros: "50.00%", value exactly 1/2.
+        let b = compute("r", &to_pct(2, frac(1, 2)), &kb).unwrap();
+        assert_eq!(pct_rendered_of(&b), "50.00%");
+        assert_eq!(b.exact, ExactRational::new(1, 2));
+    }
+
+    #[test]
+    fn to_percent_zero_places_drops_the_decimal_point() {
+        let kb = KnowledgeBase::new();
+        // 1/2 → 0 places = "50%" (no decimal point), value exactly 1/2.
+        let d = compute("r", &to_pct(0, frac(1, 2)), &kb).unwrap();
+        assert_eq!(pct_rendered_of(&d), "50%");
+        assert_eq!(d.exact, ExactRational::new(1, 2));
+    }
+
+    #[test]
+    fn to_percent_handles_sub_one_percent_sign_and_zero() {
+        let kb = KnowledgeBase::new();
+        // 1/2000 = 0.0005 → 2 places = "0.05%" (integer part padded to a leading 0).
+        let small = compute("r", &to_pct(2, frac(1, 2000)), &kb).unwrap();
+        assert_eq!(pct_rendered_of(&small), "0.05%");
+        assert_eq!(small.exact, ExactRational::new(5, 10000)); // 0.0005
+        // Negative: −1/4 = −0.25 → 1 place = "-25.0%", value exactly −1/4.
+        let neg = compute("r", &to_pct(1, frac(-1, 4)), &kb).unwrap();
+        assert_eq!(pct_rendered_of(&neg), "-25.0%");
+        assert_eq!(neg.exact, ExactRational::new(-1, 4));
+        // Zero → "0.00%", exact 0.
+        let z = compute("r", &to_pct(2, ComputeExpr::Lit(0.0)), &kb).unwrap();
+        assert_eq!(pct_rendered_of(&z), "0.00%");
+        assert_eq!(z.exact, ExactRational::new(0, 1));
+    }
+
+    #[test]
+    fn to_percent_preserves_dimension_and_is_exact_on_a_percentage_point_case() {
+        // The "$100M-per-point" case: an exact ratio, rounded only at render. A budget
+        // fraction 1/7 of a dimensioned quantity narrows the magnitude, keeps the unit.
+        let kb = kb_with(vec![money("share", 1, "usd")]);
+        let expr = to_pct(
+            3,
+            ComputeExpr::Bin(
+                ComputeOp::Div,
+                Box::new(refexpr("share")),
+                Box::new(ComputeExpr::Lit(7.0)),
+            ),
+        );
+        let d = compute("r", &expr, &kb).unwrap();
+        // 1/7 = 0.142857… → 3 places = "14.286%" (half-even on the 4th place: …57→6).
+        assert_eq!(pct_rendered_of(&d), "14.286%");
+        assert_eq!(d.exact, ExactRational::new(14286, 100000)); // 0.14286
+        assert_eq!(d.dim, Dimension::Money("usd".into()));
     }
 }

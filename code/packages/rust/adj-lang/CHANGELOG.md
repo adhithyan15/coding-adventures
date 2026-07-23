@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.60.0] — 2026-07-23
+
+### Added — NUM-6c: the `to_percent(x [, places])` percentage rendering (ADJ-NUMERIC-SUBSTRATE §4.1, §4.3)
+
+```
+let share = to_percent(votes / total, 1)   % → "42.7%"
+let round = to_percent(part / whole)        % default 2 decimal places
+```
+
+- `to_percent` joins `round_to`/`round_sig`/`to_scientific` as a built-in recognised
+  during `Apply` lowering (same native comma-list surface, no new grammar). It lowers to
+  the new `logic_engine::ComputeExpr::ToPercent` node via a new `ExprAst::ToPercent(expr,
+  places)` AST node, under the default half-even mode.
+- The `places` argument is **optional**: `to_percent(x)` uses the documented default
+  (`DEFAULT_PERCENT_PLACES = 2`), resolved at lowering so the engine node always carries a
+  concrete count and the audit records what was used. A stated `to_percent(x, n)` requires
+  `n` a **non-negative** integer literal (`≥ 0` — zero places is meaningful, `"50%"`)
+  within the precision cap (`MAX_ROUND_PLACES = 100`). A non-integer, negative, oversized,
+  or non-literal `n`, or the wrong argument count, is a clean compile error.
+- All four expression walkers carry the new node, so it composes inside formula bodies,
+  `let`s, and predicate application positions exactly like the other precision ops.
+
 ## [0.59.0] — 2026-07-22
 
 ### Added — NUM-6c: the `to_scientific(x [, figures])` scientific-notation rendering (ADJ-NUMERIC-SUBSTRATE §4.1, §4.3)
