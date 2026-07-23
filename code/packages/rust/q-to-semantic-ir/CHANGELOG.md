@@ -1,5 +1,46 @@
 # Changelog
 
+## [0.1.1] - 2026-07-23
+
+### Fixed (in the shared `semantic-ir-to-javascript` crate — task #109)
+
+`tests/oracle.rs`'s own module doc comment ("A pre-existing shared-crate
+display gap") disclosed 5 `known_bug` cases whose only remaining
+disagreement was `semantic-ir-to-javascript` having no Q-specific display
+convention: a genuine SIR22 `NDArray` result's negative values rendered
+with APL's high-minus glyph `¯` instead of Q's own plain ASCII `-`,
+regardless of source language, whenever `SIR_DISPLAY_J_UNDERSCORE` was
+unset. This was the exact same shared-crate gap `j-to-semantic-ir/tests/
+oracle.rs`'s own "Bug A" already found and left unfixed, per this repo's
+"found, NOT fixed here" discipline for a bug in a crate consumed by many
+frontends — not specific to this crate's own lowering, and not something
+this crate could route around on its own.
+
+Fixed directly in `semantic-ir-to-javascript` 0.51.4: a fifth,
+mutually-exclusive `SIR_DISPLAY_Q_ASCII_MINUS` display flag, following the
+exact pattern `SIR_DISPLAY_J_UNDERSCORE` established for J (see that
+crate's own `CHANGELOG.md` for the full writeup). No change was needed in
+this crate's own `src/lower.rs` — the gap was purely a shared-runtime
+display-convention omission, not a lowering bug.
+
+### Changed
+
+- **`tests/oracle.rs`**: flips all 5 `known_bug: Some(DISPLAY_GAP)` cases
+  to `known_bug: None`, confirmed by actually running the oracle test (not
+  just inferred from source reading) — every one now agrees end-to-end
+  with `q-runtime`: `whitespace_sensitive_strand_vs_subtraction_strand`
+  (`2 -1`), `dyadic_sub_negative_result` (`3-4` → `-1`),
+  `monadic_minus_negates_a_vector` (`-(1 2 3)` → `-1 -2 -3`),
+  `each_on_an_elementwise_primitive_matches_direct_application` (`-'1 2 3`
+  → `-1 -2 -3`), and `scan_then_reduce_negative` (`-/+\1 2 3` → `-8`). The
+  now-unused `DISPLAY_GAP` constant is removed and the module doc comment
+  updated to record the fix; the `known_bug` field itself stays on `Case`
+  (unused by any entry today) for a future genuine bug to reuse.
+- Verified via a genuine revert-and-confirm: temporarily forcing
+  `semantic-ir-to-javascript`'s new `SIR_DISPLAY_Q_ASCII_MINUS` flag back
+  to `false` reproduced the exact pre-fix failure (`¯1` instead of `-1`,
+  etc.) for all 5 cases; restoring the flag made them pass again.
+
 ## [0.1.0] - 2026-07-22
 
 ### Added

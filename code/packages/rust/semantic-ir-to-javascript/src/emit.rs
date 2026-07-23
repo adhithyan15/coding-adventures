@@ -148,7 +148,30 @@ pub fn emit_module(m: &Module) -> String {
     // generic, source-language-agnostic `head(args, …)` form every other
     // language (and Derive, before this item) still gets.
     //
-    // SECURITY: all four replacement values MUST remain a hardcoded literal
+    // A FIFTH, independent placeholder (task #109, the direct Q sibling of
+    // J's own "A THIRD" entry above, found by `q-to-semantic-ir/tests/
+    // oracle.rs`'s own `DISPLAY_GAP` cases): `true` when the module's
+    // `source_language` is Q, else `false`. Q's own console convention
+    // renders a negative number with a plain ASCII `-` (never APL's
+    // high-minus `¯`, never J's leading underscore `_`) and a non-finite
+    // value as lowercase `-inf`/`inf` — note the ASCII minus prefix on
+    // infinity, DIFFERENT from J's own `_inf` spelling
+    // (`q_runtime::value::fmt_num`, ported 1:1 in `ArrayRt.fmtNum` below).
+    // Q's bare/boxed-scalar path already happens to print ASCII `-` today
+    // (the generic `String(v)`/`floatToRubyString` fallback ends up
+    // matching Q's own convention for a plain negative integer by
+    // coincidence), but NOT for non-finite values or whole-valued floats
+    // (see `runtime.rs`'s `formatSeen` gate for the exact divergence), and
+    // a genuine SIR22 `NDArray` result reaches `ArrayRt.fmtNum`, which
+    // renders APL's own high-minus glyph unconditionally whenever neither
+    // of the other two `fmtNum`-gating flags is set — this flag closes
+    // both gaps in one place. Mutually exclusive with the four flags above
+    // by construction (all five are computed from the same single
+    // `source_language` field in `emit.rs`), so `fmtNum`/`formatSeen`
+    // below never need to arbitrate between them — only one can ever be
+    // `true` for a given module.
+    //
+    // SECURITY: all five replacement values MUST remain a hardcoded literal
     // selected by a boolean — never text derived from `source_language` or
     // any other source-controlled field — so this substitution can never
     // inject into the emitted JavaScript.
@@ -156,6 +179,7 @@ pub fn emit_module(m: &Module) -> String {
     let display_apl_high_minus = m.metadata.source_language.as_deref() == Some("apl");
     let display_j_underscore = m.metadata.source_language.as_deref() == Some("j");
     let display_derive = m.metadata.source_language.as_deref() == Some("derive");
+    let display_q_ascii_minus = m.metadata.source_language.as_deref() == Some("q");
     out.push_str(
         &RUNTIME
             .replace(
@@ -173,6 +197,10 @@ pub fn emit_module(m: &Module) -> String {
             .replace(
                 "__SIR_DISPLAY_DERIVE__",
                 if display_derive { "true" } else { "false" },
+            )
+            .replace(
+                "__SIR_DISPLAY_Q_ASCII_MINUS__",
+                if display_q_ascii_minus { "true" } else { "false" },
             ),
     );
     emit_ancestry_registration(&mut out, m);

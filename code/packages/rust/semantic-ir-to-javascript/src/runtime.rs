@@ -135,6 +135,21 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // semantic-ir` frontend that sets one of the first three (Ruby/APL/J)
   // emits any SIR23 `SymApply`/`SymSymbol` node at all today.
   const SIR_DISPLAY_DERIVE = __SIR_DISPLAY_DERIVE__;
+  // A FIFTH, independent display-convention flag (task #109, the direct Q
+  // sibling of J's own flag immediately above, found by `q-to-semantic-ir/
+  // tests/oracle.rs`'s own `DISPLAY_GAP` cases): `true` when the module's
+  // `source_language` is Q, else `false`. Q's own console convention
+  // renders a negative number with a plain ASCII `-` (never APL's
+  // high-minus `¯`, never J's leading underscore `_`) and a non-finite
+  // value as lowercase `-inf`/`inf` (note the ASCII minus PREFIX on
+  // infinity -- DIFFERENT from J's own `_inf` spelling immediately above),
+  // matching `q_runtime::value::fmt_num` exactly (`fmtNum` below is ported
+  // 1:1 from it). Mutually exclusive with the four flags above by
+  // construction (all five are computed from the same single
+  // `source_language` field in `emit.rs`), so `fmtNum`/`formatSeen` below
+  // never need to arbitrate between them -- only one can ever be `true`
+  // for a given module.
+  const SIR_DISPLAY_Q_ASCII_MINUS = __SIR_DISPLAY_Q_ASCII_MINUS__;
   // ── value model ────────────────────────────────────────────────
   // A symbol is an interned name; `===` on two interned symbols with
   // the same name is therefore identity-equal.
@@ -414,10 +429,10 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     // (MATLAB's `2 ^ 2` reaches the identical shape), so only the source
     // language, not the value's own shape, can decide the glyph.
     if (v instanceof SirFloat) {
-      return (SIR_DISPLAY_APL_HIGH_MINUS || SIR_DISPLAY_J_UNDERSCORE) ? ArrayRt.fmtNum(v.f) : floatToRubyString(v.f);
+      return (SIR_DISPLAY_APL_HIGH_MINUS || SIR_DISPLAY_J_UNDERSCORE || SIR_DISPLAY_Q_ASCII_MINUS) ? ArrayRt.fmtNum(v.f) : floatToRubyString(v.f);
     }
     if (typeof v === "number") {
-      return (SIR_DISPLAY_APL_HIGH_MINUS || SIR_DISPLAY_J_UNDERSCORE) ? ArrayRt.fmtNum(v) : String(v);
+      return (SIR_DISPLAY_APL_HIGH_MINUS || SIR_DISPLAY_J_UNDERSCORE || SIR_DISPLAY_Q_ASCII_MINUS) ? ArrayRt.fmtNum(v) : String(v);
     }
     if (v instanceof Sym) { return v.name; }
     if (v instanceof Pair) {
@@ -5864,21 +5879,27 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     }
 
     /**
-     * Format one number the way `apl_runtime::value::fmt_num` (APL) or
+     * Format one number the way `apl_runtime::value::fmt_num` (APL),
      * `j_runtime::value::fmt_num` (J, when `SIR_DISPLAY_J_UNDERSCORE` is
-     * set — added alongside `j-to-semantic-ir/tests/oracle.rs`'s "Bug A")
+     * set — added alongside `j-to-semantic-ir/tests/oracle.rs`'s "Bug A"),
+     * or `q_runtime::value::fmt_num` (Q, when `SIR_DISPLAY_Q_ASCII_MINUS`
+     * is set — task #109, the direct Q sibling of J's own fix, added
+     * alongside `q-to-semantic-ir/tests/oracle.rs`'s `DISPLAY_GAP` cases)
      * does, ported 1:1 from whichever is active: APL's high-minus glyph
-     * `¯` (never ASCII `-`), or J's leading underscore `_` (never `¯`,
-     * never `-`), prefixes a negative number; a whole-valued float prints
-     * without a trailing `.0`. Unlike the Rust source, no separate
-     * integer-vs-float branch is needed for the whole-value case —
-     * `String(5)` and `String(5.0)` are both `"5"` in JS, where Rust needs
-     * `format!("{}", mag as i64)` specifically to avoid `5.0`'s `Display`
-     * impl printing a trailing `.0`. `x < 0` (a numeric comparison) already
-     * excludes `-0` from either negative-glyph branch on its own — `-0 < 0`
-     * is `false` in JS — so, unlike Rust's `is_sign_negative()` (a
-     * bit-level check that says `true` for `-0`), no separate
-     * `-0`-is-plain-`0` guard is needed here either.
+     * `¯` (never ASCII `-`), J's leading underscore `_` (never `¯`, never
+     * `-`), or Q's own plain ASCII `-` (never `¯`, never `_`) prefixes a
+     * negative number; a whole-valued float prints without a trailing
+     * `.0`. Unlike the Rust source, no separate integer-vs-float branch is
+     * needed for the whole-value case — `String(5)` and `String(5.0)` are
+     * both `"5"` in JS, where Rust needs `format!("{}", mag as i64)`
+     * specifically to avoid `5.0`'s `Display` impl printing a trailing
+     * `.0`. `x < 0` (a numeric comparison) already excludes `-0` from any
+     * of the three negative-glyph branches on its own — `-0 < 0` is
+     * `false` in JS — so, unlike Rust's `is_sign_negative()` (a bit-level
+     * check that says `true` for `-0`), no separate `-0`-is-plain-`0`
+     * guard is needed here either (matching `q_runtime::value::fmt_num`'s
+     * own explicit `mag != 0.0` guard against exactly this, via a
+     * different mechanism that reaches the identical result).
      */
     function fmtNum(x) {
       if (Number.isNaN(x)) {
@@ -5886,10 +5907,12 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       }
       if (!Number.isFinite(x)) {
         if (SIR_DISPLAY_J_UNDERSCORE) { return x < 0 ? "_inf" : "inf"; }
+        if (SIR_DISPLAY_Q_ASCII_MINUS) { return x < 0 ? "-inf" : "inf"; }
         return x < 0 ? "¯∞" : "∞";
       }
       const body = String(Math.abs(x));
       if (SIR_DISPLAY_J_UNDERSCORE) { return x < 0 ? "_" + body : body; }
+      if (SIR_DISPLAY_Q_ASCII_MINUS) { return x < 0 ? "-" + body : body; }
       return x < 0 ? "¯" + body : body;
     }
 
@@ -6534,10 +6557,10 @@ mod tests {
         // shape the way `neg`'s array branch is.
         assert!(RUNTIME.contains("const SIR_DISPLAY_APL_HIGH_MINUS = __SIR_DISPLAY_APL_HIGH_MINUS__;"));
         assert!(RUNTIME.contains(
-            "return (SIR_DISPLAY_APL_HIGH_MINUS || SIR_DISPLAY_J_UNDERSCORE) ? ArrayRt.fmtNum(v.f) : floatToRubyString(v.f);"
+            "return (SIR_DISPLAY_APL_HIGH_MINUS || SIR_DISPLAY_J_UNDERSCORE || SIR_DISPLAY_Q_ASCII_MINUS) ? ArrayRt.fmtNum(v.f) : floatToRubyString(v.f);"
         ));
         assert!(RUNTIME.contains(
-            "return (SIR_DISPLAY_APL_HIGH_MINUS || SIR_DISPLAY_J_UNDERSCORE) ? ArrayRt.fmtNum(v) : String(v);"
+            "return (SIR_DISPLAY_APL_HIGH_MINUS || SIR_DISPLAY_J_UNDERSCORE || SIR_DISPLAY_Q_ASCII_MINUS) ? ArrayRt.fmtNum(v) : String(v);"
         ));
         // `fmtNum` must be reachable from OUTSIDE the `ArrayRt` IIFE (where
         // `formatSeen` lives) for the branches above to compile at all.
@@ -6561,6 +6584,30 @@ mod tests {
         // The APL branch must still be the DEFAULT (reached when the J flag
         // is false) -- these two lines are unchanged from before this fix,
         // confirming APL's own display is untouched by adding J's.
+        assert!(RUNTIME.contains("return x < 0 ? \"¯∞\" : \"∞\";"));
+        assert!(RUNTIME.contains("return x < 0 ? \"¯\" + body : body;"));
+    }
+
+    // ── Q's own display convention (task #109, the direct Q sibling of
+    // J's "Bug A" above, `q-to-semantic-ir/tests/oracle.rs`'s `DISPLAY_GAP`
+    // cases) ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn fmtnum_gates_the_negative_glyph_and_infinity_spelling_on_the_q_ascii_minus_flag() {
+        // Regression guard for task #109: `semantic-ir-to-javascript` had
+        // no Q-specific counterpart to `SIR_DISPLAY_APL_HIGH_MINUS`/
+        // `SIR_DISPLAY_J_UNDERSCORE` at all, so a Q-sourced module's
+        // genuine-NDArray negative numbers/infinity fell through to APL's
+        // own high-minus glyph (`ArrayRt.fmtNum`'s previously-unconditional
+        // branch) instead of Q's own plain ASCII `-`/lowercase `-inf`.
+        assert!(RUNTIME.contains("const SIR_DISPLAY_Q_ASCII_MINUS = __SIR_DISPLAY_Q_ASCII_MINUS__;"));
+        assert!(RUNTIME.contains("if (SIR_DISPLAY_Q_ASCII_MINUS) { return x < 0 ? \"-inf\" : \"inf\"; }"));
+        assert!(RUNTIME.contains("if (SIR_DISPLAY_Q_ASCII_MINUS) { return x < 0 ? \"-\" + body : body; }"));
+        // J's and APL's own branches must still be reachable (both unchanged
+        // by adding Q's) -- confirming Q's flag is a pure addition, not a
+        // replacement.
+        assert!(RUNTIME.contains("if (SIR_DISPLAY_J_UNDERSCORE) { return x < 0 ? \"_inf\" : \"inf\"; }"));
+        assert!(RUNTIME.contains("if (SIR_DISPLAY_J_UNDERSCORE) { return x < 0 ? \"_\" + body : body; }"));
         assert!(RUNTIME.contains("return x < 0 ? \"¯∞\" : \"∞\";"));
         assert!(RUNTIME.contains("return x < 0 ? \"¯\" + body : body;"));
     }

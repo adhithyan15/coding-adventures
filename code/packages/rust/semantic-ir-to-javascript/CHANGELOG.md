@@ -1,5 +1,70 @@
 # Changelog
 
+## 0.51.4 — Q's own display convention (task #109, the direct Q sibling of J's `SIR_DISPLAY_J_UNDERSCORE` fix)
+
+`q-to-semantic-ir/tests/oracle.rs` (built alongside the runtime in the same
+wave as 0.51.0's five new Q primitives) confirmed the exact same shared-crate
+display-glyph gap `j-to-semantic-ir/tests/oracle.rs`'s own "Bug A" already
+found for J now affected Q too: no per-source-language ASCII-minus flag
+existed for a non-APL/non-J language's genuine-`NDArray` results, so a
+Q-sourced module's negative array values rendered with APL's high-minus
+glyph `¯` instead of Q's own plain ASCII `-`. Fixed here, mirroring
+`SIR_DISPLAY_J_UNDERSCORE`'s own 0.46.0 fix file-for-file.
+
+### Added
+
+- **`emit.rs`/`runtime.rs`: a fifth `SIR_DISPLAY_*` flag,
+  `SIR_DISPLAY_Q_ASCII_MINUS`** — extends the existing, already-proven
+  `SIR_DISPLAY_RUBY`/`SIR_DISPLAY_APL_HIGH_MINUS`/`SIR_DISPLAY_J_UNDERSCORE`/
+  `SIR_DISPLAY_DERIVE` mechanism exactly (a mutually-exclusive boolean
+  computed from `m.metadata.source_language`, substituted into the inlined
+  `RUNTIME` blob as a hardcoded literal — never source-derived text,
+  preserving the existing SECURITY invariant), rather than inventing a new
+  one. `true` when `source_language` is `"q"`, else `false`.
+- **`runtime.rs`: `fmtNum`** gains a third glyph branch, gated on
+  `SIR_DISPLAY_Q_ASCII_MINUS`, ported 1:1 from `q_runtime::value::fmt_num`:
+  a negative finite number prefixes with plain ASCII `-` (never `¯`, never
+  `_`); a non-finite value spells `"-inf"`/`"inf"` — lowercase, and with an
+  ASCII minus PREFIX on negative infinity, deliberately DIFFERENT from J's
+  own `"_inf"` spelling (a leading underscore, not a prefix minus). `x < 0`
+  (a numeric comparison) already excludes `-0` from the negative branch on
+  its own, matching the existing APL/J branches' identical reasoning — no
+  separate `-0` guard needed, even though `q_runtime::value::fmt_num`'s own
+  Rust source needs one (`is_sign_negative()` is a bit-level check that
+  says `true` for `-0`, unlike JS's `x < 0`).
+- **`runtime.rs`: `formatSeen`'s two `SirFloat`/bare-number branches** now
+  also check `SIR_DISPLAY_Q_ASCII_MINUS` in their `ArrayRt.fmtNum`-vs-
+  fallback OR-condition (alongside the existing `SIR_DISPLAY_APL_HIGH_MINUS`/
+  `SIR_DISPLAY_J_UNDERSCORE` checks). A Q-sourced module's bare/boxed scalar
+  negative INTEGER already happened to print correctly through the generic
+  `String(v)` fallback (Q's own convention IS plain ASCII `-`), but a
+  non-finite bare scalar printed JS's native `"Infinity"`/`"-Infinity"`
+  instead of Q's own `"inf"`/`"-inf"`, and a boxed whole-valued `SirFloat`
+  fell through to `floatToRubyString`'s Ruby-style trailing `.0` (`"5.0"`,
+  not Q's own `"5"`) — both now route through the now-Q-aware `fmtNum`
+  instead.
+- Two new `runtime.rs` regression tests,
+  `fmtnum_gates_the_negative_glyph_and_infinity_spelling_on_the_q_ascii_minus_flag`
+  and an update to the pre-existing
+  `formatseen_gates_bare_number_and_boxed_float_glyph_on_apl_high_minus_flag`
+  (its two exact-string OR-condition assertions now include the third
+  flag), mirroring the J-underscore flag's own test-shape exactly.
+
+### Verification
+
+Reverted `display_q_ascii_minus` to a hardcoded `false` in `emit.rs` and
+re-ran `q-to-semantic-ir/tests/oracle.rs`: all 5 previously-`known_bug`
+cases failed exactly as before (`¯1` instead of `-1`, etc.) — confirming
+the fix, not a coincidence, is what makes them pass. Restored and
+re-confirmed green. Full suite of every SIR22-array-domain consumer crate
+(`q-to-semantic-ir`, `matlab-to-semantic-ir`, `octave-to-semantic-ir`,
+`apl-to-semantic-ir`, `j-to-semantic-ir`, `scilab-to-semantic-ir`) passes
+unchanged.
+
+### Flips 5 of `q-to-semantic-ir`'s `known_bug` oracle cases to `known_bug: None`
+
+See that crate's own `CHANGELOG.md` for the full per-case accounting.
+
 ## 0.51.3 — calculus / elementary-function handlers: `Sin`/`Cos`/`Sqrt`/`D`/`Integrate` (SIR23 addendum, item 3 of 4)
 
 Item 3 of the 4-item rollout described by `SIR23-symbolic-pattern-

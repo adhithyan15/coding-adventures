@@ -1,6 +1,6 @@
 [package]
 name = "q-to-semantic-ir"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Q (kdb+) CST → narrow-waist Semantic IR (SIR22 array/matrix domain, reusing APL/J's addendum). MA-11e, front2 Wave 5."
 
