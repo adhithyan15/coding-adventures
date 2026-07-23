@@ -464,6 +464,8 @@ fn clone_subckt_element(
             expanded.emitter_resistance = element.emitter_resistance;
             expanded.collector_resistance = element.collector_resistance;
             expanded.base_resistance = element.base_resistance;
+            expanded.minimum_base_resistance = element.minimum_base_resistance;
+            expanded.base_resistance_half_current = element.base_resistance_half_current;
             Element::Bjt(expanded)
         }
         Element::Mosfet(element) => Element::Mosfet(Mosfet::with_model(
@@ -2915,6 +2917,8 @@ pub struct Bjt {
     pub emitter_resistance: f64,
     pub collector_resistance: f64,
     pub base_resistance: f64,
+    pub minimum_base_resistance: Option<f64>,
+    pub base_resistance_half_current: f64,
 }
 
 impl Bjt {
@@ -3387,6 +3391,8 @@ impl Bjt {
             emitter_resistance: 0.0,
             collector_resistance: 0.0,
             base_resistance: 0.0,
+            minimum_base_resistance: None,
+            base_resistance_half_current: 0.0,
         }
     }
 }
@@ -3777,8 +3783,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     usize,
 )] = &[
     (ModelCardKind::Diode, 12, 18, 5, 3),
-    (ModelCardKind::Npn, 36, 53, 13, 4),
-    (ModelCardKind::Pnp, 36, 53, 13, 4),
+    (ModelCardKind::Npn, 38, 55, 13, 4),
+    (ModelCardKind::Pnp, 38, 55, 13, 4),
     (ModelCardKind::Njf, 5, 11, 5, 3),
     (ModelCardKind::Pjf, 5, 11, 5, 3),
     (ModelCardKind::Nmos, 18, 25, 6, 3),
@@ -3840,6 +3846,8 @@ const BJT_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("RE", "RE"),
     ("RC", "RC"),
     ("RB", "RB"),
+    ("RBM", "RBM"),
+    ("IRB", "IRB"),
     ("ISE", "ISE"),
     ("NE", "NE"),
     ("ISC", "ISC"),
@@ -4543,6 +4551,8 @@ pub fn bjt_from_model_card(
     bjt.emitter_resistance = model_card_value(model, "RE", 0.0);
     bjt.collector_resistance = model_card_value(model, "RC", 0.0);
     bjt.base_resistance = model_card_value(model, "RB", 0.0);
+    bjt.minimum_base_resistance = model.parameters.get("RBM").copied();
+    bjt.base_resistance_half_current = model_card_value(model, "IRB", 0.0);
     Ok(bjt)
 }
 
@@ -22231,16 +22241,34 @@ fn collect_noise_sources(
                     }
                     if bjt.base_resistance > 0.0 {
                         let intrinsic_base = bjt_intrinsic_base_node(bjt);
+                        let intrinsic_base_index = node_index(node_indices, &intrinsic_base);
+                        let base_voltage = vector_voltage(operating_point, intrinsic_base_index);
+                        let emitter_voltage = vector_voltage(
+                            operating_point,
+                            node_index(node_indices, &intrinsic.emitter),
+                        );
+                        let collector_voltage = vector_voltage(
+                            operating_point,
+                            node_index(node_indices, &intrinsic.collector),
+                        );
+                        let base_resistance = bjt_effective_base_resistance(
+                            &intrinsic,
+                            base_voltage,
+                            emitter_voltage,
+                            collector_voltage,
+                        );
                         sources.push(NoiseSource {
                             element_name: format!("{}:RB", bjt.name),
                             noise_type: NoiseType::Thermal,
                             positive: node_index(node_indices, &bjt.base),
-                            negative: node_index(node_indices, &intrinsic_base),
-                            source_psd: 4.0 * BOLTZMANN * temperature_kelvin / bjt.base_resistance,
+                            negative: intrinsic_base_index,
+                            source_psd: 4.0 * BOLTZMANN * temperature_kelvin / base_resistance,
                             frequency_exponent: 0.0,
                         });
                         intrinsic.base = intrinsic_base;
                         intrinsic.base_resistance = 0.0;
+                        intrinsic.minimum_base_resistance = None;
+                        intrinsic.base_resistance_half_current = 0.0;
                     }
                     Some(intrinsic)
                 } else {
@@ -22842,6 +22870,55 @@ fn bjt_reverse_base_current(bjt: &Bjt, junction_voltage: f64) -> (f64, f64) {
     )
 }
 
+fn bjt_effective_base_resistance(
+    bjt: &Bjt,
+    base_voltage: f64,
+    emitter_voltage: f64,
+    collector_voltage: f64,
+) -> f64 {
+    let minimum = bjt.minimum_base_resistance.unwrap_or(bjt.base_resistance);
+    if minimum == bjt.base_resistance {
+        return bjt.base_resistance;
+    }
+    let (junction_voltage, reverse_voltage, output_voltage) = match bjt.polarity {
+        BjtPolarity::Npn => (
+            base_voltage - emitter_voltage,
+            base_voltage - collector_voltage,
+            collector_voltage - emitter_voltage,
+        ),
+        BjtPolarity::Pnp => (
+            emitter_voltage - base_voltage,
+            collector_voltage - base_voltage,
+            emitter_voltage - collector_voltage,
+        ),
+    };
+    let forward_thermal_voltage = bjt.thermal_voltage * bjt.forward_emission_coefficient;
+    let exp_value = (junction_voltage / forward_thermal_voltage)
+        .clamp(-40.0, 40.0)
+        .exp();
+    let diffusion_current = bjt.saturation_current * (exp_value - 1.0);
+    let diffusion_conductance = bjt.saturation_current / forward_thermal_voltage * exp_value;
+    let early_factor = bjt_early_factor(bjt, junction_voltage, output_voltage);
+    let (_, _, charge_factor) =
+        bjt_forward_transport(bjt, diffusion_current, diffusion_conductance, early_factor);
+    let (leakage_current, _) = bjt_base_emitter_leakage(bjt, junction_voltage);
+    let (collector_leakage_current, _) = bjt_base_collector_leakage(bjt, reverse_voltage);
+    let (reverse_base_current, _) = bjt_reverse_base_current(bjt, reverse_voltage);
+    let base_current = diffusion_current / bjt.forward_beta
+        + leakage_current
+        + collector_leakage_current
+        + reverse_base_current;
+    let variable_resistance = bjt.base_resistance - minimum;
+    if bjt.base_resistance_half_current == 0.0 {
+        return minimum + variable_resistance / charge_factor;
+    }
+    let ratio = (base_current / bjt.base_resistance_half_current).max(1.0e-9);
+    let angle = (-1.0 + (1.0 + 14.59025 * ratio).sqrt()) / (2.4317 * ratio.sqrt());
+    let tangent = angle.tan();
+    let transition = 3.0 * (tangent - angle) / (angle * tangent * tangent);
+    minimum + variable_resistance * transition
+}
+
 fn stamp_bjt(
     bjt: &Bjt,
     capacitor_states: &[CapacitorState],
@@ -22880,14 +22957,32 @@ fn stamp_bjt(
         }
         if bjt.base_resistance > 0.0 {
             let intrinsic_base = bjt_intrinsic_base_node(bjt);
+            let intrinsic_base_index = node_index(node_indices, &intrinsic_base);
+            let base_voltage = vector_voltage(operating_point, intrinsic_base_index);
+            let emitter_voltage = vector_voltage(
+                operating_point,
+                node_index(node_indices, &intrinsic.emitter),
+            );
+            let collector_voltage = vector_voltage(
+                operating_point,
+                node_index(node_indices, &intrinsic.collector),
+            );
+            let base_resistance = bjt_effective_base_resistance(
+                &intrinsic,
+                base_voltage,
+                emitter_voltage,
+                collector_voltage,
+            );
             stamp_conductance(
                 matrix,
                 node_index(node_indices, &bjt.base),
-                node_index(node_indices, &intrinsic_base),
-                1.0 / bjt.base_resistance,
+                intrinsic_base_index,
+                1.0 / base_resistance,
             );
             intrinsic.base = intrinsic_base;
             intrinsic.base_resistance = 0.0;
+            intrinsic.minimum_base_resistance = None;
+            intrinsic.base_resistance_half_current = 0.0;
         }
         Some(intrinsic)
     } else {
@@ -23077,14 +23172,32 @@ fn stamp_bjt_small_signal(
         }
         if bjt.base_resistance > 0.0 {
             let intrinsic_base = bjt_intrinsic_base_node(bjt);
+            let intrinsic_base_index = node_index(node_indices, &intrinsic_base);
+            let base_voltage = vector_voltage(operating_point, intrinsic_base_index);
+            let emitter_voltage = vector_voltage(
+                operating_point,
+                node_index(node_indices, &intrinsic.emitter),
+            );
+            let collector_voltage = vector_voltage(
+                operating_point,
+                node_index(node_indices, &intrinsic.collector),
+            );
+            let base_resistance = bjt_effective_base_resistance(
+                &intrinsic,
+                base_voltage,
+                emitter_voltage,
+                collector_voltage,
+            );
             stamp_conductance(
                 matrix,
                 node_index(node_indices, &bjt.base),
-                node_index(node_indices, &intrinsic_base),
-                1.0 / bjt.base_resistance,
+                intrinsic_base_index,
+                1.0 / base_resistance,
             );
             intrinsic.base = intrinsic_base;
             intrinsic.base_resistance = 0.0;
+            intrinsic.minimum_base_resistance = None;
+            intrinsic.base_resistance_half_current = 0.0;
         }
         Some(intrinsic)
     } else {
@@ -23184,14 +23297,32 @@ fn stamp_ac_bjt_small_signal(
         }
         if bjt.base_resistance > 0.0 {
             let intrinsic_base = bjt_intrinsic_base_node(bjt);
+            let intrinsic_base_index = node_index(node_indices, &intrinsic_base);
+            let base_voltage = vector_voltage(operating_point, intrinsic_base_index);
+            let emitter_voltage = vector_voltage(
+                operating_point,
+                node_index(node_indices, &intrinsic.emitter),
+            );
+            let collector_voltage = vector_voltage(
+                operating_point,
+                node_index(node_indices, &intrinsic.collector),
+            );
+            let base_resistance = bjt_effective_base_resistance(
+                &intrinsic,
+                base_voltage,
+                emitter_voltage,
+                collector_voltage,
+            );
             stamp_complex_conductance(
                 matrix,
                 node_index(node_indices, &bjt.base),
-                node_index(node_indices, &intrinsic_base),
-                Complex::new(1.0 / bjt.base_resistance, 0.0),
+                intrinsic_base_index,
+                Complex::new(1.0 / base_resistance, 0.0),
             );
             intrinsic.base = intrinsic_base;
             intrinsic.base_resistance = 0.0;
+            intrinsic.minimum_base_resistance = None;
+            intrinsic.base_resistance_half_current = 0.0;
         }
         Some(intrinsic)
     } else {
@@ -24404,6 +24535,21 @@ fn validate_bjt(bjt: &Bjt) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: bjt.name.clone(),
             reason: "base resistance must be finite and non-negative".to_string(),
+        });
+    }
+    if bjt
+        .minimum_base_resistance
+        .is_some_and(|resistance| !resistance.is_finite() || resistance < 0.0)
+    {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "minimum base resistance must be finite and non-negative".to_string(),
+        });
+    }
+    if !bjt.base_resistance_half_current.is_finite() || bjt.base_resistance_half_current < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "base-resistance half-current must be finite and non-negative".to_string(),
         });
     }
     if !bjt.base_emitter_leakage_saturation_current.is_finite()
