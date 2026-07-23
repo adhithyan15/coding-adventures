@@ -599,7 +599,7 @@ describe("acSweep", () => {
   });
 
   it("scales BJT diffusion capacitance by the forward transit-time bias coefficient", () => {
-    function baseAmplitude(coefficient: number): number {
+    function baseAmplitude(coefficient: number, transitTimeCurrent = 0.0): number {
       const circuit = new Circuit();
       circuit.add(voltageSourceWithAc("Vac", "in", "0", 0.0, 1.0));
       circuit.add(resistor("Rin", "in", "base", 1_000.0));
@@ -607,14 +607,17 @@ describe("acSweep", () => {
       circuit.add({
         ...bjt("Q1", "col", "base", "0", "NPN", 25.85e-6, 100.0, 0.02585, 0.0, 0.0, 1.0e-6),
         forwardTransitTimeBiasCoefficient: coefficient,
+        forwardTransitTimeCurrent: transitTimeCurrent,
       });
       return complexAbs(acSweep(circuit, 100_000.0, 100_000.0, 1)[0].voltage("base")!);
     }
 
     const nominal = baseAmplitude(0.0);
     const biasScaled = baseAmplitude(9.0);
+    const currentLimited = baseAmplitude(9.0, 1.0);
 
     expect(biasScaled).toBeLessThan(nominal / 5.0);
+    expect(currentLimited).toBeGreaterThan(biasScaled * 5.0);
   });
 
   it("uses BJT reverse transit time as base-collector diffusion capacitance in AC analysis", () => {

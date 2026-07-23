@@ -870,7 +870,7 @@ fn ac_bjt_forward_excess_phase_rotates_transconductance() {
 
 #[test]
 fn ac_bjt_forward_transit_time_bias_coefficient_scales_diffusion_capacitance() {
-    fn base_amplitude(coefficient: f64) -> f64 {
+    fn base_amplitude(coefficient: f64, transit_time_current: f64) -> f64 {
         let mut circuit = Circuit::new();
         circuit.add(Element::VoltageSource(VoltageSource::with_ac(
             "Vac", "in", "0", 0.0, 1.0, 0.0,
@@ -894,6 +894,7 @@ fn ac_bjt_forward_transit_time_bias_coefficient_scales_diffusion_capacitance() {
             0.0,
         );
         transistor.forward_transit_time_bias_coefficient = coefficient;
+        transistor.forward_transit_time_current = transit_time_current;
         circuit.add(Element::Bjt(transistor));
 
         ac_sweep(&circuit, 100_000.0, 100_000.0, 1).unwrap()[0]
@@ -902,10 +903,12 @@ fn ac_bjt_forward_transit_time_bias_coefficient_scales_diffusion_capacitance() {
             .abs()
     }
 
-    let nominal = base_amplitude(0.0);
-    let bias_scaled = base_amplitude(9.0);
+    let nominal = base_amplitude(0.0, 0.0);
+    let bias_scaled = base_amplitude(9.0, 0.0);
+    let current_limited = base_amplitude(9.0, 1.0);
 
     assert!(bias_scaled < nominal / 5.0);
+    assert!(current_limited > bias_scaled * 5.0);
 }
 
 #[test]

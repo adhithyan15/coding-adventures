@@ -459,6 +459,7 @@ fn clone_subckt_element(
             expanded.forward_excess_phase_degrees = element.forward_excess_phase_degrees;
             expanded.forward_transit_time_bias_coefficient =
                 element.forward_transit_time_bias_coefficient;
+            expanded.forward_transit_time_current = element.forward_transit_time_current;
             Element::Bjt(expanded)
         }
         Element::Mosfet(element) => Element::Mosfet(Mosfet::with_model(
@@ -2905,6 +2906,7 @@ pub struct Bjt {
     pub flicker_noise_exponent: f64,
     pub forward_excess_phase_degrees: f64,
     pub forward_transit_time_bias_coefficient: f64,
+    pub forward_transit_time_current: f64,
 }
 
 impl Bjt {
@@ -3372,6 +3374,7 @@ impl Bjt {
             flicker_noise_exponent: 1.0,
             forward_excess_phase_degrees: 0.0,
             forward_transit_time_bias_coefficient: 0.0,
+            forward_transit_time_current: 0.0,
         }
     }
 }
@@ -3762,8 +3765,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     usize,
 )] = &[
     (ModelCardKind::Diode, 12, 18, 5, 3),
-    (ModelCardKind::Npn, 31, 48, 13, 4),
-    (ModelCardKind::Pnp, 31, 48, 13, 4),
+    (ModelCardKind::Npn, 32, 49, 13, 4),
+    (ModelCardKind::Pnp, 32, 49, 13, 4),
     (ModelCardKind::Njf, 5, 11, 5, 3),
     (ModelCardKind::Pjf, 5, 11, 5, 3),
     (ModelCardKind::Nmos, 18, 25, 6, 3),
@@ -3820,6 +3823,7 @@ const BJT_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("AF", "AF"),
     ("PTF", "PTF"),
     ("XTF", "XTF"),
+    ("ITF", "ITF"),
     ("ISE", "ISE"),
     ("NE", "NE"),
     ("ISC", "ISC"),
@@ -4518,6 +4522,7 @@ pub fn bjt_from_model_card(
     bjt.flicker_noise_exponent = model_card_value(model, "AF", 1.0);
     bjt.forward_excess_phase_degrees = model_card_value(model, "PTF", 0.0);
     bjt.forward_transit_time_bias_coefficient = model_card_value(model, "XTF", 0.0);
+    bjt.forward_transit_time_current = model_card_value(model, "ITF", 0.0);
     Ok(bjt)
 }
 
@@ -23015,8 +23020,9 @@ fn stamp_ac_bjt_small_signal(
         -forward_gm * excess_phase.sin(),
     );
     let reverse_gm = bjt.saturation_current / reverse_thermal_voltage * reverse_exponent.exp();
-    let diffusion_capacitance =
-        bjt.forward_transit_time * (1.0 + bjt.forward_transit_time_bias_coefficient) * forward_gm;
+    let diffusion_capacitance = bjt.forward_transit_time
+        * bjt_forward_transit_time_scale(bjt, junction_voltage)
+        * forward_gm;
     let reverse_diffusion_capacitance = bjt.reverse_transit_time * reverse_gm;
     let (_, leakage_conductance) = bjt_base_emitter_leakage(bjt, junction_voltage);
     let (_, collector_leakage_conductance) =
@@ -23631,6 +23637,23 @@ fn bjt_junction_transconductance(bjt: &Bjt, voltage: f64, emission_coefficient: 
             .exp()
 }
 
+fn bjt_forward_transit_time_scale(bjt: &Bjt, voltage: f64) -> f64 {
+    let effective_thermal_voltage = bjt.thermal_voltage * bjt.forward_emission_coefficient;
+    let forward_current = (bjt.saturation_current
+        * ((voltage / effective_thermal_voltage)
+            .clamp(-40.0, 40.0)
+            .exp()
+            - 1.0))
+        .max(0.0);
+    let current_factor = if bjt.forward_transit_time_current == 0.0 {
+        1.0
+    } else {
+        let ratio = forward_current / (forward_current + bjt.forward_transit_time_current);
+        ratio * ratio
+    };
+    1.0 + bjt.forward_transit_time_bias_coefficient * current_factor
+}
+
 fn bjt_charge_dynamic_capacitance(bjt: &Bjt, kind: BjtChargeStateKind, voltage: f64) -> f64 {
     match kind {
         BjtChargeStateKind::BaseEmitter => {
@@ -23638,7 +23661,7 @@ fn bjt_charge_dynamic_capacitance(bjt: &Bjt, kind: BjtChargeStateKind, voltage: 
                 bjt_junction_transconductance(bjt, voltage, bjt.forward_emission_coefficient);
             bjt_base_emitter_depletion_capacitance(bjt, voltage)
                 + bjt.forward_transit_time
-                    * (1.0 + bjt.forward_transit_time_bias_coefficient)
+                    * bjt_forward_transit_time_scale(bjt, voltage)
                     * conductance
         }
         BjtChargeStateKind::BaseCollector => {
@@ -24088,6 +24111,12 @@ fn validate_bjt(bjt: &Bjt) -> Result<(), SpiceError> {
             name: bjt.name.clone(),
             reason: "forward transit-time bias coefficient must be finite and non-negative"
                 .to_string(),
+        });
+    }
+    if !bjt.forward_transit_time_current.is_finite() || bjt.forward_transit_time_current < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "forward transit-time current must be finite and non-negative".to_string(),
         });
     }
     if !bjt.base_emitter_leakage_saturation_current.is_finite()

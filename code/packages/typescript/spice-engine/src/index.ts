@@ -1734,6 +1734,7 @@ export interface Bjt {
   readonly flickerNoiseExponent: number;
   readonly forwardExcessPhaseDegrees: number;
   readonly forwardTransitTimeBiasCoefficient: number;
+  readonly forwardTransitTimeCurrent: number;
 }
 
 export type MosfetType = "NMOS" | "PMOS";
@@ -2011,8 +2012,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   Record<ModelCardKind, readonly [number, number, number, number]>
 > = {
   D: [12, 18, 5, 3],
-  NPN: [31, 48, 13, 4],
-  PNP: [31, 48, 13, 4],
+  NPN: [32, 49, 13, 4],
+  PNP: [32, 49, 13, 4],
   NJF: [5, 11, 5, 3],
   PJF: [5, 11, 5, 3],
   NMOS: [18, 25, 6, 3],
@@ -3602,7 +3603,7 @@ function cloneSubcktElement(
     case "jfet":
       return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation, element.gateSourceCapacitance, element.gateDrainCapacitance);
     case "bjt":
-      return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.forwardEarlyVoltage, element.forwardEmissionCoefficient, element.reverseEmissionCoefficient, element.baseEmitterJunctionPotential, element.baseEmitterGradingCoefficient, element.baseCollectorJunctionPotential, element.baseCollectorGradingCoefficient, element.forwardBiasDepletionCoefficient, element.reverseEarlyVoltage, element.forwardBetaRolloffCurrent, element.baseEmitterLeakageSaturationCurrent, element.baseEmitterLeakageEmissionCoefficient, element.baseCollectorLeakageSaturationCurrent, element.baseCollectorLeakageEmissionCoefficient, element.forwardBetaTemperatureExponent, element.reverseBeta, element.reverseBetaRolloffCurrent, element.nominalTemperatureKelvin, element.flickerNoiseCoefficient, element.flickerNoiseExponent, element.forwardExcessPhaseDegrees, element.forwardTransitTimeBiasCoefficient);
+      return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.forwardEarlyVoltage, element.forwardEmissionCoefficient, element.reverseEmissionCoefficient, element.baseEmitterJunctionPotential, element.baseEmitterGradingCoefficient, element.baseCollectorJunctionPotential, element.baseCollectorGradingCoefficient, element.forwardBiasDepletionCoefficient, element.reverseEarlyVoltage, element.forwardBetaRolloffCurrent, element.baseEmitterLeakageSaturationCurrent, element.baseEmitterLeakageEmissionCoefficient, element.baseCollectorLeakageSaturationCurrent, element.baseCollectorLeakageEmissionCoefficient, element.forwardBetaTemperatureExponent, element.reverseBeta, element.reverseBetaRolloffCurrent, element.nominalTemperatureKelvin, element.flickerNoiseCoefficient, element.flickerNoiseExponent, element.forwardExcessPhaseDegrees, element.forwardTransitTimeBiasCoefficient, element.forwardTransitTimeCurrent);
     case "mosfet":
       return mosfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), mapSubcktNode(element.body, instanceName, nodeMap), element.type, element.params);
     case "vccs":
@@ -7792,6 +7793,7 @@ export function bjt(
   flickerNoiseExponent = 1.0,
   forwardExcessPhaseDegrees = 0.0,
   forwardTransitTimeBiasCoefficient = 0.0,
+  forwardTransitTimeCurrent = 0.0,
 ): Bjt {
   return {
     kind: "bjt",
@@ -7831,6 +7833,7 @@ export function bjt(
     flickerNoiseExponent,
     forwardExcessPhaseDegrees,
     forwardTransitTimeBiasCoefficient,
+    forwardTransitTimeCurrent,
   };
 }
 
@@ -7947,6 +7950,7 @@ const BJT_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   AF: "AF",
   PTF: "PTF",
   XTF: "XTF",
+  ITF: "ITF",
   ISE: "ISE",
   NE: "NE",
   ISC: "ISC",
@@ -8485,6 +8489,7 @@ export function bjtFromModelCard(
     p.AF ?? 1.0,
     p.PTF ?? 0.0,
     p.XTF ?? 0.0,
+    p.ITF ?? 0.0,
   );
 }
 
@@ -19658,6 +19663,22 @@ function bjtJunctionTransconductance(
   return (element.saturationCurrent / effectiveThermalVoltage) * Math.exp(exponent);
 }
 
+function bjtForwardTransitTimeScale(element: Bjt, voltage: number): number {
+  const effectiveThermalVoltage =
+    element.thermalVoltage * element.forwardEmissionCoefficient;
+  const exponent = Math.max(-40.0, Math.min(40.0, voltage / effectiveThermalVoltage));
+  const forwardCurrent = Math.max(
+    element.saturationCurrent * (Math.exp(exponent) - 1.0),
+    0.0,
+  );
+  let currentFactor = 1.0;
+  if (element.forwardTransitTimeCurrent > 0.0) {
+    const ratio = forwardCurrent / (forwardCurrent + element.forwardTransitTimeCurrent);
+    currentFactor = ratio * ratio;
+  }
+  return 1.0 + element.forwardTransitTimeBiasCoefficient * currentFactor;
+}
+
 function bjtChargeDynamicCapacitance(
   element: Bjt,
   kind: BjtChargeStateKind,
@@ -19671,7 +19692,7 @@ function bjtChargeDynamicCapacitance(
     );
     return bjtBaseEmitterDepletionCapacitance(element, voltage) +
       element.forwardTransitTime *
-        (1.0 + element.forwardTransitTimeBiasCoefficient) *
+        bjtForwardTransitTimeScale(element, voltage) *
         conductance;
   }
   const conductance = bjtJunctionTransconductance(
@@ -19967,6 +19988,9 @@ function validateBjt(element: Bjt): void {
   }
   if (!Number.isFinite(element.forwardTransitTimeBiasCoefficient) || element.forwardTransitTimeBiasCoefficient < 0.0) {
     throw invalidElement(element.name, "forward transit-time bias coefficient must be finite and non-negative");
+  }
+  if (!Number.isFinite(element.forwardTransitTimeCurrent) || element.forwardTransitTimeCurrent < 0.0) {
+    throw invalidElement(element.name, "forward transit-time current must be finite and non-negative");
   }
   if (!Number.isFinite(element.baseEmitterLeakageSaturationCurrent) || element.baseEmitterLeakageSaturationCurrent < 0.0) {
     throw invalidElement(element.name, "base-emitter leakage saturation current must be finite and non-negative");
@@ -21946,7 +21970,7 @@ function stampAcBjtSmallSignal(
     baseTransconductance / element.forwardBeta + leakage.conductance;
   const diffusionCapacitance =
     element.forwardTransitTime *
-    (1.0 + element.forwardTransitTimeBiasCoefficient) *
+    bjtForwardTransitTimeScale(element, junctionVoltage) *
     transconductance;
   const excessPhase =
     omega * element.forwardTransitTime * element.forwardExcessPhaseDegrees * Math.PI / 180.0;
