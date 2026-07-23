@@ -627,40 +627,57 @@ image (`9(2)V9 = 4.2` compares equal to `"042"`).
 
 Deferred as clean later rungs (rejected at read/compile time, never wrong output):
 a **signed** (`PIC S9`) or **edited** (`PIC $,ZZ9.99`) numeric source, a
-**numeric-edited** receiver, an **alphanumeric → scaled-receiver** MOVE (parsing
-characters into a scaled receiver), and a **group** item on either side.
+**numeric-edited** receiver, and a **group** item on either side.
 
-### `MOVE` (cross-category: alphanumeric → unsigned-integer numeric)
+### `MOVE` (cross-category: alphanumeric → unsigned numeric — integer or scaled)
 
 The **reverse** cross-category rung is `MOVE alphanumeric-item TO numeric-item`,
-restricted to an alphanumeric source (`PIC X(m)`) into an **unsigned integer**
-receiver (`PIC 9(n)` — no `S`, no `V`).
+for an alphanumeric source (`PIC X(m)`) into an **unsigned** numeric receiver
+`PIC 9(i)V9(d)` — no `S`; `d` may be `0` (an integer receiver) or `> 0` (a
+**scaled** receiver).
 
-COBOL's rule: the alphanumeric source is treated as an **unsigned integer** formed
-from its characters read as digits, then moved (de-scaled) into the numeric
-receiver **right-justified** — the receiver keeps the **low-order `n` digits**,
-left-zero-padded when the source has fewer than `n` digits and high-order-truncated
-when it has more, i.e.
+COBOL's rule: the alphanumeric source is treated as an **unsigned integer** `V`
+formed from its characters read as digits (`V = V*10 + (char - '0')`,
+left-to-right), and **that fold IS the receiver's scaled-slot magnitude
+directly** — it fills the receiver's `(i + d)` digit positions **right-justified**,
+with the implied point sitting `d` places from the right. So the slot keeps the
+**low-order `(i + d)` digits**, left-zero-padded when the source has fewer than
+`i + d` digits and high-order-truncated when it has more, i.e.
 
 ```text
-receiver_value = (integer formed from the m source digit characters) mod 10^n
+slot = V mod 10^(i+d)   (rendered with the implied point d places from the right)
 ```
 
-Worked (source read left-to-right as `value = value*10 + (char - '0')`):
+This is **NOT** the arithmetic decimal-align rule: `V` is *not* multiplied by
+`10^d`. The fold already lands at scale `d`.
 
-- `PIC X(3)="042"` → `PIC 9(3)` → `42` (exact fit; `DISPLAY` shows `"042"`).
+Worked (integer receiver — `d = 0` — is the special case):
+
+- `PIC X(3)="042"` → `PIC 9(3)` → `42` (`DISPLAY "042"`; the integer special case).
 - `PIC X(2)="05"` → `PIC 9(4)` → `0005` (source shorter → left-zero-padded).
 - `PIC X(5)="12345"` → `PIC 9(3)` → `345` (source longer → high-order-truncated).
+- `PIC X(3)="042"` → `PIC 9(2)V9` → slot `042`, reads **4.2**.
+- `PIC X(2)="42"` → `PIC 9(2)V9` → slot `042`, reads **4.2** (left-zero-padded).
+- `PIC X(5)="12345"` → `PIC 9(2)V9` → slot `345`, reads **34.5** (high-order trunc).
+- `PIC X(1)="5"` → `PIC 9(1)V99` → slot `005`, reads **0.05**.
 
-Both engines compute the value by the **identical per-character arithmetic**
-`value = value*10 + (char_byte - '0')` over the `m` source characters, so they
-always agree byte-for-byte. The oracle folds the source's bytes into an `i64` and
-stores it via `move_into_numeric` at scale 0 (which performs the digit-count
-alignment/truncation); the compiler folds the `m` bytes at run time —
+Both engines compute `V` by the **identical per-character arithmetic**
+`V = V*10 + (char_byte - '0')` over the `m` source characters, so they always agree
+byte-for-byte. The compiler folds the `m` bytes at run time —
 `d = str_index(src,k) - '0'`, `value = value*10 + d` (`mul`/`add`/`sub`/`const`
-over `i64`) — and stores `value` through the **same numeric-store helper**
-(`store_scaled` at scale 0, whose `mod 10^n` is the receiver-width truncation) a
-numeric `MOVE`/`COMPUTE` uses.
+over `i64`) — then stores `value` through the **same numeric-store helper**
+`store_scaled` a numeric `MOVE`/`COMPUTE` uses, handing it the **receiver's own
+scale `d`** as the value scale. Because the fold already IS the slot magnitude at
+scale `d`, `store_scaled` rescales `d → d` (a no-op — no shift) and keeps the
+low-order `(i + d)` digits (`mag mod 10^(i+d)`) = `V mod 10^(i+d)`. (Passing scale
+`0` would wrongly up-shift by `10^d`.) The oracle mirrors this exactly: it folds
+the identical arithmetic, then builds a `Decimal` that inserts the point `d` places
+from the right (`int` = the magnitude's digits above the last `d`, empty → `"0"`;
+`frac` = its last `d` digits, left-zero-padded to `d`) and stores it via
+`move_into_numeric(int_digits = i, dec_digits = d)`, which keeps the low-order `i`
+integer and high-order `d` fractional digits — the same `V mod 10^(i+d)`. For
+`d = 0` this is exactly the old integer-receiver behaviour (`int = V_str`,
+`frac = ""`).
 
 **All-digit scope / non-digit characters.** This rung scopes to an **all-digit**
 source. A non-digit byte is *not* rejected: the same `(byte - '0')` arithmetic runs
@@ -668,12 +685,15 @@ on both engines (defined-but-unspecified, but **identical on both by
 construction**), and every test uses an all-digit source. This choice — over a
 runtime reject — keeps the oracle and compiler provably identical, because the
 compiled path has no clean way to raise a runtime error for a non-digit that the
-oracle could mirror byte-for-byte.
+oracle could mirror byte-for-byte. A SPACE source byte (below `'0'`) makes the fold
+go negative, but an unsigned `PIC 9` field keeps the **magnitude** on both engines
+(the compiler `abs`es before `mod`; the oracle uses `unsigned_abs`) — no stray
+`'-'`.
 
 Deferred as clean later rungs (rejected identically on both engines): a **signed**
-(`PIC S9`) or **scaled** (`PIC 9V9`) or **edited** numeric receiver, a **group**
-item on either side, and a **source wider than 18 characters** (whose `i64` fold
-could overflow — an all-digit source of ≤ 18 chars stays below `10^18 < i64::MAX`).
+(`PIC S9`) or **edited** numeric receiver, a **group** item on either side, and a
+**source wider than 18 characters** (whose `i64` fold could overflow — an all-digit
+source of ≤ 18 chars stays below `10^18 < i64::MAX`).
 
 ### Comparison (numeric ↔ alphanumeric)
 

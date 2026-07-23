@@ -1729,6 +1729,85 @@ fn numeric_alpha_numeric_round_trip() {
 }
 
 // -------------------------------------------------------------------------
+// Cross-category alphanumeric → SCALED numeric MOVE — vs the oracle.
+//
+// An alphanumeric source (`PIC X(m)`) moved into an UNSIGNED SCALED receiver
+// `PIC 9(i)V9(d)` (`d > 0`) folds its `m` characters into an unsigned integer
+// `V`; that fold IS the receiver's scaled-slot magnitude directly — it fills the
+// `(i + d)` digit positions RIGHT-justified, the implied point `d` places from
+// the right. So the slot is `V mod 10^(i+d)`. This is NOT the arithmetic
+// decimal-align rule (`V` is not multiplied by `10^d`). DISPLAY shows the raw
+// `(i + d)` digits (no point). Both engines fold the identical arithmetic and
+// keep the low-order `(i + d)` digits, so they agree byte-for-byte.
+// -------------------------------------------------------------------------
+
+#[test]
+fn alphanumeric_to_scaled_numeric_move_exact_fit() {
+    // PIC X(3)="042" → PIC 9(2)V9: fold → 42, slot 042, reads 4.2 → DISPLAY "042".
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(3) VALUE \"042\".", "01  N  PIC 9(2)V9."],
+        &["MOVE A TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "042\n");
+}
+
+#[test]
+fn alphanumeric_to_scaled_numeric_move_shorter_source_zero_pads() {
+    // PIC X(2)="42" → PIC 9(2)V9: fold → 42, slot 042 (left-zero-padded to the 3
+    // positions), reads 4.2 → DISPLAY "042".
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(2) VALUE \"42\".", "01  N  PIC 9(2)V9."],
+        &["MOVE A TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "042\n");
+}
+
+#[test]
+fn alphanumeric_to_scaled_numeric_move_longer_source_truncates_high_order() {
+    // PIC X(5)="12345" → PIC 9(2)V9: fold → 12345, keep the low-order (i+d)=3
+    // digits → slot 345, reads 34.5 → DISPLAY "345".
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(5) VALUE \"12345\".", "01  N  PIC 9(2)V9."],
+        &["MOVE A TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "345\n");
+}
+
+#[test]
+fn alphanumeric_to_scaled_numeric_move_more_fraction_than_source_digits() {
+    // PIC X(1)="5" → PIC 9(1)V99: fold → 5, slot 005 (magnitude shorter than
+    // i+d=3), reads 0.05 → DISPLAY "005".
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(1) VALUE \"5\".", "01  N  PIC 9(1)V99."],
+        &["MOVE A TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "005\n");
+}
+
+#[test]
+fn alphanumeric_to_scaled_numeric_move_then_arithmetic() {
+    // The moved slot is a genuine scaled number: MOVE "042" into 9(2)V9 = 4.2, then
+    // ADD 1.3 → 5.5 → slot "055".
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(3) VALUE \"042\".", "01  N  PIC 9(2)V9."],
+        &["MOVE A TO N.", "ADD 1.3 TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "055\n");
+}
+
+#[test]
+fn alphanumeric_to_scaled_numeric_move_space_source_agrees_no_stray_sign() {
+    // A SPACE source byte (0x20) is below '0', so the fold goes negative; an
+    // unsigned scaled `PIC 9V9` field keeps the MAGNITUDE. " " → fold -16 →
+    // magnitude 16 → slot 016 → reads 1.6. Both engines must agree.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(1) VALUE \" \".", "01  N  PIC 9(2)V9."],
+        &["MOVE A TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "016\n");
+}
+
+// -------------------------------------------------------------------------
 // Mixed numeric ↔ alphanumeric comparison — vs the oracle.
 //
 // When a relation compares an UNSIGNED-INTEGER numeric operand with an

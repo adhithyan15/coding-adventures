@@ -1,5 +1,39 @@
 # Changelog
 
+## 0.35.0 — alphanumeric → SCALED-receiver MOVE (`MOVE PIC X(m) TO 9(i)V9(d)`)
+
+- The REVERSE cross-category MOVE (alphanumeric → numeric) now accepts an
+  **unsigned SCALED** receiver `PIC 9(i)V9(d)` (`d > 0`), not only an unsigned
+  integer. Oracle-first and byte-identical to `cobol-iir-compiler` 0.31.0. No
+  grammar change.
+- **The fold-is-the-slot rule.** `exec_move` folds the source's `m` characters
+  into an unsigned integer `V` (`V = V*10 + (byte - '0')`), and that fold **is the
+  receiver's scaled-slot magnitude directly** — the `(i + d)` digit positions
+  RIGHT-justified with the implied point `d` places from the right, so the slot is
+  `V mod 10^(i+d)` (left-zero-padded when the source is shorter than `i + d`,
+  high-order-truncated when longer). This is **NOT** the arithmetic decimal-align
+  rule — `V` is *not* multiplied by `10^d`.
+- **The store.** It builds a `Decimal` placing the folded magnitude at scale `d` —
+  the point inserted `d` places from the right: `int` = the magnitude's digits
+  above the last `d` (empty → `"0"`), `frac` = its last `d` digits left-zero-padded
+  to `d`. `move_into` → `move_into_numeric(int_digits = i, dec_digits = d)` keeps
+  the low-order `i` integer and high-order `d` fractional digits = `V mod 10^(i+d)`
+  with the point at `d`, matching the compiler's `store_scaled` (which is handed
+  the SAME scale `d`). For `d = 0` the split is `int = V_str`, `frac = ""` —
+  reproducing the old integer-receiver path exactly. Examples:
+  `MOVE "042" TO 9(2)V9` → slot `042` (reads `4.2`); `MOVE "12345" TO 9(2)V9` →
+  `345` (reads `34.5`); `MOVE "5" TO 9(1)V99` → `005` (reads `0.05`).
+- **Magnitude / no stray sign.** A SPACE source byte (below `'0'`) makes the fold
+  go negative, but an unsigned `PIC 9` field keeps the MAGNITUDE (`unsigned_abs`) —
+  no stray `'-'` — exactly as the compiler `abs`es before `mod`.
+- **Still deferred (clean `Unsupported`).** A **signed** (`PIC S9`) receiver, a
+  source wider than 18 characters, and group items.
+- **Tests.** The former `alphanumeric_to_scaled_numeric_move_is_deferred` reject
+  test becomes the positive `alphanumeric_to_scaled_numeric_move_exact_fit` plus
+  shorter-source, longer-source, and more-fraction-digit cases; a new
+  `alphanumeric_to_signed_scaled_numeric_move_is_deferred` keeps the signed-scaled
+  deferral.
+
 ## 0.34.0 — unsigned SCALED operand in num→alpha MOVE and mixed comparison
 
 - The numeric→alphanumeric MOVE and the mixed numeric↔alphanumeric comparison now

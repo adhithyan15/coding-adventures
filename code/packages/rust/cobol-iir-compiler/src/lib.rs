@@ -562,26 +562,51 @@ impl<'a> Compiler<'a> {
                         }
                         // Cross-category **alphanumeric → numeric** (the reverse
                         // direction): an alphanumeric source (`PIC X(m)`) moved into
-                        // an UNSIGNED INTEGER receiver (`PIC 9(n)`, no `S`, no `V`).
+                        // an UNSIGNED numeric receiver `PIC 9(i)V9(d)` (no `S`; `d`
+                        // may be 0 — an INTEGER — or > 0 — a SCALED receiver).
+                        //
                         // COBOL reads the source's `m` characters as an unsigned
-                        // integer and de-scales it into the receiver, keeping the
-                        // low-order `n` digits (right-justified: left-zero-padded if
-                        // shorter, high-order-truncated if longer) — i.e.
-                        // `receiver = (integer formed from the m source chars) mod
-                        // 10^n`. We fold the `m` bytes left-to-right into an `i64`
-                        // (`value = value*10 + (byte - '0')`) and store it through
-                        // the SAME numeric-store helper a numeric MOVE/COMPUTE uses,
-                        // which applies the receiver-width truncation, so it is
-                        // byte-identical to the oracle (which folds the identical
-                        // per-character arithmetic and stores via `move_into_numeric`
-                        // at scale 0). This rung scopes to an ALL-DIGIT source; a
-                        // non-digit byte runs the same `(byte - '0')` arithmetic on
-                        // both engines (defined-but-unspecified, identical), so no
-                        // reject is needed and no test exercises it.
+                        // integer `V` (fold `V = V*10 + (byte - '0')` left-to-right),
+                        // and that folded integer IS the receiver's scaled-slot
+                        // magnitude directly: it fills the receiver's `(i + d)` digit
+                        // positions RIGHT-justified, with the implied point sitting
+                        // `d` places from the right. So the receiver's slot is
+                        // `V mod 10^(i+d)` — left-zero-padded when the source is
+                        // shorter than `(i + d)`, high-order-truncated when longer.
+                        // This is NOT the arithmetic decimal-align rule: `V` is not
+                        // multiplied by `10^d`; the fold already lands at scale `d`.
+                        //
+                        //   MOVE "042"   TO 9(2)V9  → V=42    → slot 042 → reads 4.2
+                        //   MOVE "42"    TO 9(2)V9  → V=42    → slot 042 → reads 4.2
+                        //   MOVE "12345" TO 9(2)V9  → V=12345 → slot 345 → reads 34.5
+                        //
+                        // We fold the `m` bytes into an `i64` and store it through the
+                        // SAME numeric-store helper a numeric MOVE/COMPUTE uses. The
+                        // key is the source scale we hand `store_scaled`: because the
+                        // fold already IS the slot magnitude at scale `d`, we claim
+                        // the receiver's OWN scale `d` as the value scale. Then
+                        // `store_scaled` rescales `d → d` (a no-op — no shift) and
+                        // keeps the low-order `(i + d)` digits (`mag mod 10^(i+d)`),
+                        // which is exactly `V mod 10^(i+d)`. Passing scale `0` instead
+                        // would up-shift by `10^d` (the wrong, arithmetic rule). For
+                        // `d = 0` this reproduces the old integer-receiver behaviour
+                        // byte-for-byte. `value_max_int = m` only feeds the up-scale
+                        // overflow guard, which never fires here (from-scale equals
+                        // to-scale, so there is no up-shift), so its exact value is
+                        // immaterial; `m` (the source width) is a safe upper bound.
+                        //
+                        // This is byte-identical to the oracle (which folds the
+                        // identical per-character arithmetic and stores via
+                        // `move_into_numeric` with the fold split at scale `d`). This
+                        // rung scopes to an ALL-DIGIT source; a non-digit byte runs
+                        // the same `(byte - '0')` arithmetic on both engines
+                        // (defined-but-unspecified, identical), so no reject is needed
+                        // and no test exercises it.
                         (
                             ItemKind::Char { .. },
-                            ItemKind::Numeric { signed: false, dec_digits: 0, .. },
+                            ItemKind::Numeric { signed: false, dec_digits: d, .. },
                         ) => {
+                            let d = *d;
                             let m = self.items[src_idx].width();
                             // Guard the `i64` fold: an all-digit source of ≤ 18
                             // characters stays below `10^18 < i64::MAX`, so the fold
@@ -596,20 +621,24 @@ impl<'a> Compiler<'a> {
                             }
                             let src_reg = self.items[src_idx].reg.clone();
                             let value = self.emit_str_to_int(&src_reg, m);
-                            self.store_scaled(&dst, &value, 0, m, false)?;
+                            // Claim the receiver's scale `d` for the fold — see the
+                            // note above: the fold already IS the slot magnitude at
+                            // scale `d`, so `store_scaled` does no shift and keeps the
+                            // low-order `(i + d)` digits.
+                            self.store_scaled(&dst, &value, d, m, false)?;
                         }
                         // Every other cross-category shape stays a clean later
-                        // rung: a SIGNED (`PIC S9`) or SCALED (`PIC 9V9`) numeric
-                        // item on either side (source of a numeric→alphanumeric or
-                        // receiver of an alphanumeric→numeric MOVE).
+                        // rung: a SIGNED (`PIC S9`) numeric item on either side
+                        // (source of a numeric→alphanumeric, or receiver of an
+                        // alphanumeric→numeric MOVE).
                         _ => {
                             return Err(CompileError::Unsupported(format!(
                                 "cross-category MOVE from {name} into {dst} \
-                                 (an unsigned-integer numeric source into an \
-                                 alphanumeric receiver, or an alphanumeric source \
-                                 into an unsigned-integer numeric receiver, are \
-                                 supported; a signed or scaled numeric item on \
-                                 either side is a later rung)"
+                                 (an unsigned numeric source into an alphanumeric \
+                                 receiver, or an alphanumeric source into an unsigned \
+                                 numeric receiver — integer or scaled `PIC 9(i)V9(d)` — \
+                                 are supported; a signed numeric item on either side is \
+                                 a later rung)"
                             )));
                         }
                     }
@@ -991,10 +1020,14 @@ impl<'a> Compiler<'a> {
     /// so the source `"042"` folds to `0*10+0 → 0`, `0*10+4 → 4`, `4*10+2 → 42`.
     /// Reading each byte with the IIR `str_index` op and subtracting the constant
     /// `'0'` (48) yields that position's digit; the running `value` is the integer
-    /// the whole field denotes. The receiver-width truncation (`value mod 10^n`)
-    /// is applied later by [`Self::store_scaled`] — the same numeric-store helper a
-    /// numeric MOVE/COMPUTE uses — so the compiled result matches the oracle, which
-    /// runs the identical fold and stores through `move_into_numeric` at scale 0.
+    /// the whole field denotes — and, per the reverse-MOVE rule, IS the receiver's
+    /// scaled-slot magnitude directly (the fold is *not* re-scaled). The
+    /// receiver-width truncation (keep the low-order `(i + d)` digits,
+    /// `value mod 10^(i+d)`) is applied later by [`Self::store_scaled`] — the same
+    /// numeric-store helper a numeric MOVE/COMPUTE uses, handed the receiver's own
+    /// scale `d` so it does no shift — so the compiled result matches the oracle,
+    /// which runs the identical fold and stores through `move_into_numeric` with the
+    /// fold split at scale `d` (`d = 0` for an integer receiver).
     ///
     /// The caller has already bounded `m ≤ 18`, so the `i64` fold of an all-digit
     /// source (`< 10^18 < i64::MAX`) never overflows.
@@ -5714,14 +5747,35 @@ mod tests {
     }
 
     #[test]
-    fn alphanumeric_to_scaled_numeric_move_is_a_later_rung() {
-        // A SCALED receiver (`PIC 9V9`, non-zero fractional digits) is a later rung.
-        let err = compile_source(
+    fn alphanumeric_to_scaled_numeric_move_lowers() {
+        // A SCALED receiver (`PIC 9(i)V9(d)`, non-zero fractional digits) is now
+        // supported: the source bytes fold into the integer, which IS the scaled
+        // slot magnitude at scale `d`; `store_scaled` keeps the low-order (i+d)
+        // digits via `mod`. No up-scale `mul` is emitted (from-scale == to-scale).
+        let m = compile_source(
             &wrap(
-                &["01  A  PIC X(3) VALUE \"042\".", "01  N  PIC 9V9."],
+                &["01  A  PIC X(3) VALUE \"042\".", "01  N  PIC 9(2)V9."],
                 &["MOVE A TO N.", "STOP RUN."],
             ),
             "a2n_scaled",
+        )
+        .unwrap();
+        assert!(m.validate().is_empty(), "{:?}", m.validate());
+        let os = ops(&m);
+        assert!(os.contains(&"str_index".to_string()), "each source byte is read via str_index");
+        assert!(os.contains(&"mod".to_string()), "receiver-width truncation via mod");
+    }
+
+    #[test]
+    fn alphanumeric_to_signed_scaled_numeric_move_is_a_later_rung() {
+        // A SIGNED SCALED receiver (`PIC S9V9`) is still a later rung — only an
+        // UNSIGNED receiver (integer or scaled) is modelled this cut.
+        let err = compile_source(
+            &wrap(
+                &["01  A  PIC X(3) VALUE \"042\".", "01  N  PIC S9V9."],
+                &["MOVE A TO N.", "STOP RUN."],
+            ),
+            "a2n_signed_scaled",
         )
         .unwrap_err();
         assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");

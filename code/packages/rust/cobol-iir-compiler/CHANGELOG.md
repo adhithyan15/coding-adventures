@@ -8,6 +8,43 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.31.0: alphanumeric → SCALED-receiver MOVE (`MOVE PIC X(m) TO 9(i)V9(d)`)
+
+The REVERSE cross-category MOVE (alphanumeric → numeric) now accepts an
+**unsigned SCALED** receiver `PIC 9(i)V9(d)` (`d > 0`), not only an unsigned
+integer. Oracle-first and byte-identical to `coding-adventures-cobol-runtime`
+0.35.0. No grammar / lexer / parser change.
+
+- **The fold-is-the-slot rule.** The source's `m` characters fold left-to-right
+  into an unsigned integer `V` (`V = V*10 + (byte - '0')`), and that fold **is the
+  receiver's scaled-slot magnitude directly** — it fills the `(i + d)` digit
+  positions RIGHT-justified with the implied point `d` places from the right. So
+  the slot is `V mod 10^(i+d)`: left-zero-padded when the source is shorter than
+  `i + d`, high-order-truncated when longer. This is **NOT** the arithmetic
+  decimal-align rule — `V` is *not* multiplied by `10^d`. Examples:
+  `MOVE "042" TO 9(2)V9` → slot `042` (reads `4.2`);
+  `MOVE "42" TO 9(2)V9` → `042`; `MOVE "12345" TO 9(2)V9` → `345` (reads `34.5`);
+  `MOVE "5" TO 9(1)V99` → `005` (reads `0.05`).
+- **The lowering.** The compiler folds `V` exactly as for the integer receiver
+  (`emit_str_to_int`), then hands `store_scaled` the **receiver's own scale `d`**
+  as the value scale. `store_scaled` rescales `d → d` (a no-op — no shift) and
+  keeps the low-order `(i + d)` digits (`mag mod 10^(i+d)`) = `V mod 10^(i+d)`.
+  Passing scale `0` instead would up-shift by `10^d` (the wrong, arithmetic rule).
+  For `d = 0` this reproduces the old integer-receiver path byte-for-byte. The
+  match arm's `dec_digits: 0` gate is relaxed to `dec_digits: d` (any unsigned
+  receiver); the `value_max_int = m` argument only feeds the up-scale overflow
+  guard, which never fires here (from-scale == to-scale), so its exact value is
+  immaterial.
+- **Still deferred (clean `Unsupported`).** A **signed** (`PIC S9`) receiver, a
+  source wider than 18 characters (its `i64` fold could overflow), and group items.
+- **Tests.** The former `alphanumeric_to_scaled_numeric_move_is_a_later_rung`
+  reject test becomes the positive `alphanumeric_to_scaled_numeric_move_lowers`;
+  new `jit_e2e` cases cover exact-fit, shorter-source zero-pad, longer-source
+  high-order truncation, more-fraction-than-source digits, MOVE-then-arithmetic,
+  and the SPACE-source no-stray-sign regression, all through
+  `assert_matches_oracle`. A new `alphanumeric_to_signed_scaled_numeric_move_is_a_later_rung`
+  keeps the signed-scaled deferral.
+
 ### Added — v0.30.0: unsigned SCALED operand in num→alpha MOVE and mixed comparison
 
 The numeric→alphanumeric MOVE and the mixed numeric↔alphanumeric comparison now
