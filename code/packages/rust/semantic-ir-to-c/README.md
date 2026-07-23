@@ -81,11 +81,14 @@ The emitter is **thin**; the semantics live in an inlined C runtime
 `OptionalTypeAnnotations`, `MutualRecursion`, `Globals`; the SIR26 integer
 conversions (`Conversions`, `SizedIntegers`, `Unsigned`, `WrappingArithmetic`);
 SIR16 control flow and mutation (`Loops` — `While`, `ForRange`, `ForEach`; and
-`MutableBindings`); and SIR16 `Sequences` — a `SIR_SEQ` heap array with
-`SeqLit`/`SeqIndex`/`SeqLen`/`SeqSet` and structural equality.
+`MutableBindings`); SIR16 `Sequences` — a `SIR_SEQ` heap array with
+`SeqLit`/`SeqIndex`/`SeqLen`/`SeqSet` and structural equality; and SIR16 `Maps`
+— a `SIR_MAP` heap assoc-array with `MapLit`/`MapGet`/`MapSet`, structural
+composite keys, positional structural equality, and `{k: v}` display (matching
+the Go/Rust backends).
 
 **Rejects** (cleanly, with a source-positioned error): `TailCalls`,
-`Intrinsics`, `Maps`, `NDArrays`, `ShortCircuit`, exceptions/OOP, and every
+`Intrinsics`, `NDArrays`, `ShortCircuit`, exceptions/OOP, and every
 other not-yet-wired feature until its batch lands.  `Bignum` stays rejected
 until a bignum runtime ships — a module needing arbitrary precision is refused,
 never silently truncated.

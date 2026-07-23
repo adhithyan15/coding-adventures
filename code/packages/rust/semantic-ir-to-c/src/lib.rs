@@ -82,6 +82,21 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // as it was in 0.5.0). Structural `_sir_value_eq` makes `[1, 2] == [1, 2]`
     // true, matching every backend that carries sequences.
     Feature::Sequences,
+    // ── SIR16 maps ───────────────────────────────────────────────────
+    // `SirValue` gains a `SIR_MAP` heap-boxed, insertion-ordered ASSOC-ARRAY
+    // (linear scan, structural keys — like the Go/Rust `[]MapEntry` /
+    // `Vec<(Value, Value)>` reference, not a hash table). The emitter handles
+    // every construct the feature can surface: `MapLit` (`{k => v}`,
+    // `_sir_map_lit`), `MapGet` (`h[k]`, nil-on-miss, `_sir_map_get`), and
+    // `MapSet` (`h[k] = v`, insert/update the shared box, `_sir_map_set`). No
+    // `MapLen` node exists. `value_eq`/`fmt` gain `SIR_MAP` arms (positional
+    // structural equality and `{k: v}` display, matching Go/Rust), reusing the
+    // `SeqSet`-era depth caps to bound a cyclic map (`m[k] = m`, now
+    // constructible via the mutable `MapSet`). `ForEach` over a map is NOT
+    // special-cased — iterating a map is reference-undefined (Go's
+    // `_sir_seq_iter` panics on it); C's lenient `_sir_seq_iter` else-branch
+    // (empty iteration) already covers it without an emitter `unreachable!`.
+    Feature::Maps,
 ];
 
 impl Backend for CBackend {

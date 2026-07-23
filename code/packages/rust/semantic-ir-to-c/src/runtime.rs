@@ -42,13 +42,14 @@ pub const RUNTIME: &str = r####"/* =============================================
 
 typedef enum {
     SIR_NIL, SIR_BOOL, SIR_INT, SIR_FLOAT,
-    SIR_STR, SIR_SYM, SIR_PAIR, SIR_CLOSURE, SIR_SEQ
+    SIR_STR, SIR_SYM, SIR_PAIR, SIR_CLOSURE, SIR_SEQ, SIR_MAP
 } SirTag;
 
 typedef struct SirValue SirValue;
 typedef struct SirPair SirPair;
 typedef struct SirClosure SirClosure;
 typedef struct SirSeq SirSeq;
+typedef struct SirMap SirMap;
 
 struct SirValue {
     SirTag tag;
@@ -60,6 +61,7 @@ struct SirValue {
         SirPair *pair;    /* SIR_PAIR */
         SirClosure *clo;  /* SIR_CLOSURE */
         SirSeq *seq;      /* SIR_SEQ */
+        SirMap *map;      /* SIR_MAP */
     } as;
 };
 
@@ -70,6 +72,18 @@ struct SirPair { SirValue car; SirValue cdr; };
  * value). Boxed so the value is a shared, mutable handle: a `SeqSet` through
  * one binding is visible through every alias (matching the Go/Rust `*Seq`). */
 struct SirSeq { SirValue *items; int64_t len; };
+
+/* A SIR16 map (`{k => v, …}`) — a heap-boxed, insertion-ordered ASSOC-ARRAY:
+ * `entries[0 .. len)` are the key/value pairs in first-insertion order, backed
+ * by a `cap`-slot array that DOUBLES on overflow (a `MapSet` of a new key
+ * appends — unlike the fixed-length `SeqSet`). It is a linear-scan assoc-array,
+ * NOT a hash table, exactly like the Go/Rust reference (`[]MapEntry` /
+ * `Vec<(Value, Value)>`): lookups are O(n) but structural keys (`[1, 2]`) and
+ * insertion-order iteration/printing come for free with no `Hash`/`Eq` bound on
+ * the value type. Boxed so it is a shared, mutable handle: a `MapSet` through
+ * one binding is visible through every alias (matching the Go/Rust `*Map`). */
+struct SirMapEntry { SirValue key; SirValue val; };
+struct SirMap { struct SirMapEntry *entries; int64_t len; int64_t cap; };
 
 /* A closure's function takes its captured environment and the call args. */
 typedef SirValue (*SirFn)(SirValue *caps, SirValue *args, int argc);
@@ -347,6 +361,26 @@ int _sir_value_eq_d(SirValue a, SirValue b, int depth) {
                 if (!_sir_value_eq_d(sa->items[i], sb->items[i], depth + 1)) return 0;
             return 1;
         }
+        case SIR_MAP: {
+            /* STRUCTURAL and POSITIONAL: equal length, then entry-wise in
+             * INSERTION ORDER — `entries[i]` keys AND values equal — exactly
+             * mirroring the Go (`[]MapEntry` zip) and Rust (`iter().zip()`)
+             * reference backends. (Ruby's own `Hash#==` is order-INsensitive;
+             * all three source-emitting backends are positional, so they agree
+             * with each other — a uniform, documented divergence from real Ruby
+             * on the untested reordered-map case, not a C-only bug.) The
+             * identical-handle fast path short-circuits `m == m` and the
+             * self-referential `m[k] = m`; the depth cap bounds two DISTINCT
+             * cyclic maps (constructible now that `MapSet` mutates in place). */
+            SirMap *ma = a.as.map, *mb = b.as.map;
+            if (ma == mb) return 1;
+            if (ma->len != mb->len) return 0;
+            for (int64_t i = 0; i < ma->len; i++) {
+                if (!_sir_value_eq_d(ma->entries[i].key, mb->entries[i].key, depth + 1)) return 0;
+                if (!_sir_value_eq_d(ma->entries[i].val, mb->entries[i].val, depth + 1)) return 0;
+            }
+            return 1;
+        }
         case SIR_CLOSURE: return a.as.clo == b.as.clo;
         default:          return 0;
     }
@@ -457,6 +491,90 @@ SirValue _sir_seq_iter(SirValue it) {
     return v;
 }
 
+/* ---- SIR16 maps --------------------------------------------- */
+
+/* A fresh map with room for `cap` entries (cap 0 => NULL backing store). */
+static SirMap *_sir_map_new(int64_t cap) {
+    SirMap *m = (SirMap *)_sir_alloc(sizeof(SirMap));
+    m->len = 0;
+    m->cap = cap;
+    m->entries = (cap > 0)
+        ? (struct SirMapEntry *)_sir_alloc(sizeof(struct SirMapEntry) * (size_t)cap)
+        : NULL;
+    return m;
+}
+
+/* Linear scan for `key` by STRUCTURAL equality (`_sir_value_eq`, so a composite
+ * key like `[1, 2]` matches by value, not identity). Returns the entry index,
+ * or -1 if absent. O(n) — an assoc-array, matching the Go/Rust reference. */
+static int64_t _sir_map_find(SirMap *m, SirValue key) {
+    for (int64_t i = 0; i < m->len; i++)
+        if (_sir_value_eq(m->entries[i].key, key)) return i;
+    return -1;
+}
+
+/* Insert or update `key => val`, PRESERVING insertion order: an existing key's
+ * value is overwritten in its current slot; a new key is APPENDED, growing the
+ * backing array (capacity doubles, from 4, when full). The arena never frees,
+ * so the outgrown array simply leaks like every other reallocation here. */
+static void _sir_map_put(SirMap *m, SirValue key, SirValue val) {
+    int64_t at = _sir_map_find(m, key);
+    if (at >= 0) { m->entries[at].val = val; return; }
+    if (m->len == m->cap) {
+        int64_t ncap = (m->cap > 0) ? m->cap * 2 : 4;
+        struct SirMapEntry *ne =
+            (struct SirMapEntry *)_sir_alloc(sizeof(struct SirMapEntry) * (size_t)ncap);
+        for (int64_t i = 0; i < m->len; i++) ne[i] = m->entries[i];
+        m->entries = ne;
+        m->cap = ncap;
+    }
+    m->entries[m->len].key = key;
+    m->entries[m->len].val = val;
+    m->len++;
+}
+
+/* `{k0 => v0, k1 => v1, …}` — build a map from `n` key/value pairs passed as
+ * `2*n` variadic `SirValue`s in `k0, v0, k1, v1, …` order. A later duplicate
+ * key OVERWRITES the earlier entry (via `_sir_map_put`), matching Ruby's Hash
+ * literal and the Go/Rust `_sir_map_lit`, so `{1 => 1, 1 => 2}` is `{1 => 2}`. */
+SirValue _sir_map_lit(int n, ...) {
+    SirMap *m = _sir_map_new((int64_t)n);
+    va_list ap;
+    va_start(ap, n);
+    for (int i = 0; i < n; i++) {
+        SirValue k = va_arg(ap, SirValue);
+        SirValue val = va_arg(ap, SirValue);
+        _sir_map_put(m, k, val);
+    }
+    va_end(ap);
+    SirValue v;
+    v.tag = SIR_MAP; v.as.map = m;
+    return v;
+}
+
+/* `h[k]` (read). A MISSING key yields nil — Ruby's default-less `Hash#[]` does
+ * not raise, matching the Go/Rust `_sir_map_get`. A non-map also yields nil
+ * (the lenient read, mirroring this backend's own `_sir_seq_index`). */
+SirValue _sir_map_get(SirValue map, SirValue key) {
+    if (map.tag != SIR_MAP) return _sir_nil();
+    int64_t at = _sir_map_find(map.as.map, key);
+    return (at >= 0) ? map.as.map->entries[at].val : _sir_nil();
+}
+
+/* `h[k] = v` (write). Insert-or-update, mutating the SHARED map so a write
+ * through one binding is visible through every alias (the value is a handle,
+ * like the Go/Rust `*Map`). A map has no bounds, so — unlike `_sir_seq_set` —
+ * there is no index to trap on; a non-map is the only error. Returns the
+ * assigned value (an indexed assignment evaluates to its RHS). */
+SirValue _sir_map_set(SirValue map, SirValue key, SirValue val) {
+    if (map.tag != SIR_MAP) {
+        fprintf(stderr, "sir: []= on a non-map\n");
+        exit(1);
+    }
+    _sir_map_put(map.as.map, key, val);
+    return val;
+}
+
 SirValue _sir_is_null(SirValue v)   { return _sir_bool(v.tag == SIR_NIL); }
 SirValue _sir_is_pair(SirValue v)   { return _sir_bool(v.tag == SIR_PAIR); }
 SirValue _sir_is_number(SirValue v) { return _sir_bool(_sir_is_num(v)); }
@@ -532,6 +650,25 @@ void _sir_fmt_seq(FILE *out, SirValue v) {
     fputc(']', out);
 }
 
+/* A map renders as `{k0: v0, k1: v1, …}` in insertion order — a brace-wrapped,
+ * colon-space entry list, EXACTLY mirroring the Go (`_sir_format_map`) and Rust
+ * (`format_map_d`) backends so the three source targets print maps identically.
+ * (Real Ruby's `Hash#inspect` uses ` => ` for non-symbol keys and `key:` only
+ * for symbol keys; all three emitting backends use a uniform `: ` — a
+ * documented family-wide divergence on the untested whole-map print, kept for
+ * cross-backend agreement.) Keys and values render through `_sir_fmt`, whose
+ * depth counter bounds a self-referential map (constructible via `MapSet`). */
+void _sir_fmt_map(FILE *out, SirValue v) {
+    fputc('{', out);
+    for (int64_t i = 0; i < v.as.map->len; i++) {
+        if (i) fputs(", ", out);
+        _sir_fmt(out, v.as.map->entries[i].key);
+        fputs(": ", out);
+        _sir_fmt(out, v.as.map->entries[i].val);
+    }
+    fputc('}', out);
+}
+
 void _sir_fmt_float(FILE *out, double f) {
     /* Ruby keeps a trailing .0 on integral floats and prints non-finite
      * values as Infinity / NaN.  A plain "%g" would drop the .0, so format
@@ -594,6 +731,7 @@ void _sir_fmt(FILE *out, SirValue v) {
         case SIR_SYM:   fputs(v.as.s, out); break;
         case SIR_PAIR:  _sir_fmt_pair(out, v); break;
         case SIR_SEQ:   _sir_fmt_seq(out, v); break;
+        case SIR_MAP:   _sir_fmt_map(out, v); break;
         case SIR_CLOSURE: fputs("#<closure>", out); break;
         default: break;
     }
