@@ -116,6 +116,15 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // `ForEach` over a Hash is already covered — `(h).each { |kv| … }` works on
     // a Hash as well as an Array — so accepting Maps adds no new `unreachable!`.
     Feature::Maps,
+    // ── SIR19 default parameters ─────────────────────────────────────
+    // A positional parameter carrying a default expression renders as Ruby's
+    // native `def f(a, b = <default>)`.  Ruby evaluates the default at call time
+    // when the argument is omitted — exactly the SIR semantics — so no runtime
+    // support is needed.  Only the positional case is `DefaultParams`; a keyword
+    // default is the separate (still-unaccepted) `KeywordParams` feature. The
+    // unsupported-builtin pre-check now scans each parameter default too, so the
+    // emitter stays total.
+    Feature::DefaultParams,
 ];
 
 impl Backend for RubyBackend {

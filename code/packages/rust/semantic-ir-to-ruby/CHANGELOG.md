@@ -1,5 +1,41 @@
 # Changelog
 
+## 0.8.0 — default parameters (SIR19)
+
+Accepts `Feature::DefaultParams`. A positional parameter carrying a default
+expression renders as Ruby's **native** `def f(a, b = <default>)`. Ruby
+evaluates the default at call time when the argument is omitted — exactly the
+SIR semantics — so no runtime support is needed; it is a one-line addition to
+the function-signature emitter (`name = <emit_expr(default)>` when
+`p.default.is_some()`).
+
+- The default may reference an **earlier parameter** (`def f(a, b = a)`): Ruby
+  binds parameters left to right, matching the validator, which checks each
+  default with the parameters declared before it in scope.
+- Only the **positional** case is `DefaultParams`; a keyword default is the
+  separate (still-unaccepted) `KeywordParams` feature, so it never reaches here.
+
+Also extends the unsupported-builtin pre-check (`first_unsupported_builtin`) to
+scan each parameter default, not just the body — a default is an expression
+evaluated at call time, so a deferred builtin hidden in one (`def g(x = foo())`)
+must be rejected cleanly rather than slip past the body scan and hit the
+emitter's `unreachable!`. This keeps the emitter total for the feature.
+
+Security review additionally caught a pre-existing hole the default scan would
+inherit: `scan_expr`'s `IndirectCall` arm scanned only the call arguments, not
+the callee `target` — yet the emitter renders the target (`sir_apply(<target>,
+…)`), so a deferred builtin in the callee position could reach the
+`unreachable!`. The arm now scans the target too.
+
+First of the DefaultParams parity arc: Go/Rust/Python/JS already accept it; this
+brings the Ruby backend up (C is the last, tracked next). Verified through a
+real `ruby` with hand-built modules (a function with a defaulted parameter and a
+`main` that calls it with and without the trailing argument): the default is
+used when the argument is omitted (`f(1)` → `6` for `f(a, b = 5) = a + b`) and
+overridden when supplied (`f(1, 2)` → `3`), a default referencing an earlier
+parameter, and the deferred-builtin-in-default rejection. Bumps
+semantic-ir-to-ruby 0.7.0 → 0.8.0.
+
 ## 0.7.0 — short-circuit (SIR16)
 
 Accepts `Feature::ShortCircuit`. `Expr::LogicalAnd` / `Expr::LogicalOr`

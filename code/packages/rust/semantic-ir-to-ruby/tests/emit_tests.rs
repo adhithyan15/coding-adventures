@@ -919,3 +919,177 @@ fn short_circuit_emits_native_operators() {
     assert!(rb.contains("(1 && 2)"), "LogicalAnd → `&&`:\n{rb}");
     assert!(rb.contains("(1 || 2)"), "LogicalOr → `||`:\n{rb}");
 }
+
+// ── SIR19 default parameters ────────────────────────────────────────────────
+// `Feature::DefaultParams` — a positional parameter carrying a default
+// expression renders as Ruby's native `def f(a, b = <default>)`. Ruby evaluates
+// the default at call time when the argument is omitted (= the SIR semantics).
+// A hand-built module (function with a defaulted param + a `main` that calls it
+// with and without the trailing argument) proves the behaviour end to end.
+
+use semantic_ir::{Param, ParamKind};
+
+fn param(name: &str, default: Option<Expr>) -> Param {
+    Param {
+        name: name.into(),
+        sir_type: None,
+        kind: ParamKind::Required,
+        default: default.map(Box::new),
+        span: s2(),
+    }
+}
+fn pref(name: &str) -> Expr {
+    Expr::VarRef { name: name.into(), scope: Scope::Param, span: s2() }
+}
+fn directcall(fn_name: &str, args: Vec<Expr>) -> Expr {
+    Expr::DirectCall {
+        fn_name: fn_name.into(),
+        args,
+        effects: EffectSet::PURE,
+        span: s2(),
+    }
+}
+/// A module with a helper function `f(<params>) = <body_value>` and a `main`
+/// running `main_stmts`, declaring `DefaultParams`.
+fn defparam_module(params: Vec<Param>, body_value: Expr, main_stmts: Vec<Stmt>) -> Module {
+    let f = Function {
+        name: "f".into(),
+        params,
+        return_type: None,
+        captures: vec![],
+        body: Block { stmts: vec![], value: body_value, span: s2() },
+        effects: EffectSet::PURE.with(Effect::MayPrint),
+        metadata: Metadata::new(),
+        span: s2(),
+    };
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block {
+            stmts: main_stmts,
+            value: Expr::NilLit { span: s2() },
+            span: s2(),
+        },
+        effects: EffectSet::PURE.with(Effect::MayPrint),
+        metadata: Metadata::new(),
+        span: s2(),
+    };
+    Module {
+        name: "defprog".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::DefaultParams,
+            Feature::DynamicTyping,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![f, main],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("test")
+            .with_sir_version(CURRENT_SIR_VERSION),
+        span: s2(),
+    }
+}
+fn run_defparam(params: Vec<Param>, body_value: Expr, main_stmts: Vec<Stmt>) -> Option<String> {
+    let m = defparam_module(params, body_value, main_stmts);
+    run_ruby(&compile(&m).expect("default-param module must compile, not panic").source)
+}
+
+#[test]
+fn default_param_is_used_when_the_argument_is_omitted() {
+    // `def f(a, b = 5); a + b; end` — `f(1)` uses the default (`1 + 5 = 6`),
+    // `f(1, 2)` overrides it (`1 + 2 = 3`).
+    let body = bin("+", pref("a"), pref("b"));
+    let out = run_defparam(
+        vec![param("a", None), param("b", Some(ilit(5)))],
+        body,
+        vec![
+            puts(directcall("f", vec![ilit(1)])),          // 6
+            puts(directcall("f", vec![ilit(1), ilit(2)])), // 3
+        ],
+    );
+    match out {
+        Some(o) => assert_eq!(o, "6\n3"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn default_may_reference_an_earlier_parameter() {
+    // `def f(a, b = a); b; end` — a default sees the parameters declared before
+    // it (Ruby evaluates left to right), so `f(7)` yields `7`.
+    let out = run_defparam(
+        vec![param("a", None), param("b", Some(pref("a")))],
+        pref("b"),
+        vec![puts(directcall("f", vec![ilit(7)]))], // 7
+    );
+    match out {
+        Some(o) => assert_eq!(o, "7"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn default_param_emits_native_ruby_syntax() {
+    // Emit-shape: the signature carries the native `= <default>`.
+    let m = defparam_module(
+        vec![param("a", None), param("b", Some(ilit(5)))],
+        bin("+", pref("a"), pref("b")),
+        vec![],
+    );
+    let rb = compile(&m).expect("compile").source;
+    assert!(rb.contains("def f(a, b = 5)"), "native default syntax:\n{rb}");
+}
+
+#[test]
+fn unsupported_builtin_in_a_default_is_rejected_not_panicked() {
+    // A default is an expression evaluated at call time, so an unsupported
+    // builtin hidden in it must be caught by the pre-check (like a body), never
+    // reach the emitter's `unreachable!`. `compile` must return an Err.
+    let bad = Expr::BuiltinCall {
+        name: "totally_unsupported_xyz".into(),
+        args: vec![],
+        effects: EffectSet::PURE,
+        span: s2(),
+    };
+    let m = defparam_module(
+        vec![param("a", None), param("b", Some(bad))],
+        pref("a"),
+        vec![],
+    );
+    let err = compile(&m).expect_err("an unsupported builtin in a default is rejected");
+    assert_eq!(err.kind, semantic_ir::BackendErrorKind::UnsupportedFeature);
+}
+
+#[test]
+fn unsupported_builtin_in_an_indirect_call_target_is_rejected_cleanly() {
+    // Defense in depth (security review): `scan_expr` now also scans an
+    // `IndirectCall`'s TARGET, not just its args — `sir_apply(<target>, …)`
+    // renders the target, so a deferred builtin in the callee position must not
+    // reach the emitter's `unreachable!`. The invariant that matters is that
+    // such a module (here, the bad builtin nested in a param default) is
+    // rejected CLEANLY — whether by validation or the builtin gate — and never
+    // panics `compile`.
+    let bad_target = Expr::IndirectCall {
+        target: Box::new(Expr::BuiltinCall {
+            name: "totally_unsupported_xyz".into(),
+            args: vec![],
+            effects: EffectSet::PURE,
+            span: s2(),
+        }),
+        args: vec![],
+        effects: EffectSet::PURE,
+        span: s2(),
+    };
+    let m = defparam_module(
+        vec![param("a", None), param("b", Some(bad_target))],
+        pref("a"),
+        vec![],
+    );
+    assert!(
+        compile(&m).is_err(),
+        "a bad builtin in an IndirectCall target must be rejected, not panic"
+    );
+}

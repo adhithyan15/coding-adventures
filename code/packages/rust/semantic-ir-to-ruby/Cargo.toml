@@ -1,6 +1,6 @@
 [package]
 name = "semantic-ir-to-ruby"
-version = "0.7.0"
+version = "0.8.0"
 edition = "2021"
 description = "Semantic IR → self-contained Ruby source code (SIR25). Seventh backend for the SIR10 narrow-waist IR — the first Ruby target (Ruby was previously only a frontend)."
 

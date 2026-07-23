@@ -54,10 +54,12 @@ structural `Array#==`), `SeqIndex` (`a[i]`, nil on OOB), `SeqLen` (`a.length`),
 `MapGet` (`h[k]`, nil on miss), and `MapSet` (`h[k] = v`), with structural
 composite keys; SIR16 `Floats` — a native `Float` for `FloatLit` (rendered
 so `7.0` stays a Float, not the Integer `7`; `Infinity`/`NaN` are named), with
-native float arithmetic and division; and SIR16 `ShortCircuit` — `LogicalAnd`
+native float arithmetic and division; SIR16 `ShortCircuit` — `LogicalAnd`
 (`&&`) and `LogicalOr` (`||`) rendered as Ruby's native short-circuit
 operators, which yield the deciding operand and skip the dead branch exactly as
-SIR requires.
+SIR requires; and SIR19 `DefaultParams` — a positional parameter with a default
+renders as native `def f(a, b = <default>)` (evaluated at call time when the
+argument is omitted; may reference an earlier parameter).
 Rejects `TailCalls`, `Intrinsics`, and every not-yet-wired feature (array
 indexing / slicing via `IndexGet` — `NDArrays`; array-pattern destructuring;
 collection methods, exceptions, OOP) until its cascade batch
