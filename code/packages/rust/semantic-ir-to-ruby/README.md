@@ -62,10 +62,13 @@ renders as native `def f(a, b = <default>)` (evaluated at call time when the
 argument is omitted; may reference an earlier parameter); and SIR19
 `KeywordParams` — a keyword parameter (`def f(x:)` / `def f(x: 1)`) and keyword
 argument (`f(x: 5)`) render as Ruby's native keyword forms, matched by name (so
-order-independent).
+order-independent); and SIR17 `Exceptions` — `begin … rescue … ensure … end`
+(`TryCatch`) plus the `raise` / `retry` builtins render as native Ruby exception
+handling (a rescue matches by exception-class name, validated as a constant path
+before emit; `raise` of a specific class needs `Constants` and is rejected).
 Rejects `TailCalls`, `Intrinsics`, and every not-yet-wired feature (array
 indexing / slicing via `IndexGet` — `NDArrays`; array-pattern destructuring;
-collection methods, exceptions, OOP) until its cascade batch
+collection methods, classes/OOP) until its cascade batch
 lands — each a clean, source-positioned `UnsupportedFeature`.
 
 ## Verification
