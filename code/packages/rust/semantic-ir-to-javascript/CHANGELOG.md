@@ -1,5 +1,37 @@
 # Changelog
 
+## 0.51.5 — `is_js_reserved` was missing `eval`/`arguments` (task #110)
+
+**Not a syntactic-keyword gap — a strict-mode contextual-reserved-word
+gap.** `is_js_reserved` (`emit.rs`) is the shared identifier-safety check
+every frontend that lowers to this backend (MATLAB, Octave, Wolfram,
+Macsyma, Maxima, APL, J, Derive, Reduce, Maple, Scilab, Q, Python, Ruby,
+JS, Twig, and more) goes through via `sanitize_ident`/`is_valid_js_ident`
+before emitting a user-level identifier as a JS binding. It already listed
+every syntactic keyword (`if`, `for`, `class`, …) plus a handful of
+contextual ones unsafe as bindings (`let`, `static`, `await`, `async`,
+and the "future reserved in strict mode" set) — but not `eval` or
+`arguments`.
+
+Neither is a syntactic keyword; both are ordinary identifiers lexically.
+But every module this backend emits runs under strict-mode semantics
+(`"use strict";` / ES-module code), and strict mode specifically forbids
+binding, assigning to, or otherwise declaring a variable, parameter,
+function, or class named `eval` or `arguments` — a `SyntaxError` at
+parse time. Even in the (non-existent, for this backend) sloppy-mode
+case, shadowing either name silently breaks the special semantics it
+normally carries (`arguments` inside a non-arrow function). A SIR module
+with a user-level name `eval` or `arguments` would previously have been
+emitted verbatim by `sanitize_ident` (since `is_js_reserved` returned
+`false`), producing invalid/miscompiled JavaScript.
+
+Fixed by adding both to the existing contextual-reserved-word group in
+`is_js_reserved`'s `matches!` list (same style as the existing entries;
+no restructuring). New unit test
+`is_js_reserved_flags_strict_mode_contextual_words` pins both as reserved
+and confirms ordinary look-alike identifiers (`value`, `evaluate`,
+`argument`) are untouched.
+
 ## 0.51.4 — Q's own display convention (task #109, the direct Q sibling of J's `SIR_DISPLAY_J_UNDERSCORE` fix)
 
 `q-to-semantic-ir/tests/oracle.rs` (built alongside the runtime in the same
