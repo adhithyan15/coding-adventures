@@ -1,5 +1,40 @@
 # Changelog
 
+## 0.32.0 — reverse cross-category MOVE (alphanumeric → unsigned-integer numeric)
+
+- The **reverse** cross-category `MOVE`: `MOVE alphanumeric-item TO numeric-item`,
+  restricted to an alphanumeric source (`PIC X(m)`) into an **unsigned integer**
+  receiver (`PIC 9(n)` — no `S`, no `V`). Oracle-first and byte-identical to
+  `cobol-iir-compiler` 0.28.0. No grammar change.
+- **The rule.** COBOL reads the source's `m` characters as an unsigned integer and
+  de-scales it into the receiver **right-justified**: keeping the **low-order `n`
+  digits** — left-zero-padded when the source is shorter, high-order-truncated when
+  longer — `receiver = (integer formed from the m source chars) mod 10^n`. So
+  `X(3)="042"` → `9(3)` is `42` (displays `"042"`), `X(2)="05"` → `9(4)` is `0005`,
+  `X(5)="12345"` → `9(3)` is `345`.
+- **Lowering (`exec_move`).** The source's bytes are folded left-to-right into an
+  `i64` — `value = value*10 + (byte - '0')` (`wrapping_*` so it never panics; for
+  the in-scope all-digit ≤ 18-char source it never wraps) — then stored through
+  `move_into` as a scale-0 `Decimal`, whose `move_into_numeric` applies exactly the
+  digit-count alignment/truncation. This matches the compiler byte-for-byte, which
+  folds the identical per-character arithmetic and truncates via its numeric-store
+  helper.
+- **All-digit scope.** A non-digit byte runs the identical `(byte - '0')`
+  arithmetic on both engines (defined-but-unspecified, identical by construction),
+  so it is untested and needs no reject.
+- **Overflow guard.** A source **wider than 18 characters** (whose `i64` fold could
+  overflow) is a clean `Unsupported` later rung, rejected identically on both
+  engines.
+- **Deferral gate.** Only a genuine alphanumeric **source item** into an
+  **unsigned-integer** receiver is handled here; a **signed** (`PIC S9`) or
+  **scaled** (`PIC 9V9`) receiver, a **group** on either side, and a string
+  **literal** source all fall through to `move_into`, which rejects a
+  `Src::Chars` → numeric MOVE, so the two engines agree on the deferral.
+- **Tests.** Oracle-unit cases for the three supported shapes (exact-fit, shorter
+  source zero-pads, longer source high-order-truncates) and clean `Unsupported`
+  rejects for a signed receiver, a scaled receiver, and a group source. The prior
+  `alphanumeric_to_numeric_move_is_deferred` test was replaced accordingly.
+
 ## 0.31.0 — cross-category MOVE (unsigned-integer numeric → alphanumeric)
 
 - The first **cross-category** `MOVE`: `MOVE numeric-item TO alphanumeric-item`,

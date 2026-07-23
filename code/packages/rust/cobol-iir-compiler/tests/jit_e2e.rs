@@ -1566,6 +1566,111 @@ fn char_move_then_compare_round_trips() {
     assert_eq!(out, "SAME\n");
 }
 
+// -------------------------------------------------------------------------
+// Cross-category MOVE: alphanumeric → numeric (the reverse direction) — vs the
+// oracle.
+//
+// An alphanumeric source (`PIC X(m)`) moved into an UNSIGNED INTEGER receiver
+// (`PIC 9(n)`, no `S`, no `V`) is read as an unsigned integer formed from its
+// characters as digits, then de-scaled into the receiver: RIGHT-justified —
+// left-zero-padded when the source has fewer than `n` digits, high-order-
+// truncated when more, i.e. `receiver = (integer from the m source chars) mod
+// 10^n`. Both engines fold the identical per-character arithmetic
+// (`value = value*10 + (byte - '0')`, left to right), so they agree byte-for-byte.
+// -------------------------------------------------------------------------
+
+#[test]
+fn alphanumeric_to_numeric_move_exact_fit() {
+    // PIC X(3)="042" → PIC 9(3): fold 0,4,2 → 42; DISPLAY shows "042".
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(3) VALUE \"042\".", "01  N  PIC 9(3)."],
+        &["MOVE A TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "042\n");
+}
+
+#[test]
+fn alphanumeric_to_numeric_move_space_source_agrees_no_stray_sign() {
+    // Regression: a SPACE source byte (0x20) is below '0', so `(b-'0')` is
+    // negative and the fold goes negative. A `PIC 9` field is unsigned, so BOTH
+    // engines must store the MAGNITUDE — never a stray '-' in the numeric field.
+    // (An uninitialised `PIC X` is spaces, so this is a common, non-adversarial
+    // case.) " " → fold -16 → magnitude 16 → PIC 9(3) "016"; the compiler and the
+    // oracle must agree (assert_matches_oracle fails if they don't).
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(1) VALUE \" \".", "01  N  PIC 9(3)."],
+        &["MOVE A TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "016\n");
+    // A mixed space+digit source stays consistent too: " 5" → fold -155 →
+    // magnitude 155 → PIC 9(3) "155".
+    let out2 = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(2) VALUE \" 5\".", "01  N  PIC 9(3)."],
+        &["MOVE A TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out2, "155\n");
+}
+
+#[test]
+fn alphanumeric_to_numeric_move_shorter_source_zero_pads() {
+    // PIC X(2)="05" → PIC 9(4): fold → 5, right-justified into 4 digits "0005".
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(2) VALUE \"05\".", "01  N  PIC 9(4)."],
+        &["MOVE A TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "0005\n");
+}
+
+#[test]
+fn alphanumeric_to_numeric_move_longer_source_truncates_high_order() {
+    // PIC X(5)="12345" → PIC 9(3): fold → 12345, keep the low-order 3 → 345.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(5) VALUE \"12345\".", "01  N  PIC 9(3)."],
+        &["MOVE A TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "345\n");
+}
+
+#[test]
+fn alphanumeric_to_numeric_move_single_digit() {
+    // PIC X(1)="7" → PIC 9(1): fold → 7.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(1) VALUE \"7\".", "01  N  PIC 9(1)."],
+        &["MOVE A TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "7\n");
+}
+
+#[test]
+fn alphanumeric_to_numeric_move_then_arithmetic() {
+    // The moved value is a genuine number: MOVE "40" into 9(3)=040, ADD 2 → 042.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(2) VALUE \"40\".", "01  N  PIC 9(3)."],
+        &["MOVE A TO N.", "ADD 2 TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "042\n");
+}
+
+#[test]
+fn alphanumeric_to_numeric_move_used_in_compute() {
+    // MOVE "06" into 9(3)=006, then COMPUTE R = N * 7 → 42 → "042".
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(2) VALUE \"06\".", "01  N  PIC 9(3).", "01  R  PIC 9(3)."],
+        &["MOVE A TO N.", "COMPUTE R = N * 7.", "DISPLAY R.", "STOP RUN."],
+    ));
+    assert_eq!(out, "042\n");
+}
+
+#[test]
+fn numeric_alpha_numeric_round_trip() {
+    // numeric → alphanumeric → numeric: 9(3)=42 → X(3)="042" → 9(3)=42.
+    let out = assert_matches_oracle(&wrap(
+        &["01  N  PIC 9(3) VALUE 42.", "01  W  PIC X(3).", "01  M  PIC 9(3)."],
+        &["MOVE N TO W.", "MOVE W TO M.", "DISPLAY M.", "STOP RUN."],
+    ));
+    assert_eq!(out, "042\n");
+}
+
 // ---------------------------------------------------------------------------
 // Reference modification `IDENT(start:len)` — DISPLAY and comparison contexts.
 // A 1-based `start`; an omitted length runs to the end of the item. Every case

@@ -553,16 +553,56 @@ impl<'a> Compiler<'a> {
                             let digits = self.emit_num_digit_string(&src_reg, n);
                             self.move_str_into_char(&digits, n, didx);
                         }
+                        // Cross-category **alphanumeric → numeric** (the reverse
+                        // direction): an alphanumeric source (`PIC X(m)`) moved into
+                        // an UNSIGNED INTEGER receiver (`PIC 9(n)`, no `S`, no `V`).
+                        // COBOL reads the source's `m` characters as an unsigned
+                        // integer and de-scales it into the receiver, keeping the
+                        // low-order `n` digits (right-justified: left-zero-padded if
+                        // shorter, high-order-truncated if longer) — i.e.
+                        // `receiver = (integer formed from the m source chars) mod
+                        // 10^n`. We fold the `m` bytes left-to-right into an `i64`
+                        // (`value = value*10 + (byte - '0')`) and store it through
+                        // the SAME numeric-store helper a numeric MOVE/COMPUTE uses,
+                        // which applies the receiver-width truncation, so it is
+                        // byte-identical to the oracle (which folds the identical
+                        // per-character arithmetic and stores via `move_into_numeric`
+                        // at scale 0). This rung scopes to an ALL-DIGIT source; a
+                        // non-digit byte runs the same `(byte - '0')` arithmetic on
+                        // both engines (defined-but-unspecified, identical), so no
+                        // reject is needed and no test exercises it.
+                        (
+                            ItemKind::Char { .. },
+                            ItemKind::Numeric { signed: false, dec_digits: 0, .. },
+                        ) => {
+                            let m = self.items[src_idx].width();
+                            // Guard the `i64` fold: an all-digit source of ≤ 18
+                            // characters stays below `10^18 < i64::MAX`, so the fold
+                            // never overflows on either engine; a wider source is a
+                            // clean later rung (both engines reject it identically).
+                            if m > NUMERIC_MAX_DIGITS {
+                                return Err(CompileError::Unsupported(format!(
+                                    "alphanumeric → numeric MOVE from {name} into {dst}: a source \
+                                     wider than {NUMERIC_MAX_DIGITS} characters is a later rung \
+                                     (its {m}-digit fold could overflow the i64 intermediate)"
+                                )));
+                            }
+                            let src_reg = self.items[src_idx].reg.clone();
+                            let value = self.emit_str_to_int(&src_reg, m);
+                            self.store_scaled(&dst, &value, 0, m, false)?;
+                        }
                         // Every other cross-category shape stays a clean later
                         // rung: a SIGNED (`PIC S9`) or SCALED (`PIC 9V9`) numeric
-                        // source, and the reverse alphanumeric → numeric direction.
+                        // item on either side (source of a numeric→alphanumeric or
+                        // receiver of an alphanumeric→numeric MOVE).
                         _ => {
                             return Err(CompileError::Unsupported(format!(
                                 "cross-category MOVE from {name} into {dst} \
-                                 (only an unsigned-integer numeric source into an \
-                                 alphanumeric receiver is supported; a signed or \
-                                 scaled source, or the reverse direction, is a \
-                                 later rung)"
+                                 (an unsigned-integer numeric source into an \
+                                 alphanumeric receiver, or an alphanumeric source \
+                                 into an unsigned-integer numeric receiver, are \
+                                 supported; a signed or scaled numeric item on \
+                                 either side is a later rung)"
                             )));
                         }
                     }
@@ -928,6 +968,54 @@ impl<'a> Compiler<'a> {
                 "str",
             );
         }
+    }
+
+    /// Fold an alphanumeric source register `src_reg` of compile-time width `m`
+    /// into the unsigned integer it denotes, and return the fresh `i64` register
+    /// holding it. This is the run-time twin of the oracle's per-character fold in
+    /// the reverse (alphanumeric → numeric) MOVE: the `m` bytes are read
+    /// left-to-right as decimal digits, accumulating
+    ///
+    /// ```text
+    ///   value = 0
+    ///   for k in 0..m:  d = src[k] - '0';  value = value*10 + d
+    /// ```
+    ///
+    /// so the source `"042"` folds to `0*10+0 → 0`, `0*10+4 → 4`, `4*10+2 → 42`.
+    /// Reading each byte with the IIR `str_index` op and subtracting the constant
+    /// `'0'` (48) yields that position's digit; the running `value` is the integer
+    /// the whole field denotes. The receiver-width truncation (`value mod 10^n`)
+    /// is applied later by [`Self::store_scaled`] — the same numeric-store helper a
+    /// numeric MOVE/COMPUTE uses — so the compiled result matches the oracle, which
+    /// runs the identical fold and stores through `move_into_numeric` at scale 0.
+    ///
+    /// The caller has already bounded `m ≤ 18`, so the `i64` fold of an all-digit
+    /// source (`< 10^18 < i64::MAX`) never overflows.
+    fn emit_str_to_int(&mut self, src_reg: &str, m: usize) -> String {
+        let value = self.fresh("_a2nv");
+        self.emit("const", Some(&value), vec![Operand::Int(0)], "i64");
+        let ten = self.fresh("_a2n10");
+        self.emit("const", Some(&ten), vec![Operand::Int(10)], "i64");
+        let zero_byte = self.fresh("_a2n0");
+        self.emit("const", Some(&zero_byte), vec![Operand::Int(b'0' as i64)], "i64");
+        for k in 0..m {
+            // c = src[k] (a byte, as i64); d = c - '0' (this position's digit).
+            let kreg = self.fresh("_a2nk");
+            self.emit("const", Some(&kreg), vec![Operand::Int(k as i64)], "i64");
+            let c = self.fresh("_a2nc");
+            self.emit(
+                "str_index",
+                Some(&c),
+                vec![Operand::Var(src_reg.to_string()), Operand::Var(kreg)],
+                "i64",
+            );
+            let d = self.fresh("_a2nd");
+            self.emit("sub", Some(&d), vec![Operand::Var(c), Operand::Var(zero_byte.clone())], "i64");
+            // value = value*10 + d.
+            self.emit("mul", Some(&value), vec![Operand::Var(value.clone()), Operand::Var(ten.clone())], "i64");
+            self.emit("add", Some(&value), vec![Operand::Var(value.clone()), Operand::Var(d)], "i64");
+        }
+        value
     }
 
     /// Emit the constant-index `str_slice` for a reference modification
@@ -4745,18 +4833,23 @@ mod tests {
     }
 
     #[test]
-    fn alphanumeric_to_numeric_move_is_deferred() {
-        // The REVERSE direction (alphanumeric source → numeric receiver) is a later
-        // rung — it needs run-time digit parsing/validation.
-        let err = compile_source(
+    fn alphanumeric_to_unsigned_integer_move_lowers() {
+        // The REVERSE direction (alphanumeric source → UNSIGNED INTEGER receiver)
+        // is now supported: the source's bytes are folded left-to-right into the
+        // integer (`str_index` reads each byte, `mul`/`add` accumulate) and stored
+        // with the receiver-width truncation (`mod`).
+        let m = compile_source(
             &wrap(
                 &["01  W  PIC X(3) VALUE \"042\".", "01  N  PIC 9(3)."],
                 &["MOVE W TO N.", "STOP RUN."],
             ),
             "x",
         )
-        .unwrap_err();
-        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+        .unwrap();
+        assert!(m.validate().is_empty(), "{:?}", m.validate());
+        let os = ops(&m);
+        assert!(os.contains(&"str_index".to_string()), "each source byte is read via str_index");
+        assert!(os.contains(&"mod".to_string()), "receiver-width truncation via mod");
     }
 
     #[test]
@@ -5496,6 +5589,71 @@ mod tests {
                 &["INSPECT S TALLYING C FOR LEADING \"A\".", "STOP RUN."],
             ),
             "insp_lead",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    // Alphanumeric → numeric MOVE: the still-deferred receiver/source shapes.
+
+    #[test]
+    fn alphanumeric_to_signed_numeric_move_is_a_later_rung() {
+        // A SIGNED receiver (`PIC S9`) is a later rung — only an UNSIGNED integer
+        // receiver is modelled this cut.
+        let err = compile_source(
+            &wrap(
+                &["01  A  PIC X(3) VALUE \"042\".", "01  N  PIC S9(3)."],
+                &["MOVE A TO N.", "STOP RUN."],
+            ),
+            "a2n_signed",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn alphanumeric_to_scaled_numeric_move_is_a_later_rung() {
+        // A SCALED receiver (`PIC 9V9`, non-zero fractional digits) is a later rung.
+        let err = compile_source(
+            &wrap(
+                &["01  A  PIC X(3) VALUE \"042\".", "01  N  PIC 9V9."],
+                &["MOVE A TO N.", "STOP RUN."],
+            ),
+            "a2n_scaled",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn alphanumeric_to_numeric_wide_source_is_a_later_rung() {
+        // A source wider than 18 characters could overflow the i64 fold — a later
+        // rung on both engines.
+        let err = compile_source(
+            &wrap(
+                &["01  A  PIC X(19) VALUE \"0000000000000000042\".", "01  N  PIC 9(3)."],
+                &["MOVE A TO N.", "STOP RUN."],
+            ),
+            "a2n_wide",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn group_to_numeric_move_is_a_later_rung() {
+        // A GROUP source (no picture) into a numeric receiver is a later rung.
+        let err = compile_source(
+            &wrap(
+                &[
+                    "01  G.",
+                    "    05  A  PIC X(2) VALUE \"04\".",
+                    "    05  B  PIC X(1) VALUE \"2\".",
+                    "01  N  PIC 9(3).",
+                ],
+                &["MOVE G TO N.", "STOP RUN."],
+            ),
+            "grp2n",
         )
         .unwrap_err();
         assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");

@@ -31,6 +31,13 @@ const MAX_PERFORM_DEPTH: usize = 100;
 /// output byte-identical to this oracle.
 pub const COMPUTE_DIV_SCALE: usize = 12;
 
+/// Widest alphanumeric source an alphanumeric → numeric MOVE folds into an `i64`.
+/// An all-digit source of at most this many characters has value `< 10^18`, which
+/// fits an `i64` (`< ~9.22 * 10^18`), so the per-character fold never overflows;
+/// a wider source is a clean later rung. Mirrors the compiler's constant of the
+/// same name so both engines defer the same source widths.
+const NUMERIC_MAX_DIGITS: usize = 18;
+
 /// One field in the data model. Elementary items carry a picture and character
 /// storage; group items (no picture) are the concatenation of their children.
 struct Item {
@@ -1195,6 +1202,69 @@ impl Machine {
                                 )));
                             }
                         }
+                    }
+                }
+            }
+            // Cross-category alphanumeric → numeric MOVE (the reverse direction):
+            // an alphanumeric source item (`PIC X(m)`) moved into an UNSIGNED
+            // INTEGER receiver (`PIC 9(n)`, no `S`, no `V`). COBOL reads the
+            // source's `m` characters as an unsigned integer and de-scales it into
+            // the receiver, keeping the low-order `n` digits (right-justified:
+            // left-zero-padded when the source is shorter, high-order-truncated when
+            // longer) — `receiver = (integer formed from the m source chars) mod
+            // 10^n`. We fold the `m` bytes left-to-right into an `i64`
+            // (`value = value*10 + (byte - '0')`) and store it through `move_into`
+            // as a scale-0 `Decimal`, whose `move_into_numeric` applies exactly that
+            // digit-count alignment/truncation. This is byte-identical to the
+            // compiler, which folds the identical per-character arithmetic and
+            // truncates via its numeric-store helper. Only an unsigned-integer
+            // receiver and a genuine alphanumeric SOURCE ITEM (not a group, not a
+            // literal) are handled here; every other shape falls through to
+            // `move_into` below, which rejects a `Src::Chars` → numeric MOVE.
+            if let Operand::Ident(name) = src {
+                if let Some(&sidx) = self.by_name.get(name) {
+                    let src_is_char = matches!(
+                        self.items[sidx].picture,
+                        Some(Picture::Alphanumeric { .. }) | Some(Picture::Alphabetic { .. })
+                    );
+                    let recv_unsigned_int = matches!(
+                        self.items[idx].picture,
+                        Some(Picture::Numeric { dec_digits: 0, signed: false, .. })
+                    );
+                    if src_is_char && recv_unsigned_int {
+                        let chars = self.items[sidx].storage.clone();
+                        // Guard the `i64` fold: an all-digit source of ≤ 18
+                        // characters stays below `10^18 < i64::MAX`; a wider source
+                        // is a clean later rung (the compiler rejects it identically).
+                        if chars.len() > NUMERIC_MAX_DIGITS {
+                            return Err(RuntimeError::Unsupported(format!(
+                                "alphanumeric → numeric MOVE from {name} into {dst}: a source \
+                                 wider than {NUMERIC_MAX_DIGITS} characters is a later rung"
+                            )));
+                        }
+                        // Fold the bytes as decimal digits. `wrapping_*` matches the
+                        // compiler's i64 arithmetic and never panics; for the
+                        // in-scope all-digit ≤ 18-char source it never wraps.
+                        let mut value: i64 = 0;
+                        for b in chars.bytes() {
+                            value = value.wrapping_mul(10).wrapping_add((b as i64) - (b'0' as i64));
+                        }
+                        // Store the MAGNITUDE, exactly as the compiler's scale-0
+                        // `store_scaled` does (`abs(value) mod 10^n`). This matters for a
+                        // source byte below `'0'` — most commonly a SPACE (an
+                        // uninitialised `PIC X` is spaces): `(b - '0')` is then negative
+                        // and the fold goes negative, but a `PIC 9` field is unsigned, so
+                        // both engines keep the magnitude (never a stray `'-'`). A
+                        // non-digit source is defined-but-unspecified, identical on both
+                        // engines by construction. (`unsigned_abs` is total — no panic on
+                        // `i64::MIN`, unreachable here anyway.)
+                        let decimal = Decimal {
+                            neg: false,
+                            int: value.unsigned_abs().to_string(),
+                            frac: String::new(),
+                        };
+                        self.move_into(idx, Src::Num(decimal))?;
+                        continue;
                     }
                 }
             }

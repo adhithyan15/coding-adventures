@@ -617,10 +617,53 @@ alphanumeric-item `MOVE` emits. Because both engines run the digit image through
 one shared alphanumeric-receiver rule, the stored bytes agree byte-for-byte.
 
 Deferred as clean later rungs (rejected at read/compile time, never wrong output):
-the **reverse** direction (alphanumeric → numeric, which needs run-time digit
-parsing/validation), a **signed** (`PIC S9`) or **scaled** (`PIC 9V9`) or
-**edited** (`PIC $,ZZ9.99`) numeric source, a **numeric-edited** receiver, and a
-**group** item on either side.
+a **signed** (`PIC S9`) or **scaled** (`PIC 9V9`) or **edited** (`PIC $,ZZ9.99`)
+numeric source, a **numeric-edited** receiver, and a **group** item on either side.
+
+### `MOVE` (cross-category: alphanumeric → unsigned-integer numeric)
+
+The **reverse** cross-category rung is `MOVE alphanumeric-item TO numeric-item`,
+restricted to an alphanumeric source (`PIC X(m)`) into an **unsigned integer**
+receiver (`PIC 9(n)` — no `S`, no `V`).
+
+COBOL's rule: the alphanumeric source is treated as an **unsigned integer** formed
+from its characters read as digits, then moved (de-scaled) into the numeric
+receiver **right-justified** — the receiver keeps the **low-order `n` digits**,
+left-zero-padded when the source has fewer than `n` digits and high-order-truncated
+when it has more, i.e.
+
+```text
+receiver_value = (integer formed from the m source digit characters) mod 10^n
+```
+
+Worked (source read left-to-right as `value = value*10 + (char - '0')`):
+
+- `PIC X(3)="042"` → `PIC 9(3)` → `42` (exact fit; `DISPLAY` shows `"042"`).
+- `PIC X(2)="05"` → `PIC 9(4)` → `0005` (source shorter → left-zero-padded).
+- `PIC X(5)="12345"` → `PIC 9(3)` → `345` (source longer → high-order-truncated).
+
+Both engines compute the value by the **identical per-character arithmetic**
+`value = value*10 + (char_byte - '0')` over the `m` source characters, so they
+always agree byte-for-byte. The oracle folds the source's bytes into an `i64` and
+stores it via `move_into_numeric` at scale 0 (which performs the digit-count
+alignment/truncation); the compiler folds the `m` bytes at run time —
+`d = str_index(src,k) - '0'`, `value = value*10 + d` (`mul`/`add`/`sub`/`const`
+over `i64`) — and stores `value` through the **same numeric-store helper**
+(`store_scaled` at scale 0, whose `mod 10^n` is the receiver-width truncation) a
+numeric `MOVE`/`COMPUTE` uses.
+
+**All-digit scope / non-digit characters.** This rung scopes to an **all-digit**
+source. A non-digit byte is *not* rejected: the same `(byte - '0')` arithmetic runs
+on both engines (defined-but-unspecified, but **identical on both by
+construction**), and every test uses an all-digit source. This choice — over a
+runtime reject — keeps the oracle and compiler provably identical, because the
+compiled path has no clean way to raise a runtime error for a non-digit that the
+oracle could mirror byte-for-byte.
+
+Deferred as clean later rungs (rejected identically on both engines): a **signed**
+(`PIC S9`) or **scaled** (`PIC 9V9`) or **edited** numeric receiver, a **group**
+item on either side, and a **source wider than 18 characters** (whose `i64` fold
+could overflow — an all-digit source of ≤ 18 chars stays below `10^18 < i64::MAX`).
 
 ## Scope
 
