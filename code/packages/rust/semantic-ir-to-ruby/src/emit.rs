@@ -138,6 +138,11 @@ fn scan_stmt(s: &Stmt) -> Option<(String, semantic_ir::Span)> {
         } => scan_expr(seq)
             .or_else(|| scan_expr(index))
             .or_else(|| scan_expr(value)),
+        Stmt::MapSet {
+            map, key, value, ..
+        } => scan_expr(map)
+            .or_else(|| scan_expr(key))
+            .or_else(|| scan_expr(value)),
         // Compound-statement bodies must be scanned too, or an unsupported
         // builtin hidden in a loop body survives the pre-check and reaches the
         // emitter's `unreachable!`. (`While` was a pre-existing scan hole.)
@@ -187,6 +192,10 @@ fn scan_expr(e: &Expr) -> Option<(String, semantic_ir::Span)> {
         Expr::SeqLit { items, .. } => items.iter().find_map(scan_expr),
         Expr::SeqIndex { seq, index, .. } => scan_expr(seq).or_else(|| scan_expr(index)),
         Expr::SeqLen { seq, .. } => scan_expr(seq),
+        Expr::MapLit { entries, .. } => entries
+            .iter()
+            .find_map(|e| scan_expr(&e.key).or_else(|| scan_expr(&e.value))),
+        Expr::MapGet { map, key, .. } => scan_expr(map).or_else(|| scan_expr(key)),
         _ => None,
     }
 }
@@ -269,6 +278,18 @@ fn emit_stmt(s: &Stmt) -> String {
             "sir_seq_set({}, {}, {})",
             emit_expr(seq),
             emit_expr(index),
+            emit_expr(value)
+        ),
+        // `h[k] = v` — native `Hash#[]=`, which inserts or updates and mutates
+        // the shared Hash (matching `_sir_map_set`). Unlike a sequence, a map
+        // has no bounds, so no guard helper is needed; the assignment evaluates
+        // to `v`, but here it stands in statement position.
+        Stmt::MapSet {
+            map, key, value, ..
+        } => format!(
+            "({})[{}] = {}",
+            emit_expr(map),
+            emit_expr(key),
             emit_expr(value)
         ),
         // `iter.each { |var| … }` — a BLOCK, so `var` and any body-local are
@@ -430,6 +451,24 @@ fn emit_expr(e: &Expr) -> String {
         }
         // `a.length` — native `Array#length`, matching `_sir_seq_len`.
         Expr::SeqLen { seq, .. } => format!("({}).length", emit_expr(seq)),
+        // SIR16 map literal (`{k => v, …}`) → a native Ruby Hash — no runtime
+        // helper (unlike the Go/Rust backends, whose tagged-value runtimes box
+        // a `*Map`/assoc-list). Each key and value is an expression, emitted
+        // recursively. Ruby's Hash preserves insertion order and compares keys
+        // structurally (`eql?`/`hash`), so a composite key like `[1, 2]` works.
+        Expr::MapLit { entries, .. } => {
+            let pairs: Vec<String> = entries
+                .iter()
+                .map(|e| format!("{} => {}", emit_expr(&e.key), emit_expr(&e.value)))
+                .collect();
+            format!("{{{}}}", pairs.join(", "))
+        }
+        // `h[k]` (read). Native `Hash#[]`: a missing key yields nil (no raise),
+        // matching `_sir_map_get`. The receiver is parenthesised so a compound
+        // `map` expression indexes correctly.
+        Expr::MapGet { map, key, .. } => {
+            format!("({})[{}]", emit_expr(map), emit_expr(key))
+        }
         // SIR26: integer conversion → a mask helper chosen by target width +
         // signedness.  A target width of `Arbitrary` is the identity (a widen
         // into Ruby's already-unbounded Integer), so no helper wraps it.

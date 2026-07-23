@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.5.0 — maps (SIR16)
+
+Accepts `Feature::Maps`. Ruby has a native Hash, so the three map nodes render
+directly — no runtime value-boxing like the Go/Rust backends' `_sir_map_*`:
+
+- `Expr::MapLit` (`{k => v, …}`) → a native Hash literal.
+- `Expr::MapGet` (`h[k]`) → `(h)[k]`: a missing key yields nil (no raise),
+  matching `_sir_map_get`.
+- `Stmt::MapSet` (`h[k] = v`) → `(h)[k] = v`: insert-or-update, mutating the
+  shared Hash (a write through one binding is visible through every alias). A
+  map has no bounds, so — unlike `SeqSet` — no guard helper is needed.
+
+Ruby's Hash preserves insertion order and compares keys with `eql?`/`hash`,
+which is STRUCTURAL for composite keys — so `{[1, 2] => x}[[1, 2]]` finds the
+entry, matching the reference's `_sir_value_eq` key comparison. (One documented
+divergence: `eql?` is type-strict for numbers, so a Ruby `{1 => x}[1.0]` is nil
+where the reference's cross-representation `_sir_value_eq` would match; a
+mixed int/float map key is rare and not exercised by any conformance case.)
+
+`ForEach` over a Hash needs no new arm — the existing `(iter).each { |x| … }`
+works on a Hash (yielding `[k, v]`) as well as an Array — so accepting Maps
+keeps the emitter total. Every node verified by hand-built modules (bypassing
+the frontend, which does not yet produce these), run against a real `ruby`.
+
 ## 0.4.0 — sequences (SIR16)
 
 Accepts `Feature::Sequences`. Ruby has native arrays, so the SIR16 sequence
