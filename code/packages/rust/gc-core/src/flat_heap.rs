@@ -95,13 +95,23 @@ struct FlatHeader {
     /// "opaque / trace conservatively"; unused by this PR beyond being carried.
     kind: u16,
     /// Which generation the object lives in: [`GEN_YOUNG`] (freshly allocated) or
-    /// [`GEN_OLD`] (survived at least one collection). A generational *minor* GC
-    /// (a later rung) scans only the young generation plus old→young pointers;
-    /// this PR establishes the split and promotes survivors, but every collect is
-    /// still a full one.
+    /// [`GEN_OLD`] (survived enough collections to be tenured — see [`Self::age`]).
+    /// A generational *minor* GC scans only the young generation plus old→young
+    /// pointers.
     generation: u8,
+    /// **Tenuring age**: how many collections this object has *survived while
+    /// young*. Incremented on each survival (in [`FlatHeap::sweep`]); when it
+    /// reaches the heap's [`FlatHeap::tenure_age`] threshold the object is promoted
+    /// to [`GEN_OLD`]. Born `0` (via `alloc_zeroed`), so with the default threshold
+    /// of `1` an object tenures on its first survival — exactly the immediate
+    /// tenuring the generational rung shipped with. A larger threshold keeps
+    /// short-lived-but-not-instantly-dead objects in the young generation longer,
+    /// reducing *premature* tenuring (objects that die in their 2nd/3rd cycle would
+    /// otherwise pollute the old generation and be reclaimed only by a full GC).
+    /// Saturates rather than wrapping. Old objects never age further.
+    age: u8,
     /// Explicit tail padding to reach exactly 32 bytes.
-    _pad: [u8; 11],
+    _pad: [u8; 10],
 }
 
 /// Generation tag for a freshly-allocated object: the **young** generation, where
@@ -153,7 +163,21 @@ pub struct FlatHeap {
     /// pins a phantom child. Kind id `0` is reserved for "opaque / trace
     /// conservatively" and never appears here.
     field_maps: Vec<Box<[usize]>>,
+    /// **Tenuring threshold**: a young object is promoted to [`GEN_OLD`] once its
+    /// [`FlatHeader::age`] (collections survived) reaches this value. Default
+    /// [`DEFAULT_TENURE_AGE`] = `1` reproduces immediate tenuring (survive one
+    /// collection → old); a larger value (via [`Self::set_tenure_age`]) keeps
+    /// objects young longer to reduce premature tenuring. Never `0` (clamped by the
+    /// setter) so an object always tenures after a bounded number of survivals.
+    tenure_age: u8,
 }
+
+/// Default [`FlatHeap::tenure_age`]: **1** — a survivor tenures on its first
+/// surviving collection, i.e. the immediate-tenuring behaviour the generational
+/// collector shipped with. Chosen as the default so this rung is purely additive
+/// (existing consumers and tests are unchanged); aging is opt-in via
+/// [`FlatHeap::set_tenure_age`] and can become the default in a later tuning pass.
+pub const DEFAULT_TENURE_AGE: u8 = 1;
 
 /// Initial collection threshold, and the floor `adapt_threshold` never drops
 /// below: **1 MiB**. Small enough that a real workload collects promptly, large
@@ -191,7 +215,24 @@ impl FlatHeap {
             profile: GcProfile::default(),
             remembered: HashSet::new(),
             field_maps: Vec::new(),
+            tenure_age: DEFAULT_TENURE_AGE,
         }
+    }
+
+    /// Set the **tenuring threshold** — how many collections a young object must
+    /// survive before it is promoted to the old generation. `1` (the default) is
+    /// immediate tenuring; a larger value keeps objects young longer, so ones that
+    /// die in their 2nd/3rd cycle are reclaimed by a cheap *minor* GC instead of
+    /// polluting the old generation until a full GC. Clamped to a minimum of `1`
+    /// (a `0` threshold is meaningless — an object would tenure before surviving
+    /// anything) so tenuring always terminates.
+    pub fn set_tenure_age(&mut self, threshold: u8) {
+        self.tenure_age = threshold.max(1);
+    }
+
+    /// The current tenuring threshold (see [`Self::set_tenure_age`]).
+    pub fn tenure_age(&self) -> u8 {
+        self.tenure_age
     }
 
     /// Allocate `n` zeroed bytes and return a **real pointer** to the payload.
@@ -397,13 +438,16 @@ impl FlatHeap {
         }
 
         // ── Sweep ─────────────────────────────────────────────────────────────
-        let (freed, survived, live) = self.sweep(false);
+        let (freed, survived, live, _promoted) = self.sweep(false);
         self.live_bytes = live;
         self.adapt_threshold(prev_live);
-        // A full collect may have freed old objects, so any remembered-set entry
-        // could now dangle. Clear it; the write barrier rebuilds it as new
-        // old→young stores happen. (Cheap: the set is small and short-lived.)
-        self.remembered.clear();
+        // A full collect may have freed old objects, so a remembered-set entry
+        // could now dangle. Under aging, young objects can also *survive* a full
+        // collect (they are not all tenured), so real old→young edges may still
+        // exist — clearing outright would drop them and a later minor GC would
+        // free a live young child (UAF). Instead **prune** only the dead entries;
+        // surviving old sources (barrier-recorded and promotion-recorded) are kept.
+        self.rebuild_remembered();
 
         let stats = GcCycleStats {
             freed,
@@ -455,12 +499,13 @@ impl FlatHeap {
             self.scan_payload(h, &mut work, false);
         }
 
-        let (freed, survived, live) = self.sweep(false);
+        let (freed, survived, live, _promoted) = self.sweep(false);
         self.live_bytes = live;
         self.adapt_threshold(prev_live);
-        // Full collect: drop the (possibly now-dangling) remembered set; the
-        // write barrier rebuilds it. See `collect`.
-        self.remembered.clear();
+        // Full collect: prune only the dead entries from the remembered set (see
+        // [`Self::collect`]); aging lets young objects survive, so surviving
+        // old→young edges must be kept, not cleared.
+        self.rebuild_remembered();
 
         let stats = GcCycleStats {
             freed,
@@ -569,13 +614,17 @@ impl FlatHeap {
             self.scan_payload(h, &mut work, true);
         }
 
-        // Sweep the young generation only; promote survivors.
-        let (freed, survived, live) = self.sweep(true);
+        // Sweep the young generation only; age/promote survivors.
+        let (freed, survived, live, promoted) = self.sweep(true);
         self.live_bytes = live;
         // The remembered set is intentionally *kept*: a minor cycle frees no old
         // object, so no entry dangles. Entries whose young child was promoted are
         // now old→old — stale but harmless (the next minor scan finds no young
         // child) and cleared by the next full collect.
+        // Promotion barrier: a young object aged to tenure this minor may now hold
+        // an old→young pointer (its child stayed young). Record such promotions so
+        // the *next* minor GC visits them — else it would free the live young child.
+        self.record_promoted_old_to_young(&promoted);
 
         let stats = GcCycleStats {
             freed,
@@ -659,12 +708,13 @@ impl FlatHeap {
         }
 
         // ── Sweep ─────────────────────────────────────────────────────────────
-        let (freed, survived, live) = self.sweep(false);
+        let (freed, survived, live, _promoted) = self.sweep(false);
         self.live_bytes = live;
         self.adapt_threshold(prev_live);
-        // Full collect: drop the (possibly now-dangling) remembered set; the write
-        // barrier rebuilds it. See [`Self::collect`].
-        self.remembered.clear();
+        // Full collect: prune only the dead entries from the remembered set (see
+        // [`Self::collect`]); aging lets young objects survive, so surviving
+        // old→young edges must be kept, not cleared.
+        self.rebuild_remembered();
 
         let stats = GcCycleStats {
             freed,
@@ -739,12 +789,13 @@ impl FlatHeap {
         }
 
         // ── Sweep ─────────────────────────────────────────────────────────────
-        let (freed, survived, live) = self.sweep(false);
+        let (freed, survived, live, _promoted) = self.sweep(false);
         self.live_bytes = live;
         self.adapt_threshold(prev_live);
-        // Full collect: drop the (possibly now-dangling) remembered set; the write
-        // barrier rebuilds it. See [`Self::collect`].
-        self.remembered.clear();
+        // Full collect: prune only the dead entries from the remembered set (see
+        // [`Self::collect`]); aging lets young objects survive, so surviving
+        // old→young edges must be kept, not cleared.
+        self.rebuild_remembered();
 
         let stats = GcCycleStats {
             freed,
@@ -895,18 +946,22 @@ impl FlatHeap {
         ptr::null_mut()
     }
 
-    /// Free unmarked blocks and tenure survivors; returns
-    /// `(freed, survived, live_bytes)`.
+    /// Free unmarked blocks and age/tenure survivors; returns
+    /// `(freed, survived, live_bytes, promoted)` where `promoted` is the headers of
+    /// objects tenured to [`GEN_OLD`] *this* sweep (for the caller to check for
+    /// old→young pointers and add to the remembered set — the promotion barrier).
     ///
     /// When `young_only` (a **minor** cycle), **old** objects are left entirely
     /// alone — never freed, mark bit untouched — because a minor GC does not scan
     /// or reclaim the old generation; only **young** blocks are freed (if
-    /// unmarked) or promoted (if marked). A full cycle (`!young_only`) considers
-    /// every block. Either way a survivor is tenured to [`GEN_OLD`].
-    fn sweep(&mut self, young_only: bool) -> (usize, usize, usize) {
+    /// unmarked) or aged (if marked). A full cycle (`!young_only`) considers every
+    /// block. A young survivor's age is bumped and it is tenured once it reaches
+    /// [`Self::tenure_age`].
+    fn sweep(&mut self, young_only: bool) -> (usize, usize, usize, Vec<*mut FlatHeader>) {
         let mut freed = 0usize;
         let mut survived = 0usize;
         let mut live = 0usize;
+        let mut promoted: Vec<*mut FlatHeader> = Vec::new();
         // `cursor` points at the link that currently references the block under
         // inspection (`&mut self.all` first, then `&mut (*prev).next`), so we can
         // unlink in place without a previous-node special case.
@@ -926,11 +981,30 @@ impl FlatHeap {
                 }
                 if (*h).marked {
                     (*h).marked = false;
-                    // Tenure the survivor: an object that lives through a
-                    // collection is promoted to the old generation (already-old
-                    // objects simply stay old). This is what lets a future minor
-                    // GC skip it — most objects die young and never reach here.
-                    (*h).generation = GEN_OLD;
+                    // Tenure the survivor, but only once it has *aged* enough. A
+                    // young object that lives through a collection has its `age`
+                    // bumped (saturating); when `age` reaches `tenure_age` it is
+                    // promoted to the old generation so a future minor GC can skip
+                    // it. With the default threshold of 1 this is immediate
+                    // tenuring (age 0 → 1 ≥ 1). Already-old objects never age and
+                    // simply stay old. Keeping soon-to-die objects young a little
+                    // longer means a cheap minor GC reclaims them, instead of a
+                    // full GC being needed to clear the old generation.
+                    if (*h).generation == GEN_YOUNG {
+                        (*h).age = (*h).age.saturating_add(1);
+                        if (*h).age >= self.tenure_age {
+                            (*h).generation = GEN_OLD;
+                            // Record newly-promoted objects so the caller can add
+                            // any that hold an old→young pointer to the remembered
+                            // set (the promotion barrier — see `record_promoted_
+                            // old_to_young` / `rebuild_remembered`). A store made
+                            // into this object *while it was young* fired no write
+                            // barrier, so under aging (where a parent can tenure a
+                            // cycle before its child) that edge would otherwise be
+                            // invisible to the next minor GC → use-after-free.
+                            promoted.push(h);
+                        }
+                    }
                     survived += 1;
                     live += (*h).size;
                     cursor = &mut (*h).next;
@@ -942,7 +1016,96 @@ impl FlatHeap {
                 }
             }
         }
-        (freed, survived, live)
+        (freed, survived, live, promoted)
+    }
+
+    /// Return `true` iff the object `h` holds a pointer to a live **young** block —
+    /// i.e. it is an old→young source the remembered set must record. Traces `h`'s
+    /// payload with the *same* discipline the collector's mark uses (a registered
+    /// [`FlatHeader::kind`]'s reference-field offsets precisely; otherwise every
+    /// aligned word conservatively; both the raw word and its low-3-tag-stripped
+    /// form), so an edge is recorded exactly when a minor GC's scan would follow it.
+    ///
+    /// # Safety
+    /// `h` must be a live block owned by this heap.
+    unsafe fn points_to_live_young(&self, h: *mut FlatHeader) -> bool {
+        let base = h.add(1) as *const u8;
+        let size = (*h).size;
+        let kind = (*h).kind;
+        let has_young = |word: usize| -> bool {
+            for cand in [word, word & !0b111usize] {
+                let child = self.find_header(cand);
+                if !child.is_null() && (*child).generation == GEN_YOUNG {
+                    return true;
+                }
+            }
+            false
+        };
+        if kind != 0 {
+            if let Some(offsets) = self.field_maps.get((kind - 1) as usize) {
+                for &off in offsets.iter() {
+                    // Wrap-safe bound (`off + 8 <= size` could overflow for a
+                    // near-usize::MAX field offset): the 8-byte read must stay
+                    // inside the payload.
+                    if size >= 8 && off <= size - 8 {
+                        let w = ptr::read_unaligned(base.add(off) as *const usize);
+                        if has_young(w) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+        }
+        // Conservative: scan every aligned word.
+        let mut off = 0usize;
+        while size >= 8 && off <= size - 8 {
+            let w = ptr::read_unaligned(base.add(off) as *const usize);
+            if has_young(w) {
+                return true;
+            }
+            off += 8;
+        }
+        false
+    }
+
+    /// **Rebuild** the remembered set after a *full* collect: it must list exactly
+    /// the surviving **old** objects that point into the **young** generation. A
+    /// full collect can free old objects (dangling entries) and — under aging —
+    /// leave young objects alive (real old→young edges), so neither the pre-collect
+    /// entries nor a blanket clear is correct. Recompute from scratch by scanning
+    /// the (small, post-sweep) live set. When nothing young survives (e.g. the
+    /// default immediate-tenuring threshold), this yields the empty set, exactly as
+    /// the previous `clear()` did.
+    fn rebuild_remembered(&mut self) {
+        self.remembered.clear();
+        let mut h = self.all;
+        // SAFETY: list walk over live blocks we own; `points_to_live_young` only
+        // reads payloads of live blocks.
+        unsafe {
+            while !h.is_null() {
+                if (*h).generation == GEN_OLD && self.points_to_live_young(h) {
+                    self.remembered.insert(h as usize + HEADER_SIZE);
+                }
+                h = (*h).next;
+            }
+        }
+    }
+
+    /// The **promotion barrier** for a *minor* collect: after a minor sweep, add any
+    /// just-`promoted` object that now points into the young generation to the
+    /// remembered set. A minor keeps the existing remembered entries (it never frees
+    /// old objects, so they cannot dangle); this covers the new old→young edges that
+    /// aging creates when a parent tenures a cycle before its still-young child.
+    fn record_promoted_old_to_young(&mut self, promoted: &[*mut FlatHeader]) {
+        // SAFETY: every `h` came from this sweep's survivor set and is live.
+        unsafe {
+            for &h in promoted {
+                if self.points_to_live_young(h) {
+                    self.remembered.insert(h as usize + HEADER_SIZE);
+                }
+            }
+        }
     }
 }
 
@@ -1565,6 +1728,107 @@ mod tests {
         // Second collect, still rooting it: remains a single old object.
         let _ = heap.collect(&[keep]);
         assert_eq!(heap.object_count_by_generation(), (0, 1));
+    }
+
+    // ── Generational aging: tenure only after surviving `tenure_age` cycles ─────
+
+    /// The default tenuring threshold is `1` — immediate tenuring, preserving the
+    /// behaviour the generational rung shipped with (so this change is additive).
+    #[test]
+    fn default_tenure_age_is_one() {
+        let heap = FlatHeap::new();
+        assert_eq!(DEFAULT_TENURE_AGE, 1);
+        assert_eq!(heap.tenure_age(), 1);
+    }
+
+    /// With a raised threshold a young survivor is **aged**, not tenured: it stays
+    /// young for `tenure_age − 1` surviving collections and is promoted to old only
+    /// on the `tenure_age`-th. This is the headline aging behaviour — it keeps
+    /// objects that die in their 2nd/3rd cycle reclaimable by a cheap minor GC
+    /// instead of polluting the old generation.
+    #[test]
+    fn raised_threshold_ages_before_tenuring() {
+        let mut heap = FlatHeap::new();
+        heap.set_tenure_age(3);
+        assert_eq!(heap.tenure_age(), 3);
+
+        let keep = heap.alloc(16, 0) as usize;
+        // Survives collection 1 → age 1 (< 3): still young.
+        let _ = heap.collect(&[keep]);
+        assert_eq!(heap.object_count_by_generation(), (1, 0), "young after 1 survival");
+        // Survives collection 2 → age 2 (< 3): still young.
+        let _ = heap.collect(&[keep]);
+        assert_eq!(heap.object_count_by_generation(), (1, 0), "young after 2 survivals");
+        // Survives collection 3 → age 3 (≥ 3): tenured to old.
+        let _ = heap.collect(&[keep]);
+        assert_eq!(heap.object_count_by_generation(), (0, 1), "tenured on the 3rd survival");
+        // Stays old thereafter (old objects never age or demote).
+        let _ = heap.collect(&[keep]);
+        assert_eq!(heap.object_count_by_generation(), (0, 1), "remains old");
+    }
+
+    /// Aging is driven by the shared sweep, so a **minor** GC ages a young survivor
+    /// too: with threshold 2 the object stays young through one minor and tenures
+    /// on the second.
+    #[test]
+    fn minor_gc_ages_young_survivor() {
+        let mut heap = FlatHeap::new();
+        heap.set_tenure_age(2);
+        let keep = heap.alloc(16, 0) as usize;
+
+        heap.collect_minor(&[keep]); // age 1 (< 2): young
+        assert_eq!(heap.object_count_by_generation(), (1, 0), "young after 1 minor");
+        heap.collect_minor(&[keep]); // age 2 (≥ 2): tenured
+        assert_eq!(heap.object_count_by_generation(), (0, 1), "tenured after 2 minors");
+    }
+
+    /// **UAF regression (aging + generational barrier).** With a raised threshold a
+    /// parent can tenure a cycle *before* a young child it points at — and the
+    /// parent→child store happened while the parent was young, so no write barrier
+    /// fired. A **promotion barrier** must record the newly-old parent so the next
+    /// minor GC scans it and keeps the child; otherwise the minor GC frees a live
+    /// object. This is the exact scenario a security review caught.
+    #[test]
+    fn aged_promotion_records_old_to_young_edge_for_minor_gc() {
+        let mut heap = FlatHeap::new();
+        heap.set_tenure_age(2);
+
+        // `parent` survives one collection → age 1, still young.
+        let parent = heap.alloc(16, 0) as usize;
+        let _ = heap.collect(&[parent]);
+        assert_eq!(heap.object_count_by_generation(), (1, 0), "parent young, age 1");
+
+        // Allocate `child`, store it into `parent` (parent still YOUNG → the write
+        // barrier is a no-op and records nothing).
+        let child = heap.alloc(16, 0) as usize;
+        unsafe { *(parent as *mut usize) = child; }
+        unsafe { heap.write_barrier(parent, child); }
+        assert_eq!(heap.remembered_len(), 0, "barrier no-op while parent is young");
+
+        // Second full collect: `parent` ages 1→2 → tenured to OLD; `child` (age 1)
+        // stays YOUNG. The promotion barrier must now remember `parent`.
+        let _ = heap.collect(&[parent]);
+        assert_eq!(heap.object_count_by_generation(), (1, 1), "parent old, child young");
+        assert_eq!(heap.remembered_len(), 1, "promotion recorded the old→young source");
+
+        // A minor GC rooting only `parent` must KEEP `child` (reached via the
+        // remembered old parent), not free it.
+        heap.collect_minor(&[parent]);
+        assert!(!heap.find_header(child).is_null(), "live child must survive the minor GC");
+        assert!(!heap.find_header(parent).is_null(), "parent survives too");
+    }
+
+    /// A `0` threshold is meaningless (an object would tenure before surviving
+    /// anything); [`FlatHeap::set_tenure_age`] clamps it to `1`, so tenuring stays
+    /// well-defined and terminates.
+    #[test]
+    fn set_tenure_age_clamps_zero_to_one() {
+        let mut heap = FlatHeap::new();
+        heap.set_tenure_age(0);
+        assert_eq!(heap.tenure_age(), 1, "0 clamped to 1");
+        let keep = heap.alloc(16, 0) as usize;
+        let _ = heap.collect(&[keep]);
+        assert_eq!(heap.object_count_by_generation(), (0, 1), "behaves as immediate tenuring");
     }
 
     // ── Generational minor GC: remembered set + write barrier ──────────────────

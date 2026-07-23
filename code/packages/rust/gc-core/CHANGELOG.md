@@ -1,5 +1,51 @@
 # Changelog — gc-core
 
+## 0.11.0 — 2026-07-23 — generational aging (tenure after N survivals)
+
+Adds a tunable **tenuring age** so a young object is promoted to the old generation only
+after surviving a configurable number of collections, instead of always tenuring on its
+first survival. This is the "aging = future tuning" item flagged when the generational
+collector landed: keeping objects that die in their 2nd/3rd cycle in the young generation
+lets a cheap *minor* GC reclaim them, rather than a full GC being needed to clear the old
+generation of prematurely-tenured garbage.
+
+- `FlatHeader` gains a 1-byte `age` field (collections survived while young), stolen from
+  the existing tail padding — the header stays exactly 32 bytes (the `size_of == 32`
+  compile-time assertion is unchanged).
+- `FlatHeap::sweep` increments a young survivor's `age` (saturating) and promotes it to
+  `GEN_OLD` only once `age` reaches the heap's `tenure_age` threshold. Old objects never
+  age or demote.
+- `FlatHeap::set_tenure_age(u8)` / `tenure_age()` configure the threshold; `set_tenure_age`
+  clamps `0 → 1` so tenuring always terminates. New `DEFAULT_TENURE_AGE = 1`.
+
+**Promotion barrier (generational-invariant correctness).** Aging breaks an assumption the
+remembered set relied on: under immediate tenuring a parent and its child always tenured in
+the *same* sweep, so a promoted parent could never point at a still-young child. With aging a
+parent can tenure a cycle *before* its child — and because the parent→child store happened
+while the parent was young, the write barrier (which records only already-old parents) never
+fired. That old→young edge would be invisible to the next minor GC, which would free the live
+young child (use-after-free). This was caught by an adversarial security review. Fix: the
+sweep reports promoted objects; a **minor** collect records any that now point into the young
+generation (`record_promoted_old_to_young`), and a **full** collect *rebuilds* the remembered
+set from the surviving old→young edges (`rebuild_remembered`) instead of clearing it (a full
+collect can now leave young objects alive, so a blanket clear would drop real edges). Both
+trace with the same precise/conservative discipline the mark uses, so an edge is remembered
+exactly when a minor scan would follow it. Regression test
+`aged_promotion_records_old_to_young_edge_for_minor_gc` reproduces the exact scenario.
+
+**Backward-compatible default:** threshold `1` reproduces the exact immediate-tenuring
+behaviour the generational rung shipped with (at that threshold no young object survives a
+full collect, so `rebuild_remembered` yields the same empty set the old `clear()` did) — every
+existing test is unchanged (66 gc-core tests pass, incl. the untouched promotion / remembered-
+set / minor-GC tests). Aging is opt-in via `set_tenure_age` and can become the default in a
+later workload-tuning pass. gc-core-only; no C-ABI change (a `__gc_set_tenure_age` capi shim
+is a follow-up).
+
+New tests: `raised_threshold_ages_before_tenuring` (stays young for `N−1` collections,
+tenures on the `N`-th), `minor_gc_ages_young_survivor` (aging via a minor cycle),
+`aged_promotion_records_old_to_young_edge_for_minor_gc` (the UAF regression),
+`set_tenure_age_clamps_zero_to_one`, `default_tenure_age_is_one`.
+
 ## 0.10.0 — 2026-07-18
 
 ### Added
