@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.29.0 — `INSPECT … CONVERTING from TO to`
+
+- Added `Stmt::InspectConverting { source, from, to }` and its executor
+  `exec_inspect_converting`. `INSPECT source CONVERTING from TO to` translates each
+  character of the alphanumeric `source` through a per-character **translation
+  table** built from the two EQUAL-length string literals `from` and `to`.
+- Semantics (oracle = source of truth): a source character equal to `from[k]`
+  becomes `to[k]`; if `from` repeats a character the **FIRST (leftmost) entry
+  wins** (the map is built with `or_insert`, which never overwrites); a character
+  in no table entry is left unchanged. The map preserves length, so the rebuilt
+  string feeds the same alphanumeric char-store path a `MOVE` uses. Example:
+  `CONVERTING "AEIOU" TO "12345"` on `BEAN` → `B21N`; `CONVERTING "AAB" TO "XYZ"`
+  on `AAB` → `XXZ` (A→X wins over the later A→Y).
+- Reader: `read_inspect_converting` extracts the two string-literal operands and
+  rejects a `BEFORE`/`AFTER` region; `read_converting_literal` rejects a
+  data-name / figurative / numeric-literal / reference-modified `from`/`to`. The
+  unequal-length check lives in the executor (a clean later-rung `Unsupported`).
+- `CONVERTING` is a **standalone** `INSPECT` alternative — combining it with a
+  `TALLYING`/`REPLACING` clause in one statement does not parse (a
+  `RuntimeError::Parse`), never a mis-run. A numeric/group source is rejected by
+  the shared `inspect_alnum_source`.
+- Later rungs: unequal-length `FROM`/`TO`, a `PIC X` item / figurative /
+  reference-modified `from`/`to`, and a `BEFORE`/`AFTER` region.
+
 ## 0.28.0 — combined `INSPECT … TALLYING … REPLACING` (one statement)
 
 - Added `Stmt::InspectTallyReplace { source, counter, delim, search, replace }`

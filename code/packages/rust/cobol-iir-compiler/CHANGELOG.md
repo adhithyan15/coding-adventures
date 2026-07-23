@@ -8,6 +8,31 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.25.0: `INSPECT … CONVERTING from TO to`
+
+Lowered the `INSPECT … CONVERTING` verb — a per-character translation table —
+oracle-first and byte-identical to `cobol-runtime` 0.29.0.
+
+- **`emit_inspect_converting`** — dispatched from `emit_inspect` on the standalone
+  `inspect_converting` node (checked before the tally/replace composition, since
+  the grammar never lets `CONVERTING` sit beside `TALLYING`/`REPLACING`). The
+  `from`/`to` string literals give a compile-time table: each `from[k]` is baked as
+  a `const` compare byte and each `to[k]` as a 1-character `str_const`. The lowering
+  UNROLLS over the compile-time source width `W`, and at each position reads
+  `S[j]` once and runs a **first-match-wins** chain over the table — on the earliest
+  `from[k]` equal to `S[j]` it appends `to[k]` and jumps past the rest; if nothing
+  matches it appends the original `S[j, j+1)`. The `W`-wide accumulator is copied
+  back into the source register only after the last read (no read-after-write
+  hazard), exactly as `emit_inspect_replacing` does.
+- **First-match-wins** mirrors the oracle's char→char map (which lets the earliest
+  `from` occurrence win via `or_insert`), so a duplicated `from` character (e.g.
+  `CONVERTING "AAB" TO "XYZ"` → A→X, not A→Y) is byte-identical between the two.
+- Later rungs (clean `CompileError::Unsupported`): an unequal-length or non-ASCII
+  `from`/`to` pair, a data-name (`PIC X` item) / figurative / numeric-literal /
+  reference-modified `from`/`to`, and a `BEFORE`/`AFTER` region. A `CONVERTING`
+  combined with `TALLYING`/`REPLACING` in one statement does not parse (mutually
+  exclusive grammar alternatives), so it is a `CompileError::Parse` rejection.
+
 ### Added — v0.24.0: combined `INSPECT … TALLYING … REPLACING` (one statement)
 
 Lowered the combined `INSPECT` — one statement carrying BOTH the `TALLYING` and

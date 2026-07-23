@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.18.0 — `INSPECT … CONVERTING` alternative
+
+- Added the `inspect_converting` alternative to `inspect_stmt`:
+  `inspect_stmt = "INSPECT" operand ( inspect_tallying [ inspect_replacing ] |
+  inspect_replacing | inspect_converting ) [ "END-INSPECT" ]`, with the new rule
+  `inspect_converting = "CONVERTING" operand "TO" operand { inspect_region }`.
+- `CONVERTING` is a **standalone** alternative — it never appears beside a
+  `TALLYING`/`REPLACING` clause in one statement — so a combined form is a clean
+  parse rejection rather than a silently-accepted node.
+- The trailing `{ inspect_region }` accepts an optional `BEFORE`/`AFTER` so a
+  region-restricted `CONVERTING` parses and rejects cleanly as a later rung (a
+  friendly Unsupported) instead of a bare parse error.
+- `_grammar.rs` regenerated from `cobol.grammar` via `grammar-tools
+  compile-grammar` (never hand-edited).
+
 ## 0.17.0 — `INSPECT` statement (first rung)
 
 - Added `inspect_stmt` to the `statement` alternation:

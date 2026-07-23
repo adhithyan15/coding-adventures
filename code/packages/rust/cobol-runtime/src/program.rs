@@ -185,6 +185,15 @@ pub enum Stmt {
         search: Operand,
         replace: Operand,
     },
+    /// `INSPECT source CONVERTING from TO to` — translate each character of the
+    /// alphanumeric `source` through a per-character **translation table** built
+    /// from the two EQUAL-length string literals `from` and `to`: a character equal
+    /// to `from[k]` becomes `to[k]` (the FIRST such `k` wins if `from` repeats a
+    /// character), and a character in no table entry is left unchanged. In place,
+    /// same width. This rung: `from`/`to` are string LITERALS of equal length; a
+    /// `PIC X` item / figurative / reference-modified `from`/`to`, an unequal-length
+    /// pair, a `BEFORE`/`AFTER` region, and a numeric/group source are later rungs.
+    InspectConverting { source: String, from: String, to: String },
     StopRun,
 }
 
@@ -808,6 +817,7 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
             // INSPECT (which the standard executes as tally-then-replace).
             let has_tally = child_node(verb, "inspect_tallying").is_some();
             let has_repl = child_node(verb, "inspect_replacing").is_some();
+            let has_conv = child_node(verb, "inspect_converting").is_some();
             // The source is the first (and only top-level) `operand`; a literal or
             // reference-modified source is a later rung (its category is checked at
             // exec time). Shared by both the TALLYING and REPLACING forms.
@@ -826,6 +836,13 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                     ))
                 }
             };
+            // CONVERTING is a STANDALONE alternative — the grammar never lets it
+            // appear beside TALLYING/REPLACING — so it is handled on its own before
+            // the tally/replace composition.
+            if has_conv {
+                let (from, to) = read_inspect_converting(verb)?;
+                return Ok(Stmt::InspectConverting { source, from, to });
+            }
             match (has_tally, has_repl) {
                 // Combined: tally-then-replace in one statement. Both phrases are
                 // extracted here (each rejecting its own later-rung forms) and the
@@ -951,6 +968,57 @@ fn read_inspect_replacing_all(verb: &GrammarASTNode) -> Result<(Operand, Operand
         }
     };
     Ok((read_operand(search_node)?, read_operand(replace_node)?))
+}
+
+/// Extract the `CONVERTING from TO to` phrase from an `inspect_stmt`, returning the
+/// two string-literal operands `(from, to)`. This rung only supports STRING-LITERAL
+/// translation tables and rejects the later-rung forms the grammar also accepts: a
+/// `BEFORE`/`AFTER` region, and a data-name / figurative / numeric-literal /
+/// reference-modified `from`/`to`. (The equal-length requirement is checked at exec
+/// time so it can share the same diagnostic as any other CONVERTING error.)
+fn read_inspect_converting(verb: &GrammarASTNode) -> Result<(String, String), RuntimeError> {
+    let converting = child_node(verb, "inspect_converting").ok_or_else(|| {
+        RuntimeError::Unsupported("INSPECT without a CONVERTING clause is a later rung".into())
+    })?;
+    if child_node(converting, "inspect_region").is_some() {
+        return Err(RuntimeError::Unsupported(
+            "INSPECT CONVERTING … BEFORE/AFTER is a later rung".into(),
+        ));
+    }
+    // `from TO to` — the two `operand` children are the FROM (first) and the TO
+    // (second), in order.
+    let ops = child_nodes(converting, "operand");
+    let (from_node, to_node) = match ops.as_slice() {
+        [f, t] => (*f, *t),
+        _ => {
+            return Err(RuntimeError::Unsupported(
+                "INSPECT CONVERTING without a FROM and a TO operand".into(),
+            ))
+        }
+    };
+    Ok((read_converting_literal(from_node, "from")?, read_converting_literal(to_node, "to")?))
+}
+
+/// Read a CONVERTING `from`/`to` operand as a plain string literal. Only string
+/// literals are supported this rung; a data-name (`PIC X` item), figurative
+/// constant, numeric literal, or reference modification is a later rung. `which`
+/// names the position (`"from"`/`"to"`) for the diagnostic.
+fn read_converting_literal(op: &GrammarASTNode, which: &str) -> Result<String, RuntimeError> {
+    match read_operand(op)? {
+        Operand::Lit(Lit::Str(s)) => Ok(s),
+        Operand::Lit(Lit::Num(_)) => Err(RuntimeError::Unsupported(format!(
+            "INSPECT CONVERTING with a numeric-literal {which} operand is a later rung"
+        ))),
+        Operand::Lit(Lit::Fig(_)) => Err(RuntimeError::Unsupported(format!(
+            "INSPECT CONVERTING with a figurative-constant {which} operand is a later rung"
+        ))),
+        Operand::Ident(_) => Err(RuntimeError::Unsupported(format!(
+            "INSPECT CONVERTING with a data-name {which} operand is a later rung"
+        ))),
+        Operand::RefMod { .. } => Err(RuntimeError::Unsupported(format!(
+            "INSPECT CONVERTING with a reference-modified {which} operand is a later rung"
+        ))),
+    }
 }
 
 /// Read a `condition` node: a `disjunction` of `AND`-joined simple conditions,

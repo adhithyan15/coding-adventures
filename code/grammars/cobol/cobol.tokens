@@ -242,6 +242,12 @@ keywords:
   INSPECT
   TALLYING
   REPLACING
+  # CONVERTING translates each source character through a from→to translation
+  # table (`INSPECT src CONVERTING "AB" TO "XY"`).  It is a distinct INSPECT
+  # alternative — never combined with TALLYING/REPLACING in one statement — so it
+  # gets its own keyword.  (TO is already reserved below as an ADD/SET/MOVE
+  # preposition, so CONVERTING's `TO` needs no new token.)
+  CONVERTING
   LEADING
   CHARACTERS
   BEFORE

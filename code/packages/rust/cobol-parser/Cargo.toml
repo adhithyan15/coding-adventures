@@ -1,8 +1,8 @@
 [package]
 name = "coding-adventures-cobol-parser"
-version = "0.17.0"
+version = "0.18.0"
 edition = "2021"
-description = "Parser for COBOL-60 — parses COBOL source into a generic parse tree using the grammar-driven parser and the cobol.grammar file. v0.17.0 adds the inspect_stmt rule (INSPECT … TALLYING … FOR ALL, plus the accepted-then-rejected LEADING/CHARACTERS/BEFORE/AFTER/REPLACING later-rung forms)."
+description = "Parser for COBOL-60 — parses COBOL source into a generic parse tree using the grammar-driven parser and the cobol.grammar file. v0.18.0 adds the inspect_converting alternative to inspect_stmt (INSPECT source CONVERTING from TO to, with an accepted-then-rejected trailing BEFORE/AFTER region). v0.17.0 added the inspect_stmt rule (INSPECT … TALLYING … FOR ALL, plus the accepted-then-rejected LEADING/CHARACTERS/BEFORE/AFTER/REPLACING later-rung forms)."
 
 [dependencies]
 grammar-tools = { path = "../grammar-tools" }

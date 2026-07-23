@@ -1,8 +1,8 @@
 [package]
 name = "coding-adventures-cobol-lexer"
-version = "0.9.0"
+version = "0.10.0"
 edition = "2021"
-description = "Lexer for COBOL-60 — strips the 80-column card format via a pre-tokenize hook and tokenizes with the grammar-driven lexer and the cobol.tokens grammar file. v0.9.0 reserves the INSPECT keywords (INSPECT, TALLYING, REPLACING, LEADING, CHARACTERS, BEFORE, AFTER, FOR, END-INSPECT)."
+description = "Lexer for COBOL-60 — strips the 80-column card format via a pre-tokenize hook and tokenizes with the grammar-driven lexer and the cobol.tokens grammar file. v0.10.0 reserves the CONVERTING keyword for INSPECT … CONVERTING (TO is already reserved). v0.9.0 reserved the INSPECT keywords (INSPECT, TALLYING, REPLACING, LEADING, CHARACTERS, BEFORE, AFTER, FOR, END-INSPECT)."
 
 [dependencies]
 grammar-tools = { path = "../grammar-tools" }
