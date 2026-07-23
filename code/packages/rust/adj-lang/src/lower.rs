@@ -1221,6 +1221,16 @@ fn lower_expr(expr: &ExprAst) -> ComputeExpr {
             mode: bignum_core::RoundingMode::HalfEven,
             expr: Box::new(lower_expr(a)),
         },
+        // `to_scientific(x, figures)` (NUM-6c): the scientific-notation rendering. Lowers
+        // to the distinct engine `ToScientific` node so the significant-figure count and
+        // the default half-even mode ride along and the exact-path audit records both the
+        // exact source and the rendered string (ADJ-NUMERIC-SUBSTRATE §4.1, §4.3).
+        // `figures` was validated (≥ 1, within the cap; default applied) by the adapter.
+        ExprAst::ToScientific(a, figures) => ComputeExpr::ToScientific {
+            figures: *figures,
+            mode: bignum_core::RoundingMode::HalfEven,
+            expr: Box::new(lower_expr(a)),
+        },
         ExprAst::Call2(f, a, b) => ComputeExpr::Bin(
             lower_bin_fn(*f),
             Box::new(lower_expr(a)),
@@ -1551,6 +1561,7 @@ fn collect_refs(expr: &ExprAst, out: &mut Vec<String>) {
         | ExprAst::Ceil(a)
         | ExprAst::Round(a)
         | ExprAst::RoundTo(a, _)
+        | ExprAst::ToScientific(a, _)
         | ExprAst::Trunc(a)
         | ExprAst::Sign(a)
         | ExprAst::Call(_, a) => collect_refs(a, out),
@@ -1601,6 +1612,14 @@ const FORMULA_MAX_EXPANSION_NODES: usize = 10_000;
 /// default precision (256 bits ≈ 77 significant digits, ADJ-NUMERIC-SUBSTRATE §3)
 /// and any real measurement, so the cap constrains only pathological inputs.
 const MAX_ROUND_PLACES: u32 = 100;
+
+/// The significant-figure count `to_scientific(x)` uses when the surface omits it
+/// (NUM-6c). Six is the conventional default mantissa precision for scientific
+/// notation (`6.02214e23`) and comfortably inside [`MAX_ROUND_PLACES`]; an explicit
+/// `to_scientific(x, n)` overrides it. The default is applied here at lowering, so the
+/// engine node always carries a concrete `figures` count and the audit records what was
+/// used regardless of whether the writer stated it.
+const DEFAULT_SCI_FIGURES: u32 = 6;
 
 /// Maximum AST-nesting depth the expansion/substitution/clone walkers may descend
 /// in a single expression (ADJ-RULE-SUBSTRATE RS-1). The node budget bounds total
@@ -1684,6 +1703,9 @@ fn charged_clone(
         ExprAst::Ceil(a) => ExprAst::Ceil(Box::new(charged_clone(a, budget, d)?)),
         ExprAst::Round(a) => ExprAst::Round(Box::new(charged_clone(a, budget, d)?)),
         ExprAst::RoundTo(a, n) => ExprAst::RoundTo(Box::new(charged_clone(a, budget, d)?), *n),
+        ExprAst::ToScientific(a, n) => {
+            ExprAst::ToScientific(Box::new(charged_clone(a, budget, d)?), *n)
+        }
         ExprAst::Trunc(a) => ExprAst::Trunc(Box::new(charged_clone(a, budget, d)?)),
         ExprAst::Sign(a) => ExprAst::Sign(Box::new(charged_clone(a, budget, d)?)),
         ExprAst::Call(f, a) => ExprAst::Call(*f, Box::new(charged_clone(a, budget, d)?)),
@@ -1836,6 +1858,43 @@ fn expand_rec(
                 let value = expand_rec(&args[0], formulas, depth, chain, active, budget, d)?;
                 return Ok(ExprAst::RoundTo(Box::new(value), spec));
             }
+            // NUM-6c built-in: `to_scientific(x [, figures])` — the scientific-notation
+            // rendering. Recognised by NAME here, before the user-formula lookup, on the
+            // same comma-list application grammar. `figures` is OPTIONAL: `to_scientific(x)`
+            // uses the default mantissa precision [`DEFAULT_SCI_FIGURES`]; a stated
+            // `to_scientific(x, n)` requires `n` a positive integer literal (`≥ 1`, since a
+            // scientific mantissa has at least one significant figure) within the precision
+            // cap [`MAX_ROUND_PLACES`]. A non-integer, zero, negative, oversized, or
+            // non-literal `n`, or the wrong number of arguments, is a clean compile error.
+            if name == "to_scientific" {
+                if args.is_empty() || args.len() > 2 {
+                    return Err(LowerError::FormulaArity {
+                        formula: name.clone(),
+                        expected: 2,
+                        got: args.len(),
+                    });
+                }
+                let figures = if args.len() == 2 {
+                    match &args[1] {
+                        ExprAst::Lit(v)
+                            if v.fract() == 0.0
+                                && *v >= 1.0
+                                && *v <= MAX_ROUND_PLACES as f64 =>
+                        {
+                            *v as u32
+                        }
+                        _ => {
+                            return Err(LowerError::FormulaBadArgument {
+                                formula: name.clone(),
+                            })
+                        }
+                    }
+                } else {
+                    DEFAULT_SCI_FIGURES
+                };
+                let value = expand_rec(&args[0], formulas, depth, chain, active, budget, d)?;
+                return Ok(ExprAst::ToScientific(Box::new(value), figures));
+            }
             // Resolve the callee against the SAME registry the top-level query path
             // uses. An unknown name is a clean, specific error — distinct from an
             // aggregation or built-in call, which never reach here (they are separate
@@ -1924,6 +1983,10 @@ fn expand_rec(
             a, formulas, depth, chain, active, budget, d,
         )?))),
         ExprAst::RoundTo(a, n) => Ok(ExprAst::RoundTo(
+            Box::new(expand_rec(a, formulas, depth, chain, active, budget, d)?),
+            *n,
+        )),
+        ExprAst::ToScientific(a, n) => Ok(ExprAst::ToScientific(
             Box::new(expand_rec(a, formulas, depth, chain, active, budget, d)?),
             *n,
         )),
@@ -2107,6 +2170,9 @@ fn substitute_expr(
         ExprAst::Round(a) => ExprAst::Round(Box::new(substitute_expr(a, subst, budget, d)?)),
         ExprAst::RoundTo(a, n) => {
             ExprAst::RoundTo(Box::new(substitute_expr(a, subst, budget, d)?), *n)
+        }
+        ExprAst::ToScientific(a, n) => {
+            ExprAst::ToScientific(Box::new(substitute_expr(a, subst, budget, d)?), *n)
         }
         ExprAst::Trunc(a) => ExprAst::Trunc(Box::new(substitute_expr(a, subst, budget, d)?)),
         ExprAst::Sign(a) => ExprAst::Sign(Box::new(substitute_expr(a, subst, budget, d)?)),

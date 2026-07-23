@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.59.0] — 2026-07-22
+
+### Added — NUM-6c: the `to_scientific(x [, figures])` scientific-notation rendering (ADJ-NUMERIC-SUBSTRATE §4.1, §4.3)
+
+```
+let reported = to_scientific(avogadro, 4)   % → "6.022e23"
+let quick    = to_scientific(measured)      % default 6 significant figures
+```
+
+- `to_scientific` joins `round_to`/`round_sig` as a built-in recognised during
+  `Apply` lowering (same native comma-list application surface, no new grammar). It
+  lowers to the new `logic_engine::ComputeExpr::ToScientific` node via a new
+  `ExprAst::ToScientific(expr, figures)` AST node, under the default half-even mode.
+- The `figures` argument is **optional**: `to_scientific(x)` uses the documented
+  default mantissa precision (`DEFAULT_SCI_FIGURES = 6`), resolved here at lowering so
+  the engine node always carries a concrete count and the audit records what was used.
+  A stated `to_scientific(x, n)` requires `n` a positive integer literal (`≥ 1`, since
+  a scientific mantissa has at least one significant figure) within the precision cap
+  (`MAX_ROUND_PLACES = 100`). A non-integer, zero, negative, oversized, or non-literal
+  `n`, or the wrong argument count, is a clean compile error — never a silent format.
+- All the expression walkers (`collect_refs`, `charged_clone`, `expand_rec`,
+  `substitute_expr`) carry the new node, so it composes inside formula bodies, `let`s,
+  and predicate application positions exactly like `round_to`/`round_sig`.
+
 ## [0.58.0] — 2026-07-22
 
 ### Added — NUM-6b: the `round_sig(x, n)` significant-figures narrowing (ADJ-NUMERIC-SUBSTRATE §4.1–§4.4)

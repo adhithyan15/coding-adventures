@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.20.0] — 2026-07-22 — NUM-6c: render `to_scientific` in the audit trail
+
+The derivation-tree renderer gains a `DerivationNode::ToScientific` arm (NUM-6c): a
+`{"node":"to_scientific","figures":n,"mode":"half_even","rendered":"6.022e23","value":…,"operand":{…}}`
+object exposing the significant-figure count, the stated mode, the rendered boundary
+string, the narrowed numeric value, and the operand subtree it narrowed — everything
+`adj-verify` needs to re-render from the exact source. Adds an end-to-end test driving
+`to_scientific(x [, figures])` through the built CLI: exact rendering across scales
+(large integer, repeating rational), the optional-`figures` default, and rejection of
+a zero / non-integer figure count.
+
 ## [0.19.0] — 2026-07-22 — NUM-6b: render `round_sig` in the audit trail
 
 The derivation-tree renderer now names the KIND of precision narrowing: `"places"`

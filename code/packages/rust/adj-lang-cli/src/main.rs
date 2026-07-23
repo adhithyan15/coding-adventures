@@ -177,6 +177,25 @@ fn derivation_tree_json(
                 derivation_tree_json(operand, kb)
             )
         }
+        // A `to_scientific(x, figures)` rendering (NUM-6c): the audit exposes the
+        // significant-figure count, the rounding mode, the `rendered` boundary string,
+        // the narrowed numeric `value`, and the operand subtree it narrowed — so a
+        // checker can re-narrow the operand's exact value to `figures` significant
+        // figures and confirm the rendered form (ADJ-NUMERIC-SUBSTRATE §4.3).
+        D::ToScientific {
+            figures,
+            mode,
+            rendered,
+            operand,
+            result,
+        } => format!(
+            "{{\"node\":\"to_scientific\",\"figures\":{},\"mode\":\"{}\",\"rendered\":\"{}\",\"value\":{},\"operand\":{}}}",
+            figures,
+            rounding_mode_name(*mode),
+            esc(rendered),
+            jnum(*result),
+            derivation_tree_json(operand, kb)
+        ),
     }
 }
 

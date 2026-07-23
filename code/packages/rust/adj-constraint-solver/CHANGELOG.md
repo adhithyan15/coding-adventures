@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.14.0] - 2026-07-22 — absorb `ComputeExpr::ToScientific` (NUM-6c)
+
+### Changed
+
+- The solver's `ComputeExpr` walkers gain a `ComputeExpr::ToScientific` arm (the new
+  NUM-6c `to_scientific` rendering): it renders a number to a boundary string, so the
+  LIA/linear/CAS extractors return `None` (out of scope, exactly like a round), the
+  observed-value substitution rebuilds it with its operand substituted, and
+  `is_constant_expr` recurses into its operand. No behaviour change for existing
+  inputs — this is cross-producer totality for the new engine variant.
+
 ## [0.13.0] - 2026-07-22 — absorb `ComputeExpr::Round` (NUM-6a)
 
 ### Changed
