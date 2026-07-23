@@ -907,14 +907,19 @@ fn a_pathologically_long_elseif_chain_is_cleanly_rejected() {
     // into an `Expr::If` chain N levels deep -- deep enough that merely
     // dropping the returned `Module` overflowed the native stack and
     // aborted the process (uncatchable). Must now be a clean error well
-    // before that. (5,000 -- ~20x `MAX_EXPR_DEPTH` -- rather than this
-    // file's usual 100,000: `scilab-parser`'s own `elseif_clause*` parsing
-    // has been separately found to scale worse than linearly at very large
-    // clause counts, tracked as its own follow-up task; 5,000 is still a
-    // generous margin over the cap without that unrelated slowdown making
-    // this single test dominate the suite's runtime.)
+    // before that.
+    //
+    // (This test previously used 5,000 rather than this file's usual
+    // 100,000, out of a suspicion that `scilab-parser`'s own
+    // `elseif_clause*` parsing scaled worse than linearly at very large
+    // clause counts. That suspicion was investigated directly -- a
+    // synthetic benchmark from 10 to 80,000 `elseif` clauses measured a
+    // steady ~2x time increase per doubling of input size, i.e. linear
+    // scaling, with no quadratic trend -- and did not hold up, so this now
+    // matches the file's usual 100,000 like its sibling tests above and
+    // below.)
     let mut src = String::from("if x == 0\n  y = 1;\n");
-    for _ in 0..5_000 {
+    for _ in 0..100_000 {
         src.push_str("elseif x == 0\n  y = 1;\n");
     }
     src.push_str("end\n");

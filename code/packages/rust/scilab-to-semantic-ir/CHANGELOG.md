@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.1.3] - 2026-07-23
+
+### Fixed
+
+- **`tests/test_lower.rs`'s `a_pathologically_long_elseif_chain_is_cleanly_rejected`
+  carried a stale, never-actually-measured claim** (task #91): its comment
+  asserted `scilab-parser`'s own `elseif_clause*` parsing "has been
+  separately found to scale worse than linearly at very large clause
+  counts", and used that as the reason to test with 5,000 `elseif` clauses
+  instead of this file's usual 100,000. That claim was investigated
+  directly with a synthetic benchmark (10 to 80,000 `elseif` clauses,
+  release build): parse time grows by a steady ~2x per doubling of input
+  size (exponent ≈ 1.0-1.1) with no upward trend — linear, not quadratic.
+  `scilab-parser`'s shared `GrammarParser` packrat memo already uses a
+  tuple-keyed `HashMap` (fixed upstream in PR #8181, predating this test),
+  so there was never a live perf bug here. The comment and clause count
+  are corrected to match the file's other pathological-input tests
+  (100,000), and the misleading "unrelated slowdown" framing is replaced
+  with the actual measured result.
+
 ## [0.1.2] - 2026-07-22
 
 ### Fixed
