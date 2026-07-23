@@ -1,5 +1,45 @@
 # Changelog
 
+## 0.37.0 — SIGNED numeric ↔ alphanumeric COMPARISON (overpunched image)
+
+- The mixed numeric ↔ alphanumeric relation (`IF NUM = "str"`, `<`, `>`, … in `IF` /
+  `EVALUATE` / any condition context) now accepts a **SIGNED** numeric operand
+  (`PIC S9(i)V9(d)`, integer or scaled), not only an unsigned one. Oracle-first and
+  byte-identical to `cobol-iir-compiler` 0.33.0. No grammar change.
+- **The comparison image carries a trailing sign overpunch.** A signed numeric
+  operand's comparison image is its stored MAGNITUDE with the operational sign folded
+  into a TRAILING OVERPUNCH on the units (last) digit — the SAME bytes the signed
+  numeric → alphanumeric MOVE produces (`overpunch_trailing(&storage, neg)`). The
+  units digit `u` maps: positive `{ A B C D E F G H I`, negative `} J K L M N O P Q R`.
+  So `PIC S9(3) = -123` compares **equal** to `"12L"`, `= +123` equal to `"12C"`, and
+  a scaled `PIC S9V9 = -4.2` equal to `"4K"`. Ordering follows the byte comparison of
+  these images.
+- **Implementation.** `compare_operands` no longer rejects a signed numeric operand in
+  its `mixed` gate. Its alphanumeric byte arm now computes each side as
+  `signed_overpunch_image(op).unwrap_or_else(|| src_chars(&src))` — a new helper that
+  returns `Some(overpunch_trailing(&storage, neg))` only for a signed-numeric
+  data-name operand, else `None`. So the compared string changes ONLY for a signed
+  operand; an unsigned numeric, a figurative, or a literal keeps its ordinary
+  `src_chars` image, and the space-pad / figurative-fill / byte-compare logic is
+  otherwise unchanged. The now-unused `operand_is_signed_numeric` gate is removed.
+- **Sign-of-zero (no regression).** A value that truncates to a zero magnitude stores
+  `neg = false` (COBOL has no negative zero), so `overpunch_trailing("000", false)`
+  → `"00{"`, matching the compiler's zero-slot image.
+- **Aligned a numeric-literal asymmetry.** A numeric LITERAL vs an alphanumeric
+  operand — a different pairing than a numeric ITEM vs alphanumeric, out of this
+  rung's scope — was previously left as-is by the oracle (it silently answered) while
+  the compiler rejected it. `compare_operands` now rejects a numeric-literal operand
+  in a mixed comparison too, so both engines defer it identically.
+- **Still deferred (rejected identically on both engines).** A group item in a mixed
+  comparison, and the numeric-literal pairing above. The old
+  `mixed_signed_numeric_vs_alphanumeric_is_deferred` and
+  `mixed_signed_numeric_vs_space_figurative_is_deferred` reject tests are replaced by
+  positive parity tests (`mixed_signed_numeric_vs_alphanumeric_uses_overpunched_image`
+  with equality + ordering, `mixed_signed_units_zero_and_scaled_overpunch`,
+  `mixed_signed_zero_magnitude_compares_positive`); a
+  `mixed_numeric_literal_vs_alphanumeric_is_deferred` reject test is added and the
+  group-item reject test is kept.
+
 ## 0.36.0 — SIGNED numeric → alphanumeric MOVE (trailing sign overpunch)
 
 - The cross-category numeric → alphanumeric MOVE now accepts a **SIGNED** source

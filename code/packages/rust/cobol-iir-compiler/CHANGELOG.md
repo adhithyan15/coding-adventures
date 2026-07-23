@@ -8,6 +8,55 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.33.0: SIGNED numeric ↔ alphanumeric COMPARISON (overpunched image)
+
+The mixed numeric ↔ alphanumeric relation (`IF NUM = "str"`, `<`, `>`, …) now
+accepts a **SIGNED** numeric operand (`PIC S9(i)V9(d)`, integer or scaled), not only
+an unsigned one. Oracle-first and byte-identical to
+`coding-adventures-cobol-runtime` 0.37.0. No grammar / lexer / parser change.
+
+- **The comparison image carries a trailing sign overpunch.** When a signed DISPLAY
+  numeric is compared against an alphanumeric operand, its comparison image is its
+  `(i + d)`-digit zero-padded MAGNITUDE with the operational sign folded into a
+  TRAILING OVERPUNCH on the units (last) digit — the SAME image the signed
+  numeric → alphanumeric MOVE (v0.32.0) produces. The units digit `u` maps: positive
+  `{ A B C D E F G H I`, negative `} J K L M N O P Q R`. So `PIC S9(3) = -123`
+  compares **equal** to `"12L"`, `= +123` equal to `"12C"`, and a scaled
+  `PIC S9V9 = -4.2` equal to `"4K"`. Ordering follows the byte comparison of these
+  images.
+- **Fixed: `numeric = ZERO` is now a NUMERIC comparison.** `emit_relation`
+  previously routed a numeric item compared against the `ZERO` figurative through the
+  alphanumeric mixed path (`str_operand` carries `ZERO` as `Fig('0')`). For an unsigned
+  item that happened to agree with the oracle (a zero-padded magnitude string orders
+  like its value); for a SIGNED item the overpunched image (`"00{"`, `"12L"`, …)
+  compared against `"000"` answered wrongly — silently miscompiling the ubiquitous
+  `IF BALANCE = ZERO`. `numeric ↔ ZERO` now takes the numeric comparison path (`ZERO`
+  → `0`), matching the oracle (whose mixed gate excludes `Fig::Zero` and numeric-compares
+  `Num` vs `Fig::Zero`). `ZERO` stays alphanumeric only against a character operand;
+  `ZERO`-vs-`ZERO` stays a string compare.
+- **The lowering reuses `emit_signed_num_alpha_image`.** `num_digit_str_operand`'s
+  signed arm (previously a clean `Unsupported`) now binds `int_digits`/`dec_digits`,
+  computes `n = i + d`, and returns `StrOperand::Fixed { reg:
+  emit_signed_num_alpha_image(&num_reg, n), len: n }` — the exact same overpunched
+  image builder the signed MOVE uses (magnitude via `emit_num_digit_string`, units
+  overpunch by slicing the combined `"{ABCDEFGHI}JKLMNOPQR"` table at
+  `units + neg*10`). Both operands then flow through the identical space-padded
+  `str_cmp` an all-alphanumeric relation takes, so the byte comparison matches the
+  oracle exactly. The unsigned path and the pure numeric-vs-numeric path are
+  byte-identical to before.
+- **Sign-of-zero (no regression).** A value that truncates to a zero magnitude stores
+  `neg = false` (COBOL has no negative zero), so `emit_signed_num_alpha_image` on a
+  zero slot yields `"00{"` — equal to the oracle's `overpunch_trailing("000", false)`.
+- **Still deferred (rejected identically on both engines).** A numeric LITERAL vs an
+  alphanumeric operand (a different pairing, out of scope) and a group item in a
+  mixed comparison remain clean `Unsupported`s. The old
+  `mixed_signed_numeric_vs_alphanumeric_is_a_later_rung` reject e2e test is replaced
+  by positive oracle-parity tests (negative/positive equality, units-digit-0,
+  scaled, an ordering relation, and sign-of-zero); a
+  `signed_numeric_vs_alphanumeric_comparison_now_compiles` and a
+  `numeric_literal_vs_alphanumeric_comparison_is_still_a_later_rung` unit test are
+  added, and the group-item reject test is kept.
+
 ### Added — v0.32.0: SIGNED numeric → alphanumeric MOVE (trailing sign overpunch)
 
 The cross-category numeric → alphanumeric MOVE now accepts a **SIGNED** source

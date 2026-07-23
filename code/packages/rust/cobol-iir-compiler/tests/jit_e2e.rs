@@ -2007,22 +2007,121 @@ fn mixed_numeric_wider_field_space_pads_the_literal() {
     assert_eq!(out, "LT\n");
 }
 
-// The deferred numeric shapes in a mixed relation are clean `Unsupported`s in the
-// compiler, matching the oracle (which rejects the same shapes at run time).
+// A SIGNED numeric operand in a mixed relation compares by its magnitude image
+// with the operational sign folded into a TRAILING OVERPUNCH on the units digit
+// (positive `{A…I`, negative `}J…R`) — the same image the signed→alphanumeric
+// MOVE produces. Every case is byte-identical to the cobol-runtime oracle.
 
 #[test]
-fn mixed_signed_numeric_vs_alphanumeric_is_a_later_rung() {
-    // A SIGNED (`PIC S9`) numeric operand compared with an alphanumeric literal
-    // needs sign handling in its image → a later rung.
-    let err = compile_source(
-        &wrap(
-            &["01  S  PIC S9(3) VALUE 42."],
-            &["IF S = \"042\" DISPLAY \"Y\".", "STOP RUN."],
-        ),
-        "e2e",
-    )
-    .unwrap_err();
-    assert!(matches!(err, cobol_iir_compiler::CompileError::Unsupported(_)), "got {err:?}");
+fn mixed_signed_negative_equals_its_overpunched_image() {
+    // `PIC S9(3) = -123` → magnitude "123", units 3 negative → 'L' → "12L", so
+    // `IF S = "12L"` is TRUE and `IF S = "12C"` (the positive image) is FALSE.
+    let eq = assert_matches_oracle(&wrap(
+        &["01  S  PIC S9(3) VALUE -123."],
+        &["IF S = \"12L\" DISPLAY \"T\" ELSE DISPLAY \"F\".", "STOP RUN."],
+    ));
+    assert_eq!(eq, "T\n");
+    let ne = assert_matches_oracle(&wrap(
+        &["01  S  PIC S9(3) VALUE -123."],
+        &["IF S = \"12C\" DISPLAY \"T\" ELSE DISPLAY \"F\".", "STOP RUN."],
+    ));
+    assert_eq!(ne, "F\n");
+}
+
+#[test]
+fn mixed_signed_positive_equals_its_overpunched_image() {
+    // `PIC S9(3) = +123` → units 3 positive → 'C' → "12C", so `IF S = "12C"` is TRUE.
+    // A signed item with an unsigned VALUE is positive (neg=false).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC S9(3) VALUE 123."],
+        &["IF S = \"12C\" DISPLAY \"T\" ELSE DISPLAY \"F\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "T\n");
+}
+
+#[test]
+fn mixed_signed_units_digit_zero() {
+    // Units digit 0 selects '}' (negative) / '{' (positive).
+    let neg = assert_matches_oracle(&wrap(
+        &["01  S  PIC S9(3) VALUE -120."],
+        &["IF S = \"12}\" DISPLAY \"T\" ELSE DISPLAY \"F\".", "STOP RUN."],
+    ));
+    assert_eq!(neg, "T\n");
+    let pos = assert_matches_oracle(&wrap(
+        &["01  S  PIC S9(3) VALUE 120."],
+        &["IF S = \"12{\" DISPLAY \"T\" ELSE DISPLAY \"F\".", "STOP RUN."],
+    ));
+    assert_eq!(pos, "T\n");
+}
+
+#[test]
+fn mixed_signed_scaled_equals_its_overpunched_image() {
+    // A scaled `PIC S9V9 = -4.2` → magnitude "42", units 2 negative → 'K' → "4K".
+    let out = assert_matches_oracle(&wrap(
+        &["01  F  PIC S9V9 VALUE -4.2."],
+        &["IF F = \"4K\" DISPLAY \"T\" ELSE DISPLAY \"F\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "T\n");
+}
+
+#[test]
+fn mixed_signed_numeric_ordering() {
+    // Ordering follows the byte comparison of the overpunched images: `-123` → "12L"
+    // and "12L" < "12M" (L=0x4C < M=0x4D), so `IF S < "12M"` is TRUE.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC S9(3) VALUE -123."],
+        &["IF S < \"12M\" DISPLAY \"T\" ELSE DISPLAY \"F\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "T\n");
+}
+
+#[test]
+fn mixed_signed_zero_magnitude_compares_positive() {
+    // COBOL has no negative zero: -1000 high-order-truncated into PIC S9(3) stores an
+    // all-zero POSITIVE slot, whose overpunched image is "00{" (units 0, positive).
+    // Both engines must build "00{", so `IF S = "00{"` is TRUE (no reintroduced
+    // negative-zero divergence).
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC S9(4) VALUE -1000.", "01  S  PIC S9(3)."],
+        &[
+            "MOVE A TO S.",
+            "IF S = \"00{\" DISPLAY \"T\" ELSE DISPLAY \"F\".",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "T\n");
+}
+
+#[test]
+fn signed_numeric_vs_zero_figurative_is_a_numeric_comparison() {
+    // `IF S = ZERO` on a SIGNED field is a NUMERIC comparison (S vs 0), NOT an
+    // alphanumeric one — so a signed field holding 0 compares EQUAL to ZERO, and a
+    // negative field is LESS THAN ZERO. The ZERO figurative against a numeric operand
+    // must not route the signed item through the overpunch-string path (which would
+    // compare "00{"/"12L" against "000" and answer wrongly). Both engines agree.
+    let zero_eq = assert_matches_oracle(&wrap(
+        &["01  S  PIC S9(3) VALUE 0."],
+        &["IF S = ZERO DISPLAY \"T\" ELSE DISPLAY \"F\".", "STOP RUN."],
+    ));
+    assert_eq!(zero_eq, "T\n");
+    // A negative signed field: = ZERO is false, < ZERO is true, > ZERO is false.
+    let neg = assert_matches_oracle(&wrap(
+        &["01  A  PIC S9(3) VALUE 123.", "01  S  PIC S9(3)."],
+        &[
+            "COMPUTE S = 0 - A.",
+            "IF S = ZERO DISPLAY \"E\" ELSE DISPLAY \"N\".",
+            "IF S < ZERO DISPLAY \"L\" ELSE DISPLAY \"G\".",
+            "IF S > ZERO DISPLAY \"P\" ELSE DISPLAY \"M\".",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(neg, "N\nL\nM\n");
+    // Reversed operand order (ZERO on the left) behaves identically.
+    let rev = assert_matches_oracle(&wrap(
+        &["01  S  PIC S9(3) VALUE 0."],
+        &["IF ZERO = S DISPLAY \"T\" ELSE DISPLAY \"F\".", "STOP RUN."],
+    ));
+    assert_eq!(rev, "T\n");
 }
 
 #[test]
