@@ -298,6 +298,30 @@ body {
   padding: 5px 10px;
   border-radius: 0 4px 4px 0;
 }
+/* "New script" note — the first time the walk reaches a writing system. */
+.step__script {
+  margin: 8px 0 10px;
+  padding: 8px 12px;
+  background: #fff8ec;
+  border: 1px solid #f0dcae;
+  border-left: 3px solid var(--ff);
+  border-radius: 0 6px 6px 0;
+}
+.step__script-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ff);
+}
+.step__script-system {
+  margin-left: 8px;
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-style: italic;
+}
+.step__script-sig { margin: 5px 0 0; font-size: 0.85rem; line-height: 1.5; color: var(--ink); }
+
 .learn__nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 20px; }
 .learn__nav .opt {
   border: 1px solid var(--line);

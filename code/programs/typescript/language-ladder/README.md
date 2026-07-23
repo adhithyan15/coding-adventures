@@ -23,6 +23,13 @@ meant to build is made visible rather than left implicit. Prev / Next walk the
 spine; consolidation lessons (`practice`/`review`) are left to the review quiz,
 not the teaching sweep.
 
+The session **introduces writing systems as-needed** (`scriptintro.ts`): the
+first time the walk reaches a non-Latin script — Arabic, then Devanagari, then
+Tamil — that step gets a compact *"New script"* note (name, system, and how to
+recognise it, from the script data's `signature`), shown once at the earliest
+concept that teaches it. It's grounded: a script with no data (Kannada / Telugu
+/ Malayalam today) gets no note rather than an invented one.
+
 Below the sweep sits the **review pass** — the second mechanism. A randomised,
 SRS-weighted quiz draws over everything covered so far (`plan.reviewGrid`, the
 concept×language grid up to the cursor), leaning on what you keep missing
