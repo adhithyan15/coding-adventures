@@ -605,7 +605,7 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
-        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg, element.Vaf, element.Nf, element.Nr, element.Vje, element.Mje, element.Vjc, element.Mjc, element.Fc, element.Var, element.Ikf, element.Ise, element.Ne, element.Isc, element.Nc, element.Xtb, element.beta_r, element.Ikr, element.Tnom, element.Kf, element.Af)
+        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg, element.Vaf, element.Nf, element.Nr, element.Vje, element.Mje, element.Vjc, element.Mjc, element.Fc, element.Var, element.Ikf, element.Ise, element.Ne, element.Isc, element.Nc, element.Xtb, element.beta_r, element.Ikr, element.Tnom, element.Kf, element.Af, element.Ptf)
     if isinstance(element, VCVS):
         return VCVS(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), _map_subckt_node(element.ctrl_plus, instance_name, node_map), _map_subckt_node(element.ctrl_minus, instance_name, node_map), element.gain)
     if isinstance(element, VCCS):
@@ -9309,6 +9309,8 @@ def _validate_bjt(el: BJT) -> None:
         raise ValueError(f"{el.name}: BJT flicker noise coefficient must be finite and non-negative")
     if not math.isfinite(el.Af) or el.Af < 0.0:
         raise ValueError(f"{el.name}: BJT flicker noise exponent must be finite and non-negative")
+    if not math.isfinite(el.Ptf) or el.Ptf < 0.0:
+        raise ValueError(f"{el.name}: BJT forward excess phase must be finite and non-negative")
     if not math.isfinite(el.Ise) or el.Ise < 0.0:
         raise ValueError(
             f"{el.name}: BJT base-emitter leakage saturation current must be finite and non-negative"
@@ -12585,6 +12587,11 @@ def _stamp_ac(
         )
         g_pi: float = base_gm / el.beta_f + leakage_conductance
         diffusion_capacitance = el.Tf * gm_b
+        excess_phase = omega * el.Tf * el.Ptf * math.pi / 180.0
+        gm_ac = complex(
+            gm_b * math.cos(excess_phase),
+            -gm_b * math.sin(excess_phase),
+        )
         reverse_diffusion_capacitance = el.Tr * gm_reverse
         y_be = g_pi + 1j * omega * (
             _bjt_base_emitter_depletion_capacitance(el, Vjunc) + diffusion_capacitance
@@ -12601,30 +12608,30 @@ def _stamp_ac(
             if not _is_ground(el.collector):
                 c_i = node_to_idx[el.collector]
                 if not _is_ground(el.base):
-                    G[c_i][node_to_idx[el.base]] += gm_b + 0j
+                    G[c_i][node_to_idx[el.base]] += gm_ac
                 if not _is_ground(el.emitter):
-                    G[c_i][node_to_idx[el.emitter]] -= gm_b + 0j
+                    G[c_i][node_to_idx[el.emitter]] -= gm_ac
             if not _is_ground(el.emitter):
                 e_i = node_to_idx[el.emitter]
                 if not _is_ground(el.base):
-                    G[e_i][node_to_idx[el.base]] -= gm_b + 0j
+                    G[e_i][node_to_idx[el.base]] -= gm_ac
                 if not _is_ground(el.emitter):
-                    G[e_i][node_to_idx[el.emitter]] += gm_b + 0j
+                    G[e_i][node_to_idx[el.emitter]] += gm_ac
         else:  # PNP
             _stamp_g_c(G, node_to_idx, el.emitter, el.base, y_be)
             _stamp_g_c(G, node_to_idx, el.base, el.collector, y_bc)
             if not _is_ground(el.emitter):
                 e_i = node_to_idx[el.emitter]
                 if not _is_ground(el.emitter):
-                    G[e_i][node_to_idx[el.emitter]] += gm_b + 0j
+                    G[e_i][node_to_idx[el.emitter]] += gm_ac
                 if not _is_ground(el.base):
-                    G[e_i][node_to_idx[el.base]] -= gm_b + 0j
+                    G[e_i][node_to_idx[el.base]] -= gm_ac
             if not _is_ground(el.collector):
                 c_i = node_to_idx[el.collector]
                 if not _is_ground(el.emitter):
-                    G[c_i][node_to_idx[el.emitter]] -= gm_b + 0j
+                    G[c_i][node_to_idx[el.emitter]] -= gm_ac
                 if not _is_ground(el.base):
-                    G[c_i][node_to_idx[el.base]] += gm_b + 0j
+                    G[c_i][node_to_idx[el.base]] += gm_ac
 
 
 def ac_sweep(

@@ -1,5 +1,7 @@
 # Changelog
 
+- Add BJT model-card `PTF` forward excess-phase support, rotating AC forward
+  transconductance by the configured phase at `1 / (2*pi*TF)`.
 - Add BJT model-card `AF` flicker-noise exponent support, defaulting to `1`
   and applying `KF * abs(Ib)^AF / frequency` across noise analysis.
 - Add BJT model-card `KF` flicker-noise support with a distinct `flicker`

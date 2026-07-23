@@ -125,7 +125,7 @@ describe("dcOp", () => {
 
   it("exports stable model-card supported parameter coverage", () => {
     const coverage = modelCardSupportedParameterCoverage();
-    expect(coverage).toHaveLength(116);
+    expect(coverage).toHaveLength(118);
     expect(coverage[0]).toStrictEqual({
       kind: "D",
       canonicalParameter: "IS",
@@ -145,7 +145,7 @@ describe("dcOp", () => {
     expect(table).toContain("NMOS\tVT0\tVT0|VTO|VTH\t3");
     expect(table.split("\n").at(-1)).toBe("PMOS\tMJ\tMJ\t1");
     const records = modelCardSupportedParameterCoverageRecords();
-    expect(records).toHaveLength(116);
+    expect(records).toHaveLength(118);
     expect(records[0]).toStrictEqual({
       kind: "D",
       canonical_parameter: "IS",
@@ -210,15 +210,15 @@ describe("dcOp", () => {
       passed: true,
       kindCount: 7,
       expectedKindCount: 7,
-      canonicalParameterCount: 116,
-      expectedCanonicalParameterCount: 116,
-      acceptedNameCount: 182,
+      canonicalParameterCount: 118,
+      expectedCanonicalParameterCount: 118,
+      acceptedNameCount: 184,
       aliasedParameterCount: 53,
       maxAliasCount: 4,
       issues: [],
     });
     expect(formatModelCardSupportedParameterCoverageGateReport(report)).toBe(
-      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t116\t116\t182\t53\t4\t0",
+      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\ntrue\t7\t7\t118\t118\t184\t53\t4\t0",
     );
     expect(formatModelCardSupportedParameterCoverageGateIssueTable(report)).toBe(
       "kind\tfield\tmessage",
@@ -241,8 +241,8 @@ describe("dcOp", () => {
 
     expect(report.passed).toBe(false);
     expect(report.kindCount).toBe(7);
-    expect(report.canonicalParameterCount).toBe(115);
-    expect(report.acceptedNameCount).toBe(179);
+    expect(report.canonicalParameterCount).toBe(117);
+    expect(report.acceptedNameCount).toBe(181);
     expect(report.aliasedParameterCount).toBe(52);
     expect(report.maxAliasCount).toBe(4);
     expect(report.issues).toHaveLength(4);
@@ -257,7 +257,7 @@ describe("dcOp", () => {
       message: "expected NMOS max alias count 3, found 2",
     });
     expect(formatModelCardSupportedParameterCoverageGateReport(report)).toBe(
-      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t115\t116\t179\t52\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical supported parameters, found 17\nNMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card names, found 22\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2",
+      "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\texpected_canonical_parameter_count\taccepted_name_count\taliased_parameter_count\tmax_alias_count\tissue_count\nfalse\t7\t7\t117\t118\t181\t52\t4\t4\nkind\tfield\tmessage\nNMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical supported parameters, found 17\nNMOS\taccepted_name_count\texpected NMOS to expose 25 accepted model-card names, found 22\nNMOS\taliased_parameter_count\texpected NMOS to expose 6 alias-bearing parameters, found 5\nNMOS\tmax_alias_count\texpected NMOS max alias count 3, found 2",
     );
     const records = modelCardSupportedParameterCoverageGateIssueRecords(report);
     expect(records[0]).toStrictEqual({
@@ -345,6 +345,7 @@ describe("dcOp", () => {
       T_NOM: 50.0,
       KF: 1.0e-12,
       AF: 1.3,
+      PTF: 30.0,
       ISE: 3.0e-13,
       NE: 1.7,
       ISC: 4.0e-13,
@@ -358,7 +359,7 @@ describe("dcOp", () => {
       FC: 0.4,
     });
     const bjtModel = bjtFromModelCard("Q1", "c", "b", "e", bjtCard);
-    expect(bjtCard.parameters).toStrictEqual({ BF: 125.0, BR: 0.25, CJE: 2.0e-12, XTI: 2.4, XTB: 1.5, EG: 1.05, VAF: 80.0, VAR: 120.0, IKF: 2.0e-3, IKR: 3.0e-3, TNOM: 50.0, KF: 1.0e-12, AF: 1.3, ISE: 3.0e-13, NE: 1.7, ISC: 4.0e-13, NC: 1.8, NF: 1.2, NR: 1.3, VJE: 0.8, MJE: 0.4, VJC: 0.7, MJC: 0.45, FC: 0.4 });
+    expect(bjtCard.parameters).toStrictEqual({ BF: 125.0, BR: 0.25, CJE: 2.0e-12, XTI: 2.4, XTB: 1.5, EG: 1.05, VAF: 80.0, VAR: 120.0, IKF: 2.0e-3, IKR: 3.0e-3, TNOM: 50.0, KF: 1.0e-12, AF: 1.3, PTF: 30.0, ISE: 3.0e-13, NE: 1.7, ISC: 4.0e-13, NC: 1.8, NF: 1.2, NR: 1.3, VJE: 0.8, MJE: 0.4, VJC: 0.7, MJC: 0.45, FC: 0.4 });
     expect(bjtModel.polarity).toBe("NPN");
     expectClose(bjtModel.forwardBeta, 125.0);
     expectClose(bjtModel.reverseBeta, 0.25);
@@ -373,6 +374,7 @@ describe("dcOp", () => {
     expectClose(bjtModel.nominalTemperatureKelvin, 323.15);
     expectClose(bjtModel.flickerNoiseCoefficient, 1.0e-12);
     expectClose(bjtModel.flickerNoiseExponent, 1.3);
+    expectClose(bjtModel.forwardExcessPhaseDegrees, 30.0);
     expectClose(bjtModel.baseEmitterLeakageSaturationCurrent, 3.0e-13);
     expectClose(bjtModel.baseEmitterLeakageEmissionCoefficient, 1.7);
     expectClose(bjtModel.baseCollectorLeakageSaturationCurrent, 4.0e-13);
@@ -1016,7 +1018,7 @@ describe("dcOp", () => {
     const circuit = new Circuit();
     circuit.defineSubcircuit(
       subcircuitDefinition("bjt-cell", ["c", "b", "e"], [
-        bjt("Qcell", "c", "b", "e", "NPN", 1e-14, 100, 0.02585, 0, 0, 0, 0, 2.4, 1.05, 80.0, 1.2, 1.3, 0.8, 0.4, 0.7, 0.45, 0.4, 120.0, 2.0e-3, 3.0e-13, 1.7, 4.0e-13, 1.8, 1.5, 0.25, 3.0e-3, 323.15, 1.0e-12, 1.3),
+        bjt("Qcell", "c", "b", "e", "NPN", 1e-14, 100, 0.02585, 0, 0, 0, 0, 2.4, 1.05, 80.0, 1.2, 1.3, 0.8, 0.4, 0.7, 0.45, 0.4, 120.0, 2.0e-3, 3.0e-13, 1.7, 4.0e-13, 1.8, 1.5, 0.25, 3.0e-3, 323.15, 1.0e-12, 1.3, 30.0),
       ]),
     );
     circuit.add(xInstance("X1", ["c1", "b1", "0"], "bjt-cell"));
@@ -1046,6 +1048,7 @@ describe("dcOp", () => {
       expectClose(expanded.nominalTemperatureKelvin, 323.15);
       expectClose(expanded.flickerNoiseCoefficient, 1.0e-12);
       expectClose(expanded.flickerNoiseExponent, 1.3);
+      expectClose(expanded.forwardExcessPhaseDegrees, 30.0);
     }
   });
 
@@ -1408,6 +1411,14 @@ describe("dcOp", () => {
     circuit.add({ ...bjt("Qbad", "c", "b", "0"), flickerNoiseExponent: -1.0 });
     expect(() => dcOp(circuit)).toThrowError(
       "flicker noise exponent must be finite and non-negative",
+    );
+  });
+
+  it("rejects invalid BJT forward excess phase", () => {
+    const circuit = new Circuit();
+    circuit.add({ ...bjt("Qbad", "c", "b", "0"), forwardExcessPhaseDegrees: -1.0 });
+    expect(() => dcOp(circuit)).toThrowError(
+      "forward excess phase must be finite and non-negative",
     );
   });
 
