@@ -396,6 +396,15 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     // TWIG-GC (native-aot-substrate PR-1) — GC-managed allocation and safepoint.
     BuiltinSig { name: "gc_alloc",     n_args: 1, returns: true  },
     BuiltinSig { name: "gc_safepoint", n_args: 0, returns: false },
+    // AOT00-T1 increment C / x86_64 PR-x3 — GC collection + observability entry points
+    // a native program uses to drive and measure a collection (→ `__twig_gc_*` aliases
+    // in gc-core-capi). `gc_collect` = forced conservative full collect; `gc_collect_precise`
+    // = precise-roots stack walk (returns objects freed); `gc_live_bytes` = live payload
+    // bytes; `gc_stackmap_count` = registered-function count. Mirrors the aarch64 backend.
+    BuiltinSig { name: "gc_collect",         n_args: 0, returns: false },
+    BuiltinSig { name: "gc_collect_precise", n_args: 0, returns: true  },
+    BuiltinSig { name: "gc_live_bytes",      n_args: 0, returns: true  },
+    BuiltinSig { name: "gc_stackmap_count",  n_args: 0, returns: true  },
 ];
 
 fn lookup_builtin(name: &str) -> Option<BuiltinSig> {
