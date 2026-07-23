@@ -225,6 +225,157 @@ fn elementwise_mul_with_a_bare_scalar_operand_broadcasts() {
 }
 
 #[test]
+fn scalar_variable_self_multiplication_computes_the_square() {
+    // Regression test for task #111: every frontend's scalar/array
+    // disambiguation heuristic (`expr_is_known_scalar` or equivalent)
+    // runs at LOWERING time and can never see through a bare `VarRef` --
+    // so `x * x` between two non-literal operands (e.g. `x = 5; y = x *
+    // x;`) always lowers to `Expr::MatMul`/`__Sir.Array.matmul(x, x)`,
+    // even though `x` is a plain scalar at runtime. Before `matmul`
+    // normalized its operands through `toArrayValue` (mirroring
+    // `elementwise`), this crashed with `TypeError: Cannot read
+    // properties of undefined (reading 'length')` inside `nrows`, since
+    // a bare boxed `number` has no `.shape`. Mirrors
+    // `scilab-to-semantic-ir`'s oracle test
+    // `scalar_variable_self_multiplication_crashes_the_compiled_path`.
+    let product = Expr::MatMul {
+        lhs: Box::new(local("x")),
+        rhs: Box::new(local("x")),
+        span: sp(),
+    };
+    // `y`'s RHS references `x`, so it must be a `LetStarBinding` (sequential
+    // `let*`), not a second `LetBinding` -- a run of consecutive
+    // `LetBinding`s uses PARALLEL-let semantics (every RHS in that run is
+    // checked against the scope *before* the group), which would make `x`
+    // an unresolved name from `y`'s RHS's point of view.
+    let stmts = vec![
+        let_binding("x", int(5)),
+        Stmt::LetStarBinding {
+            name: "y".into(),
+            sir_type: None,
+            value: product,
+            span: sp(),
+        },
+        print(Expr::IndexGet {
+            target: Box::new(local("y")),
+            indices: vec![
+                IndexArg::Scalar(Box::new(int(0))),
+                IndexArg::Scalar(Box::new(int(0))),
+            ],
+            span: sp(),
+        }),
+    ];
+    let module = module_with_main(stmts, int(0), ARRAY_FEATURES);
+    if let Some(stdout) = run_module(&module, "scalar_self_mul") {
+        assert_eq!(stdout, "25");
+    }
+}
+
+#[test]
+fn function_parameter_self_multiplication_computes_the_square() {
+    // Regression test for task #111, function-parameter variant: mirrors
+    // `scalar_variable_self_multiplication_computes_the_square` above but
+    // through a function parameter -- `function sq(x) { return x * x; }`
+    // -- where `x` is a `Scope::Param` `VarRef`. The lowering heuristic
+    // treats a parameter reference exactly like any other non-literal
+    // `VarRef` (never "known scalar"), so `x * x` still lowers to
+    // `Expr::MatMul` and hits the same un-normalized-operand crash before
+    // the fix. Mirrors `scilab-to-semantic-ir`'s oracle test
+    // `function_parameter_self_multiplication_crashes_the_compiled_path`.
+    use semantic_ir::{Param, ParamKind};
+
+    fn param_ref(name: &str) -> Expr {
+        Expr::VarRef {
+            name: name.into(),
+            scope: Scope::Param,
+            span: sp(),
+        }
+    }
+
+    let sq = Function {
+        name: "sq".into(),
+        params: vec![Param {
+            name: "x".into(),
+            sir_type: None,
+            kind: ParamKind::Required,
+            default: None,
+            span: sp(),
+        }],
+        return_type: None,
+        captures: vec![],
+        body: Block {
+            stmts: vec![],
+            value: Expr::MatMul {
+                lhs: Box::new(param_ref("x")),
+                rhs: Box::new(param_ref("x")),
+                span: sp(),
+            },
+            span: sp(),
+        },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sp(),
+    };
+
+    let call = Expr::DirectCall {
+        fn_name: "sq".into(),
+        args: vec![int(5)],
+        effects: EffectSet::PURE,
+        span: sp(),
+    };
+
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block {
+            stmts: vec![
+                let_binding("y", call),
+                print(Expr::IndexGet {
+                    target: Box::new(local("y")),
+                    indices: vec![
+                        IndexArg::Scalar(Box::new(int(0))),
+                        IndexArg::Scalar(Box::new(int(0))),
+                    ],
+                    span: sp(),
+                }),
+            ],
+            value: int(0),
+            span: sp(),
+        },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sp(),
+    };
+
+    // `sq`'s param has `sir_type: None`, which itself observes
+    // `Feature::DynamicTyping` (see `semantic-ir/src/validator.rs`'s
+    // `check_function`), so the manifest must declare it alongside the
+    // array features or validation rejects the module before it ever
+    // reaches codegen.
+    let mut features = ARRAY_FEATURES.to_vec();
+    features.push(Feature::DynamicTyping);
+
+    let module = Module {
+        name: "sir22".into(),
+        manifest: FeatureManifest::from_features(&features),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![sq, main],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("handbuilt")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sp(),
+    };
+
+    if let Some(stdout) = run_module(&module, "fn_param_self_mul") {
+        assert_eq!(stdout, "25");
+    }
+}
+
+#[test]
 fn transpose_swaps_rows_and_columns() {
     // transpose([1 2 3; 4 5 6]) = [1 4; 2 5; 3 6] -- read back element
     // (2, 0) (0-based), which should be the original (0, 2) = 3.

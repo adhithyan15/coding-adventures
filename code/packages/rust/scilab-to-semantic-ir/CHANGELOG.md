@@ -1,5 +1,41 @@
 # Changelog
 
+## [0.1.2] - 2026-07-22
+
+### Fixed
+
+- **The genuine `matmul` bug 0.1.1's `tests/oracle.rs` found (task #111,
+  "finding six" in that file's own module doc comment) is now fixed
+  upstream, in `semantic-ir-to-javascript` — not in this crate.**
+  `matmul(a, b)` (`semantic-ir-to-javascript/src/runtime.rs`) now
+  normalizes both operands through `toArrayValue` as its first two
+  statements, mirroring `elementwise`'s own pattern exactly, so a plain
+  scalar variable (or function parameter) multiplied by itself no longer
+  crashes the compiled path with `TypeError: Cannot read properties of
+  undefined (reading 'length')` at `nrows`. See
+  `semantic-ir-to-javascript`'s own `CHANGELOG.md` for the fix itself.
+- **`tests/oracle.rs`: the two known-bug cases this crate's own oracle
+  suite found the bug through** —
+  `scalar_variable_self_multiplication_crashes_the_compiled_path` and
+  `function_parameter_self_multiplication_crashes_the_compiled_path` —
+  **flipped from `known_bug: Some(...)` to `known_bug: None`.** Their
+  compiled-side assertion (`scilab-to-semantic-ir` →
+  `semantic-ir-to-javascript` → an actual `node` process) now genuinely
+  runs, instead of being skipped, and passes: both resolve to `25`,
+  matching `scilab-runtime`'s own ground truth. The module doc comment's
+  "finding six" section, and the local comments on both cases, are
+  updated to reflect the fix (kept the original test names for
+  history/traceability even though they no longer crash). The other five
+  findings (three still-open shared-crate display-convention gaps, plus
+  two already-fixed-elsewhere confirmations) are unaffected and remain as
+  documented in 0.1.1 below.
+- No lowering/codegen change in this crate itself — `scilab-to-semantic-
+  ir`'s own `expr_is_known_scalar` heuristic and `build_multiplicative`
+  lowering are untouched; the fix lives entirely in the shared
+  `semantic-ir-to-javascript` runtime this crate's JS backend depends on.
+  Confirmed no regression: `cargo test -p scilab-to-semantic-ir` (full
+  suite, including `tests/oracle.rs`) still passes.
+
 ## [0.1.1] - 2026-07-23
 
 ### Added

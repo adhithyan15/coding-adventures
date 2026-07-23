@@ -1,6 +1,6 @@
 [package]
 name = "scilab-to-semantic-ir"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 description = "Scilab CST → narrow-waist Semantic IR (SIR22 array/matrix domain). MA-10e, the last item in the Scilab frontend rollout per MA10 §6."
 
