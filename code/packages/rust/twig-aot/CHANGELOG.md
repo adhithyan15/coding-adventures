@@ -1,5 +1,22 @@
 # Changelog — `twig-aot`
 
+## 0.43.1 - 2026-07-23 — recursion GC differential (AOT00-T1 x86_64 PR-x5, test-only)
+
+Adds an end-to-end differential proving precise roots reach through a **self-recursive**
+frame, not just the entry frame — the case that on x86-64 is precise only because a
+self-recursive `call` is a registered safepoint (PR-x4). A `rec(stop)` function allocates
+a 64-byte `i64` look-alike per frame and recurses once (`main → rec(0) → rec(1)`); the
+collect fires in `rec(1)`, so the collector unwinds through `rec(0)`, an intermediate
+self-recursive frame whose live look-alike is mapped only at the recursive-call return
+address. Conservative pins both look-alikes (`live_bytes == 128`); precise reclaims both
+(`== 0`) — a `precise` of `64` would mean the intermediate frame fell back to a
+conservative scan, the exact regression PR-x4 prevents.
+
+Added identically to `linux_x86_64_smoke` (runs on the native x86-64 `ubuntu-latest`
+runner — the authoritative validator, since the dev host is aarch64 macOS) and to
+`macos_arm64_smoke` (locally-runnable, validates the program shape + GC semantics; aarch64
+has always mapped recursive frames via `BL` post-scan). No production code change.
+
 ## 0.43.0 - 2026-07-23 — x86_64 GC stack-map registration, SysV (AOT00-T1 x86_64 PR-x3)
 
 Fills the x86-64 `__gc_init_stackmaps` (a no-op since PR-x2) with **real registration**
