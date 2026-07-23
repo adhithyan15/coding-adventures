@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.21.0] — 2026-07-23 — NUM-6c: render `to_percent` in the audit trail
+
+The derivation-tree renderer gains a `DerivationNode::ToPercent` arm (NUM-6c): a
+`{"node":"to_percent","places":n,"mode":"half_even","rendered":"33.33%","value":…,"operand":{…}}`
+object exposing the decimal-place count, the stated mode, the rendered `d.dd%` string, the
+narrowed numeric value (the fraction the percentage denotes), and the operand subtree —
+everything `adj-verify` needs to re-render from the exact source. Adds an end-to-end test
+driving `to_percent(x [, places])` through the built CLI: exact rendering, trailing-zero
+padding, `0`-places (`"50%"`), the optional-`places` default, and rejection of a negative /
+non-integer place count.
+
 ## [0.20.0] — 2026-07-22 — NUM-6c: render `to_scientific` in the audit trail
 
 The derivation-tree renderer gains a `DerivationNode::ToScientific` arm (NUM-6c): a

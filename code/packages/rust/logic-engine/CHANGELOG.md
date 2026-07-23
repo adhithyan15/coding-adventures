@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.48.0] — 2026-07-23 — NUM-6c: `to_percent` — percentage rendering (exact)
+
+Adds the second NUM-6c formatter (`ADJ-NUMERIC-SUBSTRATE.md` §4.1, §4.3): a **rendering**
+op that takes a dimensionless ratio, scales it by 100 and rounds to a stated number of
+decimal places on the exact path, and renders the fixed-point `d.dd%` string — with the
+narrowed **fraction** carried beside it so a downstream predicate over the binding still
+sees the ratio and the audit backs the render from the exact source.
+
+### Added
+
+- `ComputeExpr::ToPercent { places, mode, expr }` and the matching
+  `DerivationNode::ToPercent { places, mode, rendered, operand, result }`. `result` is the
+  fraction the percentage denotes (`"33.33%"` → `3333/10000`).
+- `percent(r, places, mode)` — renders an exact ratio as a fixed-point percentage with a
+  `%` suffix and returns the narrowed fraction alongside, both from one rounding. The scaled
+  integer is `C = round(r · 10^(places+2))` under `mode`; the string places the decimal
+  point `places` from `C`'s right (padding to a leading zero for sub-1% values), and the
+  narrowed fraction is `C / 10^(places+2)`. `places = 0` drops the decimal point (`"50%"`);
+  zero renders `"0.00%"`. All big-integer/-decimal — no `f64` hop. Dimension-preserving.
+
 ## [0.47.0] — 2026-07-22 — NUM-6c: `to_scientific` — scientific-notation rendering (exact)
 
 Adds the first formatter of the precision/format family (NUM-6c,

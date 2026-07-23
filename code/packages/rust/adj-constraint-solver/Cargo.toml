@@ -1,6 +1,6 @@
 [package]
 name = "adj-constraint-solver"
-version = "0.14.0"
+version = "0.15.0"
 edition = "2021"
 description = "Solver bridge for the adj-lang constraint sublanguage. Takes an adj-lang ConstraintSystem (symbols + constrain/solve/check), classifies it, and dispatches the linear-equality case to cas-solve's exact rational Gaussian elimination — returning solved values traced back to the constraints. The first slice (B2a) of the ADJ constraint-solving arc; SAT / linear-integer / inequality feasibility and optimization follow."
 

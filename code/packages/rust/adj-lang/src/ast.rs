@@ -278,6 +278,16 @@ pub enum ExprAst {
     /// application surface `to_scientific(x [, figures])`, recognised as a built-in in
     /// [`ExprAst::Apply`] lowering (same comma-list grammar as `round_to`/`round_sig`).
     ToScientific(Box<ExprAst>, u32),
+    /// A **percentage formatting** — `to_percent(x [, places])` (NUM-6c). A rendering op:
+    /// it takes `x` as a dimensionless ratio, scales it by 100 and rounds to `places`
+    /// decimal places on the exact path, and produces the `d.dd%` string alongside the
+    /// narrowed fraction (ADJ-NUMERIC-SUBSTRATE §4.1, §4.3). Lowers to the distinct
+    /// `logic_engine::ComputeExpr::ToPercent` node under the default half-even mode. The
+    /// `places` count is validated (`≥ 0`, within the precision cap); when the surface
+    /// omits it, the default is resolved at lowering. Produced by the native application
+    /// surface `to_percent(x [, places])`, recognised as a built-in in [`ExprAst::Apply`]
+    /// lowering (same comma-list grammar as `round_to`/`to_scientific`).
+    ToPercent(Box<ExprAst>, u32),
     /// An aggregation over every observation of a slot.
     Agg(AggOp, String),
     /// A **formula application** used as a sub-expression: `name(arg₁, …, argₙ)`

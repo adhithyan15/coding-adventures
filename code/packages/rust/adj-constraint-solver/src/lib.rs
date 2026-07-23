@@ -369,6 +369,8 @@ fn expr_to_pred(e: &ComputeExpr) -> Option<Predicate> {
         // `to_scientific(x, figures)` renders a number to a boundary string — not a
         // linear/polynomial term, out of scope for this tactic exactly like a round (NUM-6c).
         ComputeExpr::ToScientific { .. } => None,
+        // `to_percent(x, places)` likewise renders a number to a boundary string (NUM-6c).
+        ComputeExpr::ToPercent { .. } => None,
     }
 }
 
@@ -665,6 +667,8 @@ fn linearize(e: &ComputeExpr) -> Option<LinForm> {
         // `to_scientific(x, figures)` renders a number to a boundary string — not a
         // linear/polynomial term, out of scope for this tactic exactly like a round (NUM-6c).
         ComputeExpr::ToScientific { .. } => None,
+        // `to_percent(x, places)` likewise renders a number to a boundary string (NUM-6c).
+        ComputeExpr::ToPercent { .. } => None,
     }
 }
 
@@ -2025,6 +2029,15 @@ fn substitute_observed(
             mode: *mode,
             expr: Box::new(substitute_observed(expr, variables, kb)),
         },
+        ComputeExpr::ToPercent {
+            places,
+            mode,
+            expr,
+        } => ComputeExpr::ToPercent {
+            places: *places,
+            mode: *mode,
+            expr: Box::new(substitute_observed(expr, variables, kb)),
+        },
         ComputeExpr::Agg(_, _) => e.clone(),
     }
 }
@@ -2116,6 +2129,8 @@ fn poly_of(e: &ComputeExpr, x: &str) -> Option<Poly> {
         // `to_scientific(x, figures)` renders a number to a boundary string — not a
         // linear/polynomial term, out of scope for this tactic exactly like a round (NUM-6c).
         ComputeExpr::ToScientific { .. } => None,
+        // `to_percent(x, places)` likewise renders a number to a boundary string (NUM-6c).
+        ComputeExpr::ToPercent { .. } => None,
     }
 }
 
@@ -2327,6 +2342,8 @@ fn expr_to_ir(e: &ComputeExpr) -> Option<IRNode> {
         // `to_scientific(x, figures)` renders a number to a boundary string — not a
         // linear/polynomial term, out of scope for this tactic exactly like a round (NUM-6c).
         ComputeExpr::ToScientific { .. } => None,
+        // `to_percent(x, places)` likewise renders a number to a boundary string (NUM-6c).
+        ComputeExpr::ToPercent { .. } => None,
     }
 }
 
@@ -2352,6 +2369,8 @@ fn is_constant_expr(e: &ComputeExpr) -> bool {
         ComputeExpr::Round { expr, .. } => is_constant_expr(expr),
         // `to_scientific(c, n)` is likewise constant iff its operand is.
         ComputeExpr::ToScientific { expr, .. } => is_constant_expr(expr),
+        // `to_percent(c, n)` is likewise constant iff its operand is.
+        ComputeExpr::ToPercent { expr, .. } => is_constant_expr(expr),
     }
 }
 
