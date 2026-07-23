@@ -412,7 +412,7 @@ def test_model_card_type_aliases_are_normalized() -> None:
 
 def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     coverage = model_card_supported_parameter_coverage()
-    assert len(coverage) == 122
+    assert len(coverage) == 124
     assert coverage[0].kind == "D"
     assert coverage[0].canonical_parameter == "IS"
     assert coverage[0].accepted_names == ("IS", "JS")
@@ -427,7 +427,7 @@ def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     assert "NMOS\tVT0\tVT0|VTO|VTH\t3" in table
     assert table.splitlines()[-1] == "PMOS\tMJ\tMJ\t1"
     records = model_card_supported_parameter_coverage_records()
-    assert len(records) == 122
+    assert len(records) == 124
     assert records[0] == {
         "kind": "D",
         "canonical_parameter": "IS",
@@ -501,9 +501,9 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
     assert report.passed is True
     assert report.kind_count == 7
     assert report.expected_kind_count == 7
-    assert report.canonical_parameter_count == 122
-    assert report.expected_canonical_parameter_count == 122
-    assert report.accepted_name_count == 188
+    assert report.canonical_parameter_count == 124
+    assert report.expected_canonical_parameter_count == 124
+    assert report.accepted_name_count == 190
     assert report.aliased_parameter_count == 53
     assert report.max_alias_count == 4
     assert report.issues == ()
@@ -511,7 +511,7 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "true\t7\t7\t122\t122\t188\t53\t4\t0"
+        "true\t7\t7\t124\t124\t190\t53\t4\t0"
     )
     assert (
         format_model_card_supported_parameter_coverage_gate_issue_table(report)
@@ -539,8 +539,8 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
 
     assert report.passed is False
     assert report.kind_count == 7
-    assert report.canonical_parameter_count == 121
-    assert report.accepted_name_count == 185
+    assert report.canonical_parameter_count == 123
+    assert report.accepted_name_count == 187
     assert report.aliased_parameter_count == 52
     assert report.max_alias_count == 4
     assert len(report.issues) == 4
@@ -555,7 +555,7 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "false\t7\t7\t121\t122\t185\t52\t4\t4\n"
+        "false\t7\t7\t123\t124\t187\t52\t4\t4\n"
         "kind\tfield\tmessage\n"
         "NMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical "
         "supported parameters, found 17\n"
@@ -647,10 +647,10 @@ def test_model_card_aliases_build_device_instances() -> None:
     assert pytest.approx(1.05) == diode_model.Eg
 
     bjt_card = normalize_model_card(
-        "Qsmall", "npn", {"BETA": 125.0, "BETA_R": 0.25, "CBE": 2.0e-12, "XTI": 2.4, "XTB": 1.5, "EG": 1.05, "VA": 80.0, "VB": 120.0, "IK": 2.0e-3, "IKR": 3.0e-3, "T_NOM": 50.0, "KF": 1.0e-12, "AF": 1.3, "PTF": 30.0, "XTF": 2.0, "ITF": 4.0e-3, "ISE": 3.0e-13, "NE": 1.7, "ISC": 4.0e-13, "NC": 1.8, "NF": 1.2, "NR": 1.3, "PE": 0.8, "ME": 0.4, "PC": 0.7, "MC": 0.45, "FC": 0.4}
+        "Qsmall", "npn", {"BETA": 125.0, "BETA_R": 0.25, "CBE": 2.0e-12, "XTI": 2.4, "XTB": 1.5, "EG": 1.05, "VA": 80.0, "VB": 120.0, "IK": 2.0e-3, "IKR": 3.0e-3, "T_NOM": 50.0, "KF": 1.0e-12, "AF": 1.3, "PTF": 30.0, "XTF": 2.0, "ITF": 4.0e-3, "VTF": 0.6, "ISE": 3.0e-13, "NE": 1.7, "ISC": 4.0e-13, "NC": 1.8, "NF": 1.2, "NR": 1.3, "PE": 0.8, "ME": 0.4, "PC": 0.7, "MC": 0.45, "FC": 0.4}
     )
     bjt_model = bjt_from_model_card("Q1", "c", "b", "e", bjt_card)
-    assert bjt_card.parameters == {"BF": 125.0, "BR": 0.25, "CJE": 2.0e-12, "XTI": 2.4, "XTB": 1.5, "EG": 1.05, "VAF": 80.0, "VAR": 120.0, "IKF": 2.0e-3, "IKR": 3.0e-3, "TNOM": 50.0, "KF": 1.0e-12, "AF": 1.3, "PTF": 30.0, "XTF": 2.0, "ITF": 4.0e-3, "ISE": 3.0e-13, "NE": 1.7, "ISC": 4.0e-13, "NC": 1.8, "NF": 1.2, "NR": 1.3, "VJE": 0.8, "MJE": 0.4, "VJC": 0.7, "MJC": 0.45, "FC": 0.4}
+    assert bjt_card.parameters == {"BF": 125.0, "BR": 0.25, "CJE": 2.0e-12, "XTI": 2.4, "XTB": 1.5, "EG": 1.05, "VAF": 80.0, "VAR": 120.0, "IKF": 2.0e-3, "IKR": 3.0e-3, "TNOM": 50.0, "KF": 1.0e-12, "AF": 1.3, "PTF": 30.0, "XTF": 2.0, "ITF": 4.0e-3, "VTF": 0.6, "ISE": 3.0e-13, "NE": 1.7, "ISC": 4.0e-13, "NC": 1.8, "NF": 1.2, "NR": 1.3, "VJE": 0.8, "MJE": 0.4, "VJC": 0.7, "MJC": 0.45, "FC": 0.4}
     assert bjt_model.polarity == "NPN"
     assert bjt_model.beta_f == pytest.approx(125.0)
     assert bjt_model.beta_r == pytest.approx(0.25)
@@ -668,6 +668,7 @@ def test_model_card_aliases_build_device_instances() -> None:
     assert bjt_model.Ptf == pytest.approx(30.0)
     assert bjt_model.Xtf == pytest.approx(2.0)
     assert bjt_model.Itf == pytest.approx(4.0e-3)
+    assert bjt_model.Vtf == pytest.approx(0.6)
     assert bjt_model.Ise == pytest.approx(3.0e-13)
     assert bjt_model.Ne == pytest.approx(1.7)
     assert bjt_model.Isc == pytest.approx(4.0e-13)
@@ -1602,9 +1603,11 @@ def test_transient_bjt_forward_transit_time_holds_base_charge_on_turnoff() -> No
         forward_transit_time: float,
         forward_transit_time_bias_coefficient: float = 0.0,
         forward_transit_time_current: float = 0.0,
+        forward_transit_time_voltage: float = 0.0,
+        collector_voltage: float = 5.0,
     ) -> TransientResult:
         circuit = Circuit()
-        circuit.add(VoltageSource("Vcc", "collector", "0", 5.0))
+        circuit.add(VoltageSource("Vcc", "collector", "0", collector_voltage))
         circuit.add(CurrentSource(
             "Istep",
             "0",
@@ -1622,6 +1625,7 @@ def test_transient_bjt_forward_transit_time_holds_base_charge_on_turnoff() -> No
             Tf=forward_transit_time,
             Xtf=forward_transit_time_bias_coefficient,
             Itf=forward_transit_time_current,
+            Vtf=forward_transit_time_voltage,
         ))
         return transient(circuit, t_stop=5.0e-9, t_step=1.0e-9, method="euler")
 
@@ -1629,6 +1633,7 @@ def test_transient_bjt_forward_transit_time_holds_base_charge_on_turnoff() -> No
     stored = run(1.0e-9)
     bias_scaled = run(1.0e-9, 9.0)
     current_limited = run(1.0e-9, 9.0, 1.0)
+    voltage_limited = run(1.0e-9, 9.0, 0.0, 0.5, 10.0)
 
     assert no_storage.converged
     assert stored.converged
@@ -1641,6 +1646,13 @@ def test_transient_bjt_forward_transit_time_holds_base_charge_on_turnoff() -> No
     ) > 1.0e-12
     assert abs(
         current_limited.points[-1].node_voltages["base"]
+        - stored.points[-1].node_voltages["base"]
+    ) < abs(
+        bias_scaled.points[-1].node_voltages["base"]
+        - stored.points[-1].node_voltages["base"]
+    )
+    assert abs(
+        voltage_limited.points[-1].node_voltages["base"]
         - stored.points[-1].node_voltages["base"]
     ) < abs(
         bias_scaled.points[-1].node_voltages["base"]
@@ -2328,7 +2340,7 @@ def test_subcircuit_expansion_preserves_complete_bjt_model():
     cell = SubcircuitDefinition(
         "bjt-cell",
         ("c", "b", "e"),
-        (BJT("Qcell", "c", "b", "e", Xti=2.4, Eg=1.05, Vaf=80.0, Nf=1.2, Nr=1.3, Vje=0.8, Mje=0.4, Vjc=0.7, Mjc=0.45, Fc=0.4, Var=120.0, Ikf=2.0e-3, Ise=3.0e-13, Ne=1.7, Isc=4.0e-13, Nc=1.8, Xtb=1.5, beta_r=0.25, Ikr=3.0e-3, Tnom=323.15, Kf=1.0e-12, Af=1.3, Ptf=30.0, Xtf=2.0, Itf=4.0e-3),),
+        (BJT("Qcell", "c", "b", "e", Xti=2.4, Eg=1.05, Vaf=80.0, Nf=1.2, Nr=1.3, Vje=0.8, Mje=0.4, Vjc=0.7, Mjc=0.45, Fc=0.4, Var=120.0, Ikf=2.0e-3, Ise=3.0e-13, Ne=1.7, Isc=4.0e-13, Nc=1.8, Xtb=1.5, beta_r=0.25, Ikr=3.0e-3, Tnom=323.15, Kf=1.0e-12, Af=1.3, Ptf=30.0, Xtf=2.0, Itf=4.0e-3, Vtf=0.6),),
     )
     circuit = Circuit()
     circuit.define_subcircuit(cell)
@@ -2360,6 +2372,7 @@ def test_subcircuit_expansion_preserves_complete_bjt_model():
     assert expanded.Ptf == pytest.approx(30.0)
     assert expanded.Xtf == pytest.approx(2.0)
     assert expanded.Itf == pytest.approx(4.0e-3)
+    assert expanded.Vtf == pytest.approx(0.6)
 
 
 def test_branch_current_in_voltage_source():
@@ -2637,6 +2650,16 @@ def test_dc_rejects_invalid_bjt_forward_transit_time_current():
     with pytest.raises(
         ValueError,
         match="forward transit-time current must be finite and non-negative",
+    ):
+        dc_op(circuit)
+
+
+def test_dc_rejects_invalid_bjt_forward_transit_time_voltage():
+    circuit = Circuit()
+    circuit.add(BJT("Qbad", "c", "b", "0", Vtf=-1.0))
+    with pytest.raises(
+        ValueError,
+        match="forward transit-time voltage must be finite and non-negative",
     ):
         dc_op(circuit)
 
@@ -4481,11 +4504,16 @@ def test_ac_bjt_forward_excess_phase_rotates_transconductance():
 
 
 def test_ac_bjt_forward_transit_time_bias_coefficient_scales_diffusion_capacitance():
-    def base_amplitude(xtf: float, itf: float = 0.0) -> float:
+    def base_amplitude(
+        xtf: float,
+        itf: float = 0.0,
+        vtf: float = 0.0,
+        collector_voltage: float = 0.0,
+    ) -> float:
         circuit = Circuit()
         circuit.add(VoltageSource("Vac", "in", "0", 0.0, ac=AcSource(1.0)))
         circuit.add(Resistor("Rin", "in", "base", 1000.0))
-        circuit.add(Resistor("Rc", "col", "0", 1000.0))
+        circuit.add(VoltageSource("Vcol", "col", "0", collector_voltage))
         circuit.add(
             BJT(
                 "Q1",
@@ -4496,6 +4524,7 @@ def test_ac_bjt_forward_transit_time_bias_coefficient_scales_diffusion_capacitan
                 Tf=1.0e-6,
                 Xtf=xtf,
                 Itf=itf,
+                Vtf=vtf,
             )
         )
         return abs(
@@ -4507,9 +4536,11 @@ def test_ac_bjt_forward_transit_time_bias_coefficient_scales_diffusion_capacitan
     nominal = base_amplitude(0.0)
     bias_scaled = base_amplitude(9.0)
     current_limited = base_amplitude(9.0, 1.0)
+    voltage_limited = base_amplitude(9.0, vtf=0.1, collector_voltage=1.0)
 
     assert bias_scaled < nominal / 5.0
     assert current_limited > bias_scaled * 5.0
+    assert voltage_limited > bias_scaled * 5.0
 
 
 def test_ac_bjt_reverse_transit_time_adds_collector_diffusion_capacitance():

@@ -33,15 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language BJT forward transit-time current scale.
+1. Cross-language BJT forward transit-time voltage scale.
    - Status: current PR completion candidate.
-   - Add Berkeley BJT `ITF` model-card support in Rust, Python, and TypeScript,
+   - Add Berkeley BJT `VTF` model-card support in Rust, Python, and TypeScript,
      defaulting to zero so existing AC and transient results remain unchanged.
-   - Apply the Berkeley forward-current factor
-     `(If / (If + ITF))^2` to the `XTF` diffusion-capacitance and transient
+   - Apply the Berkeley base-collector voltage factor
+     `exp(Vbc / (1.44 * VTF))` to the `XTF` diffusion-capacitance and transient
      stored-charge enhancement while preserving the complete BJT model through
-     subcircuits.
-   - Extend the supported-parameter coverage gate from 120 to 122 canonical
+     subcircuits and tracking the control voltage in transient state.
+   - Extend the supported-parameter coverage gate from 122 to 124 canonical
      rows and lock model-card behavior, validation, hierarchy, AC loading, and
      transient stored-charge behavior in all engines.
 
@@ -3151,6 +3151,14 @@ the Rust, Python, and TypeScript surfaces together.
      charge by `TF * (1 + XTF)`.
    - Hierarchical subcircuit expansion preserves the complete BJT model, and
      the supported-parameter release gate now covers 120 canonical rows.
+
+238. Cross-language BJT forward transit-time current scale.
+   - Status: completed in PR 8844.
+   - Rust, Python, and TypeScript BJT model cards now accept `ITF`, default it
+     to zero, and apply `(If / (If + ITF))^2` to the `XTF` AC and transient
+     storage enhancement.
+   - Hierarchical subcircuit expansion preserves the complete BJT model, and
+     the supported-parameter release gate now covers 122 canonical rows.
 
 ## Backlog
 

@@ -307,8 +307,8 @@ _MODEL_CARD_SUPPORTED_PARAMETER_KINDS = (
 )
 _MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES = {
     "D": (12, 18, 5, 3),
-    "NPN": (32, 49, 13, 4),
-    "PNP": (32, 49, 13, 4),
+    "NPN": (33, 50, 13, 4),
+    "PNP": (33, 50, 13, 4),
     "NJF": (5, 11, 5, 3),
     "PJF": (5, 11, 5, 3),
     "NMOS": (18, 25, 6, 3),
@@ -386,6 +386,7 @@ _BJT_PARAMETER_ALIASES: dict[str, str] = {
     "PTF": "PTF",
     "XTF": "XTF",
     "ITF": "ITF",
+    "VTF": "VTF",
     "ISE": "ISE",
     "NE": "NE",
     "ISC": "ISC",
@@ -953,6 +954,7 @@ def bjt_from_model_card(
         Ptf=p.get("PTF", 0.0),
         Xtf=p.get("XTF", 0.0),
         Itf=p.get("ITF", 0.0),
+        Vtf=p.get("VTF", 0.0),
     )
 
 

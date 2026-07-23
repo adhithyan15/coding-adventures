@@ -693,13 +693,15 @@ fn transient_bjt_forward_transit_time_holds_base_charge_on_turnoff() {
         forward_transit_time: f64,
         forward_transit_time_bias_coefficient: f64,
         forward_transit_time_current: f64,
+        forward_transit_time_voltage: f64,
+        collector_voltage: f64,
     ) -> Vec<TransientPoint> {
         let mut circuit = Circuit::new();
         circuit.add(Element::VoltageSource(VoltageSource::new(
             "Vcc",
             "collector",
             "0",
-            5.0,
+            collector_voltage,
         )));
         circuit.add(Element::CurrentSource(CurrentSource::with_waveform(
             "Istep",
@@ -731,14 +733,16 @@ fn transient_bjt_forward_transit_time_holds_base_charge_on_turnoff() {
         );
         transistor.forward_transit_time_bias_coefficient = forward_transit_time_bias_coefficient;
         transistor.forward_transit_time_current = forward_transit_time_current;
+        transistor.forward_transit_time_voltage = forward_transit_time_voltage;
         circuit.add(Element::Bjt(transistor));
         transient(&circuit, 1.0e-9, 5.0e-9).unwrap()
     }
 
-    let no_storage = run(0.0, 0.0, 0.0);
-    let stored = run(1.0e-9, 0.0, 0.0);
-    let bias_scaled = run(1.0e-9, 9.0, 0.0);
-    let current_limited = run(1.0e-9, 9.0, 1.0);
+    let no_storage = run(0.0, 0.0, 0.0, 0.0, 5.0);
+    let stored = run(1.0e-9, 0.0, 0.0, 0.0, 5.0);
+    let bias_scaled = run(1.0e-9, 9.0, 0.0, 0.0, 5.0);
+    let current_limited = run(1.0e-9, 9.0, 1.0, 0.0, 5.0);
+    let voltage_limited = run(1.0e-9, 9.0, 0.0, 0.5, 10.0);
     let no_storage_first = no_storage[0].voltage("base").unwrap();
     let stored_first = stored[0].voltage("base").unwrap();
 
@@ -765,6 +769,11 @@ fn transient_bjt_forward_transit_time_holds_base_charge_on_turnoff() {
         .and_then(|point| point.voltage("base"))
         .unwrap();
     assert!((current_limited_last - stored_last).abs() < (bias_scaled_last - stored_last).abs());
+    let voltage_limited_last = voltage_limited
+        .last()
+        .and_then(|point| point.voltage("base"))
+        .unwrap();
+    assert!((voltage_limited_last - stored_last).abs() < (bias_scaled_last - stored_last).abs());
 }
 
 #[test]

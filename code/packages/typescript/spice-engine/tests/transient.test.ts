@@ -518,9 +518,11 @@ describe("transient", () => {
       forwardTransitTime: number,
       forwardTransitTimeBiasCoefficient = 0.0,
       forwardTransitTimeCurrent = 0.0,
+      forwardTransitTimeVoltage = 0.0,
+      collectorVoltage = 5.0,
     ): TransientPoint[] {
       const circuit = new Circuit();
-      circuit.add(voltageSource("Vcc", "collector", "0", 5.0));
+      circuit.add(voltageSource("Vcc", "collector", "0", collectorVoltage));
       circuit.add(currentSourceWithWaveform(
         "Istep",
         "0",
@@ -549,6 +551,7 @@ describe("transient", () => {
         ),
         forwardTransitTimeBiasCoefficient,
         forwardTransitTimeCurrent,
+        forwardTransitTimeVoltage,
       });
       return transient(circuit, 1.0e-9, 5.0e-9);
     }
@@ -557,6 +560,7 @@ describe("transient", () => {
     const stored = run(1.0e-9);
     const biasScaled = run(1.0e-9, 9.0);
     const currentLimited = run(1.0e-9, 9.0, 1.0);
+    const voltageLimited = run(1.0e-9, 9.0, 0.0, 0.5, 10.0);
     expectClose(noStorage[0].voltage("base"), 0.0);
     expect(stored[0].voltage("base")!).toBeGreaterThan(0.6);
     expect(stored[stored.length - 1].voltage("base")!).toBeLessThan(stored[0].voltage("base")!);
@@ -566,6 +570,13 @@ describe("transient", () => {
     )).toBeGreaterThan(1.0e-12);
     expect(Math.abs(
       currentLimited[currentLimited.length - 1].voltage("base")! -
+        stored[stored.length - 1].voltage("base")!,
+    )).toBeLessThan(Math.abs(
+      biasScaled[biasScaled.length - 1].voltage("base")! -
+        stored[stored.length - 1].voltage("base")!,
+    ));
+    expect(Math.abs(
+      voltageLimited[voltageLimited.length - 1].voltage("base")! -
         stored[stored.length - 1].voltage("base")!,
     )).toBeLessThan(Math.abs(
       biasScaled[biasScaled.length - 1].voltage("base")! -
