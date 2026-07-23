@@ -162,6 +162,19 @@ describe("noiseAc", () => {
     );
   });
 
+  it("adds thermal noise for BJT base resistance", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vbase", "base", "0", 0.65));
+    circuit.add(resistor("Rload", "out", "0", 1_000.0));
+    circuit.add({ ...bjt("Q1", "out", "base", "0"), baseResistance: 100.0 });
+    const result = noiseAc(circuit, "out", "Vbase", [1_000.0]);
+    const baseResistance = result.points[0]!.entries
+      .find((candidate) => candidate.elementName === "Q1:RB")!;
+
+    expect(baseResistance.noiseType).toBe("thermal");
+    expect(baseResistance.sourcePsd).toBeGreaterThan(0.0);
+  });
+
   it("sorts resistor contributions by output noise", () => {
     const circuit = new Circuit();
     circuit.add(voltageSource("Vin", "in", "0", 1.0));
