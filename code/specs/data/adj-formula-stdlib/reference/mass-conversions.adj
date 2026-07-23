@@ -1,0 +1,58 @@
+% ============================================================================
+% mass-conversions — customary mass-unit → kilogram factors (ADJ-TABLES RS-5).
+% ============================================================================
+% A `table` sibling of `length-conversions.adj`: a native tabular relation
+% ingested VERBATIM from a published NIST conversion table. Each row states the
+% factor converting one customary mass unit to kilograms:
+%
+%     ? mass_to_kilograms(pound, $Kg)        % 0.4535924
+%     ? mass_to_kilograms(short_ton, $Kg)    % 907.1847
+%
+% Why a `table` and not six hand-written `relate` clauses: this is exactly the
+% shape reference data comes in — a published table, not prose. The citable
+% artifact IS the NIST conversion-factors table at the `locator` below; every
+% factor here is a CELL of NIST Special Publication 811, Appendix B.9 ("Factors
+% for units listed alphabetically"), and the whole table is defended by one
+% provenance envelope rather than repeating `source`/`locator`/`trust` on every
+% row. Each `row` lowers to a ground relation `mass_to_kilograms(unit, kg)`, so
+% the exact lookup above is the ordinary SLD binding query — the engine returns
+% the factor WITH this table's citation as its proof, on the CPU, with zero model
+% calls. A looked-up factor is a number, so it can feed a `let`/`formula`
+% downstream (e.g. multiply a weight by it) through the existing slot path.
+%
+% HONESTY NOTE (distinct from length-conversions, which quotes EXACT defined
+% factors): the values below are NIST SP 811's published conversion factors,
+% rounded to SEVEN significant figures, transcribed character-for-character from
+% the SP 811 B.9 table:
+%
+%     pound (avoirdupois)          4.535 924 E-01  →  0.4535924
+%     ounce (avoirdupois)          2.834 952 E-02  →  0.02834952
+%     ton, short (2000 lb)         9.071 847 E+02  →  907.1847
+%     grain                        6.479 891 E-05  →  0.00006479891
+%     slug                         1.459 390 E+01  →  14.5939
+%     pound (troy or apothecary)   3.732 417 E-01  →  0.3732417
+%
+% These are the table's printed 7-figure factors, NOT the underlying exact
+% definitions (the avoirdupois pound is defined as exactly 0.453 592 37 kg by the
+% 1959 international agreement; SP 811 rounds it to 0.4535924). The only claim this
+% table makes is "these are the factors NIST SP 811 B.9 prints" — which is exactly
+% what a byte-check against the cited table verifies. `trust authoritative` — a
+% primary, re-fetchable standards reference. (See ADJ-TABLES.md; and
+% feedback_nothing_human_authored — nothing here is asserted "from memory": every
+% factor is a verbatim cell of the cited table.)
+% ============================================================================
+
+table mass_to_kilograms {
+    columns unit, kilograms
+
+    row (pound, 0.4535924)
+    row (ounce, 0.02834952)
+    row (short_ton, 907.1847)
+    row (grain, 0.00006479891)
+    row (slug, 14.5939)
+    row (troy_pound, 0.3732417)
+
+    source "Factors for units listed alphabetically"
+    locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b9"
+    trust authoritative
+}
