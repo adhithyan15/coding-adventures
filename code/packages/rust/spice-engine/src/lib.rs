@@ -462,6 +462,7 @@ fn clone_subckt_element(
             expanded.forward_transit_time_current = element.forward_transit_time_current;
             expanded.forward_transit_time_voltage = element.forward_transit_time_voltage;
             expanded.emitter_resistance = element.emitter_resistance;
+            expanded.collector_resistance = element.collector_resistance;
             Element::Bjt(expanded)
         }
         Element::Mosfet(element) => Element::Mosfet(Mosfet::with_model(
@@ -2911,6 +2912,7 @@ pub struct Bjt {
     pub forward_transit_time_current: f64,
     pub forward_transit_time_voltage: f64,
     pub emitter_resistance: f64,
+    pub collector_resistance: f64,
 }
 
 impl Bjt {
@@ -3381,6 +3383,7 @@ impl Bjt {
             forward_transit_time_current: 0.0,
             forward_transit_time_voltage: 0.0,
             emitter_resistance: 0.0,
+            collector_resistance: 0.0,
         }
     }
 }
@@ -3771,8 +3774,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     usize,
 )] = &[
     (ModelCardKind::Diode, 12, 18, 5, 3),
-    (ModelCardKind::Npn, 34, 51, 13, 4),
-    (ModelCardKind::Pnp, 34, 51, 13, 4),
+    (ModelCardKind::Npn, 35, 52, 13, 4),
+    (ModelCardKind::Pnp, 35, 52, 13, 4),
     (ModelCardKind::Njf, 5, 11, 5, 3),
     (ModelCardKind::Pjf, 5, 11, 5, 3),
     (ModelCardKind::Nmos, 18, 25, 6, 3),
@@ -3832,6 +3835,7 @@ const BJT_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("ITF", "ITF"),
     ("VTF", "VTF"),
     ("RE", "RE"),
+    ("RC", "RC"),
     ("ISE", "ISE"),
     ("NE", "NE"),
     ("ISC", "ISC"),
@@ -4533,6 +4537,7 @@ pub fn bjt_from_model_card(
     bjt.forward_transit_time_current = model_card_value(model, "ITF", 0.0);
     bjt.forward_transit_time_voltage = model_card_value(model, "VTF", 0.0);
     bjt.emitter_resistance = model_card_value(model, "RE", 0.0);
+    bjt.collector_resistance = model_card_value(model, "RC", 0.0);
     Ok(bjt)
 }
 
@@ -21973,6 +21978,9 @@ fn collect_node_indices(circuit: &Circuit) -> HashMap<String, usize> {
                 if bjt.emitter_resistance > 0.0 {
                     insert_node(&mut names, &bjt_intrinsic_emitter_node(bjt));
                 }
+                if bjt.collector_resistance > 0.0 {
+                    insert_node(&mut names, &bjt_intrinsic_collector_node(bjt));
+                }
             }
             Element::Mosfet(mosfet) => {
                 insert_node(&mut names, &mosfet.drain);
@@ -22180,23 +22188,41 @@ fn collect_noise_sources(
             }
             Element::Bjt(bjt) => {
                 validate_bjt(bjt)?;
-                let intrinsic_bjt = if bjt.emitter_resistance > 0.0 {
-                    let intrinsic_emitter = bjt_intrinsic_emitter_node(bjt);
-                    sources.push(NoiseSource {
-                        element_name: format!("{}:RE", bjt.name),
-                        noise_type: NoiseType::Thermal,
-                        positive: node_index(node_indices, &bjt.emitter),
-                        negative: node_index(node_indices, &intrinsic_emitter),
-                        source_psd: 4.0 * BOLTZMANN * temperature_kelvin / bjt.emitter_resistance,
-                        frequency_exponent: 0.0,
-                    });
-                    let mut intrinsic = bjt.clone();
-                    intrinsic.emitter = intrinsic_emitter;
-                    intrinsic.emitter_resistance = 0.0;
-                    Some(intrinsic)
-                } else {
-                    None
-                };
+                let intrinsic_bjt =
+                    if bjt.emitter_resistance > 0.0 || bjt.collector_resistance > 0.0 {
+                        let mut intrinsic = bjt.clone();
+                        if bjt.emitter_resistance > 0.0 {
+                            let intrinsic_emitter = bjt_intrinsic_emitter_node(bjt);
+                            sources.push(NoiseSource {
+                                element_name: format!("{}:RE", bjt.name),
+                                noise_type: NoiseType::Thermal,
+                                positive: node_index(node_indices, &bjt.emitter),
+                                negative: node_index(node_indices, &intrinsic_emitter),
+                                source_psd: 4.0 * BOLTZMANN * temperature_kelvin
+                                    / bjt.emitter_resistance,
+                                frequency_exponent: 0.0,
+                            });
+                            intrinsic.emitter = intrinsic_emitter;
+                            intrinsic.emitter_resistance = 0.0;
+                        }
+                        if bjt.collector_resistance > 0.0 {
+                            let intrinsic_collector = bjt_intrinsic_collector_node(bjt);
+                            sources.push(NoiseSource {
+                                element_name: format!("{}:RC", bjt.name),
+                                noise_type: NoiseType::Thermal,
+                                positive: node_index(node_indices, &bjt.collector),
+                                negative: node_index(node_indices, &intrinsic_collector),
+                                source_psd: 4.0 * BOLTZMANN * temperature_kelvin
+                                    / bjt.collector_resistance,
+                                frequency_exponent: 0.0,
+                            });
+                            intrinsic.collector = intrinsic_collector;
+                            intrinsic.collector_resistance = 0.0;
+                        }
+                        Some(intrinsic)
+                    } else {
+                        None
+                    };
                 let bjt = intrinsic_bjt.as_ref().unwrap_or(bjt);
                 let base = node_index(node_indices, &bjt.base);
                 let emitter = node_index(node_indices, &bjt.emitter);
@@ -22802,17 +22828,30 @@ fn stamp_bjt(
     operating_point: &[f64],
 ) -> Result<(), SpiceError> {
     validate_bjt(bjt)?;
-    let intrinsic_bjt = if bjt.emitter_resistance > 0.0 {
-        let intrinsic_emitter = bjt_intrinsic_emitter_node(bjt);
-        stamp_conductance(
-            matrix,
-            node_index(node_indices, &bjt.emitter),
-            node_index(node_indices, &intrinsic_emitter),
-            1.0 / bjt.emitter_resistance,
-        );
+    let intrinsic_bjt = if bjt.emitter_resistance > 0.0 || bjt.collector_resistance > 0.0 {
         let mut intrinsic = bjt.clone();
-        intrinsic.emitter = intrinsic_emitter;
-        intrinsic.emitter_resistance = 0.0;
+        if bjt.emitter_resistance > 0.0 {
+            let intrinsic_emitter = bjt_intrinsic_emitter_node(bjt);
+            stamp_conductance(
+                matrix,
+                node_index(node_indices, &bjt.emitter),
+                node_index(node_indices, &intrinsic_emitter),
+                1.0 / bjt.emitter_resistance,
+            );
+            intrinsic.emitter = intrinsic_emitter;
+            intrinsic.emitter_resistance = 0.0;
+        }
+        if bjt.collector_resistance > 0.0 {
+            let intrinsic_collector = bjt_intrinsic_collector_node(bjt);
+            stamp_conductance(
+                matrix,
+                node_index(node_indices, &bjt.collector),
+                node_index(node_indices, &intrinsic_collector),
+                1.0 / bjt.collector_resistance,
+            );
+            intrinsic.collector = intrinsic_collector;
+            intrinsic.collector_resistance = 0.0;
+        }
         Some(intrinsic)
     } else {
         None
@@ -22972,17 +23011,30 @@ fn stamp_bjt_small_signal(
     operating_point: &[f64],
 ) -> Result<(), SpiceError> {
     validate_bjt(bjt)?;
-    let intrinsic_bjt = if bjt.emitter_resistance > 0.0 {
-        let intrinsic_emitter = bjt_intrinsic_emitter_node(bjt);
-        stamp_conductance(
-            matrix,
-            node_index(node_indices, &bjt.emitter),
-            node_index(node_indices, &intrinsic_emitter),
-            1.0 / bjt.emitter_resistance,
-        );
+    let intrinsic_bjt = if bjt.emitter_resistance > 0.0 || bjt.collector_resistance > 0.0 {
         let mut intrinsic = bjt.clone();
-        intrinsic.emitter = intrinsic_emitter;
-        intrinsic.emitter_resistance = 0.0;
+        if bjt.emitter_resistance > 0.0 {
+            let intrinsic_emitter = bjt_intrinsic_emitter_node(bjt);
+            stamp_conductance(
+                matrix,
+                node_index(node_indices, &bjt.emitter),
+                node_index(node_indices, &intrinsic_emitter),
+                1.0 / bjt.emitter_resistance,
+            );
+            intrinsic.emitter = intrinsic_emitter;
+            intrinsic.emitter_resistance = 0.0;
+        }
+        if bjt.collector_resistance > 0.0 {
+            let intrinsic_collector = bjt_intrinsic_collector_node(bjt);
+            stamp_conductance(
+                matrix,
+                node_index(node_indices, &bjt.collector),
+                node_index(node_indices, &intrinsic_collector),
+                1.0 / bjt.collector_resistance,
+            );
+            intrinsic.collector = intrinsic_collector;
+            intrinsic.collector_resistance = 0.0;
+        }
         Some(intrinsic)
     } else {
         None
@@ -23052,17 +23104,30 @@ fn stamp_ac_bjt_small_signal(
     omega: f64,
 ) -> Result<(), SpiceError> {
     validate_bjt(bjt)?;
-    let intrinsic_bjt = if bjt.emitter_resistance > 0.0 {
-        let intrinsic_emitter = bjt_intrinsic_emitter_node(bjt);
-        stamp_complex_conductance(
-            matrix,
-            node_index(node_indices, &bjt.emitter),
-            node_index(node_indices, &intrinsic_emitter),
-            Complex::new(1.0 / bjt.emitter_resistance, 0.0),
-        );
+    let intrinsic_bjt = if bjt.emitter_resistance > 0.0 || bjt.collector_resistance > 0.0 {
         let mut intrinsic = bjt.clone();
-        intrinsic.emitter = intrinsic_emitter;
-        intrinsic.emitter_resistance = 0.0;
+        if bjt.emitter_resistance > 0.0 {
+            let intrinsic_emitter = bjt_intrinsic_emitter_node(bjt);
+            stamp_complex_conductance(
+                matrix,
+                node_index(node_indices, &bjt.emitter),
+                node_index(node_indices, &intrinsic_emitter),
+                Complex::new(1.0 / bjt.emitter_resistance, 0.0),
+            );
+            intrinsic.emitter = intrinsic_emitter;
+            intrinsic.emitter_resistance = 0.0;
+        }
+        if bjt.collector_resistance > 0.0 {
+            let intrinsic_collector = bjt_intrinsic_collector_node(bjt);
+            stamp_complex_conductance(
+                matrix,
+                node_index(node_indices, &bjt.collector),
+                node_index(node_indices, &intrinsic_collector),
+                Complex::new(1.0 / bjt.collector_resistance, 0.0),
+            );
+            intrinsic.collector = intrinsic_collector;
+            intrinsic.collector_resistance = 0.0;
+        }
         Some(intrinsic)
     } else {
         None
@@ -23726,6 +23791,14 @@ fn bjt_intrinsic_emitter_node(bjt: &Bjt) -> String {
     }
 }
 
+fn bjt_intrinsic_collector_node(bjt: &Bjt) -> String {
+    if bjt.collector_resistance == 0.0 {
+        bjt.collector.clone()
+    } else {
+        format!("__spice_{}_collector", bjt.name)
+    }
+}
+
 fn bjt_junction_transconductance(bjt: &Bjt, voltage: f64, emission_coefficient: f64) -> f64 {
     let effective_thermal_voltage = bjt.thermal_voltage * emission_coefficient;
     bjt.saturation_current / effective_thermal_voltage
@@ -23836,9 +23909,10 @@ fn bjt_charge_state_specs(bjt: &Bjt) -> Vec<BjtChargeStateSpec> {
             && bjt.forward_transit_time_bias_coefficient > 0.0
             && bjt.forward_transit_time_voltage > 0.0)
     {
+        let collector = bjt_intrinsic_collector_node(bjt);
         let (positive, negative) = match bjt.polarity {
-            BjtPolarity::Npn => (bjt.base.clone(), bjt.collector.clone()),
-            BjtPolarity::Pnp => (bjt.collector.clone(), bjt.base.clone()),
+            BjtPolarity::Npn => (bjt.base.clone(), collector),
+            BjtPolarity::Pnp => (collector, bjt.base.clone()),
         };
         specs.push(BjtChargeStateSpec {
             name: bjt_base_collector_charge_state_name(bjt),
@@ -24244,6 +24318,12 @@ fn validate_bjt(bjt: &Bjt) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: bjt.name.clone(),
             reason: "emitter resistance must be finite and non-negative".to_string(),
+        });
+    }
+    if !bjt.collector_resistance.is_finite() || bjt.collector_resistance < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: bjt.name.clone(),
+            reason: "collector resistance must be finite and non-negative".to_string(),
         });
     }
     if !bjt.base_emitter_leakage_saturation_current.is_finite()

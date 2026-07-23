@@ -1,5 +1,8 @@
 # Changelog
 
+- Add BJT model-card `RC` collector-resistance support with an intrinsic
+  collector node in DC, AC, and transient analysis plus thermal noise in noise
+  analysis.
 - Add BJT model-card `RE` emitter-resistance support with an intrinsic emitter
   node in DC, AC, and transient analysis plus thermal noise in noise analysis.
 - Add BJT model-card `VTF` forward transit-time voltage-scale support, applying

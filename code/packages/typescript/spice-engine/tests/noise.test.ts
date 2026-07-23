@@ -79,6 +79,18 @@ describe("noiseAc", () => {
     expect(entry.noiseType).toBe("thermal");
     expect(entry.sourcePsd).toBeGreaterThan(0.0);
   });
+  it("adds thermal noise for BJT collector resistance", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vbase", "base", "0", 0.65));
+    circuit.add(resistor("Rload", "out", "0", 1_000.0));
+    circuit.add({ ...bjt("Q1", "out", "base", "0"), collectorResistance: 100.0 });
+
+    const entry = noiseAc(circuit, "out", "Vbase", [1_000.0], 300.0).points[0]!.entries
+      .find((candidate) => candidate.elementName === "Q1:RC")!;
+
+    expect(entry.noiseType).toBe("thermal");
+    expect(entry.sourcePsd).toBeGreaterThan(0.0);
+  });
   it("uses BJT KF for inverse-frequency flicker noise", () => {
     const circuit = new Circuit();
     circuit.add(voltageSource("Vcc", "vcc", "0", 5.0));
