@@ -125,6 +125,13 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // unsupported-builtin pre-check now scans each parameter default too, so the
     // emitter stays total.
     Feature::DefaultParams,
+    // ── SIR19 keyword parameters ─────────────────────────────────────
+    // A keyword parameter (`def f(x:)` / `def f(x: 1)`) and a keyword argument
+    // (`f(x: 5)`) render as Ruby's NATIVE keyword forms — Ruby matches a keyword
+    // argument to its parameter by name, so no positional resolution is needed
+    // (unlike the Go/C backends' KW6 lowering).  A keyword default rides on this
+    // feature (an optional keyword), not `DefaultParams`.
+    Feature::KeywordParams,
 ];
 
 impl Backend for RubyBackend {

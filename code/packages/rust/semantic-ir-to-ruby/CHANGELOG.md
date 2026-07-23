@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.9.0 — keyword parameters (SIR19)
+
+Accepts `Feature::KeywordParams`. Ruby has native keyword arguments, so this is
+a direct emission — no positional resolution like the Go/C backends' KW6:
+
+- A **keyword parameter** renders `def f(x:)` (required) or `def f(x: <default>)`
+  (optional — a keyword default is an optional keyword, riding on
+  `KeywordParams`, not `DefaultParams`).
+- A **keyword argument** (`Expr::KeywordArg`) renders `x: <value>` in the call's
+  argument list; Ruby binds it to the parameter by **name**, so keyword
+  arguments are order-independent (`f(b: 2, a: 10)` binds `a`/`b` correctly). The
+  label is sanitised identically to the parameter it binds, so the two agree.
+- The unsupported-builtin pre-check (`scan_expr`) recurses into a keyword
+  argument's value.
+
+While restructuring the parameter loop, made it **total** over every
+`ParamKind`: a `Rest` parameter now renders `*rest` and a `KwRest` renders
+`**opts` (native Ruby), where both were previously mis-emitted as bare names.
+This matters because a `**opts` co-occurs with keyword parameters, so accepting
+`KeywordParams` must not leave it broken. (These kinds carry no feature of their
+own — a validator matter — but the emitter now spells all four kinds correctly.)
+
+First of the KeywordParams parity arc: Go/Python/JS already accept it; this
+brings the Ruby backend up (C is tracked next; the Rust backend is a separate
+gap). Verified through a real `ruby` with hand-built modules: a keyword argument
+binding by name, order-independent resolution (`f(b: 2, a: 10)` → `8` for `f(a:,
+b:) = a - b`), an optional keyword using its default when omitted (`f()` → `7`
+for `f(x: 7)`) and overridden when supplied, native `x:` / `x: 5` syntax, and
+the `*rest` / `**opts` splat emission. Bumps semantic-ir-to-ruby 0.8.0 → 0.9.0.
+
 ## 0.8.0 — default parameters (SIR19)
 
 Accepts `Feature::DefaultParams`. A positional parameter carrying a default
