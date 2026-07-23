@@ -606,6 +606,17 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     "tally": (x) => ArrayRt.tally(x),
     "replicate": (x, y) => ArrayRt.replicate(x, y),
     "exp": (x) => ArrayRt.monadicExp(x),
+    // SIR22/Q: five genuinely new primitives, no APL/J precedent (see the
+    // `qFirst`/`qWhere`/`qReverse`/`qNot`/`qTake`/`qDrop`/`qMatch`
+    // definitions in the `ArrayRt` section above for the full root-cause
+    // writeup and ground-truth citations).
+    "q_first": (x) => ArrayRt.qFirst(x),
+    "q_where": (x) => ArrayRt.qWhere(x),
+    "q_reverse": (x) => ArrayRt.qReverse(x),
+    "q_not": (x) => ArrayRt.qNot(x),
+    "q_take": (x, y) => ArrayRt.qTake(x, y),
+    "q_drop": (x, y) => ArrayRt.qDrop(x, y),
+    "q_match": (x, y) => ArrayRt.qMatch(x, y),
     "cons": (x, y) => new Pair(x, y),
     "car": (p) => p.car,
     "cdr": (p) => p.cdr,
@@ -5085,6 +5096,209 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       return ndarray(a.shape, Float64Array.from(a.data, Math.exp));
     }
 
+    // ── SIR22/Q: five genuinely new primitives, no APL/J precedent ──────
+    // (`q-to-semantic-ir`'s own module doc comment, "The 17 primitives").
+    // Documented as `BuiltinCall("q_first"/"q_where"/"q_reverse"/"q_not"/
+    // "q_take"/"q_drop"/"q_match", ...)` names since `q-to-semantic-ir`
+    // 0.1.0. Ported 1:1 from `q_runtime::builtins::{first, where_indices,
+    // reverse, not_, take, drop_, match_}`
+    // (`code/packages/rust/q-runtime/src/builtins.rs`). The `q_`-prefixed
+    // names are deliberately distinct from any existing dispatch-table
+    // entry (e.g. the generic boolean `"not"`, which returns a native JS
+    // boolean and is not elementwise) to avoid any semantic collision with
+    // another producer's identically-spelled but differently-behaved
+    // builtin.
+
+    /**
+     * Monadic `*` (first): the first item along the leading axis — a
+     * scalar's first item is itself; a vector's first item is its element
+     * 0 (a scalar result); a matrix's first item is its row 0 (a vector
+     * result). Ported 1:1 from `q_runtime::builtins::first`. The rank-2
+     * branch is unreachable through `q-to-semantic-ir` itself (this cut's
+     * grammar has no primitive that can ever construct a rank-2 value —
+     * see that crate's own module doc comment), but is still implemented,
+     * total over this domain's own rank <= 2 ceiling, exactly like every
+     * other `ArrayRt` function here.
+     */
+    function qFirst(a) {
+      a = toArrayValue(a);
+      const shape = a.shape;
+      if (shape.length === 0) {
+        return a;
+      }
+      if (shape.length === 1) {
+        if (shape[0] === 0) {
+          throw new Error("q_first: first of an empty vector is undefined");
+        }
+        return ndarray([], Float64Array.of(a.data[0]));
+      }
+      if (shape.length === 2) {
+        const [r, c] = shape;
+        if (r === 0) {
+          throw new Error("q_first: first of an empty matrix is undefined");
+        }
+        const row = new Float64Array(c);
+        for (let col = 0; col < c; col++) {
+          row[col] = get(a, 0, col);
+        }
+        return ndarray([c], row);
+      }
+      throw new Error("q_first: first is only supported for rank <= 2");
+    }
+
+    /**
+     * Monadic `&` (where): the indices (0-based) of every nonzero element.
+     * Ported 1:1 from `q_runtime::builtins::where_indices`, scoped
+     * identically to rank <= 1 (a scalar or vector).
+     */
+    function qWhere(a) {
+      a = toArrayValue(a);
+      if (a.shape.length > 1) {
+        throw new Error(`q_where: monadic argument (where) must be a scalar or vector, got rank ${a.shape.length}`);
+      }
+      const idx = [];
+      for (let i = 0; i < a.data.length; i++) {
+        if (a.data[i] !== 0) { idx.push(i); }
+      }
+      return ndarray([idx.length], Float64Array.from(idx));
+    }
+
+    /**
+     * Monadic `|` (reverse): reverses element order for a vector; reverses
+     * row order (each row's own column order stays intact) for a matrix; a
+     * scalar reverses to itself. Ported 1:1 from
+     * `q_runtime::builtins::reverse`.
+     */
+    function qReverse(a) {
+      a = toArrayValue(a);
+      const shape = a.shape;
+      if (shape.length === 0) {
+        return a;
+      }
+      if (shape.length === 1) {
+        const out = Float64Array.from(a.data);
+        out.reverse();
+        return ndarray(shape, out);
+      }
+      if (shape.length === 2) {
+        const [r, c] = shape;
+        const data = new Float64Array(r * c);
+        for (let row = 0; row < r; row++) {
+          const srcRow = r - 1 - row;
+          for (let col = 0; col < c; col++) {
+            data[col * r + row] = get(a, srcRow, col);
+          }
+        }
+        return ndarray([r, c], data);
+      }
+      throw new Error("q_reverse: reverse is only supported for rank <= 2");
+    }
+
+    /**
+     * Monadic `~` (not): `1` for `0`, `0` for anything nonzero, elementwise
+     * — matching MA11 §4's "comparisons/logic produce/accept plain 0/1
+     * numerics" (no native boolean type in this cut). Deliberately
+     * DISTINCT from the generic `"not"` builtin (which returns a native JS
+     * `boolean` for short-circuit logic, not an elementwise array result).
+     * Ported 1:1 from `q_runtime::builtins::not_`.
+     */
+    function qNot(a) {
+      a = toArrayValue(a);
+      return ndarray(a.shape, Float64Array.from(a.data, (v) => (v === 0 ? 1 : 0)));
+    }
+
+    /**
+     * Dyadic `#` (take): `x#y` takes `|x|` items from `y`, CYCLING if `y`
+     * is shorter than needed — from the front if `x >= 0`, from the *end*
+     * if `x < 0`. Ported 1:1 from `q_runtime::builtins::take`. `y` is
+     * scoped to rank <= 1 (a scalar or vector). SECURITY: the take count is
+     * capped via `checkedShapeSize` *before* allocating, exactly like
+     * `replicate`'s own count cap above.
+     */
+    function qTake(x, y) {
+      x = toArrayValue(x);
+      y = toArrayValue(y);
+      if (x.shape.length !== 0) {
+        throw new Error("q_take: dyadic left argument (take count) must be a scalar");
+      }
+      if (y.shape.length > 1) {
+        throw new Error(`q_take: dyadic right argument must be a scalar or vector (rank <= 1), got rank ${y.shape.length}`);
+      }
+      const n = x.data[0];
+      if (!Number.isInteger(n)) {
+        throw new Error(`q_take: take count must be an integer, got ${n}`);
+      }
+      const count = Math.abs(n);
+      checkedShapeSize([count]);
+      const src = y.data;
+      if (count === 0) {
+        return ndarray([0], new Float64Array(0));
+      }
+      if (src.length === 0) {
+        throw new Error("q_take: cannot take a nonzero count from an empty array");
+      }
+      const out = new Float64Array(count);
+      if (n >= 0) {
+        for (let i = 0; i < count; i++) { out[i] = src[i % src.length]; }
+      } else {
+        // Negative count: the last `count` items of the infinite cyclic
+        // repetition of `y`, ending exactly at `y`'s own last element --
+        // equivalent to taking `count` from the front of the REVERSED
+        // source, then reversing that result back.
+        const rev = Float64Array.from(src);
+        rev.reverse();
+        const tmp = new Float64Array(count);
+        for (let i = 0; i < count; i++) { tmp[i] = rev[i % rev.length]; }
+        tmp.reverse();
+        out.set(tmp);
+      }
+      return ndarray([count], out);
+    }
+
+    /**
+     * Dyadic `_` (drop): `x _ y` drops `|x|` items from `y` — from the
+     * front if `x >= 0`, from the end if `x < 0` — with NO cycling (unlike
+     * `qTake` above): dropping more items than `y` has simply empties it.
+     * Ported 1:1 from `q_runtime::builtins::drop_`. `y` is scoped to rank
+     * <= 1, mirroring `qTake`'s identical restriction.
+     */
+    function qDrop(x, y) {
+      x = toArrayValue(x);
+      y = toArrayValue(y);
+      if (x.shape.length !== 0) {
+        throw new Error("q_drop: dyadic left argument (drop count) must be a scalar");
+      }
+      if (y.shape.length > 1) {
+        throw new Error(`q_drop: dyadic right argument must be a scalar or vector (rank <= 1), got rank ${y.shape.length}`);
+      }
+      const n = x.data[0];
+      if (!Number.isInteger(n)) {
+        throw new Error(`q_drop: drop count must be an integer, got ${n}`);
+      }
+      const src = y.data;
+      const len = src.length;
+      const k = Math.min(Math.abs(n), len);
+      const out = n >= 0 ? src.slice(k) : src.slice(0, len - k);
+      return ndarray([out.length], Float64Array.from(out));
+    }
+
+    /**
+     * Dyadic `~` (match): deep equality — same shape AND every element
+     * exactly equal (plain `===`, no floating-point tolerance, matching
+     * every other comparison in this domain) — producing a single scalar
+     * `1` or `0`, NOT an elementwise array (a genuine, deliberate
+     * difference from every other dyadic primitive in this domain, which
+     * are all elementwise). Ported 1:1 from `q_runtime::builtins::match_`.
+     */
+    function qMatch(a, b) {
+      a = toArrayValue(a);
+      b = toArrayValue(b);
+      const eqShape = sameShape(a.shape, b.shape);
+      const eqData = eqShape && a.data.length === b.data.length
+        && Array.from(a.data).every((v, i) => v === b.data[i]);
+      return ndarray([], Float64Array.of(eqShape && eqData ? 1 : 0));
+    }
+
     /**
      * Format one number the way `apl_runtime::value::fmt_num` (APL) or
      * `j_runtime::value::fmt_num` (J, when `SIR_DISPLAY_J_UNDERSCORE` is
@@ -5174,6 +5388,9 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       catenate, display,
       // SIR22 addendum (J's two genuinely new primitives, no APL precedent).
       tally, replicate, monadicExp,
+      // SIR22 addendum (Q's five genuinely new primitives, no APL/J
+      // precedent -- see `q-to-semantic-ir`'s own module doc comment).
+      qFirst, qWhere, qReverse, qNot, qTake, qDrop, qMatch,
       // Exported so `formatSeen` (defined outside this IIFE, near the top
       // of the file) can render a bare/boxed scalar through the SAME
       // high-minus-aware number formatter a raw NDArray already uses via

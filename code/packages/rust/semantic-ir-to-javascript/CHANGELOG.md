@@ -1,5 +1,46 @@
 # Changelog
 
+## 0.51.0 — Q's five genuinely new SIR22-domain primitives (MA-11e)
+
+`q-to-semantic-ir` (new frontend crate, MA-11e) needed runtime support for
+five of Q's primitive verbs with no APL/J precedent and no existing
+`BuiltinCall` dispatch-table entry — the exact same shape of gap J's own
+`tally`/`replicate`/`monadicExp` addition (see this file's earlier history)
+filled for J's own two new primitives.
+
+### Added
+
+- **`runtime.rs`: `ArrayRt.qFirst`/`qWhere`/`qReverse`/`qNot`/`qTake`/
+  `qDrop`/`qMatch`**, plus matching `"q_first"`/`"q_where"`/`"q_reverse"`/
+  `"q_not"`/`"q_take"`/`"q_drop"`/`"q_match"` entries in the `builtins`
+  dispatch table `__Sir.callBuiltin`'s generic fallback already routes any
+  unrecognised `BuiltinCall` name through. Ported 1:1 from
+  `q_runtime::builtins::{first, where_indices, reverse, not_, take, drop_,
+  match_}` (`code/packages/rust/q-runtime/src/builtins.rs`). The `q_`
+  prefix is deliberately distinct from any existing entry (e.g. the
+  generic boolean `"not"`, which returns a native JS `boolean` for
+  short-circuit logic and is not elementwise) to avoid any semantic
+  collision with another producer's identically-spelled but
+  differently-behaved builtin.
+- Every change here is **additive only** — no existing function or
+  dispatch-table entry was modified. Confirmed no regression: this crate's
+  own full test suite (257 tests) and every other downstream consumer's
+  (`apl-to-semantic-ir`, `derive-to-semantic-ir`, `j-to-semantic-ir`,
+  `javascript-to-semantic-ir`, `macsyma-to-semantic-ir`,
+  `maple-to-semantic-ir`, `matlab-to-semantic-ir`, `octave-to-semantic-ir`,
+  `reduce-to-semantic-ir`, `scilab-to-semantic-ir`, `sir-conformance`,
+  `wolfram-to-semantic-ir`) still pass unchanged.
+
+### Found, NOT fixed here
+
+`q-to-semantic-ir/tests/oracle.rs` confirms the exact same display-glyph
+gap `j-to-semantic-ir/tests/oracle.rs`'s own "Bug A" already found for J
+(no per-source-language ASCII-minus flag for a non-APL/non-J language's
+genuine-NDArray results) now affects Q too, for the identical reason — see
+that crate's own `CHANGELOG.md` for the full writeup. Not fixed here,
+consistent with this repo's "found, NOT fixed here" discipline for a bug in
+a crate consumed by many frontends.
+
 ## 0.50.0 — Derive's own SIR23 display convention (SIR23 addendum, item 4 of 4)
 
 Item 4 of the 4-item rollout described by `SIR23-symbolic-pattern-
