@@ -10,7 +10,8 @@
 //!
 //! See [SIR24](../../../specs/SIR24-semantic-ir-to-c.md) for the design.
 
-use std::cell::Cell;
+use std::cell::{Cell, RefCell};
+use std::collections::HashMap;
 use std::fmt::Write;
 
 use semantic_ir::{Block, Expr, Function, Global, IntSpec, IntWidth, Module, Scope, Span, Stmt};
@@ -22,6 +23,14 @@ thread_local! {
     /// the top of [`emit_module`] so emission is byte-stable (the determinism
     /// test relies on this).
     static TEMP_ID: Cell<u64> = const { Cell::new(0) };
+
+    /// Per-module map from a user function's RAW name to its declared parameter
+    /// count, snapshotted at the top of [`emit_module`].  A `DirectCall` that
+    /// omits trailing SIR19-defaulted arguments pads the call up to this arity
+    /// with `_sir_missing()`; the callee's prologue then substitutes each
+    /// default.  Thread-local (like `TEMP_ID`) so the deep `emit_expr` /
+    /// `emit_assign` call tree can read it without threading a context.
+    static ARITY: RefCell<HashMap<String, usize>> = RefCell::new(HashMap::new());
 }
 
 fn fresh_id() -> u64 {
@@ -32,9 +41,41 @@ fn fresh_id() -> u64 {
     })
 }
 
+/// The declared parameter count of a known user function (by raw name), for
+/// call-site default-argument padding.  `None` for an unknown callee.
+fn callee_arity(fn_name: &str) -> Option<usize> {
+    ARITY.with(|a| a.borrow().get(fn_name).copied())
+}
+
+/// Append `_sir_missing()` arguments to bring a `DirectCall`'s `provided`
+/// argument count up to the callee's declared arity — the SIR19 default-param
+/// call-site padding.  A leading comma is written before each pad when the call
+/// already has `provided > 0` arguments (or a previous pad) so the argument
+/// list stays well-formed.  No-op for an unknown callee or an exact/over-full
+/// call.
+fn emit_default_padding(out: &mut String, fn_name: &str, provided: usize) {
+    if let Some(arity) = callee_arity(fn_name) {
+        for i in provided..arity {
+            if i > 0 {
+                out.push_str(", ");
+            }
+            out.push_str("_sir_missing()");
+        }
+    }
+}
+
 /// Emit a complete self-contained C source file for `m`.
 pub fn emit_module(m: &Module) -> String {
     TEMP_ID.with(|c| c.set(0));
+    // Snapshot each user function's declared arity for `DirectCall` default
+    // padding (SIR19).  Cleared first so a reused thread starts empty.
+    ARITY.with(|a| {
+        let mut map = a.borrow_mut();
+        map.clear();
+        for f in &m.functions {
+            map.insert(f.name.clone(), f.params.len());
+        }
+    });
 
     let mut out = String::new();
     emit_banner(&mut out, m);
@@ -168,8 +209,30 @@ fn emit_function(out: &mut String, f: &Function) {
     let _ = write!(out, "SirValue {}(", function_emit_name(&f.name));
     emit_param_list(out, f);
     out.push_str(") {\n");
+    emit_default_prologue(out, f, 1);
     emit_block_body(out, &f.body, 1);
     out.push_str("}\n");
+}
+
+/// Emit the SIR19 default-parameter prologue: for each parameter carrying a
+/// default, in declaration order, guard `if (_sir_is_missing(name)) { name =
+/// <default>; }`.  A call site pads an omitted trailing defaulted argument with
+/// `_sir_missing()` (see [`emit_default_padding`]); this replaces it with the
+/// default value BEFORE the body runs, so the body never sees a `SIR_MISSING`.
+/// Declaration order lets a later default reference an earlier parameter (whose
+/// own default, if any, is already filled) — matching the validator and the
+/// Go/Ruby backends.  The parameter is a C function parameter (a mutable
+/// lvalue), so it is reassigned in place; a compound default hoists through
+/// `emit_assign`.
+fn emit_default_prologue(out: &mut String, f: &Function, indent: usize) {
+    let pad = indent_str(indent);
+    for p in &f.params {
+        let Some(default) = &p.default else { continue };
+        let name = sanitize_ident(&p.name);
+        let _ = writeln!(out, "{pad}if (_sir_is_missing({name})) {{");
+        emit_assign(out, &name, default, indent + 1);
+        let _ = writeln!(out, "{pad}}}");
+    }
 }
 
 /// Emit a block in **statement/return** position — its `stmts` run for effect,
@@ -735,6 +798,8 @@ fn emit_call_with_arg_names(out: &mut String, e: &Expr, names: &[String]) {
         Expr::DirectCall { fn_name, .. } => {
             let _ = write!(out, "{}(", function_emit_name(fn_name));
             push_joined(out, names);
+            // SIR19: pad a call that omits trailing defaulted arguments.
+            emit_default_padding(out, fn_name, names.len());
             out.push(')');
         }
         Expr::IndirectCall { target, .. } => {
@@ -830,6 +895,8 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         Expr::DirectCall { fn_name, args, .. } => {
             let _ = write!(out, "{}(", function_emit_name(fn_name));
             emit_simple_args(out, args, indent);
+            // SIR19: pad a call that omits trailing defaulted arguments.
+            emit_default_padding(out, fn_name, args.len());
             out.push(')');
         }
         Expr::IndirectCall { target, args, .. } => {
@@ -1047,6 +1114,17 @@ fn is_supported_builtin(name: &str) -> bool {
 /// cleanly.
 pub fn first_unsupported_builtin(m: &Module) -> Option<(String, Span)> {
     for f in &m.functions {
+        // A SIR19 parameter default is an expression the prologue evaluates at
+        // call time, so a deferred builtin nested in one must be pre-checked
+        // too — otherwise it would slip past the body scan and reach the
+        // emitter's `unreachable!`.
+        for p in &f.params {
+            if let Some(default) = &p.default {
+                if let Some(hit) = scan_expr_for_builtin(default) {
+                    return Some(hit);
+                }
+            }
+        }
         if let Some(hit) = scan_block_for_builtin(&f.body) {
             return Some(hit);
         }

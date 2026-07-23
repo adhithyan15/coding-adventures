@@ -1,5 +1,47 @@
 # Changelog
 
+## 0.10.0 — default parameters (SIR19)
+
+Accepts `Feature::DefaultParams`. C has no native default parameters, so — like
+the Go backend — this uses a `_sir_missing` sentinel with call-site padding and
+a per-function prologue:
+
+- **Runtime**: a new `SIR_MISSING` tag with `_sir_missing()` / `_sir_is_missing`.
+  It is an INTERNAL "argument omitted" sentinel — a `SIR_MISSING` value is
+  replaced by its default before the body runs, so user code never observes it.
+- **Call site**: a `DirectCall` that leaves trailing defaulted arguments off
+  pads the call with `_sir_missing()` up to the callee's declared arity. The
+  arity is looked up in a thread-local map (`ARITY`) snapshotted at the top of
+  `emit_module` — the same mechanism as the `TEMP_ID` counter, so the deep
+  `emit_expr`/`emit_assign` call tree reads it without threading a context.
+  (The map is only read by key, so emission stays deterministic.)
+- **Prologue**: each function opens with `if (_sir_is_missing(p)) { p =
+  <default>; }` for every defaulted parameter, in declaration order — so a later
+  default may reference an earlier parameter (whose own default is already
+  filled), matching the validator and the Go/Ruby backends. A C parameter is a
+  mutable lvalue, so it is reassigned in place; a compound default hoists
+  through `emit_assign`.
+
+Only the positional case is `DefaultParams`; a keyword default is the separate
+(still-unaccepted) `KeywordParams` feature. An `IndirectCall` (a closure with no
+statically-known signature) is not padded — the closure's own arity handling
+applies; the DirectCall path is the default-parameter path.
+
+Also extends `first_unsupported_builtin` to scan each parameter default, not
+just the body — a default is evaluated (in the prologue) at call time, so a
+deferred builtin hidden in one must be rejected cleanly rather than reach the
+emitter's `unreachable!`. (The C `scan_expr_for_builtin` already scanned an
+`IndirectCall`'s target, so — unlike the Ruby backend — no target-scan fix was
+needed here.)
+
+This closes the DefaultParams parity arc: with the Ruby backend's default
+parameters (0.8.0), `Feature::DefaultParams` is now accepted on all six
+backends. Verified with hand-built modules compiled and run through a real `cc`:
+a single default used when omitted (`f(1)` → `6` for `f(a, b = 5) = a + b`) and
+overridden when supplied (`f(1, 2)` → `3`), two trailing defaults each filling
+independently, a default referencing an earlier parameter, and the prologue /
+call-site sentinel shape. Bumps semantic-ir-to-c 0.9.0 → 0.10.0.
+
 ## 0.9.0 — short-circuit (SIR16)
 
 Accepts `Feature::ShortCircuit`. `Expr::LogicalAnd` / `Expr::LogicalOr`
