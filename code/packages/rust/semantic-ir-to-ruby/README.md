@@ -52,12 +52,15 @@ structural `Array#==`), `SeqIndex` (`a[i]`, nil on OOB), `SeqLen` (`a.length`),
 `SeqSet` (`a[i] = v`, bounds-checked via `sir_seq_set`), and `ForEach`
 (`for x in a`); SIR16 `Maps` — a native Hash for `MapLit` (`{k => v}`),
 `MapGet` (`h[k]`, nil on miss), and `MapSet` (`h[k] = v`), with structural
-composite keys; and SIR16 `Floats` — a native `Float` for `FloatLit` (rendered
+composite keys; SIR16 `Floats` — a native `Float` for `FloatLit` (rendered
 so `7.0` stays a Float, not the Integer `7`; `Infinity`/`NaN` are named), with
-native float arithmetic and division.
+native float arithmetic and division; and SIR16 `ShortCircuit` — `LogicalAnd`
+(`&&`) and `LogicalOr` (`||`) rendered as Ruby's native short-circuit
+operators, which yield the deciding operand and skip the dead branch exactly as
+SIR requires.
 Rejects `TailCalls`, `Intrinsics`, and every not-yet-wired feature (array
-indexing / slicing via `IndexGet` — `NDArrays`; array-pattern destructuring —
-`ShortCircuit`; collection methods, exceptions, OOP) until its cascade batch
+indexing / slicing via `IndexGet` — `NDArrays`; array-pattern destructuring;
+collection methods, exceptions, OOP) until its cascade batch
 lands — each a clean, source-positioned `UnsupportedFeature`.
 
 ## Verification

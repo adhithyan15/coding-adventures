@@ -72,10 +72,10 @@ pub fn compile(module: &Module) -> Result<Artifact, BackendError>;
 **Landed since v0** (one version-bumped batch at a time — see the roadmap): the
 SIR26 integer conversions (`Conversions`, `SizedIntegers`, `Unsigned`,
 `WrappingArithmetic`); and the SIR16 batches `Loops` + `MutableBindings`
-(0.3.0), `Sequences` (native `Array`, 0.4.0), `Maps` (native `Hash`, 0.5.0), and
-`Floats` (native `Float`, 0.6.0).
+(0.3.0), `Sequences` (native `Array`, 0.4.0), `Maps` (native `Hash`, 0.5.0),
+`Floats` (native `Float`, 0.6.0), and `ShortCircuit` (native `&&`/`||`, 0.7.0).
 
-**Still rejects** `TailCalls`, `Intrinsics`, `ShortCircuit`, `NDArrays`,
+**Still rejects** `TailCalls`, `Intrinsics`, `NDArrays`,
 exceptions/OOP, and every not-yet-landed feature (each rejection is a clean,
 source-positioned `UnsupportedFeature`).
 
@@ -110,6 +110,8 @@ or temporaries:
 | `VarRef { Global }` | `sir_global_get("<name>")` |
 | `VarRef { Builtin }` | `sir_builtin_closure("<name>")` |
 | `If` | `(if sir_truthy(<cond>) then <then> else <else> end)` |
+| `LogicalAnd { lhs, rhs }` | `(<lhs> && <rhs>)` — native short-circuit, yields the deciding operand |
+| `LogicalOr { lhs, rhs }` | `(<lhs> \|\| <rhs>)` — native short-circuit, yields the deciding operand |
 | `Block` (stmts + value) | method body: `<stmts>` then `<value>`; as an expression: `(begin; <stmts>; <value>; end)` |
 | `LetBinding` / `LetStarBinding` | `<name> = <value>` |
 | `ExprStmt` | `<expr>` |
