@@ -33,17 +33,18 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language BJT base resistance.
+1. Cross-language BJT bias-dependent base resistance.
    - Status: current PR completion candidate.
-   - Add Berkeley BJT `RB` model-card support in Rust, Python, and TypeScript,
-     defaulting to zero so existing operating-point, AC, transient, and noise
-     results remain unchanged.
-   - Insert an intrinsic base node behind the configured series resistance,
-     use that node for nonlinear and both junction stored-charge behaviors,
-     and include the resistor's thermal-noise contribution.
-   - Extend the supported-parameter coverage gate from 128 to 130 canonical
-     rows and lock model-card behavior, validation, hierarchy, operating-point
-     loading, and noise behavior in all engines.
+   - Add Berkeley BJT `RBM` minimum-base-resistance and `IRB`
+     half-resistance-current model-card support in Rust, Python, and
+     TypeScript.
+   - Reuse the intrinsic base topology for Berkeley base-charge and
+     current-dependent resistance reduction in DC, transient, AC,
+     transfer-function, and thermal-noise behavior.
+   - Preserve constant `RB` behavior when `RBM` is omitted, extend the
+     supported-parameter coverage gate from 130 to 134 canonical rows, and
+     lock model-card behavior, validation, hierarchy, operating-point loading,
+     and noise behavior in all engines.
 
 ## Completed Slices
 
@@ -3186,6 +3187,15 @@ the Rust, Python, and TypeScript surfaces together.
    - DC, transient, AC, transfer-function, and noise paths share the intrinsic
      collector topology, including resistor thermal noise; the
      supported-parameter release gate now covers 128 canonical rows.
+
+242. Cross-language BJT base resistance.
+   - Status: completed in PR 8866.
+   - Rust, Python, and TypeScript BJT model cards now accept `RB`, default it
+     to zero, and insert an intrinsic base node behind the configured external
+     series resistance.
+   - DC, transient, AC, transfer-function, and noise paths share the intrinsic
+     base topology, including resistor thermal noise; the supported-parameter
+     release gate now covers 130 canonical rows.
 
 ## Backlog
 

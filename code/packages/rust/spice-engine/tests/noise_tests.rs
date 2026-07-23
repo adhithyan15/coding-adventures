@@ -161,6 +161,37 @@ fn bjt_base_resistance_adds_thermal_noise() {
 }
 
 #[test]
+fn bjt_minimum_base_resistance_increases_high_current_thermal_noise() {
+    let source_psd = |minimum_base_resistance, base_resistance_half_current| {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::new(
+            "Vbase", "base", "0", 0.65,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rload", "out", "0", 1_000.0,
+        )));
+        let mut transistor = Bjt::new("Q1", "out", "base", "0");
+        transistor.base_resistance = 100.0;
+        transistor.minimum_base_resistance = minimum_base_resistance;
+        transistor.base_resistance_half_current = base_resistance_half_current;
+        circuit.add(Element::Bjt(transistor));
+
+        let result = noise_ac(&circuit, "out", "Vbase", &[1_000.0], 300.0).unwrap();
+        result.points[0]
+            .entries
+            .iter()
+            .find(|entry| entry.element_name == "Q1:RB")
+            .unwrap()
+            .source_psd
+    };
+
+    let fixed = source_psd(None, 0.0);
+    let bias_dependent = source_psd(Some(10.0), 1.0e-9);
+
+    assert!(bias_dependent > fixed);
+}
+
+#[test]
 fn bjt_flicker_noise_uses_kf_with_inverse_frequency_scaling() {
     let mut circuit = Circuit::new();
     circuit.add(Element::VoltageSource(VoltageSource::new(

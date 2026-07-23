@@ -412,7 +412,7 @@ def test_model_card_type_aliases_are_normalized() -> None:
 
 def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     coverage = model_card_supported_parameter_coverage()
-    assert len(coverage) == 130
+    assert len(coverage) == 134
     assert coverage[0].kind == "D"
     assert coverage[0].canonical_parameter == "IS"
     assert coverage[0].accepted_names == ("IS", "JS")
@@ -427,7 +427,7 @@ def test_model_card_supported_parameter_coverage_exports_are_stable() -> None:
     assert "NMOS\tVT0\tVT0|VTO|VTH\t3" in table
     assert table.splitlines()[-1] == "PMOS\tMJ\tMJ\t1"
     records = model_card_supported_parameter_coverage_records()
-    assert len(records) == 130
+    assert len(records) == 134
     assert records[0] == {
         "kind": "D",
         "canonical_parameter": "IS",
@@ -501,9 +501,9 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
     assert report.passed is True
     assert report.kind_count == 7
     assert report.expected_kind_count == 7
-    assert report.canonical_parameter_count == 130
-    assert report.expected_canonical_parameter_count == 130
-    assert report.accepted_name_count == 196
+    assert report.canonical_parameter_count == 134
+    assert report.expected_canonical_parameter_count == 134
+    assert report.accepted_name_count == 200
     assert report.aliased_parameter_count == 53
     assert report.max_alias_count == 4
     assert report.issues == ()
@@ -511,7 +511,7 @@ def test_model_card_supported_parameter_coverage_gate_passes_current_catalog() -
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "true\t7\t7\t130\t130\t196\t53\t4\t0"
+        "true\t7\t7\t134\t134\t200\t53\t4\t0"
     )
     assert (
         format_model_card_supported_parameter_coverage_gate_issue_table(report)
@@ -539,8 +539,8 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
 
     assert report.passed is False
     assert report.kind_count == 7
-    assert report.canonical_parameter_count == 129
-    assert report.accepted_name_count == 193
+    assert report.canonical_parameter_count == 133
+    assert report.accepted_name_count == 197
     assert report.aliased_parameter_count == 52
     assert report.max_alias_count == 4
     assert len(report.issues) == 4
@@ -555,7 +555,7 @@ def test_model_card_supported_parameter_coverage_gate_reports_missing_alias_fami
         "passed\tkind_count\texpected_kind_count\tcanonical_parameter_count\t"
         "expected_canonical_parameter_count\taccepted_name_count\t"
         "aliased_parameter_count\tmax_alias_count\tissue_count\n"
-        "false\t7\t7\t129\t130\t193\t52\t4\t4\n"
+        "false\t7\t7\t133\t134\t197\t52\t4\t4\n"
         "kind\tfield\tmessage\n"
         "NMOS\tcanonical_parameter_count\texpected NMOS to expose 18 canonical "
         "supported parameters, found 17\n"
@@ -647,10 +647,10 @@ def test_model_card_aliases_build_device_instances() -> None:
     assert pytest.approx(1.05) == diode_model.Eg
 
     bjt_card = normalize_model_card(
-        "Qsmall", "npn", {"BETA": 125.0, "BETA_R": 0.25, "CBE": 2.0e-12, "XTI": 2.4, "XTB": 1.5, "EG": 1.05, "VA": 80.0, "VB": 120.0, "IK": 2.0e-3, "IKR": 3.0e-3, "T_NOM": 50.0, "KF": 1.0e-12, "AF": 1.3, "PTF": 30.0, "XTF": 2.0, "ITF": 4.0e-3, "VTF": 0.6, "RE": 12.0, "RC": 13.0, "RB": 14.0, "ISE": 3.0e-13, "NE": 1.7, "ISC": 4.0e-13, "NC": 1.8, "NF": 1.2, "NR": 1.3, "PE": 0.8, "ME": 0.4, "PC": 0.7, "MC": 0.45, "FC": 0.4}
+        "Qsmall", "npn", {"BETA": 125.0, "BETA_R": 0.25, "CBE": 2.0e-12, "XTI": 2.4, "XTB": 1.5, "EG": 1.05, "VA": 80.0, "VB": 120.0, "IK": 2.0e-3, "IKR": 3.0e-3, "T_NOM": 50.0, "KF": 1.0e-12, "AF": 1.3, "PTF": 30.0, "XTF": 2.0, "ITF": 4.0e-3, "VTF": 0.6, "RE": 12.0, "RC": 13.0, "RB": 14.0, "RBM": 2.0, "IRB": 5.0e-6, "ISE": 3.0e-13, "NE": 1.7, "ISC": 4.0e-13, "NC": 1.8, "NF": 1.2, "NR": 1.3, "PE": 0.8, "ME": 0.4, "PC": 0.7, "MC": 0.45, "FC": 0.4}
     )
     bjt_model = bjt_from_model_card("Q1", "c", "b", "e", bjt_card)
-    assert bjt_card.parameters == {"BF": 125.0, "BR": 0.25, "CJE": 2.0e-12, "XTI": 2.4, "XTB": 1.5, "EG": 1.05, "VAF": 80.0, "VAR": 120.0, "IKF": 2.0e-3, "IKR": 3.0e-3, "TNOM": 50.0, "KF": 1.0e-12, "AF": 1.3, "PTF": 30.0, "XTF": 2.0, "ITF": 4.0e-3, "VTF": 0.6, "RE": 12.0, "RC": 13.0, "RB": 14.0, "ISE": 3.0e-13, "NE": 1.7, "ISC": 4.0e-13, "NC": 1.8, "NF": 1.2, "NR": 1.3, "VJE": 0.8, "MJE": 0.4, "VJC": 0.7, "MJC": 0.45, "FC": 0.4}
+    assert bjt_card.parameters == {"BF": 125.0, "BR": 0.25, "CJE": 2.0e-12, "XTI": 2.4, "XTB": 1.5, "EG": 1.05, "VAF": 80.0, "VAR": 120.0, "IKF": 2.0e-3, "IKR": 3.0e-3, "TNOM": 50.0, "KF": 1.0e-12, "AF": 1.3, "PTF": 30.0, "XTF": 2.0, "ITF": 4.0e-3, "VTF": 0.6, "RE": 12.0, "RC": 13.0, "RB": 14.0, "RBM": 2.0, "IRB": 5.0e-6, "ISE": 3.0e-13, "NE": 1.7, "ISC": 4.0e-13, "NC": 1.8, "NF": 1.2, "NR": 1.3, "VJE": 0.8, "MJE": 0.4, "VJC": 0.7, "MJC": 0.45, "FC": 0.4}
     assert bjt_model.polarity == "NPN"
     assert bjt_model.beta_f == pytest.approx(125.0)
     assert bjt_model.beta_r == pytest.approx(0.25)
@@ -672,6 +672,8 @@ def test_model_card_aliases_build_device_instances() -> None:
     assert bjt_model.Re == pytest.approx(12.0)
     assert bjt_model.Rc == pytest.approx(13.0)
     assert bjt_model.Rb == pytest.approx(14.0)
+    assert bjt_model.Rbm == pytest.approx(2.0)
+    assert bjt_model.Irb == pytest.approx(5.0e-6)
     assert bjt_model.Ise == pytest.approx(3.0e-13)
     assert bjt_model.Ne == pytest.approx(1.7)
     assert bjt_model.Isc == pytest.approx(4.0e-13)
@@ -2343,7 +2345,7 @@ def test_subcircuit_expansion_preserves_complete_bjt_model():
     cell = SubcircuitDefinition(
         "bjt-cell",
         ("c", "b", "e"),
-        (BJT("Qcell", "c", "b", "e", Xti=2.4, Eg=1.05, Vaf=80.0, Nf=1.2, Nr=1.3, Vje=0.8, Mje=0.4, Vjc=0.7, Mjc=0.45, Fc=0.4, Var=120.0, Ikf=2.0e-3, Ise=3.0e-13, Ne=1.7, Isc=4.0e-13, Nc=1.8, Xtb=1.5, beta_r=0.25, Ikr=3.0e-3, Tnom=323.15, Kf=1.0e-12, Af=1.3, Ptf=30.0, Xtf=2.0, Itf=4.0e-3, Vtf=0.6, Re=12.0, Rc=13.0, Rb=14.0),),
+        (BJT("Qcell", "c", "b", "e", Xti=2.4, Eg=1.05, Vaf=80.0, Nf=1.2, Nr=1.3, Vje=0.8, Mje=0.4, Vjc=0.7, Mjc=0.45, Fc=0.4, Var=120.0, Ikf=2.0e-3, Ise=3.0e-13, Ne=1.7, Isc=4.0e-13, Nc=1.8, Xtb=1.5, beta_r=0.25, Ikr=3.0e-3, Tnom=323.15, Kf=1.0e-12, Af=1.3, Ptf=30.0, Xtf=2.0, Itf=4.0e-3, Vtf=0.6, Re=12.0, Rc=13.0, Rb=14.0, Rbm=2.0, Irb=5.0e-6),),
     )
     circuit = Circuit()
     circuit.define_subcircuit(cell)
@@ -2379,6 +2381,8 @@ def test_subcircuit_expansion_preserves_complete_bjt_model():
     assert expanded.Re == pytest.approx(12.0)
     assert expanded.Rc == pytest.approx(13.0)
     assert expanded.Rb == pytest.approx(14.0)
+    assert expanded.Rbm == pytest.approx(2.0)
+    assert expanded.Irb == pytest.approx(5.0e-6)
 
 
 def test_branch_current_in_voltage_source():
@@ -3619,6 +3623,30 @@ def test_bjt_base_resistance_drops_intrinsic_base_voltage():
 
     intrinsic = dc_op(circuit).node_voltages["__spice_Q1_base"]
     assert 0.0 < intrinsic < 0.65
+
+
+def test_bjt_minimum_base_resistance_reduces_high_current_base_drop():
+    def intrinsic_base(Rbm: float | None, Irb: float) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vcollector", "collector", "0", voltage=5.0))
+        circuit.add(VoltageSource("Vbase", "base", "0", voltage=0.65))
+        circuit.add(
+            BJT(
+                "Q1",
+                "collector",
+                "base",
+                "0",
+                Rb=1_000.0,
+                Rbm=Rbm,
+                Irb=Irb,
+            )
+        )
+        return dc_op(circuit).node_voltages["__spice_Q1_base"]
+
+    fixed = intrinsic_base(None, 0.0)
+    bias_dependent = intrinsic_base(10.0, 1.0e-6)
+    assert bias_dependent > fixed
+    assert bias_dependent < 0.65
 
 
 def test_bjt_npn_beta_ratio():
@@ -7189,6 +7217,26 @@ def test_noise_bjt_base_resistance_adds_thermal_noise() -> None:
 
     assert base_resistance.noise_type == "thermal"
     assert base_resistance.source_psd > 0.0
+
+
+def test_noise_bjt_minimum_base_resistance_increases_high_current_noise() -> None:
+    def source_psd(*, Rbm: float | None = None, Irb: float = 0.0) -> float:
+        circuit = Circuit()
+        circuit.add(VoltageSource("Vbase", "base", "0", 0.65))
+        circuit.add(Resistor("Rload", "out", "0", 1_000.0))
+        circuit.add(BJT("Q1", "out", "base", "0", Rb=100.0, Rbm=Rbm, Irb=Irb))
+
+        result = noise_ac(circuit, "out", "Vbase", freqs=[1_000.0])
+        return next(
+            entry.source_psd
+            for entry in result.points[0].entries
+            if entry.element_name == "Q1:RB"
+        )
+
+    fixed = source_psd()
+    bias_dependent = source_psd(Rbm=10.0, Irb=1.0e-9)
+
+    assert bias_dependent > fixed
 
 
 def test_noise_bjt_kf_adds_inverse_frequency_flicker_noise() -> None:

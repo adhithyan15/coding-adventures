@@ -625,7 +625,13 @@ class BJT:
     Rc:
         Constant external-to-intrinsic collector resistance in Ohms (default 0.0).
     Rb:
-        Constant external-to-intrinsic base resistance in Ohms (default 0.0).
+        Zero-bias external-to-intrinsic base resistance in Ohms (default 0.0).
+    Rbm:
+        Optional minimum high-current base resistance in Ohms. When omitted,
+        it defaults to ``Rb``.
+    Irb:
+        Base current where the resistance is halfway between ``Rb`` and
+        ``Rbm`` (default 0.0, disabled).
     """
 
     name: str
@@ -669,6 +675,8 @@ class BJT:
     Re: float = 0.0            # emitter resistance (ohms)
     Rc: float = 0.0            # collector resistance (ohms)
     Rb: float = 0.0            # base resistance (ohms)
+    Rbm: float | None = None   # minimum base resistance (ohms)
+    Irb: float = 0.0           # base-resistance half-current (A)
 
 
 # ---------------------------------------------------------------------------

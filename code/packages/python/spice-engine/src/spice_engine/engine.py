@@ -605,7 +605,7 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
     if isinstance(element, Mosfet):
         return Mosfet(name, _map_subckt_node(element.drain, instance_name, node_map), _map_subckt_node(element.gate, instance_name, node_map), _map_subckt_node(element.source, instance_name, node_map), _map_subckt_node(element.body, instance_name, node_map), element.model)
     if isinstance(element, BJT):
-        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg, element.Vaf, element.Nf, element.Nr, element.Vje, element.Mje, element.Vjc, element.Mjc, element.Fc, element.Var, element.Ikf, element.Ise, element.Ne, element.Isc, element.Nc, element.Xtb, element.beta_r, element.Ikr, element.Tnom, element.Kf, element.Af, element.Ptf, element.Xtf, element.Itf, element.Vtf, element.Re, element.Rc, element.Rb)
+        return BJT(name, _map_subckt_node(element.collector, instance_name, node_map), _map_subckt_node(element.base, instance_name, node_map), _map_subckt_node(element.emitter, instance_name, node_map), element.polarity, element.Is, element.beta_f, element.Vt, element.Cje, element.Cjc, element.Tf, element.Tr, element.Xti, element.Eg, element.Vaf, element.Nf, element.Nr, element.Vje, element.Mje, element.Vjc, element.Mjc, element.Fc, element.Var, element.Ikf, element.Ise, element.Ne, element.Isc, element.Nc, element.Xtb, element.beta_r, element.Ikr, element.Tnom, element.Kf, element.Af, element.Ptf, element.Xtf, element.Itf, element.Vtf, element.Re, element.Rc, element.Rb, element.Rbm, element.Irb)
     if isinstance(element, VCVS):
         return VCVS(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), _map_subckt_node(element.ctrl_plus, instance_name, node_map), _map_subckt_node(element.ctrl_minus, instance_name, node_map), element.gain)
     if isinstance(element, VCCS):
@@ -9142,6 +9142,62 @@ def _bjt_reverse_base_current(el: BJT, junction_voltage: float) -> tuple[float, 
     )
 
 
+def _bjt_effective_base_resistance(
+    el: BJT,
+    base_voltage: float,
+    emitter_voltage: float,
+    collector_voltage: float,
+) -> float:
+    minimum = el.Rb if el.Rbm is None else el.Rbm
+    if minimum == el.Rb:
+        return el.Rb
+    junction_voltage = (
+        base_voltage - emitter_voltage
+        if el.polarity == "NPN"
+        else emitter_voltage - base_voltage
+    )
+    reverse_voltage = (
+        base_voltage - collector_voltage
+        if el.polarity == "NPN"
+        else collector_voltage - base_voltage
+    )
+    forward_thermal_voltage = el.Vt * el.Nf
+    exp_value = math.exp(
+        max(-40.0, min(40.0, junction_voltage / forward_thermal_voltage))
+    )
+    diffusion_current = el.Is * (exp_value - 1.0)
+    diffusion_conductance = el.Is / forward_thermal_voltage * exp_value
+    output_voltage = (
+        collector_voltage - emitter_voltage
+        if el.polarity == "NPN"
+        else emitter_voltage - collector_voltage
+    )
+    early_factor = _bjt_early_factor(el, junction_voltage, output_voltage)
+    _, _, charge_factor = _bjt_forward_transport(
+        el, diffusion_current, diffusion_conductance, early_factor
+    )
+    leakage_current, _ = _bjt_base_emitter_leakage(el, junction_voltage)
+    collector_leakage_current, _ = _bjt_base_collector_leakage(el, reverse_voltage)
+    reverse_base_current, _ = _bjt_reverse_base_current(el, reverse_voltage)
+    base_current = (
+        diffusion_current / el.beta_f
+        + leakage_current
+        + collector_leakage_current
+        + reverse_base_current
+    )
+    variable_resistance = el.Rb - minimum
+    if el.Irb == 0.0:
+        return minimum + variable_resistance / charge_factor
+    ratio = max(base_current / el.Irb, 1.0e-9)
+    angle = (
+        (-1.0 + math.sqrt(1.0 + 14.59025 * ratio))
+        / (2.4317 * math.sqrt(ratio))
+    )
+    tangent = math.tan(angle)
+    transition = 3.0 * (tangent - angle) / (angle * tangent * tangent)
+    return minimum + variable_resistance * transition
+
+
 def _stamp_bjt(
     G: list[list[float]],
     b: list[float],
@@ -9219,8 +9275,12 @@ def _stamp_bjt(
         el = replace(el, collector=intrinsic_collector, Rc=0.0)
     if el.Rb > 0.0:
         intrinsic_base = _bjt_intrinsic_base_node(el)
-        _stamp_g(G, node_to_idx, el.base, intrinsic_base, 1.0 / el.Rb)
-        el = replace(el, base=intrinsic_base, Rb=0.0)
+        Vb_rb = 0.0 if _is_ground(intrinsic_base) else x[node_to_idx[intrinsic_base]]
+        Ve_rb = 0.0 if _is_ground(el.emitter) else x[node_to_idx[el.emitter]]
+        Vc_rb = 0.0 if _is_ground(el.collector) else x[node_to_idx[el.collector]]
+        base_resistance = _bjt_effective_base_resistance(el, Vb_rb, Ve_rb, Vc_rb)
+        _stamp_g(G, node_to_idx, el.base, intrinsic_base, 1.0 / base_resistance)
+        el = replace(el, base=intrinsic_base, Rb=0.0, Rbm=None, Irb=0.0)
     # --- Resolve node voltages at the current Newton iterate -----------------
     Vb = 0.0 if _is_ground(el.base) else x[node_to_idx[el.base]]
     Ve = 0.0 if _is_ground(el.emitter) else x[node_to_idx[el.emitter]]
@@ -9399,6 +9459,14 @@ def _validate_bjt(el: BJT) -> None:
     if not math.isfinite(el.Rb) or el.Rb < 0.0:
         raise ValueError(
             f"{el.name}: BJT base resistance must be finite and non-negative"
+        )
+    if el.Rbm is not None and (not math.isfinite(el.Rbm) or el.Rbm < 0.0):
+        raise ValueError(
+            f"{el.name}: BJT minimum base resistance must be finite and non-negative"
+        )
+    if not math.isfinite(el.Irb) or el.Irb < 0.0:
+        raise ValueError(
+            f"{el.name}: BJT base-resistance half-current must be finite and non-negative"
         )
     if not math.isfinite(el.Ise) or el.Ise < 0.0:
         raise ValueError(
@@ -12677,14 +12745,28 @@ def _stamp_ac(
             el = replace(el, collector=intrinsic_collector, Rc=0.0)
         if el.Rb > 0.0:
             intrinsic_base = _bjt_intrinsic_base_node(el)
+            Vb_rb = (
+                0.0
+                if _is_ground(intrinsic_base)
+                else dc_x[node_to_idx[intrinsic_base]]
+            )
+            Ve_rb = 0.0 if _is_ground(el.emitter) else dc_x[node_to_idx[el.emitter]]
+            Vc_rb = (
+                0.0
+                if _is_ground(el.collector)
+                else dc_x[node_to_idx[el.collector]]
+            )
+            base_resistance = _bjt_effective_base_resistance(
+                el, Vb_rb, Ve_rb, Vc_rb
+            )
             _stamp_g_c(
                 G,
                 node_to_idx,
                 el.base,
                 intrinsic_base,
-                complex(1.0 / el.Rb),
+                complex(1.0 / base_resistance),
             )
-            el = replace(el, base=intrinsic_base, Rb=0.0)
+            el = replace(el, base=intrinsic_base, Rb=0.0, Rbm=None, Irb=0.0)
         Vc_dc = 0.0 if _is_ground(el.collector) else dc_x[node_to_idx[el.collector]]
         Vb_dc = 0.0 if _is_ground(el.base) else dc_x[node_to_idx[el.base]]
         Ve_dc = 0.0 if _is_ground(el.emitter) else dc_x[node_to_idx[el.emitter]]
@@ -13353,14 +13435,30 @@ def _build_ss_matrix(
                 el = replace(el, collector=intrinsic_collector, Rc=0.0)
             if el.Rb > 0.0:
                 intrinsic_base = _bjt_intrinsic_base_node(el)
+                Vb_rb = (
+                    0.0
+                    if _is_ground(intrinsic_base)
+                    else dc_x[node_to_idx[intrinsic_base]]
+                )
+                Ve_rb = (
+                    0.0 if _is_ground(el.emitter) else dc_x[node_to_idx[el.emitter]]
+                )
+                Vc_rb = (
+                    0.0
+                    if _is_ground(el.collector)
+                    else dc_x[node_to_idx[el.collector]]
+                )
+                base_resistance = _bjt_effective_base_resistance(
+                    el, Vb_rb, Ve_rb, Vc_rb
+                )
                 _stamp_g(
                     G,
                     node_to_idx,
                     el.base,
                     intrinsic_base,
-                    1.0 / el.Rb,
+                    1.0 / base_resistance,
                 )
-                el = replace(el, base=intrinsic_base, Rb=0.0)
+                el = replace(el, base=intrinsic_base, Rb=0.0, Rbm=None, Irb=0.0)
             Vc_dc = 0.0 if _is_ground(el.collector) else dc_x[node_to_idx[el.collector]]
             Vb_dc = 0.0 if _is_ground(el.base) else dc_x[node_to_idx[el.base]]
             Ve_dc = 0.0 if _is_ground(el.emitter) else dc_x[node_to_idx[el.emitter]]
@@ -14290,6 +14388,8 @@ def sens_dc(
                     Re=el.Re,
                     Rc=el.Rc,
                     Rb=el.Rb,
+                    Rbm=el.Rbm,
+                    Irb=el.Irb,
                 ),
             )
             delta_beta = max(abs(el.beta_f) * perturbation, abs_floor)
@@ -14328,6 +14428,8 @@ def sens_dc(
                     Re=el.Re,
                     Rc=el.Rc,
                     Rb=el.Rb,
+                    Rbm=el.Rbm,
+                    Irb=el.Irb,
                 ),
             )
 
@@ -14576,6 +14678,8 @@ def _vary_element(el: Element, tolerance: float, distribution: str) -> Element:
             Re=el.Re,
             Rc=el.Rc,
             Rb=el.Rb,
+            Rbm=el.Rbm,
+            Irb=el.Irb,
         )
 
     # Capacitor, Inductor, Mosfet — no tunable DC parameter; return unchanged.
@@ -15036,15 +15140,31 @@ def _collect_noise_sources(
                 el = replace(el, collector=intrinsic_collector, Rc=0.0)
             if el.Rb > 0.0:
                 intrinsic_base = _bjt_intrinsic_base_node(el)
+                Vb_rb = (
+                    0.0
+                    if _is_ground(intrinsic_base)
+                    else dc_x[node_to_idx[intrinsic_base]]
+                )
+                Ve_rb = (
+                    0.0 if _is_ground(el.emitter) else dc_x[node_to_idx[el.emitter]]
+                )
+                Vc_rb = (
+                    0.0
+                    if _is_ground(el.collector)
+                    else dc_x[node_to_idx[el.collector]]
+                )
+                base_resistance = _bjt_effective_base_resistance(
+                    el, Vb_rb, Ve_rb, Vc_rb
+                )
                 sources.append((
                     f"{el.name}:RB",
                     "thermal",
                     node_to_idx.get(el.base),
                     node_to_idx.get(intrinsic_base),
-                    kT4 / el.Rb,
+                    kT4 / base_resistance,
                     0.0,
                 ))
-                el = replace(el, base=intrinsic_base, Rb=0.0)
+                el = replace(el, base=intrinsic_base, Rb=0.0, Rbm=None, Irb=0.0)
             Vb = 0.0 if _is_ground(el.base) else dc_x[node_to_idx[el.base]]
             Ve = 0.0 if _is_ground(el.emitter) else dc_x[node_to_idx[el.emitter]]
             Vc = 0.0 if _is_ground(el.collector) else dc_x[node_to_idx[el.collector]]

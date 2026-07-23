@@ -1,5 +1,7 @@
 # Changelog
 
+- Add BJT model-card `RBM` and `IRB` support for Berkeley bias-dependent base
+  resistance across DC, AC, transient, transfer-function, and noise analysis.
 - Add BJT model-card `RB` base-resistance support with an intrinsic base node
   in DC, AC, and transient analysis plus thermal noise in noise analysis.
 - Add BJT model-card `RC` collector-resistance support with an intrinsic

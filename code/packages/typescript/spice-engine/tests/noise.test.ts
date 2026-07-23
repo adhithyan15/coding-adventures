@@ -175,6 +175,31 @@ describe("noiseAc", () => {
     expect(baseResistance.sourcePsd).toBeGreaterThan(0.0);
   });
 
+  it("uses minimum BJT base resistance for high-current thermal noise", () => {
+    const sourcePsd = (
+      minimumBaseResistance: number | undefined,
+      baseResistanceHalfCurrent: number,
+    ): number => {
+      const circuit = new Circuit();
+      circuit.add(voltageSource("Vbase", "base", "0", 0.65));
+      circuit.add(resistor("Rload", "out", "0", 1_000.0));
+      circuit.add({
+        ...bjt("Q1", "out", "base", "0"),
+        baseResistance: 100.0,
+        minimumBaseResistance,
+        baseResistanceHalfCurrent,
+      });
+      const result = noiseAc(circuit, "out", "Vbase", [1_000.0]);
+      return result.points[0]!.entries
+        .find((candidate) => candidate.elementName === "Q1:RB")!.sourcePsd;
+    };
+
+    const fixed = sourcePsd(undefined, 0.0);
+    const biasDependent = sourcePsd(10.0, 1.0e-9);
+
+    expect(biasDependent).toBeGreaterThan(fixed);
+  });
+
   it("sorts resistor contributions by output noise", () => {
     const circuit = new Circuit();
     circuit.add(voltageSource("Vin", "in", "0", 1.0));
