@@ -82,14 +82,17 @@ time — see the roadmap): the SIR26 integer conversions (`Conversions`,
 (0.8.0 — `FloatLit` on the v0 `SIR_FLOAT` tag; emitter-only, the runtime
 already carried the float path), `ShortCircuit` (0.9.0 — `LogicalAnd`/
 `LogicalOr` lowered to a truthiness-branch overwrite, reusing the eager
-`and`/`or` builtin lowering; yields the deciding operand), and `DefaultParams`
+`and`/`or` builtin lowering; yields the deciding operand), `DefaultParams`
 (SIR19, 0.10.0 — the `SIR_MISSING` sentinel now exists in the runtime; a
 `DirectCall` pads omitted trailing defaults with `_sir_missing()` and each
-function opens with an `if (_sir_is_missing(p)) { p = <default>; }` prologue).
+function opens with an `if (_sir_is_missing(p)) { p = <default>; }` prologue),
+and `KeywordParams` (SIR19, 0.11.0 — KW6: a `KeywordArg` is resolved to its
+callee's parameter slot BY NAME at emit time, using the thread-local signature
+map's parameter names, producing a plain positional call).
 
 **Still rejects** (clean, source-positioned `UnsupportedFeature`):
 `TailCalls` (C does not guarantee TCO), `Intrinsics` (empty whitelist), and
-every not-yet-landed feature (`KeywordParams`, `NDArrays`,
+every not-yet-landed feature (`NDArrays`,
 `Exceptions`, `Classes`, … — see the roadmap).  `Bignum` stays
 rejected until a bignum runtime ships, so a module that *needs* arbitrary
 precision is refused rather than silently truncated.

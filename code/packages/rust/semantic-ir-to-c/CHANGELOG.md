@@ -1,5 +1,46 @@
 # Changelog
 
+## 0.11.0 — keyword parameters (SIR19)
+
+Accepts `Feature::KeywordParams`, building directly on the `_sir_missing`
+default-parameter machinery (0.10.0). C has no native keyword calls, so — like
+the Go backend's KW6 — a keyword argument is resolved to its callee's parameter
+**slot by name at emit time**, producing a plain positional C call:
+
+- A **keyword parameter** needs NO special signature — it is a positional
+  `SirValue` C parameter like any other. Only the call site resolves by name.
+- A `DirectCall` carrying any `KeywordArg` routes to a dedicated resolver
+  (`emit_keyword_call`) instead of the generic left-to-right hoist. For each
+  callee slot, in declared order, the filler is: the leading positional argument
+  at that index; else the `KeywordArg` naming that parameter; else
+  `_sir_missing()` (an omitted optional — the validator guarantees a required
+  keyword is never left out, and the same default prologue as `DefaultParams`
+  substitutes the default).
+- The thread-local signature map — previously just a per-callee arity for
+  default padding — now stores each callee's **parameter names** in order, so
+  the resolver can place a keyword argument at its slot. (Renamed `ARITY` →
+  `SIGNATURES`; `callee_arity` derives the length, `callee_param_names` the
+  names. Still read only by key, so emission stays deterministic.)
+- Each filler is hoisted into a temp first (matching the statement-oriented
+  emitter), so a compound keyword value (`f(b: g(), a: 10)`) is evaluated
+  exactly once; the temps are computed in slot order, matching Go's
+  declared-order evaluation. The unsupported-builtin pre-check scans a keyword
+  argument's value.
+
+Because a `KeywordArg` argument is non-`is_simple`, a keyword-bearing call is
+always compound → routed through `emit_keyword_call`, so a `KeywordArg` node
+never reaches the generic arg emit or `emit_expr` (where it has no arm). A
+`KeywordArg` outside a call is rejected by the validator before emit.
+
+First of the KeywordParams parity arc's C half: with the Ruby backend (0.9.0),
+`KeywordParams` is now accepted on five of six backends (the Rust backend is a
+separate gap). Verified with hand-built modules compiled and run through a real
+`cc`: a keyword argument binding by name, order-independent resolution (`f(b: 2,
+a: 10)` → `8` for `f(a:, b:) = a - b`), an optional keyword using its default
+when omitted (`f()` → `7` for `f(x: 7)`) and overridden when supplied, a mixed
+positional + keyword call, and a compound keyword value hoisted once. Bumps
+semantic-ir-to-c 0.10.0 → 0.11.0.
+
 ## 0.10.0 — default parameters (SIR19)
 
 Accepts `Feature::DefaultParams`. C has no native default parameters, so — like
