@@ -1,0 +1,1 @@
+function f(){a();b()}x();y();z();cond&&(p(),q());for(;run();)step(),tick();
