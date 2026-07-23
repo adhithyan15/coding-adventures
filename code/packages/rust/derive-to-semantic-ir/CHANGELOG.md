@@ -1,5 +1,67 @@
 # Changelog
 
+## [0.1.4] - 2026-07-22
+
+### Fixed (upstream — `semantic-ir-to-javascript` 0.51.2, not this crate's own lowering)
+
+`semantic-ir-to-javascript`'s SIR23 addendum item 2 (held-form execution
+— `Assign`/`Define`/`If` + user-function dispatch, that crate's own
+`CHANGELOG.md` `[0.51.2]` entry) makes the three `HELD_HEADS` real:
+`Assign` now genuinely binds a name in a shared environment and returns
+the bound value; `Define` now genuinely registers a
+`Define(name, params, body)` record and a later call now genuinely
+dispatches to it (substitute params → args, re-evaluate); `If` now
+genuinely evaluates its condition and selects a branch. This crate's own
+`src/lower.rs` is completely unchanged — every fix here is entirely
+upstream in the shared backend, confirmed by `tests/test_lower.rs`'s ~40
+pre-existing shape assertions still passing unmodified — but 6 more of
+`tests/oracle.rs`'s 38 `known_bug` cases now genuinely agree end-to-end
+(run and confirmed via `cargo test -p derive-to-semantic-ir --test oracle
+-- --nocapture`, not guessed), so their markers flip to `known_bug: None`
+here:
+
+- `variable_assignment_and_later_reference` (`x := 5; x + 1` → `5, 6`) —
+  `Assign` binds `x`, the next statement reads it back, item 1's `Add`
+  folding does the rest.
+- `single_param_function_definition_and_call` (`F(x) := x*x; F(5)` →
+  `F, 25`), `multi_param_function_definition_and_call`
+  (`G(a, b) := a + b; G(3, 4)` → `G, 7`) — `Define` registers the
+  function (displaying its bare name, never the stored record); the
+  call zips params to args by position, substitutes, and re-evaluates.
+- `if_true_branch` (`IF(1 > 0, 42, 0)` → `42`), `if_false_branch`
+  (`IF(1 > 2, 42, 99)` → `99`) — `If` evaluates the (already-comparison-
+  folded, item 1) condition and selects the matching branch.
+- `vector_assignment_persists_across_statements`
+  (`v := [1, 2, 3]; v` → `[1, 2, 3], [1, 2, 3]`) — **not** one of the 5
+  cases the SIR23 addendum's own "Rollout" section named for this item
+  in advance; flipped here because it genuinely passes once `Assign`
+  works (confirmed by running the test, not assumed) — this crate's own
+  `[0.1.3]` entry above already predicted exactly this: "once item 2
+  lands and binds `v` to an actual `List(1,2,3)`, it will already print
+  correctly."
+
+One more case, `a_worksheet_program_defines_then_differentiates`
+(`H(y) := DIF(SIN(t), t); H(0)` → `H, COS(t)`), is now genuinely closer —
+`Define` truly registers `H` and `H(0)` truly dispatches — but still
+disagrees: the substituted body, `D(Sin(t), t)`, still needs `DIF`/`SIN`
+folding (item 3, not part of this PR). It stays `known_bug`, with its
+reason text corrected in place to say so (the ORIGINAL reason, "Define
+never registers H," is no longer true).
+
+The remaining 7 `known_bug` cases (`dif_differentiates_a_power`,
+`dif_of_sin_gives_cos`, `a_worksheet_program_defines_then_differentiates`,
+`int_integrates_a_symbol`, `sin_of_zero`, `cos_of_zero`,
+`sqrt_of_a_perfect_square`) stay `known_bug`, all blocked purely by the
+calculus/elementary-function evaluation gap (item 3, not part of any PR
+so far).
+
+Verified no regression: `cargo test -p derive-to-semantic-ir` (full
+suite, including `tests/oracle.rs`) still passes; a genuine
+revert-and-confirm (temporarily restoring `semantic-ir-to-javascript`'s
+pre-item-2 inert behavior) makes exactly these 6 cases fail again with
+the documented old output, confirming the fix — not just the flag flip —
+is what makes them pass.
+
 ## [0.1.3] - 2026-07-22
 
 ### Fixed (upstream — `semantic-ir-to-javascript` 0.50.0, not this crate's own lowering)

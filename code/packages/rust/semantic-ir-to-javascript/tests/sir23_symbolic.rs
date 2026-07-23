@@ -435,3 +435,250 @@ fn derive_display_on_a_deeply_nested_list_of_lists_truncates_at_the_same_depth_a
         );
     }
 }
+
+// ── SIR23 addendum item 2: held-form execution (Assign/Define/If) +
+// user-function dispatch — see `code/specs/SIR23-symbolic-pattern-
+// semantic-ir.md`'s addendum, "Environment / held-form execution model" /
+// "Function dispatch". These mirror the shape of `derive-to-semantic-ir/
+// tests/oracle.rs`'s own newly-`known_bug: None` cases
+// (`variable_assignment_and_later_reference`,
+// `single_param_function_definition_and_call`,
+// `multi_param_function_definition_and_call`, `if_true_branch`,
+// `if_false_branch`) but hand-build the SIR23 nodes directly (this
+// crate's own established convention, see this file's module doc),
+// rather than routing through `derive-to-semantic-ir`'s lowering.
+
+#[test]
+fn assign_binds_and_reads_back_in_a_later_statement() {
+    // x := 5; x + 1  -- the SAME environment (`symEnv`) is shared across
+    // every top-level statement in one compiled program (one `Symbolic`
+    // IIFE evaluation = one `node` process = one flat session).
+    let stmts = vec![
+        print(sym_apply(
+            sym("Assign"),
+            vec![
+                sym("x"),
+                Expr::IntLit {
+                    value: 5,
+                    span: sp(),
+                },
+            ],
+        )),
+        print(sym_apply(
+            sym("Add"),
+            vec![
+                sym("x"),
+                Expr::IntLit {
+                    value: 1,
+                    span: sp(),
+                },
+            ],
+        )),
+    ];
+    let module = module_with_main(
+        stmts,
+        Expr::IntLit {
+            value: 0,
+            span: sp(),
+        },
+        &[Feature::SymbolicExpr],
+    );
+    if let Some(stdout) = run_module(&module, "sym_assign_read_back") {
+        assert_eq!(stdout, "5\n6");
+    }
+}
+
+#[test]
+fn single_param_define_then_call_dispatches_by_substitution() {
+    // F(x) := x*x; F(5) -- Define echoes the bare name `F` (never the
+    // stored record, `define_handler`'s own documented invariant); the
+    // call zips `params` against the call's (already-evaluated) args by
+    // position, substitutes into `body`, and re-evaluates: x*x -> 5*5 -> 25.
+    let stmts = vec![
+        print(sym_apply(
+            sym("Define"),
+            vec![
+                sym("F"),
+                sym_apply(sym("List"), vec![sym("x")]),
+                sym_apply(sym("Mul"), vec![sym("x"), sym("x")]),
+            ],
+        )),
+        print(sym_apply(
+            sym("F"),
+            vec![Expr::IntLit {
+                value: 5,
+                span: sp(),
+            }],
+        )),
+    ];
+    let module = module_with_main(
+        stmts,
+        Expr::IntLit {
+            value: 0,
+            span: sp(),
+        },
+        &[Feature::SymbolicExpr],
+    );
+    if let Some(stdout) = run_module(&module, "sym_define_call_single_param") {
+        assert_eq!(stdout, "F\n25");
+    }
+}
+
+#[test]
+fn multi_param_define_then_call_dispatches_by_position() {
+    // G(a, b) := a + b; G(3, 4) -- params zipped by POSITION, not name.
+    let stmts = vec![
+        print(sym_apply(
+            sym("Define"),
+            vec![
+                sym("G"),
+                sym_apply(sym("List"), vec![sym("a"), sym("b")]),
+                sym_apply(sym("Add"), vec![sym("a"), sym("b")]),
+            ],
+        )),
+        print(sym_apply(
+            sym("G"),
+            vec![
+                Expr::IntLit {
+                    value: 3,
+                    span: sp(),
+                },
+                Expr::IntLit {
+                    value: 4,
+                    span: sp(),
+                },
+            ],
+        )),
+    ];
+    let module = module_with_main(
+        stmts,
+        Expr::IntLit {
+            value: 0,
+            span: sp(),
+        },
+        &[Feature::SymbolicExpr],
+    );
+    if let Some(stdout) = run_module(&module, "sym_define_call_multi_param") {
+        assert_eq!(stdout, "G\n7");
+    }
+}
+
+#[test]
+fn arity_mismatch_leaves_the_user_function_call_unevaluated() {
+    // F(x) := x*x; F(1, 2) -- a 2-arg call against a 1-param definition:
+    // `apply_user_function`'s `None` return ("arity mismatch") means the
+    // call is left exactly as `evalApply`'s generic "no handler matched"
+    // fallthrough would rebuild it: the evaluated head plus the
+    // evaluated (but otherwise untouched) args, printed via the generic
+    // `head(args, ...)` convention (this module doesn't set
+    // `source_language("derive")`, so `SIR_DISPLAY_DERIVE` is off here).
+    let stmts = vec![
+        print(sym_apply(
+            sym("Define"),
+            vec![
+                sym("F"),
+                sym_apply(sym("List"), vec![sym("x")]),
+                sym_apply(sym("Mul"), vec![sym("x"), sym("x")]),
+            ],
+        )),
+        print(sym_apply(
+            sym("F"),
+            vec![
+                Expr::IntLit {
+                    value: 1,
+                    span: sp(),
+                },
+                Expr::IntLit {
+                    value: 2,
+                    span: sp(),
+                },
+            ],
+        )),
+    ];
+    let module = module_with_main(
+        stmts,
+        Expr::IntLit {
+            value: 0,
+            span: sp(),
+        },
+        &[Feature::SymbolicExpr],
+    );
+    if let Some(stdout) = run_module(&module, "sym_define_call_arity_mismatch") {
+        assert_eq!(stdout, "F\nF(1, 2)");
+    }
+}
+
+#[test]
+fn if_true_and_false_branches_select_the_right_arm() {
+    // IF(1 > 0, 42, 0) -> 42; IF(1 > 2, 42, 99) -> 99 -- `If`'s condition
+    // is evaluated (it's held, so NOT pre-evaluated by `evalApply`'s
+    // argument loop; `ifHandler` evaluates it itself), then branches.
+    let if_of = |cond_gt: (i64, i64), then_v: i64, else_v: i64| {
+        sym_apply(
+            sym("If"),
+            vec![
+                sym_apply(
+                    sym("Greater"),
+                    vec![
+                        Expr::IntLit {
+                            value: cond_gt.0,
+                            span: sp(),
+                        },
+                        Expr::IntLit {
+                            value: cond_gt.1,
+                            span: sp(),
+                        },
+                    ],
+                ),
+                Expr::IntLit {
+                    value: then_v,
+                    span: sp(),
+                },
+                Expr::IntLit {
+                    value: else_v,
+                    span: sp(),
+                },
+            ],
+        )
+    };
+    let stmts = vec![
+        print(if_of((1, 0), 42, 0)),
+        print(if_of((1, 2), 42, 99)),
+    ];
+    let module = module_with_main(
+        stmts,
+        Expr::IntLit {
+            value: 0,
+            span: sp(),
+        },
+        &[Feature::SymbolicExpr],
+    );
+    if let Some(stdout) = run_module(&module, "sym_if_branches") {
+        assert_eq!(stdout, "42\n99");
+    }
+}
+
+#[test]
+fn self_referential_assign_does_not_infinite_loop() {
+    // x := x; x -- the self-loop guard (`eval_symbol`'s own comment:
+    // "x := x would recurse forever without this"). Without the guard,
+    // the SECOND statement's lookup would recurse until `MAX_EVAL_DEPTH`
+    // fires and `Symbolic.unwrap` throws, crashing `node` with a non-zero
+    // exit (caught by `run_module`'s own `output.status.success()`
+    // assertion) -- WITH the guard, both statements return instantly.
+    let stmts = vec![
+        print(sym_apply(sym("Assign"), vec![sym("x"), sym("x")])),
+        print(sym("x")),
+    ];
+    let module = module_with_main(
+        stmts,
+        Expr::IntLit {
+            value: 0,
+            span: sp(),
+        },
+        &[Feature::SymbolicExpr],
+    );
+    if let Some(stdout) = run_module(&module, "sym_self_referential_assign") {
+        assert_eq!(stdout, "x\nx");
+    }
+}

@@ -149,6 +149,39 @@
 //! call out that the display half is now resolved and only the
 //! evaluation half remains.
 //!
+//! ## A third finding: held-form execution (`Assign`/`Define`/`If`) + user-
+//! function dispatch — FIXED by a LATER PR (SIR23 addendum, item 2 of 4)
+//!
+//! The two findings above were written down when only items 1 and 4 had
+//! landed. A later PR lands item 2: `semantic-ir-to-javascript`'s
+//! `Symbolic` IIFE gains a `symEnv` `Map` (one per compiled program's
+//! `node` process, mirroring `symbolic-vm::BaseBackend.env`), real
+//! `Assign`/`Define`/`If` handlers (ported from `handlers.rs`'s
+//! `assign_handler`/`define_handler`/`if_handler`), a `Symbol` self-loop
+//! guard in `evalTerm` (`eval_symbol`'s own "`x := x` would recurse
+//! forever without this"), and user-function dispatch (`vm.rs::
+//! apply_user_function`'s port — zip params against call args by
+//! position, substitute into the body, re-evaluate). See that crate's own
+//! `CHANGELOG.md` for the fix itself.
+//!
+//! This closes the `Assign`/`Define`/`If` half of the "dominant finding"
+//! above for every `CORPUS` entry that needs ONLY that half (not also
+//! `DIF`/`INT`/`SIN`/`COS`/`SQRT`, which stay item 3's job): 6 more cases
+//! flip to `known_bug: None` below — the 5 the SIR23 addendum's own
+//! "Rollout" section named in advance
+//! (`variable_assignment_and_later_reference`,
+//! `single_param_function_definition_and_call`,
+//! `multi_param_function_definition_and_call`, `if_true_branch`,
+//! `if_false_branch`), plus one more confirmed by actually running this
+//! file's own oracle test rather than assumed from that count —
+//! `vector_assignment_persists_across_statements` — which this crate's
+//! own `[0.1.3]` `CHANGELOG.md` entry already predicted would flip "once
+//! item 2 lands." One more case, `a_worksheet_program_defines_then_
+//! differentiates`, is now genuinely closer (`Define` truly registers `H`
+//! and `H(0)` truly dispatches) but still disagrees — the substituted
+//! body still needs `DIF`/`SIN` folding (item 3) — so it stays
+//! `known_bug`, with its reason text corrected to say so.
+//!
 //! ## Corpus
 //!
 //! Mirrors `j-to-semantic-ir/tests/oracle.rs`'s own breadth target,
@@ -164,16 +197,17 @@
 //! fold); vectors and matrices as D-5 structural `List` data (flat,
 //! singleton, elementwise-evaluated, 2×2, and 3-row/1-column shapes); a
 //! free-symbol additive-identity simplification; free-symbol negation and
-//! equation display; and bare integer/float/symbol atoms. As of item 4
-//! (this PR), 25 of the 38 cases are `known_bug: None` — the bare atoms
-//! (never needed evaluation), every case item 1's arithmetic/comparison/
-//! logic folding alone already flipped, and the 7 cases this PR's own
-//! `SIR_DISPLAY_DERIVE` flips (`negation_of_a_free_symbol`,
+//! equation display; and bare integer/float/symbol atoms. As of item 2
+//! (the latest-landed PR), 31 of the 38 cases are `known_bug: None` — the
+//! bare atoms (never needed evaluation), every case item 1's arithmetic/
+//! comparison/logic folding alone already flipped, the 7 cases item 4's
+//! `SIR_DISPLAY_DERIVE` flipped (`negation_of_a_free_symbol`,
 //! `equation_with_a_free_variable_stays_symbolic`, the three flat/
-//! elementwise `List` cases, and the two matrix cases). The remaining 13
-//! stay `known_bug`, all blocked purely by the held-form/calculus
-//! evaluation gap (items 2/3, not part of this PR) — see each entry's own
-//! `known_bug` reason.
+//! elementwise `List` cases, and the two matrix cases), and the 6 cases
+//! item 2's held-form execution + user-function dispatch flips (see "A
+//! third finding" above). The remaining 7 stay `known_bug`, all blocked
+//! purely by the calculus/elementary-function evaluation gap (item 3, not
+//! part of any PR so far) — see each entry's own `known_bug` reason.
 
 use std::fs::OpenOptions;
 use std::io::Write as _;
@@ -343,24 +377,30 @@ const CORPUS: &[Case] = &[
         name: "variable_assignment_and_later_reference",
         source: "x := 5\nx + 1\n",
         expected: "5\n6",
-        known_bug: Some(
-            "Evaluation gap (module doc): Assign is a HELD form on the ground-truth side (binds x, \
-             displays its value, 5); the compiled side's Assign(x, 5) is inert data -- no binding \
-             ever happens -- so the SECOND statement's x is never substituted: it compiles to a bare \
-             Add(x, 1) term, still referencing the raw, unbound symbol x, never 6.",
-        ),
+        // Flipped by the SIR23 addendum's item 2 (`semantic-ir-to-
+        // javascript`'s `symEnv` + `assignHandler`): `Assign` now really
+        // binds `x` in the shared environment and returns the bound
+        // value, so the SECOND statement's `x` resolves to `5` before
+        // `Add` folds `5 + 1` to `6` (item 1's own arithmetic folding,
+        // unchanged, does the rest).
+        known_bug: None,
     },
     Case {
         name: "vector_assignment_persists_across_statements",
         source: "v := [1, 2, 3]\nv\n",
         expected: "[1, 2, 3]\n[1, 2, 3]",
-        known_bug: Some(
-            "Evaluation gap ONLY now (module doc; display half fixed by item 4): the compiled side's \
-             Assign still never binds v (item 2, not part of this PR), so the second statement still \
-             compiles to the bare, still-unbound symbol v, not the list -- once item 2 lands and binds \
-             v to an actual List(1,2,3), it will already print correctly as \"[1, 2, 3]\" via this PR's \
-             own SIR_DISPLAY_DERIVE List bracket convention.",
-        ),
+        // Flipped by item 2 -- NOT listed in the SIR23 addendum's own
+        // "Rollout" section's item 2 bullet (which names only 5 cases),
+        // but verified here to flip as a genuine, confirmed side effect:
+        // `Assign` now binds `v` to an actual `List(1, 2, 3)` term (this
+        // crate's own [0.1.3] `CHANGELOG.md` entry predicted exactly
+        // this: "once item 2 lands and binds v to an actual List(1,2,3),
+        // it will already print correctly"), and item 4's own
+        // `SIR_DISPLAY_DERIVE` bracket convention (already shipped)
+        // renders it as "[1, 2, 3]" with no further work needed. Run and
+        // confirmed via `cargo test -p derive-to-semantic-ir --test
+        // oracle -- --nocapture`, not assumed from the addendum's count.
+        known_bug: None,
     },
 
     // --- User-defined functions: definition echoes the bare name (MA07
@@ -370,21 +410,27 @@ const CORPUS: &[Case] = &[
         name: "single_param_function_definition_and_call",
         source: "F(x) := x*x\nF(5)\n",
         expected: "F\n25",
-        known_bug: Some(
-            "Evaluation gap (module doc): Define is a HELD form on the ground-truth side (registers \
-             F, displays its bare name, \"F\"); the compiled side's Define(...) is inert data -- no \
-             registration ever happens -- so the SECOND statement compiles to a bare, never-\
-             dispatched F(5) call term, not 25.",
-        ),
+        // Flipped by item 2: `Define` now stores the whole `Define(F,
+        // List(x), Mul(x, x))` record under `F` and returns the bare
+        // `Symbol("F")` (never the record itself, so `F` displays as
+        // itself, matching the ground-truth worksheet echo); `F(5)`'s
+        // user-function dispatch zips `x -> 5`, substitutes into the
+        // body (`substituteSymbols`, a bare-symbol port of
+        // `symbolic-vm::vm::substitute`, not a reuse of the pattern-
+        // matching engine's `substituteTerm` -- see that function's own
+        // doc comment in `runtime.rs`), and re-evaluates `Mul(5, 5)` to
+        // `25` via item 1's already-shipped `Mul` folding.
+        known_bug: None,
     },
     Case {
         name: "multi_param_function_definition_and_call",
         source: "G(a, b) := a + b\nG(3, 4)\n",
         expected: "G\n7",
-        known_bug: Some(
-            "Evaluation gap (module doc): same root cause as single_param_function_definition_and_\
-             call -- Define never registers G, so G(3, 4) never dispatches to 7.",
-        ),
+        // Flipped by item 2 -- same mechanism as
+        // single_param_function_definition_and_call, params zipped by
+        // POSITION (`a -> 3, b -> 4`), substituted into `Add(a, b)`, and
+        // re-evaluated to `7`.
+        known_bug: None,
     },
 
     // --- DIF / INT: the shared calculus handlers (D-4, MA07 §2/§5). ---
@@ -421,8 +467,16 @@ const CORPUS: &[Case] = &[
         source: "H(y) := DIF(SIN(t), t)\nH(0)\n",
         expected: "H\nCOS(t)",
         known_bug: Some(
-            "Evaluation gap (module doc): Define never registers H, so H(0) never dispatches and \
-             never differentiates -- it compiles to a bare, never-called H(0) term.",
+            "Evaluation gap ONLY now (module doc; the Define/dispatch half is fixed by item 2): \
+             Define now genuinely registers H and H(0) now genuinely dispatches -- substituting \
+             y -> 0 into the body, which never mentions y, so substitution is a no-op -- but the \
+             substituted body, D(Sin(t), t), still never differentiates (item 3, not part of this \
+             PR): it compiles to and evaluates as the still-unevaluated term D(Sin(t), t), not \
+             COS(t). Confirmed by direct inspection: this is no longer \"H(0) never dispatches\" \
+             (the ORIGINAL reason this case was written down for) -- it is now purely the same \
+             DIF/SIN calculus gap dif_of_sin_gives_cos documents, once item 3 lands and folds \
+             D(Sin(t), t) to Cos(t), this PR's own SIR_DISPLAY_DERIVE case-bridge will already \
+             render it as \"COS(t)\".",
         ),
     },
     Case {
@@ -442,20 +496,19 @@ const CORPUS: &[Case] = &[
         name: "if_true_branch",
         source: "IF(1 > 0, 42, 0)\n",
         expected: "42",
-        known_bug: Some(
-            "Evaluation gap (module doc): compiles to a bare If(Greater(1, 0), 42, 0) term -- IF is \
-             a HELD form on the ground-truth side (evaluates the condition, then selects a branch); \
-             the compiled side never evaluates the condition or selects anything.",
-        ),
+        // Flipped by item 2 (`ifHandler`): the condition `Greater(1, 0)`
+        // is evaluated (item 1's comparison folding, unchanged) to the
+        // `True` symbol, which now genuinely selects and evaluates the
+        // 2nd arg (`42`) instead of leaving the whole `If(...)` term inert.
+        known_bug: None,
     },
     Case {
         name: "if_false_branch",
         source: "IF(1 > 2, 42, 99)\n",
         expected: "99",
-        known_bug: Some(
-            "Evaluation gap (module doc): same root cause as if_true_branch -- compiles to a bare \
-             If(Greater(1, 2), 42, 99) term, never selects a branch.",
-        ),
+        // Flipped by item 2 -- same mechanism as if_true_branch, the
+        // condition folds to `False`, selecting the 3-arg form's 3rd arg.
+        known_bug: None,
     },
 
     // --- Comparisons: fold to the symbol True/False on the ground-truth

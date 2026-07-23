@@ -402,14 +402,35 @@ one `BaseBackend` instance per `VM`):
   local scope reaches `SymbolicBackend` today — those are exactly the
   decorator-layer extensions named out of scope above), so one flat `Map`
   is a faithful, not a simplified, port of `BaseBackend.env`.
-- **Genuine, one-place reuse**: user-function dispatch (below) needs
-  "substitute these parameter names for these argument terms in this body,"
-  which is *exactly* what `substituteTerm` (already in the `Symbolic` IIFE,
-  built for `SymRule` RHS substitution) already does — the same helper,
-  called with a plain `name → term` bindings `Map` instead of a pattern-
-  match `Bindings` result. This is the one real piece of code-sharing
-  between the rewrite engine and the new evaluator; everything else is
-  deliberately separate per the architecture decision above.
+- **Correction (found during item 2's implementation, not during this
+  addendum's original research): NOT a reuse of `substituteTerm`.** This
+  bullet originally claimed user-function dispatch's "substitute these
+  parameter names for these argument terms in this body" need was
+  *exactly* what `substituteTerm` (already in the `Symbolic` IIFE, built
+  for `SymRule` RHS substitution) already does, callable unchanged with a
+  plain `name → term` bindings `Map` instead of a pattern-match
+  `Bindings` result. That assumption doesn't survive contact with the
+  actual data shapes: `substituteTerm` only substitutes at
+  `Pattern(name, inner)`-wrapped template nodes (the shape a `SymRule`'s
+  RHS uses to reference a bound pattern variable — confirmed by this
+  crate's own `tests/sir23_symbolic.rs`, whose rules always reuse the
+  literal same `Pattern`-wrapped node on both a rule's `lhs` and `rhs`),
+  while a `Define(name, List(params...), body)`'s `body` references its
+  parameters as ORDINARY bare `Symbol` nodes — confirmed directly in
+  `derive-to-semantic-ir::lower`'s own module doc ("never constructs
+  `SymPatternBlank`/`SymPatternNamed`/..."): `F(x) := x*x` lowers to a
+  body with no `Pattern`-wrapping anywhere. Calling `substituteTerm` on
+  such a body substitutes nothing at all — a silent no-op, not a loud
+  failure. The actual implementation (`semantic-ir-to-javascript`
+  `[0.51.2]`) instead adds `substituteSymbols`, a new, from-scratch port
+  of `symbolic-vm::vm::substitute` (the free function
+  `apply_user_function` itself calls, distinct from the `Handler`/
+  `Backend` machinery) — match a bare `Symbol` directly against
+  `bindings`, recurse into `head`/`args`, pass every literal through
+  unchanged. `substituteTerm` is unmodified and remains exactly what it
+  was: the pattern-rewrite engine's own RHS substitution, a genuinely
+  separate piece of code from the evaluator, same as everything else per
+  the architecture decision above.
 
 ### Function dispatch
 
@@ -418,8 +439,12 @@ Ports `vm.rs::VM::apply_user_function` exactly: on `Apply(head, args)` where
 env; if the stored value is a `Define(name, List(params...), body)` term,
 zip the (already-evaluated, applicative-order) `args` against `params` by
 position (arity mismatch → leave the call unevaluated, matching the Rust
-port's `None` return), build a `name → arg` bindings map, `substituteTerm`
-it into `body`, and recursively `evalTerm` the result — mirroring `apply_user_function`'s "substitute, then the VM's caller re-evaluates" contract exactly (`vm.rs` line ~144: `if let Some(node) = result { return self.eval(node); }`).
+port's `None` return), build a `name → arg` bindings map, `substituteSymbols`
+it into `body` (**not** `substituteTerm` — see the correction in
+"Environment / held-form execution model" above), and recursively
+`evalTerm` the result — mirroring `apply_user_function`'s "substitute,
+then the VM's caller re-evaluates" contract exactly (`vm.rs` line ~144:
+`if let Some(node) = result { return self.eval(node); }`).
 
 Note for implementers: neither `symbolic-vm::apply_user_function` nor this
 port has any recursion-depth guard specific to *user-function* calls — a
@@ -584,6 +609,16 @@ with any other in-flight PR in that crate (mirrors `sir-display-convention.md`'s
 own "sequenced to avoid contended crates" rollout wisdom). No other crate
 changes.
 
+**Status**: item 1 shipped (`semantic-ir-to-javascript` `[0.49.0]`), item 2
+shipped (`[0.51.2]`), item 4 shipped out of order, ahead of item 2
+(`[0.50.0]`) — item 4 has no code dependency on items 1–3, only a
+same-file merge sequencing concern, so shipping it before item 2 was
+always a legal ordering per this section's own dependency notes below.
+Item 3 (calculus/elementary-function handlers) has not shipped yet. See
+each item's own bullet below for what actually landed vs. what was
+originally planned, and each shipped item's own crate `CHANGELOG.md` for
+the authoritative detail.
+
 1. **`Symbolic.evalTerm` scaffold + arithmetic/comparison/logic folding.**
    The foundational PR: the recursive `evalTerm` dispatcher, the `emit.rs`
    `Stmt::ExprStmt` wrapping change, the `MAX_EVAL_DEPTH` guard (with its own
@@ -598,16 +633,32 @@ changes.
    `power_is_right_associative`, `inexact_division_folds_to_a_rational`,
    `comparison_true`, `three_term_and_chain_folds_n_ary` — the existing
    `toDisplayString` already renders a bare integer/rational/`True`/`False`
-   symbol correctly, so no display work is needed for these).
+   symbol correctly, so no display work is needed for these). **Shipped.**
 2. **Held-form execution: environment + `Assign`/`Define`/`If` + user-
    function dispatch.** Adds the `Map`-backed environment, the three held-
-   form handlers, the self-loop guard, and `apply_user_function`'s port
-   (reusing `substituteTerm`). **Depends on item 1's scaffold** (same
-   dispatch table/`HELD_HEADS` set), independent of item 3. Flips 5 more
-   cumulative cases (`variable_assignment_and_later_reference`,
+   form handlers, the self-loop guard, and `apply_user_function`'s port.
+   **Depends on item 1's scaffold** (same dispatch table/`HELD_HEADS`
+   set), independent of item 3. **Shipped** — flipped 6 cumulative cases,
+   not the 5 originally predicted here:
+   `variable_assignment_and_later_reference`,
    `single_param_function_definition_and_call`,
    `multi_param_function_definition_and_call`, `if_true_branch`,
-   `if_false_branch`).
+   `if_false_branch`, plus `vector_assignment_persists_across_statements`
+   (not named here in advance, but confirmed to flip by actually running
+   the oracle suite — see `derive-to-semantic-ir/CHANGELOG.md`'s `[0.1.4]`
+   entry). **One correction to this bullet's own original plan**: the
+   user-function-body substitution does NOT reuse `substituteTerm` as
+   this section originally said it would (see "Genuine, one-place reuse"
+   above) — `substituteTerm` only rewrites `Pattern(name, inner)`-wrapped
+   template nodes (the `SymRule`-RHS shape), while a `Define`'s body
+   references its parameters as ordinary bare `Symbol` nodes, so
+   `substituteTerm` would silently substitute nothing. A new function,
+   `substituteSymbols` (a direct, from-scratch port of
+   `symbolic-vm::vm::substitute`), does this instead — see
+   `runtime.rs`'s own doc comment on `substituteSymbols` for the full
+   explanation. This is the one place this rollout's own design research
+   turned out to be wrong; every other point in "Environment / held-form
+   execution model" and "Function dispatch" above ported as described.
 3. **Calculus/elementary-function handlers**, scoped exactly to the table
    above (not the full `symbolic-vm` polynomial/special-function surface).
    **Depends on item 1's scaffold**; independent of item 2 except for one
