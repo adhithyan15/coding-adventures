@@ -609,15 +609,18 @@ with any other in-flight PR in that crate (mirrors `sir-display-convention.md`'s
 own "sequenced to avoid contended crates" rollout wisdom). No other crate
 changes.
 
-**Status**: item 1 shipped (`semantic-ir-to-javascript` `[0.49.0]`), item 2
-shipped (`[0.51.2]`), item 4 shipped out of order, ahead of item 2
-(`[0.50.0]`) — item 4 has no code dependency on items 1–3, only a
+**Status**: all four items now shipped — item 1 (`semantic-ir-to-javascript`
+`[0.49.0]`), item 2 (`[0.51.2]`), item 4 shipped out of order, ahead of
+item 2 (`[0.50.0]`) — item 4 has no code dependency on items 1–3, only a
 same-file merge sequencing concern, so shipping it before item 2 was
-always a legal ordering per this section's own dependency notes below.
-Item 3 (calculus/elementary-function handlers) has not shipped yet. See
-each item's own bullet below for what actually landed vs. what was
-originally planned, and each shipped item's own crate `CHANGELOG.md` for
-the authoritative detail.
+always a legal ordering per this section's own dependency notes below —
+and item 3, calculus/elementary-function handlers, LAST (`[0.51.3]`). This
+closes the 4-item rollout: `derive-to-semantic-ir/tests/oracle.rs`'s full
+38-case corpus is `known_bug: None` end to end, with no case needing a new
+corpus entry, exactly as this rollout's own "Verification strategy"
+section (below) anticipated. See each item's own bullet below for what
+actually landed vs. what was originally planned, and each shipped item's
+own crate `CHANGELOG.md` for the authoritative detail.
 
 1. **`Symbolic.evalTerm` scaffold + arithmetic/comparison/logic folding.**
    The foundational PR: the recursive `evalTerm` dispatcher, the `emit.rs`
@@ -662,11 +665,28 @@ the authoritative detail.
 3. **Calculus/elementary-function handlers**, scoped exactly to the table
    above (not the full `symbolic-vm` polynomial/special-function surface).
    **Depends on item 1's scaffold**; independent of item 2 except for one
-   shared oracle case. Flips 3 more cases outright
-   (`sin_of_zero`/`cos_of_zero`/`sqrt_of_a_perfect_square`, whose folded
-   results are plain integers needing no display work); the `DIF`/`INT`
-   cases whose folded results are still compound terms (`Mul(2, x)`, etc.)
-   wait on item 4.
+   shared oracle case. **Shipped** — flipped all 7 remaining cases, not
+   "3 outright, the rest waiting on item 4" as originally predicted here:
+   by the time this item landed, item 4 (Derive's own display convention)
+   had already shipped out of order (see "Status" above), so the 4
+   `DIF`/`INT` cases whose folded results are compound terms
+   (`dif_differentiates_a_power`, `dif_of_sin_gives_cos`,
+   `a_worksheet_program_defines_then_differentiates`,
+   `int_integrates_a_symbol`) flip in the SAME PR as the 3 plain-integer
+   cases (`sin_of_zero`/`cos_of_zero`/`sqrt_of_a_perfect_square`), rather
+   than in a later one. **One scope correction, found and verified during
+   this item's own implementation, not assumed from this table's own
+   prose**: `D`'s port implements only the base cases, `Pow`'s
+   constant-exponent power rule, and `Sin`'s chain rule — NOT the "sum ...
+   rule" this table's own "Scope" cell above mentions (`Add`/`Sub`
+   differentiation), because neither of the two currently-failing `DIF`
+   oracle cases actually differentiates a sum (confirmed by reading each
+   case's own `source` directly); `Integrate`'s port implements only the
+   bare-symbol case, matching this table's own "a bare symbol" wording
+   exactly (the constant-integral case, `∫c dx = c*x`, was never
+   exercised either). See `semantic-ir-to-javascript`'s own `CHANGELOG.md`
+   `[0.51.3]` entry and `runtime.rs`'s `diffTerm`/`integrateTerm` doc
+   comments for the full detail.
 4. **Derive's own SIR23 display convention** (infix/prefix/bracket/case-
    bridging, scoped to Derive only, per "Scope boundary" above). **No code
    dependency on items 1–3** (touches only `toDisplayString`, a different
@@ -698,11 +718,13 @@ already assert the *correct*, fully-evaluated `expected` value on the
 ground-truth side, deliberately anticipating this fix (see `oracle.rs`'s own
 `Case::known_bug` doc comment: `Some(reason)` names "which documented
 shared-crate gap ... is responsible," implying the natural next step is
-removing entries from this list, not writing new ones). After all four
-rollout items land, all 38 cases should read `known_bug: None`; if any case
-still disagrees, that is either a genuinely new bug (fix it) or evidence
-this addendum's own scoping was wrong somewhere above (revisit the relevant
-section, don't force the corpus to match a broken assumption).
+removing entries from this list, not writing new ones). **Confirmed, not
+just predicted**: now that all four rollout items have landed, all 38
+cases read `known_bug: None` — no case disagreed, so no scoping revisit
+was needed beyond the two corrections item 2 and item 3 each already
+documented in their own bullets above (both found during implementation
+and verified against the actual failing cases, not assumed from this
+addendum's own original prose).
 
 Beyond Derive: this rollout, once landed, is what makes it *possible* for
 each of the other four Stream B frontends to get their own `tests/

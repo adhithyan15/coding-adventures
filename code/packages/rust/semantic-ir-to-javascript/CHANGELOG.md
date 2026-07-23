@@ -1,5 +1,154 @@
 # Changelog
 
+## 0.51.3 — calculus / elementary-function handlers: `Sin`/`Cos`/`Sqrt`/`D`/`Integrate` (SIR23 addendum, item 3 of 4)
+
+Item 3 of the 4-item rollout described by `SIR23-symbolic-pattern-
+semantic-ir.md`'s own "Addendum — SIR23 symbolic evaluator + per-language
+display convention" section — the LAST item this rollout needed;
+`derive-to-semantic-ir/tests/oracle.rs`'s 38-case corpus is now fully
+`known_bug: None`. Items 1 (`[0.49.0]`) and 2 (`[0.51.2]`) wired up
+arithmetic/comparison/logic folding and held-form execution but left
+`Sin`/`Cos`/`Sqrt`/`D`/`Integrate` as inert term constructors — `SIN(0)`
+stayed `Sin(0)`, `DIF(x^2, x)` stayed `D(Pow(x, 2), x)`, never folding or
+differentiating. This item makes them real, scoped exactly to what the
+SIR23 addendum's own canonical head→evaluator table and
+`derive-to-semantic-ir`'s remaining `known_bug` cases need — deliberately
+NOT the full `symbolic-vm` calculus/elementary-function surface (see
+"Scope" below).
+
+### Added
+
+- **`runtime.rs`: `sinHandler`/`cosHandler`/`sqrtHandler`**, registered in
+  the existing `HANDLERS` map (ordinary arg-evaluated heads, not held
+  forms). Direct ports of `handlers.rs::{sin_handler, cos_handler,
+  sqrt_handler}`'s numeric-argument branch ONLY: `to_numeric(arg)`
+  succeeds → compute, special-casing an exact zero/perfect-square result
+  so it stays an exact integer term (`Sqrt(4) -> 2`, not `2.0`) — mirrors
+  `handlers.rs`'s own exact-`Numeric::Int` variant checks, not a generic
+  "numerically zero" test. Deliberately does NOT port the π-multiple
+  exact-value tables, odd/even symmetry rewrites (`sin(-x) = -sin(x)`),
+  arc-cancellation rewrites (`sin(asin(x)) = x`), `Sqrt`'s `x^{2k}`
+  even-power split, or the `simplify == false` `panic!` branch — confirmed
+  by reading `derive-runtime`/`reduce-runtime`/`maple-runtime`'s own
+  `src/lib.rs` that all three construct `SymbolicBackend::new()`
+  unchanged, which always builds its handler table with `simplify: true`,
+  so a non-numeric argument (a free symbol) is never a panic for any of
+  these five frontends — it passes through unevaluated, the same
+  arg-evaluated pass-through every other unrecognised shape in this
+  dispatcher already uses.
+- **`runtime.rs`: `derivativeHandler`/`integrateHandler`** (`D`/
+  `Integrate`), also registered in `HANDLERS` — confirmed these are NOT
+  held heads (`HELD_HEADS` stays `{"Assign", "Define", "If"}`, unchanged),
+  since their arguments are ordinary values to differentiate/integrate,
+  not held syntax. Both need `depth` — the ONE thing distinguishing them
+  from every other `HANDLERS` entry — to re-`evalTerm` their
+  differentiated/integrated result through the same depth-checked path
+  everything else in this dispatcher uses (mirroring
+  `differentiate`/`integrate_expr`'s own "return as-is if unchanged,
+  otherwise hand back to the VM's evaluator" policy exactly, via
+  `termEquals`). `evalApply`'s handler-dispatch call site now passes
+  `depth` to every `HANDLERS` entry (additive — every other handler
+  ignores the extra argument).
+- **`runtime.rs`: `diffTerm`/`diffPowTerm`/`chainRuleTerm`/`dependsOnVar`**
+  — a narrow, deliberately-partial port of `handlers.rs::{diff, diff_pow,
+  chain, depends_on}`, restricted to EXACTLY the match arms
+  `derive-to-semantic-ir/tests/oracle.rs`'s 4 currently-`known_bug` DIF/INT
+  cases exercise (confirmed by reading each case's own `source`/`expected`
+  directly, not assumed from the spec's own prose summary): base-case
+  symbol/constant checks, `Pow`'s constant-exponent power rule, and `Sin`'s
+  chain rule (producing `Cos`). Neither currently-failing case
+  differentiates a sum, so `Add`/`Sub` are NOT ported here, contrary to
+  what the spec addendum's own prose ("sum, power, and chain rules")
+  might suggest — verified directly, not guessed. Every other
+  differentiation rule the Rust reference implements (`Mul`/`Div`
+  product/quotient rule, `Tan`/`Exp`/`Log`/`Sqrt`/`Asin`/`Acos`/`Sinh`/
+  `Cosh`/`Tanh`/`Asinh`/`Acosh`/`Atanh`/`Coth`/`Sech`/`Csch`
+  differentiation, `diff_pow`'s other two branches) is likewise NOT
+  ported: an unhandled shape falls through to the exact same "leave it as
+  an unevaluated `D(f, x)` term" default the Rust reference's own final
+  match arm already uses — a strict subset, never a divergence, for any
+  input this port doesn't implement. Like `substituteSymbols` (item 2),
+  these are pure SOURCE-tree walks bounded by the compiled program's own
+  static nesting, not runtime data, so they need no `MAX_EVAL_DEPTH`/
+  `MAX_TERM_DEPTH` guard of their own — only the final re-evaluation of
+  the differentiated result goes through the depth-checked path.
+- **`runtime.rs`: `integrateTerm`** — likewise a narrow port of
+  `handlers.rs::integrate`, restricted to the bare-symbol case (`∫x dx =
+  (1/2)x^2`, an exact `Rational(1, 2)` term, never a float) — the ONLY
+  shape `int_integrates_a_symbol` (the one currently-failing `Integrate`
+  case) exercises, and exactly what the SIR23 addendum's own canonical
+  head→evaluator table scopes `Integrate` to ("a bare symbol"). The Rust
+  reference's `!depends_on(f, x)` constant-integral branch (`∫c dx =
+  c*x`) is deliberately NOT ported either, for the same reason.
+- **`tests/sir23_symbolic.rs`: 6 new integration tests**
+  (`elementary_function_identity_folds_are_exact_integers`,
+  `sin_of_a_free_symbol_stays_unevaluated`,
+  `differentiate_a_power_via_the_power_rule`,
+  `differentiate_sin_via_the_chain_rule`, `integrate_a_bare_symbol`,
+  `differentiate_of_a_runtime_built_deep_term_stays_bounded_instead_of_
+  crashing_node` — see "Security review" below), hand-building the SIR23
+  nodes directly and running the result through an actual `node` process,
+  mirroring this file's own established convention.
+- Every change here is **additive only**: the existing `HANDLERS` map's
+  item-1/item-2 entries, `HELD_HEADS`/`HELD_HANDLERS`, `MAX_EVAL_DEPTH`,
+  and the pattern-matching engine are all unchanged. Confirmed no
+  regression: this crate's own full test suite (271 tests) and every
+  downstream Stream B frontend's (`derive-to-semantic-ir`,
+  `reduce-to-semantic-ir`, `maple-to-semantic-ir`, `wolfram-to-semantic-ir`,
+  `macsyma-to-semantic-ir`, `maxima-to-semantic-ir`) still pass unchanged.
+  Also confirmed via a genuine revert-and-confirm: temporarily removing
+  the 5 new `HANDLERS` entries (`Sin`/`Cos`/`Sqrt`/`D`/`Integrate`) makes
+  exactly the 7 newly-passing `derive-to-semantic-ir` oracle cases (and
+  the 5 matching new unit tests above) fail again, with the OLD inert
+  output (`"DIF(x^2, x)"`, `"SIN(0)"`, etc.) — restoring the change makes
+  them pass again.
+- **`derive-to-semantic-ir/tests/oracle.rs`**: the remaining 7 cases flip
+  from `known_bug: Some(...)` to `known_bug: None` —
+  `dif_differentiates_a_power`, `dif_of_sin_gives_cos`,
+  `a_worksheet_program_defines_then_differentiates`,
+  `int_integrates_a_symbol`, `sin_of_zero`, `cos_of_zero`,
+  `sqrt_of_a_perfect_square` — closing the corpus at 38/38
+  `known_bug: None`. See that crate's own `CHANGELOG.md`.
+
+### Fixed
+
+- **A `/security-review`-relevant regression this PR's own first draft
+  introduced and caught before landing**: `oop_dispatch_is_map_keyed_not_
+  reflection`'s `!RUNTIME.contains("eval(")` guard (asserting no dynamic-
+  code-execution gadget appears anywhere in the embedded runtime source,
+  comments included) false-positived on a doc comment quoting the Rust
+  reference's own `vm.eval(result)` call. Reworded the comment to
+  describe the policy in prose instead of quoting Rust syntax containing
+  the literal substring `eval(` — no functional change, no actual
+  dynamic-code-execution gadget was ever added.
+
+### Security review
+
+`/security-review` flagged (LOW severity) that `diffTerm`/`integrateTerm`
+recurse over `D`/`Integrate`'s first argument with no `depth` cap of their
+own, unlike `termEquals`/`toDisplayString` — and, unlike `substituteSymbols`
+(item 2), that argument is an ordinary EVALUATED value, not always a
+source-literal `Define` body, so in principle it could resolve to an
+arbitrarily deep RUNTIME-constructed term (the same "shallow compiled
+program, deep runtime value" concern already documented for
+`toDisplayString`). Investigated rather than dismissed OR reflexively
+patched: confirmed this is NOT actually reachable, because every value
+`evalApply` ever hands to a `HANDLERS` entry has already survived
+`evalTerm`'s own applicative-order argument evaluation — which costs one
+recursive frame per `Apply` level regardless of head, so it already hits
+the existing `MAX_EVAL_DEPTH` cap (a HEAVIER per-frame cost than
+`diffTerm`'s own walk) before `f` can ever reach a handler at all. Verified
+empirically, not just argued: a new test,
+`differentiate_of_a_runtime_built_deep_term_stays_bounded_instead_of_
+crashing_node` (`tests/sir23_symbolic.rs`), builds a term 1,000
+`Symbolic.apply` levels deep via a real runtime loop and confirms it
+differentiates correctly with `node` exiting cleanly, with no additional
+cap in `diffTerm`/`integrateTerm` at all — adding one would be unreachable
+defensive complexity given this call graph. See `diffTerm`'s own SECURITY
+doc comment in `runtime.rs` for the full reasoning and the caveat that a
+future change routing an unevaluated term into these functions from
+somewhere else would need to re-verify it.
+
 ## 0.51.2 — held-form execution: `Assign`/`Define`/`If` + user-function dispatch (SIR23 addendum, item 2 of 4)
 
 Item 2 of the 4-item rollout described by `SIR23-symbolic-pattern-

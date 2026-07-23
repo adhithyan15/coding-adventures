@@ -1,6 +1,6 @@
 [package]
 name = "derive-to-semantic-ir"
-version = "0.1.4"
+version = "0.1.5"
 edition = "2021"
 description = "Derive CST → narrow-waist Semantic IR (SIR23 symbolic/pattern domain, Stream B). Third frontend to target SIR23, sibling to wolfram-to-semantic-ir and macsyma-to-semantic-ir."
 
