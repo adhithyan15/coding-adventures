@@ -119,7 +119,7 @@ Ch. 2 plan the roadmap already set out.
     **т** (t, ← Greek tau); **completes every letter of привет** (п·р·и·в·е·т), so
     the learner can hand-write their first Russian word end to end.
 - Stroke data is the canonical `data/scripts/cyrillic.json` the companion
-  `script-writing-visualizer` app renders, so the lessons and the app agree.
+  `language-ladder` app renders, so the lessons and the app agree.
 
 ### Notes
 - Headwords use the lowercase citation form (Cyrillic case is not yet in the

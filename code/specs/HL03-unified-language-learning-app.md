@@ -3,7 +3,7 @@
 ## Overview
 
 There should be **one** app, not a scatter of separate tools. Earlier work
-produced a `script-writing-visualizer` with four disconnected modes
+produced a `script-writing-visualizer` (now renamed `language-ladder`) with four disconnected modes
 (Browse / Practice / Lessons / Concepts) plus a handful of standalone
 exploratory artifacts (a script field-guide, a spot-the-script quiz, a
 letter-reading trainer). Each was useful in isolation and wrong as an
@@ -155,7 +155,7 @@ The one genuinely new subsystem.
 
 ## Architecture — reuse, don't rebuild
 
-The engine largely exists in `code/programs/typescript/script-writing-visualizer/src`:
+The engine largely exists in `code/programs/typescript/language-ladder/src`:
 
 - `lessons.ts` — reads the written `.md` curriculum (chapter order,
   `prerequisites`). The spine.
@@ -171,8 +171,8 @@ What must be built: a **language-chain / sequencing** layer (the ordered chain +
 the per-concept sweep), a **session orchestrator** that walks a concept across
 the chain and surfaces connections, the **randomised cumulative quiz** over the
 covered (concept × language) grid, the **mistakes** store, and a UI that
-presents one flow instead of four modes. The app is **renamed** away from
-"script-writing-visualizer" to reflect what it now is.
+presents one flow instead of four modes. The app has been **renamed** from
+`script-writing-visualizer` to **`language-ladder`** to reflect what it now is.
 
 ## Scope and phasing
 
