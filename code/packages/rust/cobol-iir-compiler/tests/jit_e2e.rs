@@ -491,6 +491,157 @@ fn evaluate_on_an_alphanumeric_subject() {
     assert_eq!(eval("Z", by_range), "REST\n"); // above the range
 }
 
+// ---------------------------------------------------------------------------
+// EVALUATE with a MIXED numeric↔alphanumeric subject/WHEN. Each subject-vs-WHEN
+// comparison now reuses `emit_operand_relation` — the same dispatch an
+// `IF subject <relop> value` relation uses — so EVALUATE inherits IF's full
+// category handling (unsigned / signed / scaled digit images, figuratives, ZERO
+// routing) and its deferral set by construction. Every case is byte-identical to
+// the oracle, whose `subject_in_when` already routes through `compare_operands`.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn evaluate_numeric_subject_alphanumeric_when() {
+    // A numeric subject vs an alphanumeric WHEN value: N PIC 9(3)=42 → digit image
+    // "042". WHEN "042" matches; WHEN "42" space-pads to "42 " ('0' < '4') → no
+    // match — the same byte rule `IF N = "042"` uses.
+    let eval = |body: &[&str]| assert_matches_oracle(&wrap(&["01  N  PIC 9(3) VALUE 42."], body));
+    assert_eq!(
+        eval(&[
+            "EVALUATE N",
+            "WHEN \"042\" DISPLAY \"HIT\"",
+            "WHEN OTHER DISPLAY \"MISS\"",
+            "END-EVALUATE.",
+            "STOP RUN.",
+        ]),
+        "HIT\n"
+    );
+    assert_eq!(
+        eval(&[
+            "EVALUATE N",
+            "WHEN \"42\" DISPLAY \"HIT\"",
+            "WHEN OTHER DISPLAY \"MISS\"",
+            "END-EVALUATE.",
+            "STOP RUN.",
+        ]),
+        "MISS\n"
+    );
+}
+
+#[test]
+fn evaluate_signed_numeric_subject_alphanumeric_when() {
+    // A SIGNED numeric subject compares by its overpunched image: PIC S9(3) = -123
+    // → magnitude "123" with the negative sign folded into the units digit → "12L".
+    // WHEN "12L" matches; the positive image "12C" does not.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC S9(3) VALUE -123."],
+        &[
+            "EVALUATE S",
+            "WHEN \"12L\" DISPLAY \"NEG\"",
+            "WHEN \"12C\" DISPLAY \"POS\"",
+            "WHEN OTHER DISPLAY \"MISS\"",
+            "END-EVALUATE.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "NEG\n");
+}
+
+#[test]
+fn evaluate_scaled_numeric_subject_alphanumeric_when() {
+    // A scaled subject uses its (int + frac) digit image — no decimal point:
+    // PIC 9(2)V9 = 4.2 → "042", so `WHEN "042"` matches.
+    let out = assert_matches_oracle(&wrap(
+        &["01  F  PIC 9(2)V9 VALUE 4.2."],
+        &[
+            "EVALUATE F",
+            "WHEN \"042\" DISPLAY \"HIT\"",
+            "WHEN OTHER DISPLAY \"MISS\"",
+            "END-EVALUATE.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "HIT\n");
+}
+
+#[test]
+fn evaluate_scaled_numeric_subject_numeric_when_stays_numeric() {
+    // Regression: a scaled numeric subject vs a scaled numeric WHEN value stays a
+    // NUMERIC comparison with scale alignment — PIC 9(2)V9 = 4.2 matches WHEN 4.2.
+    let out = assert_matches_oracle(&wrap(
+        &["01  F  PIC 9(2)V9 VALUE 4.2."],
+        &[
+            "EVALUATE F",
+            "WHEN 4.1 DISPLAY \"LO\"",
+            "WHEN 4.2 DISPLAY \"HIT\"",
+            "WHEN OTHER DISPLAY \"MISS\"",
+            "END-EVALUATE.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "HIT\n");
+}
+
+#[test]
+fn evaluate_mixed_thru_range() {
+    // A THRU range with alphanumeric bounds against a numeric subject: N=42 →
+    // "042"; the byte-lexical range "040" THRU "045" contains it → match. N=50 →
+    // "050" is above "045" → no match.
+    let eval = |val: &str, body: &[&str]| {
+        assert_matches_oracle(&wrap(&[&format!("01  N  PIC 9(3) VALUE {val}.")], body))
+    };
+    let body = &[
+        "EVALUATE N",
+        "WHEN \"040\" THRU \"045\" DISPLAY \"IN\"",
+        "WHEN OTHER DISPLAY \"OUT\"",
+        "END-EVALUATE.",
+        "STOP RUN.",
+    ];
+    assert_eq!(eval("42", body), "IN\n");
+    assert_eq!(eval("50", body), "OUT\n");
+}
+
+#[test]
+fn evaluate_numeric_subject_when_zero_stays_numeric() {
+    // WHEN ZERO against a numeric subject stays a NUMERIC comparison (inherited
+    // ZERO routing) — N=0 matches numerically, not via the mixed digit-image path.
+    let out = assert_matches_oracle(&wrap(
+        &["01  N  PIC 9(3) VALUE 0."],
+        &[
+            "EVALUATE N",
+            "WHEN ZERO DISPLAY \"Z\"",
+            "WHEN OTHER DISPLAY \"NZ\"",
+            "END-EVALUATE.",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "Z\n");
+}
+
+#[test]
+fn evaluate_alpha_subject_numeric_literal_when_is_a_later_rung() {
+    // An alphanumeric subject vs a numeric-LITERAL WHEN value is a *different*
+    // pairing (numeric literal vs alphanumeric) — deferred and rejected IDENTICALLY
+    // by both engines: the oracle's `compare_operands` errors on the numeric literal
+    // and the compiler's `num_digit_str_operand` rejects it, exactly as the IF
+    // relation defers it.
+    let src = wrap(
+        &["01  G  PIC X(3) VALUE \"042\"."],
+        &[
+            "EVALUATE G",
+            "WHEN 42 DISPLAY \"HIT\"",
+            "WHEN OTHER DISPLAY \"MISS\"",
+            "END-EVALUATE.",
+            "STOP RUN.",
+        ],
+    );
+    assert!(run_cobol(&src).is_err(), "oracle must reject a numeric-literal WHEN vs alpha subject");
+    assert!(
+        compile_source(&src, "e2e").is_err(),
+        "compiler must reject a numeric-literal WHEN vs alpha subject"
+    );
+}
+
 #[test]
 fn if_compound_condition_mixing_condition_names() {
     // A level-88 condition-name combined with a relation via AND/OR.

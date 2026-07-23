@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.39.0 — EVALUATE mixed numeric↔alphanumeric subject/WHEN (parity milestone)
+
+- No behaviour change on this engine: `subject_in_when` already routes every
+  `EVALUATE` subject-vs-`WHEN` comparison through `compare_operands`, which handles a
+  mixed numeric↔alphanumeric pair (unsigned / signed / scaled, figuratives,
+  `ZERO`-numeric) exactly as an `IF` relation does — and rejects the same deferred
+  shapes (a numeric-literal-vs-alphanumeric pairing, a group operand). So
+  `EVALUATE NUM WHEN "042"` was already answered here.
+- This release records the parity milestone: `cobol-iir-compiler` 0.35.0 now compiles
+  the mixed `EVALUATE` (previously a reject) by reusing the same relation dispatch its
+  `IF` uses, closing a reject-vs-answer gate divergence — the compiler rejected what
+  this oracle answered.
+- New oracle regression tests pin the mixed EVALUATE: a numeric subject vs an
+  alphanumeric `WHEN` matches its digit image (`WHEN "042"` hits, `WHEN "42"` does
+  not), and an alphanumeric subject vs a numeric-literal `WHEN` is a clean error —
+  the same deferral the compiler applies.
+
 ## 0.38.0 — figurative-vs-figurative comparison (parity milestone)
 
 - No behaviour change on this engine: `compare_operands` already resolved a

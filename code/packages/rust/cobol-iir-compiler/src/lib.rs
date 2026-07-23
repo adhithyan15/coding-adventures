@@ -755,13 +755,6 @@ impl<'a> Compiler<'a> {
     fn emit_evaluate(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
         let subject_node = child_node(verb, "operand")
             .ok_or_else(|| CompileError::Malformed("EVALUATE without a subject".into()))?;
-        // Classify the subject: `Some` = a character value (matched with `str_cmp`),
-        // `None` = numeric (matched with the scaled `cmp_*` path).
-        let subject_str = self.str_operand(subject_node)?;
-        let subject_num = match &subject_str {
-            Some(_) => None,
-            None => Some(self.read_arith_term(subject_node)?),
-        };
         let end_lbl = self.fresh("eval_end");
         for wb in child_nodes(verb, "when_branch") {
             let is_other = child_tokens(wb).iter().any(|(k, v)| k == "KEYWORD" && v == "OTHER");
@@ -773,10 +766,7 @@ impl<'a> Compiler<'a> {
                 self.emit("jmp", None, vec![Operand::Var(end_lbl.clone())], "void");
                 continue;
             }
-            let cond = match &subject_str {
-                Some(s) => self.emit_when_match_str(s.clone(), wb)?,
-                None => self.emit_when_match(subject_num.as_ref().unwrap(), wb)?,
-            };
+            let cond = self.emit_when_match(subject_node, wb)?;
             let next_lbl = self.fresh("when_next");
             self.emit("jmp_if_false", None, vec![Operand::Var(cond), Operand::Var(next_lbl.clone())], "void");
             for s in stmts {
@@ -789,24 +779,24 @@ impl<'a> Compiler<'a> {
         Ok(())
     }
 
-    /// Emit a boolean register that is true when the subject matches any value in a
-    /// `when_branch`'s list: a single value → `cmp_eq(subject, value)`; a `THRU`
-    /// range → `and(cmp_ge(subject, lo), cmp_le(subject, hi))`; the whole list
-    /// `OR`-folds. Comparisons align the subject and each value to a common scale.
-    fn emit_when_match(&mut self, subject: &Term, wb: &GrammarASTNode) -> Result<String, CompileError> {
+    /// Emit a boolean register that is true when the EVALUATE subject matches any
+    /// value in a `when_branch`'s list. Each subject-vs-value comparison is routed
+    /// through [`Self::emit_operand_relation`] — the *same* category dispatch an
+    /// `IF subject <relop> value` relation uses — so EVALUATE inherits IF's full
+    /// category handling (numeric, alphanumeric, and mixed numeric↔alphanumeric
+    /// with unsigned/signed/scaled images, figuratives, and ZERO routing) and its
+    /// deferral set by construction. A single value `[v]` is `cmp_eq(subject, v)`;
+    /// a `THRU` range `[lo, hi]` is `and(cmp_ge(subject, lo), cmp_le(subject, hi))`;
+    /// the whole value-list `OR`-folds.
+    fn emit_when_match(&mut self, subject: &GrammarASTNode, wb: &GrammarASTNode) -> Result<String, CompileError> {
         let mut acc: Option<String> = None;
         for wv in child_nodes(wb, "when_value") {
             let ops = child_nodes(wv, "operand");
             let b = match ops.as_slice() {
-                [one] => {
-                    let value = self.read_arith_term(one)?;
-                    self.emit_scaled_cmp("cmp_eq", subject, &value)
-                }
+                [one] => self.emit_operand_relation(subject, one, "cmp_eq")?,
                 [lo, hi] => {
-                    let lo = self.read_arith_term(lo)?;
-                    let hi = self.read_arith_term(hi)?;
-                    let ge = self.emit_scaled_cmp("cmp_ge", subject, &lo);
-                    let le = self.emit_scaled_cmp("cmp_le", subject, &hi);
+                    let ge = self.emit_operand_relation(subject, lo, "cmp_ge")?;
+                    let le = self.emit_operand_relation(subject, hi, "cmp_le")?;
                     let r = self.fresh("_wrng");
                     self.emit("and", Some(&r), vec![Operand::Var(ge), Operand::Var(le)], "i64");
                     r
@@ -823,64 +813,6 @@ impl<'a> Compiler<'a> {
             });
         }
         acc.ok_or_else(|| CompileError::Malformed("WHEN without a value".into()))
-    }
-
-    /// Emit `op(left, right)` (a `cmp_*`) with both terms taken to a common scale,
-    /// returning the boolean register.
-    fn emit_scaled_cmp(&mut self, op: &str, left: &Term, right: &Term) -> String {
-        let w = self.term_scale(left).max(self.term_scale(right));
-        let a = self.emit_term_at_scale(left, w);
-        let b = self.emit_term_at_scale(right, w);
-        let out = self.fresh("_wcmp");
-        self.emit(op, Some(&out), vec![a, b], "i64");
-        out
-    }
-
-    /// Like [`Self::emit_when_match`], but for an **alphanumeric** subject: each
-    /// value is compared with `str_cmp` (space-padded, [`Self::emit_str_condition`])
-    /// — a single value is `cmp_eq`, a `THRU` range is `and(cmp_ge, cmp_le)` — and
-    /// the value-list `OR`-folds. A numeric `WHEN` value against a character subject
-    /// is a later rung (matching a relation's numeric-vs-alphanumeric deferral).
-    fn emit_when_match_str(&mut self, subject: StrOperand, wb: &GrammarASTNode) -> Result<String, CompileError> {
-        let mut acc: Option<String> = None;
-        for wv in child_nodes(wb, "when_value") {
-            let ops = child_nodes(wv, "operand");
-            let b = match ops.as_slice() {
-                [one] => {
-                    let value = self.str_value(one)?;
-                    self.emit_str_condition(subject.clone(), value, "cmp_eq")?
-                }
-                [lo, hi] => {
-                    let lo = self.str_value(lo)?;
-                    let hi = self.str_value(hi)?;
-                    let ge = self.emit_str_condition(subject.clone(), lo, "cmp_ge")?;
-                    let le = self.emit_str_condition(subject.clone(), hi, "cmp_le")?;
-                    let r = self.fresh("_wrng");
-                    self.emit("and", Some(&r), vec![Operand::Var(ge), Operand::Var(le)], "i64");
-                    r
-                }
-                _ => return Err(CompileError::Malformed("a WHEN value must be `operand` or `operand THRU operand`".into())),
-            };
-            acc = Some(match acc {
-                None => b,
-                Some(prev) => {
-                    let r = self.fresh("_wor");
-                    self.emit("or", Some(&r), vec![Operand::Var(prev), Operand::Var(b)], "i64");
-                    r
-                }
-            });
-        }
-        acc.ok_or_else(|| CompileError::Malformed("WHEN without a value".into()))
-    }
-
-    /// A `WHEN` value as a [`StrOperand`] for an alphanumeric `EVALUATE`. A numeric
-    /// value against a character subject is a later rung.
-    fn str_value(&mut self, op: &GrammarASTNode) -> Result<StrOperand, CompileError> {
-        self.str_operand(op)?.ok_or_else(|| {
-            CompileError::Unsupported(
-                "a numeric WHEN value against an alphanumeric EVALUATE subject is a later rung".into(),
-            )
-        })
     }
 
     /// `MOVE src-item TO recv-item` for two **character** items — reshape the
@@ -2389,11 +2321,26 @@ impl<'a> Compiler<'a> {
             return Err(CompileError::Malformed("relation must be operand relop operand".into()));
         }
         let op = self.relation_op(relation)?;
+        self.emit_operand_relation(operands[0], operands[1], op)
+    }
 
+    /// The category-dispatching core of a two-operand relation, shared by `IF`
+    /// relations ([`Self::emit_relation`]) and `EVALUATE`'s per-WHEN comparison
+    /// ([`Self::emit_when_match`]). Given the two operand grammar nodes and a
+    /// `cmp_*` op string, classify each side and route the comparison so that an
+    /// `EVALUATE subject WHEN value` comparison is byte-identical to `IF subject
+    /// <relop> value` for every category pair (including mixed
+    /// numeric↔alphanumeric). Returns the boolean `i64` condition register.
+    fn emit_operand_relation(
+        &mut self,
+        left: &GrammarASTNode,
+        right: &GrammarASTNode,
+        op: &str,
+    ) -> Result<String, CompileError> {
         // Classify each operand: `None` = numeric (literal / numeric item / a
         // numeric figurative), `Some` = a character value.
-        let ls = self.str_operand(operands[0])?;
-        let rs = self.str_operand(operands[1])?;
+        let ls = self.str_operand(left)?;
+        let rs = self.str_operand(right)?;
         // The `ZERO` figurative is NUMERIC when paired with a numeric operand
         // (matching the oracle, whose mixed-comparison gate excludes `Fig::Zero`
         // and numeric-compares `Num` vs `Fig::Zero`): `numeric = ZERO` is the
@@ -2410,8 +2357,8 @@ impl<'a> Compiler<'a> {
                 | (Some(StrOperand::Fig('0')), None)
         );
         if numeric_relation {
-            let left = self.read_arith_term(operands[0])?;
-            let right = self.read_arith_term(operands[1])?;
+            let left = self.read_arith_term(left)?;
+            let right = self.read_arith_term(right)?;
             let w = self.term_scale(&left).max(self.term_scale(&right));
             let a = self.emit_term_at_scale(&left, w);
             let b = self.emit_term_at_scale(&right, w);
@@ -2427,11 +2374,11 @@ impl<'a> Compiler<'a> {
             // (preserving left→right operand order). Only an unsigned-integer
             // numeric item is modelled; every other numeric shape is a later rung.
             (None, Some(b)) => {
-                let a = self.num_digit_str_operand(operands[0])?;
+                let a = self.num_digit_str_operand(left)?;
                 self.emit_str_condition(a, b, op)
             }
             (Some(a), None) => {
-                let b = self.num_digit_str_operand(operands[1])?;
+                let b = self.num_digit_str_operand(right)?;
                 self.emit_str_condition(a, b, op)
             }
         }
