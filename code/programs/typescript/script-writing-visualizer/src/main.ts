@@ -32,7 +32,14 @@ import {
 } from "./scheduler.ts";
 import { buildPool, type PoolEntry } from "./interleave.ts";
 import { loadLessons, indicesByLanguage, nextDue } from "./lessons.ts";
-import { planSession } from "./sessionplan.ts";
+import {
+  planSession,
+  initProgress,
+  applyAnswer,
+  type Progress,
+} from "./sessionplan.ts";
+import { pickNext as pickReviewCell, makeRng, cellKey, type GridCell } from "./quiz.ts";
+import { confusions } from "./mistakes.ts";
 import {
   sweepableConcepts,
   activeChain,
@@ -102,6 +109,32 @@ const CONCEPT_LESSONS = LESSONS.filter((l) => !CONSOLIDATION_TYPES.has(l.type));
 // by any active language, in the order the book first introduces them. Constant
 // for the page's lifetime (the curriculum does not change while it is open).
 const CONCEPT_SPINE = sweepableConcepts(CONCEPT_LESSONS, activeChain(ACTIVE_COUNT));
+
+// --- the Learn-mode review quiz (HL03 phase 6, slice 6b-2) ------------------
+//
+// The second of the app's two mechanisms. The teaching sweep (6b-1) walks the
+// curriculum forward; this quizzes BACKWARD over everything covered so far — a
+// randomised, SRS-weighted draw across the (concept × language) grid, so what
+// you keep missing resurfaces and what you have mastered fades. The draw and the
+// state math live in the tested engine (quiz.ts `pickNext`, sessionplan.ts
+// `applyAnswer`); this only presents a question and threads the answer back.
+//
+// A cell is asked as "<meaning> — in <language>?" and the options are the SAME
+// concept in OTHER languages (plus the answer): the cross-language look-alikes
+// the interleaving is meant to expose (mixing up merci and mercy, dhanya across
+// the Dravidian languages). The confusion the learner actually makes — which
+// wrong word they picked — is logged and surfaced in "what I keep confusing".
+// (Option count reuses the practice-mode OPTION_COUNT, defined below.)
+//
+// Look up a lesson's word by its cell so a logged confusion (stored as a cellKey)
+// can be shown as the actual word, not an opaque id.
+const LESSON_BY_ID = new Map(LESSONS.map((l) => [l.id, l]));
+let reviewProgress: Progress = initProgress();
+let reviewSession = 0; // advances once per answered question — the SRS clock
+let reviewCell: GridCell | null = null; // the question currently on screen
+let reviewOptions: GridCell[] = []; // its answer options (one is `reviewCell`)
+let reviewChosen: string | null = null; // cellKey of the picked option; null = unanswered
+
 // Constant for the page's lifetime: lesson indices grouped by language, and the
 // round-robin pool over those groups. Computing them once is why consecutive
 // reviews can walk across languages cheaply.
@@ -600,6 +633,7 @@ function renderLearnNav(): HTMLElement {
   prev.onclick = () => {
     if (conceptCursor > 0) {
       conceptCursor -= 1;
+      reviewCell = null; // covered set changed — draw the next review from it
       render();
     }
   };
@@ -609,6 +643,7 @@ function renderLearnNav(): HTMLElement {
   next.onclick = () => {
     if (conceptCursor < CONCEPT_SPINE.length - 1) {
       conceptCursor += 1;
+      reviewCell = null; // covered set changed — draw the next review from it
       render();
     }
   };
@@ -664,6 +699,190 @@ function renderLearn(): HTMLElement {
   }
 
   wrap.appendChild(renderLearnNav());
+
+  // The review pass: a cumulative, SRS-weighted quiz over everything covered so
+  // far (this concept and all before it). `plan.reviewGrid` is exactly that grid.
+  wrap.appendChild(renderReview(plan.reviewGrid));
+  return wrap;
+}
+
+// --- learn mode — the review quiz -------------------------------------------
+
+/** A deterministic Fisher–Yates shuffle driven by a seeded rng (pure of Math.random). */
+function shuffleWith<T>(items: T[], rng: () => number): T[] {
+  const a = items.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [a[i], a[j]] = [a[j]!, a[i]!];
+  }
+  return a;
+}
+
+/**
+ * Draw the next review question from the covered grid.
+ *
+ * The cell is chosen by the engine's SRS-weighted `pickNext` (missed/overdue
+ * cells rise, mastered ones sink). The options are the SAME concept in other
+ * languages — the cross-language look-alikes worth confusing — plus the answer;
+ * if a concept lives in only one language, the remaining slots are filled from
+ * elsewhere in the grid so there is always a real choice.
+ */
+function nextReviewQuestion(grid: GridCell[]): void {
+  reviewChosen = null;
+  // A fresh rng seeded by the SRS clock: the draw varies as the learner
+  // progresses yet stays reproducible for a given state.
+  const rng = makeRng(reviewSession * 2654435761 + 1);
+  const cell = pickReviewCell(grid, reviewProgress.states, reviewSession, rng);
+  reviewCell = cell;
+  if (!cell) {
+    reviewOptions = [];
+    return;
+  }
+
+  const byLang = new Map<string, GridCell>();
+  for (const c of grid) {
+    if (c.concept === cell.concept && !byLang.has(c.language)) byLang.set(c.language, c);
+  }
+  byLang.set(cell.language, cell); // the exact drawn lesson stands for its language
+
+  // Distractors must be distinct from the answer AND from each other by their
+  // SURFACE WORD, not just by cell — sibling languages sometimes share a
+  // byte-identical form for a concept (the Latin-script chain especially), and
+  // two identical-looking buttons where only one counts is an unfair question.
+  const seenWords = new Set<string>([cell.lesson.headword]);
+  const distractors: GridCell[] = [];
+  const take = (c: GridCell): void => {
+    if (distractors.length >= OPTION_COUNT - 1) return;
+    if (seenWords.has(c.lesson.headword)) return;
+    distractors.push(c);
+    seenWords.add(c.lesson.headword);
+  };
+
+  // First choice: the same concept in other languages — the cross-language
+  // look-alikes the interleaving targets.
+  for (const c of shuffleWith([...byLang.values()].filter((c) => c !== cell), rng)) take(c);
+  // Fallback: fill any remaining slots from the rest of the grid, so a concept
+  // taught in only one language still yields a real choice.
+  if (distractors.length < OPTION_COUNT - 1) {
+    for (const c of shuffleWith(grid, rng)) take(c);
+  }
+  reviewOptions = shuffleWith([...distractors, cell], rng);
+}
+
+/** Capitalize a chain-language name for display ("hindi" → "Hindi"). */
+function capitalize(s: string): string {
+  return s.length === 0 ? s : s[0]!.toUpperCase() + s.slice(1);
+}
+
+/** Resolve a logged cellKey back to its actual word, for the confusions panel. */
+function wordForKey(key: string): string {
+  try {
+    const [, language, id] = JSON.parse(key) as [string, string, string];
+    const lesson = LESSON_BY_ID.get(id);
+    return lesson ? `${lesson.headword} (${language})` : key;
+  } catch {
+    return key;
+  }
+}
+
+/** The "what I keep confusing" panel — grounded in answers actually recorded. */
+function renderConfusions(): HTMLElement | null {
+  const conf = confusions(reviewProgress.log);
+  if (conf.length === 0) return null;
+  const box = el("div", "confusions");
+  const h = el("h4", "confusions__title");
+  h.textContent = "What you keep confusing";
+  box.appendChild(h);
+  const list = el("ul", "confusions__list");
+  for (const c of conf.slice(0, 6)) {
+    const li = el("li", "");
+    li.textContent =
+      `Picked ${wordForKey(c.chosen)} for ${wordForKey(c.correct)}` +
+      (c.count > 1 ? ` · ×${c.count}` : "");
+    list.appendChild(li);
+  }
+  box.appendChild(list);
+  return box;
+}
+
+function renderReview(grid: GridCell[]): HTMLElement {
+  const wrap = el("div", "review");
+  const title = el("h3", "review__title");
+  title.textContent = "Review — everything so far";
+  wrap.appendChild(title);
+
+  if (grid.length === 0) {
+    const empty = el("p", "muted");
+    empty.textContent = "Nothing to review yet — keep walking the concepts.";
+    wrap.appendChild(empty);
+    return wrap;
+  }
+
+  // Draw lazily: a null cell means "need a fresh question" (first entry, after
+  // Next, or after the covered set changed when the concept cursor moved).
+  if (!reviewCell) nextReviewQuestion(grid);
+  const cell = reviewCell;
+  if (!cell) return wrap; // grid non-empty, so this is unreachable, but keeps TS happy
+
+  const stat = el("p", "score");
+  const conceptCount = new Set(grid.map((c) => c.concept)).size;
+  stat.textContent =
+    `${grid.length} items · ${conceptCount} concept${conceptCount === 1 ? "" : "s"}` +
+    ` · ${reviewProgress.log.length} answered`;
+  wrap.appendChild(stat);
+
+  const prompt = el("div", "prompt");
+  const label = el("div", "prompt__label");
+  label.textContent = `“${cell.lesson.gloss}” — in ${capitalize(cell.language)}?`;
+  prompt.appendChild(label);
+  wrap.appendChild(prompt);
+
+  const answerKey = cellKey(cell);
+  const opts = el("div", "options");
+  for (const opt of reviewOptions) {
+    const k = cellKey(opt);
+    const b = el("button", "option") as HTMLButtonElement;
+    b.textContent = opt.lesson.headword;
+    b.title = opt.language;
+    if (reviewChosen !== null) {
+      b.disabled = true;
+      if (k === answerKey) b.classList.add("option--correct");
+      else if (k === reviewChosen) b.classList.add("option--wrong");
+    }
+    b.onclick = () => {
+      if (reviewChosen !== null) return; // already answered
+      reviewChosen = k;
+      const correct = k === answerKey;
+      // Thread the answer through the engine: promote on a hit, demote + log the
+      // confusion (which wrong word was picked) on a miss; advance the SRS clock.
+      reviewProgress = applyAnswer(reviewProgress, cell, correct, reviewSession, correct ? undefined : k);
+      reviewSession += 1;
+      render();
+    };
+    opts.appendChild(b);
+  }
+  wrap.appendChild(opts);
+
+  if (reviewChosen !== null) {
+    const correct = reviewChosen === answerKey;
+    const reveal = el("div", "reveal");
+    const verdict = el("div", "reveal__verdict " + (correct ? "ok" : "no"));
+    verdict.textContent = correct
+      ? "✓ Correct"
+      : `✗ ${capitalize(cell.language)} for “${cell.lesson.gloss}” is ${cell.lesson.headword}`;
+    reveal.appendChild(verdict);
+    const next = el("button", "next") as HTMLButtonElement;
+    next.textContent = "Next →";
+    next.onclick = () => {
+      reviewCell = null; // force a fresh draw from the current covered grid
+      render();
+    };
+    reveal.appendChild(next);
+    wrap.appendChild(reveal);
+  }
+
+  const conf = renderConfusions();
+  if (conf) wrap.appendChild(conf);
   return wrap;
 }
 

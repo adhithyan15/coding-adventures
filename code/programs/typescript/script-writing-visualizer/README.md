@@ -19,8 +19,17 @@ own script, its etymology hook, and the **connections back** to earlier
 languages that share a root, so the cross-language memory the interleaving is
 meant to build is made visible rather than left implicit. Prev / Next walk the
 spine; consolidation lessons (`practice`/`review`) are left to the review quiz,
-not the teaching sweep. The review pass (`pickNext`/`applyAnswer`) is the next
-slice.
+not the teaching sweep.
+
+Below the sweep sits the **review pass** — the second mechanism. A randomised,
+SRS-weighted quiz draws over everything covered so far (`plan.reviewGrid`, the
+concept×language grid up to the cursor), leaning on what you keep missing
+(`pickNext`). Each question is *"‹meaning› — in ‹language›?"* with options drawn
+from the **same concept in other languages** — the cross-language look-alikes
+the interleaving targets (Telugu ధన్యవాద vs Hindi धन्यवाद). Answers thread
+through `applyAnswer` (promote a hit, demote + log a miss), and a *"what you keep
+confusing"* panel rolls the mistakes up from `confusions(log)`. Progress lives in
+memory for now; persistence is a later slice.
 
 ## Concepts mode
 

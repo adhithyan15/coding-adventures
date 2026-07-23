@@ -310,3 +310,41 @@ body {
 }
 .learn__nav .opt:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
 .learn__nav .opt:disabled { opacity: 0.4; cursor: default; }
+
+/* --- learn mode — the review quiz --------------------------------------- */
+.review {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 2px solid var(--line);
+}
+.review__title {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  margin: 0 0 10px;
+}
+/* .prompt / .options / .option / .reveal / .next are shared with practice mode. */
+.review .prompt__label { font-size: 1.15rem; font-weight: 600; color: var(--ink); }
+.review .options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+.confusions {
+  margin-top: 18px;
+  padding: 12px 14px;
+  background: var(--ff-bg);
+  border: 1px solid #f0d9c8;
+  border-radius: 8px;
+}
+.confusions__title {
+  margin: 0 0 8px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ff);
+}
+.confusions__list { margin: 0; padding-left: 18px; }
+.confusions__list li { font-size: 0.9rem; line-height: 1.6; }
