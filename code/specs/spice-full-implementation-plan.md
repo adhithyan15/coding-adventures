@@ -33,15 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language legacy BJT leakage ratios.
+1. Cross-language diode series resistance.
    - Status: current PR completion candidate.
-   - Add legacy SPICE2 BJT `C2` and `C4` model-card support in Rust, Python,
-     and TypeScript.
-   - Derive base-emitter `ISE` as `C2 * IS` and base-collector `ISC` as
-     `C4 * IS` only when the corresponding explicit leakage current is absent.
-   - Preserve existing behavior by default, extend the supported-parameter
-     coverage gate from 136 to 140 canonical rows, and lock normalization,
-     derivation, and explicit-current precedence in all engines.
+   - Add Berkeley diode `RS` model-card support in Rust, Python, and TypeScript,
+     defaulting to zero and inserting an intrinsic anode behind the configured
+     external series resistance.
+   - Keep DC, transient, AC, transfer-function, hierarchy, temperature, and
+     noise paths on the shared topology, including resistor thermal noise.
+   - Extend the supported-parameter coverage gate from 140 to 141 canonical
+     rows and lock normalization plus fixed-bias current limiting in all engines.
 
 ## Completed Slices
 
@@ -3211,6 +3211,14 @@ the Rust, Python, and TypeScript surfaces together.
    - Reverse transit-time diffusion capacitance remains intrinsic, hierarchical
      expansion preserves the model, and the supported-parameter release gate
      now covers 136 canonical rows.
+
+245. Cross-language legacy BJT leakage ratios.
+   - Status: completed in PR 8881.
+   - Rust, Python, and TypeScript BJT model cards now accept legacy SPICE2
+     `C2` and `C4` leakage ratios.
+   - `ISE` defaults to `C2 * IS` and `ISC` defaults to `C4 * IS`, while
+     explicit `ISE` and `ISC` retain precedence; the supported-parameter
+     release gate now covers 140 canonical rows.
 
 ## Backlog
 

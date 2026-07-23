@@ -390,23 +390,27 @@ fn clone_subckt_element(
             cloned.negative = map_subckt_node(&element.negative, instance_name, node_map);
             Element::CustomModel(cloned)
         }
-        Element::Diode(element) => Element::Diode(Diode::with_model_and_temperature_parameters(
-            format!("{instance_name}.{}", element.name),
-            map_subckt_node(&element.anode, instance_name, node_map),
-            map_subckt_node(&element.cathode, instance_name, node_map),
-            element.saturation_current,
-            element.thermal_voltage,
-            element.emission_coefficient,
-            element.breakdown_voltage,
-            element.breakdown_current,
-            element.junction_capacitance,
-            element.transit_time,
-            element.junction_potential,
-            element.grading_coefficient,
-            element.forward_bias_depletion_coefficient,
-            element.saturation_current_temperature_exponent,
-            element.energy_gap_electron_volts,
-        )),
+        Element::Diode(element) => {
+            let mut mapped = Diode::with_model_and_temperature_parameters(
+                format!("{instance_name}.{}", element.name),
+                map_subckt_node(&element.anode, instance_name, node_map),
+                map_subckt_node(&element.cathode, instance_name, node_map),
+                element.saturation_current,
+                element.thermal_voltage,
+                element.emission_coefficient,
+                element.breakdown_voltage,
+                element.breakdown_current,
+                element.junction_capacitance,
+                element.transit_time,
+                element.junction_potential,
+                element.grading_coefficient,
+                element.forward_bias_depletion_coefficient,
+                element.saturation_current_temperature_exponent,
+                element.energy_gap_electron_volts,
+            );
+            mapped.series_resistance = element.series_resistance;
+            Element::Diode(mapped)
+        }
         Element::Jfet(element) => Element::Jfet(Jfet::with_model_and_capacitance(
             format!("{instance_name}.{}", element.name),
             map_subckt_node(&element.drain, instance_name, node_map),
@@ -2393,6 +2397,7 @@ pub struct Diode {
     pub forward_bias_depletion_coefficient: f64,
     pub saturation_current_temperature_exponent: f64,
     pub energy_gap_electron_volts: f64,
+    pub series_resistance: f64,
 }
 
 impl Diode {
@@ -2607,6 +2612,7 @@ impl Diode {
             forward_bias_depletion_coefficient,
             saturation_current_temperature_exponent,
             energy_gap_electron_volts,
+            series_resistance: 0.0,
         }
     }
 }
@@ -3786,7 +3792,7 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     usize,
     usize,
 )] = &[
-    (ModelCardKind::Diode, 12, 18, 5, 3),
+    (ModelCardKind::Diode, 13, 19, 5, 3),
     (ModelCardKind::Npn, 41, 58, 13, 4),
     (ModelCardKind::Pnp, 41, 58, 13, 4),
     (ModelCardKind::Njf, 5, 11, 5, 3),
@@ -3813,6 +3819,7 @@ const DIODE_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("FC", "FC"),
     ("XTI", "XTI"),
     ("EG", "EG"),
+    ("RS", "RS"),
 ];
 const BJT_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("IS", "IS"),
@@ -4480,7 +4487,7 @@ pub fn diode_from_model_card(
     if model.kind != ModelCardKind::Diode {
         return Err(model_card_kind_error(&name, "diode", model.kind));
     }
-    Ok(Diode::with_model_and_temperature_parameters(
+    let mut diode = Diode::with_model_and_temperature_parameters(
         name,
         anode,
         cathode,
@@ -4496,7 +4503,9 @@ pub fn diode_from_model_card(
         model_card_value(model, "FC", 0.5),
         model_card_value(model, "XTI", 3.0),
         model_card_value(model, "EG", 1.11),
-    ))
+    );
+    diode.series_resistance = model_card_value(model, "RS", 0.0);
+    Ok(diode)
 }
 
 pub fn bjt_from_model_card(
@@ -21765,7 +21774,8 @@ fn build_ac_matrix(
             ),
             Element::Diode(diode) => {
                 validate_diode(diode)?;
-                let anode = node_index(node_indices, &diode.anode);
+                let intrinsic_anode = diode_intrinsic_anode_node(diode);
+                let anode = node_index(node_indices, &intrinsic_anode);
                 let cathode = node_index(node_indices, &diode.cathode);
                 let voltage = vector_voltage(operating_point, anode)
                     - vector_voltage(operating_point, cathode);
@@ -21777,6 +21787,14 @@ fn build_ac_matrix(
                     cathode,
                     Complex::new(conductance, omega * capacitance),
                 );
+                if diode.series_resistance > 0.0 {
+                    stamp_complex_conductance(
+                        &mut matrix,
+                        node_index(node_indices, &diode.anode),
+                        anode,
+                        Complex::new(1.0 / diode.series_resistance, 0.0),
+                    );
+                }
             }
             Element::Jfet(jfet) => {
                 stamp_ac_jfet_small_signal(jfet, node_indices, &mut matrix, operating_point, omega)?
@@ -21877,12 +21895,21 @@ fn build_small_signal_matrix(
             ),
             Element::Diode(diode) => {
                 validate_diode(diode)?;
-                let anode = node_index(node_indices, &diode.anode);
+                let intrinsic_anode = diode_intrinsic_anode_node(diode);
+                let anode = node_index(node_indices, &intrinsic_anode);
                 let cathode = node_index(node_indices, &diode.cathode);
                 let voltage = vector_voltage(operating_point, anode)
                     - vector_voltage(operating_point, cathode);
                 let (_, conductance) = diode_current_conductance(diode, voltage);
                 stamp_conductance(&mut matrix, anode, cathode, conductance);
+                if diode.series_resistance > 0.0 {
+                    stamp_conductance(
+                        &mut matrix,
+                        node_index(node_indices, &diode.anode),
+                        anode,
+                        1.0 / diode.series_resistance,
+                    );
+                }
             }
             Element::Jfet(jfet) => {
                 stamp_jfet_small_signal(jfet, node_indices, &mut matrix, operating_point)?
@@ -21999,6 +22026,9 @@ fn collect_node_indices(circuit: &Circuit) -> HashMap<String, usize> {
             Element::Diode(diode) => {
                 insert_node(&mut names, &diode.anode);
                 insert_node(&mut names, &diode.cathode);
+                if diode.series_resistance > 0.0 {
+                    insert_node(&mut names, &diode_intrinsic_anode_node(diode));
+                }
             }
             Element::Jfet(jfet) => {
                 insert_node(&mut names, &jfet.drain);
@@ -22208,7 +22238,8 @@ fn collect_noise_sources(
             }
             Element::Diode(diode) => {
                 validate_diode(diode)?;
-                let anode = node_index(node_indices, &diode.anode);
+                let intrinsic_anode = diode_intrinsic_anode_node(diode);
+                let anode = node_index(node_indices, &intrinsic_anode);
                 let cathode = node_index(node_indices, &diode.cathode);
                 let anode_voltage = vector_voltage(operating_point, anode);
                 let cathode_voltage = vector_voltage(operating_point, cathode);
@@ -22222,6 +22253,16 @@ fn collect_noise_sources(
                     source_psd: 2.0 * ELECTRON_CHARGE * current.abs(),
                     frequency_exponent: 0.0,
                 });
+                if diode.series_resistance > 0.0 {
+                    sources.push(NoiseSource {
+                        element_name: format!("{}:RS", diode.name),
+                        noise_type: NoiseType::Thermal,
+                        positive: node_index(node_indices, &diode.anode),
+                        negative: anode,
+                        source_psd: 4.0 * BOLTZMANN * temperature_kelvin / diode.series_resistance,
+                        frequency_exponent: 0.0,
+                    });
+                }
             }
             Element::Bjt(bjt) => {
                 validate_bjt(bjt)?;
@@ -22728,7 +22769,8 @@ fn stamp_diode(
     operating_point: &[f64],
 ) -> Result<(), SpiceError> {
     validate_diode(diode)?;
-    let anode = node_index(node_indices, &diode.anode);
+    let intrinsic_anode = diode_intrinsic_anode_node(diode);
+    let anode = node_index(node_indices, &intrinsic_anode);
     let cathode = node_index(node_indices, &diode.cathode);
     let voltage = anode.map_or(0.0, |index| operating_point[index])
         - cathode.map_or(0.0, |index| operating_point[index]);
@@ -22741,6 +22783,14 @@ fn stamp_diode(
     }
     if let Some(index) = cathode {
         rhs[index] += equivalent_current;
+    }
+    if diode.series_resistance > 0.0 {
+        stamp_conductance(
+            matrix,
+            node_index(node_indices, &diode.anode),
+            anode,
+            1.0 / diode.series_resistance,
+        );
     }
     stamp_diode_charge(diode, capacitor_states, node_indices, matrix, rhs)?;
     Ok(())
@@ -22778,7 +22828,8 @@ fn stamp_diode_charge(
         }
         TransientMethod::Euler => conductance * state.previous_voltage,
     };
-    let anode = node_index(node_indices, &diode.anode);
+    let intrinsic_anode = diode_intrinsic_anode_node(diode);
+    let anode = node_index(node_indices, &intrinsic_anode);
     let cathode = node_index(node_indices, &diode.cathode);
     stamp_conductance(matrix, anode, cathode, conductance);
     if let Some(index) = anode {
@@ -23985,7 +24036,16 @@ fn diode_depletion_capacitance(diode: &Diode, voltage: f64) -> f64 {
 }
 
 fn diode_charge_voltage(diode: &Diode, node_voltages: &BTreeMap<String, f64>) -> f64 {
-    voltage_at(node_voltages, &diode.anode) - voltage_at(node_voltages, &diode.cathode)
+    voltage_at(node_voltages, &diode_intrinsic_anode_node(diode))
+        - voltage_at(node_voltages, &diode.cathode)
+}
+
+fn diode_intrinsic_anode_node(diode: &Diode) -> String {
+    if diode.series_resistance == 0.0 {
+        diode.anode.clone()
+    } else {
+        format!("_D_{}_anode", diode.name)
+    }
 }
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -24354,6 +24414,12 @@ fn mosfet_charge_dynamic_capacitance(
 }
 
 fn validate_diode(diode: &Diode) -> Result<(), SpiceError> {
+    if !diode.series_resistance.is_finite() || diode.series_resistance < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: diode.name.clone(),
+            reason: "series resistance must be finite and non-negative".to_string(),
+        });
+    }
     if !diode.saturation_current.is_finite() || diode.saturation_current <= 0.0 {
         return Err(SpiceError::InvalidElement {
             name: diode.name.clone(),

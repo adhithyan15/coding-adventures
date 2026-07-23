@@ -1,9 +1,33 @@
 use spice_engine::{
     device_model_noise_audit_fixtures, format_corner_noise_table, format_noise_table, noise_ac,
     noise_ac_corners, noise_ac_corners_parallel, noise_ac_default, Bjt, Capacitor, Circuit,
-    CornerOverride, CornerSpec, CurrentSource, Element, Mosfet, MosfetLevel1Params, MosfetType,
-    NoiseType, Resistor, SpiceError, VoltageSource,
+    CornerOverride, CornerSpec, CurrentSource, Diode, Element, Mosfet, MosfetLevel1Params,
+    MosfetType, NoiseType, Resistor, SpiceError, VoltageSource,
 };
+
+#[test]
+fn diode_series_resistance_adds_thermal_noise() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vbias", "bias", "0", 1.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "Rbias", "bias", "out", 1_000.0,
+    )));
+    let mut diode = Diode::new("D1", "out", "0");
+    diode.series_resistance = 100.0;
+    circuit.add(Element::Diode(diode));
+
+    let result = noise_ac(&circuit, "out", "Vbias", &[1_000.0], 300.0).unwrap();
+    let series_resistance = result.points[0]
+        .entries
+        .iter()
+        .find(|entry| entry.element_name == "D1:RS")
+        .unwrap();
+
+    assert_eq!(series_resistance.noise_type, NoiseType::Thermal);
+    assert!(series_resistance.source_psd > 0.0);
+}
 
 #[test]
 fn bjt_forward_beta_rolloff_reduces_shot_noise() {

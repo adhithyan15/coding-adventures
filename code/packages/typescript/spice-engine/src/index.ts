@@ -1676,6 +1676,7 @@ export interface Diode {
   readonly forwardBiasDepletionCoefficient: number;
   readonly saturationCurrentTemperatureExponent: number;
   readonly energyGapElectronVolts: number;
+  readonly seriesResistance: number;
 }
 
 export type JfetPolarity = "NJF" | "PJF";
@@ -2018,7 +2019,7 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_KINDS: readonly ModelCardKind[] = 
 const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   Record<ModelCardKind, readonly [number, number, number, number]>
 > = {
-  D: [12, 18, 5, 3],
+  D: [13, 19, 5, 3],
   NPN: [41, 58, 13, 4],
   PNP: [41, 58, 13, 4],
   NJF: [5, 11, 5, 3],
@@ -3606,7 +3607,7 @@ function cloneSubcktElement(
     case "custom-model":
       return { ...element, name, positive: mapSubcktNode(element.positive, instanceName, nodeMap), negative: mapSubcktNode(element.negative, instanceName, nodeMap) };
     case "diode":
-      return diode(name, mapSubcktNode(element.anode, instanceName, nodeMap), mapSubcktNode(element.cathode, instanceName, nodeMap), element.saturationCurrent, element.thermalVoltage, element.emissionCoefficient, element.breakdownVoltage, element.breakdownCurrent, element.junctionCapacitance, element.transitTime, element.junctionPotential, element.gradingCoefficient, element.forwardBiasDepletionCoefficient, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts);
+      return diode(name, mapSubcktNode(element.anode, instanceName, nodeMap), mapSubcktNode(element.cathode, instanceName, nodeMap), element.saturationCurrent, element.thermalVoltage, element.emissionCoefficient, element.breakdownVoltage, element.breakdownCurrent, element.junctionCapacitance, element.transitTime, element.junctionPotential, element.gradingCoefficient, element.forwardBiasDepletionCoefficient, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.seriesResistance);
     case "jfet":
       return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation, element.gateSourceCapacitance, element.gateDrainCapacitance);
     case "bjt":
@@ -7568,6 +7569,7 @@ export function diode(
   forwardBiasDepletionCoefficient = 0.5,
   saturationCurrentTemperatureExponent = 3.0,
   energyGapElectronVolts = 1.11,
+  seriesResistance = 0.0,
 ): Diode {
   return {
     kind: "diode",
@@ -7586,6 +7588,7 @@ export function diode(
     forwardBiasDepletionCoefficient,
     saturationCurrentTemperatureExponent,
     energyGapElectronVolts,
+    seriesResistance,
   };
 }
 
@@ -7938,6 +7941,7 @@ const DIODE_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   FC: "FC",
   XTI: "XTI",
   EG: "EG",
+  RS: "RS",
 };
 
 const BJT_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
@@ -8468,6 +8472,7 @@ export function diodeFromModelCard(
     p.FC ?? 0.5,
     p.XTI ?? 3.0,
     p.EG ?? 1.11,
+    p.RS ?? 0.0,
   );
 }
 
@@ -17854,15 +17859,24 @@ function buildSmallSignalMatrix(
         break;
       case "diode":
         validateDiode(element);
-        const diodeVoltage = vectorVoltage(operatingPoint, nodeIndex(nodeIndices, element.anode)) -
+        const diodeAnode = diodeIntrinsicAnodeNode(element);
+        const diodeVoltage = vectorVoltage(operatingPoint, nodeIndex(nodeIndices, diodeAnode)) -
           vectorVoltage(operatingPoint, nodeIndex(nodeIndices, element.cathode));
         const [, diodeConductance] = diodeCurrentConductance(element, diodeVoltage);
         stampConductance(
           matrix,
-          nodeIndex(nodeIndices, element.anode),
+          nodeIndex(nodeIndices, diodeAnode),
           nodeIndex(nodeIndices, element.cathode),
           diodeConductance,
         );
+        if (element.seriesResistance > 0.0) {
+          stampConductance(
+            matrix,
+            nodeIndex(nodeIndices, element.anode),
+            nodeIndex(nodeIndices, diodeAnode),
+            1.0 / element.seriesResistance,
+          );
+        }
         break;
       case "jfet":
         stampJfetSmallSignal(element, nodeIndices, matrix, operatingPoint);
@@ -18036,16 +18050,25 @@ function buildAcMatrix(
         break;
       case "diode":
         validateDiode(element);
-        const diodeVoltage = vectorVoltage(operatingPoint, nodeIndex(nodeIndices, element.anode)) -
+        const diodeAnode = diodeIntrinsicAnodeNode(element);
+        const diodeVoltage = vectorVoltage(operatingPoint, nodeIndex(nodeIndices, diodeAnode)) -
           vectorVoltage(operatingPoint, nodeIndex(nodeIndices, element.cathode));
         const [, diodeConductance] = diodeCurrentConductance(element, diodeVoltage);
         const diodeCapacitance = diodeDynamicCapacitance(element, diodeVoltage);
         stampComplexConductance(
           matrix,
-          nodeIndex(nodeIndices, element.anode),
+          nodeIndex(nodeIndices, diodeAnode),
           nodeIndex(nodeIndices, element.cathode),
           complex(diodeConductance, omega * diodeCapacitance),
         );
+        if (element.seriesResistance > 0.0) {
+          stampComplexConductance(
+            matrix,
+            nodeIndex(nodeIndices, element.anode),
+            nodeIndex(nodeIndices, diodeAnode),
+            complex(1.0 / element.seriesResistance, 0.0),
+          );
+        }
         break;
       case "jfet":
         stampAcJfetSmallSignal(element, nodeIndices, matrix, operatingPoint, omega);
@@ -18290,6 +18313,9 @@ function collectNodeIndices(circuit: Circuit): Map<string, number> {
       case "diode":
         insertNode(names, element.anode);
         insertNode(names, element.cathode);
+        if (element.seriesResistance > 0.0) {
+          insertNode(names, diodeIntrinsicAnodeNode(element));
+        }
         break;
       case "jfet":
         insertNode(names, element.drain);
@@ -18449,7 +18475,8 @@ function collectNoiseSources(
       });
     } else if (element.kind === "diode") {
       validateDiode(element);
-      const anode = nodeIndex(nodeIndices, element.anode);
+      const intrinsicAnode = diodeIntrinsicAnodeNode(element);
+      const anode = nodeIndex(nodeIndices, intrinsicAnode);
       const cathode = nodeIndex(nodeIndices, element.cathode);
       const anodeVoltage = vectorVoltage(operatingPoint, anode);
       const cathodeVoltage = vectorVoltage(operatingPoint, cathode);
@@ -18462,6 +18489,16 @@ function collectNoiseSources(
         sourcePsd: 2.0 * ELECTRON_CHARGE * Math.abs(current),
         frequencyExponent: 0.0,
       });
+      if (element.seriesResistance > 0.0) {
+        sources.push({
+          elementName: `${element.name}:RS`,
+          noiseType: "thermal",
+          positive: nodeIndex(nodeIndices, element.anode),
+          negative: anode,
+          sourcePsd: 4.0 * BOLTZMANN * temperatureKelvin / element.seriesResistance,
+          frequencyExponent: 0.0,
+        });
+      }
     } else if (element.kind === "bjt") {
       validateBjt(element);
       const emitterNode = bjtIntrinsicEmitterNode(element);
@@ -18951,7 +18988,8 @@ function stampDiode(
   operatingPoint: readonly number[],
 ): void {
   validateDiode(element);
-  const anode = nodeIndex(nodeIndices, element.anode);
+  const intrinsicAnode = diodeIntrinsicAnodeNode(element);
+  const anode = nodeIndex(nodeIndices, intrinsicAnode);
   const cathode = nodeIndex(nodeIndices, element.cathode);
   const voltage =
     (anode === undefined ? 0.0 : operatingPoint[anode]) -
@@ -18965,6 +19003,14 @@ function stampDiode(
   }
   if (cathode !== undefined) {
     rhs[cathode] += equivalentCurrent;
+  }
+  if (element.seriesResistance > 0.0) {
+    stampConductance(
+      matrix,
+      nodeIndex(nodeIndices, element.anode),
+      anode,
+      1.0 / element.seriesResistance,
+    );
   }
   stampDiodeCharge(element, capacitorStates, nodeIndices, matrix, rhs);
 }
@@ -19000,7 +19046,7 @@ function stampDiodeCharge(
           (4.0 * state.previousVoltage - state.previousPreviousVoltage) /
           (2.0 * state.timeStep)
         : conductance * state.previousVoltage;
-  const anode = nodeIndex(nodeIndices, element.anode);
+  const anode = nodeIndex(nodeIndices, diodeIntrinsicAnodeNode(element));
   const cathode = nodeIndex(nodeIndices, element.cathode);
   stampConductance(matrix, anode, cathode, conductance);
   if (anode !== undefined) {
@@ -19737,6 +19783,9 @@ function validateReactiveElements(circuit: Circuit): void {
 }
 
 function validateDiode(element: Diode): void {
+  if (!Number.isFinite(element.seriesResistance) || element.seriesResistance < 0.0) {
+    throw invalidElement(element.name, "series resistance must be finite and non-negative");
+  }
   if (!Number.isFinite(element.saturationCurrent) || element.saturationCurrent <= 0.0) {
     throw invalidElement(element.name, "saturation current must be finite and positive");
   }
@@ -19815,6 +19864,12 @@ function diodeChargeStateName(element: Diode): string {
   return `_D_${element.name}_charge`;
 }
 
+function diodeIntrinsicAnodeNode(element: Diode): string {
+  return element.seriesResistance === 0.0
+    ? element.anode
+    : `_D_${element.name}_anode`;
+}
+
 function diodeHasChargeStorage(element: Diode): boolean {
   return element.junctionCapacitance > 0.0 || element.transitTime > 0.0;
 }
@@ -19841,7 +19896,8 @@ function diodeDepletionCapacitance(element: Diode, voltage: number): number {
 }
 
 function diodeChargeVoltage(element: Diode, nodeVoltages: ReadonlyMap<string, number>): number {
-  return voltageAt(nodeVoltages, element.anode) - voltageAt(nodeVoltages, element.cathode);
+  return voltageAt(nodeVoltages, diodeIntrinsicAnodeNode(element)) -
+    voltageAt(nodeVoltages, element.cathode);
 }
 
 type BjtChargeStateKind =
