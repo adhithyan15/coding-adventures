@@ -1731,6 +1731,7 @@ export interface Bjt {
   readonly reverseBetaRolloffCurrent: number;
   readonly nominalTemperatureKelvin: number | undefined;
   readonly flickerNoiseCoefficient: number;
+  readonly flickerNoiseExponent: number;
 }
 
 export type MosfetType = "NMOS" | "PMOS";
@@ -2008,8 +2009,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: Readonly<
   Record<ModelCardKind, readonly [number, number, number, number]>
 > = {
   D: [12, 18, 5, 3],
-  NPN: [28, 45, 13, 4],
-  PNP: [28, 45, 13, 4],
+  NPN: [29, 46, 13, 4],
+  PNP: [29, 46, 13, 4],
   NJF: [5, 11, 5, 3],
   PJF: [5, 11, 5, 3],
   NMOS: [18, 25, 6, 3],
@@ -3599,7 +3600,7 @@ function cloneSubcktElement(
     case "jfet":
       return jfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), element.polarity, element.beta, element.thresholdVoltage, element.channelLengthModulation, element.gateSourceCapacitance, element.gateDrainCapacitance);
     case "bjt":
-      return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.forwardEarlyVoltage, element.forwardEmissionCoefficient, element.reverseEmissionCoefficient, element.baseEmitterJunctionPotential, element.baseEmitterGradingCoefficient, element.baseCollectorJunctionPotential, element.baseCollectorGradingCoefficient, element.forwardBiasDepletionCoefficient, element.reverseEarlyVoltage, element.forwardBetaRolloffCurrent, element.baseEmitterLeakageSaturationCurrent, element.baseEmitterLeakageEmissionCoefficient, element.baseCollectorLeakageSaturationCurrent, element.baseCollectorLeakageEmissionCoefficient, element.forwardBetaTemperatureExponent, element.reverseBeta, element.reverseBetaRolloffCurrent, element.nominalTemperatureKelvin, element.flickerNoiseCoefficient);
+      return bjt(name, mapSubcktNode(element.collector, instanceName, nodeMap), mapSubcktNode(element.base, instanceName, nodeMap), mapSubcktNode(element.emitter, instanceName, nodeMap), element.polarity, element.saturationCurrent, element.forwardBeta, element.thermalVoltage, element.baseEmitterCapacitance, element.baseCollectorCapacitance, element.forwardTransitTime, element.reverseTransitTime, element.saturationCurrentTemperatureExponent, element.energyGapElectronVolts, element.forwardEarlyVoltage, element.forwardEmissionCoefficient, element.reverseEmissionCoefficient, element.baseEmitterJunctionPotential, element.baseEmitterGradingCoefficient, element.baseCollectorJunctionPotential, element.baseCollectorGradingCoefficient, element.forwardBiasDepletionCoefficient, element.reverseEarlyVoltage, element.forwardBetaRolloffCurrent, element.baseEmitterLeakageSaturationCurrent, element.baseEmitterLeakageEmissionCoefficient, element.baseCollectorLeakageSaturationCurrent, element.baseCollectorLeakageEmissionCoefficient, element.forwardBetaTemperatureExponent, element.reverseBeta, element.reverseBetaRolloffCurrent, element.nominalTemperatureKelvin, element.flickerNoiseCoefficient, element.flickerNoiseExponent);
     case "mosfet":
       return mosfet(name, mapSubcktNode(element.drain, instanceName, nodeMap), mapSubcktNode(element.gate, instanceName, nodeMap), mapSubcktNode(element.source, instanceName, nodeMap), mapSubcktNode(element.body, instanceName, nodeMap), element.type, element.params);
     case "vccs":
@@ -7786,6 +7787,7 @@ export function bjt(
   reverseBetaRolloffCurrent = 0.0,
   nominalTemperatureKelvin: number | undefined = undefined,
   flickerNoiseCoefficient = 0.0,
+  flickerNoiseExponent = 1.0,
 ): Bjt {
   return {
     kind: "bjt",
@@ -7822,6 +7824,7 @@ export function bjt(
     reverseBetaRolloffCurrent,
     nominalTemperatureKelvin,
     flickerNoiseCoefficient,
+    flickerNoiseExponent,
   };
 }
 
@@ -7935,6 +7938,7 @@ const BJT_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
   TNOM: "TNOM",
   T_NOM: "TNOM",
   KF: "KF",
+  AF: "AF",
   ISE: "ISE",
   NE: "NE",
   ISC: "ISC",
@@ -8470,6 +8474,7 @@ export function bjtFromModelCard(
     p.IKR ?? 0.0,
     p.TNOM !== undefined ? p.TNOM + 273.15 : undefined,
     p.KF ?? 0.0,
+    p.AF ?? 1.0,
   );
 }
 
@@ -18450,7 +18455,8 @@ function collectNoiseSources(
           noiseType: "flicker",
           positive: element.polarity === "NPN" ? base : emitter,
           negative: element.polarity === "NPN" ? emitter : base,
-          sourcePsd: element.flickerNoiseCoefficient * Math.abs(baseCurrent),
+          sourcePsd:
+            element.flickerNoiseCoefficient * Math.abs(baseCurrent) ** element.flickerNoiseExponent,
           frequencyExponent: 1.0,
         });
       }
@@ -19940,6 +19946,9 @@ function validateBjt(element: Bjt): void {
   }
   if (!Number.isFinite(element.flickerNoiseCoefficient) || element.flickerNoiseCoefficient < 0.0) {
     throw invalidElement(element.name, "flicker noise coefficient must be finite and non-negative");
+  }
+  if (!Number.isFinite(element.flickerNoiseExponent) || element.flickerNoiseExponent < 0.0) {
+    throw invalidElement(element.name, "flicker noise exponent must be finite and non-negative");
   }
   if (!Number.isFinite(element.baseEmitterLeakageSaturationCurrent) || element.baseEmitterLeakageSaturationCurrent < 0.0) {
     throw invalidElement(element.name, "base-emitter leakage saturation current must be finite and non-negative");

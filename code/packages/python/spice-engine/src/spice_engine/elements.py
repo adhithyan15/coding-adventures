@@ -610,6 +610,8 @@ class BJT:
         analysis uses its circuit-level nominal temperature.
     Kf:
         Flicker-noise coefficient (default 0.0, disabled).
+    Af:
+        Flicker-noise base-current exponent (default 1.0).
     """
 
     name: str
@@ -645,6 +647,7 @@ class BJT:
     Ikr: float = 0.0        # reverse-beta roll-off current (A); 0 disables
     Tnom: float | None = None  # model nominal temperature (K); None inherits
     Kf: float = 0.0            # flicker-noise coefficient; 0 disables
+    Af: float = 1.0            # flicker-noise base-current exponent
 
 
 # ---------------------------------------------------------------------------

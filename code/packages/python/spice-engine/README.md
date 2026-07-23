@@ -241,8 +241,8 @@ omitted.
 It overrides the circuit-level nominal temperature for BJT temperature scaling;
 omitting it preserves the inherited default.
 `KF` (default `0`, disabled) adds a distinct BJT base-current flicker-noise
-source to `.NOISE`, using Berkeley's default `AF=1` exponent so source PSD is
-`KF * abs(Ib) / frequency`.
+source to `.NOISE`. `AF` (default `1`) controls the base-current exponent, so
+source PSD is `KF * abs(Ib)^AF / frequency`.
 `model_card_unsupported_parameter_issues()`,
 `format_model_card_unsupported_parameter_issue_table()`,
 `model_card_unsupported_parameter_issue_records()`,
