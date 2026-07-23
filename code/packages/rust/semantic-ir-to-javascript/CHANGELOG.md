@@ -1,5 +1,101 @@
 # Changelog
 
+## 0.51.2 — held-form execution: `Assign`/`Define`/`If` + user-function dispatch (SIR23 addendum, item 2 of 4)
+
+Item 2 of the 4-item rollout described by `SIR23-symbolic-pattern-
+semantic-ir.md`'s own "Addendum — SIR23 symbolic evaluator + per-language
+display convention" section. Item 1 (`Symbolic.evalTerm`'s arithmetic/
+comparison/logic folding, `[0.49.0]` below) declared the three
+`HELD_HEADS` (`Assign`/`Define`/`If`) but wired no handler for any of
+them, so they stayed inert data — `x := 5` never bound `x`, `F(x) :=
+x*x` never registered `F`, `IF(cond, a, b)` never selected a branch.
+This item makes them real.
+
+### Added
+
+- **`runtime.rs`: a `symEnv` `Map`**, declared once inside the `Symbolic`
+  IIFE's closure (one compiled program's `node` process = one flat
+  top-level session), porting `symbolic-vm::BaseBackend.env` — see the
+  spec addendum's "Environment / held-form execution model".
+- **`Symbolic.evalTerm`'s `Symbol` leaf case**: looks the name up in
+  `symEnv`; unbound stays unchanged (`SymbolicBackend::on_unresolved`'s
+  pass-through policy); bound checks a self-loop guard (`termEquals`
+  against the original symbol — `x := x` would recurse forever without
+  it, mirroring `eval_symbol`'s own comment) before recursively
+  evaluating the binding.
+- **`assignHandler`/`defineHandler`/`ifHandler`**, registered in a new
+  `HELD_HANDLERS` map consulted by `evalApply` before the generic
+  arg-evaluated `HANDLERS` path (held forms need the RAW args plus
+  `depth`/`evalTerm` access — a different shape than the item-1
+  handlers). Direct ports of `handlers.rs::assign_handler`/
+  `define_handler`/`if_handler`: `Assign` evaluates the RHS, binds, and
+  returns the value; `Define` stores the whole `Define(name, params,
+  body)` record and returns the bare `Symbol(name)` (never the record —
+  why `F(x) := x*x` displays as `"F"`, not `"Define(...)"`); `If`
+  evaluates the condition and branches on the `True`/`False` symbol
+  (2- or 3-arg form), rebuilding the unevaluated term if the condition
+  doesn't resolve to a boolean.
+- **User-function dispatch** in `evalApply`'s "no handler matched"
+  fallthrough: if the evaluated head is a `Symbol` bound in `symEnv` to a
+  stored `Define` record, zips `params` against the (already
+  applicative-order-evaluated) call args by position — a non-`Symbol`
+  param entry is silently dropped from the zip, and an arity mismatch
+  (post-drop) leaves the call unevaluated, both mirroring
+  `apply_user_function`'s exact `filter_map`/`None`-return quirks, not
+  an "improved" version of them — then substitutes and re-`evalTerm`s
+  the result. A direct port of `vm.rs::VM::eval_apply`'s step 4 /
+  `apply_user_function`.
+- **`substituteSymbols`**: a new, from-scratch port of
+  `symbolic-vm::vm::substitute` (a bare-`Symbol`-matching substitution),
+  used for the user-function-body substitution above. **Deliberately NOT
+  a reuse of the existing `substituteTerm`**, despite the spec addendum's
+  own "Genuine, one-place reuse" note suggesting exactly that reuse:
+  `substituteTerm` only substitutes at `Pattern(name, inner)`-wrapped
+  template nodes (the shape a `SymRule`'s RHS uses to reference a bound
+  pattern variable — confirmed by this crate's own `tests/
+  sir23_symbolic.rs`), while a `Define`'s body references its parameters
+  as ORDINARY bare `Symbol` nodes (confirmed directly in
+  `derive-to-semantic-ir::lower`'s own module doc: "never constructs
+  `SymPatternBlank`/`SymPatternNamed`/..."). Calling `substituteTerm` on
+  such a body would silently substitute nothing at all. See that
+  function's own doc comment in `runtime.rs` for the full explanation —
+  this is a corrected finding relative to the spec addendum's own
+  assumption, not an oversight.
+- **`tests/sir23_symbolic.rs`: 6 new integration tests**
+  (`assign_binds_and_reads_back_in_a_later_statement`,
+  `single_param_define_then_call_dispatches_by_substitution`,
+  `multi_param_define_then_call_dispatches_by_position`,
+  `arity_mismatch_leaves_the_user_function_call_unevaluated`,
+  `if_true_and_false_branches_select_the_right_arm`,
+  `self_referential_assign_does_not_infinite_loop`), hand-building the
+  SIR23 nodes directly and running the result through an actual `node`
+  process, mirroring this file's own established convention.
+- Every change here is **additive only**: the existing `HANDLERS` map,
+  every item-1 arithmetic/comparison/logic handler, `MAX_EVAL_DEPTH`'s
+  threading, and the pattern-matching engine (`matchPattern`/
+  `substituteTerm`/`replaceAllTerm`/`replaceRepeatedTerm`) are all
+  unchanged. Confirmed no regression: this crate's own full test suite
+  (265 tests) and every downstream Stream B frontend's
+  (`derive-to-semantic-ir`, `reduce-to-semantic-ir`, `maple-to-
+  semantic-ir`, `wolfram-to-semantic-ir`, `macsyma-to-semantic-ir`,
+  `maxima-to-semantic-ir`) still pass unchanged. Also confirmed via a
+  genuine revert-and-confirm: temporarily emptying `HELD_HANDLERS` and
+  restoring `evalTerm`'s `Symbol` case to its pre-item-2 unconditional
+  pass-through makes exactly the 6 newly-passing `derive-to-semantic-ir`
+  oracle cases (and the 6 matching new unit tests above) fail again, with
+  the OLD inert output (`"Assign(x, 5)\nAdd(x, 1)"`, etc.) — restoring
+  the change makes them pass again.
+- **`derive-to-semantic-ir/tests/oracle.rs`**: 6 cases flip from
+  `known_bug: Some(...)` to `known_bug: None` —
+  `variable_assignment_and_later_reference`,
+  `single_param_function_definition_and_call`,
+  `multi_param_function_definition_and_call`, `if_true_branch`,
+  `if_false_branch` (the 5 the SIR23 addendum's own "Rollout" section
+  named), plus `vector_assignment_persists_across_statements` (confirmed
+  by actually running the oracle test, not assumed — that crate's own
+  `[0.1.3]` `CHANGELOG.md` entry already predicted this one would flip
+  once this item landed). See that crate's own `CHANGELOG.md`.
+
 ## 0.51.1 — `matmul` normalizes its operands through `toArrayValue` (task #111)
 
 Found by `scilab-to-semantic-ir/tests/oracle.rs`'s oracle/golden test suite

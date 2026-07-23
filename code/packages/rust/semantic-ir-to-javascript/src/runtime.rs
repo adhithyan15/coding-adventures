@@ -3404,6 +3404,65 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       return template;
     }
 
+    // ── substituteSymbols (symbolic-vm::vm::substitute port) ─────────
+    //
+    // SIR23 addendum item 2's own "Genuine, one-place reuse" note
+    // proposed reusing `substituteTerm` above, unchanged, for
+    // user-function-body substitution (see "Function dispatch" in
+    // `code/specs/SIR23-symbolic-pattern-semantic-ir.md`'s addendum).
+    // Confirmed, by direct inspection of both this file and the
+    // frontends' own lowering, that this does not typecheck against the
+    // ACTUAL data shapes involved, so this port deliberately does NOT
+    // reuse `substituteTerm`:
+    //
+    //   - `substituteTerm`'s only substitution site is `isPattern(
+    //     template)` — a template node shaped `Apply(Symbol("Pattern"),
+    //     [Symbol(name), inner])`. That shape is how a `SymRule`'s RHS
+    //     references a bound PATTERN variable — confirmed by this crate's
+    //     own `tests/sir23_symbolic.rs`
+    //     (`replace_repeated_reduces_nested_add_zero_to_bare_symbol`
+    //     reuses the literal SAME `named("x", blank())` node for both a
+    //     rule's `lhs` and its `rhs`). A bare `Symbol` template is passed
+    //     straight through unchanged by `substituteTerm` — by design, for
+    //     that domain: a bare symbol never happens to be a stand-in for a
+    //     pattern variable in a rewrite rule's RHS.
+    //   - A `Define(name, List(params...), body)`'s `body`, by contrast,
+    //     references its parameters as ORDINARY bare `Symbol` nodes —
+    //     confirmed directly in `derive-to-semantic-ir::lower`'s own
+    //     module doc ("this frontend ... never constructs
+    //     `SymPatternBlank`/`SymPatternNamed`/..."): `F(x) := x*x` lowers
+    //     to `Define(F, List(x), Mul(Symbol(x), Symbol(x)))`, a body with
+    //     no `Pattern`-wrapping anywhere. Calling `substituteTerm` on it
+    //     would substitute nothing at all — a silent no-op, not a loud
+    //     failure — since `isPattern` never matches a bare `Symbol`.
+    //
+    // This is instead a direct, from-scratch port of the actual function
+    // `apply_user_function` calls for this purpose:
+    // `symbolic-vm/src/vm.rs::substitute` (a free function, not a method
+    // on `Handler`/`Backend`) — match a bare `Symbol` directly against
+    // `bindings`, recurse into `head`/`args` for a compound term, pass
+    // every literal through unchanged. Not depth-capped, for the same
+    // reason `substituteTerm` above isn't: the tree being walked here is
+    // `body`, an author-written (compiled-in) function-definition body —
+    // bounded by *source* nesting, not by arbitrarily-deep *runtime* data
+    // (the concern `walkOnce`/`replaceRepeatedTerm`'s `MAX_TERM_DEPTH`
+    // guards against) — `args`' own depth is irrelevant here, since a
+    // bound parameter's value is spliced in by reference, never itself
+    // walked by this function.
+    function substituteSymbols(node, bindings) {
+      if (node.kind === "symbol") {
+        const replacement = bindings.get(node.name);
+        return replacement !== undefined ? replacement : node;
+      }
+      if (node.kind === "apply") {
+        return applyTerm(
+          substituteSymbols(node.head, bindings),
+          node.args.map((a) => substituteSymbols(a, bindings)),
+        );
+      }
+      return node;
+    }
+
     function applyRuleTerm(rewriteRule, expr) {
       if (!isRule(rewriteRule)) {
         throw new TypeError("Symbolic.applyRule: expected Rule/RuleDelayed");
@@ -3548,32 +3607,34 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     // `Handler` is the right shape, not a `SymRule` whose RHS closure
     // just happens to compute a sum.
     //
-    // ## Scope: item 1 of 4 (see the addendum's "Crate layout and
+    // ## Scope: items 1-2 of 4 (see the addendum's "Crate layout and
     // rollout (one item = one PR)" section)
     //
-    // This item wires up ONLY arithmetic (`Add`/`Sub`/`Mul`/`Div`/`Pow`/
-    // `Neg`/`Inv`/`Abs`), comparison (`Equal`/`NotEqual`/`Less`/
-    // `Greater`/`LessEqual`/`GreaterEqual`), and logic (`And`/`Or`/
-    // `Not`) folding:
+    // Item 1 wired up arithmetic (`Add`/`Sub`/`Mul`/`Div`/`Pow`/`Neg`/
+    // `Inv`/`Abs`), comparison (`Equal`/`NotEqual`/`Less`/`Greater`/
+    // `LessEqual`/`GreaterEqual`), and logic (`And`/`Or`/`Not`) folding.
+    // Item 2 (this addendum) adds the environment (`symEnv` above) and
+    // real handlers for the three `HELD_HEADS` members plus user-function
+    // dispatch:
     //
-    //   item 1 (this PR)  — arithmetic / comparison / logic folding
-    //   item 2 (future)   — environment + Assign/Define/If + user functions
-    //   item 3 (future)   — calculus / elementary-function handlers
-    //   item 4 (future)   — Derive's own SIR23 display convention
+    //   item 1 (shipped) — arithmetic / comparison / logic folding
+    //   item 2 (this PR) — environment + Assign/Define/If + user functions
+    //   item 3 (future)  — calculus / elementary-function handlers
+    //   item 4 (shipped) — Derive's own SIR23 display convention
     //
-    // `HELD_HEADS` is declared now — the held-vs-evaluated ARGUMENT
-    // treatment below is exercised starting this item — but item 1 wires
-    // up NO handler for any of its three members. `Assign`/`Define`/`If`
-    // therefore always fall through to "no handler matched" below, which
+    // `HELD_HEADS` was declared by item 1 — the held-vs-evaluated
+    // ARGUMENT treatment below was exercised starting then — but item 1
+    // wired up NO handler for any of its three members, so `Assign`/
+    // `Define`/`If` always fell through to "no handler matched", which
     // rebuilds the term from the evaluated head and the ORIGINAL,
     // unevaluated args: byte-for-byte the same inert `Apply` shape
-    // today's bare `SymApply` codegen already produces. Concretely:
-    // `Assign(x, 5+1)` must NOT fold `5 + 1` to `6` in this item, even
-    // though `Add`-folding is fully wired elsewhere in the very same
-    // expression — held means held, regardless of what handlers exist
-    // for other heads. Real execution of these three (a binding
-    // environment, a self-loop guard, user-function dispatch reusing
-    // `substituteTerm` above) is item 2's job.
+    // today's bare `SymApply` codegen already produces. Item 2 (below,
+    // see `HELD_HANDLERS`) replaces that fallthrough with real execution
+    // for these three: a binding environment, a self-loop guard, and
+    // user-function dispatch (`substituteSymbols`, not a reuse of
+    // `substituteTerm` — see that function's own doc comment for exactly
+    // why the addendum's suggested reuse doesn't typecheck against the
+    // real data shapes involved).
     //
     // `List` needs, and per the addendum's own handler table gets,
     // forever, NO handler at all: applicative-order argument evaluation
@@ -3630,6 +3691,27 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     // depth-limit sentinel rather than crashing `node`, on a default,
     // un-widened stack.
     const MAX_EVAL_DEPTH = 2000;
+
+    // ── environment / held-form execution (SIR23 addendum item 2 of 4) ──
+    //
+    // `symEnv` is the JS port of `symbolic-vm`'s `BaseBackend.env: HashMap
+    // <String, IRNode>` (`code/packages/rust/symbolic-vm/src/backend.rs`)
+    // — see `code/specs/SIR23-symbolic-pattern-semantic-ir.md`'s addendum,
+    // "Environment / held-form execution model". A plain `Map`, declared
+    // once here (module scope inside this IIFE, which itself runs exactly
+    // once per compiled program's `node` process), living for the whole
+    // program's execution — one flat top-level script/session, exactly
+    // matching one `BaseBackend` instance per `symbolic_vm::VM::new()`.
+    // Not the OOP/closure machinery elsewhere in this file
+    // (`SirInstance`/`classVarBag`/`currentSelf`) — that models host JS
+    // object identity for SIR's class-instance-variable domain, a
+    // completely different value space; reusing it here would be a
+    // type-confusion hazard, not a simplification (per the addendum's own
+    // note). Every one of the 5 SIR23 frontends' currently-implemented
+    // grammars is single-session/flat (no nested `With`/`Module`/`Block`
+    // local scope reaches `SymbolicBackend` today), so one flat `Map` is a
+    // faithful, not a simplified, port of `BaseBackend.env`.
+    const symEnv = new Map();
 
     // ── numeric tower (handlers.rs::Numeric port) ───────────────────
     //
@@ -4036,15 +4118,17 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       return applyTerm(head, args);
     }
 
-    // Per-head dispatch table (item 1's scope only — arithmetic /
-    // comparison / logic). A `Map`, not a plain object literal:
-    // `name` is derived from a compiled program's OWN term data (any
-    // source identifier can end up as a SymApply head, e.g. a user
-    // writing a call literally named `__proto__`), and a plain object's
-    // `obj[name]` lookup walks the prototype chain — `Map.prototype.get`
-    // has no such hazard. Mirrors this same file's existing preference
-    // for `Map` over object literals for name-keyed lookups (see
-    // `bindingsEmpty` above).
+    // Per-head dispatch table (arg-evaluated heads only — arithmetic /
+    // comparison / logic; see `HELD_HANDLERS` below for the three
+    // `HELD_HEADS` members, whose handlers need the RAW args plus
+    // `depth`/`evalTerm` access instead, not this shape). A `Map`, not a
+    // plain object literal: `name` is derived from a compiled program's
+    // OWN term data (any source identifier can end up as a SymApply
+    // head, e.g. a user writing a call literally named `__proto__`), and
+    // a plain object's `obj[name]` lookup walks the prototype chain —
+    // `Map.prototype.get` has no such hazard. Mirrors this same file's
+    // existing preference for `Map` over object literals for name-keyed
+    // lookups (see `bindingsEmpty` above).
     const HANDLERS = new Map([
       ["Add", addHandler],
       ["Sub", subHandler],
@@ -4065,34 +4149,171 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       ["Not", notHandler],
     ]);
 
+    // ── held-form handlers (Assign / Define / If) — SIR23 addendum item 2
+    //
+    // Direct ports of `handlers.rs::assign_handler`/`define_handler`/
+    // `if_handler` (search that file for "Assign / Define -- binding
+    // forms" and "If handler -- held head"). Unlike the arg-evaluated
+    // `HANDLERS` above, each of these receives the ORIGINAL, unevaluated
+    // `args` (per `HELD_HEADS`) plus `depth`, since each decides FOR
+    // ITSELF what (if anything) to evaluate and how — exactly why
+    // `handlers.rs`'s own `Handler` type is `Fn(&mut VM, IRApply) ->
+    // IRNode`, giving every handler potential access to `vm.eval`; only
+    // the held ones actually use it.
+
+    // `assign_handler`'s port: `x := rhs` evaluates the RHS, binds
+    // `name -> value` in `symEnv`, returns `value`. Wrong arity (not
+    // exactly 2 args) leaves the call unevaluated, mirroring
+    // `binary_args`'s `None` early-return; a non-Symbol lhs panics in the
+    // Rust reference (`panic!("Assign lhs must be a symbol, ...")`),
+    // ported here as a thrown `TypeError` — matching this file's own
+    // existing convention of throwing on a domain error no oracle case
+    // can even construct (e.g. `divHandler`'s "division by zero" above).
+    function assignHandler(head, args, depth) {
+      if (args.length !== 2) { return applyTerm(head, args); }
+      const [lhs, rhs] = args;
+      if (lhs.kind !== "symbol") {
+        throw new TypeError("Symbolic.evalTerm: Assign lhs must be a symbol, got " + lhs.kind);
+      }
+      const value = evalTerm(rhs, depth + 1);
+      if (isDepthLimitError(value)) { return value; }
+      symEnv.set(lhs.name, value);
+      return value;
+    }
+
+    // `define_handler`'s port: `F(params) := body` stores the WHOLE
+    // `Define(name, List(params...), body)` record under `name` (so the
+    // user-function dispatch step in `evalApply` below can find it), and
+    // returns the bare `Symbol(name)` — NOT the stored record — which is
+    // why a correctly-evaluated `F(x) := x*x` displays as `"F"`, never as
+    // `"Define(...)"` (`handlers.rs::define_handler`'s own comment).
+    // Wrong arity (not exactly 3 args) leaves the call unevaluated; a
+    // non-Symbol name panics in the Rust reference, ported as a thrown
+    // `TypeError` (same convention as `assignHandler` above).
+    function defineHandler(head, args) {
+      if (args.length !== 3) { return applyTerm(head, args); }
+      const nameTerm = args[0];
+      if (nameTerm.kind !== "symbol") {
+        throw new TypeError("Symbolic.evalTerm: Define name must be a symbol, got " + nameTerm.kind);
+      }
+      symEnv.set(nameTerm.name, applyTerm(head, args));
+      return symTerm(nameTerm.name);
+    }
+
+    // `if_handler`'s port: evaluate the condition; branch on the
+    // resulting `True`/`False` SYMBOL (2- or 3-arg form, matching
+    // `symbolic-vm`'s own arity check — `args.length < 2 || > 3` panics
+    // in the Rust reference, ported as a thrown `RangeError`, same
+    // convention as above). If the condition doesn't resolve to a
+    // boolean symbol, rebuild the unevaluated `If(...)` term with the
+    // condition's own (partially-)evaluated form spliced in — matches
+    // `if_handler`'s own "predicate didn't reduce -- rebuild the
+    // expression" branch exactly, free-variable-safe.
+    function ifHandler(head, args, depth) {
+      if (args.length < 2 || args.length > 3) {
+        throw new RangeError("Symbolic.evalTerm: If expects 2 or 3 arguments, got " + args.length);
+      }
+      const predicate = evalTerm(args[0], depth + 1);
+      if (isDepthLimitError(predicate)) { return predicate; }
+      const t = isTruthy(predicate);
+      if (t === true) { return evalTerm(args[1], depth + 1); }
+      if (t === false) {
+        return args.length === 3 ? evalTerm(args[2], depth + 1) : symTerm("False");
+      }
+      return applyTerm(head, [predicate].concat(args.slice(1)));
+    }
+
+    const HELD_HANDLERS = new Map([
+      ["Assign", assignHandler],
+      ["Define", defineHandler],
+      ["If", ifHandler],
+    ]);
+
+    // `is_define_record`'s port: true iff `node` is a stored
+    // `Apply(Symbol("Define"), ...)` binding.
+    function isDefineRecord(node) {
+      return node.kind === "apply" && node.head.kind === "symbol" && node.head.name === "Define";
+    }
+
+    // `apply_user_function`'s port, exactly: `definition` is the stored
+    // `Define(name, List(params...), body)` record; `args` are the
+    // ALREADY-evaluated (applicative-order) call arguments. Zips
+    // `params` against `args` BY POSITION; a non-`Symbol` param entry is
+    // silently DROPPED from the zip (mirrors the Rust reference's own
+    // `filter_map` over `params_ir`'s elements exactly — a deliberate
+    // port of that quirk, not an improvement on it, per this task's own
+    // "don't improvise different behavior" constraint). Arity mismatch
+    // (post-drop param count != arg count) or a malformed record (not
+    // exactly 3 fields, or a middle field that isn't a `List(...)`)
+    // returns `null` — "leave the call unevaluated", mirroring the Rust
+    // reference's `Option<IRNode>` `None` exactly.
+    function applyUserFunction(definition, args) {
+      if (definition.args.length !== 3) { return null; }
+      const paramsTerm = definition.args[1];
+      const body = definition.args[2];
+      if (!(paramsTerm.kind === "apply" && paramsTerm.head.kind === "symbol" && paramsTerm.head.name === "List")) {
+        return null;
+      }
+      const paramNames = [];
+      for (const p of paramsTerm.args) {
+        if (p.kind === "symbol") { paramNames.push(p.name); }
+        // else: silently dropped, matching `apply_user_function`'s own
+        // `filter_map` over non-Symbol param entries.
+      }
+      if (paramNames.length !== args.length) { return null; } // arity mismatch
+      const bindings = new Map();
+      for (let i = 0; i < paramNames.length; i++) {
+        bindings.set(paramNames[i], args[i]);
+      }
+      return substituteSymbols(body, bindings);
+    }
+
     // `Apply(head, args)`: evaluate `head` first (mirrors `eval_apply`'s
-    // own treatment of the head), then either hold `args` unevaluated
-    // (a `HELD_HEADS` member — item 1 has no handler for any of them, so
-    // this only matters for keeping their arguments byte-for-byte
-    // unevaluated, see the module doc above) or evaluate every arg in
-    // applicative order, then dispatch on the evaluated head's name
-    // against `HANDLERS`. No handler matched (every held head in this
-    // item, plus any other unknown/future head, plus `List` forever) ->
-    // rebuild the term from the evaluated head and the args just
-    // computed — the single "arg-evaluated, pass-through" policy that
+    // own treatment of the head), then either dispatch a HELD form
+    // (`Assign`/`Define`/`If` — args passed RAW, see `HELD_HANDLERS`
+    // above) or evaluate every arg in applicative order and dispatch on
+    // the evaluated head's name against `HANDLERS`. If no core handler
+    // matches, check whether the evaluated head is a `Symbol` bound in
+    // `symEnv` to a stored `Define` record (user-function dispatch,
+    // `vm.rs::eval_apply` step 4); if so, substitute and re-`evalTerm`
+    // the result. Otherwise — every held head with no handler (can't
+    // happen post item 2, since all three now have one; kept as a
+    // defensive fallback exactly mirroring `on_unknown_head`'s
+    // pass-through policy), any other unknown/future head, plus `List`
+    // forever — rebuild the term from the evaluated head and the args
+    // just computed, the single "arg-evaluated, pass-through" policy that
     // makes `List(Add(1,1), Mul(2,3))` fold its elements "for free".
     function evalApply(term, depth) {
       const evaluatedHead = evalTerm(term.head, depth + 1);
       if (isDepthLimitError(evaluatedHead)) { return evaluatedHead; }
       const name = headName(evaluatedHead);
-      let args;
+
       if (HELD_HEADS.has(name)) {
-        args = term.args; // ORIGINAL, unevaluated -- see module doc above
-      } else {
-        args = [];
-        for (const a of term.args) {
-          const evaluated = evalTerm(a, depth + 1);
-          if (isDepthLimitError(evaluated)) { return evaluated; }
-          args.push(evaluated);
+        const heldHandler = HELD_HANDLERS.get(name);
+        return heldHandler !== undefined
+          ? heldHandler(evaluatedHead, term.args, depth) // RAW args -- held
+          : applyTerm(evaluatedHead, term.args);
+      }
+
+      const args = [];
+      for (const a of term.args) {
+        const evaluated = evalTerm(a, depth + 1);
+        if (isDepthLimitError(evaluated)) { return evaluated; }
+        args.push(evaluated);
+      }
+
+      const handler = HANDLERS.get(name);
+      if (handler !== undefined) { return handler(evaluatedHead, args); }
+
+      if (evaluatedHead.kind === "symbol") {
+        const bound = symEnv.get(evaluatedHead.name);
+        if (bound !== undefined && isDefineRecord(bound)) {
+          const substituted = applyUserFunction(bound, args);
+          if (substituted !== null) { return evalTerm(substituted, depth + 1); }
         }
       }
-      const handler = HANDLERS.get(name);
-      return handler !== undefined ? handler(evaluatedHead, args) : applyTerm(evaluatedHead, args);
+
+      return applyTerm(evaluatedHead, args);
     }
 
     // `Symbolic.evalTerm(term, depth)` — the public entry point emitted
@@ -4105,16 +4326,35 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     // use (checked by the same, unmodified `isDepthLimitError`/
     // `Symbolic.unwrap`) when `MAX_EVAL_DEPTH` is exceeded.
     //
-    // A `Symbol`/`integer`/`rational`/`float`/`string` leaf: item 1 has
-    // no environment yet (no `Symbol` lookup — that is item 2's job), so
-    // every leaf, including a bare, unbound `Symbol`, is already its own
-    // fully-reduced value and is returned unchanged.
+    // A `Symbol` leaf (SIR23 addendum item 2): look it up in `symEnv`.
+    // Unbound -> pass through unchanged, mirroring
+    // `SymbolicBackend::on_unresolved`'s pass-through policy (the only
+    // policy any of these 5 frontends use — `StrictBackend`'s
+    // panic-on-unknown policy is not used by any of them). Bound -> a
+    // self-loop guard (`x := x` would recurse forever without it,
+    // `eval_symbol`'s own comment) via `termEquals` — reusing this
+    // file's existing structural-equality check (a freshly rebuilt term
+    // with the same shape must still count as "the same value" here,
+    // exactly like every other `termEquals` call site in this IIFE) —
+    // then recursively `evalTerm`s the binding.
+    //
+    // An `integer`/`rational`/`float`/`string` leaf is already its own
+    // fully-reduced value and is returned unchanged (unaffected by item
+    // 2 — only `Symbol` gained an environment lookup).
+    function evalSymbol(term, depth) {
+      const bound = symEnv.get(term.name);
+      if (bound === undefined) { return term; }
+      if (termEquals(bound, term)) { return term; }
+      return evalTerm(bound, depth + 1);
+    }
+
     function evalTerm(term, depth) {
       if (depth === undefined) { depth = 0; }
       if (depth > MAX_EVAL_DEPTH) {
         return { kind: "depth-limit", maxDepth: MAX_EVAL_DEPTH };
       }
       if (term.kind === "apply") { return evalApply(term, depth); }
+      if (term.kind === "symbol") { return evalSymbol(term, depth); }
       return term;
     }
 
