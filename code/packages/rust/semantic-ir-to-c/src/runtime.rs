@@ -42,7 +42,13 @@ pub const RUNTIME: &str = r####"/* =============================================
 
 typedef enum {
     SIR_NIL, SIR_BOOL, SIR_INT, SIR_FLOAT,
-    SIR_STR, SIR_SYM, SIR_PAIR, SIR_CLOSURE, SIR_SEQ, SIR_MAP
+    SIR_STR, SIR_SYM, SIR_PAIR, SIR_CLOSURE, SIR_SEQ, SIR_MAP,
+    /* An INTERNAL "argument was omitted" sentinel for SIR19 default parameters.
+     * A `DirectCall` that leaves a trailing defaulted argument off pads the call
+     * with `_sir_missing()`; the callee's prologue replaces each such parameter
+     * with its default expression BEFORE the body runs, so a `SIR_MISSING` value
+     * is never observed by user code (never printed, compared, or stored). */
+    SIR_MISSING
 } SirTag;
 
 typedef struct SirValue SirValue;
@@ -138,6 +144,12 @@ SirValue _sir_int(int64_t i)   { SirValue v; v.tag = SIR_INT;  v.as.i = i;   ret
 SirValue _sir_float(double f)  { SirValue v; v.tag = SIR_FLOAT; v.as.f = f;  return v; }
 SirValue _sir_str(const char *s) { SirValue v; v.tag = SIR_STR; v.as.s = s;  return v; }
 SirValue _sir_sym(const char *s) { SirValue v; v.tag = SIR_SYM; v.as.s = _sir_intern(s); return v; }
+
+/* The SIR19 "argument omitted" sentinel (see `SIR_MISSING`).  `_sir_missing()`
+ * is passed at a call site for each trailing defaulted parameter left off; the
+ * callee's prologue tests `_sir_is_missing` and substitutes the default. */
+SirValue _sir_missing(void)      { SirValue v; v.tag = SIR_MISSING; v.as.i = 0; return v; }
+int _sir_is_missing(SirValue v)  { return v.tag == SIR_MISSING; }
 
 /* ---- truthiness --------------------------------------------- */
 

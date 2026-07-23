@@ -116,6 +116,17 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // `_sir_seq_iter` panics on it); C's lenient `_sir_seq_iter` else-branch
     // (empty iteration) already covers it without an emitter `unreachable!`.
     Feature::Maps,
+    // ── SIR19 default parameters ─────────────────────────────────────
+    // A positional parameter carrying a default value.  C has no native
+    // defaults, so — like the Go backend — this uses a `_sir_missing` sentinel:
+    // a `DirectCall` that omits trailing defaulted arguments pads the call with
+    // `_sir_missing()` (call-site padding, keyed off a thread-local arity map),
+    // and each function opens with a prologue `if (_sir_is_missing(p)) { p =
+    // <default>; }` in declaration order (so a later default may reference an
+    // earlier parameter).  The unsupported-builtin pre-check also scans each
+    // default, so the emitter stays total.  Keyword defaults are the separate
+    // (still-unaccepted) `KeywordParams` feature.
+    Feature::DefaultParams,
 ];
 
 impl Backend for CBackend {
