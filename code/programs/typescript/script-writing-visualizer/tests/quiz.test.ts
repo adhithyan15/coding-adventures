@@ -103,3 +103,72 @@ describe("coveredGrid against the real curriculum", () => {
     expect(languagesIn(four)).toEqual(["spanish", "latin", "french", "german"]);
   });
 });
+
+import { cellWeight, cellDue, pickNext, makeRng, type QuizState } from "../src/quiz";
+
+const distinct = <T,>(xs: T[]) => new Set(xs).size;
+
+describe("cellWeight — the SRS bias", () => {
+  const S = 10;
+  it("weights never-seen above not-yet-due, and overdue/low-box/lapsed highest", () => {
+    const unseen = cellWeight(undefined, S);
+    const notDue = cellWeight({ box: 5, dueAtSession: 100, lapses: 0, reps: 3 }, S);
+    const dueHighBox = cellWeight({ box: 5, dueAtSession: 10, lapses: 0, reps: 3 }, S);
+    const dueLowBoxOverdue = cellWeight({ box: 0, dueAtSession: 4, lapses: 2, reps: 1 }, S);
+    expect(unseen).toBeGreaterThan(notDue);
+    expect(dueLowBoxOverdue).toBeGreaterThan(dueHighBox); // missed material outweighs due-but-known
+    expect(dueHighBox).toBeGreaterThan(notDue);
+    // more overdue → strictly heavier
+    expect(cellWeight({ box: 1, dueAtSession: 2, lapses: 0, reps: 1 }, S))
+      .toBeGreaterThan(cellWeight({ box: 1, dueAtSession: 9, lapses: 0, reps: 1 }, S));
+  });
+
+  it("cellDue is dueAtSession <= session", () => {
+    expect(cellDue({ box: 0, dueAtSession: 10, lapses: 0, reps: 0 }, 10)).toBe(true);
+    expect(cellDue({ box: 0, dueAtSession: 11, lapses: 0, reps: 0 }, 10)).toBe(false);
+  });
+});
+
+describe("pickNext — the weighted draw", () => {
+  it("returns null for an empty grid", () => {
+    expect(pickNext([], new Map(), 0, makeRng(1))).toBeNull();
+  });
+
+  it("is deterministic for a given seed", () => {
+    const grid = coveredGrid(["A", "B"], [L("spanish", "A", "a"), L("french", "B", "b")], 10);
+    const draw = (seed: number) => {
+      const rng = makeRng(seed);
+      return Array.from({ length: 20 }, () => cellKey(pickNext(grid, new Map(), 0, rng)!));
+    };
+    expect(draw(42)).toEqual(draw(42)); // same seed, same sequence
+  });
+
+  it("CONTROL: over many draws the sample spans MULTIPLE concepts AND languages", () => {
+    // 2 concepts × 2 languages, all unseen (equal weight) → the draw must not
+    // collapse to one bucket. A pickNext that always returned grid[0] fails both.
+    const grid = coveredGrid(
+      ["A", "B"],
+      [L("spanish", "A", "sa"), L("french", "A", "fa"), L("spanish", "B", "sb"), L("french", "B", "fb")],
+      10,
+    );
+    const rng = makeRng(7);
+    const drawn = Array.from({ length: 300 }, () => pickNext(grid, new Map(), 0, rng)!);
+    expect(distinct(drawn.map((c) => c.concept))).toBeGreaterThan(1);
+    expect(distinct(drawn.map((c) => c.language))).toBeGreaterThan(1);
+  });
+
+  it("CONTROL: the draw biases toward the missed/overdue cell over a mastered one", () => {
+    const grid = coveredGrid(["A", "B"], [L("spanish", "A", "missed"), L("french", "B", "known")], 10);
+    const states = new Map<string, QuizState>([
+      [cellKey(grid.find((c) => c.lesson.id === "missed")!), { box: 0, dueAtSession: 4, lapses: 2, reps: 1 }],
+      [cellKey(grid.find((c) => c.lesson.id === "known")!), { box: 5, dueAtSession: 100, lapses: 0, reps: 5 }],
+    ]);
+    const rng = makeRng(3);
+    const drawn = Array.from({ length: 400 }, () => pickNext(grid, states, 10, rng)!);
+    const missed = drawn.filter((c) => c.lesson.id === "missed").length;
+    const known = drawn.filter((c) => c.lesson.id === "known").length;
+    // missed weight ~16 vs known ~1 → missed should dominate by a wide margin.
+    // (Under a UNIFORM draw these would be ~equal — that is the injected failure.)
+    expect(missed).toBeGreaterThan(known * 3);
+  });
+});

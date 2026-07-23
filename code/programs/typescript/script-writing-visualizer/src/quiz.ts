@@ -81,3 +81,84 @@ export function cellKey(cell: GridCell): string {
   // distinct keys collide, and typed spaces here were mangled to NUL bytes.
   return JSON.stringify([cell.concept, cell.language, cell.lesson.id]);
 }
+
+// ---------------------------------------------------------------------------
+// Part 2 — the SRS-weighted draw.
+//
+// The quiz is a randomised draw over the covered grid, but not a UNIFORM one:
+// it leans on what the learner is weakest at. Each cell keeps a little Leitner
+// state (the same box/interval math as scheduler.ts, keyed by cellKey instead
+// of a letter index), and the draw weights a cell by how much it is owed:
+//   • never seen  → high (introduce it),
+//   • DUE, and the more overdue / the lower its box / the more it has lapsed →
+//     highest (this is the missed material the review exists for),
+//   • not yet due → low (it can still show up, so review stays interleaved).
+//
+// The draw is deterministic given a seeded PRNG, so the whole thing is testable.
+// ---------------------------------------------------------------------------
+
+import { MAX_BOX } from "./scheduler";
+
+/** Per-cell review state — Leitner box + when it next comes due. */
+export interface QuizState {
+  box: number;
+  dueAtSession: number;
+  lapses: number;
+  reps: number;
+}
+
+/** Is a cell due to be reviewed at (or before) this session? */
+export function cellDue(state: QuizState, session: number): boolean {
+  return state.dueAtSession <= session;
+}
+
+/**
+ * The draw weight for a cell given its state (or undefined = never seen).
+ * Higher = more likely to be drawn. A mastered, not-yet-due cell sinks to the
+ * floor; an overdue, low-box, lapsed cell rises far above it.
+ */
+export function cellWeight(state: QuizState | undefined, session: number): number {
+  if (state === undefined) return 6; // new material — worth asking
+  if (!cellDue(state, session)) return 1; // not due — rare interleaving only
+  const overdue = Math.max(0, session - state.dueAtSession);
+  const box = Math.max(0, Math.min(MAX_BOX, state.box));
+  return 4 + overdue + (MAX_BOX - box) + state.lapses;
+}
+
+/**
+ * Draw the next quiz cell from the grid, weighted by SRS state, using a seeded
+ * PRNG (`rng()` in [0, 1)). Returns null for an empty grid. Deterministic:
+ * same grid + states + session + rng sequence → same cell.
+ */
+export function pickNext(
+  grid: GridCell[],
+  states: Map<string, QuizState>,
+  session: number,
+  rng: () => number,
+): GridCell | null {
+  if (grid.length === 0) return null;
+  const weights = grid.map((cell) => cellWeight(states.get(cellKey(cell)), session));
+  const total = weights.reduce((a, w) => a + w, 0);
+  if (total <= 0) return grid[0] ?? null;
+  let point = rng() * total;
+  for (let i = 0; i < grid.length; i++) {
+    point -= weights[i]!;
+    if (point < 0) return grid[i]!;
+  }
+  return grid[grid.length - 1]!; // float slop — return the last cell
+}
+
+/**
+ * A small deterministic PRNG (a linear congruential generator), matching the
+ * app's practice of never depending on Math.random. `makeRng(seed)()` yields a
+ * reproducible stream in [0, 1).
+ */
+export function makeRng(seed: number): () => number {
+  let s = (seed | 0) || 1;
+  return () => {
+    // Math.imul keeps the 32-bit multiply exact (a plain * overflows 2^53 and
+    // rounds away low bits, shrinking the LCG period to ~11k); this restores it.
+    s = (Math.imul(s, 1103515245) + 12345) & 0x7fffffff;
+    return s / 0x7fffffff;
+  };
+}
