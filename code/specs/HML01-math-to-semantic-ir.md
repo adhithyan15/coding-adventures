@@ -270,12 +270,13 @@ without any change to the IR or the frontends.
 
 ## §5 Rollout — two parallel streams, one shared serialization point
 
-**Stream A (array/matrix, backs MATLAB/Octave/APL and future J/Scilab/IDL):**
+**Stream A (array/matrix, backs MATLAB/Octave/APL/J/Scilab and future
+IDL):**
 `SIR22` spec → `semantic-ir` core additions → `matlab-to-semantic-ir` →
 `octave-to-semantic-ir` → `sir-runtime-array` → JS/TS backend codegen →
 `apl-to-semantic-ir` (SIR22 addendum for APL primitives) →
-`j-to-semantic-ir` → golden/oracle tests (MATLAB's, Octave's, APL's, and
-J's own now shipped. MATLAB — see
+`j-to-semantic-ir` → `scilab-to-semantic-ir` → golden/oracle tests
+(MATLAB's, Octave's, APL's, J's, and Scilab's own now shipped. MATLAB — see
 `matlab-to-semantic-ir/tests/oracle.rs`, the first
 true oracle diff anywhere in this track: the same computation run through
 `matlab-runtime` and through this frontend's compiled-JS-via-`node` path,
@@ -318,7 +319,34 @@ left open for a follow-up PR (no J-specific display convention for
 negative numbers/infinity at all — only APL's high-minus glyph is wired
 up — and three of J's own builtin names, `tally`/`replicate`/`exp`, never
 registered in that crate's dispatch table) — see that crate's
-`CHANGELOG.md` for the full write-up. All items through JS/TS backend
+`CHANGELOG.md` for the full write-up. Scilab — see
+`scilab-to-semantic-ir/tests/oracle.rs`, its own 33-case corpus (`setup`
++ `final_expr` `Case` shape, structurally closer to MATLAB's/Octave's own
+oracle files than to the CAS-family ones, since `scilab-runtime`'s `disp`
+is a no-op and the only working ground-truth display convention is the
+unsuppressed `name = value` echo — but also carrying the CAS-family
+files' `known_bug` field, since this crate turned out to have six
+genuinely worth-tracking findings). 27 of 33 cases agree end-to-end with
+no marker at all. Three findings are already-open, shared-crate
+display-convention gaps confirmed to also affect Scilab (not
+independently reintroduced): the whole-valued-float-literal trailing
+`.0` bug, `Inf`/`eps` number-formatting divergence (Rust `Display` vs.
+JS `Number.prototype.toString`), and the still-open integer-literal-
+division-floors bug MATLAB's own oracle file already documents. One
+finding is a genuine, newly-discovered BUG in the shared
+`semantic-ir-to-javascript` crate, NOT fixed in the Scilab PR: `matmul`
+reads `a.shape`/`b.shape` unconditionally with no `toArrayValue`
+normalization step first (unlike its sibling `elementwise`, which
+normalizes both operands first), so any `x * y` between two non-literal
+operands that turn out to be plain scalars — not array literals —
+crashes at runtime (`TypeError: Cannot read properties of undefined
+(reading 'length')` at `nrows`). This was only reachable via Scilab's
+oracle harness because `scilab-runtime`, unlike `matlab-runtime`,
+supports user-defined functions, giving a function-parameter
+self-multiplication repro shape MATLAB's own oracle file could never
+have exercised even if it had tried — see that crate's `CHANGELOG.md`
+for the full write-up and the dedicated follow-up task filed against
+`semantic-ir-to-javascript`'s `matmul`. All items through JS/TS backend
 codegen are shipped.
 
 **Stream B (symbolic/CAS, backs Wolfram/Macsyma/Maxima/Derive/Reduce/

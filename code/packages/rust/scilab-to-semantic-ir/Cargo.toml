@@ -1,6 +1,6 @@
 [package]
 name = "scilab-to-semantic-ir"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Scilab CST → narrow-waist Semantic IR (SIR22 array/matrix domain). MA-10e, the last item in the Scilab frontend rollout per MA10 §6."
 
@@ -27,3 +27,13 @@ lexer = { path = "../lexer" }
 # doesn't yet accept is instead verified via the capability-rejection path
 # in `tests/test_validator.rs`.
 semantic-ir-to-javascript = { path = "../semantic-ir-to-javascript" }
+# tests/oracle.rs's ground truth: the same tree-walking evaluator
+# (`scilab-runtime`, MA-10d) this frontend's own CST comes from
+# (`coding-adventures-scilab-parser`), reached through its own `eval`
+# (HML01 §7's oracle/golden testing) -- mirroring `matlab-to-semantic-ir`'s/
+# `maple-to-semantic-ir`'s identical use of their own native runtime crate
+# as ground truth. The non-dev `[dependencies]` section above still
+# deliberately does NOT depend on this crate -- lowering itself only needs
+# the parse-tree shape, never the evaluator; only this test file needs it,
+# for comparison purposes only.
+coding-adventures-scilab-runtime = { path = "../scilab-runtime" }
