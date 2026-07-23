@@ -1526,11 +1526,17 @@ impl Machine {
             None => self.group_image(idx),
         };
         let chars: Vec<char> = content.chars().collect();
-        let width = chars.len() as i64;
+        let width = chars.len() as i128;
+        // Compute the half-open [start0, end) bounds in i128 so an adversarial
+        // index item (e.g. `PIC 9(18)` holding a value near i64::MAX) can never
+        // overflow the `start0 + len` add into a debug-build panic — it is caught
+        // by the bounds check below and reported as a clean RefModOutOfRange. The
+        // predicate `start0 < 0 || end < start0 || end > width` is the identical
+        // rule the emitted run-time `str_slice` enforces on the compiler side.
         let start_v = self.refmod_index_value(start)?;
-        let start0 = start_v - 1;
-        let end = match len {
-            Some(l) => start0 + self.refmod_index_value(l)?,
+        let start0 = start_v as i128 - 1;
+        let end: i128 = match len {
+            Some(l) => start0 + self.refmod_index_value(l)? as i128,
             None => width,
         };
         if start0 < 0 || end < start0 || end > width {
@@ -1539,6 +1545,7 @@ impl Machine {
                 len.as_ref().map(|_| (end - start0).to_string()).unwrap_or_default()
             )));
         }
+        // Bounds passed: 0 ≤ start0 ≤ end ≤ width, all within the small char count.
         Ok(chars[start0 as usize..end as usize].iter().collect())
     }
 

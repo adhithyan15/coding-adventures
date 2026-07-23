@@ -218,6 +218,14 @@ pub const I64_GE_S: u8 = 0x59;
 /// i64 reinterpreted as unsigned is huge), exactly like LLVM's `icmp uge`.
 pub const I64_GE_U: u8 = 0x5A;
 
+/// `i64.gt_u` (0x56) — **unsigned** i64 >. Used by the runtime `str_slice`
+/// truncation guard: a computed i64 index is checked `index >u len` on its FULL
+/// i64 value *before* it is wrapped to i32 for the memory op, so a huge index
+/// (or a negative one, which is huge unsigned) traps instead of aliasing into
+/// range through the low 32 bits. (0x55 is `i64.gt_s`; the unsigned variant is
+/// always signed+1 in the WASM comparison-opcode block.)
+pub const I64_GT_U: u8 = 0x56;
+
 /// `i32.load` (0x28) — load an i32 from linear memory at `address + offset`,
 /// with an `align` hint. Used by the E4-dyn (E4d-3) runtime string block header:
 /// a branch-selected string carries an i32 **handle** = the offset of a

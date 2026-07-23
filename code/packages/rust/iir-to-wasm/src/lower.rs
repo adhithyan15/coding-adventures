@@ -155,7 +155,7 @@ use crate::codegen::{
     I64_TRUNC_F64_S,
     I32_GE_U, I32_GT_S, I32_GT_U, I32_LE_S, I32_LE_U, I32_LT_S, I32_LT_U, I32_MUL, I32_NE,
     I32_OR, I32_REM_S, I32_REM_U, I32_SHL, I32_SHR_S, I32_SHR_U, I32_SUB, I32_XOR, I64_ADD,
-    I64_AND, I64_DIV_S, I64_DIV_U, I64_EQ, I64_GE_S, I64_GE_U, I64_GT_S, I64_LE_S, I64_LT_S,
+    I64_AND, I64_DIV_S, I64_DIV_U, I64_EQ, I64_GE_S, I64_GE_U, I64_GT_S, I64_GT_U, I64_LE_S, I64_LT_S,
     I64_MUL, I64_NE, I64_OR, I64_REM_S, I64_REM_U, I64_SHL, I64_SHR_S, I64_SHR_U, I64_SUB,
     I64_XOR, IF, LOOP, RETURN, UNREACHABLE,
 };
@@ -1337,6 +1337,28 @@ fn emit_instr(
                     })?;
                     (encode_i32_const(lit.len as i32), encode_i32_const(lit.offset as i32))
                 };
+
+                // i64 truncation guard: a computed index (e.g. a COBOL
+                // reference-modification start/length read from a numeric item) can
+                // exceed i32 range. The bounds check and `memory.copy` below operate
+                // on the i32-WRAPPED index, so a huge i64 whose low 32 bits land in
+                // [0, len] would otherwise slip past the wrapped check and splice the
+                // wrong run. Trap on the FULL i64 value first (`index >u len`, which
+                // also catches a negative index as a huge unsigned), so the wasm
+                // target agrees with the VM/oracle i64 bounds rule. i32 index slots
+                // can't truncate, so they skip this and rely on the wrapped check.
+                for &slot in &[start_slot, end_slot] {
+                    if slot_is_i64(slot) {
+                        code.extend(encode_local_get(slot));
+                        code.extend_from_slice(&push_src_len);
+                        code.extend(encode_i64_extend_i32_u());
+                        code.push(I64_GT_U);
+                        code.push(IF);
+                        code.push(BLOCK_EMPTY);
+                        code.push(UNREACHABLE);
+                        code.push(END);
+                    }
+                }
 
                 // Bounds: `unreachable` (trap) unless 0 ≤ start ≤ end ≤ len.  The
                 // compares are UNSIGNED, so a negative index (a huge unsigned) fails
