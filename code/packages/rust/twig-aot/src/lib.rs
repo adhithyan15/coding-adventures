@@ -1023,18 +1023,6 @@ fn build_gc_wrapper_x86_64(
     Ok((bytes, relocs))
 }
 
-/// Build the **no-op** `__gc_init_stackmaps` for x86-64 (a bare `ret`). A later PR
-/// (AOT00-T1 x86_64 PR-x3) fills it in to register each function's stack map; this
-/// increment lands the wrapper mechanism and proves it transparent first.
-fn build_gc_noop_init_x86_64() -> Result<Vec<u8>, AotError> {
-    let mut a = x86_64_encoder::Assembler::new();
-    a.ret();
-    a.finish().map_err(|e| AotError::Linker {
-        status: None,
-        stderr: format!("twig-aot: x86_64 GC init codegen: {e:?}"),
-    })
-}
-
 /// One `LEA r64, [RIP+…]` in the x86-64 `__gc_init_stackmaps` that must be patched to a
 /// user function's runtime address (`func_start`, the first `__gc_register_stackmap`
 /// argument). `RIP`-relative in bytes, so the displacement is a link-time constant
@@ -1065,9 +1053,8 @@ fn call_return_offsets_x86_64(relocs: &[x86_64_encoder::ExternalReloc]) -> Vec<u
 }
 
 /// Build the **SysV** x86-64 `__gc_init_stackmaps`: for every function with records,
-/// marshal the eight `__gc_register_stackmap` arguments and call it. (Windows/MsX64
-/// keeps the no-op init — its precise walk is a follow-up — so Windows degrades to a
-/// safe conservative collection.)
+/// marshal the eight `__gc_register_stackmap` arguments and call it. The MsX64 (Windows)
+/// twin is [`build_gc_init_stackmaps_x86_64_msx64`]; both ABIs now do real registration.
 ///
 /// ```text
 ///   __gc_init_stackmaps:
@@ -1163,6 +1150,108 @@ fn build_gc_init_stackmaps_x86_64(
     Ok((a.finish().map_err(gc_asm_err_x86)?, relocs, faddr))
 }
 
+/// `__gc_init_stackmaps` for the **Microsoft x64** ABI (Windows) — the MsX64 twin of
+/// [`build_gc_init_stackmaps_x86_64`] (AOT00-T1 x86_64 §Delta-2, PR-x6).
+///
+/// The stack map and `func_start` machinery are identical; only the 8-argument marshalling
+/// of `__gc_register_stackmap` differs. MsX64 passes the first four integer args in
+/// `rcx, rdx, r8, r9` and the rest on the stack **above a mandatory 32-byte shadow space**:
+///
+/// ```text
+///   sub  rsp, 64                 ; 32 shadow (home for rcx..r9) + 32 for args 5-8; 16-aligned
+///   lea  rcx, [rip + F]          ; arg1 func_start   (placeholder, patched in pass 2b)
+///   mov  rdx, <func_len>         ; arg2
+///   mov  r8,  <num_records>      ; arg3
+///   lea  r9,  [rip + F.pc]       ; arg4 pc_offsets
+///   xor  rax, rax
+///   mov  [rsp+32], rax           ; arg5 frame_sizes  = NULL
+///   mov  [rsp+40], rax           ; arg6 callee_masks = NULL
+///   lea  rax, [rip + F.counts]   ; mov [rsp+48], rax  ; arg7 slot_counts
+///   lea  rax, [rip + F.slots]|0  ; mov [rsp+56], rax  ; arg8 slots_flat
+///   call __gc_register_stackmap
+///   add  rsp, 64
+/// ```
+///
+/// **Stack-alignment invariant:** the wrapper enters this function 16-aligned after
+/// `push rbp`; `sub rsp, 64` keeps `rsp ≡ 0 (mod 16)` at each `call` (64 is a 16-multiple),
+/// as MS x64 requires — get it wrong and a `movaps` in the runtime faults. The four stack
+/// args are placed with `mov [rsp+disp], rax` (an `rsp`-based store, which the encoder
+/// emits with the required SIB byte) rather than SysV's `push`, because MsX64 must not
+/// disturb the shadow space below them.
+#[allow(clippy::type_complexity)]
+fn build_gc_init_stackmaps_x86_64_msx64(
+    fn_maps: &[FnStackMap],
+) -> Result<(Vec<u8>, Vec<x86_64_encoder::ExternalReloc>, Vec<FuncAddrRelocX86>), AotError> {
+    use x86_64_encoder::{Assembler, LabelId, Reg};
+    let mut a = Assembler::new();
+    let mut faddr: Vec<FuncAddrRelocX86> = Vec::new();
+    let mut pool: Vec<(LabelId, Vec<u32>)> = Vec::new();
+
+    a.push(Reg::Rbp);
+    a.mov_r64_r64(Reg::Rbp, Reg::Rsp);
+
+    for fm in fn_maps {
+        if fm.records.is_empty() {
+            continue; // no safepoints → nothing to register (conservative frame)
+        }
+        let mut pc_offsets: Vec<u32> = Vec::with_capacity(fm.records.len());
+        let mut slot_counts: Vec<u32> = Vec::with_capacity(fm.records.len());
+        let mut slots_flat: Vec<u32> = Vec::new();
+        for (pc, slots) in &fm.records {
+            pc_offsets.push(*pc);
+            slot_counts.push(slots.len() as u32);
+            slots_flat.extend(slots.iter().map(|&s| s as u32)); // i32 → u32 bit-cast
+        }
+        let pc_lbl = a.create_label();
+        let cnt_lbl = a.create_label();
+        let slots_lbl = if slots_flat.is_empty() { None } else { Some(a.create_label()) };
+
+        // Reserve shadow space (32) + home for the four stack args (32). One `sub` keeps
+        // rsp 16-aligned through the `call`.
+        a.sub_imm32(Reg::Rsp, 64);
+        // Args 1–4 in registers.
+        let disp_slot = a.lea_rip_placeholder(Reg::Rcx); // arg1 func_start (patched pass 2b)
+        faddr.push(FuncAddrRelocX86 { disp_slot, target: fm.name.clone() });
+        a.mov_r64_imm64(Reg::Rdx, fm.len as u64); //          arg2 func_len
+        a.mov_r64_imm64(Reg::R8, fm.records.len() as u64); // arg3 num_records
+        a.lea_rip_label(Reg::R9, pc_lbl); //                  arg4 pc_offsets
+        // Args 5–8 on the stack, above the 32-byte shadow space: [rsp+32..rsp+56].
+        a.xor_(Reg::Rax, Reg::Rax);
+        a.mov_mem_r64(Reg::Rsp, 32, Reg::Rax); // arg5 frame_sizes  = NULL
+        a.mov_mem_r64(Reg::Rsp, 40, Reg::Rax); // arg6 callee_masks = NULL
+        a.lea_rip_label(Reg::Rax, cnt_lbl);
+        a.mov_mem_r64(Reg::Rsp, 48, Reg::Rax); // arg7 slot_counts
+        match slots_lbl {
+            Some(l) => a.lea_rip_label(Reg::Rax, l), // arg8 = slots_flat
+            None => a.xor_(Reg::Rax, Reg::Rax), //     arg8 = NULL
+        }
+        a.mov_mem_r64(Reg::Rsp, 56, Reg::Rax); // arg8 slots_flat
+        a.call_rel32(GC_REGISTER_STACKMAP, x86_64_encoder::ExternalRelocKind::PltRel32);
+        a.add_imm32(Reg::Rsp, 64); // release shadow + stack args
+
+        pool.push((pc_lbl, pc_offsets));
+        pool.push((cnt_lbl, slot_counts));
+        if let Some(l) = slots_lbl {
+            pool.push((l, slots_flat));
+        }
+    }
+
+    a.mov_r64_r64(Reg::Rsp, Reg::Rbp);
+    a.pop(Reg::Rbp);
+    a.ret();
+
+    // Constant data pool — read via `lea` above, never executed (after `ret`).
+    for (lbl, words) in &pool {
+        a.bind(*lbl).map_err(gc_asm_err_x86)?;
+        for &w in words {
+            a.emit_data_u32(w);
+        }
+    }
+
+    let relocs = std::mem::take(&mut a.external_relocs);
+    Ok((a.finish().map_err(gc_asm_err_x86)?, relocs, faddr))
+}
+
 #[allow(clippy::type_complexity)]
 fn compile_module_x86_64_to_text(
     module: &IIRModule,
@@ -1174,8 +1263,8 @@ fn compile_module_x86_64_to_text(
     let mut fn_results: Vec<(String, Vec<u8>, Vec<x86_64_encoder::ExternalReloc>)> =
         Vec::with_capacity(module.functions.len());
 
-    // Per user function, the GC stack map the SysV registration function will register
-    // (collected only for SysV; MsX64 uses the no-op init, so records are unused there).
+    // Per user function, the GC stack map the registration function will register (used by
+    // both ABIs — SysV and MsX64 both do real registration now, PR-x3/PR-x6).
     let mut fn_maps: Vec<FnStackMap> = Vec::with_capacity(module.functions.len());
     for fn_ in &module.functions {
         let ctx = FunctionContext {
@@ -1193,14 +1282,14 @@ fn compile_module_x86_64_to_text(
         fn_results.push((fn_.name.clone(), bytes, relocs));
     }
 
-    // ── Inject the GC entry wrapper + (no-op) stack-map registration (AOT00-T1
-    //    x86_64 PR-x2) ──────────────────────────────────────────────────────────
+    // ── Inject the GC entry wrapper + stack-map registration (AOT00-T1 x86_64
+    //    PR-x2/x3/x6) ────────────────────────────────────────────────────────────
     //
     // Mirrors the aarch64 path: the wrapper `__gc_aot_entry` becomes the image entry
     // (the packager exports the global `main` symbol at `entry_off`, so redirecting
-    // `entry_off` to the wrapper's offset makes it `main` — no rename). It calls the
-    // (currently no-op) `__gc_init_stackmaps`, then the user entry, returning its rax.
-    // Both calls are intra-module and patched in place by pass 2 below.
+    // `entry_off` to the wrapper's offset makes it `main` — no rename). It calls
+    // `__gc_init_stackmaps` (real registration on both ABIs), then the user entry,
+    // returning its rax. Both calls are intra-module and patched in place by pass 2 below.
     let entry = module.entry_point.as_deref().ok_or(AotError::NoEntryPoint)?;
     // Reserved-symbol guard: `link()` is last-write-wins and the wrapper emits
     // `call <entry>`, so a user function OR entry named `__gc_aot_entry` /
@@ -1222,10 +1311,14 @@ fn compile_module_x86_64_to_text(
     // frame (the increment-C fix; [[feedback_precise_walk_maps_every_frame_in_chain]]).
     let (wrapper_bytes, wrapper_relocs) = build_gc_wrapper_x86_64(entry, abi)?;
 
-    // `__gc_init_stackmaps`: real registration on System V; a no-op on Windows/MsX64
-    // (whose precise walk is a follow-up), so Windows degrades to a safe conservative
-    // collection. `fn_addr_relocs` are the SysV `func_start` LEAs pass 2b patches.
-    let (init_bytes, init_relocs, fn_addr_relocs) = if matches!(abi, X86_64Abi::SysV) {
+    // `__gc_init_stackmaps`: real registration on **both** ABIs — System V (Linux) and
+    // Microsoft x64 (Windows) — so precise roots are load-bearing on every native x86-64
+    // target. The two builders differ only in the 8-arg `__gc_register_stackmap`
+    // marshalling (see `build_gc_init_stackmaps_x86_64{,_msx64}`). `fn_addr_relocs` are the
+    // `func_start` LEAs pass 2b patches (ABI-independent). The wrapper is registered too
+    // (empty ref-slot map) so the precise walk never conservatively re-scans the user
+    // entry's frame (the increment-C fix; [[feedback_precise_walk_maps_every_frame_in_chain]]).
+    let (init_bytes, init_relocs, fn_addr_relocs) = {
         let wrapper_records = call_return_offsets_x86_64(&wrapper_relocs)
             .into_iter()
             .map(|pc| (pc, Vec::new()))
@@ -1235,9 +1328,10 @@ fn compile_module_x86_64_to_text(
             len: wrapper_bytes.len(),
             records: wrapper_records,
         });
-        build_gc_init_stackmaps_x86_64(&fn_maps)?
-    } else {
-        (build_gc_noop_init_x86_64()?, Vec::new(), Vec::new())
+        match abi {
+            X86_64Abi::SysV => build_gc_init_stackmaps_x86_64(&fn_maps)?,
+            X86_64Abi::MsX64 => build_gc_init_stackmaps_x86_64_msx64(&fn_maps)?,
+        }
     };
     fn_results.push((GC_INIT_STACKMAPS.to_string(), init_bytes, init_relocs));
     fn_results.push((GC_AOT_ENTRY.to_string(), wrapper_bytes, wrapper_relocs));
@@ -1324,7 +1418,7 @@ fn compile_module_x86_64_to_text(
     // `LEA` computes `RIP + disp32`; `RIP` (= instruction end) and the target are both
     // `base + offset`, so `disp32 = target_off − (slot + 4)` is correct for any load
     // base — the same base-independence the aarch64 `ADR` func_start relies on. No `ld`
-    // relocation. (Empty on MsX64, whose init is the no-op.)
+    // relocation. Applies to both ABIs now (SysV `lea rdi`, MsX64 `lea rcx`).
     if !fn_addr_relocs.is_empty() {
         let init_off = *offsets.get(GC_INIT_STACKMAPS).ok_or_else(|| AotError::Linker {
             status: None,
@@ -3294,12 +3388,6 @@ mod tests {
         assert!(ms.len() > sysv.len(), "MsX64 reserves shadow space");
     }
 
-    /// The no-op x86_64 init is a bare `ret`.
-    #[test]
-    fn gc_noop_init_x86_64_is_ret() {
-        assert_eq!(build_gc_noop_init_x86_64().expect("codegen"), vec![0xC3]);
-    }
-
     /// After injection, the x86_64 image entry is the wrapper: `entry_off` equals the
     /// wrapper's link offset, and the byte there is `push rbp` (0x55). So the packager
     /// exports `main` at the wrapper, and libc's `_start` runs the GC entry.
@@ -3371,6 +3459,46 @@ mod tests {
         assert!(targets.contains(&"f") && targets.contains(&"g"));
         assert!(!targets.contains(&"leaf"));
         assert_eq!(bytes.last(), None.or(bytes.last())); // no panic on empty edge
+    }
+
+    /// PR-x6: the **MsX64** init registers the same functions as SysV but marshals the
+    /// 8-arg call the Microsoft-x64 way — a `sub rsp, 64` / `add rsp, 64` shadow+stack
+    /// reservation and `mov [rsp+disp], rax` stores for args 5–8 (each an `rsp`-based store
+    /// encoded with the SIB byte `24`), rather than SysV's two `push`es.
+    #[test]
+    fn gc_init_x86_64_msx64_registers_with_shadow_space_and_rsp_stores() {
+        let maps = vec![
+            FnStackMap { name: "f".into(), len: 64, records: vec![(8, vec![-16]), (20, vec![-16])] },
+            FnStackMap { name: "leaf".into(), len: 8, records: vec![] }, // skipped
+            FnStackMap { name: "g".into(), len: 16, records: vec![(4, vec![])] },
+        ];
+        let (bytes, relocs, faddr) =
+            build_gc_init_stackmaps_x86_64_msx64(&maps).expect("codegen");
+
+        // Same registration set as SysV: one call + one func_start LEA per fn with records.
+        assert_eq!(
+            relocs.iter().filter(|r| r.symbol == GC_REGISTER_STACKMAP).count(),
+            2,
+            "one call per function with records (f, g)",
+        );
+        assert_eq!(faddr.len(), 2, "one func_start LEA per registered function");
+        let targets: Vec<&str> = faddr.iter().map(|r| r.target.as_str()).collect();
+        assert!(targets.contains(&"f") && targets.contains(&"g") && !targets.contains(&"leaf"));
+
+        // `sub rsp, 64` = 48 81 EC 40 00 00 00 ; `add rsp, 64` = 48 81 C4 40 00 00 00
+        // (SUB/ADD r/m64, imm32) — one balancing pair per registered fn.
+        let subs = bytes.windows(4).filter(|w| *w == [0x48, 0x81, 0xEC, 0x40]).count();
+        let adds = bytes.windows(4).filter(|w| *w == [0x48, 0x81, 0xC4, 0x40]).count();
+        assert_eq!(subs, 2, "one `sub rsp,64` shadow+stack reservation per registered fn");
+        assert_eq!(adds, 2, "one balancing `add rsp,64` per registered fn");
+
+        // `mov [rsp+disp32], rax` = 48 89 84 24 <disp32> — the four stack args (5–8) per fn
+        // → at least 4 such stores overall (8 total; assert ≥4 to stay robust).
+        let rsp_stores = bytes.windows(4).filter(|w| *w == [0x48, 0x89, 0x84, 0x24]).count();
+        assert!(
+            rsp_stores >= 4,
+            "MsX64 places stack args with rsp-relative stores (SIB 24); found {rsp_stores}",
+        );
     }
 
     /// PR-x3 (UAF-critical): after linking a module whose `main` calls a helper, the

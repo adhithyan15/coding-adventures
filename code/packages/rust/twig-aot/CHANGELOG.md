@@ -1,5 +1,35 @@
 # Changelog — `twig-aot`
 
+## 0.44.0 - 2026-07-23 — MsX64 (Windows) precise-roots registration (AOT00-T1 x86_64 PR-x6)
+
+Brings Windows from safe-conservative GC to **real precise-roots registration**, completing
+precise roots across all three native targets (aarch64 macOS, x86-64 Linux, x86-64 Windows).
+
+Since PR-x3, `__gc_init_stackmaps` was real on System V (Linux) but a no-op on Microsoft x64
+(Windows), so Windows silently degraded to conservative collection. The presumed blocker —
+that the encoder lacked a `mov [rsp+disp], reg` store for the MsX64 stack args — turned out
+to be **already solved**: `x86_64-encoder`'s `mov_mem_r64` emits the required SIB byte for an
+`rsp` base. So no encoder change was needed; the work was purely twig-aot.
+
+- New `build_gc_init_stackmaps_x86_64_msx64` marshals the 8-arg `__gc_register_stackmap`
+  the Microsoft-x64 way: args 1–4 in `rcx/rdx/r8/r9`; args 5–8 stored at `[rsp+32..56]`
+  **above the mandatory 32-byte shadow space** via a single `sub rsp, 64` (kept 16-aligned
+  through the `call`, as MS x64 requires); `add rsp, 64` after. The `func_start` LEA and its
+  pass-2b patch are ABI-independent and reused verbatim.
+- `compile_module_x86_64_to_text` now routes both ABIs to real registration
+  (`match abi { SysV => …, MsX64 => … }`) and registers the entry wrapper on both. The
+  `build_gc_noop_init_x86_64` stub is retired.
+- Windows links the same `gc-core-capi` archive that provides `__gc_register_stackmap`, so
+  the newly-referenced symbol resolves at link time (no unresolved-symbol regression).
+
+Validated by: structural unit tests on the generated MsX64 bytes (shadow reservation +
+`rsp`-relative arg stores + one registration per function-with-records); and — because the
+`windows-latest` CI runner **executes** the AOT pipeline (`windows_x86_64_smoke` links via
+`link.exe`/`lld-link`/`gcc` and runs the `.exe`) — the same executing GC differentials as
+Linux: registration-ran (`count > 0`), `gc_stress` (`live_bytes` 0 precise / 64 conservative),
+and the recursion differential (0 precise / 128 conservative, exercising the self-recursive
+safepoint from PR-x4). twig-aot 0.43.1 → 0.44.0. Needs no encoder bump.
+
 ## 0.43.1 - 2026-07-23 — recursion GC differential (AOT00-T1 x86_64 PR-x5, test-only)
 
 Adds an end-to-end differential proving precise roots reach through a **self-recursive**
