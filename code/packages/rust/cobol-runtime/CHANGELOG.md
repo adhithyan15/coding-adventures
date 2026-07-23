@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.38.0 — figurative-vs-figurative comparison (parity milestone)
+
+- No behaviour change on this engine: `compare_operands` already resolved a
+  comparison of two figurative constants (`IF ZERO = ZERO`, `ZERO` vs `SPACE`, …) by
+  filling each to a single character (`src_chars` of a figurative is empty, so both
+  `fill_fig` to `len().max(1)` = 1) and byte-comparing — so `ZERO = ZERO` /
+  `SPACE = SPACE` are true and `ZERO > SPACE`. This release records the parity
+  milestone: `cobol-iir-compiler` 0.34.0 now compiles the same construct (previously a
+  clean reject), closing a reject-vs-answer gate divergence adversarial review found.
+  A regression test pins the behaviour.
+
 ## 0.37.0 — SIGNED numeric ↔ alphanumeric COMPARISON (overpunched image)
 
 - The mixed numeric ↔ alphanumeric relation (`IF NUM = "str"`, `<`, `>`, … in `IF` /

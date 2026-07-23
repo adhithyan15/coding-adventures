@@ -8,6 +8,21 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.34.0: figurative-vs-figurative comparison
+
+A relational condition comparing **two figurative constants** (`IF ZERO = ZERO`,
+`IF ZERO = SPACE`, `IF SPACE < ZERO`, …) now compiles instead of being rejected as
+a later rung. Each figurative has no operand length to borrow, so both resolve to a
+single fill character (width 1) — `ZERO` → `"0"`, `SPACE` → `" "` — and are compared
+by the ordinary space-padded `str_cmp` path. This is byte-identical to the oracle,
+whose `src_chars` of a figurative is empty so both `fill_fig` to `len().max(1)` = 1.
+So `ZERO = ZERO` and `SPACE = SPACE` are true, `ZERO ≠ SPACE`, and by byte value
+(`'0'` = 0x30 > `' '` = 0x20) `ZERO > SPACE` / `SPACE < ZERO`. Fixes a
+reject-vs-answer gate divergence surfaced by adversarial review of v0.33.0 (the
+oracle already answered these; the compiler rejected them). One-line change in
+`emit_str_condition` (the `(None, None)` width arm); no grammar / lexer / parser
+change.
+
 ### Added — v0.33.0: SIGNED numeric ↔ alphanumeric COMPARISON (overpunched image)
 
 The mixed numeric ↔ alphanumeric relation (`IF NUM = "str"`, `<`, `>`, …) now

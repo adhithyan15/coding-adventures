@@ -108,7 +108,10 @@ Character handling is fixed-length string work: a character item's slot always
 holds exactly its declared width, so an item-to-item `MOVE` and an alphanumeric
 comparison both reduce to a single compile-time-sized `str_slice`/`str_concat`
 (reshape) or a space-pad plus `str_cmp` (compare), with `SPACE`/`ZERO`
-figuratives expanded to the partner operand's length.
+figuratives expanded to the partner operand's length. Two figuratives compared
+against each other (`IF ZERO = SPACE`) have no length to borrow, so each resolves
+to a single fill character (width 1) — `ZERO` → `"0"`, `SPACE` → `" "` — matching
+the oracle, so `ZERO = ZERO` is true and `ZERO > SPACE`.
 
 ### Deliberately a later rung
 

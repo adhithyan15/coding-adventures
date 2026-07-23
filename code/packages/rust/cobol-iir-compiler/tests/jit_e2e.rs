@@ -1722,6 +1722,34 @@ fn alphanumeric_compare_against_spaces_figurative() {
 }
 
 #[test]
+fn figurative_vs_figurative_comparison() {
+    // Comparing two figurative constants: each has no length to borrow, so both
+    // resolve to a single fill character (`ZERO` → "0", `SPACE` → " "), matching the
+    // oracle. ZERO = ZERO and SPACE = SPACE are true; ZERO ≠ SPACE and, by byte
+    // ('0'=0x30 > ' '=0x20), ZERO > SPACE / SPACE < ZERO.
+    let zz = assert_matches_oracle(&wrap(
+        &["01  D  PIC X(1)."],
+        &["IF ZERO = ZERO DISPLAY \"T\" ELSE DISPLAY \"F\".", "STOP RUN."],
+    ));
+    assert_eq!(zz, "T\n");
+    let ss = assert_matches_oracle(&wrap(
+        &["01  D  PIC X(1)."],
+        &["IF SPACE = SPACE DISPLAY \"T\" ELSE DISPLAY \"F\".", "STOP RUN."],
+    ));
+    assert_eq!(ss, "T\n");
+    let zs = assert_matches_oracle(&wrap(
+        &["01  D  PIC X(1)."],
+        &[
+            "IF ZERO = SPACE DISPLAY \"E\" ELSE DISPLAY \"N\".",
+            "IF ZERO > SPACE DISPLAY \"G\" ELSE DISPLAY \"L\".",
+            "IF SPACE < ZERO DISPLAY \"S\" ELSE DISPLAY \"B\".",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(zs, "N\nG\nS\n");
+}
+
+#[test]
 fn char_move_then_compare_round_trips() {
     // Prove the moved value round-trips through the str slot and compares equal.
     let out = assert_matches_oracle(&wrap(
