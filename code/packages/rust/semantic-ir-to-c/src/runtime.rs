@@ -48,7 +48,10 @@ typedef enum {
      * with `_sir_missing()`; the callee's prologue replaces each such parameter
      * with its default expression BEFORE the body runs, so a `SIR_MISSING` value
      * is never observed by user code (never printed, compared, or stored). */
-    SIR_MISSING
+    SIR_MISSING,
+    /* A SIR17 exception value (`raise`d and `rescue`d) — a class name plus an
+     * optional message. */
+    SIR_ERROR
 } SirTag;
 
 typedef struct SirValue SirValue;
@@ -56,6 +59,7 @@ typedef struct SirPair SirPair;
 typedef struct SirClosure SirClosure;
 typedef struct SirSeq SirSeq;
 typedef struct SirMap SirMap;
+typedef struct SirError SirError;
 
 struct SirValue {
     SirTag tag;
@@ -68,10 +72,17 @@ struct SirValue {
         SirClosure *clo;  /* SIR_CLOSURE */
         SirSeq *seq;      /* SIR_SEQ */
         SirMap *map;      /* SIR_MAP */
+        SirError *err;    /* SIR_ERROR */
     } as;
 };
 
 struct SirPair { SirValue car; SirValue cdr; };
+
+/* A SIR17 exception (`raise`/`rescue`).  `sir_class` is the interned exception
+ * class name (`"RuntimeError"`, `"StandardError"`, …), matched against a
+ * `rescue` clause via the baked-in ancestry table.  `msg` is the message (a
+ * `SIR_STR`, or nil for a bare `raise Class` — then the class name is shown). */
+struct SirError { const char *sir_class; SirValue msg; };
 
 /* A SIR16 sequence (`[1, 2, 3]`) — a heap-boxed dynamic array. `items` points
  * at `len` `SirValue`s (arena-allocated, never freed like every other heap
@@ -394,6 +405,10 @@ int _sir_value_eq_d(SirValue a, SirValue b, int depth) {
             return 1;
         }
         case SIR_CLOSURE: return a.as.clo == b.as.clo;
+        /* Two exceptions are equal only when they are the SAME handle (Ruby's
+         * default `==` is object identity), so a `rescue => e` binding compares
+         * equal to itself. */
+        case SIR_ERROR:   return a.as.err == b.as.err;
         default:          return 0;
     }
 }
@@ -745,9 +760,131 @@ void _sir_fmt(FILE *out, SirValue v) {
         case SIR_SEQ:   _sir_fmt_seq(out, v); break;
         case SIR_MAP:   _sir_fmt_map(out, v); break;
         case SIR_CLOSURE: fputs("#<closure>", out); break;
+        /* An exception prints as its message (Ruby's `exception.message`): the
+         * raised message when present, else the class name — so `rescue => e;
+         * print(e)` shows something meaningful. */
+        case SIR_ERROR:
+            if (v.as.err->msg.tag == SIR_NIL) fputs(v.as.err->sir_class, out);
+            else _sir_fmt(out, v.as.err->msg);
+            break;
         default: break;
     }
     _sir_fmt_depth--;
+}
+
+/* ---- SIR17 exceptions (setjmp/longjmp handler stack) -------- */
+
+/* Construct an exception value.  `class` is interned; `msg` is a `SIR_STR` (or
+ * nil for a bare `raise Class`, whose message defaults to the class name). */
+SirValue _sir_error(const char *sir_class, SirValue msg) {
+    SirError *e = (SirError *)_sir_alloc(sizeof(SirError));
+    e->sir_class = _sir_intern(sir_class);
+    e->msg = msg;
+    SirValue v;
+    v.tag = SIR_ERROR; v.as.err = e;
+    return v;
+}
+
+/* The built-in exception-class ancestry (`sub → super`), baked in from the
+ * shared exception hierarchy so a `rescue StandardError` matches a raised
+ * `RuntimeError`.  A NULL super terminates the chain (`Exception` is the root).
+ * An unlisted class is treated as having no super (matches only itself / a bare
+ * rescue) — a user exception class needs the OOP `Classes` batch. */
+static const char *_sir_class_super(const char *cls) {
+    static const struct { const char *sub; const char *sup; } A[] = {
+        { "RuntimeError", "StandardError" },
+        { "ArgumentError", "StandardError" },
+        { "TypeError", "StandardError" },
+        { "NameError", "StandardError" },
+        { "NoMethodError", "NameError" },
+        { "IndexError", "StandardError" },
+        { "KeyError", "IndexError" },
+        { "RangeError", "StandardError" },
+        { "ZeroDivisionError", "StandardError" },
+        { "IOError", "StandardError" },
+        { "StopIteration", "StandardError" },
+        { "NotImplementedError", "StandardError" },
+        { "StandardError", "Exception" },
+    };
+    for (size_t i = 0; i < sizeof(A) / sizeof(A[0]); i++) {
+        if (strcmp(cls, A[i].sub) == 0) return A[i].sup;
+    }
+    return NULL;
+}
+
+/* True iff exception class `actual` IS-A `target` — equal, or descends from it
+ * through the ancestry chain. */
+int _sir_class_is_a(const char *actual, const char *target) {
+    const char *cur = actual;
+    while (cur) {
+        if (strcmp(cur, target) == 0) return 1;
+        cur = _sir_class_super(cur);
+    }
+    return 0;
+}
+
+/* Does exception `err` match a `rescue` clause listing `n` class names?  An
+ * empty list (`n == 0`, a bare `rescue`) catches every exception; otherwise the
+ * error's class must be-a one of the listed classes. */
+int _sir_rescue_matches(SirValue err, const char *const *classes, int n) {
+    if (err.tag != SIR_ERROR) return 0;
+    if (n == 0) return 1;
+    for (int i = 0; i < n; i++) {
+        if (_sir_class_is_a(err.as.err->sir_class, classes[i])) return 1;
+    }
+    return 0;
+}
+
+/* The handler stack.  A `TryCatch` pushes a `jmp_buf` and `setjmp`s it; `raise`
+ * `longjmp`s to the top.  Single-threaded emitted program, so a plain static
+ * stack is safe.  `_sir_current_error` holds the exception being handled (for a
+ * bare re-`raise` and for the rescue-clause dispatch). */
+#define SIR_MAX_HANDLERS 1024
+static jmp_buf _sir_handlers[SIR_MAX_HANDLERS];
+static int _sir_handler_top = -1;
+static SirValue _sir_current_error;
+
+/* Push a handler slot and return its index (to `setjmp`).  Overflowing the
+ * fixed stack is a hard error (pathological handler nesting). */
+int _sir_push_handler(void) {
+    if (_sir_handler_top + 1 >= SIR_MAX_HANDLERS) {
+        fprintf(stderr, "sir: exception handler stack overflow\n");
+        exit(1);
+    }
+    return ++_sir_handler_top;
+}
+void _sir_pop_handler(void) {
+    if (_sir_handler_top >= 0) _sir_handler_top--;
+}
+
+/* Raise (or re-raise) an exception.  Records it as the current error and
+ * `longjmp`s to the top handler; with no handler installed, it is uncaught —
+ * print `class: message` to stderr and exit non-zero (Ruby's default).  Returns
+ * `SirValue` only to fit the builtin-call expression contract; it never returns
+ * normally (`longjmp`/`exit`). */
+SirValue _sir_raise(SirValue exc) {
+    _sir_current_error = exc;
+    if (_sir_handler_top >= 0) {
+        longjmp(_sir_handlers[_sir_handler_top], 1);
+    }
+    if (exc.tag == SIR_ERROR) {
+        fputs(exc.as.err->sir_class, stderr);
+        if (exc.as.err->msg.tag != SIR_NIL) {
+            fputs(": ", stderr);
+            _sir_fmt(stderr, exc.as.err->msg);
+        }
+    }
+    fputc('\n', stderr);
+    exit(1);
+    return _sir_nil(); /* unreachable */
+}
+
+/* `raise <value>`: an exception object is re-raised as-is; any other value
+ * (typically a message string) becomes a `RuntimeError` carrying it — matching
+ * Ruby's `raise "boom"`. */
+SirValue _sir_raise_value(SirValue v) {
+    if (v.tag == SIR_ERROR) return _sir_raise(v);
+    return _sir_raise(_sir_error("RuntimeError", v));
 }
 
 SirValue _sir_print_v(SirValue *xs, int n) {

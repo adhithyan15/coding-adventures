@@ -86,14 +86,18 @@ already carried the float path), `ShortCircuit` (0.9.0 — `LogicalAnd`/
 (SIR19, 0.10.0 — the `SIR_MISSING` sentinel now exists in the runtime; a
 `DirectCall` pads omitted trailing defaults with `_sir_missing()` and each
 function opens with an `if (_sir_is_missing(p)) { p = <default>; }` prologue),
-and `KeywordParams` (SIR19, 0.11.0 — KW6: a `KeywordArg` is resolved to its
+`KeywordParams` (SIR19, 0.11.0 — KW6: a `KeywordArg` is resolved to its
 callee's parameter slot BY NAME at emit time, using the thread-local signature
-map's parameter names, producing a plain positional call).
+map's parameter names, producing a plain positional call), and `Exceptions`
+(SIR17, 0.12.0 — the `setjmp`/`longjmp` handler stack of §"Exception model":
+`SIR_ERROR` value, a baked-in class-ancestry table for `rescue`-by-class
+matching, a two-handler structure so `ensure` runs even when a rescue body
+raises; `raise SomeClass` and `retry` deferred).
 
 **Still rejects** (clean, source-positioned `UnsupportedFeature`):
 `TailCalls` (C does not guarantee TCO), `Intrinsics` (empty whitelist), and
-every not-yet-landed feature (`NDArrays`,
-`Exceptions`, `Classes`, … — see the roadmap).  `Bignum` stays
+every not-yet-landed feature (`NDArrays`, `Constants`,
+`Classes`, … — see the roadmap).  `Bignum` stays
 rejected until a bignum runtime ships, so a module that *needs* arbitrary
 precision is refused rather than silently truncated.
 

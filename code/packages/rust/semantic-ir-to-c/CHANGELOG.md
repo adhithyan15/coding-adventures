@@ -1,5 +1,62 @@
 # Changelog
 
+## 0.12.0 — exceptions (SIR17)
+
+Accepts `Feature::Exceptions`. C has no stack unwinding, so `begin … rescue …
+ensure … end` (`Stmt::TryCatch`) and `raise` lower to a **`setjmp`/`longjmp`
+handler stack** — the C analogue of Go `panic`/`recover`, per the SIR24
+exception-model design.
+
+- **Runtime**: a new `SIR_ERROR` value (`struct SirError { const char *sir_class;
+  SirValue msg; }`); a static stack of `jmp_buf` (`_sir_push_handler`/`_sir_pop_
+  handler`); `_sir_current_error` (the exception being handled); `_sir_raise`
+  (records the error and `longjmp`s to the top handler, or prints `class:
+  message` to stderr and exits non-zero when uncaught); `_sir_raise_value`
+  (re-raises an exception object, or wraps any other value — a message string —
+  in a `RuntimeError`); and a **baked-in exception-class ancestry table**
+  (`RuntimeError`/`ZeroDivisionError`/… → `StandardError` → `Exception`,
+  `KeyError` → `IndexError`, `NoMethodError` → `NameError`) with
+  `_sir_class_is_a` / `_sir_rescue_matches` so `rescue StandardError` catches a
+  raised `RuntimeError`. A single `#include <setjmp.h>` is added to the preamble.
+- **`TryCatch` codegen**: a TWO-handler structure — an OUTER "ensure" handler
+  wraps the whole thing so `ensure` runs even when a rescue body itself raises
+  (Ruby semantics), and an INNER "body" handler catches an exception from the
+  guarded body. The inner handler is popped BEFORE the rescue dispatch, so a
+  raise in a rescue clause (or an unmatched exception) unwinds to the outer
+  handler; the outer handler is popped before `ensure` runs, and an unmatched
+  exception is re-raised (propagated) after `ensure`.
+- **`raise`**: bare (`raise`) re-raises `_sir_current_error`; `raise "msg"`
+  raises a `RuntimeError`; `raise <exception>` re-raises it.
+
+**Injection safety**: a `rescue` clause's exception-type names are emitted as
+**quoted string literals** (`quote_c_string`) passed to `_sir_rescue_matches` —
+never as bare identifiers — so no rescue type can inject source, and the SIR24
+"dispatch is an explicit name-switch" anti-RCE invariant holds. The
+unsupported-builtin pre-check descends into a `TryCatch`'s guarded/rescue/ensure
+bodies (co-total with the emitter).
+
+Deferred to a follow-up (each a clean rejection): `raise SomeClass` (a specific
+class) lowers to a `Const` reference → observes `Feature::Constants`
+(unaccepted) → rejected; `retry` is not yet lowered (rejected by the builtin
+gate — it needs loop machinery in the `setjmp` model).
+
+Documented v0 limitation (correctness, not memory-safety): a *bare* `raise`
+(re-raise) inside a rescue body reads the global current-error, so if a nested
+`begin/rescue` completes between the clause's entry and the bare `raise`, it
+re-raises that inner (already-handled) exception rather than the clause's own —
+faithful `$!` save/restore around nested handling is deferred. (An `ensure` body
+that handles a nested exception does NOT mis-propagate — the escaping exception
+is snapshotted before `ensure` runs; regression-tested.)
+
+First of the exceptions parity arc's C half: with the Ruby backend (0.10.0),
+`Exceptions` is now accepted on all six backends. Verified with hand-built
+modules compiled and run through a real `cc`: a bare rescue catching a message,
+`rescue StandardError` matching a `RuntimeError` via the ancestry, the rescue
+binding, `ensure` on both the normal and the exception path, an unmatched
+exception propagating through an outer handler after the inner `ensure` runs,
+and an uncaught exception exiting non-zero. Bumps semantic-ir-to-c 0.11.0 →
+0.12.0.
+
 ## 0.11.0 — keyword parameters (SIR19)
 
 Accepts `Feature::KeywordParams`, building directly on the `_sir_missing`
