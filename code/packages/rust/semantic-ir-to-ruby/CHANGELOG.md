@@ -1,5 +1,50 @@
 # Changelog
 
+## 0.10.0 — exceptions (SIR17)
+
+Accepts `Feature::Exceptions` — the first of the OOP/exception frontier, and
+self-contained (a `rescue` clause matches by exception-class NAME, an advisory
+string, so it is separable from `Classes`). Ruby handles exceptions natively, so
+this needs no runtime support:
+
+- `Stmt::TryCatch` renders `begin … rescue … ensure … end`. Each `rescue`
+  clause lists its exception classes by name, optionally binds the caught
+  exception to a local (`rescue Foo => e`), and runs its body; an empty class
+  list is a bare catch-all. `ensure`, when present, runs afterwards.
+- The `raise` builtin renders the native `raise` — bare (re-raise the exception
+  being handled), with a message string (`raise "boom"` → `RuntimeError`), or
+  with an exception object. `retry` renders the native `retry`.
+- `raise SomeClass` (a specific exception class) lowers to a `Const` reference,
+  which observes `Feature::Constants` (not accepted) → such a module is rejected;
+  `raise "message"`, a bare re-raise, and `rescue` by a standard class
+  (`StandardError`, …) or catch-all are the accepted forms.
+
+**Injection safety**: a `rescue` clause's exception-type name is emitted verbatim
+as a Ruby constant reference (it must stay capitalized, so it cannot be routed
+through `sanitize_ident`). A `compile`-time gate rejects any module whose rescue
+type is not a valid Ruby constant path (`Foo` / `Foo::Bar`) — so a hand-built
+module cannot inject source through a crafted type name. Crucially, this check is
+folded into the SAME single traversal as the unsupported-builtin pre-check
+(a unified `ScanHit`), so it is **co-total with the emitter**: every `TryCatch`
+the emitter can reach — including ones nested in a call argument, a function's
+trailing value, a `SeqSet`/`MapSet` sub-expression, or any other expression
+position — is validated. (Security review caught a first attempt using a
+separate, hand-picked walk that missed several of those positions; the unified
+walk cannot drift.) The caught exception's binding, being an ordinary local,
+goes through `sanitize_ident` as usual; a `raise`d message string is quoted by
+`quote_ruby_string`.
+
+Documented limitation: a `rescue` by an advisory class name that is not a live
+Ruby constant (a user-defined exception class, which needs the not-yet-accepted
+`Classes` feature) raises `NameError` at runtime; standard classes and bare
+`rescue` always work.
+
+First of the exceptions parity arc: Go/Rust/Python/JS already accept `Exceptions`
+(C is tracked next). Verified through a real `ruby` with hand-built modules: a
+bare rescue catching a raised message, `ensure` always running, a rescue binding,
+a typed `rescue StandardError`, the native emit shape, and the injectable-type
+rejection. Bumps semantic-ir-to-ruby 0.9.0 → 0.10.0.
+
 ## 0.9.0 — keyword parameters (SIR19)
 
 Accepts `Feature::KeywordParams`. Ruby has native keyword arguments, so this is

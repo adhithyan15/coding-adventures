@@ -132,6 +132,17 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // (unlike the Go/C backends' KW6 lowering).  A keyword default rides on this
     // feature (an optional keyword), not `DefaultParams`.
     Feature::KeywordParams,
+    // ── SIR17 exceptions ─────────────────────────────────────────────
+    // `Stmt::TryCatch` (`begin … rescue … ensure … end`) and the `raise` /
+    // `retry` builtins render as Ruby's NATIVE exception handling — no runtime
+    // support (Ruby raises/rescues by exception class natively).  A `rescue`
+    // clause matches by exception-class NAME (advisory strings the frontend
+    // takes from source; validated as constant paths before emit) and may bind
+    // the caught exception to a local.  `raise SomeClass` (a specific class) is
+    // a `Const` reference → it observes `Feature::Constants` (unaccepted) and is
+    // rejected; `raise "message"`, a bare re-raise, and `rescue` by a standard
+    // class or catch-all are the accepted forms.
+    Feature::Exceptions,
 ];
 
 impl Backend for RubyBackend {
@@ -173,15 +184,33 @@ impl Backend for RubyBackend {
         //    other reserved builtins) are not gated by an unaccepted feature, so
         //    reject a module that uses a builtin v0 cannot lower rather than
         //    emit a call with no lowering.
-        if let Some((name, span)) = emit::first_unsupported_builtin(module) {
-            return Err(BackendError {
-                kind: BackendErrorKind::UnsupportedFeature,
-                message: format!(
-                    "the v0 Ruby backend does not yet lower the `{name}` builtin \
-                     (deferred to a later feature batch)"
-                ),
-                span,
-            });
+        //    A single traversal reports BOTH an unlowerable builtin AND an
+        //    injectable `rescue` type (a `rescue` clause name is emitted verbatim
+        //    as a Ruby constant reference, so it must be a valid constant path —
+        //    otherwise a hand-built module could inject source).  Sharing one
+        //    walk keeps the check co-total with the emitter.
+        match emit::first_scan_issue(module) {
+            Some(emit::ScanHit::Builtin(name, span)) => {
+                return Err(BackendError {
+                    kind: BackendErrorKind::UnsupportedFeature,
+                    message: format!(
+                        "the v0 Ruby backend does not yet lower the `{name}` builtin \
+                         (deferred to a later feature batch)"
+                    ),
+                    span,
+                });
+            }
+            Some(emit::ScanHit::RescueType(name, span)) => {
+                return Err(BackendError {
+                    kind: BackendErrorKind::UnsupportedFeature,
+                    message: format!(
+                        "the Ruby backend cannot emit the rescue exception type `{name}` \
+                         (not a valid Ruby constant path)"
+                    ),
+                    span,
+                });
+            }
+            None => {}
         }
 
         // 4. Emit.

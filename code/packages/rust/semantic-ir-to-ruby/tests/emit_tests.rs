@@ -1217,3 +1217,179 @@ fn rest_and_keyword_rest_params_emit_splat_syntax() {
     .source;
     assert!(rb.contains("def f(a, *rest, x:, **opts)"), "splat syntax:\n{rb}");
 }
+
+// ── SIR17 exceptions ────────────────────────────────────────────────────────
+// `Feature::Exceptions` — `begin … rescue … ensure … end` (`Stmt::TryCatch`)
+// and the `raise` / `retry` builtins render as Ruby's native exception
+// handling. Hand-built modules prove the catch/ensure/binding behaviour through
+// a real `ruby`.
+
+use semantic_ir::RescueClause;
+
+fn raise_(arg: Option<Expr>) -> Stmt {
+    Stmt::ExprStmt {
+        expr: Expr::BuiltinCall {
+            name: "raise".into(),
+            args: arg.into_iter().collect(),
+            effects: EffectSet::PURE,
+            span: s2(),
+        },
+        span: s2(),
+    }
+}
+fn rescue_clause(types: Vec<&str>, binding: Option<&str>, body: Vec<Stmt>) -> RescueClause {
+    RescueClause {
+        exception_types: types.into_iter().map(String::from).collect(),
+        binding: binding.map(String::from),
+        body,
+        span: s2(),
+    }
+}
+fn trycatch(body: Vec<Stmt>, rescues: Vec<RescueClause>, ensure_body: Option<Vec<Stmt>>) -> Stmt {
+    Stmt::TryCatch { body, rescues, ensure_body, span: s2() }
+}
+fn exc_module(stmts: Vec<Stmt>) -> Module {
+    let mut m = seq_module(stmts);
+    m.manifest = FeatureManifest::from_features(&[Feature::Exceptions, Feature::Strings]);
+    m
+}
+fn run_exc(stmts: Vec<Stmt>) -> Option<String> {
+    run_ruby(&compile(&exc_module(stmts)).expect("exception module must compile, not panic").source)
+}
+
+#[test]
+fn bare_rescue_catches_a_raised_message() {
+    // `begin; raise "boom"; rescue; puts "caught"; end` — the raised
+    // `RuntimeError` is caught by the bare (catch-all) rescue.
+    let out = run_exc(vec![trycatch(
+        vec![raise_(Some(strlit("boom")))],
+        vec![rescue_clause(vec![], None, vec![puts(strlit("caught"))])],
+        None,
+    )]);
+    match out {
+        Some(o) => assert_eq!(o, "caught"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn ensure_body_always_runs() {
+    // `begin; puts "body"; ensure; puts "cleanup"; end` — no exception, but the
+    // ensure still runs after the body.
+    let out = run_exc(vec![trycatch(
+        vec![puts(strlit("body"))],
+        vec![],
+        Some(vec![puts(strlit("cleanup"))]),
+    )]);
+    match out {
+        Some(o) => assert_eq!(o, "body\ncleanup"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn rescue_binds_the_caught_exception() {
+    // `begin; raise "x"; rescue => e; puts "got"; end` — the binding `e` is in
+    // scope in the clause body (a `Scope::Local`); the clause runs.
+    let out = run_exc(vec![trycatch(
+        vec![raise_(Some(strlit("x")))],
+        vec![rescue_clause(vec![], Some("e"), vec![puts(strlit("got"))])],
+        None,
+    )]);
+    match out {
+        Some(o) => assert_eq!(o, "got"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn rescue_matches_a_standard_exception_class() {
+    // `begin; raise "x"; rescue StandardError; puts "std"; end` — a
+    // `RuntimeError` is a `StandardError`, so the typed clause matches.
+    let out = run_exc(vec![trycatch(
+        vec![raise_(Some(strlit("x")))],
+        vec![rescue_clause(vec!["StandardError"], None, vec![puts(strlit("std"))])],
+        None,
+    )]);
+    match out {
+        Some(o) => assert_eq!(o, "std"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn exception_emits_native_begin_rescue_ensure() {
+    // Emit-shape: the native keywords are present.
+    let rb = compile(&exc_module(vec![trycatch(
+        vec![raise_(Some(strlit("x")))],
+        vec![rescue_clause(vec!["StandardError"], Some("e"), vec![puts(strlit("c"))])],
+        Some(vec![puts(strlit("f"))]),
+    )]))
+    .expect("compile")
+    .source;
+    assert!(rb.contains("begin"), "begin:\n{rb}");
+    assert!(rb.contains("rescue StandardError => e"), "typed rescue + binding:\n{rb}");
+    assert!(rb.contains("ensure"), "ensure:\n{rb}");
+}
+
+#[test]
+fn injectable_rescue_type_is_rejected_cleanly() {
+    // A rescue exception-type name is emitted verbatim as a constant reference,
+    // so a name carrying source (a hand-built module could) must be rejected —
+    // never emitted. `compile` returns an Err, not injectable Ruby.
+    let m = exc_module(vec![trycatch(
+        vec![puts(strlit("x"))],
+        vec![rescue_clause(vec!["Foo; system('rm -rf /')"], None, vec![puts(strlit("y"))])],
+        None,
+    )]);
+    let err = compile(&m).expect_err("an injectable rescue type must be rejected");
+    assert_eq!(err.kind, semantic_ir::BackendErrorKind::UnsupportedFeature);
+}
+
+#[test]
+fn injectable_rescue_type_nested_in_a_call_argument_is_rejected() {
+    // Regression (security review): a `TryCatch` hidden in an EXPRESSION position
+    // (here a `Block` used as a `puts` argument) is still reached by the emitter,
+    // so its rescue types must be validated too. The pre-emit scan is co-total
+    // with the emitter — a hand-picked subset walk had missed this position.
+    let payload = "StandardError\nSTDERR.puts('INJECTED')\nrescue";
+    let bad_try = trycatch(
+        vec![puts(strlit("x"))],
+        vec![rescue_clause(vec![payload], None, vec![puts(strlit("y"))])],
+        None,
+    );
+    let block_arg = Expr::Block(Box::new(Block {
+        stmts: vec![bad_try],
+        value: Expr::NilLit { span: s2() },
+        span: s2(),
+    }));
+    let m = exc_module(vec![puts(block_arg)]);
+    assert!(
+        compile(&m).is_err(),
+        "an injectable rescue type nested in a call argument must be rejected"
+    );
+}
+
+#[test]
+fn injectable_rescue_type_in_the_function_value_is_rejected() {
+    // Regression (security review): a `TryCatch` in the function's trailing
+    // VALUE (not its statement list) is emitted too, so the scan must visit
+    // `f.body.value` — not only `f.body.stmts`.
+    let bad_try = trycatch(
+        vec![puts(strlit("x"))],
+        vec![rescue_clause(vec!["Foo; system('boom')"], None, vec![puts(strlit("y"))])],
+        None,
+    );
+    let mut m = exc_module(vec![]);
+    if let Some(main) = m.functions.iter_mut().find(|f| f.name == "main") {
+        main.body.value = Expr::Block(Box::new(Block {
+            stmts: vec![bad_try],
+            value: Expr::NilLit { span: s2() },
+            span: s2(),
+        }));
+    }
+    assert!(
+        compile(&m).is_err(),
+        "an injectable rescue type in the function value must be rejected"
+    );
+}

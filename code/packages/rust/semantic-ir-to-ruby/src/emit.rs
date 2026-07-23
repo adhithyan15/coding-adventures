@@ -22,7 +22,7 @@ use crate::runtime::RUNTIME;
 static LOOP_TEMP_ID: AtomicUsize = AtomicUsize::new(0);
 
 /// Builtins the v0 backend lowers.  A `BuiltinCall` to anything else is
-/// rejected by [`first_unsupported_builtin`] (mirroring the C backend), so a
+/// rejected by [`first_scan_issue`] (mirroring the C backend), so a
 /// module using e.g. the `__method__` collection-dispatch protocol fails
 /// cleanly rather than emitting a call with no lowering.
 const SUPPORTED_BUILTINS: &[&str] = &[
@@ -53,6 +53,11 @@ const SUPPORTED_BUILTINS: &[&str] = &[
     "puts",
     "global_get",
     "global_set",
+    // SIR17 exceptions (`Feature::Exceptions`): `raise` (re-raise / raise a
+    // message or exception) and `retry` (restart the `begin` body) render as
+    // the native Ruby keywords.
+    "raise",
+    "retry",
 ];
 
 /// Emit a complete self-contained Ruby source file for `m`.
@@ -104,9 +109,22 @@ fn emit_globals_comment(out: &mut String, globals: &[Global]) {
     out.push_str("\n\n");
 }
 
-/// Scan the module for a `BuiltinCall` whose name the v0 backend cannot lower.
-/// Returns the first such `(name, span)` so `compile` can reject it cleanly.
-pub fn first_unsupported_builtin(m: &Module) -> Option<(String, semantic_ir::Span)> {
+/// A problem the pre-emit scan found — reported by `compile` as a clean
+/// rejection.  Both live in ONE traversal ([`first_scan_issue`]) so the check
+/// can never drift out of coverage with the emitter (a lesson from a rescue-type
+/// injection: a hand-picked subset walk missed positions the emitter reaches).
+pub enum ScanHit {
+    /// A `BuiltinCall` whose name the v0 backend cannot lower.
+    Builtin(String, semantic_ir::Span),
+    /// A `rescue` clause exception type that is not a valid Ruby constant path
+    /// (would inject source if emitted verbatim).
+    RescueType(String, semantic_ir::Span),
+}
+
+/// Scan the module — in a SINGLE traversal shared with the unsupported-builtin
+/// check — for the first thing `compile` must reject: an unlowerable builtin or
+/// an injectable `rescue` type.  Returns it (with a span) or `None`.
+pub fn first_scan_issue(m: &Module) -> Option<ScanHit> {
     for f in &m.functions {
         // A SIR19 parameter default is an expression evaluated at call time, so
         // a builtin nested in it (`def g(x = foo())`) must be pre-checked too —
@@ -126,7 +144,7 @@ pub fn first_unsupported_builtin(m: &Module) -> Option<(String, semantic_ir::Spa
     None
 }
 
-fn scan_block(b: &Block) -> Option<(String, semantic_ir::Span)> {
+fn scan_block(b: &Block) -> Option<ScanHit> {
     for s in &b.stmts {
         if let Some(hit) = scan_stmt(s) {
             return Some(hit);
@@ -135,7 +153,7 @@ fn scan_block(b: &Block) -> Option<(String, semantic_ir::Span)> {
     scan_expr(&b.value)
 }
 
-fn scan_stmt(s: &Stmt) -> Option<(String, semantic_ir::Span)> {
+fn scan_stmt(s: &Stmt) -> Option<ScanHit> {
     match s {
         Stmt::LetBinding { value, .. }
         | Stmt::LetStarBinding { value, .. }
@@ -169,17 +187,54 @@ fn scan_stmt(s: &Stmt) -> Option<(String, semantic_ir::Span)> {
             .or_else(|| scan_expr(stop))
             .or_else(|| scan_expr(step))
             .or_else(|| scan_block(body)),
+        // A `begin … rescue … ensure … end`.  Check each rescue clause's
+        // exception-type NAMES here (this arm is reached by the SAME complete
+        // traversal as the builtin scan, so EVERY `TryCatch` the emitter reaches
+        // is validated — no separate, drift-prone walk).  Then scan the guarded
+        // body, every rescue clause body, and the ensure body for builtins.
+        Stmt::TryCatch {
+            body,
+            rescues,
+            ensure_body,
+            span,
+        } => rescues
+            .iter()
+            .flat_map(|rc| rc.exception_types.iter())
+            .find(|t| !is_valid_constant_path(t))
+            .map(|t| ScanHit::RescueType(t.clone(), span.clone()))
+            .or_else(|| body.iter().find_map(scan_stmt))
+            .or_else(|| rescues.iter().find_map(|rc| rc.body.iter().find_map(scan_stmt)))
+            .or_else(|| {
+                ensure_body
+                    .as_ref()
+                    .and_then(|e| e.iter().find_map(scan_stmt))
+            }),
         _ => None,
     }
 }
 
-fn scan_expr(e: &Expr) -> Option<(String, semantic_ir::Span)> {
+/// Whether `name` is a syntactically valid Ruby constant path (`Foo`,
+/// `Foo::Bar`) — a non-empty `::`-separated list of identifier segments, each
+/// starting with a letter or `_` and continuing with `[A-Za-z0-9_]`.  A `rescue`
+/// clause's exception type is emitted verbatim, so this gates out any name
+/// carrying a metacharacter (space, `;`, `(`, quote, newline, …) that could
+/// inject source.
+fn is_valid_constant_path(name: &str) -> bool {
+    !name.is_empty()
+        && name.split("::").all(|seg| {
+            let mut chars = seg.chars();
+            matches!(chars.next(), Some(c) if c.is_ascii_alphabetic() || c == '_')
+                && chars.all(|c| c.is_ascii_alphanumeric() || c == '_')
+        })
+}
+
+fn scan_expr(e: &Expr) -> Option<ScanHit> {
     match e {
         Expr::BuiltinCall {
             name, args, span, ..
         } => {
             if !SUPPORTED_BUILTINS.contains(&name.as_str()) {
-                return Some((name.clone(), span.clone()));
+                return Some(ScanHit::Builtin(name.clone(), span.clone()));
             }
             args.iter().find_map(scan_expr)
         }
@@ -424,7 +479,48 @@ fn emit_stmt(s: &Stmt) -> String {
             s.push_str("end");
             s
         }
-        // Other SIR16+ statements (index-set/class/try) are not accepted; the
+        // SIR17 `begin … rescue … ensure … end`.  Ruby handles exceptions
+        // natively, so each part renders directly.  A `rescue` clause lists its
+        // exception classes by name (validated as constant paths before emit, so
+        // no source can inject), optionally binds the caught exception to a
+        // `sanitize_ident`-safe local, and runs its body; an empty class list is
+        // a bare catch-all `rescue`.  `ensure`, when present, runs afterwards.
+        Stmt::TryCatch {
+            body,
+            rescues,
+            ensure_body,
+            ..
+        } => {
+            let mut s = String::from("begin\n");
+            for st in body {
+                s.push_str(&emit_stmt(st));
+                s.push('\n');
+            }
+            for rc in rescues {
+                s.push_str("rescue");
+                if !rc.exception_types.is_empty() {
+                    let _ = write!(s, " {}", rc.exception_types.join(", "));
+                }
+                if let Some(bind) = &rc.binding {
+                    let _ = write!(s, " => {}", sanitize_ident(bind));
+                }
+                s.push('\n');
+                for st in &rc.body {
+                    s.push_str(&emit_stmt(st));
+                    s.push('\n');
+                }
+            }
+            if let Some(ens) = ensure_body {
+                s.push_str("ensure\n");
+                for st in ens {
+                    s.push_str(&emit_stmt(st));
+                    s.push('\n');
+                }
+            }
+            s.push_str("end");
+            s
+        }
+        // Other SIR16+ statements (index-set/class) are not accepted; the
         // capability check rejects such modules before emit.
         other => unreachable!("Ruby backend reached unsupported statement: {other:?}"),
     }
@@ -651,7 +747,20 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
         "puts" => format!("sir_puts({})", a.join(", ")),
         "global_get" => format!("sir_global_get({})", arg(&a, 0)),
         "global_set" => format!("sir_global_set({}, {})", arg(&a, 0), arg(&a, 1)),
-        // Unreachable: first_unsupported_builtin rejected anything else.
+        // SIR17 exceptions.  `raise` with no argument re-raises the exception
+        // being handled (`$!`); with a message string it raises a `RuntimeError`
+        // (`raise "boom"`); with an exception object it re-raises that.  Each
+        // argument is an already-emitted expression (a `StrLit` is quoted, so no
+        // source can inject).  `retry` restarts the enclosing `begin` body.
+        "raise" => {
+            if a.is_empty() {
+                "raise".to_string()
+            } else {
+                format!("raise({})", a.join(", "))
+            }
+        }
+        "retry" => "retry".to_string(),
+        // Unreachable: first_scan_issue rejected anything else.
         other => unreachable!("v0 Ruby backend reached unsupported builtin: {other}"),
     }
 }

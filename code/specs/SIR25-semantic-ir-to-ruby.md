@@ -74,12 +74,14 @@ SIR26 integer conversions (`Conversions`, `SizedIntegers`, `Unsigned`,
 `WrappingArithmetic`); and the SIR16 batches `Loops` + `MutableBindings`
 (0.3.0), `Sequences` (native `Array`, 0.4.0), `Maps` (native `Hash`, 0.5.0),
 `Floats` (native `Float`, 0.6.0), and `ShortCircuit` (native `&&`/`||`, 0.7.0);
-and the SIR19 parameter batches `DefaultParams` (native `def f(a, b =
+the SIR19 parameter batches `DefaultParams` (native `def f(a, b =
 <default>)`, 0.8.0) and `KeywordParams` (native `def f(x:)` / `f(x: 5)`, matched
-by name, 0.9.0).
+by name, 0.9.0); and SIR17 `Exceptions` (native `begin/rescue/ensure` +
+`raise`/`retry`, 0.10.0 — rescue types validated as constant paths; `raise` of a
+specific class needs `Constants`, rejected).
 
 **Still rejects** `TailCalls`, `Intrinsics`, `NDArrays`,
-exceptions/OOP, and every not-yet-landed feature (each rejection is a clean,
+`Classes`/OOP, and every not-yet-landed feature (each rejection is a clean,
 source-positioned `UnsupportedFeature`).
 
 ## Value model
