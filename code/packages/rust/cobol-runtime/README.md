@@ -23,23 +23,27 @@ A small but **fully correct** slice, growing one quirk at a time: numeric-displa
 (`X`/`A`) pictures; the item tree from
 level numbers; `VALUE` initialisation; figurative `ZERO`/`SPACE`; `MOVE` with
 the exact justify/pad/truncate rules — same-category (numeric→numeric,
-alphanumeric→alphanumeric) plus both cross-category shapes: an unsigned-integer
-numeric source into an alphanumeric receiver (its digit image left-justified,
-space-padded, or truncated) and the reverse — an alphanumeric source into an
-unsigned-integer numeric receiver (its `m` chars folded into an unsigned integer
-and de-scaled right-justified, keeping the low-order `n` digits: `receiver =
-(integer from the source) mod 10^n`); a signed/scaled numeric item on either side,
-a group, and a source wider than 18 chars are later rungs; `DISPLAY`; `STOP RUN`;
+alphanumeric→alphanumeric) plus both cross-category shapes: an unsigned numeric
+source — integer **or** scaled `PIC 9(i)V9(d)`, whose `(i+d)`-digit image
+concatenates the integer and fractional digits with **no** decimal point (the
+oracle's `Decimal::digits()` = `int + frac`) — into an alphanumeric receiver (that
+image left-justified, space-padded, or truncated) and the reverse — an
+alphanumeric source into an unsigned-integer numeric receiver (its `m` chars
+folded into an unsigned integer and de-scaled right-justified, keeping the
+low-order `n` digits: `receiver = (integer from the source) mod 10^n`); a signed
+numeric item on either side, an alphanumeric→scaled-receiver MOVE, a group, and a
+source wider than 18 chars are later rungs; `DISPLAY`; `STOP RUN`;
 fixed-point
 decimal `ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE` (decimal-point aligned; `ROUNDED`
 and `ON SIZE ERROR`; divide-by-zero is a clean error or a size-error condition);
 `COMPUTE` with
 precedence-correct arithmetic expressions (`+ - * / **`, unary sign,
 parentheses), `ROUNDED`, and `ON SIZE ERROR`; `IF … ELSE` with numeric,
-alphanumeric, and **mixed unsigned-integer-numeric ↔ alphanumeric** comparison
-(the numeric operand treated as its digit image — `Decimal::digits()`, the
-item's fixed-width zero-padded storage — then space-padded and byte-compared, so
-`NUM = "042"` is true but `NUM = "42"` is false; a signed/scaled numeric operand
+alphanumeric, and **mixed unsigned-numeric ↔ alphanumeric** comparison (the
+numeric operand — integer or scaled — treated as its digit image
+(`Decimal::digits()`, the item's fixed-width zero-padded storage, `int + frac`
+with no point) — then space-padded and byte-compared, so `NUM = "042"` is true but
+`NUM = "42"` is false, and `9(2)V9=4.2 = "042"` is true; a signed numeric operand
 or a group item in such a mixed comparison is a clean later rung, matching the
 compiler); **reference modification** `IDENT(start:len)` /
 `IDENT(start:)` (a 1-based substring of an alphanumeric item, in `DISPLAY` and

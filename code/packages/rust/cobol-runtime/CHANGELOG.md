@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.34.0 — unsigned SCALED operand in num→alpha MOVE and mixed comparison
+
+- The numeric→alphanumeric MOVE and the mixed numeric↔alphanumeric comparison now
+  accept an **unsigned SCALED** numeric operand (`PIC 9(i)V9(d)`, `d > 0`, no `S`),
+  not only an unsigned integer. Oracle-first and byte-identical to
+  `cobol-iir-compiler` 0.30.0. No grammar change.
+- **The digit-image rule.** A scaled numeric moved to / compared as alphanumeric
+  uses its **digit image = all its digits, integer part then fractional part, with
+  NO decimal point** — the `(i + d)`-digit zero-padded magnitude. This is exactly
+  what `Decimal::digits()` (`int + frac`) already yields: `item_as_decimal` splits
+  the stored digits into `int` (`int_digits` wide) and `frac` (`dec_digits` wide),
+  so `PIC 9(2)V9 = 4.2` → `"042"`, `PIC 9(1)V99 = 3.14` → `"314"`.
+- **MOVE.** Once the num→alpha MOVE gate is opened, `move_into` already routes a
+  numeric `Src` into a `PIC X` receiver via `digits()` → `move_into_char`, so no
+  move code changed: `MOVE 9(2)V9=4.2 TO X(3)` → `"042"`, `→ X(5)` → `"042  "`,
+  `→ X(2)` → `"04"`.
+- **Comparison.** `compare_operands`' alphanumeric arm already takes `src_chars`
+  (`= digits()` for a numeric), so once the mixed-gate is opened a scaled operand
+  compares by its `"042"` image: `IF F = "042"` → **true**, `IF F > "040"` →
+  **true**.
+- **Deferral gates relaxed.** The num→alpha MOVE gate and
+  `operand_is_signed_numeric` (renamed from `operand_is_signed_or_scaled_numeric`)
+  now reject **only** a **signed** (`PIC S9`) operand — a scaled operand flows
+  through.
+- **Still deferred.** A **signed** (`PIC S9`) operand, the **reverse**
+  alphanumeric→scaled-receiver MOVE, and group items.
+- **Tests.** The former `scaled_numeric_to_alphanumeric_move_is_deferred` and
+  `mixed_scaled_numeric_vs_alphanumeric_is_deferred` tests are now positive
+  (`…_uses_digit_image`); a more-fraction-digit MOVE case is added. Signed-operand
+  deferral tests stay.
+
 ## 0.33.0 — numeric ↔ alphanumeric comparison
 
 - A relational condition (in `IF` / `EVALUATE` / any condition context) comparing

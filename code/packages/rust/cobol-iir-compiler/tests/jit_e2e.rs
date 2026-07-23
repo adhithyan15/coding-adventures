@@ -1527,6 +1527,63 @@ fn numeric_to_alphanumeric_move_of_a_computed_value() {
 }
 
 #[test]
+fn scaled_numeric_to_alphanumeric_move_exact_fit() {
+    // An UNSIGNED SCALED source `PIC 9(2)V9 = 4.2` moves its full (int + frac)
+    // digit image "042" — no decimal point — exact fit into X(3).
+    let out = assert_matches_oracle(&wrap(
+        &["01  F  PIC 9(2)V9 VALUE 4.2.", "01  W  PIC X(3)."],
+        &["MOVE F TO W.", "DISPLAY W.", "STOP RUN."],
+    ));
+    assert_eq!(out, "042\n");
+}
+
+#[test]
+fn scaled_numeric_to_alphanumeric_move_more_fraction_digits() {
+    // `PIC 9(1)V99 = 3.14` → image "314" (1 int digit + 2 frac digits), into X(3).
+    let out = assert_matches_oracle(&wrap(
+        &["01  F  PIC 9(1)V99 VALUE 3.14.", "01  W  PIC X(3)."],
+        &["MOVE F TO W.", "DISPLAY W.", "STOP RUN."],
+    ));
+    assert_eq!(out, "314\n");
+}
+
+#[test]
+fn scaled_numeric_to_alphanumeric_move_space_pads() {
+    // Wider receiver: "042" left-justified into X(5), two trailing spaces.
+    let out = assert_matches_oracle(&wrap(
+        &["01  F  PIC 9(2)V9 VALUE 4.2.", "01  W  PIC X(5)."],
+        &["MOVE F TO W.", "DISPLAY W \"|\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "042  |\n");
+}
+
+#[test]
+fn scaled_numeric_to_alphanumeric_move_truncates() {
+    // Narrower receiver: "042" truncated on the right into X(2) → "04".
+    let out = assert_matches_oracle(&wrap(
+        &["01  F  PIC 9(2)V9 VALUE 4.2.", "01  W  PIC X(2)."],
+        &["MOVE F TO W.", "DISPLAY W.", "STOP RUN."],
+    ));
+    assert_eq!(out, "04\n");
+}
+
+#[test]
+fn scaled_numeric_to_alphanumeric_move_of_a_computed_value() {
+    // Build the scaled value at run time first (COMPUTE 1.4 * 3 → 4.2), then MOVE
+    // its digit image "042" into the alphanumeric receiver, then compare it.
+    let out = assert_matches_oracle(&wrap(
+        &["01  F  PIC 9(2)V9 VALUE 0.", "01  W  PIC X(3)."],
+        &[
+            "COMPUTE F = 1.4 * 3.",
+            "MOVE F TO W.",
+            "IF W = \"042\" DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "MATCH\n");
+}
+
+#[test]
 fn numeric_to_alphanumeric_move_result_compares_alphanumerically() {
     // The MOVE result is a genuine alphanumeric value: comparing it against a
     // string literal agrees with the oracle. PIC 9(3)=42 → "042" into X(3).
@@ -1782,18 +1839,34 @@ fn mixed_signed_numeric_vs_alphanumeric_is_a_later_rung() {
 }
 
 #[test]
-fn mixed_scaled_numeric_vs_alphanumeric_is_a_later_rung() {
-    // A SCALED (`PIC 9V9`) numeric operand's image needs implied-point handling
-    // → a later rung.
-    let err = compile_source(
-        &wrap(
-            &["01  F  PIC 9(2)V9 VALUE 4.2."],
-            &["IF F = \"042\" DISPLAY \"Y\".", "STOP RUN."],
-        ),
-        "e2e",
-    )
-    .unwrap_err();
-    assert!(matches!(err, cobol_iir_compiler::CompileError::Unsupported(_)), "got {err:?}");
+fn mixed_scaled_numeric_equals_its_digit_image() {
+    // An UNSIGNED SCALED operand `PIC 9(2)V9 = 4.2` compares by its (int + frac)
+    // digit image "042" — no decimal point — so `IF F = "042"` is TRUE.
+    let out = assert_matches_oracle(&wrap(
+        &["01  F  PIC 9(2)V9 VALUE 4.2."],
+        &["IF F = \"042\" DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "MATCH\n");
+}
+
+#[test]
+fn mixed_scaled_numeric_ordering() {
+    // The byte rule on the same "042" image: "042" > "040" → true.
+    let out = assert_matches_oracle(&wrap(
+        &["01  F  PIC 9(2)V9 VALUE 4.2."],
+        &["IF F > \"040\" DISPLAY \"GT\" ELSE DISPLAY \"LE\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "GT\n");
+}
+
+#[test]
+fn mixed_scaled_numeric_more_fraction_digits() {
+    // `PIC 9(1)V99 = 3.14` → image "314"; `IF F = "314"` is TRUE.
+    let out = assert_matches_oracle(&wrap(
+        &["01  F  PIC 9(1)V99 VALUE 3.14."],
+        &["IF F = \"314\" DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "MATCH\n");
 }
 
 #[test]
