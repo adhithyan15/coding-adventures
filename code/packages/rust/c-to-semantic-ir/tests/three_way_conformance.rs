@@ -305,6 +305,63 @@ fn corpus() -> Vec<Case> {
                    if (x == 0) { r = 100; } else { r = 200; } return r; }\n\
                    int main(void) { printf(\"%d\\n\", classify(0)); return 0; }",
         },
+        // ── milestone 3: early return ────────────────────────────────────────
+        Case {
+            // The headline: idiomatic recursion with a guard clause — impossible
+            // before early-return lifting.
+            label: "recursive fib(20) with a guard clause → 6765",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int fib(int n) { if (n < 2) { return n; } \
+                   return fib(n - 1) + fib(n - 2); }\n\
+                   int main(void) { printf(\"%d\\n\", fib(20)); return 0; }",
+        },
+        Case {
+            label: "chained guard clauses sign(-5) → -1",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int sign(int x) { if (x > 0) { return 1; } \
+                   if (x < 0) { return -1; } return 0; }\n\
+                   int main(void) { printf(\"%d\\n\", sign(-5)); return 0; }",
+        },
+        Case {
+            label: "unbraced guard clause (no block) sign2(0) → 0",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int sign2(int x) { if (x > 0) return 1; if (x < 0) return -1; return 0; }\n\
+                   int main(void) { printf(\"%d\\n\", sign2(0)); return 0; }",
+        },
+        Case {
+            label: "if/else where both branches return, larger(7,3) → 7",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int larger(int a, int b) { if (a > b) { return a; } else { return b; } }\n\
+                   int main(void) { printf(\"%d\\n\", larger(7, 3)); return 0; }",
+        },
+        Case {
+            label: "statements before an early return, f(6) → 12",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int f(int x) { int y = x * 2; if (y > 10) { return y; } return 0; }\n\
+                   int main(void) { printf(\"%d\\n\", f(6)); return 0; }",
+        },
+        Case {
+            label: "nested if inside an else, deep(-5) → 300",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int deep(int x) { if (x == 0) { return 100; } \
+                   else { if (x > 0) { return 200; } return 300; } }\n\
+                   int main(void) { printf(\"%d\\n\", deep(-5)); return 0; }",
+        },
+        Case {
+            // Early return still carries the width semantics through.
+            label: "early return of a wrapped uint8 → 44",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   int wrap8(int go) { uint8_t c = 200 + 100; if (go > 0) { return c; } return 0; }\n\
+                   int main(void) { printf(\"%d\\n\", wrap8(1)); return 0; }",
+        },
+        Case {
+            label: "early return combined with a loop result → 5050",
+            src: "#include <stdio.h>\n#include <stdint.h>\n\
+                   uint32_t total(int go) { uint32_t s = 0; \
+                   for (int i = 1; i <= 100; i = i + 1) { s = s + i; } \
+                   if (go > 0) { return s; } return 0; }\n\
+                   int main(void) { printf(\"%u\\n\", total(1)); return 0; }",
+        },
     ]
 }
 
