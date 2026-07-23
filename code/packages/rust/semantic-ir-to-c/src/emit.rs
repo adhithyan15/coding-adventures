@@ -547,6 +547,27 @@ fn emit_assign(out: &mut String, dst: &str, e: &Expr, indent: usize) {
             emit_assign(out, dst, &args[1], indent + 1);
             let _ = writeln!(out, "{pad}}}");
         }
+        // SIR16 short-circuit `&&` / `||` (`Expr::LogicalAnd` / `LogicalOr`) —
+        // distinct nodes from the eager `and`/`or` builtins above, but the same
+        // lowering: assign the LEFT operand into `dst`, then conditionally
+        // OVERWRITE it with the right. Because the right operand is emitted only
+        // inside the `if` body, it is not evaluated when the left already
+        // decides (true short-circuit), and `dst` holds the DECIDING OPERAND
+        // (not a coerced bool) — `a && b` is `a` when `a` is falsy else `b`;
+        // `a || b` is `a` when truthy else `b`. This matches the Go backend's
+        // short-circuit IIFE and Ruby's native `&&`/`||`.
+        Expr::LogicalAnd { lhs, rhs, .. } => {
+            emit_assign(out, dst, lhs, indent);
+            let _ = writeln!(out, "{pad}if (_sir_truthy({dst})) {{");
+            emit_assign(out, dst, rhs, indent + 1);
+            let _ = writeln!(out, "{pad}}}");
+        }
+        Expr::LogicalOr { lhs, rhs, .. } => {
+            emit_assign(out, dst, lhs, indent);
+            let _ = writeln!(out, "{pad}if (!_sir_truthy({dst})) {{");
+            emit_assign(out, dst, rhs, indent + 1);
+            let _ = writeln!(out, "{pad}}}");
+        }
         // SIR26 conversion with a compound value: compute the value into `dst`,
         // then reduce it to the target width in place.
         Expr::Convert { value, to, .. } => {
@@ -1116,6 +1137,9 @@ fn scan_expr_for_builtin(e: &Expr) -> Option<(String, Span)> {
         }),
         Expr::MapGet { map, key, .. } => {
             scan_expr_for_builtin(map).or_else(|| scan_expr_for_builtin(key))
+        }
+        Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
+            scan_expr_for_builtin(lhs).or_else(|| scan_expr_for_builtin(rhs))
         }
         _ => None,
     }

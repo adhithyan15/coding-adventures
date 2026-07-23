@@ -76,6 +76,15 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // `FloatLit`; float `+`/`-`/`*`/`/` reuse the existing variadic helpers, so
     // accepting the feature plus the one emit arm keeps the emitter total.
     Feature::Floats,
+    // ── SIR16 short-circuit ──────────────────────────────────────────
+    // `Expr::LogicalAnd` / `Expr::LogicalOr` (`&&` / `||`) — the same lowering
+    // the emitter already uses for the eager `and`/`or` builtins: assign the
+    // left operand into `dst`, then conditionally OVERWRITE with the right, so
+    // the right is not evaluated when the left decides (true short-circuit) and
+    // `dst` holds the DECIDING OPERAND (not a bool). Because the nodes are not
+    // `is_simple`, they route through `emit_assign` (and, in tail position,
+    // through the compute-into-a-temp fallback), so no other arm is needed.
+    Feature::ShortCircuit,
     // ── SIR16 control flow / mutation ────────────────────────────────
     // `Stmt::While` renders as a portable `for (;;) { … if (!truthy) break; }`
     // (the condition is re-evaluated each iteration, so it may be compound);
