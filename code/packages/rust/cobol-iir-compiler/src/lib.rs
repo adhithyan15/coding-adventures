@@ -532,10 +532,37 @@ impl<'a> Compiler<'a> {
                         (ItemKind::Char { .. }, ItemKind::Char { .. }) => {
                             self.move_char_item(src_idx, didx);
                         }
+                        // Cross-category **numeric → alphanumeric**: an UNSIGNED
+                        // INTEGER source (`PIC 9(n)`, no `S`, no `V`) moved into an
+                        // alphanumeric receiver is treated by COBOL as though it
+                        // were an alphanumeric item holding its `n` digit
+                        // characters — the item's zero-padded magnitude image, the
+                        // very digits `DISPLAY` shows — then moved by the
+                        // alphanumeric rules (LEFT-justified, space-padded on the
+                        // right if wider, truncated on the right if narrower). We
+                        // build that `n`-character digit string at run time from the
+                        // numeric slot, then feed it through the same char-store
+                        // path a same-category alphanumeric MOVE uses, so the
+                        // compiler and the oracle emit byte-identical bytes.
+                        (
+                            ItemKind::Numeric { signed: false, dec_digits: 0, .. },
+                            ItemKind::Char { .. },
+                        ) => {
+                            let n = self.numeric_dims(src_idx).0;
+                            let src_reg = self.items[src_idx].reg.clone();
+                            let digits = self.emit_num_digit_string(&src_reg, n);
+                            self.move_str_into_char(&digits, n, didx);
+                        }
+                        // Every other cross-category shape stays a clean later
+                        // rung: a SIGNED (`PIC S9`) or SCALED (`PIC 9V9`) numeric
+                        // source, and the reverse alphanumeric → numeric direction.
                         _ => {
                             return Err(CompileError::Unsupported(format!(
                                 "cross-category MOVE from {name} into {dst} \
-                                 (numeric↔alphanumeric) is a later rung"
+                                 (only an unsigned-integer numeric source into an \
+                                 alphanumeric receiver is supported; a signed or \
+                                 scaled source, or the reverse direction, is a \
+                                 later rung)"
                             )));
                         }
                     }
@@ -783,6 +810,121 @@ impl<'a> Compiler<'a> {
                 "str_concat",
                 Some(&recv_reg),
                 vec![Operand::Var(src_reg), Operand::Var(pad)],
+                "str",
+            );
+        }
+    }
+
+    /// Build, at run time, the `n`-character zero-padded decimal image of an
+    /// **unsigned integer** numeric slot `num_reg` (holding its magnitude as an
+    /// `i64`) and return the fresh `str` register that holds it. This is exactly
+    /// the digit string a `DISPLAY` of the same `PIC 9(n)` item prints — but
+    /// materialised as a *string* rather than putchar'd — so a numeric→alphanumeric
+    /// MOVE and a DISPLAY of the source agree digit-for-digit.
+    ///
+    /// The image is assembled most-significant digit first. For the digit at
+    /// 0-based position `k` (from the left of an `n`-wide field), the place value
+    /// is `p = 10^(n-1-k)`, and the digit itself is
+    ///
+    /// ```text
+    ///   d = (num / p) % 10
+    /// ```
+    ///
+    /// The `/ p` shifts that digit down to the units place and the `% 10` keeps a
+    /// single digit — so a value with **more** than `n` digits silently drops its
+    /// high-order digits (COBOL's high-order overflow, matching the recursive
+    /// `__cob_print_padded` helper). A single digit `d` (0..=9) is turned into its
+    /// 1-character string by slicing the constant lookup table `"0123456789"` at
+    /// `[d, d+1)` — no per-digit branch table needed — and the `n` pieces are
+    /// concatenated left to right onto an initially empty accumulator. Because each
+    /// piece is exactly one character, the result is exactly `n` characters wide,
+    /// the same fixed-width image the oracle's `Decimal::digits()` yields for the
+    /// item.
+    ///
+    /// ```text
+    ///   PIC 9(3) holding 42  (slot = 42)         n = 3
+    ///     k=0: p=100  d=(42/100)%10 = 0  -> "0"
+    ///     k=1: p=10   d=(42/10)%10  = 4  -> "4"
+    ///     k=2: p=1    d=(42/1)%10   = 2  -> "2"
+    ///   result = "042"
+    /// ```
+    fn emit_num_digit_string(&mut self, num_reg: &str, n: usize) -> String {
+        // The shared digit lookup table and the constant 10 divisor/modulus.
+        let table = self.fresh("_ndtbl");
+        self.emit("str_const", Some(&table), vec![Operand::Str("0123456789".into())], "str");
+        let ten = self.fresh("_ndten");
+        self.emit("const", Some(&ten), vec![Operand::Int(10)], "i64");
+        let one = self.fresh("_ndone");
+        self.emit("const", Some(&one), vec![Operand::Int(1)], "i64");
+        // result = "" — the accumulator we build the n digits into.
+        let result = self.fresh("_ndres");
+        self.emit("str_const", Some(&result), vec![Operand::Str(String::new())], "str");
+        for k in 0..n {
+            // q = num / 10^(n-1-k); for the units place (p == 1) that is num itself.
+            let place = 10i64.pow((n - 1 - k) as u32);
+            let q = if place == 1 {
+                num_reg.to_string()
+            } else {
+                let pr = self.fresh("_ndp");
+                self.emit("const", Some(&pr), vec![Operand::Int(place)], "i64");
+                let q = self.fresh("_ndq");
+                self.emit("div", Some(&q), vec![Operand::Var(num_reg.to_string()), Operand::Var(pr)], "i64");
+                q
+            };
+            // d = q % 10 (this position's digit); d1 = d + 1 (slice end).
+            let d = self.fresh("_ndd");
+            self.emit("mod", Some(&d), vec![Operand::Var(q), Operand::Var(ten.clone())], "i64");
+            let d1 = self.fresh("_ndd1");
+            self.emit("add", Some(&d1), vec![Operand::Var(d.clone()), Operand::Var(one.clone())], "i64");
+            // ch = table[d..d+1] — the 1-character string for this digit.
+            let ch = self.fresh("_ndch");
+            self.emit(
+                "str_slice",
+                Some(&ch),
+                vec![Operand::Var(table.clone()), Operand::Var(d), Operand::Var(d1)],
+                "str",
+            );
+            // result = result + ch.
+            self.emit(
+                "str_concat",
+                Some(&result),
+                vec![Operand::Var(result.clone()), Operand::Var(ch)],
+                "str",
+            );
+        }
+        result
+    }
+
+    /// Store a run-time `str` register `src_reg` of compile-time-known length
+    /// `src_len` into an alphanumeric receiver item `didx`, by the **alphanumeric**
+    /// MOVE rule — LEFT-justified, space-padded on the right when the receiver is
+    /// wider, truncated on the right when narrower. This is the string-source twin
+    /// of [`Self::move_char_item`] (which reshapes one item into another); both
+    /// funnel numeric→alphanumeric and alphanumeric→alphanumeric moves through the
+    /// identical `str_slice` / `str_concat` reshape the oracle's `move_into_char`
+    /// performs, so the stored bytes agree.
+    fn move_str_into_char(&mut self, src_reg: &str, src_len: usize, didx: usize) {
+        let recv_w = self.items[didx].width();
+        let recv_reg = self.items[didx].reg.clone();
+        if recv_w <= src_len {
+            // Receiver no wider than the source: keep the leftmost `recv_w`.
+            let start = self.fresh("_ms0");
+            self.emit("const", Some(&start), vec![Operand::Int(0)], "i64");
+            let end = self.fresh("_msn");
+            self.emit("const", Some(&end), vec![Operand::Int(recv_w as i64)], "i64");
+            self.emit(
+                "str_slice",
+                Some(&recv_reg),
+                vec![Operand::Var(src_reg.to_string()), Operand::Var(start), Operand::Var(end)],
+                "str",
+            );
+        } else {
+            // Receiver wider: left-justify and space-pad the tail.
+            let pad = self.spaces_const(recv_w - src_len);
+            self.emit(
+                "str_concat",
+                Some(&recv_reg),
+                vec![Operand::Var(src_reg.to_string()), Operand::Var(pad)],
                 "str",
             );
         }
@@ -4556,13 +4698,60 @@ mod tests {
     }
 
     #[test]
-    fn cross_category_move_is_deferred() {
-        // A numeric→alphanumeric (or reverse) item MOVE needs runtime int↔string
-        // conversion — a clean later rung, never wrong output.
-        let err = compile_source(
+    fn unsigned_integer_numeric_to_alphanumeric_move_lowers() {
+        // `MOVE PIC 9(3) TO PIC X(4)` is now supported: the digit image is built at
+        // run time (str_slice off a digit table) and char-moved (str_concat pad).
+        let m = compile_source(
             &wrap(
                 &["01  N  PIC 9(3) VALUE 42.", "01  W  PIC X(4)."],
                 &["MOVE N TO W.", "STOP RUN."],
+            ),
+            "x",
+        )
+        .unwrap();
+        assert!(m.validate().is_empty(), "{:?}", m.validate());
+        let os = ops(&m);
+        assert!(os.contains(&"str_slice".to_string()), "digit image slices off the table");
+        assert!(os.contains(&"str_concat".to_string()), "char reshape pads via str_concat");
+    }
+
+    #[test]
+    fn signed_numeric_to_alphanumeric_move_is_deferred() {
+        // A SIGNED numeric source into an alphanumeric receiver is a later rung.
+        let err = compile_source(
+            &wrap(
+                &["01  S  PIC S9(3) VALUE 42.", "01  W  PIC X(4)."],
+                &["MOVE S TO W.", "STOP RUN."],
+            ),
+            "x",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn scaled_numeric_to_alphanumeric_move_is_deferred() {
+        // A SCALED (fractional) numeric source into an alphanumeric receiver is a
+        // later rung.
+        let err = compile_source(
+            &wrap(
+                &["01  F  PIC 9(2)V9 VALUE 4.2.", "01  W  PIC X(4)."],
+                &["MOVE F TO W.", "STOP RUN."],
+            ),
+            "x",
+        )
+        .unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn alphanumeric_to_numeric_move_is_deferred() {
+        // The REVERSE direction (alphanumeric source → numeric receiver) is a later
+        // rung — it needs run-time digit parsing/validation.
+        let err = compile_source(
+            &wrap(
+                &["01  W  PIC X(3) VALUE \"042\".", "01  N  PIC 9(3)."],
+                &["MOVE W TO N.", "STOP RUN."],
             ),
             "x",
         )

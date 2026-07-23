@@ -583,6 +583,45 @@ than failing to parse.
 
 Grammar scope tracks the lexer scope below.
 
+### `MOVE` (cross-category: unsigned-integer numeric → alphanumeric)
+
+The earlier rungs implement **same-category** `MOVE`: numeric → numeric (rescale
+the implied decimal point, truncating), and alphanumeric → alphanumeric
+(left-justify, space-pad or truncate on the right). The **first cross-category**
+rung is `MOVE numeric-item TO alphanumeric-item`, restricted to an **unsigned
+integer** sending item (`PIC 9(n)` — no `S`, no `V`).
+
+COBOL's rule: a numeric sending item moved to an alphanumeric receiver is treated
+**as though it were an alphanumeric item holding its digit characters**, then
+moved by the alphanumeric rules. The digit characters are the item's `n`-digit,
+**zero-padded magnitude** — exactly the image a `DISPLAY` of the same `PIC 9(n)`
+prints. So the move is: build that `n`-character digit string, then LEFT-justify
+it into the receiver, space-padding the right when the receiver is wider and
+truncating on the right when it is narrower.
+
+Worked (`N` is `PIC 9(3)` holding `42`, so its digit image is `"042"`):
+
+- `N → PIC X(3)` (exact fit) → `"042"`.
+- `N → PIC X(5)` (wider) → `"042  "` (two trailing spaces).
+- `N → PIC X(2)` (narrower) → `"04"` (right-truncated).
+
+The oracle resolves the numeric item to its `Decimal`, takes `Decimal::digits()`
+(the `int`+`frac` characters — for an unsigned integer, exactly the `n` zero-padded
+digits), and stores it through the **same `move_into_char`** left-justify/pad path
+a same-category alphanumeric `MOVE` uses. The compiler builds the `n`-character
+digit string at run time from the numeric slot — for each digit position it takes
+`(slot / 10^k) % 10` and slices that digit out of a constant `"0123456789"` table
+(`str_slice [d, d+1)`), concatenating the `n` one-character pieces — then feeds the
+string through the **same `str_slice`/`str_concat` char reshape** an
+alphanumeric-item `MOVE` emits. Because both engines run the digit image through
+one shared alphanumeric-receiver rule, the stored bytes agree byte-for-byte.
+
+Deferred as clean later rungs (rejected at read/compile time, never wrong output):
+the **reverse** direction (alphanumeric → numeric, which needs run-time digit
+parsing/validation), a **signed** (`PIC S9`) or **scaled** (`PIC 9V9`) or
+**edited** (`PIC $,ZZ9.99`) numeric source, a **numeric-edited** receiver, and a
+**group** item on either side.
+
 ## Scope
 
 This spec's implementation stops at the **frontend** (lex + parse to a CST). No

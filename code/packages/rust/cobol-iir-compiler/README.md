@@ -34,7 +34,7 @@ integer `123`); an **alphanumeric** item (`PIC X`/`A`) is a `str`.
 | COBOL | IIR |
 | --- | --- |
 | `VALUE <lit>` / `MOVE <lit> TO item` | the register's `const`/`str_const` — the literal formatted into the item's picture at compile time |
-| `MOVE item TO item` | numeric→numeric rescales the implied point; character→character reshapes to the receiver's size (`str_slice` to truncate, `str_concat` to space-pad) |
+| `MOVE item TO item` | numeric→numeric rescales the implied point; character→character reshapes to the receiver's size (`str_slice` to truncate, `str_concat` to space-pad); **unsigned-integer numeric→alphanumeric** builds the `n`-digit zero-padded image at run time (each digit `(slot / 10^k) % 10` sliced out of a constant `"0123456789"` table) and feeds it through the same char reshape (left-justify, space-pad, or truncate). A signed/scaled numeric source, the reverse alphanumeric→numeric direction, and groups are later rungs |
 | `ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE … [GIVING r] [ROUNDED] [ON SIZE ERROR …]` | `add`/`sub`/`mul`/`div` on the `i64` slots, the result reduced to the receiver's field; a size error runs the handler and leaves the receiver unchanged |
 | `COMPUTE r [ROUNDED] = expr [ON SIZE ERROR …]` | the precedence cascade (`+ - * /`, unary minus, `**` with a constant exponent, parentheses) evaluated bottom-up over scaled `i64`, each step overflow-guarded |
 | `DISPLAY op…` | each operand's image emitted, then `putchar('\n')` — a literal prints its source text, a numeric item via the fixed-width digit helper (signed items via a trailing-overpunch helper), an alphanumeric via `print_str` |

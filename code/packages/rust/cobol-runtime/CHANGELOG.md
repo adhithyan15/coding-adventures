@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.31.0 — cross-category MOVE (unsigned-integer numeric → alphanumeric)
+
+- The first **cross-category** `MOVE`: `MOVE numeric-item TO alphanumeric-item`,
+  restricted to an **unsigned integer** source (`PIC 9(n)` — no `S`, no `V`) into a
+  `PIC X(m)` receiver. Oracle-first and byte-identical to `cobol-iir-compiler`
+  0.27.0. No grammar change.
+- **The rule.** The numeric sending item is treated as though it held its **digit
+  characters** — its `n`-digit zero-padded magnitude, exactly what `DISPLAY` shows
+  — then moved by the alphanumeric rules (LEFT-justified, space-padded on the right
+  if wider, truncated on the right if narrower). `move_into` already did this: for a
+  `Src::Num` into an alphanumeric picture it takes `Decimal::digits()` (the
+  `int`+`frac` characters — for an unsigned integer, exactly the `n` zero-padded
+  digits) and stores it through the existing `move_into_char` left-justify/pad path.
+  So `PIC 9(3)` holding `42` → `X(3)` is `"042"`, → `X(5)` is `"042  "`, → `X(2)`
+  is `"04"`.
+- **Deferral gate (`exec_move`).** Only an unsigned integer source is supported on
+  this rung. A **signed** (`PIC S9`) or **scaled** (`PIC 9V9`) numeric source into
+  an alphanumeric receiver is now a clean `Unsupported` reject, mirroring the
+  compiler's compile-time reject of the same shapes so the two engines agree on the
+  deferral (not just on the accepted case). The **reverse** direction (alphanumeric
+  → numeric) was and remains rejected in `move_into`, and a group item stays a
+  later rung.
+- **Tests.** Oracle-unit cases for the three supported shapes (exact-fit, pad,
+  truncate) and each deferred reject (signed source, scaled source, alpha →
+  numeric).
+
 ## 0.30.0 — computed (data-name) reference modification
 
 - Generalised `Operand::RefMod` to carry `start`/`len` as a new `RefIndex`

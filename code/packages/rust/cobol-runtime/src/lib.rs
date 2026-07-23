@@ -244,6 +244,91 @@ mod tests {
     }
 
     // ----------------------------------------------------------------------
+    // Cross-category MOVE: unsigned-integer numeric → alphanumeric
+    // ----------------------------------------------------------------------
+
+    /// Run a program with the given WORKING-STORAGE and PROCEDURE bodies.
+    fn run_ws(ws: &[&str], body: &[&str]) -> Result<String, RuntimeError> {
+        let mut lines = vec![
+            "IDENTIFICATION DIVISION.",
+            "PROGRAM-ID. P.",
+            "DATA DIVISION.",
+            "WORKING-STORAGE SECTION.",
+        ];
+        lines.extend_from_slice(ws);
+        lines.push("PROCEDURE DIVISION.");
+        lines.push("MAIN.");
+        lines.extend_from_slice(body);
+        run_cobol(&program(&lines))
+    }
+
+    #[test]
+    fn numeric_to_alphanumeric_move_left_justifies_and_space_pads() {
+        // PIC 9(3)=042 → PIC X(5): the digit image "042" left-justified, right-padded.
+        let out = run_ws(
+            &["01  N  PIC 9(3) VALUE 42.", "01  W  PIC X(5)."],
+            &["    MOVE N TO W.", "    DISPLAY W \"|\".", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(out, "042  |\n");
+    }
+
+    #[test]
+    fn numeric_to_alphanumeric_move_truncates_on_the_right() {
+        // PIC 9(3)=042 → PIC X(2): keeps the leftmost two digits "04".
+        let out = run_ws(
+            &["01  N  PIC 9(3) VALUE 42.", "01  W  PIC X(2)."],
+            &["    MOVE N TO W.", "    DISPLAY W.", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(out, "04\n");
+    }
+
+    #[test]
+    fn numeric_to_alphanumeric_move_exact_fit() {
+        // PIC 9(3)=042 → PIC X(3): the whole digit image "042".
+        let out = run_ws(
+            &["01  N  PIC 9(3) VALUE 42.", "01  W  PIC X(3)."],
+            &["    MOVE N TO W.", "    DISPLAY W.", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(out, "042\n");
+    }
+
+    #[test]
+    fn signed_numeric_to_alphanumeric_move_is_deferred() {
+        // A signed numeric source into an alphanumeric receiver is a later rung.
+        let err = run_ws(
+            &["01  S  PIC S9(3) VALUE 42.", "01  W  PIC X(4)."],
+            &["    MOVE S TO W.", "    STOP RUN."],
+        )
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn scaled_numeric_to_alphanumeric_move_is_deferred() {
+        // A scaled (fractional) numeric source into an alphanumeric receiver defers.
+        let err = run_ws(
+            &["01  F  PIC 9(2)V9 VALUE 4.2.", "01  W  PIC X(4)."],
+            &["    MOVE F TO W.", "    STOP RUN."],
+        )
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn alphanumeric_to_numeric_move_is_deferred() {
+        // The reverse direction (alphanumeric → numeric) remains a later rung.
+        let err = run_ws(
+            &["01  W  PIC X(3) VALUE \"042\".", "01  N  PIC 9(3)."],
+            &["    MOVE W TO N.", "    STOP RUN."],
+        )
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+    }
+
+    // ----------------------------------------------------------------------
     // Fixed-point decimal arithmetic
     // ----------------------------------------------------------------------
 
