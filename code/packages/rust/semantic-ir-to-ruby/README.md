@@ -50,9 +50,11 @@ SIR16 control flow and mutation (`Loops` — `While`, `ForRange` (numeric
 `Sequences` — native arrays for all five sequence nodes: `SeqLit` (`[1, 2, 3]`,
 structural `Array#==`), `SeqIndex` (`a[i]`, nil on OOB), `SeqLen` (`a.length`),
 `SeqSet` (`a[i] = v`, bounds-checked via `sir_seq_set`), and `ForEach`
-(`for x in a`); and SIR16 `Maps` — a native Hash for `MapLit` (`{k => v}`),
+(`for x in a`); SIR16 `Maps` — a native Hash for `MapLit` (`{k => v}`),
 `MapGet` (`h[k]`, nil on miss), and `MapSet` (`h[k] = v`), with structural
-composite keys.
+composite keys; and SIR16 `Floats` — a native `Float` for `FloatLit` (rendered
+so `7.0` stays a Float, not the Integer `7`; `Infinity`/`NaN` are named), with
+native float arithmetic and division.
 Rejects `TailCalls`, `Intrinsics`, and every not-yet-wired feature (array
 indexing / slicing via `IndexGet` — `NDArrays`; array-pattern destructuring —
 `ShortCircuit`; collection methods, exceptions, OOP) until its cascade batch

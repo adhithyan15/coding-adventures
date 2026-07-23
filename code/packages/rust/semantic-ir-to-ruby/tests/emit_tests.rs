@@ -702,3 +702,133 @@ fn for_each_over_a_map_does_not_panic() {
         assert!(!out.is_empty(), "the loop ran and printed the entry");
     }
 }
+
+// ── SIR16 floats ───────────────────────────────────────────────────────────
+// `Feature::Floats` gates ONLY `Expr::FloatLit`. Ruby has a native `Float`, so
+// the literal renders directly and arithmetic reuses the native operators. The
+// Ruby FRONTEND masks this node (its parser would emit a `FloatLit` only from
+// float SOURCE, which these tests don't go through), so — like the sequence and
+// map tests above — we hand-build producer-agnostic modules and prove the
+// emitter is total and the numbers/display match a real `ruby`.
+
+fn flit(value: f64) -> Expr {
+    Expr::FloatLit { value, span: s2() }
+}
+fn bin(name: &str, a: Expr, b: Expr) -> Expr {
+    Expr::BuiltinCall {
+        name: name.into(),
+        args: vec![a, b],
+        effects: EffectSet::PURE,
+        span: s2(),
+    }
+}
+/// A `main` module declaring only `Floats` (arithmetic/`puts` are builtins,
+/// which are gated by the builtin allowlist, not by a feature).
+fn float_module(stmts: Vec<Stmt>) -> Module {
+    let mut m = seq_module(stmts);
+    m.manifest = FeatureManifest::from_features(&[Feature::Floats]);
+    m
+}
+fn run_float(stmts: Vec<Stmt>) -> Option<String> {
+    run_ruby(&compile(&float_module(stmts)).expect("float module must compile, not panic").source)
+}
+
+#[test]
+fn float_literal_emits_a_float_not_an_integer() {
+    // THE core hazard: a naive `f64::to_string()` renders `7.0` as `"7"`, which
+    // Ruby parses as an Integer (wrong type, wrong `/`, wrong display). The
+    // emitted literal must carry a decimal point.
+    let rb = compile(&float_module(vec![puts(flit(7.0))]))
+        .expect("compile")
+        .source;
+    assert!(
+        rb.contains("7.0"),
+        "an integral FloatLit must emit `7.0`, not the Integer `7`:\n{rb}"
+    );
+}
+
+#[test]
+fn non_finite_literal_emits_a_named_constant() {
+    // Ruby has no `inf`/`nan` numeric token — the values are `Float::INFINITY` /
+    // `Float::NAN`. A `FloatLit` carrying one must still emit a parseable form.
+    let rb = compile(&float_module(vec![
+        puts(flit(f64::INFINITY)),
+        puts(flit(f64::NEG_INFINITY)),
+        puts(flit(f64::NAN)),
+    ]))
+    .expect("compile")
+    .source;
+    assert!(rb.contains("Float::INFINITY"), "positive infinity:\n{rb}");
+    assert!(rb.contains("-Float::INFINITY"), "negative infinity:\n{rb}");
+    assert!(rb.contains("Float::NAN"), "NaN:\n{rb}");
+}
+
+#[test]
+fn float_literal_displays_with_a_trailing_point() {
+    // `puts 7.0` → `7.0` (integral float keeps its `.0`), `puts 3.25` → `3.25`,
+    // `puts(-0.0)` → `-0.0` (the sign of zero survives) — all via the runtime's
+    // `sir_fmt_float`, matching a real Ruby.
+    match run_float(vec![puts(flit(7.0)), puts(flit(3.25)), puts(flit(-0.0))]) {
+        Some(out) => assert_eq!(out, "7.0\n3.25\n-0.0"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn float_arithmetic_is_native_and_exact() {
+    // Float `+`/`-`/`*` reuse the native chained operators, so an integral
+    // result stays a Float (`4.0`, not `4`) — matching every other backend.
+    match run_float(vec![
+        puts(bin("+", flit(1.5), flit(2.5))), // 4.0
+        puts(bin("*", flit(2.0), flit(3.0))), // 6.0
+        puts(bin("-", flit(7.0), flit(0.5))), // 6.5
+    ]) {
+        Some(out) => assert_eq!(out, "4.0\n6.0\n6.5"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn float_and_integer_division_follow_ruby() {
+    // `7.0 / 2` true-divides to `3.5` (Float#/); `7 / 2` floors to `3`
+    // (Integer#/) — the division frontier, preserved: a Float operand promotes,
+    // two Integers floor. A regression guard that adding floats did not disturb
+    // integer division.
+    match run_float(vec![
+        puts(bin("/", flit(7.0), ilit(2))), // 3.5
+        puts(bin("/", flit(6.0), flit(2.0))), // 3.0
+        puts(bin("/", ilit(7), ilit(2))),   // 3  (Integer floor)
+    ]) {
+        Some(out) => assert_eq!(out, "3.5\n3.0\n3"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn non_finite_arithmetic_displays_named() {
+    // Float division by zero yields `Infinity`/`-Infinity` (NOT a
+    // `ZeroDivisionError` — that is Integer-only), and `0.0/0.0` is `NaN` —
+    // rendered by `sir_fmt_float`, matching a real Ruby.
+    match run_float(vec![
+        puts(bin("/", flit(1.0), flit(0.0))),  // Infinity
+        puts(bin("/", flit(-1.0), flit(0.0))), // -Infinity
+        puts(bin("/", flit(0.0), flit(0.0))),  // NaN
+    ]) {
+        Some(out) => assert_eq!(out, "Infinity\n-Infinity\nNaN"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn float_equality_is_value_based() {
+    // `7.0 == 7.0` is true; a Float equals a numerically-equal Integer under
+    // Ruby `==` (`7.0 == 7`), routed through `sir_eq`.
+    match run_float(vec![
+        puts(bin("=", flit(7.0), flit(7.0))), // #t
+        puts(bin("=", flit(7.0), ilit(7))),   // #t (Ruby ==: 7.0 == 7)
+        puts(bin("=", flit(7.0), flit(7.5))), // #f
+    ]) {
+        Some(out) => assert_eq!(out, "#t\n#t\n#f"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}

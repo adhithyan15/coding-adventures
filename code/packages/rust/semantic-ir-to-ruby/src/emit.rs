@@ -380,6 +380,39 @@ fn emit_block_inline(b: &Block) -> String {
     parts.join("; ")
 }
 
+/// Render an `f64` as a Ruby **Float** literal that round-trips to the same
+/// value.  Two things a naive `value.to_string()` gets wrong:
+///
+/// - **Integral floats lose their point.**  Rust's `f64::to_string` renders
+///   `7.0` as `"7"`, which Ruby would parse as an *Integer* — a different type
+///   with different `/` (floor vs true divide) and display (`7` vs `7.0`).
+///   Rust's `{:?}` (Debug) instead always emits a decimal point or an exponent
+///   (`7.0`, `-0.0`, `1e300`), each a valid Ruby *Float* literal, using the
+///   shortest round-tripping form.
+/// - **Non-finite values have no numeric literal.**  Ruby has no `inf`/`nan`
+///   token (those would be method calls / bare identifiers); the values are
+///   named `Float::INFINITY` / `Float::NAN`.  A `FloatLit` carrying one is rare
+///   (it usually arises at runtime from `1.0 / 0.0`), but must still emit a
+///   parseable expression.
+///
+/// The runtime's `sir_fmt_float` renders every float through Ruby's own
+/// `to_s`/`nan?`/`infinite?`, so *display* is native regardless of how the
+/// literal was spelled — this helper only has to preserve the numeric value.
+fn float_to_ruby_literal(value: f64) -> String {
+    if value.is_nan() {
+        "Float::NAN".to_string()
+    } else if value.is_infinite() {
+        if value > 0.0 {
+            "Float::INFINITY".to_string()
+        } else {
+            "-Float::INFINITY".to_string()
+        }
+    } else {
+        // `{:?}` guarantees a `.`/exponent for every finite f64 → a Ruby Float.
+        format!("{value:?}")
+    }
+}
+
 // ---------------------------------------------------------------------------
 // Expressions (Ruby is expression-oriented → emit_expr is total)
 // ---------------------------------------------------------------------------
@@ -387,6 +420,7 @@ fn emit_block_inline(b: &Block) -> String {
 fn emit_expr(e: &Expr) -> String {
     match e {
         Expr::IntLit { value, .. } => value.to_string(),
+        Expr::FloatLit { value, .. } => float_to_ruby_literal(*value),
         Expr::BoolLit { value, .. } => value.to_string(),
         Expr::NilLit { .. } => "nil".to_string(),
         Expr::SymLit { name, .. } => emit_symbol(name),

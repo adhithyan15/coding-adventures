@@ -67,9 +67,17 @@ pub fn compile(module: &Module) -> Result<Artifact, BackendError>;
 
 **v0 accepts** the SIR-v0 feature set: `Closures`, `Pairs`, `Symbols`,
 `Strings`, `DynamicTyping`, `OptionalTypeAnnotations`, `MutualRecursion`,
-`Globals`.  **v0 rejects** `TailCalls`, `Intrinsics`, and every later feature
-until its batch lands (each rejection is a clean, source-positioned
-`UnsupportedFeature`).
+`Globals`.
+
+**Landed since v0** (one version-bumped batch at a time — see the roadmap): the
+SIR26 integer conversions (`Conversions`, `SizedIntegers`, `Unsigned`,
+`WrappingArithmetic`); and the SIR16 batches `Loops` + `MutableBindings`
+(0.3.0), `Sequences` (native `Array`, 0.4.0), `Maps` (native `Hash`, 0.5.0), and
+`Floats` (native `Float`, 0.6.0).
+
+**Still rejects** `TailCalls`, `Intrinsics`, `ShortCircuit`, `NDArrays`,
+exceptions/OOP, and every not-yet-landed feature (each rejection is a clean,
+source-positioned `UnsupportedFeature`).
 
 ## Value model
 
@@ -93,6 +101,7 @@ or temporaries:
 | SIR node | Emitted Ruby |
 |---|---|
 | `IntLit { value }` | `<value>` |
+| `FloatLit { value }` | `<value>` as a Ruby `Float` — `7.0` (never the Integer `7`), `Float::INFINITY` / `Float::NAN` |
 | `BoolLit { value }` | `true` / `false` |
 | `NilLit` | `nil` |
 | `SymLit { name }` | `:<name>` (or `:"<escaped>"`) |
