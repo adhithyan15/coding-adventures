@@ -1137,11 +1137,12 @@ impl Machine {
     /// other alphanumeric) falls into that alphanumeric arm: COBOL treats the
     /// numeric operand as though moved to an alphanumeric field — its digit image,
     /// which `Decimal::digits()` yields as the item's fixed-width zero-padded
-    /// storage (`PIC 9(3) = 42` → `"042"`) — and compares by the byte rule. Only an
-    /// **unsigned-integer** numeric item has an unambiguous image on this rung; a
-    /// **signed** (`PIC S9`) or **scaled** (`PIC 9V9`) numeric item, or a **group**
-    /// item, in a mixed comparison is a clean later rung — rejected here so the
-    /// oracle matches the compiler, which rejects the same shapes at compile time.
+    /// storage (`PIC 9(3) = 42` → `"042"`; a scaled `PIC 9(2)V9 = 4.2` → `"042"`,
+    /// its `(int + frac)` digits with no point) — and compares by the byte rule. An
+    /// **unsigned** numeric item, integer OR scaled (`PIC 9(i)V9(d)`), has an
+    /// unambiguous image on this rung; a **signed** (`PIC S9`) numeric item, or a
+    /// **group** item, in a mixed comparison is a clean later rung — rejected here so
+    /// the oracle matches the compiler, which rejects the same shapes at compile time.
     /// (A numeric *literal* vs an alphanumeric operand is a different pairing, left
     /// as-is — outside this rung's scope.)
     fn compare_operands(&self, left: &Operand, right: &Operand) -> Result<std::cmp::Ordering, RuntimeError> {
@@ -1158,9 +1159,9 @@ impl Machine {
             || matches!(&r, Src::Num(_)) && (matches!(&l, Src::Chars(_)) || alnum_fig(&l));
         if mixed {
             for op in [left, right] {
-                if self.operand_is_signed_or_scaled_numeric(op) {
+                if self.operand_is_signed_numeric(op) {
                     return Err(RuntimeError::Unsupported(
-                        "a signed or scaled numeric operand compared with an alphanumeric \
+                        "a signed numeric operand compared with an alphanumeric \
                          operand is a later rung"
                             .into(),
                     ));
@@ -1191,16 +1192,16 @@ impl Machine {
         })
     }
 
-    /// Whether `op` is a data-name referring to a **signed** (`PIC S9…`) or
-    /// **scaled** (`PIC 9V9…`, i.e. `dec_digits > 0`) numeric item — the numeric
-    /// shapes whose mixed comparison with an alphanumeric operand is a later rung.
-    /// A literal, a reference modification, or an unsigned-integer numeric item is
-    /// not one of these (returns `false`).
-    fn operand_is_signed_or_scaled_numeric(&self, op: &Operand) -> bool {
+    /// Whether `op` is a data-name referring to a **signed** (`PIC S9…`) numeric
+    /// item — the numeric shape whose mixed comparison with an alphanumeric operand
+    /// is a later rung. An unsigned numeric item (integer OR scaled, `PIC 9(i)V9(d)`,
+    /// whose `(int + frac)` digit image `Decimal::digits()` yields unambiguously) is
+    /// supported, as is a literal or a reference modification (returns `false`).
+    fn operand_is_signed_numeric(&self, op: &Operand) -> bool {
         if let Operand::Ident(name) = op {
             if let Some(&idx) = self.by_name.get(name) {
-                if let Some(Picture::Numeric { signed, dec_digits, .. }) = &self.items[idx].picture {
-                    return *signed || *dec_digits != 0;
+                if let Some(Picture::Numeric { signed, .. }) = &self.items[idx].picture {
+                    return *signed;
                 }
             }
         }
@@ -1241,13 +1242,17 @@ impl Machine {
         for dst in dsts {
             let idx = *self.by_name.get(dst).ok_or_else(|| RuntimeError::UndefinedName(dst.clone()))?;
             // Cross-category numeric → alphanumeric MOVE: COBOL treats an unsigned
-            // integer sending item as though it were an alphanumeric item holding
+            // numeric sending item as though it were an alphanumeric item holding
             // its digit characters, then moves it by the alphanumeric rules
-            // (`move_into` below, via `Decimal::digits()` + `move_into_char`). Only
-            // an UNSIGNED INTEGER source is supported on this rung — a SIGNED
-            // (`PIC S9`) or SCALED (`PIC 9V9`) numeric source into an alphanumeric
-            // receiver is a clean later rung, rejected here so the oracle and the
-            // compiler (which rejects the same shapes at compile time) agree.
+            // (`move_into` below, via `Decimal::digits()` + `move_into_char`). The
+            // digit image is the full `(int + frac)`-digit magnitude — integer part
+            // then fractional part, NO decimal point — which `Decimal::digits()`
+            // already yields (`PIC 9(2)V9 = 4.2` → `"042"`; an integer, `d = 0`, is
+            // the special case). Both an UNSIGNED INTEGER and an UNSIGNED SCALED
+            // (`PIC 9(i)V9(d)`) source are supported on this rung. A SIGNED
+            // (`PIC S9`) numeric source into an alphanumeric receiver is a clean
+            // later rung, rejected here so the oracle and the compiler (which
+            // rejects the same shape at compile time) agree.
             if let Operand::Ident(name) = src {
                 let alpha_recv = matches!(
                     self.items[idx].picture,
@@ -1255,15 +1260,15 @@ impl Machine {
                 );
                 if alpha_recv {
                     if let Some(&sidx) = self.by_name.get(name) {
-                        if let Some(Picture::Numeric { dec_digits, signed, .. }) =
+                        if let Some(Picture::Numeric { signed, .. }) =
                             &self.items[sidx].picture
                         {
-                            if *signed || *dec_digits != 0 {
+                            if *signed {
                                 return Err(RuntimeError::Unsupported(format!(
                                     "cross-category MOVE from {name} into {dst}: only an \
-                                     unsigned-integer numeric source into an alphanumeric \
-                                     receiver is supported; a signed or scaled source is a \
-                                     later rung"
+                                     unsigned numeric source (integer or scaled) into an \
+                                     alphanumeric receiver is supported; a signed source is \
+                                     a later rung"
                                 )));
                             }
                         }

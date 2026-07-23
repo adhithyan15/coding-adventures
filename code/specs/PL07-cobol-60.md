@@ -616,9 +616,19 @@ string through the **same `str_slice`/`str_concat` char reshape** an
 alphanumeric-item `MOVE` emits. Because both engines run the digit image through
 one shared alphanumeric-receiver rule, the stored bytes agree byte-for-byte.
 
+A **scaled** (unsigned `PIC 9(i)V9(d)`, `d > 0`) source is also supported: its
+digit image is the `(i+d)`-digit zero-padded magnitude — the integer digits
+followed by the fractional digits, concatenated with **no decimal point** (the
+scaled slot already holds `value·10^d`, and the oracle's `Decimal::digits()` =
+`int + frac` defines it). So `PIC 9(2)V9 = 4.2 → "042"`, `PIC 9(1)V99 = 3.14 →
+"314"`; the same left-justify / space-pad / truncate reshape into the receiver
+then applies. The mixed **comparison** with an alphanumeric operand uses the same
+image (`9(2)V9 = 4.2` compares equal to `"042"`).
+
 Deferred as clean later rungs (rejected at read/compile time, never wrong output):
-a **signed** (`PIC S9`) or **scaled** (`PIC 9V9`) or **edited** (`PIC $,ZZ9.99`)
-numeric source, a **numeric-edited** receiver, and a **group** item on either side.
+a **signed** (`PIC S9`) or **edited** (`PIC $,ZZ9.99`) numeric source, a
+**numeric-edited** receiver, an **alphanumeric → scaled-receiver** MOVE (parsing
+characters into a scaled receiver), and a **group** item on either side.
 
 ### `MOVE` (cross-category: alphanumeric → unsigned-integer numeric)
 

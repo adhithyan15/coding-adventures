@@ -8,6 +8,38 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.30.0: unsigned SCALED operand in num→alpha MOVE and mixed comparison
+
+The numeric→alphanumeric MOVE and the mixed numeric↔alphanumeric comparison now
+accept an **unsigned SCALED** numeric operand (`PIC 9(i)V9(d)`, `d > 0`, no `S`),
+not only an unsigned integer. Oracle-first and byte-identical to
+`coding-adventures-cobol-runtime` 0.34.0. No grammar / lexer / parser change.
+
+- **The digit-image rule.** A scaled numeric moved to / compared as alphanumeric
+  uses its **digit image = all its digits, integer part followed by fractional
+  part, concatenated with NO decimal point** — the `(i + d)`-digit zero-padded
+  magnitude. The scaled `i64` slot already holds `value * 10^d`, so its full
+  `(i + d)` digits *are* the image (no point inserted). This is exactly what the
+  oracle's `Decimal::digits()` (`int + frac`) yields. Examples:
+  `PIC 9(2)V9 = 4.2` → `"042"`; `PIC 9(1)V99 = 3.14` → `"314"`.
+- **MOVE.** `MOVE 9(2)V9=4.2 TO X(3)` → `"042"`, `→ X(5)` → `"042  "` (pad),
+  `→ X(2)` → `"04"` (truncate). The MOVE arm's `dec_digits: 0` gate is relaxed to
+  `signed: false` (any `dec_digits`) and `emit_num_digit_string` is called over
+  `n = int_digits + dec_digits` digits — the identical `div`/`mod`/table-slice
+  loop, just over more digits.
+- **Comparison.** `IF 9(2)V9=4.2 = "042"` → **true**; `IF … > "040"` → **true**.
+  `num_digit_str_operand` builds the same `(i + d)`-digit image, and both operands
+  run the same space-padded `str_cmp` path a same-category alphanumeric relation
+  uses, so the byte comparison is byte-identical to the oracle.
+- **Still deferred (clean `Unsupported`).** A **signed** (`PIC S9`) numeric
+  operand (integer or scaled), the **reverse** alphanumeric→scaled-receiver MOVE, a
+  numeric-edited receiver, and group items.
+- **Tests.** The former `scaled_numeric_to_alphanumeric_move_is_deferred` unit test
+  is now the positive `scaled_numeric_to_alphanumeric_move_lowers`; new `jit_e2e`
+  cases cover the exact-fit, more-fraction-digit, pad, truncate, and computed-value
+  MOVEs and the equal / ordering / more-fraction-digit comparisons, all through
+  `assert_matches_oracle`. The signed operand stays a deferral test.
+
 ### Added — v0.29.0: numeric ↔ alphanumeric comparison
 
 A relational condition (in `IF` / `EVALUATE` / any condition context) comparing

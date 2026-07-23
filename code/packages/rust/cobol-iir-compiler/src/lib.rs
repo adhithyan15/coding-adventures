@@ -533,22 +533,29 @@ impl<'a> Compiler<'a> {
                             self.move_char_item(src_idx, didx);
                         }
                         // Cross-category **numeric → alphanumeric**: an UNSIGNED
-                        // INTEGER source (`PIC 9(n)`, no `S`, no `V`) moved into an
+                        // numeric source (`PIC 9(i)V9(d)`, no `S`) moved into an
                         // alphanumeric receiver is treated by COBOL as though it
-                        // were an alphanumeric item holding its `n` digit
-                        // characters — the item's zero-padded magnitude image, the
-                        // very digits `DISPLAY` shows — then moved by the
-                        // alphanumeric rules (LEFT-justified, space-padded on the
-                        // right if wider, truncated on the right if narrower). We
-                        // build that `n`-character digit string at run time from the
-                        // numeric slot, then feed it through the same char-store
-                        // path a same-category alphanumeric MOVE uses, so the
-                        // compiler and the oracle emit byte-identical bytes.
+                        // were an alphanumeric item holding its digit characters —
+                        // the item's `(i + d)`-digit zero-padded magnitude image,
+                        // the integer part followed by the fractional part with NO
+                        // decimal point (an INTEGER source, `d = 0`, is the special
+                        // case). This is the very image `Decimal::digits()` yields
+                        // (`int + frac`) and, for an integer, the digits `DISPLAY`
+                        // shows. It is then moved by the alphanumeric rules
+                        // (LEFT-justified, space-padded on the right if wider,
+                        // truncated on the right if narrower). We build that
+                        // `(i + d)`-character digit string at run time from the
+                        // scaled numeric slot — whose magnitude is already
+                        // `value * 10^d`, so its full `(i + d)` digits ARE the image
+                        // (no point inserted) — then feed it through the same
+                        // char-store path a same-category alphanumeric MOVE uses, so
+                        // the compiler and the oracle emit byte-identical bytes.
                         (
-                            ItemKind::Numeric { signed: false, dec_digits: 0, .. },
+                            ItemKind::Numeric { signed: false, .. },
                             ItemKind::Char { .. },
                         ) => {
-                            let n = self.numeric_dims(src_idx).0;
+                            let (int_d, dec_d) = self.numeric_dims(src_idx);
+                            let n = int_d + dec_d;
                             let src_reg = self.items[src_idx].reg.clone();
                             let digits = self.emit_num_digit_string(&src_reg, n);
                             self.move_str_into_char(&digits, n, didx);
@@ -2213,9 +2220,11 @@ impl<'a> Compiler<'a> {
     /// build the identical image and run the identical space-padded `str_cmp`, the
     /// oracle (whose `Decimal::digits()` yields the same image) agrees byte-for-byte.
     ///
-    /// A signed (`PIC S9`) or scaled (`PIC 9V9`) numeric operand, a numeric literal
-    /// (a different pairing — kept out of scope), or a group item in a mixed
-    /// relation is a clean later rung (see [`Self::num_digit_str_operand`]).
+    /// An unsigned SCALED operand (`PIC 9(i)V9(d)`) uses its `(i + d)`-digit image
+    /// (int part then frac part, no point) — so `IF S = "042"` with `S PIC 9(2)V9 =
+    /// 4.2` is true. A signed (`PIC S9`) numeric operand, a numeric literal (a
+    /// different pairing — kept out of scope), or a group item in a mixed relation
+    /// is a clean later rung (see [`Self::num_digit_str_operand`]).
     fn emit_relation(&mut self, relation: &GrammarASTNode) -> Result<String, CompileError> {
         let operands = child_nodes(relation, "operand");
         if operands.len() != 2 {
@@ -2261,11 +2270,12 @@ impl<'a> Compiler<'a> {
     /// proceeds by the identical alphanumeric byte rule the oracle uses (whose
     /// `Decimal::digits()` yields the same image).
     ///
-    /// Only an **unsigned-integer** numeric ITEM (`PIC 9(n)`, no `S`, no `V`) has
-    /// an unambiguous image on this rung, so it is the only shape accepted:
+    /// An **unsigned** numeric ITEM — integer (`PIC 9(n)`) or scaled
+    /// (`PIC 9(i)V9(d)`) — has an unambiguous image (`int + frac`, no point) on this
+    /// rung, so both are accepted:
     ///
-    /// * a **signed** (`PIC S9`) or **scaled** (`PIC 9V9`) numeric item — whose
-    ///   image would need sign / implied-point handling — is a clean later rung;
+    /// * a **signed** (`PIC S9`) numeric item — whose image would need sign
+    ///   handling — is a clean later rung;
     /// * a **numeric literal** against an alphanumeric operand is a *different*
     ///   pairing (kept out of scope) and is rejected here too;
     /// * a **group** item never reaches this method — its name is unregistered on
@@ -2275,14 +2285,20 @@ impl<'a> Compiler<'a> {
             Operandy::Name(name) => {
                 let idx = self.item_index(&name)?;
                 match &self.items[idx].kind {
-                    ItemKind::Numeric { int_digits, dec_digits: 0, signed: false, .. } => {
-                        let n = *int_digits;
+                    ItemKind::Numeric { int_digits, dec_digits, signed: false, .. } => {
+                        // The digit image is the full `(i + d)`-digit magnitude —
+                        // integer part then fractional part, no decimal point — the
+                        // exact bytes `Decimal::digits()` yields (`int + frac`). The
+                        // scaled slot already holds `value * 10^d`, so its `(i + d)`
+                        // digits ARE the image (an INTEGER operand, `d = 0`, is the
+                        // special case).
+                        let n = *int_digits + *dec_digits;
                         let num_reg = self.items[idx].reg.clone();
                         let reg = self.emit_num_digit_string(&num_reg, n);
                         Ok(StrOperand::Fixed { reg, len: n })
                     }
                     ItemKind::Numeric { .. } => Err(CompileError::Unsupported(format!(
-                        "a signed or scaled numeric operand ({name}) compared with an \
+                        "a signed numeric operand ({name}) compared with an \
                          alphanumeric operand is a later rung"
                     ))),
                     // `str_operand` classified this operand as numeric (`None`); a
@@ -4899,18 +4915,23 @@ mod tests {
     }
 
     #[test]
-    fn scaled_numeric_to_alphanumeric_move_is_deferred() {
-        // A SCALED (fractional) numeric source into an alphanumeric receiver is a
-        // later rung.
-        let err = compile_source(
+    fn scaled_numeric_to_alphanumeric_move_lowers() {
+        // An UNSIGNED SCALED source (`PIC 9(2)V9`) into an alphanumeric receiver is
+        // now supported: its full (int + frac) digit image is built at run time (the
+        // same str_slice-off-a-table loop, over `int + dec` digits — no point) and
+        // char-moved (str_concat pad).
+        let m = compile_source(
             &wrap(
                 &["01  F  PIC 9(2)V9 VALUE 4.2.", "01  W  PIC X(4)."],
                 &["MOVE F TO W.", "STOP RUN."],
             ),
             "x",
         )
-        .unwrap_err();
-        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+        .unwrap();
+        assert!(m.validate().is_empty(), "{:?}", m.validate());
+        let os = ops(&m);
+        assert!(os.contains(&"str_slice".to_string()), "digit image slices off the table");
+        assert!(os.contains(&"str_concat".to_string()), "char reshape pads via str_concat");
     }
 
     #[test]

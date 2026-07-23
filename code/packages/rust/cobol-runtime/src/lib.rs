@@ -307,14 +307,27 @@ mod tests {
     }
 
     #[test]
-    fn scaled_numeric_to_alphanumeric_move_is_deferred() {
-        // A scaled (fractional) numeric source into an alphanumeric receiver defers.
-        let err = run_ws(
+    fn scaled_numeric_to_alphanumeric_move_uses_digit_image() {
+        // An UNSIGNED SCALED source `PIC 9(2)V9 = 4.2` moves its (int + frac) digit
+        // image "042" — no decimal point — into the alphanumeric receiver, left-
+        // justified and space-padded (X(4) → "042 ").
+        let out = run_ws(
             &["01  F  PIC 9(2)V9 VALUE 4.2.", "01  W  PIC X(4)."],
-            &["    MOVE F TO W.", "    STOP RUN."],
+            &["    MOVE F TO W.", "    DISPLAY W.", "    STOP RUN."],
         )
-        .unwrap_err();
-        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+        .unwrap();
+        assert_eq!(out, "042 \n");
+    }
+
+    #[test]
+    fn scaled_numeric_to_alphanumeric_move_more_fraction_digits() {
+        // `PIC 9(1)V99 = 3.14` → image "314"; exact fit into X(3).
+        let out = run_ws(
+            &["01  F  PIC 9(1)V99 VALUE 3.14.", "01  W  PIC X(3)."],
+            &["    MOVE F TO W.", "    DISPLAY W.", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(out, "314\n");
     }
 
     // Cross-category alphanumeric → numeric MOVE (the reverse direction): an
@@ -396,13 +409,13 @@ mod tests {
     // ----------------------------------------------------------------------
     // Mixed numeric ↔ alphanumeric comparison.
     //
-    // A relation comparing an UNSIGNED-INTEGER numeric operand with an
-    // ALPHANUMERIC one treats the numeric operand as though moved to an
-    // alphanumeric field — its digit image (`Decimal::digits()` yields the
-    // item's fixed-width zero-padded storage) — then compares by the
-    // alphanumeric byte rule (space-pad the shorter side, byte-by-byte). A
-    // signed / scaled numeric operand, or a group item, in a mixed comparison is
-    // a clean later rung, rejected to match the compiler.
+    // A relation comparing an UNSIGNED numeric operand (integer OR scaled,
+    // `PIC 9(i)V9(d)`) with an ALPHANUMERIC one treats the numeric operand as
+    // though moved to an alphanumeric field — its digit image (`Decimal::digits()`
+    // yields the item's fixed-width `(int + frac)` zero-padded storage, no point) —
+    // then compares by the alphanumeric byte rule (space-pad the shorter side,
+    // byte-by-byte). A signed numeric operand, or a group item, in a mixed
+    // comparison is a clean later rung, rejected to match the compiler.
     // ----------------------------------------------------------------------
 
     #[test]
@@ -482,14 +495,20 @@ mod tests {
     }
 
     #[test]
-    fn mixed_scaled_numeric_vs_alphanumeric_is_deferred() {
-        // A SCALED numeric operand's image needs implied-point handling → deferred.
-        let err = run_ws(
+    fn mixed_scaled_numeric_vs_alphanumeric_uses_digit_image() {
+        // An UNSIGNED SCALED operand `PIC 9(2)V9 = 4.2` compares by its (int + frac)
+        // digit image "042" — no point — so `IF F = "042"` is TRUE and `IF F > "040"`
+        // is TRUE, matching the compiler.
+        let out = run_ws(
             &["01  F  PIC 9(2)V9 VALUE 4.2."],
-            &["    IF F = \"042\" DISPLAY \"Y\".", "    STOP RUN."],
+            &[
+                "    IF F = \"042\" DISPLAY \"EQ\" ELSE DISPLAY \"NE\".",
+                "    IF F > \"040\" DISPLAY \"GT\" ELSE DISPLAY \"LE\".",
+                "    STOP RUN.",
+            ],
         )
-        .unwrap_err();
-        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+        .unwrap();
+        assert_eq!(out, "EQ\nGT\n");
     }
 
     #[test]
