@@ -57,9 +57,12 @@ so `7.0` stays a Float, not the Integer `7`; `Infinity`/`NaN` are named), with
 native float arithmetic and division; SIR16 `ShortCircuit` — `LogicalAnd`
 (`&&`) and `LogicalOr` (`||`) rendered as Ruby's native short-circuit
 operators, which yield the deciding operand and skip the dead branch exactly as
-SIR requires; and SIR19 `DefaultParams` — a positional parameter with a default
+SIR requires; SIR19 `DefaultParams` — a positional parameter with a default
 renders as native `def f(a, b = <default>)` (evaluated at call time when the
-argument is omitted; may reference an earlier parameter).
+argument is omitted; may reference an earlier parameter); and SIR19
+`KeywordParams` — a keyword parameter (`def f(x:)` / `def f(x: 1)`) and keyword
+argument (`f(x: 5)`) render as Ruby's native keyword forms, matched by name (so
+order-independent).
 Rejects `TailCalls`, `Intrinsics`, and every not-yet-wired feature (array
 indexing / slicing via `IndexGet` — `NDArrays`; array-pattern destructuring;
 collection methods, exceptions, OOP) until its cascade batch

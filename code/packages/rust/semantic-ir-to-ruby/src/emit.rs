@@ -10,7 +10,7 @@
 use std::fmt::Write;
 use std::sync::atomic::{AtomicUsize, Ordering};
 
-use semantic_ir::{Block, Expr, Function, Global, IntWidth, Module, Scope, Stmt};
+use semantic_ir::{Block, Expr, Function, Global, IntWidth, Module, ParamKind, Scope, Stmt};
 
 use crate::runtime::RUNTIME;
 
@@ -216,6 +216,9 @@ fn scan_expr(e: &Expr) -> Option<(String, semantic_ir::Span)> {
         Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
             scan_expr(lhs).or_else(|| scan_expr(rhs))
         }
+        // A keyword argument carries its value as a sub-expression — scan it so
+        // an unsupported builtin in `f(x: foo())` is reported cleanly.
+        Expr::KeywordArg { value, .. } => scan_expr(value),
         _ => None,
     }
 }
@@ -250,15 +253,42 @@ fn emit_function(out: &mut String, f: &Function) {
             out.push_str(", ");
         }
         first = false;
-        out.push_str(&sanitize_ident(&p.name));
-        // SIR19 default parameter (`Feature::DefaultParams`): render Ruby's
-        // native `name = <default>`.  Ruby evaluates the default at call time
-        // when the argument is omitted — exactly the SIR semantics — and left to
-        // right, so a default may reference an earlier parameter (`def f(a, b =
-        // a)`).  Only a positional default reaches here; a keyword default is
-        // the separate (unaccepted) `KeywordParams` feature.
-        if let Some(default) = &p.default {
-            let _ = write!(out, " = {}", emit_expr(default));
+        let name = sanitize_ident(&p.name);
+        // Every `ParamKind` has a native Ruby spelling — the canonical order the
+        // validator enforces (`Required* Rest? Keyword* KwRest?`) is exactly
+        // Ruby's, so emitting each in place yields a valid signature.
+        match p.kind {
+            // `x` / `x = <default>` — a positional parameter, optionally with a
+            // SIR19 default (`Feature::DefaultParams`).  Ruby evaluates the
+            // default at call time when the argument is omitted, left to right,
+            // so it may reference an earlier parameter (`def f(a, b = a)`).
+            ParamKind::Required => {
+                out.push_str(&name);
+                if let Some(default) = &p.default {
+                    let _ = write!(out, " = {}", emit_expr(default));
+                }
+            }
+            // `x:` / `x: <default>` — a native keyword parameter
+            // (`Feature::KeywordParams`): required when it has no default, an
+            // optional keyword when it does (a keyword default rides on
+            // `KeywordParams`, not `DefaultParams`).  Matched by NAME at the
+            // call site, which Ruby handles natively.
+            ParamKind::Keyword => {
+                let _ = write!(out, "{name}:");
+                if let Some(default) = &p.default {
+                    let _ = write!(out, " {}", emit_expr(default));
+                }
+            }
+            // `*rest` — a native rest parameter collecting trailing positionals
+            // into an `Array`.  (Rest/KwRest carry no default.)
+            ParamKind::Rest => {
+                let _ = write!(out, "*{name}");
+            }
+            // `**opts` — a native keyword-rest parameter collecting unmatched
+            // keywords into a `Hash`.
+            ParamKind::KwRest => {
+                let _ = write!(out, "**{name}");
+            }
         }
     }
     out.push_str(")\n");
@@ -556,6 +586,14 @@ fn emit_expr(e: &Expr) -> String {
         }
         Expr::LogicalOr { lhs, rhs, .. } => {
             format!("({} || {})", emit_expr(lhs), emit_expr(rhs))
+        }
+        // A SIR19 keyword argument (`Feature::KeywordParams`): `name: <value>`
+        // in a call's argument list.  Ruby matches it to the callee's keyword
+        // parameter by name natively, so no positional resolution is needed
+        // (unlike the Go/C backends).  The label is sanitised identically to the
+        // keyword parameter it binds, so the two always agree.
+        Expr::KeywordArg { name, value, .. } => {
+            format!("{}: {}", sanitize_ident(name), emit_expr(value))
         }
         other => unreachable!("Ruby backend reached unsupported expr: {other:?}"),
     }

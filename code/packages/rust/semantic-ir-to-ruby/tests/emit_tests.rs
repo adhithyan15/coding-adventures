@@ -1093,3 +1093,127 @@ fn unsupported_builtin_in_an_indirect_call_target_is_rejected_cleanly() {
         "a bad builtin in an IndirectCall target must be rejected, not panic"
     );
 }
+
+// ── SIR19 keyword parameters ────────────────────────────────────────────────
+// `Feature::KeywordParams` — a keyword parameter (`def f(x:)` / `def f(x: 1)`)
+// and a keyword argument (`f(x: 5)`) render as Ruby's NATIVE keyword forms;
+// Ruby matches by name, so no positional resolution is needed (unlike Go/C).
+
+fn kwparam(name: &str, default: Option<Expr>) -> Param {
+    Param {
+        name: name.into(),
+        sir_type: None,
+        kind: ParamKind::Keyword,
+        default: default.map(Box::new),
+        span: s2(),
+    }
+}
+fn kwarg(name: &str, value: Expr) -> Expr {
+    Expr::KeywordArg { name: name.into(), value: Box::new(value), span: s2() }
+}
+/// Like `defparam_module` but declaring `KeywordParams` (+ `DynamicTyping`).
+fn kwparam_module(params: Vec<Param>, body_value: Expr, main_stmts: Vec<Stmt>) -> Module {
+    let mut m = defparam_module(params, body_value, main_stmts);
+    m.manifest = FeatureManifest::from_features(&[
+        Feature::KeywordParams,
+        Feature::DynamicTyping,
+    ]);
+    m
+}
+fn run_kwparam(params: Vec<Param>, body_value: Expr, main_stmts: Vec<Stmt>) -> Option<String> {
+    let m = kwparam_module(params, body_value, main_stmts);
+    run_ruby(&compile(&m).expect("keyword-param module must compile, not panic").source)
+}
+
+#[test]
+fn keyword_argument_binds_to_the_keyword_parameter() {
+    // `def f(x:); x; end` called `f(x: 5)` → `5`.
+    let out = run_kwparam(
+        vec![kwparam("x", None)],
+        pref("x"),
+        vec![puts(directcall("f", vec![kwarg("x", ilit(5))]))],
+    );
+    match out {
+        Some(o) => assert_eq!(o, "5"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn keyword_arguments_resolve_by_name_regardless_of_order() {
+    // `def f(a:, b:); a - b; end` called `f(b: 2, a: 10)` → `8` — a keyword
+    // argument binds by NAME, so the call order does not matter (Ruby native).
+    let out = run_kwparam(
+        vec![kwparam("a", None), kwparam("b", None)],
+        bin("-", pref("a"), pref("b")),
+        vec![puts(directcall("f", vec![kwarg("b", ilit(2)), kwarg("a", ilit(10))]))],
+    );
+    match out {
+        Some(o) => assert_eq!(o, "8"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn optional_keyword_uses_its_default_when_omitted() {
+    // `def f(x: 7); x; end` — `f()` uses the default (`7`), `f(x: 9)` overrides
+    // it (`9`). A keyword default is an OPTIONAL keyword (rides on
+    // `KeywordParams`, not `DefaultParams`).
+    let out = run_kwparam(
+        vec![kwparam("x", Some(ilit(7)))],
+        pref("x"),
+        vec![
+            puts(directcall("f", vec![])),                 // 7
+            puts(directcall("f", vec![kwarg("x", ilit(9))])), // 9
+        ],
+    );
+    match out {
+        Some(o) => assert_eq!(o, "7\n9"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn keyword_param_and_arg_emit_native_ruby_syntax() {
+    // Emit-shape: the signature carries `x:` and the call carries `x: 5`.
+    let rb = compile(&kwparam_module(
+        vec![kwparam("x", None)],
+        pref("x"),
+        vec![puts(directcall("f", vec![kwarg("x", ilit(5))]))],
+    ))
+    .expect("compile")
+    .source;
+    assert!(rb.contains("def f(x:)"), "keyword parameter syntax:\n{rb}");
+    assert!(rb.contains("x: 5"), "keyword argument syntax:\n{rb}");
+}
+
+#[test]
+fn rest_and_keyword_rest_params_emit_splat_syntax() {
+    // Making the parameter emitter TOTAL: a `Rest` parameter renders `*rest`
+    // and a `KwRest` renders `**opts` — native Ruby.  A `**opts` in particular
+    // co-occurs with keyword parameters, so accepting `KeywordParams` must not
+    // leave it mis-emitted as a bare name. (These kinds carry no feature of
+    // their own, so the untyped-param `DynamicTyping` is the only manifest
+    // requirement.)
+    let splat = |kind: ParamKind, name: &str| Param {
+        name: name.into(),
+        sir_type: None,
+        kind,
+        default: None,
+        span: s2(),
+    };
+    // `def f(a, *rest, x:, **opts)` — canonical order the validator enforces.
+    let rb = compile(&kwparam_module(
+        vec![
+            param("a", None),
+            splat(ParamKind::Rest, "rest"),
+            kwparam("x", None),
+            splat(ParamKind::KwRest, "opts"),
+        ],
+        pref("a"),
+        vec![],
+    ))
+    .expect("compile")
+    .source;
+    assert!(rb.contains("def f(a, *rest, x:, **opts)"), "splat syntax:\n{rb}");
+}
