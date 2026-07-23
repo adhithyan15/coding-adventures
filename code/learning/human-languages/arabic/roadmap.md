@@ -61,7 +61,7 @@ word lessons — never as a gated reading course.
 
 - **Ch. 1 — Writing set** (`AR-W01`–`AR-W03`, `writing` type): the
   "break-it-apart-and-draw-it" companion to the greetings, rendered by the
-  script-writing-visualizer app (parallel to the Cyrillic `RU-W*` set). Right-to-
+  language-ladder app (parallel to the Cyrillic `RU-W*` set). Right-to-
   left and *abjad* taught first, then the cursive four-coats rule, dots-as-a-piece,
   and the assembly of a whole word — **سلام** — from *sīn/lām/alif/mīm*. Ties the
   Arabic letters back to their Phoenician ancestors (*ʾālep/bēt/mem* = **A/B/M**).

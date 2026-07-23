@@ -209,7 +209,7 @@ const SUBTITLES: Record<Mode, string> = {
 function renderHeader(): HTMLElement {
   const header = el("header", "header");
   const h1 = el("h1", "");
-  h1.textContent = "Script writing — learn it, then write it";
+  h1.textContent = "Language Ladder";
   const sub = el("p", "sub");
   sub.textContent = SUBTITLES[mode];
   header.append(h1, sub, renderModeToggle());

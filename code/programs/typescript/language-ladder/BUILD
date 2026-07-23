@@ -1,6 +1,6 @@
 set -e
 
-# BUILD — script-writing-visualizer (the HL02 companion study app)
+# BUILD — language-ladder (the HL03 unified curriculum learning app)
 #
 # Depends, via a `file:` dep, on the curriculum data package:
 #

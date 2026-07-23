@@ -152,7 +152,7 @@
 - **Writing lessons added** (`AR-W01-direction-and-alif`,
   `AR-W02-joining-sin-lam`, `AR-W03-dots-mim-ba-salam`): a `writing`-type
   companion to the Ch. 1 greetings, matching the Russian/Cyrillic writing set —
-  the hand-writing track the script-writing-visualizer app renders. Anchored on
+  the hand-writing track the language-ladder app renders. Anchored on
   the real Ch. 1 word **سلام** (*salām*, the "peace" inside *as-salāmu ʿalaykum*).
   No `concept_tag` (writing lessons are exempt from the concept join).
 - **W01 — direction + abjad + alif**: leads with the two big surprises before

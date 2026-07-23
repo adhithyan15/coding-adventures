@@ -1,12 +1,14 @@
-# Script Writing Visualizer
+# Language Ladder
 
-**The HL02 companion app, growing into the HL03 unified learning app.** Five
-modes. **Learn** (the default) walks the curriculum the way the book does — one
-concept at a time, forward along the language chain, each new language showing
-its threads back to the ones already learned. **Browse** and **Practice** work
-on *script letters*; **Lessons** drills the *written curriculum* — every lesson
-in every track — on a spaced-repetition schedule that persists between visits;
-and **Concepts** shows one idea in every language that has it, side by side.
+**The HL03 unified curriculum learning app** (it began life as the HL02
+`script-writing-visualizer` and has subsumed that app's modes). Five modes.
+**Learn** (the default) walks the curriculum the way the book does — one concept
+at a time, forward along the language chain, each new language showing its
+threads back to the ones already learned, then reviewing it all with a
+randomised SRS quiz. **Browse** and **Practice** work on *script letters*;
+**Lessons** drills the *written curriculum* — every lesson in every track — on a
+spaced-repetition schedule that persists between visits; and **Concepts** shows
+one idea in every language that has it, side by side.
 
 ## Learn mode (the curriculum session)
 
@@ -95,7 +97,7 @@ Pick a script, pick a letter, and the detail panel shows:
 code/learning/human-languages/data/scripts/*.json   ← the source of truth (HL01)
         │  (glyph, components, strokeOrder, notes per letter)
         ▼
-script-writing-visualizer                           ← this app renders it (HL02 MVP)
+language-ladder                                     ← this app renders it (HL03)
 ```
 
 The app imports those JSON files **directly**, so it can never drift from the
