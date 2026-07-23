@@ -423,6 +423,20 @@ pub enum ComputeExpr {
         mode: RoundingMode,
         expr: Box<ComputeExpr>,
     },
+    /// A **scientific-notation formatting** — `to_scientific(x [, figures])`
+    /// (NUM-6c). Unlike [`ComputeExpr::Round`] (which narrows to a *number*), this
+    /// is a **rendering** op: it narrows `expr` to `figures` significant figures on
+    /// the exact path (reusing the 6a/6b `round_sig` machinery), then produces the
+    /// normalized `d.ddde±E` string alongside the narrowed numeric value. Both the
+    /// exact source and the rendered string land in the audit (ADJ-NUMERIC-SUBSTRATE
+    /// §4.1, §4.3), so a checker can re-derive the rendering from the exact value.
+    /// `figures ≥ 1`; the default when the surface omits it is resolved at lowering.
+    /// Dimension-preserving (the magnitude is reformatted; its unit is untouched).
+    ToScientific {
+        figures: u32,
+        mode: RoundingMode,
+        expr: Box<ComputeExpr>,
+    },
 }
 
 /// *What* precision a [`ComputeExpr::Round`] narrows to. NUM-6a ships the
@@ -478,6 +492,20 @@ pub enum DerivationNode {
         operand: Box<DerivationNode>,
         result: f64,
     },
+    /// A **scientific-notation rendering** node (NUM-6c) — the audit record for a
+    /// `to_scientific(x, figures)`. Carries the `figures`/`mode` it narrowed under,
+    /// the `rendered` `d.ddde±E` string, and its single `operand` subtree (the exact
+    /// source), so `adj-verify` can re-narrow the operand's exact value to `figures`
+    /// significant figures and confirm the `rendered` form (ADJ-NUMERIC-SUBSTRATE
+    /// §4.3). `result` is the narrowed numeric value (so a downstream predicate over
+    /// the binding still sees a number); `rendered` is the boundary form.
+    ToScientific {
+        figures: u32,
+        mode: RoundingMode,
+        rendered: String,
+        operand: Box<DerivationNode>,
+        result: f64,
+    },
 }
 
 impl DerivationNode {
@@ -489,6 +517,7 @@ impl DerivationNode {
             DerivationNode::Lit { value } => *value,
             DerivationNode::Op { result, .. } => *result,
             DerivationNode::Round { result, .. } => *result,
+            DerivationNode::ToScientific { result, .. } => *result,
         }
     }
 }
@@ -890,6 +919,12 @@ fn eval(
 
         ComputeExpr::Round { spec, mode, expr } => eval_round(*spec, *mode, expr, kb, depth),
 
+        ComputeExpr::ToScientific {
+            figures,
+            mode,
+            expr,
+        } => eval_to_scientific(*figures, *mode, expr, kb, depth),
+
         ComputeExpr::Agg(op, slot) => {
             let observations = kb.observed_values_all(slot);
             // `count` is defined even when there are no observations (it's 0);
@@ -1208,6 +1243,141 @@ fn msd_exponent(num: &BigInteger, den: &BigInteger) -> i64 {
         e0
     } else {
         e0 - 1
+    }
+}
+
+/// Evaluate `to_scientific(x, figures)` (NUM-6c): narrow `x` to `figures` significant
+/// figures on the exact path and render the normalized scientific-notation string.
+/// A **rendering** op — it produces a boundary string (`"6.022e23"`) while keeping the
+/// narrowed numeric value for `value()` and the exact sidecar for the audit, so
+/// `adj-verify` can re-derive the string from the exact source (ADJ-NUMERIC-SUBSTRATE
+/// §4.1, §4.3). Dimension-preserving, like the round family (the magnitude is
+/// reformatted; its unit is untouched).
+#[inline(never)]
+fn eval_to_scientific(
+    figures: u32,
+    mode: RoundingMode,
+    expr: &ComputeExpr,
+    kb: &KnowledgeBase,
+    depth: usize,
+) -> Result<(DerivationNode, Dimension, Option<ExactRational>), ComputeError> {
+    let (operand, dim, exact) = eval(expr, kb, depth + 1)?;
+    // With an exact sidecar (every rational formula), the rendering and the narrowed
+    // exact value are derived TOGETHER from one rounding, so the string and the audit
+    // number can never disagree. A genuinely-inexact operand (a transcendental with no
+    // exact sidecar) falls back to formatting the already-approximate `f64`.
+    let (rendered, exact_out, result) = match &exact {
+        Some(r) => {
+            let (s, narrowed) = scientific(r, figures, mode);
+            let value = narrowed.to_f64();
+            (s, Some(narrowed), value)
+        }
+        None => {
+            let value = operand.value();
+            // `{:e}` with `figures − 1` fractional digits yields `d.ddde±E`; the
+            // operand is already approximate, so this is the labeled-lossy path.
+            let s = format!("{:.*e}", (figures.saturating_sub(1)) as usize, value);
+            (s, None, value)
+        }
+    };
+    // A non-finite operand (an `exp` overflow upstream) must not render as a clean
+    // scientific number — the same "no silently-wrong number" guard the other ops apply.
+    // (The op label reuses `Round`: `to_scientific` is a rounding-based narrowing.)
+    if !result.is_finite() {
+        return Err(ComputeError::NonFinite {
+            op: ComputeOp::Round,
+        });
+    }
+    Ok((
+        DerivationNode::ToScientific {
+            figures,
+            mode,
+            rendered,
+            operand: Box::new(operand),
+            result,
+        },
+        dim,
+        exact_out,
+    ))
+}
+
+/// Render an exact rational in normalized scientific notation `d.ddde±E` with exactly
+/// `figures` significant figures, and return the **narrowed exact value** alongside — both
+/// derived from one rounding so they always agree. `figures ≥ 1`.
+///
+/// The significant coefficient `C` is `round(|r| · 10^(figures−1−e))` under `mode`, where
+/// `e = ⌊log₁₀|r|⌋` ([`msd_exponent`]); `C` has exactly `figures` digits, except when a
+/// carry (`9.99 → 10.0`) makes it `10^figures`, which bumps the exponent and resets `C`
+/// to `10^(figures−1)`. The mantissa is `C`'s digit string with a point after the first
+/// digit (`"6.022"`); the narrowed value is `±C · 10^(e−figures+1)`. Zero renders `"0e0"`.
+/// All arithmetic is exact big-integer/-decimal, so no `f64` log or tie-break is involved.
+fn scientific(r: &ExactRational, figures: u32, mode: RoundingMode) -> (String, ExactRational) {
+    if r.numerator().is_zero() {
+        return ("0e0".to_string(), ExactRational::from_i128(0));
+    }
+    let neg = r.numerator().is_negative();
+    let num = r.numerator().abs();
+    let den = r.denominator().clone(); // always > 0 (canonical rational)
+    let mut e = msd_exponent(&num, &den);
+
+    // C = round(|r| · 10^(figures−1−e)) to the nearest integer under `mode`, computed as an
+    // exact integer division via `div_round` to scale 0 (so half-even etc. are honored).
+    let p: i64 = figures as i64 - 1 - e;
+    let (dividend, divisor) = if p >= 0 {
+        (&num * &ten_to(p as u32), den)
+    } else {
+        (num, &den * &ten_to((-p) as u32))
+    };
+    let c_bd = BigDecimal::from_integer(dividend).div_round(
+        &BigDecimal::from_integer(divisor),
+        0,
+        mode,
+    );
+    let mut c = bigdecimal_to_integer(&c_bd);
+
+    // Rounding carry: `9.99…` at 3 figs rounds to `10.0…` = `10^figures`. Bump the
+    // exponent and collapse the coefficient back to `figures` digits (`10^(figures−1)`).
+    if c >= ten_to(figures) {
+        c = ten_to(figures - 1);
+        e += 1;
+    }
+
+    let digits = c.to_string(); // exactly `figures` digits (`c ≥ 0`, in `[10^(f−1), 10^f)`)
+    let mantissa = if figures == 1 {
+        digits.clone()
+    } else {
+        format!("{}.{}", &digits[..1], &digits[1..])
+    };
+    let sign = if neg { "-" } else { "" };
+    let rendered = format!("{sign}{mantissa}e{e}");
+
+    // Narrowed exact value = ±C · 10^(e − figures + 1) (the place value of the last digit).
+    let place = e - figures as i64 + 1;
+    let signed_c = if neg { -&c } else { c };
+    let narrowed = if place >= 0 {
+        ExactRational::from_ratio(BigRational::from_integer(&signed_c * &ten_to(place as u32)))
+    } else {
+        ExactRational::from_ratio(BigRational::new(signed_c, ten_to((-place) as u32)))
+    };
+    (rendered, narrowed)
+}
+
+/// `10^n` as a [`BigInteger`]. A thin wrapper over [`BigInteger::pow`] used by the
+/// scientific-notation renderer; `n` is bounded by the operand's own magnitude (the same
+/// materialization `round_sig` already performs), not by any new user-controlled amplifier.
+fn ten_to(n: u32) -> BigInteger {
+    BigInteger::from_i64(10).pow(n)
+}
+
+/// The integer value of a `BigDecimal` known to be integral (produced by a `div_round` to
+/// scale 0). `value = mant · 10^(−scale)`, and an integral value normalizes to `scale ≤ 0`,
+/// so this is `mant · 10^|scale|`.
+fn bigdecimal_to_integer(bd: &BigDecimal) -> BigInteger {
+    let scale = bd.scale();
+    if scale < 0 {
+        bd.mantissa() * &ten_to((-scale) as u32)
+    } else {
+        bd.mantissa().clone()
     }
 }
 
@@ -2696,5 +2866,83 @@ mod tests {
             }
             other => panic!("expected Round node, got {other:?}"),
         }
+    }
+
+    // ---- NUM-6c: to_scientific(x, figures) — the scientific-notation rendering ----
+
+    fn to_sci(figures: u32, inner: ComputeExpr) -> ComputeExpr {
+        ComputeExpr::ToScientific {
+            figures,
+            mode: RoundingMode::HalfEven,
+            expr: Box::new(inner),
+        }
+    }
+    fn rendered_of(d: &Derived) -> String {
+        match &d.tree {
+            DerivationNode::ToScientific { rendered, .. } => rendered.clone(),
+            other => panic!("expected ToScientific node, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn to_scientific_renders_and_narrows_across_scales() {
+        let kb = KnowledgeBase::new();
+        // A large integer: 31459 to 3 sig-figs = 31500 = 3.15e4 (the 59 rounds the 4 up).
+        let a = compute("r", &to_sci(3, ComputeExpr::Lit(31459.0)), &kb).unwrap();
+        assert_eq!(rendered_of(&a), "3.15e4");
+        assert_eq!(a.exact, ExactRational::new(31500, 1));
+        // A repeating rational: 1/3 to 4 sig-figs = 0.3333 = 3.333e-1, EXACTLY.
+        let b = compute("r", &to_sci(4, frac(1, 3)), &kb).unwrap();
+        assert_eq!(rendered_of(&b), "3.333e-1");
+        assert_eq!(b.exact, ExactRational::new(3333, 10000));
+        // A sub-1 terminating value: 3.14159 to 3 sig-figs = 3.14 = 157/50 = 3.14e0.
+        let c = compute("r", &to_sci(3, frac(314159, 100000)), &kb).unwrap();
+        assert_eq!(rendered_of(&c), "3.14e0");
+        assert_eq!(c.exact, ExactRational::new(157, 50));
+    }
+
+    #[test]
+    fn to_scientific_handles_rounding_carry_into_a_new_exponent() {
+        let kb = KnowledgeBase::new();
+        // 999 to 2 sig-figs rounds 9.99e2 UP to 1.0e3 — the carry must bump the
+        // exponent and keep exactly `figures` mantissa digits (`"1.0"`, not `"10"`).
+        let d = compute("r", &to_sci(2, ComputeExpr::Lit(999.0)), &kb).unwrap();
+        assert_eq!(rendered_of(&d), "1.0e3");
+        assert_eq!(d.exact, ExactRational::new(1000, 1));
+    }
+
+    #[test]
+    fn to_scientific_handles_sign_single_figure_and_zero() {
+        let kb = KnowledgeBase::new();
+        // Negative, 3 figs: −1/8 = −0.125 → −1.25e−1, narrowed value exactly −1/8.
+        let neg = compute("r", &to_sci(3, frac(-1, 8)), &kb).unwrap();
+        assert_eq!(rendered_of(&neg), "-1.25e-1");
+        assert_eq!(neg.exact, ExactRational::new(-1, 8));
+        // A single significant figure has no decimal point: 602 → 6e2.
+        let one = compute("r", &to_sci(1, ComputeExpr::Lit(602.0)), &kb).unwrap();
+        assert_eq!(rendered_of(&one), "6e2");
+        assert_eq!(one.exact, ExactRational::new(600, 1));
+        // Zero has no significant digits — rendered "0e0", exact 0.
+        let z = compute("r", &to_sci(4, ComputeExpr::Lit(0.0)), &kb).unwrap();
+        assert_eq!(rendered_of(&z), "0e0");
+        assert_eq!(z.exact, ExactRational::new(0, 1));
+    }
+
+    #[test]
+    fn to_scientific_preserves_dimension() {
+        // Rendering a dimensioned value reformats the magnitude; the unit survives.
+        let kb = kb_with(vec![money("bal", 10, "usd")]);
+        let expr = to_sci(
+            3,
+            ComputeExpr::Bin(
+                ComputeOp::Div,
+                Box::new(refexpr("bal")),
+                Box::new(ComputeExpr::Lit(3.0)),
+            ),
+        );
+        let d = compute("r", &expr, &kb).unwrap();
+        assert_eq!(rendered_of(&d), "3.33e0"); // 10/3 usd → 3.33e0
+        assert_eq!(d.dim, Dimension::Money("usd".into()));
+        assert_eq!(d.exact, ExactRational::new(333, 100));
     }
 }

@@ -1,5 +1,34 @@
 # Changelog
 
+## [0.47.0] — 2026-07-22 — NUM-6c: `to_scientific` — scientific-notation rendering (exact)
+
+Adds the first formatter of the precision/format family (NUM-6c,
+`ADJ-NUMERIC-SUBSTRATE.md` §4.1, §4.3): a **rendering** op that narrows a value to a
+stated number of significant figures on the exact path (reusing the NUM-6a/6b
+`round_sig` machinery) and produces the normalized `d.ddde±E` string alongside the
+narrowed exact value — both derived from one rounding so the string and the audit
+number can never disagree.
+
+### Added
+
+- `ComputeExpr::ToScientific { figures, mode, expr }` and the matching
+  `DerivationNode::ToScientific { figures, mode, rendered, operand, result }`. The
+  node carries the rendered boundary string **and** the narrowed numeric `result`
+  (so a downstream predicate over the binding still sees a number), plus the exact
+  operand subtree — everything `adj-verify` needs to re-render from the exact source.
+- `scientific(r, figures, mode)` — renders an exact rational in normalized scientific
+  notation with exactly `figures` significant figures and returns the narrowed exact
+  value beside it. The significant coefficient is `round(|r|·10^(figures−1−e))` under
+  `mode` (`e = ⌊log₁₀|x|⌋` via the exact `msd_exponent`), with a rounding **carry**
+  (`9.99 → 10.0`) bumping the exponent; zero renders `"0e0"`. All big-integer /
+  -decimal arithmetic — no `f64` log or tie-break. Dimension-preserving.
+
+### Notes
+
+- A non-finite operand (an upstream `exp` overflow) is caught by the same
+  finite-result guard the other ops apply — it returns a clean `NonFinite` error
+  rather than rendering `"inf"` as a scientific number.
+
 ## [0.46.0] — 2026-07-22 — NUM-6b: `round_sig` — significant-figures rounding (exact)
 
 Adds the significant-figures half of the precision narrowing (NUM-6b,

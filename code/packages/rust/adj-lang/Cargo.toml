@@ -1,6 +1,6 @@
 [package]
 name = "adj-lang"
-version = "0.58.0"
+version = "0.59.0"
 edition = "2021"
 description = "Surface-syntax frontend for the adjudication framework's probabilistic-logic rulebooks. Lexes, parses, and lowers a domain-expert-readable DSL into a `logic-engine` KnowledgeBase. Dissolves ADJ46 awkwardness items A10 (rulebook syntax) and A4 (joint contributions syntactically distinct)."
 

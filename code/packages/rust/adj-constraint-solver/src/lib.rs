@@ -366,6 +366,9 @@ fn expr_to_pred(e: &ComputeExpr) -> Option<Predicate> {
         // A `round_to(x, n)` narrowing is neither linear nor polynomial — out of
         // scope for this tactic, exactly like a unary round (NUM-6a).
         ComputeExpr::Round { .. } => None,
+        // `to_scientific(x, figures)` renders a number to a boundary string — not a
+        // linear/polynomial term, out of scope for this tactic exactly like a round (NUM-6c).
+        ComputeExpr::ToScientific { .. } => None,
     }
 }
 
@@ -659,6 +662,9 @@ fn linearize(e: &ComputeExpr) -> Option<LinForm> {
         // A `round_to(x, n)` narrowing is neither linear nor polynomial — out of
         // scope for this tactic, exactly like a unary round (NUM-6a).
         ComputeExpr::Round { .. } => None,
+        // `to_scientific(x, figures)` renders a number to a boundary string — not a
+        // linear/polynomial term, out of scope for this tactic exactly like a round (NUM-6c).
+        ComputeExpr::ToScientific { .. } => None,
     }
 }
 
@@ -2010,6 +2016,15 @@ fn substitute_observed(
             mode: *mode,
             expr: Box::new(substitute_observed(expr, variables, kb)),
         },
+        ComputeExpr::ToScientific {
+            figures,
+            mode,
+            expr,
+        } => ComputeExpr::ToScientific {
+            figures: *figures,
+            mode: *mode,
+            expr: Box::new(substitute_observed(expr, variables, kb)),
+        },
         ComputeExpr::Agg(_, _) => e.clone(),
     }
 }
@@ -2098,6 +2113,9 @@ fn poly_of(e: &ComputeExpr, x: &str) -> Option<Poly> {
         // A `round_to(x, n)` narrowing is neither linear nor polynomial — out of
         // scope for this tactic, exactly like a unary round (NUM-6a).
         ComputeExpr::Round { .. } => None,
+        // `to_scientific(x, figures)` renders a number to a boundary string — not a
+        // linear/polynomial term, out of scope for this tactic exactly like a round (NUM-6c).
+        ComputeExpr::ToScientific { .. } => None,
     }
 }
 
@@ -2306,6 +2324,9 @@ fn expr_to_ir(e: &ComputeExpr) -> Option<IRNode> {
         // A `round_to(x, n)` narrowing is neither linear nor polynomial — out of
         // scope for this tactic, exactly like a unary round (NUM-6a).
         ComputeExpr::Round { .. } => None,
+        // `to_scientific(x, figures)` renders a number to a boundary string — not a
+        // linear/polynomial term, out of scope for this tactic exactly like a round (NUM-6c).
+        ComputeExpr::ToScientific { .. } => None,
     }
 }
 
@@ -2329,6 +2350,8 @@ fn is_constant_expr(e: &ComputeExpr) -> bool {
         ComputeExpr::Unary(_, a) => is_constant_expr(a),
         // `round_to(c, n)` is constant iff its operand is — same rule as unary.
         ComputeExpr::Round { expr, .. } => is_constant_expr(expr),
+        // `to_scientific(c, n)` is likewise constant iff its operand is.
+        ComputeExpr::ToScientific { expr, .. } => is_constant_expr(expr),
     }
 }
 

@@ -267,6 +267,17 @@ pub enum ExprAst {
     /// as user formula applications (`quotient(a, b)`), so no new grammar or LaTeX
     /// change is needed.
     RoundTo(Box<ExprAst>, logic_engine::RoundSpec),
+    /// A **scientific-notation formatting** — `to_scientific(x [, figures])` (NUM-6c).
+    /// A rendering op: it narrows `x` to `figures` significant figures on the exact
+    /// path (like [`ExprAst::RoundTo`] with `SigFigures`) and produces the `d.ddde±E`
+    /// string alongside the narrowed value, so the audit carries both the exact source
+    /// and the rendered form (ADJ-NUMERIC-SUBSTRATE §4.1, §4.3). Lowers to the distinct
+    /// `logic_engine::ComputeExpr::ToScientific` node under the default half-even mode.
+    /// The `figures` count is validated (`≥ 1`, within the precision cap); when the
+    /// surface omits it, the default is resolved at lowering. Produced by the native
+    /// application surface `to_scientific(x [, figures])`, recognised as a built-in in
+    /// [`ExprAst::Apply`] lowering (same comma-list grammar as `round_to`/`round_sig`).
+    ToScientific(Box<ExprAst>, u32),
     /// An aggregation over every observation of a slot.
     Agg(AggOp, String),
     /// A **formula application** used as a sub-expression: `name(arg₁, …, argₙ)`

@@ -165,7 +165,14 @@ tests → impl → security-review → babysit:
   `n ≥ 1`.
 - **NUM-6c** — the formatters `to_scientific` / `to_percent` / `to_currency` (rendering, on the
   6a/6b core) and per-`KnowledgeBase` `BigDouble` precision (the configurable default §3 defers
-  here).
+  here). Lands incrementally: **`to_scientific(x [, figures])`** ✅ **shipped** — the
+  `ComputeExpr::ToScientific { figures, mode, expr }` engine node (a *rendering* op: it narrows
+  to `figures` significant figures on the 6b exact path, then produces the normalized `d.ddde±E`
+  string beside the narrowed exact value, both from one rounding so they can never disagree), the
+  native `to_scientific(x [, figures])` application surface (optional `figures`, default 6; `≥ 1`,
+  within the precision cap), the §4.3 audit record (`node:to_scientific`, `figures`, `mode`,
+  `rendered`, operand subtree), and an end-to-end formula test. `to_percent` / `to_currency` and
+  per-`KnowledgeBase` precision follow.
 
 ---
 
