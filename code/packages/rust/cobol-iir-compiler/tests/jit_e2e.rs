@@ -1590,6 +1590,28 @@ fn alphanumeric_to_numeric_move_exact_fit() {
 }
 
 #[test]
+fn alphanumeric_to_numeric_move_space_source_agrees_no_stray_sign() {
+    // Regression: a SPACE source byte (0x20) is below '0', so `(b-'0')` is
+    // negative and the fold goes negative. A `PIC 9` field is unsigned, so BOTH
+    // engines must store the MAGNITUDE — never a stray '-' in the numeric field.
+    // (An uninitialised `PIC X` is spaces, so this is a common, non-adversarial
+    // case.) " " → fold -16 → magnitude 16 → PIC 9(3) "016"; the compiler and the
+    // oracle must agree (assert_matches_oracle fails if they don't).
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(1) VALUE \" \".", "01  N  PIC 9(3)."],
+        &["MOVE A TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out, "016\n");
+    // A mixed space+digit source stays consistent too: " 5" → fold -155 →
+    // magnitude 155 → PIC 9(3) "155".
+    let out2 = assert_matches_oracle(&wrap(
+        &["01  A  PIC X(2) VALUE \" 5\".", "01  N  PIC 9(3)."],
+        &["MOVE A TO N.", "DISPLAY N.", "STOP RUN."],
+    ));
+    assert_eq!(out2, "155\n");
+}
+
+#[test]
 fn alphanumeric_to_numeric_move_shorter_source_zero_pads() {
     // PIC X(2)="05" → PIC 9(4): fold → 5, right-justified into 4 digits "0005".
     let out = assert_matches_oracle(&wrap(

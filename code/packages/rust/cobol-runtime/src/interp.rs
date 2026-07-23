@@ -1249,8 +1249,20 @@ impl Machine {
                         for b in chars.bytes() {
                             value = value.wrapping_mul(10).wrapping_add((b as i64) - (b'0' as i64));
                         }
-                        let decimal =
-                            Decimal { neg: false, int: value.to_string(), frac: String::new() };
+                        // Store the MAGNITUDE, exactly as the compiler's scale-0
+                        // `store_scaled` does (`abs(value) mod 10^n`). This matters for a
+                        // source byte below `'0'` — most commonly a SPACE (an
+                        // uninitialised `PIC X` is spaces): `(b - '0')` is then negative
+                        // and the fold goes negative, but a `PIC 9` field is unsigned, so
+                        // both engines keep the magnitude (never a stray `'-'`). A
+                        // non-digit source is defined-but-unspecified, identical on both
+                        // engines by construction. (`unsigned_abs` is total — no panic on
+                        // `i64::MIN`, unreachable here anyway.)
+                        let decimal = Decimal {
+                            neg: false,
+                            int: value.unsigned_abs().to_string(),
+                            frac: String::new(),
+                        };
                         self.move_into(idx, Src::Num(decimal))?;
                         continue;
                     }
