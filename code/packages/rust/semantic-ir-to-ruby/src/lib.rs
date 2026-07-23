@@ -63,6 +63,16 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     Feature::SizedIntegers,
     Feature::Unsigned,
     Feature::WrappingArithmetic,
+    // ── SIR16 floats ─────────────────────────────────────────────────
+    // Ruby has a native `Float`, so a `Expr::FloatLit` renders directly as a
+    // Ruby float literal (via `float_to_ruby_literal`, which guarantees the
+    // literal round-trips as a Float — `7.0`, not the Integer `7`). `Floats`
+    // gates ONLY `FloatLit`; float arithmetic reuses the same `+`/`-`/`*`/`/`
+    // builtins (native Ruby operators, so `1.5 + 2.5 == 4.0` and `7.0 / 2 ==
+    // 3.5` are exact), and the runtime's `sir_fmt_float` already renders every
+    // float (integral floats keep their `.0`; `NaN`/`Infinity` are named). So
+    // accepting the feature plus the one emit arm keeps the emitter total.
+    Feature::Floats,
     // ── SIR16 control flow / mutation ────────────────────────────────
     // `Stmt::While` (loops) and `Stmt::Assign` (re-binding) render as Ruby's
     // native `while … end` and `name = value` — Ruby is fully mutable and

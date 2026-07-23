@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.6.0 — floats (SIR16)
+
+Accepts `Feature::Floats`. Ruby has a native `Float`, so this is a one-arm
+addition: `Expr::FloatLit` renders directly as a Ruby float literal. The
+feature gates ONLY `FloatLit` (float arithmetic reuses the existing
+`+`/`-`/`*`/`/` builtins, which already fold to native Ruby operators), and the
+runtime's `sir_fmt_float` already rendered every float — so accepting the
+feature plus the one emit arm keeps the emitter total.
+
+The literal is produced by a new `float_to_ruby_literal` helper, which fixes two
+ways a naive `value.to_string()` would be wrong:
+
+- **Integral floats must keep their point.** Rust's `f64::to_string` renders
+  `7.0` as `"7"` — which Ruby parses as an *Integer* (a different type, with
+  floor `/` instead of true divide, and `7` instead of `7.0` on display). The
+  helper uses `{:?}` (Debug), whose shortest round-tripping form always carries
+  a decimal point or exponent (`7.0`, `-0.0`, `1e300`) — every one a valid Ruby
+  *Float* literal.
+- **Non-finite values have no numeric token.** Ruby has no `inf`/`nan` literal;
+  the values are `Float::INFINITY` / `-Float::INFINITY` / `Float::NAN`. A
+  `FloatLit` carrying one (rare — it usually arises at runtime from `1.0 / 0.0`)
+  now emits the named constant.
+
+Because display routes through the runtime's `sir_fmt_float` (Ruby's own
+`to_s`/`nan?`/`infinite?`), the printed form is native regardless of how the
+literal was spelled — the helper only has to preserve the numeric value.
+Verified end-to-end through a real `ruby` with hand-built modules (the frontend
+masks `FloatLit`): integral floats keep `.0` (`7.0`, not `7`), `-0.0` keeps its
+sign, `1.5 + 2.5 == 4.0` and `2.0 * 3.0 == 6.0` (integral results stay Float),
+`7.0 / 2 == 3.5` while `7 / 2 == 3` (division frontier preserved — a Float
+operand promotes, two Integers floor), `1.0 / 0.0 == Infinity` and `0.0 / 0.0 ==
+NaN` (Float division by zero does not raise), and `7.0 == 7` is true.
+
 ## 0.5.0 — maps (SIR16)
 
 Accepts `Feature::Maps`. Ruby has a native Hash, so the three map nodes render
