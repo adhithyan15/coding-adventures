@@ -1995,4 +1995,71 @@ mod tests {
         .unwrap_err();
         assert!(matches!(frac, RuntimeError::Unsupported(_)), "got {frac:?}");
     }
+
+    #[test]
+    fn inspect_converting_translates_through_the_table() {
+        // A→X, B→Y, C→Z applied to "CAB" → "ZXY".
+        let out = run_cobol(&wrap(
+            &["01  S  PIC X(3) VALUE \"CAB\"."],
+            &["INSPECT S CONVERTING \"ABC\" TO \"XYZ\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(out, "ZXY\n");
+
+        // A multi-character vowel table: "AEIOU"→"12345" on "BEAN" → "B21N"
+        // (B and N are in no entry → unchanged; E→2, A→1).
+        let vowels = run_cobol(&wrap(
+            &["01  S  PIC X(4) VALUE \"BEAN\"."],
+            &["INSPECT S CONVERTING \"AEIOU\" TO \"12345\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(vowels, "B21N\n");
+
+        // A duplicated `from` character: the LEFTMOST entry wins — "AAB"→"XYZ" maps
+        // A→X (not the later A→Y), B→Z → "XXZ".
+        let dup = run_cobol(&wrap(
+            &["01  S  PIC X(3) VALUE \"AAB\"."],
+            &["INSPECT S CONVERTING \"AAB\" TO \"XYZ\".", "DISPLAY S.", "STOP RUN."],
+        ))
+        .unwrap();
+        assert_eq!(dup, "XXZ\n");
+    }
+
+    #[test]
+    fn inspect_converting_later_rung_forms_are_clean_errors() {
+        // Unequal-length FROM/TO have no well-defined table — a later rung.
+        let unequal = run_cobol(&wrap(
+            &["01  S  PIC X(3) VALUE \"ABC\"."],
+            &["INSPECT S CONVERTING \"AB\" TO \"XYZ\".", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(unequal, RuntimeError::Unsupported(_)), "got {unequal:?}");
+
+        // A PIC X item as the `from` operand (not a string literal) is a later rung.
+        let item = run_cobol(&wrap(
+            &["01  S  PIC X(3) VALUE \"ABC\".", "01  F  PIC X(3) VALUE \"ABC\"."],
+            &["INSPECT S CONVERTING F TO \"XYZ\".", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(item, RuntimeError::Unsupported(_)), "got {item:?}");
+
+        // A BEFORE/AFTER region restricting the conversion is a later rung.
+        let before = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"ABABA\"."],
+            &["INSPECT S CONVERTING \"A\" TO \"X\" BEFORE \"B\".", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(before, RuntimeError::Unsupported(_)), "got {before:?}");
+
+        // CONVERTING is a STANDALONE alternative — combining it with a REPLACING
+        // clause in one statement does not parse (the two are mutually exclusive
+        // grammar alternatives), so it is a clean parse-time rejection, never a
+        // mis-run.
+        let combined = run_cobol(&wrap(
+            &["01  S  PIC X(5) VALUE \"ABABA\"."],
+            &["INSPECT S CONVERTING \"A\" TO \"X\" REPLACING ALL \"B\" BY \"Y\".", "STOP RUN."],
+        ))
+        .unwrap_err();
+        assert!(matches!(combined, RuntimeError::Parse(_)), "got {combined:?}");
+    }
 }

@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.10.0 — `CONVERTING` keyword
+
+- Reserved the `CONVERTING` keyword for `INSPECT … CONVERTING from TO to`, the
+  per-character translation-table form of `INSPECT`. `TO` was already reserved (it
+  is the `ADD`/`SET`/`MOVE`/`SELECT … ASSIGN` preposition), so `CONVERTING`'s `TO`
+  needs no new token.
+- `_grammar.rs` regenerated from `cobol.tokens` via `grammar-tools compile-tokens`
+  (never hand-edited).
+
 ## 0.9.0 — `INSPECT` verb keywords
 
 - Added the reserved words the `INSPECT` statement needs: `INSPECT`, `TALLYING`,

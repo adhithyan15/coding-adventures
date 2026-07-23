@@ -350,7 +350,9 @@ unstring_stmt      = "UNSTRING" operand "DELIMITED" "BY" operand
                      [ "ON" "OVERFLOW" { statement } ]
                      [ "NOT" "ON" "OVERFLOW" { statement } ] [ "END-UNSTRING" ] ;
 inspect_stmt       = "INSPECT" operand
-                     ( inspect_tallying [ inspect_replacing ] | inspect_replacing )
+                     ( inspect_tallying [ inspect_replacing ]
+                     | inspect_replacing
+                     | inspect_converting )
                      [ "END-INSPECT" ] ;
 inspect_tallying   = "TALLYING" tally_for { tally_for } ;
 tally_for          = NAME "FOR" tally_item { tally_item } ;
@@ -359,6 +361,7 @@ tally_item         = ( "ALL" | "LEADING" ) operand { inspect_region }
 inspect_replacing  = "REPLACING" replace_item { replace_item } ;
 replace_item       = "CHARACTERS" "BY" operand { inspect_region }
                    | ( "ALL" | "LEADING" ) operand "BY" operand { inspect_region } ;
+inspect_converting = "CONVERTING" operand "TO" operand { inspect_region } ;
 inspect_region     = ( "BEFORE" | "AFTER" ) operand ;
 stop_stmt          = "STOP" ( "RUN" | NUMBER ) ;
 ```
@@ -504,6 +507,51 @@ or `REPLACING` half is itself a deferred sub-form (`LEADING`/`CHARACTERS`, sever
 counters/FOR/replace items, `BEFORE`/`AFTER`, multi-char/figurative/wider/numeric
 operands, a numeric/group source, or a non-integer counter) remains a clean later
 rung.
+
+### `INSPECT … CONVERTING` (first rung)
+
+`INSPECT` has a third, distinct form that neither counts nor does a search-and-
+replace, but **translates** each character through a table:
+`INSPECT source CONVERTING from TO to`.
+
+- `source` is the alphanumeric (`PIC X`) item, **modified in place**.
+- `from` and `to` are **string literals of EQUAL length** (1..N characters). This
+  first rung supports **string literals only** for `from`/`to`; a `PIC X` item as
+  the table (a *variable* table) is a later rung.
+
+Semantics — a per-character **translation table**. For each character of `source`,
+if it equals the character of `from` at some index `k`, it is replaced by the
+character of `to` at that same index `k`; if it matches no character of `from`, it
+is left unchanged. When `from` contains a character more than once the **FIRST
+(leftmost) occurrence wins** — that `k` supplies the replacement. The map is
+length-preserving (each character maps to exactly one), so the source keeps its
+width.
+
+Worked examples:
+
+- `CONVERTING "ABC" TO "XYZ"` maps `A→X`, `B→Y`, `C→Z`; everything else unchanged.
+  `"CAB"` → `"ZXY"`.
+- `CONVERTING "AEIOU" TO "12345"` maps `A→1, E→2, I→3, O→4, U→5`. `"BEAN"` →
+  `B, 2, 1, N` = `"B21N"` (B and N are in no entry, so they pass through).
+- `CONVERTING "AAB" TO "XYZ"` — `from` repeats `A`, and the **leftmost** entry
+  wins, so `A→X` (not the later `A→Y`) and `B→Z`: `"AAB"` → `"XXZ"`.
+
+The oracle builds the char→char map (first occurrence winning) and maps each source
+character through it, storing back through the alphanumeric char path. The compiler
+UNROLLS over the compile-time-known source width `W`: at each position it reads the
+source byte once and runs a **first-match-wins** chain over the compile-time table
+(each `from[k]` a `const` compare byte, each `to[k]` a 1-character `str_const`),
+splicing the earliest matching `to[k]` — or the original character — onto a
+`str_concat` accumulator, then copies the `W`-wide result back (only after the last
+read). The two agree byte-for-byte.
+
+`CONVERTING` is a **standalone** alternative — it is never combined with
+`TALLYING`/`REPLACING` in one statement (a combined form does not parse). Later
+rungs (clean `Unsupported`): an **unequal-length** (or non-ASCII) `from`/`to` pair,
+a `PIC X` **item** / figurative / reference-modified `from`/`to`, a `BEFORE`/`AFTER`
+region, and a numeric/group source. The trailing `{ inspect_region }` in the
+grammar lets a region-restricted `CONVERTING` parse so it rejects cleanly rather
+than failing to parse.
 
 Grammar scope tracks the lexer scope below.
 

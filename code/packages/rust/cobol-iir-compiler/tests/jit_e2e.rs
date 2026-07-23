@@ -2070,3 +2070,140 @@ fn inspect_combined_second_tally_item_is_a_later_rung() {
     .unwrap_err();
     assert!(matches!(err, cobol_iir_compiler::CompileError::Unsupported(_)), "got {err:?}");
 }
+
+// INSPECT … CONVERTING from TO to — translate every character of the source
+// through a per-character table built from the two equal-length string literals:
+// a character equal to from[k] becomes to[k] (first k wins if from repeats), and
+// a character in no table entry is left unchanged (in place, same width). Each
+// case pins the compiled per-position rebuild to the oracle's char→char map,
+// byte-for-byte.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn inspect_converting_simple_table() {
+    // A→X, B→Y, C→Z applied to "CAB" → "ZXY".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"CAB\"."],
+        &["INSPECT S CONVERTING \"ABC\" TO \"XYZ\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "ZXY\n");
+}
+
+#[test]
+fn inspect_converting_multichar_vowel_table() {
+    // "AEIOU" → "12345": A→1,E→2,I→3,O→4,U→5. "BEAN" → B,2,1,N = "B21N".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"BEAN\"."],
+        &["INSPECT S CONVERTING \"AEIOU\" TO \"12345\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "B21N\n");
+}
+
+#[test]
+fn inspect_converting_char_not_in_from_is_unchanged() {
+    // Only the vowels of "HELLO" map (E→2, O→4); H, L, L are in no table entry and
+    // pass through unchanged → "H2LL4".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(5) VALUE \"HELLO\"."],
+        &["INSPECT S CONVERTING \"AEIOU\" TO \"12345\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "H2LL4\n");
+}
+
+#[test]
+fn inspect_converting_every_character_is_converted() {
+    // Every character of "ABAB" is in the table (A→X, B→Y) → "XYXY".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"ABAB\"."],
+        &["INSPECT S CONVERTING \"AB\" TO \"XY\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "XYXY\n");
+}
+
+#[test]
+fn inspect_converting_single_char_from_and_to() {
+    // A one-entry table O→0 on "MOON" → "M00N" (the CONVERTING form of a single
+    // substitution, and the optional END-INSPECT terminator parses).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"MOON\"."],
+        &["INSPECT S CONVERTING \"O\" TO \"0\" END-INSPECT.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "M00N\n");
+}
+
+#[test]
+fn inspect_converting_duplicate_from_leftmost_wins() {
+    // `from` repeats 'A': "AAB" → "XYZ". The FIRST occurrence wins, so A→X (not the
+    // later A→Y); B→Z. "AAB" → "XXZ" (if the rightmost won it would be "YYZ").
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3) VALUE \"AAB\"."],
+        &["INSPECT S CONVERTING \"AAB\" TO \"XYZ\".", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "XXZ\n");
+}
+
+// INSPECT … CONVERTING later-rung forms — these parse (the grammar accepts the
+// broad surface) but the compiler rejects them as a clean Unsupported.
+
+#[test]
+fn inspect_converting_unequal_lengths_is_a_later_rung() {
+    // A from/to pair of different lengths has no well-defined table → later rung.
+    let err = compile_source(
+        &wrap(
+            &["01  S  PIC X(3) VALUE \"ABC\"."],
+            &["INSPECT S CONVERTING \"AB\" TO \"XYZ\".", "STOP RUN."],
+        ),
+        "insp_conv_unequal",
+    )
+    .unwrap_err();
+    assert!(matches!(err, cobol_iir_compiler::CompileError::Unsupported(_)), "got {err:?}");
+}
+
+#[test]
+fn inspect_converting_item_operand_is_a_later_rung() {
+    // A PIC X item as the `from` operand (rather than a string literal) is a later
+    // rung this slice.
+    let err = compile_source(
+        &wrap(
+            &["01  S  PIC X(3) VALUE \"ABC\".", "01  F  PIC X(3) VALUE \"ABC\"."],
+            &["INSPECT S CONVERTING F TO \"XYZ\".", "STOP RUN."],
+        ),
+        "insp_conv_item",
+    )
+    .unwrap_err();
+    assert!(matches!(err, cobol_iir_compiler::CompileError::Unsupported(_)), "got {err:?}");
+}
+
+#[test]
+fn inspect_converting_before_region_is_a_later_rung() {
+    // A BEFORE/AFTER region restricting the conversion parses but is a later rung.
+    let err = compile_source(
+        &wrap(
+            &["01  S  PIC X(5) VALUE \"ABABA\"."],
+            &["INSPECT S CONVERTING \"A\" TO \"X\" BEFORE \"B\".", "STOP RUN."],
+        ),
+        "insp_conv_before",
+    )
+    .unwrap_err();
+    assert!(matches!(err, cobol_iir_compiler::CompileError::Unsupported(_)), "got {err:?}");
+}
+
+#[test]
+fn inspect_converting_combined_with_replacing_is_rejected() {
+    // CONVERTING is a STANDALONE INSPECT alternative — the grammar does not let it
+    // sit beside a REPLACING clause in one statement — so a combined form is a
+    // clean compile-time rejection (a parse error, since the two are mutually
+    // exclusive alternatives), never a silent mis-compile.
+    let err = compile_source(
+        &wrap(
+            &["01  S  PIC X(5) VALUE \"ABABA\"."],
+            &[
+                "INSPECT S CONVERTING \"A\" TO \"X\" REPLACING ALL \"B\" BY \"Y\".",
+                "STOP RUN.",
+            ],
+        ),
+        "insp_conv_combined",
+    )
+    .unwrap_err();
+    assert!(matches!(err, cobol_iir_compiler::CompileError::Parse(_)), "got {err:?}");
+}

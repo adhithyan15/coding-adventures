@@ -1328,6 +1328,7 @@ impl<'a> Compiler<'a> {
         // the source) — which is what makes a shared delimiter/search char correct.
         let has_tally = child_node(verb, "inspect_tallying").is_some();
         let has_repl = child_node(verb, "inspect_replacing").is_some();
+        let has_conv = child_node(verb, "inspect_converting").is_some();
         // The source is the first (and only top-level) `operand`; shared by both
         // the TALLYING and REPLACING forms. It must be a plain alphanumeric item.
         let source_node = child_node(verb, "operand")
@@ -1362,6 +1363,12 @@ impl<'a> Compiler<'a> {
         // rebuild overwrites the source — so a shared delimiter/search character is
         // counted before it is substituted. The two lone forms are the single
         // branches of that same composition.
+        // CONVERTING is a STANDALONE alternative — the grammar never lets it appear
+        // beside TALLYING/REPLACING — so it dispatches on its own before the
+        // tally/replace composition.
+        if has_conv {
+            return self.emit_inspect_converting(verb, &s_reg, source_width);
+        }
         match (has_tally, has_repl) {
             (true, true) => {
                 self.emit_inspect_tallying(verb, &s_reg)?;
@@ -1534,6 +1541,147 @@ impl<'a> Compiler<'a> {
         // stores. Copy through an empty concat so the source register (read during
         // the loop) is only overwritten now, after the last read.
         let empty = self.fresh("_irempty");
+        self.emit("str_const", Some(&empty), vec![Operand::Str(String::new())], "str");
+        self.emit(
+            "str_concat",
+            Some(s_reg),
+            vec![Operand::Var(result), Operand::Var(empty)],
+            "str",
+        );
+        Ok(())
+    }
+
+    /// `INSPECT source CONVERTING from TO to` — translate the alphanumeric `source`
+    /// through a per-character **translation table** built from the two EQUAL-length
+    /// string literals `from` and `to`: at each source position the character is
+    /// replaced by `to[k]` where `k` is the FIRST index at which it equals `from[k]`
+    /// (leftmost wins if `from` repeats a character), and left unchanged if it
+    /// matches no `from` character. Both literals are single-byte (ASCII) this rung,
+    /// so — exactly like [`Self::emit_inspect_replacing`] — the width `W` is
+    /// unchanged and the result is a per-position map that we UNROLL over the
+    /// compile-time-known `W`:
+    ///
+    /// ```text
+    ///   result = ""
+    ///   for j in 0..W:                       # W is known at compile time
+    ///       c = S[j]
+    ///       if      c == from[0]   result ++= to[0]
+    ///       else if c == from[1]   result ++= to[1]
+    ///       …                                # first match wins (leftmost k)
+    ///       else                   result ++= S[j, j+1)   # unchanged
+    ///   source := result                     # exactly W chars, width unchanged
+    /// ```
+    ///
+    /// The `from` bytes are baked as `const` compare targets and the `to` bytes as
+    /// 1-character `str_const`s, both known at compile time. The per-position first-
+    /// match-wins chain mirrors the oracle's char→char map (which also lets the
+    /// earliest `from` occurrence win), so the compiled program is byte-identical to
+    /// `cobol-runtime`'s `exec_inspect` CONVERTING path. Unequal-length or non-ASCII
+    /// literals, a data-name/figurative/reference-modified `from`/`to`, and a
+    /// `BEFORE`/`AFTER` region are clean later-rung `Unsupported`s.
+    fn emit_inspect_converting(
+        &mut self,
+        verb: &GrammarASTNode,
+        s_reg: &str,
+        width: usize,
+    ) -> Result<(), CompileError> {
+        // The `CONVERTING from TO to` phrase (rejecting a BEFORE/AFTER region).
+        let (from_node, to_node) = inspect_converting_pair(verb)?;
+        let from = inspect_converting_literal(from_node, "from")?;
+        let to = inspect_converting_literal(to_node, "to")?;
+        // The table pairs `from[k]` with `to[k]`, so the two must be equal length.
+        if from.chars().count() != to.chars().count() {
+            return Err(CompileError::Unsupported(
+                "INSPECT CONVERTING with unequal-length FROM/TO operands is a later rung".into(),
+            ));
+        }
+        // This rung compares raw bytes (`str_index` yields a byte), so the table
+        // characters must be single-byte ASCII for the byte compare to equal the
+        // char map the oracle builds. A multi-byte (non-ASCII) literal is a later
+        // rung.
+        if !from.is_ascii() || !to.is_ascii() {
+            return Err(CompileError::Unsupported(
+                "INSPECT CONVERTING with a non-ASCII FROM/TO operand is a later rung".into(),
+            ));
+        }
+        let from_bytes = from.as_bytes();
+        let to_bytes = to.as_bytes();
+
+        // Bake the compile-time table once: a `const` byte for each `from[k]`
+        // (the compare target) and a 1-character `str_const` for each `to[k]`
+        // (the concatenation piece). Shared across all W positions.
+        let from_consts: Vec<String> = from_bytes
+            .iter()
+            .map(|&b| {
+                let reg = self.fresh("_icfrom");
+                self.emit("const", Some(&reg), vec![Operand::Int(b as i64)], "i64");
+                reg
+            })
+            .collect();
+        let to_consts: Vec<String> = to_bytes
+            .iter()
+            .map(|&b| {
+                let reg = self.fresh("_icto");
+                self.emit("str_const", Some(&reg), vec![Operand::Str((b as char).to_string())], "str");
+                reg
+            })
+            .collect();
+
+        // result = "" — the accumulator we build W characters into.
+        let result = self.fresh("_icres");
+        self.emit("str_const", Some(&result), vec![Operand::Str(String::new())], "str");
+
+        for j in 0..width {
+            // c = S[j]  (the source byte at this position), read ONCE and reused by
+            // every table compare.
+            let jc = self.str_index(j as i64);
+            let c = self.fresh("_icc");
+            self.emit(
+                "str_index",
+                Some(&c),
+                vec![Operand::Var(s_reg.to_string()), Operand::Var(jc.clone())],
+                "i64",
+            );
+            let pos_done = self.fresh("ic_done");
+            // First-match-wins chain over the table: on the earliest `from[k]` that
+            // equals `c`, append `to[k]` and jump past the rest.
+            for (fc, tc) in from_consts.iter().zip(to_consts.iter()) {
+                let eq = self.fresh("_iceq");
+                self.emit("cmp_eq", Some(&eq), vec![Operand::Var(c.clone()), Operand::Var(fc.clone())], "i64");
+                let next_k = self.fresh("ic_next");
+                self.emit("jmp_if_false", None, vec![Operand::Var(eq), Operand::Var(next_k.clone())], "void");
+                self.emit(
+                    "str_concat",
+                    Some(&result),
+                    vec![Operand::Var(result.clone()), Operand::Var(tc.clone())],
+                    "str",
+                );
+                self.emit("jmp", None, vec![Operand::Var(pos_done.clone())], "void");
+                self.emit("label", None, vec![Operand::Var(next_k)], "void");
+            }
+            // No table entry matched: append the original source character.
+            let jc1 = self.str_index(j as i64 + 1);
+            let orig = self.fresh("_icorig");
+            self.emit(
+                "str_slice",
+                Some(&orig),
+                vec![Operand::Var(s_reg.to_string()), Operand::Var(jc), Operand::Var(jc1)],
+                "str",
+            );
+            self.emit(
+                "str_concat",
+                Some(&result),
+                vec![Operand::Var(result.clone()), Operand::Var(orig)],
+                "str",
+            );
+            self.emit("label", None, vec![Operand::Var(pos_done)], "void");
+        }
+
+        // source := result — exactly W chars (each of the W pieces is one
+        // character), the same fixed-width image the oracle stores. Copy through an
+        // empty concat so the source register (read during the loop) is overwritten
+        // only now, after the last read (no read-after-write hazard).
+        let empty = self.fresh("_icempty");
         self.emit("str_const", Some(&empty), vec![Operand::Str(String::new())], "str");
         self.emit(
             "str_concat",
@@ -3506,6 +3654,56 @@ fn inspect_replacing_all(
         _ => Err(CompileError::Malformed(
             "INSPECT REPLACING ALL without a search and a BY replacement".into(),
         )),
+    }
+}
+
+/// Extract the `CONVERTING from TO to` phrase from an `inspect_stmt`, returning
+/// `(from_node, to_node)` and rejecting the one later-rung form the grammar also
+/// accepts here — a `BEFORE`/`AFTER` region restricting the conversion. (Unequal-
+/// length/non-ASCII/non-literal `from`/`to` are rejected by the caller.)
+fn inspect_converting_pair(
+    verb: &GrammarASTNode,
+) -> Result<(&GrammarASTNode, &GrammarASTNode), CompileError> {
+    let converting = child_node(verb, "inspect_converting").ok_or_else(|| {
+        CompileError::Unsupported("INSPECT without a CONVERTING clause is a later rung".into())
+    })?;
+    if child_node(converting, "inspect_region").is_some() {
+        return Err(CompileError::Unsupported(
+            "INSPECT CONVERTING … BEFORE/AFTER is a later rung".into(),
+        ));
+    }
+    // `from TO to` — the two `operand` children are the FROM (first) and the TO
+    // (second), in order.
+    let ops = child_nodes(converting, "operand");
+    match ops.as_slice() {
+        [f, t] => Ok((*f, *t)),
+        _ => Err(CompileError::Malformed(
+            "INSPECT CONVERTING without a FROM and a TO operand".into(),
+        )),
+    }
+}
+
+/// Read a CONVERTING `from`/`to` operand as a plain string literal. This rung only
+/// supports **string-literal** translation tables; a data-name (`PIC X` item),
+/// figurative constant, numeric literal, or reference modification is a later rung.
+/// `which` names the position (`"from"`/`"to"`) for the diagnostic.
+fn inspect_converting_literal(op: &GrammarASTNode, which: &str) -> Result<String, CompileError> {
+    match read_operand(op)? {
+        Operandy::Literal(Src::Str(s)) => Ok(s),
+        Operandy::Literal(Src::Num(_)) => Err(CompileError::Unsupported(format!(
+            "INSPECT CONVERTING with a numeric-literal {which} operand is a later rung"
+        ))),
+        Operandy::Literal(Src::Space) | Operandy::Literal(Src::Zero) => {
+            Err(CompileError::Unsupported(format!(
+                "INSPECT CONVERTING with a figurative-constant {which} operand is a later rung"
+            )))
+        }
+        Operandy::Name(_) => Err(CompileError::Unsupported(format!(
+            "INSPECT CONVERTING with a data-name {which} operand is a later rung"
+        ))),
+        Operandy::RefMod { .. } => Err(CompileError::Unsupported(format!(
+            "INSPECT CONVERTING with a reference-modified {which} operand is a later rung"
+        ))),
     }
 }
 

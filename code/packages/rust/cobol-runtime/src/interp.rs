@@ -361,6 +361,9 @@ impl Machine {
             Stmt::InspectTallyReplace { source, counter, delim, search, replace } => {
                 return self.exec_inspect_tally_replace(source, counter, delim, search, replace)
             }
+            Stmt::InspectConverting { source, from, to } => {
+                self.exec_inspect_converting(source, from, to)?
+            }
         }
         Ok(Flow::Normal)
     }
@@ -759,6 +762,55 @@ impl Machine {
             .storage
             .chars()
             .map(|c| if c == search_ch { replace_ch } else { c })
+            .collect();
+        self.move_into(sidx, Src::Chars(rebuilt))
+    }
+
+    /// `INSPECT source CONVERTING from TO to` — translate each character of the
+    /// alphanumeric `source` through a per-character **translation table** built
+    /// from the two EQUAL-length string literals `from` and `to`: a source
+    /// character equal to `from[k]` becomes `to[k]`, where `k` is the FIRST index
+    /// at which it appears in `from` (so if `from` repeats a character, the
+    /// LEFTMOST entry wins); a character in no table entry is left unchanged. The
+    /// source's width is unchanged (each character maps to exactly one), so — like
+    /// [`Self::inspect_replace`] — the rebuilt string feeds the SAME alphanumeric
+    /// char-store path a `MOVE` uses, and the compiled `cobol-iir-compiler`
+    /// per-position lowering matches this reference output byte-for-byte.
+    ///
+    /// This rung: `from`/`to` are string LITERALS of equal length. An unequal-
+    /// length pair is a clean later-rung error; a `PIC X` item / figurative /
+    /// reference-modified `from`/`to`, a `BEFORE`/`AFTER` region, and a numeric/
+    /// group source are rejected by the reader and [`Self::inspect_alnum_source`].
+    fn exec_inspect_converting(
+        &mut self,
+        source: &str,
+        from: &str,
+        to: &str,
+    ) -> Result<(), RuntimeError> {
+        let sidx = self.inspect_alnum_source(source)?;
+
+        // The table pairs `from[k]` with `to[k]`, so the two must be equal length.
+        let from_chars: Vec<char> = from.chars().collect();
+        let to_chars: Vec<char> = to.chars().collect();
+        if from_chars.len() != to_chars.len() {
+            return Err(RuntimeError::Unsupported(
+                "INSPECT CONVERTING with unequal-length FROM/TO operands is a later rung".into(),
+            ));
+        }
+
+        // Build the char→char map, FIRST occurrence wins (so a duplicated `from`
+        // character keeps its leftmost `to` partner — `or_insert` never overwrites).
+        let mut table: HashMap<char, char> = HashMap::new();
+        for (f, t) in from_chars.iter().zip(to_chars.iter()) {
+            table.entry(*f).or_insert(*t);
+        }
+
+        // Map each source character through the table (unmapped characters pass
+        // through unchanged), then store through the alphanumeric char path.
+        let rebuilt: String = self.items[sidx]
+            .storage
+            .chars()
+            .map(|c| *table.get(&c).unwrap_or(&c))
             .collect();
         self.move_into(sidx, Src::Chars(rebuilt))
     }
