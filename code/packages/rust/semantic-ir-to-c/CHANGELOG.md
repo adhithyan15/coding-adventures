@@ -1,5 +1,63 @@
 # Changelog
 
+## 0.7.0 — maps (SIR16)
+
+Accepts `Feature::Maps`. `SirValue` gains a `SIR_MAP` tag — a heap-boxed,
+insertion-ordered **assoc-array** (`struct SirMap { struct SirMapEntry
+*entries; int64_t len; int64_t cap; }`, arena allocated), a shared mutable
+handle exactly like `SIR_SEQ`. It is a linear-scan assoc-array, NOT a hash
+table — the same representation as the Go (`[]MapEntry`) and Rust
+(`Vec<(Value, Value)>`) reference backends: lookups are O(n), but structural
+keys and insertion-ordered iteration/printing come for free, with no `Hash`/`Eq`
+requirement on the value type. Every construct the feature can surface is
+lowered:
+
+- `MapLit` (`{k => v, …}`) → `_sir_map_lit(n, k0, v0, …)`, boxing `n` key/value
+  pairs. A later duplicate key overwrites the earlier entry (`{1 => 1, 1 => 2}`
+  is `{1 => 2}`), matching Ruby's Hash literal and the Go/Rust `_sir_map_lit`.
+- `MapGet` (`h[k]`) → `_sir_map_get`: a missing key yields nil (it does NOT
+  raise — matching Ruby's default-less `Hash#[]` and the reference); keys are
+  compared by STRUCTURAL equality, so a composite key like `[1, 2]` matches by
+  value.
+- `MapSet` (`h[k] = v`) → `_sir_map_set`: insert-or-update, mutating the shared
+  box so a write through one binding is visible through every alias. A map has
+  no bounds, so — unlike `SeqSet` — there is nothing to trap on; a new key
+  APPENDS (growing the backing array, capacity doubling from 4), preserving
+  insertion order.
+
+`_sir_value_eq` gains a `SIR_MAP` arm: STRUCTURAL and POSITIONAL — equal length,
+then entry-wise in insertion order (`entries[i]` key AND value equal) — exactly
+mirroring the Go (`[]MapEntry` zip) and Rust (`iter().zip()`) backends, with an
+identical-handle fast path. `_sir_fmt` renders a map as `{k: v, k2: v2}` (brace,
+colon-space, insertion order), also matching Go/Rust.
+
+**Documented family-wide divergence from real Ruby (unchanged by this batch):**
+Ruby's own `Hash#==` is order-INsensitive and its `Hash#inspect` uses ` => ` for
+non-symbol keys (and `key:` only for symbol keys). All three source-emitting
+backends (Go, Rust, and now C) are instead positional and print a uniform `: ` —
+so the three **agree with each other**, which is the property the cross-backend
+conformance corpus checks (no corpus program prints or reorder-compares a whole
+map, so the real-Ruby form is unexercised). Aligning all three to Ruby's exact
+`Hash` semantics is a separate, family-wide change.
+
+Because `MapSet` mutates in place, a self-referential map (`m[k] = m`) is now
+constructible; both the `value_eq` and `fmt` `SIR_MAP` arms reuse the
+recursion-depth caps introduced for `SeqSet` in 0.6.0, so a cyclic map
+terminates rather than overflowing the C stack (verified adversarially).
+
+`ForEach` over a map is deliberately NOT special-cased: iterating a map is
+reference-undefined (Go's `_sir_seq_iter` panics on a non-sequence), and C's
+lenient `_sir_seq_iter` else-branch already treats a non-seq/non-cons iterable
+as an empty iteration — so the loop body runs zero times and the emitter stays
+total (no new `unreachable!`), consistent with its pre-existing handling of any
+other non-iterable.
+
+Every node verified by hand-built modules (bypassing the frontend, which does
+not yet produce these) compiled and run through a real `cc` — covering present/
+missing-key reads, insert/update/alias writes, structural composite keys,
+duplicate-key overwrite, positional structural equality, brace-list display, the
+zero-iteration `ForEach`-over-map, and the cyclic-map stack-safety guard.
+
 ## 0.6.0 — sequences (SIR16)
 
 Accepts `Feature::Sequences`. `SirValue` gains a `SIR_SEQ` tag — a heap-boxed

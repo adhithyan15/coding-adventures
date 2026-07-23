@@ -439,6 +439,24 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             let _ = writeln!(out, "{ipad}}}");
             let _ = writeln!(out, "{pad}}}");
         }
+        // `h[k] = v` — insert/update the shared map box (via `_sir_map_set`,
+        // which traps only on a non-map; a map has no bounds to check). Operands
+        // are hoisted so left-to-right evaluation order holds; the returned
+        // value is discarded in statement position. Mirrors `SeqSet`.
+        Stmt::MapSet {
+            map, key, value, ..
+        } => {
+            let _ = writeln!(out, "{pad}{{");
+            let inner = indent + 1;
+            let ipad = indent_str(inner);
+            let names = hoist_operands(out, &[map, key, value], inner);
+            let _ = writeln!(
+                out,
+                "{ipad}(void)_sir_map_set({}, {}, {});",
+                names[0], names[1], names[2]
+            );
+            let _ = writeln!(out, "{pad}}}");
+        }
         other => unreachable!("C backend reached unsupported statement: {other:?}"),
     }
 }
@@ -566,6 +584,34 @@ fn emit_assign(out: &mut String, dst: &str, e: &Expr, indent: usize) {
             let ipad = indent_str(inner);
             let names = hoist_operands(out, &[seq.as_ref()], inner);
             let _ = writeln!(out, "{ipad}{dst} = _sir_seq_len({});", names[0]);
+            let _ = writeln!(out, "{pad}}}");
+        }
+        // SIR16 maps with a compound operand: hoist operands into temps
+        // (preserving left-to-right order — for a `MapLit`, key/value
+        // interleaved: k0, v0, k1, v1, …), then build/read the map.
+        Expr::MapLit { entries, .. } => {
+            let _ = writeln!(out, "{pad}{{");
+            let inner = indent + 1;
+            let ipad = indent_str(inner);
+            let mut ops: Vec<&Expr> = Vec::with_capacity(entries.len() * 2);
+            for e in entries {
+                ops.push(&e.key);
+                ops.push(&e.value);
+            }
+            let names = hoist_operands(out, &ops, inner);
+            let _ = write!(out, "{ipad}{dst} = _sir_map_lit({}", entries.len());
+            for n in &names {
+                let _ = write!(out, ", {n}");
+            }
+            out.push_str(");\n");
+            let _ = writeln!(out, "{pad}}}");
+        }
+        Expr::MapGet { map, key, .. } => {
+            let _ = writeln!(out, "{pad}{{");
+            let inner = indent + 1;
+            let ipad = indent_str(inner);
+            let names = hoist_operands(out, &[map.as_ref(), key.as_ref()], inner);
+            let _ = writeln!(out, "{ipad}{dst} = _sir_map_get({}, {});", names[0], names[1]);
             let _ = writeln!(out, "{pad}}}");
         }
         // A call whose arguments contain control flow: hoist every argument
@@ -725,6 +771,13 @@ fn is_simple(e: &Expr) -> bool {
         Expr::SeqLit { items, .. } => items.iter().all(is_simple),
         Expr::SeqIndex { seq, index, .. } => is_simple(seq) && is_simple(index),
         Expr::SeqLen { seq, .. } => is_simple(seq),
+        // SIR16 maps: a `_sir_map_*` call is simple iff every operand is (they
+        // render inline as function arguments); otherwise `emit_assign` hoists
+        // them. A `MapLit` operand set is every entry's key AND value.
+        Expr::MapLit { entries, .. } => entries
+            .iter()
+            .all(|e| is_simple(&e.key) && is_simple(&e.value)),
+        Expr::MapGet { map, key, .. } => is_simple(map) && is_simple(key),
         // SIR16+ nodes / Intrinsic are not accepted in v0 → unreachable after
         // the capability check.  Treat as non-simple defensively.
         _ => false,
@@ -804,6 +857,26 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         Expr::SeqLen { seq, .. } => {
             out.push_str("_sir_seq_len(");
             emit_expr(out, seq, indent);
+            out.push(')');
+        }
+        // SIR16 maps (simple-operand forms; compound operands are hoisted by
+        // `emit_assign`). `_sir_map_lit(N, k0, v0, …)` boxes a fresh assoc-array
+        // from N key/value pairs; `_sir_map_get(map, key)` reads it.
+        Expr::MapLit { entries, .. } => {
+            let _ = write!(out, "_sir_map_lit({}", entries.len());
+            for e in entries {
+                out.push_str(", ");
+                emit_expr(out, &e.key, indent);
+                out.push_str(", ");
+                emit_expr(out, &e.value, indent);
+            }
+            out.push(')');
+        }
+        Expr::MapGet { map, key, .. } => {
+            out.push_str("_sir_map_get(");
+            emit_expr(out, map, indent);
+            out.push_str(", ");
+            emit_expr(out, key, indent);
             out.push(')');
         }
         other => unreachable!("emit_expr on compound/unsupported node: {other:?}"),
@@ -983,6 +1056,11 @@ fn scan_block_for_builtin(b: &Block) -> Option<(String, Span)> {
             } => scan_expr_for_builtin(seq)
                 .or_else(|| scan_expr_for_builtin(index))
                 .or_else(|| scan_expr_for_builtin(value)),
+            Stmt::MapSet {
+                map, key, value, ..
+            } => scan_expr_for_builtin(map)
+                .or_else(|| scan_expr_for_builtin(key))
+                .or_else(|| scan_expr_for_builtin(value)),
             Stmt::ForEach { iter, body, .. } => {
                 scan_expr_for_builtin(iter).or_else(|| scan_block_for_builtin(body))
             }
@@ -1027,6 +1105,12 @@ fn scan_expr_for_builtin(e: &Expr) -> Option<(String, Span)> {
             scan_expr_for_builtin(seq).or_else(|| scan_expr_for_builtin(index))
         }
         Expr::SeqLen { seq, .. } => scan_expr_for_builtin(seq),
+        Expr::MapLit { entries, .. } => entries.iter().find_map(|e| {
+            scan_expr_for_builtin(&e.key).or_else(|| scan_expr_for_builtin(&e.value))
+        }),
+        Expr::MapGet { map, key, .. } => {
+            scan_expr_for_builtin(map).or_else(|| scan_expr_for_builtin(key))
+        }
         _ => None,
     }
 }

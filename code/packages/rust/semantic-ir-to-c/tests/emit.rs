@@ -114,11 +114,13 @@ fn self_contained_no_external_headers() {
 
 #[test]
 fn unaccepted_feature_is_rejected_cleanly() {
-    // A hash literal declares Feature::Maps, which this backend does not accept
-    // (arrays now declare the accepted Sequences feature, so they no longer
-    // exercise the rejection path — a hash still does).
-    let m = lower_ruby("h = {1 => 2}\nputs h");
-    let err = compile(&m).expect_err("backend rejects Maps");
+    // An (empty) class declaration declares Feature::Classes, which this
+    // backend does not accept. (Arrays now declare the accepted Sequences
+    // feature and hashes the accepted Maps feature, so neither exercises the
+    // rejection path any longer — a class still does. A class is a declaration,
+    // so — unlike a `true && false` short-circuit — it is not folded away.)
+    let m = lower_ruby("class Foo\nend");
+    let err = compile(&m).expect_err("backend rejects Classes");
     assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
 }
 
