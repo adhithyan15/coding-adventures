@@ -46,10 +46,12 @@ through a crafted name.
 empty base class; the pre-emit scan rejects, with a source-positioned error,
 everything deferred to later slices: a **superclass** (inheritance), a
 **non-empty class body** (class-level code / constants), a **namespaced**
-(`Foo::Bar`) class or constant *definition* (`const_set` names one namespace),
-and every **OOP method builtin** (`__def_method__`, `__method__`, `__super__`,
-`__self__`, `__class_method__`, …) — so a method-bearing or inheriting class
-fails cleanly rather than mis-emitting. Instance variables (`@x`), class
+(`Foo::Bar`) class or constant *definition* (`const_set` names one namespace), a
+**singleton class** (`class << self` — `Stmt::SingletonClassDef`, which also
+observes `Feature::Classes`), and every **OOP method builtin** (`__def_method__`,
+`__method__`, `__super__`, `__self__`, `__class_method__`, …) — so a
+method-bearing, inheriting, or singleton-opening class fails cleanly rather than
+mis-emitting. Instance variables (`@x`), class
 variables (`@@x`), and modules remain unaccepted features (their own later
 slices).
 

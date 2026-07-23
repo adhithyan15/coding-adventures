@@ -97,8 +97,11 @@ so no name can inject.
 feature — including the rest of OOP: class **methods** (the `__def_method__` /
 `__method__` dispatch builtins), **inheritance** (a superclass / `__super__`),
 instance variables (`@x`), class variables (`@@x`), and modules; plus a
-non-empty class body and a namespaced (`Foo::Bar`) class/constant *definition*
-(`const_set` names one namespace). Each rejection is a clean, source-positioned
+non-empty class body, a namespaced (`Foo::Bar`) class/constant *definition*
+(`const_set` names one namespace), and a **singleton class** (`class << self` —
+`Stmt::SingletonClassDef`, which also observes `Feature::Classes`, so accepting
+`Classes` obligates rejecting it in the scan lest it reach the emitter's
+`unreachable!`). Each rejection is a clean, source-positioned
 `UnsupportedFeature`.
 
 ## Value model

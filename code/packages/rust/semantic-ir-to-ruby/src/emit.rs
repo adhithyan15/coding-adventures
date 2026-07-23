@@ -293,6 +293,19 @@ fn scan_stmt(s: &Stmt) -> Option<ScanHit> {
                 None
             }
         }
+        // A `Stmt::SingletonClassDef` (`class << self`) ALSO observes
+        // `Feature::Classes` in the validator (a singleton class is a
+        // class-opening construct, not its own feature) — so accepting `Classes`
+        // obligates handling it too, or a hand-built module carrying it would
+        // pass validation + the capability check and reach the emitter's
+        // `unreachable!` (a DoS).  It is deferred to a later OOP slice; reject it
+        // cleanly here.  (`Stmt::ModuleDef` is NOT handled here because it
+        // observes the unaccepted `Feature::Modules`, so the capability check
+        // rejects such a module before this scan.)
+        Stmt::SingletonClassDef { span, .. } => Some(ScanHit::Unsupported(
+            "a singleton class (`class << self`)".to_string(),
+            span.clone(),
+        )),
         _ => None,
     }
 }

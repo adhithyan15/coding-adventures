@@ -1553,6 +1553,23 @@ fn a_non_empty_class_body_is_rejected_cleanly() {
 }
 
 #[test]
+fn a_singleton_class_is_rejected_cleanly() {
+    // Regression (security review): `Stmt::SingletonClassDef` (`class << self`)
+    // ALSO observes `Feature::Classes` in the validator, so accepting `Classes`
+    // obligates handling it — a hand-built module carrying one must be rejected
+    // cleanly, NOT reach the emitter's `unreachable!` (a DoS on a
+    // producer-agnostic module).
+    let singleton = Stmt::SingletonClassDef {
+        target: "self".into(),
+        body: vec![],
+        span: s2(),
+    };
+    let err = compile(&class_module(vec![singleton]))
+        .expect_err("a singleton class must be rejected, not panic");
+    assert_eq!(err.kind, semantic_ir::BackendErrorKind::UnsupportedFeature);
+}
+
+#[test]
 fn a_namespaced_class_name_is_rejected_cleanly() {
     // `const_set` names a constant in one namespace; a `Foo::Bar` class name is
     // deferred (not injectable — a valid path — but not yet supported).
