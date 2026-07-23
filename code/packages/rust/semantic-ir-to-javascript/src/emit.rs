@@ -1996,6 +1996,8 @@ fn is_js_reserved(s: &str) -> bool {
             | "private"
             | "protected"
             | "public"
+            | "arguments"
+            | "eval"
     )
 }
 
@@ -2077,6 +2079,25 @@ mod tests {
         assert_eq!(sanitize_ident("class"), "_$class");
         assert!(sanitize_ident("function").starts_with("_$"));
         assert!(sanitize_ident("await").starts_with("_$"));
+    }
+
+    #[test]
+    fn is_js_reserved_flags_strict_mode_contextual_words() {
+        // `eval` and `arguments` are not syntactic keywords, but this
+        // backend always emits strict-mode code (`"use strict";` / ES
+        // modules), and strict mode forbids binding, assigning to, or
+        // otherwise shadowing either name — so they must be treated as
+        // reserved here too, exactly like the syntactic keywords above.
+        assert!(is_js_reserved("eval"));
+        assert!(is_js_reserved("arguments"));
+        assert!(sanitize_ident("eval").starts_with("_$"));
+        assert!(sanitize_ident("arguments").starts_with("_$"));
+
+        // Ordinary identifiers — including close look-alikes — are
+        // unaffected by the addition.
+        assert!(!is_js_reserved("value"));
+        assert!(!is_js_reserved("evaluate"));
+        assert!(!is_js_reserved("argument"));
     }
 
     #[test]
