@@ -1,5 +1,37 @@
 # Changelog — gc-core
 
+## 0.12.0 — 2026-07-23 — moving-collector mobility classification (AOT00-T3 PR-2)
+
+First step of the moving/compacting collector (per `code/specs/AOT00-T3-moving-collector.md`):
+classify which live objects a future copying collector may **relocate** and which must stay
+**pinned**. No relocation happens yet — getting the pin/move decision right is the
+use-after-free surface, so it is landed and unit-tested on its own first.
+
+- `FlatHeader` gains a 1-byte `pinned` flag, stolen from the tail padding — the header stays
+  exactly 32 bytes (`size_of == 32` assertion intact). It is a per-classification transient
+  (born 0, cleared at the start of each classify). The 8-byte forwarding word the relocation
+  phase needs is deferred to that phase, which reuses `next` during stop-the-world (spec
+  §3.1), so no further header growth.
+- `FlatHeap::classify_mobility(root_slots, regions) -> HashSet<usize>` runs a **two-color
+  reachability** analysis and returns the movable objects' payload addresses. An object is
+  **movable** iff it is *precise-reachable* (reached from the precise `root_slots` following
+  **only** registered-kind reference edges), *not pinned* (no conservative `regions` root and
+  not a child of any `kind == 0` object reaches it), **and** itself a registered kind (so its
+  own pointers can be rewritten). Everything else is pinned. This is the simple, always-sound
+  model (spec §2): **any conservative in-edge pins** — when unsure, pin. Erring toward pinning
+  is safe; mis-classifying a pinned object as movable would be a use-after-free once
+  relocation lands (a stale conservative pointer to its old address).
+- Helpers `precise_children` (registered-kind ref offsets only), `conservative_children`
+  (every aligned word), and `push_candidates` (raw + low-3-tag-stripped, matching `mark_word`)
+  factor the two waves; the precise wave stops at `kind == 0` objects (their out-edges are
+  conservative), whose children the pinning wave then pins.
+
+Purely additive; no existing symbol or behaviour changes (66 prior tests unchanged). 5 new
+tests: precise-only registered-kind object is movable; a conservative in-edge pins even a
+precisely-reachable object; a `kind == 0` object is never movable; movability is transitive
+along a precise chain but a kind==0 parent pins its child; pin bits are transient across
+classifications. gc-core-only. gc-core 0.11.0 → 0.12.0.
+
 ## 0.11.0 — 2026-07-23 — generational aging (tenure after N survivals)
 
 Adds a tunable **tenuring age** so a young object is promoted to the old generation only

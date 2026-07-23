@@ -110,8 +110,19 @@ struct FlatHeader {
     /// otherwise pollute the old generation and be reclaimed only by a full GC).
     /// Saturates rather than wrapping. Old objects never age further.
     age: u8,
+    /// **Pin bit** for the moving/compacting collector (AOT00-T3). Set during a
+    /// mobility classification when the object is reachable through a *conservative*
+    /// root or edge (a `collect_region` span, or any `kind == 0` object whose maybe-
+    /// pointer words can't be safely rewritten). A pinned object must NOT be
+    /// relocated — a stale conservative pointer to its old address would dangle. It
+    /// is a per-classification transient (born `0` via `alloc_zeroed`, recomputed
+    /// each pass). This PR only *computes* it (the movable/pinned predicate); the
+    /// forwarding word + actual relocation are a later rung (which reuses `next` as
+    /// the forwarding slot during stop-the-world, per spec §3.1, so no further
+    /// header growth). Kept 1 byte so the header stays exactly 32 bytes.
+    pinned: bool,
     /// Explicit tail padding to reach exactly 32 bytes.
-    _pad: [u8; 10],
+    _pad: [u8; 9],
 }
 
 /// Generation tag for a freshly-allocated object: the **young** generation, where
@@ -922,6 +933,176 @@ impl FlatHeap {
             self.mark_word(word, work, young_only);
             off += 8;
         }
+    }
+
+    // ── Moving/compacting collector — mobility classification (AOT00-T3 PR-2) ──
+    //
+    // No relocation yet: these compute *which* objects a future copying collector
+    // may relocate and which must stay put. Getting the pin/move decision right is
+    // the use-after-free surface, so it is landed and tested on its own first.
+
+    /// Append the live block(s) the candidate `word` points into (raw **and** its
+    /// low-3-tag-stripped form, matching [`Self::mark_word`]) to `out`.
+    fn push_candidates(&self, word: usize, out: &mut Vec<*mut FlatHeader>) {
+        let h = self.find_header(word);
+        if !h.is_null() {
+            out.push(h);
+        }
+        let stripped = word & !0x7usize;
+        if stripped != word && stripped != 0 {
+            let h2 = self.find_header(stripped);
+            if !h2.is_null() {
+                out.push(h2);
+            }
+        }
+    }
+
+    /// Append `h`'s **precise** children — the blocks its *registered-kind reference
+    /// fields* point at. A `kind == 0` object (no field map) contributes **nothing**
+    /// here: its out-edges are conservative and are handled by the pinning wave.
+    ///
+    /// # Safety
+    /// `h` is a live block owned by this heap.
+    unsafe fn precise_children(&self, h: *mut FlatHeader, out: &mut Vec<*mut FlatHeader>) {
+        let kind = (*h).kind;
+        if kind == 0 {
+            return;
+        }
+        let offsets = match self.field_maps.get((kind - 1) as usize) {
+            Some(o) => o,
+            None => return,
+        };
+        let base = h.add(1) as *const u8;
+        let size = (*h).size;
+        for &off in offsets.iter() {
+            // Wrap-safe bound (a bad map's near-usize::MAX offset must not overflow).
+            if size >= 8 && off <= size - 8 {
+                let word = ptr::read_unaligned(base.add(off) as *const usize);
+                self.push_candidates(word, out);
+            }
+        }
+    }
+
+    /// Append every block any aligned word of `h`'s payload points at — the
+    /// **conservative** children (every word is a maybe-pointer).
+    ///
+    /// # Safety
+    /// `h` is a live block owned by this heap.
+    unsafe fn conservative_children(&self, h: *mut FlatHeader, out: &mut Vec<*mut FlatHeader>) {
+        let base = h.add(1) as *const u8;
+        let size = (*h).size;
+        let mut off = 0usize;
+        while off + 8 <= size {
+            let word = ptr::read_unaligned(base.add(off) as *const usize);
+            self.push_candidates(word, out);
+            off += 8;
+        }
+    }
+
+    /// Classify every live object as **movable** or **pinned** for the moving
+    /// collector (AOT00-T3 PR-2) — *without relocating anything*. Returns the set of
+    /// movable objects' **payload addresses**.
+    ///
+    /// An object is **movable** iff it is
+    /// - **precise-reachable**: reached from `root_slots` (the exact slot addresses a
+    ///   precise stack map names, as [`Self::collect_mixed`]) following **only**
+    ///   registered-kind reference edges — so every object on the path is one whose
+    ///   pointers can be rewritten; **and**
+    /// - **not pinned**: no `regions` (conservative) root reaches it, and it is not a
+    ///   child of any `kind == 0` object — a maybe-pointer to it could not be safely
+    ///   rewritten if it moved; **and**
+    /// - a **registered kind** (`kind != 0`): so its *own* pointers can be updated
+    ///   after it moves.
+    ///
+    /// Everything else is **pinned** (its header [`FlatHeader::pinned`] bit is set).
+    /// This is the simple, always-sound model (spec §2): *any* conservative in-edge
+    /// pins — when unsure, pin. Erring toward pinning is safe; a pinned object
+    /// mis-classified as movable would be a use-after-free once relocation lands
+    /// (a stale conservative pointer to its old address), so the predicate is a
+    /// deliberate over-approximation of "cannot move".
+    ///
+    /// # Safety
+    /// Each `root_slots` address and each `regions` span must be readable (same
+    /// contract as [`Self::collect_mixed`]).
+    pub unsafe fn classify_mobility(
+        &mut self,
+        root_slots: &[usize],
+        regions: &[(*const u8, usize)],
+    ) -> HashSet<usize> {
+        // Pin bits are a per-classification transient: clear them first.
+        {
+            let mut h = self.all;
+            while !h.is_null() {
+                (*h).pinned = false;
+                h = (*h).next;
+            }
+        }
+
+        // ── Precise wave ───────────────────────────────────────────────────────
+        // From each precise slot's word, follow ONLY registered-kind reference
+        // edges. A kind==0 object reached is precise-reachable but its (conservative)
+        // out-edges are left for the pinning wave.
+        let mut precise: HashSet<usize> = HashSet::new();
+        let mut work: Vec<*mut FlatHeader> = Vec::new();
+        let mut tmp: Vec<*mut FlatHeader> = Vec::new();
+        for &slot in root_slots {
+            let word = ptr::read_unaligned(slot as *const usize);
+            self.push_candidates(word, &mut tmp);
+        }
+        for h in tmp.drain(..) {
+            if precise.insert(h as usize) {
+                work.push(h);
+            }
+        }
+        while let Some(h) = work.pop() {
+            self.precise_children(h, &mut tmp);
+            for c in tmp.drain(..) {
+                if precise.insert(c as usize) {
+                    work.push(c);
+                }
+            }
+        }
+
+        // ── Pinning (conservative) wave ────────────────────────────────────────
+        // Seeds: every conservative-region candidate, plus every precise-reachable
+        // kind==0 object (its conservative out-edges make its children unmovable, and
+        // it is itself unmovable). Then trace conservatively — every reached object is
+        // pinned, and every word it holds is a candidate that pins its target.
+        let mut cwork: Vec<*mut FlatHeader> = Vec::new();
+        for &(base, len) in regions {
+            let mut off = 0usize;
+            while off + 8 <= len {
+                let word = ptr::read_unaligned(base.add(off) as *const usize);
+                self.push_candidates(word, &mut cwork);
+                off += 8;
+            }
+        }
+        for &ph in &precise {
+            let h = ph as *mut FlatHeader;
+            if (*h).kind == 0 {
+                cwork.push(h);
+            }
+        }
+        while let Some(h) = cwork.pop() {
+            if (*h).pinned {
+                continue;
+            }
+            (*h).pinned = true;
+            self.conservative_children(h, &mut tmp);
+            for c in tmp.drain(..) {
+                cwork.push(c);
+            }
+        }
+
+        // ── Result: movable = precise-reachable, not pinned, registered kind ────
+        let mut movable: HashSet<usize> = HashSet::new();
+        for &ph in &precise {
+            let h = ph as *mut FlatHeader;
+            if !(*h).pinned && (*h).kind != 0 {
+                movable.insert(h as usize + HEADER_SIZE); // payload address
+            }
+        }
+        movable
     }
 
     /// Return the header of the live block whose payload contains `addr`, or null.
@@ -2316,5 +2497,146 @@ mod tests {
         assert!(!heap.find_header(x).is_null());
         assert!(!heap.find_header(y).is_null());
         assert_eq!((frame0[0], frame1[1]), (x, y));
+    }
+
+    // ── Moving/compacting collector — mobility classification (AOT00-T3 PR-2) ──
+
+    /// A registered-kind object reachable ONLY through a precise slot is **movable**.
+    #[test]
+    fn mobility_precise_only_registered_kind_is_movable() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]); // kind 1: one ref field at offset 0
+        let a = heap.alloc(16, k) as usize;
+
+        // A precise root slot: the *address* of a word holding `a`.
+        let slot_word = a;
+        let slots = [&slot_word as *const usize as usize];
+        let movable = unsafe { heap.classify_mobility(&slots, &[]) };
+
+        assert!(movable.contains(&a), "precise-reachable registered-kind object is movable");
+    }
+
+    /// The SAME object gains a **conservative** in-edge (a region root) → it is now
+    /// **pinned**, not movable, even though it is still precisely reachable. This is
+    /// the load-bearing rule: any conservative in-edge wins (a maybe-pointer to its
+    /// old address could not be rewritten if it moved).
+    #[test]
+    fn mobility_conservative_in_edge_pins_even_when_precise() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]);
+        let a = heap.alloc(16, k) as usize;
+
+        let precise_word = a;
+        let cons_word = a;
+        let slots = [&precise_word as *const usize as usize];
+        let region = [(&cons_word as *const usize as *const u8, 8usize)];
+
+        // Control: precise-only → movable.
+        assert!(unsafe { heap.classify_mobility(&slots, &[]) }.contains(&a));
+        // With the conservative region → pinned (removed from the movable set).
+        let movable = unsafe { heap.classify_mobility(&slots, &region) };
+        assert!(
+            !movable.contains(&a),
+            "a conservative in-edge pins a precisely-reachable object",
+        );
+    }
+
+    /// A `kind == 0` (conservatively-traced) object is **never** movable — its own
+    /// pointers cannot be safely rewritten — even when reached only via a precise slot.
+    #[test]
+    fn mobility_kind_zero_object_is_never_movable() {
+        let mut heap = FlatHeap::new();
+        let a = heap.alloc(16, 0) as usize; // opaque / conservative kind
+        let slot_word = a;
+        let slots = [&slot_word as *const usize as usize];
+
+        let movable = unsafe { heap.classify_mobility(&slots, &[]) };
+        assert!(!movable.contains(&a), "kind==0 object is never movable");
+    }
+
+    /// Movability is transitive along a **precise** chain of registered-kind objects
+    /// (parent → child both movable), but a `kind == 0` parent's child — reached only
+    /// through the parent's conservative out-edge — is pinned (and the kind==0 parent
+    /// itself is never movable).
+    #[test]
+    fn mobility_transitive_precise_chain_vs_conservative_parent() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]);
+
+        // Precise chain: P --(ref field 0)--> C, both registered kind.
+        let p = heap.alloc(16, k) as usize;
+        let c = heap.alloc(16, k) as usize;
+        unsafe { *(p as *mut usize) = c };
+
+        // A kind==0 parent Q --(conservative word)--> D (registered kind).
+        let q = heap.alloc(16, 0) as usize;
+        let d = heap.alloc(16, k) as usize;
+        unsafe { *(q as *mut usize) = d };
+
+        let root_p = p;
+        let root_q = q;
+        let slots = [
+            &root_p as *const usize as usize,
+            &root_q as *const usize as usize,
+        ];
+        let movable = unsafe { heap.classify_mobility(&slots, &[]) };
+
+        assert!(movable.contains(&p), "precise parent movable");
+        assert!(movable.contains(&c), "precise child (transitive) movable");
+        assert!(!movable.contains(&q), "kind==0 parent never movable");
+        assert!(
+            !movable.contains(&d),
+            "child reached only via a kind==0 (conservative) parent is pinned",
+        );
+    }
+
+    /// Transitive conservative pinning across **two `kind == 0` hops** from a region
+    /// root: a registered object reached via `region → q1(kind0) → q2(kind0) →
+    /// registered` is pinned even though it is *also* precisely rooted. Exercises
+    /// `conservative_children`'s multi-hop closure (the UAF-critical over-approximation).
+    #[test]
+    fn mobility_transitive_conservative_chain_pins_registered_leaf() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]);
+
+        let r = heap.alloc(16, k) as usize; // registered leaf — would be movable alone
+        let q2 = heap.alloc(16, 0) as usize; // kind==0
+        let q1 = heap.alloc(16, 0) as usize; // kind==0, the region's target
+        unsafe {
+            *(q1 as *mut usize) = q2; // q1 -> q2 (conservative)
+            *(q2 as *mut usize) = r; //  q2 -> r  (conservative)
+        }
+
+        // r is ALSO precisely rooted, so only the conservative chain can pin it.
+        let precise_word = r;
+        let slots = [&precise_word as *const usize as usize];
+        let region_word = q1;
+        let region = [(&region_word as *const usize as *const u8, 8usize)];
+
+        let movable = unsafe { heap.classify_mobility(&slots, &region) };
+        assert!(
+            !movable.contains(&r),
+            "registered leaf reached via a 2-hop kind==0 conservative chain is pinned",
+        );
+    }
+
+    /// Reclassifying is idempotent: the transient pin bits are cleared each call, so
+    /// removing a conservative root restores an object to movable.
+    #[test]
+    fn mobility_pin_bits_are_transient_across_classifications() {
+        let mut heap = FlatHeap::new();
+        let k = heap.register_kind(&[0]);
+        let a = heap.alloc(16, k) as usize;
+
+        let word = a;
+        let slots = [&word as *const usize as usize];
+        let region = [(&word as *const usize as *const u8, 8usize)];
+
+        // Pin it, then classify again without the region — it must be movable again.
+        assert!(!unsafe { heap.classify_mobility(&slots, &region) }.contains(&a));
+        assert!(
+            unsafe { heap.classify_mobility(&slots, &[]) }.contains(&a),
+            "pin bit is a per-classification transient, cleared each call",
+        );
     }
 }
