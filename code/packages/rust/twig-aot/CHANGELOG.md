@@ -1,5 +1,37 @@
 # Changelog — `twig-aot`
 
+## 0.42.0 - 2026-07-22 — x86_64 GC entry wrapper + no-op init (AOT00-T1 x86_64 PR-x2)
+
+Ports increment A to the native x86-64 object path (`compile_module_x86_64_to_text`):
+inject the GC entry wrapper `__gc_aot_entry` and a no-op `__gc_init_stackmaps`, and
+redirect the image entry to the wrapper. Because the ELF/PE packager exports the global
+`main` symbol at whatever `entry_off` it is given (libc's `_start` calls `main`), this is
+a pure offset redirect — the same mechanism as the aarch64 Mach-O entry, no rename:
+
+```
+__gc_aot_entry (exported as `main`):
+    push rbp ; mov rbp, rsp
+    call __gc_init_stackmaps        ; no-op today; PR-x3 fills in registration
+    call <user entry>              ; rax = program result
+    mov rsp, rbp ; pop rbp ; ret   ; return rax → crt0 → exit(rax)
+```
+
+Both calls are intra-module `CALL rel32`s patched in place by the existing pass 2; `rsp`
+stays 16-aligned at each call. Under MsX64 (Windows) the wrapper reserves the 32-byte
+shadow/home space every caller must provide, matching the rest of the backend; SysV
+needs none. Reserved-symbol guard rejects a user function or entry
+named `__gc_aot_entry`/`__gc_init_stackmaps` (mirrors the aarch64 path). aarch64 and the
+x86-64 object bytes are otherwise unchanged.
+
+The wrapper mechanism is landed and proven transparent first; PR-x3 fills
+`__gc_init_stackmaps` in to register each function's stack map (per spec
+`AOT00-T1-x86_64-precise-roots.md`). Verified: 55 lib tests incl. the wrapper structure,
+entry redirect, and guard; the transparency proof (existing x86-64 programs still produce
+their exact exit code with the wrapper interposed) runs on the native x86-64
+`ubuntu-latest` CI runner (`linux_x86_64_smoke`), the authoritative validator for this
+arc (the dev host is aarch64 macOS). twig-aot 0.41.1 → 0.42.0.
+
+
 ## 0.41.1 - 2026-07-22 — test: precise roots keep a real reference AND reclaim a look-alike
 
 Completes the precise-roots correctness statement with an end-to-end test
