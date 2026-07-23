@@ -467,6 +467,21 @@ mod tests {
     }
 
     #[test]
+    fn mixed_signed_numeric_vs_space_figurative_is_deferred() {
+        // Regression: a mixed comparison also surfaces when the alphanumeric side
+        // is a FIGURATIVE (`SPACE`), not just a character string. A signed numeric
+        // vs SPACE must reject identically to the compiler (which defers a signed
+        // operand) — previously the oracle's mixed gate missed the figurative case
+        // and evaluated it, a stricter-compiler asymmetry.
+        let err = run_ws(
+            &["01  S  PIC S9(3) VALUE 42."],
+            &["    IF S = SPACE DISPLAY \"Y\".", "    STOP RUN."],
+        )
+        .unwrap_err();
+        assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
     fn mixed_scaled_numeric_vs_alphanumeric_is_deferred() {
         // A SCALED numeric operand's image needs implied-point handling → deferred.
         let err = run_ws(

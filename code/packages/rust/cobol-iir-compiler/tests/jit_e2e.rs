@@ -2718,3 +2718,16 @@ fn inspect_converting_combined_with_replacing_is_rejected() {
     .unwrap_err();
     assert!(matches!(err, cobol_iir_compiler::CompileError::Parse(_)), "got {err:?}");
 }
+
+#[test]
+fn mixed_unsigned_numeric_vs_space_figurative_agrees() {
+    // An UNSIGNED numeric vs the SPACE figurative is supported and byte-identical:
+    // NUM=42 → image "042"; SPACE expands to the image width → "   "; '0' (0x30) >
+    // ' ' (0x20), so `= SPACE` is false → "NO". (A SIGNED numeric vs SPACE is a
+    // later rung, rejected identically on both engines — see the oracle-unit test.)
+    let out = assert_matches_oracle(&wrap(
+        &["01  NUM  PIC 9(3) VALUE 42."],
+        &["IF NUM = SPACE DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "NO\n");
+}

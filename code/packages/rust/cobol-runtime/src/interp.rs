@@ -1147,14 +1147,15 @@ impl Machine {
     fn compare_operands(&self, left: &Operand, right: &Operand) -> Result<std::cmp::Ordering, RuntimeError> {
         let l = self.src_from_operand(left)?;
         let r = self.src_from_operand(right)?;
-        // A mixed comparison surfaces as exactly one numeric and one character
-        // `Src`. Reject the deferred numeric shapes (signed / scaled) and any group
-        // item participating in it, so this engine errors precisely where the
-        // compiler does.
-        let mixed = matches!(
-            (&l, &r),
-            (Src::Num(_), Src::Chars(_)) | (Src::Chars(_), Src::Num(_))
-        );
+        // A mixed comparison surfaces as one numeric `Src` and one alphanumeric —
+        // either a character string (`Src::Chars`) or a figurative such as `SPACE`
+        // (`Src::Fig`, but NOT `ZERO`, which is numeric and handled by the value
+        // arms below). Reject the deferred numeric shapes (signed / scaled) and any
+        // group item participating in it, so this engine errors precisely where the
+        // compiler does — including for a numeric-vs-figurative pairing.
+        let alnum_fig = |s: &Src| matches!(s, Src::Fig(f) if !matches!(f, Fig::Zero));
+        let mixed = matches!(&l, Src::Num(_)) && (matches!(&r, Src::Chars(_)) || alnum_fig(&r))
+            || matches!(&r, Src::Num(_)) && (matches!(&l, Src::Chars(_)) || alnum_fig(&l));
         if mixed {
             for op in [left, right] {
                 if self.operand_is_signed_or_scaled_numeric(op) {
