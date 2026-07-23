@@ -1241,18 +1241,35 @@ impl Machine {
         }
         for dst in dsts {
             let idx = *self.by_name.get(dst).ok_or_else(|| RuntimeError::UndefinedName(dst.clone()))?;
-            // Cross-category numeric → alphanumeric MOVE: COBOL treats an unsigned
-            // numeric sending item as though it were an alphanumeric item holding
-            // its digit characters, then moves it by the alphanumeric rules
-            // (`move_into` below, via `Decimal::digits()` + `move_into_char`). The
-            // digit image is the full `(int + frac)`-digit magnitude — integer part
-            // then fractional part, NO decimal point — which `Decimal::digits()`
-            // already yields (`PIC 9(2)V9 = 4.2` → `"042"`; an integer, `d = 0`, is
-            // the special case). Both an UNSIGNED INTEGER and an UNSIGNED SCALED
-            // (`PIC 9(i)V9(d)`) source are supported on this rung. A SIGNED
-            // (`PIC S9`) numeric source into an alphanumeric receiver is a clean
-            // later rung, rejected here so the oracle and the compiler (which
-            // rejects the same shape at compile time) agree.
+            // Cross-category numeric → alphanumeric MOVE: COBOL treats a numeric
+            // sending item as though it were an alphanumeric item holding its digit
+            // characters, then moves it by the alphanumeric rules (via
+            // `move_into_char`). The digit image is the full `(int + frac)`-digit
+            // magnitude — integer part then fractional part, NO decimal point —
+            // which `Decimal::digits()` (equivalently the item's `storage`) already
+            // yields (`PIC 9(2)V9 = 4.2` → `"042"`; an integer, `d = 0`, is the
+            // special case). An UNSIGNED source (integer or scaled) flows through the
+            // generic `move_into` path below (`Src::Num(d) => d.digits()`), giving
+            // that plain magnitude image.
+            //
+            // A SIGNED source (`PIC S9…`) is handled HERE: its image additionally
+            // carries the operational sign as a TRAILING OVERPUNCH on the units
+            // (last) digit — the same zoned-decimal encoding `item_image`/`DISPLAY`
+            // produce for a signed field (`overpunch_trailing`):
+            //
+            //   | units u  | 0 1 2 3 4 5 6 7 8 9 |
+            //   | positive | { A B C D E F G H I |
+            //   | negative | } J K L M N O P Q R |
+            //
+            // So `S9(3) = +123` → `"12C"`, `= −123` → `"12L"`, `S9V9 = −4.2` → `"4K"`.
+            // The overpunch is driven by the item being signed, not by the value's
+            // sign: a signed POSITIVE value takes the positive `{…I` row (which is
+            // exactly why an unsigned `"123"` and a signed positive `"12C"` differ).
+            // The overpunched image is then char-moved into the receiver by the same
+            // alphanumeric rule (`Src::Chars` → `move_into_char`), so the oracle and
+            // the compiler (which builds the identical image via the same table) emit
+            // byte-identical bytes. A group source has no `Picture::Numeric`, so it
+            // never reaches this arm.
             if let Operand::Ident(name) = src {
                 let alpha_recv = matches!(
                     self.items[idx].picture,
@@ -1260,17 +1277,15 @@ impl Machine {
                 );
                 if alpha_recv {
                     if let Some(&sidx) = self.by_name.get(name) {
-                        if let Some(Picture::Numeric { signed, .. }) =
+                        if let Some(Picture::Numeric { signed: true, .. }) =
                             &self.items[sidx].picture
                         {
-                            if *signed {
-                                return Err(RuntimeError::Unsupported(format!(
-                                    "cross-category MOVE from {name} into {dst}: only an \
-                                     unsigned numeric source (integer or scaled) into an \
-                                     alphanumeric receiver is supported; a signed source is \
-                                     a later rung"
-                                )));
-                            }
+                            // Magnitude image (`storage`) with the trailing sign
+                            // overpunch, then the ordinary alphanumeric char-move.
+                            let image =
+                                overpunch_trailing(&self.items[sidx].storage, self.items[sidx].neg);
+                            self.move_into(idx, Src::Chars(image))?;
+                            continue;
                         }
                     }
                 }
@@ -1630,10 +1645,16 @@ impl Machine {
                         ))
                     }
                 };
-                // A signed field keeps the sign (except on zero, which is
-                // unsigned); an unsigned field drops it to magnitude.
-                let neg = signed && d.neg && !d.is_zero();
-                (move_into_numeric(&d, int_digits, dec_digits), neg)
+                // A signed field keeps the sign, EXCEPT on zero, which is
+                // unsigned (COBOL has no negative zero); an unsigned field drops
+                // it to magnitude. Test the STORED magnitude, not the source `d`:
+                // a nonzero value can high-order-truncate to an all-zero slot
+                // (e.g. `-1000` into `PIC S9(3)` → `000`), and that stored zero
+                // must be positive — matching the compiler, whose single-i64 slot
+                // collapses such a value to a plain `0`.
+                let stored = move_into_numeric(&d, int_digits, dec_digits);
+                let neg = signed && d.neg && stored.bytes().any(|b| b != b'0');
+                (stored, neg)
             }
             Picture::Alphanumeric { size } | Picture::Alphabetic { size } => {
                 let chars = match src {

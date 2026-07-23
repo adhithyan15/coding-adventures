@@ -8,6 +8,48 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.32.0: SIGNED numeric → alphanumeric MOVE (trailing sign overpunch)
+
+The cross-category numeric → alphanumeric MOVE now accepts a **SIGNED** source
+(`PIC S9(i)V9(d)`, integer or scaled), not only an unsigned one. Oracle-first and
+byte-identical to `coding-adventures-cobol-runtime` 0.36.0. No grammar / lexer /
+parser change.
+
+- **The image carries a trailing sign overpunch.** A signed DISPLAY numeric's
+  alphanumeric image is its `(i + d)`-digit zero-padded MAGNITUDE with the
+  operational sign folded into a TRAILING OVERPUNCH on the units (last) digit — the
+  same zoned-decimal encoding the runtime's `overpunch_trailing` /
+  `__cob_print_signed` produce on `DISPLAY`. The units digit `u` maps: positive
+  `{ A B C D E F G H I`, negative `} J K L M N O P Q R`. So `S9(3) = +123 → "12C"`,
+  `= -123 → "12L"`, `S9V9 = -4.2 → "4K"`.
+- **The lowering builds the overpunched last byte arithmetically.** The match arm
+  is generalized from `signed: false` to `signed: _`. For a signed source,
+  `emit_signed_num_alpha_image` computes `neg = (slot < 0) ? 1 : 0` (`cmp_lt`),
+  `mag = |slot|` (`emit_abs`), the `(i+d)`-digit magnitude image (the existing
+  `emit_num_digit_string`), and `units = mag % 10`. It then slices ONE combined
+  20-character constant `"{ABCDEFGHI}JKLMNOPQR"` at `idx = units + neg*10` — the
+  positive row `{…I` at indices `0..=9`, the negative row `}…R` at `10..=19` — so
+  `table[idx..idx+1]` is exactly `overpunch_trailing`'s character (`POS[u]` at `u`,
+  `NEG[u]` at `10+u`). The final image is `image[0..n-1] ++ overpunch_char`
+  (`str_slice` + `str_concat`); for `n == 1` the head slice is empty, so the result
+  is just the overpunch char. It then feeds the same `move_str_into_char` reshape
+  (left-justify, space-pad, or truncate) the unsigned image uses.
+- **Why it matches `overpunch_trailing` byte-for-byte.** The overpunch table's
+  positive/negative rows are laid end to end in the combined constant, so indexing
+  at `units + neg*10` selects the identical byte the oracle picks by
+  `POS[u]`/`NEG[u]`; the units digit is `|slot| % 10` and the sign is `slot < 0`,
+  matching the oracle's magnitude-last-digit + `item.neg`. A signed *positive*
+  source (`neg = 0`) takes the positive row, so `"12C"` — differing from an unsigned
+  `"123"`. The unsigned path is unchanged (no overpunch, plain magnitude).
+- **Still deferred (clean `Unsupported`).** An alphanumeric → SIGNED numeric MOVE, a
+  `SIGN` clause with `SEPARATE`/`LEADING`, and a group on either side (the compiler
+  models no group items, so a group receiver is rejected). The old
+  `signed_numeric_to_alphanumeric_move_is_deferred` reject test is replaced by
+  `signed_numeric_to_alphanumeric_move_lowers`; a
+  `signed_numeric_to_group_receiver_is_deferred` unit test and seven `jit_e2e`
+  oracle-parity tests (positive exact-fit, wider space-pad, narrower truncate,
+  negative, units-digit-0, scaled `±4.2`, and a computed value) are added.
+
 ### Added — v0.31.0: alphanumeric → SCALED-receiver MOVE (`MOVE PIC X(m) TO 9(i)V9(d)`)
 
 The REVERSE cross-category MOVE (alphanumeric → numeric) now accepts an

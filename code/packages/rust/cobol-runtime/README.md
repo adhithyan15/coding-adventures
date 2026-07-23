@@ -23,19 +23,25 @@ A small but **fully correct** slice, growing one quirk at a time: numeric-displa
 (`X`/`A`) pictures; the item tree from
 level numbers; `VALUE` initialisation; figurative `ZERO`/`SPACE`; `MOVE` with
 the exact justify/pad/truncate rules — same-category (numeric→numeric,
-alphanumeric→alphanumeric) plus both cross-category shapes: an unsigned numeric
-source — integer **or** scaled `PIC 9(i)V9(d)`, whose `(i+d)`-digit image
-concatenates the integer and fractional digits with **no** decimal point (the
-oracle's `Decimal::digits()` = `int + frac`) — into an alphanumeric receiver (that
-image left-justified, space-padded, or truncated) and the reverse — an
+alphanumeric→alphanumeric) plus both cross-category shapes: a numeric
+source — unsigned **or** signed, integer **or** scaled `PIC [S]9(i)V9(d)`, whose
+`(i+d)`-digit image concatenates the integer and fractional digits with **no**
+decimal point (the oracle's `Decimal::digits()` = `int + frac`) — into an
+alphanumeric receiver (that image left-justified, space-padded, or truncated). A
+**signed** source additionally carries its operational sign as a **trailing
+overpunch** on the units digit — the same zoned-decimal encoding `DISPLAY` of a
+`PIC S9…` field produces (positive `{A…I`, negative `}J…R`), so `S9(3)=+123 →
+"12C"`, `= -123 → "12L"`, `S9V9=-4.2 → "4K"`; the overpunch is driven by the item
+being signed, so a signed *positive* source (`"12C"`) differs from an unsigned one
+(`"123"`). And the reverse — an
 alphanumeric source into an unsigned numeric receiver, **integer or scaled
 `PIC 9(i)V9(d)`**: its `m` chars fold into an unsigned integer `V`, and that fold
 **is the receiver's scaled slot magnitude directly** — the `(i+d)` digit positions
 right-justified with the implied point `d` places from the right, so
 `slot = V mod 10^(i+d)` (`MOVE "042" TO 9(2)V9` → `042` reads `4.2`,
 `MOVE "12345" TO 9(2)V9` → `345` reads `34.5`; NOT the arithmetic decimal-align
-rule — `V` is not multiplied by `10^d`); a signed
-numeric item on either side, a group, and a
+rule — `V` is not multiplied by `10^d`); an alphanumeric→**signed** numeric MOVE, a
+`SIGN` clause with `SEPARATE`/`LEADING`, a group on either side, and a
 source wider than 18 chars are later rungs; `DISPLAY`; `STOP RUN`;
 fixed-point
 decimal `ADD`/`SUBTRACT`/`MULTIPLY`/`DIVIDE` (decimal-point aligned; `ROUNDED`

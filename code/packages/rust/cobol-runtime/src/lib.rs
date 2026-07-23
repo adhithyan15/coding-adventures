@@ -296,11 +296,89 @@ mod tests {
     }
 
     #[test]
-    fn signed_numeric_to_alphanumeric_move_is_deferred() {
-        // A signed numeric source into an alphanumeric receiver is a later rung.
+    fn signed_numeric_to_alphanumeric_move_overpunches_units_digit() {
+        // A SIGNED integer source: its magnitude image carries the sign as a trailing
+        // overpunch on the units digit. +123 → units 3, positive → 'C' → "12C"; the
+        // X(4) receiver left-justifies and space-pads → "12C ".
+        let pos = run_ws(
+            &["01  S  PIC S9(3) VALUE 123.", "01  W  PIC X(4)."],
+            &["    MOVE S TO W.", "    DISPLAY W \"|\".", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(pos, "12C |\n");
+        // −123 → units 3, negative → 'L' → "12L"; exact fit into X(3).
+        let neg = run_ws(
+            &["01  S  PIC S9(3) VALUE -123.", "01  W  PIC X(3)."],
+            &["    MOVE S TO W.", "    DISPLAY W.", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(neg, "12L\n");
+    }
+
+    #[test]
+    fn signed_numeric_to_alphanumeric_move_units_zero_and_truncation() {
+        // Units digit 0 selects the '{' (positive) / '}' (negative) overpunch.
+        let neg = run_ws(
+            &["01  S  PIC S9(3) VALUE -120.", "01  W  PIC X(3)."],
+            &["    MOVE S TO W.", "    DISPLAY W.", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(neg, "12}\n");
+        // A NARROWER receiver right-truncates the image: S9(3)=-123 → "12L" → X(2) "12".
+        let trunc = run_ws(
+            &["01  S  PIC S9(3) VALUE -123.", "01  W  PIC X(2)."],
+            &["    MOVE S TO W.", "    DISPLAY W.", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(trunc, "12\n");
+    }
+
+    #[test]
+    fn signed_scaled_numeric_to_alphanumeric_move_overpunches_last_fraction_digit() {
+        // A SIGNED SCALED source `PIC S9V9 = -4.2` → magnitude image "42", overpunch
+        // the units (last fractional) digit 2, negative → 'K' → "4K" (exact fit X(2)).
+        let out = run_ws(
+            &["01  F  PIC S9V9 VALUE -4.2.", "01  W  PIC X(2)."],
+            &["    MOVE F TO W.", "    DISPLAY W.", "    STOP RUN."],
+        )
+        .unwrap();
+        assert_eq!(out, "4K\n");
+    }
+
+    #[test]
+    fn signed_value_truncating_to_zero_magnitude_is_positive() {
+        // COBOL has no negative zero: a nonzero negative value that high-order-
+        // truncates to an all-zero slot (`-1000` into `PIC S9(3)` → `000`) stores
+        // POSITIVE. Its alphanumeric image therefore takes the positive units-0
+        // overpunch '{' → "00{", NOT the negative '}'. DISPLAY of the signed field
+        // agrees. This matches the compiler, whose single-i64 slot collapses the
+        // value to a plain 0 (regression for a cross-engine sign-of-zero divergence).
+        let out = run_ws(
+            &["01  A  PIC S9(4) VALUE -1000.", "01  S  PIC S9(3).", "01  W  PIC X(3)."],
+            &[
+                "    MOVE A TO S.",
+                "    MOVE S TO W.",
+                "    DISPLAY W.",
+                "    DISPLAY S.",
+                "    STOP RUN.",
+            ],
+        )
+        .unwrap();
+        assert_eq!(out, "00{\n00{\n");
+    }
+
+    #[test]
+    fn signed_numeric_to_group_receiver_move_is_deferred() {
+        // A GROUP receiver is still a later rung on both engines — the oracle rejects
+        // it as "MOVE into a group item"; the compiler models no group items.
         let err = run_ws(
-            &["01  S  PIC S9(3) VALUE 42.", "01  W  PIC X(4)."],
-            &["    MOVE S TO W.", "    STOP RUN."],
+            &[
+                "01  S  PIC S9(3) VALUE -12.",
+                "01  G.",
+                "    05  A  PIC X(2).",
+                "    05  B  PIC X(1).",
+            ],
+            &["    MOVE S TO G.", "    STOP RUN."],
         )
         .unwrap_err();
         assert!(matches!(err, RuntimeError::Unsupported(_)), "got {err:?}");
