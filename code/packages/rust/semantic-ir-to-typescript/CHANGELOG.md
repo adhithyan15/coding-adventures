@@ -1,5 +1,39 @@
 # Changelog
 
+## 0.11.1 — `is_ts_reserved` was missing `eval`/`arguments` (task #112, the direct TS sibling of task #110's JS fix)
+
+**Not a syntactic-keyword gap — a strict-mode contextual-reserved-word
+gap**, identical to the one just fixed in `semantic-ir-to-javascript`
+(task #110). `is_ts_reserved` (`emit.rs`) is the shared identifier-safety
+check every frontend that lowers to this backend (MATLAB, Octave, Wolfram,
+Macsyma, Maxima, APL, J, Derive, Reduce, Maple, Scilab, Q, Python, Ruby,
+JS, Twig, and more) goes through via `sanitize_ident`/`is_valid_ts_ident`
+before emitting a user-level identifier as a TypeScript binding. It
+already listed every syntactic keyword (`if`, `for`, `class`, …) plus a
+handful of contextual/type-level ones unsafe as bindings (`let`, `static`,
+`any`, `boolean`, `number`, `string`, `symbol`, `type`, `namespace`,
+`interface`, and the rest of the future-reserved-in-strict-mode set) —
+but not `eval` or `arguments`.
+
+Neither is a syntactic keyword; both are ordinary identifiers lexically.
+But TypeScript is a superset of JavaScript that compiles to (and, in
+ES-module contexts, is itself parsed under) strict-mode-equivalent
+semantics, and strict mode specifically forbids binding, assigning to, or
+otherwise declaring a variable, parameter, function, or class named
+`eval` or `arguments` — a compile-time error. A SIR module with a
+user-level name `eval` or `arguments` would previously have been emitted
+verbatim by `sanitize_ident` (since `is_ts_reserved` returned `false`),
+producing invalid/broken TypeScript output.
+
+Fixed by adding both to the existing `matches!` list in `is_ts_reserved`
+(same style and position as the JS sibling fix — appended after
+`"public"`; no restructuring). New unit test
+`is_ts_reserved_flags_strict_mode_contextual_words` (modeled directly on
+the JS sibling's `is_js_reserved_flags_strict_mode_contextual_words`)
+pins both as reserved, confirms `sanitize_ident` prefixes both with
+`_$`, and confirms ordinary look-alike identifiers (`value`, `evaluate`,
+`argument`) are untouched.
+
 ## 0.11.0 — SIR22 "APL addendum" codegen: `Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`
 
 Closes the gap 0.10.0's own CHANGELOG entry (below) flagged as a "scope
