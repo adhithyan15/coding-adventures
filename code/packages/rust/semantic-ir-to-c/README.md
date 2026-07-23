@@ -85,7 +85,10 @@ SIR16 control flow and mutation (`Loops` — `While`, `ForRange`, `ForEach`; and
 `SeqLit`/`SeqIndex`/`SeqLen`/`SeqSet` and structural equality; and SIR16 `Maps`
 — a `SIR_MAP` heap assoc-array with `MapLit`/`MapGet`/`MapSet`, structural
 composite keys, positional structural equality, and `{k: v}` display (matching
-the Go/Rust backends).
+the Go/Rust backends); and SIR16 `Floats` — a `SIR_FLOAT` `FloatLit` (`7.0`
+stays a Float, not the Integer `7`; `Infinity`/`NaN` via `<math.h>`), with
+native float arithmetic, the division frontier (Float promotes, two Integers
+floor), and IEEE non-finite results.
 
 **Rejects** (cleanly, with a source-positioned error): `TailCalls`,
 `Intrinsics`, `NDArrays`, `ShortCircuit`, exceptions/OOP, and every

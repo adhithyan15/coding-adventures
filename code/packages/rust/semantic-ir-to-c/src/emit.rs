@@ -46,7 +46,11 @@ pub fn emit_module(m: &Module) -> String {
     out.push_str("#include <stdlib.h>\n");
     out.push_str("#include <string.h>\n");
     out.push_str("#include <stdarg.h>\n");
-    out.push_str("#include <stdint.h>\n\n");
+    out.push_str("#include <stdint.h>\n");
+    // `<math.h>` supplies the C99 `INFINITY` / `NAN` macros used to spell a
+    // non-finite `FloatLit` (a finite literal needs no macro). Standard and
+    // available on every C99 compiler including MSVC.
+    out.push_str("#include <math.h>\n\n");
 
     // The runtime, with the display-convention placeholder resolved to a
     // boolean-selected LITERAL (never source text — see the security note in
@@ -746,6 +750,7 @@ fn push_joined(out: &mut String, names: &[String]) {
 fn is_simple(e: &Expr) -> bool {
     match e {
         Expr::IntLit { .. }
+        | Expr::FloatLit { .. }
         | Expr::BoolLit { .. }
         | Expr::NilLit { .. }
         | Expr::SymLit { .. }
@@ -789,6 +794,7 @@ fn is_simple(e: &Expr) -> bool {
 fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
     match e {
         Expr::IntLit { value, .. } => emit_int_literal(out, *value),
+        Expr::FloatLit { value, .. } => emit_float_literal(out, *value),
         Expr::BoolLit { value, .. } => {
             let _ = write!(out, "_sir_bool({})", if *value { 1 } else { 0 });
         }
@@ -1151,6 +1157,35 @@ fn emit_int_literal(out: &mut String, value: i64) {
         out.push_str("_sir_int((-9223372036854775807LL - 1))");
     } else {
         let _ = write!(out, "_sir_int({value}LL)");
+    }
+}
+
+/// Render a `FloatLit` as a `_sir_float(<C double>)` constructor call.
+///
+/// - **Non-finite** values have no C floating literal (a program cannot write
+///   `inf` / `nan` as tokens), so they use the C99 `<math.h>` macros
+///   `INFINITY` / `NAN` (mirroring the Ruby backend's `Float::INFINITY` /
+///   `Float::NAN`). These arise only from a hand-built module — normal float
+///   arithmetic produces them at runtime, where `_sir_divide_v` already yields
+///   IEEE `inf`/`nan` without any literal.
+/// - **Finite** values use Rust's `{:?}` (Debug) form, whose shortest
+///   round-tripping spelling always carries a decimal point or exponent
+///   (`7.0`, `-0.0`, `1e300`) — each a valid C `double` literal that `strtod`
+///   parses back to the identical bit pattern. (A plain `{}` would drop the
+///   point on an integral value, but C would still read `7` as a `double` in
+///   this context; `{:?}` is used for parity with the value model and to keep
+///   the emitted text unambiguously floating-point.)
+fn emit_float_literal(out: &mut String, value: f64) {
+    if value.is_nan() {
+        out.push_str("_sir_float(NAN)");
+    } else if value.is_infinite() {
+        out.push_str(if value > 0.0 {
+            "_sir_float(INFINITY)"
+        } else {
+            "_sir_float(-INFINITY)"
+        });
+    } else {
+        let _ = write!(out, "_sir_float({value:?})");
     }
 }
 

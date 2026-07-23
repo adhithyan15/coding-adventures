@@ -1,5 +1,43 @@
 # Changelog
 
+## 0.8.0 — floats (SIR16)
+
+Accepts `Feature::Floats`. Unlike the sequences and maps batches, this needed
+**no new runtime**: `SirValue` has carried a `SIR_FLOAT` tag since v0, and the
+runtime already handled floats throughout — `_sir_float` constructor,
+`_sir_is_num`/`_sir_as_num`, int→float promotion in `_sir_plus_v`/`_sir_minus_v`/
+`_sir_times_v`, an IEEE float path in `_sir_divide_v`, and `_sir_fmt_float`. The
+one missing piece was the emitter: a `FloatLit` had no arm and hit
+`unreachable!`. `Feature::Floats` gates ONLY `FloatLit`, so this batch is a
+single emit arm plus accepting the feature — the emitter stays total.
+
+- `Expr::FloatLit` → `_sir_float(<literal>)` via a new `emit_float_literal`:
+  - a **finite** value is spelled with Rust's `{:?}` (Debug) form, whose
+    shortest round-tripping text always carries a decimal point or exponent
+    (`7.0`, `-0.0`, `1e300`) — a valid C `double` literal that `strtod` parses
+    back to the identical bit pattern;
+  - a **non-finite** value (which a literal can only carry when hand-built —
+    normal arithmetic produces `inf`/`nan` at runtime) uses the C99 `<math.h>`
+    macros `INFINITY` / `-INFINITY` / `NAN`, mirroring the Ruby backend's
+    `Float::INFINITY` / `Float::NAN`. A single `#include <math.h>` is added to
+    the emitted preamble for these (standard, available on every C99 compiler
+    including MSVC).
+
+Float arithmetic reuses the existing `+`/`-`/`*`/`/` variadic helpers: an
+integral result of a float operation stays a Float (`1.5 + 2.5 == 4.0`, not
+`4`), and the division frontier is preserved — a Float operand promotes to true
+division (`7.0 / 2 == 3.5`) while two Integers floor (`7 / 2 == 3`); Float
+division by zero yields IEEE `Infinity`/`NaN` (no trap — that is Integer-only).
+`_sir_fmt_float` renders integral floats with a trailing `.0`, `-0.0` with its
+sign, and non-finite values as `Infinity`/`-Infinity`/`NaN`.
+
+This closes the Floats parity arc: with the Ruby backend's floats (0.6.0),
+`Feature::Floats` is now accepted on all six backends. Verified with hand-built
+modules (the frontend masks `FloatLit`) compiled and run through a real `cc`:
+literal display incl. `-0.0`, native arithmetic staying Float, the division
+frontier, non-finite results AND non-finite literals, and value-based equality
+(`7.0 == 7`). Bumps semantic-ir-to-c 0.7.0 → 0.8.0.
+
 ## 0.7.0 — maps (SIR16)
 
 Accepts `Feature::Maps`. `SirValue` gains a `SIR_MAP` tag — a heap-boxed,
