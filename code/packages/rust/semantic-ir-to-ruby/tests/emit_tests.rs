@@ -1393,3 +1393,236 @@ fn injectable_rescue_type_in_the_function_value_is_rejected() {
         "an injectable rescue type in the function value must be rejected"
     );
 }
+
+// ── OOP classes slice 1 + constants (Feature::Classes, Feature::Constants) ──
+//
+// The first OOP slice: an EMPTY base class (`class Foo; end`) plus construction
+// (`Foo.new`), and the entangled `Constants` prerequisite (a class name IS a
+// Ruby constant, so any `Foo.new` makes the frontend observe `Constants`).
+//
+// Neither a native `class Foo; end` block nor a bare `PI = 3` can be emitted:
+// the frontend wraps a program's top-level code in `main`, and Ruby forbids
+// BOTH a class definition and a constant assignment inside a method body. So a
+// class / constant is defined REFLECTIVELY with `Object.const_set` — legal
+// anywhere, executing in place — which still names the class (`Foo.name`).
+//
+// Positive cases go through the real Ruby frontend + interpreter (skipping when
+// `ruby` is absent); rejection / injection cases are hand-built modules, since
+// the frontend never PRODUCES an out-of-slice or injectable shape.
+
+/// A `main` module carrying `stmts`, declaring Classes + Constants + Strings.
+fn class_module(stmts: Vec<Stmt>) -> Module {
+    Module {
+        name: "clsprog".into(),
+        manifest: FeatureManifest::from_features(&[
+            Feature::Classes,
+            Feature::Constants,
+            Feature::Strings,
+        ]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts, value: Expr::NilLit { span: s2() }, span: s2() },
+            effects: EffectSet::PURE.with(Effect::MayPrint),
+            metadata: Metadata::new().with_source_language("test"),
+            span: s2(),
+        }],
+        globals: vec![],
+        metadata: Metadata::new().with_sir_version(CURRENT_SIR_VERSION),
+        span: s2(),
+    }
+}
+fn classdef(name: &str, superclass: Option<&str>, body: Vec<Stmt>) -> Stmt {
+    Stmt::ClassDef {
+        name: name.into(),
+        superclass: superclass.map(Into::into),
+        body,
+        span: s2(),
+    }
+}
+fn new_expr(class: &str, args: Vec<Expr>) -> Expr {
+    let mut a = vec![strlit(class)];
+    a.extend(args);
+    Expr::BuiltinCall { name: "__new__".into(), args: a, effects: EffectSet::PURE, span: s2() }
+}
+fn const_assign(name: &str, value: Expr) -> Stmt {
+    Stmt::Assign { name: name.into(), scope: Scope::Const, value, span: s2() }
+}
+fn const_ref(name: &str) -> Expr {
+    Expr::VarRef { name: name.into(), scope: Scope::Const, span: s2() }
+}
+fn let_bind(name: &str, value: Expr) -> Stmt {
+    Stmt::LetBinding { name: name.into(), sir_type: None, value, span: s2() }
+}
+
+// ---- positive, through the real frontend + interpreter --------------------
+
+#[test]
+fn e2e_empty_class_declaration_and_construction() {
+    // `class Foo; end; x = Foo.new; puts "ok"` runs cleanly and prints "ok".
+    // Proves the empty class emits, is instantiable, and the program is valid
+    // Ruby (a `class`/`const` inside `main` would otherwise be a SyntaxError).
+    let rb = ruby_to_ruby("class Foo\nend\nx = Foo.new\nputs \"ok\"\n");
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "ok"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn empty_class_emits_reflective_const_set() {
+    // The empty class becomes `Object.const_set(:Foo, Class.new)` and the
+    // construction a native `Foo.new(...)` — NOT a native `class Foo` block
+    // (illegal inside the `main` method the frontend wraps top-level code in).
+    let rb = ruby_to_ruby("class Foo\nend\nx = Foo.new\n");
+    assert!(
+        rb.contains("Object.const_set(:Foo, Class.new)"),
+        "empty class → reflective const_set:\n{rb}"
+    );
+    assert!(rb.contains("Foo.new"), "construction → native .new:\n{rb}");
+    assert!(!rb.contains("class Foo\n"), "must NOT emit a native class block:\n{rb}");
+}
+
+#[test]
+fn e2e_constant_definition_and_reference() {
+    // `PI = 3; puts PI` prints "3" — the constant is defined reflectively and
+    // the bare reference resolves at runtime.  (Constants rides in with Classes.)
+    let rb = ruby_to_ruby("PI = 3\nputs PI\n");
+    assert!(
+        rb.contains("Object.const_set(:PI, 3)"),
+        "constant → reflective const_set:\n{rb}"
+    );
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "3"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn e2e_constant_used_in_an_expression() {
+    // A constant reference participates in arithmetic: `N = 5; puts N + 1` → 6.
+    let rb = ruby_to_ruby("N = 5\nputs N + 1\n");
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "6"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn raise_of_a_constant_exception_class_now_compiles() {
+    // Accepting `Constants` also unblocks `raise SomeClass` (a specific
+    // exception class is a `Const` reference) — a form the exceptions slice
+    // deferred precisely because `Constants` was then unaccepted.  A hand-built
+    // module `raise(ArgumentError)` (producer-agnostic — the bundled frontend
+    // lowers a bare `raise Foo` as a call, not a const ref) now compiles, and
+    // the const-referenced class is emitted as a bare Ruby constant.
+    let raise_const = Stmt::ExprStmt {
+        expr: Expr::BuiltinCall {
+            name: "raise".into(),
+            args: vec![const_ref("ArgumentError")],
+            effects: EffectSet::PURE,
+            span: s2(),
+        },
+        span: s2(),
+    };
+    let rb = compile(&class_module(vec![raise_const]))
+        .expect("raise of a const exception class must compile")
+        .source;
+    assert!(rb.contains("raise(ArgumentError)"), "raise a bare constant class:\n{rb}");
+}
+
+// ---- hand-built: totality (deferred shapes rejected, never panicked) ------
+
+#[test]
+fn a_class_with_a_superclass_is_rejected_cleanly() {
+    // Inheritance is a later slice; a `class Foo < Bar` is rejected, not emitted.
+    let m = class_module(vec![classdef("Foo", Some("Bar"), vec![])]);
+    let err = compile(&m).expect_err("a superclass must be rejected");
+    assert_eq!(err.kind, semantic_ir::BackendErrorKind::UnsupportedFeature);
+}
+
+#[test]
+fn a_non_empty_class_body_is_rejected_cleanly() {
+    // Class-level code / constants are a later slice; a non-empty body rejects.
+    let m = class_module(vec![classdef("Foo", None, vec![puts(strlit("hi"))])]);
+    assert!(compile(&m).is_err(), "a non-empty class body must be rejected");
+}
+
+#[test]
+fn a_namespaced_class_name_is_rejected_cleanly() {
+    // `const_set` names a constant in one namespace; a `Foo::Bar` class name is
+    // deferred (not injectable — a valid path — but not yet supported).
+    let m = class_module(vec![classdef("Foo::Bar", None, vec![])]);
+    assert!(compile(&m).is_err(), "a namespaced class name must be rejected");
+}
+
+#[test]
+fn a_method_bearing_class_is_rejected_cleanly() {
+    // A class with a method surfaces the `__def_method__` registration builtin,
+    // which is NOT supported this slice → rejected cleanly (never `unreachable!`).
+    let def_method = Stmt::ExprStmt {
+        expr: Expr::BuiltinCall {
+            name: "__def_method__".into(),
+            args: vec![strlit("Foo"), strlit("greet")],
+            effects: EffectSet::PURE,
+            span: s2(),
+        },
+        span: s2(),
+    };
+    let m = class_module(vec![classdef("Foo", None, vec![]), def_method]);
+    let err = compile(&m).expect_err("a __def_method__ builtin must be rejected");
+    assert_eq!(err.kind, semantic_ir::BackendErrorKind::UnsupportedFeature);
+}
+
+#[test]
+fn an_instance_method_call_is_rejected_cleanly() {
+    // `x.foo` lowers to the `__method__` dispatch builtin (a later slice) — a
+    // hand-built module carrying it is rejected, not emitted.
+    let call = Expr::BuiltinCall {
+        name: "__method__".into(),
+        args: vec![new_expr("Foo", vec![]), strlit("foo")],
+        effects: EffectSet::PURE,
+        span: s2(),
+    };
+    let m = class_module(vec![classdef("Foo", None, vec![]), puts(call)]);
+    assert!(compile(&m).is_err(), "a __method__ call must be rejected");
+}
+
+// ---- hand-built: injection (a crafted constant name cannot inject) --------
+
+#[test]
+fn an_injectable_class_name_is_rejected() {
+    // A `ClassDef` name is emitted into a `const_set` symbol / would name a
+    // class; a metacharacter-bearing name must be rejected, never emitted.
+    let m = class_module(vec![classdef("Foo\n  system('boom')", None, vec![])]);
+    let err = compile(&m).expect_err("an injectable class name must be rejected");
+    assert_eq!(err.kind, semantic_ir::BackendErrorKind::UnsupportedFeature);
+}
+
+#[test]
+fn an_injectable_new_class_name_is_rejected() {
+    // `__new__`'s class-name argument is emitted VERBATIM as the `.new` receiver
+    // — a crafted name (even with no matching ClassDef) must be rejected.
+    let m = class_module(vec![let_bind("x", new_expr("Foo.new; system('boom')", vec![]))]);
+    assert!(compile(&m).is_err(), "an injectable __new__ class name must be rejected");
+}
+
+#[test]
+fn an_injectable_constant_reference_is_rejected() {
+    // A `Scope::Const` reference is emitted verbatim as a Ruby constant, so a
+    // crafted name must be rejected before it can inject source.
+    let m = class_module(vec![puts(const_ref("PI; system('boom')"))]);
+    assert!(compile(&m).is_err(), "an injectable const reference must be rejected");
+}
+
+#[test]
+fn an_injectable_constant_assignment_target_is_rejected() {
+    // A `Scope::Const` assignment target is emitted into a `const_set` symbol; a
+    // crafted target must be rejected.
+    let m = class_module(vec![const_assign("PI\n=1; system('x')", ilit(1))]);
+    assert!(compile(&m).is_err(), "an injectable const assignment must be rejected");
+}

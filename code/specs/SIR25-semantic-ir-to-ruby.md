@@ -76,13 +76,30 @@ SIR26 integer conversions (`Conversions`, `SizedIntegers`, `Unsigned`,
 `Floats` (native `Float`, 0.6.0), and `ShortCircuit` (native `&&`/`||`, 0.7.0);
 the SIR19 parameter batches `DefaultParams` (native `def f(a, b =
 <default>)`, 0.8.0) and `KeywordParams` (native `def f(x:)` / `f(x: 5)`, matched
-by name, 0.9.0); and SIR17 `Exceptions` (native `begin/rescue/ensure` +
-`raise`/`retry`, 0.10.0 — rescue types validated as constant paths; `raise` of a
-specific class needs `Constants`, rejected).
+by name, 0.9.0); SIR17 `Exceptions` (native `begin/rescue/ensure` +
+`raise`/`retry`, 0.10.0 — rescue types validated as constant paths); and the
+first OOP slice, `Constants` + `Classes` (0.11.0). A constant (`PI = 3`;
+references `PI` / `Foo::Bar`) and an **empty base class** (`class Foo; end` +
+`Foo.new`) are defined **reflectively** with `Object.const_set` rather than a
+native `class`/`= ` block: the frontend wraps a program's top-level code in
+`main`, where both a `class` definition and a constant assignment are Ruby
+errors, whereas `const_set` is legal anywhere, executes in place, and still names
+the class (`Foo.name == "Foo"`, so `Foo.new` / `x.is_a?(Foo)` work). The two
+features are **entangled** — a class name is a Ruby constant, so the frontend
+records `Constants` for any `Foo.new` — hence they land together; `Constants`
+also unblocks `raise SomeClass` (a `Const` reference the 0.10 slice deferred).
+Every verbatim-emitted constant name (a `ClassDef` name, a `__new__` class name,
+a `Const` reference, a `Const` assignment target) is validated as a constant path
+in the SAME pre-emit traversal as the builtin scan (co-total with the emitter),
+so no name can inject.
 
-**Still rejects** `TailCalls`, `Intrinsics`, `NDArrays`,
-`Classes`/OOP, and every not-yet-landed feature (each rejection is a clean,
-source-positioned `UnsupportedFeature`).
+**Still rejects** `TailCalls`, `Intrinsics`, `NDArrays`, and every not-yet-landed
+feature — including the rest of OOP: class **methods** (the `__def_method__` /
+`__method__` dispatch builtins), **inheritance** (a superclass / `__super__`),
+instance variables (`@x`), class variables (`@@x`), and modules; plus a
+non-empty class body and a namespaced (`Foo::Bar`) class/constant *definition*
+(`const_set` names one namespace). Each rejection is a clean, source-positioned
+`UnsupportedFeature`.
 
 ## Value model
 
@@ -114,6 +131,10 @@ or temporaries:
 | `VarRef { Local\|Param\|Capture }` | `<name>` |
 | `VarRef { Global }` | `sir_global_get("<name>")` |
 | `VarRef { Builtin }` | `sir_builtin_closure("<name>")` |
+| `VarRef { Const }` | `<name>` — the bare Ruby constant (`PI` / `Foo::Bar`), validated as a constant path |
+| `ClassDef { name, superclass: None, body: [] }` | `Object.const_set(:<name>, Class.new)` — reflective (a native `class` block is illegal in the `main` method) |
+| `Assign { Const }` | `Object.const_set(:<name>, <value>)` — reflective constant definition |
+| `BuiltinCall("__new__", [name, args…])` | `<name>.new(<args>)` — native construction |
 | `If` | `(if sir_truthy(<cond>) then <then> else <else> end)` |
 | `LogicalAnd { lhs, rhs }` | `(<lhs> && <rhs>)` — native short-circuit, yields the deciding operand |
 | `LogicalOr { lhs, rhs }` | `(<lhs> \|\| <rhs>)` — native short-circuit, yields the deciding operand |
@@ -210,8 +231,14 @@ growing `ACCEPTED_FEATURES`, the runtime, and the conformance corpus in lockstep
 4. **[`Convert`](SIR26-integer-conversions.md)** — render integer
    narrow/reinterpret via mask helpers (`sir_u8`/`sir_i32`/…) — the C→Ruby
    faithfulness payoff.
-5. **Collections / exceptions / OOP** — the `__method__` catalog (Ruby methods
-   are largely native), `begin/rescue`, `class`/`module` (native).
+5. **Exceptions / OOP** — `begin/rescue` (native, landed 0.10); then OOP in
+   slices: `Constants` + an empty `class`/`Foo.new` (reflective `const_set`,
+   landed 0.11), then class **methods** (`define_method` for the frontend's
+   hoisted, separately-registered methods), **instance/class variables**,
+   **inheritance** (`superclass`/`super`), and **modules**/mixins.
+6. **Collections** — the `__method__` catalog for built-in `String`/`Array`/
+   `Hash`/numeric methods (Ruby methods are largely native), sharing the same
+   `__method__` dispatch surface as OOP.
 
 ## Out of scope (v0)
 

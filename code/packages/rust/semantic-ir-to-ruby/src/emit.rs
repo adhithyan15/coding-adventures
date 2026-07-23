@@ -58,6 +58,14 @@ const SUPPORTED_BUILTINS: &[&str] = &[
     // the native Ruby keywords.
     "raise",
     "retry",
+    // OOP classes slice 1 (`Feature::Classes`): `__new__` constructs an instance
+    // — the frontend's lowering of `Foo.new(args…)`.  Its first argument is the
+    // class name (a `StrLit`), emitted verbatim as the `.new` receiver after
+    // constant-path validation in the scan (so no source can inject); the rest
+    // are constructor arguments.  The OTHER OOP builtins (`__def_method__`,
+    // `__method__`, `__super__`, `__self__`, `__class_method__`, …) are
+    // deliberately absent — a module using them is rejected until their slice.
+    "__new__",
 ];
 
 /// Emit a complete self-contained Ruby source file for `m`.
@@ -119,6 +127,18 @@ pub enum ScanHit {
     /// A `rescue` clause exception type that is not a valid Ruby constant path
     /// (would inject source if emitted verbatim).
     RescueType(String, semantic_ir::Span),
+    /// A constant name/path emitted VERBATIM as a Ruby constant that is not a
+    /// valid constant path — so a metacharacter would inject source.  Covers
+    /// every such position: a `Stmt::ClassDef` name, a `__new__` call's class
+    /// name, a `Scope::Const` `VarRef` (`PI`, `Foo::Bar`), and a `Scope::Const`
+    /// `Stmt::Assign` target.  Same injection guard as `RescueType`.
+    ConstantName(String, semantic_ir::Span),
+    /// A construct that is well-formed but beyond this slice's support — a class
+    /// superclass (inheritance), a non-empty class body, or a namespaced
+    /// (`Foo::Bar`) class/constant *definition* (which `const_set` cannot name).
+    /// Carries a human-readable reason.  Deferred to a later slice; rejected
+    /// cleanly rather than mis-emitted.
+    Unsupported(String, semantic_ir::Span),
 }
 
 /// Scan the module — in a SINGLE traversal shared with the unsupported-builtin
@@ -157,8 +177,33 @@ fn scan_stmt(s: &Stmt) -> Option<ScanHit> {
     match s {
         Stmt::LetBinding { value, .. }
         | Stmt::LetStarBinding { value, .. }
-        | Stmt::ExprStmt { expr: value, .. }
-        | Stmt::Assign { value, .. } => scan_expr(value),
+        | Stmt::ExprStmt { expr: value, .. } => scan_expr(value),
+        // An `Stmt::Assign` to a `Scope::Const` target (`PI = 3`) emits the name
+        // VERBATIM as a Ruby constant, so validate it as a constant path (the
+        // same injection guard as a const reference); then scan the value. A
+        // non-const assignment routes the name through `sanitize_ident` (safe).
+        Stmt::Assign {
+            name,
+            scope,
+            value,
+            span,
+        } => {
+            if matches!(scope, Scope::Const) {
+                if !is_valid_constant_path(name) {
+                    Some(ScanHit::ConstantName(name.clone(), span.clone()))
+                } else if name.contains("::") {
+                    // `const_set` cannot name a `Foo::Bar` path.  Deferred.
+                    Some(ScanHit::Unsupported(
+                        "a namespaced constant assignment (`Foo::Bar = …`)".to_string(),
+                        span.clone(),
+                    ))
+                } else {
+                    scan_expr(value)
+                }
+            } else {
+                scan_expr(value)
+            }
+        }
         // A sequence write / iteration has sub-expressions that may themselves
         // hide an unsupported builtin — scan them (and a ForEach body) so the
         // graceful pre-check catches it rather than the emitter.
@@ -209,6 +254,45 @@ fn scan_stmt(s: &Stmt) -> Option<ScanHit> {
                     .as_ref()
                     .and_then(|e| e.iter().find_map(scan_stmt))
             }),
+        // A `Stmt::ClassDef` (`Feature::Classes`).  Slice 1 supports ONLY an
+        // empty-bodied base class → native `class Name\nend`.  At exactly the
+        // position the emitter reaches, validate that:
+        //   - the class NAME is a valid Ruby constant path — it is emitted
+        //     verbatim as the `class` name, so a metacharacter would inject;
+        //   - there is NO superclass (inheritance is a later slice);
+        //   - the body is EMPTY (class-level code / constants are a later slice).
+        // Anything else is rejected cleanly here, never reaching the emitter's
+        // `unreachable!`.  (This is why the emitter's `ClassDef` arm may ignore
+        // `superclass`/`body`: the scan guarantees they are `None`/empty.)
+        Stmt::ClassDef {
+            name,
+            superclass,
+            body,
+            span,
+        } => {
+            if !is_valid_constant_path(name) {
+                Some(ScanHit::ConstantName(name.clone(), span.clone()))
+            } else if name.contains("::") {
+                // `const_set` names a constant in ONE namespace by a bare symbol;
+                // it cannot define a `Foo::Bar` path.  Deferred.
+                Some(ScanHit::Unsupported(
+                    "a namespaced class name (`class Foo::Bar`)".to_string(),
+                    span.clone(),
+                ))
+            } else if superclass.is_some() {
+                Some(ScanHit::Unsupported(
+                    "class inheritance (a superclass)".to_string(),
+                    span.clone(),
+                ))
+            } else if !body.is_empty() {
+                Some(ScanHit::Unsupported(
+                    "a non-empty class body (class-level code or constants)".to_string(),
+                    span.clone(),
+                ))
+            } else {
+                None
+            }
+        }
         _ => None,
     }
 }
@@ -235,6 +319,21 @@ fn scan_expr(e: &Expr) -> Option<ScanHit> {
         } => {
             if !SUPPORTED_BUILTINS.contains(&name.as_str()) {
                 return Some(ScanHit::Builtin(name.clone(), span.clone()));
+            }
+            // `__new__`'s first argument is the class name, emitted VERBATIM as
+            // the `.new` receiver (`Foo.new(…)`).  Validate it here — at exactly
+            // that emitter position — as a `StrLit` holding a valid Ruby constant
+            // path, so a crafted name cannot inject source.  A malformed shape
+            // (missing / non-string class name) is reported as an unlowerable
+            // builtin rather than silently mis-emitted.
+            if name == "__new__" {
+                match args.first() {
+                    Some(Expr::StrLit { value, span }) if !is_valid_constant_path(value) => {
+                        return Some(ScanHit::ConstantName(value.clone(), span.clone()));
+                    }
+                    Some(Expr::StrLit { .. }) => {}
+                    _ => return Some(ScanHit::Builtin(name.clone(), span.clone())),
+                }
             }
             args.iter().find_map(scan_expr)
         }
@@ -274,6 +373,15 @@ fn scan_expr(e: &Expr) -> Option<ScanHit> {
         // A keyword argument carries its value as a sub-expression — scan it so
         // an unsupported builtin in `f(x: foo())` is reported cleanly.
         Expr::KeywordArg { value, .. } => scan_expr(value),
+        // A `Scope::Const` reference (`Feature::Constants`) is emitted VERBATIM
+        // as a Ruby constant (`PI`, `Foo::Bar`) by `emit_var_ref`, so validate it
+        // as a constant path here — at that emitter position — to bar injection.
+        // (Non-const scopes go through `sanitize_ident`, which is already safe.)
+        Expr::VarRef {
+            name,
+            scope: Scope::Const,
+            span,
+        } if !is_valid_constant_path(name) => Some(ScanHit::ConstantName(name.clone(), span.clone())),
         _ => None,
     }
 }
@@ -365,9 +473,23 @@ fn emit_stmt(s: &Stmt) -> String {
             format!("{} = {}", sanitize_ident(name), emit_expr(value))
         }
         Stmt::ExprStmt { expr, .. } => emit_expr(expr),
-        // SIR16 re-binding: Ruby locals are mutable, so this is a plain `=`.
-        Stmt::Assign { name, value, .. } => {
-            format!("{} = {}", sanitize_ident(name), emit_expr(value))
+        // SIR16 re-binding / SIR-constant definition.
+        // A `Scope::Const` target (`PI = 3`, `Feature::Constants`) CANNOT be a
+        // bare `PI = 3`: the frontend wraps top-level code in `main`, and a
+        // constant assignment inside a method body is a Ruby error ("dynamic
+        // constant assignment").  So define it REFLECTIVELY with `const_set`
+        // (legal anywhere, executes in place), exactly as a class does.  The
+        // scan guarantees a single-segment constant here (valid path, no `::`),
+        // so `:name` is a safe symbol literal.  Every other scope is a mutable
+        // local — a plain `=` after `sanitize_ident`.
+        Stmt::Assign {
+            name, scope, value, ..
+        } => {
+            if matches!(scope, Scope::Const) {
+                format!("Object.const_set(:{}, {})", name, emit_expr(value))
+            } else {
+                format!("{} = {}", sanitize_ident(name), emit_expr(value))
+            }
         }
         // SIR16 loop: Ruby's `while` re-tests the (already-bool) condition each
         // iteration.  The body's statements run for effect; its value is nil and
@@ -520,8 +642,23 @@ fn emit_stmt(s: &Stmt) -> String {
             s.push_str("end");
             s
         }
-        // Other SIR16+ statements (index-set/class) are not accepted; the
-        // capability check rejects such modules before emit.
+        // OOP classes slice 1 (`Feature::Classes`): an empty base-class
+        // declaration.  It CANNOT be a native `class Foo; end` block: the
+        // frontend wraps a program's top-level code in `main`, and Ruby forbids
+        // BOTH a `class` definition and a constant assignment inside a method
+        // body.  So define the class REFLECTIVELY — `Object.const_set(:Foo,
+        // Class.new)` — which is legal anywhere, names the class (`Foo.name ==
+        // "Foo"`, so `Foo.new` and `x.is_a?(Foo)` work), and executes in place
+        // (no fragile hoisting / reordering).  The scan guarantees, at this
+        // position, that `name` is a single-segment constant (valid path, no
+        // `::`), `superclass` is `None`, and `body` is empty — so `:name` is a
+        // safe symbol literal and `Class.new` takes no base / body.  (This
+        // dynamic construction also composes with the next slice's
+        // `define_method` for the frontend's hoisted, separately-registered
+        // methods.)
+        Stmt::ClassDef { name, .. } => format!("Object.const_set(:{name}, Class.new)"),
+        // Other not-yet-supported statements (e.g. index-set, module/singleton
+        // defs) are rejected by the capability check / scan before emit.
         other => unreachable!("Ruby backend reached unsupported statement: {other:?}"),
     }
 }
@@ -704,8 +841,15 @@ fn emit_var_ref(name: &str, scope: Scope) -> String {
         Scope::Local | Scope::Param | Scope::Capture => sanitize_ident(name),
         Scope::Global => format!("sir_global_get({})", quote_ruby_string(name)),
         Scope::Builtin => format!("sir_builtin_closure({})", quote_ruby_string(name)),
-        // SIR17+ scopes belong to features v0 does not accept → unreachable.
-        other => unreachable!("v0 Ruby backend reached unsupported var scope: {other:?}"),
+        // A `Scope::Const` reference (`Feature::Constants`) is a Ruby constant —
+        // emitted VERBATIM as `PI` / `Foo::Bar` (NOT through `sanitize_ident`,
+        // which would lowercase-prefix an uppercase name away from constant-hood).
+        // `first_scan_issue` has already validated the name as a constant path at
+        // this position, so it carries no injectable metacharacter.
+        Scope::Const => name.to_string(),
+        // Remaining scopes (`Instance`, `ClassVar`) belong to later OOP slices'
+        // features, not yet accepted → their modules are rejected before emit.
+        other => unreachable!("Ruby backend reached unsupported var scope: {other:?}"),
     }
 }
 
@@ -760,6 +904,19 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
             }
         }
         "retry" => "retry".to_string(),
+        // OOP classes slice 1: `Foo.new(args…)`.  `args[0]` is a `StrLit`
+        // holding the class name, emitted VERBATIM as the constant receiver
+        // (the scan validated it as a constant path at this position, so no
+        // source can inject); `args[1..]` (already in `a`) are the constructor
+        // arguments.  Native Ruby construction — no runtime helper.
+        "__new__" => {
+            let class = match args.first() {
+                Some(Expr::StrLit { value, .. }) => value.clone(),
+                // The scan rejects a malformed `__new__` before emit.
+                _ => unreachable!("__new__ requires a string class-name first argument"),
+            };
+            format!("{class}.new({})", a[1..].join(", "))
+        }
         // Unreachable: first_scan_issue rejected anything else.
         other => unreachable!("v0 Ruby backend reached unsupported builtin: {other}"),
     }
