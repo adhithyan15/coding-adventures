@@ -514,7 +514,10 @@ describe("transient", () => {
   });
 
   it("uses BJT forward transit time to hold base charge on turnoff", () => {
-    function run(forwardTransitTime: number): TransientPoint[] {
+    function run(
+      forwardTransitTime: number,
+      forwardTransitTimeBiasCoefficient = 0.0,
+    ): TransientPoint[] {
       const circuit = new Circuit();
       circuit.add(voltageSource("Vcc", "collector", "0", 5.0));
       circuit.add(currentSourceWithWaveform(
@@ -529,27 +532,35 @@ describe("transient", () => {
         ]),
       ));
       circuit.add(resistor("Rshunt", "base", "0", 1.0e12));
-      circuit.add(bjt(
-        "Q1",
-        "collector",
-        "base",
-        "0",
-        "NPN",
-        1.0e-15,
-        100.0,
-        0.02585,
-        0.0,
-        0.0,
-        forwardTransitTime,
-      ));
+      circuit.add({
+        ...bjt(
+          "Q1",
+          "collector",
+          "base",
+          "0",
+          "NPN",
+          1.0e-15,
+          100.0,
+          0.02585,
+          0.0,
+          0.0,
+          forwardTransitTime,
+        ),
+        forwardTransitTimeBiasCoefficient,
+      });
       return transient(circuit, 1.0e-9, 5.0e-9);
     }
 
     const noStorage = run(0.0);
     const stored = run(1.0e-9);
+    const biasScaled = run(1.0e-9, 9.0);
     expectClose(noStorage[0].voltage("base"), 0.0);
     expect(stored[0].voltage("base")!).toBeGreaterThan(0.6);
     expect(stored[stored.length - 1].voltage("base")!).toBeLessThan(stored[0].voltage("base")!);
+    expect(Math.abs(
+      biasScaled[biasScaled.length - 1].voltage("base")! -
+        stored[stored.length - 1].voltage("base")!,
+    )).toBeGreaterThan(1.0e-12);
   });
 
   it("reports periods for periodic source waveforms", () => {

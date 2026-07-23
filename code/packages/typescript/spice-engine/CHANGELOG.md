@@ -1,5 +1,8 @@
 # Changelog
 
+- Add BJT model-card `XTF` forward transit-time bias-coefficient support,
+  scaling forward diffusion capacitance and transient stored charge by
+  `TF * (1 + XTF)` with the Berkeley default of zero.
 - Add BJT model-card `PTF` forward excess-phase support, rotating AC forward
   transconductance by the configured phase at `1 / (2*pi*TF)`.
 - Add BJT model-card `AF` flicker-noise exponent support, defaulting to `1`
