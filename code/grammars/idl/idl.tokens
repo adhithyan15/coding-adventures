@@ -1,0 +1,398 @@
+# IDL (Interactive Data Language) Token Grammar
+# ============================================================================
+#
+# Tokenizes the MA-12b-scoped lexical surface of IDL 5.0-and-later (the
+# square-bracket-subscript language — code/specs/MA12-idl-language.md §1),
+# the science/astronomy array language whose ownership lineage runs
+# RSI -> ITT Visual Information Solutions -> Exelis VIS -> L3Harris
+# Geospatial -> NV5 Geospatial. MA12 §5 makes the one decision this file is
+# structured around: unlike every other array-family grammar already in this
+# repo (apl/j/q/scilab), IDL's *surface* is an Algol/Fortran-family
+# imperative grammar -- statements, PRO/FUNCTION definitions,
+# IF/FOR/WHILE/REPEAT blocks, an infix operator-precedence cascade with
+# WORD operators (EQ/AND/...) -- closer in shape to this repo's
+# algol.tokens/dartmouth_basic.tokens than to any array-family grammar. This
+# file is therefore written to IDL's own shape, not forked from an array
+# sibling; the array *values* come from `array-runtime` at the runtime layer
+# (MA-12d), not from anything in this lexer.
+#
+# This crate (MA-12b) is lexer-only: `code/grammars/idl/idl.grammar` and
+# `idl-parser` are MA-12c, a separate follow-on task. There is no recursion
+# cap here (recursion begins with recursive-descent parsing, MA-12c), the
+# same split every sibling `*-lexer`/`*-parser` pair in this repo already
+# follows.
+#
+# ============================================================================
+# THE ONE QUESTION THIS FILE DOES *NOT* ANSWER (MA12 Â§3 item 3)
+# ----------------------------------------------------------------------------
+# MA12 Â§3 item 3 documents IDL's `/KEYWORD` boolean-shorthand
+# (`PLOT, x, /YLOG` means `PLOT, x, YLOG=1`): a leading `/` immediately
+# before an identifier *inside a call's argument list* introduces a
+# set-boolean keyword, which must be distinguished from `/` as the division
+# operator everywhere else. MA11 (Q) had an analogous problem (`/` as
+# comment-opener vs. REDUCE adverb, resolved in `q-lexer` via
+# whitespace-adjacency pre/post-tokenize hooks -- see q.tokens's own header
+# and q-lexer/src/lib.rs), which raised the question of whether IDL's `/`
+# could be resolved the same way, in this crate, using the same kind of hook.
+#
+# It cannot, and this file deliberately does NOT try. MA12 Â§3 item 3 itself
+# frames the distinction as "a parse-context signal ... resolved the same
+# 'know which production you are inside' way MA11 Â§3 resolved Q's
+# `/`-as-comment-vs-reduce, though here the signal is grammatical position,
+# not whitespace" (emphasis on the contrast). Concretely: `/YLOG` glued with
+# zero whitespace is the boolean-keyword shorthand when it appears as a
+# PROC/FUNCTION call argument (`PLOT, x, /YLOG`), but `a/YLOG` -- the exact
+# same zero-whitespace-before-an-identifier shape -- is ordinary division
+# when `a` and `YLOG` are plain expression operands, e.g. inside
+# `x = a/YLOG`. Whitespace adjacency cannot tell these apart (both are
+# "glued, no space"); the only thing that CAN is whether the parser is
+# currently inside a call's argument-list production at that position --
+# genuine grammar-position information no pre/post-tokenize hook operating
+# on raw characters or a flat token list can see (a hook has no notion of
+# "which nonterminal is currently being parsed"; only a parser with its own
+# production stack does). So, per MA12 Â§3's own framing, this is correctly
+# `idl-parser`'s problem (MA-12c), not this lexer's. SLASH below is an
+# ordinary, single, unconditional division-operator token in every position;
+# `idl-parser` is where the `/`-immediately-before-NAME-inside-an-argument-
+# list production lives.
+#
+# ============================================================================
+# CASE-INSENSITIVITY (confirmed against the NV5/L3Harris/Dartmouth-mirror IDL
+# documentation and multiple independent secondary IDL references, since
+# MA12's own text does not state this explicitly and this repo's
+# discipline is "confirm, don't assume a sibling's convention transfers")
+# ----------------------------------------------------------------------------
+# IDL is documented as NOT case sensitive for its language surface (commands,
+# keywords, procedure/function/variable names may be typed in any case) --
+# the one documented exception is the CONTENTS of a quoted string, which are
+# always taken literally. This is the same case-insensitivity real Dartmouth
+# BASIC and COBOL already have in this repo (dartmouth_basic.tokens,
+# cobol.tokens), but this file does NOT copy their exact mechanism
+# (`case_sensitive: false`, which case-folds EVERY pattern's matching,
+# including plain NAME): doing that would also fold ordinary identifier
+# *values* (a user-typed `MyVar` would lex with a case-altered value), which
+# is a stronger claim than IDL's own documented rule needs and would
+# silently discard the exact spelling a user typed for a plain variable or
+# procedure name. Instead this file uses the narrower `@case_insensitive
+# true` magic comment alone (no `case_sensitive:` line, so it stays at its
+# default of `true`) -- the same combination `dot.tokens`, `excel.tokens`,
+# and `spice/berkeley.tokens` already use in this repo. That combination
+# makes ONLY `keywords:`-block lookup (below) case-insensitive, normalizing
+# a promoted keyword's emitted value to uppercase (`if`/`If`/`IF` all yield
+# KEYWORD("IF")) -- while every ordinary NAME (procedure, function, and
+# variable identifiers) and every STRING literal's content keeps the exact
+# case the user typed, verified directly against `lexer::grammar_lexer`'s
+# own `test_case_insensitive_non_keyword_identifier_preserves_case` /
+# `test_case_sensitive_default_keeps_original_value` tests. Whether
+# `idl-runtime`'s symbol table should itself fold identifier case at lookup
+# time (real IDL folds names internally, e.g. undefined-routine errors
+# report the name in uppercase) is a runtime-layer decision for MA-12d, not
+# a lexer concern -- this crate only guarantees the token VALUE it reports
+# is the exact source text for anything that isn't a reserved word.
+#
+# @version 1
+# @case_insensitive true
+#
+# Strings have no escape mechanism at all in real IDL (no backslash
+# escaping, no doubled-quote escaping) -- to embed the same quote character
+# a real IDL program switches quote style or concatenates via CHR()/STRING().
+# `escapes: none` tells the shared GrammarLexer engine not to apply its own
+# generic escape-interpretation pass to SQ_STRING/DQ_STRING content below
+# (which, since neither pattern's regex recognizes a backslash-escape
+# sequence to begin with, matters only for defensive correctness -- a
+# literal backslash byte inside a string, if one ever appears, passes
+# through unchanged rather than being silently reinterpreted). This mirrors
+# every other math-language grammar already in this repo that has no
+# backslash-escape convention of its own (derive.tokens, maple.tokens,
+# macsyma.tokens, reduce.tokens all set the same directive for the same
+# reason), rather than inheriting Scilab's/MATLAB's doubled-quote (`""`)
+# escaping, which is real syntax in THOSE languages but not documented
+# anywhere for IDL.
+escapes: none
+
+# ============================================================================
+# SECTION 1: The two matrix-product operators (MA12 Â§4), longest-match-first.
+#
+# IDL has TWO distinct matrix-multiplication operators -- `#` and `##` --
+# that differ in which operand's rows/columns pair with which (NV5/L3Harris
+# operator reference); they are NOT one operator typo'd twice. `##` MUST be
+# declared before the bare `#` it starts with, or the bare single-character
+# pattern would win the first-match race and strand a stray `#` behind it --
+# the same longest-match-before-bare-prefix discipline j.tokens/scilab.tokens
+# already use for their own digraphs. Named by GLYPH (not by a semantic
+# name like "MATMUL"), matching this repo's dominant symbol-token-naming
+# convention (PLUS/MINUS/STAR/CARET/HASH in q.tokens, etc.) -- HASH here is
+# IDL's matrix-product operator, a completely different primitive than Q's
+# own HASH (count/take, q.tokens SECTION 2); the glyph is shared, the
+# language is not.
+# ============================================================================
+
+HASH_HASH = "##"
+HASH      = "#"
+
+# ============================================================================
+# SECTION 2: String literals -- single- and double-quoted (MA12 Â§4).
+#
+# IDL has no transpose-vs-string-quote ambiguity the way Scilab's/MATLAB's
+# `'` does (IDL's TRANSPOSE is an ordinary function call, `TRANSPOSE(a)`,
+# not a `'` postfix operator) -- so, unlike scilab.tokens's
+# STRING_PLACEHOLDER dance, this file needs no pre/post-tokenize hook at all
+# for either quote character. Both spellings alias directly to the SAME
+# STRING token type: MA12 Â§2/Â§4 model both as the one runtime-level
+# `IdlValue::Str`, with no quote-style-driven distinction downstream, the
+# same "one token type, two spellings" choice scilab.tokens already made
+# for its own `'...'`/`"..."` pair (MA10 Â§3). No escape sequence is
+# recognized inside either pattern (see the header note on `escapes: none`
+# above) -- the body is simply "every character up to the next matching
+# quote," the same shape Dartmouth BASIC's own STRING_BODY already uses in
+# this repo for the identical "no escapes at all" string convention.
+#
+# Any token name ending in "STRING" has its outer quote characters stripped
+# automatically by the shared GrammarLexer engine (see
+# `code/packages/rust/lexer/src/grammar_lexer.rs`'s own
+# `try_match_token_in_group` quote-handling), so SQ_STRING/DQ_STRING below
+# need no manual quote-stripping code in idl-lexer itself.
+# ============================================================================
+
+SQ_STRING = /'[^']*'/ -> STRING
+DQ_STRING = /"[^"]*"/ -> STRING
+
+# ============================================================================
+# SECTION 3: Arithmetic, assignment, and ordinary punctuation (MA12 Â§4).
+#
+# `+ - * / ^` are the ordinary arithmetic operators (SLASH is ALWAYS
+# division at this layer -- see the header note on the `/KEYWORD` question
+# above). EQUALS is the single `=` glyph used for BOTH statement-level
+# assignment (`x = expr`) AND, inside a call's argument list, keyword
+# binding (`TITLE='flux'`) -- MA12 Â§3 item 2 is explicit that telling these
+# apart is a parser-context concern ("the one place idl-parser must know it
+# is inside a call-argument context to read `=` as keyword-bind rather than
+# assign"), exactly parallel to the `/KEYWORD` question above, so this file
+# emits one unconditional EQUALS token in every position, the same way
+# dartmouth_basic.tokens' own EQ note documents "the parser resolves this by
+# context -- both cases emit EQ here."
+#
+# COLON is the range-subscript separator (`a[s0:s1]`, `a[s0:s1:n]`, MA12
+# Â§4) -- IDL's ONLY use for `:` in this cut's in-scope surface (there is no
+# ternary, no dictionary/struct-literal colon in scope, and no `x:` result-
+# suppression convention the way maple.tokens/reduce.tokens have for their
+# own `;`/`:` pair). STAR is reused for both multiplication AND the
+# all/rest subscript wildcard (`a[*]`, `a[s0:*]`) -- the same "one glyph,
+# two grammar-level meanings, parser's job to tell them apart at the
+# relevant position" discipline as EQUALS/SLASH above, not a second token.
+#
+# No DOT token: IDL's decimal point is consumed entirely inside NUMBER
+# (SECTION 4) and this cut has no other in-scope use for a bare `.` --
+# structures and their `s.tag` field access (the one construct that WOULD
+# need a standalone DOT) are explicitly deferred whole (MA12 Â§4), so a
+# stray `.` outside a numeric literal falls through to the `errors:` catch-
+# all below, an honest failure rather than a silently-accepted token nothing
+# in this cut's grammar can ever use -- the same "absence, not special-cased
+# exclusion" discipline scilab.tokens documents for its own omissions.
+#
+# No `&&`/`||` short-circuit operators: real modern IDL has them, but MA12
+# Â§4/Â§6 do not list them in this cut's in-scope surface (only the classic
+# word operators AND/OR/NOT/XOR and the `&` statement separator below are
+# in scope), so they are simply left out rather than added ahead of the
+# spec that scopes this crate -- consistent with this repo's discipline of
+# implementing exactly what the current spec item lists, not a superset.
+# ============================================================================
+
+PLUS  = "+"
+MINUS = "-"
+STAR  = "*"
+SLASH = "/"
+CARET = "^"
+
+EQUALS = "="
+
+COMMA    = ","
+COLON    = ":"
+LPAREN   = "("
+RPAREN   = ")"
+LBRACKET = "["
+RBRACKET = "]"
+
+# ============================================================================
+# SECTION 4: Lexer trivia with real grammar-level meaning (MA12 Â§3/Â§4/Â§6):
+# `&` (statement separator) and `$` (line continuation). Neither is a
+# skip-section pattern -- both are ordinary, significant tokens.
+#
+# STMT_SEP (`&`) separates multiple statements written on one physical
+# source line (MA12 Â§3's "lexer trivia" bullet / Â§4's "Assignment &
+# statements" bullet) -- unrelated to logical AND, which IDL spells as the
+# WORD keyword `AND` (SECTION 6), so there is no glyph collision to guard
+# against the way Q's `/` has.
+#
+# CONTINUATION (`$`) is the line-continuation character. Per MA12 Â§5 ("the
+# REPL & binary" bullet), `idl-repl`'s own continuation scanner is what
+# actually tracks this character (alongside paren/bracket balance and
+# BEGIN...ENDxxx block depth) to decide whether to keep reading more input
+# before treating a line as complete -- so, unlike a whitespace-only
+# continuation marker that could be silently swallowed as trivia (compare
+# Python's own `LINE_CONTINUATION` in python3.12.tokens, which IS a `skip:`
+# entry because Python's backslash-newline carries no information a later
+# layer needs to see again), `$` must survive into the token stream as its
+# own real token for that later layer to inspect. This file does not try to
+# interpret it any further than that (e.g. it does not suppress the
+# following NEWLINE) -- what "continuation" means operationally is entirely
+# `idl-repl`'s concern, not this lexer's.
+# ============================================================================
+
+STMT_SEP     = "&"
+CONTINUATION = "$"
+
+# ============================================================================
+# SECTION 5: Numeric literals (MA12 Â§2/Â§4).
+#
+# Integer and floating-point, with an optional exponent -- the same shape
+# scilab.tokens' own NUMBER uses (leading-dot floats like `.5` allowed, a
+# digit required on each side of a `.` that IS present so a bare trailing
+# dot is never absorbed). MA12 Â§2/Â§4 explicitly defer IDL's typed numeric
+# tower (byte/int/uint/long/ulong/float/double/complex/dcomplex) and its
+# literal type-suffix spellings (`5L`, `5B`, `5UL`, `1.5D`, ...) to a later
+# item, computing every value in `f64` this cut -- so this pattern
+# deliberately does NOT recognize a trailing type-suffix letter; a source
+# literal spelled with one (e.g. `5L`) lexes as NUMBER("5") followed by a
+# separate NAME("L") token, an honest reflection of this cut's un-typed
+# numeric model rather than a silent guess at what the suffix should mean.
+# ============================================================================
+
+NUMBER = /([0-9]+(\.[0-9]+)?|\.[0-9]+)([eE][+-]?[0-9]+)?/
+
+# ============================================================================
+# SECTION 6: Identifiers, word operators, and control-flow/definition
+# keywords (MA12 Â§3/Â§4/Â§6).
+#
+# NAME requires a LEADING LETTER (never a leading underscore or digit) --
+# documented IDL identifier syntax, confirmed against real IDL naming rules;
+# underscores ARE allowed as continuation characters (real intrinsic names
+# like N_ELEMENTS, PTR_NEW rely on this). Leading-underscore names are a
+# real but narrow exception in full IDL -- the `_EXTRA`/`_REF_EXTRA`
+# keyword-inheritance forwarding mechanism -- and MA12 Â§4 defers that whole
+# mechanism ("this cut implements explicit named keywords only, not
+# keyword pass-through"), so no leading-underscore allowance is needed yet;
+# adding one ahead of that later item would silently accept spellings this
+# cut's grammar has no production for.
+#
+# `keywords:` lists EVERY word this cut reserves -- both MA12 Â§4's word
+# operators (spelled as ordinary identifiers, case-insensitively per the
+# header note, so `eq`/`Eq`/`EQ` all promote) and its control-flow/
+# definition keyword set. Every promoted entry becomes a generic KEYWORD
+# token (per `lexer::grammar_lexer`'s own keyword-promotion mechanism --
+# see `dartmouth_basic.tokens`'s identical convention) whose VALUE (not
+# type) tells one keyword from another, always emitted uppercase per the
+# `@case_insensitive true` directive above; `idl-parser` (MA-12c)
+# distinguishes IF from FOR from EQ by inspecting `token.value`, exactly as
+# scilab-parser/dartmouth-basic-parser already do for their own keyword
+# tokens.
+#
+# Word operators (MA12 Â§4, "Comparisons and logic as named operators"):
+#   EQ NE LT LE GT GE            -- comparison (0/1-valued, this repo's
+#                                    APL/J/Scilab convention)
+#   AND OR NOT XOR                -- logical/bitwise
+# These are ONLY the word spellings -- MA12 Â§4 does not list any symbolic
+# alternative (`==`, `!=`, `<`, `<=`, ...) for IDL's relational operators the
+# way scilab.tokens keeps both `~=`/`<>`, so none is added here.
+#
+# Control flow / definitions (MA12 Â§3's matched-block-terminator family +
+# Â§4's in-scope control-flow/procedure-and-function bullets -- the exact
+# list, no more: CASE/SWITCH/FOREACH and their ENDCASE/ENDSWITCH/
+# ENDFOREACH terminators, and GOTO/COMMON/etc., are all explicitly deferred,
+# MA12 Â§4):
+#   IF THEN ELSE ENDIF ENDELSE    -- conditional, with the matched
+#                                    ENDIF/ENDELSE terminator pair
+#   FOR DO ENDFOR                 -- FOR loop; DO is FOR's mandatory linker
+#   WHILE ENDWHILE                -- WHILE loop (DO below is its own
+#                                    mandatory linker, shared with FOR --
+#                                    one token, two use sites, the same
+#                                    "shared linker keyword" shape
+#                                    scilab.tokens documents for its own
+#                                    `do`)
+#   REPEAT UNTIL ENDREP           -- REPEAT/UNTIL loop with its own matched
+#                                    terminator
+#   BREAK CONTINUE                -- loop control
+#   BEGIN END                     -- the generic block delimiter pair (a
+#                                    bare END also closes ANY block, MA12
+#                                    Â§3 -- "the optional compiler-side
+#                                    'does ENDFOR match a FOR?' check is a
+#                                    nicety the parser can carry, not a
+#                                    semantic requirement")
+#   PRO FUNCTION RETURN           -- procedure/function definition headers
+#                                    and the function-only RETURN statement
+# ============================================================================
+
+NAME = /[a-zA-Z][a-zA-Z0-9_]*/
+
+keywords:
+  EQ
+  NE
+  LT
+  LE
+  GT
+  GE
+  AND
+  OR
+  NOT
+  XOR
+  IF
+  THEN
+  ELSE
+  ENDIF
+  ENDELSE
+  FOR
+  DO
+  ENDFOR
+  WHILE
+  ENDWHILE
+  REPEAT
+  UNTIL
+  ENDREP
+  BREAK
+  CONTINUE
+  BEGIN
+  END
+  PRO
+  FUNCTION
+  RETURN
+
+# ============================================================================
+# SECTION 7: Newlines -- significant (statement terminator, MA12 Â§4).
+#
+# A newline ends a statement, exactly like scilab.tokens/dartmouth_basic.tokens
+# (and unlike maple.tokens/reduce.tokens, whose own statement separator is
+# purely `;`/`:` with no significant newline at all) -- MA12 Â§4's own
+# "STMT_SEP separates multiple statements on one line" bullet only makes
+# sense in a grammar where a newline is ALREADY the ordinary, default
+# statement terminator; `&` is the exception that lets more than one
+# statement share a line, not the rule.
+# ============================================================================
+
+NEWLINE = /\r?\n/
+
+# ============================================================================
+# SECTION 8: Skip -- horizontal whitespace and `;` line comments (MA12 Â§3's
+# "lexer trivia" bullet / Â§5's "REPL & binary" bullet).
+#
+# Unlike Q's own `/` (which needed a pre-tokenize hook because the SAME
+# character is ALSO a real token, the REDUCE adverb, q.tokens SECTION 3),
+# IDL's `;` has no other meaning anywhere in this cut's grammar -- it is
+# ALWAYS a comment-opener, in every position -- so an ordinary declarative
+# `skip:` regex suffices with no hook at all, the same simpler shape
+# scilab.tokens' own `//`/`/* */` comments already use for the identical
+# reason ("Scilab has no `%`-comment ... there is no conflict to guard
+# against"). The comment ends just before the newline, never swallowing it
+# (mirroring q.tokens'/j.tokens' identical choice), so NEWLINE (SECTION 7)
+# stays its own significant token immediately after a commented line.
+# ============================================================================
+
+skip:
+  WHITESPACE = /[ \t]+/
+  COMMENT    = /;[^\n]*/
+
+# ============================================================================
+# SECTION 9: Error recovery.
+# ============================================================================
+
+errors:
+  UNKNOWN = /./
