@@ -2601,6 +2601,8 @@ fn is_ts_reserved(s: &str) -> bool {
             | "private"
             | "protected"
             | "public"
+            | "arguments"
+            | "eval"
     )
 }
 
@@ -2728,6 +2730,27 @@ mod tests {
     fn sanitize_avoids_reserved_words() {
         assert_ne!(sanitize_ident("class"), "class");
         assert!(sanitize_ident("class").starts_with("_$"));
+    }
+
+    #[test]
+    fn is_ts_reserved_flags_strict_mode_contextual_words() {
+        // `eval` and `arguments` are not syntactic keywords, but this
+        // backend emits TypeScript that is a strict-mode-equivalent
+        // superset of JavaScript (compiled/parsed under the same
+        // strict-mode identifier restrictions), and strict mode forbids
+        // binding, assigning to, or otherwise shadowing either name — so
+        // they must be treated as reserved here too, exactly like the
+        // syntactic keywords above.
+        assert!(is_ts_reserved("eval"));
+        assert!(is_ts_reserved("arguments"));
+        assert!(sanitize_ident("eval").starts_with("_$"));
+        assert!(sanitize_ident("arguments").starts_with("_$"));
+
+        // Ordinary identifiers — including close look-alikes — are
+        // unaffected by the addition.
+        assert!(!is_ts_reserved("value"));
+        assert!(!is_ts_reserved("evaluate"));
+        assert!(!is_ts_reserved("argument"));
     }
 
     #[test]
