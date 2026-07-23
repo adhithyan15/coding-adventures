@@ -2677,7 +2677,10 @@ impl<'a> Compiler<'a> {
     /// operand's length, space-pad both sides to their common (max) length, then
     /// `str_cmp` and apply the relation against zero. `str_cmp` returns an `i64`
     /// ordering (−1/0/1), so `cmp_* … 0` is an integer comparison (no `Bool`
-    /// mismatch). Two figuratives with no fixed length to borrow is a later rung.
+    /// mismatch). Two figuratives — neither with a length to borrow — each resolve
+    /// to a single fill character (`ZERO` → `"0"`, `SPACE` → `"  "`… width 1),
+    /// matching the oracle (whose `src_chars` of a figurative is empty, so both
+    /// `fill_fig` to `len().max(1)` = 1); e.g. `IF ZERO = SPACE` is `"0"` vs `" "`.
     fn emit_str_condition(
         &mut self,
         a: StrOperand,
@@ -2697,11 +2700,10 @@ impl<'a> Compiler<'a> {
         let width = match (a_max, b_max) {
             (Some(x), Some(y)) => x.max(y),
             (Some(x), None) | (None, Some(x)) => x,
-            (None, None) => {
-                return Err(CompileError::Unsupported(
-                    "comparing two figurative constants is a later rung".into(),
-                ));
-            }
+            // Two figuratives: neither has a length to borrow, so each resolves to
+            // a single fill character (width 1) — exactly the oracle's behaviour
+            // (`src_chars` of a figurative is empty → both `fill_fig` to `.max(1)`).
+            (None, None) => 1,
         };
         let ap = self.materialize_str_to_width(a, width);
         let bp = self.materialize_str_to_width(b, width);
@@ -5141,6 +5143,22 @@ mod tests {
         )
         .unwrap_err();
         assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn figurative_vs_figurative_comparison_now_compiles() {
+        // `IF ZERO = SPACE` (two figurative constants) now compiles — each resolves to
+        // a single fill character and both flow through the alphanumeric str_cmp path.
+        let m = compile_source(
+            &wrap(
+                &["01  D  PIC X(1)."],
+                &["IF ZERO = SPACE DISPLAY \"E\" ELSE DISPLAY \"N\".", "STOP RUN."],
+            ),
+            "x",
+        )
+        .unwrap();
+        assert!(m.validate().is_empty(), "{:?}", m.validate());
+        assert!(ops(&m).contains(&"str_cmp".to_string()), "figuratives compare via str_cmp");
     }
 
     #[test]

@@ -787,6 +787,17 @@ numeric-literal operand in a mixed comparison so the two agree). The compiler's
 `EVALUATE` mixed lowering (numeric subject vs alphanumeric `WHEN`, or the reverse)
 likewise remains a later rung; its subject/`WHEN` paths are same-category only.
 
+**Figurative-vs-figurative comparison.** Comparing two figurative constants
+(`IF ZERO = ZERO`, `IF ZERO = SPACE`, `IF SPACE < ZERO`) resolves each figurative to
+a single fill character, since neither has an operand length to borrow: the oracle's
+`src_chars` of a figurative is empty, so both `fill_fig` to `len().max(1)` = 1
+(`ZERO` → `"0"`, `SPACE` → `" "`), then byte-compares. The compiler's
+`emit_str_condition` takes width 1 for the two-figurative (`None, None`) case instead
+of rejecting it, so `ZERO = ZERO` / `SPACE = SPACE` are true, `ZERO ≠ SPACE`, and by
+byte value (`'0'` = 0x30 > `' '` = 0x20) `ZERO > SPACE` / `SPACE < ZERO` — byte-for-byte
+identical on both engines. (This closed a reject-vs-answer gate divergence: the oracle
+already answered these while the compiler rejected them.)
+
 ## Scope
 
 This spec's implementation stops at the **frontend** (lex + parse to a CST). No

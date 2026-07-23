@@ -59,7 +59,10 @@ overpunch** on the units digit (`overpunch_trailing`, the same image the
 signed→alphanumeric `MOVE` builds), so `S9(3)=-123` equals `"12L"`, `= +123` equals
 `"12C"`, `S9V9=-4.2` equals `"4K"`; ordering follows the byte comparison of those
 images. A numeric *literal* vs alphanumeric (a different pairing) or a group item in
-such a mixed comparison is a clean later rung, matching the compiler);
+such a mixed comparison is a clean later rung, matching the compiler; two figurative
+constants compared against each other (`IF ZERO = SPACE`) each fill to a single
+character — `ZERO` → `"0"`, `SPACE` → `" "` — so `ZERO = ZERO` is true and
+`ZERO > SPACE`, and the compiler now compiles the same construct);
 **reference modification** `IDENT(start:len)` /
 `IDENT(start:)` (a 1-based substring of an alphanumeric item, in `DISPLAY` and
 alphanumeric-comparison operands — with **constant** integer indices *or*

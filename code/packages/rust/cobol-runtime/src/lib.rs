@@ -673,6 +673,25 @@ mod tests {
     }
 
     #[test]
+    fn figurative_vs_figurative_comparison() {
+        // Two figurative constants compare by filling each to a single character
+        // (ZERO → "0", SPACE → " "): ZERO = ZERO and SPACE = SPACE are true; ZERO ≠
+        // SPACE and, by byte ('0'=0x30 > ' '=0x20), ZERO > SPACE. Matches the compiler.
+        let out = run_ws(
+            &["01  D  PIC X(1)."],
+            &[
+                "    IF ZERO = ZERO DISPLAY \"ZZ\" ELSE DISPLAY \"zz\".",
+                "    IF SPACE = SPACE DISPLAY \"SS\" ELSE DISPLAY \"ss\".",
+                "    IF ZERO = SPACE DISPLAY \"EQ\" ELSE DISPLAY \"NE\".",
+                "    IF ZERO > SPACE DISPLAY \"GT\" ELSE DISPLAY \"le\".",
+                "    STOP RUN.",
+            ],
+        )
+        .unwrap();
+        assert_eq!(out, "ZZ\nSS\nNE\nGT\n");
+    }
+
+    #[test]
     fn mixed_scaled_numeric_vs_alphanumeric_uses_digit_image() {
         // An UNSIGNED SCALED operand `PIC 9(2)V9 = 4.2` compares by its (int + frac)
         // digit image "042" — no point — so `IF F = "042"` is TRUE and `IF F > "040"`
