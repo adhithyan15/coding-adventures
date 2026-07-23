@@ -108,6 +108,17 @@ fn emit_globals_comment(out: &mut String, globals: &[Global]) {
 /// Returns the first such `(name, span)` so `compile` can reject it cleanly.
 pub fn first_unsupported_builtin(m: &Module) -> Option<(String, semantic_ir::Span)> {
     for f in &m.functions {
+        // A SIR19 parameter default is an expression evaluated at call time, so
+        // a builtin nested in it (`def g(x = foo())`) must be pre-checked too —
+        // otherwise it would slip past the body scan and reach the emitter's
+        // `unreachable!`.  Scan each default before the body.
+        for p in &f.params {
+            if let Some(default) = &p.default {
+                if let Some(hit) = scan_expr(default) {
+                    return Some(hit);
+                }
+            }
+        }
         if let Some(hit) = scan_block(&f.body) {
             return Some(hit);
         }
@@ -181,8 +192,14 @@ fn scan_expr(e: &Expr) -> Option<(String, semantic_ir::Span)> {
             .or_else(|| scan_block(then_branch))
             .or_else(|| scan_block(else_branch)),
         Expr::Block(b) => scan_block(b),
-        Expr::DirectCall { args, .. } | Expr::IndirectCall { args, .. } => {
-            args.iter().find_map(scan_expr)
+        Expr::DirectCall { args, .. } => args.iter().find_map(scan_expr),
+        // An `IndirectCall` renders its `target` too (`sir_apply(<target>, …)`),
+        // so a deferred builtin hidden in the callee position — not just the
+        // args — must be pre-checked, or it would reach the emitter's
+        // `unreachable!`.  (Found by security review while wiring the param
+        // default scan, which routes through here.)
+        Expr::IndirectCall { target, args, .. } => {
+            scan_expr(target).or_else(|| args.iter().find_map(scan_expr))
         }
         Expr::MakeClosure { captures, .. } => captures.iter().find_map(|c| scan_expr(&c.value)),
         Expr::Convert { value, .. } => scan_expr(value),
@@ -234,6 +251,15 @@ fn emit_function(out: &mut String, f: &Function) {
         }
         first = false;
         out.push_str(&sanitize_ident(&p.name));
+        // SIR19 default parameter (`Feature::DefaultParams`): render Ruby's
+        // native `name = <default>`.  Ruby evaluates the default at call time
+        // when the argument is omitted — exactly the SIR semantics — and left to
+        // right, so a default may reference an earlier parameter (`def f(a, b =
+        // a)`).  Only a positional default reaches here; a keyword default is
+        // the separate (unaccepted) `KeywordParams` feature.
+        if let Some(default) = &p.default {
+            let _ = write!(out, " = {}", emit_expr(default));
+        }
     }
     out.push_str(")\n");
     // Body: statements, then the block's value expression (Ruby returns it).
