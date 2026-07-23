@@ -8,6 +8,48 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.29.0: numeric ↔ alphanumeric comparison
+
+A relational condition (in `IF` / `EVALUATE` / any condition context) comparing
+an **unsigned-integer** numeric operand (`PIC 9(n)` — no `S`, no `V`) with an
+**alphanumeric** operand (a `PIC X` item **or** a string literal). Oracle-first
+and byte-identical to `coding-adventures-cobol-runtime` 0.33.0. No grammar /
+lexer / parser change was needed — a `relation` already parses; this fills in a
+formerly-`Unsupported` mixed pairing.
+
+- **The rule.** When a numeric and a non-numeric operand are compared, COBOL
+  treats the **numeric operand as though moved to an alphanumeric field** — its
+  `n`-digit zero-padded **digit image** (the exact bytes a numeric→alphanumeric
+  `MOVE` or a `DISPLAY` of the same item yields) — and the comparison proceeds by
+  the **alphanumeric byte rule**: the shorter operand is space-padded on the right
+  to the longer's length, then the two are compared byte-by-byte. So `IF NUM =
+  "042"` with `NUM PIC 9(3) = 42` compares `"042"` = `"042"` → **true**; `IF NUM =
+  "42"` compares `"042"` vs `"42 "` (space-padded) → **false**; `IF NUM > "040"`
+  → **true**.
+- **Lowering (`emit_relation` / `num_digit_str_operand`).** In the mixed arm the
+  numeric side's digit image is built by **reusing `emit_num_digit_string`** (the
+  same run-time image the numeric→alphanumeric `MOVE` builds) as a fixed-length
+  `StrOperand`, and **both** operands are then fed through the **same**
+  `emit_str_condition` path (space-pad each side to their common length, `str_cmp`,
+  compare the ordering against `0`) a same-category alphanumeric relation uses —
+  so the emitted byte comparison is identical to the oracle's.
+- **Either side, item or literal.** The numeric operand may be the left or the
+  right operand; the alphanumeric operand may be a `PIC X` item or a string
+  literal. `EVALUATE`'s subject-vs-`WHEN` comparison in the oracle reuses the same
+  `compare_operands`, so it benefits identically; the compiler's `EVALUATE` mixed
+  lowering stays a later rung (its subject/`WHEN` paths are same-category only).
+- **Deferral gate.** Only an unsigned-integer numeric item has an unambiguous
+  image on this rung. A **signed** (`PIC S9`) or **scaled** (`PIC 9V9`) numeric
+  operand (`num_digit_str_operand` → `Unsupported`), a **group** item on either
+  side (its name is unregistered → `item_index` → `Unsupported`), and a
+  **numeric-literal-vs-alphanumeric** pairing (a different pairing, kept out of
+  scope → `Unsupported`) are all clean later rungs — matching the oracle, which
+  rejects the same shapes.
+- **Tests.** Seven `jit_e2e.rs` cases through `assert_matches_oracle`
+  (`=` match / space-pad mismatch / `>` ordering / numeric on the right / against
+  a `PIC X` item / symbolic `>=` and `<` / wider field) plus three compiler-unit
+  rejects (signed, scaled, group).
+
 ### Added — v0.28.0: reverse cross-category MOVE (alphanumeric → unsigned-integer numeric)
 
 The **reverse** cross-category `MOVE`: `MOVE alphanumeric-item TO numeric-item`,

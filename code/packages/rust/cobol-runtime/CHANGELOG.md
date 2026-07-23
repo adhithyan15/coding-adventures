@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.33.0 — numeric ↔ alphanumeric comparison
+
+- A relational condition (in `IF` / `EVALUATE` / any condition context) comparing
+  an **unsigned-integer** numeric operand (`PIC 9(n)` — no `S`, no `V`) with an
+  **alphanumeric** operand (a `PIC X` item **or** a string literal). Oracle-first
+  and byte-identical to `cobol-iir-compiler` 0.29.0. No grammar change.
+- **The rule.** COBOL treats the numeric operand **as though moved to an
+  alphanumeric field** — its **digit image**, which `Decimal::digits()` already
+  yields as the item's fixed-width zero-padded storage (`PIC 9(3) = 42` → `"042"`)
+  — and `compare_operands` falls into its **alphanumeric arm**: the shorter side is
+  space-padded on the right to the longer's length and the two are byte-compared.
+  So `IF NUM = "042"` → **true**, `IF NUM = "42"` → **false** (`"042"` vs `"42 "`),
+  `IF NUM > "040"` → **true**. This is byte-identical to the compiler, which builds
+  the same image and runs the same space-padded `str_cmp`.
+- **Deferral gate (`compare_operands`).** Only an unsigned-integer numeric operand
+  has an unambiguous image on this rung. When a comparison is **mixed** (one
+  numeric `Src`, one character `Src`), `compare_operands` now rejects a **signed**
+  (`PIC S9`) or **scaled** (`PIC 9V9`) numeric operand
+  (`operand_is_signed_or_scaled_numeric`) and a **group** item (`operand_is_group`)
+  as a clean `Unsupported` later rung — so the oracle errors precisely where the
+  compiler does. A **numeric literal** vs an alphanumeric operand is a different
+  pairing, left as existing behavior (outside this rung's scope).
+- **`EVALUATE` benefits for free.** Subject-vs-`WHEN` comparison uses the same
+  `compare_operands`, so a mixed unsigned-integer/alphanumeric `WHEN` compares by
+  the same rule (and the same signed/scaled/group deferral).
+- **Tests.** Positive `IF` cases (`=` match / space-pad mismatch / `>` ordering /
+  numeric on the right / against a `PIC X` item) plus three deferral rejects
+  (signed, scaled, group).
+
 ## 0.32.0 — reverse cross-category MOVE (alphanumeric → unsigned-integer numeric)
 
 - The **reverse** cross-category `MOVE`: `MOVE alphanumeric-item TO numeric-item`,

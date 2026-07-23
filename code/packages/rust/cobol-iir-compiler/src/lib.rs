@@ -2196,8 +2196,26 @@ impl<'a> Compiler<'a> {
     /// A **numeric** comparison aligns the operands to a common scale and applies
     /// `cmp_gt`/`cmp_lt`/`cmp_eq` (`NOT` inverts the relation); an **alphanumeric**
     /// comparison space-pads both sides to a common length and applies `str_cmp`
-    /// (COBOL's rule). A numeric operand compared with an alphanumeric one is a
-    /// later rung.
+    /// (COBOL's rule).
+    ///
+    /// A **mixed** relation — one operand an unsigned-integer numeric item, the
+    /// other alphanumeric (a `PIC X` item or a string literal) — is COBOL's
+    /// "compare a numeric with a non-numeric" case: the numeric operand is treated
+    /// **as though moved to an alphanumeric field**, i.e. by its *n*-digit
+    /// zero-padded decimal image ([`Self::emit_num_digit_string`] — the exact bytes
+    /// a numeric→alphanumeric MOVE or a DISPLAY of the same item yields), and the
+    /// comparison then proceeds by the **alphanumeric byte rule**: the shorter side
+    /// is space-padded on the right to the longer's length and the two are compared
+    /// byte-by-byte (the very same `str_cmp` path an all-alphanumeric relation
+    /// takes, [`Self::emit_str_condition`]). So `IF NUM = "042"` with
+    /// `NUM PIC 9(3) = 42` compares `"042"` = `"042"` → true, while `IF NUM = "42"`
+    /// compares `"042"` vs `"42 "` (space-padded) → false. Because both engines
+    /// build the identical image and run the identical space-padded `str_cmp`, the
+    /// oracle (whose `Decimal::digits()` yields the same image) agrees byte-for-byte.
+    ///
+    /// A signed (`PIC S9`) or scaled (`PIC 9V9`) numeric operand, a numeric literal
+    /// (a different pairing — kept out of scope), or a group item in a mixed
+    /// relation is a clean later rung (see [`Self::num_digit_str_operand`]).
     fn emit_relation(&mut self, relation: &GrammarASTNode) -> Result<String, CompileError> {
         let operands = child_nodes(relation, "operand");
         if operands.len() != 2 {
@@ -2221,8 +2239,71 @@ impl<'a> Compiler<'a> {
                 Ok(cond_reg)
             }
             (Some(a), Some(b)) => self.emit_str_condition(a, b, op),
-            _ => Err(CompileError::Unsupported(
-                "comparing a numeric operand with an alphanumeric one is a later rung".into(),
+            // Mixed numeric ↔ alphanumeric: build the numeric side's digit image
+            // and feed both operands through the same alphanumeric `str_cmp` path
+            // (preserving left→right operand order). Only an unsigned-integer
+            // numeric item is modelled; every other numeric shape is a later rung.
+            (None, Some(b)) => {
+                let a = self.num_digit_str_operand(operands[0])?;
+                self.emit_str_condition(a, b, op)
+            }
+            (Some(a), None) => {
+                let b = self.num_digit_str_operand(operands[1])?;
+                self.emit_str_condition(a, b, op)
+            }
+        }
+    }
+
+    /// Build the [`StrOperand`] for the **numeric** side of a mixed
+    /// numeric↔alphanumeric relation: its *n*-digit zero-padded decimal image
+    /// ([`Self::emit_num_digit_string`]), the exact bytes a numeric→alphanumeric
+    /// MOVE (or a DISPLAY) of the same item produces, so the comparison then
+    /// proceeds by the identical alphanumeric byte rule the oracle uses (whose
+    /// `Decimal::digits()` yields the same image).
+    ///
+    /// Only an **unsigned-integer** numeric ITEM (`PIC 9(n)`, no `S`, no `V`) has
+    /// an unambiguous image on this rung, so it is the only shape accepted:
+    ///
+    /// * a **signed** (`PIC S9`) or **scaled** (`PIC 9V9`) numeric item — whose
+    ///   image would need sign / implied-point handling — is a clean later rung;
+    /// * a **numeric literal** against an alphanumeric operand is a *different*
+    ///   pairing (kept out of scope) and is rejected here too;
+    /// * a **group** item never reaches this method — its name is unregistered on
+    ///   this rung, so [`Self::str_operand`] → [`Self::item_index`] already errored.
+    fn num_digit_str_operand(&mut self, op: &GrammarASTNode) -> Result<StrOperand, CompileError> {
+        match read_operand(op)? {
+            Operandy::Name(name) => {
+                let idx = self.item_index(&name)?;
+                match &self.items[idx].kind {
+                    ItemKind::Numeric { int_digits, dec_digits: 0, signed: false, .. } => {
+                        let n = *int_digits;
+                        let num_reg = self.items[idx].reg.clone();
+                        let reg = self.emit_num_digit_string(&num_reg, n);
+                        Ok(StrOperand::Fixed { reg, len: n })
+                    }
+                    ItemKind::Numeric { .. } => Err(CompileError::Unsupported(format!(
+                        "a signed or scaled numeric operand ({name}) compared with an \
+                         alphanumeric operand is a later rung"
+                    ))),
+                    // `str_operand` classified this operand as numeric (`None`); a
+                    // character item would have been `Some`. Unreachable in practice,
+                    // but handled honestly rather than with `unreachable!`.
+                    ItemKind::Char { .. } => Err(CompileError::Malformed(format!(
+                        "operand {name} classified as both numeric and alphanumeric"
+                    ))),
+                }
+            }
+            Operandy::Literal(Src::Num(_)) | Operandy::Literal(Src::Zero) => {
+                Err(CompileError::Unsupported(
+                    "a numeric literal compared with an alphanumeric operand is a later rung \
+                     (a different pairing)"
+                        .into(),
+                ))
+            }
+            // Every remaining operand shape is alphanumeric and would have been
+            // `Some` in `str_operand`, so it never reaches the numeric side.
+            _ => Err(CompileError::Malformed(
+                "unexpected operand shape on the numeric side of a mixed comparison".into(),
             )),
         }
     }
