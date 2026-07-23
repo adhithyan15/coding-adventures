@@ -1466,6 +1466,81 @@ fn alphanumeric_shorter_literal_space_pads_for_compare() {
     assert_eq!(out, "LT\n");
 }
 
+// -------------------------------------------------------------------------
+// Cross-category MOVE: unsigned-integer numeric → alphanumeric — vs the oracle.
+//
+// The numeric sending item is treated as though it held its digit characters
+// (its zero-padded magnitude image, exactly what DISPLAY shows), then moved by
+// the alphanumeric rules: LEFT-justified, space-padded on the right when the
+// receiver is wider, truncated on the right when narrower.
+// -------------------------------------------------------------------------
+
+#[test]
+fn numeric_to_alphanumeric_move_exact_fit() {
+    // PIC 9(3)=042 → PIC X(3): the whole 3-digit image "042".
+    let out = assert_matches_oracle(&wrap(
+        &["01  N  PIC 9(3) VALUE 42.", "01  W  PIC X(3)."],
+        &["MOVE N TO W.", "DISPLAY W.", "STOP RUN."],
+    ));
+    assert_eq!(out, "042\n");
+}
+
+#[test]
+fn numeric_to_alphanumeric_move_space_pads_on_the_right() {
+    // PIC 9(3)=042 → PIC X(5): "042" left-justified, two trailing spaces.
+    let out = assert_matches_oracle(&wrap(
+        &["01  N  PIC 9(3) VALUE 42.", "01  W  PIC X(5)."],
+        &["MOVE N TO W.", "DISPLAY W \"|\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "042  |\n");
+}
+
+#[test]
+fn numeric_to_alphanumeric_move_truncates_on_the_right() {
+    // PIC 9(3)=042 → PIC X(2): keeps the leftmost two digits "04".
+    let out = assert_matches_oracle(&wrap(
+        &["01  N  PIC 9(3) VALUE 42.", "01  W  PIC X(2)."],
+        &["MOVE N TO W.", "DISPLAY W.", "STOP RUN."],
+    ));
+    assert_eq!(out, "04\n");
+}
+
+#[test]
+fn numeric_to_alphanumeric_move_single_digit() {
+    // PIC 9(1)=7 → PIC X(3): "7" then two spaces.
+    let out = assert_matches_oracle(&wrap(
+        &["01  N  PIC 9 VALUE 7.", "01  W  PIC X(3)."],
+        &["MOVE N TO W.", "DISPLAY W \"|\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "7  |\n");
+}
+
+#[test]
+fn numeric_to_alphanumeric_move_of_a_computed_value() {
+    // Compute the source at run time first (ADD builds 123), then MOVE its digit
+    // image into the alphanumeric receiver.
+    let out = assert_matches_oracle(&wrap(
+        &["01  N  PIC 9(3) VALUE 100.", "01  W  PIC X(4)."],
+        &["ADD 23 TO N.", "MOVE N TO W.", "DISPLAY W \"|\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "123 |\n");
+}
+
+#[test]
+fn numeric_to_alphanumeric_move_result_compares_alphanumerically() {
+    // The MOVE result is a genuine alphanumeric value: comparing it against a
+    // string literal agrees with the oracle. PIC 9(3)=42 → "042" into X(3).
+    let out = assert_matches_oracle(&wrap(
+        &["01  N  PIC 9(3) VALUE 42.", "01  W  PIC X(3)."],
+        &[
+            "MOVE N TO W.",
+            "IF W EQUAL \"042\" DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "MATCH\n");
+}
+
 #[test]
 fn alphanumeric_compare_against_spaces_figurative() {
     // A blank field equals SPACES; a non-blank one does not.

@@ -1167,9 +1167,39 @@ impl Machine {
             ));
         }
         for dst in dsts {
+            let idx = *self.by_name.get(dst).ok_or_else(|| RuntimeError::UndefinedName(dst.clone()))?;
+            // Cross-category numeric → alphanumeric MOVE: COBOL treats an unsigned
+            // integer sending item as though it were an alphanumeric item holding
+            // its digit characters, then moves it by the alphanumeric rules
+            // (`move_into` below, via `Decimal::digits()` + `move_into_char`). Only
+            // an UNSIGNED INTEGER source is supported on this rung — a SIGNED
+            // (`PIC S9`) or SCALED (`PIC 9V9`) numeric source into an alphanumeric
+            // receiver is a clean later rung, rejected here so the oracle and the
+            // compiler (which rejects the same shapes at compile time) agree.
+            if let Operand::Ident(name) = src {
+                let alpha_recv = matches!(
+                    self.items[idx].picture,
+                    Some(Picture::Alphanumeric { .. }) | Some(Picture::Alphabetic { .. })
+                );
+                if alpha_recv {
+                    if let Some(&sidx) = self.by_name.get(name) {
+                        if let Some(Picture::Numeric { dec_digits, signed, .. }) =
+                            &self.items[sidx].picture
+                        {
+                            if *signed || *dec_digits != 0 {
+                                return Err(RuntimeError::Unsupported(format!(
+                                    "cross-category MOVE from {name} into {dst}: only an \
+                                     unsigned-integer numeric source into an alphanumeric \
+                                     receiver is supported; a signed or scaled source is a \
+                                     later rung"
+                                )));
+                            }
+                        }
+                    }
+                }
+            }
             // Resolve the source afresh per receiver (its category can differ).
             let value = self.src_from_operand(src)?;
-            let idx = *self.by_name.get(dst).ok_or_else(|| RuntimeError::UndefinedName(dst.clone()))?;
             self.move_into(idx, value)?;
         }
         Ok(())

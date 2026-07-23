@@ -8,6 +8,40 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.27.0: cross-category MOVE (unsigned-integer numeric → alphanumeric)
+
+The first **cross-category** `MOVE`: `MOVE numeric-item TO alphanumeric-item`,
+restricted to an **unsigned integer** source (`PIC 9(n)` — no `S`, no `V`) into a
+`PIC X(m)` receiver. Oracle-first and byte-identical to `cobol-runtime` 0.31.0. No
+grammar change was needed — `MOVE` already parses and this reuses existing IIR ops.
+
+- **The rule.** COBOL treats a numeric sending item moved to an alphanumeric
+  receiver as though it were an alphanumeric item holding its **digit characters**
+  — the item's `n`-digit zero-padded magnitude, exactly what `DISPLAY` prints —
+  then moves it by the alphanumeric rules: **LEFT-justified**, space-padded on the
+  right when the receiver is wider, truncated on the right when narrower. So
+  `PIC 9(3)` holding `42` (image `"042"`) → `X(3)` is `"042"`, → `X(5)` is
+  `"042  "`, → `X(2)` is `"04"`.
+- **Lowering (`emit_num_digit_string`).** The `n`-character digit image is built at
+  run time from the numeric slot: for each position the digit is
+  `(slot / 10^k) % 10`, sliced out of a constant `"0123456789"` table
+  (`str_slice [d, d+1)`) and concatenated onto an accumulator — no per-digit branch
+  table. The `% 10` per position gives COBOL's silent high-order truncation, the
+  same as the recursive `__cob_print_padded` DISPLAY helper.
+- **Char reshape (`move_str_into_char`).** The `n`-wide digit string is then stored
+  into the receiver through the **same `str_slice`/`str_concat` reshape** a
+  same-category alphanumeric `MOVE` (`move_char_item`) uses — the string-source
+  twin of that helper. Both funnel through the one alphanumeric-receiver rule the
+  oracle's `move_into_char` performs, so the stored bytes agree.
+- **Deferred (clean `Unsupported`, never wrong output):** the **reverse** direction
+  (alphanumeric → numeric), a **signed** (`PIC S9`) or **scaled** (`PIC 9V9`) or
+  **edited** numeric source, a **numeric-edited** receiver, and a **group** item on
+  either side.
+- **Tests.** Six `jit_e2e.rs` cases through `assert_matches_oracle` (exact-fit, pad,
+  truncate, single digit `PIC 9`, a computed source via `ADD`, and a MOVE result
+  compared alphanumerically), plus compiler-unit tests for the supported lowering
+  and each deferred reject (signed / scaled source, alpha → numeric).
+
 ### Added — v0.26.0: computed (data-name) reference modification
 
 Generalised reference modification `IDENT(start:len)` to accept **data-name**
