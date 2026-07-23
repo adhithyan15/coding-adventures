@@ -1,5 +1,47 @@
 # Changelog
 
+## 0.36.0 — SIGNED numeric → alphanumeric MOVE (trailing sign overpunch)
+
+- The cross-category numeric → alphanumeric MOVE now accepts a **SIGNED** source
+  (`PIC S9(i)V9(d)`, integer or scaled), not only an unsigned one. Oracle-first and
+  byte-identical to `cobol-iir-compiler` 0.32.0. No grammar change.
+- **The image carries a trailing sign overpunch.** A signed DISPLAY numeric's
+  alphanumeric image is its `(i + d)`-digit zero-padded MAGNITUDE with the
+  operational sign folded into a TRAILING OVERPUNCH on the units (last) digit — the
+  same zoned-decimal encoding `DISPLAY` of a `PIC S9…` field already produces
+  (`overpunch_trailing`).
+- **Fixed a sign-of-zero divergence (COBOL has no negative zero).** The numeric
+  store now drops the sign when the *stored/truncated* magnitude is all-zero,
+  rather than when the *source* value is zero. A nonzero negative value that
+  high-order- or fraction-truncates to a zero slot (e.g. `-1000` into `PIC S9(3)`
+  → `000`, or `-0.4` into `PIC S9(2)`) is therefore stored POSITIVE — its image and
+  `DISPLAY` take the `{` (positive units-0) overpunch, matching `cobol-iir-compiler`
+  (whose single-`i64` slot already collapses such a value to a plain `0`). This also
+  corrects the standalone `DISPLAY` of such a field. The units digit `u` maps:
+
+  | u        | 0 1 2 3 4 5 6 7 8 9 |
+  |----------|---------------------|
+  | positive | { A B C D E F G H I |
+  | negative | } J K L M N O P Q R |
+
+  So `S9(3) = +123 → "12C"`, `= -123 → "12L"`, `S9V9 = -4.2 → "4K"` (magnitude
+  digits `"42"`, units `2` overpunched negative → `'K'`).
+- **The overpunch is driven by the item being signed, not by the value's sign.** A
+  signed *positive* source still takes the positive `{…I` row, so `S9(3) = +123`
+  gives `"12C"` — differing from an unsigned `PIC 9(3) = 123` (`"123"`). An unsigned
+  source is unchanged: no overpunch, its image is the plain magnitude.
+- **Implementation.** `exec_move` detects a signed numeric source into an
+  alphanumeric receiver, builds `overpunch_trailing(&storage, neg)`, and char-moves
+  it (`Src::Chars` → `move_into_char`) by the ordinary alphanumeric rule — LEFT-
+  justified, space-padded when the receiver is wider, right-truncated when narrower.
+- **Still deferred (rejected identically on both engines).** An alphanumeric →
+  SIGNED numeric MOVE, a `SIGN` clause with `SEPARATE`/`LEADING`, and a group item
+  on either side (a group receiver is rejected as "MOVE into a group item"). New
+  unit tests cover positive/negative, units-digit-0, scaled, wider/narrower
+  receiver, and the group-receiver reject; the old
+  `signed_numeric_to_alphanumeric_move_is_deferred` reject test is replaced by
+  `signed_numeric_to_alphanumeric_move_overpunches_units_digit`.
+
 ## 0.35.0 — alphanumeric → SCALED-receiver MOVE (`MOVE PIC X(m) TO 9(i)V9(d)`)
 
 - The REVERSE cross-category MOVE (alphanumeric → numeric) now accepts an

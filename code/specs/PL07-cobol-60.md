@@ -583,7 +583,7 @@ than failing to parse.
 
 Grammar scope tracks the lexer scope below.
 
-### `MOVE` (cross-category: unsigned-integer numeric → alphanumeric)
+### `MOVE` (cross-category: numeric → alphanumeric — unsigned or signed)
 
 The earlier rungs implement **same-category** `MOVE`: numeric → numeric (rescale
 the implied decimal point, truncating), and alphanumeric → alphanumeric
@@ -625,9 +625,30 @@ scaled slot already holds `value·10^d`, and the oracle's `Decimal::digits()` =
 then applies. The mixed **comparison** with an alphanumeric operand uses the same
 image (`9(2)V9 = 4.2` compares equal to `"042"`).
 
-Deferred as clean later rungs (rejected at read/compile time, never wrong output):
-a **signed** (`PIC S9`) or **edited** (`PIC $,ZZ9.99`) numeric source, a
-**numeric-edited** receiver, and a **group** item on either side.
+A **signed** (`PIC S9(i)V9(d)`, integer or scaled) source is also supported: its
+image is the `(i+d)`-digit zero-padded **magnitude** with the operational sign
+folded into a **trailing overpunch** on the units (last) digit — the same
+zoned-decimal encoding a `DISPLAY` of the same signed field produces. The units
+digit `u` maps positive `{ A B C D E F G H I` and negative `} J K L M N O P Q R`.
+So `S9(3) = +123 → "12C"`, `= -123 → "12L"`, and `S9V9 = -4.2 → "4K"` (magnitude
+`"42"`, units `2` overpunched negative → `'K'`); the same left-justify / space-pad
+/ truncate reshape into the receiver then applies (`S9(3) = +123 → X(5)` is
+`"12C  "`, `→ X(2)` is `"12"`). The overpunch is driven by the *item* being signed,
+not by the value's sign — a signed **positive** source still takes the positive
+`{…I` row, which is exactly why an unsigned `PIC 9(3) = 123` (`"123"`) and a signed
+`PIC S9(3) = +123` (`"12C"`) differ. The oracle reuses `overpunch_trailing(storage,
+neg)` (the very helper `DISPLAY` uses) before the shared `move_into_char`; the
+compiler reproduces the identical byte by computing `neg = slot < 0`,
+`units = |slot| % 10`, and slicing ONE combined table `"{ABCDEFGHI}JKLMNOPQR"` at
+`units + neg*10` (positive row at indices `0..=9`, negative at `10..=19`), then
+replacing the magnitude image's last character with it — so both engines still
+agree byte-for-byte.
+
+Deferred as clean later rungs (rejected identically on both engines, never wrong
+output): an **edited** (`PIC $,ZZ9.99`) numeric source, a **numeric-edited**
+receiver, a `SIGN` clause with `SEPARATE`/`LEADING`, an alphanumeric → **signed**
+numeric MOVE (the reverse direction), and a **group** item on either side (a group
+receiver is rejected as "MOVE into a group item").
 
 ### `MOVE` (cross-category: alphanumeric → unsigned numeric — integer or scaled)
 

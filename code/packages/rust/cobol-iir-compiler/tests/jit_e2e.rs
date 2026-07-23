@@ -1583,6 +1583,114 @@ fn scaled_numeric_to_alphanumeric_move_of_a_computed_value() {
     assert_eq!(out, "MATCH\n");
 }
 
+// -------------------------------------------------------------------------
+// SIGNED numeric → alphanumeric MOVE: the image is the magnitude with a
+// TRAILING SIGN OVERPUNCH on the units digit (positive `{A…I`, negative
+// `}J…R`), then moved by the alphanumeric rule. Every case is byte-identical
+// to the cobol-runtime oracle.
+// -------------------------------------------------------------------------
+
+#[test]
+fn signed_numeric_to_alphanumeric_move_positive_exact_fit() {
+    // S9(3) = +123 → magnitude "123", units 3 positive → 'C' → "12C" into X(3).
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC S9(3) VALUE 123.", "01  W  PIC X(3)."],
+        &["MOVE S TO W.", "DISPLAY W.", "STOP RUN."],
+    ));
+    assert_eq!(out, "12C\n");
+}
+
+#[test]
+fn signed_numeric_to_alphanumeric_move_positive_space_pads() {
+    // Into a WIDER X(5): "12C" left-justified, right space-padded → "12C  ".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC S9(3) VALUE 123.", "01  W  PIC X(5)."],
+        &["MOVE S TO W.", "DISPLAY W \"|\".", "STOP RUN."],
+    ));
+    assert_eq!(out, "12C  |\n");
+}
+
+#[test]
+fn signed_numeric_to_alphanumeric_move_truncates_on_the_right() {
+    // Into a NARROWER X(2): the image "12C" keeps its leftmost two chars → "12".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC S9(3) VALUE 123.", "01  W  PIC X(2)."],
+        &["MOVE S TO W.", "DISPLAY W.", "STOP RUN."],
+    ));
+    assert_eq!(out, "12\n");
+}
+
+#[test]
+fn signed_numeric_to_alphanumeric_move_negative() {
+    // S9(3) = -123 → units 3 negative → 'L' → "12L".
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC S9(3) VALUE -123.", "01  W  PIC X(3)."],
+        &["MOVE S TO W.", "DISPLAY W.", "STOP RUN."],
+    ));
+    assert_eq!(out, "12L\n");
+}
+
+#[test]
+fn signed_numeric_to_alphanumeric_move_units_digit_zero() {
+    // Units digit 0 selects '{' (positive) / '}' (negative).
+    let neg = assert_matches_oracle(&wrap(
+        &["01  S  PIC S9(3) VALUE -120.", "01  W  PIC X(3)."],
+        &["MOVE S TO W.", "DISPLAY W.", "STOP RUN."],
+    ));
+    assert_eq!(neg, "12}\n");
+    let pos = assert_matches_oracle(&wrap(
+        &["01  S  PIC S9(3) VALUE 120.", "01  W  PIC X(3)."],
+        &["MOVE S TO W.", "DISPLAY W.", "STOP RUN."],
+    ));
+    assert_eq!(pos, "12{\n");
+}
+
+#[test]
+fn signed_scaled_numeric_to_alphanumeric_move() {
+    // S9V9 = -4.2 → magnitude "42", overpunch units 2 negative → 'K' → "4K".
+    let neg = assert_matches_oracle(&wrap(
+        &["01  F  PIC S9V9 VALUE -4.2.", "01  W  PIC X(2)."],
+        &["MOVE F TO W.", "DISPLAY W.", "STOP RUN."],
+    ));
+    assert_eq!(neg, "4K\n");
+    // +4.2 → units 2 positive → 'B' → "4B".
+    let pos = assert_matches_oracle(&wrap(
+        &["01  F  PIC S9V9 VALUE 4.2.", "01  W  PIC X(2)."],
+        &["MOVE F TO W.", "DISPLAY W.", "STOP RUN."],
+    ));
+    assert_eq!(pos, "4B\n");
+}
+
+#[test]
+fn signed_numeric_to_alphanumeric_move_of_a_computed_value() {
+    // Build a signed value by arithmetic (COMPUTE 2 - 9 = -7 into S9(2)), then MOVE
+    // its overpunched image "0P" (units 7 negative → 'P') into the receiver.
+    let out = assert_matches_oracle(&wrap(
+        &["01  N  PIC S9(2) VALUE 0.", "01  W  PIC X(2)."],
+        &[
+            "COMPUTE N = 2 - 9.",
+            "MOVE N TO W.",
+            "IF W = \"0P\" DISPLAY \"MATCH\" ELSE DISPLAY \"NO\".",
+            "STOP RUN.",
+        ],
+    ));
+    assert_eq!(out, "MATCH\n");
+}
+
+#[test]
+fn signed_value_truncating_to_zero_magnitude_is_positive() {
+    // COBOL has no negative zero: -1000 high-order-truncated into PIC S9(3) stores
+    // an all-zero slot, which is POSITIVE — its overpunched image is "00{" (units 0,
+    // positive), and DISPLAY of the signed field agrees. Both engines must produce
+    // "00{" (the compiler's single-i64 slot collapses to a plain 0; the oracle drops
+    // the sign of a stored-zero magnitude). Regression for a sign-of-zero divergence.
+    let out = assert_matches_oracle(&wrap(
+        &["01  A  PIC S9(4) VALUE -1000.", "01  S  PIC S9(3).", "01  W  PIC X(3)."],
+        &["MOVE A TO S.", "MOVE S TO W.", "DISPLAY W.", "DISPLAY S.", "STOP RUN."],
+    ));
+    assert_eq!(out, "00{\n00{\n");
+}
+
 #[test]
 fn numeric_to_alphanumeric_move_result_compares_alphanumerically() {
     // The MOVE result is a genuine alphanumeric value: comparing it against a

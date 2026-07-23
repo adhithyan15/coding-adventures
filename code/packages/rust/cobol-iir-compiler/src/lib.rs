@@ -532,33 +532,59 @@ impl<'a> Compiler<'a> {
                         (ItemKind::Char { .. }, ItemKind::Char { .. }) => {
                             self.move_char_item(src_idx, didx);
                         }
-                        // Cross-category **numeric → alphanumeric**: an UNSIGNED
-                        // numeric source (`PIC 9(i)V9(d)`, no `S`) moved into an
+                        // Cross-category **numeric → alphanumeric**: a numeric
+                        // source (`PIC 9(i)V9(d)` or `PIC S9(i)V9(d)`) moved into an
                         // alphanumeric receiver is treated by COBOL as though it
                         // were an alphanumeric item holding its digit characters —
                         // the item's `(i + d)`-digit zero-padded magnitude image,
                         // the integer part followed by the fractional part with NO
                         // decimal point (an INTEGER source, `d = 0`, is the special
                         // case). This is the very image `Decimal::digits()` yields
-                        // (`int + frac`) and, for an integer, the digits `DISPLAY`
-                        // shows. It is then moved by the alphanumeric rules
+                        // (`int + frac`) and, for an unsigned integer, the digits
+                        // `DISPLAY` shows.
+                        //
+                        // For a SIGNED source (`PIC S9…`) the image additionally
+                        // carries the operational sign as a TRAILING OVERPUNCH on the
+                        // units (last) digit — the same zoned-decimal encoding the
+                        // runtime already produces when it `DISPLAY`s a signed field,
+                        // and the same table `__cob_print_signed` uses:
+                        //
+                        //   | units u  | 0 1 2 3 4 5 6 7 8 9 |
+                        //   | positive | { A B C D E F G H I |
+                        //   | negative | } J K L M N O P Q R |
+                        //
+                        // So `S9(3) = +123` → `"12C"`, `= −123` → `"12L"`, and
+                        // `S9V9 = −4.2` → `"4K"`. Note the overpunch is driven by the
+                        // *item* being signed, not by the value's sign: a signed
+                        // POSITIVE value still overpunches (its `{A…I` positive row),
+                        // which is exactly why an unsigned source (`"123"`) and a
+                        // signed positive source (`"12C"`) differ. An unsigned source
+                        // has no sign, so its image is the plain magnitude (unchanged
+                        // from before this rung).
+                        //
+                        // The image is then moved by the alphanumeric rules
                         // (LEFT-justified, space-padded on the right if wider,
                         // truncated on the right if narrower). We build that
-                        // `(i + d)`-character digit string at run time from the
-                        // scaled numeric slot — whose magnitude is already
-                        // `value * 10^d`, so its full `(i + d)` digits ARE the image
-                        // (no point inserted) — then feed it through the same
-                        // char-store path a same-category alphanumeric MOVE uses, so
-                        // the compiler and the oracle emit byte-identical bytes.
+                        // `(i + d)`-character image at run time from the scaled
+                        // numeric slot — whose magnitude is already `value * 10^d`, so
+                        // its full `(i + d)` digits ARE the image (no point inserted)
+                        // — then feed it through the same char-store path a
+                        // same-category alphanumeric MOVE uses, so the compiler and
+                        // the oracle emit byte-identical bytes.
                         (
-                            ItemKind::Numeric { signed: false, .. },
+                            ItemKind::Numeric { signed, .. },
                             ItemKind::Char { .. },
                         ) => {
+                            let signed = *signed;
                             let (int_d, dec_d) = self.numeric_dims(src_idx);
                             let n = int_d + dec_d;
                             let src_reg = self.items[src_idx].reg.clone();
-                            let digits = self.emit_num_digit_string(&src_reg, n);
-                            self.move_str_into_char(&digits, n, didx);
+                            let image = if signed {
+                                self.emit_signed_num_alpha_image(&src_reg, n)
+                            } else {
+                                self.emit_num_digit_string(&src_reg, n)
+                            };
+                            self.move_str_into_char(&image, n, didx);
                         }
                         // Cross-category **alphanumeric → numeric** (the reverse
                         // direction): an alphanumeric source (`PIC X(m)`) moved into
@@ -968,6 +994,100 @@ impl<'a> Compiler<'a> {
                 "str",
             );
         }
+        result
+    }
+
+    /// Build the `n`-character alphanumeric image of a **signed** DISPLAY numeric
+    /// slot `slot_reg`: the `n`-digit zero-padded MAGNITUDE with the operational
+    /// sign folded into a TRAILING OVERPUNCH on the units (last) digit. This is the
+    /// same zoned-decimal encoding the runtime's `overpunch_trailing` produces and
+    /// `__cob_print_signed` prints on `DISPLAY`:
+    ///
+    /// | units u  | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
+    /// |----------|---|---|---|---|---|---|---|---|---|---|
+    /// | positive | { | A | B | C | D | E | F | G | H | I |
+    /// | negative | } | J | K | L | M | N | O | P | Q | R |
+    ///
+    /// The image's leading `n − 1` characters are the magnitude's high digits; only
+    /// the units digit is overpunched. The sign is the *value's* sign (a signed
+    /// POSITIVE value takes the positive row), so `S9(3) = +123` → `"12C"`,
+    /// `= −123` → `"12L"`, and `S9V9 = −4.2` → `"4K"`.
+    ///
+    /// Rather than branch to pick a positive/negative lookup table, both rows are
+    /// laid end to end in ONE 20-character constant — positive `{…I` at indices
+    /// `0..=9`, negative `}…R` at indices `10..=19` — and indexed by
+    ///
+    /// ```text
+    ///   neg   = (slot < 0) ? 1 : 0        (cmp_lt yields 0/1)
+    ///   units = |slot| % 10
+    ///   idx   = units + neg*10            (the 0..19 slot in the combined table)
+    /// ```
+    ///
+    /// so `table[idx..idx+1]` is exactly `overpunch_trailing`'s chosen character:
+    /// `POS[u]` at index `u`, `NEG[u]` at index `10 + u`. Because the units digit is
+    /// `|slot| % 10` and the sign is `slot < 0`, the byte matches the oracle (which
+    /// overpunches the magnitude image's last digit by the identical table). For
+    /// `n == 1` the leading slice `image[0..0]` is empty, so the result is just the
+    /// one overpunch character. The finished `n`-char image feeds the same
+    /// char-store path the unsigned image and same-category alphanumeric MOVE use.
+    fn emit_signed_num_alpha_image(&mut self, slot_reg: &str, n: usize) -> String {
+        // neg = (slot < 0) ? 1 : 0; mag = |slot|.
+        let zero = self.fresh("_soz");
+        self.emit("const", Some(&zero), vec![Operand::Int(0)], "i64");
+        let neg = self.fresh("_soneg");
+        self.emit(
+            "cmp_lt",
+            Some(&neg),
+            vec![Operand::Var(slot_reg.to_string()), Operand::Var(zero)],
+            "i64",
+        );
+        let mag = self.fresh("_somag");
+        self.emit("mov", Some(&mag), vec![Operand::Var(slot_reg.to_string())], "i64");
+        self.emit_abs(&mag);
+        // The n-digit magnitude image (unsigned digits, most-significant first).
+        let image = self.emit_num_digit_string(&mag, n);
+        // idx = (mag % 10) + neg*10 — the position in the combined overpunch table.
+        let ten = self.fresh("_soten");
+        self.emit("const", Some(&ten), vec![Operand::Int(10)], "i64");
+        let units = self.fresh("_sou");
+        self.emit("mod", Some(&units), vec![Operand::Var(mag.clone()), Operand::Var(ten.clone())], "i64");
+        let off = self.fresh("_sooff");
+        self.emit("mul", Some(&off), vec![Operand::Var(neg), Operand::Var(ten)], "i64");
+        let idx = self.fresh("_soidx");
+        self.emit("add", Some(&idx), vec![Operand::Var(units), Operand::Var(off)], "i64");
+        let one = self.fresh("_soone");
+        self.emit("const", Some(&one), vec![Operand::Int(1)], "i64");
+        let idx1 = self.fresh("_soidx1");
+        self.emit("add", Some(&idx1), vec![Operand::Var(idx.clone()), Operand::Var(one)], "i64");
+        // ch = table[idx..idx+1]: positive row {…I at 0..9, negative row }…R at 10..19.
+        let table = self.fresh("_sotbl");
+        self.emit(
+            "str_const",
+            Some(&table),
+            vec![Operand::Str("{ABCDEFGHI}JKLMNOPQR".into())],
+            "str",
+        );
+        let ch = self.fresh("_soch");
+        self.emit(
+            "str_slice",
+            Some(&ch),
+            vec![Operand::Var(table), Operand::Var(idx), Operand::Var(idx1)],
+            "str",
+        );
+        // result = image[0..n-1] ++ ch — replace the units digit with its overpunch.
+        let start = self.fresh("_sos0");
+        self.emit("const", Some(&start), vec![Operand::Int(0)], "i64");
+        let head_end = self.fresh("_sohe");
+        self.emit("const", Some(&head_end), vec![Operand::Int((n - 1) as i64)], "i64");
+        let head = self.fresh("_sohead");
+        self.emit(
+            "str_slice",
+            Some(&head),
+            vec![Operand::Var(image), Operand::Var(start), Operand::Var(head_end)],
+            "str",
+        );
+        let result = self.fresh("_sores");
+        self.emit("str_concat", Some(&result), vec![Operand::Var(head), Operand::Var(ch)], "str");
         result
     }
 
@@ -4934,12 +5054,39 @@ mod tests {
     }
 
     #[test]
-    fn signed_numeric_to_alphanumeric_move_is_deferred() {
-        // A SIGNED numeric source into an alphanumeric receiver is a later rung.
-        let err = compile_source(
+    fn signed_numeric_to_alphanumeric_move_lowers() {
+        // A SIGNED numeric source into an alphanumeric receiver is now supported:
+        // its magnitude image is built (str_slice off the digit table) and the units
+        // digit is overpunched by indexing the combined `{…I}…R` sign table
+        // (str_slice) before the char reshape (str_concat).
+        let m = compile_source(
             &wrap(
                 &["01  S  PIC S9(3) VALUE 42.", "01  W  PIC X(4)."],
                 &["MOVE S TO W.", "STOP RUN."],
+            ),
+            "x",
+        )
+        .unwrap();
+        assert!(m.validate().is_empty(), "{:?}", m.validate());
+        let os = ops(&m);
+        assert!(os.contains(&"str_slice".to_string()), "overpunch char slices off the sign table");
+        assert!(os.contains(&"str_concat".to_string()), "image reshaped/padded via str_concat");
+    }
+
+    #[test]
+    fn signed_numeric_to_group_receiver_is_deferred() {
+        // A GROUP on either side of the move is still a later rung — the compiler
+        // models no group items, so a group RECEIVER is `Unsupported` (the oracle
+        // rejects it too, as "MOVE into a group item").
+        let err = compile_source(
+            &wrap(
+                &[
+                    "01  S  PIC S9(3) VALUE -12.",
+                    "01  G.",
+                    "    05  A  PIC X(2).",
+                    "    05  B  PIC X(1).",
+                ],
+                &["MOVE S TO G.", "STOP RUN."],
             ),
             "x",
         )
