@@ -73,6 +73,15 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // float (integral floats keep their `.0`; `NaN`/`Infinity` are named). So
     // accepting the feature plus the one emit arm keeps the emitter total.
     Feature::Floats,
+    // ── SIR16 short-circuit ──────────────────────────────────────────
+    // `Expr::LogicalAnd` / `Expr::LogicalOr` (`&&` / `||`) render as Ruby's
+    // native short-circuit operators — which ARE the SIR semantics exactly:
+    // they yield the DECIDING OPERAND (not a bool) and skip the rhs when the
+    // lhs decides, and Ruby truthiness is the SIR convention (only `nil`/`false`
+    // falsy), so no `sir_truthy` wrapper is needed. Two nodes, both handled →
+    // the emitter stays total. (Distinct from the eager `and`/`or` builtins,
+    // which the emitter also renders with `&&`/`||`.)
+    Feature::ShortCircuit,
     // ── SIR16 control flow / mutation ────────────────────────────────
     // `Stmt::While` (loops) and `Stmt::Assign` (re-binding) render as Ruby's
     // native `while … end` and `name = value` — Ruby is fully mutable and

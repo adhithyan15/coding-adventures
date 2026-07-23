@@ -832,3 +832,90 @@ fn float_equality_is_value_based() {
         None => eprintln!("skip: no ruby on PATH"),
     }
 }
+
+// ── SIR16 short-circuit ─────────────────────────────────────────────────────
+// `Feature::ShortCircuit` gates `Expr::LogicalAnd` / `Expr::LogicalOr`. Ruby's
+// native `&&`/`||` ARE the SIR semantics (yield the deciding operand, skip the
+// rhs when the lhs decides). The frontend CONSTANT-FOLDS `true && false`, so a
+// `LogicalAnd` node only survives from a non-constant source — these tests
+// hand-build the node directly to prove the emitter is total and short-circuits.
+
+fn blit(value: bool) -> Expr {
+    Expr::BoolLit { value, span: s2() }
+}
+fn nil_lit() -> Expr {
+    Expr::NilLit { span: s2() }
+}
+fn land(lhs: Expr, rhs: Expr) -> Expr {
+    Expr::LogicalAnd { lhs: Box::new(lhs), rhs: Box::new(rhs), span: s2() }
+}
+fn lor(lhs: Expr, rhs: Expr) -> Expr {
+    Expr::LogicalOr { lhs: Box::new(lhs), rhs: Box::new(rhs), span: s2() }
+}
+/// A `main` module declaring only `ShortCircuit`.
+fn sc_module(stmts: Vec<Stmt>) -> Module {
+    let mut m = seq_module(stmts);
+    m.manifest = FeatureManifest::from_features(&[Feature::ShortCircuit]);
+    m
+}
+fn run_sc(stmts: Vec<Stmt>) -> Option<String> {
+    run_ruby(&compile(&sc_module(stmts)).expect("short-circuit module must compile, not panic").source)
+}
+
+#[test]
+fn logical_and_returns_the_deciding_operand() {
+    // `a && b` is the OPERAND, not a bool: `1 && 2` → `2` (lhs truthy → rhs);
+    // `false && 2` → `false` (lhs falsy → lhs); `nil && 2` → `nil`.
+    match run_sc(vec![
+        puts(land(ilit(1), ilit(2))),     // 2
+        puts(land(blit(false), ilit(2))), // #f
+        puts(land(nil_lit(), ilit(2))),   // nil
+    ]) {
+        Some(out) => assert_eq!(out, "2\n#f\nnil"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn logical_or_returns_the_deciding_operand() {
+    // `a || b`: `1 || 2` → `1` (lhs truthy → lhs); `false || 5` → `5`
+    // (lhs falsy → rhs); `nil || 7` → `7`.
+    match run_sc(vec![
+        puts(lor(ilit(1), ilit(2))),     // 1
+        puts(lor(blit(false), ilit(5))), // 5
+        puts(lor(nil_lit(), ilit(7))),   // 7
+    ]) {
+        Some(out) => assert_eq!(out, "1\n5\n7"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn short_circuit_does_not_evaluate_the_dead_operand() {
+    // The RHS must NOT run when the LHS already decides. The dead operand here
+    // is `1 / 0`, which RAISES `ZeroDivisionError` if evaluated — so a broken
+    // (eager) lowering makes the emitted Ruby exit non-zero and `run_ruby`
+    // panics. A correct short-circuit skips it: `false && (1/0)` → `false`,
+    // `true || (1/0)` → `true`, both exit clean.
+    let div_by_zero = || bin("/", ilit(1), ilit(0));
+    match run_sc(vec![
+        puts(land(blit(false), div_by_zero())), // #f, no raise
+        puts(lor(blit(true), div_by_zero())),   // #t, no raise
+    ]) {
+        Some(out) => assert_eq!(out, "#f\n#t"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn short_circuit_emits_native_operators() {
+    // Emit-shape: the nodes render as Ruby `&&` / `||` (native short-circuit).
+    let rb = compile(&sc_module(vec![
+        puts(land(ilit(1), ilit(2))),
+        puts(lor(ilit(1), ilit(2))),
+    ]))
+    .expect("compile")
+    .source;
+    assert!(rb.contains("(1 && 2)"), "LogicalAnd → `&&`:\n{rb}");
+    assert!(rb.contains("(1 || 2)"), "LogicalOr → `||`:\n{rb}");
+}

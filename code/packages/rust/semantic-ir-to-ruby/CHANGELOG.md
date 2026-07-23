@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.7.0 — short-circuit (SIR16)
+
+Accepts `Feature::ShortCircuit`. `Expr::LogicalAnd` / `Expr::LogicalOr`
+(`&&` / `||`) render as Ruby's native short-circuit operators, which ARE the
+SIR semantics exactly — no runtime helper, no coercion:
+
+- They yield the **deciding operand**, not a coerced boolean: `1 && 2` is `2`,
+  `false && 2` is `false`, `nil || 7` is `7`, `1 || 2` is `1`.
+- They **skip the right operand** when the left already decides — Ruby `&&`
+  does not evaluate its rhs when the lhs is falsy, and `||` does not when the
+  lhs is truthy.
+- Ruby truthiness is the SIR/Lisp convention (only `nil` and `false` are falsy),
+  so the operands need no `sir_truthy` wrapper — unlike the Go/C backends, which
+  must lift to an IIFE / hoisted `if` to return the operand value rather than a
+  native bool.
+
+These are distinct from the eager `and`/`or` **builtins** (which the emitter
+also renders with `&&`/`||`); the `ShortCircuit` feature is specifically the two
+short-circuit expression nodes. The unsupported-builtin pre-check
+(`scan_expr`) now recurses into both operands, so a deferred builtin nested in a
+`&&`/`||` is still reported cleanly. Two nodes, both handled → the emitter stays
+total.
+
+First of the ShortCircuit parity arc: Go/Rust/Python/JS already accept it; this
+brings the Ruby backend up (C is the last, tracked next). Verified through a
+real `ruby` with hand-built modules (the frontend constant-folds a literal
+`&&`, so the node is built directly): operand-return for both operators, and a
+short-circuit proof where the dead operand is `1 / 0` — a correct lowering skips
+it (`false && (1/0)` → `false`, exits clean), a broken eager one would raise.
+Bumps semantic-ir-to-ruby 0.6.0 → 0.7.0.
+
 ## 0.6.0 — floats (SIR16)
 
 Accepts `Feature::Floats`. Ruby has a native `Float`, so this is a one-arm

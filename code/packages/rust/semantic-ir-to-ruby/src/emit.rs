@@ -196,6 +196,9 @@ fn scan_expr(e: &Expr) -> Option<(String, semantic_ir::Span)> {
             .iter()
             .find_map(|e| scan_expr(&e.key).or_else(|| scan_expr(&e.value))),
         Expr::MapGet { map, key, .. } => scan_expr(map).or_else(|| scan_expr(key)),
+        Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
+            scan_expr(lhs).or_else(|| scan_expr(rhs))
+        }
         _ => None,
     }
 }
@@ -514,6 +517,20 @@ fn emit_expr(e: &Expr) -> String {
                 format!("sir_{sign}{bits}({})", emit_expr(value))
             }
         },
+        // SIR16 short-circuit `&&` / `||` (distinct from the eager `and`/`or`
+        // builtins). Ruby's native operators ARE the SIR semantics exactly:
+        // they short-circuit (the rhs is not evaluated when the lhs decides) and
+        // yield the DECIDING OPERAND (not a coerced bool) — `a && b` is `a` when
+        // `a` is falsy else `b`; `a || b` is `a` when truthy else `b`. And Ruby
+        // truthiness is the SIR/Lisp convention (only `nil`/`false` are falsy),
+        // so no `sir_truthy` wrapper is needed — unlike the Go/C backends, which
+        // must lift to an IIFE / hoisted `if` to return the operand value.
+        Expr::LogicalAnd { lhs, rhs, .. } => {
+            format!("({} && {})", emit_expr(lhs), emit_expr(rhs))
+        }
+        Expr::LogicalOr { lhs, rhs, .. } => {
+            format!("({} || {})", emit_expr(lhs), emit_expr(rhs))
+        }
         other => unreachable!("Ruby backend reached unsupported expr: {other:?}"),
     }
 }
