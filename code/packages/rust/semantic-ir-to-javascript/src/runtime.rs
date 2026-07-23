@@ -3607,19 +3607,24 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     // `Handler` is the right shape, not a `SymRule` whose RHS closure
     // just happens to compute a sum.
     //
-    // ## Scope: items 1-2 of 4 (see the addendum's "Crate layout and
-    // rollout (one item = one PR)" section)
+    // ## Scope: items 1-4 of 4 (see the addendum's "Crate layout and
+    // rollout (one item = one PR)" section) — all four now shipped
     //
     // Item 1 wired up arithmetic (`Add`/`Sub`/`Mul`/`Div`/`Pow`/`Neg`/
     // `Inv`/`Abs`), comparison (`Equal`/`NotEqual`/`Less`/`Greater`/
     // `LessEqual`/`GreaterEqual`), and logic (`And`/`Or`/`Not`) folding.
-    // Item 2 (this addendum) adds the environment (`symEnv` above) and
-    // real handlers for the three `HELD_HEADS` members plus user-function
-    // dispatch:
+    // Item 2 added the environment (`symEnv` above) and real handlers for
+    // the three `HELD_HEADS` members plus user-function dispatch. Item 3
+    // (this PR) adds the elementary-function handlers (`Sin`/`Cos`/
+    // `Sqrt`) and the calculus handlers (`D`/`Integrate`) — see each new
+    // handler's own doc comment below, near `HANDLERS`, for exactly which
+    // `handlers.rs` match arms were ported (scoped tightly to what
+    // `derive-to-semantic-ir/tests/oracle.rs`'s remaining `known_bug`
+    // cases actually exercise) and which were deliberately left out:
     //
     //   item 1 (shipped) — arithmetic / comparison / logic folding
-    //   item 2 (this PR) — environment + Assign/Define/If + user functions
-    //   item 3 (future)  — calculus / elementary-function handlers
+    //   item 2 (shipped) — environment + Assign/Define/If + user functions
+    //   item 3 (this PR) — calculus / elementary-function handlers
     //   item 4 (shipped) — Derive's own SIR23 display convention
     //
     // `HELD_HEADS` was declared by item 1 — the held-vs-evaluated
@@ -4118,11 +4123,306 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       return applyTerm(head, args);
     }
 
+    // ── elementary-function handlers (SIR23 addendum item 3 of 4) ────
+    //
+    // Direct ports of `handlers.rs::{sin_handler, cos_handler,
+    // sqrt_handler}`, but ONLY their numeric-argument branch
+    // (`to_numeric(arg)` succeeds → compute, special-casing an exact
+    // zero/perfect-square result so it stays an exact integer term —
+    // `Sqrt(4) -> 2`, not the float `2.0` — mirroring `handlers.rs`'s own
+    // `va == Numeric::Int(0)`/`Int(1)` exact-variant checks, not a
+    // generic "numerically zero/one" test, so a hypothetical `Sin(0.0)`
+    // float argument degrades the same way the Rust reference does: past
+    // the exact-zero check, into the general `Float(sin(x))` branch).
+    //
+    // Deliberately NOT ported, per the SIR23 addendum's own "Explicitly
+    // out of scope" list and canonical head→evaluator table ("general
+    // (non-identity, non-literal) simplification is out of scope"):
+    // the π-multiple exact-value tables (`try_pi_multiple`/`frac_mod`/
+    // `sin_pi_table`/`cos_pi_table`), odd/even symmetry rewrites
+    // (`sin(-x) = -sin(x)`, `cos(-x) = cos(x)`), arc-cancellation
+    // rewrites (`sin(asin(x)) = x`, `cos(acos(x)) = x`), `Sqrt`'s
+    // `x^{2k}` even-power split, and the `simplify == false` `panic!`
+    // branch. That last omission is confirmed correct, not guessed: all
+    // three runtimes this evaluator serves construct their backend via
+    // `SymbolicBackend::new()` unchanged (confirmed by reading
+    // `derive-runtime`, `reduce-runtime`, and `maple-runtime`'s own
+    // `src/lib.rs`), and `SymbolicBackend::new` always builds its handler
+    // table with `simplify: true` (`backends.rs`) — so a non-numeric
+    // argument (a free symbol, or any compound term the narrower rules
+    // above would have mattered for) is never a `panic!` for any of
+    // these five frontends; it falls through to the plain arg-evaluated
+    // pass-through every other unrecognised shape in this dispatcher
+    // already uses. This is exactly what lets `DIF(SIN(x), x)` (see
+    // `chainRuleTerm` below) leave a still-free-symbol `Cos(x)` alone
+    // rather than erroring.
+    function sinHandler(head, args) {
+      if (args.length !== 1) { return applyTerm(head, args); }
+      const v = toNumeric(args[0]);
+      if (v !== null) {
+        if (v.tag === "int" && v.value === 0) { return intTerm(0); } // Sin(0) -> 0, exact
+        return floatTerm(Math.sin(numToF64(v)));
+      }
+      return applyTerm(head, args);
+    }
+
+    function cosHandler(head, args) {
+      if (args.length !== 1) { return applyTerm(head, args); }
+      const v = toNumeric(args[0]);
+      if (v !== null) {
+        if (v.tag === "int" && v.value === 0) { return intTerm(1); } // Cos(0) -> 1, exact
+        return floatTerm(Math.cos(numToF64(v)));
+      }
+      return applyTerm(head, args);
+    }
+
+    // `Sqrt` additionally round-trips any non-special numeric result
+    // through an exact-perfect-square check (`sqrt_handler`'s own
+    // `result.round()` trick) — this is why `Sqrt(4)` folds to the plain
+    // integer `2` even though `4` isn't `Int(0)`/`Int(1)`.
+    // `Number.isSafeInteger` guards the `intTerm` call below from ever
+    // throwing on a result outside this backend's established safe-
+    // integer ceiling (see this IIFE's own "Value model" doc comment);
+    // the Rust reference has no equivalent guard (`as i64` truncates
+    // instead), but no oracle case gets anywhere near that boundary, and
+    // falling back to a `Float` result here is strictly safer than the
+    // alternative of throwing.
+    function sqrtHandler(head, args) {
+      if (args.length !== 1) { return applyTerm(head, args); }
+      const v = toNumeric(args[0]);
+      if (v !== null) {
+        if (v.tag === "int" && v.value === 0) { return intTerm(0); }
+        if (v.tag === "int" && v.value === 1) { return intTerm(1); }
+        const f = numToF64(v);
+        const result = Math.sqrt(f);
+        const intResult = Math.round(result);
+        if (Number.isSafeInteger(intResult) && Math.abs(intResult * intResult - f) < 1e-9) {
+          return intTerm(intResult);
+        }
+        return floatTerm(result);
+      }
+      return applyTerm(head, args);
+    }
+
+    // ── calculus handlers (SIR23 addendum item 3 of 4): D / Integrate ──
+    //
+    // Narrow, deliberately-partial ports of `handlers.rs::{diff, diff_pow,
+    // chain, integrate, depends_on}`, restricted to EXACTLY the match arms
+    // the 4 currently-`known_bug` DIF/INT oracle cases in
+    // `derive-to-semantic-ir/tests/oracle.rs` (`dif_differentiates_a_
+    // power`, `dif_of_sin_gives_cos`, `a_worksheet_program_defines_then_
+    // differentiates`, `int_integrates_a_symbol`) actually exercise —
+    // confirmed by reading each case's own `source`/`expected` fields
+    // directly, not assumed from the SIR23 addendum's own prose summary
+    // ("sum, power, and chain rules"): none of the four sources ever
+    // differentiates a sum, so `Add`/`Sub` are NOT ported here, only
+    // `Pow` (constant-exponent power rule) and `Sin` (chain rule,
+    // producing `Cos`). Every other rule `diff()` implements (`Mul`/`Div`
+    // product/quotient rule, `Tan`/`Exp`/`Log`/`Sqrt`/`Asin`/`Acos`/
+    // `Sinh`/`Cosh`/`Tanh`/`Asinh`/`Acosh`/`Atanh`/`Coth`/`Sech`/`Csch`
+    // differentiation, and `diff_pow`'s other two branches — constant
+    // base with a variable exponent, and both base and exponent
+    // depending on `x`, both of which route back through `Exp`/`Log`
+    // differentiation) is deliberately NOT ported: an unhandled shape
+    // falls through to the exact same "leave it as an unevaluated
+    // `D(f, x)` term" default `diff()`'s own final match arm
+    // (`_ => apply_node(D, ...)`) already uses, so every one of these
+    // omissions is a strict subset of the reference's behaviour, never a
+    // divergence, for any input this port doesn't implement.
+    //
+    // These are SOURCE-tree walks over a term already fully built
+    // (mirroring `substituteSymbols`'s own established precedent from
+    // item 2), which is why the FINAL re-evaluation of the differentiated
+    // /integrated RESULT (`derivativeHandler`/`integrateHandler` below)
+    // is the one that goes through the existing depth-checked
+    // `evalTerm(result, depth + 1)` path — exactly like item 2's
+    // user-function dispatch did for `substituteSymbols`'s own output.
+    //
+    // SECURITY (CWE-674) — considered and deliberately NOT given their own
+    // depth cap, unlike `termEquals`/`toDisplayString` above: a `/security-
+    // review` pass flagged that `diffTerm`'s/`integrateTerm`'s input `f`
+    // is an ordinary EVALUATED argument (`D`/`Integrate` are not held
+    // heads), unlike `substituteSymbols`'s always-raw `Define` body, so in
+    // principle `f` could be a `Symbol` resolving to an arbitrarily deep
+    // RUNTIME-constructed term (the same "a shallow compiled program can
+    // build an arbitrarily deep runtime value" concern
+    // `print_on_deeply_nested_term_truncates_instead_of_crashing_node`,
+    // `tests/sir23_symbolic.rs`, documents for `toDisplayString`).
+    // Verified this is NOT actually reachable, rather than assuming a cap
+    // is unnecessary: EVERY value `evalApply` ever hands to a `HANDLERS`
+    // entry (this dispatcher's *only* call path to `diffTerm`/
+    // `integrateTerm`) has already been produced by `evalTerm(rawArg,
+    // depth + 1)` as part of ordinary applicative-order argument
+    // evaluation — and since evaluating an N-level-deep, not-yet-folded
+    // `Apply` chain costs N nested `evalTerm`/`evalApply` frames
+    // regardless of whether any level's head has a handler, that
+    // evaluation itself hits the existing `MAX_EVAL_DEPTH` cap (2000, a
+    // HEAVIER per-frame cost than this pure tree-walk) before `f` can ever
+    // reach a handler at all. Confirmed empirically, not just argued: a
+    // hand-built term 1,000 `Symbolic.apply` levels deep (comfortably
+    // under `MAX_EVAL_DEPTH`, comfortably over what a native crash would
+    // need for a frame this light) differentiates correctly with no
+    // additional guard here at all (`tests/sir23_symbolic.rs`'s
+    // `differentiate_of_a_runtime_built_deep_term_stays_bounded_instead_
+    // of_crashing_node`) — adding a redundant cap that can never fire
+    // given this call graph would be exactly the unreachable defensive
+    // complexity this repo's own "only guard what's actually reachable"
+    // discipline (see e.g. `Abs`'s un-ported identity laws above) argues
+    // against. If a FUTURE change ever calls `diffTerm`/`integrateTerm`
+    // from somewhere that bypasses `evalApply`'s argument-evaluation gate
+    // (e.g. a later item's decorator-layer builtin handed a raw, unheld
+    // term directly), this reasoning must be re-verified, not assumed
+    // still true.
+
+    // `depends_on`'s port: does `node`'s tree mention the free variable
+    // `varName` anywhere (as a bare `Symbol`, or nested inside an
+    // `Apply`'s head/args)? Numeric/string leaves never do.
+    function dependsOnVar(node, varName) {
+      if (node.kind === "symbol") { return node.name === varName; }
+      if (node.kind === "apply") {
+        return dependsOnVar(node.head, varName) || node.args.some((a) => dependsOnVar(a, varName));
+      }
+      return false;
+    }
+
+    // `diff_pow`'s port, restricted to the constant-exponent (power rule)
+    // branch: `d/dx[base^n] = n * base^(n-1) * d/dx[base]`, when `n`
+    // itself doesn't mention `x` — exactly `dif_differentiates_a_power`'s
+    // own shape (`DIF(x^2, x)`, exponent `2` is a literal). Falls through
+    // to the unevaluated `D(f, x)` term for the other two branches (see
+    // the section doc comment above for why).
+    function diffPowTerm(f, base, exponent, varName) {
+      if (!dependsOnVar(exponent, varName)) {
+        return applyTerm(symTerm("Mul"), [
+          applyTerm(symTerm("Mul"), [
+            exponent,
+            applyTerm(symTerm("Pow"), [base, applyTerm(symTerm("Sub"), [exponent, intTerm(1)])]),
+          ]),
+          diffTerm(base, varName),
+        ]);
+      }
+      return applyTerm(symTerm("D"), [f, symTerm(varName)]);
+    }
+
+    // `chain`'s port: `d/dx[g(inner)] = g'(inner) * d/dx[inner]` — used
+    // here only for `Sin`'s chain rule (`d/dx[sin(u)] = cos(u) * u'`,
+    // `dif_of_sin_gives_cos`'s and `a_worksheet_program_defines_then_
+    // differentiates`'s shared shape).
+    function chainRuleTerm(headName, inner, varName) {
+      return applyTerm(symTerm("Mul"), [
+        applyTerm(symTerm(headName), [inner]),
+        diffTerm(inner, varName),
+      ]);
+    }
+
+    // `diff`'s port — see the section doc comment above for exactly which
+    // match arms are implemented (base cases, `Pow`, `Sin`) and which are
+    // deliberately not; any other shape falls through to `diff()`'s own
+    // final arm, an unevaluated `D(f, x)` term.
+    function diffTerm(f, varName) {
+      if (!dependsOnVar(f, varName)) { return intTerm(0); }
+      if (f.kind === "symbol" && f.name === varName) { return intTerm(1); }
+      if (f.kind !== "apply" || f.head.kind !== "symbol") {
+        return applyTerm(symTerm("D"), [f, symTerm(varName)]);
+      }
+      const name = f.head.name;
+      if (name === "Pow" && f.args.length === 2) {
+        return diffPowTerm(f, f.args[0], f.args[1], varName);
+      }
+      if (name === "Sin" && f.args.length === 1) {
+        return chainRuleTerm("Cos", f.args[0], varName);
+      }
+      return applyTerm(symTerm("D"), [f, symTerm(varName)]);
+    }
+
+    // `integrate`'s port, restricted to the bare-symbol case `∫x dx =
+    // (1/2)x^2` — an exact RATIONAL term (`rationalTerm(1, 2)`, matching
+    // this crate's own exact-rational discipline already established by
+    // item 1's arithmetic folding), not a float. `int_integrates_a_
+    // symbol`'s own shape (`INT(x, x)`) is the only currently-failing
+    // case exercising `Integrate` at all, and the SIR23 addendum's own
+    // canonical head→evaluator table scopes `Integrate` to "a bare
+    // symbol" only — so the Rust reference's `!depends_on(f, x)`
+    // constant-integral branch (`∫c dx = c*x`) is deliberately NOT ported
+    // either; any other shape falls through to the unevaluated
+    // `Integrate(f, x)` term, the same pass-through policy as everywhere
+    // else in this port.
+    function integrateTerm(f, varName) {
+      if (f.kind === "symbol" && f.name === varName) {
+        return applyTerm(symTerm("Mul"), [
+          rationalTerm(1, 2),
+          applyTerm(symTerm("Pow"), [f, intTerm(2)]),
+        ]);
+      }
+      return applyTerm(symTerm("Integrate"), [f, symTerm(varName)]);
+    }
+
+    // `derivative_handler`'s port: `D(f, x)`. Arity must be exactly 2 —
+    // the Rust reference panics otherwise; ported as a thrown
+    // `RangeError`, this file's own established convention for a domain
+    // error no oracle case can construct (e.g. `ifHandler`'s arity check
+    // above). The second argument must already be a `Symbol` (mirrors
+    // `derivative_handler`'s own `match &expr.args[1] { Symbol(s) => ...,
+    // _ => return unevaluated }`) — anything else leaves the call
+    // unevaluated, not an error.
+    //
+    // Unlike every other `HANDLERS` entry above, `D` needs `depth`: after
+    // computing the symbolic derivative via `diffTerm`, a genuinely
+    // different result is re-evaluated through the SAME depth-checked
+    // `evalTerm` this whole dispatcher already threads through
+    // everywhere else — mirroring `differentiate`'s own policy exactly:
+    // return the result as-is when it structurally equals (via
+    // `termEquals`, this file's existing structural-equality check) the
+    // original unevaluated term, otherwise hand it back to the VM's own
+    // evaluator for a second pass.
+    function derivativeHandler(head, args, depth) {
+      if (args.length !== 2) {
+        throw new RangeError("Symbolic.evalTerm: D expects 2 arguments, got " + args.length);
+      }
+      const f = args[0];
+      const xTerm = args[1];
+      if (xTerm.kind !== "symbol") { return applyTerm(head, args); }
+      const result = diffTerm(f, xTerm.name);
+      const original = applyTerm(symTerm("D"), [f, symTerm(xTerm.name)]);
+      if (termEquals(result, original)) { return result; }
+      return evalTerm(result, depth + 1);
+    }
+
+    // `integrate_handler`'s port. The Rust reference accepts either 2
+    // arguments (indefinite integral) or 4 (definite integral bounds, via
+    // elliptic-integral closed forms — explicitly out of scope for this
+    // rollout) and panics for any OTHER arity; ported the same way. A
+    // 4-argument call is NOT an error, but this port has no elliptic-kind
+    // handler to try, so it goes straight to the unevaluated pass-through
+    // — exactly where the Rust reference's OWN 4-argument branch already
+    // ends up whenever none of its three elliptic-kind checks match
+    // (which, for every shape this port's callers can construct, is
+    // always), so this is a faithful port of the one reachable outcome,
+    // not a shortcut around the others.
+    function integrateHandler(head, args, depth) {
+      if (args.length !== 2 && args.length !== 4) {
+        throw new RangeError("Symbolic.evalTerm: Integrate expects 2 or 4 arguments, got " + args.length);
+      }
+      if (args.length === 4) { return applyTerm(head, args); }
+      const f = args[0];
+      const xTerm = args[1];
+      if (xTerm.kind !== "symbol") { return applyTerm(head, args); }
+      const result = integrateTerm(f, xTerm.name);
+      const original = applyTerm(symTerm("Integrate"), [f, symTerm(xTerm.name)]);
+      if (termEquals(result, original)) { return result; }
+      return evalTerm(result, depth + 1);
+    }
+
     // Per-head dispatch table (arg-evaluated heads only — arithmetic /
-    // comparison / logic; see `HELD_HANDLERS` below for the three
-    // `HELD_HEADS` members, whose handlers need the RAW args plus
-    // `depth`/`evalTerm` access instead, not this shape). A `Map`, not a
-    // plain object literal: `name` is derived from a compiled program's
+    // comparison / logic / elementary-function / calculus; see
+    // `HELD_HANDLERS` below for the three `HELD_HEADS` members, whose
+    // handlers need the RAW, un-evaluated args instead). Every entry here
+    // is called with the ALREADY-evaluated `(head, args)` — `D`/
+    // `Integrate` (SIR23 addendum item 3) additionally receive `depth`,
+    // since they need `evalTerm` access to re-evaluate their
+    // differentiated/integrated result; every other entry here simply
+    // ignores that third argument. A `Map`, not a plain object literal:
+    // `name` is derived from a compiled program's
     // OWN term data (any source identifier can end up as a SymApply
     // head, e.g. a user writing a call literally named `__proto__`), and
     // a plain object's `obj[name]` lookup walks the prototype chain —
@@ -4147,6 +4447,11 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       ["And", andHandler],
       ["Or", orHandler],
       ["Not", notHandler],
+      ["Sin", sinHandler],
+      ["Cos", cosHandler],
+      ["Sqrt", sqrtHandler],
+      ["D", derivativeHandler],
+      ["Integrate", integrateHandler],
     ]);
 
     // ── held-form handlers (Assign / Define / If) — SIR23 addendum item 2
@@ -4302,8 +4607,14 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         args.push(evaluated);
       }
 
+      // `depth` is passed to every `HANDLERS` entry, not just the
+      // `HELD_HANDLERS` ones — most (arithmetic/comparison/logic/
+      // elementary-function) handlers ignore this third argument
+      // entirely, but `D`/`Integrate` (SIR23 addendum item 3) need it to
+      // re-`evalTerm` their differentiated/integrated result through the
+      // same depth-checked path everything else in this dispatcher uses.
       const handler = HANDLERS.get(name);
-      if (handler !== undefined) { return handler(evaluatedHead, args); }
+      if (handler !== undefined) { return handler(evaluatedHead, args, depth); }
 
       if (evaluatedHead.kind === "symbol") {
         const bound = symEnv.get(evaluatedHead.name);

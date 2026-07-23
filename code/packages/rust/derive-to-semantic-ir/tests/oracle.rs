@@ -182,6 +182,40 @@
 //! body still needs `DIF`/`SIN` folding (item 3) — so it stays
 //! `known_bug`, with its reason text corrected to say so.
 //!
+//! ## A fourth finding: calculus / elementary-function handlers — FIXED by
+//! this PR (SIR23 addendum, item 3 of 4) — the corpus is now fully green
+//!
+//! This PR lands item 3, closing the remaining gap: `semantic-ir-to-
+//! javascript`'s `Symbolic` IIFE gains `Sin`/`Cos`/`Sqrt` handlers (numeric-
+//! argument branch only — `Sin(0) -> 0`, `Cos(0) -> 1`, `Sqrt(4) -> 2`
+//! exactly, not a float — ported from `handlers.rs::{sin_handler,
+//! cos_handler, sqrt_handler}`, but deliberately excluding their π-multiple
+//! tables, odd/even symmetry rules, and arc-cancellation rules, none of
+//! which any Stream B oracle case exercises) and `D`/`Integrate` handlers
+//! (ported from `handlers.rs::{diff, integrate}`, scoped to EXACTLY what
+//! this file's own remaining `known_bug` cases exercise: the sum-of-zero/
+//! symbol base cases, `Pow`'s constant-exponent power rule, and `Sin`'s
+//! chain rule for `D`; the bare-symbol case only for `Integrate`). See
+//! `semantic-ir-to-javascript/src/runtime.rs`'s own doc comments on
+//! `sinHandler`/`cosHandler`/`sqrtHandler`/`diffTerm`/`integrateTerm` for
+//! exactly which `handlers.rs` match arms were and were not ported, and
+//! that crate's own `CHANGELOG.md` for the fix itself.
+//!
+//! This closes the LAST remaining gap: all 4 DIF/INT-related cases flip
+//! (`dif_differentiates_a_power`, `dif_of_sin_gives_cos`,
+//! `a_worksheet_program_defines_then_differentiates` — whose substituted
+//! `D(Sin(t), t)` body now genuinely differentiates once dispatched,
+//! closing the case the "third finding" above left open — and
+//! `int_integrates_a_symbol`), plus the 3 elementary-function cases
+//! (`sin_of_zero`, `cos_of_zero`, `sqrt_of_a_perfect_square`) — exactly the
+//! 7 cases every earlier finding above already attributed to this gap, no
+//! more and no fewer. Confirmed by actually running this file's own oracle
+//! test (not assumed from the addendum's own prediction): all 7 flip to
+//! `known_bug: None` below, and a genuine revert-and-confirm (temporarily
+//! removing the 5 new `HANDLERS` entries in `runtime.rs`, re-running, then
+//! restoring) reproduced the exact pre-fix disagreement for all 7 and
+//! nothing else.
+//!
 //! ## Corpus
 //!
 //! Mirrors `j-to-semantic-ir/tests/oracle.rs`'s own breadth target,
@@ -197,17 +231,20 @@
 //! fold); vectors and matrices as D-5 structural `List` data (flat,
 //! singleton, elementwise-evaluated, 2×2, and 3-row/1-column shapes); a
 //! free-symbol additive-identity simplification; free-symbol negation and
-//! equation display; and bare integer/float/symbol atoms. As of item 2
-//! (the latest-landed PR), 31 of the 38 cases are `known_bug: None` — the
-//! bare atoms (never needed evaluation), every case item 1's arithmetic/
-//! comparison/logic folding alone already flipped, the 7 cases item 4's
+//! equation display; and bare integer/float/symbol atoms. As of item 3
+//! (the latest-landed PR, and the last of the 4-item SIR23 evaluator
+//! rollout), all 38 of the 38 cases are `known_bug: None` — the bare atoms
+//! (never needed evaluation), every case item 1's arithmetic/comparison/
+//! logic folding alone already flipped, the 7 cases item 4's
 //! `SIR_DISPLAY_DERIVE` flipped (`negation_of_a_free_symbol`,
 //! `equation_with_a_free_variable_stays_symbolic`, the three flat/
-//! elementwise `List` cases, and the two matrix cases), and the 6 cases
-//! item 2's held-form execution + user-function dispatch flips (see "A
-//! third finding" above). The remaining 7 stay `known_bug`, all blocked
-//! purely by the calculus/elementary-function evaluation gap (item 3, not
-//! part of any PR so far) — see each entry's own `known_bug` reason.
+//! elementwise `List` cases, and the two matrix cases), the 6 cases item
+//! 2's held-form execution + user-function dispatch flips (see "A third
+//! finding" above), and the 7 cases item 3's calculus/elementary-function
+//! handlers flip (see "A fourth finding" above) — the corpus needs no new
+//! entries for this to be true, exactly as this file's own module doc
+//! (`Case::known_bug`'s doc comment) anticipated: "the natural next step is
+//! removing entries from this list, not writing new ones."
 
 use std::fs::OpenOptions;
 use std::io::Write as _;
@@ -438,24 +475,24 @@ const CORPUS: &[Case] = &[
         name: "dif_differentiates_a_power",
         source: "DIF(x^2, x)\n",
         expected: "2*x",
-        known_bug: Some(
-            "Evaluation gap ONLY now (module doc; display half fixed by item 4): compiles to a bare \
-             D(Pow(x, 2), x) term -- confirmed by direct inspection of the emitted JS -- \
-             differentiation still never runs (item 3, not part of this PR), so it never reduces to \
-             2*x; once item 3 lands and folds this to Mul(2, x), this PR's own SIR_DISPLAY_DERIVE \
-             infix convention will already render it as \"2*x\".",
-        ),
+        // Flipped by item 3 (`derivativeHandler`/`diffPowTerm` in
+        // runtime.rs): `D(Pow(x, 2), x)` now genuinely differentiates via
+        // the constant-exponent power rule to `Mul(Mul(2, Pow(x, Sub(2,
+        // 1))), 1)`, which the already-shipped arithmetic folding (item 1)
+        // and display convention (item 4) reduce and render as `2*x`.
+        known_bug: None,
     },
     Case {
         name: "dif_of_sin_gives_cos",
         source: "DIF(SIN(x), x)\n",
         expected: "COS(x)",
-        known_bug: Some(
-            "Evaluation gap ONLY now (module doc; display half fixed by item 4): compiles to a bare \
-             D(Sin(x), x) term, still never differentiates to Cos(x) (item 3, not part of this PR); \
-             once item 3 lands and folds this to Cos(x), this PR's own SIR_DISPLAY_DERIVE \
-             case-bridge will already render it as \"COS(x)\".",
-        ),
+        // Flipped by item 3 (`chainRuleTerm` in runtime.rs): `D(Sin(x),
+        // x)` differentiates via the chain rule to `Mul(Cos(x), 1)`,
+        // which folds (item 1's `x*1 -> x` identity law) to the bare
+        // `Cos(x)` term -- `Cos` itself has no numeric argument to fold
+        // further (`x` stays free), so it passes through unevaluated,
+        // rendered by item 4's case-bridge as `COS(x)`.
+        known_bug: None,
     },
     // Mirrors derive-runtime's own `a_small_derive_program_evaluates_end_
     // to_end` test exactly: a function whose body differentiates a
@@ -466,29 +503,24 @@ const CORPUS: &[Case] = &[
         name: "a_worksheet_program_defines_then_differentiates",
         source: "H(y) := DIF(SIN(t), t)\nH(0)\n",
         expected: "H\nCOS(t)",
-        known_bug: Some(
-            "Evaluation gap ONLY now (module doc; the Define/dispatch half is fixed by item 2): \
-             Define now genuinely registers H and H(0) now genuinely dispatches -- substituting \
-             y -> 0 into the body, which never mentions y, so substitution is a no-op -- but the \
-             substituted body, D(Sin(t), t), still never differentiates (item 3, not part of this \
-             PR): it compiles to and evaluates as the still-unevaluated term D(Sin(t), t), not \
-             COS(t). Confirmed by direct inspection: this is no longer \"H(0) never dispatches\" \
-             (the ORIGINAL reason this case was written down for) -- it is now purely the same \
-             DIF/SIN calculus gap dif_of_sin_gives_cos documents, once item 3 lands and folds \
-             D(Sin(t), t) to Cos(t), this PR's own SIR_DISPLAY_DERIVE case-bridge will already \
-             render it as \"COS(t)\".",
-        ),
+        // Flipped by item 3 -- the LAST case this rollout needed: item 2
+        // already made `Define`/`H(0)` genuinely dispatch (substituting
+        // y -> 0 into a body that never mentions y, a no-op); item 3 is
+        // what makes the substituted body, `D(Sin(t), t)`, actually
+        // differentiate, exactly like `dif_of_sin_gives_cos` above (same
+        // mechanism, free variable `t` instead of `x`), folding to `COS(t)`.
+        known_bug: None,
     },
     Case {
         name: "int_integrates_a_symbol",
         source: "INT(x, x)\n",
         expected: "1/2*x^2",
-        known_bug: Some(
-            "Evaluation gap ONLY now (module doc; display half fixed by item 4): compiles to a bare \
-             Integrate(x, x) term, still never integrates to 1/2*x^2 (item 3, not part of this PR); \
-             once item 3 lands and folds this to Mul(Rational(1,2), Pow(x,2))-shaped output, this \
-             PR's own SIR_DISPLAY_DERIVE infix/Pow convention will already render it as \"1/2*x^2\".",
-        ),
+        // Flipped by item 3 (`integrateHandler`/`integrateTerm` in
+        // runtime.rs, the bare-symbol case only): `Integrate(x, x)` folds
+        // to the exact rational term `Mul(Rational(1, 2), Pow(x, 2))`
+        // (never a float), which item 4's infix/`Pow` display convention
+        // renders as `1/2*x^2`.
+        known_bug: None,
     },
 
     // --- IF: both branches (the held handler, MA07 §5). ---
@@ -574,26 +606,26 @@ const CORPUS: &[Case] = &[
         name: "sin_of_zero",
         source: "SIN(0)\n",
         expected: "0",
-        known_bug: Some(
-            "Evaluation gap (module doc): compiles to a bare Sin(0) call term, never evaluates to 0.",
-        ),
+        // Flipped by item 3 (`sinHandler` in runtime.rs): `Sin(0)` now
+        // folds to the exact integer term `0`, not a float.
+        known_bug: None,
     },
     Case {
         name: "cos_of_zero",
         source: "COS(0)\n",
         expected: "1",
-        known_bug: Some(
-            "Evaluation gap (module doc): compiles to a bare Cos(0) call term, never evaluates to 1.",
-        ),
+        // Flipped by item 3 (`cosHandler`): `Cos(0)` folds to the exact
+        // integer term `1`.
+        known_bug: None,
     },
     Case {
         name: "sqrt_of_a_perfect_square",
         source: "SQRT(4)\n",
         expected: "2",
-        known_bug: Some(
-            "Evaluation gap (module doc): compiles to a bare Sqrt(4) call term, never evaluates to \
-             2.",
-        ),
+        // Flipped by item 3 (`sqrtHandler`): `Sqrt(4)` folds to the exact
+        // integer term `2` (the perfect-square round-trip check), not the
+        // float `2.0`.
+        known_bug: None,
     },
 
     // --- Vectors / matrices: D-5 structural List data (MA07 §2/§3). ---

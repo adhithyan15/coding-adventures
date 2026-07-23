@@ -1,5 +1,58 @@
 # Changelog
 
+## [0.1.5] - 2026-07-23
+
+### Fixed (upstream — `semantic-ir-to-javascript` 0.51.3, not this crate's own lowering)
+
+`semantic-ir-to-javascript`'s SIR23 addendum item 3 (calculus /
+elementary-function handlers — `Sin`/`Cos`/`Sqrt`/`D`/`Integrate`, that
+crate's own `CHANGELOG.md` `[0.51.3]` entry) makes the LAST batch of
+previously-inert heads real: `Sin`/`Cos`/`Sqrt` fold an exact numeric
+argument (`Sin(0) -> 0`, `Cos(0) -> 1`, `Sqrt(4) -> 2`, all exact
+integers, never floats); `D` genuinely differentiates a power (constant-
+exponent power rule) or a `Sin` (chain rule, producing `Cos`); `Integrate`
+genuinely integrates a bare symbol to an exact rational term
+(`(1/2)x^2`). This crate's own `src/lower.rs` is completely unchanged —
+every fix here is entirely upstream in the shared backend, confirmed by
+`tests/test_lower.rs`'s ~40 pre-existing shape assertions still passing
+unmodified — and this closes out `tests/oracle.rs`'s 38-case corpus: ALL
+38 cases now genuinely agree end-to-end (run and confirmed via `cargo
+test -p derive-to-semantic-ir --test oracle -- --nocapture`, not
+guessed), so the remaining 7 `known_bug` markers flip to `known_bug:
+None` here — no case needed a new corpus entry, exactly as this file's
+own `Case::known_bug` doc comment anticipated:
+
+- `dif_differentiates_a_power` (`DIF(x^2, x)` → `2*x`) — the constant-
+  exponent power rule, re-evaluated through item 1's already-shipped
+  arithmetic identity folding (`Sub(2,1) -> 1`, `Pow(x,1) -> x`,
+  `Mul(_, 1) -> _`) down to `Mul(2, x)`.
+- `dif_of_sin_gives_cos` (`DIF(SIN(x), x)` → `COS(x)`) — the chain rule,
+  `Mul(Cos(x), 1)` folding (item 1's `a*1 -> a`) to the bare `Cos(x)`
+  term, which stays unevaluated (`x` is free) and prints via item 4's
+  case-bridge as `COS(x)`.
+- `a_worksheet_program_defines_then_differentiates`
+  (`H(y) := DIF(SIN(t), t); H(0)` → `H, COS(t)`) — the LAST case this
+  rollout needed. Item 2 already made `Define`/`H(0)` genuinely dispatch
+  (substituting `y -> 0` into a body that never mentions `y`, a no-op);
+  this item is what makes the substituted body, `D(Sin(t), t)`, actually
+  differentiate — same mechanism as `dif_of_sin_gives_cos` above, free
+  variable `t` instead of `x`.
+- `int_integrates_a_symbol` (`INT(x, x)` → `1/2*x^2`) — the bare-symbol
+  integration case, folding to the exact rational term
+  `Mul(Rational(1,2), Pow(x,2))`, never a float, rendered by item 4's
+  infix/`Pow` convention.
+- `sin_of_zero`, `cos_of_zero`, `sqrt_of_a_perfect_square` — the base
+  elementary-function identity folds, each an exact integer term.
+
+Verified no regression: `cargo test -p derive-to-semantic-ir` (full
+suite, including `tests/oracle.rs`) still passes; a genuine
+revert-and-confirm (temporarily removing `semantic-ir-to-javascript`'s
+5 new `HANDLERS` entries) makes exactly these 7 cases fail again with the
+documented old output (e.g. `"DIF(x^2, x)"` instead of `"2*x"`), confirming
+the fix — not just the flag flip — is what makes them pass. No case
+remains blocked: the SIR23 symbolic-evaluator rollout (4 items) is now
+complete, and this crate's oracle corpus is 38/38 `known_bug: None`.
+
 ## [0.1.4] - 2026-07-22
 
 ### Fixed (upstream — `semantic-ir-to-javascript` 0.51.2, not this crate's own lowering)

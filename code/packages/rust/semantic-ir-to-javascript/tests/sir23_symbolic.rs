@@ -682,3 +682,200 @@ fn self_referential_assign_does_not_infinite_loop() {
         assert_eq!(stdout, "x\nx");
     }
 }
+
+// ── SIR23 addendum item 3 of 4: calculus / elementary-function handlers ──
+
+fn int_lit(value: i64) -> Expr {
+    Expr::IntLit { value, span: sp() }
+}
+
+#[test]
+fn elementary_function_identity_folds_are_exact_integers() {
+    // Sin(0) -> 0, Cos(0) -> 1, Sqrt(4) -> 2 -- `sinHandler`/`cosHandler`/
+    // `sqrtHandler`'s numeric-argument branch, each producing a plain
+    // EXACT integer term (not a float), mirroring
+    // `handlers.rs::{sin_handler, cos_handler, sqrt_handler}`'s own
+    // `va == Numeric::Int(0)`/`Int(1)` special cases (for `Sqrt`, via the
+    // perfect-square round-trip check).
+    let stmts = vec![
+        print(sym_apply(sym("Sin"), vec![int_lit(0)])),
+        print(sym_apply(sym("Cos"), vec![int_lit(0)])),
+        print(sym_apply(sym("Sqrt"), vec![int_lit(4)])),
+    ];
+    let module = module_with_main(
+        stmts,
+        Expr::IntLit {
+            value: 0,
+            span: sp(),
+        },
+        &[Feature::SymbolicExpr],
+    );
+    if let Some(stdout) = run_module(&module, "sym_elementary_identity_folds") {
+        assert_eq!(stdout, "0\n1\n2");
+    }
+}
+
+#[test]
+fn sin_of_a_free_symbol_stays_unevaluated() {
+    // Sin(x) where `x` is an unbound free symbol -- `to_numeric` fails,
+    // so (per `SymbolicBackend::new()`'s `simplify: true` -- confirmed by
+    // reading `derive-runtime`/`reduce-runtime`/`maple-runtime`'s own
+    // `src/lib.rs`, none of which ever construct a `simplify: false`
+    // backend) this is NOT an error: the call passes through unevaluated,
+    // exactly like any other unrecognised shape in this dispatcher,
+    // printed via the generic `head(args, ...)` convention (this module
+    // never sets `source_language("derive")`, so `SIR_DISPLAY_DERIVE` is
+    // off here, same as `arity_mismatch_leaves_the_user_function_call_
+    // unevaluated` above).
+    let stmts = vec![print(sym_apply(sym("Sin"), vec![sym("x")]))];
+    let module = module_with_main(
+        stmts,
+        Expr::IntLit {
+            value: 0,
+            span: sp(),
+        },
+        &[Feature::SymbolicExpr],
+    );
+    if let Some(stdout) = run_module(&module, "sym_sin_of_free_symbol") {
+        assert_eq!(stdout, "Sin(x)");
+    }
+}
+
+#[test]
+fn differentiate_a_power_via_the_power_rule() {
+    // D(Pow(x, 2), x) -- `diffPowTerm`'s constant-exponent branch:
+    // `n * base^(n-1) * d/dx[base]` = `Mul(Mul(2, Pow(x, Sub(2, 1))), 1)`,
+    // then re-evaluated (`derivativeHandler`'s own `evalTerm(result, depth
+    // + 1)` call) through the already-shipped arithmetic folding (item 1):
+    // `Sub(2, 1) -> 1`, `Pow(x, 1) -> x` (identity), `Mul(2, x)` stays,
+    // outer `Mul(_, 1) -> _` (identity) -- final shape `Mul(2, x)`.
+    let stmts = vec![print(sym_apply(
+        sym("D"),
+        vec![sym_apply(sym("Pow"), vec![sym("x"), int_lit(2)]), sym("x")],
+    ))];
+    let module = module_with_main(
+        stmts,
+        Expr::IntLit {
+            value: 0,
+            span: sp(),
+        },
+        &[Feature::SymbolicExpr],
+    );
+    if let Some(stdout) = run_module(&module, "sym_differentiate_power") {
+        assert_eq!(stdout, "Mul(2, x)");
+    }
+}
+
+#[test]
+fn differentiate_sin_via_the_chain_rule() {
+    // D(Sin(x), x) -- `chainRuleTerm("Cos", x, "x")`:
+    // `Mul(Cos(x), d/dx[x])` = `Mul(Cos(x), 1)`, re-evaluated to the bare
+    // `Cos(x)` term via item 1's `a * 1 -> a` identity law (`Cos(x)`
+    // itself passes through `cosHandler` unevaluated, since `x` is free).
+    let stmts = vec![print(sym_apply(
+        sym("D"),
+        vec![sym_apply(sym("Sin"), vec![sym("x")]), sym("x")],
+    ))];
+    let module = module_with_main(
+        stmts,
+        Expr::IntLit {
+            value: 0,
+            span: sp(),
+        },
+        &[Feature::SymbolicExpr],
+    );
+    if let Some(stdout) = run_module(&module, "sym_differentiate_sin_chain_rule") {
+        assert_eq!(stdout, "Cos(x)");
+    }
+}
+
+#[test]
+fn integrate_a_bare_symbol() {
+    // Integrate(x, x) -- `integrateTerm`'s bare-symbol case: `(1/2) * x^2`
+    // = `Mul(Rational(1, 2), Pow(x, 2))`, an EXACT rational term (never a
+    // float), matching this crate's own exact-rational discipline already
+    // established by item 1's arithmetic folding
+    // (`inexact_division_folds_to_a_rational`).
+    let stmts = vec![print(sym_apply(sym("Integrate"), vec![sym("x"), sym("x")]))];
+    let module = module_with_main(
+        stmts,
+        Expr::IntLit {
+            value: 0,
+            span: sp(),
+        },
+        &[Feature::SymbolicExpr],
+    );
+    if let Some(stdout) = run_module(&module, "sym_integrate_bare_symbol") {
+        assert_eq!(stdout, "Mul(1/2, Pow(x, 2))");
+    }
+}
+
+#[test]
+fn differentiate_of_a_runtime_built_deep_term_stays_bounded_instead_of_crashing_node() {
+    // SECURITY (CWE-674) investigation, prompted by `/security-review`
+    // during this item's own development: `diffTerm`'s first argument to
+    // `D` is an already-EVALUATED value (unlike `substituteSymbols`'s
+    // always-source-literal `Define` body), so in principle it could be a
+    // `Symbol` resolving to an arbitrarily deep RUNTIME-constructed term
+    // -- the same "shallow compiled program, deep runtime value" concern
+    // `print_on_deeply_nested_term_truncates_instead_of_crashing_node`
+    // above documents for `toDisplayString`. See `diffTerm`'s own section
+    // doc comment in `runtime.rs` for why this is NOT actually reachable
+    // (verified, not assumed): every value `evalApply` hands to a
+    // `HANDLERS` entry has already survived `evalTerm`'s own applicative-
+    // order argument evaluation, which costs one recursive frame per
+    // `Apply` level regardless of head, so it already hits the existing
+    // `MAX_EVAL_DEPTH` cap (a HEAVIER per-frame cost than `diffTerm`'s own
+    // walk) before `f` can ever reach `diffTerm` at all -- no additional
+    // cap of `diffTerm`'s own is needed, and this test proves it directly
+    // rather than leaving the claim unverified: a term 1,000
+    // `Symbolic.apply` levels deep (built by an ordinary `for`-loop of
+    // real *runtime* firings, NOT a hand-built giant static AST) that
+    // never mentions `x` anywhere still differentiates correctly to the
+    // constant `0`, with `node` exiting cleanly (`run_module`'s own
+    // `output.status.success()` assertion) rather than crashing.
+    //
+    // acc = leaf; for i in range(0, 1000, 1) { acc = Symbolic-apply(f, [acc]) }
+    // print(D(acc, x))
+    let stmts = vec![
+        Stmt::LetBinding {
+            name: "acc".into(),
+            sir_type: None,
+            value: sym("leaf"),
+            span: sp(),
+        },
+        Stmt::ForRange {
+            var: "i".into(),
+            start: int_lit(0),
+            stop: int_lit(1000),
+            step: int_lit(1),
+            body: Block {
+                stmts: vec![Stmt::Assign {
+                    name: "acc".into(),
+                    scope: Scope::Local,
+                    value: sym_apply(sym("f"), vec![local("acc")]),
+                    span: sp(),
+                }],
+                value: Expr::NilLit { span: sp() },
+                span: sp(),
+            },
+            span: sp(),
+        },
+        print(sym_apply(sym("D"), vec![local("acc"), sym("x")])),
+    ];
+    let module = module_with_main(
+        stmts,
+        Expr::IntLit {
+            value: 0,
+            span: sp(),
+        },
+        &[
+            Feature::SymbolicExpr,
+            Feature::Loops,
+            Feature::MutableBindings,
+        ],
+    );
+    if let Some(stdout) = run_module(&module, "sym_differentiate_deep_runtime_term") {
+        assert_eq!(stdout, "0");
+    }
+}
