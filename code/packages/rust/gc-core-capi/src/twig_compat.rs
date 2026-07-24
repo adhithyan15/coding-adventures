@@ -26,7 +26,7 @@
 //! Once the code generators are migrated to emit the `__gc_*` names directly,
 //! this shim can be deleted.
 
-use crate::stack_scan::{__gc_collect, __gc_collect_precise, __gc_safepoint};
+use crate::stack_scan::{__gc_collect, __gc_collect_compacting, __gc_collect_precise, __gc_safepoint};
 use crate::{__gc_alloc, __gc_collection_count, __gc_live_bytes};
 
 /// `__twig_gc_alloc(n)` → [`__gc_alloc`]. Called by the emitted code and by
@@ -79,6 +79,27 @@ pub unsafe extern "C" fn __twig_gc_safepoint() {
 #[inline(never)]
 pub unsafe extern "C" fn __twig_gc_collect_precise() -> i64 {
     __gc_collect_precise()
+}
+
+/// `__twig_gc_collect_compacting()` → [`__gc_collect_compacting`]. A full **moving**
+/// collection rooted precisely at the caller's stack (spec AOT00-T3 §5): the movable
+/// survivors are evacuated into an arena and every pointer that named them — including the
+/// caller's precise root slots — is rewritten to the new location. Returns the
+/// freed-object count. This is the `__twig_gc_*` name a native code generator emits for the
+/// `gc_collect_compacting` builtin, letting a compiled program trigger a compaction. With
+/// no stack maps registered (or only conservatively-reachable objects, as today's kind-0
+/// frontend allocations) nothing is movable and it degrades to exactly
+/// [`__gc_collect_precise`], so it is always safe to call.
+///
+/// # Safety
+///
+/// Same contract as [`__gc_collect_compacting`]: the calling thread must own its stack.
+/// `#[inline(never)]` keeps it a real frame below the mutator so the walk starts at the
+/// caller.
+#[no_mangle]
+#[inline(never)]
+pub unsafe extern "C" fn __twig_gc_collect_compacting() -> i64 {
+    __gc_collect_compacting()
 }
 
 /// `__twig_gc_live_bytes()` → [`__gc_live_bytes`].

@@ -546,6 +546,93 @@ fn end_to_end_gc_precise_keeps_ref_reclaims_lookalike() {
     );
 }
 
+/// AOT00-T3 §5 — a native frontend triggers a **compacting** collection end to end.
+///
+/// Reuses the keep-ref program but drives `gc_collect_compacting` (the moving-collector
+/// C-ABI entry, via the `__twig_gc_collect_compacting` alias). The compacting collect is a
+/// strict generalisation of the precise collect: it keeps every live reference and reclaims
+/// every look-alike, then *additionally* relocates the objects it can prove movable.
+///
+/// Today every frontend heap object is allocated **kind 0** (`__dyn_cons` → `__twig_gc_alloc`
+/// → `__gc_alloc`), which the collector traces *conservatively* and therefore **pins** — so
+/// nothing is movable yet and the compacting collect degrades to exactly the precise one.
+/// This test pins that guarantee: `gc_collect_compacting` keeps the live cons cell and
+/// reclaims the i64 look-alike, giving the **identical** `live_bytes` to `gc_collect_precise`
+/// — proving the frontend can invoke a compaction, that it runs safely on a real thread
+/// stack, and that it never drops a live reference or pins a look-alike differently. (A true
+/// address-relocation differential is gated on frontend kind-registration — `__gc_alloc_kind`
+/// with a ref-field map — so an object becomes movable; a separate follow-up.)
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+#[test]
+fn end_to_end_gc_compacting_matches_precise() {
+    use interpreter_ir::instr::{IIRInstr, Operand};
+
+    fn build(collect: &str) -> IIRModule {
+        let body = vec![
+            // A real, live heap reference in an `any` slot (the stack map names it).
+            IIRInstr::new("const", Some("z0".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("z".into()),
+                vec![Operand::Var("dyn_box_int".into()), Operand::Var("z0".into())],
+                "any",
+            ),
+            IIRInstr::new(
+                "call_builtin",
+                Some("b".into()),
+                vec![Operand::Var("dyn_cons".into()), Operand::Var("z".into()), Operand::Var("z".into())],
+                "any",
+            ),
+            // A non-reference look-alike (garbage) in an `i64` slot.
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(64)], "i64"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("a".into()),
+                vec![Operand::Var("gc_alloc".into()), Operand::Var("n".into())],
+                "i64",
+            ),
+            // The collect under test (both entries return the freed count).
+            IIRInstr::new("call_builtin", Some("freed".into()), vec![Operand::Var(collect.into())], "i64"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("lb".into()),
+                vec![Operand::Var("gc_live_bytes".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("lb".into())], "i64"),
+        ];
+        let mut m = IIRModule::new("gc_compact", "twig");
+        m.add_or_replace(IIRFunction::new("main", vec![], "i64", body));
+        m.entry_point = Some("main".into());
+        m
+    }
+
+    let dir = tempfile::tempdir().expect("tempdir");
+    let run = |tag: &str, collect: &str| -> i32 {
+        let m = build(collect);
+        let exe = dir.path().join(tag);
+        twig_aot::compile_module_to_macos_executable(&m, &exe)
+            .unwrap_or_else(|e| panic!("{tag} compiles+links: {e}"));
+        let out = Command::new(&exe).output().unwrap_or_else(|e| panic!("{tag} runs: {e}"));
+        out.status.code().unwrap_or_else(|| panic!("{tag} exited by signal: {out:?}"))
+    };
+
+    let precise = run("gc_compact_prec", "gc_collect_precise");
+    let compacting = run("gc_compact_comp", "gc_collect_compacting");
+
+    // The compacting collect keeps the live cons cell (a UAF would show live_bytes == 0)…
+    assert!(
+        compacting > 0,
+        "compacting collect must KEEP the live cons cell (live_bytes={compacting})",
+    );
+    // …and, with nothing movable yet, matches the precise collect exactly.
+    assert_eq!(
+        compacting, precise,
+        "frontend-triggered compaction must match precise (nothing movable yet): \
+         compacting={compacting}, precise={precise}",
+    );
+}
+
 /// AOT00-T1 (x86_64 PR-x4 / PR-x5) — precise roots reach through a **self-recursive**
 /// frame, not just the entry frame.
 ///

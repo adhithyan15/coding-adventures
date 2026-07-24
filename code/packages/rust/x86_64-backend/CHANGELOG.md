@@ -1,5 +1,13 @@
 # Changelog — `x86_64-backend`
 
+## 0.33.0 - 2026-07-24 — `gc_collect_compacting` builtin (frontend GC.compact, AOT00-T3 §5)
+
+- New `V1_BUILTINS` entry `gc_collect_compacting` (0 args, returns the freed count) — the
+  moving/compacting collect, mirroring the aarch64 backend. The generic `__twig_<name>`
+  `call_builtin` dispatch auto-emits a `call __twig_gc_collect_compacting` (no per-name
+  lowering). A native program can now trigger a compaction. New emission unit test asserts
+  the external reloc symbol.
+
 ## 0.32.0 - 2026-07-23 — GC safepoints at self-recursive calls (AOT00-T1 x86_64 PR-x4)
 
 Closes the recursive-frame precision gap in `compile_function_with_globals_and_stackmap`.
