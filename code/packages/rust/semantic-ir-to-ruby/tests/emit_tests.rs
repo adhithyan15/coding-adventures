@@ -123,6 +123,21 @@ fn sanitize_ident_handles_keywords_and_namespace() {
     assert_eq!(sanitize_ident("Foo"), "_Foo"); // locals may not start uppercase
 }
 
+#[test]
+fn sanitize_ident_flags_encoding_magic_constant() {
+    // `__ENCODING__` is Ruby's third magic-constant keyword, alongside
+    // `__FILE__`/`__LINE__` (which were already covered here) —
+    // `__ENCODING__ = 5` is a SyntaxError under MRI, confirmed against
+    // Ruby 3.4. It was missing from `is_ruby_keyword`'s list even though
+    // its two siblings were already present.
+    assert_eq!(sanitize_ident("__ENCODING__"), "__ENCODING___");
+
+    // Ordinary identifiers — including close look-alikes — are
+    // unaffected by the addition.
+    assert_eq!(sanitize_ident("encoding"), "encoding");
+    assert_eq!(sanitize_ident("__encoding__"), "__encoding__");
+}
+
 // ── end-to-end (skips when `ruby` is absent) ────────────────────────────────
 
 #[test]
