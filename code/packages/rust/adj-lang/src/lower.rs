@@ -295,9 +295,9 @@ pub enum LowerError {
         row: usize,
     },
     /// A lookup named a `mode` that is not a recognized tactic at all (ADJ-TABLES
-    /// RS-5c/RS-5d). The valid modes are `range` (bracket / step function) and
-    /// `interpolated` (linear between breakpoints); both are built. Carries the
-    /// unrecognized mode.
+    /// RS-5c/RS-5d/RS-5f). The valid modes are `range` (bracket / step function),
+    /// `interpolated` (linear between breakpoints), and `nearest` (closest key /
+    /// nearest-neighbour); all three are built. Carries the unrecognized mode.
     LookupUnknownMode {
         mode: String,
     },
@@ -645,10 +645,11 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                         })?;
                 // Mode: `range` reads the table as a step function (bracket
                 // lookup); `interpolated` reads it as a piecewise-linear function
-                // between breakpoints (RS-5d). Both are built; any other word is not
-                // a tactic at all.
+                // between breakpoints (RS-5d); `nearest` snaps the query to the
+                // closest key (nearest-neighbour, RS-5f). All three are built; any
+                // other word is not a tactic at all.
                 match mode.as_str() {
-                    "range" | "interpolated" => {}
+                    "range" | "interpolated" | "nearest" => {}
                     _ => return Err(LowerError::LookupUnknownMode { mode: mode.clone() }),
                 }
                 let key_index = columns.iter().position(|c| c == key_col).ok_or_else(|| {

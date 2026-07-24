@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.63.0] — 2026-07-24
+
+### Added — RS-5f: `mode nearest` table lookup (ADJ-TABLES §3.4)
+
+The lowering mode dispatch now accepts `nearest` alongside `range` and `interpolated`
+(all three are built tactics); an unrecognized mode is still `LowerError::LookupUnknownMode`.
+`nearest` snaps the query key to the closest tabulated key (nearest-neighbour). Like `range`
+(and unlike `interpolated`), it returns the value cell verbatim, so it requires only a numeric
+**key** column — the existing shared `LookupNonNumericKeyColumn` check — and does **not** impose
+the `interpolated`-only numeric-value-column requirement. Doc comments on `LookupUnknownMode`
+updated to list all three modes. Purely additive; no existing behaviour changes.
+
 ## [0.62.0] — 2026-07-23
 
 ### Added — RS-5d: `mode interpolated` table lookup (ADJ-TABLES §3.3)
