@@ -62,14 +62,23 @@ renders as native `def f(a, b = <default>)` (evaluated at call time when the
 argument is omitted; may reference an earlier parameter); and SIR19
 `KeywordParams` — a keyword parameter (`def f(x:)` / `def f(x: 1)`) and keyword
 argument (`f(x: 5)`) render as Ruby's native keyword forms, matched by name (so
-order-independent); and SIR17 `Exceptions` — `begin … rescue … ensure … end`
+order-independent); SIR17 `Exceptions` — `begin … rescue … ensure … end`
 (`TryCatch`) plus the `raise` / `retry` builtins render as native Ruby exception
 handling (a rescue matches by exception-class name, validated as a constant path
-before emit; `raise` of a specific class needs `Constants` and is rejected).
+before emit); and the first OOP slice — `Constants` and `Classes`. A constant
+(`PI = 3`, references `PI` / `Foo::Bar`) and an **empty base class**
+(`class Foo; end` + `Foo.new`) are defined **reflectively** with
+`Object.const_set` — the frontend wraps top-level code in `main`, where a native
+`class`/`= ` constant definition is a Ruby error, whereas `const_set` is legal
+anywhere and still names the class (so `Foo.new` / `x.is_a?(Foo)` work). Every
+constant name emitted verbatim is validated as a constant path (co-total with
+the emitter, no injection); `Constants` also lets `raise SomeClass` compile.
 Rejects `TailCalls`, `Intrinsics`, and every not-yet-wired feature (array
 indexing / slicing via `IndexGet` — `NDArrays`; array-pattern destructuring;
-collection methods, classes/OOP) until its cascade batch
-lands — each a clean, source-positioned `UnsupportedFeature`.
+collection methods; and the rest of OOP — class **methods** / `__method__`
+dispatch, **inheritance** / superclass, instance & class variables, modules —
+plus a non-empty class body or a namespaced class/constant definition) until its
+slice lands — each a clean, source-positioned `UnsupportedFeature`.
 
 ## Verification
 

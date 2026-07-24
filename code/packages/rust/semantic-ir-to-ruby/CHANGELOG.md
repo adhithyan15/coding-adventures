@@ -1,5 +1,60 @@
 # Changelog
 
+## 0.11.0 — classes (slice 1) + constants
+
+Accepts `Feature::Classes` and `Feature::Constants` — the first slice of the OOP
+frontier: an **empty base class** and its **construction**, plus the entangled
+**constants** prerequisite.
+
+- **Classes.** `Stmt::ClassDef { name, superclass: None, body: [] }` — an empty
+  base class — is accepted, and `Foo.new(args…)` (the frontend's `__new__`
+  builtin, whose first argument is the class name) constructs an instance.
+- **Constants.** A `Scope::Const` assignment (`PI = 3`) and reference (`PI`,
+  `Foo::Bar`) are accepted. Constants ride in with Classes because they are
+  **entangled**: a class name IS a Ruby constant, so the frontend records
+  `Constants` in the manifest for any `Foo.new` (the receiver `Foo` is a
+  constant) — an instantiable class cannot compile without it. Accepting
+  Constants also unblocks `raise SomeClass` (a specific exception class is a
+  `Const` reference — a form the 0.10 exceptions slice deferred precisely
+  because Constants was then unaccepted).
+
+**Reflective definition (why not native `class Foo; end` / `PI = 3`).** The
+frontend wraps a program's top-level code in `main`, and Ruby forbids BOTH a
+`class` definition and a constant assignment inside a method body ("class
+definition in method body" / "dynamic constant assignment"). So a class and a
+constant are defined **reflectively**:
+
+- `class Foo; end` → `Object.const_set(:Foo, Class.new)`
+- `PI = 3` → `Object.const_set(:PI, 3)`
+
+`const_set` is legal anywhere, executes in place (no fragile hoisting /
+reordering), and still names the class (`Foo.name == "Foo"`, so `Foo.new` and
+`x.is_a?(Foo)` work). Constant *references* (`Foo.new`, bare `PI`) emit the bare
+constant, which resolves at runtime. This dynamic construction also composes
+cleanly with the next slice's `define_method` for the frontend's hoisted,
+separately-registered methods.
+
+**Injection safety.** Every constant name emitted verbatim — a `ClassDef` name,
+a `__new__` class name, a `Const` reference, and a `Const` assignment target —
+is validated as a Ruby constant path (`Foo` / `Foo::Bar`) by the SAME single
+pre-emit traversal that rejects unlowerable builtins (a unified `ScanHit`,
+**co-total with the emitter**), so a hand-built module cannot inject source
+through a crafted name.
+
+**Totality — deferred shapes rejected cleanly (never `unreachable!`).** Accepting
+`Classes` obligates handling every node it surfaces. This slice supports ONLY an
+empty base class; the pre-emit scan rejects, with a source-positioned error,
+everything deferred to later slices: a **superclass** (inheritance), a
+**non-empty class body** (class-level code / constants), a **namespaced**
+(`Foo::Bar`) class or constant *definition* (`const_set` names one namespace), a
+**singleton class** (`class << self` — `Stmt::SingletonClassDef`, which also
+observes `Feature::Classes`), and every **OOP method builtin** (`__def_method__`,
+`__method__`, `__super__`, `__self__`, `__class_method__`, …) — so a
+method-bearing, inheriting, or singleton-opening class fails cleanly rather than
+mis-emitting. Instance variables (`@x`), class
+variables (`@@x`), and modules remain unaccepted features (their own later
+slices).
+
 ## 0.10.0 — exceptions (SIR17)
 
 Accepts `Feature::Exceptions` — the first of the OOP/exception frontier, and

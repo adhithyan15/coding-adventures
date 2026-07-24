@@ -143,6 +143,49 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // rejected; `raise "message"`, a bare re-raise, and `rescue` by a standard
     // class or catch-all are the accepted forms.
     Feature::Exceptions,
+    // ── SIR constants ────────────────────────────────────────────────────
+    // `Feature::Constants` is observed by a `Scope::Const` name (an uppercase
+    // identifier or a `Foo::Bar` path).  Two nodes carry it, both handled:
+    //   `PI = 3`   → `Stmt::Assign { scope: Const, .. }` → native `PI = 3`
+    //   `PI` / `Foo::Bar` → `Expr::VarRef { scope: Const, .. }` → native `PI`
+    // A Ruby constant is emitted VERBATIM (not through `sanitize_ident`, which
+    // would prefix an uppercase name and destroy its constant-hood); the
+    // pre-emit scan validates every such name as a constant path (`Foo` /
+    // `Foo::Bar`), so a hand-built module cannot inject source through one.
+    //
+    // Constants is folded in with `Classes` because the two are ENTANGLED: the
+    // frontend records `Constants` in the manifest for any `Foo.new` (the
+    // receiver `Foo` is a constant), so an instantiable class cannot compile
+    // without it.  Accepting it also lets `raise SomeClass` compile (a specific
+    // exception class is a `Const` reference — a form the exceptions slice
+    // deferred precisely because Constants was unaccepted).
+    Feature::Constants,
+    // ── OOP classes, slice 1: empty declaration + construction ───────────
+    // `Feature::Classes` is observed by a module holding at least one
+    // `Stmt::ClassDef`.  This first slice accepts ONLY the minimal shape a
+    // frontend emits for `class Foo; end` — an empty-bodied, base (no
+    // superclass) class — plus `Foo.new`, which the frontend lowers to a
+    // `__new__` builtin whose first argument is the class name (a `StrLit`).
+    //   `class Foo; end`  → `Stmt::ClassDef { name: "Foo", superclass: None, body: [] }`
+    //                        → native Ruby `class Foo\nend`
+    //   `Foo.new(args…)`  → `BuiltinCall("__new__", [StrLit("Foo"), args…])`
+    //                        → native Ruby `Foo.new(args…)`
+    // Ruby is a class-based OO language, so both render as NATIVE Ruby (no
+    // runtime method-table like the Go/Rust/C value backends need).
+    //
+    // TOTALITY — accepting this feature obligates handling every node it can
+    // now surface.  `Classes` gates only `Stmt::ClassDef`, handled below; the
+    // OOP *builtins* (`__def_method__`, `__method__`, `__super__`, `__self__`,
+    // `__class_method__`, …) are NOT in `SUPPORTED_BUILTINS`, so a method-bearing
+    // class is rejected cleanly by the pre-emit scan, never reaching an
+    // `unreachable!`.  Within this slice the scan also rejects the two class
+    // shapes deferred to later slices — a **superclass** (inheritance) and a
+    // **non-empty class body** (class-level code / constants) — and validates
+    // the class name (of both `ClassDef` and `__new__`) as a Ruby constant path
+    // so a hand-built module cannot inject source through a crafted name.
+    // Instance variables / class variables / constants / modules remain
+    // unaccepted features (their own later slices).
+    Feature::Classes,
 ];
 
 impl Backend for RubyBackend {
@@ -206,6 +249,34 @@ impl Backend for RubyBackend {
                     message: format!(
                         "the Ruby backend cannot emit the rescue exception type `{name}` \
                          (not a valid Ruby constant path)"
+                    ),
+                    span,
+                });
+            }
+            // A constant name/path (a `ClassDef` name, a `__new__` class name, a
+            // `Const` reference, or a `Const` assignment target) that is not a
+            // valid Ruby constant path — it is emitted verbatim, so a
+            // metacharacter could inject source.
+            Some(emit::ScanHit::ConstantName(name, span)) => {
+                return Err(BackendError {
+                    kind: BackendErrorKind::UnsupportedFeature,
+                    message: format!(
+                        "the Ruby backend cannot emit the constant name `{name}` \
+                         (not a valid Ruby constant path)"
+                    ),
+                    span,
+                });
+            }
+            // A well-formed construct beyond this slice's support (class
+            // inheritance, a non-empty class body, or a namespaced class /
+            // constant definition) — deferred to a later slice, rejected cleanly
+            // rather than mis-emitted.
+            Some(emit::ScanHit::Unsupported(reason, span)) => {
+                return Err(BackendError {
+                    kind: BackendErrorKind::UnsupportedFeature,
+                    message: format!(
+                        "the Ruby backend does not yet support {reason} \
+                         (deferred to a later slice)"
                     ),
                     span,
                 });
