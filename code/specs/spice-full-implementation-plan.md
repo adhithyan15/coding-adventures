@@ -33,16 +33,16 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language JFET alternative beta temperature scaling.
+1. Cross-language JFET alternative threshold-voltage temperature scaling.
    - Status: current PR completion candidate.
-   - Add Berkeley JFET `BETATCE` model-card support in Rust, Python, and
+   - Add Berkeley JFET `VTOTC` model-card support in Rust, Python, and
      TypeScript.
    - When explicitly present, apply
-     `BETA(T) = BETA * 1.01^(BETATCE * (T - TNOM))` with precedence over
-     `BEX`; otherwise retain the existing `BEX` rule.
+     `VTO(T) = VTO + VTOTC * (T - TNOM)` with precedence over `TCV`; otherwise
+     retain the existing `TCV` rule.
    - Preserve parameter presence through hierarchy and cloning, validate
      finite coefficients, and extend the supported-parameter coverage gate
-     from 163 to 165
+     from 165 to 167
      canonical rows.
 
 ## Completed Slices
@@ -3332,6 +3332,15 @@ the Rust, Python, and TypeScript surfaces together.
    - Hierarchy and cloning paths preserve the exponent, finite validation is
      shared across analyses, the zero default remains temperature-invariant,
      and the supported-parameter release gate now covers 163 canonical rows.
+
+258. Cross-language JFET alternative beta temperature scaling.
+   - Status: completed in PR 8946.
+   - Rust, Python, and TypeScript JFET model cards now accept `BETATCE` and
+     apply `BETA(T) = BETA * 1.01^(BETATCE * (T - TNOM))` when explicitly
+     present, with precedence over `BEX`.
+   - Hierarchy and cloning paths preserve parameter presence, finite validation
+     is shared across analyses, the `BEX` fallback remains intact, and the
+     supported-parameter release gate now covers 165 canonical rows.
 
 ## Backlog
 

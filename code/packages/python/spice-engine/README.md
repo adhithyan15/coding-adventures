@@ -78,8 +78,9 @@ print(result.diagnostics.solver)   # "dense_real" or "sparse_real"
 operating-temperature footholds for diode, BJT, JFET, and Level-1 MOSFET
 models before running an analysis.
 JFET model cards use `TCV` for threshold-voltage scaling and `BEX` for
-`BETA(T) = BETA * (T / TNOM)^BEX`. When explicitly present, `BETATCE`
-overrides `BEX` with `BETA(T) = BETA * 1.01^(BETATCE * (T - TNOM))`.
+`BETA(T) = BETA * (T / TNOM)^BEX`. When explicitly present, `VTOTC` overrides
+`TCV` with `VTO(T) = VTO + VTOTC * (T - TNOM)`, while `BETATCE` overrides
+`BEX` with `BETA(T) = BETA * 1.01^(BETATCE * (T - TNOM))`.
 All temperature coefficients honor model-card `TNOM` / `T_NOM`.
 `dc_temperature_sweep()` and `dc_temperature_sweep_corners()` run
 `.temp`-style DC operating-point snapshots across explicit analysis
@@ -246,9 +247,11 @@ omitted.
 It overrides the circuit-level nominal temperature for BJT temperature scaling;
 omitting it preserves the inherited default.
 JFET cards accept `TCV` (default `0 V/K`) to shift threshold voltage as
-`VTO(T) = VTO - TCV * (T - TNOM)`. `TNOM`/`T_NOM` sets the JFET model's
-nominal temperature in degrees Celsius and overrides the circuit default;
-omitting `TCV` preserves temperature-invariant JFET behavior.
+`VTO(T) = VTO - TCV * (T - TNOM)`. When explicitly present, `VTOTC` takes
+precedence and applies `VTO(T) = VTO + VTOTC * (T - TNOM)`. `TNOM`/`T_NOM`
+sets the JFET model's nominal temperature in degrees Celsius and overrides the
+circuit default; omitting both coefficients preserves temperature-invariant
+JFET behavior.
 `KF` (default `0`, disabled) adds a distinct BJT base-current flicker-noise
 source to `.NOISE`. `AF` (default `1`) controls the base-current exponent, so
 source PSD is `KF * abs(Ib)^AF / frequency`.

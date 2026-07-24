@@ -435,6 +435,8 @@ fn clone_subckt_element(
             mapped.source_resistance = element.source_resistance;
             mapped.threshold_voltage_temperature_coefficient =
                 element.threshold_voltage_temperature_coefficient;
+            mapped.alternative_threshold_voltage_temperature_coefficient =
+                element.alternative_threshold_voltage_temperature_coefficient;
             mapped.nominal_temperature_kelvin = element.nominal_temperature_kelvin;
             mapped.mobility_temperature_exponent = element.mobility_temperature_exponent;
             mapped.mobility_temperature_coefficient = element.mobility_temperature_coefficient;
@@ -2798,6 +2800,16 @@ pub fn jfet_at_temperature(
             reason: "threshold-voltage temperature coefficient must be finite".to_string(),
         });
     }
+    if jfet
+        .alternative_threshold_voltage_temperature_coefficient
+        .is_some_and(|coefficient| !coefficient.is_finite())
+    {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "alternative threshold-voltage temperature coefficient must be finite"
+                .to_string(),
+        });
+    }
     if !jfet.mobility_temperature_exponent.is_finite() {
         return Err(SpiceError::InvalidElement {
             name: jfet.name.clone(),
@@ -2819,8 +2831,18 @@ pub fn jfet_at_temperature(
         |coefficient| 1.01_f64.powf(coefficient * (temperature_kelvin - nominal_temperature)),
     );
     let mut adjusted = jfet.clone();
-    adjusted.threshold_voltage -=
-        jfet.threshold_voltage_temperature_coefficient * (temperature_kelvin - nominal_temperature);
+    adjusted.threshold_voltage = jfet
+        .alternative_threshold_voltage_temperature_coefficient
+        .map_or_else(
+            || {
+                jfet.threshold_voltage
+                    - jfet.threshold_voltage_temperature_coefficient
+                        * (temperature_kelvin - nominal_temperature)
+            },
+            |coefficient| {
+                jfet.threshold_voltage + coefficient * (temperature_kelvin - nominal_temperature)
+            },
+        );
     adjusted.beta *= beta_scale;
     Ok(adjusted)
 }
@@ -2891,6 +2913,7 @@ pub struct Jfet {
     pub drain_resistance: f64,
     pub source_resistance: f64,
     pub threshold_voltage_temperature_coefficient: f64,
+    pub alternative_threshold_voltage_temperature_coefficient: Option<f64>,
     pub nominal_temperature_kelvin: Option<f64>,
     pub mobility_temperature_exponent: f64,
     pub mobility_temperature_coefficient: Option<f64>,
@@ -2970,6 +2993,7 @@ impl Jfet {
             drain_resistance: 0.0,
             source_resistance: 0.0,
             threshold_voltage_temperature_coefficient: 0.0,
+            alternative_threshold_voltage_temperature_coefficient: None,
             nominal_temperature_kelvin: None,
             mobility_temperature_exponent: 0.0,
             mobility_temperature_coefficient: None,
@@ -3896,8 +3920,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     (ModelCardKind::Diode, 15, 21, 5, 3),
     (ModelCardKind::Npn, 41, 58, 13, 4),
     (ModelCardKind::Pnp, 41, 58, 13, 4),
-    (ModelCardKind::Njf, 16, 24, 7, 3),
-    (ModelCardKind::Pjf, 16, 24, 7, 3),
+    (ModelCardKind::Njf, 17, 25, 7, 3),
+    (ModelCardKind::Pjf, 17, 25, 7, 3),
     (ModelCardKind::Nmos, 18, 25, 6, 3),
     (ModelCardKind::Pmos, 18, 25, 6, 3),
 ];
@@ -4007,6 +4031,7 @@ const JFET_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("TNOM", "TNOM"),
     ("T_NOM", "TNOM"),
     ("TCV", "TCV"),
+    ("VTOTC", "VTOTC"),
     ("BEX", "BEX"),
     ("BETATCE", "BETATCE"),
 ];
@@ -4743,6 +4768,8 @@ pub fn jfet_from_model_card(
     jfet.drain_resistance = model_card_value(model, "RD", 0.0);
     jfet.source_resistance = model_card_value(model, "RS", 0.0);
     jfet.threshold_voltage_temperature_coefficient = model_card_value(model, "TCV", 0.0);
+    jfet.alternative_threshold_voltage_temperature_coefficient =
+        model.parameters.get("VTOTC").copied();
     jfet.nominal_temperature_kelvin = model
         .parameters
         .get("TNOM")
@@ -5088,7 +5115,7 @@ fn device_model_temperature_behavior(name: &str) -> Result<String, SpiceError> {
             Ok("BJT saturation current and thermal voltage scale with temperature".to_string())
         }
         "jfet-source-bias" => Ok(
-            "JFET temperature scaling defaults to invariant; TCV/TNOM enable threshold-voltage scaling; BETATCE overrides BEX for beta scaling".to_string(),
+            "JFET temperature scaling defaults to invariant; VTOTC overrides TCV for threshold-voltage scaling; BETATCE overrides BEX for beta scaling".to_string(),
         ),
         "mos-level1-common-source" => {
             Ok("Level-1 MOS threshold and transconductance scale with temperature".to_string())
@@ -25243,6 +25270,16 @@ fn validate_jfet(jfet: &Jfet) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: jfet.name.clone(),
             reason: "mobility temperature exponent must be finite".to_string(),
+        });
+    }
+    if jfet
+        .alternative_threshold_voltage_temperature_coefficient
+        .is_some_and(|coefficient| !coefficient.is_finite())
+    {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "alternative threshold-voltage temperature coefficient must be finite"
+                .to_string(),
         });
     }
     if jfet
