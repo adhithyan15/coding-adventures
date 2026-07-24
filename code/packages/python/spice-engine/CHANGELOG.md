@@ -1,5 +1,8 @@
 # Changelog
 
+- Add JFET model-card `RD` drain-resistance support with an intrinsic drain
+  node across DC, transient, AC, transfer-function, and noise analysis, plus
+  hierarchy preservation, validation, and a distinct thermal-noise source.
 - Add JFET model-card `IS` gate-junction saturation-current support,
   defaulting to `1e-14`, stamping `IGS`/`IGD` leakage in DC, transient, AC,
   and transfer-function analyses, and emitting distinct shot-noise sources.

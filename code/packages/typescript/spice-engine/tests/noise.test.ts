@@ -89,6 +89,33 @@ describe("noiseAc", () => {
     );
   });
 
+  it("rejects an invalid JFET drain resistance", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vgate", "gate", "0", 0.0));
+    circuit.add({ ...jfet("J1", "out", "gate", "0"), drainResistance: -1.0 });
+
+    expect(() => noiseAc(circuit, "out", "Vgate", [1_000.0])).toThrow(
+      /drain resistance must be finite and non-negative/,
+    );
+  });
+
+  it("emits JFET drain-resistance thermal noise", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vdd", "vdd", "0", 5.0));
+    circuit.add(voltageSource("Vgate", "gate", "0", 0.0));
+    circuit.add(resistor("Rload", "vdd", "out", 1_000.0));
+    circuit.add({ ...jfet("J1", "out", "gate", "0"), drainResistance: 250.0 });
+
+    const entry = noiseAc(circuit, "out", "Vgate", [1_000.0], 300.0).points[0]!.entries
+      .find((candidate) =>
+        candidate.elementName === "J1:RD" && candidate.noiseType === "thermal"
+      );
+    expect(entry?.sourcePsd).toBeCloseTo(
+      4.0 * 1.380_649e-23 * 300.0 / 250.0,
+      30,
+    );
+  });
+
   it("emits distinct JFET gate-junction shot-noise sources", () => {
     const circuit = new Circuit();
     circuit.add(voltageSource("Vdd", "out", "0", 1.0));

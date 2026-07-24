@@ -33,14 +33,15 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language JFET gate-junction saturation current.
+1. Cross-language JFET drain resistance.
    - Status: current PR completion candidate.
-   - Add Berkeley JFET `IS` model-card support in Rust, Python, and TypeScript.
-   - Default `IS` to `1e-14` ampere and stamp both gate-source and gate-drain
-     junction leakage in DC, transient, AC, and transfer-function analyses.
-   - Preserve `IS` through hierarchy and cloning, validate finite non-negative
-     values, emit distinct `IGS` / `IGD` shot-noise sources, and extend the
-     supported-parameter coverage gate from 151 to 153 canonical rows.
+   - Add Berkeley JFET `RD` model-card support in Rust, Python, and TypeScript.
+   - Default `RD` to zero ohms and, when positive, route channel, gate-drain,
+     charge, AC, transient, transfer-function, and noise behavior through an
+     intrinsic drain node behind the external drain resistor.
+   - Preserve `RD` through hierarchy and cloning, validate finite non-negative
+     values, emit a distinct `RD` thermal-noise source, and extend the
+     supported-parameter coverage gate from 153 to 155 canonical rows.
 
 ## Completed Slices
 
@@ -3278,6 +3279,16 @@ the Rust, Python, and TypeScript surfaces together.
    - Hierarchy and cloning paths preserve `FC`, finite `[0, 1)` validation is
      shared across analyses, and the supported-parameter release gate now
      covers 151 canonical rows.
+
+253. Cross-language JFET gate-junction saturation current.
+   - Status: completed in PR 8930.
+   - Rust, Python, and TypeScript JFET model cards now accept `IS`, default it
+     to `1e-14` ampere, and stamp gate-source and gate-drain junction leakage
+     in DC, transient, AC, and transfer-function analyses.
+   - Hierarchy and cloning paths preserve `IS`, finite non-negative validation
+     is shared across analyses, distinct `IGS` / `IGD` shot-noise sources are
+     emitted, and the supported-parameter release gate now covers 153
+     canonical rows.
 
 ## Backlog
 

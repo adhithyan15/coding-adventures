@@ -431,6 +431,7 @@ fn clone_subckt_element(
             mapped.junction_potential = element.junction_potential;
             mapped.forward_bias_depletion_coefficient = element.forward_bias_depletion_coefficient;
             mapped.gate_saturation_current = element.gate_saturation_current;
+            mapped.drain_resistance = element.drain_resistance;
             Element::Jfet(mapped)
         }
         Element::Bjt(element) => {
@@ -2823,6 +2824,7 @@ pub struct Jfet {
     pub junction_potential: f64,
     pub forward_bias_depletion_coefficient: f64,
     pub gate_saturation_current: f64,
+    pub drain_resistance: f64,
 }
 
 impl Jfet {
@@ -2896,6 +2898,7 @@ impl Jfet {
             junction_potential: 1.0,
             forward_bias_depletion_coefficient: 0.5,
             gate_saturation_current: 1.0e-14,
+            drain_resistance: 0.0,
         }
     }
 }
@@ -3819,8 +3822,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     (ModelCardKind::Diode, 15, 21, 5, 3),
     (ModelCardKind::Npn, 41, 58, 13, 4),
     (ModelCardKind::Pnp, 41, 58, 13, 4),
-    (ModelCardKind::Njf, 10, 17, 6, 3),
-    (ModelCardKind::Pjf, 10, 17, 6, 3),
+    (ModelCardKind::Njf, 11, 18, 6, 3),
+    (ModelCardKind::Pjf, 11, 18, 6, 3),
     (ModelCardKind::Nmos, 18, 25, 6, 3),
     (ModelCardKind::Pmos, 18, 25, 6, 3),
 ];
@@ -3925,6 +3928,7 @@ const JFET_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("VJ", "PB"),
     ("FC", "FC"),
     ("IS", "IS"),
+    ("RD", "RD"),
 ];
 const MOS_LEVEL1_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("LEVEL", "LEVEL"),
@@ -4656,6 +4660,7 @@ pub fn jfet_from_model_card(
     jfet.junction_potential = model_card_value(model, "PB", 1.0);
     jfet.forward_bias_depletion_coefficient = model_card_value(model, "FC", 0.5);
     jfet.gate_saturation_current = model_card_value(model, "IS", 1.0e-14);
+    jfet.drain_resistance = model_card_value(model, "RD", 0.0);
     Ok(jfet)
 }
 
@@ -22074,6 +22079,9 @@ fn collect_node_indices(circuit: &Circuit) -> HashMap<String, usize> {
                 insert_node(&mut names, &jfet.drain);
                 insert_node(&mut names, &jfet.gate);
                 insert_node(&mut names, &jfet.source);
+                if jfet.drain_resistance > 0.0 {
+                    insert_node(&mut names, &jfet_intrinsic_drain_node(jfet));
+                }
             }
             Element::Bjt(bjt) => {
                 insert_node(&mut names, &bjt.collector);
@@ -22450,7 +22458,8 @@ fn collect_noise_sources(
             }
             Element::Jfet(jfet) => {
                 validate_jfet(jfet)?;
-                let drain = node_index(node_indices, &jfet.drain);
+                let intrinsic_drain = jfet_intrinsic_drain_node(jfet);
+                let drain = node_index(node_indices, &intrinsic_drain);
                 let gate = node_index(node_indices, &jfet.gate);
                 let source = node_index(node_indices, &jfet.source);
                 let drain_voltage = vector_voltage(operating_point, drain);
@@ -22505,6 +22514,16 @@ fn collect_noise_sources(
                         source_psd: jfet.flicker_noise_coefficient
                             * result.drain_current.abs().powf(jfet.flicker_noise_exponent),
                         frequency_exponent: 1.0,
+                    });
+                }
+                if jfet.drain_resistance > 0.0 {
+                    sources.push(NoiseSource {
+                        element_name: format!("{}:RD", jfet.name),
+                        noise_type: NoiseType::Thermal,
+                        positive: node_index(node_indices, &jfet.drain),
+                        negative: drain,
+                        source_psd: 4.0 * BOLTZMANN * temperature_kelvin / jfet.drain_resistance,
+                        frequency_exponent: 0.0,
                     });
                 }
             }
@@ -23618,7 +23637,8 @@ fn stamp_jfet(
     operating_point: &[f64],
 ) -> Result<(), SpiceError> {
     validate_jfet(jfet)?;
-    let drain = node_index(node_indices, &jfet.drain);
+    let intrinsic_drain = jfet_intrinsic_drain_node(jfet);
+    let drain = node_index(node_indices, &intrinsic_drain);
     let gate = node_index(node_indices, &jfet.gate);
     let source = node_index(node_indices, &jfet.source);
     let drain_voltage = vector_voltage(operating_point, drain);
@@ -23642,6 +23662,14 @@ fn stamp_jfet(
     );
     stamp_jfet_gate_junction(jfet, gate, drain, gate_voltage - drain_voltage, matrix, rhs);
     stamp_jfet_charge(jfet, capacitor_states, node_indices, matrix, rhs)?;
+    if jfet.drain_resistance > 0.0 {
+        stamp_conductance(
+            matrix,
+            node_index(node_indices, &jfet.drain),
+            drain,
+            1.0 / jfet.drain_resistance,
+        );
+    }
     Ok(())
 }
 
@@ -23719,8 +23747,8 @@ fn stamp_jfet_charge(
             }
             TransientMethod::Euler => conductance * state.previous_voltage,
         };
-        let positive = node_index(node_indices, spec.positive);
-        let negative = node_index(node_indices, spec.negative);
+        let positive = node_index(node_indices, &spec.positive);
+        let negative = node_index(node_indices, &spec.negative);
         stamp_conductance(matrix, positive, negative, conductance);
         if let Some(index) = positive {
             rhs[index] += history_current;
@@ -24002,7 +24030,8 @@ fn stamp_jfet_small_signal(
     operating_point: &[f64],
 ) -> Result<(), SpiceError> {
     validate_jfet(jfet)?;
-    let drain = node_index(node_indices, &jfet.drain);
+    let intrinsic_drain = jfet_intrinsic_drain_node(jfet);
+    let drain = node_index(node_indices, &intrinsic_drain);
     let gate = node_index(node_indices, &jfet.gate);
     let source = node_index(node_indices, &jfet.source);
     let drain_voltage = vector_voltage(operating_point, drain);
@@ -24021,6 +24050,14 @@ fn stamp_jfet_small_signal(
     stamp_conductance(matrix, gate, source, gate_source_conductance);
     stamp_conductance(matrix, gate, drain, gate_drain_conductance);
     stamp_transconductance(matrix, drain, source, gate, source, result.gm);
+    if jfet.drain_resistance > 0.0 {
+        stamp_conductance(
+            matrix,
+            node_index(node_indices, &jfet.drain),
+            drain,
+            1.0 / jfet.drain_resistance,
+        );
+    }
     Ok(())
 }
 
@@ -24077,7 +24114,8 @@ fn stamp_ac_jfet_small_signal(
     omega: f64,
 ) -> Result<(), SpiceError> {
     validate_jfet(jfet)?;
-    let drain = node_index(node_indices, &jfet.drain);
+    let intrinsic_drain = jfet_intrinsic_drain_node(jfet);
+    let drain = node_index(node_indices, &intrinsic_drain);
     let gate = node_index(node_indices, &jfet.gate);
     let source = node_index(node_indices, &jfet.source);
     let drain_voltage = vector_voltage(operating_point, drain);
@@ -24123,6 +24161,14 @@ fn stamp_ac_jfet_small_signal(
         source,
         Complex::new(result.gm, 0.0),
     );
+    if jfet.drain_resistance > 0.0 {
+        stamp_complex_conductance(
+            matrix,
+            node_index(node_indices, &jfet.drain),
+            drain,
+            Complex::new(1.0 / jfet.drain_resistance, 0.0),
+        );
+    }
     Ok(())
 }
 
@@ -24403,10 +24449,10 @@ fn bjt_charge_state_voltage(
     voltage_at(node_voltages, &spec.positive) - voltage_at(node_voltages, &spec.negative)
 }
 
-struct JfetChargeStateSpec<'a> {
+struct JfetChargeStateSpec {
     name: String,
-    positive: &'a str,
-    negative: &'a str,
+    positive: String,
+    negative: String,
     capacitance: f64,
 }
 
@@ -24418,21 +24464,21 @@ fn jfet_gate_drain_charge_state_name(jfet: &Jfet) -> String {
     format!("_J_{}_gd_charge", jfet.name)
 }
 
-fn jfet_charge_state_specs(jfet: &Jfet) -> Vec<JfetChargeStateSpec<'_>> {
+fn jfet_charge_state_specs(jfet: &Jfet) -> Vec<JfetChargeStateSpec> {
     let mut specs = Vec::new();
     if jfet.gate_source_capacitance > 0.0 {
         specs.push(JfetChargeStateSpec {
             name: jfet_gate_source_charge_state_name(jfet),
-            positive: jfet.gate.as_str(),
-            negative: jfet.source.as_str(),
+            positive: jfet.gate.clone(),
+            negative: jfet.source.clone(),
             capacitance: jfet.gate_source_capacitance,
         });
     }
     if jfet.gate_drain_capacitance > 0.0 {
         specs.push(JfetChargeStateSpec {
             name: jfet_gate_drain_charge_state_name(jfet),
-            positive: jfet.gate.as_str(),
-            negative: jfet.drain.as_str(),
+            positive: jfet.gate.clone(),
+            negative: jfet_intrinsic_drain_node(jfet),
             capacitance: jfet.gate_drain_capacitance,
         });
     }
@@ -24440,10 +24486,18 @@ fn jfet_charge_state_specs(jfet: &Jfet) -> Vec<JfetChargeStateSpec<'_>> {
 }
 
 fn jfet_charge_state_voltage(
-    spec: &JfetChargeStateSpec<'_>,
+    spec: &JfetChargeStateSpec,
     node_voltages: &BTreeMap<String, f64>,
 ) -> f64 {
-    voltage_at(node_voltages, spec.positive) - voltage_at(node_voltages, spec.negative)
+    voltage_at(node_voltages, &spec.positive) - voltage_at(node_voltages, &spec.negative)
+}
+
+fn jfet_intrinsic_drain_node(jfet: &Jfet) -> String {
+    if jfet.drain_resistance == 0.0 {
+        jfet.drain.clone()
+    } else {
+        format!("__spice_{}_drain", jfet.name)
+    }
 }
 
 fn jfet_charge_dynamic_capacitance(
@@ -25019,6 +25073,12 @@ fn validate_jfet(jfet: &Jfet) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: jfet.name.clone(),
             reason: "gate saturation current must be finite and non-negative".to_string(),
+        });
+    }
+    if !jfet.drain_resistance.is_finite() || jfet.drain_resistance < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "drain resistance must be finite and non-negative".to_string(),
         });
     }
     Ok(())
