@@ -326,6 +326,52 @@ fn transient_jfet_junction_potential_shapes_gate_charge() {
 }
 
 #[test]
+fn transient_jfet_forward_bias_depletion_coefficient_shapes_gate_charge() {
+    fn final_gate_voltage(coefficient: f64) -> f64 {
+        let mut circuit = Circuit::new();
+        circuit.add(Element::VoltageSource(VoltageSource::with_waveform(
+            "Vstep",
+            "in",
+            "0",
+            0.0,
+            Waveform::Pwl(PwlWaveform::new(vec![
+                (0.0, 0.0),
+                (2.0e-7, 0.6),
+                (2.0e-6, 0.6),
+            ])),
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rin", "in", "gate", 1_000.0,
+        )));
+        circuit.add(Element::Resistor(Resistor::new(
+            "Rdrain", "drain", "0", 1_000.0,
+        )));
+        let mut jfet = Jfet::with_model_and_capacitance(
+            "J1",
+            "drain",
+            "gate",
+            "0",
+            JfetPolarity::Njf,
+            1.0e-12,
+            -2.0,
+            0.0,
+            1.0e-9,
+            0.0,
+        );
+        jfet.forward_bias_depletion_coefficient = coefficient;
+        circuit.add(Element::Jfet(jfet));
+        transient_with_method(&circuit, 2.0e-7, 2.0e-6, TransientMethod::Euler)
+            .unwrap()
+            .last()
+            .unwrap()
+            .voltage("gate")
+            .unwrap()
+    }
+
+    assert!(final_gate_voltage(0.2) > final_gate_voltage(0.8));
+}
+
+#[test]
 fn transient_mosfet_overlap_capacitance_slows_gate_step() {
     fn run(gate_source_overlap_capacitance: f64) -> Vec<TransientPoint> {
         let mut circuit = Circuit::new();

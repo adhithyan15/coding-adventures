@@ -429,6 +429,7 @@ fn clone_subckt_element(
             mapped.flicker_noise_coefficient = element.flicker_noise_coefficient;
             mapped.flicker_noise_exponent = element.flicker_noise_exponent;
             mapped.junction_potential = element.junction_potential;
+            mapped.forward_bias_depletion_coefficient = element.forward_bias_depletion_coefficient;
             Element::Jfet(mapped)
         }
         Element::Bjt(element) => {
@@ -2819,6 +2820,7 @@ pub struct Jfet {
     pub flicker_noise_coefficient: f64,
     pub flicker_noise_exponent: f64,
     pub junction_potential: f64,
+    pub forward_bias_depletion_coefficient: f64,
 }
 
 impl Jfet {
@@ -2890,6 +2892,7 @@ impl Jfet {
             flicker_noise_coefficient: 0.0,
             flicker_noise_exponent: 1.0,
             junction_potential: 1.0,
+            forward_bias_depletion_coefficient: 0.5,
         }
     }
 }
@@ -3813,8 +3816,8 @@ const MODEL_CARD_SUPPORTED_PARAMETER_COVERAGE_EXPECTED_SUMMARIES: &[(
     (ModelCardKind::Diode, 15, 21, 5, 3),
     (ModelCardKind::Npn, 41, 58, 13, 4),
     (ModelCardKind::Pnp, 41, 58, 13, 4),
-    (ModelCardKind::Njf, 8, 15, 6, 3),
-    (ModelCardKind::Pjf, 8, 15, 6, 3),
+    (ModelCardKind::Njf, 9, 16, 6, 3),
+    (ModelCardKind::Pjf, 9, 16, 6, 3),
     (ModelCardKind::Nmos, 18, 25, 6, 3),
     (ModelCardKind::Pmos, 18, 25, 6, 3),
 ];
@@ -3917,6 +3920,7 @@ const JFET_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("AF", "AF"),
     ("PB", "PB"),
     ("VJ", "PB"),
+    ("FC", "FC"),
 ];
 const MOS_LEVEL1_PARAMETER_ALIAS_ENTRIES: &[(&str, &str)] = &[
     ("LEVEL", "LEVEL"),
@@ -4646,6 +4650,7 @@ pub fn jfet_from_model_card(
     jfet.flicker_noise_coefficient = model_card_value(model, "KF", 0.0);
     jfet.flicker_noise_exponent = model_card_value(model, "AF", 1.0);
     jfet.junction_potential = model_card_value(model, "PB", 1.0);
+    jfet.forward_bias_depletion_coefficient = model_card_value(model, "FC", 0.5);
     Ok(jfet)
 }
 
@@ -24361,19 +24366,17 @@ fn jfet_charge_dynamic_capacitance(
     junction_voltage: f64,
 ) -> f64 {
     const GRADING_COEFFICIENT: f64 = 0.5;
-    const FORWARD_BIAS_DEPLETION_COEFFICIENT: f64 = 0.5;
-
     let oriented_voltage = match jfet.polarity {
         JfetPolarity::Njf => junction_voltage,
         JfetPolarity::Pjf => -junction_voltage,
     };
     let normalized_voltage = oriented_voltage / jfet.junction_potential;
-    if normalized_voltage < FORWARD_BIAS_DEPLETION_COEFFICIENT {
+    if normalized_voltage < jfet.forward_bias_depletion_coefficient {
         return zero_bias_capacitance / (1.0 - normalized_voltage).powf(GRADING_COEFFICIENT);
     }
     let transition_scale =
-        (1.0 - FORWARD_BIAS_DEPLETION_COEFFICIENT).powf(1.0 + GRADING_COEFFICIENT);
-    let continuation = 1.0 - FORWARD_BIAS_DEPLETION_COEFFICIENT * (1.0 + GRADING_COEFFICIENT)
+        (1.0 - jfet.forward_bias_depletion_coefficient).powf(1.0 + GRADING_COEFFICIENT);
+    let continuation = 1.0 - jfet.forward_bias_depletion_coefficient * (1.0 + GRADING_COEFFICIENT)
         + GRADING_COEFFICIENT * normalized_voltage;
     zero_bias_capacitance * continuation / transition_scale
 }
@@ -24915,6 +24918,15 @@ fn validate_jfet(jfet: &Jfet) -> Result<(), SpiceError> {
         return Err(SpiceError::InvalidElement {
             name: jfet.name.clone(),
             reason: "junction potential must be finite and positive".to_string(),
+        });
+    }
+    if !jfet.forward_bias_depletion_coefficient.is_finite()
+        || jfet.forward_bias_depletion_coefficient < 0.0
+        || jfet.forward_bias_depletion_coefficient >= 1.0
+    {
+        return Err(SpiceError::InvalidElement {
+            name: jfet.name.clone(),
+            reason: "forward-bias depletion coefficient must be finite and in [0, 1)".to_string(),
         });
     }
     Ok(())

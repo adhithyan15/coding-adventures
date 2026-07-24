@@ -535,6 +535,22 @@ describe("acSweep", () => {
     expect(gateAmplitude(0.5)).toBeGreaterThan(gateAmplitude(2.0));
   });
 
+  it("uses JFET forward-bias depletion coefficient to shape gate capacitance", () => {
+    function gateAmplitude(coefficient: number): number {
+      const circuit = new Circuit();
+      circuit.add(voltageSourceWithAc("Vac", "in", "0", 0.6, 1.0));
+      circuit.add(resistor("Rin", "in", "gate", 1_000.0));
+      circuit.add(resistor("Rdrain", "drain", "0", 1_000.0));
+      circuit.add({
+        ...jfet("J1", "drain", "gate", "0", "NJF", 1.0e-12, -2.0, 0.0, 1.0e-9),
+        forwardBiasDepletionCoefficient: coefficient,
+      });
+      return complexAbs(acSweep(circuit, 100_000.0, 100_000.0, 1)[0].voltage("gate")!);
+    }
+
+    expect(gateAmplitude(0.2)).toBeGreaterThan(gateAmplitude(0.8));
+  });
+
   it("uses MOSFET overlap capacitance in AC analysis", () => {
     function gateAmplitude(CGSO: number): number {
       const circuit = new Circuit();

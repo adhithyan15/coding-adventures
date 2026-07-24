@@ -33,15 +33,14 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language JFET gate-junction potential.
+1. Cross-language JFET forward-bias depletion coefficient.
    - Status: current PR completion candidate.
-   - Add Berkeley JFET `PB` model-card support, with `VJ` as an accepted alias,
-     in Rust, Python, and TypeScript.
-   - Default `PB` to one volt and use it to shape the existing zero-bias
-     `CGS`/`CGD` junction capacitances in AC and transient analysis with the
-     Berkeley grading and forward-bias continuation defaults.
-   - Preserve `PB` through hierarchy and cloning, validate finite positive
-     values, and extend the supported-parameter coverage gate from 147 to 149
+   - Add Berkeley JFET `FC` model-card support in Rust, Python, and TypeScript.
+   - Default `FC` to `0.5` and use it as the forward-bias transition point for
+     the existing `CGS`/`CGD` depletion-capacitance continuation in AC and
+     transient analysis.
+   - Preserve `FC` through hierarchy and cloning, validate finite values in
+     `[0, 1)`, and extend the supported-parameter coverage gate from 149 to 151
      canonical rows.
 
 ## Completed Slices
@@ -3261,6 +3260,15 @@ the Rust, Python, and TypeScript surfaces together.
    - Hierarchy and cloning paths preserve `AF`, finite non-negative validation
      is shared across analyses, and the supported-parameter release gate now
      covers 147 canonical rows.
+
+251. Cross-language JFET gate-junction potential.
+   - Status: completed in PR 8919.
+   - Rust, Python, and TypeScript JFET model cards now accept `PB`, with `VJ`
+     as an alias, default it to one volt, and use it to shape `CGS`/`CGD`
+     depletion capacitance in AC and transient analysis.
+   - Hierarchy and cloning paths preserve `PB`, finite-positive validation is
+     shared across analyses, and the supported-parameter release gate now
+     covers 149 canonical rows.
 
 ## Backlog
 

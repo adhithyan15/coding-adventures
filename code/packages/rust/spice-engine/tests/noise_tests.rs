@@ -366,6 +366,24 @@ fn jfet_rejects_invalid_junction_potential() {
 }
 
 #[test]
+fn jfet_rejects_invalid_forward_bias_depletion_coefficient() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "Vgate", "gate", "0", 0.0,
+    )));
+    let mut jfet = Jfet::new("J1", "out", "gate", "0");
+    jfet.forward_bias_depletion_coefficient = 1.0;
+    circuit.add(Element::Jfet(jfet));
+
+    let error = noise_ac(&circuit, "out", "Vgate", &[1_000.0], 300.0).unwrap_err();
+    assert!(matches!(
+        error,
+        SpiceError::InvalidElement { reason, .. }
+            if reason == "forward-bias depletion coefficient must be finite and in [0, 1)"
+    ));
+}
+
+#[test]
 fn jfet_flicker_noise_uses_af_current_exponent() {
     let source_psd = |exponent: f64| {
         let mut circuit = Circuit::new();
