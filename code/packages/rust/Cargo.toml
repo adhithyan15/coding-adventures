@@ -280,6 +280,7 @@ members = [
     "q-runtime",
     "q-repl",
     "q-to-semantic-ir",
+    "idl-lexer",
     "logic-gates",
     "logic-core",
     "lookup-core",
