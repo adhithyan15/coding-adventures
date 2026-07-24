@@ -372,3 +372,43 @@ body {
 }
 .confusions__list { margin: 0; padding-left: 18px; }
 .confusions__list li { font-size: 0.9rem; line-height: 1.6; }
+
+/* "Reset progress" footer — a quiet, two-click destructive control. */
+.learn__reset {
+  margin-top: 28px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.reset-link {
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 2px 0;
+}
+.reset-link:hover { color: var(--ff); }
+.reset-warn { font-size: 0.85rem; color: var(--ink); }
+.reset-yes {
+  border: 1px solid var(--ff);
+  background: var(--ff);
+  color: #fff;
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+.reset-cancel {
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 0.82rem;
+  cursor: pointer;
+}

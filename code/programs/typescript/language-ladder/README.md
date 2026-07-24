@@ -48,6 +48,10 @@ to is saved on each Prev/Next and restored at startup, so the app resumes where
 you left off rather than back at the first concept. The restored index is
 clamped to the current spine, and a bad blob falls back to the start.
 
+A quiet **"Reset progress"** control at the foot of the Learn view clears it all
+(`reset.ts` — only the keys this app owns), behind a two-click confirm so a stray
+tap can't wipe everything.
+
 ## Concepts mode
 
 The curriculum tags lessons with a shared `concept_tag`, and canonical tags are
