@@ -249,6 +249,54 @@ fn shipped_area_conversions_table_resolves_and_abstains() {
 }
 
 // ---------------------------------------------------------------------------
+// (b4) Shipped table — reference/volume-conversions.adj resolves via import (a
+//      third dimension: VOLUME), and a unit absent from the table abstains.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn shipped_volume_conversions_table_resolves_and_abstains() {
+    let dir = scratch("shipped_volume");
+    let src = stdlib().join("reference/volume-conversions.adj");
+    std::fs::copy(&src, dir.join("volume-conversions.adj"))
+        .expect("copy shipped volume-conversions.adj");
+    write(
+        dir.as_path(),
+        "case.adj",
+        "import \"volume-conversions.adj\"\n\
+         ? volume_to_cubic_metres(gallon, $M3)\n\
+         ? volume_to_cubic_metres(cubic_foot, $M3)\n\
+         ? volume_to_cubic_metres(barrel, $M3)\n\
+         ? volume_to_cubic_metres(litre, $M3)\n",
+    );
+    let (ok, out, err) = run_full(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}{err}");
+    // The NIST SP 811 B.9 7-figure factors resolve, character-for-character from
+    // the table (scientific notation converted to the same plain decimal).
+    assert!(
+        out.contains("\"M3\":\"0.003785412\""),
+        "shipped U.S. gallon factor: {out}"
+    );
+    assert!(
+        out.contains("\"M3\":\"0.02831685\""),
+        "shipped cubic-foot factor: {out}"
+    );
+    assert!(
+        out.contains("\"M3\":\"0.1589873\""),
+        "shipped petroleum-barrel factor: {out}"
+    );
+    // The table's citation rides along on the answer.
+    assert!(
+        out.contains("nist-guide-si-appendix-b9"),
+        "carries the NIST SP 811 B.9 locator: {out}"
+    );
+    // `litre` is SI, not a customary unit — not a row, so the engine abstains.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "an absent unit abstains, never a fabricated factor: {out}"
+    );
+}
+
+// ---------------------------------------------------------------------------
 // (c) Arity guard — a row of the wrong length is a clean compile error.
 // ---------------------------------------------------------------------------
 
