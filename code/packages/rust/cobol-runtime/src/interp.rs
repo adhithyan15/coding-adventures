@@ -359,8 +359,8 @@ impl Machine {
             Stmt::Unstring { source, delim, targets } => {
                 self.exec_unstring(source, delim, targets)?
             }
-            Stmt::Inspect { source, counter, delim } => {
-                return self.exec_inspect(source, counter, delim)
+            Stmt::Inspect { source, counter, delim, leading } => {
+                return self.exec_inspect(source, counter, delim, *leading)
             }
             Stmt::InspectReplacing { source, search, replace } => {
                 self.exec_inspect_replacing(source, search, replace)?
@@ -630,9 +630,10 @@ impl Machine {
         source: &str,
         counter: &str,
         delim: &Operand,
+        leading: bool,
     ) -> Result<Flow, RuntimeError> {
         let sidx = self.inspect_alnum_source(source)?;
-        self.inspect_tally(sidx, counter, delim)
+        self.inspect_tally(sidx, counter, delim, leading)
     }
 
     /// The source of any INSPECT must resolve to an alphanumeric item. Returns its
@@ -656,15 +657,20 @@ impl Machine {
     }
 
     /// The TALLYING half: count occurrences of the single-character `delim` in the
-    /// source's CURRENT storage and ADD them to `counter`. Factored out of
-    /// [`Self::exec_inspect`] so the combined tally-then-replace exec can run it
-    /// FIRST (on the pre-replacement bytes) and share the counter validation and
-    /// store path. Does not mutate the source.
+    /// source's CURRENT storage and ADD them to `counter`. When `leading` is false
+    /// (`FOR ALL`) this counts EVERY occurrence; when true (`FOR LEADING`) it counts
+    /// only the run of CONSECUTIVE occurrences at the START of the source, stopping
+    /// at the first non-`delim` character. Factored out of [`Self::exec_inspect`] so
+    /// the combined tally-then-replace exec can run it FIRST (on the pre-replacement
+    /// bytes) and share the counter validation and store path; that combined path
+    /// always passes `leading = false` (a combined FOR LEADING is a later rung).
+    /// Does not mutate the source.
     fn inspect_tally(
         &mut self,
         sidx: usize,
         counter: &str,
         delim: &Operand,
+        leading: bool,
     ) -> Result<Flow, RuntimeError> {
         // The counter must be an UNSIGNED INTEGER numeric item (`PIC 9(n)`): a
         // fractional (`V`) or signed (`S`) counter is a later rung.
@@ -686,9 +692,15 @@ impl Machine {
             }
         }
 
-        // The single delimiter character, then the occurrence count.
+        // The single delimiter character, then the occurrence count. `FOR ALL`
+        // counts every match; `FOR LEADING` counts only the leading run (stop at the
+        // first non-match) — the ONLY difference between the two forms.
         let delim_ch = self.single_delim_char(delim, "INSPECT")?;
-        let count = self.items[sidx].storage.chars().filter(|&c| c == delim_ch).count();
+        let count = if leading {
+            self.items[sidx].storage.chars().take_while(|&c| c == delim_ch).count()
+        } else {
+            self.items[sidx].storage.chars().filter(|&c| c == delim_ch).count()
+        };
 
         // counter := counter_value + count, reshaped into the counter's picture —
         // the same store path ADD uses (INSPECT adds; it does not clear first).
@@ -738,8 +750,9 @@ impl Machine {
     ) -> Result<Flow, RuntimeError> {
         let sidx = self.inspect_alnum_source(source)?;
         // Tally FIRST, on the current (original) storage — it does not mutate the
-        // source, so the subsequent replace still sees the original bytes too.
-        self.inspect_tally(sidx, counter, delim)?;
+        // source, so the subsequent replace still sees the original bytes too. The
+        // combined form is FOR ALL only (`leading = false`).
+        self.inspect_tally(sidx, counter, delim, false)?;
         // THEN replace, overwriting the source in place.
         self.inspect_replace(sidx, search, replace)?;
         Ok(Flow::Normal)

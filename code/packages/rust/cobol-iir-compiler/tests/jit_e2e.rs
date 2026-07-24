@@ -2954,6 +2954,87 @@ fn inspect_delimiter_at_both_ends() {
     assert_eq!(out, "02\n");
 }
 
+// INSPECT … TALLYING … FOR LEADING — count only the run of CONSECUTIVE delimiters
+// at the START of the source, stopping at the first non-match (contrast FOR ALL,
+// which counts every occurrence). Each case pins the compiled leading-run scan to
+// the oracle byte-for-byte.
+
+#[test]
+fn inspect_leading_counts_the_leading_run() {
+    // "000123" — three leading '0's, stop at '1' → C = 3. FOR ALL agrees here
+    // (there are no other '0's), so both forms give 3 on this source.
+    let lead = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"000123\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR LEADING \"0\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(lead, "003\n");
+
+    let all = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"000123\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR ALL \"0\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(all, "003\n");
+}
+
+#[test]
+fn inspect_leading_stops_at_the_first_non_match() {
+    // "120003" — the first character is '1', not '0', so the leading run is empty →
+    // C = 0. (FOR ALL on the same source would count all three '0's = 3; LEADING's 0
+    // is what distinguishes the two forms.)
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(6) VALUE \"120003\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR LEADING \"0\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "000\n");
+}
+
+#[test]
+fn inspect_leading_all_characters_match() {
+    // "0000" — every character is the delimiter, so the leading run is the whole
+    // source → C = 4.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"0000\".", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR LEADING \"0\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "004\n");
+}
+
+#[test]
+fn inspect_leading_blank_source_counts_zero() {
+    // A blank PIC X(3) (all spaces) has no leading '0' → C = 0.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(3).", "01  C  PIC 9(3) VALUE 0."],
+        &["INSPECT S TALLYING C FOR LEADING \"0\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "000\n");
+}
+
+#[test]
+fn inspect_leading_delimiter_is_a_pic_x1_item() {
+    // The LEADING delimiter may be a PIC X(1) item, read at run time: two leading
+    // 'A's in "AAB" → C = 2.
+    let out = assert_matches_oracle(&wrap(
+        &[
+            "01  S  PIC X(3) VALUE \"AAB\".",
+            "01  DL PIC X(1) VALUE \"A\".",
+            "01  C  PIC 9(2) VALUE 0.",
+        ],
+        &["INSPECT S TALLYING C FOR LEADING DL.", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "02\n");
+}
+
+#[test]
+fn inspect_leading_adds_to_a_nonzero_counter() {
+    // INSPECT adds; it does not clear. C starts at 5, three leading '0's in "000X"
+    // → C = 5 + 3 = 8.
+    let out = assert_matches_oracle(&wrap(
+        &["01  S  PIC X(4) VALUE \"000X\".", "01  C  PIC 9(3) VALUE 5."],
+        &["INSPECT S TALLYING C FOR LEADING \"0\".", "DISPLAY C.", "STOP RUN."],
+    ));
+    assert_eq!(out, "008\n");
+}
+
 // INSPECT … REPLACING ALL x BY y — replace EVERY occurrence of the single
 // character `x` in the alphanumeric source with the single character `y`, in
 // place (same width). Each case pins the compiled per-position rebuild to the

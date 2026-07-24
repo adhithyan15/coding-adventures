@@ -8,6 +8,33 @@ tag.
 
 ## [Unreleased]
 
+### Added — v0.36.0: INSPECT TALLYING FOR LEADING (leading-run count)
+
+A lone `INSPECT source TALLYING counter FOR LEADING delim` now compiles instead of
+being rejected as a later rung. `FOR LEADING` counts only the run of **consecutive**
+`delim` characters at the START of the source, stopping at the first character that
+is not `delim`, then ADDs that count to the counter (INSPECT adds; it does not clear
+the counter first — identical to `FOR ALL` in that respect).
+
+- The scan reuses the exact `FOR ALL` count loop (`str_len` + `str_index`/`cmp_eq`,
+  then `store_scaled`). The **only** difference is the not-equal branch's jump
+  target: `FOR ALL` jumps to `nobump` (skip the `cnt += 1`, keep scanning), while
+  `FOR LEADING` jumps to `end` (break out of the loop). This mirrors the oracle's
+  `filter(…).count()` vs `take_while(…).count()`.
+- `inspect_tally_all` now returns a `leading: bool` (true for `FOR LEADING`, false
+  for `FOR ALL`); `emit_inspect_tallying` takes an `allow_leading` flag so the
+  **combined** `TALLYING … REPLACING` path passes `false` — a combined
+  `TALLYING … FOR LEADING … REPLACING` stays a clean `Unsupported`.
+- Still deferred and rejected identically to before: `LEADING` inside a `REPLACING`
+  clause, `LEADING` in the combined form, `BEFORE`/`AFTER` regions, `CHARACTERS`,
+  `FIRST`, a multi-character/figurative delimiter, and a numeric/group source. The
+  `FOR ALL` lowering is byte-identical to the previous release.
+- New JIT e2e tests pin the compiled leading-run scan to the oracle byte-for-byte:
+  `"000123"` FOR LEADING → 3 (and FOR ALL → 3, agreeing here); `"120003"` FOR
+  LEADING → 0 (FOR ALL would be 3); `"0000"` → 4; a blank `PIC X(3)` → 0; a
+  `PIC X(1)` delimiter item; and adding onto a nonzero counter. The lone-tally unit
+  test now asserts it compiles; the combined-LEADING reject test is retained.
+
 ### Changed — v0.35.0: EVALUATE reuses the IF relation dispatch (mixed numeric↔alphanumeric subject/WHEN)
 
 An `EVALUATE` whose subject and a `WHEN` value are in **different** categories —

@@ -1704,14 +1704,19 @@ impl<'a> Compiler<'a> {
     ///   counter := (counter_value + cnt) reduced into counter's picture
     /// ```
     ///
+    /// `FOR LEADING delim` is also supported — it counts only the run of
+    /// consecutive `delim` characters at the START of the source, breaking out of
+    /// the scan at the first non-match (see [`Self::emit_inspect_tallying`]).
+    ///
     /// The count is folded into the counter with the SAME numeric-store path `ADD`
     /// uses (`store_scaled`, which mirrors the oracle's `store_result`/
     /// `move_into_numeric`), so a compiled program matches `cobol-runtime`'s
-    /// `exec_inspect` byte-for-byte. Every later-rung form — `LEADING`/
-    /// `CHARACTERS` tallies, `BEFORE`/`AFTER` phrases, several counters or `FOR`
-    /// phrases, any `REPLACING`, and a multi-character/figurative/wider delimiter
-    /// or a numeric source or a non-integer/non-numeric counter — is a clean
-    /// `Unsupported`, accepted by the grammar and rejected here.
+    /// `exec_inspect` byte-for-byte. Every later-rung form — a `CHARACTERS` tally,
+    /// `BEFORE`/`AFTER` phrases, several counters or `FOR` phrases, any `REPLACING`
+    /// (including a combined `TALLYING … FOR LEADING … REPLACING`), and a multi-
+    /// character/figurative/wider delimiter or a numeric source or a non-integer/
+    /// non-numeric counter — is a clean `Unsupported`, accepted by the grammar and
+    /// rejected here.
     fn emit_inspect(&mut self, verb: &GrammarASTNode) -> Result<(), CompileError> {
         // This rung supports a LONE `TALLYING … FOR ALL`, a LONE `REPLACING ALL …
         // BY …`, or the COMBINED `TALLYING … REPLACING` in one INSPECT. The
@@ -1763,28 +1768,48 @@ impl<'a> Compiler<'a> {
         }
         match (has_tally, has_repl) {
             (true, true) => {
-                self.emit_inspect_tallying(verb, &s_reg)?;
+                // The combined form is FOR ALL only: `allow_leading = false` makes a
+                // combined `TALLYING … FOR LEADING … REPLACING` a clean later rung.
+                self.emit_inspect_tallying(verb, &s_reg, false)?;
                 self.emit_inspect_replacing(verb, &s_reg, source_width)
             }
             (false, true) => self.emit_inspect_replacing(verb, &s_reg, source_width),
-            // A lone TALLYING (or neither, which `inspect_tally_all` rejects).
-            _ => self.emit_inspect_tallying(verb, &s_reg),
+            // A lone TALLYING (or neither, which `inspect_tally_all` rejects). Both
+            // `FOR ALL` and `FOR LEADING` are supported here.
+            _ => self.emit_inspect_tallying(verb, &s_reg, true),
         }
     }
 
-    /// `INSPECT source TALLYING counter FOR ALL delim` — the count loop and
-    /// counter store, factored out of [`Self::emit_inspect`] so the combined
-    /// tally-then-replace form can emit it FIRST (over the original source bytes)
-    /// and share the exact ADD-into-counter store path. The loop only reads
-    /// `s_reg`; it never writes it, so a following REPLACING still sees the
+    /// `INSPECT source TALLYING counter FOR ALL delim` (or `FOR LEADING delim`) —
+    /// the count loop and counter store, factored out of [`Self::emit_inspect`] so
+    /// the combined tally-then-replace form can emit it FIRST (over the original
+    /// source bytes) and share the exact ADD-into-counter store path. The loop only
+    /// reads `s_reg`; it never writes it, so a following REPLACING still sees the
     /// original image.
+    ///
+    /// `FOR ALL` counts EVERY match; `FOR LEADING` counts only the run of
+    /// consecutive matches at the START, stopping at the first non-match. The two
+    /// share the identical loop — the ONLY difference is where the "not equal"
+    /// branch jumps: `FOR ALL` skips just the `cnt += 1` and keeps scanning
+    /// (`nobump`), while `FOR LEADING` breaks out of the loop entirely (`end`).
+    ///
+    /// `allow_leading` is `false` on the combined tally-then-replace path (a
+    /// combined `FOR LEADING … REPLACING` is a later rung); a lone TALLYING passes
+    /// `true`.
     fn emit_inspect_tallying(
         &mut self,
         verb: &GrammarASTNode,
         s_reg: &str,
+        allow_leading: bool,
     ) -> Result<(), CompileError> {
-        // Extract the single `FOR ALL delim` phrase (rejecting the later rungs).
-        let (counter_name, delim_node) = inspect_tally_all(verb)?;
+        // Extract the single `FOR ALL`/`FOR LEADING delim` phrase (rejecting the
+        // later rungs).
+        let (counter_name, delim_node, leading) = inspect_tally_all(verb)?;
+        if leading && !allow_leading {
+            return Err(CompileError::Unsupported(
+                "INSPECT TALLYING … FOR LEADING combined with REPLACING is a later rung".into(),
+            ));
+        }
 
         // The counter must be an unsigned integer numeric item (`PIC 9(n)`).
         let cidx = self.numeric_index(&counter_name)?;
@@ -1819,13 +1844,16 @@ impl<'a> Compiler<'a> {
         let ge = self.fresh("_inspge");
         self.emit("cmp_ge", Some(&ge), vec![Operand::Var(j.clone()), Operand::Var(len.clone())], "i64");
         self.emit("jmp_if_true", None, vec![Operand::Var(ge), Operand::Var(end.clone())], "void");
-        // if S[j] != D skip the bump.
+        // On a non-match: FOR ALL skips just the bump and keeps scanning (`nobump`);
+        // FOR LEADING breaks out of the loop entirely (`end`) — that stop-on-first-
+        // mismatch is the whole difference between the two forms.
         let c = self.fresh("_inspc0");
         self.emit("str_index", Some(&c), vec![Operand::Var(s_reg.to_string()), Operand::Var(j.clone())], "i64");
         let eq = self.fresh("_inspeq");
         self.emit("cmp_eq", Some(&eq), vec![Operand::Var(c), Operand::Var(d_reg.clone())], "i64");
         let nobump = self.fresh("insp_nobump");
-        self.emit("jmp_if_false", None, vec![Operand::Var(eq), Operand::Var(nobump.clone())], "void");
+        let mismatch_target = if leading { end.clone() } else { nobump.clone() };
+        self.emit("jmp_if_false", None, vec![Operand::Var(eq), Operand::Var(mismatch_target)], "void");
         let one = self.fresh("_insp1");
         self.emit("const", Some(&one), vec![Operand::Int(1)], "i64");
         self.emit("add", Some(&cnt), vec![Operand::Var(cnt.clone()), Operand::Var(one)], "i64");
@@ -4207,16 +4235,21 @@ fn read_refmod_index(op: &GrammarASTNode) -> Result<RefIndex, CompileError> {
     }
 }
 
-/// Extract the single supported `TALLYING counter FOR ALL delim` phrase from an
-/// `inspect_stmt`, returning `(counter_name, delim_operand_node)` and rejecting
-/// every later-rung form the grammar also accepts:
+/// Extract the supported `TALLYING counter FOR ALL delim` / `FOR LEADING delim`
+/// phrase from an `inspect_stmt`, returning `(counter_name, delim_operand_node,
+/// leading)` where `leading` is `true` for `FOR LEADING` (count only the leading
+/// run) and `false` for `FOR ALL` (count every occurrence). Rejects every later-
+/// rung form the grammar also accepts:
 ///   * more than one `TALLYING` counter (`{ tally_for }`) — one counter this rung;
 ///   * more than one `FOR` phrase on that counter (`{ tally_item }`);
-///   * a `LEADING` or `CHARACTERS` tally (only `ALL` this rung);
+///   * a `CHARACTERS` tally (only `ALL`/`LEADING` this rung);
 ///   * a `BEFORE`/`AFTER` region restricting the scan.
 ///
-/// (`REPLACING` and a non-alphanumeric source are rejected by the caller.)
-fn inspect_tally_all(verb: &GrammarASTNode) -> Result<(String, &GrammarASTNode), CompileError> {
+/// (`REPLACING`, a combined `FOR LEADING … REPLACING`, and a non-alphanumeric
+/// source are rejected by the caller.)
+fn inspect_tally_all(
+    verb: &GrammarASTNode,
+) -> Result<(String, &GrammarASTNode, bool), CompileError> {
     let tallying = child_node(verb, "inspect_tallying").ok_or_else(|| {
         CompileError::Unsupported("INSPECT without a TALLYING clause is a later rung".into())
     })?;
@@ -4246,19 +4279,18 @@ fn inspect_tally_all(verb: &GrammarASTNode) -> Result<(String, &GrammarASTNode),
             "INSPECT TALLYING … FOR CHARACTERS is a later rung".into(),
         ));
     }
-    if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING") {
-        return Err(CompileError::Unsupported(
-            "INSPECT TALLYING … FOR LEADING is a later rung".into(),
-        ));
-    }
+    // `FOR LEADING` is now supported (count only the leading run); `FOR ALL` is the
+    // default. The keyword selects the scan's stop-on-mismatch behaviour.
+    let leading = toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING");
     if child_node(ti, "inspect_region").is_some() {
         return Err(CompileError::Unsupported(
             "INSPECT TALLYING … BEFORE/AFTER is a later rung".into(),
         ));
     }
-    let delim = child_node(ti, "operand")
-        .ok_or_else(|| CompileError::Malformed("INSPECT TALLYING FOR ALL without a delimiter".into()))?;
-    Ok((counter, delim))
+    let delim = child_node(ti, "operand").ok_or_else(|| {
+        CompileError::Malformed("INSPECT TALLYING FOR ALL/LEADING without a delimiter".into())
+    })?;
+    Ok((counter, delim, leading))
 }
 
 /// Extract the single supported `REPLACING ALL search BY replace` phrase from an
@@ -5897,18 +5929,18 @@ mod tests {
     }
 
     #[test]
-    fn inspect_leading_tally_is_a_later_rung() {
-        // FOR LEADING counts only a run at the start — a later rung; only FOR ALL
-        // is modelled this cut.
-        let err = compile_source(
+    fn inspect_leading_tally_now_compiles() {
+        // A lone FOR LEADING tally counts only the run of consecutive matches at the
+        // start of the source — now supported; it must compile to a valid module.
+        let module = compile_source(
             &wrap(
                 &["01  S  PIC X(5) VALUE \"AABBB\".", "01  C  PIC 9(3) VALUE 0."],
                 &["INSPECT S TALLYING C FOR LEADING \"A\".", "STOP RUN."],
             ),
             "insp_lead",
         )
-        .unwrap_err();
-        assert!(matches!(err, CompileError::Unsupported(_)), "got {err:?}");
+        .expect("lone FOR LEADING tally should compile");
+        assert!(module.validate().is_empty(), "validate: {:?}", module.validate());
     }
 
     // Alphanumeric → numeric MOVE: the still-deferred receiver/source shapes.
